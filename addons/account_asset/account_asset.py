@@ -103,12 +103,14 @@ class account_asset_asset(osv.osv):
         depreciation_lin_obj = self.pool.get('account.asset.depreciation.line')
         for asset in self.browse(cr, uid, ids, context=context):
             undone_dotation_number = asset.method_delay
+            amount_to_depr = residual_amount = asset.purchase_value
             if asset.prorata and asset.method == 'linear':
                 undone_dotation_number += 1
-            amount_to_depr = residual_amount = asset.purchase_value - asset.salvage_value
+                amount_to_depr = residual_amount = asset.purchase_value - asset.salvage_value
             depreciation_date = datetime.strptime(self._get_last_depreciation_date(cr, uid, [asset.id], context)[asset.id], '%Y-%m-%d')
             day = depreciation_date.day
             month = depreciation_date.month
+            if month == 12: month = 0
             year = depreciation_date.year
             total_days = (year % 4) and 365 or 366
             depr_vals = []
