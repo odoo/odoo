@@ -4,7 +4,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    d$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -47,30 +47,26 @@ class contribution_register_report(report_sxw.rml_parse):
     def _get_payslip_lines(self, obj):
         payslip_obj = self.pool.get('hr.payslip')
         payslip_line = self.pool.get('hr.payslip.line')
+        payslip_lines = []
         res = []
-        result = {}
         self.regi_total = 0.0
-        self.cr.execute("SELECT pl.id, pl.slip_id from hr_payslip_line as pl "\
+        self.cr.execute("SELECT pl.id from hr_payslip_line as pl "\
                         "LEFT JOIN hr_payslip AS hp on (pl.slip_id = hp.id) "\
                         "WHERE (hp.date_from >= %s) AND (hp.date_to <= %s) "\
                         "AND pl.register_id = %s "\
-                        "GROUP BY pl.slip_id, pl.sequence, pl.id, pl.category_id "\
-                        "ORDER BY pl.sequence",
+                        "ORDER BY pl.slip_id, pl.sequence",
                         (self.date_from, self.date_to, obj.id))
-        for x in self.cr.fetchall():
-            result.setdefault(x[1], [])
-            result[x[1]].append(x[0])
-        for key, value in result.iteritems():
-            for line in payslip_line.browse(self.cr, self.uid, value):
-                res.append({
-                    'payslip_name': payslip_obj.browse(self.cr, self.uid, [key])[0].name,
-                    'name': line.name,
-                    'code': line.code,
-                    'quantity': line.quantity,
-                    'amount': line.amount,
-                    'total': line.total,
-                })
-                self.regi_total += line.total
+        payslip_lines = [x[0] for x in self.cr.fetchall()]
+        for line in payslip_line.browse(self.cr, self.uid, payslip_lines):
+            res.append({
+                'payslip_name': line.slip_id.name,
+                'name': line.name,
+                'code': line.code,
+                'quantity': line.quantity,
+                'amount': line.amount,
+                'total': line.total,
+            })
+            self.regi_total += line.total
         return res
 
 report_sxw.report_sxw('report.contribution.register.lines', 'hr.contribution.register', 'hr_payroll/report/report_contribution_register.rml', parser=contribution_register_report)
