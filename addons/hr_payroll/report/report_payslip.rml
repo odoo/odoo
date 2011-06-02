@@ -93,10 +93,6 @@
       <lineStyle kind="LINEABOVE" colorName="#cccccc" start="3,0" stop="3,0"/>
       <lineStyle kind="LINEBELOW" colorName="#cccccc" start="3,-1" stop="3,-1"/>
     </blockTableStyle>
-    <blockTableStyle id="Table7">
-      <blockAlignment value="LEFT"/>
-      <blockValign value="TOP"/>
-    </blockTableStyle>
     <blockTableStyle id="Table8">
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
@@ -194,7 +190,7 @@
         </td>
       </tr>
     </blockTable>
-    <blockTable colWidths="63.0,476.0" style="Table3">
+    <blockTable colWidths="63.0,475.0" style="Table3">
       <tr>
         <td>
           <para style="terp_default_Bold_8">
@@ -224,7 +220,7 @@
         </td>
       </tr>
     </blockTable>
-    <blockTable colWidths="63.0,206.0,89.0,181.0" style="Table5">
+    <blockTable colWidths="63.0,205.0,89.0,181.0" style="Table5">
       <tr>
         <td>
           <para style="P16">Reference</para>
@@ -240,7 +236,7 @@
         </td>
       </tr>
     </blockTable>
-    <blockTable colWidths="63.0,206.0,89.0,181.0" style="Table6">
+    <blockTable colWidths="63.0,205.0,89.0,181.0" style="Table6">
       <tr>
         <td>
           <para style="P16">Date From</para>
@@ -262,14 +258,7 @@
       <font color="white"> </font>
     </para>
     <para style="P6"/>
-    <blockTable colWidths="539.0" style="Table7">
-      <tr>
-        <td>
-          <para style="P9">Payslip Lines: </para>
-        </td>
-      </tr>
-    </blockTable>
-    <blockTable colWidths="31.0,337.0,56.0,57.0,57.0" style="Table8">
+    <blockTable colWidths="31.0,312.0,81.0,57.0,57.0" style="Table8">
       <tr>
         <td>
           <para style="P14">Code</para>
@@ -278,7 +267,7 @@
           <para style="P14">Name</para>
         </td>
         <td>
-          <para style="P14">Quantity</para>
+          <para style="P14">Quantity/Rate</para>
         </td>
         <td>
           <para style="P14">Amount</para>
@@ -293,7 +282,7 @@
     </para>
     <section>
       <para style="P4">[[repeatIn(get_payslip_lines(o.line_ids),'p') ]]</para>
-      <blockTable colWidths="31.0,337.0,56.0,59.0,56.0" style="Table9">
+      <blockTable colWidths="31.0,312.0,81.0,59.0,56.0" style="Table9">
         <tr>
           <td>
             <para style="P4">[[ p.code ]]</para>
