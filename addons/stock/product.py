@@ -182,6 +182,10 @@ class product_product(osv.osv):
         """
         if context is None:
             context = {}
+        
+        location_obj = self.pool.get('stock.location')
+        warehouse_obj = self.pool.get('stock.warehouse')
+        
         states = context.get('states',[])
         what = context.get('what',())
         if not ids:
@@ -198,6 +202,15 @@ class product_product(osv.osv):
                 context['warehouse'] = res2[0]
 
         if context.get('warehouse', False):
+            
+            # write code for added filter in product view.
+            if isinstance(context['warehouse'],str):
+                warehouse_id = warehouse_obj.search(cr, uid, [('name','ilike',context['warehouse'])], context=context)
+                if warehouse_id:
+                   context['warehouse'] =  warehouse_id[0]
+                else:
+                    raise osv.except_osv(_('Warning!'),_('There is no warehouse defined name like: "%s"')%(context['warehouse'],))
+            
             cr.execute('select lot_stock_id from stock_warehouse where id=%s', (int(context['warehouse']),))
             res2 = cr.fetchone()
             if res2:
@@ -207,18 +220,18 @@ class product_product(osv.osv):
             if type(context['location']) == type(1):
                 location_ids = [context['location']]
             elif type(context['location']) in (type(''), type(u'')):
-                location_ids = self.pool.get('stock.location').search(cr, uid, [('name','ilike',context['location'])], context=context)
+                location_ids = location_obj.search(cr, uid, [('name','ilike',context['location'])], context=context)
             else:
                 location_ids = context['location']
         else:
             location_ids = []
-            wids = self.pool.get('stock.warehouse').search(cr, uid, [], context=context)
-            for w in self.pool.get('stock.warehouse').browse(cr, uid, wids, context=context):
+            wids = warehouse_obj.search(cr, uid, [], context=context)
+            for w in warehouse_obj.browse(cr, uid, wids, context=context):
                 location_ids.append(w.lot_stock_id.id)
 
         # build the list of ids of children of the location given by id
         if context.get('compute_child',True):
-            child_location_ids = self.pool.get('stock.location').search(cr, uid, [('location_id', 'child_of', location_ids)])
+            child_location_ids = location_obj.search(cr, uid, [('location_id', 'child_of', location_ids)])
             location_ids = child_location_ids or location_ids
         else:
             location_ids = location_ids
@@ -334,6 +347,7 @@ class product_product(osv.osv):
         'track_incoming': fields.boolean('Track Incoming Lots', help="Forces to specify a Production Lot for all moves containing this product and coming from a Supplier Location"),
         'track_outgoing': fields.boolean('Track Outgoing Lots', help="Forces to specify a Production Lot for all moves containing this product and going to a Customer Location"),
         'location_id': fields.dummy(string='Stock Location', relation='stock.location', type='many2one'),
+        'warehouse_id': fields.dummy(string='Stock of Warehouse', relation='stock.warehouse', type='many2one'),
         'valuation':fields.selection([('manual_periodic', 'Periodical (manual)'),
                                         ('real_time','Real Time (automated)'),], 'Inventory Valuation',
                                         help="If real-time valuation is enabled for a product, the system will automatically write journal entries corresponding to stock moves." \

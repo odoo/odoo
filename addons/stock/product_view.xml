@@ -10,6 +10,7 @@
             <field name="arch" type="xml">
                    <field name="pricelist_id" position="before">
                        <field name="location_id" context="{'location': self}"/>
+                       <field name="warehouse_id" context="{'warehouse': self}"/>
                        <separator orientation="vertical"/>
                    </field>
             </field>
