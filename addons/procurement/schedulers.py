@@ -77,7 +77,7 @@ class procurement_order(osv.osv):
                         report_later += 1
                 for proc in procurement_obj.browse(cr, uid, ids, context=context):
                     if proc.state == 'exception':
-                        report.append('PROC %d: on order - %3.2f %-5s - %s' % \
+                        report.append(_('PROC %d: on order - %3.2f %-5s - %s') % \
                                 (proc.id, proc.product_qty, proc.product_uom.name,
                                     proc.product_id.name))
                         report_except += 1
