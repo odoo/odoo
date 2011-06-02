@@ -371,7 +371,7 @@ openerp.base.Session = openerp.base.BasicController.extend( /** @lends openerp.b
                     } else {
                         error_callback(response.error);
                     }
-                } else {
+                } else if (success_callback) {
                     success_callback(response["result"], textStatus, jqXHR);
                 }
             },
