@@ -23,6 +23,8 @@ from osv import fields,osv
 from tools.translate import _
 try:
     import gdata.contacts.service
+    import gdata.contacts.client
+
 except ImportError:
     raise osv.except_osv(_('Google Contacts Import Error!'), _('Please install gdata-python-client from http://code.google.com/p/gdata-python-client/downloads/list'))
 
@@ -34,8 +36,15 @@ class google_login(osv.osv_memory):
         'password': fields.char('Google Password', size=64),
     }
 
-    def google_login(self, user, password, type='group', context=None):
-        gd_client = gdata.contacts.service.ContactsService()
+    def google_login(self, user, password, type='', context=None):
+        if type == 'group': 
+            gd_client = gdata.contacts.client.ContactsClient(source='OpenERP')
+        if type == 'contact' :   
+            gd_client = gdata.contacts.service.ContactsService()
+        if type == 'calendar':
+            gd_client = gdata.calendar.service.CalendarService()
+        else:
+            gd_client = gdata.contacts.service.ContactsService()     
         try:    
             gd_client.ClientLogin(user, password,gd_client.source)
         except Exception:

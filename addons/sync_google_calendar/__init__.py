@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#
+#    
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,33 +15,12 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
 #
 ##############################################################################
 
-import account_central_journal
-import account_general_journal
-import account_journal
-import account_balance
-import account_partner_balance
-import account_general_ledger
-import account_partner_ledger
-#import invoice
-import account_print_invoice
-#import overdue
-import account_print_overdue
-import account_aged_partner_balance
-#import tax_report
-import account_tax_report
-import account_tax_code
-import account_balance_landscape
-import account_invoice_report
-import account_report
-import account_entries_report
-import account_analytic_entries_report
-import account_balance_sheet
-import account_profit_loss
-import account_treasury_report
+import sync_google_calendar
+import wizard
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
