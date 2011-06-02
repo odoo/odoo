@@ -212,9 +212,9 @@ class project_scrum_product_backlog(osv.osv):
                 if task.state != 'done':
                     tasks_id.append(task.id)
 
-            clone_id = self.copy(cr, uid, product.id, {
-                'name': 'PARTIAL:'+ product.name ,
-                'sprint_id':False,
+            self.copy(cr, uid, product.id, {
+                'name': 'PARTIAL:'+ product.name,
+                'sprint_id': False,
                 'tasks_id':[(6, 0, tasks_id)],
                                 })
         self.write(cr, uid, ids, {'state':'cancel'}, context=context)

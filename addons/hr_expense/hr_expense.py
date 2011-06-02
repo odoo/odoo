@@ -88,7 +88,7 @@ class hr_expense_expense(osv.osv):
         'date': lambda *a: time.strftime('%Y-%m-%d'),
         'state': 'draft',
         'employee_id': _employee_get,
-        'user_id': lambda cr, uid, id, c={}: id,
+        'user_id': lambda self, cr, uid, context: uid,
         'currency_id': _get_currency,
         'company_id': lambda self, cr, uid, c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
     }

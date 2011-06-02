@@ -938,7 +938,7 @@ class account_bank_statement(osv.osv):
         'user_id': fields.many2one('res.users', ondelete='cascade', string='User', readonly=True),
     }
     _defaults = {
-        'user_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).id
+        'user_id': lambda self, cr, uid, context: uid,
     }
 account_bank_statement()
 
@@ -953,7 +953,7 @@ class account_bank_statement_line(osv.osv):
         'journal_id': fields.function(_get_statement_journal, method=True,store=True, string='Journal', type='char', size=64),
         'am_out': fields.boolean("To count"),
         'is_acc': fields.boolean("Is accompte"),
-        'pos_statement_id': fields.many2one('pos.order', ondelete='cascade'),
+        'pos_statement_id': fields.many2one('pos.order','Order', ondelete='cascade'),
     }
 account_bank_statement_line()
 
