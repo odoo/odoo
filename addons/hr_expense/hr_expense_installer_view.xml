@@ -10,9 +10,15 @@
            <field name="context" eval="'{\'default_type\':\'service\',\'default_procure_method\':\'make_to_stock\',\'default_supply_method\':\'buy\',\'default_purchase_ok\':True, \'default_sale_ok\':False, \'default_hr_expense_ok\':True,\'default_categ_id\': ' + str(ref('cat_expense')) +'}'"/>
            <field name="view_id" ref="product.product_normal_form_view"/>
        </record>
+       
+      <record id="category_product_normal_form_view_installer" model="ir.actions.todo.category">
+          <field name="name">Product</field>
+          <field name="sequence">3</field>
+     </record>    
 
        <record id="product_normal_form_view_todo" model="ir.actions.todo">
            <field name="action_id" ref="product_normal_form_view_installer"/>
+           <field name="category_id" ref="category_product_normal_form_view_installer"/>
            <field name="sequence">3</field>
            <field name="type">normal</field>
            <field name="state">skip</field>
