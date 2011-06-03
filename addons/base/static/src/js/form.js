@@ -15,6 +15,8 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
      * @param {String} element_id this view's root element id
      * @param {openerp.base.DataSet} dataset the dataset this view will work with
      * @param {String} view_id the identifier of the OpenERP view object
+     *
+     * @property {openerp.base.Registry} registry=openerp.base.form.widgets widgets registry for this form view instance
      */
     init: function(view_manager, session, element_id, dataset, view_id) {
         this._super(session, element_id);
@@ -31,6 +33,7 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
         this.show_invalid = true;
         this.touched = false;
         this.flags = this.view_manager.action.flags || {};
+        this.registry = openerp.base.form.widgets;
     },
     start: function() {
         //this.log('Starting FormView '+this.model+this.view_id)
@@ -41,7 +44,7 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
         var self = this;
         this.fields_view = data.fields_view;
 
-        var frame = new openerp.base.form.WidgetFrame(this, this.fields_view.arch);
+        var frame = new (this.registry.get_object('frame'))(this, this.fields_view.arch);
 
         this.$element.html(QWeb.render(this.template, { 'frame': frame, 'view': this }));
         _.each(this.widgets, function(w) {
@@ -506,9 +509,9 @@ openerp.base.form.WidgetFrame = openerp.base.form.Widget.extend({
     handle_node: function(node) {
         var type = this.view.fields_view.fields[node.attrs.name] || {};
         var widget_type = node.attrs.widget || type.type || node.tag;
-        var widget = new (openerp.base.form.widgets.get_object(widget_type)) (this.view, node);
+        var widget = new (this.view.registry.get_object(widget_type)) (this.view, node);
         if (node.tag == 'field' && node.attrs.nolabel != '1') {
-            var label = new (openerp.base.form.widgets.get_object('label')) (this.view, node);
+            var label = new (this.view.registry.get_object('label')) (this.view, node);
             label["for"] = widget;
             this.add_widget(label);
         }
@@ -1370,6 +1373,7 @@ openerp.base.form.FieldBinaryImage = openerp.base.form.FieldBinary.extend({
  * Registry of form widgets, called by :js:`openerp.base.FormView`
  */
 openerp.base.form.widgets = new openerp.base.Registry({
+    'frame' : 'openerp.base.form.WidgetFrame',
     'group' : 'openerp.base.form.WidgetFrame',
     'notebook' : 'openerp.base.form.WidgetNotebook',
     'separator' : 'openerp.base.form.WidgetSeparator',
