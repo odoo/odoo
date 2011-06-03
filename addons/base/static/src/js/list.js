@@ -545,9 +545,13 @@ openerp.base.ListView.List = Class.extend( /** @lends openerp.base.ListView.List
                 e.stopPropagation();
                 var $target = $(e.currentTarget),
                       field = $target.closest('td').data('field'),
-                  record_id = self.row_id($target.closest('tr'));
+                       $row = $target.closest('tr'),
+                  record_id = self.row_id($row),
+                      index = self.row_position($row);
 
-                $(self).trigger('action', [field, record_id]);
+                $(self).trigger('action', [field, record_id, function () {
+                    self.reload_record(index, true);
+                }]);
             })
             .delegate('tr', 'click', function (e) {
                 e.stopPropagation();
@@ -671,14 +675,32 @@ openerp.base.ListView.List = Class.extend( /** @lends openerp.base.ListView.List
     /**
      * Reloads the record at index ``row_index`` in the list's rows.
      *
-     * This does not re-fetch the record, it only re-renders it, replacing the
-     * current rendering.
+     * By default, simply re-renders the record. If the ``fetch`` parameter is
+     * provided and ``true``, will first fetch the record anew.
      *
      * @param {Number} record_index index of the record to reload
+     * @param {Boolean} fetch fetches the record from remote before reloading it
      */
-    reload_record: function (record_index) {
-        this.$current.children().eq(record_index)
-            .replaceWith(this.render_record(record_index));
+    reload_record: function (record_index, fetch) {
+        var self = this;
+        var read_p = null;
+        if (fetch) {
+            // save index to restore it later, if already set
+            var old_index = this.dataset.index;
+            this.dataset.index = record_index;
+            read_p = this.dataset.read_index(
+                _.filter(_.pluck(this.columns, 'name'), _.identity),
+                function (record) {
+                    var form_record = self.transform_record(record);
+                    self.rows.splice(record_index, 1, form_record);
+                    self.dataset.index = old_index;
+                }
+            )
+        }
+
+        return $.when(read_p).then(function () {
+            self.$current.children().eq(record_index)
+                .replaceWith(self.render_record(record_index)); })
     },
     /**
      * Renders a list record to HTML
@@ -848,21 +870,7 @@ openerp.base.ListView.Groups = Class.extend( /** @lends openerp.base.ListView.Gr
             // can have selections spanning multiple links
             var selection = self.get_selection();
             $this.trigger(e, [selection.ids, selection.records]);
-        }).bind('action', function (e, name, id, callback) {
-            if (!callback) {
-                callback = function () {
-                    var $prev = child.$current.prev();
-                    if (!$prev.is('tbody')) {
-                        // ungrouped
-                        $(self.elements[0]).replaceWith(self.render());
-                    } else {
-                        // ghetto reload child (and its siblings)
-                        $prev.children().last().click();
-                    }
-                };
-            }
-            $this.trigger(e, [name, id, callback]);
-        }).bind('deleted row_link', function (e) {
+        }).bind('action deleted row_link', function (e) {
             // additional positional parameters are provided to trigger as an
             // Array, following the event type or event object, but are
             // provided to the .bind event handler as *args.

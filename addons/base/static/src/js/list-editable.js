@@ -99,22 +99,16 @@ openerp.base.list.editable = function (openerp) {
         save_row: function (row_num, edit_next) {
             var self = this;
             this.edition_form.do_save(function () {
-                self.dataset.read_index(
-                    _.filter(_.pluck(self.columns, 'name'), _.identity),
-                    function (record) {
-                        var form_record = self.transform_record(record);
-                        self.rows.splice(row_num, 1, form_record);
-                        self.reload_record(row_num);
-                        self.edition_form.stop();
-                        delete self.edition_form;
-                        if (edit_next && self.rows.length > row_num + 1) {
-                            self.dataset.index++;
-                            self.row_clicked({
-                                currentTarget: self.$current.children().eq(row_num + 1)
-                            }, row_num + 1);
-                        }
+                self.reload_record(row_num, true).then(function () {
+                    self.edition_form.stop();
+                    delete self.edition_form;
+                    if (edit_next && self.rows.length > row_num + 1) {
+                        self.dataset.index++;
+                        self.row_clicked({
+                            currentTarget: self.$current.children().eq(row_num + 1)
+                        }, row_num + 1);
                     }
-                );
+                });
             });
         },
         /**

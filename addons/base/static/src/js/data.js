@@ -259,7 +259,7 @@ openerp.base.DataSet =  openerp.base.Controller.extend( /** @lends openerp.base.
      */
     read_ids: function (ids, fields, callback) {
         var self = this;
-        this.rpc('/base/dataset/get', {
+        return this.rpc('/base/dataset/get', {
             model: this.model,
             ids: ids,
             fields: fields
@@ -279,10 +279,10 @@ openerp.base.DataSet =  openerp.base.Controller.extend( /** @lends openerp.base.
      */
     read_index: function (fields, callback) {
         if (_.isEmpty(this.ids)) {
-            callback([]);
+            return $.Deferred().reject().promise();
         } else {
             fields = fields || false;
-            this.read_ids([this.ids[this.index]], fields, function(records) {
+            return this.read_ids([this.ids[this.index]], fields, function(records) {
                 callback(records[0]);
             });
         }
