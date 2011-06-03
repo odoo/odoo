@@ -690,7 +690,8 @@ openerp.base.ListView.List = Class.extend( /** @lends openerp.base.ListView.List
         return QWeb.render('ListView.row', {
             columns: this.columns,
             options: this.options,
-            row: this.rows[record_index]
+            row: this.rows[record_index],
+            row_parity: (record_index % 2 === 0) ? 'even' : 'odd'
         });
     }
     // drag and drop

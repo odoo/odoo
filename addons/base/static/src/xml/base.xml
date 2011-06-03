@@ -802,8 +802,10 @@
             .replaceAll(this)
             .before($(document.createElement('td')).append(
                 $(document.createElement('button')).attr({
-                    'class': 'oe-list-save', 'type': 'button'}).text('Save')))
-            .after($(document.createElement('td')))
+                    'class': 'oe-edit-row-save', 'type': 'button'}).text('Save')))
+            .after($(document.createElement('td')).append(
+                $(document.createElement('button')).attr({
+                    'class': 'oe-edit-row-cancel', 'type': 'button'}).text('Cancel')))
             .unwrap();
     </t>
 </t>

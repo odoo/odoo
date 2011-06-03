@@ -2,6 +2,9 @@
  * @namespace handles editability case for lists, because it depends on form and forms already depends on lists it had to be split out
  */
 openerp.base.list.editable = function (openerp) {
+    var KEY_RETURN = 13,
+        KEY_ESCAPE = 27;
+
     // editability status of list rows
     openerp.base.ListView.prototype.defaults.editable = null;
 
@@ -47,13 +50,22 @@ openerp.base.list.editable = function (openerp) {
                     onclick: function (e) {e.stopPropagation();}
                 }).replaceAll(row)
                 .keyup(function (e) {
-                    if (e.which !== 13) {
-                        return;
+                    switch (e.which) {
+                        case KEY_RETURN:
+                            self.save_row(row_num, true);
+                            break;
+                        case KEY_ESCAPE:
+                            self.cancel_edition(row_num);
+                            break;
+                        default:
+                            return;
                     }
-                    self.save_row(row_num, true);
                 })
-                .delegate('button.oe-list-save', 'click', function () {
+                .delegate('button.oe-edit-row-save', 'click', function () {
                     self.save_row(row_num);
+                })
+                .delegate('button.oe-edit-row-cancel', 'click', function () {
+                    self.cancel_edition(row_num);
                 });
             this.edition_form = _.extend(new openerp.base.FormView(
                     null, this.group.view.session, $new_row.attr('id'),
@@ -96,7 +108,7 @@ openerp.base.list.editable = function (openerp) {
                         self.edition_form.stop();
                         delete self.edition_form;
                         if (edit_next && self.rows.length > row_num + 1) {
-                            self.dataset.index += 1;
+                            self.dataset.index++;
                             self.row_clicked({
                                 currentTarget: self.$current.children().eq(row_num + 1)
                             }, row_num + 1);
@@ -104,6 +116,16 @@ openerp.base.list.editable = function (openerp) {
                     }
                 );
             });
+        },
+        /**
+         * Cancels the edition of the row at index ``row_num``.
+         *
+         * @param {Number} row_num index of the row being edited
+         */
+        cancel_edition: function (row_num) {
+            this.reload_record(row_num);
+            this.edition_form.stop();
+            delete this.edition_form;
         }
     });
     openerp.base.list = {form: {}};
