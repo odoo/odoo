@@ -40,28 +40,59 @@ openerp.base.list.editable = function (openerp) {
             this.render_row_as_form(index, event.currentTarget);
         },
         render_row_as_form: function (row_num, row) {
+            var self = this;
             var $new_row = $('<tr>', {
                     id: _.uniqueId('oe-editable-row-'),
                     'class': $(row).attr('class'),
                     onclick: function (e) {e.stopPropagation();}
-                }).replaceAll(row);
-            var editable_row_form = _.extend(new openerp.base.FormView(
+                }).replaceAll(row)
+                .keyup(function (e) {
+                    if (e.which !== 13) {
+                        return;
+                    }
+                    self.save_row(row_num, true);
+                })
+                .delegate('button.oe-list-save', 'click', function () {
+                    self.save_row(row_num);
+                });
+            this.edition_form = _.extend(new openerp.base.FormView(
                     null, this.group.view.session, $new_row.attr('id'),
                     this.dataset, false), {
                 template: 'ListView.row.form',
                 registry: openerp.base.list.form.widgets
             });
-            editable_row_form.on_loaded({fields_view: this.get_fields_view()});
-            editable_row_form.on_record_loaded.add({
+            this.edition_form.on_loaded({fields_view: this.get_fields_view()});
+            this.edition_form.on_record_loaded.add({
                 position: 'last',
                 unique: true,
                 callback: function () {
-                    editable_row_form.$element.find('td')
-                        .addClass('oe-field-cell')
-                        .removeAttr('width');
+                    self.edition_form.$element
+                        .find('td')
+                            .addClass('oe-field-cell')
+                            .removeAttr('width')
+                        .end()
+                        .find('td:first').removeClass('oe-field-cell').end()
+                        .find('td:last').removeClass('oe-field-cell').end();
                 }
             });
-            editable_row_form.do_show();
+            this.edition_form.do_show();
+        },
+        /**
+         * Saves the current row, and triggers the edition of its following
+         * sibling if asked.
+         *
+         * @param {Number} row_num the row to save
+         * @param {Boolean} [edit_next=false] should the next row become editable
+         */
+        save_row: function (row_num, edit_next) {
+            var self = this;
+            this.edition_form.do_save(function () {
+                // nuke form
+                // re-render current row
+                if (edit_next) {
+                    // self.row_clicked({currentTarget: current_row.nextSibling}, row_num + 1)
+                }
+            });
         }
     });
     openerp.base.list = {form: {}};

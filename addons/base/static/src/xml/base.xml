@@ -800,7 +800,9 @@
                 't-as': this.attr('t-as')
             })
             .replaceAll(this)
-            .before($(document.createElement('td')))
+            .before($(document.createElement('td')).append(
+                $(document.createElement('button')).attr({
+                    'class': 'oe-list-save', 'type': 'button'}).text('Save')))
             .after($(document.createElement('td')))
             .unwrap();
     </t>
