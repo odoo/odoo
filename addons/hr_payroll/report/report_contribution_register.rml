@@ -200,13 +200,13 @@
             <para style="P2">[[ r['name'] ]]</para>
           </td>
           <td>
-            <para style="P2">[[ r['quantity'] or '0.0']]</para>
+            <para style="P2">[[ formatLang(r['quantity']) ]]</para>
           </td>
           <td>
-            <para style="P2">[[ r['amount'] or '0.0']]</para>
+            <para style="P2">[[ formatLang(r['amount']) ]]</para>
           </td>
           <td>
-            <para style="P3">[[ r['total'] or '0.0']] [[o.company_id and o.company_id.currency_id.symbol or '']]</para>
+            <para style="P3">[[ formatLang(r['total']) ]] [[o.company_id and o.company_id.currency_id.symbol or '']]</para>
           </td>
         </tr>
       </blockTable>
@@ -222,7 +222,7 @@
           <para style="P15">Total:</para>
         </td>
         <td>
-          <para style="P11">[[ sum_total() or '0.0']] [[o.company_id and o.company_id.currency_id.symbol or '']]</para>
+          <para style="P11">[[ formatLang(abs(sum_total())) ]] [[o.company_id and o.company_id.currency_id.symbol or '']]</para>
         </td>
       </tr>
     </blockTable>
