@@ -212,6 +212,18 @@ class sugarsoapBindingSOAP:
         response = self.binding.Receive(typecode)
         return response
 
+    #op: get_document_list
+    def get_document_list(self, request):
+        if isinstance(request, get_document_revisionRequest) is False:
+            raise TypeError, "%s incorrect request type" % (request.__class__)
+        kw = {}
+        # no input wsaction
+        self.binding.Send(None, None, request, soapaction="http://"+ IP +"/sugarcrm/soap.php/get_document_list", encodingStyle="http://schemas.xmlsoap.org/soap/encoding/", **kw)
+        # no output wsaction
+        typecode = Struct(pname=None, ofwhat=get_document_revisionResponse.typecode.ofwhat, pyclass=get_document_revisionResponse.typecode.pyclass)
+        response = self.binding.Receive(typecode)
+        return response    
+
     # op: get_entry_list
     def get_entry_list(self, request):
         if isinstance(request, get_entry_listRequest) is False:
@@ -900,6 +912,22 @@ class get_entriesResponse:
 get_entriesResponse.typecode.pyclass = get_entriesResponse
 
 _set_entryRequestTypecode = Struct(pname=("http://www.sugarcrm.com/sugarcrm","set_entry"), ofwhat=[ZSI.TC.String(pname="session", aname="_session", typed=False, encoded=None, minOccurs=1, maxOccurs=1, nillable=True), ZSI.TC.String(pname="module_name", aname="_module_name", typed=False, encoded=None, minOccurs=1, maxOccurs=1, nillable=True), ns0.name_value_list_Def(pname="name_value_list", aname="_name_value_list", typed=False, encoded=None, minOccurs=1, maxOccurs=1, nillable=True)], pyclass=None, encoded="http://www.sugarcrm.com/sugarcrm")
+
+class get_document_revisionRequest:
+    def __init__(self):
+        self._session = None
+        self._i = None
+        return
+get_document_revisionRequest.typecode = Struct(pname=("http://www.sugarcrm.com/sugarcrm","get_document_revision"), ofwhat=[ZSI.TC.String(pname="session", aname="_session", typed=False, encoded=None, minOccurs=1, maxOccurs=1, nillable=True), ZSI.TC.String(pname="i", aname="_i", typed=False, encoded=None, minOccurs=1, maxOccurs=1, nillable=True)], pyclass=get_document_revisionRequest, encoded="http://www.sugarcrm.com/sugarcrm")
+
+class get_document_revisionResponse:
+    def __init__(self):
+        self._return = None
+        return
+get_document_revisionResponse.typecode = Struct(pname=("http://www.sugarcrm.com/sugarcrm","get_document_revisionResponse"), ofwhat=[ns0.return_document_revision_Def(pname="return", aname="_return", typed=False, encoded=None, minOccurs=1, maxOccurs=1, nillable=True)], pyclass=get_document_revisionResponse, encoded="http://www.sugarcrm.com/sugarcrm")
+
+
+
 class set_entryRequest:
     typecode = _set_entryRequestTypecode
     __metaclass__ = pyclass_type

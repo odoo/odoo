@@ -60,6 +60,7 @@ class sugar_import(import_framework):
     TABLE_NOTE = 'Notes'
     TABLE_EMAIL = 'Emails'
     TABLE_COMPAIGN = 'Campaigns'
+    TABLE_DOCUMENT = 'DocumentRevisions'
     TABLE_HISTORY_ATTACHMNET = 'history_attachment'
     
     def initialize(self):
@@ -71,7 +72,7 @@ class sugar_import(import_framework):
         self.context['session_id'] = sessionid
         
     def get_data(self, table):
-        return sugar.search(self.context.get('port'), self.context.get('session_id'), table)
+          return sugar.search(self.context.get('port'), self.context.get('session_id'), table, 0, 500)
     """
     Common import method
     """
@@ -112,6 +113,29 @@ class sugar_import(import_framework):
         return "%s.%i" % (hour, min)
     
     """
+    import Documents
+    """
+    
+    def import_document(self, val):
+        File,Filename = sugar.get_document_revision_search(self.context.get('port'), self.context.get('session_id'), val.get('id'))
+        val['datas'] = base64.encodestring(File)
+        val['datas_fname'] = Filename
+        return val   
+        
+    def get_document_mapping(self): 
+        return { 
+                'model' : 'ir.attachment',
+                'dependencies' : [self.TABLE_USER],
+                'hook' : self.import_document,
+                'map' : {'name':'filename',
+                         'description': ppconcat('description'),
+                         'datas': 'datas',
+                         'datas_fname': 'datas_fname',
+                }
+            }     
+        
+    
+    """
     import Emails
     """
 
@@ -126,7 +150,9 @@ class sugar_import(import_framework):
         return attach_xml_id
     
     def import_email(self, val):
+        val = sugar.email_search(self.context.get('port'), self.context.get('session_id'), self.TABLE_EMAIL, val.get('id'))
         model_obj =  self.obj.pool.get('ir.model.data')
+        val = val[0]
         xml_id = self.xml_id_exist(val.get('parent_type'), val.get('parent_id'))
         model_ids = model_obj.search(self.cr, self.uid, [('name', 'like', xml_id)])
         if model_ids:
@@ -593,7 +619,6 @@ class sugar_import(import_framework):
         'Dead': 'done',
         'Converted': 'done',
     }
-
     
     def import_lead(self, val):
         if val.get('opportunity_id'): #if lead is converted into opp, don't import as lead
@@ -640,6 +665,12 @@ class sugar_import(import_framework):
     """
         import contact
     """
+    
+    def get_email(self, val):
+        email_address = sugar.get_contact_by_email(self.context.get('port'), self.context.get('username'), self.context.get('password'), val.get('email1'))
+        if email_address:
+            return ','.join(email_address)     
+    
     def import_contact(self, val):
         if val.get('primary_address_country'):
             country_id = self.get_all_countries(val.get('primary_address_country'))
@@ -665,7 +696,7 @@ class sugar_import(import_framework):
                 'city': 'primary_address_city',
                 'country_id/id': 'country_id/id',
                 'state_id/id': 'state_id/id',
-                'email': concat('email1', 'email2', delimiter=','),
+                'email': self.get_email,
                 'type': const('contact')
             }
         }
@@ -673,37 +704,46 @@ class sugar_import(import_framework):
     """ 
         import Account
     """
+    
     def get_address_type(self, val, type):
         if type == 'invoice':
             type_address = 'billing'
         else:
-            type_address = 'shipping'     
-    
-        map_partner_address = {
+            type_address = 'shipping' 
+            
+        if type == 'default':
+             map_partner_address = {
             'name': 'name',
-            'phone': 'phone_office',
-            'mobile': 'phone_mobile',
-            'fax': 'phone_fax',
-            'type': 'type',
-            'street': type_address + '_address_street',
-            'zip': type_address +'_address_postalcode',
-            'city': type_address +'_address_city',
-             'country_id/id': 'country_id/id',
-             'type': 'type',
+            'type': type,
+            'email': 'email1' 
             }
-        
+        else:        
+            map_partner_address = {
+                'name': 'name',
+                'phone': 'phone_office',
+                'mobile': 'phone_mobile',
+                'fax': 'phone_fax',
+                'type': 'type',
+                'street': type_address + '_address_street',
+                'zip': type_address +'_address_postalcode',
+                'city': type_address +'_address_city',
+                 'country_id/id': 'country_id/id',
+                 'type': 'type',
+                }
+            
         if val.get(type_address +'_address_country'):
             country_id = self.get_all_countries(val.get(type_address +'_address_country'))
             state = self.get_all_states(val.get(type_address +'_address_state'), country_id)
             val['country_id/id'] =  country_id
             val['state_id/id'] =  state
+            
         val['type'] = type
         val['id_new'] = val['id'] + '_address_' + type
         return self.import_object_mapping(map_partner_address, val, 'res.partner.address', self.TABLE_CONTACT, val['id_new'], self.DO_NOT_FIND_DOMAIN) 
-    
+        
     def get_partner_address(self, val):
         address_id=[]
-        type_dict = {'billing_address_street' : 'invoice', 'shipping_address_street' : 'delivery'}
+        type_dict = {'billing_address_street' : 'invoice', 'shipping_address_street' : 'delivery', 'type': 'default'}
         for key, type_value in type_dict.items():
             if val.get(key):
                 id = self.get_address_type(val, type_value)
@@ -838,6 +878,7 @@ class sugar_import(import_framework):
             self.TABLE_CASE: self.get_crm_claim_mapping(),
             self.TABLE_NOTE: self.get_history_mapping(),
             self.TABLE_EMAIL: self.get_email_mapping(),
+            self.TABLE_DOCUMENT: self.get_document_mapping(),
             self.TABLE_COMPAIGN: self.get_compaign_mapping()
         }
         
@@ -873,6 +914,7 @@ class import_sugarcrm(osv.osv):
         'project': fields.boolean('Projects', help="If Projects is checked, SugarCRM Projects data imported in OpenERP Projects form"),
         'project_task': fields.boolean('Project Tasks', help="If Project Tasks is checked, SugarCRM Project Tasks data imported in OpenERP Project Tasks form"),
         'bug': fields.boolean('Bugs', help="If Bugs is checked, SugarCRM Bugs data imported in OpenERP Project Issues form"),
+        'document': fields.boolean('Documents', help="If Documents is checked, SugarCRM Documents data imported in OpenERP Document Form"),
         'email_from': fields.char('Notify End Of Import To:', size=128),
         'instance_name': fields.char("Instance's Name", size=64, help="Prefix of SugarCRM id to differentiate xml_id of SugarCRM models datas come from different server."),
         
@@ -889,6 +931,7 @@ class import_sugarcrm(osv.osv):
         'project' : False,   
         'project_task': False,     
         'bug': False,
+        'document': False,
         'instance_name': 'sugarcrm',
         'email_from': 'tfr@openerp.com',
         'username' : 'tfr',
@@ -963,6 +1006,8 @@ class import_sugarcrm(osv.osv):
                 key_list.append('ProjectTask')
             if current.bug:
                 key_list.append('Bugs')
+            if current.document:
+                key_list.append('DocumentRevisions')
         return key_list
 
 

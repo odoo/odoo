@@ -114,10 +114,50 @@ def get_contact_by_email(portType, username, password, email_address=None):
     except Exception,e:
         return 'Exception: %s\n' % (tools.ustr(e))
 
-def search(portType, sessionid, module_name=None):
+def get_document_revision_search(portType, sessionid, module_id=None):
+  se_req = get_document_revisionRequest()
+  se_req._session = sessionid
+  se_req._i = module_id
+  se_resp = portType.get_document_list(se_req)
+  file = False
+  filename = False
+  file = se_resp._return.Document_revision.File
+  filename = se_resp._return.Document_revision.Filename
+  return file, filename
+
+
+def email_search(portType, sessionid, module_name, module_id, select_fields=None):
+  se_req = get_entryRequest()
+  se_req._session = sessionid
+  se_req._module_name = module_name
+  se_req._id = module_id
+  se_req._select_fields = select_fields
+  
+  se_resp = portType.get_entry(se_req)
+  ans_list = []
+  if se_resp:
+      list = se_resp._return._entry_list
+      
+      for i in list:
+          ans_dir = {}
+          for j in i._name_value_list:
+              ans_dir[tools.ustr(j._name)] = tools.ustr(j._value)
+            #end for
+          ans_list.append(ans_dir)
+    #end for
+  return ans_list
+
+def search(portType, sessionid, module_name, offset, max_results, query=None, order_by=None, select_fields=None, deleted=None):
   se_req = get_entry_listRequest()
   se_req._session = sessionid
   se_req._module_name = module_name
+  if query != None:
+      se_req._query = query
+  se_req._order_by = order_by
+  se_req._offset = offset
+  se_req._select_fields = select_fields
+  se_req._max_results = max_results
+  se_req._deleted = deleted
   se_resp = portType.get_entry_list(se_req)
   ans_list = []
   if se_resp:
