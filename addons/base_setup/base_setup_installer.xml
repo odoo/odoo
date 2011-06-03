@@ -219,17 +219,12 @@
           <field name="view_mode">form</field>
           <field name="view_id" ref="base.view_users_form"/>
       </record>
-
-    <record id="category_config_access_other_user" model="ir.actions.todo.category">
-      <field name="name">Administration</field>
-      <field name="sequence">1</field>
-    </record>    
       
       <!--   register configuration wizard  -->
 
       <record id="config_wizard_action_config_user_form" model="ir.actions.todo">
           <field name="action_id" ref="action_config_access_other_user"/>
-          <field name="category_id" ref="category_config_access_other_user"/>
+          <field name="category_id" ref="base.category_administration_config"/>
           <field name="type">normal</field>
           <field name="target">current</field>
           <field name="sequence">1000</field>
