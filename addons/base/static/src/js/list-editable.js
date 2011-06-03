@@ -57,6 +57,7 @@ openerp.base.list.editable = function (openerp) {
                 unique: true,
                 callback: function () {
                     editable_row_form.$element.find('td')
+                        .addClass('oe-field-cell')
                         .removeAttr('width');
                 }
             });
