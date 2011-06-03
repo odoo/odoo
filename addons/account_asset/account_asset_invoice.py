@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -21,20 +21,23 @@
 
 from osv import osv, fields
 
-
 class account_invoice(osv.osv):
+
     _inherit = 'account.invoice'
     def line_get_convert(self, cr, uid, x, part, date, context=None):
         res = super(account_invoice, self).line_get_convert(cr, uid, x, part, date, context=context)
         res['asset_id'] = x.get('asset_id', False)
         return res
+
 account_invoice()
 
 class account_invoice_line(osv.osv):
+
     _inherit = 'account.invoice.line'
     _columns = {
         'asset_category_id': fields.many2one('account.asset.category', 'Asset Category'),
     }
+
     def move_line_get_item(self, cr, uid, line, context=None):
         asset_obj = self.pool.get('account.asset.asset')
         res = super(account_invoice_line, self).move_line_get_item(cr, uid, line, context=context)
