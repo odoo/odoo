@@ -68,7 +68,30 @@ openerp.base.list.editable = function (openerp) {
     openerp.base.list.form.WidgetFrame = openerp.base.form.WidgetFrame.extend({
         template: 'ListView.row.frame'
     });
-    openerp.base.list.form.widgets = openerp.base.form.widgets.clone({
+    var form_widgets = openerp.base.form.widgets;
+    openerp.base.list.form.widgets = form_widgets.clone({
         'frame': 'openerp.base.list.form.WidgetFrame'
+    });
+    // All form widgets inherit a problematic behavior from
+    // openerp.base.form.WidgetFrame: the cell itself is removed when invisible
+    // whether it's @invisible or @attrs[invisible]. In list view, only the
+    // former should completely remove the cell. We need to override update_dom
+    // on all widgets since we can't just hit on widget itself (I think)
+    var list_form_widgets = openerp.base.list.form.widgets;
+    _(list_form_widgets.map).each(function (widget_path, key) {
+        if (key === 'frame') { return; }
+        var new_path = 'openerp.base.list.form.' + key;
+
+        openerp.base.list.form[key] = (form_widgets.get_object(key)).extend({
+            update_dom: function () {
+                this.$element.children().css('visibility', '');
+                if (this.invisible && this.node.attrs.invisible !== '1') {
+                    this.$element.children().css('visibility', 'hidden');
+                } else {
+                    this._super();
+                }
+            }
+        });
+        list_form_widgets.add(key, new_path);
     });
 };
