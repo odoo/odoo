@@ -58,14 +58,9 @@
             <field name="target">new</field>
         </record>
         
-        <record id="category_outlook_installer" model="ir.actions.todo.category">
-        <field name="name">Sale</field>
-        <field name="sequence">7</field>
-       </record>           
-        
         <record id="outlook_installer_todo" model="ir.actions.todo">
             <field name="action_id" ref="action_outlook_installer"/>
-            <field name="category_id" ref="category_outlook_installer"/>
+            <field name="category_id" ref="base.category_sales_management_config"/>
             <field name="type">normal</field>
             <field name="state">skip</field>
             <field name="sequence">4</field>
