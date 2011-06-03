@@ -386,44 +386,92 @@ class edi(object):
         fields = edi_document.keys()
         fields_to_import = []
         data_line = []
+        model_data = self.pool.get('ir.model.data')
         _fields = self.fields_get(cr, uid, context=context)
+        current_module = 'edi_import'
+        values = {}
         for field in edi_document.keys():
             if not field.startwith('__'):
                 field_to_import.append(field)
                 edi_field_value = edi_document[field]
-                if _fields[field]['type'] == 'many2one':
-                    #Look in ir.model.data for a record that matches the db_id.
-                    #If found, replace the m2o value with the correct database ID and stop.
-                    #If not found, continue to next step.
+                if _fields[field]['type'] in ('many2one', 'many2many'):
 
-                    #Perform name_search(name) to look for a record that matches the
-                    #given m2o name. If only one record is found, create the missing
-                    #ir.model.data record to link it to the db_id, and the replace the m2o
-                    #value with the correct database ID, then stop. If zero result or
-                    #multiple results are found, go to next step.
+                    if _fields[field]['type'] == 'many2one':
+                        edi_parent_documents = [edi_field_value]
+                    else:
+                        edi_parent_documents = edi_field_value
 
-                    #Create the new record using the only field value that is known: the
-                    #name, and create the ir.model.data entry to map to it.
-                    #This should work for many models, and if not, the module should
-                    #provide a custom EDI import logic to care for it.
-                    pass
+                    parent_lines = []
+
+                    for edi_parent_document in edi_parent_documents:
+                        #Look in ir.model.data for a record that matches the db_id.
+                        #If found, replace the m2o value with the correct database ID and stop.
+                        #If not found, continue to next step
+
+                        db_uuid, xml_id =  tuple(edi_parent_document[0].split(':'))
+                        data_ids = model_data.name_search(cr, uid, xml_id)
+                        if data_ids:
+                            d = model_data.browse(cr, uid, data_ids[0], context=context)
+                            parent_lines.append(d.res_id)
+                            
+                        else:
+                            #Perform name_search(name) to look for a record that matches the
+                            #given m2o name. If only one record is found, create the missing
+                            #ir.model.data record to link it to the db_id, and the replace the m2o
+                            #value with the correct database ID, then stop. If zero result or
+                            #multiple results are found, go to next step.
+                            #Create the new record using the only field value that is known: the
+                            #name, and create the ir.model.data entry to map to it.
+
+                            relation_object = self.get.pool(_fields[field]['relation'])
+                            relation_ids = relation_object.name_search(cr, uid, edi_parent_document[1])
+                            if relation_ids and len(relation_ids) == 1:
+                                relation_id = relation_ids[0]
+                            else:
+                                relation_id = relation_object.create(cr, uid, {'name': edi_parent_document[1]}, context=context)
+                            model_data.create(cr, uid, {
+                                                'name': xml_id,
+                                                'model': relation_object._name,
+                                                #'module':relation_object._module,
+                                                'res_id':relation_id,
+                                                },context=context)
+                            
+                            parent_lines.append(relation_id)
+
+                    if _fields[field]['type'] == 'many2one':
+                        values[field] = parent_lines[0]
+                    else:
+                        many2many_ids = []
+                        for m2m_id in parent_lines:
+                            many2many_ids.append((4,m2m_id))
+                        values[field] = many2many_ids
+                        
+                    
                 elif _fields[field]['type'] == 'one2many':
                     #Look for a record that matches the db_id provided in the __id field. If
                     #found, keep the corresponding database id, and connect it to the parent
                     #using a write value like (4,db_id).
-
                     #If not found via db_id, create a new entry using the same method that
                     #imports a full EDI record (recursive call!), grab the resulting db id,
                     #and use it to connect to the parent via a write value like (4, db_id).
-                elif _fields[field]['type'] == 'many2many':
-                    #Perform the same steps as for a Many2One (see 1.2.1.1)
-
-
-
-                    #After finding the database ID of the final record in the database,
-                    #connect it to the parent record via a write value like (4, db_id).
+            
+                    relations = []
+                    relation_object = self.get.pool(_fields[field]['relation'])
+                    for edi_relation_document in edi_field_value:
+                        db_uuid, xml_id = tuple(edi_relation_document.get('__id').split(':'))
+                        data_ids = model_data.name_search(cr, uid, xml_id)
+                        if data_ids:
+                            d = model_data.browse(cr, uid, data_ids[0], context=context)
+                            relations.append(d.res_id)
+                        else:
+                            r = relation_object.edi_import(cr, uid, edi_relation_document, context=context)
+                            relations.append(r)
+                    one2many_ids = []
+                    for o2m_id in relations:
+                        one2many_ids.append((4,o2m_id))
+                    values[field] = one2many_ids
                 else:
-                    data_line.append(edi_field_value)
+                    values[field] = edi_field_value
         
-        return self.import_data(cr, uid, field_to_import, [data_line], mode='init', current_module='edi_import', noupdate=False, context=context, filename=None)
+        return model_data._update(cr, uid, self._name, current_module, values, context=context)
         
