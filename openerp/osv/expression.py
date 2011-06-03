@@ -108,6 +108,10 @@ class expression(object):
         self.__main_table = table
         self.__all_tables.add(table)
 
+        active = False
+        for exp in self.__exp:
+            if exp[0] == 'active':
+                active = exp
         i = -1
         while i + 1<len(self.__exp):
             i += 1
@@ -150,7 +154,10 @@ class expression(object):
                 # Making search easier when there is a left operand as field.o2m or field.m2m
                 if field._type in ['many2many','one2many']:
                     right = field_obj.search(cr, uid, [(fargs[1], operator, right)], context=context)
-                    right1 = table.search(cr, uid, [(fargs[0],'in', right)], context=context)
+                    if active:
+                        right1 = table.search(cr, uid, [(fargs[0],'in', right),active], context=context)
+                    else:
+                        right1 = table.search(cr, uid, [(fargs[0],'in', right)], context=context)
                     if right1 == []:
                         self.__exp[i] = ( 'id', '=', 0 )
                     else:
@@ -292,12 +299,12 @@ class expression(object):
                 else:
                     def _get_expression(field_obj,cr, uid, left, right, operator, context=None):
                         if context is None:
-                            context = {}                        
+                            context = {}
                         c = context.copy()
                         c['active_test'] = False
                         #Special treatment to ill-formed domains
                         operator = ( operator in ['<','>','<=','>='] ) and 'in' or operator
-                        
+
                         dict_op = {'not in':'!=','in':'=','=':'in','!=':'not in','<>':'not in'}
                         if isinstance(right,tuple):
                             right = list(right)
@@ -319,7 +326,7 @@ class expression(object):
                         elif isinstance(right,(list,tuple)):
                             m2o_str = True
                             for ele in right:
-                                if not isinstance(ele, basestring): 
+                                if not isinstance(ele, basestring):
                                     m2o_str = False
                                     break
                     elif right == []:
@@ -335,7 +342,7 @@ class expression(object):
                             new_op = '!='
                         #Is it ok to put 'left' and not 'id' ?
                         self.__exp[i] = (left,new_op,False)
-                        
+
                     if m2o_str:
                         self.__exp[i] = _get_expression(field_obj,cr, uid, left, right, operator, context=context)
             else:
