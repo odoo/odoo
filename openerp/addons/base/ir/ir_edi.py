@@ -90,7 +90,10 @@ class ir_edi_document(osv.osv):
         :param records: it's a object of browse_record_list of any model
         """
         
-        edi_list = self.edi_export(cr, uid, records, context=context)
+        edi_list = []
+        for record in records:
+            record_model_obj = self.pool.get(record._name)
+            edi_list += record_model_obj.edi_export(cr, uid, [record], context=context)
         return self.serialize(edi_list)
     
     def get_document(self, cr, uid, edi_token, context=None):
