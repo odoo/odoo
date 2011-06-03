@@ -149,6 +149,16 @@ openerp.base.Registry = Class.extend( /** @lends openerp.base.Registry# */ {
     add: function (key, object_path) {
         this.map[key] = object_path;
         return this;
+    },
+    /**
+     * Creates and returns a copy of the current mapping, with the provided
+     * mapping argument added in (replacing existing keys if needed)
+     *
+     * @param {Object} [mapping={}] a mapping of keys to object-paths
+     */
+    clone: function (mapping) {
+        return new openerp.base.Registry(
+            _.extend({}, this.map, mapping || {}));
     }
 });
 
