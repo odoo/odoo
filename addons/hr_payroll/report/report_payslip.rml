@@ -287,13 +287,13 @@
             <para style="P4">[[ p.name ]]</para>
           </td>
           <td>
-            <para style="P4">[[ p.quantity or '0.0']]</para>
+            <para style="P4">[[ formatLang(p.quantity) ]]</para>
           </td>
           <td>
-            <para style="P4">[[ p.amount or '0.0' ]]</para>
+            <para style="P4">[[ formatLang(p.amount) ]]</para>
           </td>
           <td>
-            <para style="P5">[[ p.total or '0.0']] [[o.company_id and o.company_id.currency_id.symbol or '']]</para>
+            <para style="P5">[[ formatLang(p.total) ]] [[o.company_id and o.company_id.currency_id.symbol or '']]</para>
           </td>
         </tr>
       </blockTable>
