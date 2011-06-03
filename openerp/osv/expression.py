@@ -154,10 +154,10 @@ class expression(object):
                 # Making search easier when there is a left operand as field.o2m or field.m2m
                 if field._type in ['many2many','one2many']:
                     right = field_obj.search(cr, uid, [(fargs[1], operator, right)], context=context)
+                    domain = [(fargs[0],'in', right)]
                     if active:
-                        right1 = table.search(cr, uid, [(fargs[0],'in', right),active], context=context)
-                    else:
-                        right1 = table.search(cr, uid, [(fargs[0],'in', right)], context=context)
+                        domain.append(active)
+                    right1 = table.search(cr, uid, domain, context=context)
                     if right1 == []:
                         self.__exp[i] = ( 'id', '=', 0 )
                     else:
