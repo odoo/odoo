@@ -19,9 +19,11 @@
 #
 ##############################################################################
 
-from osv import osv, fields
 import time
 from datetime import datetime
+from dateutil.relativedelta import relativedelta
+
+from osv import osv, fields
 import decimal_precision as dp
 
 class account_asset_category(osv.osv):
@@ -103,17 +105,15 @@ class account_asset_asset(osv.osv):
         depreciation_lin_obj = self.pool.get('account.asset.depreciation.line')
         for asset in self.browse(cr, uid, ids, context=context):
             undone_dotation_number = asset.method_delay
-            amount_to_depr = residual_amount = asset.purchase_value
-            if asset.prorata and asset.method == 'linear':
+            if asset.prorata:
                 undone_dotation_number += 1
-                amount_to_depr = residual_amount = asset.purchase_value - asset.salvage_value
+            # For all cases: amount to depreciate is (Purchase Value - Salvage Value) 
+            amount_to_depr = residual_amount = asset.purchase_value - asset.salvage_value
             depreciation_date = datetime.strptime(self._get_last_depreciation_date(cr, uid, [asset.id], context)[asset.id], '%Y-%m-%d')
             day = depreciation_date.day
             month = depreciation_date.month
-            if month == 12: month = 0
             year = depreciation_date.year
             total_days = (year % 4) and 365 or 366
-            depr_vals = []
             for i in range(1,undone_dotation_number+1):
                 if i == undone_dotation_number + 1:
                     amount = residual_amount
@@ -139,16 +139,16 @@ class account_asset_asset(osv.osv):
                      'depreciated_value': amount_to_depr - residual_amount,
                      'depreciation_date': depreciation_date.strftime('%Y-%m-%d'),
                 }
+                dep_id = [dep.id for dep in asset.depreciation_line_ids if not dep.move_check and dep.sequence == vals['sequence']]
                 if asset.depreciation_line_ids:
-                    depr_vals.append(vals)
+                    depreciation_lin_obj.write(cr, uid, dep_id, vals, context=context) 
                 else:
                     depreciation_lin_obj.create(cr, uid, vals, context=context)
-                month += asset.method_period
-                depreciation_date = datetime(year + (month / 12), (month % 12 or 12), day)
-            for vals in depr_vals:
-                for dep in asset.depreciation_line_ids:
-                    if dep.sequence == vals['sequence'] and not dep.move_check:
-                        depreciation_lin_obj.write(cr, uid, [dep.id], vals, context=context)
+                # Considering Depr. Period as months
+                depreciation_date = (datetime(year, month, day) + relativedelta(months=+asset.method_period))
+                day = depreciation_date.day
+                month = depreciation_date.month
+                year = depreciation_date.year
         return True
 
     def validate(self, cr, uid, ids, context={}):
