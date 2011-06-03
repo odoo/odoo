@@ -9,15 +9,10 @@
       <field name="view_type">form</field>
       <field name="view_mode">form</field>
     </record>
-    
-    <record id="category_base_setup_company" model="ir.actions.todo.category">
-      <field name="name">Administration</field>
-      <field name="sequence">1</field>
-    </record>    
 
     <record id="base_setup_company_todo" model="ir.actions.todo">
         <field name="action_id" ref="action_base_setup_company"/>
-        <field name="category_id" ref="category_base_setup_company"/>
+        <field name="category_id" ref="base.category_administration_config"/>
         <field name="sequence">1</field>
         <field name="type">normal</field>
         <field name="state">skip</field>
