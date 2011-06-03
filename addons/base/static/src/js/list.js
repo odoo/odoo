@@ -639,6 +639,59 @@ openerp.base.ListView.List = Class.extend( /** @lends openerp.base.ListView.List
             });
             return record;
         });
+    },
+    /**
+     * Transforms a record from what is returned by a dataset read (a simple
+     * mapping of ``$fieldname: $value``) to the format expected by list rows
+     * and form views:
+     *
+     *    data: {
+     *         $fieldname: {
+     *             value: $value
+     *         }
+     *     }
+     *
+     * This format allows for the insertion of a bunch of metadata (names,
+     * colors, etc...)
+     *
+     * @param {Object} record original record, in dataset format
+     * @returns {Object} record displayable in a form or list view
+     */
+    transform_record: function (record) {
+        // TODO: colors handling
+        var form_data = {},
+          form_record = {data: form_data};
+
+        _(record).each(function (value, key) {
+            form_data[key] = {value: value};
+        });
+
+        return form_record;
+    },
+    /**
+     * Reloads the record at index ``row_index`` in the list's rows.
+     *
+     * This does not re-fetch the record, it only re-renders it, replacing the
+     * current rendering.
+     *
+     * @param {Number} record_index index of the record to reload
+     */
+    reload_record: function (record_index) {
+        this.$current.children().eq(record_index)
+            .replaceWith(this.render_record(record_index));
+    },
+    /**
+     * Renders a list record to HTML
+     *
+     * @param {Number} record_index index of the record to render in ``this.rows``
+     * @returns {String} QWeb rendering of the selected record
+     */
+    render_record: function (record_index) {
+        return QWeb.render('ListView.row', {
+            columns: this.columns,
+            options: this.options,
+            row: this.rows[record_index]
+        });
     }
     // drag and drop
 });
@@ -834,17 +887,8 @@ openerp.base.ListView.Groups = Class.extend( /** @lends openerp.base.ListView.Gr
             _.filter(_.pluck(this.columns, 'name'), _.identity),
             0, false,
             function (records) {
-                var form_records = _(records).map(function (record) {
-                    // TODO: colors handling
-                    var form_data = {},
-                      form_record = {data: form_data};
-
-                    _(record).each(function (value, key) {
-                        form_data[key] = {value: value};
-                    });
-
-                    return form_record;
-                });
+                var form_records = _(records).map(
+                    $.proxy(list, 'transform_record'));
 
                 rows.splice(0, rows.length);
                 rows.push.apply(rows, form_records);
