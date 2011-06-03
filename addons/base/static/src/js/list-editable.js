@@ -45,22 +45,29 @@ openerp.base.list.editable = function (openerp) {
                     'class': $(row).attr('class'),
                     onclick: function (e) {e.stopPropagation();}
                 }).replaceAll(row);
-            var editable_row_form = new openerp.base.FormView(
+            var editable_row_form = _.extend(new openerp.base.FormView(
                     null, this.group.view.session, $new_row.attr('id'),
-                    this.dataset, false);
-            editable_row_form.template = 'ListView.row.form';
+                    this.dataset, false), {
+                template: 'ListView.row.form',
+                registry: openerp.base.list.form.widgets
+            });
             editable_row_form.on_loaded({fields_view: this.get_fields_view()});
             editable_row_form.on_record_loaded.add({
                 position: 'last',
                 unique: true,
                 callback: function () {
                     editable_row_form.$element.find('td')
-                        // remove tr, tbody, table
-                        .unwrap().unwrap().unwrap()
                         .removeAttr('width');
                 }
             });
             editable_row_form.do_show();
         }
+    });
+    openerp.base.list = {form: {}};
+    openerp.base.list.form.WidgetFrame = openerp.base.form.WidgetFrame.extend({
+        template: 'ListView.row.frame'
+    });
+    openerp.base.list.form.widgets = openerp.base.form.widgets.clone({
+        'frame': 'openerp.base.list.form.WidgetFrame'
     });
 };

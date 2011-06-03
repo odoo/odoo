@@ -790,4 +790,19 @@
     <button type="button" class="oe_many2xselectpopup-form-save">Save</button>
     <button type="button" class="oe_many2xselectpopup-form-close">Close</button>
 </t>
+
+<t t-name="ListView.row.frame" t-extend="WidgetFrame">
+    <t t-jquery="tr">
+        $(document.createElement('t'))
+            .append(this.contents())
+            .attr({
+                't-foreach': this.attr('t-foreach'),
+                't-as': this.attr('t-as')
+            })
+            .replaceAll(this)
+            .before($(document.createElement('td')))
+            .after($(document.createElement('td')))
+            .unwrap();
+    </t>
+</t>
 </templates>

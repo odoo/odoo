@@ -424,6 +424,7 @@ openerp.base.form.compute_domain = function(expr, fields) {
 };
 
 openerp.base.form.Widget = openerp.base.Controller.extend({
+    template: 'Widget',
     init: function(view, node) {
         this.view = view;
         this.node = node;
@@ -437,7 +438,6 @@ openerp.base.form.Widget = openerp.base.Controller.extend({
         this.view.widgets[this.element_id] = this;
         this.children = node.children;
         this.colspan = parseInt(node.attrs.colspan || 1);
-        this.template = "Widget";
 
         this.string = this.string || node.attrs.string;
         this.help = this.help || node.attrs.help;
@@ -465,9 +465,9 @@ openerp.base.form.Widget = openerp.base.Controller.extend({
 });
 
 openerp.base.form.WidgetFrame = openerp.base.form.Widget.extend({
+    template: 'WidgetFrame',
     init: function(view, node) {
         this._super(view, node);
-        this.template = "WidgetFrame";
         this.columns = node.attrs.col || 4;
         this.x = 0;
         this.y = 0;
