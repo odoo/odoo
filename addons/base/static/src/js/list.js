@@ -14,9 +14,7 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
         // sorted it can not be reordered anymore
         'sortable': true,
         // whether the view rows can be reordered (via vertical drag & drop)
-        'reorderable': true,
-        // editability status of list rows
-        'editable': null
+        'reorderable': true
     },
     /**
      * Core class for list-type displays.
@@ -41,7 +39,6 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
      * @param {null|String} [options.addable="New"] should the new-record button be displayed, and what should its label be. Use ``null`` to hide the button.
      * @param {Boolean} [options.sortable=true] is it possible to sort the table by clicking on column headers
      * @param {Boolean} [options.reorderable=true] is it possible to reorder list rows
-     * @param {null|"bottom"|"top"} [options.editable=null] can rows be edited, and do new rows appear at the top or the bottom of the list
      *
      * @borrows openerp.base.ActionExecutor#execute_action as #execute_action
      */
@@ -274,21 +271,6 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
                 $.proxy(this, 'compute_aggregates')));
     },
     /**
-     * Sets editability status for the list, based on defaults, view
-     * architecture and the provided flag, if any.
-     *
-     * @param {Boolean} [force] forces the list to editability. Sets new row edition status to "bottom".
-     */
-    set_editable: function (force) {
-        // If ``force``, set editability to bottom
-        // else if editability flag in view arch, use that
-        // otherwise rely on view default
-        this.options.editable = (
-                (force && "bottom")
-                || this.fields_view.arch.attrs.editable
-                || this.defaults.editable);
-    },
-    /**
      * Event handler for a search, asks for the computation/folding of domains
      * and contexts (and group-by), then reloads the view's content.
      *
@@ -298,27 +280,32 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
      * @returns {$.Deferred} fold request evaluation promise
      */
     do_search: function (domains, contexts, groupbys) {
-        var self = this;
         return this.rpc('/base/session/eval_domain_and_context', {
             domains: domains,
             contexts: contexts,
             group_by_seq: groupbys
-        }, function (results) {
-            self.dataset.context = results.context;
-            self.dataset.domain = results.domain;
-            self.groups.datagroup = new openerp.base.DataGroup(
-                self.session, self.model,
-                results.domain, results.context,
-                results.group_by);
+        }, $.proxy(this, 'do_actual_search'));
+    },
+    /**
+     * Handler for the result of eval_domain_and_context, actually perform the
+     * searching
+     *
+     * @param {Object} results results of evaluating domain and process for a search
+     */
+    do_actual_search: function (results) {
+        this.dataset.context = results.context;
+        this.dataset.domain = results.domain;
+        this.groups.datagroup = new openerp.base.DataGroup(
+            this.session, this.model,
+            results.domain, results.context,
+            results.group_by);
 
-            if (_.isEmpty(results.group_by) && !results.context['group_by_no_leaf']) {
-                results.group_by = null;
-            }
-            self.set_editable(results.context['set_editable']);
+        if (_.isEmpty(results.group_by) && !results.context['group_by_no_leaf']) {
+            results.group_by = null;
+        }
 
-            self.reload_view(!!results.group_by).then(
-                $.proxy(self, 'reload_content'));
-        });
+        this.reload_view(!!results.group_by).then(
+            $.proxy(this, 'reload_content'));
     },
     /**
      * Handles the signal to delete a line from the DOM
@@ -566,17 +553,15 @@ openerp.base.ListView.List = Class.extend( /** @lends openerp.base.ListView.List
                 e.stopPropagation();
                 var index = self.row_position(e.currentTarget);
                 self.dataset.index = index;
-                if (self.options.editable) {
-                    self.render_row_as_form(
-                        index, e.currentTarget);
-                } else {
-                    $(self).trigger(
-                        'row_link',
-                        [index,
-                         self.rows[index].data.id.value,
-                         self.dataset]);
-                }
+                self.row_clicked(e, index);
             });
+    },
+    row_clicked: function (event, index) {
+        $(this).trigger(
+            'row_link',
+            [index,
+             this.rows[index].data.id.value,
+             this.dataset]);
     },
     render: function () {
         if (this.$current) {
@@ -596,29 +581,6 @@ openerp.base.ListView.List = Class.extend( /** @lends openerp.base.ListView.List
         });
         view.arch.attrs.col = 2 * view.arch.children.length;
         return view;
-    },
-    render_row_as_form: function (row_num, row) {
-        var $new_row = $('<tr>', {
-                id: _.uniqueId('oe-editable-row-'),
-                'class': $(row).attr('class'),
-                onclick: function (e) {e.stopPropagation();}
-            }).replaceAll(row);
-        var editable_row_form = new openerp.base.FormView(
-                null, this.group.view.session, $new_row.attr('id'),
-                this.dataset, false);
-        editable_row_form.template = 'ListView.row.form';
-        editable_row_form.on_loaded({fields_view: this.get_fields_view()});
-        editable_row_form.on_record_loaded.add({
-            position: 'last',
-            unique: true,
-            callback: function () {
-                editable_row_form.$element.find('td')
-                    // remove tr, tbody, table
-                    .unwrap().unwrap().unwrap()
-                    .removeAttr('width');
-            }
-        });
-        editable_row_form.do_show();
     },
     /**
      * Gets the ids of all currently selected records, if any
@@ -679,7 +641,6 @@ openerp.base.ListView.List = Class.extend( /** @lends openerp.base.ListView.List
         });
     }
     // drag and drop
-    // editable?
 });
 openerp.base.ListView.Groups = Class.extend( /** @lends openerp.base.ListView.Groups# */{
     /**
