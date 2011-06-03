@@ -453,9 +453,6 @@ openerp.base.form.Widget = openerp.base.Controller.extend({
         }
     },
     update_dom: function() {
-        if (this.attrs.name === 'someval') {
-            console.log(this.invisible);
-        }
         this.$element.toggle(!this.invisible);
     },
     render: function() {

@@ -800,6 +800,11 @@
                 't-as': this.attr('t-as')
             })
             .replaceAll(this)
+            .find('td')
+                .attr('t-att-class', function (index, value) {
+                    return "(" + value + ") + ' oe-field-cell'";
+                })
+            .end()
             .before($(document.createElement('td')))
             .after($(document.createElement('td')))
             .unwrap();
