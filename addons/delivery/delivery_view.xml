@@ -35,9 +35,9 @@
                             <field name="amount" attrs="{'invisible':[('free_if_more_than','=',False)]}"/>
                         </group>
                         <newline/>
-						<field name="use_detailed_pricelist"/>
+						<field name="use_detailed_pricelist" />
                     </group>
-						<field name="pricelist_ids" nolabel="1"/>
+						<field name="pricelist_ids" nolabel="1" attrs="{'invisible':[('use_detailed_pricelist','=',False)]}"/>
                 </form>
             </field>
         </record>
