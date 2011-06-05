@@ -106,7 +106,7 @@ class TestReport(object):
             success += self._report[severity][True]
             failure += self._report[severity][False]
         res.append("total\t%s\t%s" % (success, failure))
-        res.append("end of report (%s assertion(s) checked)" % success + failure)
+        res.append("end of report (%s assertion(s) checked)" % (success + failure))
         return "\n".join(res)
 
 class RecordDictWrapper(dict):
