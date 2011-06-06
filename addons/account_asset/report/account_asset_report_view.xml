@@ -13,19 +13,16 @@
 				<field name="asset_category_id" invisible="1"/>
 				<field name="state"  invisible="1"/>
 				<field name="month" invisible="1"/>
-				<field name="date" invisible="1"/>
 				<field name="day" invisible="1"/>
 				<field name="purchase_date" invisible="1"/>
-				<field name="date" invisible="1"/>
 				<field name="move_check" invisible="1"/>
 				<field name="nbr" sum="# of Depreciation Lines"/>
 				<field name="remaining_value" sum="# Amount to Depreciate"/>
-				<field name="depreciated_value" sum="# Amount Already Depreciated"/>
 		    </tree>
 		</field>
     </record>
     
-    <record model="ir.ui.view" id="action_account_asset_report_form">
+    <record model="ir.ui.view" id="action_account_asset_report_graph">
 		<field name="name">asset.asset.report.graph</field>
 		<field name="model">asset.asset.report</field>
 		<field name="type">graph</field>
@@ -47,7 +44,7 @@
 	                <filter string="Draft" icon="terp-document-new" domain="[('state','=','draft')]" help="Draft Assets"/>
 	                <filter string="Open" icon="terp-check" domain="[('state','=','open')]" help="Open Assets"/>
 	                <separator orientation="vertical"/>
-	                <filter string="Posted" name="posted" icon="terp-camera_test" domain="[('move_check','=',True)]" help="Posted moves for assets."/>
+	                <filter string="Posted" name="posted" icon="terp-camera_test" domain="[('move_check','=',True)]" help="Posted depreciation lines for assets."/>
 	                <separator orientation="vertical"/>
 	                <filter string="Year" icon="terp-go-year"
 	                    domain="[('purchase_date','&lt;=', time.strftime('%%Y-%%m-%%d')),('purchase_date','&gt;=',time.strftime('%%Y-01-01'))]"
@@ -62,6 +59,12 @@
 	                <field name="asset_id"/>
 	                <field name="asset_category_id"/>
 	          </group>
+		      <newline/>
+		      <group expand="0" string="Extended Filters..." groups="base.group_extended">
+		          <field name="partner_id"/>
+                  <field name="purchase_date" string="Asset Purchase Date"/>
+		          <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+		      </group>
 		      <newline/>
 		      <group expand="1" string="Group By...">
 	                <filter string="Asset" name="asset" context="{'group_by':'asset_id'}"/>
@@ -81,13 +84,13 @@
     </record>
 	
     <record model="ir.actions.act_window" id="action_asset_asset_report">	
-    	<field name="name">Assets Analysis</field>
-		<field name="res_model">asset.asset.report</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree,graph</field>
-		<field name="search_view_id" ref="view_asset_asset_report_search"/>
-		<field name="context">{'search_default_asset_category':1, 'search_default_posted':1, 'group_by':[], 'group_by_no_leaf':1}</field>
-		<field name="help">From this report, you can have an overview on all depreciation. The tool search can also be used to personalise your Assets reports and so, match this analysis to your needs;</field>
+        <field name="name">Assets Analysis</field>
+        <field name="res_model">asset.asset.report</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,graph</field>
+        <field name="search_view_id" ref="view_asset_asset_report_search"/>
+        <field name="context">{'search_default_asset_category':1, 'search_default_posted':1, 'search_default_purchase_date': time.strftime('%Y-01-01'), 'group_by':[], 'group_by_no_leaf':1}</field>
+        <field name="help">From this report, you can have an overview on all depreciation. The tool search can also be used to personalise your Assets reports and so, match this analysis to your needs;</field>
     </record>
     
     <menuitem action="action_asset_asset_report"
