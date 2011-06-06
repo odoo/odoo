@@ -83,8 +83,8 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
             'action': function (e, action_name, id, callback) {
                 self.do_action(action_name, id, callback);
             },
-            'row_link': function (e, index, id, dataset) {
-                self.do_activate_record(index, id, dataset);
+            'row_link': function (e, id, dataset) {
+                self.do_activate_record(dataset.index, id, dataset);
             }
         });
     },
@@ -565,16 +565,14 @@ openerp.base.ListView.List = Class.extend( /** @lends openerp.base.ListView.List
             })
             .delegate('tr', 'click', function (e) {
                 e.stopPropagation();
-                var index = self.row_position(e.currentTarget);
-                self.dataset.index = index;
-                self.row_clicked(e, index);
+                self.dataset.index = self.row_position(e.currentTarget);
+                self.row_clicked(e);
             });
     },
-    row_clicked: function (event, index) {
+    row_clicked: function () {
         $(this).trigger(
             'row_link',
-            [index,
-             this.rows[index].data.id.value,
+            [this.rows[this.dataset.index].data.id.value,
              this.dataset]);
     },
     render: function () {

@@ -61,13 +61,13 @@ openerp.base.list.editable = function (openerp) {
 
     var old_list_row_clicked = openerp.base.ListView.List.prototype.row_clicked;
     _.extend(openerp.base.ListView.List.prototype, {
-        row_clicked: function (event, index) {
+        row_clicked: function (event) {
             if (!this.options.editable) {
-                return old_list_row_clicked.call(this, event, index);
+                return old_list_row_clicked.call(this, event);
             }
-            this.render_row_as_form(index, event.currentTarget);
+            this.render_row_as_form(event.currentTarget);
         },
-        render_row_as_form: function (row_num, row) {
+        render_row_as_form: function (row) {
             var self = this;
             var $new_row = $('<tr>', {
                     id: _.uniqueId('oe-editable-row-'),
@@ -77,20 +77,20 @@ openerp.base.list.editable = function (openerp) {
                 .keyup(function (e) {
                     switch (e.which) {
                         case KEY_RETURN:
-                            self.save_row(row_num, true);
+                            self.save_row(true);
                             break;
                         case KEY_ESCAPE:
-                            self.cancel_edition(row_num);
+                            self.cancel_edition();
                             break;
                         default:
                             return;
                     }
                 })
                 .delegate('button.oe-edit-row-save', 'click', function () {
-                    self.save_row(row_num);
+                    self.save_row();
                 })
                 .delegate('button.oe-edit-row-cancel', 'click', function () {
-                    self.cancel_edition(row_num);
+                    self.cancel_edition();
                 });
             if (row) {
                 $new_row.replaceAll(row);
@@ -125,37 +125,38 @@ openerp.base.list.editable = function (openerp) {
          * Saves the current row, and triggers the edition of its following
          * sibling if asked.
          *
-         * @param {Number} row_num the row to save
          * @param {Boolean} [edit_next=false] should the next row become editable
          */
-        save_row: function (row_num, edit_next) {
+        save_row: function (edit_next) {
             var self = this;
             this.edition_form.do_save(function () {
-                self.reload_record(row_num, true).then(function () {
+                self.reload_record(self.dataset.index, true).then(function () {
                     self.edition_form.stop();
                     delete self.edition_form;
-                    if (edit_next && self.rows.length > row_num + 1) {
-                        self.dataset.index++;
+                    if (edit_next) {
+                        self.dataset.next();
                         self.row_clicked({
-                            currentTarget: self.$current.children().eq(row_num + 1)
-                        }, row_num + 1);
+                            currentTarget: self.$current.children().eq(
+                                self.dataset.index)
+                        });
                     }
                 });
             });
         },
         /**
-         * Cancels the edition of the row at index ``row_num``.
-         *
-         * @param {Number} row_num index of the row being edited
+         * Cancels the edition of the row for the current dataset index
          */
-        cancel_edition: function (row_num) {
-            this.reload_record(row_num);
+        cancel_edition: function () {
+            if (this.dataset.index !== null) {
+                this.reload_record(this.dataset.index);
+            }
             this.edition_form.stop();
+            this.edition_form.$element.remove();
             delete this.edition_form;
         },
         new_record: function () {
             this.dataset.index = null;
-            this.render_row_as_form(-1, null);
+            this.render_row_as_form();
         }
     });
     openerp.base.list = {form: {}};
