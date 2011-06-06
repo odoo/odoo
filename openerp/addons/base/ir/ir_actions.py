@@ -805,6 +805,7 @@ class ir_actions_todo_category(osv.osv):
     _columns = {
          'name':fields.char('Name', size=64, required=True),       
          'sequence': fields.integer('Sequence'),
+         'wizards_ids': fields.one2many('ir.actions.todo', 'category_id', 'Configuration Wizards'),
     }
 ir_actions_todo_category()
 
