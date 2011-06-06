@@ -571,20 +571,6 @@ class ListView(View):
         fields_view = self.fields_view_get(req, model, view_id, 'tree', toolbar=toolbar)
         return {'fields_view': fields_view}
 
-    def fields_view_get(self, request, model, view_id, view_type="tree",
-                        transform=True, toolbar=False, submenu=False):
-        """ Sets @editable on the view's arch if it isn't already set and
-        ``set_editable`` is present in the request context
-        """
-        view = super(ListView, self).fields_view_get(
-            request, model, view_id, view_type, transform, toolbar, submenu)
-
-        view_attributes = view['arch']['attrs']
-        if request.context.get('set_editable')\
-                and 'editable' not in view_attributes:
-            view_attributes['editable'] = 'bottom'
-        return view
-
     def process_colors(self, view, row, context):
         colors = view['arch']['attrs'].get('colors')
 
