@@ -129,19 +129,23 @@ openerp.base.list.editable = function (openerp) {
          */
         save_row: function (edit_next) {
             var self = this;
-            this.edition_form.do_save(function () {
+            this.edition_form.do_save(function (result) {
                 self.reload_record(self.dataset.index, true).then(function () {
                     self.edition_form.stop();
                     delete self.edition_form;
-                    if (edit_next) {
-                        self.dataset.next();
-                        self.row_clicked({
-                            currentTarget: self.$current.children().eq(
-                                self.dataset.index)
-                        });
+                    if (!edit_next) {
+                        return;
                     }
+                    if (result.created) {
+                        self.new_record();
+                        return;
+                    }
+                    self.dataset.next();
+                    self.render_row_as_form(
+                        self.$current.children().eq(
+                            self.dataset.index));
                 });
-            });
+            }, this.options.editable === 'top');
         },
         /**
          * Cancels the edition of the row for the current dataset index
