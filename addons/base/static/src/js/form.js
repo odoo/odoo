@@ -84,9 +84,9 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
             this.datarecord = record;
             for (var f in this.fields) {
                 var field = this.fields[f];
+                field.touched = false;
                 field.set_value(this.datarecord[f] || false);
                 field.validate();
-                field.touched = false;
             }
             if (!record.id) {
                 // New record: Second pass in order to trigger the onchanges
@@ -750,6 +750,7 @@ openerp.base.form.FieldFloat = openerp.base.form.FieldChar.extend({
     set_value: function(value) {
         if (!value) {
             // As in GTK client, floats default to 0
+            this.touched = this.view.touched = true;
             value = 0;
         }
         this._super.apply(this, [value]);

@@ -18,6 +18,7 @@ openerp.base.form.DashBoard = openerp.base.form.Widget.extend({
 
         // Events
         this.$element.find('.oe-dashboard-link-undo').click(this.on_undo);
+        this.$element.find('.oe-dashboard-link-reset').click(this.on_reset);
         this.$element.find('.oe-dashboard-link-add_widget').click(this.on_add_widget);
         this.$element.find('.oe-dashboard-link-change_layout').click(this.on_change_layout);
         this.$element.find('.oe-dashboard-column .ui-icon-minusthick').click(this.on_fold_action);
@@ -40,6 +41,12 @@ openerp.base.form.DashBoard = openerp.base.form.Widget.extend({
     on_undo: function() {
         this.rpc('/base/view/undo_custom', {
             view_id: this.view.fields_view.view_id
+        }, this.do_reload);
+    },
+    on_reset: function() {
+        this.rpc('/base/view/undo_custom', {
+            view_id: this.view.fields_view.view_id,
+            reset: true
         }, this.do_reload);
     },
     on_add_widget: function() {
@@ -112,7 +119,7 @@ openerp.base.form.DashBoard = openerp.base.form.Widget.extend({
             view_id: this.view.fields_view.view_id,
             arch: arch
         }, function() {
-            self.$element.find('.oe-dashboard-link-undo').show();
+            self.$element.find('.oe-dashboard-link-undo, .oe-dashboard-link-reset').show();
         });
     },
     on_load_action: function(result) {

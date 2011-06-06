@@ -1,6 +1,10 @@
 <template>
 <t t-name="DashBoard">
     <div class="oe-dashboard-links">
+        <button type="button" class="button oe-dashboard-link-reset" t-att-style="view.fields_view.custom_view_id ? null : 'display: none'">
+            <img src="/base/static/src/img/icons/STOCK_GOTO_FIRST.png" width="16" height="16"/>
+            <span>Reset</span>
+        </button>
         <button type="button" class="button oe-dashboard-link-undo" t-att-style="view.fields_view.custom_view_id ? null : 'display: none'">
             <img src="/base/static/src/img/icons/gtk-undo.png" width="16" height="16"/>
             <span>Undo</span>
