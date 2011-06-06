@@ -61,7 +61,16 @@
                     <tr>
                         <td><label for="db">Database:</label></td>
                         <td class="oe_field_value">
-                            <input type="text" name="db" value="trunk" autofocus="true"/>
+                            <t t-if="!db_list">
+                                <input type="text" name="db" value="trunk" autofocus="true"/>
+                            </t>
+                            <t t-if="db_list">
+                                <select name="db">
+                                    <t t-foreach="db_list" t-as="db">
+                                        <option t-att-value="db" t-att-selected="db == 'trunk'"><t t-esc="db"/></option>
+                                    </t>
+                                </select>
+                            </t>
                         </td>
                     </tr>
                     <tr>

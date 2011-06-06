@@ -778,26 +778,29 @@ openerp.base.Login =  openerp.base.Controller.extend({
         this._super(session, element_id);
     },
     start: function() {
-        this.$element.html(QWeb.render("Login", {}));
-        this.$element.find("form").submit(this.on_submit);
+        var self = this;
+        this.rpc("/base/session/get_databases_list", {}, function(result) {
+            self.db_list = result.db_list;
+            self.display();
+        }, function() {
+            self.display();
+        });
     },
+   display: function() {
+        this.$element.html(QWeb.render("Login", this));
+        this.$element.find("form").submit(this.on_submit);
+   },
     on_login_invalid: function() {
-        this.$element
-            .removeClass("login_valid")
-            .addClass("login_invalid");
         this.$element.closest(".openerp").addClass("login-mode");
     },
     on_login_valid: function() {
-        this.$element
-            .removeClass("login_invalid")
-            .addClass("login_valid");
         this.$element.closest(".openerp").removeClass("login-mode");
     },
     on_submit: function(ev) {
         ev.preventDefault();
         var self = this;
         var $e = this.$element;
-        var db = $e.find("form input[name=db]").val();
+        var db = $e.find("form [name=db]").val();
         var login = $e.find("form input[name=login]").val();
         var password = $e.find("form input[name=password]").val();
         //$e.hide();
@@ -806,12 +809,15 @@ openerp.base.Login =  openerp.base.Controller.extend({
             if(self.session.session_is_valid()) {
                 self.on_login_valid();
             } else {
+                self.$element.addClass("login_invalid");
                 self.on_login_invalid();
             }
         });
     },
     do_ask_login: function(continuation) {
         this.on_login_invalid();
+        this.$element
+            .removeClass("login_invalid");
         this.on_login_valid.add({
             position: "last",
             unique: true,

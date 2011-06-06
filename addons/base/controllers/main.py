@@ -98,6 +98,13 @@ class Session(openerpweb.Controller):
             "session_id": req.session_id,
             "uid": req.session._uid,
         }
+    
+    @openerpweb.jsonrequest
+    def get_databases_list(self, req):
+        proxy = req.session.proxy("db")
+        dbs = proxy.list()
+        
+        return {"db_list": dbs}
 
     @openerpweb.jsonrequest
     def modules(self, req):
