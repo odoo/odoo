@@ -62,17 +62,19 @@ body.openerp {
 .openerp .login {
     display: none;
 }
+.openerp .login form {
+    float: left;
+    width: 420px;
+    margin-left: 40px;
+    margin-bottom: 60px;
+}
 .openerp .login fieldset {
     padding-bottom: 5px;
     min-width: 100px;
     margin-top: 60px;
-    margin-bottom: 60px;
-    margin-left: 40px;
     border-radius: 10px;
     -moz-border-radius: 10px;
     -webkit-border-radius: 10px;
-    float: left;
-    width: 420px;
 }
 .openerp .login fieldset legend {
     padding: 4px;
@@ -84,12 +86,34 @@ body.openerp {
     width: 100%;
     border:none;
 }
-.openerp .login .oe_field_value {
+.openerp .login .oe_box2 td {
     padding: 3px;
+    text-align: right;
 }
-.openerp .login_valid {
+.openerp .login .oe_box2 td input {
+    width: 100%;
 }
-.openerp .login_invalid {
+.openerp .login .oe_login_right_pane {
+    padding:70px 35px 5px 10px;
+    min-width: 200px;
+    margin-left: 500px;
+}
+.openerp .login .login_error_message {
+    display: none;
+    background-color: #9A0404;
+    border-radius: 3px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    color: white;
+    font-family: Ubuntu, Helvetica, sans-serif;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 5px;
+    margin-top: 5px;
+    text-align: center;
+}
+.openerp .login.login_invalid .login_error_message {
+    display: block;
 }
 
 .openerp.login-mode .login-container {

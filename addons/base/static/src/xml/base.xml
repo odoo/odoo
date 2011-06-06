@@ -51,7 +51,6 @@
     Loading...
 </t>
 <t t-name="Login">
-    
     <form>
         <fieldset>
             <legend style="">
@@ -75,16 +74,52 @@
                     </tr>
                     <tr>
                         <td></td>
-                        <td class="db_login_buttons">
-                            <input type="submit" name="submit" value="Login"/>
+                        <td class="oe_field_value">
+                            <button type="submit" name="submit">Login</button>
                         </td>
                     </tr>
                 </table>
             </div>
         </fieldset>
+        <div class="login_error_message">Bad username or password</div>
     </form>
-             
-    
+    <div class="oe_login_right_pane">
+        <p>We think that daily job activities can be more intuitive, efficient, automated, .. and even fun.</p>
+        <h3>OpenERP's vision to be:</h3>
+        
+        <table cellpadding="0" cellspacing="0" width="100%" style="border:none;">
+            <tbody>
+            <tr>
+                <td>
+                    <img src="/base/static/src/img/product.png"/>
+                </td>
+                <td>
+                    <strong>Full featured</strong><br />
+                    Today's enterprise challenges are multiple. We provide one module for each need.
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <img src="/base/static/src/img/accessories-archiver.png"/>
+                </td>
+                <td>
+                    <strong>Open Source</strong><br />
+                    To Build a great product, we rely on the knowledge of thousands of contributors.
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <img src="/base/static/src/img/partner.png" />
+                </td>
+                <td>
+                    <strong>User Friendly</strong><br />
+                    In order to be productive, people need clean and easy to use interface.
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        
+    </div>
 </t>
 <t t-name="Header">
     <a href="/" class="company_logo_link">
