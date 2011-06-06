@@ -6,6 +6,7 @@ openerp.base.form.DashBoard = openerp.base.form.Widget.extend({
     init: function(view, node) {
         this._super(view, node);
         this.template = "DashBoard";
+        this.actions_attrs = {};
     },
     start: function() {
         var self = this;
@@ -50,6 +51,68 @@ openerp.base.form.DashBoard = openerp.base.form.Widget.extend({
         }, this.do_reload);
     },
     on_add_widget: function() {
+        var self = this;
+        var action = {
+            res_model : 'ir.actions.actions',
+            views : [[false,"list"]],
+            type : 'ir.actions.act_window',
+            view_type : 'list',
+            view_mode : 'list',
+            limit : 80,
+            auto_search : true,
+            domain : [['type', '=', 'ir.actions.act_window']],
+            flags : {
+                sidebar : false,
+                views_switcher : false,
+                action_buttons : false
+            }
+        };
+        // TODO: create a Dialog controller which optionally takes an action
+        // Should set width & height automatically and take buttons & views callback
+        var dialog_id = _.uniqueId("act_window_dialog");
+        var action_manager = new openerp.base.ActionManager(this.session, dialog_id);
+        var $dialog = $('<div id=' + dialog_id + '>').dialog({
+                            modal : true,
+                            title : 'Actions',
+                            width : 800,
+                            height : 600,
+                            buttons : {
+                                Cancel : function() {
+                                    $(this).dialog("destroy");
+                                },
+                                Add : function() {
+                                    self.do_add_widget(action_manager);
+                                    $(this).dialog("destroy");
+                                }
+                            }
+                        });
+        action_manager.start();
+        action_manager.do_action(action);
+        // TODO: should bind ListView#select_record in order to catch record clicking
+    },
+    do_add_widget : function(action_manager) {
+        var self = this,
+            actions = action_manager.viewmanager.views.list.controller.groups.get_selection().ids,
+            results = [],
+            qdict = { view : this.view };
+            console.log(this.actions_attrs)
+        // TODO: should load multiple actions at once
+        _.each(actions, function(aid) {
+            self.rpc('/base/action/load', {
+                action_id: aid
+            }, function(result) {
+                self.actions_attrs[aid] = {
+                    name: aid,
+                    string: _.trim(result.result.name)
+                }
+                qdict.action = {
+                    attrs : self.actions_attrs[aid]
+                }
+                self.$element.find('.oe-dashboard-column:first').prepend(QWeb.render('DashBoard.action', qdict));
+                self.do_save_dashboard();
+                self.on_load_action(result)
+            });
+        });
     },
     on_change_layout: function() {
         var self = this;
