@@ -38,6 +38,8 @@ openerp.base.form.DashBoard = openerp.base.form.Widget.extend({
                 }, self.on_load_action);
             });
         });
+
+        this.$element.find('a.oe-dashboard-action-rename').live('click', this.on_rename);
     },
     on_undo: function() {
         this.rpc('/base/view/undo_custom', {
@@ -112,6 +114,30 @@ openerp.base.form.DashBoard = openerp.base.form.Widget.extend({
                 self.do_save_dashboard();
                 self.on_load_action(result)
             });
+        });
+    },
+    on_rename : function(e) {
+        var self = this,
+            id = $(e.currentTarget).parents('.oe-dashboard-action:first').attr('data-id'),
+            $header = $(e.currentTarget).parents('.oe-dashboard-action-header:first'),
+            $rename = $header.find('a.oe-dashboard-action-rename').hide(),
+            $title = $header.find('span.oe-dashboard-action-title').hide(),
+            $input = $header.find('input[name=title]');
+        $input.val($title.text()).show().focus().bind('keydown', function(e) {
+            if (e.which == 13 || e.which == 27) {
+                if (e.which == 13) { //enter
+                    var val = $input.val();
+                    if (!val) {
+                        return false;
+                    }
+                    $title.text(val);
+                    self.actions_attrs[id].string = val;
+                    self.do_save_dashboard();
+                }
+                $input.unbind('keydown').hide();
+                $rename.show();
+                $title.show();
+            }
         });
     },
     on_change_layout: function() {
