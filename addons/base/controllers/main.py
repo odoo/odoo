@@ -473,8 +473,8 @@ class View(openerpweb.Controller):
         else:
             xml = ElementTree.fromstring(fvg['arch'])
         fvg['arch'] = Xml2Json.convert_element(xml)
-        for field in fvg["fields"].values():
-            if field["views"]:
+        for field in fvg['fields'].values():
+            if field.has_key('views') and field['views']:
                 for view in field["views"].values():
                     self.process_view(session, view, None, transform)
 
