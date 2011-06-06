@@ -399,6 +399,16 @@ openerp.base.View = openerp.base.Controller.extend({
                     return dataset.exec_workflow(record_id, action_data.name, handler);
             }
         }
+    },
+    /**
+     * Directly set a view to use instead of calling fields_view_get. This method must
+     * be called before start(). When an embedded view is set, underlying implementations
+     * of openerp.base.View must use the provided view instead of any other one.
+     * 
+     * @param embedded_view A view.
+     */
+    set_embedded_view: function(embedded_view) {
+        this.embedded_view = embedded_view;
     }
 });
 

@@ -40,15 +40,6 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
                 toolbar:!!this.flags.sidebar}, this.on_loaded);
         }
     },
-    /**
-     * Directly set a view to use instead of calling fields_view_get. This method must
-     * be called before start().
-     * 
-     * @param embedded_view A view.
-     */
-    set_embedded_view: function(embedded_view) {
-        this.embedded_view = embedded_view;
-    },
     on_loaded: function(data) {
         var self = this;
         this.fields_view = data.fields_view;
@@ -1046,7 +1037,7 @@ openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
         this.viewmanager.start();
         
         $.when(this.is_started, this.is_setted).then(function() {
-            if (modes[0] == "list") {
+            if (modes[0] == "tree") {
                 var view = self.viewmanager.views[self.viewmanager.active_view].controller;
                 view.reload_content();
             }

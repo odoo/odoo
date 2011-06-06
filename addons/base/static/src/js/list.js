@@ -272,15 +272,6 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
         }
     },
     /**
-     * Directly set a view to use instead of calling fields_view_get. This method must
-     * be called before start().
-     * 
-     * @param embedded_view A view.
-     */
-    set_embedded_view: function(embedded_view) {
-        this.embedded_view = embedded_view;
-    },
-    /**
      * re-renders the content of the list view
      */
     reload_content: function () {
