@@ -61,19 +61,20 @@ body.openerp {
 /* Login */
 .openerp .login {
     display: none;
-    padding: 6px;
-    z-index: 1002;
-    width: 34%;
-    position: fixed;
-    top: 0;
-    left: 33%;
 
 }
 .openerp .login_valid {
-    background-color: #8f8;
 }
 .openerp .login_invalid {
-    background-color: #f88;
+}
+
+.openerp.login-mode .login {
+    display: block;
+}
+.openerp.login-mode #oe_menu,
+.openerp.login-mode #oe_secondary_menu,
+.openerp.login-mode #oe_app {
+    display: none;
 }
 
 /* Main*/
