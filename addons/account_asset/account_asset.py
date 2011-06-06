@@ -31,7 +31,6 @@ class account_asset_category(osv.osv):
     _columns = {
         'name': fields.char('Name', size=64, required=True, select=1),
         'note': fields.text('Note'),
-        'journal_analytic_id': fields.many2one('account.analytic.journal', 'Analytic journal'),
         'account_analytic_id': fields.many2one('account.analytic.account', 'Analytic account'),
         'account_asset_id': fields.many2one('account.account', 'Asset Account', required=True),
         'account_depreciation_id': fields.many2one('account.account', 'Depreciation Account', required=True),
