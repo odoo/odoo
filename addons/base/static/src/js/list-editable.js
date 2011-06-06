@@ -9,6 +9,8 @@ openerp.base.list.editable = function (openerp) {
     openerp.base.ListView.prototype.defaults.editable = null;
 
     var old_actual_search = openerp.base.ListView.prototype.do_actual_search;
+    var old_add_record = openerp.base.ListView.prototype.do_add_record;
+    var old_on_loaded = openerp.base.ListView.prototype.on_loaded;
     _.extend(openerp.base.ListView.prototype, {
         /**
          * Sets editability status for the list, based on defaults, view
@@ -18,11 +20,11 @@ openerp.base.list.editable = function (openerp) {
          */
         set_editable: function (force) {
             // If ``force``, set editability to bottom
-            // else if editability flag in view arch, use that
             // otherwise rely on view default
+            // view' @editable is handled separately as we have not yet
+            // fetched and processed the view at this point.
             this.options.editable = (
                     (force && "bottom")
-                    || this.fields_view.arch.attrs.editable
                     || this.defaults.editable);
         },
         /**
@@ -31,6 +33,29 @@ openerp.base.list.editable = function (openerp) {
         do_actual_search: function (results) {
             this.set_editable(results.context['set_editable']);
             old_actual_search.call(this, results);
+        },
+        /**
+         * Replace do_add_record to handle editability (and adding new record
+         * as an editable row at the top or bottom of the list)
+         */
+        do_add_record: function () {
+            if (this.options.editable) {
+                this.groups.new_record();
+            } else {
+                old_add_record.call(this);
+            }
+        },
+        on_loaded: function (data, grouped) {
+            // tree/@editable takes priority on everything else if present.
+            this.options.editable = data.fields_view.arch.editable || this.options.editable;
+            return old_on_loaded.call(this, data, grouped);
+        }
+    });
+
+    _.extend(openerp.base.ListView.Groups.prototype, {
+        new_record: function () {
+            // TODO: handle multiple children
+            this.children[null].new_record();
         }
     });
 
@@ -48,7 +73,7 @@ openerp.base.list.editable = function (openerp) {
                     id: _.uniqueId('oe-editable-row-'),
                     'class': $(row).attr('class'),
                     onclick: function (e) {e.stopPropagation();}
-                }).replaceAll(row)
+                })
                 .keyup(function (e) {
                     switch (e.which) {
                         case KEY_RETURN:
@@ -67,6 +92,13 @@ openerp.base.list.editable = function (openerp) {
                 .delegate('button.oe-edit-row-cancel', 'click', function () {
                     self.cancel_edition(row_num);
                 });
+            if (row) {
+                $new_row.replaceAll(row);
+            } else if (this.options.editable === 'top') {
+                this.$current.prepend($new_row);
+            } else if (this.options.editable) {
+                this.$current.append($new_row);
+            }
             this.edition_form = _.extend(new openerp.base.FormView(
                     null, this.group.view.session, $new_row.attr('id'),
                     this.dataset, false), {
@@ -120,6 +152,10 @@ openerp.base.list.editable = function (openerp) {
             this.reload_record(row_num);
             this.edition_form.stop();
             delete this.edition_form;
+        },
+        new_record: function () {
+            this.dataset.index = null;
+            this.render_row_as_form(-1, null);
         }
     });
     openerp.base.list = {form: {}};
