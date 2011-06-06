@@ -65,9 +65,28 @@ openerp.base.list.editable = function (openerp) {
             if (!this.options.editable) {
                 return old_list_row_clicked.call(this, event);
             }
-            this.render_row_as_form(event.currentTarget);
+            this.edit_record();
+        },
+        /**
+         * Checks if a record is being edited, and if so cancels it
+         */
+        cancel_pending_edition: function () {
+            if (!this.edition) {
+                return;
+            }
+
+            if (this.edition_index !== null) {
+                this.reload_record(this.edition_index);
+            }
+            this.edition_form.stop();
+            this.edition_form.$element.remove();
+            delete this.edition_form;
+            delete this.edition_index;
+            delete this.edition;
         },
         render_row_as_form: function (row) {
+            this.cancel_pending_edition();
+
             var self = this;
             var $new_row = $('<tr>', {
                     id: _.uniqueId('oe-editable-row-'),
@@ -99,6 +118,8 @@ openerp.base.list.editable = function (openerp) {
             } else if (this.options.editable) {
                 this.$current.append($new_row);
             }
+            this.edition = true;
+            this.edition_index = this.dataset.index;
             this.edition_form = _.extend(new openerp.base.FormView(
                     null, this.group.view.session, $new_row.attr('id'),
                     this.dataset, false), {
@@ -133,6 +154,8 @@ openerp.base.list.editable = function (openerp) {
                 self.reload_record(self.dataset.index, true).then(function () {
                     self.edition_form.stop();
                     delete self.edition_form;
+                    delete self.edition_index;
+                    delete self.edition;
                     if (!edit_next) {
                         return;
                     }
@@ -141,9 +164,6 @@ openerp.base.list.editable = function (openerp) {
                         return;
                     }
                     self.dataset.next();
-                    self.render_row_as_form(
-                        self.$current.children().eq(
-                            self.dataset.index));
                 });
             }, this.options.editable === 'top');
         },
@@ -151,12 +171,16 @@ openerp.base.list.editable = function (openerp) {
          * Cancels the edition of the row for the current dataset index
          */
         cancel_edition: function () {
-            if (this.dataset.index !== null) {
-                this.reload_record(this.dataset.index);
-            }
-            this.edition_form.stop();
-            this.edition_form.$element.remove();
-            delete this.edition_form;
+            this.cancel_pending_edition();
+        },
+        /**
+         * Edits record currently selected via dataset
+         */
+        edit_record: function () {
+            this.render_row_as_form(
+                this.$current.children(
+                    _.sprintf('[data-index=%d]',
+                            this.dataset.index)));
         },
         new_record: function () {
             this.dataset.index = null;

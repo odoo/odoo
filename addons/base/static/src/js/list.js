@@ -607,7 +607,7 @@ openerp.base.ListView.List = Class.extend( /** @lends openerp.base.ListView.List
         this.$current.find('th.oe-record-selector input:checked')
                 .closest('tr').each(function () {
             var record = {};
-            _(rows[$(this).prevAll().length].data).each(function (obj, key) {
+            _(rows[$(this).data('index')].data).each(function (obj, key) {
                 record[key] = obj.value;
             });
             result.ids.push(record.id);
@@ -622,7 +622,7 @@ openerp.base.ListView.List = Class.extend( /** @lends openerp.base.ListView.List
      * @returns {Number} the position of the row in this.rows
      */
     row_position: function (row) {
-        return $(row).prevAll().length;
+        return $(row).data('index');
     },
     /**
      * Returns the identifier of the object displayed in the provided table
@@ -721,7 +721,8 @@ openerp.base.ListView.List = Class.extend( /** @lends openerp.base.ListView.List
             columns: this.columns,
             options: this.options,
             row: this.rows[record_index],
-            row_parity: (record_index % 2 === 0) ? 'even' : 'odd'
+            row_parity: (record_index % 2 === 0) ? 'even' : 'odd',
+            row_index: record_index
         });
     }
     // drag and drop

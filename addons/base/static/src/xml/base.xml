@@ -288,7 +288,8 @@
         </t-if>
     </t>
 </t>
-<tr t-name="ListView.row" t-att-style="style" t-att-class="row_parity">
+<tr t-name="ListView.row" t-att-style="style" t-att-class="row_parity"
+    t-att-data-index="row_index">
     <t t-foreach="columns" t-as="column">
         <td t-if="column.meta">
             
