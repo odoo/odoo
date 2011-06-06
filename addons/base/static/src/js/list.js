@@ -94,9 +94,9 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
      *
      * @returns {$.Deferred} loading promise
      */
-    start: function(fields_view) {
+    start: function() {
         this.$element.addClass('oe-listview');
-        return this.reload_view(undefined, fields_view);
+        return this.reload_view();
     },
     /**
      * Called after loading the list view's description, sets up such things
@@ -254,15 +254,15 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
      *
      * @param {Boolean} [grouped] Should the list be displayed grouped
      */
-    reload_view: function (grouped, fields_view) {
+    reload_view: function (grouped) {
         var self = this;
         this.dataset.offset = 0;
         this.dataset.limit = false;
         var callback = function (field_view_get) {
                 self.on_loaded(field_view_get, grouped);
         };
-        if (fields_view) {
-            return $.Deferred().then(callback).resolve({fields_view: fields_view});
+        if (this.embedded_view) {
+            return $.Deferred().then(callback).resolve({fields_view: this.embedded_view});
         } else {
             return this.rpc('/base/listview/load', {
                 model: this.model,
@@ -270,6 +270,15 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
                 toolbar: !!this.flags.sidebar
             }, callback);
         }
+    },
+    /**
+     * Directly set a view to use instead of calling fields_view_get. This method must
+     * be called before start().
+     * 
+     * @param embedded_view A view.
+     */
+    set_embedded_view: function(embedded_view) {
+        this.embedded_view = embedded_view;
     },
     /**
      * re-renders the content of the list view

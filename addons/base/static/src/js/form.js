@@ -31,14 +31,23 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
         this.touched = false;
         this.flags = this.view_manager.flags || {};
     },
-    start: function(fields_view) {
+    start: function() {
         //this.log('Starting FormView '+this.model+this.view_id)
-        if (fields_view) {
-            return $.Deferred().then(this.on_loaded).resolve({fields_view: fields_view});
+        if (this.embedded_view) {
+            return $.Deferred().then(this.on_loaded).resolve({fields_view: this.embedded_view});
         } else {
             return this.rpc("/base/formview/load", {"model": this.model, "view_id": this.view_id,
                 toolbar:!!this.flags.sidebar}, this.on_loaded);
         }
+    },
+    /**
+     * Directly set a view to use instead of calling fields_view_get. This method must
+     * be called before start().
+     * 
+     * @param embedded_view A view.
+     */
+    set_embedded_view: function(embedded_view) {
+        this.embedded_view = embedded_view;
     },
     on_loaded: function(data) {
         var self = this;
@@ -995,7 +1004,6 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
 openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
     init: function(view, node) {
         this._super(view, node);
-        debugger;
         this.template = "FieldOne2Many";
         this.is_started = $.Deferred();
         this.is_setted = $.Deferred();
@@ -1014,7 +1022,17 @@ openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
             self.on_ui_change();
         });
         
-        var views = [ [false,"list"], [false,"form"] ];
+        var modes = this.node.attrs.mode;
+        modes = !!modes ? modes.split(",") : ["tree", "form"];
+        var views = [];
+        _.each(modes, function(mode) {
+            var view = [false, mode == "tree" ? "list" : mode];
+            if (self.field.views && self.field.views[mode]) {
+                view.push(self.field.views[mode]);
+            }
+            views.push(view);
+        });
+        
         this.viewmanager = new openerp.base.ViewManager(this.view.session,
             this.element_id, this.dataset, views);
         this.viewmanager.start();
