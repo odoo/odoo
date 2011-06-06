@@ -362,7 +362,7 @@ openerp.base.DataSetStatic =  openerp.base.DataSet.extend({
         this.on_unlink(ids);
     },
     on_unlink: function(ids) {
-        // event
+        this.set_ids(_.without.apply(null, [this.ids].concat(ids)));
     }
 });
 

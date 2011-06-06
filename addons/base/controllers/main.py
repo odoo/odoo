@@ -463,15 +463,20 @@ class View(openerpweb.Controller):
         Model = request.session.model(model)
         fvg = Model.fields_view_get(view_id, view_type, request.context,
                                     toolbar, submenu)
+        self.process_view(request.session, fvg, request.context, transform)
+        return fvg
+    
+    def process_view(self, session, fvg, context, transform):
         if transform:
-            evaluation_context = request.session.evaluation_context(
-                request.context or {})
-            xml = self.transform_view(
-                fvg['arch'], request.session, evaluation_context)
+            evaluation_context = session.evaluation_context(context or {})
+            xml = self.transform_view(fvg['arch'], session, evaluation_context)
         else:
             xml = ElementTree.fromstring(fvg['arch'])
         fvg['arch'] = Xml2Json.convert_element(xml)
-        return fvg
+        for field in fvg["fields"].values():
+            if field["views"]:
+                for view in field["views"].values():
+                    self.process_view(session, view, None, transform)
 
     @openerpweb.jsonrequest
     def add_custom(self, request, view_id, arch):

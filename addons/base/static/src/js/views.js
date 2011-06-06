@@ -95,7 +95,8 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
             self.on_mode_switch($(this).data('view-type'));
         });
         _.each(this.views_src, function(view) {
-            self.views[view[1]] = { view_id: view[0], controller: null };
+            self.views[view[1]] = { view_id: view[0], controller: null,
+                embedded_view: view[2]};
         });
         if (this.flags.views_switcher === false) {
             this.$element.find('.oe_vm_switch').hide();
@@ -119,7 +120,14 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
             // Lazy loading of views
             var controllerclass = openerp.base.views.get_object(view_type);
             var controller = new controllerclass( this, this.session, this.element_id + "_view_" + view_type, this.dataset, view.view_id);
+            if (view.embedded_view) {
+                controller.set_embedded_view(view.embedded_view);
+            }
             view_promise = controller.start();
+            var self = this;
+            $.when(view_promise).then(function() {
+                self.on_controller_inited(view_type, controller);
+            });
             this.views[view_type].controller = controller;
         }
 
@@ -147,6 +155,13 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
         }
         return view_promise;
     },
+    /**
+     * Event launched when a controller has been inited.
+     * 
+     * @param {String} view_type type of view
+     * @param {String} view the inited controller
+     */
+    on_controller_inited: function(view_type, view) {},
     /**
      * Sets up the current viewmanager's search view.
      *
