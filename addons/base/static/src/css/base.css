@@ -61,13 +61,40 @@ body.openerp {
 /* Login */
 .openerp .login {
     display: none;
-
+}
+.openerp .login fieldset {
+    padding-bottom: 5px;
+    min-width: 100px;
+    margin-top: 60px;
+    margin-bottom: 60px;
+    margin-left: 40px;
+    border-radius: 10px;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    float: left;
+    width: 420px;
+}
+.openerp .login fieldset legend {
+    padding: 4px;
+}
+.openerp .login .oe_box2 {
+    padding: 5px 5px 20px 5px;
+}
+.openerp .login .oe_box2 table {
+    width: 100%;
+    border:none;
+}
+.openerp .login .oe_field_value {
+    padding: 3px;
 }
 .openerp .login_valid {
 }
 .openerp .login_invalid {
 }
 
+.openerp.login-mode .login-container {
+    height: 100%;
+}
 .openerp.login-mode .login {
     display: block;
 }
