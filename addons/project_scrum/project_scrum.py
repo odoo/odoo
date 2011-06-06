@@ -101,7 +101,8 @@ class project_scrum_sprint(osv.osv):
         'date_stop': fields.date('Ending Date', required=True),
         'project_id': fields.many2one('project.project', 'Project', required=True, domain=[('scrum','=',1)], help="If you have [?] in the project name, it means there are no analytic account linked to this project."),
         'product_owner_id': fields.many2one('res.users', 'Product Owner', required=True,help="The person who is responsible for the product"),
-        'scrum_master_id': fields.many2one('res.users', 'Scrum Master', required=True,help="The person who is maintains the processes for the product"),
+        'scrum_master_id': fields.many2one('res.users', 'Scrum Master', required=True,help="The person who is maintains the processestrunk-bug-791895-jam
+ for the product"),
         'meeting_ids': fields.one2many('project.scrum.meeting', 'sprint_id', 'Daily Scrum'),
         'review': fields.text('Sprint Review'),
         'retrospective': fields.text('Sprint Retrospective'),
@@ -317,12 +318,11 @@ class project_scrum_meeting(osv.osv):
         return True
 
     def email_send(self, cr, uid, ids, email, context=None):
-        email_from = tools.config.get('email_from', False)
         meeting_id = self.browse(cr, uid, ids, context=context)[0]
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-        user_email = email_from or user.address_id.email  or email_from
+        user_email = user.user_email or tools.config.get('email_from', False)
         body = _("Hello %s,\n \nI am sending you Daily Meeting Details of date %s for the Sprint %s\n") %(meeting_id.sprint_id.scrum_master_id.name, meeting_id.date, meeting_id.sprint_id.name)
-        body += _('\n*Tasks since yesterday:\n_______________________%s\n*Task for Today:\n_______________________ %s\n\n*Blocks encountered:\n_______________________ %s') %(meeting_id.question_yesterday,meeting_id.question_today, meeting_id.question_blocks or _('No Blocks'))
+        body += _('\n* Tasks since yesterday:\n_______________________\n%s\n\n* Task for Today:\n_______________________ \n%s\n\n* Blocks encountered:\n_______________________ \n\n%s') %(meeting_id.question_yesterday,meeting_id.question_today, meeting_id.question_blocks or _('No Blocks'))
         body += _("\n\nThank you,\n%s") % user.name
         sub_name = meeting_id.name or _('Scrum Meeting of %s') % meeting_id.date
         flag = tools.email_send(user_email , [email], sub_name, body, reply_to=None, openobject_id=str(meeting_id.id))
