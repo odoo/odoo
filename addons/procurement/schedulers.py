@@ -111,14 +111,14 @@ class procurement_order(osv.osv):
             end_date = time.strftime('%Y-%m-%d, %Hh %Mm %Ss')
             if uid:
                 request = self.pool.get('res.request')
-                summary = _("""Here is the procurement scheduling report. \n\
-\n\
-        Start Time: %s \n\
-        End Time: %s \n\
-        Total Procurements processed: %d \n\
-        Procurements with exceptions: %d \n\
-        Skipped Procurements (scheduled date outside of scheduler range) %d \n\
-\n\
+                summary = _("""Here is the procurement scheduling report.
+
+        Start Time: %s 
+        End Time: %s 
+        Total Procurements processed: %d 
+        Procurements with exceptions: %d 
+        Skipped Procurements (scheduled date outside of scheduler range) %d 
+
         Exceptions:\n""") % (start_date, end_date, report_total, report_except, report_later)
                 summary += '\n'.join(report)
                 request.create(cr, uid,
