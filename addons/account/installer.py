@@ -245,8 +245,7 @@ class account_installer(osv.osv_memory):
 account_installer()
 
 class account_installer_modules(osv.osv_memory):
-    _name = 'account.installer.modules'
-    _inherit = 'res.config.installer'
+    _inherit = 'base.setup.installer'
     _columns = {
         'account_analytic_plans': fields.boolean('Multiple Analytic Plans',
             help="Allows invoice lines to impact multiple analytic accounts "
