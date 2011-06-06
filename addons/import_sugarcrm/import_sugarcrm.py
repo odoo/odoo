@@ -150,18 +150,18 @@ class sugar_import(import_framework):
         return attach_xml_id
     
     def import_email(self, val):
-        val = sugar.email_search(self.context.get('port'), self.context.get('session_id'), self.TABLE_EMAIL, val.get('id'))
+        vals = sugar.email_search(self.context.get('port'), self.context.get('session_id'), self.TABLE_EMAIL, val.get('id'))
         model_obj =  self.obj.pool.get('ir.model.data')
-        val = val[0]
-        xml_id = self.xml_id_exist(val.get('parent_type'), val.get('parent_id'))
-        model_ids = model_obj.search(self.cr, self.uid, [('name', 'like', xml_id)])
-        if model_ids:
-            model = model_obj.browse(self.cr, self.uid, model_ids)[0]
-            if model.model == 'res.partner':
-                val['partner_id/.id'] = model.res_id
-            else:    
-                val['res_id'] = model.res_id
-                val['model'] = model.model
+        for val in vals:
+            xml_id = self.xml_id_exist(val.get('parent_type'), val.get('parent_id'))
+            model_ids = model_obj.search(self.cr, self.uid, [('name', 'like', xml_id)])
+            if model_ids:
+                model = model_obj.browse(self.cr, self.uid, model_ids)[0]
+                if model.model == 'res.partner':
+                    val['partner_id/.id'] = model.res_id
+                else:    
+                    val['res_id'] = model.res_id
+                    val['model'] = model.model
         return val   
         
     def get_email_mapping(self): 
@@ -173,7 +173,7 @@ class sugar_import(import_framework):
                          'history' : const("1"),
                         'date':'date_sent',
                         'email_from': 'from_addr_name',
-                        'email_to': 'reply_to_addr',
+                        'email_to': 'to_addrs_names',
                         'email_cc': 'cc_addrs_names',
                         'email_bcc': 'bcc_addrs_names',
                         'message_id': 'message_id',
@@ -274,6 +274,7 @@ class sugar_import(import_framework):
                     'description': ppconcat('description', 'resolution', 'work_log'),
                     'partner_id/id': ref(self.TABLE_ACCOUNT, 'account_id'),
                     'partner_address_id/.id': 'partner_address_id/.id',
+                    'categ_id/id': call(self.get_category, 'crm.claim', value('type')),
                     'partner_phone': 'partner_phone',
                     'email_from': 'email_from',                                        
                     'priority': self.get_claim_priority,
@@ -714,7 +715,7 @@ class sugar_import(import_framework):
         if type == 'default':
              map_partner_address = {
             'name': 'name',
-            'type': type,
+            'type': const('default'),
             'email': 'email1' 
             }
         else:        
@@ -1037,7 +1038,6 @@ class import_sugarcrm(osv.osv):
             'res_id': new_create_id,
             'type': 'ir.actions.act_window',
         }
-    
     
     
     def import_all(self, cr, uid, ids, context=None):
