@@ -52,9 +52,13 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
         this.columns = [];
 
         this.options = _.extend({}, this.defaults, options || {});
-        this.flags =  this.view_manager.action.flags;
+        this.flags =  this.view_manager.flags || {};
 
         this.set_groups(new openerp.base.ListView.Groups(this));
+        
+        if (this.dataset instanceof openerp.base.DataSetStatic) {
+            this.groups.datagroup = new openerp.base.StaticDataGroup(this.dataset);
+        }
     },
     /**
      * Set a custom Group construct as the root of the List View.
@@ -254,14 +258,19 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
         var self = this;
         this.dataset.offset = 0;
         this.dataset.limit = false;
-        return this.rpc('/base/listview/load', {
-            model: this.model,
-            view_id: this.view_id,
-            toolbar: !!this.flags.sidebar,
-            context: this.dataset.context
-        }, function (field_view_get) {
-            self.on_loaded(field_view_get, grouped);
-        });
+        var callback = function (field_view_get) {
+                self.on_loaded(field_view_get, grouped);
+        };
+        if (this.embedded_view) {
+            return $.Deferred().then(callback).resolve({fields_view: this.embedded_view});
+        } else {
+            return this.rpc('/base/listview/load', {
+                model: this.model,
+                view_id: this.view_id,
+                context: this.dataset.context,
+                toolbar: !!this.flags.sidebar
+            }, callback);
+        }
     },
     /**
      * re-renders the content of the list view

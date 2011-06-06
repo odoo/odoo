@@ -241,7 +241,10 @@ def clean_action(action, session):
             action['domain'],
             session.evaluation_context(
                 action['context'])) or []
-    fix_view_modes(action)
+    if not action.has_key('flags'):
+        # Set empty flags dictionary for web client.
+        action['flags'] = dict()
+    return fix_view_modes(action)
 
 def fix_view_modes(action):
     """ For historical reasons, OpenERP has weird dealings in relation to
@@ -271,6 +274,7 @@ def fix_view_modes(action):
         [id, mode if mode != 'tree' else 'list']
         for id, mode in action['views']
     ]
+    return action
 
 class Menu(openerpweb.Controller):
     _cp_path = "/base/menu"
@@ -452,20 +456,49 @@ class DataGroup(openerpweb.Controller):
             dict(request.context, group_by=group_by_fields))
 
 class View(openerpweb.Controller):
+    _cp_path = "/base/view"
+
     def fields_view_get(self, request, model, view_id, view_type,
                         transform=True, toolbar=False, submenu=False):
         Model = request.session.model(model)
         fvg = Model.fields_view_get(view_id, view_type, request.context,
                                     toolbar, submenu)
+        self.process_view(request.session, fvg, request.context, transform)
+        return fvg
+    
+    def process_view(self, session, fvg, context, transform):
         if transform:
-            evaluation_context = request.session.evaluation_context(
-                request.context or {})
-            xml = self.transform_view(
-                fvg['arch'], request.session, evaluation_context)
+            evaluation_context = session.evaluation_context(context or {})
+            xml = self.transform_view(fvg['arch'], session, evaluation_context)
         else:
             xml = ElementTree.fromstring(fvg['arch'])
         fvg['arch'] = Xml2Json.convert_element(xml)
-        return fvg
+        for field in fvg['fields'].values():
+            if field.has_key('views') and field['views']:
+                for view in field["views"].values():
+                    self.process_view(session, view, None, transform)
+
+    @openerpweb.jsonrequest
+    def add_custom(self, request, view_id, arch):
+        CustomView = request.session.model('ir.ui.view.custom')
+        CustomView.create({
+            'user_id': request.session._uid,
+            'ref_id': view_id,
+            'arch': arch
+        })
+        return {'result': True}
+
+    @openerpweb.jsonrequest
+    def undo_custom(self, request, view_id, reset=False):
+        CustomView = request.session.model('ir.ui.view.custom')
+        vcustom = CustomView.search([('user_id', '=', request.session._uid), ('ref_id' ,'=', view_id)])
+        if vcustom:
+            if reset:
+                CustomView.unlink(vcustom)
+            else:
+                CustomView.unlink([vcustom[0]])
+            return {'result': True}
+        return {'result': False}
 
     def normalize_attrs(self, elem, context):
         """ Normalize @attrs, @invisible, @required, @readonly and @states, so
@@ -693,12 +726,12 @@ class Action(openerpweb.Controller):
     _cp_path = "/base/action"
 
     @openerpweb.jsonrequest
-    def load(self, req, action_id, context={}):
+    def load(self, req, action_id):
         Actions = req.session.model('ir.actions.actions')
         value = False
-        action_type = Actions.read([action_id], ['type'], context)
+        action_type = Actions.read([action_id], ['type'], req.session.context)
         if action_type:
-            action = req.session.model(action_type[0]['type']).read([action_id], False, context)
+            action = req.session.model(action_type[0]['type']).read([action_id], False, req.session.context)
             if action:
-                value = action[0]
+                value = clean_action(action[0], req.session)
         return {'result': value}
