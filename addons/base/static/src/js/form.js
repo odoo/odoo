@@ -1046,7 +1046,7 @@ openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
         this.viewmanager.start();
         
         $.when(this.is_started, this.is_setted).then(function() {
-            if (modes[0] == "list") {
+            if (modes[0] == "tree") {
                 var view = self.viewmanager.views[self.viewmanager.active_view].controller;
                 view.reload_content();
             }
