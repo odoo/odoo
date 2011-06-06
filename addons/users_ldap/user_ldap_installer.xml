@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<!-- ldap installer Form View -->
+		<record model="ir.ui.view" id="view_ldap_installer_form">
+            <field name="name">ldap.installer.form</field>
+            <field name="model">ldap.installer</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="LDAP Configuration">
+					<field name="ldap_server"/>
+                    <field name="ldap_server_port"/>
+                    <field name="ldap_binddn"/>
+                    <field name="ldap_password"/>
+                    <field name="ldap_base"/>
+                    <field name="ldap_filter"/>
+                    <field name="create_user"/>
+                    <field name="user"/>
+                    <newline/>
+                    <field name="sequence"/>
+                </form>
+            </field>
+		</record>
+		<!-- ldap installer Tree View -->
+		<record model="ir.ui.view" id="view_ldap_installer_tree">
+        	<field name="name">ldap.installer.tree</field>
+        	<field name="model">ldap.installer</field>
+        	<field name="type">tree</field>
+        	<field name="arch" type="xml">
+        	<tree string="LDAP Configuration">
+				<field name="sequence"/>
+                <field name="ldap_server"/>
+                <field name="ldap_server_port"/>
+                <field name="ldap_base"/>
+        	</tree>
+        	</field>
+		</record> 
+		<record id="action_ldap_installer" model="ir.actions.act_window">
+	     	<field name="name">Setup your ldap configuration</field>
+	     	<field name="type">ir.actions.act_window</field>
+	     	<field name="res_model">ldap.installer</field>
+	     	<field name="view_type">form</field>
+	     	<field name="view_mode">tree,form</field>
+	     	<field name="view_id" ref="view_ldap_installer_tree"/>
+		</record>
+		<record id="config_wizard_action_ldap_installer" model="ir.actions.todo">
+	    	<field name="action_id" ref="action_ldap_installer"/>
+	    	<field name="type">normal</field>
+	    	<field name="target">current</field>
+	    	<field name="state">skip</field>
+		</record>
+	</data>
+</openerp>
