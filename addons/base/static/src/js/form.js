@@ -226,7 +226,15 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
             self.on_record_loaded(result.result);
         });
     },
-    do_save: function(success) {
+    /**
+     * Triggers saving the form's record. Chooses between creating a new
+     * record or saving an existing one depending on whether the record
+     * already has an id property.
+     *
+     * @param {Function} success callback on save success
+     * @param {Boolean} [prepend_on_create=false] if ``do_save`` creates a new record, should that record be inserted at the start of the dataset (by default, records are added at the end)
+     */
+    do_save: function(success, prepend_on_create) {
         var self = this;
         if (!this.ready) {
             return false;
@@ -249,7 +257,7 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
             this.log("About to save", values);
             if (!this.datarecord.id) {
                 this.dataset.create(values, function(r) {
-                    self.on_created(r, success);
+                    self.on_created(r, success, prepend_on_create);
                 });
             } else {
                 this.dataset.write(this.datarecord.id, values, function(r) {
@@ -287,19 +295,37 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
             }
         }
     },
-    on_created: function(r, success) {
+    /**
+     * Updates the form' dataset to contain the new record:
+     *
+     * * Adds the newly created record to the current dataset (at the end by
+     *   default)
+     * * Selects that record (sets the dataset's index to point to the new
+     *   record's id).
+     * * Updates the pager and sidebar displays
+     *
+     * @param {Object} r
+     * @param {Function} success callback to execute after having updated the dataset
+     * @param {Boolean} [prepend_on_create=false] adds the newly created record at the beginning of the dataset instead of the end
+     */
+    on_created: function(r, success, prepend_on_create) {
         if (!r.result) {
             this.notification.warn("Record not created", "Problem while creating record.");
         } else {
-            this.datarecord.id = arguments[0].result;
-            this.dataset.ids.push(this.datarecord.id);
-            this.dataset.index = this.dataset.ids.length - 1;
+            this.datarecord.id = r.result;
+            if (!prepend_on_create) {
+                this.dataset.ids.push(this.datarecord.id);
+                this.dataset.index = this.dataset.ids.length - 1;
+            } else {
+                this.dataset.ids.unshift(this.datarecord.id);
+                this.dataset.index = 0;
+            }
             this.dataset.count++;
             this.do_update_pager();
             this.do_update_sidebar();
             this.notification.notify("Record created", "The record has been created with id #" + this.datarecord.id);
             if (success) {
-                success(r);
+                success(_.extend(r, {created: true}));
             }
         }
     },
