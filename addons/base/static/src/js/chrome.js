@@ -441,6 +441,13 @@ openerp.base.Session = openerp.base.BasicController.extend( /** @lends openerp.b
         this.set_cookie('uid', this.uid);
         this.set_cookie('session_id', this.session_id);
     },
+    logout: function() {
+        this.uid = this.get_cookie('uid');
+        this.session_id = this.get_cookie('session_id');
+        this.set_cookie('uid', false);
+        this.set_cookie('session_id', false);
+        this.on_session_invalid(function() {});
+    },
     /**
      * Fetches a cookie stored by an openerp session
      *
@@ -777,14 +784,14 @@ openerp.base.Login =  openerp.base.Controller.extend({
     on_login_invalid: function() {
         this.$element
             .removeClass("login_valid")
-            .addClass("login_invalid")
-            .show();
+            .addClass("login_invalid");
+        this.$element.closest(".openerp").addClass("login-mode");
     },
     on_login_valid: function() {
         this.$element
             .removeClass("login_invalid")
-            .addClass("login_valid")
-            .hide();
+            .addClass("login_valid");
+        this.$element.closest(".openerp").removeClass("login-mode");
     },
     on_submit: function(ev) {
         ev.preventDefault();
@@ -810,6 +817,9 @@ openerp.base.Login =  openerp.base.Controller.extend({
             unique: true,
             callback: continuation
         });
+    },
+    on_logout: function() {
+        this.session.logout();
     }
 });
 
@@ -822,7 +832,9 @@ openerp.base.Header =  openerp.base.Controller.extend({
     },
     do_update: function() {
         this.$element.html(QWeb.render("Header", this));
-    }
+        this.$element.find(".logout").click(this.on_logout);
+    },
+    on_logout: function() {}
 });
 
 openerp.base.Menu =  openerp.base.Controller.extend({
@@ -937,6 +949,7 @@ openerp.base.WebClient = openerp.base.Controller.extend({
 
         this.header = new openerp.base.Header(this.session, "oe_header");
         this.login = new openerp.base.Login(this.session, "oe_login");
+        this.header.on_logout.add(this.login.on_logout);
 
         this.session.on_session_invalid.add(this.login.do_ask_login);
         this.session.on_session_valid.add_last(this.header.do_update);
