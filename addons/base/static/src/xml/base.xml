@@ -17,7 +17,6 @@
             <p>#{text}</p>
         </div>
     </div>
-    <div id="oe_login" class="login"></div>
     <table border="0" cellpadding="0" cellspacing="0" width="100%" height="100%" class="main_table">
     <tr>
         <td colspan="2">
@@ -35,6 +34,11 @@
         </td>
     </tr>
     <tr>
+        <td valign="top" class="login-container" colspan="2">
+            <div id="oe_login" class="login"></div>
+        </td>
+    </tr>
+    <tr>
         <td colspan="2">
             <div id="oe_footer" class="oe_footer">
                 <p class="oe_footer_powered">Powered by <a href="http://www.openerp.com">openerp.com</a>.</p>
@@ -48,11 +52,83 @@
 </t>
 <t t-name="Login">
     <form>
-        Database: <input type="text" name="db" value="trunk"/><br/>
-        Login: <input type="text" name="login" value="admin"/><br/>
-        Password: <input type="password" name="password" value="a"/><br/>
-        <input type="submit" name="submit" value="Login"/>
+        <fieldset>
+            <legend style="">
+                <img src="/base/static/src/img/stock_person.png" alt="" />
+            </legend>
+            <div class="oe_box2">
+                <table align="center" cellspacing="2px" cellpadding="0">
+                    <tr>
+                        <td><label for="db">Database:</label></td>
+                        <td class="oe_field_value">
+                            <t t-if="!db_list">
+                                <input type="text" name="db" value="trunk" autofocus="true"/>
+                            </t>
+                            <t t-if="db_list">
+                                <select name="db">
+                                    <t t-foreach="db_list" t-as="db">
+                                        <option t-att-value="db" t-att-selected="db == 'trunk'"><t t-esc="db"/></option>
+                                    </t>
+                                </select>
+                            </t>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><label for="login">User:</label></td>
+                        <td class="oe_field_value"><input type="text" name="login" value="admin" autofocus="true"/></td>
+                    </tr>
+                    <tr>
+                        <td><label for="password">Password:</label></td>
+                        <td class="oe_field_value"><input type="password" name="password" value="a"/></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td class="oe_field_value">
+                            <button type="submit" name="submit">Login</button>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </fieldset>
+        <div class="login_error_message">Bad username or password</div>
     </form>
+    <div class="oe_login_right_pane">
+        <p>We think that daily job activities can be more intuitive, efficient, automated, .. and even fun.</p>
+        <h3>OpenERP's vision to be:</h3>
+        
+        <table cellpadding="0" cellspacing="0" width="100%" style="border:none;">
+            <tbody>
+            <tr>
+                <td>
+                    <img src="/base/static/src/img/product.png"/>
+                </td>
+                <td>
+                    <strong>Full featured</strong><br />
+                    Today's enterprise challenges are multiple. We provide one module for each need.
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <img src="/base/static/src/img/accessories-archiver.png"/>
+                </td>
+                <td>
+                    <strong>Open Source</strong><br />
+                    To Build a great product, we rely on the knowledge of thousands of contributors.
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <img src="/base/static/src/img/partner.png" />
+                </td>
+                <td>
+                    <strong>User Friendly</strong><br />
+                    In order to be productive, people need clean and easy to use interface.
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        
+    </div>
 </t>
 <t t-name="Header">
     <a href="/" class="company_logo_link">

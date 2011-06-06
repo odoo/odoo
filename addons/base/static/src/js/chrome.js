@@ -162,7 +162,9 @@ openerp.base.BasicController = Class.extend( /** @lends openerp.base.BasicContro
     init: function(element_id) {
         this.element_id = element_id;
         this.$element = $('#' + element_id);
-        openerp.screen[element_id] = this;
+        if (element_id) {
+            openerp.screen[element_id] = this;
+        }
 
         // Transform on_* method into openerp.base.callbacks
         for (var name in this) {
@@ -369,7 +371,7 @@ openerp.base.Session = openerp.base.BasicController.extend( /** @lends openerp.b
                     } else {
                         error_callback(response.error);
                     }
-                } else {
+                } else if (success_callback) {
                     success_callback(response["result"], textStatus, jqXHR);
                 }
             },
@@ -438,6 +440,13 @@ openerp.base.Session = openerp.base.BasicController.extend( /** @lends openerp.b
     session_save: function () {
         this.set_cookie('uid', this.uid);
         this.set_cookie('session_id', this.session_id);
+    },
+    logout: function() {
+        this.uid = this.get_cookie('uid');
+        this.session_id = this.get_cookie('session_id');
+        this.set_cookie('uid', '');
+        this.set_cookie('session_id', '');
+        this.on_session_invalid(function() {});
     },
     /**
      * Fetches a cookie stored by an openerp session
@@ -769,26 +778,29 @@ openerp.base.Login =  openerp.base.Controller.extend({
         this._super(session, element_id);
     },
     start: function() {
-        this.$element.html(QWeb.render("Login", {}));
-        this.$element.find("form").submit(this.on_submit);
+        var self = this;
+        this.rpc("/base/session/get_databases_list", {}, function(result) {
+            self.db_list = result.db_list;
+            self.display();
+        }, function() {
+            self.display();
+        });
     },
+   display: function() {
+        this.$element.html(QWeb.render("Login", this));
+        this.$element.find("form").submit(this.on_submit);
+   },
     on_login_invalid: function() {
-        this.$element
-            .removeClass("login_valid")
-            .addClass("login_invalid")
-            .show();
+        this.$element.closest(".openerp").addClass("login-mode");
     },
     on_login_valid: function() {
-        this.$element
-            .removeClass("login_invalid")
-            .addClass("login_valid")
-            .hide();
+        this.$element.closest(".openerp").removeClass("login-mode");
     },
     on_submit: function(ev) {
         ev.preventDefault();
         var self = this;
         var $e = this.$element;
-        var db = $e.find("form input[name=db]").val();
+        var db = $e.find("form [name=db]").val();
         var login = $e.find("form input[name=login]").val();
         var password = $e.find("form input[name=password]").val();
         //$e.hide();
@@ -797,17 +809,23 @@ openerp.base.Login =  openerp.base.Controller.extend({
             if(self.session.session_is_valid()) {
                 self.on_login_valid();
             } else {
+                self.$element.addClass("login_invalid");
                 self.on_login_invalid();
             }
         });
     },
     do_ask_login: function(continuation) {
         this.on_login_invalid();
+        this.$element
+            .removeClass("login_invalid");
         this.on_login_valid.add({
             position: "last",
             unique: true,
             callback: continuation
         });
+    },
+    on_logout: function() {
+        this.session.logout();
     }
 });
 
@@ -820,7 +838,9 @@ openerp.base.Header =  openerp.base.Controller.extend({
     },
     do_update: function() {
         this.$element.html(QWeb.render("Header", this));
-    }
+        this.$element.find(".logout").click(this.on_logout);
+    },
+    on_logout: function() {}
 });
 
 openerp.base.Menu =  openerp.base.Controller.extend({
@@ -935,6 +955,7 @@ openerp.base.WebClient = openerp.base.Controller.extend({
 
         this.header = new openerp.base.Header(this.session, "oe_header");
         this.login = new openerp.base.Login(this.session, "oe_login");
+        this.header.on_logout.add(this.login.on_logout);
 
         this.session.on_session_invalid.add(this.login.do_ask_login);
         this.session.on_session_valid.add_last(this.header.do_update);
