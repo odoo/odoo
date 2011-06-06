@@ -26,6 +26,7 @@ import time
 import base64
 import urllib2
 import release
+import datetime
 
 def safe_unique_id(model, database_id):
     """Generate a unique string to represent a (model,database id) pair
@@ -216,14 +217,21 @@ class edi(object):
                         'content': base64.encodestring(attachment.datas),
                         'file_name': attachment.datas_fname,
                 })
+            ''' Here we are obtaining the release version '''
             version = []
             for ver in release.version.split('.'):
                 version.append(int(ver))
+            ''' Here we are converting local time into UTC time'''
+            UTC_OFFSET_TIMEDELTA = datetime.datetime.utcnow() - datetime.datetime.now()
+            local_datetime = datetime.datetime.strptime(record.write_date, "%Y-%m-%d %H:%M:%S")
+            result_utc_datetime = local_datetime - UTC_OFFSET_TIMEDELTA
+            write_date = result_utc_datetime.strftime("%Y-%m-%d %H:%M:%S")
+            
             edi_dict = {
                 '__model' : record._name,
                 '__module' : record._module,
                 '__id': record.id,
-                '__last_update': record.write_date, #TODO: convert into UTC
+                '__last_update': write_date, #TODO: convert into UTC
                 '__version': version,
                 '__attachments': attachment_dict_list
             }
