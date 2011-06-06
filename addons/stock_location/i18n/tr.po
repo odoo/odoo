@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:16+0000\n"
-"PO-Revision-Date: 2011-05-29 01:29+0000\n"
-"Last-Translator: Ahmet Altınışık <Unknown>\n"
+"PO-Revision-Date: 2011-06-03 10:08+0000\n"
+"Last-Translator: Ayhan KIZILTAN <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-05-30 05:41+0000\n"
+"X-Launchpad-Export-Date: 2011-06-04 06:25+0000\n"
 "X-Generator: Launchpad (build 12959)\n"
 
 #. module: stock_location
@@ -45,12 +45,12 @@ msgstr "Otomatik No Adımı Eklendi"
 #. module: stock_location
 #: view:product.product:0
 msgid "Parameters"
-msgstr "Parametreler"
+msgstr "Katsayılar"
 
 #. module: stock_location
 #: field:stock.location.path,location_from_id:0
 msgid "Source Location"
-msgstr "Kaynak Lokasyon"
+msgstr "Kaynak Konumu"
 
 #. module: stock_location
 #: help:product.pulled.flow,cancel_cascade:0
@@ -66,12 +66,12 @@ msgstr "Çekilen Akışlar"
 #. module: stock_location
 #: constraint:stock.move:0
 msgid "You must assign a production lot for this product"
-msgstr "Bu ürün için bir üretim grubu girmeniz gerekir"
+msgstr "Bu ürün için bir üretim partisi girmeniz gerekir"
 
 #. module: stock_location
 #: help:product.pulled.flow,location_src_id:0
 msgid "Location used by Destination Location to supply"
-msgstr "Gönderilecek Hedef Lokasyon tarafından kullanılan lokasyon"
+msgstr "Gönderilecek Hedef Konumu tarafından kullanılan konum"
 
 #. module: stock_location
 #: selection:product.pulled.flow,picking_type:0
@@ -90,7 +90,7 @@ msgstr ""
 #. module: stock_location
 #: model:ir.model,name:stock_location.model_stock_location
 msgid "Location"
-msgstr "Lokasyon"
+msgstr "Konum"
 
 #. module: stock_location
 #: field:product.pulled.flow,invoice_state:0
@@ -113,17 +113,17 @@ msgid ""
 "move has to be validated by a worker. With 'Automatic No Step Added', the "
 "location is replaced in the original move."
 msgstr ""
-"Bu, lokasyon ağacında ürünün izlemesi gereken rotaları belirtmek için "
+"Bu, konum ağacında ürünün izlemesi gereken rotaları belirtmek için "
 "kullanılır.\n"
 "'Otomatik Hareket' değeri, otomatik olarak onaylanacak olan geçerli birinden "
 "bir stok hareketi oluşturacaktır. 'Manual Operasyon' durumunda, stok "
 "hareketi bir çalışan tarafından onaylanmalıdır. 'Otomatik No Adımı Eklendi' "
-"durumunda, lokasyon orijinal harekette değiştirilir."
+"durumunda, konum orijinal harekette değiştirilir."
 
 #. module: stock_location
 #: model:ir.module.module,shortdesc:stock_location.module_meta_information
 msgid "Warehouse Locations Paths"
-msgstr "Depo Lokasyon Rotaları"
+msgstr "Depo Konumu Rotaları"
 
 #. module: stock_location
 #: view:product.product:0
@@ -307,11 +307,11 @@ msgid ""
 msgstr ""
 "\n"
 "Bu modül her bir ürün için destek sağlayarak Depo uygulamasını tamamlar\n"
-"lokasyon rotaları, İletme ve Çekme envanteri etkili uygulaması.\n"
+"konum rotaları, İletme ve Çekme envanteri etkili uygulaması.\n"
 "\n"
 "Genellikle şu amaçla kullanılır:\n"
 "* Ürün üretim zincirlerini yönetme\n"
-"* Her bir ürün için varsayılan lokasyonları yönetme\n"
+"* Her bir ürün için varsayılan konumları yönetme\n"
 "* Aşağıdaki işletme ihtiyaçlarına göre deponuzdaki rotaları belirleme:\n"
 "   - Kalite Kontrol\n"
 "   - Satış Sonrası Hizmetler\n"
@@ -326,20 +326,20 @@ msgstr ""
 "İletme akışları\n"
 "----------\n"
 "İletme akışları, belirli bir ürünün belirli bir lokasyona ulaşması, ilgili "
-"başka bir lokasyona hareket\n"
+"başka bir konuma hareket\n"
 "tarafından, isteğe bağlı olarak belirli bir gecikme süresinden sonra, daima "
 "izlenmesi gerektiğinde kullanışlıdır.\n"
-"Orijinal Depo uygulaması, Lokasyonlardaki İletme akışı gibi özellikleri "
-"zaten destekler, ancak\n"
+"Orijinal Depo uygulaması, Konumlardaki İletme akışı gibi özellikleri zaten "
+"destekler, ancak\n"
 "bunlar her ürün için tavsiye edilmez.\n"
 "\n"
-"Bir iletme akışı özelliği hangi lokasyonun hangi lokasyona ve hangi "
-"parametrelere bağlandığını\n"
-"gösterir. Ürünün belirli bir miktarı kaynak lokasyona hareket ettiğinde, "
-"akış özelliğinde ayarlanan parametrelere göre\n"
+"Bir iletme akışı özelliği hangi konumun hangi konuma ve hangi parametrelere "
+"bağlandığını\n"
+"gösterir. Ürünün belirli bir miktarı kaynak konuma hareket ettiğinde, akış "
+"özelliğinde ayarlanan parametrelere göre\n"
 "bağlı bir hareket otomatik olarak öngörülür\n"
-"(hedef lokasyon, gecikme süresi, hareket türü, seyir durumu vb.) "
-"Parametrelere bağlı olarak, yeni hareket\n"
+"(hedef konum, gecikme süresi, hareket türü, seyir durumu vb.) Parametrelere "
+"bağlı olarak, yeni hareket\n"
 "otomatik olarak işlenir veya manuel bir onay gerekir.\n"
 "\n"
 "Çekme akışları\n"
@@ -365,9 +365,9 @@ msgstr ""
 "\n"
 "Teknik olarak, Çekma akışları satınalma siparişlerinin sadece ele alınan "
 "ürüne göre değil\n"
-"ürün için \"ihtiyaç\" duyulan lokasyona göre de farklı olarak işlenmesine "
+"ürün için \"ihtiyaç\" duyulan konuma göre de farklı olarak işlenmesine "
 "olanak sağlar\n"
-"(örn. satınalma siparişinin gönderileceği hedef lokasyon).\n"
+"(örn. satınalma siparişinin gönderileceği hedef konum).\n"
 "\n"
 "Kullanım-Durumu\n"
 "--------\n"
@@ -376,7 +376,7 @@ msgstr ""
 "  CPU1: Mağaza 1'den bir miktar CPU1 satın ve zamanlayıcıyı çalıştırın\n"
 "     - Depo: teslimat siparişi, Mağaza 1: resepsiyon\n"
 "  CPU3:\n"
-"     - Ürünü alırken, Kalite Kontrol lokasyonuna gider ve ardından raf 2'ye "
+"     - Ürünü alırken, Kalite Kontrol konumuna gider ve ardından raf 2'ye "
 "saklanır.\n"
 "     - Müşteriye teslim edilirken: Alım Listesi -> Paketleme -> A Kapısından "
 "Teslimat Siparişi\n"
@@ -402,7 +402,7 @@ msgstr "Ad"
 #: help:product.product,path_ids:0
 msgid ""
 "These rules set the right path of the product in the whole location tree."
-msgstr "Bu kurallar, tüm lokasyon ağacı boyunca doğru ürün rotasını ayarlar."
+msgstr "Bu kurallar, tüm konum ağacı boyunca doğru ürün rotasını ayarlar."
 
 #. module: stock_location
 #: selection:stock.location.path,auto:0
@@ -440,7 +440,7 @@ msgstr ""
 #. module: stock_location
 #: help:product.pulled.flow,location_id:0
 msgid "Is the destination location that needs supplying"
-msgstr "Tedarik işleminin yapılacağı hedef lokasyondur"
+msgstr "Tedarik işleminin yapılacağı hedef konumdur"
 
 #. module: stock_location
 #: field:stock.location.path,product_id:0
@@ -451,7 +451,7 @@ msgstr "Stok Kartları"
 #: code:addons/stock_location/procurement_pull.py:118
 #, python-format
 msgid "Pulled from another location via procurement %d"
-msgstr "Satınalma %d aracılığıyla başka bir lokasyondan çekilir"
+msgstr "Satınalma %d aracılığıyla başka bir konumdan çekilir"
 
 #. module: stock_location
 #: model:stock.location,name:stock_location.stock_location_qualitytest0
@@ -476,8 +476,8 @@ msgid ""
 "Picking for pulled procurement coming from original location %s, pull rule "
 "%s, via original Procurement %s (#%d)"
 msgstr ""
-"Orijinal lokasyondan %s çekilen satınalma için alım, çekme kuralı %s, "
-"orijinal Satınalma %s (#%d) aracılığıyla"
+"Orijinal konumdan %s çekilen satınalma için alım, çekme kuralı %s, orijinal "
+"Satınalma %s (#%d) aracılığıyla"
 
 #. module: stock_location
 #: field:product.product,path_ids:0
@@ -491,7 +491,7 @@ msgid ""
 "Move for pulled procurement coming from original location %s, pull rule %s, "
 "via original Procurement %s (#%d)"
 msgstr ""
-"Orijinal lokasyondan %s iletilen satınalma için hareket, çekme kuralı %s, "
+"Orijinal konumdan %s iletilen satınalma için hareket, çekme kuralı %s, "
 "orijinal Satınalma %s (#%d) aracılığıyla"
 
 #. module: stock_location
@@ -507,7 +507,7 @@ msgstr "Satınalma"
 #. module: stock_location
 #: field:stock.location.path,location_dest_id:0
 msgid "Destination Location"
-msgstr "Hedef Lokasyon"
+msgstr "Varış Konumu"
 
 #. module: stock_location
 #: field:stock.location.path,auto:0
@@ -554,7 +554,7 @@ msgstr "Operasyon"
 #: field:product.product,path_ids:0
 #: view:stock.location.path:0
 msgid "Location Paths"
-msgstr "Lokasyon Rotası"
+msgstr "Konum Rotası"
 
 #. module: stock_location
 #: field:product.pulled.flow,journal_id:0

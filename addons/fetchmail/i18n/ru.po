@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2011-05-09 10:18+0000\n"
-"PO-Revision-Date: 2011-01-19 12:00+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"PO-Revision-Date: 2011-06-04 13:07+0000\n"
+"Last-Translator: Stanislav Hanzhin <Unknown>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-05-10 07:29+0000\n"
+"X-Launchpad-Export-Date: 2011-06-05 06:14+0000\n"
 "X-Generator: Launchpad (build 12959)\n"
 
 #. module: fetchmail
@@ -23,6 +23,8 @@ msgid ""
 "Warning! Record for selected Model can not be created\n"
 "Please choose valid Model"
 msgstr ""
+"Внимание! Невозможно создать запись для выбранной модели\n"
+"Выберите верную модель"
 
 #. module: fetchmail
 #: selection:email.server,state:0
@@ -53,7 +55,7 @@ msgstr "POP"
 #. module: fetchmail
 #: selection:email.server,state:0
 msgid "Not Confirmed"
-msgstr ""
+msgstr "Не подтверждено"
 
 #. module: fetchmail
 #: view:email.server:0
@@ -63,12 +65,12 @@ msgstr "Тип"
 #. module: fetchmail
 #: view:email.server:0
 msgid "POP/IMAP Servers"
-msgstr ""
+msgstr "Сервера POP/IMAP"
 
 #. module: fetchmail
 #: model:ir.module.module,shortdesc:fetchmail.module_meta_information
 msgid "Fetchmail Server"
-msgstr ""
+msgstr "Сервер Fetchmail"
 
 #. module: fetchmail
 #: view:email.server:0
@@ -82,6 +84,8 @@ msgid ""
 "OpenObject Model. Generates a record of this model.\n"
 "Select Object with message_new attrbutes."
 msgstr ""
+"Модель OpenObject. По этой модели генерируется запись.\n"
+"Выбрать объект с атрибутами message_new."
 
 #. module: fetchmail
 #: field:email.server,attach:0
@@ -91,7 +95,7 @@ msgstr "Добавить вложение?"
 #. module: fetchmail
 #: view:email.server:0
 msgid "# of emails"
-msgstr ""
+msgstr "Кол-во писем"
 
 #. module: fetchmail
 #: field:email.server,user:0
@@ -111,7 +115,7 @@ msgstr "Дата"
 #. module: fetchmail
 #: selection:email.server,state:0
 msgid "Waiting for Verification"
-msgstr ""
+msgstr "Ожидание проверки"
 
 #. module: fetchmail
 #: field:email.server,password:0
@@ -127,17 +131,17 @@ msgstr "Письма"
 #. module: fetchmail
 #: view:email.server:0
 msgid "Search Email Servers"
-msgstr ""
+msgstr "Поиск серверов электронной почты"
 
 #. module: fetchmail
 #: view:email.server:0
 msgid "Server & Login"
-msgstr ""
+msgstr "Сервер и имя пользователя"
 
 #. module: fetchmail
 #: view:email.server:0
 msgid "Auto Reply?"
-msgstr ""
+msgstr "Авто-ответ?"
 
 #. module: fetchmail
 #: field:email.server,name:0
@@ -147,7 +151,7 @@ msgstr "Название"
 #. module: fetchmail
 #: model:ir.model,name:fetchmail.model_mailgate_message
 msgid "Mailgateway Message"
-msgstr ""
+msgstr "Соообщение почтового шлюза"
 
 #. module: fetchmail
 #: view:email.server:0
@@ -164,7 +168,7 @@ msgstr "Сообщения"
 #: model:ir.actions.act_window,name:fetchmail.action_email_server_tree
 #: model:ir.ui.menu,name:fetchmail.menu_action_fetchmail_server_tree
 msgid "Email Servers"
-msgstr ""
+msgstr "Сервера электронной почты"
 
 #. module: fetchmail
 #: field:email.server,server:0
@@ -184,7 +188,7 @@ msgstr "Параметр процесса"
 #. module: fetchmail
 #: field:email.server,is_ssl:0
 msgid "SSL ?"
-msgstr ""
+msgstr "SSL?"
 
 #. module: fetchmail
 #: selection:email.server,type:0
@@ -206,12 +210,12 @@ msgstr "IMAP"
 #: view:email.server:0
 #: model:ir.model,name:fetchmail.model_email_server
 msgid "POP/IMAP Server"
-msgstr ""
+msgstr "Сервер POP/IMAP"
 
 #. module: fetchmail
 #: constraint:email.server:0
 msgid "Warning! Can't have duplicate server configuration!"
-msgstr ""
+msgstr "Внимание! Нельзя использовать повторяющиеся конфигурации сервера!"
 
 #. module: fetchmail
 #: field:email.server,type:0
@@ -232,13 +236,13 @@ msgstr "Сведения о сервере"
 #. module: fetchmail
 #: help:email.server,attach:0
 msgid "Fetches mail with attachments if true."
-msgstr ""
+msgstr "Если в значении \"Истина\", получать письма с вложениями."
 
 #. module: fetchmail
 #: selection:email.server,type:0
 #: selection:mailgate.message,server_type:0
 msgid "POP Server"
-msgstr ""
+msgstr "Сервер POP"
 
 #. module: fetchmail
 #: field:email.server,port:0
@@ -256,11 +260,18 @@ msgid ""
 "    * Email based Records (Add, Update)\n"
 "    "
 msgstr ""
+"Fetchmail: \n"
+"    * Получение почты с серверов POP/IMAP\n"
+"    * Поддержка SSL\n"
+"    * Интеграция со всеми модулями\n"
+"    * Автоматическое получение почты\n"
+"    * Записи на основе писем (Добавление, Обновление)\n"
+"    "
 
 #. module: fetchmail
 #: view:email.server:0
 msgid "SSL"
-msgstr ""
+msgstr "SSL"
 
 #. module: fetchmail
 #: help:email.server,action_id:0
@@ -268,29 +279,31 @@ msgid ""
 "An Email Server Action. It will be run whenever an e-mail is fetched from "
 "server."
 msgstr ""
+"Действие для почтового сервера. Будет выполняться при получении каждого "
+"письма с сервера."
 
 #. module: fetchmail
 #: help:email.server,priority:0
 msgid "Priority between 0 to 10, select define the order of Processing"
-msgstr ""
+msgstr "Приоритет от 0 до 10, выбор определяет порядок обработки."
 
 #. module: fetchmail
 #: field:email.server,action_id:0
 msgid "Email Server Action"
-msgstr ""
+msgstr "Действие для почтового сервера"
 
 #. module: fetchmail
 #: field:email.server,priority:0
 msgid "Server Priority"
-msgstr ""
+msgstr "Приоритет сервера"
 
 #. module: fetchmail
 #: view:mailgate.message:0
 #: field:mailgate.message,server_id:0
 msgid "Mail Server"
-msgstr ""
+msgstr "Почтовый сервер"
 
 #. module: fetchmail
 #: view:email.server:0
 msgid "Fetch Emails"
-msgstr ""
+msgstr "Получить эл. почту"

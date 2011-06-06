@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-05-09 10:18+0000\n"
-"PO-Revision-Date: 2011-06-01 07:19+0000\n"
+"PO-Revision-Date: 2011-06-04 05:14+0000\n"
 "Last-Translator: mgaja (GrupoIsep.com) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-06-02 06:03+0000\n"
+"X-Launchpad-Export-Date: 2011-06-05 06:14+0000\n"
 "X-Generator: Launchpad (build 12959)\n"
 
 #. module: account
@@ -119,6 +119,8 @@ msgid ""
 "If you unreconciliate transactions, you must also verify all the actions "
 "that are linked to those transactions because they will not be disabled"
 msgstr ""
+"Si desconcileu transaccions, heu de verificar totes les accions relacionades "
+"amb aquestes perquè no es desactivaran."
 
 #. module: account
 #: report:account.tax.code.entries:0
@@ -353,7 +355,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_unreconcile
 msgid "Account Unreconcile"
-msgstr ""
+msgstr "Desconciliar compte"
 
 #. module: account
 #: view:product.product:0
@@ -383,6 +385,9 @@ msgid ""
 "OpenERP. Journal items are created by OpenERP if you use Bank Statements, "
 "Cash Registers, or Customer/Supplier payments."
 msgstr ""
+"Els comptables utilitzen aquesta vista per gravar registres en massa a "
+"OpenERP. OpenERP crea els moviments comptables si fa ús d'extractes "
+"bancaris, registres de caixa o pagaments de client/proveïdor."
 
 #. module: account
 #: model:ir.model,name:account.model_account_tax_template
@@ -480,6 +485,11 @@ msgid ""
 "amount of each area of the tax declaration for your country. It’s presented "
 "in a hierarchical structure, which can be modified to fit your needs."
 msgstr ""
+"La taula d'impostos és una vista en arbre que reflecteix l'estructura de "
+"tipus impositius (o codis d'impost) i mostra la situació impositiva actual. "
+"La taula d'impostos representa la quantitat econòmica corresponent a cada "
+"codi de la declaració d'impostos del país. Es representa en una estructura "
+"jeràrquica, que pot ser modificada d'acord a les vostres necessitats."
 
 #. module: account
 #: view:account.analytic.line:0
@@ -842,6 +852,9 @@ msgid ""
 "Can not %s invoice which is already reconciled, invoice should be "
 "unreconciled first. You can only Refund this invoice"
 msgstr ""
+"No es pot %s factura que ja està conciliada, primer hauríeu de trencar la "
+"conciliació de la factura. Només podeu fer un abonament (factura "
+"rectificativa) d'aquesta factura."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_subscription_form_new
@@ -925,7 +938,7 @@ msgstr "Consolidació"
 #: view:account.invoice.report:0
 #: view:account.move.line:0
 msgid "Extended Filters..."
-msgstr ""
+msgstr "Filtres estesos..."
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_account_central_journal
@@ -954,6 +967,9 @@ msgid ""
 "amount.If the tax account is base tax code, this field will contain the "
 "basic amount(without tax)."
 msgstr ""
+"Si el compte és un compte de tipus impositiu, aquest camp contindrà la suma "
+"de l'impost. Si el compte és un tipus de base impositiva, el camp contindrà "
+"la suma de la base imposable (sense impost)."
 
 #. module: account
 #: view:account.analytic.line:0
@@ -1033,7 +1049,7 @@ msgstr "Factures de client per aprovar"
 #. module: account
 #: help:account.fiscalyear.close,fy_id:0
 msgid "Select a Fiscal year to close"
-msgstr ""
+msgstr "Seleccioneu un exercici fiscal per tancar"
 
 #. module: account
 #: help:account.account,user_type:0
@@ -1077,12 +1093,12 @@ msgstr "-"
 #. module: account
 #: view:account.analytic.account:0
 msgid "Manager"
-msgstr ""
+msgstr "Director"
 
 #. module: account
 #: view:account.subscription.generate:0
 msgid "Generate Entries before:"
-msgstr ""
+msgstr "Genera els assentaments abans:"
 
 #. module: account
 #: selection:account.bank.accounts.wizard,account_type:0

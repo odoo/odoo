@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-05-09 10:18+0000\n"
-"PO-Revision-Date: 2011-05-21 20:16+0000\n"
+"PO-Revision-Date: 2011-06-04 19:37+0000\n"
 "Last-Translator: Chertykov Denis <chertykov@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-05-22 05:57+0000\n"
+"X-Launchpad-Export-Date: 2011-06-05 06:14+0000\n"
 "X-Generator: Launchpad (build 12959)\n"
 
 #. module: account
@@ -170,8 +170,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the payment "
 "term without removing it."
 msgstr ""
-"Если поле 'Активно' имеет значение Ложь, вы сможете скрыть срок оплаты, не "
-"удаляя его."
+"Если поле \"Активно\" имеет значение Ложь, вы сможете скрыть условие оплаты, "
+"не удаляя его."
 
 #. module: account
 #: code:addons/account/invoice.py:1436
@@ -646,7 +646,7 @@ msgstr "Централизованный журнал"
 #. module: account
 #: sql_constraint:account.sequence.fiscalyear:0
 msgid "Main Sequence must be different from current !"
-msgstr ""
+msgstr "Основная нумерация должна отличаться от текущей!"
 
 #. module: account
 #: field:account.invoice.tax,tax_amount:0
@@ -1117,6 +1117,11 @@ msgid ""
 "purchase orders or receipts. This way, you can control the invoice from your "
 "supplier according to what you purchased or received."
 msgstr ""
+"\"Счета поставщиков\" позволяют вам управлять счетами выставленными вашими "
+"поставщиками. OpenERP может генерировать черновики счетов автоматически из "
+"заказов на закупку или прихода товара. В таком случае вы можете "
+"контролировать соответствие счета, полученного от поставщика, закупленному "
+"или полученному."
 
 #. module: account
 #: view:account.invoice.cancel:0
@@ -1432,6 +1437,8 @@ msgid ""
 "The payment term defined gives a computed amount greater than the total "
 "invoiced amount."
 msgstr ""
+"Невозможно создать счет!\n"
+"Сумма, рассчитанная по условию оплаты больше чем итоговая сумма счета."
 
 #. module: account
 #: field:account.installer.modules,account_anglo_saxon:0
@@ -1767,7 +1774,7 @@ msgstr ""
 #. module: account
 #: view:res.company:0
 msgid "Reserve And Profit/Loss Account"
-msgstr ""
+msgstr "Счет резервов и прибылей/убытков"
 
 #. module: account
 #: sql_constraint:account.move.line:0
@@ -2054,6 +2061,10 @@ msgid ""
 "partners accounts (for debit/credit computations), closed for depreciated "
 "accounts."
 msgstr ""
+"Этот тип используется, чтобы различать типы со специальными эффектами в "
+"OpenERP: вид - не может иметь проводок, объединение - счета которые могут "
+"иметь субсчета для консолидации нескольких компаний, кредитовые/дебетовые - "
+"для контрагентов (вычисление задолженностей), закрыт - для ненужных счетов."
 
 #. module: account
 #: view:account.chart.template:0
@@ -2203,7 +2214,7 @@ msgstr "Основная Последовательность"
 #: model:ir.model,name:account.model_account_payment_term
 #: field:res.partner,property_payment_term:0
 msgid "Payment Term"
-msgstr "Условия оплаты"
+msgstr "Условие оплаты"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_fiscal_position_form
@@ -2269,6 +2280,10 @@ msgid ""
 "You can create one in the menu: \n"
 "Configuration\\Financial Accounting\\Accounts\\Journals."
 msgstr ""
+"Для этой компании не найден журнал типа %s.\n"
+"\n"
+"Вы можете создать его в меню:\n"
+"Настройка\\Финансы и бухгалтерия\\Счета\\Журналы."
 
 #. module: account
 #: field:account.invoice.tax,base_code_id:0
@@ -2351,11 +2366,10 @@ msgid ""
 "date empty, it means direct payment. The payment term may compute several "
 "due dates, for example 50% now, 50% in one month."
 msgstr ""
-"При использовании условий платежа, дата валютирования будет сгенерирована "
-"автоматически при создании проводок. Если вы оставляете условия платежа и "
-"дату валютирования незаполненными - это будет подразумевать прямой платеж. "
-"Условия платежа могут включать в себя несколько дат валютирования, например "
-"50% сегодня, 50% в следующем месяце."
+"При использовании условий оплаты, срок будет вычислен автоматически при "
+"создании проводок. Если вы оставляете условие оплаты и срок незаполненными - "
+"это будет подразумевать прямой платеж. Условие оплаты может включать в себя "
+"несколько сроков, например 50% сразу, 50% в этом месяце."
 
 #. module: account
 #: view:account.analytic.cost.ledger.journal.report:0
@@ -2473,7 +2487,7 @@ msgstr "Сверка банковской выписки"
 #. module: account
 #: report:account.invoice:0
 msgid "Disc.(%)"
-msgstr "Скид.(%)"
+msgstr "Скидка (%)"
 
 #. module: account
 #: report:account.general.ledger:0
@@ -2668,6 +2682,9 @@ msgid ""
 "The optional quantity expressed by this line, eg: number of product sold. "
 "The quantity is not a legal requirement but is very useful for some reports."
 msgstr ""
+"Необязательное количество отраженное в этой строке, например, количество "
+"проданных товаров. Количество не является обязательным, но оно очень полезно "
+"для некоторых отчетов."
 
 #. module: account
 #: view:account.payment.term.line:0
@@ -2715,6 +2732,8 @@ msgid ""
 "between the creation date or the creation date of the entries plus the "
 "partner payment terms."
 msgstr ""
+"Дата проведения созданных проводок для этой модели. Вы можете выбрать между "
+"датой создания и датой создания проводок плюс условия оплаты партнера."
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_accounting
@@ -2748,6 +2767,8 @@ msgid ""
 "It adds initial balance row on report which display previous sum amount of "
 "debit/credit/balance"
 msgstr ""
+"Добавляет колонку начального баланса к отчету который выводит предыдущую "
+"сумму дебета/кредита/баланса."
 
 #. module: account
 #: view:account.analytic.line:0
@@ -2941,6 +2962,8 @@ msgid ""
 "This wizard will validate all journal entries of a particular journal and "
 "period. Once journal entries are validated, you can not update them anymore."
 msgstr ""
+"Этот мастер утверждает все проводки журнала для конкретного журнала и "
+"периода. После утверждения проводок вы не сможете их изменить."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_chart_template_form
@@ -3086,6 +3109,7 @@ msgid ""
 "The amount expressed in the related account currency if not equal to the "
 "company one."
 msgstr ""
+"Сумма выражена в валюте связанного счета, если не равна валюте компании."
 
 #. module: account
 #: view:account.bank.statement:0
@@ -3375,6 +3399,8 @@ msgid ""
 "based on partner payment term!\n"
 "Please define partner on it!"
 msgstr ""
+"Дата исполнения проводки созданной строкой \"%s\" модели \"%s\" основана на "
+"условии оплаты контрагента."
 
 #. module: account
 #: code:addons/account/account_move_line.py:801
@@ -3532,6 +3558,7 @@ msgid ""
 "The Payment Term of Supplier does not have Payment Term Lines(Computation) "
 "defined !"
 msgstr ""
+"Условие оплаты поставщика не содержит строк условий оплаты(расчетов)!"
 
 #. module: account
 #: view:account.state.open:0
@@ -3590,7 +3617,7 @@ msgstr "Журнал аналитических проводок"
 #: view:product.template:0
 #: view:res.partner:0
 msgid "Accounting"
-msgstr "Бухгалтерия"
+msgstr "Учёт"
 
 #. module: account
 #: help:account.central.journal,amount_currency:0
@@ -3886,6 +3913,11 @@ msgid ""
 "the system on document validation (invoices, bank statements...) and will be "
 "created in 'Posted' state."
 msgstr ""
+"Все созданные вручную новые проводки в журнале обычно в состоянии \"Не "
+"проведено\", но вы можете установить опцию для пропуска этого состояния в "
+"журнале. Проводки в этом случае, как и создаваемые системой при обработке "
+"документов (счетов, банковских выписок, ...), будут создаваться со статусом "
+"\"Проведено\"."
 
 #. module: account
 #: code:addons/account/account_analytic_line.py:90
@@ -4865,6 +4897,8 @@ msgid ""
 "Number of days to add before computation of the day of month.If Date=15/01, "
 "Number of Days=22, Day of Month=-1, then the due date is 28/02."
 msgstr ""
+"Количество дней для добавления перед вычислением дня месяца. Если "
+"дата=15/01, количество дней=22, день месяца=-1, то срок 28/02."
 
 #. module: account
 #: code:addons/account/account.py:2940
@@ -5101,8 +5135,8 @@ msgid ""
 "The sequence field is used to order the payment term lines from the lowest "
 "sequences to the higher ones"
 msgstr ""
-"Поле \"последовательность\" используется для упорядочения строк в платежном "
-"документе от наименьшего номера к наибольшему"
+"Поле \"последовательность\" используется для упорядочения строк в условии "
+"оплаты от наименьшего номера к наибольшему"
 
 #. module: account
 #: view:account.fiscal.position.template:0
@@ -5319,6 +5353,8 @@ msgid ""
 "document shows your debit and credit taking in consideration some criteria "
 "you can choose by using the search tool."
 msgstr ""
+"Этот вид предназначен для анализа различных финансовых счетов. Документ "
+"показывает дебет и кредит в соответствии с выбранными критериями поиска."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_tax_code_list
@@ -5345,6 +5381,9 @@ msgid ""
 "that you should have your last line with the type 'Balance' to ensure that "
 "the whole amount will be threated."
 msgstr ""
+"Выберите вид расчета относящийся к этой строке условия оплаты. Отметим, что "
+"последняя строка должна быть с типом \"Баланс\" для проверки обработки всей "
+"суммы."
 
 #. module: account
 #: field:account.invoice,period_id:0
@@ -5869,6 +5908,9 @@ msgid ""
 "higher ones. The order is important if you have a tax that has several tax "
 "children. In this case, the evaluation order is important."
 msgstr ""
+"Поле \"последовательность\" используется для упорядочивания позиций налогов "
+"от меньшего к большему. Последовательность важна при наличии субналогов . В "
+"таком случае важна последовательность вычислений."
 
 #. module: account
 #: selection:account.account,type:0
@@ -6181,6 +6223,8 @@ msgid ""
 "Check this box if you want to allow the cancellation the entries related to "
 "this journal or of the invoice related to this journal"
 msgstr ""
+"Отметьте, если вы хотите позволить отменять проводки связанные с этим "
+"журналом или счетом связанным с этим журналом"
 
 #. module: account
 #: view:account.fiscalyear.close:0
@@ -6610,6 +6654,11 @@ msgid ""
 "Most of the OpenERP operations (invoices, timesheets, expenses, etc) "
 "generate analytic entries on the related account."
 msgstr ""
+"Обычный план счетов имеет структуру определяемую правовыми требованиями "
+"страны. Структура аналитического плана счетов должна отражать требования "
+"вашего бизнеса. Обычно он структурирован по контрактам, проектам, ТМЦ или "
+"отделам. Большинство операций в OpenERP (счета, бюллетени, затраты и т.д.) "
+"создают проводки аналитики в соответствующих счетах."
 
 #. module: account
 #: field:account.analytic.journal,line_ids:0
@@ -6746,6 +6795,9 @@ msgid ""
 "new counterpart but will share the same counterpart. This is used in fiscal "
 "year closing."
 msgstr ""
+"Отметьте, для определения того, что каждая проводка в этом журнале не "
+"создает новой корреспондирующей части, а использует одну и ту же. Это "
+"используется при  закрытии финансового года."
 
 #. module: account
 #: field:account.bank.statement,closing_date:0
@@ -6794,7 +6846,7 @@ msgstr ""
 #: code:addons/account/account.py:952
 #, python-format
 msgid "You should have chosen periods that belongs to the same company"
-msgstr ""
+msgstr "Вы должны выбрать периоды принадлежащие одной компании."
 
 #. module: account
 #: field:account.fiscalyear.close,report_name:0
@@ -6941,7 +6993,7 @@ msgstr ""
 #. module: account
 #: view:account.payment.term.line:0
 msgid "  value amount: n.a"
-msgstr ""
+msgstr "  значение суммы: неопределено"
 
 #. module: account
 #: selection:account.move.line,centralisation:0
@@ -7204,7 +7256,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_legal_statement
 msgid "Legal Reports"
-msgstr ""
+msgstr "Официальные отчеты"
 
 #. module: account
 #: field:account.tax.code,sum_period:0
@@ -7218,6 +7270,9 @@ msgid ""
 "to the higher ones. The order is important if you have a tax with several "
 "tax children. In this case, the evaluation order is important."
 msgstr ""
+"Поле \"последовательность\" используется для упорядочивания позиций налогов "
+"от меньшего к большему. Последовательность важна при наличии субналогов . В "
+"таком случае важна последовательность вычислений."
 
 #. module: account
 #: model:ir.model,name:account.model_account_cashbox_line
@@ -7310,7 +7365,7 @@ msgstr "Выбрать валюту применяемую в счете"
 #: code:addons/account/wizard/account_invoice_refund.py:100
 #, python-format
 msgid "Can not %s draft/proforma/cancel invoice."
-msgstr ""
+msgstr "Нельзя %s черновик/проформу/отмененный счет."
 
 #. module: account
 #: code:addons/account/invoice.py:795
@@ -7344,6 +7399,7 @@ msgid ""
 "Select Fiscal Year which you want to remove entries for its End of year "
 "entries journal"
 msgstr ""
+"Выберите финансовый год для удаления проводок из журнала \"Конец года\""
 
 #. module: account
 #: field:account.tax.template,type_tax_use:0
@@ -7484,7 +7540,7 @@ msgstr "Проформа"
 #. module: account
 #: report:account.analytic.account.cost_ledger:0
 msgid "J.C. /Move name"
-msgstr ""
+msgstr "Код журн./Операция"
 
 #. module: account
 #: model:ir.model,name:account.model_account_open_closed_fiscalyear
@@ -7501,7 +7557,7 @@ msgstr "Журнал возврата покупок"
 #. module: account
 #: help:account.tax.template,amount:0
 msgid "For Tax Type percent enter % ratio between 0-1."
-msgstr ""
+msgstr "Для налога типа \"процент\" введите %, как число от 0 до 1."
 
 #. module: account
 #: selection:account.automatic.reconcile,power:0
@@ -7758,6 +7814,10 @@ msgid ""
 "sales orders or deliveries. You should only confirm them before sending them "
 "to your customers."
 msgstr ""
+"Вы можете создавать счета заказчикам и управлять счетами выставленными вашим "
+"клиентам. OpenERP может создавать черновики счетов автоматически по заказам "
+"на продажу и доставку. Вы должны только подтвердить их пред выставлением "
+"заказчикам."
 
 #. module: account
 #: view:account.entries.report:0
@@ -7853,7 +7913,7 @@ msgstr ""
 #. module: account
 #: view:account.payment.term.line:0
 msgid "  valuation: balance"
-msgstr ""
+msgstr "  расчет: баланс"
 
 #. module: account
 #: view:account.tax.code:0
@@ -7976,6 +8036,7 @@ msgid ""
 "The amount expressed in an optional other currency if it is a multi-currency "
 "entry."
 msgstr ""
+"Сумма выражается в дополнительный валюте, если эта проводка мульти-валютная."
 
 #. module: account
 #: view:account.account:0
@@ -8812,6 +8873,9 @@ msgid ""
 "Make sure you have configured Payment Term properly !\n"
 "It should contain atleast one Payment Term Line with type \"Balance\" !"
 msgstr ""
+"Вы не можете утвердить несбалансированную проводку!\n"
+"Проверьте правильность настройки условия оплаты!\n"
+"Должна быть хотя бы одна строка условия оплаты с типом \"Баланс\"!"
 
 #. module: account
 #: help:res.partner,property_account_payable:0
@@ -8888,6 +8952,9 @@ msgid ""
 "payment term!\n"
 "Please define partner on it!"
 msgstr ""
+"Дата исполнения проводки созданной строкой \"%s\" основана на условии оплаты "
+"контрагента!\n"
+"Пожалуйста, задайте контрагента!"
 
 #. module: account
 #: field:account.cashbox.line,number:0
@@ -9337,7 +9404,7 @@ msgstr ""
 #: selection:account.fiscalyear,state:0
 #: selection:account.period,state:0
 msgid "Closed"
-msgstr "Закрыто"
+msgstr "Закрыт"
 
 #. module: account
 #: model:process.node,note:account.process_node_paidinvoice0
@@ -9417,7 +9484,7 @@ msgstr "Дебиторская задолженность"
 #. module: account
 #: selection:account.model.line,date_maturity:0
 msgid "Partner Payment Term"
-msgstr "Условия платежа партнера"
+msgstr "Условие оплаты контрагента"
 
 #. module: account
 #: field:temp.range,name:0
@@ -9498,7 +9565,7 @@ msgstr "Этот период уже закрыт !"
 #. module: account
 #: help:account.move.line,currency_id:0
 msgid "The optional other currency if it is a multi-currency entry."
-msgstr "Дополнительная валюта, если эта запись мульти-валютная."
+msgstr "Дополнительная валюта, если эта проводка мульти-валютная."
 
 #. module: account
 #: model:process.transition,note:account.process_transition_invoiceimport0
