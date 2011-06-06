@@ -237,7 +237,6 @@ class delivery_grid_line(osv.osv):
         'variable_factor': fields.selection([('weight','Weight'),('volume','Volume'),('wv','Weight * Volume'), ('price','Price')], 'Variable Factor', required=True),
         'list_price': fields.float('Sale Price', required=True),
         'standard_price': fields.float('Cost Price', required=True),
-        'country_id': fields.many2one('res.country', 'Country'),
     }
     _defaults = {
         'type': lambda *args: 'weight',
