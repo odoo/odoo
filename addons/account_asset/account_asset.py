@@ -134,6 +134,11 @@ class account_asset_asset(osv.osv):
                 depreciation_date = datetime(year + (month / 12), month % 12, day)
         return True
 
+    def set_to_close(self, cr, uid, ids, context={}):
+        return self.write(cr, uid, ids, {
+            'state':'close'
+        }, context)
+
     def validate(self, cr, uid, ids, context={}):
         return self.write(cr, uid, ids, {
             'state':'open'

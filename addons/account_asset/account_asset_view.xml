@@ -100,6 +100,8 @@
                     </group>
                     <group colspan="4">
                         <field name="state" readonly="1"/>
+                        <button name="validate" states="draft" string="Confirm Asset" type="object" icon="gtk-apply"/>
+                        <button name="set_to_close" states="open" string="Set to Close" type="object" icon="gtk-no"/>
                     </group>
                     <newline/>
                  </page>
@@ -130,9 +132,6 @@
                     <field name="note" nolabel="1"/>
                  </page>
               </notebook>
-              <group colspan="2" col="2">
-                 <button name="validate" states="draft" string="Confirm Asset" type="object" icon="gtk-apply"/>
-              </group>
            </form>
        </field>
     </record>
