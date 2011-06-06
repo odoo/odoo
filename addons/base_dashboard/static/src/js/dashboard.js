@@ -19,7 +19,7 @@ openerp.base.form.DashBoard = openerp.base.form.Widget.extend({
         // Events
         this.$element.find('.oe-dashboard-link-undo').click(this.on_undo);
         this.$element.find('.oe-dashboard-link-add_widget').click(this.on_add_widget);
-        this.$element.find('.oe-dashboard-link-edit_layout').click(this.on_edit_layout);
+        this.$element.find('.oe-dashboard-link-change_layout').click(this.on_change_layout);
         this.$element.find('.oe-dashboard-column .ui-icon-minusthick').click(this.on_fold_action);
         this.$element.find('.oe-dashboard-column .ui-icon-closethick').click(this.on_close_action);
 
@@ -44,7 +44,44 @@ openerp.base.form.DashBoard = openerp.base.form.Widget.extend({
     },
     on_add_widget: function() {
     },
-    on_edit_layout: function() {
+    on_change_layout: function() {
+        var self = this;
+        var qdict = {
+            current_layout : this.$element.find('.oe-dashboard').attr('data-layout')
+        };
+        var $dialog = $('<div>').dialog({
+                            modal: true,
+                            title: 'Edit Layout',
+                            width: 'auto',
+                            height: 'auto',
+                        }).html(QWeb.render('DashBoard.layouts', qdict));
+        $dialog.find('li').click(function() {
+            var layout = $(this).attr('data-layout');
+            $dialog.dialog("destroy");
+            self.do_change_layout(layout);
+        });
+    },
+    do_change_layout: function(new_layout) {
+        var $dashboard = this.$element.find('.oe-dashboard');
+        var current_layout = $dashboard.attr('data-layout');
+        if (current_layout != new_layout) {
+            var clayout = current_layout.split('-').length,
+                nlayout = new_layout.split('-').length,
+                column_diff = clayout - nlayout;
+            if (column_diff > 0) {
+                var $last_column = $();
+                $dashboard.find('.oe-dashboard-column').each(function(k, v) {
+                    if (k >= nlayout) {
+                        $(v).find('.oe-dashboard-action').appendTo($last_column);
+                    } else {
+                        $last_column = $(v);
+                    }
+                });
+            }
+            $dashboard.toggleClass('oe-dashboard-layout_' + current_layout + ' oe-dashboard-layout_' + new_layout);
+            $dashboard.attr('data-layout', new_layout);
+            this.do_save_dashboard();
+        }
     },
     on_fold_action: function(e) {
         var $e = $(e.currentTarget);
@@ -92,6 +129,14 @@ openerp.base.form.DashBoard = openerp.base.form.Widget.extend({
         view.start();
     },
     render: function() {
+        // We should start with three columns available
+        for (var i = this.node.children.length; i < 3; i++) {
+            this.node.children.push({
+                tag: 'column',
+                attrs: {},
+                children: []
+            });
+        }
         return QWeb.render(this.template, this);
     },
     do_reload: function() {
@@ -119,7 +164,7 @@ openerp.base.form.DashBoardLegacy = openerp.base.form.DashBoard.extend({
                 }
             }
         });
-        return QWeb.render(this.template, this);
+        return this._super(this, arguments);
     }
 });
 

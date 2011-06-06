@@ -2,13 +2,16 @@
 <t t-name="DashBoard">
     <div class="oe-dashboard-links">
         <button type="button" class="button oe-dashboard-link-undo" t-att-style="view.fields_view.custom_view_id ? null : 'display: none'">
-            Undo
+            <img src="/base/static/src/img/icons/gtk-undo.png" width="16" height="16"/>
+            <span>Undo</span>
         </button>
         <button type="button" class="button oe-dashboard-link-add_widget">
-            Add Widget
+            <img src="/base/static/src/img/icons/STOCK_ADD.png" width="16" height="16"/>
+            <span>Add Widget</span>
         </button>
-        <button type="button" class="button oe-dashboard-link-edit_layout">
-            Edit layout
+        <button type="button" class="button oe-dashboard-link-change_layout">
+            <img src="/base/static/src/img/icons/gtk-edit.png" width="16" height="16"/>
+            <span>Change layout</span>
         </button>
     </div>
     <div t-att-data-layout="node.attrs.style" t-attf-class="oe-dashboard oe-dashboard-layout_#{node.attrs.style}">
@@ -33,12 +36,12 @@
         <p>
             <strong>Choose dashboard layout</strong>
         </p>
-        <ul class="layoutselection">
-            <li id="layout1" class="layoutchoice" layout-style="1"></li>
-            <li id="layout2" class="layoutchoice" layout-style="1-1"></li>
-            <li id="layout3" class="layoutchoice" layout-style="1-1-1"></li>
-            <li id="layout4" class="layoutchoice" layout-style="1-2"></li>
-            <li id="layout5" class="layoutchoice" layout-style="2-1"></li>
+        <ul>
+            <li t-foreach="'1 1-1 1-1-1 1-2 2-1'.split(' ')" t-as="layout" t-att-data-layout="layout">
+                <img t-attf-src="/base_dashboard/static/src/img/layout_#{layout}.png"/>
+                <img t-if="layout == current_layout"
+                    src="/base/static/src/img/icons/gtk-apply.png" width="16" height="16" class="oe-selected-layout"/>
+            </li>
         </ul>
     </div>
 </t>
