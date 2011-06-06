@@ -18,8 +18,9 @@
                 <group colspan="2" col="2">
                     <separator string="Depreciation Dates" colspan="2" />
                     <field name="method_time"/>
-                    <field name="method_delay"/>
-                    <field name="method_period" attrs="{'invisible':[('method_time','=','end')]}"/>                
+                    <field name="method_period"/>
+                    <field name="method_delay" attrs="{'invisible':[('method_time','=','end')]}"/>
+                    <field name="method_end" attrs="{'required': [('method_time','=','end')], 'invisible':[('method_time','=','delay')]}"/> 
                 </group>
                 <group colspan="2" col="2">
                     <separator string="Depreciation Method" colspan="2" />
@@ -88,9 +89,10 @@
                     <field name="method_progress_factor" attrs="{'invisible':[('method','=','linear')]}"/>
                     <newline/>
                     <field name="method_time"/>
-                    <field name="method_period" attrs="{'invisible':[('method_time','=','end')]}"/>
+                    <field name="method_period"/>
+                    <field name="method_delay" attrs="{'invisible': [('method_time','=','end')]}"/>
                     <field name="prorata" colspan="1"/>
-                    <field name="method_delay"/>
+                    <field name="method_end" attrs="{'required': [('method_time','=','end')], 'invisible':[('method_time','=','delay')]}"/>
                     <newline/>
                  </page>
                  <page string="Depreciation board">

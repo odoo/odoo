@@ -45,6 +45,7 @@ class account_asset_category(osv.osv):
         'method_period': fields.integer('Period Length'),
         'method_progress_factor': fields.float('Progressif Factor'),
         'method_time': fields.selection([('delay','Delay'),('end','Ending Period')], 'Time Method', required=True),
+        'method_end': fields.date('Ending date'),
         'prorata':fields.boolean('Prorata Temporis', help='Indicates that the accounting entries for this asset have to be done from the purchase date instead of the first January'),
         'open_asset': fields.boolean('Skip Draft State', help="Check this if you want to automatically confirm the assets of this category when created by invoice."),
     }
@@ -104,9 +105,6 @@ class account_asset_asset(osv.osv):
     def compute_depreciation_board(self, cr, uid,ids, context=None):
         depreciation_lin_obj = self.pool.get('account.asset.depreciation.line')
         for asset in self.browse(cr, uid, ids, context=context):
-            undone_dotation_number = asset.method_delay
-            if asset.prorata:
-                undone_dotation_number += 1
             # For all cases: amount to depreciate is (Purchase Value - Salvage Value) 
             amount_to_depr = residual_amount = asset.purchase_value - asset.salvage_value
             depreciation_date = datetime.strptime(self._get_last_depreciation_date(cr, uid, [asset.id], context)[asset.id], '%Y-%m-%d')
@@ -114,6 +112,12 @@ class account_asset_asset(osv.osv):
             month = depreciation_date.month
             year = depreciation_date.year
             total_days = (year % 4) and 365 or 366
+            undone_dotation_number = asset.method_delay
+            if asset.method_time == 'end':
+                end_date = datetime.strptime(asset.method_end, '%Y-%m-%d')
+                undone_dotation_number = (end_date - depreciation_date).days / total_days
+            if asset.prorata or asset.method_time == 'end':
+                undone_dotation_number += 1
             for i in range(1,undone_dotation_number+1):
                 if i == undone_dotation_number + 1:
                     amount = residual_amount
@@ -194,7 +198,7 @@ class account_asset_asset(osv.osv):
         'method': fields.selection([('linear','Linear'),('progressif','Progressive')], 'Computation method', required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'method_delay': fields.integer('During (interval)', readonly=True, states={'draft':[('readonly',False)]}),
         'method_period': fields.integer('Depre. all (period)', readonly=True, states={'draft':[('readonly',False)]}),
-        'method_end': fields.date('Ending date'),
+        'method_end': fields.date('Ending date', readonly=True, states={'draft':[('readonly',False)]}),
         'method_progress_factor': fields.float('Progressif Factor', readonly=True, states={'draft':[('readonly',False)]}),
         'value_residual': fields.function(_amount_residual, method=True, digits_compute=dp.get_precision('Account'), string='Residual Value'),
         'method_time': fields.selection([('delay','Delay'),('end','Ending Period')], 'Time Method', required=True, readonly=True, states={'draft':[('readonly',False)]}),
@@ -239,6 +243,7 @@ class account_asset_asset(osv.osv):
                             'method_time': category_obj.method_time,
                             'method_period': category_obj.method_period,
                             'method_progress_factor': category_obj.method_progress_factor,
+                            'method_end': category_obj.method_end,
                             'prorata': category_obj.prorata,
             }
         return res
