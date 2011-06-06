@@ -164,7 +164,7 @@ class account_asset_asset(osv.osv):
 
     def _amount_residual(self, cr, uid, ids, name, args, context={}):
         cr.execute("""SELECT
-                l.asset_id as id, SUM(abs(l.debit-l.credit)) AS amount
+                l.asset_id as id, round(SUM(abs(l.debit-l.credit))) AS amount
             FROM
                 account_move_line l
             WHERE
