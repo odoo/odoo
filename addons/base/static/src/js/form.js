@@ -951,46 +951,59 @@ openerp.base.form.FieldSelection = openerp.base.form.Field.extend({
     }
 });
 
-openerp.base.form.FieldMany2OneDatasSet = openerp.base.DataSetStatic.extend({
-    start: function() {
-    },
-    write: function (id, data, callback) {
-        this._super(id, data, callback);
-    }
-});
-
 openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
     init: function(view, node) {
         this._super(view, node);
         this.template = "FieldMany2One";
         this.is_field_m2o = true;
+        this.limit = 7;
     },
     start: function() {
-        this.$element = $('#' + this.element_id);
-        this.dataset = new openerp.base.form.FieldMany2OneDatasSet(this.session, this.field.relation);
-        var views = [ [false,"list"], [false,"form"] ];
-        new openerp.base.m2o(this.$element, this.field.relation, this.dataset, this.session)
-        this.$element.find('input').change(this.on_ui_change);
+        this._super();
+        var self = this;
+        this.$input = this.$element.find("input");
+        this.$drop_down = this.$element.find("span");
+        this.$menu_btn = this.$element.find("button");
+        this.$drop_down.button({
+            icons: {primary: "ui-icon-triangle-1-s"}, text: false
+        });
+        
+        this.$input.autocomplete({
+            source: function(req, resp) { self.get_search_result(req, resp); }
+        });
+    },
+    get_search_result: function(request, response) {
+        var search_val = request.term;
+        var self = this;
+        
+        var dataset = new openerp.base.DataSetStatic(this.session, this.field.relation, []);
+        
+        dataset.name_search(search_val, this.limit + 1, function(data){
+            var result = data.result;
+            var values = [];
+
+            $.each(result, function(i, val){
+                values.push({
+                    value: val[1],
+                    id: val[0]
+                });
+            });
+            var overflow = false;
+            if (values.length > this.limit) {
+                values = values.slice(0, this.limit);
+                overflow = true;
+            }
+            response(values);
+        });
     },
     set_value: function(value) {
-        this._super.apply(this, arguments);
-        var show_value = '';
-        if (value != null && value !== false) {
-            show_value = value[1];
-            this.value = value[0];
+        if (value != false) {
+            this.data_id = value;
         }
-        this.$element.find('input').val(show_value);
-        this.$element.find('input').attr('m2o_id', this.value);
     },
-
     get_value: function() {
-        var val = this.$element.find('input').attr('m2o_id') || this.value
-        return val;
+        return "";
     },
-
-    on_ui_change: function() {
-        this.touched = this.view.touched = true;
-    }
 });
 
 openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
