@@ -24,7 +24,6 @@ init: function(view_manager, session, element_id, dataset, view_id) {
         this.date_delay = "";
         this.date_stop = "";
         this.color_field = "";
-        this.day_lenth = 8;
         this.colors = [];
         this.color_values = [];
         this.calendar_fields = {};
@@ -91,7 +90,6 @@ init: function(view_manager, session, element_id, dataset, view_id) {
 
         var self = this;
         var result = events;
-        var project = {};
         var smalldate = "";
 
         COLOR_PALETTE = ['#ccccff', '#cc99ff', '#75507b', '#3465a4', '#73d216', '#c17d11', '#edd400',
@@ -119,12 +117,19 @@ init: function(view_manager, session, element_id, dataset, view_id) {
                 }
             }
         project = new GanttProjectInfo(1, self.name, smalldate);
+        task = new GanttTaskInfo(111, "temp", smalldate, 1, 100, "", "red");
+        project.addTask(task);
         ganttChartControl.addProject(project);
         }
 
         //create child
         var k = 0;
         var color_box = {};
+        var parents = {};
+        var all_events = {};
+        var child_event = {};
+        var temp_id = "";
+        var final_events = [];
         for (i in show_event) {
 
             var res = show_event[i];
@@ -153,8 +158,51 @@ init: function(view_manager, session, element_id, dataset, view_id) {
             }
             if (duration == false)
                 duration = 0
-            task = new GanttTaskInfo(id, text, start_date, duration, 100, "", color_box[color]);
-            project.addTask(task);
+
+            if (self.grp != undefined){
+                for (j in self.grp){
+                    var grp_key = res[self.grp[j]['group_by']];
+
+                    if (typeof(grp_key) == "object"){
+                        grp_key = res[self.grp[j]['group_by']][1];
+                    }
+                    else{
+                        grp_key = res[self.grp[j]['group_by']];
+                    }
+
+                    if (grp_key == false){
+                        grp_key = "False";
+                    }
+
+                    if (j == 0){
+                        if (parents[grp_key] == undefined){
+                            var mod_id = i+ "_" +j;
+                            parents[grp_key] = mod_id;
+                            child_event[mod_id] = {};
+                            all_events[mod_id] = {'parent': "", 'evt':[mod_id , grp_key, start_date, start_date, 100, "", "white"]};
+                        }
+                        else{
+                            mod_id = parents[grp_key];
+                        }
+                        temp_id = mod_id;
+                    }else{
+                        if (child_event[mod_id][grp_key] == undefined){
+                            var ch_mod_id = i+ "_" +j;
+                            child_event[mod_id][grp_key] = ch_mod_id;
+                            child_event[ch_mod_id] = {};
+                            temp_id = ch_mod_id;
+                            all_events[ch_mod_id] = {'parent': mod_id, 'evt':[ch_mod_id , grp_key, start_date, start_date, 100, "","white"]};
+                            mod_id = ch_mod_id;
+                        }
+                        else{
+                            mod_id = child_event[mod_id][grp_key];
+                            temp_id = mod_id;
+                        }
+                    }
+                }
+                all_events[id] = {'parent': temp_id, 'evt':[id , text, start_date, duration, 100, "", color_box[color]]};
+                final_events.push(id);
+            }
         }
 
         ganttChartControl.create("GanttDiv");
@@ -163,6 +211,67 @@ init: function(view_manager, session, element_id, dataset, view_id) {
         ganttChartControl.attachEvent("onTaskEndDrag", function(task) {self.on_resize_drag_end(task, "drag");});
         ganttChartControl.attachEvent("onTaskDblClick", function(task) {self.open_popup(task);});
 
+
+        project = ganttChartControl.getProjectById(1);
+        project.deleteTask(111);
+
+        for (i in final_events){
+            var evt_id = final_events[i];
+            var evt_date = all_events[evt_id]['evt'][2];
+            while (all_events[evt_id]['parent'] != "") {
+               var parent_id =all_events[evt_id]['parent'];
+               if (all_events[parent_id]['evt'][2] > evt_date){
+                    all_events[parent_id]['evt'][2] = evt_date;
+               }
+               evt_id = parent_id;
+            }
+        }
+        var evt_id = [];
+        var evt_date = "";
+        var evt_duration = "";
+        var evt_end_date = "";
+        
+        for (i in final_events){
+            evt_id = final_events[i];
+            evt_date = all_events[evt_id]['evt'][2];
+            evt_duration = all_events[evt_id]['evt'][3];
+
+            evt_str_date = this.convert_date_str(evt_date);
+            evt_end_date = this.end_date(evt_str_date, evt_duration);
+
+            while (all_events[evt_id]['parent'] != "") {
+               var parent_id =all_events[evt_id]['parent'];
+               if (all_events[parent_id]['evt'][3] < evt_end_date){
+                    all_events[parent_id]['evt'][3] = evt_end_date;
+               }
+               evt_id = parent_id;
+            }
+        }
+
+        for (i in all_events){
+            res = all_events[i];
+
+            if ((typeof(res['evt'][3])) == "object"){
+                res['evt'][3] = self.hours_between(res['evt'][2],res['evt'][3]);
+            }
+
+            project.insertTask(res['evt'][0], res['evt'][1], res['evt'][2], res['evt'][3], 100, "",res['evt'][6], res['parent']);
+        }
+    },
+
+    end_date: function(dat, duration) {
+
+         var self = this;
+
+         dat = this.convert_str_date(dat);
+
+         var day = Math.floor(duration/self.day_length);
+         var hrs = duration % self.day_length;
+
+         dat.add(day).days();
+         dat.add(hrs).hour();
+
+         return dat;
     },
 
     hours_between: function(date1, date2) {
@@ -262,7 +371,7 @@ init: function(view_manager, session, element_id, dataset, view_id) {
         throw "Unrecognized date/time format";
     },
 
-    reload_gantt: function(domain) {
+    reload_gantt: function() {
         var self = this;
         var ajax = {
                 url: '/base/dataset/search_read',
@@ -282,7 +391,7 @@ init: function(view_manager, session, element_id, dataset, view_id) {
     do_search: function (domains, contexts, groupbys) {
 
         var self = this;
-
+        this.grp = groupbys;
         return this.rpc('/base/session/eval_domain_and_context', {
             domains: domains,
             contexts: contexts,
@@ -290,7 +399,7 @@ init: function(view_manager, session, element_id, dataset, view_id) {
         }, function (results) {
             self.dataset.context = results.context;
             self.dataset.domain = results.domain;
-            return self.reload_gantt(self.dataset.domain);
+            return self.reload_gantt();
         });
     }
 
