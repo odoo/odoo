@@ -35,9 +35,33 @@
                             <field name="amount" attrs="{'invisible':[('free_if_more_than','=',False)]}"/>
                         </group>
                         <newline/>
-						<field name="use_detailed_pricelist" />
+                        <field name="use_detailed_pricelist" />
                     </group>
-						<field name="pricelist_ids" nolabel="1" attrs="{'invisible':[('use_detailed_pricelist','=',False)]}"/>
+                        <field name="pricelist_ids" nolabel="1" attrs="{'invisible':[('use_detailed_pricelist','=',False)]}" mode="tree,form">
+                         <tree string="Delivery grids">
+                              <field name="sequence"/>
+                              <field name="carrier_id"/>
+                              <field name="name"/>
+                         </tree>
+                        <form string="Delivery grids">
+                             <field name="name" select="1"/>
+                             <field name="active" select="1"/>
+                             <field name="sequence" groups="base.group_extended" select="1"/>
+                             <notebook colspan="4">
+                               <page string="Grid definition">
+                                  <field colspan="4" name="line_ids" nolabel="1" select="1"/>
+                               </page>
+                               <page string="Destination">
+                                   <separator colspan="4" string="Countries"/>
+                                   <field colspan="4" name="country_ids" nolabel="1"/>
+                                   <separator colspan="4" string="States"/>
+                                   <field colspan="4" name="state_ids" nolabel="1"/>
+                                   <field name="zip_from"/>
+                                   <field name="zip_to"/>
+                               </page>
+                             </notebook>
+                       </form>
+                   </field>
                 </form>
             </field>
         </record>
@@ -119,8 +143,8 @@
                     <group colspan="5" col="5">
                         <field colspan="4" name="name" select="1"/>
                         <newline/>
-						<field name="type" string="Condition"/>
-						<field name="operator" nolabel="1" />
+                        <field name="type" string="Condition"/>
+                        <field name="operator" nolabel="1" />
                         <field name="max_value" nolabel="1"/>
                     </group>
                     <newline/>

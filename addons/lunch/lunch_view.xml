@@ -24,24 +24,24 @@
             <field name="model">lunch.order</field>
             <field name="arch" type="xml">
                 <form string="Order">
-                    <group col="4" colspan="4">
+                     <group colspan="4" col="4">
                         <field name="user_id" select="1"/>
                         <field name="date" select="1"/>
-                    </group>
-                    <group col="4" colspan="4">
-                         <field name="product" select="1" on_change="onchange_product(product)"/>
-                         <field name="category"/>
-                         <field name="cashmove"/>
+                        <field name="product" select="1" on_change="onchange_product(product)"/>
+                        <field name="category"/>
                         <field name="descript"/>
-                     </group>
-                    <group col="4" colspan="6" >
                         <field name="price"/>
-                        <button name="%(action_lunch_order_confirm)d" string="Confirm Order" type="action" icon="gtk-ok"/>
+                        <field name="cashmove"/>
+                        <newline/>
+                        <field name="state" />
+                        <button name="%(action_lunch_order_confirm)d" string="Confirm Order" type="action" icon="gtk-ok" attrs="{'invisible':[('state','=','confirmed')]}"   />
                         <button name="%(action_lunch_order_cancel)d" string="Cancel Order" type="action" icon="gtk-cancel"/>
                     </group>
-                    <group col="2" colspan="4">
-                        <field name="state"/>
-                    </group>
+                    <!--group colspan="4" col="8">
+                        <field name="state" colspan="4"/>
+                        <button name="%(action_lunch_order_confirm)d" string="Confirm Order" type="action" icon="gtk-ok" attrs="{'invisible':[('state','=','confirmed')]}"  colspan="2" />
+                        <button name="%(action_lunch_order_cancel)d" string="Cancel Order" type="action" icon="gtk-cancel" colspan="2"/>
+                    </group-->
                 </form>
             </field>
         </record>
