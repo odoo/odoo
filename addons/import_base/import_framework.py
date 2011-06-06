@@ -214,7 +214,6 @@ class import_framework(Thread):
                 fields.append(key)
                 value = val(dict(dict_sugar))
                 data_lst.append(value)
-                
         return fields, data_lst
     
     def _generate_xml_id(self, name, table):
@@ -297,7 +296,6 @@ class import_framework(Thread):
         domain_search = not domain_search and [('name', 'ilike', name)] or domain_search
         obj = self.obj.pool.get(model)
         xml_id = self._generate_xml_id(name, table)
-        
         xml_ref = self.mapped_id_if_exist(model, domain_search, table, name)
         fields.append('id')
         data.append(xml_id)
@@ -342,13 +340,17 @@ class import_framework(Thread):
             
         
         """
-        
         self.data_started = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         self.cr = pooler.get_db(self.cr.dbname).cursor()
         try:
             result = []
             imported = set() #to invoid importing 2 times the sames modules
             for table in self.table_list:
+#                try:
+#                    to_import = self.get_mapping()[table].get('import', True)
+#                except:
+#                    import traceback,sys
+#                    info = reduce(lambda x, y: x+y, traceback.format_exception(sys.exc_type, sys.exc_value, sys.exc_traceback))
                 to_import = self.get_mapping()[table].get('import', True)
                 if not table in imported:
                     res = self._resolve_dependencies(self.get_mapping()[table].get('dependencies', []), imported)
