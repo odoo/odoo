@@ -1035,7 +1035,6 @@ openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
         
         this.viewmanager = new openerp.base.ViewManager(this.view.session,
             this.element_id, this.dataset, views);
-        this.viewmanager.start();
         this.viewmanager.on_controller_inited.add_last(function(view_type, controller) {
             if (view_type == "list") {
                 // TODO niv
@@ -1044,10 +1043,14 @@ openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
             }
             self.is_started.resolve();
         });
+        this.viewmanager.start();
         
         $.when(this.is_started, this.is_setted).then(function() {
-            var view = self.viewmanager.views[self.viewmanager.active_view].controller;
-            view.reload_content();
+            if (modes[0] == "list") {
+                var view = self.viewmanager.views[self.viewmanager.active_view].controller;
+                view.reload_content();
+            }
+            // TODO niv: handle other types of views
         });
     },
     set_value: function(value) {
