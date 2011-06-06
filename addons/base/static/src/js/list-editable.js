@@ -47,7 +47,7 @@ openerp.base.list.editable = function (openerp) {
         },
         on_loaded: function (data, grouped) {
             // tree/@editable takes priority on everything else if present.
-            this.options.editable = data.fields_view.arch.editable || this.options.editable;
+            this.options.editable = data.fields_view.arch.attrs.editable || this.options.editable;
             return old_on_loaded.call(this, data, grouped);
         }
     });
