@@ -456,6 +456,8 @@ class DataGroup(openerpweb.Controller):
             dict(request.context, group_by=group_by_fields))
 
 class View(openerpweb.Controller):
+    _cp_path = "/base/view"
+
     def fields_view_get(self, request, model, view_id, view_type,
                         transform=True, toolbar=False, submenu=False):
         Model = request.session.model(model)
@@ -475,6 +477,25 @@ class View(openerpweb.Controller):
             if field["views"]:
                 for view in field["views"].values():
                     self.process_view(session, view, None, transform)
+
+    @openerpweb.jsonrequest
+    def add_custom(self, request, view_id, arch):
+        CustomView = request.session.model('ir.ui.view.custom')
+        CustomView.create({
+            'user_id': request.session._uid,
+            'ref_id': view_id,
+            'arch': arch
+        })
+        return {'result': True}
+
+    @openerpweb.jsonrequest
+    def undo_custom(self, request, view_id):
+        CustomView = request.session.model('ir.ui.view.custom')
+        vcustom = CustomView.search([('user_id', '=', request.session._uid), ('ref_id' ,'=', view_id)])
+        if vcustom:
+            CustomView.unlink([vcustom[0]])
+            return {'result': True}
+        return {'result': False}
 
     def normalize_attrs(self, elem, context):
         """ Normalize @attrs, @invisible, @required, @readonly and @states, so

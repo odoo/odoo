@@ -1,6 +1,9 @@
 <template>
 <t t-name="DashBoard">
     <div class="oe-dashboard-links">
+        <button type="button" class="button oe-dashboard-link-undo" t-att-style="view.fields_view.custom_view_id ? null : 'display: none'">
+            Undo
+        </button>
         <button type="button" class="button oe-dashboard-link-add_widget">
             Add Widget
         </button>
@@ -40,10 +43,12 @@
     </div>
 </t>
 <t t-name="DashBoard.xml">
-    <board t-att-style="style">
-        <column t-foreach="columns" t-as="column">
-            <action t-foreach="column" t-as="action" t-att="action"/>
-        </column>
-    </board>
+    <form t-att-string="form_title">
+        <board t-att-style="style">
+            <column t-foreach="columns" t-as="column">
+                <action t-foreach="column" t-as="action" t-att="action"/>
+            </column>
+        </board>
+    </form>
 </t>
 </template>
