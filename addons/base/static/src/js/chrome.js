@@ -444,8 +444,8 @@ openerp.base.Session = openerp.base.BasicController.extend( /** @lends openerp.b
     logout: function() {
         this.uid = this.get_cookie('uid');
         this.session_id = this.get_cookie('session_id');
-        this.set_cookie('uid', false);
-        this.set_cookie('session_id', false);
+        this.set_cookie('uid', '');
+        this.set_cookie('session_id', '');
         this.on_session_invalid(function() {});
     },
     /**
