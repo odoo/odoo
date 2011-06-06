@@ -131,13 +131,18 @@ openerp.base.list.editable = function (openerp) {
                 position: 'last',
                 unique: true,
                 callback: function () {
-                    self.edition_form.$element
-                        .find('td')
-                            .addClass('oe-field-cell')
-                            .removeAttr('width')
-                        .end()
-                        .find('td:first').removeClass('oe-field-cell').end()
-                        .find('td:last').removeClass('oe-field-cell').end();
+                    var $e = self.edition_form.$element;
+                    $e.find('td')
+                          .addClass('oe-field-cell')
+                          .removeAttr('width')
+                      .end()
+                      .find('td:first').removeClass('oe-field-cell').end()
+                      .find('td:last').removeClass('oe-field-cell').end();
+                    _(self.columns).each(function (column) {
+                        if (column.meta) {
+                            $e.prepend('<td>');
+                        }
+                    });
                 }
             });
             this.edition_form.do_show();
