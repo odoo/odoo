@@ -257,7 +257,8 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
         return this.rpc('/base/listview/load', {
             model: this.model,
             view_id: this.view_id,
-            toolbar: !!this.flags.sidebar
+            toolbar: !!this.flags.sidebar,
+            context: this.dataset.context
         }, function (field_view_get) {
             self.on_loaded(field_view_get, grouped);
         });
