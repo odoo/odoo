@@ -489,11 +489,14 @@ class View(openerpweb.Controller):
         return {'result': True}
 
     @openerpweb.jsonrequest
-    def undo_custom(self, request, view_id):
+    def undo_custom(self, request, view_id, reset=False):
         CustomView = request.session.model('ir.ui.view.custom')
         vcustom = CustomView.search([('user_id', '=', request.session._uid), ('ref_id' ,'=', view_id)])
         if vcustom:
-            CustomView.unlink([vcustom[0]])
+            if reset:
+                CustomView.unlink(vcustom)
+            else:
+                CustomView.unlink([vcustom[0]])
             return {'result': True}
         return {'result': False}
 
