@@ -188,40 +188,27 @@ class res_company(osv.osv):
             tools.config['root_path'], '..', 'pixmaps', 'openerp-header.png'),
                     'rb') .read().encode('base64')
 
-    def _get_header3(self,cr,uid,ids):
-        return """
+    _header = """
 <header>
 <pageTemplate>
-    <frame id="first" x1="28.0" y1="28.0" width="786" height="525"/>
+    <frame id="first" x1="28.0" y1="28.0" width="%s" height="%s"/>
     <pageGraphics>
         <fill color="black"/>
         <stroke color="black"/>
         <setFont name="DejaVu Sans" size="8"/>
-        <drawString x="25" y="555"> [[ formatLang(time.strftime("%Y-%m-%d"), date=True) ]]  [[ time.strftime("%H:%M") ]]</drawString>
+        <drawString x="%s" y="%s"> [[ formatLang(time.strftime("%%Y-%%m-%%d"), date=True) ]]  [[ time.strftime("%%H:%%M") ]]</drawString>
         <setFont name="DejaVu Sans Bold" size="10"/>
-        <drawCentredString x="440" y="555">[[ company.partner_id.name ]]</drawCentredString>
+        <drawCentredString x="%s" y="%s">[[ company.partner_id.name ]]</drawCentredString>
         <stroke color="#000000"/>
-        <lines>25 550 818 550</lines>
+        <lines>%s</lines>
     </pageGraphics>
-    </pageTemplate>
+</pageTemplate>
 </header>"""
-    def _get_header2(self,cr,uid,ids):
-        return """
-        <header>
-        <pageTemplate>
-        <frame id="first" x1="28.0" y1="28.0" width="539" height="772"/>
-        <pageGraphics>
-        <fill color="black"/>
-        <stroke color="black"/>
-        <setFont name="DejaVu Sans" size="8"/>
-        <drawString x="1.0cm" y="28.3cm"> [[ formatLang(time.strftime("%Y-%m-%d"), date=True) ]]  [[ time.strftime("%H:%M") ]]</drawString>
-        <setFont name="DejaVu Sans Bold" size="10"/>
-        <drawCentredString x="11.1cm" y="28.3cm">[[ company.partner_id.name ]]</drawCentredString>
-        <stroke color="#000000"/>
-        <lines>1.0cm 28.1cm 20.1cm 28.1cm</lines>
-        </pageGraphics>
-        </pageTemplate>
-</header>"""
+
+    _header2 = _header % (539, 772, "1.0cm", "28.3cm", "11.1cm", "28.3cm", "1.0cm 28.1cm 20.1cm 28.1cm")
+
+    _header3 = _header % (786, 525, 25, 555, 440, 555, "25 550 818 550")
+
     def _get_header(self,cr,uid,ids):
         try :
             header_file = tools.file_open(os.path.join('base', 'report', 'corporate_rml_header.rml'))
@@ -267,8 +254,8 @@ class res_company(osv.osv):
     _defaults = {
         'currency_id': _get_euro,
         'rml_header':_get_header,
-        'rml_header2': _get_header2,
-        'rml_header3': _get_header3,
+        'rml_header2': _header2,
+        'rml_header3': _header3,
         #'logo':_get_logo
     }
 
