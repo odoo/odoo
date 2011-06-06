@@ -224,12 +224,12 @@ class account_asset_asset(osv.osv):
 
     def _check_prorata(self, cr, uid, ids, context=None):
         for asset in self.browse(cr, uid, ids, context=context):
-            if asset.prorata and asset.method != 'linear':
+            if asset.prorata and asset.method != 'linear' or asset.method_time != 'delay':
                 return False
         return True
 
     _constraints = [
-        (_check_prorata, '\nProrata temporis can be applied only for linear method.', ['prorata']),
+        (_check_prorata, '\nProrata temporis can be applied only for computation method linear with time method delay.', ['prorata']),
     ]
 
     def onchange_category_id(self, cr, uid, ids, category_id, context=None):
