@@ -120,20 +120,24 @@ openerp.base_calendar.CalendarView = openerp.base.Controller.extend({
         var self = this;
         scheduler.attachEvent(
             "onDblClick",
-            function(event_id, event_object) {
+            function(event_id, e) {
                 self.popup_event(event_id);
+                e.stopPropagation();
+                e.preventDefault();
             }
         );
         
         scheduler.attachEvent(
             "onEventCreated",
-            function(event_id, event_object) {
+            function(event_id, e) {
                 //Replace default Lightbox with Popup Form of new Event
-                
+            	
                 scheduler.showLightbox = function(){
                     //Delete Newly created Event,Later we reload Scheduler
                     scheduler.deleteEvent(event_id)
                     self.popup_event();
+                    e.stopPropagation();
+                    e.preventDefault();
                 }
             }
         );
@@ -304,6 +308,9 @@ openerp.base_calendar.CalendarView = openerp.base.Controller.extend({
         var action_manager = new openerp.base.ActionManager(this.session, element_id);
         action_manager.start();
         action_manager.do_action(action);
+        
+        //Default_get
+        if(!event_id) action_manager.viewmanager.dataset.index = null;
     }
 });
 
