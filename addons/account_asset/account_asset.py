@@ -139,7 +139,7 @@ class account_asset_asset(osv.osv):
             'state':'open'
         }, context)
 
-    
+
 
     def _amount_residual(self, cr, uid, ids, name, args, context={}):
         cr.execute("""SELECT
@@ -207,7 +207,7 @@ class account_asset_asset(osv.osv):
         if category_id:
             category_obj = asset_categ_obj.browse(cr, uid, category_id, context=context)
             res['value'] = {
-                            'method': category_obj.method, 
+                            'method': category_obj.method,
                             'method_delay': category_obj.method_delay,
                             'method_time': category_obj.method_time,
                             'method_period': category_obj.method_period,
@@ -215,7 +215,7 @@ class account_asset_asset(osv.osv):
                             'prorata': category_obj.prorata,
             }
         return res
-    
+
     def copy(self, cr, uid, id, default=None, context=None):
         if default is None:
             default = {}
@@ -485,36 +485,5 @@ class account_asset_history(osv.osv):
         'user_id': lambda self,cr, uid,ctx: uid
     }
 account_asset_history()
-
-class account_asset_board(osv.osv):
-    _name = 'account.asset.board'
-    _description = 'Asset board'
-    _columns = {
-        'name': fields.char('Asset name', size=64, required=True, select=1),
-        'asset_id': fields.many2one('account.asset.asset', 'Asset', required=True, select=1),
-        'value_gross': fields.float('Gross value', required=True, select=1),
-        'value_asset': fields.float('Asset Value', required=True, select=1),
-        'value_asset_cumul': fields.float('Cumul. value', required=True, select=1),
-        'value_net': fields.float('Net value', required=True, select=1),
-
-    }
-    _auto = False
-    def init(self, cr):
-        cr.execute("""
-            create or replace view account_asset_board as (
-                select
-                    min(l.id) as id,
-                    min(l.id) as asset_id,
-                    0.0 as value_gross,
-                    0.0 as value_asset,
-                    0.0 as value_asset_cumul,
-                    0.0 as value_net
-                from
-                    account_move_line l
-                where
-                    l.state <> 'draft' and
-                    l.asset_id=3
-            )""")
-account_asset_board()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
