@@ -2947,6 +2947,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             analitical_bank_ids = analytic_journal_obj.search(cr,uid,[('type','=','situation')])
             analitical_journal_bank = analitical_bank_ids and analitical_bank_ids[0] or False
 
+            vals_journal = {}
             vals_journal['name']= vals['name']
             vals_journal['code']= _('BNK') + str(current_num)
             vals_journal['sequence_id'] = seq_id
