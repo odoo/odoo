@@ -31,7 +31,6 @@
     'update_xml': [
                 'sync_google_calendar_view.xml',
                 'wizard/google_contact_import_view.xml',
-#                'wizard/wizard_import_calendar_events_view.xml',
                ],
     'demo_xml': [],
     'test': [

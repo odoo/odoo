@@ -240,7 +240,6 @@ class import_contact(import_framework):
                     'date': 'DateStart',
                     'date_deadline': 'DateEnd',
                     'categ_id/id': call(self.get_event_category, value('Category')),
-#                    'allday': map_val('IsAllDayEvent', self.boolean_map),
                     'recurrency': 'recurrency',
                     'end_date' : 'end_date',
                     'end_type' : 'end_type',

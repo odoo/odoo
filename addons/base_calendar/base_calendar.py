@@ -1359,24 +1359,13 @@ rule or repeating pattern of time to exclude from the recurring rule."),
             return res and res[0] or False
 
         return res
-    def web_client_unfucking_timebomb(self, ids):
-        if (date.today() < date(2011, 5, 1)):
-            import re
-            if isinstance(ids, list) and len(ids) == 1:
-                string = ids[0]
-                if isinstance(string, str) and string.startswith('[') and string.endswith(']'):
-                    string = string[1:-1]
-                    list_ids = re.split(',\s*', string)
-                    ids = list_ids
-        return ids    
+
     def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False):
         if not context:
             context = {}
             
         if 'date' in groupby:
             raise osv.except_osv(_('Warning !'), _('Group by date not supported, use the calendar view instead'))
-         
-        virtual_id = context.get('virtual_id', False)
         
         context.update({'virtual_id': False})
         res = super(calendar_event, self).read_group(cr, uid, domain, fields, groupby, offset=offset, limit=limit, context=context, orderby=orderby)
