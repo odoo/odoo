@@ -134,7 +134,9 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
         this.$element.html(QWeb.render("ListView", this));
 
         // Head hook
-        this.$element.find('#oe-list-add').click(this.do_add_record);
+        this.$element.find('#oe-list-add')
+                .click(this.do_add_record)
+                .toggle(!(grouped && this.options.editable));
         this.$element.find('#oe-list-delete')
                 .hide()
                 .click(this.do_delete_selected);
