@@ -201,10 +201,11 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
             return column.invisible !== '1';
         });
 
-        this.aggregate_columns = _(this.columns).chain()
-            .filter(function (column) {
-                    return column['sum'] || column['avg'];})
+        this.aggregate_columns = _(this.visible_columns)
             .map(function (column) {
+                if (!(column['sum'] || column['avg'])) {
+                    return {};
+                }
                 var func = column['sum'] ? 'sum' : 'avg';
                 return {
                     field: column.id,
@@ -212,7 +213,7 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
                     'function': func,
                     label: column[func]
                 };
-            }).value();
+            });
     },
     /**
      * Used to handle a click on a table row, if no other handler caught the
@@ -493,12 +494,14 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
         return aggregator;
     },
     display_aggregates: function (aggregation) {
-        var $footer = this.$element.find('.oe-list-footer').empty();
+        var $footer_cells = this.$element.find('.oe-list-footer');
         _(this.aggregate_columns).each(function (column) {
-            $(_.sprintf(
-                    "<span>%s: %.2f</span>",
-                    column.label, aggregation[column.field]))
-                .appendTo($footer);
+            if (!column['function']) {
+                return;
+            }
+            var pattern = (column.type == 'integer') ? '%d' : '%.2f';
+            $footer_cells.filter(_.sprintf('[data-field=%s]', column.field))
+                .text(_.sprintf(pattern, aggregation[column.field]));
         });
     }
     // TODO: implement reorder (drag and drop rows)

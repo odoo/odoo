@@ -272,11 +272,13 @@
             <th t-if="options.deletable"/>
         </tr>
     </thead>
-    <tfoot class="ui-widget-header" t-if="aggregate_columns.length">
+    <tfoot class="ui-widget-header">
         <tr>
-            <td t-att-colspan="columns_count" class='oe-list-footer'>
-                
+            <td t-if="options.selectable"/>
+            <td t-foreach="aggregate_columns" t-as="column" class="oe-list-footer oe-number"
+                t-att-data-field="column.field" t-att-title="column.label">
             </td>
+            <td t-if="options.deletable"/>
         </tr>
     </tfoot>
 </table>
