@@ -269,9 +269,8 @@ class res_partner(osv.osv):
                                         ('name','=','main_partner')])[0],
             ).res_id    
     def create(self, cr, user, vals, context=None):
-        if vals.has_key('address') and vals['address'] == []:        
-            address={'address': [[0, 0, {'type': 'default'}]]}        
-            vals.update(address)
+        if vals.has_key('address') and not vals.get('address'):
+            vals.get('address').append((0, 0, {'type': 'default'}))
         return super(res_partner, self).create(cr, user, vals, context)
 res_partner()
 
