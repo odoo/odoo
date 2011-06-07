@@ -37,7 +37,7 @@
     'test': [
 #             'test/test_sync_google_contact_import_partner.yml',
 #             'test/test_sync_google_contact_import_address.yml',
-#             'test/test_sync_google_calendar.yml',
+             'test/test_sync_google_calendar.yml',
     ],
     'installable': True,
     'active': False,
