@@ -203,15 +203,20 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
 
         this.aggregate_columns = _(this.visible_columns)
             .map(function (column) {
-                if (!(column['sum'] || column['avg'])) {
+                if (column.type !== 'integer' && column.type !== 'float') {
                     return {};
                 }
-                var func = column['sum'] ? 'sum' : 'avg';
+                var aggregation_func = column['group_operator'] || 'sum';
+
+                if (!column[aggregation_func]) {
+                    return {};
+                }
+
                 return {
                     field: column.id,
                     type: column.type,
-                    'function': func,
-                    label: column[func]
+                    'function': aggregation_func,
+                    label: column[aggregation_func]
                 };
             });
     },
