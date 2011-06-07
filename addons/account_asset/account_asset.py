@@ -105,7 +105,7 @@ class account_asset_asset(osv.osv):
     def compute_depreciation_board(self, cr, uid,ids, context=None):
         depreciation_lin_obj = self.pool.get('account.asset.depreciation.line')
         for asset in self.browse(cr, uid, ids, context=context):
-            # For all cases: amount to depreciate is (Purchase Value - Salvage Value) 
+            # For all cases: amount to depreciate is (Purchase Value - Salvage Value)
             amount_to_depr = residual_amount = asset.purchase_value - asset.salvage_value
             depreciation_date = datetime.strptime(self._get_last_depreciation_date(cr, uid, [asset.id], context)[asset.id], '%Y-%m-%d')
             day = depreciation_date.day
@@ -118,7 +118,7 @@ class account_asset_asset(osv.osv):
                 undone_dotation_number = (end_date - depreciation_date).days / total_days
             if asset.prorata or asset.method_time == 'end':
                 undone_dotation_number += 1
-            for i in range(1,undone_dotation_number+1):
+            for i in range(1, undone_dotation_number+1):
                 if i == undone_dotation_number + 1:
                     amount = residual_amount
                 else:
@@ -138,14 +138,14 @@ class account_asset_asset(osv.osv):
                      'amount': amount,
                      'asset_id': asset.id,
                      'sequence': i,
-                     'name': str(asset.id) +'/'+ str(i),
+                     'name': str(asset.id) +'/' + str(i),
                      'remaining_value': residual_amount,
                      'depreciated_value': amount_to_depr - residual_amount,
                      'depreciation_date': depreciation_date.strftime('%Y-%m-%d'),
                 }
                 dep_id = [dep.id for dep in asset.depreciation_line_ids if not dep.move_check and dep.sequence == vals['sequence']]
                 if asset.depreciation_line_ids:
-                    depreciation_lin_obj.write(cr, uid, dep_id, vals, context=context) 
+                    depreciation_lin_obj.write(cr, uid, dep_id, vals, context=context)
                 else:
                     depreciation_lin_obj.create(cr, uid, vals, context=context)
                 # Considering Depr. Period as months
@@ -160,9 +160,7 @@ class account_asset_asset(osv.osv):
             'state':'open'
         }, context)
 
-    
-
-    def _amount_residual(self, cr, uid, ids, name, args, context={}):
+    def _amount_residual(self, cr, uid, ids, name, args, context=None):
         cr.execute("""SELECT
                 l.asset_id as id, round(SUM(abs(l.debit-l.credit))) AS amount
             FROM
@@ -224,12 +222,12 @@ class account_asset_asset(osv.osv):
 
     def _check_prorata(self, cr, uid, ids, context=None):
         for asset in self.browse(cr, uid, ids, context=context):
-            if asset.prorata and asset.method != 'linear' or asset.method_time != 'delay':
+            if asset.prorata and (asset.method != 'linear' or asset.method_time != 'delay'):
                 return False
         return True
 
     _constraints = [
-        (_check_prorata, '\nProrata temporis can be applied only for computation method linear with time method delay.', ['prorata']),
+        (_check_prorata, '\nProrata temporis can be applied only for computation method linear and time method delay.', ['prorata']),
     ]
 
     def onchange_category_id(self, cr, uid, ids, category_id, context=None):
@@ -238,7 +236,7 @@ class account_asset_asset(osv.osv):
         if category_id:
             category_obj = asset_categ_obj.browse(cr, uid, category_id, context=context)
             res['value'] = {
-                            'method': category_obj.method, 
+                            'method': category_obj.method,
                             'method_delay': category_obj.method_delay,
                             'method_time': category_obj.method_time,
                             'method_period': category_obj.method_period,
@@ -247,7 +245,7 @@ class account_asset_asset(osv.osv):
                             'prorata': category_obj.prorata,
             }
         return res
-    
+
     def copy(self, cr, uid, id, default=None, context=None):
         if default is None:
             default = {}
