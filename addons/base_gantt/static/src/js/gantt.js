@@ -117,8 +117,6 @@ init: function(view_manager, session, element_id, dataset, view_id) {
                 }
             }
         project = new GanttProjectInfo(1, self.name, smalldate);
-        task = new GanttTaskInfo(111, "temp", smalldate, 1, 100, "", "red");
-        project.addTask(task);
         ganttChartControl.addProject(project);
         }
 
@@ -162,7 +160,6 @@ init: function(view_manager, session, element_id, dataset, view_id) {
             if (self.grp != undefined){
                 for (j in self.grp){
                     var grp_key = res[self.grp[j]['group_by']];
-
                     if (typeof(grp_key) == "object"){
                         grp_key = res[self.grp[j]['group_by']][1];
                     }
@@ -205,16 +202,6 @@ init: function(view_manager, session, element_id, dataset, view_id) {
             }
         }
 
-        ganttChartControl.create("GanttDiv");
-        ganttChartControl.attachEvent("onTaskStartDrag", function(task) {self.on_drag_start(task);});
-        ganttChartControl.attachEvent("onTaskEndResize", function(task) {self.on_resize_drag_end(task, "resize");});
-        ganttChartControl.attachEvent("onTaskEndDrag", function(task) {self.on_resize_drag_end(task, "drag");});
-        ganttChartControl.attachEvent("onTaskDblClick", function(task) {self.open_popup(task);});
-
-
-        project = ganttChartControl.getProjectById(1);
-        project.deleteTask(111);
-
         for (i in final_events){
             var evt_id = final_events[i];
             var evt_date = all_events[evt_id]['evt'][2];
@@ -255,8 +242,23 @@ init: function(view_manager, session, element_id, dataset, view_id) {
                 res['evt'][3] = self.hours_between(res['evt'][2],res['evt'][3]);
             }
 
-            project.insertTask(res['evt'][0], res['evt'][1], res['evt'][2], res['evt'][3], 100, "",res['evt'][6], res['parent']);
+            if(res['parent'] == ""){
+                task=new GanttTaskInfo(res['evt'][0], res['evt'][1], res['evt'][2], res['evt'][3], 100, "",res['evt'][6]);
+                project.addTask(task);
+            }else{
+                task=new GanttTaskInfo(res['evt'][0], res['evt'][1], res['evt'][2], res['evt'][3], 100, "",res['evt'][6]);
+                prt = project.getTaskById(res['parent']);
+                prt.addChildTask(task);
+            }
+
         }
+
+        ganttChartControl.create("GanttDiv");
+        ganttChartControl.attachEvent("onTaskStartDrag", function(task) {self.on_drag_start(task);});
+        ganttChartControl.attachEvent("onTaskEndResize", function(task) {self.on_resize_drag_end(task, "resize");});
+        ganttChartControl.attachEvent("onTaskEndDrag", function(task) {self.on_resize_drag_end(task, "drag");});
+        ganttChartControl.attachEvent("onTaskDblClick", function(task) {self.open_popup(task);});
+
     },
 
     end_date: function(dat, duration) {
