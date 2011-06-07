@@ -22,7 +22,7 @@ openerp.base.form.DashBoard = openerp.base.form.Widget.extend({
         this.$element.find('.oe-dashboard-link-reset').click(this.on_reset);
         this.$element.find('.oe-dashboard-link-add_widget').click(this.on_add_widget);
         this.$element.find('.oe-dashboard-link-change_layout').click(this.on_change_layout);
-        this.$element.find('.oe-dashboard-column .ui-icon-minusthick').click(this.on_fold_action);
+        this.$element.find('.oe-dashboard-column .oe-dashboard-fold').click(this.on_fold_action);
         this.$element.find('.oe-dashboard-column .ui-icon-closethick').click(this.on_close_action);
 
         this.actions_attrs = {};
@@ -97,7 +97,6 @@ openerp.base.form.DashBoard = openerp.base.form.Widget.extend({
             actions = action_manager.viewmanager.views.list.controller.groups.get_selection().ids,
             results = [],
             qdict = { view : this.view };
-            console.log(this.actions_attrs)
         // TODO: should load multiple actions at once
         _.each(actions, function(aid) {
             self.rpc('/base/action/load', {
@@ -180,9 +179,17 @@ openerp.base.form.DashBoard = openerp.base.form.Widget.extend({
         }
     },
     on_fold_action: function(e) {
-        var $e = $(e.currentTarget);
+        var $e = $(e.currentTarget),
+            $action = $e.parents('.oe-dashboard-action:first'),
+            id = parseInt($action.attr('data-id'), 10);
+        if ($e.is('.ui-icon-minusthick')) {
+            this.actions_attrs[id].fold = '1';
+        } else {
+            delete(this.actions_attrs[id].fold);
+        }
         $e.toggleClass('ui-icon-minusthick ui-icon-plusthick');
-        $e.parents('.oe-dashboard-action:first').find('.oe-dashboard-action-content').toggle();
+        $action.find('.oe-dashboard-action-content').toggle();
+        this.do_save_dashboard();
     },
     on_close_action: function(e) {
         $(e.currentTarget).parents('.oe-dashboard-action:first').remove();
