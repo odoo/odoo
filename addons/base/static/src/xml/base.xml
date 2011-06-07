@@ -95,7 +95,7 @@
     <div class="oe_login_right_pane">
         <p>We think that daily job activities can be more intuitive, efficient, automated, .. and even fun.</p>
         <h3>OpenERP's vision to be:</h3>
-        
+
         <table cellpadding="0" cellspacing="0" width="100%" style="border:none;">
             <tbody>
             <tr>
@@ -127,7 +127,7 @@
             </tr>
             </tbody>
         </table>
-        
+
     </div>
 </t>
 <t t-name="Header">
@@ -244,7 +244,7 @@
         <t t-foreach="child_data" t-as="field" >
             <div t-att-id="field.id">
                 <t t-if="(field.child_id).length>=1">
-                   <img src="/base/static/src/img/iconset-d-drop.gif" width="16" height="16" border="0"/>
+                   <img id="parentimg" src="/base/static/src/img/expand.gif" width="16" height="16" border="0"/>
                 </t>
                 <t t-esc="field.name"/>
             </div>
@@ -262,11 +262,11 @@
 
 </t>
 <t t-name="TreeView_Children">
-    <div id="subchild" >
+    <div id="subchild" style="display:none">
         <t t-foreach="childdata" t-as="child" >
             <div t-att-id="child.id" >
                 <t t-if="(child.child_id).length>=1">
-                    <img src="/base/static/src/img/iconset-d-drop.gif" width="16" height="16" border="0"/>
+                    <img id="childimg" src="/base/static/src/img/expand.gif" width="16" height="16" border="0"/>
                 </t>
                 <t t-esc="child.name"/>
             </div>
@@ -274,13 +274,12 @@
     </div>
 </t>
 <t t-name="TreeView_SubChildren">
-    <div id="childsubchild">
+    <div id="childsubchild" style="display:none">
         <t t-foreach="subchilddata" t-as="subchild" >
             <div t-att-id="subchild.id" >
                 <t t-if="(subchild.child_id).length>=1">
-                    <img src="/base/static/src/img/iconset-d-drop.gif" width="16" height="16" border="0"/>
+                    <img id="subchildimg" src="/base/static/src/img/expand.gif" width="16" height="16" border="0"/>
                 </t>
-
                 <t t-esc="subchild.name"/>
             </div>
         </t>
@@ -342,7 +341,7 @@
     <tfoot class="ui-widget-header" t-if="aggregate_columns.length">
         <tr>
             <td t-att-colspan="columns_count" class='oe-list-footer'>
-                
+
             </td>
         </tr>
     </tfoot>
@@ -358,7 +357,7 @@
 <tr t-name="ListView.row" t-att-style="style" t-att-class="row_parity">
     <t t-foreach="columns" t-as="column">
         <td t-if="column.meta">
-            
+
         </td>
     </t>
     <th t-if="options.selectable" class="oe-record-selector">
@@ -827,7 +826,7 @@
             <option value="any">Any of the following conditions must match</option>
             <option value="none">None of the following conditions must match</option>
         </select>
-        <a class="searchview_extended_delete_group" 
+        <a class="searchview_extended_delete_group"
                 href="javascript:void(0)"><span></span></a>
         <div class="searchview_extended_propositions_list">
         </div>

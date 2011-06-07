@@ -31,7 +31,9 @@ openerp.base.TreeView = openerp.base.View.extend({
                 $('#parent_id').change(self.getch(($('#parent_id').attr('value')),0));
                 self.$element.append(QWeb.render('TreeView_Secondry', {'child_data':response}));
                 $('#child_id').find('div').click(function(){
-                    self.getch(this.id,1)
+                    if(jQuery('#child_id').find('#'+(this.id)).find('#subchild').length==0){
+                        self.getch(this.id,1);
+                    }
                 });
             });
         });
@@ -60,19 +62,49 @@ openerp.base.TreeView = openerp.base.View.extend({
                     self.$element.append(QWeb.render('TreeView_Secondry', {'child_data':response}));
                 }else if(flag==1){
                     jQuery('#'+parentid).append(QWeb.render('TreeView_Children', {'childdata':response}))
+                    $("#subchild").show();
+                    jQuery('#'+parentid).find("#parentimg").attr("src", "/base/static/src/img/collapse.gif");
                     $('#'+parentid).find('#subchild').find('#subchild').remove();
                     $('#'+parentid).find('#subchild').slice(1,3).remove();
                 }else if(flag==2){
                     $("#subchild #"+parentid).find('#subchild').remove();
                     $("#subchild #"+parentid).find('#childsubchild').remove();
+                    jQuery('#subchild #'+parentid).find("#childimg").attr("src", "/base/static/src/img/collapse.gif");
                     $("#subchild #"+parentid).append(QWeb.render('TreeView_SubChildren', {'subchilddata':response}))
+                    $("#subchild #"+parentid).find('#childsubchild').show();
+
                 }
-                $('#child_id').find('div').click(function(){
-                    self.getch(this.id,1)
-                });
-                $('#child_id div #subchild').find('div').click(function(){
-                    self.getch(this.id,2)
-                });
+
+	                $('#child_id').find('div').click(function(){
+	                   var pathimg=jQuery('#child_id').find('#'+(this.id)).find("#parentimg").attr("src");
+
+                       if(pathimg=='/base/static/src/img/collapse.gif'){
+                            jQuery('#child_id').find('#'+(this.id)).find('#parentimg').attr('src','/base/static/src/img/expand.gif');
+                            //jQuery('#subchild').find('#'+(this.id)).find('#childsubchild').hide();
+                            //jQuery('#child_id').find('#'+(this.id)).find('#subchild').css('display','none');
+                       }
+                       else if(pathimg=='/base/static/src/img/expand.gif'){
+                            if(jQuery('#child_id').find('#'+(this.id)).find('#subchild').length==0){
+                                self.getch(this.id,1);
+                            }
+                       }
+	                });
+
+	                $('#child_id div #subchild').find('div').click(function(){
+                        if(jQuery('#subchild').find('#'+(this.id)).find('#childsubchild').length==0){
+                            self.getch(this.id,2);
+                        }else if((jQuery('#subchild').find('#'+(this.id)).find('#childimg').attr('src'))=='/base/static/src/img/collapse.gif'){
+                            jQuery('#subchild').find('#'+(this.id)).find('#childimg').attr('src','/base/static/src/img/expand.gif');
+                            //jQuery('#subchild').find('#'+(this.id)).find('#childsubchild').hide();
+                            jQuery('#subchild').find('#'+(this.id)).find('#childsubchild').css('display','none');
+                        }else{
+                            jQuery('#subchild').find('#'+(this.id)).find('#childsubchild').css('display','block');
+                            //jQuery('#subchild').find('#'+(this.id)).find('#childsubchild').show();
+                        }/*else{
+                            jQuery('#subchild').find('#'+(this.id)).find('#childimg').attr('src','/base/static/src/img/expand.gif');
+                            jQuery('#subchild').find('#'+(this.id)).find('#childsubchild').hide();
+                        }*/
+	                });
             });
         }
     },
