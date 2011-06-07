@@ -11,8 +11,13 @@ class ShareActionEditor(openobject.templating.TemplateEditor):
         share_opener_insertion = output.index(
                 '\n',
                 output.index(self.ADD_SHARE_SECTION)) + 1
-        return output[:share_opener_insertion] + \
-               '''<div id="share-wizard" class="sideheader-a"><h2>${_("Sharing")}</h2></div>
+        return output[:share_opener_insertion] + '''
+    <%
+        if 'has_share' not in cp.session:
+            cp.session['has_share'] = rpc.RPCProxy('share.wizard').has_share()
+    %>
+    % if cp.session['has_share']:
+        <div id="share-wizard" class="sideheader-a"><h2>${_("Sharing")}</h2></div>
                      <ul class="clean-a">
                          <li>
                              <a id="sharing" href="#share">${_("Share")}</a>
@@ -28,13 +33,16 @@ class ShareActionEditor(openobject.templating.TemplateEditor):
                                            domain: jQuery("#_terp_domain").val(),
                                            view_id: jQuery("#_terp_view_id").val(),
                                            action_id: jQuery("#_terp_action_id").val(),
-                                           search_domain: jQuery("#_terp_search_domain").val(),
+                                           search_domain: jQuery("#_terp_view_type").val() == "form" ? 
+                                                                  ("[('id','=',"+jQuery("#_terp_id").val()+")]") : 
+                                                                     jQuery("#_terp_search_domain").val(),
                                    }));
                                });
                            });
                        </script>
-                       \n''' + \
-                output[share_opener_insertion:]
+                       \n
+    % endif
+''' + output[share_opener_insertion:]
 
     def edit(self, template, template_text):
         return self.insert_share_link(

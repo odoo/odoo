@@ -31,6 +31,9 @@ from tools.safe_eval import safe_eval
 FULL_ACCESS = ('perm_read', 'perm_write', 'perm_create', 'perm_unlink')
 READ_ONLY_ACCESS = ('perm_read',)
 
+# Pseudo-domain to represent an empty filter, constructed using
+# osv.expression's DUMMY_LEAF
+DOMAIN_ALL = [(1, '=', 1)]
 
 RANDOM_PASS_CHARACTERS = [chr(x) for x in range(48, 58) + range(97, 123) + range(65, 91)]
 RANDOM_PASS_CHARACTERS.remove('l') #lowercase l, easily mistaken as one or capital i
@@ -49,6 +52,18 @@ class share_create(osv.osv_memory):
     __logger = logging.getLogger('share.wizard')
     _name = 'share.wizard'
     _description = 'Share Wizard'
+
+    def has_group(self, cr, uid, module, group_xml_id, context=None):
+        """Returns True if current user is a member of the group identified by the module, group_xml_id pair."""
+        # if the group was deleted or does not exist, we say NO (better safe than sorry)
+        try:
+            model, group_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, module, group_xml_id)
+        except ValueError:
+            return False
+        return group_id in self.pool.get('res.users').read(cr, uid, uid, ['groups_id'], context=context)['groups_id']
+
+    def has_share(self, cr, uid, context=None):
+        return self.has_group(cr, uid, module='share', group_xml_id='group_share_user', context=context)
 
     _columns = {
         'action_id': fields.many2one('ir.actions.act_window', 'Action to share', required=True,
@@ -144,10 +159,9 @@ class share_create(osv.osv_memory):
 
     def _setup_action_and_shortcut(self, cr, uid, wizard_data, user_ids, new_users, context=None):
         user_obj = self.pool.get('res.users')
-        menu_action_id = user_obj._get_menu(cr, uid, context=context)
         values = {
             'name': (_('%s (Shared)') % wizard_data.action_id.name)[:64],
-            'domain': wizard_data.domain,
+            'domain': '[]',
             'context': wizard_data.action_id.context,
             'res_model': wizard_data.action_id.res_model,
             'view_mode': wizard_data.action_id.view_mode,
@@ -157,9 +171,11 @@ class share_create(osv.osv_memory):
         for user_id in user_ids:
             action_id = self._create_shortcut(cr, user_id, values)
             if new_users:
+                # We do this only for new share users, as existing ones already have their initial home
+                # action. Resetting to the default menu does not work well as the menu is rather empty
+                # and does not contain the shortcuts in most cases.
                 user_obj.write(cr, 1, [user_id], {'action_id': action_id})
-            else:
-                user_obj.write(cr, 1, [user_id], {'action_id': menu_action_id})
+
 
     def _get_recursive_relations(self, cr, uid, model, ttypes, relation_fields=None, suffix=None, context=None):
         """Returns list of tuples representing recursive relationships of type ``ttypes`` starting from
@@ -258,21 +274,21 @@ class share_create(osv.osv_memory):
         user_obj = self.pool.get('res.users')
         rule_obj = self.pool.get('ir.rule')
         current_user = user_obj.browse(cr, uid, uid, context=context)
-        completed_models = set()
+        rules_done = set()
         for group in current_user.groups_id:
             for dummy, model in fields_relations:
-                if model.id in completed_models:
-                    continue
-                completed_models.add(model.id)
                 for rule in group.rule_groups:
-                    if rule.model_id == model.id:
+                    if rule.id in rules_done:
+                        continue
+                    rules_done.add(rule.id)
+                    if rule.model_id.id == model.id:
                         if 'user.' in rule.domain_force:
                             # Above pattern means there is likely a condition
                             # specific to current user, so we must copy the rule using
                             # the evaluated version of the domain.
                             # And it's better to copy one time too much than too few
                             rule_obj.copy(cr, 1, rule.id, default={
-                                'name': '%s (%s)' %(rule.name, _('(Copy for sharing)')),
+                                'name': '%s %s' %(rule.name, _('(Copy for sharing)')),
                                 'groups': [(6,0,[group_id])],
                                 'domain_force': rule.domain, # evaluated version!
                             })
@@ -414,11 +430,12 @@ class share_create(osv.osv_memory):
         #     to uid, and it must be replaced correctly)
         rule_obj = self.pool.get('ir.rule')
         # A.
+        main_domain = wizard_data.domain if wizard_data.domain != '[]' else DOMAIN_ALL
         rule_obj.create(cr, 1, {
             'name': _('Sharing filter created by user %s (%s) for group %s') % \
                         (current_user.name, current_user.login, group_id),
             'model_id': model.id,
-            'domain_force': wizard_data.domain,
+            'domain_force': main_domain,
             'groups': [(4,group_id)]
             })
         # B.
