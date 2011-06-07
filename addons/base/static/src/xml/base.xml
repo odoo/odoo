@@ -228,6 +228,8 @@
     </tr>
     </table>
 </t>
+<table t-name="TreeView">
+</table>
 <table t-name="ListView">
     <t t-set="columns_count" t-value="visible_columns.length + (options.selectable ? 1 : 0) + (options.deletable ? 1 : 0)"/>
     <t t-set="actions_span" t-value="Math.floor((options.deletable or options.addable) ? columns_count/2 : 0)"/>
