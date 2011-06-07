@@ -7,14 +7,15 @@ from openerp.utils import rpc
 import openerp.controllers
 import cherrypy
 
-
-
 class ShareWizardController(openerp.controllers.SecuredController):
     _cp_path = "/share"
 
     @expose()
     def index(self, domain, context, view_id, search_domain='[]', action_id=None):
         context = ast.literal_eval(context)
+        
+        if search_domain == 'None':
+            search_domain = '[]'
 
         if not action_id:
             # This should not be needed anymore, but just in case users are
