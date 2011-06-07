@@ -730,6 +730,7 @@ openerp.base.ListView.List = Class.extend( /** @lends openerp.base.ListView.List
     // drag and drop
 });
 openerp.base.ListView.Groups = Class.extend( /** @lends openerp.base.ListView.Groups# */{
+    passtrough_events: 'action deleted row_link',
     /**
      * Grouped display for the ListView. Handles basic DOM events and interacts
      * with the :js:class:`~openerp.base.DataGroup` bound to it.
@@ -881,7 +882,7 @@ openerp.base.ListView.Groups = Class.extend( /** @lends openerp.base.ListView.Gr
             // can have selections spanning multiple links
             var selection = self.get_selection();
             $this.trigger(e, [selection.ids, selection.records]);
-        }).bind('action deleted row_link', function (e) {
+        }).bind(this.passtrough_events, function (e) {
             // additional positional parameters are provided to trigger as an
             // Array, following the event type or event object, but are
             // provided to the .bind event handler as *args.
