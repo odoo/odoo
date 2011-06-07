@@ -5,15 +5,16 @@ QWeb.add_template('/base_dashboard/static/src/xml/base_dashboard.xml');
 openerp.base.form.DashBoard = openerp.base.form.Widget.extend({
     init: function(view, node) {
         this._super(view, node);
-        this.template = "DashBoard";
+        this.template = 'DashBoard';
         this.actions_attrs = {};
     },
     start: function() {
         var self = this;
         this._super.apply(this, arguments);
 
-        this.$element.find(".oe-dashboard-column").sortable({
-            connectWith: ".oe-dashboard-column",
+        this.$element.find('.oe-dashboard-column').sortable({
+            connectWith: '.oe-dashboard-column',
+            handle: '.oe-dashboard-action-header',
             scroll: false
         }).disableSelection().bind('sortstop', self.do_save_dashboard);
 
@@ -56,7 +57,7 @@ openerp.base.form.DashBoard = openerp.base.form.Widget.extend({
         var self = this;
         var action = {
             res_model : 'ir.actions.actions',
-            views : [[false,"list"]],
+            views : [[false, 'list']],
             type : 'ir.actions.act_window',
             view_type : 'list',
             view_mode : 'list',
@@ -71,7 +72,7 @@ openerp.base.form.DashBoard = openerp.base.form.Widget.extend({
         };
         // TODO: create a Dialog controller which optionally takes an action
         // Should set width & height automatically and take buttons & views callback
-        var dialog_id = _.uniqueId("act_window_dialog");
+        var dialog_id = _.uniqueId('act_window_dialog');
         var action_manager = new openerp.base.ActionManager(this.session, dialog_id);
         var $dialog = $('<div id=' + dialog_id + '>').dialog({
                             modal : true,
@@ -80,11 +81,11 @@ openerp.base.form.DashBoard = openerp.base.form.Widget.extend({
                             height : 600,
                             buttons : {
                                 Cancel : function() {
-                                    $(this).dialog("destroy");
+                                    $(this).dialog('destroy');
                                 },
                                 Add : function() {
                                     self.do_add_widget(action_manager);
-                                    $(this).dialog("destroy");
+                                    $(this).dialog('destroy');
                                 }
                             }
                         });
@@ -152,7 +153,7 @@ openerp.base.form.DashBoard = openerp.base.form.Widget.extend({
                         }).html(QWeb.render('DashBoard.layouts', qdict));
         $dialog.find('li').click(function() {
             var layout = $(this).attr('data-layout');
-            $dialog.dialog("destroy");
+            $dialog.dialog('destroy');
             self.do_change_layout(layout);
         });
     },
