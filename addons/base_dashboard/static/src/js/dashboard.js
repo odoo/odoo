@@ -117,7 +117,7 @@ openerp.base.form.DashBoard = openerp.base.form.Widget.extend({
     },
     on_rename : function(e) {
         var self = this,
-            id = $(e.currentTarget).parents('.oe-dashboard-action:first').attr('data-id'),
+            id = parseInt($(e.currentTarget).parents('.oe-dashboard-action:first').attr('data-id'), 10),
             $header = $(e.currentTarget).parents('.oe-dashboard-action-header:first'),
             $rename = $header.find('a.oe-dashboard-action-rename').hide(),
             $title = $header.find('span.oe-dashboard-action-title').hide(),
