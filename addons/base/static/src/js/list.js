@@ -136,9 +136,9 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
         // Head hook
         this.$element.find('#oe-list-add')
                 .click(this.do_add_record)
-                .toggle(!(grouped && this.options.editable));
+                .attr('disabled', grouped && this.options.editable);
         this.$element.find('#oe-list-delete')
-                .hide()
+                .attr('disabled', true)
                 .click(this.do_delete_selected);
         this.$element.find('thead').delegate('th[data-id]', 'click', function (e) {
             e.stopPropagation();
@@ -360,7 +360,7 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
      */
     do_select: function (ids, records) {
         this.$element.find('#oe-list-delete')
-            .toggle(!!ids.length);
+            .attr('disabled', !ids.length);
 
         if (!records.length) {
             this.compute_aggregates();
