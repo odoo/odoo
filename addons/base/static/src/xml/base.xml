@@ -872,10 +872,10 @@
                 't-as': this.attr('t-as')
             })
             .replaceAll(this)
-            .before($(document.createElement('td')).append(
+            .after($(document.createElement('td')).append(
                 $(document.createElement('button')).attr({
                     'class': 'oe-edit-row-save', 'type': 'button'}).text('Save')))
-            .after($(document.createElement('td')).append(
+            .before($(document.createElement('td')).append(
                 $(document.createElement('button')).attr({
                     'class': 'oe-edit-row-cancel', 'type': 'button'}).text('Cancel')))
             .unwrap();
