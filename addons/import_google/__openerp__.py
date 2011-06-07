@@ -18,7 +18,29 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-import import_google
-import google_contact_import
 
+{
+    'name': 'Google Contact Import',
+    'version': '1.0',
+    'category': 'Generic Modules/Others',
+    'description': """The module adds google contact in partner address""",
+    'author': 'OpenERP SA',
+    'website': 'http://www.openerp.com',
+    'depends': ['base', 'google_base_account','crm'],
+    'init_xml': [],
+    'update_xml': [
+                'sync_google_calendar_view.xml',
+                'wizard/google_contact_import_view.xml',
+#                'wizard/wizard_import_calendar_events_view.xml',
+               ],
+    'demo_xml': [],
+    'test': [
+#             'test/test_sync_google_contact_import_partner.yml',
+#             'test/test_sync_google_contact_import_address.yml',
+#             'test/test_sync_google_calendar.yml',
+    ],
+    'installable': True,
+    'active': False,
+    'certificate': '',
+}
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

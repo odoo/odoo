@@ -30,8 +30,43 @@
             </field>
         </record>
 
+
+
+        <record model="ir.ui.view" id="view_synchronize_google_calendar_import_form">
+            <field name="name">synchronize.google.calendar.form</field>
+            <field name="model">synchronize.google.calendar</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Import Google Calendar Events">
+                    <group colspan="4" col="4">
+                       <field name="calendar_name" />
+                    </group>
+                    <separator string="" colspan="4"/>
+                    <group colspan="4" col="4">
+                        <group colspan="2" col="2"/>
+                        <group colspan="2" col="2">
+                            <button special="cancel" string="_Cancel" icon="gtk-cancel"/>
+                            <button name="import_calendar_events" string="_Import Events" type="object" icon="terp-calendar"/>
+                        </group>
+                    </group>
+                </form>
+            </field>
+        </record>
+        <!--
+            Login Action
+        -->
+        <record model="ir.actions.act_window" id="act_google_login_form">
+          <field name="name">Import Google Calendar</field>
+          <field name="type">ir.actions.act_window</field>
+          <field name="res_model">google.login.calendar</field>
+          <field name="view_type">form</field>
+          <field name="view_mode">form</field>
+          <field name="target">new</field>
+          <field name="view_id" ref="google_base_account.view_google_login_form" />
+        </record>
+
         <record model="ir.actions.act_window" id="act_google_login_contact_form">
-          <field name="name">Import Contacts</field>
+          <field name="name">Import Google Contacts</field>
           <field name="type">ir.actions.act_window</field>
           <field name="res_model">google.login.contact</field>
           <field name="view_type">form</field>
@@ -44,5 +79,11 @@
                   parent="base.menu_address_book"
                   action="act_google_login_contact_form"
                   sequence="40" />
+
+        <menuitem id="menu_sync_calendar"
+                  parent="crm.menu_meeting_sale"
+                  action="act_google_login_form"
+                  sequence="20" />
+
     </data>
 </openerp>

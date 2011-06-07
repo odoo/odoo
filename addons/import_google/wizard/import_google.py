@@ -14,13 +14,13 @@ class import_contact(import_framework):
     TABLE_MEETING = 'Event'
    
     def initialize(self):
-            self.gd_client = gdata.contacts.service.ContactsService()
-            self.gd_client.ClientLogin(self.context.get('user', False),self.context.get('password', False))
+        self.gd_client = gdata.contacts.service.ContactsService()
+        self.gd_client.ClientLogin(self.context.get('user', False),self.context.get('password', False))
 
     def get_mapping(self):
         return { 
-                self.TABLE_CONTACT: self.get_contact_mapping(),
-                }
+            self.TABLE_CONTACT: self.get_contact_mapping(),
+        }
     def _retreive_data(self,entry):
         if entry:
             data = {}
@@ -58,7 +58,7 @@ class import_contact(import_framework):
                         'fax':data.has_key('fax') and  data['fax']  or False,
                         'type':'contact',
                         'id_new':data['id'] + '_data_'+ name,
-                          })
+                  })
             
             
             address = {
