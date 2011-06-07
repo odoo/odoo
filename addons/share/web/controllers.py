@@ -13,9 +13,6 @@ class ShareWizardController(openerp.controllers.SecuredController):
     @expose()
     def index(self, domain, context, view_id, search_domain='[]', action_id=None):
         context = ast.literal_eval(context)
-        
-        if search_domain == 'None':
-            search_domain = '[]'
 
         if not action_id:
             # This should not be needed anymore, but just in case users are
