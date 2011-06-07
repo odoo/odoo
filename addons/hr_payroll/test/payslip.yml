@@ -47,7 +47,7 @@
   !record {model: hr.payslip, id: hr_payslip_0}:
     employee_id: hr_payroll.hr_employee_richard0
 -
-  I select employee Richard
+  The selection of an employee fills the contract, structure, worked days and input data fields
 -
   !python {model: hr.payslip}: |
     import time
@@ -56,8 +56,10 @@
     date_from = time.strftime('%Y-%m-01')
     worked_days_obj = self.pool.get('hr.payslip.worked_days')
     date_to = str(datetime.now() + relativedelta.relativedelta(months=+1, day=1, days=-1))[:10]
+    emp_id = self.pool.get('hr.employee').search(cr, uid, [('id', '=', ref("hr_employee_richard0"))])
     res = self.onchange_employee_id(cr, uid, [], date_from, date_to, ref("hr_employee_richard0"), False, None)
     vals = {
+      'employee_id': emp_id[0],
       'struct_id': res['value']['struct_id'], 
       'contract_id': res['value']['contract_id'],
       'name': res['value']['name'], 
