@@ -229,7 +229,63 @@
     </table>
 </t>
 <table t-name="TreeView">
+    <tr>
+       <select name="parent" id="parent_id" style="width: 30%">
+                <t t-foreach="field_data" t-as="field" >
+                    <option t-att-value="field.id">
+                        <t t-esc="field.name"/>
+                    </option>
+                </t>
+        </select>
+   </tr>
 </table>
+<t t-name="TreeView_Secondry">
+    <div id="child_id">
+        <t t-foreach="child_data" t-as="field" >
+            <div t-att-id="field.id">
+                <t t-if="(field.child_id).length>=1">
+                   <img src="/base/static/src/img/iconset-d-drop.gif" width="16" height="16" border="0"/>
+                </t>
+                <t t-esc="field.name"/>
+            </div>
+        </t>
+    </div>
+        <!-- <ul id="child_id">
+            <t t-foreach="child_data" t-as="field" >
+                <li t-att-id="field.id" >
+                    <t t-esc="field.name"/>
+
+
+                </li>
+            </t>
+        </ul> -->
+
+</t>
+<t t-name="TreeView_Children">
+    <div id="subchild" >
+        <t t-foreach="childdata" t-as="child" >
+            <div t-att-id="child.id" >
+                <t t-if="(child.child_id).length>=1">
+                    <img src="/base/static/src/img/iconset-d-drop.gif" width="16" height="16" border="0"/>
+                </t>
+                <t t-esc="child.name"/>
+            </div>
+        </t>
+    </div>
+</t>
+<t t-name="TreeView_SubChildren">
+    <div id="childsubchild">
+        <t t-foreach="subchilddata" t-as="subchild" >
+            <div t-att-id="subchild.id" >
+                <t t-if="(subchild.child_id).length>=1">
+                    <img src="/base/static/src/img/iconset-d-drop.gif" width="16" height="16" border="0"/>
+                </t>
+
+                <t t-esc="subchild.name"/>
+            </div>
+        </t>
+    </div>
+</t>
 <table t-name="ListView">
     <t t-set="columns_count" t-value="visible_columns.length + (options.selectable ? 1 : 0) + (options.deletable ? 1 : 0)"/>
     <t t-set="actions_span" t-value="Math.floor((options.deletable or options.addable) ? columns_count/2 : 0)"/>
