@@ -8,10 +8,35 @@ openerp.base.list.editable = function (openerp) {
     // editability status of list rows
     openerp.base.ListView.prototype.defaults.editable = null;
 
-    var old_actual_search = openerp.base.ListView.prototype.do_actual_search;
-    var old_add_record = openerp.base.ListView.prototype.do_add_record;
-    var old_on_loaded = openerp.base.ListView.prototype.on_loaded;
-    _.extend(openerp.base.ListView.prototype, {
+    var old_init = openerp.base.ListView.prototype.init,
+        old_actual_search = openerp.base.ListView.prototype.do_actual_search,
+        old_add_record = openerp.base.ListView.prototype.do_add_record,
+        old_on_loaded = openerp.base.ListView.prototype.on_loaded;
+    // TODO: not sure second @lends on existing item is correct, to check
+    _.extend(openerp.base.ListView.prototype, /** @lends openerp.base.ListView# */{
+        init: function () {
+            var self = this;
+            old_init.apply(this, arguments);
+            $(this.groups).bind({
+                'edit': function (e, id, dataset) {
+                    self.do_edit(dataset.index, id, dataset);
+                }
+            })
+        },
+        /**
+         * Handles the activation of a record in editable mode (making a record
+         * editable), called *after* the record has become editable.
+         *
+         * The default behavior is to setup the listview's dataset to match
+         * whatever dataset was provided by the editing List
+         *
+         * @param {Number} index index of the record in the dataset
+         * @param {Object} id identifier of the record being edited
+         * @param {openerp.base.DataSet} dataset dataset in which the record is available
+         */
+        do_edit: function (index, id, dataset) {
+            _.extend(this.dataset, dataset);
+        },
         /**
          * Sets editability status for the list, based on defaults, view
          * architecture and the provided flag, if any.
@@ -52,7 +77,8 @@ openerp.base.list.editable = function (openerp) {
         }
     });
 
-    _.extend(openerp.base.ListView.Groups.prototype, {
+    _.extend(openerp.base.ListView.Groups.prototype, /** @lends openerp.base.ListView.Groups# */{
+        passtrough_events: openerp.base.ListView.Groups.prototype.passtrough_events + " edit",
         new_record: function () {
             // TODO: handle multiple children
             this.children[null].new_record();
@@ -60,7 +86,7 @@ openerp.base.list.editable = function (openerp) {
     });
 
     var old_list_row_clicked = openerp.base.ListView.List.prototype.row_clicked;
-    _.extend(openerp.base.ListView.List.prototype, {
+    _.extend(openerp.base.ListView.List.prototype, /** @lends openerp.base.ListView.List */{
         row_clicked: function (event) {
             if (!this.options.editable) {
                 return old_list_row_clicked.call(this, event);
@@ -169,6 +195,7 @@ openerp.base.list.editable = function (openerp) {
                         return;
                     }
                     self.dataset.next();
+                    self.edit_record();
                 });
             }, this.options.editable === 'top');
         },
@@ -186,6 +213,9 @@ openerp.base.list.editable = function (openerp) {
                 this.$current.children(
                     _.sprintf('[data-index=%d]',
                             this.dataset.index)));
+            $(this).trigger(
+                'edit',
+                [this.rows[this.dataset.index].data.id.value, this.dataset]);
         },
         new_record: function () {
             this.dataset.index = null;

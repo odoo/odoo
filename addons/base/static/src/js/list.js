@@ -392,7 +392,7 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
      *
      * @param {Number} index index of the record in the dataset
      * @param {Object} id identifier of the activated record
-     * @param {openobject.base.DataSet} dataset dataset in which the record is available (may not be the listview's dataset in case of nested groups)
+     * @param {openerp.base.DataSet} dataset dataset in which the record is available (may not be the listview's dataset in case of nested groups)
      */
     do_activate_record: function (index, id, dataset) {
         var self = this;
