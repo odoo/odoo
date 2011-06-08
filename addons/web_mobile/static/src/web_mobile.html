@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<title>Login Page OpenERP mobile</title>
+   	<link rel="stylesheet"  href="/web_mobile/static/src/css/OpenERP.css" />
+    <script type="text/javascript" src="/base/static/lib/jquery/jquery-1.5.2.js"></script>
+    <script type="text/javascript" src="/web_mobile/static/lib/jquery_mobile/jquery.mobile-1.0a4.1.js"></script>
+    <script type="text/javascript" src="/base/static/lib/jquery.ba-bbq/jquery.ba-bbq.js"></script>
+    <script type="text/javascript" src="/base/static/lib/underscore/underscore.js"></script>
+    <script type="text/javascript" src="/base/static/lib/underscore/underscore.strings.js"></script>
+    <script type="text/javascript" src="/base/static/lib/qweb/qweb.js"></script>
+    
+    <script type="text/javascript" src="/base/static/src/js/base.js"></script>
+    <script type="text/javascript" src="/base/static/src/js/chrome.js"></script>
+    <script type="text/javascript" src="/base/static/src/js/data.js"></script>
+    <script type="text/javascript" src="/base/static/src/js/dates.js"></script>
+    <script type="text/javascript" src="/base/static/src/js/views.js"></script>
+    <script type="text/javascript" src="/base/static/src/js/search.js"></script>
+    <script type="text/javascript" src="/base/static/src/js/list.js"></script>
+    <script type="text/javascript" src="/base/static/src/js/tree.js"></script>
+    <script type="text/javascript" src="/base/static/src/js/m2o.js"></script>
+    <script type="text/javascript" src="/base/static/src/js/form.js"></script>
+    
+    <script type="text/javascript" src="/web_mobile/static/src/js/web_mobile.js"></script>
+	
+
+    <script type="text/javascript">
+        $(function() {
+            var oe = openerp.init();
+            openerp.web_mobile(oe);
+            oe.web_mobile.mobilewebclient("moe");
+            $("html").page();
+        });
+    </script>
+
+</head> 
+<body>
+<div id="moe" class="openerp" data-role="page">
+    
+</div>
+</body>
+</html>
