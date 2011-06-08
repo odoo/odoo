@@ -973,10 +973,11 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
         this.$drop_down.button({
             icons: {primary: "ui-icon-triangle-1-s"}, text: false
         }).click(function() {
-            if (self.$input.autocomplete( "widget" ).is( ":visible" )) {
+            if (self.$input.autocomplete("widget").is(":visible")) {
                 self.$input.autocomplete("close");
             } else {
                 self.$input.autocomplete("search");
+                self.$input.focus();
             }
         });
         
@@ -1007,9 +1008,9 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
             
             if (values.length > this.limit) {
                 values = values.slice(0, this.limit);
-                values.push({label: "   More...", action: function() {debugger;}});
+                values.push({label: "   More...", action: function() {debugger;}});
             }
-            values.push({label: "   Create...", action: function() {debugger;}});
+            values.push({label: "   Create...", action: function() {debugger;}});
             response(values);
         });
     },
