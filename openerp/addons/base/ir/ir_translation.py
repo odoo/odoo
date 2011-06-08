@@ -92,7 +92,7 @@ class ir_translation(osv.osv):
             cr.execute('CREATE INDEX ir_translation_ltn ON ir_translation (name, lang, type)')
             cr.commit()
 
-    @tools.ormcache_multi(skiparg=3, multi=7)
+    @tools.ormcache_multi(skiparg=3, multi=6)
     def _get_ids(self, cr, uid, name, tt, lang, ids):
         translations = dict.fromkeys(ids, False)
         if ids:
@@ -178,13 +178,11 @@ class ir_translation(osv.osv):
             return tools.ustr(source)
         return trad
 
-    def create(self, cursor, user, vals, context=None):
+    def create(self, cr, uid, vals, context=None):
         if not context:
             context = {}
-        ids = super(ir_translation, self).create(cursor, user, vals, context=context)
-        for trans_obj in self.read(cursor, user, [ids], ['name','type','res_id','src','lang'], context=context):
-            self._get_source.clear_cache(self, user, trans_obj['name'], trans_obj['type'], trans_obj['lang'], source=trans_obj['src'])
-            self._get_ids.clear_cache(self, user, trans_obj['name'], trans_obj['type'], trans_obj['lang'], [trans_obj['res_id']])
+        ids = super(ir_translation, self).create(cr, uid, vals, context=context)
+        self._get_source.clear_cache(self, vals.get('name',0), vals.get('type',0),  vals.get('lang',0), vals.get('src',0))
         return ids
 
     def write(self, cursor, user, ids, vals, context=None):
@@ -193,8 +191,8 @@ class ir_translation(osv.osv):
         if isinstance(ids, (int, long)):
             ids = [ids]
         result = super(ir_translation, self).write(cursor, user, ids, vals, context=context)
+        self._get_source.clear_cache(self, user, trans_obj['name'], trans_obj['type'], trans_obj['lang'], source=trans_obj['src'])
         for trans_obj in self.read(cursor, user, ids, ['name','type','res_id','src','lang'], context=context):
-            self._get_source.clear_cache(self, user, trans_obj['name'], trans_obj['type'], trans_obj['lang'], source=trans_obj['src'])
             self._get_ids.clear_cache(self, user, trans_obj['name'], trans_obj['type'], trans_obj['lang'], [trans_obj['res_id']])
         return result
 

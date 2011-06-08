@@ -57,7 +57,7 @@ except ImportError:
 
 import openerp.loglevels as loglevels
 from config import config
-from lru import LRU
+from cache import *
 
 # get_encodings, ustr and exception_to_unicode were originally from tools.misc.
 # There are moved to loglevels until we refactor tools.
@@ -622,7 +622,6 @@ class UpdateableDict(local):
     def __ne__(self, y):
         return self.dict.__ne__(y)
 
-
 # Don't use ! Use res.currency.round()
 class currency(float):
 
@@ -638,114 +637,6 @@ class currency(float):
     #def __str__(self):
     #   display_value = int(self*(10**(-self.accuracy))/self.rounding)*self.rounding/(10**(-self.accuracy))
     #   return str(display_value)
-
-class ormcache(object):
-    """ LRU cache decorator for orm methods
-    """
-
-    def __init__(self, skiparg=2, size=8192, multi=None, timeout=None):
-        self.skiparg = skiparg
-        self.size = size
-        self.method = None
-        self.stat_miss = 0
-        self.stat_hit = 0
-        self.stat_err = 0
-
-    def __call__(self,m):
-        self.method = m
-        def lookup(self2, cr, *args):
-            r = self.lookup(m, m, self2, cr, *args)
-#            print "lookup-stats hit miss err",self.stat_hit,self.stat_miss,self.stat_err
-            return r
-        def clear(self2, *args):
-            return self.clear(self2, *args)
-        lookup.clear_cache = self.clear
-        print "returned",lookup
-        return lookup
-
-    def lookup(self, cacheid, method, self2, cr, *args):
-        try:
-            ormcache = getattr(self2, '_ormcache')
-        except AttributeError:
-            ormcache = self2._ormcache = {}
-        try:
-            d = ormcache[cacheid]
-        except KeyError:
-            d = ormcache[cacheid] = LRU(self.size)
-        key = args[self.skiparg-2:]
-        try:
-           r = d[key]
-#           print "lookup-hit",self2,cr,key,r
-           self.stat_hit += 1
-           return r
-        except KeyError:
-           self.stat_miss += 1
-#           print "lookup-miss",self2,cr,key
-           value = d[args] = method(self2, cr, *args)
-#           print "lookup-miss-value",value
-           return value
-        except TypeError:
-           self.stat_err += 1
-#           print "lookup-typeerror",self2,cr,key
-           return method(self2, cr, *args)
-
-    def clear(self, self2, *args, **kw):
-        """ Remove *args entry from the cache or all keys if *args is undefined 
-        """
-        try:
-            ormcache = getattr(self2, '_ormcache')
-        except AttributeError:
-            ormcache = self2._ormcache = {}
-        try:
-            d = ormcache[self.method]
-        except KeyError:
-            d = ormcache[self.method] = LRU(self.size)
-        d.clear()
-
-class ormcache_multi(ormcache):
-    def __init__(self, skiparg=2, size=8192, multi=4):
-        super(ormcache_multi,self).__init__(skiparg,size)
-        self.multi = multi - 3
-
-    def lookup(self, cacheid, method, self2, cr, *args):
-        superlookup = super(ormcache_multi,self).lookup
-        args = list(args)
-        multi = self.multi
-#        print args,multi
-        ids = args[multi]
-        r = {}
-        miss = []
-
-        def add_to_miss(_self2, _cr, *_args):
-            miss.append(_args[multi])
-
-        for i in ids:
-            args[multi] = i
-            r[i] = superlookup(method, add_to_miss, self2, cr, *args)
-
-        args[multi] = miss
-        r.update(method(self2, cr, *args))
-
-        for i in miss:
-            args[multi] = i
-            key = tuple(args[self.skiparg-2:])
-            self2._ormcache[cacheid][key] = r[i]
-
-        return r
-
-class dummy_cache(object):
-    """ Cache decorator replacement to actually do no caching.
-    """
-    def __init__(self, *l, **kw):
-        pass
-    def clear(self, *l, **kw):
-        pass
-    def __call__(self, fn):
-        fn.clear_cache = self.clear
-        return fn
-
-#ormcache = dummy_cache
-cache = dummy_cache
 
 def to_xml(s):
     return s.replace('&','&amp;').replace('<','&lt;').replace('>','&gt;')
