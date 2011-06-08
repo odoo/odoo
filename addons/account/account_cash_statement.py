@@ -119,39 +119,6 @@ class account_cash_statement(osv.osv):
             res2[statement.id] = encoding_total
         return res2
 
-    def _end_balance(self, cursor, user, ids, name, attr, context=None):
-        res_currency_obj = self.pool.get('res.currency')
-        res_users_obj = self.pool.get('res.users')
-        res = {}
-
-        company_currency_id = res_users_obj.browse(cursor, user, user,
-                context=context).company_id.currency_id.id
-
-        statements = self.browse(cursor, user, ids, context=context)
-        for statement in statements:
-            res[statement.id] = statement.balance_start
-            currency_id = statement.currency.id
-            for line in statement.move_line_ids:
-                if line.debit > 0:
-                    if line.account_id.id == \
-                            statement.journal_id.default_debit_account_id.id:
-                        res[statement.id] += res_currency_obj.compute(cursor,
-                                user, company_currency_id, currency_id,
-                                line.debit, context=context)
-                else:
-                    if line.account_id.id == \
-                            statement.journal_id.default_credit_account_id.id:
-                        res[statement.id] -= res_currency_obj.compute(cursor,
-                                user, company_currency_id, currency_id,
-                                line.credit, context=context)
-
-            if statement.state in ('draft', 'open'):
-                for line in statement.line_ids:
-                    res[statement.id] += line.amount
-        for r in res:
-            res[r] = round(res[r], 2)
-        return res
-
     def _get_company(self, cr, uid, context=None):
         user_pool = self.pool.get('res.users')
         company_pool = self.pool.get('res.company')

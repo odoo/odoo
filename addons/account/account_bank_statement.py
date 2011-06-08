@@ -136,8 +136,8 @@ class account_bank_statement(osv.osv):
             states={'confirm':[('readonly', True)]}),
         'balance_start': fields.float('Starting Balance', digits_compute=dp.get_precision('Account'),
             states={'confirm':[('readonly',True)]}),
-        'balance_end_real': fields.float('Closing Balance', digits_compute=dp.get_precision('Account'), states={'confirm': [('readonly', True)]}, help="closing balance entered by the cashbox verifier"),
-        'balance_end': fields.function(_end_balance, method=True, store=True, string='Balance'),
+        'balance_end_real': fields.float('Closing Balance', digits_compute=dp.get_precision('Account'), states={'confirm': [('readonly', True)]}, help="closing balance entered by the cashbox verifier"), # help for account_cash_statement
+        'balance_end': fields.function(_end_balance, method=True, store=True, string='Balance'), # store=True for account_cash_statement
         'company_id': fields.related('journal_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True),
         'line_ids': fields.one2many('account.bank.statement.line',
             'statement_id', 'Statement lines',
