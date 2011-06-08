@@ -909,13 +909,17 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
 
             try:
                 dic['res_id'] = dic['res_id'] and int(dic['res_id']) or 0
-                dic['module'] = False
-                dic['xml_id'] = False
             except:
-                split_id = dic['res_id'].split('.', 1)
-                dic['module'] = split_id[0]
-                dic['xml_id'] = split_id[1]
-                dic['res_id'] = False
+                model_data_ids = model_data_obj.search(cr, uid, [
+                    ('model', '=', dic['name'].split(',')[0]),
+                    ('module', '=', dic['res_id'].split('.', 1)[0]),
+                    ('name', '=', dic['res_id'].split('.', 1)[1]),
+                    ])
+                if model_data_ids:
+                    dic['res_id'] = model_data_obj.browse(cr, uid,
+                            model_data_ids[0]).res_id
+                else:
+                    dic['res_id'] = False
 
             args = [
                 ('lang', '=', lang),
@@ -924,11 +928,7 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
                 ('src', '=', dic['src']),
             ]
             if dic['type'] == 'model':
-                if dic['res_id'] is False:
-                    args.append(('module', '=', dic['module']))
-                    args.append(('xml_id', '=', dic['xml_id']))
-                else:
-                    args.append(('res_id', '=', dic['res_id']))
+                args.append(('res_id', '=', dic['res_id']))
             ids = trans_obj.search(cr, uid, args)
             if ids:
                 if context.get('overwrite') and dic['value']:
@@ -940,18 +940,6 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
     except IOError:
         filename = '[lang: %s][format: %s]' % (iso_lang or 'new', fileformat)
         logger.exception("couldn't read translation file %s", filename)
-
-def trans_update_res_ids(cr):
-    cr.execute("""
-            UPDATE ir_translation
-            SET res_id = COALESCE ((SELECT ir_model_data.res_id
-                          FROM ir_model_data
-                          WHERE ir_translation.module = ir_model_data.module
-                              AND ir_translation.xml_id = ir_model_data.name), 0)
-            WHERE ir_translation.module is not null
-                AND ir_translation.xml_id is not null
-                AND ir_translation.res_id = 0;
-    """)
 
 def get_locales(lang=None):
     if lang is None:

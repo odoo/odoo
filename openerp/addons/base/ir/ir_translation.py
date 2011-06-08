@@ -61,10 +61,6 @@ class ir_translation(osv.osv):
         'type': fields.selection(TRANSLATION_TYPE, string='Type', size=16, select=True),
         'src': fields.text('Source'),
         'value': fields.text('Translation Value'),
-        # These two columns map to ir_model_data.module and ir_model_data.name.
-        # They are used to resolve the res_id above after loading is done.
-        'module': fields.char('Module', size=64, help='Maps to the ir_model_data for which this translation is provided.'),
-        'xml_id': fields.char('XML Id', size=128, help='Maps to the ir_model_data for which this translation is provided.'),
     }
 
     def _auto_init(self, cr, context={}):
@@ -91,6 +87,7 @@ class ir_translation(osv.osv):
         if not cr.fetchone():
             cr.execute('CREATE INDEX ir_translation_ltn ON ir_translation (name, lang, type)')
             cr.commit()
+
 
     @tools.cache(skiparg=3, multi='ids')
     def _get_ids(self, cr, uid, name, tt, lang, ids):
