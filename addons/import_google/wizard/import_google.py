@@ -38,7 +38,7 @@ from import_base.mapper import *
 
 class import_contact(import_framework):
     
-    gd_calendar_client = False
+    gd_client = False
     calendars = False
     DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S"
     TABLE_CONTACT = 'contact'
@@ -46,8 +46,8 @@ class import_contact(import_framework):
    
     def initialize(self):
         if 'events' in self.context and self.context.get('events'):
-            self.gd_calendar_client = gdata.calendar.service.CalendarService()
-            self.gd_calendar_client.ClientLogin(self.context.get('user', False),self.context.get('password', False))
+            self.gd_client = gdata.calendar.service.CalendarService()
+            self.gd_client.ClientLogin(self.context.get('user', False),self.context.get('password', False))
             self.calendars = self.context.get('calendars') 
         
     def get_mapping(self):
@@ -177,7 +177,7 @@ class import_contact(import_framework):
             events_query = gdata.calendar.service.CalendarEventQuery(user=urllib.unquote(cal.split('/')[~0]))
             events_query.start_index = 1
             events_query.max_results = 1000
-            event_feed = self.gd_calendar_client.GetCalendarEventFeed(events_query.ToUri())
+            event_feed = self.gd_client.GetCalendarEventFeed(events_query.ToUri())
             for feed in event_feed.entry:
                 event = {            
                     'recurrency': "0",
