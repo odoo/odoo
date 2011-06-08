@@ -436,67 +436,38 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
      * @param {Array} [records]
      */
     compute_aggregates: function (records) {
-        if (_.isEmpty(this.aggregate_columns)) {
-            return;
-        }
+        var columns = _(this.aggregate_columns).filter(function (column) {
+            return column['function']; });
+
+        if (_.isEmpty(columns)) { return; }
+
         if (_.isEmpty(records)) {
             records = this.groups.get_records();
         }
 
-        var aggregator = this.build_aggregator(this.aggregate_columns);
-        this.display_aggregates(
-            _(records).reduce(aggregator, aggregator).value());
-    },
-    /**
-     * Creates a stateful callable aggregator object, which can be reduced over
-     * a collection of records in order to build the aggregations described
-     * by the parameter
-     *
-     * @param {Array} aggregation_descriptors
-     */
-    build_aggregator: function (aggregation_descriptors) {
-        var values = {};
-        var descriptors = {};
-        _(aggregation_descriptors).each(function (descriptor) {
-            values[descriptor.field] = [];
-            descriptors[descriptor.field] = descriptor;
+        var count = 0, sums = {};
+        _(columns).each(function (column) { sums[column.field] = 0; });
+        _(records).each(function (record) {
+            count += 1; //(record.count || 1);
+            _(columns).each(function (column) {
+                sums[column.field] += record[column.field];
+            });
         });
 
-        var aggregator = function (_i, record) {
-            _(values).each(function (collection, key) {
-                collection.push(record[key]);
-            });
+        var aggregates = {};
+        _(columns).each(function (column) {
+            var field = column.field;
+            switch (column['function']) {
+                case 'sum':
+                    aggregates[field] = sums[field];
+                    break;
+                case 'avg':
+                    aggregates[field] = sums[field] / count;
+                    break;
+            }
+        });
 
-            return aggregator;
-        };
-        aggregator.value = function () {
-            var result = {};
-
-            _(values).each(function (collection, key) {
-                var value;
-                switch(descriptors[key]['function']) {
-                    case 'avg':
-                        value = (_(collection).chain()
-                                .filter(function (item) {
-                                    return !_.isUndefined(item); })
-                                .reduce(function (total, item) {
-                                    return total + item; }, 0).value()
-                            / collection.length);
-                        break;
-                    case 'sum':
-                        value = (_(collection).chain()
-                            .filter(function (item) {
-                                return !_.isUndefined(item); })
-                            .reduce(function (total, item) {
-                                return total + item; }, 0).value());
-                        break;
-                }
-                result[key] = value;
-            });
-
-            return result;
-        };
-        return aggregator;
+        this.display_aggregates(aggregates);
     },
     display_aggregates: function (aggregation) {
         var $footer_cells = this.$element.find('.oe-list-footer');
@@ -790,24 +761,11 @@ openerp.base.ListView.Groups = Class.extend( /** @lends openerp.base.ListView.Gr
         }
         return red_letter_tboday;
     },
-    open_group: function (e, group) {
-        var row = e.currentTarget;
-
-        if (this.children[group.value]) {
-            this.children[group.value].apoptosis();
-            delete this.children[group.value];
-        }
-        var prospekt = this.children[group.value] = new openerp.base.ListView.Groups(this.view, {
-            options: this.options,
-            columns: this.columns
-        });
-        this.bind_child_events(prospekt);
-        prospekt.datagroup = group;
-        prospekt.render().insertAfter(
-            this.point_insertion(row));
-        $(row).find('span.ui-icon')
-                .removeClass('ui-icon-triangle-1-e')
-                .addClass('ui-icon-triangle-1-s');
+    open: function (point_insertion) {
+        this.render().insertAfter(point_insertion);
+    },
+    close: function () {
+        this.apoptosis();
     },
     /**
      * Prefixes ``$node`` with floated spaces in order to indent it relative
@@ -827,18 +785,32 @@ openerp.base.ListView.Groups = Class.extend( /** @lends openerp.base.ListView.Gr
         var self = this;
         var placeholder = this.make_fragment();
         _(datagroups).each(function (group) {
+            if (self.children[group.value]) {
+                self.children[group.value].apoptosis();
+                delete self.children[group.value];
+            }
+            var child = self.children[group.value] = new openerp.base.ListView.Groups(self.view, {
+                options: self.options,
+                columns: self.columns
+            });
+            self.bind_child_events(child);
+            child.datagroup = group;
+
             var $row = $('<tr>');
             if (group.openable) {
                 $row.click(function (e) {
                     if (!$row.data('open')) {
-                        $row.data('open', true);
-                        self.open_group(e, group);
+                        $row.data('open', true)
+                            .find('span.ui-icon')
+                                .removeClass('ui-icon-triangle-1-e')
+                                .addClass('ui-icon-triangle-1-s');
+                        child.open(self.point_insertion(e.currentTarget));
                     } else {
                         $row.removeData('open')
                             .find('span.ui-icon')
                                 .removeClass('ui-icon-triangle-1-s')
                                 .addClass('ui-icon-triangle-1-e');
-                        _(self.children).each(function (child) {child.apoptosis();});
+                        child.close();
                     }
                 });
             }
