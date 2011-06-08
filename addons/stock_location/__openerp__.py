@@ -89,7 +89,7 @@ You can use the demo data as follow:
     'images': ['images/pulled_flow.jpeg','images/pushed_flow.jpeg'],
     'depends': ['procurement','stock','sale'],
     'init_xml': [],
-    'update_xml': ['stock_location_view.xml', 'security/ir.model.access.csv', 'procurement_pull_workflow.xml'],
+    'update_xml': ['stock_location_view.xml', "security/stock_location_security.xml", 'security/ir.model.access.csv', 'procurement_pull_workflow.xml'],
     'demo_xml': [
         'stock_location_demo_cpu1.xml',
         'stock_location_demo_cpu3.yml',

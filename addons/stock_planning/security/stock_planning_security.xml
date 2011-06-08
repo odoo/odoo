@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data noupdate="0">
+
+<!-- multi -->
+     <record model="ir.rule" id="stock_planning_comp_rule">
+        <field name="name">stock_planning multi-company</field>
+        <field name="model_id" ref="model_stock_planning"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+    </record>
+
+     <record model="ir.rule" id="stock_sale_forecast_comp_rule">
+        <field name="name">stock_sale_forecast multi-company</field>
+        <field name="model_id" ref="model_stock_sale_forecast"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+    </record>
+
+</data>
+</openerp>
