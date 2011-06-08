@@ -19,9 +19,11 @@
 #
 ##############################################################################
 
-from osv import osv, fields
 import time
 from datetime import datetime
+from dateutil.relativedelta import relativedelta
+
+from osv import osv, fields
 import decimal_precision as dp
 
 class account_asset_category(osv.osv):
@@ -43,6 +45,7 @@ class account_asset_category(osv.osv):
         'method_period': fields.integer('Period Length'),
         'method_progress_factor': fields.float('Progressif Factor'),
         'method_time': fields.selection([('delay','Delay'),('end','Ending Period')], 'Time Method', required=True),
+        'method_end': fields.date('Ending date'),
         'prorata':fields.boolean('Prorata Temporis', help='Indicates that the accounting entries for this asset have to be done from the purchase date instead of the first January'),
         'open_asset': fields.boolean('Skip Draft State', help="Check this if you want to automatically confirm the assets of this category when created by invoice."),
     }
@@ -102,21 +105,32 @@ class account_asset_asset(osv.osv):
     def compute_depreciation_board(self, cr, uid,ids, context=None):
         depreciation_lin_obj = self.pool.get('account.asset.depreciation.line')
         for asset in self.browse(cr, uid, ids, context=context):
-            old_depreciation_line_ids = depreciation_lin_obj.search(cr, uid, [('asset_id', '=', asset.id), ('move_id', '=', False)])
-            if old_depreciation_line_ids:
-                depreciation_lin_obj.unlink(cr, uid, old_depreciation_line_ids, context=context)
-            undone_dotation_number = asset.method_delay - len(asset.account_move_line_ids)
-            residual_amount = asset.value_residual
+            # For all cases: amount to depreciate is (Purchase Value - Salvage Value)
+            amount_to_depr = residual_amount = asset.purchase_value - asset.salvage_value
             depreciation_date = datetime.strptime(self._get_last_depreciation_date(cr, uid, [asset.id], context)[asset.id], '%Y-%m-%d')
             day = depreciation_date.day
             month = depreciation_date.month
             year = depreciation_date.year
-            for i in range(1,undone_dotation_number+1):
+            total_days = (year % 4) and 365 or 366
+            undone_dotation_number = asset.method_delay
+            if asset.method_time == 'end':
+                end_date = datetime.strptime(asset.method_end, '%Y-%m-%d')
+                undone_dotation_number = (end_date - depreciation_date).days / total_days
+            if asset.prorata or asset.method_time == 'end':
+                undone_dotation_number += 1
+            for i in range(1, undone_dotation_number+1):
                 if i == undone_dotation_number + 1:
                     amount = residual_amount
                 else:
                     if asset.method == 'linear':
-                        amount = asset.value_residual / undone_dotation_number
+                        amount = amount_to_depr / undone_dotation_number
+                        if asset.prorata:
+                            amount = amount_to_depr / asset.method_delay
+                            if i == 1:
+                                days = total_days - float(depreciation_date.strftime('%j'))
+                                amount = (amount_to_depr / asset.method_delay) / total_days * days
+                            elif i == undone_dotation_number:
+                                amount = (amount_to_depr / asset.method_delay) / total_days * (total_days - days)
                     else:
                         amount = residual_amount * asset.method_progress_factor
                 residual_amount -= amount
@@ -124,14 +138,21 @@ class account_asset_asset(osv.osv):
                      'amount': amount,
                      'asset_id': asset.id,
                      'sequence': i,
-                     'name': str(asset.id) +'/'+ str(i),
+                     'name': str(asset.id) +'/' + str(i),
                      'remaining_value': residual_amount,
-                     'depreciated_value': asset.purchase_value - residual_amount,
+                     'depreciated_value': amount_to_depr - residual_amount,
                      'depreciation_date': depreciation_date.strftime('%Y-%m-%d'),
                 }
-                depreciation_lin_obj.create(cr, uid, vals, context=context)
-                month += asset.method_period
-                depreciation_date = datetime(year + (month / 12), month % 12, day)
+                dep_id = [dep.id for dep in asset.depreciation_line_ids if not dep.move_check and dep.sequence == vals['sequence']]
+                if asset.depreciation_line_ids:
+                    depreciation_lin_obj.write(cr, uid, dep_id, vals, context=context)
+                else:
+                    depreciation_lin_obj.create(cr, uid, vals, context=context)
+                # Considering Depr. Period as months
+                depreciation_date = (datetime(year, month, day) + relativedelta(months=+asset.method_period))
+                day = depreciation_date.day
+                month = depreciation_date.month
+                year = depreciation_date.year
         return True
 
     def validate(self, cr, uid, ids, context={}):
@@ -139,11 +160,9 @@ class account_asset_asset(osv.osv):
             'state':'open'
         }, context)
 
-    
-
-    def _amount_residual(self, cr, uid, ids, name, args, context={}):
+    def _amount_residual(self, cr, uid, ids, name, args, context=None):
         cr.execute("""SELECT
-                l.asset_id as id, SUM(abs(l.debit-l.credit)) AS amount
+                l.asset_id as id, round(SUM(abs(l.debit-l.credit))) AS amount
             FROM
                 account_move_line l
             WHERE
@@ -177,7 +196,7 @@ class account_asset_asset(osv.osv):
         'method': fields.selection([('linear','Linear'),('progressif','Progressive')], 'Computation method', required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'method_delay': fields.integer('During (interval)', readonly=True, states={'draft':[('readonly',False)]}),
         'method_period': fields.integer('Depre. all (period)', readonly=True, states={'draft':[('readonly',False)]}),
-        'method_end': fields.date('Ending date'),
+        'method_end': fields.date('Ending date', readonly=True, states={'draft':[('readonly',False)]}),
         'method_progress_factor': fields.float('Progressif Factor', readonly=True, states={'draft':[('readonly',False)]}),
         'value_residual': fields.function(_amount_residual, method=True, digits_compute=dp.get_precision('Account'), string='Residual Value'),
         'method_time': fields.selection([('delay','Delay'),('end','Ending Period')], 'Time Method', required=True, readonly=True, states={'draft':[('readonly',False)]}),
@@ -201,21 +220,32 @@ class account_asset_asset(osv.osv):
         'company_id': lambda self, cr, uid, context: self.pool.get('res.company')._company_default_get(cr, uid, 'account.asset.asset',context=context),
     }
 
+    def _check_prorata(self, cr, uid, ids, context=None):
+        for asset in self.browse(cr, uid, ids, context=context):
+            if asset.prorata and (asset.method != 'linear' or asset.method_time != 'delay'):
+                return False
+        return True
+
+    _constraints = [
+        (_check_prorata, '\nProrata temporis can be applied only for computation method linear and time method delay.', ['prorata']),
+    ]
+
     def onchange_category_id(self, cr, uid, ids, category_id, context=None):
         res = {'value':{}}
         asset_categ_obj = self.pool.get('account.asset.category')
         if category_id:
             category_obj = asset_categ_obj.browse(cr, uid, category_id, context=context)
             res['value'] = {
-                            'method': category_obj.method, 
+                            'method': category_obj.method,
                             'method_delay': category_obj.method_delay,
                             'method_time': category_obj.method_time,
                             'method_period': category_obj.method_period,
                             'method_progress_factor': category_obj.method_progress_factor,
+                            'method_end': category_obj.method_end,
                             'prorata': category_obj.prorata,
             }
         return res
-    
+
     def copy(self, cr, uid, id, default=None, context=None):
         if default is None:
             default = {}
@@ -338,7 +368,7 @@ class account_asset_depreciation_line(osv.osv):
         move_line_obj = self.pool.get('account.move.line')
         currency_obj = self.pool.get('res.currency')
         for line in self.browse(cr, uid, ids, context=context):
-            depreciation_date = time.strftime('%Y-%m-%d')
+            depreciation_date = line.asset_id.prorata and line.asset_id.purchase_date or time.strftime('%Y-%m-%d')
             period_ids = period_obj.find(cr, uid, depreciation_date, context=context)
             company_currency = line.asset_id.company_id.currency_id.id
             current_currency = line.asset_id.currency_id.id
