@@ -116,8 +116,11 @@ init: function(view_manager, session, element_id, dataset, view_id) {
                     }
                 }
             }
-        project = new GanttProjectInfo(1, self.name, smalldate);
-        ganttChartControl.addProject(project);
+            if (smalldate == ""){
+                smalldate = Date.today();
+            }
+            project = new GanttProjectInfo(1, self.name, smalldate);
+            ganttChartControl.addProject(project);
         }
 
         //create child
