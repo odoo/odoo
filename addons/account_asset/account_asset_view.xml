@@ -91,7 +91,7 @@
                     <field name="method_time"/>
                     <field name="method_period"/>
                     <field name="method_delay" attrs="{'invisible': [('method_time','=','end')]}"/>
-                    <field name="prorata" colspan="1"/>
+                    <field name="prorata" colspan="1" attrs="{'invisible': ['|',('method_time','=','end'),('method','!=','linear')]}"/>
                     <field name="method_end" attrs="{'required': [('method_time','=','end')], 'invisible':[('method_time','=','delay')]}"/>
                     <newline/>
                  </page>

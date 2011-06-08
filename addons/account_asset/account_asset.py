@@ -105,6 +105,9 @@ class account_asset_asset(osv.osv):
     def compute_depreciation_board(self, cr, uid,ids, context=None):
         depreciation_lin_obj = self.pool.get('account.asset.depreciation.line')
         for asset in self.browse(cr, uid, ids, context=context):
+            old_depreciation_line_ids = depreciation_lin_obj.search(cr, uid, [('asset_id', '=', asset.id), ('move_id', '=', False)])
+            if old_depreciation_line_ids:
+                depreciation_lin_obj.unlink(cr, uid, old_depreciation_line_ids, context=context)
             # For all cases: amount to depreciate is (Purchase Value - Salvage Value)
             amount_to_depr = residual_amount = asset.purchase_value - asset.salvage_value
             depreciation_date = datetime.strptime(self._get_last_depreciation_date(cr, uid, [asset.id], context)[asset.id], '%Y-%m-%d')
@@ -134,6 +137,8 @@ class account_asset_asset(osv.osv):
                     else:
                         amount = residual_amount * asset.method_progress_factor
                 residual_amount -= amount
+                if i <= len(asset.account_move_line_ids):
+                    continue
                 vals = {
                      'amount': amount,
                      'asset_id': asset.id,
@@ -143,11 +148,7 @@ class account_asset_asset(osv.osv):
                      'depreciated_value': amount_to_depr - residual_amount,
                      'depreciation_date': depreciation_date.strftime('%Y-%m-%d'),
                 }
-                dep_id = [dep.id for dep in asset.depreciation_line_ids if not dep.move_check and dep.sequence == vals['sequence']]
-                if asset.depreciation_line_ids:
-                    depreciation_lin_obj.write(cr, uid, dep_id, vals, context=context)
-                else:
-                    depreciation_lin_obj.create(cr, uid, vals, context=context)
+                depreciation_lin_obj.create(cr, uid, vals, context=context)
                 # Considering Depr. Period as months
                 depreciation_date = (datetime(year, month, day) + relativedelta(months=+asset.method_period))
                 day = depreciation_date.day
