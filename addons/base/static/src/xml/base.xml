@@ -242,7 +242,7 @@
 <t t-name="TreeView_Secondry">
     <div id="child_id">
         <t t-foreach="child_data" t-as="field" >
-            <div t-att-id="field.id">
+            <div t-att-id="field.id" class="childclass">
                 <t t-if="(field.child_id).length>=1">
                    <img id="parentimg" src="/base/static/src/img/expand.gif" width="16" height="16" border="0"/>
                 </t>
@@ -264,7 +264,7 @@
 <t t-name="TreeView_Children">
     <div id="subchild" style="display:none">
         <t t-foreach="childdata" t-as="child" >
-            <div t-att-id="child.id" >
+            <div t-att-id="child.id" class="subclass">
                 <t t-if="(child.child_id).length>=1">
                     <img id="childimg" src="/base/static/src/img/expand.gif" width="16" height="16" border="0"/>
                 </t>
@@ -275,7 +275,7 @@
 </t>
 <t t-name="TreeView_SubChildren">
     <div id="childsubchild" style="display:none">
-        <t t-foreach="subchilddata" t-as="subchild" >
+        <t t-foreach="subchilddata" t-as="subchild" class="subchildclass">
             <div t-att-id="subchild.id" >
                 <t t-if="(subchild.child_id).length>=1">
                     <img id="subchildimg" src="/base/static/src/img/expand.gif" width="16" height="16" border="0"/>

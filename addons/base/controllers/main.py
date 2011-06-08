@@ -98,12 +98,12 @@ class Session(openerpweb.Controller):
             "session_id": req.session_id,
             "uid": req.session._uid,
         }
-    
+
     @openerpweb.jsonrequest
     def get_databases_list(self, req):
         proxy = req.session.proxy("db")
         dbs = proxy.list()
-        
+
         return {"db_list": dbs}
 
     @openerpweb.jsonrequest
@@ -192,7 +192,7 @@ class Session(openerpweb.Controller):
         This method store an action object in the session object and returns an integer
         identifying that action. The method get_session_action() can be used to get
         back the action.
-        
+
         :param the_action: The action to save in the session.
         :type the_action: anything
         :return: A key identifying the saved action.
@@ -215,7 +215,7 @@ class Session(openerpweb.Controller):
         """
         Gets back a previously saved action. This method can return None if the action
         was saved since too much time (this case should be handled in a smart way).
-        
+
         :param key: The key given by save_session_action()
         :type key: integer
         :return: The saved action or None.
@@ -225,8 +225,8 @@ class Session(openerpweb.Controller):
         if not saved_actions:
             return None
         return saved_actions["actions"].get(key)
-        
-        
+
+
 def load_actions_from_ir_values(req, key, key2, models, meta, context):
     Values = req.session.model('ir.values')
     actions = Values.get(key, key2, models, meta, context)
@@ -305,7 +305,7 @@ class Menu(openerpweb.Controller):
         menu_items = Menus.read(menu_ids, ['name', 'sequence', 'parent_id'])
         menu_root = {'id': False, 'name': 'root', 'parent_id': [-1, '']}
         menu_items.append(menu_root)
-        
+
         # make a tree using parent_id
         menu_items_map = dict((menu_item["id"], menu_item) for menu_item in menu_items)
         for menu_item in menu_items:
@@ -369,7 +369,7 @@ class DataSet(openerpweb.Controller):
         reads = Model.read(ids, fields or False, request.context)
         reads.sort(key=lambda obj: ids.index(obj['id']))
         return reads
-    
+
     @openerpweb.jsonrequest
     def read(self, request, model, ids, fields=False):
         return self.do_search_read(request, model, ids, fields)
@@ -445,7 +445,7 @@ class DataSet(openerpweb.Controller):
         m = req.session.model(model)
         r = m.default_get(fields, context)
         return {'result': r}
-    
+
     @openerpweb.jsonrequest
     def name_search(self, req, model, search_str, domain=[], context={}):
         m = req.session.model(model)
@@ -472,7 +472,7 @@ class View(openerpweb.Controller):
                                     toolbar, submenu)
         self.process_view(request.session, fvg, request.context, transform)
         return fvg
-    
+
     def process_view(self, session, fvg, context, transform):
         if transform:
             evaluation_context = session.evaluation_context(context or {})
