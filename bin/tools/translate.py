@@ -916,7 +916,6 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
                 ('lang', '=', lang),
                 ('type', '=', dic['type']),
                 ('name', '=', dic['name']),
-                ('src', '=', dic['src']),
             ]
             if dic['type'] == 'model':
                 if dic['res_id'] is False:
@@ -924,6 +923,9 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
                     args.append(('xml_id', '=', dic['xml_id']))
                 else:
                     args.append(('res_id', '=', dic['res_id']))
+            else:
+                args.append(('src', '=', dic['src']))
+
             ids = trans_obj.search(cr, uid, args)
             if ids:
                 if context.get('overwrite') and dic['value']:
