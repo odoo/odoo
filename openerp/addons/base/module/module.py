@@ -519,7 +519,7 @@ class module(osv.osv):
                     tools.trans_load(cr, f, lang, verbose=False, context=context2)
                 elif iso_lang != 'en':
                     logger.warning('module %s: no translation for language %s', mod.name, iso_lang)
-        tools.trans_update_res_ids(cr)
+        # tools.trans_update_res_ids(cr)
 
     def check(self, cr, uid, ids, context=None):
         logger = logging.getLogger('init')
