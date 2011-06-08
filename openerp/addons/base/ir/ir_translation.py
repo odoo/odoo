@@ -21,6 +21,7 @@
 
 from osv import fields, osv
 import tools
+import logging
 
 TRANSLATION_TYPE = [
     ('field', 'Field'),
@@ -38,6 +39,115 @@ TRANSLATION_TYPE = [
     ('constraint', 'Constraint'),
     ('sql_constraint', 'SQL Constraint')
 ]
+
+class ir_translation_import_cursor(object):
+    """Temporary cursor for optimizing mass insert into ir.translation
+
+    Open it (attached to a sql cursor), feed it with translation data and
+    finish() it in order to insert multiple translations in a batch.
+    """
+    _table_name = 'tmp_ir_translation_import'
+
+    def __init__(self, cr, uid, parent, context):
+        """ Initializer
+
+        Store some values, and also create a temporary SQL table to accept
+        the data.
+        @param parent an instance of ir.translation ORM model
+        """
+
+        self._cr = cr
+        self._uid = uid
+        self._context = context
+        self._overwrite = context.get('overwrite', False)
+        self._debug = False
+        self._parent_table = parent._table
+
+        # Note that Postgres will NOT inherit the constraints or indexes
+        # of ir_translation, so this copy will be much faster.
+
+        cr.execute('''CREATE TEMP TABLE %s(
+            imd_model VARCHAR(64),
+            imd_module VARCHAR(64),
+            imd_name VARCHAR(128)
+            ) INHERITS (%s) ''' % (self._table_name, self._parent_table))
+
+    def push(self, ddict):
+        """Feed a translation, as a dictionary, into the cursor
+        """
+
+        self._cr.execute("INSERT INTO " + self._table_name \
+                + """(name, lang, res_id, src, type,
+                        imd_model, imd_module, imd_name, value)
+                VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s)""",
+                (ddict['name'], ddict['lang'], ddict.get('res_id'), ddict['src'], ddict['type'],
+                    ddict.get('imd_model'), ddict.get('imd_module'), ddict.get('imd_name'),
+                    ddict['value']))
+
+    def finish(self):
+        """ Transfer the data from the temp table to ir.translation
+        """
+        logger = logging.getLogger('orm')
+
+        cr = self._cr
+        if self._debug:
+            cr.execute("SELECT count(*) FROM %s" % self._table_name)
+            c = cr.fetchone()[0]
+            logger.debug("ir.translation.cursor: We have %d entries to process", c)
+
+        # Step 1: resolve ir.model.data references to res_ids
+        cr.execute("""UPDATE %s AS ti
+            SET res_id = imd.res_id
+            FROM ir_model_data AS imd
+            WHERE ti.res_id IS NULL
+                AND ti.imd_module IS NOT NULL AND ti.imd_name IS NOT NULL
+
+                AND ti.imd_module = imd.module AND ti.imd_name = imd.name
+                AND ti.imd_model = imd.model; """ % self._table_name)
+
+        if self._debug:
+            cr.execute("SELECT imd_module, imd_model, imd_name FROM %s " \
+                "WHERE res_id IS NULL AND imd_module IS NOT NULL" % self._table_name)
+            for row in cr.fetchall():
+                logger.debug("ir.translation.cursor: missing res_id for %s. %s/%s ", *row)
+
+        cr.execute("DELETE FROM %s WHERE res_id IS NULL AND imd_module IS NOT NULL" % \
+            self._table_name)
+
+        # Records w/o res_id must _not_ be inserted into our db, because they are
+        # referencing non-existent data.
+
+        find_expr = "irt.lang = ti.lang AND irt.type = ti.type " \
+                    " AND irt.name = ti.name AND irt.src = ti.src " \
+                    " AND (ti.type != 'model' OR ti.res_id = irt.res_id) "
+
+        # Step 2: update existing (matching) translations
+        if self._overwrite:
+            cr.execute("""UPDATE ONLY %s AS irt
+                SET value = ti.value 
+                FROM %s AS ti
+                WHERE %s AND ti.value IS NOT NULL AND ti.value != ''
+                """ % (self._parent_table, self._table_name, find_expr))
+
+        # Step 3: insert new translations
+
+        cr.execute("""INSERT INTO %s(name, lang, res_id, src, type, value)
+            SELECT name, lang, res_id, src, type, value
+              FROM %s AS ti
+              WHERE NOT EXISTS(SELECT 1 FROM ONLY %s AS irt WHERE %s);
+              """ % (self._parent_table, self._table_name, self._parent_table, find_expr))
+
+        if self._debug:
+            cr.execute('SELECT COUNT(*) FROM ONLY %s' % (self._parent_table))
+            c1 = cr.fetchone()[0]
+            cr.execute('SELECT COUNT(*) FROM ONLY %s AS irt, %s AS ti WHERE %s' % \
+                (self._parent_table, self._table_name, find_expr))
+            c = cr.fetchone()[0]
+            logger.debug("ir.translation.cursor:  %d entries now in ir.translation, %d common entries with tmp", c1, c)
+
+        # Step 4: cleanup
+        cr.execute("DROP TABLE %s" % self._table_name)
+        return True
 
 class ir_translation(osv.osv):
     _name = "ir.translation"
@@ -213,6 +323,13 @@ class ir_translation(osv.osv):
             self._get_ids.clear_cache(cursor.dbname, user, trans_obj['name'], trans_obj['type'], trans_obj['lang'], [trans_obj['res_id']])
         result = super(ir_translation, self).unlink(cursor, user, ids, context=context)
         return result
+
+    def _get_import_cursor(self, cr, uid, context=None):
+        """ Return a cursor-like object for fast inserting translations
+        """
+        if context is None:
+            context = {}
+        return ir_translation_import_cursor(cr, uid, self, context=context)
 
 ir_translation()
 
