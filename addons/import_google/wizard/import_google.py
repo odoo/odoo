@@ -42,7 +42,8 @@ class google_import(import_framework):
     gd_client = False
     calendars = False
     DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S"
-    TABLE_CONTACT = 'contact'
+    TABLE_CONTACT = 'Contact'
+    TABLE_ADDRESS ='Address'
     TABLE_EVENT = 'Events'
    
     def initialize(self):
@@ -63,10 +64,14 @@ class google_import(import_framework):
         }
         
     def get_data(self, table):
-        val = {
-            self.TABLE_EVENT: self.get_events(),
-            self.TABLE_CONTACT: self.get_contact(),
-        }
+        if table == "Contact" or table == "Address":
+            val = {
+                self.TABLE_CONTACT: self.get_contact(),
+            }
+        elif table == "Events":
+            val = {
+                self.TABLE_EVENT: self.get_events(),
+            }
         return val.get(table)
     
 
