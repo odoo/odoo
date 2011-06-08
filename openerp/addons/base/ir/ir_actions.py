@@ -162,13 +162,13 @@ class act_window(osv.osv):
 
     def _invalid_model_msg(self, cr, uid, ids, context=None):
         return _('Invalid model name in the action definition.')
-    
+
     _constraints = [
         (_check_model, _invalid_model_msg, ['res_model','src_model'])
     ]
 
     def _views_get_fnc(self, cr, uid, ids, name, arg, context=None):
-        """Returns an ordered list of the specific view modes that should be 
+        """Returns an ordered list of the specific view modes that should be
            enabled when displaying the result of this action, along with the
            ID of the specific view to use for each mode, if any were required.
 
@@ -208,7 +208,7 @@ class act_window(osv.osv):
             if act.search_view_id:
                 search_view_id = act.search_view_id.id
             else:
-                res_view = self.pool.get('ir.ui.view').search(cr, uid, 
+                res_view = self.pool.get('ir.ui.view').search(cr, uid,
                         [('model','=',act.res_model),('type','=','search'),
                         ('inherit_id','=',False)], context=context)
                 if res_view:
@@ -452,7 +452,9 @@ class actions_server(osv.osv):
         return [(r['model'], r['name']) for r in res] +  [('','')]
 
     def change_object(self, cr, uid, ids, copy_object, state, context=None):
-        if state == 'object_copy':
+        if state == 'object_copy' and copy_object:
+            if context is None:
+                context = {}
             model_pool = self.pool.get('ir.model')
             model = copy_object.split(',')[0]
             mid = model_pool.search(cr, uid, [('model','=',model)])
