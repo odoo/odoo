@@ -25,12 +25,75 @@ import logging
 from service import security
 import ldap
 from ldap.filter import filter_format
-
+import re
 
 class CompanyLDAP(osv.osv):
     _name = 'res.company.ldap'
     _order = 'sequence'
     _rec_name = 'ldap_server'
+
+    def populate(self, cr, uid, ids, context=None):
+        """ 
+        Populate OpenERP user base from LDAP.
+        Call from the button on the form or from the task scheduler.
+        """
+        logger = logging.getLogger('orm.ldap')
+        action_obj = self.pool.get('ir.actions.actions') 
+        action_id = action_obj.search(cr, 1, [('usage', '=', 'menu')])[0]
+        user_obj = self.pool.get('res.users')
+        for res_company_ldap in self.browse(cr, uid, ids, context):
+            if not res_company_ldap['create_user']:
+                continue
+            try:
+                l = ldap.open(res_company_ldap.ldap_server, res_company_ldap.ldap_server_port)
+                if l.simple_bind_s(res_company_ldap.ldap_binddn, res_company_ldap.ldap_password):
+                    base = res_company_ldap.ldap_base
+                    scope = ldap.SCOPE_SUBTREE
+                    attr_match = re.search('([a-zA-Z_]+)=\%s', res_company_ldap['ldap_filter'])
+                    if attr_match:
+                        login_attr = str(attr_match.group(1))
+                    else:
+                        logger.debug("Could not extract attribute found in ldap_filter %s." % res_company_ldap['ldap_filter'])
+                        continue
+                    filter = res_company_ldap.ldap_filter % '*'
+                    retrieve_attributes = ['cn', login_attr]
+                    result_id = l.search(base, scope, filter, retrieve_attributes)
+                    timeout = 60
+                    result_type, result_data = l.result(result_id, timeout)
+                    if not result_data:
+                        continue
+                    if result_type == ldap.RES_SEARCH_RESULT:
+                        for entry in result_data:
+                            dn = entry[0]
+                            name = entry[1]['cn'][0]
+                            login = entry[1][login_attr][0]
+                            cr.execute("SELECT id FROM res_users WHERE login=%s",(login,))
+                            res = cr.fetchone()
+                            if res:
+                                continue
+                            logger.debug("Creating new OpenERP user \"%s\" from LDAP" % login)
+                            if res_company_ldap['user']:
+                                res = user_obj.copy(cr, 1, res_company_ldap['user'].id,
+                                        default={'active': True})
+                                user_obj.write(cr, 1, res, {
+                                    'name': name,
+                                    'login': login.encode('utf-8'),
+                                    'company_id': res_company_ldap['company'].id,
+                                    })
+                            else:
+                                res = user_obj.create(cr, 1, {
+                                    'name': name,
+                                    'login': login.encode('utf-8'),
+                                    'company_id': res_company_ldap['company'].id,
+                                    'action_id': action_id,
+                                    'menu_id': action_id,
+                                    })
+                l.unbind()
+            except Exception:
+                logger.warning('cannot check', exc_info=True)
+                pass
+        return True
+    
     _columns = {
         'sequence': fields.integer('Sequence'),
         'company': fields.many2one('res.company', 'Company', required=True,
