@@ -44,15 +44,10 @@ class ir_translation(osv.osv):
     _log_access = False
 
     def _get_language(self, cr, uid, context):
-        lang_obj = self.pool.get('res.lang')
-        lang_ids = lang_obj.search(cr, uid, [('translatable', '=', True)],
-                context=context)
-        langs = lang_obj.browse(cr, uid, lang_ids, context=context)
-        res = [(lang.code, lang.name) for lang in langs]
-        for lang_dict in tools.scan_languages():
-            if lang_dict not in res:
-                res.append(lang_dict)
-        return res
+        lang_model = self.pool.get('res.lang')
+        lang_ids = lang_model.search(cr, uid, [('translatable', '=', True)], context=context)
+        lang_data = lang_model.read(cr, uid, lang_ids, ['code', 'name'], context=context)
+        return [(d['code'], d['name']) for d in lang_data]
 
     _columns = {
         'name': fields.char('Field Name', size=128, required=True),

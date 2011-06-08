@@ -864,7 +864,6 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
     pool = pooler.get_pool(db_name)
     lang_obj = pool.get('res.lang')
     trans_obj = pool.get('ir.translation')
-    model_data_obj = pool.get('ir.model.data')
     iso_lang = misc.get_iso_codes(lang)
     try:
         uid = 1

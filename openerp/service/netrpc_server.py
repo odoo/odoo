@@ -87,11 +87,15 @@ class TinySocketClientThread(threading.Thread, netsvc.OpenERPDispatcher):
                     tb_s = "".join(traceback.format_exception(*tb))
                     logging.getLogger('web-services').debug("netrpc: communication-level exception", exc_info=True)
                     ts.mysend(e, exception=True, traceback=tb_s)
+                    break
                 except Exception, ex:
                     #terminate this channel if we can't properly send back the error
                     logging.getLogger('web-services').exception("netrpc: cannot deliver exception message to client")
                     break
 
+        self.sock.shutdown(socket.SHUT_RDWR)
+        self.sock.close()
+        self.sock = None
         self.threads.remove(self)
         self.running = False
         return True
