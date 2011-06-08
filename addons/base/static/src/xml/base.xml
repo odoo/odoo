@@ -67,7 +67,12 @@
                             <t t-if="db_list">
                                 <select name="db">
                                     <t t-foreach="db_list" t-as="db">
-                                        <option t-att-value="db" t-att-selected="db == 'trunk'"><t t-esc="db"/></option>
+                                        <t t-if="selected_db === db">
+                                            <option t-att-value="db" selected="true"><t t-esc="db"/></option>
+                                        </t>
+                                        <t t-if="selected_db !== db">
+                                            <option t-att-value="db"><t t-esc="db"/></option>
+                                        </t>
                                     </t>
                                 </select>
                             </t>
@@ -75,7 +80,8 @@
                     </tr>
                     <tr>
                         <td><label for="login">User:</label></td>
-                        <td class="oe_field_value"><input type="text" name="login" value="admin" autofocus="true"/></td>
+                        <td class="oe_field_value"><input type="text" name="login"
+                            t-att-value="selected_login || ''" autofocus="true"/></td>
                     </tr>
                     <tr>
                         <td><label for="password">Password:</label></td>

@@ -776,6 +776,8 @@ openerp.base.Database = openerp.base.Controller.extend({
 openerp.base.Login =  openerp.base.Controller.extend({
     init: function(session, element_id) {
         this._super(session, element_id);
+        this.selected_db = this.session.get_cookie('last_db_login_success') || null;
+        this.selected_login = this.session.get_cookie('last_login_login_success') || null;
     },
     start: function() {
         var self = this;
@@ -786,10 +788,10 @@ openerp.base.Login =  openerp.base.Controller.extend({
             self.display();
         });
     },
-   display: function() {
+    display: function() {
         this.$element.html(QWeb.render("Login", this));
         this.$element.find("form").submit(this.on_submit);
-   },
+    },
     on_login_invalid: function() {
         this.$element.closest(".openerp").addClass("login-mode");
     },
@@ -807,6 +809,8 @@ openerp.base.Login =  openerp.base.Controller.extend({
         // Should hide then call callback
         this.session.session_login(db, login, password, function() {
             if(self.session.session_is_valid()) {
+                self.session.set_cookie('last_db_login_success', db);
+                self.session.set_cookie('last_login_login_success', login);
                 self.on_login_valid();
             } else {
                 self.$element.addClass("login_invalid");
