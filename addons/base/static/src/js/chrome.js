@@ -776,8 +776,17 @@ openerp.base.Database = openerp.base.Controller.extend({
 openerp.base.Login =  openerp.base.Controller.extend({
     init: function(session, element_id) {
         this._super(session, element_id);
-        this.selected_db = this.session.get_cookie('last_db_login_success') || null;
-        this.selected_login = this.session.get_cookie('last_login_login_success') || null;
+        this.has_local_storage = typeof(localStorage) != 'undefined';
+        this.selected_db = null;
+        this.selected_login = null;
+        this.selected_password = null;
+        this.remember = false;
+        if (this.has_local_storage && localStorage.getItem('remember_creditentials') === 'true') {
+            this.remember = true;
+            this.selected_db = localStorage.getItem('last_db_login_success');
+            this.selected_login = localStorage.getItem('last_login_login_success');
+            this.selected_password = localStorage.getItem('last_password_login_success');
+        }
     },
     start: function() {
         var self = this;
@@ -805,12 +814,24 @@ openerp.base.Login =  openerp.base.Controller.extend({
         var db = $e.find("form [name=db]").val();
         var login = $e.find("form input[name=login]").val();
         var password = $e.find("form input[name=password]").val();
+        var remember = $e.find("form input[name=remember]").attr('checked');
         //$e.hide();
         // Should hide then call callback
         this.session.session_login(db, login, password, function() {
             if(self.session.session_is_valid()) {
-                self.session.set_cookie('last_db_login_success', db);
-                self.session.set_cookie('last_login_login_success', login);
+                if (self.has_local_storage) {
+                    if(remember) {
+                        localStorage.setItem('remember_creditentials', 'true');
+                        localStorage.setItem('last_db_login_success', db);
+                        localStorage.setItem('last_login_login_success', login);
+                        localStorage.setItem('last_password_login_success', password);
+                    } else {
+                        localStorage.setItem('remember_creditentials', '');
+                        localStorage.setItem('last_db_login_success', '');
+                        localStorage.setItem('last_login_login_success', '');
+                        localStorage.setItem('last_password_login_success', '');
+                    }
+                }
                 self.on_login_valid();
             } else {
                 self.$element.addClass("login_invalid");

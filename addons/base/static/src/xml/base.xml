@@ -60,7 +60,7 @@
                 <table align="center" cellspacing="2px" cellpadding="0">
                     <tr>
                         <td><label for="db">Database:</label></td>
-                        <td class="oe_field_value">
+                        <td>
                             <t t-if="!db_list">
                                 <input type="text" name="db" value="trunk" autofocus="true"/>
                             </t>
@@ -68,7 +68,8 @@
                                 <select name="db">
                                     <t t-foreach="db_list" t-as="db">
                                         <t t-if="selected_db === db">
-                                            <option t-att-value="db" selected="true"><t t-esc="db"/></option>
+                                            <option t-att-value="db" selected="true">
+                                                <t t-esc="db"/></option>
                                         </t>
                                         <t t-if="selected_db !== db">
                                             <option t-att-value="db"><t t-esc="db"/></option>
@@ -80,16 +81,28 @@
                     </tr>
                     <tr>
                         <td><label for="login">User:</label></td>
-                        <td class="oe_field_value"><input type="text" name="login"
+                        <td><input type="text" name="login"
                             t-att-value="selected_login || ''" autofocus="true"/></td>
                     </tr>
                     <tr>
                         <td><label for="password">Password:</label></td>
-                        <td class="oe_field_value"><input type="password" name="password" value="a"/></td>
+                        <td><input type="password" name="password"
+                            t-att-value="selected_password || ''"/></td>
+                    </tr>
+                    <tr t-if="has_local_storage">
+                        <td><label for="remember">Rember password:</label></td>
+                        <td class="oe_remember">
+                            <t t-if="remember">
+                            <input type="checkbox" name="remember" checked="yes"/>
+                            </t>
+                            <t t-if="!remember">
+                            <input type="checkbox" name="remember"/>
+                            </t>
+                        </td>
                     </tr>
                     <tr>
                         <td></td>
-                        <td class="oe_field_value">
+                        <td>
                             <button type="submit" name="submit">Login</button>
                         </td>
                     </tr>
