@@ -22,17 +22,21 @@
         <div t-foreach="node.children" t-as="column" t-if="column.tag == 'column'"
              t-att-id="view.element_id + '_column_' + column_index" t-attf-class="oe-dashboard-column index_#{column_index}">
 
-            <div t-foreach="column.children" t-as="action" t-if="action.tag == 'action'" t-att-data-id="action.attrs.name"
-                class="oe-dashboard-action ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
-
-                <div class="oe-dashboard-action-header ui-widget-header ui-corner-all">
-                    <t t-esc="action.attrs.string"/>
-                    <span class='ui-icon ui-icon-closethick'></span>
-                    <span class='ui-icon ui-icon-minusthick'></span>
-                </div>
-                <div t-att-id="view.element_id + '_action_' + action.attrs.name" class="oe-dashboard-action-content"></div>
-            </div>
+            <t t-foreach="column.children" t-as="action" t-if="action.tag == 'action'" t-call="DashBoard.action"/>
         </div>
+    </div>
+</t>
+<t t-name="DashBoard.action">
+    <div t-att-data-id="action.attrs.name" class="oe-dashboard-action ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
+        <div class="oe-dashboard-action-header ui-widget-header ui-corner-all">
+            <a href="#" class="oe-dashboard-action-rename"><img src="/base/static/src/img/icons/gtk-edit.png" width="16" height="16"/></a>
+            <span class="oe-dashboard-action-title"><t t-esc="action.attrs.string"/></span>
+            <input class="oe-dashboard-action-input" type="text" name="title" value="" style="display: none"/>
+            <span class='ui-icon ui-icon-closethick'></span>
+            <span class='ui-icon ui-icon-minusthick oe-dashboard-fold' t-if="!action.attrs.fold"></span>
+            <span class='ui-icon ui-icon-plusthick oe-dashboard-fold' t-if="action.attrs.fold"></span>
+        </div>
+        <div t-att-id="view.element_id + '_action_' + action.attrs.name" class="oe-dashboard-action-content" t-att-style="action.attrs.fold ? 'display: none' : null"></div>
     </div>
 </t>
 <t t-name="DashBoard.layouts">
