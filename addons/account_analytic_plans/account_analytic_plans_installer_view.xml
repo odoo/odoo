@@ -10,12 +10,14 @@
         <field name="view_mode">tree,form</field>
         <field name="view_id" ref="account_analytic_plans.account_analytic_plan_form"/>
     </record>
-    <record id="account_analytic_plan_installer_todo" model="ir.actions.todo">
-        <field name="action_id" ref="account_analytic_plan_form_action_installer"/>
-        <field name="sequence">15</field>
-        <field name="type">normal</field>
-        <field name="state">skip</field>
-    </record>
+        
+   <record id="account_analytic_plan_installer_todo" model="ir.actions.todo">
+      <field name="action_id" ref="account_analytic_plan_form_action_installer"/>
+      <field name="category_id" ref="account.category_accounting_configuration"/>
+      <field name="sequence">15</field>
+      <field name="type">normal</field>
+      <field name="state">skip</field>
+  </record>
 
   </data>
 </openerp>

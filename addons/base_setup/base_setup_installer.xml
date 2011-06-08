@@ -61,6 +61,7 @@
 
     <record id="base_setup_installer_todo" model="ir.actions.todo">
         <field name="action_id" ref="action_base_setup_installer"/>
+        <field name="category_id" ref="base.category_administration_config"/>
         <field name="sequence">2</field>
         <field name="type">normal_recurring</field>
     </record>
@@ -111,6 +112,7 @@
  
    <record id="migrade_application_installer_modules_todo" model="ir.actions.todo">
       <field name="action_id" ref="action_migrade_application_installer_modules"/>
+      <field name="category_id" ref="base.category_administration_config"/>
       <field name="type">normal</field>
       <field name="state">skip</field>
   </record>
@@ -130,6 +132,7 @@
     <!--          register configuration wizard -->
 	<record id="config_wizard_action_import_create_installer" model="ir.actions.todo">
 	    <field name="action_id" ref="action_import_create_installer"/>
+	    <field name="category_id" ref="base.category_administration_config"/>
 	    <field name="type">normal</field>
 	    <field name="target">current</field>
 	    <field name="state">skip</field>
@@ -184,6 +187,7 @@
       
       <record id="config_action_user_preferences_config_form" model="ir.actions.todo">
           <field name="action_id" ref="action_user_preferences_config_form"/>
+          <field name="category_id" ref="base.category_administration_config"/>
           <field name="type">normal</field>
           <field name="state">skip</field>
       </record>
@@ -203,6 +207,7 @@
 
       <record id="config_wizard_action_config_user_form" model="ir.actions.todo">
           <field name="action_id" ref="action_config_access_other_user"/>
+          <field name="category_id" ref="base.category_administration_config"/>
           <field name="type">normal</field>
           <field name="target">current</field>
           <field name="sequence">1000</field>
@@ -225,11 +230,12 @@
                 </field>
           </field>
       </record>
-
+      
       <!--   register Upload Logo configuration wizard  -->
 
       <record id="config_wizard_action_res_company_logo" model="ir.actions.todo">
           <field name="action_id" ref="action_res_company_logo"/>
+          <field name="category_id" ref="base.category_administration_config"/>
           <field name="type">normal</field>
           <field name="state">cancel</field>
       </record>      
@@ -280,6 +286,7 @@
      
       <record id="config_action_partner_terminology_config_form" model="ir.actions.todo">
           <field name="action_id" ref="action_partner_terminology_config_form"/>
+          <field name="category_id" ref="base.category_administration_config"/>
           <field name="type">normal</field>
           <field name="state">skip</field>
       </record>      

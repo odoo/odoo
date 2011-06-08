@@ -612,10 +612,11 @@
 		<record id="conf_a_expense" model="account.account.template">
 			<field name="tax_ids" eval="[(6,0,[ref('otaxs')])]"/>
 		</record>
-
+		
 		<record id="action_wizard_multi_chart_todo" model="ir.actions.todo">
 			<field name="name">Generate Chart of Accounts from a Chart Template</field>
 			<field name="action_id" ref="account.action_wizard_multi_chart"/>
+			<field name="category_id" ref="account.category_accounting_configuration"/>
 			<field name="type">special</field>
 		</record>
 

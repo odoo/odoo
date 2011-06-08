@@ -39,6 +39,7 @@
 
         <record id="hr_timesheet_invoice_todo" model="ir.actions.todo">
 	        <field name="action_id" ref="action_hr_timesheet_invoice_wizard"/>
+	        <field name="category_id" ref="hr.category_hr_management_config"/>
 	        <field name="sequence">3</field>
 	        <field name="type">normal</field>
 	        <field name="state">skip</field>
@@ -74,6 +75,7 @@
 
        <record id="product_services_form_view_todo" model="ir.actions.todo">
            <field name="action_id" ref="product_services_form_view_installer"/>
+           <field name="category_id" ref="hr.category_hr_management_config"/>
            <field name="sequence">3</field>
            <field name="type">normal</field>
            <field name="state">skip</field>
