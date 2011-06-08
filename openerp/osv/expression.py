@@ -105,11 +105,11 @@ class expression(object):
                     return ids + rg(ids2, table, parent)
                 return [(left, 'in', rg(ids, table, parent or table._parent_name))]
 
-        def get_child_of_result(value):
+        def child_of_right_to_ids(value):
             if isinstance(value, basestring):
                 return [x[0] for x in field_obj.name_search(cr, uid, value, [], 'ilike', context=context, limit=None)]
             elif isinstance(value, (int, long)):
-                return list([value])
+                return [value]
             else:
                 return list(value)
 
@@ -189,7 +189,7 @@ class expression(object):
             elif field._type == 'one2many':
                 # Applying recursivity on field(one2many)
                 if operator == 'child_of':
-                    ids2 = get_child_of_result(right)
+                    ids2 = child_of_right_to_ids(right)
                     if field._obj != working_table._name:
                         dom = _rec_get(ids2, field_obj, left=left, prefix=field._obj)
                     else:
@@ -233,7 +233,7 @@ class expression(object):
             elif field._type == 'many2many':
                 #FIXME
                 if operator == 'child_of':
-                    ids2 = get_child_of_result(right)
+                    ids2 = child_of_right_to_ids(right)
                     def _rec_convert(ids):
                         if field_obj == table:
                             return ids
@@ -277,7 +277,7 @@ class expression(object):
 
             elif field._type == 'many2one':
                 if operator == 'child_of':
-                    ids2 = get_child_of_result(right)
+                    ids2 = child_of_right_to_ids(right)
                     self.__operator = 'in'
                     if field._obj != working_table._name:
                         dom = _rec_get(ids2, field_obj, left=left, prefix=field._obj)
