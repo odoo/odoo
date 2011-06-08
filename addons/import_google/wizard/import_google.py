@@ -31,6 +31,7 @@ try:
     import gdata.contacts.service
     import gdata.calendar.service
     import gdata.contacts
+    import gdata.calendar
 except ImportError:
     raise osv.except_osv(_('Google Contacts Import Error!'), _('Please install gdata-python-client from http://code.google.com/p/gdata-python-client/downloads/list'))
 from import_base.import_framework import *
@@ -45,9 +46,11 @@ class import_contact(import_framework):
     TABLE_EVENT = 'Events'
    
     def initialize(self):
-        if 'events' in self.context and self.context.get('events'):
-            self.gd_client = gdata.calendar.service.CalendarService()
-            self.gd_client.ClientLogin(self.context.get('user', False),self.context.get('password', False))
+        google = self.obj.pool.get('google.login')
+        self.gd_client = google.google_login(self.context.get('user'), 
+                                       self.context.get('password'), 
+                                        type = self.context.get('instance'))
+        if self.context.get('instance') and self.context.get('instance') == 'calendar':
             self.calendars = self.context.get('calendars') 
         
     def get_mapping(self):

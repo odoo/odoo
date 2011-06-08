@@ -280,7 +280,7 @@ synchronize_google_contact()
 class google_login_calendar(osv.osv_memory):
     """Gdata Login Object for Google Calendar Import"""
     _inherit = 'google.login'
-    _name = 'google.login.calendar'
+    _name = 'google.login'
 
     def _get_next_action(self, cr, uid, context):
         data_obj = self.pool.get('ir.model.data')
@@ -353,7 +353,7 @@ class synchronize_google_calendar_events(osv.osv_memory):
         context.update({'user': gmail_user,
                         'password': gmail_pwd,
                         'calendars': calendars,
-                        'events': True})
+                        'instance': 'calendar'})
         imp = import_contact(self, cr, uid, 'import_google', "import_google_calendar", [gmail_user], context)
         imp.set_table_list(table)
         imp.start()
