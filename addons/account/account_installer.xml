@@ -45,35 +45,20 @@
 
         <record id="view_account_modules_installer" model="ir.ui.view">
             <field name="name">account.installer.modules.form</field>
-            <field name="model">account.installer.modules</field>
+            <field name="model">base.setup.installer</field>
             <field name="type">form</field>
-            <field name="inherit_id" ref="base.res_config_installer"/>
+            <field name="inherit_id" ref="base_setup.view_base_setup_installer"/>
             <field name="arch" type="xml">
                 <data>
-                    <form position="attributes">
-                        <attribute name="string">Accounting Application Configuration</attribute>
-                    </form>
-                    <separator string="title" position="attributes">
-                         <attribute name="string">Configure Your Accounting Application</attribute>
-
-                    </separator>
-                    <xpath expr="//label[@string='description']" position="attributes">
-                        <attribute name="string">Add extra Accounting functionalities to the ones already installed.</attribute>
+                    <xpath expr="//field[@name='report_designer']" position="after">
+                    <newline/>
+                    <separator  string="Accounting &amp; Finance Features" colspan="4" />
+                    <field name="account_voucher"/>
+                    <field name="account_followup"/>
+                    <field name="account_payment"/>
+                    <field name="account_analytic_plans"/>
+                    <field name="account_anglo_saxon"/>
                     </xpath>
-                    <xpath expr="//button[@string='Install Modules']" position="attributes">
-                        <attribute name="string">Configure</attribute>
-                    </xpath>
-                    <xpath expr='//separator[@string="vsep"]' position='attributes'>
-                        <attribute name='string'></attribute>
-                    </xpath>
-                    <group colspan="8">
-                        <field name="account_voucher"/>
-                        <field name="account_followup"/>
-                        <field name="account_payment"/>
-                        <field name="account_analytic_plans"/>
-                        <field name="account_anglo_saxon"/>
-<!--                    <field name="account_voucher_payment"/>-->
-                    </group>
                 </data>
             </field>
         </record>
@@ -83,16 +68,6 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">account.installer</field>
             <field name="view_id" ref="view_account_configuration_installer"/>
-            <field name="view_type">form</field>
-            <field name="view_mode">form</field>
-            <field name="target">new</field>
-        </record>
-
-        <record id="action_account_installer" model="ir.actions.act_window">
-            <field name="name">Accounting Application Configuration</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">account.installer.modules</field>
-            <field name="view_id" ref="view_account_modules_installer"/>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="target">new</field>
@@ -108,14 +83,6 @@
             <field name="category_id" ref="category_accounting_configuration"/>
             <field name="sequence">3</field>
             <field name="type">special</field>
-        </record>
-
-        <record id="account_installer_todo" model="ir.actions.todo">
-            <field name="action_id" ref="action_account_installer"/>
-            <field name="category_id" ref="category_accounting_configuration"/>
-            <field name="sequence">5</field>
-            <field name="type">special</field>
-            <field eval="[(6,0,[ref('base.group_extended')])]" name="groups_id"/>
         </record>
 
     </data>
