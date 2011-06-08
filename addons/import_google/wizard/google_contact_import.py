@@ -29,7 +29,7 @@ except ImportError:
 from osv import fields
 from osv import osv
 from tools.translate import _
-from import_google import import_contact
+from import_google import google_import
 
 
 class google_login_contact(osv.osv_memory):
@@ -89,7 +89,7 @@ class synchronize_google_contact(osv.osv_memory):
         'group_name': 'all',
     }
 
-    def import_contact_all(self, cr, uid, ids, context=None):
+    def import_contact(self, cr, uid, ids, context=None):
         obj = self.browse(cr, uid, ids, context=context)[0]
         cust = obj.customer
         sup = obj.supplier

@@ -37,7 +37,7 @@ except ImportError:
 from import_base.import_framework import *
 from import_base.mapper import *
 
-class import_contact(import_framework):
+class google_import(import_framework):
     
     gd_client = False
     calendars = False
@@ -323,7 +323,6 @@ class import_contact(import_framework):
             }   
                     
     def get_address_mapping(self):
-        print"RRRRRRRRRREEElated to Address ONLY......................"
         return {
             'model': 'res.partner.address',
             'dependencies': [],
