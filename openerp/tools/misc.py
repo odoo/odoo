@@ -639,162 +639,113 @@ class currency(float):
     #   display_value = int(self*(10**(-self.accuracy))/self.rounding)*self.rounding/(10**(-self.accuracy))
     #   return str(display_value)
 
+class ormcache(object):
+    """ LRU cache decorator for orm methods
+    """
 
-def is_hashable(h):
-    try:
-        hash(h)
-        return True
-    except TypeError:
-        return False
+    def __init__(self, skiparg=2, size=8192, multi=None, timeout=None):
+        self.skiparg = skiparg
+        self.size = size
+        self.method = None
+        self.stat_miss = 0
+        self.stat_hit = 0
+        self.stat_err = 0
+
+    def __call__(self,m):
+        self.method = m
+        def lookup(self2, cr, *args):
+            r = self.lookup(m, m, self2, cr, *args)
+#            print "lookup-stats hit miss err",self.stat_hit,self.stat_miss,self.stat_err
+            return r
+        def clear(self2, *args):
+            return self.clear(self2, *args)
+        lookup.clear_cache = self.clear
+        print "returned",lookup
+        return lookup
+
+    def lookup(self, cacheid, method, self2, cr, *args):
+        try:
+            ormcache = getattr(self2, '_ormcache')
+        except AttributeError:
+            ormcache = self2._ormcache = {}
+        try:
+            d = ormcache[cacheid]
+        except KeyError:
+            d = ormcache[cacheid] = LRU(self.size)
+        key = args[self.skiparg-2:]
+        try:
+           r = d[key]
+#           print "lookup-hit",self2,cr,key,r
+           self.stat_hit += 1
+           return r
+        except KeyError:
+           self.stat_miss += 1
+#           print "lookup-miss",self2,cr,key
+           value = d[args] = method(self2, cr, *args)
+#           print "lookup-miss-value",value
+           return value
+        except TypeError:
+           self.stat_err += 1
+#           print "lookup-typeerror",self2,cr,key
+           return method(self2, cr, *args)
+
+    def clear(self, self2, *args, **kw):
+        """ Remove *args entry from the cache or all keys if *args is undefined 
+        """
+        try:
+            ormcache = getattr(self2, '_ormcache')
+        except AttributeError:
+            ormcache = self2._ormcache = {}
+        try:
+            d = ormcache[self.method]
+        except KeyError:
+            d = ormcache[self.method] = LRU(self.size)
+        d.clear()
+
+class ormcache_multi(ormcache):
+    def __init__(self, skiparg=2, size=8192, multi=4):
+        super(ormcache_multi,self).__init__(skiparg,size)
+        self.multi = multi - 3
+
+    def lookup(self, cacheid, method, self2, cr, *args):
+        superlookup = super(ormcache_multi,self).lookup
+        args = list(args)
+        multi = self.multi
+#        print args,multi
+        ids = args[multi]
+        r = {}
+        miss = []
+
+        def add_to_miss(_self2, _cr, *_args):
+            miss.append(_args[multi])
+
+        for i in ids:
+            args[multi] = i
+            r[i] = superlookup(method, add_to_miss, self2, cr, *args)
+
+        args[multi] = miss
+        r.update(method(self2, cr, *args))
+
+        for i in miss:
+            args[multi] = i
+            key = tuple(args[self.skiparg-2:])
+            self2._ormcache[cacheid][key] = r[i]
+
+        return r
 
 class dummy_cache(object):
     """ Cache decorator replacement to actually do no caching.
-
-    This can be useful to benchmark and/or track memory leak.
-
     """
-
-    def __init__(self, timeout=None, skiparg=2, multi=None, size=8192):
+    def __init__(self, *l, **kw):
         pass
-
-    def clear(self, dbname, *args, **kwargs):
+    def clear(self, *l, **kw):
         pass
-
-    @classmethod
-    def clean_caches_for_db(cls, dbname):
-        pass
-
     def __call__(self, fn):
         fn.clear_cache = self.clear
         return fn
 
-class real_cache(object):
-    """
-    Use it as a decorator of the function you plan to cache
-    Timeout: 0 = no timeout, otherwise in seconds
-    """
-
-    __caches = []
-
-    def __init__(self, timeout=None, skiparg=2, multi=None, size=8192):
-        assert skiparg >= 2 # at least self and cr
-        if timeout is None:
-            self.timeout = config['cache_timeout']
-        else:
-            self.timeout = timeout
-        self.skiparg = skiparg
-        self.multi = multi
-        self.lasttime = time.time()
-        self.cache = LRU(size)      # TODO take size from config
-        self.fun = None
-        cache.__caches.append(self)
-
-
-    def _generate_keys(self, dbname, kwargs2):
-        """
-        Generate keys depending of the arguments and the self.mutli value
-        """
-
-        def to_tuple(d):
-            pairs = d.items()
-            pairs.sort(key=lambda (k,v): k)
-            for i, (k, v) in enumerate(pairs):
-                if isinstance(v, dict):
-                    pairs[i] = (k, to_tuple(v))
-                if isinstance(v, (list, set)):
-                    pairs[i] = (k, tuple(v))
-                elif not is_hashable(v):
-                    pairs[i] = (k, repr(v))
-            return tuple(pairs)
-
-        if not self.multi:
-            key = (('dbname', dbname),) + to_tuple(kwargs2)
-            yield key, None
-        else:
-            multis = kwargs2[self.multi][:]
-            for id in multis:
-                kwargs2[self.multi] = (id,)
-                key = (('dbname', dbname),) + to_tuple(kwargs2)
-                yield key, id
-
-    def _unify_args(self, *args, **kwargs):
-        # Update named arguments with positional argument values (without self and cr)
-        kwargs2 = self.fun_default_values.copy()
-        kwargs2.update(kwargs)
-        kwargs2.update(dict(zip(self.fun_arg_names, args[self.skiparg-2:])))
-        return kwargs2
-
-    def clear(self, dbname, *args, **kwargs):
-        """clear the cache for database dbname
-            if *args and **kwargs are both empty, clear all the keys related to this database
-        """
-        if not args and not kwargs:
-            keys_to_del = [key for key in self.cache.keys() if key[0][1] == dbname]
-        else:
-            kwargs2 = self._unify_args(*args, **kwargs)
-            keys_to_del = [key for key, _ in self._generate_keys(dbname, kwargs2) if key in self.cache.keys()]
-
-        for key in keys_to_del:
-            self.cache.pop(key)
-
-    @classmethod
-    def clean_caches_for_db(cls, dbname):
-        for c in cls.__caches:
-            c.clear(dbname)
-
-    def __call__(self, fn):
-        if self.fun is not None:
-            raise Exception("Can not use a cache instance on more than one function")
-        self.fun = fn
-
-        argspec = inspect.getargspec(fn)
-        self.fun_arg_names = argspec[0][self.skiparg:]
-        self.fun_default_values = {}
-        if argspec[3]:
-            self.fun_default_values = dict(zip(self.fun_arg_names[-len(argspec[3]):], argspec[3]))
-
-        def cached_result(self2, cr, *args, **kwargs):
-            if time.time()-int(self.timeout) > self.lasttime:
-                self.lasttime = time.time()
-                t = time.time()-int(self.timeout)
-                old_keys = [key for key in self.cache.keys() if self.cache[key][1] < t]
-                for key in old_keys:
-                    self.cache.pop(key)
-
-            kwargs2 = self._unify_args(*args, **kwargs)
-
-            result = {}
-            notincache = {}
-            for key, id in self._generate_keys(cr.dbname, kwargs2):
-                if key in self.cache:
-                    result[id] = self.cache[key][0]
-                else:
-                    notincache[id] = key
-
-            if notincache:
-                if self.multi:
-                    kwargs2[self.multi] = notincache.keys()
-
-                result2 = fn(self2, cr, *args[:self.skiparg-2], **kwargs2)
-                if not self.multi:
-                    key = notincache[None]
-                    self.cache[key] = (result2, time.time())
-                    result[None] = result2
-                else:
-                    for id in result2:
-                        key = notincache[id]
-                        self.cache[key] = (result2[id], time.time())
-                    result.update(result2)
-
-            if not self.multi:
-                return result[None]
-            return result
-
-        cached_result.clear_cache = self.clear
-        return cached_result
-
-# TODO make it an option
-cache = real_cache
+#ormcache = dummy_cache
+cache = dummy_cache
 
 def to_xml(s):
     return s.replace('&','&amp;').replace('<','&lt;').replace('>','&gt;')

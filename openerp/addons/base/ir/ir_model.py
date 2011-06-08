@@ -450,6 +450,7 @@ class ir_model_access(osv.osv):
         # pass no groups -> no access
         return False
 
+    @tools.ormcache()
     def check(self, cr, uid, model, mode='read', raise_exception=True, context=None):
         if uid==1:
             # User root have all accesses
@@ -513,8 +514,6 @@ class ir_model_access(osv.osv):
             raise except_orm(_('AccessError'), msgs[mode] % (model_name, groups) )
         return r
 
-    check = tools.cache()(check)
-
     __cache_clearing_methods = []
 
     def register_cache_clearing_method(self, model, method):
@@ -528,7 +527,7 @@ class ir_model_access(osv.osv):
             pass
 
     def call_cache_clearing_methods(self, cr):
-        self.check.clear_cache(cr.dbname)    # clear the cache of check function
+        self.check.clear_cache(self)    # clear the cache of check function
         for model, method in self.__cache_clearing_methods:
             object_ = self.pool.get(model)
             if object_:
@@ -593,7 +592,7 @@ class ir_model_data(osv.osv):
         if not cr.fetchone():
             cr.execute('CREATE INDEX ir_model_data_module_name_index ON ir_model_data (module, name)')
 
-    @tools.cache()
+    @tools.ormcache()
     def _get_id(self, cr, uid, module, xml_id):
         """Returns the id of the ir.model.data record corresponding to a given module and xml_id (cached) or raise a ValueError if not found"""
         ids = self.search(cr, uid, [('module','=',module), ('name','=', xml_id)])
@@ -602,7 +601,7 @@ class ir_model_data(osv.osv):
         # the sql constraints ensure us we have only one result
         return ids[0]
 
-    @tools.cache()
+    @tools.ormcache()
     def get_object_reference(self, cr, uid, module, xml_id):
         """Returns (model, res_id) corresponding to a given module and xml_id (cached) or raise ValueError if not found"""
         data_id = self._get_id(cr, uid, module, xml_id)
@@ -652,8 +651,8 @@ class ir_model_data(osv.osv):
             results = cr.fetchall()
             for imd_id2,res_id2,real_id2 in results:
                 if not real_id2:
-                    self._get_id.clear_cache(cr.dbname, uid, module, xml_id)
-                    self.get_object_reference.clear_cache(cr.dbname, uid, module, xml_id)
+                    self._get_id.clear_cache(self, uid, module, xml_id)
+                    self.get_object_reference.clear_cache(self, uid, module, xml_id)
                     cr.execute('delete from ir_model_data where id=%s', (imd_id2,))
                     res_id = False
                 else:

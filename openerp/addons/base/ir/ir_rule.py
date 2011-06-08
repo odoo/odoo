@@ -94,7 +94,7 @@ class ir_rule(osv.osv):
             return ['&'] * (count-1) + dom
         return []
 
-    @tools.cache()
+    @tools.ormcache()
     def _compute_domain(self, cr, uid, model_name, mode="read"):
         if mode not in self._MODES:
             raise ValueError('Invalid mode: %r' % (mode,))
@@ -147,12 +147,12 @@ class ir_rule(osv.osv):
                                         AND u_rel.uid = %s)
                     """, (uid,))
         models = map(itemgetter(0), cr.fetchall())
-        clear = partial(self._compute_domain.clear_cache, cr.dbname, uid)
+        clear = partial(self._compute_domain.clear_cache, self, uid)
         [clear(model, mode) for model in models for mode in self._MODES]
 
 
     def domain_get(self, cr, uid, model_name, mode='read', context=None):
-        dom = self._compute_domain(cr, uid, model_name, mode=mode)
+        dom = self._compute_domain(cr, uid, model_name, mode)
         if dom:
             # _where_calc is called as superuser. This means that rules can
             # involve objects on which the real uid has no acces rights.
@@ -165,19 +165,19 @@ class ir_rule(osv.osv):
     def unlink(self, cr, uid, ids, context=None):
         res = super(ir_rule, self).unlink(cr, uid, ids, context=context)
         # Restart the cache on the _compute_domain method of ir.rule
-        self._compute_domain.clear_cache(cr.dbname)
+        self._compute_domain.clear_cache(self)
         return res
 
     def create(self, cr, user, vals, context=None):
         res = super(ir_rule, self).create(cr, user, vals, context=context)
         # Restart the cache on the _compute_domain method of ir.rule
-        self._compute_domain.clear_cache(cr.dbname)
+        self._compute_domain.clear_cache(self)
         return res
 
     def write(self, cr, uid, ids, vals, context=None):
         res = super(ir_rule, self).write(cr, uid, ids, vals, context=context)
         # Restart the cache on the _compute_domain method
-        self._compute_domain.clear_cache(cr.dbname)
+        self._compute_domain.clear_cache(self)
         return res
 
 ir_rule()
