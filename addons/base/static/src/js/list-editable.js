@@ -158,26 +158,23 @@ openerp.base.list.editable = function (openerp) {
                 template: 'ListView.row.form',
                 registry: openerp.base.list.form.widgets
             });
-            this.edition_form.on_loaded({fields_view: this.get_fields_view()});
-            this.edition_form.on_record_loaded.add({
-                position: 'last',
-                unique: true,
-                callback: function () {
-                    var $e = self.edition_form.$element;
-                    $e.find('td')
-                          .addClass('oe-field-cell')
-                          .removeAttr('width')
-                      .end()
-                      .find('td:first').removeClass('oe-field-cell').end()
-                      .find('td:last').removeClass('oe-field-cell').end();
-                    _(self.columns).each(function (column) {
-                        if (column.meta) {
-                            $e.prepend('<td>');
-                        }
-                    });
-                }
+            $.when(this.edition_form.on_loaded({fields_view: this.get_fields_view()})).then(function () {
+                // put in $.when just in case  FormView.on_loaded becomes asynchronous
+                $new_row.find('td')
+                      .addClass('oe-field-cell')
+                      .removeAttr('width')
+                  .end()
+                  .find('td:first').removeClass('oe-field-cell').end()
+                  .find('td:last').removeClass('oe-field-cell').end();
+                // pad in case of groupby
+                _(self.columns).each(function (column) {
+                    if (column.meta) {
+                        $new_row.prepend('<td>');
+                    }
+                });
+
+                self.edition_form.do_show();
             });
-            this.edition_form.do_show();
         },
         /**
          * Saves the current row, and triggers the edition of its following
