@@ -90,7 +90,8 @@ class account_bank_statement(osv.osv):
                         res[statement.id] -= res_currency_obj.compute(cursor,
                                 user, company_currency_id, currency_id,
                                 line.credit, context=context)
-            if statement.state == 'draft':
+
+            if statement.state in ('draft', 'open'):
                 for line in statement.line_ids:
                     res[statement.id] += line.amount
         for r in res:
@@ -127,7 +128,7 @@ class account_bank_statement(osv.osv):
     _name = "account.bank.statement"
     _description = "Bank Statement"
     _columns = {
-        'name': fields.char('Name', size=64, required=True, help='if you give the Name other then /, its created Accounting Entries Move will be with same name as statement name. This allows the statement entries to have the same references than the statement itself', states={'confirm': [('readonly', True)]}),
+        'name': fields.char('Name', size=64, required=True, states={'draft': [('readonly', False)]}, readonly=True, help='if you give the Name other then /, its created Accounting Entries Move will be with same name as statement name. This allows the statement entries to have the same references than the statement itself'), # readonly for account_cash_statement
         'date': fields.date('Date', required=True, states={'confirm': [('readonly', True)]}),
         'journal_id': fields.many2one('account.journal', 'Journal', required=True,
             readonly=True, states={'draft':[('readonly',False)]}),
@@ -135,20 +136,19 @@ class account_bank_statement(osv.osv):
             states={'confirm':[('readonly', True)]}),
         'balance_start': fields.float('Starting Balance', digits_compute=dp.get_precision('Account'),
             states={'confirm':[('readonly',True)]}),
-        'balance_end_real': fields.float('Ending Balance', digits_compute=dp.get_precision('Account'),
-            states={'confirm':[('readonly', True)]}),
-        'balance_end': fields.function(_end_balance, method=True, string='Balance'),
+        'balance_end_real': fields.float('Closing Balance', digits_compute=dp.get_precision('Account'), states={'confirm': [('readonly', True)]}, help="closing balance entered by the cashbox verifier"),
+        'balance_end': fields.function(_end_balance, method=True, store=True, string='Balance'),
         'company_id': fields.related('journal_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True),
         'line_ids': fields.one2many('account.bank.statement.line',
             'statement_id', 'Statement lines',
             states={'confirm':[('readonly', True)]}),
         'move_line_ids': fields.one2many('account.move.line', 'statement_id',
             'Entry lines', states={'confirm':[('readonly',True)]}),
-        'state': fields.selection([('draft', 'Draft'),('confirm', 'Confirmed')],
+        'state': fields.selection([('draft', 'Draft'),('confirm', 'Closed'),('open','Open')],
             'State', required=True,
             states={'confirm': [('readonly', True)]}, readonly="1",
             help='When new statement is created the state will be \'Draft\'. \
-            \n* And after getting confirmation from the bank it will be in \'Confirmed\' state.'),
+            \n* And after getting confirmation from the bank it will be in \'Confirmed\' state.'), # open for account_cash_statement
         'currency': fields.function(_currency, method=True, string='Currency',
             type='many2one', relation='res.currency'),
         'account_id': fields.related('journal_id', 'default_debit_account_id', type='many2one', relation='account.account', string='Account used in this journal', readonly=True, help='used in statement reconciliation domain, but shouldn\'t be used elswhere.'),
