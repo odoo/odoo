@@ -371,7 +371,9 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
             this.compute_aggregates();
             return;
         }
-        this.compute_aggregates(records);
+        this.compute_aggregates(_(records).map(function (record) {
+            return {count: 1, values: record};
+        }));
     },
     /**
      * Handles action button signals on a record
@@ -448,9 +450,17 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
         var count = 0, sums = {};
         _(columns).each(function (column) { sums[column.field] = 0; });
         _(records).each(function (record) {
-            count += 1; //(record.count || 1);
+            count += record.count || 1;
             _(columns).each(function (column) {
-                sums[column.field] += record[column.field];
+                var field = column.field;
+                switch (column['function']) {
+                    case 'sum':
+                        sums[field] += record.values[field];
+                        break;
+                    case 'avg':
+                        sums[field] += record.count * record.values[field];
+                        break;
+                }
             });
         });
 
@@ -630,7 +640,7 @@ openerp.base.ListView.List = Class.extend( /** @lends openerp.base.ListView.List
             _(row.data).each(function (obj, key) {
                 record[key] = obj.value;
             });
-            return record;
+            return {count: 1, values: record};
         });
     },
     /**
@@ -941,6 +951,12 @@ openerp.base.ListView.Groups = Class.extend( /** @lends openerp.base.ListView.Gr
         return this;
     },
     get_records: function () {
+        if (_(this.children).isEmpty()) {
+            return {
+                count: this.datagroup.length,
+                values: this.datagroup.aggregates
+            }
+        }
         return _(this.children).chain()
             .map(function (child) {
                 return child.get_records();
