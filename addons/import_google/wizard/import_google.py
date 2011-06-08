@@ -47,6 +47,8 @@ class import_contact(import_framework):
    
     def initialize(self):
         google = self.obj.pool.get('google.login')
+        self.external_id_field = 'Id'
+        self.gclient=self.context.get('gd_client', False)
         self.gd_client = google.google_login(self.context.get('user'), 
                                        self.context.get('password'), 
                                         type = self.context.get('instance'))
@@ -56,11 +58,14 @@ class import_contact(import_framework):
     def get_mapping(self):
         return { 
             self.TABLE_EVENT: self.get_event_mapping(),
+            self.TABLE_CONTACT: self.get_contact_mapping(),
+            self.TABLE_ADDRESS: self.get_address_mapping(),
         }
         
     def get_data(self, table):
         val = {
             self.TABLE_EVENT: self.get_events(),
+            self.TABLE_CONTACT: self.get_contact(),
         }
         return val.get(table)
     
@@ -257,3 +262,79 @@ class import_contact(import_framework):
                 }
         }
 
+
+    def get_contact(self):
+        contact=self.gclient
+        gclient=self.context.get('client',False)
+        datas = [] 
+        while contact:      
+            for entry in contact.entry:
+                data = {}
+                data['id'] = entry.id.text
+                name = tools.ustr(entry.title.text)
+                if name == "None":
+                    name = entry.email[0].address
+                data['name'] = name
+                emails = ','.join(email.address for email in entry.email)
+                data['email'] = emails
+                if entry.organization:
+                    if entry.organization.org_name:
+                        data.update({'company': entry.organization.org_name.text})
+                    if entry.organization.org_title:
+                        data.update ({'function': entry.organization.org_title.text})
+                if entry.phone_number:
+                    for phone in entry.phone_number:
+                        if phone.rel == gdata.contacts.REL_WORK:
+                            data['phone'] = phone.text
+                        if phone.rel == gdata.contacts.PHONE_MOBILE:
+                            data['mobile'] = phone.text
+                        if phone.rel == gdata.contacts.PHONE_WORK_FAX:
+                            data['fax'] = phone.text  
+                datas.append(data)        
+            next = contact.GetNextLink()
+            contact = next and gclient.GetContactsFeed(next.href) or None     
+        return datas
+    
+    
+    def get_partner_address(self,val):
+            field_map = {
+                'name': 'name',
+                'type': 'Type',
+                'city': 'city',
+                'phone': 'phone',
+                'mobile': 'mobile',
+                'email': 'email',
+                'fax': 'fax',
+            }
+            val.update({'Type':'contact'})
+            val.update({'id_new': val['id']+'address_contact' })
+            return self.import_object_mapping(field_map , val, 'res.partner.address', self.context.get('table')[0], val['id_new'], self.DO_NOT_FIND_DOMAIN)
+        
+    def get_contact_mapping(self):
+        return {
+            'model': 'res.partner',
+            'dependencies': [],
+            'map': {
+                'name': 'name',
+                'customer': str(self.context.get('customer')),
+                'supplier': str(self.context.get('supplier')),
+                'address/id': self.get_partner_address,
+                }
+            }   
+                    
+    def get_address_mapping(self):
+        print"RRRRRRRRRREEElated to Address ONLY......................"
+        return {
+            'model': 'res.partner.address',
+            'dependencies': [],
+            'map': {
+               'name': 'name',
+                'city': 'city',
+                'phone': 'phone',
+                'mobile': 'mobile',
+                'email': 'email',
+                'fax': 'fax'
+                }
+        
+        }
+        
