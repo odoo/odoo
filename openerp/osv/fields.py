@@ -1047,7 +1047,14 @@ class property(function):
 
         default_val = self._get_default(obj, cr, uid, prop_name, context)
 
-        if id_val is not default_val:
+        property_create = False
+        if hasattr(default_val, '_id'):
+            if default_val._id != id_val:
+                property_create = True
+        elif id_val != default_val:
+            property_create = True
+
+        if property_create:
             def_id = self._field_get(cr, uid, obj._name, prop_name)
             company = obj.pool.get('res.company')
             cid = company._company_default_get(cr, uid, obj._name, def_id,
