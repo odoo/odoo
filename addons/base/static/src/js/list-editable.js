@@ -123,7 +123,7 @@ openerp.base.list.editable = function (openerp) {
             var $new_row = $('<tr>', {
                     id: _.uniqueId('oe-editable-row-'),
                     'class': $(row).attr('class'),
-                    onclick: function (e) {e.stopPropagation();}
+                    click: function (e) {e.stopPropagation();}
                 })
                 .keyup(function (e) {
                     switch (e.which) {
