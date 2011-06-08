@@ -20,6 +20,12 @@ openerp.base.list.editable = function (openerp) {
             $(this.groups).bind({
                 'edit': function (e, id, dataset) {
                     self.do_edit(dataset.index, id, dataset);
+                },
+                'saved': function () {
+                    if (self.groups.get_selection().length) {
+                        return;
+                    }
+                    self.compute_aggregates();
                 }
             })
         },
@@ -78,7 +84,7 @@ openerp.base.list.editable = function (openerp) {
     });
 
     _.extend(openerp.base.ListView.Groups.prototype, /** @lends openerp.base.ListView.Groups# */{
-        passtrough_events: openerp.base.ListView.Groups.prototype.passtrough_events + " edit",
+        passtrough_events: openerp.base.ListView.Groups.prototype.passtrough_events + " edit saved",
         new_record: function () {
             // TODO: handle multiple children
             this.children[null].new_record();
@@ -187,6 +193,8 @@ openerp.base.list.editable = function (openerp) {
                     delete self.edition_form;
                     delete self.edition_index;
                     delete self.edition;
+
+                    $(self).trigger('saved', [self.dataset]);
                     if (!edit_next) {
                         return;
                     }
