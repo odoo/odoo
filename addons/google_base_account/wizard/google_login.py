@@ -24,7 +24,7 @@ from tools.translate import _
 try:
     import gdata.contacts.service
     import gdata.contacts.client
-
+    import gdata.calendar.service
 except ImportError:
     raise osv.except_osv(_('Google Contacts Import Error!'), _('Please install gdata-python-client from http://code.google.com/p/gdata-python-client/downloads/list'))
 
