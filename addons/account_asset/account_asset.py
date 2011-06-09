@@ -137,8 +137,11 @@ class account_asset_asset(osv.osv):
                     else:
                         amount = residual_amount * asset.method_progress_factor
                 residual_amount -= amount
+                
+                # To skip already created lines
                 if i <= len(asset.account_move_line_ids):
                     continue
+                
                 vals = {
                      'amount': amount,
                      'asset_id': asset.id,
@@ -149,6 +152,7 @@ class account_asset_asset(osv.osv):
                      'depreciation_date': depreciation_date.strftime('%Y-%m-%d'),
                 }
                 depreciation_lin_obj.create(cr, uid, vals, context=context)
+                
                 # Considering Depr. Period as months
                 depreciation_date = (datetime(year, month, day) + relativedelta(months=+asset.method_period))
                 day = depreciation_date.day
