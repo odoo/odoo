@@ -271,6 +271,7 @@ class google_import(import_framework):
     def get_contact(self):
         contact=self.gclient
         gclient=self.context.get('client',False)
+        table = self.context.get('table')[0] 
         datas = [] 
         while contact:      
             for entry in contact.entry:
@@ -282,6 +283,9 @@ class google_import(import_framework):
                 data['name'] = name
                 emails = ','.join(email.address for email in entry.email)
                 data['email'] = emails
+                if table == 'Contact':
+                    data.update({'customer': str(self.context.get('customer')),
+                                 'supplier': str(self.context.get('supplier'))})
                 if entry.organization:
                     if entry.organization.org_name:
                         data.update({'company': entry.organization.org_name.text})
@@ -321,8 +325,8 @@ class google_import(import_framework):
             'dependencies': [],
             'map': {
                 'name': 'name',
-                'customer': str(self.context.get('customer')),
-                'supplier': str(self.context.get('supplier')),
+                'customer': 'customer',
+                'supplier': 'supplier',
                 'address/id': self.get_partner_address,
                 }
             }   
