@@ -635,6 +635,8 @@
         <field name="arch" type="xml">
             <search string="Search Payslips Group">
                 <field name="name"/>
+                <field name="date_start"/>
+                <field name="date_end"/>
             </search>
         </field>
     </record>
@@ -646,6 +648,8 @@
         <field name="arch" type="xml">
             <tree string="Payslips Run">
                 <field name="name"/>
+                <field name="date_start"/>
+                <field name="date_end"/>
             </tree>
         </field>
     </record>
@@ -656,15 +660,18 @@
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Payslips Run">
-                <group col="6" colspan="6">
-                    <field name="name"/>
+                <group col="6" colspan="4">
+                    <field name="name" colspan="4"/>
+                    <field name="credit_note"/>
+                    <field name="date_start"/>
+                    <field name="date_end"/>
                 </group>
-                <notebook colspan="6">
+                <notebook colspan="4">
                     <page string="Payslips">
                         <field name="slip_ids" colspan="4" nolabel="1"/>
                     </page>
                 </notebook>
-                <group col="6" colspan="6">
+                <group col="6" colspan="4">
                     <field name="state"/>
                     <button name="%(action_hr_payslip_by_employees)d" type="action" states="draft" icon="gtk-execute" string="Generate Payslips" />
                     <button name="close_payslip_run" type="object" icon="gtk-jump-to" string="Close" states="draft"/>
