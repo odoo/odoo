@@ -24,6 +24,7 @@
 #
 ##############################################################################
 
+import cgitb
 import errno
 import logging
 import logging.handlers
@@ -430,7 +431,7 @@ class OpenERPDispatcher:
         except Exception, e:
             self.log('exception', tools.exception_to_unicode(e))
             tb = getattr(e, 'traceback', sys.exc_info())
-            tb_s = "".join(traceback.format_exception(*tb))
+            tb_s = cgitb.text(tb)
             if tools.config['debug_mode']:
                 import pdb
                 pdb.post_mortem(tb[2])
