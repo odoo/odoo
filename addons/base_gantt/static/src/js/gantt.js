@@ -160,6 +160,10 @@ init: function(view_manager, session, element_id, dataset, view_id) {
             if (duration == false)
                 duration = 0
 
+            if (self.grp.length == 0){
+               self.grp.push({'group_by' : this.parent})
+            }
+            
             if (self.grp != undefined){
                 for (j in self.grp){
                     var grp_key = res[self.grp[j]['group_by']];
@@ -220,7 +224,7 @@ init: function(view_manager, session, element_id, dataset, view_id) {
         var evt_date = "";
         var evt_duration = "";
         var evt_end_date = "";
-        
+
         for (i in final_events){
             evt_id = final_events[i];
             evt_date = all_events[evt_id]['evt'][2];
@@ -253,7 +257,6 @@ init: function(view_manager, session, element_id, dataset, view_id) {
                 prt = project.getTaskById(res['parent']);
                 prt.addChildTask(task);
             }
-
         }
 
         ganttChartControl.create("GanttDiv");
@@ -286,10 +289,10 @@ init: function(view_manager, session, element_id, dataset, view_id) {
         var date2_ms = date2.getTime();
         var difference_ms = Math.abs(date1_ms - date2_ms);
 
-        d = Math.round(difference_ms / ONE_DAY);
-        h = Math.round((difference_ms % ONE_DAY)/(1000 * 60 * 60));
-
-        return (d * this.day_length) + h;
+        d = Math.floor(difference_ms / ONE_DAY);
+        h = (difference_ms % ONE_DAY)/(1000 * 60 * 60);
+        num = (d * this.day_length) + h;
+        return parseFloat(num.toFixed(2));
 
     },
 
