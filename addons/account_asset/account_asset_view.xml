@@ -85,10 +85,10 @@
                          type="action" 
                          colspan="2"/>
                     <newline/>
-                    <field name="method"/>
+                    <field name="method" on_change="onchange_method_time(method)"/>
                     <field name="method_progress_factor" attrs="{'invisible':[('method','=','linear')]}"/>
                     <newline/>
-                    <field name="method_time"/>
+                    <field name="method_time" on_change="onchange_method_time(method_time)"/>
                     <field name="method_period"/>
                     <field name="method_delay" attrs="{'invisible': [('method_time','=','end')]}"/>
                     <field name="prorata" colspan="1" attrs="{'invisible': ['|',('method_time','=','end'),('method','!=','linear')]}"/>

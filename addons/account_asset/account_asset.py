@@ -110,12 +110,14 @@ class account_asset_asset(osv.osv):
                 depreciation_lin_obj.unlink(cr, uid, old_depreciation_line_ids, context=context)
             
             amount_to_depr = residual_amount = asset.value_residual
-            
             depreciation_date = datetime.strptime(self._get_last_depreciation_date(cr, uid, [asset.id], context)[asset.id], '%Y-%m-%d')
             day = depreciation_date.day
             month = depreciation_date.month
             year = depreciation_date.year
             total_days = (year % 4) and 365 or 366
+            if asset.account_move_line_ids:
+                add_months = asset.method_period * len(asset.account_move_line_ids) 
+                depreciation_date = (datetime(year, month, day) + relativedelta(months=+add_months))
             
             undone_dotation_number = asset.method_delay - len(asset.account_move_line_ids)
             if asset.method_time == 'end':
@@ -123,6 +125,7 @@ class account_asset_asset(osv.osv):
                 undone_dotation_number = (end_date - depreciation_date).days / total_days
             if asset.prorata or asset.method_time == 'end':
                 undone_dotation_number += 1
+
             for i in range(1, undone_dotation_number+1):
                 if i == undone_dotation_number + 1:
                     amount = residual_amount
@@ -139,7 +142,6 @@ class account_asset_asset(osv.osv):
                     else:
                         amount = residual_amount * asset.method_progress_factor
                 residual_amount -= amount
-                
                 vals = {
                      'amount': amount,
                      'asset_id': asset.id,
@@ -152,10 +154,11 @@ class account_asset_asset(osv.osv):
                 depreciation_lin_obj.create(cr, uid, vals, context=context)
                 
                 # Considering Depr. Period as months
-                depreciation_date = (datetime(year, month, day) + relativedelta(months=+asset.method_period))
                 day = depreciation_date.day
                 month = depreciation_date.month
                 year = depreciation_date.year
+                depreciation_date = (datetime(year, month, day) + relativedelta(months=+asset.method_period))
+                
         return True
 
     def validate(self, cr, uid, ids, context={}):
@@ -247,6 +250,12 @@ class account_asset_asset(osv.osv):
                             'method_end': category_obj.method_end,
                             'prorata': category_obj.prorata,
             }
+        return res
+    
+    def onchange_method_time(self, cr, uid, ids, method='linear', method_time='delay', context=None):
+        res = {'value': {}}
+        if method != 'linear' or method_time != 'delay':
+            res['value'] = {'prorata': False}
         return res
 
     def copy(self, cr, uid, id, default=None, context=None):
