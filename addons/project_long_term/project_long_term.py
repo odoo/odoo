@@ -581,6 +581,37 @@ def Project_%d():
             context = {}
         allocation = {}
         return allocation
+    def copy(self, cr, uid, id, default=None, context=None):
+        if context is None:
+            context = {}
+        if default is None:
+            default = {}
+        pool_task = self.pool.get('project.task')
+        pool_phase = self.pool.get('project.phase')
+        proj = self.browse(cr, uid, id, context=context)
+        map_phase = {} #maintains a dictionary of old to new phase
+        map_tasks = {} #maintains a dictionary of tasks either orphan to related to any phase
+        #Creating a list of new phases
+        for phase in proj.phase_ids:
+              map_phase[phase.id] = pool_phase.copy(cr, uid, phase.id, default={}, context=context)   
+        list_phases = map_phase.keys() + map_phase.values()
+
+        for phase_id in map_phase.values():
+            for task in pool_phase.browse(cr, uid, phase_id, context).task_ids:
+                map_tasks[task.id] = phase_id                       
+
+        #Creating a list of tasks which are not linked to phases
+        for task in proj.tasks:
+            if (not task.phase_id.id) or (task.phase_id.id and task.phase_id.id not in list_phases) or (task.phase_id.id and task.phase_id.id in list_phases and not task.active):
+                #Copy of Real tasks (without Phase) and inactive template tasks
+                default_phase = task.phase_id.id and {'phase_id' : map_phase.get(task.phase_id.id,False)} or {}
+                map_tasks[pool_task.copy(cr, uid, task.id, default_phase, context=context)] = map_phase.get(task.phase_id.id,False)
+        
+        default.update({'tasks':[(6,0, map_tasks.keys())]})
+        default.update({'phase_ids':[(6,0, map_phase.values())]})
+
+        return super(project, self).copy(cr, uid, id, default, context)
+
 
     def schedule_tasks(self, cr, uid, ids, context=None):
         """
