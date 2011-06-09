@@ -24,10 +24,5 @@
 
 import report_payslip
 import report_payslip_details
-import report_payroll_advice
-import report_year_salary
-import report_payroll_register
-import report_employees_detail
-import report_emp_salary_structure
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
