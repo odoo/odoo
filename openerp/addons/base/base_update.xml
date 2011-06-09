@@ -119,7 +119,7 @@
                                     context="{'user_preference': 0}"
                                     groups="base.group_multi_company"
                                     />
-                                <field name="address_id"/>
+                                <!--field name="address_id"/-->
                                 <field name="user_email" widget="email"/>
                             </group>
                             <group colspan="1" col="2" groups="base.group_extended">
@@ -175,7 +175,7 @@
                 <search string="Users">
                     <field name="name"/>
                     <field name="login"/>
-                    <field name="address_id" string="Address"/>
+                    <!--field name="address_id" string="Address"/-->
                     <field name="company_ids" string="Company" groups="base.group_multi_company"/>
                 </search>
             </field>
@@ -255,7 +255,7 @@
                     </xpath>
                 <group string="res_config_contents" position="replace">
                   <field name="name"/>
-                  <field name="email"/>
+                  <field name="user_email"/>
                   <field name="login"/>
                   <field name="password" password="True"/>
                   <field name="context_lang"/>

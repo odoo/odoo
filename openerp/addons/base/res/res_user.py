@@ -136,7 +136,7 @@ class users(osv.osv):
                 _('"email_from" needs to be set to send welcome mails '
                   'to users'))
             return False
-        if not user.get('email'):
+        if not user.get('user_email'):
             return False
 
         return tools.email_send(email_from=None, email_to=[user['email']],
@@ -175,24 +175,24 @@ class users(osv.osv):
         extended_users = group_obj.read(cr, uid, extended_group_id, ['users'], context=context)['users']
         return dict(zip(ids, ['extended' if user in extended_users else 'simple' for user in ids]))
 
-    def _email_get(self, cr, uid, ids, name, arg, context=None):
-        # perform this as superuser because the current user is allowed to read users, and that includes
-        # the email, even without any direct read access on the res_partner_address object.
-        return dict([(user.id, user.address_id.email) for user in self.browse(cr, 1, ids)]) # no context to avoid potential security issues as superuser
-
-    def _email_set(self, cr, uid, ids, name, value, arg, context=None):
-        if not isinstance(ids,list):
-            ids = [ids]
-        address_obj = self.pool.get('res.partner.address')
-        for user in self.browse(cr, uid, ids, context=context):
-            # perform this as superuser because the current user is allowed to write to the user, and that includes
-            # the email even without any direct write access on the res_partner_address object.
-            if user.address_id:
-                address_obj.write(cr, 1, user.address_id.id, {'email': value or None}) # no context to avoid potential security issues as superuser
-            else:
-                address_id = address_obj.create(cr, 1, {'name': user.name, 'email': value or None}) # no context to avoid potential security issues as superuser
-                self.write(cr, uid, ids, {'address_id': address_id}, context)
-        return True
+#    def _email_get(self, cr, uid, ids, name, arg, context=None):
+#        # perform this as superuser because the current user is allowed to read users, and that includes
+#        # the email, even without any direct read access on the res_partner_address object.
+#        return dict([(user.id, user.address_id.email) for user in self.browse(cr, 1, ids)]) # no context to avoid potential security issues as superuser
+#
+#    def _email_set(self, cr, uid, ids, name, value, arg, context=None):
+#        if not isinstance(ids,list):
+#            ids = [ids]
+#        address_obj = self.pool.get('res.partner.address')
+#        for user in self.browse(cr, uid, ids, context=context):
+#            # perform this as superuser because the current user is allowed to write to the user, and that includes
+#            # the email even without any direct write access on the res_partner_address object.
+#            if user.address_id:
+#                address_obj.write(cr, 1, user.address_id.id, {'email': value or None}) # no context to avoid potential security issues as superuser
+#            else:
+#                address_id = address_obj.create(cr, 1, {'name': user.name, 'email': value or None}) # no context to avoid potential security issues as superuser
+#                self.write(cr, uid, ids, {'address_id': address_id}, context)
+#        return True
 
     def _set_new_password(self, cr, uid, id, name, value, args, context=None):
         if value is False:
@@ -217,13 +217,13 @@ class users(osv.osv):
                                 fnct_inv=_set_new_password,
                                 string='Change password', help="Only specify a value if you want to change the user password. "
                                 "This user will have to logout and login again!"),
-        'email': fields.char('E-mail', size=64,
+        'user_email': fields.char('E-mail', size=64,
             help='If an email is provided, the user will be sent a message '
                  'welcoming him.\n\nWarning: if "email_from" and "smtp_server"'
                  " aren't configured, it won't be possible to email new "
                  "users."),
         'signature': fields.text('Signature', size=64),
-        'address_id': fields.many2one('res.partner.address', 'Address'),
+      #  'address_id': fields.many2one('res.partner.address', 'Address'),
         'active': fields.boolean('Active'),
         'action_id': fields.many2one('ir.actions.actions', 'Home Action', help="If specified, this action will be opened at logon for this user, in addition to the standard menu."),
         'menu_id': fields.many2one('ir.actions.actions', 'Menu Action', help="If specified, the action will replace the standard menu for this user."),
@@ -245,7 +245,7 @@ class users(osv.osv):
         'view': fields.function(_get_interface_type, method=True, type='selection', fnct_inv=_set_interface_type,
                                 selection=[('simple','Simplified'),('extended','Extended')],
                                 string='Interface', help="Choose between the simplified interface and the extended one"),
-        'user_email': fields.function(_email_get, method=True, fnct_inv=_email_set, string='Email', type="char", size=240),
+    #    'user_email': fields.function(_email_get, method=True, fnct_inv=_email_set, string='Email', type="char", size=240),
         'menu_tips': fields.boolean('Menu Tips', help="Check out this box if you want to always display tips on each menu action"),
         'date': fields.datetime('Last Connection', readonly=True),
     }
@@ -345,7 +345,7 @@ class users(osv.osv):
         'company_id': _get_company,
         'company_ids': _get_companies,
         'groups_id': _get_group,
-        'address_id': False,
+     #   'address_id': False,
         'menu_tips':True
     }
 
@@ -532,13 +532,13 @@ class config_users(osv.osv_memory):
         partner_id = self.pool.get('res.partner').main_partner(cr, uid)
         address = self.pool.get('res.partner.address').create(
             cr, uid, {'name': base_data['name'],
-                      'email': base_data['email'],
+                      'user_email': base_data['user_email'],
                       'partner_id': partner_id,},
             context)
         user_data = dict(
             base_data,
             signature=self._generate_signature(
-                cr, base_data['name'], base_data['email'], context=context),
+                cr, base_data['name'], base_data['user_email'], context=context),
             address_id=address,
             )
         new_user = self.pool.get('res.users').create(
