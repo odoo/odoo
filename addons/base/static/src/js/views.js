@@ -392,7 +392,7 @@ openerp.base.View = openerp.base.Controller.extend({
             var context = _.extend({}, dataset.context, action_data.context || {});
             switch(action_data.type) {
                 case 'object':
-                    return dataset.call(action_data.name, [record_id], [context], handler);
+                    return dataset.call(action_data.name, [[record_id], context], handler);
                 case 'action':
                     return this.rpc('/base/action/load', { action_id: parseInt(action_data.name, 10) }, handler);
                 default:
