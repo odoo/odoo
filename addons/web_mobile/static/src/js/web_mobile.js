@@ -37,7 +37,7 @@ openerp.web_mobile.MobileWebClient = openerp.base.Controller.extend({
         this.login = login;
         this.password = password;
         var params = { db: this.db, login: this.login, password: this.password };
-        this.rpc("/web_mobile/mobile/login", params, function(result) {
+        this.rpc("/base/session/login", params, function(result) {
             self.session_id = result.session_id;
             self.uid = result.uid;
             self.session_save();
@@ -106,7 +106,7 @@ openerp.base.ListView = openerp.base.Controller.extend({
         this.list_id = list_id;
     },
     start: function() {
-        this.rpc('/web_mobile/menu/action', {'menu_id': this.list_id},
+        this.rpc('/base/menu/action', {'menu_id': this.list_id},
                     this.on_menu_action_loaded);
     },
     on_menu_action_loaded: function(data) {
@@ -180,7 +180,7 @@ openerp.base.Menu =  openerp.base.Controller.extend({
         this.menu = false;
     },
     start: function() {
-        this.rpc("/web_mobile/menu/load", {}, this.on_loaded);
+        this.rpc("/base/menu/load", {}, this.on_loaded);
     },
     on_loaded: function(data) {
         this.data = data;
