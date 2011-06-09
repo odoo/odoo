@@ -44,18 +44,18 @@
             <field name="association" attrs="{'readonly':['|',('auction','=',True),('product_expiry','=',True)]}" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account_accountant,purchase,hr,point_of_sale,marketing,profile_tools,report_designer,association,auction,product_expiry)"/>
             <field name="auction" attrs="{'readonly':['|',('association','=',True),('product_expiry','=',True)]}" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account_accountant,purchase,hr,point_of_sale,marketing,profile_tools,report_designer,association,auction,product_expiry)"/>
             <field name="product_expiry" attrs="{'readonly':['|',('association','=',True),('auction','=',True)]}" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account_accountant,purchase,hr,point_of_sale,marketing,profile_tools,report_designer,association,auction,product_expiry)"/>
-            <group  name="crm"/> 
-            <group  name="sale"/> 
-            <group  name="project"/> 
-            <group  name="knowledge"/> 
-            <group  name="mrp"/> 
-            <group  name="account_accountant"/>
-            <group  name="purchase"/>
-            <group  name="hr"/> 
-            <group  name="profile_tools"/> 
-            <group  name="marketing"/> 
-            <group  name="report_designer"/>            
-            <group  name="association"/> 
+            <group name="crm"/> 
+            <group name="sale"/> 
+            <group name="project"/> 
+            <group name="knowledge"/> 
+            <group name="mrp"/> 
+            <group name="account_accountant"/>
+            <group name="purchase"/>
+            <group name="hr"/> 
+            <group name="profile_tools"/> 
+            <group name="marketing"/> 
+            <group name="report_designer"/>            
+            <group name="association"/> 
           </group>
         </data>
       </field>
