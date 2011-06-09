@@ -122,11 +122,11 @@ openerp.base.ListView = openerp.base.Controller.extend({
         var model = action.res_model;
         var context = action.context;
         var domain = action.domain;
-        self.rpc('/web_mobile/listview/fill', {
+
+        self.rpc('/base/listview/load', {
             'model': model,
-            'id': view_id,
-            'context': context,
-            'domain': domain
+            'view_id': view_id,
+            'toolbar': false,
             },function(result){
                 this.listview = new openerp.base.ListView(this.session, "oe_app");
                 self.$element.html(QWeb.render("ListView", {'list' : result}));

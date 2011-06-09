@@ -609,7 +609,17 @@ class ListView(View):
     @openerpweb.jsonrequest
     def load(self, req, model, view_id, toolbar=False):
         fields_view = self.fields_view_get(req, model, view_id, 'tree', toolbar=toolbar)
-        return {'fields_view': fields_view}
+        rows = DataSet().do_search_read(req, model,
+                                        offset=0, limit=False,
+                                        domain=None)
+        return {
+            'fields_view': fields_view,
+            'records': [
+                {'data': dict((key, {'value': value})
+                              for key, value in row.iteritems())}
+                for row in rows
+            ]
+        }
 
     def fields_view_get(self, request, model, view_id, view_type="tree",
                         transform=True, toolbar=False, submenu=False):
