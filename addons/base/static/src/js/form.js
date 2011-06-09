@@ -8,12 +8,15 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
      * view should be displayed (if there is one active).
      */
     searchable: false,
+    template: "FormView",
     /**
      * @constructs
      * @param {openerp.base.Session} session the current openerp session
      * @param {String} element_id this view's root element id
      * @param {openerp.base.DataSet} dataset the dataset this view will work with
      * @param {String} view_id the identifier of the OpenERP view object
+     *
+     * @property {openerp.base.Registry} registry=openerp.base.form.widgets widgets registry for this form view instance
      */
     init: function(view_manager, session, element_id, dataset, view_id) {
         this._super(session, element_id);
@@ -29,7 +32,8 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
         this.ready = false;
         this.show_invalid = true;
         this.touched = false;
-        this.flags = this.view_manager.flags || {};
+        this.flags = this.view_manager.action.flags || {};
+        this.registry = openerp.base.form.widgets;
     },
     start: function() {
         //this.log('Starting FormView '+this.model+this.view_id)
@@ -44,9 +48,9 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
         var self = this;
         this.fields_view = data.fields_view;
 
-        var frame = new openerp.base.form.WidgetFrame(this, this.fields_view.arch);
+        var frame = new (this.registry.get_object('frame'))(this, this.fields_view.arch);
 
-        this.$element.html(QWeb.render("FormView", { 'frame': frame, 'view': this }));
+        this.$element.html(QWeb.render(this.template, { 'frame': frame, 'view': this }));
         _.each(this.widgets, function(w) {
             w.start();
         });
@@ -220,7 +224,15 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
             self.on_record_loaded(result.result);
         });
     },
-    do_save: function(success) {
+    /**
+     * Triggers saving the form's record. Chooses between creating a new
+     * record or saving an existing one depending on whether the record
+     * already has an id property.
+     *
+     * @param {Function} success callback on save success
+     * @param {Boolean} [prepend_on_create=false] if ``do_save`` creates a new record, should that record be inserted at the start of the dataset (by default, records are added at the end)
+     */
+    do_save: function(success, prepend_on_create) {
         var self = this;
         if (!this.ready) {
             return false;
@@ -243,7 +255,7 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
             this.log("About to save", values);
             if (!this.datarecord.id) {
                 this.dataset.create(values, function(r) {
-                    self.on_created(r, success);
+                    self.on_created(r, success, prepend_on_create);
                 });
             } else {
                 this.dataset.write(this.datarecord.id, values, function(r) {
@@ -281,19 +293,37 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
             }
         }
     },
-    on_created: function(r, success) {
+    /**
+     * Updates the form' dataset to contain the new record:
+     *
+     * * Adds the newly created record to the current dataset (at the end by
+     *   default)
+     * * Selects that record (sets the dataset's index to point to the new
+     *   record's id).
+     * * Updates the pager and sidebar displays
+     *
+     * @param {Object} r
+     * @param {Function} success callback to execute after having updated the dataset
+     * @param {Boolean} [prepend_on_create=false] adds the newly created record at the beginning of the dataset instead of the end
+     */
+    on_created: function(r, success, prepend_on_create) {
         if (!r.result) {
             this.notification.warn("Record not created", "Problem while creating record.");
         } else {
-            this.datarecord.id = arguments[0].result;
-            this.dataset.ids.push(this.datarecord.id);
-            this.dataset.index = this.dataset.ids.length - 1;
+            this.datarecord.id = r.result;
+            if (!prepend_on_create) {
+                this.dataset.ids.push(this.datarecord.id);
+                this.dataset.index = this.dataset.ids.length - 1;
+            } else {
+                this.dataset.ids.unshift(this.datarecord.id);
+                this.dataset.index = 0;
+            }
             this.dataset.count++;
             this.do_update_pager();
             this.do_update_sidebar();
             this.notification.notify("Record created", "The record has been created with id #" + this.datarecord.id);
             if (success) {
-                success(r);
+                success(_.extend(r, {created: true}));
             }
         }
     },
@@ -422,6 +452,7 @@ openerp.base.form.compute_domain = function(expr, fields) {
 };
 
 openerp.base.form.Widget = openerp.base.Controller.extend({
+    template: 'Widget',
     init: function(view, node) {
         this.view = view;
         this.node = node;
@@ -435,7 +466,6 @@ openerp.base.form.Widget = openerp.base.Controller.extend({
         this.view.widgets[this.element_id] = this;
         this.children = node.children;
         this.colspan = parseInt(node.attrs.colspan || 1);
-        this.template = "Widget";
 
         this.string = this.string || node.attrs.string;
         this.help = this.help || node.attrs.help;
@@ -460,9 +490,9 @@ openerp.base.form.Widget = openerp.base.Controller.extend({
 });
 
 openerp.base.form.WidgetFrame = openerp.base.form.Widget.extend({
+    template: 'WidgetFrame',
     init: function(view, node) {
         this._super(view, node);
-        this.template = "WidgetFrame";
         this.columns = node.attrs.col || 4;
         this.x = 0;
         this.y = 0;
@@ -504,9 +534,9 @@ openerp.base.form.WidgetFrame = openerp.base.form.Widget.extend({
     handle_node: function(node) {
         var type = this.view.fields_view.fields[node.attrs.name] || {};
         var widget_type = node.attrs.widget || type.type || node.tag;
-        var widget = new (openerp.base.form.widgets.get_object(widget_type)) (this.view, node);
+        var widget = new (this.view.registry.get_object(widget_type)) (this.view, node);
         if (node.tag == 'field' && node.attrs.nolabel != '1') {
-            var label = new (openerp.base.form.widgets.get_object('label')) (this.view, node);
+            var label = new (this.view.registry.get_object('label')) (this.view, node);
             label["for"] = widget;
             this.add_widget(label);
         }
@@ -1369,6 +1399,7 @@ openerp.base.form.FieldBinaryImage = openerp.base.form.FieldBinary.extend({
  * Registry of form widgets, called by :js:`openerp.base.FormView`
  */
 openerp.base.form.widgets = new openerp.base.Registry({
+    'frame' : 'openerp.base.form.WidgetFrame',
     'group' : 'openerp.base.form.WidgetFrame',
     'notebook' : 'openerp.base.form.WidgetNotebook',
     'separator' : 'openerp.base.form.WidgetSeparator',

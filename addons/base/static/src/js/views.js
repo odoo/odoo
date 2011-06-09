@@ -9,7 +9,7 @@ openerp.base.ActionManager = openerp.base.Controller.extend({
     init: function(session, element_id) {
         this._super(session, element_id);
         this.viewmanager = null;
-        this.dialog_stack = []
+        this.dialog_stack = [];
         // Temporary linking view_manager to session.
         // Will use controller_parent to find it when implementation will be done.
         session.action_manager = this;
@@ -33,8 +33,7 @@ openerp.base.ActionManager = openerp.base.Controller.extend({
             case 'ir.actions.act_window':
                 if (action.target == 'new') {
                     var element_id = _.uniqueId("act_window_dialog");
-                    var dialog = $('<div id="' + element_id + '"></div>');
-                    dialog.dialog({
+                    $('<div>', {id: element_id}).dialog({
                         title: action.name,
                         modal: true,
                         width: '50%',
@@ -347,7 +346,7 @@ openerp.base.Sidebar = openerp.base.BaseWidget.extend({
             var action = self.sections[index[0]].elements[index[1]];
             action.flags = {
                 new_window : true
-            }
+            };
             self.session.action_manager.do_action(action);
             e.stopPropagation();
             e.preventDefault();
