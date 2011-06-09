@@ -523,7 +523,7 @@
                     <group col="2" colspan="2" groups="base.group_extended">
                         <separator string="Chained Locations" colspan="2"/>
                         <field name="chained_location_type"/>
-                        <field name="chained_location_id"  attrs="{'required':[('chained_location_type','=','fixed')]}"/>
+                        <field name="chained_location_id"  attrs="{'required':[('chained_location_type','=','fixed')], 'invisible':[('chained_location_type','!=','fixed')]}" string="Chained Location"/>
                         <field name="chained_auto_packing"/>
                         <field name="chained_delay"/>
                         <field name="chained_journal_id"/>
