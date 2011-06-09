@@ -300,11 +300,13 @@
             <th t-if="options.deletable"/>
         </tr>
     </thead>
-    <tfoot class="ui-widget-header" t-if="aggregate_columns.length">
+    <tfoot class="ui-widget-header">
         <tr>
-            <td t-att-colspan="columns_count" class='oe-list-footer'>
-                
+            <td t-if="options.selectable"/>
+            <td t-foreach="aggregate_columns" t-as="column" class="oe-list-footer oe-number"
+                t-att-data-field="column.field" t-att-title="column.label">
             </td>
+            <td t-if="options.deletable"/>
         </tr>
     </tfoot>
 </table>
@@ -316,7 +318,8 @@
         </t-if>
     </t>
 </t>
-<tr t-name="ListView.row" t-att-style="style" t-att-class="row_parity">
+<tr t-name="ListView.row" t-att-style="style" t-att-class="row_parity"
+    t-att-data-index="row_index">
     <t t-foreach="columns" t-as="column">
         <td t-if="column.meta">
             
@@ -326,8 +329,10 @@
         <input type="checkbox"/>
     </th>
     <t t-foreach="columns" t-as="column">
+        <t t-set="align" t-value="column.type === 'integer' or column.type == 'float'"/>
         <td t-if="!column.meta and column.invisible !== '1'" t-att-title="column.help"
-            class="oe-field-cell" t-att-data-field="column.id">
+            t-att-class="'oe-field-cell' + (align ? ' oe-number' : '')"
+            t-att-data-field="column.id">
             <t t-set="attrs" t-value="column.attrs_for(row.data)"/>
             <t t-if="!attrs.invisible">
                 <t t-set="is_button" t-value="column.tag === 'button'"/>
@@ -348,6 +353,9 @@
         <button type="button" name="delete">♻</button>
     </td>
 </tr>
+<t t-name="ListView.row.form">
+    <t t-raw="frame.render()"/>
+</t>
 <t t-name="FormView">
     <h2 class="oe_view_title"><t t-esc="view.fields_view.arch.attrs.string"/></h2>
     <div class="oe_form_header" t-att-id="view.element_id + '_header'">
@@ -878,5 +886,24 @@
 <t t-name="Many2XSelectPopup.form.buttons">
     <button type="button" class="oe_many2xselectpopup-form-save">Save</button>
     <button type="button" class="oe_many2xselectpopup-form-close">Close</button>
+</t>
+
+<t t-name="ListView.row.frame" t-extend="WidgetFrame">
+    <t t-jquery="tr">
+        $(document.createElement('t'))
+            .append(this.contents())
+            .attr({
+                't-foreach': this.attr('t-foreach'),
+                't-as': this.attr('t-as')
+            })
+            .replaceAll(this)
+            .after($(document.createElement('td')).append(
+                $(document.createElement('button')).attr({
+                    'class': 'oe-edit-row-save', 'type': 'button'}).text('Save')))
+            .before($(document.createElement('td')).append(
+                $(document.createElement('button')).attr({
+                    'class': 'oe-edit-row-cancel', 'type': 'button'}).text('Cancel')))
+            .unwrap();
+    </t>
 </t>
 </templates>
