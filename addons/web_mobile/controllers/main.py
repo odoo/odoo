@@ -59,10 +59,6 @@ class MOBILE(openerpweb.Controller):
     _cp_path = "/web_mobile/mobile"
 
     @openerpweb.jsonrequest
-    def db_list(self, req):
-        return req.session.proxy('db').list()
-
-    @openerpweb.jsonrequest
     def sc_list(self, req):
         return req.session.model('ir.ui.view_sc').get_sc(req.session._uid, "ir.ui.menu", {})
 

@@ -232,8 +232,9 @@ openerp.web_mobile.Login =  openerp.base.Controller.extend({
         var self = this;
 
         jQuery("#oe_header").children().remove();
-        this.rpc('/web_mobile/mobile/db_list',{} ,function(res){
-            self.$element.html(QWeb.render("Login", {'db' : res}));
+        this.rpc("/base/session/get_databases_list", {}, function(result) {
+            self.db_list = result.db_list;
+            self.$element.html(QWeb.render("Login", self));
             self.$element.find('#database').click(self.on_select);
             self.$element.find("a").click(self.on_clicked);
         })

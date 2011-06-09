@@ -38,7 +38,7 @@
                         <span class="ui-icon ui-icon-arrow-d ui-icon-shadow"></span>
                     </span>
                     <select data-native-menu="false" id="database" name="database" tabindex="-1">
-                        <option t-foreach="db" t-as="opt" t-value="opt">
+                        <option t-foreach="db_list" t-as="opt" t-value="opt">
                             <t t-esc="opt"/>
                         </option>
                     </select>
