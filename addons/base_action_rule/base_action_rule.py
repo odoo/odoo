@@ -418,12 +418,22 @@ the rule to mark CC(mail to any other person defined in actions)."),
         }
 
         if action.act_email_to:
-            emails.append(safe_eval(action.act_email_to, {}, locals_for_emails))
+            email_to = str(action.act_email_to)
+            try:
+                email_to = eval(str(action.act_email_to, {}, locals_for_emails))
+            except:
+                pass
+            emails.append(email_to)
 
         emails = filter(None, emails)
         if len(emails) and action.act_mail_body:
             emails = list(set(emails))
-            email_from = safe_eval(action.act_email_from, {}, locals_for_emails)
+            from_email= str(action.act_email_from)
+            try:
+                from_email= safe_eval(str(action.act_email_from), {}, locals_for_emails)
+            except:
+                pass    
+            email_from = from_email
 
             def to_email(text):
                 return re.findall(r'([^ ,<@]+@[^> ,]+)', text or '')
