@@ -108,14 +108,16 @@ class account_asset_asset(osv.osv):
             old_depreciation_line_ids = depreciation_lin_obj.search(cr, uid, [('asset_id', '=', asset.id), ('move_id', '=', False)])
             if old_depreciation_line_ids:
                 depreciation_lin_obj.unlink(cr, uid, old_depreciation_line_ids, context=context)
-            # For all cases: amount to depreciate is (Purchase Value - Salvage Value)
-            amount_to_depr = residual_amount = asset.purchase_value - asset.salvage_value
+            
+            amount_to_depr = residual_amount = asset.value_residual
+            
             depreciation_date = datetime.strptime(self._get_last_depreciation_date(cr, uid, [asset.id], context)[asset.id], '%Y-%m-%d')
             day = depreciation_date.day
             month = depreciation_date.month
             year = depreciation_date.year
             total_days = (year % 4) and 365 or 366
-            undone_dotation_number = asset.method_delay
+            
+            undone_dotation_number = asset.method_delay - len(asset.account_move_line_ids)
             if asset.method_time == 'end':
                 end_date = datetime.strptime(asset.method_end, '%Y-%m-%d')
                 undone_dotation_number = (end_date - depreciation_date).days / total_days
@@ -137,10 +139,6 @@ class account_asset_asset(osv.osv):
                     else:
                         amount = residual_amount * asset.method_progress_factor
                 residual_amount -= amount
-                
-                # To skip already created lines
-                if i <= len(asset.account_move_line_ids):
-                    continue
                 
                 vals = {
                      'amount': amount,
