@@ -531,6 +531,11 @@
             tabindex="-1" title="Show All Items"></span>
         <img t-att-id="widget.name + '_open'" alt="Open" title="Create"
             src="/base/static/src/img/iconset-d-drop.gif" class="m2o_open"/>
+        <div t-att-id="widget.cm_id" class="contextMenu" style="display:none"><ul>
+            <li t-att-id="widget.cm_id + '_search'">Search</li>
+            <li t-att-id="widget.cm_id + '_create'">Create</li>
+            <li t-att-id="widget.cm_id + '_open'">Open</li>
+        </ul></div>
     </div>
 </t>
 <t t-name="FieldOne2Many">

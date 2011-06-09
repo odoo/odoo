@@ -985,13 +985,38 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
         this.template = "FieldMany2One";
         this.limit = 7;
         this.value = null;
+        this.cm_id = _.uniqueId('m2o_cm_');
     },
     start: function() {
         this._super();
         var self = this;
         this.$input = this.$element.find("input");
         this.$drop_down = this.$element.find("span");
-        this.$menu_btn = this.$element.find("button");
+        this.$menu_btn = this.$element.find("img");
+        
+        var bindings = {};
+        bindings[this.cm_id + "_search"] = function() {
+            self._search_create_popup("search");
+        };
+        bindings[this.cm_id + "_create"] = function() {
+            self._search_create_popup("form");
+        };
+        bindings[this.cm_id + "_open"] = function() {
+            if (!self.value) {
+                return;
+            }
+            self.session.action_manager.do_action({
+                "res_model": self.field.relation,
+                "views":[[false,"form"]],
+                "res_id": self.value[0],
+                "type":"ir.actions.act_window",
+                "view_type":"form",
+                "view_mode":"form",
+                "target":"new"
+            });
+        };
+        var cmenu = this.$menu_btn.contextMenu(this.cm_id, {'leftClickToo': true,
+            bindings: bindings});
         
         this.$input.change(function() {
             if (self.$input.val() === "") {
@@ -1040,22 +1065,30 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
                 values = values.slice(0, self.limit);
                 values.push({label: "   More...", action: function() {
                     dataset.name_search(search_val, false, function(data) {
-                        var pop = new openerp.base.form.Many2XSelectPopup(null, self.view.session);
-                        pop.select_element(self.field.relation, _.map(data.result, function(x) {return x[0]}));
-                        pop.on_select_element.add(function(element_id) {
-                            dataset.call("name_get", [element_id], function(data) {
-                                self.value = data.result[0];
-                                self.$input.val(self.value[1]);
-                                pop.stop();
-                            });
-                        });
+                        self._search_create_popup("search", data.result);
                     });
                 }});
             }
+            values.push({label: '   Create "' + search_val + '"', action: function() {
+                self._search_create_popup("form");
+            }});
             values.push({label: "   Create...", action: function() {
-                
+                self._search_create_popup("form");
             }});
             response(values);
+        });
+    },
+    _search_create_popup: function(view, ids) {
+        var dataset = new openerp.base.DataSetStatic(this.session, this.field.relation, []);
+        var self = this;
+        var pop = new openerp.base.form.Many2XSelectPopup(null, self.view.session);
+        pop.select_element(self.field.relation, ids ? _.map(ids, function(x) {return x[0]}) : undefined, view);
+        pop.on_select_element.add(function(element_id) {
+            dataset.call("name_get", [element_id], function(data) {
+                self.value = data.result[0];
+                self.$input.val(self.value[1]);
+                pop.stop();
+            });
         });
     },
     set_value: function(value) {
