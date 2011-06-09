@@ -991,8 +991,8 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
         this._super();
         var self = this;
         this.$input = this.$element.find("input");
-        this.$drop_down = this.$element.find("span");
-        this.$menu_btn = this.$element.find("img");
+        this.$drop_down = this.$element.find(".oe-m2m-drop-down-button");
+        this.$menu_btn = this.$element.find(".oe-m2m-cm-button");
         
         var bindings = {};
         bindings[this.cm_id + "_search"] = function() {
@@ -1025,9 +1025,7 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
                 self.value = undefined;
             }
         });
-        this.$drop_down.button({
-            icons: {primary: "ui-icon-triangle-1-s"}, text: false
-        }).click(function() {
+        this.$drop_down.click(function() {
             if (self.$input.autocomplete("widget").is(":visible")) {
                 self.$input.autocomplete("close");
             } else {

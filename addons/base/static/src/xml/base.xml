@@ -527,10 +527,10 @@
 <t t-name="FieldMany2One">
     <div t-att-id="widget.element_id" style="padding-right: 16px;white-space: nowrap;">
         <input t-att-id="widget.element_id + '_input'" type="text" style="width: 100%;"/>
-        <span t-att-id="widget.element_id + '_drop_down'" type="button" class="ui_combo"
-            tabindex="-1" title="Show All Items"></span>
-        <img t-att-id="widget.name + '_open'" alt="Open" title="Create"
-            src="/base/static/src/img/iconset-d-drop.gif" class="m2o_open"/>
+        <span class="oe-m2m-drop-down-button" t-att-id="widget.element_id + '_drop_down'">
+            <img src="/base/static/src/img/down-arrow.png" /></span>
+        <span class="oe-m2m-cm-button" t-att-id="widget.name + '_open'">
+            <img src="/base/static/src/img/icons/gtk-edit.png"/></span>
         <div t-att-id="widget.cm_id" class="contextMenu" style="display:none"><ul>
             <li t-att-id="widget.cm_id + '_search'">Search</li>
             <li t-att-id="widget.cm_id + '_create'">Create</li>
