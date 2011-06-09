@@ -433,7 +433,7 @@ class task(osv.osv):
         'date_start': fields.datetime('Starting Date',select=True),
         'date_end': fields.datetime('Ending Date',select=True),
         'date_deadline': fields.date('Deadline',select=True),
-        'project_id': fields.many2one('project.project', 'Project', ondelete='cascade'),
+        'project_id': fields.many2one('project.project', 'Project', ondelete='set null'),
         'parent_ids': fields.many2many('project.task', 'project_task_parent_rel', 'task_id', 'parent_id', 'Parent Tasks'),
         'child_ids': fields.many2many('project.task', 'project_task_parent_rel', 'parent_id', 'task_id', 'Delegated Tasks'),
         'notes': fields.text('Notes'),
@@ -449,7 +449,7 @@ class task(osv.osv):
                 'project.task': (lambda self, cr, uid, ids, c={}: ids, ['work_ids', 'remaining_hours', 'planned_hours'], 10),
                 'project.task.work': (_get_task, ['hours'], 10),
             }),
-        'progress': fields.function(_hours_get, method=True, string='Progress (%)', multi='hours', group_operator="avg", help="Computed as: Time Spent / Total Time.",
+        'progress': fields.function(_hours_get, method=True, string='Progress (%)', multi='hours', group_operator="avg", help="If the task has a progress of 99.99% you should close the task if it's finished or reevaluate the time",
             store = {
                 'project.task': (lambda self, cr, uid, ids, c={}: ids, ['work_ids', 'remaining_hours', 'planned_hours','state'], 10),
                 'project.task.work': (_get_task, ['hours'], 10),

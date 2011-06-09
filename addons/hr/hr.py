@@ -92,8 +92,8 @@ class hr_job(osv.osv):
     _description = "Job Description"
     _columns = {
         'name': fields.char('Job Name', size=128, required=True, select=True),
-        'expected_employees': fields.function(_no_of_employee, method=True, string='Expected Employees', help='Required number of Employees in total for that job.', multi="no_of_employee"),
-        'no_of_employee': fields.function(_no_of_employee, method=True, string="No of Employee", help='Number of employee with that job.', multi="no_of_employee"),
+        'expected_employees': fields.function(_no_of_employee, method=True, string='Expected Employees', help='Required number of Employees in total for that job.', multi="no_of_employee", store=True),
+        'no_of_employee': fields.function(_no_of_employee, method=True, string="No of Employee", help='Number of employee with that job.', multi="no_of_employee", store=True),
         'no_of_recruitment': fields.float('Expected in Recruitment'),
         'employee_ids': fields.one2many('hr.employee', 'job_id', 'Employees'),
         'description': fields.text('Job Description'),

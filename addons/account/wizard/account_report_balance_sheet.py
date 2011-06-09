@@ -44,7 +44,7 @@ class account_bs_report(osv.osv_memory):
                                       help='This Account is used for transfering Profit/Loss ' \
                                            '(Profit: Amount will be added, Loss: Amount will be duducted), ' \
                                            'which is calculated from Profilt & Loss Report',
-                                      domain = [('type','=','payable')]),
+                                      domain = [('type','=','other')]),
     }
 
     _defaults={
