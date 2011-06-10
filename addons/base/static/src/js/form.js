@@ -1174,8 +1174,9 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
     },
     _change_int_value: function(value) {
         this.value = value;
-        if (this.value !== undefined &&
-            ((this.original_value ? this.original_value[0] : null) !== (this.value ? this.value[0] : null))) {
+        if (this.original_value === undefined || (this.value !== undefined &&
+            ((this.original_value ? this.original_value[0] : null) !== (this.value ? this.value[0] : null)))) {
+            this.original_value = undefined;
             this.on_ui_change();
         }
     },
