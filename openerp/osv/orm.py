@@ -1957,6 +1957,23 @@ class orm_template(object):
         """
         return self._name_search(cr, user, name, args, operator, context, limit)
 
+    def name_create(self, cr, uid, name, context=None):
+        """
+        Creates a new record by calling :py:meth:`~osv.osv.osv.create` with only one
+        value provided: the name of the new record (``_rec_name`` field).
+        The new record will also be initialized with any default values applicable
+        to this model, or provided through the context. The usual behavior of
+        :py:meth:`~osv.osv.osv.create` applies.
+        Similarly, this method may raise an exception if the model has multiple
+        required fields and some do not have default values.
+
+        :param name: name of the record to create
+
+        :return: the :py:meth:`~osv.osv.osv.name_get` value for the newly-created record.
+        """
+        rec_id = self.create(cr, uid, {self._rec_name: name}, context);
+        return self.name_get(cr, uid, [rec_id], context)[0]
+
     # private implementation of name_search, allows passing a dedicated user for the name_get part to
     # solve some access rights issues
     def _name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100, name_get_uid=None):
