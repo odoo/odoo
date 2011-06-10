@@ -1073,7 +1073,11 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
             if (self.$input.autocomplete("widget").is(":visible")) {
                 self.$input.autocomplete("close");
             } else {
-                self.$input.autocomplete("search");
+                if (self.value) {
+                    self.$input.autocomplete("search", "");
+                } else {
+                    self.$input.autocomplete("search");
+                }
                 self.$input.focus();
             }
         });
@@ -1108,7 +1112,8 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
                 e.preventDefault();
             },
             html: true,
-            close: anyoneLoosesFocus
+            close: anyoneLoosesFocus,
+            minLength: 0
         });
     },
     // autocomplete component content handling
