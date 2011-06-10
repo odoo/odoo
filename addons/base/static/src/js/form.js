@@ -979,6 +979,35 @@ openerp.base.form.FieldSelection = openerp.base.form.Field.extend({
     }
 });
 
+var proto = $.ui.autocomplete.prototype,
+    initSource = proto._initSource;
+
+function filter( array, term ) {
+    var matcher = new RegExp( $.ui.autocomplete.escapeRegex(term), "i" );
+    return $.grep( array, function(value) {
+        return matcher.test( $( "<div>" ).html( value.label || value.value || value ).text() );
+    });
+}
+
+$.extend( proto, {
+    _initSource: function() {
+        if ( this.options.html && $.isArray(this.options.source) ) {
+            this.source = function( request, response ) {
+                response( filter( this.options.source, request.term ) );
+            };
+        } else {
+            initSource.call( this );
+        }
+    },
+
+    _renderItem: function( ul, item) {
+        return $( "<li></li>" )
+            .data( "item.autocomplete", item )
+            .append( $( "<a></a>" )[ this.options.html ? "html" : "text" ]( item.label ) )
+            .appendTo( ul );
+    }
+});
+
 openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
     init: function(view, node) {
         this._super(view, node);
@@ -994,6 +1023,7 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
         this.$drop_down = this.$element.find(".oe-m2m-drop-down-button");
         this.$menu_btn = this.$element.find(".oe-m2m-cm-button");
         
+        // context menu
         var bindings = {};
         bindings[this.cm_id + "_search"] = function() {
             self._search_create_popup("search");
@@ -1018,10 +1048,11 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
         var cmenu = this.$menu_btn.contextMenu(this.cm_id, {'leftClickToo': true,
             bindings: bindings});
         
-        this.$input.change(function() {
+        // some behavior for input
+        this.$input.keyup(function() {
             if (self.$input.val() === "") {
                 self.value = null;
-            } else {
+            } else if (self.value === null || (self.value && self.$input.val() !== self.value[1])) {
                 self.value = undefined;
             }
         });
@@ -1034,6 +1065,7 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
             }
         });
         
+        // autocomplete
         this.$input.autocomplete({
             source: function(req, resp) { self.get_search_result(req, resp); },
             select: function(event, ui) {
@@ -1045,9 +1077,11 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
                     item.action();
                     return false;
                 }
-            }
+            },
+            html: true
         });
     },
+    // autocomplete component content handling
     get_search_result: function(request, response) {
         var search_val = request.term;
         var self = this;
@@ -1055,27 +1089,34 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
         var dataset = new openerp.base.DataSetStatic(this.session, this.field.relation, []);
         
         dataset.name_search(search_val, this.limit + 1, function(data) {
+            // possible selections for the m2o
             var values = _.map(data.result, function(x) {
-                return {label: x[1], id:x[0]};
+                return {label: $('<span />').text(x[1]).html(), id:x[0]};
             });
             
+            // additional selections, actions that open popup
             if (values.length > self.limit) {
                 values = values.slice(0, self.limit);
-                values.push({label: "   More...", action: function() {
+                values.push({label: "<em>   More...</em>", action: function() {
                     dataset.name_search(search_val, false, function(data) {
                         self._search_create_popup("search", data.result);
                     });
                 }});
             }
-            values.push({label: '   Create "' + search_val + '"', action: function() {
+            if (self.value === undefined) {
+                values.push({label: '<em>   Create "<strong>' +
+                        $('<span />').text(search_val).html() + '</strong>"</em>', action: function() {
+                    self._search_create_popup("form");
+                }});
+            }
+            values.push({label: "<em>   Create...</em>", action: function() {
                 self._search_create_popup("form");
             }});
-            values.push({label: "   Create...", action: function() {
-                self._search_create_popup("form");
-            }});
+            
             response(values);
         });
     },
+    // all search/create popup handling
     _search_create_popup: function(view, ids) {
         var dataset = new openerp.base.DataSetStatic(this.session, this.field.relation, []);
         var self = this;
