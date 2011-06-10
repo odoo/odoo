@@ -64,9 +64,13 @@ class google_import(import_framework):
         }
         
     def get_data(self, table):
-        if table == "Contact" or table == "Address":
+        if table == "Contact":
             val = {
                 self.TABLE_CONTACT: self.get_contact(),
+            }
+        if table == "Address":
+            val = {
+                self.TABLE_ADDRESS: self.get_contact(),
             }
         elif table == "Events":
             val = {
@@ -305,23 +309,6 @@ class google_import(import_framework):
             contact = next and gclient.GetContactsFeed(next.href) or None     
         return datas
      
-    def get_partner_address1(self, val):
-        partner_id = False
-        address_pool = self.obj.pool.get('res.partner.address')
-        company_pool = self.obj.pool.get('res.company')
-        if 'company' in val:
-            cids = company_pool.search(self.cr, self.uid, [('name', '=', val.get('company'))])
-            if cids:
-                records = company_pool.browse(self.cr, self.uid, cids)
-                for rec in records:
-                    if rec.partner_id:
-                        partner_id = rec.partner_id
-            return partner_id
-        contact = self.xml_id_exist(self.TABLE_PARTNER, val.get('id'))
-        if contact:
-            partner_id = self.get_mapped_id(self.TABLE_PARTNER, val.get('id'))
-        return partner_id
-    
     def get_partner_address(self,val):
         partner_id = False
         address_pool = self.obj.pool.get('res.partner.address')
