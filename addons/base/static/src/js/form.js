@@ -1171,9 +1171,10 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
         }
     },
     get_value: function() {
-        return this.value !== undefined ?
-            (this.value !== null ? this.value[0] : null) : undefined;
-    },
+        if (this.value === undefined)
+            throw "theorically unreachable state";
+        return this.value ? this.value[0] : null;
+    }
     
     //TODO niv: add validation
 });
