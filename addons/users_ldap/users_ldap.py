@@ -45,7 +45,7 @@ class CompanyLDAP(osv.osv):
             help="Model used for user creation"),
         'create_user': fields.boolean('Create user',
             help="Create the user if not in database"),
-        'anonymous': fields.boolean('Anonymous bind'),
+        'anonymous': fields.boolean('Anonymous connection'),
     }
     _defaults = {
         'ldap_server': lambda *a: '127.0.0.1',
