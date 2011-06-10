@@ -21,6 +21,7 @@
 from osv import fields, osv
 import pooler
 import pytz
+from tools.translate import _
 
 class base_setup_installer(osv.osv_memory):
     _name = 'base.setup.installer'
@@ -269,7 +270,7 @@ class specify_partner_terminology(osv.osv_memory):
         trans_obj = self.pool.get('ir.translation')
         user_obj = self.pool.get('res.users')
         context_lang = user_obj.browse(cr, uid, uid, context=context).context_lang
-        existing_trans_ids = trans_obj.search(cr, uid, [('name','=',name), ('lang','=',context_lang), ('type','=',type), ('src','=',src)])
+        existing_trans_ids = trans_obj.search(cr, uid, [('name','=',name), ('lang','=',context_lang), ('type','=',type), ('src','=',src), ('res_id','=',res_id)])
         if existing_trans_ids:
             trans_obj.write(cr, uid, existing_trans_ids, {'value': value}, context=context)
         else:
@@ -280,7 +281,7 @@ class specify_partner_terminology(osv.osv_memory):
         def _case_insensitive_replace(ref_string, src, value):
             import re
             pattern = re.compile(src, re.IGNORECASE)
-            return pattern.sub(value, ref_string)
+            return pattern.sub(_(value), _(ref_string))
         trans_obj = self.pool.get('ir.translation')
         fields_obj = self.pool.get('ir.model.fields')
         menu_obj = self.pool.get('ir.ui.menu')
