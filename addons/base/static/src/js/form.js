@@ -1143,12 +1143,12 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
             if (self.value === undefined) {
                 values.push({label: '<em>   Create "<strong>' +
                         $('<span />').text(search_val).html() + '</strong>"</em>', action: function() {
-                    this._change_int_value(null);
+                    self._change_int_value(null);
                     self._search_create_popup("form");
                 }});
             }
             values.push({label: "<em>   Create and Edit...</em>", action: function() {
-                this._change_int_value(null);
+                self._change_int_value(null);
                 self._search_create_popup("form");
             }});
             
@@ -1163,7 +1163,7 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
         pop.select_element(self.field.relation, ids ? _.map(ids, function(x) {return x[0]}) : undefined, view);
         pop.on_select_element.add(function(element_id) {
             dataset.call("name_get", [element_id], function(data) {
-                this._change_int_ext_value(data.result);
+                self._change_int_ext_value(data.result[0]);
                 pop.stop();
             });
         });
