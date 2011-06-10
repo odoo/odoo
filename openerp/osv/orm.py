@@ -572,6 +572,9 @@ class orm_template(object):
         raise_on_invalid_object_name(self._name)
         self._field_create(cr, context=context)
 
+    def _auto_end(self, cr, context=None):
+        pass
+
     #
     # Goal: try to apply inheritance at the instanciation level and
     #       put objects in the pool var
@@ -2544,6 +2547,7 @@ class orm(orm_template):
         - add database indices to match _columns,
 
         """
+        self._foreign_keys = []
         raise_on_invalid_object_name(self._name)
         if context is None:
             context = {}
@@ -2655,7 +2659,9 @@ class orm(orm_template):
                             raise except_orm('Programming Error', ('There is no reference available for %s') % (f._obj,))
                         ref = self.pool.get(f._obj)._table
 #                        ref = f._obj.replace('.', '_')
-                        cr.execute('CREATE TABLE "%s" ("%s" INTEGER NOT NULL REFERENCES "%s" ON DELETE CASCADE, "%s" INTEGER NOT NULL REFERENCES "%s" ON DELETE CASCADE, UNIQUE("%s","%s")) WITH OIDS' % (f._rel, f._id1, self._table, f._id2, ref, f._id1, f._id2))
+                        cr.execute('CREATE TABLE "%s" ("%s" INTEGER NOT NULL, "%s" INTEGER NOT NULL, UNIQUE("%s","%s")) WITH OIDS' % (f._rel, f._id1, f._id2, f._id1, f._id2))
+                        self._foreign_keys.append((f._rel, f._id1, self._table, 'CASCADE'))
+                        self._foreign_keys.append((f._rel, f._id2, ref, 'CASCADE'))
                         cr.execute('CREATE INDEX "%s_%s_index" ON "%s" ("%s")' % (f._rel, f._id1, f._rel, f._id1))
                         cr.execute('CREATE INDEX "%s_%s_index" ON "%s" ("%s")' % (f._rel, f._id2, f._rel, f._id2))
                         cr.execute("COMMENT ON TABLE \"%s\" IS 'RELATION BETWEEN %s AND %s'" % (f._rel, self._table, ref))
@@ -2822,7 +2828,7 @@ class orm(orm_template):
                                     if res2:
                                         if res2[0]['confdeltype'] != POSTGRES_CONFDELTYPES.get(f.ondelete.upper(), 'a'):
                                             cr.execute('ALTER TABLE "' + self._table + '" DROP CONSTRAINT "' + res2[0]['conname'] + '"')
-                                            cr.execute('ALTER TABLE "' + self._table + '" ADD FOREIGN KEY ("' + k + '") REFERENCES "' + ref + '" ON DELETE ' + f.ondelete)
+                                            self._foreign_keys.append((self._table, k, ref, f.ondelete))
                                             cr.commit()
                                             self.__schema.debug("Table '%s': column '%s': XXX",
                                                 self._table, k)
@@ -2863,7 +2869,7 @@ class orm(orm_template):
 #                                ref = f._obj.replace('.', '_')
                                 # ir_actions is inherited so foreign key doesn't work on it
                                 if ref != 'ir_actions':
-                                    cr.execute('ALTER TABLE "%s" ADD FOREIGN KEY ("%s") REFERENCES "%s" ON DELETE %s' % (self._table, k, ref, f.ondelete))
+                                    self._foreign_keys.append((self._table, k, ref, f.ondelete))
                                     self.__schema.debug("Table '%s': added foreign key '%s' with definition=REFERENCES \"%s\" ON DELETE %s",
                                         self._table, k, ref, f.ondelete)
                             if f.select:
@@ -2949,6 +2955,11 @@ class orm(orm_template):
             self._parent_store_compute(cr)
             cr.commit()
         return todo_end
+
+    def _auto_end(self, cr, context=None):
+        for t, k, r, d in self._foreign_keys:
+            cr.execute('ALTER TABLE "%s" ADD FOREIGN KEY ("%s") REFERENCES "%s" ON DELETE %s' % (t, k, r, d))
+        cr.commit()
 
     @classmethod
     def createInstance(cls, pool, cr):
