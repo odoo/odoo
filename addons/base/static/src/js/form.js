@@ -1024,8 +1024,8 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
         this._super();
         var self = this;
         this.$input = this.$element.find("input");
-        this.$drop_down = this.$element.find(".oe-m2m-drop-down-button");
-        this.$menu_btn = this.$element.find(".oe-m2m-cm-button");
+        this.$drop_down = this.$element.find(".oe-m2o-drop-down-button");
+        this.$menu_btn = this.$element.find(".oe-m2o-cm-button");
         
         // context menu
         var bindings = {};
@@ -1053,9 +1053,9 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
             bindings: bindings, itemStyle: {"color": ""},
             onContextMenu: function() {
                 if(self.value) {
-                    $("#" + self.cm_id + "_open").removeClass("oe-m2m-disabled-cm");
+                    $("#" + self.cm_id + "_open").removeClass("oe-m2o-disabled-cm");
                 } else {
-                    $("#" + self.cm_id + "_open").addClass("oe-m2m-disabled-cm");
+                    $("#" + self.cm_id + "_open").addClass("oe-m2o-disabled-cm");
                 }
                 return true;
             }
@@ -1064,9 +1064,9 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
         // some behavior for input
         this.$input.keyup(function() {
             if (self.$input.val() === "") {
-                self.value = null;
+                self._change_int_value(null);
             } else if (self.value === null || (self.value && self.$input.val() !== self.value[1])) {
-                self.value = undefined;
+                self._change_int_value(undefined);
             }
         });
         this.$drop_down.click(function() {
@@ -1086,11 +1086,10 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
                     !self.$input.autocomplete("widget").is(":visible") &&
                     !self.value) {
                 if(self.value === undefined && self.last_search.length > 0) {
-                    self.value = self.last_search[0];
+                    self._change_int_ext_value(self.last_search[0]);
                 } else {
-                    self.value = null;
+                    self._change_int_ext_value(null);
                 }
-                self.$input.val(self.value ? self.value[1] : "");
             }
         }
         this.$input.focusout(anyoneLoosesFocus);
@@ -1101,9 +1100,9 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
             select: function(event, ui) {
                 var item = ui.item;
                 if (item.id) {
-                    self.value = [item.id, item.name];
+                    self._change_int_value([item.id, item.name]);
                 } else if (item.action) {
-                    self.value = undefined;
+                    self._change_int_value(undefined);
                     item.action();
                     return false;
                 }
@@ -1136,7 +1135,7 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
                 values = values.slice(0, self.limit);
                 values.push({label: "<em>   Search More...</em>", action: function() {
                     dataset.name_search(search_val, false, function(data) {
-                        self.value = null;
+                        self._change_int_value(null);
                         self._search_create_popup("search", data.result);
                     });
                 }});
@@ -1144,12 +1143,12 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
             if (self.value === undefined) {
                 values.push({label: '<em>   Create "<strong>' +
                         $('<span />').text(search_val).html() + '</strong>"</em>', action: function() {
-                    self.value = null;
+                    this._change_int_value(null);
                     self._search_create_popup("form");
                 }});
             }
             values.push({label: "<em>   Create and Edit...</em>", action: function() {
-                self.value = null;
+                this._change_int_value(null);
                 self._search_create_popup("form");
             }});
             
@@ -1164,25 +1163,39 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
         pop.select_element(self.field.relation, ids ? _.map(ids, function(x) {return x[0]}) : undefined, view);
         pop.on_select_element.add(function(element_id) {
             dataset.call("name_get", [element_id], function(data) {
-                self.value = data.result[0];
-                self.$input.val(self.value[1]);
+                this._change_int_ext_value(data.result);
                 pop.stop();
             });
         });
     },
-    set_value: function(value) {
-        if (value != false) {
-            this.value = value;
-            this.$input.val(this.value[1]);
+    _change_int_ext_value: function(value) {
+        this._change_int_value(value);
+        this.$input.val(this.value ? this.value[1] : "");
+    },
+    _change_int_value: function(value) {
+        this.value = value;
+        if (this.value !== undefined &&
+            ((this.original_value ? this.original_value[0] : null) !== (this.value ? this.value[0] : null))) {
+            this.on_ui_change();
         }
+    },
+    set_value_from_ui: function() {},
+    set_value: function(value) {
+        this._super(value);
+        this.original_value = value;
+        this._change_int_ext_value(value);
     },
     get_value: function() {
         if (this.value === undefined)
             throw "theorically unreachable state";
-        return this.value ? this.value[0] : null;
+        return this.value ? this.value[0] : false;
+    },
+    validate: function() {
+        this.invalid = false;
+        if (this.value === null) {
+            this.invalid = this.required;
+        }
     }
-    
-    //TODO niv: add validation
 });
 
 openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
