@@ -525,15 +525,17 @@
     </select>
 </t>
 <t t-name="FieldMany2One">
-    <div style="padding-right: 16px;white-space: nowrap;">
-        <input type="text"
-            t-att-name="widget.name"
-            t-att-id="widget.element_id + '_field'"
-            t-att-class="'field_' + widget.type"
-            t-att-type="widget.type"
-            style="width: 100%;"/>
-        <span type='button' t-att-class="'ui_combo'" tabindex="'-1'" title="'Show All Items'"></span>
-        <img t-att-id="widget.name + '_open'" t-att-alt="'Open'" t-att-title="'Create'" t-att-src="'/base/static/src/img/iconset-d-drop.gif'" t-att-class="'m2o_open'"/>
+    <div t-att-id="widget.element_id" style="padding-right: 16px;white-space: nowrap;">
+        <input t-att-id="widget.element_id + '_input'" type="text" style="width: 100%;"/>
+        <span class="oe-m2m-drop-down-button" t-att-id="widget.element_id + '_drop_down'">
+            <img src="/base/static/src/img/down-arrow.png" /></span>
+        <span class="oe-m2m-cm-button" t-att-id="widget.name + '_open'">
+            <img src="/base/static/src/img/icons/gtk-edit.png"/></span>
+        <div t-att-id="widget.cm_id" class="contextMenu" style="display:none"><ul>
+            <li t-att-id="widget.cm_id + '_search'">Search</li>
+            <li t-att-id="widget.cm_id + '_create'">Create New</li>
+            <li t-att-id="widget.cm_id + '_open'" style="color:grey">Open</li>
+        </ul></div>
     </div>
 </t>
 <t t-name="FieldOne2Many">

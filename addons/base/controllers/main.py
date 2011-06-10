@@ -430,9 +430,9 @@ class DataSet(openerpweb.Controller):
         return Model.unlink(ids)
 
     @openerpweb.jsonrequest
-    def call(self, req, model, method, ids, args):
+    def call(self, req, model, method, args):
         m = req.session.model(model)
-        r = getattr(m, method)(ids, *args)
+        r = getattr(m, method)(*args)
         return {'result': r}
 
     @openerpweb.jsonrequest
@@ -447,9 +447,9 @@ class DataSet(openerpweb.Controller):
         return {'result': r}
     
     @openerpweb.jsonrequest
-    def name_search(self, req, model, search_str, domain=[], context={}):
+    def name_search(self, req, model, search_str, domain=[], context={}, limit=False):
         m = req.session.model(model)
-        r = m.name_search(search_str+'%', domain, '=ilike', context)
+        r = m.name_search(search_str, domain, 'ilike', context, limit)
         return {'result': r}
 
 class DataGroup(openerpweb.Controller):
