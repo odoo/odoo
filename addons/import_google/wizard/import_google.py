@@ -275,6 +275,7 @@ class google_import(import_framework):
         datas = [] 
         while contact:      
             for entry in contact.entry:
+               
                 data = {}
                 data['id'] = entry.id.text
                 name = tools.ustr(entry.title.text)
@@ -298,32 +299,59 @@ class google_import(import_framework):
                         if phone.rel == gdata.contacts.PHONE_MOBILE:
                             data['mobile'] = phone.text
                         if phone.rel == gdata.contacts.PHONE_WORK_FAX:
-                            data['fax'] = phone.text  
+                            data['fax'] = phone.text 
                 datas.append(data)        
             next = contact.GetNextLink()
             contact = next and gclient.GetContactsFeed(next.href) or None     
         return datas
-    
+     
+    def get_partner_address1(self, val):
+        partner_id = False
+        address_pool = self.obj.pool.get('res.partner.address')
+        company_pool = self.obj.pool.get('res.company')
+        if 'company' in val:
+            cids = company_pool.search(self.cr, self.uid, [('name', '=', val.get('company'))])
+            if cids:
+                records = company_pool.browse(self.cr, self.uid, cids)
+                for rec in records:
+                    if rec.partner_id:
+                        partner_id = rec.partner_id
+            return partner_id
+        contact = self.xml_id_exist(self.TABLE_PARTNER, val.get('id'))
+        if contact:
+            partner_id = self.get_mapped_id(self.TABLE_PARTNER, val.get('id'))
+        return partner_id
     
     def get_partner_address(self,val):
-            field_map = {
-                'name': 'name',
-                'type': 'Type',
-                'city': 'city',
-                'phone': 'phone',
-                'mobile': 'mobile',
-                'email': 'email',
-                'fax': 'fax',
-            }
-            val.update({'Type':'contact'})
-            val.update({'id_new': val['id']+'address_contact' })
-            return self.import_object_mapping(field_map , val, 'res.partner.address', self.context.get('table')[0], val['id_new'], self.DO_NOT_FIND_DOMAIN)
+        partner_id = False
+        address_pool = self.obj.pool.get('res.partner.address')
+        company_pool = self.obj.pool.get('res.company')
+        if 'company' in val:
+            cids = company_pool.search(self.cr, self.uid, [('name', '=', val.get('company'))])
+            if cids:
+                records = company_pool.browse(self.cr, self.uid, cids)
+                for rec in records:
+                    if rec.partner_id:
+                        partner_id = rec.partner_id
+        field_map = {
+            'name': 'name',
+            'type': 'Type',
+            'city': 'city',
+            'phone': 'phone',
+            'mobile': 'mobile',
+            'email': 'email',
+            'fax': 'fax',
+        }
+        val.update({'Type':'contact'})
+        val.update({'id_new': val['id']+'address_contact' })
+        return self.import_object_mapping(field_map , val, 'res.partner.address', self.context.get('table')[0], val['id_new'], self.DO_NOT_FIND_DOMAIN)
         
     def get_contact_mapping(self):
         return {
             'model': 'res.partner',
             'dependencies': [],
             'map': {
+                'id':'id',
                 'name': 'name',
                 'customer': 'customer',
                 'supplier': 'supplier',
@@ -336,13 +364,15 @@ class google_import(import_framework):
             'model': 'res.partner.address',
             'dependencies': [],
             'map': {
-               'name': 'name',
+                'id':'id',
+                'name': 'name',
                 'city': 'city',
                 'phone': 'phone',
                 'mobile': 'mobile',
                 'email': 'email',
-                'fax': 'fax'
+                'fax': 'fax',
+                'function': 'function'
                 }
         
         }
-        
+
