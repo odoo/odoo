@@ -1078,6 +1078,9 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
                     return false;
                 }
             },
+            focus: function(e, ui) {
+                e.preventDefault();
+            },
             html: true
         });
     },
@@ -1097,7 +1100,7 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
             // additional selections, actions that open popup
             if (values.length > self.limit) {
                 values = values.slice(0, self.limit);
-                values.push({label: "<em>   More...</em>", action: function() {
+                values.push({label: "<em>   Search More...</em>", action: function() {
                     dataset.name_search(search_val, false, function(data) {
                         self._search_create_popup("search", data.result);
                     });
@@ -1109,7 +1112,7 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
                     self._search_create_popup("form");
                 }});
             }
-            values.push({label: "<em>   Create...</em>", action: function() {
+            values.push({label: "<em>   Create and Edit...</em>", action: function() {
                 self._search_create_popup("form");
             }});
             
