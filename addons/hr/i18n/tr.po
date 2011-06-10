@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-05-09 10:18+0000\n"
-"PO-Revision-Date: 2011-06-03 09:08+0000\n"
+"PO-Revision-Date: 2011-06-09 14:23+0000\n"
 "Last-Translator: Ayhan KIZILTAN <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-06-04 06:25+0000\n"
-"X-Generator: Launchpad (build 12959)\n"
+"X-Launchpad-Export-Date: 2011-06-10 05:38+0000\n"
+"X-Generator: Launchpad (build 13168)\n"
 
 #. module: hr
 #: model:process.node,name:hr.process_node_openerpuser0
@@ -66,6 +66,11 @@ msgid ""
 "will be used in the recruitment process to evaluate the applicants for this "
 "job position."
 msgstr ""
+"İş Durumları, işlerin ve gereksinimlerinin tanımlanması için kullanılır. Her "
+"iş durumunda kullanılan personel sayısını ve gelecekte kaç personel "
+"beklediğinizin kayıtlarını tutabilirsiniz. Bu iş durumu için başvuranların "
+"değerlendirilmesi için seçme işleminde kullanmak üzere bir anket de "
+"ekleyebilirsiniz."
 
 #. module: hr
 #: view:hr.employee:0
@@ -122,7 +127,7 @@ msgstr "Tatiller"
 #. module: hr
 #: help:hr.installer,hr_holidays:0
 msgid "Tracks employee leaves, allocation requests and planning."
-msgstr ""
+msgstr "Personel izinlerini, tahsis istekleri ve planlamalrı izler"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_employee_marital_status
@@ -135,6 +140,8 @@ msgid ""
 "Partner that is related to the current employee. Accounting transaction will "
 "be written on this partner belongs to employee."
 msgstr ""
+"Geçerli personelle ilgili Paydaştır. Muhasebe işlemi personelle ilişkili bu "
+"paydaşa yazılacaktır."
 
 #. module: hr
 #: model:process.transition,name:hr.process_transition_employeeuser0
@@ -165,7 +172,7 @@ msgstr "Evli"
 #: constraint:hr.employee:0
 msgid ""
 "Error ! You cannot select a department for which the employee is the manager."
-msgstr ""
+msgstr "Hata ! Personelin müdür olduğu bir bölümü seçemezsiniz."
 
 #. module: hr
 #: help:hr.employee,passport_id:0
@@ -179,6 +186,9 @@ msgid ""
 "to employees by departments: expenses and timesheet validation, leaves "
 "management, recruitments, etc."
 msgstr ""
+"Firmanızın Bölüm Yapısı, bölümlere göre personelle ilgili belgelerin "
+"yönetilmesinde kullanılır: giderler, zaman çizelgesi onayları, izin "
+"yönetimi, seçme işlemlemleri, v.b"
 
 #. module: hr
 #: view:hr.employee:0
@@ -196,12 +206,14 @@ msgid ""
 "The Related user field on the Employee form allows to link the OpenERP user "
 "(and her rights) to the employee."
 msgstr ""
+"Personel formundaki İlişkili Kullanıcı alanı OpenERP kullanıcısının "
+"personele bağlanmasını sağlar."
 
 #. module: hr
 #: view:hr.job:0
 #: selection:hr.job,state:0
 msgid "In Recruitement"
-msgstr ""
+msgstr "Seçim durumunda"
 
 #. module: hr
 #: field:hr.employee,identification_id:0
@@ -223,11 +235,13 @@ msgstr "Kadın"
 msgid ""
 "Tracks and helps employees encode and validate timesheets and attendances."
 msgstr ""
+"Personelin zaman çizelgeleri ve devamlılıkları onaylamasını ve "
+"şifrelendirmesini sağlar."
 
 #. module: hr
 #: field:hr.installer,hr_evaluation:0
 msgid "Periodic Evaluations"
-msgstr ""
+msgstr "Süreli Değerlendirmeler"
 
 #. module: hr
 #: field:hr.installer,hr_timesheet_sheet:0
@@ -308,7 +322,7 @@ msgstr "Raporlama"
 #. module: hr
 #: model:ir.model,name:hr.model_ir_actions_act_window
 msgid "ir.actions.act_window"
-msgstr ""
+msgstr "ir.actions.act_window"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_board_hr
@@ -339,6 +353,8 @@ msgid ""
 "You can enhance the base HR Application by installing few HR-related "
 "functionalities."
 msgstr ""
+"Bir kaç İK-ilişkili işlevsellik kurarak temel İK Uygulamasını "
+"geliştirebilirsiniz."
 
 #. module: hr
 #: view:hr.employee:0
@@ -348,7 +364,7 @@ msgstr "Kategoriler"
 #. module: hr
 #: field:hr.job,expected_employees:0
 msgid "Expected Employees"
-msgstr ""
+msgstr "Beklenen Personel"
 
 #. module: hr
 #: model:hr.employee.marital.status,name:hr.hr_employee_marital_status_divorced
@@ -462,7 +478,7 @@ msgstr ""
 #. module: hr
 #: help:hr.employee,bank_account_id:0
 msgid "Employee bank salary account"
-msgstr "Personel banka maaş hesabı"
+msgstr "Personel maaş banka hesabı"
 
 #. module: hr
 #: field:hr.department,note:0
@@ -487,7 +503,7 @@ msgstr "İş Adresi"
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_board_hr_manager
 msgid "HR Manager Dashboard"
-msgstr "İK Yönetim Kontrol Paneli"
+msgstr "İK Yönetici Kontrol Paneli"
 
 #. module: hr
 #: view:hr.employee:0
@@ -528,7 +544,7 @@ msgstr "Etkin"
 #. module: hr
 #: constraint:hr.employee:0
 msgid "Error ! You cannot create recursive Hierarchy of Employees."
-msgstr "Hata ! Yinelemeli Personel SIradizini yaratamazsınız."
+msgstr "Hata ! Yinelemeli Personel Sıradizini yaratamazsınız."
 
 #. module: hr
 #: field:hr.employee,bank_account_id:0
@@ -557,12 +573,12 @@ msgstr ""
 msgid ""
 "In the Employee form, there are different kind of information like Contact "
 "information."
-msgstr ""
+msgstr "Personel formunda sözleşme bilgileri gibi farklı bilgiler vardır."
 
 #. module: hr
 #: help:hr.job,expected_employees:0
 msgid "Required number of Employees in total for that job."
-msgstr ""
+msgstr "O iş için gerekli toplam Personel sayısı"
 
 #. module: hr
 #: selection:hr.job,state:0
@@ -572,7 +588,7 @@ msgstr "Eski"
 #. module: hr
 #: field:hr.employee.marital.status,description:0
 msgid "Status Description"
-msgstr ""
+msgstr "Durum Açıklaması"
 
 #. module: hr
 #: sql_constraint:res.users:0
@@ -597,12 +613,12 @@ msgstr "Medeni Durumu"
 #. module: hr
 #: help:hr.installer,hr_recruitment:0
 msgid "Helps you manage and streamline your recruitment process."
-msgstr ""
+msgstr "Eleman seçme işleminizi yönetmenizi ve yürütmenizi sağlar."
 
 #. module: hr
 #: model:process.node,note:hr.process_node_employee0
 msgid "Employee form and structure"
-msgstr ""
+msgstr "Personel formu ve yapısı"
 
 #. module: hr
 #: field:hr.employee,photo:0
@@ -678,7 +694,7 @@ msgstr "Açıklama"
 #. module: hr
 #: help:hr.installer,hr_contract:0
 msgid "Extends employee profiles to help manage their contracts."
-msgstr ""
+msgstr "Sözleşmelerinin yönetimi için personel profillerini açar."
 
 #. module: hr
 #: field:hr.installer,hr_payroll:0
@@ -699,12 +715,12 @@ msgstr "İş Adı"
 #: view:hr.job:0
 #: selection:hr.job,state:0
 msgid "In Position"
-msgstr "Durumu"
+msgstr "Durumunda"
 
 #. module: hr
 #: field:hr.employee,mobile_phone:0
 msgid "Mobile"
-msgstr "Gsm No"
+msgstr "Cep"
 
 #. module: hr
 #: view:hr.department:0
@@ -726,7 +742,7 @@ msgstr "Notlar"
 #. module: hr
 #: model:ir.model,name:hr.model_hr_installer
 msgid "hr.installer"
-msgstr ""
+msgstr "ik.kurucu"
 
 #. module: hr
 #: view:board.board:0
@@ -795,12 +811,12 @@ msgstr "İş Durumları"
 #: view:hr.employee:0
 #: field:hr.employee,coach_id:0
 msgid "Coach"
-msgstr ""
+msgstr "Çalıştırıcı"
 
 #. module: hr
 #: view:hr.installer:0
 msgid "Configure Your Human Resources Application"
-msgstr ""
+msgstr "İnsan Kaynakları Uygulamanızı yapılandırın"
 
 #. module: hr
 #: field:hr.installer,hr_expense:0
@@ -822,7 +838,7 @@ msgstr "Dul"
 #. module: hr
 #: help:hr.installer,hr_payroll_account:0
 msgid "Generic Payroll system Integrated with Accountings."
-msgstr ""
+msgstr "Muhasebe ile bütünleşik Genel Bordro sistemi."
 
 #. module: hr
 #: field:hr.employee,child_ids:0
