@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 import glob, os
 import pprint
-from xml.etree import ElementTree
-from cStringIO import StringIO
 
 import simplejson
 
