@@ -313,12 +313,12 @@ openerp.base.DataSet =  openerp.base.Controller.extend( /** @lends openerp.base.
         // to implement in children
         this.notification.notify("Unlink", ids);
     },
-    call: function (method, args, callback) {
+    call: function (method, args, callback, error_callback) {
         return this.rpc('/base/dataset/call', {
             model: this.model,
             method: method,
             args: args || []
-        }, callback);
+        }, callback, error_callback);
     },
     name_search: function (search_str, limit, callback) {
         search_str = search_str || '';
