@@ -1113,7 +1113,8 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
             },
             html: true,
             close: anyoneLoosesFocus,
-            minLength: 0
+            minLength: 0,
+            delay: 0
         });
     },
     // autocomplete component content handling
