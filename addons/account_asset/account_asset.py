@@ -113,7 +113,7 @@ class account_asset_asset(osv.osv):
                 depreciation_lin_obj.unlink(cr, uid, old_depreciation_line_ids, context=context)
             
             amount_to_depr = residual_amount = asset.value_residual
-            add_months = asset.method_period * len(asset.account_move_line_ids)
+            add_months =  len(asset.account_move_line_ids) and asset.method_period * len(asset.account_move_line_ids) or 0
             depreciation_date = datetime.strptime(self._get_last_depreciation_date(cr, uid, [asset.id], context)[asset.id], '%Y-%m-%d')
             depreciation_date = self.calculate_date(depreciation_date, add_months)
             total_days = (depreciation_date.year % 4) and 365 or 366
