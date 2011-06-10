@@ -19,26 +19,19 @@
 #
 ##############################################################################
 
+from osv import osv, fields
 
-{
-    'name': 'Google Contact Import',
-    'version': '1.0',
-    'category': 'Generic Modules/Others',
-    'description': """The module adds google contact in partner address""",
-    'author': 'OpenERP SA',
-    'website': 'http://www.openerp.com',
-    'depends': ['base','google_base_account'],
-    'init_xml': [],
-    'update_xml': [
-                  'wizard/google_contact_import_view.xml'
-                   ],
-    'demo_xml': [],
-    'test': [
-             'test/test_sync_google_contact_import_partner.yml',
-             'test/test_sync_google_contact_import_address.yml',
-    ],
-    'installable': True,
-    'active': False,
-    'certificate': '',
-}
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+class crm_meeting(osv.osv):
+    _inherit = "crm.meeting"
+
+crm_meeting()
+
+class crm_case_categ(osv.osv):
+    """ Category of Case """
+    _inherit = "crm.case.categ"
+    _columns = {
+        'user_id': fields.many2one('res.users', 'User')
+    }
+crm_case_categ()
+
+# vim:expandtab:smartindent:toabstop=4:softtabstop=4:shiftwidth=4:
