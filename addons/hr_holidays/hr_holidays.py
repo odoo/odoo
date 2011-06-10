@@ -80,7 +80,7 @@ class hr_holidays_status(osv.osv):
         'active': fields.boolean('Active', help="If the active field is set to false, it will allow you to hide the leave type without removing it."),
         'max_leaves': fields.function(_user_left_days, method=True, string='Maximum Allowed', help='This value is given by the sum of all holidays requests with a positive value.', multi='user_left_days'),
         'leaves_taken': fields.function(_user_left_days, method=True, string='Leaves Already Taken', help='This value is given by the sum of all holidays requests with a negative value.', multi='user_left_days'),
-        'remaining_leaves': fields.function(_user_left_days, method=True, string='Remaining Leaves', help='Maximum Leaves Allowed - Leaves Already Taken', multi='user_left_days'),
+        'remaining_leaves': fields.function(_user_left_days, method=True, string='Remaining Legal Leaves', help='Maximum Leaves Allowed - Leaves Already Taken', multi='user_left_days'),
         'double_validation': fields.boolean('Apply Double Validation', help="If its True then its Allocation/Request have to be validated by second validator")
     }
     _defaults = {
@@ -334,7 +334,7 @@ class hr_employee(osv.osv):
         # Find for holidays status
         status_ids = type_obj.search(cr, uid, [('limit', '=', False)], context=context)
         if len(status_ids) != 1 :
-            raise osv.except_osv(('Warning !'),_("To use this feature, you must have only one leave type without the option 'Allow to Override Limit' set. (%s Found).") % (len(status_ids)))
+            raise osv.except_osv(_('Warning !'),_("To use this feature, you must have only one leave type without the option 'Allow to Override Limit' set. (%s Found).") % (len(status_ids)))
         status_id = status_ids and status_ids[0] or False
         if not status_id:
             return False
@@ -349,6 +349,10 @@ class hr_employee(osv.osv):
         return True
 
    def _get_remaining_days(self, cr, uid, ids, name, args, context=None):
+        type_obj = self.pool.get('hr.holidays.status')
+        status_ids = type_obj.search(cr, uid, [('limit', '=', False)], context=context)
+        if len(status_ids) != 1 :
+            raise osv.except_osv(_('Warning !'),_("You should have only one leave type without the option 'Allow to Override Limit' set. (%s Found).") % (len(status_ids)))
         cr.execute("SELECT sum(h.number_of_days_temp) as days, h.employee_id from hr_holidays h join hr_holidays_status s on (s.id=h.holiday_status_id) where h.type='add' and h.state='validate' and s.limit=False group by h.employee_id")
         res = cr.dictfetchall()
         remaining = {}
@@ -361,7 +365,7 @@ class hr_employee(osv.osv):
 
 
    _columns = {
-        'remaining_leaves': fields.function(_get_remaining_days, method=True, string='Remaining Leaves', fnct_inv=_set_remaining_days, type="float", help='Total number of legal leaves allocated to this employee, change this value to create allocation request.', store=True),
+        'remaining_leaves': fields.function(_get_remaining_days, method=True, string='Remaining Leaves', fnct_inv=_set_remaining_days, type="float", help='Total number of legal leaves allocated to this employee, change this value to create allocation/leave requests.', store=True),
     }
 
 hr_employee()

@@ -40,6 +40,7 @@ This module only works with Unix/Linux.
     ],
     "update_xml" : [
         "users_ldap_view.xml",
+        "user_ldap_installer.xml",
     ],
     "active": False,
     "installable": True,
