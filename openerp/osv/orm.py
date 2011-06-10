@@ -1956,6 +1956,21 @@ class orm_template(object):
 
         """
         return self._name_search(cr, user, name, args, operator, context, limit)
+    
+    def name_create(self, cr, user, name, context=None):
+        """
+        Creates a row by only providing its name and returns the result of name_get() corresponding
+        to that created row. Does not work with all objects and throws an exception in that case.
+        
+        :param cr: database cursor
+        :param user: current user id
+        :param name: object name to create
+        :param context: context arguments, like lang, time zone
+        
+        :return: tuples with the text representation of created object
+        """
+        id = self.create(cr, user, {self._rec_name: name}, context);
+        return self.name_get(cr, user, [id], context)[0]
 
     # private implementation of name_search, allows passing a dedicated user for the name_get part to
     # solve some access rights issues
