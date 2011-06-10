@@ -56,7 +56,7 @@ openerp.web_mobile.Shortcuts =  openerp.base.Controller.extend({
     },
     start: function() {
         var self = this;
-        this.rpc('/web_mobile/mobile/sc_list',{} ,function(res){
+        this.rpc('/base/session/sc_list',{} ,function(res){
             self.$element.html(QWeb.render("Shortcuts", {'sc' : res}))
             self.$element.find("a").click(self.on_clicked);
         })
@@ -94,7 +94,7 @@ openerp.web_mobile.ListView = openerp.base.Controller.extend({
         var context = action.context;
         var domain = action.domain;
 
-        self.rpc('/base/listview/load', {
+        self.rpc('/base/listview/records', {
             'model': model,
             'view_id': view_id,
             'toolbar': false,
@@ -189,7 +189,7 @@ openerp.web_mobile.Options =  openerp.base.Controller.extend({
         $opt = $(ev.currentTarget);
         current_id = $opt.attr('id');
         if (current_id == 'logout') {
-            this.rpc('/web_mobile/mobile/logout', {});
+            this.rpc('/base/session/logout', {});
             this.login = new openerp.web_mobile.Login(this.session, "oe_app");
             this.login.start();
         }

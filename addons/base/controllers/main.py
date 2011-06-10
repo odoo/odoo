@@ -98,7 +98,16 @@ class Session(openerpweb.Controller):
             "session_id": req.session_id,
             "uid": req.session._uid,
         }
-    
+
+    @openerpweb.jsonrequest
+    def logout(self,req):
+        req.session_id = False
+        req.session._uid = False
+
+    @openerpweb.jsonrequest
+    def sc_list(self, req):
+        return req.session.model('ir.ui.view_sc').get_sc(req.session._uid, "ir.ui.menu", {})
+
     @openerpweb.jsonrequest
     def get_databases_list(self, req):
         proxy = req.session.proxy("db")
@@ -609,11 +618,14 @@ class ListView(View):
     @openerpweb.jsonrequest
     def load(self, req, model, view_id, toolbar=False):
         fields_view = self.fields_view_get(req, model, view_id, 'tree', toolbar=toolbar)
+        return {'fields_view': fields_view}
+
+    @openerpweb.jsonrequest
+    def records(self, req, model, view_id, toolbar=False):
         rows = DataSet().do_search_read(req, model,
                                         offset=0, limit=False,
                                         domain=None)
         return {
-            'fields_view': fields_view,
             'records': [
                 {'data': dict((key, {'value': value})
                               for key, value in row.iteritems())}

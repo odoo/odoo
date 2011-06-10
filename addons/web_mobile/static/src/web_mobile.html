@@ -11,24 +11,19 @@
     <script type="text/javascript" src="/base/static/lib/jquery.ba-bbq/jquery.ba-bbq.js"></script>
     <script type="text/javascript" src="/base/static/lib/underscore/underscore.js"></script>
     <script type="text/javascript" src="/base/static/lib/underscore/underscore.string.js"></script>
-    <script type="text/javascript" src="/base/static/lib/qweb/qweb.js"></script>
-    
+
+    <script type="text/javascript" src="/base/static/lib/qweb/qweb2.js"></script>
+
     <script type="text/javascript" src="/base/static/src/js/base.js"></script>
     <script type="text/javascript" src="/base/static/src/js/chrome.js"></script>
     <script type="text/javascript" src="/base/static/src/js/data.js"></script>
     <script type="text/javascript" src="/base/static/src/js/dates.js"></script>
-    <script type="text/javascript" src="/base/static/src/js/views.js"></script>
-    <script type="text/javascript" src="/base/static/src/js/search.js"></script>
-    <script type="text/javascript" src="/base/static/src/js/list.js"></script>
-    <script type="text/javascript" src="/base/static/src/js/tree.js"></script>
-    <script type="text/javascript" src="/base/static/src/js/m2o.js"></script>
-    <script type="text/javascript" src="/base/static/src/js/form.js"></script>
     
     <script type="text/javascript" src="/web_mobile/static/src/js/web_mobile.js"></script>
-	
 
     <script type="text/javascript">
         $(function() {
+            QWeb = window.QWeb || new QWeb2.Engine();
             var oe = openerp.init();
             openerp.web_mobile(oe);
             oe.web_mobile.mobilewebclient("moe");
