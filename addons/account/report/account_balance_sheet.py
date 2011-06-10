@@ -137,6 +137,7 @@ class report_balancesheet_horizontal(report_sxw.rml_parse, common_report_header)
                         'name': account.name,
                         'level': account.level,
                         'balance':account.balance,
+                        'type': account.type,
                     }
                     currency = account.currency_id and account.currency_id or account.company_id.currency_id
                     if typ == 'liability' and account.type <> 'view' and (account.debit <> account.credit):
@@ -163,10 +164,12 @@ class report_balancesheet_horizontal(report_sxw.rml_parse, common_report_header)
             for i in range(0,max(len(cal_list['liability']),len(cal_list['asset']))):
                 if i < len(cal_list['liability']) and i < len(cal_list['asset']):
                     temp={
+                          'type': cal_list['liability'][i]['type'],
                           'code': cal_list['liability'][i]['code'],
                           'name': cal_list['liability'][i]['name'],
                           'level': cal_list['liability'][i]['level'],
                           'balance':cal_list['liability'][i]['balance'],
+                          'type1': cal_list['asset'][i]['type'],
                           'code1': cal_list['asset'][i]['code'],
                           'name1': cal_list['asset'][i]['name'],
                           'level1': cal_list['asset'][i]['level'],
@@ -176,10 +179,12 @@ class report_balancesheet_horizontal(report_sxw.rml_parse, common_report_header)
                 else:
                     if i < len(cal_list['asset']):
                         temp={
+                              'type': '',
                               'code': '',
                               'name': '',
                               'level': False,
                               'balance':False,
+                              'type1': cal_list['asset'][i]['type'],
                               'code1': cal_list['asset'][i]['code'],
                               'name1': cal_list['asset'][i]['name'],
                               'level1': cal_list['asset'][i]['level'],
@@ -188,10 +193,12 @@ class report_balancesheet_horizontal(report_sxw.rml_parse, common_report_header)
                         self.result_temp.append(temp)
                     if  i < len(cal_list['liability']):
                         temp={
+                              'type': cal_list['liability'][i]['type'],
                               'code': cal_list['liability'][i]['code'],
                               'name': cal_list['liability'][i]['name'],
                               'level': cal_list['liability'][i]['level'],
                               'balance':cal_list['liability'][i]['balance'],
+                              'type1': '',
                               'code1': '',
                               'name1': '',
                               'level1': False,
