@@ -144,8 +144,8 @@ class account_voucher(osv.osv):
 
     def _check_paid(self, cr, uid, ids, name, args, context=None):
         res = {}
-        ok = False
         for voucher in self.browse(cr, uid, ids, context=context):
+            ok = False
             for line in voucher.move_ids:
                 if (line.account_id.type, 'in', ('receivable', 'payable')) and line.reconcile_id:
                     ok = True
