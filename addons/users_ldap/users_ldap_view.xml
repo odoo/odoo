@@ -12,16 +12,8 @@
                         <form string="LDAP Configuration">
                             <field name="ldap_server"/>
                             <field name="ldap_server_port"/>
-                            <field name="ldap_binddn" attrs="{
-				   'required': [('anonymous', '!=', True)],
-				   'readonly': [('anonymous', '=', True)],
-				   }"/>
-                            <field name="ldap_password" attrs="{
-				   'required': [('anonymous', '!=', True)],
-				   'readonly': [('anonymous', '=', True)],
-				   }"/>
-                            <field name="anonymous"/>
-			    <newline/>
+                            <field name="ldap_binddn"/>
+                            <field name="ldap_password"/>
                             <field name="ldap_base"/>
                             <field name="ldap_filter"/>
                             <field name="create_user"/>
