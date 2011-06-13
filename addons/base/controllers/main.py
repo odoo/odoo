@@ -763,13 +763,3 @@ class TreeView(View):
     def load(self, req, model, view_id, toolbar=False):
         fields_view = self.fields_view_get(req, model, view_id, 'tree', toolbar=toolbar)
         return {'field_parent': fields_view}
-
-    def fields_view_get(self, request, model, view_id, view_type="tree",
-                        transform=True, toolbar=False, submenu=False):
-        """ Sets @editable on the view's arch if it isn't already set and
-        ``set_editable`` is present in the request context
-        """
-        view = super(TreeView, self).fields_view_get(
-            request, model, view_id, view_type, transform, toolbar, submenu)
-
-        return view

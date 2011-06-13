@@ -22,139 +22,99 @@ openerp.base.TreeView = openerp.base.View.extend({
             toolbar: this.view_manager ? !!this.view_manager.sidebar : false
         }, this.on_loaded);
     },
+
     on_loaded: function (data) {
         var self = this;
         this.dataset.read_slice([], 0, false, function (response) {
             self.$element.html(QWeb.render('TreeView', {'field_data':response}));
-
             id=self.dataset.ids[0];
-            self.dataset.domain=[['parent_id','=',parseInt(id,10)]];
-            self.dataset.read_slice([], 0, false, function (response) {
-                $('#parent_id').change(self.getch(($('#parent_id').attr('value')),0));
-                self.$element.append(QWeb.render('TreeView_Secondry', {'child_data':response}));
+            self.$element.find('#parent_id').bind('change', function(){
+                self.getdata($('#parent_id').val(), 0);
+            });
+            self.getdata(id);
+        });
+    },
 
-                $('#child_id').find('div').click(function(){
-                    if($('#'+this.id).parent().attr('id')=="child_id"){
-	                    if(jQuery('#child_id').find('#'+(this.id)).find('#subchild').length==0){
-	                       //console.log('in load');
-	                        self.getch(this.id,1);
-	                    }
-	                }
-                });
+    // get child data of selected value
+    getdata: function (id, flag) {
+        var self=this;
+        self.dataset.domain = [['parent_id', '=', parseInt(id,10)]];
+        self.dataset.read_slice([], 0, false, function (response) {
+            if (($('tr #'+id).length) == 1){
+                $('tr #'+id).find('td #parentimg').attr('src','/base/static/src/img/collapse.gif');
+                $('tr #'+id).after(QWeb.render('TreeView_Secondry', {'child_data':response}));
+            }else{
+                if (flag == 0){
+                    self.$element.find('tr').remove();
+                }
+                self.$element.append(QWeb.render('TreeView_Secondry', {'child_data':response}));
+            }
+
+            $('tr').click(function(){
+                divflag=0;
+                if ($('#'+(this.id)).length == 1){
+                    for (i in response){
+                        if (this.id == response[i].id){
+                            if (response[i].child_id.length > 0){
+                                jQuery(response[i].child_id).each(function(e,chid){
+                                    if (jQuery('tr #'+chid).length > 0){
+                                        if (jQuery('tr #'+chid).is(':hidden')){
+                                            divflag = -1;
+                                        }else{
+                                            divflag++;
+                                        }
+                                    }
+                                });
+                                if (divflag == 0){
+                                    if ($('#'+(this.id)).find('td #parentimg').attr('src') == '/base/static/src/img/expand.gif'){
+                                        self.getdata(this.id);
+                                    }
+                                }else if (divflag > 0){
+                                    self.showcontent(this.id, 1, response[i].child_id);
+                                }else if (divflag == -1){
+                                    self.showcontent(this.id, 0, response[i].child_id);
+                                }
+                            }
+                        }
+                    }
+                }
             });
         });
     },
-    getch: function(id,flag) {
-        //console.log(flag);
+
+    // show & hide the contents
+    showcontent: function (id, flag, childid) {
         var self=this;
-        if(flag==0){
-            $('#parent_id').change(function(){
-                self.on_change($('#parent_id').attr('value'),0);
-            });
-         }
-         else if(flag==1){
-            self.on_change(id,1);
-         }else{
-            self.on_change(id,2);
-         }
-    },
-    on_change:function(parentid,flag){
+        if (flag == 1){
+            $('tr #'+id).find('td #parentimg').attr('src', '/base/static/src/img/expand.gif');
+        }
+        else{
+            $('tr #'+id).find('td #parentimg').attr('src', '/base/static/src/img/collapse.gif');
+        }
 
-        var self=this;
-
-        if(parentid>0){
-            this.dataset.domain=[['parent_id','=',parseInt(parentid,10)]];
-            this.dataset.read_slice([],0,false, function (response) {
-                if(flag==0){
-                    $('#child_id').remove();
-                    self.$element.append(QWeb.render('TreeView_Secondry', {'child_data':response}));
-                }else if(flag==1){
-                    jQuery('#'+parentid).append(QWeb.render('TreeView_Children', {'childdata':response}))
-                    $("#subchild").show();
-                    jQuery('#'+parentid).find("#parentimg").attr("src", "/base/static/src/img/collapse.gif");
-                    $('#'+parentid).find('#subchild').find('#subchild').remove();
-                    $('#'+parentid).find('#subchild').slice(1,3).remove();
-                }else if(flag==2){
-                    $("#subchild #"+parentid).find('#subchild').remove();
-                    $("#subchild #"+parentid).find('#childsubchild').remove();
-                    jQuery('#subchild #'+parentid).find("#childimg").attr("src", "/base/static/src/img/collapse.gif");
-                    $("#subchild #"+parentid).append(QWeb.render('TreeView_SubChildren', {'subchilddata':response}))
-                    $("#subchild #"+parentid).find('#childsubchild').show();
-                }
-                /*for(var i=0;i<$('#child_id > div').length;i++){
-                    console.log($('#child_id:nth-child('+i+') '));
-                }*/
-                //console.log($('#child_id > div').slice().attr('id'));
-                // subclass
-                //$('#child_id').find('.childclass').click(function(){
-                if(flag==0){
-                    //console.log('in flag 0');
-	                $('#child_id').find('div').click(function(){
-
-	                   if($('#'+this.id).parent().attr('id')=="child_id"){
-		                   var pathimg=jQuery('#child_id').find('#'+(this.id)).find("#parentimg").attr("src");
-		                      if(pathimg=='/base/static/src/img/collapse.gif'){
-		                           $(('#'+this.id)+'> div').hide();
-		                           jQuery('#child_id').find('#'+(this.id)).find('#parentimg').attr('src','/base/static/src/img/expand.gif');
-		                      }
-		                      else if(pathimg=='/base/static/src/img/expand.gif'){
-		                           if(jQuery('#child_id').find('#'+(this.id)).find('#subchild').length==0){
-		                               self.getch(this.id,1);
-		                           }else{
-		                                $(('#'+this.id)+'> div').show();
-		                                jQuery('#child_id').find('#'+(this.id)).find('#parentimg').attr('src','/base/static/src/img/collapse.gif');
-		                           }
-		                      }
-	                       }
-	                });
-                }
-				$('#child_id div #subchild').find('div').click(function(){
-                    var childimg=jQuery('#subchild').find('#'+(this.id)).find("#childimg").attr("src");
-                     if(childimg=='/base/static/src/img/collapse.gif'){
-                        $('#'+this.id).find('#childsubchild').hide();
-                        jQuery('#subchild').find('#'+(this.id)).find('#childimg').attr('src','/base/static/src/img/expand.gif');
-                     }else if(childimg=='/base/static/src/img/expand.gif'){
-                       /* console.log('in else of subchild div');
-                        if($('#'+(this.id)).find('#childsubchild').css('display')=='none'){
-                            console.log('in else-else of subchild div');
-                            $(('#'+this.id)+'> div').show();
-                            jQuery('#subchild').find('#'+(this.id)).find('#childimg').attr('src','/base/static/src/img/collapse.gif');
-                        }else{
-                            self.getch(this.id,2);
-                        }*/
-                        if(jQuery('#subchild').find('#'+(this.id)).find('#childsubchild').length==0){
-                            //console.log('in else-if of subchild div');
-	                       self.getch(this.id,2);
-	                    }else{
-	                        //console.log('in else-else of subchild div');
-                            $(('#'+this.id)+'> div').show();
-                            jQuery('#subchild').find('#'+(this.id)).find('#childimg').attr('src','/base/static/src/img/collapse.gif');
-	                    }
-                     }
-
-                    /*if(jQuery('#subchild').find('#'+(this.id)).find('#childsubchild').length==0){
-			           self.getch(this.id,2);
-                    }else if((jQuery('#subchild').find('#'+(this.id)).find('#childimg').attr('src'))=='/base/static/src/img/collapse.gif'){
-                        jQuery('#subchild').find('#'+(this.id)).find('#childimg').attr('src','/base/static/src/img/expand.gif');
-				        //jQuery('#subchild').find('#'+(this.id)).find('#childsubchild').hide();
-			            jQuery('#subchild').find('#'+(this.id)).find('#childsubchild').css('display','none');
-			        }else{
-			             jQuery('#subchild').find('#'+(this.id)).find('#childsubchild').css('display','block');
-			             //jQuery('#subchild').find('#'+(this.id)).find('#childsubchild').show();
-			        }*/ /*else{
-				           jQuery('#subchild').find('#'+(this.id)).find('#childimg').attr('src','/base/static/src/img/expand.gif');
-				           jQuery('#subchild').find('#'+(this.id)).find('#childsubchild').hide();
-				        }*/
+        for (i in childid){
+            if (flag == 1){
+                self.dataset.domain = [['parent_id', '=', parseInt(childid[i],10)]];
+                self.dataset.read_slice([], 0, false, function (response) {
+                    for (j in response){
+                        if (jQuery('tr #'+response[j].id).length > 0){
+                            jQuery('tr #'+response[j].id).hide();
+                        }
+                    }
                 });
-
-
-            });
+                jQuery ('tr #'+childid[i]).hide();
+            }
+            else{
+                jQuery ('tr #'+childid[i]).show();
+            }
         }
     },
+
     reload_view: function (grouped) {
         var self = this;
         this.dataset.offset = 0;
         this.dataset.limit = false;
+
         return this.rpc('/base/treeview/load', {
             model: this.model,
             view_id: this.view_id,
