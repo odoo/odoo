@@ -19,28 +19,24 @@
 #
 ##############################################################################
 
-{
-    'name': 'Google Contact Import',
-    'version': '1.0',
-    'category': 'Generic Modules/Others',
-    'description': """The module adds google contact in partner address""",
-    'author': 'OpenERP SA',
-    'website': 'http://www.openerp.com',
-    'depends': ['base', 'google_base_account','crm'],
-    'init_xml': [],
-    'update_xml': [
-                'sync_google_calendar_view.xml',
-                'wizard/import_google_data_view.xml',
-                'wizard/google_import_message_view.xml'
-               ],
-    'demo_xml': [],
-    'test': [
-#             'test/test_sync_google_contact_import_partner.yml',
-#             'test/test_sync_google_contact_import_address.yml',
-#             'test/test_sync_google_calendar.yml',
-    ],
-    'installable': True,
-    'active': False,
-    'certificate': '',
-}
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+from osv import osv
+from osv import fields
+
+
+class google_import_message(osv.osv):
+    """Import Message"""
+    
+    _name = "google.import.message"
+    _description = "Import Message"
+    _columns = {
+        'name': fields.text('Message', readonly=True),
+        }
+
+    def default_get(self, cr, uid, fields, context=None):
+        if context == None:
+            context = {}
+        res = super(google_import_message, self).default_get(cr, uid, fields, context=context)
+        res.update({'name': context.get('message')})
+        return res
+
+google_import_message()

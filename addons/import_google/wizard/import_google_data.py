@@ -143,7 +143,20 @@ class synchronize_google_contact(osv.osv_memory):
         imp = google_import(self, cr, uid, 'google', "synchronize_google_contact", gmail_user, context)
         imp.set_table_list(tables)
         imp.start()            
-        return {}   
+        return{}
+#        context.update({'message': "Data Imported Successffully from Google."})
+#        model_pool = self.pool.get('ir.model.data')
+#        model_data_ids = model_pool.search(cr, uid, [('model', '=', 'ir.ui.view'), ('name', '=', 'google.import.message.form')])
+#        resource_id = model_pool.read(cr, uid, model_data_ids, fields)
+#        return {
+#              'view_type': 'form',
+#                'view_mode': 'form',
+#                'res_model': 'google.import.message',
+#                'views': [(resource_id, 'form')],
+#               'type': 'ir.actions.act_window',
+#                'target': 'new',
+#                'context': context,
+#            }    
 
     def import_calendar_events(self, cr, uid, ids, context=None):
         if context == None:
@@ -170,7 +183,20 @@ class synchronize_google_contact(osv.osv_memory):
         imp = google_import(self, cr, uid, 'import_google', "import_google_calendar", [gmail_user], context)
         imp.set_table_list(table)
         imp.start()
-        return {}
+    
+        context.update({'message': "Data Imported Successffully from Google."})
+        model_pool = self.pool.get('ir.model.data')
+        model_data_ids = model_pool.search(cr, uid, [('model', '=', 'ir.ui.view'), ('name', '=', 'google.import.message.form')])
+        resource_id = model_pool.read(cr, uid, model_data_ids, fields)
+        return {
+              'view_type': 'form',
+                'view_mode': 'form',
+                'res_model': 'google.import.message',
+                'views': [(resource_id, 'form')],
+               'type': 'ir.actions.act_window',
+                'target': 'new',
+                'context': context,
+            }        
     
 synchronize_google_contact()
 

@@ -20,4 +20,5 @@
 ##############################################################################
 import import_google
 import import_google_data
+import google_import_message
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
