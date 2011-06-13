@@ -116,7 +116,6 @@
 -
     !python {model: res.partner }: |
         all_ids = self.search(cr, uid, [('name', '=like', 'Ax')])
-        print all_ids,' Len is : ',len(all_ids)
         assert len(all_ids) <= 1,"It should have 1 record !"
         		
 -
