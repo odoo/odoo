@@ -120,11 +120,11 @@ class synchronize_google_contact(osv.osv_memory):
         sup = obj.supplier
         tables=[]
         user_obj = self.pool.get('res.users').browse(cr, uid, uid)
-        if not gmail_user or not gmail_pwd:
-            raise osv.except_osv(_('Error'), _("Invalid login detail !\n Specify Username/Password."))
-
+        
         gmail_user = user_obj.gmail_user
         gmail_pwd = user_obj.gmail_password
+        if not gmail_user or not gmail_pwd:
+            raise osv.except_osv(_('Error'), _("Invalid login detail !\n Specify Username/Password."))
 
         google = self.pool.get('google.login')
         gd_client = google.google_login(gmail_user, gmail_pwd, type='contact')
