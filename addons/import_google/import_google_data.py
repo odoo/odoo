@@ -36,4 +36,11 @@ class res_partner_address(osv.osv):
 
 res_partner_address()
 
+class crm_case_categ(osv.osv):
+    """ Category of Case """
+    _inherit = "crm.case.categ"
+    _columns = {
+        'user_id': fields.many2one('res.users', 'User')
+    }
+crm_case_categ()
 # vim:expandtab:smartindent:toabstop=4:softtabstop=4:shiftwidth=4:

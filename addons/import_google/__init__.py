@@ -20,6 +20,5 @@
 ##############################################################################
 
 import import_google_data
-import sync_google_calendar
 import wizard
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
