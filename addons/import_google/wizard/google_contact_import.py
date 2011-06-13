@@ -34,15 +34,20 @@ from import_google import google_import
 
 class google_login_contact(osv.osv_memory):
     _inherit = 'google.login'
-    _name = 'google.login.contact'
+    _name = 'google.login'
+    
     def _get_next_action(self, cr, uid, context=None):
         data_obj = self.pool.get('ir.model.data')
         data_id = data_obj._get_id(cr, uid, 'import_google', 'view_synchronize_google_contact_import_form')
         view_id = False
+        if context.get('contact'):
+             data_id = data_obj._get_id(cr, uid, 'import_google', 'view_synchronize_google_contact_import_form')
+        if  context.get('calendar'):
+             data_id = data_obj._get_id(cr, uid, 'import_google', 'view_synchronize_google_calendar_import_form')     
         if data_id:
             view_id = data_obj.browse(cr, uid, data_id, context=context).res_id
         value = {
-            'name': _('Import Contact'),
+            'name': _('Import google'),
             'view_type': 'form',
             'view_mode': 'form,tree',
             'res_model': 'synchronize.google.contact.import',
@@ -77,16 +82,32 @@ class synchronize_google_contact(osv.osv_memory):
         res.append(('all','All Groups'))
         return res
 
+    def _get_calendars(self, cr, uid, context=None):
+        user_obj = self.pool.get('res.users').browse(cr, uid, uid)
+        google = self.pool.get('google.login')
+        res = []
+        try:
+            gd_client = google.google_login(user_obj.gmail_user, user_obj.gmail_password, type='calendar')
+            calendars = gd_client.GetAllCalendarsFeed()
+            for cal in calendars.entry:
+                res.append((cal.id.text, cal.title.text))
+        except Exception, e:
+            raise osv.except_osv('Error !', e.args[0].get('body'))
+        res.append(('all', 'All Calendars'))
+        return res
+
     _columns = {
         'create_partner': fields.selection([('create_all','Create partner for each contact'),('create_address','Import only address')],'Options'),
         'customer': fields.boolean('Customer', help="Check this box to set newly created partner as Customer."),
         'supplier': fields.boolean('Supplier', help="Check this box to set newly created partner as Supplier."),
         'group_name': fields.selection(_get_group, "Group Name", size=32,help="Choose which group to import, By default it takes all."),
+        'calendar_name': fields.selection(_get_calendars, "Calendar Name", size=32),
      }
 
     _defaults = {
         'create_partner': 'create_all',
         'group_name': 'all',
+        'calendar_name': 'all',
     }
 
     def import_contact(self, cr, uid, ids, context=None):
@@ -124,63 +145,6 @@ class synchronize_google_contact(osv.osv_memory):
         imp.start()            
         return {}   
 
-synchronize_google_contact()
-
-
-class google_login_calendar(osv.osv_memory):
-    """Gdata Login Object for Google Calendar Import"""
-    _inherit = 'google.login'
-    _name = 'google.login'
-
-    def _get_next_action(self, cr, uid, context):
-        data_obj = self.pool.get('ir.model.data')
-        data_id = data_obj._get_id(cr, uid, 'import_google', 'view_synchronize_google_calendar_import_form')
-
-        view_id = False
-        if data_id:
-            view_id = data_obj.browse(cr, uid, data_id, context=context).res_id
-        value = {
-            'name': _('Import Events'),
-            'view_type': 'form',
-            'view_mode': 'form,tree',
-            'res_model': 'synchronize.google.calendar',
-            'view_id': False,
-            'context': context,
-            'views': [(view_id, 'form')],
-            'type': 'ir.actions.act_window',
-            'target': 'new',
-        }
-        return value
-google_login_calendar()
-
-class synchronize_google_calendar_events(osv.osv_memory):
-    """
-    Wizard to initiate import specific calendar or all calendars
-    """
-    _name = 'synchronize.google.calendar'
-
-    def _get_calendars(self, cr, uid, context=None):
-        user_obj = self.pool.get('res.users').browse(cr, uid, uid)
-        google = self.pool.get('google.login')
-        res = []
-        try:
-            gd_client = google.google_login(user_obj.gmail_user, user_obj.gmail_password, type='calendar')
-            calendars = gd_client.GetAllCalendarsFeed()
-            for cal in calendars.entry:
-                res.append((cal.id.text, cal.title.text))
-        except Exception, e:
-            raise osv.except_osv('Error !', e.args[0].get('body'))
-        res.append(('all', 'All Calendars'))
-        return res
-
-    _columns = {
-        'calendar_name': fields.selection(_get_calendars, "Calendar Name", size=32),
-    }
-
-    _defaults = {
-        'calendar_name': 'all',
-    }
-
     def import_calendar_events(self, cr, uid, ids, context=None):
         if context == None:
             context = {}
@@ -207,6 +171,7 @@ class synchronize_google_calendar_events(osv.osv_memory):
         imp.set_table_list(table)
         imp.start()
         return {}
+    
+synchronize_google_contact()
 
-synchronize_google_calendar_events()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
