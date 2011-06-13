@@ -40,7 +40,7 @@
 -
     !assert {model: res.partner, search: "[('category_id', '=', False)]"}:
         - category_id in (False, None, [])
-- 
+-
     Filtering on invalid value across x2many relationship should return an empty set
 -
     !assert {model: res.partner, search: "[('address.city','=','foo')]", count: 0, string: "Searching for address.city = foo should give empty results"}
@@ -110,4 +110,21 @@
         res_ids = self.search(cr, uid, [('company_id.partner_id', 'not in', [])])
         res_ids.sort()
         assert res_ids == all_ids, "Searching against empty set failed, returns %r" % res_ids
-
+-
+    Testing for Many2Many field with category supplier and active=False
+-
+    !python {model: res.partner }: |
+        vals = {'category_id': [(6, 0, [ref("base.res_partner_category_8")])],
+                'name': 'OpenERP Test',
+                'active': False,
+                'address': [(0, 0, {'country_id': ref("base.be")})]
+                }
+        self.create(cr, uid, vals, context=context)
+        res_ids = self.search(cr, uid, [('category_id', 'ilike', 'supplier'), ('active', '=', False)])
+        assert len(res_ids) != 0, "Record not Found with category supplier and active False."
+-
+    Testing for One2Many field with country Belgium and active=False
+-
+    !python {model: res.partner }: |
+        res_ids = self.search(cr, uid, [('address.country_id','=','Belgium'),('active','=',False)])
+        assert len(res_ids) != 0, "Record not Found with country Belgium and active False."
