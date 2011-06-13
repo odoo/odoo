@@ -43,10 +43,8 @@ class account_invoice_refund(osv.osv_memory):
         obj_journal = self.pool.get('account.journal')
         if context is None:
             context = {}
-        journal = obj_journal.search(cr, uid, [('type', '=', 'sale_refund')])
-        if context.get('type', False):
-            if context['type'] in ('in_invoice', 'in_refund'):
-                journal = obj_journal.search(cr, uid, [('type', '=', 'purchase_refund')])
+        journal_type = context.get('journal_type', False)
+        journal = obj_journal.search(cr, uid, [('type', '=', journal_type)])
         return journal and journal[0] or False
 
     _defaults = {
@@ -58,14 +56,14 @@ class account_invoice_refund(osv.osv_memory):
     def fields_view_get(self, cr, uid, view_id=None, view_type=False, context=None, toolbar=False, submenu=False):
         journal_obj = self.pool.get('account.journal')
         res = super(account_invoice_refund,self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=submenu)
-        type = context.get('journal_type', 'sale_refund')
-        if type in ('sale', 'sale_refund'):
-            type = 'sale_refund'
-        else:
-            type = 'purchase_refund'
+        type = context.get('type', 'out_invoice')
+        journal_type = (type == 'out_invoice') and 'sale_refund' or \
+                       (type == 'out_refund') and 'sale' or \
+                       (type == 'in_invoice') and 'purchase_refund' or \
+                       (type == 'in_refund') and 'purchase'
         for field in res['fields']:
             if field == 'journal_id':
-                journal_select = journal_obj._name_search(cr, uid, '', [('type', '=', type)], context=context, limit=None, name_get_uid=1)
+                journal_select = journal_obj._name_search(cr, uid, '', [('type', '=', journal_type)], context=context, limit=None, name_get_uid=1)
                 res['fields'][field]['selection'] = journal_select
         return res
 
@@ -198,10 +196,10 @@ class account_invoice_refund(osv.osv_memory):
                             if 'value' in data and data['value']:
                                 inv_obj.write(cr, uid, [inv_id], data['value'])
                         created_inv.append(inv_id)
-            if inv.type in ('out_invoice', 'out_refund'):
-                xml_id = 'action_invoice_tree3'
-            else:
-                xml_id = 'action_invoice_tree4'
+            xml_id = (inv.type == 'out_invoice') and 'action_invoice_tree3' or \
+                     (inv.type == 'out_refund') and 'action_invoice_tree1' or \
+                     (inv.type == 'in_invoice') and 'action_invoice_tree2' or \
+                     (inv.type == 'in_refund') and 'action_invoice_tree4'
             result = mod_obj.get_object_reference(cr, uid, 'account', xml_id)
             id = result and result[1] or False
             result = act_obj.read(cr, uid, id, context=context)
