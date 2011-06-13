@@ -116,24 +116,25 @@
 -
     !python {model: res.partner }: |
         all_ids = self.search(cr, uid, [('name', '=like', 'Ax')])
-        assert len(all_ids) <= 1,"with =like operator without translation field, returns"
+        print all_ids,' Len is : ',len(all_ids)
+        assert len(all_ids) <= 1,"It should have 1 record !"
         		
 -
     Check that =ilike expression is working without translation field
 -
     !python {model: res.partner }: |
         all_ids = self.search(cr, uid, [('name', '=ilike', 'Ax')])
-        assert len(all_ids) <= 2,"with =ilike operator without translation field, returns"
+        assert len(all_ids) <= 2,"It should have 2 records !"
 -
     Check that =like expression is working with translation field
 -
     !python {model: res.country }: |
         all_ids = self.search(cr, uid, [('name', '=like', 'Ind')])
-        assert len(all_ids) <= 3,"with =like operator with translation field, returns"
+        assert len(all_ids) <= 3,"It should have 3 records !"
         
 -
     Check that =ilike expression is working with translation field
 -
     !python {model: res.country }: |
         all_ids = self.search(cr, uid, [('name', '=ilike', 'Ind')])
-        assert len(all_ids) <= 3,"with =ilike operator with translation field, returns"        
+        assert len(all_ids) <= 3,"It should have 3 records !"        
