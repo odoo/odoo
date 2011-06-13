@@ -42,7 +42,16 @@ openerp.base.TreeView = openerp.base.View.extend({
         self.dataset.read_slice([], 0, false, function (response) {
             if (($('tr #'+id).length) == 1){
                 $('tr #'+id).find('td #parentimg').attr('src','/base/static/src/img/collapse.gif');
+
                 $('tr #'+id).after(QWeb.render('TreeView_Secondry', {'child_data':response}));
+                for (i in response){
+                    if($('tr #'+response[i].id)){
+                        indent=$('tr #'+id).css('textIndent');
+                        ind=indent.split('px');
+                        j=(parseInt(ind[0],10))+10;
+                        $('tr #'+response[i].id).animate({textIndent: j});
+                    }
+                }
             }else{
                 if (flag == 0){
                     self.$element.find('tr').remove();
@@ -95,6 +104,10 @@ openerp.base.TreeView = openerp.base.View.extend({
         for (i in childid){
             if (flag == 1){
                 self.dataset.domain = [['parent_id', '=', parseInt(childid[i],10)]];
+                childimg=$('tr #'+childid[i]).find('td #parentimg').attr('src');
+                if(childimg=="/base/static/src/img/collapse.gif"){
+                    $('tr #'+childid[i]).find('td #parentimg').attr('src','/base/static/src/img/expand.gif');
+                }
                 self.dataset.read_slice([], 0, false, function (response) {
                     for (j in response){
                         if (jQuery('tr #'+response[j].id).length > 0){
