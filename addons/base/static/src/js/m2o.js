@@ -1,4 +1,16 @@
 openerp.base.m2o = function(openerp){
+    
+/*
+<input type="text"
+    t-att-name="widget.name"
+    t-att-id="widget.element_id + '_field'"
+    t-att-class="'field_' + widget.type"
+    t-att-type="widget.type"
+    style="width: 100%;"/>
+<span type='button' t-att-class="'ui_combo'" tabindex="'-1'" title="'Show All Items'"></span>
+<img t-att-id="widget.name + '_open'" t-att-alt="'Open'" t-att-title="'Create'"
+t-att-src="'/base/static/src/img/iconset-d-drop.gif'" t-att-class="'m2o_open'"/>
+ */
 
     openerp.base.m2o = openerp.base.Controller.extend({
         init: function(element_id, model, dataset, session){
