@@ -30,7 +30,7 @@
     'init_xml': [],
     'update_xml': [
                 'sync_google_calendar_view.xml',
-                'wizard/google_contact_import_view.xml',
+                'wizard/import_google_data_view.xml',
                ],
     'demo_xml': [],
     'test': [
