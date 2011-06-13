@@ -7,7 +7,7 @@ openerp.web_mobile.MobileWebClient = openerp.base.Controller.extend({
     init: function(element_id) {
         var self = this;
         this._super(null, element_id);
-        QWeb.add_template("xml/mobile.xml");
+        QWeb.add_template("xml/web_mobile.xml");
         var params = {};
 
         this.$element.html(QWeb.render("WebClient", {}));
