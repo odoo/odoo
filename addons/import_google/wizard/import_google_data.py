@@ -111,11 +111,17 @@ class synchronize_google_contact(osv.osv_memory):
     }
 
     def import_contact(self, cr, uid, ids, context=None):
+        if context == None:
+            context = {}
+        if not ids:
+            return {'type': 'ir.actions.act_window_close'}
         obj = self.browse(cr, uid, ids, context=context)[0]
         cust = obj.customer
         sup = obj.supplier
         tables=[]
         user_obj = self.pool.get('res.users').browse(cr, uid, uid)
+        if not gmail_user or not gmail_pwd:
+            raise osv.except_osv(_('Error'), _("Invalid login detail !\n Specify Username/Password."))
 
         gmail_user = user_obj.gmail_user
         gmail_pwd = user_obj.gmail_password
@@ -135,11 +141,11 @@ class synchronize_google_contact(osv.osv_memory):
         else:    
             tables.append('Address')
        
-        context.update({'gd_client':contact})
-        context.update({'client':gd_client})
-        context.update({'table':tables})
-        context.update({'customer':cust})
-        context.update({'supplier':sup})        
+        context.update({'gd_client':contact,
+                       'client':gd_client,
+                        'table':tables,
+                        'customer':cust,
+                        'supplier':sup})       
         imp = google_import(self, cr, uid, 'google', "synchronize_google_contact", gmail_user, context)
         imp.set_table_list(tables)
         imp.start()            
