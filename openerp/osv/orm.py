@@ -2511,7 +2511,7 @@ class orm(orm_template):
                 pass
             if not val_id:
                 raise except_orm(_('ValidateError'),
-                                 _('Invalid value for reference field "%s" (last part must be a non-zero integer): "%s"') % (field, value))
+                                 _('Invalid value for reference field "%s" of table "%s" (last part must be a non-zero integer): "%s"') % (field, self._table, value))
             val = val_model
         else:
             val = value
@@ -2521,7 +2521,7 @@ class orm(orm_template):
         elif val in dict(self._columns[field].selection(self, cr, uid, context=context)):
             return
         raise except_orm(_('ValidateError'),
-                         _('The value "%s" for the field "%s" is not in the selection') % (value, field))
+			_('The value "%s" for the field "%s" of table "%s" is not in the selection') % (value, field, self._table))
 
     def _check_removed_columns(self, cr, log=False):
         # iterate on the database columns to drop the NOT NULL constraints
