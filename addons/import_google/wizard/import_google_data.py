@@ -34,7 +34,7 @@ from import_google import google_import
 
 class google_login_contact(osv.osv_memory):
     _inherit = 'google.login'
-    _name = 'google.login'
+    _name = 'google.login.contact'
     
     def _get_next_action(self, cr, uid, context=None):
         data_obj = self.pool.get('ir.model.data')
@@ -50,7 +50,7 @@ class google_login_contact(osv.osv_memory):
             'name': _('Import google'),
             'view_type': 'form',
             'view_mode': 'form,tree',
-            'res_model': 'synchronize.google.contact.import',
+            'res_model': 'synchronize.google.import',
             'view_id': False,
             'context': context,
             'views': [(view_id, 'form')],
@@ -61,8 +61,8 @@ class google_login_contact(osv.osv_memory):
     
 google_login_contact()
 
-class synchronize_google_contact(osv.osv_memory):
-    _name = 'synchronize.google.contact.import'
+class synchronize_google(osv.osv_memory):
+    _name = 'synchronize.google.import'
 
     def _get_group(self, cr, uid, context=None):
         user_obj = self.pool.get('res.users').browse(cr, uid, uid)
@@ -123,87 +123,47 @@ class synchronize_google_contact(osv.osv_memory):
         
         gmail_user = user_obj.gmail_user
         gmail_pwd = user_obj.gmail_password
-        if not gmail_user or not gmail_pwd:
-            raise osv.except_osv(_('Error'), _("Invalid login detail !\n Specify Username/Password."))
-
         google = self.pool.get('google.login')
-        gd_client = google.google_login(gmail_user, gmail_pwd, type='contact')
-        if not gd_client:
-            raise osv.except_osv(_('Error'), _("Please specify correct user and password !"))        
-        if obj.group_name not in ['all']:
-            query = gdata.contacts.service.ContactsQuery()
-            query.group = obj.group_name
-            contact = gd_client.GetContactsFeed(query.ToUri())
-        else:
-            contact = gd_client.GetContactsFeed()
-        if obj.create_partner=='create_all':
-            tables.append('Contact')    
-        else:    
-            tables.append('Address')
-       
-        context.update({'gd_client':contact,
-                       'client':gd_client,
-                        'table':tables,
-                        'customer':cust,
-                        'supplier':sup})       
-        imp = google_import(self, cr, uid, 'google', "synchronize_google_contact", gmail_user, context)
-        imp.set_table_list(tables)
-        imp.start()            
-        return{}
-#        context.update({'message': "Data Imported Successffully from Google."})
-#        model_pool = self.pool.get('ir.model.data')
-#        model_data_ids = model_pool.search(cr, uid, [('model', '=', 'ir.ui.view'), ('name', '=', 'google.import.message.form')])
-#        resource_id = model_pool.read(cr, uid, model_data_ids, fields)
-#        return {
-#              'view_type': 'form',
-#                'view_mode': 'form',
-#                'res_model': 'google.import.message',
-#                'views': [(resource_id, 'form')],
-#               'type': 'ir.actions.act_window',
-#                'target': 'new',
-#                'context': context,
-#            }    
-
-    def import_calendar_events(self, cr, uid, ids, context=None):
-        if context == None:
-            context = {}
-        if not ids:
-            return {'type': 'ir.actions.act_window_close'}
-        table = ['Events']
-        user_obj = self.pool.get('res.users').browse(cr, uid, uid)
-        gmail_user = user_obj.gmail_user
-        gmail_pwd = user_obj.gmail_password
         if not gmail_user or not gmail_pwd:
             raise osv.except_osv(_('Error'), _("Invalid login detail !\n Specify Username/Password."))
-        current_rec = self.browse(cr, uid, ids, context=context)
-        calendars = False
-        for rec in current_rec:
-            if rec.calendar_name != 'all':
+        
+        if context.get('contact'):
+            gd_client = google.google_login(gmail_user, gmail_pwd, type='contact')
+            if not gd_client:
+                raise osv.except_osv(_('Error'), _("Please specify correct user and password !"))        
+            if obj.group_name not in ['all']:
+                query = gdata.contacts.service.ContactsQuery()
+                query.group = obj.group_name
+                contact = gd_client.GetContactsFeed(query.ToUri())
+            else:
+                contact = gd_client.GetContactsFeed()
+            if obj.create_partner=='create_all':
+                tables.append('Contact')    
+            else:    
+                tables.append('Address')
+            context.update({'gd_client':contact,
+                           'client':gd_client,
+                            'table':tables,
+                            'customer':cust,
+                            'supplier':sup})
+              
+        elif context.get('calendar'):
+            tables.append('Events')
+            calendars = False
+            if obj.calendar_name != 'all':
                 calendars = [rec.calendar_name]
             else:
                 calendars = map(lambda x: x[0], [cal for cal in self._get_calendars(cr, uid, context) if cal[0] != 'all'])
-        context.update({'user': gmail_user,
+            context.update({'user': gmail_user,
                         'password': gmail_pwd,
                         'calendars': calendars,
                         'instance': 'calendar'})
-        imp = google_import(self, cr, uid, 'import_google', "import_google_calendar", [gmail_user], context)
-        imp.set_table_list(table)
-        imp.start()
-    
-        context.update({'message': "Data Imported Successffully from Google."})
-        model_pool = self.pool.get('ir.model.data')
-        model_data_ids = model_pool.search(cr, uid, [('model', '=', 'ir.ui.view'), ('name', '=', 'google.import.message.form')])
-        resource_id = model_pool.read(cr, uid, model_data_ids, fields)
-        return {
-              'view_type': 'form',
-                'view_mode': 'form',
-                'res_model': 'google.import.message',
-                'views': [(resource_id, 'form')],
-               'type': 'ir.actions.act_window',
-                'target': 'new',
-                'context': context,
-            }        
-    
-synchronize_google_contact()
+     
+        imp = google_import(self, cr, uid,'import_google' , "synchronize_google", gmail_user, context)
+        imp.set_table_list(tables)
+        imp.start()            
+        return{}
+
+synchronize_google()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
