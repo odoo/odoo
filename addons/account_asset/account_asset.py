@@ -108,6 +108,8 @@ class account_asset_asset(osv.osv):
     def compute_depreciation_board(self, cr, uid,ids, context=None):
         depreciation_lin_obj = self.pool.get('account.asset.depreciation.line')
         for asset in self.browse(cr, uid, ids, context=context):
+            if asset.value_residual == 0:
+                continue
             old_depreciation_line_ids = depreciation_lin_obj.search(cr, uid, [('asset_id', '=', asset.id), ('move_id', '=', False)])
             if old_depreciation_line_ids:
                 depreciation_lin_obj.unlink(cr, uid, old_depreciation_line_ids, context=context)
@@ -118,7 +120,7 @@ class account_asset_asset(osv.osv):
             depreciation_date = self.calculate_date(depreciation_date, add_months)
             total_days = (depreciation_date.year % 4) and 365 or 366
             undone_dotation_number = asset.method_delay - len(asset.account_move_line_ids)
-            if asset.method_time == 'end' and asset.value_residual != 0:
+            if asset.method_time == 'end': 
                 start_date = depreciation_date
                 end_date = datetime.strptime(asset.method_end, '%Y-%m-%d')
                 undone_dotation_number = 1
