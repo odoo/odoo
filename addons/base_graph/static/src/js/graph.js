@@ -81,9 +81,8 @@ openerp.base_graph.GraphView = openerp.base.Controller.extend({
     },
 
     schedule_chart: function(result) {
-        this.$element.html(QWeb.render("GraphView", {"fields_view": this.fields_view, "chart": this.chart}));
+        this.$element.html(QWeb.render("GraphView", {"fields_view": this.fields_view, "chart": this.chart,'view_id': this.view_id}));
         this.opration_fld = {};
-
         if (result.length){
             for(res in result) {
                 for(fld in result[res]) {
@@ -128,6 +127,7 @@ openerp.base_graph.GraphView = openerp.base.Controller.extend({
             for (i in this.opration_fld){
                 result.push(this.opration_fld[i]);
             }
+
             if(this.chart == 'bar') {
                 return this.schedule_bar(result);
             } else if(this.chart == "pie") {
@@ -150,18 +150,19 @@ openerp.base_graph.GraphView = openerp.base.Controller.extend({
                      '#75507b', '#3465a4', '#73d216', '#c17d11', '#edd400', '#fcaf3e', '#ef2929', '#ff00c9',
                      '#ad7fa8', '#729fcf', '#8ae234', '#e9b96e', '#fce94f', '#f57900', '#cc0000', '#d400a8'];
 
-        if(self.group_field){
+        if(self.group_field && (this.operator.length <= 1)){
             view_chart = self.orientation == 'horizontal'? 'stackedBarH' : 'stackedBar';
         }else{
             view_chart = self.orientation == 'horizontal'? 'barH' : 'bar';
         }
 
         for (i in result){
-            if (self.group_field){
+            if (self.group_field && (this.operator.length <= 1)){
                 newkey =result[i][self.group_field].split(' ').join('_');
             }else{
                 newkey = "val";
             }
+
             if (jQuery.inArray(newkey, self.group_list) == -1){
                 self.group_list.push(newkey);
                 if(this.operator.length > 1){
@@ -173,7 +174,7 @@ openerp.base_graph.GraphView = openerp.base.Controller.extend({
 
         for (i in result){
             var xystring = result[i][self.chart_info_fields];
-            if (self.group_field){
+            if (self.group_field && (self.operator.length <= 1)){
                 newkey =result[i][self.group_field].split(' ').join('_');
             }else{
                 newkey = "val";
@@ -200,7 +201,6 @@ openerp.base_graph.GraphView = openerp.base.Controller.extend({
                 xystr[xystring] = xyname;
             }
         }
-
         for (i in xystr){
             res.push(xystr[i]);
         }
@@ -238,7 +238,7 @@ openerp.base_graph.GraphView = openerp.base.Controller.extend({
 
         var bar_chart = new dhtmlxchartChart({
             view: view_chart,
-            container: "barchart",
+            container: self.view_id+"-barchart",
             value:"#"+self.group_list[0]+"#",
             gradient: "3d",
             border: false,
@@ -295,14 +295,14 @@ openerp.base_graph.GraphView = openerp.base.Controller.extend({
         bar_chart.parse(res,"json");
         bar_chart.attachEvent("onItemClick", function(id) {
             var id = bar_chart.get(id);
-            self.open(id);
+            self.open_list_view(id);
         });
     },
     schedule_pie: function(result) {
         var self = this;
         var chart =  new dhtmlxchartChart({
             view:"pie3D",
-            container:"piechart",
+            container:self.view_id+"-piechart",
             value:"#"+self.operator_field+"#",
             pieInnerText:function(obj) {
                 var sum = chart.sum("#"+self.operator_field+"#");
@@ -331,10 +331,10 @@ openerp.base_graph.GraphView = openerp.base.Controller.extend({
         chart.parse(result,"json");
         chart.attachEvent("onItemClick", function(id) {
             var id = chart.get(id);
-            self.open(id);
+            self.open_list_view(id);
         });
     },
-    open : function (id){
+    open_list_view : function (id){
         var self = this;
         var id = id[self.chart_info_fields];
         if (typeof id == 'object'){
