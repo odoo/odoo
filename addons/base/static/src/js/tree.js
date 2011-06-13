@@ -1,8 +1,11 @@
 openerp.base.tree = function(openerp) {
 openerp.base.views.add('tree', 'openerp.base.TreeView');
+
+/**
+ * Genuine tree view (the one displayed as a tree, not the list)
+ */
 openerp.base.TreeView = openerp.base.View.extend({
     init: function(view_manager, session, element_id, dataset, view_id, options) {
-
         this._super(session, element_id);
         this.view_manager = view_manager || new openerp.base.NullViewManager();
         this.dataset = dataset;
@@ -14,6 +17,7 @@ openerp.base.TreeView = openerp.base.View.extend({
         this.options = _.extend({}, this.defaults, options || {});
         this.flags =  this.view_manager.action.flags;
     },
+    
     start: function () {
         this._super();
         return this.rpc("/base/treeview/load", {
@@ -37,50 +41,50 @@ openerp.base.TreeView = openerp.base.View.extend({
 
     // get child data of selected value
     getdata: function (id, flag) {
-        var self=this;
-        self.dataset.domain = [['parent_id', '=', parseInt(id,10)]];
+        var self = this;
+        self.dataset.domain = [['parent_id', '=', parseInt(id, 10)]];
         self.dataset.read_slice([], 0, false, function (response) {
-            if (($('tr #'+id).length) == 1){
-                $('tr #'+id).find('td #parentimg').attr('src','/base/static/src/img/collapse.gif');
+            if (($('tr #' + id).length) == 1){
+                $('tr #' + id).find('td #parentimg').attr('src','/base/static/src/img/collapse.gif');
 
-                $('tr #'+id).after(QWeb.render('TreeView_Secondry', {'child_data':response}));
-                for (i in response){
-                    if($('tr #'+response[i].id)){
-                        indent=$('tr #'+id).css('textIndent');
+                $('tr #'+id).after(QWeb.render('TreeView_Secondry', {'child_data': response}));
+                for (i in response) {
+                    if ($('tr #'+response[i].id)) {
+                        indent=$('tr #' + id).css('textIndent');
                         ind=indent.split('px');
-                        j=(parseInt(ind[0],10))+10;
+                        j=(parseInt(ind[0],10)) + 10;
                         $('tr #'+response[i].id).animate({textIndent: j});
                     }
                 }
-            }else{
-                if (flag == 0){
+            } else {
+                if (flag == 0) {
                     self.$element.find('tr').remove();
                 }
-                self.$element.append(QWeb.render('TreeView_Secondry', {'child_data':response}));
+                self.$element.append(QWeb.render('TreeView_Secondry', {'child_data': response}));
             }
 
-            $('tr').click(function(){
-                divflag=0;
-                if ($('#'+(this.id)).length == 1){
-                    for (i in response){
-                        if (this.id == response[i].id){
-                            if (response[i].child_id.length > 0){
-                                jQuery(response[i].child_id).each(function(e,chid){
-                                    if (jQuery('tr #'+chid).length > 0){
-                                        if (jQuery('tr #'+chid).is(':hidden')){
+            $('tr').click(function() {
+                divflag = 0;
+                if ($('#' + (this.id)).length == 1) {
+                    for (i in response) {
+                        if (this.id == response[i].id) {
+                            if (response[i].child_id.length > 0) {
+                                jQuery(response[i].child_id).each(function(e, chid) {
+                                    if (jQuery('tr #' + chid).length > 0){
+                                        if (jQuery('tr #' + chid).is(':hidden')) {
                                             divflag = -1;
-                                        }else{
+                                        } else {
                                             divflag++;
                                         }
                                     }
                                 });
-                                if (divflag == 0){
-                                    if ($('#'+(this.id)).find('td #parentimg').attr('src') == '/base/static/src/img/expand.gif'){
+                                if (divflag == 0) {
+                                    if ($('#' + (this.id)).find('td #parentimg').attr('src') == '/base/static/src/img/expand.gif') {
                                         self.getdata(this.id);
                                     }
-                                }else if (divflag > 0){
+                                } else if (divflag > 0) {
                                     self.showcontent(this.id, 1, response[i].child_id);
-                                }else if (divflag == -1){
+                                } else if (divflag == -1) {
                                     self.showcontent(this.id, 0, response[i].child_id);
                                 }
                             }
@@ -93,32 +97,31 @@ openerp.base.TreeView = openerp.base.View.extend({
 
     // show & hide the contents
     showcontent: function (id, flag, childid) {
-        var self=this;
-        if (flag == 1){
-            $('tr #'+id).find('td #parentimg').attr('src', '/base/static/src/img/expand.gif');
-        }
-        else{
-            $('tr #'+id).find('td #parentimg').attr('src', '/base/static/src/img/collapse.gif');
+        var self = this;
+        if (flag == 1) {
+            $('tr #' + id).find('td #parentimg').attr('src', '/base/static/src/img/expand.gif');
+        } else {
+            $('tr #' + id).find('td #parentimg').attr('src', '/base/static/src/img/collapse.gif');
         }
 
-        for (i in childid){
-            if (flag == 1){
-                self.dataset.domain = [['parent_id', '=', parseInt(childid[i],10)]];
-                childimg=$('tr #'+childid[i]).find('td #parentimg').attr('src');
-                if(childimg=="/base/static/src/img/collapse.gif"){
-                    $('tr #'+childid[i]).find('td #parentimg').attr('src','/base/static/src/img/expand.gif');
+        for (i in childid) {
+            if (flag == 1) {
+                self.dataset.domain = [['parent_id', '=', parseInt(childid[i], 10)]];
+                childimg = $('tr #' + childid[i]).find('td #parentimg').attr('src');
+                if (childimg == "/base/static/src/img/collapse.gif") {
+                    $('tr #' + childid[i]).find('td #parentimg').attr('src', '/base/static/src/img/expand.gif');
                 }
                 self.dataset.read_slice([], 0, false, function (response) {
                     for (j in response){
-                        if (jQuery('tr #'+response[j].id).length > 0){
-                            jQuery('tr #'+response[j].id).hide();
+                        if (jQuery('tr #' + response[j].id).length > 0) {
+                            jQuery('tr #' + response[j].id).hide();
                         }
                     }
                 });
-                jQuery ('tr #'+childid[i]).hide();
+                jQuery ('tr #' + childid[i]).hide();
             }
-            else{
-                jQuery ('tr #'+childid[i]).show();
+            else {
+                jQuery ('tr #' + childid[i]).show();
             }
         }
     },
