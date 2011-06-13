@@ -430,9 +430,9 @@ class DataSet(openerpweb.Controller):
         return Model.unlink(ids)
 
     @openerpweb.jsonrequest
-    def call(self, req, model, method, ids, args):
+    def call(self, req, model, method, args):
         m = req.session.model(model)
-        r = getattr(m, method)(ids, *args)
+        r = getattr(m, method)(*args)
         return {'result': r}
 
     @openerpweb.jsonrequest
@@ -447,9 +447,9 @@ class DataSet(openerpweb.Controller):
         return {'result': r}
     
     @openerpweb.jsonrequest
-    def name_search(self, req, model, search_str, domain=[], context={}):
+    def name_search(self, req, model, search_str, domain=[], context={}, limit=False):
         m = req.session.model(model)
-        r = m.name_search(search_str+'%', domain, '=ilike', context)
+        r = m.name_search(search_str, domain, 'ilike', context, limit)
         return {'result': r}
 
 class DataGroup(openerpweb.Controller):
@@ -610,20 +610,6 @@ class ListView(View):
     def load(self, req, model, view_id, toolbar=False):
         fields_view = self.fields_view_get(req, model, view_id, 'tree', toolbar=toolbar)
         return {'fields_view': fields_view}
-
-    def fields_view_get(self, request, model, view_id, view_type="tree",
-                        transform=True, toolbar=False, submenu=False):
-        """ Sets @editable on the view's arch if it isn't already set and
-        ``set_editable`` is present in the request context
-        """
-        view = super(ListView, self).fields_view_get(
-            request, model, view_id, view_type, transform, toolbar, submenu)
-
-        view_attributes = view['arch']['attrs']
-        if request.context.get('set_editable')\
-                and 'editable' not in view_attributes:
-            view_attributes['editable'] = 'bottom'
-        return view
 
     def process_colors(self, view, row, context):
         colors = view['arch']['attrs'].get('colors')
