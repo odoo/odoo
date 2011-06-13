@@ -24,7 +24,7 @@ import base64
 import re
 
 import tools
-import addons
+import openerp.modules
 from osv import fields, osv
 from tools.translate import _
 
@@ -229,7 +229,7 @@ class ir_ui_menu(osv.osv):
         if not path:
             return False
         path_info = path.split(',')
-        icon_path = addons.get_module_resource(path_info[0],path_info[1])
+        icon_path = openerp.modules.get_module_resource(path_info[0],path_info[1])
         icon_image = False
         if icon_path:
             try:

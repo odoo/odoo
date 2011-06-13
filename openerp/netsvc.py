@@ -24,6 +24,7 @@
 #
 ##############################################################################
 
+import cgitb
 import errno
 import logging
 import logging.handlers
@@ -213,6 +214,19 @@ def init_logger():
     logger.addHandler(handler)
     logger.setLevel(int(tools.config['log_level'] or '0'))
 
+# A alternative logging scheme for automated runs of the
+# server intended to test it.
+def init_alternative_logger():
+    class H(logging.Handler):
+      def emit(self, record):
+        if record.levelno > 20:
+          print record.levelno, record.pathname, record.msg
+    handler = H()
+    logger = logging.getLogger()
+    logger.handlers = []
+    logger.addHandler(handler)
+    logger.setLevel(logging.ERROR)
+
 class Agent(object):
     """Singleton that keeps track of cancellable tasks to run at a given
        timestamp.
@@ -277,12 +291,13 @@ class Agent(object):
                 time.sleep(1)
             time.sleep(60)
 
-agent_runner = threading.Thread(target=Agent.runner, name="netsvc.Agent.runner")
-# the agent runner is a typical daemon thread, that will never quit and must be
-# terminated when the main process exits - with no consequence (the processing
-# threads it spawns are not marked daemon)
-agent_runner.setDaemon(True)
-agent_runner.start()
+def start_agent():
+    agent_runner = threading.Thread(target=Agent.runner, name="netsvc.Agent.runner")
+    # the agent runner is a typical daemon thread, that will never quit and must be
+    # terminated when the main process exits - with no consequence (the processing
+    # threads it spawns are not marked daemon)
+    agent_runner.setDaemon(True)
+    agent_runner.start()
 
 import traceback
 
@@ -416,7 +431,7 @@ class OpenERPDispatcher:
         except Exception, e:
             self.log('exception', tools.exception_to_unicode(e))
             tb = getattr(e, 'traceback', sys.exc_info())
-            tb_s = "".join(traceback.format_exception(*tb))
+            tb_s = cgitb.text(tb)
             if tools.config['debug_mode']:
                 import pdb
                 pdb.post_mortem(tb[2])

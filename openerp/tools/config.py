@@ -28,6 +28,23 @@ import openerp.loglevels as loglevels
 import logging
 import openerp.release as release
 
+class MyOption (optparse.Option, object):
+    """ optparse Option with two additional attributes.
+
+    The list of command line options (getopt.Option) is used to create the
+    list of the configuration file options. When reading the file, and then
+    reading the command line arguments, we don't want optparse.parse results
+    to override the configuration file values. But if we provide default
+    values to optparse, optparse will return them and we can't know if they
+    were really provided by the user or not. A solution is to not use
+    optparse's default attribute, but use a custom one (that will be copied
+    to create the default values of the configuration file).
+
+    """
+    def __init__(self, *opts, **attrs):
+        self.my_default = attrs.pop('my_default', None)
+        super(MyOption, self).__init__(*opts, **attrs)
+
 def check_ssl():
     try:
         from OpenSSL import SSL
@@ -39,67 +56,24 @@ def check_ssl():
 
 class configmanager(object):
     def __init__(self, fname=None):
+        # Options not exposed on the command line. Command line options will be added
+        # from optparse's parser.
         self.options = {
-            'email_from':False,
-            'xmlrpc_interface': '',    # this will bind the server to all interfaces
-            'xmlrpc_port': 8069,
-            'netrpc_interface': '',
-            'netrpc_port': 8070,
-            'xmlrpcs_interface': '',    # this will bind the server to all interfaces
-            'xmlrpcs_port': 8071,
-            'db_host': False,
-            'db_port': False,
-            'db_name': False,
-            'db_user': False,
-            'db_password': False,
-            'db_maxconn': 64,
-            'reportgz': False,
-            'netrpc': True,
-            'xmlrpc': True,
-            'xmlrpcs': True,
-            'translate_in': None,
-            'translate_out': None,
-            'overwrite_existing_translations': False,
-            'load_language': None,
-            'language': None,
-            'pg_path': None,
             'admin_passwd': 'admin',
             'csv_internal_sep': ',',
-            'addons_path': None,
-            'root_path': None,
-            'debug_mode': False,
-            'import_partial': "",
-            'pidfile': None,
-            'logfile': None,
-            'logrotate': True,
-            'smtp_server': 'localhost',
-            'smtp_user': False,
-            'smtp_port':25,
-            'smtp_ssl':False,
-            'smtp_password': False,
-            'stop_after_init': False,   # this will stop the server after initialization
-            'syslog' : False,
-            'log_level': logging.INFO,
-            'assert_exit_level': logging.ERROR, # level above which a failed assert will be raised
-            'cache_timeout': 100000,
             'login_message': False,
-            'list_db' : True,
-            'timezone' : False, # to override the default TZ
-            'test_file' : False,
-            'test_report_directory' : False,
-            'test_disable' : False,
-            'test_commit' : False,
-            'static_http_enable': False,
-            'static_http_document_root': None,
-            'static_http_url_prefix': None,
-            'secure_cert_file': 'server.cert',
-            'secure_pkey_file': 'server.pkey',
             'publisher_warranty_url': 'http://services.openerp.com/publisher-warranty/',
-            'osv_memory_count_limit': None, # number of records in each osv_memory virtual table
-            'osv_memory_age_limit': 1, # hours
+            'reportgz': False,
+            'root_path': None,
         }
 
-        self.blacklist_for_save = set(["publisher_warranty_url", "load_language", "root_path"])
+        # Not exposed in the configuration file.
+        self.blacklist_for_save = set(
+            ['publisher_warranty_url', 'load_language', 'root_path',
+            'init', 'save', 'config', 'update'])
+
+        # dictionary mapping option destination (keys in self.options) to MyOptions.
+        self.casts = {}
 
         self.misc = {}
         self.config_file = fname
@@ -109,7 +83,7 @@ class configmanager(object):
                           for x in ('CRITICAL', 'ERROR', 'WARNING', 'INFO', 'TEST', 'DEBUG', 'DEBUG_RPC', 'DEBUG_SQL', 'DEBUG_RPC_ANSWER','NOTSET')])
 
         version = "%s %s" % (release.description, release.version)
-        self.parser = parser = optparse.OptionParser(version=version)
+        self.parser = parser = optparse.OptionParser(version=version, option_class=MyOption)
 
         # Server startup config
         group = optparse.OptionGroup(parser, "Common options")
@@ -121,16 +95,19 @@ class configmanager(object):
                           help="update one or more modules (comma-separated list, use \"all\" for all modules). Requires -d.")
         group.add_option("--without-demo", dest="without_demo",
                           help="disable loading demo data for modules to be installed (comma-separated, use \"all\" for all modules). Requires -d and -i. Default is %default",
-                          default=False)
-        group.add_option("-P", "--import-partial", dest="import_partial",
-                        help="Use this for big data importation, if it crashes you will be able to continue at the current state. Provide a filename to store intermediate importation states.", default=False)
+                          my_default=False)
+        group.add_option("-P", "--import-partial", dest="import_partial", my_default='',
+                        help="Use this for big data importation, if it crashes you will be able to continue at the current state. Provide a filename to store intermediate importation states.")
         group.add_option("--pidfile", dest="pidfile", help="file where the server pid will be stored")
         parser.add_option_group(group)
 
         group = optparse.OptionGroup(parser, "XML-RPC Configuration")
-        group.add_option("--xmlrpc-interface", dest="xmlrpc_interface", help="specify the TCP IP address for the XML-RPC protocol")
-        group.add_option("--xmlrpc-port", dest="xmlrpc_port", help="specify the TCP port for the XML-RPC protocol", type="int")
-        group.add_option("--no-xmlrpc", dest="xmlrpc", action="store_false", help="disable the XML-RPC protocol")
+        group.add_option("--xmlrpc-interface", dest="xmlrpc_interface", my_default='',
+                         help="Specify the TCP IP address for the XML-RPC protocol. The empty string binds to all interfaces.")
+        group.add_option("--xmlrpc-port", dest="xmlrpc_port", my_default=8069,
+                         help="specify the TCP port for the XML-RPC protocol", type="int")
+        group.add_option("--no-xmlrpc", dest="xmlrpc", action="store_false", my_default=True,
+                         help="disable the XML-RPC protocol")
         parser.add_option_group(group)
 
         title = "XML-RPC Secure Configuration"
@@ -138,68 +115,91 @@ class configmanager(object):
             title += " (disabled as ssl is unavailable)"
 
         group = optparse.OptionGroup(parser, title)
-        group.add_option("--xmlrpcs-interface", dest="xmlrpcs_interface", help="specify the TCP IP address for the XML-RPC Secure protocol")
-        group.add_option("--xmlrpcs-port", dest="xmlrpcs_port", help="specify the TCP port for the XML-RPC Secure protocol", type="int")
-        group.add_option("--no-xmlrpcs", dest="xmlrpcs", action="store_false", help="disable the XML-RPC Secure protocol")
-        group.add_option("--cert-file", dest="secure_cert_file", help="specify the certificate file for the SSL connection")
-        group.add_option("--pkey-file", dest="secure_pkey_file", help="specify the private key file for the SSL connection")
+        group.add_option("--xmlrpcs-interface", dest="xmlrpcs_interface", my_default='',
+                         help="Specify the TCP IP address for the XML-RPC Secure protocol. The empty string binds to all interfaces.")
+        group.add_option("--xmlrpcs-port", dest="xmlrpcs_port", my_default=8071,
+                         help="specify the TCP port for the XML-RPC Secure protocol", type="int")
+        group.add_option("--no-xmlrpcs", dest="xmlrpcs", action="store_false", my_default=True,
+                         help="disable the XML-RPC Secure protocol")
+        group.add_option("--cert-file", dest="secure_cert_file", my_default='server.cert',
+                         help="specify the certificate file for the SSL connection")
+        group.add_option("--pkey-file", dest="secure_pkey_file", my_default='server.pkey',
+                         help="specify the private key file for the SSL connection")
         parser.add_option_group(group)
 
         # NET-RPC
         group = optparse.OptionGroup(parser, "NET-RPC Configuration")
-        group.add_option("--netrpc-interface", dest="netrpc_interface", help="specify the TCP IP address for the NETRPC protocol")
-        group.add_option("--netrpc-port", dest="netrpc_port", help="specify the TCP port for the NETRPC protocol", type="int")
-        group.add_option("--no-netrpc", dest="netrpc", action="store_false", help="disable the NETRPC protocol")
+        group.add_option("--netrpc-interface", dest="netrpc_interface", my_default='',
+                         help="specify the TCP IP address for the NETRPC protocol")
+        group.add_option("--netrpc-port", dest="netrpc_port", my_default=8070,
+                         help="specify the TCP port for the NETRPC protocol", type="int")
+        group.add_option("--no-netrpc", dest="netrpc", action="store_false", my_default=True,
+                         help="disable the NETRPC protocol")
         parser.add_option_group(group)
 
         # Static HTTP
         group = optparse.OptionGroup(parser, "Static HTTP service")
-        group.add_option("--static-http-enable", dest="static_http_enable", action="store_true", default=False, help="enable static HTTP service for serving plain HTML files")
+        group.add_option("--static-http-enable", dest="static_http_enable", action="store_true", my_default=False, help="enable static HTTP service for serving plain HTML files")
         group.add_option("--static-http-document-root", dest="static_http_document_root", help="specify the directory containing your static HTML files (e.g '/var/www/')")
         group.add_option("--static-http-url-prefix", dest="static_http_url_prefix", help="specify the URL root prefix where you want web browsers to access your static HTML files (e.g '/')")
         parser.add_option_group(group)
 
         # Testing Group
         group = optparse.OptionGroup(parser, "Testing Configuration")
-        group.add_option("--test-file", dest="test_file", help="Launch a YML test file.")
-        group.add_option("--test-report-directory", dest="test_report_directory", help="If set, will save sample of all reports in this directory.")
+        group.add_option("--test-file", dest="test_file", my_default=False,
+                         help="Launch a YML test file.")
+        group.add_option("--test-report-directory", dest="test_report_directory", my_default=False,
+                         help="If set, will save sample of all reports in this directory.")
         group.add_option("--test-disable", action="store_true", dest="test_disable",
-                         default=False, help="Disable loading test files.")
+                         my_default=False, help="Disable loading test files.")
         group.add_option("--test-commit", action="store_true", dest="test_commit",
-                         default=False, help="Commit database changes performed by tests.")
+                         my_default=False, help="Commit database changes performed by tests.")
         group.add_option("--assert-exit-level", dest='assert_exit_level', type="choice", choices=self._LOGLEVELS.keys(),
-                          help="specify the level at which a failed assertion will stop the server. Accepted values: %s" % (self._LOGLEVELS.keys(),))
+                         my_default='error',
+                         help="specify the level at which a failed assertion will stop the server. Accepted values: %s" % (self._LOGLEVELS.keys(),))
         parser.add_option_group(group)
 
         # Logging Group
         group = optparse.OptionGroup(parser, "Logging Configuration")
         group.add_option("--logfile", dest="logfile", help="file where the server log will be stored")
-        group.add_option("--no-logrotate", dest="logrotate", action="store_false",
+        group.add_option("--no-logrotate", dest="logrotate", action="store_false", my_default=True,
                          help="do not rotate the logfile")
         group.add_option("--syslog", action="store_true", dest="syslog",
-                         default=False, help="Send the log to the syslog server")
+                         my_default=False, help="Send the log to the syslog server")
         group.add_option('--log-level', dest='log_level', type='choice', choices=self._LOGLEVELS.keys(),
+                         my_default='info',
                          help='specify the level of the logging. Accepted values: ' + str(self._LOGLEVELS.keys()))
         parser.add_option_group(group)
 
         # SMTP Group
         group = optparse.OptionGroup(parser, "SMTP Configuration")
-        group.add_option('--email-from', dest='email_from', help='specify the SMTP email address for sending email')
-        group.add_option('--smtp', dest='smtp_server', help='specify the SMTP server for sending email')
-        group.add_option('--smtp-port', dest='smtp_port', help='specify the SMTP port', type="int")
-        group.add_option('--smtp-ssl', dest='smtp_ssl', action='store_true', help='specify the SMTP server support SSL or not')
-        group.add_option('--smtp-user', dest='smtp_user', help='specify the SMTP username for sending email')
-        group.add_option('--smtp-password', dest='smtp_password', help='specify the SMTP password for sending email')
+        group.add_option('--email-from', dest='email_from', my_default=False,
+                         help='specify the SMTP email address for sending email')
+        group.add_option('--smtp', dest='smtp_server', my_default='localhost',
+                         help='specify the SMTP server for sending email')
+        group.add_option('--smtp-port', dest='smtp_port', my_default=25,
+                         help='specify the SMTP port', type="int")
+        group.add_option('--smtp-ssl', dest='smtp_ssl', action='store_true', my_default=False,
+                         help='specify the SMTP server support SSL or not')
+        group.add_option('--smtp-user', dest='smtp_user', my_default=False,
+                         help='specify the SMTP username for sending email')
+        group.add_option('--smtp-password', dest='smtp_password', my_default=False,
+                         help='specify the SMTP password for sending email')
         parser.add_option_group(group)
 
         group = optparse.OptionGroup(parser, "Database related options")
-        group.add_option("-d", "--database", dest="db_name", help="specify the database name")
-        group.add_option("-r", "--db_user", dest="db_user", help="specify the database user name")
-        group.add_option("-w", "--db_password", dest="db_password", help="specify the database password")
+        group.add_option("-d", "--database", dest="db_name", my_default=False,
+                         help="specify the database name")
+        group.add_option("-r", "--db_user", dest="db_user", my_default=False,
+                         help="specify the database user name")
+        group.add_option("-w", "--db_password", dest="db_password", my_default=False,
+                         help="specify the database password")
         group.add_option("--pg_path", dest="pg_path", help="specify the pg executable path")
-        group.add_option("--db_host", dest="db_host", help="specify the database host")
-        group.add_option("--db_port", dest="db_port", help="specify the database port", type="int")
-        group.add_option("--db_maxconn", dest="db_maxconn", type='int',
+        group.add_option("--db_host", dest="db_host", my_default=False,
+                         help="specify the database host")
+        group.add_option("--db_port", dest="db_port", my_default=False,
+                         help="specify the database port", type="int")
+        group.add_option("--db_maxconn", dest="db_maxconn", type='int', my_default=64,
                          help="specify the the maximum number of physical connections to posgresql")
         parser.add_option_group(group)
 
@@ -216,7 +216,7 @@ class configmanager(object):
                          help="export all sentences to be translated to a CSV file, a PO file or a TGZ archive and exit")
         group.add_option("--i18n-import", dest="translate_in",
                          help="import a CSV or a PO file with translations and exit. The '-l' option is required.")
-        group.add_option("--i18n-overwrite", dest="overwrite_existing_translations", action="store_true", default=False,
+        group.add_option("--i18n-overwrite", dest="overwrite_existing_translations", action="store_true", my_default=False,
                          help="overwrites existing translation terms on updating a module or importing a CSV or a PO file.")
         group.add_option("--modules", dest="translate_modules",
                          help="specify modules to export. Use in combination with --i18n-export")
@@ -226,32 +226,42 @@ class configmanager(object):
         parser.add_option_group(group)
 
         security = optparse.OptionGroup(parser, 'Security-related options')
-        security.add_option('--no-database-list', action="store_false", dest='list_db', help="disable the ability to return the list of databases")
+        security.add_option('--no-database-list', action="store_false", dest='list_db', my_default=True,
+                            help="disable the ability to return the list of databases")
         parser.add_option_group(security)
 
         # Advanced options
         group = optparse.OptionGroup(parser, "Advanced options")
-        group.add_option("--cache-timeout", dest="cache_timeout",
+        group.add_option("--cache-timeout", dest="cache_timeout", my_default=100000,
                           help="set the timeout for the cache system", type="int")
-        group.add_option('--debug', dest='debug_mode', action='store_true', default=False, help='enable debug mode')
-        group.add_option("--stop-after-init", action="store_true", dest="stop_after_init", default=False,
-                          help="stop the server after it initializes")
-        group.add_option("-t", "--timezone", dest="timezone", help="specify reference timezone for the server (e.g. Europe/Brussels")
-        group.add_option("--osv-memory-count-limit", dest="osv_memory_count_limit", default=False,
+        group.add_option('--debug', dest='debug_mode', action='store_true', my_default=False, help='enable debug mode')
+        group.add_option("--stop-after-init", action="store_true", dest="stop_after_init", my_default=False,
+                          help="stop the server after its initialization")
+        group.add_option("-t", "--timezone", dest="timezone", my_default=False,
+                         help="specify reference timezone for the server (e.g. Europe/Brussels")
+        group.add_option("--osv-memory-count-limit", dest="osv_memory_count_limit", my_default=False,
                          help="Force a limit on the maximum number of records kept in the virtual "
                               "osv_memory tables. The default is False, which means no count-based limit.",
                          type="int")
-        group.add_option("--osv-memory-age-limit", dest="osv_memory_age_limit", default=1.0,
+        group.add_option("--osv-memory-age-limit", dest="osv_memory_age_limit", my_default=1.0,
                          help="Force a limit on the maximum age of records kept in the virtual "
                               "osv_memory tables. This is a decimal value expressed in hours, "
                               "and the default is 1 hour.",
                          type="float")
         parser.add_option_group(group)
 
+        # Copy all optparse options (i.e. MyOption) into self.options.
+        for group in parser.option_groups:
+            for option in group.option_list:
+                self.options[option.dest] = option.my_default
+                self.casts[option.dest] = option
+
         self.parse_config()
 
-    def parse_config(self, args=[]):
-        opt, args = self.parser.parse_args()
+    def parse_config(self, args=None):
+        if args is None:
+            args = []
+        opt, args = self.parser.parse_args(args)
 
         def die(cond, msg):
             if cond:
@@ -310,8 +320,12 @@ class configmanager(object):
                 ]
 
         for arg in keys:
+            # Copy the command-line argument...
             if getattr(opt, arg):
                 self.options[arg] = getattr(opt, arg)
+            # ... or keep, but cast, the config file value.
+            elif isinstance(self.options[arg], basestring) and self.casts[arg].type in optparse.Option.TYPE_CHECKER:
+                self.options[arg] = optparse.Option.TYPE_CHECKER[self.casts[arg].type](self.casts[arg], arg, self.options[arg])
 
         keys = [
             'language', 'translate_out', 'translate_in', 'overwrite_existing_translations',
@@ -323,8 +337,12 @@ class configmanager(object):
         ]
 
         for arg in keys:
+            # Copy the command-line argument...
             if getattr(opt, arg) is not None:
                 self.options[arg] = getattr(opt, arg)
+            # ... or keep, but cast, the config file value.
+            elif isinstance(self.options[arg], basestring) and self.casts[arg].type in optparse.Option.TYPE_CHECKER:
+                self.options[arg] = optparse.Option.TYPE_CHECKER[self.casts[arg].type](self.casts[arg], arg, self.options[arg])
 
         if opt.assert_exit_level:
             self.options['assert_exit_level'] = self._LOGLEVELS[opt.assert_exit_level]

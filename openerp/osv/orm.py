@@ -63,6 +63,39 @@ from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools import SKIPPED_ELEMENT_TYPES
 
 regex_order = re.compile('^(([a-z0-9_]+|"[a-z0-9_]+")( *desc| *asc)?( *, *|))+$', re.I)
+regex_object_name = re.compile(r'^[a-z0-9_.]+$')
+
+# Mapping between openerp module names and their osv classes.
+module_class_list = {}
+
+def check_object_name(name):
+    """ Check if the given name is a valid openerp object name.
+
+        The _name attribute in osv and osv_memory object is subject to
+        some restrictions. This function returns True or False whether
+        the given name is allowed or not.
+
+        TODO: this is an approximation. The goal in this approximation
+        is to disallow uppercase characters (in some places, we quote
+        table/column names and in other not, which leads to this kind
+        of errors:
+
+            psycopg2.ProgrammingError: relation "xxx" does not exist).
+
+        The same restriction should apply to both osv and osv_memory
+        objects for consistency.
+
+    """
+    if regex_object_name.match(name) is None:
+        return False
+    return True
+
+def raise_on_invalid_object_name(name):
+    if not check_object_name(name):
+        msg = "The _name attribute %s is not valid." % name
+        logger = netsvc.Logger()
+        logger.notifyChannel('orm', netsvc.LOG_ERROR, msg)
+        raise except_orm('ValueError', msg)
 
 POSTGRES_CONFDELTYPES = {
     'RESTRICT': 'r',
@@ -384,6 +417,21 @@ def get_pg_type(f):
 
 
 class orm_template(object):
+    """ Base class for OpenERP models.
+
+    OpenERP models are created by inheriting from this class (although
+    not directly; more specifically by inheriting from osv or
+    osv_memory). The constructor is called once, usually directly
+    after the class definition, e.g.:
+
+        class user(osv):
+            ...
+        user()
+
+    The system will later instanciate the class once per database (on
+    which the class' module is installed).
+
+    """
     _name = None
     _columns = {}
     _constraints = []
@@ -421,6 +469,18 @@ class orm_template(object):
         raise NotImplementedError(_('The read_group method is not implemented on this object !'))
 
     def _field_create(self, cr, context=None):
+        """
+
+        Create/update entries in ir_model, ir_model_data, and ir_model_fields.
+
+        - create an entry in ir_model (if there is not already one),
+        - create an entry in ir_model_data (if there is not already one, and if
+          'module' is in the context),
+        - update ir_model_fields with the fields found in _columns
+          (TODO there is some redundancy as _columns is updated from
+          ir_model_fields in __init__).
+
+        """
         if context is None:
             context = {}
         cr.execute("SELECT id FROM ir_model WHERE model=%s", (self._name,))
@@ -458,6 +518,7 @@ class orm_template(object):
                 'readonly': (f.readonly and 1) or 0,
                 'required': (f.required and 1) or 0,
                 'selectable': (f.selectable and 1) or 0,
+                'translate': (f.translate and 1) or 0,
                 'relation_field': (f._type=='one2many' and isinstance(f, fields.one2many)) and f._fields_id or '',
             }
             # When its a custom field,it does not contain f.select
@@ -474,13 +535,13 @@ class orm_template(object):
                 vals['id'] = id
                 cr.execute("""INSERT INTO ir_model_fields (
                     id, model_id, model, name, field_description, ttype,
-                    relation,view_load,state,select_level,relation_field
+                    relation,view_load,state,select_level,relation_field, translate
                 ) VALUES (
-                    %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s
+                    %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s
                 )""", (
                     id, vals['model_id'], vals['model'], vals['name'], vals['field_description'], vals['ttype'],
                      vals['relation'], bool(vals['view_load']), 'base',
-                    vals['select_level'], vals['relation_field']
+                    vals['select_level'], vals['relation_field'], bool(vals['translate'])
                 ))
                 if 'module' in context:
                     name1 = 'field_' + self._table + '_' + k
@@ -497,20 +558,118 @@ class orm_template(object):
                         cr.commit()
                         cr.execute("""UPDATE ir_model_fields SET
                             model_id=%s, field_description=%s, ttype=%s, relation=%s,
-                            view_load=%s, select_level=%s, readonly=%s ,required=%s, selectable=%s, relation_field=%s
+                            view_load=%s, select_level=%s, readonly=%s ,required=%s, selectable=%s, relation_field=%s, translate=%s
                         WHERE
                             model=%s AND name=%s""", (
                                 vals['model_id'], vals['field_description'], vals['ttype'],
                                 vals['relation'], bool(vals['view_load']),
-                                vals['select_level'], bool(vals['readonly']), bool(vals['required']), bool(vals['selectable']), vals['relation_field'], vals['model'], vals['name']
+                                vals['select_level'], bool(vals['readonly']), bool(vals['required']), bool(vals['selectable']), vals['relation_field'], bool(vals['translate']), vals['model'], vals['name']
                             ))
                         break
         cr.commit()
 
     def _auto_init(self, cr, context=None):
+        raise_on_invalid_object_name(self._name)
         self._field_create(cr, context=context)
 
-    def __init__(self, cr):
+    #
+    # Goal: try to apply inheritance at the instanciation level and
+    #       put objects in the pool var
+    #
+    @classmethod
+    def makeInstance(cls, pool, cr, attributes):
+        """ Instanciate a given model.
+
+        This class method instanciates the class of some model (i.e. a class
+        deriving from osv or osv_memory). The class might be the class passed
+        in argument or, if it inherits from another class, a class constructed
+        by combining the two classes.
+
+        The ``attributes`` argument specifies which parent class attributes
+        have to be combined.
+
+        TODO: the creation of the combined class is repeated at each call of
+        this method. This is probably unnecessary.
+
+        """
+        parent_names = getattr(cls, '_inherit', None)
+        if parent_names:
+            if isinstance(parent_names, (str, unicode)):
+                name = cls._name or parent_names
+                parent_names = [parent_names]
+            else:
+                name = cls._name
+
+            if not name:
+                raise TypeError('_name is mandatory in case of multiple inheritance')
+
+            for parent_name in ((type(parent_names)==list) and parent_names or [parent_names]):
+                parent_class = pool.get(parent_name).__class__
+                if not pool.get(parent_name):
+                    raise TypeError('The model "%s" specifies an unexisting parent class "%s"\n'
+                        'You may need to add a dependency on the parent class\' module.' % (name, parent_name))
+                nattr = {}
+                for s in attributes:
+                    new = copy.copy(getattr(pool.get(parent_name), s))
+                    if s == '_columns':
+                        # Don't _inherit custom fields.
+                        for c in new.keys():
+                            if new[c].manual:
+                                del new[c]
+                    if hasattr(new, 'update'):
+                        new.update(cls.__dict__.get(s, {}))
+                    elif s=='_constraints':
+                        for c in cls.__dict__.get(s, []):
+                            exist = False
+                            for c2 in range(len(new)):
+                                 #For _constraints, we should check field and methods as well
+                                 if new[c2][2]==c[2] and (new[c2][0] == c[0] \
+                                        or getattr(new[c2][0],'__name__', True) == \
+                                            getattr(c[0],'__name__', False)):
+                                    # If new class defines a constraint with
+                                    # same function name, we let it override
+                                    # the old one.
+                                    new[c2] = c
+                                    exist = True
+                                    break
+                            if not exist:
+                                new.append(c)
+                    else:
+                        new.extend(cls.__dict__.get(s, []))
+                    nattr[s] = new
+                cls = type(name, (cls, parent_class), nattr)
+        obj = object.__new__(cls)
+        obj.__init__(pool, cr)
+        return obj
+
+    def __new__(cls):
+        """ Register this model.
+
+        This doesn't create an instance but simply register the model
+        as being part of the module where it is defined.
+
+        TODO make it possible to not even have to call the constructor
+        to be registered.
+
+        """
+
+        # Set the module name (e.g. base, sale, accounting, ...) on the class.
+        module = cls.__module__.split('.')[0]
+        if not hasattr(cls, '_module'):
+            cls._module = module
+
+        # Remember which models to instanciate for this module.
+        module_class_list.setdefault(cls._module, []).append(cls)
+
+        # Since we don't return an instance here, the __init__
+        # method won't be called.
+        return None
+
+    def __init__(self, pool, cr):
+        """ Initialize a model and make it part of the given registry."""
+        pool.add(self._name, self)
+        self.pool = pool
+
         if not self._name and not hasattr(self, '_inherit'):
             name = type(self).__name__.split('.')[0]
             msg = "The class %s has to have a _name attribute" % name
@@ -1798,6 +1957,23 @@ class orm_template(object):
         """
         return self._name_search(cr, user, name, args, operator, context, limit)
 
+    def name_create(self, cr, uid, name, context=None):
+        """
+        Creates a new record by calling :py:meth:`~osv.osv.osv.create` with only one
+        value provided: the name of the new record (``_rec_name`` field).
+        The new record will also be initialized with any default values applicable
+        to this model, or provided through the context. The usual behavior of
+        :py:meth:`~osv.osv.osv.create` applies.
+        Similarly, this method may raise an exception if the model has multiple
+        required fields and some do not have default values.
+
+        :param name: name of the record to create
+
+        :return: the :py:meth:`~osv.osv.osv.name_get` value for the newly-created record.
+        """
+        rec_id = self.create(cr, uid, {self._rec_name: name}, context);
+        return self.name_get(cr, uid, [rec_id], context)[0]
+
     # private implementation of name_search, allows passing a dedicated user for the name_get part to
     # solve some access rights issues
     def _name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100, name_get_uid=None):
@@ -1899,8 +2075,12 @@ class orm_memory(orm_template):
     _max_hours = config.get('osv_memory_age_limit')
     _check_time = 20
 
-    def __init__(self, cr):
-        super(orm_memory, self).__init__(cr)
+    @classmethod
+    def createInstance(cls, pool, cr):
+        return cls.makeInstance(pool, cr, ['_columns', '_defaults'])
+
+    def __init__(self, pool, cr):
+        super(orm_memory, self).__init__(pool, cr)
         self.datas = {}
         self.next_id = 0
         self.check_id = 0
@@ -2366,6 +2546,22 @@ class orm(orm_template):
                                     self._table, column['attname'])
 
     def _auto_init(self, cr, context=None):
+        """
+
+        Call _field_create and, unless _auto is False:
+
+        - create the corresponding table in database for the model,
+        - possibly add the parent columns in database,
+        - possibly add the columns 'create_uid', 'create_date', 'write_uid',
+          'write_date' in database if _log_access is True (the default),
+        - report on database columns no more existing in _columns,
+        - remove no more existing not null constraints,
+        - alter existing database columns to match _columns,
+        - create database tables to match _columns,
+        - add database indices to match _columns,
+
+        """
+        raise_on_invalid_object_name(self._name)
         if context is None:
             context = {}
         store_compute = False
@@ -2771,8 +2967,22 @@ class orm(orm_template):
             cr.commit()
         return todo_end
 
-    def __init__(self, cr):
-        super(orm, self).__init__(cr)
+    @classmethod
+    def createInstance(cls, pool, cr):
+        return cls.makeInstance(pool, cr, ['_columns', '_defaults',
+            '_inherits', '_constraints', '_sql_constraints'])
+
+    def __init__(self, pool, cr):
+        """
+
+        - copy the stored fields' functions in the osv_pool,
+        - update the _columns with the fields found in ir_model_fields,
+        - ensure there is a many2one for each _inherits'd parent,
+        - update the children's _columns,
+        - give a chance to each field to initialize itself.
+
+        """
+        super(orm, self).__init__(pool, cr)
 
         if not hasattr(self, '_log_access'):
             # if not access is not specify, it is the same value as _auto
@@ -2829,6 +3039,7 @@ class orm(orm_template):
                     'size': field['size'],
                     'ondelete': field['on_delete'],
                     'translate': (field['translate']),
+                    'manual': True,
                     #'select': int(field['select_level'])
                 }
 
@@ -2855,6 +3066,8 @@ class orm(orm_template):
             assert (k in self._columns) or (k in self._inherit_fields), 'Default function defined in %s but field %s does not exist !' % (self._name, k,)
         for f in self._columns:
             self._columns[f].restart()
+
+    __init__.__doc__ = orm_template.__init__.__doc__ + __init__.__doc__
 
     #
     # Update objects that uses this one to update their _inherits fields

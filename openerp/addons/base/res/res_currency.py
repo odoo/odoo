@@ -21,7 +21,6 @@
 import time
 import netsvc
 from osv import fields, osv
-import ir
 
 from tools.misc import currency
 from tools.translate import _

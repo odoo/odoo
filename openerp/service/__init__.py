@@ -19,6 +19,8 @@
 #
 ##############################################################################
 
+import http_server
+import netrpc_server
 import web_services
 
 
