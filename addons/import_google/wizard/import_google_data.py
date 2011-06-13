@@ -31,6 +31,7 @@ from osv import osv
 from tools.translate import _
 from import_google import google_import
 
+
 class google_login_contact(osv.osv_memory):
     _inherit = 'google.login'
     _name = 'google.login.contact'
@@ -123,9 +124,13 @@ class synchronize_google(osv.osv_memory):
         gmail_user = user_obj.gmail_user
         gmail_pwd = user_obj.gmail_password
         google = self.pool.get('google.login')
+        if not gmail_user or not gmail_pwd:
+            raise osv.except_osv(_('Error'), _("Invalid login detail !\n Specify Username/Password."))
         
         if context.get('contact'):
             gd_client = google.google_login(gmail_user, gmail_pwd, type='contact')
+            if not gd_client:
+                raise osv.except_osv(_('Error'), _("Please specify correct user and password !"))        
             if obj.group_name not in ['all']:
                 query = gdata.contacts.service.ContactsQuery()
                 query.group = obj.group_name
@@ -144,11 +149,13 @@ class synchronize_google(osv.osv_memory):
               
         elif context.get('calendar'):
             tables.append('Events')
+            current_rec = self.browse(cr, uid, ids, context=context)
             calendars = False
-            if obj.calendar_name != 'all':
-                calendars = [rec.calendar_name]
-            else:
-                calendars = map(lambda x: x[0], [cal for cal in self._get_calendars(cr, uid, context) if cal[0] != 'all'])
+            for rec in current_rec:
+                if rec.calendar_name != 'all':
+                    calendars = [rec.calendar_name]
+                else:
+                    calendars = map(lambda x: x[0], [cal for cal in self._get_calendars(cr, uid, context) if cal[0] != 'all'])
             context.update({'user': gmail_user,
                         'password': gmail_pwd,
                         'calendars': calendars,
