@@ -688,14 +688,6 @@ class many2many(_column):
 def get_nice_size(a):
     (x,y) = a
     size = 0
-    if y and isinstance(y, dict):
-        if y.keys() and isinstance(y.get(y.keys()[0]), (int,long)):
-            size = y.get(y.keys()[0],0)
-        elif y.keys() and y.get(y.keys()[0]):
-            size = len(y.get(y.keys()[0]))
-        y.update({y.keys()[0]: tools.human_size(size)})
-        return (x, y)
-
     if isinstance(y, (int,long)):
         size = y
     elif y:
@@ -706,10 +698,9 @@ def sanitize_binary_value(dict_item):
     # binary fields should be 7-bit ASCII base64-encoded data,
     # but we do additional sanity checks to make sure the values
     # are not something else that won't pass via xmlrpc
-    index, value = dict_item
-    if isinstance(value, (xmlrpclib.Binary, tuple, list, dict)):
+    if isinstance(dict_item, (xmlrpclib.Binary, tuple, dict)):
         # these builtin types are meant to pass untouched
-        return index, value
+        return dict_item
 
     # For all other cases, handle the value as a binary string:
     # it could be a 7-bit ASCII string (e.g base64 data), but also
@@ -730,7 +721,7 @@ def sanitize_binary_value(dict_item):
     # is not likely to produce the expected output, but this is
     # just a safety mechanism (in these cases base64 data or
     # xmlrpc.Binary values should be used instead)
-    return index, tools.ustr(value)
+    return tools.ustr(dict_item)
 
 
 # ---------------------------------------------------------
@@ -806,44 +797,40 @@ class function(_column):
             return []
         return self._fnct_search(obj, cr, uid, obj, name, args, context=context)
 
+    def postprocess(self, cr, user, obj, type, value=None, context=None):
+        if context is None:
+            context = {}
+        result = value
+        if type == 'binary':
+            if context.get('bin_size', False):
+                # client requests only the size of binary fields
+                result = get_nice_size(value)
+            else:
+                result = sanitize_binary_value(value)
+
+        if type == "integer":
+            result = tools.ustr(value)
+        return result
+
     def get(self, cr, obj, ids, name, user=None, context=None, values=None):
         if context is None:
             context = {}
         if values is None:
             values = {}
-        res = {}
+        result = {}
         if self._method:
-            res = self._fnct(obj, cr, user, ids, name, self._arg, context)
+            result = self._fnct(obj, cr, user, ids, name, self._arg, context)
         else:
-            res = self._fnct(cr, obj._table, ids, name, self._arg, context)
+            result = self._fnct(cr, obj._table, ids, name, self._arg, context)
+        for id in ids:
+            if self._multi and result.get(id, {}):
+                for field, value in result[id].iteritems():
+                    if value:
+                        result[id][field] = self.postprocess(cr, user, obj, obj._columns[field]._type, value)
+            elif result.get(id, False) and result[id]:
+                result[id] = self.postprocess(cr, user, obj, self._type, result[id])
+        return result
 
-        if self._type == "many2one" :
-            # Filtering only integer/long values if passed
-            res_ids = [x for x in res.values() if x and isinstance(x, (int,long))]
-
-            if res_ids:
-                obj_model = obj.pool.get(self._obj)
-                dict_names = dict(obj_model.name_get(cr, user, res_ids, context))
-                for r in res.keys():
-                    if res[r] and res[r] in dict_names:
-                        res[r] = (res[r], dict_names[res[r]])
-
-        if self._type == 'binary':
-            if context.get('bin_size', False):
-                # client requests only the size of binary fields
-                res = dict(map(get_nice_size, res.items()))
-            else:
-                res = dict(map(sanitize_binary_value, res.items()))
-
-        if self._type == "integer":
-            for r in res.keys():
-                # Converting value into string so that it does not affect XML-RPC Limits
-                if isinstance(res[r],dict): # To treat integer values with _multi attribute
-                    for record in res[r].keys():
-                        res[r][record] = tools.ustr(res[r][record])
-                else:
-                    res[r] = tools.ustr(res[r])
-        return res
     get_memory = get
 
     def set(self, cr, obj, id, name, value, user=None, context=None):
