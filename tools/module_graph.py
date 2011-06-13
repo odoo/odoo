@@ -27,6 +27,7 @@ import optparse
 import sys
 import glob
 
+# TODO use the same function provided in openerp.modules
 def load_information_from_description_file(module):
     """
     :param module: The name of the module (sale, purchase, ...)

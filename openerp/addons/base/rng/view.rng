@@ -72,7 +72,6 @@
         <rng:element name="form">
             <rng:ref name="overload"/>
             <rng:optional><rng:attribute name="string"/></rng:optional>
-            <rng:optional><rng:attribute name="editable"/></rng:optional>
             <rng:optional><rng:attribute name="type"/></rng:optional>
             <rng:optional><rng:attribute name="link"/></rng:optional>
             <rng:ref name="container"/>
@@ -126,7 +125,14 @@
             <rng:optional><rng:attribute name="string"/></rng:optional>
             <rng:optional><rng:attribute name="colors"/></rng:optional>
             <rng:optional><rng:attribute name="color"/></rng:optional>
-            <rng:optional><rng:attribute name="editable"/></rng:optional>
+            <rng:optional>
+              <rng:attribute name="editable">
+                <rng:choice>
+                  <rng:value>top</rng:value>
+                  <rng:value>bottom</rng:value>
+                </rng:choice>
+              </rng:attribute>
+            </rng:optional>
             <rng:optional><rng:attribute name="toolbar"/></rng:optional>
             <rng:optional><rng:attribute name="link"/></rng:optional>
             <rng:optional><rng:attribute name="type"/></rng:optional>
@@ -412,7 +418,6 @@
             <rng:attribute name="name" />
             <rng:ref name="overload"/>
             <rng:ref name="access_rights"/>
-            <rng:optional><rng:attribute name="editable"/></rng:optional>
             <rng:optional><rng:attribute name="domain_filter"/></rng:optional>
             <rng:optional><rng:attribute name="attrs"/></rng:optional>
             <rng:optional><rng:attribute name="string"/></rng:optional>

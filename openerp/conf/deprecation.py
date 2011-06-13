@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2011 OpenERP s.a. (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,15 +19,19 @@
 #
 ##############################################################################
 
-from simple import simple
-from rml import rml, rml2html, rml2txt, odt2odt , html2html, makohtml2html
-from render import render
+""" Regroup variables for deprecated features.
 
-try:
-    import Image
-except ImportError:
-    import logging
-    logging.warning('Python Imaging not installed, you can use only .JPG pictures !')
+To keep the OpenERP server backward compatible with older modules, some
+additional code is needed throughout the core library. This module keeps
+track of those specific measures by providing variables that can be unset
+by the user to check if her code is future proof.
+
+"""
+
+# If True, the Python modules inside the openerp namespace are made available
+# without the 'openerp.' prefix. E.g. openerp.osv.osv and osv.osv refer to the
+# same module.
+# Introduced around 2011.02.
+open_openerp_namespace = True
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

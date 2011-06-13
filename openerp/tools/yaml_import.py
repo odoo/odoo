@@ -105,7 +105,7 @@ class TestReport(object):
             success += self._report[severity][True]
             failure += self._report[severity][False]
         res.append("total\t%s\t%s" % (success, failure))
-        res.append("end of report (%s assertion(s) checked)" % success + failure)
+        res.append("end of report (%s assertion(s) checked)" % (success + failure))
         return "\n".join(res)
 
 class RecordDictWrapper(dict):
@@ -792,7 +792,7 @@ class YamlInterpreter(object):
             is_preceded_by_comment = False
         return is_preceded_by_comment
 
-def yaml_import(cr, module, yamlfile, idref=None, mode='init', noupdate=False, report=None):
+def yaml_import(cr, module, yamlfile, idref=None, mode='init', noupdate=False):
     if idref is None:
         idref = {}
     yaml_string = yamlfile.read()

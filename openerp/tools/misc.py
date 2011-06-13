@@ -69,76 +69,6 @@ _logger = logging.getLogger('tools')
 # We include the *Base ones just in case, currently they seem to be subclasses of the _* ones.
 SKIPPED_ELEMENT_TYPES = (etree._Comment, etree._ProcessingInstruction, etree.CommentBase, etree.PIBase)
 
-# initialize a database with base/base.sql
-def init_db(cr):
-    import openerp.addons as addons
-    f = addons.get_module_resource('base', 'base.sql')
-    base_sql_file = file_open(f)
-    try:
-        cr.execute(base_sql_file.read())
-        cr.commit()
-    finally:
-        base_sql_file.close()
-
-    for i in addons.get_modules():
-        mod_path = addons.get_module_path(i)
-        if not mod_path:
-            continue
-
-        info = addons.load_information_from_description_file(i)
-
-        if not info:
-            continue
-        categs = info.get('category', 'Uncategorized').split('/')
-        p_id = None
-        while categs:
-            if p_id is not None:
-                cr.execute('SELECT id \
-                           FROM ir_module_category \
-                           WHERE name=%s AND parent_id=%s', (categs[0], p_id))
-            else:
-                cr.execute('SELECT id \
-                           FROM ir_module_category \
-                           WHERE name=%s AND parent_id IS NULL', (categs[0],))
-            c_id = cr.fetchone()
-            if not c_id:
-                cr.execute('INSERT INTO ir_module_category \
-                        (name, parent_id) \
-                        VALUES (%s, %s) RETURNING id', (categs[0], p_id))
-                c_id = cr.fetchone()[0]
-            else:
-                c_id = c_id[0]
-            p_id = c_id
-            categs = categs[1:]
-
-        active = info.get('active', False)
-        installable = info.get('installable', True)
-        if installable:
-            if active:
-                state = 'to install'
-            else:
-                state = 'uninstalled'
-        else:
-            state = 'uninstallable'
-        cr.execute('INSERT INTO ir_module_module \
-                (author, website, name, shortdesc, description, \
-                    category_id, state, certificate, web, license) \
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING id', (
-            info.get('author', ''),
-            info.get('website', ''), i, info.get('name', False),
-            info.get('description', ''), p_id, state, info.get('certificate') or None,
-            info.get('web') or False,
-            info.get('license') or 'AGPL-3'))
-        id = cr.fetchone()[0]
-        cr.execute('INSERT INTO ir_model_data \
-            (name,model,module, res_id, noupdate) VALUES (%s,%s,%s,%s,%s)', (
-                'module_meta_information', 'ir.module.module', i, id, True))
-        dependencies = info.get('depends', [])
-        for d in dependencies:
-            cr.execute('INSERT INTO ir_module_module_dependency \
-                    (module_id,name) VALUES (%s, %s)', (id, d))
-        cr.commit()
-
 def find_in_path(name):
     try:
         return which(name)
@@ -204,8 +134,8 @@ def file_open(name, mode="r", subdir='addons', pathinfo=False):
 
     @return: fileobject if pathinfo is False else (fileobject, filepath)
     """
-    import openerp.addons as addons
-    adps = addons.ad_paths
+    import openerp.modules as addons
+    adps = addons.module.ad_paths
     rtp = os.path.normcase(os.path.abspath(config['root_path']))
 
     if name.replace(os.path.sep, '/').startswith('addons/'):
@@ -717,7 +647,28 @@ def is_hashable(h):
     except TypeError:
         return False
 
-class cache(object):
+class dummy_cache(object):
+    """ Cache decorator replacement to actually do no caching.
+
+    This can be useful to benchmark and/or track memory leak.
+
+    """
+
+    def __init__(self, timeout=None, skiparg=2, multi=None, size=8192):
+        pass
+
+    def clear(self, dbname, *args, **kwargs):
+        pass
+
+    @classmethod
+    def clean_caches_for_db(cls, dbname):
+        pass
+
+    def __call__(self, fn):
+        fn.clear_cache = self.clear
+        return fn
+
+class real_cache(object):
     """
     Use it as a decorator of the function you plan to cache
     Timeout: 0 = no timeout, otherwise in seconds
@@ -841,6 +792,9 @@ class cache(object):
 
         cached_result.clear_cache = self.clear
         return cached_result
+
+# TODO make it an option
+cache = real_cache
 
 def to_xml(s):
     return s.replace('&','&amp;').replace('<','&lt;').replace('>','&gt;')
