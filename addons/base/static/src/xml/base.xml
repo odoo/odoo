@@ -239,7 +239,7 @@
 </t>
 <t t-name="TreeView_Secondry">
     <t t-foreach="child_data" t-as="field" >
-        <tr t-att-id="'Treerow_'+field.id" class="childclass">
+        <tr t-att-id="'treerow_'+field.id">
             <td valign="top" align="left" style="cursor:pointer;">
                 <t t-if="(field.child_id).length>=1">
                     <img id="parentimg" src="/base/static/src/img/expand.gif" width="16" height="16" border="0"/>
