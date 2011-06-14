@@ -668,11 +668,13 @@ class share_create(osv.osv_memory):
         }
 
     def send_emails(self, cr, uid, wizard_data, context=None):
+        self.__logger.info('Sending share notifications by email...')
         user = self.pool.get('res.users').browse(cr, UID_ROOT, uid)
         if not user.user_email:
             raise osv.except_osv(_('Email required'), _('The current user must have an email address configured in User Preferences to be able to send outgoing emails.'))
 
         # TODO: also send an HTML version of this mail
+        emails_sent = 0
         for result_line in wizard_data.result_line_ids:
             email_to = result_line.login
             subject = wizard_data.name
@@ -701,11 +703,11 @@ class share_create(osv.osv_memory):
             body += _("OpenERP is a powerful and user-friendly suite of Business Applications (CRM, Sales, HR, etc.)\n"
                       "It is open source and can be found on http://www.openerp.com.")
 
-            if not tools.email_send(user.user_email,
-                                    [email_to],
-                                    subject,
-                                    body):
+            if tools.email_send(user.user_email, [email_to], subject, body):
+                emails_sent += 1
+            else:
                 self.__logger.warning('Failed to send sharing email from %s to %s, ignored', user.user_email, email_to)
+        self.__logger.info('%s share notification(s) successfully sent.', emails_sent)
 share_create()
 
 class share_result_line(osv.osv_memory):
