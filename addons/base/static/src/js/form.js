@@ -88,6 +88,9 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
                 var field = this.fields[f];
                 field.touched = false;
                 field.set_value(this.datarecord[f] || false);
+                // TODO: here we should be able to alter the 'touched' state when setting value
+                // the following line will be removed by fme as soon as refactoring has been done
+                field.touched = false;
                 field.validate();
             }
             if (!record.id) {
@@ -173,8 +176,7 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
                 return this.rpc(ajax, {
                     model: this.dataset.model,
                     method: method,
-                    ids: (this.datarecord.id == null ? [] : [this.datarecord.id]),
-                    args: args
+                    args: [].concat([(this.datarecord.id == null ? [] : [this.datarecord.id])], args)
                 }, function(response) {
                     self.on_processed_onchange(response, processed);
                 });
@@ -1123,7 +1125,7 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
         
         var dataset = new openerp.base.DataSetStatic(this.session, this.field.relation, []);
         
-        dataset.name_search(search_val, this.limit + 1, function(data) {
+        dataset.name_search([search_val, false, 'ilike', {}, this.limit + 1], function(data) {
             self.last_search = data.result;
             // possible selections for the m2o
             var values = _.map(data.result, function(x) {
@@ -1134,13 +1136,16 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
             if (values.length > self.limit) {
                 values = values.slice(0, self.limit);
                 values.push({label: "<em>   Search More...</em>", action: function() {
-                    dataset.name_search(search_val, false, function(data) {
+                    dataset.name_search([search_val, false, 'ilike', {}, false], function(data) {
                         self._change_int_value(null);
                         self._search_create_popup("search", data.result);
                     });
                 }});
             }
-            if (self.value === undefined) {
+            var raw_result = _(data.result).map(function(x) {return x[1];})
+            if (search_val.length > 0 &&
+                !_.include(raw_result, search_val) &&
+                (!self.value || search_val !== self.value[1])) {
                 values.push({label: '<em>   Create "<strong>' +
                         $('<span />').text(search_val).html() + '</strong>"</em>', action: function() {
                     self._quick_create(search_val);
