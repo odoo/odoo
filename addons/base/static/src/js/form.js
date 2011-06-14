@@ -176,8 +176,7 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
                 return this.rpc(ajax, {
                     model: this.dataset.model,
                     method: method,
-                    ids: (this.datarecord.id == null ? [] : [this.datarecord.id]),
-                    args: args
+                    args: [].concat([(this.datarecord.id == null ? [] : [this.datarecord.id])], args)
                 }, function(response) {
                     self.on_processed_onchange(response, processed);
                 });
