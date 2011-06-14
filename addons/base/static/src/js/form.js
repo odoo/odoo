@@ -88,6 +88,9 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
                 var field = this.fields[f];
                 field.touched = false;
                 field.set_value(this.datarecord[f] || false);
+                // TODO: here we should be able to alter the 'touched' state when setting value
+                // the following line will be removed by fme as soon as refactoring has been done
+                field.touched = false;
                 field.validate();
             }
             if (!record.id) {
