@@ -98,7 +98,11 @@ class Session(openerpweb.Controller):
             "session_id": req.session_id,
             "uid": req.session._uid,
         }
-    
+
+    @openerpweb.jsonrequest
+    def sc_list(self, req):
+        return req.session.model('ir.ui.view_sc').get_sc(req.session._uid, "ir.ui.menu", {})
+
     @openerpweb.jsonrequest
     def get_databases_list(self, req):
         proxy = req.session.proxy("db")

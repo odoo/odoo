@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- vim:fdl=1:
+-->
+<templates id="template" xml:space="preserve">
+
+<t t-name="WebClient">
+    <div class="ui-page ui-body-c ui-page-active" data-role="page">
+        <div id="oe_header"></div>
+        <div id="oe_app"></div>
+    </div>
+</t>
+
+<t t-name="Header">
+     <div role="banner" class="ui-bar-b ui-header" data-role="header" data-theme="b">
+        <h1 aria-level="1" role="heading" tabindex="0" class="ui-title">OpenERP</h1>
+        <a id="home" class="ui-btn-right jqm-home ui-btn ui-btn-icon-notext ui-btn-corner-all ui-shadow ui-btn-up-b" data-direction="reverse" data-iconpos="notext" data-icon="home" href="#" title="Home" data-theme="b">
+            <span class="ui-btn-inner ui-btn-corner-all">
+                <span class="ui-btn-text">Home</span>
+                <span class="ui-icon ui-icon-home ui-icon-shadow"></span>
+            </span>
+        </a>
+    </div>
+</t>
+
+<t t-name="Login">
+     <div role="banner" class="ui-bar-b ui-header" data-role="header" data-theme="b">
+        <h1 aria-level="1" role="heading" tabindex="0" class="ui-title">OpenERP</h1>
+    </div>
+    <div role="main" class="ui-content" data-role="content">
+        <fieldset>
+            <div class="ui-field-contain ui-body ui-br" data-role="fieldcontain">
+                <label for="database" class="select ui-select">Database:</label>
+                <div class="ui-select">
+                    <div data-theme="c" class="ui-btn ui-btn-icon-right ui-btn-corner-all ui-shadow ui-btn-up-c">
+                    <span class="ui-btn-inner ui-btn-corner-all">
+                        <span id="db_text" class="ui-btn-text">Choose Database...</span>
+                        <span class="ui-icon ui-icon-arrow-d ui-icon-shadow"></span>
+                    </span>
+                    <select data-native-menu="false" id="database" name="database" tabindex="-1">
+                        <t t-foreach="db_list" t-as="opt">
+                            <option t-att-value="opt"><t t-esc="opt"/></option>
+                        </t>
+                    </select>
+                    </div>
+                </div>
+                <label class="ui-input-text" for="name">Login:</label>
+                <input class="ui-input-text ui-body-null ui-corner-all ui-shadow-inset ui-body-c" type="text" name="login" value=""/><br/>
+                <label class="ui-input-text" for="name">Password:</label>
+                <input class="ui-input-text ui-body-null ui-corner-all ui-shadow-inset ui-body-c" type="password" name="password" value=""/><br/>
+                <a id="login" class="ui-btn ui-btn-corner-all ui-shadow ui-btn-up-c" data-theme="c" href="#" data-role="button">
+                    <span class="ui-btn-inner ui-btn-corner-all">
+                        <span class="ui-btn-text">Login</span>
+                    </span>
+                </a>
+             </div>
+        </fieldset>
+    </div>
+</t>
+
+<t t-name="HomePage">
+    <div role="main" class="ui-content" data-role="content">
+        <div id="oe_shortcuts" class="shortcuts"></div>
+        <div id="oe_menu" class="menu"></div>
+        <div id="oe_options" class="options"></div>
+    </div>
+</t>
+
+<t t-name="ListView">
+    <div role="main" class="ui-content" data-role="content">
+        <ul data-role="listview" class="ui-listview">
+            <li data-theme="c" class="ui-btn ui-btn-icon-right ui-li ui-btn-up-c" t-foreach="records" t-as="record">
+                <div class="ui-btn-inner ui-li">
+                    <div class="ui-btn-text">
+                        <a href="#" class="ui-link-inherit">
+                            <span><t t-esc="record.name"/></span>
+                        </a>
+                    </div>
+                        <span class="ui-icon ui-icon-arrow-r"></span>
+                </div>
+            </li>
+        </ul>
+    </div>
+</t>
+
+<t t-name="Shortcuts">
+    <ul data-dividertheme="b" data-theme="c" data-inset="true" data-role="listview" class="ui-listview ui-listview-inset ui-corner-all ui-shadow">
+        <li data-role="list-divider" role="heading" class="ui-li ui-li-divider ui-btn ui-bar-b ui-corner-top ui-btn-up-undefined">
+            Shortcuts
+        </li>
+        <li data-theme="c" class="ui-btn ui-btn-icon-right ui-li ui-btn-up-c" t-foreach="sc" t-as="opt">
+            <div class="ui-btn-inner ui-li">
+                <div class="ui-btn-text">
+                    <a href="#" class="ui-link-inherit" t-att-data-menu="opt.id" t-att-data-name="opt.name" t-att-data-res="opt.res_id">
+                        <span><t t-esc="opt.name"/></span>
+                    </a>
+                </div>
+                <span class="ui-icon ui-icon-arrow-r"></span>
+            </div>
+        </li>
+    </ul>
+</t>
+
+<t t-name="Menu">
+    <ul data-dividertheme="b" data-theme="c" data-inset="true" data-role="listview" class="ui-listview ui-listview-inset ui-corner-all ui-shadow">
+        <li data-role="list-divider" role="heading" class="ui-li ui-li-divider ui-btn ui-bar-b ui-corner-top ui-btn-up-undefined">
+            Menu
+        </li>
+        <li data-theme="c" class="ui-btn ui-btn-icon-right ui-li ui-btn-up-c" t-foreach="data.children" t-as="menu">
+            <div class="ui-btn-inner ui-li">
+                <div class="ui-btn-text">
+                    <a href="#" class="ui-link-inherit" t-att-data-menu="menu.id" t-att-data-name="menu.name">
+                        <span><t t-esc="menu.name"/></span>
+                    </a>
+                </div>
+                <span class="ui-icon ui-icon-arrow-r"></span>
+            </div>
+        </li>
+    </ul>
+</t>
+
+<t t-name="Menu.secondary">
+    <div role="main" class="ui-content" data-role="content">
+        <ul data-role="listview" class="ui-listview">
+            <li data-theme="c" class="ui-btn ui-btn-icon-right ui-li ui-btn-up-c" t-foreach="menu.children" t-as="menu">
+                <div class="ui-btn-inner ui-li">
+                    <div class="ui-btn-text">
+                        <a href="#" class="ui-link-inherit" t-attf-id="menu_#{menu.id}" t-att-data-menu="menu.id" t-att-data-name="menu.name">
+                            <span><t t-esc="menu.name"/></span>
+                        </a>
+                    </div>
+                        <span class="ui-icon ui-icon-arrow-r"></span>
+                </div>
+            </li>
+        </ul>
+    </div>
+</t>
+
+<t t-name="Options">
+    <ul data-dividertheme="b" data-theme="c" data-inset="true" data-role="listview" class="ui-listview ui-listview-inset ui-corner-all ui-shadow">
+        <li data-role="list-divider" role="heading" class="ui-li ui-li-divider ui-btn ui-bar-b ui-corner-top ui-btn-up-undefined">
+            Options
+        </li>
+        <li data-theme="c" class="ui-btn ui-btn-icon-right ui-li ui-btn-up-c">
+            <div class="ui-btn-inner ui-li">
+                <div class="ui-btn-text">
+                    <a id="logout" href="#" class="ui-link-inherit">
+                        Logout
+                    </a>
+                </div>
+                    <span class="ui-icon ui-icon-arrow-r"></span>
+            </div>
+        </li>
+        <li data-theme="c" class="ui-btn ui-btn-icon-right ui-li ui-btn-up-c">
+            <div class="ui-btn-inner ui-li">
+                <div class="ui-btn-text">
+                    <a id="pref" href="#" class="ui-link-inherit">
+                        Preferences
+                    </a>
+                </div>
+                    <span class="ui-icon ui-icon-arrow-r"></span>
+            </div>
+        </li>
+    </ul>
+</t>
+
+</templates>

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<title>Formview of Sales Orders OpenERP mobile</title>
+	<link rel="stylesheet"  href="../OpenERPmobile.css" />
+	<script type="text/javascript" src="../jquery-1.5.1.js"></script>
+	<script type="text/javascript" src="../jquer.mobile-1.0a3.js"></script>
+
+
+</head> 
+<body> 
+
+<div style="top: 279.5px;" class="ui-loader ui-body-a ui-corner-all"><span class="ui-icon ui-icon-loading spin"></span><h1>loading</h1></div><div class="ui-page ui-body-c ui-page-active" data-url="docs/lists/lists-divider.html" data-role="page">
+
+	<div role="banner" class="ui-bar-d ui-header" data-role="header" data-theme="b">
+	    <a data-theme="c" title="back" href="../listview/SalesOrdersList.html"rel="external" data-icon="back" data-iconpos="notext" data-direction="reverse" class=" jqm-home ui-btn  ui-btn-icon-notext ui-btn-corner-all"><span class="ui-icon ui-icon-back"></span></a>
+
+		<h1 aria-level="1" role="heading" tabindex="0" class="ui-title">Sales Orders</h1>
+		<a data-theme="c" title="Save" href="../listview/SalesOrdersList.html"rel="external" data-icon="Save" data-iconpos="notext" data-direction="reverse" class="ui-btn-right jqm-home ui-btn  ui-btn-icon-notext ui-btn-corner-all"><span class="ui-icon  ui-icon-save"></span></a>
+		<a data-theme="c" title="Delete" href="../listview/SalesOrdersList.html"rel="external" data-icon="Delete" data-iconpos="notext" data-direction="reverse" class="ui-btn-right-bis jqm-home ui-btn  ui-btn-icon-notext ui-btn-corner-all"><span class="ui-icon  ui-icon-delete"></span></a>
+	</div><!-- /header -->
+
+	<div data-role="content">
+
+				
+		<div class="left">
+	         <label for="text">Order reference:</label>
+		</div>
+		<div class="right">
+	         <input type="text" name="text" id="text" value=""  />
+		</div>
+		
+			<div class="left">
+			 <label for="slider">Paid:</label>
+		</div>
+		<div class="right">
+			<select name="slider" id="slider" data-role="slider">
+				<option value="off">NO</option>
+				<option value="on">YES</option>
+			</select> 
+		</div>
+		
+			<div class="left">
+			 <label for="slider">Delivered:</label>
+		</div>
+		<div class="right">
+			<select name="slider" id="slider" data-role="slider">
+				<option value="off">NO</option>
+				<option value="on">YES</option>
+			</select> 
+		</div>
+
+		<div class="left">
+	         <label for="text">Date:</label>
+		</div>
+		<div class="right">
+	         <input type="text" name="text" id="text" value=""  />
+		</div>
+       
+
+
+
+		<div class="left">
+	         <label for="text">Shop:</label>
+		</div>
+		<div class="right">
+	         <input type="text" name="text" id="text" value=""  />
+		</div>
+
+		<div class="left">
+	         <label for="text">Customer reference:</label>
+		</div>
+		<div class="right">
+	         <input type="text" name="text" id="text" value=""  />
+		</div>
+
+		<div class="left">
+	         <label for="text">Customer:</label>
+		</div>
+		<div class="right">
+	         <input type="text" name="text" id="text" value=""  />
+		</div>
+
+		<div class="left">
+	         <label for="text">Ordering C.:</label>
+		</div>
+		<div class="right">
+	         <input type="text" name="text" id="text" value=""  />
+		</div>
+		
+		<div data-role="fieldcontain"></div>
+		<a href="../listview/SalesOrdersLinesList.html" data-role="button" rel="external">Lines</a>
+
+
+		<div class="ui-block-b"><a href="SalesOrders.html" data-role="button" rel="external">Set to draft</a></div>
+
+
+	</div>
+
+</div>
+
+</body>
+</html>

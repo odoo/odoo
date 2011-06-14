@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<title>Fromview of Opportunity OpenERP mobile</title>
+	<link rel="stylesheet"  href="../OpenERPmobile.css" />
+	<script type="text/javascript" src="../jquery-1.5.1.js"></script>
+	<script type="text/javascript" src="../jquer.mobile-1.0a3.js"></script>
+
+
+</head> 
+<body> 
+
+<div style="top: 279.5px;" class="ui-loader ui-body-a ui-corner-all"><span class="ui-icon ui-icon-loading spin"></span><h1>loading</h1></div><div class="ui-page ui-body-c ui-page-active" data-url="docs/lists/lists-divider.html" data-role="page">
+
+	<div role="banner" class="ui-bar-d ui-header" data-role="header" data-theme="b">
+	    <a data-theme="c" title="back" href="../listview/OpportunityList.html"rel="external" data-icon="back" data-iconpos="notext" data-direction="reverse" class=" jqm-home ui-btn  ui-btn-icon-notext ui-btn-corner-all"><span class="ui-icon ui-icon-back"></span></a>
+
+		<h1 aria-level="1" role="heading" tabindex="0" class="ui-title">Opportunity</h1>
+		<a data-theme="c" title="Save" href="../listview/OpportunityList.html"rel="external" data-icon="Save" data-iconpos="notext" data-direction="reverse" class="ui-btn-right jqm-home ui-btn  ui-btn-icon-notext ui-btn-corner-all"><span class="ui-icon  ui-icon-save"></span></a>
+		<a data-theme="c" title="Delete" href="../listview/OpportunityList.html"rel="external" data-icon="Delete" data-iconpos="notext" data-direction="reverse" class="ui-btn-right-bis jqm-home ui-btn  ui-btn-icon-notext ui-btn-corner-all"><span class="ui-icon  ui-icon-delete"></span></a>
+        	</div><!-- /header -->
+	
+	
+	<div data-role="content">
+	
+		<div class="left"><label for="text">Opportunity:</label></div>
+		<div class="right"><input type="text" name="text" id="text" value=""  /></div>
+		<div class="left"><label for="text">Expected Revenue:</label></div>
+		<div class="right"><input type="text" name="text" id="text" value=""  /></div>
+		<div class="left"><label for="text">Next action date:</label></div>
+		<div class="right"><input type="text" name="text" id="text" value=""  /></div>
+		
+		<div class="left"><label for="text">Stage:</label></div>
+		<div class="right"><select name="select-choice-1" id="select-choice-1">
+			<option value="E">New</option>
+			<option value="D">Qualification</option>
+			<option value="D">Proposition</option>
+			<option value="F">Negociation</option>
+			<option value="D">Won</option>
+			<option value="D">Lost</option>
+		</select></div>
+		<div class="left"><label for="text") :</label></div>
+		<div class="ui-field-contain ui-body ui-br" data-role="fieldcontain">
+				<div class="left"><label id="slider-label" class="ui-input-text ui-slider" for="slider">Probability(%):</label></div>
+			 	<div class="right"><input class="ui-input-text ui-body-null ui-corner-all ui-shadow-inset ui-body-c ui-slider-input" name="slider" id="slider" value="0" min="0" max="100" data-type="range" type="number"></div>
+		</div>
+		<div data-role="content">
+			<div class="left"><label for="text">Next action:</label></div>
+			<div class="right"><input type="text" name="text" id="text" value=""  />	</div>
+		</div>
+		<a class="ui-btn ui-btn-icon-left ui-btn-corner-all ui-shadow ui-btn-up-c" data-theme="c" href="index.html" data-role="button" data-icon="search"><span class="ui-btn-inner ui-btn-corner-all"><span class="ui-btn-text">SalesMan</span><span class="ui-icon ui-icon-search ui-icon-shadow"></span></span></a>
+		<div data-role="content">
+			<div class="left"><label for="text">Expected Closing:</label></div>
+			<div class="right"><input type="text" name="text" id="text" value=""  />	</div>
+			<div class="left"><label for="text">Priority:</label></div>
+			<div class="right"><select name="select-choice-1" id="select-choice-1">
+				<option value="E">Highest</option>
+				<option value="D">High</option>
+				<option value="D">Normal</option>
+				<option value="F">Low</option>
+				<option value="D">Lowest</option>
+			</select></div>
+		</div>
+		 <ul data-role="listview" data-inset="true" data-theme="d">
+				<li><a href="MeetingsForm.html"rel="external">Schedulde a Meeting</a></li>
+				<li><a href="SalesOrders.html"rel="external">Convert to quote</a></li>
+		 </ul>
+	
+	</div>

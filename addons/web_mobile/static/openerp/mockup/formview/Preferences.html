@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<title>Preferences OpenERP mobile</title>
+	<link rel="stylesheet"  href="../OpenERPmobile.css" />
+	<script type="text/javascript" src="../jquery-1.5.1.js"></script>
+	<script type="text/javascript" src="../jquer.mobile-1.0a3.js"></script>
+
+
+</head> 
+<body> 
+
+<div style="top: 279.5px;" class="ui-loader ui-body-a ui-corner-all"><span class="ui-icon ui-icon-loading spin"></span><h1>loading</h1></div><div class="ui-page ui-body-c ui-page-active" data-url="docs/lists/lists-divider.html" data-role="page">
+
+	<div role="banner" class="ui-bar-d ui-header" data-role="header" data-theme="b">
+	    <a data-theme="c" title="back" href="../Menu/HomePage.html"rel="external" data-icon="back" data-iconpos="notext" data-direction="reverse" class=" jqm-home ui-btn  ui-btn-icon-notext ui-btn-corner-all"><span class="ui-icon ui-icon-back"></span></a>
+			<h1 aria-level="1" role="heading" tabindex="0" class="ui-title">Preferences</h1>
+		<a data-theme="c" title="Save" href="../Menu/HomePage.html"rel="external" data-icon="Save" data-iconpos="notext" data-direction="reverse" class="ui-btn-right jqm-home ui-btn  ui-btn-icon-notext ui-btn-corner-all"><span class="ui-icon  ui-icon-save"></span></a>
+		
+        	</div><!-- /header -->
+
+	<div data-role="content">
+
+		
+		<div data-role="fieldcontain">
+		<div class="left"><label for="select-choice-1" class="select">Language:</label></div>
+		<div class="right"><select name="select-choice-1" id="select-choice-1">
+			<option value="E">English</option>
+			<option value="F">French</option>
+			<option value="D">Dutch</option>
+			<option value="S">Spanish</option>
+		</select></div>
+        </div>
+		<div data-role="fieldcontain">
+		<div class="left"><label for="select-choice-1" class="select">Timezone:</label></div>
+		<div class="right"><select name="select-choice-1" id="select-choice-1">
+			<option value="E">Brussels gmt+1</option>
+			<option value="F">...</option>
+			<option value="D">...</option>
+			<option value="S">...</option>
+		</select></div>
+        </div>
+		<div data-role="fieldcontain">
+	         <div class="left"><label for="text">E-mail:</label></div>
+	         <div class="right"><input type="text" name="text" id="text" value=""  /></div>
+		</div>
+		
+	</div>	
+		<ul data-role="listview" data-inset="true" data-theme="d">
+				<li><a href="Password.html"rel="external">Change password</a></li>
+				
+			</ul>
+		
+	
+		
+</div>
+
+</body>
+</html>
