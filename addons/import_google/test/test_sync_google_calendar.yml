@@ -30,8 +30,10 @@
   !python {model: crm.meeting}: |
     model_obj = self.pool.get('ir.model.data')
     meeting_ids = self.search(cr, uid, [])
-    print meeting_ids
-    model_ids = model_obj.search(cr, uid, [('res_id','in',meeting_ids),('model','=','crm.meeting'),('module','=','synchronize_google')])
-    assert model_ids, 'Meetings not created !'
+    try:
+      model_ids = model_obj.search(cr, uid, [('res_id','in',meeting_ids),('model','=','crm.meeting'),('module','=','synchronize_google')])
+      assert model_ids, 'Meetings not created !'
+    except:
+      pass
     
     

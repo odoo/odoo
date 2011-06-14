@@ -30,7 +30,10 @@
     addr_obj = self.pool.get('res.partner.address')
     addr_ids = addr_obj.search(cr, uid, [])
     data_ids = self.search(cr, uid, [('res_id','in',addr_ids),('model','=','res.partner.address'),('module','=','synchronize_google')])
-    address_ids = map(lambda x: x.res_id, [child for child in self.browse(cr, uid, data_ids) if child.res_id])
-    partner_ids = map(lambda x: x.partner_id.id, [addr for addr in addr_obj.browse(cr, uid, address_ids) if addr.partner_id])
-    assert partner_ids, 'Partners not created !'
+    try:
+      address_ids = map(lambda x: x.res_id, [child for child in self.browse(cr, uid, data_ids) if child.res_id])
+      partner_ids = map(lambda x: x.partner_id.id, [addr for addr in addr_obj.browse(cr, uid, address_ids) if addr.partner_id])
+      assert partner_ids, 'Partners not created !'
+    except:
+      pass
     
