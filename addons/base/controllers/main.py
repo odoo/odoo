@@ -377,7 +377,7 @@ class DataSet(openerpweb.Controller):
     @openerpweb.jsonrequest
     def get(self, request, model, ids, fields=False):
         return self.do_get(request, model, ids, fields)
-    
+
     def do_get(self, request, model, ids, fields=False):
         """ Fetches and returns the records of the model ``model`` whose ids
         are in ``ids``.
@@ -403,7 +403,7 @@ class DataSet(openerpweb.Controller):
         record_map = dict((record['id'], record) for record in records)
 
         return [record_map[id] for id in ids if record_map.get(id)]
-    
+
     @openerpweb.jsonrequest
     def load(self, req, model, id, fields):
         m = req.session.model(model)
@@ -431,9 +431,9 @@ class DataSet(openerpweb.Controller):
         return Model.unlink(ids)
 
     @openerpweb.jsonrequest
-    def call(self, req, model, method, ids, args):
+    def call(self, req, model, method, args):
         m = req.session.model(model)
-        r = getattr(m, method)(ids, *args)
+        r = getattr(m, method)(*args)
         return {'result': r}
 
     @openerpweb.jsonrequest
@@ -611,20 +611,6 @@ class ListView(View):
     def load(self, req, model, view_id, toolbar=False):
         fields_view = self.fields_view_get(req, model, view_id, 'tree', toolbar=toolbar)
         return {'fields_view': fields_view}
-
-    def fields_view_get(self, request, model, view_id, view_type="tree",
-                        transform=True, toolbar=False, submenu=False):
-        """ Sets @editable on the view's arch if it isn't already set and
-        ``set_editable`` is present in the request context
-        """
-        view = super(ListView, self).fields_view_get(
-            request, model, view_id, view_type, transform, toolbar, submenu)
-
-        view_attributes = view['arch']['attrs']
-        if request.context.get('set_editable')\
-                and 'editable' not in view_attributes:
-            view_attributes['editable'] = 'bottom'
-        return view
 
     def process_colors(self, view, row, context):
         colors = view['arch']['attrs'].get('colors')

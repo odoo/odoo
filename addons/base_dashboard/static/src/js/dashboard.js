@@ -5,15 +5,16 @@ QWeb.add_template('/base_dashboard/static/src/xml/base_dashboard.xml');
 openerp.base.form.DashBoard = openerp.base.form.Widget.extend({
     init: function(view, node) {
         this._super(view, node);
-        this.template = "DashBoard";
+        this.template = 'DashBoard';
         this.actions_attrs = {};
     },
     start: function() {
         var self = this;
         this._super.apply(this, arguments);
 
-        this.$element.find(".oe-dashboard-column").sortable({
-            connectWith: ".oe-dashboard-column",
+        this.$element.find('.oe-dashboard-column').sortable({
+            connectWith: '.oe-dashboard-column',
+            handle: '.oe-dashboard-action-header',
             scroll: false
         }).disableSelection().bind('sortstop', self.do_save_dashboard);
 
@@ -22,7 +23,7 @@ openerp.base.form.DashBoard = openerp.base.form.Widget.extend({
         this.$element.find('.oe-dashboard-link-reset').click(this.on_reset);
         this.$element.find('.oe-dashboard-link-add_widget').click(this.on_add_widget);
         this.$element.find('.oe-dashboard-link-change_layout').click(this.on_change_layout);
-        this.$element.find('.oe-dashboard-column .ui-icon-minusthick').click(this.on_fold_action);
+        this.$element.find('.oe-dashboard-column .oe-dashboard-fold').click(this.on_fold_action);
         this.$element.find('.oe-dashboard-column .ui-icon-closethick').click(this.on_close_action);
 
         this.actions_attrs = {};
@@ -56,7 +57,7 @@ openerp.base.form.DashBoard = openerp.base.form.Widget.extend({
         var self = this;
         var action = {
             res_model : 'ir.actions.actions',
-            views : [[false,"list"]],
+            views : [[false, 'list']],
             type : 'ir.actions.act_window',
             view_type : 'list',
             view_mode : 'list',
@@ -71,7 +72,7 @@ openerp.base.form.DashBoard = openerp.base.form.Widget.extend({
         };
         // TODO: create a Dialog controller which optionally takes an action
         // Should set width & height automatically and take buttons & views callback
-        var dialog_id = _.uniqueId("act_window_dialog");
+        var dialog_id = _.uniqueId('act_window_dialog');
         var action_manager = new openerp.base.ActionManager(this.session, dialog_id);
         var $dialog = $('<div id=' + dialog_id + '>').dialog({
                             modal : true,
@@ -80,11 +81,11 @@ openerp.base.form.DashBoard = openerp.base.form.Widget.extend({
                             height : 600,
                             buttons : {
                                 Cancel : function() {
-                                    $(this).dialog("destroy");
+                                    $(this).dialog('destroy');
                                 },
                                 Add : function() {
                                     self.do_add_widget(action_manager);
-                                    $(this).dialog("destroy");
+                                    $(this).dialog('destroy');
                                 }
                             }
                         });
@@ -97,7 +98,6 @@ openerp.base.form.DashBoard = openerp.base.form.Widget.extend({
             actions = action_manager.viewmanager.views.list.controller.groups.get_selection().ids,
             results = [],
             qdict = { view : this.view };
-            console.log(this.actions_attrs)
         // TODO: should load multiple actions at once
         _.each(actions, function(aid) {
             self.rpc('/base/action/load', {
@@ -118,7 +118,7 @@ openerp.base.form.DashBoard = openerp.base.form.Widget.extend({
     },
     on_rename : function(e) {
         var self = this,
-            id = $(e.currentTarget).parents('.oe-dashboard-action:first').attr('data-id'),
+            id = parseInt($(e.currentTarget).parents('.oe-dashboard-action:first').attr('data-id'), 10),
             $header = $(e.currentTarget).parents('.oe-dashboard-action-header:first'),
             $rename = $header.find('a.oe-dashboard-action-rename').hide(),
             $title = $header.find('span.oe-dashboard-action-title').hide(),
@@ -153,7 +153,7 @@ openerp.base.form.DashBoard = openerp.base.form.Widget.extend({
                         }).html(QWeb.render('DashBoard.layouts', qdict));
         $dialog.find('li').click(function() {
             var layout = $(this).attr('data-layout');
-            $dialog.dialog("destroy");
+            $dialog.dialog('destroy');
             self.do_change_layout(layout);
         });
     },
@@ -180,9 +180,17 @@ openerp.base.form.DashBoard = openerp.base.form.Widget.extend({
         }
     },
     on_fold_action: function(e) {
-        var $e = $(e.currentTarget);
+        var $e = $(e.currentTarget),
+            $action = $e.parents('.oe-dashboard-action:first'),
+            id = parseInt($action.attr('data-id'), 10);
+        if ($e.is('.ui-icon-minusthick')) {
+            this.actions_attrs[id].fold = '1';
+        } else {
+            delete(this.actions_attrs[id].fold);
+        }
         $e.toggleClass('ui-icon-minusthick ui-icon-plusthick');
-        $e.parents('.oe-dashboard-action:first').find('.oe-dashboard-action-content').toggle();
+        $action.find('.oe-dashboard-action-content').toggle();
+        this.do_save_dashboard();
     },
     on_close_action: function(e) {
         $(e.currentTarget).parents('.oe-dashboard-action:first').remove();

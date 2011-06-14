@@ -130,8 +130,8 @@ openerp.base = function(instance) {
     openerp.base.search(instance);
     openerp.base.list(instance);
     openerp.base.tree(instance);
-    openerp.base.m2o(instance);
     openerp.base.form(instance);
+    openerp.base.list.editable(instance);
 };
 
 // vim:et fdc=0 fdl=0 foldnestmax=3 fdm=syntax:

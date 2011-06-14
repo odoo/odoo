@@ -27,6 +27,10 @@ body.openerp {
     overflow-y: scroll;
 }
 
+.openerp .oe-number {
+    text-align: right !important;
+}
+
 /* STATES */
 .openerp .on_logged {
     display: none;
@@ -93,6 +97,12 @@ body.openerp {
 .openerp .login .oe_box2 td input,
 .openerp .login .oe_box2 td select {
     width: 100%;
+}
+.openerp .login .oe_box2 td.oe_remember {
+    text-align:left;
+}
+.openerp .login .oe_box2 td.oe_remember input {
+    width: inherit;
 }
 .openerp .login .oe_login_right_pane {
     padding:70px 35px 5px 10px;
@@ -596,6 +606,7 @@ background: linear-gradient(top, #ffffff 0%,#d8d8d8 11%,#afafaf 86%,#333333 91%,
     padding: 0;
     border: none;
     background: none;
+    width: 100%;
 }
 .openerp .oe-listview .oe-field-cell button:active {
     opacity: 0.5;
@@ -682,6 +693,9 @@ background: linear-gradient(top, #ffffff 0%,#d8d8d8 11%,#afafaf 86%,#333333 91%,
 .openerp table.oe_frame td {
     color: #4c4c4c;
 }
+.openerp td.oe_form_frame_cell {
+    padding: 2px;
+}
 .openerp .required.error {
     border: 1px solid #900;
 }
@@ -698,6 +712,7 @@ background: linear-gradient(top, #ffffff 0%,#d8d8d8 11%,#afafaf 86%,#333333 91%,
 .openerp label.oe_form_label, .openerp label.oe_form_label_help {
     display: block;
     text-align: right;
+    margin-top: 3px;
 }
 .openerp label.oe_form_label_help span {
     font-size: 80%;
@@ -1000,63 +1015,18 @@ background: linear-gradient(top, #ffffff 0%,#ebe9e9 100%); /* W3C */
     border-color: #828282;
 }
 
-/* Many2one Autosearch */
-.openerp .ui_combo {
-    height: 19px;
-    top: 6px;
-    width: 20px;
-    position: relative;
-    margin-left: -26px;
-}
-
-.openerp img.m2o_open {
-    vertical-align: middle;
-    cursor: pointer;
-}
-/*----- End Many2one Autosearch ------- */
-
-/* Many2one Contextmenu */
-.openerp div.m2o_contextmenu {
-    background-color: #444;
-    border: 1px solid #000;
+.openerp .oe-m2o {
+    padding-right: 16px;
     white-space: nowrap;
-    position: absolute;
-    padding: 2px;
-    z-index: 100;
 }
 
-.openerp div.m2o_contextmenu a,
-.openerp div.m2o_contextmenu span {
-    display: block;
-    text-align: left;
-    text-decoration: none;
-    white-space: nowrap;
-    padding: 2px;
-    color: #FFF;
-    cursor: pointer;
+.openerp .oe-m2o-drop-down-button {
+    margin-left: -23px;
 }
-
-.openerp div.m2o_contextmenu hr {
-    margin: 1px 0 !important;
+.openerp .oe-m2o-drop-down-button img,
+.openerp .oe-m2o-cm-button img {
+    margin-bottom: -4px;
 }
-
-.openerp div.m2o_contextmenu td {
-    padding: 1px;
+.openerp .oe-m2o-disabled-cm {
+    color: grey;
 }
-
-.openerp div.m2o_contextmenu a:hover,
-.openerp div.m2o_contextmenu span:hover {
-    color: #FFF;
-    background-color: #505050;
-    text-decoration: none;
-}
-
-.openerp div.m2o_contextmenu a.disabled,
-.openerp div.m2o_contextmenu span.disabled {
-    color: #C0C0C0;
-}
-.parent_top {
-    vertical-align: text-top;
-}
-
-/*----- End Many2one Contextmenu ------- */

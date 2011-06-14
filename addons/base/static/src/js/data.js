@@ -259,7 +259,7 @@ openerp.base.DataSet =  openerp.base.Controller.extend( /** @lends openerp.base.
      */
     read_ids: function (ids, fields, callback) {
         var self = this;
-        this.rpc('/base/dataset/get', {
+        return this.rpc('/base/dataset/get', {
             model: this.model,
             ids: ids,
             fields: fields
@@ -279,10 +279,10 @@ openerp.base.DataSet =  openerp.base.Controller.extend( /** @lends openerp.base.
      */
     read_index: function (fields, callback) {
         if (_.isEmpty(this.ids)) {
-            callback([]);
+            return $.Deferred().reject().promise();
         } else {
             fields = fields || false;
-            this.read_ids([this.ids[this.index]], fields, function(records) {
+            return this.read_ids([this.ids[this.index]], fields, function(records) {
                 callback(records[0]);
             });
         }
@@ -313,26 +313,21 @@ openerp.base.DataSet =  openerp.base.Controller.extend( /** @lends openerp.base.
         // to implement in children
         this.notification.notify("Unlink", ids);
     },
-    call: function (method, ids, args, callback) {
-        this.notification.notify(
-            "Calling", this.model + '#' + method + '(' + ids + ')');
-        ids = ids || [];
-        args = args || [];
+    call: function (method, args, callback, error_callback) {
         return this.rpc('/base/dataset/call', {
             model: this.model,
             method: method,
-            ids: ids,
-            args: args
-        }, callback);
+            args: args || []
+        }, callback, error_callback);
     },
-    name_search: function (search_str, callback) {
-        search_str = search_str || '';
-        return this.rpc('/base/dataset/name_search', {
-            model: this.model,
-            search_str: search_str,
-            domain: this.domain || [],
-            context: this.context
-        }, callback);
+    /**
+     * Arguments:
+     * name='', args=None, operator='ilike', context=None, limit=100
+     */
+    name_search: function (args, callback, error_callback) {
+        return this.call('name_search',
+            args,
+            callback, error_callback);
     },
     exec_workflow: function (id, signal, callback) {
         return this.rpc('/base/dataset/exec_workflow', {
