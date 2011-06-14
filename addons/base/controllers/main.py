@@ -377,6 +377,7 @@ class DataSet(openerpweb.Controller):
     @openerpweb.jsonrequest
     def get(self, request, model, ids, fields=False):
         return self.do_get(request, model, ids, fields)
+    
     def do_get(self, request, model, ids, fields=False):
         """ Fetches and returns the records of the model ``model`` whose ids
         are in ``ids``.
@@ -402,8 +403,8 @@ class DataSet(openerpweb.Controller):
         record_map = dict((record['id'], record) for record in records)
 
         return [record_map[id] for id in ids if record_map.get(id)]
+    
     @openerpweb.jsonrequest
-
     def load(self, req, model, id, fields):
         m = req.session.model(model)
         value = {}

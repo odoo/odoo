@@ -63,7 +63,7 @@ openerp.base.TreeView = openerp.base.View.extend({
                         textoftd = $('tr #treerow_' + response[i].id).find('td:eq('+ (childlen - 1) +')').text();
                         if ($('tr #treerow_' + response[i].id).find('td:eq('+ (childlen - 2) +')').find('#parentimg').length > 0) {
                             $('tr #treerow_' + response[i].id).find('td:eq('+ (childlen - 2) +')').css({ paddingLeft : '2px' });
-                            $('tr #treerow_' + response[i].id).find('td:eq('+ (childlen - 2) +')').find('#parentimg').addClass("top");
+                            $('tr #treerow_' + response[i].id).find('td:eq('+ (childlen - 2) +')').find('#parentimg').addClass("parent_top");
                         } else {
                             $('tr #treerow_' + response[i].id).find('td:eq('+ (childlen - 2) +')').css({ paddingLeft : '35px' });
                         }
