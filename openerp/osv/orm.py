@@ -2545,6 +2545,8 @@ class orm(orm_template):
         - alter existing database columns to match _columns,
         - create database tables to match _columns,
         - add database indices to match _columns,
+        - save in self._foreign_keys a list a foreign keys to create (see
+          _auto_end).
 
         """
         self._foreign_keys = []
@@ -2957,9 +2959,11 @@ class orm(orm_template):
         return todo_end
 
     def _auto_end(self, cr, context=None):
+        """ Create the foreign keys recorded by _auto_init. """
         for t, k, r, d in self._foreign_keys:
             cr.execute('ALTER TABLE "%s" ADD FOREIGN KEY ("%s") REFERENCES "%s" ON DELETE %s' % (t, k, r, d))
         cr.commit()
+        del self._foreign_keys
 
     @classmethod
     def createInstance(cls, pool, cr):
