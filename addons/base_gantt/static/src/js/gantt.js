@@ -74,6 +74,12 @@ init: function(view_manager, session, element_id, dataset, view_id) {
         ganttChartControl.showContextMenu(true);
         ganttChartControl.showDescTask(true,'d,s-f');
         ganttChartControl.showDescProject(true,'n,d');
+        
+        jQuery(".toggle-sidebar").click(function(e) {
+            var $gantt_panel = jQuery(".ganttTaskPanel , .ganttDayPanel");
+            $gantt_panel.width(100);
+            $gantt_panel.width(jQuery("#oe_app_search").width() - 150);
+        });
 
     },
 
