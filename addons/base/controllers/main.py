@@ -100,11 +100,6 @@ class Session(openerpweb.Controller):
         }
 
     @openerpweb.jsonrequest
-    def logout(self,req):
-        req.session_id = False
-        req.session._uid = False
-
-    @openerpweb.jsonrequest
     def sc_list(self, req):
         return req.session.model('ir.ui.view_sc').get_sc(req.session._uid, "ir.ui.menu", {})
 
@@ -619,33 +614,6 @@ class ListView(View):
     def load(self, req, model, view_id, toolbar=False):
         fields_view = self.fields_view_get(req, model, view_id, 'tree', toolbar=toolbar)
         return {'fields_view': fields_view}
-
-    @openerpweb.jsonrequest
-    def records(self, req, model, view_id, toolbar=False):
-        rows = DataSet().do_search_read(req, model,
-                                        offset=0, limit=False,
-                                        domain=None)
-        return {
-            'records': [
-                {'data': dict((key, {'value': value})
-                              for key, value in row.iteritems())}
-                for row in rows
-            ]
-        }
-
-    def fields_view_get(self, request, model, view_id, view_type="tree",
-                        transform=True, toolbar=False, submenu=False):
-        """ Sets @editable on the view's arch if it isn't already set and
-        ``set_editable`` is present in the request context
-        """
-        view = super(ListView, self).fields_view_get(
-            request, model, view_id, view_type, transform, toolbar, submenu)
-
-        view_attributes = view['arch']['attrs']
-        if request.context.get('set_editable')\
-                and 'editable' not in view_attributes:
-            view_attributes['editable'] = 'bottom'
-        return view
 
     def process_colors(self, view, row, context):
         colors = view['arch']['attrs'].get('colors')

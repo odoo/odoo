@@ -91,16 +91,12 @@ openerp.web_mobile.ListView = openerp.base.Controller.extend({
         var self = this;
         var view_id = action.views[0][0];
         var model = action.res_model;
-        var context = action.context;
-        var domain = action.domain;
 
-        self.rpc('/base/listview/records', {
-            'model': model,
-            'view_id': view_id,
-            'toolbar': false,
+        self.rpc('/base/dataset/search_read', {
+            model: model
             },function(result){
                 this.listview = new openerp.web_mobile.ListView(this.session, "oe_app");
-                self.$element.html(QWeb.render("ListView", {'list' : result}));
+                self.$element.html(QWeb.render("ListView", {'records' : result}));
             });
     }
  });
@@ -183,16 +179,12 @@ openerp.web_mobile.Options =  openerp.base.Controller.extend({
     start: function() {
         var self = this;
         this.$element.html(QWeb.render("Options", this));
-        self.$element.find("a").click(self.on_clicked);
+        self.$element.find("#logout").click(self.on_logout);
     },
-    on_clicked: function(ev) {
-        $opt = $(ev.currentTarget);
-        current_id = $opt.attr('id');
-        if (current_id == 'logout') {
-            this.rpc('/base/session/logout', {});
-            this.login = new openerp.web_mobile.Login(this.session, "oe_app");
-            this.login.start();
-        }
+    on_logout: function(ev) {
+        this.session.logout();
+        this.login = new openerp.web_mobile.Login(this.session, "oe_app");
+        this.login.start();
     }
 });
 openerp.web_mobile.Login =  openerp.base.Controller.extend({
@@ -206,34 +198,31 @@ openerp.web_mobile.Login =  openerp.base.Controller.extend({
         this.rpc("/base/session/get_databases_list", {}, function(result) {
             self.db_list = result.db_list;
             self.$element.html(QWeb.render("Login", self));
-            self.$element.find('#database').click(self.on_select);
-            self.$element.find("a").click(self.on_clicked);
+            self.$element.find('#database').click(self.on_db_select);
+            self.$element.find("#login").click(self.on_login);
+            $.mobile.initializePage();
         })
     },
-    on_select: function(ev) {
+    on_db_select: function(ev) {
         var db = this.$element.find("#database option:selected").val();
         jQuery("#db_text").html(db);
     },
-    on_clicked: function(ev) {
-        $opt = $(ev.currentTarget);
-        current_id = $opt.attr('id');
-        if (current_id = "login") {
-            ev.preventDefault();
-            var self = this;
-            var $e = this.$element;
-            var db = $e.find("div select[name=database]").val();
-            var login = $e.find("div input[name=login]").val();
-            var password = $e.find("div input[name=password]").val();
-            //$e.hide();
-            // Should hide then call callback
-            this.session.session_login(db, login, password, function() {
-                if(self.session.session_is_valid()) {
-                    self.on_login_valid();
-                } else {
-                    self.on_login_invalid();
-                }
-            });
-        }
+    on_login: function(ev) {
+        ev.preventDefault();
+        var self = this;
+        var $e = this.$element;
+        var db = $e.find("div select[name=database]").val();
+        var login = $e.find("div input[name=login]").val();
+        var password = $e.find("div input[name=password]").val();
+        //$e.hide();
+        // Should hide then call callback
+        this.session.session_login(db, login, password, function() {
+            if(self.session.session_is_valid()) {
+                self.on_login_valid();
+            } else {
+                self.on_login_invalid();
+            }
+        });
     },
     on_login_invalid: function() {
         this.$element

@@ -37,9 +37,9 @@
                         <span class="ui-icon ui-icon-arrow-d ui-icon-shadow"></span>
                     </span>
                     <select data-native-menu="false" id="database" name="database" tabindex="-1">
-                        <option t-foreach="db_list" t-as="opt" t-value="opt">
-                            <t t-esc="opt"/>
-                        </option>
+                        <t t-foreach="db_list" t-as="opt">
+                            <option t-att-value="opt"><t t-esc="opt"/></option>
+                        </t>
                     </select>
                     </div>
                 </div>
@@ -68,11 +68,11 @@
 <t t-name="ListView">
     <div role="main" class="ui-content" data-role="content">
         <ul data-role="listview" class="ui-listview">
-            <li data-theme="c" class="ui-btn ui-btn-icon-right ui-li ui-btn-up-c" t-foreach="list.records" t-as="record">
+            <li data-theme="c" class="ui-btn ui-btn-icon-right ui-li ui-btn-up-c" t-foreach="records" t-as="record">
                 <div class="ui-btn-inner ui-li">
                     <div class="ui-btn-text">
                         <a href="#" class="ui-link-inherit">
-                            <span><t t-esc="record.data.name.value"/></span>
+                            <span><t t-esc="record.name"/></span>
                         </a>
                     </div>
                         <span class="ui-icon ui-icon-arrow-r"></span>
