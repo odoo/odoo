@@ -4,31 +4,31 @@
 - |
   I create a record for the gmail account for which I want to import the contacts.
 - 
-  !record {model: google.login, id: google_login_contact_id0}:
+  !record {model: google.login.contact, id: google_login_contact_id0}:
     user: testmail.openerp
     password: openerptiny
 - |
   I login into that account.
 -
-  !python {model: google.login}: |
+  !python {model: google.login.contact}: |
     self.login(cr, uid, [ref('google_login_contact_id0')], context)
 - |
   Now I select from which group I want to get the contact details.
 -
-  !record {model: synchronize.google.contact.import, id: synchronize_google_contact_import_id0}:
+  !record {model: synchronize.google.import, id: synchronize_google_import_id0}:
     create_partner: create_address
     group_name: all
 - |
   I import the contacts and I also check if the contact already exists in db and updates the address.
 -
-  !python {model: synchronize.google.contact.import}: |
-    self.import_contact(cr, uid, [ref('synchronize_google_contact_import_id0')], context)
+  !python {model: synchronize.google.import}: |
+    self.import_contact(cr, uid, [ref('synchronize_google_import_id0')], context)
 - |
   I check whether the Contacts are created in Partner address or not.
 -
   !python {model: ir.model.data}: |
     addr_obj = self.pool.get('res.partner.address')
     addr_ids = addr_obj.search(cr, uid, [])
-    data_ids = self.search(cr, uid, [('res_id','in',addr_ids),('model','=','res.partner.address'),('module','=','sync_google_contact')])
+    data_ids = self.search(cr, uid, [('res_id','in',addr_ids),('model','=','res.partner.address'),('module','=','synchronize_google')])
     assert data_ids, 'Addresses not created !'
     
