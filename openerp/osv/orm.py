@@ -2762,8 +2762,6 @@ class orm(orm_template):
                                             cr.commit()
                                             self.__schema.debug("Table '%s': column '%s': XXX",
                                                 self._table, k)
-                                    #else: # TODO Ask review. (Above, the drop should be done for more cases (ondelete is wrong, or the targeted table is wrong).)
-                                    #    self._foreign_keys.append((self._table, k, ref, f.ondelete))
 
                     # The field doesn't exist in database. Create it if necessary.
                     else:
