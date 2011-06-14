@@ -320,15 +320,14 @@ openerp.base.DataSet =  openerp.base.Controller.extend( /** @lends openerp.base.
             args: args || []
         }, callback, error_callback);
     },
-    name_search: function (search_str, limit, callback) {
-        search_str = search_str || '';
-        return this.rpc('/base/dataset/name_search', {
-            model: this.model,
-            search_str: search_str,
-            domain: this.domain || [],
-            context: this.context,
-            limit: limit || false
-        }, callback);
+    /**
+     * Arguments:
+     * name='', args=None, operator='ilike', context=None, limit=100
+     */
+    name_search: function (args, callback, error_callback) {
+        return this.call('name_search',
+            args,
+            callback, error_callback);
     },
     exec_workflow: function (id, signal, callback) {
         return this.rpc('/base/dataset/exec_workflow', {

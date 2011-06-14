@@ -98,7 +98,11 @@ class Session(openerpweb.Controller):
             "session_id": req.session_id,
             "uid": req.session._uid,
         }
-    
+
+    @openerpweb.jsonrequest
+    def sc_list(self, req):
+        return req.session.model('ir.ui.view_sc').get_sc(req.session._uid, "ir.ui.menu", {})
+
     @openerpweb.jsonrequest
     def get_databases_list(self, req):
         proxy = req.session.proxy("db")
@@ -444,12 +448,6 @@ class DataSet(openerpweb.Controller):
     def default_get(self, req, model, fields, context={}):
         m = req.session.model(model)
         r = m.default_get(fields, context)
-        return {'result': r}
-    
-    @openerpweb.jsonrequest
-    def name_search(self, req, model, search_str, domain=[], context={}, limit=False):
-        m = req.session.model(model)
-        r = m.name_search(search_str, domain, 'ilike', context, limit)
         return {'result': r}
 
 class DataGroup(openerpweb.Controller):

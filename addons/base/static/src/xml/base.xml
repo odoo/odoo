@@ -417,7 +417,7 @@
     <t t-raw="console.log('Unhandled widget', widget)"/>
 </t>
 <t t-name="WidgetFrame">
-    <table border="0" width="100%" cellpadding="2" cellspacing="2" class="oe_frame">
+    <table border="0" width="100%" cellpadding="0" cellspacing="0" class="oe_frame">
     <tr t-foreach="widget.table" t-as="row">
         <t t-foreach="row" t-as="td">
             <td t-att-colspan="td.colspan gt 1 ? td.colspan : undefined"
@@ -425,7 +425,7 @@
                 t-att-nowrap="td.is_field_label or td.is_field_m2o? 'true' : undefined"
                 t-att-valign="td.table ? 'top' : undefined"
                 t-att-id="td.element_id"
-                t-att-class="'oe_form_' + (td.is_field_label ? 'label' : (td.field ? 'field_' + td.type : td.type))"
+                t-att-class="'oe_form_frame_cell oe_form_' + (td.is_field_label ? 'label' : (td.field ? 'field_' + td.type : td.type))"
             >
                 <t t-raw="td.render()"/>
             </td>
