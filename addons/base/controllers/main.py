@@ -445,12 +445,6 @@ class DataSet(openerpweb.Controller):
         m = req.session.model(model)
         r = m.default_get(fields, context)
         return {'result': r}
-    
-    @openerpweb.jsonrequest
-    def name_search(self, req, model, search_str, domain=[], context={}, limit=False):
-        m = req.session.model(model)
-        r = m.name_search(search_str, domain, 'ilike', context, limit)
-        return {'result': r}
 
 class DataGroup(openerpweb.Controller):
     _cp_path = "/base/group"
