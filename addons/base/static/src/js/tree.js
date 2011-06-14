@@ -133,9 +133,10 @@ openerp.base.TreeView = openerp.base.View.extend({
         for (i in childid) {
             if (flag == 1) {
                 self.dataset.domain = [['parent_id', '=', parseInt(childid[i], 10)]];
-                childimg = $('tr #treerow_ '+ childid[i]).find('td #parentimg').attr('src');
+                childimg = $('tr #treerow_' + childid[i]).find('td').find('#parentimg').attr('src');
+
                 if (childimg == "/base/static/src/img/collapse.gif") {
-                    $('tr #treerow_'+childid[i]).find('td #parentimg').attr('src','/base/static/src/img/expand.gif');
+                    $('tr #treerow_' + childid[i]).find('td').find('#parentimg').attr('src','/base/static/src/img/expand.gif');
                 }
                 self.dataset.read_slice([], 0, false, function (response) {
                     for (j in response) {
