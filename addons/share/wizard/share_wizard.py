@@ -316,15 +316,17 @@ class share_create(osv.osv_memory):
         for colinfo in get_column_infos(model_osv).itervalues():
             coldef = colinfo.column
             coltype = coldef._type
+            relation_field = None
             if coltype in ttypes and colinfo.column._obj not in models:
                 relation_model_id = model_obj.search(cr, UID_ROOT, [('model','=',coldef._obj)])[0]
                 relation_model_browse = model_obj.browse(cr, UID_ROOT, relation_model_id, context=context)
                 relation_osv = self.pool.get(coldef._obj)
                 if coltype == 'one2many':
-                    relation_field = '%s.%s'%(coldef._fields_id, suffix) if suffix else coldef._fields_id
-                else:
-                    # TODO: add some filtering for m2m and m2o - not always possible...
-                    relation_field = None
+                    # don't record reverse path if it's not a real m2o (that happens, but rarely)
+                    dest_model_ci = get_column_infos(relation_osv)
+                    reverse_rel = coldef._fields_id
+                    if reverse_rel in dest_model_ci and dest_model_ci[reverse_rel].column._type == 'many2one':
+                        relation_field = ('%s.%s'%(reverse_rel, suffix)) if suffix else reverse_rel
                 local_rel_fields.append((relation_field, relation_model_browse))
                 for parent in relation_osv._inherits:
                     if parent not in models:
@@ -482,7 +484,6 @@ class share_create(osv.osv_memory):
         self.__logger.debug("Created sharing rule on model %s with domain: %s", model_id, domain)
 
     def _create_indirect_sharing_rules(self, cr, current_user, wizard_data, group_id, fields_relations, context=None):
-        rule_obj = self.pool.get('ir.rule')
         rule_name = _('Indirect sharing filter created by user %s (%s) for group %s') % \
                             (current_user.name, current_user.login, group_id)
         try:
@@ -491,6 +492,7 @@ class share_create(osv.osv_memory):
                 domain_expr = expression(domain)
                 for rel_field, model in fields_relations:
                     related_domain = []
+                    if not rel_field: continue
                     for element in domain:
                         if domain_expr._is_leaf(element):
                             left, operator, right = element
