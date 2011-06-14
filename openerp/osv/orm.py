@@ -445,6 +445,11 @@ class orm_template(object):
     _sequence = None
     _description = None
     _inherits = {}
+    # Mapping from inherits'd field name to triple (m, r, f)
+    # where m is the model from which it is inherits'd,
+    # r is the (local) field towards m,
+    # and f is the _column object itself.
+    _inherit_fields = {}
     _table = None
     _invalids = set()
     _log_create = False
@@ -469,9 +474,11 @@ class orm_template(object):
         raise NotImplementedError(_('The read_group method is not implemented on this object !'))
 
     def _field_create(self, cr, context=None):
-        """
+        """ Create entries in ir_model_fields for all the model's fields.
 
-        Create/update entries in ir_model, ir_model_data, and ir_model_fields.
+        If necessary, also create an entry in ir_model, and if called from the
+        modules loading scheme (by receiving 'module' in the context), also
+        create entries in ir_model_data (for the model and the fields).
 
         - create an entry in ir_model (if there is not already one),
         - create an entry in ir_model_data (if there is not already one, and if
@@ -1225,6 +1232,8 @@ class orm_template(object):
 
     def fields_get_keys(self, cr, user, context=None):
         res = self._columns.keys()
+        # TODO I believe this loop can be replace by
+        # res.extend(self._inherit_fields.key())
         for parent in self._inherits:
             res.extend(self.pool.get(parent).fields_get_keys(cr, user, context))
         return res
@@ -2056,7 +2065,6 @@ class orm_template(object):
 class orm_memory(orm_template):
 
     _protected = ['read', 'write', 'create', 'default_get', 'perm_read', 'unlink', 'fields_get', 'fields_view_get', 'search', 'name_get', 'distinct_field_get', 'name_search', 'copy', 'import_data', 'search_count', 'exists']
-    _inherit_fields = {}
     _max_count = config.get('osv_memory_count_limit')
     _max_hours = config.get('osv_memory_age_limit')
     _check_time = 20
@@ -2754,6 +2762,10 @@ class orm(orm_template):
                                             cr.commit()
                                             self.__schema.debug("Table '%s': column '%s': XXX",
                                                 self._table, k)
+                                    #else: # TODO Ask review. (Above, the drop should be done for more cases (ondelete is wrong, or the targeted table is wrong).)
+                                    #    self._foreign_keys.append((self._table, k, ref, f.ondelete))
+
+                    # The field doesn't exist in database. Create it if necessary.
                     else:
                         if not isinstance(f, fields.function) or f.store:
                             # add the missing field
@@ -2775,9 +2787,10 @@ class orm(orm_template):
                                 cr.commit()
                                 netsvc.Logger().notifyChannel('data', netsvc.LOG_DEBUG, "Table '%s': setting default value of new column %s" % (self._table, k))
 
+                            # remember the functions to call for the stored fields
                             if isinstance(f, fields.function):
                                 order = 10
-                                if f.store is not True:
+                                if f.store is not True: # i.e. if f.store is a dict
                                     order = f.store[f.store.keys()[0]][2]
                                 todo_end.append((order, self._update_store, (f, k)))
 
