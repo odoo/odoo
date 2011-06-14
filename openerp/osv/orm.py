@@ -3074,7 +3074,7 @@ class orm(orm_template):
     #
 
     def _inherits_reload_src(self):
-        for obj in self.pool.obj_pool.values():
+        for obj in self.pool.models.values():
             if self._name in obj._inherits:
                 obj._inherits_reload()
 

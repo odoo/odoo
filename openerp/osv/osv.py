@@ -34,7 +34,7 @@ import logging
 from psycopg2 import IntegrityError, errorcodes
 from openerp.tools.func import wraps
 from openerp.tools.translate import translate
-from openerp.osv.orm import module_class_list
+
 
 class except_osv(Exception):
     def __init__(self, name, value, exc_type='warning'):
@@ -200,51 +200,6 @@ class object_proxy(netsvc.Service):
                 raise
         finally:
             cr.close()
-        return res
-
-
-class osv_pool(object):
-    """ Model registry for a particular database.
-
-    The registry is essentially a mapping between model names and model
-    instances. There is one registry instance per database.
-
-    """
-
-    def __init__(self):
-        self.obj_pool = {} # model name/model instance mapping
-        self._sql_error = {}
-        self._store_function = {}
-        self._init = True
-        self._init_parent = {}
-
-    def do_parent_store(self, cr):
-        for o in self._init_parent:
-            self.get(o)._parent_store_compute(cr)
-        self._init = False
-
-    def obj_list(self):
-        """ Return the list of model names in this registry."""
-        return self.obj_pool.keys()
-
-    def add(self, model_name, model):
-        """ Add or replace a model in the registry."""
-        self.obj_pool[model_name] = model
-
-    def get(self, name):
-        """ Return a model for a given name or None if it doesn't exist."""
-        return self.obj_pool.get(name)
-
-    def instanciate(self, module, cr):
-        """ Instanciate all the classes of a given module for a particular db."""
-
-        res = []
-
-        # Instanciate classes registered through their constructor and
-        # add them to the pool.
-        for klass in module_class_list.get(module, []):
-            res.append(klass.createInstance(self, cr))
-
         return res
 
 
