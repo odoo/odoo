@@ -18,13 +18,15 @@
             <span>Change layout</span>
         </button>
     </div>
-    <div t-att-data-layout="node.attrs.style" t-attf-class="oe-dashboard oe-dashboard-layout_#{node.attrs.style}">
-        <div t-foreach="node.children" t-as="column" t-if="column.tag == 'column'"
+    <table t-att-data-layout="node.attrs.style" t-attf-class="oe-dashboard oe-dashboard-layout_#{node.attrs.style}" cellspacing="4" cellpadding="0" border="0">
+    <tr>
+        <td t-foreach="node.children" t-as="column" t-if="column.tag == 'column'"
              t-att-id="view.element_id + '_column_' + column_index" t-attf-class="oe-dashboard-column index_#{column_index}">
 
             <t t-foreach="column.children" t-as="action" t-if="action.tag == 'action'" t-call="DashBoard.action"/>
-        </div>
-    </div>
+        </td>
+    </tr>
+    </table>
 </t>
 <t t-name="DashBoard.action">
     <div t-att-data-id="action.attrs.name" class="oe-dashboard-action ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
