@@ -1143,7 +1143,10 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
                     });
                 }});
             }
-            if (self.value === undefined) {
+            var raw_result = _(data.result).map(function(x) {return x[1];})
+            if (search_val.length > 0 &&
+                !_.include(raw_result, search_val) &&
+                (!self.value || search_val !== self.value[1])) {
                 values.push({label: '<em>   Create "<strong>' +
                         $('<span />').text(search_val).html() + '</strong>"</em>', action: function() {
                     self._quick_create(search_val);
