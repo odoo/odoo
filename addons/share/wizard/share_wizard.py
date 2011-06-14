@@ -37,17 +37,43 @@ UID_ROOT = 1
 # osv.expression's DUMMY_LEAF
 DOMAIN_ALL = [(1, '=', 1)]
 
-RANDOM_PASS_CHARACTERS = [chr(x) for x in range(48, 58) + range(97, 123) + range(65, 91)]
-RANDOM_PASS_CHARACTERS.remove('l') #lowercase l, easily mistaken as one or capital i
-RANDOM_PASS_CHARACTERS.remove('I') #uppercase i, easily mistaken as one or lowercase L
-RANDOM_PASS_CHARACTERS.remove('O') #uppercase o, mistaken with zero
-RANDOM_PASS_CHARACTERS.remove('o') #lowercase o, mistaken with zero
-RANDOM_PASS_CHARACTERS.remove('0') #zero, mistaken with o-letter
-RANDOM_PASS_CHARACTERS.remove('1') #one, mistaken with lowercase-L or capital i
+# A good selection of easy to read password characters (e.g. no '0' vs 'O', etc.)
+RANDOM_PASS_CHARACTERS = 'aaaabcdeeeefghjkmnpqrstuvwxyzAAAABCDEEEEFGHJKLMNPQRSTUVWXYZ23456789'
 def generate_random_pass():
-    pass_chars = RANDOM_PASS_CHARACTERS[:]
-    random.shuffle(pass_chars)
-    return ''.join(pass_chars[0:10])
+    return ''.join(random.sample(RANDOM_PASS_CHARACTERS,10))
+
+
+# Utils for introspecting the ORM - could be moved to server someday
+class column_info(object):
+    """Struct containing details about an osv column, either one local to
+       its model, or one inherited via _inherits.
+
+       :attr name: name of the column
+       :attr column: column instance, subclass of osv.fields.column
+       :attr parent_model: if the column is inherited, name of the model
+                           that contains it, None for local columns.
+       :attr parent_column: the name of the column containing the m2o
+                            relationship to the parent model that contains
+                            this column, None for local columns.
+    """
+    def __init__(self, name, column, parent_model=None, parent_column=None):
+        self.name = name
+        self.column = column
+        self.parent_model = parent_model
+        self.parent_column = parent_column
+
+def get_column_infos(osv_model):
+    """Returns a dict mapping all fields names (direct fields and
+       inherited field via _inherits) to a ``column_info`` struct
+       giving detailed columns """
+    result = {}
+    for k, (parent,m2o,col) in osv_model._inherit_fields:
+        result[k] = column_info(k, col, parent, m2o)
+    for k, v in osv_model._columns.iteritems():
+        result[k] = column_info(k,v)
+    return result
+
+
 
 class share_create(osv.osv_memory):
     __logger = logging.getLogger('share.wizard')
@@ -76,16 +102,20 @@ class share_create(osv.osv_memory):
     def has_extended_share(self, cr, uid, context=None):
         return self.has_group(cr, uid, module='share', group_xml_id='group_share_user_extended', context=context)
 
-    def _has_email(self, cr, uid, ids, name, arg, context=None):
-        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-        has_email = bool(user.user_email)
-        return dict([(id,has_email) for id in ids])
+    def has_email(self, cr, uid, context=None):
+        return bool(self.pool.get('res.users').browse(cr, uid, uid, context=context).user_email)
+
+    def view_init(self, cr, uid, fields_list, context=None):
+        if not self.has_email(cr, uid, context=context):
+            raise osv.except_osv(_('No e-mail address configured'),
+                                 _('You must configure your e-mail address in the user preferences before using the Share button.'))
+        return super(share_create, self).view_init(cr, uid, fields_list, context=context)
 
     def _user_type_selection(self, cr, uid, context=None):
-        result = [('new','New users (emails required)'),
-                   ('existing','Users you already shared with')]
+        result = [('new','New users (emails required)')]
         if self.has_extended_share(cr, uid, context=context):
-            result.append(('groups','Existing groups (Portals setup only)'))
+            result.extend([('groups','Existing groups (Portals setup only)'),
+                           ('existing','Users you already shared with')])
         return result
 
     """Override of create() to auto-compute the action name"""
@@ -104,16 +134,15 @@ class share_create(osv.osv_memory):
         'user_ids': fields.many2many('res.users', 'share_wizard_res_user_rel', 'share_id', 'user_id', 'Existing users', domain=[('share', '=', True)]),
         'group_ids': fields.many2many('res.groups', 'share_wizard_res_group_rel', 'share_id', 'group_id', 'Existing groups', domain=[('share', '=', False)]),
         'new_users': fields.text("New users"),
-        'access_mode': fields.selection([('readwrite','Read & Write'),('readonly','Read-only')],'Access Mode'),
+        'access_mode': fields.selection([('readonly','Can view'),('readwrite','Can edit')],'Access Mode', required=True,
+                                        help="Access rights to be granted on the shared documents."),
         'result_line_ids': fields.one2many('share.wizard.result.line', 'share_wizard_id', 'Summary', readonly=True),
         'share_root_url': fields.char('Generic Share Access URL', size=512, readonly=True, tooltip='Main access page for users that are granted shared access'),
-        'name': fields.char('Title', size=64, required=True, help="Title for the shared view, to be displayed as the name of the shortcut in the user's menu"),
-
-        # used to display a warning message at first step
-        'has_user_email': fields.function(_has_email, string='Has email', method=True, type="boolean"),
+        'name': fields.char('Share Title', size=64, required=True, help="Title for the share (displayed to users as menu and shortcut name)"),
+        'message': fields.text("Personal Message", help="An optional personal message, to be included in the e-mail notification."),
     }
     _defaults = {
-        'user_type' : lambda self, cr, uid, *a: 'existing' if self.pool.get('res.users').search(cr, uid, [('share', '=', True)]) else 'new',
+        'user_type' : lambda self, cr, uid, *a: 'new',
         'domain': lambda self, cr, uid, context, *a: context.get('domain', '[]'),
         'share_root_url': lambda self, cr, uid, context, *a: context.get('share_root_url') or _('Please specify "share_root_url" in context'),
         'action_id': lambda self, cr, uid, context, *a: context.get('action_id'),
@@ -129,39 +158,57 @@ class share_create(osv.osv_memory):
             'res_model': 'share.wizard',
             'view_id': False,
             'res_id': ids[0],
-            'views': [(step1_form_view_id, 'form'), (False, 'tree'), (False, 'calendar'), (False, 'graph')],
+            'views': [(step1_form_view_id, 'form')],
             'type': 'ir.actions.act_window',
             'target': 'new'
         }
 
     def _create_share_group(self, cr, uid, wizard_data, context=None):
         group_obj = self.pool.get('res.groups')
-        share_group_name = '%s: %s (%d-%s)' %('Sharing', wizard_data.action_id.res_model, uid, time.time())
+        share_group_name = '%s: %s (%d-%s)' %('Shared', wizard_data.name, uid, time.time())
         # create share group without putting admin in it
         return group_obj.create(cr, UID_ROOT, {'name': share_group_name, 'share': True}, {'noadmin': True})
 
     def _create_new_share_users(self, cr, uid, wizard_data, group_id, context=None):
+        """Create one new res.users record for each email address provided in
+           wizard_data.new_users, ignoring already existing users.
+           Populates wizard_data.result_line_ids with one new line for
+           each user (existing or not). New users will also have a value
+           for the password field, so they can receive it by email.
+           Returns the ids of the created users, and the ids of the
+           ignored, existing ones."""
         user_obj = self.pool.get('res.users')
-        current_user = user_obj.browse(cr, uid, uid, context=context)
-        user_ids = []
-        if wizard_data.user_type == 'new':
-            for new_user in wizard_data.new_users.split('\n'):
-                # attempt to show more user-friendly msg than default constraint error
-                existing = user_obj.search(cr, UID_ROOT, [('login', '=', new_user)])
-                self._assert(not existing,
-                             _('This username (%s) already exists, perhaps data has already been shared with this person.\nYou may want to try selecting existing shared users instead.') % new_user,
-                             context=context)
-                user_id = user_obj.create(cr, UID_ROOT, {
-                        'login': new_user,
-                        'password': generate_random_pass(),
-                        'name': new_user,
-                        'user_email': new_user,
-                        'groups_id': [(6,0,[group_id])],
-                        'share': True,
-                        'company_id': current_user.company_id and current_user.company_id.id
-                })
-                user_ids.append(user_id)
-        return user_ids
+        current_user = user_obj.browse(cr, UID_ROOT, uid, context=context)
+        created_ids = []
+        existing_ids = []
+        for new_user in wizard_data.new_users.split('\n'):
+            # Ignore blank lines
+            new_user = new_user.strip()
+            if not new_user: continue
+            # Ignore the user if it already exists.
+            existing = user_obj.search(cr, UID_ROOT, [('login', '=', new_user)])
+            existing_ids.extend(existing)
+            if existing:
+                new_line = { 'login': new_user,
+                             'newly_created': False}
+                wizard_data.write({'result_line_ids': [(0,0,new_line)]})
+                continue
+            new_pass = generate_random_pass()
+            user_id = user_obj.create(cr, UID_ROOT, {
+                    'login': new_user,
+                    'password': new_pass,
+                    'name': new_user,
+                    'user_email': new_user,
+                    'groups_id': [(6,0,[group_id])],
+                    'share': True,
+                    'company_id': current_user.company_id.id
+            })
+            new_line = { 'login': new_user,
+                         'password': new_pass,
+                         'newly_created': True}
+            wizard_data.write({'result_line_ids': [(0,0,new_line)]})
+            created_ids.append(user_id)
+        return created_ids, existing_ids
 
     def _create_shortcut(self, cr, uid, values, context=None):
         if context is None:
@@ -183,7 +230,7 @@ class share_create(osv.osv_memory):
         menu_obj = self.pool.get('ir.ui.menu')
         menu_id =  menu_obj.create(cr, UID_ROOT, menu_data)
         sc_data = {'name': values['name'], 'sequence': UID_ROOT,'res_id': menu_id }
-        sc_menu_id = self.pool.get('ir.ui.view_sc').create(cr, uid, sc_data, new_context)
+        self.pool.get('ir.ui.view_sc').create(cr, uid, sc_data, new_context)
 
         # update menu cache
         user_groups = set(self.pool.get('res.users').read(cr, UID_ROOT, uid, ['groups_id'])['groups_id'])
@@ -217,26 +264,34 @@ class share_create(osv.osv_memory):
         return result
 
     def _shared_action_def(self, cr, uid, wizard_data, context=None):
-        return {
+        copied_action = wizard_data.action_id
+        action_def = {
             'name': wizard_data.name,
             'domain': '[]',
             'context': self._cleanup_action_context(wizard_data.action_id.context, uid),
-            'res_model': wizard_data.action_id.res_model,
-            'view_mode': wizard_data.action_id.view_mode,
-            'view_type': wizard_data.action_id.view_type,
-            'search_view_id': wizard_data.action_id.search_view_id.id,
+            'res_model': copied_action.res_model,
+            'view_mode': copied_action.view_mode,
+            'view_type': copied_action.view_type,
+            'search_view_id': copied_action.search_view_id.id,
+            'view_id': copied_action.view_id.id,
         }
+        if copied_action.view_ids:
+            action_def['view_ids'] = [(0,0,{'sequence': x.sequence,
+                                            'view_mode': x.view_mode,
+                                            'view_id': x.view_id.id })
+                                      for x in copied_action.view_ids]
+        return action_def
 
-    def _setup_action_and_shortcut(self, cr, uid, wizard_data, user_ids, new_users, context=None):
+    def _setup_action_and_shortcut(self, cr, uid, wizard_data, user_ids, make_home, context=None):
         """Create a shortcut to reach the shared data, as well as the corresponding action, for
-           each user in ``user_ids``, and assign it as their home action.
+           each user in ``user_ids``, and assign it as their home action if ``make_home`` is True.
            Meant to be overridden for special cases.
         """
-        user_obj = self.pool.get('res.users')
         values = self._shared_action_def(cr, uid, wizard_data, context=None)
+        user_obj = self.pool.get('res.users')
         for user_id in user_ids:
             action_id = self._create_shortcut(cr, user_id, values)
-            if new_users:
+            if make_home:
                 # We do this only for new share users, as existing ones already have their initial home
                 # action. Resetting to the default menu does not work well as the menu is rather empty
                 # and does not contain the shortcuts in most cases.
@@ -252,41 +307,61 @@ class share_create(osv.osv_memory):
                                    during recursion
            :param suffix: optional suffix to append to the field path to reach the main object
         """
-
         if relation_fields is None:
             relation_fields = []
         local_rel_fields = []
         models = [x[1].model for x in relation_fields]
         model_obj = self.pool.get('ir.model')
         model_osv = self.pool.get(model.model)
-        for field in model_osv._columns.values() + [x[2] for x in model_osv._inherit_fields.itervalues()]:
-            if field._type in ttypes and field._obj not in models:
-                relation_model_id = model_obj.search(cr, UID_ROOT, [('model','=',field._obj)])[0]
-                if field._type == 'one2many':
-                    relation_field = '%s.%s'%(field._fields_id, suffix) if suffix else field._fields_id
+        for colinfo in get_column_infos(model_osv).itervalues():
+            coldef = colinfo.column
+            coltype = coldef._type
+            if coltype in ttypes and colinfo.column._obj not in models:
+                relation_model_id = model_obj.search(cr, UID_ROOT, [('model','=',coldef._obj)])[0]
+                relation_model_browse = model_obj.browse(cr, UID_ROOT, relation_model_id, context=context)
+                relation_osv = self.pool.get(coldef._obj)
+                if coltype == 'one2many':
+                    relation_field = '%s.%s'%(coldef._fields_id, suffix) if suffix else coldef._fields_id
                 else:
                     # TODO: add some filtering for m2m and m2o - not always possible...
                     relation_field = None
-                model_browse = model_obj.browse(cr, UID_ROOT, relation_model_id, context=context)
-                local_rel_fields.append((relation_field, model_browse))
-                for parent in self.pool.get(model_browse.model)._inherits:
+                local_rel_fields.append((relation_field, relation_model_browse))
+                for parent in relation_osv._inherits:
                     if parent not in models:
                         parent_model = self.pool.get(parent)
+                        parent_colinfos = get_column_infos(parent_model)
                         parent_model_browse = model_obj.browse(cr, UID_ROOT,
                                                                model_obj.search(cr, UID_ROOT, [('model','=',parent)]))[0]
-                        if relation_field and (field._fields_id in parent_model._columns or \
-                                               field._fields_id in parent_model._inherit_fields):
+                        if coldef._fields_id in parent_colinfos:
+                            # inverse relationship is available in the parent
                             local_rel_fields.append((relation_field, parent_model_browse))
                         else:
                             # TODO: can we setup a proper rule to restrict inherited models
                             # in case the parent does not contain the reverse m2o?
                             local_rel_fields.append((None, parent_model_browse))
-                if relation_model_id != model.id and field._type in ['one2many', 'many2many']:
-                    local_rel_fields += self._get_recursive_relations(cr, uid, model_browse,
-                        [field._type], relation_fields + local_rel_fields, suffix=relation_field, context=context)
+                if relation_model_id != model.id and coltype in ['one2many', 'many2many']:
+                    local_rel_fields += self._get_recursive_relations(cr, uid, relation_model_browse,
+                        [coltype], relation_fields + local_rel_fields, suffix=relation_field, context=context)
         return local_rel_fields
 
     def _get_relationship_classes(self, cr, uid, model, context=None):
+        """Computes the *relationship classes* reachable from the given
+           model. The 4 relationship classes are:
+           - [obj0]: the given model itself (and its parents via _inherits, if any)
+           - [obj1]: obj0 and all other models recursively accessible from
+                     obj0 via one2many relationships
+           - [obj2]: obj0 and all other models recursively accessible from
+                     obj0 via one2many and many2many relationships
+           - [obj3]: all models recursively accessible from obj1 via many2one
+                     relationships
+
+           Each class is returned as a list of pairs [(field,model_browse)], where
+           ``model`` is the browse_record of a reachable ir.model, and ``field`` is
+           the dot-notation reverse relationship path coming from that model to obj0,
+           or None if there is no reverse path.
+           
+           :return: ([obj0], [obj1], [obj2], [obj3])
+           """
         # obj0 class and its parents
         obj0 = [(None, model)]
         model_obj = self.pool.get(model.model)
@@ -430,62 +505,20 @@ class share_create(osv.osv_memory):
             raise osv.except_osv(_('Sharing access could not be created'),
                                  _('Sorry, the current screen and filter you are trying to share are not supported at the moment.\nYou may want to try a simpler filter.'))
 
-    def _create_result_lines(self, cr, uid, wizard_data, context=None):
-        user_obj = self.pool.get('res.users')
-        result_obj = self.pool.get('share.wizard.result.line')
+    def _finish_result_lines(self, cr, uid, wizard_data, context=None):
         share_root_url = wizard_data.share_root_url
-        format_url = '%(login)s' in share_root_url\
-                 and '%(password)s' in share_root_url\
-                 and '%(dbname)s' in share_root_url
-        existing_passwd_str = _('*usual password*')
-        if wizard_data.user_type == 'new':
-            # new users
-            for email in wizard_data.new_users.split('\n'):
-                user_id = user_obj.search(cr, UID_ROOT, [('login', '=', email)], context=context)
-                password = user_obj.read(cr, UID_ROOT, user_id[0], ['password'])['password']
+        format_url = '%(dbname)s' in share_root_url
+        for result in wizard_data.result_line_ids:
+                # share_root_url may contain placeholders for dbname, login and password
                 share_url = share_root_url % \
-                        {'login': email,
-                         'password': password,
+                        {'login': result.login,
+                         'password': '', # kept empty for security reasons
                          'dbname': cr.dbname} if format_url else share_root_url
-                result_obj.create(cr, uid, {
-                        'share_wizard_id': wizard_data.id,
-                        'login': email,
-                        'password': password,
-                        'share_url': share_url,
-                    }, context=context)
-        elif wizard_data.user_type == 'existing':
-            # existing users
-            for user in wizard_data.user_ids:
-                share_url = share_root_url % \
-                        {'login': user.login,
-                         'password': '',
-                         'dbname': cr.dbname} if format_url else share_root_url
-                result_obj.create(cr, uid, {
-                        'share_wizard_id': wizard_data.id,
-                        'login': user.login,
-                        'password': existing_passwd_str,
-                        'share_url': share_url,
-                        'newly_created': False,
-                    }, context=context)
-        else:
-            # existing groups
-            for group in wizard_data.group_ids:
-                for user in group.users:
-                    share_url = share_root_url % \
-                            {'login': user.login,
-                             'password': '',
-                             'dbname': cr.dbname} if format_url else share_root_url
-                    result_obj.create(cr, uid, {
-                            'share_wizard_id': wizard_data.id,
-                            'login': user.login,
-                            'password': existing_passwd_str,
-                            'share_url': share_url,
-                            'newly_created': False,
-                        }, context=context)
+                result.write({'share_url': share_url}, context=context)
 
     def _check_preconditions(self, cr, uid, wizard_data, context=None):
         self._assert(wizard_data.action_id and wizard_data.access_mode,
-                     _('Action and Access Mode are required to create a shared access point'),
+                     _('Action and Access Mode are required to create a shared access'),
                      context=context)
         self._assert(self.has_share(cr, uid, context=context),
                      _('You must be a member of the Share/User group to use the share wizard'),
@@ -504,36 +537,51 @@ class share_create(osv.osv_memory):
                      context=context)
 
     def _create_share_users_groups(self, cr, uid, wizard_data, context=None):
-        """Create the appropriate shared users and groups, and return the new group_ids)
-           to which the shared access should be granted.
+        """Creates the appropriate shared users and groups, and populates
+           result_line_ids of wizard_data with one line for each user. 
+
+           :return: group_ids (to which the shared access should be granted),
+                    new_user_ids, and existing_user_ids.
         """
-        group_ids = []
-        user_ids = []
+        group_ids, new_ids, existing_ids = [], [], []
+
         if wizard_data.user_type == 'groups':
             group_id = None
             group_ids.extend([g.id for g in wizard_data.group_ids])
+            # populate result lines with the users of each group
+            for group in wizard_data.group_ids:
+                for user in group.users:
+                    new_line = {'login': user.login,
+                                'newly_created': False}
+                    wizard_data.write({'result_line_ids': [(0,0,new_line)]})
+
         else:
             group_id = self._create_share_group(cr, uid, wizard_data, context=context)
             group_ids.append(group_id)
-        if wizard_data.user_type == 'new':
-            user_ids = self._create_new_share_users(cr, uid, wizard_data, group_id, context=context)
-        elif wizard_data.user_type == 'existing':
-            user_ids = [x.id for x in wizard_data.user_ids]
-            # reset home action to regular menu as user needs access to multiple items
-            self.pool.get('res.users').write(cr, UID_ROOT, user_ids, {
-                                            'groups_id': [(4,group_id)],
-                                            })
-        if user_ids:
-            self._setup_action_and_shortcut(cr, uid, wizard_data, user_ids,
-                (wizard_data.user_type == 'new'), context=context)
-        return group_ids
+            # First create any missing user, based on the email addresses provided
+            new_ids, exist_ids = self._create_new_share_users(cr, uid, wizard_data, group_id, context=context)
+            existing_ids.extend(exist_ids)
+            # Then, add any existing users to the share group
+            existing_ids.extend([x.id for x in wizard_data.user_ids]) # manually selected users
+            self.pool.get('res.users').write(cr, UID_ROOT, existing_ids, {
+                                                'groups_id': [(4,group_id)],
+                                             })
+            # Finally, setup the new action and shortcut for the users.
+            if existing_ids:
+                # Existing users will only need a shortcut
+                self._setup_action_and_shortcut(cr, uid, wizard_data, existing_ids, False, context=context)
+            if new_ids:
+                # New users need the shortcut AND a home action
+                self._setup_action_and_shortcut(cr, uid, wizard_data, new_ids, True, context=context)
+
+        return group_ids, new_ids, existing_ids
 
     def go_step_2(self, cr, uid, ids, context=None):
-        wizard_data = self.browse(cr, uid, ids and ids[0], context=context)
+        wizard_data = self.browse(cr, uid, ids[0], context=context)
         self._check_preconditions(cr, uid, wizard_data, context=context)
 
         # Create shared group and users
-        group_ids = self._create_share_users_groups(cr, uid, wizard_data, context=context)
+        group_ids, new_user_ids, existing_user_ids = self._create_share_users_groups(cr, uid, wizard_data, context=context)
 
         current_user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
 
@@ -550,10 +598,10 @@ class share_create(osv.osv_memory):
         #   - [obj2] be the target model and all other models recursively accessible from
         #            obj0 via one2many and many2many relationships
         #   - [obj3] be all models recursively accessible from obj1 via many2one relationships
+        #            (currently not used)
         obj0, obj1, obj2, obj3 = self._get_relationship_classes(cr, uid, model, context=context)
         mode = wizard_data.access_mode
 
-        rule_obj = self.pool.get('ir.rule')
         for group_id in group_ids:
             # Add access to [obj0] and [obj1] according to chosen mode
             self._add_access_rights_for_share_group(cr, uid, group_id, mode, obj0, context=context)
@@ -589,8 +637,20 @@ class share_create(osv.osv_memory):
             all_relations = obj0 + obj1 + obj2
             self._link_or_copy_current_user_rules(cr, current_user, group_id, all_relations, context=context)
 
-        # so far, so good -> populate summary results and return them
-        self._create_result_lines(cr, uid, wizard_data, context=context)
+        # so far, so good -> check summary results and return them
+        self._finish_result_lines(cr, uid, wizard_data, context=context)
+
+        # update share URL to make it generic
+        generic_share_url = wizard_data.share_root_url % {'dbname': cr.dbname,
+                                                          'login': '',
+                                                          'password': ''}
+        wizard_data.write({'share_root_url': generic_share_url}, context=context)
+
+        # refresh wizard_data
+        wizard_data = self.browse(cr, uid, ids[0], context=context)
+
+        # send the confirmation emails:
+        self.send_emails(cr, uid, wizard_data, context=context)
 
         dummy, step2_form_view_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'share', 'share_step2_form')
         return {
@@ -605,33 +665,45 @@ class share_create(osv.osv_memory):
             'target': 'new'
         }
 
-    def send_emails(self, cr, uid, ids, context=None):
-        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+    def send_emails(self, cr, uid, wizard_data, context=None):
+        user = self.pool.get('res.users').browse(cr, UID_ROOT, uid)
         if not user.user_email:
             raise osv.except_osv(_('Email required'), _('The current user must have an email address configured in User Preferences to be able to send outgoing emails.'))
-        for wizard_data in self.browse(cr, uid, ids, context=context):
-            for result_line in wizard_data.result_line_ids:
-                email_to = result_line.login
-                subject = _('%s has shared OpenERP %s information with you') % (user.name, wizard_data.action_id.name)
-                body = _("Dear,\n\n%s\n\n") % subject
-                body += _("To access it, you can go to the following URL:\n    %s") % result_line.share_url
-                body += "\n\n"
-                if result_line.newly_created:
-                    body += _("You may use the following login and password to get access to this protected area:\n")
-                    body += "%s: %s" % (_("Username"), result_line.login) + "\n"
-                    body += "%s: %s" % (_("Password"), result_line.password) + "\n"
-                    body += "%s: %s" % (_("Database"), cr.dbname) + "\n"
-                else:
-                    body += _("This additional data has been automatically added to your current access.\n")
-                    body += _("You may use your existing login and password to view it. As a reminder, your login is %s.\n") % result_line.login
 
-                if not tools.email_send(
-                                            user.user_email,
-                                            [email_to],
-                                            subject,
-                                            body):
-                    self.__logger.warning('Failed to send sharing email from %s to %s', user.user_email, email_to)
-        return {'type': 'ir.actions.act_window_close'}
+        # TODO: also send an HTML version of this mail
+        for result_line in wizard_data.result_line_ids:
+            email_to = result_line.login
+            subject = wizard_data.name
+            body = _("Hello,")
+            body += "\n\n"
+            body += _("I've shared %s with you!") % wizard_data.name
+            body += "\n\n"
+            body += _("The documents are not attached, you can view them online directly on my OpenERP server at:")
+            body += "\n    " + result_line.share_url
+            body += "\n\n"
+            if wizard_data.message:
+                body += wizard_data.message
+                body += "\n\n"
+            if result_line.newly_created:
+                body += _("These are your credentials to access this protected area:\n")
+                body += "%s: %s" % (_("Username"), result_line.login) + "\n"
+                body += "%s: %s" % (_("Password"), result_line.password) + "\n"
+                body += "%s: %s" % (_("Database"), cr.dbname) + "\n"
+            else:
+                body += _("The documents have been automatically added to your current OpenERP documents.\n")
+                body += _("You may use your current login (%s) and password to view them.\n") % result_line.login
+            body += "\n\n"
+            body += user.signature
+            body += "\n\n"
+            body += "--\n"
+            body += _("OpenERP is a powerful and user-friendly suite of Business Applications (CRM, Sales, HR, etc.)\n"
+                      "It is open source and can be found on http://www.openerp.com.")
+
+            if not tools.email_send(user.user_email,
+                                    [email_to],
+                                    subject,
+                                    body):
+                self.__logger.warning('Failed to send sharing email from %s to %s, ignored', user.user_email, email_to)
 share_create()
 
 class share_result_line(osv.osv_memory):
