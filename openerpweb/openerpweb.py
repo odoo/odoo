@@ -499,7 +499,7 @@ class Root(object):
                         return m(**kw)
             raise cherrypy.NotFound('/' + '/'.join(l))
         elif l and l[0] == 'mobile':
-            #for the mobile web client we are supposed to use a different url to join '/web_mobile'
+            #for the mobile web client we are supposed to use a different url to just add '/mobile'
             raise cherrypy.HTTPRedirect('/web_mobile/static/src/web_mobile.html', 301)
         else:
             raise cherrypy.HTTPRedirect('/base/static/src/base.html', 301)
