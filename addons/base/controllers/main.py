@@ -430,9 +430,9 @@ class DataSet(openerpweb.Controller):
         return Model.unlink(ids)
 
     @openerpweb.jsonrequest
-    def call(self, req, model, method, args):
+    def call(self, req, model, method, ids, args):
         m = req.session.model(model)
-        r = getattr(m, method)(*args)
+        r = getattr(m, method)(ids, *args)
         return {'result': r}
 
     @openerpweb.jsonrequest
