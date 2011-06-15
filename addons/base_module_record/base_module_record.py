@@ -20,7 +20,6 @@
 ##############################################################################
 
 from xml.dom import minidom
-from osv.osv import osv_pool
 from osv import fields,osv
 import pooler
 import string
