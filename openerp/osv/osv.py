@@ -31,6 +31,7 @@ import logging
 from psycopg2 import IntegrityError, errorcodes
 from openerp.tools.func import wraps
 from openerp.tools.translate import translate
+from openerp.osv.orm import MetaModel
 
 
 class except_osv(Exception):
@@ -202,12 +203,14 @@ class object_proxy(netsvc.Service):
 
 class osv_memory(orm.orm_memory):
     """ Deprecated class. """
-    pass
+    __metaclass__ = MetaModel
+    _register = False # Set to false if the model shouldn't be automatically discovered.
 
 
 class osv(orm.orm):
     """ Deprecated class. """
-    pass
+    __metaclass__ = MetaModel
+    _register = False # Set to false if the model shouldn't be automatically discovered.
 
 
 def start_object_proxy():
