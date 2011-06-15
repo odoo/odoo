@@ -42,6 +42,7 @@ openerp.base.TreeView = openerp.base.View.extend({
     // get child data of selected value
     getdata: function (id, flag) {
         var self = this;
+        var paddingflag = 0;
         self.dataset.domain = [['parent_id', '=', parseInt(id, 10)]];
         self.dataset.read_slice([], 0, false, function (response) {
             if (($('tr #treerow_' + id).length) == 1) {
@@ -60,12 +61,39 @@ openerp.base.TreeView = openerp.base.View.extend({
                 for (i in response) {
                     if ($('tr #treerow_' + response[i].id)) {
                         childlen = $('tr #treerow_' + response[i].id).find('td').length;
+                        if ($('tr #treerow_' + response[i].id).find('td:eq('+ (childlen - 2) +')').find('#parentimg').length > 0){
+                            paddingflag=1;
+                        }
+                    }
+                }
+
+                tdlen = $('tr #treerow_' + id).find('td').length;
+                paddingno = $('tr #treerow_' + id).find('td:eq('+ (tdlen - 1) +')').css('paddingLeft');
+                padd = paddingno.split('px');
+                for (i in response) {
+                    if ($('tr #treerow_' + response[i].id)) {
+                        childlen = $('tr #treerow_' + response[i].id).find('td').length;
                         textoftd = $('tr #treerow_' + response[i].id).find('td:eq('+ (childlen - 1) +')').text();
-                        if ($('tr #treerow_' + response[i].id).find('td:eq('+ (childlen - 2) +')').find('#parentimg').length > 0) {
-                            $('tr #treerow_' + response[i].id).find('td:eq('+ (childlen - 2) +')').css({ paddingLeft : '2px' });
-                            $('tr #treerow_' + response[i].id).find('td:eq('+ (childlen - 2) +')').find('#parentimg').addClass("parent_top");
+                        if (paddingflag == 0) {
+                            if (parseInt(padd[0], 10) == 1) {
+                                fix = (parseInt(padd[0], 10) + 20);
+                            } else {
+                                fix = (parseInt(padd[0], 10) + 40);
+                            }
+                            $('tr #treerow_' + response[i].id).find('td:eq('+ (childlen - 2) +')').css({ paddingLeft : fix });
+
                         } else {
-                            $('tr #treerow_' + response[i].id).find('td:eq('+ (childlen - 2) +')').css({ paddingLeft : '35px' });
+                            if (parseInt(padd[0], 10) == 1) {
+                                fix = (parseInt(padd[0],10) + 2);
+                            } else {
+                                fix = (parseInt(padd[0], 10) + 20);
+                            }
+                            if ($('tr #treerow_' + response[i].id).find('td:eq('+ (childlen - 2) +')').find('#parentimg').length == 0) {
+                                $('tr #treerow_' + response[i].id).find('td:eq('+ (childlen - 2) +')').css({ paddingLeft : (fix+20) });
+                            }else{
+                                $('tr #treerow_' + response[i].id).find('td:eq('+ (childlen - 2) +')').find('#parentimg').addClass("parent_top");
+                                $('tr #treerow_' + response[i].id).find('td:eq('+ (childlen - 2) +')').css({ paddingLeft : fix });
+                            }
                         }
                         $('tr #treerow_' + response[i].id).find('td:eq('+ (childlen - 2) +')').attr('colspan', '2');
                         $('tr #treerow_' + response[i].id).find('td:eq('+ (childlen - 2) +')').append(textoftd);
@@ -122,7 +150,8 @@ openerp.base.TreeView = openerp.base.View.extend({
 
     // show & hide the contents
     showcontent: function (id, flag, childid) {
-        var self=this;
+        var self = this;
+        var subchildids = "";
         if (flag == 1) {
             $('tr #treerow_' + id).find('td #parentimg').attr('src', '/base/static/src/img/expand.gif');
         }
@@ -138,12 +167,18 @@ openerp.base.TreeView = openerp.base.View.extend({
                 if (childimg == "/base/static/src/img/collapse.gif") {
                     $('tr #treerow_' + childid[i]).find('td').find('#parentimg').attr('src','/base/static/src/img/expand.gif');
                 }
+
                 self.dataset.read_slice([], 0, false, function (response) {
                     for (j in response) {
                         if (jQuery('tr #treerow_' + response[j].id).length > 0) {
                             jQuery('tr #treerow_' + response[j].id).hide();
+                            subchildids = response[j].child_id;
+                            if (subchildids.length > 0) {
+                                self.showcontent(response[j].id, 1, subchildids);
+                            }
                         }
                     }
+
                 });
                 jQuery ('tr #treerow_' + childid[i]).hide();
             }
