@@ -23,13 +23,10 @@
 # OSV: Objects Services
 #
 
-import sys
-import inspect
 import orm
 import openerp.netsvc as netsvc
 import openerp.pooler as pooler
 import openerp.sql_db as sql_db
-import copy
 import logging
 from psycopg2 import IntegrityError, errorcodes
 from openerp.tools.func import wraps
@@ -92,7 +89,7 @@ class object_proxy(netsvc.Service):
                                 ids = args[3]
                             else:
                                 ids = []
-                        cr = sql_db.db_connect(db_name).cursor()
+                        cr = sql_db.db_connect(dbname).cursor()
                         return src(obj, cr, uid, ids, context=(ctx or {}))
                     except Exception:
                         pass
@@ -103,7 +100,7 @@ class object_proxy(netsvc.Service):
                                  # be returned, it is the best we have.
 
                 try:
-                    cr = sql_db.db_connect(db_name).cursor()
+                    cr = sql_db.db_connect(dbname).cursor()
                     res = translate(cr, name=False, source_type=ttype,
                                     lang=lang, source=src)
                     if res:

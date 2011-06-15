@@ -138,7 +138,7 @@ class RegistryManager(object):
             cr.close()
 
         if pooljobs:
-            pool.get('ir.cron').restart(registry.db.dbname)
+            registry.get('ir.cron').restart(registry.db.dbname)
 
         return registry
 

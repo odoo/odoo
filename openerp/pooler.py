@@ -36,7 +36,7 @@ def get_db_and_pool(db_name, force_demo=False, status=None, update_module=False,
 
 def delete_pool(db_name):
     """Delete an existing registry."""
-    _Registries.delete(db_name)
+    RegistryManager.delete(db_name)
 
 
 def restart_pool(db_name, force_demo=False, status=None, update_module=False):
