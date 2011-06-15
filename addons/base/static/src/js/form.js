@@ -176,8 +176,7 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
                 return this.rpc(ajax, {
                     model: this.dataset.model,
                     method: method,
-                    ids: (this.datarecord.id == null ? [] : [this.datarecord.id]),
-                    args: args
+                    args: [].concat([(this.datarecord.id == null ? [] : [this.datarecord.id])], args)
                 }, function(response) {
                     self.on_processed_onchange(response, processed);
                 });
@@ -1126,7 +1125,7 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
         
         var dataset = new openerp.base.DataSetStatic(this.session, this.field.relation, []);
         
-        dataset.name_search(search_val, this.limit + 1, function(data) {
+        dataset.name_search([search_val, false, 'ilike', {}, this.limit + 1], function(data) {
             self.last_search = data.result;
             // possible selections for the m2o
             var values = _.map(data.result, function(x) {
@@ -1137,7 +1136,7 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
             if (values.length > self.limit) {
                 values = values.slice(0, self.limit);
                 values.push({label: "<em>   Search More...</em>", action: function() {
-                    dataset.name_search(search_val, false, function(data) {
+                    dataset.name_search([search_val, false, 'ilike', {}, false], function(data) {
                         self._change_int_value(null);
                         self._search_create_popup("search", data.result);
                     });
