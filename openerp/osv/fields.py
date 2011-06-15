@@ -692,24 +692,21 @@ class many2many(_column):
                 obj.datas[id][name] = act[2]
 
 
-def get_nice_size(a):
-    (x,y) = a
-    if isinstance(y, (int,long)):
-        size = y
-    elif y:
-        size = len(y)
-    else:
-        size = 0
-    return (x, tools.human_size(size))
+def get_nice_size(value):
+    size = 0
+    if isinstance(value, (int,long)):
+        size = value
+    elif value: # this is supposed to be a string
+        size = len(value)
+    return tools.human_size(size)
 
-def sanitize_binary_value(dict_item):
+def sanitize_binary_value(value):
     # binary fields should be 7-bit ASCII base64-encoded data,
     # but we do additional sanity checks to make sure the values
     # are not something else that won't pass via xmlrpc
-    index, value = dict_item
     if isinstance(value, (xmlrpclib.Binary, tuple, list, dict)):
         # these builtin types are meant to pass untouched
-        return index, value
+        return value
 
     # For all other cases, handle the value as a binary string:
     # it could be a 7-bit ASCII string (e.g base64 data), but also
@@ -730,7 +727,7 @@ def sanitize_binary_value(dict_item):
     # is not likely to produce the expected output, but this is
     # just a safety mechanism (in these cases base64 data or
     # xmlrpc.Binary values should be used instead)
-    return index, tools.ustr(value)
+    return tools.ustr(value)
 
 
 # ---------------------------------------------------------
@@ -806,44 +803,44 @@ class function(_column):
             return []
         return self._fnct_search(obj, cr, uid, obj, name, args, context=context)
 
-    def get(self, cr, obj, ids, name, user=None, context=None, values=None):
+    def postprocess(self, cr, uid, obj, field, value=None, context=None):
         if context is None:
             context = {}
-        if values is None:
-            values = {}
-        res = {}
-        if self._method:
-            res = self._fnct(obj, cr, user, ids, name, self._arg, context)
-        else:
-            res = self._fnct(cr, obj._table, ids, name, self._arg, context)
+        result = value
+        field_type = obj._columns[field]._type
+        if field_type == "many2one":
+            # make the result a tuple if it is not already one
+            if isinstance(value, (int,long)) and hasattr(obj._columns[field], 'relation'):
+                obj_model = obj.pool.get(obj._columns[field].relation)
+                dict_names = dict(obj_model.name_get(cr, uid, [value], context))
+                result = (value, dict_names[value])
 
-        if self._type == "many2one" :
-            # Filtering only integer/long values if passed
-            res_ids = [x for x in res.values() if x and isinstance(x, (int,long))]
-
-            if res_ids:
-                obj_model = obj.pool.get(self._obj)
-                dict_names = dict(obj_model.name_get(cr, user, res_ids, context))
-                for r in res.keys():
-                    if res[r] and res[r] in dict_names:
-                        res[r] = (res[r], dict_names[res[r]])
-
-        if self._type == 'binary':
+        if field_type == 'binary':
             if context.get('bin_size', False):
                 # client requests only the size of binary fields
-                res = dict(map(get_nice_size, res.items()))
+                result = get_nice_size(value)
             else:
-                res = dict(map(sanitize_binary_value, res.items()))
+                result = sanitize_binary_value(value)
 
-        if self._type == "integer":
-            for r in res.keys():
-                # Converting value into string so that it does not affect XML-RPC Limits
-                if isinstance(res[r],dict): # To treat integer values with _multi attribute
-                    for record in res[r].keys():
-                        res[r][record] = str(res[r][record])
-                else:
-                    res[r] = str(res[r])
-        return res
+        if field_type == "integer":
+            result = tools.ustr(value)
+        return result
+
+    def get(self, cr, obj, ids, name, uid=False, context=None, values=None):
+        result = {}
+        if self._method:
+            result = self._fnct(obj, cr, uid, ids, name, self._arg, context)
+        else:
+            result = self._fnct(cr, obj._table, ids, name, self._arg, context)
+        for id in ids:
+            if self._multi and id in result:
+                for field, value in result[id].iteritems():
+                    if value:
+                        result[id][field] = self.postprocess(cr, uid, obj, field, value, context)
+            elif result.get(id):
+                result[id] = self.postprocess(cr, uid, obj, name, result[id], context)
+        return result
+
     get_memory = get
 
     def set(self, cr, obj, id, name, value, user=None, context=None):
