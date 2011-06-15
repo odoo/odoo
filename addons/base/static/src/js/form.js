@@ -1174,9 +1174,13 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
         var dataset = new openerp.base.DataSetStatic(this.session, this.field.relation, []);
         var self = this;
         var pop = new openerp.base.form.Many2XSelectPopup(null, self.view.session);
-        pop.select_element(self.field.relation, ids ? _.map(ids, function(x) {return x[0]}) : undefined, view);
-        pop.on_select_element.add(function(element_id) {
-            dataset.call("name_get", [element_id], function(data) {
+        pop.select_element(self.field.relation,{
+                initial_ids: ids ? _.map(ids, function(x) {return x[0]}) : undefined,
+                initial_view: view,
+                disable_multiple_selection: true
+                });
+        pop.on_select_elements.add(function(element_ids) {
+            dataset.call("name_get", [element_ids[0]], function(data) {
                 self._change_int_ext_value(data.result[0]);
                 pop.stop();
             });
@@ -1329,11 +1333,13 @@ openerp.base.form.Many2ManyListView = openerp.base.ListView.extend({
                 null, this.m2m_field.view.session);
         pop.select_element(this.model);
         var self = this;
-        pop.on_select_element.add(function(element_id) {
-            if(! _.detect(self.dataset.ids, function(x) {return x == element_id;})) {
-                self.dataset.set_ids([].concat(self.dataset.ids, [element_id]));
-                self.reload_content();
-            }
+        pop.on_select_elements.add(function(element_ids) {
+            _.each(element_ids, function(element_id) {
+                if(! _.detect(self.dataset.ids, function(x) {return x == element_id;})) {
+                    self.dataset.set_ids([].concat(self.dataset.ids, [element_id]));
+                    self.reload_content();
+                }
+            });
             pop.stop();
         });
     },
@@ -1353,10 +1359,16 @@ openerp.base.form.Many2ManyListView = openerp.base.ListView.extend({
 openerp.base.form.Many2XSelectPopup = openerp.base.BaseWidget.extend({
     identifier_prefix: "many2xselectpopup",
     template: "Many2XSelectPopup",
-    select_element: function(model, initial_ids, initial_view) {
+    /**
+     * options:
+     * - initial_ids
+     * - initial_view: form or search (default search)
+     * - disable_multiple_selection
+     */
+    select_element: function(model, options) {
         this.model = model;
-        this.initial_ids = initial_ids;
-        this.initial_view = initial_view || "search";
+        this.options = options || {};
+        this.initial_ids = this.options.initial_ids;
         jQuery(this.render()).dialog({title: '',
                     modal: true,
                     minWidth: 800});
@@ -1365,7 +1377,7 @@ openerp.base.form.Many2XSelectPopup = openerp.base.BaseWidget.extend({
     start: function() {
         this._super();
         this.dataset = new openerp.base.DataSetSearch(this.session, this.model);
-        if (this.initial_view == "search") {
+        if (this.options.initial_view == "search") {
             this.setup_search_view();
         } else { // "form"
             this.new_object();
@@ -1377,10 +1389,13 @@ openerp.base.form.Many2XSelectPopup = openerp.base.BaseWidget.extend({
             this.searchview.stop();
         }
         this.searchview = new openerp.base.SearchView(null, this.session,
-                this.element_id + "_search", this.dataset, false, {});
+                this.element_id + "_search", this.dataset, false, {
+                    "selectable": !this.options.disable_multiple_selection
+                });
         this.searchview.on_search.add(function(domains, contexts, groupbys) {
             if (self.initial_ids) {
-                self.view_list.do_search.call(self, [[["id", "in", self.initial_ids]]], contexts, groupbys);
+                self.view_list.do_search.call(self, [[["id", "in", 
+                    self.initial_ids]]], contexts, groupbys);
                 self.initial_ids = undefined;
             } else {
                 self.view_list.do_search.call(self, domains, contexts, groupbys);
@@ -1389,13 +1404,16 @@ openerp.base.form.Many2XSelectPopup = openerp.base.BaseWidget.extend({
         this.searchview.on_loaded.add_last(function () {
             var $buttons = self.searchview.$element.find(".oe_search-view-buttons");
             $buttons.append(QWeb.render("Many2XSelectPopup.search.buttons"));
-            var $nbutton = $buttons.find(".oe_many2xselectpopup-search-new");
-            $nbutton.click(function() {
-                self.new_object();
-            });
             var $cbutton = $buttons.find(".oe_many2xselectpopup-search-close");
             $cbutton.click(function() {
                 self.stop();
+            });
+            var $sbutton = $buttons.find(".oe_many2xselectpopup-search-select");
+            if(self.options.disable_multiple_selection) {
+                $sbutton.hide();
+            }
+            $sbutton.click(function() {
+                self.on_select_elements(self.selected_ids);
             });
             self.view_list = new openerp.base.form.Many2XPopupListView( null, self.session,
                     self.element_id + "_view_list", self.dataset, false,
@@ -1408,7 +1426,15 @@ openerp.base.form.Many2XSelectPopup = openerp.base.BaseWidget.extend({
         });
         this.searchview.start();
     },
-    on_select_element: function(element_id) {
+    on_select_elements: function(element_ids) {
+    },
+    on_click_element: function(ids) {
+        this.selected_ids = ids || [];
+        if(this.selected_ids.length > 0) {
+            this.$element.find(".oe_many2xselectpopup-search-select").removeAttr('disabled');
+        } else {
+            this.$element.find(".oe_many2xselectpopup-search-select").attr('disabled', "disabled");
+        }
     },
     new_object: function() {
         var self = this;
@@ -1437,7 +1463,7 @@ openerp.base.form.Many2XSelectPopup = openerp.base.BaseWidget.extend({
         this.view_form.on_created.add_last(function(r, success) {
             if (r.result) {
                 var id = arguments[0].result;
-                self.on_select_element(id);
+                self.on_select_elements([id]);
             }
         });
         this.view_form.do_show();
@@ -1445,8 +1471,15 @@ openerp.base.form.Many2XSelectPopup = openerp.base.BaseWidget.extend({
 });
 
 openerp.base.form.Many2XPopupListView = openerp.base.ListView.extend({
+    do_add_record: function () {
+        this.popup.new_object();
+    },
     select_record: function(index) {
-        this.popup.on_select_element(this.dataset.ids[index]);
+        this.popup.on_select_elements([this.dataset.ids[index]]);
+    },
+    do_select: function(ids, records) {
+        this._super(ids, records);
+        this.popup.on_click_element(ids);
     }
 });
 
