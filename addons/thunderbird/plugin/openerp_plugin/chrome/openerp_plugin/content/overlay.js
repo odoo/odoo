@@ -38,6 +38,8 @@ function searchmail()
         return true
     }
     var prefService = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefService);
+    var username = Components.classes["@mozilla.org/process/environment;1"].
+            getService(Components.interfaces.nsIEnvironment).get('USERNAME')
     var version_obj = prefService.getBranch("extensions.");
     version_obj.QueryInterface(Components.interfaces.nsIPrefBranch2);
     version = version_obj.getCharPref("lastAppVersion");
@@ -152,7 +154,7 @@ function searchmail()
                 obj.initWithPath("/tmp/");
             }
             else if(navigator.userAgent.indexOf('Win')!= -1){
-                obj.initWithPath("c:\\");
+                obj.initWithPath("C:\\Users\\"+ username +"\\");
             }
             else if(navigator.userAgent.indexOf('Mac OS X')!= -1){ 
                 obj.initWithPath("/tmp/");
@@ -335,11 +337,13 @@ var listDocumentHandler = {
 //function to archive the mail content through xmlrpc request
 function parse_eml(){
     var fpath =""
+    var username = Components.classes["@mozilla.org/process/environment;1"].
+        getService(Components.interfaces.nsIEnvironment).get('USERNAME')
     if(navigator.userAgent.indexOf('Linux')!= -1){
         fpath ="/tmp/"
     }
     else if(navigator.userAgent.indexOf('Win')!= -1){
-        fpath ="C:\\"
+        fpath ="C:\\Users\\"+ username +"\\"
     }
     else if(navigator.userAgent.indexOf('Mac OS X')!= -1){ 
         fpath ="/tmp/"

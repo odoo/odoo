@@ -148,13 +148,14 @@ function getPredefinedFolder(type) {
 	// type 2 = selected messages
 
 	var use_dir = "mboximport.exportMSG.use_dir";
-
+	var username = Components.classes["@mozilla.org/process/environment;1"].
+		getService(Components.interfaces.nsIEnvironment).get('USERNAME')	
 	var dir_path="";
 	if(navigator.userAgent.indexOf('Linux')!= -1){
 		dir_path ="/tmp"
 	}
 	else if(navigator.userAgent.indexOf('Win')!= -1){
-		dir_path ="C:\\"
+		dir_path ="C:\\Users\\"+ username +"\\"
 	}
 	else if(navigator.userAgent.indexOf('Mac OS X')!= -1){ 
 		dir_path ="/tmp"
