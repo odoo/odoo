@@ -1308,10 +1308,10 @@ openerp.base.form.FieldMany2Many = openerp.base.form.Field.extend({
                     'addable': 'Add'
             });
         this.list_view.m2m_field = this;
-        this.list_view.start();
         this.list_view.on_loaded.add_last(function() {
             self.is_started.resolve();
         });
+        this.list_view.start();
         $.when(this.is_started, this.is_setted).then(function() {
             self.list_view.reload_content();
         });
@@ -1377,7 +1377,7 @@ openerp.base.form.Many2XSelectPopup = openerp.base.BaseWidget.extend({
     start: function() {
         this._super();
         this.dataset = new openerp.base.DataSetSearch(this.session, this.model);
-        if (this.options.initial_view == "search") {
+        if (this.options.initial_view || "search" == "search") {
             this.setup_search_view();
         } else { // "form"
             this.new_object();
@@ -1390,7 +1390,8 @@ openerp.base.form.Many2XSelectPopup = openerp.base.BaseWidget.extend({
         }
         this.searchview = new openerp.base.SearchView(null, this.session,
                 this.element_id + "_search", this.dataset, false, {
-                    "selectable": !this.options.disable_multiple_selection
+                    "selectable": !this.options.disable_multiple_selection,
+                    "deletable": false
                 });
         this.searchview.on_search.add(function(domains, contexts, groupbys) {
             if (self.initial_ids) {
