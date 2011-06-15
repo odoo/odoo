@@ -305,6 +305,9 @@ init: function(view_manager, session, element_id, dataset, view_id) {
 
     open_popup : function(task) {
         var event_id = task.getId();
+        
+        if(event_id.toString().search("_") != -1)
+            return;
         if (event_id) {
             event_id = parseInt(event_id, 10);
             var dataset_event_index = jQuery.inArray(event_id, this.ids);
@@ -338,6 +341,8 @@ init: function(view_manager, session, element_id, dataset, view_id) {
         var event_id = task.getId();
         var data = {};
 
+        if(event_id.toString().search("_") != -1)
+            return;
         if (evt == "drag"){
             full_date = task.getEST().set({hour: self.hh, minute : self.mm, second:0});
             data[this.date_start] = this.convert_date_str(full_date);
@@ -404,7 +409,6 @@ init: function(view_manager, session, element_id, dataset, view_id) {
     },
 
     do_search: function (domains, contexts, groupbys) {
-
         var self = this;
         this.grp = groupbys;
         return this.rpc('/base/session/eval_domain_and_context', {
