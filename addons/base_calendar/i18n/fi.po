@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2011-05-09 10:18+0000\n"
-"PO-Revision-Date: 2011-06-08 10:18+0000\n"
+"PO-Revision-Date: 2011-06-14 06:11+0000\n"
 "Last-Translator: Juha Kotamäki <Unknown>\n"
 "Language-Team: Finnish <fi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-06-09 05:43+0000\n"
+"X-Launchpad-Export-Date: 2011-06-15 05:49+0000\n"
 "X-Generator: Launchpad (build 13168)\n"
 
 #. module: base_calendar
@@ -40,6 +40,8 @@ msgid ""
 "This property defines the list of date/time exceptions for a recurring "
 "calendar component."
 msgstr ""
+"Tämä ominaisuus määrittelee poikkeusajankohdat toistuville "
+"kalenterikomponenteille."
 
 #. module: base_calendar
 #: constraint:res.users:0
@@ -236,7 +238,7 @@ msgstr "Viimeinen"
 #. module: base_calendar
 #: help:calendar.attendee,state:0
 msgid "Status of the attendee's participation"
-msgstr ""
+msgstr "Osallistujan osallistumisen tila"
 
 #. module: base_calendar
 #: selection:calendar.attendee,cutype:0
@@ -287,7 +289,7 @@ msgstr "Peruutettu"
 #: selection:calendar.alarm,trigger_interval:0
 #: selection:res.alarm,trigger_interval:0
 msgid "Minutes"
-msgstr ""
+msgstr "Minuutit"
 
 #. module: base_calendar
 #: selection:calendar.alarm,action:0
@@ -297,7 +299,7 @@ msgstr "Näytä"
 #. module: base_calendar
 #: view:calendar.event.edit.all:0
 msgid "Edit all Occurrences"
-msgstr ""
+msgstr "Muokkaa kaikkia kertoja"
 
 #. module: base_calendar
 #: view:calendar.attendee:0
@@ -379,6 +381,8 @@ msgid ""
 "If the active field is set to          true, it will allow you to hide the "
 "event alarm information without removing it."
 msgstr ""
+"Jos aktiivisen kentän tila on tosi (true), se sallii tapahtuman "
+"hälytystiedon piilottamisen ilman sen poistamista."
 
 #. module: base_calendar
 #: model:ir.module.module,shortdesc:base_calendar.module_meta_information
@@ -1151,7 +1155,7 @@ msgstr "Hae tapahtumia"
 #. module: base_calendar
 #: view:calendar.event:0
 msgid "Recurrency Option"
-msgstr ""
+msgstr "Toiston asetukset"
 
 #. module: base_calendar
 #: selection:base.calendar.set.exrule,freq:0
@@ -1199,7 +1203,7 @@ msgstr "Muistutuksen yksityiskohdat"
 #. module: base_calendar
 #: view:calendar.attendee:0
 msgid "To Review"
-msgstr ""
+msgstr "Tarkastettavaksi"
 
 #. module: base_calendar
 #: field:base.calendar.set.exrule,freq:0
@@ -1217,7 +1221,7 @@ msgstr "Valmis"
 #: help:calendar.event,interval:0
 #: help:calendar.todo,interval:0
 msgid "Repeat every (Days/Week/Month/Year)"
-msgstr ""
+msgstr "Toista joka (päivä/viikko/kuukausi/vuosi)"
 
 #. module: base_calendar
 #: view:base_calendar.invite.attendee:0
@@ -1446,7 +1450,7 @@ msgstr "Minuuteittain"
 #. module: base_calendar
 #: help:calendar.attendee,sent_by:0
 msgid "Specify the user that is acting on behalf of the calendar user"
-msgstr ""
+msgstr "Määrittele käyttäjä joka toimii kalenterikäyttäjän puolesta"
 
 #. module: base_calendar
 #: view:calendar.event:0
@@ -1480,7 +1484,7 @@ msgstr "Nimi"
 #. module: base_calendar
 #: model:ir.model,name:base_calendar.model_calendar_alarm
 msgid "Event alarm information"
-msgstr ""
+msgstr "Tapahtuman hälytystiedot"
 
 #. module: base_calendar
 #: help:calendar.alarm,name:0
@@ -1518,7 +1522,7 @@ msgstr "Huhtikuu"
 #. module: base_calendar
 #: view:calendar.event:0
 msgid "Recurrency period"
-msgstr ""
+msgstr "Toiston jakso"
 
 #. module: base_calendar
 #: field:base.calendar.set.exrule,week_list:0
@@ -1532,7 +1536,7 @@ msgstr "Arkipäivä"
 #: field:calendar.event,byday:0
 #: field:calendar.todo,byday:0
 msgid "By day"
-msgstr ""
+msgstr "Päivittäin"
 
 #. module: base_calendar
 #: field:calendar.alarm,model_id:0
@@ -1553,7 +1557,7 @@ msgstr "Tunniste (ID)"
 #. module: base_calendar
 #: selection:calendar.attendee,role:0
 msgid "For information Purpose"
-msgstr ""
+msgstr "Vain tiedoksi"
 
 #. module: base_calendar
 #: view:base_calendar.invite.attendee:0
@@ -1563,7 +1567,7 @@ msgstr "Kutsu"
 #. module: base_calendar
 #: model:ir.model,name:base_calendar.model_calendar_attendee
 msgid "Attendee information"
-msgstr ""
+msgstr "Osallistujan tiedot"
 
 #. module: base_calendar
 #: field:calendar.alarm,res_id:0
@@ -1574,7 +1578,7 @@ msgstr "Resurssi ID"
 #: code:addons/base_calendar/base_calendar.py:414
 #, python-format
 msgid "Couldn't Invite because date is not specified!"
-msgstr ""
+msgstr "Ei voitu kutsua koska päivää ei ole määritelty!"
 
 #. module: base_calendar
 #: field:calendar.attendee,sent_by:0
@@ -1591,7 +1595,7 @@ msgstr "Sekvenssi"
 #: help:calendar.event,alarm_id:0
 #: help:calendar.todo,alarm_id:0
 msgid "Set an alarm at this time, before the event occurs"
-msgstr ""
+msgstr "Aseta hälytys tähän ajankohtaan, ennen tapahtumaa"
 
 #. module: base_calendar
 #: selection:base_calendar.invite.attendee,type:0
@@ -1621,7 +1625,7 @@ msgstr "Kutsuttu"
 #: selection:calendar.event,byday:0
 #: selection:calendar.todo,byday:0
 msgid "Second"
-msgstr ""
+msgstr "Sekunti"
 
 #. module: base_calendar
 #: field:calendar.attendee,availability:0
@@ -1633,7 +1637,7 @@ msgstr "Vapaa/Varattu"
 #: field:calendar.event,end_type:0
 #: field:calendar.todo,end_type:0
 msgid "Way to end reccurency"
-msgstr ""
+msgstr "Toiston lopettaminen"
 
 #. module: base_calendar
 #: field:calendar.alarm,duration:0
