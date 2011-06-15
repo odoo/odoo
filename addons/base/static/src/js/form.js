@@ -1404,10 +1404,6 @@ openerp.base.form.Many2XSelectPopup = openerp.base.BaseWidget.extend({
         this.searchview.on_loaded.add_last(function () {
             var $buttons = self.searchview.$element.find(".oe_search-view-buttons");
             $buttons.append(QWeb.render("Many2XSelectPopup.search.buttons"));
-            var $nbutton = $buttons.find(".oe_many2xselectpopup-search-new");
-            $nbutton.click(function() {
-                self.new_object();
-            });
             var $cbutton = $buttons.find(".oe_many2xselectpopup-search-close");
             $cbutton.click(function() {
                 self.stop();
@@ -1475,6 +1471,9 @@ openerp.base.form.Many2XSelectPopup = openerp.base.BaseWidget.extend({
 });
 
 openerp.base.form.Many2XPopupListView = openerp.base.ListView.extend({
+    do_add_record: function () {
+        this.popup.new_object();
+    },
     select_record: function(index) {
         this.popup.on_select_elements([this.dataset.ids[index]]);
     },
