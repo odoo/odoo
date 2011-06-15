@@ -433,7 +433,7 @@ class task(osv.osv):
         'date_start': fields.datetime('Starting Date',select=True),
         'date_end': fields.datetime('Ending Date',select=True),
         'date_deadline': fields.date('Deadline',select=True),
-        'project_id': fields.many2one('project.project', 'Project', ondelete='set null'),
+        'project_id': fields.many2one('project.project', 'Project', ondelete='set null', select="1"),
         'parent_ids': fields.many2many('project.task', 'project_task_parent_rel', 'task_id', 'parent_id', 'Parent Tasks'),
         'child_ids': fields.many2many('project.task', 'project_task_parent_rel', 'parent_id', 'task_id', 'Delegated Tasks'),
         'notes': fields.text('Notes'),
@@ -751,10 +751,10 @@ class project_work(osv.osv):
     _description = "Project Task Work"
     _columns = {
         'name': fields.char('Work summary', size=128),
-        'date': fields.datetime('Date'),
-        'task_id': fields.many2one('project.task', 'Task', ondelete='cascade', required=True),
+        'date': fields.datetime('Date', select="1"),
+        'task_id': fields.many2one('project.task', 'Task', ondelete='cascade', required=True, select="1"),
         'hours': fields.float('Time Spent'),
-        'user_id': fields.many2one('res.users', 'Done by', required=True),
+        'user_id': fields.many2one('res.users', 'Done by', required=True, select="1"),
         'company_id': fields.related('task_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True)
     }
 
