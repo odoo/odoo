@@ -1013,6 +1013,17 @@ openerp.base.form.FieldSelection = openerp.base.form.Field.extend({
     });
 })(null);
 
+/**
+ * Builds a new context usable for operations related to fields by merging
+ * the fields'context with the action's context.
+ */
+var build_relation_context = function(relation_field) {
+    var action = relation_field.view.view_manager.action || {};
+    var a_context = action.context || {};
+    var f_context = relation_field.field.context || {};
+    return $.extend({}, a_context, f_context);
+}
+
 openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
     init: function(view, node) {
         this._super(view, node);
@@ -1048,7 +1059,8 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
                 "type":"ir.actions.act_window",
                 "view_type":"form",
                 "view_mode":"form",
-                "target":"new"
+                "target":"new",
+                "context": build_relation_context(self)
             });
         };
         var cmenu = this.$menu_btn.contextMenu(this.cm_id, {'leftClickToo': true,
@@ -1125,23 +1137,26 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
         
         var dataset = new openerp.base.DataSetStatic(this.session, this.field.relation, []);
         
-        dataset.name_search([search_val, false, 'ilike', {}, this.limit + 1], function(data) {
+        dataset.name_search([search_val, self.field.domain || false, 'ilike',
+                build_relation_context(self), this.limit + 1], function(data) {
             self.last_search = data.result;
             // possible selections for the m2o
             var values = _.map(data.result, function(x) {
                 return {label: $('<span />').text(x[1]).html(), name:x[1], id:x[0]};
             });
             
-            // additional selections, actions that open popup
+            // search more... if more results that max
             if (values.length > self.limit) {
                 values = values.slice(0, self.limit);
                 values.push({label: "<em>   Search More...</em>", action: function() {
-                    dataset.name_search([search_val, false, 'ilike', {}, false], function(data) {
+                    dataset.name_search([search_val, self.field.domain || false, 'ilike',
+                            build_relation_context(self), false], function(data) {
                         self._change_int_value(null);
                         self._search_create_popup("search", data.result);
                     });
                 }});
             }
+            // quick create
             var raw_result = _(data.result).map(function(x) {return x[1];})
             if (search_val.length > 0 &&
                 !_.include(raw_result, search_val) &&
@@ -1151,6 +1166,7 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
                     self._quick_create(search_val);
                 }});
             }
+            // create...
             values.push({label: "<em>   Create and Edit...</em>", action: function() {
                 self._change_int_value(null);
                 self._search_create_popup("form");
@@ -1162,7 +1178,7 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
     _quick_create: function(name) {
         var self = this;
         var dataset = new openerp.base.DataSetStatic(this.session, this.field.relation, []);
-        dataset.call("name_create", [name, {}], function(data) {
+        dataset.call("name_create", [name, build_relation_context(self)], function(data) {
             self._change_int_ext_value(data.result);
         }, function(a, b) {
             self._change_int_value(null);
@@ -1353,10 +1369,12 @@ openerp.base.form.Many2ManyListView = openerp.base.ListView.extend({
 openerp.base.form.Many2XSelectPopup = openerp.base.BaseWidget.extend({
     identifier_prefix: "many2xselectpopup",
     template: "Many2XSelectPopup",
-    select_element: function(model, initial_ids, initial_view) {
+    select_element: function(model, initial_ids, initial_view, domain, context) {
         this.model = model;
         this.initial_ids = initial_ids;
         this.initial_view = initial_view || "search";
+        this.domain = domain;
+        this.context = context;
         jQuery(this.render()).dialog({title: '',
                     modal: true,
                     minWidth: 800});
