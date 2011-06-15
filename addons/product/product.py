@@ -122,7 +122,7 @@ class product_uom(osv.osv):
 
     _sql_constraints = [
         ('factor_gt_zero', 'CHECK (factor!=0)', 'The conversion ratio for a unit of measure cannot be 0!'),
-        ('factor_category_id_uniq', 'unique (category_id, factor)', 'You can not have more than one UOM with same factor for same UOM category'),
+        ('uom_name_unique', 'unique (name)', 'You cannot have multiple Units of Measure with the same name'),
     ]
 
     def _compute_qty(self, cr, uid, from_uom_id, qty, to_uom_id=False):
