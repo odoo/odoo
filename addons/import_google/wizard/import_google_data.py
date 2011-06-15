@@ -34,7 +34,6 @@ from import_google import google_import
 
 class google_login_contact(osv.osv_memory):
     _inherit = 'google.login'
-    _name = 'google.login.contact'
     
     def _get_next_action(self, cr, uid, context=None):
         data_obj = self.pool.get('ir.model.data')
@@ -110,7 +109,7 @@ class synchronize_google(osv.osv_memory):
         'calendar_name': 'all',
     }
 
-    def import_contact(self, cr, uid, ids, context=None):
+    def import_google(self, cr, uid, ids, context=None):
         if context == None:
             context = {}
         if not ids:
@@ -164,7 +163,7 @@ class synchronize_google(osv.osv_memory):
         imp = google_import(self, cr, uid,'import_google' , "synchronize_google", gmail_user, context)
         imp.set_table_list(tables)
         imp.start()            
-        return{}
+        return context
 
 synchronize_google()
 

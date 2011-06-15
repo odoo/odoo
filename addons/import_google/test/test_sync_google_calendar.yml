@@ -4,14 +4,14 @@
 - |
   I create a record for the gmail account for which I want to import the contacts.
 - 
-  !record {model: google.login, id: google_login_contact_id0}:
+  !record {model: google.login, id: google_login_id0}:
     user: testmail.openerp@gmail.com
     password: openerptiny
 - |
   I login into that account.
 -
-  !python {model: google.login.contact}: |
-    self.login(cr, uid, [ref('google_login_contact_id0')], context)
+  !python {model: google.login}: |
+    self.login(cr, uid, [ref('google_login_id0')], context)
 - |
   Now I want to import all the events from all the calendars in the user account.
 - |
@@ -23,17 +23,14 @@
   I import the events from the google calendar.
 -
   !python {model: synchronize.google.import}: |
-    self.import_contact(cr, uid, [ref('synchronize_google_import_id0')], context)
+    self.import_google(cr, uid, [ref('synchronize_google_import_id0')], context={'calendar':True})
 - |
   Now I check my meetings are created or not.
 -
   !python {model: crm.meeting}: |
     model_obj = self.pool.get('ir.model.data')
     meeting_ids = self.search(cr, uid, [])
-    try:
-      model_ids = model_obj.search(cr, uid, [('res_id','in',meeting_ids),('model','=','crm.meeting'),('module','=','synchronize_google')])
-      assert model_ids, 'Meetings not created !'
-    except:
-      pass
+    model_ids = model_obj.search(cr, uid, [('res_id','in',meeting_ids),('model','=','crm.meeting'),('module','=','synchronize_google')])
+    assert model_ids, 'Meetings not created !'
     
     

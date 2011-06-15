@@ -23,7 +23,7 @@
                         <group colspan="2" col="2"/>
                         <group colspan="2" col="2">
                             <button special="cancel" string="_Cancel" icon="gtk-cancel"/>
-                            <button name="import_contact" string="_Import Contacts" type="object" icon="terp-personal+"/>
+                            <button name="import_google" string="_Import Contacts" type="object" icon="terp-personal+"/>
                         </group>
                     </group>
                 </form>
@@ -46,7 +46,7 @@
                         <group colspan="2" col="2"/>
                         <group colspan="2" col="2">
                             <button special="cancel" string="_Cancel" icon="gtk-cancel"/>
-                            <button name="import_contact" string="_Import Events" type="object" icon="terp-calendar"/>
+                            <button name="import_google" string="_Import Events" type="object" icon="terp-calendar"/>
                         </group>
                     </group>
                 </form>
@@ -58,7 +58,7 @@
         <record model="ir.actions.act_window" id="act_google_login_form">
           <field name="name">Import Google Calendar</field>
           <field name="type">ir.actions.act_window</field>
-          <field name="res_model">google.login.contact</field>
+          <field name="res_model">google.login</field>
           <field name="view_type">form</field>
           <field name="view_mode">form</field>
           <field name="target">new</field>
@@ -69,7 +69,7 @@
         <record model="ir.actions.act_window" id="act_google_login_contact_form">
           <field name="name">Import Google Contacts</field>
           <field name="type">ir.actions.act_window</field>
-          <field name="res_model">google.login.contact</field>
+          <field name="res_model">google.login</field>
           <field name="view_type">form</field>
           <field name="view_mode">form</field>
           <field name="target">new</field>
