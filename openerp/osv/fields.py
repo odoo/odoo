@@ -685,22 +685,21 @@ class many2many(_column):
                 obj.datas[id][name] = act[2]
 
 
-def get_nice_size(a):
-    (x,y) = a
+def get_nice_size(value):
     size = 0
-    if isinstance(y, (int,long)):
-        size = y
-    elif y:
-        size = len(y)
-    return (x, tools.human_size(size))
+    if isinstance(value, (int,long)):
+        size = value
+    elif value:
+        size = len(value)
+    return tools.human_size(size)
 
-def sanitize_binary_value(dict_item):
+def sanitize_binary_value(value):
     # binary fields should be 7-bit ASCII base64-encoded data,
     # but we do additional sanity checks to make sure the values
     # are not something else that won't pass via xmlrpc
-    if isinstance(dict_item, (xmlrpclib.Binary, tuple, dict)):
+    if isinstance(value, (xmlrpclib.Binary, tuple, list, dict)):
         # these builtin types are meant to pass untouched
-        return dict_item
+        return value
 
     # For all other cases, handle the value as a binary string:
     # it could be a 7-bit ASCII string (e.g base64 data), but also
@@ -721,7 +720,7 @@ def sanitize_binary_value(dict_item):
     # is not likely to produce the expected output, but this is
     # just a safety mechanism (in these cases base64 data or
     # xmlrpc.Binary values should be used instead)
-    return tools.ustr(dict_item)
+    return tools.ustr(value)
 
 
 # ---------------------------------------------------------
@@ -797,38 +796,42 @@ class function(_column):
             return []
         return self._fnct_search(obj, cr, uid, obj, name, args, context=context)
 
-    def postprocess(self, cr, user, obj, type, value=None, context=None):
+    def postprocess(self, cr, user, obj, field, value=None, context=None):
         if context is None:
             context = {}
         result = value
-        if type == 'binary':
+        field_type = obj._columns[field]._type
+        if field_type == "many2one" :
+            if isinstance(value, (int,long)) and hasattr(obj._columns[field], 'relation'):
+                obj_model = obj.pool.get(obj._columns[field].relation)
+                dict_names = dict(obj_model.name_get(cr, user, [value], context))
+                if value in dict_names:
+                    result = (value, dict_names[value])
+
+        if field_type == 'binary':
             if context.get('bin_size', False):
                 # client requests only the size of binary fields
                 result = get_nice_size(value)
             else:
                 result = sanitize_binary_value(value)
 
-        if type == "integer":
+        if field_type == "integer":
             result = tools.ustr(value)
         return result
 
     def get(self, cr, obj, ids, name, user=None, context=None, values=None):
-        if context is None:
-            context = {}
-        if values is None:
-            values = {}
         result = {}
         if self._method:
             result = self._fnct(obj, cr, user, ids, name, self._arg, context)
         else:
             result = self._fnct(cr, obj._table, ids, name, self._arg, context)
         for id in ids:
-            if self._multi and result.get(id, {}):
+            if self._multi and id in result:
                 for field, value in result[id].iteritems():
                     if value:
-                        result[id][field] = self.postprocess(cr, user, obj, obj._columns[field]._type, value)
-            elif result.get(id, False) and result[id]:
-                result[id] = self.postprocess(cr, user, obj, self._type, result[id])
+                        result[id][field] = self.postprocess(cr, user, obj, field, value, context)
+            elif result.get(id,False):
+                result[id] = self.postprocess(cr, user, obj, name, result[id], context)
         return result
 
     get_memory = get
