@@ -35,6 +35,8 @@ from psycopg2 import IntegrityError, errorcodes
 from openerp.tools.func import wraps
 from openerp.tools.translate import translate
 from openerp.osv.orm import module_class_list
+from openerp.osv.orm import MetaModel
+
 
 class except_osv(Exception):
     def __init__(self, name, value, exc_type='warning'):
@@ -245,17 +247,24 @@ class osv_pool(object):
         for klass in module_class_list.get(module, []):
             res.append(klass.createInstance(self, cr))
 
+        # Instanciate classes automatically discovered.
+        for cls in MetaModel.module_to_models.get(module, []):
+            if cls not in module_class_list.get(module, []):
+                res.append(cls.createInstance(self, cr))
+
         return res
 
 
 class osv_memory(orm.orm_memory):
     """ Deprecated class. """
-    pass
+    __metaclass__ = MetaModel
+    _register = False # Set to false if the model shouldn't be automatically discovered.
 
 
 class osv(orm.orm):
     """ Deprecated class. """
-    pass
+    __metaclass__ = MetaModel
+    _register = False # Set to false if the model shouldn't be automatically discovered.
 
 
 def start_object_proxy():

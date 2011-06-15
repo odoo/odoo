@@ -416,6 +416,32 @@ def get_pg_type(f):
     return f_type
 
 
+class MetaModel(type):
+    """ Metaclass for the Model.
+
+    This class is used as the metaclass for the Model class to discover
+    the models defined in a module (i.e. without instanciating them).
+    If the automatic discovery is not needed, it is possible to set the
+    model's _register attribute to False.
+
+    """
+
+    module_to_models = {}
+
+    def __init__(self, name, bases, attrs):
+        if not self._register:
+            self._register = True
+            super(MetaModel, self).__init__(name, bases, attrs)
+            return
+
+        module_name = self.__module__.split('.')[0]
+        if not hasattr(self, '_module'):
+            self._module = module_name
+
+        # Remember which models to instanciate for this module.
+        self.module_to_models.setdefault(self._module, []).append(self)
+
+
 class orm_template(object):
     """ Base class for OpenERP models.
 
@@ -647,7 +673,7 @@ class orm_template(object):
                     else:
                         new.extend(cls.__dict__.get(s, []))
                     nattr[s] = new
-                cls = type(name, (cls, parent_class), nattr)
+                cls = type(name, (cls, parent_class), dict(nattr, _register=False))
         obj = object.__new__(cls)
         obj.__init__(pool, cr)
         return obj
