@@ -27,6 +27,7 @@ from tools.translate import _
 
 class res_company_logo(osv.osv_memory):
     _name = 'res.company.logo'
+    _inherit = 'res.config'
     _columns = {
         'logo' : fields.binary('Logo'),
     }

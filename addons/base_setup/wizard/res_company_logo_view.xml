@@ -6,17 +6,32 @@
             <field name="name">res.company.logo.form</field>
             <field name="model">res.company.logo</field>
             <field name="type">form</field>
+            <field name="inherit_id" ref="base.res_config_view_base"/>
             <field name="arch" type="xml">
-                <form string="Upload Your Company Logo">
-                    <separator string="Upload your company logo in JPG or PNG with a format similar to 450*150 pixels" colspan="4"/>
-                    <field colspan="4" height="150" name="logo" widget="image" nolabel="1"/>
-                    <separator colspan="4"/>
-                    <group colspan="4" col="6">
-                       <label string="" colspan="2"/>
-                       <button icon="gtk-cancel" special="cancel" string="Cancel"/>
-                       <button icon="gtk-ok" string="Upload" name="execute" type="object"/>
-                    </group>
+            <data>
+                <form position="attributes">
+                     <attribute name="string">Upload Your Company Logo</attribute>
                 </form>
+                <xpath expr='//separator[@string="title"]' position='attributes'>
+                   <attribute name='string'> </attribute>
+                </xpath>
+                <xpath expr="//label[@string='description']"
+                      position="attributes">
+                      <attribute name="string">Upload your company logo in JPG or PNG with a format similar to 450*150 pixels </attribute>
+                </xpath>
+                <xpath expr='//separator[@string="vsep"]' position='attributes'>
+                     <attribute name='string'> </attribute>
+                     <attribute name='rowspan'>12</attribute>
+                 </xpath>
+                 <xpath expr="//button[@string='Next']" position="replace">
+                      <button icon="gtk-ok" string="Upload" name="execute" type="object"/>
+                  </xpath>
+                 <group string="res_config_contents" position="replace">
+                    <group colspan="4">
+                        <field colspan="4" height="150" name="logo" widget="image" nolabel="1"/>
+                  </group>
+                </group>
+             </data>
             </field>
         </record>
 
