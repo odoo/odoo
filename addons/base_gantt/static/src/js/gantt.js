@@ -125,7 +125,7 @@ init: function(view_manager, session, element_id, dataset, view_id) {
             if (smalldate == ""){
                 smalldate = Date.today();
             }
-            project = new GanttProjectInfo(1, self.name, smalldate);
+            project = new GanttProjectInfo("_1", "", smalldate);
             ganttChartControl.addProject(project);
         }
 
@@ -271,6 +271,7 @@ init: function(view_manager, session, element_id, dataset, view_id) {
         ganttChartControl.attachEvent("onTaskEndDrag", function(task) {self.on_resize_drag_end(task, "drag");});
         ganttChartControl.attachEvent("onTaskDblClick", function(task) {self.open_popup(task);});
 
+        jQuery("div #_1, div #_1 + div").hide();
     },
 
     end_date: function(dat, duration) {
