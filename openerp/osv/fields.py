@@ -796,15 +796,15 @@ class function(_column):
             return []
         return self._fnct_search(obj, cr, uid, obj, name, args, context=context)
 
-    def postprocess(self, cr, user, obj, field, value=None, context=None):
+    def postprocess(self, cr, uid, obj, field, value=None, context=None):
         if context is None:
             context = {}
         result = value
         field_type = obj._columns[field]._type
-        if field_type == "many2one" :
+        if field_type == "many2one":
             if isinstance(value, (int,long)) and hasattr(obj._columns[field], 'relation'):
                 obj_model = obj.pool.get(obj._columns[field].relation)
-                dict_names = dict(obj_model.name_get(cr, user, [value], context))
+                dict_names = dict(obj_model.name_get(cr, uid, [value], context))
                 if value in dict_names:
                     result = (value, dict_names[value])
 
@@ -819,19 +819,19 @@ class function(_column):
             result = tools.ustr(value)
         return result
 
-    def get(self, cr, obj, ids, name, user=None, context=None, values=None):
+    def get(self, cr, obj, ids, name, uid=False, context=None, values=None):
         result = {}
         if self._method:
-            result = self._fnct(obj, cr, user, ids, name, self._arg, context)
+            result = self._fnct(obj, cr, uid, ids, name, self._arg, context)
         else:
             result = self._fnct(cr, obj._table, ids, name, self._arg, context)
         for id in ids:
             if self._multi and id in result:
                 for field, value in result[id].iteritems():
                     if value:
-                        result[id][field] = self.postprocess(cr, user, obj, field, value, context)
-            elif result.get(id,False):
-                result[id] = self.postprocess(cr, user, obj, name, result[id], context)
+                        result[id][field] = self.postprocess(cr, uid, obj, field, value, context)
+            elif result.get(id):
+                result[id] = self.postprocess(cr, uid, obj, name, result[id], context)
         return result
 
     get_memory = get
