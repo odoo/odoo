@@ -27,33 +27,22 @@
 
 from openerp.modules.registry import RegistryManager
 
-_Registries = None
-
-
-def ensure_registries():
-    global _Registries
-    if _Registries is None:
-        _Registries = RegistryManager()
-
 
 def get_db_and_pool(db_name, force_demo=False, status=None, update_module=False, pooljobs=True):
     """Create and return a database connection and a newly initialized registry."""
-    ensure_registries()
-    bound_registry = _Registries.get(db_name, force_demo, status, update_module, pooljobs)
-    return bound_registry.db, bound_registry.registry
+    registry = RegistryManager.get(db_name, force_demo, status, update_module, pooljobs)
+    return registry.db, registry
 
 
 def delete_pool(db_name):
     """Delete an existing registry."""
-    ensure_registries()
-    _Registries.delete(db_name)
+    RegistryManager.delete(db_name)
 
 
 def restart_pool(db_name, force_demo=False, status=None, update_module=False):
     """Delete an existing registry and return a database connection and a newly initialized registry."""
-    ensure_registries()
-    bound_registry = _Registries.new(db_name, force_demo, status, update_module, True)
-    return bound_registry.db, bound_registry.registry
+    registry = RegistryManager.new(db_name, force_demo, status, update_module, True)
+    return registry.db, registry
 
 
 def get_db(db_name):

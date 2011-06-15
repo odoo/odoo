@@ -830,9 +830,6 @@ class orm_template(object):
             if x=='.id': return [x]
             return x.replace(':id','/id').replace('.id','/.id').split('/')
         fields_to_export = map(fsplit, fields_to_export)
-        fields_export = fields_to_export + []
-        warning = ''
-        warning_fields = []
         datas = []
         for row in self.browse(cr, uid, ids, context):
             datas += self.__export_row(cr, uid, row, fields_to_export, context)
@@ -1020,7 +1017,6 @@ class orm_template(object):
 
         if config.get('import_partial', False) and filename:
             data = pickle.load(file(config.get('import_partial')))
-            original_value = data.get(filename, 0)
 
         position = 0
         while position<len(datas):
@@ -1033,7 +1029,7 @@ class orm_template(object):
                 return (-1, res, 'Line ' + str(position) +' : ' + '!\n'.join(warning), '')
 
             try:
-                id = ir_model_data_obj._update(cr, uid, self._name,
+                ir_model_data_obj._update(cr, uid, self._name,
                      current_module, res, mode=mode, xml_id=xml_id,
                      noupdate=noupdate, res_id=res_id, context=context)
             except Exception, e:
@@ -1705,7 +1701,6 @@ class orm_template(object):
         result = {'type': view_type, 'model': self._name}
 
         ok = True
-        model = True
         sql_res = False
         parent_view_model = None
         while ok:
@@ -1739,7 +1734,6 @@ class orm_template(object):
 
             ok = sql_res[5]
             view_id = ok or sql_res[3]
-            model = False
             parent_view_model = sql_res[6]
 
         # if a view was found
@@ -3074,7 +3068,7 @@ class orm(orm_template):
     #
 
     def _inherits_reload_src(self):
-        for obj in self.pool.obj_pool.values():
+        for obj in self.pool.models.values():
             if self._name in obj._inherits:
                 obj._inherits_reload()
 
