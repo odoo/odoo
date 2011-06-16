@@ -56,6 +56,7 @@ Generic Payroll system.
         'hr_payroll_report.xml',
         'hr_payroll_data.xml',
         'security/ir.model.access.csv',
+        'wizard/hr_payroll_contribution_register_report.xml',
     ],
     'test': [
 #         'test/payslip.yml',
