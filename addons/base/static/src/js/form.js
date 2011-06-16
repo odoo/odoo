@@ -1173,7 +1173,7 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
     _search_create_popup: function(view, ids) {
         var dataset = new openerp.base.DataSetStatic(this.session, this.field.relation, []);
         var self = this;
-        var pop = new openerp.base.form.Many2XSelectPopup(null, self.view.session);
+        var pop = new openerp.base.form.SelectCreatePopup(null, self.view.session);
         pop.select_element(self.field.relation,{
                 initial_ids: ids ? _.map(ids, function(x) {return x[0]}) : undefined,
                 initial_view: view,
@@ -1232,12 +1232,11 @@ openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
         this.dataset = new openerp.base.DataSetStatic(this.session, this.field.relation);
         this.dataset.on_unlink.add_last(function(ids) {
             self.dataset.set_ids(_.without.apply(_, [self.dataset.ids].concat(ids)));
-            debugger;
             var view = self.viewmanager.views[self.viewmanager.active_view].controller;
             if(self.viewmanager.active_view === "list") {
                 view.reload_content();
             } else if (self.viewmanager.active_view === "form") {
-                // TODO niv but fme did not implemented delete in form view anyway
+                // TODO niv: but fme did not implemented delete in form view anyway
             }
 
             self.on_ui_change();
@@ -1339,7 +1338,7 @@ openerp.base.form.FieldMany2Many = openerp.base.form.Field.extend({
 
 openerp.base.form.Many2ManyListView = openerp.base.ListView.extend({
     do_add_record: function () {
-        var pop = new openerp.base.form.Many2XSelectPopup(
+        var pop = new openerp.base.form.SelectCreatePopup(
                 null, this.m2m_field.view.session);
         pop.select_element(this.model);
         var self = this;
@@ -1366,9 +1365,9 @@ openerp.base.form.Many2ManyListView = openerp.base.ListView.extend({
     }
 });
 
-openerp.base.form.Many2XSelectPopup = openerp.base.BaseWidget.extend({
-    identifier_prefix: "many2xselectpopup",
-    template: "Many2XSelectPopup",
+openerp.base.form.SelectCreatePopup = openerp.base.BaseWidget.extend({
+    identifier_prefix: "selectcreatepopup",
+    template: "SelectCreatePopup",
     /**
      * options:
      * - initial_ids
@@ -1414,12 +1413,12 @@ openerp.base.form.Many2XSelectPopup = openerp.base.BaseWidget.extend({
         });
         this.searchview.on_loaded.add_last(function () {
             var $buttons = self.searchview.$element.find(".oe_search-view-buttons");
-            $buttons.append(QWeb.render("Many2XSelectPopup.search.buttons"));
-            var $cbutton = $buttons.find(".oe_many2xselectpopup-search-close");
+            $buttons.append(QWeb.render("SelectCreatePopup.search.buttons"));
+            var $cbutton = $buttons.find(".oe_selectcreatepopup-search-close");
             $cbutton.click(function() {
                 self.stop();
             });
-            var $sbutton = $buttons.find(".oe_many2xselectpopup-search-select");
+            var $sbutton = $buttons.find(".oe_selectcreatepopup-search-select");
             if(self.options.disable_multiple_selection) {
                 $sbutton.hide();
             }
@@ -1442,9 +1441,9 @@ openerp.base.form.Many2XSelectPopup = openerp.base.BaseWidget.extend({
     on_click_element: function(ids) {
         this.selected_ids = ids || [];
         if(this.selected_ids.length > 0) {
-            this.$element.find(".oe_many2xselectpopup-search-select").removeAttr('disabled');
+            this.$element.find(".oe_selectcreatepopup-search-select").removeAttr('disabled');
         } else {
-            this.$element.find(".oe_many2xselectpopup-search-select").attr('disabled', "disabled");
+            this.$element.find(".oe_selectcreatepopup-search-select").attr('disabled', "disabled");
         }
     },
     new_object: function() {
@@ -1461,12 +1460,12 @@ openerp.base.form.Many2XSelectPopup = openerp.base.BaseWidget.extend({
         this.view_form.start();
         this.view_form.on_loaded.add_last(function() {
             var $buttons = self.view_form.$element.find(".oe_form_buttons");
-            $buttons.html(QWeb.render("Many2XSelectPopup.form.buttons"));
-            var $nbutton = $buttons.find(".oe_many2xselectpopup-form-save");
+            $buttons.html(QWeb.render("SelectCreatePopup.form.buttons"));
+            var $nbutton = $buttons.find(".oe_selectcreatepopup-form-save");
             $nbutton.click(function() {
                 self.view_form.do_save();
             });
-            var $cbutton = $buttons.find(".oe_many2xselectpopup-form-close");
+            var $cbutton = $buttons.find(".oe_selectcreatepopup-form-close");
             $cbutton.click(function() {
                 self.stop();
             });
