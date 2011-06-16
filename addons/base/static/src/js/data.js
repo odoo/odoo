@@ -322,7 +322,7 @@ openerp.base.DataSet =  openerp.base.Controller.extend( /** @lends openerp.base.
     },
     /**
      * Arguments:
-     * name='', args=None, operator='ilike', context=None, limit=100
+     * name='', args=[], operator='ilike', context=None, limit=100
      */
     name_search: function (args, callback, error_callback) {
         return this.call('name_search',

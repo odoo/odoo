@@ -83,6 +83,7 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
         this.views = {};
         this.flags = this.flags || {};
         this.sidebar = new openerp.base.NullSidebar();
+        this.registry = openerp.base.views;
     },
     /**
      * @returns {jQuery.Deferred} initial view loading promise
@@ -117,7 +118,7 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
         var view = this.views[view_type];
         if (!view.controller) {
             // Lazy loading of views
-            var controllerclass = openerp.base.views.get_object(view_type);
+            var controllerclass = this.registry.get_object(view_type);
             var controller = new controllerclass( this, this.session, this.element_id + "_view_" + view_type,
                 this.dataset, view.view_id, view.options);
             if (view.embedded_view) {

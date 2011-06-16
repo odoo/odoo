@@ -1125,7 +1125,7 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
         
         var dataset = new openerp.base.DataSetStatic(this.session, this.field.relation, []);
         
-        dataset.name_search([search_val, false, 'ilike', {}, this.limit + 1], function(data) {
+        dataset.name_search([search_val, [], 'ilike', {}, this.limit + 1], function(data) {
             self.last_search = data.result;
             // possible selections for the m2o
             var values = _.map(data.result, function(x) {
@@ -1136,7 +1136,7 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
             if (values.length > self.limit) {
                 values = values.slice(0, self.limit);
                 values.push({label: "<em>   Search More...</em>", action: function() {
-                    dataset.name_search([search_val, false, 'ilike', {}, false], function(data) {
+                    dataset.name_search([search_val, [], 'ilike', {}, false], function(data) {
                         self._change_int_value(null);
                         self._search_create_popup("search", data.result);
                     });
@@ -1232,14 +1232,8 @@ openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
         this.dataset = new openerp.base.DataSetStatic(this.session, this.field.relation);
         this.dataset.on_unlink.add_last(function(ids) {
             self.dataset.set_ids(_.without.apply(_, [self.dataset.ids].concat(ids)));
-            var view = self.viewmanager.views[self.viewmanager.active_view].controller;
-            if(self.viewmanager.active_view === "list") {
-                view.reload_content();
-            } else if (self.viewmanager.active_view === "form") {
-                // TODO niv: but fme did not implemented delete in form view anyway
-            }
-
             self.on_ui_change();
+            self.reload_current_view();
         });
         
         var modes = this.node.attrs.mode;
@@ -1252,17 +1246,23 @@ openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
             }
             if(view.view_type === "list") {
                 view.options = {
-                    "selectable": false
                 };
             }
             views.push(view);
         });
+        this.views = views;
         
         this.viewmanager = new openerp.base.ViewManager(this.view.session,
             this.element_id, this.dataset, views);
+        var reg = new openerp.base.Registry();
+        reg.add("form", openerp.base.views.map["form"]);
+        reg.add("graph", openerp.base.views.map["graph"]);
+        reg.add("list", "openerp.base.form.One2ManyListView");
+        this.viewmanager.registry = reg;
+        
         this.viewmanager.on_controller_inited.add_last(function(view_type, controller) {
             if (view_type == "list") {
-                // TODO niv
+                controller.o2m = self;
             } else if (view_type == "form") {
                 // TODO niv
             }
@@ -1278,6 +1278,15 @@ openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
             // TODO niv: handle other types of views
         });
     },
+    reload_current_view: function() {
+        var self = this;
+        var view = self.viewmanager.views[self.viewmanager.active_view].controller;
+        if(self.viewmanager.active_view === "list") {
+            view.reload_content();
+        } else if (self.viewmanager.active_view === "form") {
+            // TODO niv: but fme did not implemented delete in form view anyway
+        }
+    },
     set_value: function(value) {
         if(value != false) {
             this.dataset.set_ids(value);
@@ -1287,6 +1296,24 @@ openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
     get_value: function(value) {
         //TODO niv
         return [];
+    }
+});
+
+openerp.base.form.One2ManyListView = openerp.base.ListView.extend({
+    do_add_record: function () {
+        var self = this;
+        var pop = new openerp.base.form.SelectCreatePopup(null, self.o2m.view.session);
+        pop.select_element(self.o2m.field.relation,{
+            initial_view: "form",
+            alternative_form_view: self.o2m.field.views ? self.o2m.field.views["form"] : undefined
+        });
+        pop.on_select_elements.add(function(element_ids) {
+            var ids = self.o2m.dataset.ids;
+            _.each(element_ids, function(x) {if (!_.include(ids, x)) ids.push(x);});
+            self.o2m.dataset.set_ids(ids);
+            self.o2m.on_ui_change();
+            self.o2m.reload_current_view();
+        });
     }
 });
 
@@ -1313,7 +1340,6 @@ openerp.base.form.FieldMany2Many = openerp.base.form.Field.extend({
 
         this.list_view = new openerp.base.form.Many2ManyListView(
                 null, this.view.session, this.list_id, this.dataset, false, {
-                    'selectable': false,
                     'addable': 'Add'
             });
         this.list_view.m2m_field = this;
@@ -1373,6 +1399,7 @@ openerp.base.form.SelectCreatePopup = openerp.base.BaseWidget.extend({
      * - initial_ids
      * - initial_view: form or search (default search)
      * - disable_multiple_selection
+     * - alternative_form_view
      */
     select_element: function(model, options) {
         this.model = model;
@@ -1386,7 +1413,7 @@ openerp.base.form.SelectCreatePopup = openerp.base.BaseWidget.extend({
     start: function() {
         this._super();
         this.dataset = new openerp.base.DataSetSearch(this.session, this.model);
-        if (this.options.initial_view || "search" == "search") {
+        if ((this.options.initial_view || "search") == "search") {
             this.setup_search_view();
         } else { // "form"
             this.new_object();
@@ -1457,6 +1484,10 @@ openerp.base.form.SelectCreatePopup = openerp.base.BaseWidget.extend({
         this.dataset.index = null;
         this.view_form = new openerp.base.FormView(null, this.session,
                 this.element_id + "_view_form", this.dataset, false);
+        if (this.options.alternative_form_view) {
+            debugger;
+            this.view_form.set_embedded_view(this.options.alternative_form_view);
+        }
         this.view_form.start();
         this.view_form.on_loaded.add_last(function() {
             var $buttons = self.view_form.$element.find(".oe_form_buttons");
