@@ -53,10 +53,10 @@ class crm_phonecall(crm_case, osv.osv):
                                     ('draft', 'Draft'), 
                                     ('open', 'Todo'), 
                                     ('cancel', 'Cancelled'), 
-                                    ('done', 'Done'), 
-                                    ('pending', 'Pending'),
+                                    ('done', 'Held'), 
+                                    ('pending', 'Not Held'),
                                 ], 'State', size=16, readonly=True, 
-                                  help='The state is set to \'Draft\', when a case is created.\
+                                  help='The state is set to \'Todo\', when a case is created.\
                                   \nIf the case is in progress the state is set to \'Open\'.\
                                   \nWhen the case is over, the state is set to \'Done\'.\
                                   \nIf the case needs to be reviewed then the state is set to \'Pending\'.'), 
@@ -79,14 +79,19 @@ class crm_phonecall(crm_case, osv.osv):
                          the canall which is this opportunity source."), 
         'date_closed': fields.datetime('Closed', readonly=True), 
         'date': fields.datetime('Date'), 
-        'opportunity_id': fields.many2one ('crm.lead', 'Opportunity'), 
+        'opportunity_id': fields.many2one ('crm.lead', 'Lead/Opportunity'), 
         'message_ids': fields.one2many('mailgate.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
     }
+
+    def _get_default_state(self, cr, uid, context=None):
+        if context and context.get('default_state', False):
+            return context.get('default_state')
+        return 'open'
 
     _defaults = {
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'), 
         'priority': crm.AVAILABLE_PRIORITIES[2][0], 
-        'state':  'open', 
+        'state':  _get_default_state, 
         'user_id': lambda self,cr,uid,ctx: uid,
         'active': 1, 
     }
@@ -122,14 +127,14 @@ class crm_phonecall(crm_case, osv.osv):
         return res
 
     def case_reset(self, cr, uid, ids, *args):
-        """Resets case as draft
+        """Resets case as Todo
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
         @param ids: List of case Ids
         @param *args: Tuple Value for additional Params
         """
-        res = super(crm_phonecall, self).case_reset(cr, uid, ids, args)
+        res = super(crm_phonecall, self).case_reset(cr, uid, ids, args, 'crm.phonecall')
         self.write(cr, uid, ids, {'duration': 0.0})
         return res
 
