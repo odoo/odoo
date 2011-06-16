@@ -199,6 +199,8 @@ background: linear-gradient(top, #bd5e54 0%,#90322a 60%); /* W3C */
     line-height: 20px;
     font-weight: bold;
     font-size: 85%;
+
+    white-space: nowrap;
 }
 .openerp .menu a:hover,
 .openerp .menu a:focus,
@@ -696,6 +698,9 @@ background: linear-gradient(top, #ffffff 0%,#d8d8d8 11%,#afafaf 86%,#333333 91%,
 .openerp td.oe_form_frame_cell {
     padding: 2px;
 }
+.openerp td.oe_form_frame_cell.oe_form_group {
+    padding: 0px;
+}
 .openerp .required.error {
     border: 1px solid #900;
 }
@@ -712,7 +717,7 @@ background: linear-gradient(top, #ffffff 0%,#d8d8d8 11%,#afafaf 86%,#333333 91%,
 .openerp label.oe_form_label, .openerp label.oe_form_label_help {
     display: block;
     text-align: right;
-    margin-top: 3px;
+    margin: 3px 0 0 10px;
 }
 .openerp label.oe_form_label_help span {
     font-size: 80%;
