@@ -38,8 +38,9 @@ function searchmail()
         return true
     }
     var prefService = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefService);
-    var username = Components.classes["@mozilla.org/process/environment;1"].
-            getService(Components.interfaces.nsIEnvironment).get('USERNAME')
+    var dirService = Components.classes["@mozilla.org/file/directory_service;1"].
+    	getService(Components.interfaces.nsIProperties).get("Home", Components.interfaces.nsIFile);
+    var homeDir = dirService.path;
     var version_obj = prefService.getBranch("extensions.");
     version_obj.QueryInterface(Components.interfaces.nsIPrefBranch2);
     version = version_obj.getCharPref("lastAppVersion");
@@ -151,10 +152,10 @@ function searchmail()
             name[i] = currentAttachments[i].displayName;
             var obj = Components.classes["@mozilla.org/file/local;1"].createInstance(Components.interfaces.nsILocalFile);
             if(navigator.userAgent.indexOf('Linux')!= -1){
-                obj.initWithPath("/tmp/");
+                obj.initWithPath(homeDir+"/");
             }
             else if(navigator.userAgent.indexOf('Win')!= -1){
-                obj.initWithPath("C:\\Users\\"+ username +"\\");
+                obj.initWithPath(homeDir+"\\");
             }
             else if(navigator.userAgent.indexOf('Mac OS X')!= -1){ 
                 obj.initWithPath("/tmp/");
@@ -337,13 +338,14 @@ var listDocumentHandler = {
 //function to archive the mail content through xmlrpc request
 function parse_eml(){
     var fpath =""
-    var username = Components.classes["@mozilla.org/process/environment;1"].
-        getService(Components.interfaces.nsIEnvironment).get('USERNAME')
+    var dirService = Components.classes["@mozilla.org/file/directory_service;1"].
+        getService(Components.interfaces.nsIProperties).get("Home", Components.interfaces.nsIFile);
+    var homeDir = dirService.path;
     if(navigator.userAgent.indexOf('Linux')!= -1){
-        fpath ="/tmp/"
+        fpath =homeDir+"/"
     }
     else if(navigator.userAgent.indexOf('Win')!= -1){
-        fpath ="C:\\Users\\"+ username +"\\"
+        fpath =homeDir+"\\"
     }
     else if(navigator.userAgent.indexOf('Mac OS X')!= -1){ 
         fpath ="/tmp/"
