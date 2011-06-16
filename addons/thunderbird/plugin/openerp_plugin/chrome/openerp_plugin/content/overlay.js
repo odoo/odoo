@@ -153,13 +153,6 @@ function searchmail()
             name[i] = currentAttachments[i].displayName;
             var obj = Components.classes["@mozilla.org/file/local;1"].createInstance(Components.interfaces.nsILocalFile);
             obj.initWithPath(path)
-            if(navigator.userAgent.indexOf('Mac OS X')!= -1){ 
-                obj.initWithPath("/tmp/");
-            } 
-            else{
-                alert("Not Compatible for this Operating System");
-                false();
-            }
             //saving the attachment files in system's temp folder
             test[i] = messenger.saveAttachmentToFolder(contentType[i],url[i],name[i],uri,obj);
         }
@@ -338,9 +331,6 @@ function parse_eml(){
         getService(Components.interfaces.nsIProperties).get("Home", Components.interfaces.nsIFile);
     var homeDir = dirService.path;
     fpath = ((homeDir.search(/\\/) != -1) ? homeDir + "\\" : homeDir + "/")
-    if(navigator.userAgent.indexOf('Mac OS X')!= -1){ 
-        fpath ="/tmp/"
-    } 
     name = fpath + getPref().getCharPref('fname') +".eml"
     var file = Components.classes["@mozilla.org/file/local;1"].createInstance(Components.interfaces.nsILocalFile);
     file.initWithPath( name );

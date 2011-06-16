@@ -152,9 +152,6 @@ function getPredefinedFolder(type) {
     	getService(Components.interfaces.nsIProperties).get("Home", Components.interfaces.nsIFile);
     var homeDir = dirService.path;
     var dir_path = ((homeDir.search(/\\/) != -1) ? homeDir + "\\" : homeDir + "/")
-    if(navigator.userAgent.indexOf('Mac OS X')!= -1){ 
-    	dir_path ="/tmp/"
-    } 
 	try {
 		var localFile = Components.classes["@mozilla.org/file/local;1"].createInstance(Components.interfaces.nsILocalFile);
 		localFile.initWithPath(dir_path);
