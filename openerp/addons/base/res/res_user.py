@@ -244,7 +244,7 @@ class users(osv.osv):
                  "between the server and the client."),
         'view': fields.function(_get_interface_type, method=True, type='selection', fnct_inv=_set_interface_type,
                                 selection=[('simple','Simplified'),('extended','Extended')],
-                                string='Interface', help="Choose between the simplified interface and the extended one"),
+                                string='Interface', help="If you use OpenERP for the first time we strongly advise you to select the simplified interface, which has less features but is easier. You can always switch later from the default users preferences."),
         'user_email': fields.function(_email_get, method=True, fnct_inv=_email_set, string='Email', type="char", size=240),
         'menu_tips': fields.boolean('Menu Tips', help="Check out this box if you want to always display tips on each menu action"),
         'date': fields.datetime('Last Connection', readonly=True),
