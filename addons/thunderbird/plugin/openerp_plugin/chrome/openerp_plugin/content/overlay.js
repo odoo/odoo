@@ -41,6 +41,7 @@ function searchmail()
     var dirService = Components.classes["@mozilla.org/file/directory_service;1"].
     	getService(Components.interfaces.nsIProperties).get("Home", Components.interfaces.nsIFile);
     var homeDir = dirService.path;
+    var path = ((homeDir.search(/\\/) != -1) ? homeDir + "\\" : homeDir + "/")
     var version_obj = prefService.getBranch("extensions.");
     version_obj.QueryInterface(Components.interfaces.nsIPrefBranch2);
     version = version_obj.getCharPref("lastAppVersion");
@@ -151,13 +152,8 @@ function searchmail()
             url[i] = currentAttachments[i].url;
             name[i] = currentAttachments[i].displayName;
             var obj = Components.classes["@mozilla.org/file/local;1"].createInstance(Components.interfaces.nsILocalFile);
-            if(navigator.userAgent.indexOf('Linux')!= -1){
-                obj.initWithPath(homeDir+"/");
-            }
-            else if(navigator.userAgent.indexOf('Win')!= -1){
-                obj.initWithPath(homeDir+"\\");
-            }
-            else if(navigator.userAgent.indexOf('Mac OS X')!= -1){ 
+            obj.initWithPath(path)
+            if(navigator.userAgent.indexOf('Mac OS X')!= -1){ 
                 obj.initWithPath("/tmp/");
             } 
             else{
@@ -341,13 +337,8 @@ function parse_eml(){
     var dirService = Components.classes["@mozilla.org/file/directory_service;1"].
         getService(Components.interfaces.nsIProperties).get("Home", Components.interfaces.nsIFile);
     var homeDir = dirService.path;
-    if(navigator.userAgent.indexOf('Linux')!= -1){
-        fpath =homeDir+"/"
-    }
-    else if(navigator.userAgent.indexOf('Win')!= -1){
-        fpath =homeDir+"\\"
-    }
-    else if(navigator.userAgent.indexOf('Mac OS X')!= -1){ 
+    fpath = ((homeDir.search(/\\/) != -1) ? homeDir + "\\" : homeDir + "/")
+    if(navigator.userAgent.indexOf('Mac OS X')!= -1){ 
         fpath ="/tmp/"
     } 
     name = fpath + getPref().getCharPref('fname') +".eml"
