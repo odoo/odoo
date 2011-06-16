@@ -80,7 +80,7 @@ class mailgate_thread(osv.osv):
         for thread in self.browse(cr, uid, ids, context=context):
             l=[]
             for message in thread.message_ids:
-                l.append((message.user_id and message.user_id.email) or '')
+                l.append((message.user_id and message.user_id.user_email) or '')
                 l.append(message.email_from or '')
                 l.append(message.email_cc or '')
             res[thread.id] = l
