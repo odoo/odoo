@@ -163,7 +163,7 @@ class synchronize_google(osv.osv_memory):
         imp = google_import(self, cr, uid,'import_google' , "synchronize_google", gmail_user, context)
         imp.set_table_list(tables)
         imp.start()            
-        return context
+        return {}
 
 synchronize_google()
 
