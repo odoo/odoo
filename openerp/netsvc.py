@@ -26,21 +26,41 @@
 
 import cgitb
 import errno
+import heapq
 import logging
 import logging.handlers
 import os
+import platform
+import release
 import socket
 import sys
 import threading
 import time
-import release
-from pprint import pformat
 import warnings
-import heapq
+from pprint import pformat
 
 # TODO modules that import netsvc only for things from loglevels must be changed to use loglevels.
 from loglevels import *
 import tools
+
+def close_socket(sock):
+    """ Closes a socket instance cleanly
+
+    :param sock: the network socket to close
+    :type sock: socket.socket
+    """
+    try:
+        sock.shutdown(socket.SHUT_RDWR)
+    except socket.error, e:
+        ## On OSX, socket shutdowns both sides if any side closes it
+        ## causing an error 57 'Socket is not connected' on shutdown
+        ## of the other side (or something), see
+        ## http://bugs.python.org/issue4397
+        ## note: stdlib fixed test, not behavior
+        if e.errno != errno.ENOTCONN or platform.system() != 'Darwin':
+            raise
+    sock.close()
+
 
 class Service(object):
     """ Base class for *Local* services
@@ -381,19 +401,7 @@ class Server:
         return '\n'.join(res)
 
     def _close_socket(self):
-        if os.name != 'nt':
-            try:
-                self.socket.shutdown(getattr(socket, 'SHUT_RDWR', 2))
-            except socket.error, e:
-                if e.errno != errno.ENOTCONN: raise
-                # OSX, socket shutdowns both sides if any side closes it
-                # causing an error 57 'Socket is not connected' on shutdown
-                # of the other side (or something), see
-                # http://bugs.python.org/issue4397
-                self.__logger.debug(
-                    '"%s" when shutting down server socket, '
-                    'this is normal under OS X', e)
-        self.socket.close()
+        close_socket(self.socket)
 
 class OpenERPDispatcherException(Exception):
     def __init__(self, exception, traceback):
