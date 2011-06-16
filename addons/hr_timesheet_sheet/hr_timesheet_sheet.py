@@ -325,19 +325,12 @@ class hr_timesheet_sheet(osv.osv):
         emp_ids = self.pool.get('hr.employee').search(cr, uid, [('user_id','=',uid)], context=context)
         return emp_ids and emp_ids[0] or False
     
-    def _default_department(self, cr, uid, context=None):
-        emp_id = self._default_employee(cr, uid, context)
-        if emp_id:
-            return self.pool.get('hr.employee').read(cr, uid, [emp_id], context)[0]['department_id']
-        return False
-
     _defaults = {
         'date_from' : _default_date_from,
         'date_current' : lambda *a: time.strftime('%Y-%m-%d'),
         'date_to' : _default_date_to,
         'state': 'new',
         'employee_id': _default_employee,
-        'department_id': _default_department,
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'hr_timesheet_sheet.sheet', context=c)
     }
 
@@ -389,11 +382,14 @@ class hr_timesheet_sheet(osv.osv):
                 raise osv.except_osv(_('Invalid action !'), _('Cannot delete Sheet(s) which have attendance entries encoded !'))
         return super(hr_timesheet_sheet, self).unlink(cr, uid, ids, context=context)
 
-    def onchange_department_id(self, cr, uid, ids, employee_id, context=None):
-        department_id = False
+    def onchange_employee_id(self, cr, uid, ids, employee_id, context=None):
+        res = {'value':{}}
         if employee_id:
             department_id = self.pool.get('hr.employee').browse(cr, uid, employee_id, context=context).department_id.id or False
-        return {'value': {'department_id': department_id}}
+        res['value'] = {
+                        'department_id': department_id,
+        }
+        return res
 
 hr_timesheet_sheet()
 
