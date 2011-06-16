@@ -32,7 +32,7 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
         this.ready = false;
         this.show_invalid = true;
         this.touched = false;
-        this.flags = this.view_manager.action.flags || {};
+        this.flags = this.view_manager.flags || {};
         this.registry = openerp.base.form.widgets;
     },
     start: function() {
@@ -1242,9 +1242,14 @@ openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
         modes = !!modes ? modes.split(",") : ["tree", "form"];
         var views = [];
         _.each(modes, function(mode) {
-            var view = [false, mode == "tree" ? "list" : mode];
+            var view = {view_id: false, view_type: mode == "tree" ? "list" : mode};
             if (self.field.views && self.field.views[mode]) {
-                view.push(self.field.views[mode]);
+                view.embedded_view = self.field.views[mode];
+            }
+            if(view.view_type === "list") {
+                view.options = {
+                    "selectable": false
+                };
             }
             views.push(view);
         });
