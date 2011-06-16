@@ -513,10 +513,10 @@ class config_users(osv.osv_memory):
     _name = 'res.config.users'
     _inherit = ['res.users', 'res.config']
 
-    def _generate_signature(self, cr, name, email, context=None):
-        return _('--\n%(name)s %(email)s\n') % {
+    def _generate_signature(self, cr, name, user_email, context=None):
+        return _('--\n%(name)s %(user_email)s\n') % {
             'name': name or '',
-            'email': email and ' <'+email+'>' or '',
+            'user_mail': user_email and ' <'+user_email+'>' or '',
             }
 
     def create_user(self, cr, uid, new_id, context=None):
@@ -529,21 +529,23 @@ class config_users(osv.osv_memory):
         with the user's data %-formatted into the mail body
         """
         base_data = self.read(cr, uid, new_id, context=context)
-        partner_id = self.pool.get('res.partner').main_partner(cr, uid)
-        address = self.pool.get('res.partner.address').create(
-            cr, uid, {'name': base_data['name'],
-                      'user_email': base_data['user_email'],
-                      'partner_id': partner_id,},
-            context)
+        #partner_id = self.pool.get('res.partner').main_partner(cr, uid)
+        #address = self.pool.get('res.partner.address').create(
+
+            #cr, uid, {'name': base_data['name'],
+                      #'email': base_data['email'],
+                      #'partner_id': partner_id,},context)
+
         user_data = dict(
             base_data,
             signature=self._generate_signature(
-                cr, base_data['name'], base_data['user_email'], context=context),
-            address_id=address,
+                cr, base_data['name'], base_data['user_email'], context=context)
+                #address_id=address,
             )
         new_user = self.pool.get('res.users').create(
             cr, uid, user_data, context)
         self.send_welcome_email(cr, uid, new_user, context=context)
+
     def execute(self, cr, uid, ids, context=None):
         'Do nothing on execution, just launch the next action/todo'
         pass
