@@ -261,19 +261,12 @@
         <tr t-att-id="'treerow_' + field.id">
             <td valign="top" align="left" style="cursor: pointer;">
                 <t t-if="(field.child_id).length >= 1">
-                    <img id="parentimg" src="/base/static/src/img/expand.gif" width="16" height="16" border="0"/>
+                    <img t-att-id="'parentimg_' + field.id" src="/base/static/src/img/expand.gif" width="16" height="16" border="0"/>
                 </t>
+                <span>
+                    <t t-esc="field.name"/>
+                </span>
             </td>
-            <t t-if="(field.child_id).length >= 1">
-                <td style="cursor: pointer;" align="left">
-                    <t t-esc="field.name"/>
-                </td>
-            </t>
-            <t t-if="(field.child_id).length == 0">
-	            <td align="left">
-                    <t t-esc="field.name"/>
-	            </td>
-            </t>
         </tr>
     </t>
 </t>

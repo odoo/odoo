@@ -46,65 +46,52 @@ openerp.base.TreeView = openerp.base.View.extend({
         self.dataset.domain = [['parent_id', '=', parseInt(id, 10)]];
         self.dataset.read_slice([], 0, false, function (response) {
             if (($('tr #treerow_' + id).length) == 1) {
-                $('tr #treerow_' + id).find('td #parentimg').attr('src','/base/static/src/img/collapse.gif');
+                $('tr #treerow_' + id).find('td').children(':first-child').attr('src','/base/static/src/img/collapse.gif');
                 $('tr #treerow_' + id).after(QWeb.render('TreeView_Secondry', {'child_data' : response}));
-                parentlen = $('tr #treerow_' + id).find('td').length;
+
                 for (i in response) {
                     if ($('tr #treerow_' + response[i].id)) {
-                        childlen = $('tr #treerow_' + response[i].id).find('td').length;
-                        while (childlen < (parentlen + 1)) {
-                            $('tr #treerow_' + response[i].id).find('td:eq(0)').before('<td></td>');
-                            childlen++;
-                        }
-                    }
-                }
-                for (i in response) {
-                    if ($('tr #treerow_' + response[i].id)) {
-                        childlen = $('tr #treerow_' + response[i].id).find('td').length;
-                        if ($('tr #treerow_' + response[i].id).find('td:eq('+ (childlen - 2) +')').find('#parentimg').length > 0){
-                            paddingflag=1;
+                        if ($('tr #treerow_' + response[i].id).find('td').children(':first-child').attr('id') == 'parentimg_' + response[i].id) {
+                            paddingflag = 1;
                         }
                     }
                 }
 
-                tdlen = $('tr #treerow_' + id).find('td').length;
-                paddingno = $('tr #treerow_' + id).find('td:eq('+ (tdlen - 1) +')').css('paddingLeft');
+                paddingno = $('tr #treerow_' + id).find('td').css('paddingLeft');
                 padd = paddingno.split('px');
+
                 for (i in response) {
                     if ($('tr #treerow_' + response[i].id)) {
-                        childlen = $('tr #treerow_' + response[i].id).find('td').length;
-                        textoftd = $('tr #treerow_' + response[i].id).find('td:eq('+ (childlen - 1) +')').text();
                         if (paddingflag == 0) {
-                            if (parseInt(padd[0], 10) == 1) {
-                                fix = (parseInt(padd[0], 10) + 20);
-                            } else {
-                                fix = (parseInt(padd[0], 10) + 40);
-                            }
-                            $('tr #treerow_' + response[i].id).find('td:eq('+ (childlen - 2) +')').css({ paddingLeft : fix });
-
+                            fix = (parseInt(padd[0], 10) + 40);
+                            $('tr #treerow_' + response[i].id).find('td').css({ paddingLeft : fix });
                         } else {
                             if (parseInt(padd[0], 10) == 1) {
-                                fix = (parseInt(padd[0],10) + 2);
+                                fix = (parseInt(padd[0],10) + 17);
                             } else {
                                 fix = (parseInt(padd[0], 10) + 20);
                             }
-                            if ($('tr #treerow_' + response[i].id).find('td:eq('+ (childlen - 2) +')').find('#parentimg').length == 0) {
-                                $('tr #treerow_' + response[i].id).find('td:eq('+ (childlen - 2) +')').css({ paddingLeft : (fix+20) });
-                            }else{
-                                $('tr #treerow_' + response[i].id).find('td:eq('+ (childlen - 2) +')').find('#parentimg').addClass("parent_top");
-                                $('tr #treerow_' + response[i].id).find('td:eq('+ (childlen - 2) +')').css({ paddingLeft : fix });
+                            $('tr #treerow_' + response[i].id).find('td').children(':first-child').addClass("parent_top");
+                            if ($('tr #treerow_' + response[i].id).find('td').children(':first-child').attr('id') == "parentimg_" + response[i].id) {
+                                $('tr #treerow_' + response[i].id).find('td').css({ paddingLeft : fix });
+                            } else {
+                                $('tr #treerow_' + response[i].id).find('td').css({ paddingLeft : (fix + 20) });
                             }
                         }
-                        $('tr #treerow_' + response[i].id).find('td:eq('+ (childlen - 2) +')').attr('colspan', '2');
-                        $('tr #treerow_' + response[i].id).find('td:eq('+ (childlen - 2) +')').append(textoftd);
-                        $('tr #treerow_' + response[i].id).find('td:eq('+ (childlen - 1) +')').remove();
                     }
                 }
             } else {
                 if (flag == 0) {
                     self.$element.find('tr').remove();
                 }
-                self.$element.append(QWeb.render('TreeView_Secondry', {'child_data': response}));
+                self.$element.append(QWeb.render('TreeView_Secondry', {'child_data' : response}));
+                self.$element.find('tr[id ^= treerow_]').each( function() {
+                    $('#' + this.id).find('td').children(':first-child').addClass("parent_top");
+                    if ($('#' + this.id).find('td').children(':first-child').attr('id')) {
+                    } else {
+                        $('#' + this.id).find('td').css({ paddingLeft : '20px' });
+                    }
+                });
             }
 
             self.$element.find('tr').mouseover( function() {
@@ -114,36 +101,35 @@ openerp.base.TreeView = openerp.base.View.extend({
                 $(this).css({ color : '#000000' });
             });
 
-            $('tr').click(function() {
+            $('tr').find('td').children(':first-child').click( function() {
                 divflag=0;
                 if ($('#'+(this.id)).length == 1) {
                     rowid = (this.id).split('_');
-
-                    for (i in response) {
-                        if (rowid[1] == response[i].id){
-                            if (response[i].child_id.length > 0) {
-                                jQuery(response[i].child_id).each (function(e, chid) {
-                                    if (jQuery('tr #treerow_' + chid).length > 0) {
-                                        if (jQuery('tr #treerow_' + chid).is(':hidden')) {
-                                            divflag = -1;
-                                        } else {
-                                            divflag++;
-                                        }
+	                for (i in response) {
+                        if (rowid[1] == response[i].id && response[i].child_id.length > 0) {
+                            jQuery(response[i].child_id).each (function(e, chid) {
+                                if (jQuery('tr #treerow_' + chid).length > 0) {
+                                    if (jQuery('tr #treerow_' + chid).is(':hidden')) {
+                                        divflag = -1;
+                                    } else {
+                                        divflag++;
                                     }
-                                });
-                                if (divflag == 0) {
-                                    if ($('#' + (this.id)).find('td #parentimg').attr('src') == '/base/static/src/img/expand.gif') {
-                                        self.getdata(rowid[1]);
-                                    }
-                                } else if (divflag > 0) {
-                                    self.showcontent(rowid[1], 1, response[i].child_id);
-                                } else if (divflag == -1) {
-                                    self.showcontent(rowid[1], 0, response[i].child_id);
                                 }
+                            });
+                            if (divflag == 0) {
+                                if ($('#' + (this.id)).attr('src') == '/base/static/src/img/expand.gif') {
+                                    self.getdata(rowid[1]);
+                                }
+                            } else if (divflag > 0) {
+                                self.showcontent(rowid[1], 1, response[i].child_id);
+                            } else if (divflag == -1) {
+                                self.showcontent(rowid[1], 0, response[i].child_id);
                             }
-                        }
+	                   }
                     }
                 }
+            });
+            $('tr[id ^= treerow_]').find('td').children(':last-child').click(function(){
             });
         });
     },
@@ -153,19 +139,19 @@ openerp.base.TreeView = openerp.base.View.extend({
         var self = this;
         var subchildids = "";
         if (flag == 1) {
-            $('tr #treerow_' + id).find('td #parentimg').attr('src', '/base/static/src/img/expand.gif');
+            $('tr #treerow_' + id).find('td').children(':first-child').attr('src', '/base/static/src/img/expand.gif');
         }
         else {
-            $('tr #treerow_' + id).find('td #parentimg').attr('src', '/base/static/src/img/collapse.gif');
+            $('tr #treerow_' + id).find('td').children(':first-child').attr('src', '/base/static/src/img/collapse.gif');
         }
 
         for (i in childid) {
             if (flag == 1) {
                 self.dataset.domain = [['parent_id', '=', parseInt(childid[i], 10)]];
-                childimg = $('tr #treerow_' + childid[i]).find('td').find('#parentimg').attr('src');
+                childimg = $('tr #treerow_' + childid[i]).find('td').children(':first-child').attr('src');
 
                 if (childimg == "/base/static/src/img/collapse.gif") {
-                    $('tr #treerow_' + childid[i]).find('td').find('#parentimg').attr('src','/base/static/src/img/expand.gif');
+                    $('tr #treerow_' + childid[i]).find('td').children(':first-child').attr('src','/base/static/src/img/expand.gif');
                 }
 
                 self.dataset.read_slice([], 0, false, function (response) {
@@ -178,7 +164,6 @@ openerp.base.TreeView = openerp.base.View.extend({
                             }
                         }
                     }
-
                 });
                 jQuery ('tr #treerow_' + childid[i]).hide();
             }
