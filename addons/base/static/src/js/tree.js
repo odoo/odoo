@@ -50,10 +50,9 @@ openerp.base.TreeView = openerp.base.View.extend({
                 $('tr #treerow_' + id).after(QWeb.render('TreeView_Secondry', {'child_data' : response}));
 
                 for (i in response) {
-                    if ($('tr #treerow_' + response[i].id)) {
-                        if ($('tr #treerow_' + response[i].id).find('td').children(':first-child').attr('id') == 'parentimg_' + response[i].id) {
-                            paddingflag = 1;
-                        }
+                	var row_id = $('tr #treerow_' + response[i].id);
+                    if (row_id && row_id.find('td').children(':first-child').attr('id') == 'parentimg_' + response[i].id) {
+                    	paddingflag = 1;
                     }
                 }
 
@@ -61,7 +60,8 @@ openerp.base.TreeView = openerp.base.View.extend({
                 padd = paddingno.split('px');
 
                 for (i in response) {
-                    if ($('tr #treerow_' + response[i].id)) {
+                	var row_id = $('tr #treerow_' + response[i].id);
+                    if (row_id) {
                         if (paddingflag == 0) {
                             fix = (parseInt(padd[0], 10) + 40);
                             $('tr #treerow_' + response[i].id).find('td').css({ paddingLeft : fix });
@@ -71,11 +71,11 @@ openerp.base.TreeView = openerp.base.View.extend({
                             } else {
                                 fix = (parseInt(padd[0], 10) + 20);
                             }
-                            $('tr #treerow_' + response[i].id).find('td').children(':first-child').addClass("parent_top");
-                            if ($('tr #treerow_' + response[i].id).find('td').children(':first-child').attr('id') == "parentimg_" + response[i].id) {
-                                $('tr #treerow_' + response[i].id).find('td').css({ paddingLeft : fix });
+                            row_id.find('td').children(':first-child').addClass("parent_top");
+                            if (row_id.find('td').children(':first-child').attr('id') == "parentimg_" + response[i].id) {
+                                row_id.find('td').css({ paddingLeft : fix });
                             } else {
-                                $('tr #treerow_' + response[i].id).find('td').css({ paddingLeft : (fix + 20) });
+                                row_id.find('td').css({ paddingLeft : (fix + 20) });
                             }
                         }
                     }
