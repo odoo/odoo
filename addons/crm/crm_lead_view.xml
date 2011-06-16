@@ -327,9 +327,8 @@
                     domain="[('create_date','&lt;', time.strftime('%%Y-%%m-%%d 23:59:59')),('create_date','&gt;=',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d 00:00:00'))]"
                 />
                 <separator orientation="vertical"/>
-                <field name="name" string="Subject"/>
-                <field name="partner_name"/>
-                <field name="email_from"/>
+                <field name="name" string="Lead / Customer"
+                    domain="['|','|',('partner_name','ilike',self),('email_from','ilike',self),('name','ilike',self)]"/>
                 <field name="user_id">
                     <filter icon="terp-personal-"
                         domain="[('user_id','=', False)]"

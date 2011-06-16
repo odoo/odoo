@@ -82,7 +82,6 @@ class project(osv.osv):
 
     def _progress_rate(self, cr, uid, ids, names, arg, context=None):
         res = {}.fromkeys(ids, 0.0)
-        progress = {}
         if not ids:
             return res
         cr.execute('''SELECT
@@ -161,9 +160,9 @@ class project(osv.osv):
     # TODO: Why not using a SQL contraints ?
     def _check_dates(self, cr, uid, ids, context=None):
         for leave in self.read(cr, uid, ids, ['date_start', 'date'], context=context):
-             if leave['date_start'] and leave['date']:
-                 if leave['date_start'] > leave['date']:
-                     return False
+            if leave['date_start'] and leave['date']:
+                if leave['date_start'] > leave['date']:
+                    return False
         return True
 
     _constraints = [
@@ -241,7 +240,6 @@ class project(osv.osv):
     def duplicate_template(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
-        task_pool = self.pool.get('project.task')
         data_obj = self.pool.get('ir.model.data')
         result = []
         for proj in self.browse(cr, uid, ids, context=context):
@@ -401,16 +399,10 @@ class task(osv.osv):
         if not default.get('name', False):
             default['name'] = self.browse(cr, uid, id, context=context).name or ''
             if not context.get('copy',False):
-                 new_name = _("%s (copy)")%default.get('name','')
-                 default.update({'name':new_name})
+                new_name = _("%s (copy)")%default.get('name','')
+                default.update({'name':new_name})
         return super(task, self).copy_data(cr, uid, id, default, context)
 
-    def _check_dates(self, cr, uid, ids, context=None):
-        task = self.read(cr, uid, ids[0], ['date_start', 'date_end'])
-        if task['date_start'] and task['date_end']:
-             if task['date_start'] > task['date_end']:
-                 return False
-        return True
 
     def _is_template(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
@@ -441,7 +433,7 @@ class task(osv.osv):
         'date_start': fields.datetime('Starting Date',select=True),
         'date_end': fields.datetime('Ending Date',select=True),
         'date_deadline': fields.date('Deadline',select=True),
-        'project_id': fields.many2one('project.project', 'Project', ondelete='cascade'),
+        'project_id': fields.many2one('project.project', 'Project', ondelete='set null', select="1"),
         'parent_ids': fields.many2many('project.task', 'project_task_parent_rel', 'task_id', 'parent_id', 'Parent Tasks'),
         'child_ids': fields.many2many('project.task', 'project_task_parent_rel', 'parent_id', 'task_id', 'Delegated Tasks'),
         'notes': fields.text('Notes'),
@@ -457,7 +449,7 @@ class task(osv.osv):
                 'project.task': (lambda self, cr, uid, ids, c={}: ids, ['work_ids', 'remaining_hours', 'planned_hours'], 10),
                 'project.task.work': (_get_task, ['hours'], 10),
             }),
-        'progress': fields.function(_hours_get, method=True, string='Progress (%)', multi='hours', group_operator="avg", help="Computed as: Time Spent / Total Time.",
+        'progress': fields.function(_hours_get, method=True, string='Progress (%)', multi='hours', group_operator="avg", help="If the task has a progress of 99.99% you should close the task if it's finished or reevaluate the time",
             store = {
                 'project.task': (lambda self, cr, uid, ids, c={}: ids, ['work_ids', 'remaining_hours', 'planned_hours','state'], 10),
                 'project.task.work': (_get_task, ['hours'], 10),
@@ -578,7 +570,7 @@ class task(osv.osv):
         project = task.project_id
         res = self.do_close(cr, uid, [project_id], context=context)
         if project.warn_manager or project.warn_customer:
-           return {
+            return {
                 'name': _('Send Email after close task'),
                 'view_type': 'form',
                 'view_mode': 'form',
@@ -722,27 +714,35 @@ class task(osv.osv):
             self.log(cr, uid, id, message)
         return True
 
-    def next_type(self, cr, uid, ids, *args):
+    def _change_type(self, cr, uid, ids, next, *args):
+        """
+            go to the next stage
+            if next is False, go to previous stage
+        """
         for task in self.browse(cr, uid, ids):
-            typeid = task.type_id.id
-            types = map(lambda x:x.id, task.project_id.type_ids or [])
-            if types:
+            if  task.project_id.type_ids:
+                typeid = task.type_id.id
+                types_seq={}
+                for type in task.project_id.type_ids :
+                    types_seq[type.id] = type.sequence
+                if next:
+                    types = sorted(types_seq.items(), lambda x, y: cmp(x[1], y[1]))
+                else:
+                    types = sorted(types_seq.items(), lambda x, y: cmp(y[1], x[1]))
+                sorted_types = [x[0] for x in types]
                 if not typeid:
-                    self.write(cr, uid, task.id, {'type_id': types[0]})
-                elif typeid and typeid in types and types.index(typeid) != len(types)-1:
-                    index = types.index(typeid)
-                    self.write(cr, uid, task.id, {'type_id': types[index+1]})
+                    self.write(cr, uid, task.id, {'type_id': sorted_types[0]})
+                elif typeid and typeid in sorted_types and sorted_types.index(typeid) != len(sorted_types)-1:
+                    index = sorted_types.index(typeid)
+                    self.write(cr, uid, task.id, {'type_id': sorted_types[index+1]})
         return True
+        
+    def next_type(self, cr, uid, ids, *args):
+        return self._change_type(cr, uid, ids, True, *args)
 
     def prev_type(self, cr, uid, ids, *args):
-        for task in self.browse(cr, uid, ids):
-            typeid = task.type_id.id
-            types = map(lambda x:x.id, task.project_id and task.project_id.type_ids or [])
-            if types:
-                if typeid and typeid in types:
-                    index = types.index(typeid)
-                    self.write(cr, uid, task.id, {'type_id': index and types[index-1] or False})
-        return True
+        return self._change_type(cr, uid, ids, False, *args)
+       
 
 task()
 
@@ -751,10 +751,10 @@ class project_work(osv.osv):
     _description = "Project Task Work"
     _columns = {
         'name': fields.char('Work summary', size=128),
-        'date': fields.datetime('Date'),
-        'task_id': fields.many2one('project.task', 'Task', ondelete='cascade', required=True),
+        'date': fields.datetime('Date', select="1"),
+        'task_id': fields.many2one('project.task', 'Task', ondelete='cascade', required=True, select="1"),
         'hours': fields.float('Time Spent'),
-        'user_id': fields.many2one('res.users', 'Done by', required=True),
+        'user_id': fields.many2one('res.users', 'Done by', required=True, select="1"),
         'company_id': fields.related('task_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True)
     }
 
@@ -796,6 +796,13 @@ class account_analytic_account(osv.osv):
         if vals.get('child_ids', False) and context.get('analytic_project_copy', False):
             vals['child_ids'] = []
         return super(account_analytic_account, self).create(cr, uid, vals, context=context)
+    
+    def unlink(self, cr, uid, ids, *args, **kwargs):
+        project_obj = self.pool.get('project.project')
+        analytic_ids = project_obj.search(cr, uid, [('analytic_account_id','in',ids)])
+        if analytic_ids:
+            raise osv.except_osv(_('Warning !'), _('Please delete the project linked with this account first.'))
+        return super(account_analytic_account, self).unlink(cr, uid, ids, *args, **kwargs)
 
 account_analytic_account()
 

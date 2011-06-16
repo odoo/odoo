@@ -13,34 +13,34 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-22 04:53+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-04-29 05:30+0000\n"
+"X-Generator: Launchpad (build 12758)\n"
 
 #. module: hr
 #: model:process.node,name:hr.process_node_openerpuser0
 msgid "Openerp user"
-msgstr "Пользователь Openerp"
+msgstr "Пользователь OpenERP"
 
 #. module: hr
 #: view:hr.job:0
 #: field:hr.job,requirements:0
 msgid "Requirements"
-msgstr ""
+msgstr "Требования"
 
 #. module: hr
 #: constraint:hr.department:0
 msgid "Error! You can not create recursive departments."
-msgstr "Ошибка! Невозможно создать рекурсивные отделы."
+msgstr "Ошибка! Вы не можете создавать рекурсивные подразделения."
 
 #. module: hr
 #: model:process.transition,name:hr.process_transition_contactofemployee0
 msgid "Link the employee to information"
-msgstr ""
+msgstr "Связать сотрудника с информацией"
 
 #. module: hr
 #: field:hr.employee,sinid:0
 msgid "SIN No"
-msgstr "Карта социальной защиты(ИНН)"
+msgstr "Страховой номер индивидуального лицевого счета (СНИЛС)"
 
 #. module: hr
 #: model:ir.module.module,shortdesc:hr.module_meta_information
@@ -55,7 +55,7 @@ msgstr "Кадры"
 #: view:hr.employee:0
 #: view:hr.job:0
 msgid "Group By..."
-msgstr ""
+msgstr "Объеденить по..."
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.action_hr_job
@@ -66,6 +66,11 @@ msgid ""
 "will be used in the recruitment process to evaluate the applicants for this "
 "job position."
 msgstr ""
+"Штатное расписаение используется для описания должностей и требований к ним. "
+"Вы можете отслеживать число сотрудников на должности и ожидаемое их "
+"количество в будущем. Вы также можете присоединить к должности опросный "
+"лист, который будет использоваться при найме для тестирования соискателей на "
+"эту должность."
 
 #. module: hr
 #: view:hr.employee:0
@@ -79,27 +84,27 @@ msgstr "Подразделение"
 #. module: hr
 #: help:hr.installer,hr_attendance:0
 msgid "Simplifies the management of employee's attendances."
-msgstr ""
+msgstr "Упрощает управление посещаемостью сотрудников."
 
 #. module: hr
 #: view:hr.job:0
 msgid "Mark as Old"
-msgstr ""
+msgstr "Отметить устаревшей"
 
 #. module: hr
 #: view:hr.job:0
 msgid "Jobs"
-msgstr "Должность"
+msgstr "Должности"
 
 #. module: hr
 #: view:hr.job:0
 msgid "In Recruitment"
-msgstr ""
+msgstr "Набор сотрудников"
 
 #. module: hr
 #: view:hr.installer:0
 msgid "title"
-msgstr ""
+msgstr "обращение"
 
 #. module: hr
 #: field:hr.department,company_id:0
@@ -112,22 +117,23 @@ msgstr "Компания"
 #. module: hr
 #: field:hr.job,no_of_recruitment:0
 msgid "Expected in Recruitment"
-msgstr ""
+msgstr "Планируется набрать"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_open_view_attendance_reason_config
 msgid "Holidays"
-msgstr ""
+msgstr "Отпуска"
 
 #. module: hr
 #: help:hr.installer,hr_holidays:0
 msgid "Tracks employee leaves, allocation requests and planning."
 msgstr ""
+"Отслеживание отсутствия сотрудников, запросов на замещение и планирование."
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_employee_marital_status
 msgid "Employee Marital Status"
-msgstr ""
+msgstr "Семейное положение сотрудника"
 
 #. module: hr
 #: help:hr.employee,partner_id:0
@@ -135,42 +141,46 @@ msgid ""
 "Partner that is related to the current employee. Accounting transaction will "
 "be written on this partner belongs to employee."
 msgstr ""
+"Партнёр, связанный с текущим сотрудником. Учёт сделок с этим партнёром будет "
+"связан с этим сотрудником."
 
 #. module: hr
 #: model:process.transition,name:hr.process_transition_employeeuser0
 msgid "Link a user to an employee"
-msgstr ""
+msgstr "Связать пользователя с сотрудником"
 
 #. module: hr
 #: field:hr.installer,hr_contract:0
 msgid "Employee's Contracts"
-msgstr ""
+msgstr "Договоры сотрудника"
 
 #. module: hr
 #: help:hr.installer,hr_payroll:0
 msgid "Generic Payroll system."
-msgstr ""
+msgstr "Общая система начисления заработной платы"
 
 #. module: hr
 #: view:hr.employee:0
 msgid "My Departments Employee"
-msgstr ""
+msgstr "Сотрудники моего подразделения"
 
 #. module: hr
 #: model:hr.employee.marital.status,name:hr.hr_employee_marital_status_married
 msgid "Married"
-msgstr ""
+msgstr "В браке"
 
 #. module: hr
 #: constraint:hr.employee:0
 msgid ""
 "Error ! You cannot select a department for which the employee is the manager."
 msgstr ""
+"Ошибка! Вы не можете выбрать подразделение, руководителем которого является "
+"этот сотрудник."
 
 #. module: hr
 #: help:hr.employee,passport_id:0
 msgid "Employee Passport Information"
-msgstr ""
+msgstr "Паспортные данные сотрудника"
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.open_module_tree_department
@@ -179,16 +189,19 @@ msgid ""
 "to employees by departments: expenses and timesheet validation, leaves "
 "management, recruitments, etc."
 msgstr ""
+"Структура подразделений Вашей компании используется для управления "
+"документами, связанными с сотрудниками, по подразделениям: издержки и "
+"проверка табелей учёта, управление отпусками, набор сотрудников и т.д."
 
 #. module: hr
 #: view:hr.employee:0
 msgid "Position"
-msgstr ""
+msgstr "Должность"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.action2
 msgid "Employee Hierarchy"
-msgstr "Структура подчинения (сотрудников)"
+msgstr "Структура подчинения"
 
 #. module: hr
 #: model:process.transition,note:hr.process_transition_employeeuser0
@@ -196,22 +209,24 @@ msgid ""
 "The Related user field on the Employee form allows to link the OpenERP user "
 "(and her rights) to the employee."
 msgstr ""
+"Поле \"Связанный пользователь\" в форме \"Сотрудник\" позволяет связать "
+"пользователя OpenERP (и его права) с сотрудником"
 
 #. module: hr
 #: view:hr.job:0
 #: selection:hr.job,state:0
 msgid "In Recruitement"
-msgstr ""
+msgstr "Набор сотрудников"
 
 #. module: hr
 #: field:hr.employee,identification_id:0
 msgid "Identification No"
-msgstr ""
+msgstr "Идентификационный номер"
 
 #. module: hr
 #: field:hr.job,no_of_employee:0
 msgid "No of Employee"
-msgstr ""
+msgstr "№ сотрудника"
 
 #. module: hr
 #: selection:hr.employee,gender:0
@@ -223,16 +238,18 @@ msgstr "Женский"
 msgid ""
 "Tracks and helps employees encode and validate timesheets and attendances."
 msgstr ""
+"Отслеживание и помощь сотрудникам в заполнении и проверке табелей учёта и "
+"посещаемости."
 
 #. module: hr
 #: field:hr.installer,hr_evaluation:0
 msgid "Periodic Evaluations"
-msgstr ""
+msgstr "Периодические проверки"
 
 #. module: hr
 #: field:hr.installer,hr_timesheet_sheet:0
 msgid "Timesheets"
-msgstr ""
+msgstr "Табели"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_employee_tree
@@ -242,29 +259,29 @@ msgstr "Структура сотрудников"
 #. module: hr
 #: view:hr.employee:0
 msgid "Social IDs"
-msgstr "Страховое удостоверение"
+msgstr "Номера социального страхования"
 
 #. module: hr
 #: help:hr.job,no_of_employee:0
 msgid "Number of employee with that job."
-msgstr ""
+msgstr "Количество сотрудников на этой должности"
 
 #. module: hr
 #: field:hr.employee,work_phone:0
 msgid "Work Phone"
-msgstr "Раб. тел."
+msgstr "Рабочий телефон"
 
 #. module: hr
 #: field:hr.employee.category,child_ids:0
 msgid "Child Categories"
-msgstr "Подчиненные категории"
+msgstr "Дочерние категории"
 
 #. module: hr
 #: view:hr.job:0
 #: field:hr.job,description:0
 #: model:ir.model,name:hr.model_hr_job
 msgid "Job Description"
-msgstr ""
+msgstr "Описание должности"
 
 #. module: hr
 #: field:hr.employee,work_location:0
@@ -282,18 +299,18 @@ msgstr "Сотрудник"
 #. module: hr
 #: model:process.node,note:hr.process_node_employeecontact0
 msgid "Other information"
-msgstr ""
+msgstr "Прочая информация"
 
 #. module: hr
 #: field:hr.employee,work_email:0
 msgid "Work E-mail"
-msgstr ""
+msgstr "Рабочий электронный адрес"
 
 #. module: hr
 #: field:hr.department,complete_name:0
 #: field:hr.employee.category,complete_name:0
 msgid "Name"
-msgstr "Название"
+msgstr "Наименование"
 
 #. module: hr
 #: field:hr.employee,birthday:0
@@ -308,12 +325,12 @@ msgstr "Отчетность"
 #. module: hr
 #: model:ir.model,name:hr.model_ir_actions_act_window
 msgid "ir.actions.act_window"
-msgstr ""
+msgstr "ir.actions.act_window"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_board_hr
 msgid "Human Resources Dashboard"
-msgstr ""
+msgstr "Инфо-панель \"Кадры\""
 
 #. module: hr
 #: view:hr.employee:0
@@ -326,12 +343,12 @@ msgstr "Должность"
 #: view:hr.department:0
 #: field:hr.department,member_ids:0
 msgid "Members"
-msgstr "Участники"
+msgstr "Сотрудники"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_configuration
 msgid "Configuration"
-msgstr "Настройки"
+msgstr "Настройка"
 
 #. module: hr
 #: view:hr.installer:0
@@ -339,21 +356,23 @@ msgid ""
 "You can enhance the base HR Application by installing few HR-related "
 "functionalities."
 msgstr ""
+"Вы можете улучшить базовое приложение \"Кадры\" подключив некоторый "
+"дополнительный функционал."
 
 #. module: hr
 #: view:hr.employee:0
 msgid "Categories"
-msgstr ""
+msgstr "Категории"
 
 #. module: hr
 #: field:hr.job,expected_employees:0
 msgid "Expected Employees"
-msgstr ""
+msgstr "Планируется сотрудников"
 
 #. module: hr
 #: help:hr.employee,sinid:0
 msgid "Social Insurance Number"
-msgstr ""
+msgstr "Cтраховой номер индивидуального лицевого счета"
 
 #. module: hr
 #: model:hr.employee.marital.status,name:hr.hr_employee_marital_status_divorced
@@ -363,12 +382,12 @@ msgstr "В разводе"
 #. module: hr
 #: field:hr.employee.category,parent_id:0
 msgid "Parent Category"
-msgstr "Родительская категория"
+msgstr "Категория верхнего уровня"
 
 #. module: hr
 #: constraint:hr.employee.category:0
 msgid "Error ! You cannot create recursive Categories."
-msgstr ""
+msgstr "Ошибка! Вы не можете создавать рекурсивные категории."
 
 #. module: hr
 #: view:hr.department:0
@@ -377,7 +396,7 @@ msgstr ""
 #: view:res.users:0
 #: field:res.users,context_department_id:0
 msgid "Departments"
-msgstr "Отделы"
+msgstr "Подразделения"
 
 #. module: hr
 #: model:process.node,name:hr.process_node_employeecontact0
@@ -387,7 +406,7 @@ msgstr "Контакты сотрудника"
 #. module: hr
 #: view:board.board:0
 msgid "My Board"
-msgstr ""
+msgstr "Моя панель"
 
 #. module: hr
 #: selection:hr.employee,gender:0
@@ -397,7 +416,7 @@ msgstr "Мужской"
 #. module: hr
 #: field:hr.installer,progress:0
 msgid "Configuration Progress"
-msgstr ""
+msgstr "Процесс настройки"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_categ_form
@@ -414,12 +433,12 @@ msgstr "Категория сотрудника"
 #. module: hr
 #: field:hr.installer,config_logo:0
 msgid "Image"
-msgstr ""
+msgstr "Изображение"
 
 #. module: hr
 #: model:process.process,name:hr.process_process_employeecontractprocess0
 msgid "Employee Contract"
-msgstr ""
+msgstr "Договор с сотрудником"
 
 #. module: hr
 #: help:hr.installer,hr_evaluation:0
@@ -427,21 +446,23 @@ msgid ""
 "Lets you create and manage the periodic evaluation and performance review of "
 "employees."
 msgstr ""
+"Позволяет создавать и управлять периодическими проверками и обзором "
+"производительности сотрудников."
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_department
 msgid "hr.department"
-msgstr "Отдел Кадров"
+msgstr "hr.department"
 
 #. module: hr
 #: help:hr.employee,parent_id:0
 msgid "It is linked with manager of Department"
-msgstr ""
+msgstr "Связано с руководителем подразделения"
 
 #. module: hr
 #: field:hr.installer,hr_recruitment:0
 msgid "Recruitment Process"
-msgstr ""
+msgstr "Процесс набора сотрудников"
 
 #. module: hr
 #: field:hr.employee,category_ids:0
@@ -463,11 +484,22 @@ msgid ""
 "they will be able to enter time through the system. In the note tab, you can "
 "enter text data that should be recorded for a specific employee."
 msgstr ""
+"Здесь можно управлять рабочей силой, создавая сотрудников и назначая им  "
+"специальные свойства в системе. Обслуживайте всю информацию по сотрудникам и "
+"отслеживайте все, что должно быть о них записано. Вкладка \"Личные данные\" "
+"поможет поддерживать актуальной информацию о сотрудниках. Вкладка "
+"\"Категории\" предоставляет возможность назначить сотрудникам категории "
+"исходя из их должностей и деятельности внутри компании. Категорией может "
+"быть уровень уровень важность внутри компании или подразделения. Вкладка "
+"\"Табели учёта\" позволяет назначать им специальные табели учёта и "
+"аналитические журналы, где им будет дана возможность вводить данные о "
+"затраченном времени. На вкладке \"Заметки\" вводите текстовые данные, "
+"которые должны быть связаны с сотрудником."
 
 #. module: hr
 #: help:hr.employee,bank_account_id:0
 msgid "Employee bank salary account"
-msgstr ""
+msgstr "Зарплатный счёт сотрудника в банке"
 
 #. module: hr
 #: field:hr.department,note:0
@@ -478,6 +510,7 @@ msgstr "Примечание"
 #: constraint:res.users:0
 msgid "The chosen company is not in the allowed companies for this user"
 msgstr ""
+"Выбранная организация отсутствует в списке разрешённых для этого пользователя"
 
 #. module: hr
 #: view:hr.employee:0
@@ -492,7 +525,7 @@ msgstr "Рабочий адрес"
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_board_hr_manager
 msgid "HR Manager Dashboard"
-msgstr ""
+msgstr "Инф. панель менеджера отдела кадров"
 
 #. module: hr
 #: view:hr.employee:0
@@ -502,7 +535,7 @@ msgstr "Статус"
 #. module: hr
 #: view:hr.installer:0
 msgid "Configure"
-msgstr ""
+msgstr "Настроить"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_categ_tree
@@ -513,27 +546,27 @@ msgstr "Структура категорий"
 #. module: hr
 #: field:hr.employee,partner_id:0
 msgid "unknown"
-msgstr ""
+msgstr "неизвестен"
 
 #. module: hr
 #: field:hr.installer,hr_holidays:0
 msgid "Holidays / Leaves Management"
-msgstr ""
+msgstr "Управление отпусками/пропусками"
 
 #. module: hr
 #: field:hr.employee,ssnid:0
 msgid "SSN No"
-msgstr "Карта социальной защиты (ИНН)"
+msgstr "Номер карты социальной защиты"
 
 #. module: hr
 #: view:hr.employee:0
 msgid "Active"
-msgstr "Активен"
+msgstr "Активные"
 
 #. module: hr
 #: constraint:hr.employee:0
 msgid "Error ! You cannot create recursive Hierarchy of Employees."
-msgstr "Ошибка! Вы не можете создать взаимное подчинение сотрудников."
+msgstr "Ошибка! Структура подчинения не может быть рекурсивной."
 
 #. module: hr
 #: view:hr.department:0
@@ -551,6 +584,13 @@ msgid ""
 "    * HR Jobs\n"
 "    "
 msgstr ""
+"\n"
+"    Модуль для управления сотрудниками. Вы можете управлять:\n"
+"    * Сотрудниками и подчинением : Вы можете описать сотрудника как "
+"пользователя и отображать иерархии\n"
+"    * Кадровые подразделения\n"
+"    * Кадровые должности\n"
+"    "
 
 #. module: hr
 #: model:process.transition,note:hr.process_transition_contactofemployee0
@@ -558,32 +598,34 @@ msgid ""
 "In the Employee form, there are different kind of information like Contact "
 "information."
 msgstr ""
+"В форме \"Сотрудник\" может содержаться различная информация, например "
+"контактные данные."
 
 #. module: hr
 #: help:hr.job,expected_employees:0
 msgid "Required number of Employees in total for that job."
-msgstr ""
+msgstr "Общее число сотрудников, требуемых на эту должность."
 
 #. module: hr
 #: selection:hr.job,state:0
 msgid "Old"
-msgstr ""
+msgstr "Устарела"
 
 #. module: hr
 #: field:hr.employee.marital.status,description:0
 msgid "Status Description"
-msgstr ""
+msgstr "Описание статуса"
 
 #. module: hr
 #: sql_constraint:res.users:0
 msgid "You can not have two users with the same login !"
-msgstr ""
+msgstr "Не может быть двух пользователей с одинаковым именем пользователя!"
 
 #. module: hr
 #: view:hr.job:0
 #: field:hr.job,state:0
 msgid "State"
-msgstr ""
+msgstr "Состояние"
 
 #. module: hr
 #: field:hr.employee,marital:0
@@ -597,12 +639,12 @@ msgstr "Семейное положение"
 #. module: hr
 #: help:hr.installer,hr_recruitment:0
 msgid "Helps you manage and streamline your recruitment process."
-msgstr ""
+msgstr "Помогает управлять и рационализировать процесс набора сотрудников."
 
 #. module: hr
 #: model:process.node,note:hr.process_node_employee0
 msgid "Employee form and structure"
-msgstr ""
+msgstr "??Форма и структура сотрудника"
 
 #. module: hr
 #: field:hr.employee,photo:0
@@ -612,27 +654,27 @@ msgstr "Фотография"
 #. module: hr
 #: model:ir.model,name:hr.model_res_users
 msgid "res.users"
-msgstr ""
+msgstr "res.users"
 
 #. module: hr
 #: field:hr.installer,hr_payroll_account:0
 msgid "Payroll Accounting"
-msgstr ""
+msgstr "Учёт заработной платы"
 
 #. module: hr
 #: view:hr.employee:0
 msgid "Personal Information"
-msgstr "Персональная информация"
+msgstr "Личные данные"
 
 #. module: hr
 #: field:hr.employee,passport_id:0
 msgid "Passport No"
-msgstr ""
+msgstr "№ паспорта"
 
 #. module: hr
 #: view:res.users:0
 msgid "Current Activity"
-msgstr ""
+msgstr "Текущая деятельность"
 
 #. module: hr
 #: help:hr.installer,hr_expense:0
@@ -640,11 +682,13 @@ msgid ""
 "Tracks and manages employee expenses, and can automatically re-invoice "
 "clients if the expenses are project-related."
 msgstr ""
+"Отслеживание и управление издержками сотрудников. Можно автоматически "
+"перевыставить счета клиентам, если издержки связаны с проектом."
 
 #. module: hr
 #: view:hr.job:0
 msgid "Current"
-msgstr ""
+msgstr "Текущие"
 
 #. module: hr
 #: field:hr.department,parent_id:0
@@ -665,39 +709,39 @@ msgstr "Домашний адрес"
 #: field:hr.installer,hr_attendance:0
 #: model:ir.ui.menu,name:hr.menu_open_view_attendance_reason_new_config
 msgid "Attendances"
-msgstr ""
+msgstr "Посещаемость"
 
 #. module: hr
 #: view:hr.employee.marital.status:0
 #: view:hr.job:0
 msgid "Description"
-msgstr ""
+msgstr "Описание"
 
 #. module: hr
 #: help:hr.installer,hr_contract:0
 msgid "Extends employee profiles to help manage their contracts."
-msgstr ""
+msgstr "Расширяет профили сотрудников, помогая управлять их договорами."
 
 #. module: hr
 #: field:hr.installer,hr_payroll:0
 msgid "Payroll"
-msgstr ""
+msgstr "Платежная ведомость"
 
 #. module: hr
 #: model:hr.employee.marital.status,name:hr.hr_employee_marital_status_single
 msgid "Single"
-msgstr ""
+msgstr "Холост/Не замужем"
 
 #. module: hr
 #: field:hr.job,name:0
 msgid "Job Name"
-msgstr ""
+msgstr "Наименование должности"
 
 #. module: hr
 #: view:hr.job:0
 #: selection:hr.job,state:0
 msgid "In Position"
-msgstr ""
+msgstr "В норме"
 
 #. module: hr
 #: field:hr.employee,mobile_phone:0
@@ -707,7 +751,7 @@ msgstr "Мобильный телефон"
 #. module: hr
 #: view:hr.department:0
 msgid "department"
-msgstr "отдел"
+msgstr "подразделение"
 
 #. module: hr
 #: field:hr.employee,country_id:0
@@ -724,23 +768,23 @@ msgstr "Примечания"
 #. module: hr
 #: model:ir.model,name:hr.model_hr_installer
 msgid "hr.installer"
-msgstr ""
+msgstr "hr.installer"
 
 #. module: hr
 #: view:board.board:0
 msgid "HR Manager Board"
-msgstr ""
+msgstr "Панель менеджера по кадрам"
 
 #. module: hr
 #: field:hr.employee,resource_id:0
 msgid "Resource"
-msgstr ""
+msgstr "Ресурс"
 
 #. module: hr
 #: view:hr.installer:0
 #: model:ir.actions.act_window,name:hr.action_hr_installer
 msgid "Human Resources Application Configuration"
-msgstr ""
+msgstr "Настройка приложения \"Кадры\""
 
 #. module: hr
 #: field:hr.employee,gender:0
@@ -766,17 +810,17 @@ msgstr "Банковский счет"
 #. module: hr
 #: field:hr.department,name:0
 msgid "Department Name"
-msgstr "Название отдела"
+msgstr "Наименование подразделения"
 
 #. module: hr
 #: help:hr.employee,ssnid:0
 msgid "Social Security Number"
-msgstr ""
+msgstr "Номер карты социальной защиты"
 
 #. module: hr
 #: model:process.node,note:hr.process_node_openerpuser0
 msgid "Creation of a OpenERP user"
-msgstr ""
+msgstr "Создание пользователя OpenERP"
 
 #. module: hr
 #: field:hr.department,child_ids:0
@@ -787,40 +831,41 @@ msgstr "Подчиненные подразделения"
 #: model:ir.actions.act_window,name:hr.action_hr_job
 #: model:ir.ui.menu,name:hr.menu_hr_job
 msgid "Job Positions"
-msgstr ""
+msgstr "Штатное расписание"
 
 #. module: hr
 #: view:hr.employee:0
 #: field:hr.employee,coach_id:0
 msgid "Coach"
-msgstr ""
+msgstr "Тренер"
 
 #. module: hr
 #: view:hr.installer:0
 msgid "Configure Your Human Resources Application"
-msgstr ""
+msgstr "Настройте Ваше приложение \"Кадры\""
 
 #. module: hr
 #: field:hr.installer,hr_expense:0
 msgid "Expenses"
-msgstr ""
+msgstr "Издержки"
 
 #. module: hr
 #: field:hr.department,manager_id:0
 #: view:hr.employee:0
 #: field:hr.employee,parent_id:0
 msgid "Manager"
-msgstr "Менеджер"
+msgstr "Руководитель"
 
 #. module: hr
 #: model:hr.employee.marital.status,name:hr.hr_employee_marital_status_widower
 msgid "Widower"
-msgstr ""
+msgstr "Вдовец/вдова"
 
 #. module: hr
 #: help:hr.installer,hr_payroll_account:0
 msgid "Generic Payroll system Integrated with Accountings."
 msgstr ""
+"Общая система начисления заработной платы, интегрированная с Бухгалтерией."
 
 #. module: hr
 #: field:hr.employee,child_ids:0
