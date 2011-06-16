@@ -90,7 +90,7 @@
     name: !eval time.strftime('%Y-%m-%d 11:00:00')
 
 -
-  On "Sign In/Sign Out by Project" wizard i click on "Sign In/Sign Out" button of this wizard.
+  On "Sign In/Sign Out by Project" wizard I click on "Sign In/Sign Out" button of this wizard.
 -
   !python {model: hr.sign.in.project}: |
     uid = ref('test_timesheet_user1')
@@ -100,8 +100,8 @@
 -
   !python {model: hr.sign.in.project}: |
       import time
-      uid = ref('test_timesheet_user1')
-      new_id = self.create(cr, uid, {'emp_id': ref('hr_employee_fracline1'), 'name': 'Francline', 'server_date': time.strftime('%Y-%m-%d %H:%M:%S'), 'state': 'absent'})
+      uid = ref('test_timesheet_user1'),
+      new_id = self.create(cr, uid, {'emp_id': ref('hr_employee_fracline1'), 'name': 'Francline', 'server_date': time.strftime('%Y-%m-%d %H:%M:%S'), 'date': time.strftime('%Y-%m-%d 12:%M:%S'), 'state': 'absent'})
       self.sign_in_result(cr, uid, [new_id], context)
 
 -
@@ -131,7 +131,7 @@
        import time
        from datetime import datetime, date, timedelta
        uid = ref('test_timesheet_user1')
-       new_id = self.create(cr, uid, {'account_id': ref('account_analytic_account_project0'), 'analytic_amount': 7.0, 'date': (datetime.now()+timedelta(1)).strftime('%Y-%m-%d %H:%M:%S'), 'date_start': time.strftime('%Y-%m-%d %H:%M:%S'), 'info': 'Create Yaml for hr module', 'name': 'Francline', 'server_date': time.strftime('%Y-%m-%d %H:%M:%S'), 'state': 'absent'})
+       new_id = self.create(cr, uid, {'account_id': ref('account_analytic_account_project0'), 'analytic_amount': 6.0, 'date': time.strftime('%Y-%m-%d 18:%M:%S'), 'date_start': time.strftime('%Y-%m-%d %H:%M:%S'), 'info': 'Create Yaml for hr module', 'name': 'Francline', 'server_date': time.strftime('%Y-%m-%d %H:%M:%S'), 'state': 'absent'})
        self.sign_out_result_end(cr, uid, [new_id], context)
 
 - |
