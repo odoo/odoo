@@ -293,13 +293,13 @@ class auction_lots(osv.osv):
                         result = lot.buyer_price - lot.seller_price - lot.costs
 
                 elif name == "gross_margin":
-                   if ((lot.obj_price==0) and (lot.state=='draft')):
-                     amount = lot.lot_est1
-                   else:
-                     amount = lot.obj_price
-                   if amount > 0:
-                     result = (lot.gross_revenue * 100) / amount
-                     result = round(result,2)
+                    if ((lot.obj_price==0) and (lot.state=='draft')):
+                        amount = lot.lot_est1
+                    else:
+                        amount = lot.obj_price
+                    if amount > 0:
+                        result = (lot.gross_revenue * 100) / amount
+                        result = round(result,2)
 
                 elif name == "net_margin":
                     if ((lot.obj_price==0) and (lot.state=='draft')):

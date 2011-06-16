@@ -666,7 +666,8 @@ class crm_case_section(osv.osv):
         """
         if context is None:
             context = {}
-
+        if not isinstance(ids, list) : 
+            ids = [ids]
         res = []
         if not ids:
             return res

@@ -56,7 +56,7 @@
     for invoice in invoice_id.invoice_line:
       product = invoice.product_id.id
 
-    product_exp = data['product']
+    product_exp = data['product'][0]
 
     assert product == product_exp
     assert aline.invoice_id, "Invoice created, but analytic line wasn't updated."
