@@ -207,7 +207,7 @@ class split_in_production_lot(osv.osv_memory):
         'line_ids': fields.one2many('stock.move.split.lines', 'lot_id', 'Production Lots'),
         'line_exist_ids': fields.one2many('stock.move.split.lines.exist', 'lot_id', 'Production Lots'),
         'use_exist' : fields.boolean('Existing Lots', help="Check this option to select existing lots in the list below, otherwise you should enter new ones line by line."),
-        'location_id': fields.many2one('stock.location', 'Source Location', required=True, select=True)
+        'location_id': fields.many2one('stock.location', 'Source Location')
      }
 
     def split_lot(self, cr, uid, ids, context=None):
@@ -310,10 +310,10 @@ class stock_move_split_lines_exist(osv.osv_memory):
     }
 
     def onchange_lot_id(self, cr, uid, ids, prodlot_id=False, product_qty=False,
-                        loc_id=False, product_id=False, uom_id=False, context=None):
+                        loc_id=False, product_id=False, uom_id=False):
 
-        return self.pool.get('stock.move').onchange_lot_id(cr, uid, ids, prodlot_id, product_qty,
-                        loc_id, product_id, uom_id, context=context)
+        return self.pool.get('stock.move').onchange_lot_id(cr, uid, [], prodlot_id, product_qty,
+                        loc_id, product_id, uom_id)
 
 stock_move_split_lines_exist()
 
