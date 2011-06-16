@@ -97,13 +97,19 @@ class payslip_details_report(report_sxw.rml_parse):
                 result.setdefault(obj[id].register_id.name, [])
                 result[obj[id].register_id.name].append(obj[id].id)
         for key, value in result.iteritems():
+            register_total = 0
+            for line in payslip_line.browse(self.cr, self.uid, value):
+                register_total += line.total
             res.append({
                 'register_name': key,
+                'total': register_total,
             })
             for line in payslip_line.browse(self.cr, self.uid, value):
                 res.append({
                     'name': line.name,
                     'code': line.code,
+                    'quantity': line.quantity,
+                    'amount': line.amount,
                     'total': line.total,
                 })
         return res
