@@ -232,14 +232,14 @@
             <!-- TODO prefix id with the element_id of the controller t-attf-id="#{prefix}_localid" -->
             <div class="oe_vm_switch">
                 <t t-if="views.length != 1" t-foreach="views" t-as="view">
-                    <button type="button" t-att-data-view-type="view[1]">
-                        <t t-esc="view[1]"/>
+                    <button type="button" t-att-data-view-type="view.view_type">
+                        <t t-esc="view.view_type"/>
                     </button>
                 </t>
             </div>
             <div t-attf-id="#{prefix}_search" t-opentag="true"/>
             <t t-foreach="views" t-as="view">
-                <div t-attf-id="#{prefix}_view_#{view[1]}"/>
+                <div t-attf-id="#{prefix}_view_#{view.view_type}"/>
             </t>
         </td>
         <td class="view-manager-main-sidebar" height="100%">
@@ -877,20 +877,20 @@
         </p>
     </div>
 </t>
-<t t-name="Many2XSelectPopup">
+<t t-name="SelectCreatePopup">
     <div t-att-id="element_id">
         <div t-att-id="element_id + '_search'"></div>
         <div t-att-id="element_id + '_view_list'"></div>
         <div t-att-id="element_id + '_view_form'"></div>
     </div>
 </t>
-<t t-name="Many2XSelectPopup.search.buttons">
-    <button type="button" class="oe_many2xselectpopup-search-select" disabled="disabled">Select</button>
-    <button type="button" class="oe_many2xselectpopup-search-close">Close</button>
+<t t-name="SelectCreatePopup.search.buttons">
+    <button type="button" class="oe_selectcreatepopup-search-select" disabled="disabled">Select</button>
+    <button type="button" class="oe_selectcreatepopup-search-close">Close</button>
 </t>
-<t t-name="Many2XSelectPopup.form.buttons">
-    <button type="button" class="oe_many2xselectpopup-form-save">Save</button>
-    <button type="button" class="oe_many2xselectpopup-form-close">Close</button>
+<t t-name="SelectCreatePopup.form.buttons">
+    <button type="button" class="oe_selectcreatepopup-form-save">Save</button>
+    <button type="button" class="oe_selectcreatepopup-form-close">Close</button>
 </t>
 
 <t t-name="ListView.row.frame" t-extend="WidgetFrame">
