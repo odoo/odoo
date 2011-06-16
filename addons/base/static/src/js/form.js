@@ -1231,10 +1231,15 @@ openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
         
         this.dataset = new openerp.base.DataSetStatic(this.session, this.field.relation);
         this.dataset.on_unlink.add_last(function(ids) {
-            // TODO niv check form view
+            self.dataset.set_ids(_.without.apply(_, [self.dataset.ids].concat(ids)));
+            debugger;
             var view = self.viewmanager.views[self.viewmanager.active_view].controller;
-            view.reload_content();
-            // TODO niv make real suppression (list or direct)
+            if(self.viewmanager.active_view === "list") {
+                view.reload_content();
+            } else if (self.viewmanager.active_view === "form") {
+                // TODO niv but fme did not implemented delete in form view anyway
+            }
+
             self.on_ui_change();
         });
         
