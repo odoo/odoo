@@ -131,17 +131,14 @@ class synchronize_google(osv.osv_memory):
             if not gd_client:
                 raise osv.except_osv(_('Error'), _("Please specify correct user and password !"))        
             if obj.group_name not in ['all']:
-                query = gdata.contacts.service.ContactsQuery()
-                query.group = obj.group_name
-                contact = gd_client.GetContactsFeed(query.ToUri())
-            else:
-                contact = gd_client.GetContactsFeed()
+                context.update({ 'group_name': obj.group_name})
             if obj.create_partner=='create_all':
                 tables.append('Contact')    
             else:    
                 tables.append('Address')
-            context.update({'gd_client':contact,
-                           'client':gd_client,
+            context.update({'user': gmail_user,
+                            'password': gmail_pwd,
+                            'instance': 'contact',
                             'table':tables,
                             'customer':cust,
                             'supplier':sup})
@@ -163,7 +160,23 @@ class synchronize_google(osv.osv_memory):
         imp = google_import(self, cr, uid,'import_google' , "synchronize_google", gmail_user, context)
         imp.set_table_list(tables)
         imp.start()            
-        return {}
+        #return {}
+        msg = "  you're Contact import in background, a email will be send when the process is finished to %s"%(user_obj.gmail_user)
+        context.update({'message': msg})   
+
+        obj_model = self.pool.get('ir.model.data')
+        model_data_ids = obj_model.search(cr,uid,[('model','=','ir.ui.view'),('name','=','view_google_import_message_form')])
+        resource_id = obj_model.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
+        
+        return {
+                'view_type': 'form',
+                'view_mode': 'form',
+                'res_model': 'google.import.message',
+                'views': [(resource_id,'form')],
+                'type': 'ir.actions.act_window',
+                'target': 'new',
+               'context': context,
+            }
 
 synchronize_google()
 

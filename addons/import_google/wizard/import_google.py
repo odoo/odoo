@@ -49,10 +49,12 @@ class google_import(import_framework):
     def initialize(self):
         google = self.obj.pool.get('google.login')
         self.external_id_field = 'Id'
-        self.gclient=self.context.get('gd_client', False)
         self.gd_client = google.google_login(self.context.get('user'), 
                                        self.context.get('password'), 
-                                        type = self.context.get('instance'))
+                                        self.context.get('instance'))
+        
+        if self.context.get('instance') and self.context.get('instance') == 'contact':
+            self.contact = self.context.get('contact') 
         if self.context.get('instance') and self.context.get('instance') == 'calendar':
             self.calendars = self.context.get('calendars') 
         
@@ -273,13 +275,16 @@ class google_import(import_framework):
 
 
     def get_contact(self):
-        contact=self.gclient
-        gclient=self.context.get('client',False)
         table = self.context.get('table')[0] 
         datas = [] 
-        while contact:      
-            for entry in contact.entry:
-               
+        if self.context.get('group_name'):
+            query = gdata.contacts.service.ContactsQuery()
+            query.group = self.context.get('group_name')
+            self.contact = self.gd_client.GetContactsFeed(query.ToUri())
+        else: 
+            self.contact = self.gd_client.GetContactsFeed()   
+        while self.contact: 
+            for entry in self.contact.entry:
                 data = {}
                 data['id'] = entry.id.text
                 name = tools.ustr(entry.title.text)
@@ -305,8 +310,8 @@ class google_import(import_framework):
                         if phone.rel == gdata.contacts.PHONE_WORK_FAX:
                             data['fax'] = phone.text 
                 datas.append(data)        
-            next = contact.GetNextLink()
-            contact = next and gclient.GetContactsFeed(next.href) or None     
+            next = self.contact.GetNextLink()
+            self.contact = next and self.gd_client.GetContactsFeed(next.href) or None     
         return datas
      
     def get_partner_address(self,val):
