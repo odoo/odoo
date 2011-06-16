@@ -70,6 +70,11 @@ res_company()
 class users(osv.osv):
     _inherit = "res.users"
     def login(self, db, login, password):
+
+        if not password:
+            # empty passwords are disallowed for obvious security reasons
+            return False
+
         ret = super(users,self).login(db, login, password)
         if ret:
             return ret
