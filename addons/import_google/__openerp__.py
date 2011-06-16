@@ -28,10 +28,11 @@
     'website': 'http://www.openerp.com',
     'depends': ['base', 'google_base_account','crm'],
     'init_xml': [],
-    'update_xml': [
+    'update_xml': ['security/ir.model.access.csv',
                 'sync_google_calendar_view.xml',
                 'wizard/import_google_data_view.xml',
                 'wizard/google_import_message_view.xml'
+
                ],
     'demo_xml': [],
     'test': [
