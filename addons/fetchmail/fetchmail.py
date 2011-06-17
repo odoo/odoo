@@ -199,7 +199,7 @@ class email_server(osv.osv):
 
                     pop_server.quit()
 
-                    logger.notifyChannel('imap', netsvc.LOG_INFO, 'fetchmail fetch %s email(s) from %s' % (numMsgs, server.name))
+                    logger.notifyChannel(server.type, netsvc.LOG_INFO, 'fetchmail fetch %s email(s) from %s' % (numMsgs, server.name))
 
             except Exception, e:
                 logger.notifyChannel(server.type, netsvc.LOG_WARNING, '%s' % (tools.ustr(e)))
