@@ -1615,38 +1615,39 @@ class orm_template(object):
             raise AttributeError("View definition error for inherited view '%s' on model '%s': %s"
                                  %  (child_view.xml_id, self._name, error_msg))
 
-        def _inherit_apply(src, inherit, inherit_id=None):
-            def _find(node, node2):
-                if node2.tag == 'xpath':
-                    res = node.xpath(node2.get('expr'))
-                    if res:
-                        return res[0]
-                    else:
-                        return None
-                else:
-                    for n in node.getiterator(node2.tag):
-                        res = True
-                        if node2.tag == 'field':
-                            # only compare field names, a field can be only once in a given view
-                            # at a given level (and for multilevel expressions, we should use xpath
-                            # inheritance spec anyway)
-                            if node2.get('name') == n.get('name'):
-                                return n
-                            else:
-                                continue
-                        for attr in node2.attrib:
-                            if attr == 'position':
-                                continue
-                            if n.get(attr):
-                                if n.get(attr) == node2.get(attr):
-                                    continue
-                            res = False
-                        if res:
-                            return n
+        def locate(source, spec):
+            """ Locate a node in a source (parent) view.
+
+                Given a complete source (parent) view, and a 'spec'
+                node (a node in a inheriting view that specifies the
+                location in the source view of what should be changed),
+                return (if it exists) the node in the source view matching
+                the specification.
+
+            """
+            if spec.tag == 'xpath':
+                nodes = source.xpath(spec.get('expr'))
+                return nodes[0] if nodes else None
+            elif spec.tag == 'field':
+                # Only compare the field name: a field can be only once in a given view
+                # at a given level (and for multilevel expressions, we should use xpath
+                # inheritance spec anyway).
+                for node in source.getiterator('field'):
+                    if node.get('name') == spec.get('name'):
+                        return node
+                return None
+            else:
+                for node in source.getiterator(spec.tag):
+                    good = True
+                    for attr in spec.attrib:
+                        if attr != 'position' and node.get(attr) and node.get(attr) != spec.get(attr):
+                            good = False
+                            break
+                    if good:
+                        return node
                 return None
 
-            # End: _find(node, node2)
-
+        def _inherit_apply(src, inherit, inherit_id=None):
             doc_dest = etree.fromstring(encode(inherit))
             toparse = [doc_dest]
 
@@ -1657,7 +1658,7 @@ class orm_template(object):
                 if node2.tag == 'data':
                     toparse += [ c for c in doc_dest ]
                     continue
-                node = _find(src, node2)
+                node = locate(src, node2)
                 if node is not None:
                     pos = 'inside'
                     if node2.get('position'):
