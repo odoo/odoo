@@ -41,6 +41,7 @@ module 'share'.
              'security/ir.model.access.csv',
              'portal_view.xml',
              'wizard_view.xml',
+             'wizard/share_wizard_view.xml',
             ],
     'installable': True,
     'certificate' : '',
