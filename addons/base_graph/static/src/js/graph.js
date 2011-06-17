@@ -116,9 +116,9 @@ openerp.base_graph.GraphView = openerp.base.Controller.extend({
                     this.opration_fld[gen_key] = map_val;
                 }else{
                     map_val = this.opration_fld[gen_key];
-                    map_val[this.operator_field] = map_val[this.operator_field] + result[i][this.operator_field];
+                    map_val[this.operator_field] += result[i][this.operator_field];
                     if (this.operator.length > 1){
-                        map_val[this.operator_field_one] = map_val[this.operator_field_one] + result[i][this.operator_field_one];
+                        map_val[this.operator_field_one] += result[i][this.operator_field_one];
                     }
                     this.opration_fld[gen_key] = map_val;
                 }
