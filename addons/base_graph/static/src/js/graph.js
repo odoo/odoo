@@ -39,7 +39,7 @@ openerp.base_graph.GraphView = openerp.base.Controller.extend({
         this.group_field = '';
         this.orientation = this.fields_view.arch.attrs.orientation || '';
 
-        for(fld in this.fields_view.arch.children) {
+        for(var fld in this.fields_view.arch.children) {
             if (this.fields_view.arch.children[fld].attrs.operator) {
                 this.operator.push(this.fields_view.arch.children[fld].attrs.name);
             }
@@ -91,7 +91,7 @@ openerp.base_graph.GraphView = openerp.base.Controller.extend({
                     }
                     if (typeof result[res][fld] == 'string'){
                         if (this.all_fields[fld]['selection']){
-                            for (i in this.all_fields[fld]['selection']){
+                            for (var i in this.all_fields[fld]['selection']){
                                 if(result[res][fld] == this.all_fields[fld]['selection'][i][0]){
                                    result[res][fld] = this.all_fields[fld]['selection'][i];
                                 }
@@ -101,37 +101,37 @@ openerp.base_graph.GraphView = openerp.base.Controller.extend({
                 }
             }
 
-            for (var i in result){
-                var gen_key = result[i][this.chart_info_fields]+"_"+result[i][this.group_field];
+            for (var j in result){
+                var gen_key = result[j][this.chart_info_fields]+"_"+result[j][this.group_field];
                 if (this.opration_fld[gen_key] == undefined){
                     var map_val = {};
-                    map_val[this.operator_field] = result[i][this.operator_field];
+                    map_val[this.operator_field] = result[j][this.operator_field];
                     if (this.operator.length > 1){
-                        map_val[this.operator_field_one] = result[i][this.operator_field_one];
+                        map_val[this.operator_field_one] = result[j][this.operator_field_one];
                     }
-                    map_val[this.chart_info_fields] = result[i][this.chart_info_fields];
+                    map_val[this.chart_info_fields] = result[j][this.chart_info_fields];
                     if (this.group_field){
-                        map_val[this.group_field] = (typeof result[i][this.group_field] == 'object')?result[i][this.group_field][1]:result[i][this.group_field];
+                        map_val[this.group_field] = (typeof result[j][this.group_field] == 'object')?result[j][this.group_field][1]:result[j][this.group_field];
                     }
                     this.opration_fld[gen_key] = map_val;
                 }else{
                     map_val = this.opration_fld[gen_key];
-                    map_val[this.operator_field] += result[i][this.operator_field];
+                    map_val[this.operator_field] += result[j][this.operator_field];
                     if (this.operator.length > 1){
-                        map_val[this.operator_field_one] += result[i][this.operator_field_one];
+                        map_val[this.operator_field_one] += result[j][this.operator_field_one];
                     }
                     this.opration_fld[gen_key] = map_val;
                 }
             }
-            result = [];
-            for (i in this.opration_fld){
-                result.push(this.opration_fld[i]);
+            var graph_data = [];
+            for (var op in this.opration_fld){
+                graph_data.push(this.opration_fld[op]);
             }
 
             if(this.chart == 'bar') {
-                return this.schedule_bar(result);
+                return this.schedule_bar(graph_data);
             } else if(this.chart == "pie") {
-                return this.schedule_pie(result);
+                return this.schedule_pie(graph_data);
             }
         }
     },
@@ -156,7 +156,7 @@ openerp.base_graph.GraphView = openerp.base.Controller.extend({
             view_chart = self.orientation == 'horizontal'? 'barH' : 'bar';
         }
 
-        for (i in result){
+        for (var i in result){
             if (self.group_field && (this.operator.length <= 1)){
                 newkey =result[i][self.group_field].split(' ').join('_');
             }else{
@@ -172,51 +172,51 @@ openerp.base_graph.GraphView = openerp.base.Controller.extend({
             }
         }
 
-        for (i in result){
-            var xystring = result[i][self.chart_info_fields];
+        for (var j in result){
+            var xystring = result[j][self.chart_info_fields];
             if (self.group_field && (self.operator.length <= 1)){
-                newkey =result[i][self.group_field].split(' ').join('_');
+                newkey =result[j][self.group_field].split(' ').join('_');
             }else{
                 newkey = "val";
             }
             if (xystr[xystring] == undefined){
                 xyname = {};
                 xyname[self.chart_info_fields] = xystring;
-                for (var j in self.group_list){
-                    xyname[self.group_list[j]] = 0.0001;
+                for (var k in self.group_list){
+                    xyname[self.group_list[k]] = 0.0001;
                 }
-                xyname[newkey] = result[i][self.operator_field];
+                xyname[newkey] = result[j][self.operator_field];
                 if (self.operator.length > 1){
-                    xyname[newkey_one] = result[i][self.operator_field_one];
+                    xyname[newkey_one] = result[j][self.operator_field_one];
                 }
                 xystr[xystring] = xyname;
             }
             else{
                 xyname = {};
                 xyname = xystr[xystring];
-                xyname[newkey] = result[i][self.operator_field];
+                xyname[newkey] = result[j][self.operator_field];
                 if (self.operator.length > 1){
-                    xyname[newkey_one] = result[i][self.operator_field_one];
+                    xyname[newkey_one] = result[j][self.operator_field_one];
                 }
                 xystr[xystring] = xyname;
             }
         }
-        for (i in xystr){
-            res.push(xystr[i]);
+        for (var label in xystr){
+            res.push(xystr[label]);
         }
 
         //for legend color
         var grp_color = [];
-        for (var i in self.group_list){
+        for (var l in self.group_list){
             var legend = {};
-            if (self.group_list[i] == "val"){
+            if (self.group_list[l] == "val"){
                 legend['text'] = self.fields[self.operator_field]['string']
-            }else if(self.group_list[i] == "val1"){
+            }else if(self.group_list[l] == "val1"){
                 legend['text'] = self.fields[self.operator_field_one]['string']
             }else{
-                legend['text'] = self.group_list[i];
+                legend['text'] = self.group_list[l];
             }
-            legend['color'] = COLOR_PALETTE[i];
+            legend['color'] = COLOR_PALETTE[l];
             grp_color.push(legend);
         }
 
@@ -228,12 +228,13 @@ openerp.base_graph.GraphView = openerp.base.Controller.extend({
         oth_ax['lines'] = true;
         oth_ax['title'] = "<b>"+self.y_title+"</b>";
 
+        var x_ax, y_ax;
         if (self.orientation == 'horizontal'){
-             var x_ax = oth_ax;
-             var y_ax = temp_ax;
+             x_ax = oth_ax;
+             y_ax = temp_ax;
         }else{
-             var x_ax = temp_ax;
-             var y_ax = oth_ax;
+             x_ax = temp_ax;
+             y_ax = oth_ax;
         }
 
         var bar_chart = new dhtmlxchartChart({
@@ -286,16 +287,15 @@ openerp.base_graph.GraphView = openerp.base.Controller.extend({
                 }
             }
         });
-        for (var i = 1; i<self.group_list.length;i++){
+        for (var m = 1; m<self.group_list.length;m++){
             bar_chart.addSeries({
-                value: "#"+self.group_list[i]+"#",
-                color: grp_color[i]['color']
+                value: "#"+self.group_list[m]+"#",
+                color: grp_color[m]['color']
             });
         }
         bar_chart.parse(res,"json");
         bar_chart.attachEvent("onItemClick", function(id) {
-            var id = bar_chart.get(id);
-            self.open_list_view(id);
+            self.open_list_view(bar_chart.get(id));
         });
     },
     schedule_pie: function(result) {
@@ -330,13 +330,12 @@ openerp.base_graph.GraphView = openerp.base.Controller.extend({
         });
         chart.parse(result,"json");
         chart.attachEvent("onItemClick", function(id) {
-            var id = chart.get(id);
-            self.open_list_view(id);
+            self.open_list_view(chart.get(id));
         });
     },
     open_list_view : function (id){
         var self = this;
-        var id = id[self.chart_info_fields];
+        id = id[self.chart_info_fields];
         if (typeof id == 'object'){
             id = id[0];
         }else{
