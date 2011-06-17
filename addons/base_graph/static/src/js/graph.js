@@ -250,7 +250,7 @@ openerp.base_graph.GraphView = openerp.base.Controller.extend({
                 template:function(obj){
                     if(x_ax['template']){
                         var val = obj[x_ax['template']];
-                        val = (typeof val == 'object')?val[1]:(val==false?'Undefined':val);
+                        val = (typeof val == 'object')?val[1]:(!val?'Undefined':val);
                         return val;
                     }else{
                         return obj;
@@ -263,7 +263,7 @@ openerp.base_graph.GraphView = openerp.base.Controller.extend({
                 template:function(obj){
                     if(y_ax['template']){
                         var vals = obj[y_ax['template']];
-                        vals = (typeof vals == 'object')?vals[1]:(vals==false?'Undefined':vals);
+                        vals = (typeof vals == 'object')?vals[1]:(!vals?'Undefined':vals);
                         return vals;
                     }else{
                         return obj;
