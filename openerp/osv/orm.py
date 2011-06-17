@@ -68,6 +68,7 @@ regex_object_name = re.compile(r'^[a-z0-9_.]+$')
 # Mapping between openerp module names and their osv classes.
 module_class_list = {}
 
+
 def check_object_name(name):
     """ Check if the given name is a valid openerp object name.
 
@@ -1260,87 +1261,55 @@ class orm_template(object):
             res.extend(self.pool.get(parent).fields_get_keys(cr, user, context))
         return res
 
-    # returns the definition of each field in the object
-    # the optional fields parameter can limit the result to some fields
+
     def fields_get(self, cr, user, allfields=None, context=None, write_access=True):
+        """ Returns the definition of each field.
+
+            The returned value is a dictionary (indiced by field name) of
+            dictionaries. The _inherits'd fields are included. The string,
+            help, and selection (if present) attributes are translated.
+
+        """
         if context is None:
             context = {}
+
         res = {}
+
         translation_obj = self.pool.get('ir.translation')
         for parent in self._inherits:
             res.update(self.pool.get(parent).fields_get(cr, user, allfields, context))
 
-        if self._columns.keys():
-            for f in self._columns.keys():
-                field_col = self._columns[f]
-                if allfields and f not in allfields:
-                    continue
-                res[f] = {'type': field_col._type}
-                # This additional attributes for M2M and function field is added
-                # because we need to display tooltip with this additional information
-                # when client is started in debug mode.
-                if isinstance(field_col, fields.function):
-                    res[f]['function'] = field_col._fnct and field_col._fnct.func_name or False
-                    res[f]['store'] = field_col.store
-                    if isinstance(field_col.store, dict):
-                        res[f]['store'] = str(field_col.store)
-                    res[f]['fnct_search'] = field_col._fnct_search and field_col._fnct_search.func_name or False
-                    res[f]['fnct_inv'] = field_col._fnct_inv and field_col._fnct_inv.func_name or False
-                    res[f]['fnct_inv_arg'] = field_col._fnct_inv_arg or False
-                    res[f]['func_obj'] = field_col._obj or False
-                    res[f]['func_method'] = field_col._method
-                if isinstance(field_col, fields.many2many):
-                    res[f]['related_columns'] = list((field_col._id1, field_col._id2))
-                    res[f]['third_table'] = field_col._rel
-                for arg in ('string', 'readonly', 'states', 'size', 'required', 'group_operator',
-                        'change_default', 'translate', 'help', 'select', 'selectable'):
-                    if getattr(field_col, arg):
-                        res[f][arg] = getattr(field_col, arg)
-                if not write_access:
-                    res[f]['readonly'] = True
-                    res[f]['states'] = {}
-                for arg in ('digits', 'invisible', 'filters'):
-                    if getattr(field_col, arg, None):
-                        res[f][arg] = getattr(field_col, arg)
+        for f, field in self._columns.iteritems():
+            if allfields and f not in allfields:
+                continue
 
-                if field_col.string:
-                    res_trans = translation_obj._get_source(cr, user, self._name + ',' + f, 'field', context.get('lang', False) or 'en_US')
-                    if res_trans:
-                        res[f]['string'] = res_trans
-                if field_col.help:
-                    help_trans = translation_obj._get_source(cr, user, self._name + ',' + f, 'help', context.get('lang', False) or 'en_US')
-                    if help_trans:
-                        res[f]['help'] = help_trans
+            res[f] = fields.field_to_dict(self, cr, user, context, field)
 
-                if hasattr(field_col, 'selection'):
-                    if isinstance(field_col.selection, (tuple, list)):
-                        sel = field_col.selection
-                        # translate each selection option
-                        sel2 = []
-                        for (key, val) in sel:
-                            val2 = None
-                            if val:
-                                val2 = translation_obj._get_source(cr, user, self._name + ',' + f, 'selection', context.get('lang', False) or 'en_US', val)
-                            sel2.append((key, val2 or val))
-                        sel = sel2
-                        res[f]['selection'] = sel
-                    else:
-                        # call the 'dynamic selection' function
-                        res[f]['selection'] = field_col.selection(self, cr, user, context)
-                if res[f]['type'] in ('one2many', 'many2many', 'many2one', 'one2one'):
-                    res[f]['relation'] = field_col._obj
-                    res[f]['domain'] = field_col._domain
-                    res[f]['context'] = field_col._context
-        else:
-            #TODO : read the fields from the database
-            pass
+            if not write_access:
+                res['readonly'] = True
+                res['states'] = {}
 
-        if allfields:
-            # filter out fields which aren't in the fields list
-            for r in res.keys():
-                if r not in allfields:
-                    del res[r]
+            if hasattr(res[f], 'string'):
+                res_trans = translation_obj._get_source(cr, user, self._name + ',' + f, 'field', context.get('lang', False) or 'en_US')
+                if res_trans:
+                    res[f]['string'] = res_trans
+            if hasattr(res[f], 'help'):
+                help_trans = translation_obj._get_source(cr, user, self._name + ',' + f, 'help', context.get('lang', False) or 'en_US')
+                if help_trans:
+                    res[f]['help'] = help_trans
+            if hasattr(res[f], 'selection'):
+                if isinstance(field.selection, (tuple, list)):
+                    sel = field.selection
+                    sel2 = []
+                    for key, val in sel:
+                        val2 = None
+                        if val:
+                            val2 = translation_obj._get_source(cr, user, self._name + ',' + f, 'selection', context.get('lang', False) or 'en_US', val)
+                        sel2.append((key, val2 or val))
+                    res[f]['selection'] = sel2
+
         return res
+
 
     #
     # Overload this method if you need a window title which depends on the context
@@ -1633,7 +1602,7 @@ class orm_template(object):
         :raise Invalid ArchitectureError: if there is view type other than form, tree, calendar, search etc defined on the structure
 
         """
-        if not context:
+        if context is None:
             context = {}
 
         def encode(s):
@@ -1643,10 +1612,8 @@ class orm_template(object):
 
         def raise_view_error(error_msg, child_view_id):
             view, child_view = self.pool.get('ir.ui.view').browse(cr, user, [view_id, child_view_id], context)
-            raise AttributeError(("View definition error for inherited view '%(xml_id)s' on '%(model)s' model: " + error_msg)
-                                 %  { 'xml_id': child_view.xml_id,
-                                      'parent_xml_id': view.xml_id,
-                                      'model': self._name, })
+            raise AttributeError("View definition error for inherited view '%s' on model '%s': %s"
+                                 %  (child_view.xml_id, self._name, error_msg))
 
         def _inherit_apply(src, inherit, inherit_id=None):
             def _find(node, node2):

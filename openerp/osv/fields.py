@@ -1117,5 +1117,57 @@ class property(function):
         self.field_id = {}
 
 
+def field_to_dict(self, cr, user, context, field):
+    """ Return a dictionary representation of a field.
+
+    The string, help, and selection attributes (if any) are untranslated.  This
+    representation is the one returned by fields_get() (fields_get() will do
+    the translation).
+
+    """
+
+    res = {'type': field._type}
+    # This additional attributes for M2M and function field is added
+    # because we need to display tooltip with this additional information
+    # when client is started in debug mode.
+    if isinstance(field, function):
+        res['function'] = field._fnct and field._fnct.func_name or False
+        res['store'] = field.store
+        if isinstance(field.store, dict):
+            res['store'] = str(field.store)
+        res['fnct_search'] = field._fnct_search and field._fnct_search.func_name or False
+        res['fnct_inv'] = field._fnct_inv and field._fnct_inv.func_name or False
+        res['fnct_inv_arg'] = field._fnct_inv_arg or False
+        res['func_obj'] = field._obj or False
+        res['func_method'] = field._method
+    if isinstance(field, many2many):
+        res['related_columns'] = list((field._id1, field._id2))
+        res['third_table'] = field._rel
+    for arg in ('string', 'readonly', 'states', 'size', 'required', 'group_operator',
+            'change_default', 'translate', 'help', 'select', 'selectable'):
+        if getattr(field, arg):
+            res[arg] = getattr(field, arg)
+    for arg in ('digits', 'invisible', 'filters'):
+        if getattr(field, arg, None):
+            res[arg] = getattr(field, arg)
+
+    if field.string:
+        res['string'] = field.string
+    if field.help:
+        res['help'] = field.help
+
+    if hasattr(field, 'selection'):
+        if isinstance(field.selection, (tuple, list)):
+            res['selection'] = field.selection
+        else:
+            # call the 'dynamic selection' function
+            res['selection'] = field.selection(self, cr, user, context)
+    if res['type'] in ('one2many', 'many2many', 'many2one', 'one2one'):
+        res['relation'] = field._obj
+        res['domain'] = field._domain
+        res['context'] = field._context
+
+    return res
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
