@@ -144,6 +144,9 @@ openerp.base = function(instance) {
     if (openerp.base.form) {
         openerp.base.form(instance);
     }
+    if (openerp.base.list && openerp.base.list.editable) {
+        openerp.base.list.editable(instance);
+    }
 };
 
 // vim:et fdc=0 fdl=0 foldnestmax=3 fdm=syntax:
