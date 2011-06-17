@@ -455,9 +455,10 @@ class DataSet(openerpweb.Controller):
         return {'result': r}
 
     @openerpweb.jsonrequest
-    def default_get(self, req, model, fields, context={}):
+    def default_get(self, req, model, fields):
         m = req.session.model(model)
-        r = m.default_get(fields, context)
+        ctx = _eval_domain_and_context(req, [req.context], [])["context"]
+        r = m.default_get(fields, ctx)
         return {'result': r}
 
 class DataGroup(openerpweb.Controller):

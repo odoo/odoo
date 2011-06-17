@@ -173,7 +173,7 @@ class CompoundDomain:
                 
             if isinstance(domain, list):
                 final_domain.extend(domain)
-                break
+                continue
             
             ctx = dict(context or {})
             ctx['context'] = ctx
@@ -201,7 +201,7 @@ class CompoundContext:
     
             if isinstance(context_to_eval, dict):
                 final_context.update(context_to_eval)
-                break
+                continue
             
             ctx.update(final_context)
             ctx["context"] = ctx

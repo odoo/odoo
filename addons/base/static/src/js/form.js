@@ -34,6 +34,7 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
         this.touched = false;
         this.flags = this.view_manager.flags || {};
         this.registry = openerp.base.form.widgets;
+        this.has_been_loaded = $.Deferred();
     },
     start: function() {
         //this.log('Starting FormView '+this.model+this.view_id)
@@ -47,7 +48,6 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
     on_loaded: function(data) {
         var self = this;
         this.fields_view = data.fields_view;
-
         var frame = new (this.registry.get_object('frame'))(this, this.fields_view.arch);
 
         this.$element.html(QWeb.render(this.template, { 'frame': frame, 'view': this }));
@@ -65,6 +65,7 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
         this.$element.find('#' + this.element_id + '_header button.oe_form_button_new').click(this.on_button_new);
 
         this.view_manager.sidebar.set_toolbar(data.fields_view.toolbar);
+        this.has_been_loaded.resolve();
     },
     do_show: function () {
         var self = this;
@@ -222,8 +223,10 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
     },
     on_button_new: function() {
         var self = this;
-        this.dataset.default_get(_.keys(this.fields), function(result) {
-            self.on_record_loaded(result.result);
+        $.when(this.has_been_loaded).then(function() {
+            self.dataset.default_get(_.keys(self.fields_view.fields), function(result) {
+                self.on_record_loaded(result.result);
+            });
         });
     },
     /**
@@ -1183,11 +1186,11 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
             self._change_int_ext_value(data.result);
         }, function(a, b) {
             self._change_int_value(null);
-            self._search_create_popup("form");
+            self._search_create_popup("form", undefined, {"default_name": name});
         });
     },
     // all search/create popup handling
-    _search_create_popup: function(view, ids) {
+    _search_create_popup: function(view, ids, context) {
         var dataset = new openerp.base.DataSetStatic(this.session, this.field.relation, []);
         var self = this;
         var pop = new openerp.base.form.SelectCreatePopup(null, self.view.session);
@@ -1195,7 +1198,8 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
                 initial_ids: ids ? _.map(ids, function(x) {return x[0]}) : undefined,
                 initial_view: view,
                 disable_multiple_selection: true
-                });
+                }, self.view.domain || [],
+                new openerp.base.CompoundContext(build_relation_context(self)).add(context || {}));
         pop.on_select_elements.add(function(element_ids) {
             dataset.call("name_get", [element_ids[0]], function(data) {
                 self._change_int_ext_value(data.result[0]);
@@ -1431,7 +1435,8 @@ openerp.base.form.SelectCreatePopup = openerp.base.BaseWidget.extend({
     },
     start: function() {
         this._super();
-        this.dataset = new openerp.base.DataSetSearch(this.session, this.model);
+        this.dataset = new openerp.base.DataSetSearch(this.session, this.model,
+            this.context, this.domain);
         if ((this.options.initial_view || "search") == "search") {
             this.setup_search_view();
         } else { // "form"
@@ -1450,8 +1455,8 @@ openerp.base.form.SelectCreatePopup = openerp.base.BaseWidget.extend({
                 });
         this.searchview.on_search.add(function(domains, contexts, groupbys) {
             if (self.initial_ids) {
-                self.view_list.do_search.call(self, [[["id", "in", 
-                    self.initial_ids]]], contexts, groupbys);
+                self.view_list.do_search.call(self,[[["id", "in", self.initial_ids]]],
+                    contexts, groupbys);
                 self.initial_ids = undefined;
             } else {
                 self.view_list.do_search.call(self, domains, contexts, groupbys);
