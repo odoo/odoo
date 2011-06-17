@@ -181,7 +181,7 @@ class CompoundDomain:
             ctx['context'] = ctx
             
             domain.session = self.session
-            domain.extend(domain.evaluate(ctx))
+            final_domain.extend(domain.evaluate(ctx))
         return final_domain
     
     def add(self, domain):
