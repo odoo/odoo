@@ -160,9 +160,11 @@ class Context(object):
                     ctx)
 
 class CompoundDomain:
-    def __init__(self):
+    def __init__(self, *domains):
         self.domains = []
         self.session = None
+        for domain in domains:
+            self.add(domain)
         
     def evaluate(self, context=None):
         final_domain = []
@@ -187,9 +189,11 @@ class CompoundDomain:
         return self
 
 class CompoundContext:
-    def __init__(self):
+    def __init__(self, *contexts):
         self.contexts = []
         self.session = None
+        for context in contexts:
+            self.add(context)
     
     def evaluate(self, context=None):
         ctx = dict(context or {})
