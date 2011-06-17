@@ -65,7 +65,7 @@ Do not leave trailing commas in object literals
 
 While it is legal to leave trailing commas in Python dictionaries, e.g.
 
-::
+.. code-block:: python
 
     foo = {
         'a': 1,
@@ -111,14 +111,18 @@ RST, using Sphinx's `Python domain`_ [#]_:
   docstring, using Sphinx's `info fields`_
 
   For parameters types, built-in and stdlib types should be using the
-  combined syntax::
+  combined syntax:
+
+  .. code-block:: restructuredtext
 
       :param dict foo: what the purpose of foo is
 
   unless a more extensive explanation needs to be given (e.g. the
   specification that the input should be a list of 3-tuple needs to
   use ``:type:`` even though all types involved are built-ins). Any
-  other type should be specified in full using the ``:type:`` field::
+  other type should be specified in full using the ``:type:`` field
+
+  .. code-block:: restructuredtext
 
       :param foo: what the purpose of foo is
       :type foo: some.addon.Class
@@ -154,12 +158,16 @@ when writing javascript API documentation:
   are not documented, or JsDoc will not understand what they are and
   will not generate documentation for their content.
 
-  As a result, the bare minimum for a namespace is::
+  As a result, the bare minimum for a namespace is:
+
+  .. code-block:: javascript
 
       /** @namespace */
       foo.bar.baz = {};
 
-  while for a class it is::
+  while for a class it is:
+
+  .. code-block:: javascript
 
       /** @class */
       foo.bar.baz.Qux = [...]
@@ -255,7 +263,6 @@ with the descriptions and irrelevant atttributes stripped):
     });
 
 .. code-block:: javascript
-
 
     openerp.base.search.Widget = openerp.base.Controller.extend(
         /** @lends openerp.base.search.Widget# */{
