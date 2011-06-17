@@ -338,8 +338,6 @@ openerp.base_graph.GraphView = openerp.base.Controller.extend({
         id = id[self.chart_info_fields];
         if (typeof id == 'object'){
             id = id[0];
-        }else{
-            id = id;
         }
         if(this.view_manager.action.context){
            this.view_manager.action.context = {};
