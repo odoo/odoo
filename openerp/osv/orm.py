@@ -68,6 +68,7 @@ regex_object_name = re.compile(r'^[a-z0-9_.]+$')
 # Mapping between openerp module names and their osv classes.
 module_class_list = {}
 
+
 def check_object_name(name):
     """ Check if the given name is a valid openerp object name.
 
@@ -416,6 +417,32 @@ def get_pg_type(f):
     return f_type
 
 
+class MetaModel(type):
+    """ Metaclass for the Model.
+
+    This class is used as the metaclass for the Model class to discover
+    the models defined in a module (i.e. without instanciating them).
+    If the automatic discovery is not needed, it is possible to set the
+    model's _register attribute to False.
+
+    """
+
+    module_to_models = {}
+
+    def __init__(self, name, bases, attrs):
+        if not self._register:
+            self._register = True
+            super(MetaModel, self).__init__(name, bases, attrs)
+            return
+
+        module_name = self.__module__.split('.')[0]
+        if not hasattr(self, '_module'):
+            self._module = module_name
+
+        # Remember which models to instanciate for this module.
+        self.module_to_models.setdefault(self._module, []).append(self)
+
+
 class orm_template(object):
     """ Base class for OpenERP models.
 
@@ -445,6 +472,11 @@ class orm_template(object):
     _sequence = None
     _description = None
     _inherits = {}
+    # Mapping from inherits'd field name to triple (m, r, f)
+    # where m is the model from which it is inherits'd,
+    # r is the (local) field towards m,
+    # and f is the _column object itself.
+    _inherit_fields = {}
     _table = None
     _invalids = set()
     _log_create = False
@@ -469,9 +501,11 @@ class orm_template(object):
         raise NotImplementedError(_('The read_group method is not implemented on this object !'))
 
     def _field_create(self, cr, context=None):
-        """
+        """ Create entries in ir_model_fields for all the model's fields.
 
-        Create/update entries in ir_model, ir_model_data, and ir_model_fields.
+        If necessary, also create an entry in ir_model, and if called from the
+        modules loading scheme (by receiving 'module' in the context), also
+        create entries in ir_model_data (for the model and the fields).
 
         - create an entry in ir_model (if there is not already one),
         - create an entry in ir_model_data (if there is not already one, and if
@@ -572,6 +606,9 @@ class orm_template(object):
         raise_on_invalid_object_name(self._name)
         self._field_create(cr, context=context)
 
+    def _auto_end(self, cr, context=None):
+        pass
+
     #
     # Goal: try to apply inheritance at the instanciation level and
     #       put objects in the pool var
@@ -637,7 +674,7 @@ class orm_template(object):
                     else:
                         new.extend(cls.__dict__.get(s, []))
                     nattr[s] = new
-                cls = type(name, (cls, parent_class), nattr)
+                cls = type(name, (cls, parent_class), dict(nattr, _register=False))
         obj = object.__new__(cls)
         obj.__init__(pool, cr)
         return obj
@@ -830,9 +867,6 @@ class orm_template(object):
             if x=='.id': return [x]
             return x.replace(':id','/id').replace('.id','/.id').split('/')
         fields_to_export = map(fsplit, fields_to_export)
-        fields_export = fields_to_export + []
-        warning = ''
-        warning_fields = []
         datas = []
         for row in self.browse(cr, uid, ids, context):
             datas += self.__export_row(cr, uid, row, fields_to_export, context)
@@ -1020,7 +1054,6 @@ class orm_template(object):
 
         if config.get('import_partial', False) and filename:
             data = pickle.load(file(config.get('import_partial')))
-            original_value = data.get(filename, 0)
 
         position = 0
         while position<len(datas):
@@ -1033,7 +1066,7 @@ class orm_template(object):
                 return (-1, res, 'Line ' + str(position) +' : ' + '!\n'.join(warning), '')
 
             try:
-                id = ir_model_data_obj._update(cr, uid, self._name,
+                ir_model_data_obj._update(cr, uid, self._name,
                      current_module, res, mode=mode, xml_id=xml_id,
                      noupdate=noupdate, res_id=res_id, context=context)
             except Exception, e:
@@ -1222,91 +1255,61 @@ class orm_template(object):
 
     def fields_get_keys(self, cr, user, context=None):
         res = self._columns.keys()
+        # TODO I believe this loop can be replace by
+        # res.extend(self._inherit_fields.key())
         for parent in self._inherits:
             res.extend(self.pool.get(parent).fields_get_keys(cr, user, context))
         return res
 
-    # returns the definition of each field in the object
-    # the optional fields parameter can limit the result to some fields
+
     def fields_get(self, cr, user, allfields=None, context=None, write_access=True):
+        """ Returns the definition of each field.
+
+            The returned value is a dictionary (indiced by field name) of
+            dictionaries. The _inherits'd fields are included. The string,
+            help, and selection (if present) attributes are translated.
+
+        """
         if context is None:
             context = {}
+
         res = {}
+
         translation_obj = self.pool.get('ir.translation')
         for parent in self._inherits:
             res.update(self.pool.get(parent).fields_get(cr, user, allfields, context))
 
-        if self._columns.keys():
-            for f in self._columns.keys():
-                field_col = self._columns[f]
-                if allfields and f not in allfields:
-                    continue
-                res[f] = {'type': field_col._type}
-                # This additional attributes for M2M and function field is added
-                # because we need to display tooltip with this additional information
-                # when client is started in debug mode.
-                if isinstance(field_col, fields.function):
-                    res[f]['function'] = field_col._fnct and field_col._fnct.func_name or False
-                    res[f]['store'] = field_col.store
-                    if isinstance(field_col.store, dict):
-                        res[f]['store'] = str(field_col.store)
-                    res[f]['fnct_search'] = field_col._fnct_search and field_col._fnct_search.func_name or False
-                    res[f]['fnct_inv'] = field_col._fnct_inv and field_col._fnct_inv.func_name or False
-                    res[f]['fnct_inv_arg'] = field_col._fnct_inv_arg or False
-                    res[f]['func_obj'] = field_col._obj or False
-                    res[f]['func_method'] = field_col._method
-                if isinstance(field_col, fields.many2many):
-                    res[f]['related_columns'] = list((field_col._id1, field_col._id2))
-                    res[f]['third_table'] = field_col._rel
-                for arg in ('string', 'readonly', 'states', 'size', 'required', 'group_operator',
-                        'change_default', 'translate', 'help', 'select', 'selectable'):
-                    if getattr(field_col, arg):
-                        res[f][arg] = getattr(field_col, arg)
-                if not write_access:
-                    res[f]['readonly'] = True
-                    res[f]['states'] = {}
-                for arg in ('digits', 'invisible', 'filters'):
-                    if getattr(field_col, arg, None):
-                        res[f][arg] = getattr(field_col, arg)
+        for f, field in self._columns.iteritems():
+            if allfields and f not in allfields:
+                continue
 
-                if field_col.string:
-                    res_trans = translation_obj._get_source(cr, user, self._name + ',' + f, 'field', context.get('lang', False) or 'en_US')
-                    if res_trans:
-                        res[f]['string'] = res_trans
-                if field_col.help:
-                    help_trans = translation_obj._get_source(cr, user, self._name + ',' + f, 'help', context.get('lang', False) or 'en_US')
-                    if help_trans:
-                        res[f]['help'] = help_trans
+            res[f] = fields.field_to_dict(self, cr, user, context, field)
 
-                if hasattr(field_col, 'selection'):
-                    if isinstance(field_col.selection, (tuple, list)):
-                        sel = field_col.selection
-                        # translate each selection option
-                        sel2 = []
-                        for (key, val) in sel:
-                            val2 = None
-                            if val:
-                                val2 = translation_obj._get_source(cr, user, self._name + ',' + f, 'selection', context.get('lang', False) or 'en_US', val)
-                            sel2.append((key, val2 or val))
-                        sel = sel2
-                        res[f]['selection'] = sel
-                    else:
-                        # call the 'dynamic selection' function
-                        res[f]['selection'] = field_col.selection(self, cr, user, context)
-                if res[f]['type'] in ('one2many', 'many2many', 'many2one', 'one2one'):
-                    res[f]['relation'] = field_col._obj
-                    res[f]['domain'] = field_col._domain
-                    res[f]['context'] = field_col._context
-        else:
-            #TODO : read the fields from the database
-            pass
+            if not write_access:
+                res['readonly'] = True
+                res['states'] = {}
 
-        if allfields:
-            # filter out fields which aren't in the fields list
-            for r in res.keys():
-                if r not in allfields:
-                    del res[r]
+            if hasattr(res[f], 'string'):
+                res_trans = translation_obj._get_source(cr, user, self._name + ',' + f, 'field', context.get('lang', False) or 'en_US')
+                if res_trans:
+                    res[f]['string'] = res_trans
+            if hasattr(res[f], 'help'):
+                help_trans = translation_obj._get_source(cr, user, self._name + ',' + f, 'help', context.get('lang', False) or 'en_US')
+                if help_trans:
+                    res[f]['help'] = help_trans
+            if hasattr(res[f], 'selection'):
+                if isinstance(field.selection, (tuple, list)):
+                    sel = field.selection
+                    sel2 = []
+                    for key, val in sel:
+                        val2 = None
+                        if val:
+                            val2 = translation_obj._get_source(cr, user, self._name + ',' + f, 'selection', context.get('lang', False) or 'en_US', val)
+                        sel2.append((key, val2 or val))
+                    res[f]['selection'] = sel2
+
         return res
+
 
     #
     # Overload this method if you need a window title which depends on the context
@@ -1599,7 +1602,7 @@ class orm_template(object):
         :raise Invalid ArchitectureError: if there is view type other than form, tree, calendar, search etc defined on the structure
 
         """
-        if not context:
+        if context is None:
             context = {}
 
         def encode(s):
@@ -1609,10 +1612,8 @@ class orm_template(object):
 
         def raise_view_error(error_msg, child_view_id):
             view, child_view = self.pool.get('ir.ui.view').browse(cr, user, [view_id, child_view_id], context)
-            raise AttributeError(("View definition error for inherited view '%(xml_id)s' on '%(model)s' model: " + error_msg)
-                                 %  { 'xml_id': child_view.xml_id,
-                                      'parent_xml_id': view.xml_id,
-                                      'model': self._name, })
+            raise AttributeError("View definition error for inherited view '%s' on model '%s': %s"
+                                 %  (child_view.xml_id, self._name, error_msg))
 
         def _inherit_apply(src, inherit, inherit_id=None):
             def _find(node, node2):
@@ -1705,7 +1706,6 @@ class orm_template(object):
         result = {'type': view_type, 'model': self._name}
 
         ok = True
-        model = True
         sql_res = False
         parent_view_model = None
         while ok:
@@ -1739,7 +1739,6 @@ class orm_template(object):
 
             ok = sql_res[5]
             view_id = ok or sql_res[3]
-            model = False
             parent_view_model = sql_res[6]
 
         # if a view was found
@@ -1956,6 +1955,23 @@ class orm_template(object):
 
         """
         return self._name_search(cr, user, name, args, operator, context, limit)
+
+    def name_create(self, cr, uid, name, context=None):
+        """
+        Creates a new record by calling :py:meth:`~osv.osv.osv.create` with only one
+        value provided: the name of the new record (``_rec_name`` field).
+        The new record will also be initialized with any default values applicable
+        to this model, or provided through the context. The usual behavior of
+        :py:meth:`~osv.osv.osv.create` applies.
+        Similarly, this method may raise an exception if the model has multiple
+        required fields and some do not have default values.
+
+        :param name: name of the record to create
+
+        :return: the :py:meth:`~osv.osv.osv.name_get` value for the newly-created record.
+        """
+        rec_id = self.create(cr, uid, {self._rec_name: name}, context);
+        return self.name_get(cr, uid, [rec_id], context)[0]
 
     # private implementation of name_search, allows passing a dedicated user for the name_get part to
     # solve some access rights issues
@@ -2544,149 +2560,74 @@ class orm(orm_template):
         - alter existing database columns to match _columns,
         - create database tables to match _columns,
         - add database indices to match _columns,
+        - save in self._foreign_keys a list a foreign keys to create (see
+          _auto_end).
 
         """
+        self._foreign_keys = []
         raise_on_invalid_object_name(self._name)
         if context is None:
             context = {}
         store_compute = False
-        create = False
         todo_end = []
+        update_custom_fields = context.get('update_custom_fields', False)
         self._field_create(cr, context=context)
+        create = not self._table_exist(cr)
+
         if getattr(self, '_auto', True):
-            cr.execute("SELECT relname FROM pg_class WHERE relkind IN ('r','v') AND relname=%s", (self._table,))
-            if not cr.rowcount:
-                cr.execute('CREATE TABLE "%s" (id SERIAL NOT NULL, PRIMARY KEY(id)) WITHOUT OIDS' % (self._table,))
-                cr.execute("COMMENT ON TABLE \"%s\" IS '%s'" % (self._table, self._description.replace("'", "''")))
-                create = True
-                self.__schema.debug("Table '%s': created", self._table)
+
+            if create:
+                self._create_table(cr)
 
             cr.commit()
             if self._parent_store:
-                cr.execute("""SELECT c.relname
-                    FROM pg_class c, pg_attribute a
-                    WHERE c.relname=%s AND a.attname=%s AND c.oid=a.attrelid
-                    """, (self._table, 'parent_left'))
-                if not cr.rowcount:
-                    cr.execute('ALTER TABLE "%s" ADD COLUMN "parent_left" INTEGER' % (self._table,))
-                    cr.execute('ALTER TABLE "%s" ADD COLUMN "parent_right" INTEGER' % (self._table,))
-                    if 'parent_left' not in self._columns:
-                        self.__logger.error('create a column parent_left on object %s: fields.integer(\'Left Parent\', select=1)',
-                                            self._table)
-                        self.__schema.debug("Table '%s': added column '%s' with definition=%s",
-                                            self._table, 'parent_left', 'INTEGER')
-                    elif not self._columns['parent_left'].select:
-                        self.__logger.error('parent_left column on object %s must be indexed! Add select=1 to the field definition)',
-                                            self._table)
-                    if 'parent_right' not in self._columns:
-                        self.__logger.error('create a column parent_right on object %s: fields.integer(\'Right Parent\', select=1)',
-                                            self._table)
-                        self.__schema.debug("Table '%s': added column '%s' with definition=%s",
-                                            self._table, 'parent_right', 'INTEGER')
-                    elif not self._columns['parent_right'].select:
-                        self.__logger.error('parent_right column on object %s must be indexed! Add select=1 to the field definition)',
-                                            self._table)
-                    if self._columns[self._parent_name].ondelete != 'cascade':
-                        self.__logger.error("The column %s on object %s must be set as ondelete='cascade'",
-                                            self._parent_name, self._name)
-
-                    cr.commit()
+                if not self._parent_columns_exist(cr):
+                    self._create_parent_columns(cr)
                     store_compute = True
 
+            # Create the create_uid, create_date, write_uid, write_date, columns if desired.
             if self._log_access:
-                logs = {
-                    'create_uid': 'INTEGER REFERENCES res_users ON DELETE SET NULL',
-                    'create_date': 'TIMESTAMP',
-                    'write_uid': 'INTEGER REFERENCES res_users ON DELETE SET NULL',
-                    'write_date': 'TIMESTAMP'
-                }
-                for k in logs:
-                    cr.execute("""
-                        SELECT c.relname
-                          FROM pg_class c, pg_attribute a
-                         WHERE c.relname=%s AND a.attname=%s AND c.oid=a.attrelid
-                        """, (self._table, k))
-                    if not cr.rowcount:
-                        cr.execute('ALTER TABLE "%s" ADD COLUMN "%s" %s' % (self._table, k, logs[k]))
-                        cr.commit()
-                        self.__schema.debug("Table '%s': added column '%s' with definition=%s",
-                                            self._table, k, logs[k])
+                self._add_log_columns(cr)
 
             self._check_removed_columns(cr, log=False)
 
             # iterate on the "object columns"
-            todo_update_store = []
-            update_custom_fields = context.get('update_custom_fields', False)
+            column_data = self._select_column_data(cr)
 
-            cr.execute("SELECT c.relname,a.attname,a.attlen,a.atttypmod,a.attnotnull,a.atthasdef,t.typname,CASE WHEN a.attlen=-1 THEN a.atttypmod-4 ELSE a.attlen END as size " \
-               "FROM pg_class c,pg_attribute a,pg_type t " \
-               "WHERE c.relname=%s " \
-               "AND c.oid=a.attrelid " \
-               "AND a.atttypid=t.oid", (self._table,))
-            col_data = dict(map(lambda x: (x['attname'], x),cr.dictfetchall()))
-
-
-            for k in self._columns:
+            for k, f in self._columns.iteritems():
                 if k in ('id', 'write_uid', 'write_date', 'create_uid', 'create_date'):
                     continue
-                #Not Updating Custom fields
-                if k.startswith('x_') and not update_custom_fields:
+                # Don't update custom (also called manual) fields
+                if f.manual and not update_custom_fields:
                     continue
 
-                f = self._columns[k]
-
                 if isinstance(f, fields.one2many):
-                    cr.execute("SELECT relname FROM pg_class WHERE relkind='r' AND relname=%s", (f._obj,))
+                    self._o2m_raise_on_missing_reference(cr, f)
 
-                    if self.pool.get(f._obj):
-                        if f._fields_id not in self.pool.get(f._obj)._columns.keys():
-                            if not self.pool.get(f._obj)._inherits or (f._fields_id not in self.pool.get(f._obj)._inherit_fields.keys()):
-                                raise except_orm('Programming Error', ("There is no reference field '%s' found for '%s'") % (f._fields_id, f._obj,))
-
-                    if cr.fetchone():
-                        cr.execute("SELECT count(1) as c FROM pg_class c,pg_attribute a WHERE c.relname=%s AND a.attname=%s AND c.oid=a.attrelid", (f._obj, f._fields_id))
-                        res = cr.fetchone()[0]
-                        if not res:
-                            cr.execute('ALTER TABLE "%s" ADD FOREIGN KEY (%s) REFERENCES "%s" ON DELETE SET NULL' % (self._obj, f._fields_id, f._table))
-                            self.__schema.debug("Table '%s': added foreign key '%s' with definition=REFERENCES \"%s\" ON DELETE SET NULL",
-                                self._obj, f._fields_id, f._table)
                 elif isinstance(f, fields.many2many):
-                    cr.execute("SELECT relname FROM pg_class WHERE relkind IN ('r','v') AND relname=%s", (f._rel,))
-                    if not cr.dictfetchall():
-                        if not self.pool.get(f._obj):
-                            raise except_orm('Programming Error', ('There is no reference available for %s') % (f._obj,))
-                        ref = self.pool.get(f._obj)._table
-#                        ref = f._obj.replace('.', '_')
-                        cr.execute('CREATE TABLE "%s" ("%s" INTEGER NOT NULL REFERENCES "%s" ON DELETE CASCADE, "%s" INTEGER NOT NULL REFERENCES "%s" ON DELETE CASCADE, UNIQUE("%s","%s")) WITH OIDS' % (f._rel, f._id1, self._table, f._id2, ref, f._id1, f._id2))
-                        cr.execute('CREATE INDEX "%s_%s_index" ON "%s" ("%s")' % (f._rel, f._id1, f._rel, f._id1))
-                        cr.execute('CREATE INDEX "%s_%s_index" ON "%s" ("%s")' % (f._rel, f._id2, f._rel, f._id2))
-                        cr.execute("COMMENT ON TABLE \"%s\" IS 'RELATION BETWEEN %s AND %s'" % (f._rel, self._table, ref))
-                        cr.commit()
-                        self.__schema.debug("Create table '%s': relation between '%s' and '%s'",
-                                            f._rel, self._table, ref)
+                    self._m2m_raise_or_create_relation(cr, f)
+
                 else:
-                    res = col_data.get(k, [])
-                    res = res and [res] or []
+                    res = column_data.get(k)
+
+                    # The field is not found as-is in database, try if it
+                    # exists with an old name.
                     if not res and hasattr(f, 'oldname'):
-                        cr.execute("SELECT c.relname,a.attname,a.attlen,a.atttypmod,a.attnotnull,a.atthasdef,t.typname,CASE WHEN a.attlen=-1 THEN a.atttypmod-4 ELSE a.attlen END as size " \
-                            "FROM pg_class c,pg_attribute a,pg_type t " \
-                            "WHERE c.relname=%s " \
-                            "AND a.attname=%s " \
-                            "AND c.oid=a.attrelid " \
-                            "AND a.atttypid=t.oid", (self._table, f.oldname))
-                        res_old = cr.dictfetchall()
-                        if res_old and len(res_old) == 1:
+                        res = column_data.get(f.oldname)
+                        if res:
                             cr.execute('ALTER TABLE "%s" RENAME "%s" TO "%s"' % (self._table, f.oldname, k))
-                            res = res_old
-                            res[0]['attname'] = k
+                            res['attname'] = k
+                            column_data[k] = res
                             self.__schema.debug("Table '%s': renamed column '%s' to '%s'",
                                                 self._table, f.oldname, k)
 
-                    if len(res) == 1:
-                        f_pg_def = res[0]
-                        f_pg_type = f_pg_def['typname']
-                        f_pg_size = f_pg_def['size']
-                        f_pg_notnull = f_pg_def['attnotnull']
+                    # The field already exists in database. Possibly
+                    # change its type, rename it, drop it or change its
+                    # constraints.
+                    if res:
+                        f_pg_type = res['typname']
+                        f_pg_size = res['size']
+                        f_pg_notnull = res['attnotnull']
                         if isinstance(f, fields.function) and not f.store and\
                                 not getattr(f, 'nodrop', False):
                             self.__logger.info('column %s (%s) in table %s removed: converted to a function !\n',
@@ -2824,13 +2765,13 @@ class orm(orm_template):
                                     if res2:
                                         if res2[0]['confdeltype'] != POSTGRES_CONFDELTYPES.get(f.ondelete.upper(), 'a'):
                                             cr.execute('ALTER TABLE "' + self._table + '" DROP CONSTRAINT "' + res2[0]['conname'] + '"')
-                                            cr.execute('ALTER TABLE "' + self._table + '" ADD FOREIGN KEY ("' + k + '") REFERENCES "' + ref + '" ON DELETE ' + f.ondelete)
+                                            self._foreign_keys.append((self._table, k, ref, f.ondelete))
                                             cr.commit()
                                             self.__schema.debug("Table '%s': column '%s': XXX",
                                                 self._table, k)
-                    elif len(res) > 1:
-                        netsvc.Logger().notifyChannel('orm', netsvc.LOG_ERROR, "Programming error, column %s->%s has multiple instances !" % (self._table, k))
-                    if not res:
+
+                    # The field doesn't exist in database. Create it if necessary.
+                    else:
                         if not isinstance(f, fields.function) or f.store:
                             # add the missing field
                             cr.execute('ALTER TABLE "%s" ADD COLUMN "%s" %s' % (self._table, k, get_pg_type(f)[1]))
@@ -2851,21 +2792,21 @@ class orm(orm_template):
                                 cr.commit()
                                 netsvc.Logger().notifyChannel('data', netsvc.LOG_DEBUG, "Table '%s': setting default value of new column %s" % (self._table, k))
 
+                            # remember the functions to call for the stored fields
                             if isinstance(f, fields.function):
                                 order = 10
-                                if f.store is not True:
+                                if f.store is not True: # i.e. if f.store is a dict
                                     order = f.store[f.store.keys()[0]][2]
-                                todo_update_store.append((order, f, k))
+                                todo_end.append((order, self._update_store, (f, k)))
 
                             # and add constraints if needed
                             if isinstance(f, fields.many2one):
                                 if not self.pool.get(f._obj):
                                     raise except_orm('Programming Error', ('There is no reference available for %s') % (f._obj,))
                                 ref = self.pool.get(f._obj)._table
-#                                ref = f._obj.replace('.', '_')
                                 # ir_actions is inherited so foreign key doesn't work on it
                                 if ref != 'ir_actions':
-                                    cr.execute('ALTER TABLE "%s" ADD FOREIGN KEY ("%s") REFERENCES "%s" ON DELETE %s' % (self._table, k, ref, f.ondelete))
+                                    self._foreign_keys.append((self._table, k, ref, f.ondelete))
                                     self.__schema.debug("Table '%s': added foreign key '%s' with definition=REFERENCES \"%s\" ON DELETE %s",
                                         self._table, k, ref, f.ondelete)
                             if f.select:
@@ -2883,8 +2824,6 @@ class orm(orm_template):
                                         "ALTER TABLE %s ALTER COLUMN %s SET NOT NULL"
                                     self.__logger.warn(msg, k, self._table, self._table, k)
                             cr.commit()
-            for order, f, k in todo_update_store:
-                todo_end.append((order, self._update_store, (f, k)))
 
         else:
             cr.execute("SELECT relname FROM pg_class WHERE relkind IN ('r','v') AND relname=%s", (self._table,))
@@ -2892,6 +2831,134 @@ class orm(orm_template):
 
         cr.commit()     # start a new transaction
 
+        self._add_sql_constraints(cr)
+
+        if create:
+            self._execute_sql(cr)
+
+        if store_compute:
+            self._parent_store_compute(cr)
+            cr.commit()
+
+        return todo_end
+
+
+    def _auto_end(self, cr, context=None):
+        """ Create the foreign keys recorded by _auto_init. """
+        for t, k, r, d in self._foreign_keys:
+            cr.execute('ALTER TABLE "%s" ADD FOREIGN KEY ("%s") REFERENCES "%s" ON DELETE %s' % (t, k, r, d))
+        cr.commit()
+        del self._foreign_keys
+
+
+    def _table_exist(self, cr):
+        cr.execute("SELECT relname FROM pg_class WHERE relkind IN ('r','v') AND relname=%s", (self._table,))
+        return cr.rowcount
+
+
+    def _create_table(self, cr):
+        cr.execute('CREATE TABLE "%s" (id SERIAL NOT NULL, PRIMARY KEY(id)) WITHOUT OIDS' % (self._table,))
+        cr.execute("COMMENT ON TABLE \"%s\" IS '%s'" % (self._table, self._description.replace("'", "''")))
+        self.__schema.debug("Table '%s': created", self._table)
+
+
+    def _parent_columns_exist(self, cr):
+        cr.execute("""SELECT c.relname
+            FROM pg_class c, pg_attribute a
+            WHERE c.relname=%s AND a.attname=%s AND c.oid=a.attrelid
+            """, (self._table, 'parent_left'))
+        return cr.rowcount
+
+
+    def _create_parent_columns(self, cr):
+        cr.execute('ALTER TABLE "%s" ADD COLUMN "parent_left" INTEGER' % (self._table,))
+        cr.execute('ALTER TABLE "%s" ADD COLUMN "parent_right" INTEGER' % (self._table,))
+        if 'parent_left' not in self._columns:
+            self.__logger.error('create a column parent_left on object %s: fields.integer(\'Left Parent\', select=1)',
+                                self._table)
+            self.__schema.debug("Table '%s': added column '%s' with definition=%s",
+                                self._table, 'parent_left', 'INTEGER')
+        elif not self._columns['parent_left'].select:
+            self.__logger.error('parent_left column on object %s must be indexed! Add select=1 to the field definition)',
+                                self._table)
+        if 'parent_right' not in self._columns:
+            self.__logger.error('create a column parent_right on object %s: fields.integer(\'Right Parent\', select=1)',
+                                self._table)
+            self.__schema.debug("Table '%s': added column '%s' with definition=%s",
+                                self._table, 'parent_right', 'INTEGER')
+        elif not self._columns['parent_right'].select:
+            self.__logger.error('parent_right column on object %s must be indexed! Add select=1 to the field definition)',
+                                self._table)
+        if self._columns[self._parent_name].ondelete != 'cascade':
+            self.__logger.error("The column %s on object %s must be set as ondelete='cascade'",
+                                self._parent_name, self._name)
+
+        cr.commit()
+
+
+    def _add_log_columns(self, cr):
+        logs = {
+            'create_uid': 'INTEGER REFERENCES res_users ON DELETE SET NULL',
+            'create_date': 'TIMESTAMP',
+            'write_uid': 'INTEGER REFERENCES res_users ON DELETE SET NULL',
+            'write_date': 'TIMESTAMP'
+        }
+        for k in logs:
+            cr.execute("""
+                SELECT c.relname
+                  FROM pg_class c, pg_attribute a
+                 WHERE c.relname=%s AND a.attname=%s AND c.oid=a.attrelid
+                """, (self._table, k))
+            if not cr.rowcount:
+                cr.execute('ALTER TABLE "%s" ADD COLUMN "%s" %s' % (self._table, k, logs[k]))
+                cr.commit()
+                self.__schema.debug("Table '%s': added column '%s' with definition=%s",
+                                    self._table, k, logs[k])
+
+
+    def _select_column_data(self, cr):
+        cr.execute("SELECT c.relname,a.attname,a.attlen,a.atttypmod,a.attnotnull,a.atthasdef,t.typname,CASE WHEN a.attlen=-1 THEN a.atttypmod-4 ELSE a.attlen END as size " \
+           "FROM pg_class c,pg_attribute a,pg_type t " \
+           "WHERE c.relname=%s " \
+           "AND c.oid=a.attrelid " \
+           "AND a.atttypid=t.oid", (self._table,))
+        return dict(map(lambda x: (x['attname'], x),cr.dictfetchall()))
+
+
+    def _o2m_raise_on_missing_reference(self, cr, f):
+        # TODO this check should be a method on fields.one2many.
+        other = self.pool.get(f._obj)
+        if other:
+            # TODO the condition could use fields_get_keys().
+            if f._fields_id not in other._columns.keys():
+                if f._fields_id not in other._inherit_fields.keys():
+                    raise except_orm('Programming Error', ("There is no reference field '%s' found for '%s'") % (f._fields_id, f._obj,))
+
+
+    def _m2m_raise_or_create_relation(self, cr, f):
+        cr.execute("SELECT relname FROM pg_class WHERE relkind IN ('r','v') AND relname=%s", (f._rel,))
+        if not cr.dictfetchall():
+            if not self.pool.get(f._obj):
+                raise except_orm('Programming Error', ('There is no reference available for %s') % (f._obj,))
+            ref = self.pool.get(f._obj)._table
+            cr.execute('CREATE TABLE "%s" ("%s" INTEGER NOT NULL, "%s" INTEGER NOT NULL, UNIQUE("%s","%s")) WITH OIDS' % (f._rel, f._id1, f._id2, f._id1, f._id2))
+            self._foreign_keys.append((f._rel, f._id1, self._table, 'CASCADE'))
+            self._foreign_keys.append((f._rel, f._id2, ref, 'CASCADE'))
+            cr.execute('CREATE INDEX "%s_%s_index" ON "%s" ("%s")' % (f._rel, f._id1, f._rel, f._id1))
+            cr.execute('CREATE INDEX "%s_%s_index" ON "%s" ("%s")' % (f._rel, f._id2, f._rel, f._id2))
+            cr.execute("COMMENT ON TABLE \"%s\" IS 'RELATION BETWEEN %s AND %s'" % (f._rel, self._table, ref))
+            cr.commit()
+            self.__schema.debug("Create table '%s': relation between '%s' and '%s'",
+                                f._rel, self._table, ref)
+
+
+    def _add_sql_constraints(self, cr):
+        """
+
+        Modify this model's database table constraints so they match the one in
+        _sql_constraints.
+
+        """
         for (key, con, _) in self._sql_constraints:
             conname = '%s_%s' % (self._table, key)
 
@@ -2940,17 +3007,16 @@ class orm(orm_template):
                     self.__schema.warn(sql_action['msg_err'])
                     cr.rollback()
 
-        if create:
-            if hasattr(self, "_sql"):
-                for line in self._sql.split(';'):
-                    line2 = line.replace('\n', '').strip()
-                    if line2:
-                        cr.execute(line2)
-                        cr.commit()
-        if store_compute:
-            self._parent_store_compute(cr)
-            cr.commit()
-        return todo_end
+
+    def _execute_sql(self, cr):
+        """ Execute the SQL code from the _sql attribute (if any)."""
+        if hasattr(self, "_sql"):
+            for line in self._sql.split(';'):
+                line2 = line.replace('\n', '').strip()
+                if line2:
+                    cr.execute(line2)
+                    cr.commit()
+
 
     @classmethod
     def createInstance(cls, pool, cr):
@@ -3029,18 +3095,18 @@ class orm(orm_template):
                 }
 
                 if field['ttype'] == 'selection':
-                    self._columns[field['name']] = getattr(fields, field['ttype'])(eval(field['selection']), **attrs)
+                    self._columns[field['name']] = fields.selection(eval(field['selection']), **attrs)
                 elif field['ttype'] == 'reference':
-                    self._columns[field['name']] = getattr(fields, field['ttype'])(selection=eval(field['selection']), **attrs)
+                    self._columns[field['name']] = fields.reference(selection=eval(field['selection']), **attrs)
                 elif field['ttype'] == 'many2one':
-                    self._columns[field['name']] = getattr(fields, field['ttype'])(field['relation'], **attrs)
+                    self._columns[field['name']] = fields.many2one(field['relation'], **attrs)
                 elif field['ttype'] == 'one2many':
-                    self._columns[field['name']] = getattr(fields, field['ttype'])(field['relation'], field['relation_field'], **attrs)
+                    self._columns[field['name']] = fields.one2many(field['relation'], field['relation_field'], **attrs)
                 elif field['ttype'] == 'many2many':
                     _rel1 = field['relation'].replace('.', '_')
                     _rel2 = field['model'].replace('.', '_')
                     _rel_name = 'x_%s_%s_%s_rel' % (_rel1, _rel2, field['name'])
-                    self._columns[field['name']] = getattr(fields, field['ttype'])(field['relation'], _rel_name, 'id1', 'id2', **attrs)
+                    self._columns[field['name']] = fields.many2many(field['relation'], _rel_name, 'id1', 'id2', **attrs)
                 else:
                     self._columns[field['name']] = getattr(fields, field['ttype'])(**attrs)
         self._inherits_check()
@@ -3059,18 +3125,25 @@ class orm(orm_template):
     #
 
     def _inherits_reload_src(self):
-        for obj in self.pool.obj_pool.values():
+        """ Recompute the _inherit_fields mapping on each _inherits'd child model."""
+        for obj in self.pool.models.values():
             if self._name in obj._inherits:
                 obj._inherits_reload()
 
     def _inherits_reload(self):
+        """ Recompute the _inherit_fields mapping.
+
+        This will also call itself on each inherits'd child model.
+
+        """
         res = {}
         for table in self._inherits:
-            res.update(self.pool.get(table)._inherit_fields)
-            for col in self.pool.get(table)._columns.keys():
-                res[col] = (table, self._inherits[table], self.pool.get(table)._columns[col])
-            for col in self.pool.get(table)._inherit_fields.keys():
-                res[col] = (table, self._inherits[table], self.pool.get(table)._inherit_fields[col][2])
+            other = self.pool.get(table)
+            res.update(other._inherit_fields)
+            for col in other._columns.keys():
+                res[col] = (table, self._inherits[table], other._columns[col])
+            for col in other._inherit_fields.keys():
+                res[col] = (table, self._inherits[table], other._inherit_fields[col][2])
         self._inherit_fields = res
         self._inherits_reload_src()
 

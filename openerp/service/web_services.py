@@ -90,7 +90,12 @@ class db(netsvc.ExportService):
                 cr = None
                 try:
                     serv.actions[id]['progress'] = 0
+                    cr = sql_db.db_connect(db_name).cursor()
+                    openerp.modules.db.initialize(cr) # TODO this should be removed as it is done by pooler.restart_pool.
                     tools.config['lang'] = lang
+                    cr.commit()
+                    cr.close()
+
                     pool = pooler.restart_pool(db_name, demo, serv.actions[id],
                             update_module=True)[1]
 

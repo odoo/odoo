@@ -72,6 +72,9 @@ class configmanager(object):
             ['publisher_warranty_url', 'load_language', 'root_path',
             'init', 'save', 'config', 'update'])
 
+        # dictionary mapping option destination (keys in self.options) to MyOptions.
+        self.casts = {}
+
         self.misc = {}
         self.config_file = fname
         self.has_ssl = check_ssl()
@@ -251,11 +254,14 @@ class configmanager(object):
         for group in parser.option_groups:
             for option in group.option_list:
                 self.options[option.dest] = option.my_default
+                self.casts[option.dest] = option
 
         self.parse_config()
 
-    def parse_config(self, args=[]):
-        opt, args = self.parser.parse_args()
+    def parse_config(self, args=None):
+        if args is None:
+            args = []
+        opt, args = self.parser.parse_args(args)
 
         def die(cond, msg):
             if cond:
@@ -314,8 +320,12 @@ class configmanager(object):
                 ]
 
         for arg in keys:
+            # Copy the command-line argument...
             if getattr(opt, arg):
                 self.options[arg] = getattr(opt, arg)
+            # ... or keep, but cast, the config file value.
+            elif isinstance(self.options[arg], basestring) and self.casts[arg].type in optparse.Option.TYPE_CHECKER:
+                self.options[arg] = optparse.Option.TYPE_CHECKER[self.casts[arg].type](self.casts[arg], arg, self.options[arg])
 
         keys = [
             'language', 'translate_out', 'translate_in', 'overwrite_existing_translations',
@@ -327,8 +337,12 @@ class configmanager(object):
         ]
 
         for arg in keys:
+            # Copy the command-line argument...
             if getattr(opt, arg) is not None:
                 self.options[arg] = getattr(opt, arg)
+            # ... or keep, but cast, the config file value.
+            elif isinstance(self.options[arg], basestring) and self.casts[arg].type in optparse.Option.TYPE_CHECKER:
+                self.options[arg] = optparse.Option.TYPE_CHECKER[self.casts[arg].type](self.casts[arg], arg, self.options[arg])
 
         if opt.assert_exit_level:
             self.options['assert_exit_level'] = self._LOGLEVELS[opt.assert_exit_level]

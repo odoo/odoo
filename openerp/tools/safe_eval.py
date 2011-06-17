@@ -274,6 +274,7 @@ def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval", nocopy=Fal
                 'tuple': tuple,
                 'map': map,
                 'abs': abs,
+                'min': min,
                 'reduce': reduce,
                 'filter': filter,
                 'round': round,

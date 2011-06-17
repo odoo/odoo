@@ -46,6 +46,7 @@ def _check_xml(self, cr, uid, ids, context=None):
 
 class view_custom(osv.osv):
     _name = 'ir.ui.view.custom'
+    _order = 'create_date desc'  # search(limit=1) should return the last customization
     _columns = {
         'ref_id': fields.many2one('ir.ui.view', 'Original View', select=True),
         'user_id': fields.many2one('res.users', 'User', select=True),

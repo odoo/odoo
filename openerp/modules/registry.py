@@ -24,87 +24,135 @@
 """
 
 import openerp.sql_db
+import openerp.osv.orm
 
 
-class BoundRegistry(object):
-    """ Model registry/database connection pair."""
-    def __init__(self, db, registry):
-        self.db = db
-        self.registry = registry
+class Registry(object):
+    """ Model registry for a particular database.
+
+    The registry is essentially a mapping between model names and model
+    instances. There is one registry instance per database.
+
+    """
+
+    def __init__(self, db_name):
+        self.models = {} # model name/model instance mapping
+        self._sql_error = {}
+        self._store_function = {}
+        self._init = True
+        self._init_parent = {}
+        self.db_name = db_name
+        self.db = openerp.sql_db.db_connect(db_name)
+
+    def do_parent_store(self, cr):
+        for o in self._init_parent:
+            self.get(o)._parent_store_compute(cr)
+        self._init = False
+
+    def obj_list(self):
+        """ Return the list of model names in this registry."""
+        return self.models.keys()
+
+    def add(self, model_name, model):
+        """ Add or replace a model in the registry."""
+        self.models[model_name] = model
+
+    def get(self, model_name):
+        """ Return a model for a given name or None if it doesn't exist."""
+        return self.models.get(model_name)
+
+    def __getitem__(self, model_name):
+        """ Return a model for a given name or raise KeyError if it doesn't exist."""
+        return self.models[model_name]
+
+    def instanciate(self, module, cr):
+        """ Instanciate all the classes of a given module for a particular db."""
+
+        res = []
+
+        # Instanciate classes registered through their constructor and
+        # add them to the pool.
+        for klass in openerp.osv.orm.module_class_list.get(module, []):
+            res.append(klass.createInstance(self, cr))
+
+        # Instanciate classes automatically discovered.
+        for cls in openerp.osv.orm.MetaModel.module_to_models.get(module, []):
+            if cls not in openerp.osv.orm.module_class_list.get(module, []):
+                res.append(cls.createInstance(self, cr))
+
+        return res
 
 
 class RegistryManager(object):
     """ Model registries manager.
 
-        The manager is responsible for creation and deletion of bound model
+        The manager is responsible for creation and deletion of model
         registries (essentially database connection/model registry pairs).
 
     """
 
-    # TODO maybe should receive the addons paths
-    def __init__(self):
-        # Mapping between db name and bound model registry.
-        # Accessed through the methods below.
-        self.bound_registries = {}
+    # Mapping between db name and model registry.
+    # Accessed through the methods below.
+    registries = {}
 
 
-    def get(self, db_name, force_demo=False, status=None, update_module=False,
+    @classmethod
+    def get(cls, db_name, force_demo=False, status=None, update_module=False,
             pooljobs=True):
-        """ Return a bound registry for a given database name."""
+        """ Return a registry for a given database name."""
 
-        if db_name in self.bound_registries:
-            bound_registry = self.bound_registries[db_name]
+        if db_name in cls.registries:
+            registry = cls.registries[db_name]
         else:
-            bound_registry = self.new(db_name, force_demo, status,
+            registry = cls.new(db_name, force_demo, status,
                 update_module, pooljobs)
-        return bound_registry
+        return registry
 
 
-    def new(self, db_name, force_demo=False, status=None,
+    @classmethod
+    def new(cls, db_name, force_demo=False, status=None,
             update_module=False, pooljobs=True):
-        """ Create and return a new bound registry for a given database name.
+        """ Create and return a new registry for a given database name.
 
-        The (possibly) previous bound registry for that database name is
-        discarded.
+        The (possibly) previous registry for that database name is discarded.
 
         """
 
         import openerp.modules
-        import openerp.osv.osv as osv_osv
-        db = openerp.sql_db.db_connect(db_name)
-        pool = osv_osv.osv_pool()
+        registry = Registry(db_name)
 
         # Initializing a registry will call general code which will in turn
         # call registries.get (this object) to obtain the registry being
-        # initialized. Make it available in the bound_registries dictionary
-        # then remove it if an exception is raised.
-        self.delete(db_name)
-        bound_registry = BoundRegistry(db, pool)
-        self.bound_registries[db_name] = bound_registry
+        # initialized. Make it available in the registries dictionary then
+        # remove it if an exception is raised.
+        cls.delete(db_name)
+        cls.registries[db_name] = registry
         try:
-            # This should be a method on BoundRegistry
-            openerp.modules.load_modules(db, force_demo, status, update_module)
+            # This should be a method on Registry
+            openerp.modules.load_modules(registry.db, force_demo, status, update_module)
         except Exception:
-            del self.bound_registries[db_name]
+            del cls.registries[db_name]
             raise
 
-        cr = db.cursor()
+        cr = registry.db.cursor()
         try:
-            pool.do_parent_store(cr)
-            pool.get('ir.actions.report.xml').register_all(cr)
+            registry.do_parent_store(cr)
+            registry.get('ir.actions.report.xml').register_all(cr)
             cr.commit()
         finally:
             cr.close()
 
         if pooljobs:
-            pool.get('ir.cron').restart(db.dbname)
+            registry.get('ir.cron').restart(registry.db.dbname)
 
-        return bound_registry
+        return registry
 
 
-    def delete(self, db_name):
-        if db_name in self.bound_registries:
-            del self.bound_registries[db_name]
+    @classmethod
+    def delete(cls, db_name):
+        """ Delete the registry linked to a given database. """
+        if db_name in cls.registries:
+            del cls.registries[db_name]
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
