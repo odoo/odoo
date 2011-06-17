@@ -320,13 +320,22 @@ openerp.base.DataSet =  openerp.base.Controller.extend( /** @lends openerp.base.
             args: args || []
         }, callback, error_callback);
     },
+    call_and_eval: function (method, args, domain_id, context_id, callback, error_callback) {
+        return this.rpc('/base/dataset/call', {
+            model: this.model,
+            method: method,
+            domain_id: domain_id || null,
+            context_id: context_id || null,
+            args: args || []
+        }, callback, error_callback);
+    },
     /**
      * Arguments:
      * name='', args=[], operator='ilike', context=None, limit=100
      */
     name_search: function (args, callback, error_callback) {
-        return this.call('name_search',
-            args,
+        return this.call_and_eval('name_search',
+            args, 1, 3,
             callback, error_callback);
     },
     exec_workflow: function (id, signal, callback) {
@@ -430,6 +439,36 @@ openerp.base.DataSetSearch =  openerp.base.DataSet.extend({
         return undefined;
     }
 });
+
+openerp.base.CompoundContext = function(source_context) {
+    this.__ref = "compound_context";
+    this.__contexts = [];
+    if (source_context === undefined)
+        return;
+    else if (source_context.__ref === "compound_context")
+        this.__contexts.concat(source_context.__contexts);
+    else
+        this.add(source_context);
+};
+openerp.base.CompoundContext.prototype.add = function(context) {
+    this.__contexts.push(context);
+    return this;
+};
+
+openerp.base.CompoundDomain = function(source_domain) {
+    this.__ref = "compound_domain";
+    this.__domains = [];
+    if (source_domain === undefined)
+        return;
+    else if (source_domain.__ref === "compound_domain")
+        this.__domains.concat(source_domain.__domains);
+    else
+        this.add(source_domain);
+};
+openerp.base.CompoundDomain.prototype.add = function(domain) {
+    this.__domains.push(domain);
+    return this;
+};
 
 };
 
