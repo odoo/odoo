@@ -231,10 +231,10 @@ openerp.base.DataSet =  openerp.base.Controller.extend( /** @lends openerp.base.
      * @param {openerp.base.Session} session current OpenERP session
      * @param {String} model the OpenERP model this dataset will manage
      */
-    init: function(session, model) {
+    init: function(session, model, context) {
         this._super(session);
         this.model = model;
-        this.context = {};
+        this.context = context || {};
         this.index = 0;
         this.count = 0;
     },
@@ -371,9 +371,9 @@ openerp.base.DataSetStatic =  openerp.base.DataSet.extend({
 });
 
 openerp.base.DataSetSearch =  openerp.base.DataSet.extend({
-    init: function(session, model) {
-        this._super(session, model);
-        this.domain = [];
+    init: function(session, model, context, domain) {
+        this._super(session, model, context);
+        this.domain = domain || [];
         this._sort = [];
         this.offset = 0;
         // subset records[offset:offset+limit]
@@ -440,33 +440,34 @@ openerp.base.DataSetSearch =  openerp.base.DataSet.extend({
     }
 });
 
-openerp.base.CompoundContext = function(source_context) {
+openerp.base.CompoundContext = function() {
     this.__ref = "compound_context";
     this.__contexts = [];
-    if (source_context === undefined)
-        return;
-    else if (source_context.__ref === "compound_context")
-        this.__contexts.concat(source_context.__contexts);
-    else
-        this.add(source_context);
+    var self = this;
+    _.each(arguments, function(x) {
+        self.add(x);
+    });
 };
 openerp.base.CompoundContext.prototype.add = function(context) {
-    this.__contexts.push(context);
+    if (context.__ref === "compound_context")
+        this.__contexts = this.__contexts.concat(context.__contexts);
+    else
+        this.__contexts.push(context);
     return this;
 };
 
-openerp.base.CompoundDomain = function(source_domain) {
+openerp.base.CompoundDomain = function() {
     this.__ref = "compound_domain";
     this.__domains = [];
-    if (source_domain === undefined)
-        return;
-    else if (source_domain.__ref === "compound_domain")
-        this.__domains.concat(source_domain.__domains);
-    else
-        this.add(source_domain);
+    _.each(arguments, function(x) {
+        self.add(x);
+    });
 };
 openerp.base.CompoundDomain.prototype.add = function(domain) {
-    this.__domains.push(domain);
+    if (domain.__ref === "compound_domain")
+        this.__domains = this.__domains.concat(domain.__domains);
+    else
+        this.__domains.push(domain);
     return this;
 };
 
