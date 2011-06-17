@@ -1021,7 +1021,8 @@ var build_relation_context = function(relation_field) {
     var action = relation_field.view.view_manager.action || {};
     var a_context = action.context || {};
     var f_context = relation_field.field.context || {};
-    return $.extend({}, a_context, f_context);
+    var ctx = new openerp.base.CompoundContext(a_context).add(f_context);
+    return ctx;
 }
 
 openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
@@ -1419,8 +1420,8 @@ openerp.base.form.SelectCreatePopup = openerp.base.BaseWidget.extend({
      */
     select_element: function(model, options, domain, context) {
         this.model = model;
-        this.domain = domain;
-        this.context = context;
+        this.domain = domain || [];
+        this.context = context || {};
         this.options = options || {};
         this.initial_ids = this.options.initial_ids;
         jQuery(this.render()).dialog({title: '',
@@ -1503,7 +1504,6 @@ openerp.base.form.SelectCreatePopup = openerp.base.BaseWidget.extend({
         this.view_form = new openerp.base.FormView(null, this.session,
                 this.element_id + "_view_form", this.dataset, false);
         if (this.options.alternative_form_view) {
-            debugger;
             this.view_form.set_embedded_view(this.options.alternative_form_view);
         }
         this.view_form.start();

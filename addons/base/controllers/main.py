@@ -170,25 +170,7 @@ class Session(openerpweb.Controller):
                 a list of fields to group by, potentially empty (in which case
                 no group by should be performed)
         """
-        context = req.session.eval_contexts(contexts)
-        domain = req.session.eval_domains(domains, context)
-
-        group_by_sequence = []
-        for candidate in (group_by_seq or []):
-            ctx = req.session.eval_context(candidate, context)
-            group_by = ctx.get('group_by')
-            if not group_by:
-                continue
-            elif isinstance(group_by, basestring):
-                group_by_sequence.append(group_by)
-            else:
-                group_by_sequence.extend(group_by)
-
-        return {
-            'context': context,
-            'domain': domain,
-            'group_by': group_by_sequence
-        }
+        return _eval_domain_and_context(req, contexts, domains, group_by_seq)
 
     @openerpweb.jsonrequest
     def save_session_action(self, req, the_action):
@@ -230,6 +212,26 @@ class Session(openerpweb.Controller):
             return None
         return saved_actions["actions"].get(key)
         
+def _eval_domain_and_context(req, contexts, domains, group_by_seq=None):
+    context = req.session.eval_contexts(contexts)
+    domain = req.session.eval_domains(domains, context)
+
+    group_by_sequence = []
+    for candidate in (group_by_seq or []):
+        ctx = req.session.eval_context(candidate, context)
+        group_by = ctx.get('group_by')
+        if not group_by:
+            continue
+        elif isinstance(group_by, basestring):
+            group_by_sequence.append(group_by)
+        else:
+            group_by_sequence.extend(group_by)
+
+    return {
+        'context': context,
+        'domain': domain,
+        'group_by': group_by_sequence
+    }
         
 def load_actions_from_ir_values(req, key, key2, models, meta, context):
     Values = req.session.model('ir.values')
@@ -434,7 +436,15 @@ class DataSet(openerpweb.Controller):
         return Model.unlink(ids)
 
     @openerpweb.jsonrequest
-    def call(self, req, model, method, args):
+    def call(self, req, model, method, args, domain_id=None, context_id=None):
+        domain = args[domain_id] if domain_id and len(args) - 1 >= domain_id  else []
+        context = args[context_id] if context_id and len(args) - 1 >= context_id  else {}
+        res = _eval_domain_and_context(req, [context], [domain]);
+        if(domain_id and len(args) - 1 >= domain_id):
+            args[context_id] = res["context"]
+        if(context_id and len(args) - 1 >= context_id):
+            args[domain_id] = res["domain"]
+        
         m = req.session.model(model)
         r = getattr(m, method)(*args)
         return {'result': r}

@@ -167,7 +167,7 @@ class CompoundDomain:
     def evaluate(self, context=None):
         final_domain = []
         for domain in self.domains:
-            if not isinstance(domain, (list, nonliterals.Domain, nonliterals.CompoundDomain)):
+            if not isinstance(domain, (list, Domain, CompoundDomain)):
                 raise TypeError("Domain %r is not a list or a nonliteral Domain",
                                  domain)
                 
@@ -180,6 +180,7 @@ class CompoundDomain:
             
             domain.session = self.session
             domain.extend(domain.evaluate(ctx))
+        return final_domain
     
     def add(self, domain):
         self.domains.append(domain)
@@ -191,9 +192,10 @@ class CompoundContext:
         self.session = None
     
     def evaluate(self, context=None):
-        final_context = dict(context or {})
+        ctx = dict(context or {})
+        final_context = {}
         for context_to_eval in self.contexts:
-            if not isinstance(context_to_eval, (dict, nonliterals.Context, nonliterals.CompoundContext)):
+            if not isinstance(context_to_eval, (dict, Context, CompoundContext)):
                 raise TypeError("Context %r is not a dict or a nonliteral Context",
                                  context_to_eval)
     
@@ -201,11 +203,12 @@ class CompoundContext:
                 final_context.update(context_to_eval)
                 break
             
-            ctx = dict(final_context)
+            ctx.update(final_context)
             ctx["context"] = ctx
             
             context_to_eval.session = self.session
             final_context.update(context_to_eval.evaluate(ctx))
+        return final_context
             
     def add(self, context):
         self.contexts.append(context)
