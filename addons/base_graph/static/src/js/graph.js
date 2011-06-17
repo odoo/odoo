@@ -25,7 +25,6 @@ openerp.base_graph.GraphView = openerp.base.Controller.extend({
         this.rpc("/base_graph/graphview/load", {"model": this.model, "view_id": this.view_id}, this.on_loaded);
     },
     on_loaded: function(data) {
-        var self = this;
         this.all_fields = data.all_fields;
         this.fields_view = data.fields_view;
         this.name = this.fields_view.name || this.fields_view.arch.attrs.string;
@@ -61,7 +60,7 @@ openerp.base_graph.GraphView = openerp.base.Controller.extend({
         this.chart_info = this.chart_info_fields[0];
         this.x_title = this.fields[this.chart_info_fields[0]]['string'];
         this.y_title = this.fields[this.operator_field]['string'];
-        self.load_chart();
+        this.load_chart();
     },
 
     load_chart: function(data) {
@@ -83,7 +82,6 @@ openerp.base_graph.GraphView = openerp.base.Controller.extend({
 
     schedule_chart: function(results) {
         this.$element.html(QWeb.render("GraphView", {"fields_view": this.fields_view, "chart": this.chart,'view_id': this.view_id}));
-        this.opration_fld = {};
         if (results.length){
             _.each(results, function (result) {
                 _.each(result, function (field_value, field_name) {
@@ -101,10 +99,11 @@ openerp.base_graph.GraphView = openerp.base.Controller.extend({
                 }, this);
             }, this);
 
+            var opration_fld = {};
             _.each(results, function (result) {
                 var gen_key = result[this.chart_info_fields]+"_"+result[this.group_field];
-                if (this.opration_fld[gen_key] == undefined){
-                    var map_val = {};
+                var map_val = {};
+                if (opration_fld[gen_key] == undefined){
                     map_val[this.operator_field] = result[this.operator_field];
                     if (this.operator.length > 1){
                         map_val[this.operator_field_one] = result[this.operator_field_one];
@@ -113,19 +112,18 @@ openerp.base_graph.GraphView = openerp.base.Controller.extend({
                     if (this.group_field){
                         map_val[this.group_field] = (typeof result[this.group_field] == 'object')?result[this.group_field][1]:result[this.group_field];
                     }
-                    this.opration_fld[gen_key] = map_val;
                 } else {
-                    map_val = this.opration_fld[gen_key];
+                    map_val = opration_fld[gen_key];
                     map_val[this.operator_field] += result[this.operator_field];
                     if (this.operator.length > 1){
                         map_val[this.operator_field_one] += result[this.operator_field_one];
                     }
-                    this.opration_fld[gen_key] = map_val;
                 }
+                opration_fld[gen_key] = map_val;
             }, this);
 
             var graph_data = [];
-            _.each(this.opration_fld, function (column_data) {
+            _.each(opration_fld, function (column_data) {
                 graph_data.push(column_data);
             });
 
@@ -141,9 +139,7 @@ openerp.base_graph.GraphView = openerp.base.Controller.extend({
         var self = this;
         var view_chart = '';
         var xystr = {};
-        var xyname = {};
-        var res = [];
-        this.group_list = [];
+        var group_list = [];
         var newkey = '', newkey_one;
 
         var COLOR_PALETTE = ['#cc99ff', '#ccccff', '#48D1CC', '#CFD784', '#8B7B8B', '#75507b', '#b0008c', '#ff0000', '#ff8e00', '#9000ff', '#0078ff', '#00ff00', '#e6ff00', '#ffff00',
@@ -164,52 +160,40 @@ openerp.base_graph.GraphView = openerp.base.Controller.extend({
                 newkey = "val";
             }
 
-            if (jQuery.inArray(newkey, self.group_list) == -1){
-                self.group_list.push(newkey);
+            if (jQuery.inArray(newkey, group_list) == -1){
+                group_list.push(newkey);
                 if(this.operator.length > 1){
                     newkey_one = "val1";
-                    self.group_list.push(newkey_one);
+                    group_list.push(newkey_one);
                 }
             }
         }, this);
 
         _.each(results, function (result) {
-            var xystring = result[self.chart_info_fields];
+            var xystring = result[self.chart_info_fields],
+                xyname = {};
             if (self.group_field && (self.operator.length <= 1)){
                 newkey = result[self.group_field].split(' ').join('_');
             }else{
                 newkey = "val";
             }
             if (xystr[xystring] == undefined){
-                xyname = {};
                 xyname[self.chart_info_fields] = xystring;
-                _.each(self.group_list, function (group) {
+                _.each(group_list, function (group) {
                     xyname[group] = 0.0001;
                 });
-                xyname[newkey] = result[self.operator_field];
-                if (self.operator.length > 1){
-                    xyname[newkey_one] = result[self.operator_field_one];
-                }
-                xystr[xystring] = xyname;
-            }
-            else{
-                xyname = {};
+            } else {
                 xyname = xystr[xystring];
-                xyname[newkey] = result[self.operator_field];
-                if (self.operator.length > 1){
-                    xyname[newkey_one] = result[self.operator_field_one];
-                }
-                xystr[xystring] = xyname;
             }
-        });
-
-        _.each(xystr, function (column_data) {
-            res.push(column_data);
+            xyname[newkey] = result[self.operator_field];
+            if (self.operator.length > 1){
+                xyname[newkey_one] = result[self.operator_field_one];
+            }
+            xystr[xystring] = xyname;
         });
 
         //for legend color
-        var grp_color = [];
-        _.each(self.group_list, function (group_legend, index) {
+        var grp_color = _.map(group_list, function (group_legend, index) {
             var legend = {color: COLOR_PALETTE[index]};
 
             if (group_legend == "val"){
@@ -219,7 +203,7 @@ openerp.base_graph.GraphView = openerp.base.Controller.extend({
             }else{
                 legend['text'] = group_legend;
             }
-            grp_color.push(legend);
+            return legend;
         });
 
         //for axis's value and title
@@ -244,7 +228,7 @@ openerp.base_graph.GraphView = openerp.base.Controller.extend({
         var bar_chart = new dhtmlxchartChart({
             view: view_chart,
             container: self.view_id+"-barchart",
-            value:"#"+self.group_list[0]+"#",
+            value:"#"+group_list[0]+"#",
             gradient: "3d",
             border: false,
             width: 1024,
@@ -291,13 +275,13 @@ openerp.base_graph.GraphView = openerp.base.Controller.extend({
                 }
             }
         });
-        for (var m = 1; m<self.group_list.length;m++){
+        for (var m = 1; m<group_list.length;m++){
             bar_chart.addSeries({
-                value: "#"+self.group_list[m]+"#",
+                value: "#"+group_list[m]+"#",
                 color: grp_color[m]['color']
             });
         }
-        bar_chart.parse(res,"json");
+        bar_chart.parse(_.values(xystr), "json");
         bar_chart.attachEvent("onItemClick", function(id) {
             self.open_list_view(bar_chart.get(id));
         });
