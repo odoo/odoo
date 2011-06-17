@@ -100,9 +100,9 @@ class hr_expense_expense(osv.osv):
         company_id = False
         if employee_id:
             employee = emp_obj.browse(cr, uid, employee_id, context=context)
-            department_id = employee.department_id.id or False
-            company_id = employee.company_id.id or False
-        return {'value':{'department_id':department_id, 'company_id':company_id}}
+            department_id = employee.department_id.id
+            company_id = employee.company_id.id
+        return {'value': {'department_id': department_id, 'company_id': company_id}}
 
     def expense_confirm(self, cr, uid, ids, *args):
         self.write(cr, uid, ids, {
