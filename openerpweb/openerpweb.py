@@ -194,7 +194,7 @@ class OpenERPSession(object):
         :raises: ``TypeError`` if ``context_to_eval`` is neither a dict nor
                  a Context
         """
-        if not isinstance(context_to_eval, (dict, nonliterals.Domain)):
+        if not isinstance(context_to_eval, (dict, nonliterals.Context, nonliterals.CompoundContext)):
             raise TypeError("Context %r is not a dict or a nonliteral Context",
                              context_to_eval)
 
@@ -250,7 +250,7 @@ class OpenERPSession(object):
 
         :raises: ``TypeError`` if ``domain`` is neither a list nor a Domain
         """
-        if not isinstance(domain, (list, nonliterals.Domain)):
+        if not isinstance(domain, (list, nonliterals.Domain, nonliterals.CompoundDomain)):
             raise TypeError("Domain %r is not a list or a nonliteral Domain",
                              domain)
 
