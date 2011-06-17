@@ -505,6 +505,7 @@ class report_custom(report_int):
         colors = map(lambda x:fill_style.Plain(bgcolor=x), misc.choice_colors(nb_bar))
         
         abscissa = {}
+        idx0 = 0
         for line in data_by_year.keys():
             fields_bar = []
             # sum data and save it in a list. An item for a fields
@@ -532,7 +533,6 @@ class report_custom(report_int):
                     if fields[idx+1]['cumulate']:
                         prev += data[k]
                         
-                idx0 = 0
                 plot = bar_plot.T(label=fields[idx+1]['name']+' '+str(line), data = data_cum, cluster=(idx0*(len(fields)-1)+idx,nb_bar), fill_style=colors[idx0*(len(fields)-1)+idx])
                 ar.add_plot(plot)
                 abscissa.update(fields_bar[idx])
