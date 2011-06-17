@@ -383,13 +383,10 @@ class hr_timesheet_sheet(osv.osv):
         return super(hr_timesheet_sheet, self).unlink(cr, uid, ids, context=context)
 
     def onchange_employee_id(self, cr, uid, ids, employee_id, context=None):
-        res = {'value':{}}
+        department_id =  False
         if employee_id:
-            department_id = self.pool.get('hr.employee').browse(cr, uid, employee_id, context=context).department_id.id or False
-        res['value'] = {
-                        'department_id': department_id,
-        }
-        return res
+            department_id = self.pool.get('hr.employee').browse(cr, uid, employee_id, context=context).department_id.id
+        return {'value': {'department_id': department_id}}
 
 hr_timesheet_sheet()
 
