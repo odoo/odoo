@@ -116,7 +116,7 @@ class email_server(osv.osv):
         if context is None:
             context = {}
         for server in self.browse(cr, uid, ids, context=context):
-            logger.notifyChannel('imap', netsvc.LOG_INFO, 'fetchmail start checking for new emails on %s' % (server.name))
+            logger.notifyChannel(server.type, netsvc.LOG_INFO, 'fetchmail start checking for new emails on %s' % (server.name))
             context.update({'server_id': server.id, 'server_type': server.type})
             try:
                 if server.type == 'imap':
