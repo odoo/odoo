@@ -40,6 +40,8 @@ class stock_invoice_onshipping(osv.osv_memory):
         browse_picking = model_pool.browse(cr, uid, res_ids, context=context)
         
         for pick in browse_picking:
+            if not pick.move_lines:
+                continue
             src_usage = pick.move_lines[0].location_id.usage
             dest_usage = pick.move_lines[0].location_dest_id.usage
             type = pick.type
@@ -59,6 +61,9 @@ class stock_invoice_onshipping(osv.osv_memory):
                 t1 = jr_type.id,jr_type.name
                 if t1 not in vals:
                     vals.append(t1)
+        if not vals:
+            raise osv.except_osv(_('Warning !'), _('Either there are no moves linked to the picking or Accounting Journals are misconfigured!'))
+        
         return vals
 
 
