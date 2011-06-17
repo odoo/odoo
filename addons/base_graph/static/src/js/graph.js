@@ -210,7 +210,8 @@ openerp.base_graph.GraphView = openerp.base.Controller.extend({
         //for legend color
         var grp_color = [];
         _.each(self.group_list, function (group_legend, index) {
-            var legend = {};
+            var legend = {color: COLOR_PALETTE[index]};
+
             if (group_legend == "val"){
                 legend['text'] = self.fields[self.operator_field]['string']
             }else if(group_legend == "val1"){
@@ -218,17 +219,18 @@ openerp.base_graph.GraphView = openerp.base.Controller.extend({
             }else{
                 legend['text'] = group_legend;
             }
-            legend['color'] = COLOR_PALETTE[index];
             grp_color.push(legend);
         });
 
         //for axis's value and title
-        var temp_ax = {};
-        var oth_ax = {};
-        temp_ax['template'] = self.chart_info_fields;
-        temp_ax['title'] = "<b>"+self.x_title+"</b>" ;
-        oth_ax['lines'] = true;
-        oth_ax['title'] = "<b>"+self.y_title+"</b>";
+        var temp_ax = {
+            template: self.chart_info_fields,
+            title: "<b>"+self.x_title+"</b>"
+        };
+        var oth_ax = {
+            lines: true,
+            title: "<b>"+self.y_title+"</b>"
+        };
 
         var x_ax, y_ax;
         if (self.orientation == 'horizontal'){
