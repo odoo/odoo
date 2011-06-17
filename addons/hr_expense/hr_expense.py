@@ -58,7 +58,7 @@ class hr_expense_expense(osv.osv):
     def _company_get(obj, cr, uid, context=None):
         employee_id = _employee_get(obj, cr, uid, context)
         if employee_id:
-            return obj.pool.get('hr.employee').read(cr, uid, [employee_id], ['company_id'], context)[0]['company_id']
+            return obj.pool.get('hr.employee').browse(cr, uid, employee_id, context=context).company_id.id
         return False
 
     _name = "hr.expense.expense"
