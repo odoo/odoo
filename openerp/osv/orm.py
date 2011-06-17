@@ -1318,7 +1318,7 @@ class orm_template(object):
         return False
 
     def __view_look_dom(self, cr, user, node, view_id, context=None):
-        if not context:
+        if context is None:
             context = {}
         result = False
         fields = {}
@@ -1329,8 +1329,8 @@ class orm_template(object):
                 return s.encode('utf8')
             return s
 
-        # return True if node can be displayed to current user
         def check_group(node):
+            """ Set invisible to true if the user is not in the specified groups. """
             if node.get('groups'):
                 groups = node.get('groups').split(',')
                 access_pool = self.pool.get('ir.model.access')
@@ -1340,9 +1340,6 @@ class orm_template(object):
                     if 'attrs' in node.attrib:
                         del(node.attrib['attrs']) #avoid making field visible later
                 del(node.attrib['groups'])
-                return can_see
-            else:
-                return True
 
         if node.tag in ('field', 'node', 'arrow'):
             if node.get('object'):
@@ -1421,8 +1418,7 @@ class orm_template(object):
                 if node.get(additional_field):
                     fields[node.get(additional_field)] = {}
 
-        if 'groups' in node.attrib:
-            check_group(node)
+        check_group(node)
 
         # translate view
         if ('lang' in context) and not result:
@@ -1454,6 +1450,7 @@ class orm_template(object):
         return fields
 
     def _disable_workflow_buttons(self, cr, user, node):
+        """ Set the buttons in node to readonly if the user can't activate them. """
         if user == 1:
             # admin user can always activate workflow buttons
             return node
@@ -1616,13 +1613,13 @@ class orm_template(object):
                                  %  (child_view.xml_id, self._name, error_msg))
 
         def locate(source, spec):
-            """ Locate a node in a source (parent) view.
+            """ Locate a node in a source (parent) architecture.
 
-                Given a complete source (parent) view, and a 'spec'
-                node (a node in a inheriting view that specifies the
-                location in the source view of what should be changed),
-                return (if it exists) the node in the source view matching
-                the specification.
+            Given a complete source (parent) architecture (i.e. the field
+            `arch` in a view), and a 'spec' node (a node in a inheriting
+            view that specifies the location in the source view of what
+            should be changed), return (if it exists) the node in the
+            source view matching the specification.
 
             """
             if spec.tag == 'xpath':
@@ -1647,32 +1644,38 @@ class orm_template(object):
                         return node
                 return None
 
-        def _inherit_apply(src, inherit, inherit_id=None):
-            doc_dest = etree.fromstring(encode(inherit))
-            toparse = [doc_dest]
+        def apply_specs(source, inherit, inherit_id=None):
+            """ Apply an inheriting view.
 
-            while len(toparse):
-                node2 = toparse.pop(0)
-                if isinstance(node2, SKIPPED_ELEMENT_TYPES):
+            Apply to a source architecture all the spec nodes (i.e. nodes
+            describing where and what changes to apply to some parent
+            architecture) given by an inheriting view.
+
+            """
+            specs_tree = etree.fromstring(encode(inherit))
+            # Queue of specification nodes (i.e. nodes describing where and
+            # changes to apply to some parent architecture).
+            specs = [specs_tree]
+
+            while len(specs):
+                spec = specs.pop(0)
+                if isinstance(spec, SKIPPED_ELEMENT_TYPES):
                     continue
-                if node2.tag == 'data':
-                    toparse += [ c for c in doc_dest ]
+                if spec.tag == 'data':
+                    specs += [ c for c in specs_tree ]
                     continue
-                node = locate(src, node2)
+                node = locate(source, spec)
                 if node is not None:
-                    pos = 'inside'
-                    if node2.get('position'):
-                        pos = node2.get('position')
+                    pos = spec.get('position', 'inside')
                     if pos == 'replace':
-                        parent = node.getparent()
-                        if parent is None:
-                            src = copy.deepcopy(node2[0])
+                        if node.getparent() is None:
+                            source = copy.deepcopy(spec[0])
                         else:
-                            for child in node2:
+                            for child in spec:
                                 node.addprevious(child)
                             node.getparent().remove(node)
                     elif pos == 'attributes':
-                        for child in node2.getiterator('attribute'):
+                        for child in spec.getiterator('attribute'):
                             attribute = (child.get('name'), child.text and child.text.encode('utf8') or None)
                             if attribute[1]:
                                 node.set(attribute[0], attribute[1])
@@ -1680,7 +1683,7 @@ class orm_template(object):
                                 del(node.attrib[attribute[0]])
                     else:
                         sib = node.getnext()
-                        for child in node2:
+                        for child in spec:
                             if pos == 'inside':
                                 node.append(child)
                             elif pos == 'after':
@@ -1695,22 +1698,31 @@ class orm_template(object):
                                 raise_view_error("Invalid position value: '%s'" % pos, inherit_id)
                 else:
                     attrs = ''.join([
-                        ' %s="%s"' % (attr, node2.get(attr))
-                        for attr in node2.attrib
+                        ' %s="%s"' % (attr, spec.get(attr))
+                        for attr in spec.attrib
                         if attr != 'position'
                     ])
-                    tag = "<%s%s>" % (node2.tag, attrs)
+                    tag = "<%s%s>" % (spec.tag, attrs)
                     raise_view_error("Element '%s' not found in parent view '%%(parent_xml_id)s'" % tag, inherit_id)
-            return src
-        # End: _inherit_apply(src, inherit)
+            return source
+
+        def apply_chained_specs(source, inherit_id):
+            """ Apply all the (directly and indirectly) inheriting views. """
+            # get all views which inherit from (ie modify) this view
+            cr.execute('select arch,id from ir_ui_view where inherit_id=%s and model=%s order by priority', (inherit_id, self._name))
+            sql_inherit = cr.fetchall()
+            for (inherit, id) in sql_inherit:
+                source = apply_specs(source, inherit, id)
+                source = apply_chained_specs(source, id)
+            return source
 
         result = {'type': view_type, 'model': self._name}
 
-        ok = True
         sql_res = False
         parent_view_model = None
-        while ok:
-            view_ref = context.get(view_type + '_view_ref', False)
+        view_ref = context.get(view_type + '_view_ref')
+        # Search for a root (i.e. without any parent) view.
+        while True:
             if view_ref and not view_id:
                 if '.' in view_ref:
                     module, view_ref = view_ref.split('.', 1)
@@ -1724,44 +1736,30 @@ class orm_template(object):
                               FROM ir_ui_view
                               WHERE id=%s""", (view_id,))
             else:
-                cr.execute('''SELECT
-                        arch,name,field_parent,id,type,inherit_id,model
-                    FROM
-                        ir_ui_view
-                    WHERE
-                        model=%s AND
-                        type=%s AND
-                        inherit_id IS NULL
-                    ORDER BY priority''', (self._name, view_type))
-            sql_res = cr.fetchone()
+                cr.execute("""SELECT arch,name,field_parent,id,type,inherit_id,model
+                              FROM ir_ui_view
+                              WHERE model=%s AND type=%s AND inherit_id IS NULL
+                              ORDER BY priority""", (self._name, view_type))
+            sql_res = cr.dictfetchone()
 
             if not sql_res:
                 break
 
-            ok = sql_res[5]
-            view_id = ok or sql_res[3]
-            parent_view_model = sql_res[6]
+            view_id = sql_res['inherit_id'] or sql_res['id']
+            parent_view_model = sql_res['model']
+            if not sql_res['inherit_id']:
+                break
 
         # if a view was found
         if sql_res:
-            result['type'] = sql_res[4]
-            result['view_id'] = sql_res[3]
-            result['arch'] = sql_res[0]
+            result['type'] = sql_res['type']
+            result['view_id'] = sql_res['id']
 
-            def _inherit_apply_rec(result, inherit_id):
-                # get all views which inherit from (ie modify) this view
-                cr.execute('select arch,id from ir_ui_view where inherit_id=%s and model=%s order by priority', (inherit_id, self._name))
-                sql_inherit = cr.fetchall()
-                for (inherit, id) in sql_inherit:
-                    result = _inherit_apply(result, inherit, id)
-                    result = _inherit_apply_rec(result, id)
-                return result
+            source = etree.fromstring(encode(sql_res['arch']))
+            result['arch'] = apply_chained_specs(source, result['view_id'])
 
-            inherit_result = etree.fromstring(encode(result['arch']))
-            result['arch'] = _inherit_apply_rec(inherit_result, sql_res[3])
-
-            result['name'] = sql_res[1]
-            result['field_parent'] = sql_res[2] or False
+            result['name'] = sql_res['nam']
+            result['field_parent'] = sql_res['field_parent'] or False
         else:
 
             # otherwise, build some kind of default view
@@ -1791,7 +1789,7 @@ class orm_template(object):
                 xml = self.__get_default_search_view(cr, user, context)
 
             else:
-                xml = '<?xml version="1.0"?>' # what happens here, graph case?
+                # what happens here, graph case?
                 raise except_orm(_('Invalid Architecture!'), _("There is no view of type '%s' defined for the structure!") % view_type)
             result['arch'] = etree.fromstring(encode(xml))
             result['name'] = 'default'
