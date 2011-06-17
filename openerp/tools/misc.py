@@ -36,6 +36,7 @@ import threading
 import time
 import warnings
 import zipfile
+from collections import defaultdict
 from datetime import datetime
 from email.MIMEText import MIMEText
 from email.MIMEBase import MIMEBase
@@ -1398,18 +1399,46 @@ class unquote(str):
        or escaping, keeping the original string untouched. The name come from Lisp's unquote.
        One of the uses for this is to preserve or insert bare variable names within dicts during eval()
        of a dict's repr(). Use with care.
-       Some examples:
+
+       Some examples (notice that there are never quotes surrounding
+       the ``active_id`` name:
+
        >>> unquote('active_id')
-       active_id
-       >>> repr(unquote('active_id'))
        active_id
        >>> d = {'test': unquote('active_id')}
        >>> d
        {'test': active_id}
-       >>> repr(d)
-       "{'test': active_id}"
+       >>> print d
+       {'test': active_id}
     """
     def __repr__(self):
         return self
+
+class UnquoteEvalContext(defaultdict):
+    """Defaultdict-based evaluation context that returns 
+       an ``unquote`` string for any missing name used during
+       the evaluation.
+       Mostly useful for evaluating OpenERP domains/contexts that
+       may refer to names that are unknown at the time of eval,
+       so that when the context/domain is converted back to a string,
+       the original names are preserved.
+
+       **Warning**: using an ``UnquoteEvalContext`` as context for ``eval()`` or
+       ``safe_eval()`` will shadow the builtins, which may cause other
+       failures, depending on what is evaluated.
+
+       Example (notice that ``section_id`` is preserved in the final
+       result) :
+
+       >>> context_str = "{'default_user_id': uid, 'default_section_id': section_id}"
+       >>> eval(context_str, UnquoteEvalContext(uid=1))
+       {'default_user_id': 1, 'default_section_id': section_id}
+
+       """
+    def __init__(self, *args, **kwargs):
+        super(UnquoteEvalContext, self).__init__(None, *args, **kwargs)
+
+    def __missing__(self, key):
+        return unquote(key)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
