@@ -104,7 +104,7 @@ openerp.base_graph.GraphView = openerp.base.Controller.extend({
             for (var i in result){
                 var gen_key = result[i][this.chart_info_fields]+"_"+result[i][this.group_field];
                 if (this.opration_fld[gen_key] == undefined){
-                    var map_val = {}
+                    var map_val = {};
                     map_val[this.operator_field] = result[i][this.operator_field];
                     if (this.operator.length > 1){
                         map_val[this.operator_field_one] = result[i][this.operator_field_one];
@@ -123,7 +123,7 @@ openerp.base_graph.GraphView = openerp.base.Controller.extend({
                     this.opration_fld[gen_key] = map_val;
                 }
             }
-            result = []
+            result = [];
             for (i in this.opration_fld){
                 result.push(this.opration_fld[i]);
             }
