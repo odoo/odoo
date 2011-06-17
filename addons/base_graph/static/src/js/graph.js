@@ -84,8 +84,8 @@ openerp.base_graph.GraphView = openerp.base.Controller.extend({
         this.$element.html(QWeb.render("GraphView", {"fields_view": this.fields_view, "chart": this.chart,'view_id': this.view_id}));
         this.opration_fld = {};
         if (result.length){
-            for(res in result) {
-                for(fld in result[res]) {
+            for(var res in result) {
+                for(var fld in result[res]) {
                     if (typeof result[res][fld] == 'object') {
                         result[res][fld] = result[res][fld][result[res][fld].length - 1];
                     }
@@ -101,7 +101,7 @@ openerp.base_graph.GraphView = openerp.base.Controller.extend({
                 }
             }
 
-            for (i in result){
+            for (var i in result){
                 var gen_key = result[i][this.chart_info_fields]+"_"+result[i][this.group_field];
                 if (this.opration_fld[gen_key] == undefined){
                     var map_val = {}
@@ -182,7 +182,7 @@ openerp.base_graph.GraphView = openerp.base.Controller.extend({
             if (xystr[xystring] == undefined){
                 xyname = {};
                 xyname[self.chart_info_fields] = xystring;
-                for (j in self.group_list){
+                for (var j in self.group_list){
                     xyname[self.group_list[j]] = 0.0001;
                 }
                 xyname[newkey] = result[i][self.operator_field];
@@ -207,7 +207,7 @@ openerp.base_graph.GraphView = openerp.base.Controller.extend({
 
         //for legend color
         var grp_color = [];
-        for (i in self.group_list){
+        for (var i in self.group_list){
             var legend = {};
             if (self.group_list[i] == "val"){
                 legend['text'] = self.fields[self.operator_field]['string']

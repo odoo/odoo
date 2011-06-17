@@ -16,6 +16,43 @@ Source code repository
 Merge proposals
 +++++++++++++++
 
+Coding issues and coding conventions
+++++++++++++++++++++++++++++++++++++
+
+Javascript coding
+~~~~~~~~~~~~~~~~~
+
+Use ``var`` for *all* declarations
+**********************************
+
+In javascript (as opposed to Python), assigning to a variable which does not
+already exist and is not explicitly declared (via ``var``) will implicitly
+create a global variable. This is bad for a number of reasons:
+
+* It leaks information outside function scopes
+* It keeps memory of previous run, with potentially buggy behaviors
+* It may conflict with other functions with the same issue
+* It makes code harder to statically check (via e.g. IDE inspectors)
+
+.. note::
+    It is perfectly possible to use ``var`` in ``for`` loops:
+
+    .. code-block:: javascript
+
+        for (var i = 0; i < some_array.length; ++i) {
+            // code here
+        }
+
+    this is not an issue
+
+All local *and global* variables should be declared via ``var``.
+
+.. note:: generally speaking, you should not need globals in OpenERP Web: you
+          can just declare a variable local to your top-level function. This
+          way, if your widget/addon is instantiated several times on the same
+          page (because it's used in embedded mode) each instance will have its
+          own internal but global-to-its-objects data.
+
 Writing documentation
 +++++++++++++++++++++
 
