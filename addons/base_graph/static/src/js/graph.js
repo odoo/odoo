@@ -3,6 +3,15 @@
  *---------------------------------------------------------*/
 
 openerp.base_graph = function (openerp) {
+var COLOR_PALETTE = [
+    '#cc99ff', '#ccccff', '#48D1CC', '#CFD784', '#8B7B8B', '#75507b',
+    '#b0008c', '#ff0000', '#ff8e00', '#9000ff', '#0078ff', '#00ff00',
+    '#e6ff00', '#ffff00', '#905000', '#9b0000', '#840067', '#9abe00',
+    '#ffc900', '#510090', '#0000c9', '#009b00', '#75507b', '#3465a4',
+    '#73d216', '#c17d11', '#edd400', '#fcaf3e', '#ef2929', '#ff00c9',
+    '#ad7fa8', '#729fcf', '#8ae234', '#e9b96e', '#fce94f', '#f57900',
+    '#cc0000', '#d400a8'];
+
 QWeb.add_template('/base_graph/static/src/xml/base_graph.xml');
 openerp.base.views.add('graph', 'openerp.base_graph.GraphView');
 openerp.base_graph.GraphView = openerp.base.Controller.extend({
@@ -141,11 +150,6 @@ openerp.base_graph.GraphView = openerp.base.Controller.extend({
         var xystr = {};
         var group_list = [];
         var newkey = '', newkey_one;
-
-        var COLOR_PALETTE = ['#cc99ff', '#ccccff', '#48D1CC', '#CFD784', '#8B7B8B', '#75507b', '#b0008c', '#ff0000', '#ff8e00', '#9000ff', '#0078ff', '#00ff00', '#e6ff00', '#ffff00',
-                     '#905000', '#9b0000', '#840067', '#9abe00', '#ffc900', '#510090', '#0000c9', '#009b00',
-                     '#75507b', '#3465a4', '#73d216', '#c17d11', '#edd400', '#fcaf3e', '#ef2929', '#ff00c9',
-                     '#ad7fa8', '#729fcf', '#8ae234', '#e9b96e', '#fce94f', '#f57900', '#cc0000', '#d400a8'];
 
         if(self.group_field && (this.operator.length <= 1)){
             view_chart = self.orientation == 'horizontal'? 'stackedBarH' : 'stackedBar';
