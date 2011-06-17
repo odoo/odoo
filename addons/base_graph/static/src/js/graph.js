@@ -283,7 +283,7 @@ openerp.base_graph.GraphView = openerp.base.Controller.extend({
                 marker:{
                     type:"round",
                     width:12
-                },
+                }
             }
         });
         for (var i = 1; i<self.group_list.length;i++){
@@ -373,7 +373,7 @@ openerp.base_graph.GraphView = openerp.base.Controller.extend({
                 self.load_chart(response);
             });
         });
-    },
+    }
 
 });
 

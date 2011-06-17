@@ -22,6 +22,13 @@ Coding issues and coding conventions
 Javascript coding
 ~~~~~~~~~~~~~~~~~
 
+These are a number of guidelines for javascript code. More than coding
+conventions, these are warnings against potentially harmful or sub-par
+constructs.
+
+Ideally, you should be able to configure your editor or IDE to warn you against
+these kinds of issues.
+
 Use ``var`` for *all* declarations
 **********************************
 
@@ -52,6 +59,29 @@ All local *and global* variables should be declared via ``var``.
           way, if your widget/addon is instantiated several times on the same
           page (because it's used in embedded mode) each instance will have its
           own internal but global-to-its-objects data.
+
+Do not leave trailing commas in object literals
+***********************************************
+
+While it is legal to leave trailing commas in Python dictionaries, e.g.
+
+::
+
+    foo = {
+        'a': 1,
+        'b': 2,
+    }
+
+and it's valid in ECMAScript 5 and most browsers support it in Javascript, you
+should *never* use trailing commas in Javascript object literals:
+
+* Internet Explorer does *not* support trailing commas (at least until and
+  including Internet Explorer 8), and trailing comma will cause hard-to-debug
+  errors in it
+
+* JSON does not accept trailing comma (it is a syntax error), and using them
+  in object literals puts you at risks of using them in literal JSON strings
+  as well (though there are few reasons to write JSON by hand)
 
 Writing documentation
 +++++++++++++++++++++
