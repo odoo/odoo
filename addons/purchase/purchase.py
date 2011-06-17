@@ -228,7 +228,7 @@ class purchase_order(osv.osv):
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'purchase.order', context=c),
     }
     _sql_constraints = [
-        ('name_uniq', 'unique(name)', 'Order Reference must be unique !'),
+        ('name_uniq', 'unique(name, company_id)', 'Order Reference must be unique !'),
     ]
     _name = "purchase.order"
     _description = "Purchase Order"

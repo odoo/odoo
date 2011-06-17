@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+        <!-- Sequence types purchase-->
+        
+        <record id="seq_type_purchase_order_multi_company" model="ir.sequence.type">
+            <field name="name">Purchase Order</field>
+            <field name="code">purchase.order</field>
+        </record>
+
+       <!-- Sequences for Purchase-->
+        
+        <record id="seq_purchase_order_shop1" model="ir.sequence">
+            <field name="name">Purchase Order</field>
+            <field name="code">purchase.order</field>
+            <field name="prefix">PO</field>
+            <field name="padding">5</field>
+            <field name="company_id" ref="stock.res_company_shop0"/>
+        </record>
+        
+        <record id="seq_purchase_order_shop2" model="ir.sequence">
+            <field name="name">Purchase Order</field>
+            <field name="code">purchase.order</field>
+            <field name="prefix">PO</field>
+            <field name="padding">5</field>
+            <field name="company_id" ref="stock.res_company_tinyshop0"/>
+        </record>
+
+    </data>
+</openerp>
