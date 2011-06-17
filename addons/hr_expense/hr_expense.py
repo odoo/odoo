@@ -55,12 +55,6 @@ class hr_expense_expense(osv.osv):
         else:
             return self.pool.get('res.currency').search(cr, uid, [('rate','=',1.0)], context=context)[0]
 
-    def _company_get(obj, cr, uid, context=None):
-        employee_id = _employee_get(obj, cr, uid, context)
-        if employee_id:
-            return obj.pool.get('hr.employee').browse(cr, uid, employee_id, context=context).company_id.id
-        return False
-
     _name = "hr.expense.expense"
     _description = "Expense"
     _columns = {
@@ -98,7 +92,6 @@ class hr_expense_expense(osv.osv):
         'employee_id': _employee_get,
         'user_id': lambda cr, uid, id, c={}: id,
         'currency_id': _get_currency,
-        'company_id': _company_get,
     }
 
     def onchange_employee_id(self, cr, uid, ids, employee_id, context=None):
