@@ -37,6 +37,7 @@ import sys
 import threading
 import time
 import warnings
+import types
 from pprint import pformat
 
 # TODO modules that import netsvc only for things from loglevels must be changed to use loglevels.
@@ -440,7 +441,7 @@ class OpenERPDispatcher:
             self.log('exception', tools.exception_to_unicode(e))
             tb = getattr(e, 'traceback', sys.exc_info())
             tb_s = cgitb.text(tb)
-            if tools.config['debug_mode']:
+            if tools.config['debug_mode'] and isinstance(tb, types.TracebackType):
                 import pdb
                 pdb.post_mortem(tb[2])
             raise OpenERPDispatcherException(e, tb_s)
