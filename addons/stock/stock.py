@@ -1012,7 +1012,7 @@ class stock_picking(osv.osv):
                     'address_invoice_id': address_invoice_id,
                     'address_contact_id': address_contact_id,
                     'comment': comment,
-                    'payment_term': payment_term_id,
+                    'payment_term': address.partner_id.property_payment_term and address.partner_id.property_payment_term.id or False,
                     'fiscal_position': partner.property_account_position.id,
                     'date_invoice': context.get('date_inv',False),
                     'company_id': picking.company_id.id,
