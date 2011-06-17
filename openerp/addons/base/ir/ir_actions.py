@@ -803,7 +803,7 @@ act_window_close()
 class ir_actions_todo_category(osv.osv):
     _name = 'ir.actions.todo.category'
     _columns = {
-         'name':fields.char('Name', size=64, required=True),       
+         'name':fields.char('Name', size=64, translate=True, required=True), 
          'sequence': fields.integer('Sequence'),
          'wizards_ids': fields.one2many('ir.actions.todo', 'category_id', 'Configuration Wizards'),
     }
