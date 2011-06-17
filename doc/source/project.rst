@@ -83,6 +83,91 @@ should *never* use trailing commas in Javascript object literals:
   in object literals puts you at risks of using them in literal JSON strings
   as well (though there are few reasons to write JSON by hand)
 
+*Never* use ``for … in`` to iterate on arrays
+*********************************************
+
+:ref:`Iterating over an object with for…in is a bit tricky already
+<for-in-iteration>`, it is far more complex than in Python (where it Just
+Works™) due to the interaction of various Javascript features, but to iterate
+on arrays it becomes downright deadly and errorneous: ``for…in`` really
+iterates over an *object*'s *properties*.
+
+With an array, this has the following consequences:
+
+* It does not necessarily iterate in numerical order, nor does it iterate in
+  any kind of set order. The order is implementation-dependent and may vary
+  from one run to the next depending on a number of reasons and implementation
+  details.
+* If properties are added to an array, to ``Array.prototype`` or to
+  ``Object.prototype`` (the latter two should not happen in well-behaved
+  javascript code, but you never know...) those properties *will* be iterated
+  over by ``for…in``. While ``Object.hasOwnProperty`` will guard against
+  iterating prototype properties, they will not guard against properties set
+  on the array instance itself (as memoizers for instance).
+
+  Note that this includes setting negative keys on arrays.
+
+For this reason, ``for…in`` should **never** be used on array objects. Instead,
+you should use either a normal ``for`` or (even better, unless you have
+profiled the code and found a hotspot) one of Underscore's array iteration
+methods (`_.each`_, `_.map`_, `_.filter`_, etc...).
+
+Underscore is guaranteed to be bundled and available in OpenERP Web scopes.
+
+.. _for-in-iteration:
+
+Use ``hasOwnProperty`` when iterating on an object with ``for … in``
+********************************************************************
+
+``for…in`` is Javascript's built-in facility for iterating over and object's
+properties.
+
+`It is also fairly tricky to use`_: it iterates over *all* non-builtin
+properties of your objects [#]_, which includes methods of an object's class.
+
+As a result, when iterating over an object with ``for…in`` the first line of
+the body *should* generally be a call to `Object.hasOwnProperty`_. This call
+will check whether the property was set directly on the object or comes from
+the object's class:
+
+.. code-block:: javascript
+
+    for(var key in ob) {
+        if (!ob.hasOwnProperty(key)) {
+            // comes from ob's class
+            continue;
+        }
+        // do stuff with key
+    }
+
+Since properties can be added directly to e.g. ``Object.prototype`` (even
+though it's usually considered bad style), you should not assume you ever know
+which properties ``for…in`` is going to iterate over.
+
+An alternative is to use Underscore's iteration methods, which generally work
+over objects as well as arrays:
+
+Instead of
+
+.. code-block:: javascript
+
+    for (var key in ob) {
+        if (!ob.hasOwnProperty(key)) { continue; }
+        var value = ob[key];
+        // Do stuff with key and value
+    }
+
+you could write:
+
+.. code-block:: javascript
+
+    _.each(ob, function (value, key) {
+        // do stuff with key and value
+    });
+
+and not worry about the details of the iteration: underscore should do the
+right thing for you on its own [#]_.
+
 Writing documentation
 +++++++++++++++++++++
 
@@ -294,6 +379,30 @@ Roadmap
 Release notes
 +++++++++++++
 
+.. [#] More precisely, it iterates over all *enumerable* properties. It just
+       happens that built-in properties (such as ``String.indexOf`` or
+       ``Object.toString``) are set to non-enumerable.
+
+       The enumerability of a property can be checked using
+       `Object.propertyIsEnumeable`_.
+
+       Before ECMAScript 5, it was not possible for user-defined properties
+       to be non-enumerable in a portable manner. ECMAScript 5 introduced
+       `Object.defineProperty`_ which lets user code create non-enumerable
+       properties (and more, read-only properties for instance, or implicit
+       getters and setters). However, support for these is not fully complete
+       at this point, and they are not being used in OpenERP Web code anyway.
+
+.. [#] While using underscore is generally the preferred method (simpler,
+       more reliable and easier to write than a *correct* ``for…in``
+       iteration), it is also probably slower (due to the overhead of
+       calling a bunch of functions).
+
+       As a result, if you profile some code and find out that an underscore
+       method adds unacceptable overhead in a tight loop, you may want to
+       replace it with a ``for…in`` (or a regular ``for`` statement for
+       arrays).
+
 .. [#] Because Python is the default domain, the ``py:`` markup prefix
        is optional and should be left out.
 
@@ -326,3 +435,17 @@ Release notes
     http://code.google.com/p/jsdoc-toolkit/
 .. _John Resig's Class implementation:
     http://ejohn.org/blog/simple-javascript-inheritance/
+.. _\_.each:
+    http://documentcloud.github.com/underscore/#each
+.. _\_.map:
+    http://documentcloud.github.com/underscore/#map
+.. _\_.filter:
+    http://documentcloud.github.com/underscore/#select
+.. _It is also fairly tricky to use:
+    https://developer.mozilla.org/en/JavaScript/Reference/Statements/for...in#Description
+.. _Object.propertyIsEnumeable:
+    https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object/propertyIsEnumerable
+.. _Object.defineProperty:
+    https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object/defineProperty
+.. _Object.hasOwnProperty:
+    https://developer.mozilla.org/en/JavaScript/Reference/Global_Objects/Object/hasOwnProperty

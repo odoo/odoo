@@ -39,17 +39,18 @@ openerp.base_graph.GraphView = openerp.base.Controller.extend({
         this.group_field = '';
         this.orientation = this.fields_view.arch.attrs.orientation || '';
 
-        for(var fld in this.fields_view.arch.children) {
-            if (this.fields_view.arch.children[fld].attrs.operator) {
-                this.operator.push(this.fields_view.arch.children[fld].attrs.name);
+        _.each(this.fields_view.arch.children, function (field) {
+            if (field.attrs.operator) {
+                this.operator.push(field.attrs.name);
             }
-            else if (this.fields_view.arch.children[fld].attrs.group) {
-                this.group_field = this.fields_view.arch.children[fld].attrs.name;
+            else if (field.attrs.group) {
+                this.group_field = field.attrs.name;
             }
             else {
-                this.chart_info_fields.push(this.fields_view.arch.children[fld].attrs.name);
+                this.chart_info_fields.push(field.attrs.name);
             }
-        }
+        }, this);
+
         this.operator_field = this.operator[0];
         if(this.operator.length > 1){
             this.operator_field_one = this.operator[1];
@@ -80,53 +81,53 @@ openerp.base_graph.GraphView = openerp.base.Controller.extend({
         }
     },
 
-    schedule_chart: function(result) {
+    schedule_chart: function(results) {
         this.$element.html(QWeb.render("GraphView", {"fields_view": this.fields_view, "chart": this.chart,'view_id': this.view_id}));
         this.opration_fld = {};
-        if (result.length){
-            for(var res in result) {
-                for(var fld in result[res]) {
-                    if (typeof result[res][fld] == 'object') {
-                        result[res][fld] = result[res][fld][result[res][fld].length - 1];
+        if (results.length){
+            _.each(results, function (result) {
+                _.each(result, function (field_value, field_name) {
+                    if (typeof field_value == 'object') {
+                        result[field_name] = field_value[field_value.length - 1];
                     }
-                    if (typeof result[res][fld] == 'string'){
-                        if (this.all_fields[fld]['selection']){
-                            for (var i in this.all_fields[fld]['selection']){
-                                if(result[res][fld] == this.all_fields[fld]['selection'][i][0]){
-                                   result[res][fld] = this.all_fields[fld]['selection'][i];
-                                }
+                    if (typeof field_value == 'string'){
+                        var choices = this.all_fields[field_name]['selection'];
+                        _.each(choices, function (choice) {
+                            if(field_value == choice[0]){
+                               result[field_name] = choice;
                             }
-                        }
+                        });
                     }
-                }
-            }
+                }, this);
+            }, this);
 
-            for (var j in result){
-                var gen_key = result[j][this.chart_info_fields]+"_"+result[j][this.group_field];
+            _.each(results, function (result) {
+                var gen_key = result[this.chart_info_fields]+"_"+result[this.group_field];
                 if (this.opration_fld[gen_key] == undefined){
                     var map_val = {};
-                    map_val[this.operator_field] = result[j][this.operator_field];
+                    map_val[this.operator_field] = result[this.operator_field];
                     if (this.operator.length > 1){
-                        map_val[this.operator_field_one] = result[j][this.operator_field_one];
+                        map_val[this.operator_field_one] = result[this.operator_field_one];
                     }
-                    map_val[this.chart_info_fields] = result[j][this.chart_info_fields];
+                    map_val[this.chart_info_fields] = result[this.chart_info_fields];
                     if (this.group_field){
-                        map_val[this.group_field] = (typeof result[j][this.group_field] == 'object')?result[j][this.group_field][1]:result[j][this.group_field];
+                        map_val[this.group_field] = (typeof result[this.group_field] == 'object')?result[this.group_field][1]:result[this.group_field];
                     }
                     this.opration_fld[gen_key] = map_val;
-                }else{
+                } else {
                     map_val = this.opration_fld[gen_key];
-                    map_val[this.operator_field] += result[j][this.operator_field];
+                    map_val[this.operator_field] += result[this.operator_field];
                     if (this.operator.length > 1){
-                        map_val[this.operator_field_one] += result[j][this.operator_field_one];
+                        map_val[this.operator_field_one] += result[this.operator_field_one];
                     }
                     this.opration_fld[gen_key] = map_val;
                 }
-            }
+            }, this);
+
             var graph_data = [];
-            for (var op in this.opration_fld){
-                graph_data.push(this.opration_fld[op]);
-            }
+            _.each(this.opration_fld, function (column_data) {
+                graph_data.push(column_data);
+            });
 
             if(this.chart == 'bar') {
                 return this.schedule_bar(graph_data);
@@ -136,14 +137,14 @@ openerp.base_graph.GraphView = openerp.base.Controller.extend({
         }
     },
 
-    schedule_bar: function(result) {
+    schedule_bar: function(results) {
         var self = this;
         var view_chart = '';
         var xystr = {};
         var xyname = {};
         var res = [];
         this.group_list = [];
-        var newkey = '';
+        var newkey = '', newkey_one;
 
         var COLOR_PALETTE = ['#cc99ff', '#ccccff', '#48D1CC', '#CFD784', '#8B7B8B', '#75507b', '#b0008c', '#ff0000', '#ff8e00', '#9000ff', '#0078ff', '#00ff00', '#e6ff00', '#ffff00',
                      '#905000', '#9b0000', '#840067', '#9abe00', '#ffc900', '#510090', '#0000c9', '#009b00',
@@ -156,69 +157,70 @@ openerp.base_graph.GraphView = openerp.base.Controller.extend({
             view_chart = self.orientation == 'horizontal'? 'barH' : 'bar';
         }
 
-        for (var i in result){
+        _.each(results, function (result) {
             if (self.group_field && (this.operator.length <= 1)){
-                newkey =result[i][self.group_field].split(' ').join('_');
-            }else{
+                newkey = result[self.group_field].split(' ').join('_');
+            } else {
                 newkey = "val";
             }
 
             if (jQuery.inArray(newkey, self.group_list) == -1){
                 self.group_list.push(newkey);
                 if(this.operator.length > 1){
-                    var newkey_one = "val1";
+                    newkey_one = "val1";
                     self.group_list.push(newkey_one);
                 }
             }
-        }
+        }, this);
 
-        for (var j in result){
-            var xystring = result[j][self.chart_info_fields];
+        _.each(results, function (result) {
+            var xystring = result[self.chart_info_fields];
             if (self.group_field && (self.operator.length <= 1)){
-                newkey =result[j][self.group_field].split(' ').join('_');
+                newkey = result[self.group_field].split(' ').join('_');
             }else{
                 newkey = "val";
             }
             if (xystr[xystring] == undefined){
                 xyname = {};
                 xyname[self.chart_info_fields] = xystring;
-                for (var k in self.group_list){
-                    xyname[self.group_list[k]] = 0.0001;
-                }
-                xyname[newkey] = result[j][self.operator_field];
+                _.each(self.group_list, function (group) {
+                    xyname[group] = 0.0001;
+                });
+                xyname[newkey] = result[self.operator_field];
                 if (self.operator.length > 1){
-                    xyname[newkey_one] = result[j][self.operator_field_one];
+                    xyname[newkey_one] = result[self.operator_field_one];
                 }
                 xystr[xystring] = xyname;
             }
             else{
                 xyname = {};
                 xyname = xystr[xystring];
-                xyname[newkey] = result[j][self.operator_field];
+                xyname[newkey] = result[self.operator_field];
                 if (self.operator.length > 1){
-                    xyname[newkey_one] = result[j][self.operator_field_one];
+                    xyname[newkey_one] = result[self.operator_field_one];
                 }
                 xystr[xystring] = xyname;
             }
-        }
-        for (var label in xystr){
-            res.push(xystr[label]);
-        }
+        });
+
+        _.each(xystr, function (column_data) {
+            res.push(column_data);
+        });
 
         //for legend color
         var grp_color = [];
-        for (var l in self.group_list){
+        _.each(self.group_list, function (group_legend, index) {
             var legend = {};
-            if (self.group_list[l] == "val"){
+            if (group_legend == "val"){
                 legend['text'] = self.fields[self.operator_field]['string']
-            }else if(self.group_list[l] == "val1"){
+            }else if(group_legend == "val1"){
                 legend['text'] = self.fields[self.operator_field_one]['string']
             }else{
-                legend['text'] = self.group_list[l];
+                legend['text'] = group_legend;
             }
-            legend['color'] = COLOR_PALETTE[l];
+            legend['color'] = COLOR_PALETTE[index];
             grp_color.push(legend);
-        }
+        });
 
         //for axis's value and title
         var temp_ax = {};
