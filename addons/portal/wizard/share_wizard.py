@@ -112,52 +112,78 @@ class share_wizard_portal(osv.osv_memory):
         menu_id =  self.pool.get('ir.ui.menu').create(cr, UID_ROOT, menu_data)
         return menu_id
 
-    def _create_share_users_groups(self, cr, uid, wizard_data, context=None):
-        """Creates the appropriate shared users and groups, and populates
-           result_line_ids of wizard_data with one line for each user. 
+    def _create_share_users_group(self, cr, uid, wizard_data, context=None):
+        # Override of super() to handle the possibly selected "existing users"
+        # and "existing groups".
+        # In both cases, we call super() to create the share group, but when
+        # sharing with existing groups, we will later delete it, and copy its
+        # access rights and rules to the selected groups.
+        group_id = super(share_wizard_portal,self)._create_share_users_group(cr, uid, wizard_data, context=context)
 
-           :return: group_ids (to which the shared access should be granted),
-                    new_user_ids, and existing_user_ids.
-        """
-        group_ids, new_ids, existing_ids = [], [], []
-
-        if wizard_data.user_type == 'groups':
-            group_id = None
-            group_ids.extend([g.id for g in wizard_data.group_ids])
-            # populate result lines with the users of each group
-            for group in wizard_data.group_ids:
-                for user in group.users:
-                    new_line = {'login': user.login,
-                                'newly_created': False}
-                    wizard_data.write({'result_line_ids': [(0,0,new_line)]})
-
-            # get the list of portals and the related groups
-            # and install their menus.
+        # For sharing with existing groups, we don't create a share group, instead we'll
+        # alter the rules of the groups so they can see the shared data
+        if wizard_data.group_ids:
+            # get the list of portals and the related groups to install their menus.
             Portals = self.pool.get('res.portal')
             all_portals = Portals.browse(cr, UID_ROOT, Portals.search(cr, UID_ROOT, [])) #no context!
             all_portal_group_ids = [p.group_id.id for p in all_portals]
+
+            # populate result lines with the users of each group and
+            # setup the menu for portal groups
             for group in wizard_data.group_ids:
                 if group.id in all_portal_group_ids:
                     portal = all_portals[all_portal_group_ids.index(group.id)]
                     self._create_shared_data_menu(cr, uid, wizard_data, portal, context=context)
 
-        else:
-            # for other case with user_type in ('emails', 'existing'), we rely on super()
-            group_ids, new_ids, existing_ids = super(share_wizard_portal,self)._create_share_users_groups(cr, uid, wizard_data, context=context)
-            # must take care of existing users, by adding them to the new group, which is group_ids[0],
-            # and adding the shortcut
-            group_id = group_ids[0]
-            existing_user_ids = [x.id for x in wizard_data.user_ids] # manually selected users
-            if existing_user_ids:
-                self.pool.get('res.users').write(cr, UID_ROOT, existing_user_ids, {'groups_id': [(4,group_id)]})
-                self._setup_action_and_shortcut(cr, uid, wizard_data, existing_ids, make_home=False, context=context)
-                existing_ids.extend(existing_user_ids)
-                # populate the result lines for existing users too
-                for user in wizard_data.user_ids:
-                    new_line = { 'login': user.login,
-                                 'newly_created': False}
+                for user in group.users:
+                    new_line = {'user_id': user.id,
+                                'newly_created': False}
                     wizard_data.write({'result_line_ids': [(0,0,new_line)]})
 
-        return group_ids, new_ids, existing_ids
+        elif wizard_data.user_ids:
+            # must take care of existing users, by adding them to the new group, which is group_ids[0],
+            # and adding the shortcut
+            selected_user_ids = [x.id for x in wizard_data.user_ids]
+            self.pool.get('res.users').write(cr, UID_ROOT, selected_user_ids, {'groups_id': [(4,group_id)]})
+            self._setup_action_and_shortcut(cr, uid, wizard_data, selected_user_ids, make_home=False, context=context)
+            # populate the result lines for existing users too
+            for user in wizard_data.user_ids:
+                new_line = { 'user_id': user.id,
+                             'newly_created': False}
+                wizard_data.write({'result_line_ids': [(0,0,new_line)]})
+
+        return group_id
+
+    def copy_share_group_access_and_delete(self, cr, wizard_data, share_group_id, context=None):
+        # In the case of sharing with existing groups, the strategy is to copy
+        # access rights and rules from the share group, so that we can
+        if not wizard_data.group_ids: return
+        Groups = self.pool.get('res.groups')
+        Rules = self.pool.get('ir.rule')
+        Rights = self.pool.get('ir.model.access')
+        share_group = Groups.browse(cr, UID_ROOT, share_group_id)
+        share_rule_ids = [r.id for r in share_group.rule_groups]
+        for target_group in wizard_data.group_ids:
+            # Link the rules to the group. This is appropriate because as of
+            # v6.1, the algorithm for combining them will OR the rules, hence
+            # extending the visible data.
+            Rules.write(cr, UID_ROOT, share_rule_ids, {'groups': [(4,target_group.id)]})
+            self._logger.debug("Linked sharing rules from temporary sharing group to group %s", target_group)
+
+            # Copy the access rights. This is appropriate too because
+            # groups have the UNION of all permissions granted by their
+            # access right lines.
+            for access_line in share_group.model_access:
+                Rights.copy(cr, UID_ROOT, access_line.id, default={'group_id': target_group.id})
+            self._logger.debug("Copied access rights from temporary sharing group to group %s", target_group)
+
+        # finally, delete it after removing its users
+        Groups.write(cr, UID_ROOT, [share_group_id], {'users': [(6,0,[])]})
+        Groups.unlink(cr, UID_ROOT, [share_group_id])
+        self._logger.debug("Deleted temporary sharing group %s", share_group_id)
+
+    def _finish_result_lines(self, cr, uid, wizard_data, share_group_id, context=None):
+        super(share_wizard_portal,self)._finish_result_lines(cr, uid, wizard_data, share_group_id, context=context)
+        self.copy_share_group_access_and_delete(cr, wizard_data, share_group_id, context=context)
 
 share_wizard_portal()
