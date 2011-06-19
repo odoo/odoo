@@ -936,6 +936,9 @@ class related(function):
         if self._type=='many2one':
             ids = filter(None, res.values())
             if ids:
+                # name_get as root, as seeing the name of a related
+                # object depends on access right of source document,
+                # not target, so user may not have access.
                 ng = dict(obj.pool.get(self._obj).name_get(cr, 1, ids, context=context))
                 for r in res:
                     if res[r]:
@@ -1079,7 +1082,10 @@ class property(function):
             value = properties.get_by_record(cr, uid, prop, context=context)
             res[prop.res_id.id][prop.fields_id.name] = value or False
             if value and (prop.type == 'many2one'):
-                record_exists = obj.pool.get(value._name).exists(cr, uid, value.id)
+                # check existence as root, as seeing the name of a related
+                # object depends on access right of source document,
+                # not target, so user may not have access.
+                record_exists = obj.pool.get(value._name).exists(cr, 1, value.id)
                 if record_exists:
                     replaces.setdefault(value._name, {})
                     replaces[value._name][value.id] = True
@@ -1087,8 +1093,11 @@ class property(function):
                     res[prop.res_id.id][prop.fields_id.name] = False
 
         for rep in replaces:
-            nids = obj.pool.get(rep).search(cr, uid, [('id','in',replaces[rep].keys())], context=context)
-            replaces[rep] = dict(obj.pool.get(rep).name_get(cr, uid, nids, context=context))
+            # search+name_get as root, as seeing the name of a related
+            # object depends on access right of source document,
+            # not target, so user may not have access.
+            nids = obj.pool.get(rep).search(cr, 1, [('id','in',replaces[rep].keys())], context=context)
+            replaces[rep] = dict(obj.pool.get(rep).name_get(cr, 1, nids, context=context))
 
         for prop in prop_name:
             for id in ids:
