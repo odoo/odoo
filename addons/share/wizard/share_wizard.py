@@ -172,7 +172,7 @@ class share_wizard(osv.osv_memory):
         current_user = user_obj.browse(cr, UID_ROOT, uid, context=context)
         created_ids = []
         existing_ids = []
-        for new_user in wizard_data.new_users.split('\n'):
+        for new_user in (wizard_data.new_users or '').split('\n'):
             # Ignore blank lines
             new_user = new_user.strip()
             if not new_user: continue
