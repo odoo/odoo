@@ -20,6 +20,7 @@
 ##############################################################################
 
 from osv import osv, fields
+from tools.translate import _
 
 UID_ROOT = 1
 SHARED_DOCS_MENU = "Documents"
@@ -30,24 +31,23 @@ class share_wizard_portal(osv.osv_memory):
        menus in the selected portal upon sharing with a portal group."""
     _inherit = "share.wizard"
 
+    def _user_type_selection(self, cr, uid, context=None):
+        selection = super(share_wizard_portal, self)._user_type_selection(cr, uid, context=context)
+        selection.extend([('existing','Users you already shared with'),
+                          ('groups','Existing Groups (e.g Portal Groups)')])
+        return selection
+
     _columns = {
         'user_ids': fields.many2many('res.users', 'share_wizard_res_user_rel', 'share_id', 'user_id', 'Existing users', domain=[('share', '=', True)]),
         'group_ids': fields.many2many('res.groups', 'share_wizard_res_group_rel', 'share_id', 'group_id', 'Existing groups', domain=[('share', '=', False)]),
+
+        # no clean way to extend selection yet, copy the field. 
+        'user_type': fields.selection(_user_type_selection,'Users to share with',
+             help="Select the type of user(s) you would like to share data with."),
     }
 
     def is_portal_manager(self, cr, uid, context=None):
         return self.has_group(cr, uid, module='portal', group_xml_id='group_portal_manager', context=context)
-
-    def has_share(self, cr, uid, context=None):
-        return self.has_extended_share(cr, uid, context=context) or \
-               super(share_wizard_portal, self).has_share(cr, uid, context=context)
-
-    def _user_type_selection(self, cr, uid, context=None):
-        selection = super(share_wizard_portal, self)._user_type_selection(cr, uid, context=context)
-        if self.is_portal_manager(cr, uid, context=context):
-            selection.extend([('existing','Users you already shared with'),
-                              ('groups','Portal Groups')])
-        return selection
 
     def _check_preconditions(self, cr, uid, wizard_data, context=None):
         if wizard_data.user_type == 'existing':
@@ -144,9 +144,9 @@ class share_wizard_portal(osv.osv_memory):
         else:
             # for other case with user_type in ('emails', 'existing'), we rely on super()
             group_ids, new_ids, existing_ids = super(share_wizard_portal,self)._create_share_users_groups(cr, uid, wizard_data, context=context)
-
             # must take care of existing users, by adding them to the new group, which is group_ids[0],
             # and adding the shortcut
+            group_id = group_ids[0]
             existing_user_ids = [x.id for x in wizard_data.user_ids] # manually selected users
             if existing_user_ids:
                 self.pool.get('res.users').write(cr, UID_ROOT, existing_user_ids, {'groups_id': [(4,group_id)]})
