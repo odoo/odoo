@@ -230,7 +230,7 @@ class share_wizard(osv.osv_memory):
         return action_id
 
     def _cleanup_action_context(self, context_str, user_id):
-        """Returns a dict representing the context_str evaluated (literal_eval) as
+        """Returns a dict representing the context_str evaluated (safe_eval) as
            a dict where items that are not useful for shared actions
            have been removed. If the evaluation of context_str as a
            dict fails, context_str is returned unaltered.
@@ -241,15 +241,17 @@ class share_wizard(osv.osv_memory):
         result = False
         if context_str:
             try:
-                context = safe_eval(context_str, {'uid': user_id})
+                context = safe_eval(context_str, tools.UnquoteEvalContext(), nocopy=True)
                 result = dict(context)
                 for key in context:
                     # Remove all context keys that seem to toggle default
-                    # filters based on the current user, which make no sense
-                    # for shared users
+                    # filters based on the current user, as it makes no sense
+                    # for shared users, who would not see any data by default.
                     if key and key.startswith('search_default_') and 'user_id' in key:
                         result.pop(key)
-            except (NameError, ValueError):
+            except Exception:
+                # Note: must catch all exceptions, as UnquoteEvalContext may cause many
+                #       different exceptions, as it shadows builtins.
                 self.__logger.debug("Failed to cleanup action context as it does not parse server-side", exc_info=True)
                 result = context_str
         return result
