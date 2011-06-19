@@ -1286,8 +1286,8 @@ class orm_template(object):
             res[f] = fields.field_to_dict(self, cr, user, context, field)
 
             if not write_access:
-                res['readonly'] = True
-                res['states'] = {}
+                res[f]['readonly'] = True
+                res[f]['states'] = {}
 
             if hasattr(res[f], 'string'):
                 res_trans = translation_obj._get_source(cr, user, self._name + ',' + f, 'field', context.get('lang', False) or 'en_US')
