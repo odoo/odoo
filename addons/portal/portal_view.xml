@@ -12,7 +12,7 @@
             <field name="view_mode">tree,form</field>
             <field name="help">
 A portal helps defining specific views and rules for a group of users (the
-portal group).  A portal is associated to a menu; when changed, the portal menu
+portal group).  A portal is associated with a menu; when changed, the portal menu
 is assigned to the portal's users.  Groups can be added to or removed from the
 portal's users.
             </field>
@@ -20,12 +20,40 @@ portal's users.
         <menuitem name="Portals" id="portal_list_menu"
             parent="portal_menu" sequence="1" action="portal_list_action"/>
 
+
+        <!-- portal list view -->
+        <record id="portal_list" model="ir.ui.view">
+            <field name="name">Portal List</field>
+            <field name="model">res.portal</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Portal List">
+                    <field name="group_id"/>
+                    <field name="user_ids"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- portal search view -->
+        <record id="portal_search" model="ir.ui.view">
+            <field name="name">Portal Search</field>
+            <field name="model">res.portal</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Portal Search">
+                    <field name="group_id"/>
+                    <field name="user_ids"/>
+                    <field name="menu_action_id"/>
+                    <field name="parent_menu_id"/>
+                </search>
+            </field>
+        </record>
+
         <!-- portal form view -->
         <record id="portal_form" model="ir.ui.view">
             <field name="name">Portal Form</field>
             <field name="model">res.portal</field>
             <field name="type">form</field>
-            <field name="priority" eval="16"/>
             <field name="arch" type="xml">
                 <form string="Portal Form">
                     <field name="group_id" on_change="onchange_group(group_id)"/>
