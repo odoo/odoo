@@ -581,6 +581,7 @@ class groups2(osv.osv): ##FIXME: Is there a reason to inherit this object ?
 
         if group_users:
             user_names = [user.name for user in self.pool.get('res.users').browse(cr, uid, group_users, context=context)]
+            user_names = list(set(user_names))
             if len(user_names) >= 5:
                 user_names = user_names[:5] + ['...']
             raise osv.except_osv(_('Warning !'),
