@@ -1487,7 +1487,7 @@ dhtmlx.chart.stackedBarH = {
 			
 			/*for the 2nd, 3rd, etc. series*/
 			if(sIndex)
-			    x0 = data[i].$startX;
+			    x0 = data[i].$startX || x0;
 			
 			if(value<0||(this._settings.yAxis&&value===0)){
 				this.renderTextAt(true, true, x0+Math.floor(barWidth/2),y0,this._settings.label(data[i]));
@@ -1622,8 +1622,8 @@ dhtmlx.chart.stackedBar = {
 			
 			/*for the 2nd, 3rd, etc. series*/
 			if(sIndex)
-			    y0 = data[i].$startY;
-			
+			    y0 = data[i].$startY || y0;
+
 			/*the max height limit*/
 			if(y0 < (point0.y+1)) continue;
 			
