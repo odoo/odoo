@@ -205,9 +205,9 @@ class account_invoice_refund(osv.osv_memory):
                                 inv_obj.write(cr, uid, [inv_id], data['value'])
                         created_inv.append(inv_id)
             xml_id = (inv.type == 'out_refund') and 'action_invoice_tree1' or \
-                     (inv.type == 'in_invoice') and 'action_invoice_tree2' or \
+                     (inv.type == 'in_refund') and 'action_invoice_tree2' or \
                      (inv.type == 'out_invoice') and 'action_invoice_tree3' or \
-                     (inv.type == 'in_refund') and 'action_invoice_tree4'
+                     (inv.type == 'in_invoice') and 'action_invoice_tree4'
             result = mod_obj.get_object_reference(cr, uid, 'account', xml_id)
             id = result and result[1] or False
             result = act_obj.read(cr, uid, id, context=context)
