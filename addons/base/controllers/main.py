@@ -238,6 +238,7 @@ def eval_context_and_domain(session, context, domain=None):
     return (e_context, e_domain)
         
 def load_actions_from_ir_values(req, key, key2, models, meta, context):
+    context['bin_size'] = False # Possible upstream bug. Antony says not to loose time on this.
     Values = req.session.model('ir.values')
     actions = Values.get(key, key2, models, meta, context)
 
@@ -339,10 +340,7 @@ class Menu(openerpweb.Controller):
     def action(self, req, menu_id):
         actions = load_actions_from_ir_values(req,'action', 'tree_but_open',
                                              [('ir.ui.menu', menu_id)], False,
-                                             #TODO niv fme: make it support context
-                                             #req.session.eval_context(req.context))
-                                             {})
-
+                                             req.session.eval_context(req.context))
         return {"action": actions}
 
 class DataSet(openerpweb.Controller):
