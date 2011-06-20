@@ -226,7 +226,7 @@ openerp.base_graph.GraphView = openerp.base.Controller.extend({
              y_axis = ordinate_description;
         }
 
-        var bar_chart = new dhtmlxchartChart({
+        var bar_chart = new dhtmlXChart({
             view: view_chart,
             container: self.view_id+"-barchart",
             value:"#"+group_list[0]+"#",
@@ -289,7 +289,7 @@ openerp.base_graph.GraphView = openerp.base.Controller.extend({
     },
     schedule_pie: function(result) {
         var self = this;
-        var chart =  new dhtmlxchartChart({
+        var chart =  new dhtmlXChart({
             view:"pie3D",
             container:self.view_id+"-piechart",
             value:"#"+self.operator_field+"#",
