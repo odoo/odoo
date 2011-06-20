@@ -149,6 +149,16 @@ openerp.base.Registry = Class.extend( /** @lends openerp.base.Registry# */ {
     add: function (key, object_path) {
         this.map[key] = object_path;
         return this;
+    },
+    /**
+     * Creates and returns a copy of the current mapping, with the provided
+     * mapping argument added in (replacing existing keys if needed)
+     *
+     * @param {Object} [mapping={}] a mapping of keys to object-paths
+     */
+    clone: function (mapping) {
+        return new openerp.base.Registry(
+            _.extend({}, this.map, mapping || {}));
     }
 });
 
@@ -441,6 +451,13 @@ openerp.base.Session = openerp.base.BasicController.extend( /** @lends openerp.b
         this.set_cookie('uid', this.uid);
         this.set_cookie('session_id', this.session_id);
     },
+    logout: function() {
+        this.uid = this.get_cookie('uid');
+        this.session_id = this.get_cookie('session_id');
+        this.set_cookie('uid', '');
+        this.set_cookie('session_id', '');
+        this.on_session_invalid(function() {});
+    },
     /**
      * Fetches a cookie stored by an openerp session
      *
@@ -720,6 +737,66 @@ openerp.base.BaseWidget = openerp.base.Controller.extend({
     }
 });
 
+openerp.base.Dialog = openerp.base.BaseWidget.extend({
+    dialog_title: "",
+    identifier_prefix: 'dialog',
+    init: function (session, options) {
+        this._super(null, session);
+        options = _.extend({
+            modal: true,
+            title: this.dialog_title,
+            width: '700px',
+            min_width: 0,
+            max_width: '100%',
+            height: '500px',
+            min_height: 0,
+            max_height: '100%',
+            buttons: {}
+        }, options);
+
+        options.width = this.get_width(options.width);
+        options.min_width = this.get_width(options.min_width);
+        options.max_width = this.get_width(options.max_width);
+        options.height = this.get_height(options.height);
+        options.min_height = this.get_height(options.min_height);
+        options.max_height = this.get_height(options.max_height);
+
+        if (options.width > options.max_width) options.width = options.max_width;
+        if (options.width < options.min_width) options.width = options.min_width;
+        if (options.height > options.max_height) options.height = options.max_height;
+        if (options.height < options.min_height) options.height = options.min_height;
+
+        for (var f in this) {
+            if (f.substr(0, 10) == 'on_button_') {
+                options.buttons[f.substr(10)] = this[f];
+            }
+        }
+        this.options = options;
+    },
+    get_width: function(val) {
+        return this.get_size(val.toString(), $(window.top).width());
+    },
+    get_height: function(val) {
+        return this.get_size(val.toString(), $(window.top).height());
+    },
+    get_size: function(val, available_size) {
+        if (val == 'auto') {
+            return val;
+        } else if (val.slice(-1) == "%") {
+            return Math.round(available_size / 100 * parseInt(val.slice(0, -1), 10));
+        } else {
+            return parseInt(val, 10);
+        }
+    },
+    start: function () {
+        this.$dialog = $('<div id="' + this.element_id + '"></div>').dialog(this.options);
+        this._super();
+    },
+    stop: function () {
+        this.$dialog("destroy").remove();
+    }
+});
+
 openerp.base.CrashManager = openerp.base.Controller.extend({
     init: function(session, element_id) {
         this._super(session, element_id);
@@ -769,47 +846,81 @@ openerp.base.Database = openerp.base.Controller.extend({
 openerp.base.Login =  openerp.base.Controller.extend({
     init: function(session, element_id) {
         this._super(session, element_id);
+        this.has_local_storage = typeof(localStorage) != 'undefined';
+        this.selected_db = null;
+        this.selected_login = null;
+        this.selected_password = null;
+        this.remember = false;
+        if (this.has_local_storage && localStorage.getItem('remember_creditentials') === 'true') {
+            this.remember = true;
+            this.selected_db = localStorage.getItem('last_db_login_success');
+            this.selected_login = localStorage.getItem('last_login_login_success');
+            this.selected_password = localStorage.getItem('last_password_login_success');
+        }
     },
     start: function() {
-        this.$element.html(QWeb.render("Login", {}));
+        var self = this;
+        this.rpc("/base/session/get_databases_list", {}, function(result) {
+            self.db_list = result.db_list;
+            self.display();
+        }, function() {
+            self.display();
+        });
+    },
+    display: function() {
+        this.$element.html(QWeb.render("Login", this));
         this.$element.find("form").submit(this.on_submit);
     },
     on_login_invalid: function() {
-        this.$element
-            .removeClass("login_valid")
-            .addClass("login_invalid")
-            .show();
+        this.$element.closest(".openerp").addClass("login-mode");
     },
     on_login_valid: function() {
-        this.$element
-            .removeClass("login_invalid")
-            .addClass("login_valid")
-            .hide();
+        this.$element.closest(".openerp").removeClass("login-mode");
     },
     on_submit: function(ev) {
         ev.preventDefault();
         var self = this;
         var $e = this.$element;
-        var db = $e.find("form input[name=db]").val();
+        var db = $e.find("form [name=db]").val();
         var login = $e.find("form input[name=login]").val();
         var password = $e.find("form input[name=password]").val();
+        var remember = $e.find("form input[name=remember]").attr('checked');
         //$e.hide();
         // Should hide then call callback
         this.session.session_login(db, login, password, function() {
             if(self.session.session_is_valid()) {
+                if (self.has_local_storage) {
+                    if(remember) {
+                        localStorage.setItem('remember_creditentials', 'true');
+                        localStorage.setItem('last_db_login_success', db);
+                        localStorage.setItem('last_login_login_success', login);
+                        localStorage.setItem('last_password_login_success', password);
+                    } else {
+                        localStorage.setItem('remember_creditentials', '');
+                        localStorage.setItem('last_db_login_success', '');
+                        localStorage.setItem('last_login_login_success', '');
+                        localStorage.setItem('last_password_login_success', '');
+                    }
+                }
                 self.on_login_valid();
             } else {
+                self.$element.addClass("login_invalid");
                 self.on_login_invalid();
             }
         });
     },
     do_ask_login: function(continuation) {
         this.on_login_invalid();
+        this.$element
+            .removeClass("login_invalid");
         this.on_login_valid.add({
             position: "last",
             unique: true,
             callback: continuation
         });
+    },
+    on_logout: function() {
+        this.session.logout();
     }
 });
 
@@ -822,7 +933,9 @@ openerp.base.Header =  openerp.base.Controller.extend({
     },
     do_update: function() {
         this.$element.html(QWeb.render("Header", this));
-    }
+        this.$element.find(".logout").click(this.on_logout);
+    },
+    on_logout: function() {}
 });
 
 openerp.base.Menu =  openerp.base.Controller.extend({
@@ -937,6 +1050,7 @@ openerp.base.WebClient = openerp.base.Controller.extend({
 
         this.header = new openerp.base.Header(this.session, "oe_header");
         this.login = new openerp.base.Login(this.session, "oe_login");
+        this.header.on_logout.add(this.login.on_logout);
 
         this.session.on_session_invalid.add(this.login.do_ask_login);
         this.session.on_session_valid.add_last(this.header.do_update);

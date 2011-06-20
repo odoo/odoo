@@ -1,31 +1,44 @@
 <template>
 <t t-name="DashBoard">
     <div class="oe-dashboard-links">
+        <button type="button" class="button oe-dashboard-link-reset" t-att-style="view.fields_view.custom_view_id ? null : 'display: none'">
+            <img src="/base/static/src/img/icons/STOCK_GOTO_FIRST.png" width="16" height="16"/>
+            <span>Reset</span>
+        </button>
         <button type="button" class="button oe-dashboard-link-undo" t-att-style="view.fields_view.custom_view_id ? null : 'display: none'">
-            Undo
+            <img src="/base/static/src/img/icons/gtk-undo.png" width="16" height="16"/>
+            <span>Undo</span>
         </button>
         <button type="button" class="button oe-dashboard-link-add_widget">
-            Add Widget
+            <img src="/base/static/src/img/icons/STOCK_ADD.png" width="16" height="16"/>
+            <span>Add Widget</span>
         </button>
-        <button type="button" class="button oe-dashboard-link-edit_layout">
-            Edit layout
+        <button type="button" class="button oe-dashboard-link-change_layout">
+            <img src="/base/static/src/img/icons/gtk-edit.png" width="16" height="16"/>
+            <span>Change layout</span>
         </button>
     </div>
-    <div t-att-data-layout="node.attrs.style" t-attf-class="oe-dashboard oe-dashboard-layout_#{node.attrs.style}">
-        <div t-foreach="node.children" t-as="column" t-if="column.tag == 'column'"
+    <table t-att-data-layout="node.attrs.style" t-attf-class="oe-dashboard oe-dashboard-layout_#{node.attrs.style}" cellspacing="0" cellpadding="0" border="0">
+    <tr>
+        <td t-foreach="node.children" t-as="column" t-if="column.tag == 'column'"
              t-att-id="view.element_id + '_column_' + column_index" t-attf-class="oe-dashboard-column index_#{column_index}">
 
-            <div t-foreach="column.children" t-as="action" t-if="action.tag == 'action'" t-att-data-id="action.attrs.name"
-                class="oe-dashboard-action ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
-
-                <div class="oe-dashboard-action-header ui-widget-header ui-corner-all">
-                    <t t-esc="action.attrs.string"/>
-                    <span class='ui-icon ui-icon-closethick'></span>
-                    <span class='ui-icon ui-icon-minusthick'></span>
-                </div>
-                <div t-att-id="view.element_id + '_action_' + action.attrs.name" class="oe-dashboard-action-content"></div>
-            </div>
+            <t t-foreach="column.children" t-as="action" t-if="action.tag == 'action'" t-call="DashBoard.action"/>
+        </td>
+    </tr>
+    </table>
+</t>
+<t t-name="DashBoard.action">
+    <div t-att-data-id="action.attrs.name" class="oe-dashboard-action ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
+        <div class="oe-dashboard-action-header ui-widget-header ui-corner-all">
+            <a href="#" class="oe-dashboard-action-rename"><img src="/base/static/src/img/icons/gtk-edit.png" width="16" height="16"/></a>
+            <span class="oe-dashboard-action-title"><t t-esc="action.attrs.string"/></span>
+            <input class="oe-dashboard-action-input" type="text" name="title" value="" style="display: none"/>
+            <span class='ui-icon ui-icon-closethick'></span>
+            <span class='ui-icon ui-icon-minusthick oe-dashboard-fold' t-if="!action.attrs.fold"></span>
+            <span class='ui-icon ui-icon-plusthick oe-dashboard-fold' t-if="action.attrs.fold"></span>
         </div>
+        <div t-att-id="view.element_id + '_action_' + action.attrs.name" class="oe-dashboard-action-content" t-att-style="action.attrs.fold ? 'display: none' : null"></div>
     </div>
 </t>
 <t t-name="DashBoard.layouts">
@@ -33,12 +46,12 @@
         <p>
             <strong>Choose dashboard layout</strong>
         </p>
-        <ul class="layoutselection">
-            <li id="layout1" class="layoutchoice" layout-style="1"></li>
-            <li id="layout2" class="layoutchoice" layout-style="1-1"></li>
-            <li id="layout3" class="layoutchoice" layout-style="1-1-1"></li>
-            <li id="layout4" class="layoutchoice" layout-style="1-2"></li>
-            <li id="layout5" class="layoutchoice" layout-style="2-1"></li>
+        <ul>
+            <li t-foreach="'1 1-1 1-1-1 1-2 2-1'.split(' ')" t-as="layout" t-att-data-layout="layout">
+                <img t-attf-src="/base_dashboard/static/src/img/layout_#{layout}.png"/>
+                <img t-if="layout == current_layout"
+                    src="/base/static/src/img/icons/gtk-apply.png" width="16" height="16" class="oe-selected-layout"/>
+            </li>
         </ul>
     </div>
 </t>

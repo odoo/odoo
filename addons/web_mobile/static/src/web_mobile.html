@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html style="height: 100%">
+<head>
+    <meta charset="utf-8" />
+    <title>Login Page OpenERP mobile</title>
+    <link rel="stylesheet"  href="/web_mobile/static/lib/jquery_mobile/css/jquery.mobile-1.0a4.1.css" />
+
+    <script type="text/javascript" src="/base/static/lib/LABjs/LAB.js"></script> 
+    <script type="text/javascript" src="/base/static/lib/jquery/jquery-1.5.2.js"></script>
+    <script type="text/javascript" src="/web_mobile/static/lib/jquery_mobile/js/jquery.mobile-1.0a4.1.js"></script>
+    <script type="text/javascript" src="/base/static/lib/jquery.ba-bbq/jquery.ba-bbq.js"></script>
+    <script type="text/javascript" src="/base/static/lib/underscore/underscore.js"></script>
+    <script type="text/javascript" src="/base/static/lib/underscore/underscore.string.js"></script>
+
+    <script type="text/javascript" src="/base/static/lib/qweb/qweb2.js"></script>
+
+    <script type="text/javascript" src="/base/static/src/js/base.js"></script>
+    <script type="text/javascript" src="/base/static/src/js/chrome.js"></script>
+    <script type="text/javascript" src="/base/static/src/js/data.js"></script>
+    <script type="text/javascript" src="/base/static/src/js/dates.js"></script>
+
+    <script type="text/javascript" src="/web_mobile/static/src/js/web_mobile.js"></script>
+
+    <script type="text/javascript">
+        $(function() {
+            QWeb = window.QWeb || new QWeb2.Engine();
+            var oe = openerp.init();
+            openerp.web_mobile(oe);
+            oe.web_mobile.mobilewebclient("moe");
+            $("html").page();
+        });
+    </script>
+
+</head> 
+
+<body>
+    <div id="moe" class="openerp" data-role="page"></div>
+</body>
+
+</html>

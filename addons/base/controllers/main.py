@@ -100,6 +100,18 @@ class Session(openerpweb.Controller):
         }
 
     @openerpweb.jsonrequest
+    def sc_list(self, req):
+        return req.session.model('ir.ui.view_sc').get_sc(req.session._uid, "ir.ui.menu",
+                                                         req.session.eval_context(req.context))
+
+    @openerpweb.jsonrequest
+    def get_databases_list(self, req):
+        proxy = req.session.proxy("db")
+        dbs = proxy.list()
+        
+        return {"db_list": dbs}
+
+    @openerpweb.jsonrequest
     def modules(self, req):
         return {"modules": [name
             for name, manifest in openerpweb.addons_manifest.iteritems()
@@ -159,9 +171,9 @@ class Session(openerpweb.Controller):
                 a list of fields to group by, potentially empty (in which case
                 no group by should be performed)
         """
-        context = req.session.eval_contexts(contexts)
-        domain = req.session.eval_domains(domains, context)
-
+        context = req.session.eval_context(openerpweb.nonliterals.CompoundContext(*contexts))
+        domain = req.session.eval_domain(openerpweb.nonliterals.CompoundDomain(*(domains or [])), context)
+        
         group_by_sequence = []
         for candidate in (group_by_seq or []):
             ctx = req.session.eval_context(candidate, context)
@@ -172,7 +184,7 @@ class Session(openerpweb.Controller):
                 group_by_sequence.append(group_by)
             else:
                 group_by_sequence.extend(group_by)
-
+        
         return {
             'context': context,
             'domain': domain,
@@ -219,6 +231,11 @@ class Session(openerpweb.Controller):
             return None
         return saved_actions["actions"].get(key)
         
+def eval_context_and_domain(session, context, domain=None):
+    e_context = session.eval_context(context)
+    e_domain = session.eval_domain(domain or [], e_context)
+
+    return (e_context, e_domain)
         
 def load_actions_from_ir_values(req, key, key2, models, meta, context):
     Values = req.session.model('ir.values')
@@ -294,8 +311,9 @@ class Menu(openerpweb.Controller):
         Menus = req.session.model('ir.ui.menu')
         # menus are loaded fully unlike a regular tree view, cause there are
         # less than 512 items
-        menu_ids = Menus.search([])
-        menu_items = Menus.read(menu_ids, ['name', 'sequence', 'parent_id'])
+        context = req.session.eval_context(req.context)
+        menu_ids = Menus.search([], 0, False, False, context)
+        menu_items = Menus.read(menu_ids, ['name', 'sequence', 'parent_id'], context)
         menu_root = {'id': False, 'name': 'root', 'parent_id': [-1, '']}
         menu_items.append(menu_root)
         
@@ -320,7 +338,10 @@ class Menu(openerpweb.Controller):
     @openerpweb.jsonrequest
     def action(self, req, menu_id):
         actions = load_actions_from_ir_values(req,'action', 'tree_but_open',
-                                             [('ir.ui.menu', menu_id)], False, {})
+                                             [('ir.ui.menu', menu_id)], False,
+                                             #TODO niv fme: make it support context
+                                             #req.session.eval_context(req.context))
+                                             {})
 
         return {"action": actions}
 
@@ -329,7 +350,8 @@ class DataSet(openerpweb.Controller):
 
     @openerpweb.jsonrequest
     def fields(self, req, model):
-        return {'fields': req.session.model(model).fields_get()}
+        return {'fields': req.session.model(model).fields_get(False,
+                                                              req.session.eval_context(req.context))}
 
     @openerpweb.jsonrequest
     def search_read(self, request, model, fields=False, offset=0, limit=False, domain=None, context=None, sort=None):
@@ -351,21 +373,23 @@ class DataSet(openerpweb.Controller):
         :rtype: list
         """
         Model = request.session.model(model)
-
-        ids = Model.search(domain or [], offset or 0, limit or False,
-                           sort or False, request.context)
+        context, domain = eval_context_and_domain(request.session, request.context, domain)
+        
+        ids = Model.search(domain, offset or 0, limit or False,
+                           sort or False, context)
 
         if fields and fields == ['id']:
             # shortcut read if we only want the ids
             return map(lambda id: {'id': id}, ids)
 
-        reads = Model.read(ids, fields or False, request.context)
+        reads = Model.read(ids, fields or False, context)
         reads.sort(key=lambda obj: ids.index(obj['id']))
         return reads
     
     @openerpweb.jsonrequest
     def read(self, request, model, ids, fields=False):
-        return self.do_search_read(request, model, ids, fields)
+        return self.do_search_read(request, model, ids, fields,
+                                   request.session.eval_context(request.context))
 
     @openerpweb.jsonrequest
     def get(self, request, model, ids, fields=False):
@@ -390,42 +414,50 @@ class DataSet(openerpweb.Controller):
         :rtype: list
         """
         Model = request.session.model(model)
-        records = Model.read(ids, fields, request.context)
+        records = Model.read(ids, fields, request.session.eval_context(request.context))
 
         record_map = dict((record['id'], record) for record in records)
 
         return [record_map[id] for id in ids if record_map.get(id)]
+    
     @openerpweb.jsonrequest
-
     def load(self, req, model, id, fields):
         m = req.session.model(model)
         value = {}
-        r = m.read([id])
+        r = m.read([id], False, req.session.eval_context(req.context))
         if r:
             value = r[0]
         return {'value': value}
 
     @openerpweb.jsonrequest
-    def create(self, req, model, data, context={}):
+    def create(self, req, model, data):
         m = req.session.model(model)
-        r = m.create(data, context)
+        r = m.create(data, req.session.eval_context(req.context))
         return {'result': r}
 
     @openerpweb.jsonrequest
-    def save(self, req, model, id, data, context={}):
+    def save(self, req, model, id, data):
         m = req.session.model(model)
-        r = m.write([id], data, context)
+        r = m.write([id], data, req.session.eval_context(req.context))
         return {'result': r}
 
     @openerpweb.jsonrequest
     def unlink(self, request, model, ids=[]):
         Model = request.session.model(model)
-        return Model.unlink(ids)
+        return Model.unlink(ids, request.session.eval_context(request.context))
 
     @openerpweb.jsonrequest
-    def call(self, req, model, method, ids, args):
+    def call(self, req, model, method, args, domain_id=None, context_id=None):
+        domain = args[domain_id] if domain_id and len(args) - 1 >= domain_id  else []
+        context = args[context_id] if context_id and len(args) - 1 >= context_id  else {}
+        c, d = eval_context_and_domain(req.session, context, domain);
+        if(domain_id and len(args) - 1 >= domain_id):
+            args[domain_id] = d
+        if(context_id and len(args) - 1 >= context_id):
+            args[context_id] = c
+        
         m = req.session.model(model)
-        r = getattr(m, method)(ids, *args)
+        r = getattr(m, method)(*args)
         return {'result': r}
 
     @openerpweb.jsonrequest
@@ -434,15 +466,9 @@ class DataSet(openerpweb.Controller):
         return {'result': r}
 
     @openerpweb.jsonrequest
-    def default_get(self, req, model, fields, context={}):
+    def default_get(self, req, model, fields):
         m = req.session.model(model)
-        r = m.default_get(fields, context)
-        return {'result': r}
-    
-    @openerpweb.jsonrequest
-    def name_search(self, req, model, search_str, domain=[], context={}):
-        m = req.session.model(model)
-        r = m.name_search(search_str+'%', domain, '=ilike', context)
+        r = m.default_get(fields, req.session.eval_context(req.context))
         return {'result': r}
 
 class DataGroup(openerpweb.Controller):
@@ -450,10 +476,11 @@ class DataGroup(openerpweb.Controller):
     @openerpweb.jsonrequest
     def read(self, request, model, group_by_fields, domain=None):
         Model = request.session.model(model)
+        context, domain = eval_context_and_domain(request.session, request.context, domain)
 
         return Model.read_group(
             domain or [], False, group_by_fields, 0, False,
-            dict(request.context, group_by=group_by_fields))
+            dict(context, group_by=group_by_fields))
 
 class View(openerpweb.Controller):
     _cp_path = "/base/view"
@@ -461,17 +488,23 @@ class View(openerpweb.Controller):
     def fields_view_get(self, request, model, view_id, view_type,
                         transform=True, toolbar=False, submenu=False):
         Model = request.session.model(model)
-        fvg = Model.fields_view_get(view_id, view_type, request.context,
-                                    toolbar, submenu)
+        context = request.session.eval_context(request.context)
+        fvg = Model.fields_view_get(view_id, view_type, context, toolbar, submenu)
+        # todo fme?: check that we should pass the evaluated context here
+        self.process_view(request.session, fvg, context, transform)
+        return fvg
+    
+    def process_view(self, session, fvg, context, transform):
         if transform:
-            evaluation_context = request.session.evaluation_context(
-                request.context or {})
-            xml = self.transform_view(
-                fvg['arch'], request.session, evaluation_context)
+            evaluation_context = session.evaluation_context(context or {})
+            xml = self.transform_view(fvg['arch'], session, evaluation_context)
         else:
             xml = ElementTree.fromstring(fvg['arch'])
         fvg['arch'] = Xml2Json.convert_element(xml)
-        return fvg
+        for field in fvg['fields'].values():
+            if field.has_key('views') and field['views']:
+                for view in field["views"].values():
+                    self.process_view(session, view, None, transform)
 
     @openerpweb.jsonrequest
     def add_custom(self, request, view_id, arch):
@@ -480,15 +513,20 @@ class View(openerpweb.Controller):
             'user_id': request.session._uid,
             'ref_id': view_id,
             'arch': arch
-        })
+        }, request.session.eval_context(request.context))
         return {'result': True}
 
     @openerpweb.jsonrequest
-    def undo_custom(self, request, view_id):
+    def undo_custom(self, request, view_id, reset=False):
         CustomView = request.session.model('ir.ui.view.custom')
-        vcustom = CustomView.search([('user_id', '=', request.session._uid), ('ref_id' ,'=', view_id)])
+        context = request.session.eval_context(request.context)
+        vcustom = CustomView.search([('user_id', '=', request.session._uid), ('ref_id' ,'=', view_id)],
+                                    0, False, False, context)
         if vcustom:
-            CustomView.unlink([vcustom[0]])
+            if reset:
+                CustomView.unlink(vcustom, context)
+            else:
+                CustomView.unlink([vcustom[0]], context)
             return {'result': True}
         return {'result': False}
 
@@ -596,20 +634,6 @@ class ListView(View):
         fields_view = self.fields_view_get(req, model, view_id, 'tree', toolbar=toolbar)
         return {'fields_view': fields_view}
 
-    def fields_view_get(self, request, model, view_id, view_type="tree",
-                        transform=True, toolbar=False, submenu=False):
-        """ Sets @editable on the view's arch if it isn't already set and
-        ``set_editable`` is present in the request context
-        """
-        view = super(ListView, self).fields_view_get(
-            request, model, view_id, view_type, transform, toolbar, submenu)
-
-        view_attributes = view['arch']['attrs']
-        if request.context.get('set_editable')\
-                and 'editable' not in view_attributes:
-            view_attributes['editable'] = 'bottom'
-        return view
-
     def process_colors(self, view, row, context):
         colors = view['arch']['attrs'].get('colors')
 
@@ -639,7 +663,7 @@ class SearchView(View):
     @openerpweb.jsonrequest
     def fields_get(self, req, model):
         Model = req.session.model(model)
-        fields = Model.fields_get()
+        fields = Model.fields_get(False, req.session.eval_context(req.context))
         return {'fields': fields}
 
 class Binary(openerpweb.Controller):
@@ -649,11 +673,12 @@ class Binary(openerpweb.Controller):
     def image(self, request, session_id, model, id, field, **kw):
         cherrypy.response.headers['Content-Type'] = 'image/png'
         Model = request.session.model(model)
+        context = request.session.eval_context(request.context)
         try:
             if not id:
-                res = Model.default_get([field], request.context).get(field, '')
+                res = Model.default_get([field], context).get(field, '')
             else:
-                res = Model.read([int(id)], [field], request.context)[0].get(field, '')
+                res = Model.read([int(id)], [field], context)[0].get(field, '')
             return base64.decodestring(res)
         except: # TODO: what's the exception here?
             return self.placeholder()
@@ -663,7 +688,8 @@ class Binary(openerpweb.Controller):
     @openerpweb.httprequest
     def saveas(self, request, session_id, model, id, field, fieldname, **kw):
         Model = request.session.model(model)
-        res = Model.read([int(id)], [field, fieldname])[0]
+        context = request.session.eval_context(request.context)
+        res = Model.read([int(id)], [field, fieldname], context)[0]
         filecontent = res.get(field, '')
         if not filecontent:
             raise cherrypy.NotFound
@@ -705,6 +731,7 @@ class Binary(openerpweb.Controller):
     @openerpweb.httprequest
     def upload_attachment(self, request, session_id, callback, model, id, ufile=None):
         cherrypy.response.timeout = 500
+        context = request.session.eval_context(request.context)
         Model = request.session.model('ir.attachment')
         try:
             out = """<script language="javascript" type="text/javascript">
@@ -719,7 +746,7 @@ class Binary(openerpweb.Controller):
                 'datas': base64.encodestring(ufile.file.read()),
                 'res_model': model,
                 'res_id': int(id)
-            })
+            }, context)
             args = {
                 'filename': ufile.filename,
                 'id':  attachment_id
@@ -735,9 +762,13 @@ class Action(openerpweb.Controller):
     def load(self, req, action_id):
         Actions = req.session.model('ir.actions.actions')
         value = False
-        action_type = Actions.read([action_id], ['type'], req.session.context)
+        context = req.session.eval_context(req.context)
+        action_type = Actions.read([action_id], ['type'], context)
         if action_type:
-            action = req.session.model(action_type[0]['type']).read([action_id], False, req.session.context)
+            action = req.session.model(action_type[0]['type']).read([action_id], False,
+                                                                    #TODO fme: check why does not work with context
+                                                                    #context)
+                                                                    {})
             if action:
                 value = clean_action(action[0], req.session)
         return {'result': value}

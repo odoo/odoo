@@ -9,7 +9,7 @@ openerp.base.ActionManager = openerp.base.Controller.extend({
     init: function(session, element_id) {
         this._super(session, element_id);
         this.viewmanager = null;
-        this.dialog_stack = []
+        this.dialog_stack = [];
         // Temporary linking view_manager to session.
         // Will use controller_parent to find it when implementation will be done.
         session.action_manager = this;
@@ -33,8 +33,7 @@ openerp.base.ActionManager = openerp.base.Controller.extend({
             case 'ir.actions.act_window':
                 if (action.target == 'new') {
                     var element_id = _.uniqueId("act_window_dialog");
-                    var dialog = $('<div id="' + element_id + '"></div>');
-                    dialog.dialog({
+                    $('<div>', {id: element_id}).dialog({
                         title: action.name,
                         modal: true,
                         width: '50%',
@@ -79,10 +78,12 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
         this.dataset = dataset;
         this.searchview = null;
         this.active_view = null;
-        this.views_src = views;
+        this.views_src = _.map(views, function(x)
+            {return x instanceof Array? {view_id: x[0], view_type: x[1]} : x;});
         this.views = {};
         this.flags = this.flags || {};
         this.sidebar = new openerp.base.NullSidebar();
+        this.registry = openerp.base.views;
     },
     /**
      * @returns {jQuery.Deferred} initial view loading promise
@@ -95,13 +96,13 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
             self.on_mode_switch($(this).data('view-type'));
         });
         _.each(this.views_src, function(view) {
-            self.views[view[1]] = { view_id: view[0], controller: null };
+            self.views[view.view_type] = $.extend({}, view, {controller: null});
         });
         if (this.flags.views_switcher === false) {
             this.$element.find('.oe_vm_switch').hide();
         }
         // switch to the first one in sequence
-        return this.on_mode_switch(this.views_src[0][1]);
+        return this.on_mode_switch(this.views_src[0].view_type);
     },
     stop: function() {
     },
@@ -117,9 +118,17 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
         var view = this.views[view_type];
         if (!view.controller) {
             // Lazy loading of views
-            var controllerclass = openerp.base.views.get_object(view_type);
-            var controller = new controllerclass( this, this.session, this.element_id + "_view_" + view_type, this.dataset, view.view_id);
+            var controllerclass = this.registry.get_object(view_type);
+            var controller = new controllerclass( this, this.session, this.element_id + "_view_" + view_type,
+                this.dataset, view.view_id, view.options);
+            if (view.embedded_view) {
+                controller.set_embedded_view(view.embedded_view);
+            }
             view_promise = controller.start();
+            var self = this;
+            $.when(view_promise).then(function() {
+                self.on_controller_inited(view_type, controller);
+            });
             this.views[view_type].controller = controller;
         }
 
@@ -147,6 +156,13 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
         }
         return view_promise;
     },
+    /**
+     * Event launched when a controller has been inited.
+     * 
+     * @param {String} view_type type of view
+     * @param {String} view the inited controller
+     */
+    on_controller_inited: function(view_type, view) {},
     /**
      * Sets up the current viewmanager's search view.
      *
@@ -332,7 +348,7 @@ openerp.base.Sidebar = openerp.base.BaseWidget.extend({
             var action = self.sections[index[0]].elements[index[1]];
             action.flags = {
                 new_window : true
-            }
+            };
             self.session.action_manager.do_action(action);
             e.stopPropagation();
             e.preventDefault();
@@ -377,13 +393,23 @@ openerp.base.View = openerp.base.Controller.extend({
             var context = _.extend({}, dataset.context, action_data.context || {});
             switch(action_data.type) {
                 case 'object':
-                    return dataset.call(action_data.name, [record_id], [context], handler);
+                    return dataset.call(action_data.name, [[record_id], context], handler);
                 case 'action':
                     return this.rpc('/base/action/load', { action_id: parseInt(action_data.name, 10) }, handler);
                 default:
                     return dataset.exec_workflow(record_id, action_data.name, handler);
             }
         }
+    },
+    /**
+     * Directly set a view to use instead of calling fields_view_get. This method must
+     * be called before start(). When an embedded view is set, underlying implementations
+     * of openerp.base.View must use the provided view instead of any other one.
+     * 
+     * @param embedded_view A view.
+     */
+    set_embedded_view: function(embedded_view) {
+        this.embedded_view = embedded_view;
     }
 });
 
