@@ -19,21 +19,24 @@
 #
 ##############################################################################
 
-from osv import fields,osv
+from osv import osv
+from osv import fields
 
-class res_partner_address(osv.osv):
-    _inherit = "res.partner.address"
 
+class google_import_message(osv.osv):
+    """Import Message"""
+    
+    _name = "google.import.message"
+    _description = "Import Message"
     _columns = {
-        'write_date': fields.datetime('Date Modified', readonly=True, help="Modification date and time of address."),
-    }
+        'name': fields.text('Message', readonly=True),
+        }
 
-    def unlink(self, cr, uid, ids, context=None):
-        model_obj = self.pool.get('ir.model.data')
-        model_ids = model_obj.search(cr, uid, [('res_id','in',ids),('model','=','res.partner.address'),('module','=','sync_google_contact')], context=context)
-        model_obj.unlink(cr, uid, model_ids, context=context)
-        return super(res_partner_address, self).unlink(cr, uid, ids, context=context)
+    def default_get(self, cr, uid, fields, context=None):
+        if context == None:
+            context = {}
+        res = super(google_import_message, self).default_get(cr, uid, fields, context=context)
+        res.update({'name': context.get('message')})
+        return res
 
-res_partner_address()
-
-# vim:expandtab:smartindent:toabstop=4:softtabstop=4:shiftwidth=4:
+google_import_message()

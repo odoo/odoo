@@ -346,11 +346,6 @@ class import_framework(Thread):
             result = []
             imported = set() #to invoid importing 2 times the sames modules
             for table in self.table_list:
-#                try:
-#                    to_import = self.get_mapping()[table].get('import', True)
-#                except:
-#                    import traceback,sys
-#                    info = reduce(lambda x, y: x+y, traceback.format_exception(sys.exc_type, sys.exc_value, sys.exc_traceback))
                 to_import = self.get_mapping()[table].get('import', True)
                 if not table in imported:
                     res = self._resolve_dependencies(self.get_mapping()[table].get('dependencies', []), imported)

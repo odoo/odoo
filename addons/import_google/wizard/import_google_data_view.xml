@@ -3,7 +3,7 @@
     <data>
         <record model="ir.ui.view" id="view_synchronize_google_contact_import_form">
             <field name="name">synchronize.base.form</field>
-            <field name="model">synchronize.google.contact.import</field>
+            <field name="model">synchronize.google.import</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Import contacts from a google account">
@@ -23,7 +23,7 @@
                         <group colspan="2" col="2"/>
                         <group colspan="2" col="2">
                             <button special="cancel" string="_Cancel" icon="gtk-cancel"/>
-                            <button name="import_contact" string="_Import Contacts" type="object" icon="terp-personal+"/>
+                            <button name="import_google" string="_Import Contacts" type="object" icon="terp-personal+"/>
                         </group>
                     </group>
                 </form>
@@ -34,7 +34,7 @@
 
         <record model="ir.ui.view" id="view_synchronize_google_calendar_import_form">
             <field name="name">synchronize.google.calendar.form</field>
-            <field name="model">synchronize.google.calendar</field>
+            <field name="model">synchronize.google.import</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Import Google Calendar Events">
@@ -46,7 +46,7 @@
                         <group colspan="2" col="2"/>
                         <group colspan="2" col="2">
                             <button special="cancel" string="_Cancel" icon="gtk-cancel"/>
-                            <button name="import_calendar_events" string="_Import Events" type="object" icon="terp-calendar"/>
+                            <button name="import_google" string="_Import Events" type="object" icon="terp-calendar"/>
                         </group>
                     </group>
                 </form>
@@ -62,16 +62,18 @@
           <field name="view_type">form</field>
           <field name="view_mode">form</field>
           <field name="target">new</field>
+          <field name="context">{'calendar':True}</field>
           <field name="view_id" ref="google_base_account.view_google_login_form" />
         </record>
 
         <record model="ir.actions.act_window" id="act_google_login_contact_form">
           <field name="name">Import Google Contacts</field>
           <field name="type">ir.actions.act_window</field>
-          <field name="res_model">google.login.contact</field>
+          <field name="res_model">google.login</field>
           <field name="view_type">form</field>
           <field name="view_mode">form</field>
           <field name="target">new</field>
+          <field name="context">{'contact':True}</field>
           <field name="view_id" ref="google_base_account.view_google_login_form" />
         </record>
 

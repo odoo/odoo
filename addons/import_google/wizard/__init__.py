@@ -19,5 +19,6 @@
 #
 ##############################################################################
 import import_google
-import google_contact_import
+import import_google_data
+import google_import_message
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

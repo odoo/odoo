@@ -37,31 +37,47 @@ except ImportError:
 from import_base.import_framework import *
 from import_base.mapper import *
 
-class import_contact(import_framework):
+class google_import(import_framework):
     
     gd_client = False
     calendars = False
     DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S"
-    TABLE_CONTACT = 'contact'
+    TABLE_CONTACT = 'Contact'
+    TABLE_ADDRESS ='Address'
     TABLE_EVENT = 'Events'
    
     def initialize(self):
         google = self.obj.pool.get('google.login')
+        self.external_id_field = 'Id'
         self.gd_client = google.google_login(self.context.get('user'), 
                                        self.context.get('password'), 
-                                        type = self.context.get('instance'))
+                                        self.context.get('instance'))
+        
+        if self.context.get('instance') and self.context.get('instance') == 'contact':
+            self.contact = self.context.get('contact') 
         if self.context.get('instance') and self.context.get('instance') == 'calendar':
             self.calendars = self.context.get('calendars') 
         
     def get_mapping(self):
         return { 
             self.TABLE_EVENT: self.get_event_mapping(),
+            self.TABLE_CONTACT: self.get_contact_mapping(),
+            self.TABLE_ADDRESS: self.get_address_mapping(),
         }
         
     def get_data(self, table):
-        val = {
-            self.TABLE_EVENT: self.get_events(),
-        }
+        if table == "Contact":
+            val = {
+                self.TABLE_CONTACT: self.get_contact(),
+            }
+        if table == "Address":
+            val = {
+                self.TABLE_ADDRESS: self.get_contact(),
+            }
+        elif table == "Events":
+            val = {
+                self.TABLE_EVENT: self.get_events(),
+            }
         return val.get(table)
     
 
@@ -255,5 +271,100 @@ class import_contact(import_framework):
                     'month_list':'month_list',
                     'rrule_type': 'rrule_type',
                 }
+        }
+
+
+    def get_contact(self):
+        table = self.context.get('table')[0] 
+        datas = [] 
+        if self.context.get('group_name'):
+            query = gdata.contacts.service.ContactsQuery()
+            query.group = self.context.get('group_name')
+            self.contact = self.gd_client.GetContactsFeed(query.ToUri())
+        else: 
+            self.contact = self.gd_client.GetContactsFeed()   
+        while self.contact: 
+            for entry in self.contact.entry:
+                data = {}
+                data['id'] = entry.id.text
+                name = tools.ustr(entry.title.text)
+                if name == "None":
+                    name = entry.email[0].address
+                data['name'] = name
+                emails = ','.join(email.address for email in entry.email)
+                data['email'] = emails
+                if table == 'Contact':
+                    data.update({'customer': str(self.context.get('customer')),
+                                 'supplier': str(self.context.get('supplier'))})
+                if entry.organization:
+                    if entry.organization.org_name:
+                        data.update({'company': entry.organization.org_name.text})
+                    if entry.organization.org_title:
+                        data.update ({'function': entry.organization.org_title.text})
+                if entry.phone_number:
+                    for phone in entry.phone_number:
+                        if phone.rel == gdata.contacts.REL_WORK:
+                            data['phone'] = phone.text
+                        if phone.rel == gdata.contacts.PHONE_MOBILE:
+                            data['mobile'] = phone.text
+                        if phone.rel == gdata.contacts.PHONE_WORK_FAX:
+                            data['fax'] = phone.text 
+                datas.append(data)        
+            next = self.contact.GetNextLink()
+            self.contact = next and self.gd_client.GetContactsFeed(next.href) or None     
+        return datas
+     
+    def get_partner_address(self,val):
+        partner_id = False
+        address_pool = self.obj.pool.get('res.partner.address')
+        company_pool = self.obj.pool.get('res.company')
+        if 'company' in val:
+            cids = company_pool.search(self.cr, self.uid, [('name', '=', val.get('company'))])
+            if cids:
+                records = company_pool.browse(self.cr, self.uid, cids)
+                for rec in records:
+                    if rec.partner_id:
+                        partner_id = rec.partner_id
+        field_map = {
+            'name': 'name',
+            'type': 'Type',
+            'city': 'city',
+            'phone': 'phone',
+            'mobile': 'mobile',
+            'email': 'email',
+            'fax': 'fax',
+        }
+        val.update({'Type':'contact'})
+        val.update({'id_new': val['id']+'address_contact' })
+        return self.import_object_mapping(field_map , val, 'res.partner.address', self.context.get('table')[0], val['id_new'], self.DO_NOT_FIND_DOMAIN)
+        
+    def get_contact_mapping(self):
+        return {
+            'model': 'res.partner',
+            'dependencies': [],
+            'map': {
+                'id':'id',
+                'name': 'name',
+                'customer': 'customer',
+                'supplier': 'supplier',
+                'address/id': self.get_partner_address,
+                }
+            }   
+                    
+    def get_address_mapping(self):
+        return {
+            'model': 'res.partner.address',
+            'dependencies': [],
+            'map': {
+                'id':'id',
+                'name': 'name',
+                'city': 'city',
+                'phone': 'phone',
+                'mobile': 'mobile',
+                'email': 'email',
+                'fax': 'fax',
+                'function': 'function'
+                }
+        
         }
 
