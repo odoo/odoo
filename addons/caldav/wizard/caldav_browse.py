@@ -181,30 +181,24 @@ configuration
     }
 
     def default_get(self, cr, uid, fields, context=None):
+        pref_obj = self.pool.get('user.preference')
+        obj_ids = pref_obj.browse(cr, uid ,context.get('res_id'), context=context)
         res = {}
-        host = ''
+        host = obj_ids[0].host_name
         port = ''
         prefix = 'http://'  
         if not config.get('xmlrpc'):
             if not config.get('netrpc'):
                 prefix = 'https://' 
-                host = config.get('xmlrpcs_interface', None)
                 port = config.get('xmlrpcs_port', 8071)
             else:
-                host = config.get('netrpc_interface', None)
                 port = config.get('netrpc_port',8070) 
         else: 
-            host = config.get('xmlrpc_interface', None)
             port = config.get('xmlrpc_port',8069)
-        if host ==  '' or None:
-            obj = self.pool.get('user.preference').browse(cr,uid,uid,context)
-            host = obj.host_name
-            port = 8069
         if not config.get_misc('webdav','enable',True):
             raise Exception("WebDAV is disabled, cannot continue")
         user_pool = self.pool.get('res.users')
         current_user = user_pool.browse(cr, uid, uid, context=context)
-        pref_obj = self.pool.get('user.preference')
         pref_ids = pref_obj.browse(cr, uid ,context.get('rec_id',False), context=context)
         #TODO write documentation
         res['description'] = self.__doc['other']
