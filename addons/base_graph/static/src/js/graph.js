@@ -46,6 +46,7 @@ openerp.base_graph.GraphView = openerp.base.Controller.extend({
         this.operator = [];
         this.group_field = '';
         this.orientation = this.fields_view.arch.attrs.orientation || '';
+        this.elem_id = this.$element[0]['id'];
 
         _.each(this.fields_view.arch.children, function (field) {
             if (field.attrs.operator) {
@@ -81,19 +82,17 @@ openerp.base_graph.GraphView = openerp.base.Controller.extend({
         }else{
             this.dataset.read_ids(
                 this.dataset.ids,
-                {},
-                function(res) {
+                {}, function(res) {
                     self.schedule_chart(res);
-                }
-            );
+                });
         }
     },
 
     schedule_chart: function(results) {
-        this.$element.html(QWeb.render("GraphView", {"fields_view": this.fields_view, "chart": this.chart,'view_id': this.view_id}));
-        if (!results.length) {
+        this.$element.html(QWeb.render("GraphView", {"fields_view": this.fields_view, "chart": this.chart,'elem_id': this.elem_id}));
+        /*if (!results.length) {
             return;
-        }
+        }*/
         _.each(results, function (result) {
             _.each(result, function (field_value, field_name) {
                 if (typeof field_value == 'object') {
@@ -169,11 +168,16 @@ openerp.base_graph.GraphView = openerp.base.Controller.extend({
             }
         }, this);
 
+        if (group_list.length <=1){
+            group_list = [];
+            group_list.push(newkey = "val");
+        }
+
         var abscissa_data = {};
         _.each(results, function (result) {
             var label = result[self.chart_info_fields],
               section = {};
-            if (self.group_field && (self.operator.length <= 1)){
+            if (self.group_field && (group_list.length > 1) && (self.operator.length <= 1)){
                 newkey = result[self.group_field].split(' ').join('_');
             }else{
                 newkey = "val";
@@ -196,7 +200,6 @@ openerp.base_graph.GraphView = openerp.base.Controller.extend({
         //for legend color
         var grp_color = _.map(group_list, function (group_legend, index) {
             var legend = {color: COLOR_PALETTE[index]};
-
             if (group_legend == "val"){
                 legend['text'] = self.fields[self.operator_field]['string']
             }else if(group_legend == "val1"){
@@ -208,13 +211,54 @@ openerp.base_graph.GraphView = openerp.base.Controller.extend({
         });
 
         //for axis's value and title
+        var max_min = [];
+        var max = 0;
+        var min = 0;
+        var step = 0;
+        var stack_data = 0;
+        var minimum = 0;
+
+        if(! _.isEmpty(abscissa_data)){
+            _.each(abscissa_data, function (abscissa_datas) {
+                if (group_list.length <= 1){
+                    max_min.push(abscissa_datas[group_list]);
+                }else{
+                    stack_data = (abscissa_datas[group_list[0]]) + (abscissa_datas[group_list[1]]);
+                    max_min.push(stack_data);
+                }
+            });
+            max = Math.max.apply(Math,max_min);
+            minimum = Math.min.apply(Math,max_min);
+            if (minimum < 0){
+                min = minimum;
+            }
+            if (max != 0){
+                if (max < 0){
+                    max = max - (10 + max % 10)
+                }else{
+                    max = max + (10 - (max % 10))
+                }
+                step = Math.round(max/10);
+            }else{
+                max = 9;
+                step = 1;
+            }
+        }else{
+            max = 9;
+            step=1;
+        }
+
         var abscissa_description = {
             template: self.chart_info_fields,
             title: "<b>"+self.x_title+"</b>"
         };
+
         var ordinate_description = {
             lines: true,
-            title: "<b>"+self.y_title+"</b>"
+            title: "<b>"+self.y_title+"</b>",
+            start: min,
+            step: step,
+            end: max
         };
 
         var x_axis, y_axis;
@@ -228,7 +272,7 @@ openerp.base_graph.GraphView = openerp.base.Controller.extend({
 
         var bar_chart = new dhtmlxchartChart({
             view: view_chart,
-            container: self.view_id+"-barchart",
+            container: self.elem_id+"-barchart",
             value:"#"+group_list[0]+"#",
             gradient: "3d",
             border: false,
@@ -260,7 +304,10 @@ openerp.base_graph.GraphView = openerp.base.Controller.extend({
                     }
                 },
                 title:y_axis['title'],
-                lines: y_axis['lines']
+                lines: y_axis['lines'],
+                start:y_axis['start'],
+                step:y_axis['step'],
+                end:y_axis['end']
             },
             padding: {
                 left: 75
@@ -283,6 +330,7 @@ openerp.base_graph.GraphView = openerp.base.Controller.extend({
             });
         }
         bar_chart.parse(_.values(abscissa_data), "json");
+        jQuery("#"+self.elem_id+"-barchart").height(jQuery("#"+self.elem_id+"-barchart").height()+50);
         bar_chart.attachEvent("onItemClick", function(id) {
             self.open_list_view(bar_chart.get(id));
         });
@@ -291,7 +339,7 @@ openerp.base_graph.GraphView = openerp.base.Controller.extend({
         var self = this;
         var chart =  new dhtmlxchartChart({
             view:"pie3D",
-            container:self.view_id+"-piechart",
+            container:self.elem_id+"-piechart",
             value:"#"+self.operator_field+"#",
             pieInnerText:function(obj) {
                 var sum = chart.sum("#"+self.operator_field+"#");
