@@ -110,9 +110,6 @@ class ir_cron(osv.osv, netsvc.Agent):
             except Exception, e:
                 self._handle_callback_exception(cr, uid, model, func, args, job_id, e)
 
-    def yeah(self, cr, uid):
-        print "YEAH"
-
     def _poolJobs(self, db_name, check=False):
         try:
             db, pool = pooler.get_db_and_pool(db_name)
