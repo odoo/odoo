@@ -138,6 +138,9 @@ class OpenERPSession(object):
         """
         assert self._uid, "The user needs to be logged-in to initialize his context"
         self.context = self.model('res.users').context_get(self.context)
+        # set bin_size to True all the time
+        self.context = self.context or {}
+        self.context["bin_size"] = True
         
         self.client_timezone = self.context.get("tz", False)
         # invalid code, anyway we decided the server will be in UTC
