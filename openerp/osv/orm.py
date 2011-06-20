@@ -1616,10 +1616,14 @@ class orm_template(object):
             """ Locate a node in a source (parent) architecture.
 
             Given a complete source (parent) architecture (i.e. the field
-            `arch` in a view), and a 'spec' node (a node in a inheriting
+            `arch` in a view), and a 'spec' node (a node in an inheriting
             view that specifies the location in the source view of what
             should be changed), return (if it exists) the node in the
             source view matching the specification.
+
+            :param source: a parent architecture to modify
+            :param spec: a modifying node in an inheriting view
+            :return: a node in the source matching the spec
 
             """
             if spec.tag == 'xpath':
@@ -1644,15 +1648,20 @@ class orm_template(object):
                         return node
                 return None
 
-        def apply_specs(source, inherit, inherit_id=None):
+        def apply_inheritance_specs(source, specs_arch, inherit_id=None):
             """ Apply an inheriting view.
 
             Apply to a source architecture all the spec nodes (i.e. nodes
             describing where and what changes to apply to some parent
             architecture) given by an inheriting view.
 
+            :param source: a parent architecture to modify
+            :param specs_arch: a modifying architecture in an inheriting view
+            :param inherit_id: the database id of the inheriting view
+            :return: a modified source where the specs are applied
+
             """
-            specs_tree = etree.fromstring(encode(inherit))
+            specs_tree = etree.fromstring(encode(specs_arch))
             # Queue of specification nodes (i.e. nodes describing where and
             # changes to apply to some parent architecture).
             specs = [specs_tree]
@@ -1706,14 +1715,22 @@ class orm_template(object):
                     raise_view_error("Element '%s' not found in parent view '%%(parent_xml_id)s'" % tag, inherit_id)
             return source
 
-        def apply_chained_specs(source, inherit_id):
-            """ Apply all the (directly and indirectly) inheriting views. """
+        def apply_view_inheritance(source, inherit_id):
+            """ Apply all the (directly and indirectly) inheriting views.
+
+            :param source: a parent architecture to modify (with parent
+                modifications already applied)
+            :param inherit_id: the database id of the parent view
+            :return: a modified source where all the modifying architecture
+                are applied
+
+            """
             # get all views which inherit from (ie modify) this view
             cr.execute('select arch,id from ir_ui_view where inherit_id=%s and model=%s order by priority', (inherit_id, self._name))
             sql_inherit = cr.fetchall()
             for (inherit, id) in sql_inherit:
-                source = apply_specs(source, inherit, id)
-                source = apply_chained_specs(source, id)
+                source = apply_inheritance_specs(source, inherit, id)
+                source = apply_view_inheritance(source, id)
             return source
 
         result = {'type': view_type, 'model': self._name}
@@ -1756,9 +1773,9 @@ class orm_template(object):
             result['view_id'] = sql_res['id']
 
             source = etree.fromstring(encode(sql_res['arch']))
-            result['arch'] = apply_chained_specs(source, result['view_id'])
+            result['arch'] = apply_view_inheritance(source, result['view_id'])
 
-            result['name'] = sql_res['nam']
+            result['name'] = sql_res['name']
             result['field_parent'] = sql_res['field_parent'] or False
         else:
 
