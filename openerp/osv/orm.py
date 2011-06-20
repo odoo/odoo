@@ -1639,7 +1639,7 @@ class orm_template(object):
                 for node in source.getiterator(spec.tag):
                     good = True
                     for attr in spec.attrib:
-                        if attr != 'position' and node.get(attr) and node.get(attr) != spec.get(attr):
+                        if attr != 'position' and (not node.get(attr) or node.get(attr) != spec.get(attr)):
                             good = False
                             break
                     if good:
