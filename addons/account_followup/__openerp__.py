@@ -47,6 +47,7 @@ Note that if you want to check the followup level for a given partner/account en
     'depends': ['account'],
     'init_xml': [],
     'update_xml': [
+        'security/account_followup_security.xml',
         'security/ir.model.access.csv',
         'wizard/account_followup_print_view.xml',
         'report/account_followup_report.xml',
