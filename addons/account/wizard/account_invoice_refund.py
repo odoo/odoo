@@ -71,7 +71,7 @@ class account_invoice_refund(osv.osv_memory):
                        (type == 'in_refund') and 'purchase'
         for field in res['fields']:
             if field == 'journal_id':
-                journal_select = journal_obj._name_search(cr, uid, '', [('type', '=', journal_type), ('company_id','child_of',[company_id])], context=context, limit=None, name_get_uid=1)
+                journal_select = journal_obj._name_search(cr, uid, '', [('type', '=', journal_type), ('company_id','child_of',[company_id])], context=context)
                 res['fields'][field]['selection'] = journal_select
         return res
 
