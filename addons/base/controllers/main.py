@@ -761,12 +761,11 @@ class Action(openerpweb.Controller):
         Actions = req.session.model('ir.actions.actions')
         value = False
         context = req.session.eval_context(req.context)
+        context["bin_size"] = False
         action_type = Actions.read([action_id], ['type'], context)
         if action_type:
             action = req.session.model(action_type[0]['type']).read([action_id], False,
-                                                                    #TODO fme: check why does not work with context
-                                                                    #context)
-                                                                    {})
+                                                                    context)
             if action:
                 value = clean_action(action[0], req.session)
         return {'result': value}
