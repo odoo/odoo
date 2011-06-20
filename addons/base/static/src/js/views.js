@@ -117,8 +117,8 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
         var view = this.views[view_type];
         if (!view.controller) {
             // Lazy loading of views
-            var controllerclass = openerp.base.views.get_object(view_type);
-            var controller = new controllerclass( this, this.session, this.element_id + "_view_" + view_type, this.dataset, view.view_id);
+            var ControllerClass = openerp.base.views.get_object(view_type);
+            var controller = new ControllerClass( this, this.session, this.element_id + "_view_" + view_type, this.dataset, view.view_id);
             if (view.embedded_view) {
                 controller.set_embedded_view(view.embedded_view);
             }

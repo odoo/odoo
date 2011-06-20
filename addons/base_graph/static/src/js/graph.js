@@ -14,7 +14,7 @@ var COLOR_PALETTE = [
 
 QWeb.add_template('/base_graph/static/src/xml/base_graph.xml');
 openerp.base.views.add('graph', 'openerp.base_graph.GraphView');
-openerp.base_graph.GraphView = openerp.base.Controller.extend({
+openerp.base_graph.GraphView = openerp.base.View.extend({
 
     init: function(view_manager, session, element_id, dataset, view_id) {
         this._super(session, element_id);
@@ -31,7 +31,7 @@ openerp.base_graph.GraphView = openerp.base.Controller.extend({
         this.$element.hide();
     },
     start: function() {
-        this.rpc("/base_graph/graphview/load", {"model": this.model, "view_id": this.view_id}, this.on_loaded);
+        return this.rpc("/base_graph/graphview/load", {"model": this.model, "view_id": this.view_id}, this.on_loaded);
     },
     on_loaded: function(data) {
         this.all_fields = data.all_fields;
