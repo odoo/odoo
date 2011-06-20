@@ -1482,12 +1482,10 @@ class orm_template(object):
         if node.tag == 'diagram':
             if node.getchildren()[0].tag == 'node':
                 node_fields = self.pool.get(node.getchildren()[0].get('object')).fields_get(cr, user, fields_def.keys(), context)
+                fields.update(node_fields)
             if node.getchildren()[1].tag == 'arrow':
                 arrow_fields = self.pool.get(node.getchildren()[1].get('object')).fields_get(cr, user, fields_def.keys(), context)
-            for key, value in node_fields.items():
-                fields[key] = value
-            for key, value in arrow_fields.items():
-                fields[key] = value
+                fields.update(arrow_fields)
         else:
             fields = self.fields_get(cr, user, fields_def.keys(), context)
         for field in fields_def:
