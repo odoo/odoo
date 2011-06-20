@@ -296,7 +296,7 @@ openerp.base_graph.GraphView = openerp.base.Controller.extend({
             pieInnerText:function(obj) {
                 var sum = chart.sum("#"+self.operator_field+"#");
                 var val = obj[self.operator_field] / sum * 100 ;
-                return Math.round(val * 10)/10 + "%";
+                return val.toFixed(1) + "%";
             },
             gradient:"3d",
             height: 20,
