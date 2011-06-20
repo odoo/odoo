@@ -27,6 +27,16 @@ class NonLiteralEncoder(simplejson.encoder.JSONEncoder):
                 '__ref': 'context',
                 '__id': object.key
             }
+        elif isinstance(object, CompoundDomain):
+            return {
+                '__ref': 'compound_domain',
+                '__domains': [self.default(el) for el in object.domains]
+            }
+        elif isinstance(object, CompoundContext):
+            return {
+                '__ref': 'compound_context',
+                '__contexts': [self.default(el) for el in object.contexts]
+            }
         return super(NonLiteralEncoder, self).default(object)
 
 def non_literal_decoder(dct):
@@ -47,6 +57,16 @@ def non_literal_decoder(dct):
             if 'own_values' in dct:
                 context.own = dct['own_values']
             return context
+        elif dct["__ref"] == "compound_domain":
+            cdomain = CompoundDomain()
+            for el in dct["__domains"]:
+                cdomain.domains.append(non_literal_decoder(el))
+            return cdomain
+        elif dct["__ref"] == "compound_context":
+            ccontext = CompoundContext()
+            for el in dct["__contexts"]:
+                ccontext.contexts.append(non_literal_decoder(el))
+            return ccontext
     return dct
 
 class Domain(object):
@@ -138,3 +158,63 @@ class Context(object):
             ctx.update(self.own)
         return eval(self.get_context_string(),
                     ctx)
+
+class CompoundDomain:
+    def __init__(self, *domains):
+        self.domains = []
+        self.session = None
+        for domain in domains:
+            self.add(domain)
+        
+    def evaluate(self, context=None):
+        final_domain = []
+        for domain in self.domains:
+            if not isinstance(domain, (list, Domain, CompoundDomain)):
+                raise TypeError("Domain %r is not a list or a nonliteral Domain",
+                                 domain)
+                
+            if isinstance(domain, list):
+                final_domain.extend(domain)
+                continue
+            
+            ctx = dict(context or {})
+            ctx['context'] = ctx
+            
+            domain.session = self.session
+            final_domain.extend(domain.evaluate(ctx))
+        return final_domain
+    
+    def add(self, domain):
+        self.domains.append(domain)
+        return self
+
+class CompoundContext:
+    def __init__(self, *contexts):
+        self.contexts = []
+        self.session = None
+        for context in contexts:
+            self.add(context)
+    
+    def evaluate(self, context=None):
+        ctx = dict(context or {})
+        final_context = {}
+        for context_to_eval in self.contexts:
+            if not isinstance(context_to_eval, (dict, Context, CompoundContext)):
+                raise TypeError("Context %r is not a dict or a nonliteral Context",
+                                 context_to_eval)
+    
+            if isinstance(context_to_eval, dict):
+                final_context.update(context_to_eval)
+                continue
+            
+            ctx.update(final_context)
+            ctx["context"] = ctx
+            
+            context_to_eval.session = self.session
+            final_context.update(context_to_eval.evaluate(ctx))
+        return final_context
+            
+    def add(self, context):
+        self.contexts.append(context)
+        return self
+        

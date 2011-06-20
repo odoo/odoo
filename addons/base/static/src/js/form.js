@@ -34,6 +34,7 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
         this.touched = false;
         this.flags = this.view_manager.flags || {};
         this.registry = openerp.base.form.widgets;
+        this.has_been_loaded = $.Deferred();
     },
     start: function() {
         //this.log('Starting FormView '+this.model+this.view_id)
@@ -47,7 +48,6 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
     on_loaded: function(data) {
         var self = this;
         this.fields_view = data.fields_view;
-
         var frame = new (this.registry.get_object('frame'))(this, this.fields_view.arch);
 
         this.$element.html(QWeb.render(this.template, { 'frame': frame, 'view': this }));
@@ -65,6 +65,7 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
         this.$element.find('#' + this.element_id + '_header button.oe_form_button_new').click(this.on_button_new);
 
         this.view_manager.sidebar.set_toolbar(data.fields_view.toolbar);
+        this.has_been_loaded.resolve();
     },
     do_show: function () {
         var self = this;
@@ -222,8 +223,10 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
     },
     on_button_new: function() {
         var self = this;
-        this.dataset.default_get(_.keys(this.fields), function(result) {
-            self.on_record_loaded(result.result);
+        $.when(this.has_been_loaded).then(function() {
+            self.dataset.default_get(_.keys(self.fields_view.fields), function(result) {
+                self.on_record_loaded(result.result);
+            });
         });
     },
     /**
@@ -1013,6 +1016,18 @@ openerp.base.form.FieldSelection = openerp.base.form.Field.extend({
     });
 })(null);
 
+/**
+ * Builds a new context usable for operations related to fields by merging
+ * the fields'context with the action's context.
+ */
+var build_relation_context = function(relation_field) {
+    var action = relation_field.view.view_manager.action || {};
+    var a_context = action.context || {};
+    var f_context = relation_field.field.context || {};
+    var ctx = new openerp.base.CompoundContext(a_context).add(f_context);
+    return ctx;
+}
+
 openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
     init: function(view, node) {
         this._super(view, node);
@@ -1048,7 +1063,8 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
                 "type":"ir.actions.act_window",
                 "view_type":"form",
                 "view_mode":"form",
-                "target":"new"
+                "target":"new",
+                "context": build_relation_context(self)
             });
         };
         var cmenu = this.$menu_btn.contextMenu(this.cm_id, {'leftClickToo': true,
@@ -1125,23 +1141,26 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
         
         var dataset = new openerp.base.DataSetStatic(this.session, this.field.relation, []);
         
-        dataset.name_search([search_val, [], 'ilike', {}, this.limit + 1], function(data) {
+        dataset.name_search([search_val, self.field.domain || [], 'ilike',
+                build_relation_context(self), this.limit + 1], function(data) {
             self.last_search = data.result;
             // possible selections for the m2o
             var values = _.map(data.result, function(x) {
                 return {label: $('<span />').text(x[1]).html(), name:x[1], id:x[0]};
             });
             
-            // additional selections, actions that open popup
+            // search more... if more results that max
             if (values.length > self.limit) {
                 values = values.slice(0, self.limit);
                 values.push({label: "<em>   Search More...</em>", action: function() {
-                    dataset.name_search([search_val, [], 'ilike', {}, false], function(data) {
+                    dataset.name_search([search_val, self.field.domain || [], 'ilike',
+                            build_relation_context(self), false], function(data) {
                         self._change_int_value(null);
                         self._search_create_popup("search", data.result);
                     });
                 }});
             }
+            // quick create
             var raw_result = _(data.result).map(function(x) {return x[1];})
             if (search_val.length > 0 &&
                 !_.include(raw_result, search_val) &&
@@ -1151,6 +1170,7 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
                     self._quick_create(search_val);
                 }});
             }
+            // create...
             values.push({label: "<em>   Create and Edit...</em>", action: function() {
                 self._change_int_value(null);
                 self._search_create_popup("form");
@@ -1162,15 +1182,15 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
     _quick_create: function(name) {
         var self = this;
         var dataset = new openerp.base.DataSetStatic(this.session, this.field.relation, []);
-        dataset.call("name_create", [name, {}], function(data) {
+        dataset.call("name_create", [name, build_relation_context(self)], function(data) {
             self._change_int_ext_value(data.result);
         }, function(a, b) {
             self._change_int_value(null);
-            self._search_create_popup("form");
+            self._search_create_popup("form", undefined, {"default_name": name});
         });
     },
     // all search/create popup handling
-    _search_create_popup: function(view, ids) {
+    _search_create_popup: function(view, ids, context) {
         var dataset = new openerp.base.DataSetStatic(this.session, this.field.relation, []);
         var self = this;
         var pop = new openerp.base.form.SelectCreatePopup(null, self.view.session);
@@ -1178,7 +1198,8 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
                 initial_ids: ids ? _.map(ids, function(x) {return x[0]}) : undefined,
                 initial_view: view,
                 disable_multiple_selection: true
-                });
+                }, self.view.domain || [],
+                new openerp.base.CompoundContext(build_relation_context(self)).add(context || {}));
         pop.on_select_elements.add(function(element_ids) {
             dataset.call("name_get", [element_ids[0]], function(data) {
                 self._change_int_ext_value(data.result[0]);
@@ -1401,8 +1422,10 @@ openerp.base.form.SelectCreatePopup = openerp.base.BaseWidget.extend({
      * - disable_multiple_selection
      * - alternative_form_view
      */
-    select_element: function(model, options) {
+    select_element: function(model, options, domain, context) {
         this.model = model;
+        this.domain = domain || [];
+        this.context = context || {};
         this.options = options || {};
         this.initial_ids = this.options.initial_ids;
         jQuery(this.render()).dialog({title: '',
@@ -1412,7 +1435,8 @@ openerp.base.form.SelectCreatePopup = openerp.base.BaseWidget.extend({
     },
     start: function() {
         this._super();
-        this.dataset = new openerp.base.DataSetSearch(this.session, this.model);
+        this.dataset = new openerp.base.DataSetSearch(this.session, this.model,
+            this.context, this.domain);
         if ((this.options.initial_view || "search") == "search") {
             this.setup_search_view();
         } else { // "form"
@@ -1431,8 +1455,8 @@ openerp.base.form.SelectCreatePopup = openerp.base.BaseWidget.extend({
                 });
         this.searchview.on_search.add(function(domains, contexts, groupbys) {
             if (self.initial_ids) {
-                self.view_list.do_search.call(self, [[["id", "in", 
-                    self.initial_ids]]], contexts, groupbys);
+                self.view_list.do_search.call(self,[[["id", "in", self.initial_ids]]],
+                    contexts, groupbys);
                 self.initial_ids = undefined;
             } else {
                 self.view_list.do_search.call(self, domains, contexts, groupbys);
@@ -1485,7 +1509,6 @@ openerp.base.form.SelectCreatePopup = openerp.base.BaseWidget.extend({
         this.view_form = new openerp.base.FormView(null, this.session,
                 this.element_id + "_view_form", this.dataset, false);
         if (this.options.alternative_form_view) {
-            debugger;
             this.view_form.set_embedded_view(this.options.alternative_form_view);
         }
         this.view_form.start();
