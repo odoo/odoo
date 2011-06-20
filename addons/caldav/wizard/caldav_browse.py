@@ -197,8 +197,9 @@ configuration
             host = config.get('xmlrpc_interface', None)
             port = config.get('xmlrpc_port',8069)
         if host ==  '' or None:
-                host = 'localhost'
-                port = 8069
+            obj = self.pool.get('user.preference').browse(cr,uid,uid,context)
+            host = obj.host_name
+            port = 8069
         if not config.get_misc('webdav','enable',True):
             raise Exception("WebDAV is disabled, cannot continue")
         user_pool = self.pool.get('res.users')
@@ -238,6 +239,7 @@ class user_preference(osv.osv_memory):
                'calendar' :fields.many2one('basic.calendar', 'Calendar', required=True),
                'service': fields.selection([('webdav','CalDAV')], "Services"),
                'device' : fields.selection([('other', 'Other'), ('iphone', 'iPhone'), ('android', 'Android based device'),('thunderbird', 'Sunbird/Thunderbird'), ('evolution','Evolution')], "Software/Devices"),
+               'host_name': fields.char('Host Name', size=64, required=True),  
     }
     
     def _get_default_calendar(self, cr, uid, context):
@@ -278,6 +280,22 @@ class user_preference(osv.osv_memory):
             'target': 'new',
             'context': context,
         }
-    
+        
+    def next_window(self, cr, uid, ids, context=None):
+        obj_model = self.pool.get('ir.model.data')
+        model_data_ids = obj_model.search(cr,uid,[('model','=','ir.ui.view'),('name','=','user_prefernce_form')])
+        resource_id = obj_model.read(cr, uid, model_data_ids, fields=['res_id'])
+        context.update({'res_id': ids})
+        resource_id = obj_model.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
+        
+        return {
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'user.preference',
+            'views': [(resource_id,'form')],
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'context': context,
+        }
     
 user_preference()
