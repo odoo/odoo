@@ -984,7 +984,7 @@ dhtmlx.chart.stackedArea ={
 			
 			ctx.globalAlpha = this._settings.alpha.call(this,data[0]);
 			ctx.fillStyle = this._settings.color.call(this,data[0]);
-		   
+
 		   /*for the 2nd, 3rd, etc. series*/
 		    var y01 = (sIndex?data[0].$startY:point1.y);
 		   
