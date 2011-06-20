@@ -1289,15 +1289,15 @@ class orm_template(object):
                 res[f]['readonly'] = True
                 res[f]['states'] = {}
 
-            if hasattr(res[f], 'string'):
+            if 'string' in res[f]:
                 res_trans = translation_obj._get_source(cr, user, self._name + ',' + f, 'field', context.get('lang', False) or 'en_US')
                 if res_trans:
                     res[f]['string'] = res_trans
-            if hasattr(res[f], 'help'):
+            if 'help' in res[f]:
                 help_trans = translation_obj._get_source(cr, user, self._name + ',' + f, 'help', context.get('lang', False) or 'en_US')
                 if help_trans:
                     res[f]['help'] = help_trans
-            if hasattr(res[f], 'selection'):
+            if 'selection' in res[f]:
                 if isinstance(field.selection, (tuple, list)):
                     sel = field.selection
                     sel2 = []
