@@ -78,10 +78,12 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
         this.dataset = dataset;
         this.searchview = null;
         this.active_view = null;
-        this.views_src = views;
+        this.views_src = _.map(views, function(x)
+            {return x instanceof Array? {view_id: x[0], view_type: x[1]} : x;});
         this.views = {};
         this.flags = this.flags || {};
         this.sidebar = new openerp.base.NullSidebar();
+        this.registry = openerp.base.views;
     },
     /**
      * @returns {jQuery.Deferred} initial view loading promise
@@ -94,14 +96,13 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
             self.on_mode_switch($(this).data('view-type'));
         });
         _.each(this.views_src, function(view) {
-            self.views[view[1]] = { view_id: view[0], controller: null,
-                embedded_view: view[2]};
+            self.views[view.view_type] = $.extend({}, view, {controller: null});
         });
         if (this.flags.views_switcher === false) {
             this.$element.find('.oe_vm_switch').hide();
         }
         // switch to the first one in sequence
-        return this.on_mode_switch(this.views_src[0][1]);
+        return this.on_mode_switch(this.views_src[0].view_type);
     },
     stop: function() {
     },
@@ -117,8 +118,9 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
         var view = this.views[view_type];
         if (!view.controller) {
             // Lazy loading of views
-            var controllerclass = openerp.base.views.get_object(view_type);
-            var controller = new controllerclass( this, this.session, this.element_id + "_view_" + view_type, this.dataset, view.view_id);
+            var controllerclass = this.registry.get_object(view_type);
+            var controller = new controllerclass( this, this.session, this.element_id + "_view_" + view_type,
+                this.dataset, view.view_id, view.options);
             if (view.embedded_view) {
                 controller.set_embedded_view(view.embedded_view);
             }

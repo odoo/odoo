@@ -334,9 +334,6 @@ openerp.base.Session = openerp.base.BasicController.extend( /** @lends openerp.b
         // Construct a JSON-RPC2 request, method is currently unused
         params.session_id = this.session_id;
         params.context = typeof(params.context) != "undefined" ? params.context  : this.context;
-        if (!params.context.bin_size) {
-            params.context.bin_size = true;
-        }
 
         // Use a default error handler unless defined
         error_callback = typeof(error_callback) != "undefined" ? error_callback : this.on_rpc_error;
@@ -734,6 +731,66 @@ openerp.base.BaseWidget = openerp.base.Controller.extend({
      */
     render: function (additional) {
         return QWeb.render(this.template, _.extend({}, this, additional != null ? additional : {}));
+    }
+});
+
+openerp.base.Dialog = openerp.base.BaseWidget.extend({
+    dialog_title: "",
+    identifier_prefix: 'dialog',
+    init: function (session, options) {
+        this._super(null, session);
+        options = _.extend({
+            modal: true,
+            title: this.dialog_title,
+            width: '700px',
+            min_width: 0,
+            max_width: '100%',
+            height: '500px',
+            min_height: 0,
+            max_height: '100%',
+            buttons: {}
+        }, options);
+
+        options.width = this.get_width(options.width);
+        options.min_width = this.get_width(options.min_width);
+        options.max_width = this.get_width(options.max_width);
+        options.height = this.get_height(options.height);
+        options.min_height = this.get_height(options.min_height);
+        options.max_height = this.get_height(options.max_height);
+
+        if (options.width > options.max_width) options.width = options.max_width;
+        if (options.width < options.min_width) options.width = options.min_width;
+        if (options.height > options.max_height) options.height = options.max_height;
+        if (options.height < options.min_height) options.height = options.min_height;
+
+        for (var f in this) {
+            if (f.substr(0, 10) == 'on_button_') {
+                options.buttons[f.substr(10)] = this[f];
+            }
+        }
+        this.options = options;
+    },
+    get_width: function(val) {
+        return this.get_size(val.toString(), $(window.top).width());
+    },
+    get_height: function(val) {
+        return this.get_size(val.toString(), $(window.top).height());
+    },
+    get_size: function(val, available_size) {
+        if (val == 'auto') {
+            return val;
+        } else if (val.slice(-1) == "%") {
+            return Math.round(available_size / 100 * parseInt(val.slice(0, -1), 10));
+        } else {
+            return parseInt(val, 10);
+        }
+    },
+    start: function () {
+        this.$dialog = $('<div id="' + this.element_id + '"></div>').dialog(this.options);
+        this._super();
+    },
+    stop: function () {
+        this.$dialog("destroy").remove();
     }
 });
 

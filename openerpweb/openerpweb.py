@@ -138,6 +138,9 @@ class OpenERPSession(object):
         """
         assert self._uid, "The user needs to be logged-in to initialize his context"
         self.context = self.model('res.users').context_get(self.context)
+        # set bin_size to True all the time
+        self.context = self.context or {}
+        self.context["bin_size"] = True
         
         self.client_timezone = self.context.get("tz", False)
         # invalid code, anyway we decided the server will be in UTC
@@ -182,7 +185,7 @@ class OpenERPSession(object):
 
     def eval_context(self, context_to_eval, context=None):
         """ Evaluates the provided context_to_eval in the context (haha) of
-        the context.
+        the context. Also merges the evaluated context with the session's context.
 
         :param context_to_eval: a context to evaluate. Must be a dict or a
                                 non-literal context. If it's a dict, will be
@@ -194,46 +197,15 @@ class OpenERPSession(object):
         :raises: ``TypeError`` if ``context_to_eval`` is neither a dict nor
                  a Context
         """
-        if not isinstance(context_to_eval, (dict, nonliterals.Domain)):
-            raise TypeError("Context %r is not a dict or a nonliteral Context",
-                             context_to_eval)
-
-        if isinstance(context_to_eval, dict):
-            return context_to_eval
-
-        ctx = dict(context or {})
-        ctx['context'] = ctx
-
-        # if the domain was unpacked from JSON, it needs the current
-        # OpenERPSession for its data retrieval
-        context_to_eval.session = self
-        return context_to_eval.evaluate(ctx)
-
-    def eval_contexts(self, contexts, context=None):
-        """ Evaluates a sequence of contexts to build a single final result
-
-        :param list contexts: a list of Context or dict contexts
-        :param dict context: a base context, if needed
-        :returns: the final combination of all provided contexts
-        :rtype: dict
-        """
-        # This is the context we use to evaluate stuff
-        current_context = dict(
+        ctx = dict(
             self.base_eval_context,
             **(context or {}))
-        # this is our result, it should not contain the values
-        # of the base context above
-        final_context = {}
-        for ctx in contexts:
-            # evaluate the current context in the sequence, merge it into
-            # the result
-            final_context.update(
-                self.eval_context(
-                    ctx, current_context))
-            # update the current evaluation context so that future
-            # evaluations can use the results we just gathered
-            current_context.update(final_context)
-        return final_context
+        ctx['context'] = ctx
+        
+        # adding the context of the session to send to the openerp server
+        ccontext = nonliterals.CompoundContext(self.context, context_to_eval)
+        ccontext.session = self
+        return ccontext.evaluate(ctx)
 
     def eval_domain(self, domain, context=None):
         """ Evaluates the provided domain using the provided context
@@ -250,39 +222,15 @@ class OpenERPSession(object):
 
         :raises: ``TypeError`` if ``domain`` is neither a list nor a Domain
         """
-        if not isinstance(domain, (list, nonliterals.Domain)):
-            raise TypeError("Domain %r is not a list or a nonliteral Domain",
-                             domain)
-
         if isinstance(domain, list):
             return domain
 
         ctx = dict(context or {})
         ctx['context'] = ctx
 
-        # if the domain was unpacked from JSON, it needs the current
-        # OpenERPSession for its data retrieval
-        domain.session = self
-        return domain.evaluate(ctx)
-
-    def eval_domains(self, domains, context=None):
-        """ Evaluates and concatenates the provided domains using the
-        provided context for all of them.
-
-        Returns the final, concatenated result.
-
-        :param list domains: a list of Domain or list domains
-        :param dict context: the context in which the domains
-                             should be evaluated (if evaluations need
-                             to happen)
-        :returns: the final combination of all domains in the sequence
-        :rtype: list
-        """
-        final_domain = []
-        for domain in domains:
-            final_domain.extend(
-                self.eval_domain(domain, context))
-        return final_domain
+        cdomain = nonliterals.CompoundDomain(domain)
+        cdomain.session = self
+        return cdomain.evaluate(ctx)
 
 #----------------------------------------------------------
 # OpenERP Web RequestHandler

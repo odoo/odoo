@@ -231,10 +231,10 @@ openerp.base.DataSet =  openerp.base.Controller.extend( /** @lends openerp.base.
      * @param {openerp.base.Session} session current OpenERP session
      * @param {String} model the OpenERP model this dataset will manage
      */
-    init: function(session, model) {
+    init: function(session, model, context) {
         this._super(session);
         this.model = model;
-        this.context = {};
+        this.context = context || {};
         this.index = 0;
         this.count = 0;
     },
@@ -320,13 +320,22 @@ openerp.base.DataSet =  openerp.base.Controller.extend( /** @lends openerp.base.
             args: args || []
         }, callback, error_callback);
     },
+    call_and_eval: function (method, args, domain_id, context_id, callback, error_callback) {
+        return this.rpc('/base/dataset/call', {
+            model: this.model,
+            method: method,
+            domain_id: domain_id || null,
+            context_id: context_id || null,
+            args: args || []
+        }, callback, error_callback);
+    },
     /**
      * Arguments:
-     * name='', args=None, operator='ilike', context=None, limit=100
+     * name='', args=[], operator='ilike', context=None, limit=100
      */
     name_search: function (args, callback, error_callback) {
-        return this.call('name_search',
-            args,
+        return this.call_and_eval('name_search',
+            args, 1, 3,
             callback, error_callback);
     },
     exec_workflow: function (id, signal, callback) {
@@ -362,9 +371,9 @@ openerp.base.DataSetStatic =  openerp.base.DataSet.extend({
 });
 
 openerp.base.DataSetSearch =  openerp.base.DataSet.extend({
-    init: function(session, model) {
-        this._super(session, model);
-        this.domain = [];
+    init: function(session, model, context, domain) {
+        this._super(session, model, context);
+        this.domain = domain || [];
         this._sort = [];
         this.offset = 0;
         // subset records[offset:offset+limit]
@@ -430,6 +439,37 @@ openerp.base.DataSetSearch =  openerp.base.DataSet.extend({
         return undefined;
     }
 });
+
+openerp.base.CompoundContext = function() {
+    this.__ref = "compound_context";
+    this.__contexts = [];
+    var self = this;
+    _.each(arguments, function(x) {
+        self.add(x);
+    });
+};
+openerp.base.CompoundContext.prototype.add = function(context) {
+    if (context.__ref === "compound_context")
+        this.__contexts = this.__contexts.concat(context.__contexts);
+    else
+        this.__contexts.push(context);
+    return this;
+};
+
+openerp.base.CompoundDomain = function() {
+    this.__ref = "compound_domain";
+    this.__domains = [];
+    _.each(arguments, function(x) {
+        self.add(x);
+    });
+};
+openerp.base.CompoundDomain.prototype.add = function(domain) {
+    if (domain.__ref === "compound_domain")
+        this.__domains = this.__domains.concat(domain.__domains);
+    else
+        this.__domains.push(domain);
+    return this;
+};
 
 };
 
