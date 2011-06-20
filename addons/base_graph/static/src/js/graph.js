@@ -14,7 +14,7 @@ var COLOR_PALETTE = [
 
 QWeb.add_template('/base_graph/static/src/xml/base_graph.xml');
 openerp.base.views.add('graph', 'openerp.base_graph.GraphView');
-openerp.base_graph.GraphView = openerp.base.Controller.extend({
+openerp.base_graph.GraphView = openerp.base.View.extend({
 
     init: function(view_manager, session, element_id, dataset, view_id) {
         this._super(session, element_id);
@@ -31,7 +31,7 @@ openerp.base_graph.GraphView = openerp.base.Controller.extend({
         this.$element.hide();
     },
     start: function() {
-        this.rpc("/base_graph/graphview/load", {"model": this.model, "view_id": this.view_id}, this.on_loaded);
+        return this.rpc("/base_graph/graphview/load", {"model": this.model, "view_id": this.view_id}, this.on_loaded);
     },
     on_loaded: function(data) {
         this.all_fields = data.all_fields;
@@ -270,7 +270,7 @@ openerp.base_graph.GraphView = openerp.base.Controller.extend({
              y_axis = ordinate_description;
         }
 
-        var bar_chart = new dhtmlxchartChart({
+        var bar_chart = new dhtmlXChart({
             view: view_chart,
             container: self.elem_id+"-barchart",
             value:"#"+group_list[0]+"#",
@@ -337,14 +337,14 @@ openerp.base_graph.GraphView = openerp.base.Controller.extend({
     },
     schedule_pie: function(result) {
         var self = this;
-        var chart =  new dhtmlxchartChart({
+        var chart =  new dhtmlXChart({
             view:"pie3D",
             container:self.elem_id+"-piechart",
             value:"#"+self.operator_field+"#",
             pieInnerText:function(obj) {
                 var sum = chart.sum("#"+self.operator_field+"#");
                 var val = obj[self.operator_field] / sum * 100 ;
-                return Math.round(val * 10)/10 + "%";
+                return val.toFixed(1) + "%";
             },
             gradient:"3d",
             height: 20,
