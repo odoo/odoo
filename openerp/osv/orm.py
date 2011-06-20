@@ -1421,8 +1421,8 @@ class orm_template(object):
         check_group(node)
 
         # translate view
-        if ('lang' in context) and not result:
-            if node.get('string'):
+        if 'lang' in context:
+            if node.get('string') and not result:
                 trans = self.pool.get('ir.translation')._get_source(cr, user, self._name, 'view', context['lang'], node.get('string'))
                 if trans == node.get('string') and ('base_model_name' in context):
                     # If translation is same as source, perhaps we'd have more luck with the alternative model name
