@@ -99,10 +99,19 @@ class ir_cron(osv.osv, netsvc.Agent):
             try:
                 netsvc.log('cron', (cr.dbname,uid,'*',model,func)+tuple(args), channel=logging.DEBUG,
                             depth=(None if self._logger.isEnabledFor(logging.DEBUG_RPC_ANSWER) else 1), fn='object.execute')
-                f(cr, uid, *args)
+                logger = logging.getLogger('execution time')
+                if logger.isEnabledFor(logging.DEBUG_RPC):
+                    start_time = time.time()
+                    f(cr, uid, *args)
+                    end_time = time.time()
+                    logger.log(logging.DEBUG_RPC, '%.3fs (%s, %s)' % (end_time - start_time, model, func))
+                else:
+                    f(cr, uid, *args)
             except Exception, e:
                 self._handle_callback_exception(cr, uid, model, func, args, job_id, e)
 
+    def yeah(self, cr, uid):
+        print "YEAH"
 
     def _poolJobs(self, db_name, check=False):
         try:

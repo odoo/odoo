@@ -434,7 +434,14 @@ class OpenERPDispatcher:
             logger = logging.getLogger('result')
             self.log('service', tuple(replace_request_password(params)), depth=(None if logger.isEnabledFor(logging.DEBUG_RPC_ANSWER) else 1), fn='%s.%s'%(service_name,method))
             auth = getattr(self, 'auth_provider', None)
-            result = ExportService.getService(service_name).dispatch(method, auth, params)
+            if logger.isEnabledFor(logging.DEBUG_RPC):
+                start_time = time.time()
+                result = ExportService.getService(service_name).dispatch(method, auth, params)
+                end_time = time.time()
+                logger = logging.getLogger('execution time')
+                self.log('execution time', tuple(replace_request_password(params)), depth=1, fn='%.3fs '%(end_time - start_time))
+            else:
+                result = ExportService.getService(service_name).dispatch(method, auth, params)
             self.log('result', result, channel=logging.DEBUG_RPC_ANSWER)
             return result
         except Exception, e:
