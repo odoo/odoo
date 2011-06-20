@@ -50,7 +50,7 @@ class account_invoice_refund(osv.osv_memory):
                (inv_type == 'out_refund') and 'sale' or \
                (inv_type == 'in_invoice') and 'purchase_refund' or \
                (inv_type == 'in_refund') and 'purchase'
-        journal = obj_journal.search(cr, uid, [('type', '=', type), ('company_id','child_of',[company_id])], limit=1, context=context)
+        journal = obj_journal.search(cr, uid, [('type', '=', type), ('company_id','=',company_id)], limit=1, context=context)
         return journal and journal[0] or False
 
     _defaults = {
