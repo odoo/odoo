@@ -33,6 +33,8 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
         this.show_invalid = true;
         this.touched = false;
         this.flags = this.view_manager.flags || {};
+        this.default_focus_field = null;
+        this.default_focus_button = null;
         this.registry = openerp.base.form.widgets;
         this.has_been_loaded = $.Deferred();
     },
@@ -106,6 +108,9 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
         }
         this.do_update_pager(record.id == null);
         this.do_update_sidebar();
+        if (this.default_focus_field) {
+            this.default_focus_field.focus();
+        }
     },
     on_form_changed: function(widget) {
         if (widget && widget.node.attrs.on_change) {
@@ -537,10 +542,15 @@ openerp.base.form.WidgetFrame = openerp.base.form.Widget.extend({
         var type = this.view.fields_view.fields[node.attrs.name] || {};
         var widget_type = node.attrs.widget || type.type || node.tag;
         var widget = new (this.view.registry.get_object(widget_type)) (this.view, node);
-        if (node.tag == 'field' && node.attrs.nolabel != '1') {
-            var label = new (this.view.registry.get_object('label')) (this.view, node);
-            label["for"] = widget;
-            this.add_widget(label);
+        if (node.tag == 'field') {
+            if (node.attrs.default_focus == '1') {
+                this.view.default_focus_field = widget;
+            }
+            if (node.attrs.nolabel != '1') {
+                var label = new (this.view.registry.get_object('label')) (this.view, node);
+                label["for"] = widget;
+                this.add_widget(label);
+            }
         }
         this.add_widget(widget);
     },
@@ -585,6 +595,10 @@ openerp.base.form.WidgetButton = openerp.base.form.Widget.extend({
     init: function(view, node) {
         this._super(view, node);
         this.template = "WidgetButton";
+        if (node.attrs.default_focus == '1') {
+            // TODO fme: provide enter key binding to widgets
+            this.view.default_focus_button = this;
+        }
     },
     start: function() {
         this._super.apply(this, arguments);
@@ -701,6 +715,8 @@ openerp.base.form.Field = openerp.base.form.Widget.extend({
     },
     validate: function() {
         this.invalid = false;
+    },
+    focus: function() {
     }
 });
 
@@ -733,6 +749,9 @@ openerp.base.form.FieldChar = openerp.base.form.Field.extend({
         } else if (this.validation_regex) {
             this.invalid = !this.validation_regex.test(value);
         }
+    },
+    focus: function() {
+        this.$element.find('input').focus();
     }
 });
 
@@ -830,6 +849,9 @@ openerp.base.form.FieldDatetime = openerp.base.form.Field.extend({
     validate: function() {
         this.invalid = this.required && this.$element.find('input')[this.jqueryui_object]('getDate') === '';
     },
+    focus: function() {
+        this.$element.find('input').focus();
+    },
     parse: openerp.base.parse_datetime,
     format: openerp.base.format_datetime
 });
@@ -893,6 +915,9 @@ openerp.base.form.FieldText = openerp.base.form.Field.extend({
         } else if (this.validation_regex) {
             this.invalid = !this.validation_regex.test(value);
         }
+    },
+    focus: function() {
+        this.$element.find('textarea').focus();
     }
 });
 
@@ -923,6 +948,9 @@ openerp.base.form.FieldBoolean = openerp.base.form.Field.extend({
     },
     validate: function() {
         this.invalid = this.required && !this.$element.find('input').is(':checked');
+    },
+    focus: function() {
+        this.$element.find('input').focus();
     }
 });
 
@@ -978,6 +1006,9 @@ openerp.base.form.FieldSelection = openerp.base.form.Field.extend({
     },
     validate: function() {
         this.invalid = this.required && this.$element.find('select').val() === "";
+    },
+    focus: function() {
+        this.$element.find('select').focus();
     }
 });
 
