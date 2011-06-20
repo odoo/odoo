@@ -72,8 +72,9 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
     do_show: function () {
         var self = this;
         self.$element.show();
-        if (this.dataset.index === null) {
+        if (this.dataset.index === null || (this.dataset.index === 0 && this.dataset.ids.length == 0)) {
             // null index means we should start a new record
+            // 0 index with empty ids means we called the form with empty dataset (wizards, switched to form from empty list, ...)
             this.on_button_new();
         } else {
             this.dataset.read_index(_.keys(this.fields_view.fields), this.on_record_loaded);
