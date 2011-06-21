@@ -362,6 +362,25 @@ openerp.base.Sidebar = openerp.base.BaseWidget.extend({
 
 openerp.base.NullSidebar = openerp.base.generate_null_object_class(openerp.base.Sidebar);
 
+openerp.base.Export = openerp.base.Dialog.extend({
+    dialog_title: "Export",
+    template: 'ExportDialog',
+    identifier_prefix: 'export_dialog',
+    init: function (session, model, domain) {
+        this._super();
+    },
+    start: function () {
+        this._super();
+        this.$element.html(this.render());
+    },
+    on_button_Export: function() {
+        console.log("Export")
+    },
+    on_button_Cancel: function() {
+        this.$element.dialog("close");
+    }
+});
+
 openerp.base.View = openerp.base.Controller.extend({
     /**
      * Fetches and executes the action identified by ``action_data``.

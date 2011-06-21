@@ -341,7 +341,7 @@
                     <t t-set="value" t-value="row['data'][column.id].value"/>
                     <t t-esc="value instanceof Array ? value[1] : value"/>
                 </t>
-                <button type="button" t-att-title="column.help"
+                <button type="button" t-att-title="column.string"
                         t-if="is_button">
                     <img t-att-src="'/base/static/src/img/icons/' + column.icon + '.png'"
                          t-att-alt="column.string"/>
