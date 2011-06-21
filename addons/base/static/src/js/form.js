@@ -42,8 +42,12 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
         if (this.embedded_view) {
             return $.Deferred().then(this.on_loaded).resolve({fields_view: this.embedded_view});
         } else {
+            var context = new openerp.base.CompoundContext(this.dataset.context);
+            if (this.view_manager.action && this.view_manager.action.context) {
+                context.add(this.view_manager.action.context);
+            }
             return this.rpc("/base/formview/load", {"model": this.model, "view_id": this.view_id,
-                toolbar:!!this.flags.sidebar}, this.on_loaded);
+                toolbar:!!this.flags.sidebar, context: context}, this.on_loaded);
         }
     },
     on_loaded: function(data) {
@@ -84,7 +88,6 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
         this.$element.hide();
     },
     on_record_loaded: function(record) {
-        console.info(record)
         this.touched = false;
         if (record) {
             this.datarecord = record;
@@ -226,8 +229,12 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
     },
     on_button_new: function() {
         var self = this;
+        var context = new openerp.base.CompoundContext(this.dataset.context);
+        if (this.view_manager.action && this.view_manager.action.context) {
+            context.add(this.view_manager.action.context);
+        }
         $.when(this.has_been_loaded).then(function() {
-            self.dataset.default_get(_.keys(self.fields_view.fields), function(result) {
+            self.dataset.default_get(_.keys(self.fields_view.fields), context, function(result) {
                 self.on_record_loaded(result.result);
             });
         });
