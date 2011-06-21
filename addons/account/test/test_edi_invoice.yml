@@ -1,0 +1,13 @@
+-
+  Tesing of Export functionality
+-
+  !python {model: ir.edi.document}: |
+    invoice_obj = self.pool.get('account.invoice')
+    invoice_ids = invoice_obj.search(cr, uid, [])
+    print "invoices>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",invoice_ids
+    if invoice_ids:
+      invoices = invoice_obj.browse(cr, uid, invoice_ids)
+      tokens = self.export_edi(cr, uid, invoices)
+      for token in tokens:
+        document = self.get_document(cr, uid, token, context=context)
+        a = self.import_edi(cr, uid, edi_document = document)
