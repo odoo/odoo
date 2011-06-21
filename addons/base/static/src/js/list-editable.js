@@ -125,6 +125,15 @@ openerp.base.list.editable = function (openerp) {
                     'class': $(row).attr('class'),
                     click: function (e) {e.stopPropagation();}
                 })
+                .delegate('button.oe-edit-row-save', 'click', function () {
+                    self.save_row();
+                })
+                .delegate('button.oe-edit-row-cancel', 'click', function () {
+                    self.cancel_edition();
+                })
+                .delegate('button', 'keyup', function (e) {
+                    e.stopImmediatePropagation();
+                })
                 .keyup(function (e) {
                     switch (e.which) {
                         case KEY_RETURN:
@@ -136,12 +145,6 @@ openerp.base.list.editable = function (openerp) {
                         default:
                             return;
                     }
-                })
-                .delegate('button.oe-edit-row-save', 'click', function () {
-                    self.save_row();
-                })
-                .delegate('button.oe-edit-row-cancel', 'click', function () {
-                    self.cancel_edition();
                 });
             if (row) {
                 $new_row.replaceAll(row);
