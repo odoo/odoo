@@ -739,36 +739,47 @@ openerp.base.Dialog = openerp.base.BaseWidget.extend({
     identifier_prefix: 'dialog',
     init: function (session, options) {
         this._super(null, session);
-        options = _.extend({
+        this.options = {
             modal: true,
-            title: this.dialog_title,
-            width: '700px',
+            width: 'auto',
             min_width: 0,
             max_width: '100%',
-            height: '500px',
+            height: 'auto',
             min_height: 0,
             max_height: '100%',
+            autoOpen: false,
             buttons: {}
-        }, options);
-
-        options.width = this.get_width(options.width);
-        options.min_width = this.get_width(options.min_width);
-        options.max_width = this.get_width(options.max_width);
-        options.height = this.get_height(options.height);
-        options.min_height = this.get_height(options.min_height);
-        options.max_height = this.get_height(options.max_height);
-
-        if (options.width > options.max_width) options.width = options.max_width;
-        if (options.width < options.min_width) options.width = options.min_width;
-        if (options.height > options.max_height) options.height = options.max_height;
-        if (options.height < options.min_height) options.height = options.min_height;
-
+        };
         for (var f in this) {
             if (f.substr(0, 10) == 'on_button_') {
-                options.buttons[f.substr(10)] = this[f];
+                this.options.buttons[f.substr(10)] = this[f];
             }
         }
-        this.options = options;
+        if (options) {
+            this.set_options(options);
+        }
+    },
+    set_options: function(options) {
+        options = options || {};
+        options.width = this.get_width(options.width || this.options.width);
+        options.min_width = this.get_width(options.min_width || this.options.min_width);
+        options.max_width = this.get_width(options.max_width || this.options.max_width);
+        options.height = this.get_height(options.height || this.options.height);
+        options.min_height = this.get_height(options.min_height || this.options.min_height);
+        options.max_height = this.get_height(options.max_height || this.options.max_width);
+
+        if (options.width !== 'auto') {
+            if (options.width > options.max_width) options.width = options.max_width;
+            if (options.width < options.min_width) options.width = options.min_width;
+        }
+        if (options.height !== 'auto') {
+            if (options.height > options.max_height) options.height = options.max_height;
+            if (options.height < options.min_height) options.height = options.min_height;
+        }
+        if (!options.title && this.dialog_title) {
+            options.title = this.dialog_title;
+        }
+        _.extend(this.options, options);
     },
     get_width: function(val) {
         return this.get_size(val.toString(), $(window.top).width());
@@ -777,7 +788,7 @@ openerp.base.Dialog = openerp.base.BaseWidget.extend({
         return this.get_size(val.toString(), $(window.top).height());
     },
     get_size: function(val, available_size) {
-        if (val == 'auto') {
+        if (val === 'auto') {
             return val;
         } else if (val.slice(-1) == "%") {
             return Math.round(available_size / 100 * parseInt(val.slice(0, -1), 10));
@@ -785,12 +796,26 @@ openerp.base.Dialog = openerp.base.BaseWidget.extend({
             return parseInt(val, 10);
         }
     },
-    start: function () {
+    start: function (auto_open) {
         this.$dialog = $('<div id="' + this.element_id + '"></div>').dialog(this.options);
+        if (auto_open !== false) {
+            this.open();
+        }
         this._super();
     },
+    open: function(options) {
+        // TODO fme: bind window on resize
+        if (this.template) {
+            this.$element.html(this.render());
+        }
+        this.set_options(options);
+        this.$dialog.dialog(this.options).dialog('open');
+    },
+    close: function(options) {
+        this.$dialog.dialog('close');
+    },
     stop: function () {
-        this.$dialog("destroy").remove();
+        this.$dialog.dialog('destroy');
     }
 });
 
