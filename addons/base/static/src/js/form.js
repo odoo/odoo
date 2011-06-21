@@ -84,6 +84,7 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
         this.$element.hide();
     },
     on_record_loaded: function(record) {
+        console.info(record)
         this.touched = false;
         if (record) {
             this.datarecord = record;
@@ -996,7 +997,7 @@ openerp.base.form.FieldSelection = openerp.base.form.Field.extend({
         if (value != null && value !== false) {
             this.$element.find('select').val(value);
         } else {
-            this.$element.find('select')[0].selectedIndex = 0;
+            this.$element.find('select').val('false');
         }
     },
     set_value_from_ui: function() {
