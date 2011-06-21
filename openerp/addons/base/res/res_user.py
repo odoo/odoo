@@ -136,7 +136,7 @@ class users(osv.osv):
                 _('"email_from" needs to be set to send welcome mails '
                   'to users'))
             return False
-        if not user.get('user_email'):
+        if not user.get('email'):
             return False
 
         return tools.email_send(email_from=None, email_to=[user['email']],
