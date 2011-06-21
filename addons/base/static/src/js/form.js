@@ -1,4 +1,3 @@
-
 openerp.base.form = function (openerp) {
 
 openerp.base.views.add('form', 'openerp.base.FormView');
@@ -299,6 +298,7 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
             if (success) {
                 success(r);
             }
+            this.reload();
         }
     },
     /**
@@ -333,6 +333,7 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
             if (success) {
                 success(_.extend(r, {created: true}));
             }
+            this.reload();
         }
     },
     do_search: function (domains, contexts, groupbys) {
