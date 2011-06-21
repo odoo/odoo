@@ -260,11 +260,18 @@
             <field name="model">lunch.product</field>
             <field name="arch" type="xml">
                 <form string="Products">
-                    <field name="name" select="1"/>
-                    <field name="category_id" widget="selection"/>
-                    <field name="description" />
-                    <field name="price" />
-                    <field name="active"/>
+                     <group col="6">
+                          <field name="name" select="1"/>
+                          <field name="category_id" widget="selection"/>
+                          <field name="price" />
+                     </group>
+                     <notebook colspan="4">
+                         <page string="General Information"> 
+                              <field name="active"/>
+                              <separator string="Description" colspan="4" />
+                              <field name="description" nolabel="1" colspan="4" />
+                          </page>
+                     </notebook>
                 </form>
             </field>
         </record>
