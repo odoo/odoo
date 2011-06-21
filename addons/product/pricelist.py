@@ -522,7 +522,7 @@ class product_pricelist_item(osv.osv):
     _description = "Pricelist item"
     _order = "sequence, min_quantity desc"
     _defaults = {
-        'base': lambda *a: -1,
+        'base': lambda *a: 1,
         'min_quantity': lambda *a: 0,
         'sequence': lambda *a: 5,
         'price_discount': lambda *a: 0,
