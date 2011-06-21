@@ -1267,6 +1267,15 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
     }
 });
 
+/*
+# Values: (0, 0,  { fields })    create
+#         (1, ID, { fields })    update
+#         (2, ID)                remove (delete)
+#         (3, ID)                unlink one (target id or target of relation)
+#         (4, ID)                link
+#         (5)                    unlink all (only valid for one2many)
+*/
+
 openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
     init: function(view, node) {
         this._super(view, node);
@@ -1279,9 +1288,8 @@ openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
 
         var self = this;
 
-        this.dataset = new openerp.base.DataSetStatic(this.session, this.field.relation);
-        this.dataset.on_unlink.add_last(function(ids) {
-            self.dataset.set_ids(_.without.apply(_, [self.dataset.ids].concat(ids)));
+        this.dataset = new openerp.base.form.One2ManyDataset(this.session, this.field.relation);
+        this.dataset.on_change.add_last(function() {
             self.on_ui_change();
             self.reload_current_view();
         });
@@ -1337,16 +1345,45 @@ openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
             // TODO niv: but fme did not implemented delete in form view anyway
         }
     },
+    set_value_from_ui: function() {},
     set_value: function(value) {
         if(value != false) {
-            this.dataset.set_ids(value);
+            this.dataset.reset_ids(value);
             this.is_setted.resolve();
         }
     },
-    get_value: function(value) {
-        //TODO niv
-        return [];
+    get_value: function() {
+        var val = _.map(this.dataset.to_delete, function(v, k) {return [2, parseInt(k, 10)];});
+        var val = val.concat(_.map(this.dataset.to_create, function(x) {return [0, 0, x];}));
+        return val;
+    },
+    validate: function() {
+        this.invalid = false;
+        // TODO niv
     }
+});
+
+openerp.base.form.One2ManyDataset = openerp.base.DataSetStatic.extend({
+    init: function() {
+        this._super.apply(this, arguments);
+        this.reset_ids([]);
+    },
+    create: function(data, callback, error_callback) {
+    },
+    write: function (id, data, callback) {
+    },
+    unlink: function(ids) {
+        var self = this;
+        this.set_ids(_.without.apply(_, [this.ids].concat(ids)));
+        _.each(ids, function(x) {self.to_delete[x] = true;});
+        this.on_change();
+    },
+    reset_ids: function(ids) {
+        this.set_ids(ids);
+        this.to_delete = {};
+        this.to_create = {};
+    },
+    on_change: function() {}
 });
 
 openerp.base.form.One2ManyListView = openerp.base.ListView.extend({
@@ -1505,7 +1542,7 @@ openerp.base.form.SelectCreatePopup = openerp.base.BaseWidget.extend({
             $sbutton.click(function() {
                 self.on_select_elements(self.selected_ids);
             });
-            self.view_list = new openerp.base.form.Many2XPopupListView( null, self.session,
+            self.view_list = new openerp.base.form.SelectCreateListView( null, self.session,
                     self.element_id + "_view_list", self.dataset, false,
                     {'deletable': false});
             self.view_list.popup = self;
@@ -1563,7 +1600,7 @@ openerp.base.form.SelectCreatePopup = openerp.base.BaseWidget.extend({
     }
 });
 
-openerp.base.form.Many2XPopupListView = openerp.base.ListView.extend({
+openerp.base.form.SelectCreateListView = openerp.base.ListView.extend({
     do_add_record: function () {
         this.popup.new_object();
     },
