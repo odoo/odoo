@@ -796,9 +796,6 @@ openerp.base.search.ExtendedSearchGroup = openerp.base.BaseWidget.extend({
         });
         var delete_btn = this.$element.find('.searchview_extended_delete_group');
         delete_btn.click(function (e) {
-            if (_this.parent.children.length == 1)  {
-                _this.parent.hide();
-            }
             _this.stop();
         });
     },
@@ -811,6 +808,11 @@ openerp.base.search.ExtendedSearchGroup = openerp.base.BaseWidget.extend({
         return [].concat(choice == "none" ? ['!'] : [],
             _.map(_.range(_.max([0,props.length - 1])), function() { return op; }),
             props);
+    },
+    stop: function() {
+        if (this.parent.children.length == 1)
+            this.parent.hide();
+        this._super();
     }
 });
 
@@ -837,6 +839,11 @@ openerp.base.search.ExtendedSearchProposition = openerp.base.BaseWidget.extend({
         delete_btn.click(function (e) {
             _this.stop();
         });
+    },
+    stop: function() {
+        if (this.parent.children.length == 1)
+            this.parent.stop();
+        this._super();
     },
     changed: function() {
         var nval = this.$element.find(".searchview_extended_prop_field").val();
