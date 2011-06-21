@@ -102,11 +102,10 @@ class ir_cron(osv.osv, netsvc.Agent):
                 logger = logging.getLogger('execution time')
                 if logger.isEnabledFor(logging.DEBUG_RPC):
                     start_time = time.time()
-                    f(cr, uid, *args)
+                f(cr, uid, *args)
+                if logger.isEnabledFor(logging.DEBUG_RPC):
                     end_time = time.time()
                     logger.log(logging.DEBUG_RPC, '%.3fs (%s, %s)' % (end_time - start_time, model, func))
-                else:
-                    f(cr, uid, *args)
             except Exception, e:
                 self._handle_callback_exception(cr, uid, model, func, args, job_id, e)
 
