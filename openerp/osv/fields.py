@@ -1169,5 +1169,24 @@ def field_to_dict(self, cr, user, context, field):
 
     return res
 
+
+class column_info(object):
+    """Struct containing details about an osv column, either one local to
+       its model, or one inherited via _inherits.
+
+       :attr name: name of the column
+       :attr column: column instance, subclass of osv.fields._column
+       :attr parent_model: if the column is inherited, name of the model
+                           that contains it, None for local columns.
+       :attr parent_column: the name of the column containing the m2o
+                            relationship to the parent model that contains
+                            this column, None for local columns.
+    """
+    def __init__(self, name, column, parent_model=None, parent_column=None):
+        self.name = name
+        self.column = column
+        self.parent_model = parent_model
+        self.parent_column = parent_column
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

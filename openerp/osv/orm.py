@@ -477,6 +477,11 @@ class orm_template(object):
     # r is the (local) field towards m,
     # and f is the _column object itself.
     _inherit_fields = {}
+    # Mapping field name/column_info object
+    # This is similar to _inherit_fields but:
+    # 1. includes self fields,
+    # 2. uses column_info instead of a triple.
+    _all_columns = {}
     _table = None
     _invalids = set()
     _log_create = False
@@ -1263,7 +1268,7 @@ class orm_template(object):
 
 
     def fields_get(self, cr, user, allfields=None, context=None, write_access=True):
-        """ Returns the definition of each field.
+        """ Return the definition of each field.
 
             The returned value is a dictionary (indiced by field name) of
             dictionaries. The _inherits'd fields are included. The string,
@@ -3141,6 +3146,7 @@ class orm(orm_template):
             if self._name in obj._inherits:
                 obj._inherits_reload()
 
+
     def _inherits_reload(self):
         """ Recompute the _inherit_fields mapping.
 
@@ -3155,7 +3161,21 @@ class orm(orm_template):
             for col in other._inherit_fields.keys():
                 res[col] = (table, self._inherits[table], other._inherit_fields[col][2])
         self._inherit_fields = res
+        self._all_columns = self._get_column_infos()
         self._inherits_reload_src()
+
+
+    def _get_column_infos(self):
+        """Returns a dict mapping all fields names (direct fields and
+           inherited field via _inherits) to a ``column_info`` struct
+           giving detailed columns """
+        result = {}
+        for k, (parent, m2o, col) in self._inherit_fields.iteritems():
+            result[k] = fields.column_info(k, col, parent, m2o)
+        for k, col in self._columns.iteritems():
+            result[k] = fields.column_info(k, col)
+        return result
+
 
     def _inherits_check(self):
         for table, field_name in self._inherits.items():
