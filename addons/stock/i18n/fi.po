@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2011-05-09 10:19+0000\n"
-"PO-Revision-Date: 2011-06-16 10:04+0000\n"
+"PO-Revision-Date: 2011-06-20 08:49+0000\n"
 "Last-Translator: Juha Kotamäki <Unknown>\n"
 "Language-Team: Finnish <fi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-06-17 05:37+0000\n"
+"X-Launchpad-Export-Date: 2011-06-21 06:07+0000\n"
 "X-Generator: Launchpad (build 13168)\n"
 
 #. module: stock
@@ -2684,7 +2684,7 @@ msgstr "Virhe, ei kumppania!"
 #: code:addons/stock/wizard/stock_fill_inventory.py:47
 #, python-format
 msgid "You cannot perform this operation on more than one Stock Inventories."
-msgstr ""
+msgstr "Et voi tehdä tätä toimintoa enemmälle kuin yhdelle varastolle."
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_incoterms_tree
@@ -2699,7 +2699,7 @@ msgstr "INCOTERMS"
 #: report:lot.stock.overview_all:0
 #: report:stock.inventory.move:0
 msgid "Total:"
-msgstr ""
+msgstr "Summa:"
 
 #. module: stock
 #: help:stock.incoterms,name:0
@@ -2708,6 +2708,8 @@ msgid ""
 "costs and responsibilities between buyer and seller and reflect state-of-the-"
 "art transportation practices."
 msgstr ""
+"Incoterm lausekkeet ovat myynnin sopimuslausekkeita. Niitä käytetään "
+"määrittämään kulujen ja vastuiden jakaminen myyjän ja ostajan kesken."
 
 #. module: stock
 #: help:stock.fill.inventory,recursive:0
@@ -2715,6 +2717,7 @@ msgid ""
 "If checked, products contained in child locations of selected location will "
 "be included as well."
 msgstr ""
+"Jos valittu, tuotteet jotka ovat alatason paikoissa otetaan myös mukaan."
 
 #. module: stock
 #: field:stock.move.track,tracking_prefix:0
@@ -2724,18 +2727,18 @@ msgstr "Seurannan etuliite"
 #. module: stock
 #: field:stock.inventory,name:0
 msgid "Inventory Reference"
-msgstr ""
+msgstr "Varaston viite"
 
 #. module: stock
 #: code:addons/stock/stock.py:1304
 #, python-format
 msgid "Internal picking"
-msgstr ""
+msgstr "Sisäinen keräily"
 
 #. module: stock
 #: view:stock.location.product:0
 msgid "Open Product"
-msgstr ""
+msgstr "Avaa tuote"
 
 #. module: stock
 #: field:stock.location.product,to_date:0
@@ -2746,7 +2749,7 @@ msgstr "päättyen"
 #: view:stock.move:0
 #: view:stock.picking:0
 msgid "Process"
-msgstr ""
+msgstr "Prosessi"
 
 #. module: stock
 #: field:stock.production.lot.revision,name:0
@@ -2776,7 +2779,7 @@ msgstr "Varaston kirjanpidon ominaisuudet"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_out
 msgid "Customers Packings"
-msgstr ""
+msgstr "Asiakkaan pakkaukset"
 
 #. module: stock
 #: selection:report.stock.inventory,state:0
@@ -2795,7 +2798,7 @@ msgstr "Valmis"
 #: model:ir.model,name:stock.model_stock_change_standard_price
 #: view:stock.change.standard.price:0
 msgid "Change Standard Price"
-msgstr ""
+msgstr "Muuta standardihintaa"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_locations_virtual
@@ -2827,7 +2830,7 @@ msgstr "Ei kiireellinen"
 #. module: stock
 #: view:stock.move:0
 msgid "To Do"
-msgstr ""
+msgstr "Tehtävät"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_warehouse_form
@@ -2838,14 +2841,14 @@ msgstr "Varastot"
 #. module: stock
 #: field:stock.journal,user_id:0
 msgid "Responsible"
-msgstr ""
+msgstr "Vastuuhenkilö"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_inventory_report
 #: model:ir.ui.menu,name:stock.menu_action_stock_inventory_report
 #: view:report.stock.inventory:0
 msgid "Inventory Analysis"
-msgstr ""
+msgstr "Varaston analyysi"
 
 #. module: stock
 #: field:stock.invoice.onshipping,journal_id:0
@@ -2889,14 +2892,14 @@ msgstr "Tuote"
 #: code:addons/stock/wizard/stock_return_picking.py:126
 #, python-format
 msgid "Invoicing"
-msgstr ""
+msgstr "Laskutus"
 
 #. module: stock
 #: code:addons/stock/stock.py:2274
 #: code:addons/stock/stock.py:2334
 #, python-format
 msgid "Please provide Proper Quantity !"
-msgstr ""
+msgstr "Ole hyvä ja syötä oikeanalinen määrä!"
 
 #. module: stock
 #: field:stock.move,product_uos:0
@@ -2911,19 +2914,19 @@ msgstr "Korkeus (Z)"
 #. module: stock
 #: field:stock.ups,weight:0
 msgid "Lot weight"
-msgstr ""
+msgstr "Erän paino"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move_consume
 #: view:stock.move.consume:0
 msgid "Consume Products"
-msgstr ""
+msgstr "Käytä tuotteet"
 
 #. module: stock
 #: code:addons/stock/stock.py:1663
 #, python-format
 msgid "Insufficient Stock in Lot !"
-msgstr ""
+msgstr "Erässä ei tarpeeksi tuotteita !"
 
 #. module: stock
 #: field:stock.location,parent_right:0
@@ -2933,7 +2936,7 @@ msgstr "Oikea ylempi"
 #. module: stock
 #: field:stock.picking,address_id:0
 msgid "Address"
-msgstr ""
+msgstr "Osoite"
 
 #. module: stock
 #: report:lot.stock.overview:0
@@ -2955,23 +2958,23 @@ msgstr "Toimittajat"
 #: field:report.stock.inventory,value:0
 #: field:report.stock.move,value:0
 msgid "Total Value"
-msgstr ""
+msgstr "Kokonaisarvo"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_product_by_category_stock_form
 msgid "Products by Category"
-msgstr ""
+msgstr "Tuotteet Kategorioittain"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_product_category_config_stock
 msgid "Products Categories"
-msgstr ""
+msgstr "Tuotteiden Kategoriat"
 
 #. module: stock
 #: field:stock.move.memory.in,wizard_id:0
 #: field:stock.move.memory.out,wizard_id:0
 msgid "Wizard"
-msgstr ""
+msgstr "Velho"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_view_stock_location_product
@@ -2982,12 +2985,12 @@ msgstr "Tuotteet paikoittain"
 #. module: stock
 #: field:stock.fill.inventory,recursive:0
 msgid "Include children"
-msgstr ""
+msgstr "Ota alataso mukaan"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_components
 msgid "Shelf 1"
-msgstr ""
+msgstr "Hylly 1"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_picking_tree6
@@ -3003,7 +3006,7 @@ msgstr ""
 #. module: stock
 #: view:stock.move:0
 msgid "Order"
-msgstr ""
+msgstr "Tilaus"
 
 #. module: stock
 #: field:stock.tracking,name:0
@@ -3025,17 +3028,17 @@ msgstr "Kirjanpidon merkinnät"
 #. module: stock
 #: report:stock.picking.list:0
 msgid "Total"
-msgstr ""
+msgstr "Yhteensä"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_intermediatelocation0
 msgid "Internal Shippings"
-msgstr ""
+msgstr "Sisäiset toimitukset"
 
 #. module: stock
 #: field:stock.change.standard.price,enable_stock_in_out_acc:0
 msgid "Enable Related Account"
-msgstr ""
+msgstr "Ota käyttöön viittaava tili"
 
 #. module: stock
 #: field:stock.location,stock_virtual_value:0
@@ -3053,12 +3056,12 @@ msgstr "Erät"
 #: view:stock.move:0
 #: view:stock.picking:0
 msgid "New pack"
-msgstr ""
+msgstr "Uusi pakkaus"
 
 #. module: stock
 #: view:stock.move:0
 msgid "Destination"
-msgstr ""
+msgstr "Vastaanottaja"
 
 #. module: stock
 #: selection:stock.picking,move_type:0
@@ -3072,17 +3075,19 @@ msgid ""
 "Quantities, UoMs, Products and Locations cannot be modified on stock moves "
 "that have already been processed (except by the Administrator)"
 msgstr ""
+"Määriä, yksiköitä, tuotteita ja paikkoja ei voida muuttaa varastosiirroissa "
+"jotka on jo käsitelty (paitsi pääkäyttäjä)"
 
 #. module: stock
 #: code:addons/stock/product.py:386
 #, python-format
 msgid "Future Productions"
-msgstr ""
+msgstr "Tulevat tuotannot"
 
 #. module: stock
 #: view:stock.picking:0
 msgid "To Invoice"
-msgstr ""
+msgstr "Laskutettavaa"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_return_picking.py:115
@@ -3099,17 +3104,17 @@ msgstr "Tavaraluetteloiden pvm."
 #. module: stock
 #: view:report.stock.move:0
 msgid "Total incoming quantity"
-msgstr ""
+msgstr "Saapuva määrä yhteensä"
 
 #. module: stock
 #: field:report.stock.move,product_qty_out:0
 msgid "Out Qty"
-msgstr ""
+msgstr "Lähtevä määrä"
 
 #. module: stock
 #: field:stock.production.lot,move_ids:0
 msgid "Moves for this production lot"
-msgstr ""
+msgstr "Siirtoja tälle tuotantoerälle"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move_memory_out
@@ -3120,7 +3125,7 @@ msgstr ""
 #: view:stock.move:0
 #: view:stock.picking:0
 msgid "Put in current pack"
-msgstr ""
+msgstr "Laita nykyiseen pakkaukseen"
 
 #. module: stock
 #: view:stock.inventory:0
@@ -3130,12 +3135,12 @@ msgstr "Erän tavaraluettelo"
 #. module: stock
 #: view:stock.move:0
 msgid "Reason"
-msgstr ""
+msgstr "Syy"
 
 #. module: stock
 #: report:stock.picking.list:0
 msgid "Delivery Order:"
-msgstr ""
+msgstr "Toimitusmääräin:"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_production_lot_form
@@ -3203,6 +3208,7 @@ msgid ""
 "There is no inventory variation account defined on the product category: "
 "\"%s\" (id: %d)"
 msgstr ""
+"Tuotekategorialle \"%s\" (id: %d) ei ole määritelty varastoneron tiliä."
 
 #. module: stock
 #: view:stock.inventory.merge:0
@@ -3216,7 +3222,7 @@ msgstr "Haluatko yhdistää nämä tavaraluettelot?"
 #: selection:stock.move,state:0
 #: selection:stock.picking,state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "Peruttu"
 
 #. module: stock
 #: field:stock.location,chained_location_type:0
@@ -3226,13 +3232,13 @@ msgstr "Ketjutettu paikkatyyppi"
 #. module: stock
 #: help:stock.picking,move_type:0
 msgid "It specifies goods to be delivered all at once or by direct delivery"
-msgstr ""
+msgstr "Määrittelee kerralla toimitettavat tai suoratoimitettavat tuotteet"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_invoice_onshipping.py:85
 #, python-format
 msgid "This picking list does not require invoicing."
-msgstr ""
+msgstr "Tämä keräilylistä ei vaadi laskutusta."
 
 #. module: stock
 #: selection:report.stock.move,type:0
@@ -3268,7 +3274,7 @@ msgstr "Varoitus"
 #: code:addons/stock/stock.py:2589
 #, python-format
 msgid "is done."
-msgstr ""
+msgstr "on tehty."
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree
@@ -3303,7 +3309,7 @@ msgstr "Vahvista"
 #. module: stock
 #: help:stock.location,icon:0
 msgid "Icon show in  hierarchical tree view"
-msgstr ""
+msgstr "Näytä kuvake hierarkisessa puunäkymässä"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_view_stock_merge_inventories
@@ -3314,18 +3320,20 @@ msgstr "Yhdistä tavaraluettelot"
 #. module: stock
 #: help:stock.change.product.qty,new_quantity:0
 msgid "This quantity is expressed in the Default UoM of the product."
-msgstr ""
+msgstr "Tämä määrä on määritelty tuotteen oletusmittayksikössä"
 
 #. module: stock
 #: report:stock.picking.list:0
 msgid "Reception:"
-msgstr ""
+msgstr "Vastaanotto:"
 
 #. module: stock
 #: help:stock.location,scrap_location:0
 msgid ""
 "Check this box to allow using this location to put scrapped/damaged goods."
 msgstr ""
+"Valitse tämä mahdollistaaksesi romutettujen/vioittuneiden tuotteiden "
+"laittamisen paikkaan."
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_relate_picking
@@ -3335,18 +3343,18 @@ msgstr "Liittyvä keräily"
 #. module: stock
 #: view:report.stock.move:0
 msgid "Total outgoing quantity"
-msgstr ""
+msgstr "Lähtevä määrä yhteensä"
 
 #. module: stock
 #: field:stock.picking,backorder_id:0
 msgid "Back Order of"
-msgstr ""
+msgstr "Jälkitilaus"
 
 #. module: stock
 #: help:stock.move.memory.in,cost:0
 #: help:stock.move.memory.out,cost:0
 msgid "Unit Cost for this product line"
-msgstr ""
+msgstr "Yksikkökustannus tälle tuotelinjalle"
 
 #. module: stock
 #: model:ir.model,name:stock.model_product_category
@@ -3355,7 +3363,7 @@ msgstr ""
 #: view:report.stock.move:0
 #: field:report.stock.move,categ_id:0
 msgid "Product Category"
-msgstr ""
+msgstr "Tuotteen kategoria"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_change_product_qty.py:88
@@ -3377,7 +3385,7 @@ msgstr ""
 #. module: stock
 #: view:stock.split.into:0
 msgid "Quantity to leave in the current pack"
-msgstr ""
+msgstr "Määrä joka jätetään nykyiseen pakkaukseen"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_invoice_onshipping
@@ -3394,7 +3402,7 @@ msgstr "Konfiguraatio"
 #: field:stock.inventory.line.split,use_exist:0
 #: field:stock.move.split,use_exist:0
 msgid "Existing Lots"
-msgstr ""
+msgstr "Olemassaolevat erät"
 
 #. module: stock
 #: field:product.product,location_id:0
@@ -3415,13 +3423,13 @@ msgstr ""
 #. module: stock
 #: field:stock.location,chained_journal_id:0
 msgid "Chaining Journal"
-msgstr ""
+msgstr "Ketjupäiväkirja"
 
 #. module: stock
 #: code:addons/stock/stock.py:732
 #, python-format
 msgid "Not enough stock, unable to reserve the products."
-msgstr ""
+msgstr "Ei tarpeeksi varstoa, ei voida varata tuotteita"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_customers
@@ -3432,7 +3440,7 @@ msgstr "Asiakkaat"
 #: code:addons/stock/stock.py:1317
 #, python-format
 msgid "is cancelled."
-msgstr ""
+msgstr "on peruutettu."
 
 #. module: stock
 #: view:stock.inventory.line:0
@@ -3443,24 +3451,24 @@ msgstr "Varaston inventaarion rivit"
 #: code:addons/stock/wizard/stock_partial_picking.py:97
 #, python-format
 msgid "Process Document"
-msgstr ""
+msgstr "Prosessoi dokumentti"
 
 #. module: stock
 #: code:addons/stock/product.py:368
 #, python-format
 msgid "Future Deliveries"
-msgstr ""
+msgstr "Tulevat toimitukset"
 
 #. module: stock
 #: view:stock.picking:0
 msgid "Additional info"
-msgstr ""
+msgstr "Lisätietoja"
 
 #. module: stock
 #: view:stock.move:0
 #: field:stock.move,tracking_id:0
 msgid "Pack"
-msgstr ""
+msgstr "Paketti"
 
 #. module: stock
 #: view:stock.move:0
@@ -3485,17 +3493,17 @@ msgstr "Automaattinen hyväksyntä"
 #. module: stock
 #: report:stock.picking.list:0
 msgid "Weight"
-msgstr ""
+msgstr "Paino"
 
 #. module: stock
 #: model:ir.model,name:stock.model_product_template
 msgid "Product Template"
-msgstr ""
+msgstr "Tuotemalli"
 
 #. module: stock
 #: selection:report.stock.move,month:0
 msgid "December"
-msgstr ""
+msgstr "Joulukuu"
 
 #. module: stock
 #: selection:stock.location,chained_auto_packing:0
@@ -3531,7 +3539,7 @@ msgstr ""
 #: code:addons/stock/wizard/stock_fill_inventory.py:53
 #, python-format
 msgid "Stock Inventory is already Validated."
-msgstr ""
+msgstr "Varasto on jo tarkistettu."
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_products_moves
@@ -3546,27 +3554,27 @@ msgstr "Laskutettu"
 #. module: stock
 #: field:stock.move,address_id:0
 msgid "Destination Address"
-msgstr ""
+msgstr "Määränpään osoite"
 
 #. module: stock
 #: field:stock.picking,max_date:0
 msgid "Max. Expected Date"
-msgstr ""
+msgstr "Viimeinen odotettu päivä"
 
 #. module: stock
 #: field:stock.picking,auto_picking:0
 msgid "Auto-Picking"
-msgstr ""
+msgstr "Automaattikeräily"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_shop1
 msgid "Shop 2"
-msgstr ""
+msgstr "Tehdas 2"
 
 #. module: stock
 #: constraint:res.partner:0
 msgid "Error ! You can not create recursive associated members."
-msgstr ""
+msgstr "Virhe! Rekursiivisesti rinnastettuja jäseniä ei voi luoda."
 
 #. module: stock
 #: view:report.stock.inventory:0
@@ -3591,7 +3599,7 @@ msgstr "Luonnos"
 #: model:ir.actions.report.xml,name:stock.report_stock_inventory_move
 #: report:stock.inventory.move:0
 msgid "Stock Inventory"
-msgstr ""
+msgstr "Varastonarvo"
 
 #. module: stock
 #: help:report.stock.inventory,state:0
@@ -3606,18 +3614,18 @@ msgstr ""
 #. module: stock
 #: view:board.board:0
 msgid "Outgoing Products Delay"
-msgstr ""
+msgstr "Lähtevien tuotteiden viive"
 
 #. module: stock
 #: field:stock.move.split.lines,use_exist:0
 msgid "Existing Lot"
-msgstr ""
+msgstr "Olemassaoleva erä"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_return_picking.py:194
 #, python-format
 msgid "Please specify at least one non-zero quantity!"
-msgstr ""
+msgstr "Ole hyvä ja määrittele ainakin yksi ei-nolla arvoinen määrä!"
 
 #. module: stock
 #: help:product.template,property_stock_procurement:0
@@ -3632,35 +3640,35 @@ msgstr ""
 #: code:addons/stock/stock.py:1316
 #, python-format
 msgid "is ready to process."
-msgstr ""
+msgstr "On valmis prosessoitavaksi"
 
 #. module: stock
 #: help:stock.picking,origin:0
 msgid "Reference of the document that produced this picking."
-msgstr ""
+msgstr "Viite dokumenttiin joka loi tämän keräilyn"
 
 #. module: stock
 #: field:stock.fill.inventory,set_stock_zero:0
 msgid "Set to zero"
-msgstr ""
+msgstr "Aseta nollaksi"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_invoice_onshipping.py:87
 #, python-format
 msgid "None of these picking lists require invoicing."
-msgstr ""
+msgstr "Mikään näistä keräilylistoista ei vaadi laskutusta"
 
 #. module: stock
 #: selection:report.stock.move,month:0
 msgid "November"
-msgstr ""
+msgstr "Marraskuu"
 
 #. module: stock
 #: code:addons/stock/product.py:101
 #: code:addons/stock/stock.py:2018
 #, python-format
 msgid "There is no journal defined on the product category: \"%s\" (id: %d)"
-msgstr ""
+msgstr "Tuotekategorialle \"%s\" (id: %d) ei ole määritelty päiväkirjaa."
 
 #. module: stock
 #: code:addons/stock/product.py:382
@@ -3672,12 +3680,12 @@ msgstr "Ei suunniteltu määrä"
 #: code:addons/stock/stock.py:1315
 #, python-format
 msgid "is scheduled"
-msgstr ""
+msgstr "on aikataulutettu"
 
 #. module: stock
 #: field:stock.location,chained_company_id:0
 msgid "Chained Company"
-msgstr ""
+msgstr "Ketjutettu yritys"
 
 #. module: stock
 #: view:stock.picking:0
@@ -3687,7 +3695,7 @@ msgstr "Tarkista saatavuus"
 #. module: stock
 #: selection:report.stock.move,month:0
 msgid "January"
-msgstr ""
+msgstr "Tammikuu"
 
 #. module: stock
 #: help:product.product,track_incoming:0
@@ -3704,13 +3712,13 @@ msgstr "Tulevat varastonsiirrot"
 #. module: stock
 #: field:stock.move,move_history_ids2:0
 msgid "Move History (parent moves)"
-msgstr ""
+msgstr "Siirtohistoria (ylätason siirrot)"
 
 #. module: stock
 #: code:addons/stock/product.py:364
 #, python-format
 msgid "Future Stock"
-msgstr ""
+msgstr "Tuleva varasto"
 
 #. module: stock
 #: code:addons/stock/stock.py:512
@@ -3724,12 +3732,12 @@ msgstr "Virhe"
 #. module: stock
 #: field:stock.ups.final,xmlfile:0
 msgid "XML File"
-msgstr ""
+msgstr "XML tiedosto"
 
 #. module: stock
 #: view:stock.change.product.qty:0
 msgid "Select Quantity"
-msgstr ""
+msgstr "Valitse määrä"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_location_tree
@@ -3765,7 +3773,7 @@ msgstr "Seuranta"
 #. module: stock
 #: view:stock.picking:0
 msgid "To invoice"
-msgstr ""
+msgstr "Laskutettava"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_location_form
@@ -3782,7 +3790,7 @@ msgstr "Yleistiedot"
 #. module: stock
 #: field:stock.production.lot,prefix:0
 msgid "Prefix"
-msgstr ""
+msgstr "Etuliite"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_splitinto.py:53
@@ -3812,23 +3820,23 @@ msgstr "Kohdepaikka"
 #: help:stock.move,product_packaging:0
 msgid ""
 "It specifies attributes of packaging like type, quantity of packaging,etc."
-msgstr ""
+msgstr "Määrittelee pakkauksen tiedot kuten tyyppi, määrä jne."
 
 #. module: stock
 #: code:addons/stock/stock.py:2385
 #, python-format
 msgid "quantity."
-msgstr ""
+msgstr "määrä"
 
 #. module: stock
 #: constraint:stock.move:0
 msgid "You must assign a production lot for this product"
-msgstr ""
+msgstr "Tälle tuotteelle pitää määrittää valmistuserä"
 
 #. module: stock
 #: view:stock.move:0
 msgid "Expected"
-msgstr ""
+msgstr "Oletettu"
 
 #. module: stock
 #: selection:report.stock.inventory,location_type:0
@@ -3840,7 +3848,7 @@ msgstr "Tuotanto"
 #. module: stock
 #: view:stock.split.into:0
 msgid "Split Move"
-msgstr ""
+msgstr "Jaa siirto"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_return_picking.py:92
@@ -3849,6 +3857,8 @@ msgid ""
 "There are no products to return (only lines in Done state and not fully "
 "returned yet can be returned)!"
 msgstr ""
+"Palautettavia tuotteita ei ole (vain rivit valmis tilassa joita ei ole vielä "
+"kokonaan palautettu voidaan palauttaa)"
 
 #. module: stock
 #: help:stock.location,valuation_in_account_id:0
@@ -3860,12 +3870,12 @@ msgstr ""
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move_split
 msgid "Split in Production lots"
-msgstr ""
+msgstr "Jaa valmistuseriin"
 
 #. module: stock
 #: view:report.stock.inventory:0
 msgid "Real"
-msgstr ""
+msgstr "Todellinen"
 
 #. module: stock
 #: report:stock.picking.list:0
@@ -3877,13 +3887,13 @@ msgstr "Kuvaus"
 #. module: stock
 #: selection:report.stock.move,month:0
 msgid "May"
-msgstr ""
+msgstr "Toukokuu"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_partial_move.py:133
 #, python-format
 msgid "Deliver"
-msgstr ""
+msgstr "Toimita"
 
 #. module: stock
 #: help:product.template,property_stock_account_output:0
@@ -3903,7 +3913,7 @@ msgstr "Tulevien seuranta"
 #: model:ir.actions.report.xml,name:stock.report_location_overview_all
 #: report:lot.stock.overview_all:0
 msgid "Location Content"
-msgstr ""
+msgstr "Paikan sisältö"
 
 #. module: stock
 #: code:addons/stock/product.py:388
@@ -3922,7 +3932,7 @@ msgstr "Lähtevän varaston tili"
 #. module: stock
 #: view:stock.move:0
 msgid "Picking"
-msgstr ""
+msgstr "Keräily"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_report_prodlots
@@ -3939,18 +3949,18 @@ msgstr "Asiakas"
 #. module: stock
 #: selection:report.stock.move,month:0
 msgid "February"
-msgstr ""
+msgstr "Helmikuu"
 
 #. module: stock
 #: view:stock.production.lot:0
 msgid "Production Lot Identification"
-msgstr ""
+msgstr "Tuotantoerän tunnus"
 
 #. module: stock
 #: field:stock.location,scrap_location:0
 #: view:stock.move.scrap:0
 msgid "Scrap Location"
-msgstr ""
+msgstr "Romuta paikka"
 
 #. module: stock
 #: selection:report.stock.move,month:0
@@ -3966,7 +3976,7 @@ msgstr "Tulevaisuudessa"
 #. module: stock
 #: field:stock.invoice.onshipping,invoice_date:0
 msgid "Invoiced date"
-msgstr ""
+msgstr "Laskutuspäivä"
 
 #. module: stock
 #: code:addons/stock/stock.py:732
@@ -3988,17 +3998,17 @@ msgstr "Lähtevä"
 #. module: stock
 #: selection:stock.move.split.lines,action:0
 msgid "Keep in one lot"
-msgstr ""
+msgstr "Pidä yhdessä erässä"
 
 #. module: stock
 #: view:product.product:0
 msgid "Cost Price:"
-msgstr ""
+msgstr "Hankintahinta:"
 
 #. module: stock
 #: help:stock.move,move_dest_id:0
 msgid "Optional: next stock move when chaining them"
-msgstr ""
+msgstr "Vaihtoehtoinen: seuraava varastonsiirto kun ketjutetaan"
 
 #. module: stock
 #: view:report.stock.move:0
