@@ -603,7 +603,7 @@ class task(osv.osv):
                         'ref_partner_id': task.partner_id.id,
                         'ref_doc1': 'project.task,%d'% (task.id,),
                         'ref_doc2': 'project.project,%d'% (project.id,),
-                    })
+                    }, context=context)
 
             for parent_id in task.parent_ids:
                 if parent_id.state in ('pending','draft'):
@@ -612,12 +612,12 @@ class task(osv.osv):
                         if child.id != task.id and child.state not in ('done','cancelled'):
                             reopen = False
                     if reopen:
-                        self.do_reopen(cr, uid, [parent_id.id])
+                        self.do_reopen(cr, uid, [parent_id.id], context=context)
             vals.update({'state': 'done'})
             vals.update({'remaining_hours': 0.0})
             if not task.date_end:
                 vals.update({ 'date_end':time.strftime('%Y-%m-%d %H:%M:%S')})
-            self.write(cr, uid, [task.id],vals)
+            self.write(cr, uid, [task.id],vals, context=context)
             message = _("The task '%s' is done") % (task.name,)
             self.log(cr, uid, task.id, message)
         return True
@@ -636,17 +636,16 @@ class task(osv.osv):
                     'ref_partner_id': task.partner_id.id,
                     'ref_doc1': 'project.task,%d' % task.id,
                     'ref_doc2': 'project.project,%d' % project.id,
-                })
+                }, context=context)
 
-            self.write(cr, uid, [task.id], {'state': 'open'})
-
+            self.write(cr, uid, [task.id], {'state': 'open'}, context=context)
         return True
 
     def do_cancel(self, cr, uid, ids, context=None):
         if context == None:
             context = {}
         request = self.pool.get('res.request')
-        tasks = self.browse(cr, uid, ids)
+        tasks = self.browse(cr, uid, ids, context=context)
         for task in tasks:
             project = task.project_id
             if project.warn_manager and project.user_id and (project.user_id.id != uid):
@@ -658,21 +657,21 @@ class task(osv.osv):
                     'ref_partner_id': task.partner_id.id,
                     'ref_doc1': 'project.task,%d' % task.id,
                     'ref_doc2': 'project.project,%d' % project.id,
-                })
+                }, context=context)
             message = _("The task '%s' is cancelled.") % (task.name,)
             self.log(cr, uid, task.id, message)
-            self.write(cr, uid, [task.id], {'state': 'cancelled', 'remaining_hours':0.0})
+            self.write(cr, uid, [task.id], {'state': 'cancelled', 'remaining_hours':0.0}, context=context)
         return True
 
     def do_open(self, cr, uid, ids, context=None):
         if context == None:
             context = {}
-        tasks= self.browse(cr,uid,ids)
+        tasks= self.browse(cr, uid, ids, context=context)
         for t in tasks:
             data = {'state': 'open'}
             if not t.date_start:
                 data['date_start'] = time.strftime('%Y-%m-%d %H:%M:%S')
-            self.write(cr, uid, [t.id], data)
+            self.write(cr, uid, [t.id], data, context=context)
             message = _("The task '%s' is opened.") % (t.name,)
             self.log(cr, uid, t.id, message)
         return True
@@ -680,7 +679,7 @@ class task(osv.osv):
     def do_draft(self, cr, uid, ids, context=None):
         if context == None:
             context = {}
-        self.write(cr, uid, ids, {'state': 'draft'})
+        self.write(cr, uid, ids, {'state': 'draft'}, context=context)
         return True
 
     def do_delegate(self, cr, uid, task_id, delegate_data={}, context=None):
@@ -718,7 +717,7 @@ class task(osv.osv):
     def do_pending(self, cr, uid, ids, context=None):
         if context == None:
             context = {}
-        self.write(cr, uid, ids, {'state': 'pending'})
+        self.write(cr, uid, ids, {'state': 'pending'}, context=context)
         for (id, name) in self.name_get(cr, uid, ids):
             message = _("The task '%s' is pending.") % name
             self.log(cr, uid, id, message)
