@@ -1257,7 +1257,7 @@ class stock_picking(osv.osv):
                 if (pick.type == 'in') and (move.product_id.cost_method == 'average'):
                     new_price_unit = move.product_id.standard_price
                 else:
-                    new_price_unit = price_unit
+                    new_price_unit = self.get_current_cost_price(cr, uid, ids, pick, move, product_price, context=context)
                 move_obj.write(cr, uid, [move.id],
                         {
                             'product_qty' : move.product_qty - product_qty,
