@@ -398,6 +398,13 @@ openerp.base.View = openerp.base.Controller.extend({
     execute_action: function (action_data, dataset, action_manager, record_id, on_no_action) {
         var handler = function (r) {
             if (r.result && r.result.constructor == Object) {
+                r.result.flags = {
+                    sidebar : false,
+                    search_view : false,
+                    views_switcher : false,
+                    action_buttons : false,
+                    pager : false
+                };
                 action_manager.do_action(r.result);
             } else {
                 on_no_action(r.result);
