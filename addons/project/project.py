@@ -586,6 +586,8 @@ class task(osv.osv):
         """
         Close Task
         """
+        if context == None:
+            context = {}
         request = self.pool.get('res.request')
         for task in self.browse(cr, uid, ids, context=context):
             vals = {}
@@ -640,7 +642,9 @@ class task(osv.osv):
 
         return True
 
-    def do_cancel(self, cr, uid, ids, *args):
+    def do_cancel(self, cr, uid, ids, context=None):
+        if context == None:
+            context = {}
         request = self.pool.get('res.request')
         tasks = self.browse(cr, uid, ids)
         for task in tasks:
@@ -660,7 +664,9 @@ class task(osv.osv):
             self.write(cr, uid, [task.id], {'state': 'cancelled', 'remaining_hours':0.0})
         return True
 
-    def do_open(self, cr, uid, ids, *args):
+    def do_open(self, cr, uid, ids, context=None):
+        if context == None:
+            context = {}
         tasks= self.browse(cr,uid,ids)
         for t in tasks:
             data = {'state': 'open'}
@@ -671,7 +677,9 @@ class task(osv.osv):
             self.log(cr, uid, t.id, message)
         return True
 
-    def do_draft(self, cr, uid, ids, *args):
+    def do_draft(self, cr, uid, ids, context=None):
+        if context == None:
+            context = {}
         self.write(cr, uid, ids, {'state': 'draft'})
         return True
 
@@ -707,7 +715,9 @@ class task(osv.osv):
         self.log(cr, uid, task.id, message)
         return True
 
-    def do_pending(self, cr, uid, ids, *args):
+    def do_pending(self, cr, uid, ids, context=None):
+        if context == None:
+            context = {}
         self.write(cr, uid, ids, {'state': 'pending'})
         for (id, name) in self.name_get(cr, uid, ids):
             message = _("The task '%s' is pending.") % name
