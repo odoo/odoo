@@ -28,7 +28,6 @@ from tools.translate import _
 class caldav_browse(osv.osv_memory):
 
     __doc = {
-
     'other' : _("""
   * Webdav server that provides remote access to calendar
   * Synchronisation of calendar using WebDAV
@@ -45,10 +44,7 @@ class caldav_browse(osv.osv_memory):
         HOSTNAME: Host on which OpenERP server(With webdav) is running
         PORT : Port on which OpenERP server is running (By Default : 8069)
         DATABASE_NAME: Name of database on which OpenERP Calendar is created
-        CALENDAR_NAME: Name of calendar to access
      """),
-
-
 
      'iphone' : _("""
     For SSL specific configuration see the documentation below
@@ -87,8 +83,6 @@ Now, to setup the calendars, you need to:
     Note that when creating a new calendar entry, you will have to specify
     which calendar it should be saved at.
 
-
-
 IF you need SSL (and your certificate is not a verified one, as usual),
 then you first will need to let the iPhone trust that. Follow these
 steps:
@@ -124,7 +118,7 @@ configuration
 5. Then you can synchronize manually or custom the settings to synchronize every x minutes.
 
     """),
-
+    
      'evolution' : _("""
     1. Go to Calendar View
 
@@ -142,7 +136,6 @@ configuration
 
     5. A new calendar named with the name you gave should appear on the left side.
      """),
-
 
      'thunderbird' : _("""
 Prerequire
@@ -169,8 +162,6 @@ configuration
 7. Then Finish, your meetings should appear now in your calendar view
 """),
     }
-
-
     _name = 'caldav.browse'
     _description = 'Caldav Browse'
 
@@ -217,7 +208,6 @@ configuration
         return res
 
     def browse_caldav(self, cr, uid, ids, context):
-
         return {}
 
 caldav_browse()
@@ -239,17 +229,14 @@ class user_preference(osv.osv_memory):
         if context == None:
             context = {}
         name = context.get('cal_name')
-
         collection_obj = self.pool.get('basic.calendar')
         ids = collection_obj.search(cr, uid, [('name', '=', name)])
         return ids[0]
-
 
     def _get_default_collection(self, cr, uid, context):
         collection_obj = self.pool.get('document.directory')
         ids = collection_obj.search(cr, uid, [('name', '=', 'c')])
         return ids[0]
-
 
     _defaults={
               'service': 'webdav',
@@ -281,7 +268,6 @@ class user_preference(osv.osv_memory):
         resource_id = obj_model.read(cr, uid, model_data_ids, fields=['res_id'])
         context.update({'res_id': ids,'host':host_name})
         resource_id = obj_model.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
-
         return {
             'view_type': 'form',
             'view_mode': 'form',
