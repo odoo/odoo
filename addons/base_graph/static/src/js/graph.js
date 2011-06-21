@@ -277,6 +277,9 @@ openerp.base_graph.GraphView = openerp.base.View.extend({
             gradient: "3d",
             border: false,
             width: 1024,
+            tooltip:{
+                template:"#"+group_list[0]+"#"
+            },
             radius: 0,
             color:grp_color[0]['color'],
             origin:0,
@@ -326,6 +329,9 @@ openerp.base_graph.GraphView = openerp.base.View.extend({
         for (var m = 1; m<group_list.length;m++){
             bar_chart.addSeries({
                 value: "#"+group_list[m]+"#",
+                tooltip:{
+                    template:"#"+group_list[m]+"#"
+                },
                 color: grp_color[m]['color']
             });
         }
