@@ -547,9 +547,13 @@ background: linear-gradient(top, #ffffff 0%,#d8d8d8 11%,#afafaf 86%,#333333 91%,
 }
 
 .openerp .searchview_extended_group {
-    border: #696969 solid 1px;
+    border-bottom: #696969 solid 1px;
     padding: 3px;
     margin: 2px;
+}
+
+.openerp .searchview_extended_group.last_group {
+    border-bottom: none;
 }
 
 .openerp .oe_search-view-custom-filter-btn span {

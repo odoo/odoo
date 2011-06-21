@@ -731,6 +731,7 @@ openerp.base.search.ExtendedSearch = openerp.base.BaseWidget.extend({
         var render = group.render();
         this.$element.find('.searchview_extended_groups_list').append(render);
         group.start();
+        this.check_last_element();
     },
     start: function () {
         this._super();
@@ -771,6 +772,10 @@ openerp.base.search.ExtendedSearch = openerp.base.BaseWidget.extend({
         if(this.$element.hasClass("expanded")) {
             this.$element.toggleClass("folded expanded");
         }
+    },
+    check_last_element: function() {
+        _.each(this.children, function(x) {x.set_last_group(false);});
+        this.children[this.children.length - 1].set_last_group(true);
     }
 });
 
@@ -810,9 +815,17 @@ openerp.base.search.ExtendedSearchGroup = openerp.base.BaseWidget.extend({
             props);
     },
     stop: function() {
+        var parent = this.parent;
         if (this.parent.children.length == 1)
             this.parent.hide();
         this._super();
+        parent.check_last_element();
+    },
+    set_last_group: function(is_last) {
+        if(is_last)
+            this.$element.addClass("last_group");
+        else
+            this.$element.removeClass("last_group");
     }
 });
 
