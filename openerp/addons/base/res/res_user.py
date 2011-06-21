@@ -38,7 +38,7 @@ class groups(osv.osv):
         'name': fields.char('Group Name', size=64, required=True),
         'model_access': fields.one2many('ir.model.access', 'group_id', 'Access Controls'),
         'rule_groups': fields.many2many('ir.rule', 'rule_group_rel',
-            'group_id', 'rule_group_id', 'Rules', domain=[('global', '=', False)]),
+        'group_id', 'rule_group_id', 'Rules', domain=[('global', '=', False)]),
         'menu_access': fields.many2many('ir.ui.menu', 'ir_ui_menu_group_rel', 'gid', 'menu_id', 'Access Menu'),
         'comment' : fields.text('Comment',size=250),
     }
@@ -113,7 +113,6 @@ class users(osv.osv):
         is to return config_users.WELCOME_MAIL_SUBJECT
         """
         return self.WELCOME_MAIL_SUBJECT
-
     def get_welcome_mail_body(self, cr, uid, context=None):
         """ Returns the subject of the mail new users receive (when
         created via the res.config.users wizard), default implementation
@@ -201,13 +200,11 @@ class users(osv.osv):
                                 fnct_inv=_set_new_password,
                                 string='Change password', help="Only specify a value if you want to change the user password. "
                                 "This user will have to logout and login again!"),
-
         'user_email': fields.char('E-mail', size=64,
             help='If an email is provided, the user will be sent a message '
                  'welcoming him.\n\nWarning: if "email_from" and "smtp_server"'
                  " aren't configured, it won't be possible to email new "
                  "users."),
-
         'signature': fields.text('Signature', size=64),
        'active': fields.boolean('Active'),
         'action_id': fields.many2one('ir.actions.actions', 'Home Action', help="If specified, this action will be opened at logon for this user, in addition to the standard menu."),
@@ -496,7 +493,7 @@ class config_users(osv.osv_memory):
     _name = 'res.config.users'
     _inherit = ['res.users', 'res.config']
 
-    def _generate_signature(self, cr, name, user_email, context=None):
+    def _generate_signature(self, cr, name, email, context=None):
         return _('--\n%(name)s %(email)s\n') % {
             'name': name or '',
             'email': email and ' <'+email+'>' or '',
@@ -512,7 +509,6 @@ class config_users(osv.osv_memory):
         with the user's data %-formatted into the mail body
         """
         base_data = self.read(cr, uid, new_id, context=context)
-     
         user_data = dict(
             base_data,
             signature=self._generate_signature(
