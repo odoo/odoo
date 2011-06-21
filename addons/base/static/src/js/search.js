@@ -759,11 +759,9 @@ openerp.base.search.ExtendedSearch = openerp.base.BaseWidget.extend({
     on_activate: function() {
         this.add_group();
         var table = this.$element.closest("table.oe-searchview-render-line");
-        if(table.css("display") == "none") {
-            table.css("display", "");
-            if(this.$element.hasClass("folded")) {
-                this.$element.toggleClass("folded expanded");
-            }
+        table.css("display", "");
+        if(this.$element.hasClass("folded")) {
+            this.$element.toggleClass("folded expanded");
         }
     },
     hide: function() {
