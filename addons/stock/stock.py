@@ -971,7 +971,6 @@ class stock_picking(osv.osv):
         for picking in self.browse(cr, uid, ids, context=context):
             if picking.invoice_state != '2binvoiced':
                 continue
-            payment_term_id = False
             partner =  picking.address_id and picking.address_id.partner_id
             if not partner:
                 raise osv.except_osv(_('Error, no partner !'),
@@ -979,13 +978,7 @@ class stock_picking(osv.osv):
 
             if not inv_type:
                 inv_type = self._get_invoice_type(picking)
-
-            if inv_type in ('out_invoice', 'out_refund'):
-                account_id = partner.property_account_receivable.id
-                payment_term_id = self._get_payment_term(cr, uid, picking)
-            else:
-                account_id = partner.property_account_payable.id
-
+            account_id = partner.property_account_payable.id
             address_contact_id, address_invoice_id = \
                     self._get_address_invoice(cr, uid, picking).values()
             address = address_obj.browse(cr, uid, address_contact_id, context=context)
@@ -1012,7 +1005,7 @@ class stock_picking(osv.osv):
                     'address_invoice_id': address_invoice_id,
                     'address_contact_id': address_contact_id,
                     'comment': comment,
-                    'payment_term': address.partner_id.property_payment_term and address.partner_id.property_payment_term.id or False,
+                    'payment_term': self._get_payment_term(cr, uid, picking),
                     'fiscal_position': partner.property_account_position.id,
                     'date_invoice': context.get('date_inv',False),
                     'company_id': picking.company_id.id,
