@@ -185,7 +185,7 @@ openerp.base_graph.GraphView = openerp.base.View.extend({
             if (abscissa_data[label] == undefined){
                 section[self.chart_info_fields] = label;
                 _.each(group_list, function (group) {
-                    section[group] = 0.0001;
+                    section[group] = 0;
                 });
             } else {
                 section = abscissa_data[label];
