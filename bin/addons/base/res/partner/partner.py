@@ -222,7 +222,7 @@ class res_partner(osv.osv):
         return True
 
     def address_get(self, cr, uid, ids, adr_pref=['default']):
-        cr.execute('select type,id from res_partner_address where partner_id IN %s',(tuple(ids),))
+        cr.execute('select type,id from res_partner_address where partner_id IN %s and active',(tuple(ids),))
         res = cr.fetchall()
         adr = dict(res)
         # get the id of the (first) default address if there is one,
