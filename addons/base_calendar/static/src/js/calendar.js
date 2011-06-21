@@ -84,6 +84,9 @@ openerp.base_calendar.CalendarView = openerp.base.Controller.extend({
         
         scheduler.clearAll();
         scheduler.config.api_date="%Y-%m-%d %H:%M:%S";
+        scheduler.config.details_on_dblclick=true;
+        scheduler.config.details_on_create = true;
+		
         if(this.fields[this.date_start]['type'] == 'time') {
             scheduler.config.xml_date="%H:%M:%S";
         } else {
