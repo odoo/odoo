@@ -3150,7 +3150,6 @@ class orm(orm_template):
         res = {}
         for table in self._inherits:
             other = self.pool.get(table)
-            res.update(other._inherit_fields)
             for col in other._columns.keys():
                 res[col] = (table, self._inherits[table], other._columns[col])
             for col in other._inherit_fields.keys():
