@@ -870,12 +870,15 @@
     </div>
 </t>
 <t t-name="DialogWarning">
-    <div id="dialog-message" t-att-title="title">
-        <p>
-            <span class="ui-icon ui-icon-circle-check" style="float:left; margin:0 7px 50px 0;"></span>
-            <t t-esc="message"/>
-        </p>
-    </div>
+    <p class="oe-dialog-warning">
+        <img src="/base/static/src/img/warning.png" class="oe-dialog-icon"/>
+        <t t-esc="error.data.fault_code.substr(18)"/>
+    </p>
+</t>
+<t t-name="DialogTraceback">
+    <pre><t t-esc="error.message"/></pre>
+    <hr/>
+    <pre><t t-esc="error.data.debug"/></pre>
 </t>
 <t t-name="SelectCreatePopup">
     <div t-att-id="element_id">

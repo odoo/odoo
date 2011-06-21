@@ -819,24 +819,32 @@ openerp.base.Dialog = openerp.base.BaseWidget.extend({
     }
 });
 
-openerp.base.CrashManager = openerp.base.Controller.extend({
-    init: function(session, element_id) {
-        this._super(session, element_id);
+openerp.base.CrashManager = openerp.base.Dialog.extend({
+    identifier_prefix: 'dialog_crash',
+    init: function(session) {
+        this._super(session);
         this.session.on_rpc_error.add(this.on_rpc_error);
     },
-    on_rpc_error: function(error) {
-        var msg = error.message + "\n" + error.data.debug;
-        this.display_error(msg);
+    on_button_Ok: function() {
+        this.close();
     },
-    display_error: function(message) {
-        $('<pre></pre>').text(message).dialog({
-            modal: true,
-            buttons: {
-                OK: function() {
-                    $(this).dialog("close");
-                }
-            }
-        });
+    on_rpc_error: function(error) {
+        this.error = error;
+        if (error.code === 200) {
+            this.dialog_title = "OpenERP Warning";
+            this.template = 'DialogWarning';
+            this.open({
+                width: 'auto',
+                height: 'auto'
+            });
+        } else {
+            this.dialog_title = "OpenERP Error";
+            this.template = 'DialogTraceback';
+            this.open({
+                width: '80%',
+                height: '80%'
+            });
+        }
     }
 });
 
@@ -1066,6 +1074,7 @@ openerp.base.WebClient = openerp.base.Controller.extend({
         this.session = new openerp.base.Session("oe_errors");
         this.loading = new openerp.base.Loading(this.session, "oe_loading");
         this.crashmanager =  new openerp.base.CrashManager(this.session);
+        this.crashmanager.start(false);
 
         // Do you autorize this ?
         openerp.base.Controller.prototype.notification = new openerp.base.Notification("oe_notification");
