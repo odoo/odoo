@@ -67,19 +67,13 @@ class google_import(import_framework):
         }
 
     def get_data(self, table):
-        if table == "Contact":
-            val = {
-                self.TABLE_CONTACT: self.get_contact(),
-            }
-        if table == "Address":
-            val = {
-                self.TABLE_ADDRESS: self.get_contact(),
-            }
-        elif table == "Events":
-            val = {
-                self.TABLE_EVENT: self.get_events(),
-            }
-        return val.get(table)
+        data_fetching_function = {
+              self.TABLE_CONTACT: self.get_contact,
+              self.TABLE_ADDRESS: self.get_contact,
+              self.TABLE_EVENT: self.get_events,
+        }
+
+        return data_fetching_function.get(table)()
 
 
     def _get_tinydates(self, stime, etime,context):
