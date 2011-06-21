@@ -202,8 +202,8 @@ class account_analytic_account(osv.osv):
         'currency_id': _get_default_currency,
     }
 
-    def check_recursion(self, cr, uid, ids, parent=None):
-        return super(account_analytic_account, self)._check_recursion(cr, uid, ids, parent=parent)
+    def check_recursion(self, cr, uid, ids, context=None, parent=None):
+        return super(account_analytic_account, self)._check_recursion(cr, uid, ids, context=context, parent=parent)
 
     _order = 'name asc'
     _constraints = [

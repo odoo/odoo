@@ -20,7 +20,7 @@
 ##############################################################################
 
 from osv import fields, osv
-from osv.osv import osv_pool, object_proxy
+from osv.osv import object_proxy
 from tools.translate import _
 import pooler
 import time

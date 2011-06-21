@@ -433,7 +433,7 @@ class task(osv.osv):
         'date_start': fields.datetime('Starting Date',select=True),
         'date_end': fields.datetime('Ending Date',select=True),
         'date_deadline': fields.date('Deadline',select=True),
-        'project_id': fields.many2one('project.project', 'Project', ondelete='cascade'),
+        'project_id': fields.many2one('project.project', 'Project', ondelete='set null', select="1"),
         'parent_ids': fields.many2many('project.task', 'project_task_parent_rel', 'task_id', 'parent_id', 'Parent Tasks'),
         'child_ids': fields.many2many('project.task', 'project_task_parent_rel', 'parent_id', 'task_id', 'Delegated Tasks'),
         'notes': fields.text('Notes'),
@@ -714,27 +714,35 @@ class task(osv.osv):
             self.log(cr, uid, id, message)
         return True
 
-    def next_type(self, cr, uid, ids, *args):
+    def _change_type(self, cr, uid, ids, next, *args):
+        """
+            go to the next stage
+            if next is False, go to previous stage
+        """
         for task in self.browse(cr, uid, ids):
-            typeid = task.type_id.id
-            types = map(lambda x:x.id, task.project_id.type_ids or [])
-            if types:
+            if  task.project_id.type_ids:
+                typeid = task.type_id.id
+                types_seq={}
+                for type in task.project_id.type_ids :
+                    types_seq[type.id] = type.sequence
+                if next:
+                    types = sorted(types_seq.items(), lambda x, y: cmp(x[1], y[1]))
+                else:
+                    types = sorted(types_seq.items(), lambda x, y: cmp(y[1], x[1]))
+                sorted_types = [x[0] for x in types]
                 if not typeid:
-                    self.write(cr, uid, task.id, {'type_id': types[0]})
-                elif typeid and typeid in types and types.index(typeid) != len(types)-1:
-                    index = types.index(typeid)
-                    self.write(cr, uid, task.id, {'type_id': types[index+1]})
+                    self.write(cr, uid, task.id, {'type_id': sorted_types[0]})
+                elif typeid and typeid in sorted_types and sorted_types.index(typeid) != len(sorted_types)-1:
+                    index = sorted_types.index(typeid)
+                    self.write(cr, uid, task.id, {'type_id': sorted_types[index+1]})
         return True
+        
+    def next_type(self, cr, uid, ids, *args):
+        return self._change_type(cr, uid, ids, True, *args)
 
     def prev_type(self, cr, uid, ids, *args):
-        for task in self.browse(cr, uid, ids):
-            typeid = task.type_id.id
-            types = map(lambda x:x.id, task.project_id and task.project_id.type_ids or [])
-            if types:
-                if typeid and typeid in types:
-                    index = types.index(typeid)
-                    self.write(cr, uid, task.id, {'type_id': index and types[index-1] or False})
-        return True
+        return self._change_type(cr, uid, ids, False, *args)
+       
 
 task()
 
@@ -743,10 +751,10 @@ class project_work(osv.osv):
     _description = "Project Task Work"
     _columns = {
         'name': fields.char('Work summary', size=128),
-        'date': fields.datetime('Date'),
-        'task_id': fields.many2one('project.task', 'Task', ondelete='cascade', required=True),
+        'date': fields.datetime('Date', select="1"),
+        'task_id': fields.many2one('project.task', 'Task', ondelete='cascade', required=True, select="1"),
         'hours': fields.float('Time Spent'),
-        'user_id': fields.many2one('res.users', 'Done by', required=True),
+        'user_id': fields.many2one('res.users', 'Done by', required=True, select="1"),
         'company_id': fields.related('task_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True)
     }
 

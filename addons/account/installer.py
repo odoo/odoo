@@ -118,7 +118,6 @@ class account_installer(osv.osv_memory):
     def execute(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
-        super(account_installer, self).execute(cr, uid, ids, context=context)
         fy_obj = self.pool.get('account.fiscalyear')
         mod_obj = self.pool.get('ir.model.data')
         obj_acc_temp = self.pool.get('account.account.template')
@@ -226,6 +225,7 @@ class account_installer(osv.osv_memory):
                         fy_obj.create_period(cr, uid, [fiscal_id])
                     elif res['period'] == '3months':
                         fy_obj.create_period3(cr, uid, [fiscal_id])
+        super(account_installer, self).execute(cr, uid, ids, context=context)
 
     def modules_to_install(self, cr, uid, ids, context=None):
         modules = super(account_installer, self).modules_to_install(
