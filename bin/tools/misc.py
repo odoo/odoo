@@ -1264,6 +1264,11 @@ def detect_ip_addr():
         ip_addr = 'localhost'
     return ip_addr
 
+def logout_db(db_name):
+    from sql_db import close_db
+    close_db(db_name)
+    return True
+
 # RATIONALE BEHIND TIMESTAMP CALCULATIONS AND TIMEZONE MANAGEMENT:
 #  The server side never does any timestamp calculation, always
 #  sends them in a naive (timezone agnostic) format supposed to be

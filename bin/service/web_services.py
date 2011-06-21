@@ -385,7 +385,7 @@ class common(_ObjectService):
             return True
         elif method in ['about', 'timezone_get', 'get_server_environment',
                         'login_message','get_stats', 'check_connectivity',
-                        'list_http_services']:
+                        'list_http_services','logout_db']:
             pass
         elif method in ['get_available_updates', 'get_migration_scripts', 'set_loglevel', 'get_os_time', 'get_sqlcount']:
             passwd = params[0]
@@ -439,6 +439,9 @@ GNU Public Licence.
 
     def exp_timezone_get(self, db, login, password):
         return tools.misc.get_server_timezone()
+
+    def exp_logout_db(self, db, login, password):
+        return tools.misc.logout_db(db)
 
     def exp_get_available_updates(self, contract_id, contract_password):
         import tools.maintenance as tm
