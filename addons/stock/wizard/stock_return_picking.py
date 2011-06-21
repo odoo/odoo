@@ -33,6 +33,7 @@ class stock_return_picking_memory(osv.osv_memory):
         'quantity' : fields.float("Quantity", required=True),
         'wizard_id' : fields.many2one('stock.return.picking', string="Wizard"),
         'move_id' : fields.many2one('stock.move', "Move"),
+        'price_unit' : fields.float('Cost Price', digits=(16,2), help="Historical cost price of product")
     }
 
 stock_return_picking_memory()
@@ -73,7 +74,7 @@ class stock_return_picking(osv.osv_memory):
             for line in pick.move_lines:
                 qty = line.product_qty - return_history[line.id]
                 if qty > 0:
-                    result1.append({'product_id': line.product_id.id, 'quantity': qty,'move_id':line.id})
+                    result1.append({'product_id': line.product_id.id, 'quantity': qty,'move_id':line.id, 'price_unit': line.price_unit})
             if 'product_return_moves' in fields:
                 res.update({'product_return_moves': result1})
         return res
@@ -180,9 +181,10 @@ class stock_return_picking(osv.osv_memory):
                     'product_qty': new_qty,
                     'product_uos_qty': uom_obj._compute_qty(cr, uid, move.product_uom.id,
                         new_qty, move.product_uos.id),
-                    'picking_id':new_picking, 'state':'draft',
-                    'location_id':new_location, 'location_dest_id':move.location_id.id,
-                    'date':date_cur,})
+                    'picking_id': new_picking, 'state': 'draft',
+                    'location_id': new_location, 'location_dest_id': move.location_id.id,
+                    'date': date_cur,
+                    'price_unit': move.price_unit})
                 move_obj.write(cr, uid, [move.id], {'move_history_ids2':[(4,new_move)]})
         if not returned_lines:
             raise osv.except_osv(_('Warning !'), _("Please specify at least one non-zero quantity!"))

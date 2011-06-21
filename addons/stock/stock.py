@@ -1140,6 +1140,19 @@ class stock_picking(osv.osv):
                 move_obj.unlink(cr, uid, ids2, ctx)
 
         return super(stock_picking, self).unlink(cr, uid, ids, context=context)
+    
+    def get_current_cost_price(self, cr, uid, ids, pick, move, product_price, context=None):
+        """@return: Return Current cost price"""
+        if context is None:
+            context = {}
+        price_unit = 0.0
+        if (pick.type == 'in') and (move.product_id.cost_method == 'average'):
+            price_unit = product_price
+        elif move.price_unit == 0:
+            price_unit = move.product_id.standard_price
+        else:
+            price_unit = move.price_unit
+        return price_unit
 
     # FIXME: needs refactoring, this code is partially duplicated in stock_move.do_partial()!
     def do_partial(self, cr, uid, ids, partial_datas, context=None):
@@ -1217,7 +1230,6 @@ class stock_picking(osv.osv):
                                 {'price_unit': product_price,
                                  'price_currency_id': product_currency})
 
-
             for move in too_few:
                 product_qty = move_product_qty[move.id]
 
@@ -1229,35 +1241,45 @@ class stock_picking(osv.osv):
                                 'state':'draft',
                             })
                 if product_qty != 0:
+                    price_unit = self.get_current_cost_price(cr, uid, ids, pick, move, product_price, context=context)
                     defaults = {
                             'product_qty' : product_qty,
                             'product_uos_qty': product_qty, #TODO: put correct uos_qty
                             'picking_id' : new_picking,
                             'state': 'assigned',
                             'move_dest_id': False,
-                            'price_unit': move.price_unit,
+                            'price_unit': price_unit or 0.0
                     }
                     prodlot_id = prodlot_ids[move.id]
                     if prodlot_id:
                         defaults.update(prodlot_id=prodlot_id)
                     move_obj.copy(cr, uid, move.id, defaults)
-
+                if (pick.type == 'in') and (move.product_id.cost_method == 'average'):
+                    new_price_unit = move.product_id.standard_price
+                else:
+                    new_price_unit = price_unit
                 move_obj.write(cr, uid, [move.id],
                         {
                             'product_qty' : move.product_qty - product_qty,
                             'product_uos_qty':move.product_qty - product_qty, #TODO: put correct uos_qty
+                            'price_unit': new_price_unit or 0.0
                         })
 
             if new_picking:
                 move_obj.write(cr, uid, [c.id for c in complete], {'picking_id': new_picking})
             for move in complete:
+                price_unit = self.get_current_cost_price(cr, uid, ids, pick, move, product_price, context=context)
+                defaults = {'price_unit': price_unit or 0.0}
                 if prodlot_ids.get(move.id):
-                    move_obj.write(cr, uid, [move.id], {'prodlot_id': prodlot_ids[move.id]})
+                    defaults.update({'prodlot_id': prodlot_ids[move.id]})
+                move_obj.write(cr, uid, [move.id], defaults)
             for move in too_many:
+                price_unit = self.get_current_cost_price(cr, uid, ids, pick, move, product_price, context=context)
                 product_qty = move_product_qty[move.id]
                 defaults = {
                     'product_qty' : product_qty,
                     'product_uos_qty': product_qty, #TODO: put correct uos_qty
+                    'price_unit': price_unit or 0.0
                 }
                 prodlot_id = prodlot_ids.get(move.id)
                 if prodlot_ids.get(move.id):
@@ -2489,7 +2511,7 @@ class stock_move(osv.osv):
 
         for move in complete:
             if prodlot_ids.get(move.id):
-                self.write(cr, uid, [move.id],{'prodlot_id': prodlot_ids.get(move.id)})
+                self.write(cr, uid, [move.id],{'prodlot_id': prodlot_ids.get(move.id), 'price_unit': move.product_id.standard_price})
             self.action_done(cr, uid, [move.id], context=context)
             if  move.picking_id.id :
                 # TOCHECK : Done picking if all moves are done

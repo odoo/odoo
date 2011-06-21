@@ -709,6 +709,7 @@ class sale_order(osv.osv):
                         #'state': 'waiting',
                         'note': line.notes,
                         'company_id': order.company_id.id,
+                        'price_unit': line.product_id.standard_price or 0.0
                     })
                     
                 if line.product_id:
