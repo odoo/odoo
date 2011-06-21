@@ -144,6 +144,16 @@ openerp.base_calendar.CalendarView = openerp.base.Controller.extend({
                 }
             }
         );
+        
+        scheduler.attachEvent("onBeforeEventChanged", function(event_obj, native_event, is_new) {
+        	var is_event_exist = jQuery.inArray(event_obj.id, self.dataset.ids);
+        	if(is_event_exist >= 0 && !is_new) {
+        		// try to save Event.
+        	} else {
+        		// new Event.
+        		return true;
+        	}
+        });
     },
     
     convert_event: function(event) {
