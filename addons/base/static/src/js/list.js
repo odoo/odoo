@@ -571,7 +571,7 @@ openerp.base.ListView.List = Class.extend( /** @lends openerp.base.ListView.List
             this.$current.remove();
         }
         this.$current = this.$_element.clone(true);
-        this.$current.empty().append($(QWeb.render('ListView.rows', this)));
+        this.$current.empty().append(QWeb.render('ListView.rows', this));
     },
     get_fields_view: function () {
         // deep copy of view
