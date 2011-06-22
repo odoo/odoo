@@ -125,10 +125,10 @@ module named account_voucher.
         
     ],
     'demo_xml': [
-        #'account_demo.xml',
-        #'project/project_demo.xml',
-        #'project/analytic_account_demo.xml',
-        #'demo/account_minimal.xml',
+        'account_demo.xml',
+        'project/project_demo.xml',
+        'project/analytic_account_demo.xml',
+        'demo/account_minimal.xml',
 #        'account_unit_test.xml',
     ],
     'test': [
