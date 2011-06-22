@@ -670,15 +670,10 @@ QWeb2.Element = (function() {
             this.top("(function(" + value + ") {");
             this.bottom("})(dict);");
             this.indent();
-            if (this.children.length === 1) {
-                var lines = this.children[0].node.data.split(/\r?\n/);
-                for (var i = 0, ilen = lines.length; i < ilen; i++) {
-                    this.top(lines[i]);
-                }
-            } else {
-                this.engine.tools.exception("'js' code block contains " + this.children.length + " nodes instead of 1");
+            var lines = this.engine.tools.xml_node_to_string(this.node, true).split(/\r?\n/);
+            for (var i = 0, ilen = lines.length; i < ilen; i++) {
+                this.top(lines[i]);
             }
-            // Maybe I could handle the children ?
             this.process_children = false;
         },
         compile_action_debug : function(value) {
