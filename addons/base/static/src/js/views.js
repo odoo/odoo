@@ -455,6 +455,41 @@ openerp.base.ProcessView = openerp.base.Controller.extend({
 openerp.base.HelpView = openerp.base.Controller.extend({
 });
 
+openerp.base.json_node_to_xml = function(node, single_quote, indent) {
+    // For debugging purpose, this function will convert a json node back to xml
+    // Maybe usefull for xml view editor
+    if (typeof(node.tag) !== 'string' || !node.children instanceof Array || !node.attrs instanceof Object) {
+        throw("Node a json node");
+    }
+    indent = indent || 0;
+    var sindent = Array(indent + 1).join('\t'),
+        r = sindent + '<' + node.tag;
+    for (var attr in node.attrs) {
+        var vattr = node.attrs[attr];
+        if (typeof(vattr) !== 'string') {
+            // domains, ...
+            vattr = JSON.stringify(vattr);
+        }
+        vattr = vattr.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        if (single_quote) {
+            vattr = vattr.replace(/&quot;/g, "'");
+        }
+        r += ' ' + attr + '="' + vattr + '"';
+    }
+    if (node.children.length) {
+        r += '>\n';
+        var childs = [];
+        for (var i = 0, ii = node.children.length; i < ii; i++) {
+            childs.push(openerp.base.json_node_to_xml(node.children[i], single_quote, indent + 1));
+        }
+        r += childs.join('\n');
+        r += '\n' + sindent + '</' + node.tag + '>';
+        return r;
+    } else {
+        return r + '/>';
+    }
+}
+
 };
 
 // vim:et fdc=0 fdl=0 foldnestmax=3 fdm=syntax:
