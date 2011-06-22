@@ -121,10 +121,6 @@ class CompanyLDAP(osv.osv):
                    'login': login,
                    'company_id': conf['company']
                    }
-        if not conf['user']:
-            action_obj = self.pool.get('ir.actions.actions')
-            values['action_id'] = values['menu_id'] = action_obj.search(
-                cr, uid, [('usage', '=', 'menu')], order='id')[0]
         return values
     
     def get_or_create_user(self, cr, uid, login, conf, ldap_entry,
