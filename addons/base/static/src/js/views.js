@@ -113,7 +113,8 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
      * @returns {jQuery.Deferred} new view loading promise
      */
     on_mode_switch: function(view_type) {
-        var view_promise;
+        var self = this,
+            view_promise;
         this.active_view = view_type;
         var view = this.views[view_type];
         if (!view.controller) {
@@ -124,6 +125,16 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
             if (view.embedded_view) {
                 controller.set_embedded_view(view.embedded_view);
             }
+            if (view_type === 'list' && this.flags.search_view === false && this.action && this.action['auto_search']) {
+                // In case the search view is not instanciated: manually call ListView#search
+                controller.on_loaded.add({
+                    callback: function () {
+                        controller.do_search([self.action.domain], [self.action.context], []);
+                    },
+                    position: 'last',
+                    unique: true
+                });
+            }
             view_promise = controller.start();
             var self = this;
             $.when(view_promise).then(function() {
@@ -131,6 +142,7 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
             });
             this.views[view_type].controller = controller;
         }
+
 
         if (this.searchview) {
             if (view.controller.searchable === false) {
@@ -261,16 +273,18 @@ openerp.base.ViewManagerAction = openerp.base.ViewManager.extend({
             }
         });
 
-        // init search view
-        var searchview_id = this.action.search_view_id && this.action.search_view_id[0];
+        if (this.flags.search_view !== false) {
+            // init search view
+            var searchview_id = this.action.search_view_id && this.action.search_view_id[0];
 
-        var searchview_loaded = this.setup_search_view(
-                searchview_id || false, search_defaults);
+            var searchview_loaded = this.setup_search_view(
+                    searchview_id || false, search_defaults);
 
-        // schedule auto_search
-        if (searchview_loaded != null && this.action['auto_search']) {
-            $.when(searchview_loaded, inital_view_loaded)
-                .then(this.searchview.do_search);
+            // schedule auto_search
+            if (searchview_loaded != null && this.action['auto_search']) {
+                $.when(searchview_loaded, inital_view_loaded)
+                    .then(this.searchview.do_search);
+            }
         }
     },
     stop: function() {
