@@ -1364,6 +1364,9 @@ openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
 });
 
 openerp.base.form.One2ManyDataset = openerp.base.DataSetStatic.extend({
+    virtual_id_prefix: "one2many_v_id_",
+    virtual_id_regex: /one2many_v_id_.*/,
+    debug_mode: true,
     init: function() {
         this._super.apply(this, arguments);
         this.reset_ids([]);
@@ -1375,15 +1378,40 @@ openerp.base.form.One2ManyDataset = openerp.base.DataSetStatic.extend({
     unlink: function(ids) {
         var self = this;
         this.set_ids(_.without.apply(_, [this.ids].concat(ids)));
-        _.each(ids, function(x) {self.to_delete[x] = true;});
+        _.each(ids, function(x) {self.to_delete.push({id:x})});
         this.on_change();
     },
     reset_ids: function(ids) {
         this.set_ids(ids);
-        this.to_delete = {};
-        this.to_create = {};
+        this.to_delete = [];
+        this.to_create = [];
+        this.cache = [];
     },
-    on_change: function() {}
+    on_change: function() {},
+    read_ids: function (ids, fields, callback) {
+        var self = this;
+        var to_get = [];
+        var to_remember = [];
+        _.each(ids, function(id) {
+            var cached = _.detect(self.cache, function(x) {return x.id === id;});
+            if (!cached || !_each.all(fields, function(x) {cached.values[x] !== undefined}))
+                to_get.push(id);
+            else
+                to_remember.push(cached);
+        });
+        // for debuggin, test to see if all the ids we try to load from db are real ids
+        if (this.debug_mode)
+            _.each(to_get, function(x) {
+                if(typeof(x) == "string") {
+                    var test = self.virtual_id_regex.exec(x);
+                    if(test && test[0] === x) {
+                        throw "Trying to get value from virtual id";
+                    }
+                }
+            });
+        //TODO niv
+        this._super(ids, fields, callback);
+    },
 });
 
 openerp.base.form.One2ManyListView = openerp.base.ListView.extend({
