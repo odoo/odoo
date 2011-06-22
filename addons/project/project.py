@@ -529,8 +529,6 @@ class task(osv.osv):
     #
     # Override view according to the company definition
     #
-
-
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         users_obj = self.pool.get('res.users')
 
@@ -562,13 +560,27 @@ class task(osv.osv):
                 res['fields'][f]['string'] = res['fields'][f]['string'].replace('Hours',tm)
         return res
 
+    def _check_child_task(self, cr, uid, ids, context=None):
+        if context == None:
+            context = {}
+        tasks = self.browse(cr, uid, ids, context=context)
+        for task in tasks:
+            if task.child_ids:
+                for child in task.child_ids:
+                    if child.state in ['draft', 'open', 'pending']:
+                        raise osv.except_osv(_("Warning !"), _("Child task still open.\nPlease cancel or complete child task first."))
+        return True
+
     def action_close(self, cr, uid, ids, context=None):
         # This action open wizard to send email to partner or project manager after close task.
-        project_id = len(ids) and ids[0] or False
-        if not project_id: return False
-        task = self.browse(cr, uid, project_id, context=context)
+        if context == None:
+            context = {}
+        task_id = len(ids) and ids[0] or False
+        self._check_child_task(cr, uid, ids, context=context)
+        if not task_id: return False
+        task = self.browse(cr, uid, task_id, context=context)
         project = task.project_id
-        res = self.do_close(cr, uid, [project_id], context=context)
+        res = self.do_close(cr, uid, [task_id], context=context)
         if project.warn_manager or project.warn_customer:
             return {
                 'name': _('Send Email after close task'),
@@ -643,6 +655,7 @@ class task(osv.osv):
     def do_cancel(self, cr, uid, ids, *args):
         request = self.pool.get('res.request')
         tasks = self.browse(cr, uid, ids)
+        self._check_child_task(cr, uid, ids, context=context)
         for task in tasks:
             project = task.project_id
             if project.warn_manager and project.user_id and (project.user_id.id != uid):
@@ -736,13 +749,19 @@ class task(osv.osv):
                     index = sorted_types.index(typeid)
                     self.write(cr, uid, task.id, {'type_id': sorted_types[index+1]})
         return True
-        
+
     def next_type(self, cr, uid, ids, *args):
         return self._change_type(cr, uid, ids, True, *args)
 
     def prev_type(self, cr, uid, ids, *args):
         return self._change_type(cr, uid, ids, False, *args)
-       
+
+    def unlink(self, cr, uid, ids, context=None):
+        if context == None:
+            context = {}
+        self._check_child_task(cr, uid, ids, context=context)
+        res = super(task, self).unlink(cr, uid, ids, context)
+        return res
 
 task()
 
