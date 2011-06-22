@@ -94,10 +94,12 @@ openerp.base_calendar.CalendarView = openerp.base.Controller.extend({
             
         }
         
+        this.mode = this.mode || 'month';
+        
         scheduler.config.multi_day = true; //Multi day events are not rendered in daily and weekly views
         
         // Initialize Sceduler
-		scheduler.init('openerp_scheduler',null,"month");
+		scheduler.init('openerp_scheduler',null,this.mode);
         
         //To parse Events we have to convert date Format
         var res_events = [];
@@ -149,6 +151,24 @@ openerp.base_calendar.CalendarView = openerp.base.Controller.extend({
         	var is_event_exist = jQuery.inArray(event_obj.id, self.dataset.ids);
         	if(is_event_exist >= 0 || !is_new) {
         		// try to save Event.
+        		var data = {};
+        		self.mode = scheduler._mode;
+        		
+        		if(self.calendar_fields.date_start.kind == 'time') {
+        			data[self.date_start] = event_obj.start_date.toString('HH:mm:ss')
+        		} else {
+        			data[self.date_start] = event_obj.start_date.toString('yyyy-MM-dd HH:mm:ss')
+        		}
+        		
+        		if(self.date_stop) {
+        			
+        		}
+        		
+        		if(self.date_delay) {
+        			
+        		}
+        		self.dataset.write(event_obj.id, data, function(){self.load_scheduler()})
+        		
         	} else {
         		// new Event.
         		return true;
@@ -313,7 +333,8 @@ openerp.base_calendar.CalendarView = openerp.base.Controller.extend({
             			var _dialog = this;
             			view_manager.views[view_manager.active_view].controller.do_save(function(r) {
             				$(_dialog).dialog("destroy");
-            				self.start();
+//            				self.start();
+            				self.load_scheduler();
             			})
             		}
             	}
