@@ -122,14 +122,13 @@ module named account_voucher.
         'board_account_view.xml',
         "wizard/account_report_profit_loss_view.xml",
         "wizard/account_report_balance_sheet_view.xml",
-        'test/test_edi_invoice.yml',
-        #'wizard/edi_import_view.xml',
+        
     ],
     'demo_xml': [
-        'account_demo.xml',
-        'project/project_demo.xml',
-        'project/analytic_account_demo.xml',
-        'demo/account_minimal.xml',
+        #'account_demo.xml',
+        #'project/project_demo.xml',
+        #'project/analytic_account_demo.xml',
+        #'demo/account_minimal.xml',
 #        'account_unit_test.xml',
     ],
     'test': [
@@ -145,7 +144,7 @@ module named account_voucher.
         'test/account_bank_statement.yml',
         'test/account_cash_statement.yml',
         'test/account_report.yml',
-        
+        'test/test_edi_invoice.yml',
 
             ],
     'installable': True,

@@ -47,21 +47,13 @@ class account_invoice(osv.osv,ir_edi.edi):
         # Get EDI doc based on this struct. The result will also contain
         # all metadata fields and attachments.
         
-        edi_doc = super(account_invoice,self).edi_export(cr, uid, ids, edi_struct, context)
-        
-        
+        edi_doc = super(account_invoice,self).edi_export(cr, uid, ids, edi_struct, context) 
         for i, invoice in enumerate(self.browse(cr, uid, rec_id, context=context)):
             # add specific data for import
             inv_comp = invoice.company_id
-            
-
             comp_partner = inv_comp.partner_id
-            
             comp_partner_addr = comp_partner.address
-            
             for address in comp_partner_addr:
-                
-
                 edi_doc[i].update({
                         # Add company info and address
                         'company_address': {
@@ -119,7 +111,6 @@ class account_invoice(osv.osv,ir_edi.edi):
         if context is None:
             context = {}
         for field in edi_document.keys():
-            
             if field == 'type':
                 if len(edi_document['invoice_line']):
                 	name = edi_document['invoice_line'][0]['product_id'][1]
@@ -130,7 +121,6 @@ class account_invoice(osv.osv,ir_edi.edi):
                     if re_ids:
                         if product_obj.browse(cr,uid,re_ids)[0].property_account_expense:
                             account_id = product_obj.browse(cr,uid,re_ids)[0].property_account_expense
-                            
                         else:
                             account_id = product_categ.browse(cr,uid,re_ids)[0].property_account_expense_categ
                         if product_obj.browse(cr,uid,re_ids)[0].taxes_id:
@@ -138,9 +128,7 @@ class account_invoice(osv.osv,ir_edi.edi):
                     if edi_document['type'] == 'out_refund':
                         edi_document['type'] = 'in_refund'
                     else:
-                        edi_document['type'] = 'in_invoice'       
-                          		
-                    
+                        edi_document['type'] = 'in_invoice'         
                 elif edi_document['type'] == 'in_invoice' or edi_document['type'] == 'in_refund':
                     if re_ids:
                         if product_obj.browse(cr,uid,re_ids)[0].property_account_income:
@@ -163,12 +151,10 @@ class account_invoice(osv.osv,ir_edi.edi):
                         
                 if tax_id:
                     name_ids = model_data.search(cr, uid, [('model','=',tax_id[0]._name),('res_id','=',tax_id[0].id)])
-                    
                     if name_ids:
                         xml_id = model_data.browse(cr, uid, name_ids)[0].name
                         db_uuid = ir_edi.safe_unique_id(tax_id[0]._name,tax_id[0].id)
                         edi_document['tax_line'][0]['account_id'] = [db_uuid+':'+xml_id,tax_id[0].name]
-                        
                 else:
                     if len(edi_document['tax_line']):
                         edi_document['tax_line'][0]['manual'] = True
@@ -177,9 +163,7 @@ class account_invoice(osv.osv,ir_edi.edi):
                 part = {}
                 comp = {}
                 partner_id = partner.search(cr,uid,[('name','=',edi_document['company_id'][1])])
-                
                 if len(partner_id):
-                    
                     browse_partner = partner.browse(cr,uid,partner_id[0])
                     u_id = model_data.search(cr, uid, [('res_id','=',browse_partner.id),('model','=',browse_partner._name)])
                     if len(u_id):
@@ -188,20 +172,14 @@ class account_invoice(osv.osv,ir_edi.edi):
                         uuid = ir_edi.safe_unique_id(browse_partner._name,browse_partner.id)
                         db_uuid = '%s:%s' % (uuid,xml_obj.name)
                         part.update({'partner_id':[db_uuid,browse_partner.name]})
-                        
                 else:
                     company_id = company.create(cr, uid, {'name':edi_document['company_id'][1]})
                     add_id = partner_add.create(cr,uid,edi_document['company_address'])
                     res.update({'name': edi_document['company_id'][1],'supplier': True, 'partner_id': edi_document['partner_id'],'address':add_id}) 
                     partner_id = partner.create(cr,uid,res)
-                    
                     browse_partner = partner.browse(cr,uid,partner_id[0])
-                    
                     u_id = model_data.search(cr, uid, [('res_id','=',browse_partner.id),('model','=',browse_partner._name)])
-                    
-                    
                     if len(u_id):
-                        
                         xml_obj = model_data.browse(cr,uid,u_id[0])
                         uuid = ir_edi.safe_unique_id(browse_partner._name,browse_partner.id)
                         db_uuid = '%s:%s' % (uuid,xml_obj.name)
@@ -210,14 +188,10 @@ class account_invoice(osv.osv,ir_edi.edi):
                 comp_id = partner.search(cr,uid,[('name','=',edi_document['partner_id'][1])])
                
                 if len(comp_id): 
-                    
                     browse_partner = partner.browse(cr,uid,comp_id[0])
-                    
                     browse_company = company.browse(cr,uid,browse_partner.company_id.id)
-                    
                     u_id = u_id = model_data.search(cr, uid, [('res_id','=',browse_company.id),('model','=',browse_company._name)])
                     if len(u_id):
-                        
                         xml_obj = model_data.browse(cr,uid,u_id[0])
                         uuid = ir_edi.safe_unique_id(browse_company._name,browse_company.id)
                         db_uuid = '%s:%s' % (uuid,xml_obj.name)
@@ -228,9 +202,6 @@ class account_invoice(osv.osv,ir_edi.edi):
                 edi_document.update(part)
                 edi_document.update(comp)      
                 if len(partner_id):
-                    
-                    
-                    
                     p = self.pool.get('res.partner').browse(cr, uid, partner_id[0])
                     if company_id:
                         if p.property_account_receivable.company_id.id != company_id.id and p.property_account_payable.company_id.id != company_id.id:
@@ -265,14 +236,12 @@ class account_invoice(osv.osv,ir_edi.edi):
                         uuid = ir_edi.safe_unique_id(acc_obj._name,acc_obj.id)
                         db_uuid = '%s:%s' % (uuid,xml_obj.name)
                         edi_document.update({'account_id':[db_uuid,acc_obj.name]})
-                        print "account_id",edi_document['account_id']
+                        
                 edi_document.update({'reference':edi_document['internal_number'],'reference_type' : 'none'})    
                 edi_document['internal_number'] = False
                 context['type'] = edi_document['type']  
-                comp
+                
         del edi_document['company_address']
-        
-        
         return super(account_invoice,self).edi_import(cr, uid, edi_document)
       
 account_invoice()
