@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import base64
 import glob, os
-import pprint
 from xml.etree import ElementTree
 from cStringIO import StringIO
 
@@ -352,9 +351,10 @@ class DataSet(openerpweb.Controller):
                                                               req.session.eval_context(req.context))}
 
     @openerpweb.jsonrequest
-    def search_read(self, request, model, fields=False, offset=0, limit=False, domain=None, context=None, sort=None):
-        return self.do_search_read(request, model, fields, offset, limit, domain, context, sort)
-    def do_search_read(self, request, model, fields=False, offset=0, limit=False, domain=None, context=None, sort=None):
+    def search_read(self, request, model, fields=False, offset=0, limit=False, domain=None, sort=None):
+        return self.do_search_read(request, model, fields, offset, limit, domain, sort)
+    def do_search_read(self, request, model, fields=False, offset=0, limit=False, domain=None
+                       , sort=None):
         """ Performs a search() followed by a read() (if needed) using the
         provided search criteria
 
@@ -367,23 +367,33 @@ class DataSet(openerpweb.Controller):
         :param int limit: the maximum number of records to return
         :param list domain: the search domain for the query
         :param list sort: sorting directives
-        :returns: a list of result records
+        :returns: A structure (dict) with two keys: ids (all the ids matching
+                  the (domain, context) pair) and records (paginated records
+                  matching fields selection set)
         :rtype: list
         """
         Model = request.session.model(model)
-        context, domain = eval_context_and_domain(request.session, request.context, domain)
-        
-        ids = Model.search(domain, offset or 0, limit or False,
-                           sort or False, context)
+        context, domain = eval_context_and_domain(
+            request.session, request.context, domain)
 
+        ids = Model.search(domain, 0, False, sort or False, context)
+        # need to fill the dataset with all ids for the (domain, context) pair,
+        # so search un-paginated and paginate manually before reading
+        paginated_ids = ids[offset:(offset + limit if limit else None)]
         if fields and fields == ['id']:
             # shortcut read if we only want the ids
-            return map(lambda id: {'id': id}, ids)
+            return {
+                'ids': ids,
+                'records': map(lambda id: {'id': id}, paginated_ids)
+            }
 
-        reads = Model.read(ids, fields or False, context)
-        reads.sort(key=lambda obj: ids.index(obj['id']))
-        return reads
-    
+        records = Model.read(paginated_ids, fields or False, context)
+        records.sort(key=lambda obj: ids.index(obj['id']))
+        return {
+            'ids': ids,
+            'records': records
+        }
+
     @openerpweb.jsonrequest
     def read(self, request, model, ids, fields=False):
         return self.do_search_read(request, model, ids, fields,

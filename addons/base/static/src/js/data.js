@@ -404,14 +404,11 @@ openerp.base.DataSetSearch =  openerp.base.DataSet.extend({
             sort: this.sort(),
             offset: offset,
             limit: limit
-        }, function (records) {
-            self.ids.splice(0, self.ids.length);
+        }, function (result) {
+            self.ids = result.ids;
             self.offset = offset;
-            self.count = records.length;    // TODO: get real count
-            for (var i=0; i < records.length; i++ ) {
-                self.ids.push(records[i].id);
-            }
-            callback(records);
+            self.count = result.ids.length;
+            callback(result.records);
         });
     },
     /**
