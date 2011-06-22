@@ -351,12 +351,13 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
         if (!this.datarecord.id) {
             this.on_attachments_loaded([]);
         } else {
-            this.rpc('/base/dataset/search_read', {
-                model: 'ir.attachment',
-                fields: ['name', 'url', 'type'],
-                domain: [['res_model', '=', this.dataset.model], ['res_id', '=', this.datarecord.id], ['type', 'in', ['binary', 'url']]],
-                context: this.dataset.context
-            }, this.on_attachments_loaded);
+            (new openerp.base.DataSetSearch(
+                    this.session, 'ir.attachment', this.dataset.context,
+                    [['res_model', '=', this.dataset.model],
+                     ['res_id', '=', this.datarecord.id],
+                     ['type', 'in', ['binary', 'url']]])).read_slice(
+                ['name', 'url', 'type'], false, false,
+                this.on_attachments_loaded);
         }
     },
     on_attachments_loaded: function(attachments) {
