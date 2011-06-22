@@ -153,22 +153,18 @@ openerp.base_calendar.CalendarView = openerp.base.Controller.extend({
         		// try to save Event.
         		var data = {};
         		self.mode = scheduler._mode;
-        		
-        		if(self.calendar_fields.date_start.kind == 'time') {
-        			data[self.date_start] = event_obj.start_date.toString('HH:mm:ss')
-        		} else {
-        			data[self.date_start] = event_obj.start_date.toString('yyyy-MM-dd HH:mm:ss')
-        		}
+        		var date_format = self.calendar_fields.date_start.kind == 'time' ? 'HH:mm:ss' : 'yyyy-MM-dd HH:mm:ss';
+        		data[self.date_start] = event_obj.start_date.toString(date_format);
         		
         		if(self.date_stop) {
-        			
+        			data[self.date_stop] = event_obj.end_date.toString(date_format);
         		}
         		
         		if(self.date_delay) {
         			
         		}
-        		self.dataset.write(event_obj.id, data, function(){self.load_scheduler()})
         		
+        		self.dataset.write(event_obj.id, data, function(){self.load_scheduler()});
         	} else {
         		// new Event.
         		return true;
