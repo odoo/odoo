@@ -6,7 +6,6 @@ can't be sent there themselves).
 """
 import binascii
 import hashlib
-import simplejson.decoder
 import simplejson.encoder
 
 __all__ = ['Domain', 'Context', 'NonLiteralEncoder, non_literal_decoder']
@@ -17,6 +16,8 @@ SHORT_HASH_BYTES_SIZE = 6
 
 class NonLiteralEncoder(simplejson.encoder.JSONEncoder):
     def default(self, object):
+        if not isinstance(object, (BaseDomain, BaseContext)):
+            return super(NonLiteralEncoder, self).default(object)
         if isinstance(object, Domain):
             return {
                 '__ref': 'domain',
@@ -30,14 +31,14 @@ class NonLiteralEncoder(simplejson.encoder.JSONEncoder):
         elif isinstance(object, CompoundDomain):
             return {
                 '__ref': 'compound_domain',
-                '__domains': [self.default(el) for el in object.domains]
+                '__domains': object.domains
             }
         elif isinstance(object, CompoundContext):
             return {
                 '__ref': 'compound_context',
-                '__contexts': [self.default(el) for el in object.contexts]
+                '__contexts': object.contexts
             }
-        return super(NonLiteralEncoder, self).default(object)
+        raise TypeError('Could not encode unknown non-literal %s' % object)
 
 def non_literal_decoder(dct):
     """ Decodes JSON dicts into :class:`Domain` and :class:`Context` based on
@@ -69,7 +70,16 @@ def non_literal_decoder(dct):
             return ccontext
     return dct
 
-class Domain(object):
+# TODO: use abstract base classes if 2.6+?
+class BaseDomain(object):
+    def evaluate(self, context=None):
+        raise NotImplementedError('Non literals must implement evaluate()')
+
+class BaseContext(object):
+    def evaluate(self, context=None):
+        raise NotImplementedError('Non literals must implement evaluate()')
+
+class Domain(BaseDomain):
     def __init__(self, session, domain_string=None, key=None):
         """ Uses session information to store the domain string and map it to a
         domain key, which can be safely round-tripped to the client.
@@ -113,7 +123,7 @@ class Domain(object):
             ctx.update(self.own)
         return eval(self.get_domain_string(), ctx)
 
-class Context(object):
+class Context(BaseContext):
     def __init__(self, session, context_string=None, key=None):
         """ Uses session information to store the context string and map it to
         a key (stored in a secret location under a secret mountain), which can
@@ -159,7 +169,7 @@ class Context(object):
         return eval(self.get_context_string(),
                     ctx)
 
-class CompoundDomain:
+class CompoundDomain(BaseDomain):
     def __init__(self, *domains):
         self.domains = []
         self.session = None
@@ -169,7 +179,7 @@ class CompoundDomain:
     def evaluate(self, context=None):
         final_domain = []
         for domain in self.domains:
-            if not isinstance(domain, (list, Domain, CompoundDomain)):
+            if not isinstance(domain, (list, BaseDomain)):
                 raise TypeError("Domain %r is not a list or a nonliteral Domain",
                                  domain)
                 
@@ -188,7 +198,7 @@ class CompoundDomain:
         self.domains.append(domain)
         return self
 
-class CompoundContext:
+class CompoundContext(BaseContext):
     def __init__(self, *contexts):
         self.contexts = []
         self.session = None
@@ -199,7 +209,7 @@ class CompoundContext:
         ctx = dict(context or {})
         final_context = {}
         for context_to_eval in self.contexts:
-            if not isinstance(context_to_eval, (dict, Context, CompoundContext)):
+            if not isinstance(context_to_eval, (dict, BaseContext)):
                 raise TypeError("Context %r is not a dict or a nonliteral Context",
                                  context_to_eval)
     

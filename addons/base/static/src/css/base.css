@@ -547,9 +547,25 @@ background: linear-gradient(top, #ffffff 0%,#d8d8d8 11%,#afafaf 86%,#333333 91%,
 }
 
 .openerp .searchview_extended_group {
-    border: #696969 solid 1px;
     padding: 3px;
     margin: 2px;
+}
+
+.openerp .searchview_extended_group .oe_adv_filters_and {
+    border-bottom: 1px solid #8E8E8E;
+    text-align: center;
+    margin-top: -10px;
+}
+.openerp .searchview_extended_group .oe_adv_filters_and span {
+    background: #F0EEEE;
+    position: relative;
+    top: 0.5em;
+    padding: 0 1em 0 1em;
+    color: #8E8E8E;
+}
+
+.openerp .searchview_extended_group.last_group .oe_adv_filters_and {
+    display: none;
 }
 
 .openerp .oe_search-view-custom-filter-btn span {
@@ -565,6 +581,7 @@ background: linear-gradient(top, #ffffff 0%,#d8d8d8 11%,#afafaf 86%,#333333 91%,
 
 .openerp .searchview_extended_delete_group {
     float:right;
+    display: none;
 }
 
 .openerp .searchview_extended_delete_group span,
@@ -1041,4 +1058,15 @@ background: linear-gradient(top, #ffffff 0%,#ebe9e9 100%); /* W3C */
 }
 .openerp .oe-m2o-disabled-cm {
     color: grey;
+}
+
+.openerp .oe-dialog-warning {
+    font-size: 1.2em;
+    font-weight: bold;
+}
+.openerp .oe-dialog-warning img {
+    float: left;
+    position: relative;
+    top: -0.5em;
+    margin:0 7px 7px 0;
 }

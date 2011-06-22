@@ -397,10 +397,22 @@ openerp.base.View = openerp.base.Controller.extend({
      */
     execute_action: function (action_data, dataset, action_manager, record_id, on_no_action) {
         var handler = function (r) {
-            if (r.result && r.result.constructor == Object) {
-                action_manager.do_action(r.result);
+            var action = r.result;
+            if (action && action.constructor == Object) {
+                action.context = action.context || {};
+                action.context['active_id'] = dataset.ids[dataset.index];
+                action.context['active_ids'] = [dataset.ids[dataset.index]];
+                action.context['active_model'] = dataset.model;
+                action.flags = {
+                    sidebar : false,
+                    search_view : false,
+                    views_switcher : false,
+                    action_buttons : false,
+                    pager : false
+                };
+                action_manager.do_action(action);
             } else {
-                on_no_action(r.result);
+                on_no_action(action);
             }
         };
 
@@ -409,12 +421,12 @@ openerp.base.View = openerp.base.Controller.extend({
                 result : { type: 'ir.actions.act_window_close' }
             });
         } else {
-            var context = _.extend({}, dataset.context, action_data.context || {});
+            var context = new openerp.base.CompoundContext(dataset.context).add(action_data.context || {});
             switch(action_data.type) {
                 case 'object':
-                    return dataset.call(action_data.name, [[record_id], context], handler);
+                    return dataset.call_and_eval(action_data.name, [[record_id], context], null, 1, handler);
                 case 'action':
-                    return this.rpc('/base/action/load', { action_id: parseInt(action_data.name, 10) }, handler);
+                    return this.rpc('/base/action/load', { action_id: parseInt(action_data.name, 10), context: context }, handler);
                 default:
                     return dataset.exec_workflow(record_id, action_data.name, handler);
             }

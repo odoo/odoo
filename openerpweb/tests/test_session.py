@@ -77,7 +77,7 @@ class TestOpenERPSession(unittest2.TestCase):
 
     def test_eval_empty_domains(self):
         self.assertEqual(
-            self.session.eval_domain(CompoundDomain(*[])),
+            self.session.eval_domain(CompoundDomain()),
             [])
 
     def test_eval_literal_domains(self):

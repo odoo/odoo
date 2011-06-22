@@ -35,10 +35,10 @@ var QWeb2 = {
             return (noquotes ? '' : "'") + s.replace(/\r?\n/g, "\\n").replace(/'/g, "\\'") + (noquotes ? '' : "'");
         },
         html_escape: function(s, attribute) {
-            if (s === null || s === undefined) {
+            if (s == null) {
                 return '';
             }
-            s = (new String(s)).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            s = String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
             if (attribute) {
                 s = s.replace(/"/g, '&quot;');
             }
