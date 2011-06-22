@@ -252,18 +252,23 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
         if (!this.ready) {
             return false;
         }
-        var invalid = false;
-        var values = {};
+        var invalid = false,
+            values = {},
+            first_invalid_field = null;
         for (var f in this.fields) {
             f = this.fields[f];
             if (f.invalid) {
                 invalid = true;
                 f.update_dom();
+                if (!first_invalid_field) {
+                    first_invalid_field = f;
+                }
             } else if (f.touched) {
                 values[f.name] = f.get_value();
             }
         }
         if (invalid) {
+            first_invalid_field.focus();
             this.on_invalid();
             return false;
         } else {
@@ -553,7 +558,7 @@ openerp.base.form.WidgetFrame = openerp.base.form.Widget.extend({
         var widget_type = node.attrs.widget || type.type || node.tag;
         var widget = new (this.view.registry.get_object(widget_type)) (this.view, node);
         if (node.tag == 'field') {
-            if (node.attrs.default_focus == '1') {
+            if (!this.view.default_focus_field || node.attrs.default_focus == '1') {
                 this.view.default_focus_field = widget;
             }
             if (node.attrs.nolabel != '1') {
