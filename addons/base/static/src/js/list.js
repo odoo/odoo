@@ -59,6 +59,24 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
         if (this.dataset instanceof openerp.base.DataSetStatic) {
             this.groups.datagroup = new openerp.base.StaticDataGroup(this.dataset);
         }
+
+        this.page = 0;
+    },
+    /**
+     * Retrieves the view's number of records per page (|| section)
+     *
+     * options > defaults > view_manager.action.limit > indefinite
+     *
+     * @returns {Number|null}
+     */
+    limit: function () {
+        if (!this._limit) {
+            this._limit = (this.options.limit
+                        || this.defaults.limit
+                        || (this.view_manager.action || {}).limit
+                        || null);
+        }
+        return this._limit;
     },
     /**
      * Set a custom Group construct as the root of the List View.
@@ -182,7 +200,7 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
             }
             return column;
         };
-        
+
         this.columns.splice(0, this.columns.length);
         this.columns.push.apply(
                 this.columns,
@@ -505,6 +523,7 @@ openerp.base.ListView.List = Class.extend( /** @lends openerp.base.ListView.List
     init: function (group, opts) {
         var self = this;
         this.group = group;
+        this.view = group.view;
 
         this.options = opts.options;
         this.columns = opts.columns;
@@ -822,7 +841,7 @@ openerp.base.ListView.Groups = Class.extend( /** @lends openerp.base.ListView.Gr
             self.indent($group_column, group.level);
             // count column
             $('<td>').text(group.length).appendTo($row);
-                    
+
             self.pad($row);
             _(self.columns).chain()
                 .filter(function (column) {return !column.invisible;})
@@ -875,10 +894,11 @@ openerp.base.ListView.Groups = Class.extend( /** @lends openerp.base.ListView.Gr
             });
         this.bind_child_events(list);
 
-        var d = new $.Deferred();
+        var limit = this.view.limit(),
+                d = new $.Deferred();
         dataset.read_slice(
             _.filter(_.pluck(this.columns, 'name'), _.identity),
-            0, false,
+            this.view.page * limit, limit,
             function (records) {
                 var form_records = _(records).map(
                     $.proxy(list, 'transform_record'));
