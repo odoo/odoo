@@ -748,5 +748,8 @@ class TreeView(View):
 
     @openerpweb.jsonrequest
     def load(self, req, model, view_id, toolbar=False):
+        Model = req.session.model(model)
+        fields = Model.fields_get()
         fields_view = self.fields_view_get(req, model, view_id, 'tree', toolbar=toolbar)
-        return {'field_parent': fields_view}
+        return {'field_parent': fields_view, 'fields' : fields}
+

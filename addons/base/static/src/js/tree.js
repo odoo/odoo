@@ -29,6 +29,8 @@ openerp.base.TreeView = openerp.base.View.extend({
 
     on_loaded: function (data) {
         var self = this;
+        this.fields_view = data.field_parent;
+        this.fields = data.fields;
         this.dataset.read_slice([], 0, false, function (response) {
             self.$element.html(QWeb.render('TreeView', {'field_data' : response}));
             id=self.dataset.ids[0];
@@ -101,7 +103,12 @@ openerp.base.TreeView = openerp.base.View.extend({
                 $(this).css({ color : '#000000' });
             });
 
-            $('tr').find('td').children(':first-child').click( function() {
+            $('tr[id ^= treerow_]').find('td').children(':first-child').click( function() {
+                if ($(this).is('span')) {
+                    id = $(this).parent().parent().attr('id');
+	                newid = id.split('_')[1];
+                    self.getlist(newid);
+                }
                 divflag=0;
                 if ($('#'+(this.id)).length == 1) {
                     rowid = (this.id).split('_');
@@ -129,9 +136,60 @@ openerp.base.TreeView = openerp.base.View.extend({
                     }
                 }
             });
-            $('tr[id ^= treerow_]').find('td').children(':last-child').click(function(){
+
+            $('tr[id^=treerow_]').find('td').children(':last-child').click(function(){
+                id = $(this).parent().parent().attr('id');
+                newid = id.split('_')[1];
+                self.getlist(newid);
             });
         });
+    },
+
+    getlist: function(newid){
+        var self = this;
+        this.dataset = new openerp.base.DataSetStatic(self.session, self.fields.relation);
+        this.dataset.on_unlink.add_last(function(ids) {
+            // TODO niv check form view
+            var view = self.viewmanager.views[self.viewmanager.active_view].controller;
+            view.reload_content();
+            // TODO niv make real suppression (list or direct)
+        });
+        self.dataset.model = 'product.product';
+        self.dataset.domain = [['categ_id', 'child_of', parseInt(newid,10)]];
+
+        var modes;
+        modes = !!modes ? modes.split(",") : ["tree", "form"];
+        var views = [];
+        _.each(modes, function(mode) {
+            var view = [false, mode == "tree" ? "list" : mode];
+            if (self.fields.views && self.fields.views[mode]) {
+                view.push(self.fields.views[mode]);
+            }
+            views.push(view);
+        });
+
+        this.viewmanager = new openerp.base.ViewManager(self.session, self.element_id, self.dataset, views);
+        this.viewmanager.on_controller_inited.add_last( function(view_type, controller) {
+            if (view_type == "list") {
+                // TODO niv
+            } else if (view_type == "form") {
+                // TODO niv
+            }
+        });
+        this.viewmanager.start();
+
+        var action = {
+            "res_model": this.viewmanager.model,
+            "domain": this.viewmanager.dataset.domain,
+            "views":views,
+            "type":"ir.actions.act_window",
+            "auto_search":true,
+            "view_type":"list",
+            "view_mode":"list"
+        }
+
+        this.viewmanageraction = new openerp.base.ViewManagerAction(self.session, self.element_id, action);
+        this.viewmanageraction.start();
     },
 
     // show & hide the contents
