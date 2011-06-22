@@ -48,7 +48,7 @@ var QWeb2 = {
             if (o !== null && o !== undefined) {
                 if (o.constructor === Array) {
                     if (o[1] !== null && o[1] !== undefined) {
-                        return ' ' + o[0] + '="' + this.html_escape(o[1]) + '"';
+                        return ' ' + o[0] + '="' + this.html_escape(o[1], true) + '"';
                     }
                 } else if (typeof o === 'object') {
                     var r = '';
