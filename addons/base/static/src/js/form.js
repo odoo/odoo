@@ -1381,35 +1381,62 @@ openerp.base.form.One2ManyDataset = openerp.base.DataSetStatic.extend({
         this.reset_ids([]);
     },
     create: function(data, callback, error_callback) {
+        var cached = {id:_.uniqueId(this.virtual_id_prefix), values: data};
+        this.to_create.push(cached);
+        this.set_ids(ids.concat([cached.id]));
+        this.cache.push(cached);
+        this.on_change();
+        return $.Deferred().then(callback).resolve({result: cached.id}).promise();
     },
     write: function (id, data, callback) {
+        var record = _.select(this.to_create, function(x) {return x.id === id;});
+        record = record || _.select(this.to_write, function(x) {return x.id === id;});
+        if (previous) {
+            $.extend(previous.value, data);
+        } else {
+            record = {id: id, values: data};
+            self.to_write.push(record);
+        }
+        var cached = _.select(this.cache, function(x) {return x.id === id;});
+        $.extend(cached.value, record.values);
+        this.on_change();
+        return $.Deferred().then(callback).resolve({result: true}).promise();
     },
     unlink: function(ids) {
         var self = this;
+        var to_create_size = this.to_create.length;
+        var remove = function(list, to_remove) {
+            return _.reject(list, function(x) { return _.include(to_remove, x.id);});
+        };
+        this.to_create = remove(this.to_create);
+        this.to_write = remove(this.to_write);
+        this.cache = remove(this.cache);
         this.set_ids(_.without.apply(_, [this.ids].concat(ids)));
-        _.each(ids, function(x) {self.to_delete.push({id:x})});
+        if (this.to_create == to_create_size) {
+            _.each(ids, function(x) {self.to_delete.push({id:x})});
+        }
         this.on_change();
     },
     reset_ids: function(ids) {
         this.set_ids(ids);
         this.to_delete = [];
         this.to_create = [];
+        this.to_write = [];
         this.cache = [];
+        // good idea?
+        this.on_change();
     },
     on_change: function() {},
     read_ids: function (ids, fields, callback) {
         var self = this;
         var to_get = [];
-        var to_remember = [];
         _.each(ids, function(id) {
             var cached = _.detect(self.cache, function(x) {return x.id === id;});
             if (!cached || !_each.all(fields, function(x) {cached.values[x] !== undefined}))
                 to_get.push(id);
-            else
-                to_remember.push(cached);
         });
-        // for debuggin, test to see if all the ids we try to load from db are real ids
-        if (this.debug_mode)
+        if (this.debug_mode) {
+            // test to see if all the ids we try to load from db are real ids
             _.each(to_get, function(x) {
                 if(typeof(x) == "string") {
                     var test = self.virtual_id_regex.exec(x);
@@ -1418,8 +1445,37 @@ openerp.base.form.One2ManyDataset = openerp.base.DataSetStatic.extend({
                     }
                 }
             });
-        //TODO niv
-        this._super(ids, fields, callback);
+        };
+        var completion = $.Deferred();
+        $.when(completion).then(callback);
+        var return_records = function() {
+            var records = _.map(ids, function(id) {return _.detect(self.cache, function(c) {return c.id === id;}).values;});
+            if (self.debug_mode) {
+                if (_.include(records, undefined)) {
+                    throw "Record not correctly loaded";
+                }
+            }
+            completion.resolve(records);
+        }
+        if(to_get) {
+            var rpc_promise = this._super(to_get, fields, function(records) {
+                _.each(records, function(record, index) {
+                    var id = to_get[index];
+                    var cached = _.detect(self.cache, function(x) {return x.id === id;});
+                    if (!cached) {
+                        self.cache.push({id: id, values: record});
+                    } else {
+                        // I assume cache value is prioritary
+                        self.cached = $.extend({}, record, cached);
+                    }
+                });
+                return_records();
+            });
+            $.when(rpc_promise).fail(function() {completion.reject();});
+        } else {
+            return_records();
+        }
+        return completion.promise();
     },
 });
 
