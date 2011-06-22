@@ -1325,11 +1325,26 @@ class orm_template(object):
         return False
 
     def __view_look_dom(self, cr, user, node, view_id, context=None):
+        """ Return the description of the fields in the node.
+
+        In a normal call to this method, node is a complete view architecture
+        but it is actually possible to give some sub-node (this is used so
+        that the method can call itself recursively).
+
+        Originally, the field descriptions are drawn from the node itself.
+        But there is now some code calling fields_get() in order to merge some
+        of those information in the architecture.
+
+        """
         if context is None:
             context = {}
         result = False
         fields = {}
         children = True
+
+        modifiers = {}
+        if node.get('attrs'):
+            modifiers = eval(node.get('attrs')) # get the attrs before they are (possibly) deleted by check_group below
 
         def encode(s):
             if isinstance(s, unicode):
@@ -1344,6 +1359,7 @@ class orm_template(object):
                 can_see = any(access_pool.check_groups(cr, user, group) for group in groups)
                 if not can_see:
                     node.set('invisible', '1')
+                    modifiers.setdefault('invisible', '1')
                     if 'attrs' in node.attrib:
                         del(node.attrib['attrs']) #avoid making field visible later
                 del(node.attrib['groups'])
@@ -1415,6 +1431,15 @@ class orm_template(object):
                             attrs['selection'].append((False, ''))
                 fields[node.get('name')] = attrs
 
+                # TODO a true fields_get is unnecessary (no need for the translation)
+                field = self.fields_get(cr, user, [node.get('name')], context)[node.get('name')]
+                for a in ('invisible', 'readonly', 'required'):
+                    if field.get(a):
+                        modifiers[a] = field.get(a)
+                    # The view architeture overrides the python model.
+                    if node.get(a):
+                        modifiers[a] = node.get(a)
+
         elif node.tag in ('form', 'tree'):
             result = self.view_header_get(cr, user, False, node.tag, context)
             if result:
@@ -1454,6 +1479,8 @@ class orm_template(object):
             if children or (node.tag == 'field' and f.tag in ('filter','separator')):
                 fields.update(self.__view_look_dom(cr, user, f, view_id, context))
 
+        if modifiers:
+            node.set('modifiers', str(modifiers))
         return fields
 
     def _disable_workflow_buttons(self, cr, user, node):
@@ -1482,6 +1509,16 @@ class orm_template(object):
         return node
 
     def __view_look_dom_arch(self, cr, user, node, view_id, context=None):
+        """ Return an architecture and a description of all the fields.
+
+        The field description combines the result of fields_get() and
+        __view_look_dom().
+
+        :param node: the architecture as as an etree
+        :return: a tuple (arch, fields) where arch is the given node as a
+            string and fields is the description of all the fields.
+
+        """
         fields_def = self.__view_look_dom(cr, user, node, view_id, context=context)
         node = self._disable_workflow_buttons(cr, user, node)
         arch = etree.tostring(node, encoding="utf-8").replace('\t', '')
@@ -1515,6 +1552,7 @@ class orm_template(object):
     def __get_default_calendar_view(self):
         """Generate a default calendar view (For internal use only).
         """
+        # TODO could return an etree instead of a string
 
         arch = ('<?xml version="1.0" encoding="utf-8"?>\n'
                 '<calendar string="%s"') % (self._description)
@@ -1582,6 +1620,7 @@ class orm_template(object):
         for field_name in fields_to_search:
             field_group.append(etree.Element("field", attrib={'name': field_name}))
 
+        #TODO tostring can be removed as fromstring is call directly after...
         return etree.tostring(search_view, encoding="utf-8").replace('\t', '')
 
     #
