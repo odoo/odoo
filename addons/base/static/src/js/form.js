@@ -1518,8 +1518,6 @@ openerp.base.form.FieldMany2Many = openerp.base.form.Field.extend({
         this.dataset = new openerp.base.DataSetStatic(
                 this.session, this.field.relation);
         this.dataset.on_unlink.add_last(function(ids) {
-            self.list_view.reload_content();
-
             self.on_ui_change();
         });
 
