@@ -218,7 +218,7 @@ class users(osv.osv):
         'password': fields.char('Password', size=64, invisible=True, help="Keep empty if you don't want the user to be able to connect on the system."),
         'new_password': fields.function(_get_password, method=True, type='char', size=64,
                                 fnct_inv=_set_new_password,
-                                string='Change password', help="Only specify a value if you want to change the user password. "
+                                string='Set password', help="Only specify a value if you want to change the user password. "
                                 "This user will have to logout and login again!"),
         'email': fields.char('E-mail', size=64,
             help='If an email is provided, the user will be sent a message '
