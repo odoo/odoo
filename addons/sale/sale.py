@@ -1013,9 +1013,11 @@ class sale_order_line(osv.osv):
 
     def product_id_change(self, cr, uid, ids, pricelist, product, qty=0,
             uom=False, qty_uos=0, uos=False, name='', partner_id=False,
-            lang=False, update_tax=True, date_order=False, packaging=False, fiscal_position=False, flag=False):
+            lang=False, update_tax=True, date_order=False, packaging=False, fiscal_position=False, flag=False, context=None):
         if not  partner_id:
             raise osv.except_osv(_('No Customer Defined !'), _('You have to select a customer in the sales form !\nPlease set one customer before choosing a product.'))
+        if not context:
+            context = {}
         warning = {}
         warning_msgs = ''
         product_uom_obj = self.pool.get('product.uom')
@@ -1023,7 +1025,7 @@ class sale_order_line(osv.osv):
         product_obj = self.pool.get('product.product')
         if partner_id:
             lang = partner_obj.browse(cr, uid, partner_id).lang
-        context = {'lang': lang, 'partner_id': partner_id}
+        context.update({'lang': lang, 'partner_id': partner_id})
 
         if not product:
             return {'value': {'th_weight': 0, 'product_packaging': False,
@@ -1034,7 +1036,8 @@ class sale_order_line(osv.osv):
 
         result = {}
         product_obj = product_obj.browse(cr, uid, product, context=context)
-        if not packaging and product_obj.packaging:
+        from_packaging = context.get('from_packaging', False)
+        if not packaging and product_obj.packaging and not from_packaging:
             packaging = product_obj.packaging[0].id
             result['product_packaging'] = packaging
         
