@@ -143,7 +143,7 @@ class crm_lead(crm_case, osv.osv):
             domain="['|',('section_id','=',section_id),('section_id','=',False), ('object_id.model', '=', 'crm.lead')]"),
         'type_id': fields.many2one('crm.case.resource.type', 'Campaign', \
             domain="['|',('section_id','=',section_id),('section_id','=',False)]"),
-        'channel_id': fields.many2one('res.partner.canal', 'Channel'),
+        'channel_id': fields.many2one('res.partner.canal', 'Lead Source'),
 
         'contact_name': fields.char('Contact Name', size=64),
         'partner_name': fields.char("Customer Name", size=64,help='The name of the future partner that will be created while converting the into opportunity'),
