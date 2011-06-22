@@ -1040,6 +1040,9 @@ class sale_order_line(osv.osv):
         if not packaging and product_obj.packaging and not from_packaging:
             packaging = product_obj.packaging[0].id
             result['product_packaging'] = packaging
+        elif not product_obj.packaging:
+            packaging = False
+            result['product_packaging'] = False
         
         if packaging:
             default_uom = product_obj.uom_id and product_obj.uom_id.id
