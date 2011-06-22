@@ -102,7 +102,11 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
                 this.touched = true;
                 this.show_invalid = false;
                 for (var f in record) {
-                    this.on_form_changed(this.fields[f]);
+                    var field = this.fields[f];
+                    if (field) {
+                        field.touched = true;
+                        this.on_form_changed(field);
+                    }
                 }
             }
             this.on_form_changed();
