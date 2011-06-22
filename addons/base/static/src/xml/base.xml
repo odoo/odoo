@@ -871,10 +871,19 @@
     </div>
 </t>
 <t t-name="DialogWarning">
-    <p class="oe-dialog-warning">
-        <img src="/base/static/src/img/warning.png" class="oe-dialog-icon"/>
-        <t t-esc="error.data.fault_code.substr(18)"/>
-    </p>
+    <table cellspacing="0" cellpadding="0" border="0" class="oe-dialog-warning">
+    <tr>
+        <td><img src="/base/static/src/img/warning.png" class="oe-dialog-icon"/></td>
+        <td>
+            <p>
+                <t t-js="d">
+                    d.html_error = context.engine.tools.html_escape(d.error.data.fault_code).replace(/\n/g, '<br/>');
+                </t>
+                <t t-raw="html_error"/>
+            </p>
+        </td>
+    </tr>
+    </table>
 </t>
 <t t-name="DialogTraceback">
     <pre><t t-esc="error.message"/></pre>
