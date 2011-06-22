@@ -1305,7 +1305,6 @@ openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
         this.dataset = new openerp.base.form.One2ManyDataset(this.session, this.field.relation);
         this.dataset.on_change.add_last(function() {
             self.on_ui_change();
-            self.reload_current_view();
         });
 
         var modes = this.node.attrs.mode;
@@ -1374,6 +1373,23 @@ openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
     validate: function() {
         this.invalid = false;
         // TODO niv
+    }
+});
+
+openerp.base.form.One2ManyListView = openerp.base.ListView.extend({
+    do_add_record: function () {
+        var self = this;
+        var pop = new openerp.base.form.SelectCreatePopup(null, self.o2m.view.session);
+        pop.select_element(self.o2m.field.relation,{
+            initial_view: "form",
+            alternative_form_view: self.o2m.field.views ? self.o2m.field.views["form"] : undefined
+        });
+        pop.on_select_elements.add(function(element_ids) {
+            var ids = self.o2m.dataset.ids;
+            _.each(element_ids, function(x) {if (!_.include(ids, x)) ids.push(x);});
+            self.o2m.dataset.set_ids(ids);
+            self.o2m.reload_current_view();
+        });
     }
 });
 
@@ -1484,24 +1500,6 @@ openerp.base.form.One2ManyDataset = openerp.base.DataSetStatic.extend({
     },
 });
 
-openerp.base.form.One2ManyListView = openerp.base.ListView.extend({
-    do_add_record: function () {
-        var self = this;
-        var pop = new openerp.base.form.SelectCreatePopup(null, self.o2m.view.session);
-        pop.select_element(self.o2m.field.relation,{
-            initial_view: "form",
-            alternative_form_view: self.o2m.field.views ? self.o2m.field.views["form"] : undefined
-        });
-        pop.on_select_elements.add(function(element_ids) {
-            var ids = self.o2m.dataset.ids;
-            _.each(element_ids, function(x) {if (!_.include(ids, x)) ids.push(x);});
-            self.o2m.dataset.set_ids(ids);
-            self.o2m.on_ui_change();
-            self.o2m.reload_current_view();
-        });
-    }
-});
-
 openerp.base.form.FieldMany2Many = openerp.base.form.Field.extend({
     init: function(view, node) {
         this._super(view, node);
@@ -1517,7 +1515,7 @@ openerp.base.form.FieldMany2Many = openerp.base.form.Field.extend({
 
         this.dataset = new openerp.base.DataSetStatic(
                 this.session, this.field.relation);
-        this.dataset.on_unlink.add_last(function(ids) {
+        this.dataset.on_change.add_last(function(ids) {
             self.on_ui_change();
         });
 
