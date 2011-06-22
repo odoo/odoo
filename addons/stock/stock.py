@@ -978,7 +978,11 @@ class stock_picking(osv.osv):
 
             if not inv_type:
                 inv_type = self._get_invoice_type(picking)
-            account_id = partner.property_account_payable.id
+                
+            if inv_type in ('out_invoice', 'out_refund'):
+                account_id = partner.property_account_receivable.id
+            else:
+                account_id = partner.property_account_payable.id
             address_contact_id, address_invoice_id = \
                     self._get_address_invoice(cr, uid, picking).values()
             address = address_obj.browse(cr, uid, address_contact_id, context=context)
