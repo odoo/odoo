@@ -42,6 +42,7 @@ class google_import(import_framework):
 
     gd_client = False
     calendars = False
+    contact = False
     DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S"
     TABLE_CONTACT = 'Contact'
     TABLE_ADDRESS ='Address'
@@ -312,7 +313,28 @@ class google_import(import_framework):
             self.contact = next and self.gd_client.GetContactsFeed(next.href) or None
         return datas
 
-    def get_partner_address(self,val):
+
+
+    def get_address_id(self, val):
+        contact = self.xml_id_exist(self.TABLE_ADDRESS, val.get('id'))
+        if contact:
+            return str(contact)
+        return False
+
+    def get_contact_mapping(self):
+        return {
+            'model': 'res.partner',
+            'dependencies': [self.TABLE_ADDRESS],
+            'map': {
+                'id':'id',
+                'name': 'name',
+                'customer': 'customer',
+                'supplier': 'supplier',
+                'address/id': self.get_address_id,
+                }
+            }
+
+    def get_partner_id(self, val):
         partner_id = False
         address_pool = self.obj.pool.get('res.partner.address')
         company_pool = self.obj.pool.get('res.company')
@@ -323,31 +345,11 @@ class google_import(import_framework):
                 for rec in records:
                     if rec.partner_id:
                         partner_id = rec.partner_id
-        field_map = {
-            'name': 'name',
-            'type': 'Type',
-            'city': 'city',
-            'phone': 'phone',
-            'mobile': 'mobile',
-            'email': 'email',
-            'fax': 'fax',
-        }
-        val.update({'Type':'contact'})
-        val.update({'id_new': val['id']+'address_contact' })
-        return self.import_object_mapping(field_map , val, 'res.partner.address', self.context.get('table')[0], val['id_new'], self.DO_NOT_FIND_DOMAIN)
-
-    def get_contact_mapping(self):
-        return {
-            'model': 'res.partner',
-            'dependencies': [],
-            'map': {
-                'id':'id',
-                'name': 'name',
-                'customer': 'customer',
-                'supplier': 'supplier',
-                'address/id': self.get_partner_address,
-                }
-            }
+            return partner_id
+        contact = self.xml_id_exist(self.TABLE_CONTACT, val.get('id'))
+        if contact:
+            partner_id = self.get_mapped_id(self.TABLE_CONTACT, val.get('id'))
+        return partner_id
 
     def get_address_mapping(self):
         return {
@@ -355,6 +357,7 @@ class google_import(import_framework):
             'dependencies': [],
             'map': {
                 'id':'id',
+                'partner_id/.id': self.get_partner_id,
                 'name': 'name',
                 'city': 'city',
                 'phone': 'phone',
