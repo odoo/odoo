@@ -310,9 +310,10 @@ openerp.base.DataSet =  openerp.base.Controller.extend( /** @lends openerp.base.
             context: this.context
         }, callback);
     },
-    unlink: function(ids) {
-        // to implement in children
-        this.notification.notify("Unlink", ids);
+    unlink: function(ids, callback, error_callback) {
+        var self = this;
+        return this.call_and_eval("unlink", [ids, this.context], null, 1,
+            callback, error_callback);
     },
     call: function (method, args, callback, error_callback) {
         return this.rpc('/base/dataset/call', {
@@ -362,9 +363,12 @@ openerp.base.DataSetStatic =  openerp.base.DataSet.extend({
     set_ids: function (ids) {
         this.ids = ids;
         this.count = this.ids.length;
+        this.index = this.index <= this.count - 1 ?
+            this.index : (this.count > 0 ? this.count - 1 : 0);
     },
     unlink: function(ids) {
         this.on_unlink(ids);
+        return $.Deferred().resolve({result: true});
     },
     on_unlink: function(ids) {
         this.set_ids(_.without.apply(null, [this.ids].concat(ids)));
@@ -438,6 +442,17 @@ openerp.base.DataSetSearch =  openerp.base.DataSet.extend({
 
         this._sort.unshift((reverse ? '-' : '') + field);
         return undefined;
+    },
+    unlink: function(ids, callback, error_callback) {
+        var self = this;
+        return this._super(ids, function(result) {
+            self.ids = _.without.apply(_, [self.ids].concat(ids));
+            self.count = self.ids.length;
+            self.index = self.index <= self.count - 1 ?
+                self.index : (self.count > 0 ? self.count -1 : 0);
+            if (callback)
+                callback(result);
+        }, error_callback);
     }
 });
 
