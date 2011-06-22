@@ -57,6 +57,7 @@ init: function(view_manager, session, element_id, dataset, view_id) {
         this.parent = this.fields_view.arch.children[0].attrs.link;
 
         this.format = "yyyy-MM-dd";
+        this.grp = [];
 
         self.create_gantt();
         self.get_events();
@@ -74,12 +75,6 @@ init: function(view_manager, session, element_id, dataset, view_id) {
         ganttChartControl.showContextMenu(true);
         ganttChartControl.showDescTask(true,'d,s-f');
         ganttChartControl.showDescProject(true,'n,d');
-        
-        jQuery(".toggle-sidebar").click(function(e) {
-            var $gantt_panel = jQuery(".ganttTaskPanel , .ganttDayPanel");
-            $gantt_panel.width(100);
-            $gantt_panel.width(jQuery("#oe_app_search").width() - 150);
-        });
 
     },
 
@@ -264,6 +259,16 @@ init: function(view_manager, session, element_id, dataset, view_id) {
                 prt.addChildTask(task);
             }
         }
+        oth_hgt = 264;
+        min_hgt = 150;
+        gantt_hgt = jQuery(window).height() - oth_hgt;
+        search_wdt = jQuery("#oe_app_search").width();
+
+        if (gantt_hgt > min_hgt){
+            jQuery('#GanttDiv').height(gantt_hgt).width(search_wdt);
+        } else{
+            jQuery('#GanttDiv').height(min_hgt).width(search_wdt);
+        }
 
         ganttChartControl.create("GanttDiv");
         ganttChartControl.attachEvent("onTaskStartDrag", function(task) {self.on_drag_start(task);});
@@ -271,7 +276,46 @@ init: function(view_manager, session, element_id, dataset, view_id) {
         ganttChartControl.attachEvent("onTaskEndDrag", function(task) {self.on_resize_drag_end(task, "drag");});
         ganttChartControl.attachEvent("onTaskDblClick", function(task) {self.open_popup(task);});
 
+        taskdiv = jQuery("div.taskPanel").parent();
+        taskdiv.addClass('ganttTaskPanel');
+        taskdiv.prev().addClass('ganttDayPanel');
+        $gantt_panel = jQuery(".ganttTaskPanel , .ganttDayPanel");
+
+        ganttrow = jQuery('.taskPanel').closest('tr');
+        gtd =  ganttrow.children(':first-child');
+        gtd.children().addClass('task-name');
+
+        jQuery(".toggle-sidebar").click(function(e) {
+            self.set_width();
+        });
+
+        jQuery(window).bind('resize', function () {
+
+            gantt_hgt = jQuery(window).height() - oth_hgt;
+
+            if (gantt_hgt < min_hgt){
+                gantt_hgt = min_hgt;
+            }
+            jQuery('#GanttDiv').height(gantt_hgt);
+            jQuery('.task-name').height(gantt_hgt - 40);
+            taskdiv.height(gantt_hgt - 40);
+            if (taskdiv.height() > jQuery('.taskPanel').height()){
+                jQuery('.taskPanel').height(taskdiv.height());
+                jQuery('.task-name').children().height(taskdiv.height());
+            }
+            self.set_width();
+        });
+
         jQuery("div #_1, div #_1 + div").hide();
+    },
+
+    set_width: function() {
+        $gantt_panel.width(100);
+        jQuery('#GanttDiv').css('width','100%');
+        $gantt_panel.width(jQuery("#oe_app_search").width() - 150);
+        if (taskdiv.width() > taskdiv.children().width()){
+            taskdiv.children().width(taskdiv.width());
+        }
     },
 
     end_date: function(dat, duration) {

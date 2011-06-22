@@ -2844,7 +2844,7 @@ GanttChart.prototype.create = function(divId)
     var newCellTblControl;
 
     //Add to content Table
-    this.contentHeight = screen.height * 0.3;
+    this.contentHeight = content.offsetHeight;
     this.contentWidth = content.offsetWidth;
     content.appendChild(tableControl);
 
@@ -2891,8 +2891,6 @@ GanttChart.prototype.create = function(divId)
     if (this._showTreePanel) {
         this.panelNames.style.height = (this.contentHeight - 56) + "px";
         this.panelNames.style.width = this.maxWidthPanelNames + "px";
-        this.panelTime.className = "ganttDayPanel";
-        this.oData.className = "ganttTaskPanel"; 
         this.oData.style.width = (this.contentWidth - this.maxWidthPanelNames) + "px";
         this.panelTasks.style.width = this.dayInPixels * this.countDays + "px";
         this.panelTime.style.width = (this.contentWidth - this.maxWidthPanelNames - 0*18) + "px";
