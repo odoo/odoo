@@ -90,7 +90,7 @@
                             t-att-value="selected_password || ''"/></td>
                     </tr>
                     <tr t-if="has_local_storage">
-                        <td><label for="remember">Rember password:</label></td>
+                        <td><label for="remember">Remember password:</label></td>
                         <td class="oe_remember">
                             <t t-if="remember">
                             <input type="checkbox" name="remember" checked="yes"/>
@@ -804,6 +804,7 @@
         </div>
         <a class="searchview_extended_add_proposition" href="javascript:void(0)">
             <span>Add condition</span></a>
+        <div class="oe_adv_filters_and"><span>and</span></div>
     </div>
 </t>
 <t t-name="SearchView.extended_search.proposition">
@@ -870,12 +871,15 @@
     </div>
 </t>
 <t t-name="DialogWarning">
-    <div id="dialog-message" t-att-title="title">
-        <p>
-            <span class="ui-icon ui-icon-circle-check" style="float:left; margin:0 7px 50px 0;"></span>
-            <t t-esc="message"/>
-        </p>
-    </div>
+    <p class="oe-dialog-warning">
+        <img src="/base/static/src/img/warning.png" class="oe-dialog-icon"/>
+        <t t-esc="error.data.fault_code.substr(18)"/>
+    </p>
+</t>
+<t t-name="DialogTraceback">
+    <pre><t t-esc="error.message"/></pre>
+    <hr/>
+    <pre><t t-esc="error.data.debug"/></pre>
 </t>
 <t t-name="SelectCreatePopup">
     <div t-att-id="element_id">

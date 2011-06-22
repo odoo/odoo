@@ -35,10 +35,10 @@ var QWeb2 = {
             return (noquotes ? '' : "'") + s.replace(/\r?\n/g, "\\n").replace(/'/g, "\\'") + (noquotes ? '' : "'");
         },
         html_escape: function(s, attribute) {
-            if (s === null || s === undefined) {
+            if (s == null) {
                 return '';
             }
-            s = (new String(s)).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            s = String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
             if (attribute) {
                 s = s.replace(/"/g, '&quot;');
             }
@@ -48,7 +48,7 @@ var QWeb2 = {
             if (o !== null && o !== undefined) {
                 if (o.constructor === Array) {
                     if (o[1] !== null && o[1] !== undefined) {
-                        return ' ' + o[0] + '="' + this.html_escape(o[1]) + '"';
+                        return ' ' + o[0] + '="' + this.html_escape(o[1], true) + '"';
                     }
                 } else if (typeof o === 'object') {
                     var r = '';

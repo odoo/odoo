@@ -1,4 +1,3 @@
-
 openerp.base.form = function (openerp) {
 
 openerp.base.views.add('form', 'openerp.base.FormView');
@@ -43,8 +42,12 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
         if (this.embedded_view) {
             return $.Deferred().then(this.on_loaded).resolve({fields_view: this.embedded_view});
         } else {
+            var context = new openerp.base.CompoundContext(this.dataset.context);
+            if (this.view_manager.action && this.view_manager.action.context) {
+                context.add(this.view_manager.action.context);
+            }
             return this.rpc("/base/formview/load", {"model": this.model, "view_id": this.view_id,
-                toolbar:!!this.flags.sidebar}, this.on_loaded);
+                toolbar:!!this.flags.sidebar, context: context}, this.on_loaded);
         }
     },
     on_loaded: function(data) {
@@ -226,8 +229,12 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
     },
     on_button_new: function() {
         var self = this;
+        var context = new openerp.base.CompoundContext(this.dataset.context);
+        if (this.view_manager.action && this.view_manager.action.context) {
+            context.add(this.view_manager.action.context);
+        }
         $.when(this.has_been_loaded).then(function() {
-            self.dataset.default_get(_.keys(self.fields_view.fields), function(result) {
+            self.dataset.default_get(_.keys(self.fields_view.fields), context, function(result) {
                 self.on_record_loaded(result.result);
             });
         });
@@ -299,6 +306,7 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
             if (success) {
                 success(r);
             }
+            this.reload();
         }
     },
     /**
@@ -333,6 +341,7 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
             if (success) {
                 success(_.extend(r, {created: true}));
             }
+            this.reload();
         }
     },
     do_search: function (domains, contexts, groupbys) {
@@ -995,7 +1004,7 @@ openerp.base.form.FieldSelection = openerp.base.form.Field.extend({
         if (value != null && value !== false) {
             this.$element.find('select').val(value);
         } else {
-            this.$element.find('select')[0].selectedIndex = 0;
+            this.$element.find('select').val('false');
         }
     },
     set_value_from_ui: function() {
