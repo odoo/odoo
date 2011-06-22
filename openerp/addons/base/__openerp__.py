@@ -71,7 +71,6 @@
         'res/partner/wizard/partner_clear_ids_view.xml',
         'res/partner/wizard/partner_wizard_ean_check_view.xml',
         'res/partner/partner_data.xml',
-        'test/test_edi_document.yml',
         'res/ir_property_view.xml',
         'security/base_security.xml',
         'publisher_warranty/publisher_warranty_view.xml',
@@ -96,6 +95,7 @@
         'test/test_ir_rule.yml', # <-- These tests modify/add/delete ir_rules.
         'test/test_config_users.yml',
         'test/test_ir_values.yml',
+        'test/test_edi_documents.yml',
         
     ],
     'installable': True,

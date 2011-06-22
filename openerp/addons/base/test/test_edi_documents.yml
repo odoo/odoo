@@ -4,13 +4,11 @@
   !python {model: ir.edi.document}: |
     partner_obj = self.pool.get('res.partner')
     partner_ids = partner_obj.search(cr, uid, [])
-    
     if partner_ids:
       partners = partner_obj.browse(cr, uid, partner_ids)
       tokens = self.export_edi(cr, uid, partners)
-      print '>>>>>>>>>>',tokens
     for token in tokens:
       document = self.get_document(cr, uid, token, context=context)
       a = self.import_edi(cr, uid, edi_document = document)
-      print '////////////',a
+      
 
