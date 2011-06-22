@@ -349,10 +349,6 @@ class hr_employee(osv.osv):
         return True
 
    def _get_remaining_days(self, cr, uid, ids, name, args, context=None):
-        type_obj = self.pool.get('hr.holidays.status')
-        status_ids = type_obj.search(cr, uid, [('limit', '=', False)], context=context)
-        if len(status_ids) != 1 :
-            raise osv.except_osv(_('Warning !'),_("You should have only one leave type without the option 'Allow to Override Limit' set. (%s Found).") % (len(status_ids)))
         cr.execute("SELECT sum(h.number_of_days_temp) as days, h.employee_id from hr_holidays h join hr_holidays_status s on (s.id=h.holiday_status_id) where h.type='add' and h.state='validate' and s.limit=False group by h.employee_id")
         res = cr.dictfetchall()
         remaining = {}
