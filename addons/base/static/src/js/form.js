@@ -1280,7 +1280,7 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
             var dataset = new openerp.base.DataSetStatic(this.session, this.field.relation, []);
             dataset.call("name_get", [value], function(data) {
                 real_set_value(data.result[0]);
-            });
+            }).fail(function() {self.tmp_value = undefined;});
         } else {
             setTimeout(function() {real_set_value(value);}, 0);
         }
@@ -1486,9 +1486,10 @@ openerp.base.form.One2ManyDataset = openerp.base.DataSetStatic.extend({
         var return_records = function() {
             var records = _.map(ids, function(id) {return _.detect(self.cache, function(c) {return c.id === id;}).values;});
             // avoid giving fields that were not asked for (+ create a copy of the cache)
+            var fields_plus_id = fields.concat(["id"]);
             records = _.map(records, function(record) {
                 var tmp = {};
-                _.each(fields, function(field) {
+                _.each(fields_plus_id, function(field) {
                     tmp[field] = record[field];
                 });
                 return tmp;
