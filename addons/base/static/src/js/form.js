@@ -1402,7 +1402,9 @@ openerp.base.form.One2ManyDataset = openerp.base.DataSetStatic.extend({
         this.to_create.push(cached);
         this.cache.push(cached);
         this.on_change();
-        return $.Deferred().then(callback).resolve({result: cached.id}).promise();
+        var to_return =  $.Deferred().then(callback);
+        setTimeout(function() {to_return.resolve({result: cached.id});}, 0);
+        return to_return.promise();
     },
     write: function (id, data, callback) {
         var record = _.select(this.to_create, function(x) {return x.id === id;});
@@ -1416,9 +1418,11 @@ openerp.base.form.One2ManyDataset = openerp.base.DataSetStatic.extend({
         var cached = _.select(this.cache, function(x) {return x.id === id;});
         $.extend(cached.value, record.values);
         this.on_change();
-        return $.Deferred().then(callback).resolve({result: true}).promise();
+        var to_return = $.Deferred().then(callback);
+        setTimeout(function () {to_return.resolve({result: true});}, 0);
+        return to_return.promise();
     },
-    unlink: function(ids) {
+    unlink: function(ids, callback, error_callback) {
         var self = this;
         var to_create_size = this.to_create.length;
         var remove = function(list, to_remove) {
@@ -1432,6 +1436,9 @@ openerp.base.form.One2ManyDataset = openerp.base.DataSetStatic.extend({
             _.each(ids, function(x) {self.to_delete.push({id:x})});
         }
         this.on_change();
+        var to_return = $.Deferred().then(callback);
+        setTimeout(function () {to_return.resolve({result: true});}, 0);
+        return to_return.promise();
     },
     reset_ids: function(ids) {
         this.set_ids(ids);
@@ -1457,12 +1464,20 @@ openerp.base.form.One2ManyDataset = openerp.base.DataSetStatic.extend({
         var completion = $.Deferred().then(callback);
         var return_records = function() {
             var records = _.map(ids, function(id) {return _.detect(self.cache, function(c) {return c.id === id;}).values;});
+            // avoid giving fields that were not asked for (+ create a copy of the cache)
+            records = _.map(records, function(record) {
+                var tmp = {};
+                _.each(fields, function(field) {
+                    tmp[field] = record[field];
+                });
+                return tmp;
+            });
             if (self.debug_mode) {
                 if (_.include(records, undefined)) {
                     throw "Record not correctly loaded";
                 }
             }
-            completion.resolve(records);
+            setTimeout(function () {completion.resolve(records);}, 0);
         }
         if(to_get.length > 0) {
             var rpc_promise = this._super(to_get, fields, function(records) {
