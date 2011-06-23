@@ -1441,16 +1441,17 @@ openerp.base.form.One2ManyDataset = openerp.base.DataSetStatic.extend({
         return to_return.promise();
     },
     write: function (id, data, callback) {
-        var record = _.select(this.to_create, function(x) {return x.id === id;});
-        record = record || _.select(this.to_write, function(x) {return x.id === id;});
+        var self = this;
+        var record = _.detect(this.to_create, function(x) {return x.id === id;});
+        record = record || _.detect(this.to_write, function(x) {return x.id === id;});
         if (record) {
-            $.extend(previous.value, data);
+            $.extend(record.values, data);
         } else {
             record = {id: id, values: data};
             self.to_write.push(record);
         }
-        var cached = _.select(this.cache, function(x) {return x.id === id;});
-        $.extend(cached.value, record.values);
+        var cached = _.detect(this.cache, function(x) {return x.id === id;});
+        $.extend(cached.values, record.values);
         this.on_change();
         var to_return = $.Deferred().then(callback);
         setTimeout(function () {to_return.resolve({result: true});}, 0);
@@ -1458,17 +1459,15 @@ openerp.base.form.One2ManyDataset = openerp.base.DataSetStatic.extend({
     },
     unlink: function(ids, callback, error_callback) {
         var self = this;
-        var to_create_size = this.to_create.length;
-        var remove = function(list, to_remove) {
-            return _.reject(list, function(x) { return _.include(to_remove, x.id);});
-        };
-        this.to_create = remove(this.to_create);
-        this.to_write = remove(this.to_write);
-        this.cache = remove(this.cache);
+        _.each(ids, function(id) {
+            if (! _.detect(self.to_create, function(x) { return x.id === id; })) {
+                self.to_delete.push({id: id})
+            }
+        });
+        this.to_create = _.reject(this.to_create, function(x) { return _.include(ids, x.id);});
+        this.to_write = _.reject(this.to_write, function(x) { return _.include(ids, x.id);});
+        this.cache = _.reject(this.cache, function(x) { return _.include(ids, x.id);});
         this.set_ids(_.without.apply(_, [this.ids].concat(ids)));
-        if (this.to_create == to_create_size) {
-            _.each(ids, function(x) {self.to_delete.push({id:x})});
-        }
         this.on_change();
         var to_return = $.Deferred().then(callback);
         setTimeout(function () {to_return.resolve({result: true});}, 0);
@@ -1497,15 +1496,8 @@ openerp.base.form.One2ManyDataset = openerp.base.DataSetStatic.extend({
         });
         var completion = $.Deferred().then(callback);
         var return_records = function() {
-            var records = _.map(ids, function(id) {return _.detect(self.cache, function(c) {return c.id === id;}).values;});
-            // avoid giving fields that were not asked for (+ create a copy of the cache)
-            var fields_plus_id = fields.concat(["id"]);
-            records = _.map(records, function(record) {
-                var tmp = {};
-                _.each(fields_plus_id, function(field) {
-                    tmp[field] = record[field];
-                });
-                return tmp;
+            var records = _.map(ids, function(id) {
+                return _.extend({}, _.detect(self.cache, function(c) {return c.id === id;}).values, {"id": id});
             });
             if (self.debug_mode) {
                 if (_.include(records, undefined)) {
