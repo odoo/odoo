@@ -1396,8 +1396,10 @@ openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
         });
     },
     get_value: function() {
-        var val = _.map(this.dataset.to_delete, function(v, k) {return [2, parseInt(k, 10)];});
-        var val = val.concat(_.map(this.dataset.to_create, function(x) {return [0, 0, x];}));
+        var val = _.map(this.dataset.to_delete, function(v, k) {return [2, x.id];});
+        val = val.concat(_.map(this.dataset.to_create, function(x) {return [0, 0, x.values];}));
+        val = val.concat(_.map(this.dataset.to_write, function(x) {return [1, x.id, x.values];}));
+        debugger;
         return val;
     },
     validate: function() {
