@@ -1,8 +1,8 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -15,29 +15,32 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
 from osv import osv, fields
-import time
 
 class account_invoice(osv.osv):
+
     _inherit = 'account.invoice'
-    def line_get_convert(self, cr, uid, x, part, date, context={}):
-        res = super(account_invoice, self).line_get_convert(cr, uid, x, part, date, context)
+    def line_get_convert(self, cr, uid, x, part, date, context=None):
+        res = super(account_invoice, self).line_get_convert(cr, uid, x, part, date, context=context)
         res['asset_id'] = x.get('asset_id', False)
         return res
+
 account_invoice()
 
 class account_invoice_line(osv.osv):
+
     _inherit = 'account.invoice.line'
     _columns = {
         'asset_category_id': fields.many2one('account.asset.category', 'Asset Category'),
     }
-    def move_line_get_item(self, cr, uid, line, context={}):
+
+    def move_line_get_item(self, cr, uid, line, context=None):
         asset_obj = self.pool.get('account.asset.asset')
-        res = super(account_invoice_line, self).move_line_get_item(cr, uid, line, context)
+        res = super(account_invoice_line, self).move_line_get_item(cr, uid, line, context=context)
         if line.invoice_id and line.invoice_id.type not in ('out_invoice', 'out_refund') and line.asset_category_id:
                 vals = {
                     'name': line.product_id and (line.name + ": " + line.product_id.name) or line.name,
@@ -52,7 +55,7 @@ class account_invoice_line(osv.osv):
                 if line.asset_category_id.open_asset:
                     asset_obj.validate(cr, uid, [asset_id], context=context)
         return res
+
 account_invoice_line()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
