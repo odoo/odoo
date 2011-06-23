@@ -70,7 +70,7 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
      * @returns {Number|null}
      */
     limit: function () {
-        if (!this._limit) {
+        if (this._limit === undefined) {
             this._limit = (this.options.limit
                         || this.defaults.limit
                         || (this.view_manager.action || {}).limit
@@ -186,7 +186,23 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
             }).find('.oe-pager-state')
                 .click(function (e) {
                     e.stopPropagation();
-                    // TODO: pagination setup thingie
+                    var $this = $(this);
+
+                    var $select = $('<select>')
+                        .appendTo($this.empty())
+                        .click(function (e) {e.stopPropagation();})
+                        .append('<option value="80">80</option>' +
+                                '<option value="100">100</option>' +
+                                '<option value="200">200</option>' +
+                                '<option value="500">500</option>' +
+                                '<option value="NaN">Unlimited</option>')
+                        .change(function () {
+                            var val = parseInt($select.val(), 10);
+                            self._limit = (isNaN(val) ? null : val);
+                            self.page = 0;
+                            self.reload_content();
+                        })
+                        .val(self._limit || 'NaN');
                 });
 
         this.view_manager.sidebar.set_toolbar(data.fields_view.toolbar);
@@ -204,8 +220,13 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
         var limit = this.limit(),
             total = dataset.ids.length,
             first = (this.page * limit),
-             last = ((total - first) < limit) ? total : first + limit;
-        this.$element.find('span.oe-pager-state').text(_.sprintf(
+            last;
+        if (!limit || (total - first) < limit) {
+            last = total;
+        } else {
+            last = first + limit;
+        }
+        this.$element.find('span.oe-pager-state').empty().text(_.sprintf(
             "[%d to %d] of %d", first + 1, last, total));
 
         this.$element
