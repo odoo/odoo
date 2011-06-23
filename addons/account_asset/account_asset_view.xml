@@ -124,7 +124,7 @@
                  </page>
                  <page string="Notes">
                     <field name="note" nolabel="1"/>
-                 </page>    
+                 </page>
               </notebook>
               <field name="state" readonly="1"/>
               <group colspan="2" col="2">
@@ -168,39 +168,6 @@
         </field>
     </record>
 
-    <record model="ir.ui.view" id="view_account_asset_board_form">
-        <field name="name">account.asset.board.form</field>
-        <field name="model">account.asset.board</field>
-        <field name="type">form</field>
-        <field name="arch" type="xml">
-            <form string="Asset board">
-                <field name="name" select="1"/>
-                <field name="asset_id" select="1"/>
-                   <field name="value_gross" select="2"/>
-                <field name="value_asset"/>
-                <field name="value_asset_cumul"/>
-                <field name="value_net"/>
-        <field name="test"/>
-            </form>
-        </field>
-    </record>
-
-    <record model="ir.ui.view" id="view_account_asset_board_tree">
-        <field name="name">account.asset.board.tree</field>
-        <field name="model">account.asset.board</field>
-        <field name="type">tree</field>
-        <field name="arch" type="xml">
-            <tree string="Asset board">
-                <field name="name"/>
-                <field name="asset_id"/>
-                <field name="value_gross"/>
-                <field name="value_asset"/>
-                <field name="value_asset_cumul"/>
-                <field name="value_net"/>
-        <field name="test"/>
-            </tree>
-        </field>
-    </record>
 
     <record model="ir.ui.view" id="view_account_asset_asset_tree">
         <field name="name">account.asset.asset.tree</field>
