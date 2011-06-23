@@ -235,7 +235,7 @@ openerp.base.DataSet =  openerp.base.Controller.extend( /** @lends openerp.base.
         this._super(session);
         this.model = model;
         this.context = context || {};
-        this.index = 0;
+        this.index = null;
         this.count = 0;
     },
     start: function() {
