@@ -876,7 +876,7 @@ openerp.base.form.FieldDatetime = openerp.base.form.Field.extend({
         }
     },
     validate: function() {
-        this.invalid = this.required && this.$element.find('input')[this.jqueryui_object]('getDate') === '';
+        this.invalid = this.required && !this.$element.find('input')[this.jqueryui_object]('getDate');
     },
     focus: function() {
         this.$element.find('input').focus();
