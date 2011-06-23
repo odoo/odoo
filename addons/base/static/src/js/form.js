@@ -36,6 +36,7 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
         this.default_focus_button = null;
         this.registry = openerp.base.form.widgets;
         this.has_been_loaded = $.Deferred();
+        this.$form_header = null;
     },
     start: function() {
         //this.log('Starting FormView '+this.model+this.view_id)
@@ -59,76 +60,80 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
         _.each(this.widgets, function(w) {
             w.start();
         });
-        this.$element.find('div.oe_form_pager button[data-pager-action]').click(function() {
+        this.$form_header = this.$element.find('#' + this.element_id + '_header');
+        this.$form_header.find('div.oe_form_pager button[data-pager-action]').click(function() {
             var action = $(this).data('pager-action');
             self.on_pager_action(action);
         });
 
-        this.$element.find('#' + this.element_id + '_header button.oe_form_button_save').click(this.do_save);
-        this.$element.find('#' + this.element_id + '_header button.oe_form_button_save_edit').click(this.do_save_edit);
-        this.$element.find('#' + this.element_id + '_header button.oe_form_button_cancel').click(this.do_cancel);
-        this.$element.find('#' + this.element_id + '_header button.oe_form_button_new').click(this.on_button_new);
+        this.$form_header.find('button.oe_form_button_save').click(this.do_save);
+        this.$form_header.find('button.oe_form_button_save_edit').click(this.do_save_edit);
+        this.$form_header.find('button.oe_form_button_cancel').click(this.do_cancel);
+        this.$form_header.find('button.oe_form_button_new').click(this.on_button_new);
 
         this.view_manager.sidebar.set_toolbar(data.fields_view.toolbar);
         this.has_been_loaded.resolve();
     },
     do_show: function () {
         var self = this;
-        self.$element.show();
-        if (this.dataset.index === null || (this.dataset.index === 0 && this.dataset.ids.length == 0)) {
+        if (this.dataset.index === null) {
             // null index means we should start a new record
-            // 0 index with empty ids means we called the form with empty dataset (wizards, switched to form from empty list, ...)
             this.on_button_new();
         } else {
             this.dataset.read_index(_.keys(this.fields_view.fields), this.on_record_loaded);
         }
+        self.$element.show();
         this.view_manager.sidebar.do_refresh(true);
     },
     do_hide: function () {
         this.$element.hide();
     },
     on_record_loaded: function(record) {
+        if (!record) {
+            throw("Form: No record received");
+        }
+        if (!record.id) {
+            this.$form_header.find('.oe_form_on_create').show();
+            this.$form_header.find('.oe_form_on_update').hide();
+            this.$form_header.find('button.oe_form_button_new').hide();
+        } else {
+            this.$form_header.find('.oe_form_on_create').hide();
+            this.$form_header.find('.oe_form_on_update').show();
+            this.$form_header.find('button.oe_form_button_new').show();
+        }
         this.touched = false;
-        if (record) {
-            this.datarecord = record;
-            for (var f in this.fields) {
+        this.datarecord = record;
+        for (var f in this.fields) {
+            var field = this.fields[f];
+            field.touched = false;
+            field.set_value(this.datarecord[f] || false);
+            field.validate();
+        }
+        if (!record.id) {
+            // New record: Second pass in order to trigger the onchanges
+            this.touched = true;
+            this.show_invalid = false;
+            for (var f in record) {
                 var field = this.fields[f];
-                field.touched = false;
-                field.set_value(this.datarecord[f] || false);
-                field.validate();
-            }
-            if (!record.id) {
-                // New record: Second pass in order to trigger the onchanges
-                this.touched = true;
-                this.show_invalid = false;
-                for (var f in record) {
-                    var field = this.fields[f];
-                    if (field) {
-                        field.touched = true;
-                        this.on_form_changed(field);
-                    }
+                if (field) {
+                    field.touched = true;
+                    this.do_onchange(field);
                 }
             }
-            this.on_form_changed();
-            this.show_invalid = this.ready = true;
-        } else {
-            this.log("No record received");
         }
+        this.on_form_changed();
+        this.show_invalid = this.ready = true;
         this.do_update_pager(record.id == null);
         this.do_update_sidebar();
         if (this.default_focus_field) {
             this.default_focus_field.focus();
         }
     },
-    on_form_changed: function(widget) {
-        if (widget && widget.node.attrs.on_change) {
-            this.do_onchange(widget);
-        } else {
-            for (var w in this.widgets) {
-                w = this.widgets[w];
-                w.process_attrs();
-                w.update_dom();
-            }
+    on_form_changed: function() {
+        for (var w in this.widgets) {
+            w = this.widgets[w];
+            w.process_attrs();
+            w.update_dom();
         }
     },
     on_pager_action: function(action) {
@@ -161,6 +166,7 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
             this.ready = false;
             var onchange = _.trim(widget.node.attrs.on_change);
             var call = onchange.match(/^\s?(.*?)\((.*?)\)\s?$/);
+            console.log("Onchange triggered for field '%s' -> %s", widget.name, onchange);
             if (call) {
                 var method = call[1], args = [];
                 var argument_replacement = {
@@ -199,12 +205,14 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
     on_processed_onchange: function(response, processed) {
         var result = response.result;
         if (result.value) {
+            console.log("      |-> Onchange Response :", result.value);
             for (var f in result.value) {
                 var field = this.fields[f];
                 if (field) {
                     var value = result.value[f];
                     processed.push(field.name);
                     if (field.get_value() != value) {
+                        console.log("          |-> Onchange Action :  change '%s' value from '%s' to '%s'", field.name, field.get_value(), value);
                         field.set_value(value);
                         if (_.indexOf(processed, field.name) < 0) {
                             this.do_onchange(field, processed);
@@ -728,7 +736,8 @@ openerp.base.form.Field = openerp.base.form.Widget.extend({
         this.validate();
         if (!this.invalid) {
             this.set_value_from_ui();
-            this.view.on_form_changed(this);
+            this.view.do_onchange(this);
+            this.view.on_form_changed();
         } else {
             this.update_dom();
         }
