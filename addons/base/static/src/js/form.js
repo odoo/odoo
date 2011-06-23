@@ -1399,13 +1399,15 @@ openerp.base.form.One2ManyListView = openerp.base.ListView.extend({
         var pop = new openerp.base.form.SelectCreatePopup(null, self.o2m.view.session);
         pop.select_element(self.o2m.field.relation,{
             initial_view: "form",
-            alternative_form_view: self.o2m.field.views ? self.o2m.field.views["form"] : undefined
+            alternative_form_view: self.o2m.field.views ? self.o2m.field.views["form"] : undefined,
+            auto_create: false
         });
-        pop.on_select_elements.add(function(element_ids) {
-            var ids = self.o2m.dataset.ids;
-            _.each(element_ids, function(x) {if (!_.include(ids, x)) ids.push(x);});
-            self.o2m.dataset.set_ids(ids);
-            self.o2m.reload_current_view();
+        pop.on_create.add(function(data) {
+            self.o2m.dataset.create(data, function(r) {
+                self.o2m.dataset.set_ids(self.o2m.dataset.ids.concat([r.result]));
+                pop.stop();
+                self.o2m.reload_current_view();
+            });
         });
     }
 });
@@ -1559,7 +1561,6 @@ openerp.base.form.SelectCreatePopup = openerp.base.BaseWidget.extend({
         this.searchview.start();
     },
     on_create: function(data) {
-        debugger;
         if (!this.options.auto_create)
             return;
         var self = this;
