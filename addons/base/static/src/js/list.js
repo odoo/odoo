@@ -939,6 +939,7 @@ openerp.base.ListView.Groups = Class.extend( /** @lends openerp.base.ListView.Gr
     },
     render_dataset: function (dataset) {
         var rows = [],
+            self = this,
             list = new openerp.base.ListView.List(this, {
                 options: this.options,
                 columns: this.columns,
@@ -954,7 +955,9 @@ openerp.base.ListView.Groups = Class.extend( /** @lends openerp.base.ListView.Gr
             _.filter(_.pluck(this.columns, 'name'), _.identity),
             view.page * limit, limit,
             function (records) {
-                view.configure_pager(dataset);
+                if (!self.datagroup.openable) {
+                    view.configure_pager(dataset);
+                }
 
                 var form_records = _(records).map(
                     $.proxy(list, 'transform_record'));
