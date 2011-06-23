@@ -19,24 +19,25 @@
 #
 ##############################################################################
 
-#
-# Object relationnal mapping to postgresql module
-#    . Hierarchical structure
-#    . Constraints consistency, validations
-#    . Object meta Data depends on its status
-#    . Optimised processing by complex query (multiple actions at once)
-#    . Default fields value
-#    . Permissions optimisation
-#    . Persistant object: DB postgresql
-#    . Datas conversions
-#    . Multi-level caching system
-#    . 2 different inheritancies
-#    . Fields:
-#         - classicals (varchar, integer, boolean, ...)
-#         - relations (one2many, many2one, many2many)
-#         - functions
-#
-#
+"""
+  Object relational mapping to database (postgresql) module
+     * Hierarchical structure
+     * Constraints consistency, validations
+     * Object meta Data depends on its status
+     * Optimised processing by complex query (multiple actions at once)
+     * Default fields value
+     * Permissions optimisation
+     * Persistant object: DB postgresql
+     * Datas conversions
+     * Multi-level caching system
+     * 2 different inheritancies
+     * Fields:
+          - classicals (varchar, integer, boolean, ...)
+          - relations (one2many, many2one, many2many)
+          - functions
+ 
+"""
+
 import calendar
 import copy
 import datetime
@@ -123,8 +124,9 @@ class except_orm(Exception):
 class BrowseRecordError(Exception):
     pass
 
-# Readonly python database object browser
 class browse_null(object):
+    """ Readonly python database object browser
+    """
 
     def __init__(self):
         self.id = False
@@ -152,6 +154,11 @@ class browse_null(object):
 # TODO: execute an object method on browse_record_list
 #
 class browse_record_list(list):
+    """ Collection of browse objects
+    
+        Such an instance will be returned when doing a ``browse([ids..])``
+        and will be iterable, yielding browse() objects
+    """
 
     def __init__(self, lst, context=None):
         if not context:
@@ -161,13 +168,25 @@ class browse_record_list(list):
 
 
 class browse_record(object):
+    """ An object that behaves like a row of an object's table.
+        It has attributes after the columns of the corresponding object.
+        
+        Examples::
+        
+            uobj = pool.get('res.users')
+            user_rec = uobj.browse(cr, uid, 104)
+            name = user_rec.name
+    """
     logger = netsvc.Logger()
 
     def __init__(self, cr, uid, id, table, cache, context=None, list_class=None, fields_process=None):
-        '''
-        table : the object (inherited from orm)
-        context : dictionary with an optional context
-        '''
+        """
+        @param cache a dictionary of model->field->data to be shared accross browse
+            objects, thus reducing the SQL read()s . It can speed up things a lot,
+            but also be disastrous if not discarded after write()/unlink() operations
+        @param table the object (inherited from orm)
+        @param context dictionary with an optional context
+        """
         if fields_process is None:
             fields_process = {}
         if context is None:
@@ -361,10 +380,10 @@ class browse_record(object):
 
 
 def get_pg_type(f):
-    '''
+    """
     returns a tuple
     (type returned by postgres when the column was created, type expression to create the column)
-    '''
+    """
 
     type_dict = {
             fields.boolean: 'bool',
@@ -725,7 +744,7 @@ class orm_template(object):
 
         :param cr: database cursor
         :param user: current user id
-        :param select: id or list of ids
+        :param select: id or list of ids.
         :param context: context arguments, like lang, time zone
         :rtype: object or list of objects requested
 

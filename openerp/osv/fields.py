@@ -19,18 +19,19 @@
 #
 ##############################################################################
 
-# . Fields:
-#      - simple
-#      - relations (one2many, many2one, many2many)
-#      - function
-#
-# Fields Attributes:
-#   _classic_read: is a classic sql fields
-#   _type   : field type
-#   readonly
-#   required
-#   size
-#
+""" Fields:
+      - simple
+      - relations (one2many, many2one, many2many)
+      - function
+
+    Fields Attributes:
+        * _classic_read: is a classic sql fields
+        * _type   : field type
+        * readonly
+        * required
+        * size
+"""
+
 import datetime as DT
 import string
 import sys
@@ -51,6 +52,12 @@ def _symbol_set(symb):
 
 
 class _column(object):
+    """ Base of all fields, a database column
+    
+        An instance of this object is a *description* of a database column. It will
+        not hold any data, but only provide the methods to manipulate data of an
+        ORM record or even prepare/update the database to hold such a field of data.
+    """
     _classic_read = True
     _classic_write = True
     _prefetch = True
@@ -855,6 +862,15 @@ class function(_column):
 # ---------------------------------------------------------
 
 class related(function):
+    """Field that points to some data inside another field of the current record.
+
+    Example::
+
+       _columns = {
+           'foo_id': fields.many2one('my.foo', 'Foo'),
+           'bar': fields.related('frol', 'foo_id', type='char', string='Frol of Foo'),
+        }
+    """
 
     def _fnct_search(self, tobj, cr, uid, obj=None, name=None, domain=None, context=None):
         self._field_get2(cr, uid, obj, context)
