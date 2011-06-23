@@ -21,5 +21,7 @@
 
 import publisher_warranty
 
+#.apidoc title: IR interface (Deprecated)
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

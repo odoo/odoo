@@ -20,6 +20,8 @@
 #
 ##############################################################################
 
+#.apidoc title: Utilities: tools.misc
+
 """
 Miscelleanous tools used by OpenERP.
 """

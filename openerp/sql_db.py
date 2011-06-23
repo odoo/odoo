@@ -20,6 +20,8 @@
 #
 ##############################################################################
 
+#.apidoc title: PostgreSQL interface
+
 """
 The PostgreSQL connector is a connectivity layer between the OpenERP code and
 the database, *not* a database abstraction toolkit. Database abstraction is what
@@ -27,6 +29,9 @@ the ORM does, in fact.
 
 See also: the `pooler` module
 """
+
+#.apidoc add-functions: print_stats
+#.apidoc add-classes: Cursor Connection ConnectionPool
 
 __all__ = ['db_connect', 'close_db']
 

@@ -26,9 +26,11 @@ import marshal
 
 import netsvc
 
+#.apidoc title: Net-RPC classes
+
 class Myexception(Exception):
     """
-    custome exception object store 
+    custom exception object store
     * faultcode
     * faulestring
     * args

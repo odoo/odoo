@@ -19,9 +19,7 @@
 #
 ##############################################################################
 
-#
-# OSV: Objects Services
-#
+#.apidoc title: Objects Services (OSV)
 
 import orm
 import openerp.netsvc as netsvc
