@@ -20,6 +20,14 @@
 #
 ##############################################################################
 
+"""
+The PostgreSQL connector is a connectivity layer between the OpenERP code and
+the database, *not* a database abstraction toolkit. Database abstraction is what
+the ORM does, in fact.
+
+See also: the `pooler` module
+"""
+
 __all__ = ['db_connect', 'close_db']
 
 from threading import currentThread
@@ -66,6 +74,13 @@ re_into = re.compile('.* into "?([a-zA-Z_0-9]+)"? .*$');
 sql_counter = 0
 
 class Cursor(object):
+    """ Cursor is an open transaction to Postgres, utilizing a TCP connection
+    
+        A lightweight wrapper around psycopg2's `psycopg1cursor` objects
+        
+        This is the object behind the `cr` variable used all over the OpenERP
+        code.
+    """
     IN_MAX = 1000 # decent limit on size of IN queries - guideline = Oracle limit
     __logger = None
 
@@ -233,22 +248,37 @@ class Cursor(object):
 
     @check
     def commit(self):
+        """ Perform an SQL `COMMIT`
+        """
         return self._cnx.commit()
 
     @check
     def rollback(self):
+        """ Perform an SQL `ROLLBACK`
+        """
         return self._cnx.rollback()
 
     @check
     def __getattr__(self, name):
         return getattr(self._obj, name)
 
+        """ Set the mode of postgres operations for all cursors
+        """
+        """Obtain the mode of postgres operations for all cursors
+        """
 
 class PsycoConnection(psycopg2.extensions.connection):
     pass
 
 class ConnectionPool(object):
-
+    """ The pool of connections to database(s)
+    
+        Keep a set of connections to pg databases open, and reuse them
+        to open cursors for all transactions.
+        
+        The connections are *not* automatically closed. Only a close_db()
+        can trigger that.
+    """
     __logger = logging.getLogger('db.connection_pool')
 
     def locked(fun):
@@ -340,6 +370,8 @@ class ConnectionPool(object):
 
 
 class Connection(object):
+    """ A lightweight instance of a connection to postgres
+    """
     __logger = logging.getLogger('db.connection')
 
     def __init__(self, pool, dbname):
