@@ -257,6 +257,9 @@ class account_installer_modules(osv.osv_memory):
             help="Helps you generate reminder letters for unpaid invoices, "
                  "including multiple levels of reminding and customized "
                  "per-partner policies."),
+        'account_voucher': fields.boolean('Voucher Management',
+            help="Account Voucher module includes all the basic requirements of "
+                 "Voucher Entries for Bank, Cash, Sales, Purchase, Expenses, Contra, etc... "),
         'account_anglo_saxon': fields.boolean('Anglo-Saxon Accounting',
             help="This module will support the Anglo-Saxons accounting methodology by "
                 "changing the accounting logic with stock transactions."),
