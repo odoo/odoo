@@ -437,19 +437,11 @@ init: function(view_manager, session, element_id, dataset, view_id) {
 
     reload_gantt: function() {
         var self = this;
-        var ajax = {
-                url: '/base/dataset/search_read',
-                async: false
-            };
-            this.rpc(ajax, {
-                model: this.dataset.model,
-                domain: self.dataset.domain,
-                context :self.dataset.context
-            }, function(response) {
-                ganttChartControl.clearAll();
-                jQuery("#GanttDiv").children().remove();
-                self.load_event(response);
-            });
+        this.dataset.read_slice(false, false, false, function(response) {
+            ganttChartControl.clearAll();
+            jQuery("#GanttDiv").children().remove();
+            self.load_event(response);
+        });
     },
 
     do_search: function (domains, contexts, groupbys) {
