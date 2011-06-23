@@ -20,7 +20,6 @@
 ##############################################################################
 
 import time
-import ir
 from tools.translate import _
 
 from osv import osv, fields

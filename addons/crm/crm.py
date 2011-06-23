@@ -331,8 +331,6 @@ class crm_case(object):
             if not case.user_id:
                 data['user_id'] = uid
             self.write(cr, uid, case.id, data)
-
-
         self._action(cr, uid, cases, 'open')
         return True
 
@@ -423,11 +421,14 @@ class crm_case(object):
         @param ids: List of case Ids
         @param *args: Tuple Value for additional Params
         """
+        state = 'draft' 
+        if 'crm.phonecall' in args:
+            state = 'open' 
         cases = self.browse(cr, uid, ids)
         cases[0].state # to fill the browse record cache
         self._history(cr, uid, cases, _('Draft'))
-        self.write(cr, uid, ids, {'state': 'draft', 'active': True})
-        self._action(cr, uid, cases, 'draft')
+        self.write(cr, uid, ids, {'state': state, 'active': True})
+        self._action(cr, uid, cases, state)
         return True
 
     def remind_partner(self, cr, uid, ids, context=None, attach=False):
@@ -454,9 +455,9 @@ class crm_case(object):
         """
         for case in self.browse(cr, uid, ids, context=context):
             if not destination and not case.email_from:
-                raise osv.except_osv(_('Error!'), ("Partner Email is not specified in Case"))
+                return False
             if not case.user_id.user_email:
-               raise osv.except_osv(_('Error!'), ("User Email is not specified in Case"))
+                return False
             
             if destination and case.section_id.user_id:
                 case_email = case.section_id.user_id.user_email

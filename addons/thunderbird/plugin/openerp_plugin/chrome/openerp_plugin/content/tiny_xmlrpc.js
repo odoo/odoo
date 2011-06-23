@@ -1434,34 +1434,6 @@ var listArchiveHandler = {
 }
 
 //function to archive the mail content through xmlrpc request
-
-function parse_eml(){
-    var fpath =""
-    if(navigator.userAgent.indexOf('Linux')!= -1){
-        fpath ="/tmp/"
-    }
-    else if(navigator.userAgent.indexOf('Win')!= -1){
-        fpath ="C:\\"
-    }
-    else if(navigator.userAgent.indexOf('Mac OS X')!= -1){ 
-        fpath ="/tmp/"
-    } 
-
-    name = fpath + getFileName() +".eml"
-    var file = Components.classes["@mozilla.org/file/local;1"].createInstance(Components.interfaces.nsILocalFile);
-    file.initWithPath( name );
-    if ( file.exists() == false ) {
-        return null;
-    } else {
-        var is = Components.classes["@mozilla.org/network/file-input-stream;1"].createInstance( Components.interfaces.nsIFileInputStream );
-        is.init( file,0x01, 00004, null);
-        var sis = Components.classes["@mozilla.org/scriptableinputstream;1"].createInstance( Components.interfaces.nsIScriptableInputStream );
-        sis.init( is );
-        var output = sis.read( sis.available() );
-        return output
-    }
-    
-}
 function upload_archivemail()
 {
     list_documents = document.getElementById('listSearchBox')
@@ -1484,6 +1456,7 @@ function upload_archivemail()
     strobj.data = 'thunderbird.partner';
     var resobj = xmlRpcClient.createType(xmlRpcClient.STRING,{});
 
+	
     for(i=0;i<cnt;i++)
     {   
         var object = list_documents.getSelectedItem(i);
@@ -1497,7 +1470,6 @@ function upload_archivemail()
     var a = ['ref_ids','message'];
     var b = [ref_ids, eml_string];
     var arrofarr = dictcontact(a,b);
-
     xmlRpcClient.asyncCall(listArchiveHandler,null,'execute',[strDbName,struids,strpass,strobj,strmethod,arrofarr],6);
      
 }

@@ -159,7 +159,7 @@ Objects per Day
         <field name="type">graph</field>
         <field name="arch" type="xml">
             <graph string="Objects per day"  type="bar">
-                <field name="name" select="1"/>
+                <field name="name"/>
                 <field name="obj_num" operator="+"/>
                 <field name="user_id" group="True"/>
             </graph>
@@ -205,8 +205,8 @@ Auction adjudication
         <field name="type">graph</field>
         <field name="arch" type="xml">
             <graph string="Total adjudication" type="bar">
-                <field name="name" select="1"/>
-                <field name="adj_total" select="1" />
+                <field name="name"/>
+                <field name="adj_total"/>
                 <field name="user_id" group="True"/>
             </graph>
         </field>
@@ -249,7 +249,7 @@ Object encoded
         <field name="type">graph</field>
         <field name="arch" type="xml">
             <graph string="Object statistic" type="bar">
-                <field name="user_id" select="1"/>
+                <field name="user_id"/>
                 <field name="obj_ret"  operator="+" />
                 <field name="obj_num"  operator="+" />
                 <field name="obj_margin"  operator="+" />
