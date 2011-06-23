@@ -574,18 +574,6 @@ openerp.base.ListView.List = Class.extend( /** @lends openerp.base.ListView.List
         this.$current = this.$_element.clone(true);
         this.$current.empty().append(QWeb.render('ListView.rows', this));
     },
-    get_fields_view: function () {
-        // deep copy of view
-        var view = $.extend(true, {}, this.group.view.fields_view);
-        _(view.arch.children).each(function (widget) {
-            widget.attrs.nolabel = true;
-            if (widget.tag === 'button') {
-                delete widget.attrs.string;
-            }
-        });
-        view.arch.attrs.col = 2 * view.arch.children.length;
-        return view;
-    },
     /**
      * Gets the ids of all currently selected records, if any
      * @returns {Object} object with the keys ``ids`` and ``records``, holding respectively the ids of all selected records and the records themselves.
