@@ -59,6 +59,12 @@ class account_asset_category(osv.osv):
         'method_progress_factor': 0.3,
     }
 
+    def onchange_account_asset(self, cr, uid, ids, account_asset_id, context=None):
+        res = {'value':{}}
+        if account_asset_id:
+           res['value'] = {'account_depreciation_id': account_asset_id}
+        return res
+
 account_asset_category()
 
 #class one2many_mod_asset(fields.one2many):
