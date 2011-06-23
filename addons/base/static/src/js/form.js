@@ -1324,7 +1324,7 @@ openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
 
         var self = this;
 
-        this.dataset = new openerp.base.form.One2ManyDataset(this.session, this.field.relation);
+        this.dataset = new openerp.base.BufferedDataSet(this.session, this.field.relation);
         this.dataset.on_change.add_last(function() {
             self.on_ui_change();
         });
@@ -1410,111 +1410,6 @@ openerp.base.form.One2ManyListView = openerp.base.ListView.extend({
     }
 });
 
-openerp.base.form.One2ManyDataset = openerp.base.DataSetStatic.extend({
-    virtual_id_prefix: "one2many_v_id_",
-    virtual_id_regex: /one2many_v_id_.*/,
-    debug_mode: true,
-    init: function() {
-        this._super.apply(this, arguments);
-        this.reset_ids([]);
-    },
-    create: function(data, callback, error_callback) {
-        var cached = {id:_.uniqueId(this.virtual_id_prefix), values: data};
-        this.to_create.push(cached);
-        this.cache.push(cached);
-        this.on_change();
-        var to_return =  $.Deferred().then(callback);
-        setTimeout(function() {to_return.resolve({result: cached.id});}, 0);
-        return to_return.promise();
-    },
-    write: function (id, data, callback) {
-        var self = this;
-        var record = _.detect(this.to_create, function(x) {return x.id === id;});
-        record = record || _.detect(this.to_write, function(x) {return x.id === id;});
-        if (record) {
-            $.extend(record.values, data);
-        } else {
-            record = {id: id, values: data};
-            self.to_write.push(record);
-        }
-        var cached = _.detect(this.cache, function(x) {return x.id === id;});
-        $.extend(cached.values, record.values);
-        this.on_change();
-        var to_return = $.Deferred().then(callback);
-        setTimeout(function () {to_return.resolve({result: true});}, 0);
-        return to_return.promise();
-    },
-    unlink: function(ids, callback, error_callback) {
-        var self = this;
-        _.each(ids, function(id) {
-            if (! _.detect(self.to_create, function(x) { return x.id === id; })) {
-                self.to_delete.push({id: id})
-            }
-        });
-        this.to_create = _.reject(this.to_create, function(x) { return _.include(ids, x.id);});
-        this.to_write = _.reject(this.to_write, function(x) { return _.include(ids, x.id);});
-        this.cache = _.reject(this.cache, function(x) { return _.include(ids, x.id);});
-        this.set_ids(_.without.apply(_, [this.ids].concat(ids)));
-        this.on_change();
-        var to_return = $.Deferred().then(callback);
-        setTimeout(function () {to_return.resolve({result: true});}, 0);
-        return to_return.promise();
-    },
-    reset_ids: function(ids) {
-        this.set_ids(ids);
-        this.to_delete = [];
-        this.to_create = [];
-        this.to_write = [];
-        this.cache = [];
-    },
-    on_change: function() {},
-    read_ids: function (ids, fields, callback) {
-        var self = this;
-        var to_get = [];
-        _.each(ids, function(id) {
-            var cached = _.detect(self.cache, function(x) {return x.id === id;});
-            var created = _.detect(self.to_create, function(x) {return x.id === id;});
-            if (created) {
-                _.each(fields, function(x) {if (cached.values[x] === undefined) cached.values[x] = false;});
-            } else {
-                if (!cached || !_.all(fields, function(x) {return cached.values[x] !== undefined}))
-                    to_get.push(id);
-            }
-        });
-        var completion = $.Deferred().then(callback);
-        var return_records = function() {
-            var records = _.map(ids, function(id) {
-                return _.extend({}, _.detect(self.cache, function(c) {return c.id === id;}).values, {"id": id});
-            });
-            if (self.debug_mode) {
-                if (_.include(records, undefined)) {
-                    throw "Record not correctly loaded";
-                }
-            }
-            setTimeout(function () {completion.resolve(records);}, 0);
-        }
-        if(to_get.length > 0) {
-            var rpc_promise = this._super(to_get, fields, function(records) {
-                _.each(records, function(record, index) {
-                    var id = to_get[index];
-                    var cached = _.detect(self.cache, function(x) {return x.id === id;});
-                    if (!cached) {
-                        self.cache.push({id: id, values: record});
-                    } else {
-                        // I assume cache value is prioritary
-                        _.defaults(cached.values, record);
-                    }
-                });
-                return_records();
-            });
-            $.when(rpc_promise).fail(function() {completion.reject();});
-        } else {
-            return_records();
-        }
-        return completion.promise();
-    },
-});
-
 openerp.base.form.FieldMany2Many = openerp.base.form.Field.extend({
     init: function(view, node) {
         this._super(view, node);
@@ -1596,12 +1491,13 @@ openerp.base.form.SelectCreatePopup = openerp.base.BaseWidget.extend({
      * - initial_view: form or search (default search)
      * - disable_multiple_selection
      * - alternative_form_view
+     * - auto_create (default true)
      */
     select_element: function(model, options, domain, context) {
         this.model = model;
         this.domain = domain || [];
         this.context = context || {};
-        this.options = options || {};
+        this.options = _.defaults(options || {}, {"initial_view": "search", "auto_create": true});
         this.initial_ids = this.options.initial_ids;
         jQuery(this.render()).dialog({title: '',
                     modal: true,
@@ -1610,9 +1506,9 @@ openerp.base.form.SelectCreatePopup = openerp.base.BaseWidget.extend({
     },
     start: function() {
         this._super();
-        this.dataset = new openerp.base.DataSetSearch(this.session, this.model,
+        this.dataset = new openerp.base.ReadOnlyDataSetSearch(this.session, this.model,
             this.context, this.domain);
-        if ((this.options.initial_view || "search") == "search") {
+        if (this.options.initial_view == "search") {
             this.setup_search_view();
         } else { // "form"
             this.new_object();
@@ -1662,6 +1558,16 @@ openerp.base.form.SelectCreatePopup = openerp.base.BaseWidget.extend({
         });
         this.searchview.start();
     },
+    on_create: function(data) {
+        debugger;
+        if (!this.options.auto_create)
+            return;
+        var self = this;
+        var wdataset = new openerp.base.DataSetSearch(this.session, this.model, this.context, this.domain);
+        wdataset.create(data, function(r) {
+            self.on_select_elements([r.result]);
+        });
+    },
     on_select_elements: function(element_ids) {
     },
     on_click_element: function(ids) {
@@ -1699,12 +1605,7 @@ openerp.base.form.SelectCreatePopup = openerp.base.BaseWidget.extend({
                 self.stop();
             });
         });
-        this.view_form.on_created.add_last(function(r, success) {
-            if (r.result) {
-                var id = arguments[0].result;
-                self.on_select_elements([id]);
-            }
-        });
+        this.dataset.on_create.add(this.on_create);
         this.view_form.do_show();
     }
 });
