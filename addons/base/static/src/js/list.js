@@ -167,7 +167,53 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
             self.reload_view();
         });
 
+        this.$element.find('.oe-list-pager')
+            .delegate('button', 'click', function () {
+                var $this = $(this);
+                switch ($this.data('pager-action')) {
+                    case 'first':
+                        self.page = 0; break;
+                    case 'last':
+                        self.page = Math.floor(
+                            self.dataset.ids.length / self.limit());
+                        break;
+                    case 'next':
+                        self.page += 1; break;
+                    case 'previous':
+                        self.page -= 1; break;
+                }
+                self.reload_content();
+            }).find('.oe-pager-state')
+                .click(function (e) {
+                    e.stopPropagation();
+                    // TODO: pagination setup thingie
+                });
+
         this.view_manager.sidebar.set_toolbar(data.fields_view.toolbar);
+    },
+    /**
+     * Configures the ListView pager based on the provided dataset's information
+     *
+     * Horrifying side-effect: sets the dataset's data on this.dataset?
+     *
+     * @param {openerp.base.DataSet} dataset
+     */
+    configure_pager: function (dataset) {
+        this.dataset.ids = dataset.ids;
+
+        var limit = this.limit(),
+            total = dataset.ids.length,
+            first = (this.page * limit),
+             last = ((total - first) < limit) ? total : first + limit;
+        this.$element.find('span.oe-pager-state').text(_.sprintf(
+            "[%d to %d] of %d", first + 1, last, total));
+
+        this.$element
+            .find('button[data-pager-action=first], button[data-pager-action=previous]')
+                .attr('disabled', this.page === 0)
+            .end()
+            .find('button[data-pager-action=last], button[data-pager-action=next]')
+                .attr('disabled', last === total);
     },
     /**
      * Sets up the listview's columns: merges view and fields data, move
@@ -282,10 +328,8 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
      */
     reload_view: function (grouped) {
         var self = this;
-        this.dataset.offset = 0;
-        this.dataset.limit = false;
         var callback = function (field_view_get) {
-                self.on_loaded(field_view_get, grouped);
+            self.on_loaded(field_view_get, grouped);
         };
         if (this.embedded_view) {
             return $.Deferred().then(callback).resolve({fields_view: this.embedded_view});
@@ -882,12 +926,15 @@ openerp.base.ListView.Groups = Class.extend( /** @lends openerp.base.ListView.Gr
             });
         this.bind_child_events(list);
 
-        var limit = this.view.limit(),
-                d = new $.Deferred();
+        var view = this.view,
+           limit = view.limit(),
+               d = new $.Deferred();
         dataset.read_slice(
             _.filter(_.pluck(this.columns, 'name'), _.identity),
-            this.view.page * limit, limit,
+            view.page * limit, limit,
             function (records) {
+                view.configure_pager(dataset);
+
                 var form_records = _(records).map(
                     $.proxy(list, 'transform_record'));
 
