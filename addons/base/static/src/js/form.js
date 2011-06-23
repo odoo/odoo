@@ -1266,9 +1266,21 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
     set_value_from_ui: function() {},
     set_value: function(value) {
         value = value || null;
-        this._super(value);
-        this.original_value = value;
-        this._change_int_ext_value(value);
+        var self = this;
+        var _super = this._super;
+        var real_set_value = function(rval) {
+            _super.apply(self, rval);
+            self.original_value = rval;
+            self._change_int_ext_value(rval);
+        };
+        if(typeof(value) === "number") {
+            var dataset = new openerp.base.DataSetStatic(this.session, this.field.relation, []);
+            dataset.call("name_get", value, function(data) {
+                real_set_value(data.result[0]);
+            });
+        } else {
+            setTimeout(function() {real_set_value(value);}, 0);
+        }
     },
     get_value: function() {
         if (this.value === undefined)
