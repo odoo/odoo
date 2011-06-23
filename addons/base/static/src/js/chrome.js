@@ -399,7 +399,6 @@ openerp.base.Session = openerp.base.BasicController.extend( /** @lends openerp.b
     on_rpc_response: function() {
     },
     on_rpc_error: function(error) {
-        this.on_log(error.message, error.data.debug);
     },
     /**
      * The session is validated either by login or by restoration of a previous session
@@ -830,8 +829,15 @@ openerp.base.CrashManager = openerp.base.Dialog.extend({
     },
     on_rpc_error: function(error) {
         this.error = error;
-        if (error.code === 200) {
-            this.dialog_title = "OpenERP Warning";
+        if (error.data.fault_code) {
+            var split = error.data.fault_code.split('\n')[0].split(' -- ');
+            if (split.length > 1) {
+                error.type = split.shift();
+                error.data.fault_code = error.data.fault_code.substr(error.type.length + 4);
+            }
+        }
+        if (error.code === 200 && error.type) {
+            this.dialog_title = "OpenERP " + _.capitalize(error.type);
             this.template = 'DialogWarning';
             this.open({
                 width: 'auto',
