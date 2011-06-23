@@ -163,8 +163,11 @@ class synchronize_google(osv.osv_memory):
      
         imp = google_import(self, cr, uid,'import_google' , "synchronize_google", gmail_user, context)
         imp.set_table_list(tables)
-        imp.start()            
-        context.update({'message': msg})   
+        imp.start()
+        #Note: Cleaning timezone object from context to avoid pickle problem
+        if 'au_tz' in context:
+            context.pop('au_tz')
+        context.update({'message': msg})
         obj_model = self.pool.get('ir.model.data')
         model_data_ids = obj_model.search(cr,uid,[('model','=','ir.ui.view'),('name','=','view_google_import_message_form')])
         resource_id = obj_model.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
