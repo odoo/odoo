@@ -90,11 +90,8 @@ openerp.web_mobile.ListView = openerp.base.Controller.extend({
     on_action: function(action) {
         var self = this;
         var view_id = action.views[0][0];
-        var model = action.res_model;
-
-        self.rpc('/base/dataset/search_read', {
-            model: model
-            },function(result){
+        (new openerp.base.DataSetSearch(this.session, action.res_model, null, null))
+            .read_slice(false, false, false, function(result){
                 this.listview = new openerp.web_mobile.ListView(this.session, "oe_app");
                 self.$element.html(QWeb.render("ListView", {'records' : result}));
             });
