@@ -63,6 +63,9 @@ def close_socket(sock):
     sock.close()
 
 
+#.apidoc title: Common Services: netsvc
+#.apidoc module-mods: member-order: bysource
+
 class Service(object):
     """ Base class for *Local* services
 
@@ -249,19 +252,22 @@ def init_alternative_logger():
     logger.setLevel(logging.ERROR)
 
 class Agent(object):
-    """Singleton that keeps track of cancellable tasks to run at a given
-       timestamp.
-       The tasks are caracterised by:
+    """ Singleton that keeps track of cancellable tasks to run at a given
+        timestamp.
+       
+        The tasks are characterised by:
+       
             * a timestamp
             * the database on which the task run
             * the function to call
             * the arguments and keyword arguments to pass to the function
 
         Implementation details:
-          Tasks are stored as list, allowing the cancellation by setting
-          the timestamp to 0.
-          A heapq is used to store tasks, so we don't need to sort
-          tasks ourself.
+        
+          - Tasks are stored as list, allowing the cancellation by setting
+            the timestamp to 0.
+          - A heapq is used to store tasks, so we don't need to sort
+            tasks ourself.
     """
     __tasks = []
     __tasks_by_db = {}
