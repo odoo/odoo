@@ -365,12 +365,13 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
         if (!this.datarecord.id) {
             this.on_attachments_loaded([]);
         } else {
-            this.rpc('/base/dataset/search_read', {
+            // TODO fme: modify this so it doesn't try to load attachments when there is not sidebar
+            /*this.rpc('/base/dataset/search_read', {
                 model: 'ir.attachment',
                 fields: ['name', 'url', 'type'],
                 domain: [['res_model', '=', this.dataset.model], ['res_id', '=', this.datarecord.id], ['type', 'in', ['binary', 'url']]],
                 context: this.dataset.context
-            }, this.on_attachments_loaded);
+            }, this.on_attachments_loaded);*/
         }
     },
     on_attachments_loaded: function(attachments) {
@@ -1264,6 +1265,7 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
     },
     set_value_from_ui: function() {},
     set_value: function(value) {
+        value = value || null;
         this._super(value);
         this.original_value = value;
         this._change_int_ext_value(value);
@@ -1295,7 +1297,6 @@ openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
         this._super(view, node);
         this.template = "FieldOne2Many";
         this.is_started = $.Deferred();
-        this.is_setted = $.Deferred();
     },
     start: function() {
         this._super.apply(this, arguments);
@@ -1340,14 +1341,6 @@ openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
             self.is_started.resolve();
         });
         this.viewmanager.start();
-
-        $.when(this.is_started, this.is_setted).then(function() {
-            if (modes[0] == "tree") {
-                var view = self.viewmanager.views[self.viewmanager.active_view].controller;
-                view.reload_content();
-            }
-            // TODO niv: handle other types of views
-        });
     },
     reload_current_view: function() {
         var self = this;
@@ -1355,15 +1348,18 @@ openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
         if(self.viewmanager.active_view === "list") {
             view.reload_content();
         } else if (self.viewmanager.active_view === "form") {
-            // TODO niv: but fme did not implemented delete in form view anyway
+            // TODO niv: implement
         }
     },
     set_value_from_ui: function() {},
     set_value: function(value) {
-        if(value != false) {
-            this.dataset.reset_ids(value);
-            this.is_setted.resolve();
-        }
+        value = value || []
+        this._super(value);
+        this.dataset.reset_ids(value);
+        var self = this;
+        $.when(this.is_started).then(function() {
+            self.reload_current_view();
+        });
     },
     get_value: function() {
         var val = _.map(this.dataset.to_delete, function(v, k) {return [2, parseInt(k, 10)];});
@@ -1404,7 +1400,6 @@ openerp.base.form.One2ManyDataset = openerp.base.DataSetStatic.extend({
     create: function(data, callback, error_callback) {
         var cached = {id:_.uniqueId(this.virtual_id_prefix), values: data};
         this.to_create.push(cached);
-        this.set_ids(ids.concat([cached.id]));
         this.cache.push(cached);
         this.on_change();
         return $.Deferred().then(callback).resolve({result: cached.id}).promise();
@@ -1412,7 +1407,7 @@ openerp.base.form.One2ManyDataset = openerp.base.DataSetStatic.extend({
     write: function (id, data, callback) {
         var record = _.select(this.to_create, function(x) {return x.id === id;});
         record = record || _.select(this.to_write, function(x) {return x.id === id;});
-        if (previous) {
+        if (record) {
             $.extend(previous.value, data);
         } else {
             record = {id: id, values: data};
@@ -1444,8 +1439,6 @@ openerp.base.form.One2ManyDataset = openerp.base.DataSetStatic.extend({
         this.to_create = [];
         this.to_write = [];
         this.cache = [];
-        // good idea?
-        this.on_change();
     },
     on_change: function() {},
     read_ids: function (ids, fields, callback) {
@@ -1453,22 +1446,15 @@ openerp.base.form.One2ManyDataset = openerp.base.DataSetStatic.extend({
         var to_get = [];
         _.each(ids, function(id) {
             var cached = _.detect(self.cache, function(x) {return x.id === id;});
-            if (!cached || !_each.all(fields, function(x) {cached.values[x] !== undefined}))
-                to_get.push(id);
+            var created = _.detect(self.to_create, function(x) {return x.id === id;});
+            if (created) {
+                _.each(fields, function(x) {if (cached.values[x] === undefined) cached.values[x] = false;});
+            } else {
+                if (!cached || !_.all(fields, function(x) {return cached.values[x] !== undefined}))
+                    to_get.push(id);
+            }
         });
-        if (this.debug_mode) {
-            // test to see if all the ids we try to load from db are real ids
-            _.each(to_get, function(x) {
-                if(typeof(x) == "string") {
-                    var test = self.virtual_id_regex.exec(x);
-                    if(test && test[0] === x) {
-                        throw "Trying to get value from virtual id";
-                    }
-                }
-            });
-        };
-        var completion = $.Deferred();
-        $.when(completion).then(callback);
+        var completion = $.Deferred().then(callback);
         var return_records = function() {
             var records = _.map(ids, function(id) {return _.detect(self.cache, function(c) {return c.id === id;}).values;});
             if (self.debug_mode) {
@@ -1478,7 +1464,7 @@ openerp.base.form.One2ManyDataset = openerp.base.DataSetStatic.extend({
             }
             completion.resolve(records);
         }
-        if(to_get) {
+        if(to_get.length > 0) {
             var rpc_promise = this._super(to_get, fields, function(records) {
                 _.each(records, function(record, index) {
                     var id = to_get[index];
@@ -1487,7 +1473,7 @@ openerp.base.form.One2ManyDataset = openerp.base.DataSetStatic.extend({
                         self.cache.push({id: id, values: record});
                     } else {
                         // I assume cache value is prioritary
-                        self.cached = $.extend({}, record, cached);
+                        _.defaults(cached.values, record);
                     }
                 });
                 return_records();
@@ -1506,7 +1492,6 @@ openerp.base.form.FieldMany2Many = openerp.base.form.Field.extend({
         this.template = "FieldMany2Many";
         this.list_id = _.uniqueId("many2many");
         this.is_started = $.Deferred();
-        this.is_setted = $.Deferred();
     },
     start: function() {
         this._super.apply(this, arguments);
@@ -1515,7 +1500,8 @@ openerp.base.form.FieldMany2Many = openerp.base.form.Field.extend({
 
         this.dataset = new openerp.base.DataSetStatic(
                 this.session, this.field.relation);
-        this.dataset.on_change.add_last(function(ids) {
+        this.dataset.on_unlink.add_last(function(ids) {
+            //TODO niv: should check this for other cases
             self.on_ui_change();
         });
 
@@ -1528,15 +1514,15 @@ openerp.base.form.FieldMany2Many = openerp.base.form.Field.extend({
             self.is_started.resolve();
         });
         this.list_view.start();
-        $.when(this.is_started, this.is_setted).then(function() {
-            self.list_view.reload_content();
-        });
     },
     set_value: function(value) {
-        if (value != false) {
-            this.dataset.set_ids(value);
-            this.is_setted.resolve();
-        }
+        value = value || [];
+        this._super(value);
+        this.dataset.set_ids(value);
+        var self = this;
+        $.when(this.is_started).then(function() {
+            self.list_view.reload_content();
+        });
     },
     get_value: function() {
         return [[6,false,this.dataset.ids]];

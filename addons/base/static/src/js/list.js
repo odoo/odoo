@@ -877,7 +877,7 @@ openerp.base.ListView.Groups = Class.extend( /** @lends openerp.base.ListView.Gr
 
         var d = new $.Deferred();
         dataset.read_slice(
-            _.filter(_.pluck(this.columns, 'name'), _.identity),
+            _.filter(_.pluck(_.select(this.columns, function(x) {return x.tag == "field";}), 'name'), _.identity),
             0, false,
             function (records) {
                 var form_records = _(records).map(
