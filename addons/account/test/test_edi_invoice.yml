@@ -1,13 +1,71 @@
 -
-  Tesing of Export functionality
+  create Company
+-
+  !record {model: res.company, id: res_company_test}:
+    name: Thomson pvt. ltd.
+    partner_id: 1
+    rml_header: 1
+    rml_header2: 1
+    rml_header3: 1
+    currency_id: 1
+
+-
+  create customer
+-
+  !record {model: res.partner, id: res_partner_test}:
+    name: Junjun wala
+    supplier: False
+    company_id: res_company_test
+    address:
+        - partner_id: res_partner_test
+          type: default
+          name: ivan
+          street: m g road
+          street2: line 28
+          city: paris    
+    
+- 
+  Creating a customer invoice record
+- 
+  !record {model: account.invoice, id: account_invoice_test}:
+    amount_tax: 0.0
+    amount_total: 83.0
+    amount_untaxed: 83.0
+    currency_id: base.EUR
+    date_invoice: '2011-06-22'
+    invoice_line:
+        name: '[CPU1] Processor AMD Athlon XP 1800+'
+        partner_id: res_partner_test
+        price_subtotal: 75.0
+        price_unit: 75.0
+        product_id: product.product_product_cpu1
+        quantity: 1.0
+    journal_id: 'False'
+    name: Nothing
+    partner_id: res_partner_test
+    payment_term: account.account_payment_term
+    reference_type: none
+   
+-
+  Tesing of Export functionality and Import Functionality
 -
   !python {model: ir.edi.document}: |
+    
     invoice_obj = self.pool.get('account.invoice')
-    invoice_ids = invoice_obj.search(cr, uid, [])
-    print "invoices>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",invoice_ids
+    invoice_ids = invoice_obj.search(cr, uid, [partner_id])
     if invoice_ids:
       invoices = invoice_obj.browse(cr, uid, invoice_ids)
       tokens = self.export_edi(cr, uid, invoices)
       for token in tokens:
         document = self.get_document(cr, uid, token, context=context)
         a = self.import_edi(cr, uid, edi_document = document)
+        
+-
+  Check after import of document customer become supplier or not
+-
+  !python {model: account.invoice}: |
+    ids=self.search(cr, uid, [('partner_id','=',base.main_company),('company_id','=',res_company_test),('type','=','in_invoice')])
+    if not ids:
+      raise AssertionError("Invoice is not imported")
+     
+   
