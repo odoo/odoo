@@ -152,10 +152,10 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
         this.$element.html(QWeb.render("ListView", this));
 
         // Head hook
-        this.$element.find('#oe-list-add')
+        this.$element.find('.oe-list-add')
                 .click(this.do_add_record)
                 .attr('disabled', grouped && this.options.editable);
-        this.$element.find('#oe-list-delete')
+        this.$element.find('.oe-list-delete')
                 .attr('disabled', true)
                 .click(this.do_delete_selected);
         this.$element.find('thead').delegate('th[data-id]', 'click', function (e) {
@@ -364,7 +364,7 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
      * @param {Array} records selected record values
      */
     do_select: function (ids, records) {
-        this.$element.find('#oe-list-delete')
+        this.$element.find('.oe-list-delete')
             .attr('disabled', !ids.length);
 
         if (!records.length) {

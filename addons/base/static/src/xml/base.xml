@@ -255,11 +255,11 @@
             <th t-if="actions_span" t-att-colspan="actions_span"
                 class="oe-actions">
                 <t t-if="flags.action_buttons !== false">
-                    <button type="button" id="oe-list-add"
+                    <button type="button" class="oe-list-add"
                             t-if="options.addable">
                         <t t-esc="options.addable"/>
                     </button>
-                    <button type="button" id="oe-list-delete"
+                    <button type="button" class="oe-list-delete"
                             t-if="options.selectable and options.deletable">
                         Delete
                     </button>
