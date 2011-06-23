@@ -86,16 +86,16 @@
                              type="action" 
                              colspan="2"/>
                         <newline/>
-                        <field name="method_time"/>
+                        <field name="method_time" on_change="onchange_method_time(method_time)"/>
                         <field name="method_delay" attrs="{'invisible':[('method_time','=','end')]}"/>
                         <field name="method_period"/>
                         <field name="method_end" attrs="{'required': [('method_time','=','end')], 'invisible':[('method_time','=','delay')]}"/> 
                     </group>
                     <group colspan="2" col="2">
                         <separator string="Depreciation Method" colspan="2" />
-                        <field name="method"/>
+                        <field name="method" on_change="onchange_method_time(method)"/>
                         <field name="method_progress_factor" attrs="{'invisible':[('method','=','linear')]}"/>
-                        <field name="prorata"/>
+                        <field name="prorata" attrs="{'invisible': ['|',('method_time','=','end'),('method','!=','linear')]}"/>
                     </group>
                     <newline/>
                  </page>
@@ -104,9 +104,9 @@
                        <tree string="Depreciation Lines" colors="blue:(move_check == False);black:(move_check == True)">
                           <field name="depreciation_date"/>
                           <field name="sequence" invisible="1"/>
+                          <field name="depreciated_value" readonly="1"/>
                           <field name="amount"/>
-                          <field name="depreciated_value"/>
-                          <field name="remaining_value"/>
+                          <field name="remaining_value" readonly="1"/>
                           <field name="move_check"/>
                           <button name="create_move" attrs="{'invisible':[('move_check','!=',False)]}" icon="gtk-execute" string="Create Move" type="object"/>
                        </tree>
