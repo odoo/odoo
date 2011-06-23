@@ -22,6 +22,7 @@
 import re
 import urllib
 import dateutil
+import pytz
 from dateutil import *
 from pytz import timezone
 from datetime import datetime
@@ -38,56 +39,52 @@ from import_base.import_framework import *
 from import_base.mapper import *
 
 class google_import(import_framework):
-    
+
     gd_client = False
     calendars = False
+    contact = False
     DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S"
     TABLE_CONTACT = 'Contact'
     TABLE_ADDRESS ='Address'
     TABLE_EVENT = 'Events'
-   
+
     def initialize(self):
         google = self.obj.pool.get('google.login')
         self.external_id_field = 'Id'
-        self.gd_client = google.google_login(self.context.get('user'), 
-                                       self.context.get('password'), 
+        self.gd_client = google.google_login(self.context.get('user'),
+                                       self.context.get('password'),
                                         self.context.get('instance'))
-        
+
         if self.context.get('instance') and self.context.get('instance') == 'contact':
-            self.contact = self.context.get('contact') 
+            self.contact = self.context.get('contact')
         if self.context.get('instance') and self.context.get('instance') == 'calendar':
-            self.calendars = self.context.get('calendars') 
-        
+            self.calendars = self.context.get('calendars')
+
     def get_mapping(self):
-        return { 
+        return {
             self.TABLE_EVENT: self.get_event_mapping(),
             self.TABLE_CONTACT: self.get_contact_mapping(),
             self.TABLE_ADDRESS: self.get_address_mapping(),
         }
-        
-    def get_data(self, table):
-        if table == "Contact":
-            val = {
-                self.TABLE_CONTACT: self.get_contact(),
-            }
-        if table == "Address":
-            val = {
-                self.TABLE_ADDRESS: self.get_contact(),
-            }
-        elif table == "Events":
-            val = {
-                self.TABLE_EVENT: self.get_events(),
-            }
-        return val.get(table)
-    
 
-    def _get_tinydates(self, stime, etime):
+    def get_data(self, table):
+        data_fetching_function = {
+              self.TABLE_CONTACT: self.get_contact,
+              self.TABLE_ADDRESS: self.get_contact,
+              self.TABLE_EVENT: self.get_events,
+        }
+
+        return data_fetching_function.get(table)()
+
+
+    def _get_tinydates(self, stime, etime,context):
         stime = dateutil.parser.parse(stime)
         etime = dateutil.parser.parse(etime)
         try:
-            au_dt = au_tz.normalize(stime.astimezone(au_tz))
+            au_tz = context.get('au_tz')
+            au_dt = au_tz.normalize(stime.replace(tzinfo=pytz.utc).astimezone(au_tz))
             timestring = datetime.datetime(*au_dt.timetuple()[:6]).strftime('%Y-%m-%d %H:%M:%S')
-            au_dt = au_tz.normalize(etime.astimezone(au_tz))
+            au_dt = au_tz.normalize(etime.replace(tzinfo=pytz.utc).astimezone(au_tz))
             timestring_end = datetime.datetime(*au_dt.timetuple()[:6]).strftime('%Y-%m-%d %H:%M:%S')
         except:
             timestring = datetime.datetime(*stime.timetuple()[:6]).strftime('%Y-%m-%d %H:%M:%S')
@@ -191,14 +188,16 @@ class google_import(import_framework):
         else:
             time_zone = tools.get_server_timezone()
         au_tz = timezone(time_zone)
-        event_vals = []            
+        context = self.context
+        context.update({'au_tz':au_tz})
+        event_vals = []
         for cal in self.calendars:
             events_query = gdata.calendar.service.CalendarEventQuery(user=urllib.unquote(cal.split('/')[~0]))
             events_query.start_index = 1
             events_query.max_results = 1000
             event_feed = self.gd_client.GetCalendarEventFeed(events_query.ToUri())
             for feed in event_feed.entry:
-                event = {            
+                event = {
                     'recurrency': "0",
                     'end_date' : False,
                     'end_type' : False,
@@ -214,7 +213,7 @@ class google_import(import_framework):
 
                 timestring = timestring_end = datetime.datetime.now().strftime(self.DATETIME_FORMAT)
                 if feed.when:
-                    timestring, timestring_end = self._get_tinydates(feed.when[0].start_time, feed.when[0].end_time)
+                    timestring, timestring_end = self._get_tinydates(feed.when[0].start_time, feed.when[0].end_time,context)
                 else:
                     x = feed.recurrence.text.split(';')
                     repeat_status = self._get_repeat_status(feed.recurrence.text)
@@ -226,11 +225,11 @@ class google_import(import_framework):
                         event.update(repeat_status)
 
                 event.update({'id' : feed.id.text,
-                              'DateStart': timestring, 
+                              'DateStart': timestring,
                               'DateEnd': timestring_end,
                               'Category':event_feed.title.text,
                               'Name': feed.title.text or 'No title',
-                              'Description': feed.content.text, 
+                              'Description': feed.content.text,
                               })
                 event_vals.append(event)
         return event_vals
@@ -246,7 +245,7 @@ class google_import(import_framework):
         if val.get("recurrency"):
             val.update({"recurrency": "1"})
         return val
-    
+
     def get_event_mapping(self):
         return {
             'model': 'crm.meeting',
@@ -275,15 +274,15 @@ class google_import(import_framework):
 
 
     def get_contact(self):
-        table = self.context.get('table')[0] 
-        datas = [] 
+        table = self.context.get('table')[0]
+        datas = []
         if self.context.get('group_name'):
             query = gdata.contacts.service.ContactsQuery()
             query.group = self.context.get('group_name')
             self.contact = self.gd_client.GetContactsFeed(query.ToUri())
-        else: 
-            self.contact = self.gd_client.GetContactsFeed()   
-        while self.contact: 
+        else:
+            self.contact = self.gd_client.GetContactsFeed()
+        while self.contact:
             for entry in self.contact.entry:
                 data = {}
                 data['id'] = entry.id.text
@@ -308,13 +307,34 @@ class google_import(import_framework):
                         if phone.rel == gdata.contacts.PHONE_MOBILE:
                             data['mobile'] = phone.text
                         if phone.rel == gdata.contacts.PHONE_WORK_FAX:
-                            data['fax'] = phone.text 
-                datas.append(data)        
+                            data['fax'] = phone.text
+                datas.append(data)
             next = self.contact.GetNextLink()
-            self.contact = next and self.gd_client.GetContactsFeed(next.href) or None     
+            self.contact = next and self.gd_client.GetContactsFeed(next.href) or None
         return datas
-     
-    def get_partner_address(self,val):
+
+
+
+    def get_address_id(self, val):
+        contact = self.xml_id_exist(self.TABLE_ADDRESS, val.get('id'))
+        if contact:
+            return str(contact)
+        return False
+
+    def get_contact_mapping(self):
+        return {
+            'model': 'res.partner',
+            'dependencies': [self.TABLE_ADDRESS],
+            'map': {
+                'id':'id',
+                'name': 'name',
+                'customer': 'customer',
+                'supplier': 'supplier',
+                'address/id': self.get_address_id,
+                }
+            }
+
+    def get_partner_id(self, val):
         partner_id = False
         address_pool = self.obj.pool.get('res.partner.address')
         company_pool = self.obj.pool.get('res.company')
@@ -325,38 +345,19 @@ class google_import(import_framework):
                 for rec in records:
                     if rec.partner_id:
                         partner_id = rec.partner_id
-        field_map = {
-            'name': 'name',
-            'type': 'Type',
-            'city': 'city',
-            'phone': 'phone',
-            'mobile': 'mobile',
-            'email': 'email',
-            'fax': 'fax',
-        }
-        val.update({'Type':'contact'})
-        val.update({'id_new': val['id']+'address_contact' })
-        return self.import_object_mapping(field_map , val, 'res.partner.address', self.context.get('table')[0], val['id_new'], self.DO_NOT_FIND_DOMAIN)
-        
-    def get_contact_mapping(self):
-        return {
-            'model': 'res.partner',
-            'dependencies': [],
-            'map': {
-                'id':'id',
-                'name': 'name',
-                'customer': 'customer',
-                'supplier': 'supplier',
-                'address/id': self.get_partner_address,
-                }
-            }   
-                    
+            return partner_id
+        contact = self.xml_id_exist(self.TABLE_CONTACT, val.get('id'))
+        if contact:
+            partner_id = self.get_mapped_id(self.TABLE_CONTACT, val.get('id'))
+        return partner_id
+
     def get_address_mapping(self):
         return {
             'model': 'res.partner.address',
             'dependencies': [],
             'map': {
                 'id':'id',
+                'partner_id/.id': self.get_partner_id,
                 'name': 'name',
                 'city': 'city',
                 'phone': 'phone',
@@ -365,6 +366,5 @@ class google_import(import_framework):
                 'fax': 'fax',
                 'function': 'function'
                 }
-        
-        }
 
+        }
