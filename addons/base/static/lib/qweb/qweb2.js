@@ -35,10 +35,10 @@ var QWeb2 = {
             return (noquotes ? '' : "'") + s.replace(/\r?\n/g, "\\n").replace(/'/g, "\\'") + (noquotes ? '' : "'");
         },
         html_escape: function(s, attribute) {
-            if (s === null || s === undefined) {
+            if (s == null) {
                 return '';
             }
-            s = (new String(s)).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            s = String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
             if (attribute) {
                 s = s.replace(/"/g, '&quot;');
             }
@@ -48,7 +48,7 @@ var QWeb2 = {
             if (o !== null && o !== undefined) {
                 if (o.constructor === Array) {
                     if (o[1] !== null && o[1] !== undefined) {
-                        return ' ' + o[0] + '="' + this.html_escape(o[1]) + '"';
+                        return ' ' + o[0] + '="' + this.html_escape(o[1], true) + '"';
                     }
                 } else if (typeof o === 'object') {
                     var r = '';
@@ -670,15 +670,10 @@ QWeb2.Element = (function() {
             this.top("(function(" + value + ") {");
             this.bottom("})(dict);");
             this.indent();
-            if (this.children.length === 1) {
-                var lines = this.children[0].node.data.split(/\r?\n/);
-                for (var i = 0, ilen = lines.length; i < ilen; i++) {
-                    this.top(lines[i]);
-                }
-            } else {
-                this.engine.tools.exception("'js' code block contains " + this.children.length + " nodes instead of 1");
+            var lines = this.engine.tools.xml_node_to_string(this.node, true).split(/\r?\n/);
+            for (var i = 0, ilen = lines.length; i < ilen; i++) {
+                this.top(lines[i]);
             }
-            // Maybe I could handle the children ?
             this.process_children = false;
         },
         compile_action_debug : function(value) {

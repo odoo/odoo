@@ -731,6 +731,7 @@ openerp.base.search.ExtendedSearch = openerp.base.BaseWidget.extend({
         var render = group.render();
         this.$element.find('.searchview_extended_groups_list').append(render);
         group.start();
+        this.check_last_element();
     },
     start: function () {
         this._super();
@@ -758,11 +759,9 @@ openerp.base.search.ExtendedSearch = openerp.base.BaseWidget.extend({
     on_activate: function() {
         this.add_group();
         var table = this.$element.closest("table.oe-searchview-render-line");
-        if(table.css("display") == "none") {
-            table.css("display", "");
-            if(this.$element.hasClass("folded")) {
-                this.$element.toggleClass("folded expanded");
-            }
+        table.css("display", "");
+        if(this.$element.hasClass("folded")) {
+            this.$element.toggleClass("folded expanded");
         }
     },
     hide: function() {
@@ -771,6 +770,10 @@ openerp.base.search.ExtendedSearch = openerp.base.BaseWidget.extend({
         if(this.$element.hasClass("expanded")) {
             this.$element.toggleClass("folded expanded");
         }
+    },
+    check_last_element: function() {
+        _.each(this.children, function(x) {x.set_last_group(false);});
+        this.children[this.children.length - 1].set_last_group(true);
     }
 });
 
@@ -796,9 +799,6 @@ openerp.base.search.ExtendedSearchGroup = openerp.base.BaseWidget.extend({
         });
         var delete_btn = this.$element.find('.searchview_extended_delete_group');
         delete_btn.click(function (e) {
-            if (_this.parent.children.length == 1)  {
-                _this.parent.hide();
-            }
             _this.stop();
         });
     },
@@ -811,6 +811,19 @@ openerp.base.search.ExtendedSearchGroup = openerp.base.BaseWidget.extend({
         return [].concat(choice == "none" ? ['!'] : [],
             _.map(_.range(_.max([0,props.length - 1])), function() { return op; }),
             props);
+    },
+    stop: function() {
+        var parent = this.parent;
+        if (this.parent.children.length == 1)
+            this.parent.hide();
+        this._super();
+        parent.check_last_element();
+    },
+    set_last_group: function(is_last) {
+        if(is_last)
+            this.$element.addClass("last_group");
+        else
+            this.$element.removeClass("last_group");
     }
 });
 
@@ -837,6 +850,11 @@ openerp.base.search.ExtendedSearchProposition = openerp.base.BaseWidget.extend({
         delete_btn.click(function (e) {
             _this.stop();
         });
+    },
+    stop: function() {
+        if (this.parent.children.length == 1)
+            this.parent.stop();
+        this._super();
     },
     changed: function() {
         var nval = this.$element.find(".searchview_extended_prop_field").val();

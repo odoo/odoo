@@ -334,9 +334,6 @@ openerp.base.Session = openerp.base.BasicController.extend( /** @lends openerp.b
         // Construct a JSON-RPC2 request, method is currently unused
         params.session_id = this.session_id;
         params.context = typeof(params.context) != "undefined" ? params.context  : this.context;
-        if (!params.context.bin_size) {
-            params.context.bin_size = true;
-        }
 
         // Use a default error handler unless defined
         error_callback = typeof(error_callback) != "undefined" ? error_callback : this.on_rpc_error;
@@ -402,7 +399,6 @@ openerp.base.Session = openerp.base.BasicController.extend( /** @lends openerp.b
     on_rpc_response: function() {
     },
     on_rpc_error: function(error) {
-        this.on_log(error.message, error.data.debug);
     },
     /**
      * The session is validated either by login or by restoration of a previous session
@@ -737,24 +733,124 @@ openerp.base.BaseWidget = openerp.base.Controller.extend({
     }
 });
 
-openerp.base.CrashManager = openerp.base.Controller.extend({
-    init: function(session, element_id) {
-        this._super(session, element_id);
+openerp.base.Dialog = openerp.base.BaseWidget.extend({
+    dialog_title: "",
+    identifier_prefix: 'dialog',
+    init: function (session, options) {
+        this._super(null, session);
+        this.options = {
+            modal: true,
+            width: 'auto',
+            min_width: 0,
+            max_width: '100%',
+            height: 'auto',
+            min_height: 0,
+            max_height: '100%',
+            autoOpen: false,
+            buttons: {}
+        };
+        for (var f in this) {
+            if (f.substr(0, 10) == 'on_button_') {
+                this.options.buttons[f.substr(10)] = this[f];
+            }
+        }
+        if (options) {
+            this.set_options(options);
+        }
+    },
+    set_options: function(options) {
+        options = options || {};
+        options.width = this.get_width(options.width || this.options.width);
+        options.min_width = this.get_width(options.min_width || this.options.min_width);
+        options.max_width = this.get_width(options.max_width || this.options.max_width);
+        options.height = this.get_height(options.height || this.options.height);
+        options.min_height = this.get_height(options.min_height || this.options.min_height);
+        options.max_height = this.get_height(options.max_height || this.options.max_width);
+
+        if (options.width !== 'auto') {
+            if (options.width > options.max_width) options.width = options.max_width;
+            if (options.width < options.min_width) options.width = options.min_width;
+        }
+        if (options.height !== 'auto') {
+            if (options.height > options.max_height) options.height = options.max_height;
+            if (options.height < options.min_height) options.height = options.min_height;
+        }
+        if (!options.title && this.dialog_title) {
+            options.title = this.dialog_title;
+        }
+        _.extend(this.options, options);
+    },
+    get_width: function(val) {
+        return this.get_size(val.toString(), $(window.top).width());
+    },
+    get_height: function(val) {
+        return this.get_size(val.toString(), $(window.top).height());
+    },
+    get_size: function(val, available_size) {
+        if (val === 'auto') {
+            return val;
+        } else if (val.slice(-1) == "%") {
+            return Math.round(available_size / 100 * parseInt(val.slice(0, -1), 10));
+        } else {
+            return parseInt(val, 10);
+        }
+    },
+    start: function (auto_open) {
+        this.$dialog = $('<div id="' + this.element_id + '"></div>').dialog(this.options);
+        if (auto_open !== false) {
+            this.open();
+        }
+        this._super();
+    },
+    open: function(options) {
+        // TODO fme: bind window on resize
+        if (this.template) {
+            this.$element.html(this.render());
+        }
+        this.set_options(options);
+        this.$dialog.dialog(this.options).dialog('open');
+    },
+    close: function(options) {
+        this.$dialog.dialog('close');
+    },
+    stop: function () {
+        this.$dialog.dialog('destroy');
+    }
+});
+
+openerp.base.CrashManager = openerp.base.Dialog.extend({
+    identifier_prefix: 'dialog_crash',
+    init: function(session) {
+        this._super(session);
         this.session.on_rpc_error.add(this.on_rpc_error);
     },
-    on_rpc_error: function(error) {
-        var msg = error.message + "\n" + error.data.debug;
-        this.display_error(msg);
+    on_button_Ok: function() {
+        this.close();
     },
-    display_error: function(message) {
-        $('<pre></pre>').text(message).dialog({
-            modal: true,
-            buttons: {
-                OK: function() {
-                    $(this).dialog("close");
-                }
+    on_rpc_error: function(error) {
+        this.error = error;
+        if (error.data.fault_code) {
+            var split = error.data.fault_code.split('\n')[0].split(' -- ');
+            if (split.length > 1) {
+                error.type = split.shift();
+                error.data.fault_code = error.data.fault_code.substr(error.type.length + 4);
             }
-        });
+        }
+        if (error.code === 200 && error.type) {
+            this.dialog_title = "OpenERP " + _.capitalize(error.type);
+            this.template = 'DialogWarning';
+            this.open({
+                width: 'auto',
+                height: 'auto'
+            });
+        } else {
+            this.dialog_title = "OpenERP Error";
+            this.template = 'DialogTraceback';
+            this.open({
+                width: '80%',
+                height: '80%'
+            });
+        }
     }
 });
 
@@ -984,6 +1080,7 @@ openerp.base.WebClient = openerp.base.Controller.extend({
         this.session = new openerp.base.Session("oe_errors");
         this.loading = new openerp.base.Loading(this.session, "oe_loading");
         this.crashmanager =  new openerp.base.CrashManager(this.session);
+        this.crashmanager.start(false);
 
         // Do you autorize this ?
         openerp.base.Controller.prototype.notification = new openerp.base.Notification("oe_notification");

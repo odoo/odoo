@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import unittest2
-from openerpweb.nonliterals import Domain
+from openerpweb.nonliterals import Domain, Context, CompoundDomain, CompoundContext
 import openerpweb.openerpweb
 
 class TestOpenERPSession(unittest2.TestCase):
@@ -77,7 +77,7 @@ class TestOpenERPSession(unittest2.TestCase):
 
     def test_eval_empty_domains(self):
         self.assertEqual(
-            self.session.eval_domains([]),
+            self.session.eval_domain(CompoundDomain()),
             [])
 
     def test_eval_literal_domains(self):
@@ -89,7 +89,7 @@ class TestOpenERPSession(unittest2.TestCase):
              ('c', 'in', ['a', 'b', 'c'])]
         ]
         self.assertEqual(
-            self.session.eval_domains(domains),
+            self.session.eval_domain(CompoundDomain(*domains)),
             [
                 ('a', 'is', 3),
                 ('b', 'ilike', 'foo'),
@@ -104,7 +104,7 @@ class TestOpenERPSession(unittest2.TestCase):
                    "['|', ('date', '<', current_date),"
                         " ('date', '>', current_date)]")]
         self.assertEqual(
-            self.session.eval_domains(domains),
+            self.session.eval_domain(CompoundDomain(*domains)),
             [('uid', '=', -1),
              '|', ('date', '<', '1945-08-05'), ('date', '>', '1945-08-05')]
         )

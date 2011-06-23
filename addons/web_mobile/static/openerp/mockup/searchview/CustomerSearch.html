@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<title>Searchview of customers OpenERP mobile</title>
+	<link rel="stylesheet"  href="../OpenERPmobile.css" />
+	<script type="text/javascript" src="../jquery-1.5.1.js"></script>
+	<script type="text/javascript" src="../jquer.mobile-1.0a3.js"></script>
+</head> 
+<body> 
+
+	<div style="top: 279.5px;" class="ui-loader ui-body-a ui-corner-all"><span class="ui-icon ui-icon-loading spin"></span><h1>loading</h1></div><div class="ui-page ui-body-c ui-page-active" data-url="docs/lists/lists-divider.html" data-role="page">
+
+	<div role="banner" class="ui-bar-d ui-header" data-role="header" data-theme="b">
+	    <a data-theme="c" title="back" href="../menu/CustomersOptions.html"rel="external" data-icon="back" data-iconpos="notext" data-direction="reverse" class=" jqm-home ui-btn  ui-btn-icon-notext ui-btn-corner-all"><span class="ui-icon ui-icon-back"></span></a>
+
+		<h1 aria-level="1" role="heading" tabindex="0" class="ui-title">Search Customers</h1>
+		
+    </div><!-- /header -->
+
+	<div data-role="content">
+	
+			 <fieldset data-role="controlgroup" data-type="horizontal">
+                <input type="checkbox" name="checkbox-6" id="checkbox-6" class="custom" />
+                 <label for="checkbox-6">Customers</label>
+                <input type="checkbox" name="checkbox-7" id="checkbox-7" class="custom" />
+                 <label for="checkbox-7"><em>Suppliers</em></label>
+            </fieldset>
+
+			<label for="text">Name:</label>
+	        <input type="text" name="text" id="text" value=""  />
+			<label for="text">Contact:</label>
+	        <input type="text" name="text" id="text" value=""  />
+			<a class="ui-btn ui-btn-icon-left ui-btn-corner-all ui-shadow ui-btn-up-c" data-theme="c" href="../listview/CountryList.html"rel="external" data-role="button" data-icon="search"><span class="ui-btn-inner ui-btn-corner-all"><span class="ui-btn-text">Country</span><span class="ui-icon ui-icon-search ui-icon-shadow"></span></span></a>
+			<label for="text">Category:</label>
+	        <input type="text" name="text" id="text" value=""  />
+			<label for="select-choice-1" class="select">Sales Team:</label>
+				<select name="select-choice-1" id="select-choice-1">
+					<option value="in">Sales Department</option>
+					<option value="out"></option>
+				</select>
+			<a class="ui-btn ui-btn-icon-left ui-btn-corner-all ui-shadow ui-btn-up-c" data-theme="c" href="../listview/SalesManList.html"rel="external" data-role="button" data-icon="search"><span class="ui-btn-inner ui-btn-corner-all"><span class="ui-btn-text">SaleMan</span><span class="ui-icon ui-icon-search ui-icon-shadow"></span></span></a>
+			
+			<fieldset data-role="controlgroup" data-type="horizontal">
+					<p>Group by</p>
+					<input type="checkbox" name="checkbox-6" id="checkbox-6" class="custom" />
+					 <label for="checkbox-6">SalesMan</label>
+			</fieldset>
+			<fieldset class="ui-grid-a">
+			  
+				<div class="ui-block-a"><a class="ui-btn ui-btn-corner-all ui-shadow ui-btn-up-c" data-theme="c" href="../listview/CustomersListCustomized.html"rel="external" data-role="button"><span class="ui-btn-inner ui-btn-corner-all"><span class="ui-btn-text">Search</span></span></a>></div>
+				<div class="ui-block-b"><a class="ui-btn ui-btn-corner-all ui-shadow ui-btn-up-c" data-theme="c" href="CustomerSearch.html"rel="external" data-role="button"><span class="ui-btn-inner ui-btn-corner-all"><span class="ui-btn-text">Clear</span></span></a>></div>	   
+			</fieldset>
+		
+	</div>
+		
+</body>
+</html>

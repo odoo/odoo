@@ -199,6 +199,8 @@ background: linear-gradient(top, #bd5e54 0%,#90322a 60%); /* W3C */
     line-height: 20px;
     font-weight: bold;
     font-size: 85%;
+
+    white-space: nowrap;
 }
 .openerp .menu a:hover,
 .openerp .menu a:focus,
@@ -545,9 +547,25 @@ background: linear-gradient(top, #ffffff 0%,#d8d8d8 11%,#afafaf 86%,#333333 91%,
 }
 
 .openerp .searchview_extended_group {
-    border: #696969 solid 1px;
     padding: 3px;
     margin: 2px;
+}
+
+.openerp .searchview_extended_group .oe_adv_filters_and {
+    border-bottom: 1px solid #8E8E8E;
+    text-align: center;
+    margin-top: -10px;
+}
+.openerp .searchview_extended_group .oe_adv_filters_and span {
+    background: #F0EEEE;
+    position: relative;
+    top: 0.5em;
+    padding: 0 1em 0 1em;
+    color: #8E8E8E;
+}
+
+.openerp .searchview_extended_group.last_group .oe_adv_filters_and {
+    display: none;
 }
 
 .openerp .oe_search-view-custom-filter-btn span {
@@ -563,6 +581,7 @@ background: linear-gradient(top, #ffffff 0%,#d8d8d8 11%,#afafaf 86%,#333333 91%,
 
 .openerp .searchview_extended_delete_group {
     float:right;
+    display: none;
 }
 
 .openerp .searchview_extended_delete_group span,
@@ -610,6 +629,12 @@ background: linear-gradient(top, #ffffff 0%,#d8d8d8 11%,#afafaf 86%,#333333 91%,
 }
 .openerp .oe-listview .oe-field-cell button:active {
     opacity: 0.5;
+}
+.openerp .oe-listview .oe-field-cell button img {
+    cursor: pointer;
+}
+.openerp .oe-listview .oe-field-cell button img:hover {
+    opacity: 0.75;
 }
 
 .openerp .oe-listview th.oe-actions {
@@ -693,6 +718,12 @@ background: linear-gradient(top, #ffffff 0%,#d8d8d8 11%,#afafaf 86%,#333333 91%,
 .openerp table.oe_frame td {
     color: #4c4c4c;
 }
+.openerp td.oe_form_frame_cell {
+    padding: 2px;
+}
+.openerp td.oe_form_frame_cell.oe_form_group {
+    padding: 0px;
+}
 .openerp .required.error {
     border: 1px solid #900;
 }
@@ -709,6 +740,7 @@ background: linear-gradient(top, #ffffff 0%,#d8d8d8 11%,#afafaf 86%,#333333 91%,
 .openerp label.oe_form_label, .openerp label.oe_form_label_help {
     display: block;
     text-align: right;
+    margin: 3px 0 0 10px;
 }
 .openerp label.oe_form_label_help span {
     font-size: 80%;
@@ -784,7 +816,8 @@ background: linear-gradient(top, #ffffff 0%,#d8d8d8 11%,#afafaf 86%,#333333 91%,
 .openerp .separator.horizontal {
    font-weight: bold;
     border-bottom-width: 1px;
-    margin: 6px 4px 6px 1px;
+    margin: 3px 4px 3px 1px;
+    height: 15px;
 }
 .openerp td.required input, .openerp td.required select {
     background-color: #D2D2FF;
@@ -1025,4 +1058,10 @@ background: linear-gradient(top, #ffffff 0%,#ebe9e9 100%); /* W3C */
 }
 .openerp .oe-m2o-disabled-cm {
     color: grey;
+}
+
+.openerp .oe-dialog-warning p {
+    padding-left: 1em;
+    font-size: 1.2em;
+    font-weight: bold;
 }

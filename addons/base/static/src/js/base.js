@@ -126,12 +126,27 @@ openerp.base = function(instance) {
     openerp.base.dates(instance);
     openerp.base.chrome(instance);
     openerp.base.data(instance);
-    openerp.base.views(instance);
-    openerp.base.search(instance);
-    openerp.base.list(instance);
-    openerp.base.tree(instance);
-    openerp.base.form(instance);
-    openerp.base.list.editable(instance);
+    if (openerp.base.views) {
+        openerp.base.views(instance);
+    }
+    if (openerp.base.search) {
+        openerp.base.search(instance);
+    }
+    if (openerp.base.list) {
+        openerp.base.list(instance);
+    }
+    if (openerp.base.tree) {
+        openerp.base.tree(instance);
+    }
+    if (openerp.base. m2o) {
+        openerp.base.m2o(instance);
+    }
+    if (openerp.base.form) {
+        openerp.base.form(instance);
+    }
+    if (openerp.base.list && openerp.base.list.editable) {
+        openerp.base.list.editable(instance);
+    }
 };
 
 // vim:et fdc=0 fdl=0 foldnestmax=3 fdm=syntax:
