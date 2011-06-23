@@ -48,6 +48,7 @@ import re
 import time
 import traceback
 import types
+import simplejson
 
 import openerp.netsvc as netsvc
 from lxml import etree
@@ -70,6 +71,76 @@ module_class_list = {}
 
 # Super-user identifier (aka Administrator aka root)
 ROOT_USER_ID = 1
+
+def transfer_field_to_modifiers(field, modifiers):
+    for a in ('invisible', 'readonly', 'required'):
+        if field.get(a):
+            modifiers[a] = field.get(a)
+
+
+# Don't deal with groups, it is done by check_group().
+def transfer_node_to_modifiers(node, modifiers):
+    if node.get('attrs'):
+        modifiers.update(eval(node.get('attrs')))
+
+    if node.get('states'):
+        # TODO combine with AND or OR, use implicit AND for now.
+        modifiers.setdefault('invisible', [])\
+            .append(('state', 'not in', node.get('states').split(',')))
+
+    for a in ('invisible', 'readonly', 'required'):
+        if node.get(a):
+            try:
+                # TODO only simple expression as it is evaluated server-side
+                modifiers[a] = bool(eval(node.get(a)))
+            except:
+                print ">>> Can't seem to eval this thing:", node.get(a)
+
+def simplify_modifiers(modifiers):
+    for a in ('invisible', 'readonly', 'required'):
+        if a in modifiers and not modifiers[a]:
+            del modifiers[a]
+
+
+def transfer_modifiers_to_node(modifiers, node):
+    if modifiers:
+        simplify_modifiers(modifiers)
+        node.set('modifiers', simplejson.dumps(modifiers))
+
+
+def test_modifiers(what, expected):
+    modifiers = {}
+    if isinstance(what, basestring):
+        node = etree.fromstring(what)
+        transfer_node_to_modifiers(node, modifiers)
+        simplify_modifiers(modifiers)
+        json = simplejson.dumps(modifiers)
+        assert json == expected, "%s != %s" % (json, expected)
+    elif isinstance(what, dict):
+        transfer_field_to_modifiers(what, modifiers)
+        simplify_modifiers(modifiers)
+        json = simplejson.dumps(modifiers)
+        assert json == expected, "%s != %s" % (json, expected)
+
+
+def tests():
+    test_modifiers('<field name="a"/>', '{}')
+    test_modifiers('<field name="a" invisible="1"/>', '{"invisible": true}')
+    test_modifiers('<field name="a" readonly="1"/>', '{"readonly": true}')
+    test_modifiers('<field name="a" required="1"/>', '{"required": true}')
+    test_modifiers('<field name="a" invisible="0"/>', '{}')
+    test_modifiers('<field name="a" readonly="0"/>', '{}')
+    test_modifiers('<field name="a" required="0"/>', '{}')
+    test_modifiers('<field name="a" invisible="1" required="1"/>', '{"invisible": true, "required": true}') # TODO order is not guaranteed
+    test_modifiers('<field name="a" invisible="1" required="0"/>', '{"invisible": true}')
+    test_modifiers('<field name="a" invisible="0" required="1"/>', '{"required": true}')
+    test_modifiers("""<field name="a" attrs="{'invisible': [('b', '=', 'c')]}"/>""", '{"invisible": [["b", "=", "c"]]}')
+
+    # The dictionary is supposed to be the result of fields_get().
+    test_modifiers({}, '{}')
+    test_modifiers({"invisible": True}, '{"invisible": true}')
+    test_modifiers({"invisible": False}, '{}')
+    
 
 def check_object_name(name):
     """ Check if the given name is a valid openerp object name.
@@ -1343,8 +1414,6 @@ class orm_template(object):
         children = True
 
         modifiers = {}
-        if node.get('attrs'):
-            modifiers = eval(node.get('attrs')) # get the attrs before they are (possibly) deleted by check_group below
 
         def encode(s):
             if isinstance(s, unicode):
@@ -1359,7 +1428,7 @@ class orm_template(object):
                 can_see = any(access_pool.check_groups(cr, user, group) for group in groups)
                 if not can_see:
                     node.set('invisible', '1')
-                    modifiers.setdefault('invisible', '1')
+                    modifiers['invisible'] = True
                     if 'attrs' in node.attrib:
                         del(node.attrib['attrs']) #avoid making field visible later
                 del(node.attrib['groups'])
@@ -1432,13 +1501,9 @@ class orm_template(object):
                 fields[node.get('name')] = attrs
 
                 # TODO a true fields_get is unnecessary (no need for the translation)
+                # TODO do this in _view_look_dom_arch instead of here
                 field = self.fields_get(cr, user, [node.get('name')], context)[node.get('name')]
-                for a in ('invisible', 'readonly', 'required'):
-                    if field.get(a):
-                        modifiers[a] = field.get(a)
-                    # The view architeture overrides the python model.
-                    if node.get(a):
-                        modifiers[a] = node.get(a)
+                transfer_field_to_modifiers(field, modifiers)
 
         elif node.tag in ('form', 'tree'):
             result = self.view_header_get(cr, user, False, node.tag, context)
@@ -1451,6 +1516,12 @@ class orm_template(object):
                     fields[node.get(additional_field)] = {}
 
         check_group(node)
+
+        # The view architeture overrides the python model.
+        # Get the attrs before they are (possibly) deleted by check_group below
+        transfer_node_to_modifiers(node, modifiers)
+
+        # TODO remove attrs couterpart in modifiers when invisible is true ?
 
         # translate view
         if 'lang' in context:
@@ -1479,8 +1550,7 @@ class orm_template(object):
             if children or (node.tag == 'field' and f.tag in ('filter','separator')):
                 fields.update(self.__view_look_dom(cr, user, f, view_id, context))
 
-        if modifiers:
-            node.set('modifiers', str(modifiers))
+        transfer_modifiers_to_node(modifiers, node)
         return fields
 
     def _disable_workflow_buttons(self, cr, user, node):
