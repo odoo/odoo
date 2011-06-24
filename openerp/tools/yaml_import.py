@@ -643,7 +643,6 @@ class YamlInterpreter(object):
                 ids = [self.get_id(node.id)]
             if len(ids):
                 self.pool.get(node.model).unlink(self.cr, self.uid, ids)
-                self.pool.get('ir.model.data')._unlink(self.cr, 1, node.model, ids)
         else:
             self.logger.log(logging.TEST, "Record not deleted.")
 

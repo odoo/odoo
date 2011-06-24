@@ -173,6 +173,20 @@ class expression(object):
                     return ids + rg(ids2, table, parent)
                 return [(left, 'in', rg(ids, table, parent or table._parent_name))]
 
+        def child_of_right_to_ids(value):
+            """ Normalize a single id, or a string, or a list of ids to a list of ids.
+
+            This function is always used with _rec_get() above, so it should be
+            called directly from _rec_get instead of repeatedly before _rec_get.
+
+            """
+            if isinstance(value, basestring):
+                return [x[0] for x in field_obj.name_search(cr, uid, value, [], 'ilike', context=context, limit=None)]
+            elif isinstance(value, (int, long)):
+                return [value]
+            else:
+                return list(value)
+
         self.__main_table = table
         self.__all_tables.add(table)
 
@@ -203,7 +217,8 @@ class expression(object):
             field = working_table._columns.get(fargs[0], False)
             if not field:
                 if left == 'id' and operator == 'child_of':
-                    dom = _rec_get(right, working_table)
+                    ids2 = child_of_right_to_ids(right)
+                    dom = _rec_get(ids2, working_table)
                     self.__exp = self.__exp[:i] + dom + self.__exp[i+1:]
                 continue
 
@@ -249,10 +264,7 @@ class expression(object):
             elif field._type == 'one2many':
                 # Applying recursivity on field(one2many)
                 if operator == 'child_of':
-                    if isinstance(right, basestring):
-                        ids2 = [x[0] for x in field_obj.name_search(cr, uid, right, [], 'like', context=context, limit=None)]
-                    else:
-                        ids2 = list(right)
+                    ids2 = child_of_right_to_ids(right)
                     if field._obj != working_table._name:
                         dom = _rec_get(ids2, field_obj, left=left, prefix=field._obj)
                     else:
@@ -296,16 +308,12 @@ class expression(object):
             elif field._type == 'many2many':
                 #FIXME
                 if operator == 'child_of':
-                    if isinstance(right, basestring):
-                        ids2 = [x[0] for x in field_obj.name_search(cr, uid, right, [], 'like', context=context, limit=None)]
-                    else:
-                        ids2 = list(right)
-
                     def _rec_convert(ids):
                         if field_obj == table:
                             return ids
                         return self.__execute_recursive_in(cr, field._id1, field._rel, field._id2, ids, operator, field._type)
 
+                    ids2 = child_of_right_to_ids(right)
                     dom = _rec_get(ids2, field_obj)
                     ids2 = field_obj.search(cr, uid, dom, context=context)
                     self.__exp[i] = ('id', 'in', _rec_convert(ids2))
@@ -344,13 +352,7 @@ class expression(object):
 
             elif field._type == 'many2one':
                 if operator == 'child_of':
-                    if isinstance(right, basestring):
-                        ids2 = [x[0] for x in field_obj.name_search(cr, uid, right, [], 'like', limit=None)]
-                    elif isinstance(right, (int, long)):
-                        ids2 = list([right])
-                    else:
-                        ids2 = list(right)
-
+                    ids2 = child_of_right_to_ids(right)
                     self.__operator = 'in'
                     if field._obj != working_table._name:
                         dom = _rec_get(ids2, field_obj, left=left, prefix=field._obj)
@@ -360,12 +362,12 @@ class expression(object):
                 else:
                     def _get_expression(field_obj,cr, uid, left, right, operator, context=None):
                         if context is None:
-                            context = {}                        
+                            context = {}
                         c = context.copy()
                         c['active_test'] = False
                         #Special treatment to ill-formed domains
                         operator = ( operator in ['<','>','<=','>='] ) and 'in' or operator
-                        
+
                         dict_op = {'not in':'!=','in':'=','=':'in','!=':'not in','<>':'not in'}
                         if isinstance(right,tuple):
                             right = list(right)
@@ -387,7 +389,7 @@ class expression(object):
                         elif isinstance(right,(list,tuple)):
                             m2o_str = True
                             for ele in right:
-                                if not isinstance(ele, basestring): 
+                                if not isinstance(ele, basestring):
                                     m2o_str = False
                                     break
                     elif right == []:
@@ -403,7 +405,7 @@ class expression(object):
                             new_op = '!='
                         #Is it ok to put 'left' and not 'id' ?
                         self.__exp[i] = (left,new_op,False)
-                        
+
                     if m2o_str:
                         self.__exp[i] = _get_expression(field_obj,cr, uid, left, right, operator, context=context)
             else:

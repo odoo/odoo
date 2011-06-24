@@ -3514,9 +3514,10 @@ class orm(orm_template):
             # Removing the ir_model_data reference if the record being deleted is a record created by xml/csv file,
             # as these are not connected with real database foreign keys, and would be dangling references.
             # Step 1. Calling unlink of ir_model_data only for the affected IDS.
-            referenced_ids = pool_model_data.search(cr, uid, [('res_id','in',list(sub_ids)),('model','=',self._name)], context=context)
+            reference_ids = pool_model_data.search(cr, uid, [('res_id','in',list(sub_ids)),('model','=',self._name)], context=context)
             # Step 2. Marching towards the real deletion of referenced records
-            pool_model_data.unlink(cr, uid, referenced_ids, context=context)
+            if reference_ids:
+                pool_model_data.unlink(cr, uid, reference_ids, context=context)
 
             # For the same reason, removing the record relevant to ir_values
             ir_value_ids = ir_values_obj.search(cr, uid,
