@@ -163,6 +163,6 @@ def search(portType, sessionid, module_name, offset, max_results, query=None, or
             for j in i._name_value_list:
                 ans_dir[tools.ustr(j._name)] = tools.ustr(j._value)
             #end for
-        ans_list.append(ans_dir)
+            ans_list.append(ans_dir)
     #end for
     return ans_list

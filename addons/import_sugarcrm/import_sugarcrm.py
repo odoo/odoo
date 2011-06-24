@@ -63,6 +63,8 @@ class sugar_import(import_framework):
     TABLE_DOCUMENT = 'DocumentRevisions'
     TABLE_HISTORY_ATTACHMNET = 'history_attachment'
     
+    MAX_RESULT_PER_PAGE = 200
+    
     def initialize(self):
         #login
         PortType,sessionid = sugar.login(self.context.get('username',''), self.context.get('password',''), self.context.get('url',''))
@@ -72,8 +74,20 @@ class sugar_import(import_framework):
         self.context['session_id'] = sessionid
         
     def get_data(self, table):
-        return sugar.search(self.context.get('port'), self.context.get('session_id'), table, 0, 500)
+        offset = 0
+        
+        res = []
+        while True:
+            r = sugar.search(self.context.get('port'), self.context.get('session_id'), table, offset, self.MAX_RESULT_PER_PAGE)
+            res.extend(r)
+            if len(r) < self.MAX_RESULT_PER_PAGE:
+                break;
+            offset += self.MAX_RESULT_PER_PAGE
+        return res
     
+    #def get_link(self, from_table, ids, to_table):
+        #return sugar.relation_search(self.context.get('port'), self.context.get('session_id'), from_table, module_id=ids, related_module=to_table)
+
     """
     Common import method
     """
@@ -118,7 +132,7 @@ class sugar_import(import_framework):
     
     def import_document(self, val):
         File,Filename = sugar.get_document_revision_search(self.context.get('port'), self.context.get('session_id'), val.get('id'))
-        val['datas'] = base64.encodestring(File)
+        val['datas'] = File
         val['datas_fname'] = Filename
         return val   
         
@@ -139,16 +153,7 @@ class sugar_import(import_framework):
     import Emails
     """
 
-    def get_email_attachment(self, val):
-        File, Filename = sugar.attachment_search(self.context.get('port'), self.context.get('session_id'), self.TABLE_EMAIL, val.get('id')) 
-        attach_xml_id = False
-        if File:
-            fields = ['name', 'datas', 'datas_fname','res_id', 'res_model']
-            name = 'attachment_'+ (Filename or val.get('name'))
-            datas = [Filename or val.get('name'), File, Filename, val.get('res_id'),val.get('model',False)]
-            attach_xml_id = self.import_object(fields, datas, 'ir.attachment', self.TABLE_HISTORY_ATTACHMNET, name, [('res_id', '=', val.get('res_id'), ('model', '=', val.get('model')))])
-        return attach_xml_id
-    
+      
     def import_email(self, val):
         vals = sugar.email_search(self.context.get('port'), self.context.get('session_id'), self.TABLE_EMAIL, val.get('id'))
         model_obj =  self.obj.pool.get('ir.model.data')
@@ -180,7 +185,6 @@ class sugar_import(import_framework):
                         'res_id': 'res_id',
                         'model': 'model',
                         'partner_id/.id': 'partner_id/.id',                         
-                        'attachment_ids/id': self.get_email_attachment,
                         'user_id/id': ref(self.TABLE_USER, 'assigned_user_id'),
                         'description': ppconcat('description', 'description_html'),
                 }
@@ -189,15 +193,7 @@ class sugar_import(import_framework):
     """
     import History(Notes)
     """
-    def get_note_attachment(self, val):
-        File, Filename = sugar.attachment_search(self.context.get('port'), self.context.get('session_id'), self.TABLE_NOTE, val.get('id')) 
-        attach_xml_id = False
-        if File:
-            fields = ['name', 'datas', 'datas_fname','res_id', 'res_model']
-            name = 'attachment_'+ (Filename or val.get('name'))
-            datas = [Filename or val.get('name'), File, Filename, val.get('res_id'),val.get('model',False)]
-            attach_xml_id = self.import_object(fields, datas, 'ir.attachment', self.TABLE_HISTORY_ATTACHMNET, name, [('res_id', '=', val.get('res_id'), ('model', '=', val.get('model')))])
-        return attach_xml_id
+    
 
     def import_history(self, val):
         model_obj =  self.obj.pool.get('ir.model.data')
@@ -207,27 +203,28 @@ class sugar_import(import_framework):
             model = model_obj.browse(self.cr, self.uid, model_ids)[0]
             if model.model == 'res.partner':
                 val['partner_id/.id'] = model.res_id
-                val['history'] = "1"
-            else:    
-                val['res_id'] = model.res_id
-                val['model'] = model.model
+            val['res_id'] = model.res_id
+            val['model'] = model.model
+        File, Filename = sugar.attachment_search(self.context.get('port'), self.context.get('session_id'), self.TABLE_NOTE, val.get('id')) 
+        if File:
+            val['datas'] = File
+            val['datas_fname'] = Filename
         return val    
     
     def get_history_mapping(self): 
         return { 
-                'model' : 'mailgate.message',
-                'dependencies' : [self.TABLE_USER, self.TABLE_PROJECT, self.TABLE_PROJECT_TASK, self.TABLE_ACCOUNT, self.TABLE_CONTACT, self.TABLE_LEAD, self.TABLE_OPPORTUNITY, self.TABLE_MEETING, self.TABLE_CALL],
+                'model' : 'ir.attachment',
+                'dependencies' : [self.TABLE_USER, self.TABLE_PROJECT, self.TABLE_PROJECT_TASK, self.TABLE_ACCOUNT, self.TABLE_CONTACT, self.TABLE_LEAD, self.TABLE_OPPORTUNITY, self.TABLE_MEETING, self.TABLE_CALL, self.TABLE_EMAIL],
                 'hook' : self.import_history,
                 'map' : {
                       'name':'name',
-                      'date': 'date_entered',
-                      'user_id/id': ref(self.TABLE_USER, 'assigned_user_id'),
+                      'user_id/id': ref(self.TABLE_USER, 'created_by'),
                       'description': ppconcat('description', 'description_html'),
                       'res_id': 'res_id',
-                      'model': 'model',
-                      'attachment_ids/id': self.get_note_attachment,
+                      'res_model': 'model',
                       'partner_id/.id' : 'partner_id/.id',
-                      'history' : 'history',
+                      'datas' : 'datas',
+                      'datas_fname' : 'datas_fname'
                 }
             }     
     
@@ -713,10 +710,10 @@ class sugar_import(import_framework):
             type_address = 'shipping' 
             
         if type == 'default':
-             map_partner_address = {
-            'name': 'name',
-            'type': const('default'),
-            'email': 'email1' 
+            map_partner_address = {
+                'name': 'name',
+                'type': const('default'),
+                'email': 'email1' 
             }
         else:        
             map_partner_address = {

@@ -9,8 +9,8 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Import Data From SugarCRM">
-    				<group col="8" width="980">
-	    				<group colspan="2" col="1">
+    				<group col="8" >
+	    				<group colspan="2" col="1" width="200">
 	    					<label colspan="1"  string=""/>
 	    					<label colspan="2"  string="Explaination Text"/>
 	    					<label colspan="1"  string="This Module Import SugarCRM Module Data into OpenERP Module."/>
@@ -20,7 +20,7 @@
                             <label colspan="2"  string=""/>
 			            </group>
 	    				<separator string="" orientation="vertical" colspan="1" rowspan="24" />                
-	                    <group colspan="4">
+	                    <group colspan="4" width="600"> 
 	                    	<separator string="Login Information" colspan="3"/>
 	                    	 <field name="url" colspan="4" widget="url"/>
 	                         <field name="username"/>
@@ -41,10 +41,7 @@
 	                             	<field name= "claim" />
 	                             	<field name="email_history"/>
 	                             </group>
-	                            <group colspan="1" col="2">
-	                                <separator string="HR" colspan="4"/>
-	    	                         <field name="employee" />  
-	                            </group>   
+	                         
 	                             <group colspan="2" col="2"> 
 	                                <separator string="Project" colspan="4"/>       
 		                             <field name= "project" />
@@ -52,6 +49,8 @@
 		                             <field name= "bug"/>
 	                            </group>
 	                            <group colspan="1" col="4">
+	                            	<separator string="HR" colspan="4"/>
+	    	                         <field name="employee" />  
 	                                <separator string="Document" colspan="4"/>
 		                             <field name= "document" />
 	                            </group>	                            
