@@ -26,14 +26,22 @@ class asset_modify(osv.osv_memory):
     _description = 'Modify Asset'
 
     _columns = {
-                'name': fields.char('Reason', size=64, required=True),
-                'method_delay': fields.float('Number of interval'),
-                'method_period': fields.float('Period per interval'),
-                'method_end': fields.date('Ending date'),
-                'note': fields.text('Notes'),
+        'name': fields.char('Reason', size=64, required=True),
+        'method_delay': fields.float('Number of interval'),
+        'method_period': fields.float('Period per interval'),
+        'method_end': fields.date('Ending date'),
+        'note': fields.text('Notes'),
     }
     
     def default_get(self, cr, uid, fields, context=None):
+        """ To get default values for the object.
+        @param self: The object pointer.
+        @param cr: A database cursor
+        @param uid: ID of the user currently logged in
+        @param fields: List of fields for which we want default values 
+        @param context: A standard dictionary 
+        @return: A dictionary which of fields with values. 
+        """ 
         asset_obj = self.pool.get('account.asset.asset')
         res = super(asset_modify, self).default_get(cr, uid, fields, context=context)
         asset_id = context.get('active_id', False)
@@ -49,6 +57,15 @@ class asset_modify(osv.osv_memory):
         return res
     
     def modify(self, cr, uid, ids, context=None):
+        """ Modifies the duration of asset for calculating depreciation
+        and maintains the history of old values.
+        @param self: The object pointer.
+        @param cr: A database cursor
+        @param uid: ID of the user currently logged in
+        @param ids: List of Ids 
+        @param context: A standard dictionary 
+        @return: Close the wizard. 
+        """ 
         asset_obj = self.pool.get('account.asset.asset')
         history_obj = self.pool.get('account.asset.history')
         asset_id = context.get('active_id', False)
