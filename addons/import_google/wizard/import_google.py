@@ -77,11 +77,10 @@ class google_import(import_framework):
         return data_fetching_function.get(table)()
 
 
-    def _get_tinydates(self, stime, etime,context):
+    def _get_tinydates(self, stime, etime, au_tz):
         stime = dateutil.parser.parse(stime)
         etime = dateutil.parser.parse(etime)
         try:
-            au_tz = context.get('au_tz')
             au_dt = au_tz.normalize(stime.replace(tzinfo=pytz.utc).astimezone(au_tz))
             timestring = datetime.datetime(*au_dt.timetuple()[:6]).strftime('%Y-%m-%d %H:%M:%S')
             au_dt = au_tz.normalize(etime.replace(tzinfo=pytz.utc).astimezone(au_tz))
@@ -188,8 +187,6 @@ class google_import(import_framework):
         else:
             time_zone = tools.get_server_timezone()
         au_tz = timezone(time_zone)
-        context = self.context
-        context.update({'au_tz':au_tz})
         event_vals = []
         for cal in self.calendars:
             events_query = gdata.calendar.service.CalendarEventQuery(user=urllib.unquote(cal.split('/')[~0]))
@@ -213,7 +210,7 @@ class google_import(import_framework):
 
                 timestring = timestring_end = datetime.datetime.now().strftime(self.DATETIME_FORMAT)
                 if feed.when:
-                    timestring, timestring_end = self._get_tinydates(feed.when[0].start_time, feed.when[0].end_time,context)
+                    timestring, timestring_end = self._get_tinydates(feed.when[0].start_time, feed.when[0].end_time, au_tz)
                 else:
                     x = feed.recurrence.text.split(';')
                     repeat_status = self._get_repeat_status(feed.recurrence.text)
