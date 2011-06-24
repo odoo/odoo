@@ -58,6 +58,12 @@
 -
     !python {model: res.partner.category }: |
         ids = self.search(cr, uid, [('id', 'child_of',[ref('categ_0')])])
+        assert len(ids) == 2, ids
+-
+    Test hierarchical search in M2M with child IDs
+-
+    !python {model: res.partner.category }: |
+        ids = self.search(cr, uid, [('id', 'child_of',[ref('categ_1')])])
         assert len(ids) == 1, ids
 -
     Testing that some domain expressions work
