@@ -54,6 +54,20 @@
             </field>
         </record>
 
+        <record model="ir.ui.view" id="account_supplier_invoice_form_inherit_1">
+            <field name="name">account.supplier.invoice.form.inherit_1</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_supplier_form"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <xpath expr="/form/notebook/page/field[@name='invoice_line']" position="replace">
+                    <!-- keep the original fields, because other views position on that, too -->
+                    <field name="invoice_line" invisible="True"/>
+                    <field name="abstract_line_ids" colspan="4" nolabel="1"/>
+                </xpath>
+            </field>
+        </record>
+
 <!-- notification message views -->
     <record model="ir.ui.view" id="view_notify_message_search">
         <field name="name">notify.message.search</field>
