@@ -887,6 +887,7 @@ openerp.base.Login =  openerp.base.Controller.extend({
         this.selected_login = null;
         this.selected_password = null;
         this.remember = false;
+        
         if (this.has_local_storage && localStorage.getItem('remember_creditentials') === 'true') {
             this.remember = true;
             this.selected_db = localStorage.getItem('last_db_login_success');
@@ -906,6 +907,7 @@ openerp.base.Login =  openerp.base.Controller.extend({
     display: function() {
         this.$element.html(QWeb.render("Login", this));
         this.$element.find("form").submit(this.on_submit);
+        this.$element.find('#oe-db-config').click(this.do_db_config);
     },
     on_login_invalid: function() {
         this.$element.closest(".openerp").addClass("login-mode");
@@ -957,6 +959,13 @@ openerp.base.Login =  openerp.base.Controller.extend({
     },
     on_logout: function() {
         this.session.logout();
+    },
+    do_db_config: function() {
+    	this.$element.html(QWeb.render("Database", this));
+    	this.$element.find('#back-to-login').click(function() {
+    		this.header = new openerp.base.Header(this.session, "oe_header");
+    		this.header.on_logout();
+    	});
     }
 });
 
@@ -971,7 +980,11 @@ openerp.base.Header =  openerp.base.Controller.extend({
         this.$element.html(QWeb.render("Header", this));
         this.$element.find(".logout").click(this.on_logout);
     },
-    on_logout: function() {}
+    on_logout: function() {
+    	this.session = new openerp.base.Session("oe_errors");
+   		this.login = new openerp.base.Login(this.session, "oe_login");
+   		this.login.start();
+    }
 });
 
 openerp.base.Menu =  openerp.base.Controller.extend({
@@ -1082,7 +1095,7 @@ openerp.base.WebClient = openerp.base.Controller.extend({
         this.crashmanager =  new openerp.base.CrashManager(this.session);
         this.crashmanager.start(false);
 
-        // Do you autorize this ?
+        // Do you authorize this ?
         openerp.base.Controller.prototype.notification = new openerp.base.Notification("oe_notification");
 
         this.header = new openerp.base.Header(this.session, "oe_header");

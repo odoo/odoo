@@ -50,6 +50,26 @@
 <t t-name="Loading">
     Loading...
 </t>
+<t t-name="Database">
+	<table align="center" width="100%">
+		<tr>
+			<td>
+				<img src="/base/static/src/img/db.png" alt="" />
+			</td>
+			<td style="font-weight: bold; color: #555;">
+				CREATE DATABASE
+			</td>
+			<td align="right" width="85%">
+				<button type="button" id="back-to-login">Login</button>
+				<button type="button" id="db-create">Create</button>
+				<button type="button" id="db-drop">Drop</button>
+				<button type="button" id="db-backup">Backup</button>
+				<button type="button" id="db-restore">Restore</button>
+				<button type="button" id="db-change-password">Password</button>
+			</td>
+		</tr>
+	</table>
+</t>
 <t t-name="Login">
     <form>
         <fieldset>
@@ -103,6 +123,7 @@
                     <tr>
                         <td></td>
                         <td>
+                        	<button type="button" id="oe-db-config">Database</button>
                             <button type="submit" name="submit">Login</button>
                         </td>
                     </tr>
