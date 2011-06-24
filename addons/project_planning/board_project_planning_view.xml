@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-
+		
+		<record id="action_account_analytic_planning_stat_dashboard" model="ir.actions.act_window">
+            <field name="name">My Project's planning</field>
+            <field name="res_model">report_account_analytic.planning.stat</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">graph,tree</field>
+			<field name="domain">[('manager_id','=',uid),('planning_id.state','&lt;&gt;','cancel')]</field>
+            <field name="search_view_id" ref="project_planning.account_analytic_planning_stat_view_search"/>
+        </record>
+        
         <record id="board_project_planning_form" model="ir.ui.view">
             <field name="name">board.project.planning.form</field>
             <field name="model">board.board</field>
@@ -9,7 +18,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
       		<xpath expr="/form/hpaned/child1/action[@string='My Open Tasks']" position="after"> 
-				<action colspan="4" name="%(project_planning.action_account_analytic_planning_stat_form)d" string="My Project's planning" domain="[('manager_id','=',uid),('planning_id.state','&lt;&gt;','cancel')]"/>
+				<action colspan="4" name="%(action_account_analytic_planning_stat_dashboard)d" string="My Project's planning"/>
 			</xpath>
             </field>
         </record>
