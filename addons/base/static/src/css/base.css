@@ -613,6 +613,9 @@ background: linear-gradient(top, #ffffff 0%,#d8d8d8 11%,#afafaf 86%,#333333 91%,
     vertical-align: middle;
     text-align: left;
 }
+.openerp .oe-listview td.oe-record-delete {
+    text-align: right;
+}
 .openerp .oe-listview th.oe-sortable,
 .openerp .oe-listview th.oe-sortable .ui-icon {
     cursor: pointer;
@@ -645,6 +648,14 @@ background: linear-gradient(top, #ffffff 0%,#d8d8d8 11%,#afafaf 86%,#333333 91%,
 }
 .openerp .oe-list-pager .oe-pager-state {
     cursor: pointer;
+}
+
+.openerp .oe-listview .oe-group-name {
+    padding-right: 1em;
+}
+.openerp .oe-listview .oe-group-name,
+.openerp .oe-listview .oe-group-pagination {
+    white-space: nowrap;
 }
 
 .openerp .oe-listview tfoot td {

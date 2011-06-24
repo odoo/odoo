@@ -787,13 +787,8 @@ openerp.base.ListView.Groups = Class.extend( /** @lends openerp.base.ListView.Gr
         this.columns = view.columns;
         this.datagroup = null;
 
-        this.sections = [];
+        this.$row = null;
         this.children = {};
-    },
-    pad: function ($row) {
-        if (this.options.selectable) {
-            $row.append('<td>');
-        }
     },
     make_fragment: function () {
         return document.createDocumentFragment();
@@ -827,8 +822,13 @@ openerp.base.ListView.Groups = Class.extend( /** @lends openerp.base.ListView.Gr
     },
     open: function (point_insertion) {
         this.render().insertAfter(point_insertion);
+        this.$row.children().last()
+            .append('<button type="button" data-pager-action="previous">&lt;</button>')
+            .append('<span class="oe-pager-state"></span>')
+            .append('<button type="button" data-pager-action="next">&gt;</button>');
     },
     close: function () {
+        this.$row.children().last().empty();
         this.apoptosis();
     },
     /**
@@ -860,7 +860,7 @@ openerp.base.ListView.Groups = Class.extend( /** @lends openerp.base.ListView.Gr
             self.bind_child_events(child);
             child.datagroup = group;
 
-            var $row = $('<tr>');
+            var $row = child.$row = $('<tr>');
             if (group.openable) {
                 $row.click(function (e) {
                     if (!$row.data('open')) {
@@ -880,7 +880,7 @@ openerp.base.ListView.Groups = Class.extend( /** @lends openerp.base.ListView.Gr
             }
             placeholder.appendChild($row[0]);
 
-            var $group_column = $('<th>').appendTo($row);
+            var $group_column = $('<th class="oe-group-name">').appendTo($row);
             if (group.grouped_on) {
                 // Don't fill this if group_by_no_leaf but no group_by
                 $group_column
@@ -895,7 +895,9 @@ openerp.base.ListView.Groups = Class.extend( /** @lends openerp.base.ListView.Gr
             // count column
             $('<td>').text(group.length).appendTo($row);
 
-            self.pad($row);
+            if (self.options.selectable) {
+                $row.append('<td>');
+            }
             _(self.columns).chain()
                 .filter(function (column) {return !column.invisible;})
                 .each(function (column) {
@@ -916,6 +918,9 @@ openerp.base.ListView.Groups = Class.extend( /** @lends openerp.base.ListView.Gr
                         $row.append('<td>');
                     }
                 });
+            if (self.options.deletable) {
+                $row.append('<td class="oe-group-pagination">');
+            }
         });
         return placeholder;
     },
@@ -957,6 +962,18 @@ openerp.base.ListView.Groups = Class.extend( /** @lends openerp.base.ListView.Gr
             function (records) {
                 if (!self.datagroup.openable) {
                     view.configure_pager(dataset);
+                } else {
+                    var page = 1,
+                       pages = Math.ceil(dataset.ids.length / limit);
+                    self.$row
+                        .find('.oe-pager-state')
+                            .text(_.sprintf('%d/%d', page, pages))
+                        .end()
+                        .find('button[data-pager-action=previous]')
+                            .attr('disabled', page === 1)
+                        .end()
+                        .find('button[data-pager-action=next]')
+                            .attr('disabled', page === pages);
                 }
 
                 var form_records = _(records).map(
