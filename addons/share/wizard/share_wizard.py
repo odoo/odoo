@@ -21,6 +21,7 @@
 import logging
 import random
 import time
+from urllib import quote_plus
 
 import tools
 from osv import osv, fields
@@ -67,7 +68,7 @@ def get_column_infos(osv_model):
        inherited field via _inherits) to a ``column_info`` struct
        giving detailed columns """
     result = {}
-    for k, (parent,m2o,col) in osv_model._inherit_fields:
+    for k, (parent,m2o,col) in osv_model._inherit_fields.iteritems():
         result[k] = column_info(k, col, parent, m2o)
     for k, v in osv_model._columns.iteritems():
         result[k] = column_info(k,v)
@@ -560,10 +561,11 @@ class share_wizard(osv.osv_memory):
         format_url = '%(dbname)s' in share_root_url
         for result in wizard_data.result_line_ids:
                 # share_root_url may contain placeholders for dbname, login and password
-                share_url = share_root_url % \
-                        {'login': result.user_id.login,
-                         'password': '', # kept empty for security reasons
-                         'dbname': cr.dbname} if format_url else share_root_url
+                share_url = (share_root_url % \
+                                        {'login': quote_plus(result.user_id.login),
+                                         'password': '', # kept empty for security reasons
+                                         'dbname': quote_plus(cr.dbname)}) \
+                                          if format_url else share_root_url
                 result.write({'share_url': share_url}, context=context)
 
     def _check_preconditions(self, cr, uid, wizard_data, context=None):
