@@ -94,12 +94,18 @@ class value(mapper):
         and don't care about the name of the field
         call(self.method, value('field1'))
     """
-    def __init__(self, val, default=''):
+    def __init__(self, val, default='', fallback=False):
         self.val = val
         self.default = default
+        self.fallback = fallback
         
     def __call__(self, external_values):
-        return external_values.get(self.val, self.default) 
+        val = external_values.get(self.val, self.default) 
+        if self.fallback and (not val or val == self.default):
+            val = external_values.get(self.fallback, self.default)
+        return val 
+    
+
     
 class map_val(mapper):
     """

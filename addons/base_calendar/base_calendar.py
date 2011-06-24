@@ -1366,7 +1366,7 @@ rule or repeating pattern of time to exclude from the recurring rule."),
             
         if 'date' in groupby:
             raise osv.except_osv(_('Warning !'), _('Group by date not supported, use the calendar view instead'))
-        
+        virtual_id = context.get('virtual_id', False)
         context.update({'virtual_id': False})
         res = super(calendar_event, self).read_group(cr, uid, domain, fields, groupby, offset=offset, limit=limit, context=context, orderby=orderby)
         for re in res:

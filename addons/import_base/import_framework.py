@@ -237,6 +237,7 @@ class import_framework(Thread):
             Check if the external id exist in the openerp database
             in order to check if the id exist the table where it come from
             should be provide
+            @return the xml_id generated if the external_id exist in the database or false
         """
         if not external_id:
             return False

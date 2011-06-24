@@ -21,21 +21,6 @@
 
 from osv import fields,osv
 
-class res_partner_address(osv.osv):
-    _inherit = "res.partner.address"
-
-    _columns = {
-        'write_date': fields.datetime('Date Modified', readonly=True, help="Modification date and time of address."),
-    }
-
-    def unlink(self, cr, uid, ids, context=None):
-        model_obj = self.pool.get('ir.model.data')
-        model_ids = model_obj.search(cr, uid, [('res_id','in',ids),('model','=','res.partner.address'),('module','=','sync_google_contact')], context=context)
-        model_obj.unlink(cr, uid, model_ids, context=context)
-        return super(res_partner_address, self).unlink(cr, uid, ids, context=context)
-
-res_partner_address()
-
 class crm_case_categ(osv.osv):
     """ Category of Case """
     _inherit = "crm.case.categ"

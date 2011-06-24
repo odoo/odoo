@@ -27,6 +27,7 @@ from dateutil import *
 from pytz import timezone
 from datetime import datetime
 import time
+from osv import *
 try:
     import gdata
     import gdata.contacts.service
@@ -195,7 +196,7 @@ class google_import(import_framework):
             event_feed = self.gd_client.GetCalendarEventFeed(events_query.ToUri())
             for feed in event_feed.entry:
                 event = {
-                    'recurrency': "0",
+                    'recurrency': False,
                     'end_date' : False,
                     'end_type' : False,
                     'byday': 0,
@@ -238,15 +239,14 @@ class google_import(import_framework):
         data = [name, 'crm.meeting']
         return self.import_object(fields, data, 'crm.case.categ', "crm_case_categ", nameid, [('name', 'ilike', name)])
 
-    def get_event(self, val):
+    def get_rec(self, val):
         if val.get("recurrency"):
-            val.update({"recurrency": "1"})
-        return val
+            return "1"
+        return "0"
 
     def get_event_mapping(self):
         return {
             'model': 'crm.meeting',
-            'hook': self.get_event,
             'map': {
                     'id': 'id',
                     'name': 'Name',
@@ -255,7 +255,7 @@ class google_import(import_framework):
                     'date': 'DateStart',
                     'date_deadline': 'DateEnd',
                     'categ_id/id': call(self.get_event_category, value('Category')),
-                    'recurrency': 'recurrency',
+                    'recurrency': self.get_rec,
                     'end_date' : 'end_date',
                     'end_type' : 'end_type',
                     'byday':'byday',
@@ -312,37 +312,25 @@ class google_import(import_framework):
 
 
 
-    def get_address_id(self, val):
-        contact = self.xml_id_exist(self.TABLE_ADDRESS, val.get('id'))
-        if contact:
-            return str(contact)
-        return False
-
     def get_contact_mapping(self):
         return {
             'model': 'res.partner',
             'dependencies': [self.TABLE_ADDRESS],
             'map': {
                 'id':'id',
-                'name': 'name',
+                'name': value('company', fallback='name'),
                 'customer': 'customer',
                 'supplier': 'supplier',
-                'address/id': self.get_address_id,
+                'address/id': ref(self.TABLE_ADDRESS, 'id'),
                 }
             }
 
     def get_partner_id(self, val):
         partner_id = False
-        address_pool = self.obj.pool.get('res.partner.address')
-        company_pool = self.obj.pool.get('res.company')
+        company_pool = self.obj.pool.get('res.partner')
         if 'company' in val:
-            cids = company_pool.search(self.cr, self.uid, [('name', '=', val.get('company'))])
-            if cids:
-                records = company_pool.browse(self.cr, self.uid, cids)
-                for rec in records:
-                    if rec.partner_id:
-                        partner_id = rec.partner_id
-            return partner_id
+            partner_ids = company_pool.search(self.cr, self.uid, [('name', '=', val.get('company'))])
+            return partner_ids and partner_ids[0] or False
         contact = self.xml_id_exist(self.TABLE_CONTACT, val.get('id'))
         if contact:
             partner_id = self.get_mapped_id(self.TABLE_CONTACT, val.get('id'))
