@@ -164,7 +164,6 @@ init: function(view_manager, session, element_id, dataset, view_id) {
             if (self.grp.length == 0){
                self.grp.push({'group_by' : this.parent})
             }
-            
             if (self.grp != undefined){
                 for (j in self.grp){
                     var grp_key = res[self.grp[j]['group_by']];
@@ -243,22 +242,37 @@ init: function(view_manager, session, element_id, dataset, view_id) {
             }
         }
 
-        for (i in all_events){
-            res = all_events[i];
+        for (j in self.grp){
+            for (i in all_events){
+                res = all_events[i];
+                if ((typeof(res['evt'][3])) == "object"){
+                    res['evt'][3] = self.hours_between(res['evt'][2],res['evt'][3]);
+                }
 
-            if ((typeof(res['evt'][3])) == "object"){
-                res['evt'][3] = self.hours_between(res['evt'][2],res['evt'][3]);
-            }
-
-            if(res['parent'] == ""){
-                task=new GanttTaskInfo(res['evt'][0], res['evt'][1], res['evt'][2], res['evt'][3], 100, "",res['evt'][6]);
-                project.addTask(task);
-            }else{
-                task=new GanttTaskInfo(res['evt'][0], res['evt'][1], res['evt'][2], res['evt'][3], 100, "",res['evt'][6]);
-                prt = project.getTaskById(res['parent']);
-                prt.addChildTask(task);
+                k = res['evt'][0].toString().indexOf('_');
+                if (k != -1){
+                    if (res['evt'][0].substring(k) == "_"+j){
+                        if (j == 0){
+                            task = new GanttTaskInfo(res['evt'][0], res['evt'][1], res['evt'][2], res['evt'][3], res['evt'][4], "",res['evt'][6]);
+                            project.addTask(task);
+                        } else {
+                            task = new GanttTaskInfo(res['evt'][0], res['evt'][1], res['evt'][2], res['evt'][3], res['evt'][4], "",res['evt'][6]);
+                            prt = project.getTaskById(res['parent']);
+                            prt.addChildTask(task);
+                        }
+                    }
+                }
             }
         }
+        for (i in final_events){
+            evt_id = final_events[i];
+            res = all_events[evt_id];
+
+            task=new GanttTaskInfo(res['evt'][0], res['evt'][1], res['evt'][2], res['evt'][3], res['evt'][4], "",res['evt'][6]);
+            prt = project.getTaskById(res['parent']);
+            prt.addChildTask(task);
+        }
+
         oth_hgt = 264;
         min_hgt = 150;
         gantt_hgt = jQuery(window).height() - oth_hgt;
