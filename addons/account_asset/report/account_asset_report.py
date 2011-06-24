@@ -36,11 +36,12 @@ class asset_asset_report(osv.osv):
                                   ('11', 'November'), ('12', 'December')], 'Month', readonly=True),
         'day': fields.char('Day', size=16, readonly=True),
         'purchase_date': fields.date('Asset Date', required=True),
+        'depreciation_date': fields.date('Depreciation Date', readonly=True),
         'asset_id': fields.many2one('account.asset.asset', string='Asset', readonly=True),
         'asset_category_id': fields.many2one('account.asset.category',string='Asset category'),
         'partner_id': fields.many2one('res.partner', 'Partner', readonly=True),
-        'state': fields.selection([('draft','Draft'),('open','Running'),('close','Close')], 'state', required=True, readonly=True),
-        'remaining_value': fields.float('Amount to Depreciate', required=True, readonly=True),
+        'state': fields.selection([('draft','Draft'),('open','Running'),('close','Close')], 'State', required=True, readonly=True),
+        'remaining_value': fields.float('Amount of Depreciation Lines', required=True, readonly=True),
         'depreciated_value': fields.float('Amount Already Depreciated', required=True, readonly=True),
         'move_check': fields.boolean('Posted', readonly=True),
         'nbr': fields.integer('# of Depreciation Lines', readonly=True),
@@ -56,6 +57,7 @@ class asset_asset_report(osv.osv):
                     to_char(a.purchase_date, 'YYYY') as name,
                     to_char(a.purchase_date, 'MM') as month,
                     to_char(a.purchase_date, 'YYYY-MM-DD') as day,
+                    to_date(dl.depreciation_date, 'YYYY-MM-DD') as depreciation_date,
                     a.purchase_date as purchase_date,
                     dl.amount as remaining_value,
                     dl.move_check as move_check,
@@ -71,7 +73,8 @@ class asset_asset_report(osv.osv):
                 group by 
                     dl.asset_id, dl.move_check, a.state, 
                     a.category_id, a.partner_id, a.purchase_date, dl.amount,
-                    a.company_id, a.purchase_value, a.salvage_value
+                    a.company_id, a.purchase_value, a.salvage_value,
+                    to_date(dl.depreciation_date, 'YYYY-MM-DD')
         )""")
 	
 asset_asset_report()
