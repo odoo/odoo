@@ -972,7 +972,7 @@ class orm_template(object):
                 if field[len(prefix)]=='id':
                     try:
                         data_res_id = _get_id(model_name, line[i], current_module, 'id')
-                    except ValueError, e:
+                    except ValueError:
                         pass
                     xml_id = line[i]
                     continue

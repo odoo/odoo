@@ -35,7 +35,6 @@ import socket
 import sys
 import threading
 import time
-import warnings
 import types
 from pprint import pformat
 
@@ -186,7 +185,6 @@ class ColoredFormatter(DBFormatter):
         return DBFormatter.format(self, record)
 
 def init_logger():
-    import os
     from tools.translate import resetlocale
     resetlocale()
 

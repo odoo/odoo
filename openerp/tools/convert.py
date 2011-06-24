@@ -45,7 +45,6 @@ import openerp.loglevels as loglevels
 import openerp.pooler as pooler
 from config import config
 from translate import _
-from yaml_import import convert_yaml_import
 
 # List of etree._Element subclasses that we choose to ignore when parsing XML.
 from misc import SKIPPED_ELEMENT_TYPES

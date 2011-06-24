@@ -21,7 +21,6 @@
 import logging
 import re
 import time
-from operator import itemgetter
 
 from osv import fields,osv
 import netsvc
