@@ -972,7 +972,7 @@ class orm_template(object):
                 if field[len(prefix)]=='id':
                     try:
                         data_res_id = _get_id(model_name, line[i], current_module, 'id')
-                    except ValueError, e:
+                    except ValueError:
                         pass
                     xml_id = line[i]
                     continue
@@ -2069,8 +2069,9 @@ class orm_template(object):
 class orm_memory(orm_template):
 
     _protected = ['read', 'write', 'create', 'default_get', 'perm_read', 'unlink', 'fields_get', 'fields_view_get', 'search', 'name_get', 'distinct_field_get', 'name_search', 'copy', 'import_data', 'search_count', 'exists']
-    _max_count = config.get('osv_memory_count_limit')
-    _max_hours = config.get('osv_memory_age_limit')
+    _inherit_fields = {}
+    _max_count = None
+    _max_hours = None
     _check_time = 20
 
     @classmethod
@@ -2082,6 +2083,8 @@ class orm_memory(orm_template):
         self.datas = {}
         self.next_id = 0
         self.check_id = 0
+        self._max_count = config.get('osv_memory_count_limit')
+        self._max_hours = config.get('osv_memory_age_limit')
         cr.execute('delete from wkf_instance where res_type=%s', (self._name,))
 
     def _check_access(self, uid, object_id, mode):
