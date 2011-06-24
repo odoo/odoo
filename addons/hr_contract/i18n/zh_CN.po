@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:15+0000\n"
-"PO-Revision-Date: 2011-01-19 12:00+0000\n"
-"Last-Translator: ryanlin <Unknown>\n"
+"PO-Revision-Date: 2011-06-23 03:37+0000\n"
+"Last-Translator: openerp-china.Black Jack <onetimespeed@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-25 06:41+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-06-24 05:54+0000\n"
+"X-Generator: Launchpad (build 13168)\n"
 
 #. module: hr_contract
 #: view:hr.contract.wage.type:0
@@ -34,7 +34,7 @@ msgstr "试用期"
 #. module: hr_contract
 #: field:hr.contract,trial_date_start:0
 msgid "Trial Start Date"
-msgstr "使用期开始日期"
+msgstr "试用期开始日期"
 
 #. module: hr_contract
 #: view:hr.contract:0
@@ -74,7 +74,7 @@ msgstr "每小时成本系数"
 #. module: hr_contract
 #: view:hr.contract:0
 msgid "Overpassed"
-msgstr "Overpassed"
+msgstr "经验"
 
 #. module: hr_contract
 #: view:hr.contract.wage.type:0
@@ -89,7 +89,7 @@ msgstr "部门"
 #. module: hr_contract
 #: selection:hr.contract.wage.type,type:0
 msgid "Basic"
-msgstr "基本信息"
+msgstr "基本"
 
 #. module: hr_contract
 #: view:hr.contract:0
@@ -116,7 +116,7 @@ msgstr "周期的小时数"
 #. module: hr_contract
 #: field:hr.employee,vehicle_distance:0
 msgid "Home-Work Distance"
-msgstr "通勤距离"
+msgstr "家-工作距离"
 
 #. module: hr_contract
 #: view:hr.contract:0
@@ -125,7 +125,7 @@ msgstr "通勤距离"
 #: model:ir.actions.act_window,name:hr_contract.action_hr_contract
 #: model:ir.ui.menu,name:hr_contract.hr_menu_contract
 msgid "Contracts"
-msgstr "合同"
+msgstr "合同列表"
 
 #. module: hr_contract
 #: view:hr.employee:0
@@ -135,7 +135,7 @@ msgstr "个人信息"
 #. module: hr_contract
 #: view:hr.contract:0
 msgid "Job"
-msgstr "工作"
+msgstr "职位"
 
 #. module: hr_contract
 #: view:hr.contract:0
@@ -145,7 +145,7 @@ msgstr "搜索合同"
 #. module: hr_contract
 #: help:hr.employee,contract_id:0
 msgid "Latest contract of the employee"
-msgstr "该雇员最近的合同"
+msgstr "该员工最近的合同"
 
 #. module: hr_contract
 #: field:hr.contract,advantages_net:0
@@ -163,6 +163,13 @@ msgid ""
 "    You can assign several contracts per employee.\n"
 "    "
 msgstr ""
+"\n"
+"    在管理合同里添加这员工的所有信息：\n"
+"    * 婚姻状况\n"
+"    * 社保号\n"
+"    * 籍贯，出生日期。。。\n"
+"    您可以为员工签订几份合同。\n"
+"    "
 
 #. module: hr_contract
 #: view:hr.contract:0
@@ -203,7 +210,7 @@ msgstr "工资类型"
 #. module: hr_contract
 #: constraint:hr.employee:0
 msgid "Error ! You cannot create recursive Hierarchy of Employees."
-msgstr "错误！您不能创建循环的员工等级。"
+msgstr "错误！您不能创建递归的员工等级。"
 
 #. module: hr_contract
 #: field:hr.contract,date_end:0
@@ -218,7 +225,7 @@ msgstr "工资"
 #. module: hr_contract
 #: field:hr.contract,name:0
 msgid "Contract Reference"
-msgstr "合同引用"
+msgstr "合同编号"
 
 #. module: hr_contract
 #: help:hr.employee,vehicle_distance:0
@@ -235,7 +242,7 @@ msgstr "备注"
 #: constraint:hr.employee:0
 msgid ""
 "Error ! You cannot select a department for which the employee is the manager."
-msgstr "错误！您不能选择该雇员担任经理的部门。"
+msgstr "错误！您不能选择一部门因为该员工是经理。"
 
 #. module: hr_contract
 #: view:hr.contract:0
@@ -263,12 +270,12 @@ msgstr "搜索工资期"
 #: view:hr.contract:0
 #: field:hr.contract,working_hours:0
 msgid "Working Schedule"
-msgstr "工作安排"
+msgstr "工作时间表"
 
 #. module: hr_contract
 #: view:hr.employee:0
 msgid "Job Info"
-msgstr "招聘信息"
+msgstr "职位信息"
 
 #. module: hr_contract
 #: field:hr.contract.wage.type,period_id:0
@@ -280,7 +287,7 @@ msgstr "工资周期"
 #. module: hr_contract
 #: field:hr.contract,job_id:0
 msgid "Job Title"
-msgstr "职位"
+msgstr "职位名称"
 
 #. module: hr_contract
 #: field:hr.employee,manager:0
@@ -300,7 +307,7 @@ msgstr "错误！合同开始日期必须小于结束日期。"
 #. module: hr_contract
 #: view:hr.contract.wage.type:0
 msgid "Search Wage Type"
-msgstr "搜索薪酬类型"
+msgstr "搜索工资类型"
 
 #. module: hr_contract
 #: field:hr.contract.wage.type,type:0
@@ -310,7 +317,7 @@ msgstr "类型"
 #. module: hr_contract
 #: field:hr.contract,trial_date_end:0
 msgid "Trial End Date"
-msgstr "试用期截至日期"
+msgstr "试用期结束日期"
 
 #. module: hr_contract
 #: view:hr.contract:0
@@ -345,7 +352,7 @@ msgstr "工资周期"
 msgid ""
 "This field is used by the timesheet system to compute the price of an hour "
 "of work wased on the contract of the employee"
-msgstr "这字段使用时间表系统来计算合同员工的每小时工价"
+msgstr "这字段使用工时表系统来计算合同员工的每小时工价"
 
 #. module: hr_contract
 #: view:hr.contract:0
@@ -360,7 +367,7 @@ msgstr "体检日期"
 #. module: hr_contract
 #: field:hr.contract,advantages_gross:0
 msgid "Allowances"
-msgstr "津贴"
+msgstr "补贴"
 
 #. module: hr_contract
 #: view:hr.contract:0
