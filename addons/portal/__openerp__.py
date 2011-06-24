@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2011 OpenERP S.A (<http://www.openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -21,38 +21,30 @@
 
 
 {
-    "name" : "Sharing Tools",
-    "version" : "1.5",
-    "depends" : ["base"],
+    "name" : "Portal",
+    "version" : "0.3",
+    "depends" : ["base", "share"],
     "author" : "OpenERP SA",
     "category": 'Tools',
     "description": """
-This module adds generic sharing tools to your current OpenERP database.
-========================================================================
+This module defines 'portals' to customize the access to your OpenERP database
+for external users.
 
-It specifically adds a 'share' button that is available in the Web client to
-share any kind of OpenERP data with colleagues, customers, friends, etc.
-
-The system will work by creating new users and groups on the fly, and by
-combining the appropriate access rights and ir.rules to ensure that the
-shared users only have access to the data that has been shared with them.
-
-This is extremely useful for collaborative work, knowledge sharing,
-synchronization with other companies, etc.
-
+A portal defines customized user menu and access rights for a group of users
+(the ones associated to that portal).  It also associates user groups to the
+portal users (adding a group in the portal automatically adds it to the portal
+users, etc).  That feature is very handy when used in combination with the
+module 'share'.
     """,
     'website': 'http://www.openerp.com',
-    'demo_xml': ['share_demo.xml'],
-    'data': [
-        'security/share_security.xml',
-        'share_view.xml',
-        'res_users_view.xml',
-        'wizard/share_wizard_view.xml'
-    ],
+    'data': ['security/portal_security.xml',
+             'security/ir.model.access.csv',
+             'portal_view.xml',
+             'wizard_view.xml',
+             'wizard/share_wizard_view.xml',
+            ],
     'installable': True,
-    'web': True,
-    'certificate' : '001301246528927038493',
-    'images': ['images/share_wizard.jpeg','images/sharing_wizard_step1.jpeg', 'images/sharing_wizard_step2.jpeg'],
+    'certificate' : '',
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
