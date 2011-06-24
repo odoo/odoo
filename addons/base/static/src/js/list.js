@@ -789,6 +789,8 @@ openerp.base.ListView.Groups = Class.extend( /** @lends openerp.base.ListView.Gr
 
         this.$row = null;
         this.children = {};
+
+        this.page = 0;
     },
     make_fragment: function () {
         return document.createDocumentFragment();
@@ -820,12 +822,32 @@ openerp.base.ListView.Groups = Class.extend( /** @lends openerp.base.ListView.Gr
         }
         return red_letter_tboday;
     },
+    make_paginator: function () {
+        var self = this;
+        var $prev = $('<button type="button" data-pager-action="previous">&lt;</button>')
+            .click(function (e) {
+                e.stopPropagation();
+                self.page -= 1;
+
+                self.$row.closest('tbody').next()
+                    .replaceWith(self.render());
+            });
+        var $next = $('<button type="button" data-pager-action="next">&gt;</button>')
+            .click(function (e) {
+                e.stopPropagation();
+                self.page += 1;
+
+                self.$row.closest('tbody').next()
+                    .replaceWith(self.render());
+            });
+        this.$row.children().last()
+            .append($prev)
+            .append('<span class="oe-pager-state"></span>')
+            .append($next);
+    },
     open: function (point_insertion) {
         this.render().insertAfter(point_insertion);
-        this.$row.children().last()
-            .append('<button type="button" data-pager-action="previous">&lt;</button>')
-            .append('<span class="oe-pager-state"></span>')
-            .append('<button type="button" data-pager-action="next">&gt;</button>');
+        this.make_paginator();
     },
     close: function () {
         this.$row.children().last().empty();
@@ -955,25 +977,26 @@ openerp.base.ListView.Groups = Class.extend( /** @lends openerp.base.ListView.Gr
 
         var view = this.view,
            limit = view.limit(),
-               d = new $.Deferred();
+               d = new $.Deferred(),
+            page = this.datagroup.openable ? this.page : view.page;
+
         dataset.read_slice(
             _.filter(_.pluck(this.columns, 'name'), _.identity),
-            view.page * limit, limit,
+            page * limit, limit,
             function (records) {
                 if (!self.datagroup.openable) {
                     view.configure_pager(dataset);
                 } else {
-                    var page = 1,
-                       pages = Math.ceil(dataset.ids.length / limit);
+                    var pages = Math.ceil(dataset.ids.length / limit);
                     self.$row
                         .find('.oe-pager-state')
-                            .text(_.sprintf('%d/%d', page, pages))
+                            .text(_.sprintf('%d/%d', page + 1, pages))
                         .end()
                         .find('button[data-pager-action=previous]')
-                            .attr('disabled', page === 1)
+                            .attr('disabled', page === 0)
                         .end()
                         .find('button[data-pager-action=next]')
-                            .attr('disabled', page === pages);
+                            .attr('disabled', page === pages - 1);
                 }
 
                 var form_records = _(records).map(
