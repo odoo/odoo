@@ -126,6 +126,7 @@ class wizard(osv.osv_memory):
         """ create new users in portal(s), and notify them by email """
         # we copy the context to change the language for translating emails
         context0 = context or {}
+        context0['noshortcut'] = True           # prevent shortcut creation
         context = context0.copy()
         
         user_obj = self.pool.get('res.users')
