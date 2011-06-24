@@ -1,7 +1,7 @@
 -
   create Company
 -
-  !record {model: res.company, id: res_company_test}:
+  !record {model: res.company, id: res_company_test11}:
     name: Thomson pvt. ltd.
     partner_id: 1
     rml_header: 1
@@ -10,62 +10,54 @@
     currency_id: 1
 
 -
-  create customer
+  create partner
 -
-  !record {model: res.partner, id: res_partner_test}:
+  !record {model: res.partner, id: res_partner_test20}:
     name: Junjun wala
     supplier: False
-    company_id: res_company_test
-    address:
-        - partner_id: res_partner_test
-          type: default
-          name: ivan
-          street: m g road
-          street2: line 28
-          city: paris    
+    company_id: res_company_test11
     
-- 
-  Creating a customer invoice record
-- 
-  !record {model: account.invoice, id: account_invoice_test}:
-    amount_tax: 0.0
-    amount_total: 83.0
-    amount_untaxed: 83.0
+-
+  create customer invoice
+-
+  !record {model: account.invoice, id: customer_invoice_test}:
+    journal_id: 1
+    partner_id: res_partner_test20
     currency_id: base.EUR
+    address_invoice_id: base.res_partner_address_11
+    company_id: base.main_company
+    account_id: 1
     date_invoice: '2011-06-22'
-    invoice_line:
-        name: '[CPU1] Processor AMD Athlon XP 1800+'
-        partner_id: res_partner_test
-        price_subtotal: 75.0
-        price_unit: 75.0
-        product_id: product.product_product_cpu1
-        quantity: 1.0
-    journal_id: 'False'
     name: Nothing
-    partner_id: res_partner_test
-    payment_term: account.account_payment_term
-    reference_type: none
-   
+    type: 'out_invoice'
+    invoice_line:
+      - product_id: product.product_product_pc1
+        partner_id: res_partner_test20
+        uos_id: 1
+        quantity: 1.0
+        price_unit: 10.0
+        name: 'basic pc'
+        account_id: 1
+    
 -
   Tesing of Export functionality and Import Functionality
 -
   !python {model: ir.edi.document}: |
     
     invoice_obj = self.pool.get('account.invoice')
-    invoice_ids = invoice_obj.search(cr, uid, [partner_id])
-    if invoice_ids:
-      invoices = invoice_obj.browse(cr, uid, invoice_ids)
-      tokens = self.export_edi(cr, uid, invoices)
-      for token in tokens:
-        document = self.get_document(cr, uid, token, context=context)
-        a = self.import_edi(cr, uid, edi_document = document)
-        
+    #invoice_ids = invoice_obj.search(cr, uid, ['account.customer_invoice_test'])
+    #if invoice_ids:
+    invoices = invoice_obj.browse(cr, uid, [ref("customer_invoice_test")])
+    tokens = self.export_edi(cr, uid, invoices)
+    for token in tokens:
+      document = self.get_document(cr, uid, token, context=context)
+      a = self.import_edi(cr, uid, edi_document = document)
+      
 -
-  Check after import of document customer become supplier or not
+  Check the customer invoice is exported or not
 -
   !python {model: account.invoice}: |
-    ids=self.search(cr, uid, [('partner_id','=',base.main_company),('company_id','=',res_company_test),('type','=','in_invoice')])
+    ids=self.search(cr, uid, [('partner_id','=',ref("res_partner_test20")),('company_id','=',ref("res_company_test11")),('type','=','out_invoice')])
     if not ids:
       raise AssertionError("Invoice is not imported")
-     
-   
+
