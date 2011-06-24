@@ -503,7 +503,7 @@ class account_move_line(osv.osv):
                                 }),
         'date_created': fields.date('Creation date', select=True),
         'analytic_lines': fields.one2many('account.analytic.line', 'move_id', 'Analytic lines'),
-        'centralisation': fields.selection([('normal','Normal'),('credit','Credit Centralisation'),('debit','Debit Centralisation')], 'Centralisation', size=6),
+        'centralisation': fields.selection([('normal','Normal'),('credit','Credit Centralisation'),('debit','Debit Centralisation'),('currency','Currency Adjustment')], 'Centralisation', size=8),
         'balance': fields.function(_balance, fnct_search=_balance_search, method=True, string='Balance'),
         'state': fields.selection([('draft','Unbalanced'), ('valid','Valid')], 'State', readonly=True,
                                   help='When new move line is created the state will be \'Draft\'.\n* When all the payments are done it will be in \'Valid\' state.'),
@@ -1200,10 +1200,11 @@ class account_move_line(osv.osv):
     def _update_check(self, cr, uid, ids, context=None):
         done = {}
         for line in self.browse(cr, uid, ids, context=context):
+            err_msg = _('Move name (id): %s (%s)') % (line.move_id.name, str(line.move_id.id))
             if line.move_id.state <> 'draft' and (not line.journal_id.entry_posted):
-                raise osv.except_osv(_('Error !'), _('You can not do this modification on a confirmed entry ! Please note that you can just change some non important fields !'))
+                raise osv.except_osv(_('Error !'), _('You can not do this modification on a confirmed entry ! Please note that you can just change some non important fields ! \n%s') % err_msg)
             if line.reconcile_id:
-                raise osv.except_osv(_('Error !'), _('You can not do this modification on a reconciled entry ! Please note that you can just change some non important fields !'))
+                raise osv.except_osv(_('Error !'), _('You can not do this modification on a reconciled entry ! Please note that you can just change some non important fields ! \n%s') % err_msg)
             t = (line.journal_id.id, line.period_id.id)
             if t not in done:
                 self._update_journal_check(cr, uid, line.journal_id.id, line.period_id.id, context)
