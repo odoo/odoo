@@ -122,7 +122,7 @@ class purchase_order(osv.osv):
     }
     def wkf_confirm_order(self, cr, uid, ids, context=None):
         res = super(purchase_order, self).wkf_confirm_order(cr, uid, ids, context=context)
-        proc_obj=self.pool.get('procurement.order')
+        proc_obj = self.pool.get('procurement.order')
         for po in self.browse(cr, uid, ids, context=context):
             if po.requisition_id and (po.requisition_id.exclusive=='exclusive'):
                 for order in po.requisition_id.purchase_ids:

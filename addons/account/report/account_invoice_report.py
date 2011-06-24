@@ -47,7 +47,6 @@ class account_invoice_report(osv.osv):
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'user_id': fields.many2one('res.users', 'Salesman', readonly=True),
         'price_total': fields.float('Total Without Tax', readonly=True),
-        'price_total_tax': fields.float('Total With Tax', readonly=True),
         'price_average': fields.float('Average Price', readonly=True, group_operator="avg"),
         'currency_rate': fields.float('Currency Rate', readonly=True),
         'nbr':fields.integer('# of Lines', readonly=True),
@@ -69,6 +68,7 @@ class account_invoice_report(osv.osv):
         'address_contact_id': fields.many2one('res.partner.address', 'Contact Address Name', readonly=True),
         'address_invoice_id': fields.many2one('res.partner.address', 'Invoice Address Name', readonly=True),
         'account_id': fields.many2one('account.account', 'Account',readonly=True),
+        'account_line_id': fields.many2one('account.account', 'Account Line',readonly=True),
         'partner_bank_id': fields.many2one('res.partner.bank', 'Bank Account',readonly=True),
         'residual': fields.float('Total Residual', readonly=True),
         'delay_to_pay': fields.float('Avg. Delay To Pay', readonly=True, group_operator="avg"),
@@ -89,7 +89,7 @@ class account_invoice_report(osv.osv):
                     ai.payment_term as payment_term,
                     ai.period_id as period_id,
                     (case when u.uom_type not in ('reference') then
-                        (select name from product_uom where uom_type='reference' and category_id=u.category_id)
+                        (select name from product_uom where uom_type='reference' and active and category_id=u.category_id LIMIT 1)
                     else
                         u.name
                     end) as uom_name,
@@ -106,44 +106,30 @@ class account_invoice_report(osv.osv):
                     ai.address_contact_id as address_contact_id,
                     ai.address_invoice_id as address_invoice_id,
                     ai.account_id as account_id,
+                    ail.account_id as account_line_id,
                     ai.partner_bank_id as partner_bank_id,
                     sum(case when ai.type in ('out_refund','in_invoice') then
-                         ail.quantity / u.factor * -1
+                         -ail.quantity / u.factor
                         else
                          ail.quantity / u.factor
                         end) as product_qty,
+
                     sum(case when ai.type in ('out_refund','in_invoice') then
-                         ail.quantity*ail.price_unit * -1
+                         -ail.price_subtotal
                         else
-                         ail.quantity*ail.price_unit
+                          ail.price_subtotal
                         end) / cr.rate as price_total,
-                    sum(case when ai.type in ('out_refund','in_invoice') then
-                         ai.amount_total * -1
-                        else
-                         ai.amount_total
-                         end) / (CASE WHEN 
-                              (select count(l.id) from account_invoice_line as l
-                               left join account_invoice as a ON (a.id=l.invoice_id)
-                               where a.id=ai.id) <> 0 
-                            THEN 
-                              (select count(l.id) from account_invoice_line as l
-                               left join account_invoice as a ON (a.id=l.invoice_id)
-                               where a.id=ai.id) 
-                            ELSE 1 
-                            END) / cr.rate as price_total_tax,
+
                     (case when ai.type in ('out_refund','in_invoice') then
-                      sum(ail.quantity*ail.price_unit*-1)
+                      sum(-ail.price_subtotal)
                     else
-                      sum(ail.quantity*ail.price_unit)
-                    end) / (CASE WHEN
-                         (case when ai.type in ('out_refund','in_invoice') 
-                          then sum(ail.quantity/u.factor*-1)
-                          else sum(ail.quantity/u.factor) end) <> 0 
-                       THEN 
-                         (case when ai.type in ('out_refund','in_invoice') 
-                          then sum(ail.quantity/u.factor*-1)
-                          else sum(ail.quantity/u.factor) end) 
-                       ELSE 1 
+                      sum(ail.price_subtotal)
+                    end) / (CASE WHEN sum(ail.quantity/u.factor) <> 0
+                       THEN
+                         (case when ai.type in ('out_refund','in_invoice')
+                          then sum(-ail.quantity/u.factor)
+                          else sum(ail.quantity/u.factor) end)
+                       ELSE 1
                        END)
                      / cr.rate as price_average,
 
@@ -159,22 +145,23 @@ class account_invoice_report(osv.osv):
                         left join account_invoice_line as l ON (a.id=l.invoice_id)
                         where a.id=ai.id)) as due_delay,
                     (case when ai.type in ('out_refund','in_invoice') then
-                      ai.residual * -1
+                      -ai.residual
                     else
                       ai.residual
-                    end)/ (CASE WHEN 
+                    end)/ (CASE WHEN
                         (select count(l.id) from account_invoice_line as l
                          left join account_invoice as a ON (a.id=l.invoice_id)
-                         where a.id=ai.id) <> 0 
+                         where a.id=ai.id) <> 0
                        THEN
                         (select count(l.id) from account_invoice_line as l
                          left join account_invoice as a ON (a.id=l.invoice_id)
-                         where a.id=ai.id) 
-                       ELSE 1 
+                         where a.id=ai.id)
+                       ELSE 1
                        END) / cr.rate as residual
                 from account_invoice_line as ail
                 left join account_invoice as ai ON (ai.id=ail.invoice_id)
-                left join product_template pt on (pt.id=ail.product_id)
+                left join product_product pr on (pr.id=ail.product_id)
+                left join product_template pt on (pt.id=pr.product_tmpl_id)
                 left join product_uom u on (u.id=ail.uos_id),
                 res_currency_rate cr
                 where cr.id in (select id from res_currency_rate cr2  where (cr2.currency_id = ai.currency_id)
@@ -202,6 +189,7 @@ class account_invoice_report(osv.osv):
                     ai.address_contact_id,
                     ai.address_invoice_id,
                     ai.account_id,
+                    ail.account_id,
                     ai.partner_bank_id,
                     ai.residual,
                     ai.amount_total,

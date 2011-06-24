@@ -12,14 +12,15 @@
                 <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                 <separator string="Accounting information" colspan="4" />
                 <field name="journal_id"/>
-                <field name="account_asset_id"/>
+                <field name="account_asset_id" on_change="onchange_account_asset(account_asset_id)"/>
                 <field name="account_depreciation_id"/>
                 <field name="account_expense_depreciation_id"/>
                 <group colspan="2" col="2">
                     <separator string="Depreciation Dates" colspan="2" />
                     <field name="method_time"/>
-                    <field name="method_delay"/>
-                    <field name="method_period" attrs="{'invisible':[('method_time','=','end')]}"/>                
+                    <field name="method_delay" attrs="{'invisible':[('method_time','=','end')]}"/>
+                    <field name="method_period"/>
+                    <field name="method_end" attrs="{'required': [('method_time','=','end')], 'invisible':[('method_time','=','delay')]}"/> 
                 </group>
                 <group colspan="2" col="2">
                     <separator string="Depreciation Method" colspan="2" />
@@ -28,11 +29,10 @@
                     <field name="prorata"/>
                     <field name="open_asset"/>
                 </group>
-        	<group col="4" colspan="4" groups="analytic.group_analytic_accounting">
+        	<group col="2" colspan="2" groups="analytic.group_analytic_accounting">
         	    <separator string="Analytic information" colspan="4" />
         	    <newline/>
         	    <field name="account_analytic_id" />
-        	    <field name="journal_analytic_id" />
         	</group>
                 <separator string="Notes" colspan="4"/>
                 <field name="note" colspan="4" nolabel="1"/>
@@ -76,21 +76,26 @@
                     <separator string="Other Information" colspan="4"/>
                     <field name="partner_id"/>
                     <field name="purchase_date"/>
-                    <separator string="Depreciation duration" colspan="4"/>
-                    <button 
-                         name="%(wizard_asset_modify)d" 
-                         states="open" 
-                         string="Change duration" 
-                         type="action" 
-                         colspan="2"/>
-                    <newline/>
-                    <field name="method"/>
-                    <field name="method_progress_factor" attrs="{'invisible':[('method','=','linear')]}"/>
-                    <newline/>
-                    <field name="method_time"/>
-                    <field name="method_period" attrs="{'invisible':[('method_time','=','end')]}"/>
-                    <field name="prorata" colspan="1"/>
-                    <field name="method_delay"/>
+                    <group colspan="2" col="2">
+                        <separator string="Depreciation Dates" colspan="2" />
+                        <button 
+                             name="%(wizard_asset_modify)d" 
+                             states="open" 
+                             string="Change duration" 
+                             type="action" 
+                             colspan="2"/>
+                        <newline/>
+                        <field name="method_time" on_change="onchange_method_time(method_time)"/>
+                        <field name="method_delay" attrs="{'invisible':[('method_time','=','end')]}"/>
+                        <field name="method_period"/>
+                        <field name="method_end" attrs="{'required': [('method_time','=','end')], 'invisible':[('method_time','=','delay')]}"/> 
+                    </group>
+                    <group colspan="2" col="2">
+                        <separator string="Depreciation Method" colspan="2" />
+                        <field name="method" on_change="onchange_method_time(method)"/>
+                        <field name="method_progress_factor" attrs="{'invisible':[('method','=','linear')]}"/>
+                        <field name="prorata" attrs="{'invisible': ['|',('method_time','=','end'),('method','!=','linear')]}"/>
+                    </group>
                     <newline/>
                  </page>
                  <page string="Depreciation board">
@@ -98,9 +103,9 @@
                        <tree string="Depreciation Lines" colors="blue:(move_check == False);black:(move_check == True)">
                           <field name="depreciation_date"/>
                           <field name="sequence" invisible="1"/>
+                          <field name="depreciated_value" readonly="1"/>
                           <field name="amount"/>
-                          <field name="depreciated_value"/>
-                          <field name="remaining_value"/>
+                          <field name="remaining_value" readonly="1"/>
                           <field name="move_check"/>
                           <button name="create_move" attrs="{'invisible':[('move_check','!=',False)]}" icon="gtk-execute" string="Create Move" type="object"/>
                        </tree>
@@ -110,7 +115,7 @@
                           <field name="depreciated_value"/>
                        </graph>
                     </field>
-                    <button type="object" attrs="{'invisible':[('state','&lt;&gt;','open')]}" name="compute_depreciation_board" string="Compute" icon="terp-stock_format-scientific" colspan="2"/>
+                    <button type="object" name="compute_depreciation_board" string="Compute" icon="terp-stock_format-scientific" colspan="2"/>
                  </page>
                  <page string="History">
                     <field name="account_move_line_ids" colspan="4" nolabel="1" readonly="1"/>
@@ -118,7 +123,7 @@
                  </page>
                  <page string="Notes">
                     <field name="note" nolabel="1"/>
-                 </page>    
+                 </page>
               </notebook>
               <field name="state" readonly="1"/>
               <group colspan="2" col="2">
@@ -162,39 +167,6 @@
         </field>
     </record>
 
-    <record model="ir.ui.view" id="view_account_asset_board_form">
-        <field name="name">account.asset.board.form</field>
-        <field name="model">account.asset.board</field>
-        <field name="type">form</field>
-        <field name="arch" type="xml">
-            <form string="Asset board">
-                <field name="name" select="1"/>
-                <field name="asset_id" select="1"/>
-                   <field name="value_gross" select="2"/>
-                <field name="value_asset"/>
-                <field name="value_asset_cumul"/>
-                <field name="value_net"/>
-        <field name="test"/>
-            </form>
-        </field>
-    </record>
-
-    <record model="ir.ui.view" id="view_account_asset_board_tree">
-        <field name="name">account.asset.board.tree</field>
-        <field name="model">account.asset.board</field>
-        <field name="type">tree</field>
-        <field name="arch" type="xml">
-            <tree string="Asset board">
-                <field name="name"/>
-                <field name="asset_id"/>
-                <field name="value_gross"/>
-                <field name="value_asset"/>
-                <field name="value_asset_cumul"/>
-                <field name="value_net"/>
-        <field name="test"/>
-            </tree>
-        </field>
-    </record>
 
     <record model="ir.ui.view" id="view_account_asset_asset_tree">
         <field name="name">account.asset.asset.tree</field>

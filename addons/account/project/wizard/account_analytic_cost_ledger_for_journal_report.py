@@ -38,7 +38,6 @@ class account_analytic_cost_ledger_journal_report(osv.osv_memory):
     }
 
     def check_report(self, cr, uid, ids, context=None):
-        datas = {}
         if context is None:
             context = {}
         data = self.read(cr, uid, ids)[0]

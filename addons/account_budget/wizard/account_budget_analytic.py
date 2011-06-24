@@ -36,7 +36,6 @@ class account_budget_analytic(osv.osv_memory):
     }
 
     def check_report(self, cr, uid, ids, context=None):
-        datas = {}
         if context is None:
             context = {}
         data = self.read(cr, uid, ids, context=context)[0]

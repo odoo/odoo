@@ -37,7 +37,7 @@ class crm_lead_report_assign(osv.osv):
     _auto = False
     _description = "CRM Lead Report"
     _columns = {
-        'name': fields.char('Year', size=64, required=False, readonly=True),
+        'year': fields.char('Year', size=64, required=False, readonly=True),
         'partner_assigned_id':fields.many2one('res.partner', 'Partner', readonly=True),
         'grade_id':fields.many2one('res.partner.grade', 'Grade', readonly=True),
         'user_id':fields.many2one('res.users', 'User', readonly=True),
@@ -51,7 +51,7 @@ class crm_lead_report_assign(osv.osv):
                                   ('09', 'September'), ('10', 'October'),\
                                   ('11', 'November'), ('12', 'December')], 'Month', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
-        'partner_date': fields.date('Partner Date', readonly=True),
+        'date_assign': fields.date('Partner Date', readonly=True),
         'create_date': fields.datetime('Create Date', readonly=True),
         'day': fields.char('Day', size=128, readonly=True),
         'delay_open': fields.float('Delay to Open',digits=(16,2),readonly=True, group_operator="avg",help="Number of Days to open the case"),
@@ -82,18 +82,20 @@ class crm_lead_report_assign(osv.osv):
             CRM Lead Report
             @param cr: the current row, from the database cursor
         """
+        print "WHATTT "
         tools.drop_view_if_exists(cr, 'crm_lead_report_assign')
         cr.execute("""
             CREATE OR REPLACE VIEW crm_lead_report_assign AS (
                 SELECT
                     c.id,
-                    to_char(c.create_date, 'YYYY') as name,
-                    to_char(c.create_date, 'MM') as month,
-                    to_char(c.create_date, 'YYYY-MM-DD') as day,
+                    to_char(c.date_assign, 'YYYY') as year,
+                    to_char(c.date_assign, 'MM') as month,
+                    to_char(c.date_assign, 'YYYY-MM-DD') as day,
                     to_char(c.create_date, 'YYYY-MM-DD') as creation_date,
                     to_char(c.date_open, 'YYYY-MM-DD') as opening_date,
                     to_char(c.date_closed, 'YYYY-mm-dd') as date_closed,
                     c.state,
+                    c.date_assign,
                     c.user_id,
                     c.probability,
                     c.probability as probability_max,
