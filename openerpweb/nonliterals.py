@@ -180,9 +180,9 @@ class CompoundDomain(BaseDomain):
         final_domain = []
         for domain in self.domains:
             if not isinstance(domain, (list, BaseDomain)):
-                raise TypeError("Domain %r is not a list or a nonliteral Domain",
-                                 domain)
-                
+                raise TypeError(
+                    "Domain %r is not a list or a nonliteral Domain" % domain)
+
             if isinstance(domain, list):
                 final_domain.extend(domain)
                 continue
@@ -210,9 +210,9 @@ class CompoundContext(BaseContext):
         final_context = {}
         for context_to_eval in self.contexts:
             if not isinstance(context_to_eval, (dict, BaseContext)):
-                raise TypeError("Context %r is not a dict or a nonliteral Context",
-                                 context_to_eval)
-    
+                raise TypeError(
+                    "Context %r is not a dict or a nonliteral Context" % context_to_eval)
+
             if isinstance(context_to_eval, dict):
                 final_context.update(context_to_eval)
                 continue
