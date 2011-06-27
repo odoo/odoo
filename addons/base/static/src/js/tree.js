@@ -33,7 +33,7 @@ openerp.base.TreeView = openerp.base.View.extend({
         this.fields = data.fields;
         this.dataset.read_slice([], 0, false, function (response) {
             self.$element.html(QWeb.render('TreeView', {'field_data' : response}));
-            id=self.dataset.ids[0];
+            id = self.dataset.ids[0];
             self.$element.find('#parent_id').bind('change', function(){
                 self.getdata($('#parent_id').val(), 0);
             });
@@ -45,6 +45,13 @@ openerp.base.TreeView = openerp.base.View.extend({
     getdata: function (id, flag) {
         var self = this;
         var paddingflag = 0;
+        var row_id = ""; // Used to Get Id of the selcted tr
+        var rowid = ""; // Used to Split Id of the selcted tr with '_'
+        var fixpadding = "";
+        var padding = ""; //Used to get padding Left of selcted tr
+        var padd = ""; // Used to Split Padding Left of the selcted tr with 'px'
+        var divflag = "";
+
         self.dataset.domain = [['parent_id', '=', parseInt(id, 10)]];
         self.dataset.read_slice([], 0, false, function (response) {
             if (($('tr #treerow_' + id).length) == 1) {
@@ -52,32 +59,32 @@ openerp.base.TreeView = openerp.base.View.extend({
                 $('tr #treerow_' + id).after(QWeb.render('TreeView_Secondry', {'child_data' : response}));
 
                 for (i in response) {
-                	var row_id = $('tr #treerow_' + response[i].id);
+                	row_id = $('tr #treerow_' + response[i].id);
                     if (row_id && row_id.find('td').children(':first-child').attr('id') == 'parentimg_' + response[i].id) {
                     	paddingflag = 1;
                     }
                 }
 
-                paddingno = $('tr #treerow_' + id).find('td').css('paddingLeft');
-                padd = paddingno.split('px');
+                padding = $('tr #treerow_' + id).find('td').css('paddingLeft');
+                padd = padding.split('px')[0];
 
                 for (i in response) {
-                	var row_id = $('tr #treerow_' + response[i].id);
+                	row_id = $('tr #treerow_' + response[i].id);
                     if (row_id) {
                         if (paddingflag == 0) {
-                            fix = (parseInt(padd[0], 10) + 40);
-                            $('tr #treerow_' + response[i].id).find('td').css({ paddingLeft : fix });
+                            fixpadding = (parseInt(padd, 10) + 40);
+                            $('tr #treerow_' + response[i].id).find('td').css({ paddingLeft : fixpadding });
                         } else {
-                            if (parseInt(padd[0], 10) == 1) {
-                                fix = (parseInt(padd[0],10) + 17);
+                            if (parseInt(padd, 10) == 1) {
+                                fixpadding = (parseInt(padd,10) + 17);
                             } else {
-                                fix = (parseInt(padd[0], 10) + 20);
+                                fixpadding = (parseInt(padd, 10) + 20);
                             }
                             row_id.find('td').children(':first-child').addClass("parent_top");
                             if (row_id.find('td').children(':first-child').attr('id') == "parentimg_" + response[i].id) {
-                                row_id.find('td').css({ paddingLeft : fix });
+                                row_id.find('td').css({ paddingLeft : fixpadding });
                             } else {
-                                row_id.find('td').css({ paddingLeft : (fix + 20) });
+                                row_id.find('td').css({ paddingLeft : (fixpadding + 20) });
                             }
                         }
                     }
@@ -105,18 +112,19 @@ openerp.base.TreeView = openerp.base.View.extend({
 
             $('tr[id ^= treerow_]').find('td').children(':first-child').click( function() {
                 if ($(this).is('span')) {
-                    id = $(this).parent().parent().attr('id');
-	                newid = id.split('_')[1];
-                    self.getlist(newid);
+                    // Get details in listview
+                    row_id = $(this).parent().parent().attr('id');
+	                rowid = row_id.split('_')[1];
+                    self.getlist(rowid);
                 }
-                divflag=0;
+                divflag = 0;
                 if ($('#'+(this.id)).length == 1) {
-                    rowid = (this.id).split('_');
+                    rowid = (this.id).split('_')[1];
 	                for (i in response) {
-                        if (rowid[1] == response[i].id && response[i].child_id.length > 0) {
-                            jQuery(response[i].child_id).each (function(e, chid) {
-                                if (jQuery('tr #treerow_' + chid).length > 0) {
-                                    if (jQuery('tr #treerow_' + chid).is(':hidden')) {
+                        if (rowid == response[i].id && response[i].child_id.length > 0) {
+                            jQuery(response[i].child_id).each (function(e, childid) {
+                                if (jQuery('tr #treerow_' + childid).length > 0) {
+                                    if (jQuery('tr #treerow_' + childid).is(':hidden')) {
                                         divflag = -1;
                                     } else {
                                         divflag++;
@@ -125,12 +133,12 @@ openerp.base.TreeView = openerp.base.View.extend({
                             });
                             if (divflag == 0) {
                                 if ($('#' + (this.id)).attr('src') == '/base/static/src/img/expand.gif') {
-                                    self.getdata(rowid[1]);
+                                    self.getdata(rowid);
                                 }
                             } else if (divflag > 0) {
-                                self.showcontent(rowid[1], 1, response[i].child_id);
+                                self.showcontent(rowid, 1, response[i].child_id);
                             } else if (divflag == -1) {
-                                self.showcontent(rowid[1], 0, response[i].child_id);
+                                self.showcontent(rowid, 0, response[i].child_id);
                             }
 	                   }
                     }
@@ -138,14 +146,16 @@ openerp.base.TreeView = openerp.base.View.extend({
             });
 
             $('tr[id^=treerow_]').find('td').children(':last-child').click(function(){
-                id = $(this).parent().parent().attr('id');
-                newid = id.split('_')[1];
-                self.getlist(newid);
+                // Get details in listview
+                row_id = $(this).parent().parent().attr('id');
+                rowid = row_id.split('_')[1];
+                self.getlist(rowid);
             });
         });
     },
 
-    getlist: function(newid){
+    // Get details in listview
+    getlist: function(id){
         var self = this;
         this.dataset = new openerp.base.DataSetStatic(self.session, self.fields.relation);
         this.dataset.on_unlink.add_last(function(ids) {
@@ -155,7 +165,7 @@ openerp.base.TreeView = openerp.base.View.extend({
             // TODO niv make real suppression (list or direct)
         });
         self.dataset.model = 'product.product';
-        self.dataset.domain = [['categ_id', 'child_of', parseInt(newid,10)]];
+        self.dataset.domain = [['categ_id', 'child_of', parseInt(id,10)]];
 
         var modes;
         modes = !!modes ? modes.split(",") : ["tree", "form"];
