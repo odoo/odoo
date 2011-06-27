@@ -1561,6 +1561,7 @@ class orm_template(object):
         tree_view = self.fields_view_get(cr, uid, False, 'tree', context=context)
 
         fields_to_search = set()
+        # TODO it seems _all_columns could be used instead of fields_get (no need for translated fields info)
         fields = self.fields_get(cr, uid, context=context)
         for field in fields:
             if fields[field].get('select'):
@@ -1784,6 +1785,7 @@ class orm_template(object):
 
             # otherwise, build some kind of default view
             if view_type == 'form':
+                # TODO it seems fields_get can be replaced by _all_columns (no need for translation)
                 res = self.fields_get(cr, user, context=context)
                 xml = '<?xml version="1.0" encoding="utf-8"?> ' \
                      '<form string="%s">' % (self._description,)
@@ -2366,6 +2368,7 @@ class orm(orm_template):
             groupby_def = self._columns.get(groupby) or (self._inherit_fields.get(groupby) and self._inherit_fields.get(groupby)[2])
             assert groupby_def and groupby_def._classic_write, "Fields in 'groupby' must be regular database-persisted fields (no function or related fields), or function fields with store=True"
 
+        # TODO it seems fields_get can be replaced by _all_columns (no need for translation)
         fget = self.fields_get(cr, uid, fields)
         float_int_fields = filter(lambda x: fget[x]['type'] in ('float', 'integer'), fields)
         flist = ''
@@ -4390,6 +4393,7 @@ class orm(orm_template):
         else:
             raise IndexError( _("Record #%d of %s not found, cannot copy!") %( id, self._name))
 
+        # TODO it seems fields_get can be replaced by _all_columns (no need for translation)
         fields = self.fields_get(cr, uid, context=context)
         for f in fields:
             ftype = fields[f]['type']
@@ -4447,6 +4451,7 @@ class orm(orm_template):
         seen_map[self._name].append(old_id)
 
         trans_obj = self.pool.get('ir.translation')
+        # TODO it seems fields_get can be replaced by _all_columns (no need for translation)
         fields = self.fields_get(cr, uid, context=context)
 
         translation_records = []
