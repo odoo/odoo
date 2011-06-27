@@ -1284,7 +1284,7 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
         var _super = this._super;
         this.tmp_value = value;
         var real_set_value = function(rval) {
-            this.tmp_value = undefined;
+            self.tmp_value = undefined;
             _super.apply(self, rval);
             self.original_value = rval;
             self._change_int_ext_value(rval);
