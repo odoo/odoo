@@ -94,7 +94,7 @@ openerp.base.TreeView = openerp.base.View.extend({
                     self.$element.find('tr').remove();
                 }
                 self.$element.append(QWeb.render('TreeView_Secondry', {'child_data' : response}));
-                
+
                 self.$element.find('tr[id ^= treerow_]').each( function() {
                     $('#' + this.id).find('td').children(':first-child').addClass("parent_top");
                     if (!($('#' + this.id).find('td').children(':first-child').attr('id'))) {
@@ -112,7 +112,6 @@ openerp.base.TreeView = openerp.base.View.extend({
 
             $('tr[id ^= treerow_]').find('td').children(':first-child').click( function() {
                 if ($(this).is('span')) {
-                    // Get details in listview
                     row_id = $(this).parent().parent().attr('id');
 	                rowid = row_id.split('_')[1];
                     self.getlist(rowid);
@@ -146,7 +145,6 @@ openerp.base.TreeView = openerp.base.View.extend({
             });
 
             $('tr[id^=treerow_]').find('td').children(':last-child').click(function(){
-                // Get details in listview
                 row_id = $(this).parent().parent().attr('id');
                 rowid = row_id.split('_')[1];
                 self.getlist(rowid);
@@ -159,12 +157,12 @@ openerp.base.TreeView = openerp.base.View.extend({
         var self = this;
         this.dataset = new openerp.base.DataSetStatic(self.session, self.fields.relation);
         this.dataset.on_unlink.add_last(function(ids) {
-            // TODO niv check form view
+
             var view = self.viewmanager.views[self.viewmanager.active_view].controller;
             view.reload_content();
-            // TODO niv make real suppression (list or direct)
+
         });
-        
+
         self.dataset.model = 'product.product';
         self.dataset.domain = [['categ_id', 'child_of', parseInt(id, 10)]];
 
@@ -182,21 +180,21 @@ openerp.base.TreeView = openerp.base.View.extend({
         this.viewmanager = new openerp.base.ViewManager(self.session, self.element_id, self.dataset, views);
         this.viewmanager.on_controller_inited.add_last( function(view_type, controller) {
             if (view_type == "list") {
-                // TODO niv
+
             } else if (view_type == "form") {
-                // TODO niv
+
             }
         });
         this.viewmanager.start();
 
         var action = {
-            "res_model": this.viewmanager.model,
-            "domain": this.viewmanager.dataset.domain,
-            "views": views,
-            "type": "ir.actions.act_window",
-            "auto_search": true,
-            "view_type": "list",
-            "view_mode": "list"
+            "res_model" : this.viewmanager.model,
+            "domain" : this.viewmanager.dataset.domain,
+            "views" : views,
+            "type" : "ir.actions.act_window",
+            "auto_search" : true,
+            "view_type" : "list",
+            "view_mode" : "list"
         }
 
         this.viewmanageraction = new openerp.base.ViewManagerAction(self.session, self.element_id, action);
@@ -226,7 +224,7 @@ openerp.base.TreeView = openerp.base.View.extend({
 
                 self.dataset.read_slice([], 0, false, function (response) {
                     for (j in response) {
-                    	var res_ids = jQuery('tr #treerow_' + response[j].id;
+                    	var res_ids = jQuery('tr #treerow_' + response[j].id);
                         if (res_ids.length > 0) {
                             res_ids.hide();
                             subchildids = response[j].child_id;
