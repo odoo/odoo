@@ -98,6 +98,7 @@ class survey(osv.osv):
         current_rec = self.read(cr, uid, ids, context=context)
         title = current_rec.get('title') + ' (Copy)'
         vals.update({'title':title})
+        vals.update({'history':[],'tot_start_survey':0,'tot_comp_survey':0})
         return super(survey, self).copy(cr, uid, ids, vals, context=context)
 
     def action_print_survey(self, cr, uid, ids, context=None):

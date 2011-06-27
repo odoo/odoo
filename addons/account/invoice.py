@@ -263,7 +263,7 @@ class account_invoice(osv.osv):
         'move_lines':fields.function(_get_lines, method=True, type='many2many', relation='account.move.line', string='Entry Lines'),
         'residual': fields.function(_amount_residual, method=True, digits_compute=dp.get_precision('Account'), string='Residual',
             store={
-                'account.invoice': (lambda self, cr, uid, ids, c={}: ids, ['invoice_line'], 50),
+                'account.invoice': (lambda self, cr, uid, ids, c={}: ids, ['invoice_line','move_id'], 50),
                 'account.invoice.tax': (_get_invoice_tax, None, 50),
                 'account.invoice.line': (_get_invoice_line, ['price_unit','invoice_line_tax_id','quantity','discount','invoice_id'], 50),
                 'account.move.line': (_get_invoice_from_line, None, 50),
