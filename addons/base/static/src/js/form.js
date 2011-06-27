@@ -421,6 +421,13 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
         } else {
             this.on_button_new();
         }
+    },
+    get_fields_values: function() {
+        var values = {};
+        _.each(this.fields, function(value, key) {
+            values[key] = value.get_value();
+        });
+        return values;
     }
 });
 
