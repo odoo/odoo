@@ -228,6 +228,9 @@ class account_asset_asset(osv.osv):
         'currency_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.currency_id.id,
         'company_id': lambda self, cr, uid, context: self.pool.get('res.company')._company_default_get(cr, uid, 'account.asset.asset',context=context),
     }
+    
+    def _check_recursion(self, cr, uid, ids, context=None, parent=None):
+        return super(account_asset_asset, self)._check_recursion(cr, uid, ids, context=context, parent=parent)
 
     def _check_prorata(self, cr, uid, ids, context=None):
         for asset in self.browse(cr, uid, ids, context=context):
@@ -236,6 +239,7 @@ class account_asset_asset(osv.osv):
         return True
 
     _constraints = [
+        (_check_recursion, 'Error ! You can not create recursive assets.', ['parent_id']),
         (_check_prorata, '\nProrata temporis can be applied only for computation method linear and time method delay.', ['prorata']),
     ]
 
