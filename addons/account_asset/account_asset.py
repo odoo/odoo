@@ -524,7 +524,7 @@ class account_asset_history(osv.osv):
         'method_end': fields.date('Ending date'),
         'note': fields.text('Note'),
     }
-    _order = 'create_date desc'
+    _order = 'id desc'
     _defaults = {
         'date': lambda *args: time.strftime('%Y-%m-%d'),
         'user_id': lambda self,cr, uid,ctx: uid

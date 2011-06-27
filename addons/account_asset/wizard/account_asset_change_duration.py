@@ -20,7 +20,7 @@
 ##############################################################################
 import time
 
-from osv import osv,fields
+from osv import osv, fields
 
 class asset_modify(osv.osv_memory):
     _name = 'asset.modify'
@@ -28,8 +28,8 @@ class asset_modify(osv.osv_memory):
 
     _columns = {
         'name': fields.char('Reason', size=64, required=True),
-        'method_delay': fields.float('Number of interval'),
-        'method_period': fields.float('Period per interval'),
+        'method_delay': fields.integer('Number of Depreciation'),
+        'method_period': fields.integer('Period Length'),
         'method_end': fields.date('Ending date'),
         'note': fields.text('Notes'),
     }
