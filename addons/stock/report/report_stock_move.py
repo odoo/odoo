@@ -176,11 +176,16 @@ CREATE OR REPLACE view report_stock_inventory AS (
         m.product_id as product_id, pt.categ_id as product_categ_id, l.usage as location_type,
         m.company_id,
         m.state as state, m.prodlot_id as prodlot_id,
-        coalesce(sum(-pt.standard_price * m.product_qty)::decimal, 0.0) as value,
-        CASE when pt.uom_id = m.product_uom THEN
+        case when (pt.cost_method = 'average') then 
+            coalesce(sum(-m.price_unit * m.product_qty)::decimal, 0.0)
+        else
+            coalesce(sum(-pt.standard_price * m.product_qty)::decimal, 0.0)
+            end as value,
+        case when pt.uom_id = m.product_uom then
             coalesce(sum(-m.product_qty)::decimal, 0.0) 
-        ELSE
-            coalesce(sum(-m.product_qty * pu.factor)::decimal, 0.0) END as product_qty
+        else
+            coalesce(sum(-m.product_qty * pu.factor)::decimal, 0.0) 
+            end as product_qty
     FROM
         stock_move m
             LEFT JOIN stock_picking p ON (m.picking_id=p.id)
@@ -191,7 +196,7 @@ CREATE OR REPLACE view report_stock_inventory AS (
             LEFT JOIN stock_location l ON (m.location_id=l.id)
     GROUP BY
         m.id, m.product_id, m.product_uom, pt.categ_id, m.address_id, m.location_id,  m.location_dest_id,
-        m.prodlot_id, m.date, m.state, l.usage, m.company_id, pt.uom_id
+        m.prodlot_id, m.date, m.state, l.usage, m.company_id, pt.uom_id, pt.cost_method
 ) UNION ALL (
     SELECT
         -m.id as id, m.date as date,
@@ -199,11 +204,16 @@ CREATE OR REPLACE view report_stock_inventory AS (
         m.product_id as product_id, pt.categ_id as product_categ_id, l.usage as location_type,
         m.company_id,
         m.state as state, m.prodlot_id as prodlot_id,
-        coalesce(sum(pt.standard_price * m.product_qty )::decimal, 0.0) as value,
-        CASE when pt.uom_id = m.product_uom  THEN 
+        case when (pt.cost_method = 'average') then 
+            coalesce(sum(m.price_unit * m.product_qty)::decimal, 0.0)
+        else
+            coalesce(sum(pt.standard_price * m.product_qty)::decimal, 0.0)
+            end as value,
+        case when pt.uom_id = m.product_uom then 
             coalesce(sum(m.product_qty)::decimal, 0.0) 
-        ELSE
-            coalesce(sum(m.product_qty * pu.factor)::decimal, 0.0) END as product_qty
+        else
+            coalesce(sum(m.product_qty * pu.factor)::decimal, 0.0) 
+            end as product_qty
     FROM
         stock_move m
             LEFT JOIN stock_picking p ON (m.picking_id=p.id)
@@ -214,7 +224,7 @@ CREATE OR REPLACE view report_stock_inventory AS (
             LEFT JOIN stock_location l ON (m.location_dest_id=l.id)
     GROUP BY
         m.id, m.product_id, m.product_uom, pt.categ_id, m.address_id, m.location_id, m.location_dest_id,
-        m.prodlot_id, m.date, m.state, l.usage, m.company_id, pt.uom_id
+        m.prodlot_id, m.date, m.state, l.usage, m.company_id, pt.uom_id, pt.cost_method
     )
 );
         """)
