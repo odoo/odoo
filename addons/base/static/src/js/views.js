@@ -418,6 +418,7 @@ openerp.base.View = openerp.base.Controller.extend({
                 action.context['active_id'] = dataset.ids[dataset.index];
                 action.context['active_ids'] = [dataset.ids[dataset.index]];
                 action.context['active_model'] = dataset.model;
+                _.extend(action.context, dataset.context);
                 action.flags = {
                     sidebar : false,
                     search_view : false,
