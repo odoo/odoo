@@ -190,6 +190,22 @@ class edi(object):
        Classes that inherit from this mixin class should override the 
        ``edi_import()`` and ``edi_export()`` methods to implement their
        specific behavior, based on the primitives provided by this superclass."""
+
+    def edi_xml_id(self, cr, uid, record, context=None):
+        model_data_pool = self.pool.get('ir.model.data')
+        uuid = safe_unique_id(record._name, record.id)
+        data_ids = model_data_pool.search(cr, uid, [('res_id','=',record.id),('model','=',record._name)])
+        if len(data_ids):
+            xml_record_id = data_ids[0]
+        else:
+            xml_record_id = model_data_pool.create(cr, uid, {
+                'name': uuid,
+                'model': record._name,
+                'module': edi_module,
+                'res_id': record.id}, context=context)
+        xml_record = model_data_pool.browse(cr, uid, xml_record_id, context=context)
+        db_uuid = '%s:%s.%s' % (uuid, xml_record.module, xml_record.name)
+        return db_uuid
     
     def edi_metadata(self, cr, uid, records, context=None):
         """Return a list representing the boilerplate EDI structure for
@@ -206,7 +222,6 @@ class edi(object):
         """
         if context is None:
             context = {}
-        model_data_pool = self.pool.get('ir.model.data')
         data_ids = []
         attachment_object = self.pool.get('ir.attachment')
         edi_dict_list = []
@@ -230,21 +245,7 @@ class edi(object):
                 })
             
             
-            data_ids = model_data_pool.search(cr, uid, [('res_id','=',record.id),('model','=',record._name)])
-            uuid = safe_unique_id(record._name, record.id)
-
-            if len(data_ids):
-                xml_record_id = data_ids[0]
-            else:
-                xml_record_id = model_data_pool.create(cr, uid, {
-                    'name': uuid,
-                    'model': record._name,
-                    'module': edi_module,
-                    'res_id': record.id}, context=context)
-
-            xml_record = model_data_pool.browse(cr, uid, xml_record_id, context=context)
-            db_uuid = '%s:%s.%s' % (uuid, xml_record.module, xml_record.name)
-            
+            db_uuid = self.edi_xml_id(cr, uid, record, context=context)
             edi_dict = {
                 '__id': db_uuid,
                 '__last_update': False, #record.write_date, #TODO: convert into UTC
@@ -267,20 +268,13 @@ class edi(object):
         Exmaple: ['db-uuid:xml-id',  'Partner Name']
         """
         # generic implementation!
-        data_object = self.pool.get('ir.model.data')
-        db_uuid = safe_unique_id(record._name, record.id)
-        xml_ids = data_object.search(cr, uid, [('model','=',record._name),('res_id','=',record.id)])
-        
-        if xml_ids:
-            xml_id = data_object.browse(cr, uid, xml_ids[0], context=context)
-            xml_id = '%s.%s' %(xml_id.module, xml_id.name)
-        else:
-            xml_id = record._name    
-        db_uuid = '%s:%s' %(db_uuid, xml_id)
-        name = record.name
+        db_uuid = self.edi_xml_id(cr, uid, record, context=context)
+        relation_model_pool = self.pool.get(record._name)  
+        name = relation_model_pool.name_get(cr, uid, [record.id], context=context)
+        name = name and name[0][1] or False
         return [db_uuid, name]
         
-    def edi_o2m(self, cr, uid, records, context=None):
+    def edi_o2m(self, cr, uid, records, edi_struct=None, context=None):
         """Return a list representing a O2M EDI value for
            the browse_records from the given browse_record_list.
 
@@ -301,7 +295,7 @@ class edi(object):
         for record in records:
             
             model_obj = self.pool.get(record._name)
-            dict_list += model_obj.edi_export(cr, uid, [record], context=ctx)
+            dict_list += model_obj.edi_export(cr, uid, [record], edi_struct=edi_struct, context=ctx)
         
         return dict_list
         
@@ -368,12 +362,22 @@ class edi(object):
                 elif cols['type'] == 'many2many':
                     value = self.edi_m2m(cr, uid, record, context=context)
                 elif cols['type'] == 'one2many':
-                    value = self.edi_o2m(cr, uid, record, context=context )
+                    value = self.edi_o2m(cr, uid, record, edi_struct=edi_struct.get(field, {}), context=context )
                 else:
                     value = record
                 edi_dict[field] = value
             edi_dict_list.append(edi_dict)
         return edi_dict_list
+
+    def edi_import_relation(self, cr, uid, relation_model, relation_value, values={}, context=None):
+        relation_object = self.pool.get(relation_model)
+        relation_ids = relation_object.name_search(cr, uid, relation_value, context=context)
+        if relation_ids and len(relation_ids) == 1:
+            relation_id = relation_ids[0][0]
+        else:
+            values.update({'name': relation_value})
+            relation_id = relation_object.create(cr, uid, values, context=context)
+        return relation_id
         
     def edi_import(self, cr, uid, edi_document, context=None):
     
@@ -465,13 +469,9 @@ class edi(object):
                                 #multiple results are found, go to next step.
                                 #Create the new record using the only field value that is known: the
                                 #name, and create the ir.model.data entry to map to it.
-
-                                relation_object = self.pool.get(_fields[field]['relation'])
-                                relation_ids = relation_object.search(cr, uid, [('name','=',edi_parent_document[1])])
-                                if relation_ids and len(relation_ids) == 1:
-                                    relation_id = relation_ids[0]
-                                else:
-                                    relation_id = relation_object.create(cr, uid, {'name': edi_parent_document[1]}, context=context)
+                                relation_model = _fields[field]['relation']
+                                relation_id = self.edi_import_relation(cr, uid, relation_model, edi_parent_document[1], context=context)
+                                relation_object = self.pool.get(relation_model)
                                 model_data.create(cr, uid, {
                                                     'name': xml_id,
                                                     'model': relation_object._name,
