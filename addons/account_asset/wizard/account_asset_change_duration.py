@@ -19,6 +19,7 @@
 #
 ##############################################################################
 import time
+
 from osv import osv,fields
 
 class asset_modify(osv.osv_memory):
@@ -71,7 +72,7 @@ class asset_modify(osv.osv_memory):
         asset_id = context.get('active_id', False)
         asset = asset_obj.browse(cr, uid, asset_id, context=context)
         data = self.browse(cr, uid, ids[0], context=context)
-        history_obj.create(cr, uid, {
+        history_vals = {
             'asset_id': asset_id,
             'name': asset.name,
             'method_delay': asset.method_delay,
@@ -80,13 +81,15 @@ class asset_modify(osv.osv_memory):
             'user_id': uid,
             'date': time.strftime('%Y-%m-%d'),
             'note': data.note,
-        }, context=context)
-        asset_obj.write(cr, uid, [asset_id], {
+        }
+        history_obj.create(cr, uid, history_vals, context=context)
+        asset_vals = {
             'name': data.name,
             'method_delay': data.method_delay,
             'method_period': data.method_period,
             'method_end': data.method_end,
-        }, context=context)
+        }
+        asset_obj.write(cr, uid, [asset_id], asset_vals, context=context)
         return {'type': 'ir.actions.act_window_close'}
 
 asset_modify()
