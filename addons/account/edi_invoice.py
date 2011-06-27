@@ -19,8 +19,9 @@
 #
 ##############################################################################
 
-from osv import fields, osv,orm
+from osv import fields, osv, orm
 from base.ir import ir_edi
+from tools.translate import _
 
 class account_invoice(osv.osv,ir_edi.edi):
     _inherit = 'account.invoice'
@@ -115,6 +116,7 @@ class account_invoice(osv.osv,ir_edi.edi):
                     will be of type 'manual', and default accounts should be picked based
                     on the tax config of the DB where it is imported.    
         """
+
         partner = self.pool.get('res.partner')
         partner_add = self.pool.get('res.partner.address')
         model_data = self.pool.get('ir.model.data')
@@ -122,6 +124,7 @@ class account_invoice(osv.osv,ir_edi.edi):
         product_categ = self.pool.get('product.category')
         acc_invoice = self.pool.get('account.invoice')
         company = self.pool.get('res.company')
+        country = self.pool.get('res.country')
         tax_id = []
         account_id = []
         partner_id = None
@@ -186,16 +189,47 @@ class account_invoice(osv.osv,ir_edi.edi):
                     u_id = model_data.search(cr, uid, [('res_id','=',browse_partner.id),('model','=',browse_partner._name)])
                     if len(u_id):
                         company_id = browse_partner.company_id
+                        
                         xml_obj = model_data.browse(cr,uid,u_id[0])
                         uuid = ir_edi.safe_unique_id(browse_partner._name,browse_partner.id)
                         db_uuid = '%s:%s' % (uuid,xml_obj.name)
                         part.update({'partner_id':[db_uuid,browse_partner.name]})
+                
                 else:
+                    
+                    company_address = {}
                     company_id = company.create(cr, uid, {'name':edi_document['company_id'][1]})
-                    add_id = partner_add.create(cr,uid,edi_document['company_address'])
-                    res.update({'name': edi_document['company_id'][1],'supplier': True, 'partner_id': edi_document['partner_id'],'address':add_id}) 
-                    partner_id = partner.create(cr,uid,res)
+                    
+                    for key in edi_document['company_address'].keys():
+                        if type(edi_document['company_address'][key]).__name__ == 'list':
+                            if edi_document['company_address'][key][1] is not None:
+                                country_id = country.search(cr ,uid,[('name','=',edi_document['company_address'][key][1])])
+                                
+                                if len(country_id):
+                                    company_address.update({key : country_id[0]})
+                                    
+                                else:
+                                    if isinstance(edi_document['company_address'][key][1],unicode):
+                                        country_name = str(edi_document['company_address'][key][1])
+                                        country_code = country_name[:2].upper()
+                                    country_id = country.create(cr, uid, {'code': country_code,name: country_name})
+                                    company_address.update({key : country_id[0]})
+                            else:
+                                company_address.update({key : edi_document['company_address'][key][1]})
+                        else:
+                            company_address.update({key:edi_document['company_address'][key]})  
+                    
+                    add_id = []
+                    partner_id = []
+                    
+                    add_id = partner_add.create(cr,uid,company_address)
+                    
+                    res.update({'name': edi_document['company_id'][1],'supplier': True,'address': [unicode(add_id)], 'company_id': unicode(company_id),'country' : country_id})
+                    
+                    partner_id.append(partner.create(cr,uid,{'name': edi_document['company_id'][1],'supplier': True,'address': unicode(add_id), 'company_id': unicode(company_id),'country' : country_id}))
+                    
                     browse_partner = partner.browse(cr,uid,partner_id[0])
+                    company_id = browse_partner.company_id
                     u_id = model_data.search(cr, uid, [('res_id','=',browse_partner.id),('model','=',browse_partner._name)])
                     if len(u_id):
                         xml_obj = model_data.browse(cr,uid,u_id[0])
@@ -218,15 +252,21 @@ class account_invoice(osv.osv,ir_edi.edi):
                 del edi_document['partner_id']
                 del edi_document['company_id']
                 edi_document.update(part)
-                edi_document.update(comp)      
+                edi_document.update(comp) 
+                
+              
                 if len(partner_id):
                     p = self.pool.get('res.partner').browse(cr, uid, partner_id[0])
+                    
+                    partner_id = int(partner_id[0])
+                    
                     if company_id:
                         if p.property_account_receivable.company_id.id != company_id.id and p.property_account_payable.company_id.id != company_id.id:
                             property_obj = self.pool.get('ir.property')
                             
                             rec_pro_id = property_obj.search(cr,uid,[('name','=','property_account_receivable'),('res_id','=','res.partner,'+str(partner_id)+''),('company_id','=',company_id.id)])
-                            pay_pro_id = property_obj.search(cr,uid,[('name','=','property_account_payable'),('res_id','=','res.partner,'+str(partner_id)+''),('company_id','=',company_id)])
+                            pay_pro_id = property_obj.search(cr,uid,[('name','=','property_account_payable'),('res_id','=','res.partner,'+str(partner_id)+''),('company_id','=',company_id.id)])
+                            
                             if not rec_pro_id:
                                 rec_pro_id = property_obj.search(cr,uid,[('name','=','property_account_receivable'),('company_id','=',company_id.id)])
                             if not pay_pro_id:
@@ -236,8 +276,8 @@ class account_invoice(osv.osv,ir_edi.edi):
                             rec_res_id = rec_line_data and rec_line_data[0].get('value_reference',False) and int(rec_line_data[0]['value_reference'].split(',')[1]) or False
                             pay_res_id = pay_line_data and pay_line_data[0].get('value_reference',False) and int(pay_line_data[0]['value_reference'].split(',')[1]) or False
                             if not rec_res_id and not pay_res_id:
-                                raise osv.except_osv(_('Configuration Error !'),
-                                    _('Can not find account chart for this company, Please Create account.'))
+                                raise osv.except_osv(_('Configuration Error !'), _('Can not find account chart for this company, Please Create account.'))
+                                
                             account_obj = self.pool.get('account.account')
                             rec_obj_acc = account_obj.browse(cr, uid, [rec_res_id])
                             pay_obj_acc = account_obj.browse(cr, uid, [pay_res_id])
@@ -248,7 +288,9 @@ class account_invoice(osv.osv,ir_edi.edi):
                         acc_obj = p.property_account_receivable
                     else:
                         acc_obj = p.property_account_payable
+                    
                     res_id = model_data.search(cr,uid,[('model','=',acc_obj._name),('res_id','=',acc_obj.id)])
+                    
                     if len(res_id):
                         xml_obj = model_data.browse(cr, uid, res_id[0])
                         uuid = ir_edi.safe_unique_id(acc_obj._name,acc_obj.id)
@@ -258,7 +300,7 @@ class account_invoice(osv.osv,ir_edi.edi):
                 edi_document.update({'reference':edi_document['internal_number'],'reference_type' : 'none'})    
                 edi_document['internal_number'] = False
                 context['type'] = edi_document['type']  
-                
+            
         del edi_document['company_address']
         return super(account_invoice,self).edi_import(cr, uid, edi_document)
       
