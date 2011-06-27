@@ -176,11 +176,33 @@
         <field name="arch" type="xml">
             <tree string="Assets">
                 <field name="name"/>
-                <field name="code"/>
+                <field name="category_id"/>                
                 <field name="purchase_date"/>
+                <field name="partner_id"/>
+                <field name="purchase_value"/>
+                <field name="value_residual"/>
+                <field name="currency_id"/>
                 <field name="company_id" groups="base.group_multi_company"/>
                 <field name="state"/>
             </tree>
+        </field>
+    </record>
+
+    <record id="view_analytic_entries_report_search" model="ir.ui.view">
+        <field name="name">account.asset.asset.search</field>
+        <field name="model">account.asset.asset</field>
+        <field name="type">search</field>
+        <field name="arch" type="xml">
+            <search string="Account Asset Analysis">
+                <group col="10" colspan="12">
+                    <filter icon="terp-document-new" string="Draft" domain="[('state','=', 'draft')]" help="Assets in Draft State"/>
+                    <filter icon="terp-camera_test" string="Running" domain="[('state','=', 'open')]" help="Assets in Running State"/>
+                </group>
+                <field name="name"/>
+                <field name="category_id"/>
+                <field name="purchase_date"/>        
+                <field name="partner_id"/>
+            </search>
         </field>
     </record>
 
