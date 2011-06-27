@@ -244,6 +244,7 @@ openerp.base.ViewManagerAction = openerp.base.ViewManager.extend({
             dataset = new openerp.base.DataSetStatic(session, action.res_model);
             dataset.ids = [action.res_id];
             dataset.count = 1;
+            dataset.index = 0;
         }
         this._super(session, element_id, dataset, action.views);
         this.action = action;
