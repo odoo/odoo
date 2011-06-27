@@ -26,6 +26,9 @@ import time
 import base64
 import urllib2
 import openerp.release as release
+
+edi_module = 'edi_import'
+
 def safe_unique_id(model, database_id):
     """Generate a unique string to represent a (model,database id) pair
     without being too long, without revealing the database id, and
@@ -201,8 +204,9 @@ class edi(object):
         - __version': a list of components for the version
         - __attachments': a list (possibly empty) of dicts describing the files attached to this record.
         """
-        # generic implementation!
-        model_data = self.pool.get('ir.model.data')
+        if context is None:
+            context = {}
+        model_data_pool = self.pool.get('ir.model.data')
         data_ids = []
         attachment_object = self.pool.get('ir.attachment')
         edi_dict_list = []
@@ -214,6 +218,7 @@ class edi(object):
             except:
                 pass
             version.append(ver)
+
         for record in records:
             attachment_ids = attachment_object.search(cr, uid, [('res_model','=', record._name), ('res_id', '=', record.id)])
             attachment_dict_list = []
@@ -225,21 +230,32 @@ class edi(object):
                 })
             
             
-            data_ids = model_data.search(cr, uid, [('res_id','=',record.id),('model','=',record._name)])
-            
+            data_ids = model_data_pool.search(cr, uid, [('res_id','=',record.id),('model','=',record._name)])
+            uuid = safe_unique_id(record._name, record.id)
+
             if len(data_ids):
-                xml_record = model_data.browse(cr, uid, data_ids[0])
-                uuid = safe_unique_id(record._name, record.id)
-                db_uuid = '%s:%s.%s' % (uuid, xml_record.module, xml_record.name)
-                
+                xml_record_id = data_ids[0]
+            else:
+                xml_record_id = model_data_pool.create(cr, uid, {
+                    'name': uuid,
+                    'model': record._name,
+                    'module': edi_module,
+                    'res_id': record.id}, context=context)
+
+            xml_record = model_data_pool.browse(cr, uid, xml_record_id, context=context)
+            db_uuid = '%s:%s.%s' % (uuid, xml_record.module, xml_record.name)
+            
             edi_dict = {
-                '__model' : record._name,
-                '__module' : record._module,
                 '__id': db_uuid,
                 '__last_update': False, #record.write_date, #TODO: convert into UTC
-                '__version': version,
-                '__attachments': attachment_dict_list
             }
+            if not context.get('o2m_export'):
+                edi_dict.update({
+                    '__model' : record._name,
+                    '__module' : record._module,
+                    '__version': version,
+                    '__attachments': attachment_dict_list
+                })
             edi_dict_list.append(edi_dict)
             
         return edi_dict_list
@@ -278,11 +294,14 @@ class edi(object):
         """
         # generic implementation!
         dict_list = []
-        
+        if context is None:
+            context = {}
+        ctx = context.copy()
+        ctx.update({'o2m_export':True})
         for record in records:
             
             model_obj = self.pool.get(record._name)
-            dict_list += model_obj.edi_export(cr, uid, [record], context=context)
+            dict_list += model_obj.edi_export(cr, uid, [record], context=ctx)
         
         return dict_list
         
@@ -410,7 +429,6 @@ class edi(object):
         data_line = []
         model_data = self.pool.get('ir.model.data')
         _fields = self.fields_get(cr, uid, context=context)
-        current_module = 'edi_import'
         values = {}
         for field in edi_document.keys():
             if not field.startswith('__'):
@@ -500,5 +518,5 @@ class edi(object):
                 else:
                     values[field] = edi_field_value
         
-        return model_data._update(cr, uid, self._name, current_module, values, context=context)
+        return model_data._update(cr, uid, self._name, edi_module, values, context=context)
 # vim: ts=4 sts=4 sw=4 si et
