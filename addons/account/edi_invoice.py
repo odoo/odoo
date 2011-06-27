@@ -23,13 +23,11 @@ from osv import fields, osv, orm
 from base.ir import ir_edi
 from tools.translate import _
 
-class account_invoice(osv.osv,ir_edi.edi):
+class account_invoice(osv.osv, ir_edi.edi):
     _inherit = 'account.invoice'
 
-    def edi_export(self, cr, uid, ids, edi_struct=None, context=None):
+    def edi_export(self, cr, uid, records, edi_struct=None, context=None):
         """Exports a supplier or customer invoice"""
-        rec_id = [ids[0].id]
-        
         edi_struct = {
                 'name': True,
                 'origin': True,
@@ -63,35 +61,51 @@ class account_invoice(osv.osv,ir_edi.edi):
                         'tax_amount': True,
                 },
         }
-        # Get EDI doc based on this struct. The result will also contain
-        # all metadata fields and attachments.
-        
-        edi_doc = super(account_invoice,self).edi_export(cr, uid, ids, edi_struct, context) 
-        for i, invoice in enumerate(self.browse(cr, uid, rec_id, context=context)):
-            # add specific data for import
-            inv_comp = invoice.company_id
-            comp_partner = inv_comp.partner_id
-            comp_partner_addr = comp_partner.address
-            for address in comp_partner_addr:
-                edi_doc[i].update({
-                        # Add company info and address
-                        'company_address': {
-                                'street': address.street,
-                                'street2': address.street2,
-                                'zip': address.zip,
-                                'city': address.city,
-                                'state_id': self.edi_m2o(cr, uid, address.state_id),
-                                'country_id': self.edi_m2o(cr, uid, address.country_id),
-                                'email': address.email,
-                                'phone': address.phone
-                        },
-                        # Function fields are not included in normal export
+        partner_pool = self.pool.get('res.partner')
+        partner_address_pool = self.pool.get('res.partner.address')
+        company_address_dict = {
+            'street': True,
+            'street2': True,
+            'zip': True,
+            'city': True,
+            'state_id': True,
+            'country_id': True,
+            'email': True,
+            'phone': True,
+                   
+        }
+        edi_doc_list = []
+        for invoice in records:
+            # Get EDI doc based on struct. The result will also contain all metadata fields and attachments.
+            edi_doc = super(account_invoice,self).edi_export(cr, uid, [invoice], edi_struct, context)
+            if not edi_doc:
+                continue
+            edi_doc = edi_doc[0]
 
-                        #'company_logo': inv_comp.logo,#TODO
-                        #'paid': inv_comp.paid, #TODO
-                })
-        
-        return edi_doc
+            # Add company info and address
+            res = partner_pool.address_get(cr, uid, [invoice.company_id.partner_id.id], ['contact', 'invoice'])
+            contact_addr_id = res['contact']
+            invoice_addr_id = res['invoice']
+
+            address = partner_address_pool.browse(cr, uid, invoice_addr_id, context=context)
+            edi_company_address_dict = {}
+            for key, value in company_address_dict.items():
+                if not value:
+                   continue
+                address_rec = getattr(address, key)
+                if not address_rec:
+                    continue
+                if key.endswith('_id'):
+                    address_rec = self.edi_m2o(cr, uid, address_rec, context=context)
+                edi_company_address_dict[key] = address_rec
+                    
+            edi_doc.update({
+                    'company_address': edi_company_address_dict,
+                    #'company_logo': inv_comp.logo,#TODO
+                    #'paid': inv_comp.paid, #TODO
+            })
+            edi_doc_list.append(edi_doc)
+        return edi_doc_list
 
     def edi_import(self, cr, uid, edi_document, context=None):
     

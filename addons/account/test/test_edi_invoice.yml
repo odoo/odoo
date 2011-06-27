@@ -48,6 +48,7 @@
     tokens = self.export_edi(cr, uid, invoices)
     for token in tokens:
       document = self.get_document(cr, uid, token, context=context)
+      print document
       a = self.import_edi(cr, uid, edi_document = document)
       
 -
