@@ -230,7 +230,6 @@ class rml_parse(object):
         self.lang_dict_called = False
         for obj in self.objects:
             obj._context['lang'] = lang
-        return True
 
     def _get_lang_dict(self):
         pool_lang = self.pool.get('res.lang')
