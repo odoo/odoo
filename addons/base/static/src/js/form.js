@@ -1259,7 +1259,7 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
                 }, self.view.domain || [],
                 new openerp.base.CompoundContext(build_relation_context(self)).add(context || {}));
         pop.on_select_elements.add(function(element_ids) {
-            dataset.call("name_get", [element_ids[0]], function(data) {
+            dataset.call("name_get", [[element_ids[0]]], function(data) {
                 self._change_int_ext_value(data.result[0]);
                 pop.stop();
             });
@@ -1291,7 +1291,7 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
         };
         if(typeof(value) === "number") {
             var dataset = new openerp.base.DataSetStatic(this.session, this.field.relation, []);
-            dataset.call("name_get", [value], function(data) {
+            dataset.call("name_get", [[value]], function(data) {
                 real_set_value(data.result[0]);
             }).fail(function() {self.tmp_value = undefined;});
         } else {
