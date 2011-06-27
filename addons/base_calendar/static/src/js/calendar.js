@@ -161,7 +161,16 @@ openerp.base_calendar.CalendarView = openerp.base.Controller.extend({
         		}
         		
         		if(self.date_delay) {
-        			
+        			var tds = (event_obj.start_date.getOrdinalNumber() / 1e3 >> 0) - (event_obj.start_date.getOrdinalNumber() < 0);
+        			var tde = (event_obj.end_date.getOrdinalNumber() / 1e3 >> 0) - (event_obj.end_date.getOrdinalNumber() < 0);
+        			var n = (tde - tds) / (60 * 60);
+        			if(n > self.day_length) {
+                    	var d = Math.floor(n / 24),
+                        	h = n % 24;
+                    	
+                    	n = d * self.day_length + h;
+                    }
+        			data[self.date_delay] = n;
         		}
         		
         		self.dataset.write(event_obj.id, data, function(){self.load_scheduler()});
