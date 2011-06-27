@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,7 +19,24 @@
 #
 ##############################################################################
 
-import base_calendar_invite_attendee
+from osv import osv
+from osv import fields
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
+class google_import_message(osv.osv):
+    """Import Message"""
+    
+    _name = "google.import.message"
+    _description = "Import Message"
+    _columns = {
+        'name': fields.text('Message', readonly=True),
+        }
+
+    def default_get(self, cr, uid, fields, context=None):
+        if context == None:
+            context = {}
+        res = super(google_import_message, self).default_get(cr, uid, fields, context=context)
+        res.update({'name': context.get('message')})
+        return res
+
+google_import_message()

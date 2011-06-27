@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,7 +19,15 @@
 #
 ##############################################################################
 
-import base_calendar_invite_attendee
+from osv import fields,osv
+    
+class res_users(osv.osv):
+    _inherit = "res.users"
+    _columns = {
+        'gmail_user': fields.char('Username', size=64,),
+        'gmail_password': fields.char('Password', size=64),
+    }
+res_users()    
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+# vim:expandtab:smartindent:toabstop=4:softtabstop=4:shiftwidth=4:
 

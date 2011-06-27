@@ -20,36 +20,28 @@
 ##############################################################################
 
 {
-    "name" : "Basic Calendar Functionality",
-    "version" : "1.0",
-    "depends" : ["base"],
-    'description': """
-This is a full-featured calendar system.
-========================================
-
-It supports:
-    - Calendar of events
-    - Alerts (create requests)
-    - Recurring events
-    - Invitations to people""",
-    "author" : "OpenERP SA",
-    'category': 'Tools',
+    'name': 'Google Import',
+    'version': '1.0',
+    'category': 'Generic Modules/Others',
+    'description': """The module adds google contact in partner address and add google calendar events details in Meeting""",
+    'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
-    "init_xml" : [
-        'base_calendar_data.xml'
-    ],
-    "demo_xml" : [],
-    "update_xml" : [
-        'security/calendar_security.xml',
-        'security/ir.model.access.csv',
-        'wizard/base_calendar_invite_attendee_view.xml',
-        'base_calendar_view.xml'
-    ],
-    "test" : ['test/base_calendar_test.yml'],
-    "installable" : True,
-    "active" : False,
-    "certificate" : "00694071962960352821",
-    'images': ['images/base_calendar1.jpeg','images/base_calendar2.jpeg','images/base_calendar3.jpeg','images/base_calendar4.jpeg',],
-}
+    'depends': ['base', 'google_base_account','crm'],
+    'init_xml': [],
+    'update_xml': ['security/ir.model.access.csv',
+                'sync_google_calendar_view.xml',
+                'wizard/import_google_data_view.xml',
+                'wizard/google_import_message_view.xml'
 
+               ],
+    'demo_xml': [],
+    'test': [
+             #'test/test_sync_google_contact_import_partner.yml',
+            # 'test/test_sync_google_contact_import_address.yml',
+             #'test/test_sync_google_calendar.yml',
+    ],
+    'installable': True,
+    'active': False,
+    'certificate': '',
+}
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
