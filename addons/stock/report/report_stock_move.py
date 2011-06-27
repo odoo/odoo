@@ -94,11 +94,11 @@ class report_stock_move(osv.osv):
                             ELSE 0.0
                             END AS in_qty,
                         CASE WHEN sp.type in ('out') THEN
-                            sum(sm.product_qty * pu.factor) * pt.standard_price
+                            sum(sm.product_qty * pu.factor) * sm.price_unit
                             ELSE 0.0
                             END AS out_value,
                         CASE WHEN sp.type in ('in') THEN
-                            sum(sm.product_qty * pu.factor) * pt.standard_price
+                            sum(sm.product_qty * pu.factor) * sm.price_unit
                             ELSE 0.0
                             END AS in_value,
                         min(sm.id) as sm_id,
@@ -133,7 +133,7 @@ class report_stock_move(osv.osv):
                         sm.id,sp.type, sm.date,sm.address_id,
                         sm.product_id,sm.state,sm.product_uom,sm.date_expected,
                         sm.product_id,pt.standard_price, sm.picking_id, sm.product_qty,
-                        sm.company_id,sm.product_qty, sm.location_id,sm.location_dest_id,pu.factor,pt.categ_id, sp.stock_journal_id)
+                        sm.company_id,sm.product_qty, sm.location_id,sm.location_dest_id,pu.factor,pt.categ_id, sp.stock_journal_id, sm.price_unit)
                     AS al
 
                     GROUP BY
