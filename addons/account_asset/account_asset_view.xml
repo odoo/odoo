@@ -65,10 +65,10 @@
                  <field name="name" select="1"/>
                  <field name="category_id" select="1" on_change="onchange_category_id(category_id)"/>
                  <field name="code" select="1"/>
-                 <field name="parent_id"/>
                  <field name="purchase_value" select="1"/>
                  <field name="salvage_value"/>
                  <field name="value_residual"/>
+                 <field name="parent_id"/>
                  <field name="currency_id" select="1"/>
                  <field name="company_id" select="1" widget="selection" groups="base.group_multi_company"/>
               </group>
@@ -184,13 +184,33 @@
             </tree>
         </field>
     </record>
+    
+    <record model="ir.ui.view" id="view_account_asset_asset_hierarchy_tree">
+        <field name="name">account.asset.asset.hierarchy</field>
+        <field name="model">account.asset.asset</field>
+        <field name="type">tree</field>
+        <field name="field_parent">child_ids</field>
+        <field name="arch" type="xml">
+            <tree string="Assets">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="category_id"/>
+                <field name="purchase_date"/>
+                <field name="purchase_value"/>
+                <field name="value_residual"/>
+                <field name="currency_id"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
 
     <record model="ir.actions.act_window" id="action_account_asset_asset_tree">
         <field name="name">Asset Hierarchy</field>
         <field name="res_model">account.asset.asset</field>
         <field name="view_type">tree</field>
         <field name="domain">[('parent_id','=',False)]</field>
-        <field name="view_id" ref="view_account_asset_asset_tree"/>
+        <field name="view_id" ref="view_account_asset_asset_hierarchy_tree"/>
     </record>
 
     <menuitem id="menu_finance_assets" name="Assets" parent="account.menu_finance"/>
