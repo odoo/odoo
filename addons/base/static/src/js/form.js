@@ -1387,19 +1387,51 @@ openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
     },
     set_value_from_ui: function() {},
     set_value: function(value) {
-        value = value || []
-        this._super(value);
-        this.dataset.reset_ids(value);
+        value = value || [];
         var self = this;
+        if(value.length >= 1 && value[0] instanceof Array) {
+            var ids = [];
+            _each(value, function(command) {
+                if(command[0] == 0) {
+                    var obj = {id: _.uniqueId(self.dataset.virtual_id_prefix), values: command[2]};
+                    self.dataset.to_create.push(obj);
+                    self.dataset.cache.push(_.clone(obj));
+                    ids.push(obj.id);
+                } else if(command[0] == 1) {
+                    var obj = {id: command[1], values: command[2]};
+                    self.dataset.to_write.push(obj);
+                    self.dataset.cache.push(_.clone(obj));
+                    ids.push(obj.id);
+                } else if(command[0] == 2) {
+                    self.dataset.to_delete.push({id: command[1]});
+                } else if(command[0] == 4) {
+                    ids.push(command[1]);
+                }
+            });
+            this._super(ids);
+            this.dataset.set_ids(ids);
+        } else {
+            this._super(value);
+            this.dataset.reset_ids(value);
+        }
         $.when(this.is_started).then(function() {
             self.reload_current_view();
         });
     },
     get_value: function() {
-        var val = _.map(this.dataset.to_delete, function(v, k) {return [2, x.id];});
-        val = val.concat(_.map(this.dataset.to_create, function(x) {return [0, 0, x.values];}));
-        val = val.concat(_.map(this.dataset.to_write, function(x) {return [1, x.id, x.values];}));
-        debugger;
+        var self = this;
+        var val = _.map(this.dataset.ids, function(id) {
+            var alter_order = _.detect(self.dataset.to_create, function(x) {return x.id === id;});
+            if (alter_order) {
+                return [0, 0, alter_order.values];
+            }
+            alter_order = _.detect(self.dataset.to_write, function(x) {return x.id === id;});
+            if (alter_order) {
+                return [1, alter_order.id, alter_order.values];
+            }
+            return [4, id];
+        });
+        val = val.concat(_.map(this.dataset.to_delete, function(v, k) {return [2, x.id];}));
         return val;
     },
     validate: function() {
@@ -1458,6 +1490,9 @@ openerp.base.form.FieldMany2Many = openerp.base.form.Field.extend({
     },
     set_value: function(value) {
         value = value || [];
+        if (value.length >= 1 && value[0] instanceof Array) {
+            value = value[0][2];
+        }
         this._super(value);
         this.dataset.set_ids(value);
         var self = this;
