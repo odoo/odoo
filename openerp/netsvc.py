@@ -431,15 +431,19 @@ class OpenERPDispatcher:
         log(title, msg, channel=channel, depth=depth, fn=fn)
     def dispatch(self, service_name, method, params):
         try:
-            logger = logging.getLogger('result')
-            self.log('service', tuple(replace_request_password(params)), depth=(None if logger.isEnabledFor(logging.DEBUG_RPC_ANSWER) else 1), fn='%s.%s'%(service_name,method))
             auth = getattr(self, 'auth_provider', None)
+            logger = logging.getLogger('result')
+            start_time = end_time = 0
+            if logger.isEnabledFor(logging.DEBUG_RPC_ANSWER):
+                self.log('service', tuple(replace_request_password(params)), depth=None, fn='%s.%s'%(service_name,method))
             if logger.isEnabledFor(logging.DEBUG_RPC):
                 start_time = time.time()
             result = ExportService.getService(service_name).dispatch(method, auth, params)
             if logger.isEnabledFor(logging.DEBUG_RPC):
                 end_time = time.time()
-                self.log('execution time', tuple(replace_request_password(params)), depth=1, fn='%.3fs '%(end_time - start_time))
+            if not logger.isEnabledFor(logging.DEBUG_RPC_ANSWER):
+                self.log('service (%.3fs)' % (end_time - start_time), tuple(replace_request_password(params)), depth=1, fn='%s.%s'%(service_name,method))
+            self.log('execution time', '%.3fs' % (end_time - start_time), channel=logging.DEBUG_RPC_ANSWER)
             self.log('result', result, channel=logging.DEBUG_RPC_ANSWER)
             return result
         except Exception, e:
