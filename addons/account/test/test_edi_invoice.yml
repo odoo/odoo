@@ -28,7 +28,7 @@
     company_id: base.main_company
     account_id: 1
     date_invoice: '2011-06-22'
-    name: Nothing
+    name: selling product
     type: 'out_invoice'
     invoice_line:
       - product_id: product.product_product_pc1
@@ -48,14 +48,13 @@
     tokens = self.export_edi(cr, uid, invoices)
     for token in tokens:
       document = self.get_document(cr, uid, token, context=context)
-      print document
       a = self.import_edi(cr, uid, edi_document = document)
       
 -
   Check the customer invoice is exported or not
 -
   !python {model: account.invoice}: |
-    ids=self.search(cr, uid, [('partner_id','=',ref("res_partner_test20")),('company_id','=',ref("res_company_test11")),('type','=','out_invoice')])
+    ids=self.search(cr, uid, [('partner_id','=',ref("res_partner_test20")),('type','=','out_invoice')])
     if not ids:
       raise AssertionError("Invoice is not imported")
 

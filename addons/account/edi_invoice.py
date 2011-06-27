@@ -131,192 +131,131 @@ class account_invoice(osv.osv, ir_edi.edi):
                     on the tax config of the DB where it is imported.    
         """
 
-        partner = self.pool.get('res.partner')
-        partner_add = self.pool.get('res.partner.address')
-        model_data = self.pool.get('ir.model.data')
-        product_obj = self.pool.get('product.product')
-        product_categ = self.pool.get('product.category')
-        acc_invoice = self.pool.get('account.invoice')
-        company = self.pool.get('res.company')
-        country = self.pool.get('res.country')
+        partner_pool = self.pool.get('res.partner')
+        partner_address_pool = self.pool.get('res.partner.address')
+        model_data_pool = self.pool.get('ir.model.data')
+        product_pool = self.pool.get('product.product')
+        product_categ_pool = self.pool.get('product.category')
+        company_pool = self.pool.get('res.company')
+        country_pool = self.pool.get('res.country')
+        state_pool = self.pool.get('res.country.state')
+        account_journal_pool = self.pool.get('account.journal')
+        invoice_line_pool = self.pool.get('account.invoice.line')
+        account_pool = self.pool.get('account.account')
         tax_id = []
         account_id = []
         partner_id = None
         company_id = None
         if context is None:
             context = {}
-        for field in edi_document.keys():
-            if field == 'type':
-                if len(edi_document['invoice_line']):
-                	name = edi_document['invoice_line'][0]['product_id'][1]
-                else:
-                	name = None
-                re_ids = product_obj.search(cr,uid,[('name','=',name)])
-                if edi_document['type'] == 'out_invoice' or edi_document['type'] == 'out_refund':
-                    if re_ids:
-                        if product_obj.browse(cr,uid,re_ids)[0].property_account_expense:
-                            account_id = product_obj.browse(cr,uid,re_ids)[0].property_account_expense
-                        else:
-                            account_id = product_categ.browse(cr,uid,re_ids)[0].property_account_expense_categ
-                        if product_obj.browse(cr,uid,re_ids)[0].taxes_id:
-                            tax_id = product_obj.browse(cr, uid,re_ids)[0].taxes_id
-                    if edi_document['type'] == 'out_refund':
-                        edi_document['type'] = 'in_refund'
-                    else:
-                        edi_document['type'] = 'in_invoice'         
-                elif edi_document['type'] == 'in_invoice' or edi_document['type'] == 'in_refund':
-                    if re_ids:
-                        if product_obj.browse(cr,uid,re_ids)[0].property_account_income:
-                            account_id = product_obj.browse(cr,uid,re_ids)[0].property_account_income
-                        else:
-                            account_id = product_categ.browse(cr,uid,re_ids)[0].property_account_income_categ
-                        if product_obj.browse(cr,uid,re_ids)[0].taxes_id:
-                            tax_id = product_obj.browse(cr, uid,re_ids)[0].taxes_id
-                    if edi_document['type'] == 'in_refund':
-                        edi_document['type'] = 'out_refund'
-                    else:
-                        edi_document['type'] = 'out_invoice'
-                    
-                if account_id:
-                    name_ids = model_data.search(cr, uid, [('model','=',account_id._name),('res_id','=',account_id.id)])
-                    if name_ids:
-                        xml_id = model_data.browse(cr, uid, name_ids)[0].name
-                        db_uuid = ir_edi.safe_unique_id(account_id._name,account_id.id)
-                        edi_document['invoice_line'][0]['account_id'] = [db_uuid+':'+xml_id,account_id.name]
-                        
-                if tax_id:
-                    name_ids = model_data.search(cr, uid, [('model','=',tax_id[0]._name),('res_id','=',tax_id[0].id)])
-                    if name_ids:
-                        xml_id = model_data.browse(cr, uid, name_ids)[0].name
-                        db_uuid = ir_edi.safe_unique_id(tax_id[0]._name,tax_id[0].id)
-                        edi_document['tax_line'][0]['account_id'] = [db_uuid+':'+xml_id,tax_id[0].name]
-                else:
-                    if len(edi_document['tax_line']):
-                        edi_document['tax_line'][0]['manual'] = True
-                    
-                res = {}
-                part = {}
-                comp = {}
-                partner_id = partner.search(cr,uid,[('name','=',edi_document['company_id'][1])])
-                if len(partner_id):
-                    browse_partner = partner.browse(cr,uid,partner_id[0])
-                    u_id = model_data.search(cr, uid, [('res_id','=',browse_partner.id),('model','=',browse_partner._name)])
-                    if len(u_id):
-                        company_id = browse_partner.company_id
-                        
-                        xml_obj = model_data.browse(cr,uid,u_id[0])
-                        uuid = ir_edi.safe_unique_id(browse_partner._name,browse_partner.id)
-                        db_uuid = '%s:%s' % (uuid,xml_obj.name)
-                        part.update({'partner_id':[db_uuid,browse_partner.name]})
-                
-                else:
-                    
-                    company_address = {}
-                    company_id = company.create(cr, uid, {'name':edi_document['company_id'][1]})
-                    
-                    for key in edi_document['company_address'].keys():
-                        if type(edi_document['company_address'][key]).__name__ == 'list':
-                            if edi_document['company_address'][key][1] is not None:
-                                country_id = country.search(cr ,uid,[('name','=',edi_document['company_address'][key][1])])
-                                
-                                if len(country_id):
-                                    company_address.update({key : country_id[0]})
-                                    
-                                else:
-                                    if isinstance(edi_document['company_address'][key][1],unicode):
-                                        country_name = str(edi_document['company_address'][key][1])
-                                        country_code = country_name[:2].upper()
-                                    country_id = country.create(cr, uid, {'code': country_code,name: country_name})
-                                    company_address.update({key : country_id[0]})
-                            else:
-                                company_address.update({key : edi_document['company_address'][key][1]})
-                        else:
-                            company_address.update({key:edi_document['company_address'][key]})  
-                    
-                    add_id = []
-                    partner_id = []
-                    
-                    add_id = partner_add.create(cr,uid,company_address)
-                    
-                    res.update({'name': edi_document['company_id'][1],'supplier': True,'address': [unicode(add_id)], 'company_id': unicode(company_id),'country' : country_id})
-                    
-                    partner_id.append(partner.create(cr,uid,{'name': edi_document['company_id'][1],'supplier': True,'address': unicode(add_id), 'company_id': unicode(company_id),'country' : country_id}))
-                    
-                    browse_partner = partner.browse(cr,uid,partner_id[0])
-                    company_id = browse_partner.company_id
-                    u_id = model_data.search(cr, uid, [('res_id','=',browse_partner.id),('model','=',browse_partner._name)])
-                    if len(u_id):
-                        xml_obj = model_data.browse(cr,uid,u_id[0])
-                        uuid = ir_edi.safe_unique_id(browse_partner._name,browse_partner.id)
-                        db_uuid = '%s:%s' % (uuid,xml_obj.name)
-                        part.update({'partner_id':[db_uuid,browse_partner.name]})
-                
-                comp_id = partner.search(cr,uid,[('name','=',edi_document['partner_id'][1])])
-               
-                if len(comp_id): 
-                    browse_partner = partner.browse(cr,uid,comp_id[0])
-                    browse_company = company.browse(cr,uid,browse_partner.company_id.id)
-                    u_id = u_id = model_data.search(cr, uid, [('res_id','=',browse_company.id),('model','=',browse_company._name)])
-                    if len(u_id):
-                        xml_obj = model_data.browse(cr,uid,u_id[0])
-                        uuid = ir_edi.safe_unique_id(browse_company._name,browse_company.id)
-                        db_uuid = '%s:%s' % (uuid,xml_obj.name)
-                        comp.update({'company_id':[db_uuid,browse_company.name]})
-                        
-                del edi_document['partner_id']
-                del edi_document['company_id']
-                edi_document.update(part)
-                edi_document.update(comp) 
-                
-              
-                if len(partner_id):
-                    p = self.pool.get('res.partner').browse(cr, uid, partner_id[0])
-                    
-                    partner_id = int(partner_id[0])
-                    
-                    if company_id:
-                        if p.property_account_receivable.company_id.id != company_id.id and p.property_account_payable.company_id.id != company_id.id:
-                            property_obj = self.pool.get('ir.property')
-                            
-                            rec_pro_id = property_obj.search(cr,uid,[('name','=','property_account_receivable'),('res_id','=','res.partner,'+str(partner_id)+''),('company_id','=',company_id.id)])
-                            pay_pro_id = property_obj.search(cr,uid,[('name','=','property_account_payable'),('res_id','=','res.partner,'+str(partner_id)+''),('company_id','=',company_id.id)])
-                            
-                            if not rec_pro_id:
-                                rec_pro_id = property_obj.search(cr,uid,[('name','=','property_account_receivable'),('company_id','=',company_id.id)])
-                            if not pay_pro_id:
-                                pay_pro_id = property_obj.search(cr,uid,[('name','=','property_account_payable'),('company_id','=',company_id.id)])
-                            rec_line_data = property_obj.read(cr,uid,rec_pro_id,['name','value_reference','res_id'])
-                            pay_line_data = property_obj.read(cr,uid,pay_pro_id,['name','value_reference','res_id'])
-                            rec_res_id = rec_line_data and rec_line_data[0].get('value_reference',False) and int(rec_line_data[0]['value_reference'].split(',')[1]) or False
-                            pay_res_id = pay_line_data and pay_line_data[0].get('value_reference',False) and int(pay_line_data[0]['value_reference'].split(',')[1]) or False
-                            if not rec_res_id and not pay_res_id:
-                                raise osv.except_osv(_('Configuration Error !'), _('Can not find account chart for this company, Please Create account.'))
-                                
-                            account_obj = self.pool.get('account.account')
-                            rec_obj_acc = account_obj.browse(cr, uid, [rec_res_id])
-                            pay_obj_acc = account_obj.browse(cr, uid, [pay_res_id])
-                            p.property_account_receivable = rec_obj_acc[0]
-                            p.property_account_payable = pay_obj_acc[0]
         
-                    if edi_document['type'] in ('out_invoice', 'out_refund'):
-                        acc_obj = p.property_account_receivable
-                    else:
-                        acc_obj = p.property_account_payable
-                    
-                    res_id = model_data.search(cr,uid,[('model','=',acc_obj._name),('res_id','=',acc_obj.id)])
-                    
-                    if len(res_id):
-                        xml_obj = model_data.browse(cr, uid, res_id[0])
-                        uuid = ir_edi.safe_unique_id(acc_obj._name,acc_obj.id)
-                        db_uuid = '%s:%s' % (uuid,xml_obj.name)
-                        edi_document.update({'account_id':[db_uuid,acc_obj.name]})
-                        
-                edi_document.update({'reference':edi_document['internal_number'],'reference_type' : 'none'})    
-                edi_document['internal_number'] = False
-                context['type'] = edi_document['type']  
-            
+
+        # import company as a new partner, if type==in then supplier=1, else customer=1
+        # partner_id field is modified to point to the new partner
+        # company_address data used to add address to new partner
+        edi_company_address = edi_document['company_address']
+        edi_partner_id = edi_document['partner_id']
+        company_name = edi_document['company_id'][1]
+        invoice_type = edi_document['type']
+        state_id = edi_company_address.get('state_id', False)
+        state_name = state_id and state_id[1]
+        country_id = edi_company_address.get('country_id', False)
+        country_name = country_id and country_id[1]
+
+        country_id = country_name and self.edi_import_relation(cr, uid, 'res.country', country_name, context=context) or False
+        state_id = state_name and self.edi_import_relation(cr, uid, 'res.country.state', state_name, 
+                                values={'country_id': country_id, 'code': state_name}, context=context) or False
+        address_value = {
+            'street': edi_company_address.get('street', False),
+            'street2': edi_company_address.get('street2', False),
+            'zip': edi_company_address.get('zip', False),
+            'city': edi_company_address.get('city', False),
+            'state_id': state_id,
+            'country_id': country_id,
+            'email': edi_company_address.get('email', False),
+            'phone': edi_company_address.get('phone', False),
+               
+        }
+        
+
+        partner_value = {'name': company_name}
+        if invoice_type in ('out_invoice', 'in_refund'):
+            partner_value.update({'customer': True, 'supplier': False})
+        if invoice_type in ('in_invoice', 'out_refund'):
+            partner_value.update({'customer': False, 'supplier': True})
+
+        partner_id = partner_pool.create(cr, uid, partner_value, context=context)
+        address_value.update({'partner_id': partner_id})
+        address_id = partner_address_pool.create(cr, uid, address_value, context=context)
+
+        partner = partner_pool.browse(cr, uid, partner_id, context=context)
+        edi_document['partner_id'] = self.edi_m2o(cr, uid, partner, context=context)
+
+        # change type: out_invoice'<->'in_invoice','out_refund'<->'in_refund'
+        invoice_type = invoice_type.startswith('in_') and invoice_type.replace('in_','out_') or invoice_type.replace('out_','in_')
+        edi_document['type'] = invoice_type
+
+        # Set Account
+        if invoice_type in ('out_invoice', 'out_refund'):
+            invoice_account = partner.property_account_receivable
+        else:
+            invoice_account = partner.property_account_payable
+        edi_document['account_id'] = invoice_account and self.edi_m2o(cr, uid, invoice_account, context=context) or False
+
+        # reference: should contain the value of the 'internal_number'
+        edi_document['reference'] = edi_document.get('internal_number', False)
+        # reference_type: 'none'
+        edi_document['reference_type'] = 'none'
+
+        # internal number: reset to False, auto-generated
+        edi_document['internal_number'] = False
+
+        # company should set by default so delete company data from edi Document
         del edi_document['company_address']
-        return super(account_invoice,self).edi_import(cr, uid, edi_document)
+        del edi_document['company_id'] 
+
+        # journal_id: should be selected based on type: simply put the 'type' in the context when calling create(), will be selected correctly
+        journal_context = context.copy()
+        journal_context.update({'type':invoice_type})
+        journal_id = self._get_journal(cr, uid, context=journal_context)
+        journal = False
+        if journal_id:
+            journal = account_journal_pool.browse(cr, uid, journal_id, context=context)
+        edi_document['journal_id'] = journal and  self.edi_m2o(cr, uid, journal, context=context) or False
+
+        # for invoice lines, the account_id value should be taken from the product's default, i.e. from the default category, as it will not be provided.
+        for edi_invoice_line in edi_document.get('invoice_line', []):
+            product_id = edi_invoice_line.get('product_id', False)
+            account = False
+            if product_id:
+                product_name = product_id and product_id[1]
+                product_id = self.edi_import_relation(cr, uid, 'product.product', product_name, context=context)
+                product = product_pool.browse(cr, uid, product_id, context=context)
+
+                if invoice_type in ('out_invoice','out_refund'):
+                    account = product.product_tmpl_id.property_account_income
+                    if not account:
+                        account = product.categ_id.property_account_income_categ
+                else:
+                    account = product.product_tmpl_id.property_account_expense
+                    if not account:
+                        account = product.categ_id.property_account_expense_categ
+
+            # TODO: add effect of fiscal position 
+            # account = fpos_obj.map_account(cr, uid, fiscal_position_id, account.id)
+            edi_invoice_line['account_id'] = account and self.edi_m2o(cr, uid, account, context=context) or False
+        
+        # for tax lines, we disconnect from the invoice.line, so all tax lines will be of type 'manual', and default accounts should be picked based
+        # on the tax config of the DB where it is imported.
+        for edi_tax_line in edi_document.get('tax_line', []):
+            account_ids = account_pool.search(cr, uid, [('type','<>','view'),('type','<>','income'), ('type', '<>', 'closed')])
+            if account_ids:
+                edi_tax_line['account_id'] = account_ids[0] #TODO should select account of output VAT for Customer Invoice and Input VAT for Supplier Invoice
+            edi_tax_line['manual'] = True
+
+        # TODO :=> payment_term: if set, create a default one based on name... 
+        print edi_document       
+        return super(account_invoice,self).edi_import(cr, uid, edi_document, context=context)
       
 account_invoice()
 
