@@ -1303,7 +1303,7 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
             if (this.tmp_value instanceof Array) {
                 return this.tmp_value[0];
             }
-            return this.tmp_value;
+            return this.tmp_value === null ? false : this.tmp_value;
         }
         if (this.value === undefined)
             throw "theorically unreachable state";
