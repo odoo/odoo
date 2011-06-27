@@ -336,25 +336,7 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
         }
         var self = this;
         return $.when(this.dataset.unlink(ids)).then(function () {
-            _(self.rows).chain()
-                .map(function (row, index) {
-                    return {
-                        index: index,
-                        id: row.data.id.value
-                    };})
-                .filter(function (record) {
-                    return _.contains(ids, record.id);
-                })
-                .sort(function (a, b) {
-                    // sort in reverse index order, so we delete from the end
-                    // and don't blow up the following indexes (leading to
-                    // removing the wrong records from the visible list)
-                    return b.index - a.index;
-                })
-                .each(function (record) {
-                    self.rows.splice(record.index, 1);
-                });
-            // TODO only refresh modified rows
+            self.reload_content();
         });
     },
     /**
@@ -895,7 +877,7 @@ openerp.base.ListView.Groups = Class.extend( /** @lends openerp.base.ListView.Gr
 
         var d = new $.Deferred();
         dataset.read_slice(
-            _.filter(_.pluck(this.columns, 'name'), _.identity),
+            _.filter(_.pluck(_.select(this.columns, function(x) {return x.tag == "field";}), 'name'), _.identity),
             0, false,
             function (records) {
                 var form_records = _(records).map(

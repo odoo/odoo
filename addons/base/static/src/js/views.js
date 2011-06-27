@@ -113,7 +113,8 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
      * @returns {jQuery.Deferred} new view loading promise
      */
     on_mode_switch: function(view_type) {
-        var view_promise;
+        var self = this,
+            view_promise;
         this.active_view = view_type;
         var view = this.views[view_type];
         if (!view.controller) {
@@ -124,6 +125,16 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
             if (view.embedded_view) {
                 controller.set_embedded_view(view.embedded_view);
             }
+            if (view_type === 'list' && this.flags.search_view === false && this.action && this.action['auto_search']) {
+                // In case the search view is not instanciated: manually call ListView#search
+                controller.on_loaded.add({
+                    callback: function () {
+                        controller.do_search([self.action.domain], [self.action.context], []);
+                    },
+                    position: 'last',
+                    unique: true
+                });
+            }
             view_promise = controller.start();
             var self = this;
             $.when(view_promise).then(function() {
@@ -131,6 +142,7 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
             });
             this.views[view_type].controller = controller;
         }
+
 
         if (this.searchview) {
             if (view.controller.searchable === false) {
@@ -261,16 +273,18 @@ openerp.base.ViewManagerAction = openerp.base.ViewManager.extend({
             }
         });
 
-        // init search view
-        var searchview_id = this.action.search_view_id && this.action.search_view_id[0];
+        if (this.flags.search_view !== false) {
+            // init search view
+            var searchview_id = this.action.search_view_id && this.action.search_view_id[0];
 
-        var searchview_loaded = this.setup_search_view(
-                searchview_id || false, search_defaults);
+            var searchview_loaded = this.setup_search_view(
+                    searchview_id || false, search_defaults);
 
-        // schedule auto_search
-        if (searchview_loaded != null && this.action['auto_search']) {
-            $.when(searchview_loaded, inital_view_loaded)
-                .then(this.searchview.do_search);
+            // schedule auto_search
+            if (searchview_loaded != null && this.action['auto_search']) {
+                $.when(searchview_loaded, inital_view_loaded)
+                    .then(this.searchview.do_search);
+            }
         }
     },
     stop: function() {
@@ -454,6 +468,41 @@ openerp.base.ProcessView = openerp.base.Controller.extend({
 
 openerp.base.HelpView = openerp.base.Controller.extend({
 });
+
+openerp.base.json_node_to_xml = function(node, single_quote, indent) {
+    // For debugging purpose, this function will convert a json node back to xml
+    // Maybe usefull for xml view editor
+    if (typeof(node.tag) !== 'string' || !node.children instanceof Array || !node.attrs instanceof Object) {
+        throw("Node a json node");
+    }
+    indent = indent || 0;
+    var sindent = Array(indent + 1).join('\t'),
+        r = sindent + '<' + node.tag;
+    for (var attr in node.attrs) {
+        var vattr = node.attrs[attr];
+        if (typeof(vattr) !== 'string') {
+            // domains, ...
+            vattr = JSON.stringify(vattr);
+        }
+        vattr = vattr.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        if (single_quote) {
+            vattr = vattr.replace(/&quot;/g, "'");
+        }
+        r += ' ' + attr + '="' + vattr + '"';
+    }
+    if (node.children.length) {
+        r += '>\n';
+        var childs = [];
+        for (var i = 0, ii = node.children.length; i < ii; i++) {
+            childs.push(openerp.base.json_node_to_xml(node.children[i], single_quote, indent + 1));
+        }
+        r += childs.join('\n');
+        r += '\n' + sindent + '</' + node.tag + '>';
+        return r;
+    } else {
+        return r + '/>';
+    }
+}
 
 };
 

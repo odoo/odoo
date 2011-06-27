@@ -383,11 +383,6 @@ class DataSet(openerpweb.Controller):
         reads = Model.read(ids, fields or False, context)
         reads.sort(key=lambda obj: ids.index(obj['id']))
         return reads
-    
-    @openerpweb.jsonrequest
-    def read(self, request, model, ids, fields=False):
-        return self.do_search_read(request, model, ids, fields,
-                                   request.session.eval_context(request.context))
 
     @openerpweb.jsonrequest
     def get(self, request, model, ids, fields=False):

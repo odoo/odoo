@@ -377,6 +377,7 @@ openerp.base.search.FilterGroup = openerp.base.search.Widget.extend({
     init: function (filters, view) {
         this._super(view);
         this.filters = filters;
+        this.length = filters.length;
     },
     start: function () {
         this._super();
