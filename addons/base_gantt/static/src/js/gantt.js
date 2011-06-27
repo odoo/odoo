@@ -298,37 +298,53 @@ init: function(view_manager, session, element_id, dataset, view_id) {
         ganttrow = jQuery('.taskPanel').closest('tr');
         gtd =  ganttrow.children(':first-child');
         gtd.children().addClass('task-name');
+        
+        self.set_heigth();
+        self.set_width();
 
         jQuery(".toggle-sidebar").click(function(e) {
             self.set_width();
         });
 
         jQuery(window).bind('resize', function () {
-
-            gantt_hgt = jQuery(window).height() - oth_hgt;
-
-            if (gantt_hgt < min_hgt){
-                gantt_hgt = min_hgt;
-            }
-            jQuery('#GanttDiv').height(gantt_hgt);
-            jQuery('.task-name').height(gantt_hgt - 40);
-            taskdiv.height(gantt_hgt - 40);
-            if (taskdiv.height() > jQuery('.taskPanel').height()){
-                jQuery('.taskPanel').height(taskdiv.height());
-                jQuery('.task-name').children().height(taskdiv.height());
-            }
+            self.set_heigth();
             self.set_width();
         });
 
         jQuery("div #_1, div #_1 + div").hide();
     },
 
+    set_heigth: function() {
+
+        gantt_hgt = jQuery(window).height() - oth_hgt;
+        
+        if (gantt_hgt < min_hgt){
+            gantt_hgt = min_hgt;
+        }
+        jQuery('#GanttDiv').css('height','100%');
+        jQuery('.task-name').height(gantt_hgt - 40 -16);
+        taskdiv.height(gantt_hgt - 40);
+
+        if (taskdiv.height() > jQuery('.taskPanel').height() + 16){
+            jQuery('.taskPanel').height(taskdiv.height() - 16);
+            jQuery('.task-name').children().height(taskdiv.height() - 16);
+        }
+    },
+
     set_width: function() {
-        $gantt_panel.width(100);
+
+        $gantt_panel.width(1);
+        jQuery(".ganttTaskPanel").parent().width(1);
+
+        search_wdt = jQuery("#oe_app_search").width();
+
         jQuery('#GanttDiv').css('width','100%');
-        $gantt_panel.width(jQuery("#oe_app_search").width() - 150);
-        if (taskdiv.width() > taskdiv.children().width()){
-            taskdiv.children().width(taskdiv.width());
+        jQuery(".ganttTaskPanel").parent().width(search_wdt - 150);
+        jQuery(".ganttTaskPanel").width(search_wdt - 150);
+        jQuery(".ganttDayPanel").width(search_wdt - 150 - 14);
+
+        if (taskdiv.width() > taskdiv.children().width() + 16){
+            taskdiv.children().width(taskdiv.width() - 16);
         }
     },
 
