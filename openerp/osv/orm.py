@@ -68,6 +68,8 @@ regex_object_name = re.compile(r'^[a-z0-9_.]+$')
 # Mapping between openerp module names and their osv classes.
 module_class_list = {}
 
+# Super-user identifier (aka Administrator aka root)
+ROOT_USER_ID = 1
 
 def check_object_name(name):
     """ Check if the given name is a valid openerp object name.
@@ -2108,14 +2110,14 @@ class orm_memory(orm_template):
             for k,v in self.datas.iteritems():
                 if v['internal.date_access'] < max:
                     tounlink.append(k)
-            self.unlink(cr, 1, tounlink)
+            self.unlink(cr, ROOT_USER_ID, tounlink)
 
         # Count-based expiration
         if self._max_count and len(self.datas) > self._max_count:
             # sort by access time to remove only the first/oldest ones in LRU fashion
             records = self.datas.items()
             records.sort(key=lambda x:x[1]['internal.date_access'])
-            self.unlink(cr, 1, [x[0] for x in records[:len(self.datas)-self._max_count]])
+            self.unlink(cr, ROOT_USER_ID, [x[0] for x in records[:len(self.datas)-self._max_count]])
 
         return True
 
@@ -2491,7 +2493,7 @@ class orm(orm_template):
         while ids_lst:
             iids = ids_lst[:40]
             ids_lst = ids_lst[40:]
-            res = f.get(cr, self, iids, k, 1, {})
+            res = f.get(cr, self, iids, k, ROOT_USER_ID, {})
             for key, val in res.items():
                 if f._multi:
                     val = val[k]
@@ -2697,7 +2699,7 @@ class orm(orm_template):
                                 # set the field to the default value if any
                                 if k in self._defaults:
                                     if callable(self._defaults[k]):
-                                        default = self._defaults[k](self, cr, 1, context)
+                                        default = self._defaults[k](self, cr, ROOT_USER_ID, context)
                                     else:
                                         default = self._defaults[k]
 
@@ -2782,7 +2784,7 @@ class orm(orm_template):
                             # initialize it
                             if not create and k in self._defaults:
                                 if callable(self._defaults[k]):
-                                    default = self._defaults[k](self, cr, 1, context)
+                                    default = self._defaults[k](self, cr, ROOT_USER_ID, context)
                                 else:
                                     default = self._defaults[k]
 
@@ -3513,11 +3515,13 @@ class orm(orm_template):
 
             # Removing the ir_model_data reference if the record being deleted is a record created by xml/csv file,
             # as these are not connected with real database foreign keys, and would be dangling references.
-            # Step 1. Calling unlink of ir_model_data only for the affected IDS.
-            reference_ids = pool_model_data.search(cr, uid, [('res_id','in',list(sub_ids)),('model','=',self._name)], context=context)
+            # Note: following steps performed as admin to avoid access rights restrictions, and with no context
+            #       to avoid possible side-effects during admin calls.
+            # Step 1. Calling unlink of ir_model_data only for the affected IDS
+            reference_ids = pool_model_data.search(cr, ROOT_USER_ID, [('res_id','in',list(sub_ids)),('model','=',self._name)])
             # Step 2. Marching towards the real deletion of referenced records
             if reference_ids:
-                pool_model_data.unlink(cr, uid, reference_ids, context=context)
+                pool_model_data.unlink(cr, ROOT_USER_ID, reference_ids)
 
             # For the same reason, removing the record relevant to ir_values
             ir_value_ids = ir_values_obj.search(cr, uid,
@@ -4013,8 +4017,8 @@ class orm(orm_template):
 
             result.setdefault(fncts[fnct][0], {})
 
-            # uid == 1 for accessing objects having rules defined on store fields
-            ids2 = fncts[fnct][2](self, cr, 1, ids, context)
+            # use admin user for accessing objects having rules defined on store fields
+            ids2 = fncts[fnct][2](self, cr, ROOT_USER_ID, ids, context)
             for id in filter(None, ids2):
                 result[fncts[fnct][0]].setdefault(id, [])
                 result[fncts[fnct][0]][id].append(fnct)
@@ -4067,8 +4071,8 @@ class orm(orm_template):
         for key in keys:
             val = todo[key]
             if key:
-                # uid == 1 for accessing objects having rules defined on store fields
-                result = self._columns[val[0]].get(cr, self, ids, val, 1, context=context)
+                # use admin user for accessing objects having rules defined on store fields
+                result = self._columns[val[0]].get(cr, self, ids, val, ROOT_USER_ID, context=context)
                 for id, value in result.items():
                     if field_flag:
                         for f in value.keys():
@@ -4093,8 +4097,8 @@ class orm(orm_template):
 
             else:
                 for f in val:
-                    # uid == 1 for accessing objects having rules defined on store fields
-                    result = self._columns[f].get(cr, self, ids, f, 1, context=context)
+                    # use admin user for accessing objects having rules defined on store fields
+                    result = self._columns[f].get(cr, self, ids, f, ROOT_USER_ID, context=context)
                     for r in result.keys():
                         if field_flag:
                             if r in field_dict.keys():
