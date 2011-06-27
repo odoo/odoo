@@ -22,6 +22,7 @@
 from osv import fields, osv
 from tools.translate import _
 import time
+import decimal_precision as dp
 
 
 class stock_partial_move_memory_out(osv.osv_memory):
@@ -29,7 +30,7 @@ class stock_partial_move_memory_out(osv.osv_memory):
     _rec_name = 'product_id'
     _columns = {
         'product_id' : fields.many2one('product.product', string="Product", required=True),
-        'quantity' : fields.float("Quantity", required=True),
+        'quantity' : fields.float("Quantity", required=True, digits_compute= dp.get_precision('Product UoM')),
         'product_uom': fields.many2one('product.uom', 'Unit of Measure', required=True),
         'prodlot_id' : fields.many2one('stock.production.lot', 'Production Lot'),
         'move_id' : fields.many2one('stock.move', "Move"),
