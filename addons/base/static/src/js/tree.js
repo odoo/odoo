@@ -45,11 +45,11 @@ openerp.base.TreeView = openerp.base.View.extend({
     getdata: function (id, flag) {
         var self = this;
         var paddingflag = 0;
-        var row_id = ""; // Used to Get Id of the selcted tr
-        var rowid = ""; // Used to Split Id of the selcted tr with '_'
+        var row_id = "";
+        var rowid = "";
         var fixpadding = "";
-        var padding = ""; //Used to get padding Left of selcted tr
-        var padd = ""; // Used to Split Padding Left of the selcted tr with 'px'
+        var padding = "";
+        var padd = "";
         var divflag = "";
 
         self.dataset.domain = [['parent_id', '=', parseInt(id, 10)]];
@@ -73,7 +73,7 @@ openerp.base.TreeView = openerp.base.View.extend({
                     if (row_id) {
                         if (paddingflag == 0) {
                             fixpadding = (parseInt(padd, 10) + 40);
-                            $('tr #treerow_' + response[i].id).find('td').css({ paddingLeft : fixpadding });
+                            row_id.find('td').css({ paddingLeft : fixpadding });
                         } else {
                             if (parseInt(padd, 10) == 1) {
                                 fixpadding = (parseInt(padd,10) + 17);
@@ -94,10 +94,10 @@ openerp.base.TreeView = openerp.base.View.extend({
                     self.$element.find('tr').remove();
                 }
                 self.$element.append(QWeb.render('TreeView_Secondry', {'child_data' : response}));
+                
                 self.$element.find('tr[id ^= treerow_]').each( function() {
                     $('#' + this.id).find('td').children(':first-child').addClass("parent_top");
-                    if ($('#' + this.id).find('td').children(':first-child').attr('id')) {
-                    } else {
+                    if (!($('#' + this.id).find('td').children(':first-child').attr('id'))) {
                         $('#' + this.id).find('td').css({ paddingLeft : '20px' });
                     }
                 });
@@ -164,8 +164,9 @@ openerp.base.TreeView = openerp.base.View.extend({
             view.reload_content();
             // TODO niv make real suppression (list or direct)
         });
+        
         self.dataset.model = 'product.product';
-        self.dataset.domain = [['categ_id', 'child_of', parseInt(id,10)]];
+        self.dataset.domain = [['categ_id', 'child_of', parseInt(id, 10)]];
 
         var modes;
         modes = !!modes ? modes.split(",") : ["tree", "form"];
@@ -191,11 +192,11 @@ openerp.base.TreeView = openerp.base.View.extend({
         var action = {
             "res_model": this.viewmanager.model,
             "domain": this.viewmanager.dataset.domain,
-            "views":views,
-            "type":"ir.actions.act_window",
-            "auto_search":true,
-            "view_type":"list",
-            "view_mode":"list"
+            "views": views,
+            "type": "ir.actions.act_window",
+            "auto_search": true,
+            "view_type": "list",
+            "view_mode": "list"
         }
 
         this.viewmanageraction = new openerp.base.ViewManagerAction(self.session, self.element_id, action);
@@ -206,11 +207,12 @@ openerp.base.TreeView = openerp.base.View.extend({
     showcontent: function (id, flag, childid) {
         var self = this;
         var subchildids = "";
+        var first_child = $('tr #treerow_' + id).find('td').children(':first-child');
         if (flag == 1) {
-            $('tr #treerow_' + id).find('td').children(':first-child').attr('src', '/base/static/src/img/expand.gif');
+            first_child.attr('src', '/base/static/src/img/expand.gif');
         }
         else {
-            $('tr #treerow_' + id).find('td').children(':first-child').attr('src', '/base/static/src/img/collapse.gif');
+            first_child.attr('src', '/base/static/src/img/collapse.gif');
         }
 
         for (i in childid) {
@@ -224,8 +226,9 @@ openerp.base.TreeView = openerp.base.View.extend({
 
                 self.dataset.read_slice([], 0, false, function (response) {
                     for (j in response) {
-                        if (jQuery('tr #treerow_' + response[j].id).length > 0) {
-                            jQuery('tr #treerow_' + response[j].id).hide();
+                    	var res_ids = jQuery('tr #treerow_' + response[j].id;
+                        if (res_ids.length > 0) {
+                            res_ids.hide();
                             subchildids = response[j].child_id;
                             if (subchildids.length > 0) {
                                 self.showcontent(response[j].id, 1, subchildids);
