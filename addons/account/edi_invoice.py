@@ -254,7 +254,6 @@ class account_invoice(osv.osv, ir_edi.edi):
             edi_tax_line['manual'] = True
 
         # TODO :=> payment_term: if set, create a default one based on name... 
-        print edi_document       
         return super(account_invoice,self).edi_import(cr, uid, edi_document, context=context)
       
 account_invoice()
