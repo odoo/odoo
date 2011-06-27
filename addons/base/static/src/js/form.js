@@ -568,8 +568,8 @@ openerp.base.form.WidgetFrame = openerp.base.form.Widget.extend({
     },
     handle_node: function(node) {
         var type = this.view.fields_view.fields[node.attrs.name] || {};
-        var widget_type = node.attrs.widget || type.type || node.tag;
-        var widget = new (this.view.registry.get_object(widget_type)) (this.view, node);
+        var widget = new (this.view.registry.get_any(
+                [node.attrs.widget, type.type, node.tag])) (this.view, node);
         if (node.tag == 'field') {
             if (!this.view.default_focus_field || node.attrs.default_focus == '1') {
                 this.view.default_focus_field = widget;

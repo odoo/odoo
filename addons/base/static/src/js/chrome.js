@@ -138,6 +138,29 @@ openerp.base.Registry = Class.extend( /** @lends openerp.base.Registry# */ {
         return object_match;
     },
     /**
+     * Tries a number of keys, and returns the first object matching one of
+     * the keys.
+     *
+     * @param {Array} keys a sequence of keys to fetch the object for
+     * @returns {Class} the first class found matching an object
+     *
+     * @throws {openerp.base.KeyNotFound} if none of the keys was in the mapping
+     * @trows {openerp.base.ObjectNotFound} if a found object path was invalid
+     */
+    get_any: function (keys) {
+        for (var i=0; i<keys.length; ++i) {
+            try {
+                return this.get_object(keys[i]);
+            } catch (e) {
+                if (e instanceof openerp.base.KeyNotFound) {
+                    continue;
+                }
+                throw e;
+            }
+        }
+        throw new openerp.base.KeyNotFound(keys.join(','));
+    },
+    /**
      * Adds a new key and value to the registry.
      *
      * This method can be chained.
