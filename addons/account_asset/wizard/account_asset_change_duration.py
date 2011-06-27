@@ -19,6 +19,7 @@
 #
 ##############################################################################
 import time
+from lxml import etree
 
 from osv import osv, fields
 
@@ -33,7 +34,36 @@ class asset_modify(osv.osv_memory):
         'method_end': fields.date('Ending date'),
         'note': fields.text('Notes'),
     }
-    
+
+    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
+        """ Returns views and fields for current model.
+        @param cr: A database cursor
+        @param user: ID of the user currently logged in
+        @param view_id: list of fields, which required to read signatures
+        @param view_type: defines a view type. it can be one of (form, tree, graph, calender, gantt, search, mdx)
+        @param context: context arguments, like lang, time zone
+        @param toolbar: contains a list of reports, wizards, and links related to current model
+
+        @return: Returns a dictionary that contains definition for fields, views, and toolbars
+        """
+        asset_obj = self.pool.get('account.asset.asset')
+        result = super(asset_modify, self).fields_view_get(cr, uid, view_id, view_type, context=context, toolbar=toolbar, submenu=submenu)
+        if not context:
+            context = {}
+        asset_id = context.get('active_id', False)
+        active_model = context.get('active_model', '')
+        if active_model == 'account.asset.asset' and asset_id:
+            asset = asset_obj.browse(cr, uid, asset_id, context=context)
+            doc = etree.XML(result['arch'])
+            if asset.method_time == 'delay':
+                node = doc.xpath("//field[@name='method_end']")[0]
+                node.set('invisible', '1')
+            elif asset.method_time == 'end':
+                node = doc.xpath("//field[@name='method_delay']")[0]
+                node.set('invisible', '1')
+            result['arch'] = etree.tostring(doc)
+        return result
+
     def default_get(self, cr, uid, fields, context=None):
         """ To get default values for the object.
         @param self: The object pointer.
