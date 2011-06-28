@@ -138,21 +138,21 @@ class sugar_import(import_framework):
         sugar_document_opportunity = sugar.relation_search(self.context.get('port'), self.context.get('session_id'), 'Documents', module_id=val.get('id'), related_module=self.TABLE_OPPORTUNITY, query=None, deleted=None)
         sugar_document_case = sugar.relation_search(self.context.get('port'), self.context.get('session_id'), 'Documents', module_id=val.get('id'), related_module=self.TABLE_CASE, query=None, deleted=None)
         sugar_document_bug = sugar.relation_search(self.context.get('port'), self.context.get('session_id'), 'Documents', module_id=val.get('id'), related_module=self.TABLE_BUG, query=None, deleted=None)
-        for bug_id in sugar_document_bug:
-            res_id = self.get_mapped_id(self.TABLE_BUG, bug_id)
-            res_model = 'project.issue'
-        for case_id in sugar_document_case:
-            res_id = self.get_mapped_id(self.TABLE_CASE, case_id)
-            res_model = 'crm.claim'
-        for opportunity_id in sugar_document_opportunity:
-            res_id = self.get_mapped_id(self.TABLE_OPPORTUNITY, opportunity_id)
-            res_model = 'crm.lead' 
-        for contact_id in sugar_document_contact:
-            res_id = self.get_mapped_id(self.TABLE_CONTACT, contact_id)
-            res_model = 'res.partner.address'
-        for account_id in sugar_document_account:
-            res_id = self.get_mapped_id(self.TABLE_ACCOUNT, account_id)
+        if sugar_document_account:
+            res_id = self.get_mapped_id(self.TABLE_ACCOUNT,sugar_document_account[0])
             res_model = 'res.partner'
+        elif sugar_document_contact:
+            res_id = self.get_mapped_id(self.TABLE_CONTACT, sugar_document_contact[0])
+            res_model = 'res.partner.address'
+        elif sugar_document_opportunity:
+            res_id = self.get_mapped_id(self.TABLE_OPPORTUNITY, sugar_document_opportunity[0])
+            res_model = 'crm.lead'
+        elif sugar_document_case:
+            res_id = self.get_mapped_id(self.TABLE_CASE, sugar_document_case[0])
+            res_model = 'crm.claim'
+        elif sugar_document_bug:
+            res_id = self.get_mapped_id(self.TABLE_BUG, sugar_document_bug[0])
+            res_model = 'project.issue'
         return res_id,res_model
     
     def import_document(self, val):
