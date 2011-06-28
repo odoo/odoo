@@ -844,6 +844,12 @@ class ir_actions_todo(osv.osv):
         wizard = self.browse(cr, uid, wizard_id, context=context)
         res = self.pool.get('ir.actions.act_window').read(cr, uid, wizard.action_id.id, [], context=context)
         res.update({'nodestroy': True})
+
+        # Open Specific resouce when res_id is provided in context
+        if res.get('context', {}):
+            ctx = eval(res['context'])
+            if ctx.get('res_id'):
+                res.update({'res_id': ctx.get('res_id')})
         return res
 
     def action_open(self, cr, uid, ids, context=None):
