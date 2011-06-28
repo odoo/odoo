@@ -1328,18 +1328,39 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
 var commands = {
     // (0, _, {values})
     CREATE: 0,
+    'create': function (values) {
+        return [commands.CREATE, false, values];
+    },
     // (1, id, {values})
     UPDATE: 1,
+    'update': function (id, values) {
+        return [commands.UPDATE, id, values];
+    },
     // (2, id[, _])
     DELETE: 2,
+    'delete': function (id) {
+        return [commands.DELETE, id, false];
+    },
     // (3, id[, _]) removes relation, but not linked record itself
     FORGET: 3,
+    'forget': function (id) {
+        return [commands.FORGET, id, false];
+    },
     // (4, id[, _])
     LINK_TO: 4,
+    'link_to': function (id) {
+        return [commands.LINK_TO, id, false];
+    },
     // (5[, _[, _]])
     FORGET_ALL: 5,
+    'forget_all': function () {
+        return [5, false, false];
+    },
     // (6, _, ids) replaces all linked records with provided ids
-    REPLACE_ALL: 6
+    REPLACE_WITH: 6,
+    'replace_with': function (ids) {
+        return [6, false, ids];
+    }
 };
 openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
     init: function(view, node) {
@@ -1442,16 +1463,17 @@ openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
         var val = _.map(this.dataset.ids, function(id) {
             var alter_order = _.detect(self.dataset.to_create, function(x) {return x.id === id;});
             if (alter_order) {
-                return [0, 0, alter_order.values];
+                return commands.create(alter_order.values);
             }
             alter_order = _.detect(self.dataset.to_write, function(x) {return x.id === id;});
             if (alter_order) {
-                return [1, alter_order.id, alter_order.values];
+                return commands.update(alter_order.id, alter_order.values);
             }
-            return [4, id];
+            return commands.link_to(id);
         });
-        val = val.concat(_.map(this.dataset.to_delete, function(v, k) {return [2, x.id];}));
-        return val;
+        return val.concat(_.map(
+            this.dataset.to_delete, function(x) {
+                return commands['delete'](x.id);}));
     },
     validate: function() {
         this.invalid = false;
