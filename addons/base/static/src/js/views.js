@@ -259,7 +259,7 @@ openerp.base.ViewManagerAction = openerp.base.ViewManager.extend({
         if (!action.res_id) {
             dataset = new openerp.base.DataSetSearch(session, action.res_model, action.context || null);
         } else {
-            dataset = new openerp.base.DataSetStatic(session, action.res_model, [action.res_id]);
+            dataset = new openerp.base.DataSetStatic(session, action.res_model, {}, [action.res_id]);
             if (action.context) {
                 // TODO fme: should normalize all DataSets constructors to (session, model, context, ...)
                 dataset.context = action.context;

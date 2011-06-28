@@ -328,14 +328,19 @@ openerp.base.DataSet =  openerp.base.Controller.extend( /** @lends openerp.base.
             args: args || []
         }, callback, error_callback);
     },
-    /**
-     * Arguments:
-     * name='', args=[], operator='ilike', context=None, limit=100
+    name_get: function(ids, callback) {
+        return this.call_and_eval('name_get', [ids, this.context], null, 1, callback);
+    },
+    /*
+     * args = domain
      */
-    name_search: function (args, callback, error_callback) {
+    name_search: function (name, args, operator, limit, callback) {
         return this.call_and_eval('name_search',
-            args, 1, 3,
-            callback, error_callback);
+            [name || '', args || false, operator || 'ilike', this.context, limit || 100],
+            1, 3, callback);
+    },
+    name_create: function(name, callback) {
+        return this.call_and_eval('name_create', [name, this.context], null, 1, callback);
     },
     exec_workflow: function (id, signal, callback) {
         return this.rpc('/base/dataset/exec_workflow', {
@@ -347,8 +352,8 @@ openerp.base.DataSet =  openerp.base.Controller.extend( /** @lends openerp.base.
 });
 
 openerp.base.DataSetStatic =  openerp.base.DataSet.extend({
-    init: function(session, model, ids) {
-        this._super(session, model);
+    init: function(session, model, context, ids) {
+        this._super(session, model, context);
         // all local records
         this.ids = ids || [];
         this.count = this.ids.length;
@@ -612,6 +617,7 @@ openerp.base.CompoundDomain = function() {
     this.__ref = "compound_domain";
     this.__domains = [];
     this.__eval_context = null;
+    var self = this;
     _.each(arguments, function(x) {
         self.add(x);
     });
