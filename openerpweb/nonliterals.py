@@ -123,7 +123,7 @@ class Domain(BaseDomain):
         ctx = self.session.evaluation_context(context)
         if self.own:
             ctx.update(self.own)
-        return eval(self.get_domain_string(), ctx)
+        return eval(self.get_domain_string(), SuperDict(ctx))
 
 class Context(BaseContext):
     def __init__(self, session, context_string=None, key=None):
@@ -169,7 +169,19 @@ class Context(BaseContext):
         if self.own:
             ctx.update(self.own)
         return eval(self.get_context_string(),
-                    ctx)
+                    SuperDict(ctx))
+        
+def SuperDict(dict):
+    def __getattr__(self, name):
+        try:
+            return self[name]
+        except KeyError:
+            raise AttributeError(name)
+    def __getitem__(self, key):
+        tmp = super(dict, self)[key]
+        if isinstance(tmp, dict):
+            return SuperDict(tmp)
+        return tmp
 
 class CompoundDomain(BaseDomain):
     def __init__(self, *domains):
