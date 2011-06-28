@@ -1325,7 +1325,22 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
 #         (4, ID)                link
 #         (5)                    unlink all (only valid for one2many)
 */
-
+var commands = {
+    // (0, _, {values})
+    CREATE: 0,
+    // (1, id, {values})
+    UPDATE: 1,
+    // (2, id[, _])
+    DELETE: 2,
+    // (3, id[, _]) removes relation, but not linked record itself
+    FORGET: 3,
+    // (4, id[, _])
+    LINK_TO: 4,
+    // (5[, _[, _]])
+    FORGET_ALL: 5,
+    // (6, _, ids) replaces all linked records with provided ids
+    REPLACE_ALL: 6
+};
 openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
     init: function(view, node) {
         this._super(view, node);
@@ -1389,21 +1404,27 @@ openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
         var self = this;
         if(value.length >= 1 && value[0] instanceof Array) {
             var ids = [];
-            _each(value, function(command) {
-                if(command[0] == 0) {
-                    var obj = {id: _.uniqueId(self.dataset.virtual_id_prefix), values: command[2]};
-                    self.dataset.to_create.push(obj);
-                    self.dataset.cache.push(_.clone(obj));
-                    ids.push(obj.id);
-                } else if(command[0] == 1) {
-                    var obj = {id: command[1], values: command[2]};
-                    self.dataset.to_write.push(obj);
-                    self.dataset.cache.push(_.clone(obj));
-                    ids.push(obj.id);
-                } else if(command[0] == 2) {
-                    self.dataset.to_delete.push({id: command[1]});
-                } else if(command[0] == 4) {
-                    ids.push(command[1]);
+            _.each(value, function(command) {
+                var obj = {values: command[2]};
+                switch (command[0]) {
+                    case commands.CREATE:
+                        obj['id'] = _.uniqueId(self.dataset.virtual_id_prefix);
+                        self.dataset.to_create.push(obj);
+                        self.dataset.cache.push(_.clone(obj));
+                        ids.push(obj.id);
+                        return;
+                    case commands.UPDATE:
+                        obj['id'] = command[1];
+                        self.dataset.to_write.push(obj);
+                        self.dataset.cache.push(_.clone(obj));
+                        ids.push(obj.id);
+                        return;
+                    case commands.DELETE:
+                        self.dataset.to_delete.push({id: command[1]});
+                        return;
+                    case commands.LINK_TO:
+                        ids.push(command[1]);
+                        return;
                 }
             });
             this._super(ids);
