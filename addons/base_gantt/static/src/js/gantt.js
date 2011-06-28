@@ -275,6 +275,7 @@ init: function(view_manager, session, element_id, dataset, view_id) {
 
         oth_hgt = 264;
         min_hgt = 150;
+        name_min_wdt = 150;
         gantt_hgt = jQuery(window).height() - oth_hgt;
         search_wdt = jQuery("#oe_app_search").width();
 
@@ -298,7 +299,7 @@ init: function(view_manager, session, element_id, dataset, view_id) {
         ganttrow = jQuery('.taskPanel').closest('tr');
         gtd =  ganttrow.children(':first-child');
         gtd.children().addClass('task-name');
-        
+
         self.set_heigth();
         self.set_width();
 
@@ -337,15 +338,25 @@ init: function(view_manager, session, element_id, dataset, view_id) {
         jQuery(".ganttTaskPanel").parent().width(1);
 
         search_wdt = jQuery("#oe_app_search").width();
-
+        day_wdt = jQuery(".ganttDayPanel").children().children().width();
+        name_wdt = jQuery('.task-name').width();
         jQuery('#GanttDiv').css('width','100%');
-        jQuery(".ganttTaskPanel").parent().width(search_wdt - 150);
-        jQuery(".ganttTaskPanel").width(search_wdt - 150);
-        jQuery(".ganttDayPanel").width(search_wdt - 150 - 14);
 
-        if (taskdiv.width() > taskdiv.children().width() + 16){
-            taskdiv.children().width(taskdiv.width() - 16);
+        if (search_wdt - day_wdt <= name_min_wdt){
+            jQuery(".ganttTaskPanel").parent().width(search_wdt - name_min_wdt);
+            jQuery(".ganttTaskPanel").width(search_wdt - name_min_wdt);
+            jQuery(".ganttDayPanel").width(search_wdt - name_min_wdt - 14);
+            jQuery('.task-name').width(name_min_wdt);
+            jQuery('.task-name').children().width(name_min_wdt);
+        }else{
+            jQuery(".ganttTaskPanel").parent().width(day_wdt);
+            jQuery(".ganttTaskPanel").width(day_wdt);
+            jQuery(".taskPanel").width(day_wdt - 16);
+            jQuery(".ganttDayPanel").width(day_wdt -16);
+            jQuery('.task-name').width(search_wdt - day_wdt);
+            jQuery('.task-name').children().width(search_wdt - day_wdt);
         }
+
     },
 
     end_date: function(dat, duration) {
