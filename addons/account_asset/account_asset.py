@@ -398,30 +398,36 @@ class account_asset_depreciation_line(osv.osv):
                 'journal_id': line.asset_id.category_id.journal_id.id,
                 }
             move_id = move_obj.create(cr, uid, move_vals, context=context)
+            asset_name = line.asset_id.name
+            reference = line.name
+            mov_id = move_id
+            amt = amount
+            journal_id = line.asset_id.category_id.journal_id.id
+            partner_id = line.asset_id.partner_id.id
             move_line_obj.create(cr, uid, {
-                'name': line.asset_id.name,
-                'ref': line.name,
-                'move_id': move_id,
+                'name': asset_name,
+                'ref': reference,
+                'move_id': mov_id,
                 'account_id': line.asset_id.category_id.account_depreciation_id.id,
                 'debit': 0.0,
-                'credit': amount,
+                'credit': amt,
                 'period_id': period_ids and period_ids[0] or False,
-                'journal_id': line.asset_id.category_id.journal_id.id,
-                'partner_id': line.asset_id.partner_id.id,
+                'journal_id': journal_id,
+                'partner_id': partner_id,
                 'currency_id': company_currency <> current_currency and  current_currency or False,
                 'amount_currency': company_currency <> current_currency and - sign * line.amount or 0.0,
                 'date': depreciation_date,
             })
             move_line_obj.create(cr, uid, {
-                'name': line.asset_id.name,
-                'ref': line.name,
-                'move_id': move_id,
+                'name': asset_name,
+                'ref': reference,
+                'move_id': mov_id,
                 'account_id': line.asset_id.category_id.account_expense_depreciation_id.id,
                 'credit': 0.0,
-                'debit': amount,
+                'debit': amt,
                 'period_id': period_ids and period_ids[0] or False,
-                'journal_id': line.asset_id.category_id.journal_id.id,
-                'partner_id': line.asset_id.partner_id.id,
+                'journal_id': journal_id,
+                'partner_id': partner_id,
                 'currency_id': company_currency <> current_currency and  current_currency or False,
                 'amount_currency': company_currency <> current_currency and sign * line.amount or 0.0,
                 'analytic_account_id': line.asset_id.category_id.account_analytic_id.id,
