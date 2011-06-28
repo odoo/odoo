@@ -36,7 +36,8 @@ class NonLiteralEncoder(simplejson.encoder.JSONEncoder):
         elif isinstance(object, CompoundContext):
             return {
                 '__ref': 'compound_context',
-                '__contexts': object.contexts
+                '__contexts': object.contexts,
+                '__eval_context': object.get_eval_context()
             }
         raise TypeError('Could not encode unknown non-literal %s' % object)
 
@@ -67,6 +68,7 @@ def non_literal_decoder(dct):
             ccontext = CompoundContext()
             for el in dct["__contexts"]:
                 ccontext.contexts.append(non_literal_decoder(el))
+            ccontext.set_eval_context(non_literal_decoder(dct.get("__eval_context") or {}))
             return ccontext
     return dct
 
@@ -121,7 +123,7 @@ class Domain(BaseDomain):
         ctx = self.session.evaluation_context(context)
         if self.own:
             ctx.update(self.own)
-        return eval(self.get_domain_string(), ctx)
+        return eval(self.get_domain_string(), SuperDict(ctx))
 
 class Context(BaseContext):
     def __init__(self, session, context_string=None, key=None):
@@ -167,7 +169,19 @@ class Context(BaseContext):
         if self.own:
             ctx.update(self.own)
         return eval(self.get_context_string(),
-                    ctx)
+                    SuperDict(ctx))
+        
+def SuperDict(dict):
+    def __getattr__(self, name):
+        try:
+            return self[name]
+        except KeyError:
+            raise AttributeError(name)
+    def __getitem__(self, key):
+        tmp = super(dict, self)[key]
+        if isinstance(tmp, dict):
+            return SuperDict(tmp)
+        return tmp
 
 class CompoundDomain(BaseDomain):
     def __init__(self, *domains):
@@ -197,16 +211,23 @@ class CompoundDomain(BaseDomain):
     def add(self, domain):
         self.domains.append(domain)
         return self
+    
+def get_eval_context(context):
+    if isinstance(context, CompoundContext):
+        return context.get_eval_context() or {}
+    return {}
 
 class CompoundContext(BaseContext):
     def __init__(self, *contexts):
         self.contexts = []
+        self.eval_context = None
         self.session = None
         for context in contexts:
             self.add(context)
     
     def evaluate(self, context=None):
         ctx = dict(context or {})
+        ctx.update(self.get_eval_context() or {})
         final_context = {}
         for context_to_eval in self.contexts:
             if not isinstance(context_to_eval, (dict, BaseContext)):
@@ -225,6 +246,15 @@ class CompoundContext(BaseContext):
         return final_context
             
     def add(self, context):
-        self.contexts.append(context)
+        if isinstance(context, BaseContext):
+            self.contexts = self.contexts + context.contexts
+        else:
+            self.contexts.append(context)
+        return self
+    
+    def set_eval_context(self, eval_context):
+        self.eval_context = eval_context
         return self
         
+    def get_eval_context(self):
+        return self.eval_context

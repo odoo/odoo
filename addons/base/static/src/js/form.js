@@ -417,6 +417,13 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
         } else {
             this.on_button_new();
         }
+    },
+    get_fields_values: function() {
+        var values = {};
+        _.each(this.fields, function(value, key) {
+            values[key] = value.get_value();
+        });
+        return values;
     }
 });
 
@@ -1079,7 +1086,8 @@ var build_relation_context = function(relation_field) {
     var action = relation_field.view.view_manager.action || {};
     var a_context = action.context || {};
     var f_context = relation_field.field.context || {};
-    var ctx = new openerp.base.CompoundContext(a_context).add(f_context);
+    var fields_values = relation_field.view.get_fields_values();
+    var ctx = new openerp.base.CompoundContext(a_context).add(f_context).set_eval_context(fields_values);
     return ctx;
 }
 
@@ -1301,7 +1309,7 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
             if (this.tmp_value instanceof Array) {
                 return this.tmp_value[0];
             }
-            return this.tmp_value === null ? false : this.tmp_value;
+            return this.tmp_value ? this.tmp_value : false;
         }
         if (this.value === undefined)
             throw "theorically unreachable state";
