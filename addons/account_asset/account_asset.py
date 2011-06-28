@@ -352,10 +352,9 @@ class account_asset_asset(osv.osv):
         return result
 
     def create(self, cr, uid, vals, context=None):
-        val = super(account_asset_asset, self).create(cr, uid, vals, context=context)
-        obj = self.pool.get('account.asset.asset')
-        obj.compute_depreciation_board(cr, uid, [val])
-        return val
+        asset_id = super(account_asset_asset, self).create(cr, uid, vals, context=context)
+        self.compute_depreciation_board(cr, uid, [asset_id], context=context)
+        return asset_id
 
 account_asset_asset()
 
