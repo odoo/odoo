@@ -320,22 +320,4 @@ class specify_partner_terminology(osv.osv_memory):
 specify_partner_terminology()
 
 
-# this code is needed to be moved in main currency class
-class res_currency(osv.osv):
-    _inherit = 'res.currency'
-
-    def name_get(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
-#        We can use the following line,if we want to restrict this name_get for company setup only
-#        But, its better to show currencies as name(Code).
-        if not len(ids):
-            return []
-        if isinstance(ids, (int, long)):
-            ids = [ids]
-        reads = self.read(cr, uid, ids, ['name','symbol'], context, load='_classic_write')
-        return [(x['id'], tools.ustr(x['name']) + (x['symbol'] and (' (' + tools.ustr(x['symbol']) + ')') or '')) for x in reads]
-
-res_currency()
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
