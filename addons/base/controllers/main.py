@@ -238,7 +238,6 @@ def eval_context_and_domain(session, context, domain=None):
     return (e_context, e_domain)
         
 def load_actions_from_ir_values(req, key, key2, models, meta, context):
-    context['bin_size'] = False # Possible upstream bug. Antony says not to loose time on this.
     Values = req.session.model('ir.values')
     actions = Values.get(key, key2, models, meta, context)
 
@@ -756,7 +755,6 @@ class Action(openerpweb.Controller):
         Actions = req.session.model('ir.actions.actions')
         value = False
         context = req.session.eval_context(req.context)
-        context["bin_size"] = False
         action_type = Actions.read([action_id], ['type'], context)
         if action_type:
             action = req.session.model(action_type[0]['type']).read([action_id], False,
