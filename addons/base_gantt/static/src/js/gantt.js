@@ -81,7 +81,7 @@ init: function(view_manager, session, element_id, dataset, view_id) {
     get_events: function() {
 
         var self = this;
-        this.dataset.read_ids(this.dataset.ids, {}, function(result) {
+        this.dataset.read_slice(false, false, false, function(result) {
             self.load_event(result);
         });
 
