@@ -11,8 +11,8 @@ openerp.base.callback = function(obj, method) {
         for(var i = 0; i < callback.callback_chain.length; i++)  {
             var c = callback.callback_chain[i];
             if(c.unique) {
-                // al: obscure but shortening C-style hack, sorry
-                callback.callback_chain.pop(i--);
+                callback.callback_chain.splice(i, 1);
+                i -= 1;
             }
             r = c.callback.apply(c.self, c.args.concat(args));
             // TODO special value to stop the chain
