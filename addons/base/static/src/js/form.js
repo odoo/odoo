@@ -677,12 +677,18 @@ openerp.base.form.WidgetButton = openerp.base.form.Widget.extend({
 
 openerp.base.form.WidgetLabel = openerp.base.form.Widget.extend({
     init: function(view, node) {
-        this.is_field_label = true;
         this.element_name = 'label_' + node.attrs.name;
 
         this._super(view, node);
 
-        this.template = "WidgetLabel";
+        // TODO fme: support for attrs.align
+        if (this.node.tag == 'label' && this.node.attrs.colspan) {
+            this.is_field_label = false;
+            this.template = "WidgetParagraph";
+        } else {
+            this.is_field_label = true;
+            this.template = "WidgetLabel";
+        }
         this.colspan = 1;
     },
     render: function () {

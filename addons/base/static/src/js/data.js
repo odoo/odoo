@@ -328,6 +328,15 @@ openerp.base.DataSet =  openerp.base.Controller.extend( /** @lends openerp.base.
             args: args || []
         }, callback, error_callback);
     },
+    call_button: function (method, args, callback, error_callback) {
+        return this.rpc('/base/dataset/call_button', {
+            model: this.model,
+            method: method,
+            domain_id: null,
+            context_id: 1,
+            args: args || []
+        }, callback, error_callback);
+    },
     name_get: function(ids, callback) {
         return this.call_and_eval('name_get', [ids, this.context], null, 1, callback);
     },

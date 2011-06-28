@@ -250,12 +250,12 @@ def load_actions_from_ir_values(req, key, key2, models, meta, context):
 
 def clean_action(action, session):
     # values come from the server, we can just eval them
-    if isinstance(action['context'], basestring):
+    if isinstance(action.get('context', None), basestring):
         action['context'] = eval(
             action['context'],
             session.evaluation_context()) or {}
 
-    if isinstance(action['domain'], basestring):
+    if isinstance(action.get('domain', None), basestring):
         action['domain'] = eval(
             action['domain'],
             session.evaluation_context(
@@ -286,13 +286,15 @@ def fix_view_modes(action):
     if action.pop('view_type') != 'form':
         return
 
-    action['view_mode'] = ','.join(
-        mode if mode != 'tree' else 'list'
-        for mode in action['view_mode'].split(','))
-    action['views'] = [
-        [id, mode if mode != 'tree' else 'list']
-        for id, mode in action['views']
-    ]
+    if action.has_key('view_mode'):
+        action['view_mode'] = ','.join(
+            mode if mode != 'tree' else 'list'
+            for mode in action['view_mode'].split(','))
+    if action.has_key('views'):
+        action['views'] = [
+            [id, mode if mode != 'tree' else 'list']
+            for id, mode in action['views']
+        ]
     return action
 
 class Menu(openerpweb.Controller):
@@ -440,8 +442,7 @@ class DataSet(openerpweb.Controller):
         Model = request.session.model(model)
         return Model.unlink(ids, request.session.eval_context(request.context))
 
-    @openerpweb.jsonrequest
-    def call(self, req, model, method, args, domain_id=None, context_id=None):
+    def call_common(self, req, model, method, args, domain_id=None, context_id=None):
         domain = args[domain_id] if domain_id and len(args) - 1 >= domain_id  else []
         context = args[context_id] if context_id and len(args) - 1 >= context_id  else {}
         c, d = eval_context_and_domain(req.session, context, domain);
@@ -449,10 +450,20 @@ class DataSet(openerpweb.Controller):
             args[domain_id] = d
         if(context_id and len(args) - 1 >= context_id):
             args[context_id] = c
-        
+
         m = req.session.model(model)
-        r = getattr(m, method)(*args)
-        return {'result': r}
+        return getattr(m, method)(*args)
+
+    @openerpweb.jsonrequest
+    def call(self, req, model, method, args, domain_id=None, context_id=None):
+        return {'result': self.call_common(req, model, method, args, domain_id, context_id)}
+
+    @openerpweb.jsonrequest
+    def call_button(self, req, model, method, args, domain_id=None, context_id=None):
+        action = self.call_common(req, model, method, args, domain_id, context_id)
+        if isinstance(action, dict) and action.get('type') != '':
+            clean_action(action, req.session)
+        return {'result': action}
 
     @openerpweb.jsonrequest
     def exec_workflow(self, req, model, id, signal):

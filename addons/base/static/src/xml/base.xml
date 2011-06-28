@@ -468,6 +468,9 @@
         <t t-if="widget.string and widget.node.tag != 'label'">:</t>
     </label>
 </t>
+<t t-name="WidgetParagraph">
+    <p class="oe_form_paragraph"><t t-esc="widget.string"/></p>
+</t>
 <t t-name="FieldChar">
     <input type="text"
         t-att-name="widget.name"
