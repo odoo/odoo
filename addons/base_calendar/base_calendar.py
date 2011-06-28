@@ -810,7 +810,6 @@ class calendar_alarm(osv.osv):
         @param use_new_cursor: False or the dbname
         @param context: A standard dictionary for contextual values
         """
-        return True # XXX FIXME REMOVE THIS AFTER FIXING get_recurrent_dates!!
         if context is None:
             context = {}
         current_datetime = datetime.now()
