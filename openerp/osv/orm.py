@@ -79,7 +79,9 @@ def transfer_field_to_modifiers(field, modifiers):
 
 
 # Don't deal with groups, it is done by check_group().
-def transfer_node_to_modifiers(node, modifiers):
+# Need the context to evaluate the invisible attribute on tree views.
+# For non-tree views, the context shouldn't be given.
+def transfer_node_to_modifiers(node, modifiers, context=None):
     if node.get('attrs'):
         modifiers.update(eval(node.get('attrs')))
 
@@ -90,11 +92,19 @@ def transfer_node_to_modifiers(node, modifiers):
 
     for a in ('invisible', 'readonly', 'required'):
         if node.get(a):
-            try:
-                # TODO only simple expression as it is evaluated server-side
-                modifiers[a] = bool(eval(node.get(a)))
-            except:
-                print ">>> Can't seem to eval this thing:", node.get(a)
+            if a == 'invisible' and context is not None:
+                # Invisible in a tree view has a specific meaning, make it a
+                # new key in the modifiers attribute.
+                try:
+                    modifiers['tree_invisible'] = bool(eval(node.get(a), {'context': context}))
+                except:
+                    print ">>> Can't seem to eval this thing (1):", node.get(a)
+            else:
+                try:
+                    # Only simple expression as it is evaluated server-side
+                    modifiers[a] = bool(eval(node.get(a)))
+                except:
+                    print ">>> Can't seem to eval this thing (2):", node.get(a)
 
 def simplify_modifiers(modifiers):
     for a in ('invisible', 'readonly', 'required'):
@@ -1395,7 +1405,7 @@ class orm_template(object):
     def view_header_get(self, cr, user, view_id=None, view_type='form', context=None):
         return False
 
-    def __view_look_dom(self, cr, user, node, view_id, context=None):
+    def __view_look_dom(self, cr, user, node, view_id, in_tree_view, model_fields, context=None):
         """ Return the description of the fields in the node.
 
         In a normal call to this method, node is a complete view architecture
@@ -1500,15 +1510,15 @@ class orm_template(object):
                             attrs['selection'].append((False, ''))
                 fields[node.get('name')] = attrs
 
-                # TODO a true fields_get is unnecessary (no need for the translation)
-                # TODO do this in _view_look_dom_arch instead of here
-                field = self.fields_get(cr, user, [node.get('name')], context)[node.get('name')]
+                field = model_fields[node.get('name')]
                 transfer_field_to_modifiers(field, modifiers)
 
         elif node.tag in ('form', 'tree'):
             result = self.view_header_get(cr, user, False, node.tag, context)
             if result:
                 node.set('string', result)
+            if node.tag == 'tree':
+                in_tree_view = True
 
         elif node.tag == 'calendar':
             for additional_field in ('date_start', 'date_delay', 'date_stop', 'color'):
@@ -1519,7 +1529,7 @@ class orm_template(object):
 
         # The view architeture overrides the python model.
         # Get the attrs before they are (possibly) deleted by check_group below
-        transfer_node_to_modifiers(node, modifiers)
+        transfer_node_to_modifiers(node, modifiers, context if in_tree_view else None)
 
         # TODO remove attrs couterpart in modifiers when invisible is true ?
 
@@ -1548,7 +1558,7 @@ class orm_template(object):
 
         for f in node:
             if children or (node.tag == 'field' and f.tag in ('filter','separator')):
-                fields.update(self.__view_look_dom(cr, user, f, view_id, context))
+                fields.update(self.__view_look_dom(cr, user, f, view_id, in_tree_view, model_fields, context))
 
         transfer_modifiers_to_node(modifiers, node)
         return fields
@@ -1589,19 +1599,22 @@ class orm_template(object):
             string and fields is the description of all the fields.
 
         """
-        fields_def = self.__view_look_dom(cr, user, node, view_id, context=context)
-        node = self._disable_workflow_buttons(cr, user, node)
-        arch = etree.tostring(node, encoding="utf-8").replace('\t', '')
         fields = {}
         if node.tag == 'diagram':
             if node.getchildren()[0].tag == 'node':
-                node_fields = self.pool.get(node.getchildren()[0].get('object')).fields_get(cr, user, fields_def.keys(), context)
+                node_fields = self.pool.get(node.getchildren()[0].get('object')).fields_get(cr, user, None, context)
                 fields.update(node_fields)
             if node.getchildren()[1].tag == 'arrow':
-                arrow_fields = self.pool.get(node.getchildren()[1].get('object')).fields_get(cr, user, fields_def.keys(), context)
+                arrow_fields = self.pool.get(node.getchildren()[1].get('object')).fields_get(cr, user, None, context)
                 fields.update(arrow_fields)
         else:
-            fields = self.fields_get(cr, user, fields_def.keys(), context)
+            fields = self.fields_get(cr, user, None, context)
+        fields_def = self.__view_look_dom(cr, user, node, view_id, False, fields, context=context)
+        node = self._disable_workflow_buttons(cr, user, node)
+        arch = etree.tostring(node, encoding="utf-8").replace('\t', '')
+        for k in fields.keys():
+            if k not in fields_def:
+                del fields[k]
         for field in fields_def:
             if field == 'id':
                 # sometime, the view may contain the (invisible) field 'id' needed for a domain (when 2 objects have cross references)
