@@ -136,7 +136,6 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
                 });
             }
             view_promise = controller.start();
-            var self = this;
             $.when(view_promise).then(function() {
                 self.on_controller_inited(view_type, controller);
             });
@@ -157,12 +156,13 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
             .filter('[data-view-type="' + view_type + '"]')
             .attr('disabled', true);
 
-        for (var i in this.views) {
-            if (this.views[i].controller) {
-                if (i === view_type) {
-                    $.when(view_promise).then(this.views[i].controller.do_show);
+        for (var view_name in this.views) {
+            if (!this.views.hasOwnProperty(view_name)) { continue; }
+            if (this.views[view_name].controller) {
+                if (view_name === view_type) {
+                    $.when(view_promise).then(this.views[view_name].controller.do_show);
                 } else {
-                    this.views[i].controller.do_hide();
+                    this.views[view_name].controller.do_hide();
                 }
             }
         }
@@ -415,10 +415,11 @@ openerp.base.View = openerp.base.Controller.extend({
             var action = r.result;
             if (action && action.constructor == Object) {
                 action.context = action.context || {};
-                action.context['active_id'] = dataset.ids[dataset.index];
-                action.context['active_ids'] = [dataset.ids[dataset.index]];
-                action.context['active_model'] = dataset.model;
-                _.extend(action.context, dataset.context);
+                _.extend(action.context, {
+                    active_id: dataset.ids[dataset.index],
+                    active_ids: [dataset.ids[dataset.index]],
+                    active_model: dataset.model
+                }, dataset.context);
                 action.flags = {
                     sidebar : false,
                     search_view : false,
@@ -478,7 +479,7 @@ openerp.base.json_node_to_xml = function(node, single_quote, indent) {
         throw("Node a json node");
     }
     indent = indent || 0;
-    var sindent = Array(indent + 1).join('\t'),
+    var sindent = new Array(indent + 1).join('\t'),
         r = sindent + '<' + node.tag;
     for (var attr in node.attrs) {
         var vattr = node.attrs[attr];
