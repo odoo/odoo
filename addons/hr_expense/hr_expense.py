@@ -21,7 +21,6 @@
 
 import time
 
-import netsvc
 from osv import fields, osv
 from tools.translate import _
 import decimal_precision as dp
@@ -127,7 +126,7 @@ class hr_expense_expense(osv.osv):
     def invoice(self, cr, uid, ids, context=None):
         wf_service = netsvc.LocalService("workflow")
         mod_obj = self.pool.get('ir.model.data')
-        res = mod_obj.get_object_reference(cr, uid, 'account', 'invoice_form')
+        res = mod_obj.get_object_reference(cr, uid, 'account', 'invoice_supplier_form')
         res_id = res and res[1] or False,
         inv_ids = []
         for id in ids:
@@ -216,7 +215,6 @@ class hr_expense_expense(osv.osv):
                     account_journal.write(cr, uid, [journal.id],{'analytic_journal_id':analytic_journal_ids[0]})
             inv_id = invoice_obj.create(cr, uid, inv, {'type': 'in_invoice'})
             invoice_obj.button_compute(cr, uid, [inv_id], {'type': 'in_invoice'}, set_total=True)
-
             self.write(cr, uid, [exp.id], {'invoice_id': inv_id, 'state': 'invoiced'})
             res = inv_id
         return res

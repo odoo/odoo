@@ -13,6 +13,7 @@
     />
 
     <record model="ir.actions.act_window" id="crm_case_categ_meet_create_partner">
+        <field name="name">Create Partner For Meeting</field>
         <field name="context" eval="{'default_state':'draft'}"/>
     </record>
 
@@ -50,7 +51,7 @@
         <field name="res_model">crm.meeting</field>
         <field name="view_mode">calendar,tree,form,gantt</field>
         <field name="view_id" ref="crm_case_calendar_view_meet"/>
-        <field name="context">{"search_default_user_id":uid, 'search_default_section_id': section_id}</field>
+        <field name="context">{"search_default_user_id":uid, 'search_default_section_id': section_id, 'virtual_id' : True}</field>
         <field name="search_view_id" ref="view_crm_case_meetings_filter"/>
         <field name="help">The meeting calendar is shared between the sales teams and fully integrated with other applications such as the employee holidays or the business opportunities. You can also synchronize meetings with your mobile phone using the caldav interface.
         </field>

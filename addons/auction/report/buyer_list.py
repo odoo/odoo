@@ -19,11 +19,8 @@
 #
 ##############################################################################
 
-import pooler
 import time
 from report import report_sxw
-from osv import osv
-from tools.translate import _
 
 class buyer_list(report_sxw.rml_parse):
     auc_lot_ids=[]
@@ -66,7 +63,6 @@ class buyer_list(report_sxw.rml_parse):
         return auct_dat
 
     def lines_lots_auct_lot(self,obj):
-        auc_lot_ids = []
 
         auc_date_ids = self.pool.get('auction.dates').search(self.cr, self.uid, ([('name','like',obj['name'])]))
 

@@ -177,9 +177,10 @@
                                 <group colspan="4">
                                     <field colspan="4" name="email_cc" string="Global CC" widget="char"/>
                                 </group>
-                                <field name="message_ids" colspan="4" nolabel="1" mode="tree,form">
+                                <field name="message_ids" colspan="4" nolabel="1" mode="tree,form" readonly="1">
                                     <tree string="History">
                                         <field name="display_text" string="History Information"/>
+                                        <field name="history" invisible="1"/>
                                         <button
                                             string="Reply"
                                             name="%(crm.action_crm_send_mail)d"
@@ -305,11 +306,41 @@
             </field>
         </record>
 
+        <record id="base.view_crm_partner_info_History1" model="ir.ui.view">
+            <field name="name">res.partner.crm.history.inherit1</field>
+            <field name="model">res.partner</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="/form/notebook/page[@string='History']" position="attributes">
+                    <attribute name="invisible">False</attribute>
+                </xpath>
+            </field>
+        </record>    
+        <record id="view_claim_partner_info_form1" model="ir.ui.view">
+            <field name="name">res.partner.claim.info.form</field>
+            <field name="model">res.partner</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="priority">20</field>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="/form/notebook/page[@string='History']" position="inside">
+                        <field name="claims_ids" colspan="4" nolabel="1">
+                            <tree string="Partners Claim" editable="bottom">
+                                <field name="name"/>
+                            </tree>
+                        </field>
+                    </xpath>
+                </data>
+            </field>
+        </record>        
+
         <act_window
             context="{'search_default_partner_id': [active_id], 'default_partner_id': active_id}"
             id="act_claim_partner"
-            name="Report a Claim"
-            view_mode="form,tree"
+            name="Claims"
+            view_mode="tree,form"
             res_model="crm.claim"
             src_model="res.partner"/>
 
@@ -318,8 +349,8 @@
             domain="[('partner_address_id', '=', active_id)]"
             context="{'default_partner_id': partner_id}"
             id="act_claim_partner_address"
-            name="Report a Claim"
-            view_mode="form,tree"
+            name="Claims"
+            view_mode="tree,form"
             res_model="crm.claim"
             src_model="res.partner.address"/>
 

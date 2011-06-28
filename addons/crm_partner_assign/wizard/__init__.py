@@ -20,3 +20,4 @@
 ##############################################################################
 
 import crm_forward_to_partner
+import crm_merge_opportunity

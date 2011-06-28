@@ -15,11 +15,13 @@
             </xpath>
             <xpath expr="//field[@name='target_move']" position="after">
                 <field name="result_selection"/>
-                <field name="initial_balance"/>
-                <field name="reconcil"/>
                 <field name="amount_currency"/>
                 <field name="page_split"/>
                 <newline/>
+            </xpath>
+            <xpath expr="//field[@name='filter']" position="replace">
+                <field name="filter" on_change="onchange_filter(filter, fiscalyear_id)" colspan="4"/>
+                <field name="initial_balance" attrs="{'readonly':[('filter', 'in', ('filter_no', 'unreconciled'))]}" />
             </xpath>
             </data>
             </field>

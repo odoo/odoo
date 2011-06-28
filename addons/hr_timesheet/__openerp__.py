@@ -44,6 +44,7 @@ to set up a management by affair.
     'init_xml': ['hr_timesheet_data.xml'],
     'update_xml': [
         'security/ir.model.access.csv',
+        'security/hr_timesheet_security.xml',
         'hr_timesheet_view.xml',
         'hr_timesheet_report.xml',
         'hr_timesheet_wizard.xml',
