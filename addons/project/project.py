@@ -582,12 +582,10 @@ class task(osv.osv):
            }
         return res
 
-    def do_close(self, cr, uid, ids, context=None):
+    def do_close(self, cr, uid, ids, context={}):
         """
         Close Task
         """
-        if context == None:
-            context = {}
         request = self.pool.get('res.request')
         for task in self.browse(cr, uid, ids, context=context):
             vals = {}
@@ -641,9 +639,7 @@ class task(osv.osv):
             self.write(cr, uid, [task.id], {'state': 'open'}, context=context)
         return True
 
-    def do_cancel(self, cr, uid, ids, context=None):
-        if context == None:
-            context = {}
+    def do_cancel(self, cr, uid, ids, context={}):
         request = self.pool.get('res.request')
         tasks = self.browse(cr, uid, ids, context=context)
         for task in tasks:
@@ -663,9 +659,7 @@ class task(osv.osv):
             self.write(cr, uid, [task.id], {'state': 'cancelled', 'remaining_hours':0.0}, context=context)
         return True
 
-    def do_open(self, cr, uid, ids, context=None):
-        if context == None:
-            context = {}
+    def do_open(self, cr, uid, ids, context={}):
         tasks= self.browse(cr, uid, ids, context=context)
         for t in tasks:
             data = {'state': 'open'}
@@ -676,9 +670,7 @@ class task(osv.osv):
             self.log(cr, uid, t.id, message)
         return True
 
-    def do_draft(self, cr, uid, ids, context=None):
-        if context == None:
-            context = {}
+    def do_draft(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state': 'draft'}, context=context)
         return True
 
@@ -714,9 +706,7 @@ class task(osv.osv):
         self.log(cr, uid, task.id, message)
         return True
 
-    def do_pending(self, cr, uid, ids, context=None):
-        if context == None:
-            context = {}
+    def do_pending(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, {'state': 'pending'}, context=context)
         for (id, name) in self.name_get(cr, uid, ids):
             message = _("The task '%s' is pending.") % name
