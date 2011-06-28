@@ -353,6 +353,9 @@ openerp.base.DataSetStatic =  openerp.base.DataSet.extend({
         // all local records
         this.ids = ids || [];
         this.count = this.ids.length;
+        if (this.ids.length) {
+            this.index = 0;
+        }
     },
     read_slice: function (fields, offset, limit, callback) {
         var self = this;
