@@ -234,7 +234,8 @@ class Session(openerpweb.Controller):
         
 def eval_context_and_domain(session, context, domain=None):
     e_context = session.eval_context(context)
-    e_domain = session.eval_domain(domain or [], e_context)
+    # should we give the evaluated context as an evaluation context to the domain?
+    e_domain = session.eval_domain(domain or [])
 
     return (e_context, e_domain)
         
