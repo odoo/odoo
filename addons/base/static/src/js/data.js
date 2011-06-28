@@ -196,9 +196,7 @@ openerp.base.GrouplessDataGroup = openerp.base.DataGroup.extend(
         this._super(session, model, domain, context, null, level);
     },
     list: function (ifGroups, ifRecords) {
-        ifRecords(_.extend(
-                new openerp.base.DataSetSearch(this.session, this.model),
-                {domain: this.domain, context: this.context}));
+        ifRecords(new openerp.base.DataSetSearch(this.session, this.model, this.context, this.domain));
     }
 });
 
