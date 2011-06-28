@@ -22,6 +22,7 @@ from osv import fields, osv
 import pooler
 import pytz
 from tools.translate import _
+import tools
 
 class base_setup_installer(osv.osv_memory):
     _name = 'base.setup.installer'
@@ -317,5 +318,6 @@ class specify_partner_terminology(osv.osv_memory):
         return {}
     
 specify_partner_terminology()
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

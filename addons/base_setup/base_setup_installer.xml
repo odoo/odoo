@@ -1,6 +1,6 @@
 <openerp>
   <data>
-  
+
     <record id="view_base_setup_installer" model="ir.ui.view">
       <field name="name">base.setup.installer.view</field>
       <field name="model">base.setup.installer</field>
@@ -24,7 +24,7 @@
           <separator string="title" position="attributes">
             <attribute name="string">Install Applications</attribute>
           </separator>
-            
+
           <group colspan="8">
             <field name="crm" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account_accountant,purchase,hr,point_of_sale,marketing,profile_tools,report_designer,association,auction,product_expiry)"/>
             <field name="sale" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account_accountant,purchase,hr,point_of_sale,marketing,profile_tools,report_designer,association,auction,product_expiry)"/>
@@ -44,18 +44,18 @@
             <field name="association" attrs="{'readonly':['|',('auction','=',True),('product_expiry','=',True)]}" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account_accountant,purchase,hr,point_of_sale,marketing,profile_tools,report_designer,association,auction,product_expiry)"/>
             <field name="auction" attrs="{'readonly':['|',('association','=',True),('product_expiry','=',True)]}" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account_accountant,purchase,hr,point_of_sale,marketing,profile_tools,report_designer,association,auction,product_expiry)"/>
             <field name="product_expiry" attrs="{'readonly':['|',('association','=',True),('auction','=',True)]}" on_change="onchange_moduleselection(crm,sale,project,knowledge,stock,mrp,account_accountant,purchase,hr,point_of_sale,marketing,profile_tools,report_designer,association,auction,product_expiry)"/>
-            <group name="crm"/> 
-            <group name="sale"/> 
-            <group name="project"/> 
-            <group name="knowledge"/> 
-            <group name="mrp"/> 
+            <group name="crm"/>
+            <group name="sale"/>
+            <group name="project"/>
+            <group name="knowledge"/>
+            <group name="mrp"/>
             <group name="account_accountant"/>
             <group name="purchase"/>
-            <group name="hr"/> 
-            <group name="profile_tools"/> 
-            <group name="marketing"/> 
-            <group name="report_designer"/>            
-            <group name="association"/> 
+            <group name="hr"/>
+            <group name="profile_tools"/>
+            <group name="marketing"/>
+            <group name="report_designer"/>
+            <group name="association"/>
           </group>
         </data>
       </field>
@@ -77,7 +77,7 @@
         <field name="sequence">2</field>
         <field name="type">normal_recurring</field>
     </record>
-    
+
 <!--     Migrate data from another application Conf Wiz-->
 
     <record id="view_migrade_application_installer_modules" model="ir.ui.view">
@@ -111,7 +111,7 @@
             </data>
         </field>
     </record>
-    
+
     <record id="action_migrade_application_installer_modules" model="ir.actions.act_window">
 	     <field name="name">Migrate data from another application</field>
 	     <field name="type">ir.actions.act_window</field>
@@ -121,16 +121,16 @@
 	     <field name="view_mode">form</field>
 	     <field name="target">new</field>
    </record>
- 
+
    <record id="migrade_application_installer_modules_todo" model="ir.actions.todo">
       <field name="action_id" ref="action_migrade_application_installer_modules"/>
       <field name="category_id" ref="base.category_administration_config"/>
       <field name="type">normal</field>
       <field name="state">skip</field>
   </record>
-  
+
           <!-- Import or create customers configartion view  -->
-	
+
 	 <record id="action_import_create_installer" model="ir.actions.act_window">
 	     <field name="name">Import or create customers </field>
 	     <field name="type">ir.actions.act_window</field>
@@ -149,7 +149,7 @@
 	    <field name="target">current</field>
 	    <field name="state">skip</field>
 	</record>
-	
+
 	<!--        Define default users preferences-->
 
      <record id="view_user_preferences_config_form" model="ir.ui.view">
@@ -196,16 +196,16 @@
       </record>
 
       <!--   Register configuration wizard -->
-      
+
       <record id="config_action_user_preferences_config_form" model="ir.actions.todo">
           <field name="action_id" ref="action_user_preferences_config_form"/>
           <field name="category_id" ref="base.category_administration_config"/>
           <field name="type">normal</field>
           <field name="state">skip</field>
       </record>
-      
+
       <!--     Config Wiz   Create New User's Login   -->
-        
+
       <record id="action_config_access_other_user" model="ir.actions.act_window">
           <field name="name">Create New User's Login</field>
           <field name="type">ir.actions.act_window</field>
@@ -214,7 +214,7 @@
           <field name="view_mode">form</field>
           <field name="view_id" ref="base.view_users_form"/>
       </record>
-      
+
       <!--   register configuration wizard  -->
 
       <record id="config_wizard_action_config_user_form" model="ir.actions.todo">
@@ -225,7 +225,7 @@
           <field name="sequence">1000</field>
           <field name="state">cancel</field>
       </record>
-      
+
       <!--      Inherit company Form -->
 
       <record id="view_inherit_res_company_logo" model="ir.ui.view">
@@ -242,7 +242,7 @@
                 </field>
           </field>
       </record>
-      
+
       <!--   register Upload Logo configuration wizard  -->
 
       <record id="config_wizard_action_res_company_logo" model="ir.actions.todo">
@@ -250,7 +250,7 @@
           <field name="category_id" ref="base.category_administration_config"/>
           <field name="type">normal</field>
           <field name="state">cancel</field>
-      </record>      
+      </record>
 
             <!--        Specify Your Terminology Config Wiz-->
 
@@ -295,13 +295,32 @@
       </record>
 
       <!--   Register configuration wizard -->
-     
+
       <record id="config_action_partner_terminology_config_form" model="ir.actions.todo">
           <field name="action_id" ref="action_partner_terminology_config_form"/>
           <field name="category_id" ref="base.category_administration_config"/>
           <field name="type">normal</field>
           <field name="state">skip</field>
-      </record>      
-       
+      </record>
+
+
+    <record id="action_base_setup_company" model="ir.actions.act_window">
+      <field name="name">Company Configuration</field>
+      <field name="type">ir.actions.act_window</field>
+      <field name="res_model">res.company</field>
+      <field name="view_id" ref="base.view_company_form"/>
+      <field name="view_type">form</field>
+      <field name="view_mode">form</field>
+      <field name="context">{'res_id': user.company_id.id}</field>
+    </record>
+
+    <record id="base_setup_company_todo" model="ir.actions.todo">
+        <field name="action_id" ref="action_base_setup_company"/>
+        <field name="category_id" ref="base.category_administration_config"/>
+        <field name="sequence">1</field>
+        <field name="type">normal</field>
+        <field name="state">skip</field>
+    </record>
+
   </data>
 </openerp>
