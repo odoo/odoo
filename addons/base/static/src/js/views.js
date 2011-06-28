@@ -432,8 +432,8 @@ openerp.base.View = openerp.base.Controller.extend({
             if (action && action.constructor == Object) {
                 action.context = action.context || {};
                 _.extend(action.context, {
-                    active_id: dataset.ids[dataset.index],
-                    active_ids: [dataset.ids[dataset.index]],
+                    active_id: record_id || false,
+                    active_ids: [record_id || false],
                     active_model: dataset.model
                 });
                 action.flags = {
@@ -462,7 +462,7 @@ openerp.base.View = openerp.base.Controller.extend({
             var context = new openerp.base.CompoundContext(dataset.context).add(action_data.context || {});
             switch(action_data.type) {
                 case 'object':
-                    return dataset.call_and_eval(action_data.name, [[record_id], context], null, 1, handler);
+                    return dataset.call_button(action_data.name, [[record_id], context], handler);
                 case 'action':
                     return this.rpc('/base/action/load', { action_id: parseInt(action_data.name, 10), context: context }, handler);
                 default:
