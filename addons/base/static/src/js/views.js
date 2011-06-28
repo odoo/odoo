@@ -459,7 +459,7 @@ openerp.base.View = openerp.base.Controller.extend({
                 result : { type: 'ir.actions.act_window_close', special: action_data.special }
             });
         } else {
-            var context = new openerp.base.CompoundContext(dataset.context).add(action_data.context || {});
+            var context = new openerp.base.CompoundContext(dataset.context, action_data.context || {});
             switch(action_data.type) {
                 case 'object':
                     return dataset.call_button(action_data.name, [[record_id], context], handler);
