@@ -847,7 +847,8 @@ class ir_actions_todo(osv.osv):
 
         # Open Specific resouce when res_id is provided in context
         if res.get('context', {}):
-            ctx = eval(res['context'])
+            user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+            ctx = eval(res['context'], {'user': user})
             if ctx.get('res_id'):
                 res.update({'res_id': ctx.get('res_id')})
         return res
