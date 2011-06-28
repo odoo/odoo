@@ -144,7 +144,7 @@ class crm_opportunity2phonecall(osv.osv_memory):
 
             value = {
                 'name': _('Phone Call'),
-                #'domain': "[('user_id','=',%s),('opportunity_id','=',%s)]" % (uid,opp.id),
+                'domain': "[('user_id','=',%s),('opportunity_id','=',%s)]" % (uid,opp.id),
                 'view_type': 'form',
                 'view_mode': 'tree,form',
                 'res_model': 'crm.phonecall',
@@ -152,7 +152,6 @@ class crm_opportunity2phonecall(osv.osv_memory):
                 'views': [(id3, 'form'), (id2, 'tree'), (False, 'calendar')],
                 'type': 'ir.actions.act_window',
                 'search_view_id': res['res_id'],
-                'context':context,
             }
         return value
 
