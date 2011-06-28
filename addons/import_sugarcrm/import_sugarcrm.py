@@ -157,9 +157,12 @@ class sugar_import(import_framework):
     
     def import_document(self, val):
         File,Filename = sugar.get_document_revision_search(self.context.get('port'), self.context.get('session_id'), val.get('document_revision_id'))
-        res_id, res_model  = self.import_related_document(val)   
-        val['res_id'] = res_id
-        val['res_model'] = res_model
+        res_id, res_model  = self.import_related_document(val)
+        if res_model == 'res.partner':
+            val['partner_id/.id'] = res_id
+        else:                   
+            val['res_id'] = res_id
+            val['res_model'] = res_model
         if File:
             val['datas'] = File
             val['datas_fname'] = Filename
@@ -175,7 +178,8 @@ class sugar_import(import_framework):
                          'datas': 'datas',
                          'datas_fname': 'datas_fname',
                          'res_model': 'res_model',
-                         'res_id': 'res_id'
+                         'res_id': 'res_id',
+                         'partner_id/.id': 'partner_id/.id'
                 }
             }     
         
