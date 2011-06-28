@@ -474,9 +474,10 @@ background: linear-gradient(top, #ffffff 0%,#d8d8d8 11%,#afafaf 86%,#333333 91%,
     background: #AAAAAA;
 }
 .openerp .filter_icon {
+    height: 22px;
     padding: 1px 2px 0 2px;
-    margin-left: 0;
-    margin-right: 0;
+    margin: 0;
+    vertical-align: bottom;
 }
 .openerp .filter_label {
     font-weight: bold;
@@ -536,14 +537,6 @@ background: linear-gradient(top, #ffffff 0%,#d8d8d8 11%,#afafaf 86%,#333333 91%,
 }
 .openerp .searchview_group_content {
     padding-left: 10px;
-}
-.openerp .searchview_group_content .oe-searchview-render-line {
-    width:0;
-}
-
-
-.openerp .oe-searchview-render-line {
-    width:100%;
 }
 
 .openerp .searchview_extended_group {
@@ -1055,6 +1048,7 @@ background: linear-gradient(top, #ffffff 0%,#ebe9e9 100%); /* W3C */
 .openerp .oe-m2o-drop-down-button img,
 .openerp .oe-m2o-cm-button img {
     margin-bottom: -4px;
+    cursor: pointer;
 }
 .openerp .oe-m2o-disabled-cm {
     color: grey;
