@@ -574,7 +574,7 @@ openerp.base.BufferedDataSet = openerp.base.DataSetStatic.extend({
             return_records();
         }
         return completion.promise();
-    },
+    }
 });
 
 openerp.base.ReadOnlyDataSetSearch = openerp.base.DataSetSearch.extend({
