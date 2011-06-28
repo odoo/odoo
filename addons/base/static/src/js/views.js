@@ -127,9 +127,13 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
             }
             if (view_type === 'list' && this.flags.search_view === false && this.action && this.action['auto_search']) {
                 // In case the search view is not instanciated: manually call ListView#search
+                var domains = !_(self.action.domain).isEmpty()
+                                ? [self.action.domain] : [],
+                   contexts = !_(self.action.context).isEmpty()
+                                ? [self.action.context] : [];
                 controller.on_loaded.add({
                     callback: function () {
-                        controller.do_search([self.action.domain], [self.action.context], []);
+                        controller.do_search(domains, contexts, []);
                     },
                     position: 'last',
                     unique: true
