@@ -242,13 +242,14 @@ openerp.base.NullViewManager = openerp.base.generate_null_object_class(openerp.b
 openerp.base.ViewManagerAction = openerp.base.ViewManager.extend({
     init: function(session, element_id, action) {
         var dataset;
-        if(!action.res_id) {
-            dataset = new openerp.base.DataSetSearch(session, action.res_model);
+        if (!action.res_id) {
+            dataset = new openerp.base.DataSetSearch(session, action.res_model, action.context || null);
         } else {
-            dataset = new openerp.base.DataSetStatic(session, action.res_model);
-            dataset.ids = [action.res_id];
-            dataset.count = 1;
-            dataset.index = 0;
+            dataset = new openerp.base.DataSetStatic(session, action.res_model, [action.res_id]);
+            if (action.context) {
+                // TODO fme: should normalize all DataSets constructors to (session, model, context, ...)
+                dataset.context = action.context;
+            }
         }
         this._super(session, element_id, dataset, action.views);
         this.action = action;
@@ -423,7 +424,7 @@ openerp.base.View = openerp.base.Controller.extend({
                     active_id: dataset.ids[dataset.index],
                     active_ids: [dataset.ids[dataset.index]],
                     active_model: dataset.model
-                }, dataset.context);
+                });
                 action.flags = {
                     sidebar : false,
                     search_view : false,
