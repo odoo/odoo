@@ -236,7 +236,6 @@ class crm_base(object):
         """
         cases = self.browse(cr, uid, ids)
         cases[0].state # to fill the browse record cache
-        self._history(cr, uid, cases, _('Draft'))
         self.write(cr, uid, ids, {'state': 'draft', 'active': True})
         self._action(cr, uid, cases, 'draft')
         return True
