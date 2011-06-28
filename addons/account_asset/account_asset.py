@@ -169,6 +169,9 @@ class account_asset_asset(osv.osv):
             'state':'open'
         }, context)
 
+    def set_to_close(self, cr, uid, ids, context=None):
+        return self.write(cr, uid, ids, {'state': 'close'}, context=context)
+
     def _amount_residual(self, cr, uid, ids, name, args, context=None):
         cr.execute("""SELECT
                 l.asset_id as id, round(SUM(abs(l.debit-l.credit))) AS amount
@@ -350,6 +353,7 @@ class account_asset_asset(osv.osv):
                 if period and (period.date_start<=date_start):
                     result += self._compute_move(cr, uid, property, period, context)
         return result
+
 account_asset_asset()
 
 class account_asset_depreciation_line(osv.osv):
@@ -374,7 +378,7 @@ class account_asset_depreciation_line(osv.osv):
         'move_check': fields.function(_get_move_check, method=True, type='boolean', string='Posted', store=True)
     }
 
-    def create_move(self, cr, uid,ids, context=None):
+    def create_move(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
         asset_obj = self.pool.get('account.asset.asset')
@@ -383,6 +387,7 @@ class account_asset_depreciation_line(osv.osv):
         move_line_obj = self.pool.get('account.move.line')
         currency_obj = self.pool.get('res.currency')
         for line in self.browse(cr, uid, ids, context=context):
+            rem_value = line.remaining_value
             depreciation_date = line.asset_id.prorata and line.asset_id.purchase_date or time.strftime('%Y-%m-%d')
             period_ids = period_obj.find(cr, uid, depreciation_date, context=context)
             company_currency = line.asset_id.company_id.currency_id.id
@@ -429,6 +434,8 @@ class account_asset_depreciation_line(osv.osv):
                 'asset_id': line.asset_id.id
             })
             self.write(cr, uid, line.id, {'move_id': move_id}, context=context)
+            if rem_value == 0:
+                asset_obj.write(cr, uid, line.asset_id.id, {'state': 'close'}, context=context)                
         return True
 
 account_asset_depreciation_line()
