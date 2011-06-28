@@ -350,6 +350,13 @@ class account_asset_asset(osv.osv):
                 if period and (period.date_start<=date_start):
                     result += self._compute_move(cr, uid, property, period, context)
         return result
+
+    def create(self, cr, uid, vals, context=None):
+        val = super(account_asset_asset, self).create(cr, uid, vals, context=context)
+        obj = self.pool.get('account.asset.asset')
+        obj.compute_depreciation_board(cr, uid, [val])
+        return val
+
 account_asset_asset()
 
 class account_asset_depreciation_line(osv.osv):
