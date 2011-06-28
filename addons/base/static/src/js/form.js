@@ -241,12 +241,8 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
     },
     on_button_new: function() {
         var self = this;
-        var context = new openerp.base.CompoundContext(this.dataset.context);
-        if (this.view_manager.action && this.view_manager.action.context) {
-            context.add(this.view_manager.action.context);
-        }
         $.when(this.has_been_loaded).then(function() {
-            self.dataset.default_get(_.keys(self.fields_view.fields), context, function(result) {
+            self.dataset.default_get(_.keys(self.fields_view.fields), function(result) {
                 self.on_record_loaded(result.result);
             });
         });
@@ -665,6 +661,8 @@ openerp.base.form.WidgetButton = openerp.base.form.Widget.extend({
             this.node.attrs, this.view.dataset, this.session.action_manager,
             this.view.datarecord.id, function (result) {
                 self.log("Button returned", result);
+                self.view.reload();
+            }, function() {
                 self.view.reload();
             });
     }

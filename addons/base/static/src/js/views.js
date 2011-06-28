@@ -18,7 +18,7 @@ openerp.base.ActionManager = openerp.base.Controller.extend({
      * Process an action
      * Supported actions: act_window
      */
-    do_action: function(action) {
+    do_action: function(action, on_closed) {
         var self = this;
         action.flags = _.extend({
             sidebar : action.target != 'new',
@@ -44,6 +44,7 @@ openerp.base.ActionManager = openerp.base.Controller.extend({
                     });
                     var viewmanager = new openerp.base.ViewManagerAction(this.session, element_id, action);
                     viewmanager.start();
+                    viewmanager.on_act_window_closed.add(on_closed);
                     this.dialog_stack.push(viewmanager);
                 } else if (action.flags.new_window) {
                     action.flags.new_window = false;
@@ -62,6 +63,7 @@ openerp.base.ActionManager = openerp.base.Controller.extend({
                 break;
             case 'ir.actions.act_window_close':
                 var dialog = this.dialog_stack.pop();
+                dialog.on_act_window_closed();
                 dialog.$element.dialog('destroy');
                 dialog.stop();
                 break;
@@ -200,6 +202,11 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
                       contexts.concat(self.contexts()), groupbys);
         });
         return this.searchview.start();
+    },
+    /**
+     * Called when this view manager has been created by an action 'act_window@target=new' is closed
+     */
+    on_act_window_closed : function() {
     },
     /**
      * Called when one of the view want to execute an action
@@ -415,7 +422,7 @@ openerp.base.View = openerp.base.Controller.extend({
      * @param {Object} [record_id] the identifier of the object on which the action is to be applied
      * @param {Function} on_no_action callback to execute if the action does not generate any result (no new action)
      */
-    execute_action: function (action_data, dataset, action_manager, record_id, on_no_action) {
+    execute_action: function (action_data, dataset, action_manager, record_id, on_no_action, on_closed) {
         var handler = function (r) {
             var action = r.result;
             if (action && action.constructor == Object) {
@@ -432,7 +439,7 @@ openerp.base.View = openerp.base.Controller.extend({
                     action_buttons : false,
                     pager : false
                 };
-                action_manager.do_action(action);
+                action_manager.do_action(action, on_closed);
             } else {
                 on_no_action(action);
             }
