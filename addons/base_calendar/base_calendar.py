@@ -1110,7 +1110,6 @@ rule or repeating pattern of time to exclude from the recurring rule."),
         else:
             ids = select
         result = []
-        recur_dict = []
         if ids and virtual_id:
             for data in super(calendar_event, self).read(cr, uid, ids, context=context):
                 start_date = base_start_date and datetime.strptime(base_start_date[:10]+ ' 00:00:00' , "%Y-%m-%d %H:%M:%S") or False
@@ -1429,8 +1428,11 @@ rule or repeating pattern of time to exclude from the recurring rule."),
             
         res = False
         for id in ids:
-            event_datas = self.read(cr, uid, [id], ['date', 'rrule', 'exdate'], context=context)[0]
-            event_id = event_datas['id']
+            data_list = self.read(cr, uid, [id], ['date', 'rrule', 'exdate'], context=context)
+            if len(data_list) < 1:
+                continue
+            event_data = data_list[0]
+            event_id = event_data['id']
 
             if self.get_edit_all(cr, uid, event_id, vals=None):
                 event_id = base_calendar_id2real_id(event_id)
@@ -1442,11 +1444,11 @@ rule or repeating pattern of time to exclude from the recurring rule."),
             else:
                 str_event, date_new = event_id.split('-')
                 event_id = int(str_event)
-                if event_datas['rrule']:
+                if event_data['rrule']:
                     # Remove one of the recurrent event
                     date_new = time.strftime("%Y%m%dT%H%M%S", \
                                  time.strptime(date_new, "%Y%m%d%H%M%S"))
-                    exdate = (event_datas['exdate'] and (event_datas['exdate'] + ',')  or '') + date_new
+                    exdate = (event_data['exdate'] and (event_data['exdate'] + ',')  or '') + date_new
                     res = self.write(cr, uid, [event_id], {'exdate': exdate})
                 else:
                     res = super(calendar_event, self).unlink(cr, uid, [event_id], context=context)
