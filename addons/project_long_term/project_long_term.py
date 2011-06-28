@@ -725,11 +725,22 @@ class project_task(osv.osv):
         'user_id' : False
     }
 
+    def _get_child_duration(self, cr, uid, tasks, duration, context=None):
+        #DFS : visit all child
+        for task in tasks:
+            if task.child_ids:
+                duration = self._get_child_duration(cr, uid, task.child_ids, duration, context)
+            duration += task.planned_hours
+        return duration
+
     def generate_task(self, cr, uid, task_id, parent=False, flag=False, context=None):
         if context is None:
             context = {}
         task = self.browse(cr, uid, task_id, context=context)
-        duration = str(task.planned_hours )+ 'H'
+        duration = task.planned_hours
+        if task.child_ids:
+            duration = self._get_child_duration(cr, uid, task.child_ids, duration, context)
+        duration = str(duration)+ 'H'
         str_resource = False
         parent = task.parent_ids
         if task.phase_id.resource_ids:
@@ -745,7 +756,7 @@ class project_task(osv.osv):
 '''%(task.id, task.name, duration, str_resource)
             if parent:
                 s +='''
-            start = up.Task_%s.end
+            start = up.Task_%s.start
 '''%(parent[0].id)
         else:
             s = '''
@@ -756,7 +767,7 @@ class project_task(osv.osv):
 '''%(task.id, task.name, duration, str_resource)
             if parent:
                 s +='''
-        start = up.Task_%s.end
+        start = up.Task_%s.start
 '''%(parent[0].id)
         s += '\n'
         return s
