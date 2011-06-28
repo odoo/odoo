@@ -597,10 +597,7 @@ openerp.base.CompoundContext = function() {
     });
 };
 openerp.base.CompoundContext.prototype.add = function(context) {
-    if (context.__ref === "compound_context")
-        this.__contexts = this.__contexts.concat(context.__contexts);
-    else
-        this.__contexts.push(context);
+    this.__contexts.push(context);
     return this;
 };
 openerp.base.CompoundContext.prototype.set_eval_context = function(eval_context) {
@@ -614,16 +611,21 @@ openerp.base.CompoundContext.prototype.get_eval_context = function() {
 openerp.base.CompoundDomain = function() {
     this.__ref = "compound_domain";
     this.__domains = [];
+    this.__eval_context = null;
     _.each(arguments, function(x) {
         self.add(x);
     });
 };
 openerp.base.CompoundDomain.prototype.add = function(domain) {
-    if (domain.__ref === "compound_domain")
-        this.__domains = this.__domains.concat(domain.__domains);
-    else
-        this.__domains.push(domain);
+    this.__domains.push(domain);
     return this;
+};
+openerp.base.CompoundDomain.prototype.set_eval_context = function(eval_context) {
+    this.__eval_context = eval_context;
+    return this;
+};
+openerp.base.CompoundDomain.prototype.get_eval_context = function() {
+    return this.__eval_context;
 };
 
 };

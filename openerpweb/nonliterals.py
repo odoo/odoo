@@ -8,7 +8,7 @@ import binascii
 import hashlib
 import simplejson.encoder
 
-__all__ = ['Domain', 'Context', 'NonLiteralEncoder, non_literal_decoder']
+__all__ = ['Domain', 'Context', 'NonLiteralEncoder, non_literal_decoder', 'CompoundDomain', 'CompoundContext']
 
 #: 48 bits should be sufficient to have almost no chance of collision
 #: with a million hashes, according to hg@67081329d49a
@@ -31,7 +31,8 @@ class NonLiteralEncoder(simplejson.encoder.JSONEncoder):
         elif isinstance(object, CompoundDomain):
             return {
                 '__ref': 'compound_domain',
-                '__domains': object.domains
+                '__domains': object.domains,
+                '__eval_context': object.get_eval_context()
             }
         elif isinstance(object, CompoundContext):
             return {
@@ -62,13 +63,14 @@ def non_literal_decoder(dct):
         elif dct["__ref"] == "compound_domain":
             cdomain = CompoundDomain()
             for el in dct["__domains"]:
-                cdomain.domains.append(non_literal_decoder(el))
+                cdomain.domains.append(el)
+            cdomain.set_eval_context(dct.get("__eval_context"))
             return cdomain
         elif dct["__ref"] == "compound_context":
             ccontext = CompoundContext()
             for el in dct["__contexts"]:
-                ccontext.contexts.append(non_literal_decoder(el))
-            ccontext.set_eval_context(non_literal_decoder(dct.get("__eval_context") or {}))
+                ccontext.contexts.append(el)
+            ccontext.set_eval_context(dct.get("__eval_context"))
             return ccontext
     return dct
 
@@ -187,6 +189,7 @@ class CompoundDomain(BaseDomain):
     def __init__(self, *domains):
         self.domains = []
         self.session = None
+        self.eval_context = None
         for domain in domains:
             self.add(domain)
         
@@ -202,6 +205,7 @@ class CompoundDomain(BaseDomain):
                 continue
             
             ctx = dict(context or {})
+            ctx.update(self.get_eval_context() or {})
             ctx['context'] = ctx
             
             domain.session = self.session
@@ -212,10 +216,12 @@ class CompoundDomain(BaseDomain):
         self.domains.append(domain)
         return self
     
-def get_eval_context(context):
-    if isinstance(context, CompoundContext):
-        return context.get_eval_context() or {}
-    return {}
+    def set_eval_context(self, eval_context):
+        self.eval_context = eval_context
+        return self
+        
+    def get_eval_context(self):
+        return self.eval_context
 
 class CompoundContext(BaseContext):
     def __init__(self, *contexts):
@@ -246,10 +252,7 @@ class CompoundContext(BaseContext):
         return final_context
             
     def add(self, context):
-        if isinstance(context, BaseContext):
-            self.contexts = self.contexts + context.contexts
-        else:
-            self.contexts.append(context)
+        self.contexts.append(context)
         return self
     
     def set_eval_context(self, eval_context):
