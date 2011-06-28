@@ -1360,11 +1360,9 @@ openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
 
         this.viewmanager = new openerp.base.ViewManager(this.view.session,
             this.element_id, this.dataset, views);
-        var reg = new openerp.base.Registry();
-        reg.add("form", openerp.base.views.map["form"]);
-        reg.add("graph", openerp.base.views.map["graph"]);
-        reg.add("list", "openerp.base.form.One2ManyListView");
-        this.viewmanager.registry = reg;
+        this.viewmanager.registry = openerp.base.views.clone({
+            list: 'openerp.base.form.One2ManyListView'
+        });
 
         this.viewmanager.on_controller_inited.add_last(function(view_type, controller) {
             if (view_type == "list") {
