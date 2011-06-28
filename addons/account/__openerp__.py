@@ -121,8 +121,8 @@ module named account_voucher.
         'company_view.xml',
         'board_account_view.xml',
         "wizard/account_report_profit_loss_view.xml",
-        "wizard/account_report_balance_sheet_view.xml"
-    ],
+        "wizard/account_report_balance_sheet_view.xml",
+            ],
     'demo_xml': [
         'account_demo.xml',
         'project/project_demo.xml',
@@ -142,10 +142,9 @@ module named account_voucher.
         'test/account_fiscalyear_close.yml',
         'test/account_bank_statement.yml',
         'test/account_cash_statement.yml',
-        'test/account_report.yml',
         'test/test_edi_invoice.yml',
-
-            ],
+        'test/account_report.yml',
+    ],
     'installable': True,
     'active': False,
     'certificate': '0080331923549',

@@ -1,0 +1,90 @@
+-
+  create Company
+-
+  !record {model: res.company, id: res_company_test11}:
+    name: Thomson pvt. ltd.
+    partner_id: 1
+    rml_header: 1
+    rml_header2: 1
+    rml_header3: 1
+    currency_id: 1
+
+-
+  create partner
+-
+  !record {model: res.partner, id: res_partner_test20}:
+    name: Junjun wala
+    supplier: False
+    company_id: res_company_test11
+-
+  create customer invoice
+-
+  !record {model: account.invoice, id: customer_invoice_test}:
+    journal_id: 1
+    partner_id: res_partner_test20
+    currency_id: base.EUR
+    address_invoice_id: base.res_partner_address_11
+    company_id: res_company_test11
+    account_id: account.a_pay
+    date_invoice: '2011-06-22'
+    name: selling product
+    type: 'out_invoice'
+    invoice_line:
+      - product_id: product.product_product_pc1
+        partner_id: res_partner_test20
+        uos_id: 1
+        quantity: 1.0
+        price_unit: 10.0
+        name: 'basic pc'
+        account_id: account.a_pay
+        
+    tax_line:
+      - name: sale tax
+        account_id: account.a_pay
+        manual: True
+        amount: 1000.00
+
+-
+  I open the Invoice for the SO.
+-
+  !python {model: account.invoice}: |
+    
+    invoices = self.browse(cr, uid, ref("customer_invoice_test"))
+    import netsvc
+    wf_service = netsvc.LocalService("workflow")
+    wf_service.trg_validate(uid, 'account.invoice',invoices.id,'invoice_open', cr)
+
+-
+  Tesing of EDI functionality
+-
+  !python {model: ir.edi.document}: |
+    invoice_invoice_new = self.pool.get('account.invoice')
+    invoices = invoice_invoice_new.browse(cr, uid, [ref("customer_invoice_test")])
+    tokens = self.export_edi(cr, uid, invoices)
+    for token in tokens:
+      document = self.get_document(cr, uid, token, context=context)
+      a = self.import_edi(cr, uid, edi_document = document)
+  
+-
+  Check the exported out_invoice become in_invoice or not
+-
+  !python {model: account.invoice}: |
+    
+    invoice_old = self.browse(cr,uid,ref("customer_invoice_test"))
+    ids = self.search(cr, uid, [('reference','=',invoice_old.internal_number)])
+    invoice_new = self.browse(cr, uid, ids)[0]
+    assert invoice_new.partner_id.name == invoice_old.partner_id.name, "invoice is not imported and new partner is not created"
+    assert invoice_new.partner_id.company_id.name == 'OpenERP S.A.', "company_id is not converted to main company"
+    assert invoice_new.partner_id.address[0].partner_id == invoice_old.partner_id.name, "new partner is not imported and new address is not added"
+    assert invoice_new.reference == invoice_old.internal_number, "internal number is not stored in reference"
+    assert invoice_new.reference_type == None, "reference type is not set to 'None'"
+    assert invoice_new.internal_number == False, "internal number is not reset"
+    assert invoice_new.journal_id.id, "journal id is not selected" 
+    assert invoice_new.payment_term.id, "Not created a default one based on name"
+    assert invoice_new.invoice_line.account_id.id, "account_id is not taken from product's default"
+    assert invoice_new.tax_line.manual == True, "for tax line manual is not set to True"
+    assert invoice_new.tax_line.account_id, "for tax_line default accounts is not picked based on the tax config of the DB where it is imported."
+    
+    
+    
+   
