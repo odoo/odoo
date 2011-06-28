@@ -70,7 +70,9 @@ def emp_create_xml(self, cr, uid, dept, holiday_type, row_id, empid, name, som, 
          for index in range(1,61):
               display[index]=' '
               count=''
+              
     data_xml=['<info id="%d" number="%d" val="%s" />' % (row_id,x,display[x]) for x in range(1,len(display)+1) ]
+    
     # Computing the xml
     xml = '''
     %s
@@ -200,11 +202,14 @@ class report_custom(report_rml):
 
         months_xml =['<months  number="%d" name="%s"/>' % (x, _(month_dict[x])) for x in range(1,len(month_dict)+1) ]
         months_xml.append(st)
+        
         emp_xml=''
         row_id=1
+        
         if data['model']=='hr.employee':
             for id in data['form']['emp']:
                  items = obj_emp.read(cr, uid, id, ['id','name'])
+                 
                  emp_xml += emp_create_xml(self, cr, uid, 0, holiday_type, row_id, items['id'], items['name'], som, eom)
                  row_id = row_id +1
 
@@ -224,6 +229,7 @@ class report_custom(report_rml):
                     dept_done=1
                     emp_xml += emp_create_xml(self, cr, uid, 0, holiday_type, row_id, item['id'], item['name'], som, eom)
                     row_id = row_id +1
+                    
         header_xml = '''
         <header>
         <date>%s</date>

@@ -96,6 +96,7 @@ class report_custom(report_rml):
                     days_xml.append(today_xml)
                     today, tomor = tomor, tomor + one_day
                 user_xml.append(user_repr % '\n'.join(days_xml))
+                
         rpt_obj = pooler.get_pool(cr.dbname).get('hr.employee')
         rml_obj=report_sxw.rml_parse(cr, uid, rpt_obj._name,context)
         header_xml = '''
