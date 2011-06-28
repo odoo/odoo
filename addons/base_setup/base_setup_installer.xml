@@ -311,7 +311,7 @@
       <field name="view_id" ref="base.view_company_form"/>
       <field name="view_type">form</field>
       <field name="view_mode">form</field>
-      <field name="context">{'res_id': 1}</field>
+      <field name="context">{'res_id': user.company_id.id}</field>
     </record>
 
     <record id="base_setup_company_todo" model="ir.actions.todo">
