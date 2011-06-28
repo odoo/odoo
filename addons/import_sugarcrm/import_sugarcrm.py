@@ -149,20 +149,17 @@ class sugar_import(import_framework):
             res_model = 'crm.lead' 
         for contact_id in sugar_document_contact:
             res_id = self.get_mapped_id(self.TABLE_CONTACT, contact_id)
-            res_model = 'res.parner.address'
+            res_model = 'res.partner.address'
         for account_id in sugar_document_account:
             res_id = self.get_mapped_id(self.TABLE_ACCOUNT, account_id)
-            res_model = 'res.parner'
+            res_model = 'res.partner'
         return res_id,res_model
     
     def import_document(self, val):
         File,Filename = sugar.get_document_revision_search(self.context.get('port'), self.context.get('session_id'), val.get('document_revision_id'))
         res_id, res_model  = self.import_related_document(val)
-        if res_model == 'res.partner':
-            val['partner_id/.id'] = res_id
-        else:                   
-            val['res_id'] = res_id
-            val['res_model'] = res_model
+        val['res_id'] = res_id
+        val['res_model'] = res_model
         if File:
             val['datas'] = File
             val['datas_fname'] = Filename
@@ -171,7 +168,7 @@ class sugar_import(import_framework):
     def get_document_mapping(self): 
         return { 
                 'model' : 'ir.attachment',
-                'dependencies' : [self.TABLE_USER, self.TABLE_ACCOUNT, self.TABLE_CONTACT, self.TABLE_OPPORTUNITY, self.TABLE_CASE, self.TABLE_BUG],
+                'dependencies' : [self.TABLE_USER, self.TABLE_ACCOUNT,self.TABLE_CONTACT, self.TABLE_OPPORTUNITY, self.TABLE_CASE, self.TABLE_BUG],
                 'hook' : self.import_document,
                 'map' : {'name':'document_name',
                          'description': ppconcat('description'),
@@ -179,7 +176,6 @@ class sugar_import(import_framework):
                          'datas_fname': 'datas_fname',
                          'res_model': 'res_model',
                          'res_id': 'res_id',
-                         'partner_id/.id': 'partner_id/.id'
                 }
             }     
         
