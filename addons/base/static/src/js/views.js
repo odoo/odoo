@@ -135,7 +135,7 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
                 controller.set_embedded_view(view.embedded_view);
             }
             if (view_type === 'list' && this.flags.search_view === false && this.action && this.action['auto_search']) {
-                // In case the search view is not instanciated: manually call ListView#search
+                // In case the search view is not instantiated: manually call ListView#search
                 var domains = !_(self.action.domain).isEmpty()
                                 ? [self.action.domain] : [],
                    contexts = !_(self.action.context).isEmpty()
@@ -356,16 +356,12 @@ openerp.base.Sidebar = openerp.base.BaseWidget.extend({
     },
     do_refresh: function(new_view) {
         var view = this.view_manager.active_view;
-        the_condition = this.sections.length > 0 && _.detect(this.sections,
+        var the_condition = this.sections.length > 0 && _.detect(this.sections,
             function(x) {return x.elements.length > 0;}) != undefined
             && (!new_view || view != 'list');
-        if (!the_condition) {
-            this.$element.addClass('closed-sidebar');
-            this.$element.removeClass('open-sidebar');
-        } else {
-            this.$element.addClass('open-sidebar');
-            this.$element.removeClass('closed-sidebar');
-        }
+
+        this.$element.toggleClass('open-sidebar', the_condition)
+                     .toggleClass('closed-sidebar', !the_condition);
 
         this.$element.html(QWeb.render("ViewManager.sidebar.internal", { sidebar: this, view: view }));
 
