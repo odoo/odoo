@@ -328,6 +328,15 @@ openerp.base.DataSet =  openerp.base.Controller.extend( /** @lends openerp.base.
             args: args || []
         }, callback, error_callback);
     },
+    call_button: function (method, args, callback, error_callback) {
+        return this.rpc('/base/dataset/call_button', {
+            model: this.model,
+            method: method,
+            domain_id: null,
+            context_id: 1,
+            args: args || []
+        }, callback, error_callback);
+    },
     /**
      * Arguments:
      * name='', args=[], operator='ilike', context=None, limit=100
