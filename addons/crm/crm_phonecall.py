@@ -91,7 +91,7 @@ class crm_phonecall(crm_base, osv.osv):
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'), 
         'priority': crm.AVAILABLE_PRIORITIES[2][0], 
         'state':  _get_default_state, 
-        'user_id': lambda self,cr,uid,ctx: uid,
+        #'user_id': lambda self,cr,uid,ctx: uid,
         'active': 1, 
     }
     
