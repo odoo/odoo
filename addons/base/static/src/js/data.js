@@ -196,9 +196,7 @@ openerp.base.GrouplessDataGroup = openerp.base.DataGroup.extend(
         this._super(session, model, domain, context, null, level);
     },
     list: function (ifGroups, ifRecords) {
-        ifRecords(_.extend(
-                new openerp.base.DataSetSearch(this.session, this.model),
-                {domain: this.domain, context: this.context}));
+        ifRecords(new openerp.base.DataSetSearch(this.session, this.model, this.context, this.domain));
     }
 });
 
@@ -287,12 +285,11 @@ openerp.base.DataSet =  openerp.base.Controller.extend( /** @lends openerp.base.
             });
         }
     },
-    default_get: function(fields, context, callback) {
-        context = context || this.context;
+    default_get: function(fields, callback) {
         return this.rpc('/base/dataset/default_get', {
             model: this.model,
             fields: fields,
-            context: context
+            context: this.context
         }, callback);
     },
     create: function(data, callback, error_callback) {
@@ -355,6 +352,9 @@ openerp.base.DataSetStatic =  openerp.base.DataSet.extend({
         // all local records
         this.ids = ids || [];
         this.count = this.ids.length;
+        if (this.ids.length) {
+            this.index = 0;
+        }
     },
     read_slice: function (fields, offset, limit, callback) {
         var self = this;
