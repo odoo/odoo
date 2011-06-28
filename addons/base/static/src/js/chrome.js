@@ -284,13 +284,12 @@ openerp.base.generate_null_object_class = function(claz, add) {
         }
         if (prototype.prototype)
             copy_proto(prototype.prototype);
-    }
+    };
     copy_proto(claz.prototype);
-    var init = openerp.base.BasicController.prototype.init;
-    newer.init = init;
+    newer.init = openerp.base.BasicController.prototype.init;
     var tmpclass = claz.extend(newer);
     return tmpclass.extend(add || {});
-}
+};
 
 openerp.base.Notification =  openerp.base.BasicController.extend({
     init: function(element_id) {
@@ -580,7 +579,7 @@ openerp.base.Controller = openerp.base.BasicController.extend( /** @lends opener
      */
     controller_get: function(key) {
         return this.controller_registry[key];
-        // OR should contrustct it ? setting parent correctly ?
+        // OR should build it ? setting parent correctly ?
         // function construct(constructor, args) {
         //     function F() {
         //         return constructor.apply(this, args);
@@ -640,7 +639,7 @@ openerp.base.Controller = openerp.base.BasicController.extend( /** @lends opener
             }
             // TODO if post prefix
             //this.element_id = _.uniqueId(_.toArray(arguments).join('_'));
-        };
+        }
     },
     /**
      * Performs a JSON-RPC call
