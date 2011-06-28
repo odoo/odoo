@@ -78,6 +78,18 @@ class res_currency(osv.osv):
                     r['date'] = currency_date
         return res
 
+    def name_get(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+#        We can use the following line,if we want to restrict this name_get for company setup only
+#        But, its better to show currencies as name(Code).
+        if not len(ids):
+            return []
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        reads = self.read(cr, uid, ids, ['name','symbol'], context, load='_classic_write')
+        return [(x['id'], tools.ustr(x['name']) + (x['symbol'] and (' (' + tools.ustr(x['symbol']) + ')') or '')) for x in reads]
+
     def round(self, cr, uid, currency, amount):
         if currency.rounding == 0:
             return 0.0
