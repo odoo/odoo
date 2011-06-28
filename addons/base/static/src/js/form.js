@@ -1542,7 +1542,7 @@ openerp.base.form.FieldMany2Many = openerp.base.form.Field.extend({
         });
     },
     get_value: function() {
-        return [[6,false,this.dataset.ids]];
+        return [commands.replace_with(this.dataset.ids)];
     }
 });
 
