@@ -31,6 +31,9 @@ openerp.base.ActionManager = openerp.base.Controller.extend({
         // instantiate the right controllers by understanding the action
         switch (action.type) {
             case 'ir.actions.act_window':
+                if (!action.target && this.dialog_stack.length) {
+                    action.flags.new_window = true;
+                }
                 if (action.target == 'new') {
                     var element_id = _.uniqueId("act_window_dialog");
                     $('<div>', {id: element_id}).dialog({
@@ -45,6 +48,7 @@ openerp.base.ActionManager = openerp.base.Controller.extend({
                     var viewmanager = new openerp.base.ViewManagerAction(this.session, element_id, action);
                     viewmanager.start();
                     viewmanager.on_act_window_closed.add(on_closed);
+                    viewmanager.is_dialog = true;
                     this.dialog_stack.push(viewmanager);
                 } else if (action.flags.new_window) {
                     action.flags.new_window = false;
@@ -63,7 +67,9 @@ openerp.base.ActionManager = openerp.base.Controller.extend({
                 break;
             case 'ir.actions.act_window_close':
                 var dialog = this.dialog_stack.pop();
-                dialog.on_act_window_closed();
+                if (!action.special) {
+                    dialog.on_act_window_closed();
+                }
                 dialog.$element.dialog('destroy');
                 dialog.stop();
                 break;
@@ -86,6 +92,7 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
         this.flags = this.flags || {};
         this.sidebar = new openerp.base.NullSidebar();
         this.registry = openerp.base.views;
+        this.is_dialog = false;
     },
     /**
      * @returns {jQuery.Deferred} initial view loading promise
@@ -423,6 +430,7 @@ openerp.base.View = openerp.base.Controller.extend({
      * @param {Function} on_no_action callback to execute if the action does not generate any result (no new action)
      */
     execute_action: function (action_data, dataset, action_manager, record_id, on_no_action, on_closed) {
+        var self = this;
         var handler = function (r) {
             var action = r.result;
             if (action && action.constructor == Object) {
@@ -440,6 +448,11 @@ openerp.base.View = openerp.base.Controller.extend({
                     pager : false
                 };
                 action_manager.do_action(action, on_closed);
+                if (self.view_manager.is_dialog && action.type != 'ir.actions.act_window_close') {
+                    handler({
+                        result : { type: 'ir.actions.act_window_close' }
+                    });
+                }
             } else {
                 on_no_action(action);
             }
@@ -447,7 +460,7 @@ openerp.base.View = openerp.base.Controller.extend({
 
         if (action_data.special) {
             handler({
-                result : { type: 'ir.actions.act_window_close' }
+                result : { type: 'ir.actions.act_window_close', special: action_data.special }
             });
         } else {
             var context = new openerp.base.CompoundContext(dataset.context).add(action_data.context || {});
