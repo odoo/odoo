@@ -22,6 +22,8 @@
 from osv import osv, fields
 from tools.translate import _
 
+import time
+
 class crm_opportunity2phonecall(osv.osv_memory):
     """Converts Opportunity to Phonecall"""
 
@@ -31,11 +33,13 @@ class crm_opportunity2phonecall(osv.osv_memory):
     _columns = {
         'name' : fields.char('Call summary', size=64, required=True, select=1),
         'user_id' : fields.many2one('res.users', "Assign To"),
-        'date': fields.datetime('Date' , required=True),
+        'partner_id' : fields.many2one('res.partner', "Partner"),
+        'date': fields.datetime('Date'),
         'section_id': fields.many2one('crm.case.section', 'Sales Team'),
-        'categ_id': fields.many2one('crm.case.categ', 'Category', required=True, \
+        'categ_id': fields.many2one('crm.case.categ', 'Category',  \
                         domain="['|',('section_id','=',False),('section_id','=',section_id),\
-                        ('object_id.model', '=', 'crm.phonecall')]"), 
+                        ('object_id.model', '=', 'crm.phonecall')]"),
+        'action': fields.selection([('schedule','Schedule a call'), ('log','Log a call')], 'Action', required=True), 
     }
 
     def default_get(self, cr, uid, fields, context=None):
@@ -58,6 +62,7 @@ class crm_opportunity2phonecall(osv.osv_memory):
 
         record_ids = context and context.get('active_ids', []) or []
         res = super(crm_opportunity2phonecall, self).default_get(cr, uid, fields, context=context)
+        res.update({'action': 'schedule', 'date': time.strftime('%Y-%m-%d %H:%M:%S')})
         for opp in opp_obj.browse(cr, uid, record_ids, context=context):
             if 'name' in fields:
                 res.update({'name': opp.name})
@@ -67,6 +72,8 @@ class crm_opportunity2phonecall(osv.osv_memory):
                 res.update({'section_id': opp.section_id and opp.section_id.id or False})
             if 'categ_id' in fields:
                 res.update({'categ_id': categ_id})
+            if 'partner_id' in fields:
+                res.update({'partner_id': opp.partner_id and opp.partner_id.id or False})
         return res
 
     def action_cancel(self, cr, uid, ids, context=None):
@@ -112,7 +119,7 @@ class crm_opportunity2phonecall(osv.osv_memory):
 
         for this in self.browse(cr, uid, ids, context=context):
             for opp in opp_obj.browse(cr, uid, record_ids, context=context):
-                new_case = phonecall_obj.create(cr, uid, {
+                vals = {
                         'name' : opp.name,
                         'case_id' : opp.id ,
                         'user_id' : this.user_id and this.user_id.id or False,
@@ -126,9 +133,12 @@ class crm_opportunity2phonecall(osv.osv_memory):
                         'partner_mobile' : opp.partner_address_id and opp.partner_address_id.mobile or False,
                         'priority': opp.priority,
                         'opportunity_id': opp.id
-                }, context=context)
-
-                phonecall_obj.case_open(cr, uid, [new_case])
+                }
+                new_case = phonecall_obj.create(cr, uid, vals, context=context)
+                if this.action == 'schedule':
+                    phonecall_obj.case_open(cr, uid, [new_case])
+                elif this.action == 'log':
+                    phonecall_obj.case_close(cr, uid, [new_case])
 
             value = {
                 'name': _('Phone Call'),

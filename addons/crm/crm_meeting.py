@@ -20,7 +20,7 @@
 ##############################################################################
 
 from base_calendar import base_calendar
-from crm import crm_case
+from crm import crm_base, crm_case
 from osv import fields, osv
 from tools.translate import _
 import logging
@@ -36,13 +36,13 @@ class crm_phonecall(crm_case, osv.osv):
 crm_phonecall()
 
 
-class crm_meeting(crm_case, osv.osv):
+class crm_meeting(crm_base, osv.osv):
     """ CRM Meeting Cases """
 
     _name = 'crm.meeting'
     _description = "Meeting"
     _order = "id desc"
-    _inherit = ['mailgate.thread',"calendar.event"]
+    _inherit = "calendar.event"
     _columns = {
         # From crm.case
         'name': fields.char('Summary', size=124, required=True, states={'done': [('readonly', True)]}), 

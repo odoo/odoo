@@ -449,7 +449,7 @@ class sale_order(osv.osv):
         res_id = res and res[1] or False,
 
         return {
-            'name': 'Customer Invoices',
+            'name': _('Customer Invoices'),
             'view_type': 'form',
             'view_mode': 'form',
             'view_id': [res_id],
@@ -1127,7 +1127,7 @@ class sale_order_line(osv.osv):
         else:
             price = self.pool.get('product.pricelist').price_get(cr, uid, [pricelist],
                     product, qty or 1.0, partner_id, {
-                        'uom': uom,
+                        'uom': uom or result.get('product_uom'),
                         'date': date_order,
                         })[pricelist]
             if price is False:

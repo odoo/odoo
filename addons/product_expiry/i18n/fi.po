@@ -1,0 +1,181 @@
+# Finnish translation for openobject-addons
+# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"PO-Revision-Date: 2011-06-27 06:27+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Finnish <fi@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2011-06-28 04:40+0000\n"
+"X-Generator: Launchpad (build 13168)\n"
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_stock_production_lot
+msgid "Production lot"
+msgstr "Tuotantoerä"
+
+#. module: product_expiry
+#: model:product.template,name:product_expiry.product_product_from_product_template
+msgid "Ham"
+msgstr "Kinkku"
+
+#. module: product_expiry
+#: model:product.template,name:product_expiry.product_product_lait_product_template
+msgid "Cow milk"
+msgstr "Maito"
+
+#. module: product_expiry
+#: model:ir.module.module,shortdesc:product_expiry.module_meta_information
+msgid "Products date of expiry"
+msgstr "Tuotteet viimeisen käyttöpäivän mukaan"
+
+#. module: product_expiry
+#: field:product.product,life_time:0
+msgid "Product Life Time"
+msgstr "Tuotteen elinikä"
+
+#. module: product_expiry
+#: help:stock.production.lot,use_date:0
+msgid ""
+"The date on which the lot starts deteriorating without becoming dangerous."
+msgstr ""
+"Päivä jolloin erän laatu alkaa heikkenemään ennenkun se tulee vaaralliseksi."
+
+#. module: product_expiry
+#: field:product.product,use_time:0
+msgid "Product Use Time"
+msgstr "Tuotteen käyttöaika"
+
+#. module: product_expiry
+#: sql_constraint:stock.production.lot:0
+msgid ""
+"The combination of serial number and internal reference must be unique !"
+msgstr ""
+"Sarjanumeron ja sisäisen viitenumeron yhdistelmän on oltava uniikki !"
+
+#. module: product_expiry
+#: help:stock.production.lot,removal_date:0
+msgid "The date on which the lot should be removed."
+msgstr "Päivä jolloin erä tulisi poistaa."
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_product_product
+msgid "Product"
+msgstr "Tuote"
+
+#. module: product_expiry
+#: help:product.product,alert_time:0
+msgid ""
+"The number of days after which an alert should be notified about the "
+"production lot."
+msgstr "Päivien määrä jonka jälkeen tuote-erästä tulee hälytys."
+
+#. module: product_expiry
+#: field:product.product,removal_time:0
+msgid "Product Removal Time"
+msgstr "Tuotteen poistopäivä"
+
+#. module: product_expiry
+#: field:stock.production.lot,removal_date:0
+msgid "Removal Date"
+msgstr "Poistopäivä"
+
+#. module: product_expiry
+#: help:stock.production.lot,life_date:0
+msgid ""
+"The date on which the lot may become dangerous and should not be consumed."
+msgstr ""
+"Päivä jolloin erä muuttuu vaaralliseksi, eikä sitä tule enään käyttää."
+
+#. module: product_expiry
+#: model:ir.module.module,description:product_expiry.module_meta_information
+msgid ""
+"Track different dates on products and production lots:\n"
+" - end of life\n"
+" - best before date\n"
+" - removal date\n"
+" - alert date\n"
+"Used, for example, in food industries."
+msgstr ""
+
+#. module: product_expiry
+#: model:product.template,name:product_expiry.product_product_pain_product_template
+msgid "Bread"
+msgstr "Leipä"
+
+#. module: product_expiry
+#: model:product.uom,name:product_expiry.product_uom_ltr
+#: model:product.uom.categ,name:product_expiry.product_uom_categ_vol
+msgid "LTR"
+msgstr ""
+
+#. module: product_expiry
+#: view:product.product:0
+#: view:stock.production.lot:0
+msgid "Dates"
+msgstr "Päivämäärät"
+
+#. module: product_expiry
+#: field:stock.production.lot,life_date:0
+msgid "End of Life Date"
+msgstr "Elinkaaren loppupäivä"
+
+#. module: product_expiry
+#: field:stock.production.lot,use_date:0
+msgid "Best before Date"
+msgstr "Parasta ennen päiväys"
+
+#. module: product_expiry
+#: model:product.template,name:product_expiry.product_product_jambon_product_template
+msgid "French cheese Camenbert"
+msgstr "Ranskalaista Camenbert juustoa"
+
+#. module: product_expiry
+#: help:product.product,removal_time:0
+msgid "The number of days before a production lot should be removed."
+msgstr "Päivien määrä ennenkuin tuotantoerä tulisi poistaa."
+
+#. module: product_expiry
+#: field:stock.production.lot,alert_date:0
+msgid "Alert Date"
+msgstr "Hälytyspäivä"
+
+#. module: product_expiry
+#: help:product.product,use_time:0
+msgid ""
+"The number of days before a production lot starts deteriorating without "
+"becoming dangerous."
+msgstr ""
+
+#. module: product_expiry
+#: constraint:product.product:0
+msgid "Error: Invalid ean code"
+msgstr "Virhe: Väärä EAN-koodi"
+
+#. module: product_expiry
+#: help:product.product,life_time:0
+msgid ""
+"The number of days before a production lot may become dangerous and should "
+"not be consumed."
+msgstr ""
+"Päivien määrä ennenkuin tuotantoerä voi tulla vaaralliseksi eikä sitä enään "
+"tulisi käyttää."
+
+#. module: product_expiry
+#: help:stock.production.lot,alert_date:0
+msgid ""
+"The date on which an alert should be notified about the production lot."
+msgstr "Päivä jolloin tästä tuotantoerästä tulisi tehdä hälytys."
+
+#. module: product_expiry
+#: field:product.product,alert_time:0
+msgid "Product Alert Time"
+msgstr "Tuotten hälytysaika"

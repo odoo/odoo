@@ -558,7 +558,7 @@ class mrp_repair(osv.osv):
                     'name': repair.name,
                     'picking_id': picking,
                     'product_id': repair.product_id.id,
-                    'product_qty': 1.0,
+                    'product_qty': move.product_uom_qty or 1.0,
                     'product_uom': repair.product_id.uom_id.id,
                     'prodlot_id': repair.prodlot_id and repair.prodlot_id.id or False,
                     'address_id': repair.address_id and repair.address_id.id or False,
