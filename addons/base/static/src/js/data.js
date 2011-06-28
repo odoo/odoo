@@ -590,6 +590,7 @@ openerp.base.ReadOnlyDataSetSearch = openerp.base.DataSetSearch.extend({
 openerp.base.CompoundContext = function() {
     this.__ref = "compound_context";
     this.__contexts = [];
+    this.__eval_context = null;
     var self = this;
     _.each(arguments, function(x) {
         self.add(x);
@@ -601,6 +602,13 @@ openerp.base.CompoundContext.prototype.add = function(context) {
     else
         this.__contexts.push(context);
     return this;
+};
+openerp.base.CompoundContext.prototype.set_eval_context = function(eval_context) {
+    this.__eval_context = eval_context;
+    return this;
+};
+openerp.base.CompoundContext.prototype.get_eval_context = function() {
+    return this.__eval_context;
 };
 
 openerp.base.CompoundDomain = function() {

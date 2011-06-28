@@ -171,8 +171,12 @@ class Session(openerpweb.Controller):
                 a list of fields to group by, potentially empty (in which case
                 no group by should be performed)
         """
-        context = req.session.eval_context(openerpweb.nonliterals.CompoundContext(*contexts))
-        domain = req.session.eval_domain(openerpweb.nonliterals.CompoundDomain(*(domains or [])), context)
+        contexts = contexts or []
+        domains = domains or []
+        e_context = dict(reduce(lambda x, y: x + y, [openerpweb.nonliterals.get_eval_context(x).items() for x in contexts]))
+        context, domain = eval_context_and_domain(req.session,
+                                                  openerpweb.nonliterals.CompoundContext(*contexts).set_eval_context(e_context),
+                                                  openerpweb.nonliterals.CompoundDomain(*domains))
         
         group_by_sequence = []
         for candidate in (group_by_seq or []):
@@ -233,7 +237,8 @@ class Session(openerpweb.Controller):
         
 def eval_context_and_domain(session, context, domain=None):
     e_context = session.eval_context(context)
-    e_domain = session.eval_domain(domain or [], e_context)
+    eval_context = openerpweb.nonliterals.get_eval_context(context)
+    e_domain = session.eval_domain(domain or [], dict(eval_context.items() + e_context.items()))
 
     return (e_context, e_domain)
         
