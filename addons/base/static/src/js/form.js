@@ -1277,9 +1277,15 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
     },
     _change_int_value: function(value) {
         this.value = value;
-        if (this.original_value === undefined || (this.value !== undefined &&
-            ((this.original_value ? this.original_value[0] : null) !== (this.value ? this.value[0] : null)))) {
-            this.original_value = undefined;
+        var back_orig_value = this.original_value;
+        if (this.value === null || this.value) {
+            this.original_value = this.value;
+        }
+        if (back_orig_value === undefined) { // first use after a set_value()
+            return;
+        }
+        if (this.value !== undefined && ((back_orig_value ? back_orig_value[0] : null)
+                !== (this.value ? this.value[0] : null))) {
             this.on_ui_change();
         }
     },
@@ -1292,7 +1298,7 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
         var real_set_value = function(rval) {
             self.tmp_value = undefined;
             _super.apply(self, rval);
-            self.original_value = rval;
+            self.original_value = undefined;
             self._change_int_ext_value(rval);
         };
         if(typeof(value) === "number") {
@@ -1312,7 +1318,7 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
             return this.tmp_value ? this.tmp_value : false;
         }
         if (this.value === undefined)
-            throw "theorically unreachable state";
+            return this.original_value ? this.original_value[0] : false;
         return this.value ? this.value[0] : false;
     },
     validate: function() {
