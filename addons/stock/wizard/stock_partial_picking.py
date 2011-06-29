@@ -155,15 +155,15 @@ class stock_partial_picking(osv.osv_memory):
 
             for move in moves_list:
                 partial_datas['move%s' % (move.move_id.id)] = {
-                    'product_id': move.id, 
-                    'product_qty': move.quantity, 
-                    'product_uom': move.product_uom.id, 
-                    'prodlot_id': move.prodlot_id.id, 
+                    'product_id': move.product_id.id,
+                    'product_qty': move.quantity,
+                    'product_uom': move.product_uom.id,
+                    'prodlot_id': move.prodlot_id.id,
                 }
                 if (picking_type == 'in') and (move.product_id.cost_method == 'average'):
                     partial_datas['move%s' % (move.move_id.id)].update({
-                                                    'product_price' : move.cost, 
-                                                    'product_currency': move.currency.id, 
+                                                    'product_price' : move.cost,
+                                                    'product_currency': move.currency.id,
                                                     })
         pick_obj.do_partial(cr, uid, picking_ids, partial_datas, context=context)
         return {'type': 'ir.actions.act_window_close'}
