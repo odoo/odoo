@@ -243,12 +243,12 @@ def load_actions_from_ir_values(req, key, key2, models, meta, context):
     Values = req.session.model('ir.values')
     actions = Values.get(key, key2, models, meta, context)
 
-    for _, _, action in actions:
-        clean_action(action, req.session)
-
-    return actions
+    return [(id, name, clean_action(action, req.session))
+            for id, name, action in actions]
 
 def clean_action(action, session):
+    if action['type'] != 'ir.actions.act_window':
+        return action
     # values come from the server, we can just eval them
     if isinstance(action.get('context', None), basestring):
         action['context'] = eval(
@@ -260,7 +260,7 @@ def clean_action(action, session):
             action['domain'],
             session.evaluation_context(
                 action['context'])) or []
-    if not action.has_key('flags'):
+    if 'flags' not in action:
         # Set empty flags dictionary for web client.
         action['flags'] = dict()
     return fix_view_modes(action)
@@ -286,11 +286,11 @@ def fix_view_modes(action):
     if action.pop('view_type') != 'form':
         return
 
-    if action.has_key('view_mode'):
+    if 'view_mode' in action:
         action['view_mode'] = ','.join(
             mode if mode != 'tree' else 'list'
             for mode in action['view_mode'].split(','))
-    if action.has_key('views'):
+    if 'views' in action:
         action['views'] = [
             [id, mode if mode != 'tree' else 'list']
             for id, mode in action['views']
@@ -461,8 +461,8 @@ class DataSet(openerpweb.Controller):
     def call_button(self, req, model, method, args, domain_id=None, context_id=None):
         action = self.call_common(req, model, method, args, domain_id, context_id)
         if isinstance(action, dict) and action.get('type') != '':
-            clean_action(action, req.session)
-        return {'result': action}
+            return {'result': clean_action(action, req.session)}
+        return {'result': False}
 
     @openerpweb.jsonrequest
     def exec_workflow(self, req, model, id, signal):
