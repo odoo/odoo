@@ -34,7 +34,7 @@
             <div id="oe_database" class="database"></div>
         </td>
         <td valign="top">
-        	<div id="oe_db_options" style="height: 100%; padding-top: 10px;"></div>
+        	<div id="oe_db_options"></div>
         </td>
     </tr>
     <tr>
@@ -59,7 +59,7 @@
     Loading...
 </t>
 <t t-name="Database">
-	<ul class="db_options" style="padding: 0px;">
+	<ul class="db_options" style="padding: 0px; display: inline;">
 		<li id="db-create">Create</li>
 		<li id="db-drop">Drop</li>
 		<li id="db-backup">Backup</li>
@@ -69,16 +69,47 @@
 	</ul>
 </t>
 <t t-name="CreateDB">
-	<table align="center" width="100%">
+	<table width="100%">
 		<tr>
-			<td valign="top">
-				<img src="/base/static/src/img/db.png" alt="" />
-			</td>
 			<td class="option_string">
 				<t t-esc="db_string"/>
 			</td>
 		</tr>
 	</table>
+	<table align="center" class="db_option_table">
+		<tr>
+			<td><label for="super_admin_pwd">Super admin password:</label></td>
+			<td><input type="text" name="super_admin_pwd" autofocus="true"/></td>
+		</tr>
+		<tr>
+			<td><label for="db_name">New database name:</label></td>
+			<td><input type="text" name="db_name"/></td>
+		</tr>
+		<tr>
+			<td><label for="demo_data">Load Demonstration data:</label></td>
+			<td><input type="checkbox" name="demo_data"/></td>
+		</tr>
+		<tr>
+			<td><label for="db_lang">Default language:</label></td>
+			<td>
+				<select name="db">
+	                
+	            </select>
+	    	</td>
+		</tr>
+		<tr>
+			<td><label for="admin_pwd">Super admin password:</label></td>
+			<td><input type="text" name="super_admin_pwd"/></td>
+		</tr>
+		<tr>
+			<td><label for="confirm_pwd">Super admin password:</label></td>
+			<td><input type="text" name="confirm_pwd"/></td>
+		</tr>
+		<tr>
+			<td colspan="2" align="right"><button type="button">Submit</button></td>
+		</tr>
+	</table>
+	
 </t>
 <t t-name="Login">
     <form>
