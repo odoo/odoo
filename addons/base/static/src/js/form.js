@@ -174,17 +174,32 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
                     'True' : true,
                     'None' : null
                 }
+                var parent_fields = null;
                 _.each(call[2].split(','), function(a) {
                     var field = _.trim(a);
                     if (field in argument_replacement) {
                         args.push(argument_replacement[field]);
+                        return;
                     } else if (self.fields[field]) {
                         var value = self.fields[field].get_value();
                         args.push(value == null ? false : value);
+                        return;
                     } else {
-                        args.push(false);
-                        self.log("warning : on_change can't find field " + field, onchange);
+                        debugger;
+                        var splitted = field.split('.');
+                        if (splitted.length > 1 && _.trim(splitted[0]) === "parent" && self.dataset.parent_view) {
+                            if (parent_fields === null) {
+                                parent_fields = self.dataset.parent_view.get_fields_values();
+                            }
+                            var p_val = parent_fields[_.trim(splitted[1])];
+                            if (p_val !== undefined) {
+                                args.push(value ? value : false);
+                                return;
+                            }
+                        }
                     }
+                    throw "Could not get field with name '" + field +
+                        "' for onchange '" + onchange + "'";
                 });
                 var ajax = {
                     url: '/base/dataset/call',
@@ -1083,28 +1098,26 @@ openerp.base.form.FieldSelection = openerp.base.form.Field.extend({
     });
 })();
 
+var build_view_fields_values = function(view) {
+    var a_dataset = view.dataset || {};
+    var fields_values = view.get_fields_values();
+    var parent_values = a_dataset.parent_view ? a_dataset.parent_view.get_fields_values() : {};
+    fields_values.parent = parent_values;
+    return fields_values;
+}
 /**
  * Builds a new context usable for operations related to fields by merging
  * the fields'context with the action's context.
  */
 var build_relation_context = function(relation_field) {
-    var a_context = relation_field.view.dataset.context || {};
-    var fields_values = relation_field.view.get_fields_values();
-    var parent_values = a_context.get_eval_context ? a_context.get_eval_context() || {} : {};
-    parent_values = _.clone(parent_values);
-    delete parent_values.parent;
-    fields_values.parent = parent_values;
+    var a_context = relation_field.view.dataset.get_context() || {};
+    var fields_values = build_view_fields_values(relation_field.view);
     var f_context = new openerp.base.CompoundContext(relation_field.field.context || {}).set_eval_context(fields_values);
     var ctx = new openerp.base.CompoundContext(a_context, f_context);
     return ctx;
 }
 var build_relation_domain = function(relation_field) {
-    var a_context = relation_field.view.dataset.context || {};
-    var fields_values = relation_field.view.get_fields_values();
-    var parent_values = a_context.get_eval_context ? a_context.get_eval_context() || {} : {};
-    parent_values = _.clone(parent_values);
-    delete parent_values.parent;
-    fields_values.parent = parent_values;
+    var fields_values = build_view_fields_values(relation_field.view);
     var f_domain = new openerp.base.CompoundDomain(relation_field.field.domain || []).set_eval_context(fields_values);
     return f_domain;
 }
@@ -1404,7 +1417,9 @@ openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
 
         var self = this;
 
-        this.dataset = new openerp.base.BufferedDataSet(this.session, this.field.relation);
+        this.dataset = new openerp.base.form.One2ManyDataSet(this.session, this.field.relation);
+        this.dataset.o2m = this;
+        this.dataset.parent_view = this.view;
         this.dataset.on_change.add_last(function() {
             self.on_ui_change();
         });
@@ -1491,6 +1506,8 @@ openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
     },
     get_value: function() {
         var self = this;
+        if (!this.dataset)
+            return [];
         var val = _.map(this.dataset.ids, function(id) {
             var alter_order = _.detect(self.dataset.to_create, function(x) {return x.id === id;});
             if (alter_order) {
@@ -1512,6 +1529,13 @@ openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
     }
 });
 
+openerp.base.form.One2ManyDataSet = openerp.base.BufferedDataSet.extend({
+    get_context: function() {
+        this.context = build_relation_context(this.o2m);
+        return this.context;
+    }
+});
+
 openerp.base.form.One2ManyListView = openerp.base.ListView.extend({
     do_add_record: function () {
         var self = this;
@@ -1519,8 +1543,9 @@ openerp.base.form.One2ManyListView = openerp.base.ListView.extend({
         pop.select_element(self.o2m.field.relation,{
             initial_view: "form",
             alternative_form_view: self.o2m.field.views ? self.o2m.field.views["form"] : undefined,
-            auto_create: false
-        });
+            auto_create: false,
+            parent_view: self.o2m.view
+        }, build_relation_domain(self.o2m), build_relation_context(self.o2m));
         pop.on_create.add(function(data) {
             self.o2m.dataset.create(data, function(r) {
                 self.o2m.dataset.set_ids(self.o2m.dataset.ids.concat([r.result]));
@@ -1616,6 +1641,7 @@ openerp.base.form.SelectCreatePopup = openerp.base.BaseWidget.extend({
      * - disable_multiple_selection
      * - alternative_form_view
      * - auto_create (default true)
+     * - parent_view
      */
     select_element: function(model, options, domain, context) {
         this.model = model;
@@ -1632,6 +1658,7 @@ openerp.base.form.SelectCreatePopup = openerp.base.BaseWidget.extend({
         this._super();
         this.dataset = new openerp.base.ReadOnlyDataSetSearch(this.session, this.model,
             this.context, this.domain);
+        this.dataset.parent_view = this.options.parent_view;
         if (this.options.initial_view == "search") {
             this.setup_search_view();
         } else { // "form"
@@ -1687,6 +1714,7 @@ openerp.base.form.SelectCreatePopup = openerp.base.BaseWidget.extend({
             return;
         var self = this;
         var wdataset = new openerp.base.DataSetSearch(this.session, this.model, this.context, this.domain);
+        wdataset = this.options.parent_view;
         wdataset.create(data, function(r) {
             self.on_select_elements([r.result]);
         });

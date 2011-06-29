@@ -259,7 +259,8 @@ openerp.base.DataSet =  openerp.base.Controller.extend( /** @lends openerp.base.
         return this.rpc('/base/dataset/get', {
             model: this.model,
             ids: ids,
-            fields: fields
+            fields: fields,
+            context: this.get_context()
         }, callback);
     },
     /**
@@ -288,14 +289,14 @@ openerp.base.DataSet =  openerp.base.Controller.extend( /** @lends openerp.base.
         return this.rpc('/base/dataset/default_get', {
             model: this.model,
             fields: fields,
-            context: this.context
+            context: this.get_context()
         }, callback);
     },
     create: function(data, callback, error_callback) {
         return this.rpc('/base/dataset/create', {
             model: this.model,
             data: data,
-            context: this.context
+            context: this.get_context()
         }, callback, error_callback);
     },
     write: function (id, data, callback) {
@@ -303,12 +304,12 @@ openerp.base.DataSet =  openerp.base.Controller.extend( /** @lends openerp.base.
             model: this.model,
             id: id,
             data: data,
-            context: this.context
+            context: this.get_context()
         }, callback);
     },
     unlink: function(ids, callback, error_callback) {
         var self = this;
-        return this.call_and_eval("unlink", [ids, this.context], null, 1,
+        return this.call_and_eval("unlink", [ids, this.get_context()], null, 1,
             callback, error_callback);
     },
     call: function (method, args, callback, error_callback) {
@@ -337,18 +338,18 @@ openerp.base.DataSet =  openerp.base.Controller.extend( /** @lends openerp.base.
         }, callback, error_callback);
     },
     name_get: function(ids, callback) {
-        return this.call_and_eval('name_get', [ids, this.context], null, 1, callback);
+        return this.call_and_eval('name_get', [ids, this.get_context()], null, 1, callback);
     },
     /*
      * args = domain
      */
     name_search: function (name, args, operator, limit, callback) {
         return this.call_and_eval('name_search',
-            [name || '', args || false, operator || 'ilike', this.context, limit || 100],
+            [name || '', args || false, operator || 'ilike', this.get_context(), limit || 100],
             1, 3, callback);
     },
     name_create: function(name, callback) {
-        return this.call_and_eval('name_create', [name, this.context], null, 1, callback);
+        return this.call_and_eval('name_create', [name, this.get_context()], null, 1, callback);
     },
     exec_workflow: function (id, signal, callback) {
         return this.rpc('/base/dataset/exec_workflow', {
@@ -356,6 +357,9 @@ openerp.base.DataSet =  openerp.base.Controller.extend( /** @lends openerp.base.
             id: id,
             signal: signal
         }, callback);
+    },
+    get_context: function() {
+        return this.context;
     }
 });
 
@@ -413,7 +417,7 @@ openerp.base.DataSetSearch =  openerp.base.DataSet.extend({
             model: this.model,
             fields: fields,
             domain: this.domain,
-            context: this.context,
+            context: this.get_context(),
             sort: this.sort(),
             offset: offset,
             limit: limit
