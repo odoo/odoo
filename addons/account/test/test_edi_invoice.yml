@@ -1,5 +1,5 @@
 -
-  create Company
+  I create a company for Customer
 -
   !record {model: res.company, id: res_company_test11}:
     name: Thomson pvt. ltd.
@@ -10,14 +10,14 @@
     currency_id: 1
 
 -
-  create partner
+  I create a partner which is a my customer
 -
   !record {model: res.partner, id: res_partner_test20}:
     name: Junjun wala
     supplier: False
     company_id: res_company_test11
 -
-  create customer invoice
+  I create one customer invoice
 -
   !record {model: account.invoice, id: customer_invoice_test}:
     journal_id: 1
@@ -45,7 +45,7 @@
         amount: 1000.00
 
 -
-  I open the Invoice for the SO.
+  I Open the Invoice
 -
   !python {model: account.invoice}: |
     
@@ -55,30 +55,30 @@
     wf_service.trg_validate(uid, 'account.invoice',invoices.id,'invoice_open', cr)
 
 -
-  Tesing of EDI functionality
+  I Tesing of EDI functionality. First I export customer invoice from my company than import that invoice into customer company
 -
   !python {model: ir.edi.document}: |
-    invoice_invoice_new = self.pool.get('account.invoice')
-    invoices = invoice_invoice_new.browse(cr, uid, [ref("customer_invoice_test")])
-    tokens = self.export_edi(cr, uid, invoices)
-    for token in tokens:
-      document = self.get_document(cr, uid, token, context=context)
-      a = self.import_edi(cr, uid, edi_document = document)
-  
+    invoice_pool = self.pool.get('account.invoice')
+    invoice = invoice_pool.browse(cr, uid, ref("customer_invoice_test"))
+    tokens = self.export_edi(cr, uid, [invoice])
+    assert tokens, 'Token is not generated'
+    document = self.get_document(cr, uid, tokens[0])
+    a = self.import_edi(cr, uid, edi_document = document)
+    assert a, 'Invoice is not imported'
 -
-  Check the exported out_invoice become in_invoice or not
+  I Checking the out invoice become in invoice or not after import
 -
   !python {model: account.invoice}: |
     
-    invoice_old = self.browse(cr,uid,ref("customer_invoice_test"))
+    invoice_old = self.browse(cr, uid, ref("customer_invoice_test"))
     new_partner_id = self.pool.get('res.partner').name_search(cr, uid, invoice_old.company_id.name)
-    assert new_partner_id, 'Partner is not created of party'
+    assert new_partner_id, 'Partner is not created of Supplier'
     
-    ids = self.search(cr, uid, [('partner_id','=',new_partner_id[0]),('reference','=',invoice_old.internal_number)])
+    ids = self.search(cr, uid, [('partner_id','=',new_partner_id[0][0]),('reference','=',invoice_old.internal_number)])
     assert ids, 'Invoice does not have created of party'
     invoice_new = self.browse(cr, uid, ids[0])
     assert invoice_new.reference == invoice_old.internal_number, "internal number is not stored in reference"
-    assert invoice_new.reference_type == None, "reference type is not set to 'None'"
+    assert invoice_new.reference_type == 'none', "reference type is not set to 'None'"
     assert invoice_new.internal_number == False, "internal number is not reset"
     assert invoice_new.journal_id.id, "journal id is not selected" 
     for inv_line in invoice_new.invoice_line:
