@@ -183,6 +183,7 @@ class procurement_order(osv.osv):
                     'product_qty': -product.virtual_available,
                     'product_uom': product.uom_id.id,
                     'location_id': location_id,
+                    'company_id': warehouse.company_id.id,
                     'procure_method': 'make_to_order',
                     })
                 wf_service.trg_validate(uid, 'procurement.order', proc_id, 'button_confirm', cr)

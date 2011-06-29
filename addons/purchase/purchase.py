@@ -775,6 +775,8 @@ class procurement_order(osv.osv):
         prod_obj = self.pool.get('product.product')
         acc_pos_obj = self.pool.get('account.fiscal.position')
         po_obj = self.pool.get('purchase.order')
+        wharehouse_obj = self.pool.get('stock.warehouse')
+
         for procurement in self.browse(cr, uid, ids, context=context):
             res_id = procurement.move_id.id
             partner = procurement.product_id.seller_id # Taken Main Supplier of Product of Procurement.
@@ -821,6 +823,8 @@ class procurement_order(osv.osv):
                 'partner_id': partner_id,
                 'partner_address_id': address_id,
                 'location_id': procurement.location_id.id,
+                'warehouse_id': wharehouse_obj.search(cr, uid, [('company_id','=',procurement.company_id.id or company)])[0],
+                'company_id': procurement.company_id.id or company,
                 'pricelist_id': pricelist_id,
                 'order_line': [(0,0,line)],
                 'company_id': procurement.company_id.id,
