@@ -342,6 +342,8 @@ class edi(object):
         
         if context is None:
             context = {}
+        if edi_struct is None:
+            edi_struct = {}
         _fields = self.fields_get(cr, uid, context=context)
         fields_to_export = edi_struct and edi_struct.keys() or _fields.keys()
         edi_dict_list = []
