@@ -112,6 +112,10 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
      * @returns {jQuery.Deferred} new view loading promise
      */
     on_mode_switch: function(view_type) {
+        if(view_type == "tree"){
+            this.searchview = new openerp.base.SearchView(null, this.session,
+                this.element_id + "_search", this.dataset, false, {});
+        }
         var view_promise;
         this.active_view = view_type;
         var view = this.views[view_type];
@@ -156,7 +160,6 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
     },
     /**
      * Event launched when a controller has been inited.
-     * 
      * @param {String} view_type type of view
      * @param {String} view the inited controller
      */
@@ -403,7 +406,6 @@ openerp.base.View = openerp.base.Controller.extend({
      * Directly set a view to use instead of calling fields_view_get. This method must
      * be called before start(). When an embedded view is set, underlying implementations
      * of openerp.base.View must use the provided view instead of any other one.
-     * 
      * @param embedded_view A view.
      */
     set_embedded_view: function(embedded_view) {

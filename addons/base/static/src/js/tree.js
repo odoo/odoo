@@ -5,13 +5,19 @@ openerp.base.views.add('tree', 'openerp.base.TreeView');
  * Genuine tree view (the one displayed as a tree, not the list)
  */
 openerp.base.TreeView = openerp.base.View.extend({
+    /**
+     * Indicates that this view is not searchable, and thus that no search
+     * view should be displayed (if there is one active).
+     */
+    searchable : false,
+
     init: function(view_manager, session, element_id, dataset, view_id, options) {
         this._super(session, element_id);
         this.view_manager = view_manager || new openerp.base.NullViewManager();
         this.dataset = dataset;
         this.model = dataset.model;
         this.view_id = view_id;
-
+        this.session = session;
         this.columns = [];
 
         this.options = _.extend({}, this.defaults, options || {});
@@ -31,6 +37,7 @@ openerp.base.TreeView = openerp.base.View.extend({
         var self = this;
         this.fields_view = data.field_parent;
         this.fields = data.fields;
+
         this.dataset.read_slice([], 0, false, function (response) {
             self.$element.html(QWeb.render('TreeView', {'field_data' : response}));
             self.$element.find('#parent_id').bind('change', function(){
@@ -63,6 +70,7 @@ openerp.base.TreeView = openerp.base.View.extend({
 
                 padding = curr_node.find('td').css('paddingLeft');
                 padd = parseInt(padding.replace('px',''), 10);
+
                 for (var i = 0; i < response.length; i++) {
                     row_id = $('tr #treerow_' + response[i].id);
                     if (row_id) {
@@ -105,11 +113,6 @@ openerp.base.TreeView = openerp.base.View.extend({
             });
 
             self.$element.find('tr[id ^= treerow_]').find('td').children(':first-child').click( function() {
-                if ($(this).is('span')) {
-                    row_id = $(this).parent().parent().attr('id');
-	                rowid = row_id.split('_')[1];
-                    self.showrecord(rowid);
-                }
                 is_loaded = 0;
                 if ($(this).length == 1) {
                     rowid = (this.id).split('_')[1];
@@ -138,29 +141,20 @@ openerp.base.TreeView = openerp.base.View.extend({
                 }
             });
 
-            self.$element.find('tr[id^=treerow_]').find('td').children(':last-child').click(function(){
+            self.$element.find('tr[id ^= treerow_]').find('td').children(':last-child').click( function(e) {
                 row_id = $(this).parent().parent().attr('id');
                 rowid = row_id.split('_')[1];
-                self.showrecord(rowid);
+                self.showrecord(rowid, self.model);
+                e.stopImmediatePropagation();
             });
         });
     },
 
     // Get details in listview
-    showrecord: function(id){
+    showrecord: function(id, model){
         var self = this;
-        this.dataset = new openerp.base.DataSetStatic(self.session, self.fields.relation);
-        this.dataset.on_unlink.add_last(function(ids) {
-
-            var view = self.viewmanager.views[self.viewmanager.active_view].controller;
-            view.reload_content();
-
-        });
-
         self.dataset.model = 'product.product';
         self.dataset.domain = [['categ_id', 'child_of', parseInt(id, 10)]];
-
-
         var modes = !!modes ? modes.split(",") : ["tree", "form"];
         var views = [];
         _.each(modes, function(mode) {
@@ -170,29 +164,29 @@ openerp.base.TreeView = openerp.base.View.extend({
             }
             views.push(view);
         });
-
-        this.viewmanager = new openerp.base.ViewManager(self.session, self.element_id, self.dataset, views);
-        this.viewmanager.on_controller_inited.add_last( function(view_type, controller) {
-            if (view_type == "list") {
-
-            } else if (view_type == "form") {
-
-            }
-        });
-        this.viewmanager.start();
-
         var action = {
-            "res_model" : this.viewmanager.model,
-            "domain" : this.viewmanager.dataset.domain,
+            "res_model" : self.dataset.model,
+            "domain" : self.dataset.domain,
             "views" : views,
             "type" : "ir.actions.act_window",
             "auto_search" : true,
             "view_type" : "list",
             "view_mode" : "list"
         }
+        action.flags = {
+            search_view: true,
+            sidebar : true,
+            views_switcher : true,
+            action_buttons : true,
+            pager: true,
+            new_window : true
+        }
 
-        this.viewmanageraction = new openerp.base.ViewManagerAction(self.session, self.element_id, action);
-        this.viewmanageraction.start();
+        this.actionmanager = new openerp.base.ActionManager(self.session, self.element_id);
+        this.actionmanager.start()
+        this.actionmanager.do_action(action);
+
+        self.dataset.model = model;
     },
 
     // show & hide the contents
@@ -261,6 +255,14 @@ openerp.base.TreeView = openerp.base.View.extend({
             self.reload_view(!!results.group_by).then(
                 $.proxy(self, 'reload_content'));
         });
-    }
+    },
+    do_show: function () {
+        this.$element.show();
+        this.view_manager.sidebar.do_refresh(true);
+    },
+    do_hide: function () {
+        this.$element.hide();
+        this.hidden = true;
+    },
 });
 }
