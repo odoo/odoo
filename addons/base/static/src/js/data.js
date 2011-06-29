@@ -527,6 +527,7 @@ openerp.base.BufferedDataSet = openerp.base.DataSetStatic.extend({
         this.to_create = [];
         this.to_write = [];
         this.cache = [];
+        this.delete_all = false;
     },
     on_change: function() {},
     read_ids: function (ids, fields, callback) {
