@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2011-05-09 10:19+0000\n"
-"PO-Revision-Date: 2011-05-10 01:43+0000\n"
-"Last-Translator: Sami Haahtinen <sami@haahtinen.name>\n"
+"PO-Revision-Date: 2011-06-27 07:09+0000\n"
+"Last-Translator: Juha Kotamäki <Unknown>\n"
 "Language-Team: Finnish <fi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-05-10 07:38+0000\n"
-"X-Generator: Launchpad (build 12959)\n"
+"X-Launchpad-Export-Date: 2011-06-28 05:30+0000\n"
+"X-Generator: Launchpad (build 13168)\n"
 
 #. module: product
 #: model:product.template,name:product.product_product_ram512_product_template
@@ -25,7 +25,7 @@ msgstr "DDR 512MB PC400"
 #. module: product
 #: field:product.packaging,rows:0
 msgid "Number of Layers"
-msgstr ""
+msgstr "Kerrosten määrä"
 
 #. module: product
 #: constraint:product.pricelist.item:0
@@ -33,6 +33,8 @@ msgid ""
 "Error ! You cannot assign the Main Pricelist as Other Pricelist in PriceList "
 "Item!"
 msgstr ""
+"Virhe ! Et voi määritellä päähintalistaa toiseksi hintalistaksi "
+"hintalistaluettelossa!"
 
 #. module: product
 #: help:product.pricelist.item,product_tmpl_id:0
@@ -56,7 +58,7 @@ msgstr "Emolevy ASUStek A7V8X-X"
 #. module: product
 #: help:product.template,seller_qty:0
 msgid "This is minimum quantity to purchase from Main Supplier."
-msgstr ""
+msgstr "Päätoimittajan minimihankintamäärä"
 
 #. module: product
 #: model:product.uom,name:product.uom_day
@@ -89,6 +91,8 @@ msgid ""
 "This pricelist will be used, instead of the default one, for sales to the "
 "current partner"
 msgstr ""
+"Tätä hintalistaa käytetään oletusarvon sijasta myyntiin nykyiselle "
+"yhteistyökumppanille"
 
 #. module: product
 #: constraint:product.supplierinfo:0
@@ -102,7 +106,7 @@ msgstr ""
 #. module: product
 #: field:product.template,seller_qty:0
 msgid "Supplier Quantity"
-msgstr ""
+msgstr "Toimittajan määrä"
 
 #. module: product
 #: selection:product.template,mes_type:0
@@ -154,6 +158,8 @@ msgid ""
 "The minimal quantity to trigger this rule, expressed in the supplier UoM if "
 "any or in the default UoM of the product otherrwise."
 msgstr ""
+"Minimimäärä joka liipaisee tämän säännön, määriteltynä toimittajan "
+"toimitusyksikössä (jos on) tai tuotteen oletusmittayksikössä."
 
 #. module: product
 #: model:product.template,name:product.product_product_24_product_template
@@ -223,7 +229,7 @@ msgstr "Muut"
 #. module: product
 #: model:product.template,name:product.product_product_worker0_product_template
 msgid "Worker"
-msgstr ""
+msgstr "Työntekijä"
 
 #. module: product
 #: help:product.template,sale_ok:0
@@ -231,6 +237,8 @@ msgid ""
 "Determines if the product can be visible in the list of product within a "
 "selection from a sale order line."
 msgstr ""
+"määritteleen onko tuote näkyvissä tuotelistassa josta valitaan "
+"myyntitilausrivit."
 
 #. module: product
 #: model:product.pricelist.version,name:product.ver0
@@ -293,7 +301,7 @@ msgstr ""
 #. module: product
 #: model:process.node,note:product.process_node_supplier0
 msgid "Supplier name, price, product code, ..."
-msgstr ""
+msgstr "Toimittajan nimi, hinta, tuotekoodi, ..."
 
 #. module: product
 #: model:product.template,name:product.product_product_hdd3_product_template
@@ -308,7 +316,7 @@ msgstr "EAN13"
 #. module: product
 #: field:product.template,seller_id:0
 msgid "Main Supplier"
-msgstr ""
+msgstr "Päätoimittaja"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_ul_form_action
@@ -336,7 +344,7 @@ msgstr ""
 #. module: product
 #: model:product.template,name:product.product_product_woodmm0_product_template
 msgid "Wood 2mm"
-msgstr ""
+msgstr "Puu 2 mm"
 
 #. module: product
 #: field:product.price_list,qty1:0
@@ -346,7 +354,7 @@ msgstr "Määrä 1"
 #. module: product
 #: help:product.packaging,ul_qty:0
 msgid "The number of packages by layer"
-msgstr ""
+msgstr "Pakkausten määrä kerroksittain"
 
 #. module: product
 #: field:product.packaging,qty:0
@@ -363,7 +371,7 @@ msgstr "Tila"
 #. module: product
 #: help:product.template,categ_id:0
 msgid "Select category for the current product"
-msgstr ""
+msgstr "Valitse nykyisen tuotteen kategoria"
 
 #. module: product
 #: field:product.product,outgoing_qty:0
@@ -373,7 +381,7 @@ msgstr "Lähtevät"
 #. module: product
 #: selection:product.uom,uom_type:0
 msgid "Reference UoM for this category"
-msgstr ""
+msgstr "viitemittayksikkö tälle kategorialle"
 
 #. module: product
 #: model:product.price.type,name:product.list_price
@@ -399,7 +407,7 @@ msgstr "Tuotevastaava"
 #. module: product
 #: field:product.supplierinfo,product_name:0
 msgid "Supplier Product Name"
-msgstr ""
+msgstr "Toimittajan tuotenimi"
 
 #. module: product
 #: model:product.template,name:product.product_product_pc3_product_template
@@ -418,7 +426,7 @@ msgstr ""
 #. module: product
 #: view:product.pricelist:0
 msgid "Products Price Search"
-msgstr ""
+msgstr "Tuotteen hintojen haku"
 
 #. module: product
 #: view:product.product:0
@@ -494,7 +502,7 @@ msgstr "Koodit"
 msgid ""
 "Choose here the Unit of Measure in which the prices and quantities are "
 "expressed below."
-msgstr ""
+msgstr "Valitse mittayksikkö jossa hinnat ja määrät näytetään alapuolella."
 
 #. module: product
 #: field:product.price_list,qty4:0
@@ -527,6 +535,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the product "
 "without removing it."
 msgstr ""
+"Jos aktiivinen kenttä asetetaan tilaan epätosi (false), se mahdollistaa "
+"tuotteen piilottamisen poistamatta sitä."
 
 #. module: product
 #: model:product.template,name:product.product_product_metalcleats0_product_template
@@ -540,6 +550,8 @@ msgid ""
 "No active version for the selected pricelist !\n"
 "Please create or activate one."
 msgstr ""
+"Ei aktiivista versiota valitusta hintalistasta !\n"
+"Ole hyvä ja luo tai aktivoi jokin."
 
 #. module: product
 #: model:ir.model,name:product.model_product_uom_categ
@@ -572,6 +584,8 @@ msgid ""
 "1 or several supplier(s) can be linked to a product. All information stands "
 "in the product form."
 msgstr ""
+"1 tai useampia toimittajia voidaan liittää tuotteeseen. Kaikki tiedot "
+"näkyvät tuotelomakkeella."
 
 #. module: product
 #: help:product.uom,category_id:0
@@ -579,6 +593,8 @@ msgid ""
 "Quantity conversions may happen automatically between Units of Measure in "
 "the same category, according to their respective ratios."
 msgstr ""
+"Määräkonversioita voi tapahtua automaattisesti saman kategorian "
+"määräyksiköiden välillä, suhdelukujen mukaisesti."
 
 #. module: product
 #: help:product.packaging,width:0
@@ -598,12 +614,12 @@ msgstr "Näkymä"
 #. module: product
 #: model:ir.actions.act_window,name:product.product_template_action_tree
 msgid "Product Templates"
-msgstr ""
+msgstr "Tuote mallipohjat"
 
 #. module: product
 #: model:product.template,name:product.product_product_restaurantexpenses0_product_template
 msgid "Restaurant Expenses"
-msgstr ""
+msgstr "Ravintolakulut"
 
 #. module: product
 #: constraint:product.packaging:0
@@ -655,7 +671,7 @@ msgstr ""
 #. module: product
 #: model:product.template,name:product.product_product_kitshelfofcm0_product_template
 msgid "KIT Shelf of 100cm"
-msgstr ""
+msgstr "100 cm hyllykkö"
 
 #. module: product
 #: field:product.supplierinfo,name:0
@@ -665,7 +681,7 @@ msgstr "Toimittaja"
 #. module: product
 #: model:product.template,name:product.product_product_sidepanel0_product_template
 msgid "Side Panel"
-msgstr ""
+msgstr "Sivupaneeli"
 
 #. module: product
 #: model:product.template,name:product.product_product_26_product_template
@@ -700,7 +716,7 @@ msgstr "Toimittajat"
 #. module: product
 #: view:product.product:0
 msgid "To Purchase"
-msgstr ""
+msgstr "Ostettava"
 
 #. module: product
 #: help:product.supplierinfo,min_qty:0
@@ -709,6 +725,8 @@ msgid ""
 "Product UoM if not empty, in the default unit of measure of the product "
 "otherwise."
 msgstr ""
+"Minimimiäärä joka hankintaan tältä toimittajalla, ilmaistuna toimittajan "
+"mittayksikössä (jos on) tai tuotteen oletusmittayksikössä."
 
 #. module: product
 #: view:product.pricelist.item:0
@@ -721,6 +739,8 @@ msgid ""
 "This price will be considered as a price for the supplier UoM if any or the "
 "default Unit of Measure of the product otherwise"
 msgstr ""
+"Hinta koskee toimittajan mittayksikköä (jos on) tai tuotteen "
+"oletusmittayksikköä."
 
 #. module: product
 #: model:product.category,name:product.product_category_accessories
@@ -735,7 +755,7 @@ msgstr "Asiakkaan läpimenoaika"
 #. module: product
 #: model:process.transition,name:product.process_transition_supplierofproduct0
 msgid "Supplier of the product"
-msgstr ""
+msgstr "Tuotteen toimittaja"
 
 #. module: product
 #: help:product.template,uos_id:0
@@ -816,7 +836,7 @@ msgstr "Hankinta ja paikat"
 #. module: product
 #: model:product.template,name:product.product_product_kitchendesignproject0_product_template
 msgid "Kitchen Design Project"
-msgstr ""
+msgstr "Keittiönsuunnittelu projekti"
 
 #. module: product
 #: model:product.uom,name:product.uom_hour
@@ -831,12 +851,12 @@ msgstr "Kehityksessä"
 #. module: product
 #: model:product.template,name:product.product_product_shelfofcm1_product_template
 msgid "Shelf of 200cm"
-msgstr ""
+msgstr "200 cm hylly"
 
 #. module: product
 #: view:product.uom:0
 msgid "Ratio & Precision"
-msgstr ""
+msgstr "Suhde ja tarkkuus"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_gram
@@ -906,6 +926,8 @@ msgid ""
 "Product's cost for accounting stock valuation. It is the base price for the "
 "supplier price."
 msgstr ""
+"Tuotekustannukset varastonarvostusta varten. On perushinta "
+"toimittajahinnalle."
 
 #. module: product
 #: view:product.price.type:0
@@ -978,7 +1000,7 @@ msgstr "Sarja"
 #. module: product
 #: view:product.price_list:0
 msgid "Calculate Product Price per unit base on pricelist version."
-msgstr ""
+msgstr "Laske tuotehinta yksiköittäin hintalistaversion mukaan."
 
 #. module: product
 #: model:ir.model,name:product.model_product_ul
@@ -1029,7 +1051,7 @@ msgstr ""
 #. module: product
 #: selection:product.uom,uom_type:0
 msgid "Bigger than the reference UoM"
-msgstr ""
+msgstr "Suurempi kuin viitemittayksikkö"
 
 #. module: product
 #: model:ir.module.module,shortdesc:product.module_meta_information
@@ -1039,12 +1061,12 @@ msgstr "Tuotteet ja hinnastot"
 #. module: product
 #: view:product.product:0
 msgid "To Sell"
-msgstr ""
+msgstr "Myytäväksi"
 
 #. module: product
 #: model:product.category,name:product.product_category_services0
 msgid "Marketable Services"
-msgstr ""
+msgstr "Markkinoitavat palvelut"
 
 #. module: product
 #: field:product.pricelist.item,price_surcharge:0
@@ -1078,7 +1100,7 @@ msgstr "Nimi"
 #. module: product
 #: view:product.product:0
 msgid "Stockable"
-msgstr ""
+msgstr "Varastoitava"
 
 #. module: product
 #: model:product.template,name:product.product_product_woodlintelm0_product_template
@@ -1130,7 +1152,7 @@ msgstr ""
 #: help:product.category,sequence:0
 msgid ""
 "Gives the sequence order when displaying a list of product categories."
-msgstr ""
+msgstr "Antaa järjestyksen näytettäessä tuotekategorialistaa."
 
 #. module: product
 #: field:product.uom,factor:0
@@ -1218,7 +1240,7 @@ msgstr ""
 #. module: product
 #: help:product.template,seller_id:0
 msgid "Main Supplier who has highest priority in Supplier List."
-msgstr ""
+msgstr "Päätoimittaja jolla on korkein prioriteetti toimittajalistalla."
 
 #. module: product
 #: model:product.category,name:product.product_category_services
@@ -1243,7 +1265,7 @@ msgstr "Tuotteet"
 #. module: product
 #: help:product.packaging,rows:0
 msgid "The number of layers on a pallet or box"
-msgstr ""
+msgstr "Pkaetin tai lavan kerrosten määrä."
 
 #. module: product
 #: help:product.pricelist.item,base:0
@@ -1370,7 +1392,7 @@ msgstr "Hylly"
 #. module: product
 #: field:product.template,uom_po_id:0
 msgid "Purchase Unit of Measure"
-msgstr ""
+msgstr "Hankinnan mittayksikkö"
 
 #. module: product
 #: field:product.template,supply_method:0
@@ -1384,11 +1406,14 @@ msgid ""
 "category to get the list of all products linked to this category or to a "
 "child of this category."
 msgstr ""
+"Luettelo kaikista tuotteista kategorioittain. Voit valita kategoriaa "
+"saadaksesi listan kaikista kategoriaan liitetyistä tuotteista tai alatason "
+"kategorioista."
 
 #. module: product
 #: view:product.product:0
 msgid "Group by..."
-msgstr ""
+msgstr "Ryhmittele.."
 
 #. module: product
 #: model:product.template,name:product.product_product_cpu_gen_product_template
@@ -1437,6 +1462,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the pricelist "
 "without removing it."
 msgstr ""
+"Jos aktiivinen kenttä asetetaan arvoon epätosi (false), voit piilottaa "
+"hinnaston poistamatta sitä."
 
 #. module: product
 #: field:product.product,qty_available:0
@@ -1469,7 +1496,7 @@ msgstr "Pyöristystarkkuus"
 #. module: product
 #: view:product.uom:0
 msgid "Unit of Measure Properties"
-msgstr ""
+msgstr "Mittayksikön ominaisuudet"
 
 #. module: product
 #: model:product.template,name:product.product_product_shelf1_product_template
@@ -1494,7 +1521,7 @@ msgstr "Tyhjän pakkauksen paino"
 #. module: product
 #: selection:product.uom,uom_type:0
 msgid "Smaller than the reference UoM"
-msgstr ""
+msgstr "Pienempi kuin viitemittayksikkö"
 
 #. module: product
 #: field:product.price.type,active:0
@@ -1513,7 +1540,7 @@ msgstr "Variaation kate"
 #. module: product
 #: sql_constraint:product.uom:0
 msgid "The conversion ratio for a unit of measure cannot be 0!"
-msgstr ""
+msgstr "Muuntokerroin mittayksikölle ei voi olla 0 !"
 
 #. module: product
 #: help:product.packaging,ean:0
@@ -1547,7 +1574,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:product.product_price_type_action
 #: model:ir.ui.menu,name:product.menu_product_price_type
 msgid "Price Types"
-msgstr ""
+msgstr "Hintatyypit"
 
 #. module: product
 #: help:product.template,uom_id:0
@@ -1583,12 +1610,12 @@ msgstr "Julkinen hinnasto"
 #. module: product
 #: model:product.category,name:product.product_category_marketableproduct0
 msgid "Marketable Products"
-msgstr ""
+msgstr "Markkinoitavat tuotteet"
 
 #. module: product
 #: field:product.supplierinfo,product_code:0
 msgid "Supplier Product Code"
-msgstr ""
+msgstr "Toimittajan tuotekoodi"
 
 #. module: product
 #: view:product.product:0
@@ -1643,7 +1670,7 @@ msgstr "Valmista tilaukseen"
 #. module: product
 #: help:product.packaging,qty:0
 msgid "The total number of products you can put by pallet or box."
-msgstr ""
+msgstr "Tuotteiden kokonaismäärä jotka voit laittaa lavalle tai laatikkoon."
 
 #. module: product
 #: field:product.product,variants:0
@@ -1670,7 +1697,7 @@ msgstr "Munnoskerroin"
 #. module: product
 #: help:product.supplierinfo,sequence:0
 msgid "Assigns the priority to the list of product supplier."
-msgstr ""
+msgstr "Asettaa tuotteen toimittajan prioriteetin"
 
 #. module: product
 #: field:product.template,uom_id:0
@@ -1760,11 +1787,13 @@ msgid ""
 "Default Unit of Measure used for purchase orders. It must be in the same "
 "category than the default unit of measure."
 msgstr ""
+"Oletusmittayksikkö jota käytetään ostotilauksilla. Täytyy olla samaa "
+"kategoriaa kuin oletusmittayksikkö."
 
 #. module: product
 #: model:product.template,description:product.product_product_cpu1_product_template
 msgid "This product is configured with example of push/pull flows"
-msgstr ""
+msgstr "Tuote on määritelty työntö/imu virtausten esimerkiksi"
 
 #. module: product
 #: field:product.packaging,length:0
@@ -1796,12 +1825,12 @@ msgstr "Muut Tuotteet"
 #. module: product
 #: view:product.product:0
 msgid "Characteristics"
-msgstr ""
+msgstr "Tuntomerkit"
 
 #. module: product
 #: field:product.template,sale_ok:0
 msgid "Can be Sold"
-msgstr ""
+msgstr "Voidaan myydä"
 
 #. module: product
 #: field:product.template,produce_delay:0
@@ -1851,7 +1880,7 @@ msgstr "* ( 1 + "
 #. module: product
 #: help:product.packaging,weight:0
 msgid "The weight of a full package, pallet or box."
-msgstr ""
+msgstr "Koko pakkauksen, lavan tai paketin kokonaispaino."
 
 #. module: product
 #: model:product.template,name:product.product_product_hdd2_product_template
@@ -1866,7 +1895,7 @@ msgstr "Työntekijä"
 #. module: product
 #: model:product.template,name:product.product_product_shelfofcm0_product_template
 msgid "Shelf of 100cm"
-msgstr ""
+msgstr "100 cm hylly"
 
 #. module: product
 #: model:ir.model,name:product.model_product_category
@@ -1882,7 +1911,7 @@ msgstr "Hinnaston Nimi"
 #. module: product
 #: field:product.supplierinfo,delay:0
 msgid "Delivery Lead Time"
-msgstr ""
+msgstr "Toimitusviive"
 
 #. module: product
 #: help:product.uom,active:0
@@ -1890,6 +1919,8 @@ msgid ""
 "By unchecking the active field you can disable a unit of measure without "
 "deleting it."
 msgstr ""
+"Poistamalla valinnan kentästä voit poistaa käytöstä mittayksikön poistamatta "
+"sitä kokonaan."
 
 #. module: product
 #: field:product.template,seller_delay:0
@@ -1907,6 +1938,8 @@ msgid ""
 "Create and manage your packaging dimensions and types you want to be "
 "maintained in your system."
 msgstr ""
+"Luo ja hallitse pakkausmittoja ja tyyppejä joita haluat ylläpitää "
+"järjestelmässäsi"
 
 #. module: product
 #: model:product.template,name:product.product_product_rearpanelarm1_product_template
@@ -1930,7 +1963,7 @@ msgstr "HDD Seagate 7200.8 80GB"
 #. module: product
 #: help:product.supplierinfo,qty:0
 msgid "This is a quantity which is converted into Default Uom."
-msgstr ""
+msgstr "Tämä on määrä joka muutetaan oletusmittayksikköön."
 
 #. module: product
 #: field:product.packaging,ul:0
@@ -1965,7 +1998,7 @@ msgstr "Hiiri"
 #. module: product
 #: field:product.uom,uom_type:0
 msgid "UoM Type"
-msgstr ""
+msgstr "Mittayksikön tyyppi"
 
 #. module: product
 #: help:product.template,product_manager:0
@@ -2008,7 +2041,7 @@ msgstr "Virhe! Et voi luoda itseään toistavasti rinnastettuja jäseniä."
 #. module: product
 #: model:product.template,name:product.product_product_hotelexpenses0_product_template
 msgid "Hotel Expenses"
-msgstr ""
+msgstr "Hotellikulut"
 
 #. module: product
 #: help:product.uom,factor_inv:0
@@ -2025,7 +2058,7 @@ msgstr ""
 #. module: product
 #: help:product.packaging,sequence:0
 msgid "Gives the sequence order when displaying a list of packaging."
-msgstr ""
+msgstr "Antaa järjestyksen näytettäessä pakkausten listausta."
 
 #. module: product
 #: field:product.pricelist.item,price_round:0
@@ -2043,6 +2076,8 @@ msgid ""
 "This supplier's product name will be used when printing a request for "
 "quotation. Keep empty to use the internal one."
 msgstr ""
+"Tämän toimittajan tuotenimeä käytetään tarjouspyynnössä. Jätä tyhjäksi jos "
+"käytetään sisäistä nimeä."
 
 #. module: product
 #: selection:product.template,mes_type:0
@@ -2052,7 +2087,7 @@ msgstr "Vaihteleva"
 #. module: product
 #: field:product.template,rental:0
 msgid "Can be Rent"
-msgstr ""
+msgstr "Voidaan vuokrata"
 
 #. module: product
 #: model:product.price.type,name:product.standard_price
@@ -2073,7 +2108,7 @@ msgstr "Bruttopaino"
 #. module: product
 #: model:product.template,name:product.product_product_assemblysection0_product_template
 msgid "Assembly Section"
-msgstr ""
+msgstr "Kokoonpano osa"
 
 #. module: product
 #: model:product.category,name:product.product_category_3
@@ -2131,7 +2166,7 @@ msgstr "Viiveet"
 #. module: product
 #: model:process.node,note:product.process_node_product0
 msgid "Creation of the product"
-msgstr ""
+msgstr "Tuotteen luominen"
 
 #. module: product
 #: help:product.template,type:0
@@ -2158,6 +2193,8 @@ msgid ""
 "Could not resolve product category, you have defined cyclic categories of "
 "products!"
 msgstr ""
+"Ei voitu ratkaista tuotekategoriaa, olet määritellyt syklisiä kategorioita "
+"tuotteille!"
 
 #. module: product
 #: view:product.template:0
@@ -2196,7 +2233,7 @@ msgstr "Tuotevariaatio"
 #. module: product
 #: model:product.category,name:product.product_category_shelves0
 msgid "Shelves"
-msgstr ""
+msgstr "Hyllyt"
 
 #. module: product
 #: code:addons/product/pricelist.py:517
@@ -2258,7 +2295,7 @@ msgstr "Myyntihinta"
 #. module: product
 #: field:product.category,type:0
 msgid "Category Type"
-msgstr ""
+msgstr "Kategorian tyyppi"
 
 #. module: product
 #: model:product.category,name:product.cat2

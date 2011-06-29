@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:15+0000\n"
-"PO-Revision-Date: 2011-06-05 18:39+0000\n"
-"Last-Translator: Chertykov Denis <chertykov@gmail.com>\n"
+"PO-Revision-Date: 2011-06-27 05:20+0000\n"
+"Last-Translator: Bulat Shafigullin <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-06-06 05:43+0000\n"
-"X-Generator: Launchpad (build 12959)\n"
+"X-Launchpad-Export-Date: 2011-06-28 05:30+0000\n"
+"X-Generator: Launchpad (build 13168)\n"
 
 #. module: event
 #: view:event.event:0
@@ -77,7 +77,7 @@ msgstr "Дата регистрации"
 #. module: event
 #: help:event.event,main_speaker_id:0
 msgid "Speaker who are giving speech on event."
-msgstr ""
+msgstr "Выступающие на мероприятии."
 
 #. module: event
 #: view:partner.event.registration:0
@@ -279,7 +279,7 @@ msgstr "Тип события"
 #. module: event
 #: model:ir.model,name:event.model_event_type
 msgid " Event Type "
-msgstr ""
+msgstr " Тип мероприятия "
 
 #. module: event
 #: view:event.event:0
@@ -336,7 +336,7 @@ msgstr "Разное"
 #: view:event.event:0
 #: field:event.event,speaker_ids:0
 msgid "Other Speakers"
-msgstr ""
+msgstr "Другие выступающие"
 
 #. module: event
 #: model:ir.model,name:event.model_event_make_invoice
@@ -440,6 +440,9 @@ msgid ""
 "subscribes to a confirmed event. This is also the email sent to remind "
 "someone about the event."
 msgstr ""
+"Это сообщение будет отправлено, когда мероприятие будет утверждено или кто-"
+"то подпишется на утвержденное мероприятие. Оно так же отправляется для "
+"напоминания о мероприятии."
 
 #. module: event
 #: help:event.event,register_prospect:0
@@ -669,7 +672,7 @@ msgstr "Мои события"
 #. module: event
 #: view:event.event:0
 msgid "Speakers"
-msgstr ""
+msgstr "Выступающие"
 
 #. module: event
 #: view:event.make.invoice:0
@@ -699,7 +702,7 @@ msgstr ""
 #. module: event
 #: view:event.event:0
 msgid "Beginning Date"
-msgstr ""
+msgstr "Дата начала"
 
 #. module: event
 #: field:event.registration,date_closed:0
@@ -724,7 +727,7 @@ msgstr "Кол-во регистраций"
 #. module: event
 #: field:event.event,child_ids:0
 msgid "Child Events"
-msgstr ""
+msgstr "Дочерние мероприятия"
 
 #. module: event
 #: selection:report.event.registration,month:0
@@ -747,6 +750,7 @@ msgstr "Июнь"
 msgid ""
 "Check this box if you want to use the automatic mailing for new registration"
 msgstr ""
+"Отметьте, если хотите получать автоматические сообщения о новой регистрации."
 
 #. module: event
 #: field:event.registration,write_date:0
@@ -756,7 +760,7 @@ msgstr "Дата записи"
 #. module: event
 #: view:event.registration:0
 msgid "My Registrations"
-msgstr ""
+msgstr "Мои регистрации"
 
 #. module: event
 #: view:event.confirm:0
@@ -764,6 +768,8 @@ msgid ""
 "Warning: This Event has not reached its Minimum Registration Limit. Are you "
 "sure you want to confirm it?"
 msgstr ""
+"Предупреждение: Данное мероприятие не получило минимального количества "
+"необходимых регистраций. Вы действительно хотите утвердить его?"
 
 #. module: event
 #: field:event.registration,active:0
@@ -784,6 +790,7 @@ msgstr "Расширенные фильтры..."
 #: help:event.event,reply_to:0
 msgid "The email address put in the 'Reply-To' of all emails sent by OpenERP"
 msgstr ""
+"Данный адрес будет указан в поле 'От кого' в письмах, отправленных OpenERP"
 
 #. module: event
 #: selection:report.event.registration,month:0
@@ -793,7 +800,7 @@ msgstr "Октябрь"
 #. module: event
 #: help:event.event,register_current:0
 msgid "Total of Open and Done Registrations"
-msgstr ""
+msgstr "Сумма открытых и закрытых регистраций"
 
 #. module: event
 #: field:event.event,language:0
@@ -845,7 +852,7 @@ msgstr "Инфо-панель"
 #. module: event
 #: view:event.event:0
 msgid "Confirmation Email Body"
-msgstr ""
+msgstr "Тело подтверждающего письма"
 
 #. module: event
 #: view:event.registration:0
@@ -878,7 +885,7 @@ msgstr ""
 #. module: event
 #: view:event.event:0
 msgid "Auto Confirmation Email"
-msgstr ""
+msgstr "Письмо автоподтверждения"
 
 #. module: event
 #: view:report.event.registration:0
@@ -933,7 +940,7 @@ msgstr "Закрыть"
 #. module: event
 #: view:event.event:0
 msgid "Event by Registration"
-msgstr ""
+msgstr "Мероприятия по регистрации"
 
 #. module: event
 #: code:addons/event/event.py:432
@@ -951,7 +958,7 @@ msgstr "Ответственный пользователь"
 #: code:addons/event/event.py:545
 #, python-format
 msgid "Auto Confirmation: [%s] %s"
-msgstr ""
+msgstr "Автоподтверждение: [%s] %s"
 
 #. module: event
 #: view:event.event:0
@@ -967,7 +974,7 @@ msgstr "Ответственный"
 #: view:event.registration:0
 #: field:partner.event.registration,unit_price:0
 msgid "Registration Cost"
-msgstr ""
+msgstr "Стоимость регистрации"
 
 #. module: event
 #: view:event.event:0
@@ -985,7 +992,7 @@ msgstr "Цена за ед."
 #: field:report.event.registration,speaker_id:0
 #: field:res.partner,speaker:0
 msgid "Speaker"
-msgstr ""
+msgstr "Выступающий"
 
 #. module: event
 #: view:event.registration:0
@@ -1049,12 +1056,12 @@ msgstr "Май"
 #. module: event
 #: view:res.partner:0
 msgid "Events Registration"
-msgstr ""
+msgstr "Регистрация мероприятий"
 
 #. module: event
 #: help:event.event,mail_registr:0
 msgid "This email will be sent when someone subscribes to the event."
-msgstr ""
+msgstr "Это письмо будет отправлено при подписке на мероприятие."
 
 #. module: event
 #: model:product.template,name:event.event_product_2_product_template
@@ -1075,7 +1082,7 @@ msgstr "Следующие события"
 #. module: event
 #: view:partner.event.registration:0
 msgid "_Subcribe"
-msgstr ""
+msgstr "_Подписаться"
 
 #. module: event
 #: model:ir.model,name:event.model_partner_event_registration
@@ -1145,7 +1152,7 @@ msgstr ""
 #: view:res.partner:0
 #, python-format
 msgid "Close Registration"
-msgstr ""
+msgstr "Закрыть регистрацию"
 
 #. module: event
 #: selection:report.event.registration,month:0
@@ -1234,7 +1241,7 @@ msgstr ""
 #. module: event
 #: field:event.event,speaker_confirmed:0
 msgid "Speaker Confirmed"
-msgstr ""
+msgstr "Выступающий утвержден"
 
 #. module: event
 #: model:ir.actions.act_window,help:event.action_event_view
