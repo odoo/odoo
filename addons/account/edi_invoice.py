@@ -240,20 +240,21 @@ class account_invoice(osv.osv, ir_edi.edi):
                     account = product.product_tmpl_id.property_account_expense
                     if not account:
                         account = product.categ_id.property_account_expense_categ
-
             # TODO: add effect of fiscal position 
             # account = fpos_obj.map_account(cr, uid, fiscal_position_id, account.id)
             edi_invoice_line['account_id'] = account and self.edi_m2o(cr, uid, account, context=context) or False
-        
+
         # for tax lines, we disconnect from the invoice.line, so all tax lines will be of type 'manual', and default accounts should be picked based
         # on the tax config of the DB where it is imported.
         for edi_tax_line in edi_document.get('tax_line', []):
             account_ids = account_pool.search(cr, uid, [('type','<>','view'),('type','<>','income'), ('type', '<>', 'closed')])
             if account_ids:
-                edi_tax_line['account_id'] = account_ids[0] #TODO should select account of output VAT for Customer Invoice and Input VAT for Supplier Invoice
+                tax_account = account_pool.browse(cr, uid, account_ids[0])
+                edi_tax_line['account_id'] = self.edi_m2o(cr, uid, tax_account, context=context) #TODO should select account of output VAT for Customer Invoice and Input VAT for Supplier Invoice
             edi_tax_line['manual'] = True
 
         # TODO :=> payment_term: if set, create a default one based on name... 
+       
         return super(account_invoice,self).edi_import(cr, uid, edi_document, context=context)
       
 account_invoice()
