@@ -438,7 +438,6 @@ class account_asset_depreciation_line(osv.osv):
             self.write(cr, uid, line.id, {'move_id': move_id}, context=context)
         if can_close:
             asset_obj.write(cr, uid, [line.asset_id.id], {'state': 'close'}, context=context)                
-            return True
         return True
 
 account_asset_depreciation_line()
