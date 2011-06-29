@@ -1267,7 +1267,8 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
         var dataset = new openerp.base.DataSetStatic(this.session, this.field.relation, build_relation_context(self));
         dataset.name_create(name, function(data) {
             self._change_int_ext_value(data.result);
-        }).fail(function() {
+        }).fail(function(error, event) {
+            event.preventDefault();
             self._change_int_value(null);
             self._search_create_popup("form", undefined, {"default_name": name});
         });
