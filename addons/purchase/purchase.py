@@ -776,7 +776,6 @@ class procurement_order(osv.osv):
         acc_pos_obj = self.pool.get('account.fiscal.position')
         po_obj = self.pool.get('purchase.order')
         wharehouse_obj = self.pool.get('stock.warehouse')
-
         for procurement in self.browse(cr, uid, ids, context=context):
             res_id = procurement.move_id.id
             partner = procurement.product_id.seller_id # Taken Main Supplier of Product of Procurement.
@@ -819,6 +818,7 @@ class procurement_order(osv.osv):
                 'taxes_id': [(6,0,taxes)]
             })
             purchase_id = po_obj.create(cr, uid, {
+                'name': self.pool.get('ir.sequence').get(cr, uid, 'purchase.order') or _('PO:%s') %procurement.name,
                 'origin': procurement.origin,
                 'partner_id': partner_id,
                 'partner_address_id': address_id,
