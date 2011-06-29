@@ -877,9 +877,36 @@ openerp.base.Loading =  openerp.base.Controller.extend({
 });
 
 openerp.base.Database = openerp.base.Controller.extend({
+	init: function(session, element_id, option_id) {
+		this._super(session, element_id);
+		this.option_id = option_id;
+		this.$option_id = $('#' + option_id);
+	},
+	start: function() {
+		this.$element.html(QWeb.render("Database", this));
+		
+		this.$element.closest(".openerp").removeClass("login-mode");
+        this.$element.closest(".openerp").addClass("database_block");
+        
+        var self = this;
+        
+        this.$element.find('#db-create').click(function() {
+        	self.db_string = "CREATE DATABASE";
+        	self.$option_id.html(QWeb.render("CreateDB", self));
+        });
+        self.$element.find('#db-drop').click();
+        self.$element.find('#db-backup').click();
+        self.$element.find('#db-restore').click();
+        self.$element.find('#db-change-password').click();
+        
+       	self.$element.find('#back-to-login').click(function() {
+    		self.header = new openerp.base.Header(self.session, "oe_header");
+    		self.header.on_logout();	
+    	});
+	}
 });
 
-openerp.base.Login =  openerp.base.Controller.extend({
+openerp.base.Login = openerp.base.Controller.extend({
     init: function(session, element_id) {
         this._super(session, element_id);
         this.has_local_storage = typeof(localStorage) != 'undefined';
@@ -905,9 +932,19 @@ openerp.base.Login =  openerp.base.Controller.extend({
         });
     },
     display: function() {
+        var self = this;
+        
         this.$element.html(QWeb.render("Login", this));
+        
+        this.$element.closest(".openerp").removeClass("database_block");
+    	this.$element.closest(".openerp").addClass("login-mode");
+    	
+        this.$element.find('#oe-db-config').click(function() {
+        	self.database = new openerp.base.Database(self.session, "oe_database", "oe_db_options");
+        	self.database.start();
+        });
+        
         this.$element.find("form").submit(this.on_submit);
-        this.$element.find('#oe-db-config').click(this.do_db_config);
     },
     on_login_invalid: function() {
         this.$element.closest(".openerp").addClass("login-mode");
@@ -959,13 +996,6 @@ openerp.base.Login =  openerp.base.Controller.extend({
     },
     on_logout: function() {
         this.session.logout();
-    },
-    do_db_config: function() {
-    	this.$element.html(QWeb.render("Database", this));
-    	this.$element.find('#back-to-login').click(function() {
-    		this.header = new openerp.base.Header(this.session, "oe_header");
-    		this.header.on_logout();
-    	});
     }
 });
 
@@ -981,7 +1011,6 @@ openerp.base.Header =  openerp.base.Controller.extend({
         this.$element.find(".logout").click(this.on_logout);
     },
     on_logout: function() {
-    	this.session = new openerp.base.Session("oe_errors");
    		this.login = new openerp.base.Login(this.session, "oe_login");
    		this.login.start();
     }
@@ -1108,6 +1137,7 @@ openerp.base.WebClient = openerp.base.Controller.extend({
 
         this.menu = new openerp.base.Menu(this.session, "oe_menu", "oe_secondary_menu");
         this.menu.on_action.add(this.on_menu_action);
+        
     },
     start: function() {
         this.session.start();

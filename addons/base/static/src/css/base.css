@@ -32,7 +32,8 @@ body.openerp {
 }
 
 /* STATES */
-.openerp .on_logged {
+.openerp .on_logged,
+.openerp .db_options_row {
     display: none;
 }
 
@@ -135,8 +136,38 @@ body.openerp {
 }
 .openerp.login-mode .menu,
 .openerp.login-mode .secondary_menu,
-.openerp.login-mode .oe-application {
+.openerp.login-mode .oe-application,
+.openerp.login-mode .db_options_row {
     display: none;
+}
+
+.openerp.database_block .db_options_row {
+	height: 100%;
+	display: table-row;
+}
+
+.openerp.database_block .menu,
+.openerp.database_block .secondary_menu,
+.openerp.database_block .oe-application,
+.openerp.database_block .login-container {
+    display: none;
+}
+
+.db_container {
+	width: 20%;	
+}
+
+ul.db_options li {
+	cursor: pointer;
+	font-weight: bold;
+	color: #333333;
+}
+
+.option_string {
+	font-weight: bold; 
+	color: #555; 
+	width: 100%; 
+	text-align: left;	
 }
 
 /* Main*/
