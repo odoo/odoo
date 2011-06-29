@@ -237,7 +237,7 @@ def eval_context_and_domain(session, context, domain=None):
     # should we give the evaluated context as an evaluation context to the domain?
     e_domain = session.eval_domain(domain or [])
 
-    return (e_context, e_domain)
+    return e_context, e_domain
         
 def load_actions_from_ir_values(req, key, key2, models, meta, context):
     Values = req.session.model('ir.values')
@@ -438,21 +438,20 @@ class DataSet(openerpweb.Controller):
         return {'result': r}
 
     @openerpweb.jsonrequest
-    def unlink(self, request, model, ids=[]):
+    def unlink(self, request, model, ids=()):
         Model = request.session.model(model)
         return Model.unlink(ids, request.session.eval_context(request.context))
 
     def call_common(self, req, model, method, args, domain_id=None, context_id=None):
         domain = args[domain_id] if domain_id and len(args) - 1 >= domain_id  else []
         context = args[context_id] if context_id and len(args) - 1 >= context_id  else {}
-        c, d = eval_context_and_domain(req.session, context, domain);
-        if(domain_id and len(args) - 1 >= domain_id):
+        c, d = eval_context_and_domain(req.session, context, domain)
+        if domain_id and len(args) - 1 >= domain_id:
             args[domain_id] = d
-        if(context_id and len(args) - 1 >= context_id):
+        if context_id and len(args) - 1 >= context_id:
             args[context_id] = c
 
-        m = req.session.model(model)
-        return getattr(m, method)(*args)
+        return getattr(req.session.model(model), method)(*args)
 
     @openerpweb.jsonrequest
     def call(self, req, model, method, args, domain_id=None, context_id=None):
@@ -713,7 +712,7 @@ class Binary(openerpweb.Controller):
         for key, val in cherrypy.request.headers.iteritems():
             headers[key.lower()] = val
         size = int(headers.get('content-length', 0))
-        # TODO: might be usefull to have a configuration flag for max-lenght file uploads
+        # TODO: might be useful to have a configuration flag for max-length file uploads
         try:
             out = """<script language="javascript" type="text/javascript">
                         var win = window.top.window,
