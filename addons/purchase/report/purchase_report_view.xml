@@ -180,7 +180,8 @@
         <field name="res_model">report.stock.move</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,graph</field>
-        <field name="context">{'search_default_month':1, 'search_default_group_product':1, 'search_default_group_partner':1, 'search_default_done':1, 'search_default_in': 1, 'group_by':[], 'group_by_no_leaf':1}</field>
+        <field name="search_view_id"  ref="stock.view_stock_search"/>
+        <field name="context">{'full':'1','contact_display': 'partner','search_default_done':1, 'search_default_month':1, 'search_default_group_type':1, 'group_by': [], 'group_by_no_leaf':1,}</field>
         <field name="help">Reception Analysis allows you to easily check and analyse your company order receptions and the performance of your supplier's deliveries.</field>
     </record>
     <menuitem action="action_stock_move_report_po" id="menu_action_stock_move_report_po" parent="base.next_id_73" sequence="8"/>
