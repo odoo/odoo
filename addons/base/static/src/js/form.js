@@ -181,11 +181,10 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
                         args.push(argument_replacement[field]);
                         return;
                     } else if (self.fields[field]) {
-                        var value = self.fields[field].get_value();
+                        var value = self.fields[field].get_on_change_value();
                         args.push(value == null ? false : value);
                         return;
                     } else {
-                        debugger;
                         var splitted = field.split('.');
                         if (splitted.length > 1 && _.trim(splitted[0]) === "parent" && self.dataset.parent_view) {
                             if (parent_fields === null) {
@@ -747,6 +746,9 @@ openerp.base.form.Field = openerp.base.form.Widget.extend({
     },
     get_value: function() {
         return this.value;
+    },
+    get_on_change_value: function() {
+        return this.get_value();
     },
     update_dom: function() {
         this._super.apply(this, arguments);
@@ -1539,6 +1541,20 @@ openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
         return val.concat(_.map(
             this.dataset.to_delete, function(x) {
                 return commands['delete'](x.id);}));
+    },
+    get_on_change_value: function() {
+        var self;
+        return _.map(this.dataset.ids, function(id) {
+            var values = _.detect(self.dataset.cache, function(x) {return x.id === id});
+            if (values) {
+                values = _.clone(values);
+                delete values["id"];
+                return values;
+            } else {
+                console.info("trying to get value in a o2m before that value is loaded");
+                return {};
+            }
+        });
     },
     validate: function() {
         this.invalid = false;
