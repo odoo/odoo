@@ -1,0 +1,92 @@
+-
+  I create a company for Customer
+-
+  !record {model: res.company, id: res_company_test11}:
+    name: Thomson pvt. ltd.
+    partner_id: 1
+    rml_header: 1
+    rml_header2: 1
+    rml_header3: 1
+    currency_id: 1
+
+-
+  I create a partner which is a my customer
+-
+  !record {model: res.partner, id: res_partner_test20}:
+    name: Junjun wala
+    supplier: False
+    company_id: res_company_test11
+-
+  I create one customer invoice
+-
+  !record {model: account.invoice, id: customer_invoice_test}:
+    journal_id: 1
+    partner_id: res_partner_test20
+    currency_id: base.EUR
+    address_invoice_id: base.res_partner_address_11
+    company_id: res_company_test11
+    account_id: account.a_pay
+    date_invoice: '2011-06-22'
+    name: selling product
+    type: 'out_invoice'
+    invoice_line:
+      - product_id: product.product_product_pc1
+        partner_id: res_partner_test20
+        uos_id: 1
+        quantity: 1.0
+        price_unit: 10.0
+        name: 'basic pc'
+        account_id: account.a_pay
+        
+    tax_line:
+      - name: sale tax
+        account_id: account.a_pay
+        manual: True
+        amount: 1000.00
+
+-
+  I Open the Invoice
+-
+  !python {model: account.invoice}: |
+    
+    invoices = self.browse(cr, uid, ref("customer_invoice_test"))
+    import netsvc
+    wf_service = netsvc.LocalService("workflow")
+    wf_service.trg_validate(uid, 'account.invoice',invoices.id,'invoice_open', cr)
+
+-
+  I Tesing of EDI functionality. First I export customer invoice from my company than import that invoice into customer company
+-
+  !python {model: ir.edi.document}: |
+    invoice_pool = self.pool.get('account.invoice')
+    invoice = invoice_pool.browse(cr, uid, ref("customer_invoice_test"))
+    tokens = self.export_edi(cr, uid, [invoice])
+    assert tokens, 'Token is not generated'
+    document = self.get_document(cr, uid, tokens[0])
+    a = self.import_edi(cr, uid, edi_document = document)
+    assert a, 'Invoice is not imported'
+-
+  I Checking the out invoice become in invoice or not after import
+-
+  !python {model: account.invoice}: |
+    
+    invoice_old = self.browse(cr, uid, ref("customer_invoice_test"))
+    new_partner_id = self.pool.get('res.partner').name_search(cr, uid, invoice_old.company_id.name)
+    assert new_partner_id, 'Partner is not created of Supplier'
+    
+    ids = self.search(cr, uid, [('partner_id','=',new_partner_id[0][0]),('reference','=',invoice_old.internal_number)])
+    assert ids, 'Invoice does not have created of party'
+    invoice_new = self.browse(cr, uid, ids[0])
+    assert invoice_new.reference == invoice_old.internal_number, "internal number is not stored in reference"
+    assert invoice_new.reference_type == 'none', "reference type is not set to 'None'"
+    assert invoice_new.internal_number == False, "internal number is not reset"
+    assert invoice_new.journal_id.id, "journal id is not selected" 
+    for inv_line in invoice_new.invoice_line:
+        assert inv_line.account_id.id, "account_id is not taken from product's default"
+    for inv_tax in invoice_new.tax_line:
+        assert inv_tax.manual, "for tax line manual is not set to True"
+        assert inv_tax.account_id, "for tax_line default accounts is not picked based on the tax config of the DB where it is imported."
+    
+    
+    
+   
