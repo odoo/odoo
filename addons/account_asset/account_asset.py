@@ -116,9 +116,7 @@ class account_asset_asset(osv.osv):
             old_depreciation_line_ids = depreciation_lin_obj.search(cr, uid, [('asset_id', '=', asset.id), ('move_id', '=', False)])
             if old_depreciation_line_ids:
                 depreciation_lin_obj.unlink(cr, uid, old_depreciation_line_ids, context=context)
-            
             amount_to_depr = residual_amount = asset.value_residual
-
             depreciation_date = datetime.strptime(self._get_last_depreciation_date(cr, uid, [asset.id], context)[asset.id], '%Y-%m-%d')
             day = depreciation_date.day
             month = depreciation_date.month
@@ -350,6 +348,7 @@ class account_asset_asset(osv.osv):
                 if period and (period.date_start<=date_start):
                     result += self._compute_move(cr, uid, property, period, context)
         return result
+
 account_asset_asset()
 
 class account_asset_depreciation_line(osv.osv):

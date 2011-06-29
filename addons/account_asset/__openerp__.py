@@ -36,6 +36,8 @@
     ],
     "demo_xml" : [
     ],
+    'test': ['test/account_asset.yml',
+             ],
     "update_xml" : [
         "security/ir.model.access.csv",
         "account_asset_wizard.xml",
