@@ -234,20 +234,19 @@ openerp.base.DataSet =  openerp.base.Controller.extend( /** @lends openerp.base.
         this.model = model;
         this.context = context || {};
         this.index = null;
-        this.count = 0;
     },
     start: function() {
     },
     previous: function () {
         this.index -= 1;
         if (this.index < 0) {
-            this.index = this.count - 1;
+            this.index = this.ids.length - 1;
         }
         return this;
     },
     next: function () {
         this.index += 1;
-        if (this.index >= this.count) {
+        if (this.index >= this.ids.length) {
             this.index = 0;
         }
         return this;
@@ -365,7 +364,6 @@ openerp.base.DataSetStatic =  openerp.base.DataSet.extend({
         this._super(session, model, context);
         // all local records
         this.ids = ids || [];
-        this.count = this.ids.length;
         if (this.ids.length) {
             this.index = 0;
         }
@@ -378,9 +376,8 @@ openerp.base.DataSetStatic =  openerp.base.DataSet.extend({
     },
     set_ids: function (ids) {
         this.ids = ids;
-        this.count = this.ids.length;
-        this.index = this.index <= this.count - 1 ?
-            this.index : (this.count > 0 ? this.count - 1 : 0);
+        this.index = this.index <= this.ids.length - 1 ?
+            this.index : (this.ids.length > 0 ? this.length - 1 : 0);
     },
     unlink: function(ids) {
         this.on_unlink(ids);
@@ -423,7 +420,6 @@ openerp.base.DataSetSearch =  openerp.base.DataSet.extend({
         }, function (records) {
             self.ids.splice(0, self.ids.length);
             self.offset = offset;
-            self.count = records.length;    // TODO: get real count
             for (var i=0; i < records.length; i++ ) {
                 self.ids.push(records[i].id);
             }
@@ -463,9 +459,8 @@ openerp.base.DataSetSearch =  openerp.base.DataSet.extend({
         var self = this;
         return this._super(ids, function(result) {
             self.ids = _.without.apply(_, [self.ids].concat(ids));
-            self.count = self.ids.length;
-            self.index = self.index <= self.count - 1 ?
-                self.index : (self.count > 0 ? self.count -1 : 0);
+            self.index = self.index <= self.ids.length - 1 ?
+                self.index : (self.ids.length > 0 ? self.ids.length -1 : 0);
             if (callback)
                 callback(result);
         }, error_callback);

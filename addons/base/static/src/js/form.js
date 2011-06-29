@@ -157,7 +157,7 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
         var $pager = this.$element.find('#' + this.element_id + '_header div.oe_form_pager');
         var index = hide_index ? '-' : this.dataset.index + 1;
         $pager.find('span.oe_pager_index').html(index);
-        $pager.find('span.oe_pager_count').html(this.dataset.count);
+        $pager.find('span.oe_pager_count').html(this.dataset.ids.length);
     },
     do_onchange: function(widget, processed) {
         processed = processed || [];
@@ -347,7 +347,6 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
                 this.dataset.ids.unshift(this.datarecord.id);
                 this.dataset.index = 0;
             }
-            this.dataset.count++;
             this.do_update_pager();
             this.do_update_sidebar();
             this.notification.notify("Record created", "The record has been created with id #" + this.datarecord.id);
