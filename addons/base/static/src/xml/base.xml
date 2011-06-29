@@ -34,7 +34,7 @@
             <div id="oe_database" class="database"></div>
         </td>
         <td valign="top">
-        	<div id="oe_db_options"></div>
+        	<div id="oe_db_options" style="height: 100%; padding-top: 10px;"></div>
         </td>
     </tr>
     <tr>
@@ -42,7 +42,7 @@
         </td>
         <td valign="top">
             <div id="oe_app" class="oe-application">
-                <div style="width:100%;">&amp;nbsp;</div>
+                <div style="width: 100%;">&amp;nbsp;</div>
             </div>
         </td>
     </tr>
@@ -59,7 +59,7 @@
     Loading...
 </t>
 <t t-name="Database">
-	<ul class="db_options">
+	<ul class="db_options" style="padding: 0px;">
 		<li id="db-create">Create</li>
 		<li id="db-drop">Drop</li>
 		<li id="db-backup">Backup</li>
@@ -71,7 +71,7 @@
 <t t-name="CreateDB">
 	<table align="center" width="100%">
 		<tr>
-			<td>
+			<td valign="top">
 				<img src="/base/static/src/img/db.png" alt="" />
 			</td>
 			<td class="option_string">

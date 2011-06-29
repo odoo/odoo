@@ -154,13 +154,30 @@ body.openerp {
 }
 
 .db_container {
-	width: 20%;	
+	width: 15%;	
 }
 
 ul.db_options li {
-	cursor: pointer;
+	padding: 10px 0 10px 5px;
+	background: #949292; /* Old browsers */
+	background: -moz-linear-gradient(top, #949292 30%, #6d6b6b 95%, #282828 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(30%,#949292), color-stop(95%,#6d6b6b), color-stop(100%,#282828)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, #949292 30%,#6d6b6b 95%,#282828 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, #949292 30%,#6d6b6b 95%,#282828 100%); /* Opera11.10+ */
+	background: -ms-linear-gradient(top, #949292 30%,#6d6b6b 95%,#282828 100%); /* IE10+ */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#949292', endColorstr='#282828',GradientType=0 ); /* IE6-9 */
+	background: linear-gradient(top, #949292 30%,#6d6b6b 95%,#282828 100%); /* W3C */
+	/* for ie9 */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#949292', endColorstr='#5B5A5A',GradientType=0 ); /* IE6-9 */
+	border: none;
+	    /* overriding jquery ui */
+	-moz-border-radius: 0px; -webkit-border-radius: 0px; border-radius: 0px;
+	display: block;
 	font-weight: bold;
-	color: #333333;
+	text-transform: uppercase;
+	margin: 1px;
+	color: #EEEEEE;
+	cursor: pointer;
 }
 
 .option_string {
