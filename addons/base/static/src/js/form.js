@@ -241,12 +241,8 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
     },
     on_button_new: function() {
         var self = this;
-        var context = new openerp.base.CompoundContext(this.dataset.context);
-        if (this.view_manager.action && this.view_manager.action.context) {
-            context.add(this.view_manager.action.context);
-        }
         $.when(this.has_been_loaded).then(function() {
-            self.dataset.default_get(_.keys(self.fields_view.fields), context, function(result) {
+            self.dataset.default_get(_.keys(self.fields_view.fields), function(result) {
                 self.on_record_loaded(result.result);
             });
         });
@@ -421,6 +417,13 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
         } else {
             this.on_button_new();
         }
+    },
+    get_fields_values: function() {
+        var values = {};
+        _.each(this.fields, function(value, key) {
+            values[key] = value.get_value();
+        });
+        return values;
     }
 });
 
@@ -448,7 +451,7 @@ openerp.base.form.compute_domain = function(expr, fields) {
             }
         }
 
-        var field = fields[ex[0]].value;
+        var field = fields[ex[0]].get_value ? fields[ex[0]].get_value() : fields[ex[0]].value;
         var op = ex[1];
         var val = ex[2];
 
@@ -568,8 +571,8 @@ openerp.base.form.WidgetFrame = openerp.base.form.Widget.extend({
     },
     handle_node: function(node) {
         var type = this.view.fields_view.fields[node.attrs.name] || {};
-        var widget_type = node.attrs.widget || type.type || node.tag;
-        var widget = new (this.view.registry.get_object(widget_type)) (this.view, node);
+        var widget = new (this.view.registry.get_any(
+                [node.attrs.widget, type.type, node.tag])) (this.view, node);
         if (node.tag == 'field') {
             if (!this.view.default_focus_field || node.attrs.default_focus == '1') {
                 this.view.default_focus_field = widget;
@@ -666,18 +669,26 @@ openerp.base.form.WidgetButton = openerp.base.form.Widget.extend({
             this.view.datarecord.id, function (result) {
                 self.log("Button returned", result);
                 self.view.reload();
+            }, function() {
+                self.view.reload();
             });
     }
 });
 
 openerp.base.form.WidgetLabel = openerp.base.form.Widget.extend({
     init: function(view, node) {
-        this.is_field_label = true;
         this.element_name = 'label_' + node.attrs.name;
 
         this._super(view, node);
 
-        this.template = "WidgetLabel";
+        // TODO fme: support for attrs.align
+        if (this.node.tag == 'label' && this.node.attrs.colspan) {
+            this.is_field_label = false;
+            this.template = "WidgetParagraph";
+        } else {
+            this.is_field_label = true;
+            this.template = "WidgetLabel";
+        }
         this.colspan = 1;
     },
     render: function () {
@@ -1078,11 +1089,25 @@ openerp.base.form.FieldSelection = openerp.base.form.Field.extend({
  * the fields'context with the action's context.
  */
 var build_relation_context = function(relation_field) {
-    var action = relation_field.view.view_manager.action || {};
-    var a_context = action.context || {};
-    var f_context = relation_field.field.context || {};
-    var ctx = new openerp.base.CompoundContext(a_context).add(f_context);
+    var a_context = relation_field.view.dataset.context || {};
+    var fields_values = relation_field.view.get_fields_values();
+    var parent_values = a_context.get_eval_context ? a_context.get_eval_context() || {} : {};
+    parent_values = _.clone(parent_values);
+    delete parent_values.parent;
+    fields_values.parent = parent_values;
+    var f_context = new openerp.base.CompoundContext(relation_field.field.context || {}).set_eval_context(fields_values);
+    var ctx = new openerp.base.CompoundContext(a_context, f_context);
     return ctx;
+}
+var build_relation_domain = function(relation_field) {
+    var a_context = relation_field.view.dataset.context || {};
+    var fields_values = relation_field.view.get_fields_values();
+    var parent_values = a_context.get_eval_context ? a_context.get_eval_context() || {} : {};
+    parent_values = _.clone(parent_values);
+    delete parent_values.parent;
+    fields_values.parent = parent_values;
+    var f_domain = new openerp.base.CompoundDomain(relation_field.field.domain || []).set_eval_context(fields_values);
+    return f_domain;
 }
 
 openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
@@ -1197,10 +1222,10 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
         var search_val = request.term;
         var self = this;
 
-        var dataset = new openerp.base.DataSetStatic(this.session, this.field.relation, []);
+        var dataset = new openerp.base.DataSetStatic(this.session, this.field.relation, build_relation_context(self));
 
-        dataset.name_search([search_val, self.field.domain || [], 'ilike',
-                build_relation_context(self), this.limit + 1], function(data) {
+        dataset.name_search(search_val, build_relation_domain(self), 'ilike',
+                this.limit + 1, function(data) {
             self.last_search = data.result;
             // possible selections for the m2o
             var values = _.map(data.result, function(x) {
@@ -1211,8 +1236,8 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
             if (values.length > self.limit) {
                 values = values.slice(0, self.limit);
                 values.push({label: "<em>   Search More...</em>", action: function() {
-                    dataset.name_search([search_val, self.field.domain || [], 'ilike',
-                            build_relation_context(self), false], function(data) {
+                    dataset.name_search(search_val, build_relation_domain(self), 'ilike'
+                    , false, function(data) {
                         self._change_int_value(null);
                         self._search_create_popup("search", data.result);
                     });
@@ -1239,27 +1264,27 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
     },
     _quick_create: function(name) {
         var self = this;
-        var dataset = new openerp.base.DataSetStatic(this.session, this.field.relation, []);
-        dataset.call("name_create", [name, build_relation_context(self)], function(data) {
+        var dataset = new openerp.base.DataSetStatic(this.session, this.field.relation, build_relation_context(self));
+        dataset.name_create(name, function(data) {
             self._change_int_ext_value(data.result);
-        }, function(a, b) {
+        }).fail(function() {
             self._change_int_value(null);
             self._search_create_popup("form", undefined, {"default_name": name});
         });
     },
     // all search/create popup handling
     _search_create_popup: function(view, ids, context) {
-        var dataset = new openerp.base.DataSetStatic(this.session, this.field.relation, []);
         var self = this;
         var pop = new openerp.base.form.SelectCreatePopup(null, self.view.session);
         pop.select_element(self.field.relation,{
                 initial_ids: ids ? _.map(ids, function(x) {return x[0]}) : undefined,
                 initial_view: view,
                 disable_multiple_selection: true
-                }, self.view.domain || [],
-                new openerp.base.CompoundContext(build_relation_context(self)).add(context || {}));
+                }, build_relation_domain(self),
+                new openerp.base.CompoundContext(build_relation_context(self), context || {}));
         pop.on_select_elements.add(function(element_ids) {
-            dataset.call("name_get", [element_ids[0]], function(data) {
+            var dataset = new openerp.base.DataSetStatic(this.session, this.field.relation, build_relation_context(self));
+            dataset.name_get([element_ids[0]], function(data) {
                 self._change_int_ext_value(data.result[0]);
                 pop.stop();
             });
@@ -1271,9 +1296,15 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
     },
     _change_int_value: function(value) {
         this.value = value;
-        if (this.original_value === undefined || (this.value !== undefined &&
-            ((this.original_value ? this.original_value[0] : null) !== (this.value ? this.value[0] : null)))) {
-            this.original_value = undefined;
+        var back_orig_value = this.original_value;
+        if (this.value === null || this.value) {
+            this.original_value = this.value;
+        }
+        if (back_orig_value === undefined) { // first use after a set_value()
+            return;
+        }
+        if (this.value !== undefined && ((back_orig_value ? back_orig_value[0] : null)
+                !== (this.value ? this.value[0] : null))) {
             this.on_ui_change();
         }
     },
@@ -1284,14 +1315,14 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
         var _super = this._super;
         this.tmp_value = value;
         var real_set_value = function(rval) {
-            this.tmp_value = undefined;
+            self.tmp_value = undefined;
             _super.apply(self, rval);
-            self.original_value = rval;
+            self.original_value = undefined;
             self._change_int_ext_value(rval);
         };
         if(typeof(value) === "number") {
-            var dataset = new openerp.base.DataSetStatic(this.session, this.field.relation, []);
-            dataset.call("name_get", [value], function(data) {
+            var dataset = new openerp.base.DataSetStatic(this.session, this.field.relation, build_relation_context(self));
+            dataset.name_get([value], function(data) {
                 real_set_value(data.result[0]);
             }).fail(function() {self.tmp_value = undefined;});
         } else {
@@ -1303,10 +1334,10 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
             if (this.tmp_value instanceof Array) {
                 return this.tmp_value[0];
             }
-            return this.tmp_value;
+            return this.tmp_value ? this.tmp_value : false;
         }
         if (this.value === undefined)
-            throw "theorically unreachable state";
+            return this.original_value ? this.original_value[0] : false;
         return this.value ? this.value[0] : false;
     },
     validate: function() {
@@ -1325,7 +1356,43 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
 #         (4, ID)                link
 #         (5)                    unlink all (only valid for one2many)
 */
-
+var commands = {
+    // (0, _, {values})
+    CREATE: 0,
+    'create': function (values) {
+        return [commands.CREATE, false, values];
+    },
+    // (1, id, {values})
+    UPDATE: 1,
+    'update': function (id, values) {
+        return [commands.UPDATE, id, values];
+    },
+    // (2, id[, _])
+    DELETE: 2,
+    'delete': function (id) {
+        return [commands.DELETE, id, false];
+    },
+    // (3, id[, _]) removes relation, but not linked record itself
+    FORGET: 3,
+    'forget': function (id) {
+        return [commands.FORGET, id, false];
+    },
+    // (4, id[, _])
+    LINK_TO: 4,
+    'link_to': function (id) {
+        return [commands.LINK_TO, id, false];
+    },
+    // (5[, _[, _]])
+    FORGET_ALL: 5,
+    'forget_all': function () {
+        return [5, false, false];
+    },
+    // (6, _, ids) replaces all linked records with provided ids
+    REPLACE_WITH: 6,
+    'replace_with': function (ids) {
+        return [6, false, ids];
+    }
+};
 openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
     init: function(view, node) {
         this._super(view, node);
@@ -1360,11 +1427,9 @@ openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
 
         this.viewmanager = new openerp.base.ViewManager(this.view.session,
             this.element_id, this.dataset, views);
-        var reg = new openerp.base.Registry();
-        reg.add("form", openerp.base.views.map["form"]);
-        reg.add("graph", openerp.base.views.map["graph"]);
-        reg.add("list", "openerp.base.form.One2ManyListView");
-        this.viewmanager.registry = reg;
+        this.viewmanager.registry = openerp.base.views.clone({
+            list: 'openerp.base.form.One2ManyListView'
+        });
 
         this.viewmanager.on_controller_inited.add_last(function(view_type, controller) {
             if (view_type == "list") {
@@ -1387,20 +1452,59 @@ openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
     },
     set_value_from_ui: function() {},
     set_value: function(value) {
-        value = value || []
-        this._super(value);
-        this.dataset.reset_ids(value);
+        value = value || [];
         var self = this;
+        if(value.length >= 1 && value[0] instanceof Array) {
+            var ids = [];
+            _.each(value, function(command) {
+                var obj = {values: command[2]};
+                switch (command[0]) {
+                    case commands.CREATE:
+                        obj['id'] = _.uniqueId(self.dataset.virtual_id_prefix);
+                        self.dataset.to_create.push(obj);
+                        self.dataset.cache.push(_.clone(obj));
+                        ids.push(obj.id);
+                        return;
+                    case commands.UPDATE:
+                        obj['id'] = command[1];
+                        self.dataset.to_write.push(obj);
+                        self.dataset.cache.push(_.clone(obj));
+                        ids.push(obj.id);
+                        return;
+                    case commands.DELETE:
+                        self.dataset.to_delete.push({id: command[1]});
+                        return;
+                    case commands.LINK_TO:
+                        ids.push(command[1]);
+                        return;
+                }
+            });
+            this._super(ids);
+            this.dataset.set_ids(ids);
+        } else {
+            this._super(value);
+            this.dataset.reset_ids(value);
+        }
         $.when(this.is_started).then(function() {
             self.reload_current_view();
         });
     },
     get_value: function() {
-        var val = _.map(this.dataset.to_delete, function(v, k) {return [2, x.id];});
-        val = val.concat(_.map(this.dataset.to_create, function(x) {return [0, 0, x.values];}));
-        val = val.concat(_.map(this.dataset.to_write, function(x) {return [1, x.id, x.values];}));
-        debugger;
-        return val;
+        var self = this;
+        var val = _.map(this.dataset.ids, function(id) {
+            var alter_order = _.detect(self.dataset.to_create, function(x) {return x.id === id;});
+            if (alter_order) {
+                return commands.create(alter_order.values);
+            }
+            alter_order = _.detect(self.dataset.to_write, function(x) {return x.id === id;});
+            if (alter_order) {
+                return commands.update(alter_order.id, alter_order.values);
+            }
+            return commands.link_to(id);
+        });
+        return val.concat(_.map(
+            this.dataset.to_delete, function(x) {
+                return commands['delete'](x.id);}));
     },
     validate: function() {
         this.invalid = false;
@@ -1458,6 +1562,9 @@ openerp.base.form.FieldMany2Many = openerp.base.form.Field.extend({
     },
     set_value: function(value) {
         value = value || [];
+        if (value.length >= 1 && value[0] instanceof Array) {
+            value = value[0][2];
+        }
         this._super(value);
         this.dataset.set_ids(value);
         var self = this;
@@ -1466,7 +1573,7 @@ openerp.base.form.FieldMany2Many = openerp.base.form.Field.extend({
         });
     },
     get_value: function() {
-        return [[6,false,this.dataset.ids]];
+        return [commands.replace_with(this.dataset.ids)];
     }
 });
 
@@ -1543,7 +1650,7 @@ openerp.base.form.SelectCreatePopup = openerp.base.BaseWidget.extend({
                 });
         this.searchview.on_search.add(function(domains, contexts, groupbys) {
             if (self.initial_ids) {
-                self.view_list.do_search.call(self,[[["id", "in", self.initial_ids]]],
+                self.view_list.do_search.call(self, domains.concat([[["id", "in", self.initial_ids]]]),
                     contexts, groupbys);
                 self.initial_ids = undefined;
             } else {

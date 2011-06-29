@@ -11,8 +11,8 @@ openerp.base.callback = function(obj, method) {
         for(var i = 0; i < callback.callback_chain.length; i++)  {
             var c = callback.callback_chain[i];
             if(c.unique) {
-                // al: obscure but shortening C-style hack, sorry
-                callback.callback_chain.pop(i--);
+                callback.callback_chain.splice(i, 1);
+                i -= 1;
             }
             r = c.callback.apply(c.self, c.args.concat(args));
             // TODO special value to stop the chain
@@ -138,6 +138,29 @@ openerp.base.Registry = Class.extend( /** @lends openerp.base.Registry# */ {
         return object_match;
     },
     /**
+     * Tries a number of keys, and returns the first object matching one of
+     * the keys.
+     *
+     * @param {Array} keys a sequence of keys to fetch the object for
+     * @returns {Class} the first class found matching an object
+     *
+     * @throws {openerp.base.KeyNotFound} if none of the keys was in the mapping
+     * @trows {openerp.base.ObjectNotFound} if a found object path was invalid
+     */
+    get_any: function (keys) {
+        for (var i=0; i<keys.length; ++i) {
+            try {
+                return this.get_object(keys[i]);
+            } catch (e) {
+                if (e instanceof openerp.base.KeyNotFound) {
+                    continue;
+                }
+                throw e;
+            }
+        }
+        throw new openerp.base.KeyNotFound(keys.join(','));
+    },
+    /**
      * Adds a new key and value to the registry.
      *
      * This method can be chained.
@@ -261,13 +284,12 @@ openerp.base.generate_null_object_class = function(claz, add) {
         }
         if (prototype.prototype)
             copy_proto(prototype.prototype);
-    }
+    };
     copy_proto(claz.prototype);
-    var init = openerp.base.BasicController.prototype.init;
-    newer.init = init;
+    newer.init = openerp.base.BasicController.prototype.init;
     var tmpclass = claz.extend(newer);
     return tmpclass.extend(add || {});
-}
+};
 
 openerp.base.Notification =  openerp.base.BasicController.extend({
     init: function(element_id) {
@@ -557,7 +579,7 @@ openerp.base.Controller = openerp.base.BasicController.extend( /** @lends opener
      */
     controller_get: function(key) {
         return this.controller_registry[key];
-        // OR should contrustct it ? setting parent correctly ?
+        // OR should build it ? setting parent correctly ?
         // function construct(constructor, args) {
         //     function F() {
         //         return constructor.apply(this, args);
@@ -617,7 +639,7 @@ openerp.base.Controller = openerp.base.BasicController.extend( /** @lends opener
             }
             // TODO if post prefix
             //this.element_id = _.uniqueId(_.toArray(arguments).join('_'));
-        };
+        }
     },
     /**
      * Performs a JSON-RPC call
