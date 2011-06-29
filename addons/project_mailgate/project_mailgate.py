@@ -120,32 +120,24 @@ class project_tasks(osv.osv):
                                        context=context)
 
     def do_draft(self, cr, uid, ids, context):
-        if context == None:
-            context = {}
         res = super(project_tasks, self).do_draft(cr, uid, ids, context)
         tasks = self.browse(cr, uid, ids, context=context)
         self._history(cr, uid, tasks, _('Draft'), context=context)
         return res
 
     def do_open(self, cr, uid, ids, context=None):
-        if context == None:
-            context = {}
         res = super(project_tasks, self).do_open(cr, uid, ids, context)
         tasks = self.browse(cr, uid, ids, context=context)
         self._history(cr, uid, tasks, _('Open'), context=context)
         return res
 
     def do_pending(self, cr, uid, ids, context=None):
-        if context == None:
-            context = {}
         res = super(project_tasks, self).do_pending(cr, uid, ids, context)
         tasks = self.browse(cr, uid, ids, context=context)
         self._history(cr, uid, tasks, _('Pending'), context=context)
         return res
 
     def do_close(self, cr, uid, ids, context=None):
-        if context == None:
-            context = {}
         res = super(project_tasks, self).do_close(cr, uid, ids, context)
         tasks = self.browse(cr, uid, ids, context=context)
         for task in tasks:
@@ -154,8 +146,6 @@ class project_tasks(osv.osv):
         return res
 
     def do_cancel(self, cr, uid, ids, context=None):
-        if context == None:
-            context = {}
         res = super(project_tasks, self).do_cancel(cr, uid, ids, context=context)
         tasks = self.browse(cr, uid, ids, context=context)
         self._history(cr, uid, tasks, _('Cancel'), context=context)
