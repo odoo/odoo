@@ -214,7 +214,7 @@ class account_asset_asset(osv.osv):
         'method_time': fields.selection([('delay','Delay'),('end','Ending Period')], 'Time Method', required=True, readonly=True, states={'draft':[('readonly',False)]}, help="Delay: Allow users to enter number of periods to generate depreciation lines \n Ending Period: Calculates depreciation lines on the basis of Ending Period Date and Number of Depreciation"),
         'prorata':fields.boolean('Prorata Temporis', readonly="True", states={'draft':[('readonly',False)]}, help='Indicates that the accounting entries for this asset have to be done from the purchase date instead of the first January'),
         'history_ids': fields.one2many('account.asset.history', 'asset_id', 'History', readonly=True),
-        'depreciation_line_ids': fields.one2many('account.asset.depreciation.line', 'asset_id', 'Depreciation Lines'),
+        'depreciation_line_ids': fields.one2many('account.asset.depreciation.line', 'asset_id', 'Depreciation Lines', readonly=True, states={'draft':[('readonly',False)]}),
         'salvage_value': fields.float('Salvage Value', digits_compute=dp.get_precision('Account'), help="It is the amount you plan to have that you cannot depreciate.", readonly=False, states={'close':[('readonly',True)]}),
     }
     _defaults = {
@@ -379,6 +379,7 @@ class account_asset_depreciation_line(osv.osv):
     }
 
     def create_move(self, cr, uid, ids, context=None):
+        can_close = False
         if context is None:
             context = {}
         asset_obj = self.pool.get('account.asset.asset')
@@ -387,7 +388,8 @@ class account_asset_depreciation_line(osv.osv):
         move_line_obj = self.pool.get('account.move.line')
         currency_obj = self.pool.get('res.currency')
         for line in self.browse(cr, uid, ids, context=context):
-            rem_value = line.remaining_value
+            if line.remaining_value == 0.0:
+                can_close = True
             depreciation_date = line.asset_id.prorata and line.asset_id.purchase_date or time.strftime('%Y-%m-%d')
             period_ids = period_obj.find(cr, uid, depreciation_date, context=context)
             company_currency = line.asset_id.company_id.currency_id.id
@@ -434,8 +436,9 @@ class account_asset_depreciation_line(osv.osv):
                 'asset_id': line.asset_id.id
             })
             self.write(cr, uid, line.id, {'move_id': move_id}, context=context)
-            if rem_value == 0:
-                asset_obj.write(cr, uid, line.asset_id.id, {'state': 'close'}, context=context)                
+        if can_close:
+            asset_obj.write(cr, uid, [line.asset_id.id], {'state': 'close'}, context=context)                
+            return True
         return True
 
 account_asset_depreciation_line()
