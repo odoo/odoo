@@ -350,30 +350,39 @@ openerp.base.Session = openerp.base.BasicController.extend( /** @lends openerp.b
      * @param {Object} params call parameters
      * @param {Function} success_callback function to execute on RPC call success
      * @param {Function} error_callback function to execute on RPC call failure
+     * one
      * @returns {jQuery.Deferred} jquery-provided ajax deferred
      */
     rpc: function(url, params, success_callback, error_callback) {
+        var self = this;
         // Construct a JSON-RPC2 request, method is currently unused
         params.session_id = this.session_id;
-        params.context = typeof(params.context) != "undefined" ? params.context  : this.context;
-
-        // Use a default error handler unless defined
-        error_callback = typeof(error_callback) != "undefined" ? error_callback : this.on_rpc_error;
+        // niv: wtf?
+        //params.context = typeof(params.context) != "undefined" ? params.context  : this.context;
 
         // Call using the rpc_mode
-        return this.rpc_ajax(url, {
+        var deferred = $.Deferred();
+        this.rpc_ajax(url, {
             jsonrpc: "2.0",
             method: "call",
             params: params,
             id:null
-        }, success_callback, error_callback);
+        }).then(function () {deferred.resolve.apply(deferred, arguments);},
+        function(error) {deferred.reject(error, $.Event());});
+        return deferred.fail(function() {
+            deferred.fail(function(error, event) {
+                if (!event.isDefaultPrevented()) {
+                    self.on_rpc_error(error, event);
+                }
+            });
+        }).then(success_callback, error_callback).promise();
     },
     /**
      * Raw JSON-RPC call
      *
      * @returns {jQuery.Deferred} ajax-based deferred object
      */
-    rpc_ajax: function(url, payload, success_callback, error_callback) {
+    rpc_ajax: function(url, payload) {
         var self = this;
         this.on_rpc_request();
         // url can be an $.ajax option object
@@ -388,33 +397,35 @@ openerp.base.Session = openerp.base.BasicController.extend( /** @lends openerp.b
             dataType: 'json',
             contentType: 'application/json',
             data: JSON.stringify(payload),
-            processData: false,
-            success: function(response, textStatus, jqXHR) {
+            processData: false
+        }, url);
+        var deferred = $.Deferred();
+        $.ajax(ajax).done(function(response, textStatus, jqXHR) {
                 self.on_rpc_response();
                 if (response.error) {
                     if (response.error.data.type == "session_invalid") {
                         self.uid = false;
                         self.on_session_invalid(function() {
-                            self.rpc(url, payload.params, success_callback, error_callback);
+                            self.rpc(url, payload.params,
+                                function() {deferred.resolve.apply(deferred, arguments);},
+                                function() {deferred.reject.apply(deferred, arguments);});
                         });
                     } else {
-                        error_callback(response.error);
+                        deferred.reject(response.error);
                     }
-                } else if (success_callback) {
-                    success_callback(response["result"], textStatus, jqXHR);
+                } else {
+                    deferred.resolve(response["result"], textStatus, jqXHR);
                 }
-            },
-            error: function(jqXHR, textStatus, errorThrown) {
+            }).fail(function(jqXHR, textStatus, errorThrown) {
                 self.on_rpc_response();
                 var error = {
                     code: -32098,
                     message: "XmlHttpRequestError " + errorThrown,
                     data: {type: "xhr"+textStatus, debug: jqXHR.responseText, objects: [jqXHR, errorThrown] }
                 };
-                error_callback(error);
-            }
-        }, url);
-        return $.ajax(ajax);
+                deferred.reject(error);
+            });
+        return deferred.promise();
     },
     on_rpc_request: function() {
     },
