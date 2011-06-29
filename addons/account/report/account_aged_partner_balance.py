@@ -57,6 +57,8 @@ class aged_trial_report(report_sxw.rml_parse, common_report_header):
             self.ACCOUNT_TYPE = ['payable']
         else:
             self.ACCOUNT_TYPE = ['payable','receivable']
+        lang_dict = self.pool.get('res.users').read(self.cr,self.uid,self.uid,['context_lang'])
+        data['lang'] = lang_dict.get('context_lang') or False
         return super(aged_trial_report, self).set_context(objects, data, ids, report_type=report_type)
 
     def _get_lines(self, form):
