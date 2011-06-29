@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,19 +15,24 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+from osv import fields,osv
+from base.ir import ir_edi
 
-import tools
+class res_partner(osv.osv, ir_edi.edi):
+    _inherit = "res.partner"
 
-from partner import *
-from crm import *
-import edi_partner
-import wizard
-import report
+res_partner()
 
+class res_partner_address(osv.osv, ir_edi.edi):
+    _inherit = "res.partner.address"
 
+res_partner_address()
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+class res_partner_bank(osv.osv, ir_edi.edi):
+    _inherit = "res.partner.bank"
+
+res_partner_bank()
 

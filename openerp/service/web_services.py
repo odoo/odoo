@@ -37,6 +37,47 @@ import openerp.modules
 import locale
 import logging
 from cStringIO import StringIO
+import threading
+
+class edi(netsvc.ExportService):
+    def exp_get_edi_document(self, edi_token):
+        db_name = getattr(threading.currentThread(), 'dbname', None)
+        if db_name:
+            cr = pooler.get_db_only(db_name).cursor()
+        else:
+            raise Exception("No database cursor found!")
+        pool = pooler.get_pool(db_name)
+        edi_pool = pool.get('ir.edi.document')
+        return edi_pool.get_document(cr, 1, edi_token)
+
+    def exp_import_edi_document(self, db, uid, passwd, edi_document, context=None):
+        cr = pooler.get_db_only(db).cursor()
+        pool = pooler.get_pool(db)
+        edi_pool = pool.get('ir.edi.document')
+        return edi_pool.import_edi(cr, uid, edi_document=edi_document, context=context)
+
+    def exp_import_edi_url(self, db, uid, passwd, edi_url, context=None):
+        cr = pooler.get_db_only(db).cursor()
+        pool = pooler.get_pool(db)
+        edi_pool = pool.get('ir.edi.document')
+        return edi_pool.import_edi(cr, uid, edi_url=edi_url, context=context)
+
+    def __init__(self, name="edi"):
+        netsvc.ExportService.__init__(self, name)
+        self.joinGroup("web-services")
+
+    def dispatch(self, method, auth, params):
+        if method in ['import_edi_document',  'import_edi_url']:
+            (db, uid, passwd ) = params[0:3]
+            security.check(db, uid, passwd)
+        elif method in ['get_edi_document']:
+            # params = params
+            # No security check for these methods
+            pass
+        else:
+            raise KeyError("Method not found: %s" % method)
+        fn = getattr(self, 'exp_'+method)
+        return fn(*params)
 
 class db(netsvc.ExportService):
     def __init__(self, name="db"):
@@ -763,6 +804,7 @@ def start_web_services():
     objects_proxy()
     wizard()
     report_spool()
+    edi()
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
