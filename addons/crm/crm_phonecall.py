@@ -86,14 +86,20 @@ class crm_phonecall(crm_base, osv.osv):
         if context and context.get('default_state', False):
             return context.get('default_state')
         return 'open'
+    
+    def get_user_id(self, cr, uid, ctx):
+        print "default user"
+        return uid
 
     _defaults = {
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'), 
         'priority': crm.AVAILABLE_PRIORITIES[2][0], 
         'state':  _get_default_state, 
-        'user_id': lambda self,cr,uid,ctx: uid,
+        'user_id': get_user_id,
         'active': 1, 
     }
+    
+    
     
     # From crm.case
 
