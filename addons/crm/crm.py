@@ -137,11 +137,8 @@ class crm_base(object):
         """Opens Case
         @param ids: List of case Ids
         """
-        print "case open"
         cases = self.browse(cr, uid, ids)
         for case in cases:
-            print case
-            print case.user_id
             data = {'state': 'open', 'active': True}
             if not case.user_id:
                 data['user_id'] = uid
