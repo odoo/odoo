@@ -181,11 +181,10 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
                         args.push(argument_replacement[field]);
                         return;
                     } else if (self.fields[field]) {
-                        var value = self.fields[field].get_value();
+                        var value = self.fields[field].get_on_change_value();
                         args.push(value == null ? false : value);
                         return;
                     } else {
-                        debugger;
                         var splitted = field.split('.');
                         if (splitted.length > 1 && _.trim(splitted[0]) === "parent" && self.dataset.parent_view) {
                             if (parent_fields === null) {
@@ -747,6 +746,9 @@ openerp.base.form.Field = openerp.base.form.Widget.extend({
     },
     get_value: function() {
         return this.value;
+    },
+    get_on_change_value: function() {
+        return this.get_value();
     },
     update_dom: function() {
         this._super.apply(this, arguments);
@@ -1396,8 +1398,8 @@ var commands = {
         return [commands.LINK_TO, id, false];
     },
     // (5[, _[, _]])
-    FORGET_ALL: 5,
-    'forget_all': function () {
+    DELETE_ALL: 5,
+    'delete_all': function () {
         return [5, false, false];
     },
     // (6, _, ids) replaces all linked records with provided ids
@@ -1469,6 +1471,7 @@ openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
     set_value: function(value) {
         value = value || [];
         var self = this;
+        this.dataset.reset_ids([]);
         if(value.length >= 1 && value[0] instanceof Array) {
             var ids = [];
             _.each(value, function(command) {
@@ -1492,7 +1495,22 @@ openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
                     case commands.LINK_TO:
                         ids.push(command[1]);
                         return;
+                    case commands.DELETE_ALL:
+                        self.dataset.delete_all = true;
+                        return;
                 }
+            });
+            this._super(ids);
+            this.dataset.set_ids(ids);
+        } else if (value.length >= 1 && typeof(value[0]) === "object") {
+            var ids = [];
+            this.dataset.delete_all = true;
+            _.each(value, function(command) {
+                var obj = {values: command};
+                obj['id'] = _.uniqueId(self.dataset.virtual_id_prefix);
+                self.dataset.to_create.push(obj);
+                self.dataset.cache.push(_.clone(obj));
+                ids.push(obj.id);
             });
             this._super(ids);
             this.dataset.set_ids(ids);
@@ -1508,7 +1526,8 @@ openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
         var self = this;
         if (!this.dataset)
             return [];
-        var val = _.map(this.dataset.ids, function(id) {
+        var val = this.dataset.delete_all ? [commands.delete_all()] : [];
+        val = val.concat(_.map(this.dataset.ids, function(id) {
             var alter_order = _.detect(self.dataset.to_create, function(x) {return x.id === id;});
             if (alter_order) {
                 return commands.create(alter_order.values);
@@ -1518,10 +1537,24 @@ openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
                 return commands.update(alter_order.id, alter_order.values);
             }
             return commands.link_to(id);
-        });
+        }));
         return val.concat(_.map(
             this.dataset.to_delete, function(x) {
                 return commands['delete'](x.id);}));
+    },
+    get_on_change_value: function() {
+        var self;
+        return _.map(this.dataset.ids, function(id) {
+            var values = _.detect(self.dataset.cache, function(x) {return x.id === id});
+            if (values) {
+                values = _.clone(values);
+                delete values["id"];
+                return values;
+            } else {
+                console.info("trying to get value in a o2m before that value is loaded");
+                return {};
+            }
+        });
     },
     validate: function() {
         this.invalid = false;
