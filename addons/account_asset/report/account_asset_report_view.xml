@@ -19,6 +19,9 @@
                 <field name="move_check" invisible="1"/>
                 <field name="company_id" invisible="1"/>
                 <field name="nbr" sum="# of Depreciation Lines"/>
+                <field name="gross_value"/>
+                <field name="posted_value" invisible="not context.get('posted_value_visible', False)"/>
+                <field name="unposted_value" invisible="not context.get('unposted_value_visible', True)"/>
                 <field name="remaining_value" sum="# Amount of Depreciation Lines"/>
             </tree>
         </field>
@@ -56,7 +59,8 @@
                     <filter string="Draft" icon="terp-document-new" domain="[('state','=','draft')]" help="Assets in draft state"/>
                     <filter string="Running" icon="terp-check" domain="[('state','=','open')]" help="Assets in running state"/>
                     <separator orientation="vertical"/>
-                    <filter string="Posted" name="posted" icon="terp-camera_test" domain="[('move_check','=',True)]" help="Posted depreciation lines"/>
+                    <filter string="Posted" name="posted" icon="terp-camera_test" domain="[('move_check','=',True)]" help="Posted depreciation lines"
+                        context="{'unposted_value_visible': 0, 'posted_value_visible': 1}"/>
                     <separator orientation="vertical"/>
                     <field name="asset_id"/>
                     <field name="asset_category_id"/>

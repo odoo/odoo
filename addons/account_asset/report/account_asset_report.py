@@ -42,9 +42,11 @@ class asset_asset_report(osv.osv):
         'partner_id': fields.many2one('res.partner', 'Partner', readonly=True),
         'state': fields.selection([('draft','Draft'),('open','Running'),('close','Close')], 'State', required=True, readonly=True),
         'remaining_value': fields.float('Amount of Depreciation Lines', required=True, readonly=True),
-        'depreciated_value': fields.float('Amount Already Depreciated', required=True, readonly=True),
         'move_check': fields.boolean('Posted', readonly=True),
         'nbr': fields.integer('# of Depreciation Lines', readonly=True),
+        'gross_value': fields.float('Gross Value', readonly=True, group_operator="avg"),
+        'posted_value': fields.float('Posted Value', readonly=True),
+        'unposted_value': fields.float('Unposted Value', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
     }
     
@@ -59,22 +61,42 @@ class asset_asset_report(osv.osv):
                     to_char(a.purchase_date, 'YYYY-MM-DD') as day,
                     to_date(dl.depreciation_date, 'YYYY-MM-DD') as depreciation_date,
                     a.purchase_date as purchase_date,
-                    dl.amount as remaining_value,
-                    dl.move_check as move_check,
+                    a.purchase_value as gross_value,
+                    dl.amount as remaining_value, 
+                    (CASE WHEN dl.move_check
+                      THEN dl.amount
+                      ELSE 0
+                      END) as posted_value,
+                    (CASE WHEN dl.move_check
+                      THEN (sum(a.purchase_value) - a.salvage_value - (select sum(ml.debit) from account_move_line ml
+                           left join account_asset_asset ac on (ac.id=ml.asset_id) where ac.id=a.id)) 
+                           / (CASE WHEN
+                                (select count(d.id) from account_asset_depreciation_line as d
+                                 left join account_asset_asset as ac ON (ac.id=d.asset_id)
+                                 where a.id=ac.id and d.move_check) <> 0
+                               THEN
+                                (select count(d.id) from account_asset_depreciation_line as d
+                                 left join account_asset_asset as ac ON (ac.id=d.asset_id)
+                                 where a.id=ac.id and d.move_check)
+                               ELSE 1
+                               END)
+                      ELSE 0
+                      END) as unposted_value,
                     dl.asset_id as asset_id,
+                    dl.move_check as move_check,
                     a.category_id as asset_category_id,
                     a.partner_id as partner_id,
                     a.state as state,
                     count(dl.*) as nbr,
                     a.company_id as company_id
-                from
-                    account_asset_depreciation_line dl
-                    left join account_asset_asset a on (dl.asset_id=a.id)
+                from account_asset_asset a
+                    left join account_asset_depreciation_line dl on (dl.asset_id=a.id)
                 group by 
-                    dl.asset_id, dl.move_check, a.state, 
-                    a.category_id, a.partner_id, a.purchase_date, dl.amount,
-                    a.company_id, a.purchase_value, a.salvage_value,
-                    to_date(dl.depreciation_date, 'YYYY-MM-DD')
+                    dl.amount,dl.remaining_value,dl.depreciated_value,dl.asset_id,
+                    to_char(a.purchase_date, 'YYYY'),to_char(a.purchase_date, 'MM'),
+                    to_char(a.purchase_date, 'YYYY-MM-DD'),to_date(dl.depreciation_date, 'YYYY-MM-DD'),
+                    a.purchase_date, dl.move_check, a.state, a.category_id, a.partner_id, a.company_id,
+                    a.purchase_value, a.id, a.salvage_value
         )""")
 	
 asset_asset_report()
