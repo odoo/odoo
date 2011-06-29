@@ -350,15 +350,15 @@ openerp.base.Session = openerp.base.BasicController.extend( /** @lends openerp.b
      * @param {Object} params call parameters
      * @param {Function} success_callback function to execute on RPC call success
      * @param {Function} error_callback function to execute on RPC call failure
+     * one
      * @returns {jQuery.Deferred} jquery-provided ajax deferred
      */
     rpc: function(url, params, success_callback, error_callback) {
+        var self = this;
         // Construct a JSON-RPC2 request, method is currently unused
         params.session_id = this.session_id;
-        params.context = typeof(params.context) != "undefined" ? params.context  : this.context;
-
-        // Use a default error handler unless defined
-        error_callback = typeof(error_callback) != "undefined" ? error_callback : this.on_rpc_error;
+        // niv: wtf?
+        //params.context = typeof(params.context) != "undefined" ? params.context  : this.context;
 
         // Call using the rpc_mode
         var deferred = $.Deferred();
@@ -369,20 +369,20 @@ openerp.base.Session = openerp.base.BasicController.extend( /** @lends openerp.b
             id:null
         }).then(function () {deferred.resolve.apply(deferred, arguments);},
         function(error) {deferred.reject(error, $.Event());});
-        return deferred.then(success_callback, function(error, event) {
-            deferred.fail(function(error2, event2) {
+        return deferred.fail(function() {
+            deferred.fail(function(error, event) {
                 if (!event.isDefaultPrevented()) {
-                    error_callback(error2, event2);
+                    self.on_rpc_error(error, event);
                 }
             });
-        }).promise();
+        }).then(success_callback, error_callback).promise();
     },
     /**
      * Raw JSON-RPC call
      *
      * @returns {jQuery.Deferred} ajax-based deferred object
      */
-    rpc_ajax: function(url, payload, success_callback, error_callback) {
+    rpc_ajax: function(url, payload) {
         var self = this;
         this.on_rpc_request();
         // url can be an $.ajax option object
@@ -425,7 +425,7 @@ openerp.base.Session = openerp.base.BasicController.extend( /** @lends openerp.b
                 };
                 deferred.reject(error);
             });
-        return deferred.promise().then(success_callback, error_callback);
+        return deferred.promise();
     },
     on_rpc_request: function() {
     },
