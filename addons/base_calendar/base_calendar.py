@@ -1023,7 +1023,7 @@ defines the list of date/time exceptions for a recurring calendar component."),
         'exrule': fields.char('Exception Rule', size=352, help="Defines a \
 rule or repeating pattern of time to exclude from the recurring rule."),
         'rrule': fields.function(_get_rulestring, type='char', size=124, method=True, \
-                                    string='Recurrent Rule'),
+                                    store=True, string='Recurrent Rule'),
         'rrule_type': fields.selection([('none', ''), ('daily', 'Daily'), \
                             ('weekly', 'Weekly'), ('monthly', 'Monthly'), \
                             ('yearly', 'Yearly'),],
