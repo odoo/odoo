@@ -144,6 +144,8 @@
                     <field name="quantity" string="Quantity/Rate"/>
                     <field name="amount"/>
                     <field name="total"/>
+                    <field name="amount_select" invisible="1"/>
+                    <field name="register_id" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -196,6 +198,7 @@
                     <newline/>
                     <group col="8" colspan="4" expand="0" string="Group By...">
                         <filter string="Salary Rule Category" icon="terp-camera_test" name="category_id" context="{'group_by':'category_id'}"/>
+                        <filter string="Contribution Register" name="register_id" icon="terp-folder-yellow" context="{'group_by':'register_id'}"/>
                         <separator orientation="vertical"/>
                         <filter string="Amount Type" name="amount_select" icon="terp-stock_symbol-selection" context="{'group_by':'amount_select'}"/>
                         <separator orientation="vertical"/>
