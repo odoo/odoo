@@ -912,15 +912,30 @@ openerp.base.Database = openerp.base.Controller.extend({
         
         var self = this;
         
+        this.rpc("/base/session/get_databases_list", {}, function(result) {
+            self.db_list = result.db_list;
+        });
+        
         this.$element.find('#db-create').click(function() {
         	self.db_string = "CREATE DATABASE";
         	self.$option_id.html(QWeb.render("CreateDB", self));
         });
-        self.$element.find('#db-drop').click();
-        self.$element.find('#db-backup').click();
-        self.$element.find('#db-restore').click();
-        self.$element.find('#db-change-password').click();
-        
+        self.$element.find('#db-drop').click(function() {
+        	self.db_string = "DROP DATABASE";
+        	self.$option_id.html(QWeb.render("DropDB", self));
+        });
+        self.$element.find('#db-backup').click(function() {
+        	self.db_string = "BACKUP DATABASE";
+        	self.$option_id.html(QWeb.render("BackupDB", self));
+        });
+        self.$element.find('#db-restore').click(function() {
+        	self.db_string = "RESTORE DATABASE";
+        	self.$option_id.html(QWeb.render("RestoreDB", self));
+        });
+        self.$element.find('#db-change-password').click(function() {
+        	self.db_string = "CHANGE DATABASE PASSWORD";
+        	self.$option_id.html(QWeb.render("Change_DB_Pwd", self));
+        });
        	self.$element.find('#back-to-login').click(function() {
     		self.header = new openerp.base.Header(self.session, "oe_header");
     		self.header.on_logout();	
