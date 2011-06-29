@@ -119,7 +119,7 @@ class project_tasks(osv.osv):
                                        message_id=message_id, attach=attach, \
                                        context=context)
 
-    def do_draft(self, cr, uid, ids, context):
+    def do_draft(self, cr, uid, ids, context=None):
         res = super(project_tasks, self).do_draft(cr, uid, ids, context)
         tasks = self.browse(cr, uid, ids, context=context)
         self._history(cr, uid, tasks, _('Draft'), context=context)
