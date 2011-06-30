@@ -171,8 +171,9 @@ class Session(openerpweb.Controller):
                 a list of fields to group by, potentially empty (in which case
                 no group by should be performed)
         """
-        context = req.session.eval_context(openerpweb.nonliterals.CompoundContext(*contexts))
-        domain = req.session.eval_domain(openerpweb.nonliterals.CompoundDomain(*(domains or [])), context)
+        context, domain = eval_context_and_domain(req.session,
+                                                  openerpweb.nonliterals.CompoundContext(*(contexts or [])),
+                                                  openerpweb.nonliterals.CompoundDomain(*(domains or [])))
         
         group_by_sequence = []
         for candidate in (group_by_seq or []):
@@ -233,12 +234,12 @@ class Session(openerpweb.Controller):
         
 def eval_context_and_domain(session, context, domain=None):
     e_context = session.eval_context(context)
-    e_domain = session.eval_domain(domain or [], e_context)
+    # should we give the evaluated context as an evaluation context to the domain?
+    e_domain = session.eval_domain(domain or [])
 
-    return (e_context, e_domain)
+    return e_context, e_domain
         
 def load_actions_from_ir_values(req, key, key2, models, meta, context):
-    context['bin_size'] = False # Possible upstream bug. Antony says not to loose time on this.
     Values = req.session.model('ir.values')
     actions = Values.get(key, key2, models, meta, context)
 
@@ -249,12 +250,12 @@ def load_actions_from_ir_values(req, key, key2, models, meta, context):
 
 def clean_action(action, session):
     # values come from the server, we can just eval them
-    if isinstance(action['context'], basestring):
+    if isinstance(action.get('context', None), basestring):
         action['context'] = eval(
             action['context'],
             session.evaluation_context()) or {}
 
-    if isinstance(action['domain'], basestring):
+    if isinstance(action.get('domain', None), basestring):
         action['domain'] = eval(
             action['domain'],
             session.evaluation_context(
@@ -285,13 +286,15 @@ def fix_view_modes(action):
     if action.pop('view_type') != 'form':
         return
 
-    action['view_mode'] = ','.join(
-        mode if mode != 'tree' else 'list'
-        for mode in action['view_mode'].split(','))
-    action['views'] = [
-        [id, mode if mode != 'tree' else 'list']
-        for id, mode in action['views']
-    ]
+    if action.has_key('view_mode'):
+        action['view_mode'] = ','.join(
+            mode if mode != 'tree' else 'list'
+            for mode in action['view_mode'].split(','))
+    if action.has_key('views'):
+        action['views'] = [
+            [id, mode if mode != 'tree' else 'list']
+            for id, mode in action['views']
+        ]
     return action
 
 class Menu(openerpweb.Controller):
@@ -435,23 +438,31 @@ class DataSet(openerpweb.Controller):
         return {'result': r}
 
     @openerpweb.jsonrequest
-    def unlink(self, request, model, ids=[]):
+    def unlink(self, request, model, ids=()):
         Model = request.session.model(model)
         return Model.unlink(ids, request.session.eval_context(request.context))
 
-    @openerpweb.jsonrequest
-    def call(self, req, model, method, args, domain_id=None, context_id=None):
+    def call_common(self, req, model, method, args, domain_id=None, context_id=None):
         domain = args[domain_id] if domain_id and len(args) - 1 >= domain_id  else []
         context = args[context_id] if context_id and len(args) - 1 >= context_id  else {}
-        c, d = eval_context_and_domain(req.session, context, domain);
-        if(domain_id and len(args) - 1 >= domain_id):
+        c, d = eval_context_and_domain(req.session, context, domain)
+        if domain_id and len(args) - 1 >= domain_id:
             args[domain_id] = d
-        if(context_id and len(args) - 1 >= context_id):
+        if context_id and len(args) - 1 >= context_id:
             args[context_id] = c
-        
-        m = req.session.model(model)
-        r = getattr(m, method)(*args)
-        return {'result': r}
+
+        return getattr(req.session.model(model), method)(*args)
+
+    @openerpweb.jsonrequest
+    def call(self, req, model, method, args, domain_id=None, context_id=None):
+        return {'result': self.call_common(req, model, method, args, domain_id, context_id)}
+
+    @openerpweb.jsonrequest
+    def call_button(self, req, model, method, args, domain_id=None, context_id=None):
+        action = self.call_common(req, model, method, args, domain_id, context_id)
+        if isinstance(action, dict) and action.get('type') != '':
+            clean_action(action, req.session)
+        return {'result': action}
 
     @openerpweb.jsonrequest
     def exec_workflow(self, req, model, id, signal):
@@ -701,7 +712,7 @@ class Binary(openerpweb.Controller):
         for key, val in cherrypy.request.headers.iteritems():
             headers[key.lower()] = val
         size = int(headers.get('content-length', 0))
-        # TODO: might be usefull to have a configuration flag for max-lenght file uploads
+        # TODO: might be useful to have a configuration flag for max-length file uploads
         try:
             out = """<script language="javascript" type="text/javascript">
                         var win = window.top.window,
@@ -756,7 +767,6 @@ class Action(openerpweb.Controller):
         Actions = req.session.model('ir.actions.actions')
         value = False
         context = req.session.eval_context(req.context)
-        context["bin_size"] = False
         action_type = Actions.read([action_id], ['type'], context)
         if action_type:
             action = req.session.model(action_type[0]['type']).read([action_id], False,

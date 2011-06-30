@@ -138,15 +138,13 @@ class OpenERPSession(object):
         """
         assert self._uid, "The user needs to be logged-in to initialize his context"
         self.context = self.model('res.users').context_get(self.context)
-        # set bin_size to True all the time
         self.context = self.context or {}
-        self.context["bin_size"] = True
-        
+
         self.client_timezone = self.context.get("tz", False)
         # invalid code, anyway we decided the server will be in UTC
         #if self.client_timezone:
         #    self.remote_timezone = self.execute('common', 'timezone_get')
-            
+
         self._locale = self.context.get('lang','en_US')
         lang_ids = self.execute('res.lang','search', [('code', '=', self._locale)])
         if lang_ids:
@@ -203,7 +201,7 @@ class OpenERPSession(object):
         ctx['context'] = ctx
         
         # adding the context of the session to send to the openerp server
-        ccontext = nonliterals.CompoundContext(self.context, context_to_eval)
+        ccontext = nonliterals.CompoundContext(self.context, context_to_eval or {})
         ccontext.session = self
         return ccontext.evaluate(ctx)
 

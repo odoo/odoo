@@ -8,7 +8,7 @@ import binascii
 import hashlib
 import simplejson.encoder
 
-__all__ = ['Domain', 'Context', 'NonLiteralEncoder, non_literal_decoder']
+__all__ = ['Domain', 'Context', 'NonLiteralEncoder, non_literal_decoder', 'CompoundDomain', 'CompoundContext']
 
 #: 48 bits should be sufficient to have almost no chance of collision
 #: with a million hashes, according to hg@67081329d49a
@@ -31,12 +31,14 @@ class NonLiteralEncoder(simplejson.encoder.JSONEncoder):
         elif isinstance(object, CompoundDomain):
             return {
                 '__ref': 'compound_domain',
-                '__domains': object.domains
+                '__domains': object.domains,
+                '__eval_context': object.get_eval_context()
             }
         elif isinstance(object, CompoundContext):
             return {
                 '__ref': 'compound_context',
-                '__contexts': object.contexts
+                '__contexts': object.contexts,
+                '__eval_context': object.get_eval_context()
             }
         raise TypeError('Could not encode unknown non-literal %s' % object)
 
@@ -61,12 +63,14 @@ def non_literal_decoder(dct):
         elif dct["__ref"] == "compound_domain":
             cdomain = CompoundDomain()
             for el in dct["__domains"]:
-                cdomain.domains.append(non_literal_decoder(el))
+                cdomain.domains.append(el)
+            cdomain.set_eval_context(dct.get("__eval_context"))
             return cdomain
         elif dct["__ref"] == "compound_context":
             ccontext = CompoundContext()
             for el in dct["__contexts"]:
-                ccontext.contexts.append(non_literal_decoder(el))
+                ccontext.contexts.append(el)
+            ccontext.set_eval_context(dct.get("__eval_context"))
             return ccontext
     return dct
 
@@ -121,7 +125,7 @@ class Domain(BaseDomain):
         ctx = self.session.evaluation_context(context)
         if self.own:
             ctx.update(self.own)
-        return eval(self.get_domain_string(), ctx)
+        return eval(self.get_domain_string(), SuperDict(ctx))
 
 class Context(BaseContext):
     def __init__(self, session, context_string=None, key=None):
@@ -167,12 +171,25 @@ class Context(BaseContext):
         if self.own:
             ctx.update(self.own)
         return eval(self.get_context_string(),
-                    ctx)
+                    SuperDict(ctx))
+        
+def SuperDict(dict):
+    def __getattr__(self, name):
+        try:
+            return self[name]
+        except KeyError:
+            raise AttributeError(name)
+    def __getitem__(self, key):
+        tmp = super(dict, self)[key]
+        if isinstance(tmp, dict):
+            return SuperDict(tmp)
+        return tmp
 
 class CompoundDomain(BaseDomain):
     def __init__(self, *domains):
         self.domains = []
         self.session = None
+        self.eval_context = None
         for domain in domains:
             self.add(domain)
         
@@ -180,14 +197,15 @@ class CompoundDomain(BaseDomain):
         final_domain = []
         for domain in self.domains:
             if not isinstance(domain, (list, BaseDomain)):
-                raise TypeError("Domain %r is not a list or a nonliteral Domain",
-                                 domain)
-                
+                raise TypeError(
+                    "Domain %r is not a list or a nonliteral Domain" % domain)
+
             if isinstance(domain, list):
                 final_domain.extend(domain)
                 continue
             
             ctx = dict(context or {})
+            ctx.update(self.get_eval_context() or {})
             ctx['context'] = ctx
             
             domain.session = self.session
@@ -197,22 +215,31 @@ class CompoundDomain(BaseDomain):
     def add(self, domain):
         self.domains.append(domain)
         return self
+    
+    def set_eval_context(self, eval_context):
+        self.eval_context = eval_context
+        return self
+        
+    def get_eval_context(self):
+        return self.eval_context
 
 class CompoundContext(BaseContext):
     def __init__(self, *contexts):
         self.contexts = []
+        self.eval_context = None
         self.session = None
         for context in contexts:
             self.add(context)
     
     def evaluate(self, context=None):
         ctx = dict(context or {})
+        ctx.update(self.get_eval_context() or {})
         final_context = {}
         for context_to_eval in self.contexts:
             if not isinstance(context_to_eval, (dict, BaseContext)):
-                raise TypeError("Context %r is not a dict or a nonliteral Context",
-                                 context_to_eval)
-    
+                raise TypeError(
+                    "Context %r is not a dict or a nonliteral Context" % context_to_eval)
+
             if isinstance(context_to_eval, dict):
                 final_context.update(context_to_eval)
                 continue
@@ -227,4 +254,10 @@ class CompoundContext(BaseContext):
     def add(self, context):
         self.contexts.append(context)
         return self
+    
+    def set_eval_context(self, eval_context):
+        self.eval_context = eval_context
+        return self
         
+    def get_eval_context(self):
+        return self.eval_context
