@@ -224,9 +224,8 @@ class hr_holidays(osv.osv):
         return True
 
     def holidays_validate(self, cr, uid, ids, *args):
-        context = {}
         lang = self.pool.get('res.users').browse(cr, uid, uid).context_lang
-        context.update({'lang': lang})
+        context = {'lang': lang}
         self.check_holidays(cr, uid, ids, context=context)
         obj_emp = self.pool.get('hr.employee')
         ids2 = obj_emp.search(cr, uid, [('user_id', '=', uid)])
@@ -234,9 +233,8 @@ class hr_holidays(osv.osv):
         return self.write(cr, uid, ids, {'state':'validate1', 'manager_id': manager})
 
     def holidays_validate2(self, cr, uid, ids, *args):
-        context = {}
         lang = self.pool.get('res.users').browse(cr, uid, uid).context_lang
-        context.update({'lang': lang})
+        context = {'lang': lang}
         self.check_holidays(cr, uid, ids, context=context)
         obj_emp = self.pool.get('hr.employee')
         ids2 = obj_emp.search(cr, uid, [('user_id', '=', uid)])
@@ -283,9 +281,8 @@ class hr_holidays(osv.osv):
         return True
 
     def holidays_confirm(self, cr, uid, ids, *args):
-        context = {}
         lang = self.pool.get('res.users').browse(cr, uid, uid).context_lang
-        context.update({'lang': lang})
+        context = {'lang': lang}
         self.check_holidays(cr, uid, ids, context=context)
         return self.write(cr, uid, ids, {'state':'confirm'})
 
@@ -313,8 +310,6 @@ class hr_holidays(osv.osv):
 
     def check_holidays(self, cr, uid, ids, context=None):
         holi_status_obj = self.pool.get('hr.holidays.status')
-        if context is None:
-            context = {}
         for record in self.browse(cr, uid, ids):
             if record.holiday_type == 'employee' and record.type == 'remove':
                 if record.employee_id and not record.holiday_status_id.limit:
