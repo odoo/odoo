@@ -1501,6 +1501,18 @@ openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
             });
             this._super(ids);
             this.dataset.set_ids(ids);
+        } else if (value.length >= 1 && typeof(value[0]) === "object") {
+            var ids = [];
+            this.dataset.delete_all = true;
+            _.each(value, function(command) {
+                var obj = {values: command};
+                obj['id'] = _.uniqueId(self.dataset.virtual_id_prefix);
+                self.dataset.to_create.push(obj);
+                self.dataset.cache.push(_.clone(obj));
+                ids.push(obj.id);
+            });
+            this._super(ids);
+            this.dataset.set_ids(ids);
         } else {
             this._super(value);
             this.dataset.reset_ids(value);
