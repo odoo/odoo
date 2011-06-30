@@ -118,6 +118,7 @@ openerp.base_calendar.CalendarView = openerp.base.Controller.extend({
             }
             res_events.push(this.convert_event(evt))
         }
+        
         scheduler.parse(res_events,"json");
         jQuery('#dhx_minical_icon').bind('click', this.mini_calendar);
         
@@ -182,82 +183,77 @@ openerp.base_calendar.CalendarView = openerp.base.Controller.extend({
     },
     
     convert_event: function(event) {
-        var res_text = '';
-        var res_description = [];
-        var start = event[this.date_start];
-        var end = event[this.date_delay] || 1;
-        var span = 0;
-        if(this.info_fields) {
-            var fld = event[this.info_fields[0]];
-            if(typeof fld == 'object') {
-                
-                res_text = fld[fld.length -1];
-            } else {
-                res_text = fld
-            }
-            var sliced_info_fields = this.info_fields.slice(1);
-            for(sl_fld in sliced_info_fields) {
-                var slc_fld = event[sliced_info_fields[sl_fld]];
-                if(typeof slc_fld == 'object') {
-                  res_description.push(slc_fld[slc_fld.length - 1])  
-                } else {
-                    if(slc_fld) {
-                        res_description.push(slc_fld);
-                    }
-                }
-            }
-        }
-        if(start && end){
-            var n = 0;
-            var h = end;
-            if (end == this.day_length) {
-                span = 1
-            } else if(end > this.day_length) {
-                n = end / this.day_length;
-                h = end % this.day_length;
-                n = parseInt(Math.floor(n));
-                
-                if(h > 0)
-                    span = n + 1
-                else
-                    span = n
-            }
-            var end_date = openerp.base.parse_datetime(start);
-            end = end_date.add({hours: h, minutes: n})   
-        }
-        if(start && this.date_stop) {
-            var tds = start = openerp.base.parse_datetime(start);
-            var tde = ends = openerp.base.parse_datetime(event[this.date_stop]);
-            if(event[this.date_stop] == undefined) {
-                if(tds) {
-                    end = (tds.getOrdinalNumber() + 60 * 60)
-                }
-            }
-            
-            if(tds && tde) {
-                //time.mktime equivalent
-                tds = (tds.getOrdinalNumber() / 1e3 >> 0) - (tds.getOrdinalNumber() < 0);
-                tde = (tde.getOrdinalNumber() / 1e3 >> 0) - (tde.getOrdinalNumber() < 0);
-                
-            }
-            if(tds >= tde) {
-                 tde = tds + 60 * 60;
-            }
-            
-            n = (tde - tds) / (60 * 60);
-            if (n >= this.day_length) {
-                span = Math.ceil(n / 24);
-            }
-        }
-        
-        return {
-            'start_date': start.toString('yyyy-MM-dd HH:mm:ss'),
-            'end_date': end.toString('yyyy-MM-dd HH:mm:ss'),
+    	var starts = event[this.date_start],
+    		ends = event[this.date_delay] || 1,
+    		span = 0,
+    		res_text = '',
+    		res_description = [];
+    	
+    	var parse_start_date = openerp.base.parse_datetime(starts);
+    	if(event[this.date_stop]) {
+    		var parse_end_date = openerp.base.parse_datetime(event[this.date_stop]);
+    	}
+       if(this.info_fields) {
+    	   var fld = event[this.info_fields[0]];
+    	   
+           if(typeof fld == 'object') res_text = fld[fld.length -1];
+           else res_text = fld;
+           
+           var sliced_info_fields = this.info_fields.slice(1);
+           for(sl_fld in sliced_info_fields) {
+               var slc_fld = event[sliced_info_fields[sl_fld]];
+               
+               if(typeof slc_fld == 'object') res_description.push(slc_fld[slc_fld.length - 1]);  
+               else {
+                   if(slc_fld) res_description.push(slc_fld);
+               }
+           }
+       }
+       
+       if(starts && ends) {
+    		var n = 0,
+    			h = ends;
+    		if(ends == this.day_length) span = 1;
+    		else if(ends > this.day_length) {
+    			n = ends / this.day_length,
+    			h = ends % this.day_length
+    			n = parseInt(Math.floor(n));
+    			
+    			if(h > 0) span = n + 1;
+    			else span = n;
+    		}
+    		var start = parse_start_date.setTime((parse_start_date.getTime() + (h * 60 * 60) + (n * 24 * 60 * 60)))
+    		ends = parse_start_date;
+    	}
+    	
+    	if(starts && this.date_stop) {
+    		ends = parse_end_date;
+    		if(event[this.date_stop] == undefined) {
+        		var start = parse_start_date.setTime((parse_start_date.getTime() + (h * 60 * 60) + (n * 24 * 60 * 60)))
+    			ends = parse_start_date;
+    		}
+    		var tds = parse_start_date.getTime(),
+    			tde = parse_end_date.getTime();
+    		
+    		if(tds >= tde) {
+    			tde = tds + 60 * 60;
+    			parse_end_date.setTime(tde);
+    			ends = parse_end_date;
+    		}
+    		n = (tde - tds) / (60 * 60);
+    		
+    		if (n >= this.day_length) span = Math.ceil(n / 24);
+    	}
+    	
+    	return {
+            'start_date': parse_start_date.toString('yyyy-MM-dd HH:mm:ss'),
+            'end_date': ends.toString('yyyy-MM-dd HH:mm:ss'),
             'text': res_text,
             'id': event['id'],
             'title': res_description.join()
             }
     },
+    
     
     mini_calendar: function() {
 		
