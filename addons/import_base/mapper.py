@@ -101,6 +101,18 @@ class value(mapper):
     def __call__(self, external_values):
         return external_values.get(self.val, self.default) 
     
+class fallback_value(value):
+    def __init__(self, val, default='', fallback=False):
+        self.val = val
+        self.default = default
+        self.fallback = fallback
+        
+    def __call__(self, external_values):
+        val = external_values.get(self.val, self.default) 
+        if self.fallback and (not val or val == self.default):
+            val = external_values.get(self.fallback, self.default)
+        return val 
+    
 class map_val(mapper):
     """
         Use : map_val(external_field, val_mapping)
