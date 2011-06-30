@@ -1134,14 +1134,17 @@ var build_view_fields_values = function(view) {
 var build_relation_context = function(relation_field) {
     var a_context = relation_field.view.dataset.get_context() || {};
     var fields_values = build_view_fields_values(relation_field.view);
-    var f_context = new openerp.base.CompoundContext(relation_field.field.context || {}).set_eval_context(fields_values);
-    var ctx = new openerp.base.CompoundContext(a_context, f_context);
+    var f_context = relation_field.field.context || {};
+    var v_context = new openerp.base.CompoundContext(relation_field.node.attrs.default_get || {},
+        relation_field.node.attrs.context || {}).set_eval_context(fields_values);
+    var ctx = new openerp.base.CompoundContext(a_context, f_context, v_context);
     return ctx;
 }
 var build_relation_domain = function(relation_field) {
     var fields_values = build_view_fields_values(relation_field.view);
-    var f_domain = new openerp.base.CompoundDomain(relation_field.field.domain || []).set_eval_context(fields_values);
-    return f_domain;
+    var f_domain = relation_field.field.domain || [];
+    var v_domain = new openerp.base.CompoundDomain(relation_field.node.attrs.domain || []).set_eval_context(fields_values);
+    return new openerp.base.CompoundDomain(f_domain, v_domain);
 }
 
 openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({

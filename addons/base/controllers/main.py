@@ -649,15 +649,16 @@ class View(openerpweb.Controller):
         """
         self.parse_domain(elem, 'domain', session)
         self.parse_domain(elem, 'filter_domain', session)
-        context_string = elem.get('context', '').strip()
-        if context_string:
-            try:
-                elem.set('context',
-                         openerpweb.ast.literal_eval(context_string))
-            except ValueError:
-                elem.set('context',
-                         openerpweb.nonliterals.Context(
-                             session, context_string))
+        for el in ['context', 'default_get']:
+            context_string = elem.get(el, '').strip()
+            if context_string:
+                try:
+                    elem.set(el,
+                             openerpweb.ast.literal_eval(context_string))
+                except ValueError:
+                    elem.set(el,
+                             openerpweb.nonliterals.Context(
+                                 session, context_string))
 
 class FormView(View):
     _cp_path = "/base/formview"
