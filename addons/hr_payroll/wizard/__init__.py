@@ -20,10 +20,7 @@
 #
 ##############################################################################
 
-
-import hr_payroll_employees_detail
-#import hr_payroll_create_analytic
-import hr_payroll_year_salary
 import hr_payroll_payslips_by_employees
+import hr_payroll_contribution_register_report
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
