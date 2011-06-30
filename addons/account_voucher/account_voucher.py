@@ -1016,7 +1016,7 @@ def resolve_o2m_operations(cr, uid, target_osv, operations, fields, context):
         result = None
         if not isinstance(operation, (list, tuple)):
             result = target_osv.read(cr, uid, operation, fields, context=context)
-        if operation[0] == 0:
+        elif operation[0] == 0:
             # may be necessary to check if all the fields are here and get the default values?
             result = operation[2]
         elif operation[0] == 1:
