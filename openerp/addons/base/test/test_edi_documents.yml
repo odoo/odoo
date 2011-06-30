@@ -1,14 +1,29 @@
 -
-  Tesing of EDI functionality
+  I create partner
+-
+  !record {model: res.partner, id: res_partner_test33}:
+    name: Ivan
+    title: 5
+    website: www.openerp.com
+    address:
+      - type: default
+        name: Davidson
+        street: M.G. Road
+        zip: 354562
+        city: Alhabad
+        phone: +91 985764653
+    supplier: False
+    customer: True
+    company_id: base.main_company
+-
+  I am Tesing of EDI functionality. so first export partner and than import it again
 -
   !python {model: ir.edi.document}: |
       partner_obj = self.pool.get('res.partner')
-      partner_ids = partner_obj.search(cr, uid, [('name','=','OpenERP S.A.')])
-      if partner_ids:
-          partners = partner_obj.browse(cr, uid, partner_ids)
-          tokens = self.export_edi(cr, uid, partners)
-          for token in tokens:
-              document = self.get_document(cr, uid, token, context=context)
-              a = self.import_edi(cr, uid, edi_document = document)
-      
+      partners = [partner_obj.browse(cr, uid, ref("res_partner_test33"))]
+      tokens = self.export_edi(cr, uid, partners)
+      assert tokens, 'Token is not generated.'
+      document = self.get_document(cr, uid, tokens[0], context=context)
+      a = self.import_edi(cr, uid, edi_document = document)
+
 
