@@ -53,7 +53,7 @@ class base_setup_installer(osv.osv_memory):
         'mrp':fields.boolean('Manufacturing',
             help="Helps you manage your manufacturing processes and generate "
                  "reports on those processes."),
-        'account_voucher':fields.boolean('Invoicing',
+        'account_voucher':fields.boolean('Invoicing & Payments',
             help="Allows you to create your invoices and track the payments. It is an easier version of the accounting module for managers who are not accountants."),
         'account_accountant':fields.boolean('Accounting & Finance',
             help="Helps you handle your accounting needs, if you are not an accountant, we suggest you to install only the Invoicing "),
@@ -120,8 +120,6 @@ class base_setup_installer(osv.osv_memory):
                 continue
             if datas[mod] == 1:
                 modules_selected.append(mod)
-                if mod in ('account','sale','purchase'):
-                    modules_selected.append('account_voucher')
 
         module_ids = module_pool.search(cr, uid, [('name', 'in', modules_selected)], context=context)
         for module in module_pool.browse(cr, uid, module_ids, context=context):
