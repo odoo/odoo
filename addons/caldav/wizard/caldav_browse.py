@@ -237,12 +237,22 @@ class user_preference(osv.osv_memory):
         collection_obj = self.pool.get('document.directory')
         ids = collection_obj.search(cr, uid, [('name', '=', 'c')])
         return ids[0]
+    
+    def _get_default_host(self, cr, uid, context):
+        ids=self.search(cr,uid,[])
+        host_name = ''
+        if ids:
+            ids = len(ids)> 1 and len(ids)-1 or ids[0] # Use len(ids)-1 for taking the value of last id 
+            host_obj = self.browse(cr, uid,[ids],context=context)[0]
+            host_name = host_obj.host_name
+        return host_name
 
     _defaults={
               'service': 'webdav',
               'collection' : _get_default_collection,
               'calendar' : _get_default_calendar,
               'device' : 'other',
+              'host_name':_get_default_host
 
     }
 
