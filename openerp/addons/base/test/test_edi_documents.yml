@@ -3,7 +3,7 @@
 -
   !record {model: res.partner, id: res_partner_test33}:
     name: Ivan
-    title: 5
+    title: base.res_partner_title_sir
     website: www.openerp.com
     address:
       - type: default
@@ -15,23 +15,34 @@
     supplier: False
     customer: True
     company_id: base.main_company
+    
 -
-  Tesing of EDI functionality
+    I am creating one Document to be stored in ".
 -
+    !record {model: 'ir.attachment', id: document_4}:
+        name : "My partner document"
+        res_model : res.partner
+        type : binary
+
+-
+    Attach a pdf file in "My partner document"
+-
+    !python {model: 'ir.attachment'}: |
+        import addons
+        import base64
+        pdf_file = open(addons.get_module_resource('base','test', 'partner.pdf'))
+        self.write(cr, uid, [ref("document_4")], {'res_id':ref("res_partner_test33"), 'datas_fname': 'partner.pdf', 'datas' : base64.encodestring(pdf_file.read())}, context)
+      
+-
+  Testing import and export
+-      
+
   !python {model: ir.edi.document}: |
       partner_obj = self.pool.get('res.partner')
       partners = [partner_obj.browse(cr, uid, ref("res_partner_test33"))]
       tokens = self.export_edi(cr, uid, partners)
       for token in tokens:
         document = self.get_document(cr, uid, token, context=context)
+        print document
         a = self.import_edi(cr, uid, edi_document = document)
 
--
-  Check the exported out_invoice become in_invoice or not
--
-  !python {model: res.partner}: |
-    old_ids = self.search(cr,uid,[('id','=',ref('res_partner_test33')),('customer','=',True)])
-    partner_old = self.browse(cr ,uid, old_ids[0])
-    assert partner_old.name == 'Ivan', "partner is not created"
-    assert partner_old.website == 'www.openerp.com', "website is inserted"
-   

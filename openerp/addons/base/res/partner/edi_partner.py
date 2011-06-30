@@ -23,7 +23,7 @@ from base.ir import ir_edi
 
 class res_partner(osv.osv, ir_edi.edi):
     _inherit = "res.partner"
-
+    
 res_partner()
 
 class res_partner_address(osv.osv, ir_edi.edi):
