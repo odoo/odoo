@@ -54,7 +54,7 @@ openerp.base.TreeView = openerp.base.View.extend({
         self.dataset.domain = [['parent_id', '=', parseInt(id, 10)]];
         self.dataset.read_slice([], 0, false, function (response) {
 
-            var is_padding,row_id,rowid,fixpadding,padding,padd,is_loaded;
+            var is_padding, row_id, record_id;
             var curr_node = $('tr #treerow_' + id);
 
             if (curr_node.length == 1) {
@@ -68,15 +68,16 @@ openerp.base.TreeView = openerp.base.View.extend({
                     }
                 }
 
-                padding = curr_node.find('td').css('paddingLeft');
-                padd = parseInt(padding.replace('px',''), 10);
-
+                var padding = curr_node.find('td').css('paddingLeft');
+                var padd = parseInt(padding.replace('px',''), 10);
+				var fixpadding;
+				
                 for (var i = 0; i < response.length; i++) {
                     row_id = $('tr #treerow_' + response[i].id);
                     if (row_id) {
                         if (!is_padding) {
                             fixpadding = padd + 40;
-                            row_id.find('td').css('paddingLeft', fixpadding );
+                            row_id.find('td').css('paddingLeft', fixpadding);
                         } else {
                             if (padd == 1) {
                                 fixpadding = padd + 17;
@@ -113,11 +114,11 @@ openerp.base.TreeView = openerp.base.View.extend({
             });
 
             self.$element.find('tr[id ^= treerow_]').find('td').children(':first-child').click( function() {
-                is_loaded = 0;
+                var is_loaded = 0;
                 if ($(this).length == 1) {
-                    rowid = (this.id).split('_')[1];
+                    record_id = (this.id).split('_')[1];
                     for (var i = 0; i < response.length; i++) {
-                        if (rowid == response[i].id && response[i].child_id.length > 0) {
+                        if (record_id == response[i].id && response[i].child_id.length > 0) {
                             $(response[i].child_id).each (function(e, childid) {
                                 if ($('tr #treerow_' + childid).length > 0) {
                                     if ($('tr #treerow_' + childid).is(':hidden')) {
@@ -129,12 +130,12 @@ openerp.base.TreeView = openerp.base.View.extend({
                             });
                             if (is_loaded == 0) {
                                 if ($(this).attr('src') == '/base/static/src/img/expand.gif') {
-                                    self.getdata(rowid, true);
+                                    self.getdata(record_id, true);
                                 }
                             } else if (is_loaded > 0) {
-                                self.showcontent(rowid, true, response[i].child_id);
+                                self.showcontent(record_id, true, response[i].child_id);
                             } else {
-                                self.showcontent(rowid, false, response[i].child_id);
+                                self.showcontent(record_id, false, response[i].child_id);
                             }
                         }
                     }
@@ -143,8 +144,8 @@ openerp.base.TreeView = openerp.base.View.extend({
 
             self.$element.find('tr[id ^= treerow_]').find('td').children(':last-child').click( function(e) {
                 row_id = $(this).parent().parent().attr('id');
-                rowid = row_id.split('_')[1];
-                self.showrecord(rowid, self.model);
+                record_id = row_id.split('_')[1];
+                self.showrecord(record_id, self.model);
                 e.stopImmediatePropagation();
             });
         });
