@@ -427,7 +427,6 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
 
         if (_.isEmpty(records)) {
             records = this.groups.get_records();
-            if (records.constructor != Array) debugger
         }
 
         var count = 0, sums = {};
@@ -935,7 +934,6 @@ openerp.base.ListView.Groups = Class.extend( /** @lends openerp.base.ListView.Gr
     },
     get_records: function () {
         if (_(this.children).isEmpty()) {
-            alert("HERE")
             return {
                 count: this.datagroup.length,
                 values: this.datagroup.aggregates
