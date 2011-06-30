@@ -35,7 +35,7 @@ class asset_asset_report(osv.osv):
                                   ('09', 'September'), ('10', 'October'),\
                                   ('11', 'November'), ('12', 'December')], 'Month', readonly=True),
         'day': fields.char('Day', size=16, readonly=True),
-        'purchase_date': fields.date('Asset Date', required=True),
+        'purchase_date': fields.date('Purchase Date', required=True),
         'depreciation_date': fields.date('Depreciation Date', readonly=True),
         'asset_id': fields.many2one('account.asset.asset', string='Asset', readonly=True),
         'asset_category_id': fields.many2one('account.asset.category',string='Asset category'),
@@ -89,8 +89,8 @@ class asset_asset_report(osv.osv):
                     a.state as state,
                     count(dl.*) as nbr,
                     a.company_id as company_id
-                from account_asset_asset a
-                    left join account_asset_depreciation_line dl on (dl.asset_id=a.id)
+                from account_asset_depreciation_line dl
+                    left join account_asset_asset a on (dl.asset_id=a.id)
                 group by 
                     dl.amount,dl.remaining_value,dl.depreciated_value,dl.asset_id,
                     to_char(a.purchase_date, 'YYYY'),to_char(a.purchase_date, 'MM'),
