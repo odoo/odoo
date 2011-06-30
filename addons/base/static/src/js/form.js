@@ -233,7 +233,8 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
                         }
                     }
                 } else {
-                    this.log("warning : on_processed_onchange can't find field " + f, result);
+                    // this is a common case, the normal behavior should be to ignore it
+                    this.log("on_processed_onchange can't find field " + f, result);
                 }
             }
             this.on_form_changed();
@@ -1500,18 +1501,6 @@ openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
             });
             this._super(ids);
             this.dataset.set_ids(ids);
-        } else if (value.length >= 1 && typeof(value[0]) === "object") {
-            var ids = [];
-            this.dataset.delete_all = true;
-            _.each(value, function(command) {
-                var obj = {values: command};
-                obj['id'] = _.uniqueId(self.dataset.virtual_id_prefix);
-                self.dataset.to_create.push(obj);
-                self.dataset.cache.push(_.clone(obj));
-                ids.push(obj.id);
-            });
-            this._super(ids);
-            this.dataset.set_ids(ids);
         } else {
             this._super(value);
             this.dataset.reset_ids(value);
@@ -1540,20 +1529,6 @@ openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
             this.dataset.to_delete, function(x) {
                 return commands['delete'](x.id);}));
     },
-    get_on_change_value: function() {
-        var self;
-        return _.map(this.dataset.ids, function(id) {
-            var values = _.detect(self.dataset.cache, function(x) {return x.id === id});
-            if (values) {
-                values = _.clone(values);
-                delete values["id"];
-                return values;
-            } else {
-                console.info("trying to get value in a o2m before that value is loaded");
-                return {};
-            }
-        });
-    },
     validate: function() {
         this.invalid = false;
         // TODO niv
@@ -1580,6 +1555,7 @@ openerp.base.form.One2ManyListView = openerp.base.ListView.extend({
         pop.on_create.add(function(data) {
             self.o2m.dataset.create(data, function(r) {
                 self.o2m.dataset.set_ids(self.o2m.dataset.ids.concat([r.result]));
+                self.o2m.dataset.on_change();
                 pop.stop();
                 self.o2m.reload_current_view();
             });
