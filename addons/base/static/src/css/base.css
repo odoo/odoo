@@ -773,13 +773,14 @@ background: linear-gradient(top, #ffffff 0%,#d8d8d8 11%,#afafaf 86%,#333333 91%,
     position: relative;
     vertical-align: top;
 }
-.openerp input.field_date, .openerp input.field_datetime {
-    background: #fff url('../img/ui/field_calendar.png') no-repeat right center;
-    background-origin: content-box;
-    -moz-background-origin: content;
-    -moz-background-origin: content-box;
-    -webkit-background-origin: content-box;
+.openerp img.ui-datepicker-trigger, .openerp img.ui-datepicker-trigger {
+    margin-left: -20px;
+    vertical-align: middle;
+    cursor: pointer;
+    position: relative;
+    top: -1px;
 }
+
 /* http://www.quirksmode.org/dom/inputfile.html
  * http://stackoverflow.com/questions/2855589/replace-input-type-file-by-an-image
  */
