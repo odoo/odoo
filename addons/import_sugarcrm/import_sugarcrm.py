@@ -60,7 +60,7 @@ class sugar_import(import_framework):
     TABLE_NOTE = 'Notes'
     TABLE_EMAIL = 'Emails'
     TABLE_COMPAIGN = 'Campaigns'
-    TABLE_DOCUMENT = 'DocumentRevisions'
+    TABLE_DOCUMENT = 'Documents'
     TABLE_HISTORY_ATTACHMNET = 'history_attachment'
     
     MAX_RESULT_PER_PAGE = 200
@@ -130,21 +130,52 @@ class sugar_import(import_framework):
     import Documents
     """
     
+    def import_related_document(self, val):
+        res_model = False
+        res_id = False
+        sugar_document_account = sugar.relation_search(self.context.get('port'), self.context.get('session_id'), 'Documents', module_id=val.get('id'), related_module='Accounts', query=None, deleted=None)
+        sugar_document_contact = sugar.relation_search(self.context.get('port'), self.context.get('session_id'), 'Documents', module_id=val.get('id'), related_module=self.TABLE_CONTACT, query=None, deleted=None)
+        sugar_document_opportunity = sugar.relation_search(self.context.get('port'), self.context.get('session_id'), 'Documents', module_id=val.get('id'), related_module=self.TABLE_OPPORTUNITY, query=None, deleted=None)
+        sugar_document_case = sugar.relation_search(self.context.get('port'), self.context.get('session_id'), 'Documents', module_id=val.get('id'), related_module=self.TABLE_CASE, query=None, deleted=None)
+        sugar_document_bug = sugar.relation_search(self.context.get('port'), self.context.get('session_id'), 'Documents', module_id=val.get('id'), related_module=self.TABLE_BUG, query=None, deleted=None)
+        if sugar_document_account:
+            res_id = self.get_mapped_id(self.TABLE_ACCOUNT,sugar_document_account[0])
+            res_model = 'res.partner'
+        elif sugar_document_contact:
+            res_id = self.get_mapped_id(self.TABLE_CONTACT, sugar_document_contact[0])
+            res_model = 'res.partner.address'
+        elif sugar_document_opportunity:
+            res_id = self.get_mapped_id(self.TABLE_OPPORTUNITY, sugar_document_opportunity[0])
+            res_model = 'crm.lead'
+        elif sugar_document_case:
+            res_id = self.get_mapped_id(self.TABLE_CASE, sugar_document_case[0])
+            res_model = 'crm.claim'
+        elif sugar_document_bug:
+            res_id = self.get_mapped_id(self.TABLE_BUG, sugar_document_bug[0])
+            res_model = 'project.issue'
+        return res_id,res_model
+    
     def import_document(self, val):
-        File,Filename = sugar.get_document_revision_search(self.context.get('port'), self.context.get('session_id'), val.get('id'))
-        val['datas'] = File
-        val['datas_fname'] = Filename
+        File,Filename = sugar.get_document_revision_search(self.context.get('port'), self.context.get('session_id'), val.get('document_revision_id'))
+        res_id, res_model  = self.import_related_document(val)
+        val['res_id'] = res_id
+        val['res_model'] = res_model
+        if File:
+            val['datas'] = File
+            val['datas_fname'] = Filename
         return val   
         
     def get_document_mapping(self): 
         return { 
                 'model' : 'ir.attachment',
-                'dependencies' : [self.TABLE_USER],
+                'dependencies' : [self.TABLE_USER, self.TABLE_ACCOUNT,self.TABLE_CONTACT, self.TABLE_OPPORTUNITY, self.TABLE_CASE, self.TABLE_BUG],
                 'hook' : self.import_document,
-                'map' : {'name':'filename',
+                'map' : {'name':'document_name',
                          'description': ppconcat('description'),
                          'datas': 'datas',
                          'datas_fname': 'datas_fname',
+                         'res_model': 'res_model',
+                         'res_id': 'res_id',
                 }
             }     
         
@@ -900,7 +931,6 @@ class import_sugarcrm(osv.osv):
         'password': fields.char('Password', size=24,required=True),
          'url' : fields.char('SugarSoap Api url:', size=264, required=True, help="Webservice's url where to get the data.\
                       example : 'http://example.com/sugarcrm/soap.php', or copy the address of your sugarcrm application http://trial.sugarcrm.com/qbquyj4802/index.php?module=Home&action=index"),
-                
         'opportunity': fields.boolean('Leads and Opportunities', help="If Opportunities are checked, SugarCRM opportunities data imported in OpenERP crm-Opportunity form"),
         'contact': fields.boolean('Contacts', help="If Contacts are checked, SugarCRM Contacts data imported in OpenERP partner address form"),
         'account': fields.boolean('Accounts', help="If Accounts are checked, SugarCRM  Accounts data imported in OpenERP partners form"),
@@ -915,8 +945,11 @@ class import_sugarcrm(osv.osv):
         'document': fields.boolean('Documents', help="If Documents is checked, SugarCRM Documents data imported in OpenERP Document Form"),
         'email_from': fields.char('Notify End Of Import To:', size=128),
         'instance_name': fields.char("Instance's Name", size=64, help="Prefix of SugarCRM id to differentiate xml_id of SugarCRM models datas come from different server."),
-        
     }
+    
+    def _get_email_id(self, cr, uid, context=None):
+        return self.pool.get('res.users').browse(cr, uid, uid, context=context).user_email    
+    
     _defaults = {#to be set to true, but easier for debugging
        'opportunity': True,
        'contact' : True,
@@ -931,7 +964,7 @@ class import_sugarcrm(osv.osv):
         'bug': True,
         'document': False,
         'instance_name': 'sugarcrm',
-        'email_from': 'tfr@openerp.com',
+        'email_from': _get_email_id,
         'username' : 'tfr',
         'password' : 'a',
         'url':  "http://localhost/sugarcrm/soap.php"        
@@ -1005,7 +1038,7 @@ class import_sugarcrm(osv.osv):
             if current.bug:
                 key_list.append('Bugs')
             if current.document:
-                key_list.append('DocumentRevisions')
+                key_list.append('Documents')
         return key_list
 
 
