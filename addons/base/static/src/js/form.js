@@ -1159,8 +1159,6 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
                 "views":[[false,"form"]],
                 "res_id": self.value[0],
                 "type":"ir.actions.act_window",
-                "view_type":"form",
-                "view_mode":"form",
                 "target":"new",
                 "context": build_relation_context(self)
             });

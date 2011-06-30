@@ -243,12 +243,12 @@ def load_actions_from_ir_values(req, key, key2, models, meta, context):
     Values = req.session.model('ir.values')
     actions = Values.get(key, key2, models, meta, context)
 
-    for _, _, action in actions:
-        clean_action(action, req.session)
-
-    return actions
+    return [(id, name, clean_action(action, req.session))
+            for id, name, action in actions]
 
 def clean_action(action, session):
+    if action['type'] != 'ir.actions.act_window':
+        return action
     # values come from the server, we can just eval them
     if isinstance(action.get('context', None), basestring):
         action['context'] = eval(
@@ -260,10 +260,48 @@ def clean_action(action, session):
             action['domain'],
             session.evaluation_context(
                 action['context'])) or []
-    if not action.has_key('flags'):
+    if 'flags' not in action:
         # Set empty flags dictionary for web client.
         action['flags'] = dict()
     return fix_view_modes(action)
+
+def generate_views(action):
+    """
+    While the server generates a sequence called "views" computing dependencies
+    between a bunch of stuff for views coming directly from the database
+    (the ``ir.actions.act_window model``), it's also possible for e.g. buttons
+    to return custom view dictionaries generated on the fly.
+
+    In that case, there is no ``views`` key available on the action.
+
+    Since the web client relies on ``action['views']``, generate it here from
+    ``view_mode`` and ``view_id``.
+
+    Currently handles two different cases:
+
+    * no view_id, multiple view_mode
+    * single view_id, single view_mode
+
+    :param dict action: action descriptor dictionary to generate a views key for
+    """
+    view_id = action.get('view_id', False)
+    if isinstance(view_id, (list, tuple)):
+        view_id = view_id[0]
+
+    # providing at least one view mode is a requirement, not an option
+    view_modes = action['view_mode'].split(',')
+
+    if len(view_modes) > 1:
+        if view_id:
+            raise ValueError('Non-db action dictionaries should provide '
+                             'either multiple view modes or a single view '
+                             'mode and an optional view id.\n\n Got view '
+                             'modes %r and view id %r for action %r' % (
+                view_modes, view_id, action))
+        action['views'] = [(False, mode) for mode in view_modes]
+        return
+    action['views'] = [(view_id, view_modes[0])]
+
 
 def fix_view_modes(action):
     """ For historical reasons, OpenERP has weird dealings in relation to
@@ -283,18 +321,17 @@ def fix_view_modes(action):
     :param dict action: an action descriptor
     :returns: nothing, the action is modified in place
     """
+    if 'views' not in action:
+        generate_views(action)
+
     if action.pop('view_type') != 'form':
         return
 
-    if action.has_key('view_mode'):
-        action['view_mode'] = ','.join(
-            mode if mode != 'tree' else 'list'
-            for mode in action['view_mode'].split(','))
-    if action.has_key('views'):
-        action['views'] = [
-            [id, mode if mode != 'tree' else 'list']
-            for id, mode in action['views']
-        ]
+    action['views'] = [
+        [id, mode if mode != 'tree' else 'list']
+        for id, mode in action['views']
+    ]
+
     return action
 
 class Menu(openerpweb.Controller):
@@ -461,8 +498,8 @@ class DataSet(openerpweb.Controller):
     def call_button(self, req, model, method, args, domain_id=None, context_id=None):
         action = self.call_common(req, model, method, args, domain_id, context_id)
         if isinstance(action, dict) and action.get('type') != '':
-            clean_action(action, req.session)
-        return {'result': action}
+            return {'result': clean_action(action, req.session)}
+        return {'result': False}
 
     @openerpweb.jsonrequest
     def exec_workflow(self, req, model, id, signal):
@@ -774,3 +811,8 @@ class Action(openerpweb.Controller):
             if action:
                 value = clean_action(action[0], req.session)
         return {'result': value}
+
+    @openerpweb.jsonrequest
+    def run(self, req, action_id):
+        return clean_action(req.session.model('ir.actions.server').run(
+            [action_id], req.session.eval_context(req.context)), req.session)
