@@ -18,20 +18,21 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
-from osv import fields,osv
-from tools.safe_eval import safe_eval as eval
-import tools
-import time
-from tools.config import config
-from tools.translate import _
-import netsvc
-import logging
-import re
+import ast
 import copy
+import logging
 import os
+import re
+import time
+import tools
 from xml import dom
+
+import netsvc
+from osv import fields,osv
 from report.report_sxw import report_sxw, report_rml
+from tools.config import config
+from tools.safe_eval import safe_eval as eval
+from tools.translate import _
 
 class actions(osv.osv):
     _name = 'ir.actions.actions'
@@ -841,6 +842,43 @@ class ir_actions_todo(osv.osv):
         return self.write(cr, uid, ids, {'state': 'open'}, context=context)
 
 ir_actions_todo()
+
+class act_client(osv.osv):
+    _name = 'ir.actions.client'
+    _inherit = 'ir.actions.actions'
+    _table = 'ir_act_client'
+    _sequence = 'ir_actions_id_seq'
+    _order = 'name'
+
+    def _get_kwargs(self, cr, uid, ids, field_name, arg, context):
+        return dict([
+            ((record.id, ast.literal_eval(record.kwargs_store))
+             if record.kwargs_store else (record.id, False))
+            for record in self.browse(cr, uid, ids, context=context)
+        ])
+
+    def _set_kwargs(self, cr, uid, ids, field_name, field_value, arg, context):
+        assert isinstance(field_value, dict), "kwargs can only be dictionaries"
+        for record in self.browse(cr, uid, ids, context=context):
+            record.write({field_name: repr(field_value)})
+
+    _columns = {
+        'tag': fields.char('Client action tag', size=64, required=True,
+                           help="An arbitrary string, interpreted by the client"
+                                " according to its own needs and wishes. There "
+                                "is no central tag repository across clients."),
+        'kwargs': fields.function(_get_kwargs, fnct_inv=_set_kwargs,
+                                  type='binary', method=True,
+                                  string="Supplementary arguments",
+                                  help="Arguments sent to the client along with"
+                                       "the view tag"),
+        'kwargs_store': fields.binary("Kwargs storage", readonly=True)
+    }
+    _defaults = {
+        'type': 'ir.actions.client',
+
+    }
+act_client()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
