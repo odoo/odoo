@@ -234,7 +234,7 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
                     }
                 } else {
                     // this is a common case, the normal behavior should be to ignore it
-                    //this.log("warning : on_processed_onchange can't find field " + field, result);
+                    this.log("on_processed_onchange can't find field " + f, result);
                 }
             }
             this.on_form_changed();
@@ -1557,6 +1557,7 @@ openerp.base.form.One2ManyListView = openerp.base.ListView.extend({
         pop.on_create.add(function(data) {
             self.o2m.dataset.create(data, function(r) {
                 self.o2m.dataset.set_ids(self.o2m.dataset.ids.concat([r.result]));
+                self.o2m.dataset.on_change();
                 pop.stop();
                 self.o2m.reload_current_view();
             });
