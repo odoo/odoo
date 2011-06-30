@@ -265,6 +265,44 @@ def clean_action(action, session):
         action['flags'] = dict()
     return fix_view_modes(action)
 
+def generate_views(action):
+    """
+    While the server generates a sequence called "views" computing dependencies
+    between a bunch of stuff for views coming directly from the database
+    (the ``ir.actions.act_window model``), it's also possible for e.g. buttons
+    to return custom view dictionaries generated on the fly.
+
+    In that case, there is no ``views`` key available on the action.
+
+    Since the web client relies on ``action['views']``, generate it here from
+    ``view_mode`` and ``view_id``.
+
+    Currently handles two different cases:
+
+    * no view_id, multiple view_mode
+    * single view_id, single view_mode
+
+    :param dict action: action descriptor dictionary to generate a views key for
+    """
+    view_id = action.get('view_id', False)
+    if isinstance(view_id, (list, tuple)):
+        view_id = view_id[0]
+
+    # providing at least one view mode is a requirement, not an option
+    view_modes = action['view_mode'].split(',')
+
+    if len(view_modes) > 1:
+        if view_id:
+            raise ValueError('Non-db action dictionaries should provide '
+                             'either multiple view modes or a single view '
+                             'mode and an optional view id.\n\n Got view '
+                             'modes %r and view id %r for action %r' % (
+                view_modes, view_id, action))
+        action['views'] = [(False, mode) for mode in view_modes]
+        return
+    action['views'] = [(view_id, view_modes[0])]
+
+
 def fix_view_modes(action):
     """ For historical reasons, OpenERP has weird dealings in relation to
     view_mode and the view_type attribute (on window actions):
@@ -283,18 +321,17 @@ def fix_view_modes(action):
     :param dict action: an action descriptor
     :returns: nothing, the action is modified in place
     """
+    if 'views' not in action:
+        generate_views(action)
+
     if action.pop('view_type') != 'form':
         return
 
-    if 'view_mode' in action:
-        action['view_mode'] = ','.join(
-            mode if mode != 'tree' else 'list'
-            for mode in action['view_mode'].split(','))
-    if 'views' in action:
-        action['views'] = [
-            [id, mode if mode != 'tree' else 'list']
-            for id, mode in action['views']
-        ]
+    action['views'] = [
+        [id, mode if mode != 'tree' else 'list']
+        for id, mode in action['views']
+    ]
+
     return action
 
 class Menu(openerpweb.Controller):
@@ -774,3 +811,8 @@ class Action(openerpweb.Controller):
             if action:
                 value = clean_action(action[0], req.session)
         return {'result': value}
+
+    @openerpweb.jsonrequest
+    def run(self, req, action_id):
+        return clean_action(req.session.model('ir.actions.server').run(
+            [action_id], req.session.eval_context(req.context)), req.session)
