@@ -105,7 +105,7 @@ class report_custom(report_rml):
         <company>%s</company>
         </header>
         ''' % (str(rml_obj.formatLang(time.strftime("%Y-%m-%d"),date=True))+' ' + str(time.strftime("%H:%M")),pooler.get_pool(cr.dbname).get('res.users').browse(cr,uid,uid).company_id.name)
-
+       
         first_date = str(month)
         som = datetime.strptime(first_date, '%Y-%m-%d %H:%M:%S')
         eom = som + timedelta(int(dy)-1)
@@ -177,10 +177,11 @@ class report_custom(report_rml):
         xml = '''<?xml version="1.0" encoding="UTF-8" ?>
         <report>
         %s
+        <title>%s</title>
         %s
         %s
         </report>
-        ''' % (header_xml,'\n'.join(user_xml),date_xml)
+        ''' % (header_xml,_('Attendances By Month'),'\n'.join(user_xml),date_xml)
         return xml
 
 report_custom('report.hr.attendance.bymonth', 'hr.employee', '', 'addons/hr_attendance/report/bymonth.xsl')
