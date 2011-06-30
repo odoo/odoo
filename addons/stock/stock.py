@@ -1176,13 +1176,12 @@ class stock_picking(osv.osv):
                 if move.state in ('done', 'cancel'):
                     continue
                 partial_data = partial_datas.get('move%s'%(move.id), False)
-                assert partial_data, _('Missing partial picking data for move #%s') % (move.id)
-                product_qty = partial_data.get('product_qty',0.0)
+                product_qty = partial_data and partial_data.get('product_qty') or 0.0
                 move_product_qty[move.id] = product_qty
-                product_uom = partial_data.get('product_uom',False)
-                product_price = partial_data.get('product_price',0.0)
-                product_currency = partial_data.get('product_currency',False)
-                prodlot_id = partial_data.get('prodlot_id')
+                product_uom = partial_data and partial_data.get('product_uom') or False
+                product_price = partial_data and partial_data.get('product_price') or 0.0
+                product_currency = partial_data and partial_data.get('product_currency') or False
+                prodlot_id = partial_data and partial_data.get('prodlot_id') or False
                 prodlot_ids[move.id] = prodlot_id
                 if move.product_qty == product_qty:
                     complete.append(move)

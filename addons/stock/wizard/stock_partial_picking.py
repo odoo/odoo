@@ -154,11 +154,6 @@ class stock_partial_picking(osv.osv_memory):
             picking_type = self.get_picking_type(cr, uid, pick, context=context)
             moves_list = picking_type == 'in' and partial.product_moves_in or partial.product_moves_out
 
-            #Adding a check whether any move has been removed
-            if len(moves_list) < len(pick.move_lines):
-                raise osv.except_osv(_('Processing Error'),\
-                _('You cannot remove any move while validating the picking, rather you can set the quantity as zero!'))
-
             #Adding a check whether any move has been added
             if len(moves_list) > len(pick.move_lines):
                 raise osv.except_osv(_('Processing Error'),\
@@ -171,21 +166,18 @@ class stock_partial_picking(osv.osv_memory):
                     raise osv.except_osv(_('Processing Error'),\
                     _('You cannot add any new move while validating the picking, rather you can split the lines prior to validation!'))
 
-                if len(moves_list) == 1 and move.quantity == 0:
-                    raise osv.except_osv(_('Processing Error'), \
-                    _('bass la na kar!!'))
-
                 calc_qty = uom_obj._compute_qty(cr, uid, move.product_uom.id, \
                                     move.quantity, move.move_id.product_uom.id)
 
                 #Adding a check whether any move line contains exceeding qty to original moveline
                 if calc_qty > move.move_id.product_qty:
                     raise osv.except_osv(_('Processing Error'),
-                    _('Processing quantity %d for %s is larger than the available quantity %d !')\
-                    %(move.quantity, move.product_id.name, move.move_id.product_qty))
+                    _('Processing quantity %d %s for %s is larger than the available quantity %d %s !')\
+                    %(move.quantity, move.product_uom.name, move.product_id.name,\
+                      move.move_id.product_qty, move.move_id.product_uom.name))
 
                 #Adding a check whether any move line contains qty less than zero
-                if calc_qty < 0:
+                if calc_qty <= 0:
                     raise osv.except_osv(_('Processing Error'), \
                             _('Can not process quantity %d for Product %s !') \
                             %(move.quantity, move.product_id.name))
