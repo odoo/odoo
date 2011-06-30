@@ -850,7 +850,8 @@ class ir_actions_todo(osv.osv):
             user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
             ctx = eval(res['context'], {'user': user})
             if ctx.get('res_id'):
-                res.update({'res_id': ctx.get('res_id')})
+                res.update({'res_id': ctx.pop('res_id')})
+                res.update({'context': ctx})
         return res
 
     def action_open(self, cr, uid, ids, context=None):
