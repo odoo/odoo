@@ -56,7 +56,7 @@ class account_common_report(osv.osv_memory):
         return res
 
     def onchange_filter(self, cr, uid, ids, filter='filter_no', fiscalyear_id=False, context=None):
-        res = {}
+        res = {'value': {}}
         if filter == 'filter_no':
             res['value'] = {'period_from': False, 'period_to': False, 'date_from': False ,'date_to': False}
         if filter == 'filter_date':
@@ -68,7 +68,7 @@ class account_common_report(osv.osv_memory):
                                FROM account_period p
                                LEFT JOIN account_fiscalyear f ON (p.fiscalyear_id = f.id)
                                WHERE f.id = %s
-                               ORDER BY p.date_start ASC
+                               ORDER BY p.date_start ASC, p.special ASC
                                LIMIT 1) AS period_start
                 UNION
                 SELECT * FROM (SELECT p.id

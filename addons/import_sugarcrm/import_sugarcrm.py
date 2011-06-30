@@ -60,7 +60,10 @@ class sugar_import(import_framework):
     TABLE_NOTE = 'Notes'
     TABLE_EMAIL = 'Emails'
     TABLE_COMPAIGN = 'Campaigns'
+    TABLE_DOCUMENT = 'Documents'
     TABLE_HISTORY_ATTACHMNET = 'history_attachment'
+    
+    MAX_RESULT_PER_PAGE = 200
     
     def initialize(self):
         #login
@@ -71,11 +74,23 @@ class sugar_import(import_framework):
         self.context['session_id'] = sessionid
         
     def get_data(self, table):
-        return sugar.search(self.context.get('port'), self.context.get('session_id'), table)
+        offset = 0
+        
+        res = []
+        while True:
+            r = sugar.search(self.context.get('port'), self.context.get('session_id'), table, offset, self.MAX_RESULT_PER_PAGE)
+            res.extend(r)
+            if len(r) < self.MAX_RESULT_PER_PAGE:
+                break;
+            offset += self.MAX_RESULT_PER_PAGE
+        return res
+    
+    #def get_link(self, from_table, ids, to_table):
+        #return sugar.relation_search(self.context.get('port'), self.context.get('session_id'), from_table, module_id=ids, related_module=to_table)
+
     """
     Common import method
     """
-
     def get_category(self, val, model, name):
         fields = ['name', 'object_id']
         data = [name, model]
@@ -112,30 +127,77 @@ class sugar_import(import_framework):
         return "%s.%i" % (hour, min)
     
     """
+    import Documents
+    """
+    
+    def import_related_document(self, val):
+        res_model = False
+        res_id = False
+        sugar_document_account = sugar.relation_search(self.context.get('port'), self.context.get('session_id'), 'Documents', module_id=val.get('id'), related_module='Accounts', query=None, deleted=None)
+        sugar_document_contact = sugar.relation_search(self.context.get('port'), self.context.get('session_id'), 'Documents', module_id=val.get('id'), related_module=self.TABLE_CONTACT, query=None, deleted=None)
+        sugar_document_opportunity = sugar.relation_search(self.context.get('port'), self.context.get('session_id'), 'Documents', module_id=val.get('id'), related_module=self.TABLE_OPPORTUNITY, query=None, deleted=None)
+        sugar_document_case = sugar.relation_search(self.context.get('port'), self.context.get('session_id'), 'Documents', module_id=val.get('id'), related_module=self.TABLE_CASE, query=None, deleted=None)
+        sugar_document_bug = sugar.relation_search(self.context.get('port'), self.context.get('session_id'), 'Documents', module_id=val.get('id'), related_module=self.TABLE_BUG, query=None, deleted=None)
+        if sugar_document_account:
+            res_id = self.get_mapped_id(self.TABLE_ACCOUNT,sugar_document_account[0])
+            res_model = 'res.partner'
+        elif sugar_document_contact:
+            res_id = self.get_mapped_id(self.TABLE_CONTACT, sugar_document_contact[0])
+            res_model = 'res.partner.address'
+        elif sugar_document_opportunity:
+            res_id = self.get_mapped_id(self.TABLE_OPPORTUNITY, sugar_document_opportunity[0])
+            res_model = 'crm.lead'
+        elif sugar_document_case:
+            res_id = self.get_mapped_id(self.TABLE_CASE, sugar_document_case[0])
+            res_model = 'crm.claim'
+        elif sugar_document_bug:
+            res_id = self.get_mapped_id(self.TABLE_BUG, sugar_document_bug[0])
+            res_model = 'project.issue'
+        return res_id,res_model
+    
+    def import_document(self, val):
+        File,Filename = sugar.get_document_revision_search(self.context.get('port'), self.context.get('session_id'), val.get('document_revision_id'))
+        res_id, res_model  = self.import_related_document(val)
+        val['res_id'] = res_id
+        val['res_model'] = res_model
+        if File:
+            val['datas'] = File
+            val['datas_fname'] = Filename
+        return val   
+        
+    def get_document_mapping(self): 
+        return { 
+                'model' : 'ir.attachment',
+                'dependencies' : [self.TABLE_USER, self.TABLE_ACCOUNT,self.TABLE_CONTACT, self.TABLE_OPPORTUNITY, self.TABLE_CASE, self.TABLE_BUG],
+                'hook' : self.import_document,
+                'map' : {'name':'document_name',
+                         'description': ppconcat('description'),
+                         'datas': 'datas',
+                         'datas_fname': 'datas_fname',
+                         'res_model': 'res_model',
+                         'res_id': 'res_id',
+                }
+            }     
+        
+    
+    """
     import Emails
     """
 
-    def get_email_attachment(self, val):
-        File, Filename = sugar.attachment_search(self.context.get('port'), self.context.get('session_id'), self.TABLE_EMAIL, val.get('id')) 
-        attach_xml_id = False
-        if File:
-            fields = ['name', 'datas', 'datas_fname','res_id', 'res_model']
-            name = 'attachment_'+ (Filename or val.get('name'))
-            datas = [Filename or val.get('name'), File, Filename, val.get('res_id'),val.get('model',False)]
-            attach_xml_id = self.import_object(fields, datas, 'ir.attachment', self.TABLE_HISTORY_ATTACHMNET, name, [('res_id', '=', val.get('res_id'), ('model', '=', val.get('model')))])
-        return attach_xml_id
-    
+      
     def import_email(self, val):
+        vals = sugar.email_search(self.context.get('port'), self.context.get('session_id'), self.TABLE_EMAIL, val.get('id'))
         model_obj =  self.obj.pool.get('ir.model.data')
-        xml_id = self.xml_id_exist(val.get('parent_type'), val.get('parent_id'))
-        model_ids = model_obj.search(self.cr, self.uid, [('name', 'like', xml_id)])
-        if model_ids:
-            model = model_obj.browse(self.cr, self.uid, model_ids)[0]
-            if model.model == 'res.partner':
-                val['partner_id/.id'] = model.res_id
-            else:    
-                val['res_id'] = model.res_id
-                val['model'] = model.model
+        for val in vals:
+            xml_id = self.xml_id_exist(val.get('parent_type'), val.get('parent_id'))
+            model_ids = model_obj.search(self.cr, self.uid, [('name', 'like', xml_id)])
+            if model_ids:
+                model = model_obj.browse(self.cr, self.uid, model_ids)[0]
+                if model.model == 'res.partner':
+                    val['partner_id/.id'] = model.res_id
+                else:    
+                    val['res_id'] = model.res_id
+                    val['model'] = model.model
         return val   
         
     def get_email_mapping(self): 
@@ -147,14 +209,13 @@ class sugar_import(import_framework):
                          'history' : const("1"),
                         'date':'date_sent',
                         'email_from': 'from_addr_name',
-                        'email_to': 'reply_to_addr',
+                        'email_to': 'to_addrs_names',
                         'email_cc': 'cc_addrs_names',
                         'email_bcc': 'bcc_addrs_names',
                         'message_id': 'message_id',
                         'res_id': 'res_id',
                         'model': 'model',
                         'partner_id/.id': 'partner_id/.id',                         
-                        'attachment_ids/id': self.get_email_attachment,
                         'user_id/id': ref(self.TABLE_USER, 'assigned_user_id'),
                         'description': ppconcat('description', 'description_html'),
                 }
@@ -163,15 +224,7 @@ class sugar_import(import_framework):
     """
     import History(Notes)
     """
-    def get_note_attachment(self, val):
-        File, Filename = sugar.attachment_search(self.context.get('port'), self.context.get('session_id'), self.TABLE_NOTE, val.get('id')) 
-        attach_xml_id = False
-        if File:
-            fields = ['name', 'datas', 'datas_fname','res_id', 'res_model']
-            name = 'attachment_'+ (Filename or val.get('name'))
-            datas = [Filename or val.get('name'), File, Filename, val.get('res_id'),val.get('model',False)]
-            attach_xml_id = self.import_object(fields, datas, 'ir.attachment', self.TABLE_HISTORY_ATTACHMNET, name, [('res_id', '=', val.get('res_id'), ('model', '=', val.get('model')))])
-        return attach_xml_id
+    
 
     def import_history(self, val):
         model_obj =  self.obj.pool.get('ir.model.data')
@@ -181,27 +234,28 @@ class sugar_import(import_framework):
             model = model_obj.browse(self.cr, self.uid, model_ids)[0]
             if model.model == 'res.partner':
                 val['partner_id/.id'] = model.res_id
-                val['history'] = "1"
-            else:    
-                val['res_id'] = model.res_id
-                val['model'] = model.model
+            val['res_id'] = model.res_id
+            val['model'] = model.model
+        File, Filename = sugar.attachment_search(self.context.get('port'), self.context.get('session_id'), self.TABLE_NOTE, val.get('id')) 
+        if File:
+            val['datas'] = File
+            val['datas_fname'] = Filename
         return val    
     
     def get_history_mapping(self): 
         return { 
-                'model' : 'mailgate.message',
-                'dependencies' : [self.TABLE_USER, self.TABLE_PROJECT, self.TABLE_PROJECT_TASK, self.TABLE_ACCOUNT, self.TABLE_CONTACT, self.TABLE_LEAD, self.TABLE_OPPORTUNITY, self.TABLE_MEETING, self.TABLE_CALL],
+                'model' : 'ir.attachment',
+                'dependencies' : [self.TABLE_USER, self.TABLE_PROJECT, self.TABLE_PROJECT_TASK, self.TABLE_ACCOUNT, self.TABLE_CONTACT, self.TABLE_LEAD, self.TABLE_OPPORTUNITY, self.TABLE_MEETING, self.TABLE_CALL, self.TABLE_EMAIL],
                 'hook' : self.import_history,
                 'map' : {
                       'name':'name',
-                      'date': 'date_entered',
-                      'user_id/id': ref(self.TABLE_USER, 'assigned_user_id'),
+                      'user_id/id': ref(self.TABLE_USER, 'created_by'),
                       'description': ppconcat('description', 'description_html'),
                       'res_id': 'res_id',
-                      'model': 'model',
-                      'attachment_ids/id': self.get_note_attachment,
+                      'res_model': 'model',
                       'partner_id/.id' : 'partner_id/.id',
-                      'history' : 'history',
+                      'datas' : 'datas',
+                      'datas_fname' : 'datas_fname'
                 }
             }     
     
@@ -248,6 +302,7 @@ class sugar_import(import_framework):
                     'description': ppconcat('description', 'resolution', 'work_log'),
                     'partner_id/id': ref(self.TABLE_ACCOUNT, 'account_id'),
                     'partner_address_id/.id': 'partner_address_id/.id',
+                    'categ_id/id': call(self.get_category, 'crm.claim', value('type')),
                     'partner_phone': 'partner_phone',
                     'email_from': 'email_from',                                        
                     'priority': self.get_claim_priority,
@@ -593,7 +648,6 @@ class sugar_import(import_framework):
         'Dead': 'done',
         'Converted': 'done',
     }
-
     
     def import_lead(self, val):
         if val.get('opportunity_id'): #if lead is converted into opp, don't import as lead
@@ -640,6 +694,12 @@ class sugar_import(import_framework):
     """
         import contact
     """
+    
+    def get_email(self, val):
+        email_address = sugar.get_contact_by_email(self.context.get('port'), self.context.get('username'), self.context.get('password'), val.get('email1'))
+        if email_address:
+            return ','.join(email_address)     
+    
     def import_contact(self, val):
         if val.get('primary_address_country'):
             country_id = self.get_all_countries(val.get('primary_address_country'))
@@ -665,7 +725,7 @@ class sugar_import(import_framework):
                 'city': 'primary_address_city',
                 'country_id/id': 'country_id/id',
                 'state_id/id': 'state_id/id',
-                'email': concat('email1', 'email2', delimiter=','),
+                'email': self.get_email,
                 'type': const('contact')
             }
         }
@@ -673,37 +733,46 @@ class sugar_import(import_framework):
     """ 
         import Account
     """
+    
     def get_address_type(self, val, type):
         if type == 'invoice':
             type_address = 'billing'
         else:
-            type_address = 'shipping'     
-    
-        map_partner_address = {
-            'name': 'name',
-            'phone': 'phone_office',
-            'mobile': 'phone_mobile',
-            'fax': 'phone_fax',
-            'type': 'type',
-            'street': type_address + '_address_street',
-            'zip': type_address +'_address_postalcode',
-            'city': type_address +'_address_city',
-             'country_id/id': 'country_id/id',
-             'type': 'type',
+            type_address = 'shipping' 
+            
+        if type == 'default':
+            map_partner_address = {
+                'name': 'name',
+                'type': const('default'),
+                'email': 'email1' 
             }
-        
+        else:        
+            map_partner_address = {
+                'name': 'name',
+                'phone': 'phone_office',
+                'mobile': 'phone_mobile',
+                'fax': 'phone_fax',
+                'type': 'type',
+                'street': type_address + '_address_street',
+                'zip': type_address +'_address_postalcode',
+                'city': type_address +'_address_city',
+                 'country_id/id': 'country_id/id',
+                 'type': 'type',
+                }
+            
         if val.get(type_address +'_address_country'):
             country_id = self.get_all_countries(val.get(type_address +'_address_country'))
             state = self.get_all_states(val.get(type_address +'_address_state'), country_id)
             val['country_id/id'] =  country_id
             val['state_id/id'] =  state
+            
         val['type'] = type
         val['id_new'] = val['id'] + '_address_' + type
         return self.import_object_mapping(map_partner_address, val, 'res.partner.address', self.TABLE_CONTACT, val['id_new'], self.DO_NOT_FIND_DOMAIN) 
-    
+        
     def get_partner_address(self, val):
         address_id=[]
-        type_dict = {'billing_address_street' : 'invoice', 'shipping_address_street' : 'delivery'}
+        type_dict = {'billing_address_street' : 'invoice', 'shipping_address_street' : 'delivery', 'type': 'default'}
         for key, type_value in type_dict.items():
             if val.get(key):
                 id = self.get_address_type(val, type_value)
@@ -838,6 +907,7 @@ class sugar_import(import_framework):
             self.TABLE_CASE: self.get_crm_claim_mapping(),
             self.TABLE_NOTE: self.get_history_mapping(),
             self.TABLE_EMAIL: self.get_email_mapping(),
+            self.TABLE_DOCUMENT: self.get_document_mapping(),
             self.TABLE_COMPAIGN: self.get_compaign_mapping()
         }
         
@@ -861,7 +931,6 @@ class import_sugarcrm(osv.osv):
         'password': fields.char('Password', size=24,required=True),
          'url' : fields.char('SugarSoap Api url:', size=264, required=True, help="Webservice's url where to get the data.\
                       example : 'http://example.com/sugarcrm/soap.php', or copy the address of your sugarcrm application http://trial.sugarcrm.com/qbquyj4802/index.php?module=Home&action=index"),
-                
         'opportunity': fields.boolean('Leads and Opportunities', help="If Opportunities are checked, SugarCRM opportunities data imported in OpenERP crm-Opportunity form"),
         'contact': fields.boolean('Contacts', help="If Contacts are checked, SugarCRM Contacts data imported in OpenERP partner address form"),
         'account': fields.boolean('Accounts', help="If Accounts are checked, SugarCRM  Accounts data imported in OpenERP partners form"),
@@ -869,28 +938,33 @@ class import_sugarcrm(osv.osv):
         'meeting': fields.boolean('Meetings', help="If Meetings is checked, SugarCRM Meetings and Meeting Tasks data imported in OpenERP meetings form"),
         'call': fields.boolean('Calls', help="If Calls is checked, SugarCRM Calls data imported in OpenERP phonecalls form"),
         'claim': fields.boolean('Cases', help="If Cases is checked, SugarCRM Cases data imported in OpenERP Claims form"),
-        'email_history': fields.boolean('Email and History',help="If Email and History is checked, SugarCRM Notes and Emails data imported in OpenERP's Related module's History with attachment"),
+        'email_history': fields.boolean('Email and Note',help="If Email and History is checked, SugarCRM Notes, Attachment and Emails data imported in OpenERP's Related module's History with attachment"),
         'project': fields.boolean('Projects', help="If Projects is checked, SugarCRM Projects data imported in OpenERP Projects form"),
         'project_task': fields.boolean('Project Tasks', help="If Project Tasks is checked, SugarCRM Project Tasks data imported in OpenERP Project Tasks form"),
         'bug': fields.boolean('Bugs', help="If Bugs is checked, SugarCRM Bugs data imported in OpenERP Project Issues form"),
+        'document': fields.boolean('Documents', help="If Documents is checked, SugarCRM Documents data imported in OpenERP Document Form"),
         'email_from': fields.char('Notify End Of Import To:', size=128),
         'instance_name': fields.char("Instance's Name", size=64, help="Prefix of SugarCRM id to differentiate xml_id of SugarCRM models datas come from different server."),
-        
     }
+    
+    def _get_email_id(self, cr, uid, context=None):
+        return self.pool.get('res.users').browse(cr, uid, uid, context=context).user_email    
+    
     _defaults = {#to be set to true, but easier for debugging
-       'opportunity': False,
-       'contact' : False,
-       'account' : False,
+       'opportunity': True,
+       'contact' : True,
+       'account' : True,
         'employee' : False,
-        'meeting' : False,
-        'call' : False,
-        'claim' : False,    
-        'email_history' : False, 
-        'project' : False,   
-        'project_task': False,     
-        'bug': False,
+        'meeting' : True,
+        'call' : True,
+        'claim' : True,    
+        'email_history' : True, 
+        'project' : True,   
+        'project_task': True,     
+        'bug': True,
+        'document': False,
         'instance_name': 'sugarcrm',
-        'email_from': 'tfr@openerp.com',
+        'email_from': _get_email_id,
         'username' : 'tfr',
         'password' : 'a',
         'url':  "http://localhost/sugarcrm/soap.php"        
@@ -963,6 +1037,8 @@ class import_sugarcrm(osv.osv):
                 key_list.append('ProjectTask')
             if current.bug:
                 key_list.append('Bugs')
+            if current.document:
+                key_list.append('Documents')
         return key_list
 
 
@@ -992,7 +1068,6 @@ class import_sugarcrm(osv.osv):
             'res_id': new_create_id,
             'type': 'ir.actions.act_window',
         }
-    
     
     
     def import_all(self, cr, uid, ids, context=None):

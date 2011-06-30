@@ -113,6 +113,9 @@ class stock_location(osv.osv):
         """
         prod_id = context and context.get('product_id', False)
 
+        if not prod_id:
+            return dict([(i, {}.fromkeys(field_names, 0.0)) for i in ids])
+
         product_product_obj = self.pool.get('product.product')
 
         cr.execute('select distinct product_id, location_id from stock_move where location_id in %s', (tuple(ids), ))
@@ -621,8 +624,8 @@ class stock_picking(osv.osv):
         'state': fields.selection([
             ('draft', 'Draft'),
             ('auto', 'Waiting'),
-            ('confirmed', 'Confirmed'),
-            ('assigned', 'Available'),
+            ('confirmed', 'Waiting Availability'),
+            ('assigned', 'Ready to Process'),
             ('done', 'Done'),
             ('cancel', 'Cancelled'),
             ], 'State', readonly=True, select=True,
@@ -1126,7 +1129,7 @@ class stock_picking(osv.osv):
         for pick in self.browse(cr, uid, ids, context=context):
             if pick.state in ['done','cancel']:
                 raise osv.except_osv(_('Error'), _('You cannot remove the picking which is in %s state !')%(pick.state,))
-            elif pick.state in ['confirmed','assigned', 'draft']:
+            else:
                 ids2 = [move.id for move in pick.move_lines]
                 ctx = context.copy()
                 ctx.update({'call_unlink':True})
@@ -1315,7 +1318,8 @@ class stock_picking(osv.osv):
                 'assigned': _('is ready to process.'),
                 'cancel': _('is cancelled.'),
                 'done': _('is done.'),
-                'draft':_('is in draft state.'),
+                'auto': _('is waiting.'),
+                'draft': _('is in draft state.'),
             }
             res = data_obj.get_object_reference(cr, uid, 'stock', view_list.get(pick.type, 'view_picking_form'))
             context.update({'view_id': res and res[1] or False})

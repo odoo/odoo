@@ -32,6 +32,7 @@ CRM_CLAIM_PENDING_STATES = (
     crm.AVAILABLE_STATES[4][0], # Pending
 )
 
+
 class crm_claim(crm.crm_case, osv.osv):
     """
     Crm claim
@@ -265,6 +266,13 @@ class crm_claim(crm.crm_case, osv.osv):
 
 crm_claim()
 
+class res_partner(osv.osv):
+   
+    _inherit = 'res.partner'
+    _columns = {
+        'claims_ids': fields.one2many('crm.claim', 'partner_id', 'Claims'),
+    }
+res_partner()
 
 class crm_stage_claim(osv.osv):
     

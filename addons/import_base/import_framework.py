@@ -78,6 +78,13 @@ class import_framework(Thread):
         """
         return [{}]
     
+    def get_link(self, from_table, ids, to_table):
+        """
+            @return: a dictionaries that contains the association between the id (from_table) 
+                     and the list (to table) of id linked 
+        """
+        return {}
+    
     def get_mapping(self):
         """
             @return: { TABLE_NAME : {
@@ -387,7 +394,7 @@ class import_framework(Thread):
         if not self.email:
             return 		 
         tools.email_send(
-                'import_sugarcrm@module.openerp',
+                'import@module.openerp',
                 self.email,
                 self.get_email_subject(result),
                 self.get_email_body(result),

@@ -10,7 +10,7 @@
                	<xpath expr="//page[@string='Tasks Stages']" position="after">
                    	<page string="Messages" groups="base.group_extended">
                    		<field name="message_ids" nolabel="1" colspan="4">
-                   			<tree editable="1" string="Messages">
+                   			<tree editable="bottom" string="Messages">
 		                     	<field name="message" attrs="{'readonly':[('from_id', '!=', uid)]}"/>
 		                     	<field name="from_id"/>
 		                     	<field name="to_id" attrs="{'readonly':[('from_id', '!=', uid)]}"/>
