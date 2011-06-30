@@ -106,7 +106,9 @@ class res_config_configurable(osv.osv_memory):
         next = self._next_action(cr, uid)
         self.__logger.info('next action is %s', next)
         if next:
-            return next.action_launch(context=context)
+            res = next.action_launch(context=context)
+            res.update({'nodestroy': False})
+            return res
         self.__logger.info('all configuration actions have been executed')
 
         current_user_menu = self.pool.get('res.users').browse(cr, uid, uid).menu_id
