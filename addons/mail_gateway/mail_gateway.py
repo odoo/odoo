@@ -519,7 +519,7 @@ class mailgate_tool(osv.osv_memory):
                             body = content
                             has_plain_text = True
                 elif part.get_content_maintype() in ('application', 'image'):
-                    if filename :
+                    if filename and attach:
                         attachments[filename] = part.get_payload(decode=True)
                     else:
                         res = part.get_payload(decode=True)

@@ -116,7 +116,7 @@ class email_server(osv.osv):
         if context is None:
             context = {}
         for server in self.browse(cr, uid, ids, context=context):
-            logger.notifyChannel('imap', netsvc.LOG_INFO, 'fetchmail start checking for new emails on %s' % (server.name))
+            logger.notifyChannel(server.type, netsvc.LOG_INFO, 'fetchmail start checking for new emails on %s' % (server.name))
             context.update({'server_id': server.id, 'server_type': server.type})
             try:
                 if server.type == 'imap':
@@ -199,7 +199,7 @@ class email_server(osv.osv):
 
                     pop_server.quit()
 
-                    logger.notifyChannel('imap', netsvc.LOG_INFO, 'fetchmail fetch %s email(s) from %s' % (numMsgs, server.name))
+                    logger.notifyChannel(server.type, netsvc.LOG_INFO, 'fetchmail fetch %s email(s) from %s' % (numMsgs, server.name))
 
             except Exception, e:
                 logger.notifyChannel(server.type, netsvc.LOG_WARNING, '%s' % (tools.ustr(e)))
