@@ -150,11 +150,13 @@ class account_voucher(osv.osv):
             credit += l['amount']
         return abs(amount - abs(credit - debit))
 
-    def onchange_line_ids(self, cr, uid, ids, line_dr_ids, line_cr_ids, amount):
+    def onchange_line_ids(self, cr, uid, ids, line_dr_ids, line_cr_ids, amount, context=None):
+        context = context or {}
         if not line_dr_ids and not line_cr_ids:
             return {'value':{}}
-        line_dr_ids = [x[2] for x in line_dr_ids]
-        line_cr_ids = [x[2] for x in line_cr_ids]
+        line_osv = self.pool.get("account.voucher.line")
+        line_dr_ids = resolve_o2m_operations(cr, uid, line_osv, line_dr_ids, ['amount'], context)
+        line_cr_ids = resolve_o2m_operations(cr, uid, line_osv, line_cr_ids, ['amount'], context)
         return {'value': {'writeoff_amount': self._compute_writeoff_amount(cr, uid, line_dr_ids, line_cr_ids, amount)}}
 
     def _get_writeoff_amount(self, cr, uid, ids, name, args, context=None):
@@ -1024,7 +1026,8 @@ def resolve_o2m_operations(cr, uid, target_osv, operations, fields, context):
             result.update(operation[2])
         elif operation[0] == 4:
             result = target_osv.read(cr, uid, operation[1], fields, context=context)
-        results.append(result)
+        if result != None:
+            results.append(result)
     return results
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
