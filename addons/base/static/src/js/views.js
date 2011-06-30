@@ -19,7 +19,6 @@ openerp.base.ActionManager = openerp.base.Controller.extend({
      * Supported actions: act_window
      */
     do_action: function(action, on_closed) {
-        var self = this;
         action.flags = _.extend({
             sidebar : action.target != 'new',
             search_view : true,
@@ -29,61 +28,65 @@ openerp.base.ActionManager = openerp.base.Controller.extend({
             pager : true
         }, action.flags || {});
         // instantiate the right controllers by understanding the action
-        switch (action.type) {
-            case 'ir.actions.act_window':
-                if (!action.target && this.dialog_stack.length) {
-                    action.flags.new_window = true;
-                }
-                if (action.target == 'new') {
-                    var element_id = _.uniqueId("act_window_dialog");
-                    $('<div>', {id: element_id}).dialog({
-                        title: action.name,
-                        modal: true,
-                        width: '50%',
-                        height: 'auto'
-                    }).bind('dialogclose', function(event) {
-                        // When dialog is closed with ESC key or close manually, branch to act_window_close logic
-                        self.do_action({ type: 'ir.actions.act_window_close' });
-                    });
-                    var viewmanager = new openerp.base.ViewManagerAction(this.session, element_id, action);
-                    viewmanager.start();
-                    viewmanager.on_act_window_closed.add(on_closed);
-                    viewmanager.is_dialog = true;
-                    this.dialog_stack.push(viewmanager);
-                } else if (action.flags.new_window) {
-                    action.flags.new_window = false;
-                    this.rpc("/base/session/save_session_action", { the_action : action}, function(key) {
-                        var url = window.location.protocol + "//" + window.location.host +
-                                window.location.pathname + "?" + jQuery.param({ s_action : "" + key });
-                        window.open(url);
-                    });
-                } else {
-                    if (this.viewmanager) {
-                        this.viewmanager.stop();
-                    }
-                    this.viewmanager = new openerp.base.ViewManagerAction(this.session, this.element_id, action);
-                    this.viewmanager.start();
-                }
-                break;
-            case 'ir.actions.act_window_close':
-                var dialog = this.dialog_stack.pop();
-                if (!action.special) {
-                    dialog.on_act_window_closed();
-                }
-                dialog.$element.dialog('destroy');
-                dialog.stop();
-                break;
-            case 'ir.actions.server':
-                this.rpc('/base/action/run', {
-                    action_id: action.id,
-                    context: {active_id: 66, active_ids: [66], active_model: 'ir.ui.menu'}
-                }).then(function (action) {
-                    self.do_action(action, on_closed)
-                });
-                break;
-            default:
-                console.log("Action manager can't handle action of type " + action.type, action);
+        if (!(action.type in this)) {
+            console.log("Action manager can't handle action of type " + action.type, action);
+            return;
         }
+        this[action.type](action, on_closed);
+    },
+
+    'ir.actions.act_window': function (action, on_closed) {
+        var self = this;
+        if (!action.target && this.dialog_stack.length) {
+            action.flags.new_window = true;
+        }
+        if (action.target == 'new') {
+            var element_id = _.uniqueId("act_window_dialog");
+            $('<div>', {id: element_id}).dialog({
+                title: action.name,
+                modal: true,
+                width: '50%',
+                height: 'auto'
+            }).bind('dialogclose', function(event) {
+                // When dialog is closed with ESC key or close manually, branch to act_window_close logic
+                self.do_action({ type: 'ir.actions.act_window_close' });
+            });
+            var viewmanager = new openerp.base.ViewManagerAction(this.session, element_id, action);
+            viewmanager.start();
+            viewmanager.on_act_window_closed.add(on_closed);
+            viewmanager.is_dialog = true;
+            this.dialog_stack.push(viewmanager);
+        } else if (action.flags.new_window) {
+            action.flags.new_window = false;
+            this.rpc("/base/session/save_session_action", { the_action : action}, function(key) {
+                var url = window.location.protocol + "//" + window.location.host +
+                        window.location.pathname + "?" + jQuery.param({ s_action : "" + key });
+                window.open(url);
+            });
+        } else {
+            if (this.viewmanager) {
+                this.viewmanager.stop();
+            }
+            this.viewmanager = new openerp.base.ViewManagerAction(this.session, this.element_id, action);
+            this.viewmanager.start();
+        }
+    },
+    'ir.actions.act_window_close': function (action, on_closed) {
+        var dialog = this.dialog_stack.pop();
+        if (!action.special) {
+            dialog.on_act_window_closed();
+        }
+        dialog.$element.dialog('destroy');
+        dialog.stop();
+    },
+    'ir.actions.server': function (action, on_closed) {
+        var self = this;
+        this.rpc('/base/action/run', {
+            action_id: action.id,
+            context: {active_id: 66, active_ids: [66], active_model: 'ir.ui.menu'}
+        }).then(function (action) {
+            self.do_action(action, on_closed)
+        });
     }
 });
 
