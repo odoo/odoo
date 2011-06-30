@@ -44,7 +44,7 @@ class asset_asset_report(osv.osv):
         'remaining_value': fields.float('Amount of Depreciation Lines', required=True, readonly=True),
         'move_check': fields.boolean('Posted', readonly=True),
         'nbr': fields.integer('# of Depreciation Lines', readonly=True),
-        'gross_value': fields.float('Gross Value', readonly=True, group_operator="avg"),
+        'gross_value': fields.float('Gross Value', readonly=True),
         'posted_value': fields.float('Posted Value', readonly=True),
         'unposted_value': fields.float('Unposted Value', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
@@ -61,7 +61,12 @@ class asset_asset_report(osv.osv):
                     to_char(a.purchase_date, 'YYYY-MM-DD') as day,
                     to_date(dl.depreciation_date, 'YYYY-MM-DD') as depreciation_date,
                     a.purchase_date as purchase_date,
-                    a.purchase_value as gross_value,
+                    (CASE WHEN (select min(d.id) from account_asset_depreciation_line as d
+                                left join account_asset_asset as ac ON (ac.id=d.asset_id)
+                                where a.id=ac.id) = min(dl.id)
+                      THEN a.purchase_value
+                      ELSE 0
+                      END) as gross_value,
                     dl.amount as remaining_value, 
                     (CASE WHEN dl.move_check
                       THEN dl.amount
