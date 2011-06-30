@@ -211,10 +211,15 @@ class hr_payslip_run(osv.osv):
         'state': fields.selection([
             ('draft', 'Draft'),
             ('close', 'Close'),
-        ], 'State', select=True, readonly=True)
+        ], 'State', select=True, readonly=True),
+        'date_start': fields.date('Date From', required=True, readonly=True, states={'draft': [('readonly', False)]}),
+        'date_end': fields.date('Date To', required=True, readonly=True, states={'draft': [('readonly', False)]}),
+        'credit_note': fields.boolean('Credit Note', readonly=True, states={'draft': [('readonly', False)]}, help="If its checked, indicates that all payslips generated from here are refund payslips."),
     }
     _defaults = {
         'state': 'draft',
+        'date_start': lambda *a: time.strftime('%Y-%m-01'),
+        'date_end': lambda *a: str(datetime.now() + relativedelta.relativedelta(months=+1, day=1, days=-1))[:10],
     }
 
     def draft_payslip_run(self, cr, uid, ids, context=None):
@@ -309,7 +314,7 @@ class hr_payslip(osv.osv):
 
     def hr_verify_sheet(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state': 'verify'}, context=context)
-    
+
     def refund_sheet(self, cr, uid, ids, context=None):
         mod_obj = self.pool.get('ir.model.data')
         wf_service = netsvc.LocalService("workflow")
@@ -462,7 +467,7 @@ class hr_payslip(osv.osv):
         def _sum_salary_rule_category(localdict, category, amount):
             if category.parent_id:
                 localdict = _sum_salary_rule_category(localdict, category.parent_id, amount)
-            localdict['categories'][category.code] = category.code in localdict['categories'] and localdict['categories'][category.code] + amount or amount
+            localdict['categories'].dict[category.code] = category.code in localdict['categories'].dict and localdict['categories'].dict[category.code] + amount or amount
             return localdict
 
         class BrowsableObject(object):
@@ -474,7 +479,7 @@ class hr_payslip(osv.osv):
                 self.dict = dict
 
             def __getattr__(self, attr):
-                return self.dict.__getitem__(attr)
+                return attr in self.dict and self.dict.__getitem__(attr) or 0.0
 
         class InputLine(BrowsableObject):
             """a class that will be used into the python code, mainly for usability purposes"""
@@ -527,6 +532,8 @@ class hr_payslip(osv.osv):
 
         #we keep a dict with the result because a value can be overwritten by another rule with the same code
         result_dict = {}
+        rules = {}
+        categories_dict = {}
         blacklist = []
         payslip_obj = self.pool.get('hr.payslip')
         inputs_obj = self.pool.get('hr.payslip.worked_days')
@@ -539,11 +546,13 @@ class hr_payslip(osv.osv):
         for input_line in payslip.input_line_ids:
             inputs[input_line.code] = input_line
 
+        categories_obj = BrowsableObject(self.pool, cr, uid, payslip.employee_id.id, categories_dict)
         input_obj = InputLine(self.pool, cr, uid, payslip.employee_id.id, inputs)
         worked_days_obj = WorkedDays(self.pool, cr, uid, payslip.employee_id.id, worked_days)
         payslip_obj = Payslips(self.pool, cr, uid, payslip.employee_id.id, payslip)
+        rules_obj = BrowsableObject(self.pool, cr, uid, payslip.employee_id.id, rules)
 
-        localdict = {'categories': {}, 'payslip': payslip_obj, 'worked_days': worked_days_obj, 'inputs': input_obj}
+        localdict = {'categories': categories_obj, 'rules': rules_obj, 'payslip': payslip_obj, 'worked_days': worked_days_obj, 'inputs': input_obj}
         #get the ids of the structures on the contracts and their parent id as well
         structure_ids = self.pool.get('hr.contract').get_all_structures(cr, uid, contract_ids, context=context)
         #get the rules of the structure and thier children
@@ -565,9 +574,10 @@ class hr_payslip(osv.osv):
                     #check if there is already a rule computed with that code
                     previous_amount = rule.code in localdict and localdict[rule.code] or 0.0
                     #set/overwrite the amount computed for this rule in the localdict
-                    localdict[rule.code] = amount
+                    localdict[rule.code] = amount * qty
+                    rules[rule.code] = rule
                     #sum the amount for its salary category
-                    localdict = _sum_salary_rule_category(localdict, rule.category_id, amount - previous_amount)
+                    localdict = _sum_salary_rule_category(localdict, rule.category_id, (amount * qty) - previous_amount)
                     #create/overwrite the rule in the temporary results
                     result_dict[key] = {
                         'salary_rule_id': rule.id,
@@ -754,21 +764,12 @@ class hr_salary_rule(osv.osv):
             ('fix','Fixed Amount'),
             ('code','Python Code'),
         ],'Amount Type', select=True, required=True, help="The computation method for the rule amount."),
-        'amount_fix': fields.float('Fixed Amount', digits_compute=dp.get_precision('Account'),),
-        'amount_percentage': fields.float('Percentage (%)', digits_compute=dp.get_precision('Account'), help='For example, enter 50.0 to apply a percentage of 50%'),
+        'amount_fix': fields.float('Fixed Amount', digits_compute=dp.get_precision('Payroll'),),
+        'amount_percentage': fields.float('Percentage (%)', digits_compute=dp.get_precision('Payroll'), help='For example, enter 50.0 to apply a percentage of 50%'),
         'amount_python_compute':fields.text('Python Code'),
         'amount_percentage_base':fields.char('Percentage based on',size=1024, required=False, readonly=False, help='result will be affected to a variable'),
         'child_ids':fields.one2many('hr.salary.rule', 'parent_rule_id', 'Child Salary Rule'),
-        'register_id':fields.property(
-            'hr.contribution.register',
-            type='many2one',
-            relation='hr.contribution.register',
-            string="Contribution Register",
-            method=True,
-            view_load=True,
-            help="Contribution register based on company",
-            required=False
-        ),
+        'register_id':fields.many2one('hr.contribution.register', 'Contribution Register', help="Contribution register for the rule"),
         'input_ids': fields.one2many('hr.rule.input', 'input_id', 'Inputs'),
         'note':fields.text('Description'),
      }
@@ -779,8 +780,8 @@ class hr_salary_rule(osv.osv):
 # payslip: object containing the payslips
 # employee: hr.employee object
 # contract: hr.contract object
-# rules: rules code (previously computed)
-# categories: dictionary containing the computed salary rule categories (sum of amount of all rules belonging to that category). Keys are the category codes.
+# rules: object containing the rules code (previously computed)
+# categories: object containing the computed salary rule categories (sum of amount of all rules belonging to that category).
 # worked_days: object containing the computed worked days.
 # inputs: object containing the computed inputs.
 
@@ -794,14 +795,14 @@ result = contract.wage * 0.10''',
 # payslip: object containing the payslips
 # employee: hr.employee object
 # contract: hr.contract object
-# rules: rules code (previously computed)
-# categories: dictionary containing the computed salary rule categories (sum of amount of all rules belonging to that category). Keys are the category codes.
+# rules: object containing the rules code (previously computed)
+# categories: object containing the computed salary rule categories (sum of amount of all rules belonging to that category).
 # worked_days: object containing the computed worked days
 # inputs: object containing the computed inputs
 
 # Note: returned value have to be set in the variable 'result'
 
-result = rules['NET'] > categories['NET'] * 0.10''',
+result = rules.NET > categories.NET * 0.10''',
         'condition_range': 'contract.wage',
         'sequence': 5,
         'appears_on_payslip': True,
@@ -915,10 +916,10 @@ class hr_payslip_line(osv.osv):
         'salary_rule_id':fields.many2one('hr.salary.rule', 'Rule', required=True),
         'employee_id':fields.many2one('hr.employee', 'Employee', required=True),
         'contract_id':fields.many2one('hr.contract', 'Contract', required=True),
-        'amount': fields.float('Amount', digits_compute=dp.get_precision('Account')),
-        'quantity': fields.float('Quantity', digits_compute=dp.get_precision('Account')),
-        'company_contrib': fields.float('Company Contribution', readonly=True, digits_compute=dp.get_precision('Account')),
-        'total': fields.function(_calculate_total, method=True, type='float', string='Total', digits_compute=dp.get_precision('Account'),store=True ),
+        'amount': fields.float('Amount', digits_compute=dp.get_precision('Payroll')),
+        'quantity': fields.float('Quantity', digits_compute=dp.get_precision('Payroll')),
+        'company_contrib': fields.float('Company Contribution', readonly=True, digits_compute=dp.get_precision('Payroll')),
+        'total': fields.function(_calculate_total, method=True, type='float', string='Total', digits_compute=dp.get_precision('Payroll'),store=True ),
     }
 
 hr_payslip_line()
@@ -960,7 +961,7 @@ class hr_employee(osv.osv):
 
     _columns = {
         'slip_ids':fields.one2many('hr.payslip', 'employee_id', 'Payslips', required=False, readonly=True),
-        'total_wage': fields.function(_calculate_total_wage, method=True, type='float', string='Total Basic Salary', digits_compute=dp.get_precision('Account'), help="Sum of all current contract's wage of employee."),
+        'total_wage': fields.function(_calculate_total_wage, method=True, type='float', string='Total Basic Salary', digits_compute=dp.get_precision('Payroll'), help="Sum of all current contract's wage of employee."),
     }
 
 hr_employee()
