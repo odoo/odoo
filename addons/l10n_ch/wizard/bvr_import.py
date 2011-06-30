@@ -181,17 +181,18 @@ def _import(self, cursor, user, data, context=None):
             'period_id': statement.period_id.id
              }
         voucher_id = voucher_obj.create(cursor, user, voucher_res, context=context)
-        context.update({'move_line_ids': line_ids})
+        ctx = context.copy()
+        ctx.update({'move_line_ids': line_ids})
         values['voucher_id'] = voucher_id
         voucher_line_dict =  False
         if result['value']['line_ids']:
              for line_dict in result['value']['line_ids']:
-                 move_line = move_line_obj.browse(cursor, user, line_dict['move_line_id'], context)
+                 move_line = move_line_obj.browse(cursor, user, line_dict['move_line_id'], context=ctx)
                  if move_id == move_line.move_id.id:
                      voucher_line_dict = line_dict
         if voucher_line_dict:
              voucher_line_dict.update({'voucher_id':voucher_id})
-             voucher_line_obj.create(cursor, user, voucher_line_dict, context=context)                
+             voucher_line_obj.create(cursor, user, voucher_line_dict, context=ctx)                
              
         if not account_id:
             if record['amount'] >= 0:
@@ -224,7 +225,7 @@ def _import(self, cursor, user, data, context=None):
                 _('The properties account payable account receivable are not set'))
         values['account_id'] = account_id
         values['partner_id'] = partner_id
-        statement_line_obj.create(cursor, user, values, context=context)
+        statement_line_obj.create(cursor, user, values, context=ctx)
     attachment_obj.create(cursor, user, {
         'name': 'BVR',
         'datas': file,
