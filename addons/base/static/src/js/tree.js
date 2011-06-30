@@ -21,7 +21,11 @@ openerp.base.TreeView = openerp.base.View.extend({
         this.columns = [];
 
         this.options = _.extend({}, this.defaults, options || {});
+
         this.flags =  this.view_manager.action.flags;
+
+        this.view_manager.flags.search_view = this.view_manager.action.flags.search_view = false;
+        this.view_manager.flags.sidebar = this.view_manager.action.flags.sidebar = false;
     },
 
     start: function () {
@@ -70,8 +74,8 @@ openerp.base.TreeView = openerp.base.View.extend({
 
                 var padding = curr_node.find('td').css('paddingLeft');
                 var padd = parseInt(padding.replace('px',''), 10);
-				var fixpadding;
-				
+                var fixpadding;
+
                 for (var i = 0; i < response.length; i++) {
                     row_id = $('tr #treerow_' + response[i].id);
                     if (row_id) {
@@ -244,6 +248,7 @@ openerp.base.TreeView = openerp.base.View.extend({
             self.on_loaded(field_view_get, grouped);
         });
     },
+
     do_search: function (domains, contexts, groupbys) {
         var self = this;
         return this.rpc('/base/session/eval_domain_and_context', {
@@ -257,10 +262,12 @@ openerp.base.TreeView = openerp.base.View.extend({
                 $.proxy(self, 'reload_content'));
         });
     },
+
     do_show: function () {
         this.$element.show();
         this.view_manager.sidebar.do_refresh(true);
     },
+
     do_hide: function () {
         this.$element.hide();
         this.hidden = true;

@@ -112,10 +112,6 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
      * @returns {jQuery.Deferred} new view loading promise
      */
     on_mode_switch: function(view_type) {
-        if(view_type == "tree"){
-            this.searchview = new openerp.base.SearchView(null, this.session,
-                this.element_id + "_search", this.dataset, false, {});
-        }
         var view_promise;
         this.active_view = view_type;
         var view = this.views[view_type];
