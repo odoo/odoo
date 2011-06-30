@@ -1,7 +1,7 @@
 -
-  In order to test Account Asset feature first I will create Asset Category
+  In order to test Account Asset feature first I create Asset Category
 - 
-  I will Create an Asset Category Record
+  I Create an Asset Category Record
 - 
   !record {model: account.asset.category, id: account_asset_category_landbuildings0}:
     account_asset_id: account.xfa
@@ -10,7 +10,7 @@
     journal_id: account.expenses_journal
     name: Land & Buildings
 - 
-  I will Create an Account Asset Record
+  I Create an Account Asset Record
 - 
   !record {model: account.asset.asset, id: account_asset_asset_Land0}:
     category_id: account_asset_category_landbuildings0
@@ -22,36 +22,30 @@
     salvage_value: 2000.0
     state: draft
 -
-  I will check initially that Account Asset is in the "Draft" state
+  I check Initially that Account Asset is in the "Draft" state
 -
   !assert {model: account.asset.asset, id: account_asset_asset_Land0}:
     - state == 'draft'
 -
-  I will Confirm Account Asset using Confirm Asset button
+  I Confirm Account Asset using Confirm Asset button
 -
   !python {model: account.asset.asset}: |
     self.validate(cr, uid, [ref("account_asset_asset_Land0")])
 -
-  I will compute Account Asset using Compute button and check the number of depreciation lines created are proper
+  I Compute Account Asset using Compute button and check the number of depreciation lines created are proper
 -
   !python {model: account.asset.asset}: |
     self.compute_depreciation_board(cr, uid, [ref("account_asset_asset_Land0")])
     value = self.browse(cr, uid, [ref("account_asset_asset_Land0")])[0]
     assert value.method_delay == len(value.depreciation_line_ids)
 -
-  I will Create Account Asset Move using using create move method
+  I Create Account Asset Move using using create move method
 -
   !python {model: account.asset.depreciation.line}: |
     ids = self.search(cr, uid, [('asset_id','=',ref('account_asset_asset_Land0'))])
     self.create_move(cr, uid, ids)
 -
-  I will check that After creating all the moves of the asset the state is in "Close" state
+  I Check that After creating all the moves of the asset the state is in "Close" state
 -
   !assert {model: account.asset.asset, id: account_asset_asset_Land0}:
     - state == 'close'
--
-  I will check when the state of Account asset is close the residual value becomes 0
--
-  !assert {model: account.asset.asset, id: account_asset_asset_Land0}:
-    - value_residual == 0.0
-
