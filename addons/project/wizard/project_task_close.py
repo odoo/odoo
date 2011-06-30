@@ -109,7 +109,7 @@ class project_task_close(osv.osv_memory):
                 mail_id = tools.email_send(from_adr, to_adr, subject, tools.ustr(body), email_bcc=[from_adr])
                 if not mail_id:
                     raise osv.except_osv(_('Error'), _("Couldn't send mail! Check the email ids and smtp configuration settings"))
-        return {}
+        return {'type': 'ir.actions.act_window_close'}
 
 project_task_close()
 
