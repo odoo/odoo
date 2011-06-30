@@ -904,6 +904,10 @@ openerp.base.form.FieldDatetime = openerp.base.form.Field.extend({
             this.value = this.format(this.value);
         }
     },
+    update_dom: function() {
+        this._super.apply(this, arguments);
+        this.$element.find('input').attr('disabled', this.readonly);
+    },
     validate: function() {
         this.invalid = this.required && !this.$element.find('input')[this.jqueryui_object]('getDate');
     },
