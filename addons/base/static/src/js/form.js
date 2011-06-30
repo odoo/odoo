@@ -1503,18 +1503,6 @@ openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
             });
             this._super(ids);
             this.dataset.set_ids(ids);
-        } else if (value.length >= 1 && typeof(value[0]) === "object") {
-            var ids = [];
-            this.dataset.delete_all = true;
-            _.each(value, function(command) {
-                var obj = {values: command};
-                obj['id'] = _.uniqueId(self.dataset.virtual_id_prefix);
-                self.dataset.to_create.push(obj);
-                self.dataset.cache.push(_.clone(obj));
-                ids.push(obj.id);
-            });
-            this._super(ids);
-            this.dataset.set_ids(ids);
         } else {
             this._super(value);
             this.dataset.reset_ids(value);
@@ -1542,20 +1530,6 @@ openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
         return val.concat(_.map(
             this.dataset.to_delete, function(x) {
                 return commands['delete'](x.id);}));
-    },
-    get_on_change_value: function() {
-        var self;
-        return _.map(this.dataset.ids, function(id) {
-            var values = _.detect(self.dataset.cache, function(x) {return x.id === id});
-            if (values) {
-                values = _.clone(values);
-                delete values["id"];
-                return values;
-            } else {
-                console.info("trying to get value in a o2m before that value is loaded");
-                return {};
-            }
-        });
     },
     validate: function() {
         this.invalid = false;
