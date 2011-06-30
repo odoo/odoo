@@ -120,6 +120,8 @@ class base_setup_installer(osv.osv_memory):
                 continue
             if datas[mod] == 1:
                 modules_selected.append(mod)
+                if mod in ('account','sale','purchase'):
+                    modules_selected.append('account_voucher')
 
         module_ids = module_pool.search(cr, uid, [('name', 'in', modules_selected)], context=context)
         for module in module_pool.browse(cr, uid, module_ids, context=context):
