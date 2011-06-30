@@ -107,6 +107,9 @@ class account_asset_asset(osv.osv):
             GROUP BY a.id, a.purchase_date """, (tuple(ids),))
         return dict(cr.fetchall())
 
+    def calculate_date(self, date, period):
+        return datetime(date.year, date.month, date.day) + relativedelta(months=+period)
+
     def compute_depreciation_board(self, cr, uid,ids, context=None):
         depreciation_lin_obj = self.pool.get('account.asset.depreciation.line')
         for asset in self.browse(cr, uid, ids, context=context):
@@ -120,16 +123,20 @@ class account_asset_asset(osv.osv):
             amount_to_depr = residual_amount = asset.value_residual
 
             depreciation_date = datetime.strptime(self._get_last_depreciation_date(cr, uid, [asset.id], context)[asset.id], '%Y-%m-%d')
-            day = depreciation_date.day
-            month = depreciation_date.month
-            year = depreciation_date.year
-            total_days = (year % 4) and 365 or 366
+            total_days = (depreciation_date.year % 4) and 365 or 366
             undone_dotation_number = asset.method_delay
+            # Considering Depr. Period as months
+            time_period = asset.method_period
             if asset.method_time == 'end':
                 end_date = datetime.strptime(asset.method_end, '%Y-%m-%d')
+                if time_period != 12:
+                    total_days = time_period * 30
                 undone_dotation_number = (end_date - depreciation_date).days / total_days
             if asset.prorata or asset.method_time == 'end':
                 undone_dotation_number += 1
+            if posted_depreciation_line_ids:
+                add_months = time_period * len(posted_depreciation_line_ids)
+                depreciation_date = self.calculate_date(depreciation_date, add_months)
             for x in range(len(posted_depreciation_line_ids), undone_dotation_number):
                 i = x + 1
                 if i == undone_dotation_number:
@@ -157,11 +164,7 @@ class account_asset_asset(osv.osv):
                      'depreciation_date': depreciation_date.strftime('%Y-%m-%d'),
                 }
                 depreciation_lin_obj.create(cr, uid, vals, context=context)
-                # Considering Depr. Period as months
-                depreciation_date = (datetime(year, month, day) + relativedelta(months=+asset.method_period))
-                day = depreciation_date.day
-                month = depreciation_date.month
-                year = depreciation_date.year
+                depreciation_date = self.calculate_date(depreciation_date, time_period)
         return True
 
     def validate(self, cr, uid, ids, context={}):
