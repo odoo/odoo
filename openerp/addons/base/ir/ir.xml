@@ -1884,8 +1884,8 @@
             <field name="arch" type="xml">
                 <tree editable="bottom" string="Config Wizard Steps">
                     <field name="sequence"/>
-                    <field name="category_id"/>
                     <field name="action_id"/>
+                    <field name="category_id"/>
                     <field name="type"/>
                     <field name="state" readonly="1"/>
                     <button name="action_launch" states="open" string="Launch" type="object" icon="gtk-execute" help="Launch Configuration Wizard"/>
@@ -1930,8 +1930,8 @@
                     <group>
                         <filter string="To Do" name="todo" icon="terp-camera_test" domain=" [('state','=','open')]" help="Wizards to be Launched"/>
                         <separator orientation="vertical"/>
-                        <field name="category_id"/>
                         <field name="action_id"/>
+                        <field name="category_id"/>
                         <field name="state"/>
                     </group>
                     <newline/>
