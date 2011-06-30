@@ -149,7 +149,6 @@ class account_invoice(osv.osv, ir_edi.edi):
         if context is None:
             context = {}
         
-
         # import company as a new partner, if type==in then supplier=1, else customer=1
         # partner_id field is modified to point to the new partner
         # company_address data used to add address to new partner
@@ -249,8 +248,8 @@ class account_invoice(osv.osv, ir_edi.edi):
         for edi_tax_line in edi_document.get('tax_line', []):
             account_ids = account_pool.search(cr, uid, [('type','<>','view'),('type','<>','income'), ('type', '<>', 'closed')])
             if account_ids:
-                browse_account = account_pool.browse(cr, uid, account_ids[0])
-                edi_tax_line['account_id'] = self.edi_m2o(cr, uid, browse_account, context=context) #TODO should select account of output VAT for Customer Invoice and Input VAT for Supplier Invoice
+                tax_account = account_pool.browse(cr, uid, account_ids[0])
+                edi_tax_line['account_id'] = self.edi_m2o(cr, uid, tax_account, context=context) #TODO should select account of output VAT for Customer Invoice and Input VAT for Supplier Invoice
             edi_tax_line['manual'] = True
 
         # TODO :=> payment_term: if set, create a default one based on name... 
