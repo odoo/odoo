@@ -58,13 +58,6 @@ class account_bank_statement(osv.osv):
                 journal_id = ids[0]
         return journal_id
 
-    def _default_balance_start(self, cr, uid, context=None):
-        cr.execute('select id from account_bank_statement where journal_id=%s order by date desc limit 1', (1,))
-        res = cr.fetchone()
-        if res:
-            return self.browse(cr, uid, res[0], context=context).balance_end
-        return 0.0
-
     def _end_balance(self, cursor, user, ids, name, attr, context=None):
         res_currency_obj = self.pool.get('res.currency')
         res_users_obj = self.pool.get('res.users')
@@ -158,7 +151,6 @@ class account_bank_statement(osv.osv):
         'name': "/",
         'date': lambda *a: time.strftime('%Y-%m-%d'),
         'state': 'draft',
-        'balance_start': _default_balance_start,
         'journal_id': _default_journal_id,
         'period_id': _get_period,
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.bank.statement',context=c),
