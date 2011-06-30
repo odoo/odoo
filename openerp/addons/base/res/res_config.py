@@ -106,22 +106,12 @@ class res_config_configurable(osv.osv_memory):
         next = self._next_action(cr, uid)
         self.__logger.info('next action is %s', next)
         if next:
-            action = next.action_id
-            return {
-                'view_mode': action.view_mode,
-                'view_type': action.view_type,
-                'view_id': action.view_id and [action.view_id.id] or False,
-                'res_model': action.res_model,
-                'type': action.type,
-                'target': action.target,
-            }
+            return next.action_launch(context=context)
         self.__logger.info('all configuration actions have been executed')
 
-        current_user_menu = self.pool.get('res.users')\
-            .browse(cr, uid, uid).menu_id
+        current_user_menu = self.pool.get('res.users').browse(cr, uid, uid).menu_id
         # return the action associated with the menu
-        return self.pool.get(current_user_menu.type)\
-            .read(cr, uid, current_user_menu.id)
+        return self.pool.get(current_user_menu.type).read(cr, uid, current_user_menu.id)
 
     def start(self, cr, uid, ids, context=None):
         ids2 = self.pool.get('ir.actions.todo').search(cr, uid, [], context=context)
