@@ -63,7 +63,13 @@ class _column(object):
     _symbol_set = (_symbol_c, _symbol_f)
     _symbol_get = None
 
-    def __init__(self, string='unknown', required=False, readonly=False, domain=None, context=None, states=None, priority=0, change_default=False, size=None, ondelete="set null", translate=False, select=False, **args):
+    def __init__(self, string='unknown', required=False, readonly=False, domain=None, context=None, states=None, priority=0, change_default=False, size=None, ondelete="set null", translate=False, select=False, manual=False, **args):
+        """
+
+        The 'manual' keyword argument specifies if the field is a custom one.
+        It corresponds to the 'state' column in ir_model_fields.
+
+        """
         if domain is None:
             domain = []
         if context is None:
@@ -84,6 +90,7 @@ class _column(object):
         self.read = False
         self.view_load = 0
         self.select = select
+        self.manual = manual
         self.selectable = True
         self.group_operator = args.get('group_operator', False)
         for a in args:
@@ -625,7 +632,7 @@ class many2many(_column):
             if not (isinstance(act, list) or isinstance(act, tuple)) or not act:
                 continue
             if act[0] == 0:
-                idnew = obj.create(cr, user, act[2])
+                idnew = obj.create(cr, user, act[2], context=context)
                 cr.execute('insert into '+self._rel+' ('+self._id1+','+self._id2+') values (%s,%s)', (id, idnew))
             elif act[0] == 1:
                 obj.write(cr, user, [act[1]], act[2], context=context)
@@ -685,24 +692,21 @@ class many2many(_column):
                 obj.datas[id][name] = act[2]
 
 
-def get_nice_size(a):
-    (x,y) = a
-    if isinstance(y, (int,long)):
-        size = y
-    elif y:
-        size = len(y)
-    else:
-        size = 0
-    return (x, tools.human_size(size))
+def get_nice_size(value):
+    size = 0
+    if isinstance(value, (int,long)):
+        size = value
+    elif value: # this is supposed to be a string
+        size = len(value)
+    return tools.human_size(size)
 
-def sanitize_binary_value(dict_item):
+def sanitize_binary_value(value):
     # binary fields should be 7-bit ASCII base64-encoded data,
     # but we do additional sanity checks to make sure the values
     # are not something else that won't pass via xmlrpc
-    index, value = dict_item
     if isinstance(value, (xmlrpclib.Binary, tuple, list, dict)):
         # these builtin types are meant to pass untouched
-        return index, value
+        return value
 
     # For all other cases, handle the value as a binary string:
     # it could be a 7-bit ASCII string (e.g base64 data), but also
@@ -723,7 +727,7 @@ def sanitize_binary_value(dict_item):
     # is not likely to produce the expected output, but this is
     # just a safety mechanism (in these cases base64 data or
     # xmlrpc.Binary values should be used instead)
-    return index, tools.ustr(value)
+    return tools.ustr(value)
 
 
 # ---------------------------------------------------------
@@ -799,44 +803,44 @@ class function(_column):
             return []
         return self._fnct_search(obj, cr, uid, obj, name, args, context=context)
 
-    def get(self, cr, obj, ids, name, user=None, context=None, values=None):
+    def postprocess(self, cr, uid, obj, field, value=None, context=None):
         if context is None:
             context = {}
-        if values is None:
-            values = {}
-        res = {}
-        if self._method:
-            res = self._fnct(obj, cr, user, ids, name, self._arg, context)
-        else:
-            res = self._fnct(cr, obj._table, ids, name, self._arg, context)
+        result = value
+        field_type = obj._columns[field]._type
+        if field_type == "many2one":
+            # make the result a tuple if it is not already one
+            if isinstance(value, (int,long)) and hasattr(obj._columns[field], 'relation'):
+                obj_model = obj.pool.get(obj._columns[field].relation)
+                dict_names = dict(obj_model.name_get(cr, uid, [value], context))
+                result = (value, dict_names[value])
 
-        if self._type == "many2one" :
-            # Filtering only integer/long values if passed
-            res_ids = [x for x in res.values() if x and isinstance(x, (int,long))]
-
-            if res_ids:
-                obj_model = obj.pool.get(self._obj)
-                dict_names = dict(obj_model.name_get(cr, user, res_ids, context))
-                for r in res.keys():
-                    if res[r] and res[r] in dict_names:
-                        res[r] = (res[r], dict_names[res[r]])
-
-        if self._type == 'binary':
+        if field_type == 'binary':
             if context.get('bin_size', False):
                 # client requests only the size of binary fields
-                res = dict(map(get_nice_size, res.items()))
+                result = get_nice_size(value)
             else:
-                res = dict(map(sanitize_binary_value, res.items()))
+                result = sanitize_binary_value(value)
 
-        if self._type == "integer":
-            for r in res.keys():
-                # Converting value into string so that it does not affect XML-RPC Limits
-                if isinstance(res[r],dict): # To treat integer values with _multi attribute
-                    for record in res[r].keys():
-                        res[r][record] = str(res[r][record])
-                else:
-                    res[r] = str(res[r])
-        return res
+        if field_type == "integer":
+            result = tools.ustr(value)
+        return result
+
+    def get(self, cr, obj, ids, name, uid=False, context=None, values=None):
+        result = {}
+        if self._method:
+            result = self._fnct(obj, cr, uid, ids, name, self._arg, context)
+        else:
+            result = self._fnct(cr, obj._table, ids, name, self._arg, context)
+        for id in ids:
+            if self._multi and id in result:
+                for field, value in result[id].iteritems():
+                    if value:
+                        result[id][field] = self.postprocess(cr, uid, obj, field, value, context)
+            elif result.get(id):
+                result[id] = self.postprocess(cr, uid, obj, name, result[id], context)
+        return result
+
     get_memory = get
 
     def set(self, cr, obj, id, name, value, user=None, context=None):
@@ -932,6 +936,9 @@ class related(function):
         if self._type=='many2one':
             ids = filter(None, res.values())
             if ids:
+                # name_get as root, as seeing the name of a related
+                # object depends on access right of source document,
+                # not target, so user may not have access.
                 ng = dict(obj.pool.get(self._obj).name_get(cr, 1, ids, context=context))
                 for r in res:
                     if res[r]:
@@ -1075,7 +1082,10 @@ class property(function):
             value = properties.get_by_record(cr, uid, prop, context=context)
             res[prop.res_id.id][prop.fields_id.name] = value or False
             if value and (prop.type == 'many2one'):
-                record_exists = obj.pool.get(value._name).exists(cr, uid, value.id)
+                # check existence as root, as seeing the name of a related
+                # object depends on access right of source document,
+                # not target, so user may not have access.
+                record_exists = obj.pool.get(value._name).exists(cr, 1, value.id)
                 if record_exists:
                     replaces.setdefault(value._name, {})
                     replaces[value._name][value.id] = True
@@ -1083,8 +1093,11 @@ class property(function):
                     res[prop.res_id.id][prop.fields_id.name] = False
 
         for rep in replaces:
-            nids = obj.pool.get(rep).search(cr, uid, [('id','in',replaces[rep].keys())], context=context)
-            replaces[rep] = dict(obj.pool.get(rep).name_get(cr, uid, nids, context=context))
+            # search+name_get as root, as seeing the name of a related
+            # object depends on access right of source document,
+            # not target, so user may not have access.
+            nids = obj.pool.get(rep).search(cr, 1, [('id','in',replaces[rep].keys())], context=context)
+            replaces[rep] = dict(obj.pool.get(rep).name_get(cr, 1, nids, context=context))
 
         for prop in prop_name:
             for id in ids:
@@ -1112,6 +1125,77 @@ class property(function):
     def restart(self):
         self.field_id = {}
 
+
+def field_to_dict(self, cr, user, context, field):
+    """ Return a dictionary representation of a field.
+
+    The string, help, and selection attributes (if any) are untranslated.  This
+    representation is the one returned by fields_get() (fields_get() will do
+    the translation).
+
+    """
+
+    res = {'type': field._type}
+    # This additional attributes for M2M and function field is added
+    # because we need to display tooltip with this additional information
+    # when client is started in debug mode.
+    if isinstance(field, function):
+        res['function'] = field._fnct and field._fnct.func_name or False
+        res['store'] = field.store
+        if isinstance(field.store, dict):
+            res['store'] = str(field.store)
+        res['fnct_search'] = field._fnct_search and field._fnct_search.func_name or False
+        res['fnct_inv'] = field._fnct_inv and field._fnct_inv.func_name or False
+        res['fnct_inv_arg'] = field._fnct_inv_arg or False
+        res['func_obj'] = field._obj or False
+        res['func_method'] = field._method
+    if isinstance(field, many2many):
+        res['related_columns'] = list((field._id1, field._id2))
+        res['third_table'] = field._rel
+    for arg in ('string', 'readonly', 'states', 'size', 'required', 'group_operator',
+            'change_default', 'translate', 'help', 'select', 'selectable'):
+        if getattr(field, arg):
+            res[arg] = getattr(field, arg)
+    for arg in ('digits', 'invisible', 'filters'):
+        if getattr(field, arg, None):
+            res[arg] = getattr(field, arg)
+
+    if field.string:
+        res['string'] = field.string
+    if field.help:
+        res['help'] = field.help
+
+    if hasattr(field, 'selection'):
+        if isinstance(field.selection, (tuple, list)):
+            res['selection'] = field.selection
+        else:
+            # call the 'dynamic selection' function
+            res['selection'] = field.selection(self, cr, user, context)
+    if res['type'] in ('one2many', 'many2many', 'many2one', 'one2one'):
+        res['relation'] = field._obj
+        res['domain'] = field._domain
+        res['context'] = field._context
+
+    return res
+
+
+class column_info(object):
+    """Struct containing details about an osv column, either one local to
+       its model, or one inherited via _inherits.
+
+       :attr name: name of the column
+       :attr column: column instance, subclass of osv.fields._column
+       :attr parent_model: if the column is inherited, name of the model
+                           that contains it, None for local columns.
+       :attr parent_column: the name of the column containing the m2o
+                            relationship to the parent model that contains
+                            this column, None for local columns.
+    """
+    def __init__(self, name, column, parent_model=None, parent_column=None):
+        self.name = name
+        self.column = column
+        self.parent_model = parent_model
+        self.parent_column = parent_column
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

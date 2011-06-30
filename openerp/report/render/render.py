@@ -26,15 +26,7 @@
 # Add a transparant multi-thread layer to all report rendering layers
 #
 
-import threading
-
-#
 # TODO: method to stock on the disk
-# Les class de reporting doivent surclasser cette classe
-# Les seules methodes qui peuvent etre redefinies sont:
-#     __init__
-#     _render
-#
 class render(object):
     """ Represents a report job being rendered.
     
@@ -46,6 +38,10 @@ class render(object):
             If a string is absolute path, it will be opened as such, else
             it will be passed to tools.file_open() which also considers zip
             addons.
+
+    Reporting classes must subclass this class and redefine the __init__ and
+    _render methods (not the other methods).
+
     """
     def __init__(self, bin_datas=None, path='.'):
         self.done = False
@@ -60,30 +56,18 @@ class render(object):
 
     def render(self):
         self.done = False
-        result = self._render()
-        self._result = result
+        self._result = self._render()
         self.done = True
         return True
     
     def is_done(self):
-        res = self.done
-        return res
+        return self.done
 
     def get(self):
         if self.is_done():
             return self._result
         else:
             return None
-
-if __name__=='__main__':
-    import time
-    print 'Multi-thread code !'
-    r = render()
-    r.render()
-    while not r.is_done():
-        print 'not yet!'
-        time.sleep(1)
-    print 'done!'
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

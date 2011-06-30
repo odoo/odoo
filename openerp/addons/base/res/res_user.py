@@ -127,6 +127,8 @@ class users(osv.osv):
     def send_welcome_email(self, cr, uid, id, context=None):
         logger= netsvc.Logger()
         user = self.pool.get('res.users').read(cr, uid, id, context=context)
+        if not user.get('email'):
+            return False
         if not tools.config.get('smtp_server'):
             logger.notifyChannel('mails', netsvc.LOG_WARNING,
                 _('"smtp_server" needs to be set to send mails to users'))
@@ -135,8 +137,6 @@ class users(osv.osv):
             logger.notifyChannel("mails", netsvc.LOG_WARNING,
                 _('"email_from" needs to be set to send welcome mails '
                   'to users'))
-            return False
-        if not user.get('email'):
             return False
 
         return tools.email_send(email_from=None, email_to=[user['email']],
@@ -206,6 +206,9 @@ class users(osv.osv):
             raise osv.except_osv(_('Operation Canceled'), _('Please use the change password wizard (in User Preferences or User menu) to change your own password.'))
         self.write(cr, uid, id, {'password': value})
 
+    def _get_password(self, cr, uid, ids, arg, karg, context=None):
+        return dict.fromkeys(ids, '')
+
     _columns = {
         'name': fields.char('User Name', size=64, required=True, select=True,
                             help="The new user's real name, used for searching"
@@ -213,7 +216,7 @@ class users(osv.osv):
         'login': fields.char('Login', size=64, required=True,
                              help="Used to log into the system"),
         'password': fields.char('Password', size=64, invisible=True, help="Keep empty if you don't want the user to be able to connect on the system."),
-        'new_password': fields.function(lambda *a:'', method=True, type='char', size=64,
+        'new_password': fields.function(_get_password, method=True, type='char', size=64,
                                 fnct_inv=_set_new_password,
                                 string='Change password', help="Only specify a value if you want to change the user password. "
                                 "This user will have to logout and login again!"),
@@ -263,7 +266,6 @@ class users(osv.osv):
             if 'password' in o and ( 'id' not in o or o['id'] != uid ):
                 o['password'] = '********'
             return o
-
         result = super(users, self).read(cr, uid, ids, fields, context, load)
         canwrite = self.pool.get('ir.model.access').check(cr, uid, 'res.users', 'write', raise_exception=False)
         if not canwrite:
@@ -365,7 +367,7 @@ class users(osv.osv):
                     break
             else:
                 if 'company_id' in values:
-                    if not (values['company_id'] in self.read(cr, uid, uid, ['company_ids'], context=context)['company_ids']):
+                    if not (values['company_id'] in self.read(cr, 1, uid, ['company_ids'], context=context)['company_ids']):
                         del values['company_id']
                 uid = 1 # safe fields only, so we write as super-user to bypass access rights
 
@@ -458,24 +460,25 @@ class users(osv.osv):
             raise security.ExceptionNoTb('AccessDenied')
 
     def check(self, db, uid, passwd):
+        """Verifies that the given (uid, password) pair is authorized for the database ``db`` and
+           raise an exception if it is not."""
         if not passwd:
-            return False
+            # empty passwords disallowed for obvious security reasons
+            raise security.ExceptionNoTb('AccessDenied')
         if self._uid_cache.get(db, {}).get(uid) == passwd:
-            return True
+            return
         cr = pooler.get_db(db).cursor()
         try:
             cr.execute('SELECT COUNT(1) FROM res_users WHERE id=%s AND password=%s AND active=%s',
                         (int(uid), passwd, True))
             res = cr.fetchone()[0]
-            if not bool(res):
+            if not res:
                 raise security.ExceptionNoTb('AccessDenied')
-            if res:
-                if self._uid_cache.has_key(db):
-                    ulist = self._uid_cache[db]
-                    ulist[uid] = passwd
-                else:
-                    self._uid_cache[db] = {uid:passwd}
-            return bool(res)
+            if self._uid_cache.has_key(db):
+                ulist = self._uid_cache[db]
+                ulist[uid] = passwd
+            else:
+                self._uid_cache[db] = {uid:passwd}
         finally:
             cr.close()
 
@@ -522,9 +525,9 @@ class groups2(osv.osv): ##FIXME: Is there a reason to inherit this object ?
 
         if group_users:
             user_names = [user.name for user in self.pool.get('res.users').browse(cr, uid, group_users, context=context)]
+            user_names = list(set(user_names))
             if len(user_names) >= 5:
-                user_names = user_names[:5]
-                user_names += '...'
+                user_names = user_names[:5] + ['...']
             raise osv.except_osv(_('Warning !'),
                         _('Group(s) cannot be deleted, because some user(s) still belong to them: %s !') % \
                             ', '.join(user_names))

@@ -45,16 +45,6 @@ class TinySocketClientThread(threading.Thread, netsvc.OpenERPDispatcher):
         self.sock.settimeout(1200)
         self.threads = threads
 
-    def __del__(self):
-        if self.sock:
-            try:
-                self.socket.shutdown(
-                    getattr(socket, 'SHUT_RDWR', 2))
-            except Exception:
-                pass
-            # That should garbage-collect and close it, too
-            self.sock = None
-
     def run(self):
         self.running = True
         try:
@@ -87,11 +77,14 @@ class TinySocketClientThread(threading.Thread, netsvc.OpenERPDispatcher):
                     tb_s = "".join(traceback.format_exception(*tb))
                     logging.getLogger('web-services').debug("netrpc: communication-level exception", exc_info=True)
                     ts.mysend(e, exception=True, traceback=tb_s)
+                    break
                 except Exception, ex:
                     #terminate this channel if we can't properly send back the error
                     logging.getLogger('web-services').exception("netrpc: cannot deliver exception message to client")
                     break
 
+        netsvc.close_socket(self.sock)
+        self.sock = None
         self.threads.remove(self)
         self.running = False
         return True

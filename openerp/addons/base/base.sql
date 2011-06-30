@@ -45,6 +45,7 @@ CREATE TABLE ir_model_fields (
   view_load boolean,
   relate boolean default False,
   relation_field varchar(128),
+  translate boolean default False,
   primary key(id)
 );
 

@@ -1618,29 +1618,44 @@
             <field eval="time.strftime('%Y-01-01')" name="name"/>
         </record>
 
-        <record id="CFA" model="res.currency">
-            <!-- There are in fact 2 CFA currencies:
-                  - XAF for the Central African CFA franc
-                  - XOF for the West African CFA franc
-                As they are interchangeable, we probably only need one.
-                XOF appears to have "CFA" as symbol, while "XAF" is "FCFA",
-                so let's pick XOF as the ISO Code, to have a code-symbol match.
-                We can keep CFA as XML ID to show that we only have one currency,
-                there is no possible conflict, as no other currency currently
-                has CFA as ISO Code.
-                See http://en.wikipedia.org/wiki/CFA_franc
-                    http://en.wikipedia.org/wiki/ISO_4217
-            -->
+        <record id="XOF" model="res.currency">
             <field name="name">XOF</field>
             <field name="symbol">CFA</field>
             <field name="rounding">1</field>
             <field name="accuracy">4</field>
             <field name="company_id" ref="main_company"/>
         </record>
-        <record id="rateCFA" model="res.currency.rate">
+        <record id="rateXOF" model="res.currency.rate">
            <field name="rate">655.957</field>
-           <field name="currency_id" ref="CFA"/>
+           <field name="currency_id" ref="XOF"/>
            <field eval="time.strftime('%Y-01-01')" name="name"/>
        </record>
+
+        <record id="XAF" model="res.currency">
+            <field name="name">XAF</field>
+            <field name="symbol">FCFA</field>
+            <field name="rounding">1</field>
+            <field name="accuracy">4</field>
+            <field name="company_id" ref="main_company"/>
+        </record>
+        <record id="rateXAF" model="res.currency.rate">
+           <field name="rate">655.957</field>
+           <field name="currency_id" ref="XAF"/>
+           <field eval="time.strftime('%Y-01-01')" name="name"/>
+       </record>
+
+        <record id="UGX" model="res.currency">
+            <field name="name">UGX</field>
+            <field name="symbol">USh</field>
+            <field name="rounding">1</field>
+            <field name="accuracy">4</field>
+            <field name="company_id" ref="main_company"/>
+        </record>
+        <record id="rateUGX" model="res.currency.rate">
+            <field name="rate">3401.91388</field>
+            <field name="currency_id" ref="UGX"/>
+            <field eval="time.strftime('%Y-01-01')" name="name"/>
+        </record>
+
     </data>
 </openerp>
