@@ -243,8 +243,7 @@ class user_preference(osv.osv_memory):
         host_name = ''
         if ids:
             ids = len(ids)> 1 and len(ids)-1 or ids[0] # Use len(ids)-1 for taking the value of last id 
-            host_obj = self.browse(cr, uid,[ids],context=context)[0]
-            host_name = host_obj.host_name
+            host_name = self.browse(cr, uid,[ids],context=context)[0].host_name
         return host_name
 
     _defaults={
