@@ -23,6 +23,7 @@ from datetime import datetime
 from tools.translate import _
 from osv import fields, osv
 from resource.faces import task as Task 
+from operator import itemgetter
 
 class project_phase(osv.osv):
     _name = "project.phase"
@@ -725,22 +726,11 @@ class project_task(osv.osv):
         'user_id' : False
     }
 
-    def _get_child_duration(self, cr, uid, tasks, duration, context=None):
-        #DFS : visit all child
-        for task in tasks:
-            if task.child_ids:
-                duration = self._get_child_duration(cr, uid, task.child_ids, duration, context)
-            duration += task.planned_hours
-        return duration
-
     def generate_task(self, cr, uid, task_id, parent=False, flag=False, context=None):
         if context is None:
             context = {}
         task = self.browse(cr, uid, task_id, context=context)
-        duration = task.planned_hours
-        if task.child_ids:
-            duration = self._get_child_duration(cr, uid, task.child_ids, duration, context)
-        duration = str(duration)+ 'H'
+        duration = str(task.planned_hours)+ 'H'
         str_resource = False
         parent = task.parent_ids
         if task.phase_id.resource_ids:
@@ -754,10 +744,12 @@ class project_task(osv.osv):
             effort = \'%s\'
             resource = %s
 '''%(task.id, task.name, duration, str_resource)
-            if parent:
+            if task.child_ids:
+                seq = [[child.planned_hours, child.id] for child in task.child_ids]
+                seq.sort(key=itemgetter(0))
                 s +='''
-            start = up.Task_%s.start
-'''%(parent[0].id)
+            start = up.Task_%s.end
+    '''%(seq[-1][1])
         else:
             s = '''
     def Task_%s():
@@ -765,10 +757,12 @@ class project_task(osv.osv):
         effort = \'%s\'
         resource = %s
 '''%(task.id, task.name, duration, str_resource)
-            if parent:
+            if task.child_ids:
+                seq = [[child.planned_hours, child.id] for child in task.child_ids]
+                seq.sort(key=itemgetter(0))
                 s +='''
-        start = up.Task_%s.start
-'''%(parent[0].id)
+        start = up.Task_%s.end
+'''%(seq[-1][1])
         s += '\n'
         return s
 project_task()
