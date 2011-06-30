@@ -1331,6 +1331,7 @@ class account_move(osv.osv):
 
     def _centralise(self, cr, uid, move, mode, context=None):
         assert mode in ('debit', 'credit'), 'Invalid Mode' #to prevent sql injection
+        currency_obj = self.pool.get('res.currency') 
         if context is None:
             context = {}
 
@@ -1381,6 +1382,34 @@ class account_move(osv.osv):
         cr.execute('SELECT SUM(%s) FROM account_move_line WHERE move_id=%%s AND id!=%%s' % (mode,), (move.id, line_id2))
         result = cr.fetchone()[0] or 0.0
         cr.execute('update account_move_line set '+mode2+'=%s where id=%s', (result, line_id))
+
+        #adjust also the amount in currency if needed
+        cr.execute("select currency_id, sum(amount_currency) as amount_currency from account_move_line where move_id = %s and currency_id is not null group by currency_id", (move.id,))
+        for row in cr.dictfetchall():
+            currency_id = currency_obj.browse(cr, uid, row['currency_id'], context=context)
+            if not currency_obj.is_zero(cr, uid, currency_id, row['amount_currency']):
+                amount_currency = row['amount_currency'] * -1
+                account_id = amount_currency > 0 and move.journal_id.default_debit_account_id.id or move.journal_id.default_credit_account_id.id
+                cr.execute('select id from account_move_line where move_id=%s and centralisation=\'currency\' and currency_id = %slimit 1', (move.id, row['currency_id']))
+                res = cr.fetchone()
+                if res:
+                    cr.execute('update account_move_line set amount_currency=%s , account_id=%s where id=%s', (amount_currency, account_id, res[0]))
+                else:
+                    context.update({'journal_id': move.journal_id.id, 'period_id': move.period_id.id})
+                    line_id = self.pool.get('account.move.line').create(cr, uid, {
+                        'name': _('Currency Adjustment'),
+                        'centralisation': 'currency',
+                        'account_id': account_id,
+                        'move_id': move.id,
+                        'journal_id': move.journal_id.id,
+                        'period_id': move.period_id.id,
+                        'date': move.period_id.date_stop,
+                        'debit': 0.0,
+                        'credit': 0.0,
+                        'currency_id': row['currency_id'],
+                        'amount_currency': amount_currency,
+                    }, context)
+
         return True
 
     #

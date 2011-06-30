@@ -21,6 +21,8 @@
 
 from osv import osv, fields
 from tools.translate import _
+import pprint
+pp = pprint.PrettyPrinter(indent=4)
 
 import time
 
@@ -121,23 +123,24 @@ class crm_opportunity2phonecall(osv.osv_memory):
             for opp in opp_obj.browse(cr, uid, record_ids, context=context):
                 vals = {
                         'name' : opp.name,
-                        'case_id' : opp.id ,
+                        'case_id' : opp.id,
                         'user_id' : this.user_id and this.user_id.id or False,
                         'categ_id' : this.categ_id.id,
                         'description' : opp.description or False,
                         'date' : this.date,
-                        'section_id' : this.section_id.id or opp.section_id.id or False,
+                        'section_id' : this.section_id.id or False,
                         'partner_id': opp.partner_id and opp.partner_id.id or False,
                         'partner_address_id': opp.partner_address_id and opp.partner_address_id.id or False,
                         'partner_phone' : opp.phone or (opp.partner_address_id and opp.partner_address_id.phone or False),
                         'partner_mobile' : opp.partner_address_id and opp.partner_address_id.mobile or False,
                         'priority': opp.priority,
-                        'opportunity_id': opp.id
+                        'opportunity_id': opp.id,
+                        'date_open': time.strftime('%Y-%m-%d %H:%M:%S')
                 }
+                
                 new_case = phonecall_obj.create(cr, uid, vals, context=context)
-                if this.action == 'schedule':
-                    phonecall_obj.case_open(cr, uid, [new_case])
-                elif this.action == 'log':
+               
+                if this.action == 'log':
                     phonecall_obj.case_close(cr, uid, [new_case])
 
             value = {
@@ -149,7 +152,7 @@ class crm_opportunity2phonecall(osv.osv_memory):
                 'res_id' : new_case,
                 'views': [(id3, 'form'), (id2, 'tree'), (False, 'calendar')],
                 'type': 'ir.actions.act_window',
-                'search_view_id': res['res_id']
+                'search_view_id': res['res_id'],
             }
         return value
 
