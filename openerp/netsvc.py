@@ -3,28 +3,23 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
-#    The refactoring about the OpenSSL support come from Tryton
-#    Copyright (C) 2007-2009 Cédric Krier.
-#    Copyright (C) 2007-2009 Bertrand Chenal.
-#    Copyright (C) 2008 B2CK SPRL.
+#    Copyright (C) 2004-2011 OpenERP SA (<http://www.openerp.com>)
 #
 #    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
+#    GNU Affero General Public License for more details.
 #
-#    You should have received a copy of the GNU General Public License
+#    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
-import cgitb
 import errno
 import heapq
 import logging
@@ -36,7 +31,6 @@ import socket
 import sys
 import threading
 import time
-import warnings
 import types
 from pprint import pformat
 
@@ -187,7 +181,6 @@ class ColoredFormatter(DBFormatter):
         return DBFormatter.format(self, record)
 
 def init_logger():
-    import os
     from tools.translate import resetlocale
     resetlocale()
 
@@ -431,16 +424,25 @@ class OpenERPDispatcher:
         log(title, msg, channel=channel, depth=depth, fn=fn)
     def dispatch(self, service_name, method, params):
         try:
-            logger = logging.getLogger('result')
-            self.log('service', tuple(replace_request_password(params)), depth=(None if logger.isEnabledFor(logging.DEBUG_RPC_ANSWER) else 1), fn='%s.%s'%(service_name,method))
             auth = getattr(self, 'auth_provider', None)
+            logger = logging.getLogger('result')
+            start_time = end_time = 0
+            if logger.isEnabledFor(logging.DEBUG_RPC_ANSWER):
+                self.log('service', tuple(replace_request_password(params)), depth=None, fn='%s.%s'%(service_name,method))
+            if logger.isEnabledFor(logging.DEBUG_RPC):
+                start_time = time.time()
             result = ExportService.getService(service_name).dispatch(method, auth, params)
+            if logger.isEnabledFor(logging.DEBUG_RPC):
+                end_time = time.time()
+            if not logger.isEnabledFor(logging.DEBUG_RPC_ANSWER):
+                self.log('service (%.3fs)' % (end_time - start_time), tuple(replace_request_password(params)), depth=1, fn='%s.%s'%(service_name,method))
+            self.log('execution time', '%.3fs' % (end_time - start_time), channel=logging.DEBUG_RPC_ANSWER)
             self.log('result', result, channel=logging.DEBUG_RPC_ANSWER)
             return result
         except Exception, e:
             self.log('exception', tools.exception_to_unicode(e))
             tb = getattr(e, 'traceback', sys.exc_info())
-            tb_s = cgitb.text(tb)
+            tb_s = "".join(traceback.format_exception(*tb))
             if tools.config['debug_mode'] and isinstance(tb, types.TracebackType):
                 import pdb
                 pdb.post_mortem(tb[2])

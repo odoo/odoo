@@ -104,7 +104,7 @@ class res_config_configurable(osv.osv_memory):
             return {
                 'view_mode': action.view_mode,
                 'view_type': action.view_type,
-                'view_id': action.view_id and [action.view_id.id] or False,
+                'view_id': (action.view_id.id, 'Next Setup Action') if action.view_id else False,
                 'res_model': action.res_model,
                 'type': action.type,
                 'target': action.target,

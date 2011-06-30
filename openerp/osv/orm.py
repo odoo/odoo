@@ -68,6 +68,8 @@ regex_object_name = re.compile(r'^[a-z0-9_.]+$')
 # Mapping between openerp module names and their osv classes.
 module_class_list = {}
 
+# Super-user identifier (aka Administrator aka root)
+ROOT_USER_ID = 1
 
 def check_object_name(name):
     """ Check if the given name is a valid openerp object name.
@@ -477,6 +479,11 @@ class orm_template(object):
     # r is the (local) field towards m,
     # and f is the _column object itself.
     _inherit_fields = {}
+    # Mapping field name/column_info object
+    # This is similar to _inherit_fields but:
+    # 1. includes self fields,
+    # 2. uses column_info instead of a triple.
+    _all_columns = {}
     _table = None
     _invalids = set()
     _log_create = False
@@ -972,7 +979,7 @@ class orm_template(object):
                 if field[len(prefix)]=='id':
                     try:
                         data_res_id = _get_id(model_name, line[i], current_module, 'id')
-                    except ValueError, e:
+                    except ValueError:
                         pass
                     xml_id = line[i]
                     continue
@@ -1263,7 +1270,7 @@ class orm_template(object):
 
 
     def fields_get(self, cr, user, allfields=None, context=None, write_access=True):
-        """ Returns the definition of each field.
+        """ Return the definition of each field.
 
             The returned value is a dictionary (indiced by field name) of
             dictionaries. The _inherits'd fields are included. The string,
@@ -1289,15 +1296,15 @@ class orm_template(object):
                 res[f]['readonly'] = True
                 res[f]['states'] = {}
 
-            if hasattr(res[f], 'string'):
+            if 'string' in res[f]:
                 res_trans = translation_obj._get_source(cr, user, self._name + ',' + f, 'field', context.get('lang', False) or 'en_US')
                 if res_trans:
                     res[f]['string'] = res_trans
-            if hasattr(res[f], 'help'):
+            if 'help' in res[f]:
                 help_trans = translation_obj._get_source(cr, user, self._name + ',' + f, 'help', context.get('lang', False) or 'en_US')
                 if help_trans:
                     res[f]['help'] = help_trans
-            if hasattr(res[f], 'selection'):
+            if 'selection' in res[f]:
                 if isinstance(field.selection, (tuple, list)):
                     sel = field.selection
                     sel2 = []
@@ -1318,7 +1325,7 @@ class orm_template(object):
         return False
 
     def __view_look_dom(self, cr, user, node, view_id, context=None):
-        if not context:
+        if context is None:
             context = {}
         result = False
         fields = {}
@@ -1329,8 +1336,8 @@ class orm_template(object):
                 return s.encode('utf8')
             return s
 
-        # return True if node can be displayed to current user
         def check_group(node):
+            """ Set invisible to true if the user is not in the specified groups. """
             if node.get('groups'):
                 groups = node.get('groups').split(',')
                 access_pool = self.pool.get('ir.model.access')
@@ -1340,9 +1347,6 @@ class orm_template(object):
                     if 'attrs' in node.attrib:
                         del(node.attrib['attrs']) #avoid making field visible later
                 del(node.attrib['groups'])
-                return can_see
-            else:
-                return True
 
         if node.tag in ('field', 'node', 'arrow'):
             if node.get('object'):
@@ -1421,12 +1425,11 @@ class orm_template(object):
                 if node.get(additional_field):
                     fields[node.get(additional_field)] = {}
 
-        if 'groups' in node.attrib:
-            check_group(node)
+        check_group(node)
 
         # translate view
-        if ('lang' in context) and not result:
-            if node.get('string'):
+        if 'lang' in context:
+            if node.get('string') and not result:
                 trans = self.pool.get('ir.translation')._get_source(cr, user, self._name, 'view', context['lang'], node.get('string'))
                 if trans == node.get('string') and ('base_model_name' in context):
                     # If translation is same as source, perhaps we'd have more luck with the alternative model name
@@ -1454,6 +1457,7 @@ class orm_template(object):
         return fields
 
     def _disable_workflow_buttons(self, cr, user, node):
+        """ Set the buttons in node to readonly if the user can't activate them. """
         if user == 1:
             # admin user can always activate workflow buttons
             return node
@@ -1485,12 +1489,10 @@ class orm_template(object):
         if node.tag == 'diagram':
             if node.getchildren()[0].tag == 'node':
                 node_fields = self.pool.get(node.getchildren()[0].get('object')).fields_get(cr, user, fields_def.keys(), context)
+                fields.update(node_fields)
             if node.getchildren()[1].tag == 'arrow':
                 arrow_fields = self.pool.get(node.getchildren()[1].get('object')).fields_get(cr, user, fields_def.keys(), context)
-            for key, value in node_fields.items():
-                fields[key] = value
-            for key, value in arrow_fields.items():
-                fields[key] = value
+                fields.update(arrow_fields)
         else:
             fields = self.fields_get(cr, user, fields_def.keys(), context)
         for field in fields_def:
@@ -1561,6 +1563,7 @@ class orm_template(object):
         tree_view = self.fields_view_get(cr, uid, False, 'tree', context=context)
 
         fields_to_search = set()
+        # TODO it seems _all_columns could be used instead of fields_get (no need for translated fields info)
         fields = self.fields_get(cr, uid, context=context)
         for field in fields:
             if fields[field].get('select'):
@@ -1615,63 +1618,79 @@ class orm_template(object):
             raise AttributeError("View definition error for inherited view '%s' on model '%s': %s"
                                  %  (child_view.xml_id, self._name, error_msg))
 
-        def _inherit_apply(src, inherit, inherit_id=None):
-            def _find(node, node2):
-                if node2.tag == 'xpath':
-                    res = node.xpath(node2.get('expr'))
-                    if res:
-                        return res[0]
-                    else:
-                        return None
-                else:
-                    for n in node.getiterator(node2.tag):
-                        res = True
-                        if node2.tag == 'field':
-                            # only compare field names, a field can be only once in a given view
-                            # at a given level (and for multilevel expressions, we should use xpath
-                            # inheritance spec anyway)
-                            if node2.get('name') == n.get('name'):
-                                return n
-                            else:
-                                continue
-                        for attr in node2.attrib:
-                            if attr == 'position':
-                                continue
-                            if n.get(attr):
-                                if n.get(attr) == node2.get(attr):
-                                    continue
-                            res = False
-                        if res:
-                            return n
+        def locate(source, spec):
+            """ Locate a node in a source (parent) architecture.
+
+            Given a complete source (parent) architecture (i.e. the field
+            `arch` in a view), and a 'spec' node (a node in an inheriting
+            view that specifies the location in the source view of what
+            should be changed), return (if it exists) the node in the
+            source view matching the specification.
+
+            :param source: a parent architecture to modify
+            :param spec: a modifying node in an inheriting view
+            :return: a node in the source matching the spec
+
+            """
+            if spec.tag == 'xpath':
+                nodes = source.xpath(spec.get('expr'))
+                return nodes[0] if nodes else None
+            elif spec.tag == 'field':
+                # Only compare the field name: a field can be only once in a given view
+                # at a given level (and for multilevel expressions, we should use xpath
+                # inheritance spec anyway).
+                for node in source.getiterator('field'):
+                    if node.get('name') == spec.get('name'):
+                        return node
+                return None
+            else:
+                for node in source.getiterator(spec.tag):
+                    good = True
+                    for attr in spec.attrib:
+                        if attr != 'position' and (not node.get(attr) or node.get(attr) != spec.get(attr)):
+                            good = False
+                            break
+                    if good:
+                        return node
                 return None
 
-            # End: _find(node, node2)
+        def apply_inheritance_specs(source, specs_arch, inherit_id=None):
+            """ Apply an inheriting view.
 
-            doc_dest = etree.fromstring(encode(inherit))
-            toparse = [doc_dest]
+            Apply to a source architecture all the spec nodes (i.e. nodes
+            describing where and what changes to apply to some parent
+            architecture) given by an inheriting view.
 
-            while len(toparse):
-                node2 = toparse.pop(0)
-                if isinstance(node2, SKIPPED_ELEMENT_TYPES):
+            :param source: a parent architecture to modify
+            :param specs_arch: a modifying architecture in an inheriting view
+            :param inherit_id: the database id of the inheriting view
+            :return: a modified source where the specs are applied
+
+            """
+            specs_tree = etree.fromstring(encode(specs_arch))
+            # Queue of specification nodes (i.e. nodes describing where and
+            # changes to apply to some parent architecture).
+            specs = [specs_tree]
+
+            while len(specs):
+                spec = specs.pop(0)
+                if isinstance(spec, SKIPPED_ELEMENT_TYPES):
                     continue
-                if node2.tag == 'data':
-                    toparse += [ c for c in doc_dest ]
+                if spec.tag == 'data':
+                    specs += [ c for c in specs_tree ]
                     continue
-                node = _find(src, node2)
+                node = locate(source, spec)
                 if node is not None:
-                    pos = 'inside'
-                    if node2.get('position'):
-                        pos = node2.get('position')
+                    pos = spec.get('position', 'inside')
                     if pos == 'replace':
-                        parent = node.getparent()
-                        if parent is None:
-                            src = copy.deepcopy(node2[0])
+                        if node.getparent() is None:
+                            source = copy.deepcopy(spec[0])
                         else:
-                            for child in node2:
+                            for child in spec:
                                 node.addprevious(child)
                             node.getparent().remove(node)
                     elif pos == 'attributes':
-                        for child in node2.getiterator('attribute'):
+                        for child in spec.getiterator('attribute'):
                             attribute = (child.get('name'), child.text and child.text.encode('utf8') or None)
                             if attribute[1]:
                                 node.set(attribute[0], attribute[1])
@@ -1679,7 +1698,7 @@ class orm_template(object):
                                 del(node.attrib[attribute[0]])
                     else:
                         sib = node.getnext()
-                        for child in node2:
+                        for child in spec:
                             if pos == 'inside':
                                 node.append(child)
                             elif pos == 'after':
@@ -1694,22 +1713,39 @@ class orm_template(object):
                                 raise_view_error("Invalid position value: '%s'" % pos, inherit_id)
                 else:
                     attrs = ''.join([
-                        ' %s="%s"' % (attr, node2.get(attr))
-                        for attr in node2.attrib
+                        ' %s="%s"' % (attr, spec.get(attr))
+                        for attr in spec.attrib
                         if attr != 'position'
                     ])
-                    tag = "<%s%s>" % (node2.tag, attrs)
+                    tag = "<%s%s>" % (spec.tag, attrs)
                     raise_view_error("Element '%s' not found in parent view '%%(parent_xml_id)s'" % tag, inherit_id)
-            return src
-        # End: _inherit_apply(src, inherit)
+            return source
+
+        def apply_view_inheritance(source, inherit_id):
+            """ Apply all the (directly and indirectly) inheriting views.
+
+            :param source: a parent architecture to modify (with parent
+                modifications already applied)
+            :param inherit_id: the database id of the parent view
+            :return: a modified source where all the modifying architecture
+                are applied
+
+            """
+            # get all views which inherit from (ie modify) this view
+            cr.execute('select arch,id from ir_ui_view where inherit_id=%s and model=%s order by priority', (inherit_id, self._name))
+            sql_inherit = cr.fetchall()
+            for (inherit, id) in sql_inherit:
+                source = apply_inheritance_specs(source, inherit, id)
+                source = apply_view_inheritance(source, id)
+            return source
 
         result = {'type': view_type, 'model': self._name}
 
-        ok = True
         sql_res = False
         parent_view_model = None
-        while ok:
-            view_ref = context.get(view_type + '_view_ref', False)
+        view_ref = context.get(view_type + '_view_ref')
+        # Search for a root (i.e. without any parent) view.
+        while True:
             if view_ref and not view_id:
                 if '.' in view_ref:
                     module, view_ref = view_ref.split('.', 1)
@@ -1723,48 +1759,35 @@ class orm_template(object):
                               FROM ir_ui_view
                               WHERE id=%s""", (view_id,))
             else:
-                cr.execute('''SELECT
-                        arch,name,field_parent,id,type,inherit_id,model
-                    FROM
-                        ir_ui_view
-                    WHERE
-                        model=%s AND
-                        type=%s AND
-                        inherit_id IS NULL
-                    ORDER BY priority''', (self._name, view_type))
-            sql_res = cr.fetchone()
+                cr.execute("""SELECT arch,name,field_parent,id,type,inherit_id,model
+                              FROM ir_ui_view
+                              WHERE model=%s AND type=%s AND inherit_id IS NULL
+                              ORDER BY priority""", (self._name, view_type))
+            sql_res = cr.dictfetchone()
 
             if not sql_res:
                 break
 
-            ok = sql_res[5]
-            view_id = ok or sql_res[3]
-            parent_view_model = sql_res[6]
+            view_id = sql_res['inherit_id'] or sql_res['id']
+            parent_view_model = sql_res['model']
+            if not sql_res['inherit_id']:
+                break
 
         # if a view was found
         if sql_res:
-            result['type'] = sql_res[4]
-            result['view_id'] = sql_res[3]
-            result['arch'] = sql_res[0]
+            result['type'] = sql_res['type']
+            result['view_id'] = sql_res['id']
 
-            def _inherit_apply_rec(result, inherit_id):
-                # get all views which inherit from (ie modify) this view
-                cr.execute('select arch,id from ir_ui_view where inherit_id=%s and model=%s order by priority', (inherit_id, self._name))
-                sql_inherit = cr.fetchall()
-                for (inherit, id) in sql_inherit:
-                    result = _inherit_apply(result, inherit, id)
-                    result = _inherit_apply_rec(result, id)
-                return result
+            source = etree.fromstring(encode(sql_res['arch']))
+            result['arch'] = apply_view_inheritance(source, result['view_id'])
 
-            inherit_result = etree.fromstring(encode(result['arch']))
-            result['arch'] = _inherit_apply_rec(inherit_result, sql_res[3])
-
-            result['name'] = sql_res[1]
-            result['field_parent'] = sql_res[2] or False
+            result['name'] = sql_res['name']
+            result['field_parent'] = sql_res['field_parent'] or False
         else:
 
             # otherwise, build some kind of default view
             if view_type == 'form':
+                # TODO it seems fields_get can be replaced by _all_columns (no need for translation)
                 res = self.fields_get(cr, user, context=context)
                 xml = '<?xml version="1.0" encoding="utf-8"?> ' \
                      '<form string="%s">' % (self._description,)
@@ -1790,7 +1813,7 @@ class orm_template(object):
                 xml = self.__get_default_search_view(cr, user, context)
 
             else:
-                xml = '<?xml version="1.0"?>' # what happens here, graph case?
+                # what happens here, graph case?
                 raise except_orm(_('Invalid Architecture!'), _("There is no view of type '%s' defined for the structure!") % view_type)
             result['arch'] = etree.fromstring(encode(xml))
             result['name'] = 'default'
@@ -2069,8 +2092,9 @@ class orm_template(object):
 class orm_memory(orm_template):
 
     _protected = ['read', 'write', 'create', 'default_get', 'perm_read', 'unlink', 'fields_get', 'fields_view_get', 'search', 'name_get', 'distinct_field_get', 'name_search', 'copy', 'import_data', 'search_count', 'exists']
-    _max_count = config.get('osv_memory_count_limit')
-    _max_hours = config.get('osv_memory_age_limit')
+    _inherit_fields = {}
+    _max_count = None
+    _max_hours = None
     _check_time = 20
 
     @classmethod
@@ -2082,6 +2106,8 @@ class orm_memory(orm_template):
         self.datas = {}
         self.next_id = 0
         self.check_id = 0
+        self._max_count = config.get('osv_memory_count_limit')
+        self._max_hours = config.get('osv_memory_age_limit')
         cr.execute('delete from wkf_instance where res_type=%s', (self._name,))
 
     def _check_access(self, uid, object_id, mode):
@@ -2105,14 +2131,14 @@ class orm_memory(orm_template):
             for k,v in self.datas.iteritems():
                 if v['internal.date_access'] < max:
                     tounlink.append(k)
-            self.unlink(cr, 1, tounlink)
+            self.unlink(cr, ROOT_USER_ID, tounlink)
 
         # Count-based expiration
         if self._max_count and len(self.datas) > self._max_count:
             # sort by access time to remove only the first/oldest ones in LRU fashion
             records = self.datas.items()
             records.sort(key=lambda x:x[1]['internal.date_access'])
-            self.unlink(cr, 1, [x[0] for x in records[:len(self.datas)-self._max_count]])
+            self.unlink(cr, ROOT_USER_ID, [x[0] for x in records[:len(self.datas)-self._max_count]])
 
         return True
 
@@ -2347,6 +2373,7 @@ class orm(orm_template):
             groupby_def = self._columns.get(groupby) or (self._inherit_fields.get(groupby) and self._inherit_fields.get(groupby)[2])
             assert groupby_def and groupby_def._classic_write, "Fields in 'groupby' must be regular database-persisted fields (no function or related fields), or function fields with store=True"
 
+        # TODO it seems fields_get can be replaced by _all_columns (no need for translation)
         fget = self.fields_get(cr, uid, fields)
         float_int_fields = filter(lambda x: fget[x]['type'] in ('float', 'integer'), fields)
         flist = ''
@@ -2488,7 +2515,7 @@ class orm(orm_template):
         while ids_lst:
             iids = ids_lst[:40]
             ids_lst = ids_lst[40:]
-            res = f.get(cr, self, iids, k, 1, {})
+            res = f.get(cr, self, iids, k, ROOT_USER_ID, {})
             for key, val in res.items():
                 if f._multi:
                     val = val[k]
@@ -2694,7 +2721,7 @@ class orm(orm_template):
                                 # set the field to the default value if any
                                 if k in self._defaults:
                                     if callable(self._defaults[k]):
-                                        default = self._defaults[k](self, cr, 1, context)
+                                        default = self._defaults[k](self, cr, ROOT_USER_ID, context)
                                     else:
                                         default = self._defaults[k]
 
@@ -2779,7 +2806,7 @@ class orm(orm_template):
                             # initialize it
                             if not create and k in self._defaults:
                                 if callable(self._defaults[k]):
-                                    default = self._defaults[k](self, cr, 1, context)
+                                    default = self._defaults[k](self, cr, ROOT_USER_ID, context)
                                 else:
                                     default = self._defaults[k]
 
@@ -3127,6 +3154,7 @@ class orm(orm_template):
             if self._name in obj._inherits:
                 obj._inherits_reload()
 
+
     def _inherits_reload(self):
         """ Recompute the _inherit_fields mapping.
 
@@ -3136,13 +3164,26 @@ class orm(orm_template):
         res = {}
         for table in self._inherits:
             other = self.pool.get(table)
-            res.update(other._inherit_fields)
             for col in other._columns.keys():
                 res[col] = (table, self._inherits[table], other._columns[col])
             for col in other._inherit_fields.keys():
                 res[col] = (table, self._inherits[table], other._inherit_fields[col][2])
         self._inherit_fields = res
+        self._all_columns = self._get_column_infos()
         self._inherits_reload_src()
+
+
+    def _get_column_infos(self):
+        """Returns a dict mapping all fields names (direct fields and
+           inherited field via _inherits) to a ``column_info`` struct
+           giving detailed columns """
+        result = {}
+        for k, (parent, m2o, col) in self._inherit_fields.iteritems():
+            result[k] = fields.column_info(k, col, parent, m2o)
+        for k, col in self._columns.iteritems():
+            result[k] = fields.column_info(k, col)
+        return result
+
 
     def _inherits_check(self):
         for table, field_name in self._inherits.items():
@@ -3510,10 +3551,13 @@ class orm(orm_template):
 
             # Removing the ir_model_data reference if the record being deleted is a record created by xml/csv file,
             # as these are not connected with real database foreign keys, and would be dangling references.
-            # Step 1. Calling unlink of ir_model_data only for the affected IDS.
-            referenced_ids = pool_model_data.search(cr, uid, [('res_id','in',list(sub_ids)),('model','=',self._name)], context=context)
+            # Note: following steps performed as admin to avoid access rights restrictions, and with no context
+            #       to avoid possible side-effects during admin calls.
+            # Step 1. Calling unlink of ir_model_data only for the affected IDS
+            reference_ids = pool_model_data.search(cr, ROOT_USER_ID, [('res_id','in',list(sub_ids)),('model','=',self._name)])
             # Step 2. Marching towards the real deletion of referenced records
-            pool_model_data.unlink(cr, uid, referenced_ids, context=context)
+            if reference_ids:
+                pool_model_data.unlink(cr, ROOT_USER_ID, reference_ids)
 
             # For the same reason, removing the record relevant to ir_values
             ir_value_ids = ir_values_obj.search(cr, uid,
@@ -4009,8 +4053,8 @@ class orm(orm_template):
 
             result.setdefault(fncts[fnct][0], {})
 
-            # uid == 1 for accessing objects having rules defined on store fields
-            ids2 = fncts[fnct][2](self, cr, 1, ids, context)
+            # use admin user for accessing objects having rules defined on store fields
+            ids2 = fncts[fnct][2](self, cr, ROOT_USER_ID, ids, context)
             for id in filter(None, ids2):
                 result[fncts[fnct][0]].setdefault(id, [])
                 result[fncts[fnct][0]][id].append(fnct)
@@ -4063,8 +4107,8 @@ class orm(orm_template):
         for key in keys:
             val = todo[key]
             if key:
-                # uid == 1 for accessing objects having rules defined on store fields
-                result = self._columns[val[0]].get(cr, self, ids, val, 1, context=context)
+                # use admin user for accessing objects having rules defined on store fields
+                result = self._columns[val[0]].get(cr, self, ids, val, ROOT_USER_ID, context=context)
                 for id, value in result.items():
                     if field_flag:
                         for f in value.keys():
@@ -4089,8 +4133,8 @@ class orm(orm_template):
 
             else:
                 for f in val:
-                    # uid == 1 for accessing objects having rules defined on store fields
-                    result = self._columns[f].get(cr, self, ids, f, 1, context=context)
+                    # use admin user for accessing objects having rules defined on store fields
+                    result = self._columns[f].get(cr, self, ids, f, ROOT_USER_ID, context=context)
                     for r in result.keys():
                         if field_flag:
                             if r in field_dict.keys():
@@ -4357,6 +4401,7 @@ class orm(orm_template):
         else:
             raise IndexError( _("Record #%d of %s not found, cannot copy!") %( id, self._name))
 
+        # TODO it seems fields_get can be replaced by _all_columns (no need for translation)
         fields = self.fields_get(cr, uid, context=context)
         for f in fields:
             ftype = fields[f]['type']
@@ -4414,6 +4459,7 @@ class orm(orm_template):
         seen_map[self._name].append(old_id)
 
         trans_obj = self.pool.get('ir.translation')
+        # TODO it seems fields_get can be replaced by _all_columns (no need for translation)
         fields = self.fields_get(cr, uid, context=context)
 
         translation_records = []

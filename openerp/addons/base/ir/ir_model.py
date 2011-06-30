@@ -21,7 +21,6 @@
 import logging
 import re
 import time
-from operator import itemgetter
 
 from osv import fields,osv
 import netsvc
@@ -450,6 +449,23 @@ class ir_model_access(osv.osv):
         # pass no groups -> no access
         return False
 
+    def group_names_with_access(self, cr, model_name, access_mode):
+        """Returns the names of visible groups which have been granted ``access_mode`` on
+           the model ``model_name``.
+           :rtype: list
+        """
+        assert access_mode in ['read','write','create','unlink'], 'Invalid access mode: %s' % access_mode
+        cr.execute('''SELECT
+                        g.name
+                      FROM
+                        ir_model_access a
+                        JOIN ir_model m ON (a.model_id=m.id)
+                        JOIN res_groups g ON (a.group_id=g.id)
+                      WHERE
+                        m.model=%s AND
+                        a.perm_''' + access_mode, (model_name,))
+        return [x[0] for x in cr.fetchall()]
+
     def check(self, cr, uid, model, mode='read', raise_exception=True, context=None):
         if uid==1:
             # User root have all accesses
@@ -493,16 +509,7 @@ class ir_model_access(osv.osv):
             r = cr.fetchone()[0]
 
         if not r and raise_exception:
-            cr.execute('''select
-                    g.name
-                from
-                    ir_model_access a 
-                    left join ir_model m on (a.model_id=m.id) 
-                    left join res_groups g on (a.group_id=g.id)
-                where
-                    m.model=%s and
-                    a.group_id is not null and perm_''' + mode, (model_name, ))
-            groups = ', '.join(map(lambda x: x[0], cr.fetchall())) or '/'
+            groups = ', '.join(self.group_names_with_access(cr, model_name, mode)) or '/'
             msgs = {
                 'read':   _("You can not read this document (%s) ! Be sure your user belongs to one of these groups: %s."),
                 'write':  _("You can not write in this document (%s) ! Be sure your user belongs to one of these groups: %s."),
@@ -580,7 +587,6 @@ class ir_model_data(osv.osv):
     def __init__(self, pool, cr):
         osv.osv.__init__(self, pool, cr)
         self.doinit = True
-        self.unlink_mark = {}
 
         # also stored in pool to avoid being discarded along with this osv instance
         if getattr(pool, 'model_data_reference_ids', None) is None:
@@ -628,6 +634,14 @@ class ir_model_data(osv.osv):
         except:
             id = False
         return id
+
+    def unlink(self, cr, uid, ids, context=None):
+        """ Regular unlink method, but make sure to clear the caches. """
+        ref_ids = self.browse(cr, uid, ids, context=context)
+        for ref_id in ref_ids:
+            self._get_id.clear_cache(cr.dbname, uid, ref_id.module, ref_id.name)
+            self.get_object_reference.clear_cache(cr.dbname, uid, ref_id.module, ref_id.name)
+        return super(ir_model_data,self).unlink(cr, uid, ids, context=context)
 
     def _update(self,cr, uid, model, module, values, xml_id=False, store=True, noupdate=False, mode='init', res_id=False, context=None):
         model_obj = self.pool.get(model)
@@ -719,12 +733,6 @@ class ir_model_data(osv.osv):
                                 table.replace('.', '_'))] = (table, inherit_id)
         return res_id
 
-    def _unlink(self, cr, uid, model, res_ids):
-        for res_id in res_ids:
-            self.unlink_mark[(model, res_id)] = False
-            cr.execute('delete from ir_model_data where res_id=%s and model=%s', (res_id, model))
-        return True
-
     def ir_set(self, cr, uid, key, key2, name, models, value, replace=True, isobject=False, meta=None, xml_id=False):
         if type(models[0])==type([]) or type(models[0])==type(()):
             model,res_id = models[0]
@@ -752,15 +760,25 @@ class ir_model_data(osv.osv):
         return True
 
     def _process_end(self, cr, uid, modules):
+        """ Clear records removed from updated module data.
+
+        This method is called at the end of the module loading process.
+        It is meant to removed records that are no longer present in the
+        updated data. Such records are recognised as the one with an xml id
+        and a module in ir_model_data and noupdate set to false, but not
+        present in self.loads.
+
+        """
         if not modules:
             return True
         modules = list(modules)
         module_in = ",".join(["%s"] * len(modules))
         cr.execute('select id,name,model,res_id,module from ir_model_data where module IN (' + module_in + ') and noupdate=%s', modules + [False])
         wkf_todo = []
+        to_unlink = []
         for (id, name, model, res_id,module) in cr.fetchall():
             if (module,name) not in self.loads:
-                self.unlink_mark[(model,res_id)] = id
+                to_unlink.append((model,res_id))
                 if model=='workflow.activity':
                     cr.execute('select res_type,res_id from wkf_instance where id IN (select inst_id from wkf_workitem where act_id=%s)', (res_id,))
                     wkf_todo.extend(cr.fetchall())
@@ -773,36 +791,19 @@ class ir_model_data(osv.osv):
 
         cr.commit()
         if not config.get('import_partial'):
-            for (model, res_id) in self.unlink_mark.keys():
+            for (model, res_id) in to_unlink:
                 if self.pool.get(model):
                     self.__logger.info('Deleting %s@%s', res_id, model)
                     try:
                         self.pool.get(model).unlink(cr, uid, [res_id])
-                        if id:
-                            ids = self.search(cr, uid, [('res_id','=',res_id),
-                                                        ('model','=',model)])
-                            self.__logger.debug('=> Deleting %s: %s',
-                                                self._name, ids)
-                            if len(ids) > 1 and \
-                               self.__logger.isEnabledFor(logging.WARNING):
-                                self.__logger.warn(
-                                    'Got %d %s for (%s, %d): %s',
-                                    len(ids), self._name, model, res_id,
-                                    map(itemgetter('module','name'),
-                                        self.read(cr, uid, ids,
-                                                  ['name', 'module'])))
-                            self.unlink(cr, uid, ids)
-                            cr.execute(
-                                'DELETE FROM ir_values WHERE value=%s',
-                                ('%s,%s'%(model, res_id),))
                         cr.commit()
                     except Exception:
                         cr.rollback()
                         self.__logger.warn(
-                            'Could not delete id: %d of model %s\nThere '
-                            'should be some relation that points to this '
-                            'resource\nYou should manually fix this and '
-                            'restart with --update=module', res_id, model)
+                            'Could not delete obsolete record with id: %d of model %s\n'
+                            'There should be some relation that points to this resource\n'
+                            'You should manually fix this and restart with --update=module',
+                            res_id, model)
         return True
 ir_model_data()
 
