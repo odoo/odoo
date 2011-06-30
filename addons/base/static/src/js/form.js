@@ -879,12 +879,17 @@ openerp.base.form.FieldDatetime = openerp.base.form.Field.extend({
         this._super(view, node);
         this.template = "FieldDate";
         this.jqueryui_object = 'datetimepicker';
+        this.validation_regex = /^\d+-\d+-\d+( \d+:\d+(:\d+)?)?$/;
     },
     start: function() {
         this._super.apply(this, arguments);
         this.$element.find('input').change(this.on_ui_change)[this.jqueryui_object]({
             dateFormat: 'yy-mm-dd',
-            timeFormat: 'hh:mm:ss'
+            timeFormat: 'hh:mm:ss',
+            showOn: 'button',
+            buttonImage: '/base/static/src/img/ui/field_calendar.png',
+            buttonImageOnly: true,
+            constrainInput: false
         });
     },
     set_value: function(value) {
@@ -904,8 +909,20 @@ openerp.base.form.FieldDatetime = openerp.base.form.Field.extend({
             this.value = this.format(this.value);
         }
     },
+    update_dom: function() {
+        this._super.apply(this, arguments);
+        this.$element.find('input').attr('disabled', this.readonly);
+    },
     validate: function() {
-        this.invalid = this.required && !this.$element.find('input')[this.jqueryui_object]('getDate');
+        this.invalid = false;
+        var value = this.$element.find('input').val();
+        if (value === "") {
+            this.invalid = this.required;
+        } else if (this.validation_regex) {
+            this.invalid = !this.validation_regex.test(value);
+        } else {
+            this.invalid = !this.$element.find('input')[this.jqueryui_object]('getDate');
+        }
     },
     focus: function() {
         this.$element.find('input').focus();
@@ -918,6 +935,7 @@ openerp.base.form.FieldDate = openerp.base.form.FieldDatetime.extend({
     init: function(view, node) {
         this._super(view, node);
         this.jqueryui_object = 'datepicker';
+        this.validation_regex = /^\d+-\d+-\d+$/;
     },
     parse: openerp.base.parse_date,
     format: openerp.base.format_date
