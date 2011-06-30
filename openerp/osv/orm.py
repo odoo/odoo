@@ -75,36 +75,35 @@ ROOT_USER_ID = 1
 def transfer_field_to_modifiers(field, modifiers):
     for a in ('invisible', 'readonly', 'required'):
         if field.get(a):
-            modifiers[a] = field.get(a)
+            modifiers[a] = bool(field.get(a))
 
 
 # Don't deal with groups, it is done by check_group().
 # Need the context to evaluate the invisible attribute on tree views.
 # For non-tree views, the context shouldn't be given.
-def transfer_node_to_modifiers(node, modifiers, context=None):
+def transfer_node_to_modifiers(node, modifiers, context=None, in_tree_view=False):
     if node.get('attrs'):
         modifiers.update(eval(node.get('attrs')))
 
     if node.get('states'):
-        # TODO combine with AND or OR, use implicit AND for now.
-        modifiers.setdefault('invisible', [])\
-            .append(('state', 'not in', node.get('states').split(',')))
+        if 'invisible' in modifiers and isinstance(modifiers['invisible'], list):
+             # TODO combine with AND or OR, use implicit AND for now.
+             modifiers['invisible'].append(('state', 'not in', node.get('states').split(',')))
+        else:
+             modifiers['invisible'] = [('state', 'not in', node.get('states').split(','))]
 
     for a in ('invisible', 'readonly', 'required'):
         if node.get(a):
-            if a == 'invisible' and context is not None:
+            v = bool(eval(node.get(a), {'context': context or {}}))
+            if in_tree_view and a == 'invisible':
                 # Invisible in a tree view has a specific meaning, make it a
                 # new key in the modifiers attribute.
-                try:
-                    modifiers['tree_invisible'] = bool(eval(node.get(a), {'context': context}))
-                except:
-                    print ">>> Can't seem to eval this thing (1):", node.get(a)
-            else:
-                try:
-                    # Only simple expression as it is evaluated server-side
-                    modifiers[a] = bool(eval(node.get(a)))
-                except:
-                    print ">>> Can't seem to eval this thing (2):", node.get(a)
+                modifiers['tree_invisible'] = v
+            elif v or (a not in modifiers or not isinstance(modifiers[a], list)):
+                # Don't set the attribute to False if a dynamic value was
+                # provided (i.e. a domain from attrs or states).
+                modifiers[a] = v
+
 
 def simplify_modifiers(modifiers):
     for a in ('invisible', 'readonly', 'required'):
@@ -133,7 +132,10 @@ def test_modifiers(what, expected):
         assert json == expected, "%s != %s" % (json, expected)
 
 
-def tests():
+# To use this test:
+# import openerp
+# openerp.osv.orm.modifiers_tests()
+def modifiers_tests():
     test_modifiers('<field name="a"/>', '{}')
     test_modifiers('<field name="a" invisible="1"/>', '{"invisible": true}')
     test_modifiers('<field name="a" readonly="1"/>', '{"readonly": true}')
@@ -1517,8 +1519,7 @@ class orm_template(object):
             result = self.view_header_get(cr, user, False, node.tag, context)
             if result:
                 node.set('string', result)
-            if node.tag == 'tree':
-                in_tree_view = True
+            in_tree_view = node.tag == 'tree'
 
         elif node.tag == 'calendar':
             for additional_field in ('date_start', 'date_delay', 'date_stop', 'color'):
@@ -1529,7 +1530,7 @@ class orm_template(object):
 
         # The view architeture overrides the python model.
         # Get the attrs before they are (possibly) deleted by check_group below
-        transfer_node_to_modifiers(node, modifiers, context if in_tree_view else None)
+        transfer_node_to_modifiers(node, modifiers, context, in_tree_view)
 
         # TODO remove attrs couterpart in modifiers when invisible is true ?
 
