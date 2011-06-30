@@ -289,9 +289,15 @@ class procurement_order(osv.osv):
                 return False
             partner = procurement.product_id.seller_id #Taken Main Supplier of Product of Procurement.
 
+            if not partner:
+                cr.execute('update procurement_order set message=%s where id=%s',
+                           (_('No default supplier defined for this product'), procurement.id))
+                return False
+
             if user.company_id and user.company_id.partner_id:
                 if partner.id == user.company_id.partner_id.id:
                     return False
+
             address_id = partner_obj.address_get(cr, uid, [partner.id], ['delivery'])['delivery']
             if not address_id:
                 cr.execute('update procurement_order set message=%s where id=%s',

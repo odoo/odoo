@@ -8,13 +8,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:16+0000\n"
 "PO-Revision-Date: 2011-01-18 09:19+0000\n"
-"Last-Translator: Borja López Soilán <borjalopezsoilan@gmail.com>\n"
+"Last-Translator: Borja López Soilán (NeoPolus) <borjalopezsoilan@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-03-18 04:41+0000\n"
-"X-Generator: Launchpad (build 12559)\n"
+"X-Launchpad-Export-Date: 2011-04-29 04:47+0000\n"
+"X-Generator: Launchpad (build 12758)\n"
 
 #~ msgid "Stock Management"
 #~ msgstr "Gestión de inventario"
@@ -73,7 +73,7 @@ msgstr "Hoy"
 #. module: stock
 #: field:stock.production.lot.revision,indice:0
 msgid "Revision Number"
-msgstr "Número revisión"
+msgstr "Número de revisión"
 
 #. module: stock
 #: view:stock.move.memory.in:0
@@ -144,8 +144,8 @@ msgid ""
 "This is the list of all delivery orders that have to be prepared, according "
 "to your different sales orders and your logistics rules."
 msgstr ""
-"Esta es la lista de albaranes de salida que deben de ser preparados, en "
-"función de sus pedidos de venta y sus reglas logísticas."
+"Esta es la lista de albaranes de salida que deben ser preparados, en función "
+"de sus pedidos de venta y sus reglas logísticas."
 
 #. module: stock
 #: view:report.stock.move:0
@@ -192,9 +192,9 @@ msgid ""
 "product."
 msgstr ""
 "Al hacer la valoración de inventario en tiempo real, la contrapartida de los "
-"asientos del diario para todos los movimientos de stock de salida será "
-"creada en esta cuenta. Este es el valor por defecto para todos los productos "
-"de esta categoría, también puede indicarse directamente en cada producto."
+"asientos del diario para todos los movimientos de stock de salida se creará "
+"en esta cuenta. Este es el valor por defecto para todos los productos de "
+"esta categoría, también puede indicarse directamente en cada producto."
 
 #. module: stock
 #: code:addons/stock/stock.py:1176
@@ -435,7 +435,7 @@ msgstr "Albarán de salida"
 #: model:ir.actions.act_window,help:stock.action_warehouse_form
 msgid ""
 "Create and manage your warehouses and assign them a location from here"
-msgstr "Crea y gestiona sus almacenes y les asigna una ubicación desde aquí"
+msgstr "Cree y gestione sus almacenes y asígneles una ubicación desde aquí."
 
 #. module: stock
 #: field:report.stock.move,product_qty_in:0
@@ -472,9 +472,9 @@ msgid ""
 "product, the one from the product category is used."
 msgstr ""
 "Al hacer la valoración de inventario en tiempo real, la contrapartida de los "
-"asientos del diario para todos los movimientos de stock de entrada será "
-"creada en esta cuenta. Si no se indica en el producto, se utilizará la "
-"definida en la categoría del producto."
+"asientos del diario para todos los movimientos de stock de entrada se creará "
+"en esta cuenta. Si no se indica en el producto, se utilizará la definida en "
+"la categoría del producto."
 
 #. module: stock
 #: field:report.stock.inventory,location_type:0
@@ -486,7 +486,7 @@ msgstr "Tipo de ubicación"
 #: help:report.stock.move,type:0
 #: help:stock.picking,type:0
 msgid "Shipping type specify, goods coming in or going out."
-msgstr "Indica tipo de envío, mercancías de entrada o de salida."
+msgstr "Indica el tipo de envío, recepción o envío de mercancías."
 
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.report_move_labels
@@ -638,7 +638,7 @@ msgstr ""
 "existencias a un diario específico según el tipo de operación a realizar por "
 "el trabajador/equipo que debe realizar la operación. Ejemplos de diarios de "
 "existencias pueden ser: control de calidad, listas de selección, embalaje, "
-"etc"
+"etc."
 
 #. module: stock
 #: field:stock.location,complete_name:0
@@ -777,7 +777,7 @@ msgstr "Dirección ubicación"
 #: help:stock.move,prodlot_id:0
 msgid "Production lot is used to put a serial number on the production"
 msgstr ""
-"Lote de producción se utiliza para poner un número de serie a la producción"
+"Lote de producción se utiliza para poner un número de serie a la producción."
 
 #. module: stock
 #: field:stock.warehouse,lot_input_id:0
@@ -787,7 +787,7 @@ msgstr "Ubicación de entrada"
 #. module: stock
 #: help:stock.picking,date:0
 msgid "Date of Order"
-msgstr "Fecha de orden"
+msgstr "Fecha de la orden."
 
 #. module: stock
 #: selection:product.product,valuation:0
@@ -1003,7 +1003,7 @@ msgstr "Ubicación de producción"
 #. module: stock
 #: help:stock.picking,address_id:0
 msgid "Address of partner"
-msgstr "Dirección de empresa"
+msgstr "Dirección de la empresa."
 
 #. module: stock
 #: model:res.company,overdue_msg:stock.res_company_shop0
@@ -1217,7 +1217,7 @@ msgstr "Retraso entre movimiento original y movimiento encadenado en días."
 #. module: stock
 #: view:stock.fill.inventory:0
 msgid "Import current product inventory from the following location"
-msgstr "Importar inventario de producto actual para la siguiente ubicación"
+msgstr "Importar inventario de productos actual para la siguiente ubicación"
 
 #. module: stock
 #: help:stock.location,chained_auto_packing:0
@@ -1660,7 +1660,7 @@ msgstr "Cancelar disponibilidad"
 #. module: stock
 #: help:stock.move,date_expected:0
 msgid "Scheduled date for the processing of this move"
-msgstr "Fecha planificada para el procesado de este movimiento"
+msgstr "Fecha planificada para el procesado de este movimiento."
 
 #. module: stock
 #: field:stock.inventory,move_ids:0
@@ -1897,7 +1897,7 @@ msgstr ""
 #. module: stock
 #: field:stock.warehouse,partner_address_id:0
 msgid "Owner Address"
-msgstr "Dirección dueño"
+msgstr "Dirección propietario"
 
 #. module: stock
 #: help:stock.move,price_unit:0
@@ -1916,10 +1916,10 @@ msgid ""
 "moves. Use this report when you want to analyse the different routes taken "
 "by your products and inventory management performance."
 msgstr ""
-"El análisis de movimientos el permite analizar y verificar fácilmente los "
+"El análisis de movimientos le permite analizar y verificar fácilmente los "
 "movimientos de stock de su compañía. Utilice este informe cuando quiera "
 "analizar las diferentes rutas tomadas por sus productos y el rendimiento de "
-"su inventario."
+"la gestión de su inventario."
 
 #. module: stock
 #: field:report.stock.move,day_diff1:0
@@ -2015,9 +2015,9 @@ msgid ""
 "    "
 msgstr ""
 "El módulo de OpenERP de gestión de inventario puede gestionar múltiples "
-"almacenes, y varias localizaciones estructuradas.\n"
-"Gracias a la gestión de doble entrada, el control de inventario es de gran "
-"potencia y flexible:\n"
+"almacenes, y varias ubicaciones estructuradas.\n"
+"Gracias a la gestión de doble entrada, el control de inventario es potente y "
+"flexible:\n"
 "* Historial de movimientos y planificación,\n"
 "* Diferentes métodos de inventario (FIFO, LIFO, ...)\n"
 "* Valoración de existencias (precio estándar o medio, ...)\n"
@@ -2032,8 +2032,8 @@ msgstr ""
 "    * Compras en excepción\n"
 "    * Gráfico: Número de productos Recibidos frente al previsto (gráfico de "
 "barras semanal por día)\n"
-"    * Gráfico: Número de productos Entregados frente al previsto previsto "
-"(gráfico de barras semanal por día)\n"
+"    * Gráfico: Número de productos Entregados frente al previsto (gráfico de "
+"barras semanal por día)\n"
 "    "
 
 #. module: stock
@@ -2447,15 +2447,15 @@ msgid ""
 "location to the Stock location. Each report can be performed on physical, "
 "partner or virtual locations."
 msgstr ""
-"Defina sus posiciones para reflejar su estructura de almacén y organización. "
-"OpenERP es capaz de manejar ubicaciones físicas (almacén, estante, caja, "
-"etc.), ubicaciones de entidades (clientes, proveedores) y ubicaciones "
-"virtuales que son el equivalente de las operaciones de stock como los "
-"consumos por órdenes de la fabricación, inventarios, etc. Cada operación de "
-"stock en OpenERP mueve los productos de una ubicación a otra. Por ejemplo, "
-"si recibe productos de un proveedor, OpenERP moverá productos desde la "
-"ubicación del proveedor a la ubicación del stock. Cada informe puede ser "
-"realizado sobre ubicaciones físicas, de entidades o virtuales."
+"Defina sus ubicaciones para reflejar la estructura de su almacén y "
+"organización. OpenERP es capaz de manejar ubicaciones físicas (almacén, "
+"estante, caja, etc.), ubicaciones de empresa (clientes, proveedores) y "
+"ubicaciones virtuales que son la contrapartida de las operaciones de stock "
+"como los consumos por órdenes de la fabricación, inventarios, etc. Cada "
+"operación de stock en OpenERP mueve los productos de una ubicación a otra. "
+"Por ejemplo, si recibe productos de un proveedor, OpenERP moverá productos "
+"desde la ubicación del proveedor a la ubicación del stock. Cada informe "
+"puede ser realizado sobre ubicaciones físicas, de empresa o virtuales."
 
 #. module: stock
 #: view:stock.invoice.onshipping:0
@@ -2643,7 +2643,7 @@ msgstr "Mes"
 #. module: stock
 #: help:stock.picking,date_done:0
 msgid "Date of Completion"
-msgstr "Fecha de realización"
+msgstr "Fecha de realización."
 
 #. module: stock
 #: help:stock.production.lot,name:0
@@ -2737,9 +2737,9 @@ msgid ""
 "product."
 msgstr ""
 "Al hacer la valoración de inventario en tiempo real, la contrapartida de los "
-"asientos del diario para todos los movimientos de stock de entrada será "
-"creada en esta cuenta. Este es el valor por defecto para todos los productos "
-"de esta categoría, también puede indicarse directamente en cada producto."
+"asientos del diario para todos los movimientos de stock de entrada se creará "
+"en esta cuenta. Este es el valor por defecto para todos los productos de "
+"esta categoría, también puede indicarse directamente en cada producto."
 
 #. module: stock
 #: field:stock.production.lot.revision,date:0
@@ -2772,6 +2772,8 @@ msgstr "Cantidad (UdV)"
 msgid ""
 "You are moving %.2f %s products but only %.2f %s available in this lot."
 msgstr ""
+"Está moviendo %.2f %s productos pero sólo %.2f %s están disponibles en este "
+"lote."
 
 #. module: stock
 #: view:stock.move:0
@@ -2896,9 +2898,9 @@ msgid ""
 "filter all resources of the day for the 'From' date and 23:59:59 for the "
 "'To' date)"
 msgstr ""
-"(Déjelo vacío para abrir la situación actual Ponga HH:MM:SS a 00:00:00 para "
-"filtrar todos los recursos del día del campo fecha 'Desde' y 23:59:59 para "
-"la fecha 'Hasta')"
+"(Déjelo vacío para abrir la situación actual. Ponga HH:MM:SS a 00:00:00 para "
+"filtrar todos los recursos del día en el campo fecha 'Desde' y 23:59:59 en "
+"el campo fecha 'Hasta'.)"
 
 #. module: stock
 #: view:product.category:0
@@ -3139,7 +3141,7 @@ msgid ""
 msgstr ""
 "Los movimientos internos muestran todas las operaciones de inventario que se "
 "deben realizar en su almacén. Todas las operaciones pueden ser clasificadas "
-"en stocks diarios, para que cada trabajador tenga su propia lista de "
+"en diarios de stock, para que cada trabajador tenga su propia lista de "
 "operaciones a realizar en su propio diario. La mayor parte de operaciones "
 "son preparadas automáticamente por OpenERP según sus reglas de logística "
 "preconfiguradas, pero también puede registrar operaciones de stock de forma "
@@ -3583,6 +3585,11 @@ msgid ""
 "If cost price is decreased, stock variation account will be creadited and "
 "stock input account will be debited."
 msgstr ""
+"Si el precio de coste se incrementa, la cuenta la variación de existencias "
+"irá al debe y la cuenta de salida de stock irá al haber con el valor = "
+"(diferencia de cantidad * cantidad disponible).\n"
+"Si el precio de coste se reduce, la cuenta la variación de existencias irá "
+"al haber y la cuenta de entrada de stock irá al debe."
 
 #. module: stock
 #: field:stock.location,chained_journal_id:0
@@ -3787,7 +3794,7 @@ msgstr ""
 #. module: stock
 #: view:board.board:0
 msgid "Outgoing Products Delay"
-msgstr "Retraso productos de salida"
+msgstr "Retraso albaranes salida"
 
 #. module: stock
 #: field:stock.move.split.lines,use_exist:0
@@ -3917,9 +3924,9 @@ msgid ""
 "click on a location to get the list of the products and their stock level in "
 "this particular location and all its children."
 msgstr ""
-"Esto es la estructura de los almacenes y ubicaciones de su empresa. Puede "
+"Esta es la estructura de los almacenes y ubicaciones de su compañía. Puede "
 "pulsar sobre una ubicación para obtener la lista de los productos y su nivel "
-"de stock en esta ubicación específica y todos sus hijos."
+"de stock en esta ubicación específica y todos sus hijas."
 
 #. module: stock
 #: model:res.request.link,name:stock.req_link_tracking
@@ -4080,9 +4087,9 @@ msgid ""
 "product, the one from the product category is used."
 msgstr ""
 "Al hacer la valoración de inventario en tiempo real, la contrapartida de los "
-"asientos del diario para todos los movimientos de stock de salida será "
-"creada en esta cuenta. Si no se indica en el producto, se utilizará la "
-"cuenta de la categoría del producto."
+"asientos del diario para todos los movimientos de stock de salida se creará "
+"en esta cuenta. Si no se indica en el producto, se utilizará la cuenta de la "
+"categoría del producto."
 
 #. module: stock
 #: view:stock.tracking:0

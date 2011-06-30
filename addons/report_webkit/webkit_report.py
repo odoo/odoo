@@ -5,6 +5,7 @@
 # All Right Reserved
 #
 # Author : Nicolas Bessi (Camptocamp)
+# Contributor(s) : Florent Xicluna (Wingo SA)
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -41,8 +42,19 @@ import pooler
 from report_helper import WebKitHelper
 from report.report_sxw import *
 import addons
+import tools
 from tools.translate import _
 from osv.osv import except_osv
+
+
+def mako_template(text):
+    """Build a Mako template.
+
+    This template uses UTF-8 encoding
+    """
+    # default_filters=['unicode', 'h'] can be used to set global filters
+    return Template(text, input_encoding='utf-8', output_encoding='utf-8')
+
 
 class WebKitParser(report_sxw):
     """Custom class that use webkit to render HTML reports
@@ -67,7 +79,8 @@ class WebKitParser(report_sxw):
                              _('Please install executable on your system'+
                              ' (sudo apt-get install wkhtmltopdf) or download it from here:'+
                              ' http://code.google.com/p/wkhtmltopdf/downloads/list and set the'+
-                             ' path to the executable on the Company form.')
+                             ' path to the executable on the Company form.'+
+                             'Minimal version is 0.9.9')
                             ) 
         if os.path.isabs(path) :
             if (os.path.exists(path) and os.access(path, os.X_OK)\
@@ -98,7 +111,9 @@ class WebKitParser(report_sxw):
         else:
             command = ['wkhtmltopdf']
 
-        command.append('-q')
+        command.append('--quiet')
+        # default to UTF-8 encoding.  Use <meta charset="latin-1"> to override.
+        command.extend(['--encoding', 'utf-8'])
         if header :
             head_file = file( os.path.join(
                                   tmp_dir,
@@ -237,7 +252,7 @@ class WebKitParser(report_sxw):
         if not template and report_xml.report_webkit_data :
             template =  report_xml.report_webkit_data
         if not template :
-            raise except_osv(_('Webkit Report template not found !'), _(''))
+            raise except_osv(_('Error!'), _('Webkit Report template not found !'))
         header = report_xml.webkit_header.html
         footer = report_xml.webkit_header.footer_html
         if not header and report_xml.header:
@@ -250,6 +265,7 @@ class WebKitParser(report_sxw):
             header = u"""
 <html>
     <head>
+        <meta content="text/html; charset=UTF-8" http-equiv="content-type"/>
         <style type="text/css"> 
             ${css}
         </style>
@@ -276,7 +292,7 @@ class WebKitParser(report_sxw):
         company= user.company_id
         
         #default_filters=['unicode', 'entity'] can be used to set global filter
-        body_mako_tpl = Template(template ,input_encoding='utf-8')
+        body_mako_tpl = mako_template(template)
         helper = WebKitHelper(cursor, uid, report_xml.id, context)
         try :
             html = body_mako_tpl.render(     helper=helper,
@@ -288,7 +304,7 @@ class WebKitParser(report_sxw):
             msg = exceptions.text_error_template().render()
             netsvc.Logger().notifyChannel('Webkit render', netsvc.LOG_ERROR, msg)
             raise except_osv(_('Webkit render'), msg)
-        head_mako_tpl = Template(header, input_encoding='utf-8')
+        head_mako_tpl = mako_template(header)
         try :
             head = head_mako_tpl.render(
                                         company=company,
@@ -305,7 +321,7 @@ class WebKitParser(report_sxw):
                 exceptions.text_error_template().render())
         foot = False
         if footer :
-            foot_mako_tpl = Template(footer ,input_encoding='utf-8')
+            foot_mako_tpl = mako_template(footer)
             try :
                 foot = foot_mako_tpl.render(
                                             company=company,
@@ -327,7 +343,7 @@ class WebKitParser(report_sxw):
                                             time=time,
                                             helper=helper,
                                             css=css,
-                                            _debug=html,
+                                            _debug=tools.ustr(html),
                                             formatLang=self.formatLang,
                                             setLang=self.setLang,
                                             _=self.translate_call,

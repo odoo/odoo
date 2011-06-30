@@ -242,7 +242,6 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
 
         if not self.ids:
             return 0.0
-        temp_res = 0.0
         self.cr.execute(
                 "SELECT sum(debit) " \
                 "FROM account_move_line AS l " \
@@ -261,7 +260,6 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
 
         if not self.ids:
             return 0.0
-        temp_res = 0.0
         self.cr.execute(
                 "SELECT sum(credit) " \
                 "FROM account_move_line AS l " \
@@ -281,7 +279,6 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
 
         if not self.ids:
             return 0.0
-        temp_res = 0.0
         self.cr.execute(
                 "SELECT sum(debit-credit) " \
                 "FROM account_move_line AS l " \
@@ -295,7 +292,6 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
         return temp_res
 
     def _get_partners(self):
-        cr, uid = self.cr, self.uid
 
         if self.result_selection == 'customer':
             return _('Receivable Accounts')

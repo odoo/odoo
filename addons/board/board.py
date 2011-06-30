@@ -129,6 +129,7 @@ class board_board(osv.osv):
         if vids:
             view_id = vids[0]
             arch = self.pool.get('ir.ui.view.custom').browse(cr, user, view_id, context=context)
+            res['custom_view_id'] = view_id
             res['arch'] = arch.arch
         res['arch'] = self._arch_preprocessing(cr, user, res['arch'], context=context)
         res['toolbar'] = {'print': [], 'action': [], 'relate': []}

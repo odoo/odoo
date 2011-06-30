@@ -80,7 +80,7 @@ class mailgate_thread(osv.osv):
         for thread in self.browse(cr, uid, ids, context=context):
             l=[]
             for message in thread.message_ids:
-                l.append((message.user_id and message.user_id.email) or '')
+                l.append((message.user_id and message.user_id.user_email) or '')
                 l.append(message.email_from or '')
                 l.append(message.email_cc or '')
             res[thread.id] = l
@@ -271,7 +271,7 @@ class mailgate_message(osv.osv):
         'date': fields.datetime('Date', readonly=True),
         'history': fields.boolean('Is History?', readonly=True),
         'user_id': fields.many2one('res.users', 'User Responsible', readonly=True),
-        'message': fields.text('Description', readonly=True),
+        'message': fields.text('Message', readonly=True),
         'email_from': fields.char('From', size=128, help="Email From", readonly=True),
         'email_to': fields.char('To', help="Email Recipients", size=256, readonly=True),
         'email_cc': fields.char('Cc', help="Carbon Copy Email Recipients", size=256, readonly=True),
