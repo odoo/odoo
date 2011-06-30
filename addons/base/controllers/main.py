@@ -286,15 +286,11 @@ def fix_view_modes(action):
     if action.pop('view_type') != 'form':
         return
 
-    if 'view_mode' in action:
-        action['view_mode'] = ','.join(
-            mode if mode != 'tree' else 'list'
-            for mode in action['view_mode'].split(','))
-    if 'views' in action:
-        action['views'] = [
-            [id, mode if mode != 'tree' else 'list']
-            for id, mode in action['views']
-        ]
+    action['views'] = [
+        [id, mode if mode != 'tree' else 'list']
+        for id, mode in action['views']
+    ]
+
     return action
 
 class Menu(openerpweb.Controller):
@@ -774,3 +770,8 @@ class Action(openerpweb.Controller):
             if action:
                 value = clean_action(action[0], req.session)
         return {'result': value}
+
+    @openerpweb.jsonrequest
+    def run(self, req, action_id):
+        return clean_action(req.session.model('ir.actions.server').run(
+            [action_id], req.session.eval_context(req.context)), req.session)
