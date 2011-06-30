@@ -41,9 +41,8 @@ openerp.base.TreeView = openerp.base.View.extend({
         var self = this;
         this.fields_view = data.field_parent;
         this.fields = data.fields;
-
         this.dataset.read_slice([], 0, false, function (response) {
-            self.$element.html(QWeb.render('TreeView', {'field_data' : response}));
+            self.$element.html(QWeb.render('TreeView', { 'field_data' : response, 'title' : self.fields_view.arch.attrs.string }));
             self.$element.find('#parent_id').bind('change', function(){
                 self.getdata($('#parent_id').val(), false);
             });

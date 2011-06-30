@@ -248,6 +248,7 @@
     </table>
 </t>
 <t t-name="TreeView">
+    <h2 class="oe_view_title"><t t-esc="title"/></h2>
     <select name="parent" id="parent_id" style="width: 30%">
         <t t-foreach="field_data" t-as="field" >
             <option t-att-value="field.id">
