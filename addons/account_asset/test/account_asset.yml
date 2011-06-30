@@ -1,68 +1,57 @@
 -
-  In order to test Account Asset feature first i created Asset Category then Account Asset 
+  In order to test Account Asset feature first I will create Asset Category
 - 
-  Creating a account.asset.category record
+  I will Create an Asset Category Record
 - 
-  !record {model: account.asset.category, id: account_asset_category_fixed_assets0}:
+  !record {model: account.asset.category, id: account_asset_category_landbuildings0}:
     account_asset_id: account.xfa
     account_depreciation_id: account.xfa
-    account_expense_depreciation_id: account.a_recv
-    company_id: base.main_company
-    journal_id: account.bank_journal
-    method: linear
-    method_time: delay
-    name: Fixed Assets
-
+    account_expense_depreciation_id: account.a_expense
+    journal_id: account.expenses_journal
+    name: Land & Buildings
 - 
-  Creating a account.asset.asset record
+  I will Create an Account Asset Record
 - 
-  !record {model: account.asset.asset, id: account_asset_asset_car0}:
-    category_id: account_asset_category_fixed_assets0
+  !record {model: account.asset.asset, id: account_asset_asset_Land0}:
+    category_id: account_asset_category_landbuildings0
     code: a
-    company_id: base.main_company
-    currency_id: base.EUR
-    method: linear
-    method_time: delay
-    method_delay: 5
-    method_period: 12
-    name: Car
+    name: Land
     partner_id: base.res_partner_14
     period_id: account.period_6
-    purchase_date: '2011-06-29'
     purchase_value: 5000.0
     salvage_value: 2000.0
     state: draft
 -
-  I check that Initially Account Asset is in the "Draft" state
+  I will check initially that Account Asset is in the "Draft" state
 -
-  !assert {model: account.asset.asset, id: account_asset_asset_car0}:
+  !assert {model: account.asset.asset, id: account_asset_asset_Land0}:
     - state == 'draft'
 -
-  I Confirm Account Asset using Confirm Asset button
+  I will Confirm Account Asset using Confirm Asset button
 -
   !python {model: account.asset.asset}: |
-    self.validate(cr, uid, [ref("account_asset_asset_car0")])
+    self.validate(cr, uid, [ref("account_asset_asset_Land0")])
 -
-  I compute Account Asset using Compute button and check the number of depreciation lines created are proper
+  I will compute Account Asset using Compute button and check the number of depreciation lines created are proper
 -
   !python {model: account.asset.asset}: |
-    self.compute_depreciation_board(cr, uid, [ref("account_asset_asset_car0")])
-    for value in self.browse(cr, uid, [ref("account_asset_asset_car0")]):
-      assert value.method_delay == len(value.depreciation_line_ids)
+    self.compute_depreciation_board(cr, uid, [ref("account_asset_asset_Land0")])
+    value = self.browse(cr, uid, [ref("account_asset_asset_Land0")])[0]
+    assert value.method_delay == len(value.depreciation_line_ids)
 -
-  I Create Account Asset Move using using create move method
+  I will Create Account Asset Move using using create move method
 -
   !python {model: account.asset.depreciation.line}: |
-    ids = self.search(cr, uid, [('asset_id','=',ref('account_asset_asset_car0'))])
+    ids = self.search(cr, uid, [('asset_id','=',ref('account_asset_asset_Land0'))])
     self.create_move(cr, uid, ids)
 -
-  I check that After creating all the moves of asset the state is in "Close" state
+  I will check that After creating all the moves of the asset the state is in "Close" state
 -
-  !assert {model: account.asset.asset, id: account_asset_asset_car0}:
+  !assert {model: account.asset.asset, id: account_asset_asset_Land0}:
     - state == 'close'
 -
-  I check that after the state is closed the rsidual value becomes 0
+  I will check when the state of Account asset is close the residual value becomes 0
 -
-  !assert {model: account.asset.asset, id: account_asset_asset_car0}:
+  !assert {model: account.asset.asset, id: account_asset_asset_Land0}:
     - value_residual == 0.0
 
