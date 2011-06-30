@@ -529,7 +529,7 @@ class one2many(_column):
                 assert reverse_rel, 'Trying to unlink the content of a o2m but the pointed object does not have a m2o'
                 # if the pointed object has on delete cascade, just delete it
                 if reverse_rel.column.ondelete == "cascade":
-                    obj.unlink(cr, user, obj.search(cr, user, [(self._fields_id,'=',id)], context), context)
+                    obj.unlink(cr, user, obj.search(cr, user, [(self._fields_id,'=',id)], context=context), context=context)
                 else:
                     cr.execute('update '+_table+' set '+self._fields_id+'=null where '+self._fields_id+'=%s', (id,))
             elif act[0] == 6:
