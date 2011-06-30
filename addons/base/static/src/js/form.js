@@ -233,7 +233,7 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
                         }
                     }
                 } else {
-                    this.log("warning : on_processed_onchange can't find field " + field, result);
+                    this.log("warning : on_processed_onchange can't find field " + f, result);
                 }
             }
             this.on_form_changed();
