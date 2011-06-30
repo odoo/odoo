@@ -536,11 +536,23 @@ class View(openerpweb.Controller):
         return fvg
     
     def process_view(self, session, fvg, context, transform):
+        # depending on how it feels, xmlrpclib.ServerProxy can translate
+        # XML-RPC strings to ``str`` or ``unicode``. ElementTree does not
+        # enjoy unicode strings which can not be trivially converted to
+        # strings, and it blows up during parsing.
+
+        # So ensure we fix this retardation by converting view xml back to
+        # bit strings.
+        if isinstance(fvg['arch'], unicode):
+            arch = fvg['arch'].encode('utf-8')
+        else:
+            arch = fvg['arch']
+
         if transform:
             evaluation_context = session.evaluation_context(context or {})
-            xml = self.transform_view(fvg['arch'], session, evaluation_context)
+            xml = self.transform_view(arch, session, evaluation_context)
         else:
-            xml = ElementTree.fromstring(fvg['arch'])
+            xml = ElementTree.fromstring(arch)
         fvg['arch'] = Xml2Json.convert_element(xml)
         for field in fvg['fields'].values():
             if field.has_key('views') and field['views']:
