@@ -294,22 +294,24 @@ class account_voucher(osv.osv):
         return True
 
     def onchange_price(self, cr, uid, ids, line_ids, tax_id, partner_id=False, context=None):
+        context = context or {}
         tax_pool = self.pool.get('account.tax')
         partner_pool = self.pool.get('res.partner')
         position_pool = self.pool.get('account.fiscal.position')
+        line_pool = self.pool.get('account.voucher.line')
         res = {
             'tax_amount': False,
             'amount': False,
         }
         voucher_total = 0.0
-        voucher_line_ids = []
+
+        line_ids = resolve_o2m_operations(cr, uid, line_pool, line_ids, ["amount"], context)
 
         total = 0.0
         total_tax = 0.0
         for line in line_ids:
             line_amount = 0.0
-            line_amount = line[2] and line[2].get('amount',0.0) or 0.0
-            voucher_line_ids += [line[1]]
+            line_amount = line.get('amount',0.0)
             voucher_total += line_amount
 
         total = voucher_total
@@ -1007,5 +1009,22 @@ class account_bank_statement_line(osv.osv):
         return super(account_bank_statement_line, self).unlink(cr, uid, ids, context=context)
 
 account_bank_statement_line()
+
+def resolve_o2m_operations(cr, uid, target_osv, operations, fields, context):
+    results = []
+    for operation in operations:
+        result = None
+        if not isinstance(operation, (list, tuple)):
+            result = target_osv.read(cr, uid, operation, fields, context=context)
+        if operation[0] == 0:
+            # may be necessary to check if all the fields are here and get the default values?
+            result = operation[2]
+        elif operation[0] == 1:
+            result = target_osv.read(cr, uid, operation[1], fields, context=context)
+            result.update(operation[2])
+        elif operation[0] == 4:
+            result = target_osv.read(cr, uid, operation[1], fields, context=context)
+        results.append(result)
+    return results
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
