@@ -38,6 +38,15 @@ import locale
 import logging
 from cStringIO import StringIO
 
+#.apidoc title: Exported Service methods
+#.apidoc module-mods: member-order: bysource
+
+""" This python module defines the RPC methods available to remote clients.
+
+    Each 'Export Service' is a group of 'methods', which in turn are RPC
+    procedures to be called. Each method has its own arguments footprint.
+"""
+
 class db(netsvc.ExportService):
     def __init__(self, name="db"):
         netsvc.ExportService.__init__(self, name)

@@ -34,8 +34,9 @@ denom_fr = ( '',
           'Décillion',    'Undecillion',     'Duodecillion',  'Tredecillion',   'Quattuordecillion',
           'Sexdecillion', 'Septendecillion', 'Octodecillion', 'Icosillion', 'Vigintillion' )
 
-# convert a value < 100 to French.
 def _convert_nn_fr(val):
+    """ convert a value < 100 to French
+    """
     if val < 20:
         return to_19_fr[val]
     for (dcap, dval) in ((k, 20 + (10 * v)) for (v, k) in enumerate(tens_fr)):
@@ -44,10 +45,13 @@ def _convert_nn_fr(val):
                 return dcap + '-' + to_19_fr[val % 10]
             return dcap
 
-# convert a value < 1000 to french, special cased because it is the level that kicks 
-# off the < 100 special case.  The rest are more general.  This also allows you to
-# get strings in the form of 'forty-five hundred' if called directly.
 def _convert_nnn_fr(val):
+    """ convert a value < 1000 to french
+    
+        special cased because it is the level that kicks 
+        off the < 100 special case.  The rest are more general.  This also allows you to
+        get strings in the form of 'forty-five hundred' if called directly.
+    """
     word = ''
     (mod, rem) = (val % 100, val // 100)
     if rem > 0:
@@ -98,8 +102,9 @@ denom_nl = ( '',
            'Decillion', 'Undecillion', 'Duodecillion', 'Tredecillion', 'Quattuordecillion',
            'Sexdecillion', 'Septendecillion', 'Octodecillion', 'Novemdecillion', 'Vigintillion' )
 
-# convert a value < 100 to Dutch.
 def _convert_nn_nl(val):
+    """ convert a value < 100 to Dutch
+    """
     if val < 20:
         return to_19_nl[val]
     for (dcap, dval) in ((k, 20 + (10 * v)) for (v, k) in enumerate(tens_nl)):
@@ -108,10 +113,13 @@ def _convert_nn_nl(val):
                 return dcap + '-' + to_19_nl[val % 10]
             return dcap
 
-# convert a value < 1000 to Dutch, special cased because it is the level that kicks 
-# off the < 100 special case.  The rest are more general.  This also allows you to
-# get strings in the form of 'forty-five hundred' if called directly.
 def _convert_nnn_nl(val):
+    """ convert a value < 1000 to Dutch
+    
+        special cased because it is the level that kicks 
+        off the < 100 special case.  The rest are more general.  This also allows you to
+        get strings in the form of 'forty-five hundred' if called directly.
+    """
     word = ''
     (mod, rem) = (val % 100, val // 100)
     if rem > 0:
@@ -160,10 +168,11 @@ def add_amount_to_text_function(lang, func):
 #TODO: we should use the country AND language (ex: septante VS soixante dix)
 #TODO: we should use en by default, but the translation func is yet to be implemented
 def amount_to_text(nbr, lang='fr', currency='euro'):
-    """
-    Converts an integer to its textual representation, using the language set in the context if any.
-    Example:
-        1654: mille six cent cinquante-quatre.
+    """ Converts an integer to its textual representation, using the language set in the context if any.
+
+        Example::
+        
+            1654: mille six cent cinquante-quatre.
     """
 #    if nbr > 1000000:
 ##TODO: use logger   
