@@ -1,4 +1,4 @@
-# -*- encoding: utf-8 -*-
+	# -*- encoding: utf-8 -*-
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
@@ -180,6 +180,9 @@ class account_asset_asset(osv.osv):
             'state':'open'
         }, context)
 
+    def set_to_close(self, cr, uid, ids, context=None):
+        return self.write(cr, uid, ids, {'state': 'close'}, context=context)
+
     def _amount_residual(self, cr, uid, ids, name, args, context=None):
         cr.execute("""SELECT
                 l.asset_id as id, round(SUM(abs(l.debit-l.credit))) AS amount
@@ -197,21 +200,20 @@ class account_asset_asset(osv.osv):
     _columns = {
         'period_id': fields.many2one('account.period', 'First Period', required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'account_move_line_ids': fields.one2many('account.move.line', 'asset_id', 'Entries', readonly=True, states={'draft':[('readonly',False)]}),
-
-        'name': fields.char('Asset', size=64, required=True, select=1),
-        'code': fields.char('Reference ', size=16, select=1),
-        'purchase_value': fields.float('Gross Value ', required=True, size=16, select=1),
-        'currency_id': fields.many2one('res.currency','Currency',required=True,size=5,select=1),
-        'company_id': fields.many2one('res.company', 'Company', required=True),
+        'name': fields.char('Asset', size=64, required=True, select=1, readonly=False, states={'close':[('readonly',True)]}),
+        'code': fields.char('Reference ', size=16, select=1, readonly=False, states={'close':[('readonly',True)]}),
+        'purchase_value': fields.float('Gross value ', required=True, readonly=False, states={'close':[('readonly',True)]}),
+        'currency_id': fields.many2one('res.currency','Currency',required=True, readonly=False, states={'close':[('readonly',True)]}),
+        'company_id': fields.many2one('res.company', 'Company', required=True, readonly=False, states={'close':[('readonly',True)]}),
         'note': fields.text('Note'),
-        'category_id': fields.many2one('account.asset.category', 'Asset Category',required=True, change_default=True),
+        'category_id': fields.many2one('account.asset.category', 'Asset category',required=True, change_default=True, readonly=False, states={'close':[('readonly',True)]}),
         'localisation': fields.char('Localisation', size=32, select=2),
         'parent_id': fields.many2one('account.asset.asset', 'Parent Asset'),
         'child_ids': fields.one2many('account.asset.asset', 'parent_id', 'Children Assets'),
-        'purchase_date': fields.date('Purchase Date', required=True),
+        'purchase_date': fields.date('Purchase Date', required=True, readonly=False, states={'close':[('readonly',True)]}),
         'state': fields.selection([('draft','Draft'),('open','Running'),('close','Close')], 'State', required=True),
         'active': fields.boolean('Active', select=2),
-        'partner_id': fields.many2one('res.partner', 'Partner'),
+        'partner_id': fields.many2one('res.partner', 'Partner', readonly=False, states={'close':[('readonly',True)]}),
         'method': fields.selection([('linear','Linear'),('degressive','Degressive')], 'Computation Method', required=True, readonly=True, states={'draft':[('readonly',False)]}, help="Linear: Calculated on basis of Gross Value/During (interval) \
          \nDegressive: Calculated on basis of Gross Value * Degressive Factor"),
         'method_delay': fields.integer('Number of Depreciations', readonly=True, states={'draft':[('readonly',False)]}, help="Calculates Depreciation within specified interval"),
@@ -220,10 +222,10 @@ class account_asset_asset(osv.osv):
         'method_progress_factor': fields.float('Progressif Factor', readonly=True, states={'draft':[('readonly',False)]}),
         'value_residual': fields.function(_amount_residual, method=True, digits_compute=dp.get_precision('Account'), string='Residual Value'),
         'method_time': fields.selection([('delay','Delay'),('end','Ending Period')], 'Time Method', required=True, readonly=True, states={'draft':[('readonly',False)]}, help="Delay: Allow users to enter number of periods to generate depreciation lines \n Ending Period: Calculates depreciation lines on the basis of Ending Period Date and Number of Depreciation"),
-        'prorata':fields.boolean('Prorata Temporis', Readonly="True", help='Indicates that the accounting entries for this asset have to be done from the purchase date instead of the first January'),
+        'prorata':fields.boolean('Prorata Temporis', readonly=True, states={'draft':[('readonly',False)]}, help='Indicates that the accounting entries for this asset have to be done from the purchase date instead of the first January'),
         'history_ids': fields.one2many('account.asset.history', 'asset_id', 'History', readonly=True),
-        'depreciation_line_ids': fields.one2many('account.asset.depreciation.line', 'asset_id', 'Depreciation Lines'),
-        'salvage_value': fields.float('Salvage Value', digits_compute=dp.get_precision('Account'), help="It is the amount you plan to have that you cannot depreciate."),
+        'depreciation_line_ids': fields.one2many('account.asset.depreciation.line', 'asset_id', 'Depreciation Lines', readonly=True, states={'draft':[('readonly',False)]}),
+        'salvage_value': fields.float('Salvage Value', digits_compute=dp.get_precision('Account'), help="It is the amount you plan to have that you cannot depreciate.", readonly=False, states={'close':[('readonly',True)]}),
     }
     _defaults = {
         'code': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'account.asset.code'),
@@ -395,7 +397,8 @@ class account_asset_depreciation_line(osv.osv):
         'move_check': fields.function(_get_move_check, method=True, type='boolean', string='Posted', store=True)
     }
 
-    def create_move(self, cr, uid,ids, context=None):
+    def create_move(self, cr, uid, ids, context=None):
+        can_close = False
         if context is None:
             context = {}
         asset_obj = self.pool.get('account.asset.asset')
@@ -404,6 +407,8 @@ class account_asset_depreciation_line(osv.osv):
         move_line_obj = self.pool.get('account.move.line')
         currency_obj = self.pool.get('res.currency')
         for line in self.browse(cr, uid, ids, context=context):
+            if currency_obj.is_zero(cr, uid, line.asset_id.currency_id, line.remaining_value):
+                can_close = True
             depreciation_date = line.asset_id.prorata and line.asset_id.purchase_date or time.strftime('%Y-%m-%d')
             period_ids = period_obj.find(cr, uid, depreciation_date, context=context)
             company_currency = line.asset_id.company_id.currency_id.id
@@ -450,6 +455,8 @@ class account_asset_depreciation_line(osv.osv):
                 'asset_id': line.asset_id.id
             })
             self.write(cr, uid, line.id, {'move_id': move_id}, context=context)
+        if can_close:
+            asset_obj.write(cr, uid, [line.asset_id.id], {'state': 'close'}, context=context)                
         return True
 
 account_asset_depreciation_line()
