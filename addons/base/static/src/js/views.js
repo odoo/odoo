@@ -4,6 +4,7 @@
 
 openerp.base.views = function(openerp) {
 
+openerp.base.client_actions = new openerp.base.Registry();
 openerp.base.ActionManager = openerp.base.Controller.extend({
 // process all kind of actions
     init: function(session, element_id) {
@@ -87,6 +88,10 @@ openerp.base.ActionManager = openerp.base.Controller.extend({
         }).then(function (action) {
             self.do_action(action, on_closed)
         });
+    },
+    'ir.actions.client': function (action) {
+        var Handler = openerp.base.client_actions.get_object(action.tag);
+        new Handler(this.session, this.element_id, action['kwargs']).start();
     }
 });
 
