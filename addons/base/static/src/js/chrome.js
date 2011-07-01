@@ -944,7 +944,7 @@ openerp.base.Database = openerp.base.Controller.extend({
 		        var password = self.$option_id.find("input[name=drop_password]").val();
 	        	
 	        	if (confirm("Do you really want to delete the database: " + db + " ?")) {
-		        	self.rpc("/base/session/drop_db", {'db': db, 'password': password}, 
+		        	self.rpc("/base/session/db_operation", {'flag': 'drop', 'db': db, 'password': password}, 
 			        	function(result) {
 			        		self.$option_id.find("select[name=drop_db] :selected").remove();
 			        		self.notification.notify("Dropping database", "The database '" + db + "' has been dropped");
