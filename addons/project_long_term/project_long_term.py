@@ -23,6 +23,7 @@ from datetime import datetime
 from tools.translate import _
 from osv import fields, osv
 from resource.faces import task as Task 
+from operator import itemgetter
 
 class project_phase(osv.osv):
     _name = "project.phase"
@@ -729,7 +730,7 @@ class project_task(osv.osv):
         if context is None:
             context = {}
         task = self.browse(cr, uid, task_id, context=context)
-        duration = str(task.planned_hours )+ 'H'
+        duration = str(task.planned_hours)+ 'H'
         str_resource = False
         parent = task.parent_ids
         if task.phase_id.resource_ids:
@@ -743,10 +744,12 @@ class project_task(osv.osv):
             effort = \'%s\'
             resource = %s
 '''%(task.id, task.name, duration, str_resource)
-            if parent:
+            if task.child_ids:
+                seq = [[child.planned_hours, child.id] for child in task.child_ids]
+                seq.sort(key=itemgetter(0))
                 s +='''
             start = up.Task_%s.end
-'''%(parent[0].id)
+    '''%(seq[-1][1])
         else:
             s = '''
     def Task_%s():
@@ -754,10 +757,12 @@ class project_task(osv.osv):
         effort = \'%s\'
         resource = %s
 '''%(task.id, task.name, duration, str_resource)
-            if parent:
+            if task.child_ids:
+                seq = [[child.planned_hours, child.id] for child in task.child_ids]
+                seq.sort(key=itemgetter(0))
                 s +='''
         start = up.Task_%s.end
-'''%(parent[0].id)
+'''%(seq[-1][1])
         s += '\n'
         return s
 project_task()
