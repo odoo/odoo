@@ -1,0 +1,36 @@
+-
+  In order to test google calendar feature with OpenERP, I import events from
+  a google account and store them in Meetings.
+- |
+  I create a record for the gmail account for which I want to import the contacts.
+- 
+  !record {model: google.login, id: google_login_id0}:
+    user: testmail.openerp@gmail.com
+    password: openerptiny
+- |
+  I login into that account.
+-
+  !python {model: google.login}: |
+    self.login(cr, uid, [ref('google_login_id0')], context)
+- |
+  Now I want to import all the events from all the calendars in the user account.
+- |
+  I select all calendars.
+-
+  !record {model: synchronize.google.import, id: synchronize_google_import_id0}:
+    calendar_name: all
+- |
+  I import the events from the google calendar.
+-
+  !python {model: synchronize.google.import}: |
+    self.import_google(cr, uid, [ref('synchronize_google_import_id0')], context={'calendar':True})
+- |
+  Now I check my meetings are created or not.
+-
+  !python {model: crm.meeting}: |
+    model_obj = self.pool.get('ir.model.data')
+    meeting_ids = self.search(cr, uid, [])
+    model_ids = model_obj.search(cr, uid, [('res_id','in',meeting_ids),('model','=','crm.meeting'),('module','=','synchronize_google')])
+    assert model_ids, 'Meetings not created !'
+    
+    

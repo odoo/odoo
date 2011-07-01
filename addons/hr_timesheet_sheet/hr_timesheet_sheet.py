@@ -494,6 +494,8 @@ class hr_timesheet_line(osv.osv):
     ]
 
     def unlink(self, cr, uid, ids, *args, **kwargs):
+        if isinstance(ids, (int, long)):
+            ids = [ids]
         self._check(cr, uid, ids)
         return super(hr_timesheet_line,self).unlink(cr, uid, ids,*args, **kwargs)
 
@@ -619,12 +621,16 @@ class hr_attendance(osv.osv):
         return res
 
     def unlink(self, cr, uid, ids, *args, **kwargs):
+        if isinstance(ids, (int, long)):
+            ids = [ids]
         self._check(cr, uid, ids)
         return super(hr_attendance,self).unlink(cr, uid, ids,*args, **kwargs)
 
     def write(self, cr, uid, ids, vals, context=None):
         if context is None:
             context = {}
+        if isinstance(ids, (int, long)):
+            ids = [ids]
         self._check(cr, uid, ids)
         res = super(hr_attendance,self).write(cr, uid, ids, vals, context=context)
         if 'sheet_id' in context:

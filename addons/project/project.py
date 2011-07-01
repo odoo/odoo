@@ -529,8 +529,6 @@ class task(osv.osv):
     #
     # Override view according to the company definition
     #
-
-
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         users_obj = self.pool.get('res.users')
 
@@ -562,13 +560,27 @@ class task(osv.osv):
                 res['fields'][f]['string'] = res['fields'][f]['string'].replace('Hours',tm)
         return res
 
+    def _check_child_task(self, cr, uid, ids, context=None):
+        if context == None:
+            context = {}
+        tasks = self.browse(cr, uid, ids, context=context)
+        for task in tasks:
+            if task.child_ids:
+                for child in task.child_ids:
+                    if child.state in ['draft', 'open', 'pending']:
+                        raise osv.except_osv(_("Warning !"), _("Child task still open.\nPlease cancel or complete child task first."))
+        return True
+
     def action_close(self, cr, uid, ids, context=None):
         # This action open wizard to send email to partner or project manager after close task.
-        project_id = len(ids) and ids[0] or False
-        if not project_id: return False
-        task = self.browse(cr, uid, project_id, context=context)
+        if context == None:
+            context = {}
+        task_id = len(ids) and ids[0] or False
+        self._check_child_task(cr, uid, ids, context=context)
+        if not task_id: return False
+        task = self.browse(cr, uid, task_id, context=context)
         project = task.project_id
-        res = self.do_close(cr, uid, [project_id], context=context)
+        res = self.do_close(cr, uid, [task_id], context=context)
         if project.warn_manager or project.warn_customer:
             return {
                 'name': _('Send Email after close task'),
@@ -582,7 +594,7 @@ class task(osv.osv):
            }
         return res
 
-    def do_close(self, cr, uid, ids, context=None):
+    def do_close(self, cr, uid, ids, context={}):
         """
         Close Task
         """
@@ -601,7 +613,7 @@ class task(osv.osv):
                         'ref_partner_id': task.partner_id.id,
                         'ref_doc1': 'project.task,%d'% (task.id,),
                         'ref_doc2': 'project.project,%d'% (project.id,),
-                    })
+                    }, context=context)
 
             for parent_id in task.parent_ids:
                 if parent_id.state in ('pending','draft'):
@@ -610,12 +622,12 @@ class task(osv.osv):
                         if child.id != task.id and child.state not in ('done','cancelled'):
                             reopen = False
                     if reopen:
-                        self.do_reopen(cr, uid, [parent_id.id])
+                        self.do_reopen(cr, uid, [parent_id.id], context=context)
             vals.update({'state': 'done'})
             vals.update({'remaining_hours': 0.0})
             if not task.date_end:
                 vals.update({ 'date_end':time.strftime('%Y-%m-%d %H:%M:%S')})
-            self.write(cr, uid, [task.id],vals)
+            self.write(cr, uid, [task.id],vals, context=context)
             message = _("The task '%s' is done") % (task.name,)
             self.log(cr, uid, task.id, message)
         return True
@@ -634,15 +646,15 @@ class task(osv.osv):
                     'ref_partner_id': task.partner_id.id,
                     'ref_doc1': 'project.task,%d' % task.id,
                     'ref_doc2': 'project.project,%d' % project.id,
-                })
+                }, context=context)
 
-            self.write(cr, uid, [task.id], {'state': 'open'})
-
+            self.write(cr, uid, [task.id], {'state': 'open'}, context=context)
         return True
 
-    def do_cancel(self, cr, uid, ids, *args):
+    def do_cancel(self, cr, uid, ids, context={}):
         request = self.pool.get('res.request')
-        tasks = self.browse(cr, uid, ids)
+        tasks = self.browse(cr, uid, ids, context=context)
+        self._check_child_task(cr, uid, ids, context=context)
         for task in tasks:
             project = task.project_id
             if project.warn_manager and project.user_id and (project.user_id.id != uid):
@@ -654,25 +666,25 @@ class task(osv.osv):
                     'ref_partner_id': task.partner_id.id,
                     'ref_doc1': 'project.task,%d' % task.id,
                     'ref_doc2': 'project.project,%d' % project.id,
-                })
+                }, context=context)
             message = _("The task '%s' is cancelled.") % (task.name,)
             self.log(cr, uid, task.id, message)
-            self.write(cr, uid, [task.id], {'state': 'cancelled', 'remaining_hours':0.0})
+            self.write(cr, uid, [task.id], {'state': 'cancelled', 'remaining_hours':0.0}, context=context)
         return True
 
-    def do_open(self, cr, uid, ids, *args):
-        tasks= self.browse(cr,uid,ids)
+    def do_open(self, cr, uid, ids, context={}):
+        tasks= self.browse(cr, uid, ids, context=context)
         for t in tasks:
             data = {'state': 'open'}
             if not t.date_start:
                 data['date_start'] = time.strftime('%Y-%m-%d %H:%M:%S')
-            self.write(cr, uid, [t.id], data)
+            self.write(cr, uid, [t.id], data, context=context)
             message = _("The task '%s' is opened.") % (t.name,)
             self.log(cr, uid, t.id, message)
         return True
 
-    def do_draft(self, cr, uid, ids, *args):
-        self.write(cr, uid, ids, {'state': 'draft'})
+    def do_draft(self, cr, uid, ids, context={}):
+        self.write(cr, uid, ids, {'state': 'draft'}, context=context)
         return True
 
     def do_delegate(self, cr, uid, task_id, delegate_data={}, context=None):
@@ -707,8 +719,8 @@ class task(osv.osv):
         self.log(cr, uid, task.id, message)
         return True
 
-    def do_pending(self, cr, uid, ids, *args):
-        self.write(cr, uid, ids, {'state': 'pending'})
+    def do_pending(self, cr, uid, ids, context={}):
+        self.write(cr, uid, ids, {'state': 'pending'}, context=context)
         for (id, name) in self.name_get(cr, uid, ids):
             message = _("The task '%s' is pending.") % name
             self.log(cr, uid, id, message)
@@ -736,13 +748,19 @@ class task(osv.osv):
                     index = sorted_types.index(typeid)
                     self.write(cr, uid, task.id, {'type_id': sorted_types[index+1]})
         return True
-        
+
     def next_type(self, cr, uid, ids, *args):
         return self._change_type(cr, uid, ids, True, *args)
 
     def prev_type(self, cr, uid, ids, *args):
         return self._change_type(cr, uid, ids, False, *args)
-       
+
+    def unlink(self, cr, uid, ids, context=None):
+        if context == None:
+            context = {}
+        self._check_child_task(cr, uid, ids, context=context)
+        res = super(task, self).unlink(cr, uid, ids, context)
+        return res
 
 task()
 
