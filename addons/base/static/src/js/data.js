@@ -393,6 +393,14 @@ openerp.base.DataSetStatic =  openerp.base.DataSet.extend({
 });
 
 openerp.base.DataSetSearch =  openerp.base.DataSet.extend({
+    /**
+     * @constructs
+     *
+     * @param {openerp.base.Session} session
+     * @param {String} model
+     * @param {Object} context
+     * @param {Array} domain
+     */
     init: function(session, model, context, domain) {
         this._super(session, model, context);
         this.domain = domain || [];
