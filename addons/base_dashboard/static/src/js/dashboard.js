@@ -61,7 +61,6 @@ openerp.base.form.DashBoard = openerp.base.form.Widget.extend({
             type : 'ir.actions.act_window',
             limit : 80,
             auto_search : true,
-            domain : [['type', '=', 'ir.actions.act_window']],
             flags : {
                 sidebar : false,
                 views_switcher : false,
