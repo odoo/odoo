@@ -273,4 +273,38 @@ openerp.base.form.DashBoardLegacy = openerp.base.form.DashBoard.extend({
 openerp.base.form.widgets.add('hpaned', 'openerp.base.form.DashBoardLegacy');
 openerp.base.form.widgets.add('vpaned', 'openerp.base.form.DashBoardLegacy');
 openerp.base.form.widgets.add('board', 'openerp.base.form.DashBoard');
+
+openerp.base.client_actions.add(
+    'board.config.overview', 'openerp.base_dashboard.ConfigOverview'
+);
+if (!openerp.base_dashboard) {
+    openerp.base_dashboard = {};
 }
+openerp.base_dashboard.ConfigOverview = openerp.base.Controller.extend({
+    start: function () {
+        new openerp.base.DataSetSearch(this.session, 'ir.actions.todo')
+            .read_slice(['state', 'action_id'], undefined, undefined,
+                        this.on_records_loaded);
+    },
+    on_records_loaded: function (records) {
+        var done_records = _(records).filter(function (record) {
+                                return record.state === 'done';}),
+            done_ratio = done_records.length / records.length;
+        this.$element.html(QWeb.render('ConfigOverview', {
+            completion: done_ratio * 100,
+            todos: _(records).map(function (record) {
+                return {
+                    action: record.action_id[0],
+                    name: record.action_id[1],
+                    state: record.state,
+                    done: record.state === 'done',
+                    skipped: record.state === 'skip',
+                    to_do: record.state !== 'done' && record.state !== 'skip'
+                }
+            })
+        }));
+        var $progress = this.$element.find('div.oe-config-progress');
+        $progress.progressbar({value: $progress.data('completion')});
+    }
+})
+};
