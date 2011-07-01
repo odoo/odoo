@@ -927,6 +927,10 @@ openerp.base.Database = openerp.base.Controller.extend({
             self.db_list = result.db_list;
         });
         
+        this.rpc("/base/session/get_lang_list", {}, function(result) {
+        	self.lang_list = result.lang_list;
+        });
+        
         this.$element.find('#db-create').click(function() {
         	self.db_string = "CREATE DATABASE";
         	self.$option_id.html(QWeb.render("CreateDB", self));

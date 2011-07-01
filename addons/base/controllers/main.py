@@ -110,6 +110,15 @@ class Session(openerpweb.Controller):
         dbs = proxy.list()
         
         return {"db_list": dbs}
+    
+    @openerpweb.jsonrequest
+    def get_lang_list(self, req):
+        lang_list = [('en_US', 'English (US)')]
+        try:
+            lang_list = lang_list + (req.session.proxy("db").list_lang() or [])
+        except Exception, e:
+            pass
+        return {"lang_list": lang_list}
 
     @openerpweb.jsonrequest
     def modules(self, req):

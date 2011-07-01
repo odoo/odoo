@@ -95,9 +95,13 @@
 		<tr>
 			<td><label for="db_lang">Default language:</label></td>
 			<td>
-				<select name="db">
-	                
-	            </select>
+				<t t-if="lang_list">
+	            	<select name="db_lang">
+	                	<t t-foreach="lang_list" t-as="lang">
+                        	<option t-att-value="lang[0]"><t t-esc="lang[1]"/></option>
+                    	</t>
+	            	</select>
+	        	</t>
 	    	</td>
 		</tr>
 		<tr>
@@ -127,14 +131,7 @@
 			<t t-if="db_list">
             	<select name="db">
                 	<t t-foreach="db_list" t-as="db">
-                    	<t t-if="selected_db === db">
-                        	<option t-att-value="db" selected="true">
-                            	<t t-esc="db"/>
-                            </option>
-                       	</t>
-                       	<t t-if="selected_db !== db">
-                        	<option t-att-value="db"><t t-esc="db"/></option>
-                    	</t>
+                       	<option t-att-value="db"><t t-esc="db"/></option>
                 	</t>
             	</select>
         	</t>
@@ -163,14 +160,7 @@
 				<t t-if="db_list">
 	            	<select name="db">
 	                	<t t-foreach="db_list" t-as="db">
-	                    	<t t-if="selected_db === db">
-	                        	<option t-att-value="db" selected="true">
-	                            	<t t-esc="db"/>
-	                            </option>
-	                       	</t>
-	                       	<t t-if="selected_db !== db">
-	                        	<option t-att-value="db"><t t-esc="db"/></option>
-	                    	</t>
+	                       	<option t-att-value="db"><t t-esc="db"/></option>
 	                	</t>
 	            	</select>
 	        	</t>
