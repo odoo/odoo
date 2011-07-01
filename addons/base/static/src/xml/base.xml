@@ -113,7 +113,7 @@
 			<td><input type="text" name="confirm_pwd"/></td>
 		</tr>
 		<tr>
-			<td colspan="2" align="right"><button type="button">Submit</button></td>
+			<td colspan="2" align="right"><button type="button">Create</button></td>
 		</tr>
 	</table>
 </t>
@@ -127,9 +127,9 @@
 	</table>
 	<table align="center" class="db_option_table">
 		<tr>
-			<td><label for="db_name">Database:</label></td>
+			<td><label for="drop_db">Database:</label></td>
 			<t t-if="db_list">
-            	<select name="db">
+            	<select name="drop_db">
                 	<t t-foreach="db_list" t-as="db">
                        	<option t-att-value="db"><t t-esc="db"/></option>
                 	</t>
@@ -137,11 +137,11 @@
         	</t>
 		</tr>
 		<tr>
-			<td><label for="pwd">Password:</label></td>
-			<td><input type="password" name="pwd"/></td>
+			<td><label for="droppassword">Password:</label></td>
+			<td><input type="password" name="drop_password" value=""/></td>
 		</tr>
 		<tr>
-			<td colspan="2" align="right"><button type="button">Submit</button></td>
+			<td colspan="2" align="right"><button type="button" id="drop_db_btn">Drop</button></td>
 		</tr>
 	</table>
 </t>
@@ -171,7 +171,7 @@
 			<td><input type="password" name="pwd"/></td>
 		</tr>
 		<tr>
-			<td colspan="2" align="right"><button type="button">Submit</button></td>
+			<td colspan="2" align="right"><button type="button">Backup</button></td>
 		</tr>
 	</table>
 </t>
@@ -197,7 +197,7 @@
 			<td><input type="text" name="new_db"/></td>
 		</tr>
 		<tr>
-			<td colspan="2" align="right"><button type="button">Submit</button></td>
+			<td colspan="2" align="right"><button type="button">Restore</button></td>
 		</tr>
 	</table>
 </t>
@@ -223,7 +223,7 @@
 			<td><input type="password" name="confirm_pwd"/></td>
 		</tr>
 		<tr>
-			<td colspan="2" align="right"><button type="button">Submit</button></td>
+			<td colspan="2" align="right"><button type="button">Change Password</button></td>
 		</tr>
 	</table>
 </t>

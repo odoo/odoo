@@ -938,6 +938,20 @@ openerp.base.Database = openerp.base.Controller.extend({
         self.$element.find('#db-drop').click(function() {
         	self.db_string = "DROP DATABASE";
         	self.$option_id.html(QWeb.render("DropDB", self));
+        	
+	        self.$option_id.find('#drop_db_btn').click(function() {
+	        	var db = self.$option_id.find("select[name=drop_db]").val();
+		        var password = self.$option_id.find("input[name=drop_password]").val();
+	        	
+	        	if (confirm("Do you really want to delete the database: " + db + " ?")) {
+		        	self.rpc("/base/session/drop_db", {'db': db, 'password': password}, 
+			        	function(result) {
+			        		self.$option_id.find("select[name=drop_db] :selected").remove();
+			        		self.notification.notify("Dropping database", "The database '" + db + "' has been dropped");
+			        	});
+		        }
+	        });
+        	
         });
         self.$element.find('#db-backup').click(function() {
         	self.db_string = "BACKUP DATABASE";

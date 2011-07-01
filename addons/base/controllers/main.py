@@ -119,7 +119,19 @@ class Session(openerpweb.Controller):
         except Exception, e:
             pass
         return {"lang_list": lang_list}
-
+    
+    @openerpweb.jsonrequest
+    def drop_db(self, req, **kw):
+        
+        db = kw.get('db')
+        password = kw.get('password')
+        try:
+            res = req.session.proxy("db").drop(password, db)
+            if res:
+                return res
+        except TypeError:
+            return {'error': e}
+            
     @openerpweb.jsonrequest
     def modules(self, req):
         return {"modules": [name
