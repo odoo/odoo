@@ -907,10 +907,14 @@ class account_period(osv.osv):
         return False
 
     def find(self, cr, uid, dt=None, context=None):
+        if context is None: context = {}
         if not dt:
             dt = time.strftime('%Y-%m-%d')
 #CHECKME: shouldn't we check the state of the period?
-        ids = self.search(cr, uid, [('date_start','<=',dt),('date_stop','>=',dt)])
+        args = [('date_start', '<=' ,dt), ('date_stop', '>=', dt)]
+        if context.get('company_id', False):
+            args.append(('company_id', '=', context['company_id']))
+        ids = self.search(cr, uid, args, context=context)
         if not ids:
             raise osv.except_osv(_('Error !'), _('No period defined for this date: %s !\nPlease create a fiscal year.')%dt)
         return ids
