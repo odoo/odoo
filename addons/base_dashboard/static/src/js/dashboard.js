@@ -280,14 +280,19 @@ openerp.base.client_actions.add(
 if (!openerp.base_dashboard) {
     openerp.base_dashboard = {};
 }
-openerp.base_dashboard.ConfigOverview = openerp.base.Controller.extend({
+openerp.base_dashboard.ConfigOverview = openerp.base.View.extend({
+    init: function (parent_or_session, element_id) {
+        this._super(parent_or_session, element_id);
+        this.dataset = new openerp.base.DataSetSearch(
+                this.session, 'ir.actions.todo');
+    },
     start: function () {
-        new openerp.base.DataSetSearch(this.session, 'ir.actions.todo')
-            .read_slice(['state', 'action_id'], undefined, undefined,
+        this.dataset.read_slice(['state', 'action_id'], undefined, undefined,
                         this.on_records_loaded);
     },
     on_records_loaded: function (records) {
-        var done_records = _(records).filter(function (record) {
+        var       self = this,
+          done_records = _(records).filter(function (record) {
                                 return record.state === 'done';}),
             done_ratio = done_records.length / records.length;
         this.$element.html(QWeb.render('ConfigOverview', {
@@ -299,12 +304,26 @@ openerp.base_dashboard.ConfigOverview = openerp.base.Controller.extend({
                     state: record.state,
                     done: record.state === 'done',
                     skipped: record.state === 'skip',
-                    to_do: record.state !== 'done' && record.state !== 'skip'
+                    to_do: (record.state !== 'done' && record.state !== 'skip')
                 }
             })
         }));
         var $progress = this.$element.find('div.oe-config-progress');
         $progress.progressbar({value: $progress.data('completion')});
+
+        // allow for executing to-do and skipped action
+        this.$element.find('div.oe-dashboard-config-overview ul')
+                .delegate('li.ui-state-error', 'click', function () {
+            self.execute_action({
+                type: 'action',
+                name: $(this).data('action')
+            }, self.dataset,
+            new openerp.base.ActionManager(self.session, self.element_id),
+            null, null, function () {
+                // after action popup closed, refresh configuration thingie
+                self.start();
+            });
+        });
     }
 })
 };

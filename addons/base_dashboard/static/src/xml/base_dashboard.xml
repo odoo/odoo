@@ -69,7 +69,8 @@
     <ul>
 
         <li t-foreach="todos" t-as="todo"
-            t-att-class="!todo.done ? 'ui-state-error ' + (todo.skipped ? 'ui-priority-secondary' : 'ui-priority-primary') : ''">
+            t-att-class="!todo.done ? 'ui-state-error ' + (todo.skipped ? 'ui-priority-secondary' : 'ui-priority-primary') : ''"
+            t-att-data-action="todo.action">
             <span t-if="todo.done" class="ui-icon ui-icon-circle-check"/>
             <span t-if="todo.skipped" class="ui-icon ui-icon-circle-minus"/>
             <span t-if="todo.to_do" class="ui-icon ui-icon-circle-close"/>
