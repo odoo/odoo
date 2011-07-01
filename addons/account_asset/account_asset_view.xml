@@ -20,7 +20,7 @@
                     <field name="method_time"/>
                     <field name="method_delay" attrs="{'invisible':[('method_time','=','end')]}"/>
                     <field name="method_period"/>
-                    <field name="method_end" attrs="{'required': [('method_time','=','end')], 'invisible':[('method_time','=','delay')]}"/> 
+                    <field name="method_end" attrs="{'required': [('method_time','=','end')], 'invisible':[('method_time','=','delay')]}"/>
                 </group>
                 <group colspan="2" col="2">
                     <separator string="Depreciation Method" colspan="2" />
@@ -200,8 +200,12 @@
         <field name="arch" type="xml">
             <tree string="Assets">
                 <field name="name"/>
-                <field name="code"/>
+                <field name="category_id"/>
                 <field name="purchase_date"/>
+                <field name="partner_id"/>
+                <field name="purchase_value"/>
+                <field name="value_residual"/>
+                <field name="currency_id"/>
                 <field name="company_id" groups="base.group_multi_company"/>
                 <field name="state"/>
             </tree>
@@ -228,6 +232,25 @@
         </field>
     </record>
 
+    <record id="view_account_asset_search" model="ir.ui.view">
+        <field name="name">account.asset.asset.search</field>
+        <field name="model">account.asset.asset</field>
+        <field name="type">search</field>
+        <field name="arch" type="xml">
+            <search string="Account Asset Analysis">
+                <group col="10" colspan="12">
+                    <filter icon="terp-document-new" string="Draft" domain="[('state','=', 'draft')]" help="Assets in Draft State"/>
+                    <filter icon="terp-camera_test" string="Running" domain="[('state','=', 'open')]" help="Assets in Running State"/>
+                    <separator orientation="vertical"/>
+                    <field name="name"/>
+                    <field name="category_id"/>
+                    <field name="purchase_date"/>
+                    <field name="partner_id"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
     <record model="ir.actions.act_window" id="action_account_asset_asset_tree">
         <field name="name">Asset Hierarchy</field>
         <field name="res_model">account.asset.asset</field>
@@ -245,6 +268,8 @@
         <field name="name">Assets</field>
         <field name="res_model">account.asset.asset</field>
         <field name="view_type">form</field>
+        <field name="view_id" ref="view_account_asset_asset_tree"/>
+        <field name="search_view_id" ref="view_account_asset_search"/>
     </record>
 
     <menuitem
