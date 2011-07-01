@@ -107,7 +107,7 @@ class account_asset_asset(osv.osv):
             GROUP BY a.id, a.purchase_date """, (tuple(ids),))
         return dict(cr.fetchall())
 
-    def _compute_board_amount(self, cr, uid, asset, i, residual_amount, amount_to_depr, undone_dotation_number, posted_depreciation_line_ids, total_days, context=None):
+    def _compute_board_amount(self, cr, uid, asset, i, residual_amount, amount_to_depr, undone_dotation_number, posted_depreciation_line_ids, total_days, depreciation_date, context=None):
         #by default amount = 0
         amount = 0
         if i == undone_dotation_number:
@@ -156,7 +156,7 @@ class account_asset_asset(osv.osv):
             undone_dotation_number = self._compute_board_undone_dotation_nb(cr, uid, asset, depreciation_date, total_days, context=context)
             for x in range(len(posted_depreciation_line_ids), undone_dotation_number):
                 i = x + 1
-                amount = self._compute_board_amount(cr, uid, asset, i, residual_amount, amount_to_depr, undone_dotation_number, posted_depreciation_line_ids, total_days, context=context)
+                amount = self._compute_board_amount(cr, uid, asset, i, residual_amount, amount_to_depr, undone_dotation_number, posted_depreciation_line_ids, total_days, depreciation_date, context=context)
                 residual_amount -= amount
                 vals = {
                      'amount': amount,
