@@ -201,7 +201,7 @@ class OpenERPSession(object):
         ctx['context'] = ctx
         
         # adding the context of the session to send to the openerp server
-        ccontext = nonliterals.CompoundContext(self.context, context_to_eval)
+        ccontext = nonliterals.CompoundContext(self.context, context_to_eval or {})
         ccontext.session = self
         return ccontext.evaluate(ctx)
 

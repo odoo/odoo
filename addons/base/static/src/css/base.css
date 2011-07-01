@@ -831,13 +831,14 @@ background: linear-gradient(top, #cc4e45 0%,#b52d20 8%,#7a211a 100%); /* W3C */
     position: relative;
     vertical-align: top;
 }
-.openerp input.field_date, .openerp input.field_datetime {
-    background: #fff url('../img/ui/field_calendar.png') no-repeat right center;
-    background-origin: content-box;
-    -moz-background-origin: content;
-    -moz-background-origin: content-box;
-    -webkit-background-origin: content-box;
+.openerp img.ui-datepicker-trigger, .openerp img.ui-datepicker-trigger {
+    margin-left: -20px;
+    vertical-align: middle;
+    cursor: pointer;
+    position: relative;
+    top: -1px;
 }
+
 /* http://www.quirksmode.org/dom/inputfile.html
  * http://stackoverflow.com/questions/2855589/replace-input-type-file-by-an-image
  */
@@ -1093,6 +1094,12 @@ background: linear-gradient(top, #ffffff 0%,#ebe9e9 100%); /* W3C */
 .openerp.kitten-mode-activated .loading {
     background: #828282;
     border-color: #828282;
+}
+.openerp .oe_necessary_team_song {
+    display: none;
+}
+.openerp.kitten-mode-activated .oe_necessary_team_song {
+    display: block;
 }
 
 .openerp .oe-m2o {

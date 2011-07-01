@@ -73,6 +73,14 @@ openerp.base.ActionManager = openerp.base.Controller.extend({
                 dialog.$element.dialog('destroy');
                 dialog.stop();
                 break;
+            case 'ir.actions.server':
+                this.rpc('/base/action/run', {
+                    action_id: action.id,
+                    context: {active_id: 66, active_ids: [66], active_model: 'ir.ui.menu'}
+                }).then(function (action) {
+                    self.do_action(action, on_closed)
+                });
+                break;
             default:
                 console.log("Action manager can't handle action of type " + action.type, action);
         }

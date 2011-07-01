@@ -36,7 +36,7 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
      * @param {Boolean} [options.selectable=true] determines whether view rows are selectable (e.g. via a checkbox)
      * @param {Boolean} [options.header=true] should the list's header be displayed
      * @param {Boolean} [options.deletable=true] are the list rows deletable
-     * @param {null|String} [options.addable="New"] should the new-record button be displayed, and what should its label be. Use ``null`` to hide the button.
+     * @param {void|String} [options.addable="New"] should the new-record button be displayed, and what should its label be. Use ``null`` to hide the button.
      * @param {Boolean} [options.sortable=true] is it possible to sort the table by clicking on column headers
      * @param {Boolean} [options.reorderable=true] is it possible to reorder list rows
      *
@@ -232,7 +232,7 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
      * If the index is null, ``switch_to_record`` asks for the creation of a
      * new record.
      *
-     * @param {Number|null} index the record index (in the current dataset) to switch to
+     * @param {Number|void} index the record index (in the current dataset) to switch to
      * @param {String} [view="form"] the view type to switch to
      */
     select_record:function (index, view) {

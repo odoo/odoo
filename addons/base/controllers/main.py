@@ -237,18 +237,18 @@ def eval_context_and_domain(session, context, domain=None):
     # should we give the evaluated context as an evaluation context to the domain?
     e_domain = session.eval_domain(domain or [])
 
-    return (e_context, e_domain)
+    return e_context, e_domain
         
 def load_actions_from_ir_values(req, key, key2, models, meta, context):
     Values = req.session.model('ir.values')
     actions = Values.get(key, key2, models, meta, context)
 
-    for _, _, action in actions:
-        clean_action(action, req.session)
-
-    return actions
+    return [(id, name, clean_action(action, req.session))
+            for id, name, action in actions]
 
 def clean_action(action, session):
+    if action['type'] != 'ir.actions.act_window':
+        return action
     # values come from the server, we can just eval them
     if isinstance(action.get('context', None), basestring):
         action['context'] = eval(
@@ -260,10 +260,48 @@ def clean_action(action, session):
             action['domain'],
             session.evaluation_context(
                 action['context'])) or []
-    if not action.has_key('flags'):
+    if 'flags' not in action:
         # Set empty flags dictionary for web client.
         action['flags'] = dict()
     return fix_view_modes(action)
+
+def generate_views(action):
+    """
+    While the server generates a sequence called "views" computing dependencies
+    between a bunch of stuff for views coming directly from the database
+    (the ``ir.actions.act_window model``), it's also possible for e.g. buttons
+    to return custom view dictionaries generated on the fly.
+
+    In that case, there is no ``views`` key available on the action.
+
+    Since the web client relies on ``action['views']``, generate it here from
+    ``view_mode`` and ``view_id``.
+
+    Currently handles two different cases:
+
+    * no view_id, multiple view_mode
+    * single view_id, single view_mode
+
+    :param dict action: action descriptor dictionary to generate a views key for
+    """
+    view_id = action.get('view_id', False)
+    if isinstance(view_id, (list, tuple)):
+        view_id = view_id[0]
+
+    # providing at least one view mode is a requirement, not an option
+    view_modes = action['view_mode'].split(',')
+
+    if len(view_modes) > 1:
+        if view_id:
+            raise ValueError('Non-db action dictionaries should provide '
+                             'either multiple view modes or a single view '
+                             'mode and an optional view id.\n\n Got view '
+                             'modes %r and view id %r for action %r' % (
+                view_modes, view_id, action))
+        action['views'] = [(False, mode) for mode in view_modes]
+        return
+    action['views'] = [(view_id, view_modes[0])]
+
 
 def fix_view_modes(action):
     """ For historical reasons, OpenERP has weird dealings in relation to
@@ -283,18 +321,17 @@ def fix_view_modes(action):
     :param dict action: an action descriptor
     :returns: nothing, the action is modified in place
     """
+    if 'views' not in action:
+        generate_views(action)
+
     if action.pop('view_type') != 'form':
         return
 
-    if action.has_key('view_mode'):
-        action['view_mode'] = ','.join(
-            mode if mode != 'tree' else 'list'
-            for mode in action['view_mode'].split(','))
-    if action.has_key('views'):
-        action['views'] = [
-            [id, mode if mode != 'tree' else 'list']
-            for id, mode in action['views']
-        ]
+    action['views'] = [
+        [id, mode if mode != 'tree' else 'list']
+        for id, mode in action['views']
+    ]
+
     return action
 
 class Menu(openerpweb.Controller):
@@ -438,21 +475,20 @@ class DataSet(openerpweb.Controller):
         return {'result': r}
 
     @openerpweb.jsonrequest
-    def unlink(self, request, model, ids=[]):
+    def unlink(self, request, model, ids=()):
         Model = request.session.model(model)
         return Model.unlink(ids, request.session.eval_context(request.context))
 
     def call_common(self, req, model, method, args, domain_id=None, context_id=None):
         domain = args[domain_id] if domain_id and len(args) - 1 >= domain_id  else []
         context = args[context_id] if context_id and len(args) - 1 >= context_id  else {}
-        c, d = eval_context_and_domain(req.session, context, domain);
-        if(domain_id and len(args) - 1 >= domain_id):
+        c, d = eval_context_and_domain(req.session, context, domain)
+        if domain_id and len(args) - 1 >= domain_id:
             args[domain_id] = d
-        if(context_id and len(args) - 1 >= context_id):
+        if context_id and len(args) - 1 >= context_id:
             args[context_id] = c
 
-        m = req.session.model(model)
-        return getattr(m, method)(*args)
+        return getattr(req.session.model(model), method)(*args)
 
     @openerpweb.jsonrequest
     def call(self, req, model, method, args, domain_id=None, context_id=None):
@@ -462,8 +498,8 @@ class DataSet(openerpweb.Controller):
     def call_button(self, req, model, method, args, domain_id=None, context_id=None):
         action = self.call_common(req, model, method, args, domain_id, context_id)
         if isinstance(action, dict) and action.get('type') != '':
-            clean_action(action, req.session)
-        return {'result': action}
+            return {'result': clean_action(action, req.session)}
+        return {'result': False}
 
     @openerpweb.jsonrequest
     def exec_workflow(self, req, model, id, signal):
@@ -500,11 +536,23 @@ class View(openerpweb.Controller):
         return fvg
     
     def process_view(self, session, fvg, context, transform):
+        # depending on how it feels, xmlrpclib.ServerProxy can translate
+        # XML-RPC strings to ``str`` or ``unicode``. ElementTree does not
+        # enjoy unicode strings which can not be trivially converted to
+        # strings, and it blows up during parsing.
+
+        # So ensure we fix this retardation by converting view xml back to
+        # bit strings.
+        if isinstance(fvg['arch'], unicode):
+            arch = fvg['arch'].encode('utf-8')
+        else:
+            arch = fvg['arch']
+
         if transform:
             evaluation_context = session.evaluation_context(context or {})
-            xml = self.transform_view(fvg['arch'], session, evaluation_context)
+            xml = self.transform_view(arch, session, evaluation_context)
         else:
-            xml = ElementTree.fromstring(fvg['arch'])
+            xml = ElementTree.fromstring(arch)
         fvg['arch'] = Xml2Json.convert_element(xml)
         for field in fvg['fields'].values():
             if field.has_key('views') and field['views']:
@@ -613,15 +661,16 @@ class View(openerpweb.Controller):
         """
         self.parse_domain(elem, 'domain', session)
         self.parse_domain(elem, 'filter_domain', session)
-        context_string = elem.get('context', '').strip()
-        if context_string:
-            try:
-                elem.set('context',
-                         openerpweb.ast.literal_eval(context_string))
-            except ValueError:
-                elem.set('context',
-                         openerpweb.nonliterals.Context(
-                             session, context_string))
+        for el in ['context', 'default_get']:
+            context_string = elem.get(el, '').strip()
+            if context_string:
+                try:
+                    elem.set(el,
+                             openerpweb.ast.literal_eval(context_string))
+                except ValueError:
+                    elem.set(el,
+                             openerpweb.nonliterals.Context(
+                                 session, context_string))
 
 class FormView(View):
     _cp_path = "/base/formview"
@@ -713,7 +762,7 @@ class Binary(openerpweb.Controller):
         for key, val in cherrypy.request.headers.iteritems():
             headers[key.lower()] = val
         size = int(headers.get('content-length', 0))
-        # TODO: might be usefull to have a configuration flag for max-lenght file uploads
+        # TODO: might be useful to have a configuration flag for max-length file uploads
         try:
             out = """<script language="javascript" type="text/javascript">
                         var win = window.top.window,
@@ -775,3 +824,8 @@ class Action(openerpweb.Controller):
             if action:
                 value = clean_action(action[0], req.session)
         return {'result': value}
+
+    @openerpweb.jsonrequest
+    def run(self, req, action_id):
+        return clean_action(req.session.model('ir.actions.server').run(
+            [action_id], req.session.eval_context(req.context)), req.session)

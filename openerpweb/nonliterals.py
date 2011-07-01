@@ -7,6 +7,8 @@ can't be sent there themselves).
 import binascii
 import hashlib
 import simplejson.encoder
+import time
+import datetime
 
 __all__ = ['Domain', 'Context', 'NonLiteralEncoder, non_literal_decoder', 'CompoundDomain', 'CompoundContext']
 
@@ -173,14 +175,14 @@ class Context(BaseContext):
         return eval(self.get_context_string(),
                     SuperDict(ctx))
         
-def SuperDict(dict):
+class SuperDict(dict):
     def __getattr__(self, name):
         try:
             return self[name]
         except KeyError:
             raise AttributeError(name)
     def __getitem__(self, key):
-        tmp = super(dict, self)[key]
+        tmp = super(type(self), self).__getitem__(key)
         if isinstance(tmp, dict):
             return SuperDict(tmp)
         return tmp
