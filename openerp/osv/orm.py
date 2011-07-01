@@ -48,7 +48,6 @@ import re
 import time
 import traceback
 import types
-import simplejson
 
 import openerp.netsvc as netsvc
 from lxml import etree
@@ -71,88 +70,6 @@ module_class_list = {}
 
 # Super-user identifier (aka Administrator aka root)
 ROOT_USER_ID = 1
-
-def transfer_field_to_modifiers(field, modifiers):
-    for a in ('invisible', 'readonly', 'required'):
-        if field.get(a):
-            modifiers[a] = bool(field.get(a))
-
-
-# Don't deal with groups, it is done by check_group().
-# Need the context to evaluate the invisible attribute on tree views.
-# For non-tree views, the context shouldn't be given.
-def transfer_node_to_modifiers(node, modifiers, context=None, in_tree_view=False):
-    if node.get('attrs'):
-        modifiers.update(eval(node.get('attrs')))
-
-    if node.get('states'):
-        if 'invisible' in modifiers and isinstance(modifiers['invisible'], list):
-             # TODO combine with AND or OR, use implicit AND for now.
-             modifiers['invisible'].append(('state', 'not in', node.get('states').split(',')))
-        else:
-             modifiers['invisible'] = [('state', 'not in', node.get('states').split(','))]
-
-    for a in ('invisible', 'readonly', 'required'):
-        if node.get(a):
-            v = bool(eval(node.get(a), {'context': context or {}}))
-            if in_tree_view and a == 'invisible':
-                # Invisible in a tree view has a specific meaning, make it a
-                # new key in the modifiers attribute.
-                modifiers['tree_invisible'] = v
-            elif v or (a not in modifiers or not isinstance(modifiers[a], list)):
-                # Don't set the attribute to False if a dynamic value was
-                # provided (i.e. a domain from attrs or states).
-                modifiers[a] = v
-
-
-def simplify_modifiers(modifiers):
-    for a in ('invisible', 'readonly', 'required'):
-        if a in modifiers and not modifiers[a]:
-            del modifiers[a]
-
-
-def transfer_modifiers_to_node(modifiers, node):
-    if modifiers:
-        simplify_modifiers(modifiers)
-        node.set('modifiers', simplejson.dumps(modifiers))
-
-
-def test_modifiers(what, expected):
-    modifiers = {}
-    if isinstance(what, basestring):
-        node = etree.fromstring(what)
-        transfer_node_to_modifiers(node, modifiers)
-        simplify_modifiers(modifiers)
-        json = simplejson.dumps(modifiers)
-        assert json == expected, "%s != %s" % (json, expected)
-    elif isinstance(what, dict):
-        transfer_field_to_modifiers(what, modifiers)
-        simplify_modifiers(modifiers)
-        json = simplejson.dumps(modifiers)
-        assert json == expected, "%s != %s" % (json, expected)
-
-
-# To use this test:
-# import openerp
-# openerp.osv.orm.modifiers_tests()
-def modifiers_tests():
-    test_modifiers('<field name="a"/>', '{}')
-    test_modifiers('<field name="a" invisible="1"/>', '{"invisible": true}')
-    test_modifiers('<field name="a" readonly="1"/>', '{"readonly": true}')
-    test_modifiers('<field name="a" required="1"/>', '{"required": true}')
-    test_modifiers('<field name="a" invisible="0"/>', '{}')
-    test_modifiers('<field name="a" readonly="0"/>', '{}')
-    test_modifiers('<field name="a" required="0"/>', '{}')
-    test_modifiers('<field name="a" invisible="1" required="1"/>', '{"invisible": true, "required": true}') # TODO order is not guaranteed
-    test_modifiers('<field name="a" invisible="1" required="0"/>', '{"invisible": true}')
-    test_modifiers('<field name="a" invisible="0" required="1"/>', '{"required": true}')
-    test_modifiers("""<field name="a" attrs="{'invisible': [('b', '=', 'c')]}"/>""", '{"invisible": [["b", "=", "c"]]}')
-
-    # The dictionary is supposed to be the result of fields_get().
-    test_modifiers({}, '{}')
-    test_modifiers({"invisible": True}, '{"invisible": true}')
-    test_modifiers({"invisible": False}, '{}')
-    
 
 def check_object_name(name):
     """ Check if the given name is a valid openerp object name.
@@ -1407,25 +1324,12 @@ class orm_template(object):
     def view_header_get(self, cr, user, view_id=None, view_type='form', context=None):
         return False
 
-    def __view_look_dom(self, cr, user, node, view_id, in_tree_view, model_fields, context=None):
-        """ Return the description of the fields in the node.
-
-        In a normal call to this method, node is a complete view architecture
-        but it is actually possible to give some sub-node (this is used so
-        that the method can call itself recursively).
-
-        Originally, the field descriptions are drawn from the node itself.
-        But there is now some code calling fields_get() in order to merge some
-        of those information in the architecture.
-
-        """
+    def __view_look_dom(self, cr, user, node, view_id, context=None):
         if context is None:
             context = {}
         result = False
         fields = {}
         children = True
-
-        modifiers = {}
 
         def encode(s):
             if isinstance(s, unicode):
@@ -1440,7 +1344,6 @@ class orm_template(object):
                 can_see = any(access_pool.check_groups(cr, user, group) for group in groups)
                 if not can_see:
                     node.set('invisible', '1')
-                    modifiers['invisible'] = True
                     if 'attrs' in node.attrib:
                         del(node.attrib['attrs']) #avoid making field visible later
                 del(node.attrib['groups'])
@@ -1512,14 +1415,10 @@ class orm_template(object):
                             attrs['selection'].append((False, ''))
                 fields[node.get('name')] = attrs
 
-                field = model_fields[node.get('name')]
-                transfer_field_to_modifiers(field, modifiers)
-
         elif node.tag in ('form', 'tree'):
             result = self.view_header_get(cr, user, False, node.tag, context)
             if result:
                 node.set('string', result)
-            in_tree_view = node.tag == 'tree'
 
         elif node.tag == 'calendar':
             for additional_field in ('date_start', 'date_delay', 'date_stop', 'color'):
@@ -1527,12 +1426,6 @@ class orm_template(object):
                     fields[node.get(additional_field)] = {}
 
         check_group(node)
-
-        # The view architeture overrides the python model.
-        # Get the attrs before they are (possibly) deleted by check_group below
-        transfer_node_to_modifiers(node, modifiers, context, in_tree_view)
-
-        # TODO remove attrs couterpart in modifiers when invisible is true ?
 
         # translate view
         if 'lang' in context:
@@ -1559,9 +1452,8 @@ class orm_template(object):
 
         for f in node:
             if children or (node.tag == 'field' and f.tag in ('filter','separator')):
-                fields.update(self.__view_look_dom(cr, user, f, view_id, in_tree_view, model_fields, context))
+                fields.update(self.__view_look_dom(cr, user, f, view_id, context))
 
-        transfer_modifiers_to_node(modifiers, node)
         return fields
 
     def _disable_workflow_buttons(self, cr, user, node):
@@ -1590,32 +1482,19 @@ class orm_template(object):
         return node
 
     def __view_look_dom_arch(self, cr, user, node, view_id, context=None):
-        """ Return an architecture and a description of all the fields.
-
-        The field description combines the result of fields_get() and
-        __view_look_dom().
-
-        :param node: the architecture as as an etree
-        :return: a tuple (arch, fields) where arch is the given node as a
-            string and fields is the description of all the fields.
-
-        """
+        fields_def = self.__view_look_dom(cr, user, node, view_id, context=context)
+        node = self._disable_workflow_buttons(cr, user, node)
+        arch = etree.tostring(node, encoding="utf-8").replace('\t', '')
         fields = {}
         if node.tag == 'diagram':
             if node.getchildren()[0].tag == 'node':
-                node_fields = self.pool.get(node.getchildren()[0].get('object')).fields_get(cr, user, None, context)
+                node_fields = self.pool.get(node.getchildren()[0].get('object')).fields_get(cr, user, fields_def.keys(), context)
                 fields.update(node_fields)
             if node.getchildren()[1].tag == 'arrow':
-                arrow_fields = self.pool.get(node.getchildren()[1].get('object')).fields_get(cr, user, None, context)
+                arrow_fields = self.pool.get(node.getchildren()[1].get('object')).fields_get(cr, user, fields_def.keys(), context)
                 fields.update(arrow_fields)
         else:
-            fields = self.fields_get(cr, user, None, context)
-        fields_def = self.__view_look_dom(cr, user, node, view_id, False, fields, context=context)
-        node = self._disable_workflow_buttons(cr, user, node)
-        arch = etree.tostring(node, encoding="utf-8").replace('\t', '')
-        for k in fields.keys():
-            if k not in fields_def:
-                del fields[k]
+            fields = self.fields_get(cr, user, fields_def.keys(), context)
         for field in fields_def:
             if field == 'id':
                 # sometime, the view may contain the (invisible) field 'id' needed for a domain (when 2 objects have cross references)
@@ -1636,7 +1515,6 @@ class orm_template(object):
     def __get_default_calendar_view(self):
         """Generate a default calendar view (For internal use only).
         """
-        # TODO could return an etree instead of a string
 
         arch = ('<?xml version="1.0" encoding="utf-8"?>\n'
                 '<calendar string="%s"') % (self._description)
@@ -1704,7 +1582,6 @@ class orm_template(object):
         for field_name in fields_to_search:
             field_group.append(etree.Element("field", attrib={'name': field_name}))
 
-        #TODO tostring can be removed as fromstring is call directly after...
         return etree.tostring(search_view, encoding="utf-8").replace('\t', '')
 
     #
