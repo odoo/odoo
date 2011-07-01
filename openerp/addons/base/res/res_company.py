@@ -81,13 +81,13 @@ class res_company(osv.osv):
 
     def _get_address_data(self, cr, uid, ids, name, arg, context=None):
         result = {}
+        part_obj = self.pool.get('res.partner')
+        address_obj = self.pool.get('res.partner.address')
         for company in self.browse(cr, uid, ids, context=context):
             result[company.id] = {}
             for field in name:
                 result[company.id][field] = False
             if company.partner_id:
-                part_obj = self.pool.get('res.partner')
-                address_obj = self.pool.get('res.partner.address')
                 address_data = part_obj.address_get(cr, uid, [company.partner_id.id], adr_pref=['default'])
                 if address_data['default']:
                     address = address_obj.read(cr, uid, address_data['default'], [], context=context)
