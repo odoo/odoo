@@ -25,10 +25,8 @@
     "depends" : ["account"],
     "author" : "Tiny",
     "description": """Financial and accounting asset management.
-    Allows to define
-    * Asset category. 
-    * Assets.
-    *Asset usage period and property.
+    This Module manages the assets owned by a company or an individual. It will keep track of depreciation's occurred on 
+    those assets. And it allows to create Move's of the depreciation lines.
     """,
     "website" : "http://www.openerp.com",
     "category" : "Generic Modules/Accounting",
