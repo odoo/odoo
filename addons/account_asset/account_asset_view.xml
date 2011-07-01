@@ -115,6 +115,9 @@
                         <field name="prorata" attrs="{'invisible': ['|',('method_time','=','end'),('method','!=','linear')]}"/>
                     </group>
                     <newline/>
+                    <separator string="" colspan="4" />
+                    <field name="state" readonly="1" colspan="3"/>
+                    <button name="validate" states="draft" string="Confirm Asset" type="object" icon="terp-camera_test"/>
                  </page>
                  <page string="Depreciation board">
                     <field name="depreciation_line_ids" colspan="4" nolabel="1" mode="tree,graph" >
@@ -143,10 +146,6 @@
                     <field name="note" nolabel="1"/>
                  </page>
               </notebook>
-              <field name="state" readonly="1"/>
-              <group colspan="2" col="2">
-                 <button name="validate" states="draft" string="Confirm asset" type="object"/>
-              </group>
            </form>
        </field>
     </record>
