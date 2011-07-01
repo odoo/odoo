@@ -59,8 +59,6 @@ openerp.base.form.DashBoard = openerp.base.form.Widget.extend({
             res_model : 'ir.actions.actions',
             views : [[false, 'list']],
             type : 'ir.actions.act_window',
-            view_type : 'list',
-            view_mode : 'list',
             limit : 80,
             auto_search : true,
             domain : [['type', '=', 'ir.actions.act_window']],
@@ -227,10 +225,10 @@ openerp.base.form.DashBoard = openerp.base.form.Widget.extend({
             views_switcher : false,
             action_buttons : false,
             pager: false
-        }
-        var element_id = this.view.element_id + '_action_' + action.id;
-        var view = new openerp.base.ViewManagerAction(this.session, element_id, action);
-        view.start();
+        };
+        new openerp.base.ActionManager(
+                this.session, this.view.element_id + '_action_' + action.id)
+            .do_action(action);
     },
     render: function() {
         // We should start with three columns available

@@ -196,9 +196,7 @@ openerp.base.GrouplessDataGroup = openerp.base.DataGroup.extend(
         this._super(session, model, domain, context, null, level);
     },
     list: function (ifGroups, ifRecords) {
-        ifRecords(_.extend(
-                new openerp.base.DataSetSearch(this.session, this.model),
-                {domain: this.domain, context: this.context}));
+        ifRecords(new openerp.base.DataSetSearch(this.session, this.model, this.context, this.domain));
     }
 });
 
@@ -235,21 +233,20 @@ openerp.base.DataSet =  openerp.base.Controller.extend( /** @lends openerp.base.
         this._super(session);
         this.model = model;
         this.context = context || {};
-        this.index = 0;
-        this.count = 0;
+        this.index = null;
     },
     start: function() {
     },
     previous: function () {
         this.index -= 1;
         if (this.index < 0) {
-            this.index = this.count - 1;
+            this.index = this.ids.length - 1;
         }
         return this;
     },
     next: function () {
         this.index += 1;
-        if (this.index >= this.count) {
+        if (this.index >= this.ids.length) {
             this.index = 0;
         }
         return this;
@@ -262,7 +259,8 @@ openerp.base.DataSet =  openerp.base.Controller.extend( /** @lends openerp.base.
         return this.rpc('/base/dataset/get', {
             model: this.model,
             ids: ids,
-            fields: fields
+            fields: fields,
+            context: this.get_context()
         }, callback);
     },
     /**
@@ -291,14 +289,14 @@ openerp.base.DataSet =  openerp.base.Controller.extend( /** @lends openerp.base.
         return this.rpc('/base/dataset/default_get', {
             model: this.model,
             fields: fields,
-            context: this.context
+            context: this.get_context()
         }, callback);
     },
     create: function(data, callback, error_callback) {
         return this.rpc('/base/dataset/create', {
             model: this.model,
             data: data,
-            context: this.context
+            context: this.get_context()
         }, callback, error_callback);
     },
     write: function (id, data, callback) {
@@ -306,12 +304,13 @@ openerp.base.DataSet =  openerp.base.Controller.extend( /** @lends openerp.base.
             model: this.model,
             id: id,
             data: data,
-            context: this.context
+            context: this.get_context()
         }, callback);
     },
-    unlink: function(ids) {
-        // to implement in children
-        this.notification.notify("Unlink", ids);
+    unlink: function(ids, callback, error_callback) {
+        var self = this;
+        return this.call_and_eval("unlink", [ids, this.get_context()], null, 1,
+            callback, error_callback);
     },
     call: function (method, args, callback, error_callback) {
         return this.rpc('/base/dataset/call', {
@@ -329,14 +328,28 @@ openerp.base.DataSet =  openerp.base.Controller.extend( /** @lends openerp.base.
             args: args || []
         }, callback, error_callback);
     },
-    /**
-     * Arguments:
-     * name='', args=[], operator='ilike', context=None, limit=100
+    call_button: function (method, args, callback, error_callback) {
+        return this.rpc('/base/dataset/call_button', {
+            model: this.model,
+            method: method,
+            domain_id: null,
+            context_id: 1,
+            args: args || []
+        }, callback, error_callback);
+    },
+    name_get: function(ids, callback) {
+        return this.call_and_eval('name_get', [ids, this.get_context()], null, 1, callback);
+    },
+    /*
+     * args = domain
      */
-    name_search: function (args, callback, error_callback) {
+    name_search: function (name, args, operator, limit, callback) {
         return this.call_and_eval('name_search',
-            args, 1, 3,
-            callback, error_callback);
+            [name || '', args || false, operator || 'ilike', this.get_context(), limit || 100],
+            1, 3, callback);
+    },
+    name_create: function(name, callback) {
+        return this.call_and_eval('name_create', [name, this.get_context()], null, 1, callback);
     },
     exec_workflow: function (id, signal, callback) {
         return this.rpc('/base/dataset/exec_workflow', {
@@ -344,26 +357,35 @@ openerp.base.DataSet =  openerp.base.Controller.extend( /** @lends openerp.base.
             id: id,
             signal: signal
         }, callback);
+    },
+    get_context: function() {
+        return this.context;
     }
 });
 
 openerp.base.DataSetStatic =  openerp.base.DataSet.extend({
-    init: function(session, model, ids) {
-        this._super(session, model);
+    init: function(session, model, context, ids) {
+        this._super(session, model, context);
         // all local records
         this.ids = ids || [];
-        this.count = this.ids.length;
+        if (this.ids.length) {
+            this.index = 0;
+        }
     },
     read_slice: function (fields, offset, limit, callback) {
+        var self = this;
+        offset = offset || 0;
         var end_pos = limit && limit !== -1 ? offset + limit : undefined;
         this.read_ids(this.ids.slice(offset, end_pos), fields, callback);
     },
     set_ids: function (ids) {
         this.ids = ids;
-        this.count = this.ids.length;
+        this.index = this.index <= this.ids.length - 1 ?
+            this.index : (this.ids.length > 0 ? this.length - 1 : 0);
     },
     unlink: function(ids) {
         this.on_unlink(ids);
+        return $.Deferred().resolve({result: true});
     },
     on_unlink: function(ids) {
         this.set_ids(_.without.apply(null, [this.ids].concat(ids)));
@@ -395,14 +417,13 @@ openerp.base.DataSetSearch =  openerp.base.DataSet.extend({
             model: this.model,
             fields: fields,
             domain: this.domain,
-            context: this.context,
+            context: this.get_context(),
             sort: this.sort(),
             offset: offset,
             limit: limit
         }, function (records) {
             self.ids.splice(0, self.ids.length);
             self.offset = offset;
-            self.count = records.length;    // TODO: get real count
             for (var i=0; i < records.length; i++ ) {
                 self.ids.push(records[i].id);
             }
@@ -437,38 +458,189 @@ openerp.base.DataSetSearch =  openerp.base.DataSet.extend({
 
         this._sort.unshift((reverse ? '-' : '') + field);
         return undefined;
+    },
+    unlink: function(ids, callback, error_callback) {
+        var self = this;
+        return this._super(ids, function(result) {
+            self.ids = _.without.apply(_, [self.ids].concat(ids));
+            self.index = self.index <= self.ids.length - 1 ?
+                self.index : (self.ids.length > 0 ? self.ids.length -1 : 0);
+            if (callback)
+                callback(result);
+        }, error_callback);
     }
+});
+
+openerp.base.BufferedDataSet = openerp.base.DataSetStatic.extend({
+    virtual_id_prefix: "one2many_v_id_",
+    virtual_id_regex: /one2many_v_id_.*/,
+    debug_mode: true,
+    init: function() {
+        this._super.apply(this, arguments);
+        this.reset_ids([]);
+    },
+    create: function(data, callback, error_callback) {
+        var cached = {id:_.uniqueId(this.virtual_id_prefix), values: data};
+        this.to_create.push(cached);
+        this.cache.push(cached);
+        this.on_change();
+        var to_return =  $.Deferred().then(callback);
+        setTimeout(function() {to_return.resolve({result: cached.id});}, 0);
+        return to_return.promise();
+    },
+    write: function (id, data, callback) {
+        var self = this;
+        var record = _.detect(this.to_create, function(x) {return x.id === id;});
+        record = record || _.detect(this.to_write, function(x) {return x.id === id;});
+        if (record) {
+            $.extend(record.values, data);
+        } else {
+            record = {id: id, values: data};
+            self.to_write.push(record);
+        }
+        var cached = _.detect(this.cache, function(x) {return x.id === id;});
+        $.extend(cached.values, record.values);
+        this.on_change();
+        var to_return = $.Deferred().then(callback);
+        setTimeout(function () {to_return.resolve({result: true});}, 0);
+        return to_return.promise();
+    },
+    unlink: function(ids, callback, error_callback) {
+        var self = this;
+        _.each(ids, function(id) {
+            if (! _.detect(self.to_create, function(x) { return x.id === id; })) {
+                self.to_delete.push({id: id})
+            }
+        });
+        this.to_create = _.reject(this.to_create, function(x) { return _.include(ids, x.id);});
+        this.to_write = _.reject(this.to_write, function(x) { return _.include(ids, x.id);});
+        this.cache = _.reject(this.cache, function(x) { return _.include(ids, x.id);});
+        this.set_ids(_.without.apply(_, [this.ids].concat(ids)));
+        this.on_change();
+        var to_return = $.Deferred().then(callback);
+        setTimeout(function () {to_return.resolve({result: true});}, 0);
+        return to_return.promise();
+    },
+    reset_ids: function(ids) {
+        this.set_ids(ids);
+        this.to_delete = [];
+        this.to_create = [];
+        this.to_write = [];
+        this.cache = [];
+        this.delete_all = false;
+    },
+    on_change: function() {},
+    read_ids: function (ids, fields, callback) {
+        var self = this;
+        var to_get = [];
+        _.each(ids, function(id) {
+            var cached = _.detect(self.cache, function(x) {return x.id === id;});
+            var created = _.detect(self.to_create, function(x) {return x.id === id;});
+            if (created) {
+                _.each(fields, function(x) {if (cached.values[x] === undefined) cached.values[x] = false;});
+            } else {
+                if (!cached || !_.all(fields, function(x) {return cached.values[x] !== undefined}))
+                    to_get.push(id);
+            }
+        });
+        var completion = $.Deferred().then(callback);
+        var return_records = function() {
+            var records = _.map(ids, function(id) {
+                return _.extend({}, _.detect(self.cache, function(c) {return c.id === id;}).values, {"id": id});
+            });
+            if (self.debug_mode) {
+                if (_.include(records, undefined)) {
+                    throw "Record not correctly loaded";
+                }
+            }
+            setTimeout(function () {completion.resolve(records);}, 0);
+        }
+        if(to_get.length > 0) {
+            var rpc_promise = this._super(to_get, fields, function(records) {
+                _.each(records, function(record, index) {
+                    var id = to_get[index];
+                    var cached = _.detect(self.cache, function(x) {return x.id === id;});
+                    if (!cached) {
+                        self.cache.push({id: id, values: record});
+                    } else {
+                        // I assume cache value is prioritary
+                        _.defaults(cached.values, record);
+                    }
+                });
+                return_records();
+            });
+            $.when(rpc_promise).fail(function() {completion.reject();});
+        } else {
+            return_records();
+        }
+        return completion.promise();
+    }
+});
+
+openerp.base.ReadOnlyDataSetSearch = openerp.base.DataSetSearch.extend({
+    create: function(data, callback, error_callback) {
+        this.on_create(data);
+        var to_return = $.Deferred().then(callback);
+        setTimeout(function () {to_return.resolve({"result": undefined});}, 0);
+        return to_return.promise();
+    },
+    on_create: function(data) {},
+    write: function (id, data, callback) {
+        this.on_write(id);
+        var to_return = $.Deferred().then(callback);
+        setTimeout(function () {to_return.resolve({"result": true});}, 0);
+        return to_return.promise();
+    },
+    on_write: function(id) {},
+    unlink: function(ids, callback, error_callback) {
+        this.on_unlink(ids);
+        var to_return = $.Deferred().then(callback);
+        setTimeout(function () {to_return.resolve({"result": true});}, 0);
+        return to_return.promise();
+    },
+    on_unlink: function(ids) {}
 });
 
 openerp.base.CompoundContext = function() {
     this.__ref = "compound_context";
     this.__contexts = [];
+    this.__eval_context = null;
     var self = this;
     _.each(arguments, function(x) {
         self.add(x);
     });
 };
 openerp.base.CompoundContext.prototype.add = function(context) {
-    if (context.__ref === "compound_context")
-        this.__contexts = this.__contexts.concat(context.__contexts);
-    else
-        this.__contexts.push(context);
+    this.__contexts.push(context);
     return this;
+};
+openerp.base.CompoundContext.prototype.set_eval_context = function(eval_context) {
+    this.__eval_context = eval_context;
+    return this;
+};
+openerp.base.CompoundContext.prototype.get_eval_context = function() {
+    return this.__eval_context;
 };
 
 openerp.base.CompoundDomain = function() {
     this.__ref = "compound_domain";
     this.__domains = [];
+    this.__eval_context = null;
+    var self = this;
     _.each(arguments, function(x) {
         self.add(x);
     });
 };
 openerp.base.CompoundDomain.prototype.add = function(domain) {
-    if (domain.__ref === "compound_domain")
-        this.__domains = this.__domains.concat(domain.__domains);
-    else
-        this.__domains.push(domain);
+    this.__domains.push(domain);
     return this;
+};
+openerp.base.CompoundDomain.prototype.set_eval_context = function(eval_context) {
+    this.__eval_context = eval_context;
+    return this;
+};
+openerp.base.CompoundDomain.prototype.get_eval_context = function() {
+    return this.__eval_context;
 };
 
 };
