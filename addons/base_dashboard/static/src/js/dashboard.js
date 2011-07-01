@@ -147,7 +147,7 @@ openerp.base.form.DashBoard = openerp.base.form.Widget.extend({
                             modal: true,
                             title: 'Edit Layout',
                             width: 'auto',
-                            height: 'auto',
+                            height: 'auto'
                         }).html(QWeb.render('DashBoard.layouts', qdict));
         $dialog.find('li').click(function() {
             var layout = $(this).attr('data-layout');
