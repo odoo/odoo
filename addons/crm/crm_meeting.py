@@ -125,7 +125,7 @@ class calendar_attendee(osv.osv):
        return result
 
     _columns = {
-        'categ_id': fields.function(_compute_data, method=True, \
+        'categ_id': fields.function(_compute_data, \
                         string='Event Type', type="many2one", \
                         relation="crm.case.categ", multi='categ_id'),
     }

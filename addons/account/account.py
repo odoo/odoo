@@ -368,16 +368,16 @@ class account_account(osv.osv):
         'parent_id': fields.many2one('account.account', 'Parent', ondelete='cascade', domain=[('type','=','view')]),
         'child_parent_ids': fields.one2many('account.account','parent_id','Children'),
         'child_consol_ids': fields.many2many('account.account', 'account_account_consol_rel', 'child_id', 'parent_id', 'Consolidated Children'),
-        'child_id': fields.function(_get_child_ids, method=True, type='many2many', relation="account.account", string="Child Accounts"),
-        'balance': fields.function(__compute, digits_compute=dp.get_precision('Account'), method=True, string='Balance', multi='balance'),
-        'credit': fields.function(__compute, digits_compute=dp.get_precision('Account'), method=True, string='Credit', multi='balance'),
-        'debit': fields.function(__compute, digits_compute=dp.get_precision('Account'), method=True, string='Debit', multi='balance'),
+        'child_id': fields.function(_get_child_ids, type='many2many', relation="account.account", string="Child Accounts"),
+        'balance': fields.function(__compute, digits_compute=dp.get_precision('Account'), string='Balance', multi='balance'),
+        'credit': fields.function(__compute, digits_compute=dp.get_precision('Account'), string='Credit', multi='balance'),
+        'debit': fields.function(__compute, digits_compute=dp.get_precision('Account'), string='Debit', multi='balance'),
         'reconcile': fields.boolean('Reconcile', help="Check this if the user is allowed to reconcile entries in this account."),
         'shortcut': fields.char('Shortcut', size=12),
         'tax_ids': fields.many2many('account.tax', 'account_account_tax_default_rel',
             'account_id', 'tax_id', 'Default Taxes'),
         'note': fields.text('Note'),
-        'company_currency_id': fields.function(_get_company_currency, method=True, type='many2one', relation='res.currency', string='Company Currency'),
+        'company_currency_id': fields.function(_get_company_currency, type='many2one', relation='res.currency', string='Company Currency'),
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'active': fields.boolean('Active', select=2, help="If the active field is set to False, it will allow you to hide the account without removing it."),
 
@@ -390,7 +390,7 @@ class account_account(osv.osv):
             'manage this. So if you import from another software system you may have to use the rate at date. ' \
             'Incoming transactions always use the rate at date.', \
             required=True),
-        'level': fields.function(_get_level, string='Level', method=True, store=True, type='integer'),
+        'level': fields.function(_get_level, string='Level', store=True, type='integer'),
     }
 
     _defaults = {
@@ -587,7 +587,7 @@ class account_journal_column(osv.osv):
     _description = "Journal Column"
     _columns = {
         'name': fields.char('Column Name', size=64, required=True),
-        'field': fields.selection(_col_get, 'Field Name', method=True, required=True, size=32),
+        'field': fields.selection(_col_get, 'Field Name', required=True, size=32),
         'view_id': fields.many2one('account.journal.view', 'Journal View', select=True),
         'sequence': fields.integer('Sequence', help="Gives the sequence order to journal column.", readonly=True),
         'required': fields.boolean('Required'),
@@ -985,7 +985,7 @@ class account_journal_period(osv.osv):
         'name': fields.char('Journal-Period Name', size=64, required=True),
         'journal_id': fields.many2one('account.journal', 'Journal', required=True, ondelete="cascade"),
         'period_id': fields.many2one('account.period', 'Period', required=True, ondelete="cascade"),
-        'icon': fields.function(_icon_get, method=True, string='Icon', type='char', size=32),
+        'icon': fields.function(_icon_get, string='Icon', type='char', size=32),
         'active': fields.boolean('Active', required=True, help="If the active field is set to False, it will allow you to hide the journal period without removing it."),
         'state': fields.selection([('draft','Draft'), ('printed','Printed'), ('done','Done')], 'State', required=True, readonly=True,
                                   help='When journal period is created. The state is \'Draft\'. If a report is printed it comes to \'Printed\' state. When all transactions are done, it comes in \'Done\' state.'),
@@ -1139,7 +1139,7 @@ class account_move(osv.osv):
         'line_id': fields.one2many('account.move.line', 'move_id', 'Entries', states={'posted':[('readonly',True)]}),
         'to_check': fields.boolean('To Review', help='Check this box if you are unsure of that journal entry and if you want to note it as \'to be reviewed\' by an accounting expert.'),
         'partner_id': fields.related('line_id', 'partner_id', type="many2one", relation="res.partner", string="Partner", store=True),
-        'amount': fields.function(_amount_compute, method=True, string='Amount', digits_compute=dp.get_precision('Account'), type='float', fnct_search=_search_amount),
+        'amount': fields.function(_amount_compute, string='Amount', digits_compute=dp.get_precision('Account'), type='float', fnct_search=_search_amount),
         'date': fields.date('Date', required=True, states={'posted':[('readonly',True)]}, select=True),
         'narration':fields.text('Narration'),
         'company_id': fields.related('journal_id','company_id',type='many2one',relation='res.company',string='Company', store=True, readonly=True),
@@ -1646,8 +1646,8 @@ class account_tax_code(osv.osv):
         'name': fields.char('Tax Case Name', size=64, required=True, translate=True),
         'code': fields.char('Case Code', size=64),
         'info': fields.text('Description'),
-        'sum': fields.function(_sum_year, method=True, string="Year Sum"),
-        'sum_period': fields.function(_sum_period, method=True, string="Period Sum"),
+        'sum': fields.function(_sum_year, string="Year Sum"),
+        'sum_period': fields.function(_sum_period, string="Period Sum"),
         'parent_id': fields.many2one('account.tax.code', 'Parent Code', select=True),
         'child_ids': fields.one2many('account.tax.code', 'parent_id', 'Child Codes'),
         'line_ids': fields.one2many('account.move.line', 'tax_code_id', 'Lines'),
