@@ -273,6 +273,7 @@ class ir_ui_menu(osv.osv):
                 ('ir.actions.wizard', 'ir.actions.wizard'),
                 ('ir.actions.url', 'ir.actions.url'),
                 ('ir.actions.server', 'ir.actions.server'),
+                ('ir.actions.client', 'ir.actions.client'),
             ]),
     }
 
