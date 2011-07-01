@@ -801,7 +801,12 @@ class act_window_close(osv.osv):
 act_window_close()
 
 class ir_actions_todo_category(osv.osv):
+    """
+    Category of Configuration Wizards
+    """
+
     _name = 'ir.actions.todo.category'
+    _description = "Configuration Wizard Category"
     _columns = {
          'name':fields.char('Name', size=64, translate=True, required=True), 
          'sequence': fields.integer('Sequence'),
@@ -816,7 +821,11 @@ TODO_STATES = [('open', 'To Do'),
                ('cancel','Cancelled')]
 
 class ir_actions_todo(osv.osv):
+    """
+    Configuration Wizards
+    """
     _name = 'ir.actions.todo'
+    _description = "Configuration Wizards"
     _columns={
         'action_id': fields.many2one(
             'ir.actions.act_window', 'Action', select=True, required=True,
@@ -824,7 +833,9 @@ class ir_actions_todo(osv.osv):
         'sequence': fields.integer('Sequence'),
         'state': fields.selection(TODO_STATES, string='State', required=True),
         'name':fields.char('Name', size=64),
-        'type': fields.selection([('special','Special'),('normal','Normal'),('normal_recurring','Normal Recurring')],'Type',required=True),
+        'type': fields.selection([('special','Special'),('normal','Normal'),('normal_recurring','Normal Recurring')], 'Type', required=True, help="Special: that have to be run again on trigger (when someone select this application to be reconfigured)\
+\nNormal: that will be display in the config panel and disappear as soon it's done\
+\nNormal Recurring: that will be always displayed in the config panel regardless of it's state"),
         'groups_id':fields.many2many('res.groups', 'res_groups_action_rel', 'uid', 'gid', 'Groups'),
         'note':fields.text('Text', translate=True),
         'category_id': fields.many2one('ir.actions.todo.category','Category'),
