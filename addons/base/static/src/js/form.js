@@ -1616,10 +1616,10 @@ openerp.base.form.FieldMany2Many = openerp.base.form.Field.extend({
 
         var self = this;
 
-        this.dataset = new openerp.base.DataSetStatic(
+        this.dataset = new openerp.base.form.Many2ManyDataSet(
                 this.session, this.field.relation);
+        this.dataset.m2m = this;
         this.dataset.on_unlink.add_last(function(ids) {
-            //TODO niv: should check this for other cases
             self.on_ui_change();
         });
 
@@ -1647,6 +1647,18 @@ openerp.base.form.FieldMany2Many = openerp.base.form.Field.extend({
     },
     get_value: function() {
         return [commands.replace_with(this.dataset.ids)];
+    },
+    set_value_from_ui: function() {},
+    validate: function() {
+        this.invalid = false;
+        // TODO niv
+    }
+});
+
+openerp.base.form.Many2ManyDataSet = openerp.base.DataSetStatic.extend({
+    get_context: function() {
+        this.context = this.m2m.build_context();
+        return this.context;
     }
 });
 
@@ -1654,7 +1666,7 @@ openerp.base.form.Many2ManyListView = openerp.base.ListView.extend({
     do_add_record: function () {
         var pop = new openerp.base.form.SelectCreatePopup(
                 null, this.m2m_field.view.session);
-        pop.select_element(this.model);
+        pop.select_element(this.model, {}, this.m2m_field.build_domain(), this.m2m_field.build_context());
         var self = this;
         pop.on_select_elements.add(function(element_ids) {
             _.each(element_ids, function(element_id) {
@@ -1670,12 +1682,13 @@ openerp.base.form.Many2ManyListView = openerp.base.ListView.extend({
     do_activate_record: function(index, id) {
         this.m2m_field.view.session.action_manager.do_action({
             "res_model": this.dataset.model,
-            "views":[[false,"form"]],
+            "views": [[false,"form"]],
             "res_id": id,
-            "type":"ir.actions.act_window",
-            "view_type":"form",
-            "view_mode":"form",
-            "target":"new"
+            "type": "ir.actions.act_window",
+            "view_type": "form",
+            "view_mode": "form",
+            "target": "new",
+            "context": this.m2m_field.build_context()
         });
     }
 });
