@@ -524,10 +524,12 @@ class account_asset_history(osv.osv):
         'method_end': fields.date('Ending date'),
         'note': fields.text('Note'),
     }
+    _order = 'date desc'
     _defaults = {
         'date': lambda *args: time.strftime('%Y-%m-%d'),
-        'user_id': lambda self,cr, uid,ctx: uid
+        'user_id': lambda self, cr, uid, ctx: uid
     }
+    
 account_asset_history()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
