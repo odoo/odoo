@@ -846,7 +846,7 @@ class ir_actions_todo(osv.osv):
         res.update({'nodestroy': True})
 
         # Open Specific resouce when res_id is provided in context
-        if res.get('context', {}):
+        if res.get('context'):
             user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
             ctx = eval(res['context'], {'user': user})
             if ctx.get('res_id'):
