@@ -107,6 +107,34 @@ class account_asset_asset(osv.osv):
             GROUP BY a.id, a.purchase_date """, (tuple(ids),))
         return dict(cr.fetchall())
 
+    def _compute_board_amount(self, cr, uid, asset, i, residual_amount, amount_to_depr, undone_dotation_number, posted_depreciation_line_ids, total_days, context=None):
+        #by default amount = 0
+        amount = 0
+        if i == undone_dotation_number:
+            amount = residual_amount
+        else:
+            if asset.method == 'linear':
+                amount = amount_to_depr / (undone_dotation_number - len(posted_depreciation_line_ids))
+                if asset.prorata:
+                    amount = amount_to_depr / asset.method_delay
+                    days = total_days - float(depreciation_date.strftime('%j'))
+                    if i == 1:
+                        amount = (amount_to_depr / asset.method_delay) / total_days * days
+                    elif i == undone_dotation_number:
+                        amount = (amount_to_depr / asset.method_delay) / total_days * (total_days - days)
+            elif asset.method == 'degressive':
+                amount = residual_amount * asset.method_progress_factor
+        return amount
+
+    def _compute_board_undone_dotation_nb(self, cr, uid, asset, depreciation_date, total_days, context=None):
+        undone_dotation_number = asset.method_delay
+        if asset.method_time == 'end':
+            end_date = datetime.strptime(asset.method_end, '%Y-%m-%d')
+            undone_dotation_number = (end_date - depreciation_date).days / total_days
+        if asset.prorata or asset.method_time == 'end':
+            undone_dotation_number += 1
+        return undone_dotation_number
+
     def compute_depreciation_board(self, cr, uid,ids, context=None):
         depreciation_lin_obj = self.pool.get('account.asset.depreciation.line')
         for asset in self.browse(cr, uid, ids, context=context):
@@ -124,28 +152,11 @@ class account_asset_asset(osv.osv):
             month = depreciation_date.month
             year = depreciation_date.year
             total_days = (year % 4) and 365 or 366
-            undone_dotation_number = asset.method_delay
-            if asset.method_time == 'end':
-                end_date = datetime.strptime(asset.method_end, '%Y-%m-%d')
-                undone_dotation_number = (end_date - depreciation_date).days / total_days
-            if asset.prorata or asset.method_time == 'end':
-                undone_dotation_number += 1
+
+            undone_dotation_number = self._compute_board_undone_dotation_nb(cr, uid, asset, depreciation_date, total_days, context=context)
             for x in range(len(posted_depreciation_line_ids), undone_dotation_number):
                 i = x + 1
-                if i == undone_dotation_number:
-                    amount = residual_amount
-                else:
-                    if asset.method == 'linear':
-                        amount = amount_to_depr / (undone_dotation_number - len(posted_depreciation_line_ids))
-                        if asset.prorata:
-                            amount = amount_to_depr / asset.method_delay
-                            if i == 1:
-                                days = total_days - float(depreciation_date.strftime('%j'))
-                                amount = (amount_to_depr / asset.method_delay) / total_days * days
-                            elif i == undone_dotation_number:
-                                amount = (amount_to_depr / asset.method_delay) / total_days * (total_days - days)
-                    else:
-                        amount = residual_amount * asset.method_progress_factor
+                amount = self._compute_board_amount(cr, uid, asset, i, residual_amount, amount_to_depr, undone_dotation_number, posted_depreciation_line_ids, total_days, context=context)
                 residual_amount -= amount
                 vals = {
                      'amount': amount,
@@ -201,8 +212,8 @@ class account_asset_asset(osv.osv):
         'state': fields.selection([('draft','Draft'),('open','Running'),('close','Close')], 'State', required=True),
         'active': fields.boolean('Active', select=2),
         'partner_id': fields.many2one('res.partner', 'Partner'),
-        'method': fields.selection([('linear','Linear'),('progressif','Progressive')], 'Computation Method', required=True, readonly=True, states={'draft':[('readonly',False)]}, help="Linear: Calculated on basis of Gross Value/During (interval) \
-         \nProgressive: Calculated on basis of Gross Value * Progressif Factor"),
+        'method': fields.selection([('linear','Linear'),('degressive','Degressive')], 'Computation Method', required=True, readonly=True, states={'draft':[('readonly',False)]}, help="Linear: Calculated on basis of Gross Value/During (interval) \
+         \nDegressive: Calculated on basis of Gross Value * Degressive Factor"),
         'method_delay': fields.integer('Number of Depreciations', readonly=True, states={'draft':[('readonly',False)]}, help="Calculates Depreciation within specified interval"),
         'method_period': fields.integer('Period Length', readonly=True, states={'draft':[('readonly',False)]}, help="State here the time during 2 depreciations, in months"),
         'method_end': fields.date('Ending date', readonly=True, states={'draft':[('readonly',False)]}),
