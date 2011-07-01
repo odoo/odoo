@@ -115,7 +115,8 @@ class ir_rule(osv.osv):
         if ids:
             for rule in self.browse(cr, uid, ids):
                 for group in rule.groups:
-                    group_rule.setdefault(group.id, []).append(rule.id)
+                    if uid in [u.id for u in group.users]:
+                        group_rule.setdefault(group.id, []).append(rule.id)
                 if not rule.groups:
                   global_rules.append(rule.id)
             global_domain = self.domain_create(cr, uid, global_rules)
