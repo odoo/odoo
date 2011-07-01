@@ -109,6 +109,7 @@ class asset_modify(osv.osv_memory):
         history_vals = {
             'asset_id': asset_id,
             'name': data.name,
+            'method_time': asset.method_time,
             'method_delay': asset.method_delay,
             'method_period': asset.method_period,
             'method_end': asset.method_end,

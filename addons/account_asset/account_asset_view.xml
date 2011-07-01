@@ -140,14 +140,20 @@
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Asset history">
+              <group col="6" colspan="4">
                 <field name="name" select="1"/>
                 <field name="date" select="1"/>
                 <field name="user_id" select="1"/>
-                <field name="method_delay" select="2"/>
+              </group>
+              <group col="2" colspan="2">
+                <separator string="Depreciation Dates" colspan="2" />
+                <field name="method_time"/>
+                <field name="method_delay" attrs="{'invisible':[('method_time','=','end')]}"/>
                 <field name="method_period"/>
-                <field name="method_end"/>
-                <separator string="Notes" colspan="4"/>
-                <field name="note" colspan="4" nolabel="1"/>
+                <field name="method_end" attrs="{'invisible':[('method_time','=','delay')]}"/>
+              </group>
+              <separator string="Notes" colspan="4"/>
+              <field name="note" colspan="4" nolabel="1"/>
             </form>
         </field>
     </record>
