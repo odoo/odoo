@@ -590,7 +590,23 @@
                             </field>
                         </page>
                         <page string="Journal Entries" name="move_live_ids">
-                            <field colspan="4" name="move_line_ids" nolabel="1"/>
+                            <field colspan="4" name="move_line_ids" nolabel="1" mode="tree,form">
+                            	<tree string="Journal Items" editable="top" on_write="on_create_write">
+									<field name="move_id"/>
+									<field name="ref"/>
+									<field name="date"/>
+									<field name="period_id"/>
+									<field name="partner_id" on_change="onchange_partner_id(move_id, partner_id, account_id, debit, credit, date, journal_id)"/>
+									<field name="account_id"/>
+									<field name="name"/>
+									<field name="journal_id" invisible="1"/>
+									<field name="debit" sum="Total debit"/>
+									<field name="credit" sum="Total credit"/>
+									<field name="reconcile_partial_id" groups="base.group_extended"/>
+									<field name="reconcile_id"/>
+									<field name="state"/>
+								</tree>
+                            </field>
                         </page>
                     </notebook>
                     <group col="8" colspan="4">
