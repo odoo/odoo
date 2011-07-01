@@ -43,7 +43,7 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
         if (this.embedded_view) {
             return $.Deferred().then(this.on_loaded).resolve({fields_view: this.embedded_view});
         } else {
-            var context = new openerp.base.CompoundContext(this.dataset.context);
+            var context = new openerp.base.CompoundContext(this.dataset.get_context());
             if (this.view_manager.action && this.view_manager.action.context) {
                 context.add(this.view_manager.action.context);
             }
@@ -394,7 +394,7 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
                 model: 'ir.attachment',
                 fields: ['name', 'url', 'type'],
                 domain: [['res_model', '=', this.dataset.model], ['res_id', '=', this.datarecord.id], ['type', 'in', ['binary', 'url']]],
-                context: this.dataset.context
+                context: this.dataset.get_context()
             }, this.on_attachments_loaded);*/
         }
     },
