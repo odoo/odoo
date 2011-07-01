@@ -47,11 +47,26 @@
         <field name="arch" type="xml">
             <tree string="Asset category">
                 <field name="name"/>
+                <field name="method_time"/>
+                <field name="method_delay"/>
+                <field name="method"/>
                 <field name="journal_id"/>
                 <field name="account_asset_id"/>
-                <field name="account_depreciation_id"/>
+                <field name="account_expense_depreciation_id"/>
                 <field name="company_id" groups="base.group_multi_company"/>
             </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_account_asset_category_search">
+        <field name="name">account.asset.category.search</field>
+        <field name="model">account.asset.category</field>
+        <field name="type">search</field>
+        <field name="arch" type="xml">
+            <search string="Search Asset Category">
+                <field name="name"/>
+                <field name="journal_id"/>
+            </search>
         </field>
     </record>
 
