@@ -214,7 +214,7 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
                     model: this.dataset.model,
                     method: method,
                     args: [(this.datarecord.id == null ? [] : [this.datarecord.id])].concat(args),
-                    context_id: context_index + 1
+                    context_id: context_index === null ? null : context_index + 1
                 }, function(response) {
                     self.on_processed_onchange(response, processed);
                 });
