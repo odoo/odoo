@@ -30,6 +30,10 @@ except ImportError:
     # http://svn.python.org/view/python/tags/r254/Lib/functools.py?view=markup
 
     def partial(fun, *args, **kwargs):
+        """ Partial implementation
+        
+            See: http://svn.python.org/view/python/tags/r254/Lib/functools.py
+        """
         def _partial(*args2, **kwargs2):
             return fun(*(args+args2), **dict(kwargs, **kwargs2))
         return _partial

@@ -19,18 +19,19 @@
 #
 ##############################################################################
 
-# . Fields:
-#      - simple
-#      - relations (one2many, many2one, many2many)
-#      - function
-#
-# Fields Attributes:
-#   _classic_read: is a classic sql fields
-#   _type   : field type
-#   readonly
-#   required
-#   size
-#
+""" Fields:
+      - simple
+      - relations (one2many, many2one, many2many)
+      - function
+
+    Fields Attributes:
+        * _classic_read: is a classic sql fields
+        * _type   : field type
+        * readonly
+        * required
+        * size
+"""
+
 import datetime as DT
 import string
 import sys
@@ -51,6 +52,12 @@ def _symbol_set(symb):
 
 
 class _column(object):
+    """ Base of all fields, a database column
+    
+        An instance of this object is a *description* of a database column. It will
+        not hold any data, but only provide the methods to manipulate data of an
+        ORM record or even prepare/update the database to hold such a field of data.
+    """
     _classic_read = True
     _classic_write = True
     _prefetch = True
@@ -734,6 +741,192 @@ def sanitize_binary_value(value):
 # Function fields
 # ---------------------------------------------------------
 class function(_column):
+    """
+    A field whose value is computed by a function (rather
+    than being read from the database).
+
+    :param fnct: the callable that will compute the field value.
+    :param arg: arbitrary value to be passed to ``fnct`` when computing the value.
+    :param fnct_inv: the callable that will allow writing values in that field
+                     (if not provided, the field is read-only).
+    :param fnct_inv_arg: arbitrary value to be passed to ``fnct_inv`` when
+                         writing a value.
+    :param str type: type of the field simulated by the function field
+    :param fnct_search: the callable that allows searching on the field
+                        (if not provided, search will not return any result).
+    :param store: store computed value in database
+                  (see :ref:`The *store* parameter <field-function-store>`).
+    :type store: True or dict specifying triggers for field computation
+    :param multi: name of batch for batch computation of function fields.
+                  All fields with the same batch name will be computed by
+                  a single function call. This changes the signature of the
+                  ``fnct`` callable.
+
+    .. _field-function-fnct: The ``fnct`` parameter
+
+    .. rubric:: The ``fnct`` parameter
+
+    The callable implementing the function field must have the following signature:
+
+    .. function:: fnct(model, cr, uid, ids, field_name(s), arg, context)
+
+        Implements the function field.
+
+        :param orm_template model: model to which the field belongs (should be ``self`` for
+                                   a model method)
+        :param field_name(s): name of the field to compute, or if ``multi`` is provided,
+                              list of field names to compute.
+        :type field_name(s): str | [str]
+        :param arg: arbitrary value passed when declaring the function field
+        :rtype: dict
+        :return: mapping of ``ids`` to computed values, or if multi is provided,
+                 to a map of field_names to computed values
+
+    The values in the returned dictionary must be of the type specified by the type
+    argument in the field declaration.
+
+    Here is an example with a simple function ``char`` function field::
+
+        # declarations
+        def compute(self, cr, uid, ids, field_name, arg, context):
+            result = {}
+            # ...
+            return result
+        _columns['my_char'] = fields.function(compute, type='char', size=50)
+
+        # when called with ``ids=[1,2,3]``, ``compute`` could return:
+        {
+            1: 'foo',
+            2: 'bar',
+            3: False # null values should be returned explicitly too
+        }
+
+    If ``multi`` is set, then ``field_name`` is replaced by ``field_names``: a list
+    of the field names that should be computed. Each value in the returned
+    dictionary must then be a dictionary mapping field names to values.
+
+    Here is an example where two function fields (``name`` and ``age``)
+    are both computed by a single function field::
+
+        # declarations
+        def compute(self, cr, uid, ids, field_names, arg, context):
+            result = {}
+            # ...
+            return result
+        _columns['name'] = fields.function(compute_person_data, type='char',\
+                                           size=50, multi='person_data')
+        _columns[''age'] = fields.function(compute_person_data, type='integer',\
+                                           multi='person_data')
+
+        # when called with ``ids=[1,2,3]``, ``compute_person_data`` could return:
+        {
+            1: {'name': 'Bob', 'age': 23},
+            2: {'name': 'Sally', 'age': 19},
+            3: {'name': 'unknown', 'age': False}
+        }
+
+    .. _field-function-fnct-inv:
+
+    .. rubric:: The ``fnct_inv`` parameter
+
+    This callable implements the write operation for the function field
+    and must have the following signature:
+
+    .. function:: fnct_inv(model, cr, uid, ids, field_name, field_value, fnct_inv_arg, context)
+
+        Callable that implements the ``write`` operation for the function field.
+
+        :param orm_template model: model to which the field belongs (should be ``self`` for
+                                   a model method)
+        :param str field_name: name of the field to set
+        :param fnct_inv_arg: arbitrary value passed when declaring the function field
+        :return: True
+
+    When writing values for a function field, the ``multi`` parameter is ignored.
+
+    .. _field-function-fnct-search:
+
+    .. rubric:: The ``fnct_search`` parameter
+
+    This callable implements the search operation for the function field
+    and must have the following signature:
+
+    .. function:: fnct_search(model, cr, uid, model_again, field_name, criterion, context)
+
+        Callable that implements the ``search`` operation for the function field by expanding
+        a search criterion based on the function field into a new domain based only on
+        columns that are stored in the database.
+
+        :param orm_template model: model to which the field belongs (should be ``self`` for
+                                   a model method)
+        :param orm_template model_again: same value as ``model`` (seriously! this is for backwards
+                                         compatibility)
+        :param str field_name: name of the field to search on
+        :param list criterion: domain component specifying the search criterion on the field.
+        :rtype: list
+        :return: domain to use instead of ``criterion`` when performing the search.
+                 This new domain must be based only on columns stored in the database, as it
+                 will be used directly without any translation.
+
+        The returned value must be a domain, that is, a list of the form [(field_name, operator, operand)].
+        The most generic way to implement ``fnct_search`` is to directly search for the records that
+        match the given ``criterion``, and return their ``ids`` wrapped in a domain, such as
+        ``[('id','in',[1,3,5])]``.
+
+    .. _field-function-store:
+
+    .. rubric:: The ``store`` parameter
+
+    The ``store`` parameter allows caching the result of the field computation in the
+    database, and defining the triggers that will invalidate that cache and force a
+    recomputation of the function field.
+    When not provided, the field is computed every time its value is read.
+    The value of ``store`` may be either ``True`` (to recompute the field value whenever
+    any field in the same record is modified), or a dictionary specifying a more
+    flexible set of recomputation triggers.
+
+    A trigger specification is a dictionary that maps the names of the models that
+    will trigger the computation, to a tuple describing the trigger rule, in the
+    following form::
+
+        store = {
+            'trigger_model': (mapping_function,
+                              ['trigger_field1', 'trigger_field2'],
+                              priority),
+        }
+
+    A trigger rule is defined by a 3-item tuple where:
+
+        * The ``mapping_function`` is defined as follows:
+
+            .. function:: mapping_function(trigger_model, cr, uid, trigger_ids, context)
+
+                Callable that maps record ids of a trigger model to ids of the
+                corresponding records in the source model (whose field values
+                need to be recomputed).
+
+                :param orm_template model: trigger_model
+                :param list trigger_ids: ids of the records of trigger_model that were
+                                         modified
+                :rtype: list
+                :return: list of ids of the source model whose function field values
+                         need to be recomputed
+
+        * The second item is a list of the fields who should act as triggers for
+          the computation. If an empty list is given, all fields will act as triggers.
+        * The last item is the priority, used to order the triggers when processing them
+          after any write operation on a model that has function field triggers. The
+          default priority is 10.
+
+    In fact, setting store = True is the same as using the following trigger dict::
+
+        store = {
+              'model_itself': (lambda self, cr, uid, ids, context: ids,
+                               [],
+                               10)
+        }
+
+    """
     _classic_read = False
     _classic_write = False
     _prefetch = False
@@ -743,10 +936,9 @@ class function(_column):
 #
 # multi: compute several fields in one call
 #
-    def __init__(self, fnct, arg=None, fnct_inv=None, fnct_inv_arg=None, type='float', fnct_search=None, obj=None, method=False, store=False, multi=False, **args):
+    def __init__(self, fnct, arg=None, fnct_inv=None, fnct_inv_arg=None, type='float', fnct_search=None, obj=None, store=False, multi=False, **args):
         _column.__init__(self, **args)
         self._obj = obj
-        self._method = method
         self._fnct = fnct
         self._fnct_inv = fnct_inv
         self._arg = arg
@@ -827,11 +1019,7 @@ class function(_column):
         return result
 
     def get(self, cr, obj, ids, name, uid=False, context=None, values=None):
-        result = {}
-        if self._method:
-            result = self._fnct(obj, cr, uid, ids, name, self._arg, context)
-        else:
-            result = self._fnct(cr, obj._table, ids, name, self._arg, context)
+        result = self._fnct(obj, cr, uid, ids, name, self._arg, context)
         for id in ids:
             if self._multi and id in result:
                 for field, value in result[id].iteritems():
@@ -855,6 +1043,15 @@ class function(_column):
 # ---------------------------------------------------------
 
 class related(function):
+    """Field that points to some data inside another field of the current record.
+
+    Example::
+
+       _columns = {
+           'foo_id': fields.many2one('my.foo', 'Foo'),
+           'bar': fields.related('frol', 'foo_id', type='char', string='Frol of Foo'),
+        }
+    """
 
     def _fnct_search(self, tobj, cr, uid, obj=None, name=None, domain=None, context=None):
         self._field_get2(cr, uid, obj, context)
@@ -952,7 +1149,7 @@ class related(function):
     def __init__(self, *arg, **args):
         self.arg = arg
         self._relations = []
-        super(related, self).__init__(self._fnct_read, arg, self._fnct_write, fnct_inv_arg=arg, method=True, fnct_search=self._fnct_search, **args)
+        super(related, self).__init__(self._fnct_read, arg, self._fnct_write, fnct_inv_arg=arg, fnct_search=self._fnct_search, **args)
         if self.store is True:
             # TODO: improve here to change self.store = {...} according to related objects
             pass
@@ -989,7 +1186,7 @@ class dummy(function):
     def __init__(self, *arg, **args):
         self.arg = arg
         self._relations = []
-        super(dummy, self).__init__(self._fnct_read, arg, self._fnct_write, fnct_inv_arg=arg, method=True, fnct_search=None, **args)
+        super(dummy, self).__init__(self._fnct_read, arg, self._fnct_write, fnct_inv_arg=arg, fnct_search=None, **args)
 
 # ---------------------------------------------------------
 # Serialized fields
@@ -1148,7 +1345,6 @@ def field_to_dict(self, cr, user, context, field):
         res['fnct_inv'] = field._fnct_inv and field._fnct_inv.func_name or False
         res['fnct_inv_arg'] = field._fnct_inv_arg or False
         res['func_obj'] = field._obj or False
-        res['func_method'] = field._method
     if isinstance(field, many2many):
         res['related_columns'] = list((field._id1, field._id2))
         res['third_table'] = field._rel
