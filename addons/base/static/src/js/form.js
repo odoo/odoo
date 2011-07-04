@@ -1681,7 +1681,9 @@ openerp.base.form.Many2ManyListView = openerp.base.ListView.extend({
     do_add_record: function () {
         var pop = new openerp.base.form.SelectCreatePopup(
                 null, this.m2m_field.view.session);
-        pop.select_element(this.model, {}, this.m2m_field.build_domain(), this.m2m_field.build_context());
+        pop.select_element(this.model, {},
+            new openerp.base.CompoundDomain(this.m2m_field.build_domain(), ["!", ["id", "in", this.m2m_field.dataset.ids]]),
+            this.m2m_field.build_context());
         var self = this;
         pop.on_select_elements.add(function(element_ids) {
             _.each(element_ids, function(element_id) {
@@ -1734,7 +1736,7 @@ openerp.base.form.SelectCreatePopup = openerp.base.BaseWidget.extend({
     start: function() {
         this._super();
         this.dataset = new openerp.base.ReadOnlyDataSetSearch(this.session, this.model,
-            this.context, this.domain);
+            this.context);
         this.dataset.parent_view = this.options.parent_view;
         if (this.options.initial_view == "search") {
             this.setup_search_view();
@@ -1754,11 +1756,11 @@ openerp.base.form.SelectCreatePopup = openerp.base.BaseWidget.extend({
                 });
         this.searchview.on_search.add(function(domains, contexts, groupbys) {
             if (self.initial_ids) {
-                self.view_list.do_search.call(self, domains.concat([[["id", "in", self.initial_ids]]]),
+                self.view_list.do_search.call(self, domains.concat([[["id", "in", self.initial_ids]], self.domain]),
                     contexts, groupbys);
                 self.initial_ids = undefined;
             } else {
-                self.view_list.do_search.call(self, domains, contexts, groupbys);
+                self.view_list.do_search.call(self, domains.concat([self.domain]), contexts, groupbys);
             }
         });
         this.searchview.on_loaded.add_last(function () {
