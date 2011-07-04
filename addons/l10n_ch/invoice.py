@@ -73,7 +73,7 @@ class account_invoice(osv.osv):
             help='The partner bank account to pay\nKeep empty to use the default'
             ),
         ### Amount to pay
-        'amount_to_pay': fields.function(_amount_to_pay, method=True,
+        'amount_to_pay': fields.function(_amount_to_pay,
             type='float', string='Amount to be paid',
             help='The amount which should be paid at the current date\n' \
                     'minus the amount which is already in payment order'),

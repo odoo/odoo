@@ -180,8 +180,8 @@ class contrib_register(osv.osv):
     _columns = {
         'account_id': fields.many2one('account.account', 'Account'),
         'analytic_account_id':fields.many2one('account.analytic.account', 'Analytic Account'),
-        'yearly_total_by_emp': fields.function(_total_contrib, method=True, multi='dc', store=True, string='Total By Employee', digits=(16, 4)),
-        'yearly_total_by_comp': fields.function(_total_contrib, method=True, multi='dc', store=True,  string='Total By Company', digits=(16, 4)),
+        'yearly_total_by_emp': fields.function(_total_contrib, multi='dc', store=True, string='Total By Employee', digits=(16, 4)),
+        'yearly_total_by_comp': fields.function(_total_contrib, multi='dc', store=True,  string='Total By Company', digits=(16, 4)),
     }
 contrib_register()
 

@@ -61,7 +61,7 @@ class account_analytic_line(osv.osv):
         return res
 
     _columns = {
-        'amount_currency': fields.function(_get_amount, string="Amount Currency", type="float", method=True, store=True, help="The amount expressed in the related account currency if not equal to the company one.", readonly=True),
+        'amount_currency': fields.function(_get_amount, string="Amount Currency", type="float", store=True, help="The amount expressed in the related account currency if not equal to the company one.", readonly=True),
         'percentage': fields.float('Percentage')
     }
 

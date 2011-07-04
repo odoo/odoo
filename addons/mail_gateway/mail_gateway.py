@@ -281,7 +281,7 @@ class mailgate_message(osv.osv):
         'description': fields.text('Description', readonly=True),
         'partner_id': fields.many2one('res.partner', 'Partner', required=False),
         'attachment_ids': fields.many2many('ir.attachment', 'message_attachment_rel', 'message_id', 'attachment_id', 'Attachments', readonly=True),
-        'display_text': fields.function(_get_display_text, method=True, type='text', size="512", string='Display Text'),
+        'display_text': fields.function(_get_display_text, type='text', size="512", string='Display Text'),
     }
 
     def init(self, cr):

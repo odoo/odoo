@@ -63,7 +63,7 @@ class delivery_carrier(osv.osv):
         'partner_id': fields.many2one('res.partner', 'Carrier Partner', required=True),
         'product_id': fields.many2one('product.product', 'Delivery Product', required=True),
         'grids_id': fields.one2many('delivery.grid', 'carrier_id', 'Delivery Grids'),
-        'price' : fields.function(get_price, method=True,string='Price'),
+        'price' : fields.function(get_price,string='Price'),
         'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the delivery carrier without removing it.")
     }
     _defaults = {
