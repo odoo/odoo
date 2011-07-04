@@ -160,7 +160,7 @@ class wizard(osv.osv_memory):
             data = {
                 'company': user.company_id.name,
                 'message': wiz.message or "",
-                'url': wiz.portal_id.url or "(missing url)",
+                'url': wiz.portal_id.url or _("(missing url)"),
                 'db': cr.dbname,
             }
             dest_uids = user_obj.search(cr, ROOT_UID, login_cond)

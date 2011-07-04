@@ -20,6 +20,7 @@
 ##############################################################################
 
 from osv import osv, fields
+from tools.translate import _
 
 
 
@@ -106,7 +107,7 @@ class portal(osv.osv):
         for p in self.browse(cr, uid, ids, context):
             # create a menuitem under 'portal.portal_menu'
             menu_values = {
-                'name': p.name + ' Menu',
+                'name': _('%s Menu') % p.name,
                 'parent_id': menu_root,
                 'groups_id': [(6, 0, [p.group_id.id])],
             }
@@ -180,7 +181,7 @@ class portal_override_menu(osv.osv):
             actions_obj = self.pool.get('ir.actions.act_window')
             parent_id = p.parent_menu_id.id if p.parent_menu_id else False
             action_values = {
-                'name': p.name + ' Menu',
+                'name': _('%s Menu') % p.name,
                 'type': 'ir.actions.act_window',
                 'usage': 'menu',
                 'res_model': 'ir.ui.menu',
