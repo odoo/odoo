@@ -1305,7 +1305,7 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
             // create...
             values.push({label: "<em>   Create and Edit...</em>", action: function() {
                 self._change_int_value(null);
-                self._search_create_popup("form");
+                self._search_create_popup("form", undefined, {"default_name": search_val});
             }});
 
             response(values);
