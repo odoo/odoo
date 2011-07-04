@@ -231,6 +231,11 @@ class Session(openerpweb.Controller):
         if not saved_actions:
             return None
         return saved_actions["actions"].get(key)
+
+    @openerpweb.jsonrequest
+    def check(self, req):
+        req.session.assert_valid()
+        return None
         
 def eval_context_and_domain(session, context, domain=None):
     e_context = session.eval_context(context)

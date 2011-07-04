@@ -337,7 +337,12 @@ openerp.base.Session = openerp.base.BasicController.extend( /** @lends openerp.b
         this.context = {};
     },
     start: function() {
-        this.session_restore();
+        var self = this;
+        return this.session_restore().then(function () {
+            self.on_session_valid();
+        }, function () {
+            self.on_session_invalid();
+        });
     },
     /**
      * Executes an RPC call, registering the provided callbacks.
@@ -472,7 +477,7 @@ openerp.base.Session = openerp.base.BasicController.extend( /** @lends openerp.b
         this.session_id = this.get_cookie('session_id');
         // we should do an rpc to confirm that this session_id is valid and if it is retrieve the information about db and login
         // then call on_session_valid
-        this.on_session_valid();
+        return this.rpc('/base/session/check', {}, function () {}, function () {});
     },
     /**
      * Saves the session id and uid locally
@@ -531,7 +536,6 @@ openerp.base.Session = openerp.base.BasicController.extend( /** @lends openerp.b
             var modules = self.module_list.join(',');
             self.rpc('/base/session/csslist', {mods: modules}, self.do_load_css);
             self.rpc('/base/session/jslist', {"mods": modules}, self.debug ? self.do_load_modules_debug : self.do_load_modules_prod);
-            openerp._modules_loaded = true;
         });
     },
     do_load_css: function (result) {
@@ -566,6 +570,7 @@ openerp.base.Session = openerp.base.BasicController.extend( /** @lends openerp.b
                 this.module_loaded[mod] = true;
             }
         }
+        openerp._modules_loaded = true;
     }
 });
 
@@ -1100,8 +1105,8 @@ openerp.base.ImportExport = openerp.base.Controller.extend({
 
 openerp.base.WebClient = openerp.base.Controller.extend({
     init: function(element_id) {
-        var self = this;
         this._super(null, element_id);
+        this.view_manager = {};
 
         QWeb.add_template("xml/base.xml");
         var params = {};
@@ -1143,13 +1148,40 @@ openerp.base.WebClient = openerp.base.Controller.extend({
         
         // if using saved actions, load the action and give it to action manager
         var parameters = jQuery.deparam(jQuery.param.querystring());
-        if(parameters["s_action"] != undefined) {
+        if (parameters["s_action"] != undefined) {
             var key = parseInt(parameters["s_action"]);
             var self = this;
             this.rpc("/base/session/get_session_action", {key:key}, function(action) {
                 self.action_manager.do_action(action);
             });
+        } else if (openerp._modules_loaded) { // TODO: find better option than this
+            this.load_url_state()
+        } else {
+            this.session.on_modules_loaded.add({
+                callback: $.proxy(this, 'load_url_state'),
+                unique: true,
+                position: 'last'
+            })
         }
+    },
+    /**
+     * Loads state from URL if any, or checks if there is a home action and
+     * loads that, assuming we're at the index
+     */
+    load_url_state: function () {
+        var self = this;
+        // TODO: add actual loading if there is url state to unpack, test on window.location.hash
+        var ds = new openerp.base.DataSetSearch(this.session, 'res.users');
+        ds.read_ids([parseInt(this.session.uid, 10)], ['action_id'], function (actions) {
+            var home_action = actions[0].action_id;
+            if (!home_action) { return; }
+            // oh dear
+            openerp.base.View.prototype.execute_action.call(
+                self, {
+                    'name': home_action[0],
+                    'type': 'action'
+                }, ds, self.action_manager);
+        })
     },
     on_menu_action: function(action) {
         this.action_manager.do_action(action);

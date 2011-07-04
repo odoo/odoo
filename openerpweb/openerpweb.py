@@ -108,15 +108,20 @@ class OpenERPSession(object):
         if uid: self.get_context()
         return uid
 
-    def execute(self, model, func, *l, **d):
+    def assert_valid(self):
+        """
+        Ensures this session is valid (logged into the openerp server)
+        """
         if not (self._db and self._uid and self._password):
             raise OpenERPUnboundException()
+
+    def execute(self, model, func, *l, **d):
+        self.assert_valid()
         r = self.proxy('object').execute(self._db, self._uid, self._password, model, func, *l, **d)
         return r
 
     def exec_workflow(self, model, id, signal):
-        if not (self._db and self._uid and self._password):
-            raise OpenERPUnboundException()
+        self.assert_valid()
         r = self.proxy('object').exec_workflow(self._db, self._uid, self._password, model, signal, id)
         return r
 
