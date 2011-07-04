@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-05-09 10:18+0000\n"
-"PO-Revision-Date: 2011-01-19 12:00+0000\n"
-"Last-Translator: Wei \"oldrev\" Li <oldrev@gmail.com>\n"
+"PO-Revision-Date: 2011-07-03 09:26+0000\n"
+"Last-Translator: Joshua Jan <popkar77@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-05-10 07:24+0000\n"
-"X-Generator: Launchpad (build 12959)\n"
+"X-Launchpad-Export-Date: 2011-07-04 05:07+0000\n"
+"X-Generator: Launchpad (build 13168)\n"
 
 #. module: base_setup
 #: field:base.setup.company,city:0
@@ -30,7 +30,7 @@ msgstr "安装"
 #: code:addons/base_setup/__init__.py:56
 #, python-format
 msgid "The following users have been installed : \n"
-msgstr ""
+msgstr "下列用户已经安装 \n"
 
 #. module: base_setup
 #: field:base.setup.installer,account_voucher:0
@@ -60,19 +60,19 @@ msgstr "额外工具"
 #. module: base_setup
 #: field:base.setup.company,rml_footer1:0
 msgid "Report Footer 1"
-msgstr "报表脚注1"
+msgstr "报表页脚1"
 
 #. module: base_setup
 #: help:base.setup.installer,mrp:0
 msgid ""
 "Helps you manage your manufacturing processes and generate reports on those "
 "processes."
-msgstr ""
+msgstr "帮助您管理您的制造过程和生成这些过程的报表。"
 
 #. module: base_setup
 #: help:base.setup.installer,marketing:0
 msgid "Helps you manage your marketing campaigns step by step."
-msgstr "逐步帮助管理您的市场营销。"
+msgstr "逐步帮助您管理市场营销。"
 
 #. module: base_setup
 #: view:base.setup.config:0
@@ -113,13 +113,13 @@ msgstr "配置进度"
 #. module: base_setup
 #: field:base.setup.company,rml_footer2:0
 msgid "Report Footer 2"
-msgstr "报表脚注2"
+msgstr "报表页脚 2"
 
 #. module: base_setup
 #: field:base.setup.company,currency:0
 #: model:ir.model,name:base_setup.model_res_currency
 msgid "Currency"
-msgstr "货币"
+msgstr "外币"
 
 #. module: base_setup
 #: field:base.setup.company,state_id:0
@@ -175,12 +175,12 @@ msgstr "res_config_contents"
 msgid ""
 "Your company information will be used to personalize documents issued with "
 "OpenERP such as invoices, sales orders and much more."
-msgstr ""
+msgstr "你公司的信息会出现在OprnERP的各种个性化报表上，例如发票，销售订单，和其他"
 
 #. module: base_setup
 #: view:base.setup.installer:0
 msgid "title"
-msgstr "title"
+msgstr "标题"
 
 #. module: base_setup
 #: field:base.setup.installer,knowledge:0
@@ -206,16 +206,17 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"    这模块实现一个配置的系统帮助用户\n"
+"    这模块实现一个配置向导系统帮助用户\n"
 "在一个新数据库配置系统\n"
 "\n"
 "    它允许在配置列表中选择安装:\n"
-"   *最小配置\n"
+"    *最小配置\n"
 "    *只有会计\n"
+"    *服务公司\n"
 "    *制造公司\n"
 "\n"
-"    它还询问以帮助简单设置你的公司:\n"
-"                  报表头,注脚,所用的会计表和要安装的语言\n"
+"    它还通过界面对话框来帮助您轻松设置您的公司:\n"
+"    报页头，页脚,所用的会计表和要安装的语言\n"
 "    "
 
 #. module: base_setup
@@ -223,14 +224,14 @@ msgstr ""
 msgid ""
 "Installs a preselected set of OpenERP applications which will help you "
 "manage your industry."
-msgstr ""
+msgstr "安装这个OpenERP的预选模块来帮助你管理你的行业"
 
 #. module: base_setup
 #: help:base.setup.installer,project:0
 msgid ""
 "Helps you manage your projects and tasks by tracking them, generating "
 "plannings, etc..."
-msgstr ""
+msgstr "帮助你管理项目，跟踪任务，生成计划"
 
 #. module: base_setup
 #: field:base.setup.company,name:0
@@ -247,14 +248,14 @@ msgstr "跳过配置向导"
 msgid ""
 "Helps you manage your human resources by encoding your employees structure, "
 "generating work sheets, tracking attendance and more."
-msgstr ""
+msgstr "帮助你管理你员工的时间编码架构 生成工作时间表，考勤和跟踪等"
 
 #. module: base_setup
 #: help:base.setup.installer,account_voucher:0
 msgid ""
 "Allows you to create your invoices and track the payments. It is an easier "
 "version of the accounting module for managers who are not accountants."
-msgstr ""
+msgstr "允许你创建发票并跟踪付款,这是一个面向没有会计知识的管理人员的简化版会计模块,"
 
 #. module: base_setup
 #: code:addons/base_setup/__init__.py:50
@@ -264,6 +265,9 @@ msgid ""
 "\t\tLogin : %s \n"
 "\t\tPassword : %s"
 msgstr ""
+"    - %s :\n"
+"\t\t登陆名: %s \n"
+"\t\t密码: %s"
 
 #. module: base_setup
 #: help:base.setup.installer,purchase:0

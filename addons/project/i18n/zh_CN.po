@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-05-09 10:19+0000\n"
-"PO-Revision-Date: 2011-06-29 01:07+0000\n"
-"Last-Translator: mrshelly <Unknown>\n"
+"PO-Revision-Date: 2011-07-02 14:24+0000\n"
+"Last-Translator: Jeff Wang <wjfonhand@hotmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-06-30 05:20+0000\n"
+"X-Launchpad-Export-Date: 2011-07-03 05:28+0000\n"
 "X-Generator: Launchpad (build 13168)\n"
 
 #. module: project
@@ -24,7 +24,7 @@ msgstr "指派任务"
 #. module: project
 #: help:project.task.delegate,new_task_description:0
 msgid "Reinclude the description of the task in the task of the user"
-msgstr ""
+msgstr "包含当前任务的描述"
 
 #. module: project
 #: code:addons/project/project.py:671
@@ -38,7 +38,9 @@ msgid ""
 "This will set the unit of measure used in projects and tasks.\n"
 "If you use the timesheet linked to projects (project_timesheet module), "
 "don't forget to setup the right unit of measure in your employees."
-msgstr "这将设置项目和任务的计量单位如果你使用链接的时间表不要忘记设置你员工的计量单位"
+msgstr ""
+"此操作用于设置项目和任务的所采用的计量单位\n"
+"如果您安装了project_timesheet模块，工作时间表会与项目连接，请记得在员工设置中选择正确的计量单位。"
 
 #. module: project
 #: constraint:res.users:0
@@ -79,7 +81,7 @@ msgstr "问题跟踪程序"
 #. module: project
 #: field:project.installer,hr_timesheet_sheet:0
 msgid "Timesheets"
-msgstr "时间表"
+msgstr "工作时间表"
 
 #. module: project
 #: view:project.task:0
@@ -96,14 +98,14 @@ msgstr "确认小时数"
 #: view:report.project.task.user:0
 #: field:report.project.task.user,progress:0
 msgid "Progress"
-msgstr "进展"
+msgstr "进度"
 
 #. module: project
 #: help:project.task,remaining_hours:0
 msgid ""
 "Total remaining time, can be re-estimated periodically by the assignee of "
 "the task."
-msgstr "总剩余时间,任务接收者能重新估计"
+msgstr "总剩余时间，任务执行者可定期重估"
 
 #. module: project
 #: help:project.project,priority:0
@@ -143,7 +145,7 @@ msgstr "委派任务"
 #. module: project
 #: field:project.task,child_ids:0
 msgid "Delegated Tasks"
-msgstr "委派任务"
+msgstr "已委派任务"
 
 #. module: project
 #: help:project.project,warn_header:0
@@ -317,7 +319,7 @@ msgstr "如果项目允许，能够按实际工时生成发票"
 #: view:project.project:0
 msgid ""
 "Automatic variables for headers and footer. Use exactly the same notation."
-msgstr "页眉页脚的自动变量.使用同一个符号."
+msgstr ""
 
 #. module: project
 #: selection:project.task,state:0

@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2011-05-09 10:18+0000\n"
-"PO-Revision-Date: 2011-06-30 04:02+0000\n"
+"PO-Revision-Date: 2011-07-02 16:55+0000\n"
 "Last-Translator: Bulat Shafigullin <Unknown>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-07-01 05:30+0000\n"
+"X-Launchpad-Export-Date: 2011-07-03 05:28+0000\n"
 "X-Generator: Launchpad (build 13168)\n"
 
 #. module: caldav
@@ -508,7 +508,7 @@ msgstr ""
 #: model:ir.ui.menu,name:caldav.menu_calendar
 #: field:user.preference,calendar:0
 msgid "Calendar"
-msgstr ""
+msgstr "Календарь"
 
 #. module: caldav
 #: code:addons/caldav/calendar.py:41
@@ -618,6 +618,32 @@ msgid ""
 "    \n"
 "    "
 msgstr ""
+"\n"
+"Требование\n"
+"----------\n"
+"Встроенного средства синхронизации календаря с Caldav не существует.\n"
+"Следовательно вам нужно установить стороннее ПО: Календар (CalDav) \n"
+"пока это единственный вариант\n"
+"\n"
+"настройка\n"
+"----------\n"
+"\n"
+"1. Откройте Синхронизация календаря\n"
+"   Появится окно с двумя вкладками\n"
+"   Мы будем работать с первой\n"
+"   \n"
+"2. URL календаря CalDAV: вставьте показанный выше URL (т.е. : "
+"http://host.com:8069/webdav/db/calendars/users/demo/c/Meetings)\n"
+"\n"
+"3. Наберите свой логин и пароль\n"
+"\n"
+"4. Если ваш сервер не использует SSL, вы получите предупреждение, Нажмите "
+"\"Да\"\n"
+"\n"
+"5. Затем вы можете синхронизировать вручную или настроить на синхронизацию "
+"каждые х минут.\n"
+"    \n"
+"    "
 
 #. module: caldav
 #: code:addons/caldav/wizard/caldav_browse.py:53
@@ -680,6 +706,62 @@ msgid ""
 "      now trusts it.   \n"
 "    "
 msgstr ""
+"\n"
+"    Для настроек спецефичных для SSL смотрите документацию ниже\n"
+"\n"
+"Для настройки календарей вам нужно сделать следующее:\n"
+"\n"
+"1. Нажмите \"Настройки\", затем выберите \"Почта, Контакты, Календари\".\n"
+"2. Выберите \"Добавить аккаунт...\"\n"
+"3. Нажмите на  \"Другой\"\n"
+"4. Из группы \"Календари\" выберите \"Добавить аккаунт CalDAV\"\n"
+"\n"
+"5. Введите имя хоста\n"
+"   (т.е. если url выглядит как "
+"http://openerp.com:8069/webdav/db_1/calendars/ , то openerp.com будет "
+"хостом)\n"
+"\n"
+"6. Заполните имя пользователя и пароль, так же как и у вашего аккаунта в "
+"openerp.\n"
+"\n"
+"7. Вы можете добавить описание или название сервера или напр. \"Календари "
+"OpenERP\".\n"
+"\n"
+"9. Если вы не пользуетесь SSL сервером, вы получите ошибку, не беспокойтесь "
+"о ней, нажмите \"Продолжить\"\n"
+"\n"
+"10. Затем нажмите на \"Расширенные настройки\" для установки порта и пути.\n"
+"    \n"
+"11. Настройте порт OpenERP сервера: 8071 для SSL, 8069 для обычного.\n"
+"\n"
+"12. Введите \"URL аккаунта\" справа в OpenERP webdav:\n"
+"    url заданный мастером (т.е. : "
+"http://my.server.ip:8069/webdav/dbname/calendars/ )\n"
+"\n"
+"11. Нажмите на Выполнено. Телефон подключится к серверу OpenERP и проверит "
+"возможность использования аккаунта.\n"
+"\n"
+"12. Откройте главное меню iPhone и запустите приложение Календарь.\n"
+"    Ваши календари из OpenERP будут видны после выбора \n"
+"    кнопки \"Календари\".\n"
+"    Заметьте, что при создании новой записи в календари вам нужно будет "
+"выбирать\n"
+"    в каком календаре ее хранить.\n"
+"\n"
+"\n"
+"\n"
+"Если вы желаете использовать SSL (и ваш сертификат как обычно не проверен),\n"
+"тогда вам нужно будет сообщить iPhone доверять ему. Следуйте данным \n"
+"шагам:\n"
+"\n"
+"    шаг1. Откройте Safari и введите https путь к серверу OpenERP:\n"
+"      https://my.server.ip:8071/\n"
+"      (предполагается, что адрес \"my.server.ip\" и стандартный порт HTTPS\n"
+"      8071)\n"
+"    s2. Safari попытается подключится и выведет сообщение об использовании \n"
+"      сертификата. Нажмите \"Принять\" и iPhone\n"
+"      будет ему доверять.   \n"
+"    "
 
 #. module: caldav
 #: sql_constraint:document.directory:0
@@ -689,13 +771,13 @@ msgstr ""
 #. module: caldav
 #: view:user.preference:0
 msgid "User Preference"
-msgstr ""
+msgstr "Настройки пользователя"
 
 #. module: caldav
 #: code:addons/caldav/wizard/calendar_event_subscribe.py:59
 #, python-format
 msgid "Please provide Proper URL !"
-msgstr ""
+msgstr "Введите верный URL!"
 
 #. module: caldav
 #: model:ir.model,name:caldav.model_basic_calendar_timezone
@@ -721,7 +803,7 @@ msgstr "basic.calendar.alias"
 #: view:calendar.event.import:0
 #: field:calendar.event.import,file_path:0
 msgid "Select ICS file"
-msgstr ""
+msgstr "Выберит ICS файл"
 
 #. module: caldav
 #: selection:user.preference,device:0
@@ -751,7 +833,7 @@ msgstr ""
 #. module: caldav
 #: field:user.preference,device:0
 msgid "Software/Devices"
-msgstr ""
+msgstr "Программы/Устройства"
 
 #. module: caldav
 #: help:basic.calendar,has_webcal:0
@@ -787,7 +869,7 @@ msgstr ""
 #: code:addons/caldav/wizard/calendar_event_import.py:86
 #, python-format
 msgid "Import Sucessful"
-msgstr ""
+msgstr "Импортировано успешно"
 
 #. module: caldav
 #: view:calendar.event.import:0
@@ -803,22 +885,22 @@ msgstr ""
 #. module: caldav
 #: model:ir.model,name:caldav.model_calendar_event_import
 msgid "Event Import"
-msgstr ""
+msgstr "Импорт события"
 
 #. module: caldav
 #: selection:basic.calendar.fields,fn:0
 msgid "Interval in hours"
-msgstr ""
+msgstr "Интервал в часах"
 
 #. module: caldav
 #: view:calendar.event.subscribe:0
 msgid "Subscribe to Remote Calendar"
-msgstr ""
+msgstr "Подписаться на удаленный календарь"
 
 #. module: caldav
 #: help:basic.calendar,calendar_color:0
 msgid "For supporting clients, the color of the calendar entries"
-msgstr ""
+msgstr "Для поддерживающих клиентов: цвет записи в календаре"
 
 #. module: caldav
 #: field:basic.calendar,name:0
@@ -842,28 +924,28 @@ msgstr "basic.calendar.alarm"
 #: code:addons/caldav/calendar.py:1291
 #, python-format
 msgid "Attendee must have an Email Id"
-msgstr ""
+msgstr "Участник должен иметь Email"
 
 #. module: caldav
 #: model:ir.actions.act_window,name:caldav.action_calendar_event_export_values
 msgid "Export .ics File"
-msgstr ""
+msgstr "Экспортировать .ics файл"
 
 #. module: caldav
 #: code:addons/caldav/calendar.py:41
 #, python-format
 msgid "vobject Import Error!"
-msgstr ""
+msgstr "Ошибка импорта vobject!"
 
 #. module: caldav
 #: field:calendar.event.export,file_path:0
 msgid "Save ICS file"
-msgstr ""
+msgstr "Сохранить ICS файл"
 
 #. module: caldav
 #: selection:user.preference,device:0
 msgid "Sunbird/Thunderbird"
-msgstr ""
+msgstr "Sunbird/Thunderbird"
 
 #. module: caldav
 #: field:basic.calendar,calendar_order:0
@@ -873,7 +955,7 @@ msgstr ""
 #. module: caldav
 #: selection:basic.calendar.fields,fn:0
 msgid "Datetime In UTC"
-msgstr ""
+msgstr "Дата и время в UTC"
 
 #. module: caldav
 #: field:basic.calendar,calendar_color:0
@@ -888,12 +970,12 @@ msgstr ""
 #. module: caldav
 #: model:ir.model,name:caldav.model_basic_calendar_fields
 msgid "Calendar fields"
-msgstr ""
+msgstr "Поля календаря"
 
 #. module: caldav
 #: view:calendar.event.import:0
 msgid "Import Message"
-msgstr ""
+msgstr "Импортировать сообщение"
 
 #. module: caldav
 #: model:ir.actions.act_window,name:caldav.action_calendar_event_subscribe
@@ -904,7 +986,7 @@ msgstr ""
 #. module: caldav
 #: sql_constraint:document.directory:0
 msgid "Directory must have a parent or a storage"
-msgstr ""
+msgstr "Каталог должен иметь родителя или хранилище"
 
 #. module: caldav
 #: model:ir.model,name:caldav.model_basic_calendar_todo
