@@ -169,17 +169,21 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
             console.log("Onchange triggered for field '%s' -> %s", widget.name, onchange);
             if (call) {
                 var method = call[1], args = [];
+                var context_index = null;
                 var argument_replacement = {
-                    'False' : false,
-                    'True' : true,
-                    'None' : null,
-                    'context': widget.build_context ? widget.build_context() : {}
+                    'False' : function() {return false;},
+                    'True' : function() {return true;},
+                    'None' : function() {return null;},
+                    'context': function(i) {
+                        context_index = i;
+                        return widget.build_context ? widget.build_context() : {};
+                    }
                 }
                 var parent_fields = null;
-                _.each(call[2].split(','), function(a) {
+                _.each(call[2].split(','), function(a, i) {
                     var field = _.trim(a);
                     if (field in argument_replacement) {
-                        args.push(argument_replacement[field]);
+                        args.push(argument_replacement[field](i));
                         return;
                     } else if (self.fields[field]) {
                         var value = self.fields[field].get_on_change_value();
@@ -208,7 +212,8 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
                 return this.rpc(ajax, {
                     model: this.dataset.model,
                     method: method,
-                    args: [(this.datarecord.id == null ? [] : [this.datarecord.id])].concat(args)
+                    args: [(this.datarecord.id == null ? [] : [this.datarecord.id])].concat(args),
+                    context_id: context_index + 1
                 }, function(response) {
                     self.on_processed_onchange(response, processed);
                 });
