@@ -73,7 +73,7 @@ class account_statement_from_invoice_lines(osv.osv_memory):
             elif (line.invoice and line.invoice.currency_id.id <> statement.currency.id):
                 amount = currency_obj.compute(cr, uid, line.invoice.currency_id.id,
                     statement.currency.id, amount, context=ctx)
-
+           
             context.update({'move_line_ids': [line.id]})
             result = voucher_obj.onchange_partner_id(cr, uid, [], partner_id=line.partner_id.id, journal_id=statement.journal_id.id, price=abs(amount), currency_id= statement.currency.id, ttype=(amount < 0 and 'payment' or 'receipt'), date=time.strftime('%Y-%m-%d'), context=context)
             voucher_res = { 'type':(amount < 0 and 'payment' or 'receipt'),
@@ -98,6 +98,10 @@ class account_statement_from_invoice_lines(osv.osv_memory):
             if voucher_line_dict:
                 voucher_line_dict.update({'voucher_id': voucher_id})
                 voucher_line_obj.create(cr, uid, voucher_line_dict, context=context)
+
+            amount_res = voucher_line_dict.get('amount_unreconciled',amount)
+            voucher_obj.write(cr, uid, voucher_id, {'amount':amount_res}, context=context)
+
             if line.journal_id.type == 'sale':
                 type = 'customer'
             elif line.journal_id.type == 'purchase':
@@ -106,7 +110,7 @@ class account_statement_from_invoice_lines(osv.osv_memory):
                 type = 'general'
             statement_line_obj.create(cr, uid, {
                 'name': line.name or '?',
-                'amount': amount,
+                'amount': amount_res,
                 'type': type,
                 'partner_id': line.partner_id.id,
                 'account_id': line.account_id.id,
