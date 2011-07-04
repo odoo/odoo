@@ -1149,7 +1149,7 @@ openerp.base.WebClient = openerp.base.Controller.extend({
         // if using saved actions, load the action and give it to action manager
         var parameters = jQuery.deparam(jQuery.param.querystring());
         if (parameters["s_action"] != undefined) {
-            var key = parseInt(parameters["s_action"]);
+            var key = parseInt(parameters["s_action"], 10);
             var self = this;
             this.rpc("/base/session/get_session_action", {key:key}, function(action) {
                 self.action_manager.do_action(action);
