@@ -931,7 +931,7 @@ class import_sugarcrm(osv.osv):
         'password': fields.char('Password', size=24,required=True),
          'url' : fields.char('SugarSoap Api url:', size=264, required=True, help="Webservice's url where to get the data.\
                       example : 'http://example.com/sugarcrm/soap.php', or copy the address of your sugarcrm application http://trial.sugarcrm.com/qbquyj4802/index.php?module=Home&action=index"),
-        'opportunity': fields.boolean('Leads and Opportunities', help="If Opportunities are checked, SugarCRM opportunities data imported in OpenERP crm-Opportunity form"),
+        'opportunity': fields.boolean('Leads & Opp', help="IfLeads & Opp are checked, SugarCRM leads and opportunities data are imported in OpenERP crm-Opportunity form"),
         'contact': fields.boolean('Contacts', help="If Contacts are checked, SugarCRM Contacts data imported in OpenERP partner address form"),
         'account': fields.boolean('Accounts', help="If Accounts are checked, SugarCRM  Accounts data imported in OpenERP partners form"),
         'employee': fields.boolean('Employee', help="If Employees is checked, SugarCRM Employees data imported in OpenERP employees form"),
