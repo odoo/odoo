@@ -20,7 +20,7 @@
                     <field name="method_time"/>
                     <field name="method_delay" attrs="{'invisible':[('method_time','=','end')]}"/>
                     <field name="method_period"/>
-                    <field name="method_end" attrs="{'required': [('method_time','=','end')], 'invisible':[('method_time','=','delay')]}"/> 
+                    <field name="method_end" attrs="{'required': [('method_time','=','end')], 'invisible':[('method_time','=','delay')]}"/>
                 </group>
                 <group colspan="2" col="2">
                     <separator string="Depreciation Method" colspan="2" />
@@ -47,11 +47,26 @@
         <field name="arch" type="xml">
             <tree string="Asset category">
                 <field name="name"/>
+                <field name="method_time"/>
+                <field name="method_delay"/>
+                <field name="method"/>
                 <field name="journal_id"/>
                 <field name="account_asset_id"/>
-                <field name="account_depreciation_id"/>
+                <field name="account_expense_depreciation_id"/>
                 <field name="company_id" groups="base.group_multi_company"/>
             </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_account_asset_category_search">
+        <field name="name">account.asset.category.search</field>
+        <field name="model">account.asset.category</field>
+        <field name="type">search</field>
+        <field name="arch" type="xml">
+            <search string="Search Asset Category">
+                <field name="name"/>
+                <field name="journal_id"/>
+            </search>
         </field>
     </record>
 
@@ -74,21 +89,24 @@
               <notebook colspan="4">
                  <page string="Depreciation">
                     <separator string="Other Information" colspan="4"/>
+                    <field name="parent_id"/>
                     <field name="partner_id"/>
                     <field name="purchase_date"/>
+                    <newline/>
                     <group colspan="2" col="2">
                         <separator string="Depreciation Dates" colspan="2" />
-                        <button 
-                             name="%(wizard_asset_modify)d" 
-                             states="open" 
-                             string="Change duration" 
-                             type="action" 
-                             colspan="2"/>
-                        <newline/>
                         <field name="method_time" on_change="onchange_method_time(method_time)"/>
                         <field name="method_delay" attrs="{'invisible':[('method_time','=','end')]}"/>
                         <field name="method_period"/>
-                        <field name="method_end" attrs="{'required': [('method_time','=','end')], 'invisible':[('method_time','=','delay')]}"/> 
+                        <field name="method_end" attrs="{'required': [('method_time','=','end')], 'invisible':[('method_time','=','delay')]}"/>
+                        <newline/>
+                        <button 
+                             name="%(action_asset_modify)d" 
+                             states="open" 
+                             string="Change Duration" 
+                             type="action"
+                             icon="terp-stock_effects-object-colorize" 
+                             colspan="2"/> 
                     </group>
                     <group colspan="2" col="2">
                         <separator string="Depreciation Method" colspan="2" />
@@ -97,6 +115,12 @@
                         <field name="prorata" attrs="{'invisible': ['|',('method_time','=','end'),('method','!=','linear')]}"/>
                     </group>
                     <newline/>
+                    <separator string="" colspan="4" />
+                    <field name="state" readonly="1" colspan="2"/>
+                    <group colspan="2" col="2">
+                       <button name="validate" states="draft" string="Confirm Asset" type="object" icon="terp-camera_test"/>
+                       <button name="set_to_close" states="open" string="Set to Close" type="object" icon="gtk-close"/>
+                    </group>
                  </page>
                  <page string="Depreciation board">
                     <field name="depreciation_line_ids" colspan="4" nolabel="1" mode="tree,graph" >
@@ -115,7 +139,7 @@
                           <field name="depreciated_value"/>
                        </graph>
                     </field>
-                    <button type="object" name="compute_depreciation_board" string="Compute" icon="terp-stock_format-scientific" colspan="2"/>
+                    <button type="object" name="compute_depreciation_board" string="Compute" icon="terp-stock_format-scientific" colspan="2" attrs="{'invisible':[('state','=','close')]}"/>
                  </page>
                  <page string="History">
                     <field name="account_move_line_ids" colspan="4" nolabel="1" readonly="1"/>
@@ -125,10 +149,6 @@
                     <field name="note" nolabel="1"/>
                  </page>
               </notebook>
-              <field name="state" readonly="1"/>
-              <group colspan="2" col="2">
-                 <button name="validate" states="draft" string="Confirm asset" type="object"/>
-              </group>
            </form>
        </field>
     </record>
@@ -139,14 +159,20 @@
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Asset history">
+              <group col="6" colspan="4">
                 <field name="name" select="1"/>
                 <field name="date" select="1"/>
                 <field name="user_id" select="1"/>
-                <field name="method_delay" select="2"/>
+              </group>
+              <group col="2" colspan="2">
+                <separator string="Depreciation Dates" colspan="2" />
+                <field name="method_time"/>
+                <field name="method_delay" attrs="{'invisible':[('method_time','=','end')]}"/>
                 <field name="method_period"/>
-                <field name="method_end"/>
-                <separator string="Notes" colspan="4"/>
-                <field name="note" colspan="4" nolabel="1"/>
+                <field name="method_end" attrs="{'invisible':[('method_time','=','delay')]}"/>
+              </group>
+              <separator string="Notes" colspan="4"/>
+              <field name="note" colspan="4" nolabel="1"/>
             </form>
         </field>
     </record>
@@ -176,11 +202,54 @@
         <field name="arch" type="xml">
             <tree string="Assets">
                 <field name="name"/>
-                <field name="code"/>
+                <field name="category_id"/>
                 <field name="purchase_date"/>
+                <field name="partner_id"/>
+                <field name="purchase_value"/>
+                <field name="value_residual"/>
+                <field name="currency_id"/>
                 <field name="company_id" groups="base.group_multi_company"/>
                 <field name="state"/>
             </tree>
+        </field>
+    </record>
+    
+    <record model="ir.ui.view" id="view_account_asset_asset_hierarchy_tree">
+        <field name="name">account.asset.asset.hierarchy</field>
+        <field name="model">account.asset.asset</field>
+        <field name="type">tree</field>
+        <field name="field_parent">child_ids</field>
+        <field name="arch" type="xml">
+            <tree string="Assets">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="category_id"/>
+                <field name="purchase_date"/>
+                <field name="purchase_value"/>
+                <field name="value_residual"/>
+                <field name="currency_id"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_account_asset_search" model="ir.ui.view">
+        <field name="name">account.asset.asset.search</field>
+        <field name="model">account.asset.asset</field>
+        <field name="type">search</field>
+        <field name="arch" type="xml">
+            <search string="Account Asset Analysis">
+                <group col="10" colspan="12">
+                    <filter icon="terp-document-new" string="Draft" domain="[('state','=', 'draft')]" help="Assets in Draft State"/>
+                    <filter icon="terp-camera_test" string="Running" domain="[('state','=', 'open')]" help="Assets in Running State"/>
+                    <separator orientation="vertical"/>
+                    <field name="name"/>
+                    <field name="category_id"/>
+                    <field name="purchase_date"/>
+                    <field name="partner_id"/>
+                </group>
+            </search>
         </field>
     </record>
 
@@ -189,7 +258,7 @@
         <field name="res_model">account.asset.asset</field>
         <field name="view_type">tree</field>
         <field name="domain">[('parent_id','=',False)]</field>
-        <field name="view_id" ref="view_account_asset_asset_tree"/>
+        <field name="view_id" ref="view_account_asset_asset_hierarchy_tree"/>
     </record>
 
     <menuitem id="menu_finance_assets" name="Assets" parent="account.menu_finance"/>
@@ -201,6 +270,8 @@
         <field name="name">Assets</field>
         <field name="res_model">account.asset.asset</field>
         <field name="view_type">form</field>
+        <field name="view_id" ref="view_account_asset_asset_tree"/>
+        <field name="search_view_id" ref="view_account_asset_search"/>
     </record>
 
     <menuitem

@@ -1,4 +1,4 @@
-# -*- encoding: utf-8 -*-
+	# -*- encoding: utf-8 -*-
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
@@ -40,7 +40,7 @@ class account_asset_category(osv.osv):
         'journal_id': fields.many2one('account.journal', 'Journal', required=True),
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'method': fields.selection([('linear','Linear'),('progressif','Progressive')], 'Computation method', required=True),
-        'method_delay': fields.integer('Number of Depreciation'),
+        'method_delay': fields.integer('Number of Depreciations'),
         'method_period': fields.integer('Period Length', help="State here the time between 2 depreciations, in months"),
         'method_progress_factor': fields.float('Progressif Factor'),
         'method_time': fields.selection([('delay','Delay'),('end','Ending Period')], 'Time Method', required=True),
@@ -107,8 +107,33 @@ class account_asset_asset(osv.osv):
             GROUP BY a.id, a.purchase_date """, (tuple(ids),))
         return dict(cr.fetchall())
 
-    def calculate_date(self, date, period):
-        return datetime(date.year, date.month, date.day) + relativedelta(months=+period)
+    def _compute_board_amount(self, cr, uid, asset, i, residual_amount, amount_to_depr, undone_dotation_number, posted_depreciation_line_ids, total_days, depreciation_date, context=None):
+        #by default amount = 0
+        amount = 0
+        if i == undone_dotation_number:
+            amount = residual_amount
+        else:
+            if asset.method == 'linear':
+                amount = amount_to_depr / (undone_dotation_number - len(posted_depreciation_line_ids))
+                if asset.prorata:
+                    amount = amount_to_depr / asset.method_delay
+                    days = total_days - float(depreciation_date.strftime('%j'))
+                    if i == 1:
+                        amount = (amount_to_depr / asset.method_delay) / total_days * days
+                    elif i == undone_dotation_number:
+                        amount = (amount_to_depr / asset.method_delay) / total_days * (total_days - days)
+            elif asset.method == 'degressive':
+                amount = residual_amount * asset.method_progress_factor
+        return amount
+
+    def _compute_board_undone_dotation_nb(self, cr, uid, asset, depreciation_date, total_days, context=None):
+        undone_dotation_number = asset.method_delay
+        if asset.method_time == 'end':
+            end_date = datetime.strptime(asset.method_end, '%Y-%m-%d')
+            undone_dotation_number = (end_date - depreciation_date).days / total_days
+        if asset.prorata or asset.method_time == 'end':
+            undone_dotation_number += 1
+        return undone_dotation_number
 
     def compute_depreciation_board(self, cr, uid,ids, context=None):
         depreciation_lin_obj = self.pool.get('account.asset.depreciation.line')
@@ -123,36 +148,15 @@ class account_asset_asset(osv.osv):
             amount_to_depr = residual_amount = asset.value_residual
 
             depreciation_date = datetime.strptime(self._get_last_depreciation_date(cr, uid, [asset.id], context)[asset.id], '%Y-%m-%d')
-            total_days = (depreciation_date.year % 4) and 365 or 366
-            undone_dotation_number = asset.method_delay
-            # Considering Depr. Period as months
-            time_period = asset.method_period
-            if asset.method_time == 'end':
-                end_date = datetime.strptime(asset.method_end, '%Y-%m-%d')
-                if time_period != 12:
-                    total_days = time_period * 30
-                undone_dotation_number = (end_date - depreciation_date).days / total_days
-            if asset.prorata or asset.method_time == 'end':
-                undone_dotation_number += 1
-            if posted_depreciation_line_ids:
-                add_months = time_period * len(posted_depreciation_line_ids)
-                depreciation_date = self.calculate_date(depreciation_date, add_months)
+            day = depreciation_date.day
+            month = depreciation_date.month
+            year = depreciation_date.year
+            total_days = (year % 4) and 365 or 366
+
+            undone_dotation_number = self._compute_board_undone_dotation_nb(cr, uid, asset, depreciation_date, total_days, context=context)
             for x in range(len(posted_depreciation_line_ids), undone_dotation_number):
                 i = x + 1
-                if i == undone_dotation_number:
-                    amount = residual_amount
-                else:
-                    if asset.method == 'linear':
-                        amount = amount_to_depr / (undone_dotation_number - len(posted_depreciation_line_ids))
-                        if asset.prorata:
-                            amount = amount_to_depr / asset.method_delay
-                            if i == 1:
-                                days = total_days - float(depreciation_date.strftime('%j'))
-                                amount = (amount_to_depr / asset.method_delay) / total_days * days
-                            elif i == undone_dotation_number:
-                                amount = (amount_to_depr / asset.method_delay) / total_days * (total_days - days)
-                    else:
-                        amount = residual_amount * asset.method_progress_factor
+                amount = self._compute_board_amount(cr, uid, asset, i, residual_amount, amount_to_depr, undone_dotation_number, posted_depreciation_line_ids, total_days, depreciation_date, context=context)
                 residual_amount -= amount
                 vals = {
                      'amount': amount,
@@ -164,13 +168,20 @@ class account_asset_asset(osv.osv):
                      'depreciation_date': depreciation_date.strftime('%Y-%m-%d'),
                 }
                 depreciation_lin_obj.create(cr, uid, vals, context=context)
-                depreciation_date = self.calculate_date(depreciation_date, time_period)
+                # Considering Depr. Period as months
+                depreciation_date = (datetime(year, month, day) + relativedelta(months=+asset.method_period))
+                day = depreciation_date.day
+                month = depreciation_date.month
+                year = depreciation_date.year
         return True
 
     def validate(self, cr, uid, ids, context={}):
         return self.write(cr, uid, ids, {
             'state':'open'
         }, context)
+
+    def set_to_close(self, cr, uid, ids, context=None):
+        return self.write(cr, uid, ids, {'state': 'close'}, context=context)
 
     def _amount_residual(self, cr, uid, ids, name, args, context=None):
         cr.execute("""SELECT
@@ -189,33 +200,32 @@ class account_asset_asset(osv.osv):
     _columns = {
         'period_id': fields.many2one('account.period', 'First Period', required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'account_move_line_ids': fields.one2many('account.move.line', 'asset_id', 'Entries', readonly=True, states={'draft':[('readonly',False)]}),
-
-        'name': fields.char('Asset', size=64, required=True, select=1),
-        'code': fields.char('Reference ', size=16, select=1),
-        'purchase_value': fields.float('Gross value ', required=True, size=16, select=1),
-        'currency_id': fields.many2one('res.currency','Currency',required=True,size=5,select=1),
-        'company_id': fields.many2one('res.company', 'Company', required=True),
+        'name': fields.char('Asset', size=64, required=True, select=1, readonly=False, states={'close':[('readonly',True)]}),
+        'code': fields.char('Reference ', size=16, select=1, readonly=False, states={'close':[('readonly',True)]}),
+        'purchase_value': fields.float('Gross value ', required=True, readonly=False, states={'close':[('readonly',True)]}),
+        'currency_id': fields.many2one('res.currency','Currency',required=True, readonly=False, states={'close':[('readonly',True)]}),
+        'company_id': fields.many2one('res.company', 'Company', required=True, readonly=False, states={'close':[('readonly',True)]}),
         'note': fields.text('Note'),
-        'category_id': fields.many2one('account.asset.category', 'Asset category',required=True, change_default=True),
+        'category_id': fields.many2one('account.asset.category', 'Asset category',required=True, change_default=True, readonly=False, states={'close':[('readonly',True)]}),
         'localisation': fields.char('Localisation', size=32, select=2),
         'parent_id': fields.many2one('account.asset.asset', 'Parent Asset'),
         'child_ids': fields.one2many('account.asset.asset', 'parent_id', 'Children Assets'),
-        'purchase_date': fields.date('Purchase Date', required=True),
+        'purchase_date': fields.date('Purchase Date', required=True, readonly=False, states={'close':[('readonly',True)]}),
         'state': fields.selection([('draft','Draft'),('open','Running'),('close','Close')], 'State', required=True),
         'active': fields.boolean('Active', select=2),
-        'partner_id': fields.many2one('res.partner', 'Partner'),
-        'method': fields.selection([('linear','Linear'),('progressif','Progressive')], 'Computation Method', required=True, readonly=True, states={'draft':[('readonly',False)]}, help="Linear: Calculated on basis of Gross Value/During (interval) \
-         \nProgressive: Calculated on basis of Gross Value * Progressif Factor"),
-        'method_delay': fields.integer('Number of Depreciation', readonly=True, states={'draft':[('readonly',False)]}, help="Calculates Depreciation within specified interval"),
+        'partner_id': fields.many2one('res.partner', 'Partner', readonly=False, states={'close':[('readonly',True)]}),
+        'method': fields.selection([('linear','Linear'),('degressive','Degressive')], 'Computation Method', required=True, readonly=True, states={'draft':[('readonly',False)]}, help="Linear: Calculated on basis of Gross Value/During (interval) \
+         \nDegressive: Calculated on basis of Gross Value * Degressive Factor"),
+        'method_delay': fields.integer('Number of Depreciations', readonly=True, states={'draft':[('readonly',False)]}, help="Calculates Depreciation within specified interval"),
         'method_period': fields.integer('Period Length', readonly=True, states={'draft':[('readonly',False)]}, help="State here the time during 2 depreciations, in months"),
-        'method_end': fields.date('Ending date', readonly=True, states={'draft':[('readonly',False)]}),
+        'method_end': fields.date('Ending Date', readonly=True, states={'draft':[('readonly',False)]}),
         'method_progress_factor': fields.float('Progressif Factor', readonly=True, states={'draft':[('readonly',False)]}),
         'value_residual': fields.function(_amount_residual, method=True, digits_compute=dp.get_precision('Account'), string='Residual Value'),
         'method_time': fields.selection([('delay','Delay'),('end','Ending Period')], 'Time Method', required=True, readonly=True, states={'draft':[('readonly',False)]}, help="Delay: Allow users to enter number of periods to generate depreciation lines \n Ending Period: Calculates depreciation lines on the basis of Ending Period Date and Number of Depreciation"),
-        'prorata':fields.boolean('Prorata Temporis', Readonly="True", help='Indicates that the accounting entries for this asset have to be done from the purchase date instead of the first January'),
+        'prorata':fields.boolean('Prorata Temporis', readonly=True, states={'draft':[('readonly',False)]}, help='Indicates that the accounting entries for this asset have to be done from the purchase date instead of the first January'),
         'history_ids': fields.one2many('account.asset.history', 'asset_id', 'History', readonly=True),
-        'depreciation_line_ids': fields.one2many('account.asset.depreciation.line', 'asset_id', 'Depreciation Lines'),
-        'salvage_value': fields.float('Salvage Value', digits_compute=dp.get_precision('Account'), help="It is the amount you plan to have that you cannot depreciate."),
+        'depreciation_line_ids': fields.one2many('account.asset.depreciation.line', 'asset_id', 'Depreciation Lines', readonly=True, states={'draft':[('readonly',False)]}),
+        'salvage_value': fields.float('Salvage Value', digits_compute=dp.get_precision('Account'), help="It is the amount you plan to have that you cannot depreciate.", readonly=False, states={'close':[('readonly',True)]}),
     }
     _defaults = {
         'code': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'account.asset.code'),
@@ -231,6 +241,9 @@ class account_asset_asset(osv.osv):
         'currency_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.currency_id.id,
         'company_id': lambda self, cr, uid, context: self.pool.get('res.company')._company_default_get(cr, uid, 'account.asset.asset',context=context),
     }
+    
+    def _check_recursion(self, cr, uid, ids, context=None, parent=None):
+        return super(account_asset_asset, self)._check_recursion(cr, uid, ids, context=context, parent=parent)
 
     def _check_prorata(self, cr, uid, ids, context=None):
         for asset in self.browse(cr, uid, ids, context=context):
@@ -239,6 +252,7 @@ class account_asset_asset(osv.osv):
         return True
 
     _constraints = [
+        (_check_recursion, 'Error ! You can not create recursive assets.', ['parent_id']),
         (_check_prorata, '\nProrata temporis can be applied only for computation method linear and time method delay.', ['prorata']),
     ]
 
@@ -353,6 +367,12 @@ class account_asset_asset(osv.osv):
                 if period and (period.date_start<=date_start):
                     result += self._compute_move(cr, uid, property, period, context)
         return result
+
+    def create(self, cr, uid, vals, context=None):
+        asset_id = super(account_asset_asset, self).create(cr, uid, vals, context=context)
+        self.compute_depreciation_board(cr, uid, [asset_id], context=context)
+        return asset_id
+
 account_asset_asset()
 
 class account_asset_depreciation_line(osv.osv):
@@ -377,7 +397,8 @@ class account_asset_depreciation_line(osv.osv):
         'move_check': fields.function(_get_move_check, method=True, type='boolean', string='Posted', store=True)
     }
 
-    def create_move(self, cr, uid,ids, context=None):
+    def create_move(self, cr, uid, ids, context=None):
+        can_close = False
         if context is None:
             context = {}
         asset_obj = self.pool.get('account.asset.asset')
@@ -386,6 +407,8 @@ class account_asset_depreciation_line(osv.osv):
         move_line_obj = self.pool.get('account.move.line')
         currency_obj = self.pool.get('res.currency')
         for line in self.browse(cr, uid, ids, context=context):
+            if currency_obj.is_zero(cr, uid, line.asset_id.currency_id, line.remaining_value):
+                can_close = True
             depreciation_date = line.asset_id.prorata and line.asset_id.purchase_date or time.strftime('%Y-%m-%d')
             period_ids = period_obj.find(cr, uid, depreciation_date, context=context)
             company_currency = line.asset_id.company_id.currency_id.id
@@ -401,30 +424,34 @@ class account_asset_depreciation_line(osv.osv):
                 'journal_id': line.asset_id.category_id.journal_id.id,
                 }
             move_id = move_obj.create(cr, uid, move_vals, context=context)
+            asset_name = line.asset_id.name
+            reference = line.name
+            journal_id = line.asset_id.category_id.journal_id.id
+            partner_id = line.asset_id.partner_id.id
             move_line_obj.create(cr, uid, {
-                'name': line.name,
-                'ref': line.name,
+                'name': asset_name,
+                'ref': reference,
                 'move_id': move_id,
                 'account_id': line.asset_id.category_id.account_depreciation_id.id,
                 'debit': 0.0,
                 'credit': amount,
                 'period_id': period_ids and period_ids[0] or False,
-                'journal_id': line.asset_id.category_id.journal_id.id,
-                'partner_id': line.asset_id.partner_id.id,
+                'journal_id': journal_id,
+                'partner_id': partner_id,
                 'currency_id': company_currency <> current_currency and  current_currency or False,
                 'amount_currency': company_currency <> current_currency and - sign * line.amount or 0.0,
                 'date': depreciation_date,
             })
             move_line_obj.create(cr, uid, {
-                'name': line.name,
-                'ref': line.name,
+                'name': asset_name,
+                'ref': reference,
                 'move_id': move_id,
                 'account_id': line.asset_id.category_id.account_expense_depreciation_id.id,
                 'credit': 0.0,
                 'debit': amount,
                 'period_id': period_ids and period_ids[0] or False,
-                'journal_id': line.asset_id.category_id.journal_id.id,
-                'partner_id': line.asset_id.partner_id.id,
+                'journal_id': journal_id,
+                'partner_id': partner_id,
                 'currency_id': company_currency <> current_currency and  current_currency or False,
                 'amount_currency': company_currency <> current_currency and sign * line.amount or 0.0,
                 'analytic_account_id': line.asset_id.category_id.account_analytic_id.id,
@@ -432,6 +459,8 @@ class account_asset_depreciation_line(osv.osv):
                 'asset_id': line.asset_id.id
             })
             self.write(cr, uid, line.id, {'move_id': move_id}, context=context)
+        if can_close:
+            asset_obj.write(cr, uid, [line.asset_id.id], {'state': 'close'}, context=context)                
         return True
 
 account_asset_depreciation_line()
@@ -522,15 +551,18 @@ class account_asset_history(osv.osv):
         'user_id': fields.many2one('res.users', 'User', required=True),
         'date': fields.date('Date', required=True),
         'asset_id': fields.many2one('account.asset.asset', 'Asset', required=True),
-        'method_delay': fields.integer('Number of interval'),
-        'method_period': fields.integer('Period per interval'),
+        'method_time': fields.selection([('delay','Delay'),('end','Ending Period')], 'Time Method', required=True, help="Delay: Allow users to enter number of periods to generate depreciation lines \n Ending Period: Calculates depreciation lines on the basis of Ending Period Date and Number of Depreciations"),
+        'method_delay': fields.integer('Number of Depreciations'),
+        'method_period': fields.integer('Period Length', help="Time in month between two depreciations"),
         'method_end': fields.date('Ending date'),
         'note': fields.text('Note'),
     }
+    _order = 'date desc'
     _defaults = {
         'date': lambda *args: time.strftime('%Y-%m-%d'),
-        'user_id': lambda self,cr, uid,ctx: uid
+        'user_id': lambda self, cr, uid, ctx: uid
     }
+    
 account_asset_history()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
