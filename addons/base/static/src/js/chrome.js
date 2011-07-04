@@ -271,7 +271,7 @@ openerp.base.BasicController = Class.extend( /** @lends openerp.base.BasicContro
  * that does nothing and always return undefined).
  * 
  * @param {Class} claz
- * @param {dict} add Additional functions to override.
+ * @param {Object} add Additional functions to override.
  * @return {Class}
  */
 openerp.base.generate_null_object_class = function(claz, add) {
@@ -1012,7 +1012,7 @@ openerp.base.Menu =  openerp.base.Controller.extend({
     init: function(session, element_id, secondary_menu_id) {
         this._super(session, element_id);
         this.secondary_menu_id = secondary_menu_id;
-        this.$secondary_menu = $("#" + secondary_menu_id);
+        this.$secondary_menu = $("#" + secondary_menu_id).hide();
         this.menu = false;
     },
     start: function() {
@@ -1071,7 +1071,7 @@ openerp.base.Menu =  openerp.base.Controller.extend({
                     this.on_menu_action_loaded);
         }
 
-        $('.active', this.$element.add(this.$secondary_menu)).removeClass('active');
+        $('.active', this.$element.add(this.$secondary_menu.show())).removeClass('active');
         $parent.addClass('active');
         $menu.addClass('active');
         $menu.parent('h4').addClass('active');
