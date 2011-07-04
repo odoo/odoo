@@ -36,7 +36,7 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
      * @param {Boolean} [options.selectable=true] determines whether view rows are selectable (e.g. via a checkbox)
      * @param {Boolean} [options.header=true] should the list's header be displayed
      * @param {Boolean} [options.deletable=true] are the list rows deletable
-     * @param {null|String} [options.addable="New"] should the new-record button be displayed, and what should its label be. Use ``null`` to hide the button.
+     * @param {void|String} [options.addable="New"] should the new-record button be displayed, and what should its label be. Use ``null`` to hide the button.
      * @param {Boolean} [options.sortable=true] is it possible to sort the table by clicking on column headers
      * @param {Boolean} [options.reorderable=true] is it possible to reorder list rows
      *
@@ -232,7 +232,7 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
      * If the index is null, ``switch_to_record`` asks for the creation of a
      * new record.
      *
-     * @param {Number|null} index the record index (in the current dataset) to switch to
+     * @param {Number|void} index the record index (in the current dataset) to switch to
      * @param {String} [view="form"] the view type to switch to
      */
     select_record:function (index, view) {
@@ -275,7 +275,7 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
             return this.rpc('/base/listview/load', {
                 model: this.model,
                 view_id: this.view_id,
-                context: this.dataset.context,
+                context: this.dataset.get_context(),
                 toolbar: !!this.flags.sidebar
             }, callback);
         }
@@ -336,25 +336,7 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
         }
         var self = this;
         return $.when(this.dataset.unlink(ids)).then(function () {
-            _(self.rows).chain()
-                .map(function (row, index) {
-                    return {
-                        index: index,
-                        id: row.data.id.value
-                    };})
-                .filter(function (record) {
-                    return _.contains(ids, record.id);
-                })
-                .sort(function (a, b) {
-                    // sort in reverse index order, so we delete from the end
-                    // and don't blow up the following indexes (leading to
-                    // removing the wrong records from the visible list)
-                    return b.index - a.index;
-                })
-                .each(function (record) {
-                    self.rows.splice(record.index, 1);
-                });
-            // TODO only refresh modified rows
+            self.reload_content();
         });
     },
     /**
@@ -406,7 +388,7 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
         var self = this;
         _.extend(this.dataset, {
             domain: dataset.domain,
-            context: dataset.context
+            context: dataset.get_context()
         }).read_slice([], 0, false, function () {
             self.select_record(index);
         });
@@ -571,7 +553,7 @@ openerp.base.ListView.List = Class.extend( /** @lends openerp.base.ListView.List
             this.$current.remove();
         }
         this.$current = this.$_element.clone(true);
-        this.$current.empty().append($(QWeb.render('ListView.rows', this)));
+        this.$current.empty().append(QWeb.render('ListView.rows', this));
     },
     get_fields_view: function () {
         // deep copy of view
@@ -895,7 +877,7 @@ openerp.base.ListView.Groups = Class.extend( /** @lends openerp.base.ListView.Gr
 
         var d = new $.Deferred();
         dataset.read_slice(
-            _.filter(_.pluck(this.columns, 'name'), _.identity),
+            _.filter(_.pluck(_.select(this.columns, function(x) {return x.tag == "field";}), 'name'), _.identity),
             0, false,
             function (records) {
                 var form_records = _(records).map(

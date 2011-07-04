@@ -271,7 +271,7 @@ init: function(view_manager, session, element_id, dataset, view_id) {
             this.rpc(ajax, {
                 model: this.dataset.model,
                 domain: self.dataset.domain,
-                context :self.dataset.context
+                context :self.dataset.get_context()
             }, function(response) {
                 ganttChartControl.clearAll();
                 jQuery("#GanttDiv").children().remove();

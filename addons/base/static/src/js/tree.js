@@ -20,10 +20,11 @@ openerp.base.TreeView = openerp.base.View.extend({
         this.session = session;
         this.columns = [];
 
-        this.options = _.extend({}, this.defaults, options || {});
+        /*this.options = _.extend({}, this.defaults, options || {});
 
         this.flags =  this.view_manager.action.flags;
-
+*/
+        console.log(this.view_manager.action);
         this.view_manager.flags.search_view = this.view_manager.action.flags.search_view = false;
         this.view_manager.flags.sidebar = this.view_manager.action.flags.sidebar = false;
     },

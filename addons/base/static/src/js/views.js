@@ -18,7 +18,7 @@ openerp.base.ActionManager = openerp.base.Controller.extend({
      * Process an action
      * Supported actions: act_window
      */
-    do_action: function(action) {
+    do_action: function(action, on_closed) {
         var self = this;
         action.flags = _.extend({
             sidebar : action.target != 'new',
@@ -31,6 +31,9 @@ openerp.base.ActionManager = openerp.base.Controller.extend({
         // instantiate the right controllers by understanding the action
         switch (action.type) {
             case 'ir.actions.act_window':
+                if (!action.target && this.dialog_stack.length) {
+                    action.flags.new_window = true;
+                }
                 if (action.target == 'new') {
                     var element_id = _.uniqueId("act_window_dialog");
                     $('<div>', {id: element_id}).dialog({
@@ -44,6 +47,8 @@ openerp.base.ActionManager = openerp.base.Controller.extend({
                     });
                     var viewmanager = new openerp.base.ViewManagerAction(this.session, element_id, action);
                     viewmanager.start();
+                    viewmanager.on_act_window_closed.add(on_closed);
+                    viewmanager.is_dialog = true;
                     this.dialog_stack.push(viewmanager);
                 } else if (action.flags.new_window) {
                     action.flags.new_window = false;
@@ -62,8 +67,19 @@ openerp.base.ActionManager = openerp.base.Controller.extend({
                 break;
             case 'ir.actions.act_window_close':
                 var dialog = this.dialog_stack.pop();
+                if (!action.special) {
+                    dialog.on_act_window_closed();
+                }
                 dialog.$element.dialog('destroy');
                 dialog.stop();
+                break;
+            case 'ir.actions.server':
+                this.rpc('/base/action/run', {
+                    action_id: action.id,
+                    context: {active_id: 66, active_ids: [66], active_model: 'ir.ui.menu'}
+                }).then(function (action) {
+                    self.do_action(action, on_closed)
+                });
                 break;
             default:
                 console.log("Action manager can't handle action of type " + action.type, action);
@@ -78,10 +94,13 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
         this.dataset = dataset;
         this.searchview = null;
         this.active_view = null;
-        this.views_src = views;
+        this.views_src = _.map(views, function(x)
+            {return x instanceof Array? {view_id: x[0], view_type: x[1]} : x;});
         this.views = {};
         this.flags = this.flags || {};
         this.sidebar = new openerp.base.NullSidebar();
+        this.registry = openerp.base.views;
+        this.is_dialog = false;
     },
     /**
      * @returns {jQuery.Deferred} initial view loading promise
@@ -94,14 +113,13 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
             self.on_mode_switch($(this).data('view-type'));
         });
         _.each(this.views_src, function(view) {
-            self.views[view[1]] = { view_id: view[0], controller: null,
-                embedded_view: view[2]};
+            self.views[view.view_type] = $.extend({}, view, {controller: null});
         });
         if (this.flags.views_switcher === false) {
             this.$element.find('.oe_vm_switch').hide();
         }
         // switch to the first one in sequence
-        return this.on_mode_switch(this.views_src[0][1]);
+        return this.on_mode_switch(this.views_src[0].view_type);
     },
     stop: function() {
     },
@@ -112,23 +130,39 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
      * @returns {jQuery.Deferred} new view loading promise
      */
     on_mode_switch: function(view_type) {
-        var view_promise;
+        var self = this,
+            view_promise;
         this.active_view = view_type;
         var view = this.views[view_type];
         if (!view.controller) {
             // Lazy loading of views
-            var controllerclass = openerp.base.views.get_object(view_type);
-            var controller = new controllerclass( this, this.session, this.element_id + "_view_" + view_type, this.dataset, view.view_id);
+            var controllerclass = this.registry.get_object(view_type);
+            var controller = new controllerclass( this, this.session, this.element_id + "_view_" + view_type,
+                this.dataset, view.view_id, view.options);
             if (view.embedded_view) {
                 controller.set_embedded_view(view.embedded_view);
             }
+            if (view_type === 'list' && this.flags.search_view === false && this.action && this.action['auto_search']) {
+                // In case the search view is not instantiated: manually call ListView#search
+                var domains = !_(self.action.domain).isEmpty()
+                                ? [self.action.domain] : [],
+                   contexts = !_(self.action.context).isEmpty()
+                                ? [self.action.context] : [];
+                controller.on_loaded.add({
+                    callback: function () {
+                        controller.do_search(domains, contexts, []);
+                    },
+                    position: 'last',
+                    unique: true
+                });
+            }
             view_promise = controller.start();
-            var self = this;
             $.when(view_promise).then(function() {
                 self.on_controller_inited(view_type, controller);
             });
             this.views[view_type].controller = controller;
         }
+
 
         if (this.searchview) {
             if (view.controller.searchable === false) {
@@ -143,12 +177,13 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
             .filter('[data-view-type="' + view_type + '"]')
             .attr('disabled', true);
 
-        for (var i in this.views) {
-            if (this.views[i].controller) {
-                if (i === view_type) {
-                    $.when(view_promise).then(this.views[i].controller.do_show);
+        for (var view_name in this.views) {
+            if (!this.views.hasOwnProperty(view_name)) { continue; }
+            if (this.views[view_name].controller) {
+                if (view_name === view_type) {
+                    $.when(view_promise).then(this.views[view_name].controller.do_show);
                 } else {
-                    this.views[i].controller.do_hide();
+                    this.views[view_name].controller.do_hide();
                 }
             }
         }
@@ -181,6 +216,11 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
                       contexts.concat(self.contexts()), groupbys);
         });
         return this.searchview.start();
+    },
+    /**
+     * Called when this view manager has been created by an action 'act_window@target=new' is closed
+     */
+    on_act_window_closed : function() {
     },
     /**
      * Called when one of the view want to execute an action
@@ -222,13 +262,16 @@ openerp.base.NullViewManager = openerp.base.generate_null_object_class(openerp.b
 
 openerp.base.ViewManagerAction = openerp.base.ViewManager.extend({
     init: function(session, element_id, action) {
+        console.log("here in view manager action",action);
         var dataset;
-        if(!action.res_id) {
-            dataset = new openerp.base.DataSetSearch(session, action.res_model);
+        if (!action.res_id) {
+            dataset = new openerp.base.DataSetSearch(session, action.res_model, action.context || null);
         } else {
-            dataset = new openerp.base.DataSetStatic(session, action.res_model);
-            dataset.ids = [action.res_id];
-            dataset.count = 1;
+            dataset = new openerp.base.DataSetStatic(session, action.res_model, {}, [action.res_id]);
+            if (action.context) {
+                // TODO fme: should normalize all DataSets constructors to (session, model, context, ...)
+                dataset.context = action.context;
+            }
         }
         this._super(session, element_id, dataset, action.views);
         this.action = action;
@@ -258,16 +301,18 @@ openerp.base.ViewManagerAction = openerp.base.ViewManager.extend({
             }
         });
 
-        // init search view
-        var searchview_id = this.action.search_view_id && this.action.search_view_id[0];
+        if (this.flags.search_view !== false) {
+            // init search view
+            var searchview_id = this.action.search_view_id && this.action.search_view_id[0];
 
-        var searchview_loaded = this.setup_search_view(
-                searchview_id || false, search_defaults);
+            var searchview_loaded = this.setup_search_view(
+                    searchview_id || false, search_defaults);
 
-        // schedule auto_search
-        if (searchview_loaded != null && this.action['auto_search']) {
-            $.when(searchview_loaded, inital_view_loaded)
-                .then(this.searchview.do_search);
+            // schedule auto_search
+            if (searchview_loaded != null && this.action['auto_search']) {
+                $.when(searchview_loaded, inital_view_loaded)
+                    .then(this.searchview.do_search);
+            }
         }
     },
     stop: function() {
@@ -319,16 +364,12 @@ openerp.base.Sidebar = openerp.base.BaseWidget.extend({
     },
     do_refresh: function(new_view) {
         var view = this.view_manager.active_view;
-        the_condition = this.sections.length > 0 && _.detect(this.sections,
+        var the_condition = this.sections.length > 0 && _.detect(this.sections,
             function(x) {return x.elements.length > 0;}) != undefined
             && (!new_view || view != 'list');
-        if (!the_condition) {
-            this.$element.addClass('closed-sidebar');
-            this.$element.removeClass('open-sidebar');
-        } else {
-            this.$element.addClass('open-sidebar');
-            this.$element.removeClass('closed-sidebar');
-        }
+
+        this.$element.toggleClass('open-sidebar', the_condition)
+                     .toggleClass('closed-sidebar', !the_condition);
 
         this.$element.html(QWeb.render("ViewManager.sidebar.internal", { sidebar: this, view: view }));
 
@@ -359,6 +400,25 @@ openerp.base.Sidebar = openerp.base.BaseWidget.extend({
 
 openerp.base.NullSidebar = openerp.base.generate_null_object_class(openerp.base.Sidebar);
 
+openerp.base.Export = openerp.base.Dialog.extend({
+    dialog_title: "Export",
+    template: 'ExportDialog',
+    identifier_prefix: 'export_dialog',
+    init: function (session, model, domain) {
+        this._super();
+    },
+    start: function () {
+        this._super();
+        this.$element.html(this.render());
+    },
+    on_button_Export: function() {
+        console.log("Export")
+    },
+    on_button_Cancel: function() {
+        this.$element.dialog("close");
+    }
+});
+
 openerp.base.View = openerp.base.Controller.extend({
     /**
      * Fetches and executes the action identified by ``action_data``.
@@ -373,26 +433,46 @@ openerp.base.View = openerp.base.Controller.extend({
      * @param {Object} [record_id] the identifier of the object on which the action is to be applied
      * @param {Function} on_no_action callback to execute if the action does not generate any result (no new action)
      */
-    execute_action: function (action_data, dataset, action_manager, record_id, on_no_action) {
+    execute_action: function (action_data, dataset, action_manager, record_id, on_no_action, on_closed) {
+        var self = this;
         var handler = function (r) {
-            if (r.result && r.result.constructor == Object) {
-                action_manager.do_action(r.result);
+            var action = r.result;
+            if (action && action.constructor == Object) {
+                action.context = action.context || {};
+                _.extend(action.context, {
+                    active_id: record_id || false,
+                    active_ids: [record_id || false],
+                    active_model: dataset.model
+                });
+                action.flags = {
+                    sidebar : false,
+                    search_view : false,
+                    views_switcher : false,
+                    action_buttons : false,
+                    pager : false
+                };
+                action_manager.do_action(action, on_closed);
+                if (self.view_manager.is_dialog && action.type != 'ir.actions.act_window_close') {
+                    handler({
+                        result : { type: 'ir.actions.act_window_close' }
+                    });
+                }
             } else {
-                on_no_action(r.result);
+                on_no_action(action);
             }
         };
 
         if (action_data.special) {
             handler({
-                result : { type: 'ir.actions.act_window_close' }
+                result : { type: 'ir.actions.act_window_close', special: action_data.special }
             });
         } else {
-            var context = _.extend({}, dataset.context, action_data.context || {});
+            var context = new openerp.base.CompoundContext(dataset.get_context(), action_data.context || {});
             switch(action_data.type) {
                 case 'object':
-                    return dataset.call(action_data.name, [[record_id], context], handler);
+                    return dataset.call_button(action_data.name, [[record_id], context], handler);
                 case 'action':
-                    return this.rpc('/base/action/load', { action_id: parseInt(action_data.name, 10) }, handler);
+                    return this.rpc('/base/action/load', { action_id: parseInt(action_data.name, 10), context: context }, handler);
                 default:
                     return dataset.exec_workflow(record_id, action_data.name, handler);
             }
@@ -419,6 +499,41 @@ openerp.base.ProcessView = openerp.base.Controller.extend({
 
 openerp.base.HelpView = openerp.base.Controller.extend({
 });
+
+openerp.base.json_node_to_xml = function(node, single_quote, indent) {
+    // For debugging purpose, this function will convert a json node back to xml
+    // Maybe usefull for xml view editor
+    if (typeof(node.tag) !== 'string' || !node.children instanceof Array || !node.attrs instanceof Object) {
+        throw("Node a json node");
+    }
+    indent = indent || 0;
+    var sindent = new Array(indent + 1).join('\t'),
+        r = sindent + '<' + node.tag;
+    for (var attr in node.attrs) {
+        var vattr = node.attrs[attr];
+        if (typeof(vattr) !== 'string') {
+            // domains, ...
+            vattr = JSON.stringify(vattr);
+        }
+        vattr = vattr.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        if (single_quote) {
+            vattr = vattr.replace(/&quot;/g, "'");
+        }
+        r += ' ' + attr + '="' + vattr + '"';
+    }
+    if (node.children.length) {
+        r += '>\n';
+        var childs = [];
+        for (var i = 0, ii = node.children.length; i < ii; i++) {
+            childs.push(openerp.base.json_node_to_xml(node.children[i], single_quote, indent + 1));
+        }
+        r += childs.join('\n');
+        r += '\n' + sindent + '</' + node.tag + '>';
+        return r;
+    } else {
+        return r + '/>';
+    }
+}
 
 };
 

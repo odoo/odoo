@@ -11,8 +11,8 @@ openerp.base.callback = function(obj, method) {
         for(var i = 0; i < callback.callback_chain.length; i++)  {
             var c = callback.callback_chain[i];
             if(c.unique) {
-                // al: obscure but shortening C-style hack, sorry
-                callback.callback_chain.pop(i--);
+                callback.callback_chain.splice(i, 1);
+                i -= 1;
             }
             r = c.callback.apply(c.self, c.args.concat(args));
             // TODO special value to stop the chain
@@ -138,6 +138,29 @@ openerp.base.Registry = Class.extend( /** @lends openerp.base.Registry# */ {
         return object_match;
     },
     /**
+     * Tries a number of keys, and returns the first object matching one of
+     * the keys.
+     *
+     * @param {Array} keys a sequence of keys to fetch the object for
+     * @returns {Class} the first class found matching an object
+     *
+     * @throws {openerp.base.KeyNotFound} if none of the keys was in the mapping
+     * @trows {openerp.base.ObjectNotFound} if a found object path was invalid
+     */
+    get_any: function (keys) {
+        for (var i=0; i<keys.length; ++i) {
+            try {
+                return this.get_object(keys[i]);
+            } catch (e) {
+                if (e instanceof openerp.base.KeyNotFound) {
+                    continue;
+                }
+                throw e;
+            }
+        }
+        throw new openerp.base.KeyNotFound(keys.join(','));
+    },
+    /**
      * Adds a new key and value to the registry.
      *
      * This method can be chained.
@@ -261,13 +284,12 @@ openerp.base.generate_null_object_class = function(claz, add) {
         }
         if (prototype.prototype)
             copy_proto(prototype.prototype);
-    }
+    };
     copy_proto(claz.prototype);
-    var init = openerp.base.BasicController.prototype.init;
-    newer.init = init;
+    newer.init = openerp.base.BasicController.prototype.init;
     var tmpclass = claz.extend(newer);
     return tmpclass.extend(add || {});
-}
+};
 
 openerp.base.Notification =  openerp.base.BasicController.extend({
     init: function(element_id) {
@@ -328,33 +350,39 @@ openerp.base.Session = openerp.base.BasicController.extend( /** @lends openerp.b
      * @param {Object} params call parameters
      * @param {Function} success_callback function to execute on RPC call success
      * @param {Function} error_callback function to execute on RPC call failure
+     * one
      * @returns {jQuery.Deferred} jquery-provided ajax deferred
      */
     rpc: function(url, params, success_callback, error_callback) {
+        var self = this;
         // Construct a JSON-RPC2 request, method is currently unused
         params.session_id = this.session_id;
-        params.context = typeof(params.context) != "undefined" ? params.context  : this.context;
-        if (!params.context.bin_size) {
-            params.context.bin_size = true;
-        }
-
-        // Use a default error handler unless defined
-        error_callback = typeof(error_callback) != "undefined" ? error_callback : this.on_rpc_error;
+        // niv: wtf?
+        //params.context = typeof(params.context) != "undefined" ? params.context  : this.context;
 
         // Call using the rpc_mode
-        return this.rpc_ajax(url, {
+        var deferred = $.Deferred();
+        this.rpc_ajax(url, {
             jsonrpc: "2.0",
             method: "call",
             params: params,
             id:null
-        }, success_callback, error_callback);
+        }).then(function () {deferred.resolve.apply(deferred, arguments);},
+        function(error) {deferred.reject(error, $.Event());});
+        return deferred.fail(function() {
+            deferred.fail(function(error, event) {
+                if (!event.isDefaultPrevented()) {
+                    self.on_rpc_error(error, event);
+                }
+            });
+        }).then(success_callback, error_callback).promise();
     },
     /**
      * Raw JSON-RPC call
      *
      * @returns {jQuery.Deferred} ajax-based deferred object
      */
-    rpc_ajax: function(url, payload, success_callback, error_callback) {
+    rpc_ajax: function(url, payload) {
         var self = this;
         this.on_rpc_request();
         // url can be an $.ajax option object
@@ -369,40 +397,42 @@ openerp.base.Session = openerp.base.BasicController.extend( /** @lends openerp.b
             dataType: 'json',
             contentType: 'application/json',
             data: JSON.stringify(payload),
-            processData: false,
-            success: function(response, textStatus, jqXHR) {
+            processData: false
+        }, url);
+        var deferred = $.Deferred();
+        $.ajax(ajax).done(function(response, textStatus, jqXHR) {
                 self.on_rpc_response();
                 if (response.error) {
                     if (response.error.data.type == "session_invalid") {
                         self.uid = false;
                         self.on_session_invalid(function() {
-                            self.rpc(url, payload.params, success_callback, error_callback);
+                            self.rpc(url, payload.params,
+                                function() {deferred.resolve.apply(deferred, arguments);},
+                                function(error, event) {event.preventDefault();
+                                    deferred.reject.apply(deferred, arguments);});
                         });
                     } else {
-                        error_callback(response.error);
+                        deferred.reject(response.error);
                     }
-                } else if (success_callback) {
-                    success_callback(response["result"], textStatus, jqXHR);
+                } else {
+                    deferred.resolve(response["result"], textStatus, jqXHR);
                 }
-            },
-            error: function(jqXHR, textStatus, errorThrown) {
+            }).fail(function(jqXHR, textStatus, errorThrown) {
                 self.on_rpc_response();
                 var error = {
                     code: -32098,
                     message: "XmlHttpRequestError " + errorThrown,
                     data: {type: "xhr"+textStatus, debug: jqXHR.responseText, objects: [jqXHR, errorThrown] }
                 };
-                error_callback(error);
-            }
-        }, url);
-        return $.ajax(ajax);
+                deferred.reject(error);
+            });
+        return deferred.promise();
     },
     on_rpc_request: function() {
     },
     on_rpc_response: function() {
     },
     on_rpc_error: function(error) {
-        this.on_log(error.message, error.data.debug);
     },
     /**
      * The session is validated either by login or by restoration of a previous session
@@ -561,7 +591,7 @@ openerp.base.Controller = openerp.base.BasicController.extend( /** @lends opener
      */
     controller_get: function(key) {
         return this.controller_registry[key];
-        // OR should contrustct it ? setting parent correctly ?
+        // OR should build it ? setting parent correctly ?
         // function construct(constructor, args) {
         //     function F() {
         //         return constructor.apply(this, args);
@@ -621,7 +651,7 @@ openerp.base.Controller = openerp.base.BasicController.extend( /** @lends opener
             }
             // TODO if post prefix
             //this.element_id = _.uniqueId(_.toArray(arguments).join('_'));
-        };
+        }
     },
     /**
      * Performs a JSON-RPC call
@@ -737,24 +767,124 @@ openerp.base.BaseWidget = openerp.base.Controller.extend({
     }
 });
 
-openerp.base.CrashManager = openerp.base.Controller.extend({
-    init: function(session, element_id) {
-        this._super(session, element_id);
+openerp.base.Dialog = openerp.base.BaseWidget.extend({
+    dialog_title: "",
+    identifier_prefix: 'dialog',
+    init: function (session, options) {
+        this._super(null, session);
+        this.options = {
+            modal: true,
+            width: 'auto',
+            min_width: 0,
+            max_width: '100%',
+            height: 'auto',
+            min_height: 0,
+            max_height: '100%',
+            autoOpen: false,
+            buttons: {}
+        };
+        for (var f in this) {
+            if (f.substr(0, 10) == 'on_button_') {
+                this.options.buttons[f.substr(10)] = this[f];
+            }
+        }
+        if (options) {
+            this.set_options(options);
+        }
+    },
+    set_options: function(options) {
+        options = options || {};
+        options.width = this.get_width(options.width || this.options.width);
+        options.min_width = this.get_width(options.min_width || this.options.min_width);
+        options.max_width = this.get_width(options.max_width || this.options.max_width);
+        options.height = this.get_height(options.height || this.options.height);
+        options.min_height = this.get_height(options.min_height || this.options.min_height);
+        options.max_height = this.get_height(options.max_height || this.options.max_width);
+
+        if (options.width !== 'auto') {
+            if (options.width > options.max_width) options.width = options.max_width;
+            if (options.width < options.min_width) options.width = options.min_width;
+        }
+        if (options.height !== 'auto') {
+            if (options.height > options.max_height) options.height = options.max_height;
+            if (options.height < options.min_height) options.height = options.min_height;
+        }
+        if (!options.title && this.dialog_title) {
+            options.title = this.dialog_title;
+        }
+        _.extend(this.options, options);
+    },
+    get_width: function(val) {
+        return this.get_size(val.toString(), $(window.top).width());
+    },
+    get_height: function(val) {
+        return this.get_size(val.toString(), $(window.top).height());
+    },
+    get_size: function(val, available_size) {
+        if (val === 'auto') {
+            return val;
+        } else if (val.slice(-1) == "%") {
+            return Math.round(available_size / 100 * parseInt(val.slice(0, -1), 10));
+        } else {
+            return parseInt(val, 10);
+        }
+    },
+    start: function (auto_open) {
+        this.$dialog = $('<div id="' + this.element_id + '"></div>').dialog(this.options);
+        if (auto_open !== false) {
+            this.open();
+        }
+        this._super();
+    },
+    open: function(options) {
+        // TODO fme: bind window on resize
+        if (this.template) {
+            this.$element.html(this.render());
+        }
+        this.set_options(options);
+        this.$dialog.dialog(this.options).dialog('open');
+    },
+    close: function(options) {
+        this.$dialog.dialog('close');
+    },
+    stop: function () {
+        this.$dialog.dialog('destroy');
+    }
+});
+
+openerp.base.CrashManager = openerp.base.Dialog.extend({
+    identifier_prefix: 'dialog_crash',
+    init: function(session) {
+        this._super(session);
         this.session.on_rpc_error.add(this.on_rpc_error);
     },
-    on_rpc_error: function(error) {
-        var msg = error.message + "\n" + error.data.debug;
-        this.display_error(msg);
+    on_button_Ok: function() {
+        this.close();
     },
-    display_error: function(message) {
-        $('<pre></pre>').text(message).dialog({
-            modal: true,
-            buttons: {
-                OK: function() {
-                    $(this).dialog("close");
-                }
+    on_rpc_error: function(error) {
+        this.error = error;
+        if (error.data.fault_code) {
+            var split = error.data.fault_code.split('\n')[0].split(' -- ');
+            if (split.length > 1) {
+                error.type = split.shift();
+                error.data.fault_code = error.data.fault_code.substr(error.type.length + 4);
             }
-        });
+        }
+        if (error.code === 200 && error.type) {
+            this.dialog_title = "OpenERP " + _.capitalize(error.type);
+            this.template = 'DialogWarning';
+            this.open({
+                width: 'auto',
+                height: 'auto'
+            });
+        } else {
+            this.dialog_title = "OpenERP Error";
+            this.template = 'DialogTraceback';
+            this.open({
+                width: '80%',
+                height: '80%'
+            });
+        }
     }
 });
 
@@ -984,6 +1114,7 @@ openerp.base.WebClient = openerp.base.Controller.extend({
         this.session = new openerp.base.Session("oe_errors");
         this.loading = new openerp.base.Loading(this.session, "oe_loading");
         this.crashmanager =  new openerp.base.CrashManager(this.session);
+        this.crashmanager.start(false);
 
         // Do you autorize this ?
         openerp.base.Controller.prototype.notification = new openerp.base.Notification("oe_notification");

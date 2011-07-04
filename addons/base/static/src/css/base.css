@@ -199,6 +199,8 @@ background: linear-gradient(top, #bd5e54 0%,#90322a 60%); /* W3C */
     line-height: 20px;
     font-weight: bold;
     font-size: 85%;
+
+    white-space: nowrap;
 }
 .openerp .menu a:hover,
 .openerp .menu a:focus,
@@ -472,9 +474,10 @@ background: linear-gradient(top, #ffffff 0%,#d8d8d8 11%,#afafaf 86%,#333333 91%,
     background: #AAAAAA;
 }
 .openerp .filter_icon {
+    height: 22px;
     padding: 1px 2px 0 2px;
-    margin-left: 0;
-    margin-right: 0;
+    margin: 0;
+    vertical-align: bottom;
 }
 .openerp .filter_label {
     font-weight: bold;
@@ -535,19 +538,27 @@ background: linear-gradient(top, #ffffff 0%,#d8d8d8 11%,#afafaf 86%,#333333 91%,
 .openerp .searchview_group_content {
     padding-left: 10px;
 }
-.openerp .searchview_group_content .oe-searchview-render-line {
-    width:0;
-}
-
-
-.openerp .oe-searchview-render-line {
-    width:100%;
-}
 
 .openerp .searchview_extended_group {
-    border: #696969 solid 1px;
     padding: 3px;
     margin: 2px;
+}
+
+.openerp .searchview_extended_group .oe_adv_filters_and {
+    border-bottom: 1px solid #8E8E8E;
+    text-align: center;
+    margin-top: -10px;
+}
+.openerp .searchview_extended_group .oe_adv_filters_and span {
+    background: #F0EEEE;
+    position: relative;
+    top: 0.5em;
+    padding: 0 1em 0 1em;
+    color: #8E8E8E;
+}
+
+.openerp .searchview_extended_group.last_group .oe_adv_filters_and {
+    display: none;
 }
 
 .openerp .oe_search-view-custom-filter-btn span {
@@ -563,6 +574,7 @@ background: linear-gradient(top, #ffffff 0%,#d8d8d8 11%,#afafaf 86%,#333333 91%,
 
 .openerp .searchview_extended_delete_group {
     float:right;
+    display: none;
 }
 
 .openerp .searchview_extended_delete_group span,
@@ -610,6 +622,12 @@ background: linear-gradient(top, #ffffff 0%,#d8d8d8 11%,#afafaf 86%,#333333 91%,
 }
 .openerp .oe-listview .oe-field-cell button:active {
     opacity: 0.5;
+}
+.openerp .oe-listview .oe-field-cell button img {
+    cursor: pointer;
+}
+.openerp .oe-listview .oe-field-cell button img:hover {
+    opacity: 0.75;
 }
 
 .openerp .oe-listview th.oe-actions {
@@ -696,6 +714,9 @@ background: linear-gradient(top, #ffffff 0%,#d8d8d8 11%,#afafaf 86%,#333333 91%,
 .openerp td.oe_form_frame_cell {
     padding: 2px;
 }
+.openerp td.oe_form_frame_cell.oe_form_group {
+    padding: 0px;
+}
 .openerp .required.error {
     border: 1px solid #900;
 }
@@ -712,7 +733,7 @@ background: linear-gradient(top, #ffffff 0%,#d8d8d8 11%,#afafaf 86%,#333333 91%,
 .openerp label.oe_form_label, .openerp label.oe_form_label_help {
     display: block;
     text-align: right;
-    margin-top: 3px;
+    margin: 3px 0 0 10px;
 }
 .openerp label.oe_form_label_help span {
     font-size: 80%;
@@ -752,13 +773,14 @@ background: linear-gradient(top, #ffffff 0%,#d8d8d8 11%,#afafaf 86%,#333333 91%,
     position: relative;
     vertical-align: top;
 }
-.openerp input.field_date, .openerp input.field_datetime {
-    background: #fff url('../img/ui/field_calendar.png') no-repeat right center;
-    background-origin: content-box;
-    -moz-background-origin: content;
-    -moz-background-origin: content-box;
-    -webkit-background-origin: content-box;
+.openerp img.ui-datepicker-trigger, .openerp img.ui-datepicker-trigger {
+    margin-left: -20px;
+    vertical-align: middle;
+    cursor: pointer;
+    position: relative;
+    top: -1px;
 }
+
 /* http://www.quirksmode.org/dom/inputfile.html
  * http://stackoverflow.com/questions/2855589/replace-input-type-file-by-an-image
  */
@@ -788,7 +810,8 @@ background: linear-gradient(top, #ffffff 0%,#d8d8d8 11%,#afafaf 86%,#333333 91%,
 .openerp .separator.horizontal {
    font-weight: bold;
     border-bottom-width: 1px;
-    margin: 6px 4px 6px 1px;
+    margin: 3px 4px 3px 1px;
+    height: 15px;
 }
 .openerp td.required input, .openerp td.required select {
     background-color: #D2D2FF;
@@ -1026,10 +1049,16 @@ background: linear-gradient(top, #ffffff 0%,#ebe9e9 100%); /* W3C */
 .openerp .oe-m2o-drop-down-button img,
 .openerp .oe-m2o-cm-button img {
     margin-bottom: -4px;
+    cursor: pointer;
 }
 .openerp .oe-m2o-disabled-cm {
     color: grey;
 }
 .parent_top {
     vertical-align: text-top;
+}
+.openerp .oe-dialog-warning p {
+    padding-left: 1em;
+    font-size: 1.2em;
+    font-weight: bold;
 }
