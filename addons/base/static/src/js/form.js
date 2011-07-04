@@ -247,7 +247,7 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
             }
             this.on_form_changed();
         }
-        if (result.warning) {
+        if (result.warning && !_.isEmpty(result.warning)) {
             $(QWeb.render("DialogWarning", result.warning)).dialog({
                 modal: true,
                 buttons: {
