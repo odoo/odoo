@@ -242,7 +242,7 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
                     }
                 } else {
                     // this is a common case, the normal behavior should be to ignore it
-                    this.log("on_processed_onchange can't find field " + f, result);
+                    console.debug("on_processed_onchange can't find field " + f, result);
                 }
             }
             this.on_form_changed();
