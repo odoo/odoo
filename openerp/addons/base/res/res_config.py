@@ -44,10 +44,9 @@ class res_config_configurable(osv.osv_memory):
         '''Return a description the current progress of configuration:
         a tuple of (non_open_todos:int, total_todos: int)
         '''
-        return (self.pool.get('ir.actions.todo')\
-                .search_count(cr, uid, [('state','<>','open')], context),
-                self.pool.get('ir.actions.todo')\
-                .search_count(cr, uid, [], context))
+        todo_pool = self.pool.get('ir.actions.todo')
+        return (todo_pool.search_count(cr, uid, [('state','<>','open')], context),
+                todo_pool.search_count(cr, uid, [], context))
 
     def _progress(self, cr, uid, context=None):
         closed, total = self.get_current_progress(cr, uid, context=context)
@@ -116,8 +115,9 @@ class res_config_configurable(osv.osv_memory):
         return self.pool.get(current_user_menu.type).read(cr, uid, current_user_menu.id)
 
     def start(self, cr, uid, ids, context=None):
-        ids2 = self.pool.get('ir.actions.todo').search(cr, uid, [], context=context)
-        for todo in self.pool.get('ir.actions.todo').browse(cr, uid, ids2, context=context):
+        todo_pool = self.pool.get('ir.actions.todo')
+        ids2 = todo_pool.search(cr, uid, [], context=context)
+        for todo in todo_pool.browse(cr, uid, ids2, context=context):
             if (todo.type=='normal_recurring'):
                 todo.write({'state':'open'})
         return self.next(cr, uid, ids, context)
