@@ -83,11 +83,11 @@ class res_currency(osv.osv):
             context = {}
 #        We can use the following line,if we want to restrict this name_get for company setup only
 #        But, its better to show currencies as name(Code).
-        if not len(ids):
+        if not ids::
             return []
         if isinstance(ids, (int, long)):
             ids = [ids]
-        reads = self.read(cr, uid, ids, ['name','symbol'], context, load='_classic_write')
+        reads = self.read(cr, uid, ids, ['name','symbol'], context=context, load='_classic_write')
         return [(x['id'], tools.ustr(x['name']) + (x['symbol'] and (' (' + tools.ustr(x['symbol']) + ')') or '')) for x in reads]
 
     def round(self, cr, uid, currency, amount):
