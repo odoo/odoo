@@ -255,6 +255,7 @@ class mrp_repair(osv.osv):
     def action_invoice_create(self, cr, uid, ids, group=False, context=None):
         res={}
         invoices_group = {}
+        inv_obj = self.pool.get('account.invoice')
         for repair in self.browse(cr, uid, ids, context=context):
             res[repair.id]=False
             if repair.state in ('draft','cancel') or repair.invoice_id:
@@ -265,13 +266,13 @@ class mrp_repair(osv.osv):
             if (repair.invoice_method != 'none'):
                 if group and repair.partner_invoice_id.id in invoices_group:
                     inv_id= invoices_group[repair.partner_invoice_id.id]
-                    invoice=invoice_obj.browse(cr, uid,inv_id)
+                    invoice=inv_obj.browse(cr, uid,inv_id)
                     invoice_vals = {
                         'name': invoice.name +', '+repair.name,
                         'origin': invoice.origin+', '+repair.name,
                         'comment':(comment and (invoice.comment and invoice.comment+"\n"+comment or comment)) or (invoice.comment and invoice.comment or ''),
                     }
-                    invoice_obj.write(cr, uid, [inv_id],invoice_vals,context=context)
+                    inv_obj.write(cr, uid, [inv_id],invoice_vals,context=context)
                 else:
                     if not repair.partner_id.property_account_receivable:
                         raise osv.except_osv(_('Error !'), _('No account defined for partner "%s".') % repair.partner_id.name )
@@ -287,7 +288,6 @@ class mrp_repair(osv.osv):
                         'comment': repair.quotation_notes,
                         'fiscal_position': repair.partner_id.property_account_position.id
                     }
-                    inv_obj = self.pool.get('account.invoice')
                     inv_id = inv_obj.create(cr, uid, inv)
                     invoices_group[repair.partner_invoice_id.id] = inv_id
                 self.write(cr, uid, repair.id , {'invoiced':True,'invoice_id' : inv_id})
