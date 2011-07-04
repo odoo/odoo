@@ -935,7 +935,7 @@ openerp.base.form.FieldDatetime = openerp.base.form.Field.extend({
     },
     set_value: function(value) {
         this._super.apply(this, arguments);
-        if (value == null || value == false) {
+        if (!value) {
             this.$element.find('input').val('');
         } else {
             this.$element.find('input').unbind('change');
@@ -1086,7 +1086,7 @@ openerp.base.form.FieldProgressBar = openerp.base.form.Field.extend({
     set_value: function(value) {
         this._super.apply(this, arguments);
         var show_value = Number(value);
-        if (show_value === NaN) {
+        if (isNaN(show_value)) {
             show_value = 0;
         }
         this.$element.find('div').progressbar('option', 'value', show_value).find('span').html(show_value + '%');
