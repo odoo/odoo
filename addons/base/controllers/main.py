@@ -127,7 +127,31 @@ class Session(openerpweb.Controller):
         if flag == 'drop':
             db = kw.get('db')
             password = kw.get('password')
+            
             return req.session.proxy("db").drop(password, db)
+        
+        elif flag == 'backup':
+            db = kw.get('db')
+            password = kw.get('password')
+            # todo: content type
+            res = rpc.session.proxy("db").dump(password, db)
+            if res:
+                return base64.decodestring(res)
+            
+        elif flag == 'restore':
+            filename = kw.get('filename')
+            db = kw.get('db')
+            password = kw.get('password')
+            
+            data = base64.encodestring(filename.file.read())
+            return rpc.session.proxy("db").restore(password, db, data)
+        
+        elif flag == 'change_password':
+            old_password = kw.get('old_password')
+            new_password = kw.get('new_password')
+            confirm_password = kw.get('confirm_password')
+            
+            return rpc.session.proxy("db").change_admin_password(old_password, new_password)
             
     @openerpweb.jsonrequest
     def modules(self, req):

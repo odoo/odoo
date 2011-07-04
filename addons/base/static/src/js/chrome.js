@@ -935,13 +935,14 @@ openerp.base.Database = openerp.base.Controller.extend({
         	self.db_string = "CREATE DATABASE";
         	self.$option_id.html(QWeb.render("CreateDB", self));
         });
+        
         self.$element.find('#db-drop').click(function() {
         	self.db_string = "DROP DATABASE";
         	self.$option_id.html(QWeb.render("DropDB", self));
         	
 	        self.$option_id.find('#drop_db_btn').click(function() {
 	        	var db = self.$option_id.find("select[name=drop_db]").val();
-		        var password = self.$option_id.find("input[name=drop_password]").val();
+		        var password = self.$option_id.find("input[name=drop_pwd]").val();
 	        	
 	        	if (confirm("Do you really want to delete the database: " + db + " ?")) {
 		        	self.rpc("/base/session/db_operation", {'flag': 'drop', 'db': db, 'password': password}, 
@@ -953,20 +954,61 @@ openerp.base.Database = openerp.base.Controller.extend({
 			        	});
 		        }
 	        });
-        	
         });
+        
         self.$element.find('#db-backup').click(function() {
         	self.db_string = "BACKUP DATABASE";
         	self.$option_id.html(QWeb.render("BackupDB", self));
+        	
+        	self.$option_id.find('#backup_db_btn').click(function() {
+	        	var db = self.$option_id.find("select[name=backup_db]").val();
+		        var password = self.$option_id.find("input[name=backup_pwd]").val();
+        	
+	        	self.rpc("/base/session/db_operation", {'flag': 'backup', 'db': db, 'password': password}, 
+	        	function(result) {
+	        		if (!result.error) {
+		        		self.notification.notify("Backup has been created for the database: '" + db + "'");
+		        	}
+	        	});
+        	});
         });
+        
         self.$element.find('#db-restore').click(function() {
         	self.db_string = "RESTORE DATABASE";
         	self.$option_id.html(QWeb.render("RestoreDB", self));
+        	
+        	self.$option_id.find('#restore_db_btn').click(function() {
+	        	var db = self.$option_id.find("input[name=restore_db]").val();
+		        var password = self.$option_id.find("input[name=restore_pwd]").val();
+		        var new_db = self.$option_id.find("input[name=new_db]").val();
+        	
+	        	self.rpc("/base/session/db_operation", {'flag': 'restore', 'db': db, 'password': password, 'new_db': new_db}, 
+	        	function(result) {
+	        		if (!result.error) {
+		        		self.notification.notify("You restored your database as: '" + new_db + "'");
+		        	}
+	        	});
+        	});
         });
+        
         self.$element.find('#db-change-password').click(function() {
         	self.db_string = "CHANGE DATABASE PASSWORD";
         	self.$option_id.html(QWeb.render("Change_DB_Pwd", self));
+        	
+        	self.$option_id.find('#change_pwd_btn').click(function() {
+	        	var old_pwd = self.$option_id.find("input[name=old_db]").val();
+		        var new_pwd = self.$option_id.find("input[name=new_pwd]").val();
+		        var confirm_pwd = self.$option_id.find("input[name=confirm_pwd]").val();
+        	
+	        	self.rpc("/base/session/db_operation", {'flag': 'change_password', 'old_password': old_pwd, 'new_password': new_pwd, 'confirm_password': confirm_pwd}, 
+	        	function(result) {
+	        		if (!result.error) {
+		        		self.notification.notify("Password has been changed successfully");
+		        	}
+	        	});
+	        });
         });
+        
        	self.$element.find('#back-to-login').click(function() {
     		self.header = new openerp.base.Header(self.session, "oe_header");
     		self.header.on_logout();	
