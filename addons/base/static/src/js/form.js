@@ -176,7 +176,8 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
                     'None' : function() {return null;},
                     'context': function(i) {
                         context_index = i;
-                        return widget.build_context ? widget.build_context() : {};
+                        var ctx = widget.build_context ? widget.build_context() : {};
+                        return ctx;
                     }
                 }
                 var parent_fields = null;
@@ -197,7 +198,7 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
                             }
                             var p_val = parent_fields[_.trim(splitted[1])];
                             if (p_val !== undefined) {
-                                args.push(value ? value : false);
+                                args.push(p_val == null ? false : p_val);
                                 return;
                             }
                         }
@@ -442,7 +443,8 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
     get_fields_values: function() {
         var values = {};
         _.each(this.fields, function(value, key) {
-            values[key] = value.get_value();
+            var val = value.get_value();
+            values[key] = val;
         });
         return values;
     }
