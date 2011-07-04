@@ -1444,6 +1444,7 @@ var commands = {
     }
 };
 openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
+    multi_selection: false,
     init: function(view, node) {
         this._super(view, node);
         this.template = "FieldOne2Many";
@@ -1471,6 +1472,7 @@ openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
             }
             if(view.view_type === "list") {
                 view.options = {
+                    'selectable': self.multi_selection
                 };
             }
             views.push(view);
@@ -1616,6 +1618,7 @@ openerp.base.form.One2ManyListView = openerp.base.ListView.extend({
 });
 
 openerp.base.form.FieldMany2Many = openerp.base.form.Field.extend({
+    multi_selection: false,
     init: function(view, node) {
         this._super(view, node);
         this.template = "FieldMany2Many";
@@ -1636,7 +1639,8 @@ openerp.base.form.FieldMany2Many = openerp.base.form.Field.extend({
 
         this.list_view = new openerp.base.form.Many2ManyListView(
                 null, this.view.session, this.list_id, this.dataset, false, {
-                    'addable': 'Add'
+                    'addable': 'Add',
+                    'selectable': self.multi_selection
             });
         this.list_view.m2m_field = this;
         this.list_view.on_loaded.add_last(function() {
