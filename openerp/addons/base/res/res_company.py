@@ -79,23 +79,23 @@ class res_company(osv.osv):
     _description = 'Companies'
     _order = 'name'
 
-    def _get_address_data(self, cr, uid, ids, name, arg, context=None):
+    def _get_address_data(self, cr, uid, ids, field_names, arg, context=None):
+        "Retrieves address data of the partner related to the company"
         result = {}
         part_obj = self.pool.get('res.partner')
         address_obj = self.pool.get('res.partner.address')
         for company in self.browse(cr, uid, ids, context=context):
-            result[company.id] = {}
-            for field in name:
-                result[company.id][field] = False
+            result[company.id] = {}.fromkeys(field_names, False)
             if company.partner_id:
                 address_data = part_obj.address_get(cr, uid, [company.partner_id.id], adr_pref=['default'])
                 if address_data['default']:
-                    address = address_obj.read(cr, uid, address_data['default'], [], context=context)
-                    for field in name:
+                    address = address_obj.read(cr, uid, address_data['default'], field_names, context=context)
+                    for field in field_names:
                         result[company.id][field] = address[field] or False
         return result
 
     def _set_address_data(self, cr, uid, company_id, name, value, arg, context=None):
+        "Set the address data of the partner related to the company"
         company = self.browse(cr, uid, company_id, context=context)
         if company.partner_id:
             part_obj = self.pool.get('res.partner')
@@ -329,8 +329,7 @@ class res_company(osv.osv):
         fp.write(header_xml)
         fp.close()
 
-        if netsvc.Service._services.get('report.company.report'):
-            netsvc.Service._services.pop('report.company.report')
+        netsvc.Service._services.pop('report.company.report', False)
 
         myreport = report_sxw.report_sxw('report.company.report', 'res.company', tempfilename, parser=company_parser)
         return {
