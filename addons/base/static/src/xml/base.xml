@@ -86,19 +86,7 @@
                     </tr>
                     <tr>
                         <td><label for="password">Password:</label></td>
-                        <td><input type="password" name="password"
-                            t-att-value="selected_password || ''"/></td>
-                    </tr>
-                    <tr t-if="has_local_storage">
-                        <td><label for="remember">Remember password:</label></td>
-                        <td class="oe_remember">
-                            <t t-if="remember">
-                            <input type="checkbox" name="remember" checked="yes"/>
-                            </t>
-                            <t t-if="!remember">
-                            <input type="checkbox" name="remember"/>
-                            </t>
-                        </td>
+                        <td><input type="password" name="password"/></td>
                     </tr>
                     <tr>
                         <td></td>
