@@ -605,7 +605,6 @@ class mrp_production(osv.osv):
             cr.execute('delete from mrp_production_workcenter_line where production_id=%s', (production.id,))
             bom_point = production.bom_id
             bom_id = production.bom_id.id
-            routing = production.routing_id.id
             if not bom_point:
                 bom_id = bom_obj._bom_find(cr, uid, production.product_id.id, production.product_uom.id, properties)
                 if bom_id:
@@ -616,7 +615,7 @@ class mrp_production(osv.osv):
             if not bom_id:
                 raise osv.except_osv(_('Error'), _("Couldn't find bill of material for product"))
             factor = uom_obj._compute_qty(cr, uid, production.product_uom.id, production.product_qty, bom_point.product_uom.id)
-            res = bom_obj._bom_explode(cr, uid, bom_point, factor / bom_point.product_qty, properties, routing_id=routing)
+            res = bom_obj._bom_explode(cr, uid, bom_point, factor / bom_point.product_qty, properties, routing_id=production.routing_id.id)
             results = res[0]
             results2 = res[1]
             for line in results:
