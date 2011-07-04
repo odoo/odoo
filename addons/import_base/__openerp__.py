@@ -31,7 +31,7 @@
     'website': 'http://www.openerp.com',
     'depends': ['base'],
     'init_xml': [],
-    'update_xml': [],
+    'update_xml': ["import_base_view.xml"],
     'demo_xml': [],
     'test': [], #TODO provide test
     'installable': True,

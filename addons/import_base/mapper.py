@@ -57,7 +57,7 @@ class concat(mapper):
         self.delimiter = delimiter and delimiter.get('delimiter', ' ') or ' '
         
     def __call__(self, external_values):
-        return self.delimiter.join(map(lambda x : external_values.get(x,''), self.arg))
+        return self.delimiter.join(map(lambda x : str(external_values.get(x,'')), self.arg))
     
 class ppconcat(mapper):
     """
@@ -71,7 +71,7 @@ class ppconcat(mapper):
         self.delimiter = delimiter and delimiter.get('delimiter', ' ') or '\n\n'
         
     def __call__(self, external_values):
-        return self.delimiter.join(map(lambda x : x + ": " + external_values.get(x,''), self.arg))
+        return self.delimiter.join(map(lambda x : x + ": " + str(external_values.get(x,'')), self.arg))
     
 class const(mapper):
     """
@@ -94,12 +94,16 @@ class value(mapper):
         and don't care about the name of the field
         call(self.method, value('field1'))
     """
-    def __init__(self, val, default=''):
+    def __init__(self, val, default='', fallback=False):
         self.val = val
         self.default = default
+        self.fallback = fallback
         
     def __call__(self, external_values):
-        return external_values.get(self.val, self.default) 
+        val = external_values.get(self.val, self.default) 
+        if self.fallback and (not val or val == self.default):
+            val = external_values.get(self.fallback, self.default)
+        return val 
     
 class fallback_value(value):
     def __init__(self, val, default='', fallback=False):
@@ -175,5 +179,3 @@ class call(mapper):
             else:
                 args.append(arg)
         return self.fun(external_values, *args)
-    
-    

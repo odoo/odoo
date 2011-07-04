@@ -46,8 +46,11 @@ class import_framework(Thread):
     """
     DO_NOT_FIND_DOMAIN = [('id', '=', 0)]
   
+    #TODO don't use context to pass credential parameters
     def __init__(self, obj, cr, uid, instance_name, module_name, email_to_notify=False, context=None):
         Thread.__init__(self)
+        #change this value to set another default field for unique ID in the external table
+        self.external_id_field = 'id'
         self.obj = obj
         self.cr = cr
         self.uid = uid
@@ -58,8 +61,6 @@ class import_framework(Thread):
         self.table_list = []
         self.initialize()
         
-        
-      
     """
         Abstract Method to be implemented in 
         the real instance
@@ -84,6 +85,15 @@ class import_framework(Thread):
                      and the list (to table) of id linked 
         """
         return {}
+
+    def get_external_id(self, data):
+        """
+            @return the external id
+                the default implementation return self.external_id_field (that has 'id') by default
+                if the name of id field is different, you can overwrite this method or change the value
+                of self.external_id_field
+        """
+        return data[self.external_id_field]
     
     def get_mapping(self):
         """
@@ -161,7 +171,7 @@ class import_framework(Thread):
             for k, field_name in self_dependencies:
                 data[k] = data.get(field_name) and self._generate_xml_id(data.get(field_name), table)
                     
-            data['id_new'] = self._generate_xml_id(data['id'], table)
+            data['id_new'] = self._generate_xml_id(self.get_external_id(data), table)
             fields, values = self._fields_mapp(data, mapping, table)
             res.append(values)
         
@@ -221,7 +231,6 @@ class import_framework(Thread):
                 fields.append(key)
                 value = val(dict(dict_sugar))
                 data_lst.append(value)
-                
         return fields, data_lst
     
     def _generate_xml_id(self, name, table):
@@ -245,6 +254,7 @@ class import_framework(Thread):
             Check if the external id exist in the openerp database
             in order to check if the id exist the table where it come from
             should be provide
+            @return the xml_id generated if the external_id exist in the database or false
         """
         if not external_id:
             return False
@@ -304,7 +314,6 @@ class import_framework(Thread):
         domain_search = not domain_search and [('name', 'ilike', name)] or domain_search
         obj = self.obj.pool.get(model)
         xml_id = self._generate_xml_id(name, table)
-        
         xml_ref = self.mapped_id_if_exist(model, domain_search, table, name)
         fields.append('id')
         data.append(xml_id)
@@ -349,7 +358,6 @@ class import_framework(Thread):
             
         
         """
-        
         self.data_started = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         self.cr = pooler.get_db(self.cr.dbname).cursor()
         try:
@@ -392,7 +400,7 @@ class import_framework(Thread):
                 
     def _send_notification_email(self, result):
         if not self.email:
-            return 		 
+            return False	 
         tools.email_send(
                 'import@module.openerp',
                 self.email,
@@ -438,4 +446,20 @@ class import_framework(Thread):
         """
         return "The import of data \n instance name : %s \n" % self.instance_name
     
-#For example of use see import_sugarcrm    
+
+    #TODO documentation test
+    def run_test(self):
+        back_get_data = self.get_data
+        back_get_link = self.get_link
+        self.get_data = self.get_data_test
+        self.get_link = self.get_link_test
+        self.run()
+        self.get_data = back_get_data
+        self.get_link = back_get_link
+        
+        
+    def get_data_test(self, table):
+        return [{}]
+
+    def get_link_test(self, from_table, ids, to_table):
+        return {}
