@@ -880,8 +880,8 @@ openerp.base.CrashManager = openerp.base.Dialog.extend({
             this.dialog_title = "OpenERP Error";
             this.template = 'DialogTraceback';
             this.open({
-                width: '80%',
-                height: '80%'
+                width: 'auto',
+                height: 'auto'
             });
         }
     }
@@ -946,8 +946,10 @@ openerp.base.Database = openerp.base.Controller.extend({
 	        	if (confirm("Do you really want to delete the database: " + db + " ?")) {
 		        	self.rpc("/base/session/db_operation", {'flag': 'drop', 'db': db, 'password': password}, 
 			        	function(result) {
-			        		self.$option_id.find("select[name=drop_db] :selected").remove();
-			        		self.notification.notify("Dropping database", "The database '" + db + "' has been dropped");
+			        		if (!result.error) {
+				        		self.$option_id.find("select[name=drop_db] :selected").remove();
+				        		self.notification.notify("Dropping database", "The database '" + db + "' has been dropped");
+				        	}
 			        	});
 		        }
 	        });

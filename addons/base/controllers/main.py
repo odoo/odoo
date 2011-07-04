@@ -12,6 +12,7 @@ import openerpweb.ast
 import openerpweb.nonliterals
 
 import cherrypy
+import xmlrpclib
 
 # Should move to openerpweb.Xml2Json
 class Xml2Json:
@@ -126,12 +127,7 @@ class Session(openerpweb.Controller):
         if flag == 'drop':
             db = kw.get('db')
             password = kw.get('password')
-            try:
-                res = req.session.proxy("db").drop(password, db)
-                if res:
-                    return res
-            except TypeError:
-                return {'error': e}
+            return req.session.proxy("db").drop(password, db)
             
     @openerpweb.jsonrequest
     def modules(self, req):
