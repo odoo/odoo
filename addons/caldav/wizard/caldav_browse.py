@@ -26,9 +26,8 @@ import addons
 from tools.translate import _
 
 class caldav_browse(osv.osv_memory):
-    
+
     __doc = {
-    
     'other' : _("""
   * Webdav server that provides remote access to calendar
   * Synchronisation of calendar using WebDAV
@@ -45,11 +44,8 @@ class caldav_browse(osv.osv_memory):
         HOSTNAME: Host on which OpenERP server(With webdav) is running
         PORT : Port on which OpenERP server is running (By Default : 8069)
         DATABASE_NAME: Name of database on which OpenERP Calendar is created
-        CALENDAR_NAME: Name of calendar to access
      """),
-     
-     
-     
+
      'iphone' : _("""
     For SSL specific configuration see the documentation below
 
@@ -60,7 +56,7 @@ Now, to setup the calendars, you need to:
 3. Click on "Other"
 4. From the "Calendars" group, select "Add CalDAV Account"
 
-5. Enter the host's name 
+5. Enter the host's name
    (ie : if the url is http://openerp.com:8069/webdav/db_1/calendars/ , openerp.com is the host)
 
 6. Fill Username and password with your openerp login and password
@@ -71,8 +67,8 @@ Now, to setup the calendars, you need to:
 9. If you are not using a SSL server, you'll get an error, do not worry and push "Continue"
 
 10. Then click to "Advanced Settings" to specify the right
-    ports and paths. 
-    
+    ports and paths.
+
 11. Specify the port for the OpenERP server: 8071 for SSL, 8069 without.
 
 12. Set the "Account URL" to the right path of the OpenERP webdav:
@@ -87,8 +83,6 @@ Now, to setup the calendars, you need to:
     Note that when creating a new calendar entry, you will have to specify
     which calendar it should be saved at.
 
-
-
 IF you need SSL (and your certificate is not a verified one, as usual),
 then you first will need to let the iPhone trust that. Follow these
 steps:
@@ -99,13 +93,13 @@ steps:
       is the default 8071)
     s2. Safari will try to connect and issue a warning about the certificate
       used. Inspect the certificate and click "Accept" so that iPhone
-      now trusts it.   
+      now trusts it.
     """),
     'android' : _("""
 Prerequire
 ----------
 There is no buit-in way to synchronize calendar with caldav.
-So you need to install a third part software : Calendar (CalDav) 
+So you need to install a third part software : Calendar (CalDav)
 for now it's the only one
 
 configuration
@@ -114,7 +108,7 @@ configuration
 1. Open Calendar Sync
    I'll get an interface with 2 tabs
    Stay on the first one
-   
+
 2. CaDAV Calendar URL : put the URL given above (ie : http://host.com:8069/webdav/db/calendars/users/demo/c/Meetings)
 
 3. Put your openerp username and password
@@ -122,7 +116,7 @@ configuration
 4. If your server don't use SSL, you'll get a warnign, say "Yes"
 
 5. Then you can synchronize manually or custom the settings to synchronize every x minutes.
-    
+
     """),
     
      'evolution' : _("""
@@ -130,7 +124,7 @@ configuration
 
     2. File -> New -> Calendar
 
-    3. Fill the form 
+    3. Fill the form
         - type : CalDav
         - name : Whaterver you want (ie : Meeting)
         - url : http://HOST:PORT/webdav/DB_NAME/calendars/users/USER/c/Meetings (ie : http://localhost:8069/webdav/db_1/calendars/users/demo/c/Meetings) the one given on the top of this window
@@ -140,10 +134,9 @@ configuration
 
     4. Click ok and give your openerp password
 
-    5. A new calendar named with the name you gave should appear on the left side.     
+    5. A new calendar named with the name you gave should appear on the left side.
      """),
-     
-     
+
      'thunderbird' : _("""
 Prerequire
 ----------
@@ -161,7 +154,7 @@ configuration
 
 4. for format choose CalDav
    and as location the url given above (ie : http://host.com:8069/webdav/db/calendars/users/demo/c/Meetings)
-   
+
 5. Choose a name and a color for the Calendar, and we advice you to uncheck "alarm"
 
 6. Then put your openerp login and password (to give the password only check the box "Use password Manager to remember this password"
@@ -169,8 +162,6 @@ configuration
 7. Then Finish, your meetings should appear now in your calendar view
 """),
     }
-    
-    
     _name = 'caldav.browse'
     _description = 'Caldav Browse'
 
@@ -181,55 +172,48 @@ configuration
     }
 
     def default_get(self, cr, uid, fields, context=None):
+        pref_obj = self.pool.get('user.preference')
+        pref_ids = pref_obj.browse(cr, uid ,context.get('rec_id',False), context=context)
         res = {}
-        host = ''
+        host = context.get('host')
         port = ''
-        prefix = 'http://'  
+        prefix = 'http://'
         if not config.get('xmlrpc'):
             if not config.get('netrpc'):
-                prefix = 'https://' 
-                host = config.get('xmlrpcs_interface', None)
+                prefix = 'https://'
                 port = config.get('xmlrpcs_port', 8071)
             else:
-                host = config.get('netrpc_interface', None)
-                port = config.get('netrpc_port',8070) 
-        else: 
-            host = config.get('xmlrpc_interface', None)
+                port = config.get('netrpc_port',8070)
+        else:
             port = config.get('xmlrpc_port',8069)
-        if host ==  '' or None:
-                host = 'localhost'
-                port = 8069
         if not config.get_misc('webdav','enable',True):
             raise Exception("WebDAV is disabled, cannot continue")
         user_pool = self.pool.get('res.users')
         current_user = user_pool.browse(cr, uid, uid, context=context)
-        pref_obj = self.pool.get('user.preference')
-        pref_ids = pref_obj.browse(cr, uid ,context.get('rec_id',False), context=context)
         #TODO write documentation
         res['description'] = self.__doc['other']
         if pref_ids:
-            pref_ids = pref_ids[0] 
+            pref_ids = pref_ids[0]
             if pref_ids.device == 'iphone':
                 url = host + ':' + str(port) + '/'+ pref_ids.service + '/' + cr.dbname + '/'+'calendars/'
             else :
                 url = host + ':' + str(port) + '/'+ pref_ids.service + '/' + cr.dbname + '/'+'calendars/'+ 'users/'+ current_user.login + '/'+ pref_ids.collection.name+ '/'+ pref_ids.calendar.name
-            
+
             res['description'] = self.__doc.get(pref_ids.device , self.__doc['other'])
         file = open(addons.get_module_resource('caldav','doc', 'caldav_doc.pdf'),'rb')
         res['caldav_doc_file'] = base64.encodestring(file.read())
-        
+
         #res['doc_link'] = 'http://doc.openerp.com/'
         res['url'] = prefix+url
         return res
 
     def browse_caldav(self, cr, uid, ids, context):
-
         return {}
 
 caldav_browse()
 
 class user_preference(osv.osv_memory):
-    
+
     _name = 'user.preference'
     _description = 'User preference Form'
 
@@ -238,32 +222,39 @@ class user_preference(osv.osv_memory):
                'calendar' :fields.many2one('basic.calendar', 'Calendar', required=True),
                'service': fields.selection([('webdav','CalDAV')], "Services"),
                'device' : fields.selection([('other', 'Other'), ('iphone', 'iPhone'), ('android', 'Android based device'),('thunderbird', 'Sunbird/Thunderbird'), ('evolution','Evolution')], "Software/Devices"),
+               'host_name': fields.char('Host Name', size=64, required=True),
     }
-    
+
     def _get_default_calendar(self, cr, uid, context):
         if context == None:
             context = {}
         name = context.get('cal_name')
-        
         collection_obj = self.pool.get('basic.calendar')
         ids = collection_obj.search(cr, uid, [('name', '=', name)])
         return ids[0]
-       
-        
+
     def _get_default_collection(self, cr, uid, context):
         collection_obj = self.pool.get('document.directory')
         ids = collection_obj.search(cr, uid, [('name', '=', 'c')])
         return ids[0]
     
-        
+    def _get_default_host(self, cr, uid, context):
+        ids=self.search(cr,uid,[])
+        host_name = ''
+        if ids:
+            ids = len(ids)> 1 and len(ids)-1 or ids[0] # Use len(ids)-1 for taking the value of last id 
+            host_name = self.browse(cr, uid,[ids],context=context)[0].host_name
+        return host_name
+
     _defaults={
               'service': 'webdav',
               'collection' : _get_default_collection,
               'calendar' : _get_default_calendar,
               'device' : 'other',
-              
-    }    
-   
+              'host_name':_get_default_host
+
+    }
+
     def open_window(self, cr, uid, ids, context=None):
         obj_model = self.pool.get('ir.model.data')
         model_data_ids = obj_model.search(cr,uid,[('model','=','ir.ui.view'),('name','=','caldav_Browse')])
@@ -278,6 +269,22 @@ class user_preference(osv.osv_memory):
             'target': 'new',
             'context': context,
         }
-    
-    
+
+    def next_window(self, cr, uid, ids, context=None):
+        obj_model = self.pool.get('ir.model.data')
+        host_name  = self.browse (cr,uid,ids)[0].host_name
+        model_data_ids = obj_model.search(cr,uid,[('model','=','ir.ui.view'),('name','=','user_prefernce_form')])
+        resource_id = obj_model.read(cr, uid, model_data_ids, fields=['res_id'])
+        context.update({'res_id': ids,'host':host_name})
+        resource_id = obj_model.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
+        return {
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'user.preference',
+            'views': [(resource_id,'form')],
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'context': context,
+        }
+
 user_preference()

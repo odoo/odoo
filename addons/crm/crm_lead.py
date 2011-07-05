@@ -143,7 +143,7 @@ class crm_lead(crm_case, osv.osv):
             domain="['|',('section_id','=',section_id),('section_id','=',False), ('object_id.model', '=', 'crm.lead')]"),
         'type_id': fields.many2one('crm.case.resource.type', 'Campaign', \
             domain="['|',('section_id','=',section_id),('section_id','=',False)]"),
-        'channel_id': fields.many2one('res.partner.canal', 'Channel'),
+        'channel_id': fields.many2one('res.partner.canal', 'Lead Source'),
 
         'contact_name': fields.char('Contact Name', size=64),
         'partner_name': fields.char("Customer Name", size=64,help='The name of the future partner that will be created while converting the into opportunity'),
@@ -170,7 +170,7 @@ class crm_lead(crm_case, osv.osv):
                                   \nWhen the case is over, the state is set to \'Done\'.\
                                   \nIf the case needs to be reviewed then the state is set to \'Pending\'.'),
         'message_ids': fields.one2many('mailgate.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
-        'subjects': fields.function(_get_email_subject, fnct_search=_history_search, string='Subject of Email', method=True, type='char', size=64),
+        'subjects': fields.function(_get_email_subject, fnct_search=_history_search, string='Subject of Email', type='char', size=64),
     }
 
 
@@ -270,7 +270,6 @@ class crm_lead(crm_case, osv.osv):
         data_obj = self.pool.get('ir.model.data')
         value = {}
 
-        view_id = False
 
         for case in self.browse(cr, uid, ids, context=context):
             context.update({'active_id': case.id})
