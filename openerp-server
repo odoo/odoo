@@ -109,6 +109,7 @@ if config['db_name']:
             cr.rollback()
 
         pool.get('ir.cron')._poolJobs(db.dbname)
+        # pool.get('ir.cron').restart(db.dbname) # jobs will start to be processed later, when start_agent below is called.
 
         cr.close()
 
