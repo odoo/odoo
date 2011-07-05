@@ -128,8 +128,8 @@ class report_account_analytic_planning(osv.osv):
         'business_days': fields.integer('Business Days', required=True, states={'done':[('readonly', True)]}, help='Set here the number of working days within this planning for one person full time'),
         'planning_user_ids': one2many_mod3('report_account_analytic.planning.user', 'planning_id', 'Planning By User'),
         'planning_account': fields.one2many('report_account_analytic.planning.account', 'planning_id', 'Planning By Account'),
-        'total_planned': fields.function(_get_total_planned, method=True, string='Total Planned'),
-        'total_free': fields.function(_get_total_free, method=True, string='Total Free'),
+        'total_planned': fields.function(_get_total_planned, string='Total Planned'),
+        'total_free': fields.function(_get_total_free, string='Total Free'),
     }
     _defaults = {
         'date_from': lambda *a: time.strftime('%Y-%m-01'),
@@ -202,7 +202,7 @@ class report_account_analytic_planning_line(osv.osv):
         'amount': fields.float('Quantity', required=True),
         'amount_unit': fields.many2one('product.uom', 'Qty UoM', required=True),
         'note': fields.text('Note', size=64),
-        'amount_in_base_uom': fields.function(_amount_base_uom, method=True, string='Quantity in base uom', store=True),
+        'amount_in_base_uom': fields.function(_amount_base_uom, string='Quantity in base uom', store=True),
         'task_ids': fields.one2many('project.task', 'planning_line_id', 'Planning Tasks'),
     }
     _order = 'user_id, account_id'
@@ -301,13 +301,13 @@ class report_account_analytic_planning_user(osv.osv):
     _columns = {
         'planning_id': fields.many2one('report_account_analytic.planning', 'Planning'),
         'user_id': fields.many2one('res.users', 'User', readonly=True),
-        'tasks': fields.function(_get_tasks, method=True, string='Remaining Tasks', help='This value is given by the sum of work remaining to do on the task for this planning, expressed in days.'),
+        'tasks': fields.function(_get_tasks, string='Remaining Tasks', help='This value is given by the sum of work remaining to do on the task for this planning, expressed in days.'),
         'plan_tasks': fields.float('Time Planned on Tasks', readonly=True, help='This value is given by the sum of time allocation with task(s) linked, expressed in days.'),
-        'free': fields.function(_get_free, method=True, string='Unallocated Time', readonly=True, help='Computed as \
+        'free': fields.function(_get_free, string='Unallocated Time', readonly=True, help='Computed as \
 Business Days - (Time Allocation of Tasks + Time Allocation without Tasks + Holiday Leaves)'),
         'plan_open': fields.float('Time Allocation without Tasks', readonly=True,help='This value is given by the sum of time allocation without task(s) linked, expressed in days.'),
         'holiday': fields.float('Leaves',help='This value is given by the total of validated leaves into the \'Date From\' and \'Date To\' of the planning.'),
-        'timesheet': fields.function(_get_timesheets, method=True, string='Timesheet', help='This value is given by the sum of all work encoded in the timesheet(s) between the \'Date From\' and \'Date To\' of the planning.'),
+        'timesheet': fields.function(_get_timesheets, string='Timesheet', help='This value is given by the sum of all work encoded in the timesheet(s) between the \'Date From\' and \'Date To\' of the planning.'),
     }
 
     def init(self, cr):
@@ -435,10 +435,10 @@ class report_account_analytic_planning_account(osv.osv):
     _columns = {
         'planning_id': fields.many2one('report_account_analytic.planning', 'Planning'),
         'account_id': fields.many2one('account.analytic.account', 'Analytic account', readonly=True),
-        'tasks': fields.function(_get_tasks, method=True, string='Remaining Tasks', help='This value is given by the sum of work remaining to do on the task for this planning, expressed in days.'),
+        'tasks': fields.function(_get_tasks, string='Remaining Tasks', help='This value is given by the sum of work remaining to do on the task for this planning, expressed in days.'),
         'plan_tasks': fields.float('Time Allocation of Tasks', readonly=True, help='This value is given by the sum of time allocation with the checkbox \'Assigned in Taks\' set to TRUE expressed in days.'),
         'plan_open': fields.float('Time Allocation without Tasks', readonly=True, help='This value is given by the sum of time allocation with the checkbox \'Assigned in Taks\' set to FALSE, expressed in days.'),
-        'timesheet': fields.function(_get_timesheets, method=True, string='Timesheet', help='This value is given by the sum of all work encoded in the timesheet(s) between the \'Date From\' and \'Date To\' of the planning.'),
+        'timesheet': fields.function(_get_timesheets, string='Timesheet', help='This value is given by the sum of all work encoded in the timesheet(s) between the \'Date From\' and \'Date To\' of the planning.'),
     }
 
     def init(self, cr):
@@ -546,8 +546,8 @@ WHERE user_id=%s and account_id=%s and date>=%s and date<=%s''', (line.user_id.i
         'manager_id': fields.many2one('res.users', 'Manager'),
         'account_id': fields.many2one('account.analytic.account', 'Account'),
         'sum_amount': fields.float('Planned Days', required=True),
-        'sum_amount_real': fields.function(_sum_amount_real, method=True, string='Timesheet'),
-        'sum_amount_tasks': fields.function(_sum_amount_tasks, method=True, string='Tasks'),
+        'sum_amount_real': fields.function(_sum_amount_real, string='Timesheet'),
+        'sum_amount_tasks': fields.function(_sum_amount_tasks, string='Tasks'),
     }
 
     def init(self, cr):

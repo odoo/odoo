@@ -20,7 +20,6 @@
 ##############################################################################
 
 from osv import fields, osv
-import ir
 
 class res_partner(osv.osv):
     _inherit = 'res.partner'
