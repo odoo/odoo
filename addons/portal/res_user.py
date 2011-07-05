@@ -19,8 +19,16 @@
 #
 ##############################################################################
 
-import portal
-import wizard
-import res_user
-import ir_ui_menu
+from osv import osv, fields
+
+
+
+class res_users(osv.osv):
+    _inherit = 'res.users'
+    _columns = {
+        'partner_id': fields.many2one('res.partner',
+            string='Related Partner'),
+    }
+
+res_users()
 
