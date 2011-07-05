@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2011-05-09 10:19+0000\n"
-"PO-Revision-Date: 2011-06-28 06:44+0000\n"
+"PO-Revision-Date: 2011-07-04 17:47+0000\n"
 "Last-Translator: shjerryzhou <Unknown>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-06-29 05:32+0000\n"
+"X-Launchpad-Export-Date: 2011-07-05 05:08+0000\n"
 "X-Generator: Launchpad (build 13168)\n"
 
 #. module: survey
@@ -30,7 +30,7 @@ msgid ""
 "Minimum Required Answer you                                     entered is "
 "greater than the number of answer.                                      "
 "Please use a number that is smaller than %d."
-msgstr ""
+msgstr "你输入最小需要的答案数大于答案的总数。请用小于%d的数量。"
 
 #. module: survey
 #: view:survey.question.wiz:0
@@ -50,7 +50,7 @@ msgid ""
 "Maximum Required Answer you                                     entered for "
 "your maximum is greater than the number of answer.                           "
 "           Please use a number that is smaller than %d."
-msgstr ""
+msgstr "你输入用于最多答案数的最多需要的答案数大于答案的总数。请用小于%d的数量。"
 
 #. module: survey
 #: view:survey:0
@@ -108,7 +108,7 @@ msgstr "范围"
 #. module: survey
 #: view:survey.response.line:0
 msgid "Table Answer"
-msgstr ""
+msgstr "答案列表"
 
 #. module: survey
 #: field:survey.history,date:0
@@ -168,7 +168,7 @@ msgstr "已完成"
 #. module: survey
 #: selection:survey.question,required_type:0
 msgid "Exactly"
-msgstr ""
+msgstr "固定值"
 
 #. module: survey
 #: view:survey:0
@@ -192,7 +192,7 @@ msgid ""
 "#Required Answer you entered                                     is greater "
 "than the number of answer.                                     Please use a "
 "number that is smaller than %d."
-msgstr ""
+msgstr "你输入的需要的答案数大于答案的总数。请用小于%d的数量。"
 
 #. module: survey
 #: field:survey.question,tot_resp:0
@@ -225,7 +225,7 @@ msgstr "选项矩阵（每行只有一个答案）"
 msgid ""
 "Maximum Required Answer you entered for your maximum is greater than the "
 "number of answer. Please use a number that is smaller than %d."
-msgstr ""
+msgstr "你输入用于最多答案数的最多需要的答案数大于答案的总数。请用小于%d的数量。"
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.action_view_survey_question_message
@@ -239,7 +239,7 @@ msgstr "调查问题"
 #. module: survey
 #: view:survey.question.column.heading:0
 msgid "Use if question type is rating_scale"
-msgstr ""
+msgstr "用于问题类型rating_scale"
 
 #. module: survey
 #: field:survey.print,page_number:0
@@ -311,7 +311,7 @@ msgstr "完成的调查总数"
 #. module: survey
 #: view:survey.response.answer:0
 msgid "(Use Only Question Type is matrix_of_drop_down_menus)"
-msgstr ""
+msgstr "（仅用于问题类型matrix_of_drop_down_menus）"
 
 #. module: survey
 #: model:ir.actions.report.xml,name:survey.survey_analysis
@@ -328,7 +328,7 @@ msgstr "已取消"
 #. module: survey
 #: selection:survey.question,type:0
 msgid "Rating Scale"
-msgstr ""
+msgstr "rating scale"
 
 #. module: survey
 #: field:survey.question,comment_field_type:0
@@ -407,7 +407,7 @@ msgstr "编辑问卷"
 #. module: survey
 #: view:survey.response.line:0
 msgid "Survey Answer Line"
-msgstr ""
+msgstr "问卷答案明细"
 
 #. module: survey
 #: field:survey.question.column.heading,menu_choice:0
@@ -471,7 +471,7 @@ msgstr "survey.tbl.column.heading"
 #. module: survey
 #: view:survey.request:0
 msgid "Late"
-msgstr ""
+msgstr "最近"
 
 #. module: survey
 #: sql_constraint:res.users:0
@@ -493,7 +493,7 @@ msgstr "未验证注释内容"
 #: selection:survey.question,comment_valid_type:0
 #: selection:survey.question,validation_type:0
 msgid "Must Be A Whole Number"
-msgstr ""
+msgstr "必须是一个整数"
 
 #. module: survey
 #: field:survey.answer,question_id:0
@@ -536,6 +536,8 @@ msgid ""
 "etc. You can edit survey manually or click on the 'Edit Survey' for a "
 "WYSIWYG interface."
 msgstr ""
+"你可以为不同的目的创建文件调查：招聘与面试，员工定期评估，市场营销活动等。文件由包含多种问题类型的页面组成：文本，多选等。你你可以手工编辑问卷或者通过点击"
+"“编辑文件”进行所见即所得界面编辑。"
 
 #. module: survey
 #: view:survey:0
@@ -547,26 +549,26 @@ msgstr "状态"
 #. module: survey
 #: view:survey.request:0
 msgid "Evaluation Plan Phase"
-msgstr ""
+msgstr "评估计划阶段"
 
 #. module: survey
 #: view:survey:0
 #: view:survey.page:0
 #: view:survey.question:0
 msgid "Between"
-msgstr ""
+msgstr "介于"
 
 #. module: survey
 #: view:survey.print:0
 #: view:survey.print.answer:0
 #: view:survey.print.statistics:0
 msgid "Print"
-msgstr ""
+msgstr "打印"
 
 #. module: survey
 #: field:survey.question,make_comment_field:0
 msgid "Make Comment Field an Answer Choice"
-msgstr ""
+msgstr "使注释字段作为答案选择"
 
 #. module: survey
 #: view:survey:0
@@ -582,7 +584,7 @@ msgstr "电子邮箱"
 #. module: survey
 #: model:ir.ui.menu,name:survey.menu_answer_surveys
 msgid "Answer Surveys"
-msgstr ""
+msgstr "填写问卷"
 
 #. module: survey
 #: selection:survey.response,state:0
@@ -592,12 +594,12 @@ msgstr "未完成"
 #. module: survey
 #: view:survey.print:0
 msgid "Survey Print"
-msgstr ""
+msgstr "打印问卷"
 
 #. module: survey
 #: view:survey.send.invitation:0
 msgid "Select Partner"
-msgstr ""
+msgstr "选择业务伙伴"
 
 #. module: survey
 #: field:survey.question,type:0
@@ -608,7 +610,7 @@ msgstr "问题类型"
 #: code:addons/survey/wizard/survey_answer.py:131
 #, python-format
 msgid "You can not answer this survey more than %s times"
-msgstr ""
+msgstr "你填写此文件不能超过%s次"
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.act_survey_answer
@@ -634,24 +636,24 @@ msgstr ""
 #: code:addons/survey/wizard/survey_answer.py:124
 #, python-format
 msgid "You can not answer because the survey is not open"
-msgstr ""
+msgstr "你不能填写此问卷，因为它还没启用"
 
 #. module: survey
 #: selection:survey.response,response_type:0
 msgid "Link"
-msgstr ""
+msgstr "链接"
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.action_survey_type_form
 #: model:ir.model,name:survey.model_survey_type
 #: view:survey.type:0
 msgid "Survey Type"
-msgstr ""
+msgstr "问卷类型"
 
 #. module: survey
 #: field:survey.page,sequence:0
 msgid "Page Nr"
-msgstr ""
+msgstr "页码"
 
 #. module: survey
 #: view:survey:0
@@ -660,12 +662,12 @@ msgstr ""
 #: field:survey.question,descriptive_text:0
 #: selection:survey.question,type:0
 msgid "Descriptive Text"
-msgstr ""
+msgstr "描述性文字"
 
 #. module: survey
 #: field:survey.question,minimum_req_ans:0
 msgid "Minimum Required Answer"
-msgstr ""
+msgstr "最小需要的答案数"
 
 #. module: survey
 #: code:addons/survey/survey.py:484
@@ -673,75 +675,75 @@ msgstr ""
 msgid ""
 "You must enter one or more menu choices in column heading (white spaces not "
 "allowed)"
-msgstr ""
+msgstr "你必须在列头输入一个或多个菜单选项（不能为空格）"
 
 #. module: survey
 #: field:survey.question,req_error_msg:0
 msgid "Error Message"
-msgstr ""
+msgstr "错误消息"
 
 #. module: survey
 #: code:addons/survey/survey.py:482
 #, python-format
 msgid "You must enter one or more menu choices in column heading"
-msgstr ""
+msgstr "你必须在列头输入一个或多个菜单选项"
 
 #. module: survey
 #: field:survey.request,date_deadline:0
 msgid "Deadline date"
-msgstr ""
+msgstr "截至日期"
 
 #. module: survey
 #: selection:survey.question,comment_valid_type:0
 #: selection:survey.question,validation_type:0
 msgid "Must Be A Date"
-msgstr ""
+msgstr "必须为日期类型"
 
 #. module: survey
 #: model:ir.model,name:survey.model_survey_print
 msgid "survey.print"
-msgstr ""
+msgstr "survey.print"
 
 #. module: survey
 #: view:survey.question.column.heading:0
 #: field:survey.question.column.heading,title:0
 msgid "Column Heading"
-msgstr ""
+msgstr "列头"
 
 #. module: survey
 #: field:survey.question,is_require_answer:0
 msgid "Require Answer to Question"
-msgstr ""
+msgstr "需要答案"
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.action_survey_request_tree
 #: model:ir.ui.menu,name:survey.menu_survey_type_form1
 msgid "Survey Requests"
-msgstr ""
+msgstr "问卷请求"
 
 #. module: survey
 #: code:addons/survey/survey.py:375
 #: code:addons/survey/survey.py:462
 #, python-format
 msgid "You must enter one or more column heading."
-msgstr ""
+msgstr "你必须输入一条或多条列头"
 
 #. module: survey
 #: code:addons/survey/wizard/survey_answer.py:759
 #: code:addons/survey/wizard/survey_answer.py:954
 #, python-format
 msgid "Please enter an integer value"
-msgstr ""
+msgstr "请输入一个整数"
 
 #. module: survey
 #: model:ir.model,name:survey.model_survey_browse_answer
 msgid "survey.browse.answer"
-msgstr ""
+msgstr "survey.browse.answer"
 
 #. module: survey
 #: selection:survey.question,comment_field_type:0
 msgid "Paragraph of Text"
-msgstr ""
+msgstr "文本段落"
 
 #. module: survey
 #: code:addons/survey/survey.py:428
@@ -750,37 +752,37 @@ msgid ""
 "Maximum Required Answer you                                     entered for "
 "your maximum is greater than the number of answer.                           "
 "          Please use a number that is smaller than %d."
-msgstr ""
+msgstr "你输入的最多需要的答案数大于答案数。请用小于%d的数字。"
 
 #. module: survey
 #: view:survey.request:0
 msgid "Watting Answer"
-msgstr ""
+msgstr "等待回答"
 
 #. module: survey
 #: view:survey:0
 #: view:survey.page:0
 #: view:survey.question:0
 msgid "When the question is not answered, display this error message:"
-msgstr ""
+msgstr "当问题没有回答的时候，显示此错误消息："
 
 #. module: survey
 #: view:survey:0
 #: view:survey.page:0
 #: view:survey.question:0
 msgid "Options"
-msgstr ""
+msgstr "选项"
 
 #. module: survey
 #: model:ir.ui.menu,name:survey.menu_browse_survey_response
 msgid "Browse Answers"
-msgstr ""
+msgstr "浏览答案"
 
 #. module: survey
 #: field:survey.response.answer,comment_field:0
 #: view:survey.response.line:0
 msgid "Comment"
-msgstr ""
+msgstr "注释"
 
 #. module: survey
 #: model:ir.model,name:survey.model_survey_answer
@@ -790,40 +792,40 @@ msgstr ""
 #: view:survey.response.answer:0
 #: view:survey.response.line:0
 msgid "Survey Answer"
-msgstr ""
+msgstr "问卷答案"
 
 #. module: survey
 #: selection:survey.answer,type:0
 msgid "Selection"
-msgstr ""
+msgstr "选择"
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.action_browse_survey_response
 #: view:survey:0
 msgid "Answer Survey"
-msgstr ""
+msgstr "填写问卷"
 
 #. module: survey
 #: view:survey:0
 #: view:survey.page:0
 #: view:survey.question:0
 msgid "Comment Field"
-msgstr ""
+msgstr "备注字段"
 
 #. module: survey
 #: selection:survey.response,response_type:0
 msgid "Manually"
-msgstr ""
+msgstr "手工"
 
 #. module: survey
 #: help:survey,responsible_id:0
 msgid "User responsible for survey"
-msgstr ""
+msgstr "问卷的用户职责"
 
 #. module: survey
 #: field:survey.question,comment_column:0
 msgid "Add comment column in matrix"
-msgstr ""
+msgstr "在矩阵列表中添加备注字段"
 
 #. module: survey
 #: field:survey.answer,response:0
@@ -834,14 +836,14 @@ msgstr ""
 #: field:survey.print,without_pagebreak:0
 #: field:survey.print.answer,without_pagebreak:0
 msgid "Print Without Page Breaks"
-msgstr ""
+msgstr "不分页符打印"
 
 #. module: survey
 #: view:survey:0
 #: view:survey.page:0
 #: view:survey.question:0
 msgid "When the comment is an invalid format, display this error message"
-msgstr ""
+msgstr "当备注的格式无效的时候，显示此错误消息"
 
 #. module: survey
 #: code:addons/survey/wizard/survey_selection.py:138
@@ -849,13 +851,13 @@ msgstr ""
 msgid ""
 "You can not give more response. Please contact the author of this survey for "
 "further assistance."
-msgstr ""
+msgstr "你不能再次回复。请联系此问卷的作者获取更多的帮助。"
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.act_survey_page_question
 #: model:ir.actions.act_window,name:survey.act_survey_question
 msgid "Questions"
-msgstr ""
+msgstr "问题"
 
 #. module: survey
 #: help:survey,response_user:0
