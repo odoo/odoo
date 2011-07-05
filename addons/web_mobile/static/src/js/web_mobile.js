@@ -83,18 +83,51 @@ openerp.web_mobile.ListView = openerp.base.Controller.extend({
     on_menu_action_loaded: function(data) {
         var self = this;
         if (data.action.length) {
-            var action = data.action[0][2];
-            self.on_action(action);
+            this.action = data.action[0][2];
+            this.dataset = (new openerp.base.DataSetSearch(this.session, this.action.res_model, null, null))
+            this.dataset.read_slice(false, false, false, function(result){
+                self.$element.html(QWeb.render("ListView", {'records' : result}));
+                self.$element.find("a#list-id").click(self.on_list_click);
+            });
         }
     },
-    on_action: function(action) {
+    on_list_click: function(ev) {
+        $record = $(ev.currentTarget);
         var self = this;
-        var view_id = action.views[0][0];
-        (new openerp.base.DataSetSearch(this.session, action.res_model, null, null))
-            .read_slice(false, false, false, function(result){
-                this.listview = new openerp.web_mobile.ListView(this.session, "oe_app");
-                self.$element.html(QWeb.render("ListView", {'records' : result}));
-            });
+        id = $record.data('id');
+        model = this.action.res_model;
+        view_id = this.action.views[1][0];
+        this.dataset.read_slice(false, false, false, function(result){
+            for (var i = 0; i < result.length; i++) {
+                if (result[i].id == id) {
+                    var data = result[i];
+                }
+            }
+            self.rpc("/base/formview/load", {"model": model, "view_id": view_id }, 
+                function(result){
+                    var view_fields = result.fields_view.arch.children;
+                    get_fields = self.filter_fields(view_fields);
+                    for (var j = 0; j < view_fields.length; j++) {
+                        if (view_fields[j].tag == 'notebook') {
+                            var notebooks = view_fields[j];
+                        }
+                    }
+                    jQuery("#oe_header").find("h1").html(result.fields_view.arch.attrs.string);
+                    self.$element.html(QWeb.render("FormView", {'get_fields': get_fields, 'notebooks': notebooks || false, 'fields' : result.fields_view.fields, 'values' : data}));
+                });
+        });
+    },
+    filter_fields: function(view_fields, fields) {
+        this.fields = fields || [];
+        for (var i=0; i < view_fields.length; i++){
+            if (view_fields[i].tag == 'field') {
+                this.fields.push(view_fields[i]);
+            }
+            if (view_fields[i].tag == 'group') {
+                this.filter_fields(view_fields[i].children, this.fields);
+            }
+        }
+        return this.fields;
     }
  });
 
