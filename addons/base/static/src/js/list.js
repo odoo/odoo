@@ -275,7 +275,7 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
             return this.rpc('/base/listview/load', {
                 model: this.model,
                 view_id: this.view_id,
-                context: this.dataset.context,
+                context: this.dataset.get_context(),
                 toolbar: !!this.flags.sidebar
             }, callback);
         }
@@ -388,7 +388,7 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
         var self = this;
         _.extend(this.dataset, {
             domain: dataset.domain,
-            context: dataset.context
+            context: dataset.get_context()
         }).read_slice([], 0, false, function () {
             self.select_record(index);
         });

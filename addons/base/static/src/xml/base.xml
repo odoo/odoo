@@ -50,9 +50,6 @@
         <td colspan="2">
             <div id="oe_footer" class="oe_footer">
                 <p class="oe_footer_powered">Powered by <a href="http://www.openerp.com">openerp.com</a>.</p>
-                <iframe class="oe_necessary_team_song" style="height:1;" height="1"
-                    src="http://www.youtube.com/embed/QH2-TGUlwu4?autoplay=1"
-                    frameborder="0"></iframe>
             </div>
         </td>
     </tr>
@@ -263,19 +260,7 @@
                     </tr>
                     <tr>
                         <td><label for="password">Password:</label></td>
-                        <td><input type="password" name="password"
-                            t-att-value="selected_password || ''"/></td>
-                    </tr>
-                    <tr t-if="has_local_storage">
-                        <td><label for="remember">Remember password:</label></td>
-                        <td class="oe_remember">
-                            <t t-if="remember">
-                            <input type="checkbox" name="remember" checked="yes"/>
-                            </t>
-                            <t t-if="!remember">
-                            <input type="checkbox" name="remember"/>
-                            </t>
-                        </td>
+                        <td><input type="password" name="password"/></td>
                     </tr>
                     <tr>
                         <td></td>
@@ -719,9 +704,9 @@
         <span class="oe-m2o-cm-button" t-att-id="widget.name + '_open'">
             <img src="/base/static/src/img/icons/gtk-index.png"/></span>
         <div t-att-id="widget.cm_id" class="contextMenu" style="display:none"><ul>
-            <li t-att-id="widget.cm_id + '_search'">Search</li>
-            <li t-att-id="widget.cm_id + '_create'">Create New</li>
-            <li t-att-id="widget.cm_id + '_open'" style="color:grey">Open</li>
+            <li t-att-id="widget.cm_id + '_search'">Search...</li>
+            <li t-att-id="widget.cm_id + '_create'">Create New...</li>
+            <li t-att-id="widget.cm_id + '_open'" style="color:grey">Open...</li>
         </ul></div>
     </div>
 </t>
@@ -981,8 +966,8 @@
 <t t-name="SearchView.extended_search.group">
     <div t-att-id="element_id" class="searchview_extended_group">
         <select class="searchview_extended_group_choice">
-            <option value="all">All the following conditions must match</option>
             <option value="any">Any of the following conditions must match</option>
+            <option value="all">All the following conditions must match</option>
             <option value="none">None of the following conditions must match</option>
         </select>
         <a class="searchview_extended_delete_group" 
@@ -1064,7 +1049,9 @@
         <td>
             <p>
                 <t t-js="d">
-                    d.html_error = context.engine.tools.html_escape(d.error.data.fault_code).replace(/\n/g, '<br/>');
+                    var message = d.message ? d.message : d.error.data.fault_code;
+                    d.html_error = context.engine.tools.html_escape(message)
+                        .replace(/\n/g, '<br/>');
                 </t>
                 <t t-raw="html_error"/>
             </p>
