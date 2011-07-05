@@ -24,6 +24,7 @@ from osv import fields, osv
 import time
 import binascii
 import tools
+from tools.translate import _
 
 CRM_HELPDESK_STATES = (
     crm.AVAILABLE_STATES[2][0], # Cancelled
@@ -104,7 +105,7 @@ class crm_helpdesk(crm.crm_case, osv.osv):
         """
         mailgate_pool = self.pool.get('email.server.tools')
 
-        subject = msg.get('subject')
+        subject = msg.get('subject') or _("No Subject")
         body = msg.get('body')
         msg_from = msg.get('from')
         priority = msg.get('priority')

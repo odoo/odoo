@@ -300,7 +300,7 @@ class hr_applicant(crm.crm_case, osv.osv):
         mailgate_pool = self.pool.get('email.server.tools')
         attach_obj = self.pool.get('ir.attachment')
 
-        subject = msg.get('subject')
+        subject = msg.get('subject') or _("No Subject")
         body = msg.get('body')
         msg_from = msg.get('from')
         priority = msg.get('priority')
