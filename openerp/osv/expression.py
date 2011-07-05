@@ -23,6 +23,8 @@
 from openerp.tools import flatten, reverse_enumerate
 import fields
 
+#.apidoc title: Domain Expressions
+
 NOT_OPERATOR = '!'
 OR_OPERATOR = '|'
 AND_OPERATOR = '&'

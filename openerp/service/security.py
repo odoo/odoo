@@ -22,8 +22,11 @@
 import openerp.pooler as pooler
 import openerp.tools as tools
 
-# When rejecting a password, hide the traceback
+#.apidoc title: Authentication helpers
+
 class ExceptionNoTb(Exception):
+    """ When rejecting a password, hide the traceback
+    """
     def __init__(self, msg):
         super(ExceptionNoTb, self).__init__(msg)
         self.traceback = ('','','')
