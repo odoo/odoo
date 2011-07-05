@@ -133,9 +133,11 @@ class Session(openerpweb.Controller):
         elif flag == 'backup':
             db = kw.get('db')
             password = kw.get('password')
-            # todo: content type
+            
             res = req.session.proxy("db").dump(password, db)
             if res:
+                cherrypy.response.headers['Content-Type'] = "application/data"
+                cherrypy.response.headers['Content-Disposition'] = 'filename="' + db + '.dump"'
                 return base64.decodestring(res)
             
         elif flag == 'restore':

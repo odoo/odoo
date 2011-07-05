@@ -943,14 +943,16 @@ openerp.base.Database = openerp.base.Controller.extend({
         	
         	$("form[name=drop_db_form]").validate();
         	
-	        self.$option_id.find('#drop_db_btn').click(function() {
+	        self.$option_id.find('form[name=drop_db_form]').submit(function(ev) {
+        		ev.preventDefault();
+        		
 	        	var db = self.$option_id.find("select[name=drop_db]").val();
 		        var password = self.$option_id.find("input[name=drop_pwd]").val();
 	        	
 	        	if (confirm("Do you really want to delete the database: " + db + " ?")) {
 		        	self.rpc("/base/session/db_operation", {'flag': 'drop', 'db': db, 'password': password}, 
 			        	function(result) {
-			        		if (!result.error) {
+			        		if (result && !result.error) {
 				        		self.$option_id.find("select[name=drop_db] :selected").remove();
 				        		self.notification.notify("Dropping database", "The database '" + db + "' has been dropped");
 				        	}
@@ -965,13 +967,15 @@ openerp.base.Database = openerp.base.Controller.extend({
         	
         	$("form[name=backup_db_form]").validate();
         	
-        	self.$option_id.find('#backup_db_btn').click(function() {
+        	self.$option_id.find('form[name=backup_db_form]').submit(function(ev) {
+        		ev.preventDefault();
+        		
 	        	var db = self.$option_id.find("select[name=backup_db]").val();
 		        var password = self.$option_id.find("input[name=backup_pwd]").val();
-        	
+		        
 	        	self.rpc("/base/session/db_operation", {'flag': 'backup', 'db': db, 'password': password}, 
 	        	function(result) {
-	        		if (!result.error) {
+	        		if (result && !result.error) {
 		        		self.notification.notify("Backup has been created for the database: '" + db + "'");
 		        	}
 	        	});
@@ -984,14 +988,16 @@ openerp.base.Database = openerp.base.Controller.extend({
         	
         	$("form[name=restore_db_form]").validate();
         	
-        	self.$option_id.find('#restore_db_btn').click(function() {
+        	self.$option_id.find('form[name=restore_db_form]').submit(function(ev) {
+        		ev.preventDefault();
+        		
 	        	var db = self.$option_id.find("input[name=restore_db]").val();
 		        var password = self.$option_id.find("input[name=restore_pwd]").val();
 		        var new_db = self.$option_id.find("input[name=new_db]").val();
         	
 	        	self.rpc("/base/session/db_operation", {'flag': 'restore', 'db': db, 'password': password, 'new_db': new_db}, 
 	        	function(result) {
-	        		if (!result.error) {
+	        		if (result && !result.error) {
 		        		self.notification.notify("You restored your database as: '" + new_db + "'");
 		        	}
 	        	});
