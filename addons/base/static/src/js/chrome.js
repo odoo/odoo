@@ -994,18 +994,46 @@ openerp.base.Database = openerp.base.Controller.extend({
         	self.db_string = "CHANGE DATABASE PASSWORD";
         	self.$option_id.html(QWeb.render("Change_DB_Pwd", self));
         	
-        	self.$option_id.find('#change_pwd_btn').click(function() {
-	        	var old_pwd = self.$option_id.find("input[name=old_db]").val();
+        	$("form[name=change_db_pwd]").validate();
+        	
+        	$("input[name=old_pwd]").rules("add", {
+			 required: true,
+			 minlength: 1,
+			 messages: {
+			 		required: "Please enter password !"
+				}
+			});
+			$("input[name=new_pwd]").rules("add", {
+			 required: true,
+			 minlength: 1,
+			 messages: {
+			 		required: "Please enter password !"
+				}
+			});
+			$("input[name=confirm_pwd]").rules("add", {
+			 required: true,
+			 equalTo: 'input[name=new_pwd]',
+			 messages: {
+			 		required: "Password did not match !"
+				}
+			});
+			
+			$("input[name=old_pwd]").focus();
+	        
+        	self.$option_id.find('form[name=change_db_pwd]').submit(function(ev) {
+        		ev.preventDefault();
+        		
+        		var old_pwd = self.$option_id.find("input[name=old_pwd]").val();
 		        var new_pwd = self.$option_id.find("input[name=new_pwd]").val();
 		        var confirm_pwd = self.$option_id.find("input[name=confirm_pwd]").val();
-        	
+        		        		
 	        	self.rpc("/base/session/db_operation", {'flag': 'change_password', 'old_password': old_pwd, 'new_password': new_pwd, 'confirm_password': confirm_pwd}, 
 	        	function(result) {
-	        		if (!result.error) {
+	        		if (result && !result.error) {
 		        		self.notification.notify("Password has been changed successfully");
 		        	}
 	        	});
-	        });
+        	});
         });
         
        	self.$element.find('#back-to-login').click(function() {
@@ -1051,7 +1079,7 @@ openerp.base.Login =  openerp.base.Controller.extend({
         	self.database.start();
         });
         
-        this.$element.find("form").submit(this.on_submit);
+       this.$element.find("form").submit(this.on_submit);
     },
     on_login_invalid: function() {
         this.$element.closest(".openerp").addClass("login-mode");

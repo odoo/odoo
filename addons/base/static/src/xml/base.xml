@@ -199,30 +199,34 @@
 	</table>
 </t>
 <t t-name="Change_DB_Pwd">
-	<table width="100%">
-		<tr>
-			<td class="option_string">
-				<t t-esc="db_string"/>
-			</td>
-		</tr>
-	</table>
-	<table align="center" class="db_option_table">
-		<tr>
-			<td><label for="old_pwd">Old password:</label></td>
-			<td><input type="password" name="old_pwd"/></td>
-		</tr>
-		<tr>
-			<td><label for="new_pwd">New password:</label></td>
-			<td><input type="password" name="new_pwd"/></td>
-		</tr>
-		<tr>
-			<td><label for="confirm_pwd">Confirm password:</label></td>
-			<td><input type="password" name="confirm_pwd"/></td>
-		</tr>
-		<tr>
-			<td colspan="2" align="right"><button type="button" id="change_pwd_btn">Change Password</button></td>
-		</tr>
-	</table>
+	<form name="change_db_pwd" method="POST">
+		<table width="100%">
+			<tr>
+				<td class="option_string">
+					<t t-esc="db_string"/>
+				</td>
+			</tr>
+		</table>
+		<table align="center" class="db_option_table">
+			<tr>
+				<td><label for="old_pwd">Old password:</label></td>
+				<td><input type="password" name="old_pwd"/></td>
+			</tr>
+			<tr>
+				<td><label for="new_pwd">New password:</label></td>
+				<td><input type="password" name="new_pwd"/></td>
+			</tr>
+			<tr>
+				<td><label for="confirm_pwd">Confirm password:</label></td>
+				<td><input type="password" name="confirm_pwd"/></td>
+			</tr>
+			<tr>
+				<td colspan="2" align="right">
+					<input type="submit" value="Change Password"/>
+				</td>
+			</tr>
+		</table>
+	</form>
 </t>
 <t t-name="Login">
     <form>
