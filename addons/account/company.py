@@ -30,7 +30,6 @@ class res_company(osv.osv):
             type='many2one',
             relation='account.account',
             string="Reserve and Profit/Loss Account",
-            method=True,
             view_load=True,
             domain="[('type', '=', 'other')]",
             help="This Account is used for transferring Profit/Loss(If It is Profit: Amount will be added, Loss : Amount will be deducted.), Which is calculated from Profit & Loss Report"),

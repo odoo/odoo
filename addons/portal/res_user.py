@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2011 OpenERP S.A (<http://www.openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,22 +19,16 @@
 #
 ##############################################################################
 
-from osv import fields, osv
+from osv import osv, fields
 
-class res_partner(osv.osv):
-    _inherit = 'res.partner'
+
+
+class res_users(osv.osv):
+    _inherit = 'res.users'
     _columns = {
-        'property_delivery_carrier': fields.property(
-          'delivery.carrier',
-          type='many2one',
-          relation='delivery.carrier',
-          string="Delivery Method",
-          view_load=True,
-          help="This delivery method will be used when invoicing from picking."),
+        'partner_id': fields.many2one('res.partner',
+            string='Related Partner'),
     }
-res_partner()
 
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+res_users()
 

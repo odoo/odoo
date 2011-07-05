@@ -138,16 +138,19 @@ class res_users(osv.osv):
 
     def create(self, cr, uid, data, context=None):
         user_id = super(res_users, self).create(cr, uid, data, context=context)
-        data_obj = self.pool.get('ir.model.data')
-        try:
-            data_id = data_obj._get_id(cr, uid, 'crm', 'ir_ui_view_sc_calendar0')
-            view_id  = data_obj.browse(cr, uid, data_id, context=context).res_id
-            self.pool.get('ir.ui.view_sc').copy(cr, uid, view_id, default = {
-                                        'user_id': user_id}, context=context)
-        except:
-            # Tolerate a missing shortcut. See product/product.py for similar code.
-            logging.getLogger('orm').debug('Skipped meetings shortcut for user "%s"', data.get('name','<new'))
-            
+        
+        # add shortcut unless 'noshortcut' is True in context
+        if not(context and context.get('noshortcut', False)):
+            data_obj = self.pool.get('ir.model.data')
+            try:
+                data_id = data_obj._get_id(cr, uid, 'crm', 'ir_ui_view_sc_calendar0')
+                view_id  = data_obj.browse(cr, uid, data_id, context=context).res_id
+                self.pool.get('ir.ui.view_sc').copy(cr, uid, view_id, default = {
+                                            'user_id': user_id}, context=context)
+            except:
+                # Tolerate a missing shortcut. See product/product.py for similar code.
+                logging.getLogger('orm').debug('Skipped meetings shortcut for user "%s"', data.get('name','<new'))
+        
         return user_id
 
 res_users()

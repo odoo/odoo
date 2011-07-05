@@ -250,7 +250,6 @@ class pos_order(osv.osv):
             states={'draft': [('readonly', False)]}, readonly=True),
         'date_order': fields.datetime('Date Ordered', readonly=True, select=True),
         'date_validation': fields.function(_get_date_payment,
-                                           method=True,
                                            string='Validation Date',
                                            type='date', select=True, store=True),
         'date_payment': fields.function(_get_date_payment2,
