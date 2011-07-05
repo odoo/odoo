@@ -190,8 +190,6 @@ class hr_holidays(osv.osv):
 
     def onchange_date_from(self, cr, uid, ids, date_to, date_from, context=None):
         result = {}
-        if context is None:
-            context = {}
         if date_to and date_from:
             diff_day = self._get_number_of_days(date_from, date_to, context=context)
             result['value'] = {
@@ -226,8 +224,6 @@ class hr_holidays(osv.osv):
         return True
 
     def holidays_validate(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         self.check_holidays(cr, uid, ids, context=context)
         obj_emp = self.pool.get('hr.employee')
         ids2 = obj_emp.search(cr, uid, [('user_id', '=', uid)])
@@ -235,8 +231,6 @@ class hr_holidays(osv.osv):
         return self.write(cr, uid, ids, {'state':'validate1', 'manager_id': manager})
 
     def holidays_validate2(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         self.check_holidays(cr, uid, ids, context=context)
         obj_emp = self.pool.get('hr.employee')
         ids2 = obj_emp.search(cr, uid, [('user_id', '=', uid)])
@@ -283,14 +277,10 @@ class hr_holidays(osv.osv):
         return True
 
     def holidays_confirm(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         self.check_holidays(cr, uid, ids, context=context)
         return self.write(cr, uid, ids, {'state':'confirm'})
 
     def holidays_refuse(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         obj_emp = self.pool.get('hr.employee')
         ids2 = obj_emp.search(cr, uid, [('user_id', '=', uid)])
         manager = ids2 and ids2[0] or False

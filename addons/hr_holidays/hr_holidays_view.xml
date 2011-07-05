@@ -71,7 +71,7 @@
                 <form string="Leave Request">
                     <group col="8" colspan="4">
                     <field name="name" attrs="{'readonly':[('state','!=','draft'),('state','!=','confirm')]}" />
-                    <field name="holiday_type" on_change="onchange_type(holiday_type, context)" attrs="{'readonly':[('state','!=','draft')]}" width="130" groups="base.group_hr_manager"/>
+                    <field name="holiday_type" on_change="onchange_type(holiday_type)" attrs="{'readonly':[('state','!=','draft')]}" width="130" groups="base.group_hr_manager"/>
                     <group attrs="{'invisible':[('holiday_type','=','employee')]}">
                         <field name="category_id"  attrs="{'required':[('holiday_type','=','category')], 'readonly':[('state','!=','draft')]}"/>
                         </group>
@@ -83,8 +83,8 @@
                         <page string="General">
                             <field name="holiday_status_id" on_change="onchange_sec_id(holiday_status_id)" context="{'employee_id':employee_id}" />
                             <field name="department_id" attrs="{'readonly':[('holiday_type','=','category')]}" />
-                            <field name="date_from" on_change="onchange_date_from(date_to, date_from, context)" required="1"/>
-                            <field name="date_to" on_change="onchange_date_from(date_to, date_from, context)" required="1"/>
+                            <field name="date_from" on_change="onchange_date_from(date_to, date_from)" required="1"/>
+                            <field name="date_to" on_change="onchange_date_from(date_to, date_from)" required="1"/>
                             <field name="number_of_days_temp"/>
                             <newline/>
                             <field name="manager_id"/>
@@ -115,7 +115,7 @@
             <form string="Allocation Request">
                 <group col="8" colspan="4">
                     <field name="name" />
-                    <field name="holiday_type" on_change="onchange_type(holiday_type, context)" attrs="{'readonly':[('state','!=','draft')]}" string="Allocation Category" groups="base.group_hr_manager"/>
+                    <field name="holiday_type" on_change="onchange_type(holiday_type)" attrs="{'readonly':[('state','!=','draft')]}" string="Allocation Category" groups="base.group_hr_manager"/>
                         <group attrs="{'invisible':[('holiday_type','=','category')]}">
                         <field name="employee_id" attrs="{'required':[('holiday_type','=','employee')]}"/>
                         </group>
@@ -181,8 +181,8 @@
                     <field name="name" />
                     <field name="holiday_status_id" />
                     <field name="type"/>
-                    <field name="date_from" on_change="onchange_date_from(date_to, date_from, context)" attrs="{'readonly':[('type','=','add')], 'required':[('type','=','remove')]}"/>
-                    <field name="date_to" on_change="onchange_date_from(date_to, date_from, context)" attrs="{'readonly':[('type','=','add')], 'required':[('type','=','remove')]}"/>
+                    <field name="date_from" on_change="onchange_date_from(date_to, date_from)" attrs="{'readonly':[('type','=','add')], 'required':[('type','=','remove')]}"/>
+                    <field name="date_to" on_change="onchange_date_from(date_to, date_from)" attrs="{'readonly':[('type','=','add')], 'required':[('type','=','remove')]}"/>
                     <field name="number_of_days_temp"/>
                     <notebook colspan="4">
                         <page string="General">
