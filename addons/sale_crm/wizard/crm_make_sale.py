@@ -91,6 +91,7 @@ class crm_make_sale(osv.osv_memory):
                 vals = {
                     'origin': _('Opportunity: %s') % str(case.id),
                     'section_id': case.section_id and case.section_id.id or False,
+                    'categ_id': case.categ_id and case.categ_id.id or False,
                     'shop_id': make.shop_id.id,
                     'partner_id': partner.id,
                     'pricelist_id': pricelist,

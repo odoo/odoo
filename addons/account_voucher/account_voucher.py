@@ -226,7 +226,7 @@ class account_voucher(osv.osv):
         'writeoff_acc_id': fields.many2one('account.account', 'Write-Off account', readonly=True, states={'draft': [('readonly', False)]}),
         'comment': fields.char('Write-Off Comment', size=64, required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'analytic_id': fields.many2one('account.analytic.account','Write-Off Analytic Account', readonly=True, states={'draft': [('readonly', False)]}),
-        'writeoff_amount': fields.function(_get_writeoff_amount, method=True, string='Write-Off Amount', type='float', readonly=True),
+        'writeoff_amount': fields.function(_get_writeoff_amount, string='Write-Off Amount', type='float', readonly=True),
     }
     _defaults = {
         'period_id': _get_period,
@@ -845,8 +845,8 @@ class account_voucher_line(osv.osv):
         'move_line_id': fields.many2one('account.move.line', 'Journal Item'),
         'date_original': fields.related('move_line_id','date', type='date', relation='account.move.line', string='Date', readonly=1),
         'date_due': fields.related('move_line_id','date_maturity', type='date', relation='account.move.line', string='Due Date', readonly=1),
-        'amount_original': fields.function(_compute_balance, method=True, multi='dc', type='float', string='Original Amount', store=True),
-        'amount_unreconciled': fields.function(_compute_balance, method=True, multi='dc', type='float', string='Open Balance', store=True),
+        'amount_original': fields.function(_compute_balance, multi='dc', type='float', string='Original Amount', store=True),
+        'amount_unreconciled': fields.function(_compute_balance, multi='dc', type='float', string='Open Balance', store=True),
         'company_id': fields.related('voucher_id','company_id', relation='res.company', type='many2one', string='Company', store=True, readonly=True),
     }
     _defaults = {
@@ -991,7 +991,7 @@ class account_bank_statement_line(osv.osv):
 
     _columns = {
         'amount_reconciled': fields.function(_amount_reconciled,
-            string='Amount reconciled', method=True, type='float'),
+            string='Amount reconciled', type='float'),
         'voucher_id': fields.many2one('account.voucher', 'Payment'),
 
     }
