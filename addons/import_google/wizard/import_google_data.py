@@ -71,7 +71,7 @@ class synchronize_google(osv.osv_memory):
             raise osv.except_osv(_('Warning !'), _("No Google Username or password Defined for user.\nPlease define in user view"))
         gd_client = google.google_login(user_obj.gmail_user,user_obj.gmail_password,type='group')
         if not gd_client:
-            raise osv.except_osv(_('Error'), _("Authentication fail check the user and password !"))
+            return [('failed', 'Connection to google fail')]
 
         res = []
         query = gdata.contacts.service.GroupsQuery(feed='/m8/feeds/groups/default/full')
@@ -92,7 +92,7 @@ class synchronize_google(osv.osv_memory):
             for cal in calendars.entry:
                 res.append((cal.id.text, cal.title.text))
         except Exception, e:
-            raise osv.except_osv('Error !', e.args[0].get('body'))
+            return [('failed', 'Connection to google fail')]
         res.append(('all', 'All Calendars'))
         return res
 
