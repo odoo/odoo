@@ -520,14 +520,20 @@ class one2many(_column):
             elif act[0] == 2:
                 obj.unlink(cr, user, [act[1]], context=context)
             elif act[0] == 3:
-                cr.execute('update '+_table+' set '+self._fields_id+'=null where id=%s', (act[1],))
+                reverse_rel = obj._all_columns.get(self._fields_id)
+                assert reverse_rel, 'Trying to unlink the content of a o2m but the pointed model does not have a m2o'
+                # if the model has on delete cascade, just delete the row
+                if reverse_rel.column.ondelete == "cascade":
+                    obj.unlink(cr, user, [act[1]], context=context)
+                else:
+                    cr.execute('update '+_table+' set '+self._fields_id+'=null where id=%s', (act[1],))
             elif act[0] == 4:
                 # Must use write() to recompute parent_store structure if needed
                 obj.write(cr, user, [act[1]], {self._fields_id:id}, context=context or {})
             elif act[0] == 5:
                 reverse_rel = obj._all_columns.get(self._fields_id)
-                assert reverse_rel, 'Trying to unlink the content of a o2m but the pointed object does not have a m2o'
-                # if the pointed object has on delete cascade, just delete it
+                assert reverse_rel, 'Trying to unlink the content of a o2m but the pointed model does not have a m2o'
+                # if the model has on delete cascade, just delete the rows
                 if reverse_rel.column.ondelete == "cascade":
                     obj.unlink(cr, user, obj.search(cr, user, [(self._fields_id,'=',id)], context=context), context=context)
                 else:
