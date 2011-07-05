@@ -27,6 +27,9 @@ openerp.base.TreeView = openerp.base.View.extend({
         console.log(this.view_manager.action);
         this.view_manager.flags.search_view = this.view_manager.action.flags.search_view = false;
         this.view_manager.flags.sidebar = this.view_manager.action.flags.sidebar = false;
+
+        this.actionmanager = new openerp.base.ActionManager(this.session, this.element_id);
+        this.actionmanager.start();
     },
 
     start: function () {
@@ -117,7 +120,7 @@ openerp.base.TreeView = openerp.base.View.extend({
                 $(this).css('color','#000000');
             });
 
-            self.$element.find('tr[id ^= treerow_]').find('td').children(':first-child').click( function() {
+            self.$element.find('tr[id ^= treerow_] td').children(':first-child').click( function() {
                 var is_loaded = 0;
                 if ($(this).length == 1) {
                     record_id = (this.id).split('_')[1];
@@ -169,27 +172,22 @@ openerp.base.TreeView = openerp.base.View.extend({
             }
             views.push(view);
         });
-        var action = {
+        this.actionmanager.do_action({
             "res_model" : self.dataset.model,
             "domain" : self.dataset.domain,
             "views" : views,
             "type" : "ir.actions.act_window",
             "auto_search" : true,
-            "view_type" : "list",
-            "view_mode" : "list"
-        }
-        action.flags = {
-            search_view: true,
-            sidebar : true,
-            views_switcher : true,
-            action_buttons : true,
-            pager: true,
-            new_window : true
-        }
-
-        this.actionmanager = new openerp.base.ActionManager(self.session, self.element_id);
-        this.actionmanager.start()
-        this.actionmanager.do_action(action);
+            "view_mode" : "list",
+            "flags": {
+                search_view: true,
+                sidebar : true,
+                views_switcher : true,
+                action_buttons : true,
+                pager: true,
+                new_window : true
+            }
+        });
 
         self.dataset.model = model;
     },
@@ -271,6 +269,6 @@ openerp.base.TreeView = openerp.base.View.extend({
     do_hide: function () {
         this.$element.hide();
         this.hidden = true;
-    },
+    }
 });
-}
+};
