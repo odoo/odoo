@@ -711,7 +711,6 @@ class company_contribution(osv.osv):
             type='many2one',
             relation='hr.contibution.register',
             string="Contribution Register",
-            method=True,
             view_load=True,
             help="Contribution register based on company",
             required=False

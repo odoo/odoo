@@ -157,9 +157,9 @@ class hr_applicant(crm.crm_case, osv.osv):
         'response': fields.integer("Response"),
         'reference': fields.char('Reference', size=128),
         'day_open': fields.function(_compute_day, string='Days to Open', \
-                                method=True, multi='day_open', type="float", store=True),
+                                multi='day_open', type="float", store=True),
         'day_close': fields.function(_compute_day, string='Days to Close', \
-                                method=True, multi='day_close', type="float", store=True),
+                                multi='day_close', type="float", store=True),
     }
 
     def _get_stage(self, cr, uid, context=None):

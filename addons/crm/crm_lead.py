@@ -161,9 +161,9 @@ class crm_lead(crm_case, osv.osv):
         'referred': fields.char('Referred By', size=64),
         'date_open': fields.datetime('Opened', readonly=True),
         'day_open': fields.function(_compute_day, string='Days to Open', \
-                                method=True, multi='day_open', type="float", store=True),
+                                multi='day_open', type="float", store=True),
         'day_close': fields.function(_compute_day, string='Days to Close', \
-                                method=True, multi='day_close', type="float", store=True),
+                                multi='day_close', type="float", store=True),
         'state': fields.selection(crm.AVAILABLE_STATES, 'State', size=16, readonly=True,
                                   help='The state is set to \'Draft\', when a case is created.\
                                   \nIf the case is in progress the state is set to \'Open\'.\
