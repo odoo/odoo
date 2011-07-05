@@ -332,9 +332,9 @@ class account_account(osv.osv):
                 for acc in record.child_consol_ids:
                     if acc.id not in result[record.id]:
                         result[record.id].append(acc.id)
-
+                        
         return result
-
+    
     def _get_level(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
         accounts = self.browse(cr, uid, ids, context=context)
@@ -344,7 +344,7 @@ class account_account(osv.osv):
             while parent_id:
                 obj = self.browse(cr, uid, parent_id.id)
                 level += 1
-                parent_id =  obj.parent_id
+                parent_id = obj.parent_id
             res[account.id] = level
         return res
 
@@ -394,7 +394,7 @@ class account_account(osv.osv):
             required=True),
         'level': fields.function(_get_level, string='Level', method=True, type='integer',
              store={
-                    'account.account': (lambda self, cr, uid, ids, c={}: ids, ['parent_id'], 10),
+                    'account.account': (_get_children_and_consol, [], 10),
                    }),
     }
 
