@@ -161,7 +161,7 @@ class hr_holidays(osv.osv):
         leave_ids = obj_res_leave.search(cr, uid, [('holiday_id', 'in', ids)], context=context)
         return obj_res_leave.unlink(cr, uid, leave_ids)
 
-    def onchange_type(self, cr, uid, ids, holiday_type):
+    def onchange_type(self, cr, uid, ids, holiday_type, context=None):
         result = {'value': {'employee_id': False}}
         if holiday_type == 'employee':
             ids_employee = self.pool.get('hr.employee').search(cr, uid, [('user_id','=', uid)])
@@ -172,7 +172,7 @@ class hr_holidays(osv.osv):
         return result
 
     # TODO: can be improved using resource calendar method
-    def _get_number_of_days(self, date_from, date_to):
+    def _get_number_of_days(self, date_from, date_to, context=None):
         """Returns a float equals to the timedelta between two dates given as string."""
 
         DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S"
@@ -188,10 +188,12 @@ class hr_holidays(osv.osv):
                 raise osv.except_osv(_('Warning!'),_('You cannot delete a leave which is not in draft state !'))
         return super(hr_holidays, self).unlink(cr, uid, ids, context)
 
-    def onchange_date_from(self, cr, uid, ids, date_to, date_from):
+    def onchange_date_from(self, cr, uid, ids, date_to, date_from, context=None):
         result = {}
+        if context is None:
+            context = {}
         if date_to and date_from:
-            diff_day = self._get_number_of_days(date_from, date_to)
+            diff_day = self._get_number_of_days(date_from, date_to, context=context)
             result['value'] = {
                 'number_of_days_temp': round(diff_day)+1
             }
@@ -212,7 +214,7 @@ class hr_holidays(osv.osv):
                 }
         return {'warning': warning}
 
-    def set_to_draft(self, cr, uid, ids, *args):
+    def set_to_draft(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {
             'state': 'draft',
             'manager_id': False,
@@ -223,20 +225,18 @@ class hr_holidays(osv.osv):
             wf_service.trg_create(uid, 'hr.holidays', id, cr)
         return True
 
-    def get_user_lang(self, cr, uid, ids):
-        lang = self.pool.get('res.users').browse(cr, uid, uid).context_lang
-        return {'lang': lang}
-
-    def holidays_validate(self, cr, uid, ids, *args):
-        context = self.get_user_lang(cr, uid, ids)
+    def holidays_validate(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
         self.check_holidays(cr, uid, ids, context=context)
         obj_emp = self.pool.get('hr.employee')
         ids2 = obj_emp.search(cr, uid, [('user_id', '=', uid)])
         manager = ids2 and ids2[0] or False
         return self.write(cr, uid, ids, {'state':'validate1', 'manager_id': manager})
 
-    def holidays_validate2(self, cr, uid, ids, *args):
-        context = self.get_user_lang(cr, uid, ids)
+    def holidays_validate2(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
         self.check_holidays(cr, uid, ids, context=context)
         obj_emp = self.pool.get('hr.employee')
         ids2 = obj_emp.search(cr, uid, [('user_id', '=', uid)])
@@ -282,20 +282,23 @@ class hr_holidays(osv.osv):
                     wf_service.trg_validate(uid, 'hr.holidays', leave_id, 'second_validate', cr)
         return True
 
-    def holidays_confirm(self, cr, uid, ids, *args):
-        context = self.get_user_lang(cr, uid, ids)
+    def holidays_confirm(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
         self.check_holidays(cr, uid, ids, context=context)
         return self.write(cr, uid, ids, {'state':'confirm'})
 
-    def holidays_refuse(self, cr, uid, ids, *args):
+    def holidays_refuse(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
         obj_emp = self.pool.get('hr.employee')
         ids2 = obj_emp.search(cr, uid, [('user_id', '=', uid)])
         manager = ids2 and ids2[0] or False
         self.write(cr, uid, ids, {'state': 'refuse', 'manager_id2': manager})
-        self.holidays_cancel(cr, uid, ids)
+        self.holidays_cancel(cr, uid, ids, context=context)
         return True
 
-    def holidays_cancel(self, cr, uid, ids, *args):
+    def holidays_cancel(self, cr, uid, ids, context=None):
         obj_crm_meeting = self.pool.get('crm.meeting')
         for record in self.browse(cr, uid, ids):
             # Delete the meeting
