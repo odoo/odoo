@@ -933,11 +933,15 @@ openerp.base.Database = openerp.base.Controller.extend({
         this.$element.find('#db-create').click(function() {
         	self.db_string = "CREATE DATABASE";
         	self.$option_id.html(QWeb.render("CreateDB", self));
+        	
+        	$("form[name=create_db_form]").validate();
         });
         
         self.$element.find('#db-drop').click(function() {
         	self.db_string = "DROP DATABASE";
         	self.$option_id.html(QWeb.render("DropDB", self));
+        	
+        	$("form[name=drop_db_form]").validate();
         	
 	        self.$option_id.find('#drop_db_btn').click(function() {
 	        	var db = self.$option_id.find("select[name=drop_db]").val();
@@ -959,6 +963,8 @@ openerp.base.Database = openerp.base.Controller.extend({
         	self.db_string = "BACKUP DATABASE";
         	self.$option_id.html(QWeb.render("BackupDB", self));
         	
+        	$("form[name=backup_db_form]").validate();
+        	
         	self.$option_id.find('#backup_db_btn').click(function() {
 	        	var db = self.$option_id.find("select[name=backup_db]").val();
 		        var password = self.$option_id.find("input[name=backup_pwd]").val();
@@ -975,6 +981,8 @@ openerp.base.Database = openerp.base.Controller.extend({
         self.$element.find('#db-restore').click(function() {
         	self.db_string = "RESTORE DATABASE";
         	self.$option_id.html(QWeb.render("RestoreDB", self));
+        	
+        	$("form[name=restore_db_form]").validate();
         	
         	self.$option_id.find('#restore_db_btn').click(function() {
 	        	var db = self.$option_id.find("input[name=restore_db]").val();
@@ -994,7 +1002,7 @@ openerp.base.Database = openerp.base.Controller.extend({
         	self.db_string = "CHANGE DATABASE PASSWORD";
         	self.$option_id.html(QWeb.render("Change_DB_Pwd", self));
         	
-        	$("form[name=change_db_pwd]").validate();
+        	$("form[name=change_pwd_form]").validate();
         	
         	$("input[name=old_pwd]").rules("add", {
 			 required: true,
@@ -1020,7 +1028,7 @@ openerp.base.Database = openerp.base.Controller.extend({
 			
 			$("input[name=old_pwd]").focus();
 	        
-        	self.$option_id.find('form[name=change_db_pwd]').submit(function(ev) {
+        	self.$option_id.find('form[name=change_pwd_form]').submit(function(ev) {
         		ev.preventDefault();
         		
         		var old_pwd = self.$option_id.find("input[name=old_pwd]").val();

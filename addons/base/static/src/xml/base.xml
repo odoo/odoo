@@ -69,137 +69,145 @@
 	</ul>
 </t>
 <t t-name="CreateDB">
-	<table width="100%">
-		<tr>
-			<td class="option_string">
-				<t t-esc="db_string"/>
-			</td>
-		</tr>
-	</table>
-	<table align="center" class="db_option_table">
-		<tr>
-			<td><label for="super_admin_pwd">Super admin password:</label></td>
-			<td><input type="text" name="super_admin_pwd" autofocus="true"/></td>
-		</tr>
-		<tr>
-			<td><label for="db_name">New database name:</label></td>
-			<td><input type="text" name="db_name"/></td>
-		</tr>
-		<tr>
-			<td><label for="demo_data">Load Demonstration data:</label></td>
-			<td><input type="checkbox" name="demo_data"/></td>
-		</tr>
-		<tr>
-			<td><label for="db_lang">Default language:</label></td>
-			<td>
-				<t t-if="lang_list">
-	            	<select name="db_lang">
-	                	<t t-foreach="lang_list" t-as="lang">
-                        	<option t-att-value="lang[0]"><t t-esc="lang[1]"/></option>
-                    	</t>
-	            	</select>
-	        	</t>
-	    	</td>
-		</tr>
-		<tr>
-			<td><label for="admin_pwd">Super admin password:</label></td>
-			<td><input type="text" name="super_admin_pwd"/></td>
-		</tr>
-		<tr>
-			<td><label for="confirm_pwd">Confirm password:</label></td>
-			<td><input type="text" name="confirm_pwd"/></td>
-		</tr>
-		<tr>
-			<td colspan="2" align="right"><button type="button" id="create_db_btn">Create</button></td>
-		</tr>
-	</table>
+	<form name="create_db_form" method="POST">
+		<table width="100%">
+			<tr>
+				<td class="option_string">
+					<t t-esc="db_string"/>
+				</td>
+			</tr>
+		</table>
+		<table align="center" class="db_option_table">
+			<tr>
+				<td><label for="super_admin_pwd">Super admin password:</label></td>
+				<td><input type="text" name="super_admin_pwd" autofocus="true"/></td>
+			</tr>
+			<tr>
+				<td><label for="db_name">New database name:</label></td>
+				<td><input type="text" name="db_name"/></td>
+			</tr>
+			<tr>
+				<td><label for="demo_data">Load Demonstration data:</label></td>
+				<td><input type="checkbox" name="demo_data"/></td>
+			</tr>
+			<tr>
+				<td><label for="db_lang">Default language:</label></td>
+				<td>
+					<t t-if="lang_list">
+		            	<select name="db_lang">
+		                	<t t-foreach="lang_list" t-as="lang">
+	                        	<option t-att-value="lang[0]"><t t-esc="lang[1]"/></option>
+	                    	</t>
+		            	</select>
+		        	</t>
+		    	</td>
+			</tr>
+			<tr>
+				<td><label for="admin_pwd">Super admin password:</label></td>
+				<td><input type="text" name="super_admin_pwd"/></td>
+			</tr>
+			<tr>
+				<td><label for="confirm_pwd">Confirm password:</label></td>
+				<td><input type="text" name="confirm_pwd"/></td>
+			</tr>
+			<tr>
+				<td colspan="2" align="right"><input type="submit" value="Create"/></td>
+			</tr>
+		</table>
+	</form>
 </t>
 <t t-name="DropDB">
-	<table width="100%">
-		<tr>
-			<td class="option_string">
-				<t t-esc="db_string"/>
-			</td>
-		</tr>
-	</table>
-	<table align="center" class="db_option_table">
-		<tr>
-			<td><label for="drop_db">Database:</label></td>
-			<t t-if="db_list">
-            	<select name="drop_db">
-                	<t t-foreach="db_list" t-as="db">
-                       	<option t-att-value="db"><t t-esc="db"/></option>
-                	</t>
-            	</select>
-        	</t>
-		</tr>
-		<tr>
-			<td><label for="drop_password">Password:</label></td>
-			<td><input type="password" name="drop_pwd" value=""/></td>
-		</tr>
-		<tr>
-			<td colspan="2" align="right"><button type="button" id="drop_db_btn">Drop</button></td>
-		</tr>
-	</table>
-</t>
-<t t-name="BackupDB">
-	<table width="100%">
-		<tr>
-			<td class="option_string">
-				<t t-esc="db_string"/>
-			</td>
-		</tr>
-	</table>
-	<table align="center" class="db_option_table">
-		<tr>
-			<td><label for="backup_db">Database:</label></td>
-			<td>
+	<form name="drop_db_form" method="POST">
+		<table width="100%">
+			<tr>
+				<td class="option_string">
+					<t t-esc="db_string"/>
+				</td>
+			</tr>
+		</table>
+		<table align="center" class="db_option_table">
+			<tr>
+				<td><label for="drop_db">Database:</label></td>
 				<t t-if="db_list">
-	            	<select name="backup_db">
+	            	<select name="drop_db">
 	                	<t t-foreach="db_list" t-as="db">
 	                       	<option t-att-value="db"><t t-esc="db"/></option>
 	                	</t>
 	            	</select>
 	        	</t>
-	        </td>
-		</tr>
-		<tr>
-			<td><label for="backup_pwd">Password:</label></td>
-			<td><input type="password" name="backup_pwd"/></td>
-		</tr>
-		<tr>
-			<td colspan="2" align="right"><button type="button" id="backup_db_btn">Backup</button></td>
-		</tr>
-	</table>
+			</tr>
+			<tr>
+				<td><label for="drop_password">Password:</label></td>
+				<td><input type="password" name="drop_pwd" class="required"/></td>
+			</tr>
+			<tr>
+				<td colspan="2" align="right"><input type="submit" value="Drop"/></td>
+			</tr>
+		</table>
+	</form>
+</t>
+<t t-name="BackupDB">
+	<form name="backup_db_form" method="POST">
+		<table width="100%">
+			<tr>
+				<td class="option_string">
+					<t t-esc="db_string"/>
+				</td>
+			</tr>
+		</table>
+		<table align="center" class="db_option_table">
+			<tr>
+				<td><label for="backup_db">Database:</label></td>
+				<td>
+					<t t-if="db_list">
+		            	<select name="backup_db">
+		                	<t t-foreach="db_list" t-as="db">
+		                       	<option t-att-value="db"><t t-esc="db"/></option>
+		                	</t>
+		            	</select>
+		        	</t>
+		        </td>
+			</tr>
+			<tr>
+				<td><label for="backup_pwd">Password:</label></td>
+				<td><input type="password" name="backup_pwd" class="required"/></td>
+			</tr>
+			<tr>
+				<td colspan="2" align="right"><input type="submit" value="Backup"/></td>
+			</tr>
+		</table>
+	</form>
 </t>
 <t t-name="RestoreDB">
-	<table width="100%">
-		<tr>
-			<td class="option_string">
-				<t t-esc="db_string"/>
-			</td>
-		</tr>
-	</table>
-	<table align="center" class="db_option_table">
-		<tr>
-			<td><label for="restore_db">File:</label></td>
-			<td><input type="file" name="restore_db"/></td>
-		</tr>
-		<tr>
-			<td><label for="restore_pwd">Password:</label></td>
-			<td><input type="password" name="restore_pwd"/></td>
-		</tr>
-		<tr>
-			<td><label for="new_db">New database name:</label></td>
-			<td><input type="text" name="new_db"/></td>
-		</tr>
-		<tr>
-			<td colspan="2" align="right"><button type="button" id="restore_db_btn">Restore</button></td>
-		</tr>
-	</table>
+	<form name="restore_db_form" method="POST">
+		<table width="100%">
+			<tr>
+				<td class="option_string">
+					<t t-esc="db_string"/>
+				</td>
+			</tr>
+		</table>
+		<table align="center" class="db_option_table">
+			<tr>
+				<td><label for="restore_db">File:</label></td>
+				<td><input type="file" name="restore_db" class="required"/></td>
+			</tr>
+			<tr>
+				<td><label for="restore_pwd">Password:</label></td>
+				<td><input type="password" name="restore_pwd" class="required"/></td>
+			</tr>
+			<tr>
+				<td><label for="new_db">New database name:</label></td>
+				<td><input type="text" name="new_db" class="required"/></td>
+			</tr>
+			<tr>
+				<td colspan="2" align="right"><input type="submit" value="Restore"/></td>
+			</tr>
+		</table>
+	</form>
 </t>
 <t t-name="Change_DB_Pwd">
-	<form name="change_db_pwd" method="POST">
+	<form name="change_pwd_form" method="POST">
 		<table width="100%">
 			<tr>
 				<td class="option_string">
@@ -221,9 +229,7 @@
 				<td><input type="password" name="confirm_pwd"/></td>
 			</tr>
 			<tr>
-				<td colspan="2" align="right">
-					<input type="submit" value="Change Password"/>
-				</td>
+				<td colspan="2" align="right"><input type="submit" value="Change Password"/></td>
 			</tr>
 		</table>
 	</form>
