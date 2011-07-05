@@ -54,9 +54,9 @@ class sale_order_dates(osv.osv):
         return res
 
     _columns = {
-        'commitment_date': fields.function(_get_commitment_date, method=True, store=True, type='date', string='Commitment Date', help="Date on which delivery of products is to be made."),
+        'commitment_date': fields.function(_get_commitment_date, store=True, type='date', string='Commitment Date', help="Date on which delivery of products is to be made."),
         'requested_date': fields.date('Requested Date', help="Date on which customer has requested for sales."),
-        'effective_date': fields.function(_get_effective_date, method=True, type='date', store=True, string='Effective Date',help="Date on which picking is created."),
+        'effective_date': fields.function(_get_effective_date, type='date', store=True, string='Effective Date',help="Date on which picking is created."),
     }
 
 sale_order_dates()
