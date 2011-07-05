@@ -324,5 +324,36 @@ openerp.base_dashboard.ConfigOverview = openerp.base.View.extend({
             });
         });
     }
+});
+
+openerp.base.client_actions.add(
+    'board.home.applications', 'openerp.base_dashboard.ApplicationTiles');
+openerp.base_dashboard.ApplicationTiles = openerp.base.View.extend({
+    init: function (parent_or_session, element_id) {
+        this._super(parent_or_session, element_id);
+        this.dataset = new openerp.base.DataSetSearch(
+                this.session, 'ir.ui.menu', null, [['parent_id', '=', false]]);
+    },
+    start: function () {
+        var self = this;
+        this.dataset.read_slice(
+            ['name', 'web_icon_data', 'web_icon_hover_data'],
+            null, null, function (applications) {
+                // Create a matrix of 3*x applications
+                var rows = [];
+                while (applications.length) {
+                    rows.push(applications.splice(0, 3));
+                }
+                self.$element
+                    .append(QWeb.render(
+                        'ApplicationTiles', {rows: rows}))
+                    .find('.oe-dashboard-home-tile')
+                        .click(function () {
+                            var $this = $(this);
+                            $this.closest('.openerp')
+                                 .find('.menu a[data-menu=' + $this.data('menuid') + ']')
+                                 .click();});
+        });
+    }
 })
 };

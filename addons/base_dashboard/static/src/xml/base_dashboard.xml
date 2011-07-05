@@ -80,4 +80,22 @@
         </li>
     </ul>
 </div>
+<div t-name="ApplicationTiles" class="oe-dashboard-home-tiles">
+    <table width="100%">
+        <tr t-foreach="rows" t-as="row">
+            <td t-foreach="row" t-as="application" width="33.3%">
+                <div class="oe-dashboard-home-tile"
+                     t-att-data-menuid="application.id">
+                    <div class="oe-dashboard-home-tile-icon">
+                        <img t-if="application.web_icon_data"
+                            t-att-src="'data:image/png;base64,' + application.web_icon_data"
+                        /><img t-if="application.web_icon_hover_data" class="hover"
+                            t-att-src="'data:image/png;base64,' + application.web_icon_hover_data"/>
+                    </div>
+                    <span><t t-esc="application.name"/></span>
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>
 </template>
