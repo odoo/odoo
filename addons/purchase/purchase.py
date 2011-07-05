@@ -824,7 +824,6 @@ class procurement_order(osv.osv):
                 'partner_address_id': address_id,
                 'location_id': procurement.location_id.id,
                 'warehouse_id': wharehouse_obj.search(cr, uid, [('company_id','=',procurement.company_id.id or company)])[0],
-                'company_id': procurement.company_id.id or company,
                 'pricelist_id': pricelist_id,
                 'order_line': [(0,0,line)],
                 'company_id': procurement.company_id.id,
