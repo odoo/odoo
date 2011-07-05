@@ -130,37 +130,34 @@ class account_asset_asset(osv.osv):
         undone_dotation_number = asset.method_delay
         if asset.method_time == 'end':
             end_date = datetime.strptime(asset.method_end, '%Y-%m-%d')
-            total_days = asset.method_period * 30
+            total_days = asset.method_period != 12 and asset.method_period * 30 or total_days
+            no_of_days = float((end_date - depreciation_date).days) / float(total_days)
             undone_dotation_number = (end_date - depreciation_date).days / total_days
-            if end_date.strftime('%m-%d') < depreciation_date.strftime('%m-%d'):
-                undone_dotation_number -= 1
-        if asset.prorata or asset.method_time == 'end':
+            if no_of_days - undone_dotation_number > 0.5:
+                undone_dotation_number += 1
+        if asset.prorata:
             undone_dotation_number += 1
         return undone_dotation_number
     
-    def _compute_board_depreciation_date(self, date, period):
-         return datetime(date.year, date.month, date.day) + relativedelta(months=+period)
-
     def compute_depreciation_board(self, cr, uid, ids, context=None):
         depreciation_lin_obj = self.pool.get('account.asset.depreciation.line')
         for asset in self.browse(cr, uid, ids, context=context):
             if asset.value_residual == 0.0:
                 continue
             posted_depreciation_line_ids = depreciation_lin_obj.search(cr, uid, [('asset_id', '=', asset.id), ('move_check', '=', True)])
-            last_depr_id = posted_depreciation_line_ids[-1:] and posted_depreciation_line_ids[-1:][0]
             old_depreciation_line_ids = depreciation_lin_obj.search(cr, uid, [('asset_id', '=', asset.id), ('move_id', '=', False)])
             if old_depreciation_line_ids:
                 depreciation_lin_obj.unlink(cr, uid, old_depreciation_line_ids, context=context)
             
             amount_to_depr = residual_amount = asset.value_residual
+
             depreciation_date = datetime.strptime(self._get_last_depreciation_date(cr, uid, [asset.id], context)[asset.id], '%Y-%m-%d')
-            total_days = (depreciation_date.year % 4) and 365 or 366
+            day = depreciation_date.day
+            month = depreciation_date.month
+            year = depreciation_date.year
+            total_days = (year % 4) and 365 or 366
 
             undone_dotation_number = self._compute_board_undone_dotation_nb(cr, uid, asset, depreciation_date, total_days, context=context)
-            if last_depr_id:
-                depreciation_date = datetime.strptime(depreciation_lin_obj.browse(cr, uid, last_depr_id, context=context).depreciation_date, '%Y-%m-%d')
-                depreciation_date = self._compute_board_depreciation_date(depreciation_date, asset.method_period)
-
             for x in range(len(posted_depreciation_line_ids), undone_dotation_number):
                 i = x + 1
                 amount = self._compute_board_amount(cr, uid, asset, i, residual_amount, amount_to_depr, undone_dotation_number, posted_depreciation_line_ids, total_days, depreciation_date, context=context)
@@ -176,7 +173,10 @@ class account_asset_asset(osv.osv):
                 }
                 depreciation_lin_obj.create(cr, uid, vals, context=context)
                 # Considering Depr. Period as months
-                depreciation_date = self._compute_board_depreciation_date(depreciation_date, asset.method_period)
+                depreciation_date = (datetime(year, month, day) + relativedelta(months=+asset.method_period))
+                day = depreciation_date.day
+                month = depreciation_date.month
+                year = depreciation_date.year
         return True
 
     def validate(self, cr, uid, ids, context={}):
