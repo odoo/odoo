@@ -307,7 +307,8 @@
         id="act_entries_open"
         name="Entries"
         res_model="account.move.line"
-        src_model="account.asset.asset"/>
+        src_model="account.asset.asset"
+        context="{'search_default_asset_id': [active_id], 'default_asset_id': active_id}"/>
 
     <menuitem id="menu_finance_config_assets" name="Assets" parent="account.menu_finance_accounting"/>
     <record model="ir.actions.act_window" id="action_account_asset_asset_list_normal">
