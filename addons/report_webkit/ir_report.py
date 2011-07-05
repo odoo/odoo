@@ -125,7 +125,6 @@ class ReportXML(osv.osv):
                                             relation='ir.header_webkit',
                                             string='WebKit Header',
                                             help="The header linked to the report",
-                                            method=True,
                                             view_load=True,
                                             required=True
                                         ),

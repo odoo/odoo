@@ -26,13 +26,13 @@ class account_common_account_report(osv.osv_memory):
     _description = 'Account Common Account Report'
     _inherit = "account.common.report"
     _columns = {
-        'display_account': fields.selection([('bal_all','All'), ('bal_movement','With movements'),
-                                            ('bal_solde','With balance is not equal to 0'),
+        'display_account': fields.selection([('all','All'), ('movement','With movements'),
+                                            ('not_zero','With balance is not equal to 0'),
                                             ],'Display Accounts', required=True),
 
     }
     _defaults = {
-        'display_account': 'bal_all',
+        'display_account': 'movement',
     }
 
     def pre_print_report(self, cr, uid, ids, data, context=None):

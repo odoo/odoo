@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:14+0000\n"
-"PO-Revision-Date: 2011-05-16 19:22+0000\n"
+"PO-Revision-Date: 2011-05-22 13:35+0000\n"
 "Last-Translator: Ayhan KIZILTAN <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-05-17 04:40+0000\n"
+"X-Launchpad-Export-Date: 2011-05-23 04:37+0000\n"
 "X-Generator: Launchpad (build 12959)\n"
 
 #. module: account_analytic_analysis
@@ -135,6 +135,9 @@ msgid ""
 "if all these costs have been invoiced at the normal sale price provided by "
 "the pricelist."
 msgstr ""
+"Bu maliyetlerden elde edilen gelir, fiyat listesindeki normal satış "
+"fiyatlarına göre faturalandırılmış ise projedeki maliyetleriniz temel "
+"alınmıştır."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,user_ids:0
@@ -229,6 +232,8 @@ msgid ""
 "Number of hours (from journal of type 'general') that can be invoiced if you "
 "invoice based on analytic account."
 msgstr ""
+"Eğer analiz hesabı temel alınmışsa faturalandırılacak saat (türü 'genel' "
+"olan yevmiyelerden alınan) sayılarıdır."
 
 #. module: account_analytic_analysis
 #: view:account.analytic.account:0
@@ -246,6 +251,8 @@ msgid ""
 "If invoice from analytic account, the remaining amount you can invoice to "
 "the customer based on the total costs."
 msgstr ""
+"Eğer analiz hesabından fatura edilecekse, müşteriye keseceğiniz fatura "
+"bakiye tutarı toplam maliyetlere dayanır."
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,revenue_per_hour:0
@@ -280,7 +287,7 @@ msgstr "Analitik Hesap"
 #: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_managed_overpassed
 #: model:ir.ui.menu,name:account_analytic_analysis.menu_action_account_analytic_managed_overpassed
 msgid "Overpassed Accounts"
-msgstr ""
+msgstr "Görmezden Gelinen Hesaplar"
 
 #. module: account_analytic_analysis
 #: model:ir.actions.act_window,name:account_analytic_analysis.action_hr_tree_invoiced_all
@@ -296,7 +303,7 @@ msgstr "Toplam Saat"
 #. module: account_analytic_analysis
 #: constraint:account.analytic.account:0
 msgid "Error! You can not create recursive analytic accounts."
-msgstr ""
+msgstr "Hata! Yinelenen çözümleme hesabı oluşturamazsınız."
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,total_cost:0
@@ -304,6 +311,8 @@ msgid ""
 "Total of costs for this account. It includes real costs (from invoices) and "
 "indirect costs, like time spent on timesheets."
 msgstr ""
+"Bu hesap için toplam maliyetler. Gerçek maliyetleri (faturalardan) ve "
+"dolaylı maliyetleri, zaman çizelgelerindeki harcanan süreler gibi, içerir."
 
 #~ msgid "All Analytic Accounts"
 #~ msgstr "Tüm Analitik Hesaplar"
