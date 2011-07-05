@@ -357,8 +357,6 @@ openerp.base.Session = openerp.base.BasicController.extend( /** @lends openerp.b
         var self = this;
         // Construct a JSON-RPC2 request, method is currently unused
         params.session_id = this.session_id;
-        // niv: wtf?
-        //params.context = typeof(params.context) != "undefined" ? params.context  : this.context;
 
         // Call using the rpc_mode
         var deferred = $.Deferred();
@@ -408,7 +406,8 @@ openerp.base.Session = openerp.base.BasicController.extend( /** @lends openerp.b
                         self.on_session_invalid(function() {
                             self.rpc(url, payload.params,
                                 function() {deferred.resolve.apply(deferred, arguments);},
-                                function() {deferred.reject.apply(deferred, arguments);});
+                                function(error, event) {event.preventDefault();
+                                    deferred.reject.apply(deferred, arguments);});
                         });
                     } else {
                         deferred.reject(response.error);
@@ -913,18 +912,15 @@ openerp.base.Database = openerp.base.Controller.extend({
 });
 
 openerp.base.Login =  openerp.base.Controller.extend({
+    remember_creditentials: true,
     init: function(session, element_id) {
         this._super(session, element_id);
         this.has_local_storage = typeof(localStorage) != 'undefined';
         this.selected_db = null;
         this.selected_login = null;
-        this.selected_password = null;
-        this.remember = false;
-        if (this.has_local_storage && localStorage.getItem('remember_creditentials') === 'true') {
-            this.remember = true;
+        if (this.has_local_storage && this.remember_creditentials) {
             this.selected_db = localStorage.getItem('last_db_login_success');
             this.selected_login = localStorage.getItem('last_login_login_success');
-            this.selected_password = localStorage.getItem('last_password_login_success');
         }
     },
     start: function() {
@@ -953,22 +949,17 @@ openerp.base.Login =  openerp.base.Controller.extend({
         var db = $e.find("form [name=db]").val();
         var login = $e.find("form input[name=login]").val();
         var password = $e.find("form input[name=password]").val();
-        var remember = $e.find("form input[name=remember]").attr('checked');
         //$e.hide();
         // Should hide then call callback
         this.session.session_login(db, login, password, function() {
             if(self.session.session_is_valid()) {
                 if (self.has_local_storage) {
-                    if(remember) {
-                        localStorage.setItem('remember_creditentials', 'true');
+                    if(self.remember_creditentials) {
                         localStorage.setItem('last_db_login_success', db);
                         localStorage.setItem('last_login_login_success', login);
-                        localStorage.setItem('last_password_login_success', password);
                     } else {
-                        localStorage.setItem('remember_creditentials', '');
                         localStorage.setItem('last_db_login_success', '');
                         localStorage.setItem('last_login_login_success', '');
-                        localStorage.setItem('last_password_login_success', '');
                     }
                 }
                 self.on_login_valid();
