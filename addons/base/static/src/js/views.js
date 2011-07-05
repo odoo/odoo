@@ -262,7 +262,6 @@ openerp.base.NullViewManager = openerp.base.generate_null_object_class(openerp.b
 
 openerp.base.ViewManagerAction = openerp.base.ViewManager.extend({
     init: function(session, element_id, action) {
-        console.log("here in view manager action",action);
         var dataset;
         if (!action.res_id) {
             dataset = new openerp.base.DataSetSearch(session, action.res_model, action.context || null);
