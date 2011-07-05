@@ -142,7 +142,7 @@
                                             <field
                                                 name="product_packaging"
                                                 context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'shop':parent.shop_id, 'uom':product_uom}"
-                                                on_change="onchange_product_packaging(parent.pricelist_id, product_id, product_uom_qty, product_uom, product_packaging, True)"
+                                                on_change="product_packaging_change(parent.pricelist_id, product_id, product_uom_qty, product_uom, parent.partner_id, product_packaging, True)"
                                                 domain="[('product_id','=',product_id)]"
                                                 groups="base.group_extended"/>
 

@@ -1011,53 +1011,60 @@ class sale_order_line(osv.osv):
         default.update({'state': 'draft', 'move_ids': [], 'invoiced': False, 'invoice_lines': []})
         return super(sale_order_line, self).copy_data(cr, uid, id, default, context=context)
     
-    def onchange_product_packaging(self, cr, uid, ids, pricelist, product, qty, uom, packaging, flag):
+    def product_packaging_change(self, cr, uid, ids, pricelist, product, qty=0, uom=False, 
+                                   partner_id=False, packaging=False, flag=False, context=None):
         product_obj = self.pool.get('product.product')
         product_uom_obj = self.pool.get('product.uom')
+        pack_obj = self.pool.get('product.packaging')
         warning = {}
         result = {}
         warning_msgs = ''
         if not product:
             return {'value': {'product_packaging': False}}
-        products = product_obj.browse(cr, uid, product)
-        if not packaging and products.packaging and not flag:
+        
+        if flag:
+            res = self.product_id_change(cr, uid, ids, pricelist=pricelist, 
+                    product=product, qty=qty, uom=uom, partner_id=partner_id,
+                    packaging=packaging, flag=False)
+            warning_msgs = res.get('warning') and res['warning']['message']
+            
+        products = product_obj.browse(cr, uid, product, context=context)
+        if not products.packaging:
+            packaging = result['product_packaging'] = False
+        elif not packaging and products.packaging and not flag:
             packaging = products.packaging[0].id
             result['product_packaging'] = packaging
-        elif not products.packaging:
-            packaging = False
-            result['product_packaging'] = False
-        
+            
         if packaging:
             default_uom = products.uom_id and products.uom_id.id
-            pack = self.pool.get('product.packaging').browse(cr, uid, packaging)
+            pack = pack_obj.browse(cr, uid, packaging, context=context)
             q = product_uom_obj._compute_qty(cr, uid, uom, pack.qty, default_uom)
 #            qty = qty - qty % q + q
             if qty and (q and not (qty % q) == 0):
                 ean = pack.ean or _('(n/a)')
                 qty_pack = pack.qty
                 type_ul = pack.ul
-                warn_msg = _("You selected a quantity of %d Units.\n"
-                            "But it's not compatible with the selected packaging.\n"
-                            "Here is a proposition of quantities according to the packaging:\n"
-                            "EAN: %s Quantity: %s Type of ul: %s") % \
-                                (qty, ean, qty_pack, type_ul.name)
-                warning_msgs += _("Picking Information ! : ") + warn_msg + "\n\n"
-            result['product_uom_qty'] = qty
-
-        if warning_msgs:
-            warning = {
+                if not warning_msgs:
+                    warn_msg = _("You selected a quantity of %d Units.\n"
+                                "But it's not compatible with the selected packaging.\n"
+                                "Here is a proposition of quantities according to the packaging:\n"
+                                "EAN: %s Quantity: %s Type of ul: %s") % \
+                                    (qty, ean, qty_pack, type_ul.name)
+                    warning_msgs += _("Picking Information ! : ") + warn_msg + "\n\n"
+                warning = {
                        'title': _('Configuration Error !'),
-                       'message' : warning_msgs  
-            }
+                       'message': warning_msgs
+                }
+            result['product_uom_qty'] = qty
 
         return {'value': result, 'warning': warning}
 
     def product_id_change(self, cr, uid, ids, pricelist, product, qty=0,
             uom=False, qty_uos=0, uos=False, name='', partner_id=False,
             lang=False, update_tax=True, date_order=False, packaging=False, fiscal_position=False, flag=False):
-        if not  partner_id:
+        if not partner_id:
             raise osv.except_osv(_('No Customer Defined !'), _('You have to select a customer in the sales form !\nPlease set one customer before choosing a product.'))
-        warning_msgs = ''
+        warning = {}
         product_uom_obj = self.pool.get('product.uom')
         partner_obj = self.pool.get('res.partner')
         product_obj = self.pool.get('product.product')
@@ -1072,9 +1079,9 @@ class sale_order_line(osv.osv):
         if not date_order:
             date_order = time.strftime('%Y-%m-%d')
 
-        res = self.onchange_product_packaging(cr, uid, ids, pricelist, product, qty, uom, packaging, False)
+        res = self.product_packaging_change(cr, uid, ids, pricelist, product, qty, uom, partner_id, packaging)
         result = res.get('value', {})
-        warning = res.get('warning', {})
+        warning_msgs = res.get('warning') and res['warning']['message'] or ''
         product_obj = product_obj.browse(cr, uid, product, context=context)
 
         uom2 = False
