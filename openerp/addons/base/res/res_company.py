@@ -25,12 +25,6 @@ import os
 import tools
 from tools.translate import _
 from tools.safe_eval import safe_eval as eval
-from lxml import etree
-import tempfile
-
-import pooler
-import netsvc
-from report import report_sxw
 
 class multi_company_default(osv.osv):
     """
@@ -80,7 +74,7 @@ class res_company(osv.osv):
     _order = 'name'
 
     def _get_address_data(self, cr, uid, ids, field_names, arg, context=None):
-        "Retrieves address data of the partner related to the company"
+        """ Read the 'address' functional fields. """
         result = {}
         part_obj = self.pool.get('res.partner')
         address_obj = self.pool.get('res.partner.address')
@@ -95,7 +89,7 @@ class res_company(osv.osv):
         return result
 
     def _set_address_data(self, cr, uid, company_id, name, value, arg, context=None):
-        "Set the address data of the partner related to the company"
+        """ Write the 'address' functional fields. """
         company = self.browse(cr, uid, company_id, context=context)
         if company.partner_id:
             part_obj = self.pool.get('res.partner')
@@ -116,22 +110,22 @@ class res_company(osv.osv):
         'rml_header1': fields.char('Report Header', size=200),
         'rml_footer1': fields.char('Report Footer 1', size=200),
         'rml_footer2': fields.char('Report Footer 2', size=200),
-        'rml_header' : fields.text('RML Header', required=True),
-        'rml_header2' : fields.text('RML Internal Header', required=True),
-        'rml_header3' : fields.text('RML Internal Header', required=True),
-        'logo' : fields.binary('Logo'),
+        'rml_header': fields.text('RML Header', required=True),
+        'rml_header2': fields.text('RML Internal Header', required=True),
+        'rml_header3': fields.text('RML Internal Header', required=True),
+        'logo': fields.binary('Logo'),
         'currency_id': fields.many2one('res.currency', 'Currency', required=True),
         'currency_ids': fields.one2many('res.currency', 'company_id', 'Currency'),
         'user_ids': fields.many2many('res.users', 'res_company_users_rel', 'cid', 'user_id', 'Accepted Users'),
         'account_no':fields.char('Account No.', size=64),
-        'street' : fields.function(_get_address_data, fnct_inv=_set_address_data, size=128, type='char', string="Street", multi='address'), 
-        'street2' : fields.function(_get_address_data, fnct_inv=_set_address_data, size=128, type='char', string="Street2", multi='address'), 
-        'zip' : fields.function(_get_address_data, fnct_inv=_set_address_data, size=24, type='char', string="Zip", multi='address'), 
-        'city' : fields.function(_get_address_data, fnct_inv=_set_address_data, size=24, type='char', string="City", multi='address'),         
-        'state_id' : fields.function(_get_address_data, fnct_inv=_set_address_data, type='many2one', domain="[('country_id', '=', country_id)]", relation='res.country.state', string="State", multi='address'), 
-        'country_id' : fields.function(_get_address_data, fnct_inv=_set_address_data, type='many2one', relation='res.country', string="Country", multi='address'), 
-        'email' : fields.function(_get_address_data, fnct_inv=_set_address_data, size=64, type='char', string="Email", multi='address'), 
-        'phone' : fields.function(_get_address_data, fnct_inv=_set_address_data, size=64, type='char', string="Phone", multi='address'), 
+        'street': fields.function(_get_address_data, fnct_inv=_set_address_data, size=128, type='char', string="Street", multi='address'), 
+        'street2': fields.function(_get_address_data, fnct_inv=_set_address_data, size=128, type='char', string="Street2", multi='address'), 
+        'zip': fields.function(_get_address_data, fnct_inv=_set_address_data, size=24, type='char', string="Zip", multi='address'), 
+        'city': fields.function(_get_address_data, fnct_inv=_set_address_data, size=24, type='char', string="City", multi='address'),         
+        'state_id': fields.function(_get_address_data, fnct_inv=_set_address_data, type='many2one', domain="[('country_id', '=', country_id)]", relation='res.country.state', string="State", multi='address'), 
+        'country_id': fields.function(_get_address_data, fnct_inv=_set_address_data, type='many2one', relation='res.country', string="Country", multi='address'), 
+        'email': fields.function(_get_address_data, fnct_inv=_set_address_data, size=64, type='char', string="Email", multi='address'), 
+        'phone': fields.function(_get_address_data, fnct_inv=_set_address_data, size=64, type='char', string="Phone", multi='address'), 
     }
 
     def _search(self, cr, uid, args, offset=0, limit=None, order=None,

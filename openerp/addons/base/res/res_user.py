@@ -240,14 +240,13 @@ class users(osv.osv):
 
         'company_ids':fields.many2many('res.company','res_company_users_rel','user_id','cid','Companies'),
         'context_lang': fields.selection(_lang_get, 'Language', required=True,
-            help="Sets default language for the all user interface, when UI "
-                "translations are available. If you want to Add new Language, you can add it from 'Load an Official Translation' wizard  from 'Administration' menu."),
+            help="The default language used in the graphical user interface, when translations are available. To add a new language, you can use the 'Load an Official Translation' wizard available from the 'Administration' menu."),
         'context_tz': fields.selection(_tz_get,  'Timezone', size=64,
             help="The user's timezone, used to perform timezone conversions "
                  "between the server and the client."),
         'view': fields.function(_get_interface_type, method=True, type='selection', fnct_inv=_set_interface_type,
                                 selection=[('simple','Simplified'),('extended','Extended')],
-                                string='Interface', help="If you use OpenERP for the first time we strongly advise you to select the simplified interface, which has less features but is easier. You can always switch later from the users preferences."),
+                                string='Interface', help="OpenERP offers a simplified and an extended user interface. If you use OpenERP for the first time we strongly advise you to select the simplified interface, which has less features but is easier to use. You can switch to the other interface from the User/Preferences menu at any time."),
         'user_email': fields.function(_email_get, method=True, fnct_inv=_email_set, string='Email', type="char", size=240),
         'menu_tips': fields.boolean('Menu Tips', help="Check out this box if you want to always display tips on each menu action"),
         'date': fields.datetime('Last Connection', readonly=True),

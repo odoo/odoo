@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2011 OpenERP S.A. <http://www.openerp.com>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -832,12 +832,13 @@ class ir_actions_todo(osv.osv):
             ondelete='cascade'),
         'sequence': fields.integer('Sequence'),
         'state': fields.selection(TODO_STATES, string='State', required=True),
-        'name':fields.char('Name', size=64),
-        'type': fields.selection([('special','Special'),('normal','Normal'),('normal_recurring','Normal Recurring')], 'Type', required=True, help="Special: that have to be run again on trigger (when someone select this application to be reconfigured)\
-\nNormal: that will be displayed in the config panel and disappear as soon it's done\
-\nNormal Recurring: that will be always displayed in the config panel regardless of it's state"),
-        'groups_id':fields.many2many('res.groups', 'res_groups_action_rel', 'uid', 'gid', 'Groups'),
-        'note':fields.text('Text', translate=True),
+        'name': fields.char('Name', size=64),
+        'type': fields.selection([('special','Special'),('normal','Normal'),('normal_recurring','Normal Recurring')], 'Type', required=True,
+            help="""Special: the wizard is run whenever the system is reconfigured.
+Normal: the wizard is visible in the configuration panel until it is done.
+Normal Recurring: the wizard is visible in the configuration panel regardless of its state."""),
+        'groups_id': fields.many2many('res.groups', 'res_groups_action_rel', 'uid', 'gid', 'Groups'),
+        'note': fields.text('Text', translate=True),
         'category_id': fields.many2one('ir.actions.todo.category','Category'),
     }
     _defaults={
@@ -856,7 +857,7 @@ class ir_actions_todo(osv.osv):
         res = self.pool.get('ir.actions.act_window').read(cr, uid, wizard.action_id.id, [], context=context)
         res.update({'nodestroy': True})
 
-        # Open Specific resouce when res_id is provided in context
+        # Open a specific record when res_id is provided in the context
         if res.get('context'):
             user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
             ctx = eval(res['context'], {'user': user})

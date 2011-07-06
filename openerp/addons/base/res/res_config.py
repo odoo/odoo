@@ -77,8 +77,9 @@ class res_config_configurable(osv.osv_memory):
                 dont_skip_todo = bool(cr.fetchone())
             if dont_skip_todo:
                 res = todos.browse(cr, uid, active_todos[0], context=None)
-                # Wizards that directly opens a form stays in Todo state even if its called, 
-                # as next_action is not called,  so, setting state as done 'manually' 
+                # A wizard opening directly a form instead of calling
+                # next_action will remain in the todo state so we set it to
+                # done ourselves.
                 if res.action_id.target == 'current':
                     res.write({'state': 'done'})
                 return res

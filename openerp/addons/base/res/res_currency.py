@@ -79,10 +79,6 @@ class res_currency(osv.osv):
         return res
 
     def name_get(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
-#        We can use the following line,if we want to restrict this name_get for company setup only
-#        But, its better to show currencies as name(Code).
         if not ids:
             return []
         if isinstance(ids, (int, long)):
