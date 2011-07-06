@@ -300,16 +300,15 @@ init: function(view_manager, session, element_id, dataset, view_id) {
         gtd =  ganttrow.children(':first-child');
         gtd.children().addClass('task-name');
 
-        self.set_heigth();
-        self.set_width();
-
         jQuery(".toggle-sidebar").click(function(e) {
             self.set_width();
         });
 
-        jQuery(window).bind('resize', function () {
-            self.set_heigth();
-            self.set_width();
+        jQuery(window).bind('resize',function(){
+            window.clearTimeout(ganttChartControl._resize_timer);
+            ganttChartControl._resize_timer = window.setTimeout(function(){
+                self.reload_gantt();
+            }, 200);
         });
 
         jQuery("div #_1, div #_1 + div").hide();
