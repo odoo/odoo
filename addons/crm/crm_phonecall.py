@@ -95,6 +95,8 @@ class crm_phonecall(crm_base, osv.osv):
         'active': 1, 
     }
     
+    
+    
     # From crm.case
 
     def onchange_partner_address_id(self, cr, uid, ids, add, email=False):

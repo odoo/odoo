@@ -59,23 +59,17 @@ class crm_base(object):
     def _get_default_partner_address(self, cr, uid, context=None):
 
         """Gives id of default address for current user
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param context: A standard dictionary for contextual values
+        :param context: if portal in context is false return false anyway
         """
         if context is None:
             context = {}
-        if not context.get('portal', False):
+        if not context.get('portal'):
             return False
         return self.pool.get('res.users').browse(cr, uid, uid, context).address_id.id
 
     def _get_default_partner(self, cr, uid, context=None):
         """Gives id of partner for current user
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param context: A standard dictionary for contextual values
+        :param context: if portal in context is false return false anyway
         """
         if context is None:
             context = {}
@@ -88,10 +82,7 @@ class crm_base(object):
     
     def _get_default_email(self, cr, uid, context=None):
         """Gives default email address for current user
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param context: A standard dictionary for contextual values
+        :param context: if portal in context is false return false anyway
         """
         if not context.get('portal', False):
             return False
@@ -102,10 +93,7 @@ class crm_base(object):
     
     def _get_default_user(self, cr, uid, context=None):
         """Gives current user id
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param context: A standard dictionary for contextual values
+       :param context: if portal in context is false return false anyway
         """
         if context and context.get('portal', False):
             return False
@@ -113,19 +101,12 @@ class crm_base(object):
 
     def _get_section(self, cr, uid, context=None):
         """Gives section id for current User
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param context: A standard dictionary for contextual values
         """
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         return user.context_section_id.id or False
     
     def onchange_partner_address_id(self, cr, uid, ids, add, email=False):
         """This function returns value of partner email based on Partner Address
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
         @param ids: List of case IDs
         @param add: Id of Partner's address
         @email: Partner's email ID
@@ -140,9 +121,6 @@ class crm_base(object):
         
     def onchange_partner_id(self, cr, uid, ids, part, email=False):
         """This function returns value of partner address based on partner
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
         @param ids: List of case IDs
         @param part: Partner's id
         @email: Partner's email ID
@@ -157,13 +135,8 @@ class crm_base(object):
     
     def case_open(self, cr, uid, ids, *args):
         """Opens Case
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
         @param ids: List of case Ids
-        @param *args: Tuple Value for additional Params
         """
-
         cases = self.browse(cr, uid, ids)
         for case in cases:
             data = {'state': 'open', 'active': True}
@@ -177,11 +150,7 @@ class crm_base(object):
 
     def case_close(self, cr, uid, ids, *args):
         """Closes Case
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
         @param ids: List of case Ids
-        @param *args: Tuple Value for additional Params
         """
         cases = self.browse(cr, uid, ids)
         cases[0].state # to fill the browse record cache
@@ -196,11 +165,7 @@ class crm_base(object):
 
     def case_cancel(self, cr, uid, ids, *args):
         """Cancels Case
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
         @param ids: List of case Ids
-        @param *args: Tuple Value for additional Params
         """
         cases = self.browse(cr, uid, ids)
         cases[0].state # to fill the browse record cache
@@ -214,11 +179,7 @@ class crm_base(object):
 
     def case_pending(self, cr, uid, ids, *args):
         """Marks case as pending
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
         @param ids: List of case Ids
-        @param *args: Tuple Value for additional Params
         """
         cases = self.browse(cr, uid, ids)
         cases[0].state # to fill the browse record cache
@@ -228,15 +189,10 @@ class crm_base(object):
 
     def case_reset(self, cr, uid, ids, *args):
         """Resets case as draft
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
         @param ids: List of case Ids
-        @param *args: Tuple Value for additional Params
         """
         cases = self.browse(cr, uid, ids)
         cases[0].state # to fill the browse record cache
-        self._history(cr, uid, cases, _('Draft'))
         self.write(cr, uid, ids, {'state': 'draft', 'active': True})
         self._action(cr, uid, cases, 'draft')
         return True
@@ -726,7 +682,7 @@ class crm_case_section(osv.osv):
 
     _columns = {
         'name': fields.char('Sales Team', size=64, required=True, translate=True),
-        'complete_name': fields.function(get_full_name, method=True, type='char', size=256, readonly=True, store=True),
+        'complete_name': fields.function(get_full_name, type='char', size=256, readonly=True, store=True),
         'code': fields.char('Code', size=8),
         'active': fields.boolean('Active', help="If the active field is set to "\
                         "true, it will allow you to hide the sales team without removing it."),
