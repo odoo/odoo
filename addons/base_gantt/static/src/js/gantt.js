@@ -314,23 +314,6 @@ init: function(view_manager, session, element_id, dataset, view_id) {
         jQuery("div #_1, div #_1 + div").hide();
     },
 
-    set_heigth: function() {
-
-        gantt_hgt = jQuery(window).height() - oth_hgt;
-        
-        if (gantt_hgt < min_hgt){
-            gantt_hgt = min_hgt;
-        }
-        jQuery('#GanttDiv').css('height','100%');
-        jQuery('.task-name').height(gantt_hgt - 40 -16);
-        taskdiv.height(gantt_hgt - 40);
-
-        if (taskdiv.height() > jQuery('.taskPanel').height() + 16){
-            jQuery('.taskPanel').height(taskdiv.height() - 16);
-            jQuery('.task-name').children().height(taskdiv.height() - 16);
-        }
-    },
-
     set_width: function() {
 
         $gantt_panel.width(1);
