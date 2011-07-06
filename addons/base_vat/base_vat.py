@@ -155,39 +155,6 @@ class res_partner(osv.osv):
             return False
         return True
 
-    # Italy VAT number check fails is some cases from vatnumber library..so override this check method here
-    def check_vat_it(self, vat):
-        '''
-        Check Italy VAT number.
-        '''
-        if len(vat) != 11:
-            return False
-        try:
-            int(vat)
-        except:
-            return False
-        if int(vat[0:7]) <= 0:
-            return False
-        if int(vat[7:10]) <= 0:
-            return False
-        if int(vat[7:10]) > 100 and int(vat[7:10]) < 120:
-            return False
-#        Fixed in OpenERP
-#        if int(vat[7:10]) > 121:
-#            return False
-
-        sum = int(vat[0]) + vatnumber.mult_add(2, int(vat[1])) + int(vat[2]) + \
-                vatnumber.mult_add(2, int(vat[3])) + int(vat[4]) + \
-                vatnumber.mult_add(2, int(vat[5])) + int(vat[6]) + \
-                vatnumber.mult_add(2, int(vat[7])) + int(vat[8]) + \
-                vatnumber.mult_add(2, int(vat[9]))
-        check = 10 - (sum % 10)
-        if check == 10:
-            check = 0
-        if check != int(vat[10]):
-            return False
-        return True
-
 res_partner()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
