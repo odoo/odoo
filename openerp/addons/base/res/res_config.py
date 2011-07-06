@@ -44,10 +44,9 @@ class res_config_configurable(osv.osv_memory):
         '''Return a description the current progress of configuration:
         a tuple of (non_open_todos:int, total_todos: int)
         '''
-        return (self.pool.get('ir.actions.todo')\
-                .search_count(cr, uid, [('state','<>','open')], context),
-                self.pool.get('ir.actions.todo')\
-                .search_count(cr, uid, [], context))
+        todo_pool = self.pool.get('ir.actions.todo')
+        return (todo_pool.search_count(cr, uid, [('state','<>','open')], context),
+                todo_pool.search_count(cr, uid, [], context))
 
     def _progress(self, cr, uid, context=None):
         closed, total = self.get_current_progress(cr, uid, context=context)
@@ -66,6 +65,7 @@ class res_config_configurable(osv.osv_memory):
     def _next_action(self, cr, uid, context=None):
         todos = self.pool.get('ir.actions.todo')
         self.__logger.info('getting next %s', todos)
+        # Don't forget to change the domain in search view, if this condition is changed
         active_todos = todos.search(cr, uid, [('state','=','open')],
                                     limit=1)
         if active_todos:
@@ -76,7 +76,13 @@ class res_config_configurable(osv.osv_memory):
                 cr.execute("select 1 from res_groups_users_rel where uid=%s and gid IN %s",(uid, tuple(todo_groups),))
                 dont_skip_todo = bool(cr.fetchone())
             if dont_skip_todo:
-                return todos.browse(cr, uid, active_todos[0], context=None)
+                res = todos.browse(cr, uid, active_todos[0], context=None)
+                # A wizard opening directly a form instead of calling
+                # next_action will remain in the todo state so we set it to
+                # done ourselves.
+                if res.action_id.target == 'current':
+                    res.write({'state': 'done'})
+                return res
             else:
                 todos.write(cr, uid, active_todos[0], {'state':'skip'}, context=None)
                 return self._next_action(cr, uid)
@@ -100,27 +106,20 @@ class res_config_configurable(osv.osv_memory):
         next = self._next_action(cr, uid)
         self.__logger.info('next action is %s', next)
         if next:
-            action = next.action_id
-            return {
-                'view_mode': action.view_mode,
-                'view_type': action.view_type,
-                'view_id': (action.view_id.id, 'Next Setup Action') if action.view_id else False,
-                'res_model': action.res_model,
-                'type': action.type,
-                'target': action.target,
-            }
+            res = next.action_launch(context=context)
+            res.update({'nodestroy': False})
+            return res
         self.__logger.info('all configuration actions have been executed')
 
-        current_user_menu = self.pool.get('res.users')\
-            .browse(cr, uid, uid).menu_id
+        current_user_menu = self.pool.get('res.users').browse(cr, uid, uid).menu_id
         # return the action associated with the menu
-        return self.pool.get(current_user_menu.type)\
-            .read(cr, uid, current_user_menu.id)
+        return self.pool.get(current_user_menu.type).read(cr, uid, current_user_menu.id)
 
     def start(self, cr, uid, ids, context=None):
-        ids2 = self.pool.get('ir.actions.todo').search(cr, uid, [], context=context)
-        for todo in self.pool.get('ir.actions.todo').browse(cr, uid, ids2, context=context):
-            if (todo.restart=='always') or (todo.restart=='onskip' and (todo.state in ('skip','cancel'))):
+        todo_pool = self.pool.get('ir.actions.todo')
+        ids2 = todo_pool.search(cr, uid, [], context=context)
+        for todo in todo_pool.browse(cr, uid, ids2, context=context):
+            if (todo.type=='normal_recurring'):
                 todo.write({'state':'open'})
         return self.next(cr, uid, ids, context)
 
