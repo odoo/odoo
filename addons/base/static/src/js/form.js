@@ -166,20 +166,24 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
             this.ready = false;
             var onchange = _.trim(widget.node.attrs.on_change);
             var call = onchange.match(/^\s?(.*?)\((.*?)\)\s?$/);
-            console.log("Onchange triggered for field '%s' -> %s", widget.name, onchange);
             if (call) {
                 var method = call[1], args = [];
+                var context_index = null;
                 var argument_replacement = {
-                    'False' : false,
-                    'True' : true,
-                    'None' : null,
-                    'context': widget.build_context ? widget.build_context() : {}
+                    'False' : function() {return false;},
+                    'True' : function() {return true;},
+                    'None' : function() {return null;},
+                    'context': function(i) {
+                        context_index = i;
+                        var ctx = widget.build_context ? widget.build_context() : {};
+                        return ctx;
+                    }
                 }
                 var parent_fields = null;
-                _.each(call[2].split(','), function(a) {
+                _.each(call[2].split(','), function(a, i) {
                     var field = _.trim(a);
                     if (field in argument_replacement) {
-                        args.push(argument_replacement[field]);
+                        args.push(argument_replacement[field](i));
                         return;
                     } else if (self.fields[field]) {
                         var value = self.fields[field].get_on_change_value();
@@ -193,7 +197,7 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
                             }
                             var p_val = parent_fields[_.trim(splitted[1])];
                             if (p_val !== undefined) {
-                                args.push(value ? value : false);
+                                args.push(p_val == null ? false : p_val);
                                 return;
                             }
                         }
@@ -208,7 +212,8 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
                 return this.rpc(ajax, {
                     model: this.dataset.model,
                     method: method,
-                    args: [(this.datarecord.id == null ? [] : [this.datarecord.id])].concat(args)
+                    args: [(this.datarecord.id == null ? [] : [this.datarecord.id])].concat(args),
+                    context_id: context_index === null ? null : context_index + 1
                 }, function(response) {
                     self.on_processed_onchange(response, processed);
                 });
@@ -220,14 +225,12 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
     on_processed_onchange: function(response, processed) {
         var result = response.result;
         if (result.value) {
-            console.log("      |-> Onchange Response :", result.value);
             for (var f in result.value) {
                 var field = this.fields[f];
                 if (field) {
                     var value = result.value[f];
                     processed.push(field.name);
                     if (field.get_value() != value) {
-                        console.log("          |-> Onchange Action :  change '%s' value from '%s' to '%s'", field.name, field.get_value(), value);
                         field.set_value(value);
                         field.touched = true;
                         if (_.indexOf(processed, field.name) < 0) {
@@ -236,12 +239,11 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
                     }
                 } else {
                     // this is a common case, the normal behavior should be to ignore it
-                    this.log("on_processed_onchange can't find field " + f, result);
                 }
             }
             this.on_form_changed();
         }
-        if (result.warning) {
+        if (!_.isEmpty(result.warning)) {
             $(QWeb.render("DialogWarning", result.warning)).dialog({
                 modal: true,
                 buttons: {
@@ -390,12 +392,13 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
             this.on_attachments_loaded([]);
         } else {
             // TODO fme: modify this so it doesn't try to load attachments when there is not sidebar
-            /*this.rpc('/base/dataset/search_read', {
-                model: 'ir.attachment',
-                fields: ['name', 'url', 'type'],
-                domain: [['res_model', '=', this.dataset.model], ['res_id', '=', this.datarecord.id], ['type', 'in', ['binary', 'url']]],
-                context: this.dataset.get_context()
-            }, this.on_attachments_loaded);*/
+            /*(new openerp.base.DataSetSearch(
+                    this.session, 'ir.attachment', this.dataset.get_context(),
+                    [['res_model', '=', this.dataset.model],
+                     ['res_id', '=', this.datarecord.id],
+                     ['type', 'in', ['binary', 'url']]])).read_slice(
+                ['name', 'url', 'type'], false, false,
+                this.on_attachments_loaded);*/
         }
     },
     on_attachments_loaded: function(attachments) {
@@ -437,7 +440,8 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
     get_fields_values: function() {
         var values = {};
         _.each(this.fields, function(value, key) {
-            values[key] = value.get_value();
+            var val = value.get_value();
+            values[key] = val;
         });
         return values;
     }
@@ -928,7 +932,7 @@ openerp.base.form.FieldDatetime = openerp.base.form.Field.extend({
     },
     set_value: function(value) {
         this._super.apply(this, arguments);
-        if (value == null || value == false) {
+        if (!value) {
             this.$element.find('input').val('');
         } else {
             this.$element.find('input').unbind('change');
@@ -1079,7 +1083,7 @@ openerp.base.form.FieldProgressBar = openerp.base.form.Field.extend({
     set_value: function(value) {
         this._super.apply(this, arguments);
         var show_value = Number(value);
-        if (show_value === NaN) {
+        if (isNaN(show_value)) {
             show_value = 0;
         }
         this.$element.find('div').progressbar('option', 'value', show_value).find('span').html(show_value + '%');
@@ -1298,7 +1302,7 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
             // create...
             values.push({label: "<em>   Create and Edit...</em>", action: function() {
                 self._change_int_value(null);
-                self._search_create_popup("form");
+                self._search_create_popup("form", undefined, {"default_name": search_val});
             }});
 
             response(values);
@@ -1437,6 +1441,7 @@ var commands = {
     }
 };
 openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
+    multi_selection: false,
     init: function(view, node) {
         this._super(view, node);
         this.template = "FieldOne2Many";
@@ -1464,6 +1469,7 @@ openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
             }
             if(view.view_type === "list") {
                 view.options = {
+                    'selectable': self.multi_selection
                 };
             }
             views.push(view);
@@ -1585,26 +1591,31 @@ openerp.base.form.One2ManyDataSet = openerp.base.BufferedDataSet.extend({
 
 openerp.base.form.One2ManyListView = openerp.base.ListView.extend({
     do_add_record: function () {
-        var self = this;
-        var pop = new openerp.base.form.SelectCreatePopup(null, self.o2m.view.session);
-        pop.select_element(self.o2m.field.relation,{
-            initial_view: "form",
-            alternative_form_view: self.o2m.field.views ? self.o2m.field.views["form"] : undefined,
-            auto_create: false,
-            parent_view: self.o2m.view
-        }, self.o2m.build_domain(), self.o2m.build_context());
-        pop.on_create.add(function(data) {
-            self.o2m.dataset.create(data, function(r) {
-                self.o2m.dataset.set_ids(self.o2m.dataset.ids.concat([r.result]));
-                self.o2m.dataset.on_change();
-                pop.stop();
-                self.o2m.reload_current_view();
+        if (this.options.editable) {
+            this._super.apply(this, arguments);
+        } else {
+            var self = this;
+            var pop = new openerp.base.form.SelectCreatePopup(null, self.o2m.view.session);
+            pop.select_element(self.o2m.field.relation,{
+                initial_view: "form",
+                alternative_form_view: self.o2m.field.views ? self.o2m.field.views["form"] : undefined,
+                auto_create: false,
+                parent_view: self.o2m.view
+            }, self.o2m.build_domain(), self.o2m.build_context());
+            pop.on_create.add(function(data) {
+                self.o2m.dataset.create(data, function(r) {
+                    self.o2m.dataset.set_ids(self.o2m.dataset.ids.concat([r.result]));
+                    self.o2m.dataset.on_change();
+                    pop.stop();
+                    self.o2m.reload_current_view();
+                });
             });
-        });
+        }
     }
 });
 
 openerp.base.form.FieldMany2Many = openerp.base.form.Field.extend({
+    multi_selection: false,
     init: function(view, node) {
         this._super(view, node);
         this.template = "FieldMany2Many";
@@ -1625,7 +1636,8 @@ openerp.base.form.FieldMany2Many = openerp.base.form.Field.extend({
 
         this.list_view = new openerp.base.form.Many2ManyListView(
                 null, this.view.session, this.list_id, this.dataset, false, {
-                    'addable': 'Add'
+                    'addable': 'Add',
+                    'selectable': self.multi_selection
             });
         this.list_view.m2m_field = this;
         this.list_view.on_loaded.add_last(function() {
@@ -1666,7 +1678,9 @@ openerp.base.form.Many2ManyListView = openerp.base.ListView.extend({
     do_add_record: function () {
         var pop = new openerp.base.form.SelectCreatePopup(
                 null, this.m2m_field.view.session);
-        pop.select_element(this.model, {}, this.m2m_field.build_domain(), this.m2m_field.build_context());
+        pop.select_element(this.model, {},
+            new openerp.base.CompoundDomain(this.m2m_field.build_domain(), ["!", ["id", "in", this.m2m_field.dataset.ids]]),
+            this.m2m_field.build_context());
         var self = this;
         pop.on_select_elements.add(function(element_ids) {
             _.each(element_ids, function(element_id) {
@@ -1719,7 +1733,7 @@ openerp.base.form.SelectCreatePopup = openerp.base.BaseWidget.extend({
     start: function() {
         this._super();
         this.dataset = new openerp.base.ReadOnlyDataSetSearch(this.session, this.model,
-            this.context, this.domain);
+            this.context);
         this.dataset.parent_view = this.options.parent_view;
         if (this.options.initial_view == "search") {
             this.setup_search_view();
@@ -1739,11 +1753,11 @@ openerp.base.form.SelectCreatePopup = openerp.base.BaseWidget.extend({
                 });
         this.searchview.on_search.add(function(domains, contexts, groupbys) {
             if (self.initial_ids) {
-                self.view_list.do_search.call(self, domains.concat([[["id", "in", self.initial_ids]]]),
+                self.view_list.do_search.call(self, domains.concat([[["id", "in", self.initial_ids]], self.domain]),
                     contexts, groupbys);
                 self.initial_ids = undefined;
             } else {
-                self.view_list.do_search.call(self, domains, contexts, groupbys);
+                self.view_list.do_search.call(self, domains.concat([self.domain]), contexts, groupbys);
             }
         });
         this.searchview.on_loaded.add_last(function () {

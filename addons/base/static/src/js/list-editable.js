@@ -116,6 +116,23 @@ openerp.base.list.editable = function (openerp) {
             delete this.edition_index;
             delete this.edition;
         },
+        /**
+         * Adapts this list's view description to be suitable to the inner form view of a row being edited.
+         *
+         * @returns {Object} fields_view_get's view section suitable for putting into form view of editable rows.
+         */
+        get_form_fields_view: function () {
+            // deep copy of view
+            var view = $.extend(true, {}, this.group.view.fields_view);
+            _(view.arch.children).each(function (widget) {
+                widget.attrs.nolabel = true;
+                if (widget.tag === 'button') {
+                    delete widget.attrs.string;
+                }
+            });
+            view.arch.attrs.col = 2 * view.arch.children.length;
+            return view;
+        },
         render_row_as_form: function (row) {
             this.cancel_pending_edition();
 
@@ -161,7 +178,7 @@ openerp.base.list.editable = function (openerp) {
                 template: 'ListView.row.form',
                 registry: openerp.base.list.form.widgets
             });
-            $.when(this.edition_form.on_loaded({fields_view: this.get_fields_view()})).then(function () {
+            $.when(this.edition_form.on_loaded({fields_view: this.get_form_fields_view()})).then(function () {
                 // put in $.when just in case  FormView.on_loaded becomes asynchronous
                 $new_row.find('td')
                       .addClass('oe-field-cell')

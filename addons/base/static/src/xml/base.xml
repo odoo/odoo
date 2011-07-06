@@ -86,19 +86,7 @@
                     </tr>
                     <tr>
                         <td><label for="password">Password:</label></td>
-                        <td><input type="password" name="password"
-                            t-att-value="selected_password || ''"/></td>
-                    </tr>
-                    <tr t-if="has_local_storage">
-                        <td><label for="remember">Remember password:</label></td>
-                        <td class="oe_remember">
-                            <t t-if="remember">
-                            <input type="checkbox" name="remember" checked="yes"/>
-                            </t>
-                            <t t-if="!remember">
-                            <input type="checkbox" name="remember"/>
-                            </t>
-                        </td>
+                        <td><input type="password" name="password"/></td>
                     </tr>
                     <tr>
                         <td></td>
@@ -255,11 +243,11 @@
             <th t-if="actions_span" t-att-colspan="actions_span"
                 class="oe-actions">
                 <t t-if="flags.action_buttons !== false">
-                    <button type="button" id="oe-list-add"
+                    <button type="button" class="oe-list-add"
                             t-if="options.addable">
                         <t t-esc="options.addable"/>
                     </button>
-                    <button type="button" id="oe-list-delete"
+                    <button type="button" class="oe-list-delete"
                             t-if="options.selectable and options.deletable">
                         Delete
                     </button>
@@ -268,16 +256,19 @@
             <th t-att-colspan="columns_count - actions_span"
                 class="oe-list-pager">
                 <t t-if="flags.pager !== false">
-                    <button type="button" data-pager-action="first">First</button>
-                    <button type="button" data-pager-action="previous"
+                    <button type="button" disabled="disabled"
+                            data-pager-action="first">First</button>
+                    <button type="button" disabled="disabled"
+                            data-pager-action="previous"
                             >&lt;&lt;</button>
 
-                    <span class="oe-pager-first">1</span>
-                    to <span class="oe-pager-last">1</span>
-                    of <span class="oe-pager-total">1</span>
+                    <span class="oe-pager-state">
+                    </span>
 
-                    <button type="button" data-pager-action="next">&gt;&gt;</button>
-                    <button type="button" data-pager-action="last">Last</button>
+                    <button type="button" disabled="disabled"
+                            data-pager-action="next">&gt;&gt;</button>
+                    <button type="button" disabled="disabled"
+                            data-pager-action="last">Last</button>
                 </t>
             </th>
         </tr>
@@ -541,9 +532,9 @@
         <span class="oe-m2o-cm-button" t-att-id="widget.name + '_open'">
             <img src="/base/static/src/img/icons/gtk-index.png"/></span>
         <div t-att-id="widget.cm_id" class="contextMenu" style="display:none"><ul>
-            <li t-att-id="widget.cm_id + '_search'">Search</li>
-            <li t-att-id="widget.cm_id + '_create'">Create New</li>
-            <li t-att-id="widget.cm_id + '_open'" style="color:grey">Open</li>
+            <li t-att-id="widget.cm_id + '_search'">Search...</li>
+            <li t-att-id="widget.cm_id + '_create'">Create New...</li>
+            <li t-att-id="widget.cm_id + '_open'" style="color:grey">Open...</li>
         </ul></div>
     </div>
 </t>
@@ -803,8 +794,8 @@
 <t t-name="SearchView.extended_search.group">
     <div t-att-id="element_id" class="searchview_extended_group">
         <select class="searchview_extended_group_choice">
-            <option value="all">All the following conditions must match</option>
             <option value="any">Any of the following conditions must match</option>
+            <option value="all">All the following conditions must match</option>
             <option value="none">None of the following conditions must match</option>
         </select>
         <a class="searchview_extended_delete_group" 
@@ -886,7 +877,9 @@
         <td>
             <p>
                 <t t-js="d">
-                    d.html_error = context.engine.tools.html_escape(d.error.data.fault_code).replace(/\n/g, '<br/>');
+                    var message = d.message ? d.message : d.error.data.fault_code;
+                    d.html_error = context.engine.tools.html_escape(message)
+                        .replace(/\n/g, '<br/>');
                 </t>
                 <t t-raw="html_error"/>
             </p>
