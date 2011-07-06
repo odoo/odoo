@@ -226,23 +226,6 @@
           <field name="state">cancel</field>
       </record>
 
-      <!--      Inherit company Form -->
-
-      <record id="view_inherit_res_company_logo" model="ir.ui.view">
-          <field name="name">res.company.form.updated</field>
-          <field name="model">res.company</field>
-          <field name="type">form</field>
-          <field name="inherit_id" ref="base.view_company_form" />
-          <field name="arch" type="xml">
-                <field name="rml_footer2" position="after">
-                    <group colspan="4" col="8">
-                        <label string="" colspan="7"/>
-                        <button name="preview_report" string="Preview Report" type="object" icon="gtk-print"/>
-                    </group>
-                </field>
-          </field>
-      </record>
-
       <!--   register Upload Logo configuration wizard  -->
 
       <record id="config_wizard_action_res_company_logo" model="ir.actions.todo">
