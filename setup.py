@@ -89,7 +89,7 @@ if os.name == 'nt':
                 "pydot", "asyncore","asynchat", "reportlab", "vobject",
                 "HTMLParser", "select", "mako", "poplib",
                 "imaplib", "smtplib", "email", "yaml", "DAV",
-                "uuid", "commands", "openerp",
+                "uuid", "commands", "openerp", "vatnumber"
             ],
             "excludes" : ["Tkconstants","Tkinter","tcl"],
         }
@@ -164,6 +164,7 @@ setup(name             = name,
           'pyyaml',
           'pywebdav',
           'feedparser',
+          'vatnumber',
       ],
       extras_require = {
           'SSL' : ['pyopenssl'],
