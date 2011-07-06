@@ -105,11 +105,11 @@ class sale_order(osv.osv):
                 procurement_order mp on (mp.move_id=m.id)
             WHERE
                 p.sale_id IN %s GROUP BY m.state, mp.state, p.sale_id, p.type''', (tuple(ids),))
-        
+
         for item in cr.dictfetchall():
             if item['move_state'] == 'cancel':
                 continue
-           
+
             if item['picking_type'] == 'in':#this is a returned picking
                 tmp[item['sale_order_id']]['total'] -= item['nbr'] or 0.0 # Deducting the return picking qty
                 if item['procurement_state'] == 'done' or item['move_state'] == 'done':
@@ -118,7 +118,7 @@ class sale_order(osv.osv):
                 tmp[item['sale_order_id']]['total'] += item['nbr'] or 0.0
                 if item['procurement_state'] == 'done' or item['move_state'] == 'done':
                     tmp[item['sale_order_id']]['picked'] += item['nbr'] or 0.0
-                
+
         for order in self.browse(cr, uid, ids, context=context):
             if order.shipped:
                 res[order.id] = 100.0
@@ -710,7 +710,7 @@ class sale_order(osv.osv):
                         'note': line.notes,
                         'company_id': order.company_id.id,
                     })
-                    
+
                 if line.product_id:
                     proc_id = self.pool.get('procurement.order').create(cr, uid, {
                         'name': line.name,
@@ -1078,7 +1078,7 @@ class sale_order_line(osv.osv):
         if not date_order:
             date_order = time.strftime('%Y-%m-%d')
 
-        res = self.product_packaging_change(cr, uid, ids, pricelist, product, qty, uom, partner_id, packaging)
+        res = self.product_packaging_change(cr, uid, ids, pricelist, product, qty, uom, partner_id, packaging, context=context)
         result = res.get('value', {})
         warning_msgs = res.get('warning') and res['warning']['message'] or ''
         product_obj = product_obj.browse(cr, uid, product, context=context)
@@ -1147,7 +1147,7 @@ class sale_order_line(osv.osv):
                      max(0,product_obj.qty_available), product_obj.uom_id.name)
             warning_msgs += _("Not enough stock ! : ") + warn_msg + "\n\n"
         # get unit price
-        
+
         if not pricelist:
             warn_msg = _('You have to select a pricelist or a customer in the sales form !\n'
                     'Please set one before choosing a product.')
@@ -1168,7 +1168,7 @@ class sale_order_line(osv.osv):
         if warning_msgs:
             warning = {
                        'title': _('Configuration Error !'),
-                       'message' : warning_msgs  
+                       'message' : warning_msgs
                     }
         return {'value': result, 'domain': domain, 'warning': warning}
 
@@ -1211,7 +1211,7 @@ class sale_config_picking_policy(osv.osv_memory):
             ('picking', 'Invoice Based on Deliveries'),
         ], 'Shipping Default Policy', required=True,
            help="""The Shipping Policy is used to synchronise invoice and delivery operations.
-        - The "Invoice Based on Sales Orders" option will create the picking order directly and wait for the user to manually click on the 'Invoice' button to generate the draft invoice.  
+        - The "Invoice Based on Sales Orders" option will create the picking order directly and wait for the user to manually click on the 'Invoice' button to generate the draft invoice.
         - The "Invoice Based on Deliveries" option is used to create an invoice during the picking process."""),
         'step': fields.selection([
             ('one', 'Delivery Order Only'),
