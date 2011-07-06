@@ -186,6 +186,10 @@
     Company
     ======================
     -->
+
+        <report id="preview_report" model="res.company" name="preview.report" multi="True"
+            rml="base/report/preview_report.rml" string="Preview Report"/>
+
         <record id="view_company_form" model="ir.ui.view">
             <field name="name">res.company.form</field>
             <field name="model">res.company</field>
@@ -219,7 +223,7 @@
                             <field name="rml_footer2" colspan="4"/>
                             <group colspan="4" col="8">
                                 <label string="" colspan="7"/>
-                                <button name="preview_report" string="Preview Report" type="object" icon="gtk-print"/>
+                                <button name="%(preview_report)d" string="Preview Report" type="action" icon="gtk-print"/>
                             </group>
                         </page>
                         <page string="Header/Footer" groups="base.group_extended">
