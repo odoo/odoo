@@ -26,6 +26,7 @@
     "depends" : ["base"],
     "author" : "OpenERP SA",
     "category": 'Tools',
+    'complexity': "easy",
     "description": """
 Installer for knowledge-based tools.
 ====================================

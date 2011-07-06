@@ -25,6 +25,7 @@
     "maintainer" : "OpenERP SA",
     "website" : "http://www.openerp.com",
     "category" : "Tools",
+    'complexity': "easy",
     "description": """
 This module replaces the cleartext password in the database with a password hash.
 =================================================================================
