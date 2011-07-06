@@ -21,16 +21,13 @@
 ##############################################################################
 
 import string
+import datetime
 import vatnumber
 import re
-import datetime
 
 from osv import osv, fields
 from tools.misc import ustr
 from tools.translate import _
-from tools.misc import ustr
-import re
-import datetime
 
 _ref_vat = {
     'be': 'BE0477472701', 'at': 'ATU12345675',

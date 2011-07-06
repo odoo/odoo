@@ -39,9 +39,6 @@ checking the validity of VAT Number assigned to partners in European countries.
     'active': False,
     'certificate': '0084849360989',
     'images': ['images/1_partner_vat.jpeg'],
-    'external_dependencies': {
-        'python' : ['vatnumber'],
-    }
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
