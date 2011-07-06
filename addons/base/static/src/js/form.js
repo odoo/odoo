@@ -166,7 +166,6 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
             this.ready = false;
             var onchange = _.trim(widget.node.attrs.on_change);
             var call = onchange.match(/^\s?(.*?)\((.*?)\)\s?$/);
-            console.log("Onchange triggered for field '%s' -> %s", widget.name, onchange);
             if (call) {
                 var method = call[1], args = [];
                 var context_index = null;
@@ -226,14 +225,12 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
     on_processed_onchange: function(response, processed) {
         var result = response.result;
         if (result.value) {
-            console.log("      |-> Onchange Response :", result.value);
             for (var f in result.value) {
                 var field = this.fields[f];
                 if (field) {
                     var value = result.value[f];
                     processed.push(field.name);
                     if (field.get_value() != value) {
-                        console.log("          |-> Onchange Action :  change '%s' value from '%s' to '%s'", field.name, field.get_value(), value);
                         field.set_value(value);
                         field.touched = true;
                         if (_.indexOf(processed, field.name) < 0) {
@@ -242,12 +239,11 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
                     }
                 } else {
                     // this is a common case, the normal behavior should be to ignore it
-                    console.debug("on_processed_onchange can't find field " + f, result);
                 }
             }
             this.on_form_changed();
         }
-        if (result.warning && !_.isEmpty(result.warning)) {
+        if (!_.isEmpty(result.warning)) {
             $(QWeb.render("DialogWarning", result.warning)).dialog({
                 modal: true,
                 buttons: {
@@ -396,12 +392,13 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
             this.on_attachments_loaded([]);
         } else {
             // TODO fme: modify this so it doesn't try to load attachments when there is not sidebar
-            /*this.rpc('/base/dataset/search_read', {
-                model: 'ir.attachment',
-                fields: ['name', 'url', 'type'],
-                domain: [['res_model', '=', this.dataset.model], ['res_id', '=', this.datarecord.id], ['type', 'in', ['binary', 'url']]],
-                context: this.dataset.get_context()
-            }, this.on_attachments_loaded);*/
+            /*(new openerp.base.DataSetSearch(
+                    this.session, 'ir.attachment', this.dataset.get_context(),
+                    [['res_model', '=', this.dataset.model],
+                     ['res_id', '=', this.datarecord.id],
+                     ['type', 'in', ['binary', 'url']]])).read_slice(
+                ['name', 'url', 'type'], false, false,
+                this.on_attachments_loaded);*/
         }
     },
     on_attachments_loaded: function(attachments) {
