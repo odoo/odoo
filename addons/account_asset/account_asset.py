@@ -130,10 +130,9 @@ class account_asset_asset(osv.osv):
         undone_dotation_number = asset.method_delay
         if asset.method_time == 'end':
             end_date = datetime.strptime(asset.method_end, '%Y-%m-%d')
-            total_days = asset.method_period != 12 and asset.method_period * 30 or total_days
-            no_of_days = float((end_date - depreciation_date).days) / float(total_days)
-            undone_dotation_number = (end_date - depreciation_date).days / total_days
-            if no_of_days - undone_dotation_number > 0.5:
+            undone_dotation_number = 0
+            while depreciation_date <= end_date:
+                depreciation_date = (datetime(depreciation_date.year, depreciation_date.month, depreciation_date.day) + relativedelta(months=+asset.method_period))
                 undone_dotation_number += 1
         if asset.prorata:
             undone_dotation_number += 1
@@ -156,6 +155,8 @@ class account_asset_asset(osv.osv):
             month = depreciation_date.month
             year = depreciation_date.year
             total_days = (year % 4) and 365 or 366
+            if asset.method_time == 'end':
+                total_days = asset.method_period != 12 and asset.method_period * 30 or total_days
 
             undone_dotation_number = self._compute_board_undone_dotation_nb(cr, uid, asset, depreciation_date, total_days, context=context)
             for x in range(len(posted_depreciation_line_ids), undone_dotation_number):
