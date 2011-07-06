@@ -976,7 +976,9 @@ openerp.base.Database = openerp.base.Controller.extend({
 	        	self.rpc("/base/session/db_operation", {'flag': 'backup', 'db': db, 'password': password}, 
 	        	function(result) {
 	        		if (result && !result.error) {
-		        		self.notification.notify("Backup has been created for the database: '" + db + "'");
+		        		self.notification.notify("Backup Database", "Backup has been created for the database: '" + db + "'");
+		        	} else if (result.error) {
+		        		self.notification.notify("Backup Database", result.error);
 		        	}
 	        	});
         	});
@@ -998,7 +1000,9 @@ openerp.base.Database = openerp.base.Controller.extend({
 	        	self.rpc("/base/session/db_operation", {'flag': 'restore', 'db': db, 'password': password, 'new_db': new_db}, 
 	        	function(result) {
 	        		if (result && !result.error) {
-		        		self.notification.notify("You restored your database as: '" + new_db + "'");
+		        		self.notification.notify("Restore Database", "You restored your database as: '" + new_db + "'");
+		        	} else if (result.error) {
+		        		self.notification.notify("Restore Database", result.error);
 		        	}
 	        	});
         	});
@@ -1044,7 +1048,7 @@ openerp.base.Database = openerp.base.Controller.extend({
 	        	self.rpc("/base/session/db_operation", {'flag': 'change_password', 'old_password': old_pwd, 'new_password': new_pwd, 'confirm_password': confirm_pwd}, 
 	        	function(result) {
 	        		if (result && !result.error) {
-		        		self.notification.notify("Password has been changed successfully");
+		        		self.notification.notify("Changed Password", "Password has been changed successfully");
 		        	}
 	        	});
         	});

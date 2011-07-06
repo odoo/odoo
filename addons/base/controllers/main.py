@@ -133,20 +133,26 @@ class Session(openerpweb.Controller):
         elif flag == 'backup':
             db = kw.get('db')
             password = kw.get('password')
-            
-            res = req.session.proxy("db").dump(password, db)
-            if res:
-                cherrypy.response.headers['Content-Type'] = "application/data"
-                cherrypy.response.headers['Content-Disposition'] = 'filename="' + db + '.dump"'
-                return base64.decodestring(res)
+            try:
+                res = req.session.proxy("db").dump(password, db)
+                if res:
+                    cherrypy.response.headers['Content-Type'] = "application/data"
+                    cherrypy.response.headers['Content-Disposition'] = 'filename="' + db + '.dump"'
+                    return base64.decodestring(res)
+            except Exception:
+                return {'error': 'Could not create backup !'}
             
         elif flag == 'restore':
             filename = kw.get('filename')
             db = kw.get('db')
             password = kw.get('password')
             
-            data = base64.encodestring(filename.file.read())
-            return req.session.proxy("db").restore(password, db, data)
+            try:
+                if filename:
+                    data = base64.encodestring(filename.file.read())
+                    return req.session.proxy("db").restore(password, db, data)
+            except Exception:
+                return {'error': 'Could not restore database !'}
         
         elif flag == 'change_password':
             old_password = kw.get('old_password')
