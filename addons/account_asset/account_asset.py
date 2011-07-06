@@ -208,7 +208,7 @@ class account_asset_asset(osv.osv):
         'note': fields.text('Note'),
         'category_id': fields.many2one('account.asset.category', 'Asset category',required=True, change_default=True, readonly=False, states={'close':[('readonly',True)]}),
         'localisation': fields.char('Localisation', size=32, select=2),
-        'parent_id': fields.many2one('account.asset.asset', 'Parent Asset'),
+        'parent_id': fields.many2one('account.asset.asset', 'Parent Asset', readonly=False, states={'close':[('readonly',True)]}),
         'child_ids': fields.one2many('account.asset.asset', 'parent_id', 'Children Assets'),
         'purchase_date': fields.date('Purchase Date', required=True, readonly=False, states={'close':[('readonly',True)]}),
         'state': fields.selection([('draft','Draft'),('open','Running'),('close','Close')], 'State', required=True),
