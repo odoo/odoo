@@ -52,7 +52,7 @@ class idea_category(osv.osv):
 
     _columns = {
         'name': fields.char('Category', size=64, required=True),
-        'complete_name': fields.function(_categ_name_get_fnc, method=True, type="char", string='Name'),
+        'complete_name': fields.function(_categ_name_get_fnc, type="char", string='Name'),
         'summary': fields.text('Summary'),
         'parent_id': fields.many2one('idea.category', 'Parent Categories', ondelete='set null'),
         'child_ids': fields.one2many('idea.category', 'parent_id', 'Child Categories'),
@@ -180,10 +180,10 @@ class idea_idea(osv.osv):
         'created_date': fields.datetime('Creation date', readonly=True),
         'open_date': fields.datetime('Open date', readonly=True, help="Date when an idea opened"),
         'vote_ids': fields.one2many('idea.vote', 'idea_id', 'Vote'),
-        'my_vote': fields.function(_vote_read, fnct_inv = _vote_save, string="My Vote", method=True, type="selection", selection=VoteValues),
-        'vote_avg': fields.function(_vote_avg_compute, method=True, string="Average Score", type="float"),
-        'count_votes': fields.function(_vote_count, method=True, string="Count of votes", type="integer"),
-        'count_comments': fields.function(_comment_count, method=True, string="Count of comments", type="integer"),
+        'my_vote': fields.function(_vote_read, fnct_inv = _vote_save, string="My Vote", type="selection", selection=VoteValues),
+        'vote_avg': fields.function(_vote_avg_compute, string="Average Score", type="float"),
+        'count_votes': fields.function(_vote_count, string="Count of votes", type="integer"),
+        'count_comments': fields.function(_comment_count, string="Count of comments", type="integer"),
         'category_id': fields.many2one('idea.category', 'Category', required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'state': fields.selection([('draft', 'Draft'),
             ('open', 'Opened'),

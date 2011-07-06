@@ -19,35 +19,40 @@
 #
 ##############################################################################
 
+import logging
+
 from osv import osv, fields
+from tools.safe_eval import safe_eval
 
 class portal_menu(osv.osv):
-    """Inherited menu class to customized the login search for menus,
-       as web client 6.0 does not support the menu action properly yet"""
-
+    """
+        Fix menu class to customize the login search for menus,
+        as web client 6.0 does not support the menu action properly yet
+    """
+    _name = 'ir.ui.menu'
     _inherit = 'ir.ui.menu'
 
     def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
         if context is None:
             context = {}
-        # if the current user belongs to a portal, we have to
-        # rewrite any search on the top menus to be under the
-        # portal's root menu:
+        
+        # if the user belongs to a portal, we have to rewrite any search on the
+        # top menus to be under the portal's parent menu
         if not context.get('ir.ui.menu.full_list') and uid != 1 and \
-                            args and len(args) == 1 and \
-                            len(args[0]) == 3 and \
-                            (args[0][0] == 'parent_id' \
-                                and args[0][1] == '=' \
-                                and args[0][2] == False):
-                Portals = self.pool.get('res.portal')
-                portal_id = Portals.search(cr, uid, [('group_id.users', 'in', uid)])
-                if portal_id:
-                    assert len(portal_id) == 1, "Users may only belong to one portal at a time!"
-                    portal_data = Portals.read(cr, uid, portal_id[0], ['parent_menu_id'])
-                    menu_id_pair = portal_data.get('parent_menu_id') # (ID, Name)
-                    if menu_id_pair:
-                        args = [('parent_id', '=', menu_id_pair[0])]
-        ids = super(portal_menu, self).search(cr, uid, args, offset=0,
-                        limit=None, order=order, context=context, count=False)
-        return len(ids) if count else ids
+                args == [('parent_id', '=', False)]:
+            portal_obj = self.pool.get('res.portal')
+            portal_ids = portal_obj.search(cr, uid, [('users', 'in', uid)])
+            if portal_ids:
+                if len(portal_ids) > 1:
+                    log = logging.getLogger('ir.ui.menu')
+                    log.warning('User %s belongs to several portals', str(uid))
+                p = portal_obj.browse(cr, uid, portal_ids[0])
+                # if the portal overrides the menu, use its domain
+                if p.menu_action_id:
+                    args = safe_eval(p.menu_action_id.domain)
+        
+        return super(portal_menu, self).search(cr, uid, args, offset=offset,
+                    limit=limit, order=order, context=context, count=count)
+
 portal_menu()
+

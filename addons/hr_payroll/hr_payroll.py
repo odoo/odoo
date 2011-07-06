@@ -318,11 +318,11 @@ class hr_contract(osv.osv):
         'visa_expire': fields.date('Visa Expire Date'),
         'struct_id': fields.many2one('hr.payroll.structure', 'Salary Structure'),
         'working_days_per_week': fields.integer('Working Days', help="No of Working days / week for an employee"),
-        'basic': fields.function(_calculate_salary, method=True, store=True, multi='dc', type='float', string='Basic Salary', digits=(14,2)),
-        'gross': fields.function(_calculate_salary, method=True, store=True, multi='dc', type='float', string='Gross Salary', digits=(14,2)),
-        'net': fields.function(_calculate_salary, method=True, store=True, multi='dc', type='float', string='Net Salary', digits=(14,2)),
-        'advantages_net': fields.function(_calculate_salary, method=True, store=True, multi='dc', type='float', string='Deductions', digits=(14,2)),
-        'advantages_gross': fields.function(_calculate_salary, method=True, store=True, multi='dc', type='float', string='Allowances', digits=(14,2)),
+        'basic': fields.function(_calculate_salary, store=True, multi='dc', type='float', string='Basic Salary', digits=(14,2)),
+        'gross': fields.function(_calculate_salary, store=True, multi='dc', type='float', string='Gross Salary', digits=(14,2)),
+        'net': fields.function(_calculate_salary, store=True, multi='dc', type='float', string='Net Salary', digits=(14,2)),
+        'advantages_net': fields.function(_calculate_salary, store=True, multi='dc', type='float', string='Deductions', digits=(14,2)),
+        'advantages_gross': fields.function(_calculate_salary, store=True, multi='dc', type='float', string='Allowances', digits=(14,2)),
     }
     _defaults = {
         'working_days_per_week': lambda *a: 5,
@@ -374,10 +374,10 @@ class payroll_register(osv.osv):
         ],'State', select=True, readonly=True),
         'active':fields.boolean('Active', required=False),
         'company_id':fields.many2one('res.company', 'Company', required=False),
-        'grows': fields.function(_calculate, method=True, store=True, multi='dc', string='Gross Salary', type='float', digits=(16, 4)),
-        'net': fields.function(_calculate, method=True, store=True, multi='dc', string='Net Salary', digits=(16, 4)),
-        'allounce': fields.function(_calculate, method=True, store=True, multi='dc', string='Allowance', digits=(16, 4)),
-        'deduction': fields.function(_calculate, method=True, store=True, multi='dc', string='Deduction', digits=(16, 4)),
+        'grows': fields.function(_calculate, store=True, multi='dc', string='Gross Salary', type='float', digits=(16, 4)),
+        'net': fields.function(_calculate, store=True, multi='dc', string='Net Salary', digits=(16, 4)),
+        'allounce': fields.function(_calculate, store=True, multi='dc', string='Allowance', digits=(16, 4)),
+        'deduction': fields.function(_calculate, store=True, multi='dc', string='Deduction', digits=(16, 4)),
         'note': fields.text('Description'),
         'bank_id':fields.many2one('res.bank', 'Bank', required=False, help="Select the Bank Address from whcih the salary is going to be paid"),
     }
@@ -611,8 +611,8 @@ class contrib_register(osv.osv):
         'company_id':fields.many2one('res.company', 'Company', required=False),
         'name':fields.char('Name', size=256, required=True, readonly=False),
         'register_line_ids':fields.one2many('hr.contibution.register.line', 'register_id', 'Register Line', readonly=True),
-        'monthly_total_by_emp': fields.function(_total_contrib, method=True, multi='dc', string='Total By Employee', digits=(16, 4)),
-        'monthly_total_by_comp': fields.function(_total_contrib, method=True, multi='dc', string='Total By Company', digits=(16, 4)),
+        'monthly_total_by_emp': fields.function(_total_contrib, multi='dc', string='Total By Employee', digits=(16, 4)),
+        'monthly_total_by_comp': fields.function(_total_contrib, multi='dc', string='Total By Company', digits=(16, 4)),
         'note': fields.text('Description'),
     }
     _defaults = {
@@ -644,7 +644,7 @@ class contrib_register_line(osv.osv):
         'date': fields.date('Date'),
         'emp_deduction': fields.float('Employee Deduction', digits=(16, 4)),
         'comp_deduction': fields.float('Company Deduction', digits=(16, 4)),
-        'total': fields.function(_total, method=True, store=True,  string='Total', digits=(16, 4)),
+        'total': fields.function(_total, store=True,  string='Total', digits=(16, 4)),
     }
     _defaults = {
         'date': lambda *a: time.strftime('%Y-%m-%d'),
@@ -711,7 +711,6 @@ class company_contribution(osv.osv):
             type='many2one',
             relation='hr.contibution.register',
             string="Contribution Register",
-            method=True,
             view_load=True,
             help="Contribution register based on company",
             required=False
@@ -884,12 +883,12 @@ class hr_payslip(osv.osv):
         'basic_before_leaves': fields.float('Basic Salary', readonly=True,  digits_compute=dp.get_precision('Account')),
         'leaves': fields.float('Leave Deductions', readonly=True,  digits_compute=dp.get_precision('Account')),
         'basic': fields.float('Net Basic', readonly=True,  digits_compute=dp.get_precision('Account')),
-        'grows': fields.function(_calculate, method=True, store=True, multi='dc', string='Gross Salary', digits_compute=dp.get_precision('Account')),
-        'net': fields.function(_calculate, method=True, store=True, multi='dc', string='Net Salary', digits_compute=dp.get_precision('Account')),
-        'allounce': fields.function(_calculate, method=True, store=True, multi='dc', string='Allowance', digits_compute=dp.get_precision('Account')),
-        'deduction': fields.function(_calculate, method=True, store=True, multi='dc', string='Deduction', digits_compute=dp.get_precision('Account')),
-        'other_pay': fields.function(_calculate, method=True, store=True, multi='dc', string='Others', digits_compute=dp.get_precision('Account')),
-        'total_pay': fields.function(_calculate, method=True, store=True, multi='dc', string='Total Payment', digits_compute=dp.get_precision('Account')),
+        'grows': fields.function(_calculate, store=True, multi='dc', string='Gross Salary', digits_compute=dp.get_precision('Account')),
+        'net': fields.function(_calculate, store=True, multi='dc', string='Net Salary', digits_compute=dp.get_precision('Account')),
+        'allounce': fields.function(_calculate, store=True, multi='dc', string='Allowance', digits_compute=dp.get_precision('Account')),
+        'deduction': fields.function(_calculate, store=True, multi='dc', string='Deduction', digits_compute=dp.get_precision('Account')),
+        'other_pay': fields.function(_calculate, store=True, multi='dc', string='Others', digits_compute=dp.get_precision('Account')),
+        'total_pay': fields.function(_calculate, store=True, multi='dc', string='Total Payment', digits_compute=dp.get_precision('Account')),
         'line_ids':fields.one2many('hr.payslip.line', 'slip_id', 'Payslip Line', required=False, readonly=True, states={'draft': [('readonly', False)]}),
         'company_id':fields.many2one('res.company', 'Company', required=False, readonly=True, states={'draft': [('readonly', False)]}),
         'holiday_days': fields.float('No of Leaves', readonly=True),
@@ -1436,11 +1435,11 @@ class hr_employee(osv.osv):
         'slip_ids':fields.one2many('hr.payslip', 'employee_id', 'Payslips', required=False, readonly=True),
         'otherid': fields.char('Other Id', size=64),
 
-        'basic': fields.function(_calculate_salary, method=True, multi='dc', type='float', string='Basic Salary', digits=(14,2)),
-        'gross': fields.function(_calculate_salary, method=True, multi='dc', type='float', string='Gross Salary', digits=(14,2)),
-        'net': fields.function(_calculate_salary, method=True, multi='dc', type='float', string='Net Salary', digits=(14,2)),
-        'advantages_net': fields.function(_calculate_salary, method=True, multi='dc', type='float', string='Deductions', digits=(14,2)),
-        'advantages_gross': fields.function(_calculate_salary, method=True, multi='dc', type='float', string='Allowances', digits=(14,2)),
+        'basic': fields.function(_calculate_salary, multi='dc', type='float', string='Basic Salary', digits=(14,2)),
+        'gross': fields.function(_calculate_salary, multi='dc', type='float', string='Gross Salary', digits=(14,2)),
+        'net': fields.function(_calculate_salary, multi='dc', type='float', string='Net Salary', digits=(14,2)),
+        'advantages_net': fields.function(_calculate_salary, multi='dc', type='float', string='Deductions', digits=(14,2)),
+        'advantages_gross': fields.function(_calculate_salary, multi='dc', type='float', string='Allowances', digits=(14,2)),
     }
 hr_employee()
 

@@ -161,16 +161,16 @@ class crm_lead(crm_case, osv.osv):
         'referred': fields.char('Referred By', size=64),
         'date_open': fields.datetime('Opened', readonly=True),
         'day_open': fields.function(_compute_day, string='Days to Open', \
-                                method=True, multi='day_open', type="float", store=True),
+                                multi='day_open', type="float", store=True),
         'day_close': fields.function(_compute_day, string='Days to Close', \
-                                method=True, multi='day_close', type="float", store=True),
+                                multi='day_close', type="float", store=True),
         'state': fields.selection(crm.AVAILABLE_STATES, 'State', size=16, readonly=True,
                                   help='The state is set to \'Draft\', when a case is created.\
                                   \nIf the case is in progress the state is set to \'Open\'.\
                                   \nWhen the case is over, the state is set to \'Done\'.\
                                   \nIf the case needs to be reviewed then the state is set to \'Pending\'.'),
         'message_ids': fields.one2many('mailgate.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
-        'subjects': fields.function(_get_email_subject, fnct_search=_history_search, string='Subject of Email', method=True, type='char', size=64),
+        'subjects': fields.function(_get_email_subject, fnct_search=_history_search, string='Subject of Email', type='char', size=64),
     }
 
 
@@ -345,7 +345,7 @@ class crm_lead(crm_case, osv.osv):
         """
         mailgate_pool = self.pool.get('email.server.tools')
 
-        subject = msg.get('subject')
+        subject = msg.get('subject') or _("No Subject")
         body = msg.get('body')
         msg_from = msg.get('from')
         priority = msg.get('priority')
