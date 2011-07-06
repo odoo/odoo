@@ -237,7 +237,7 @@ class account_voucher(osv.osv):
         'comment': fields.char('Write-Off Comment', size=64, required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'analytic_id': fields.many2one('account.analytic.account','Write-Off Analytic Account', readonly=True, states={'draft': [('readonly', False)]}),
         'writeoff_amount': fields.function(_get_writeoff_amount, string='Write-Off Amount', type='float', readonly=True),
-        'paid': fields.function(_check_paid, method=True, string='Paid', type='boolean', help="The Voucher has been totally paid."),
+        'paid': fields.function(_check_paid, string='Paid', type='boolean', help="The Voucher has been totally paid."),
     }
     _defaults = {
         'period_id': _get_period,
