@@ -135,7 +135,7 @@ openerp.base.ContainerDataGroup = openerp.base.DataGroup.extend(
                 domain: this.domain,
                 group_by_fields: this.group_by
             }, function () { }).then(function (response) {
-                var data_groups = _(response.result).map(
+                var data_groups = _(response).map(
                         _.bind(self.transform_group, self));
                 self.groups = data_groups;
                 d.resolveWith(self, [data_groups]);
