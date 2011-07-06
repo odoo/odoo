@@ -1010,31 +1010,30 @@ class sale_order_line(osv.osv):
             default = {}
         default.update({'state': 'draft', 'move_ids': [], 'invoiced': False, 'invoice_lines': []})
         return super(sale_order_line, self).copy_data(cr, uid, id, default, context=context)
-    
-    def product_packaging_change(self, cr, uid, ids, pricelist, product, qty=0, uom=False, 
+
+    def product_packaging_change(self, cr, uid, ids, pricelist, product, qty=0, uom=False,
                                    partner_id=False, packaging=False, flag=False, context=None):
+        if not product:
+            return {'value': {'product_packaging': False}}
         product_obj = self.pool.get('product.product')
         product_uom_obj = self.pool.get('product.uom')
         pack_obj = self.pool.get('product.packaging')
         warning = {}
         result = {}
         warning_msgs = ''
-        if not product:
-            return {'value': {'product_packaging': False}}
-        
         if flag:
-            res = self.product_id_change(cr, uid, ids, pricelist=pricelist, 
+            res = self.product_id_change(cr, uid, ids, pricelist=pricelist,
                     product=product, qty=qty, uom=uom, partner_id=partner_id,
                     packaging=packaging, flag=False)
             warning_msgs = res.get('warning') and res['warning']['message']
-            
+
         products = product_obj.browse(cr, uid, product, context=context)
         if not products.packaging:
             packaging = result['product_packaging'] = False
         elif not packaging and products.packaging and not flag:
             packaging = products.packaging[0].id
             result['product_packaging'] = packaging
-            
+
         if packaging:
             default_uom = products.uom_id and products.uom_id.id
             pack = pack_obj.browse(cr, uid, packaging, context=context)
