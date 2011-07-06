@@ -64,7 +64,7 @@ class res_partner_contact(osv.osv):
                          relation='res.partner', string='Main Employer'),
         'function': fields.related('job_ids', 'function', type='char', \
                                  string='Main Function'),
-        'job_id': fields.function(_main_job, method=True, type='many2one',\
+        'job_id': fields.function(_main_job, type='many2one',\
                                  relation='res.partner.job', string='Main Job'),
         'email': fields.char('E-Mail', size=240),
         'comment': fields.text('Notes', translate=True),

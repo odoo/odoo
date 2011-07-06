@@ -19,15 +19,11 @@
 #
 ##############################################################################
 
-import ir
 import os, time
 import netsvc
 
 import random
 import StringIO
-
-import tools
-import pooler
 
 from report.render import render
 from report.interface import report_int

@@ -270,10 +270,9 @@
             <field name="model">report_timesheet.account.date</field>
             <field name="type">graph</field>
             <field name="arch" type="xml">
-                <graph orientation="horizontal" string="Daily timesheet per account">
+                <graph string="Daily timesheet per account">
                     <field name="account_id" groups="analytic.group_analytic_accounting"/>
                     <field name="quantity" operator="+"/>
-                    <field group="True" name="user_id"/>
                 </graph>
             </field>
         </record>
@@ -346,7 +345,6 @@
                 <graph string="Timesheet per account">
                     <field name="account_id" groups="analytic.group_analytic_accounting"/>
                     <field name="quantity" operator="+"/>
-                    <field group="True" name="user_id"/>
                 </graph>
             </field>
         </record>

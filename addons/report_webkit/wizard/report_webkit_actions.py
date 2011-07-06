@@ -29,9 +29,9 @@
 #
 ##############################################################################
 
-import ir
 from tools.translate import _
 from osv import fields, osv
+import pooler
 
 class report_webkit_actions(osv.osv_memory):
     _name = "report.webkit.actions"
@@ -66,7 +66,8 @@ class report_webkit_actions(osv.osv_memory):
                                                     context.get('active_id'), 
                                                     context=context
                                                 )
-        ids = self.pool.get('ir.values').search(
+        ir_values_obj = self.pool.get('ir.values')
+        ids = ir_values_obj.search(
                             cr, 
                             uid, 
                             [('value','=',report.type+','+str(context.get('active_id')))]
@@ -105,7 +106,8 @@ class report_webkit_actions(osv.osv_memory):
                                                         context=context
                                                     )
             if current.print_button:
-                res = ir.ir_set(
+                ir_values_obj = pooler.get_pool(cr.dbname).get('ir.values')
+                res = ir_values_obj.set(
                                 cr, 
                                 uid, 
                                 'action', 
@@ -116,7 +118,8 @@ class report_webkit_actions(osv.osv_memory):
                                  isobject=True
                                 )
             else:
-                res = ir.ir_set(
+                ir_values_obj = pooler.get_pool(cr.dbname).get('ir.values')
+                res = ir_values_obj.set(
                                     cr, 
                                     uid, 
                                     'action', 
