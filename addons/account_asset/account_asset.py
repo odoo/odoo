@@ -213,7 +213,7 @@ class account_asset_asset(osv.osv):
         'purchase_date': fields.date('Purchase Date', required=True, readonly=False, states={'close':[('readonly',True)]}),
         'state': fields.selection([('draft','Draft'),('open','Running'),('close','Close')], 'State', required=True,
                                   help="When an asset is created, the state is 'Draft'.\n" \
-                                       "If the asset is owned by the company or an individual then it is called a confirmed asset, the state is 'Running'.\n" \
+                                       "If the asset is confirmed, the state is 'Running'.\n" \
                                        "An asset can be closed before or after all depreciation lines are posted, the state is 'Close'."),
         'active': fields.boolean('Active', select=2),
         'partner_id': fields.many2one('res.partner', 'Partner', readonly=False, states={'close':[('readonly',True)]}),
