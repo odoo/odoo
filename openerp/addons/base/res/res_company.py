@@ -306,47 +306,6 @@ class res_company(osv.osv):
         (osv.osv._check_recursion, 'Error! You can not create recursive companies.', ['parent_id'])
     ]
 
-    def preview_report(self, cr, uid, ids, context=None):
-        #TODO: we should be able to create a report dynamically without using the filesystem (without using the trick with tempfilename)
-        if not ids:
-            return False
-        # we need to pass the company_id in order to make a new browse record for the rml parser, because the cursor was previously closed and because of this partner data was not printed 
-        company_id = ids[0]
-        company = self.browse(cr, uid, company_id, context=context)
-
-        class company_parser(report_sxw.rml_parse):
-            def __init__(self, cr, uid, name, context):
-                super(company_parser, self).__init__(cr, uid, name, context=context)
-                import openerp
-                company = openerp.pooler.get_pool(cr.dbname).get('res.company').browse(cr, uid, company_id, context=context)
-                self.setCompany(company)
-
-        rml = etree.XML(company.rml_header)
-        rml = rml.getchildren()[0]
-        header_xml = """<document filename="Preview Report.pdf">
-        <template pageSize="(595.0,842.0)" title="Preview Report" author="OpenERP S.A.(sales@openerp.com)" allowSplitting="20">""" 
-        footer_xml = """
-          </template>
-          </document>
-          """
-        tempfileid, tempfilename= tempfile.mkstemp('.rml', 'openerp_')
-        fp = open(tempfilename, 'wb+')
-        fp.write(header_xml)
-        fp.write(etree.tostring(rml))
-        fp.write(footer_xml)
-        fp.close()
-
-        #we need to remove the eventual instances of this report, as we can't have 2 services with the same name
-        netsvc.Service._services.pop('report.company.report', False)
-        #the report service is created on the fly because there is no rml given
-        report_sxw.report_sxw('report.company.report', 'res.company', tempfilename, parser=company_parser)
-        return {
-                'type': 'ir.actions.report.xml',
-                'report_name': 'company.report',
-                'datas': {'ids': ids, 'model': 'res.company'},
-                'nodestroy': True,
-                'context': context #pass the context in order to use it in the browse of the company_parser
-            }
 
 res_company()
 
