@@ -3,55 +3,24 @@
 
     <record id="view_project_installer" model="ir.ui.view">
       <field name="name">project.installer.view</field>
-      <field name="model">project.installer</field>
+      <field name="model">base.setup.installer</field>
       <field name="type">form</field>
-      <field name="inherit_id" ref="base.res_config_installer"/>
+      <field name="inherit_id" ref="base_setup.view_base_setup_installer"/>
       <field name="arch" type="xml">
           <data>
-          <form position="attributes">
-            <attribute name="string">Project Application Configuration</attribute>
-          </form>
-          <separator string="title" position="attributes">
-            <attribute name="string">Configure Your Project Management Application</attribute>
-          </separator>
-           <xpath expr='//separator[@string="vsep"]' position='attributes'>
-                <attribute name='string'></attribute>
-             </xpath>
-          <xpath expr="//label[@string='description']" position="attributes">
-              <attribute name="string">Various OpenERP applications are available to manage your projects with different level of control and flexibility.</attribute>
-          </xpath>
-          <xpath expr="//button[@string='Install Modules']" position="attributes">
-              <attribute name="string">Configure</attribute>
-          </xpath>
-          <group colspan="8">
-            <field name="project_issue"/>
-            <field name="project_long_term" groups="base.group_extended"/>
-            <field name="hr_timesheet_sheet"/>
-            <field name="project_timesheet"/>
-            <field name="account_budget" groups="base.group_extended"/>
+          <xpath expr="//group[@name='project']" position="replace">
             <newline/>
-            <separator string="Methodologies" colspan="4"/>
-            <field name="project_scrum"/>
-            <field name="project_gtd"/>
-          </group>
+            <separator  string="Project Management Features" colspan="4" />
+            <field name="project_issue" />
+            <field name="project_long_term" />
+            <field name="hr_timesheet_sheet" />
+            <field name="project_timesheet" />
+            <field name="account_budget" />
+            <field name="project_scrum" />
+            <field name="project_gtd" />
+          </xpath>
         </data>
       </field>
-    </record>
-
-    <record id="action_project_installer" model="ir.actions.act_window">
-      <field name="name">Project Application Configuration</field>
-      <field name="type">ir.actions.act_window</field>
-      <field name="res_model">project.installer</field>
-      <field name="view_id" ref="view_project_installer"/>
-      <field name="view_type">form</field>
-      <field name="view_mode">form</field>
-      <field name="target">new</field>
-    </record>
-
-    <record id="project_installer_todo" model="ir.actions.todo">
-        <field name="action_id" ref="action_project_installer"/>
-        <field name="restart">always</field>
-        <field name="sequence">3</field>
     </record>
 
   </data>

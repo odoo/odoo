@@ -55,6 +55,7 @@ Print product labels with barcode.
         'product_data.xml',
         'product_report.xml',
         'product_view.xml',
+        'wizard/product_installer.xml',
         'product_shortcut_data.xml',
         'pricelist_view.xml',
         'partner_view.xml',
