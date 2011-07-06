@@ -46,6 +46,7 @@
                         <filter icon="terp-camera_test" string="Certified" domain="[('certificate','&lt;&gt;', False)]"/>
                         <separator orientation="vertical"/>
                         <field name="name"/>
+                        <field name="complexity"/>
                         <field name="description"/>
                         <field name="dependencies_id"/>
                         <field name="state"/>
@@ -90,6 +91,7 @@
                     <field name="certificate" />
                     <field colspan="4" name="shortdesc" select="2"/>
                     <field name="category_id"/>
+                    <field name="complexity"/>
                     <field name="demo" readonly="1"/>
                     <notebook colspan="4">
                         <page string="Module">
@@ -149,6 +151,7 @@
                     <field name="name"/>
                     <field name="category_id"/>
                     <field name="shortdesc"/>
+                    <field name="complexity"/>
                     <field name="author"/>
                     <field name="installed_version"/>
                     <field name="latest_version"/>

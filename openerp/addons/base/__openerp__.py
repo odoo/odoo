@@ -25,6 +25,7 @@
     'name': 'Base',
     'version': '1.3',
     'category': 'Generic Modules/Base',
+    'complexity': "easy",
     'description': """The kernel of OpenERP, needed for all installation.""",
     'author': 'OpenERP SA',
     'maintainer': 'OpenERP SA',

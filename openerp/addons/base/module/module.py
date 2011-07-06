@@ -188,6 +188,10 @@ class module(osv.osv):
         'views_by_module': fields.function(_get_views, method=True, string='Views', type='text', multi="meta", store=True),
         'certificate' : fields.char('Quality Certificate', size=64, readonly=True),
         'web': fields.boolean('Has a web component', readonly=True),
+        'complexity':fields.selection([('easy','Easy'),
+                ('normal','Normal'),
+                ('expert','Expert')], 
+                string='Complexity', readonly=True, help='"Level of difficulties of module. Easy : this module is intuitive and easy to use for everyone. Normal : easy to use for business expert. Expert : this module needs some technical skills".'),
     }
 
     _defaults = {
@@ -364,6 +368,7 @@ class module(osv.osv):
             'license': terp.get('license', 'AGPL-3'),
             'certificate': terp.get('certificate') or False,
             'web': terp.get('web') or False,
+            'complexity': terp.get('complexity', ''),
         }
 
     # update the list of available packages
