@@ -935,6 +935,49 @@ openerp.base.Database = openerp.base.Controller.extend({
         	self.$option_id.html(QWeb.render("CreateDB", self));
         	
         	$("form[name=create_db_form]").validate();
+        	
+        	$("input[name=create_confirm_pwd]").rules("add", {
+			 equalTo: 'input[name=create_admin_pwd]',
+			 messages: {
+			 		required: "Password did not match !"
+				}
+			});
+			
+        	$("input[name=super_admin_pwd]").focus();
+        	
+        	self.$option_id.find('form[name=create_db_form]').submit(function(ev) {
+        		ev.preventDefault();
+        		
+        		var super_admin_pwd = self.$option_id.find("input[name=super_admin_pwd]").val();
+        		var db = self.$option_id.find("input[name=db_name]").val();
+        		var demo_data = self.$option_id.find("input[name=demo_data]:checked");
+        		var db_lang = self.$option_id.find("select[name=db_lang]").val();
+        		var admin_pwd = self.$option_id.find("input[name=create_admin_pwd]").val();
+        		var confirm_pwd = self.$option_id.find("input[name=create_confirm_pwd]").val();
+
+        		if (demo_data.length) 
+        			demo_data = 'True';
+        		else
+        			demo_data = 'False';
+        		
+        		self.rpc("/base/session/db_operation", {
+        											'flag': 'create', 
+        											'super_admin_pwd': super_admin_pwd,
+        											'db': db, 
+        											'demo_data': demo_data,
+        											'db_lang': db_lang,
+        											'admin_pwd': admin_pwd,
+        											'confirm_pwd': confirm_pwd
+        											}, 
+			        	function(result) {
+			        		if (result && !result.error) {
+				        		
+				        	}
+			        	});
+        		
+        	});
+        	
+        	
         });
         
         self.$element.find('#db-drop').click(function() {
@@ -1015,21 +1058,18 @@ openerp.base.Database = openerp.base.Controller.extend({
         	$("form[name=change_pwd_form]").validate();
         	
         	$("input[name=old_pwd]").rules("add", {
-			 required: true,
 			 minlength: 1,
 			 messages: {
 			 		required: "Please enter password !"
 				}
 			});
 			$("input[name=new_pwd]").rules("add", {
-			 required: true,
 			 minlength: 1,
 			 messages: {
 			 		required: "Please enter password !"
 				}
 			});
 			$("input[name=confirm_pwd]").rules("add", {
-			 required: true,
 			 equalTo: 'input[name=new_pwd]',
 			 messages: {
 			 		required: "Password did not match !"

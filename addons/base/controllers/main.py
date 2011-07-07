@@ -124,7 +124,10 @@ class Session(openerpweb.Controller):
     @openerpweb.jsonrequest
     def db_operation(self, req, flag, **kw):
         
-        if flag == 'drop':
+        if flag == 'create':
+            pass
+        
+        elif flag == 'drop':
             db = kw.get('db')
             password = kw.get('password')
             

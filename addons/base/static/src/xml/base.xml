@@ -80,15 +80,15 @@
 		<table align="center" class="db_option_table">
 			<tr>
 				<td><label for="super_admin_pwd">Super admin password:</label></td>
-				<td><input type="text" name="super_admin_pwd" autofocus="true"/></td>
+				<td><input type="password" name="super_admin_pwd" class="required"/></td>
 			</tr>
 			<tr>
 				<td><label for="db_name">New database name:</label></td>
-				<td><input type="text" name="db_name"/></td>
+				<td><input type="text" name="db_name" class="required"/></td>
 			</tr>
 			<tr>
 				<td><label for="demo_data">Load Demonstration data:</label></td>
-				<td><input type="checkbox" name="demo_data"/></td>
+				<td><input type="checkbox" name="demo_data" checked='checked'/></td>
 			</tr>
 			<tr>
 				<td><label for="db_lang">Default language:</label></td>
@@ -103,12 +103,12 @@
 		    	</td>
 			</tr>
 			<tr>
-				<td><label for="admin_pwd">Super admin password:</label></td>
-				<td><input type="text" name="super_admin_pwd"/></td>
+				<td><label for="create_admin_pwd">Super admin password:</label></td>
+				<td><input type="password" name="create_admin_pwd" class="required"/></td>
 			</tr>
 			<tr>
-				<td><label for="confirm_pwd">Confirm password:</label></td>
-				<td><input type="text" name="confirm_pwd"/></td>
+				<td><label for="create_confirm_pwd">Confirm password:</label></td>
+				<td><input type="password" name="create_confirm_pwd" class="required"/></td>
 			</tr>
 			<tr>
 				<td colspan="2" align="right"><input type="submit" value="Create"/></td>
@@ -218,15 +218,15 @@
 		<table align="center" class="db_option_table">
 			<tr>
 				<td><label for="old_pwd">Old password:</label></td>
-				<td><input type="password" name="old_pwd"/></td>
+				<td><input type="password" name="old_pwd" class="required"/></td>
 			</tr>
 			<tr>
 				<td><label for="new_pwd">New password:</label></td>
-				<td><input type="password" name="new_pwd"/></td>
+				<td><input type="password" name="new_pwd" class="required"/></td>
 			</tr>
 			<tr>
 				<td><label for="confirm_pwd">Confirm password:</label></td>
-				<td><input type="password" name="confirm_pwd"/></td>
+				<td><input type="password" name="confirm_pwd" class="required"/></td>
 			</tr>
 			<tr>
 				<td colspan="2" align="right"><input type="submit" value="Change Password"/></td>
