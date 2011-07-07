@@ -798,7 +798,7 @@ openerp.base.form.Field = openerp.base.form.Widget.extend({
         var v_context1 = this.node.attrs.default_get || {};
         var v_context2 = this.node.attrs.context || {};
         var v_context = new openerp.base.CompoundContext(v_context1, v_context2);
-        if (v_context1.__ref || v_context2.__ref) {
+        if (v_context1.__ref || v_context2.__ref || true) { //TODO niv: remove || true
             var fields_values = this._build_view_fields_values();
             v_context.set_eval_context(fields_values);
         }
@@ -808,7 +808,7 @@ openerp.base.form.Field = openerp.base.form.Widget.extend({
     build_domain: function() {
         var f_domain = this.field.domain || [];
         var v_domain = this.node.attrs.domain || [];
-        if (!(v_domain instanceof Array)) {
+        if (!(v_domain instanceof Array) || true) { //TODO niv: remove || true
             var fields_values = this._build_view_fields_values();
             v_domain = new openerp.base.CompoundDomain(v_domain).set_eval_context(fields_values);
         }
@@ -1509,7 +1509,9 @@ openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
             }
             self.is_started.resolve();
         });
-        this.viewmanager.start();
+        setTimeout(function () {
+            self.viewmanager.start();
+        }, 0);
     },
     reload_current_view: function() {
         var self = this;
@@ -1662,7 +1664,9 @@ openerp.base.form.FieldMany2Many = openerp.base.form.Field.extend({
         this.list_view.on_loaded.add_last(function() {
             self.is_started.resolve();
         });
-        this.list_view.start();
+        setTimeout(function () {
+            self.list_view.start();
+        }, 0);
     },
     set_value: function(value) {
         value = value || [];
