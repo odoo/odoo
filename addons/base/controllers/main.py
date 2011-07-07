@@ -124,14 +124,14 @@ class Session(openerpweb.Controller):
     def jslist(self, req, mods='base'):
         return {'files': self.manifest_glob(mods.split(','), 'js')}
 
-    def css(self, req, mods='base,base_hello'):
+    def css(self, req, mods='base'):
         files = self.manifest_glob(mods.split(','), 'css')
         concat = self.concat_files(files)[0]
         # TODO request set the Date of last modif and Etag
         return concat
     css.exposed = True
 
-    def js(self, req, mods='base,base_hello'):
+    def js(self, req, mods='base'):
         files = self.manifest_glob(mods.split(','), 'js')
         concat = self.concat_files(files)[0]
         # TODO request set the Date of last modif and Etag
