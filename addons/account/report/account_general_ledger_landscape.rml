@@ -373,7 +373,7 @@
           <para style="terp_tblheader_General_Centre">Display Account</para>
         </td>
         <td>
-          <para style="terp_tblheader_General_Centre">Filter By [[ get_filter(data)!='No Filter' and get_filter(data) ]]</para>
+          <para style="terp_tblheader_General_Centre">Filter By [[ data['form']['filter']!='filter_no' and get_filter(data) ]]</para>
         </td>
         <td>
           <para style="terp_tblheader_General_Centre">Entries Sorted By</para>
@@ -398,8 +398,8 @@
           <para style="terp_default_Centre_7">[[ (data['form']['display_account']=='all' and 'All') or (data['form']['display_account']=='movement' and 'With movements') or 'With balance is not equal to 0']]</para>
         </td>
         <td>
-          <para style="terp_default_Centre_7">[[ get_filter(data)=='No Filter' and get_filter(data) or removeParentNode('para') ]]</para>
-          <blockTable colWidths="58.0,58.0" style="Table3">[[ get_filter(data)=='Date' or removeParentNode('blockTable') ]]
+          <para style="terp_default_Centre_7">[[ data['form']['filter']=='filter_no' and get_filter(data) or removeParentNode('para') ]]</para>
+          <blockTable colWidths="58.0,58.0" style="Table3">[[ data['form']['filter']=='filter_date' or removeParentNode('blockTable') ]]
             <tr>
               <td>
                 <para style="terp_tblheader_General_Centre">Start Date</para>
@@ -409,7 +409,7 @@
               </td>
             </tr>
           </blockTable>
-          <blockTable colWidths="58.0,58.0" style="Table4">[[ get_filter(data)=='Date' or removeParentNode('blockTable') ]]
+          <blockTable colWidths="58.0,58.0" style="Table4">[[ data['form']['filter']=='filter_date' or removeParentNode('blockTable') ]]
             <tr>
               <td>
                 <para style="terp_default_Centre_7">[[ formatLang(get_start_date(data),date=True) ]]</para>
@@ -419,7 +419,7 @@
               </td>
             </tr>
           </blockTable>
-          <blockTable colWidths="58.0,58.0" style="Table5">[[ get_filter(data)=='Periods' or removeParentNode('blockTable') ]]
+          <blockTable colWidths="58.0,58.0" style="Table5">[[ data['form']['filter']=='filter_period' or removeParentNode('blockTable') ]]
             <tr>
               <td>
                 <para style="terp_tblheader_General_Centre">Start Period</para>
@@ -429,7 +429,7 @@
               </td>
             </tr>
           </blockTable>
-          <blockTable colWidths="58.0,58.0" style="Table6">[[ get_filter(data)=='Periods' or removeParentNode('blockTable') ]]
+          <blockTable colWidths="58.0,58.0" style="Table6">[[ data['form']['filter']=='filter_period' or removeParentNode('blockTable') ]]
             <tr>
               <td>
                 <para style="terp_default_Centre_7">[[ get_start_period(data) or removeParentNode('para') ]]</para>
