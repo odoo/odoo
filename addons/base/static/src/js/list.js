@@ -409,9 +409,9 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
             $.proxy(this, 'reload_content'));
     },
     /**
-     * Handles the signal to delete a line from the DOM
+     * Handles the signal to delete lines from the records list
      *
-     * @param {Array} ids the id of the object to delete
+     * @param {Array} ids the ids of the records to delete
      */
     do_delete: function (ids) {
         if (!ids.length) {
@@ -419,7 +419,7 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
         }
         var self = this;
         return $.when(this.dataset.unlink(ids)).then(function () {
-            self.reload_content();
+            self.groups.drop_records(ids);
         });
     },
     /**
@@ -769,6 +769,24 @@ openerp.base.ListView.List = Class.extend( /** @lends openerp.base.ListView.List
             row_parity: (record_index % 2 === 0) ? 'even' : 'odd',
             row_index: record_index
         });
+    },
+    /**
+     * Stops displaying the records matching the provided ids.
+     *
+     * @param {Array} ids identifiers of the records to remove
+     */
+    drop_records: function (ids) {
+        var self = this;
+        _(this.rows).chain()
+              .map(function (record, index) {
+                return {index: index, id: record.data.id.value};
+            }).filter(function (record) {
+                return _(ids).contains(record.id);
+            }).reverse()
+              .each(function (record) {
+                self.$current.find('tr:eq(' + record.index + ')').remove();
+                self.rows.splice(record.index, 1);
+            })
     }
     // drag and drop
 });
@@ -1062,6 +1080,19 @@ openerp.base.ListView.Groups = Class.extend( /** @lends openerp.base.ListView.Gr
             .map(function (child) {
                 return child.get_records();
             }).flatten().value();
+    },
+    /**
+     * Stops displaying the records with the linked ids, assumes these records
+     * were deleted from the DB.
+     *
+     * This is the up-signal from the `deleted` event on groups and lists.
+     *
+     * @param {Array} ids list of identifier of the records to remove.
+     */
+    drop_records: function (ids) {
+        _.each(this.children, function (child) {
+            child.drop_records(ids);
+        });
     }
 });
 };
