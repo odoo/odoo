@@ -1218,7 +1218,7 @@ import orm
 class property(function):
 
     def _get_default(self, obj, cr, uid, prop_name, context=None):
-        return self._get_defaults(obj, cr, uid, [prop_name], context=None)[0][prop_name]
+        return self._get_defaults(obj, cr, uid, [prop_name], context=None)[prop_name]
 
     def _get_defaults(self, obj, cr, uid, prop_names, context=None):
         """
@@ -1291,7 +1291,8 @@ class property(function):
             name_get_list_ids = []
             for id in ids:
                 #get the result of ir.property.get() for this res_id and save it in res if it's existing
-                value = properties.get(cr, uid, prop, obj._name, res_id=id, context=context)
+                obj_reference = obj._name + ',' + str(id)
+                value = properties.get(cr, uid, prop, obj._name, res_id=obj_reference, context=context)
                 if value:
                     res[id][prop] = value
                 if isinstance(default_val[prop], orm.browse_record):
