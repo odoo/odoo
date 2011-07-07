@@ -98,4 +98,13 @@
         </tr>
     </table>
 </div>
+<div t-name="HomeWidgets" class="oe-dashboard-home-widgets">
+    <div class="oe-dashboard-home-widgets-widget"
+         t-foreach="widgets" t-as="widget">
+        <h3><t t-esc="widget.title"/></h3>
+        <div>
+        </div>
+        <t t-raw="widget.content"/>
+    </div>
+</div>
 </template>

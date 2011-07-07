@@ -355,5 +355,70 @@ openerp.base_dashboard.ApplicationTiles = openerp.base.View.extend({
                                  .click();});
         });
     }
-})
+});
+openerp.base.client_actions.add(
+    'board.home.widgets', 'openerp.base_dashboard.Widgets');
+openerp.base_dashboard.Widgets = openerp.base.View.extend({
+    init: function (parent_or_session, element_id) {
+        this._super(parent_or_session, element_id);
+        this.user_widgets = new openerp.base.DataSetSearch(
+                this.session, 'res.widget.user', null,
+                ['|', ['user_id', '=', false],
+                      ['user_id', '=', this.session.uid]]);
+        this.widgets = new openerp.base.DataSetSearch(this.session, 'res.widget');
+    },
+    start: function () {
+        this.user_widgets.read_slice(['widget_id', 'user_id'], null, null,
+            this.on_widgets_list_loaded);
+    },
+    on_widgets_list_loaded: function (user_widgets) {
+        var self = this;
+        var widget_user = {};
+        _(user_widgets).each(function (widget) {
+            widget['widget_id'] = widget['widget_id'][0];
+            widget_user[widget['widget_id']] = {
+                removable: widget['user_id'] !== false,
+                user_widget_id: widget['id']
+            };
+        });
+        this.widgets.read_ids(_(user_widgets).pluck('widget_id'), [], function (widgets) {
+            _(widgets).each(function (widget) {
+                _.extend(widget, widget_user[widget['id']]);
+            });
+            var root = self.$element[0];
+            root.innerHTML = QWeb.render('HomeWidgets', {
+                widgets: widgets
+            });
+
+            self.process_widgets_scripts(0, root.getElementsByTagName('script'));
+        })
+    },
+    process_widgets_scripts: function (index, nodes) {
+        if (nodes.length <= index) {
+            return;
+        }
+        var old_write = window.document.write,
+                 self = this,
+               script = nodes[index],
+             deferred = $.Deferred().then(function () {
+                            window.document.write = old_write; }),
+         continuation = function () {
+             $.when(self.process_widgets_scripts(index+1, nodes)).then(
+                     deferred.resolve());
+         };
+        window.document.write = function (s) {
+            $(script).closest('.oe-dashboard-home-widgets-widget')
+                .children('div')
+                .append(s);
+        };
+
+        if (!script.src) {
+            new Function(script.firstChild.nodeValue)();
+            setTimeout(continuation);
+        } else {
+            $LAB.script(script.src).wait(continuation);
+        }
+        return deferred;
+    }
+});
 };
