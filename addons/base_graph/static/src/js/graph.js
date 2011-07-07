@@ -20,6 +20,7 @@ openerp.base_graph.GraphView = openerp.base.View.extend({
         this._super(session, element_id);
         this.view_manager = view_manager;
         this.dataset = dataset;
+        this.dataset_index = 0;
         this.model = this.dataset.model;
         this.view_id = view_id;
     },
@@ -80,19 +81,15 @@ openerp.base_graph.GraphView = openerp.base.View.extend({
             this.y_title = this.all_fields[this.operator_field]['string'];
             self.schedule_chart(data);
         }else{
-            this.dataset.read_ids(
-                this.dataset.ids,
-                {}, function(res) {
-                    self.schedule_chart(res);
-                });
+            this.dataset.read_slice(this.fields, 0, false, function(res) {
+                self.schedule_chart(res);
+            });
         }
     },
 
     schedule_chart: function(results) {
         this.$element.html(QWeb.render("GraphView", {"fields_view": this.fields_view, "chart": this.chart,'elem_id': this.elem_id}));
-        /*if (!results.length) {
-            return;
-        }*/
+
         _.each(results, function (result) {
             _.each(result, function (field_value, field_name) {
                 if (typeof field_value == 'object') {
@@ -294,6 +291,7 @@ openerp.base_graph.GraphView = openerp.base.View.extend({
              y_axis = ordinate_description;
         }
         tooltip = self.chart_info_fields;
+
         var bar_chart = new dhtmlXChart({
             view: view_chart,
             container: self.elem_id+"-barchart",
@@ -368,9 +366,6 @@ openerp.base_graph.GraphView = openerp.base.View.extend({
         bar_chart.parse(_.values(abscissa_data), "json");
         jQuery("#"+self.elem_id+"-barchart").height(jQuery("#"+self.elem_id+"-barchart").height()+50);
         bar_chart.attachEvent("onItemClick", function(id) {
-            if(jQuery(".dhx_tooltip").is(":visible") == true) {
-                jQuery(".dhx_tooltip").css('display','none');
-            }
             self.open_list_view(bar_chart.get(id));
         });
     },
@@ -413,23 +408,47 @@ openerp.base_graph.GraphView = openerp.base.View.extend({
         });
     },
     open_list_view : function (id){
+        if($(".dhx_tooltip").is(":visible") == true) {
+            $(".dhx_tooltip").remove('div');
+        }
         var self = this;
         id = id[self.chart_info_fields];
         if (typeof id == 'object'){
             id = id[0];
         }
-        if(this.view_manager.action.context){
-           this.view_manager.action.context = {};
+
+        var self = this;
+        var record_id = "";
+        self.dataset.model = self.model;
+        if (typeof self.chart_info_fields == 'object'){
+            record_id = self.chart_info_fields[0];
+        }else{
+            record_id = self.chart_info_fields;
         }
-        if(!this.view_manager.action.domain) {
-            this.view_manager.action.domain = [[self.chart_info_fields, '=', id],['id','in',self.dataset.ids]];
-        } else {
-            this.view_manager.action.domain.push([self.chart_info_fields, '=', id],['id','in',self.dataset.ids]);
+        self.dataset.domain = [[record_id, '=', id],['id','in',self.dataset.ids]];
+        var modes = !!modes ? modes.split(",") : ["list", "form", "graph"];
+        var views = [];
+        _.each(modes, function(mode) {
+            var view = [false, mode];
+            if (self.fields.views && self.fields.views[mode]) {
+                view.push(self.fields.views[mode]);
+            }
+            views.push(view);
+        });
+        var action = {
+            "res_model" : self.dataset.model,
+            "domain" : self.dataset.domain,
+            "views" : views,
+            "type" : "ir.actions.act_window",
+            "auto_search" : true,
+            "view_type" : "list",
+            "view_mode" : "list"
         }
-        var action_manager = new openerp.base.ActionManager(this.view_manager.session, this.view_manager.element_id);
-        action_manager.start();
-        action_manager.do_action(this.view_manager.action);
+        this.actionmanager = new openerp.base.ActionManager(this.session, "oe_app");
+        this.actionmanager.start();
+        this.actionmanager.do_action(action);
     },
+
     do_search: function(domains, contexts, groupbys) {
         var self = this;
         this.rpc('/base/session/eval_domain_and_context', {
@@ -443,9 +462,9 @@ openerp.base_graph.GraphView = openerp.base.View.extend({
             }else{
                 self.chart_info_fields = self.chart_info;
             }
-            self.dataset.context = self.context = results.context;
-            self.dataset.domain = self.domain = results.domain;
-            self.dataset.read_slice({}, 0, self.limit,function(response){
+            self.dataset.context = results.context;
+            self.dataset.domain = results.domain;
+            self.dataset.read_slice([], 0, false,function(response){
                 self.load_chart(response);
             });
         });
