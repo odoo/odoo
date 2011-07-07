@@ -254,6 +254,8 @@ class hr_timesheet_sheet(osv.osv):
     def sign(self, cr, uid, ids, typ, context=None):
         self.check_sign(cr, uid, ids, typ, context=context)
         sign_obj = self.pool.get('hr.sign.in.out')
+        sheet = self.browse(cr, uid, ids, context=context)[0]
+        context['emp_id'] = [sheet.employee_id.id]
         sign_id = sign_obj.create(cr, uid, {}, context=context)
         methods = {'sign_in': sign_obj.si_check,
                    'sign_out': sign_obj.so_check}
