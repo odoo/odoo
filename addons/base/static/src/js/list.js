@@ -252,18 +252,18 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
             var name = field.attrs.name;
             var column = _.extend({id: name, tag: field.tag},
                     field.attrs, fields[name]);
-            // attrs computer
-            if (column.attrs) {
-                var attrs = JSON.parse(column.attrs);
-                column.attrs_for = function (fields) {
+            // modifiers computer
+            if (column.modifiers) {
+                var modifiers = JSON.parse(column.modifiers);
+                column.modifiers_for = function (fields) {
                     var result = {};
-                    for (var attr in attrs) {
-                        result[attr] = domain_computer(attrs[attr], fields);
+                    for (var modifier in modifiers) {
+                        result[modifier] = domain_computer(modifiers[modifier], fields);
                     }
                     return result;
                 };
             } else {
-                column.attrs_for = noop;
+                column.modifiers_for = noop;
             }
             return column;
         };
@@ -275,10 +275,10 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
         if (grouped) {
             this.columns.unshift({
                 id: '_group', tag: '', string: "Group", meta: true,
-                attrs_for: function () { return {}; }
+                modifiers_for: function () { return {}; }
             }, {
                 id: '_count', tag: '', string: '#', meta: true,
-                attrs_for: function () { return {}; }
+                modifiers_for: function () { return {}; }
             });
         }
 

@@ -132,7 +132,7 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
     on_form_changed: function() {
         for (var w in this.widgets) {
             w = this.widgets[w];
-            w.process_attrs();
+            w.process_modifiers();
             w.update_dom();
         }
     },
@@ -503,7 +503,7 @@ openerp.base.form.compute_domain = function(expr, fields) {
                 stack.push(!_(val).contains(field));
                 break;
             default:
-                this.log("Unsupported operator in attrs :", op);
+                this.log("Unsupported operator in modifiers :", op);
         }
     }
     return _.all(stack);
@@ -514,7 +514,7 @@ openerp.base.form.Widget = openerp.base.Controller.extend({
     init: function(view, node) {
         this.view = view;
         this.node = node;
-        this.attrs = JSON.parse(this.node.attrs.attrs || '{}');
+        this.modifiers = JSON.parse(this.node.attrs.modifiers || '{}');
         this.type = this.type || node.tag;
         this.element_name = this.element_name || this.type;
         this.element_id = [this.view.element_id, this.element_name, this.view.widgets_counter++].join("_");
@@ -527,15 +527,15 @@ openerp.base.form.Widget = openerp.base.Controller.extend({
 
         this.string = this.string || node.attrs.string;
         this.help = this.help || node.attrs.help;
-        this.invisible = (node.attrs.invisible == '1');
+        this.invisible = this.modifiers['invisible'] === true;
     },
     start: function() {
         this.$element = $('#' + this.element_id);
     },
-    process_attrs: function() {
+    process_modifiers: function() {
         var compute_domain = openerp.base.form.compute_domain;
-        for (var a in this.attrs) {
-            this[a] = compute_domain(this.attrs[a], this.view.fields);
+        for (var a in this.modifiers) {
+            this[a] = compute_domain(this.modifiers[a], this.view.fields);
         }
     },
     update_dom: function() {
@@ -736,10 +736,9 @@ openerp.base.form.Field = openerp.base.form.Widget.extend({
         this.field = view.fields_view.fields[node.attrs.name] || {};
         this.string = node.attrs.string || this.field.string;
         this.help = node.attrs.help || this.field.help;
-        this.invisible = (this.invisible || this.field.invisible == '1');
-        this.nolabel = (this.field.nolabel || node.attrs.nolabel) == '1';
-        this.readonly = (this.field.readonly || node.attrs.readonly) == '1';
-        this.required = (this.field.required || node.attrs.required) == '1';
+        this.nolabel = (this.field.nolabel || node.attrs.nolabel) === '1';
+        this.readonly = this.modifiers['readonly'] === true;
+        this.required = this.modifiers['required'] === true;
         this.invalid = false;
         this.touched = false;
     },
