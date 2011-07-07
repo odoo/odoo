@@ -284,6 +284,18 @@ class Agent(object):
                     task[0] = 0
 
     @classmethod
+    def reschedule_in_advance(cls, function, timestamp, db_name, *args, **kwargs):
+        # Cancel the previous task if any.
+        old_timestamp = None
+        if db_name in cls.__tasks_by_db:
+            for task in cls.__tasks_by_db[db_name]:
+                if task[2] == function and timestamp < task[0]:
+                    old_timestamp = task[0]
+                    task[0] = 0
+        if not old_timestamp or timestamp < old_timestamp:
+            cls.setAlarm(function, timestamp, db_name, *args, **kwargs)
+
+    @classmethod
     def quit(cls):
         cls.cancel(None)
 
