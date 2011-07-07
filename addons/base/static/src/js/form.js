@@ -912,6 +912,25 @@ openerp.base.form.FieldFloat = openerp.base.form.FieldChar.extend({
     }
 });
 
+openerp.base.form.FieldInteger = openerp.base.form.FieldFloat.extend({
+    init: function(view, node) {
+        this._super(view, node);
+        this.validation_regex = /^-?\d+$/;
+    },
+    set_value: function(value) {
+        this._super.apply(this, [value]);
+        if (value === false || value === undefined) {
+            // TODO fme: check if GTK client default integers to 0 (like it does with floats)
+            value = 0;
+        }
+        var show_value = parseInt(value, 10);
+        this.$element.find('input').val(show_value);
+    },
+    set_value_from_ui: function() {
+        this.value = Number(this.$element.find('input').val());
+    }
+});
+
 openerp.base.form.FieldDatetime = openerp.base.form.Field.extend({
     init: function(view, node) {
         this._super(view, node);
@@ -2018,7 +2037,7 @@ openerp.base.form.widgets = new openerp.base.Registry({
     'reference' : 'openerp.base.form.FieldReference',
     'boolean' : 'openerp.base.form.FieldBoolean',
     'float' : 'openerp.base.form.FieldFloat',
-    'integer': 'openerp.base.form.FieldFloat',
+    'integer': 'openerp.base.form.FieldInteger',
     'progressbar': 'openerp.base.form.FieldProgressBar',
     'float_time': 'openerp.base.form.FieldFloatTime',
     'image': 'openerp.base.form.FieldBinaryImage',
