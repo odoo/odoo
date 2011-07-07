@@ -1117,28 +1117,38 @@ openerp.base.form.FieldSelection = openerp.base.form.Field.extend({
     init: function(view, node) {
         this._super(view, node);
         this.template = "FieldSelection";
+        this.field_index = [];
+        var self = this;
+        var i = 0;
+        _.each(this.field.selection, function(x) {
+            self.field_index.push({"ikey": "" + i, "ekey": x[0], "label": x[1]});
+            i = i + 1;
+        });
     },
     start: function() {
         this._super.apply(this, arguments);
         this.$element.find('select').change(this.on_ui_change);
     },
     set_value: function(value) {
-        this._super.apply(this, arguments);
-        if (value != null && value !== false) {
-            this.$element.find('select').val(value);
-        } else {
-            this.$element.find('select').val('false');
-        }
+        value = value === null ? false : value;
+        value = value instanceof Array ? value[0] : value;
+        this._super(value);
+        var option = _.detect(this.field_index, function(x) {return x.ekey === value;});
+        this.$element.find('select').val(option.ikey);
     },
     set_value_from_ui: function() {
-        this.value = this.$element.find('select').val();
+        var ikey = this.$element.find('select').val();
+        var option = _.detect(this.field_index, function(x) {return x.ikey === ikey;});
+        this.value = option.ekey;
     },
     update_dom: function() {
         this._super.apply(this, arguments);
         this.$element.find('select').attr('disabled', this.readonly);
     },
     validate: function() {
-        this.invalid = this.required && this.$element.find('select').val() === "";
+        var ikey = this.$element.find('select').val();
+        var option = _.detect(this.field_index, function(x) {return x.ikey === ikey;});
+        this.invalid = this.required && option.ekey === false;
     },
     focus: function() {
         this.$element.find('select').focus();
