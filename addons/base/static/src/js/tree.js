@@ -44,6 +44,7 @@ openerp.base.TreeView = openerp.base.View.extend({
         var self = this;
         this.fields_view = data.field_parent;
         this.fields = data.fields;
+        self.dataset.domain = [['parent_id', '=', '']];
         this.dataset.read_slice([], 0, false, function (response) {
             self.$element.html(QWeb.render('TreeView', { 'field_data' : response, 'title' : self.fields_view.arch.attrs.string }));
             self.$element.find('#parent_id').bind('change', function(){
@@ -230,34 +231,6 @@ openerp.base.TreeView = openerp.base.View.extend({
                 $ ('tr #treerow_' + childid[i]).show();
             }
         }
-    },
-
-    reload_view: function (grouped) {
-        var self = this;
-        this.dataset.offset = 0;
-        this.dataset.limit = false;
-
-        return this.rpc('/base/treeview/load', {
-            model: this.model,
-            view_id: this.view_id,
-            toolbar: !!this.flags.sidebar
-        }, function (field_view_get) {
-            self.on_loaded(field_view_get, grouped);
-        });
-    },
-
-    do_search: function (domains, contexts, groupbys) {
-        var self = this;
-        return this.rpc('/base/session/eval_domain_and_context', {
-            domains: domains,
-            contexts: contexts,
-            group_by_seq: groupbys
-        }, function (results) {
-            self.dataset.context = results.context;
-            self.dataset.domain = results.domain;
-            self.reload_view(!!results.group_by).then(
-                $.proxy(self, 'reload_content'));
-        });
     },
 
     do_show: function () {
