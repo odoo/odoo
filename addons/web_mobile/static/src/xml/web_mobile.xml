@@ -67,12 +67,17 @@
 
 <t t-name="ListView">
     <div role="main" class="ui-content" data-role="content">
-        <ul role="listbox" data-role="listview" class="ui-listview" data-filter="true">
+        <form class="ui-listview-filter ui-bar-c" role="search">
+	        <div id="search-data" class="ui-input-search ui-shadow-inset ui-btn-corner-all ui-btn-shadow ui-icon-searchfield ui-body-c">
+	            <input id="searchid" placeholder="Filter items..." data-type="search" class="ui-input-text ui-body-null" autosearch="true" setTimeDefault="700"/>
+	        </div>
+        </form>
+        <ul role="listbox" data-role="listview" class="ui-listview">
             <li data-theme="c" class="ui-btn ui-btn-icon-right ui-li ui-btn-up-c" t-foreach="records" t-as="record">
                 <div class="ui-btn-inner ui-li">
                     <div class="ui-btn-text">
-                        <a id="list-id" t-att-data-id="record.id" href="#" class="ui-link-inherit">
-                            <span><t t-esc="record.name"/></span>
+                        <a id="list-id" t-att-data-id="record[0]" href="#" class="ui-link-inherit">
+                            <span><t t-esc="record[1]"/></span>
                         </a>
                     </div>
                         <span class="ui-icon ui-icon-arrow-r"></span>
