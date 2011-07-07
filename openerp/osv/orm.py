@@ -77,9 +77,21 @@ module_class_list = {}
 ROOT_USER_ID = 1
 
 def transfer_field_to_modifiers(field, modifiers):
+    default_values = {}
+    state_exceptions = {}
     for a in ('invisible', 'readonly', 'required'):
+        default_values[a] = False
+        state_exceptions[a] = []
         if field.get(a):
-            modifiers[a] = bool(field.get(a))
+            default_values[a] = bool(field.get(a))
+    for state, modifs in (field.get("states") or {}).items():
+        for modif in modifs:
+            if(default_values[modif[0]] != modif[1]):
+                state_exceptions[modif[0]].append(state)
+    
+    for attr, default_value in default_values.items():
+        modifiers[attr] = [("state", "not in" if default_value else "in", state_exceptions[attr])] \
+                if state_exceptions[attr] else default_value
 
 
 # Don't deal with groups, it is done by check_group().
