@@ -1387,6 +1387,22 @@ def upload_data(email, data, type='SURVEY'):
     a.start()
     return True
 
+def get_and_sort_by_field(cr, uid, obj, ids, field, context=None):
+    """
+     This function reads a field on several ids and build a dictionary {KEY:VALUE} with:
+       KEY: field value
+       VALUE: all the ids of obj that share the same value for that field
+    """
+    value_fields = obj.read(cr, uid, ids, [field],context=context)
+    res = {}
+    for item in value_fields:
+        key = item[field]
+        if isinstance(key,tuple):
+            key = key[0]
+        if not key in set_field:
+            res[key] = []
+        res[key].append(item['id'])
+    return res
 
 # port of python 2.6's attrgetter with support for dotted notation
 def resolve_attr(obj, attr):
