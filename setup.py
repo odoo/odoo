@@ -164,6 +164,7 @@ setup(name             = name,
           'pyyaml',
           'pywebdav',
           'feedparser',
+          'simplejson >= 2.0',
       ],
       extras_require = {
           'SSL' : ['pyopenssl'],
