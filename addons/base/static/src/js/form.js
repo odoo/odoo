@@ -1133,12 +1133,12 @@ openerp.base.form.FieldSelection = openerp.base.form.Field.extend({
         value = value instanceof Array ? value[0] : value;
         this._super(value);
         var option = _.detect(this.field_index, function(x) {return x.ekey === value;});
-        this.$element.find('select').val(option.ikey);
+        this.$element.find('select').val(option === undefined ? '' : option.ikey);
     },
     set_value_from_ui: function() {
         var ikey = this.$element.find('select').val();
         var option = _.detect(this.field_index, function(x) {return x.ikey === ikey;});
-        this.value = option.ekey;
+        this.value = option === undefined ? false : option.ekey;
     },
     update_dom: function() {
         this._super.apply(this, arguments);
@@ -1147,7 +1147,7 @@ openerp.base.form.FieldSelection = openerp.base.form.Field.extend({
     validate: function() {
         var ikey = this.$element.find('select').val();
         var option = _.detect(this.field_index, function(x) {return x.ikey === ikey;});
-        this.invalid = this.required && option.ekey === false;
+        this.invalid = this.required && (option === undefined || option.ekey === false);
     },
     focus: function() {
         this.$element.find('select').focus();
