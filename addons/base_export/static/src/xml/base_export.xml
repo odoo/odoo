@@ -1,0 +1,109 @@
+<template>
+
+    <t t-name="ExportView">
+        <button id="exportview">Export</button>
+    </t>
+
+    <t t-name="ExportTreeView">
+        <table class="view" cellspacing="5" border="0" width="100%">
+            <tr>
+                <td class="side_spacing" align="left">
+                    This wizard will export all data that matches the current search criteria to a CSV file.
+                    You can export all data or only the fields that can be reimported after modification.
+                </td>
+            </tr>
+            <tr>
+                <td class="side_spacing">
+                    <table>
+                        <tr>
+                            <td class="label"><label for="import_compat">Export Type:</label></td>
+                            <td>
+                                <select id="import_compat" name="import_compat">
+                                    <option value="1">Import Compatible Export</option>
+                                    <option value="0">Export all Data</option>
+                                </select>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="side_spacing">
+                    <table class="fields-selector-export" cellspacing="5" border="0">
+                        <tr>
+                            <th class="oe_view_title">Available fields</th>
+                            <th class="oe_view_title"></th>
+                            <th class="oe_view_title">Fields to export</th>
+                        </tr>
+                        <tr>
+                            <td class="fields-selector-left" height="400px">
+                                <div id="fields_left">
+                                <table class="fields-selector-export" cellspacing="5" border="0">
+                                    <th class="header_title"> Name </th>
+                                    <tr>
+                                        <td>
+                                            <table width="100%">
+                                                <t t-foreach="fields" t-as="field" >
+                                                    <tr t-att-id="'treerow_' + field.id" class="row">
+                                                        <td valign="top" align="left" style="cursor: pointer;">
+                                                            <t t-if="(field.children).length >= 1">
+                                                                <img t-att-id="'parentimg_' + field.id" src="/base/static/src/img/expand.gif" width="16" height="16" border="0"/>
+                                                            </t>
+                                                        </td>
+                                                        <td valign="top" align="left" style="cursor: pointer;">
+                                                            <a href="javascript: void(0)" t-att-data-field="field">
+                                                                <t t-esc="field.string"/>
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                </t>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </table>
+                                </div>
+                            </td>
+                            <td class="fields-selector-center">
+                                <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                                    <tr>
+                                        <td align="center">
+                                            <button id="add">Add </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td align="center">
+                                            <button id="remove">Remove </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td align="center">
+                                            <button id="remove_all">Remove All </button>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                            <td class="fields-selector-right" height="400px">
+                                <select name="fields" id="fields" multiple="multiple"></select>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td class="side_spacing">
+                    <table width="100%">
+                        <tr>
+                            <td class="imp-header" align="right">
+                                <button id="cancel">Cancel </button>
+                                <button id="export_to_file">Export to File </button>
+                            </td>
+                            <td width="5%"></td>
+                         </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </t>
+
+</template>

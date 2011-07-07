@@ -161,6 +161,16 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
                 self.on_controller_inited(view_type, controller);
             });
             this.views[view_type].controller = controller;
+            if(this.flags && this.flags.sidebar) {
+                if(this.active_view == 'list' || this.active_view == 'form') {
+                    this.views[this.active_view].controller.$element.after(QWeb.render('ExportView'))
+                    this.$element.find('#exportview').click(function(ev) {
+                        var export_view = new openerp.base_export.Export(self.session, self.dataset, self.views);
+                        export_view.start();
+                        ev.preventDefault();
+                    });
+                }
+            }
         }
 
 
@@ -191,7 +201,7 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
     },
     /**
      * Event launched when a controller has been inited.
-     * 
+     *
      * @param {String} view_type type of view
      * @param {String} view the inited controller
      */
@@ -482,7 +492,7 @@ openerp.base.View = openerp.base.Controller.extend({
      * Directly set a view to use instead of calling fields_view_get. This method must
      * be called before start(). When an embedded view is set, underlying implementations
      * of openerp.base.View must use the provided view instead of any other one.
-     * 
+     *
      * @param embedded_view A view.
      */
     set_embedded_view: function(embedded_view) {
