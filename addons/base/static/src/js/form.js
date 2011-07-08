@@ -1121,8 +1121,28 @@ openerp.base.form.FieldSelection = openerp.base.form.Field.extend({
         });
     },
     start: function() {
+        // Flag indicating whether we're in an event chain containing a change
+        // event on the select, in order to know what to do on keyup[RETURN]:
+        // * If the user presses [RETURN] as part of changing the value of a
+        //   selection, we should just let the value change and not let the
+        //   event broadcast further (e.g. to validating the current state of
+        //   the form in editable list view, which would lead to saving the
+        //   current row or switching to the next one)
+        // * If the user presses [RETURN] with a select closed (side-effect:
+        //   also if the user opened the select and pressed [RETURN] without
+        //   changing the selected value), takes the action as validating the
+        //   row
+        var ischanging = false;
         this._super.apply(this, arguments);
-        this.$element.find('select').change(this.on_ui_change);
+        this.$element.find('select')
+            .change(this.on_ui_change)
+            .change(function () { ischanging = true; })
+            .click(function () { ischanging = false; })
+            .keyup(function (e) {
+                if (e.which !== 13 || !ischanging) { return; }
+                e.stopPropagation();
+                ischanging = false;
+            });
     },
     set_value: function(value) {
         value = value === null ? false : value;
