@@ -1387,11 +1387,12 @@ def upload_data(email, data, type='SURVEY'):
     a.start()
     return True
 
-def get_and_sort_by_field(cr, uid, obj, ids, field, context=None):
-    """
-     This function reads a field on several ids and build a dictionary {KEY:VALUE} with:
-       KEY: field value
-       VALUE: all the ids of obj that share the same value for that field
+def get_and_group_by_field(cr, uid, obj, ids, field, context=None):
+    """Reads ``field´´ on given ``ids´´ and map all the ones that shares the same value.
+
+       :param string field: name of the field we want to read and group by
+       :return: mapping of field values to the list of ids that have it
+       :rtype: dict
     """
     value_fields = obj.read(cr, uid, ids, [field],context=context)
     res = {}
@@ -1399,10 +1400,13 @@ def get_and_sort_by_field(cr, uid, obj, ids, field, context=None):
         key = item[field]
         if isinstance(key,tuple):
             key = key[0]
-        if not key in set_field:
+        if not key in res:
             res[key] = []
         res[key].append(item['id'])
     return res
+
+def get_and_group_by_company(cr, uid, obj, ids, context=None):
+    return get_and_group_by_field(cr, uid, obj, ids, field='company_id', context=context)
 
 # port of python 2.6's attrgetter with support for dotted notation
 def resolve_attr(obj, attr):
