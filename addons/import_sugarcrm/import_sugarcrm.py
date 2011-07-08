@@ -169,7 +169,7 @@ class sugar_import(import_framework):
     def get_document_mapping(self): 
         return { 
                 'model' : 'ir.attachment',
-                'dependencies' : [self.TABLE_USER, self.TABLE_ACCOUNT,self.TABLE_CONTACT, self.TABLE_OPPORTUNITY, self.TABLE_CASE, self.TABLE_BUG],
+                'dependencies' : [self.TABLE_USER],
                 'hook' : self.import_document,
                 'map' : {
                          'name':'document_name',
@@ -205,7 +205,7 @@ class sugar_import(import_framework):
     def get_email_mapping(self): 
         return { 
                 'model' : 'mailgate.message',
-                'dependencies' : [self.TABLE_USER, self.TABLE_PROJECT, self.TABLE_PROJECT_TASK, self.TABLE_ACCOUNT, self.TABLE_CONTACT, self.TABLE_LEAD, self.TABLE_OPPORTUNITY, self.TABLE_MEETING, self.TABLE_CALL],
+                'dependencies' : [self.TABLE_USER, self.TABLE_ACCOUNT, self.TABLE_CONTACT, self.TABLE_LEAD, self.TABLE_OPPORTUNITY, self.TABLE_MEETING, self.TABLE_CALL],
                 'hook' : self.import_email,
                 'map' : {'name':'name',
                          'history' : const("1"),
@@ -951,21 +951,41 @@ class import_sugarcrm(osv.osv):
     
     def _get_email_id(self, cr, uid, context=None):
         return self.pool.get('res.users').browse(cr, uid, uid, context=context).user_email
-
+    
+    def get_all(self, cr, uid,model, context=None):
+        obj_module = self.pool.get('ir.module.module')
+        module_id = obj_module.search(cr, uid, [('name', '=', model)])
+        if module_id:
+                for id in module_id:
+                    module_state = obj_module.browse(cr, uid, id).state
+                    if module_state == 'installed':
+                        return True
+                    else:
+                        return False
+        return True
+                
+    def _get_project(self, cr, uid, context=None):
+        return self.get_all(cr,uid,'project',context=context)
+                        
+    def _get_crm_claim(self, cr, uid, context=None):
+        return self.get_all(cr,uid,'crm_claim',context=context)
+                    
+    def _get_project_issue(self, cr, uid, context=None):
+        return self.get_all(cr,uid,'project_issue',context=context)
     
     _defaults = {#to be set to true, but easier for debugging
-       'opportunity': False,
+       'opportunity': True,
        'contact' : True,
        'account' : True,
-        'employee' : False,
-        'meeting' : False,
-        'call' : False,
-        'claim' : False,    
-        'email_history' : False, 
-        'project' : False,   
-        'project_task': False,     
-        'bug': False,
-        'document': False,
+        'employee' : True,
+        'meeting' : True,
+        'call' : True,
+        'claim' : _get_crm_claim,    
+        'email_history' : True, 
+        'project' : _get_project,   
+        'project_task': _get_project,     
+        'bug': _get_project_issue,
+        'document': True,
         'instance_name': 'sugarcrm',
         'email_from': _get_email_id,
         'username' : 'admin',
@@ -1015,7 +1035,6 @@ class import_sugarcrm(osv.osv):
         list = []
         for current in self.browse(cr, uid, ids, context):
             context.update({'username': current.username, 'password': current.password, 'url': current.url, 'email_user': current.email_from or False, 'instance_name': current.instance_name or False})
-            
             if current.contact:
                 key_list.append('Contacts')
             if current.account:
@@ -1023,30 +1042,19 @@ class import_sugarcrm(osv.osv):
             if current.opportunity:
                 key_list.append('Leads')
                 key_list.append('Opportunities')
-                list.append('crm')    
-                list.append('hr')          
             if current.employee:
                 key_list.append('Employees') 
-                list.append('hr') 
             if current.meeting:
                 key_list.append('Meetings')
-                list.append('crm')
-                list.append('hr')
             if current.call:
                 key_list.append('Calls')
-                list.append('crm')
-                list.append('hr')
             if current.claim:
                 key_list.append('Cases')  
-                list.append('crm')
                 list.append('crm_claim')
-                list.append('hr')
             if current.email_history:
                 key_list.append('Emails') 
                 key_list.append('Notes') 
-                list.append('crm')
                 list.append('project')
-                list.append('hr')
             if current.project:
                 key_list.append('Project')
                 list.append('project')
@@ -1058,10 +1066,6 @@ class import_sugarcrm(osv.osv):
                 list.append('project_issue')
             if current.document:
                 key_list.append('Documents')
-                list.append('crm')
-                list.append('crm_claim')
-                list.append('project_issue')
-                list.append('project')
         return key_list,list
 
 
@@ -1092,8 +1096,7 @@ class import_sugarcrm(osv.osv):
             'res_id': new_create_id,
             'type': 'ir.actions.act_window',
         }
-    
-    
+        
     def import_all(self, cr, uid, ids, context=None):
         
 #        """Import all sugarcrm data into openerp module"""
@@ -1106,8 +1109,10 @@ class import_sugarcrm(osv.osv):
         module_id = obj_module.search(cr, uid, [('name', 'in', model)])
         if module_id:
                 for id in module_id:
+                    k = obj_module.read(cr, uid, id)
                     module_state = obj_module.browse(cr, uid, id).state
                     if module_state == 'uninstalled':
+                        k = obj_module.read(cr, uid, id)
                         keys =  ', '.join(keys)
                         module = ', '.join(model)
                         raise osv.except_osv(_('Error !!'), _("%s data required %s Module to be installed, please install %s module") %(keys,module,module))
