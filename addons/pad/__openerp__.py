@@ -3,6 +3,7 @@
     'name': 'Enhanced support for (Ether)Pad attachments',
     'version': '1.0.3',
     'category': 'Tools',
+    'complexity': "easy",
     'description': """
 Adds enhanced support for (Ether)Pad attachments in the web client.
 ===================================================================

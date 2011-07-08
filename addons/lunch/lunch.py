@@ -45,7 +45,7 @@ class lunch_product(osv.osv):
     _columns = {
         'name': fields.char('Name', size=50, required=True),
         'category_id': fields.many2one('lunch.category', 'Category'),
-        'description': fields.char('Description', size=128, required=False),
+        'description': fields.text('Description', size=128, required=False),
         'price': fields.float('Price', digits=(16,2)),
         'active': fields.boolean('Active'),
     }
@@ -81,7 +81,7 @@ class lunch_cashbox(osv.osv):
     _columns = {
         'manager': fields.many2one('res.users', 'Manager'),
         'name': fields.char('Name', size=30, required=True, unique = True),
-        'sum_remain': fields.function(amount_available, method=True, string='Total Remaining'),
+        'sum_remain': fields.function(amount_available, string='Total Remaining'),
     }
 
 lunch_cashbox()
@@ -140,7 +140,7 @@ class lunch_order(osv.osv):
             states = {'draft':[('readonly', False)]}),
         'state': fields.selection([('draft', 'Draft'), ('confirmed', 'Confirmed'), ], \
             'State', readonly=True, select=True),
-        'price': fields.function(_price_get, method=True, string="Price"),
+        'price': fields.function(_price_get, string="Price"),
         'category': fields.many2one('lunch.category','Category'),
     }
 

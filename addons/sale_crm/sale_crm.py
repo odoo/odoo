@@ -26,6 +26,8 @@ class sale_order(osv.osv):
 
     _columns = {
         'section_id': fields.many2one('crm.case.section', 'Sales Team'),
+        'categ_id': fields.many2one('crm.case.categ', 'Category', \
+            domain="['|',('section_id','=',section_id),('section_id','=',False), ('object_id.model', '=', 'crm.lead')]")
     }
 
 sale_order()

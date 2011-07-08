@@ -24,6 +24,7 @@
     'category': 'Sales', 
     'name': 'CRM Fundraising',
     'version': '1.0',
+    'complexity': "easy",
     'description': """
 Fundraising.
 ============

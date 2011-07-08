@@ -23,6 +23,7 @@
     "version" : "1.1",
     "author" : "OpenERP SA",
     "category": 'Finance',
+    'complexity': "normal",
     "description": """
 Accounting and Financial Management.
 ====================================
@@ -59,6 +60,7 @@ module named account_voucher.
         'account_menuitem.xml',
         'report/account_invoice_report_view.xml',
         'report/account_entries_report_view.xml',
+        'report/account_treasury_report_view.xml',
         'report/account_report_view.xml',
         'report/account_analytic_entries_report_view.xml',
         'wizard/account_move_bank_reconcile_view.xml',
