@@ -1221,19 +1221,20 @@ class property(function):
         return self._get_defaults(obj, cr, uid, [prop_name], context=None)[prop_name]
 
     def _get_defaults(self, obj, cr, uid, prop_names, context=None):
-        """
-          This function receives a list of property field name and returns a dictionary with
-           KEY: name of property fields
-           VALUE: the result of ir.property.get() function for res_id = False
+        """Get the default values for ``prop_names´´ property fields (result of ir.property.get() function for res_id = False).
+
+           :param list of string prop_names: list of name of property fields for those we want the default value
+           :return: map of property field names to their default value
+           :rtype: dict
         """
         prop = obj.pool.get('ir.property')
         replaces = {}
         default_value = {}.fromkeys(prop_names, False)
         for prop_name in prop_names:
-            for value in [prop.get(cr, uid, prop_name, obj._name, context=context)]:
-                if isinstance(value, orm.browse_null):
-                    continue
-                default_value[prop_name] = value
+            value = prop.get(cr, uid, prop_name, obj._name, context=context)
+            if isinstance(value, orm.browse_null):
+                continue
+            default_value[prop_name] = value
         return default_value
 
     def _get_by_id(self, obj, cr, uid, prop_name, ids, context=None):
@@ -1286,6 +1287,11 @@ class property(function):
             res[id] = default_val.copy()
 
         for prop in prop_names:
+            # get the type of property field as root (as access depends on access right of source document,
+            # not ir.property object, so user may not have acces)
+            property_field_id = properties.search(cr, 1, [('name','=',prop)], context=context)
+            property_field_type = property_field_id and properties.read(cr, 1, property_field_id, ['type'], context=context)[0]['type'] or False
+            property_destination_obj = None
             #if the property field is a m2o field, we will append the id of the value to name_get_list_ids
             #in order to make a name_get in batch for all the ids needed.
             name_get_list_ids = []
@@ -1295,10 +1301,21 @@ class property(function):
                 value = properties.get(cr, uid, prop, obj._name, res_id=obj_reference, context=context)
                 if value:
                     res[id][prop] = value
-                if isinstance(default_val[prop], orm.browse_record):
-                    name_get_list_ids.append(res[id][prop].id)
-            if isinstance(default_val[prop], orm.browse_record):
-                name_get_values = dict(obj.pool.get(default_val[prop]._name).name_get(cr, uid, name_get_list_ids, context=context))
+                # check existence as root (as seeing the name of a related
+                # object depends on access right of source document,
+                # not target, so user may not have access) in order to avoid
+                # pointing on an unexisting record.
+                if res[id][prop] and property_field_type == 'many2one':
+                    if not property_destination_obj:
+                        property_destination_obj = res[id][prop]._name
+                    if not obj.pool.get(res[id][prop]._name).exists(cr, 1, res[id][prop].id):
+                        res[id][prop] = False
+            if property_destination_obj and property_field_type == 'many2one':
+                # name_get as root (as seeing the name of a related
+                # object depends on access right of source document,
+                # not target, so user may not have access.)
+                name_get_list_ids = [res[id][prop].id for id in ids if res[id][prop]]
+                name_get_values = dict(obj.pool.get(property_destination_obj).name_get(cr, 1, name_get_list_ids, context=context))
             #if the property field is a m2o, we need to return a tuple with (id, name)
             for id in ids:
                 if res[id][prop] and isinstance(res[id][prop], orm.browse_record):
