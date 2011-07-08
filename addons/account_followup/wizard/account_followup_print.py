@@ -213,7 +213,8 @@ class account_followup_print_all(osv.osv_memory):
             msg_sent = ''
             msg_unsent = ''
             data_user = user_obj.browse(cr, uid, uid, context=context)
-            move_lines = line_obj.browse(cr, uid, data['partner_ids'], context=context)
+            line_ids = line_obj.search(cr,uid,[('partner_id','in',data['partner_ids'])])
+            move_lines = line_obj.browse(cr, uid, line_ids, context=context)
             partners = []
             dict_lines = {}
             for line in move_lines:
