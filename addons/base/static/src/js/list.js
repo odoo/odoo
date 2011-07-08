@@ -797,10 +797,18 @@ openerp.base.ListView.List = Class.extend( /** @lends openerp.base.ListView.List
 
         var record = row_data[column.id];
         if (record.value === false) { return ''; }
-        switch (column.type) {
+        switch (column.widget || column.type) {
             case 'many2one':
                 // name_get value format
                 return record.value[1];
+            case 'float_time':
+                return _.sprintf("%02d:%02d",
+                        Math.floor(record.value),
+                        Math.round((record.value % 1) * 60));
+            case 'progressbar':
+                return _.sprintf(
+                    '<progress value="%.2f" max="100.0">%.2f%%</progress>',
+                        record.value, record.value);
             default:
                 return record.value;
         }
