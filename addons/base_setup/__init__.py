@@ -20,7 +20,6 @@
 ##############################################################################
 
 import installer
-import todo
 import wizard
 import os
 import base64
