@@ -26,6 +26,7 @@
     "depends" : ["base"],
     "author" : "OpenERP SA",
     "category" : "Tools",
+    'complexity': "easy",
     "description": """
 Installer for extra tools like lunch, survey, idea, share, etc.
 ===============================================================

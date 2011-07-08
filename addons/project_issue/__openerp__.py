@@ -24,6 +24,7 @@
     'name': 'Issue Management in Project Management',
     'version': '1.0',
     'category': 'Project Management',
+    'complexity': "easy",
     'description': """
 This module provides Issues/Bugs Management in Project.
 =======================================================

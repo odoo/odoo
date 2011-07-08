@@ -26,6 +26,7 @@
     "depends" : ["base"],
     "author" : "OpenERP SA",
     "category": 'Sales',
+    'complexity': "expert",
     "description": """
 Menu for Marketing.
 ===================

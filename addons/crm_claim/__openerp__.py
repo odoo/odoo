@@ -24,6 +24,7 @@
     'name': 'Customer & Supplier Claims Management',
     'version': '1.0',
     'category': 'Sales',
+    'complexity': "easy",
     'description': """
 This modules allows you to track your customers/suppliers claims and grievances.
 ================================================================================

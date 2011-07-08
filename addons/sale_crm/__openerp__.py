@@ -23,6 +23,7 @@
     'name': 'Creates Sales order from Opportunity',
     'version': '1.0',
     'category': 'Sales',
+    'complexity': "easy",
     'description': """
 This module adds a shortcut on one or several opportunity cases in the CRM.
 ===========================================================================

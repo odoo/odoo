@@ -23,6 +23,7 @@
     'name'      : 'Account Analytic Defaults',
     'version'   : '1.0',
     'category'  : 'Finance',
+    'complexity': "normal",
     'description': """Set default values for your analytic accounts
 Allows to automatically select analytic accounts based on criterions:
 =====================================================================
