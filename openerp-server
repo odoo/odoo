@@ -108,7 +108,7 @@ if config['db_name']:
             openerp.tools.convert_yaml_import(cr, 'base', file(config["test_file"]), {}, 'test', True)
             cr.rollback()
 
-        pool.get('ir.cron')._poolJobs(db.dbname)
+        pool.get('ir.cron').restart(db.dbname)
 
         cr.close()
 

@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2011 OpenERP S.A. <http://www.openerp.com>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -800,6 +800,20 @@ class act_window_close(osv.osv):
     }
 act_window_close()
 
+class ir_actions_todo_category(osv.osv):
+    """
+    Category of Configuration Wizards
+    """
+
+    _name = 'ir.actions.todo.category'
+    _description = "Configuration Wizard Category"
+    _columns = {
+         'name':fields.char('Name', size=64, translate=True, required=True), 
+         'sequence': fields.integer('Sequence'),
+         'wizards_ids': fields.one2many('ir.actions.todo', 'category_id', 'Configuration Wizards'),
+    }
+ir_actions_todo_category()
+
 # This model use to register action services.
 TODO_STATES = [('open', 'To Do'),
                ('done', 'Done'),
@@ -807,22 +821,30 @@ TODO_STATES = [('open', 'To Do'),
                ('cancel','Cancelled')]
 
 class ir_actions_todo(osv.osv):
+    """
+    Configuration Wizards
+    """
     _name = 'ir.actions.todo'
+    _description = "Configuration Wizards"
     _columns={
         'action_id': fields.many2one(
             'ir.actions.act_window', 'Action', select=True, required=True,
             ondelete='cascade'),
         'sequence': fields.integer('Sequence'),
         'state': fields.selection(TODO_STATES, string='State', required=True),
-        'name':fields.char('Name', size=64),
-        'restart': fields.selection([('onskip','On Skip'),('always','Always'),('never','Never')],'Restart',required=True),
-        'groups_id':fields.many2many('res.groups', 'res_groups_action_rel', 'uid', 'gid', 'Groups'),
-        'note':fields.text('Text', translate=True),
+        'name': fields.char('Name', size=64),
+        'type': fields.selection([('special','Special'),('normal','Normal'),('normal_recurring','Normal Recurring')], 'Type', required=True,
+            help="""Special: the wizard is run whenever the system is reconfigured.
+Normal: the wizard is visible in the configuration panel until it is done.
+Normal Recurring: the wizard is visible in the configuration panel regardless of its state."""),
+        'groups_id': fields.many2many('res.groups', 'res_groups_action_rel', 'uid', 'gid', 'Groups'),
+        'note': fields.text('Text', translate=True),
+        'category_id': fields.many2one('ir.actions.todo.category','Category'),
     }
     _defaults={
         'state': 'open',
         'sequence': 10,
-        'restart': 'onskip',
+        'type': 'special',
     }
     _order="sequence,name,id"
 
@@ -832,8 +854,16 @@ class ir_actions_todo(osv.osv):
             context = {}
         wizard_id = ids and ids[0] or False
         wizard = self.browse(cr, uid, wizard_id, context=context)
-        res = self.pool.get('ir.actions.act_window').read(cr, uid, wizard.action_id.id, ['name', 'view_type', 'view_mode', 'res_model', 'context', 'views', 'type'], context=context)
-        res.update({'target':'new', 'nodestroy': True})
+        res = self.pool.get('ir.actions.act_window').read(cr, uid, wizard.action_id.id, [], context=context)
+        res.update({'nodestroy': True})
+
+        # Open a specific record when res_id is provided in the context
+        if res.get('context'):
+            user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+            ctx = eval(res['context'], {'user': user})
+            if ctx.get('res_id'):
+                res.update({'res_id': ctx.pop('res_id')})
+                res.update({'context': ctx})
         return res
 
     def action_open(self, cr, uid, ids, context=None):
