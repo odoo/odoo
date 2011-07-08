@@ -65,6 +65,8 @@ class report_balancesheet_horizontal(report_sxw.rml_parse, common_report_header)
         if (data['model'] == 'ir.ui.menu'):
             new_ids = 'chart_account_id' in data['form'] and [data['form']['chart_account_id']] or []
             objects = self.pool.get('account.account').browse(self.cr, self.uid, new_ids)
+            lang_dict = self.pool.get('res.users').read(self.cr,self.uid,self.uid,['context_lang'])
+            data['lang'] = lang_dict.get('context_lang') or False
         return super(report_balancesheet_horizontal, self).set_context(objects, data, new_ids, report_type=report_type)
 
     def sum_dr(self):
