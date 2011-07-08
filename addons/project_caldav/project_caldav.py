@@ -42,10 +42,10 @@ class project_task(osv.osv):
                                   help='If the task is created the state is \'Draft\'.\n If the task is started, the state becomes \'In Progress\'.\n If review is needed the task is in \'Pending\' state.\
                                   \n If the task is over, the states is set to \'Done\'.'),
     }
+    
     _defaults = {
         'state': 'draft',
     }
-
 
     def open_task(self, cr, uid, ids, context=None):
         """
