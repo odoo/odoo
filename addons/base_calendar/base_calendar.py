@@ -1208,7 +1208,7 @@ rule or repeating pattern of time to exclude from the recurring rule."),
 
 
     def remove_virtual_id(self, ids):
-        if isinstance(ids, (str, int)):
+        if isinstance(ids, (str, int, long)):
             return base_calendar_id2real_id(ids)
             
         if isinstance(ids, (list, tuple)):
@@ -1239,7 +1239,6 @@ rule or repeating pattern of time to exclude from the recurring rule."),
                     if until_date:
                         continue
                     until_date = arg[2]
-        
         res = super(calendar_event, self).search(cr, uid, args_without_date, \
                                  0, 0, order, context, count=False)
         res = self.get_recurrent_ids(cr, uid, res, start_date, until_date, limit, context=context)
