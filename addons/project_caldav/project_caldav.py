@@ -28,7 +28,7 @@ from project.project import task as base_project_task
 
 class project_task(osv.osv):
     _name = "project.task"
-    _inherit = ["calendar.todo", "project.task"]
+    _inherit = ["project.task", "calendar.todo"]
     _columns = {
         # force inherit from project.project_task so that 
         # calendar.todo.active is masked oute
