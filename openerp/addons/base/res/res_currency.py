@@ -21,7 +21,7 @@
 import time
 import netsvc
 from osv import fields, osv
-import ir
+import tools
 
 from tools.misc import currency
 from tools.translate import _
@@ -77,6 +77,14 @@ class res_currency(osv.osv):
                     currency_date = currency_rate_obj.read(cr,user,rates[0],['name'])['name']
                     r['date'] = currency_date
         return res
+
+    def name_get(self, cr, uid, ids, context=None):
+        if not ids:
+            return []
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        reads = self.read(cr, uid, ids, ['name','symbol'], context=context, load='_classic_write')
+        return [(x['id'], tools.ustr(x['name']) + (x['symbol'] and (' (' + tools.ustr(x['symbol']) + ')') or '')) for x in reads]
 
     def round(self, cr, uid, currency, amount):
         if currency.rounding == 0:

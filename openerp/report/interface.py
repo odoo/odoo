@@ -27,7 +27,7 @@ import openerp.netsvc as netsvc
 import openerp.pooler as pooler
 
 import openerp.tools as tools
-import openerp.addons as addons
+import openerp.modules
 import print_xml
 import render
 import urllib
@@ -119,7 +119,7 @@ class report_rml(report_int):
         pos_xml = i.end()
 
         doc = print_xml.document(cr, uid, {}, {})
-        tmpl_path = addons.get_module_resource('base', 'report', 'corporate_defaults.xml')
+        tmpl_path = openerp.modules.get_module_resource('base', 'report', 'corporate_defaults.xml')
         doc.parse(tmpl_path, [uid], 'res.users', context)
         corporate_header = doc.xml_get()
         doc.close()

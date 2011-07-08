@@ -20,6 +20,19 @@
 #
 ##############################################################################
 
+#.apidoc title: PostgreSQL interface
+
+"""
+The PostgreSQL connector is a connectivity layer between the OpenERP code and
+the database, *not* a database abstraction toolkit. Database abstraction is what
+the ORM does, in fact.
+
+See also: the `pooler` module
+"""
+
+#.apidoc add-functions: print_stats
+#.apidoc add-classes: Cursor Connection ConnectionPool
+
 __all__ = ['db_connect', 'close_db']
 
 from threading import currentThread
@@ -54,7 +67,6 @@ psycopg2.extensions.register_type(psycopg2.extensions.new_type((700, 701, 1700,)
 
 import tools
 from tools.func import wraps, frame_codeinfo
-from netsvc import Agent
 from datetime import datetime as mdt
 from datetime import timedelta
 import threading
@@ -67,18 +79,30 @@ re_into = re.compile('.* into "?([a-zA-Z_0-9]+)"? .*$');
 sql_counter = 0
 
 class Cursor(object):
+    """ Cursor is an open transaction to Postgres, utilizing a TCP connection
+    
+        A lightweight wrapper around psycopg2's `psycopg1cursor` objects
+        
+        This is the object behind the `cr` variable used all over the OpenERP
+        code.
+    """
     IN_MAX = 1000 # decent limit on size of IN queries - guideline = Oracle limit
-    __logger = logging.getLogger('db.cursor')
+    __logger = None
 
     def check(f):
         @wraps(f)
         def wrapper(self, *args, **kwargs):
             if self.__closed:
-                raise psycopg2.OperationalError('Unable to use the cursor after having closed it')
+                msg = 'Unable to use a closed cursor.'
+                if self.__closer:
+                    msg += ' It was closed at %s, line %s' % self.__closer
+                raise psycopg2.OperationalError(msg)
             return f(self, *args, **kwargs)
         return wrapper
 
     def __init__(self, pool, dbname, serialized=False):
+        if self.__class__.__logger is None:
+            self.__class__.__logger = logging.getLogger('db.cursor')
         self.sql_from_log = {}
         self.sql_into_log = {}
 
@@ -100,6 +124,7 @@ class Cursor(object):
             self.__caller = frame_codeinfo(currentframe(),2)
         else:
             self.__caller = False
+        self.__closer = False
 
     def __del__(self):
         if not self.__closed:
@@ -198,6 +223,8 @@ class Cursor(object):
         if not self._obj:
             return
 
+        if self.sql_log:
+            self.__closer = frame_codeinfo(currentframe(),3)
         self.print_log()
 
         if not self._serialized:
@@ -226,22 +253,37 @@ class Cursor(object):
 
     @check
     def commit(self):
+        """ Perform an SQL `COMMIT`
+        """
         return self._cnx.commit()
 
     @check
     def rollback(self):
+        """ Perform an SQL `ROLLBACK`
+        """
         return self._cnx.rollback()
 
     @check
     def __getattr__(self, name):
         return getattr(self._obj, name)
 
+        """ Set the mode of postgres operations for all cursors
+        """
+        """Obtain the mode of postgres operations for all cursors
+        """
 
 class PsycoConnection(psycopg2.extensions.connection):
     pass
 
 class ConnectionPool(object):
-
+    """ The pool of connections to database(s)
+    
+        Keep a set of connections to pg databases open, and reuse them
+        to open cursors for all transactions.
+        
+        The connections are *not* automatically closed. Only a close_db()
+        can trigger that.
+    """
     __logger = logging.getLogger('db.connection_pool')
 
     def locked(fun):
@@ -333,6 +375,8 @@ class ConnectionPool(object):
 
 
 class Connection(object):
+    """ A lightweight instance of a connection to postgres
+    """
     __logger = logging.getLogger('db.connection')
 
     def __init__(self, pool, dbname):
@@ -375,15 +419,18 @@ def dsn_are_equals(first, second):
     return key(first) == key(second)
 
 
-_Pool = ConnectionPool(int(tools.config['db_maxconn']))
+_Pool = None
 
 def db_connect(db_name):
+    global _Pool
+    if _Pool is None:
+        _Pool = ConnectionPool(int(tools.config['db_maxconn']))
     currentThread().dbname = db_name
     return Connection(_Pool, db_name)
 
 def close_db(db_name):
+    """ You might want to call openerp.netsvc.Agent.cancel(db_name) along this function."""
     _Pool.close_all(dsn(db_name))
-    Agent.cancel(db_name)
     tools.cache.clean_caches_for_db(db_name)
     ct = currentThread()
     if hasattr(ct, 'dbname'):

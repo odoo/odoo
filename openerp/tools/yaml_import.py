@@ -105,7 +105,7 @@ class TestReport(object):
             success += self._report[severity][True]
             failure += self._report[severity][False]
         res.append("total\t%s\t%s" % (success, failure))
-        res.append("end of report (%s assertion(s) checked)" % success + failure)
+        res.append("end of report (%s assertion(s) checked)" % (success + failure))
         return "\n".join(res)
 
 class RecordDictWrapper(dict):
@@ -177,7 +177,7 @@ class YamlInterpreter(object):
             try:
                 _, id = self.pool.get('ir.model.data').get_object_reference(self.cr, self.uid, module, checked_xml_id)
                 self.id_map[xml_id] = id
-            except ValueError, e:
+            except ValueError:
                 raise ValueError("""%s not found when processing %s.
     This Yaml file appears to depend on missing data. This often happens for
     tests that belong to a module's test suite and depend on each other.""" % (checked_xml_id, self.filename))
@@ -488,7 +488,6 @@ class YamlInterpreter(object):
         if self.isnoupdate(function) and self.mode != 'init':
             return
         model = self.get_model(function.model)
-        context = self.get_context(function, self.eval_context)
         if function.eval:
             args = self.process_eval(function.eval)
         else:
@@ -643,7 +642,6 @@ class YamlInterpreter(object):
                 ids = [self.get_id(node.id)]
             if len(ids):
                 self.pool.get(node.model).unlink(self.cr, self.uid, ids)
-                self.pool.get('ir.model.data')._unlink(self.cr, 1, node.model, ids)
         else:
             self.logger.log(logging.TEST, "Record not deleted.")
 
@@ -792,7 +790,7 @@ class YamlInterpreter(object):
             is_preceded_by_comment = False
         return is_preceded_by_comment
 
-def yaml_import(cr, module, yamlfile, idref=None, mode='init', noupdate=False, report=None):
+def yaml_import(cr, module, yamlfile, idref=None, mode='init', noupdate=False):
     if idref is None:
         idref = {}
     yaml_string = yamlfile.read()
