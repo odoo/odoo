@@ -1116,12 +1116,8 @@ openerp.base.form.FieldSelection = openerp.base.form.Field.extend({
     init: function(view, node) {
         this._super(view, node);
         this.template = "FieldSelection";
-        this.field_index = [];
-        var self = this;
-        var i = 0;
-        _.each(this.field.selection, function(x) {
-            self.field_index.push({"ikey": "" + i, "ekey": x[0], "label": x[1]});
-            i = i + 1;
+        this.field_index = _.map(this.field.selection, function(x, index) {
+            return {"ikey": "" + index, "ekey": x[0], "label": x[1]};
         });
     },
     start: function() {
