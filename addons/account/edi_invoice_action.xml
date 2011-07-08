@@ -3,7 +3,7 @@
 	<data>
 		<!--Export edi document  -->
 		<record id="ir_actions_server_invoice" model="ir.actions.server">
-			<field name="code">context.update({'token':self.pool.get('ir.edi.document').export_edi(cr, uid, [object], context = context)})</field>
+			<field name="code">context.update({'token':self.pool.get('ir.edi.document').export_edi(cr, uid, [object], context = context),'invoice':object.number,'company':object.company_id.name,'currency':object.currency_id.name,'amount':object.amount_total,'date_due':object.date_due})</field>
 			<field eval="6" name="sequence"/>
 			<field name="state">code</field>
 			<field name="type">ir.actions.server</field>
@@ -49,15 +49,14 @@
 			<field name="def_body_html"></field>
 			<field name="object_name" ref="account.model_account_invoice"/>
 			<field name="def_cc">xyz</field>
-			<field name="def_body_text">test ${object._context.get('token')}
-${object.account_id.currency_mode}
+			<field name="def_body_text">
 Hello,
 
-We just registered the invoice 'INV/001' for 121 EUR for your company 'ASUSTek'.
+We just registered the invoice ${object.number} for ${object.amount}, ${object.currency} for your company ${object.company}.
 You can click on the following link to preview, print and pay this invoice:
-    http://URL_ON_WEB_CLIENT
+    http://localhost:8080/openerp/token? ${object._context.get('token')}
 
-Please note that this invoice has to be paid before 12/04/2011.
+Please note that this invoice has to be paid before ${object.date_due}
 
 Regards,</field>
 			<field name="template_language">mako</field>
