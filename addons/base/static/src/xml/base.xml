@@ -324,20 +324,7 @@
         <td t-if="!column.meta and column.invisible !== '1'" t-att-title="column.help"
             t-att-class="'oe-field-cell' + (align ? ' oe-number' : '')"
             t-att-data-field="column.id">
-            <t t-set="attrs" t-value="column.modifiers_for(row.data)"/>
-            <t t-if="!attrs.invisible">
-                <t t-set="is_button" t-value="column.tag === 'button'"/>
-                <!-- TODO: get correct widget from form -->
-                <t t-if="!is_button and row['data'][column.id].value !== false">
-                    <t t-set="value" t-value="row['data'][column.id].value"/>
-                    <t t-esc="value instanceof Array ? value[1] : value"/>
-                </t>
-                <button type="button" t-att-title="column.string"
-                        t-if="is_button">
-                    <img t-att-src="'/base/static/src/img/icons/' + column.icon + '.png'"
-                         t-att-alt="column.string"/>
-                </button>
-            </t>
+            <t t-raw="render_cell(row.data, column)"/>
         </td>
     </t>
     <td t-if="options.deletable" class='oe-record-delete'>

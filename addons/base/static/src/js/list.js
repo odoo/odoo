@@ -637,7 +637,9 @@ openerp.base.ListView.List = Class.extend( /** @lends openerp.base.ListView.List
             this.$current.remove();
         }
         this.$current = this.$_element.clone(true);
-        this.$current.empty().append(QWeb.render('ListView.rows', this));
+        this.$current.empty().append(
+            QWeb.render('ListView.rows', _.extend({
+                render_cell: this.render_cell}, this)));
     },
     /**
      * Gets the ids of all currently selected records, if any
@@ -767,8 +769,41 @@ openerp.base.ListView.List = Class.extend( /** @lends openerp.base.ListView.List
             options: this.options,
             row: this.rows[record_index],
             row_parity: (record_index % 2 === 0) ? 'even' : 'odd',
-            row_index: record_index
+            row_index: record_index,
+            render_cell: this.render_cell
         });
+    },
+    /**
+     * Formats the rendring of a given value based on its field type
+     *
+     * @param {Object} row_data record whose values should be displayed in the cell
+     * @param {Object} column column descriptor
+     * @param {"button"|"field"} column.tag base control type
+     * @param {String} column.type widget type for a field control
+     * @param {String} [column.string] button label
+     * @param {String} [column.icon] button icon
+     */
+    render_cell: function (row_data, column) {
+        var attrs = column.modifiers_for(row_data);
+        if (attrs.invisible) { return ''; }
+        if (column.tag === 'button') {
+            return [
+                '<button type="button" title="', column.string || '', '">',
+                    '<img src="/base/static/src/img/icons/', column.icon, '.png"',
+                        ' alt="', column.string || '', '"/>',
+                '</button>'
+            ].join('')
+        }
+
+        var record = row_data[column.id];
+        if (record.value === false) { return ''; }
+        switch (column.type) {
+            case 'many2one':
+                // name_get value format
+                return record.value[1];
+            default:
+                return record.value;
+        }
     },
     /**
      * Stops displaying the records matching the provided ids.
