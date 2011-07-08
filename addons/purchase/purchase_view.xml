@@ -49,6 +49,14 @@
               action="product.product_uom_form_action" id="menu_purchase_uom_form_action"
               parent="menu_purchase_unit_measure_purchase" sequence="30"/>
 
+        <menuitem
+            id="menu_purchase_partner_cat" name="Address Book"
+            parent="menu_purchase_config_purchase"/>
+
+        <menuitem
+            action="base.action_partner_category_form" id="menu_partner_categories_in_form" name="Partner Categories"
+            parent="purchase.menu_purchase_partner_cat"/>
+
 
         <!--supplier addresses action-->
         <record id="action_supplier_address_form" model="ir.actions.act_window">
