@@ -196,7 +196,7 @@ class partner_balance(report_sxw.rml_parse):
         result_tmp = 0.0
         if self.date_lst:
             self.cr.execute(
-                "SELECT p.ref,l.account_id,ac.name as account_name,ac.code as code ,p.name, sum(debit) as debit, sum(credit) as credit, " \
+                "SELECT p.ref,l.account_id,ac.name as account_name,ac.code as code ,p.name, COALESCE(sum(debit),0.00) as debit, COALESCE(sum(credit),0.00) as credit, " \
                         "CASE WHEN sum(debit) > sum(credit) " \
                             "THEN sum(debit) - sum(credit) " \
                             "ELSE 0 " \
