@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2011-05-09 10:19+0000\n"
-"PO-Revision-Date: 2011-06-10 19:23+0000\n"
+"PO-Revision-Date: 2011-07-07 14:53+0000\n"
 "Last-Translator: mgaja (GrupoIsep.com) <Unknown>\n"
 "Language-Team: Catalan <ca@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-06-11 06:14+0000\n"
+"X-Launchpad-Export-Date: 2011-07-08 05:53+0000\n"
 "X-Generator: Launchpad (build 13168)\n"
 
 #. module: survey
@@ -31,11 +31,13 @@ msgid ""
 "greater than the number of answer.                                      "
 "Please use a number that is smaller than %d."
 msgstr ""
+"El nombre de respostes necessàries mínim que heu introduït és major que el "
+"nombre de respostes. Utilitzeu un nombre menor que %d."
 
 #. module: survey
 #: view:survey.question.wiz:0
 msgid "Your Messages"
-msgstr ""
+msgstr "Els vostres missatges"
 
 #. module: survey
 #: field:survey.question,comment_valid_type:0
@@ -51,6 +53,8 @@ msgid ""
 "your maximum is greater than the number of answer.                           "
 "           Please use a number that is smaller than %d."
 msgstr ""
+"El nombre de respostes necessàries màxim que heu introduït per al màxim és "
+"major que el nombre de respostes. Utilitzeu un nombre menor que %d."
 
 #. module: survey
 #: view:survey:0
@@ -127,6 +131,8 @@ msgid ""
 "You must enter one or more menu                                 choices in "
 "column heading (white spaces not allowed)"
 msgstr ""
+"Heu d'introduir una o més opcions de menú en la capçalera de columna (no es "
+"permeten espais en blanc)"
 
 #. module: survey
 #: field:survey.question.column.heading,in_visible_menu_choice:0
@@ -193,6 +199,8 @@ msgid ""
 "than the number of answer.                                     Please use a "
 "number that is smaller than %d."
 msgstr ""
+"El nombre de respostes necessàries que heu introduït és major que el nombre "
+"de respostes. Utilitzeu un número menor que %d."
 
 #. module: survey
 #: field:survey.question,tot_resp:0
@@ -207,7 +215,7 @@ msgstr "Número de fila"
 #. module: survey
 #: model:ir.model,name:survey.model_survey_name_wiz
 msgid "survey.name.wiz"
-msgstr ""
+msgstr "enquesta.nom.assist"
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.action_survey_question_form
@@ -245,7 +253,7 @@ msgstr "Utilitzeu si la pregunta és de tipus qualificació_escala"
 #: field:survey.print,page_number:0
 #: field:survey.print.answer,page_number:0
 msgid "Include Page Number"
-msgstr ""
+msgstr "Inclou número de pàgina"
 
 #. module: survey
 #: view:survey.page:0
@@ -312,6 +320,7 @@ msgstr "Total d'enquestes completades"
 #: view:survey.response.answer:0
 msgid "(Use Only Question Type is matrix_of_drop_down_menus)"
 msgstr ""
+"(utilitzeu només quan el tipus de pregunta sigui matrix_of_drop_down_menus)"
 
 #. module: survey
 #: model:ir.actions.report.xml,name:survey.survey_analysis
@@ -323,7 +332,7 @@ msgstr "Estadístiques enquestes"
 #: view:survey.request:0
 #: selection:survey.request,state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "Cancel·lada"
 
 #. module: survey
 #: selection:survey.question,type:0
@@ -483,7 +492,7 @@ msgstr "No podeu tenir dos usuaris amb el mateix identificador!"
 #. module: survey
 #: field:survey.send.invitation,mail_from:0
 msgid "From"
-msgstr ""
+msgstr "Des de"
 
 #. module: survey
 #: selection:survey.question,comment_valid_type:0
@@ -590,12 +599,12 @@ msgstr "Correu electrònic"
 #. module: survey
 #: model:ir.ui.menu,name:survey.menu_answer_surveys
 msgid "Answer Surveys"
-msgstr ""
+msgstr "Respon enquestes"
 
 #. module: survey
 #: selection:survey.response,state:0
 msgid "Not Finished"
-msgstr ""
+msgstr "No acabat"
 
 #. module: survey
 #: view:survey.print:0
@@ -716,7 +725,7 @@ msgstr "Data límit"
 #: selection:survey.question,comment_valid_type:0
 #: selection:survey.question,validation_type:0
 msgid "Must Be A Date"
-msgstr ""
+msgstr "Ha de ser una data"
 
 #. module: survey
 #: model:ir.model,name:survey.model_survey_print
@@ -732,7 +741,7 @@ msgstr "Capçalera de la columna"
 #. module: survey
 #: field:survey.question,is_require_answer:0
 msgid "Require Answer to Question"
-msgstr ""
+msgstr "Resposta obligatòria per a la pregunta"
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.action_survey_request_tree
@@ -874,6 +883,8 @@ msgid ""
 "You can not give more response. Please contact the author of this survey for "
 "further assistance."
 msgstr ""
+"No podeu donar més respostes. Poseu-vos en contacte amb l'autor d'aquesta "
+"enquesta per obtenir més ajuda."
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.act_survey_page_question
@@ -884,7 +895,7 @@ msgstr "Preguntes"
 #. module: survey
 #: help:survey,response_user:0
 msgid "Set to one if  you require only one Answer per user"
-msgstr ""
+msgstr "Estableix a un si només requereix una resposta per usuari."
 
 #. module: survey
 #: field:survey,users:0
@@ -916,7 +927,7 @@ msgstr "Número de pàgina"
 #: code:addons/survey/wizard/survey_answer.py:92
 #, python-format
 msgid "Cannot locate survey for the question wizard!"
-msgstr ""
+msgstr "No es pot localitzar l'enquesta per a l'assistent de preguntes!"
 
 #. module: survey
 #: view:survey:0
@@ -942,6 +953,7 @@ msgstr "Registre"
 #: view:survey.question:0
 msgid "When the choices do not add up correctly, display this error message"
 msgstr ""
+"Mostra aquest missatge d'error quan les seleccions no totalitzin correctament"
 
 #. module: survey
 #: field:survey,date_close:0
@@ -1025,7 +1037,7 @@ msgstr "Resposta"
 #. module: survey
 #: field:survey,max_response_limit:0
 msgid "Maximum Answer Limit"
-msgstr ""
+msgstr "Límit màxim de resposta"
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.action_act_view_survey_send_invitation
@@ -1085,7 +1097,7 @@ msgstr "Diversos camps de text"
 #: selection:survey.print,orientation:0
 #: selection:survey.print.answer,orientation:0
 msgid "Landscape(Horizontal)"
-msgstr ""
+msgstr "Horitzontal"
 
 #. module: survey
 #: field:survey.question,no_of_rows:0
@@ -1101,7 +1113,7 @@ msgstr "Detalls de l'enquesta"
 #. module: survey
 #: selection:survey.question,type:0
 msgid "Multiple Textboxes With Different Type"
-msgstr ""
+msgstr "Camps de text múltiples amb tipus diferent"
 
 #. module: survey
 #: view:survey.question.column.heading:0
@@ -1151,7 +1163,7 @@ msgstr "Número enter"
 #. module: survey
 #: model:ir.model,name:survey.model_survey_send_invitation
 msgid "survey.send.invitation"
-msgstr ""
+msgstr "enquesta.envia.invitació"
 
 #. module: survey
 #: field:survey.history,user_id:0
@@ -1164,7 +1176,7 @@ msgstr "Usuari/a"
 #. module: survey
 #: field:survey.name.wiz,transfer:0
 msgid "Page Transfer"
-msgstr ""
+msgstr "Pàgina de transferència"
 
 #. module: survey
 #: selection:survey.response.line,state:0
