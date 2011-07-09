@@ -211,7 +211,10 @@ class account_asset_asset(osv.osv):
         'parent_id': fields.many2one('account.asset.asset', 'Parent Asset', readonly=False, states={'close':[('readonly',True)]}),
         'child_ids': fields.one2many('account.asset.asset', 'parent_id', 'Children Assets'),
         'purchase_date': fields.date('Purchase Date', required=True, readonly=False, states={'close':[('readonly',True)]}),
-        'state': fields.selection([('draft','Draft'),('open','Running'),('close','Close')], 'State', required=True),
+        'state': fields.selection([('draft','Draft'),('open','Running'),('close','Close')], 'State', required=True,
+                                  help="When an asset is created, the state is 'Draft'.\n" \
+                                       "If the asset is confirmed, the state goes in 'Running' and the depreciation lines can be posted in the accounting.\n" \
+                                       "You can manually close an asset when the depreciation is over. If the last line of depreciation is posted, the asset automatically goes in that state."),
         'active': fields.boolean('Active', select=2),
         'partner_id': fields.many2one('res.partner', 'Partner', readonly=False, states={'close':[('readonly',True)]}),
         'method': fields.selection([('linear','Linear'),('degressive','Degressive')], 'Computation Method', required=True, readonly=True, states={'draft':[('readonly',False)]}, help="Linear: Calculated on basis of Gross Value/During (interval) \
@@ -224,7 +227,7 @@ class account_asset_asset(osv.osv):
         'method_time': fields.selection([('delay','Delay'),('end','Ending Period')], 'Time Method', required=True, readonly=True, states={'draft':[('readonly',False)]}, help="Delay: Allow users to enter number of periods to generate depreciation lines \n Ending Period: Calculates depreciation lines on the basis of Ending Period Date and Number of Depreciation"),
         'prorata':fields.boolean('Prorata Temporis', readonly=True, states={'draft':[('readonly',False)]}, help='Indicates that the accounting entries for this asset have to be done from the purchase date instead of the first January'),
         'history_ids': fields.one2many('account.asset.history', 'asset_id', 'History', readonly=True),
-        'depreciation_line_ids': fields.one2many('account.asset.depreciation.line', 'asset_id', 'Depreciation Lines', readonly=True, states={'draft':[('readonly',False)]}),
+        'depreciation_line_ids': fields.one2many('account.asset.depreciation.line', 'asset_id', 'Depreciation Lines', readonly=True, states={'draft':[('readonly',False)],'open':[('readonly',False)]}),
         'salvage_value': fields.float('Salvage Value', digits_compute=dp.get_precision('Account'), help="It is the amount you plan to have that you cannot depreciate.", readonly=False, states={'close':[('readonly',True)]}),
     }
     _defaults = {
