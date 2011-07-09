@@ -278,87 +278,13 @@ class account_asset_asset(osv.osv):
         default.update({'depreciation_line_ids': [], 'state': 'draft'})
         return super(account_asset_asset, self).copy(cr, uid, id, default, context=context)
 
-    def _compute_period(self, cr, uid, property, context={}):
-        if (len(property.entry_asset_ids or [])/2)>=property.method_number:
-            return False
-        if len(property.entry_asset_ids):
-            cp = property.entry_asset_ids[-1].period_id
-            cpid = self.pool.get('account.period').next(cr, uid, cp, property.method_period, context)
-            current_period = self.pool.get('account.period').browse(cr, uid, cpid, context)
-        else:
-            current_period = property.asset_id.period_id
-        return current_period
-
-    def _compute_move(self, cr, uid, property, period, context={}):
-        #FIXME: fucntion not working OK
+    def _compute_entries(self, cr, uid, ids, period_id, context={}):
         result = []
-        total = 0.0
-        for move in property.asset_id.entry_ids:
-            total += move.debit-move.credit
-        for move in property.entry_asset_ids:
-            if move.account_id == property.account_asset_ids:
-                total += move.debit
-                total += -move.credit
-        periods = (len(property.entry_asset_ids)/2) - property.method_number
-
-        if periods==1:
-            amount = total
-        else:
-            if property.method == 'linear':
-                amount = total / periods
-            else:
-                amount = total * property.method_progress_factor
-
-        move_id = self.pool.get('account.move').create(cr, uid, {
-            'journal_id': property.journal_id.id,
-            'period_id': period.id,
-            'name': property.name or property.asset_id.name,
-            'ref': property.asset_id.code
-        })
-        result = [move_id]
-        id = self.pool.get('account.move.line').create(cr, uid, {
-            'name': property.name or property.asset_id.name,
-            'move_id': move_id,
-            'account_id': property.account_asset_id.id,
-            'debit': amount>0 and amount or 0.0,
-            'credit': amount<0 and -amount or 0.0,
-            'ref': property.asset_id.code,
-            'period_id': period.id,
-            'journal_id': property.journal_id.id,
-            'partner_id': property.asset_id.partner_id.id,
-            'date': time.strftime('%Y-%m-%d'),
-        })
-        id2 = self.pool.get('account.move.line').create(cr, uid, {
-            'name': property.name or property.asset_id.name,
-            'move_id': move_id,
-            'account_id': property.account_actif_id.id,
-            'credit': amount>0 and amount or 0.0,
-            'debit': amount<0 and -amount or 0.0,
-            'ref': property.asset_id.code,
-            'period_id': period.id,
-            'journal_id': property.journal_id.id,
-            'partner_id': property.asset_id.partner_id.id,
-            'date': time.strftime('%Y-%m-%d'),
-        })
-    #
-        self.pool.get('account.asset.asset').write(cr, uid, [property.id], {
-            'entry_asset_ids': [(4, id2, False),(4,id,False)]
-        })
-        if property.method_number - (len(property.entry_asset_ids)/2)<=1:
-            #self.pool.get('account.asset.property')._close(cr, uid, property, context)
-            return result
-        return result
-
-    def _compute_entries(self, cr, uid, asset, period_id, context={}):
-        #FIXME: function not working CHECK all res
-        result = []
-        date_start = self.pool.get('account.period').browse(cr, uid, period_id, context).date_start
-        for property in asset.property_ids:
-            if property.state=='open':
-                period = self._compute_period(cr, uid, property, context)
-                if period and (period.date_start<=date_start):
-                    result += self._compute_move(cr, uid, property, period, context)
-        return result
+        period_obj = self.pool.get('account.period')
+        depreciation_obj = self.pool.get('account.asset.depreciation.line')
+        period = period_obj.browse(cr, uid, period_id, context=context) 
+        depreciation_ids = depreciation_obj.search(cr, uid, [('asset_id', 'in', ids), ('depreciation_date','<',period.date_stop), ('depreciation_date', '>', period.date_start)], context=context)
+        return depreciation_obj.create_move(cr, uid, depreciation_ids, context=context)
 
     def create(self, cr, uid, vals, context=None):
         asset_id = super(account_asset_asset, self).create(cr, uid, vals, context=context)
@@ -399,6 +325,7 @@ class account_asset_depreciation_line(osv.osv):
         move_obj = self.pool.get('account.move')
         move_line_obj = self.pool.get('account.move.line')
         currency_obj = self.pool.get('res.currency')
+        created_move_ids = []
         for line in self.browse(cr, uid, ids, context=context):
             if currency_obj.is_zero(cr, uid, line.asset_id.currency_id, line.remaining_value):
                 can_close = True
@@ -452,9 +379,10 @@ class account_asset_depreciation_line(osv.osv):
                 'asset_id': line.asset_id.id
             })
             self.write(cr, uid, line.id, {'move_id': move_id}, context=context)
-        if can_close:
-            asset_obj.write(cr, uid, [line.asset_id.id], {'state': 'close'}, context=context)                
-        return True
+            created_move_ids.append(move_id)
+            if can_close:
+                asset_obj.write(cr, uid, [line.asset_id.id], {'state': 'close'}, context=context)                
+        return created_move_ids
 
 account_asset_depreciation_line()
 

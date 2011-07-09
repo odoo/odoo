@@ -47,10 +47,8 @@ asset_ask_fields = {
 def _asset_compute(self, cr, uid, data, context):
     pool = pooler.get_pool(cr.dbname)
     ass_obj = pool.get('account.asset.asset')
-    ids = ass_obj.search(cr, uid, [('state','=','normal')], context=context)
-    ids_create = []
-    for asset in ass_obj.browse(cr, uid, ids, context):
-        ids_create += ass_obj._compute_entries(cr, uid, asset, data['form']['period_id'], context)
+    ids = ass_obj.search(cr, uid, [('state','=','open')], context=context)
+    ids_create = ass_obj._compute_entries(cr, uid, ids, data['form']['period_id'], context=context)
     self.move_ids = ids_create
     return {'move_ids': ids_create}
 

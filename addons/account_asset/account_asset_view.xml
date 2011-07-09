@@ -166,7 +166,7 @@
         <field name="type">tree</field>
         <field name="field_parent">child_ids</field>
         <field name="arch" type="xml">
-            <tree string="Assets">
+            <tree string="Assets" colors="blue:(state == 'draft');grey:(state == 'close')">
                 <field name="name"/>
                 <field name="category_id"/>
                 <field name="purchase_date"/>
