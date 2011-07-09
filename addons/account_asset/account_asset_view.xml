@@ -2,6 +2,10 @@
 <openerp>
 <data>
 
+    <!--
+        Asset Category 
+     -->
+
     <record model="ir.ui.view" id="view_account_asset_category_form">
         <field name="name">account.asset.category.form</field>
         <field name="model">account.asset.category</field>
@@ -18,15 +22,15 @@
                 <group colspan="2" col="2">
                     <separator string="Depreciation Dates" colspan="2" />
                     <field name="method_time"/>
-                    <field name="method_number" attrs="{'invisible':[('method_time','=','end')]}"/>
+                    <field name="method_number" attrs="{'invisible':[('method_time','=','end')], 'required':[('method_time','=','number')]}"/>
                     <field name="method_period"/>
                     <field name="method_end" attrs="{'required': [('method_time','=','end')], 'invisible':[('method_time','=','number')]}"/>
                 </group>
                 <group colspan="2" col="2">
                     <separator string="Depreciation Method" colspan="2" />
                     <field name="method"/>
-                    <field name="method_progress_factor" attrs="{'invisible':[('method','=','linear')]}"/>
-                    <field name="prorata"/>
+                    <field name="method_progress_factor" attrs="{'invisible':[('method','=','linear')], 'required':[('method','=','degressive')]}"/>
+                    <field name="prorata" attrs="{'invisible':[('method','&lt;&gt;','linear')]}"/>
                     <field name="open_asset"/>
                 </group>
         	<group col="2" colspan="2" groups="analytic.group_analytic_accounting">
@@ -47,12 +51,10 @@
         <field name="arch" type="xml">
             <tree string="Asset category">
                 <field name="name"/>
-                <field name="method_time"/>
-                <field name="method_number"/>
-                <field name="method"/>
                 <field name="journal_id"/>
-                <field name="account_asset_id"/>
-                <field name="account_expense_depreciation_id"/>
+                <field name="method_time"/>
+                <field name="method"/>
+                <field name="open_asset"/>
                 <field name="company_id" groups="base.group_multi_company"/>
             </tree>
         </field>
@@ -69,6 +71,10 @@
             </search>
         </field>
     </record>
+
+    <!--
+        Asset
+     -->
 
     <record model="ir.ui.view" id="view_account_asset_asset_form">
         <field name="name">account.asset.asset.form</field>
@@ -87,7 +93,7 @@
                  <field name="company_id" select="1" widget="selection" groups="base.group_multi_company"/>
               </group>
               <notebook colspan="4">
-                 <page string="Depreciation">
+                 <page string="General">
                     <separator string="Other Information" colspan="4"/>
                     <field name="parent_id"/>
                     <field name="partner_id"/>
@@ -96,7 +102,7 @@
                     <group colspan="2" col="2">
                         <separator string="Depreciation Dates" colspan="2" />
                         <field name="method_time" on_change="onchange_method_time(method_time)"/>
-                        <field name="method_number" attrs="{'invisible':[('method_time','=','end')]}"/>
+                        <field name="method_number" attrs="{'invisible':[('method_time','=','end')], 'required':[('method_time','=','number')]}"/>
                         <field name="method_period"/>
                         <field name="method_end" attrs="{'required': [('method_time','=','end')], 'invisible':[('method_time','=','number')]}"/>
                         <newline/>
@@ -111,7 +117,7 @@
                     <group colspan="2" col="2">
                         <separator string="Depreciation Method" colspan="2" />
                         <field name="method" on_change="onchange_method_time(method)"/>
-                        <field name="method_progress_factor" attrs="{'invisible':[('method','=','linear')]}"/>
+                        <field name="method_progress_factor" attrs="{'invisible':[('method','=','linear')], 'required':[('method','=','degressive')]}"/>
                         <field name="prorata" attrs="{'invisible': ['|',('method_time','=','end'),('method','!=','linear')]}"/>
                     </group>
                     <newline/>
@@ -131,7 +137,8 @@
                           <field name="amount"/>
                           <field name="remaining_value" readonly="1"/>
                           <field name="move_check"/>
-                          <button name="create_move" attrs="{'invisible':[('move_check','!=',False)]}" icon="gtk-execute" string="Create Move" type="object"/>
+                          <field name="parent_state" invisible="1"/>
+                          <button name="create_move" attrs="{'invisible':['|',('move_check','!=',False),('parent_state','!=','open')]}" icon="gtk-execute" string="Create Move" type="object"/>
                        </tree>
                        <graph type="bar">
                           <field name="name"/>
@@ -152,6 +159,69 @@
            </form>
        </field>
     </record>
+
+    <record model="ir.ui.view" id="view_account_asset_asset_tree">
+        <field name="name">account.asset.asset.tree</field>
+        <field name="model">account.asset.asset</field>
+        <field name="type">tree</field>
+        <field name="field_parent">child_ids</field>
+        <field name="arch" type="xml">
+            <tree string="Assets">
+                <field name="name"/>
+                <field name="category_id"/>
+                <field name="purchase_date"/>
+                <field name="partner_id"/>
+                <field name="purchase_value"/>
+                <field name="value_residual"/>
+                <field name="currency_id"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_account_asset_asset_hierarchy_tree">
+        <field name="name">account.asset.asset.hierarchy</field>
+        <field name="model">account.asset.asset</field>
+        <field name="type">tree</field>
+        <field name="field_parent">child_ids</field>
+        <field name="arch" type="xml">
+            <tree string="Assets">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="category_id"/>
+                <field name="purchase_date"/>
+                <field name="purchase_value"/>
+                <field name="value_residual"/>
+                <field name="currency_id"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_account_asset_search" model="ir.ui.view">
+        <field name="name">account.asset.asset.search</field>
+        <field name="model">account.asset.asset</field>
+        <field name="type">search</field>
+        <field name="arch" type="xml">
+            <search string="Account Asset">
+                <group col="10" colspan="12">
+                    <filter icon="terp-check" string="Current" domain="[('state','in', ('draft','open'))]" help="Assets in draft and open states"/>
+                    <filter icon="terp-dialog-close" string="Closed" domain="[('state','=', 'close')]" help="Assets in closed state"/>
+                    <separator orientation="vertical"/>
+                    <field name="name"/>
+                    <field name="category_id"/>
+                    <field name="purchase_date"/>
+                    <field name="partner_id"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    
+    <!--
+        Asset History 
+     -->
 
     <record model="ir.ui.view" id="view_account_asset_history_form">
         <field name="name">account.asset.history.form</field>
@@ -190,66 +260,6 @@
                 <field name="method_period"/>
                 <field name="method_end"/>
             </tree>
-        </field>
-    </record>
-
-
-    <record model="ir.ui.view" id="view_account_asset_asset_tree">
-        <field name="name">account.asset.asset.tree</field>
-        <field name="model">account.asset.asset</field>
-        <field name="type">tree</field>
-        <field name="field_parent">child_ids</field>
-        <field name="arch" type="xml">
-            <tree string="Assets">
-                <field name="name"/>
-                <field name="category_id"/>
-                <field name="purchase_date"/>
-                <field name="partner_id"/>
-                <field name="purchase_value"/>
-                <field name="value_residual"/>
-                <field name="currency_id"/>
-                <field name="company_id" groups="base.group_multi_company"/>
-                <field name="state"/>
-            </tree>
-        </field>
-    </record>
-    
-    <record model="ir.ui.view" id="view_account_asset_asset_hierarchy_tree">
-        <field name="name">account.asset.asset.hierarchy</field>
-        <field name="model">account.asset.asset</field>
-        <field name="type">tree</field>
-        <field name="field_parent">child_ids</field>
-        <field name="arch" type="xml">
-            <tree string="Assets">
-                <field name="name"/>
-                <field name="code"/>
-                <field name="category_id"/>
-                <field name="purchase_date"/>
-                <field name="purchase_value"/>
-                <field name="value_residual"/>
-                <field name="currency_id"/>
-                <field name="company_id" groups="base.group_multi_company"/>
-                <field name="state"/>
-            </tree>
-        </field>
-    </record>
-
-    <record id="view_account_asset_search" model="ir.ui.view">
-        <field name="name">account.asset.asset.search</field>
-        <field name="model">account.asset.asset</field>
-        <field name="type">search</field>
-        <field name="arch" type="xml">
-            <search string="Account Asset Analysis">
-                <group col="10" colspan="12">
-                    <filter icon="terp-document-new" string="Draft" domain="[('state','=', 'draft')]" help="Assets in Draft State"/>
-                    <filter icon="terp-camera_test" string="Running" domain="[('state','=', 'open')]" help="Assets in Running State"/>
-                    <separator orientation="vertical"/>
-                    <field name="name"/>
-                    <field name="category_id"/>
-                    <field name="purchase_date"/>
-                    <field name="partner_id"/>
-                </group>
-            </search>
         </field>
     </record>
 

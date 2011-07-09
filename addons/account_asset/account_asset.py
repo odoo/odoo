@@ -39,17 +39,19 @@ class account_asset_category(osv.osv):
         'account_expense_depreciation_id': fields.many2one('account.account', 'Depr. Expense Account', required=True),
         'journal_id': fields.many2one('account.journal', 'Journal', required=True),
         'company_id': fields.many2one('res.company', 'Company', required=True),
-        'method': fields.selection([('linear','Linear'),('progressif','Progressive')], 'Computation method', required=True),
+        'method': fields.selection([('linear','Linear'),('degressive','Degressive')], 'Computation Method', required=True, help="Choose the method to use to compute the amount of depreciation lines.\n"\
+            "  * Linear: Calculated on basis of: Gross Value / Number of Depreciations\n" \
+            "  * Degressive: Calculated on basis of: Remaining Value * Degressive Factor"),
         'method_number': fields.integer('Number of Depreciations'),
-        'method_period': fields.integer('Period Length', help="State here the time between 2 depreciations, in months"),
-        'method_progress_factor': fields.float('Progressif Factor'),
+        'method_period': fields.integer('Period Length', help="State here the time between 2 depreciations, in months", required=True),
+        'method_progress_factor': fields.float('Degressive Factor'),
         'method_time': fields.selection([('number','Number of Depreciations'),('end','Ending Date')], 'Time Method', required=True,
                                   help="Choose the method to use to compute the dates and number of depreciation lines.\n"\
-                                       "Number of Depreciations: Fix the number of depreciation lines and the time between 2 depreciations.\n" \
-                                       "Ending Date: Choose the time between 2 depreciations and the date the depreciations won't go beyond."),
+                                       "  * Number of Depreciations: Fix the number of depreciation lines and the time between 2 depreciations.\n" \
+                                       "  * Ending Date: Choose the time between 2 depreciations and the date the depreciations won't go beyond."),
         'method_end': fields.date('Ending date'),
-        'prorata':fields.boolean('Prorata Temporis', help='Indicates that the accounting entries for this asset have to be done from the purchase date instead of the first January'),
-        'open_asset': fields.boolean('Skip Draft State', help="Check this if you want to automatically confirm the assets of this category when created by invoice."),
+        'prorata':fields.boolean('Prorata Temporis', help='Indicates that the first depreciation entry for this asset have to be done from the purchase date instead of the first January'),
+        'open_asset': fields.boolean('Skip Draft State', help="Check this if you want to automatically confirm the assets of this category when created by invoices."),
     }
 
     _defaults = {
@@ -184,52 +186,50 @@ class account_asset_asset(osv.osv):
         return res
 
     _columns = {
-        'period_id': fields.many2one('account.period', 'First Period', required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'account_move_line_ids': fields.one2many('account.move.line', 'asset_id', 'Entries', readonly=True, states={'draft':[('readonly',False)]}),
-        'name': fields.char('Asset', size=64, required=True, select=1, readonly=False, states={'close':[('readonly',True)]}),
-        'code': fields.char('Reference ', size=16, select=1, readonly=False, states={'close':[('readonly',True)]}),
-        'purchase_value': fields.float('Gross value ', required=True, readonly=False, states={'close':[('readonly',True)]}),
-        'currency_id': fields.many2one('res.currency','Currency',required=True, readonly=False, states={'close':[('readonly',True)]}),
-        'company_id': fields.many2one('res.company', 'Company', required=True, readonly=False, states={'close':[('readonly',True)]}),
+        'name': fields.char('Asset', size=64, required=True, readonly=True, states={'draft':[('readonly',False)]}),
+        'code': fields.char('Reference ', size=16, readonly=True, states={'draft':[('readonly',False)]}),
+        'purchase_value': fields.float('Gross value ', required=True, readonly=True, states={'draft':[('readonly',False)]}),
+        'currency_id': fields.many2one('res.currency','Currency',required=True, readonly=True, states={'draft':[('readonly',False)]}),
+        'company_id': fields.many2one('res.company', 'Company', required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'note': fields.text('Note'),
-        'category_id': fields.many2one('account.asset.category', 'Asset category',required=True, change_default=True, readonly=False, states={'close':[('readonly',True)]}),
-        'localisation': fields.char('Localisation', size=32, select=2),
-        'parent_id': fields.many2one('account.asset.asset', 'Parent Asset', readonly=False, states={'close':[('readonly',True)]}),
+        'category_id': fields.many2one('account.asset.category', 'Asset category', required=True, change_default=True, readonly=True, states={'draft':[('readonly',False)]}),
+        'parent_id': fields.many2one('account.asset.asset', 'Parent Asset', readonly=True, states={'draft':[('readonly',False)]}),
         'child_ids': fields.one2many('account.asset.asset', 'parent_id', 'Children Assets'),
-        'purchase_date': fields.date('Purchase Date', required=True, readonly=False, states={'close':[('readonly',True)]}),
+        'purchase_date': fields.date('Purchase Date', required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'state': fields.selection([('draft','Draft'),('open','Running'),('close','Close')], 'State', required=True,
                                   help="When an asset is created, the state is 'Draft'.\n" \
                                        "If the asset is confirmed, the state goes in 'Running' and the depreciation lines can be posted in the accounting.\n" \
                                        "You can manually close an asset when the depreciation is over. If the last line of depreciation is posted, the asset automatically goes in that state."),
-        'active': fields.boolean('Active', select=2),
-        'partner_id': fields.many2one('res.partner', 'Partner', readonly=False, states={'close':[('readonly',True)]}),
-        'method': fields.selection([('linear','Linear'),('degressive','Degressive')], 'Computation Method', required=True, readonly=True, states={'draft':[('readonly',False)]}, help="Linear: Calculated on basis of Gross Value/During (interval) \
-         \nDegressive: Calculated on basis of Gross Value * Degressive Factor"),
+        'active': fields.boolean('Active'),
+        'partner_id': fields.many2one('res.partner', 'Partner', readonly=True, states={'draft':[('readonly',False)]}),
+        'method': fields.selection([('linear','Linear'),('degressive','Degressive')], 'Computation Method', required=True, readonly=True, states={'draft':[('readonly',False)]}, help="Choose the method to use to compute the amount of depreciation lines.\n"\
+            "  * Linear: Calculated on basis of: Gross Value / Number of Depreciations\n" \
+            "  * Degressive: Calculated on basis of: Remaining Value * Degressive Factor"),
         'method_number': fields.integer('Number of Depreciations', readonly=True, states={'draft':[('readonly',False)]}, help="Calculates Depreciation within specified interval"),
-        'method_period': fields.integer('Period Length', readonly=True, states={'draft':[('readonly',False)]}, help="State here the time during 2 depreciations, in months"),
+        'method_period': fields.integer('Period Length', required=True, readonly=True, states={'draft':[('readonly',False)]}, help="State here the time during 2 depreciations, in months"),
         'method_end': fields.date('Ending Date', readonly=True, states={'draft':[('readonly',False)]}),
-        'method_progress_factor': fields.float('Progressif Factor', readonly=True, states={'draft':[('readonly',False)]}),
+        'method_progress_factor': fields.float('Degressive Factor', readonly=True, states={'draft':[('readonly',False)]}),
         'value_residual': fields.function(_amount_residual, method=True, digits_compute=dp.get_precision('Account'), string='Residual Value'),
         'method_time': fields.selection([('number','Number of Depreciations'),('end','Ending Date')], 'Time Method', required=True, readonly=True, states={'draft':[('readonly',False)]}, 
                                   help="Choose the method to use to compute the dates and number of depreciation lines.\n"\
-                                       "Number of Depreciations: Fix the number of depreciation lines and the time between 2 depreciations.\n" \
-                                       "Ending Date: Choose the time between 2 depreciations and the date the depreciations won't go beyond."),
-        'prorata':fields.boolean('Prorata Temporis', readonly=True, states={'draft':[('readonly',False)]}, help='Indicates that the accounting entries for this asset have to be done from the purchase date instead of the first January'),
+                                       "  * Number of Depreciations: Fix the number of depreciation lines and the time between 2 depreciations.\n" \
+                                       "  * Ending Date: Choose the time between 2 depreciations and the date the depreciations won't go beyond."),
+        'prorata':fields.boolean('Prorata Temporis', readonly=True, states={'draft':[('readonly',False)]}, help='Indicates that the first depreciation entry for this asset have to be done from the purchase date instead of the first January'),
         'history_ids': fields.one2many('account.asset.history', 'asset_id', 'History', readonly=True),
         'depreciation_line_ids': fields.one2many('account.asset.depreciation.line', 'asset_id', 'Depreciation Lines', readonly=True, states={'draft':[('readonly',False)],'open':[('readonly',False)]}),
-        'salvage_value': fields.float('Salvage Value', digits_compute=dp.get_precision('Account'), help="It is the amount you plan to have that you cannot depreciate.", readonly=False, states={'close':[('readonly',True)]}),
+        'salvage_value': fields.float('Salvage Value', digits_compute=dp.get_precision('Account'), help="It is the amount you plan to have that you cannot depreciate.", readonly=True, states={'draft':[('readonly',False)]}),
     }
     _defaults = {
         'code': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'account.asset.code'),
         'purchase_date': lambda obj, cr, uid, context: time.strftime('%Y-%m-%d'),
-        'active': lambda obj, cr, uid, context: True,
-        'state': lambda obj, cr, uid, context: 'draft',
-        'period_id': _get_period,
-        'method': lambda obj, cr, uid, context: 'linear',
-        'method_number': lambda obj, cr, uid, context: 5,
-        'method_time': lambda obj, cr, uid, context: 'number',
-        'method_period': lambda obj, cr, uid, context: 12,
-        'method_progress_factor': lambda obj, cr, uid, context: 0.3,
+        'active': True,
+        'state': 'draft',
+        'method': 'linear',
+        'method_number': 5,
+        'method_time': 'number',
+        'method_period': 12,
+        'method_progress_factor': 0.3,
         'currency_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.currency_id.id,
         'company_id': lambda self, cr, uid, context: self.pool.get('res.company')._company_default_get(cr, uid, 'account.asset.asset',context=context),
     }
@@ -245,7 +245,7 @@ class account_asset_asset(osv.osv):
 
     _constraints = [
         (_check_recursion, 'Error ! You can not create recursive assets.', ['parent_id']),
-        (_check_prorata, '\nProrata temporis can be applied only for computation method linear and time method number.', ['prorata']),
+        (_check_prorata, 'Prorata temporis can be applied only for computation method "linear" and time method "number of depreciations".', ['prorata']),
     ]
 
     def onchange_category_id(self, cr, uid, ids, category_id, context=None):
@@ -381,6 +381,7 @@ class account_asset_depreciation_line(osv.osv):
         'name': fields.char('Depreciation Name', size=64, required=True, select=1),
         'sequence': fields.integer('Sequence of the depreciation', required=True),
         'asset_id': fields.many2one('account.asset.asset', 'Asset', required=True),
+        'parent_state': fields.related('asset_id', 'state', type='char', string='State of Asset'),
         'amount': fields.float('Depreciation Amount', required=True),
         'remaining_value': fields.float('Amount to Depreciate', required=True),
         'depreciated_value': fields.float('Amount Already Depreciated', required=True),
