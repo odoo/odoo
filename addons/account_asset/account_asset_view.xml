@@ -18,9 +18,9 @@
                 <group colspan="2" col="2">
                     <separator string="Depreciation Dates" colspan="2" />
                     <field name="method_time"/>
-                    <field name="method_delay" attrs="{'invisible':[('method_time','=','end')]}"/>
+                    <field name="method_number" attrs="{'invisible':[('method_time','=','end')]}"/>
                     <field name="method_period"/>
-                    <field name="method_end" attrs="{'required': [('method_time','=','end')], 'invisible':[('method_time','=','delay')]}"/>
+                    <field name="method_end" attrs="{'required': [('method_time','=','end')], 'invisible':[('method_time','=','number')]}"/>
                 </group>
                 <group colspan="2" col="2">
                     <separator string="Depreciation Method" colspan="2" />
@@ -48,7 +48,7 @@
             <tree string="Asset category">
                 <field name="name"/>
                 <field name="method_time"/>
-                <field name="method_delay"/>
+                <field name="method_number"/>
                 <field name="method"/>
                 <field name="journal_id"/>
                 <field name="account_asset_id"/>
@@ -96,9 +96,9 @@
                     <group colspan="2" col="2">
                         <separator string="Depreciation Dates" colspan="2" />
                         <field name="method_time" on_change="onchange_method_time(method_time)"/>
-                        <field name="method_delay" attrs="{'invisible':[('method_time','=','end')]}"/>
+                        <field name="method_number" attrs="{'invisible':[('method_time','=','end')]}"/>
                         <field name="method_period"/>
-                        <field name="method_end" attrs="{'required': [('method_time','=','end')], 'invisible':[('method_time','=','delay')]}"/>
+                        <field name="method_end" attrs="{'required': [('method_time','=','end')], 'invisible':[('method_time','=','number')]}"/>
                         <newline/>
                         <button 
                              name="%(action_asset_modify)d" 
@@ -167,9 +167,9 @@
               <group col="2" colspan="2">
                 <separator string="Depreciation Dates" colspan="2" />
                 <field name="method_time"/>
-                <field name="method_delay" attrs="{'invisible':[('method_time','=','end')]}"/>
+                <field name="method_number" attrs="{'invisible':[('method_time','=','end')]}"/>
                 <field name="method_period"/>
-                <field name="method_end" attrs="{'invisible':[('method_time','=','delay')]}"/>
+                <field name="method_end" attrs="{'invisible':[('method_time','=','number')]}"/>
               </group>
               <separator string="Notes" colspan="4"/>
               <field name="note" colspan="4" nolabel="1"/>
@@ -186,7 +186,7 @@
                 <field name="date" select="1"/>
                 <field name="name" select="1"/>
                 <field name="user_id" select="1"/>
-                <field name="method_delay" select="2"/>
+                <field name="method_number" select="2"/>
                 <field name="method_period"/>
                 <field name="method_end"/>
             </tree>
