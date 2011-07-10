@@ -283,7 +283,7 @@ class account_asset_asset(osv.osv):
         period_obj = self.pool.get('account.period')
         depreciation_obj = self.pool.get('account.asset.depreciation.line')
         period = period_obj.browse(cr, uid, period_id, context=context) 
-        depreciation_ids = depreciation_obj.search(cr, uid, [('asset_id', 'in', ids), ('depreciation_date','<',period.date_stop), ('depreciation_date', '>', period.date_start)], context=context)
+        depreciation_ids = depreciation_obj.search(cr, uid, [('asset_id', 'in', ids), ('depreciation_date', '<', period.date_stop), ('depreciation_date', '>', period.date_start), ('move_check', '=', False)], context=context)
         return depreciation_obj.create_move(cr, uid, depreciation_ids, context=context)
 
     def create(self, cr, uid, vals, context=None):
@@ -336,16 +336,16 @@ class account_asset_depreciation_line(osv.osv):
             context.update({'date': depreciation_date})
             amount = currency_obj.compute(cr, uid, current_currency, company_currency, line.amount, context=context)
             sign = line.asset_id.category_id.journal_id.type = 'purchase' and 1 or -1
+            asset_name = line.asset_id.name
+            reference = line.name
             move_vals = {
-                'name': line.name,
+                'name': asset_name,
                 'date': depreciation_date,
-                'ref': line.name,
+                'ref': reference,
                 'period_id': period_ids and period_ids[0] or False,
                 'journal_id': line.asset_id.category_id.journal_id.id,
                 }
             move_id = move_obj.create(cr, uid, move_vals, context=context)
-            asset_name = line.asset_id.name
-            reference = line.name
             journal_id = line.asset_id.category_id.journal_id.id
             partner_id = line.asset_id.partner_id.id
             move_line_obj.create(cr, uid, {
