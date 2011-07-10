@@ -24,6 +24,7 @@ import base64
 import email
 import tools
 import binascii
+import dateutil.parser
 class email_server_tools(osv.osv_memory):
     _inherit = "email.server.tools"
     def history_message(self, cr, uid, model, res_id, message, context=None):
@@ -73,7 +74,8 @@ class email_server_tools(osv.osv_memory):
             msg['reply'] = self._decode_header(msg_txt.get('Reply-To'))
 
         if 'Date' in fields:
-            msg['date'] = self._decode_header(msg_txt.get('Date'))
+            date = self._decode_header(msg_txt.get('Date'))
+            msg['date'] = dateutil.parser.parse(date).strftime("%Y-%m-%d %H:%M:%S")
 
         if 'Content-Transfer-Encoding' in fields:
             msg['encoding'] = msg_txt.get('Content-Transfer-Encoding')

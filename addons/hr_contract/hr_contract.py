@@ -46,7 +46,7 @@ class hr_employee(osv.osv):
         'vehicle': fields.char('Company Vehicle', size=64),
         'vehicle_distance': fields.integer('Home-Work Distance', help="In kilometers"),
         'contract_ids': fields.one2many('hr.contract', 'employee_id', 'Contracts'),
-        'contract_id':fields.function(_get_latest_contract, method=True, string='Contract', type='many2one', relation="hr.contract", help='Latest contract of the employee'),
+        'contract_id':fields.function(_get_latest_contract, string='Contract', type='many2one', relation="hr.contract", help='Latest contract of the employee'),
     }
 
 hr_employee()

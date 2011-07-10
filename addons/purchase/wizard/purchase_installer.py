@@ -21,8 +21,7 @@
 from osv import fields, osv
 
 class purchase_installer(osv.osv_memory):
-    _name = 'purchase.installer'
-    _inherit = 'res.config.installer'
+    _inherit = 'base.setup.installer'
 
     _columns = {
         'purchase_requisition':fields.boolean('Purchase Requisition',help="Manages your Purchase Requisition and allows you to easily keep track and manage all your purchase orders."),

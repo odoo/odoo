@@ -22,8 +22,7 @@
 from osv import fields, osv
 
 class marketing_installer(osv.osv_memory):
-    _name = 'marketing.installer'
-    _inherit = 'res.config.installer'
+    _inherit = 'base.setup.installer'
     _columns = {
         'email_template':fields.boolean('Automated E-Mails',
             help="Helps you to design templates of emails and integrate them in your different processes."),

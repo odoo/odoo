@@ -361,7 +361,7 @@ class openerp_dav_handler(dav_interface):
         for db_name in result:
             cr = None
             try:
-                db = pooler.get_db_only(db_name)
+                db = pooler.get_db(db_name)
                 cr = db.cursor()
                 cr.execute("SELECT id FROM ir_module_module WHERE name = 'document' AND state='installed' ")
                 res=cr.fetchone()

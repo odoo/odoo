@@ -45,7 +45,7 @@ class hr_employee_category(osv.osv):
     _description = "Employee Category"
     _columns = {
         'name': fields.char("Category", size=64, required=True),
-        'complete_name': fields.function(_name_get_fnc, method=True, type="char", string='Name'),
+        'complete_name': fields.function(_name_get_fnc, type="char", string='Name'),
         'parent_id': fields.many2one('hr.employee.category', 'Parent Category', select=True),
         'child_ids': fields.one2many('hr.employee.category', 'parent_id', 'Child Categories')
     }
@@ -92,8 +92,8 @@ class hr_job(osv.osv):
     _description = "Job Description"
     _columns = {
         'name': fields.char('Job Name', size=128, required=True, select=True),
-        'expected_employees': fields.function(_no_of_employee, method=True, string='Expected Employees', help='Required number of Employees in total for that job.', multi="no_of_employee", store=True),
-        'no_of_employee': fields.function(_no_of_employee, method=True, string="No of Employee", help='Number of employee with that job.', multi="no_of_employee", store=True),
+        'expected_employees': fields.function(_no_of_employee, string='Expected Employees', help='Required number of Employees in total for that job.', multi="no_of_employee", store=True),
+        'no_of_employee': fields.function(_no_of_employee, string="No of Employee", help='Number of employee with that job.', multi="no_of_employee", store=True),
         'no_of_recruitment': fields.float('Expected in Recruitment'),
         'employee_ids': fields.one2many('hr.employee', 'job_id', 'Employees'),
         'description': fields.text('Job Description'),
@@ -241,16 +241,19 @@ class res_users(osv.osv):
 
     def create(self, cr, uid, data, context=None):
         user_id = super(res_users, self).create(cr, uid, data, context=context)
-        data_obj = self.pool.get('ir.model.data')
-        try:
-            data_id = data_obj._get_id(cr, uid, 'hr', 'ir_ui_view_sc_employee')
-            view_id  = data_obj.browse(cr, uid, data_id, context=context).res_id
-            self.pool.get('ir.ui.view_sc').copy(cr, uid, view_id, default = {
-                                        'user_id': user_id}, context=context)
-        except:
-            # Tolerate a missing shortcut. See product/product.py for similar code.
-            logging.getLogger('orm').debug('Skipped meetings shortcut for user "%s"', data.get('name','<new'))
-
+        
+        # add shortcut unless 'noshortcut' is True in context
+        if not(context and context.get('noshortcut', False)):
+            data_obj = self.pool.get('ir.model.data')
+            try:
+                data_id = data_obj._get_id(cr, uid, 'hr', 'ir_ui_view_sc_employee')
+                view_id  = data_obj.browse(cr, uid, data_id, context=context).res_id
+                self.pool.get('ir.ui.view_sc').copy(cr, uid, view_id, default = {
+                                            'user_id': user_id}, context=context)
+            except:
+                # Tolerate a missing shortcut. See product/product.py for similar code.
+                logging.getLogger('orm').debug('Skipped meetings shortcut for user "%s"', data.get('name','<new'))
+        
         return user_id
 
 res_users()

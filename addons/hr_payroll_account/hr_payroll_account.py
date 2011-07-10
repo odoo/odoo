@@ -60,7 +60,6 @@ class hr_employee(osv.osv):
             type='many2one',
             relation='account.account',
             string="Bank Account",
-            method=True,
             domain="[('type', '=', 'liquidity')]",
             view_load=True,
             help="Select Bank Account from where Salary Expense will be Paid, to be used for payslip verification."),
@@ -69,7 +68,6 @@ class hr_employee(osv.osv):
             type='many2one',
             relation='account.account',
             string="Salary Account",
-            method=True,
             domain="[('type', '=', 'other')]",
             view_load=True,
             help="Expense account when Salary Expense will be recorded"),
@@ -78,7 +76,6 @@ class hr_employee(osv.osv):
             type='many2one',
             relation='account.account',
             string="Employee Account",
-            method=True,
             domain="[('type', '=', 'other')]",
             view_load=True,
             help="Employee Payable Account"),
@@ -87,7 +84,6 @@ class hr_employee(osv.osv):
             type='many2one',
             relation='account.analytic.account',
             string="Analytic Account",
-            method=True,
             view_load=True,
             help="Analytic Account for Salary Analysis"),
     }
@@ -180,8 +176,8 @@ class contrib_register(osv.osv):
     _columns = {
         'account_id': fields.many2one('account.account', 'Account'),
         'analytic_account_id':fields.many2one('account.analytic.account', 'Analytic Account'),
-        'yearly_total_by_emp': fields.function(_total_contrib, method=True, multi='dc', store=True, string='Total By Employee', digits=(16, 4)),
-        'yearly_total_by_comp': fields.function(_total_contrib, method=True, multi='dc', store=True,  string='Total By Company', digits=(16, 4)),
+        'yearly_total_by_emp': fields.function(_total_contrib, multi='dc', store=True, string='Total By Employee', digits=(16, 4)),
+        'yearly_total_by_comp': fields.function(_total_contrib, multi='dc', store=True,  string='Total By Company', digits=(16, 4)),
     }
 contrib_register()
 
