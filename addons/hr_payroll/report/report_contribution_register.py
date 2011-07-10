@@ -54,6 +54,7 @@ class contribution_register_report(report_sxw.rml_parse):
                         "LEFT JOIN hr_payslip AS hp on (pl.slip_id = hp.id) "\
                         "WHERE (hp.date_from >= %s) AND (hp.date_to <= %s) "\
                         "AND pl.register_id = %s "\
+                        "AND hp.state = 'done' "\
                         "ORDER BY pl.slip_id, pl.sequence",
                         (self.date_from, self.date_to, obj.id))
         payslip_lines = [x[0] for x in self.cr.fetchall()]
