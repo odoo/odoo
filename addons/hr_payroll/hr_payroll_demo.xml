@@ -2,19 +2,38 @@
 <openerp>
     <data>
 
+        <!-- Contribution Register -->
+
+        <record id="hr_houserent_register" model="hr.contribution.register">
+            <field name="name">House Rent Allowance Register</field>
+        </record>
+
+        <record id="hr_provident_fund_register" model="hr.contribution.register">
+            <field name="name">Provident Fund Register</field>
+        </record>
+
+        <record id="hr_professional_tax_register" model="hr.contribution.register">
+            <field name="name">Professional Tax Register</field>
+        </record>
+
+        <record id="hr_meal_voucher_register" model="hr.contribution.register">
+            <field name="name">Meal Voucher Register</field>
+        </record>
+
         <!-- Salary Rules -->
 
-        <record id="hr_payslip_line_houserantallowance1" model="hr.salary.rule">
+        <record id="hr_salary_rule_houserentallowance1" model="hr.salary.rule">
             <field name="amount_select">percentage</field>
             <field eval="40.0" name="amount_percentage"/>
             <field name="amount_percentage_base">contract.wage</field>
             <field name="code">HRA</field>
             <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="register_id" ref="hr_houserent_register"/>
             <field name="name">House Rent Allowance</field>
             <field name="sequence" eval="5"/>
         </record>
 
-        <record id="hr_payslip_line_convanceallowance1" model="hr.salary.rule">
+        <record id="hr_salary_rule_convanceallowance1" model="hr.salary.rule">
             <field name="amount_select">fix</field>
             <field eval="800.0" name="amount_fix"/>
             <field name="code">CA</field>
@@ -23,22 +42,24 @@
             <field name="sequence" eval="10"/>
         </record>
 
-        <record id="hr_payslip_line_professionaltax1" model="hr.salary.rule">
+        <record id="hr_salary_rule_professionaltax1" model="hr.salary.rule">
             <field name="amount_select">fix</field>
             <field eval="150" name="sequence"/>
             <field eval="-200.0" name="amount_fix"/>
             <field name="code">PT</field>
             <field name="category_id" ref="hr_payroll.DED"/>
+            <field name="register_id" ref="hr_professional_tax_register"/>
             <field name="name">Professional Tax</field>
         </record>
 
-        <record id="hr_payslip_line_providentfund1" model="hr.salary.rule">
+        <record id="hr_salary_rule_providentfund1" model="hr.salary.rule">
             <field name="amount_select">percentage</field>
             <field eval="120" name="sequence"/>
             <field eval="-12.5" name="amount_percentage"/>
             <field name="amount_percentage_base">contract.wage</field>
             <field name="code">PF</field>
             <field name="category_id" ref="hr_payroll.DED"/>
+            <field name="register_id" ref="hr_provident_fund_register"/>
             <field name="name">Provident Fund</field>
         </record>
 
@@ -57,6 +78,7 @@
             <field name="quantity">worked_days.WORK100.number_of_days</field>
             <field name="code">MA</field>
             <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="register_id" ref="hr_meal_voucher_register"/>
             <field name="name">Meal Voucher</field>
             <field name="sequence" eval="16"/>
          </record>
@@ -89,7 +111,7 @@
          <record id="structure_001" model="hr.payroll.structure">
             <field name="code">ME</field>
             <field name="name">Marketing Executive</field>
-            <field eval="[(6, 0, [ref('hr_payslip_line_houserantallowance1'), ref('hr_payslip_line_convanceallowance1'),ref('hr_payslip_line_professionaltax1'),ref('hr_payslip_line_providentfund1')])]" name="rule_ids"/>
+            <field eval="[(6, 0, [ref('hr_salary_rule_houserentallowance1'), ref('hr_salary_rule_convanceallowance1'),ref('hr_salary_rule_professionaltax1'),ref('hr_salary_rule_providentfund1')])]" name="rule_ids"/>
             <field name="company_id" ref="base.main_company"/>
             <field name="parent_id" ref="structure_base"/>
         </record>
@@ -103,6 +125,7 @@
         </record>
 
         <!-- Employee -->
+
         <record id="hr_employee_bonamy0" model="hr.employee">
             <field eval="0" name="manager"/>
             <field eval="1.0" name="time_efficiency"/>
@@ -113,6 +136,7 @@
         </record>
 
         <!-- Employee Contract -->
+
         <record id="hr_contract_firstcontract1" model="hr.contract">
             <field name="name">Marketing Executive Contract</field>
             <field name="type_id" ref="hr_contract.hr_contract_type_emp"/>
