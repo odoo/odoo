@@ -29,7 +29,7 @@ class asset_modify(osv.osv_memory):
 
     _columns = {
         'name': fields.char('Reason', size=64, required=True),
-        'method_delay': fields.integer('Number of Depreciations'),
+        'method_number': fields.integer('Number of Depreciations', required=True),
         'method_period': fields.integer('Period Length'),
         'method_end': fields.date('Ending date'),
         'note': fields.text('Notes'),
@@ -55,11 +55,11 @@ class asset_modify(osv.osv_memory):
         if active_model == 'account.asset.asset' and asset_id:
             asset = asset_obj.browse(cr, uid, asset_id, context=context)
             doc = etree.XML(result['arch'])
-            if asset.method_time == 'delay':
+            if asset.method_time == 'number':
                 node = doc.xpath("//field[@name='method_end']")[0]
                 node.set('invisible', '1')
             elif asset.method_time == 'end':
-                node = doc.xpath("//field[@name='method_delay']")[0]
+                node = doc.xpath("//field[@name='method_number']")[0]
                 node.set('invisible', '1')
             result['arch'] = etree.tostring(doc)
         return result
@@ -81,8 +81,8 @@ class asset_modify(osv.osv_memory):
         asset = asset_obj.browse(cr, uid, asset_id, context=context)
         if 'name' in fields:
             res.update({'name': asset.name})
-        if 'method_delay' in fields and asset.method_time == 'delay':
-            res.update({'method_delay': asset.method_delay})
+        if 'method_number' in fields and asset.method_time == 'number':
+            res.update({'method_number': asset.method_number})
         if 'method_period' in fields:
             res.update({'method_period': asset.method_period})
         if 'method_end' in fields and asset.method_time == 'end':
@@ -110,7 +110,7 @@ class asset_modify(osv.osv_memory):
             'asset_id': asset_id,
             'name': data.name,
             'method_time': asset.method_time,
-            'method_delay': asset.method_delay,
+            'method_number': asset.method_number,
             'method_period': asset.method_period,
             'method_end': asset.method_end,
             'user_id': uid,
@@ -119,11 +119,12 @@ class asset_modify(osv.osv_memory):
         }
         history_obj.create(cr, uid, history_vals, context=context)
         asset_vals = {
-            'method_delay': data.method_delay,
+            'method_number': data.method_number,
             'method_period': data.method_period,
             'method_end': data.method_end,
         }
         asset_obj.write(cr, uid, [asset_id], asset_vals, context=context)
+        asset_obj.compute_depreciation_board(cr, uid, [asset_id], context=context)
         return {'type': 'ir.actions.act_window_close'}
 
 asset_modify()
