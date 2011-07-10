@@ -17,7 +17,6 @@
     code: land
     name: Land
     partner_id: base.res_partner_14
-    period_id: account.period_6
     purchase_value: 5000.0
     state: draft
 -
@@ -42,7 +41,7 @@
     self.compute_depreciation_board(cr, uid, [ref("account_asset_asset_Land0")])
     # pressing computation button can be remove if creation of depreciation lines while asset is created
     value = self.browse(cr, uid, [ref("account_asset_asset_Land0")])[0]
-    assert value.method_delay == len(value.depreciation_line_ids)
+    assert value.method_number == len(value.depreciation_line_ids)
 -
   I Create Account Move using create move button on depreciation lines
 -
