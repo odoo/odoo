@@ -1,4 +1,4 @@
-	# -*- encoding: utf-8 -*-
+# -*- encoding: utf-8 -*-
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
@@ -118,12 +118,15 @@ class account_asset_asset(osv.osv):
         undone_dotation_number = asset.method_number
         if asset.method_time == 'end':
             end_date = datetime.strptime(asset.method_end, '%Y-%m-%d')
-            undone_dotation_number = (end_date - depreciation_date).days / total_days
-        if asset.prorata or asset.method_time == 'end':
+            undone_dotation_number = 0
+            while depreciation_date <= end_date:
+                depreciation_date = (datetime(depreciation_date.year, depreciation_date.month, depreciation_date.day) + relativedelta(months=+asset.method_period))
+                undone_dotation_number += 1
+        if asset.prorata:
             undone_dotation_number += 1
         return undone_dotation_number
-
-    def compute_depreciation_board(self, cr, uid,ids, context=None):
+    
+    def compute_depreciation_board(self, cr, uid, ids, context=None):
         depreciation_lin_obj = self.pool.get('account.asset.depreciation.line')
         for asset in self.browse(cr, uid, ids, context=context):
             if asset.value_residual == 0.0:
