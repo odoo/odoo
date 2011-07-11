@@ -474,7 +474,7 @@ def main(argv):
     (o, args) = op.parse_args(argv[1:])
     o = vars(o)
     for k in o.keys():
-        if o[k] == None:
+        if o[k] is None:
             del(o[k])
 
     # Setup and run cherrypy
