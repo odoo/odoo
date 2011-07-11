@@ -60,6 +60,7 @@
   !python {model: ir.edi.document}: |
     invoice_pool = self.pool.get('account.invoice')
     invoice = invoice_pool.browse(cr, uid, ref("customer_invoice_test"))
+
     tokens = self.export_edi(cr, uid, [invoice])
     assert tokens, 'Token is not generated'
     document = self.get_document(cr, uid, tokens[0])
@@ -86,7 +87,3 @@
     for inv_tax in invoice_new.tax_line:
         assert inv_tax.manual, "for tax line manual is not set to True"
         assert inv_tax.account_id, "for tax_line default accounts is not picked based on the tax config of the DB where it is imported."
-    
-    
-    
-   

@@ -149,7 +149,6 @@ class account_invoice(osv.osv, ir_edi.edi):
         if context is None:
             context = {}
         
-
         # import company as a new partner, if type==in then supplier=1, else customer=1
         # partner_id field is modified to point to the new partner
         # company_address data used to add address to new partner

@@ -122,12 +122,14 @@ module named account_voucher.
         'board_account_view.xml',
         "wizard/account_report_profit_loss_view.xml",
         "wizard/account_report_balance_sheet_view.xml",
+        #"edi_invoice_action.xml",
             ],
     'demo_xml': [
         'account_demo.xml',
         'project/project_demo.xml',
         'project/analytic_account_demo.xml',
         'demo/account_minimal.xml',
+        #"edi_invoice_action.xml",
 #        'account_unit_test.xml',
     ],
     'test': [
