@@ -121,7 +121,7 @@ class account_followup_print_all(osv.osv_memory):
         'partner_lang': fields.boolean('Send Email in Partner Language', help='Do not change message text, if you want to send email in partner language, or configure from company'),
         'email_body': fields.text('Email body'),
         'summary': fields.text('Summary', required=True, readonly=True),
-        'test': fields.boolean('Test File', help='Check if you want to print follow ups without changing follow ups level.')
+        'test_print': fields.boolean('Test Print', help='Check if you want to print followups without changing follow ups level.')
     }
     def _get_summary(self, cr, uid, context=None):
         if context is None:
@@ -316,14 +316,15 @@ class account_followup_print_all(osv.osv_memory):
         to_update = res
         data['followup_id'] = 'followup_id' in context and context['followup_id'] or False
         date = 'date' in context and context['date'] or data['date']
-        for id in to_update.keys():
-            if to_update[id]['partner_id'] in data['partner_ids'] and not data['test']:
-                cr.execute(
-                    "UPDATE account_move_line "\
-                    "SET followup_line_id=%s, followup_date=%s "\
-                    "WHERE id=%s",
-                    (to_update[id]['level'],
-                    date, int(id),))
+        if not data['test_print']:
+            for id in to_update.keys():
+                if to_update[id]['partner_id'] in data['partner_ids']:
+                    cr.execute(
+                        "UPDATE account_move_line "\
+                        "SET followup_line_id=%s, followup_date=%s "\
+                        "WHERE id=%s",
+                        (to_update[id]['level'],
+                        date, int(id),))
         data.update({'date': context['date']})
         datas = {
              'ids': [],
