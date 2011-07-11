@@ -50,7 +50,7 @@ openerp.base_export.Export = openerp.base.Controller.extend({
 
     on_show_data: function(result) {
         var self = this;
-        $('tr #treerow_' + self.field_id).after(QWeb.render('ExportTreeView-Secondary', {'fields': result}));
+        $("tr[id='treerow_" + self.field_id + "']").after(QWeb.render('ExportTreeView-Secondary', {'fields': result}));
         jQuery($.find('img[id ^= parentimg]')).click(function(){
             self.on_click(this.id, result);
 
