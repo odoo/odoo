@@ -1,0 +1,55 @@
+-
+  In order to test Account Asset I create Asset and confirm it and check it's Depriciation lines
+- 
+  I Create an Asset Category
+- 
+  !record {model: account.asset.category, id: account_asset_category_landbuildings0}:
+    account_asset_id: account.xfa
+    account_depreciation_id: account.xfa
+    account_expense_depreciation_id: account.a_expense
+    journal_id: account.expenses_journal
+    name: Land & Buildings
+- 
+  I Create an Account Asset
+- 
+  !record {model: account.asset.asset, id: account_asset_asset_Land0}:
+    category_id: account_asset_category_landbuildings0
+    code: land
+    name: Land
+    partner_id: base.res_partner_14
+    purchase_value: 5000.0
+    state: draft
+-
+  I check Initially that Account Asset is in the "Draft" state
+-
+  !assert {model: account.asset.asset, id: account_asset_asset_Land0}:
+    - state == 'draft'
+-
+  I Confirm Account Asset using Confirm Asset button
+-
+  !python {model: account.asset.asset}: |
+    self.validate(cr, uid, [ref("account_asset_asset_Land0")])
+-
+  I check Asset is in running state after pressing Confirm button on asset
+-
+  !assert {model: account.asset.asset, id: account_asset_asset_Land0}:
+    - state == 'open'
+-
+  I Compute Account Asset using Compute button and check the number of depreciation lines created
+-
+  !python {model: account.asset.asset}: |
+    self.compute_depreciation_board(cr, uid, [ref("account_asset_asset_Land0")])
+    # pressing computation button can be remove if creation of depreciation lines while asset is created
+    value = self.browse(cr, uid, [ref("account_asset_asset_Land0")])[0]
+    assert value.method_number == len(value.depreciation_line_ids)
+-
+  I Create Account Move using create move button on depreciation lines
+-
+  !python {model: account.asset.depreciation.line}: |
+    ids = self.search(cr, uid, [('asset_id','=',ref('account_asset_asset_Land0'))])
+    self.create_move(cr, uid, ids)
+-
+  I Check that After creating all the moves of depreciation lines the state is in "Close" state
+-
+  !assert {model: account.asset.asset, id: account_asset_asset_Land0}:
+    - state == 'close'
