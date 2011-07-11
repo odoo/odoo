@@ -1395,7 +1395,7 @@ def get_and_group_by_field(cr, uid, obj, ids, field, context=None):
        :rtype: dict
     """
     res = {}
-    for record in obj.read(cr, uid, ids, [field], context=context)
+    for record in obj.read(cr, uid, ids, [field], context=context):
         key = record[field]
         res.setdefault(key[0] if isinstance(key, tuple) else key, []).append(record['id'])
     return res
