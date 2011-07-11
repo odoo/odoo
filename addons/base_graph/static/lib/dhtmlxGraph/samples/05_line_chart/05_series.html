@@ -1,0 +1,94 @@
+<!--conf
+<sample>
+              <product version="2.6" edition="std"/>
+                     <modifications>
+                            <modified date="100609"/>
+                     </modifications>
+               </sample>
+ -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+	<title>Scales</title>
+	<script src="../../codebase/dhtmlxchart.js" type="text/javascript"></script>
+	<link rel="STYLESHEET" type="text/css" href="../../codebase/dhtmlxchart.css">
+	<script>
+	var data = [
+		{ "companyA":"-1.9", "companyB":1, year:"2000" },
+		{ "companyA":"-0.8", "companyB":0.8, year:"2001" },
+		{ "companyA":"3.4", "companyB":1.9, year:"2002" },
+		{ "companyA":"4.1", "companyB":2.5, year:"2003" },
+		{ "companyA":"4.3", "companyB":3.1, year:"2004" },
+		{ "companyA":"5.9", "companyB":4.5, year:"2005" },
+		{ "companyA":"6.1", "companyB":5.7, year:"2006" },
+		{ "companyA":"6.5", "companyB":7.2, year:"2007" },
+		{ "companyA":"5.2", "companyB":6.5, year:"2008" },
+		{ "companyA":"4.8", "companyB":6.8, year:"2009" }
+	];
+	
+	window.onload = function(){
+		var chart1 =  new dhtmlXChart({
+			view:"line",
+			container:"chart1",
+	    	value:"#companyA#",
+			item:{
+				borderColor: "#3399ff",
+				color: "#ffffff"
+			},
+			line:{
+				color:"#3399ff",
+				width:3
+			},
+			xAxis:{
+				template:"#year#"
+			},
+			yAxis:{
+				start:-2,
+				step:1,
+				end:8
+			},
+			padding:{
+				left:35,
+				bottom:20
+			},
+			origin:0,
+			legend:{
+				layout:"x",
+				width: 75,
+				align:"center",
+				valign:"bottom",
+				marker:{
+					type:"round",
+					width:15
+				},
+				values:[
+					{text:"company A",color:"#3399ff"},
+					{text:"company B",color:"#66cc00"}
+				]
+			}
+		})
+		
+	
+		chart1.addSeries({
+			value:"#companyB#",
+			item:{
+				borderColor: "#66cc00",
+				color: "#ffffff"
+			},
+			line:{
+				color:"#66cc00",
+				width:3
+			}
+		})
+		chart1.parse(data,"json");
+	}
+	</script>
+</head>
+<body >
+	<table>
+		<tr>
+			<td><div id="chart1" style="width:500px;height:300px;border:1px solid #A4BED4;"></div></td>
+		</tr>
+	</table>
+</body>
+</html>
