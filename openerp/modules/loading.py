@@ -156,7 +156,6 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
     pool = pooler.get_pool(cr.dbname)
     migrations = openerp.modules.migration.MigrationManager(cr, graph)
     logger.notifyChannel('init', netsvc.LOG_DEBUG, 'loading %d packages..' % len(graph))
-    modobj = pool.get('ir.module.module')
 
     # register, instantiate and initialize models for each modules
     for package in graph:
@@ -174,6 +173,10 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
             init_module_models(cr, package.name, models)
 
         status['progress'] = float(statusi) / len(graph)
+
+        # Can't put this line out of the loop: ir.module.module will be
+        # registered by init_module_models() above.
+        modobj = pool.get('ir.module.module')
 
         if perform_checks:
             modobj.check(cr, 1, [module_id])
