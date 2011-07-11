@@ -77,7 +77,6 @@ class hr_contract(osv.osv):
         'advantages': fields.text('Advantages'),
         'notes': fields.text('Notes'),
         'permit_no': fields.char('Work Permit No', size=256, required=False, readonly=False),
-        'passport': fields.char('Passport', size=16, required=False),
         'visa_no': fields.char('Visa No', size=64, required=False, readonly=False),
         'visa_expire': fields.date('Visa Expire Date'),
     }
