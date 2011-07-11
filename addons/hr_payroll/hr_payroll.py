@@ -318,8 +318,8 @@ class hr_payslip(osv.osv):
     def refund_sheet(self, cr, uid, ids, context=None):
         mod_obj = self.pool.get('ir.model.data')
         wf_service = netsvc.LocalService("workflow")
-        for id in ids:
-            id_copy = self.copy(cr, uid, id, {'credit_note': True}, context=context)
+        for payslip in self.browse(cr, uid, ids, context=context):
+            id_copy = self.copy(cr, uid, payslip.id, {'credit_note': True, 'name': _('Refund: ')+payslip.name}, context=context)
             self.compute_sheet(cr, uid, [id_copy], context=context)
             wf_service.trg_validate(uid, 'hr.payslip', id_copy, 'hr_verify_sheet', cr)
             wf_service.trg_validate(uid, 'hr.payslip', id_copy, 'process_sheet', cr)
@@ -369,7 +369,7 @@ class hr_payslip(osv.osv):
         slip_line_pool = self.pool.get('hr.payslip.line')
         sequence_obj = self.pool.get('ir.sequence')
         for payslip in self.browse(cr, uid, ids, context=context):
-            number = sequence_obj.get(cr, uid, 'salary.slip')
+            number = payslip.number or sequence_obj.get(cr, uid, 'salary.slip')
             #delete old payslip lines
             old_slipline_ids = slip_line_pool.search(cr, uid, [('slip_id', '=', payslip.id)], context=context)
 #            old_slipline_ids
