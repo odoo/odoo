@@ -120,29 +120,25 @@ openerp.base.ContainerDataGroup = openerp.base.DataGroup.extend(
             aggregates: aggregates
         };
     },
-    fetch: function () {
+    fetch: function (fields) {
         // internal method
         var d = new $.Deferred();
         var self = this;
 
-        // disable caching for now, not sure what I should do there
-        if (false && this.groups) {
-            d.resolveWith(this, [this.groups]);
-        } else {
-            this.rpc('/base/group/read', {
-                model: this.model,
-                context: this.context,
-                domain: this.domain,
-                group_by_fields: this.group_by
-            }, function () { }).then(function (response) {
-                var data_groups = _(response).map(
-                        _.bind(self.transform_group, self));
-                self.groups = data_groups;
-                d.resolveWith(self, [data_groups]);
-            }, function () {
-                d.rejectWith.apply(d, self, [arguments]);
-            });
-        }
+        this.rpc('/base/group/read', {
+            model: this.model,
+            context: this.context,
+            domain: this.domain,
+            fields: _.uniq(this.group_by.concat(fields)),
+            group_by_fields: this.group_by
+        }, function () { }).then(function (response) {
+            var data_groups = _(response).map(
+                    _.bind(self.transform_group, self));
+            self.groups = data_groups;
+            d.resolveWith(self, [data_groups]);
+        }, function () {
+            d.rejectWith.apply(d, [self, arguments]);
+        });
         return d.promise();
     },
     /**
@@ -163,10 +159,14 @@ openerp.base.ContainerDataGroup = openerp.base.DataGroup.extend(
      *     records have for the current ``grouped_on`` field name).
      * ``aggregates``
      *     a mapping of other aggregation fields provided by ``read_group``
+     *
+     * @param {Array} fields the list of fields to aggregate in each group, can be empty
+     * @param {Function} ifGroups function executed if any group is found (DataGroup.group_by is non-null and non-empty), called with a (potentially empty) list of groups as parameters.
+     * @param {Function} ifRecords function executed if there is no grouping left to perform, called with a DataSet instance as parameter
      */
-    list: function (ifGroups, ifRecords) {
+    list: function (fields, ifGroups, ifRecords) {
         var self = this;
-        this.fetch().then(function (group_records) {
+        this.fetch(fields).then(function (group_records) {
             ifGroups(_(group_records).map(function (group) {
                 var child_context = _.extend({}, self.context, group.__context);
                 return _.extend(
@@ -195,7 +195,7 @@ openerp.base.GrouplessDataGroup = openerp.base.DataGroup.extend(
     init: function (session, model, domain, context, level) {
         this._super(session, model, domain, context, null, level);
     },
-    list: function (ifGroups, ifRecords) {
+    list: function (fields, ifGroups, ifRecords) {
         ifRecords(_.extend(
                 new openerp.base.DataSetSearch(this.session, this.model),
                 {domain: this.domain, context: this.context}));
@@ -215,7 +215,7 @@ openerp.base.StaticDataGroup = openerp.base.GrouplessDataGroup.extend(
     init: function (dataset) {
         this.dataset = dataset;
     },
-    list: function (ifGroups, ifRecords) {
+    list: function (fields, ifGroups, ifRecords) {
         ifRecords(this.dataset);
     }
 });
