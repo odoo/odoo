@@ -969,7 +969,7 @@ openerp.base.form.FieldDatetime = openerp.base.form.Field.extend({
     },
     update_dom: function() {
         this._super.apply(this, arguments);
-        this.$element.find('input').attr('disabled', this.readonly);
+        this.$element.find('input').datepicker(this.readonly ? 'disable' : 'enable');
     },
     validate: function() {
         this.invalid = false;
