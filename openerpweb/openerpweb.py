@@ -368,7 +368,7 @@ class HttpRequest(object):
         self.context = kw.get('context', {})
         host = cherrypy.config['openerp.server.host']
         port = cherrypy.config['openerp.server.port']
-        self.session = self.httpsession.setdefault(kw.get('session_id', None), OpenERPSession(host, port))
+        self.session = self.httpsession.setdefault(kw.get('session_id'), OpenERPSession(host, port))
         self.result = ""
         if request.method == 'GET':
             print "GET --> %s.%s %s %r" % (controller.__class__.__name__, f.__name__, request, kw)
