@@ -88,14 +88,14 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
             if new_query:
                 cr.execute(new_query)
 
-    def load_init_xml(cr, m, idref, mode):
-        _load_data(cr, m, idref, mode, 'init_xml')
+    def load_init_xml(cr, module_name, idref, mode):
+        _load_data(cr, module_name, idref, mode, 'init_xml')
 
-    def load_update_xml(cr, m, idref, mode):
-        _load_data(cr, m, idref, mode, 'update_xml')
+    def load_update_xml(cr, module_name, idref, mode):
+        _load_data(cr, module_name, idref, mode, 'update_xml')
 
-    def load_demo_xml(cr, m, idref, mode):
-        _load_data(cr, m, idref, mode, 'demo_xml')
+    def load_demo_xml(cr, module_name, idref, mode):
+        _load_data(cr, module_name, idref, mode, 'demo_xml')
 
     def load_data(cr, module_name, idref, mode):
         _load_data(cr, module_name, idref, mode, 'data')
@@ -156,34 +156,29 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
     pool = pooler.get_pool(cr.dbname)
     migrations = openerp.modules.migration.MigrationManager(cr, graph)
     logger.notifyChannel('init', netsvc.LOG_DEBUG, 'loading %d packages..' % len(graph))
+    modobj = pool.get('ir.module.module')
 
-    # register, instanciate and initialize models for each modules
+    # register, instantiate and initialize models for each modules
     for package in graph:
-        if skip_modules and package.name in skip_modules:
+        module_name = package.name
+        module_id = package.id
+
+        if skip_modules and module_name in skip_modules:
             continue
+
         logger.notifyChannel('init', netsvc.LOG_INFO, 'module %s: loading objects' % package.name)
         migrations.migrate_module(package, 'pre')
         register_module_classes(package.name)
         models = pool.instanciate(package.name, cr)
         if hasattr(package, 'init') or hasattr(package, 'update') or package.state in ('to install', 'to upgrade'):
             init_module_models(cr, package.name, models)
-        cr.commit()
 
-    # load data for each modules
-    modobj = pool.get('ir.module.module')
-    for package in graph:
-        status['progress'] = (float(statusi)+0.1) / len(graph)
-        m = package.name
-        mid = package.id
-
-        if skip_modules and m in skip_modules:
-            continue
+        status['progress'] = float(statusi) / len(graph)
 
         if perform_checks:
-            modobj.check(cr, 1, [mid])
+            modobj.check(cr, 1, [module_id])
 
         idref = {}
-        status['progress'] = (float(statusi)+0.4) / len(graph)
 
         mode = 'update'
         if hasattr(package, 'init') or package.state == 'to install':
@@ -192,21 +187,21 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
         if hasattr(package, 'init') or hasattr(package, 'update') or package.state in ('to install', 'to upgrade'):
             if package.state=='to upgrade':
                 # upgrading the module information
-                modobj.write(cr, 1, [mid], modobj.get_values_from_terp(package.data))
-            load_init_xml(cr, m, idref, mode)
-            load_update_xml(cr, m, idref, mode)
-            load_data(cr, m, idref, mode)
+                modobj.write(cr, 1, [module_id], modobj.get_values_from_terp(package.data))
+            load_init_xml(cr, module_name, idref, mode)
+            load_update_xml(cr, module_name, idref, mode)
+            load_data(cr, module_name, idref, mode)
             if hasattr(package, 'demo') or (package.dbdemo and package.state != 'installed'):
                 status['progress'] = (float(statusi)+0.75) / len(graph)
-                load_demo_xml(cr, m, idref, mode)
-                load_demo(cr, m, idref, mode)
-                cr.execute('update ir_module_module set demo=%s where id=%s', (True, mid))
+                load_demo_xml(cr, module_name, idref, mode)
+                load_demo(cr, module_name, idref, mode)
+                cr.execute('update ir_module_module set demo=%s where id=%s', (True, module_id))
 
                 # launch tests only in demo mode, as most tests will depend
                 # on demo data. Other tests can be added into the regular
                 # 'data' section, but should probably not alter the data,
                 # as there is no rollback.
-                load_test(cr, m, idref, mode)
+                load_test(cr, module_name, idref, mode)
 
             processed_modules.append(package.name)
 
@@ -214,17 +209,16 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
 
             ver = release.major_version + '.' + package.data['version']
             # Set new modules and dependencies
-            modobj.write(cr, 1, [mid], {'state': 'installed', 'latest_version': ver})
-            cr.commit()
+            modobj.write(cr, 1, [module_id], {'state': 'installed', 'latest_version': ver})
             # Update translations for all installed languages
-            modobj.update_translations(cr, 1, [mid], None)
-            cr.commit()
+            modobj.update_translations(cr, 1, [module_id], None)
 
             package.state = 'installed'
             for kind in ('init', 'demo', 'update'):
                 if hasattr(package, kind):
                     delattr(package, kind)
 
+        cr.commit()
         statusi += 1
 
     cr.commit()
