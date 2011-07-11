@@ -1228,7 +1228,6 @@ class property(function):
            :rtype: dict
         """
         prop = obj.pool.get('ir.property')
-        default_value = {}.fromkeys(prop_names, False)
         for prop_name in prop_names:
             default_value[prop_name] = prop.get(cr, uid, prop_name, obj._name, context=context)
         return default_value
