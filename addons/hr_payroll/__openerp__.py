@@ -59,7 +59,9 @@ Generic Payroll system.
         'wizard/hr_payroll_contribution_register_report.xml',
     ],
     'test': [
-#         'test/payslip.yml',
+         'test/payslip.yml',
+#         'test/payment_advice.yml',
+#         'test/payroll_register.yml',
         # 'test/hr_payroll_report.yml',
     ],
     'demo_xml': [

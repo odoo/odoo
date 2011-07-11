@@ -47,6 +47,9 @@ Generic Payroll system Integrated with Accountings.
     'demo_xml': [
         'hr_payroll_account_demo.xml'
     ],
+    'test': [
+         'test/hr_payroll_account.yml',
+     ],
     'installable': True,
     'active': False,
     'certificate' : '00923971112835220957',
