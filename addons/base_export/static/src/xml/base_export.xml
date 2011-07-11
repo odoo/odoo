@@ -55,7 +55,7 @@
                                 <table border="0" cellpadding="0" cellspacing="0" width="100%">
                                     <tr>
                                         <td align="center">
-                                            <button id="add">Add </button>
+                                            <button id="add_field">Add </button>
                                         </td>
                                     </tr>
                                     <tr>
@@ -71,22 +71,9 @@
                                 </table>
                             </td>
                             <td class="fields-selector-right" height="400px">
-                                <select name="fields" id="fields" multiple="multiple"></select>
+                                <select name="fields_list" id="fields_list" multiple="multiple"></select>
                             </td>
                         </tr>
-                    </table>
-                </td>
-            </tr>
-            <tr>
-                <td class="side_spacing">
-                    <table width="100%">
-                        <tr>
-                            <td class="imp-header" align="right">
-                                <button id="cancel">Cancel </button>
-                                <button id="export_to_file">Export to File </button>
-                            </td>
-                            <td width="5%"></td>
-                         </tr>
                     </table>
                 </td>
             </tr>
@@ -104,11 +91,11 @@
                             </t>
                             <td valign="top" align="left" style="cursor: pointer;" width="18">
                                 <t t-if="(field.children).length >= 1">
-                                    <img t-att-id="'parentimg@' + field.id" src="/base/static/src/img/expand.gif" width="16" height="16" border="0"/>
+                                    <img t-att-id="'parentimg-' + field.id" src="/base/static/src/img/expand.gif" width="16" height="16" border="0"/>
                                 </t>
                             </td>
                             <td valign="top" align="left" style="cursor: pointer;">
-                                <a href="javascript: void(0)">
+                                <a t-att-id="'export-' + field.id" href="javascript: void(0)" style="text-decoration: none;" class="row">
                                     <t t-esc="field.string"/>
                                 </a>
                             </td>

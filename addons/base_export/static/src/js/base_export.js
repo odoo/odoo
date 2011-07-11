@@ -19,8 +19,20 @@ openerp.base_export.Export = openerp.base.Controller.extend({
             title: "Export Data",
             modal: true,
             width: '50%',
-            height: 'auto'
+            height: 'auto',
+            buttons : {
+                        "Close" : function() {
+                        _export.dialog('destroy');
+                          },
+                        "Export To File" : function() {
+                        _export.dialog('destroy');
+                          }
+                       }
         }).html(QWeb.render('ExportTreeView', {'fields': result}))
+
+		jQuery(_export).find('[id^=export]').dblclick(function(){
+            self.add_field(this.id, this.text)
+		});
         jQuery(_export).find('[id^=parentimg]').click(function(){
             self.on_click(this.id, result);
         });
@@ -28,7 +40,7 @@ openerp.base_export.Export = openerp.base.Controller.extend({
 
     on_click: function(id, result) {
         var self = this
-	    this.field_id = id.split("@")[1];
+	    this.field_id = id.split("-")[1];
 	    var model = ''
 	    var prefix = ''
 	    var name = ''
@@ -53,8 +65,18 @@ openerp.base_export.Export = openerp.base.Controller.extend({
         $("tr[id='treerow_" + self.field_id + "']").after(QWeb.render('ExportTreeView-Secondary', {'fields': result}));
         jQuery($.find('img[id ^= parentimg]')).click(function(){
             self.on_click(this.id, result);
-
         });
+        jQuery($.find('[id^=export]')).dblclick(function(){
+            self.add_field(this.id, this.text)
+        });
+    },
+
+    add_field: function(id, string) {
+		var field_list = $('#fields_list')
+		field_id = id.split("-")[1];
+		if ( !$("#fields_list option[value='" + field_id + "']").length){
+	        field_list.append( new Option(string, field_id));
+	    }
     },
 });
 
