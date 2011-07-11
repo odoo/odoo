@@ -51,6 +51,11 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
                 toolbar:!!this.flags.sidebar, context: context}, this.on_loaded);
         }
     },
+    stop: function() {
+        _.each(this.widgets, function(w) {
+            w.stop();
+        });
+    },
     on_loaded: function(data) {
         var self = this;
         this.fields_view = data.fields_view;
@@ -531,6 +536,9 @@ openerp.base.form.Widget = openerp.base.Controller.extend({
     },
     start: function() {
         this.$element = $('#' + this.element_id);
+    },
+    stop: function() {
+        this.$element.remove();
     },
     process_modifiers: function() {
         var compute_domain = openerp.base.form.compute_domain;
