@@ -32,7 +32,7 @@
     "category" : "Generic Modules/Accounting",
     "init_xml" : [
     ],
-    "demo_xml" : [
+    "demo_xml" : [ 'account_asset_demo.xml'
     ],
     'test': ['test/account_asset.yml',
              ],
