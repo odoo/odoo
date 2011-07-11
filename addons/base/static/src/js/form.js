@@ -132,7 +132,7 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
     on_form_changed: function() {
         for (var w in this.widgets) {
             w = this.widgets[w];
-            w.process_attrs();
+            w.process_modifiers();
             w.update_dom();
         }
     },
@@ -166,7 +166,6 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
             this.ready = false;
             var onchange = _.trim(widget.node.attrs.on_change);
             var call = onchange.match(/^\s?(.*?)\((.*?)\)\s?$/);
-            console.log("Onchange triggered for field '%s' -> %s", widget.name, onchange);
             if (call) {
                 var method = call[1], args = [];
                 var context_index = null;
@@ -226,14 +225,12 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
     on_processed_onchange: function(response, processed) {
         var result = response.result;
         if (result.value) {
-            console.log("      |-> Onchange Response :", result.value);
             for (var f in result.value) {
                 var field = this.fields[f];
                 if (field) {
                     var value = result.value[f];
                     processed.push(field.name);
                     if (field.get_value() != value) {
-                        console.log("          |-> Onchange Action :  change '%s' value from '%s' to '%s'", field.name, field.get_value(), value);
                         field.set_value(value);
                         field.touched = true;
                         if (_.indexOf(processed, field.name) < 0) {
@@ -242,12 +239,11 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
                     }
                 } else {
                     // this is a common case, the normal behavior should be to ignore it
-                    console.debug("on_processed_onchange can't find field " + f, result);
                 }
             }
             this.on_form_changed();
         }
-        if (result.warning && !_.isEmpty(result.warning)) {
+        if (!_.isEmpty(result.warning)) {
             $(QWeb.render("DialogWarning", result.warning)).dialog({
                 modal: true,
                 buttons: {
@@ -396,12 +392,13 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
             this.on_attachments_loaded([]);
         } else {
             // TODO fme: modify this so it doesn't try to load attachments when there is not sidebar
-            /*this.rpc('/base/dataset/search_read', {
-                model: 'ir.attachment',
-                fields: ['name', 'url', 'type'],
-                domain: [['res_model', '=', this.dataset.model], ['res_id', '=', this.datarecord.id], ['type', 'in', ['binary', 'url']]],
-                context: this.dataset.get_context()
-            }, this.on_attachments_loaded);*/
+            /*(new openerp.base.DataSetSearch(
+                    this.session, 'ir.attachment', this.dataset.get_context(),
+                    [['res_model', '=', this.dataset.model],
+                     ['res_id', '=', this.datarecord.id],
+                     ['type', 'in', ['binary', 'url']]])).read_slice(
+                ['name', 'url', 'type'], false, false,
+                this.on_attachments_loaded);*/
         }
     },
     on_attachments_loaded: function(attachments) {
@@ -506,7 +503,7 @@ openerp.base.form.compute_domain = function(expr, fields) {
                 stack.push(!_(val).contains(field));
                 break;
             default:
-                this.log("Unsupported operator in attrs :", op);
+                this.log("Unsupported operator in modifiers :", op);
         }
     }
     return _.all(stack);
@@ -517,7 +514,7 @@ openerp.base.form.Widget = openerp.base.Controller.extend({
     init: function(view, node) {
         this.view = view;
         this.node = node;
-        this.attrs = JSON.parse(this.node.attrs.attrs || '{}');
+        this.modifiers = JSON.parse(this.node.attrs.modifiers || '{}');
         this.type = this.type || node.tag;
         this.element_name = this.element_name || this.type;
         this.element_id = [this.view.element_id, this.element_name, this.view.widgets_counter++].join("_");
@@ -530,15 +527,15 @@ openerp.base.form.Widget = openerp.base.Controller.extend({
 
         this.string = this.string || node.attrs.string;
         this.help = this.help || node.attrs.help;
-        this.invisible = (node.attrs.invisible == '1');
+        this.invisible = this.modifiers['invisible'] === true;
     },
     start: function() {
         this.$element = $('#' + this.element_id);
     },
-    process_attrs: function() {
+    process_modifiers: function() {
         var compute_domain = openerp.base.form.compute_domain;
-        for (var a in this.attrs) {
-            this[a] = compute_domain(this.attrs[a], this.view.fields);
+        for (var a in this.modifiers) {
+            this[a] = compute_domain(this.modifiers[a], this.view.fields);
         }
     },
     update_dom: function() {
@@ -739,10 +736,9 @@ openerp.base.form.Field = openerp.base.form.Widget.extend({
         this.field = view.fields_view.fields[node.attrs.name] || {};
         this.string = node.attrs.string || this.field.string;
         this.help = node.attrs.help || this.field.help;
-        this.invisible = (this.invisible || this.field.invisible == '1');
-        this.nolabel = (this.field.nolabel || node.attrs.nolabel) == '1';
-        this.readonly = (this.field.readonly || node.attrs.readonly) == '1';
-        this.required = (this.field.required || node.attrs.required) == '1';
+        this.nolabel = (this.field.nolabel || node.attrs.nolabel) === '1';
+        this.readonly = this.modifiers['readonly'] === true;
+        this.required = this.modifiers['required'] === true;
         this.invalid = false;
         this.touched = false;
     },
@@ -801,7 +797,7 @@ openerp.base.form.Field = openerp.base.form.Widget.extend({
         var v_context1 = this.node.attrs.default_get || {};
         var v_context2 = this.node.attrs.context || {};
         var v_context = new openerp.base.CompoundContext(v_context1, v_context2);
-        if (v_context1.__ref || v_context2.__ref) {
+        if (v_context1.__ref || v_context2.__ref || true) { //TODO niv: remove || true
             var fields_values = this._build_view_fields_values();
             v_context.set_eval_context(fields_values);
         }
@@ -811,7 +807,7 @@ openerp.base.form.Field = openerp.base.form.Widget.extend({
     build_domain: function() {
         var f_domain = this.field.domain || [];
         var v_domain = this.node.attrs.domain || [];
-        if (!(v_domain instanceof Array)) {
+        if (!(v_domain instanceof Array) || true) { //TODO niv: remove || true
             var fields_values = this._build_view_fields_values();
             v_domain = new openerp.base.CompoundDomain(v_domain).set_eval_context(fields_values);
         }
@@ -915,6 +911,25 @@ openerp.base.form.FieldFloat = openerp.base.form.FieldChar.extend({
     }
 });
 
+openerp.base.form.FieldInteger = openerp.base.form.FieldFloat.extend({
+    init: function(view, node) {
+        this._super(view, node);
+        this.validation_regex = /^-?\d+$/;
+    },
+    set_value: function(value) {
+        this._super.apply(this, [value]);
+        if (value === false || value === undefined) {
+            // TODO fme: check if GTK client default integers to 0 (like it does with floats)
+            value = 0;
+        }
+        var show_value = parseInt(value, 10);
+        this.$element.find('input').val(show_value);
+    },
+    set_value_from_ui: function() {
+        this.value = Number(this.$element.find('input').val());
+    }
+});
+
 openerp.base.form.FieldDatetime = openerp.base.form.Field.extend({
     init: function(view, node) {
         this._super(view, node);
@@ -935,7 +950,7 @@ openerp.base.form.FieldDatetime = openerp.base.form.Field.extend({
     },
     set_value: function(value) {
         this._super.apply(this, arguments);
-        if (value == null || value == false) {
+        if (!value) {
             this.$element.find('input').val('');
         } else {
             this.$element.find('input').unbind('change');
@@ -1086,7 +1101,7 @@ openerp.base.form.FieldProgressBar = openerp.base.form.Field.extend({
     set_value: function(value) {
         this._super.apply(this, arguments);
         var show_value = Number(value);
-        if (show_value === NaN) {
+        if (isNaN(show_value)) {
             show_value = 0;
         }
         this.$element.find('div').progressbar('option', 'value', show_value).find('span').html(show_value + '%');
@@ -1101,28 +1116,54 @@ openerp.base.form.FieldSelection = openerp.base.form.Field.extend({
     init: function(view, node) {
         this._super(view, node);
         this.template = "FieldSelection";
+        this.field_index = _.map(this.field.selection, function(x, index) {
+            return {"ikey": "" + index, "ekey": x[0], "label": x[1]};
+        });
     },
     start: function() {
+        // Flag indicating whether we're in an event chain containing a change
+        // event on the select, in order to know what to do on keyup[RETURN]:
+        // * If the user presses [RETURN] as part of changing the value of a
+        //   selection, we should just let the value change and not let the
+        //   event broadcast further (e.g. to validating the current state of
+        //   the form in editable list view, which would lead to saving the
+        //   current row or switching to the next one)
+        // * If the user presses [RETURN] with a select closed (side-effect:
+        //   also if the user opened the select and pressed [RETURN] without
+        //   changing the selected value), takes the action as validating the
+        //   row
+        var ischanging = false;
         this._super.apply(this, arguments);
-        this.$element.find('select').change(this.on_ui_change);
+        this.$element.find('select')
+            .change(this.on_ui_change)
+            .change(function () { ischanging = true; })
+            .click(function () { ischanging = false; })
+            .keyup(function (e) {
+                if (e.which !== 13 || !ischanging) { return; }
+                e.stopPropagation();
+                ischanging = false;
+            });
     },
     set_value: function(value) {
-        this._super.apply(this, arguments);
-        if (value != null && value !== false) {
-            this.$element.find('select').val(value);
-        } else {
-            this.$element.find('select').val('false');
-        }
+        value = value === null ? false : value;
+        value = value instanceof Array ? value[0] : value;
+        this._super(value);
+        var option = _.detect(this.field_index, function(x) {return x.ekey === value;});
+        this.$element.find('select').val(option === undefined ? '' : option.ikey);
     },
     set_value_from_ui: function() {
-        this.value = this.$element.find('select').val();
+        var ikey = this.$element.find('select').val();
+        var option = _.detect(this.field_index, function(x) {return x.ikey === ikey;});
+        this.value = option === undefined ? false : option.ekey;
     },
     update_dom: function() {
         this._super.apply(this, arguments);
         this.$element.find('select').attr('disabled', this.readonly);
     },
     validate: function() {
-        this.invalid = this.required && this.$element.find('select').val() === "";
+        var ikey = this.$element.find('select').val();
+        var option = _.detect(this.field_index, function(x) {return x.ikey === ikey;});
+        this.invalid = this.required && (option === undefined || option.ekey === false);
     },
     focus: function() {
         this.$element.find('select').focus();
@@ -1493,7 +1534,9 @@ openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
             }
             self.is_started.resolve();
         });
-        this.viewmanager.start();
+        setTimeout(function () {
+            self.viewmanager.start();
+        }, 0);
     },
     reload_current_view: function() {
         var self = this;
@@ -1646,7 +1689,9 @@ openerp.base.form.FieldMany2Many = openerp.base.form.Field.extend({
         this.list_view.on_loaded.add_last(function() {
             self.is_started.resolve();
         });
-        this.list_view.start();
+        setTimeout(function () {
+            self.list_view.start();
+        }, 0);
     },
     set_value: function(value) {
         value = value || [];
@@ -2021,7 +2066,7 @@ openerp.base.form.widgets = new openerp.base.Registry({
     'reference' : 'openerp.base.form.FieldReference',
     'boolean' : 'openerp.base.form.FieldBoolean',
     'float' : 'openerp.base.form.FieldFloat',
-    'integer': 'openerp.base.form.FieldFloat',
+    'integer': 'openerp.base.form.FieldInteger',
     'progressbar': 'openerp.base.form.FieldProgressBar',
     'float_time': 'openerp.base.form.FieldFloatTime',
     'image': 'openerp.base.form.FieldBinaryImage',

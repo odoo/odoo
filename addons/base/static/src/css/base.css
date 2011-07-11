@@ -680,6 +680,9 @@ background: linear-gradient(top, #cc4e45 0%,#b52d20 8%,#7a211a 100%); /* W3C */
     vertical-align: middle;
     text-align: left;
 }
+.openerp .oe-listview td.oe-record-delete {
+    text-align: right;
+}
 .openerp .oe-listview th.oe-sortable,
 .openerp .oe-listview th.oe-sortable .ui-icon {
     cursor: pointer;
@@ -709,6 +712,17 @@ background: linear-gradient(top, #cc4e45 0%,#b52d20 8%,#7a211a 100%); /* W3C */
 }
 .openerp .oe-listview th.oe-list-pager {
     text-align: right;
+}
+.openerp .oe-list-pager .oe-pager-state {
+    cursor: pointer;
+}
+
+.openerp .oe-listview .oe-group-name {
+    padding-right: 1em;
+}
+.openerp .oe-listview .oe-group-name,
+.openerp .oe-listview .oe-group-pagination {
+    white-space: nowrap;
 }
 
 .openerp .oe-listview tfoot td {

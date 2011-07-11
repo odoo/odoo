@@ -350,7 +350,6 @@ openerp.base.Session = openerp.base.BasicController.extend( /** @lends openerp.b
      * @param {Object} params call parameters
      * @param {Function} success_callback function to execute on RPC call success
      * @param {Function} error_callback function to execute on RPC call failure
-     * one
      * @returns {jQuery.Deferred} jquery-provided ajax deferred
      */
     rpc: function(url, params, success_callback, error_callback) {

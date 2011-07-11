@@ -736,6 +736,9 @@ openerp.base.search.ExtendedSearch = openerp.base.BaseWidget.extend({
     },
     start: function () {
         this._super();
+        if (!this.$element) {
+            return; // not a logical state but sometimes it happens
+        }
         this.$element.closest("table.oe-searchview-render-line").css("display", "none");
         var self = this;
         this.rpc("/base/searchview/fields_get",
@@ -751,6 +754,9 @@ openerp.base.search.ExtendedSearch = openerp.base.BaseWidget.extend({
         return null;
     },
     get_domain: function() {
+        if (!this.$element) {
+            return null; // not a logical state but sometimes it happens
+        }
         if(this.$element.closest("table.oe-searchview-render-line").css("display") == "none") {
             return null;
         }

@@ -135,7 +135,7 @@ openerp.base.ContainerDataGroup = openerp.base.DataGroup.extend(
                 domain: this.domain,
                 group_by_fields: this.group_by
             }, function () { }).then(function (response) {
-                var data_groups = _(response.result).map(
+                var data_groups = _(response).map(
                         _.bind(self.transform_group, self));
                 self.groups = data_groups;
                 d.resolveWith(self, [data_groups]);
@@ -196,7 +196,9 @@ openerp.base.GrouplessDataGroup = openerp.base.DataGroup.extend(
         this._super(session, model, domain, context, null, level);
     },
     list: function (ifGroups, ifRecords) {
-        ifRecords(new openerp.base.DataSetSearch(this.session, this.model, this.context, this.domain));
+        ifRecords(_.extend(
+                new openerp.base.DataSetSearch(this.session, this.model),
+                {domain: this.domain, context: this.context}));
     }
 });
 
@@ -421,13 +423,10 @@ openerp.base.DataSetSearch =  openerp.base.DataSet.extend({
             sort: this.sort(),
             offset: offset,
             limit: limit
-        }, function (records) {
-            self.ids.splice(0, self.ids.length);
+        }, function (result) {
+            self.ids = result.ids;
             self.offset = offset;
-            for (var i=0; i < records.length; i++ ) {
-                self.ids.push(records[i].id);
-            }
-            callback(records);
+            callback(result.records);
         });
     },
     /**

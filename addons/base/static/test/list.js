@@ -149,7 +149,7 @@ $(document).ready(function () {
         listview.$element.find('tbody th input:eq(1)')
                          .attr('checked', true);
 
-        listview.$element.find('#oe-list-delete').click();
+        listview.$element.find('.oe-list-delete').click();
         deepEqual(deleted, [2, 3]);
     });
 });
