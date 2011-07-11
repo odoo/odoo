@@ -113,7 +113,6 @@
             openerp.sessions[new_instance._session_id] = new_instance;
             if (!skip_init){
                 openerp.base(new_instance);
-                openerp.web_mobile(new_instance);
             }
             return new_instance;
         }
@@ -149,6 +148,9 @@ openerp.base = function(instance) {
     }
     if (openerp.base.list && openerp.base.list.editable) {
         openerp.base.list.editable(instance);
+    }
+    if (openerp.web_mobile) {
+        openerp.web_mobile(instance);
     }
 };
 
