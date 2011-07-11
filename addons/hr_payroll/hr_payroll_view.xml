@@ -45,7 +45,7 @@
             <field name="arch" type="xml">
             <data>
                 <xpath expr="/form/notebook/page/group/field[@name='advantages']" position="before">
-                    <field name="struct_id" select="1"/>
+                    <field name="struct_id" required="1"/>
                 </xpath>
                  <xpath expr="/form/notebook/page/group/field[@name='working_hours']" position="after">
                     <field name="schedule_pay"/>

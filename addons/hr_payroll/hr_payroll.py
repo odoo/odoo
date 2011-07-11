@@ -119,7 +119,7 @@ class hr_contract(osv.osv):
     _inherit = 'hr.contract'
     _description = 'Employee Contract'
     _columns = {
-        'struct_id': fields.many2one('hr.payroll.structure', 'Salary Structure', required=True),
+        'struct_id': fields.many2one('hr.payroll.structure', 'Salary Structure'),
         'schedule_pay': fields.selection([
             ('monthly', 'Monthly'),
             ('quarterly', 'Quarterly'),
