@@ -617,21 +617,44 @@ openerp.base.form.WidgetFrame = openerp.base.form.Widget.extend({
 });
 
 openerp.base.form.WidgetNotebook = openerp.base.form.Widget.extend({
+    template: 'WidgetNotebook',
     init: function(view, node) {
         this._super(view, node);
-        this.template = "WidgetNotebook";
         this.pages = [];
         for (var i = 0; i < node.children.length; i++) {
             var n = node.children[i];
             if (n.tag == "page") {
-                var page = new openerp.base.form.WidgetFrame(this.view, n);
+                var page = new openerp.base.form.WidgetNotebookPage(this.view, n, this, this.pages.length);
                 this.pages.push(page);
             }
         }
     },
     start: function() {
+        var self = this;
         this._super.apply(this, arguments);
         this.$element.tabs();
+    }
+});
+
+openerp.base.form.WidgetNotebookPage = openerp.base.form.WidgetFrame.extend({
+    template: 'WidgetNotebookPage',
+    init: function(view, node, notebook, index) {
+        this.notebook = notebook;
+        this.index = index;
+        this.element_name = 'page_' + index;
+        this._super(view, node);
+        this.element_tab_id = this.element_id + '_tab';
+    },
+    start: function() {
+        this._super.apply(this, arguments);
+        this.$element_tab = $('#' + this.element_tab_id);
+    },
+    update_dom: function() {
+        if (this.invisible) {
+            this.notebook.$element.tabs('select', 0);
+        }
+        this.$element_tab.toggle(!this.invisible);
+        this.$element.toggle(!this.invisible);
     }
 });
 
