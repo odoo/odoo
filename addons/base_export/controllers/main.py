@@ -10,7 +10,7 @@ class Export(View):
         return fields
 
     @openerpweb.jsonrequest
-    def get_fields(self, req, model):
+    def get_fields(self, req, model, prefix='', field_parent=None, name= ''):
         fields = self.fields_get(req, model)
 
         fields.update({'id': {'string': 'ID'}, '.id': {'string': 'Database ID'}})
@@ -19,11 +19,12 @@ class Export(View):
         for key, value in fields.items():
             record = {}
 
-            id = key
-            nm = value['string']
-
+            id = prefix + (prefix and '/' or '') + key
+            nm = name + (name and '/' or '') + value['string']
+            levels = nm.split('/')
+            levels > 1 and levels.remove(levels[0]) or []
             record.update(id=id, string= nm, action='javascript: void(0)',
-                          target=None, icon=None, children=[])
+                          target=None, icon=None, children=[], level = levels)
             records.append(record)
 
             if value.get('relation', False):
