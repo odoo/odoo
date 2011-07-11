@@ -1,5 +1,5 @@
 -
-  create partner
+  I create partner
 -
   !record {model: res.partner, id: res_partner_test33}:
     name: Ivan
@@ -17,7 +17,7 @@
     company_id: base.main_company
     
 -
-    I am creating one Document to be stored in ".
+    I am creating one Document to be attached in partner ".
 -
     !record {model: 'ir.attachment', id: document_4}:
         name : "My partner document"
@@ -25,7 +25,7 @@
         type : binary
 
 -
-    Attach a pdf file in "My partner document"
+    I attach a pdf file in "My partner document"
 -
     !python {model: 'ir.attachment'}: |
         import addons
@@ -34,15 +34,14 @@
         self.write(cr, uid, [ref("document_4")], {'res_id':ref("res_partner_test33"), 'datas_fname': 'partner.pdf', 'datas' : base64.encodestring(pdf_file.read())}, context)
       
 -
-  Testing import and export
+  I am Tesing of EDI functionality. so first export partner and than import it again.
 -      
 
   !python {model: ir.edi.document}: |
       partner_obj = self.pool.get('res.partner')
       partners = [partner_obj.browse(cr, uid, ref("res_partner_test33"))]
       tokens = self.export_edi(cr, uid, partners)
-      for token in tokens:
-        document = self.get_document(cr, uid, token, context=context)
-        print document
-        a = self.import_edi(cr, uid, edi_document = document)
+      assert tokens, 'Token is not generated.'
+      document = self.get_document(cr, uid, tokens[0], context=context)
+      a = self.import_edi(cr, uid, edi_document = document)
 
