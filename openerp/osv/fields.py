@@ -1298,8 +1298,8 @@ class property(function):
                 # object depends on access right of source document,
                 # not target, so user may not have access) in order to avoid
                 # pointing on an unexisting record.
-                if res[id][prop_name] and property_destination_obj:
-                    if obj.pool.get(property_destination_obj).exists(cr, 1, res[id][prop_name].id):
+                if property_destination_obj:
+                    if res[id][prop_name] and obj.pool.get(property_destination_obj).exists(cr, 1, res[id][prop_name].id):
                         name_get_list_ids.append(res[id][prop_name].id)
                     else:
                         res[id][prop_name] = False
