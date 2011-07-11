@@ -469,8 +469,8 @@ def main(argv):
     op = optparse.OptionParser()
     op.add_option("-p", "--port", dest="server.socket_port", help="listening port", type="int", metavar="NUMBER")
     op.add_option("-s", "--session-path", dest="tools.sessions.storage_path", help="directory used for session storage", metavar="DIR")
-    op.add_option("", "--server-host", dest="openerp.server.host", help="OpenERP server hostname", metavar="HOST")
-    op.add_option("", "--server-port", dest="openerp.server.port", help="OpenERP server port", type="int", metavar="NUMBER")
+    op.add_option("--server-host", dest="openerp.server.host", help="OpenERP server hostname", metavar="HOST")
+    op.add_option("--server-port", dest="openerp.server.port", help="OpenERP server port", type="int", metavar="NUMBER")
     (o, args) = op.parse_args(argv[1:])
     o = vars(o)
     for k in o.keys():
