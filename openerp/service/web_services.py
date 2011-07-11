@@ -69,7 +69,7 @@ class edi(netsvc.ExportService):
 
     def exp_import_edi_url(self, db, uid, passwd, edi_url, context=None):
         res = None
-        cr = pooler.get_db_only(db).cursor()
+        cr = pooler.get_db(db).cursor()
         pool = pooler.get_pool(db)
         edi_pool = pool.get('ir.edi.document')
         try:

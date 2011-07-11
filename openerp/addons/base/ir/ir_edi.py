@@ -122,13 +122,14 @@ class ir_edi_document(osv.osv):
 
         :param edi_dicts: list of edi_dict
         """
-       
+        res = []
         for edi_document in edi_documents:
             model = edi_document.get('__model')
             assert model, _('model should be provided in EDI Dict')
             model_obj = self.pool.get(model)
-            model_obj.edi_import(cr, uid, edi_document, context=context)
-        return True
+            record_id = model_obj.edi_import(cr, uid, edi_document, context=context)
+            res.append((model,record_id))
+        return res
     
     def deserialize(self, edi_document_string):
         """ Deserialized the edi document string
@@ -175,7 +176,6 @@ class ir_edi_document(osv.osv):
         
         if edi_url and not edi_document:
             edi_document = urllib2.urlopen(edi_url).read()
-
         assert edi_document, _('EDI Document should be provided')
         edi_documents = self.deserialize(edi_document)
         return self.load_edi(cr, uid, edi_documents, context=context)
