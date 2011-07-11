@@ -33,7 +33,9 @@ class payment_mode(osv.osv):
             required=True,help='Bank Account for the Payment Mode'),
         'journal': fields.many2one('account.journal', 'Journal', required=True,
             domain=[('type', 'in', ('bank','cash'))], help='Bank or Cash Journal for the Payment Mode'),
-        'company_id': fields.many2one('res.company', 'Company', required=True),
+        'company_id': fields.many2one('res.company', 'Company',required=True),
+        'partner_id':fields.related('company_id','partner_id',type='many2one',relation='res.partner',string='Partner',store=True,),
+        
     }
     _defaults = {
         'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id
@@ -49,6 +51,14 @@ class payment_mode(osv.osv):
             JOIN payment_mode pm ON (pm.bank_id = pb.id)
             WHERE pm.id = %s """, [payment_code])
         return [x[0] for x in cr.fetchall()]
+    
+    def onchange_company_id (self, cr, uid, ids, company_id=False, context=None):
+        result = {}
+        if company_id:
+            partner_id = self.pool.get('res.company').browse(cr, uid, company_id, context=context).partner_id.id
+            result['partner_id'] = partner_id
+        return {'value': result}
+                
 
 payment_mode()
 
@@ -56,6 +66,7 @@ class payment_order(osv.osv):
     _name = 'payment.order'
     _description = 'Payment Order'
     _rec_name = 'reference'
+    _order = 'id desc'
 
     def get_wizard(self, type):
         logger = netsvc.Logger()
@@ -85,7 +96,7 @@ class payment_order(osv.osv):
             ('done', 'Done')], 'State', select=True,
             help='When an order is placed the state is \'Draft\'.\n Once the bank is confirmed the state is set to \'Confirmed\'.\n Then the order is paid the state is \'Done\'.'),
         'line_ids': fields.one2many('payment.line', 'order_id', 'Payment lines', states={'done': [('readonly', True)]}),
-        'total': fields.function(_total, string="Total", method=True, type='float'),
+        'total': fields.function(_total, string="Total", type='float'),
         'user_id': fields.many2one('res.users', 'User', required=True, states={'done': [('readonly', True)]}),
         'date_prefered': fields.selection([
             ('now', 'Directly'),
@@ -328,19 +339,19 @@ class payment_line(osv.osv):
             required=True, help='Payment amount in the partner currency'),
         'currency': fields.many2one('res.currency','Partner Currency', required=True),
         'company_currency': fields.many2one('res.currency', 'Company Currency', readonly=True),
-        'bank_id': fields.many2one('res.partner.bank', 'Destination Bank account'),
+        'bank_id': fields.many2one('res.partner.bank', 'Destination Bank Account'),
         'order_id': fields.many2one('payment.order', 'Order', required=True,
             ondelete='cascade', select=True),
         'partner_id': fields.many2one('res.partner', string="Partner", required=True, help='The Ordering Customer'),
         'amount': fields.function(_amount, string='Amount in Company Currency',
-            method=True, type='float',
+            type='float',
             help='Payment amount in the company currency'),
         'ml_date_created': fields.function(_get_ml_created_date, string="Effective Date",
-            method=True, type='date', help="Invoice Effective Date"),
-        'ml_maturity_date': fields.function(_get_ml_maturity_date, method=True, type='date', string='Due Date'),
-        'ml_inv_ref': fields.function(_get_ml_inv_ref, method=True, type='many2one', relation='account.invoice', string='Invoice Ref.'),
-        'info_owner': fields.function(info_owner, string="Owner Account", method=True, type="text", help='Address of the Main Partner'),
-        'info_partner': fields.function(info_partner, string="Destination Account", method=True, type="text", help='Address of the Ordering Customer.'),
+            type='date', help="Invoice Effective Date"),
+        'ml_maturity_date': fields.function(_get_ml_maturity_date, type='date', string='Due Date'),
+        'ml_inv_ref': fields.function(_get_ml_inv_ref, type='many2one', relation='account.invoice', string='Invoice Ref.'),
+        'info_owner': fields.function(info_owner, string="Owner Account", type="text", help='Address of the Main Partner'),
+        'info_partner': fields.function(info_partner, string="Destination Account", type="text", help='Address of the Ordering Customer.'),
         'date': fields.date('Payment Date', help="If no payment date is specified, the bank will treat this payment line directly"),
         'create_date': fields.datetime('Created', readonly=True),
         'state': fields.selection([('normal','Free'), ('structured','Structured')], 'Communication Type', required=True),

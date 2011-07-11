@@ -42,9 +42,7 @@ It supports:
     "update_xml" : [
         'security/calendar_security.xml',
         'security/ir.model.access.csv',
-        'wizard/calendar_event_edit_all_view.xml',
         'wizard/base_calendar_invite_attendee_view.xml',
-        'wizard/base_calendar_set_exrule_view.xml',
         'base_calendar_view.xml'
     ],
     "test" : ['test/base_calendar_test.yml'],

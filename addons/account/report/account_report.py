@@ -101,20 +101,20 @@ class report_aged_receivable(osv.osv):
     def _calc_bal(self, cr, uid, ids, name, args, context=None):
         res = {}
         for period in self.read(cr, uid, ids, ['name'], context=context):
-           date1,date2 = period['name'].split(' to ')
-           cr.execute("SELECT SUM(credit-debit) FROM account_move_line AS line, account_account as ac  \
+            date1,date2 = period['name'].split(' to ')
+            cr.execute("SELECT SUM(credit-debit) FROM account_move_line AS line, account_account as ac  \
                         WHERE (line.account_id=ac.id) AND ac.type='receivable' \
                             AND (COALESCE(line.date,date) BETWEEN %s AND  %s) \
                             AND (reconcile_id IS NULL) AND ac.active",(str(date2),str(date1),))
-           amount = cr.fetchone()
-           amount = amount[0] or 0.00
-           res[period['id']] = amount
+            amount = cr.fetchone()
+            amount = amount[0] or 0.00
+            res[period['id']] = amount
 
         return res
 
     _columns = {
         'name': fields.char('Month Range', size=7, readonly=True),
-        'balance': fields.function(_calc_bal, method=True, string='Balance', readonly=True),
+        'balance': fields.function(_calc_bal, string='Balance', readonly=True),
     }
 
     def init(self, cr, uid=1):

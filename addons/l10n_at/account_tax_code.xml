@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data noupdate="True">
+
+		<record model="account.tax.code.template" id="vat_code_tax">
+			<field name="name">Steuern AT</field>
+		</record>
+
+		<record model="account.tax.code.template" id="tax_code_B">
+			<field name="name">Bemessungsgrundlage</field>
+			<field name="parent_id" ref="vat_code_tax"/>
+		</record>	
+		
+		<record model="account.tax.code.template" id="tax_code_BV">
+			<field name="name">Vorsteuer (dient lediglich der Verprobung)</field>
+			<field name="parent_id" ref="tax_code_B"/>
+		</record>	
+		
+		<record model="account.tax.code.template" id="tax_code_BAUS">
+			<field name="name">Einfuhren</field>
+			<field name="parent_id" ref="tax_code_BV"/>
+		</record>		
+		
+		<record model="account.tax.code.template" id="tax_code_BAUS10">
+			<field name="name">Einfuhren zum Steuersatz von 10 %</field>
+			<field name="parent_id" ref="tax_code_BAUS"/>
+		</record>
+		<record model="account.tax.code.template" id="tax_code_BAUS20">
+			<field name="name">Einfuhren zum Steuersatz von 20 %</field>
+			<field name="parent_id" ref="tax_code_BAUS"/>
+		</record>
+		
+	
+		
+		<record model="account.tax.code.template" id="tax_code_VST">
+			<field name="name">Abziehbare Vorsteuerbeträge</field>
+			<field name="code">VST</field>
+		</record>
+		<record model="account.tax.code.template" id="tax_code_62">
+			<field name="name">Entrichtete Einfuhrumsatzsteuer</field>
+			<field name="parent_id" ref="tax_code_VST"/>
+		</record>
+		<record model="account.tax.code.template" id="tax_code_61">
+			<field name="name">Vorsteuerbeträge aus dem innergemeinschaftlichen Erwerb</field>
+			<field name="parent_id" ref="tax_code_VST"/>
+		</record>
+
+		
+		<record model="account.tax.code.template" id="tax_code_83">
+			<field name="name">UST Vorauszahlung / Überschuss - bitte dem Betrag ein Minuszeichen voranstellen</field>
+			<field name="parent_id" ref="vat_code_tax"/>
+			<field name="code">095</field>
+		</record>		
+		
+
+		<record model="account.tax.code.template" id="tax_code_U">
+			<field name="name">Steuern</field>
+			<field name="code">ST</field>
+			<field name="parent_id" ref="tax_code_83"/>
+		</record>
+		<record model="account.tax.code.template" id="tax_code_BU">
+			<field name="name">Steuern</field>
+			<field name="code">BMG</field>
+			<field name="parent_id" ref="tax_code_B"/>
+		</record>
+
+		<record model="account.tax.code.template" id="tax_code_UZ19">
+			<field name="name">Lieferungen, sonstige Leistungen und Eigenverbrauch</field>
+			<field name="parent_id" ref="tax_code_U"/>
+		</record>
+		<record model="account.tax.code.template" id="tax_code_BZ19">
+			<field name="name">Lieferungen, sonstige Leistungen und Eigenverbrauch</field>
+			<field name="parent_id" ref="tax_code_BU"/>
+			<field name="code">000</field>
+		</record>
+			
+		<record model="account.tax.code.template" id="tax_code_UZ26">
+			<field name="name">Steuerpflichtige Umsätze (Lieferungen, sonstige Leistungen und Eigenverbrauch)</field>
+			<field name="parent_id" ref="tax_code_UZ19"/>
+		</record>			
+		<record model="account.tax.code.template" id="tax_code_BZ26">
+			<field name="name">Steuerpflichtige Umsätze (Lieferungen, sonstige Leistungen und Eigenverbrauch)</field>
+			<field name="parent_id" ref="tax_code_BZ19"/>
+		</record>			
+
+		<record model="account.tax.code.template" id="tax_code_811">
+			<field name="name">zum Steuersatz von 20 %</field>
+			<field name="parent_id" ref="tax_code_UZ26"/>
+			<field name="code">022 UST</field>
+		</record>
+		<record model="account.tax.code.template" id="tax_code_81">
+			<field name="name">zum Steuersatz von 20 %</field>
+			<field name="parent_id" ref="tax_code_BZ26"/>
+			<field name="code">022 BMG</field>
+		</record>
+
+		<record model="account.tax.code.template" id="tax_code_861">
+			<field name="name">zum Steuersatz von 10%</field>
+			<field name="parent_id" ref="tax_code_UZ26"/>
+			<field name="code">029 UST</field>
+			</record>
+		<record model="account.tax.code.template" id="tax_code_86">
+			<field name="name">zum Steuersatz von 10%</field>
+			<field name="parent_id" ref="tax_code_BZ26"/>
+			<field name="code">029 BMG</field>
+		</record>
+
+		
+		
+		<record model="account.tax.code.template" id="tax_code_UZ33">
+			<field name="name">Innergemeinschaftliche Erwerbe</field>
+			<field name="parent_id" ref="tax_code_U"/>
+		</record>		
+		<record model="account.tax.code.template" id="tax_code_BZ33">
+			<field name="name">Innergemeinschaftliche Erwerbe</field>
+			<field name="parent_id" ref="tax_code_BU"/>
+			<field name="code">070 BMG</field>
+		</record>		
+		
+		<record model="account.tax.code.template" id="tax_code_UZ35">
+			<field name="name">Steuerpflichtige innergemeinschaftliche Erwerbe</field>
+			<field name="parent_id" ref="tax_code_UZ33"/>
+		</record>			
+		<record model="account.tax.code.template" id="tax_code_BZ35">
+			<field name="name">Steuerpflichtige innergemeinschaftliche Erwerbe</field>
+			<field name="parent_id" ref="tax_code_BZ33"/>
+		</record>		
+		
+		<record model="account.tax.code.template" id="tax_code_891">
+			<field name="name">zum Steuersatz von 20 %</field>
+			<field name="parent_id" ref="tax_code_UZ35"/>
+			<field name="code">072 UST</field>
+		</record>
+		<record model="account.tax.code.template" id="tax_code_89">
+			<field name="name">zum Steuersatz von 20 %</field>
+			<field name="parent_id" ref="tax_code_BZ35"/>
+			<field name="code">072 BMG</field>
+		</record>
+
+		<record model="account.tax.code.template" id="tax_code_931">
+			<field name="name">zum Steuersatz von 10%</field>
+			<field name="parent_id" ref="tax_code_UZ35"/>
+			<field name="code">073 UST</field>
+			</record>
+		<record model="account.tax.code.template" id="tax_code_93">
+			<field name="name">zum Steuersatz von 10%</field>
+			<field name="parent_id" ref="tax_code_BZ35"/>
+			<field name="code">073 BMG</field>
+		</record>		
+		
+		
+		
+		
+		<record model="account.tax.code.template" id="tax_code_BRV">
+			<field name="name">Rechnungen von anderen Unternehmern und innergemeinschaftliche Dreiecksgeschäfte</field>
+			<field name="parent_id" ref="tax_code_BV"/>
+		</record>
+		
+		<record model="account.tax.code.template" id="tax_code_BRV10">
+			<field name="name">zum Steuersatz von 10 %</field>
+			<field name="parent_id" ref="tax_code_BRV"/>
+		</record>
+		<record model="account.tax.code.template" id="tax_code_BRV20">
+			<field name="name">zum Steuersatz von 20 %</field>
+			<field name="parent_id" ref="tax_code_BRV"/>
+		</record>
+
+		<record model="account.tax.code.template" id="tax_code_66">
+			<field name="name">20% Vorsteuerbeträge aus Rechnungen von anderen Unternehmern, aus Leistungen und aus innergemeinschaftlichen Dreiecksgeschäften</field>
+			<field name="parent_id" ref="tax_code_VST"/>
+		</record>
+		
+		<record model="account.tax.code.template" id="tax_code_661">
+			<field name="name">10% Vorsteuerbeträge aus Rechnungen von anderen Unternehmern, aus Leistungen und aus innergemeinschaftlichen Dreiecksgeschäften</field>
+			<field name="parent_id" ref="tax_code_VST"/>
+		</record>
+
+		
+		<record model="account.tax.code.template" id="tax_code_BZ19">
+			<field name="name">Lieferungen und sonstige Leistungen (einschließlich unentgeltlicher Wertabgaben)</field>
+			<field name="parent_id" ref="tax_code_BU"/>
+		</record>		
+		
+		<record model="account.tax.code.template" id="tax_code_BZ20">
+			<field name="name">Steuerfreie Umsätze mit Vorsteuerabzug</field>
+			<field name="parent_id" ref="tax_code_BZ19"/>
+		</record>		
+		
+		<record model="account.tax.code.template" id="tax_code_43">
+			<field name="name">§ 6 Abs. 1 Z 1 iVm § 7 (Ausfuhrlieferungen)</field>
+			<field name="parent_id" ref="tax_code_BZ20"/>
+			<field name="code">011</field>
+		</record>
+		<record model="account.tax.code.template" id="tax_code_41">
+			<field name="name">Art. 6 Abs. 1 (Innergemeinschaftliche Lieferungen)</field>
+			<field name="parent_id" ref="tax_code_BZ20"/>
+			<field name="code">017</field>
+		</record>
+		
+		<record model="account.tax.code.template" id="tax_code_065">
+			<field name="name">Vorsteuer aus innergemeinschaftlichem Erwerb</field>
+			<field name="parent_id" ref="tax_code_U"/>
+			<field name="code">065</field>
+		</record>		
+
+	</data>
+</openerp>

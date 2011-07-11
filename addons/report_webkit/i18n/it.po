@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-15 05:58+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-04-29 05:54+0000\n"
+"X-Generator: Launchpad (build 12758)\n"
 
 #. module: report_webkit
 #: field:ir.actions.report.xml,webkit_header:0
@@ -41,7 +41,7 @@ msgstr "IMG intestazione"
 #. module: report_webkit
 #: field:res.company,lib_path:0
 msgid "Webkit Executable Path"
-msgstr ""
+msgstr "Percorso eseguibile webkit"
 
 #. module: report_webkit
 #: selection:ir.header_webkit,format:0
@@ -87,7 +87,7 @@ msgstr "B7 21 88 x 125 mm"
 #: code:addons/report_webkit/webkit_report.py:338
 #, python-format
 msgid "Webkit render"
-msgstr ""
+msgstr "Render webkit"
 
 #. module: report_webkit
 #: selection:ir.header_webkit,format:0
@@ -105,6 +105,12 @@ msgid ""
 "http://code.google.com/p/wkhtmltopdf/downloads/list and set the'+\n"
 "                             ' path to the executable on the Company form."
 msgstr ""
+"Prego installare gli eseguibili nel vostro sistema'+\n"
+"                             ' (sudo apt-get install wkhtmltopdf) o "
+"scaricatelo da qui:'+\n"
+"                             ' "
+"http://code.google.com/p/wkhtmltopdf/downloads/list e impostata il'+\n"
+"                             ' percorso all'eseguibile nel modulo Azienda."
 
 #. module: report_webkit
 #: help:ir.header_img,name:0
@@ -199,7 +205,7 @@ msgstr "Immagini disponibili"
 #. module: report_webkit
 #: field:ir.header_webkit,html:0
 msgid "webkit header"
-msgstr ""
+msgstr "Intestazione webkit"
 
 #. module: report_webkit
 #: selection:ir.header_webkit,format:0
@@ -270,7 +276,7 @@ msgstr ""
 #: view:ir.actions.report.xml:0
 #: view:res.company:0
 msgid "Webkit"
-msgstr ""
+msgstr "Webkit"
 
 #. module: report_webkit
 #: help:ir.header_webkit,format:0
@@ -285,7 +291,7 @@ msgstr "B5 1 176 x 250 mm, 6.93 x 9.84 inches"
 #. module: report_webkit
 #: view:ir.header_webkit:0
 msgid "Content and styling"
-msgstr ""
+msgstr "Contenuto e stile"
 
 #. module: report_webkit
 #: selection:ir.header_webkit,format:0
@@ -337,7 +343,7 @@ msgstr "B3 18 353 x 500 mm"
 #. module: report_webkit
 #: help:ir.actions.report.xml,webkit_debug:0
 msgid "Enable the webkit engine debugger"
-msgstr ""
+msgstr "Abilita il motore debugger webkit"
 
 #. module: report_webkit
 #: field:ir.header_img,img:0
@@ -355,6 +361,8 @@ msgid ""
 "Check this to view the newly added internal print action after creating it "
 "(technical view) "
 msgstr ""
+"Spunta questo per vedere le nuove azioni di stampa intere dopo averle create "
+"(vista tecnica) "
 
 #. module: report_webkit
 #: view:res.company:0
@@ -434,7 +442,7 @@ msgstr "B6 20 125 x 176 mm"
 #. module: report_webkit
 #: help:ir.header_webkit,html:0
 msgid "Set Webkit Report Header"
-msgstr ""
+msgstr "Imposta intestazione report webkit"
 
 #. module: report_webkit
 #: field:ir.header_webkit,format:0
@@ -472,6 +480,12 @@ msgid ""
 "          raise except_osv(\n"
 "                _('No header defined for this Webkit report!"
 msgstr ""
+"'))\n"
+"        header = report_xml.webkit_header.html\n"
+"        footer = report_xml.webkit_header.footer_html\n"
+"        if not header and report_xml.header:\n"
+"          raise except_osv(\n"
+"                _('No header defined for this Webkit report!"
 
 #. module: report_webkit
 #: help:res.company,lib_path:0
@@ -481,7 +495,7 @@ msgstr "Percorso completo (assoluto) dell'eseguibile wkhtmltopdf"
 #. module: report_webkit
 #: field:ir.header_webkit,footer_html:0
 msgid "webkit footer"
-msgstr ""
+msgstr "Piè pagina webkit"
 
 #. module: report_webkit
 #: field:ir.actions.report.xml,webkit_debug:0
@@ -501,12 +515,12 @@ msgstr "B0 14 1000 x 1414 mm"
 #. module: report_webkit
 #: field:ir.actions.report.xml,report_webkit_data:0
 msgid "Webkit Template"
-msgstr ""
+msgstr "Template webkit"
 
 #. module: report_webkit
 #: model:ir.module.module,shortdesc:report_webkit.module_meta_information
 msgid "Webkit Report Engine"
-msgstr ""
+msgstr "Motore report webkit"
 
 #. module: report_webkit
 #: field:ir.header_img,name:0
@@ -539,7 +553,7 @@ msgstr "Comm10E 25 105 x 241 mm, U.S. Common 10 Envelope"
 #: code:addons/report_webkit/webkit_report.py:240
 #, python-format
 msgid "Webkit Report template not found !"
-msgstr ""
+msgstr "Template report webkit non trovato!"
 
 #. module: report_webkit
 #: field:ir.header_webkit,margin_left:0

@@ -4,7 +4,8 @@
 
         <menuitem id="menu_hr_root" icon="terp-hr" name="Human Resources" sequence="15"
             web_icon="images/hr.png"
-            web_icon_hover="images/hr-hover.png"/>
+            web_icon_hover="images/hr-hover.png"
+            groups="base.group_hr_manager,base.group_hr_user,base.group_user"/>
         <menuitem id="menu_hr_main" parent="menu_hr_root" name="Human Resources" sequence="0"/>
         <menuitem id="menu_hr_configuration" name="Configuration" parent="hr.menu_hr_root" groups="base.group_hr_manager" sequence="50"/>
         <menuitem id="menu_hr_management" name="Human Resources" parent="hr.menu_hr_configuration" sequence="1"/>
@@ -63,7 +64,7 @@
                                 <field name="work_location"/>
                             </group>
                             <group col="2" colspan="2">
-                                <separator string="Position" colspan="2"/>
+                                <separator string="Job Information" colspan="2"/>
                                 <field name="job_id" domain="[('state','!=','old')]"/>
                                 <field name="coach_id" />
                             </group>
@@ -176,6 +177,7 @@
             <field name="model">hr.employee</field>
             <field name="type">tree</field>
             <field name="field_parent">child_ids</field>
+            <field eval="20" name="priority"/>
             <field name="arch" type="xml">
                 <tree string="Employees">
                     <field name="name"/>

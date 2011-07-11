@@ -149,18 +149,18 @@ class account_analytic_account(osv.osv):
 
     _columns = {
         'name': fields.char('Account Name', size=128, required=True),
-        'complete_name': fields.function(_complete_name_calc, method=True, type='char', string='Full Account Name'),
-        'code': fields.char('Account Code', size=24),
+        'complete_name': fields.function(_complete_name_calc, type='char', string='Full Account Name'),
+        'code': fields.char('Account Code', size=24, select=True),
         'type': fields.selection([('view','View'), ('normal','Normal')], 'Account Type', help='If you select the View Type, it means you won\'t allow to create journal entries using that account.'),
         'description': fields.text('Description'),
         'parent_id': fields.many2one('account.analytic.account', 'Parent Analytic Account', select=2),
         'child_ids': fields.one2many('account.analytic.account', 'parent_id', 'Child Accounts'),
-        'child_complete_ids': fields.function(_child_compute, relation='account.analytic.account', method=True, string="Account Hierarchy", type='many2many'),
+        'child_complete_ids': fields.function(_child_compute, relation='account.analytic.account', string="Account Hierarchy", type='many2many'),
         'line_ids': fields.one2many('account.analytic.line', 'account_id', 'Analytic Entries'),
-        'balance': fields.function(_debit_credit_bal_qtty, method=True, type='float', string='Balance', multi='debit_credit_bal_qtty', digits_compute=dp.get_precision('Account')),
-        'debit': fields.function(_debit_credit_bal_qtty, method=True, type='float', string='Debit', multi='debit_credit_bal_qtty', digits_compute=dp.get_precision('Account')),
-        'credit': fields.function(_debit_credit_bal_qtty, method=True, type='float', string='Credit', multi='debit_credit_bal_qtty', digits_compute=dp.get_precision('Account')),
-        'quantity': fields.function(_debit_credit_bal_qtty, method=True, type='float', string='Quantity', multi='debit_credit_bal_qtty'),
+        'balance': fields.function(_debit_credit_bal_qtty, type='float', string='Balance', multi='debit_credit_bal_qtty', digits_compute=dp.get_precision('Account')),
+        'debit': fields.function(_debit_credit_bal_qtty, type='float', string='Debit', multi='debit_credit_bal_qtty', digits_compute=dp.get_precision('Account')),
+        'credit': fields.function(_debit_credit_bal_qtty, type='float', string='Credit', multi='debit_credit_bal_qtty', digits_compute=dp.get_precision('Account')),
+        'quantity': fields.function(_debit_credit_bal_qtty, type='float', string='Quantity', multi='debit_credit_bal_qtty'),
         'quantity_max': fields.float('Maximum Quantity', help='Sets the higher limit of quantity of hours.'),
         'partner_id': fields.many2one('res.partner', 'Partner'),
         'contact_id': fields.many2one('res.partner.address', 'Contact'),
@@ -175,7 +175,7 @@ class account_analytic_account(osv.osv):
                                   \n* And finally when all the transactions are over, it can be in \'Close\' state. \
                                   \n* The project can be in either if the states \'Template\' and \'Running\'.\n If it is template then we can make projects based on the template projects. If its in \'Running\' state it is a normal project.\
                                  \n If it is to be reviewed then the state is \'Pending\'.\n When the project is completed the state is set to \'Done\'.'),
-        'currency_id': fields.function(_currency, fnct_inv=_set_company_currency, method=True,
+        'currency_id': fields.function(_currency, fnct_inv=_set_company_currency,
             store = {
                 'res.company': (_get_analytic_account, ['currency_id'], 10),
             }, string='Currency', type='many2one', relation='res.currency'),
@@ -202,10 +202,10 @@ class account_analytic_account(osv.osv):
         'currency_id': _get_default_currency,
     }
 
-    def check_recursion(self, cr, uid, ids, parent=None):
-        return super(account_analytic_account, self)._check_recursion(cr, uid, ids, parent=parent)
+    def check_recursion(self, cr, uid, ids, context=None, parent=None):
+        return super(account_analytic_account, self)._check_recursion(cr, uid, ids, context=context, parent=parent)
 
-    _order = 'date_start desc,parent_id desc,code'
+    _order = 'name asc'
     _constraints = [
         (check_recursion, 'Error! You can not create recursive analytic accounts.', ['parent_id']),
     ]
@@ -245,13 +245,23 @@ class account_analytic_account(osv.osv):
             cr.execute("select analytic_account_id from project_project")
             project_ids = [x[0] for x in cr.fetchall()]
             return self.name_get(cr, uid, project_ids, context=context)
-        account = self.search(cr, uid, [('code', '=', name)] + args, limit=limit, context=context)
-        if not account:
-            account = self.search(cr, uid, [('name', 'ilike', '%%%s%%' % name)] + args, limit=limit, context=context)
-            newacc = account
-            while newacc:
-                newacc = self.search(cr, uid, [('parent_id', 'in', newacc)]+args, limit=limit, context=context)
-                account += newacc
+        if name:
+            account = self.search(cr, uid, [('code', '=', name)] + args, limit=limit, context=context)
+            if not account:
+                names=map(lambda i : i.strip(),name.split('/'))
+                for i in range(len(names)):
+                    dom=[('name', operator, names[i])]
+                    if i>0:
+                        dom+=[('id','child_of',account)]
+                    account = self.search(cr, uid, dom, limit=limit, context=context)
+                newacc = account
+                while newacc:
+                    newacc = self.search(cr, uid, [('parent_id', 'in', newacc)], limit=limit, context=context)
+                    account += newacc
+                if args:
+                    account = self.search(cr, uid, [('id', 'in', account)] + args, limit=limit, context=context)
+        else:
+            account = self.search(cr, uid, args, limit=limit, context=context)
         return self.name_get(cr, uid, account, context=context)
 
 account_analytic_account()

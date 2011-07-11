@@ -49,7 +49,7 @@ class sale_order_line(osv.osv):
         return res
 
     _columns = {
-        'margin': fields.function(_product_margin, method=True, string='Margin', store=True),
+        'margin': fields.function(_product_margin, string='Margin', store=True),
         'purchase_price': fields.float('Cost Price', digits=(16,2))
     }
 
@@ -67,7 +67,7 @@ class sale_order(osv.osv):
         return result
 
     _columns = {
-        'margin': fields.function(_product_margin, method=True, string='Margin', store=True, help="It gives profitability by calculating the difference between the Unit Price and Cost Price."),
+        'margin': fields.function(_product_margin, string='Margin', store=True, help="It gives profitability by calculating the difference between the Unit Price and Cost Price."),
     }
 
 sale_order()
@@ -84,8 +84,7 @@ class stock_picking(osv.osv):
         # need to carify with new requirement
         invoice_ids = []
         picking_obj = self.pool.get('stock.picking')
-        res = super(stock_picking, self).action_invoice_create(cr, uid, ids, journal_id=False,
-            group=False, type='out_invoice', context=None)
+        res = super(stock_picking, self).action_invoice_create(cr, uid, ids, journal_id=journal_id, group=group, type=type, context=context)
         invoice_ids = res.values()
         picking_obj.write(cr, uid, ids, {'invoice_ids': [[6, 0, invoice_ids]]})
         return res

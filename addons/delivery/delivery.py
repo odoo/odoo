@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -40,6 +40,7 @@ class delivery_carrier(osv.osv):
             currency = order.pricelist_id.currency_id.name or ''
             res = [(r['id'], r['name']+' ('+(str(r['price']))+' '+currency+')') for r in self.read(cr, uid, ids, ['name', 'price'], context)]
         return res
+
     def get_price(self, cr, uid, ids, field_name, arg=None, context=None):
         res={}
         if context is None:
@@ -58,17 +59,26 @@ class delivery_carrier(osv.osv):
                   price = 0.0
             res[carrier.id]=price
         return res
+
     _columns = {
         'name': fields.char('Carrier', size=64, required=True),
         'partner_id': fields.many2one('res.partner', 'Carrier Partner', required=True),
         'product_id': fields.many2one('product.product', 'Delivery Product', required=True),
         'grids_id': fields.one2many('delivery.grid', 'carrier_id', 'Delivery Grids'),
-        'price' : fields.function(get_price, method=True,string='Price'),
-        'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the delivery carrier without removing it.")
+        'price' : fields.function(get_price, string='Price'),
+        'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the delivery carrier without removing it."),
+        'normal_price': fields.float('Normal Price'),
+        'free_if_more_than': fields.boolean('Free If More Than'),
+        'amount': fields.float('Amount'),
+        'use_detailed_pricelist': fields.boolean('Use Detailed Pricelist'),
+        'pricelist_ids': fields.one2many('delivery.grid', 'carrier_id', 'Price List'),
     }
+
     _defaults = {
-        'active': lambda *args:1
+        'active': 1,
+        'free_if_more_than': False,
     }
+
     def grid_get(self, cr, uid, ids, contact_id, context=None):
         contact = self.pool.get('res.partner.address').browse(cr, uid, contact_id, context=context)
         for carrier in self.browse(cr, uid, ids, context=context):
@@ -86,6 +96,63 @@ class delivery_carrier(osv.osv):
                     continue
                 return grid.id
         return False
+
+    def create_grid_lines(self, cr, uid, ids, vals, context=None):
+        if context == None:
+            context = {}
+        grid_line_pool = self.pool.get('delivery.grid.line')
+        grid_pool = self.pool.get('delivery.grid')
+        for record in self.browse(cr, uid, ids, context=context):
+            grid_id = grid_pool.search(cr, uid, [('carrier_id', '=', record.id)], context=context)
+            if not grid_id:
+                record_data = {
+                    'name': vals.get('name', False),
+                    'carrier_id': record.id,
+                    'seqeunce': 10,
+                }
+                new_grid_id = grid_pool.create(cr, uid, record_data, context=context)
+                grid_id = [new_grid_id]
+
+            #delete all existing grid lines
+            grid_lines = [line.id for line in grid_pool.browse(cr, uid, grid_id[0]).line_ids if line.type == 'price']
+            grid_line_pool.unlink(cr, uid, grid_lines, context=context)
+
+            #create the grid lines
+            if record.free_if_more_than:
+                data = {
+                    'grid_id': grid_id and grid_id[0],
+                    'name': _('Free if more than %d') % record.amount,
+                    'type': 'price',
+                    'operator': '>=',
+                    'max_value': record.amount,
+                    'standard_price': 0.0,
+                    'list_price': 0.0,
+                }
+                grid_line_pool.create(cr, uid, data, context=context)
+
+            if record.normal_price:
+                default_data = {
+                    'grid_id': grid_id and grid_id[0],
+                    'name': _('Default price'),
+                    'type': 'price',
+                    'operator': '>=',
+                    'max_value': 0.0,
+                    'standard_price': record.normal_price,
+                    'list_price': record.normal_price,
+                }
+                grid_line_pool.create(cr, uid, default_data, context=context)
+        return True
+
+    def write(self, cr, uid, ids, vals, context=None):
+        res_id = super(delivery_carrier, self).write(cr, uid, ids, vals, context=context)
+        self.create_grid_lines(cr, uid, ids, vals, context=context)
+        return res_id
+
+    def create(self, cr, uid, vals, context=None):
+        res_id = super(delivery_carrier, self).create(cr, uid, vals, context=context)
+        self.create_grid_lines(cr, uid, [res_id], vals, context=context)
+        return res_id
+
 delivery_carrier()
 
 class delivery_grid(osv.osv):
@@ -151,7 +218,9 @@ class delivery_grid_line(osv.osv):
     _columns = {
         'name': fields.char('Name', size=32, required=True),
         'grid_id': fields.many2one('delivery.grid', 'Grid',required=True),
-        'type': fields.selection([('weight','Weight'),('volume','Volume'),('wv','Weight * Volume'), ('price','Price')], 'Variable', required=True),
+        'type': fields.selection([('weight','Weight'),('volume','Volume'),\
+                                  ('wv','Weight * Volume'), ('price','Price')],\
+                                  'Variable', required=True),
         'operator': fields.selection([('==','='),('<=','<='),('>=','>=')], 'Operator', required=True),
         'max_value': fields.float('Maximum Value', required=True),
         'price_type': fields.selection([('fixed','Fixed'),('variable','Variable')], 'Price Type', required=True),
@@ -166,7 +235,6 @@ class delivery_grid_line(osv.osv):
         'variable_factor': lambda *args: 'weight',
     }
     _order = 'list_price'
-
 
 delivery_grid_line()
 

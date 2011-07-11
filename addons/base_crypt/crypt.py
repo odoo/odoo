@@ -41,6 +41,7 @@ from string import ascii_letters, digits
 from osv import fields,osv
 import pooler
 from tools.translate import _
+from service import security
 
 magic_md5 = '$1$'
 
@@ -162,7 +163,7 @@ class users(osv.osv):
         # an existing column cannot be downsized; thus we use the original
         # column size.
         'password': fields.function(get_pw, fnct_inv=set_pw, type='char',
-            method=True, size=64, string='Password', invisible=True,
+            size=64, string='Password', invisible=True,
             store=True),
     }
 
@@ -184,7 +185,7 @@ class users(osv.osv):
                 cr.close()
 
     def _login(self, cr, db, login, password):
-        cr.execute( 'SELECT password, id FROM res_users WHERE login=%s',
+        cr.execute( 'SELECT password, id FROM res_users WHERE login=%s AND active',
             (login.encode('utf-8'),))
 
         if cr.rowcount:
@@ -220,6 +221,10 @@ class users(osv.osv):
             return False
 
     def check(self, db, uid, passwd):
+        if not passwd:
+            # empty passwords disallowed for obvious security reasons
+            raise security.ExceptionNoTb('AccessDenied')
+
         # Get a chance to hash all passwords in db before using the uid_cache.
         obj = pooler.get_pool(db).get('res.users')
         if not hasattr(obj, "_salt_cache"):
@@ -245,7 +250,7 @@ class users(osv.osv):
                     raise security.ExceptionNoTb('AccessDenied')
             else:
                 salt = self._salt_cache[db][uid]
-                cr.execute('SELECT COUNT(*) FROM res_users WHERE id=%s AND password=%s', 
+                cr.execute('SELECT COUNT(*) FROM res_users WHERE id=%s AND password=%s AND active', 
                     (int(uid), encrypt_md5(passwd, salt)))
                 res = cr.fetchone()[0]
         finally:

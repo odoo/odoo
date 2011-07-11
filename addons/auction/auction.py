@@ -95,12 +95,12 @@ class auction_dates(osv.osv):
         'seller_costs': fields.many2many('account.tax', 'auction_seller_taxes_rel', 'auction_id', 'tax_id', 'Seller Costs', help="Account tax for seller"),
         'acc_income': fields.many2one('account.account', 'Income Account', required=True),
         'acc_expense': fields.many2one('account.account', 'Expense Account', required=True),
-        'adj_total': fields.function(_adjudication_get, method=True, string='Total Adjudication', store=True),
+        'adj_total': fields.function(_adjudication_get, string='Total Adjudication', store=True),
         'state': fields.selection((('draft', 'Draft'), ('closed', 'Closed')), 'State', select=1, readonly=True,
                                   help='When auction starts the state is \'Draft\'.\n At the end of auction, the state becomes \'Closed\'.'),
         'account_analytic_id': fields.many2one('account.analytic.account', 'Analytic Account', required=False),
-        'buyer_invoice_history': fields.function(_get_invoice, relation='account.invoice', method=True, string="Buyer Invoice", type='many2many', multi=True),
-        'seller_invoice_history': fields.function(_get_invoice, relation='account.invoice', method=True, string="Seller Invoice", type='many2many', multi=True),
+        'buyer_invoice_history': fields.function(_get_invoice, relation='account.invoice', string="Buyer Invoice", type='many2many', multi=True),
+        'seller_invoice_history': fields.function(_get_invoice, relation='account.invoice', string="Seller Invoice", type='many2many', multi=True),
     }
 
     _defaults = {
@@ -293,13 +293,13 @@ class auction_lots(osv.osv):
                         result = lot.buyer_price - lot.seller_price - lot.costs
 
                 elif name == "gross_margin":
-                   if ((lot.obj_price==0) and (lot.state=='draft')):
-                     amount = lot.lot_est1
-                   else:
-                     amount = lot.obj_price
-                   if amount > 0:
-                     result = (lot.gross_revenue * 100) / amount
-                     result = round(result,2)
+                    if ((lot.obj_price==0) and (lot.state=='draft')):
+                        amount = lot.lot_est1
+                    else:
+                        amount = lot.obj_price
+                    if amount > 0:
+                        result = (lot.gross_revenue * 100) / amount
+                        result = round(result,2)
 
                 elif name == "net_margin":
                     if ((lot.obj_price==0) and (lot.state=='draft')):
@@ -382,8 +382,8 @@ class auction_lots(osv.osv):
         'vnd_lim': fields.float('Seller limit'),
         'vnd_lim_net': fields.boolean('Net limit ?', readonly=True),
         'image': fields.binary('Image', help="Object Image"),
-        'paid_vnd':fields.function(_getprice, string='Seller Paid', method=True, type='boolean', store=True, multi="paid_vnd", help="When state of Seller Invoice is 'Paid', this field is selected as True."),
-        'paid_ach':fields.function(_getprice, string='Buyer Invoice Reconciled', method=True, type='boolean', store=True, multi="paid_ach", help="When state of Buyer Invoice is 'Paid', this field is selected as True."),
+        'paid_vnd':fields.function(_getprice, string='Seller Paid', type='boolean', store=True, multi="paid_vnd", help="When state of Seller Invoice is 'Paid', this field is selected as True."),
+        'paid_ach':fields.function(_getprice, string='Buyer Invoice Reconciled', type='boolean', store=True, multi="paid_ach", help="When state of Buyer Invoice is 'Paid', this field is selected as True."),
         'state': fields.selection((
             ('draft', 'Draft'),
             ('unsold', 'Unsold'),
@@ -394,14 +394,14 @@ class auction_lots(osv.osv):
                 \n* The \'Unsold\' state is used when object does not sold for long time, user can also set it as draft state after unsold. \
                 \n* The \'Paid\' state is used when user pay for the object \
                 \n* The \'Sold\' state is used when user buy the object.'),
-        'buyer_price': fields.function(_getprice, method=True, string='Buyer price', store=True, multi="buyer_price", help="Buyer Price"),
-        'seller_price': fields.function(_getprice, method=True, string='Seller price', store=True, multi="seller_price", help="Seller Price"),
-        'gross_revenue':fields.function(_getprice, method=True, string='Gross revenue', store=True, multi="gross_revenue", help="Buyer Price - Seller Price"),
-        'gross_margin':fields.function(_getprice, method=True, string='Gross Margin (%)', store=True, multi="gross_margin", help="(Gross Revenue*100.0)/ Object Price"),
-        'costs':fields.function(_getprice, method=True, string='Indirect costs', store=True, multi="costs", help="Deposit cost"),
+        'buyer_price': fields.function(_getprice, string='Buyer price', store=True, multi="buyer_price", help="Buyer Price"),
+        'seller_price': fields.function(_getprice, string='Seller price', store=True, multi="seller_price", help="Seller Price"),
+        'gross_revenue':fields.function(_getprice, string='Gross revenue', store=True, multi="gross_revenue", help="Buyer Price - Seller Price"),
+        'gross_margin':fields.function(_getprice, string='Gross Margin (%)', store=True, multi="gross_margin", help="(Gross Revenue*100.0)/ Object Price"),
+        'costs':fields.function(_getprice, string='Indirect costs', store=True, multi="costs", help="Deposit cost"),
         'statement_id': fields.many2many('account.bank.statement.line', 'auction_statement_line_rel', 'auction_id', 'statement', 'Payment', help="Bank statement line for given buyer"),
-        'net_revenue':fields.function(_getprice, method=True, string='Net revenue', store=True, multi="net_revenue", help="Buyer Price - Seller Price - Indirect Cost"),
-        'net_margin':fields.function(_getprice, method=True, string='Net Margin (%)', store=True, multi="net_margin", help="(Net Revenue * 100)/ Object Price"),
+        'net_revenue':fields.function(_getprice, string='Net revenue', store=True, multi="net_revenue", help="Buyer Price - Seller Price - Indirect Cost"),
+        'net_margin':fields.function(_getprice, string='Net Margin (%)', store=True, multi="net_margin", help="(Net Revenue * 100)/ Object Price"),
     }
     _defaults = {
         'state':lambda *a: 'draft',

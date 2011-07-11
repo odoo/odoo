@@ -233,7 +233,7 @@
         <td>
           <para style="terp_default_Centre_8">[[ get_fiscalyear(data) or '' ]]</para>
         </td>
-          <td><para style="terp_default_Centre_8">[[ (data['form']['display_account']=='bal_all' and 'All') or  (data['form']['display_account']=='bal_movement' and 'With movements') or 'With balance is not equal to 0']]</para></td>
+          <td><para style="terp_default_Centre_8">[[ (data['form']['display_account']=='all' and 'All') or  (data['form']['display_account']=='movement' and 'With movements') or 'With balance is not equal to 0']]</para></td>
         <td>  <para style="terp_default_Centre_8">[[ get_filter(data)=='No Filter' and get_filter(data) or removeParentNode('para') ]] </para>
           <blockTable colWidths="60.0,60.0" style="Table5">[[ get_filter(data)=='Date' or removeParentNode('blockTable') ]]
             <tr>

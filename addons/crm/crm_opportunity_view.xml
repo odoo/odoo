@@ -59,7 +59,7 @@
                                     colspan="1" />
                                 <group col="3" colspan="2">
                                     <field name="email_from" string="Email" />
-                                    <button string="Send Email"
+                                    <button string="Mail"
                                     name="%(crm.action_crm_send_mail)d"
                                     context="{'mail':'new', 'model': 'crm.lead'}"
                                     icon="terp-mail-message-new" type="action" />
@@ -132,7 +132,7 @@
                             <group colspan="2" col="2">
                                 <separator string="Mailings" colspan="2"/>
                                 <field name="optin" on_change="on_change_optin(optin)"/>
-                        		<field name="optout" on_change="on_change_optout(optout)"/>
+                                <field name="optout" on_change="on_change_optout(optout)"/>
                             </group>
                         </page>
 
@@ -156,8 +156,8 @@
                                         <field name="date"/>
                                         <field name="email_to" size="512"/>
                                         <field name="email_cc" size="512"/>
-                                        <field name="name" colspan="4" attrs="{'invisible': [('history', '=', True)]}"/>
-                                        <field name="display_text" colspan="4"   attrs="{'invisible': [('history', '=', False)]}"/>
+                                        <field name="name" colspan="4" widget="char" attrs="{'invisible': [('history', '=', False)]}" size="512"/>
+                                        <field name="display_text" colspan="4"   attrs="{'invisible': [('history', '=', True)]}"/>
                                         <field name="history" invisible="1"/>
                                     </group>
                                     <notebook colspan="4">
@@ -230,6 +230,7 @@
                         <field name="stage_id"/>
                         <field name="channel_id" invisible="1"/>
                         <field name="type_id" invisible="1"/>
+                        <field name="subjects" invisible="1"/>
                         <button name="stage_previous" string="Previous Stage"
                             states="open,pending" type="object" icon="gtk-go-back" />
                         <button name="stage_next" string="Next Stage"
@@ -309,6 +310,7 @@
                                 domain="[]"
                                 help="Show Sales Team"/>
                         </field>
+
                         <newline/>
                         <group  expand="0" string="Extended Filters..." groups="base.group_extended">
                               <field name="stage_id" widget="selection" domain="[('type', '=', 'opportunity')]"/>
@@ -324,6 +326,7 @@
                               <newline/>
                               <field name="create_date" string="Creation Date"/>
                               <field name="date_closed"/>
+                              <field name="subjects"/>
                         </group>
                         <newline/>
                         <group expand="0" string="Group By..." colspan="16">

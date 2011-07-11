@@ -240,10 +240,10 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
 
     _columns = {
         'name': fields.char(size='64', string='File Name'),
-        'summary': fields.function(_get_summary, method=True, type='text', string='Summary'),
+        'summary': fields.function(_get_summary, type='text', string='Summary'),
         'file_export': fields.binary(string='Export'),
         'file_import': fields.binary(string='Import'),
-        'state': fields.function(_get_state, method=True, string='State', type='selection', selection=ANONYMIZATION_STATES, readonly=False),
+        'state': fields.function(_get_state, string='State', type='selection', selection=ANONYMIZATION_STATES, readonly=False),
         'msg': fields.text(string='Message'),
     }
 
@@ -295,9 +295,8 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
 
         eview = etree.fromstring(res['arch'])
         placeholder = eview.xpath("group[@name='placeholder1']")
-        placeholder = len(placeholder) and placeholder[0] or None
-
-        if placeholder:
+        if len(placeholder):
+            placeholder = placeholder[0]
             if step == 'new_window' and state == 'clear':
                 # clicked in the menu and the fields are not anonymized: warn the admin that backuping the db is very important
                 placeholder.addnext(etree.Element('field', {'name': 'msg', 'colspan': '4', 'nolabel': '1'}))

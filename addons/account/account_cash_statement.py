@@ -58,7 +58,7 @@ class account_cashbox_line(osv.osv):
     _columns = {
         'pieces': fields.float('Values', digits_compute=dp.get_precision('Account')),
         'number': fields.integer('Number'),
-        'subtotal': fields.function(_sub_total, method=True, string='Sub Total', type='float', digits_compute=dp.get_precision('Account')),
+        'subtotal': fields.function(_sub_total, string='Sub Total', type='float', digits_compute=dp.get_precision('Account')),
         'starting_id': fields.many2one('account.bank.statement', ondelete='cascade'),
         'ending_id': fields.many2one('account.bank.statement', ondelete='cascade'),
      }
@@ -223,10 +223,10 @@ class account_cash_statement(osv.osv):
             [('draft', 'Draft'),
             ('confirm', 'Closed'),
             ('open','Open')], 'State', required=True, states={'confirm': [('readonly', True)]}, readonly="1"),
-        'total_entry_encoding': fields.function(_get_sum_entry_encoding, method=True, store=True, string="Cash Transaction", help="Total cash transactions"),
+        'total_entry_encoding': fields.function(_get_sum_entry_encoding, store=True, string="Cash Transaction", help="Total cash transactions"),
         'closing_date': fields.datetime("Closed On"),
-        'balance_end': fields.function(_end_balance, method=True, store=True, string='Balance', help="Closing balance based on Starting Balance and Cash Transactions"),
-        'balance_end_cash': fields.function(_balance_end_cash, method=True, store=True, string='Balance', help="Closing balance based on cashBox"),
+        'balance_end': fields.function(_end_balance, store=True, string='Balance', help="Closing balance based on Starting Balance and Cash Transactions"),
+        'balance_end_cash': fields.function(_balance_end_cash, store=True, string='Balance', help="Closing balance based on cashBox"),
         'starting_details_ids': fields.one2many('account.cashbox.line', 'starting_id', string='Opening Cashbox'),
         'ending_details_ids': fields.one2many('account.cashbox.line', 'ending_id', string='Closing Cashbox'),
         'name': fields.char('Name', size=64, required=True, states={'draft': [('readonly', False)]}, readonly=True, help='if you give the Name other then /, its created Accounting Entries Move will be with same name as statement name. This allows the statement entries to have the same references than the statement itself'),
@@ -320,6 +320,7 @@ class account_cash_statement(osv.osv):
         """ Changes statement state to Running.
         @return: True
         """
+        obj_seq = self.pool.get('ir.sequence')
         if context is None:
             context = {}
         statement_pool = self.pool.get('account.bank.statement')
@@ -329,15 +330,18 @@ class account_cash_statement(osv.osv):
                 raise osv.except_osv(_('Error !'), (_('User %s does not have rights to access %s journal !') % (statement.user_id.name, statement.journal_id.name)))
 
             if statement.name and statement.name == '/':
-                number = self.pool.get('ir.sequence').get(cr, uid, 'account.cash.statement')
+                if statement.journal_id.sequence_id:
+                    c = {'fiscalyear_id': statement.period_id.fiscalyear_id.id}
+                    st_number = obj_seq.get_id(cr, uid, statement.journal_id.sequence_id.id, context=c)
+                else:
+                    st_number = obj_seq.get(cr, uid, 'account.cash.statement')
                 vals.update({
-                    'name': number
+                    'name': st_number
                 })
 
             vals.update({
                 'date': time.strftime("%Y-%m-%d %H:%M:%S"),
                 'state': 'open',
-
             })
             self.write(cr, uid, [statement.id], vals, context=context)
         return True
