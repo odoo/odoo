@@ -408,24 +408,23 @@ openerp.base_graph.GraphView = openerp.base.View.extend({
         });
     },
     open_list_view : function (id){
-        if($(".dhx_tooltip").is(":visible") == true) {
+        var self = this;
+        if($(".dhx_tooltip").is(":visible")) {
             $(".dhx_tooltip").remove('div');
         }
-        var self = this;
-        id = id[self.chart_info_fields];
+        id = id[this.chart_info_fields];
         if (typeof id == 'object'){
             id = id[0];
         }
 
-        var self = this;
         var record_id = "";
-        self.dataset.model = self.model;
-        if (typeof self.chart_info_fields == 'object'){
-            record_id = self.chart_info_fields[0];
+        this.dataset.model = this.model;
+        if (typeof this.chart_info_fields == 'object'){
+            record_id = this.chart_info_fields[0];
         }else{
-            record_id = self.chart_info_fields;
+            record_id = this.chart_info_fields;
         }
-        self.dataset.domain = [[record_id, '=', id],['id','in',self.dataset.ids]];
+        this.dataset.domain = [[record_id, '=', id],['id','in',this.dataset.ids]];
         var modes = !!modes ? modes.split(",") : ["list", "form", "graph"];
         var views = [];
         _.each(modes, function(mode) {
@@ -435,18 +434,17 @@ openerp.base_graph.GraphView = openerp.base.View.extend({
             }
             views.push(view);
         });
-        var action = {
-            "res_model" : self.dataset.model,
-            "domain" : self.dataset.domain,
+        this.actionmanager = new openerp.base.ActionManager(this.session, "oe_app");
+        this.actionmanager.start();
+        this.actionmanager.do_action({
+            "res_model" : this.dataset.model,
+            "domain" : this.dataset.domain,
             "views" : views,
             "type" : "ir.actions.act_window",
             "auto_search" : true,
             "view_type" : "list",
             "view_mode" : "list"
-        }
-        this.actionmanager = new openerp.base.ActionManager(this.session, "oe_app");
-        this.actionmanager.start();
-        this.actionmanager.do_action(action);
+        });
     },
 
     do_search: function(domains, contexts, groupbys) {
