@@ -94,31 +94,28 @@
     </t>
 
     <t t-name="ExportTreeView-Secondary">
-
         <t t-foreach="fields" t-as="field" >
             <tr t-att-id="'treerow_' + field.id" class="row">
                 <td>
-                <table width="100%" border="0">
-              <tr class="row">
-	               <t t-if="(field.level).length >= 1">
-	                   <t t-foreach="field.level" t-as="level" >
-	                    <td width="18">&amp;nbsp;</td>
-	                   </t>
-	               </t>
-               <td valign="top" align="left" style="cursor: pointer;" width="18">
-                   <t t-if="(field.children).length >= 1">
-                       <img t-att-id="'parentimg@' + field.id" src="/base/static/src/img/expand.gif" width="16" height="16" border="0"/>
-                   </t>
-               </td>
-               <td valign="top" align="left" style="cursor: pointer;">
-                   <a href="javascript: void(0)">
-                       <t t-esc="field.string"/>
-                   </a>
-               </td>
-                    </tr>
-                </table>
+                    <table width="100%" border="0">
+                        <tr class="row">
+                            <t t-foreach="field.level" t-as="level" >
+                                <td width="18">&amp;nbsp;</td>
+                            </t>
+                            <td valign="top" align="left" style="cursor: pointer;" width="18">
+                                <t t-if="(field.children).length >= 1">
+                                    <img t-att-id="'parentimg@' + field.id" src="/base/static/src/img/expand.gif" width="16" height="16" border="0"/>
+                                </t>
+                            </td>
+                            <td valign="top" align="left" style="cursor: pointer;">
+                                <a href="javascript: void(0)">
+                                    <t t-esc="field.string"/>
+                                </a>
+                            </td>
+                        </tr>
+                    </table>
                 </td>
-         </tr>
-     </t>
+            </tr>
+        </t>
     </t>
 </template>

@@ -19,7 +19,7 @@ class Export(View):
         for key, value in fields.items():
             record = {}
 
-            id = prefix + (prefix and '/' or '') + key
+            id = prefix + (prefix and '_'or '') + key
             nm = name + (name and '/' or '') + value['string']
             levels = nm.split('/')
             levels > 1 and levels.remove(levels[0]) or []
@@ -39,7 +39,7 @@ class Export(View):
                     cfields_order.sort(lambda x,y: -cmp(cfields[x].get('string', ''), cfields[y].get('string', '')))
                     children = []
                     for j, fld in enumerate(cfields_order):
-                        cid = id + '/' + fld
+                        cid = id + '_' + fld
                         cid = cid.replace(' ', '_')
                         children.append(cid)
                     record['children'] = children or []
@@ -50,7 +50,7 @@ class Export(View):
                     cfields_order.sort(lambda x,y: -cmp(cfields[x].get('string', ''), cfields[y].get('string', '')))
                     children = []
                     for j, fld in enumerate(cfields_order):
-                        cid = id + '/' + fld
+                        cid = id + '_' + fld
                         cid = cid.replace(' ', '_')
                         children.append(cid)
                     record['children'] = children or []

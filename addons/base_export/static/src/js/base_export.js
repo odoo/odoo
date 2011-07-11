@@ -28,8 +28,7 @@ openerp.base_export.Export = openerp.base.Controller.extend({
 
     on_click: function(id, result) {
         var self = this
-	    this.field_id = id.split("@");
-	    this.field_id = self.field_id[1];
+	    this.field_id = id.split("@")[1];
 	    var model = ''
 	    var prefix = ''
 	    var name = ''
@@ -53,7 +52,6 @@ openerp.base_export.Export = openerp.base.Controller.extend({
         var self = this;
         $('tr #treerow_' + self.field_id).after(QWeb.render('ExportTreeView-Secondary', {'fields': result}));
         jQuery($.find('img[id ^= parentimg]')).click(function(){
-            self.field_id = this.id
             self.on_click(this.id, result);
 
         });
