@@ -1,14 +1,48 @@
 -
-  Tesing of EDI functionality
+  create partner
 -
+  !record {model: res.partner, id: res_partner_test33}:
+    name: Ivan
+    title: base.res_partner_title_sir
+    website: www.openerp.com
+    address:
+      - type: default
+        name: Davidson
+        street: M.G. Road
+        zip: 354562
+        city: Alhabad
+        phone: +91 985764653
+    supplier: False
+    customer: True
+    company_id: base.main_company
+    
+-
+    I am creating one Document to be stored in ".
+-
+    !record {model: 'ir.attachment', id: document_4}:
+        name : "My partner document"
+        res_model : res.partner
+        type : binary
+
+-
+    Attach a pdf file in "My partner document"
+-
+    !python {model: 'ir.attachment'}: |
+        import addons
+        import base64
+        pdf_file = open(addons.get_module_resource('base','test', 'partner.pdf'))
+        self.write(cr, uid, [ref("document_4")], {'res_id':ref("res_partner_test33"), 'datas_fname': 'partner.pdf', 'datas' : base64.encodestring(pdf_file.read())}, context)
+      
+-
+  Testing import and export
+-      
+
   !python {model: ir.edi.document}: |
       partner_obj = self.pool.get('res.partner')
-      partner_ids = partner_obj.search(cr, uid, [('name','=','OpenERP S.A.')])
-      if partner_ids:
-          partners = partner_obj.browse(cr, uid, partner_ids)
-          tokens = self.export_edi(cr, uid, partners)
-          for token in tokens:
-              document = self.get_document(cr, uid, token, context=context)
-              a = self.import_edi(cr, uid, edi_document = document)
-      
+      partners = [partner_obj.browse(cr, uid, ref("res_partner_test33"))]
+      tokens = self.export_edi(cr, uid, partners)
+      for token in tokens:
+        document = self.get_document(cr, uid, token, context=context)
+        print document
+        a = self.import_edi(cr, uid, edi_document = document)
 

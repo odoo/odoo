@@ -40,27 +40,43 @@ from cStringIO import StringIO
 import threading
 
 class edi(netsvc.ExportService):
-    def exp_get_edi_document(self, edi_token):
-        db_name = getattr(threading.currentThread(), 'dbname', None)
+    def exp_get_edi_document(self, edi_token, db_name=None):
+        res = None
+        if not db_name:
+            db_name = getattr(threading.currentThread(), 'dbname', None)
         if db_name:
-            cr = pooler.get_db_only(db_name).cursor()
+            cr = pooler.get_db(db_name).cursor()
         else:
             raise Exception("No database cursor found!")
         pool = pooler.get_pool(db_name)
         edi_pool = pool.get('ir.edi.document')
-        return edi_pool.get_document(cr, 1, edi_token)
+        try:
+            res = edi_pool.get_document(cr, 1, edi_token)
+        finally:
+            cr.close()
+        return res
 
     def exp_import_edi_document(self, db, uid, passwd, edi_document, context=None):
-        cr = pooler.get_db_only(db).cursor()
+        res = None
+        cr = pooler.get_db(db).cursor()
         pool = pooler.get_pool(db)
         edi_pool = pool.get('ir.edi.document')
-        return edi_pool.import_edi(cr, uid, edi_document=edi_document, context=context)
+        try:
+            res = edi_pool.import_edi(cr, uid, edi_document=edi_document, context=context)
+        finally:
+            cr.close()
+        return res
 
     def exp_import_edi_url(self, db, uid, passwd, edi_url, context=None):
+        res = None
         cr = pooler.get_db_only(db).cursor()
         pool = pooler.get_pool(db)
         edi_pool = pool.get('ir.edi.document')
-        return edi_pool.import_edi(cr, uid, edi_url=edi_url, context=context)
+        try:
+            res = edi_pool.import_edi(cr, uid, edi_url=edi_url, context=context)
+        finally:
+            cr.close()
+        return res
 
     def __init__(self, name="edi"):
         netsvc.ExportService.__init__(self, name)
