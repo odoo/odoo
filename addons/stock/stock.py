@@ -1303,6 +1303,11 @@ class stock_picking(osv.osv):
         """
         if context is None:
             context = {}
+        user_lang = self.pool.get('res.users').read(cr, uid, uid, ['context_lang'], context=context)['context_lang']
+        lang_code = self.pool.get('res.lang').search(cr, uid, [('code','=',user_lang)])
+        if lang_code:
+           lang_id = lang_code[0]
+        date_format = self.pool.get('res.lang').read(cr, uid, lang_id, ['date_format'], context=context)['date_format']
         data_obj = self.pool.get('ir.model.data')
         for pick in self.browse(cr, uid, ids, context=context):
             msg=''
@@ -1320,7 +1325,7 @@ class stock_picking(osv.osv):
             }
             message = type_list.get(pick.type, _('Document')) + " '" + (pick.name or '?') + "' "
             if pick.min_date:
-                msg= _(' for the ')+ datetime.strptime(pick.min_date, '%Y-%m-%d %H:%M:%S').strftime('%m/%d/%Y')
+                msg= _(' for the ')+ datetime.strptime(pick.min_date, '%Y-%m-%d %H:%M:%S').strftime(date_format)
             state_list = {
                 'confirmed': _("is scheduled") + msg +'.',
                 'assigned': _('is ready to process.'),
