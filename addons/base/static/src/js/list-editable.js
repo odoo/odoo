@@ -268,10 +268,12 @@ openerp.base.list.editable = function (openerp) {
         openerp.base.list.form[key] = (form_widgets.get_object(key)).extend({
             update_dom: function () {
                 this.$element.children().css('visibility', '');
-                if (this.invisible && this.node.attrs.invisible !== '1') {
+                if (this.invisible) {
                     this.$element.children().css('visibility', 'hidden');
                 } else {
+                    this.invisible = !!this.modifiers.tree_invisible;
                     this._super();
+                    this.invisible = false;
                 }
             }
         });

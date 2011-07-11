@@ -594,36 +594,6 @@ class View(openerpweb.Controller):
             return {'result': True}
         return {'result': False}
 
-    def normalize_attrs(self, elem, context):
-        """ Normalize @attrs, @invisible, @required, @readonly and @states, so
-        the client only has to deal with @attrs.
-
-        See `the discoveries pad <http://pad.openerp.com/discoveries>`_ for
-        the rationale.
-
-        :param elem: the current view node (Python object)
-        :type elem: xml.etree.ElementTree.Element
-        :param dict context: evaluation context
-        """
-        # If @attrs is normalized in json by server, the eval should be replaced by simplejson.loads
-        attrs = openerpweb.ast.literal_eval(elem.get('attrs', '{}'))
-        if 'states' in elem.attrib:
-            attrs.setdefault('invisible', [])\
-                .append(('state', 'not in', elem.attrib.pop('states').split(',')))
-        if attrs:
-            elem.set('attrs', simplejson.dumps(attrs))
-        for a in ['invisible', 'readonly', 'required']:
-            if a in elem.attrib:
-                # In the XML we trust
-                avalue = bool(eval(elem.get(a, 'False'),
-                                   {'context': context or {}}))
-                if not avalue:
-                    del elem.attrib[a]
-                else:
-                    elem.attrib[a] = '1'
-                    if a == 'invisible' and 'attrs' in elem.attrib:
-                        del elem.attrib['attrs']
-
     def transform_view(self, view_string, session, context=None):
         # transform nodes on the fly via iterparse, instead of
         # doing it statically on the parsing result
@@ -633,7 +603,6 @@ class View(openerpweb.Controller):
             if event == "start":
                 if root is None:
                     root = elem
-                self.normalize_attrs(elem, context)
                 self.parse_domains_and_contexts(elem, session)
         return root
 

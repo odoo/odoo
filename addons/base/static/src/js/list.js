@@ -252,18 +252,18 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
             var name = field.attrs.name;
             var column = _.extend({id: name, tag: field.tag},
                     field.attrs, fields[name]);
-            // attrs computer
-            if (column.attrs) {
-                var attrs = JSON.parse(column.attrs);
-                column.attrs_for = function (fields) {
+            // modifiers computer
+            if (column.modifiers) {
+                var modifiers = JSON.parse(column.modifiers);
+                column.modifiers_for = function (fields) {
                     var result = {};
-                    for (var attr in attrs) {
-                        result[attr] = domain_computer(attrs[attr], fields);
+                    for (var modifier in modifiers) {
+                        result[modifier] = domain_computer(modifiers[modifier], fields);
                     }
                     return result;
                 };
             } else {
-                column.attrs_for = noop;
+                column.modifiers_for = noop;
             }
             return column;
         };
@@ -275,10 +275,10 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
         if (grouped) {
             this.columns.unshift({
                 id: '_group', tag: '', string: "Group", meta: true,
-                attrs_for: function () { return {}; }
+                modifiers_for: function () { return {}; }
             }, {
                 id: '_count', tag: '', string: '#', meta: true,
-                attrs_for: function () { return {}; }
+                modifiers_for: function () { return {}; }
             });
         }
 
@@ -409,9 +409,9 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
             $.proxy(this, 'reload_content'));
     },
     /**
-     * Handles the signal to delete a line from the DOM
+     * Handles the signal to delete lines from the records list
      *
-     * @param {Array} ids the id of the object to delete
+     * @param {Array} ids the ids of the records to delete
      */
     do_delete: function (ids) {
         if (!ids.length) {
@@ -419,7 +419,7 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
         }
         var self = this;
         return $.when(this.dataset.unlink(ids)).then(function () {
-            self.reload_content();
+            self.groups.drop_records(ids);
         });
     },
     /**
@@ -637,7 +637,9 @@ openerp.base.ListView.List = Class.extend( /** @lends openerp.base.ListView.List
             this.$current.remove();
         }
         this.$current = this.$_element.clone(true);
-        this.$current.empty().append(QWeb.render('ListView.rows', this));
+        this.$current.empty().append(
+            QWeb.render('ListView.rows', _.extend({
+                render_cell: this.render_cell}, this)));
     },
     /**
      * Gets the ids of all currently selected records, if any
@@ -767,8 +769,67 @@ openerp.base.ListView.List = Class.extend( /** @lends openerp.base.ListView.List
             options: this.options,
             row: this.rows[record_index],
             row_parity: (record_index % 2 === 0) ? 'even' : 'odd',
-            row_index: record_index
+            row_index: record_index,
+            render_cell: this.render_cell
         });
+    },
+    /**
+     * Formats the rendring of a given value based on its field type
+     *
+     * @param {Object} row_data record whose values should be displayed in the cell
+     * @param {Object} column column descriptor
+     * @param {"button"|"field"} column.tag base control type
+     * @param {String} column.type widget type for a field control
+     * @param {String} [column.string] button label
+     * @param {String} [column.icon] button icon
+     */
+    render_cell: function (row_data, column) {
+        var attrs = column.modifiers_for(row_data);
+        if (attrs.invisible) { return ''; }
+        if (column.tag === 'button') {
+            return [
+                '<button type="button" title="', column.string || '', '">',
+                    '<img src="/base/static/src/img/icons/', column.icon, '.png"',
+                        ' alt="', column.string || '', '"/>',
+                '</button>'
+            ].join('')
+        }
+
+        var record = row_data[column.id];
+        if (record.value === false) { return ''; }
+        switch (column.widget || column.type) {
+            case 'many2one':
+                // name_get value format
+                return record.value[1];
+            case 'float_time':
+                return _.sprintf("%02d:%02d",
+                        Math.floor(record.value),
+                        Math.round((record.value % 1) * 60));
+            case 'progressbar':
+                return _.sprintf(
+                    '<progress value="%.2f" max="100.0">%.2f%%</progress>',
+                        record.value, record.value);
+            default:
+                return record.value;
+        }
+    },
+    /**
+     * Stops displaying the records matching the provided ids.
+     *
+     * @param {Array} ids identifiers of the records to remove
+     */
+    drop_records: function (ids) {
+        var self = this;
+        _(this.rows).chain()
+              .map(function (record, index) {
+                return {index: index, id: record.data.id.value};
+            }).filter(function (record) {
+                return _(ids).contains(record.id);
+            }).reverse()
+              .each(function (record) {
+                self.$current.find('tr:eq(' + record.index + ')').remove();
+                self.rows.splice(record.index, 1);
+            })
     }
     // drag and drop
 });
@@ -1062,6 +1123,19 @@ openerp.base.ListView.Groups = Class.extend( /** @lends openerp.base.ListView.Gr
             .map(function (child) {
                 return child.get_records();
             }).flatten().value();
+    },
+    /**
+     * Stops displaying the records with the linked ids, assumes these records
+     * were deleted from the DB.
+     *
+     * This is the up-signal from the `deleted` event on groups and lists.
+     *
+     * @param {Array} ids list of identifier of the records to remove.
+     */
+    drop_records: function (ids) {
+        _.each(this.children, function (child) {
+            child.drop_records(ids);
+        });
     }
 });
 };

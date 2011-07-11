@@ -459,7 +459,8 @@ openerp.base.View = openerp.base.Controller.extend({
                     search_view : false,
                     views_switcher : false,
                     action_buttons : false,
-                    pager : false
+                    pager : false,
+                    new_window: true
                 };
                 action_manager.do_action(action, on_closed);
                 if (self.view_manager.is_dialog && action.type != 'ir.actions.act_window_close') {

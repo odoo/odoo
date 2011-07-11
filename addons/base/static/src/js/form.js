@@ -132,7 +132,7 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
     on_form_changed: function() {
         for (var w in this.widgets) {
             w = this.widgets[w];
-            w.process_attrs();
+            w.process_modifiers();
             w.update_dom();
         }
     },
@@ -503,7 +503,7 @@ openerp.base.form.compute_domain = function(expr, fields) {
                 stack.push(!_(val).contains(field));
                 break;
             default:
-                this.log("Unsupported operator in attrs :", op);
+                this.log("Unsupported operator in modifiers :", op);
         }
     }
     return _.all(stack);
@@ -514,7 +514,7 @@ openerp.base.form.Widget = openerp.base.Controller.extend({
     init: function(view, node) {
         this.view = view;
         this.node = node;
-        this.attrs = JSON.parse(this.node.attrs.attrs || '{}');
+        this.modifiers = JSON.parse(this.node.attrs.modifiers || '{}');
         this.type = this.type || node.tag;
         this.element_name = this.element_name || this.type;
         this.element_id = [this.view.element_id, this.element_name, this.view.widgets_counter++].join("_");
@@ -527,15 +527,15 @@ openerp.base.form.Widget = openerp.base.Controller.extend({
 
         this.string = this.string || node.attrs.string;
         this.help = this.help || node.attrs.help;
-        this.invisible = (node.attrs.invisible == '1');
+        this.invisible = this.modifiers['invisible'] === true;
     },
     start: function() {
         this.$element = $('#' + this.element_id);
     },
-    process_attrs: function() {
+    process_modifiers: function() {
         var compute_domain = openerp.base.form.compute_domain;
-        for (var a in this.attrs) {
-            this[a] = compute_domain(this.attrs[a], this.view.fields);
+        for (var a in this.modifiers) {
+            this[a] = compute_domain(this.modifiers[a], this.view.fields);
         }
     },
     update_dom: function() {
@@ -736,10 +736,9 @@ openerp.base.form.Field = openerp.base.form.Widget.extend({
         this.field = view.fields_view.fields[node.attrs.name] || {};
         this.string = node.attrs.string || this.field.string;
         this.help = node.attrs.help || this.field.help;
-        this.invisible = (this.invisible || this.field.invisible == '1');
-        this.nolabel = (this.field.nolabel || node.attrs.nolabel) == '1';
-        this.readonly = (this.field.readonly || node.attrs.readonly) == '1';
-        this.required = (this.field.required || node.attrs.required) == '1';
+        this.nolabel = (this.field.nolabel || node.attrs.nolabel) === '1';
+        this.readonly = this.modifiers['readonly'] === true;
+        this.required = this.modifiers['required'] === true;
         this.invalid = false;
         this.touched = false;
     },
@@ -1117,28 +1116,54 @@ openerp.base.form.FieldSelection = openerp.base.form.Field.extend({
     init: function(view, node) {
         this._super(view, node);
         this.template = "FieldSelection";
+        this.field_index = _.map(this.field.selection, function(x, index) {
+            return {"ikey": "" + index, "ekey": x[0], "label": x[1]};
+        });
     },
     start: function() {
+        // Flag indicating whether we're in an event chain containing a change
+        // event on the select, in order to know what to do on keyup[RETURN]:
+        // * If the user presses [RETURN] as part of changing the value of a
+        //   selection, we should just let the value change and not let the
+        //   event broadcast further (e.g. to validating the current state of
+        //   the form in editable list view, which would lead to saving the
+        //   current row or switching to the next one)
+        // * If the user presses [RETURN] with a select closed (side-effect:
+        //   also if the user opened the select and pressed [RETURN] without
+        //   changing the selected value), takes the action as validating the
+        //   row
+        var ischanging = false;
         this._super.apply(this, arguments);
-        this.$element.find('select').change(this.on_ui_change);
+        this.$element.find('select')
+            .change(this.on_ui_change)
+            .change(function () { ischanging = true; })
+            .click(function () { ischanging = false; })
+            .keyup(function (e) {
+                if (e.which !== 13 || !ischanging) { return; }
+                e.stopPropagation();
+                ischanging = false;
+            });
     },
     set_value: function(value) {
-        this._super.apply(this, arguments);
-        if (value != null && value !== false) {
-            this.$element.find('select').val(value);
-        } else {
-            this.$element.find('select').val('false');
-        }
+        value = value === null ? false : value;
+        value = value instanceof Array ? value[0] : value;
+        this._super(value);
+        var option = _.detect(this.field_index, function(x) {return x.ekey === value;});
+        this.$element.find('select').val(option === undefined ? '' : option.ikey);
     },
     set_value_from_ui: function() {
-        this.value = this.$element.find('select').val();
+        var ikey = this.$element.find('select').val();
+        var option = _.detect(this.field_index, function(x) {return x.ikey === ikey;});
+        this.value = option === undefined ? false : option.ekey;
     },
     update_dom: function() {
         this._super.apply(this, arguments);
         this.$element.find('select').attr('disabled', this.readonly);
     },
     validate: function() {
-        this.invalid = this.required && this.$element.find('select').val() === "";
+        var ikey = this.$element.find('select').val();
+        var option = _.detect(this.field_index, function(x) {return x.ikey === ikey;});
+        this.invalid = this.required && (option === undefined || option.ekey === false);
     },
     focus: function() {
         this.$element.find('select').focus();
