@@ -991,14 +991,80 @@ class calendar_event(osv.osv):
         """
         
         result = {}
+        if not isinstance(ids, list):
+            ids = [ids]
+            
         for datas in self.read(cr, uid, ids, ['id','byday','recurrency', 'month_list','end_date', 'rrule_type', 'select1', 'interval', 'count', 'end_type', 'mo', 'tu', 'we', 'th', 'fr', 'sa', 'su', 'exrule', 'day', 'week_list' ], context=context):
             event = datas['id']
             if datas.get('interval', 0) < 0:
                 raise osv.except_osv(_('Warning!'), _('Interval can not be Negative'))
             if datas.get('count', 0) < 0:
                 raise osv.except_osv(_('Warning!'), _('Count can not be Negative'))
-            result[event] = self.compute_rule_string(datas)
+            if datas['recurrency']:
+                result[event] = self.compute_rule_string(datas)
+            else:
+                result[event] = ""
         return result
+    
+    def _parse_rrule(self, rule, data):
+        day_list = ['mo', 'tu', 'we', 'th', 'fr', 'sa', 'su']
+        r = rrule.rrulestr(rule)
+        data['count'] = r._count
+        data['interval'] = r._interval
+        data['end_date'] = r._until and r._until.strftime("%Y-%m-%d %H:%M:%S")
+        #repeat weekly
+        if r._byweekday:
+            for i in xrange(0,7):
+                if i in r._byweekday:
+                    data[day_list[i]] = True
+            data['rrule_type'] = 'weekly'
+        #repeat monthly bynweekday ((weekday, weeknumber), )
+        if r._bynweekday: 
+            data['week_list'] = day_list[r._bynweekday[0][0]].upper()
+            data['byday'] = r._bynweekday[0][1]
+            data['rrule_type'] = 'monthly' 
+            
+        #end of recurrence    
+        #in case of repeat for ever that we do not support right now
+        if not (data.get('count') or data.get('end_date')):
+            data['count'] = 100
+        if data.get('count'):
+            data['end_type'] = 'count'
+        else:
+            data['end_type'] = 'end_date'  
+        return data    
+    
+    def _write_rrule(self, cr, uid, ids, field_name, field_value, arg, context):
+        print field_name, field_value
+        data = {
+            'byday' : False,
+            'recurrency' : False,
+            'month_list' : False,
+            'end_date' : False, 
+            'rrule_type' : False, 
+            'select1' : False, 
+            'interval' : 0, 
+            'count' : False, 
+            'end_type' : False, 
+            'mo' : False, 
+            'tu' : False, 
+            'we' : False, 
+            'th' : False, 
+            'fr' : False, 
+            'sa' : False, 
+            'su' : False, 
+            'exrule' : False, 
+            'day' : False, 
+            'week_list' : False
+        }
+        
+        if field_value:
+                update_data = self._parse_rrule(field_value, dict(data))
+                print update_data
+                #parse_rrule
+        self.write(cr, uid, ids, data, context=context)
+        
+        print "rrule", self._get_rulestring(cr, uid, ids, None, arg, context)
 
     _columns = {
         'id': fields.integer('ID'),
@@ -1022,7 +1088,7 @@ class calendar_event(osv.osv):
 defines the list of date/time exceptions for a recurring calendar component."),
         'exrule': fields.char('Exception Rule', size=352, help="Defines a \
 rule or repeating pattern of time to exclude from the recurring rule."),
-        'rrule': fields.function(_get_rulestring, type='char', size=124, \
+        'rrule': fields.function(_get_rulestring, fnct_inv=_write_rrule, type='char', size=124, \
                                     store=True, string='Recurrent Rule'),
         'rrule_type': fields.selection([('none', ''), ('daily', 'Daily'), \
                             ('weekly', 'Weekly'), ('monthly', 'Monthly'), \
@@ -1173,7 +1239,7 @@ rule or repeating pattern of time to exclude from the recurring rule."),
         @param self: the object pointer
         @param datas: dictionary of freq and interval value.
         """
-        
+        print "compute rule string"
         def get_week_string(freq, datas):
             weekdays = ['mo', 'tu', 'we', 'th', 'fr', 'sa', 'su']
             if freq == 'weekly':
@@ -1277,6 +1343,8 @@ rule or repeating pattern of time to exclude from the recurring rule."),
             except Exception:
                 return True
   
+    
+        
     def write(self, cr, uid, ids, vals, context=None, check=True, update_check=True):
         if context is None:
             context = {}
@@ -1284,6 +1352,9 @@ rule or repeating pattern of time to exclude from the recurring rule."),
             select = [ids]
         else:
             select = ids
+            
+       
+            
         new_ids = []
         res = False
         for event_id in select:
@@ -1335,6 +1406,9 @@ rule or repeating pattern of time to exclude from the recurring rule."),
             context=context)
         vals.update(updated_vals.get('value', {}))
         if new_ids:
+            if 'rrule' in vals.keys():
+                print "write, rrule"
+            print "write ", vals
             res = super(calendar_event, self).write(cr, uid, new_ids, vals, context=context)
 
         if ('alarm_id' in vals or 'base_calendar_alarm_id' in vals)\
