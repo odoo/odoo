@@ -255,7 +255,7 @@ class third_party_ledger(rml_parse.rml_parse):
 #				full_account.append(r)
 		if self.date_lst_string:
 			self.cr.execute(
-				"SELECT l.id,l.date,j.code, l.ref, l.name, l.debit, l.credit " \
+				"SELECT l.id,l.date,j.code, l.ref, l.name, COALESCE(l.debit,0.00) as debit, COALESCE(l.credit,0.00) as credit " \
 				"FROM account_move_line l " \
 				"LEFT JOIN account_journal j " \
 					"ON (l.journal_id = j.id) " \
