@@ -18,6 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 {
     'name': 'Base VAT',
     'version': '1.0',
@@ -39,4 +40,5 @@ checking the validity of VAT Number assigned to partners in European countries.
     'certificate': '0084849360989',
     'images': ['images/1_partner_vat.jpeg'],
 }
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
