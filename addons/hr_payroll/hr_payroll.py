@@ -769,7 +769,7 @@ class hr_salary_rule(osv.osv):
         'amount_python_compute':fields.text('Python Code'),
         'amount_percentage_base':fields.char('Percentage based on',size=1024, required=False, readonly=False, help='result will be affected to a variable'),
         'child_ids':fields.one2many('hr.salary.rule', 'parent_rule_id', 'Child Salary Rule'),
-        'register_id':fields.many2one('hr.contribution.register', 'Contribution Register', help="Contribution register for the rule"),
+        'register_id':fields.many2one('hr.contribution.register', 'Contribution Register', help="Eventual third party involved in the salary payment of the employees."),
         'input_ids': fields.one2many('hr.rule.input', 'input_id', 'Inputs'),
         'note':fields.text('Description'),
      }
@@ -918,7 +918,6 @@ class hr_payslip_line(osv.osv):
         'contract_id':fields.many2one('hr.contract', 'Contract', required=True),
         'amount': fields.float('Amount', digits_compute=dp.get_precision('Payroll')),
         'quantity': fields.float('Quantity', digits_compute=dp.get_precision('Payroll')),
-        'company_contrib': fields.float('Company Contribution', readonly=True, digits_compute=dp.get_precision('Payroll')),
         'total': fields.function(_calculate_total, method=True, type='float', string='Total', digits_compute=dp.get_precision('Payroll'),store=True ),
     }
 
