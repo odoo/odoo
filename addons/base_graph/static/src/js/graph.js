@@ -166,7 +166,7 @@ openerp.base_graph.GraphView = openerp.base.View.extend({
                 var legend_key = '';
                 _.each(self.group_field, function (res) {
                     result[res] = (typeof result[res] == 'object') ? result[res][1] : result[res];
-                    legend_key = legend_key + result[res];
+                    legend_key += result[res];
                 });
                 newkey = legend_key.replace(/\s+/g,'_').replace(/[^a-zA-Z 0-9]+/g,'_');
                 string_legend = legend_key;
@@ -203,7 +203,7 @@ openerp.base_graph.GraphView = openerp.base.View.extend({
                 var legend_key_two = '';
                 _.each(self.group_field, function (res) {
                     result[res] = (typeof result[res] == 'object') ? result[res][1] : result[res];
-                    legend_key_two = legend_key_two +result[res];
+                    legend_key_two += result[res];
                 });
                 newkey = legend_key_two.replace(/\s+/g,'_').replace(/[^a-zA-Z 0-9]+/g,'_');
             }else{
@@ -259,12 +259,12 @@ openerp.base_graph.GraphView = openerp.base.View.extend({
                     min = 0;
                     step=1;
                 }else if(maximum > 0){
-                    max = maximum + (10 - maximum % 10)
+                    max = maximum + (10 - maximum % 10);
                     min = 0;
                     step = Math.round(max/10);
                 }else{
                     max = 0;
-                    min = minimum - (10 + minimum % 10)
+                    min = minimum - (10 + minimum % 10);
                     step = Math.round(Math.abs(min)/10);
                 }
             }
