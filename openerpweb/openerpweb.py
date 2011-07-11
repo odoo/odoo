@@ -280,7 +280,7 @@ class JsonRequest(object):
         return self.params
 
     def dispatch(self, controller, method, requestf=None, request=None):
-        ''' Calls the method asked for by the JSON-RPC2 request
+        """ Calls the method asked for by the JSON-RPC2 request
 
         :param controller: the instance of the controller which received the request
         :type controller: type
@@ -293,17 +293,19 @@ class JsonRequest(object):
 
         :returns: a string-encoded JSON-RPC2 reply
         :rtype: bytes
-        '''
+        """
         # Read POST content or POST Form Data named "request"
         if requestf:
             request = simplejson.load(requestf, object_hook=nonliterals.non_literal_decoder)
         else:
             request = simplejson.loads(request, object_hook=nonliterals.non_literal_decoder)
+
+        response = {"jsonrpc": "2.0", "id": request.get('id')}
         try:
             print "--> %s.%s %s" % (controller.__class__.__name__, method.__name__, request)
             error = None
             self.parse(request)
-            result = method(controller, self, **self.params)
+            response["result"] = method(controller, self, **self.params)
         except OpenERPUnboundException:
             error = {
                 'code': 100,
@@ -335,11 +337,8 @@ class JsonRequest(object):
                     'debug': "Client %s" % traceback.format_exc()
                 }
             }
-        response = {"jsonrpc": "2.0", "id": request.get('id')}
         if error:
             response["error"] = error
-        else:
-            response["result"] = result
 
         print "<--", response
         print
