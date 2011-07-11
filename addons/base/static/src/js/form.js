@@ -590,7 +590,10 @@ openerp.base.form.WidgetFrame = openerp.base.form.Widget.extend({
         }
     },
     handle_node: function(node) {
-        var type = this.view.fields_view.fields[node.attrs.name] || {};
+        var type = {};
+        if (node.tag == 'field') {
+            type = this.view.fields_view.fields[node.attrs.name] || {};
+        }
         var widget = new (this.view.registry.get_any(
                 [node.attrs.widget, type.type, node.tag])) (this.view, node);
         if (node.tag == 'field') {
@@ -630,7 +633,6 @@ openerp.base.form.WidgetNotebook = openerp.base.form.Widget.extend({
         }
     },
     start: function() {
-        var self = this;
         this._super.apply(this, arguments);
         this.$element.tabs();
     }
