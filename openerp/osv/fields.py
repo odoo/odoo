@@ -1228,20 +1228,16 @@ class property(function):
            :rtype: dict
         """
         prop = obj.pool.get('ir.property')
-        replaces = {}
         default_value = {}.fromkeys(prop_names, False)
         for prop_name in prop_names:
-            value = prop.get(cr, uid, prop_name, obj._name, context=context)
-            if isinstance(value, orm.browse_null):
-                continue
-            default_value[prop_name] = value
+            default_value[prop_name] = prop.get(cr, uid, prop_name, obj._name, context=context)
         return default_value
 
     def _get_by_id(self, obj, cr, uid, prop_name, ids, context=None):
         prop = obj.pool.get('ir.property')
         vids = [obj._name + ',' + str(oid) for oid in  ids]
 
-        domain = [('fields_id.model', '=', obj._name), ('fields_id.name','in',prop_name)]
+        domain = [('fields_id.model', '=', obj._name), ('fields_id.name', 'in', prop_name)]
         #domain = prop._get_domain(cr, uid, prop_name, obj._name, context)
         if vids:
             domain = [('res_id', 'in', vids)] + domain
@@ -1277,49 +1273,45 @@ class property(function):
         return False
 
     def _fnct_read(self, obj, cr, uid, ids, prop_names, obj_dest, context=None):
-        properties = obj.pool.get('ir.property')
-        #get the default values (for res_id = False) for the property fields 
+        prop = obj.pool.get('ir.property')
+        # get the default values (for res_id = False) for the property fields 
         default_val = self._get_defaults(obj, cr, uid, prop_names, context)
 
-        #build the dictionary that will be returned
+        # build the dictionary that will be returned
         res = {}
         for id in ids:
             res[id] = default_val.copy()
 
-        for prop in prop_names:
-            # get the type of property field as root (as access depends on access right of source document,
-            # not ir.property object, so user may not have acces)
-            property_field_id = properties.search(cr, 1, [('name','=',prop)], context=context)
-            property_field_type = property_field_id and properties.read(cr, 1, property_field_id, ['type'], context=context)[0]['type'] or False
-            property_destination_obj = None
-            #if the property field is a m2o field, we will append the id of the value to name_get_list_ids
-            #in order to make a name_get in batch for all the ids needed.
+        for prop_name in prop_names:
+            property_field = obj._all_columns.get(prop_name).column
+            property_field_type = property_field.type
+            property_destination_obj = property_field.relation # false if type is not a many2one
+            # If the property field is a m2o field, we will append the id of the value to name_get_list_ids
+            # in order to make a name_get in batch for all the ids needed.
             name_get_list_ids = []
             for id in ids:
-                #get the result of ir.property.get() for this res_id and save it in res if it's existing
+                # get the result of ir.property.get() for this res_id and save it in res if it's existing
                 obj_reference = obj._name + ',' + str(id)
-                value = properties.get(cr, uid, prop, obj._name, res_id=obj_reference, context=context)
+                value = prop.get(cr, uid, prop_name, obj._name, res_id=obj_reference, context=context)
                 if value:
-                    res[id][prop] = value
-                # check existence as root (as seeing the name of a related
+                    res[id][prop_name] = value
+                # Check existence as root (as seeing the name of a related
                 # object depends on access right of source document,
                 # not target, so user may not have access) in order to avoid
                 # pointing on an unexisting record.
-                if res[id][prop] and property_field_type == 'many2one':
-                    if not property_destination_obj:
-                        property_destination_obj = res[id][prop]._name
-                    if not obj.pool.get(res[id][prop]._name).exists(cr, 1, res[id][prop].id):
-                        res[id][prop] = False
-            if property_destination_obj and property_field_type == 'many2one':
+                if res[id][prop_name] and property_destination_obj:
+                    if obj.pool.get(property_destination_obj).exists(cr, 1, res[id][prop_name].id):
+                        name_get_list_ids.append(res[id][prop_name].id)
+                    else:
+                        res[id][prop_name] = False
+            if property_destination_obj:
                 # name_get as root (as seeing the name of a related
                 # object depends on access right of source document,
                 # not target, so user may not have access.)
-                name_get_list_ids = [res[id][prop].id for id in ids if res[id][prop]]
                 name_get_values = dict(obj.pool.get(property_destination_obj).name_get(cr, 1, name_get_list_ids, context=context))
-            #if the property field is a m2o, we need to return a tuple with (id, name)
-            for id in ids:
-                if res[id][prop] and isinstance(res[id][prop], orm.browse_record):
-                    res[id][prop] = (res[id][prop].id , name_get_values.get(res[id][prop].id, False))
+                # the property field is a m2o, we need to return a tuple with (id, name)
+                for id in name_get_values.keys():
+                    res[id][prop_name] = (res[id][prop_name].id , name_get_values.get(res[id][prop_name].id))
         return res
 
     def _field_get(self, cr, uid, model_name, prop):
