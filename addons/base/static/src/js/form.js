@@ -902,6 +902,7 @@ openerp.base.form.FieldFloat = openerp.base.form.FieldChar.extend({
         if (value === false || value === undefined) {
             // As in GTK client, floats default to 0
             value = 0;
+            this.touched = true;
         }
         var show_value = value.toFixed(2);
         this.$element.find('input').val(show_value);
@@ -921,6 +922,7 @@ openerp.base.form.FieldInteger = openerp.base.form.FieldFloat.extend({
         if (value === false || value === undefined) {
             // TODO fme: check if GTK client default integers to 0 (like it does with floats)
             value = 0;
+            this.touched = true;
         }
         var show_value = parseInt(value, 10);
         this.$element.find('input').val(show_value);
@@ -1007,6 +1009,7 @@ openerp.base.form.FieldFloatTime = openerp.base.form.FieldChar.extend({
         if (value === false || value === undefined) {
             // As in GTK client, floats default to 0
             value = 0;
+            this.touched = true;
         }
         var show_value = _.sprintf("%02d:%02d", Math.floor(value), Math.round((value % 1) * 60));
         this.$element.find('input').val(show_value);
