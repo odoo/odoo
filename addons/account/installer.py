@@ -240,8 +240,7 @@ class account_installer(osv.osv_memory):
 account_installer()
 
 class account_installer_modules(osv.osv_memory):
-    _name = 'account.installer.modules'
-    _inherit = 'res.config.installer'
+    _inherit = 'base.setup.installer'
     _columns = {
         'account_analytic_plans': fields.boolean('Multiple Analytic Plans',
             help="Allows invoice lines to impact multiple analytic accounts "
@@ -253,16 +252,9 @@ class account_installer_modules(osv.osv_memory):
             help="Helps you generate reminder letters for unpaid invoices, "
                  "including multiple levels of reminding and customized "
                  "per-partner policies."),
-        'account_voucher': fields.boolean('Voucher Management',
-            help="Account Voucher module includes all the basic requirements of "
-                 "Voucher Entries for Bank, Cash, Sales, Purchase, Expenses, Contra, etc... "),
         'account_anglo_saxon': fields.boolean('Anglo-Saxon Accounting',
             help="This module will support the Anglo-Saxons accounting methodology by "
                 "changing the accounting logic with stock transactions."),
-    }
-
-    _defaults = {
-        'account_voucher': True,
     }
 
 account_installer_modules()
