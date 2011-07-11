@@ -121,7 +121,7 @@ class account_followup_print_all(osv.osv_memory):
         'partner_lang': fields.boolean('Send Email in Partner Language', help='Do not change message text, if you want to send email in partner language, or configure from company'),
         'email_body': fields.text('Email body'),
         'summary': fields.text('Summary', required=True, readonly=True),
-        'test_print': fields.boolean('Test Print', help='Check if you want to print followups without changing follow ups level.')
+        'test_print': fields.boolean('Test Print', help='Check if you want to print followups without changing followups level.')
     }
     def _get_summary(self, cr, uid, context=None):
         if context is None:
