@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import base64
 import glob, os
-import pprint
 from xml.etree import ElementTree
 from cStringIO import StringIO
 
@@ -125,14 +124,14 @@ class Session(openerpweb.Controller):
     def jslist(self, req, mods='base'):
         return {'files': self.manifest_glob(mods.split(','), 'js')}
 
-    def css(self, req, mods='base,base_hello'):
+    def css(self, req, mods='base'):
         files = self.manifest_glob(mods.split(','), 'css')
         concat = self.concat_files(files)[0]
         # TODO request set the Date of last modif and Etag
         return concat
     css.exposed = True
 
-    def js(self, req, mods='base,base_hello'):
+    def js(self, req, mods='base'):
         files = self.manifest_glob(mods.split(','), 'js')
         concat = self.concat_files(files)[0]
         # TODO request set the Date of last modif and Etag
@@ -392,9 +391,10 @@ class DataSet(openerpweb.Controller):
                                                               req.session.eval_context(req.context))}
 
     @openerpweb.jsonrequest
-    def search_read(self, request, model, fields=False, offset=0, limit=False, domain=None, context=None, sort=None):
-        return self.do_search_read(request, model, fields, offset, limit, domain, context, sort)
-    def do_search_read(self, request, model, fields=False, offset=0, limit=False, domain=None, context=None, sort=None):
+    def search_read(self, request, model, fields=False, offset=0, limit=False, domain=None, sort=None):
+        return self.do_search_read(request, model, fields, offset, limit, domain, sort)
+    def do_search_read(self, request, model, fields=False, offset=0, limit=False, domain=None
+                       , sort=None):
         """ Performs a search() followed by a read() (if needed) using the
         provided search criteria
 
@@ -407,22 +407,33 @@ class DataSet(openerpweb.Controller):
         :param int limit: the maximum number of records to return
         :param list domain: the search domain for the query
         :param list sort: sorting directives
-        :returns: a list of result records
+        :returns: A structure (dict) with two keys: ids (all the ids matching
+                  the (domain, context) pair) and records (paginated records
+                  matching fields selection set)
         :rtype: list
         """
         Model = request.session.model(model)
-        context, domain = eval_context_and_domain(request.session, request.context, domain)
-        
-        ids = Model.search(domain, offset or 0, limit or False,
-                           sort or False, context)
+        context, domain = eval_context_and_domain(
+            request.session, request.context, domain)
 
+        ids = Model.search(domain, 0, False, sort or False, context)
+        # need to fill the dataset with all ids for the (domain, context) pair,
+        # so search un-paginated and paginate manually before reading
+        paginated_ids = ids[offset:(offset + limit if limit else None)]
         if fields and fields == ['id']:
             # shortcut read if we only want the ids
-            return map(lambda id: {'id': id}, ids)
+            return {
+                'ids': ids,
+                'records': map(lambda id: {'id': id}, paginated_ids)
+            }
 
-        reads = Model.read(ids, fields or False, context)
-        reads.sort(key=lambda obj: ids.index(obj['id']))
-        return reads
+        records = Model.read(paginated_ids, fields or False, context)
+        records.sort(key=lambda obj: ids.index(obj['id']))
+        return {
+            'ids': ids,
+            'records': records
+        }
+
 
     @openerpweb.jsonrequest
     def get(self, request, model, ids, fields=False):
@@ -583,36 +594,6 @@ class View(openerpweb.Controller):
             return {'result': True}
         return {'result': False}
 
-    def normalize_attrs(self, elem, context):
-        """ Normalize @attrs, @invisible, @required, @readonly and @states, so
-        the client only has to deal with @attrs.
-
-        See `the discoveries pad <http://pad.openerp.com/discoveries>`_ for
-        the rationale.
-
-        :param elem: the current view node (Python object)
-        :type elem: xml.etree.ElementTree.Element
-        :param dict context: evaluation context
-        """
-        # If @attrs is normalized in json by server, the eval should be replaced by simplejson.loads
-        attrs = openerpweb.ast.literal_eval(elem.get('attrs', '{}'))
-        if 'states' in elem.attrib:
-            attrs.setdefault('invisible', [])\
-                .append(('state', 'not in', elem.attrib.pop('states').split(',')))
-        if attrs:
-            elem.set('attrs', simplejson.dumps(attrs))
-        for a in ['invisible', 'readonly', 'required']:
-            if a in elem.attrib:
-                # In the XML we trust
-                avalue = bool(eval(elem.get(a, 'False'),
-                                   {'context': context or {}}))
-                if not avalue:
-                    del elem.attrib[a]
-                else:
-                    elem.attrib[a] = '1'
-                    if a == 'invisible' and 'attrs' in elem.attrib:
-                        del elem.attrib['attrs']
-
     def transform_view(self, view_string, session, context=None):
         # transform nodes on the fly via iterparse, instead of
         # doing it statically on the parsing result
@@ -622,7 +603,6 @@ class View(openerpweb.Controller):
             if event == "start":
                 if root is None:
                     root = elem
-                self.normalize_attrs(elem, context)
                 self.parse_domains_and_contexts(elem, session)
         return root
 

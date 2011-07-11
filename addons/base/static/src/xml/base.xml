@@ -243,11 +243,11 @@
             <th t-if="actions_span" t-att-colspan="actions_span"
                 class="oe-actions">
                 <t t-if="flags.action_buttons !== false">
-                    <button type="button" id="oe-list-add"
+                    <button type="button" class="oe-list-add"
                             t-if="options.addable">
                         <t t-esc="options.addable"/>
                     </button>
-                    <button type="button" id="oe-list-delete"
+                    <button type="button" class="oe-list-delete"
                             t-if="options.selectable and options.deletable">
                         Delete
                     </button>
@@ -256,16 +256,19 @@
             <th t-att-colspan="columns_count - actions_span"
                 class="oe-list-pager">
                 <t t-if="flags.pager !== false">
-                    <button type="button" data-pager-action="first">First</button>
-                    <button type="button" data-pager-action="previous"
+                    <button type="button" disabled="disabled"
+                            data-pager-action="first">First</button>
+                    <button type="button" disabled="disabled"
+                            data-pager-action="previous"
                             >&lt;&lt;</button>
 
-                    <span class="oe-pager-first">1</span>
-                    to <span class="oe-pager-last">1</span>
-                    of <span class="oe-pager-total">1</span>
+                    <span class="oe-pager-state">
+                    </span>
 
-                    <button type="button" data-pager-action="next">&gt;&gt;</button>
-                    <button type="button" data-pager-action="last">Last</button>
+                    <button type="button" disabled="disabled"
+                            data-pager-action="next">&gt;&gt;</button>
+                    <button type="button" disabled="disabled"
+                            data-pager-action="last">Last</button>
                 </t>
             </th>
         </tr>
@@ -321,20 +324,7 @@
         <td t-if="!column.meta and column.invisible !== '1'" t-att-title="column.help"
             t-att-class="'oe-field-cell' + (align ? ' oe-number' : '')"
             t-att-data-field="column.id">
-            <t t-set="attrs" t-value="column.attrs_for(row.data)"/>
-            <t t-if="!attrs.invisible">
-                <t t-set="is_button" t-value="column.tag === 'button'"/>
-                <!-- TODO: get correct widget from form -->
-                <t t-if="!is_button and row['data'][column.id].value !== false">
-                    <t t-set="value" t-value="row['data'][column.id].value"/>
-                    <t t-esc="value instanceof Array ? value[1] : value"/>
-                </t>
-                <button type="button" t-att-title="column.string"
-                        t-if="is_button">
-                    <img t-att-src="'/base/static/src/img/icons/' + column.icon + '.png'"
-                         t-att-alt="column.string"/>
-                </button>
-            </t>
+            <t t-raw="render_cell(row.data, column)"/>
         </td>
     </t>
     <td t-if="options.deletable" class='oe-record-delete'>
@@ -514,9 +504,9 @@
         t-att-id="widget.element_id + '_field'"
         t-att-class="'field_' + widget.type"
         style="width: 100%">
-            <t t-foreach="widget.field.selection" t-as="options">
-                <option t-att-value="options[0]">
-                    <t t-esc="options[1]"/>
+            <t t-foreach="widget.field_index" t-as="options">
+                <option t-att-value="options.ikey">
+                    <t t-esc="options.label"/>
                 </option>
             </t>
     </select>
