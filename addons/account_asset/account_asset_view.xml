@@ -12,7 +12,7 @@
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Asset category">
-                <field name="name" select="1"/>
+                <field name="name"/>
                 <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                 <separator string="Accounting information" colspan="4" />
                 <field name="journal_id"/>
@@ -83,14 +83,14 @@
         <field name="arch" type="xml">
            <form string="Asset">
               <group col="6" colspan="4">
-                 <field name="name" select="1"/>
-                 <field name="category_id" select="1" on_change="onchange_category_id(category_id)"/>
-                 <field name="code" select="1"/>
-                 <field name="purchase_value" select="1"/>
+                 <field name="name"/>
+                 <field name="category_id" on_change="onchange_category_id(category_id)"/>
+                 <field name="code"/>
+                 <field name="purchase_value"/>
                  <field name="salvage_value"/>
                  <field name="value_residual"/>
-                 <field name="currency_id" select="1"/>
-                 <field name="company_id" select="1" widget="selection" groups="base.group_multi_company"/>
+                 <field name="currency_id"/>
+                 <field name="company_id" widget="selection" groups="base.group_multi_company"/>
               </group>
               <notebook colspan="4">
                  <page string="General">
@@ -230,9 +230,9 @@
         <field name="arch" type="xml">
             <form string="Asset history">
               <group col="6" colspan="4">
-                <field name="name" select="1"/>
-                <field name="date" select="1"/>
-                <field name="user_id" select="1"/>
+                <field name="name"/>
+                <field name="date"/>
+                <field name="user_id"/>
               </group>
               <group col="2" colspan="2">
                 <separator string="Depreciation Dates" colspan="2" />
@@ -253,10 +253,11 @@
         <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Asset history">
-                <field name="date" select="1"/>
-                <field name="name" select="1"/>
-                <field name="user_id" select="1"/>
-                <field name="method_number" select="2"/>
+                <field name="date"/>
+                <field name="name"/>
+                <field name="user_id"/>
+                <field name="method_time"/>
+                <field name="method_number"/>
                 <field name="method_period"/>
                 <field name="method_end"/>
             </tree>

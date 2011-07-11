@@ -407,7 +407,7 @@ class account_asset_history(osv.osv):
         'date': fields.date('Date', required=True),
         'asset_id': fields.many2one('account.asset.asset', 'Asset', required=True),
         'method_time': fields.selection([('number','Number of Depreciations'),('end','Ending Date')], 'Time Method', required=True, 
-                                  help="Choose the method to use to compute the dates and number of depreciation lines.\n"\
+                                  help="The method to use to compute the dates and number of depreciation lines.\n"\
                                        "Number of Depreciations: Fix the number of depreciation lines and the time between 2 depreciations.\n" \
                                        "Ending Date: Choose the time between 2 depreciations and the date the depreciations won't go beyond."),
         'method_number': fields.integer('Number of Depreciations'),
