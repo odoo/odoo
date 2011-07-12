@@ -922,9 +922,9 @@ openerp.base.Login =  openerp.base.Controller.extend({
             this.selected_login = localStorage.getItem('last_login_login_success');
         }
         if (jQuery.deparam(jQuery.param.querystring()).debug != undefined) {
-            this.selected_db = "trunk";
-            this.selected_login = "admin";
-            this.selected_password = "a";
+            this.selected_db = this.selected_db || "trunk";
+            this.selected_login = this.selected_login || "admin";
+            this.selected_password = this.selected_password || "a";
         }
     },
     start: function() {
