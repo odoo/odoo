@@ -1006,66 +1006,9 @@ class calendar_event(osv.osv):
                 result[event] = ""
         return result
     
-    def _parse_rrule(self, rule, data):
-        day_list = ['mo', 'tu', 'we', 'th', 'fr', 'sa', 'su']
-        r = rrule.rrulestr(rule)
-        data['count'] = r._count
-        data['interval'] = r._interval
-        data['end_date'] = r._until and r._until.strftime("%Y-%m-%d %H:%M:%S")
-        #repeat weekly
-        if r._byweekday:
-            for i in xrange(0,7):
-                if i in r._byweekday:
-                    data[day_list[i]] = True
-            data['rrule_type'] = 'weekly'
-        #repeat monthly bynweekday ((weekday, weeknumber), )
-        if r._bynweekday: 
-            data['week_list'] = day_list[r._bynweekday[0][0]].upper()
-            data['byday'] = r._bynweekday[0][1]
-            data['rrule_type'] = 'monthly' 
-            
-        #end of recurrence    
-        #in case of repeat for ever that we do not support right now
-        if not (data.get('count') or data.get('end_date')):
-            data['count'] = 100
-        if data.get('count'):
-            data['end_type'] = 'count'
-        else:
-            data['end_type'] = 'end_date'  
-        return data    
+      
     
-    def _write_rrule(self, cr, uid, ids, field_name, field_value, arg, context):
-        print field_name, field_value
-        data = {
-            'byday' : False,
-            'recurrency' : False,
-            'month_list' : False,
-            'end_date' : False, 
-            'rrule_type' : False, 
-            'select1' : False, 
-            'interval' : 0, 
-            'count' : False, 
-            'end_type' : False, 
-            'mo' : False, 
-            'tu' : False, 
-            'we' : False, 
-            'th' : False, 
-            'fr' : False, 
-            'sa' : False, 
-            'su' : False, 
-            'exrule' : False, 
-            'day' : False, 
-            'week_list' : False
-        }
-        
-        if field_value:
-                update_data = self._parse_rrule(field_value, dict(data))
-                print update_data
-                #parse_rrule
-        self.write(cr, uid, ids, data, context=context)
-        
-        print "rrule", self._get_rulestring(cr, uid, ids, None, arg, context)
-
+    
     _columns = {
         'id': fields.integer('ID'),
         'sequence': fields.integer('Sequence'),
@@ -1088,7 +1031,7 @@ class calendar_event(osv.osv):
 defines the list of date/time exceptions for a recurring calendar component."),
         'exrule': fields.char('Exception Rule', size=352, help="Defines a \
 rule or repeating pattern of time to exclude from the recurring rule."),
-        'rrule': fields.function(_get_rulestring, fnct_inv=_write_rrule, type='char', size=124, \
+        'rrule': fields.function(_get_rulestring, type='char', size=124, \
                                     store=True, string='Recurrent Rule'),
         'rrule_type': fields.selection([('none', ''), ('daily', 'Daily'), \
                             ('weekly', 'Weekly'), ('monthly', 'Monthly'), \
@@ -1239,7 +1182,6 @@ rule or repeating pattern of time to exclude from the recurring rule."),
         @param self: the object pointer
         @param datas: dictionary of freq and interval value.
         """
-        print "compute rule string"
         def get_week_string(freq, datas):
             weekdays = ['mo', 'tu', 'we', 'th', 'fr', 'sa', 'su']
             if freq == 'weekly':
@@ -1271,7 +1213,85 @@ rule or repeating pattern of time to exclude from the recurring rule."),
             return ''
         interval_srting = datas.get('interval') and (';INTERVAL=' + str(datas.get('interval'))) or ''
         return 'FREQ=' + freq.upper() + get_week_string(freq, datas) + interval_srting + get_end_date(datas) + get_month_string(freq, datas)
+    
+    def _get_empty_rrule_data(self):
+        return  {
+            'byday' : False,
+            'recurrency' : False,
+            'end_date' : False, 
+            'rrule_type' : False, 
+            'select1' : False, 
+            'interval' : 0, 
+            'count' : False, 
+            'end_type' : False, 
+            'mo' : False, 
+            'tu' : False, 
+            'we' : False, 
+            'th' : False, 
+            'fr' : False, 
+            'sa' : False, 
+            'su' : False, 
+            'exrule' : False, 
+            'day' : False, 
+            'week_list' : False
+        }
 
+    def _write_rrule(self, cr, uid, ids, field_value, rule_date=False, context=None):
+        data = self._get_empty_rrule_data()
+        
+        if field_value:
+            data['recurrency'] = True
+            for event in self.browse(cr, uid, ids, context=context):
+                rdate = rule_date or event.date
+                update_data = self._parse_rrule(field_value, dict(data), rdate)
+                data.update(update_data)
+                #parse_rrule
+                self.write(cr, uid, event.id, data, context=context)
+        
+
+    def _parse_rrule(self, rule, data, date_start):
+        day_list = ['mo', 'tu', 'we', 'th', 'fr', 'sa', 'su']
+        rrule_type = ['yearly', 'monthly', 'weekly', 'daily']
+        r = rrule.rrulestr(rule, dtstart=datetime.strptime(date_start, "%Y-%m-%d %H:%M:%S"))
+        
+        if r._freq > 0 and r._freq < 4:
+            data['rrule_type'] = rrule_type[r._freq]
+            
+        data['count'] = r._count
+        data['interval'] = r._interval
+        data['end_date'] = r._until and r._until.strftime("%Y-%m-%d %H:%M:%S")
+        #repeat weekly
+        if r._byweekday:
+            for i in xrange(0,7):
+                if i in r._byweekday:
+                    data[day_list[i]] = True
+            data['rrule_type'] = 'weekly'
+        #repeat monthly bynweekday ((weekday, weeknumber), )
+        if r._bynweekday: 
+            data['week_list'] = day_list[r._bynweekday[0][0]].upper()
+            data['byday'] = r._bynweekday[0][1]
+            data['select1'] = 'day'
+            data['rrule_type'] = 'monthly' 
+           
+        if r._bymonthday:
+            data['day'] = r._bymonthday[0]
+            data['select1'] = 'date'
+            data['rrule_type'] = 'monthly'
+            
+        #yearly but for openerp it's monthly, take same information as monthly but interval is 12 times
+        if r._bymonth:
+            data['interval'] = data['interval'] * 12
+            
+        #FIXEME handle forever case
+        #end of recurrence    
+        #in case of repeat for ever that we do not support right now
+        if not (data.get('count') or data.get('end_date')):
+            data['count'] = 100
+        if data.get('count'):
+            data['end_type'] = 'count'
+        else:
+            data['end_type'] = 'end_date'  
+        return data  
 
     def remove_virtual_id(self, ids):
         if isinstance(ids, (str, int, long)):
@@ -1407,8 +1427,12 @@ rule or repeating pattern of time to exclude from the recurring rule."),
         vals.update(updated_vals.get('value', {}))
         if new_ids:
             if 'rrule' in vals.keys():
-                print "write, rrule"
-            print "write ", vals
+                if 'date' in vals.keys():
+                    date_to_write = vals['date']
+                else:
+                    date_to_write = False
+                self._write_rrule(cr, uid, new_ids, vals['rrule'], date_to_write, context)
+                
             res = super(calendar_event, self).write(cr, uid, new_ids, vals, context=context)
 
         if ('alarm_id' in vals or 'base_calendar_alarm_id' in vals)\
@@ -1535,6 +1559,11 @@ rule or repeating pattern of time to exclude from the recurring rule."),
 
         if vals.get('vtimezone', '') and vals.get('vtimezone', '').startswith('/freeassociation.sourceforge.net/tzfile/'):
             vals['vtimezone'] = vals['vtimezone'][40:]
+        
+        if 'date' in vals and 'rrule' in vals and vals['rrule']:
+            update_datas = self._parse_rrule(vals['rrule'], self._get_empty_rrule_data(), vals['date'])
+            update_datas['recurrency'] = True
+            vals.update(update_datas)
 
         updated_vals = self.onchange_dates(cr, uid, [],
             vals.get('date', False),
