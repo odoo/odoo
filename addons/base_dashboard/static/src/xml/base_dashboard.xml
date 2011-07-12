@@ -102,9 +102,7 @@
     <div class="oe-dashboard-home-widgets-widget"
          t-foreach="widgets" t-as="widget">
         <h3><t t-esc="widget.title"/></h3>
-        <div>
-        </div>
-        <t t-raw="widget.content"/>
+        <iframe width="100%" frameborder="0" t-att-src="url + widget.id"/>
     </div>
 </div>
 </template>

@@ -381,44 +381,18 @@ openerp.base_dashboard.Widgets = openerp.base.View.extend({
                 user_widget_id: widget['id']
             };
         });
-        this.widgets.read_ids(_(user_widgets).pluck('widget_id'), [], function (widgets) {
+        this.widgets.read_ids(_(user_widgets).pluck('widget_id'), ['title'], function (widgets) {
             _(widgets).each(function (widget) {
                 _.extend(widget, widget_user[widget['id']]);
             });
-            var root = self.$element[0];
-            root.innerHTML = QWeb.render('HomeWidgets', {
-                widgets: widgets
-            });
-
-            self.process_widgets_scripts(0, root.getElementsByTagName('script'));
+            var url = _.sprintf(
+                '/base_dashboard/widgets/content?session_id=%s&widget_id=',
+                self.session.session_id);
+            self.$element.html(QWeb.render('HomeWidgets', {
+                widgets: widgets,
+                url: url
+            }));
         })
-    },
-    process_widgets_scripts: function (index, nodes) {
-        if (nodes.length <= index) {
-            return;
-        }
-        var old_write = window.document.write,
-                 self = this,
-               script = nodes[index],
-             deferred = $.Deferred().then(function () {
-                            window.document.write = old_write; }),
-         continuation = function () {
-             $.when(self.process_widgets_scripts(index+1, nodes)).then(
-                     deferred.resolve());
-         };
-        window.document.write = function (s) {
-            $(script).closest('.oe-dashboard-home-widgets-widget')
-                .children('div')
-                .append(s);
-        };
-
-        if (!script.src) {
-            new Function(script.firstChild.nodeValue)();
-            setTimeout(continuation);
-        } else {
-            $LAB.script(script.src).wait(continuation);
-        }
-        return deferred;
     }
 });
 };
