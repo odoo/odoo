@@ -364,7 +364,7 @@ openerp.base_dashboard.Widgets = openerp.base.View.extend({
         this.user_widgets = new openerp.base.DataSetSearch(
                 this.session, 'res.widget.user', null,
                 ['|', ['user_id', '=', false],
-                      ['user_id', '=', this.session.uid]]);
+                      ['user_id', '=', parseInt(this.session.uid, 10)]]);
         this.widgets = new openerp.base.DataSetSearch(this.session, 'res.widget');
     },
     start: function () {
