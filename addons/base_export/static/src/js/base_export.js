@@ -15,27 +15,21 @@ openerp.base_export.Export = openerp.base.Controller.extend({
     on_loaded: function(result) {
         var self = this;
         var element_id = _.uniqueId("act_window_dialog");
-        var _export = $('<div>', {id: element_id}).dialog({
+        this._export = $('<div>', {id: element_id}).dialog({
             title: "Export Data",
             modal: true,
             width: '50%',
             height: 'auto',
             buttons : {
                         "Close" : function() {
-                        _export.dialog('destroy');
+                        this._export.dialog('destroy');
                           },
                         "Export To File" : function() {
-                        _export.dialog('destroy');
+                        this._export.dialog('destroy');
                           }
                        }
-        }).html(QWeb.render('ExportTreeView', {'fields': result}))
-
-		jQuery(_export).find('[id^=export]').dblclick(function(){
-            self.add_field(this.id, this.text)
-		});
-        jQuery(_export).find('[id^=parentimg]').click(function(){
-            self.on_click(this.id, result);
-        });
+        }).html(QWeb.render('ExportTreeView'))
+        self.on_show_data(result)
     },
 
     on_click: function(id, result) {
@@ -52,17 +46,19 @@ openerp.base_export.Export = openerp.base.Controller.extend({
 	        }
 	    }
 	    if (model){
-	       self.get_data(model, prefix, name)
+	       this.rpc("/base_export/export/get_fields", {"model": model, "prefix": prefix, "field_parent" : this.field_id, "name": name}, this.on_show_data, {});
         }
-    },
-
-    get_data: function(model, prefix, name) {
-        this.rpc("/base_export/export/get_fields", {"model": model, "prefix": prefix, "field_parent" : this.field_id, "name": name}, this.on_show_data, {});
     },
 
     on_show_data: function(result) {
         var self = this;
-        $("tr[id='treerow_" + self.field_id + "']").after(QWeb.render('ExportTreeView-Secondary', {'fields': result}));
+        var current_tr = $("tr[id='treerow_" + self.field_id + "']");
+        if (current_tr.length >= 1){
+            current_tr.after(QWeb.render('ExportTreeView-Secondary', {'fields': result}));
+        }
+        else{
+            jQuery(self._export).find('#left_field_panel').append(QWeb.render('ExportTreeView-Secondary',  {'fields': result}));
+        }
         jQuery($.find('img[id ^= parentimg]')).click(function(){
             self.on_click(this.id, result);
         });
