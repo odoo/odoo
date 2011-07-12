@@ -248,6 +248,10 @@ def flatten(list):
             r.append(e)
     return r
 
+def get_hostname(obj, cr, uid):
+    return obj.pool.get('ir.config_parameter').get_param(cr, uid, 'network.hostname', default="localhost")
+    
+
 def reverse_enumerate(l):
     """Like enumerate but in the other sens
     
