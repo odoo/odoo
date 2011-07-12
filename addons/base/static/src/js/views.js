@@ -22,11 +22,11 @@ openerp.base.ActionManager = openerp.base.Controller.extend({
         var self = this;
         action.flags = _.extend({
             sidebar : action.target != 'new',
-            search_view : true,
+            search_view : action.target != 'new',
             new_window : false,
-            views_switcher : true,
-            action_buttons : true,
-            pager : true
+            views_switcher : action.target != 'new',
+            action_buttons : action.target != 'new',
+            pager : action.target != 'new'
         }, action.flags || {});
         // instantiate the right controllers by understanding the action
         switch (action.type) {
@@ -445,11 +445,6 @@ openerp.base.View = openerp.base.Controller.extend({
                     active_model: dataset.model
                 });
                 action.flags = {
-                    sidebar : false,
-                    search_view : false,
-                    views_switcher : false,
-                    action_buttons : false,
-                    pager : false,
                     new_window: true
                 };
                 action_manager.do_action(action, on_closed);
