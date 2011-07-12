@@ -308,6 +308,9 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
                         'invisible': domain_computer(modifiers.invisible, fields)
                     };
                 };
+                if (modifiers['tree_invisible']) {
+                    column.invisible = '1';
+                }
             } else {
                 column.modifiers_for = noop;
             }
