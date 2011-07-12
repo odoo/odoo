@@ -487,21 +487,24 @@ base_action_rule()
 
 
 class ir_cron(osv.osv):
-    _inherit = 'ir.cron' 
-    
+    _inherit = 'ir.cron'
+    _init_done = False
+
     def _poolJobs(self, db_name, check=False):
-        try:
-            db = pooler.get_db(db_name)
-        except:
-            return False
-        cr = db.cursor()
-        try:
-            next = datetime.now().strftime('%Y-%m-%d %H:00:00')
-            # Putting nextcall always less than current time in order to call it every time
-            cr.execute('UPDATE ir_cron set nextcall = \'%s\' where numbercall<>0 and active and model=\'base.action.rule\' ' % (next))
-        finally:
-            cr.commit()
-            cr.close()
+        if not self._init_done:
+            self._init_done = True
+            try:
+                db = pooler.get_db(db_name)
+            except:
+                return False
+            cr = db.cursor()
+            try:
+                next = datetime.now().strftime('%Y-%m-%d %H:00:00')
+                # Putting nextcall always less than current time in order to call it every time
+                cr.execute('UPDATE ir_cron set nextcall = \'%s\' where numbercall<>0 and active and model=\'base.action.rule\' ' % (next))
+            finally:
+                cr.commit()
+                cr.close()
 
         super(ir_cron, self)._poolJobs(db_name, check=check)
 

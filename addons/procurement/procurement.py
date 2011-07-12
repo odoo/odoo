@@ -527,7 +527,7 @@ class stock_warehouse_orderpoint(osv.osv):
             help="The procurement quantity will be rounded up to this multiple."),
         'procurement_id': fields.many2one('procurement.order', 'Latest procurement', ondelete="set null"),
         'company_id': fields.many2one('res.company','Company',required=True),
-        'procurement_draft_ids': fields.function(_get_draft_procurements, method=True, type='many2many', relation="procurement.order", \
+        'procurement_draft_ids': fields.function(_get_draft_procurements, type='many2many', relation="procurement.order", \
                                 string="Related Procurement Orders",help="Draft procurement of the product and location of that orderpoint"),
     }
     _defaults = {

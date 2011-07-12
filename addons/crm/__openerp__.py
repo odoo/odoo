@@ -56,6 +56,7 @@ Creates a dashboard for CRM that includes:
     'depends': [
         'base',
         'base_action_rule',
+        'base_setup',
         'process',
         'mail_gateway',
         'base_calendar',
@@ -129,6 +130,7 @@ Creates a dashboard for CRM that includes:
             'test/test_crm_phonecall.yml',
             'test/test_crm_recurrent_meeting.yml',
             'test/test_crm_stage_changes.yml',
+            'test/test_crm_recurrent_meeting_case2.yml',
              ],
     'installable': True,
     'active': False,
