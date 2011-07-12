@@ -28,6 +28,7 @@ from tools.translate import _
 
 class res_currency(osv.osv):
     def _current_rate(self, cr, uid, ids, name, arg, context=None):
+        currency_rate_obj = self.pool.get('res.currency.rate')
         if context is None:
             context = {}
         res = {}
@@ -36,15 +37,16 @@ class res_currency(osv.osv):
         else:
             date = time.strftime('%Y-%m-%d')
         date = date or time.strftime('%Y-%m-%d')
-        currency_rate_type_id = context.get('currency_rate_type_id', 0) 
+        domain = [('currency_id','in',ids), ('name','<=',date)]
+        currency_rate_type_id = context.get('currency_rate_type_id', False)
+        if currency_rate_type_id:
+            domain.append(('currency_rate_type_id','=',currency_rate_type_id))
+        curr_rate_ids = currency_rate_obj.search(cr, uid, domain, context=context)
         for id in ids:
-            cr.execute("SELECT currency_id, rate FROM res_currency_rate "\
-                       "WHERE currency_id = %s AND name <= %s AND currency_rate_type_id = %s "\
-                       "ORDER BY name desc LIMIT 1" ,(id, date, currency_rate_type_id))
-                       
-            if cr.rowcount:
-                id, rate = cr.fetchall()[0]
-                res[id] = rate
+            if curr_rate_ids:
+                for cur in currency_rate_obj.browse(cr, uid, curr_rate_ids, context=context):
+                    if cur.currency_id.id == id:
+                        res[id] = cur.rate
             else:
                 res[id] = 0
 
