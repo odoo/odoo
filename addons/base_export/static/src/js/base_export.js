@@ -101,6 +101,16 @@ openerp.base_export.Export = openerp.base.Controller.extend({
             self.selected_field_id = this.id;
             self.selected_field_str = this.text;
         });
+        jQuery($.find('#fields_list')).mouseover(function(event){
+            if(event.relatedTarget){
+                if ('id' in event.relatedTarget.attributes && 'string' in event.relatedTarget.attributes){
+                    field_id = event.relatedTarget.attributes["id"]["value"]
+                    if (field_id && field_id.split("-")[0] == 'export'){
+                        self.add_field(event.relatedTarget.attributes['id']["value"], event.relatedTarget.attributes["string"]["value"]);
+                    }
+                }
+            }
+        });
     },
 
     // show & hide the contents
