@@ -304,6 +304,7 @@ QWeb2.Engine = (function() {
                     "   /* START TEMPLATE */ try {\n" +
                     (e.compile()) + "\n" +
                     "   /* END OF TEMPLATE */ } catch(error) {\n" +
+                    "       if (console && console.exception) console.exception(error);\n" +
                     "       context.engine.tools.exception('Runtime Error: ' + error, context);\n" +
                     "   }\n" +
                     "   return r.join('');";
