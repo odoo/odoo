@@ -1212,8 +1212,6 @@ class serialized(_column):
         self._symbol_get = self._deserialize_func
         super(serialized, self).__init__(string=string, **args)
 
-import orm
-
 # TODO: review completly this class for speed improvement
 class property(function):
 
