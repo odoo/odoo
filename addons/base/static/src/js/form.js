@@ -51,6 +51,11 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
                 toolbar:!!this.flags.sidebar, context: context}, this.on_loaded);
         }
     },
+    stop: function() {
+        _.each(this.widgets, function(w) {
+            w.stop();
+        });
+    },
     on_loaded: function(data) {
         var self = this;
         this.fields_view = data.fields_view;
@@ -532,6 +537,9 @@ openerp.base.form.Widget = openerp.base.Controller.extend({
     start: function() {
         this.$element = $('#' + this.element_id);
     },
+    stop: function() {
+        this.$element.remove();
+    },
     process_modifiers: function() {
         var compute_domain = openerp.base.form.compute_domain;
         for (var a in this.modifiers) {
@@ -590,7 +598,10 @@ openerp.base.form.WidgetFrame = openerp.base.form.Widget.extend({
         }
     },
     handle_node: function(node) {
-        var type = this.view.fields_view.fields[node.attrs.name] || {};
+        var type = {};
+        if (node.tag == 'field') {
+            type = this.view.fields_view.fields[node.attrs.name] || {};
+        }
         var widget = new (this.view.registry.get_any(
                 [node.attrs.widget, type.type, node.tag])) (this.view, node);
         if (node.tag == 'field') {
@@ -617,14 +628,14 @@ openerp.base.form.WidgetFrame = openerp.base.form.Widget.extend({
 });
 
 openerp.base.form.WidgetNotebook = openerp.base.form.Widget.extend({
+    template: 'WidgetNotebook',
     init: function(view, node) {
         this._super(view, node);
-        this.template = "WidgetNotebook";
         this.pages = [];
         for (var i = 0; i < node.children.length; i++) {
             var n = node.children[i];
             if (n.tag == "page") {
-                var page = new openerp.base.form.WidgetFrame(this.view, n);
+                var page = new openerp.base.form.WidgetNotebookPage(this.view, n, this, this.pages.length);
                 this.pages.push(page);
             }
         }
@@ -632,6 +643,28 @@ openerp.base.form.WidgetNotebook = openerp.base.form.Widget.extend({
     start: function() {
         this._super.apply(this, arguments);
         this.$element.tabs();
+    }
+});
+
+openerp.base.form.WidgetNotebookPage = openerp.base.form.WidgetFrame.extend({
+    template: 'WidgetNotebookPage',
+    init: function(view, node, notebook, index) {
+        this.notebook = notebook;
+        this.index = index;
+        this.element_name = 'page_' + index;
+        this._super(view, node);
+        this.element_tab_id = this.element_id + '_tab';
+    },
+    start: function() {
+        this._super.apply(this, arguments);
+        this.$element_tab = $('#' + this.element_tab_id);
+    },
+    update_dom: function() {
+        if (this.invisible) {
+            this.notebook.$element.tabs('select', 0);
+        }
+        this.$element_tab.toggle(!this.invisible);
+        this.$element.toggle(!this.invisible);
     }
 });
 
@@ -902,6 +935,7 @@ openerp.base.form.FieldFloat = openerp.base.form.FieldChar.extend({
         if (value === false || value === undefined) {
             // As in GTK client, floats default to 0
             value = 0;
+            this.touched = true;
         }
         var show_value = value.toFixed(2);
         this.$element.find('input').val(show_value);
@@ -921,6 +955,7 @@ openerp.base.form.FieldInteger = openerp.base.form.FieldFloat.extend({
         if (value === false || value === undefined) {
             // TODO fme: check if GTK client default integers to 0 (like it does with floats)
             value = 0;
+            this.touched = true;
         }
         var show_value = parseInt(value, 10);
         this.$element.find('input').val(show_value);
@@ -967,7 +1002,7 @@ openerp.base.form.FieldDatetime = openerp.base.form.Field.extend({
     },
     update_dom: function() {
         this._super.apply(this, arguments);
-        this.$element.find('input').attr('disabled', this.readonly);
+        this.$element.find('input').datepicker(this.readonly ? 'disable' : 'enable');
     },
     validate: function() {
         this.invalid = false;
@@ -1007,6 +1042,7 @@ openerp.base.form.FieldFloatTime = openerp.base.form.FieldChar.extend({
         if (value === false || value === undefined) {
             // As in GTK client, floats default to 0
             value = 0;
+            this.touched = true;
         }
         var show_value = _.sprintf("%02d:%02d", Math.floor(value), Math.round((value % 1) * 60));
         this.$element.find('input').val(show_value);

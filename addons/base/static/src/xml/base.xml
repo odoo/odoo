@@ -278,7 +278,7 @@
                     <t t-esc="column.string"/>
                 </th>
             </t>
-            <th t-if="options.selectable"/>
+            <th t-if="options.selectable" width="1"/>
             <t t-foreach="columns" t-as="column">
                 <th t-if="!column.meta and column.invisible !== '1'" t-att-data-id="column.id"
                     t-att-class="((options.sortable and column.tag !== 'button') ? 'oe-sortable' : null)">
@@ -288,7 +288,7 @@
                     </t>
                 </th>
             </t>
-            <th t-if="options.deletable"/>
+            <th t-if="options.deletable" width="1"/>
         </tr>
     </thead>
     <tfoot class="ui-widget-header">
@@ -316,7 +316,7 @@
             
         </td>
     </t>
-    <th t-if="options.selectable" class="oe-record-selector">
+    <th t-if="options.selectable" class="oe-record-selector" width="1">
         <input type="checkbox"/>
     </th>
     <t t-foreach="columns" t-as="column">
@@ -327,7 +327,7 @@
             <t t-raw="render_cell(row.data, column)"/>
         </td>
     </t>
-    <td t-if="options.deletable" class='oe-record-delete'>
+    <td t-if="options.deletable" class='oe-record-delete' width="1">
         <button type="button" name="delete">♻</button>
     </td>
 </tr>
@@ -419,17 +419,20 @@
 </t>
 <t t-name="WidgetNotebook">
     <ul>
-        <li t-foreach="widget.pages" t-as="page">
-            <a t-att-href="'#' + widget.element_id + '-' + page_index">
+        <li t-foreach="widget.pages" t-as="page" t-att-id="page.element_tab_id">
+            <a t-att-href="'#' + page.element_id">
                 <t t-esc="page.string"/>
             </a>
         </li>
     </ul>
     <t t-foreach="widget.pages" t-as="page">
-        <div t-att-id="widget.element_id + '-' + page_index">
-            <t t-raw="page.render()"/>
-        </div>
+        <t t-raw="page.render()"/>
     </t>
+</t>
+<t t-name="WidgetNotebookPage">
+    <div t-att-id="widget.element_id">
+        <t t-call="WidgetFrame"/>
+    </div>
 </t>
 <t t-name="WidgetSeparator">
     <div t-att-class="'separator ' + (widget.node.attrs.orientation || 'horizontal')">
