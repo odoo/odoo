@@ -845,6 +845,7 @@ openerp.base.Dialog = openerp.base.BaseWidget.extend({
         this.$dialog.dialog('close');
     },
     stop: function () {
+        this.close();
         this.$dialog.dialog('destroy');
     }
 });
