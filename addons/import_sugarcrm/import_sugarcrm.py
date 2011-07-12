@@ -955,14 +955,15 @@ class import_sugarcrm(osv.osv):
     def get_all(self, cr, uid,model, context=None):
         obj_module = self.pool.get('ir.module.module')
         module_id = obj_module.search(cr, uid, [('name', '=', model)])
+        flag = False
         if module_id:
                 for id in module_id:
                     module_state = obj_module.browse(cr, uid, id).state
                     if module_state == 'installed':
-                        return True
+                        flag = True
                     else:
-                        return False
-        return True
+                        flag = False
+        return flag
                 
     def _get_project(self, cr, uid, context=None):
         return self.get_all(cr,uid,'project',context=context)
@@ -1085,16 +1086,11 @@ class import_sugarcrm(osv.osv):
         model = list(set_list)
         if not keys:
             raise osv.except_osv(_('Warning !'), _('Select Module to Import.'))
-        obj_module = self.pool.get('ir.module.module')
-        module_id = obj_module.search(cr, uid, [('name', 'in', model)])
-        if module_id:
-                for id in module_id:
-                    module_state = obj_module.browse(cr, uid, id).state
-                    if module_state == 'uninstalled':
-                        keys =  ', '.join(keys)
-                        module = ', '.join(model)
-                        raise osv.except_osv(_('Error !!'), _("%s data required %s Module to be installed, please install %s module") %(keys,module,module))
-
+        for module in model:
+            state = self.get_all(cr,uid,module,context=context)
+            if state == False:
+                keys =  ', '.join(keys)
+                raise osv.except_osv(_('Error !!'), _("%s data required %s Module to be installed, Please install %s module") %(keys,module,module))
         cron_obj = self.pool.get('ir.cron')
         url = self.parse_valid_url(context)
         args = (keys,context.get('email_user'), context.get('instance_name'), url, context.get('username'), context.get('password') )
@@ -1116,15 +1112,11 @@ class import_sugarcrm(osv.osv):
         model = list(set_list)
         if not keys:
             raise osv.except_osv(_('Warning !'), _('Select Module to Import.'))
-        obj_module = self.pool.get('ir.module.module')
-        module_id = obj_module.search(cr, uid, [('name', 'in', model)])
-        if module_id:
-                for id in module_id:
-                    module_state = obj_module.browse(cr, uid, id).state
-                    if module_state == 'uninstalled':
-                        keys =  ', '.join(keys)
-                        module = ', '.join(model)
-                        raise osv.except_osv(_('Error !!'), _("%s data required %s Module to be installed, please install %s module") %(keys,module,module))
+        for module in model:
+            state = self.get_all(cr,uid,module,context=context)
+            if state == False:
+                keys =  ', '.join(keys)
+                raise osv.except_osv(_('Error !!'), _("%s data required %s Module to be installed, Please install %s module") %(keys,module,module))
         url = self.parse_valid_url(context)
         context.update({'url': url})
         imp = sugar_import(self, cr, uid, context.get('instance_name'), "import_sugarcrm", [context.get('email_user')], context)
@@ -1141,6 +1133,5 @@ class import_sugarcrm(osv.osv):
                 'type': 'ir.actions.act_window',
                 'target': 'new',
             }
-        
         
 import_sugarcrm()
