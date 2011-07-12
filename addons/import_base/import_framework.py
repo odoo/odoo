@@ -49,7 +49,6 @@ class import_framework(Thread):
     #TODO don't use context to pass credential parameters
     def __init__(self, obj, cr, uid, instance_name, module_name, email_to_notify=False, context=None):
         Thread.__init__(self)
-        #change this value to set another default field for unique ID in the external table
         self.external_id_field = 'id'
         self.obj = obj
         self.cr = cr
@@ -59,8 +58,7 @@ class import_framework(Thread):
         self.context = context or {}
         self.email = email_to_notify
         self.table_list = []
-        self.initialize()
-        
+
     """
         Abstract Method to be implemented in 
         the real instance
@@ -317,6 +315,7 @@ class import_framework(Thread):
         xml_ref = self.mapped_id_if_exist(model, domain_search, table, name)
         fields.append('id')
         data.append(xml_id)
+
         obj.import_data(self.cr, self.uid, fields, [data], mode='update', current_module=self.module_name, noupdate=True, context=self.context)
         return xml_ref or xml_id
     
@@ -361,6 +360,7 @@ class import_framework(Thread):
         self.data_started = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         self.cr = pooler.get_db(self.cr.dbname).cursor()
         try:
+            self.initialize()
             result = []
             imported = set() #to invoid importing 2 times the sames modules
             for table in self.table_list:
@@ -401,6 +401,7 @@ class import_framework(Thread):
     def _send_notification_email(self, result):
         if not self.email:
             return False	 
+
         tools.email_send(
                 'import@module.openerp',
                 self.email,
@@ -451,15 +452,20 @@ class import_framework(Thread):
     def run_test(self):
         back_get_data = self.get_data
         back_get_link = self.get_link
+        back_init = self.initialize
         self.get_data = self.get_data_test
         self.get_link = self.get_link_test
+        self.initialize = self.intialize_test
         self.run()
         self.get_data = back_get_data
         self.get_link = back_get_link
-        
+        self.initialize = back_init
         
     def get_data_test(self, table):
         return [{}]
 
     def get_link_test(self, from_table, ids, to_table):
         return {}
+    
+    def intialize_test(self):
+        pass
