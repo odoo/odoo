@@ -1,0 +1,66 @@
+<!--conf
+<sample>
+              <product version="2.6" edition="std"/>
+                     <modifications>
+                            <modified date="100609"/>
+                     </modifications>
+               </sample>
+ -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+	<title>Colors: default</title>
+	<script src="../../codebase/dhtmlxchart.js" type="text/javascript"></script>
+	<link rel="STYLESHEET" type="text/css" href="../../codebase/dhtmlxchart.css">
+	
+	<style>
+		.dhx_chart_title{
+			padding-left:3px
+		}
+	</style>
+	<script>
+	var data = [
+		{ sales:"2.9", year:"2000" },
+		{ sales:"3.5", year:"2001" },
+		{ sales:"3.1", year:"2002" },
+		{ sales:"4.2", year:"2003" },
+		{ sales:"4.5", year:"2004" },
+		{ sales:"9.6", year:"2005" },
+		{ sales:"7.4", year:"2006" },
+		{ sales:"9.0", year:"2007" },
+		{ sales:"7.3", year:"2008" },
+		{ sales:"4.8", year:"2009" }
+	];
+window.onload = function(){
+	var barChart =  new dhtmlXChart({
+		view:"bar",
+		container:"chart_container",
+		value:"#sales#",
+		label:"#year#",
+		padding:{
+			bottom:0,
+			right:0,
+			left:0
+		},
+		width:30
+	})
+	barChart.parse(data,"json");
+	
+	var barChart2 =  new dhtmlXChart({
+		view:"pie",
+		container:"chart_container2",
+		value:"#sales#",
+	    details:"#year#"
+	});
+	barChart2.parse(data,"json");
+}
+	</script>
+</head>
+<body>
+	<p>Chart colors are defined by color property. If it is not set, chart is colored using "rainbow" algorithm.</p>
+	<div id="chart_container" style="width:450px;height:300px;border:1px solid #A4BED4;float:left;margin-right:20px"></div>
+	<div id="chart_container2" style="width:450px;height:300px;border:1px solid #A4BED4;"></div>
+	
+	
+</body>
+</html>

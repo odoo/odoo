@@ -59,6 +59,24 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
         if (this.dataset instanceof openerp.base.DataSetStatic) {
             this.groups.datagroup = new openerp.base.StaticDataGroup(this.dataset);
         }
+
+        this.page = 0;
+    },
+    /**
+     * Retrieves the view's number of records per page (|| section)
+     *
+     * options > defaults > view_manager.action.limit > indefinite
+     *
+     * @returns {Number|null}
+     */
+    limit: function () {
+        if (this._limit === undefined) {
+            this._limit = (this.options.limit
+                        || this.defaults.limit
+                        || (this.view_manager.action || {}).limit
+                        || null);
+        }
+        return this._limit;
     },
     /**
      * Set a custom Group construct as the root of the List View.
@@ -134,10 +152,10 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
         this.$element.html(QWeb.render("ListView", this));
 
         // Head hook
-        this.$element.find('#oe-list-add')
+        this.$element.find('.oe-list-add')
                 .click(this.do_add_record)
                 .attr('disabled', grouped && this.options.editable);
-        this.$element.find('#oe-list-delete')
+        this.$element.find('.oe-list-delete')
                 .attr('disabled', true)
                 .click(this.do_delete_selected);
         this.$element.find('thead').delegate('th[data-id]', 'click', function (e) {
@@ -149,7 +167,74 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
             self.reload_view();
         });
 
+        this.$element.find('.oe-list-pager')
+            .delegate('button', 'click', function () {
+                var $this = $(this);
+                switch ($this.data('pager-action')) {
+                    case 'first':
+                        self.page = 0; break;
+                    case 'last':
+                        self.page = Math.floor(
+                            self.dataset.ids.length / self.limit());
+                        break;
+                    case 'next':
+                        self.page += 1; break;
+                    case 'previous':
+                        self.page -= 1; break;
+                }
+                self.reload_content();
+            }).find('.oe-pager-state')
+                .click(function (e) {
+                    e.stopPropagation();
+                    var $this = $(this);
+
+                    var $select = $('<select>')
+                        .appendTo($this.empty())
+                        .click(function (e) {e.stopPropagation();})
+                        .append('<option value="80">80</option>' +
+                                '<option value="100">100</option>' +
+                                '<option value="200">200</option>' +
+                                '<option value="500">500</option>' +
+                                '<option value="NaN">Unlimited</option>')
+                        .change(function () {
+                            var val = parseInt($select.val(), 10);
+                            self._limit = (isNaN(val) ? null : val);
+                            self.page = 0;
+                            self.reload_content();
+                        })
+                        .val(self._limit || 'NaN');
+                });
+
         this.view_manager.sidebar.set_toolbar(data.fields_view.toolbar);
+    },
+    /**
+     * Configures the ListView pager based on the provided dataset's information
+     *
+     * Horrifying side-effect: sets the dataset's data on this.dataset?
+     *
+     * @param {openerp.base.DataSet} dataset
+     */
+    configure_pager: function (dataset) {
+        this.dataset.ids = dataset.ids;
+
+        var limit = this.limit(),
+            total = dataset.ids.length,
+            first = (this.page * limit),
+            last;
+        if (!limit || (total - first) < limit) {
+            last = total;
+        } else {
+            last = first + limit;
+        }
+        this.$element.find('span.oe-pager-state').empty().text(_.sprintf(
+            "[%d to %d] of %d", first + 1, last, total));
+
+        this.$element
+            .find('button[data-pager-action=first], button[data-pager-action=previous]')
+                .attr('disabled', this.page === 0)
+            .end()
+            .find('button[data-pager-action=last], button[data-pager-action=next]')
+                .attr('disabled', last === total);
     },
     /**
      * Sets up the listview's columns: merges view and fields data, move
@@ -167,22 +252,23 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
             var name = field.attrs.name;
             var column = _.extend({id: name, tag: field.tag},
                     field.attrs, fields[name]);
-            // attrs computer
-            if (column.attrs) {
-                var attrs = JSON.parse(column.attrs);
-                column.attrs_for = function (fields) {
-                    var result = {};
-                    for (var attr in attrs) {
-                        result[attr] = domain_computer(attrs[attr], fields);
+            // modifiers computer
+            if (column.modifiers) {
+                var modifiers = JSON.parse(column.modifiers);
+                column.modifiers_for = function (fields) {
+                    if (!modifiers.invisible) {
+                        return {};
                     }
-                    return result;
+                    return {
+                        'invisible': domain_computer(modifiers.invisible, fields)
+                    };
                 };
             } else {
-                column.attrs_for = noop;
+                column.modifiers_for = noop;
             }
             return column;
         };
-        
+
         this.columns.splice(0, this.columns.length);
         this.columns.push.apply(
                 this.columns,
@@ -190,10 +276,10 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
         if (grouped) {
             this.columns.unshift({
                 id: '_group', tag: '', string: "Group", meta: true,
-                attrs_for: function () { return {}; }
+                modifiers_for: function () { return {}; }
             }, {
                 id: '_count', tag: '', string: '#', meta: true,
-                attrs_for: function () { return {}; }
+                modifiers_for: function () { return {}; }
             });
         }
 
@@ -264,10 +350,8 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
      */
     reload_view: function (grouped) {
         var self = this;
-        this.dataset.offset = 0;
-        this.dataset.limit = false;
         var callback = function (field_view_get) {
-                self.on_loaded(field_view_get, grouped);
+            self.on_loaded(field_view_get, grouped);
         };
         if (this.embedded_view) {
             return $.Deferred().then(callback).resolve({fields_view: this.embedded_view});
@@ -326,9 +410,9 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
             $.proxy(this, 'reload_content'));
     },
     /**
-     * Handles the signal to delete a line from the DOM
+     * Handles the signal to delete lines from the records list
      *
-     * @param {Array} ids the id of the object to delete
+     * @param {Array} ids the ids of the records to delete
      */
     do_delete: function (ids) {
         if (!ids.length) {
@@ -336,7 +420,7 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
         }
         var self = this;
         return $.when(this.dataset.unlink(ids)).then(function () {
-            self.reload_content();
+            self.groups.drop_records(ids);
         });
     },
     /**
@@ -346,7 +430,7 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
      * @param {Array} records selected record values
      */
     do_select: function (ids, records) {
-        this.$element.find('#oe-list-delete')
+        this.$element.find('.oe-list-delete')
             .attr('disabled', !ids.length);
 
         if (!records.length) {
@@ -505,6 +589,7 @@ openerp.base.ListView.List = Class.extend( /** @lends openerp.base.ListView.List
     init: function (group, opts) {
         var self = this;
         this.group = group;
+        this.view = group.view;
 
         this.options = opts.options;
         this.columns = opts.columns;
@@ -553,19 +638,9 @@ openerp.base.ListView.List = Class.extend( /** @lends openerp.base.ListView.List
             this.$current.remove();
         }
         this.$current = this.$_element.clone(true);
-        this.$current.empty().append(QWeb.render('ListView.rows', this));
-    },
-    get_fields_view: function () {
-        // deep copy of view
-        var view = $.extend(true, {}, this.group.view.fields_view);
-        _(view.arch.children).each(function (widget) {
-            widget.attrs.nolabel = true;
-            if (widget.tag === 'button') {
-                delete widget.attrs.string;
-            }
-        });
-        view.arch.attrs.col = 2 * view.arch.children.length;
-        return view;
+        this.$current.empty().append(
+            QWeb.render('ListView.rows', _.extend({
+                render_cell: this.render_cell}, this)));
     },
     /**
      * Gets the ids of all currently selected records, if any
@@ -695,8 +770,67 @@ openerp.base.ListView.List = Class.extend( /** @lends openerp.base.ListView.List
             options: this.options,
             row: this.rows[record_index],
             row_parity: (record_index % 2 === 0) ? 'even' : 'odd',
-            row_index: record_index
+            row_index: record_index,
+            render_cell: this.render_cell
         });
+    },
+    /**
+     * Formats the rendring of a given value based on its field type
+     *
+     * @param {Object} row_data record whose values should be displayed in the cell
+     * @param {Object} column column descriptor
+     * @param {"button"|"field"} column.tag base control type
+     * @param {String} column.type widget type for a field control
+     * @param {String} [column.string] button label
+     * @param {String} [column.icon] button icon
+     */
+    render_cell: function (row_data, column) {
+        var attrs = column.modifiers_for(row_data);
+        if (attrs.invisible) { return ''; }
+        if (column.tag === 'button') {
+            return [
+                '<button type="button" title="', column.string || '', '">',
+                    '<img src="/base/static/src/img/icons/', column.icon, '.png"',
+                        ' alt="', column.string || '', '"/>',
+                '</button>'
+            ].join('')
+        }
+
+        var record = row_data[column.id];
+        if (record.value === false) { return ''; }
+        switch (column.widget || column.type) {
+            case 'many2one':
+                // name_get value format
+                return record.value[1];
+            case 'float_time':
+                return _.sprintf("%02d:%02d",
+                        Math.floor(record.value),
+                        Math.round((record.value % 1) * 60));
+            case 'progressbar':
+                return _.sprintf(
+                    '<progress value="%.2f" max="100.0">%.2f%%</progress>',
+                        record.value, record.value);
+            default:
+                return record.value;
+        }
+    },
+    /**
+     * Stops displaying the records matching the provided ids.
+     *
+     * @param {Array} ids identifiers of the records to remove
+     */
+    drop_records: function (ids) {
+        var self = this;
+        _(this.rows).chain()
+              .map(function (record, index) {
+                return {index: index, id: record.data.id.value};
+            }).filter(function (record) {
+                return _(ids).contains(record.id);
+            }).reverse()
+              .each(function (record) {
+                self.$current.find('tr:eq(' + record.index + ')').remove();
+                self.rows.splice(record.index, 1);
+            })
     }
     // drag and drop
 });
@@ -715,13 +849,10 @@ openerp.base.ListView.Groups = Class.extend( /** @lends openerp.base.ListView.Gr
         this.columns = view.columns;
         this.datagroup = null;
 
-        this.sections = [];
+        this.$row = null;
         this.children = {};
-    },
-    pad: function ($row) {
-        if (this.options.selectable) {
-            $row.append('<td>');
-        }
+
+        this.page = 0;
     },
     make_fragment: function () {
         return document.createDocumentFragment();
@@ -753,10 +884,35 @@ openerp.base.ListView.Groups = Class.extend( /** @lends openerp.base.ListView.Gr
         }
         return red_letter_tboday;
     },
+    make_paginator: function () {
+        var self = this;
+        var $prev = $('<button type="button" data-pager-action="previous">&lt;</button>')
+            .click(function (e) {
+                e.stopPropagation();
+                self.page -= 1;
+
+                self.$row.closest('tbody').next()
+                    .replaceWith(self.render());
+            });
+        var $next = $('<button type="button" data-pager-action="next">&gt;</button>')
+            .click(function (e) {
+                e.stopPropagation();
+                self.page += 1;
+
+                self.$row.closest('tbody').next()
+                    .replaceWith(self.render());
+            });
+        this.$row.children().last()
+            .append($prev)
+            .append('<span class="oe-pager-state"></span>')
+            .append($next);
+    },
     open: function (point_insertion) {
         this.render().insertAfter(point_insertion);
+        this.make_paginator();
     },
     close: function () {
+        this.$row.children().last().empty();
         this.apoptosis();
     },
     /**
@@ -788,7 +944,7 @@ openerp.base.ListView.Groups = Class.extend( /** @lends openerp.base.ListView.Gr
             self.bind_child_events(child);
             child.datagroup = group;
 
-            var $row = $('<tr>');
+            var $row = child.$row = $('<tr>');
             if (group.openable) {
                 $row.click(function (e) {
                     if (!$row.data('open')) {
@@ -808,7 +964,7 @@ openerp.base.ListView.Groups = Class.extend( /** @lends openerp.base.ListView.Gr
             }
             placeholder.appendChild($row[0]);
 
-            var $group_column = $('<th>').appendTo($row);
+            var $group_column = $('<th class="oe-group-name">').appendTo($row);
             if (group.grouped_on) {
                 // Don't fill this if group_by_no_leaf but no group_by
                 $group_column
@@ -822,8 +978,10 @@ openerp.base.ListView.Groups = Class.extend( /** @lends openerp.base.ListView.Gr
             self.indent($group_column, group.level);
             // count column
             $('<td>').text(group.length).appendTo($row);
-                    
-            self.pad($row);
+
+            if (self.options.selectable) {
+                $row.append('<td>');
+            }
             _(self.columns).chain()
                 .filter(function (column) {return !column.invisible;})
                 .each(function (column) {
@@ -844,6 +1002,9 @@ openerp.base.ListView.Groups = Class.extend( /** @lends openerp.base.ListView.Gr
                         $row.append('<td>');
                     }
                 });
+            if (self.options.deletable) {
+                $row.append('<td class="oe-group-pagination">');
+            }
         });
         return placeholder;
     },
@@ -867,6 +1028,7 @@ openerp.base.ListView.Groups = Class.extend( /** @lends openerp.base.ListView.Gr
     },
     render_dataset: function (dataset) {
         var rows = [],
+            self = this,
             list = new openerp.base.ListView.List(this, {
                 options: this.options,
                 columns: this.columns,
@@ -875,11 +1037,30 @@ openerp.base.ListView.Groups = Class.extend( /** @lends openerp.base.ListView.Gr
             });
         this.bind_child_events(list);
 
-        var d = new $.Deferred();
+        var view = this.view,
+           limit = view.limit(),
+               d = new $.Deferred(),
+            page = this.datagroup.openable ? this.page : view.page;
+
         dataset.read_slice(
             _.filter(_.pluck(_.select(this.columns, function(x) {return x.tag == "field";}), 'name'), _.identity),
-            0, false,
+            page * limit, limit,
             function (records) {
+                if (!self.datagroup.openable) {
+                    view.configure_pager(dataset);
+                } else {
+                    var pages = Math.ceil(dataset.ids.length / limit);
+                    self.$row
+                        .find('.oe-pager-state')
+                            .text(_.sprintf('%d/%d', page + 1, pages))
+                        .end()
+                        .find('button[data-pager-action=previous]')
+                            .attr('disabled', page === 0)
+                        .end()
+                        .find('button[data-pager-action=next]')
+                            .attr('disabled', page === pages - 1);
+                }
+
                 var form_records = _(records).map(
                     $.proxy(list, 'transform_record'));
 
@@ -894,18 +1075,23 @@ openerp.base.ListView.Groups = Class.extend( /** @lends openerp.base.ListView.Gr
         var self = this;
         var $element = $('<tbody>');
         this.elements = [$element[0]];
-        this.datagroup.list(function (groups) {
-            $element[0].appendChild(
-                self.render_groups(groups));
-            if (post_render) { post_render(); }
-        }, function (dataset) {
-            self.render_dataset(dataset).then(function (list) {
-                self.children[null] = list;
-                self.elements =
-                    [list.$current.replaceAll($element)[0]];
+
+        this.datagroup.list(
+            _(this.view.visible_columns).chain()
+                .filter(function (column) { return column.tag === 'field' })
+                .pluck('name').value(),
+            function (groups) {
+                $element[0].appendChild(
+                    self.render_groups(groups));
                 if (post_render) { post_render(); }
+            }, function (dataset) {
+                self.render_dataset(dataset).then(function (list) {
+                    self.children[null] = list;
+                    self.elements =
+                        [list.$current.replaceAll($element)[0]];
+                    if (post_render) { post_render(); }
+                });
             });
-        });
         return $element;
     },
     /**
@@ -943,6 +1129,19 @@ openerp.base.ListView.Groups = Class.extend( /** @lends openerp.base.ListView.Gr
             .map(function (child) {
                 return child.get_records();
             }).flatten().value();
+    },
+    /**
+     * Stops displaying the records with the linked ids, assumes these records
+     * were deleted from the DB.
+     *
+     * This is the up-signal from the `deleted` event on groups and lists.
+     *
+     * @param {Array} ids list of identifier of the records to remove.
+     */
+    drop_records: function (ids) {
+        _.each(this.children, function (child) {
+            child.drop_records(ids);
+        });
     }
 });
 };

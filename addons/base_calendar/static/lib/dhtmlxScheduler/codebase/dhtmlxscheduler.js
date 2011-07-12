@@ -6,47 +6,6 @@ to use it in not GPL project. Please contact sales@dhtmlx.com for details
 
 (c) DHTMLX Ltd.
 */
-dhtmlx = function (B) {
-    for (var A in B) {
-        dhtmlx[A] = B[A]
-    }
-    return dhtmlx
-};
-dhtmlx.extend_api = function (A, D, C) {
-    var B = window[A];
-    if (!B) {
-        return
-    }
-    window[A] = function (G) {
-        if (G && typeof G == "object" && !G.tagName && !(G instanceof Array)) {
-            var F = B.apply(this, (D._init ? D._init(G) : arguments));
-            for (var E in dhtmlx) {
-                if (D[E]) {
-                    this[D[E]](dhtmlx[E])
-                }
-            }
-            for (var E in G) {
-                if (D[E]) {
-                    this[D[E]](G[E])
-                } else {
-                    if (E.indexOf("on") == 0) {
-                        this.attachEvent(E, G[E])
-                    }
-                }
-            }
-        } else {
-            var F = B.apply(this, arguments)
-        }
-        if (D._patch) {
-            D._patch(this)
-        }
-        return F || this
-    };
-    window[A].prototype = B.prototype;
-    if (C) {
-        dhtmlXHeir(window[A].prototype, C)
-    }
-};
 dhtmlxAjax = {
     get: function (A, C) {
         var B = new dtmlXMLLoaderObject(true);
