@@ -120,7 +120,7 @@ class project_phase(osv.osv):
         'state': fields.selection([('draft', 'Draft'), ('open', 'In Progress'), ('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done')], 'State', readonly=True, required=True,
                                   help='If the phase is created the state \'Draft\'.\n If the phase is started, the state becomes \'In Progress\'.\n If review is needed the phase is in \'Pending\' state.\
                                   \n If the phase is over, the states is set to \'Done\'.'),
-        'total_hours': fields.function(_compute, method=True, string='Total Hours'),
+        'total_hours': fields.function(_compute, string='Total Hours'),
      }
     _defaults = {
         'responsible_id': lambda obj,cr,uid,context: uid,
@@ -399,7 +399,7 @@ class project_resource_allocation(osv.osv):
             res[allocation.id] = name
         return res
     _columns = {
-        'name': fields.function(get_name, method=True, type='char', size=256),
+        'name': fields.function(get_name, type='char', size=256),
         'resource_id': fields.many2one('resource.resource', 'Resource', required=True),
         'phase_id': fields.many2one('project.phase', 'Project Phase', ondelete='cascade', required=True),
         'project_id': fields.related('phase_id', 'project_id', type='many2one', relation="project.project", string='Project', store=True),

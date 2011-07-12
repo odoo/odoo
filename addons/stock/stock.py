@@ -167,10 +167,10 @@ class stock_location(osv.osv):
                        \n* Production: Virtual counterpart location for production operations: this location consumes the raw material and produces finished products
                       """, select = True),
          # temporarily removed, as it's unused: 'allocation_method': fields.selection([('fifo', 'FIFO'), ('lifo', 'LIFO'), ('nearest', 'Nearest')], 'Allocation Method', required=True),
-        'complete_name': fields.function(_complete_name, method=True, type='char', size=100, string="Location Name"),
+        'complete_name': fields.function(_complete_name, type='char', size=100, string="Location Name"),
 
-        'stock_real': fields.function(_product_value, method=True, type='float', string='Real Stock', multi="stock"),
-        'stock_virtual': fields.function(_product_value, method=True, type='float', string='Virtual Stock', multi="stock"),
+        'stock_real': fields.function(_product_value, type='float', string='Real Stock', multi="stock"),
+        'stock_virtual': fields.function(_product_value, type='float', string='Virtual Stock', multi="stock"),
 
         'location_id': fields.many2one('stock.location', 'Parent Location', select=True, ondelete='cascade'),
         'child_ids': fields.one2many('stock.location', 'location_id', 'Contains'),
@@ -207,8 +207,8 @@ class stock_location(osv.osv):
 
         'parent_left': fields.integer('Left Parent', select=1),
         'parent_right': fields.integer('Right Parent', select=1),
-        'stock_real_value': fields.function(_product_value, method=True, type='float', string='Real Stock Value', multi="stock", digits_compute=dp.get_precision('Account')),
-        'stock_virtual_value': fields.function(_product_value, method=True, type='float', string='Virtual Stock Value', multi="stock", digits_compute=dp.get_precision('Account')),
+        'stock_real_value': fields.function(_product_value, type='float', string='Real Stock Value', multi="stock", digits_compute=dp.get_precision('Account')),
+        'stock_virtual_value': fields.function(_product_value, type='float', string='Virtual Stock Value', multi="stock", digits_compute=dp.get_precision('Account')),
         'company_id': fields.many2one('res.company', 'Company', select=1, help='Let this field empty if this location is shared between all companies'),
         'scrap_location': fields.boolean('Scrap Location', help='Check this box to allow using this location to put scrapped/damaged goods.'),
         'valuation_in_account_id': fields.many2one('account.account', 'Stock Input Account',domain = [('type','=','other')], help='This account will be used to value stock moves that have this location as destination, instead of the stock output account from the product.'),
@@ -486,7 +486,7 @@ class stock_tracking(osv.osv):
             return sequence
 
     _columns = {
-        'name': fields.char('Pack Reference', size=64, required=True, select=True),
+        'name': fields.char('Pack Reference', size=64, required=True, select=True, help="By default, the pack reference is generated following the sscc standard. (Serial number + 1 check digit)"),
         'active': fields.boolean('Active', help="By unchecking the active field, you may hide a pack without deleting it."),
         'serial': fields.char('Additional Reference', size=64, select=True, help="Other reference or serial number"),
         'move_ids': fields.one2many('stock.move', 'tracking_id', 'Moves for this pack', readonly=True),
@@ -636,11 +636,11 @@ class stock_picking(osv.osv):
                  "* Done: has been processed, can't be modified or cancelled anymore\n"\
                  "* Cancelled: has been cancelled, can't be confirmed anymore"),
         'min_date': fields.function(get_min_max_date, fnct_inv=_set_minimum_date, multi="min_max_date",
-                 method=True, store=True, type='datetime', string='Expected Date', select=1, help="Expected date for the picking to be processed"),
+                 store=True, type='datetime', string='Expected Date', select=1, help="Expected date for the picking to be processed"),
         'date': fields.datetime('Order Date', help="Date of Order", select=True),
         'date_done': fields.datetime('Date Done', help="Date of Completion"),
         'max_date': fields.function(get_min_max_date, fnct_inv=_set_maximum_date, multi="min_max_date",
-                 method=True, store=True, type='datetime', string='Max. Expected Date', select=2),
+                 store=True, type='datetime', string='Max. Expected Date', select=2),
         'move_lines': fields.one2many('stock.move', 'picking_id', 'Internal Moves', states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}),
         'auto_picking': fields.boolean('Auto-Picking'),
         'address_id': fields.many2one('res.partner.address', 'Address', help="Address of partner"),
@@ -1399,7 +1399,7 @@ class stock_production_lot(osv.osv):
         'prefix': fields.char('Prefix', size=64, help="Optional prefix to prepend when displaying this serial number: PREFIX/SERIAL [INT_REF]"),
         'product_id': fields.many2one('product.product', 'Product', required=True, domain=[('type', '<>', 'service')]),
         'date': fields.datetime('Creation Date', required=True),
-        'stock_available': fields.function(_get_stock, fnct_search=_stock_search, method=True, type="float", string="Available", select=True,
+        'stock_available': fields.function(_get_stock, fnct_search=_stock_search, type="float", string="Available", select=True,
             help="Current quantity of products with this Production Lot Number available in company warehouses",
             digits_compute=dp.get_precision('Product UoM')),
         'revisions': fields.one2many('stock.production.lot.revision', 'lot_id', 'Revisions'),

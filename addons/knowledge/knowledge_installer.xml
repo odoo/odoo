@@ -2,59 +2,22 @@
   <data>
     <record id="view_knowledge_installer" model="ir.ui.view">
       <field name="name">knowledge.installer.view</field>
-      <field name="model">knowledge.installer</field>
+      <field name="model">base.setup.installer</field>
       <field name="type">form</field>
-      <field name="inherit_id" ref="base.res_config_installer"/>
+      <field name="inherit_id" ref="base_setup.view_base_setup_installer"/>
       <field name="arch" type="xml">
         <data>
-          <form position="attributes">
-            <attribute name="string">Knowledge Application Configuration</attribute>
-          </form>
-
-          <separator string="title" position="attributes">
-            <attribute name="string"
-                       >Configure Your Knowledge Application</attribute>
-          </separator>
-          <xpath expr='//separator[@string="vsep"]' position='attributes'>
-                      <attribute name='string'></attribute>
-                  </xpath>
-          <xpath expr="//label[@string='description']"
-                 position="attributes">
-            <attribute name="string">Share information within the company with these specific Addons.</attribute>
+          <xpath expr="//group[@name='knowledge']" position="replace">
+            <newline/>
+            <separator  string="Knowledge Management Features" colspan="4" />
+            <field name="document_ftp" />
+            <field name="document_webdav" />
+            <field name="wiki" />
+            <field name="wiki_faq" />
+            <field name="wiki_quality_manual" />
           </xpath>
-          <group colspan="8" position="replace">
-          <group colspan="4">
-            <field name="document_ftp"/>
-            <field name="document_webdav"/>
-            <field name="wiki"/>
-            <separator string="Content templates" colspan="4"/>
-            <field name="wiki_faq"/>
-            <field name="wiki_quality_manual"/>
-          </group>
-          </group>
-         <xpath expr="//button[@string='Install Modules']" position="attributes">
-              <attribute name="string">Configure</attribute>
-         </xpath>
         </data>
       </field>
     </record>
-
-    <record id="action_knowledge_installer" model="ir.actions.act_window">
-      <field name="name">Knowledge Application Configuration</field>
-      <field name="type">ir.actions.act_window</field>
-      <field name="res_model">knowledge.installer</field>
-      <field name="view_id" ref="view_knowledge_installer"/>
-      <field name="view_type">form</field>
-      <field name="view_mode">form</field>
-      <field name="target">new</field>
-    </record>
-
-    <record id="knowledge_installer_todo" model="ir.actions.todo">
-      <field name="action_id" ref="action_knowledge_installer"/>
-      <field name="sequence">3</field>
-      <field name="groups_id" eval="[(6,0,[ref('base.group_extended')])]"/>
-            <field name="restart">always</field>
-    </record>
-
   </data>
 </openerp>

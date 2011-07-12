@@ -171,7 +171,7 @@ class account_followup_print_all(osv.osv_memory):
             "SELECT * "\
             "FROM account_followup_followup_line "\
             "WHERE followup_id=%s "\
-            "ORDER BY sequence", (fup_id,))
+            "ORDER BY delay", (fup_id,))
         for result in cr.dictfetchall():
             delay = datetime.timedelta(days=result['delay'])
             fups[old] = (current_date - delay, result['id'])

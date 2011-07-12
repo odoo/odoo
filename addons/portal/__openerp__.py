@@ -19,14 +19,13 @@
 #
 ##############################################################################
 
-
 {
-    "name" : "Portal",
-    "version" : "0.3",
-    "depends" : ["base", "share"],
-    "author" : "OpenERP SA",
-    "category": 'Tools',
-    "description": """
+    'name' : "Portal",
+    'version' : "1.0",
+    'depends' : ["base", "share"],
+    'author' : "OpenERP SA",
+    'category': 'Tools',
+    'description': """
 This module defines 'portals' to customize the access to your OpenERP database
 for external users.
 
@@ -37,12 +36,14 @@ users, etc).  That feature is very handy when used in combination with the
 module 'share'.
     """,
     'website': 'http://www.openerp.com',
-    'data': ['security/portal_security.xml',
-             'security/ir.model.access.csv',
-             'portal_view.xml',
-             'wizard_view.xml',
-             'wizard/share_wizard_view.xml',
-            ],
+    'data': [
+        'security/portal_security.xml',
+        'security/ir.model.access.csv',
+        'portal_view.xml',
+        'res_user_view.xml',
+        'wizard/portal_wizard_view.xml',
+        'wizard/share_wizard_view.xml',
+    ],
     'installable': True,
     'certificate' : '',
 }

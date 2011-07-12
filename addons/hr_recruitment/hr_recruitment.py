@@ -157,9 +157,9 @@ class hr_applicant(crm.crm_case, osv.osv):
         'response': fields.integer("Response"),
         'reference': fields.char('Reference', size=128),
         'day_open': fields.function(_compute_day, string='Days to Open', \
-                                method=True, multi='day_open', type="float", store=True),
+                                multi='day_open', type="float", store=True),
         'day_close': fields.function(_compute_day, string='Days to Close', \
-                                method=True, multi='day_close', type="float", store=True),
+                                multi='day_close', type="float", store=True),
     }
 
     def _get_stage(self, cr, uid, context=None):
@@ -308,7 +308,7 @@ class hr_applicant(crm.crm_case, osv.osv):
         mailgate_pool = self.pool.get('email.server.tools')
         attach_obj = self.pool.get('ir.attachment')
 
-        subject = msg.get('subject')
+        subject = msg.get('subject') or _("No Subject")
         body = msg.get('body')
         msg_from = msg.get('from')
         priority = msg.get('priority')
