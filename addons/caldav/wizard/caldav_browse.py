@@ -24,6 +24,7 @@ from tools import config
 import base64
 import addons
 from tools.translate import _
+import tools
 
 class caldav_browse(osv.osv_memory):
 
@@ -239,12 +240,8 @@ class user_preference(osv.osv_memory):
         return ids[0]
     
     def _get_default_host(self, cr, uid, context):
-        ids=self.search(cr,uid,[])
-        host_name = ''
-        if ids:
-            ids = len(ids)> 1 and len(ids)-1 or ids[0] # Use len(ids)-1 for taking the value of last id 
-            host_name = self.browse(cr, uid,[ids],context=context)[0].host_name
-        return host_name
+
+        return tools.get_hostname(self, cr, uid)
 
     _defaults={
               'service': 'webdav',
