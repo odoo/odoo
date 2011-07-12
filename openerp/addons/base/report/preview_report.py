@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2011 OpenERP S.A. <http://www.openerp.com>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,17 +19,14 @@
 #
 ##############################################################################
 
-from simple import simple
-from rml import rml, rml2html, rml2txt, odt2odt , html2html, makohtml2html
-from render import render
+from report import report_sxw
 
-#.apidoc title: Report Rendering
+class rmlparser(report_sxw.rml_parse):
+    def set_context(self, objects, data, ids, report_type = None):
+        super(rmlparser,self).set_context(objects, data, ids, report_type)
+        self.setCompany(objects[0])
 
-try:
-    import Image
-except ImportError:
-    import logging
-    logging.warning('Python Imaging not installed, you can use only .JPG pictures !')
+report_sxw.report_sxw('report.preview.report', 'res.company',
+      'addons/base/report/preview_report.rml', parser=rmlparser, header='external')
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

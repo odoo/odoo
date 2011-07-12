@@ -32,5 +32,7 @@ from pdf_utils import *
 from yaml_import import *
 from sql import *
 
+#.apidoc title: Tools
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
