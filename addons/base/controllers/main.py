@@ -324,7 +324,7 @@ def fix_view_modes(action):
         generate_views(action)
 
     if action.pop('view_type') != 'form':
-        return
+        return action
 
     action['views'] = [
         [id, mode if mode != 'tree' else 'list']
