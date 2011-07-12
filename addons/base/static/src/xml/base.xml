@@ -885,9 +885,19 @@
 </t>
 <t t-name="SelectCreatePopup">
     <div t-att-id="element_id">
-        <div t-att-id="element_id + '_search'"></div>
-        <div t-att-id="element_id + '_view_list'"></div>
-        <div t-att-id="element_id + '_view_form'"></div>
+        <table style="width:100%">
+            <tr style="width:100%">
+                <td style="width:100%">
+                    <div t-att-id="element_id + '_search'" style="width:100%"></div>
+                </td>
+            </tr>
+            <tr style="width:100%">
+                <td style="width:100%">
+                    <div t-att-id="element_id + '_view_list'" style="width:100%"></div>
+                </td>
+            </tr>
+        </table>
+        <div t-att-id="element_id + '_view_form'" style="width:100%"></div>
     </div>
 </t>
 <t t-name="SelectCreatePopup.search.buttons">

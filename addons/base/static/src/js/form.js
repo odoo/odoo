@@ -1821,7 +1821,8 @@ openerp.base.form.SelectCreatePopup = openerp.base.BaseWidget.extend({
         this.initial_ids = this.options.initial_ids;
         jQuery(this.render()).dialog({title: '',
                     modal: true,
-                    minWidth: 800});
+                    width: 960,
+                    height: 600});
         this.start();
     },
     start: function() {
