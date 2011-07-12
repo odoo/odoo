@@ -247,7 +247,12 @@ openerp.base.list.editable = function (openerp) {
             this.render_row_as_form();
         }
     });
-    openerp.base.list = {form: {}};
+    if (!openerp.base.list) {
+        openerp.base.list = {};
+    }
+    if (!openerp.base.list.form) {
+        openerp.base.list.form = {};
+    }
     openerp.base.list.form.WidgetFrame = openerp.base.form.WidgetFrame.extend({
         template: 'ListView.row.frame'
     });
