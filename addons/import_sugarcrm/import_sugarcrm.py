@@ -982,7 +982,7 @@ class import_sugarcrm(osv.osv):
         'meeting' : True,
         'call' : True,
         'claim' : _get_crm_claim,    
-        'email_history' : True, 
+        'email_history' : _get_project, 
         'project' : _get_project,   
         'project_task': _get_project,     
         'bug': _get_project_issue,
@@ -1033,7 +1033,7 @@ class import_sugarcrm(osv.osv):
         if not context:
             context = {}
         key_list = []
-        list = []
+        module = {}
         for current in self.browse(cr, uid, ids, context):
             context.update({'username': current.username, 'password': current.password, 'url': current.url, 'email_user': current.email_from or False, 'instance_name': current.instance_name or False})
             if current.contact:
@@ -1051,23 +1051,23 @@ class import_sugarcrm(osv.osv):
                 key_list.append('Calls')
             if current.claim:
                 key_list.append('Cases')  
-                list.append('crm_claim')
+                module.update({'Cases':'crm_claim'})
             if current.email_history:
                 key_list.append('Emails') 
                 key_list.append('Notes') 
-                list.append('project')
+                module.update({'Email and Note':'project'})
             if current.project:
                 key_list.append('Project')
-                list.append('project')
+                module.update({'Project':'project'})
             if current.project_task:
                 key_list.append('ProjectTask')
-                list.append('project')
+                module.update({'ProjectTask':'project'})
             if current.bug:
                 key_list.append('Bugs')
-                list.append('project_issue')
+                module.update({'Bugs':'project_issue'})
             if current.document:
                 key_list.append('Documents')
-        return key_list,list
+        return key_list,module
 
 
     def do_import_all(self, cr, uid, *args):
@@ -1082,14 +1082,14 @@ class import_sugarcrm(osv.osv):
 
     def import_from_scheduler_all(self, cr, uid, ids, context=None):
         keys, module_list = self.get_key(cr, uid, ids, context)
-        set_list = set(module_list)
-        model = list(set_list)
         if not keys:
             raise osv.except_osv(_('Warning !'), _('Select Module to Import.'))
-        for module in model:
+        key_list = module_list.keys()
+        for module in key_list :
+            module = module_list[module]
             state = self.get_all(cr,uid,module,context=context)
             if state == False:
-                keys =  ', '.join(keys)
+                keys =  ', '.join(key_list)
                 raise osv.except_osv(_('Error !!'), _("%s data required %s Module to be installed, Please install %s module") %(keys,module,module))
         cron_obj = self.pool.get('ir.cron')
         url = self.parse_valid_url(context)
@@ -1108,14 +1108,14 @@ class import_sugarcrm(osv.osv):
         
 #        """Import all sugarcrm data into openerp module"""
         keys, module_list = self.get_key(cr, uid, ids, context)
-        set_list = set(module_list)
-        model = list(set_list)
         if not keys:
             raise osv.except_osv(_('Warning !'), _('Select Module to Import.'))
-        for module in model:
+        key_list = module_list.keys()
+        for module in key_list :
+            module = module_list[module]
             state = self.get_all(cr,uid,module,context=context)
             if state == False:
-                keys =  ', '.join(keys)
+                keys =  ', '.join(key_list)
                 raise osv.except_osv(_('Error !!'), _("%s data required %s Module to be installed, Please install %s module") %(keys,module,module))
         url = self.parse_valid_url(context)
         context.update({'url': url})
