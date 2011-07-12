@@ -1387,6 +1387,21 @@ def upload_data(email, data, type='SURVEY'):
     a.start()
     return True
 
+def get_and_group_by_field(cr, uid, obj, ids, field, context=None):
+    """ Read the values of ``field´´ for the given ``ids´´ and group ids by value.
+
+       :param string field: name of the field we want to read and group by
+       :return: mapping of field values to the list of ids that have it
+       :rtype: dict
+    """
+    res = {}
+    for record in obj.read(cr, uid, ids, [field], context=context):
+        key = record[field]
+        res.setdefault(key[0] if isinstance(key, tuple) else key, []).append(record['id'])
+    return res
+
+def get_and_group_by_company(cr, uid, obj, ids, context=None):
+    return get_and_group_by_field(cr, uid, obj, ids, field='company_id', context=context)
 
 # port of python 2.6's attrgetter with support for dotted notation
 def resolve_attr(obj, attr):
