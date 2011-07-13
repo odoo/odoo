@@ -1,6 +1,23 @@
 
 openerp.base.data = function(openerp) {
 
+/**
+ * Serializes the sort criterion array of a dataset into a form which can be
+ * consumed by OpenERP's RPC APIs.
+ *
+ * @param {Array} criterion array of fields, from first to last criteria, prefixed with '-' for reverse sorting
+ * @returns {String} SQL-like sorting string (``ORDER BY``) clause
+ */
+openerp.base.serialize_sort = function (criterion) {
+    return _.map(criterion,
+        function (criteria) {
+            if (criteria[0] === '-') {
+                return criteria.slice(1) + ' DESC';
+            }
+            return criteria + ' ASC';
+        }).join(', ');
+};
+
 openerp.base.DataGroup =  openerp.base.Controller.extend( /** @lends openerp.base.DataGroup# */{
     /**
      * Management interface between views and grouped collections of OpenERP
@@ -130,7 +147,8 @@ openerp.base.ContainerDataGroup = openerp.base.DataGroup.extend(
             context: this.context,
             domain: this.domain,
             fields: _.uniq(this.group_by.concat(fields)),
-            group_by_fields: this.group_by
+            group_by_fields: this.group_by,
+            sort: openerp.base.serialize_sort(this.sort)
         }, function () { }).then(function (response) {
             var data_groups = _(response).map(
                     _.bind(self.transform_group, self));
@@ -174,7 +192,7 @@ openerp.base.ContainerDataGroup = openerp.base.DataGroup.extend(
                         self.session, self.model, group.__domain,
                         child_context, child_context.group_by,
                         self.level + 1),
-                    group);
+                    group, {sort: self.sort});
             }));
         });
     }
@@ -197,8 +215,8 @@ openerp.base.GrouplessDataGroup = openerp.base.DataGroup.extend(
     },
     list: function (fields, ifGroups, ifRecords) {
         ifRecords(_.extend(
-                new openerp.base.DataSetSearch(this.session, this.model),
-                {domain: this.domain, context: this.context}));
+            new openerp.base.DataSetSearch(this.session, this.model),
+            {domain: this.domain, context: this.context, _sort: this.sort}));
     }
 });
 
@@ -444,16 +462,12 @@ openerp.base.DataSetSearch =  openerp.base.DataSet.extend({
      */
     sort: function (field, force_reverse) {
         if (!field) {
-            return _.map(this._sort, function (criteria) {
-                if (criteria[0] === '-') {
-                    return criteria.slice(1) + ' DESC';
-                }
-                return criteria + ' ASC';
-            }).join(', ');
+            return openerp.base.serialize_sort(this._sort);
         }
-
         var reverse = force_reverse || (this._sort[0] === field);
-        this._sort = _.without(this._sort, field, '-' + field);
+        this._sort.splice.apply(
+            this._sort, [0, this._sort.length].concat(
+                _.without(this._sort, field, '-' + field)));
 
         this._sort.unshift((reverse ? '-' : '') + field);
         return undefined;

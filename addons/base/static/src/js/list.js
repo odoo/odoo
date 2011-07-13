@@ -209,7 +209,7 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
             self.dataset.sort($(this).data('id'));
 
             // TODO: should only reload content (and set the right column to a sorted display state)
-            self.reload_view();
+            self.reload_content();
         });
 
         this.$element.find('.oe-list-pager')
@@ -449,6 +449,7 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
             this.session, this.model,
             results.domain, results.context,
             results.group_by);
+        this.groups.datagroup.sort = this.dataset._sort;
 
         if (_.isEmpty(results.group_by) && !results.context['group_by_no_leaf']) {
             results.group_by = null;
