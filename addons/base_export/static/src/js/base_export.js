@@ -1,7 +1,7 @@
 openerp.base_export = function(openerp) {
 QWeb.add_template('/base_export/static/src/xml/base_export.xml');
 openerp.base.views.add('export', 'openerp.base_export.Export');
-openerp.base_export.Export = openerp.base.Controller.extend({
+openerp.base_export.Export = openerp.base.Dialog.extend({
 
     init: function(session, dataset, views){
         this._super(session);
@@ -9,7 +9,6 @@ openerp.base_export.Export = openerp.base.Controller.extend({
         this.views = views
         this.selected_field_id = '';
         this.selected_field_str = '';
-
     },
 
     start: function() {
@@ -24,16 +23,16 @@ openerp.base_export.Export = openerp.base.Controller.extend({
             modal: true,
             width: '50%',
             height: 'auto',
+            position: 'top',
             buttons : {
                         "Close" : function() {
-                            self.stop();
-                            self._export.dialog('destroy');
+                            self.close();
                           },
                         "Export To File" : function() {
                             self.get_fields();
                           }
                        },
-            close: function(event, ui){ self.stop();},
+            close: function(event, ui){ self.close();},
         }).html(QWeb.render('ExportTreeView'))
         self.on_show_data(result)
         jQuery(this._export).find('#add_field').click(function(){
@@ -158,12 +157,13 @@ openerp.base_export.Export = openerp.base.Controller.extend({
             alert('Please select fields to export...');
         }
         else {
-            this._export.dialog('destroy');
+            this._export.dialog('close');
         }
     },
 
-    stop: function() {
+    close: function() {
         jQuery(this._export).remove();
+        this._export.dialog('close');
     },
 
 });
