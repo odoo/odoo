@@ -46,7 +46,9 @@ openerp.base.TreeView = openerp.base.View.extend({
         this.fields = data.fields;
         self.dataset.domain = [['parent_id', '=', '']];
         this.dataset.read_slice([], 0, false, function (response) {
+
             self.$element.html(QWeb.render('TreeView', { 'field_data' : response, 'title' : self.fields_view.arch.attrs.string }));
+            self.$element.append(QWeb.render('TreeView_Header'));
             self.$element.find('#parent_id').bind('change', function(){
                 self.getdata($('#parent_id').val(), false);
             });
@@ -104,7 +106,9 @@ openerp.base.TreeView = openerp.base.View.extend({
             } else {
                 if (!flag) {
                     self.$element.find('tr').remove();
+                    self.$element.append(QWeb.render('TreeView_Header'));
                 }
+
                 self.$element.append(QWeb.render('TreeView_Secondry', {'child_data' : response}));
                 self.$element.find('tr[id ^= treerow_]').each( function() {
                     $(this).find('td').children(':first-child').addClass("parent_top");

@@ -246,6 +246,16 @@
         </t>
     </select>
 </t>
+<t t-name="TreeView_Header">
+    <tr>
+        <td align="left" style="padding-left:15px;"><span><b>Name</b></span>
+        </td>
+        <td align="center" style="padding-left:10px;"><span><b>Category Type</b></span>
+        </td>
+        <td align="center" style="padding-left:30px;"><span><b>Sequence</b></span>
+        </td>
+    </tr>
+</t>
 <t t-name="TreeView_Secondry">
     <t t-foreach="child_data" t-as="field" >
         <tr t-att-id="'treerow_' + field.id">
