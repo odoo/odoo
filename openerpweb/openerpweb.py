@@ -314,27 +314,16 @@ class JsonRequest(object):
                 }
             }
         except xmlrpclib.Fault, e:
-            if e.faultCode and e.faultCode.split(':')[0] == 'AccessDenied':
-                message, string = e.faultCode.split(':')
-                error = {
-                     'code': 200,
-                     'message': message,
-                     'data': {
-                              'type': 'server_exception',
-                              'debug': string
-                      }
-                 }
-            else:
-                error = {
-                    'code': 200,
-                    'message': "OpenERP Server Error",
-                    'data': {
-                        'type': 'server_exception',
-                        'fault_code': e.faultCode,
-                        'debug': "Client %s\nServer %s" % (
-                        "".join(traceback.format_exception("", None, sys.exc_traceback)), e.faultString)
-                    }
+            error = {
+                'code': 200,
+                'message': "OpenERP Server Error",
+                'data': {
+                    'type': 'server_exception',
+                    'fault_code': e.faultCode,
+                    'debug': "Client %s\nServer %s" % (
+                    "".join(traceback.format_exception("", None, sys.exc_traceback)), e.faultString)
                 }
+            }
         except Exception:
             cherrypy.log("An error occured while handling a json request",
                          severity=logging.ERROR, traceback=True)

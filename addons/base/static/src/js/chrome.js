@@ -974,18 +974,29 @@ openerp.base.Database = openerp.base.Controller.extend({
        			demo_data = 'False';
        		
        		self.rpc("/base/session/db_operation", {
-					'flag': 'create', 
-					'super_admin_pwd': super_admin_pwd,
-					'db': db, 
-					'demo_data': demo_data,
-					'db_lang': db_lang,
-					'admin_pwd': admin_pwd,
-					'confirm_pwd': confirm_pwd
-				}, 
-	        	function(result) {
-	        		if (result && !result.error) {
-		        		
-		        	}
+				'flag': 'create', 
+				'super_admin_pwd': super_admin_pwd,
+				'db': db, 
+				'demo_data': demo_data,
+				'db_lang': db_lang,
+				'admin_pwd': admin_pwd,
+				'confirm_pwd': confirm_pwd
+			}, 
+        	function(result) {
+        		if (result && !result.error) {
+	        		
+	        	} else if(result.error) {
+	        		var db_error_dialog = _.uniqueId("db_error_dialog");
+                  		$('<div>', {id: db_error_dialog}).dialog({
+		                modal: true,
+		                title: "Create Database",
+		                buttons: {
+		                    Ok: function() {
+		                        $(this).dialog("close");
+		                    }
+		                }
+		            }).html("<center style='padding-top: 15px; font-size: 15px'>" + result.error + "</center>");
+	        	}
        		});
 		});
     },
@@ -1005,12 +1016,23 @@ openerp.base.Database = openerp.base.Controller.extend({
         	
         	if (confirm("Do you really want to delete the database: " + db + " ?")) {
 	        	self.rpc("/base/session/db_operation", {'flag': 'drop', 'db': db, 'password': password}, 
-		        	function(result) {
-		        		if (result && !result.error) {
-			        		self.$option_id.find("select[name=drop_db] :selected").remove();
-			        		self.notification.notify("Dropping database", "The database '" + db + "' has been dropped");
-			        	}
-		        	});
+	        	function(result) {
+	        		if (result && ! result.error) {
+		        		self.$option_id.find("select[name=drop_db] :selected").remove();
+		        		self.notification.notify("Dropping database", "The database '" + db + "' has been dropped");
+		        	} else if(result.error) {
+		        		var db_error_dialog = _.uniqueId("db_error_dialog");
+                   		$('<div>', {id: db_error_dialog}).dialog({
+			                modal: true,
+			                title: "Drop Database",
+			                buttons: {
+			                    Ok: function() {
+			                        $(this).dialog("close");
+			                    }
+			                }
+			            }).html("<center style='padding-top: 15px; font-size: 15px'>" + result.error + "</center>");
+		        	}
+	        	});
 	        }
         });
     },
@@ -1032,8 +1054,17 @@ openerp.base.Database = openerp.base.Controller.extend({
         	function(result) {
         		if (result && !result.error) {
 	        		self.notification.notify("Backup Database", "Backup has been created for the database: '" + db + "'");
-	        	} else if (result.error) {
-	        		self.notification.notify("Backup Database", result.error);
+	        	} else if(result.error) {
+	        		var db_error_dialog = _.uniqueId("db_error_dialog");
+                  		$('<div>', {id: db_error_dialog}).dialog({
+		                modal: true,
+		                title: "Backup Database",
+		                buttons: {
+		                    Ok: function() {
+		                        $(this).dialog("close");
+		                    }
+		                }
+		            }).html("<center style='padding-top: 15px; font-size: 15px'>" + result.error + "</center>");
 	        	}
         	});
        	});
@@ -1057,8 +1088,17 @@ openerp.base.Database = openerp.base.Controller.extend({
         	function(result) {
         		if (result && !result.error) {
 	        		self.notification.notify("Restore Database", "You restored your database as: '" + new_db + "'");
-	        	} else if (result.error) {
-	        		self.notification.notify("Restore Database", result.error);
+	        	} else if(result.error) {
+	        		var db_error_dialog = _.uniqueId("db_error_dialog");
+                  		$('<div>', {id: db_error_dialog}).dialog({
+		                modal: true,
+		                title: "Restore Database",
+		                buttons: {
+		                    Ok: function() {
+		                        $(this).dialog("close");
+		                    }
+		                }
+		            }).html("<center style='padding-top: 15px; font-size: 15px'>" + result.error + "</center>");
 	        	}
         	});
        	});
@@ -1103,6 +1143,17 @@ openerp.base.Database = openerp.base.Controller.extend({
 	        	function(result) {
 	        		if (result && !result.error) {
 		        		self.notification.notify("Changed Password", "Password has been changed successfully");
+		        	} else if(result.error) {
+		        		var db_error_dialog = _.uniqueId("db_error_dialog");
+                   		$('<div>', {id: db_error_dialog}).dialog({
+			                modal: true,
+			                title: "Change Password",
+			                buttons: {
+			                    Ok: function() {
+			                        $(this).dialog("close");
+			                    }
+			                }
+			            }).html("<center style='padding-top: 15px; font-size: 15px'>" + result.error + "</center>");
 		        	}
 	        	});
 	       	});

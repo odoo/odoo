@@ -130,7 +130,13 @@ class Session(openerpweb.Controller):
             db = kw.get('db')
             password = kw.get('password')
             
-            return req.session.proxy("db").drop(password, db)
+            try:
+                return req.session.proxy("db").drop(password, db)
+            except Exception, e:
+                if e.faultCode and e.faultCode.split(':')[0] == 'AccessDenied':
+                    return {'error': 'Bad super admin password !'}
+                else:
+                    return {'error': 'Could not drop database !'}
         
         elif flag == 'backup':
             db = kw.get('db')
@@ -141,8 +147,11 @@ class Session(openerpweb.Controller):
                     cherrypy.response.headers['Content-Type'] = "application/data"
                     cherrypy.response.headers['Content-Disposition'] = 'filename="' + db + '.dump"'
                     return base64.decodestring(res)
-            except Exception:
-                return {'error': 'Could not create backup !'}
+            except Exception, e:
+                if e.faultCode and e.faultCode.split(':')[0] == 'AccessDenied':
+                    return {'error': 'Bad super admin password !'}
+                else:
+                    return {'error': 'Could not drop database !'}
             
         elif flag == 'restore':
             filename = kw.get('filename')
@@ -150,19 +159,26 @@ class Session(openerpweb.Controller):
             password = kw.get('password')
             
             try:
-                if filename:
-                    data = base64.encodestring(filename.file.read())
-                    return req.session.proxy("db").restore(password, db, data)
-            except Exception:
-                return {'error': 'Could not restore database !'}
+                data = base64.encodestring(filename.file.read())
+                return req.session.proxy("db").restore(password, db, data)
+            except Exception, e:
+                if e.faultCode and e.faultCode.split(':')[0] == 'AccessDenied':
+                    return {'error': 'Bad super admin password !'}
+                else:
+                    return {'error': 'Could not restore database !'}
         
         elif flag == 'change_password':
             old_password = kw.get('old_password')
             new_password = kw.get('new_password')
             confirm_password = kw.get('confirm_password')
             
-            if old_password and new_password and confirm_password:
+            try:
                 return req.session.proxy("db").change_admin_password(old_password, new_password)
+            except Exception, e:
+                if e.faultCode and e.faultCode.split(':')[0] == 'AccessDenied':
+                    return {'error': 'Bad super admin password !'}
+                else:
+                    return {'error': 'Error, password not changed !'}
             
     @openerpweb.jsonrequest
     def modules(self, req):
