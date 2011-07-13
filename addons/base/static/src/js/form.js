@@ -722,10 +722,7 @@ openerp.base.form.WidgetButton = openerp.base.form.Widget.extend({
 
         this.view.execute_action(
             this.node.attrs, this.view.dataset, this.session.action_manager,
-            this.view.datarecord.id, function (result) {
-                self.log("Button returned", result);
-                self.view.reload();
-            }, function() {
+            this.view.datarecord.id, function () {
                 self.view.reload();
             });
     }

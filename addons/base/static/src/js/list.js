@@ -453,13 +453,7 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
             return field.name === name;
         });
         if (!action) { return; }
-        this.execute_action(
-            action, this.dataset, this.session.action_manager,
-            id, function () {
-                if (callback) {
-                    callback();
-                }
-        });
+        this.execute_action(action, this.dataset, this.session.action_manager, id, callback);
     },
     /**
      * Handles the activation of a record (clicking on it)
