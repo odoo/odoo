@@ -68,9 +68,8 @@ class Database(openerpweb.Controller):
         dbs = proxy.list()
         h = req.httprequest.headers['Host'].split(':')[0]
         d = h.split(':')[0]
-        r = cherrypy.config['openerp.dbfilter'].replace('%h',h).replace('%d',d)
-        print "h,d",h,d,r
-        dbs = [i for i in dbs if re.match(r,i)]
+        r = cherrypy.config['openerp.dbfilter'].replace('%h', h).replace('%d', d)
+        dbs = [i for i in dbs if re.match(r, i)]
         return {"db_list": dbs}
     
     @openerpweb.jsonrequest
