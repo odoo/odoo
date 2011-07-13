@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:16+0000\n"
-"PO-Revision-Date: 2011-06-28 04:40+0000\n"
+"PO-Revision-Date: 2011-07-12 16:07+0000\n"
 "Last-Translator: shjerryzhou <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-06-29 05:31+0000\n"
+"X-Launchpad-Export-Date: 2011-07-13 05:14+0000\n"
 "X-Generator: Launchpad (build 13168)\n"
 
 #. module: sale
@@ -530,7 +530,7 @@ msgstr "对每个销售订单明细，将会创建对应的采购订单来供应
 msgid ""
 "Incoterm which stands for 'International Commercial terms' implies its a "
 "series of sales terms which are used in the commercial transaction."
-msgstr ""
+msgstr "国际贸易术语包含一系列用于贸易事务的术语。"
 
 #. module: sale
 #: field:sale.order,partner_invoice_id:0
@@ -1489,7 +1489,7 @@ msgid ""
 "Depending on the configuration of the location Output, the move between the "
 "output area and the customer is done through the Delivery Order manually or "
 "automatically."
-msgstr ""
+msgstr "根据输出位置的配置，输出区域和客户之间的库存转移是通过发货单手工或自动完成的。"
 
 #. module: sale
 #: code:addons/sale/sale.py:1165
@@ -1612,6 +1612,11 @@ msgid ""
 "\n"
 "EAN: %s Quantity: %s Type of ul: %s"
 msgstr ""
+"你选中了%d单位的数量。\n"
+"但是它和选中的装箱单不一致。\n"
+"根据装箱单它的数量应该是：\n"
+"\n"
+"EAN：%s 数量：%s ul类型：%s"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order
@@ -1635,7 +1640,7 @@ msgid ""
 "the same time as the procurement order. It represents the assignment of "
 "parts to the sales order. There is 1 pick list by sales order line which "
 "evolves with the availability of parts."
-msgstr ""
+msgstr "一旦销售订单被确认，拣货单表格就会和采购订单一起被生成。它代表部分销售订单分配。每行有效的销售订单明细会对应一张拣货单。"
 
 #. module: sale
 #: selection:sale.order.line,state:0
@@ -1696,7 +1701,7 @@ msgid ""
 "The Shipping Policy is used to configure per order if you want to deliver as "
 "soon as possible when one product is available or you wait that all products "
 "are available.."
-msgstr ""
+msgstr "运输方式是用于配置每张销售订单是否有一个产品有效时尽可能早发货，还是等所有产品都准备好了才尽可能早发货。"
 
 #. module: sale
 #: selection:sale.report,month:0
@@ -1712,6 +1717,9 @@ msgid ""
 "1.The state of this sales order line is either \"draft\" or \"cancel\"!\n"
 "2.The Sales Order Line is Invoiced!"
 msgstr ""
+"由于以下原因不能为此销售订单明细生成发票：\n"
+"1. 销售订单明细的状态是“草稿”或者“取消”！\n"
+"2. 销售订单明细已经开票！"
 
 #. module: sale
 #: field:sale.order.line,th_weight:0
@@ -1743,7 +1751,7 @@ msgid ""
 "confirmed or as the invoice is paid. It drives the purchasing and the "
 "production of products regarding to the rules and to the sales order's "
 "parameters. "
-msgstr ""
+msgstr "采购订单会在销售订单确认或发票付款后立刻自动生成。它促使了规则和销售订单参数中相关产品的采购和生成。 "
 
 #. module: sale
 #: view:sale.order.line:0
@@ -1764,7 +1772,7 @@ msgstr "业务员"
 #. module: sale
 #: model:process.node,note:sale.process_node_saleorder0
 msgid "Drives procurement and invoicing"
-msgstr ""
+msgstr "促使采购和开票"
 
 #. module: sale
 #: field:sale.order,amount_untaxed:0
@@ -1804,6 +1812,11 @@ msgid ""
 "            \n"
 "* The 'Cancelled' state is set when a user cancel the sales order related."
 msgstr ""
+"*当相关的销售订单处于草稿状态时设置为'草稿'状态。                     \n"
+"*当相关的销售订单被确认时设置为'已确认'状态。                     \n"
+"*当相关的销售订单被设置为异常的时候设置为'异常'状态。                     \n"
+"*当销售订单明细已经拣货时设置为'已完成'状态。                     \n"
+"*当用户取消相关销售订单时设置为'已取消'状态。"
 
 #. module: sale
 #: help:sale.order,amount_tax:0
@@ -1846,7 +1859,7 @@ msgstr "直接送货"
 #. module: sale
 #: field:sale.installer,sale_journal:0
 msgid "Invoicing journals"
-msgstr ""
+msgstr "开票日志"
 
 #. module: sale
 #: field:sale.advance.payment.inv,product_id:0
@@ -1900,14 +1913,14 @@ msgstr "错误"
 #: view:sale.report:0
 #: field:sale.report,delay:0
 msgid "Commitment Delay"
-msgstr ""
+msgstr "承诺延迟"
 
 #. module: sale
 #: model:process.node,note:sale.process_node_saleprocurement0
 msgid ""
 "One Procurement order for each sales order line and for each of the "
 "components."
-msgstr ""
+msgstr "有一个采购订单对应每行销售订单明细的每个部件。"
 
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_assign0
@@ -1981,6 +1994,8 @@ msgid ""
 "warehouse from which the products will be delivered for each particular "
 "sales."
 msgstr ""
+"如果有有超过一个商店转售你公司的产品，你可以在这里创建和管理它们。无论什么时候生成一个报价单或者销售订单，它都必须和一个商店关联起来。商店也会为各自的销售"
+"订单指定产品会从那个仓库发货。"
 
 #. module: sale
 #: help:sale.order,invoiced:0
@@ -2001,7 +2016,7 @@ msgstr "5月"
 #. module: sale
 #: help:sale.installer,sale_order_dates:0
 msgid "Adds commitment, requested and effective dates on Sales Orders."
-msgstr ""
+msgstr "为销售订单添加承诺，申请和生效日期。"
 
 #. module: sale
 #: view:sale.order:0
@@ -2025,7 +2040,7 @@ msgstr "2月"
 msgid ""
 "Allows you to group and invoice your delivery orders according to different "
 "invoicing types: daily, weekly, etc."
-msgstr ""
+msgstr "允许你对你的发货单根据不同开票类型：每天，每周等，进行分组和开票。"
 
 #. module: sale
 #: selection:sale.report,month:0
@@ -2074,6 +2089,8 @@ msgid ""
 "having invoiced yet. If you want to analyse your turnover, you should use "
 "the Invoice Analysis report in the Accounting application."
 msgstr ""
+"这个报表会对你的报价单和销售订单进行分析。分析报告会检查你的销售收入，并且按照不同的分组标准（业务员，合作伙伴，产品等）进行培训。用这个报表对还没有开票的"
+"销售订单进行分析。 如果你想分析你的营业额，你应该使用会计应用程序里面的发票分析报表。"
 
 #. module: sale
 #: report:sale.order:0

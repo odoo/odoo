@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2011-05-09 10:19+0000\n"
-"PO-Revision-Date: 2011-05-03 15:22+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2011-07-11 14:24+0000\n"
+"Last-Translator: openerp-china.Black Jack <onetimespeed@gmail.com>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-05-10 07:48+0000\n"
-"X-Generator: Launchpad (build 12959)\n"
+"X-Launchpad-Export-Date: 2011-07-12 05:23+0000\n"
+"X-Generator: Launchpad (build 13168)\n"
 
 #. module: stock_planning
 #: code:addons/stock_planning/wizard/stock_planning_createlines.py:73
@@ -198,7 +198,7 @@ msgstr "仓库作为调拨的起点."
 #. module: stock_planning
 #: model:ir.model,name:stock_planning.model_stock_period_createlines
 msgid "stock.period.createlines"
-msgstr ""
+msgstr "stock.period.createlines"
 
 #. module: stock_planning
 #: field:stock.planning,outgoing_before:0
@@ -236,7 +236,7 @@ msgstr "库存和销售预计"
 #. module: stock_planning
 #: model:ir.model,name:stock_planning.model_stock_sale_forecast
 msgid "stock.sale.forecast"
-msgstr ""
+msgstr "stock.sale.forecast"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_dept_id:0
@@ -256,7 +256,7 @@ msgstr "库存模拟"
 #. module: stock_planning
 #: model:ir.model,name:stock_planning.model_stock_planning_createlines
 msgid "stock.planning.createlines"
-msgstr ""
+msgstr "stock.planning.createlines"
 
 #. module: stock_planning
 #: help:stock.planning,incoming_before:0
@@ -325,7 +325,7 @@ msgstr "    即将入库 "
 #: code:addons/stock_planning/stock_planning.py:715
 #, python-format
 msgid "Pick List "
-msgstr ""
+msgstr "装箱单列表 "
 
 #. module: stock_planning
 #: view:stock.planning.createlines:0
@@ -377,7 +377,7 @@ msgstr "库存周期"
 #. module: stock_planning
 #: model:ir.model,name:stock_planning.model_stock_sale_forecast_createlines
 msgid "stock.sale.forecast.createlines"
-msgstr ""
+msgstr "stock.sale.forecast.createlines"
 
 #. module: stock_planning
 #: field:stock.planning,warehouse_id:0
@@ -442,7 +442,7 @@ msgstr "错误！"
 #: code:addons/stock_planning/stock_planning.py:626
 #, python-format
 msgid "Manual planning for "
-msgstr ""
+msgstr "手动计划 "
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_user_id:0
@@ -479,7 +479,7 @@ msgstr "计算计划"
 #: code:addons/stock_planning/stock_planning.py:636
 #, python-format
 msgid "Procurement created in MPS by user: "
-msgstr ""
+msgstr "在MPS(主生产计划)由用户创建需求： "
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:140
@@ -908,6 +908,19 @@ msgid ""
 "periods for the same product, warehouse and company because results can be "
 "unpredictable. The same apply to Forecasts lines.\n"
 msgstr ""
+"\n"
+"这模块的主要目标：在MPS(主生产计划)外能手动生成采购(正规请求)，MPS是根据最少库存规则来自动工作。\n"
+"模块里的术语：\n"
+"    仓库和销售周期：您库存计划，销售预测和制造需求计划(MRP)的开始日期与结束日期之间时间。\n"
+"    仓库和销售预测：是在周期内您计划销售产品的数量。\n"
+"    仓库计划：在周期内您计划采购产品的数量。\n"
+"\n"
+"因为在销售预测模块也使用术语“销售预测”和“计划”但它们是金额值。所以在这模块使用“仓库和销售预测”和“仓库计划”来强调这是一个数量值。\n"
+"\n"
+"本模块的三个操作步骤：\n"
+"    1.创建周期，必须步骤。\n"
+"    2.建立销售预测并输入数量，可选步骤，但它是下一步所必须的。\n"
+"    3.建立计划的明细并输入数量，这是在周期内采购或生产的数量。\n"
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:140
@@ -1411,7 +1424,7 @@ msgstr "主生产计划("
 #: code:addons/stock_planning/stock_planning.py:678
 #, python-format
 msgid "Pick created from MPS by user: "
-msgstr ""
+msgstr "在MPS(主生产计划)由用户创建的装箱单： "
 
 #. module: stock_planning
 #: field:stock.planning,procure_to_stock:0
