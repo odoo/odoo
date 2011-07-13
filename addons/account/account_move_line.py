@@ -591,8 +591,6 @@ class account_move_line(osv.osv):
         return True
 
     def _check_date(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         lines = self.browse(cr, uid, ids, context=context)
         for l in lines:
             if l.journal_id.allow_date:
