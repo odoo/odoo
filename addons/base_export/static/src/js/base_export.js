@@ -6,25 +6,21 @@ openerp.base_export.Export = openerp.base.Dialog.extend({
     init: function(session, dataset, views){
         this._super(session);
         this.dataset = dataset
-        this.views = views
         this.selected_field_id = '';
         this.selected_field_str = '';
     },
 
     start: function() {
-        this.rpc("/base_export/export/get_fields", {"model": this.dataset.model}, this.on_loaded);
-    },
-
-    on_loaded: function(result) {
-        var self = this;
-        var element_id = _.uniqueId("act_window_dialog");
-        this._export = $('<div>', {id: element_id}).dialog({
-            title: "Export Data",
-            modal: true,
-            width: '50%',
-            height: 'auto',
-            position: 'top',
-            buttons : {
+        var self = this
+        self._super(false);
+        self.template = 'ExportTreeView';
+        self.dialog_title = "Export Data "
+        self.open({
+                    modal: true,
+                    width: '50%',
+                    height: 'auto',
+                    position: 'top',
+                    buttons : {
                         "Close" : function() {
                             self.close();
                           },
@@ -32,63 +28,64 @@ openerp.base_export.Export = openerp.base.Dialog.extend({
                             self.get_fields();
                           }
                        },
-            close: function(event, ui){ self.close();},
-        }).html(QWeb.render('ExportTreeView'))
-        self.on_show_data(result)
-        jQuery(this._export).find('#add_field').click(function(){
+                    close: function(event, ui){ self.close();}
+                   });
+        jQuery(self.$dialog).find('#add_field').click(function(){
             if (self.selected_field_id && self.selected_field_str){
                 self.add_field(self.selected_field_id, self.selected_field_str);
             }
         });
-        jQuery(this._export).find('#remove_field').click(function(){
-            jQuery(self._export).find("#fields_list option:selected").remove();
+        jQuery(self.$dialog).find('#remove_field').click(function(){
+            jQuery(self.$dialog).find("#fields_list option:selected").remove();
         });
-        jQuery(this._export).find('#remove_all_field').click(function(){
-            jQuery(self._export).find("#fields_list option").remove();
+        jQuery(self.$dialog).find('#remove_all_field').click(function(){
+            jQuery(self.$dialog).find("#fields_list option").remove();
         });
+        this.rpc("/base_export/export/get_fields", {"model": this.dataset.model}, this.on_show_data);
     },
 
     on_click: function(id, result) {
         var self = this
-	    this.field_id = id.split("-")[1];
+	    self.field_id = id.split("-")[1];
 	    var model = ''
 	    var prefix = ''
 	    var name = ''
 	    var is_loaded = 0;
-	    for (var record in result){
-	        if(result[record]['id'] == this.field_id){
-	            model = result[record]['params']['model']
-	            prefix = result[record]['params']['prefix']
-	            name = result[record]['params']['name']
-	            if ( (result[record]['children']).length >= 1){
-                    $(result[record]['children']).each (function(e, childid) {
+        _.each(result, function(record) {
+            if(record['id'] == self.field_id){
+                model = record['params']['model']
+                prefix = record['params']['prefix']
+                name = record['params']['name']
+                if ((record['children']).length >= 1){
+                    $(record['children']).each (function(e, childid) {
                         if ($("tr[id='treerow_" + childid +"']").length > 0) {
                             if ($("tr[id='treerow_" + childid +"']").is(':hidden')) {
                                 is_loaded = -1;
                             } else {
-	                            is_loaded++;
-	                        }
-	                    }
-	                });
-	                if (is_loaded == 0) {
-                        if ($("tr[id='treerow_" + this.field_id +"']").find('img').attr('src') == '/base/static/src/img/expand.gif') {
+                                is_loaded++;
+                            }
+                        }
+                    });
+                    if (is_loaded == 0) {
+                        if ($("tr[id='treerow_" + self.field_id +"']").find('img').attr('src') == '/base/static/src/img/expand.gif') {
                             if (model){
-                                this.rpc("/base_export/export/get_fields", {"model": model, "prefix": prefix, "field_parent" : this.field_id, "name": name}, function (result) {
-                                    self.on_show_data(result, true);
+                                self.rpc("/base_export/export/get_fields", {"model": model, "prefix": prefix, "field_parent" : self.field_id, "name": name}, function (results) {
+                                    self.on_show_data(results);
                                 });
                             }
                         }
-	                } else if (is_loaded > 0) {
-	                    self.showcontent(this.field_id, true);
-	                } else {
-	                    self.showcontent(this.field_id, false);
-	                }
-	            }
-	        }
-	    }
+                    } else if (is_loaded > 0) {
+                        self.showcontent(self.field_id, true);
+                    } else {
+                        self.showcontent(self.field_id, false);
+                    }
+                }
+            }
+
+        });
     },
 
-    on_show_data: function(result, flag) {
+    on_show_data: function(result) {
         var self = this;
         var current_tr = $("tr[id='treerow_" + self.field_id + "']");
         if (current_tr.length >= 1){
@@ -96,7 +93,7 @@ openerp.base_export.Export = openerp.base.Dialog.extend({
             current_tr.after(QWeb.render('ExportTreeView-Secondary', {'fields': result}));
         }
         else{
-            jQuery(self._export).find('#left_field_panel').append(QWeb.render('ExportTreeView-Secondary',  {'fields': result}));
+            jQuery(this.$dialog).find('#left_field_panel').append(QWeb.render('ExportTreeView-Secondary',  {'fields': result}));
         }
         jQuery($.find('img[id ^= parentimg]')).click(function(){
             self.on_click(this.id, result);
@@ -157,13 +154,13 @@ openerp.base_export.Export = openerp.base.Dialog.extend({
             alert('Please select fields to export...');
         }
         else {
-            this._export.dialog('close');
+            this.close();
         }
     },
 
     close: function() {
-        jQuery(this._export).remove();
-        this._export.dialog('close');
+        jQuery(this.$dialog).remove();
+        this._super();
     },
 
 });
