@@ -35,6 +35,10 @@ class account_invoice(osv.osv, ir_edi.edi):
                 'type': True, # -> reversed at import
                 'internal_number': True, # -> reference at import
                 'comment': True,
+                'reference': True,
+                'amount_untaxed': True,
+                'amount_tax': True,
+                'amount_total': True,
                 'date_invoice': True,
                 'date_due': True,
                 'partner_id': True,
@@ -47,6 +51,7 @@ class account_invoice(osv.osv, ir_edi.edi):
                         'uos_id': True,
                         'product_id': True,
                         'price_unit': True,
+                        'price_subtotal': True,
                         'quantity': True,
                         'discount': True,
                         'note': True,
