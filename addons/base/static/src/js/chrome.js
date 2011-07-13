@@ -923,7 +923,7 @@ openerp.base.Database = openerp.base.Controller.extend({
         
         var self = this;
         
-        this.rpc("/base/session/get_databases_list", {}, function(result) {
+        this.rpc("/base/database/get_databases_list", {}, function(result) {
             self.db_list = result.db_list;
         });
         
@@ -974,7 +974,7 @@ openerp.base.Database = openerp.base.Controller.extend({
        		else
        			demo_data = 'False';
        		
-       		self.rpc("/base/session/db_operation", {
+       		self.rpc("/base/database/db_operation", {
 				'flag': 'create', 
 				'super_admin_pwd': super_admin_pwd,
 				'db': db, 
@@ -1016,7 +1016,7 @@ openerp.base.Database = openerp.base.Controller.extend({
 	        var password = self.$option_id.find("input[name=drop_pwd]").val();
         	
         	if (confirm("Do you really want to delete the database: " + db + " ?")) {
-	        	self.rpc("/base/session/db_operation", {'flag': 'drop', 'db': db, 'password': password}, 
+	        	self.rpc("/base/database/db_operation", {'flag': 'drop', 'db': db, 'password': password}, 
 	        	function(result) {
 	        		if (result && ! result.error) {
 		        		self.$option_id.find("select[name=drop_db] :selected").remove();
@@ -1051,7 +1051,7 @@ openerp.base.Database = openerp.base.Controller.extend({
         	var db = self.$option_id.find("select[name=backup_db]").val();
 	        var password = self.$option_id.find("input[name=backup_pwd]").val();
 	        
-        	self.rpc("/base/session/db_operation", {'flag': 'backup', 'db': db, 'password': password}, 
+        	self.rpc("/base/database/db_operation", {'flag': 'backup', 'db': db, 'password': password}, 
         	function(result) {
         		if (result && !result.error) {
 	        		self.notification.notify("Backup Database", "Backup has been created for the database: '" + db + "'");
@@ -1085,7 +1085,7 @@ openerp.base.Database = openerp.base.Controller.extend({
 	        var password = self.$option_id.find("input[name=restore_pwd]").val();
 	        var new_db = self.$option_id.find("input[name=new_db]").val();
        	
-        	self.rpc("/base/session/db_operation", {'flag': 'restore', 'db': db, 'password': password, 'new_db': new_db}, 
+        	self.rpc("/base/database/db_operation", {'flag': 'restore', 'db': db, 'password': password, 'new_db': new_db}, 
         	function(result) {
         		if (result && !result.error) {
 	        		self.notification.notify("Restore Database", "You restored your database as: '" + new_db + "'");
@@ -1140,7 +1140,7 @@ openerp.base.Database = openerp.base.Controller.extend({
 	        var new_pwd = self.$option_id.find("input[name=new_pwd]").val();
 	        var confirm_pwd = self.$option_id.find("input[name=confirm_pwd]").val();
        		        		
-        	self.rpc("/base/session/db_operation", {'flag': 'change_password', 'old_password': old_pwd, 'new_password': new_pwd, 'confirm_password': confirm_pwd}, 
+        	self.rpc("/base/database/db_operation", {'flag': 'change_password', 'old_password': old_pwd, 'new_password': new_pwd, 'confirm_password': confirm_pwd}, 
 	        	function(result) {
 	        		if (result && !result.error) {
 		        		self.notification.notify("Changed Password", "Password has been changed successfully");
@@ -1183,7 +1183,7 @@ openerp.base.Login =  openerp.base.Controller.extend({
     },
     start: function() {
         var self = this;
-        this.rpc("/base/session/get_databases_list", {}, function(result) {
+        this.rpc("/base/database/get_databases_list", {}, function(result) {
             self.db_list = result.db_list;
             self.display();
         }, function() {

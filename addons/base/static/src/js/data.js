@@ -584,12 +584,12 @@ openerp.base.ReadOnlyDataSetSearch = openerp.base.DataSetSearch.extend({
     },
     on_create: function(data) {},
     write: function (id, data, callback) {
-        this.on_write(id);
+        this.on_write(id, data);
         var to_return = $.Deferred().then(callback);
         setTimeout(function () {to_return.resolve({"result": true});}, 0);
         return to_return.promise();
     },
-    on_write: function(id) {},
+    on_write: function(id, data) {},
     unlink: function(ids, callback, error_callback) {
         this.on_unlink(ids);
         var to_return = $.Deferred().then(callback);

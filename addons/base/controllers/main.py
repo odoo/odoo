@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-import base64
-import glob, os, re
+
+import base64, glob, os, re
 from xml.etree import ElementTree
 from cStringIO import StringIO
 
@@ -59,69 +59,19 @@ class Xml2Json:
 class DatabaseCreationError(Exception): pass
 class DatabaseCreationCrash(DatabaseCreationError): pass
 
-class Session(openerpweb.Controller):
-    _cp_path = "/base/session"
-
-    def manifest_glob(self, addons, key):
-        files = []
-        for addon in addons:
-            globlist = openerpweb.addons_manifest.get(addon, {}).get(key, [])
-
-            files.extend([
-                resource_path[len(openerpweb.path_addons):]
-                for pattern in globlist
-                for resource_path in glob.glob(os.path.join(
-                    openerpweb.path_addons, addon, pattern))
-            ])
-        return files
-
-    def concat_files(self, file_list):
-        """ Concatenate file content
-        return (concat,timestamp)
-        concat: concatenation of file content
-        timestamp: max(os.path.getmtime of file_list)
-        """
-        root = openerpweb.path_root
-        files_content = []
-        files_timestamp = 0
-        for i in file_list:
-            fname = os.path.join(root, i)
-            ftime = os.path.getmtime(fname)
-            if ftime > files_timestamp:
-                files_timestamp = ftime
-            files_content = open(fname).read()
-        files_concat = "".join(files_content)
-        return files_concat
-
-    @openerpweb.jsonrequest
-    def login(self, req, db, login, password):
-        req.session.login(db, login, password)
-
-        return {
-            "session_id": req.session_id,
-            "uid": req.session._uid,
-        }
-
-    @openerpweb.jsonrequest
-    def sc_list(self, req):
-        return req.session.model('ir.ui.view_sc').get_sc(req.session._uid, "ir.ui.menu",
-                                                         req.session.eval_context(req.context))
+class Database(openerpweb.Controller):
+    _cp_path = "/base/database"
 
     @openerpweb.jsonrequest
     def get_databases_list(self, req):
         proxy = req.session.proxy("db")
         dbs = proxy.list()
-        
+        h = req.httprequest.headers['Host'].split(':')[0]
+        d = h.split(':')[0]
+        r = cherrypy.config['openerp.dbfilter'].replace('%h',h).replace('%d',d)
+        print "h,d",h,d,r
+        dbs = [i for i in dbs if re.match(r,i)]
         return {"db_list": dbs}
-    
-    @openerpweb.jsonrequest
-    def get_lang_list(self, req):
-        lang_list = [('en_US', 'English (US)')]
-        try:
-            lang_list = lang_list + (req.session.proxy("db").list_lang() or [])
-        except Exception, e:
-            pass
-        return {"lang_list": lang_list}
     
     @openerpweb.jsonrequest
     def db_operation(self, req, flag, **kw):
@@ -216,6 +166,63 @@ class Session(openerpweb.Controller):
                     return {'error': 'Bad super admin password !', 'title': 'Change Password'}
                 else:
                     return {'error': 'Error, password not changed !', 'title': 'Change Password'}
+
+class Session(openerpweb.Controller):
+    _cp_path = "/base/session"
+
+    def manifest_glob(self, addons, key):
+        files = []
+        for addon in addons:
+            globlist = openerpweb.addons_manifest.get(addon, {}).get(key, [])
+
+            files.extend([
+                resource_path[len(openerpweb.path_addons):]
+                for pattern in globlist
+                for resource_path in glob.glob(os.path.join(
+                    openerpweb.path_addons, addon, pattern))
+            ])
+        return files
+
+    def concat_files(self, file_list):
+        """ Concatenate file content
+        return (concat,timestamp)
+        concat: concatenation of file content
+        timestamp: max(os.path.getmtime of file_list)
+        """
+        root = openerpweb.path_root
+        files_content = []
+        files_timestamp = 0
+        for i in file_list:
+            fname = os.path.join(root, i)
+            ftime = os.path.getmtime(fname)
+            if ftime > files_timestamp:
+                files_timestamp = ftime
+            files_content = open(fname).read()
+        files_concat = "".join(files_content)
+        return files_concat
+
+    @openerpweb.jsonrequest
+    def login(self, req, db, login, password):
+        req.session.login(db, login, password)
+
+        return {
+            "session_id": req.session_id,
+            "uid": req.session._uid,
+        }
+
+    @openerpweb.jsonrequest
+    def sc_list(self, req):
+        return req.session.model('ir.ui.view_sc').get_sc(req.session._uid, "ir.ui.menu",
+                                                         req.session.eval_context(req.context))
+
+    @openerpweb.jsonrequest
+    def get_lang_list(self, req):
+        lang_list = [('en_US', 'English (US)')]
+        try:
+            lang_list = lang_list + (req.session.proxy("db").list_lang() or [])
+        except Exception, e:
+            pass
+        return {"lang_list": lang_list}
             
     @openerpweb.jsonrequest
     def modules(self, req):
@@ -337,14 +344,14 @@ class Session(openerpweb.Controller):
         if not saved_actions:
             return None
         return saved_actions["actions"].get(key)
-        
+
 def eval_context_and_domain(session, context, domain=None):
     e_context = session.eval_context(context)
     # should we give the evaluated context as an evaluation context to the domain?
     e_domain = session.eval_domain(domain or [])
 
     return e_context, e_domain
-        
+
 def load_actions_from_ir_values(req, key, key2, models, meta, context):
     Values = req.session.model('ir.values')
     actions = Values.get(key, key2, models, meta, context)
@@ -407,7 +414,6 @@ def generate_views(action):
         action['views'] = [(False, mode) for mode in view_modes]
         return
     action['views'] = [(view_id, view_modes[0])]
-
 
 def fix_view_modes(action):
     """ For historical reasons, OpenERP has weird dealings in relation to
@@ -652,7 +658,7 @@ class View(openerpweb.Controller):
         # todo fme?: check that we should pass the evaluated context here
         self.process_view(request.session, fvg, context, transform)
         return fvg
-    
+
     def process_view(self, session, fvg, context, transform):
         # depending on how it feels, xmlrpclib.ServerProxy can translate
         # XML-RPC strings to ``str`` or ``unicode``. ElementTree does not
@@ -916,3 +922,5 @@ class Action(openerpweb.Controller):
     def run(self, req, action_id):
         return clean_action(req.session.model('ir.actions.server').run(
             [action_id], req.session.eval_context(req.context)), req.session)
+
+#
