@@ -270,6 +270,9 @@ class JsonRequest(object):
         self.request = request
         self.params = request.get("params", {})
         self.applicationsession = applicationsession
+        self.httprequest = cherrypy.request
+        self.httpresponse = cherrypy.response
+        self.httpsession = cherrypy.session
         self.httpsession_id = "cookieid"
         self.httpsession = cherrypy.session
         self.session_id = self.params.pop("session_id", None) or uuid.uuid4().hex
@@ -454,22 +457,19 @@ def main(argv):
     os.environ["TZ"] = "UTC"
 
     DEFAULT_CONFIG = {
-        'openerp.server.host': '127.0.0.1',
-        'openerp.server.port': 8069,
-        'server.socket_port': 8002,
         'server.socket_host': '0.0.0.0',
         'tools.sessions.on': True,
         'tools.sessions.storage_type': 'file',
-        'tools.sessions.storage_path': os.path.join(tempfile.gettempdir(), "cpsessions"),
         'tools.sessions.timeout': 60
     }
 
     # Parse config
     op = optparse.OptionParser()
-    op.add_option("-p", "--port", dest="server.socket_port", help="listening port", type="int", metavar="NUMBER")
-    op.add_option("-s", "--session-path", dest="tools.sessions.storage_path", help="directory used for session storage", metavar="DIR")
-    op.add_option("--server-host", dest="openerp.server.host", help="OpenERP server hostname", metavar="HOST")
-    op.add_option("--server-port", dest="openerp.server.port", help="OpenERP server port", type="int", metavar="NUMBER")
+    op.add_option("-p", "--port", dest="server.socket_port", default=8002, help="listening port", type="int", metavar="NUMBER")
+    op.add_option("-s", "--session-path", dest="tools.sessions.storage_path", default=os.path.join(tempfile.gettempdir(), "cpsessions"),  help="directory used for session storage", metavar="DIR")
+    op.add_option("--server-host", dest="openerp.server.host", default='127.0.0.1', help="OpenERP server hostname", metavar="HOST")
+    op.add_option("--server-port", dest="openerp.server.port", default=8069, help="OpenERP server port", type="int", metavar="NUMBER")
+    op.add_option("--db-filter", dest="openerp.dbfilter", default='.*', help="Filter listed database", metavar="REGEXP")
     (o, args) = op.parse_args(argv[1:])
     o = vars(o)
     for k in o.keys():
@@ -480,8 +480,8 @@ def main(argv):
     cherrypy.tree.mount(Root())
 
     cherrypy.config.update(config=DEFAULT_CONFIG)
-    if os.path.exists(os.path.join(os.path.dirname( os.path.dirname(__file__)),'openerp-web.cfg')):
-        cherrypy.config.update(os.path.join(os.path.dirname( os.path.dirname(__file__)),'openerp-web.cfg'))
+    if os.path.exists(os.path.join(path_root,'openerp-web.cfg')):
+        cherrypy.config.update(os.path.join(path_root,'openerp-web.cfg'))
     if os.path.exists(os.path.expanduser('~/.openerp_webrc')):
         cherrypy.config.update(os.path.expanduser('~/.openerp_webrc'))
     cherrypy.config.update(o)

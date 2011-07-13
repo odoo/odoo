@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
-import base64
-import glob, os
+import base64, glob, os, re
 from xml.etree import ElementTree
 from cStringIO import StringIO
 
@@ -55,6 +54,20 @@ class Xml2Json:
 # OpenERP Web base Controllers
 #----------------------------------------------------------
 
+class Database(openerpweb.Controller):
+    _cp_path = "/base/database"
+
+    @openerpweb.jsonrequest
+    def get_databases_list(self, req):
+        proxy = req.session.proxy("db")
+        dbs = proxy.list()
+        h = req.httprequest.headers['Host'].split(':')[0]
+        d = h.split(':')[0]
+        r = cherrypy.config['openerp.dbfilter'].replace('%h',h).replace('%d',d)
+        print "h,d",h,d,r
+        dbs = [i for i in dbs if re.match(r,i)]
+        return {"db_list": dbs}
+
 class Session(openerpweb.Controller):
     _cp_path = "/base/session"
 
@@ -102,13 +115,6 @@ class Session(openerpweb.Controller):
     def sc_list(self, req):
         return req.session.model('ir.ui.view_sc').get_sc(req.session._uid, "ir.ui.menu",
                                                          req.session.eval_context(req.context))
-
-    @openerpweb.jsonrequest
-    def get_databases_list(self, req):
-        proxy = req.session.proxy("db")
-        dbs = proxy.list()
-        
-        return {"db_list": dbs}
 
     @openerpweb.jsonrequest
     def modules(self, req):
@@ -230,14 +236,14 @@ class Session(openerpweb.Controller):
         if not saved_actions:
             return None
         return saved_actions["actions"].get(key)
-        
+
 def eval_context_and_domain(session, context, domain=None):
     e_context = session.eval_context(context)
     # should we give the evaluated context as an evaluation context to the domain?
     e_domain = session.eval_domain(domain or [])
 
     return e_context, e_domain
-        
+
 def load_actions_from_ir_values(req, key, key2, models, meta, context):
     Values = req.session.model('ir.values')
     actions = Values.get(key, key2, models, meta, context)
@@ -300,7 +306,6 @@ def generate_views(action):
         action['views'] = [(False, mode) for mode in view_modes]
         return
     action['views'] = [(view_id, view_modes[0])]
-
 
 def fix_view_modes(action):
     """ For historical reasons, OpenERP has weird dealings in relation to
@@ -545,7 +550,7 @@ class View(openerpweb.Controller):
         # todo fme?: check that we should pass the evaluated context here
         self.process_view(request.session, fvg, context, transform)
         return fvg
-    
+
     def process_view(self, session, fvg, context, transform):
         # depending on how it feels, xmlrpclib.ServerProxy can translate
         # XML-RPC strings to ``str`` or ``unicode``. ElementTree does not
@@ -809,3 +814,5 @@ class Action(openerpweb.Controller):
     def run(self, req, action_id):
         return clean_action(req.session.model('ir.actions.server').run(
             [action_id], req.session.eval_context(req.context)), req.session)
+
+#
