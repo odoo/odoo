@@ -240,14 +240,13 @@ class users(osv.osv):
 
         'company_ids':fields.many2many('res.company','res_company_users_rel','user_id','cid','Companies'),
         'context_lang': fields.selection(_lang_get, 'Language', required=True,
-            help="Sets the language for the user's user interface, when UI "
-                 "translations are available"),
+            help="The default language used in the graphical user interface, when translations are available. To add a new language, you can use the 'Load an Official Translation' wizard available from the 'Administration' menu."),
         'context_tz': fields.selection(_tz_get,  'Timezone', size=64,
             help="The user's timezone, used to perform timezone conversions "
                  "between the server and the client."),
         'view': fields.function(_get_interface_type, method=True, type='selection', fnct_inv=_set_interface_type,
                                 selection=[('simple','Simplified'),('extended','Extended')],
-                                string='Interface', help="Choose between the simplified interface and the extended one"),
+                                string='Interface', help="OpenERP offers a simplified and an extended user interface. If you use OpenERP for the first time we strongly advise you to select the simplified interface, which has less features but is easier to use. You can switch to the other interface from the User/Preferences menu at any time."),
         'user_email': fields.function(_email_get, method=True, fnct_inv=_email_set, string='Email', type="char", size=240),
         'menu_tips': fields.boolean('Menu Tips', help="Check out this box if you want to always display tips on each menu action"),
         'date': fields.datetime('Last Connection', readonly=True),
@@ -510,62 +509,6 @@ class users(osv.osv):
         raise osv.except_osv(_('Warning!'), _("Setting empty passwords is not allowed for security reasons!"))
 
 users()
-
-class config_users(osv.osv_memory):
-    _name = 'res.config.users'
-    _inherit = ['res.users', 'res.config']
-
-    def _generate_signature(self, cr, name, email, context=None):
-        return _('--\n%(name)s %(email)s\n') % {
-            'name': name or '',
-            'email': email and ' <'+email+'>' or '',
-            }
-
-    def create_user(self, cr, uid, new_id, context=None):
-        """ create a new res.user instance from the data stored
-        in the current res.config.users.
-
-        If an email address was filled in for the user, sends a mail
-        composed of the return values of ``get_welcome_mail_subject``
-        and ``get_welcome_mail_body`` (which should be unicode values),
-        with the user's data %-formatted into the mail body
-        """
-        base_data = self.read(cr, uid, new_id, context=context)
-        partner_id = self.pool.get('res.partner').main_partner(cr, uid)
-        address = self.pool.get('res.partner.address').create(
-            cr, uid, {'name': base_data['name'],
-                      'email': base_data['email'],
-                      'partner_id': partner_id,},
-            context)
-        # Change the read many2one values from (id,name) to id, and
-        # the one2many from ids to (6,0,ids).
-        base_data.update({'menu_id' : base_data.get('menu_id') and base_data['menu_id'][0],
-                          'company_id' : base_data.get('company_id') and base_data['company_id'][0],
-                          'action_id' :  base_data.get('action_id') and base_data['action_id'][0],
-                          'signature' : self._generate_signature(cr, base_data['name'], base_data['email'], context=context),
-                          'address_id' : address,
-                          'groups_id' : [(6,0, base_data.get('groups_id',[]))],
-                })
-        new_user = self.pool.get('res.users').create(
-            cr, uid, base_data, context)
-        self.send_welcome_email(cr, uid, new_user, context=context)
-
-    def execute(self, cr, uid, ids, context=None):
-        'Do nothing on execution, just launch the next action/todo'
-        pass
-    def action_add(self, cr, uid, ids, context=None):
-        'Create a user, and re-display the view'
-        self.create_user(cr, uid, ids[0], context=context)
-        return {
-            'view_type': 'form',
-            "view_mode": 'form',
-            'res_model': 'res.config.users',
-            'view_id':self.pool.get('ir.ui.view')\
-                .search(cr,uid,[('name','=','res.config.users.confirm.form')]),
-            'type': 'ir.actions.act_window',
-            'target':'new',
-            }
-config_users()
 
 class groups2(osv.osv): ##FIXME: Is there a reason to inherit this object ?
     _inherit = 'res.groups'

@@ -527,12 +527,24 @@ class one2many(_column):
             elif act[0] == 2:
                 obj.unlink(cr, user, [act[1]], context=context)
             elif act[0] == 3:
-                cr.execute('update '+_table+' set '+self._fields_id+'=null where id=%s', (act[1],))
+                reverse_rel = obj._all_columns.get(self._fields_id)
+                assert reverse_rel, 'Trying to unlink the content of a o2m but the pointed model does not have a m2o'
+                # if the model has on delete cascade, just delete the row
+                if reverse_rel.column.ondelete == "cascade":
+                    obj.unlink(cr, user, [act[1]], context=context)
+                else:
+                    cr.execute('update '+_table+' set '+self._fields_id+'=null where id=%s', (act[1],))
             elif act[0] == 4:
                 # Must use write() to recompute parent_store structure if needed
                 obj.write(cr, user, [act[1]], {self._fields_id:id}, context=context or {})
             elif act[0] == 5:
-                cr.execute('update '+_table+' set '+self._fields_id+'=null where '+self._fields_id+'=%s', (id,))
+                reverse_rel = obj._all_columns.get(self._fields_id)
+                assert reverse_rel, 'Trying to unlink the content of a o2m but the pointed model does not have a m2o'
+                # if the model has on delete cascade, just delete the rows
+                if reverse_rel.column.ondelete == "cascade":
+                    obj.unlink(cr, user, obj.search(cr, user, [(self._fields_id,'=',id)], context=context), context=context)
+                else:
+                    cr.execute('update '+_table+' set '+self._fields_id+'=null where '+self._fields_id+'=%s', (id,))
             elif act[0] == 6:
                 # Must use write() to recompute parent_store structure if needed
                 obj.write(cr, user, act[2], {self._fields_id:id}, context=context or {})
@@ -1200,34 +1212,30 @@ class serialized(_column):
         self._symbol_get = self._deserialize_func
         super(serialized, self).__init__(string=string, **args)
 
-
 # TODO: review completly this class for speed improvement
 class property(function):
 
     def _get_default(self, obj, cr, uid, prop_name, context=None):
-        return self._get_defaults(obj, cr, uid, [prop_name], context=None)[0][prop_name]
+        return self._get_defaults(obj, cr, uid, [prop_name], context=None)[prop_name]
 
-    def _get_defaults(self, obj, cr, uid, prop_name, context=None):
+    def _get_defaults(self, obj, cr, uid, prop_names, context=None):
+        """Get the default values for ``prop_names´´ property fields (result of ir.property.get() function for res_id = False).
+
+           :param list of string prop_names: list of name of property fields for those we want the default value
+           :return: map of property field names to their default value
+           :rtype: dict
+        """
         prop = obj.pool.get('ir.property')
-        domain = [('fields_id.model', '=', obj._name), ('fields_id.name','in',prop_name), ('res_id','=',False)]
-        ids = prop.search(cr, uid, domain, context=context)
-        replaces = {}
-        default_value = {}.fromkeys(prop_name, False)
-        for prop_rec in prop.browse(cr, uid, ids, context=context):
-            if default_value.get(prop_rec.fields_id.name, False):
-                continue
-            value = prop.get_by_record(cr, uid, prop_rec, context=context) or False
-            default_value[prop_rec.fields_id.name] = value
-            if value and (prop_rec.type == 'many2one'):
-                replaces.setdefault(value._name, {})
-                replaces[value._name][value.id] = True
-        return default_value, replaces
+        res = {}
+        for prop_name in prop_names:
+            res[prop_name] = prop.get(cr, uid, prop_name, obj._name, context=context)
+        return res
 
     def _get_by_id(self, obj, cr, uid, prop_name, ids, context=None):
         prop = obj.pool.get('ir.property')
         vids = [obj._name + ',' + str(oid) for oid in  ids]
 
-        domain = [('fields_id.model', '=', obj._name), ('fields_id.name','in',prop_name)]
+        domain = [('fields_id.model', '=', obj._name), ('fields_id.name', 'in', prop_name)]
         #domain = prop._get_domain(cr, uid, prop_name, obj._name, context)
         if vids:
             domain = [('res_id', 'in', vids)] + domain
@@ -1262,47 +1270,47 @@ class property(function):
             }, context=context)
         return False
 
+    def _fnct_read(self, obj, cr, uid, ids, prop_names, obj_dest, context=None):
+        prop = obj.pool.get('ir.property')
+        # get the default values (for res_id = False) for the property fields 
+        default_val = self._get_defaults(obj, cr, uid, prop_names, context)
 
-    def _fnct_read(self, obj, cr, uid, ids, prop_name, obj_dest, context=None):
-        properties = obj.pool.get('ir.property')
-        domain = [('fields_id.model', '=', obj._name), ('fields_id.name','in',prop_name)]
-        domain += [('res_id','in', [obj._name + ',' + str(oid) for oid in  ids])]
-        nids = properties.search(cr, uid, domain, context=context)
-        default_val,replaces = self._get_defaults(obj, cr, uid, prop_name, context)
-
+        # build the dictionary that will be returned
         res = {}
         for id in ids:
             res[id] = default_val.copy()
 
-        brs = properties.browse(cr, uid, nids, context=context)
-        for prop in brs:
-            value = properties.get_by_record(cr, uid, prop, context=context)
-            res[prop.res_id.id][prop.fields_id.name] = value or False
-            if value and (prop.type == 'many2one'):
-                # check existence as root, as seeing the name of a related
-                # object depends on access right of source document,
-                # not target, so user may not have access.
-                record_exists = obj.pool.get(value._name).exists(cr, 1, value.id)
-                if record_exists:
-                    replaces.setdefault(value._name, {})
-                    replaces[value._name][value.id] = True
-                else:
-                    res[prop.res_id.id][prop.fields_id.name] = False
-
-        for rep in replaces:
-            # search+name_get as root, as seeing the name of a related
-            # object depends on access right of source document,
-            # not target, so user may not have access.
-            nids = obj.pool.get(rep).search(cr, 1, [('id','in',replaces[rep].keys())], context=context)
-            replaces[rep] = dict(obj.pool.get(rep).name_get(cr, 1, nids, context=context))
-
-        for prop in prop_name:
+        for prop_name in prop_names:
+            property_field = obj._all_columns.get(prop_name).column
+            property_destination_obj = property_field._obj if property_field._type == 'many2one' else False
+            # If the property field is a m2o field, we will append the id of the value to name_get_ids
+            # in order to make a name_get in batch for all the ids needed.
+            name_get_ids = {}
             for id in ids:
-                if res[id][prop] and hasattr(res[id][prop], '_name'):
-                    res[id][prop] = (res[id][prop].id , replaces[res[id][prop]._name].get(res[id][prop].id, False))
-
+                # get the result of ir.property.get() for this res_id and save it in res if it's existing
+                obj_reference = obj._name + ',' + str(id)
+                value = prop.get(cr, uid, prop_name, obj._name, res_id=obj_reference, context=context)
+                if value:
+                    res[id][prop_name] = value
+                # Check existence as root (as seeing the name of a related
+                # object depends on access right of source document,
+                # not target, so user may not have access) in order to avoid
+                # pointing on an unexisting record.
+                if property_destination_obj:
+                    if res[id][prop_name] and obj.pool.get(property_destination_obj).exists(cr, 1, res[id][prop_name].id):
+                        name_get_ids[id] = res[id][prop_name].id
+                    else:
+                        res[id][prop_name] = False
+            if property_destination_obj:
+                # name_get as root (as seeing the name of a related
+                # object depends on access right of source document,
+                # not target, so user may not have access.)
+                name_get_values = dict(obj.pool.get(property_destination_obj).name_get(cr, 1, name_get_ids.values(), context=context))
+                # the property field is a m2o, we need to return a tuple with (id, name)
+                for k, v in name_get_ids.iteritems():
+                    if res[k][prop_name]:
+                        res[k][prop_name] = (v , name_get_values.get(v))
         return res
-
 
     def _field_get(self, cr, uid, model_name, prop):
         if not self.field_id.get(cr.dbname):

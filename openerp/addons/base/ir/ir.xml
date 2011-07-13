@@ -1885,7 +1885,8 @@
                 <tree editable="bottom" string="Config Wizard Steps">
                     <field name="sequence"/>
                     <field name="action_id"/>
-                    <field name="restart"/>
+                    <field name="category_id"/>
+                    <field name="type"/>
                     <field name="state" readonly="1"/>
                     <button name="action_launch" states="open" string="Launch" type="object" icon="gtk-execute" help="Launch Configuration Wizard"/>
                     <button name="action_open" states="cancel,skip,done"
@@ -1903,8 +1904,9 @@
                 <form string="Config Wizard Steps">
                     <group colspan="4" col="6">
                         <field name="action_id"/>
-                        <field name="restart"/>
+                        <field name="type"/>
                         <field name="sequence"/>
+                        <field name="category_id"/>
                     </group>
                     <separator string="Groups" colspan="4"/>
                     <field name="groups_id" nolabel="1" colspan="4"/>
@@ -1925,10 +1927,17 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Actions">
-                    <filter string="To Do" name="todo" icon="terp-camera_test" domain=" ['|',('state','=','open'),'&amp;',('state','=','skip'),('restart','=','onskip')]" help="Todo State Or (Skip State And Onskip Restart)"/>
-                    <separator orientation="vertical"/>
-                    <field name="state"/>
-                    <field name="restart"/>
+                    <group>
+                        <filter string="To Do" name="todo" icon="terp-camera_test" domain=" [('state','=','open')]" help="Wizards to be Launched"/>
+                        <separator orientation="vertical"/>
+                        <field name="action_id"/>
+                        <field name="category_id"/>
+                        <field name="state"/>
+                    </group>
+                    <newline/>
+                    <group expand="0" string="Group By...">
+                        <filter string="Category" context="{'group_by': 'category_id'}" icon="terp-folder-orange"/>
+                    </group>
                 </search>
             </field>
         </record>
@@ -1943,7 +1952,7 @@
         <menuitem id="next_id_11" name="Configuration Wizards" parent="base.menu_config" sequence="1"/>
 
         <menuitem action="act_ir_actions_todo_form" id="menu_ir_actions_todo_form"
-                parent="next_id_11" groups="base.group_extended" sequence="20"/>
+                parent="next_id_11" sequence="20"/>
 
 
 
@@ -1958,6 +1967,41 @@
             <field name="function">power_on</field>
             <field name="args">()</field>
         </record>
+        
+        <record id="ir_actions_todo_category_form" model="ir.ui.view">
+            <field name="name">ir.actions.todo.category.form</field>
+            <field name="model">ir.actions.todo.category</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Wizard Category">
+                        <field name="name"/>
+                        <field name="sequence"/>
+                        <field name="wizards_ids" nolabel="1" colspan="4"/>
+                </form>
+            </field>
+        </record>
+        
+        <record id="ir_actions_todo_category_tree" model="ir.ui.view">
+            <field name="name">ir.actions.todo.category.tree</field>
+            <field name="model">ir.actions.todo.category</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Wizard Category">
+                        <field name="name"/>
+                        <field name="sequence"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="category_sales_management_config" model="ir.actions.todo.category">
+            <field name="name">Sales Management</field>
+            <field name="sequence">5</field>
+        </record>         
+
+        <record id="category_tools_customization_config" model="ir.actions.todo.category">
+            <field name="name">Tools / Customization</field>
+            <field name="sequence">5</field>
+        </record>         
 
     </data>
 </openerp>
