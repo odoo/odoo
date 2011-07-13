@@ -36,7 +36,7 @@
                         <span id="db_text" class="ui-btn-text">Choose Database...</span>
                         <span class="ui-icon ui-icon-arrow-d ui-icon-shadow"></span>
                     </span>
-                    <select data-native-menu="false" id="database" name="database" tabindex="-1">
+                    <select id="database" name="database">
                         <t t-foreach="db_list" t-as="opt">
                             <option t-att-value="opt"><t t-esc="opt"/></option>
                         </t>
@@ -94,7 +94,10 @@
             <div data-role="fieldcontain">
             
                 <label class="ui-input-text">
-                    <span><t t-esc="fields[field.attrs.name].string"></t></span>:
+                    <span>
+                        <t t-if="!(field.attrs.string)" t-esc="fields[field.attrs.name].string"></t>
+                        <t t-if="field.attrs.string" t-esc="field.attrs.string"></t>
+                    </span>:
                 </label>
                 <t t-if="fields[field.attrs.name].type == 'char'">
                     <t t-if="values[field.attrs.name]">
@@ -148,7 +151,11 @@
                                 <span class="ui-icon ui-icon-arrow-d ui-icon-shadow"></span>
                             </span>
                             <select>
-                                
+                                <t t-if="fields[field.attrs.name].selection">
+                                    <t t-foreach="fields[field.attrs.name].selection" t-as="opt">
+                                        <option t-att-value="opt[0]"><t t-esc="opt[1]"/></option>
+                                    </t>
+                                </t>
                             </select>
                         </div>
                     </div>
