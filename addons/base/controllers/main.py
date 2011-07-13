@@ -56,6 +56,9 @@ class Xml2Json:
 # OpenERP Web base Controllers
 #----------------------------------------------------------
 
+class DatabaseCreationError(Exception): pass
+class DatabaseCreationCrash(DatabaseCreationError): pass
+
 class Session(openerpweb.Controller):
     _cp_path = "/base/session"
 
@@ -134,6 +137,31 @@ class Session(openerpweb.Controller):
             
             if not re.match('^[a-zA-Z][a-zA-Z0-9_]+$', dbname):
                 return {'error': "You must avoid all accents, space or special characters.", 'title': 'Bad database name'}
+            
+            ok = False
+            try:
+                return req.session.proxy("db").create(super_admin_pwd, dbname, demo_data, db_lang, admin_pwd)
+#                while True:
+#                    try:
+#                        progress, users = req.session.proxy('db').get_progress(super_admin_pwd, res)
+#                        if progress == 1.0:
+#                            for x in users:
+#                                if x['login'] == 'admin':
+#                                    req.session.login(dbname, 'admin', x['password'])
+#                                    ok = True
+#                            break
+#                        else:
+#                            time.sleep(1)
+#                    except:
+#                        raise DatabaseCreationCrash()
+#            except DatabaseCreationCrash:
+#                return {'error': "The server crashed during installation.\nWe suggest you to drop this database.",
+#                        'title': 'Error during database creation'}
+            except Exception, e:
+                if e.faultCode and e.faultCode.split(':')[0] == 'AccessDenied':
+                    return {'error': 'Bad super admin password !', 'title': 'Create Database'}
+                else:
+                    return {'error': 'Could not create database !', 'title': 'Create Database'}
         
         elif flag == 'drop':
             db = kw.get('db')
