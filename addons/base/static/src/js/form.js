@@ -1321,10 +1321,12 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
         }
         this.$input.focusout(anyoneLoosesFocus);
 
+        var isSelecting = false;
         // autocomplete
         this.$input.autocomplete({
             source: function(req, resp) { self.get_search_result(req, resp); },
             select: function(event, ui) {
+                isSelecting = true;
                 var item = ui.item;
                 if (item.id) {
                     self._change_int_value([item.id, item.name]);
@@ -1341,6 +1343,14 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
             close: anyoneLoosesFocus,
             minLength: 0,
             delay: 0
+        });
+        // used to correct a bug when selecting an element by pushing 'enter' in an editable list
+        this.$input.keyup(function(e) {
+            if (e.which === 13) {
+                if (isSelecting)
+                    e.stopPropagation();
+            }
+            isSelecting = false;
         });
     },
     // autocomplete component content handling
@@ -1811,7 +1821,8 @@ openerp.base.form.SelectCreatePopup = openerp.base.BaseWidget.extend({
         this.initial_ids = this.options.initial_ids;
         jQuery(this.render()).dialog({title: '',
                     modal: true,
-                    minWidth: 800});
+                    width: 960,
+                    height: 600});
         this.start();
     },
     start: function() {

@@ -86,7 +86,8 @@
                     </tr>
                     <tr>
                         <td><label for="password">Password:</label></td>
-                        <td><input type="password" name="password"/></td>
+                        <td><input type="password" name="password"
+                                t-att-value="selected_password || ''"/></td>
                     </tr>
                     <tr>
                         <td></td>
@@ -522,9 +523,9 @@
         <span class="oe-m2o-cm-button" t-att-id="widget.name + '_open'">
             <img src="/base/static/src/img/icons/gtk-index.png"/></span>
         <div t-att-id="widget.cm_id" class="contextMenu" style="display:none"><ul>
-            <li t-att-id="widget.cm_id + '_search'">Search...</li>
-            <li t-att-id="widget.cm_id + '_create'">Create New...</li>
             <li t-att-id="widget.cm_id + '_open'" style="color:grey">Open...</li>
+            <li t-att-id="widget.cm_id + '_create'">Create and Edit...</li>
+            <li t-att-id="widget.cm_id + '_search'">Search...</li>
         </ul></div>
     </div>
 </t>
@@ -884,9 +885,19 @@
 </t>
 <t t-name="SelectCreatePopup">
     <div t-att-id="element_id">
-        <div t-att-id="element_id + '_search'"></div>
-        <div t-att-id="element_id + '_view_list'"></div>
-        <div t-att-id="element_id + '_view_form'"></div>
+        <table style="width:100%">
+            <tr style="width:100%">
+                <td style="width:100%">
+                    <div t-att-id="element_id + '_search'" style="width:100%"></div>
+                </td>
+            </tr>
+            <tr style="width:100%">
+                <td style="width:100%">
+                    <div t-att-id="element_id + '_view_list'" style="width:100%"></div>
+                </td>
+            </tr>
+        </table>
+        <div t-att-id="element_id + '_view_form'" style="width:100%"></div>
     </div>
 </t>
 <t t-name="SelectCreatePopup.search.buttons">

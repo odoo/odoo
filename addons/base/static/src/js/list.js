@@ -256,11 +256,12 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
             if (column.modifiers) {
                 var modifiers = JSON.parse(column.modifiers);
                 column.modifiers_for = function (fields) {
-                    var result = {};
-                    for (var modifier in modifiers) {
-                        result[modifier] = domain_computer(modifiers[modifier], fields);
+                    if (!modifiers.invisible) {
+                        return {};
                     }
-                    return result;
+                    return {
+                        'invisible': domain_computer(modifiers.invisible, fields)
+                    };
                 };
             } else {
                 column.modifiers_for = noop;
