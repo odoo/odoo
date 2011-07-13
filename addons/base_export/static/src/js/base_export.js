@@ -41,6 +41,12 @@ openerp.base_export.Export = openerp.base.Controller.extend({
                 self.add_field(self.selected_field_id, self.selected_field_str);
             }
         });
+        jQuery(this._export).find('#remove_field').click(function(){
+            jQuery(self._export).find("#fields_list option:selected").remove();
+        });
+        jQuery(this._export).find('#remove_all_field').click(function(){
+            jQuery(self._export).find("#fields_list option").remove();
+        });
     },
 
     on_click: function(id, result) {

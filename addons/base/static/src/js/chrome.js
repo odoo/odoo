@@ -269,7 +269,7 @@ openerp.base.BasicController = Class.extend( /** @lends openerp.base.BasicContro
 /**
  * Generates an inherited class that replaces all the methods by null methods (methods
  * that does nothing and always return undefined).
- * 
+ *
  * @param {Class} claz
  * @param {dict} add Additional functions to override.
  * @return {Class}
@@ -579,7 +579,7 @@ openerp.base.Controller = openerp.base.BasicController.extend( /** @lends opener
         element_post_prefix: false
     },
     /**
-     * Controller registry, 
+     * Controller registry,
      */
     controller_registry: {
     },
@@ -676,14 +676,14 @@ openerp.base.BaseWidget = openerp.base.Controller.extend({
     /**
      * The name of the QWeb template that will be used for rendering. Must be
      * redefined in subclasses or the render() method can not be used.
-     * 
+     *
      * @type string
      */
     template: null,
     /**
      * The prefix used to generate an id automatically. Should be redefined in
      * subclasses. If it is not defined, a default identifier will be used.
-     * 
+     *
      * @type string
      */
     identifier_prefix: 'generic-identifier',
@@ -741,7 +741,7 @@ openerp.base.BaseWidget = openerp.base.Controller.extend({
     /**
      * Set the parent of this component, also un-register the previous parent
      * if there was one.
-     * 
+     *
      * @param {openerp.base.BaseWidget} parent The new parent.
      */
     set_parent: function(parent) {
@@ -756,7 +756,7 @@ openerp.base.BaseWidget = openerp.base.Controller.extend({
     /**
      * Render the widget. This.template must be defined.
      * The content of the current object is passed as context to the template.
-     * 
+     *
      * @param {object} additional Additional context arguments to pass to the template.
      */
     render: function (additional) {
@@ -1135,7 +1135,7 @@ openerp.base.WebClient = openerp.base.Controller.extend({
     on_logged: function() {
         this.action_manager =  new openerp.base.ActionManager(this.session, "oe_app");
         this.action_manager.start();
-        
+
         // if using saved actions, load the action and give it to action manager
         var parameters = jQuery.deparam(jQuery.param.querystring());
         if(parameters["s_action"] != undefined) {
