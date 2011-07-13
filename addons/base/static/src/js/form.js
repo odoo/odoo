@@ -1269,6 +1269,9 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
             }
             var pop = new openerp.base.form.FormOpenPopup(null, self.view.session);
             pop.show_element(self.field.relation, self.value[0],self.build_context(), {});
+            pop.on_write_completed.add_last(function() {
+                self.set_value(self.value[0]);
+            });
         };
         var cmenu = this.$menu_btn.contextMenu(this.cm_id, {'leftClickToo': true,
             bindings: bindings, itemStyle: {"color": ""},
@@ -1976,8 +1979,10 @@ openerp.base.form.FormOpenPopup = openerp.base.BaseWidget.extend({
         wdataset.parent_view = this.options.parent_view;
         wdataset.write(id, data, function(r) {
             self.stop();
+            self.on_write_completed();
         });
     },
+    on_write_completed: function() {},
     setup_form_view: function() {
         var self = this;
         this.view_form = new openerp.base.FormView(null, this.session,
