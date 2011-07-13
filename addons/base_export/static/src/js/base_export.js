@@ -26,12 +26,14 @@ openerp.base_export.Export = openerp.base.Controller.extend({
             height: 'auto',
             buttons : {
                         "Close" : function() {
+                            self.stop();
                             self._export.dialog('destroy');
                           },
                         "Export To File" : function() {
                             self.get_fields();
                           }
-                       }
+                       },
+            close: function(event, ui){ self.stop();},
         }).html(QWeb.render('ExportTreeView'))
         self.on_show_data(result)
         jQuery(this._export).find('#add_field').click(function(){
@@ -153,6 +155,11 @@ openerp.base_export.Export = openerp.base.Controller.extend({
             this._export.dialog('destroy');
         }
     },
+
+    stop: function() {
+        jQuery(this._export).remove();
+    },
+
 });
 
 };
