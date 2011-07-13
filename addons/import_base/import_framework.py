@@ -158,7 +158,7 @@ class import_framework(Thread):
                 and each data_i have a external id => in data_id['id']
         """
         if not datas:
-            return (0, 'No data in this table')
+            return (0, 'No data found')
         mapping['id'] = 'id_new'
         res = []
         
@@ -460,7 +460,7 @@ class import_framework(Thread):
                 warning = _("with no warning")
             else:
                 warning = _("with warning : %s") % warning
-            body += _("%s records were imported from table %s, %s \n") % (nb, table, warning)
+            body += _("%s has been successfully imported from %s %s, %s \n") % (nb, self.instance_name, table, warning)
         return self.get_body_header(result) + "\n\n" + body
     
     def get_body_header(self, result):

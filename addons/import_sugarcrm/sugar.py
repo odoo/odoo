@@ -28,6 +28,7 @@ from tools.translate import _
 import base64
 from lxml import etree
 import tools
+import import_sugarcrm
 
 
 
@@ -161,7 +162,7 @@ def search(portType, sessionid, module_name, offset, max_results, query=None, or
         for i in list:
             ans_dir = {}
             for j in i._name_value_list:
-                ans_dir[tools.ustr(j._name)] = tools.ustr(j._value)
+                ans_dir[tools.ustr(j._name)] = import_sugarcrm.unescape_htmlentities(tools.ustr(j._value))
             #end for
             ans_list.append(ans_dir)
     #end for

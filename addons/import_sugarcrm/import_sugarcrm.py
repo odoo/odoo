@@ -26,9 +26,16 @@ from import_base.mapper import *
 from datetime import datetime
 import base64
 import pprint
-from papyon.service.SOAPService import url_split
 pp = pprint.PrettyPrinter(indent=4)
 #copy old import here
+
+import htmllib
+
+def unescape_htmlentities(s):
+    p = htmllib.HTMLParser(None)
+    p.save_bgn()
+    p.feed(s)
+    return p.save_end()
 
 class related_ref(dbmapper):
     def __init__(self, type):
@@ -443,6 +450,7 @@ class sugar_import(import_framework):
         }
 
     def import_task(self, val):
+        print  val.get('date_start'), val.get('date_due')
         val['date'] = val.get('date_start') or datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
         val['date_deadline'] = val.get('date_due') or datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
         return val
@@ -933,20 +941,21 @@ class import_sugarcrm(osv.osv):
     _columns = {
         'username': fields.char('User Name', size=64, required=True),
         'password': fields.char('Password', size=24,required=True),
-         'url' : fields.char('SugarSoap Api url:', size=264, required=True, help="Webservice's url where to get the data.\
+        'url' : fields.char('SugarSoap Api url:', size=264, required=True, help="Webservice's url where to get the data.\
                       example : 'http://example.com/sugarcrm/soap.php', or copy the address of your sugarcrm application http://trial.sugarcrm.com/qbquyj4802/index.php?module=Home&action=index"),
-        'opportunity': fields.boolean('Leads & Opp', help="IfLeads & Opp are checked, SugarCRM leads and opportunities data are imported in OpenERP crm-Opportunity form"),
-        'contact': fields.boolean('Contacts', help="If Contacts are checked, SugarCRM Contacts data imported in OpenERP partner address form"),
-        'account': fields.boolean('Accounts', help="If Accounts are checked, SugarCRM  Accounts data imported in OpenERP partners form"),
-        'employee': fields.boolean('Employee', help="If Employees is checked, SugarCRM Employees data imported in OpenERP employees form"),
-        'meeting': fields.boolean('Meetings', help="If Meetings is checked, SugarCRM Meetings and Meeting Tasks data imported in OpenERP meetings form"),
-        'call': fields.boolean('Calls', help="If Calls is checked, SugarCRM Calls data imported in OpenERP phonecalls form"),
-        'claim': fields.boolean('Cases', help="If Cases is checked, SugarCRM Cases data imported in OpenERP Claims form"),
-        'email_history': fields.boolean('Email and Note',help="If Email and History is checked, SugarCRM Notes, Attachment and Emails data imported in OpenERP's Related module's History with attachment"),
-        'project': fields.boolean('Projects', help="If Projects is checked, SugarCRM Projects data imported in OpenERP Projects form"),
-        'project_task': fields.boolean('Project Tasks', help="If Project Tasks is checked, SugarCRM Project Tasks data imported in OpenERP Project Tasks form"),
-        'bug': fields.boolean('Bugs', help="If Bugs is checked, SugarCRM Bugs data imported in OpenERP Project Issues form"),
-        'document': fields.boolean('Documents', help="If Documents is checked, SugarCRM Documents data imported in OpenERP Document Form"),
+        'user' : fields.boolean('User', help="Check this box to import sugarCRM Users into OpenERP users, warning if a user with the same login exist in OpenERP, user information will be erase by sugarCRM user information", readonly=True),
+        'opportunity': fields.boolean('Leads & Opp', help="Check this box to import sugarCRM Leads and Opportunities into OpenERP Leads and Opportunities"),
+        'contact': fields.boolean('Contacts', help="Check this box to import sugarCRM Contacts into OpenERP addresses"),
+        'account': fields.boolean('Accounts', help="Check this box to import sugarCRM Accounts into OpenERP partners"),
+        'employee': fields.boolean('Employee', help="Check this box to import sugarCRM Employees into OpenERP employees"),
+        'meeting': fields.boolean('Meetings', help="Check this box to import sugarCRM Meetings and Tasks into OpenERP meetings"),
+        'call': fields.boolean('Calls', help="Check this box to import sugarCRM Calls into OpenERP calls"),
+        'claim': fields.boolean('Cases', help="Check this box to import sugarCRM Cases into OpenERP claims"),
+        'email_history': fields.boolean('Email and Note',help="Check this box to import sugarCRM Emails, Notes and Attachments into OpenERP Messages and Attachments"),
+        'project': fields.boolean('Projects', help="Check this box to import sugarCRM Projects into OpenERP projects"),
+        'project_task': fields.boolean('Project Tasks', help="Check this box to import sugarCRM Project Tasks into OpenERP tasks"),
+        'bug': fields.boolean('Bugs', help="Check this box to import sugarCRM Bugs into OpenERP project issues"),
+        'document': fields.boolean('Documents', help="Check this box to import sugarCRM Documents into OpenERP documents"),
         'email_from': fields.char('Notify End Of Import To:', size=128),
         'instance_name': fields.char("Instance's Name", size=64, help="Prefix of SugarCRM id to differentiate xml_id of SugarCRM models datas come from different server."),
     }
@@ -971,6 +980,7 @@ class import_sugarcrm(osv.osv):
         return self._module_installed(cr,uid,'hr',context=context)
     
     _defaults = {#to be set to true, but easier for debugging
+       'user' : True,
        'opportunity': True,
        'contact' : True,
        'account' : True,
@@ -1035,6 +1045,8 @@ class import_sugarcrm(osv.osv):
         module = {}
         for current in self.browse(cr, uid, ids, context):
             context.update({'username': current.username, 'password': current.password, 'url': current.url, 'email_user': current.email_from or False, 'instance_name': current.instance_name or False})
+            if current.user:
+                key_list.append('Users')
             if current.contact:
                 key_list.append('Contacts')
             if current.account:
