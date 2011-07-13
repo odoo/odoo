@@ -283,10 +283,8 @@
             <t t-foreach="columns" t-as="column">
                 <th t-if="!column.meta and column.invisible !== '1'" t-att-data-id="column.id"
                     t-att-class="((options.sortable and column.tag !== 'button') ? 'oe-sortable' : null)">
-                    <t t-if="column.tag !== 'button'">
-                        <t t-esc="column.string"/>
-                        <span t-att-class="(fields_view.sorted.field === column.id) ? ('ui-icon' + (fields_view.sorted.reversed ? ' ui-icon-triangle-1-n' : ' ui-icon-triangle-1-s')) : ''"/>
-                    </t>
+                    <t t-if="column.tag !== 'button'"
+                        ><t t-esc="column.string"/></t>
                 </th>
             </t>
             <th t-if="options.deletable" width="1"/>

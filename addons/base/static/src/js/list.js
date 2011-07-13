@@ -192,8 +192,6 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
 
         this.setup_columns(this.fields_view.fields, grouped);
 
-        if (!this.fields_view.sorted) { this.fields_view.sorted = {}; }
-
         this.$element.html(QWeb.render("ListView", this));
 
         // Head hook
@@ -203,12 +201,19 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
         this.$element.find('.oe-list-delete')
                 .attr('disabled', true)
                 .click(this.do_delete_selected);
-        this.$element.find('thead').delegate('th[data-id]', 'click', function (e) {
+        this.$element.find('thead').delegate('th.oe-sortable[data-id]', 'click', function (e) {
             e.stopPropagation();
 
-            self.dataset.sort($(this).data('id'));
+            var $this = $(this);
+            self.dataset.sort($this.data('id'));
+            if ($this.find('span').length) {
+                $this.find('span').toggleClass(
+                    'ui-icon-triangle-1-s ui-icon-triangle-1-n');
+            } else {
+                $this.append('<span class="ui-icon ui-icon-triangle-1-s">')
+                     .siblings('.oe-sortable').find('span').remove();
+            }
 
-            // TODO: should only reload content (and set the right column to a sorted display state)
             self.reload_content();
         });
 
