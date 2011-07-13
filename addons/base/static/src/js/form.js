@@ -1785,15 +1785,11 @@ openerp.base.form.Many2ManyListView = openerp.base.ListView.extend({
         });
     },
     do_activate_record: function(index, id) {
-        this.m2m_field.view.session.action_manager.do_action({
-            "res_model": this.dataset.model,
-            "views": [[false,"form"]],
-            "res_id": id,
-            "type": "ir.actions.act_window",
-            "view_type": "form",
-            "view_mode": "form",
-            "target": "new",
-            "context": this.m2m_field.build_context()
+        var self = this;
+        var pop = new openerp.base.form.FormOpenPopup(null, this.m2m_field.view.session);
+        pop.show_element(this.dataset.model, id, this.m2m_field.build_context(), {});
+        pop.on_write_completed.add_last(function() {
+            self.reload_content();
         });
     }
 });
