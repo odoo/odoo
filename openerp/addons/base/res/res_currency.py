@@ -41,14 +41,14 @@ class res_currency(osv.osv):
         currency_rate_type_id = context.get('currency_rate_type_id', False)
         if currency_rate_type_id:
             domain.append(('currency_rate_type_id','=',currency_rate_type_id))
-        curr_rate_ids = currency_rate_obj.search(cr, uid, domain, context=context)
+        curr_rate_ids = currency_rate_obj.search(cr, uid, domain, order='name desc', context=context)
+        curr_rates = currency_rate_obj.browse(cr, uid, curr_rate_ids, context=context)
         for id in ids:
-            if curr_rate_ids:
-                for cur in currency_rate_obj.browse(cr, uid, curr_rate_ids, context=context):
-                    if cur.currency_id.id == id:
-                        res[id] = cur.rate
-            else:
-                res[id] = 0
+            res[id] = 0
+            for cur in curr_rates:
+                if cur.currency_id.id == id:
+                    res[id] = cur.rate
+                    break
 
         return res
     _name = "res.currency"
