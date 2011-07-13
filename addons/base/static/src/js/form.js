@@ -1267,14 +1267,8 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
             if (!self.value) {
                 return;
             }
-            self.session.action_manager.do_action({
-                "res_model": self.field.relation,
-                "views":[[false,"form"]],
-                "res_id": self.value[0],
-                "type":"ir.actions.act_window",
-                "target":"new",
-                "context": self.build_context()
-            });
+            var pop = new openerp.base.form.FormOpenPopup(null, self.view.session);
+            pop.show_element(self.field.relation, self.value[0],self.build_context(), {});
         };
         var cmenu = this.$menu_btn.contextMenu(this.cm_id, {'leftClickToo': true,
             bindings: bindings, itemStyle: {"color": ""},
@@ -1885,7 +1879,7 @@ openerp.base.form.SelectCreatePopup = openerp.base.BaseWidget.extend({
             return;
         var self = this;
         var wdataset = new openerp.base.DataSetSearch(this.session, this.model, this.context, this.domain);
-        wdataset = this.options.parent_view;
+        wdataset.parent_view = this.options.parent_view;
         wdataset.create(data, function(r) {
             self.on_select_elements([r.result]);
         });
@@ -1942,6 +1936,70 @@ openerp.base.form.SelectCreateListView = openerp.base.ListView.extend({
     do_select: function(ids, records) {
         this._super(ids, records);
         this.popup.on_click_element(ids);
+    }
+});
+
+openerp.base.form.FormOpenPopup = openerp.base.BaseWidget.extend({
+    identifier_prefix: "formopenpopup",
+    template: "FormOpenPopup",
+    /**
+     * options:
+     * - alternative_form_view
+     * - auto_write (default true)
+     * - parent_view
+     */
+    show_element: function(model, row_id, context, options) {
+        this.model = model;
+        this.row_id = row_id;
+        this.context = context || {};
+        this.options = _.defaults(options || {}, {"auto_write": true});
+        jQuery(this.render()).dialog({title: '',
+                    modal: true,
+                    width: 960,
+                    height: 600});
+        this.start();
+    },
+    start: function() {
+        this._super();
+        this.dataset = new openerp.base.ReadOnlyDataSetSearch(this.session, this.model,
+            this.context);
+        this.dataset.ids = [this.row_id];
+        this.dataset.index = 0;
+        this.dataset.parent_view = this.options.parent_view;
+        this.setup_form_view();
+    },
+    on_write: function(id, data) {
+        if (!this.options.auto_write)
+            return;
+        var self = this;
+        var wdataset = new openerp.base.DataSetSearch(this.session, this.model, this.context, this.domain);
+        wdataset.parent_view = this.options.parent_view;
+        wdataset.write(id, data, function(r) {
+            self.stop();
+        });
+    },
+    setup_form_view: function() {
+        var self = this;
+        this.view_form = new openerp.base.FormView(null, this.session,
+                this.element_id + "_view_form", this.dataset, false);
+        if (this.options.alternative_form_view) {
+            this.view_form.set_embedded_view(this.options.alternative_form_view);
+        }
+        this.view_form.start();
+        this.view_form.on_loaded.add_last(function() {
+            var $buttons = self.view_form.$element.find(".oe_form_buttons");
+            $buttons.html(QWeb.render("FormOpenPopup.form.buttons"));
+            var $nbutton = $buttons.find(".oe_formopenpopup-form-save");
+            $nbutton.click(function() {
+                self.view_form.do_save();
+            });
+            var $cbutton = $buttons.find(".oe_formopenpopup-form-close");
+            $cbutton.click(function() {
+                self.stop();
+            });
+            self.view_form.do_show();
+        });
+        this.dataset.on_write.add(this.on_write);
     }
 });
 
