@@ -22,6 +22,16 @@
             <field name="journal_id" ref="analytic_journal"/>
         </record>
 
+        <record id="hr.employee2" model="hr.employee">
+            <field name="product_id" ref="product_consultant"/>
+            <field name="journal_id" ref="analytic_journal"/>
+        </record>
+
+        <record id="hr.employee3" model="hr.employee">
+            <field name="product_id" ref="product_consultant"/>
+            <field name="journal_id" ref="analytic_journal"/>
+        </record>
+
         <record id="working_hours_requirements" model="hr.analytic.timesheet">
             <field name="name">Requirements analysis and specification</field>
             <field name="user_id" ref="base.user_root"/>
