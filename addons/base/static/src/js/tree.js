@@ -84,14 +84,14 @@ openerp.base.TreeView = openerp.base.View.extend({
                     if (row_id) {
                         if (!is_padding) {
                             fixpadding = padd + 40;
-                            row_id.find('td').css('paddingLeft', fixpadding);
+                            row_id.find('td:first').css('paddingLeft', fixpadding);
                         } else {
                             if (padd == 1) {
                                 fixpadding = padd + 17;
                             } else {
                                 fixpadding = padd + 20;
                             }
-                            var curr_node_elem = row_id.find('td');
+                            var curr_node_elem = row_id.find('td:first');
                             curr_node_elem.children(':first-child').addClass("parent_top");
                             if (curr_node_elem.children(':first-child').attr('id') == "parentimg_" + response[i].id) {
                                 curr_node_elem.css('paddingLeft', fixpadding );
@@ -114,7 +114,7 @@ openerp.base.TreeView = openerp.base.View.extend({
                 });
             }
 
-            self.$element.find('tr').mouseover( function() {
+            self.$element.find('tr').find('td:first').mouseover( function() {
                 $(this).css('color', '#0000FF');
             }).mouseout( function() {
                 $(this).css('color','#000000');
