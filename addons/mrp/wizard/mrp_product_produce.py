@@ -74,7 +74,7 @@ class mrp_product_produce(osv.osv_memory):
             for move_id in move_ids:
                 prod_obj.action_produce(cr, uid, move_id,
                                     data['product_qty'], data['mode'], context=context)
-        return {}
+        return {'type': 'ir.actions.act_window_close'}
 
 mrp_product_produce()
 
