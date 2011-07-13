@@ -434,9 +434,7 @@ openerp.base_graph.GraphView = openerp.base.View.extend({
             }
             views.push(view);
         });
-        this.actionmanager = new openerp.base.ActionManager(this.session, "oe_app");
-        this.actionmanager.start();
-        this.actionmanager.do_action({
+        this.session.action_manager.do_action({
             "res_model" : this.dataset.model,
             "domain" : this.dataset.domain,
             "views" : views,
