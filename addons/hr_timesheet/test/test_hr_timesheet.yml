@@ -100,7 +100,7 @@
 -
   !python {model: hr.sign.in.project}: |
       import time
-      uid = ref('test_timesheet_user1'),
+      uid = ref('test_timesheet_user1')
       new_id = self.create(cr, uid, {'emp_id': ref('hr_employee_fracline1'), 'name': 'Francline', 'server_date': time.strftime('%Y-%m-%d %H:%M:%S'), 'date': time.strftime('%Y-%m-%d 12:%M:%S'), 'state': 'absent'})
       self.sign_in_result(cr, uid, [new_id], context)
 
