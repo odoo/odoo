@@ -22,11 +22,13 @@ import pprint
 import mapper
 import pooler
 import tools
-
+from tools.translate import _
 
 from threading import Thread
 import datetime
 import logging
+import StringIO
+import traceback
 pp = pprint.PrettyPrinter(indent=4)
 
 
@@ -58,6 +60,7 @@ class import_framework(Thread):
         self.context = context or {}
         self.email = email_to_notify
         self.table_list = []
+        self.logger = logging.getLogger('import_framework')
 
     """
         Abstract Method to be implemented in 
@@ -175,8 +178,9 @@ class import_framework(Thread):
         
         model_obj = self.obj.pool.get(model)
         if not model_obj:
-            raise ValueError("%s is not a valid model name" % model)
-        
+            raise ValueError(_("%s is not a valid model name") % model)
+        self.logger.debug(_("fields imported : "))
+        self.logger.debug(fields)
         (p, r, warning, s) = model_obj.import_data(self.cr, self.uid, fields, res, mode='update', current_module=self.module_name, noupdate=True, context=self.context)
         for (field, field_name) in self_dependencies:
             self._import_self_dependencies(model_obj, field, datas)
@@ -311,6 +315,9 @@ class import_framework(Thread):
         """
         domain_search = not domain_search and [('name', 'ilike', name)] or domain_search
         obj = self.obj.pool.get(model)
+        if not obj: #if the model doesn't exist
+            return False
+        
         xml_id = self._generate_xml_id(name, table)
         xml_ref = self.mapped_id_if_exist(model, domain_search, table, name)
         fields.append('id')
@@ -359,6 +366,7 @@ class import_framework(Thread):
         """
         self.data_started = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         self.cr = pooler.get_db(self.cr.dbname).cursor()
+        error = False
         try:
             self.initialize()
             result = []
@@ -369,16 +377,22 @@ class import_framework(Thread):
                     res = self._resolve_dependencies(self.get_mapping()[table].get('dependencies', []), imported)
                     result.extend(res)
                     if to_import:
+                        self.logger.debug(_("import : ") + table )
                         (position, warning) = self._import_table(table)
                         result.append((table, position, warning))
                     imported.add(table)
             self.cr.commit()
-            
+        
+        except Exception, err:
+            sh = StringIO.StringIO()
+            traceback.print_exc(file=sh)
+            error = sh.getvalue()
+            print error
         finally:
             self.cr.close()
+           
         self.date_ended = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        self._send_notification_email(result)
-        
+        self._send_notification_email(result, error)
         
     def _resolve_dependencies(self, dep, imported):
         """ 
@@ -392,26 +406,29 @@ class import_framework(Thread):
                 res = self._resolve_dependencies(self.get_mapping()[dependency].get('dependencies', []), imported)
                 result.extend(res)
                 if to_import:
+                    self.logger.debug("import dependency : " + dependency)
                     r = self._import_table(dependency)
                     (position, warning) = r
                     result.append((dependency, position, warning))
                 imported.add(dependency)
         return result
                 
-    def _send_notification_email(self, result):
-        if not self.email:
+    def _send_notification_email(self, result, error):
+        if not self.email or not self.email[0]:
             return False	 
 
         tools.email_send(
                 'import@module.openerp',
                 self.email,
-                self.get_email_subject(result),
-                self.get_email_body(result),
+                self.get_email_subject(result, error),
+                self.get_email_body(result, error),
             )
-        logger = logging.getLogger('import_sugarcam')
-        logger.info("Import finished, notification email sended")
+        if error:
+            self.logger.error(_("Import failed due to an unexpected error"))
+        else:
+            self.logger.info(_("Import finished, notification email sended"))
     
-    def get_email_subject(self, result):
+    def get_email_subject(self, result, error=False):
         """
             This method define the subject of the email send by openerp at the end of import
             @param result: a list of tuple 
@@ -419,9 +436,11 @@ class import_framework(Thread):
             @return the subject of the mail
         
         """
-        return "Import of your data finished at %s" % self.date_ended
+        if error:
+            return _("Data Import failed at %s due to an unexpected error") % self.date_ended
+        return _("Import of your data finished at %s") % self.date_ended
     
-    def get_email_body(self, result):
+    def get_email_body(self, result, error=False):
         """
             This method define the body of the email send by openerp at the end of import. The body is separated in two part
             the header (@see get_body_header), and the generate body with the list of table and number of record imported.
@@ -432,20 +451,23 @@ class import_framework(Thread):
         
         """
         
-        body = "started at %s and finished at %s \n" % (self.data_started, self.date_ended)
+        body = _("started at %s and finished at %s \n") % (self.data_started, self.date_ended)
+        if error:
+            body += _("but failed, in consequence no data were imported to keep database consistency \n error : \n") + error 
+            
         for (table, nb, warning) in result:
             if not warning:
-                warning = "with no warning"
+                warning = _("with no warning")
             else:
-                warning = "with warning : %s" % warning
-            body += "%s records were imported from table %s, %s \n" % (nb, table, warning)
+                warning = _("with warning : %s") % warning
+            body += _("%s records were imported from table %s, %s \n") % (nb, table, warning)
         return self.get_body_header(result) + "\n\n" + body
     
     def get_body_header(self, result):
         """
             @return the first sentences written in the mail's body
         """
-        return "The import of data \n instance name : %s \n" % self.instance_name
+        return _("The import of data \n instance name : %s \n") % self.instance_name
     
 
     #TODO documentation test

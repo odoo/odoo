@@ -27,7 +27,7 @@
             "Contacts", "Employees", Meetings, Phonecalls, Emails, and Project, Project Tasks Data into OpenERP Module.""",
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
-    'depends': ['import_base', 'crm_claim', 'project', 'project_issue', 'hr', 'document'],
+    'depends': ['import_base','crm', 'document'],
     'init_xml': [],
     'update_xml': ["wizard/import_message_view.xml",
                    "import_sugarcrm_view.xml"],
