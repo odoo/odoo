@@ -990,7 +990,7 @@ openerp.base.Database = openerp.base.Controller.extend({
 	        		var db_error_dialog = _.uniqueId("db_error_dialog");
                   		$('<div>', {id: db_error_dialog}).dialog({
 		                modal: true,
-		                title: "Create Database",
+		                title: result.title,
 		                buttons: {
 		                    Ok: function() {
 		                        $(this).dialog("close");
@@ -1025,7 +1025,7 @@ openerp.base.Database = openerp.base.Controller.extend({
 		        		var db_error_dialog = _.uniqueId("db_error_dialog");
                    		$('<div>', {id: db_error_dialog}).dialog({
 			                modal: true,
-			                title: "Drop Database",
+			                title: result.title,
 			                buttons: {
 			                    Ok: function() {
 			                        $(this).dialog("close");
@@ -1059,7 +1059,7 @@ openerp.base.Database = openerp.base.Controller.extend({
 	        		var db_error_dialog = _.uniqueId("db_error_dialog");
                   		$('<div>', {id: db_error_dialog}).dialog({
 		                modal: true,
-		                title: "Backup Database",
+		                title: result.title,
 		                buttons: {
 		                    Ok: function() {
 		                        $(this).dialog("close");
@@ -1093,7 +1093,7 @@ openerp.base.Database = openerp.base.Controller.extend({
 	        		var db_error_dialog = _.uniqueId("db_error_dialog");
                   		$('<div>', {id: db_error_dialog}).dialog({
 		                modal: true,
-		                title: "Restore Database",
+		                title: result.title,
 		                buttons: {
 		                    Ok: function() {
 		                        $(this).dialog("close");
@@ -1148,7 +1148,7 @@ openerp.base.Database = openerp.base.Controller.extend({
 		        		var db_error_dialog = _.uniqueId("db_error_dialog");
                    		$('<div>', {id: db_error_dialog}).dialog({
 			                modal: true,
-			                title: "Change Password",
+			                title: result.title,
 			                buttons: {
 			                    Ok: function() {
 			                        $(this).dialog("close");
