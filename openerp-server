@@ -100,7 +100,7 @@ if not ( config["stop_after_init"] or \
 
 if config['db_name']:
     for dbname in config['db_name'].split(','):
-        db, pool = openerp.pooler.get_db_and_pool(dbname, update_module=config['init'] or config['update'], pooljobs=False)
+        db, registry = openerp.pooler.get_db_and_pool(dbname, update_module=config['init'] or config['update'], pooljobs=False)
         cr = db.cursor()
 
         if config["test_file"]:
@@ -109,7 +109,7 @@ if config['db_name']:
             cr.rollback()
 
         # jobs will start to be processed later, when start_agent below is called.
-        pool.get('ir.cron').restart(db.dbname)
+        registry.start_cron_thread()
 
         cr.close()
 
@@ -218,6 +218,7 @@ def quit():
                 # and would present the forced shutdown
                 thread.join(0.05)
                 time.sleep(0.05)
+    openerp.modules.registry.RegistryManager.delete_all()
     sys.exit(0)
 
 if config['pidfile']:

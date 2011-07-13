@@ -25,6 +25,8 @@
 
 import openerp.sql_db
 import openerp.osv.orm
+import openerp.netsvc
+import openerp.tools
 
 
 class Registry(object):
@@ -81,6 +83,9 @@ class Registry(object):
                 res.append(cls.createInstance(self, cr))
 
         return res
+
+    def start_cron_thread(self):
+        self.get('ir.cron').restart(self.db.dbname)
 
 
 class RegistryManager(object):
@@ -143,16 +148,34 @@ class RegistryManager(object):
             cr.close()
 
         if pooljobs:
-            registry.get('ir.cron').restart(registry.db.dbname)
+            registry.start_cron_thread()
 
         return registry
 
 
     @classmethod
     def delete(cls, db_name):
-        """ Delete the registry linked to a given database. """
+        """ Delete the registry linked to a given database.
+
+        This also cleans the associated caches. For good measure this also
+        cancels the associated cron job. But please note that the cron job can
+        be running and take some time before ending, and that you should not
+        remove a registry if it can still be used by some thread. So it might
+        be necessary to call yourself openerp.netsvc.Agent.cancel(db_name) and
+        and join (i.e. wait for) the thread.
+
+        """
         if db_name in cls.registries:
             del cls.registries[db_name]
+        openerp.tools.cache.clean_caches_for_db(db_name)
+        openerp.netsvc.Agent.cancel(db_name)
+
+
+    @classmethod
+    def delete_all(cls):
+        """ Delete all the registries. """
+        for db_name in cls.registries.keys():
+            cls.delete(db_name)
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

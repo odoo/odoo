@@ -429,9 +429,8 @@ def db_connect(db_name):
     return Connection(_Pool, db_name)
 
 def close_db(db_name):
-    """ You might want to call openerp.netsvc.Agent.cancel(db_name) along this function."""
+    """ You might want to call openerp.modules.registry.RegistryManager.delete(db_name) along this function."""
     _Pool.close_all(dsn(db_name))
-    tools.cache.clean_caches_for_db(db_name)
     ct = currentThread()
     if hasattr(ct, 'dbname'):
         delattr(ct, 'dbname')
