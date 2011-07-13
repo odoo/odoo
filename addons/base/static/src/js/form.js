@@ -41,7 +41,10 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
     start: function() {
         //this.log('Starting FormView '+this.model+this.view_id)
         if (this.embedded_view) {
-            return $.Deferred().then(this.on_loaded).resolve({fields_view: this.embedded_view});
+            var def = $.Deferred().then(this.on_loaded);
+            var self = this;
+            setTimeout(function() {def.resolve({fields_view: self.embedded_view});}, 0);
+            return def.promise();
         } else {
             var context = new openerp.base.CompoundContext(this.dataset.get_context());
             if (this.view_manager.action && this.view_manager.action.context) {
@@ -1700,6 +1703,20 @@ openerp.base.form.One2ManyListView = openerp.base.ListView.extend({
                 });
             });
         }
+    },
+    do_activate_record: function(index, id) {
+        var self = this;
+        var pop = new openerp.base.form.FormOpenPopup(null, self.o2m.view.session);
+        pop.show_element(self.o2m.field.relation, id, self.o2m.build_context(),{
+            auto_write: false,
+            alternative_form_view: self.o2m.field.views ? self.o2m.field.views["form"] : undefined,
+            parent_view: self.o2m.view
+        });
+        pop.on_write.add(function(id, data) {
+            self.o2m.dataset.write(id, data, function(r) {
+                self.o2m.reload_current_view();
+            });
+        });
     }
 });
 
@@ -1968,13 +1985,13 @@ openerp.base.form.FormOpenPopup = openerp.base.BaseWidget.extend({
         this.setup_form_view();
     },
     on_write: function(id, data) {
+        this.stop();
         if (!this.options.auto_write)
             return;
         var self = this;
         var wdataset = new openerp.base.DataSetSearch(this.session, this.model, this.context, this.domain);
         wdataset.parent_view = this.options.parent_view;
         wdataset.write(id, data, function(r) {
-            self.stop();
             self.on_write_completed();
         });
     },
