@@ -47,6 +47,7 @@ Account Voucher module includes all the basic requirements of Voucher Entries fo
         "wizard/account_voucher_unreconcile_view.xml",
         "wizard/account_statement_from_invoice_view.xml",
         "account_voucher_view.xml",
+        "company_view.xml",
         "voucher_payment_receipt_view.xml",
         "voucher_sales_purchase_view.xml",
         "account_voucher_wizard.xml",
