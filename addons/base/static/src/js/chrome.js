@@ -912,6 +912,7 @@ openerp.base.Database = openerp.base.Controller.extend({
 		this._super(session, element_id);
 		this.option_id = option_id;
 		this.$option_id = $('#' + option_id);
+		this.$option_id.html('');
 	},
 	start: function() {
 		this.$element.html(QWeb.render("Database", this));
