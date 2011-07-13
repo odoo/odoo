@@ -285,14 +285,18 @@ class Agent(object):
 
     @classmethod
     def reschedule_in_advance(cls, function, timestamp, db_name, *args, **kwargs):
+        if not timestamp:
+            return
         # Cancel the previous task if any.
-        old_timestamp = None
+        old_timestamp = False
         if db_name in cls.__tasks_by_db:
             for task in cls.__tasks_by_db[db_name]:
-                if task[2] == function and timestamp < task[0]:
-                    old_timestamp = task[0]
+                print ">>> function:", function
+                if task[2] == function and (not task[0] or timestamp < task[0]):
+                    old_timestamp = True
                     task[0] = 0
-        if not old_timestamp or timestamp < old_timestamp:
+        if old_timestamp or db_name not in cls.__tasks_by_db or not cls.__tasks_by_db[db_name]:
+            print ">>> rescheduled earlier", timestamp
             cls.setAlarm(function, timestamp, db_name, *args, **kwargs)
 
     @classmethod
@@ -306,6 +310,7 @@ class Agent(object):
         """
         current_thread = threading.currentThread()
         while True:
+            print ">>>>> starting thread for"
             while cls.__tasks and cls.__tasks[0][0] < time.time():
                 task = heapq.heappop(cls.__tasks)
                 timestamp, dbname, function, args, kwargs = task
@@ -319,6 +324,7 @@ class Agent(object):
                 task_thread = threading.Thread(target=function, name='netsvc.Agent.task', args=args, kwargs=kwargs)
                 # force non-daemon task threads (the runner thread must be daemon, and this property is inherited by default)
                 task_thread.setDaemon(False)
+                print ">>>>> -", function.func_name
                 task_thread.start()
                 time.sleep(1)
             time.sleep(60)
