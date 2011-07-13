@@ -256,11 +256,12 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
             if (column.modifiers) {
                 var modifiers = JSON.parse(column.modifiers);
                 column.modifiers_for = function (fields) {
-                    var result = {};
-                    for (var modifier in modifiers) {
-                        result[modifier] = domain_computer(modifiers[modifier], fields);
+                    if (!modifiers.invisible) {
+                        return {};
                     }
-                    return result;
+                    return {
+                        'invisible': domain_computer(modifiers.invisible, fields)
+                    };
                 };
             } else {
                 column.modifiers_for = noop;
@@ -1074,18 +1075,23 @@ openerp.base.ListView.Groups = Class.extend( /** @lends openerp.base.ListView.Gr
         var self = this;
         var $element = $('<tbody>');
         this.elements = [$element[0]];
-        this.datagroup.list(function (groups) {
-            $element[0].appendChild(
-                self.render_groups(groups));
-            if (post_render) { post_render(); }
-        }, function (dataset) {
-            self.render_dataset(dataset).then(function (list) {
-                self.children[null] = list;
-                self.elements =
-                    [list.$current.replaceAll($element)[0]];
+
+        this.datagroup.list(
+            _(this.view.visible_columns).chain()
+                .filter(function (column) { return column.tag === 'field' })
+                .pluck('name').value(),
+            function (groups) {
+                $element[0].appendChild(
+                    self.render_groups(groups));
                 if (post_render) { post_render(); }
+            }, function (dataset) {
+                self.render_dataset(dataset).then(function (list) {
+                    self.children[null] = list;
+                    self.elements =
+                        [list.$current.replaceAll($element)[0]];
+                    if (post_render) { post_render(); }
+                });
             });
-        });
         return $element;
     },
     /**

@@ -394,7 +394,7 @@ def fix_view_modes(action):
         generate_views(action)
 
     if action.pop('view_type') != 'form':
-        return
+        return action
 
     action['views'] = [
         [id, mode if mode != 'tree' else 'list']
@@ -596,12 +596,12 @@ class DataSet(openerpweb.Controller):
 class DataGroup(openerpweb.Controller):
     _cp_path = "/base/group"
     @openerpweb.jsonrequest
-    def read(self, request, model, group_by_fields, domain=None):
+    def read(self, request, model, fields, group_by_fields, domain=None):
         Model = request.session.model(model)
         context, domain = eval_context_and_domain(request.session, request.context, domain)
 
         return Model.read_group(
-            domain or [], False, group_by_fields, 0, False,
+            domain or [], fields, group_by_fields, 0, False,
             dict(context, group_by=group_by_fields))
 
 class View(openerpweb.Controller):

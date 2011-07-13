@@ -845,6 +845,7 @@ openerp.base.Dialog = openerp.base.BaseWidget.extend({
         this.$dialog.dialog('close');
     },
     stop: function () {
+        this.close();
         this.$dialog.dialog('destroy');
     }
 });
@@ -1173,6 +1174,11 @@ openerp.base.Login =  openerp.base.Controller.extend({
         if (this.has_local_storage && this.remember_creditentials) {
             this.selected_db = localStorage.getItem('last_db_login_success');
             this.selected_login = localStorage.getItem('last_login_login_success');
+        }
+        if (jQuery.deparam(jQuery.param.querystring()).debug != undefined) {
+            this.selected_db = this.selected_db || "trunk";
+            this.selected_login = this.selected_login || "admin";
+            this.selected_password = this.selected_password || "a";
         }
     },
     start: function() {
