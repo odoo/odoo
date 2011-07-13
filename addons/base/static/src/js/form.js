@@ -614,14 +614,15 @@ openerp.base.form.WidgetFrame = openerp.base.form.Widget.extend({
             if (node.attrs.nolabel != '1') {
                 var label = new (this.view.registry.get_object('label')) (this.view, node);
                 label["for"] = widget;
-                this.add_widget(label);
+                this.add_widget(label, widget.colspan + 1);
             }
         }
         this.add_widget(widget);
     },
-    add_widget: function(widget) {
+    add_widget: function(widget, colspan) {
+        colspan = colspan || widget.colspan;
         var current_row = this.table[this.table.length - 1];
-        if (current_row.length && (this.x + widget.colspan) > this.columns) {
+        if (current_row.length && (this.x + colspan) > this.columns) {
             current_row = this.add_row();
         }
         current_row.push(widget);
