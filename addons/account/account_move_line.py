@@ -591,8 +591,7 @@ class account_move_line(osv.osv):
         return True
 
     def _check_date(self, cr, uid, ids, context=None):
-        lines = self.browse(cr, uid, ids, context=context)
-        for l in lines:
+        for l in self.browse(cr, uid, ids, context=context):
             if l.journal_id.allow_date:
                 if not time.strptime(l.date[:10],'%Y-%m-%d') >= time.strptime(l.period_id.date_start, '%Y-%m-%d') or not time.strptime(l.date[:10], '%Y-%m-%d') <= time.strptime(l.period_id.date_stop, '%Y-%m-%d'):
                     return False
