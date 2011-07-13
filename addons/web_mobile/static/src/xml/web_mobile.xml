@@ -195,16 +195,15 @@
                 </t>
             </div>
             </t>
-
             <t t-if="notebooks">
                 <t t-foreach="notebooks.children" t-as="page">
                     <div class="info ui-collapsible-contain" data-collapsed="true" data-role="collapsible">
-                        <h1 class="ui-collapsible-heading ui-collapsible-heading-collapsed">
-                            <a class="ui-collapsible-heading-toggle ui-btn ui-btn-icon-left ui-shadow ui-corner-all ui-btn-up-c" href="#" data-theme="c">
+                        <h1 class="ui-collapsible-heading">
+                            <a class="ui-collapsible-heading-toggle ui-btn ui-btn-icon-left ui-shadow ui-corner-all ui-btn-up-c" href="#" data-theme="c" t-id="page.attrs.string">
                                 <span class="ui-btn-inner ui-corner-all">
                                     <span class="ui-btn-text">
                                         <t t-esc="page.attrs.string"></t>
-                                        <span class="ui-collapsible-heading-status"></span>
+                                        <!-- <span class="ui-collapsible-heading-status"></span> -->
                                     </span>
                                     <span data-theme="d" class="ui-btn ui-btn-icon-left ui-btn-corner-all ui-shadow ui-btn-up-d">
                                         <span class="ui-btn-inner ui-btn-corner-all ui-corner-all">
@@ -214,12 +213,10 @@
                                     </span>
                                 </span>
                             </a>
-                        </h1>
-                        <div class="ui-collapsible-content ui-collapsible-content-collapsed" aria-hidden="true">
-                            <div class="detail">
-                                
+                            <div class="ui-collapsible-content ui-collapsible-content-collapsed" aria-hidden="true">
+                                <div class="detail"></div>
                             </div>
-                        </div>
+                        </h1>
                     </div>
                 </t>
             </t>
