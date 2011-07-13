@@ -2496,9 +2496,10 @@ class orm(orm_template):
         :param int offset: optional number of records to skip
         :param int limit: optional max number of records to return
         :param dict context: context arguments, like lang, time zone
-        :param order: optional ``order by`` specification, for overriding the natural
-                      sort ordering of the groups, see also :py:meth:`~osv.osv.osv.search`
-                      (supported only for many2one fields currently)
+        :param list orderby: optional ``order by`` specification, for
+                             overriding the natural sort ordering of the
+                             groups, see also :py:meth:`~osv.osv.osv.search`
+                             (supported only for many2one fields currently)
         :return: list of dictionaries(one dictionary for each record) containing:
 
                     * the values of fields grouped by the fields in ``groupby`` argument
