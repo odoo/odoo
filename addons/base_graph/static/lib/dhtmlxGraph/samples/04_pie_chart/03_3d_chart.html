@@ -1,0 +1,48 @@
+<!--conf
+<sample>
+              <product version="2.6" edition="std"/>
+                     <modifications>
+                            <modified date="100609"/>
+                     </modifications>
+               </sample>
+ -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+	<title>3D view</title>
+	<script src="../../codebase/dhtmlxchart.js" type="text/javascript"></script>
+	<link rel="STYLESHEET" type="text/css" href="../../codebase/dhtmlxchart.css">
+	<script>
+	var data = [
+	    { sales:"10.5", component:"dhxGrid",color:"#c7e1f3" },
+		{ sales:"8.7", component:"dhxScheduler",color:"#45abf5" },
+	    { sales:"6.3", component:"dhxTree",color:"#3590d0" },
+		{ sales:"5.3", component:"dhxTabbar",color:"#BDDBF9" },
+		{ sales:"4.5", component:"dhxLayout",color:"#d9e5ed" },
+		{ sales:"4.2", component:"dhxMenu",color:"#aed7f4" }
+	];
+	
+	window.onload = function(){
+		var chart =  new dhtmlXChart({
+			view:"pie3D",
+			container:"chart",
+			value:"#sales#",
+			label:function(obj){
+				var sum = chart.sum("#sales#");
+				return obj.component+" ("+Math.round(parseFloat(obj.sales)/sum*100)+"%)";
+			},
+			color:"#color#",
+			radius:110
+		});
+		chart.parse(data,"json");
+	}
+
+	</script>
+</head>
+<body>
+	<div id="chart" style="width:500px;height:300px;border:1px solid #A4BED4;"></div></td>
+	
+	
+	
+</body>
+</html>

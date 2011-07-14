@@ -370,7 +370,7 @@ openerp.base.Session = openerp.base.BasicController.extend( /** @lends openerp.b
             params: params,
             id:null
         }).then(function () {deferred.resolve.apply(deferred, arguments);},
-        function(error) {deferred.reject(error, $.Event());});
+                function(error) {deferred.reject(error, $.Event());});
         return deferred.fail(function() {
             deferred.fail(function(error, event) {
                 if (!event.isDefaultPrevented()) {
@@ -403,31 +403,35 @@ openerp.base.Session = openerp.base.BasicController.extend( /** @lends openerp.b
         }, url);
         var deferred = $.Deferred();
         $.ajax(ajax).done(function(response, textStatus, jqXHR) {
-                self.on_rpc_response();
-                if (response.error) {
-                    if (response.error.data.type == "session_invalid") {
-                        self.uid = false;
-                        self.on_session_invalid(function() {
-                            self.rpc(url, payload.params,
-                                function() {deferred.resolve.apply(deferred, arguments);},
-                                function(error, event) {event.preventDefault();
-                                    deferred.reject.apply(deferred, arguments);});
-                        });
-                    } else {
-                        deferred.reject(response.error);
-                    }
-                } else {
-                    deferred.resolve(response["result"], textStatus, jqXHR);
-                }
-            }).fail(function(jqXHR, textStatus, errorThrown) {
-                self.on_rpc_response();
-                var error = {
-                    code: -32098,
-                    message: "XmlHttpRequestError " + errorThrown,
-                    data: {type: "xhr"+textStatus, debug: jqXHR.responseText, objects: [jqXHR, errorThrown] }
-                };
-                deferred.reject(error);
+            self.on_rpc_response();
+            if (!response.error) {
+                deferred.resolve(response["result"], textStatus, jqXHR);
+                return;
+            }
+            if (response.error.data.type !== "session_invalid") {
+                deferred.reject(response.error);
+                return;
+            }
+            self.uid = false;
+            self.on_session_invalid(function() {
+                self.rpc(url, payload.params,
+                    function() {
+                        deferred.resolve.apply(deferred, arguments);
+                    },
+                    function(error, event) {
+                        event.preventDefault();
+                        deferred.reject.apply(deferred, arguments);
+                    });
             });
+        }).fail(function(jqXHR, textStatus, errorThrown) {
+            self.on_rpc_response();
+            var error = {
+                code: -32098,
+                message: "XmlHttpRequestError " + errorThrown,
+                data: {type: "xhr"+textStatus, debug: jqXHR.responseText, objects: [jqXHR, errorThrown] }
+            };
+            deferred.reject(error);
+        });
         return deferred.promise();
     },
     on_rpc_request: function() {
@@ -850,6 +854,7 @@ openerp.base.Dialog = openerp.base.BaseWidget.extend({
         this.$dialog.dialog('close');
     },
     stop: function () {
+        this.close();
         this.$dialog.dialog('destroy');
     }
 });
@@ -926,10 +931,15 @@ openerp.base.Login =  openerp.base.Controller.extend({
             this.selected_db = localStorage.getItem('last_db_login_success');
             this.selected_login = localStorage.getItem('last_login_login_success');
         }
+        if (jQuery.deparam(jQuery.param.querystring()).debug != undefined) {
+            this.selected_db = this.selected_db || "trunk";
+            this.selected_login = this.selected_login || "admin";
+            this.selected_password = this.selected_password || "a";
+        }
     },
     start: function() {
         var self = this;
-        this.rpc("/base/session/get_databases_list", {}, function(result) {
+        this.rpc("/base/database/get_databases_list", {}, function(result) {
             self.db_list = result.db_list;
             self.display();
         }, function() {

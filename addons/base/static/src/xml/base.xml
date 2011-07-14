@@ -86,7 +86,8 @@
                     </tr>
                     <tr>
                         <td><label for="password">Password:</label></td>
-                        <td><input type="password" name="password"/></td>
+                        <td><input type="password" name="password"
+                                t-att-value="selected_password || ''"/></td>
                     </tr>
                     <tr>
                         <td></td>
@@ -278,17 +279,15 @@
                     <t t-esc="column.string"/>
                 </th>
             </t>
-            <th t-if="options.selectable"/>
+            <th t-if="options.selectable" width="1"/>
             <t t-foreach="columns" t-as="column">
                 <th t-if="!column.meta and column.invisible !== '1'" t-att-data-id="column.id"
                     t-att-class="((options.sortable and column.tag !== 'button') ? 'oe-sortable' : null)">
-                    <t t-if="column.tag !== 'button'">
-                        <t t-esc="column.string"/>
-                        <span t-att-class="(fields_view.sorted.field === column.id) ? ('ui-icon' + (fields_view.sorted.reversed ? ' ui-icon-triangle-1-n' : ' ui-icon-triangle-1-s')) : ''"/>
-                    </t>
+                    <t t-if="column.tag !== 'button'"
+                        ><t t-esc="column.string"/></t>
                 </th>
             </t>
-            <th t-if="options.deletable"/>
+            <th t-if="options.deletable" width="1"/>
         </tr>
     </thead>
     <tfoot class="ui-widget-header">
@@ -316,7 +315,7 @@
             
         </td>
     </t>
-    <th t-if="options.selectable" class="oe-record-selector">
+    <th t-if="options.selectable" class="oe-record-selector" width="1">
         <input type="checkbox"/>
     </th>
     <t t-foreach="columns" t-as="column">
@@ -324,23 +323,10 @@
         <td t-if="!column.meta and column.invisible !== '1'" t-att-title="column.help"
             t-att-class="'oe-field-cell' + (align ? ' oe-number' : '')"
             t-att-data-field="column.id">
-            <t t-set="attrs" t-value="column.attrs_for(row.data)"/>
-            <t t-if="!attrs.invisible">
-                <t t-set="is_button" t-value="column.tag === 'button'"/>
-                <!-- TODO: get correct widget from form -->
-                <t t-if="!is_button and row['data'][column.id].value !== false">
-                    <t t-set="value" t-value="row['data'][column.id].value"/>
-                    <t t-esc="value instanceof Array ? value[1] : value"/>
-                </t>
-                <button type="button" t-att-title="column.string"
-                        t-if="is_button">
-                    <img t-att-src="'/base/static/src/img/icons/' + column.icon + '.png'"
-                         t-att-alt="column.string"/>
-                </button>
-            </t>
+            <t t-raw="render_cell(row.data, column)"/>
         </td>
     </t>
-    <td t-if="options.deletable" class='oe-record-delete'>
+    <td t-if="options.deletable" class='oe-record-delete' width="1">
         <button type="button" name="delete">♻</button>
     </td>
 </tr>
@@ -432,17 +418,20 @@
 </t>
 <t t-name="WidgetNotebook">
     <ul>
-        <li t-foreach="widget.pages" t-as="page">
-            <a t-att-href="'#' + widget.element_id + '-' + page_index">
+        <li t-foreach="widget.pages" t-as="page" t-att-id="page.element_tab_id">
+            <a t-att-href="'#' + page.element_id">
                 <t t-esc="page.string"/>
             </a>
         </li>
     </ul>
     <t t-foreach="widget.pages" t-as="page">
-        <div t-att-id="widget.element_id + '-' + page_index">
-            <t t-raw="page.render()"/>
-        </div>
+        <t t-raw="page.render()"/>
     </t>
+</t>
+<t t-name="WidgetNotebookPage">
+    <div t-att-id="widget.element_id">
+        <t t-call="WidgetFrame"/>
+    </div>
 </t>
 <t t-name="WidgetSeparator">
     <div t-att-class="'separator ' + (widget.node.attrs.orientation || 'horizontal')">
@@ -517,9 +506,9 @@
         t-att-id="widget.element_id + '_field'"
         t-att-class="'field_' + widget.type"
         style="width: 100%">
-            <t t-foreach="widget.field.selection" t-as="options">
-                <option t-att-value="options[0]">
-                    <t t-esc="options[1]"/>
+            <t t-foreach="widget.field_index" t-as="options">
+                <option t-att-value="options.ikey">
+                    <t t-esc="options.label"/>
                 </option>
             </t>
     </select>
@@ -532,9 +521,9 @@
         <span class="oe-m2o-cm-button" t-att-id="widget.name + '_open'">
             <img src="/base/static/src/img/icons/gtk-index.png"/></span>
         <div t-att-id="widget.cm_id" class="contextMenu" style="display:none"><ul>
-            <li t-att-id="widget.cm_id + '_search'">Search...</li>
-            <li t-att-id="widget.cm_id + '_create'">Create New...</li>
             <li t-att-id="widget.cm_id + '_open'" style="color:grey">Open...</li>
+            <li t-att-id="widget.cm_id + '_create'">Create and Edit...</li>
+            <li t-att-id="widget.cm_id + '_search'">Search...</li>
         </ul></div>
     </div>
 </t>
@@ -894,9 +883,19 @@
 </t>
 <t t-name="SelectCreatePopup">
     <div t-att-id="element_id">
-        <div t-att-id="element_id + '_search'"></div>
-        <div t-att-id="element_id + '_view_list'"></div>
-        <div t-att-id="element_id + '_view_form'"></div>
+        <table style="width:100%">
+            <tr style="width:100%">
+                <td style="width:100%">
+                    <div t-att-id="element_id + '_search'" style="width:100%"></div>
+                </td>
+            </tr>
+            <tr style="width:100%">
+                <td style="width:100%">
+                    <div t-att-id="element_id + '_view_list'" style="width:100%"></div>
+                </td>
+            </tr>
+        </table>
+        <div t-att-id="element_id + '_view_form'" style="width:100%"></div>
     </div>
 </t>
 <t t-name="SelectCreatePopup.search.buttons">
@@ -907,7 +906,15 @@
     <button type="button" class="oe_selectcreatepopup-form-save">Save</button>
     <button type="button" class="oe_selectcreatepopup-form-close">Close</button>
 </t>
-
+<t t-name="FormOpenPopup">
+    <div t-att-id="element_id">
+        <div t-att-id="element_id + '_view_form'" style="width:100%"></div>
+    </div>
+</t>
+<t t-name="FormOpenPopup.form.buttons">
+    <button type="button" class="oe_formopenpopup-form-save">Save</button>
+    <button type="button" class="oe_formopenpopup-form-close">Close</button>
+</t>
 <t t-name="ListView.row.frame" t-extend="WidgetFrame">
     <t t-jquery="tr">
         $(document.createElement('t'))

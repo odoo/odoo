@@ -1,0 +1,207 @@
+<!--conf
+<sample>
+              <product version="2.6" edition="std"/>
+                     <modifications>
+                            <modified date="100609"/>
+                     </modifications>
+               </sample>
+ -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+	<title>Chart</title>
+	<script src="../../codebase/dhtmlxchart.js" type="text/javascript"></script>
+	<link rel="STYLESHEET" type="text/css" href="../../codebase/dhtmlxchart.css">
+</head>
+<body >
+	<h1>Chart</h1>
+	<table>
+		<tr>
+			<td><div id="chart1" style="width:450px;height:300px;border:1px solid #A4BED4;"></div></td>
+			<td><div id="chart2" style="width:450px;height:300px;border:1px solid #A4BED4;"></div></td>
+			<td><div id="chart3" style="width:450px;height:300px;border:1px solid #A4BED4;"></div></td>
+		</tr>
+		<tr>
+			
+			
+		</tr>
+		<tr>
+			<td><div id="chart4" style="width:450px;height:300px;border:1px solid #A4BED4;"></div></td>
+			<td><div id="chart5" style="width:450px;height:300px;border:1px solid #A4BED4;"></div></td>
+			<td><div id="chart6" style="width:450px;height:300px;border:1px solid #A4BED4;"></div></td>
+		</tr>
+	</table>
+	
+	<script>
+	var data = [
+		{ sales:"3.0", year:"2000" },
+		{ sales:"3.8", year:"2001" },
+		{ sales:"3.4", year:"2002" },
+		{ sales:"4.1", year:"2003" },
+		{ sales:"4.3", year:"2004" },
+		{ sales:"9.9", year:"2005" },
+		{ sales:"7.4", year:"2006" },
+		{ sales:"9.0", year:"2007" },
+		{ sales:"7.3", year:"2008" },
+		{ sales:"4.8", year:"2009" }
+	];
+	
+	
+	var barChart1 =  new dhtmlXChart({
+		view:"bar",
+		alpha:function(data){
+			return data.sales/10;
+		},
+		container:"chart1",
+	    value:"#sales#",
+		label:"#sales#",
+		color:"#66cc33",
+		width:50,
+		tooltip:{
+			template:"#sales#"
+		},
+		xAxis:{
+			title:"Sales per year",
+			template:"#year#"
+		},
+		yAxis:{
+			start:0,
+			end:10,
+			step:1,
+			title:"Sales, million"
+		}
+	})
+	barChart1.parse(data,"json");
+	
+	var barChart2 =  new dhtmlXChart({
+		view:"bar",
+		container:"chart2",
+		value:"#sales#",
+		label:"#sales#",
+		width:2,
+		border:false,
+
+		tooltip:{
+			template:"#sales#"
+		},
+		xAxis:{
+			title:"Years",
+			template:"#year#"
+		},
+		yAxis:{
+			start:0,
+			end:10,
+			step:1,
+			title:"Sales,<br/>million"
+		}
+		
+	})
+	barChart2.parse(data,"json");
+
+	
+	var barChart3 =  new dhtmlXChart({
+		view:"bar",
+		container:"chart3",
+	    value:"#sales#",
+		label:"#sales#",
+		width:35,
+		border:false,
+		gradient:true,
+		xAxis:{
+			title:"Sales per year",
+			template:"#year#"
+		},
+		yAxis:{
+			start:0,
+			end:10,
+			step:1,
+			title:"Sales,<br/>million"
+		}
+	});
+	barChart3.parse(data,"json");
+	
+	var barChart4 =  new dhtmlXChart({
+		view:"bar",
+		alpha:function(data){
+			return data.sales/10;
+		},
+		container:"chart4",
+	    value:"#sales#",
+		label:"#sales#",
+		width:50,
+		gradient:function(gradient){
+			gradient.addColorStop(1.0,"#FF0000");
+			gradient.addColorStop(0.3,"#FFFF00");
+			gradient.addColorStop(0.0,"#00FF22");
+		},
+		tooltip:{
+			template:"#sales#"
+		},
+		xAxis:{
+			title:"Sales per year",
+			template:"#year#"
+		},
+		yAxis:{
+			start:0,
+			end:10,
+			step:1,
+			title:"Sales,<br/>million"
+		}
+	})
+	barChart4.parse(data,"json");
+	
+		
+	var barChart5 =  new dhtmlXChart({
+		view:"bar",
+		container:"chart5",
+	    value:"#sales#",
+		label:"#sales#",
+		width:35,
+
+		tooltip:{
+			template:"#sales#"
+		},
+		xAxis:{
+			title:"Sales per year",
+			template:"#year#"
+		},
+		yAxis:{
+			start:0,
+			end:10,
+			step:1,
+			title:"Sales,<br/>million"
+		}
+	})
+	barChart5.parse(data,"json");
+	
+	var barChart6 =  new dhtmlXChart({
+		view:"bar",
+		alpha:function(data){
+			return data.sales/10;
+		},
+		container:"chart6",
+	    value:"#sales#",
+		label:"#sales#",
+		color:"#66cc33",
+		border:false,
+		width:30,
+		radius:0,
+		tooltip:{
+			template:"#sales#"
+		},
+		xAxis:{
+			title:"Sales per year",
+			template:"#year#"
+		},
+		yAxis:{
+			start:0,
+			end:10,
+			step:1,
+			title:"Sales,<br/>million"
+		}
+	})
+	barChart6.parse(data,"json");
+	
+	</script>
+</body>
+</html>

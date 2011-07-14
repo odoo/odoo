@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
-import base64
-import glob, os
+import base64, glob, os, re
 from xml.etree import ElementTree
 from cStringIO import StringIO
 
@@ -55,6 +54,20 @@ class Xml2Json:
 # OpenERP Web base Controllers
 #----------------------------------------------------------
 
+class Database(openerpweb.Controller):
+    _cp_path = "/base/database"
+
+    @openerpweb.jsonrequest
+    def get_databases_list(self, req):
+        proxy = req.session.proxy("db")
+        dbs = proxy.list()
+        h = req.httprequest.headers['Host'].split(':')[0]
+        d = h.split('.')[0]
+        r = cherrypy.config['openerp.dbfilter'].replace('%h',h).replace('%d',d)
+        print "h,d",h,d,r
+        dbs = [i for i in dbs if re.match(r,i)]
+        return {"db_list": dbs}
+
 class Session(openerpweb.Controller):
     _cp_path = "/base/session"
 
@@ -104,13 +117,6 @@ class Session(openerpweb.Controller):
                                                          req.session.eval_context(req.context))
 
     @openerpweb.jsonrequest
-    def get_databases_list(self, req):
-        proxy = req.session.proxy("db")
-        dbs = proxy.list()
-        
-        return {"db_list": dbs}
-
-    @openerpweb.jsonrequest
     def modules(self, req):
         return {"modules": [name
             for name, manifest in openerpweb.addons_manifest.iteritems()
@@ -124,14 +130,14 @@ class Session(openerpweb.Controller):
     def jslist(self, req, mods='base'):
         return {'files': self.manifest_glob(mods.split(','), 'js')}
 
-    def css(self, req, mods='base,base_hello'):
+    def css(self, req, mods='base'):
         files = self.manifest_glob(mods.split(','), 'css')
         concat = self.concat_files(files)[0]
         # TODO request set the Date of last modif and Etag
         return concat
     css.exposed = True
 
-    def js(self, req, mods='base,base_hello'):
+    def js(self, req, mods='base'):
         files = self.manifest_glob(mods.split(','), 'js')
         concat = self.concat_files(files)[0]
         # TODO request set the Date of last modif and Etag
@@ -235,14 +241,14 @@ class Session(openerpweb.Controller):
     def check(self, req):
         req.session.assert_valid()
         return None
-        
+
 def eval_context_and_domain(session, context, domain=None):
     e_context = session.eval_context(context)
     # should we give the evaluated context as an evaluation context to the domain?
     e_domain = session.eval_domain(domain or [])
 
     return e_context, e_domain
-        
+
 def load_actions_from_ir_values(req, key, key2, models, meta, context):
     Values = req.session.model('ir.values')
     actions = Values.get(key, key2, models, meta, context)
@@ -306,7 +312,6 @@ def generate_views(action):
         return
     action['views'] = [(view_id, view_modes[0])]
 
-
 def fix_view_modes(action):
     """ For historical reasons, OpenERP has weird dealings in relation to
     view_mode and the view_type attribute (on window actions):
@@ -329,7 +334,7 @@ def fix_view_modes(action):
         generate_views(action)
 
     if action.pop('view_type') != 'form':
-        return
+        return action
 
     action['views'] = [
         [id, mode if mode != 'tree' else 'list']
@@ -508,7 +513,7 @@ class DataSet(openerpweb.Controller):
 
     @openerpweb.jsonrequest
     def call(self, req, model, method, args, domain_id=None, context_id=None):
-        return {'result': self.call_common(req, model, method, args, domain_id, context_id)}
+        return self.call_common(req, model, method, args, domain_id, context_id)
 
     @openerpweb.jsonrequest
     def call_button(self, req, model, method, args, domain_id=None, context_id=None):
@@ -524,20 +529,19 @@ class DataSet(openerpweb.Controller):
 
     @openerpweb.jsonrequest
     def default_get(self, req, model, fields):
-        m = req.session.model(model)
-        r = m.default_get(fields, req.session.eval_context(req.context))
-        return {'result': r}
+        Model = req.session.model(model)
+        return Model.default_get(fields, req.session.eval_context(req.context))
 
 class DataGroup(openerpweb.Controller):
     _cp_path = "/base/group"
     @openerpweb.jsonrequest
-    def read(self, request, model, group_by_fields, domain=None):
+    def read(self, request, model, fields, group_by_fields, domain=None, sort=None):
         Model = request.session.model(model)
         context, domain = eval_context_and_domain(request.session, request.context, domain)
 
         return Model.read_group(
-            domain or [], False, group_by_fields, 0, False,
-            dict(context, group_by=group_by_fields))
+            domain or [], fields, group_by_fields, 0, False,
+            dict(context, group_by=group_by_fields), sort or False)
 
 class View(openerpweb.Controller):
     _cp_path = "/base/view"
@@ -550,7 +554,7 @@ class View(openerpweb.Controller):
         # todo fme?: check that we should pass the evaluated context here
         self.process_view(request.session, fvg, context, transform)
         return fvg
-    
+
     def process_view(self, session, fvg, context, transform):
         # depending on how it feels, xmlrpclib.ServerProxy can translate
         # XML-RPC strings to ``str`` or ``unicode``. ElementTree does not
@@ -599,36 +603,6 @@ class View(openerpweb.Controller):
             return {'result': True}
         return {'result': False}
 
-    def normalize_attrs(self, elem, context):
-        """ Normalize @attrs, @invisible, @required, @readonly and @states, so
-        the client only has to deal with @attrs.
-
-        See `the discoveries pad <http://pad.openerp.com/discoveries>`_ for
-        the rationale.
-
-        :param elem: the current view node (Python object)
-        :type elem: xml.etree.ElementTree.Element
-        :param dict context: evaluation context
-        """
-        # If @attrs is normalized in json by server, the eval should be replaced by simplejson.loads
-        attrs = openerpweb.ast.literal_eval(elem.get('attrs', '{}'))
-        if 'states' in elem.attrib:
-            attrs.setdefault('invisible', [])\
-                .append(('state', 'not in', elem.attrib.pop('states').split(',')))
-        if attrs:
-            elem.set('attrs', simplejson.dumps(attrs))
-        for a in ['invisible', 'readonly', 'required']:
-            if a in elem.attrib:
-                # In the XML we trust
-                avalue = bool(eval(elem.get(a, 'False'),
-                                   {'context': context or {}}))
-                if not avalue:
-                    del elem.attrib[a]
-                else:
-                    elem.attrib[a] = '1'
-                    if a == 'invisible' and 'attrs' in elem.attrib:
-                        del elem.attrib['attrs']
-
     def transform_view(self, view_string, session, context=None):
         # transform nodes on the fly via iterparse, instead of
         # doing it statically on the parsing result
@@ -638,7 +612,6 @@ class View(openerpweb.Controller):
             if event == "start":
                 if root is None:
                     root = elem
-                self.normalize_attrs(elem, context)
                 self.parse_domains_and_contexts(elem, session)
         return root
 
