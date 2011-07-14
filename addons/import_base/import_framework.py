@@ -61,6 +61,7 @@ class import_framework(Thread):
         self.email = email_to_notify
         self.table_list = []
         self.logger = logging.getLogger('import_framework')
+        self.initialize()
 
     """
         Abstract Method to be implemented in 
@@ -70,6 +71,13 @@ class import_framework(Thread):
         """
             init before import
             usually for the login
+        """
+        pass
+    
+    def init_run(self):
+        """
+            call after intialize run in the thread, not in the main process
+            TO use for long initialization operation 
         """
         pass
     
@@ -367,9 +375,9 @@ class import_framework(Thread):
         self.data_started = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         self.cr = pooler.get_db(self.cr.dbname).cursor()
         error = False
+        result = []
         try:
-            self.initialize()
-            result = []
+            self.init_run()
             imported = set() #to invoid importing 2 times the sames modules
             for table in self.table_list:
                 to_import = self.get_mapping()[table].get('import', True)

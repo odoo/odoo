@@ -451,7 +451,7 @@ class sugar_import(import_framework):
 
     def import_task(self, val):
         date =  val.get('date_start') or datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-        val['date'] = ''.joint(date)
+        val['date'] = ''.join(date)
         date_deadline = val.get('date_due') or datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
         val['date_deadline'] = ''.join(date_deadline)
         return val
@@ -626,7 +626,8 @@ class sugar_import(import_framework):
                 'type' : const('opportunity'),
                 'categ_id/id': call(self.get_category, 'crm.lead', value('opportunity_type')),
                 'email_from': 'email_from',
-                'state': map_val('status', self.opp_state)  , #TODO
+                'state': map_val('status', self.opp_state),
+                'description' : 'description',
             }
         }
         
@@ -698,7 +699,7 @@ class sugar_import(import_framework):
                 'channel_id/id': call(self.get_channel_id, value('lead_source')),
                 'type_id/id': ref(self.TABLE_COMPAIGN, 'campaign_id'),
                 'country_id/id': 'country_id/id',
-                'state_id/id': 'state_id/id'
+                'state_id/id': 'state_id/id',
                 } 
         }
     
@@ -996,12 +997,9 @@ class import_sugarcrm(osv.osv):
         'document': True,
         'instance_name': 'sugarcrm',
         'email_from': _get_email_id,
-        #'username' : 'admin',
-        #'password' : '',
-        #'url':  "http://sugarcrm.example.com/soap.php"
-        'username' : 'tfr',
-        'password' : 'a',
-        'url':  "http://localhost/sugarcrm/soap.php"        
+        'username' : 'admin',
+        'password' : '',
+        'url':  "http://sugarcrm.example.com/soap.php"
     }
     
     def check_url(self, url, context):
