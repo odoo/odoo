@@ -239,6 +239,7 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
         if (result.value) {
             for (var f in result.value) {
                 var field = this.fields[f];
+                // If field is not defined in the view, just ignore it
                 if (field) {
                     var value = result.value[f];
                     processed.push(field.name);
@@ -249,8 +250,6 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
                             this.do_onchange(field, processed);
                         }
                     }
-                } else {
-                    // this is a common case, the normal behavior should be to ignore it
                 }
             }
             this.on_form_changed();
@@ -266,7 +265,7 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
             });
         }
         if (result.domain) {
-            // Will be removed ?
+            // TODO: 
         }
         this.ready = true;
     },
@@ -2034,10 +2033,10 @@ openerp.base.form.FormOpenPopup = openerp.base.BaseWidget.extend({
     }
 });
 
-openerp.base.form.FieldReference = openerp.base.form.Field.extend({
+openerp.base.form.FieldReference = openerp.base.form.FieldChar.extend({
     init: function(view, node) {
         this._super(view, node);
-        this.template = "FieldReference";
+        //this.template = "FieldReference";
     }
 });
 
