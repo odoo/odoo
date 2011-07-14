@@ -79,6 +79,10 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
         this.$form_header.find('button.oe_form_button_cancel').click(this.do_cancel);
         this.$form_header.find('button.oe_form_button_new').click(this.on_button_new);
 
+        this.$form_header.find('button.oe_get_xml_view').click(function() {
+            $('<xmp>' + openerp.base.json_node_to_xml(self.fields_view.arch, true) + '</xmp>').dialog({ width: '95%', height: 600});
+        });
+
         this.view_manager.sidebar.set_toolbar(data.fields_view.toolbar);
         this.has_been_loaded.resolve();
     },
@@ -1238,6 +1242,21 @@ openerp.base.form.FieldSelection = openerp.base.form.Field.extend({
     });
 })();
 
+openerp.base.form.dialog = function(content, options) {
+    options = _.extend({
+        autoOpen: true,
+        width: '90%',
+        height: '90%',
+        min_width: '800px',
+        min_height: '600px'
+    }, options || {});
+    options.autoOpen = true;
+    var dialog = new openerp.base.Dialog(null, options);
+    dialog.$dialog = $(content).dialog(dialog.options);
+    console.log(dialog.options)
+    return dialog.$dialog;
+}
+
 openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
     init: function(view, node) {
         this._super(view, node);
@@ -1826,10 +1845,7 @@ openerp.base.form.SelectCreatePopup = openerp.base.BaseWidget.extend({
         this.context = context || {};
         this.options = _.defaults(options || {}, {"initial_view": "search", "auto_create": true});
         this.initial_ids = this.options.initial_ids;
-        jQuery(this.render()).dialog({title: '',
-                    modal: true,
-                    width: 960,
-                    height: 600});
+        openerp.base.form.dialog(this.render());
         this.start();
     },
     start: function() {
