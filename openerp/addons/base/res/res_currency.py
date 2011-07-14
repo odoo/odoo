@@ -133,6 +133,15 @@ class res_currency(osv.osv):
 
 res_currency()
 
+class res_currency_rate_type(osv.osv):
+    _name = "res.currency.rate.type"
+    _description = "Currency Rate Type"
+    _columns = {
+        'name': fields.char('Name', size=32, required=True),
+    }
+
+res_currency_rate_type()
+
 class res_currency_rate(osv.osv):
     _name = "res.currency.rate"
     _description = "Currency Rate"
@@ -141,11 +150,13 @@ class res_currency_rate(osv.osv):
         'rate': fields.float('Rate', digits=(12,6), required=True,
             help='The rate of the currency to the currency of rate 1'),
         'currency_id': fields.many2one('res.currency', 'Currency', readonly=True),
+        'currency_rate_type_id': fields.many2one('res.currency.rate.type', 'Currency Rate Type'),
     }
     _defaults = {
         'name': lambda *a: time.strftime('%Y-%m-%d'),
     }
     _order = "name desc"
+
 res_currency_rate()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
