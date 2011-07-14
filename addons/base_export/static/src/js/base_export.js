@@ -128,6 +128,8 @@ openerp.base_export.Export = openerp.base.Dialog.extend({
             $('#left_field_panel').append(QWeb.render('ExportTreeView-Secondary',  {'fields': result}));
         }
         $('img[id ^= parentimg]').click(function(){
+            var elem_id = this.id.split("-")[1];
+            $($.find("tr[id='treerow-" + elem_id + "']")).find('a').focus();
             self.on_click(this.id, result);
         });
         $('[id^=export-]').dblclick(function(){
@@ -137,26 +139,30 @@ openerp.base_export.Export = openerp.base.Dialog.extend({
             self.on_field_click(this);
         });
         $("tr[id^='treerow-']").keydown(function (e) {
-	        var keyCode = e.keyCode || e.which;
-	        arrow = {left: 37, up: 38, right: 39, down: 40 };
-	        switch (keyCode) {
-	            case arrow.left:
-	                if( jQuery(this).find('img').attr('src') == '/base/static/src/img/collapse.gif'){
-	                    self.on_click(this.id, result);
-	                }
-	               break;
-	            case arrow.up:
-	                //..
-	               break;
-	            case arrow.right:
-	                if( jQuery(this).find('img').attr('src') == '/base/static/src/img/expand.gif'){
-	                    self.on_click(this.id, result);
-	                }
-	               break;
-	            case arrow.down:
-	                //..
-	               break;
-	        }
+            var keyCode = e.keyCode || e.which;
+            arrow = {left: 37, up: 38, right: 39, down: 40 };
+            switch (keyCode) {
+                case arrow.left:
+                    if( jQuery(this).find('img').attr('src') == '/base/static/src/img/collapse.gif'){
+                        self.on_click(this.id, result);
+                    }
+                break;
+                case arrow.up:
+                    $(this).prev().find('a').focus();
+                break;
+                case arrow.right:
+                    if( jQuery(this).find('img').attr('src') == '/base/static/src/img/expand.gif'){
+                        self.on_click(this.id, result);
+                    }
+                break;
+                case arrow.down:
+                    var elem = this;
+                    while($(elem).next().is(":visible") == false){
+                        elem = $(elem).next();
+                    }
+                    $(elem).next().find('a').focus();
+                break;
+            }
         });
 
         $('#fields_list').mouseover(function(event){
