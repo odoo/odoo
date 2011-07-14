@@ -157,9 +157,9 @@ class res_partner(osv.osv):
 
     def create(self, cr, user, values, context=None):
         # add a default address if none is given
-        if not values.get('address'):
-            values['address'] = [(0, 0, {'type': 'default'})]
-        return super(res_partner, self).create(cr, user, values, context)
+        if vals.has_key('address') and not vals.get('address'):
+            vals.get('address').append((0, 0, {'type': 'default'}))
+        return super(res_partner, self).create(cr, user, vals, context)
 
     def do_share(self, cr, uid, ids, *args):
         return True
