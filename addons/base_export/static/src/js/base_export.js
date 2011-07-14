@@ -29,15 +29,15 @@ openerp.base_export.Export = openerp.base.Dialog.extend({
                        },
                     close: function(event, ui){ self.close();}
                    });
-        jQuery(self.$dialog).find('#add_field').click(function(){
-	        for (var key in self.selected_fields) {
-	            self.add_field(key, self.selected_fields[key])
-	        }
+        $('#add_field').click(function(){
+            for (var key in self.selected_fields) {
+                self.add_field(key, self.selected_fields[key])
+            }
         });
-        jQuery(self.$dialog).find('#remove_field').click(function(){
+        $('#remove_field').click(function(){
             jQuery(self.$dialog).find("#fields_list option:selected").remove();
         });
-        jQuery(self.$dialog).find('#remove_all_field').click(function(){
+        $('#remove_all_field').click(function(){
             jQuery(self.$dialog).find("#fields_list option").remove();
         });
         this.rpc("/base_export/export/get_fields", {"model": this.dataset.model}, this.on_show_data);
@@ -45,39 +45,37 @@ openerp.base_export.Export = openerp.base.Dialog.extend({
 
     on_click: function(id, result) {
         var self = this
-	    self.field_id = id.split("-")[1];
-	    var model = ''
-	    var prefix = ''
-	    var name = ''
-	    var is_loaded = 0;
+        self.field_id = id.split("-")[1];
+        var model = ''
+        var prefix = ''
+        var name = ''
+        var is_loaded = 0;
         _.each(result, function(record) {
-            if(record['id'] == self.field_id){
+            if(record['id'] == self.field_id && (record['children']).length >= 1){
                 model = record['params']['model']
                 prefix = record['params']['prefix']
                 name = record['params']['name']
-                if ((record['children']).length >= 1){
-                    $(record['children']).each (function(e, childid) {
-                        if ($("tr[id='treerow_" + childid +"']").length > 0) {
-                            if ($("tr[id='treerow_" + childid +"']").is(':hidden')) {
-                                is_loaded = -1;
-                            } else {
-                                is_loaded++;
-                            }
+                $(record['children']).each (function(e, childid) {
+                    if ($("tr[id='treerow_" + childid +"']").length > 0) {
+                        if ($("tr[id='treerow_" + childid +"']").is(':hidden')) {
+                            is_loaded = -1;
+                        } else {
+                            is_loaded++;
                         }
-                    });
-                    if (is_loaded == 0) {
-                        if ($("tr[id='treerow_" + self.field_id +"']").find('img').attr('src') == '/base/static/src/img/expand.gif') {
-                            if (model){
-                                self.rpc("/base_export/export/get_fields", {"model": model, "prefix": prefix, "field_parent" : self.field_id, "name": name}, function (results) {
-                                    self.on_show_data(results);
-                                });
-                            }
-                        }
-                    } else if (is_loaded > 0) {
-                        self.showcontent(self.field_id, true);
-                    } else {
-                        self.showcontent(self.field_id, false);
                     }
+                });
+                if (is_loaded == 0) {
+                    if ($("tr[id='treerow_" + self.field_id +"']").find('img').attr('src') == '/base/static/src/img/expand.gif') {
+                        if (model){
+                            self.rpc("/base_export/export/get_fields", {"model": model, "prefix": prefix, "field_parent" : self.field_id, "name": name}, function (results) {
+                                self.on_show_data(results);
+                            });
+                        }
+                    }
+                } else if (is_loaded > 0) {
+                    self.showcontent(self.field_id, true);
+                } else {
+                    self.showcontent(self.field_id, false);
                 }
             }
 
@@ -92,15 +90,15 @@ openerp.base_export.Export = openerp.base.Dialog.extend({
             current_tr.after(QWeb.render('ExportTreeView-Secondary', {'fields': result}));
         }
         else{
-            jQuery(this.$dialog).find('#left_field_panel').append(QWeb.render('ExportTreeView-Secondary',  {'fields': result}));
+            $('#left_field_panel').append(QWeb.render('ExportTreeView-Secondary',  {'fields': result}));
         }
-        jQuery($.find('img[id ^= parentimg]')).click(function(){
+        $('img[id ^= parentimg]').click(function(){
             self.on_click(this.id, result);
         });
-        jQuery($.find('[id^=export-]')).dblclick(function(){
+        $('[id^=export-]').dblclick(function(){
             self.add_field(this.id.split('-')[1], this.text)
         });
-        jQuery($.find('[id^=export-]')).click(function(){
+        $('[id^=export-]').click(function(){
             self.on_field_click(this);
         });
 
@@ -123,7 +121,7 @@ openerp.base_export.Export = openerp.base.Dialog.extend({
             }
         });
 
-        jQuery($.find('#fields_list')).mouseover(function(event){
+        $('#fields_list').mouseover(function(event){
             if(event.relatedTarget){
                 if ('id' in event.relatedTarget.attributes && 'string' in event.relatedTarget.attributes){
                     field_id = event.relatedTarget.attributes["id"]["value"]
@@ -154,21 +152,27 @@ openerp.base_export.Export = openerp.base.Dialog.extend({
             first_child.attr('src', '/base/static/src/img/collapse.gif');
         }
         var child_field = $("tr[id^='treerow_" + id +"/']")
+        var child_len = (id.split("/")).length + 1
         for (var i = 0; i < child_field.length; i++) {
             if (flag) {
                 $(child_field[i]).hide();
             }
             else {
-                $(child_field[i]).show();
+                if(child_len ==  (child_field[i].id.split("/")).length){
+                    if( jQuery(child_field[i]).find('img').attr('src') == '/base/static/src/img/collapse.gif'){
+                        jQuery(child_field[i]).find('img').attr('src', '/base/static/src/img/expand.gif')
+                    }
+                    $(child_field[i]).show();
+                }
             }
         }
     },
 
     add_field: function(field_id, string) {
-		var field_list = $('#fields_list')
-		if ( $("#fields_list option[value='" + field_id + "']") && !$("#fields_list option[value='" + field_id + "']").length){
-	        field_list.append( new Option(string, field_id));
-	    }
+        var field_list = $('#fields_list')
+        if ( $("#fields_list option[value='" + field_id + "']") && !$("#fields_list option[value='" + field_id + "']").length){
+            field_list.append( new Option(string, field_id));
+        }
     },
 
     get_fields: function (){
