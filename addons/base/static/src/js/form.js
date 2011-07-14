@@ -828,8 +828,10 @@ openerp.base.form.Field = openerp.base.form.Widget.extend({
      * the fields'context with the action's context.
      */
     build_context: function() {
-        var a_context = this.view.dataset.get_context() || {};
-        var f_context = this.field.context || {};
+        // I previously belevied contexts should be herrited, but now I doubt it
+        //var a_context = this.view.dataset.get_context() || {};
+        var f_context = this.field.context || null;
+        // maybe the default_get should only be used when we do a default_get?
         var v_context1 = this.node.attrs.default_get || {};
         var v_context2 = this.node.attrs.context || {};
         var v_context = new openerp.base.CompoundContext(v_context1, v_context2);
@@ -837,17 +839,19 @@ openerp.base.form.Field = openerp.base.form.Widget.extend({
             var fields_values = this._build_view_fields_values();
             v_context.set_eval_context(fields_values);
         }
-        var ctx = new openerp.base.CompoundContext(a_context, f_context, v_context);
+        // if there is a context on the node, overrides the model's context
+        var ctx = f_context || v_context;
         return ctx;
     },
     build_domain: function() {
-        var f_domain = this.field.domain || [];
+        var f_domain = this.field.domain || null;
         var v_domain = this.node.attrs.domain || [];
         if (!(v_domain instanceof Array) || true) { //TODO niv: remove || true
             var fields_values = this._build_view_fields_values();
             v_domain = new openerp.base.CompoundDomain(v_domain).set_eval_context(fields_values);
         }
-        return new openerp.base.CompoundDomain(f_domain, v_domain);
+        // if there is a domain on the node, overrides the model's domain
+        return f_domain || v_domain;
     }
 });
 
