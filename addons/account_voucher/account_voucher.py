@@ -142,30 +142,35 @@ class account_voucher(osv.osv):
             res['arch'] = etree.tostring(doc)
         return res
 
-    def _compute_writeoff_amount(self, cr, uid, line_dr_ids, line_cr_ids, amount, context=None):
+    def _compute_writeoff_amount(self, cr, uid, line_dr_ids, line_cr_ids, amount, voucher_date, voucher_currency_id, context=None):
         if context is None:
             context = {}
+        currency_pool = self.pool.get('res.currency')
         ctx = context.copy()
-        debit = credit = currency_rate_diff = 0.0
-        #import pdb;pdb.set_trace()
+        counter_for_writeoff = counter_for_currency_diff = real_amount = 0.0
         for l in line_dr_ids:
+            real_amount -= l.get('amount_in_company_currency', 0.0)
             ctx.update({'date': l['date_original']})
-            currency_rate_diff += 'amount_in_company_currency' in l and l['amount_in_company_currency'] or self.pool.get('res.currency').compute(cr, uid, l['currency_id'], l['company_currency_id'], l['amount_original'], context=ctx)
-            debit += l['amount']
+            counter_for_writeoff -= currency_pool.compute(cr, uid, l['company_currency_id'], voucher_currency_id, l.get('amount_in_company_currency',0.0), context=ctx)
+            ctx.update({'date': voucher_date})
+            counter_for_currency_diff -= currency_pool.compute(cr, uid, l['currency_id'], l['company_currency_id'], l['amount'], context=ctx) 
         for l in line_cr_ids:
+            real_amount += l.get('amount_in_company_currency', 0.0)
             ctx.update({'date': l['date_original']})
-            currency_rate_diff -= 'amount_in_company_currency' in l and l['amount_in_company_currency'] or self.pool.get('res.currency').compute(cr, uid, l['currency_id'], l['company_currency_id'], l['amount_original'], context=ctx)
-            credit += l['amount']
-        return abs(amount - abs(credit - debit)), currency_rate_diff
+            counter_for_writeoff += currency_pool.compute(cr, uid, l['company_currency_id'], voucher_currency_id, l.get('amount_in_company_currency',0.0), context=ctx)
+            ctx.update({'date': voucher_date})
+            counter_for_currency_diff += currency_pool.compute(cr, uid, l['currency_id'], l['company_currency_id'], l['amount'], context=ctx) 
+        writeoff_amount = amount - counter_for_writeoff
+        currency_rate_difference = real_amount - counter_for_currency_diff
+        return writeoff_amount, currency_rate_difference
 
-    def onchange_line_ids(self, cr, uid, ids, line_dr_ids, line_cr_ids, amount, context=None):
+    def onchange_line_ids(self, cr, uid, ids, line_dr_ids, line_cr_ids, amount, voucher_date, voucher_currency_id, context=None):
         if not line_dr_ids and not line_cr_ids:
             return {'value':{}}
         line_osv = self.pool.get("account.voucher.line")
         line_dr_ids = resolve_o2m_operations(cr, uid, line_osv, line_dr_ids, ['amount'], context)
         line_cr_ids = resolve_o2m_operations(cr, uid, line_osv, line_cr_ids, ['amount'], context)
-        currency_pool = self.pool.get('res.currency')
-        writeoff_amount, currency_rate_diff = self._compute_writeoff_amount(cr, uid, line_dr_ids, line_cr_ids, amount, context=context) 
+        writeoff_amount, currency_rate_diff = self._compute_writeoff_amount(cr, uid, line_dr_ids, line_cr_ids, amount, voucher_date, voucher_currency_id, context=context) 
         return {'value': {'writeoff_amount': writeoff_amount,}}# 'currency_rate_difference': currency_rate_diff}}
 
     def _get_writeoff_amount(self, cr, uid, ids, name, args, context=None):
@@ -173,7 +178,7 @@ class account_voucher(osv.osv):
         if context is None:
             context = {}
         res = {}.fromkeys(ids,{})
-        counter_for_writeoff = counter_for_currency_diff = real_amount = expected_amount = 0.0
+        counter_for_writeoff = counter_for_currency_diff = real_amount = 0.0
         currency_pool = self.pool.get('res.currency')
         for voucher in self.browse(cr, uid, ids, context=context):
             ctx = context.copy()
@@ -188,7 +193,7 @@ class account_voucher(osv.osv):
                 ctx.update({'date': l.date_original})
                 counter_for_writeoff += currency_pool.compute(cr, uid, voucher.company_id.currency_id.id, voucher.currency_id.id, l.amount_in_company_currency, context=ctx)
                 ctx.update({'date': voucher.date})
-                counter_for_currency_diff += l.amount and currency_pool.compute(cr, uid, l.currency_id.id, voucher.company_id.currency_id.id, l.amount, context=ctx) 
+                counter_for_currency_diff += currency_pool.compute(cr, uid, l.currency_id.id, voucher.company_id.currency_id.id, l.amount, context=ctx) 
             writeoff_amount = voucher.amount - counter_for_writeoff
             res[voucher.id]['writeoff_amount'] = writeoff_amount 
             res[voucher.id]['currency_rate_difference'] = real_amount - counter_for_currency_diff
@@ -550,7 +555,7 @@ class account_voucher(osv.osv):
                 default['value']['pre_line'] = 1
             elif ttype == 'receipt' and len(default['value']['line_dr_ids']) > 0:
                 default['value']['pre_line'] = 1
-            default['value']['writeoff_amount'], default['value']['currency_rate_difference'] = self._compute_writeoff_amount(cr, uid, default['value']['line_dr_ids'], default['value']['line_cr_ids'], price, context=context)
+            default['value']['writeoff_amount'], default['value']['currency_rate_difference'] = self._compute_writeoff_amount(cr, uid, default['value']['line_dr_ids'], default['value']['line_cr_ids'], price, date, currency_id, context=context)
         return default
 
     def onchange_date(self, cr, uid, ids, partner_id, journal_id, price, currency_id, ttype, date, context=None):
@@ -722,12 +727,33 @@ class account_voucher(osv.osv):
                 'date_maturity': voucher.date_due
             }
             move_line_pool.create(cr, uid, move_line)
+
+            #create the move line for the currency difference
+            if voucher.currency_rate_difference:
+                if voucher.currency_rate_difference > 0:
+                    account_id = voucher.company_id.property_income_currency_exchange
+                    if not account_id:
+                        raise osv.except_osv(_('Warning'),_("Unable to create accounting entry for currency rate difference. You have to configure the field 'Income Currency Rate' on the company! "))
+                else:
+                    account_id = voucher.company_id.property_expense_currency_exchange
+                    if not account_id:
+                        raise osv.except_osv(_('Warning'),_("Unable to create accounting entry for currency rate difference. You have to configure the field 'Expense Currency Rate' on the company! "))
+                
+                currency_diff_line = {
+                    'name': _('Currency Difference'),
+                    'debit': voucher.currency_rate_difference > 0 and voucher.currency_rate_difference or 0.0,
+                    'credit': voucher.currency_rate_difference < 0 and -voucher.currency_rate_difference or 0.0,
+                    'account_id': account_id.id,
+                    'move_id': move_id,
+                    'journal_id': voucher.journal_id.id,
+                    'period_id': voucher.period_id.id,
+                    'partner_id': voucher.partner_id.id,
+                    'date': voucher.date,
+                    'date_maturity': voucher.date_due
+                }
+
+                move_line_pool.create(cr, uid, currency_diff_line, context=context)
             rec_list_ids = []
-            line_total = debit - credit
-            if voucher.type == 'sale':
-                line_total = line_total - currency_pool.compute(cr, uid, voucher.currency_id.id, company_currency, voucher.tax_amount, context=context_multi_currency)
-            elif voucher.type == 'purchase':
-                line_total = line_total + currency_pool.compute(cr, uid, voucher.currency_id.id, company_currency, voucher.tax_amount, context=context_multi_currency)
 
             for line in voucher.line_ids:
                 #create one move line per voucher line where amount is not 0.0
@@ -754,9 +780,6 @@ class account_voucher(osv.osv):
                     'debit': 0.0,
                     'date': voucher.date
                 }
-                #TODO: assigner le montant de la diff de change sur le bon compte et pas debtor
-                #TODO: mettre le montant de company currency en onchange + readonly + computed
-                #TODO: mettre un champ difference de change sur le voucher
                 if amount < 0:
                     amount = -amount
                     if line.type == 'dr':
@@ -764,10 +787,8 @@ class account_voucher(osv.osv):
                     else:
                         line.type = 'dr'
                 if (line.type=='dr'):
-                    line_total += amount
                     move_line['debit'] = amount
                 else:
-                    line_total -= amount
                     move_line['credit'] = amount
 
                 if voucher.tax_id and voucher.type in ('sale', 'purchase'):
@@ -785,8 +806,8 @@ class account_voucher(osv.osv):
                     rec_ids = [voucher_line, line.move_line_id.id]
                     rec_list_ids.append(rec_ids)
 
-            if not currency_pool.is_zero(cr, uid, voucher.currency_id, line_total):
-                diff = line_total
+            if not currency_pool.is_zero(cr, uid, voucher.currency_id, voucher.writeoff_amount):
+                diff = currency_pool.compute(cr, uid, current_currency, company_currency, voucher.writeoff_amount, context=context_multi_currency) 
                 account_id = False
                 write_off_name = ''
                 if voucher.payment_option == 'with_writeoff':
@@ -804,8 +825,8 @@ class account_voucher(osv.osv):
                     'date': voucher.date,
                     'credit': diff > 0 and diff or 0.0,
                     'debit': diff < 0 and -diff or 0.0,
-                    #'amount_currency': company_currency <> current_currency and currency_pool.compute(cr, uid, company_currency, current_currency, diff * -1, context=context_multi_currency) or 0.0,
-                    #'currency_id': company_currency <> current_currency and current_currency or False,
+                    'amount_currency': voucher.writeoff_amount,
+                    'currency_id': company_currency <> current_currency and current_currency or False,
                 }
                 move_line_pool.create(cr, uid, move_line)
             self.write(cr, uid, [voucher.id], {

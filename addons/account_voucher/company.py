@@ -28,14 +28,14 @@ class res_company(osv.osv):
             'account.account',
             type='many2one',
             relation='account.account',
-            string="Income Currency Exchange",
+            string="Income Currency Rate",
             view_load=True,
             domain="[('type', '=', 'other')]",),
         'property_expense_currency_exchange': fields.property(
             'account.account',
             type='many2one',
             relation='account.account',
-            string="Expense Currency Exchange",
+            string="Expense Currency Rate",
             view_load=True,
             domain="[('type', '=', 'other')]",),
     }
