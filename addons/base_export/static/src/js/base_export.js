@@ -56,8 +56,8 @@ openerp.base_export.Export = openerp.base.Dialog.extend({
                 prefix = record['params']['prefix']
                 name = record['params']['name']
                 $(record['children']).each (function(e, childid) {
-                    if ($("tr[id='treerow_" + childid +"']").length > 0) {
-                        if ($("tr[id='treerow_" + childid +"']").is(':hidden')) {
+                    if ($("tr[id='treerow-" + childid +"']").length > 0) {
+                        if ($("tr[id='treerow-" + childid +"']").is(':hidden')) {
                             is_loaded = -1;
                         } else {
                             is_loaded++;
@@ -65,7 +65,7 @@ openerp.base_export.Export = openerp.base.Dialog.extend({
                     }
                 });
                 if (is_loaded == 0) {
-                    if ($("tr[id='treerow_" + self.field_id +"']").find('img').attr('src') == '/base/static/src/img/expand.gif') {
+                    if ($("tr[id='treerow-" + self.field_id +"']").find('img').attr('src') == '/base/static/src/img/expand.gif') {
                         if (model){
                             self.rpc("/base_export/export/get_fields", {"model": model, "prefix": prefix, "field_parent" : self.field_id, "name": name}, function (results) {
                                 self.on_show_data(results);
@@ -84,7 +84,7 @@ openerp.base_export.Export = openerp.base.Dialog.extend({
 
     on_show_data: function(result) {
         var self = this;
-        var current_tr = $("tr[id='treerow_" + self.field_id + "']");
+        var current_tr = $("tr[id='treerow-" + self.field_id + "']");
         if (current_tr.length >= 1){
             current_tr.find('img').attr('src','/base/static/src/img/collapse.gif');
             current_tr.after(QWeb.render('ExportTreeView-Secondary', {'fields': result}));
@@ -101,24 +101,27 @@ openerp.base_export.Export = openerp.base.Dialog.extend({
         $('[id^=export-]').click(function(){
             self.on_field_click(this);
         });
-
-        $('[id^=export-]').keydown(function (e) {
-        var keyCode = e.keyCode || e.which,
-        arrow = {left: 37, up: 38, right: 39, down: 40 };
-        switch (keyCode) {
-            case arrow.left:
-                self.on_click(this.id, result);
-            break;
-            case arrow.up:
-                //..
-            break;
-            case arrow.right:
-                self.on_click(this.id, result);
-            break;
-            case arrow.down:
-                //..
-            break;
-            }
+        $("tr[id^='treerow-']").keydown(function (e) {
+	        var keyCode = e.keyCode || e.which;
+	        arrow = {left: 37, up: 38, right: 39, down: 40 };
+	        switch (keyCode) {
+	            case arrow.left:
+	                if( jQuery(this).find('img').attr('src') == '/base/static/src/img/collapse.gif'){
+	                    self.on_click(this.id, result);
+	                }
+	               break;
+	            case arrow.up:
+	                //..
+	               break;
+	            case arrow.right:
+	                if( jQuery(this).find('img').attr('src') == '/base/static/src/img/expand.gif'){
+	                    self.on_click(this.id, result);
+	                }
+	               break;
+	            case arrow.down:
+	                //..
+	               break;
+	        }
         });
 
         $('#fields_list').mouseover(function(event){
@@ -144,14 +147,14 @@ openerp.base_export.Export = openerp.base.Dialog.extend({
 
     // show & hide the contents
     showcontent: function (id, flag) {
-        var first_child = $("tr[id='treerow_" + id + "']").find('img')
+        var first_child = $("tr[id='treerow-" + id + "']").find('img')
         if (flag) {
             first_child.attr('src', '/base/static/src/img/expand.gif');
         }
         else {
             first_child.attr('src', '/base/static/src/img/collapse.gif');
         }
-        var child_field = $("tr[id^='treerow_" + id +"/']")
+        var child_field = $("tr[id^='treerow-" + id +"/']")
         var child_len = (id.split("/")).length + 1
         for (var i = 0; i < child_field.length; i++) {
             if (flag) {
