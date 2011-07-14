@@ -43,6 +43,7 @@ class res_currency(osv.osv):
                 res[id] = rate
             else:
                 res[id] = 0
+
         return res
     _name = "res.currency"
     _description = "Currency"
@@ -68,7 +69,7 @@ class res_currency(osv.osv):
     _order = "name"
 
     def read(self, cr, user, ids, fields=None, context=None, load='_classic_read'):
-        res=super(osv.osv, self).read(cr, user, ids, fields, context, load)
+        res = super(osv.osv, self).read(cr, user, ids, fields, context, load)
         for r in res:
             if r.__contains__('rate_ids'):
                 rates=r['rate_ids']
@@ -76,6 +77,7 @@ class res_currency(osv.osv):
                     currency_rate_obj=  self.pool.get('res.currency.rate')
                     currency_date = currency_rate_obj.read(cr,user,rates[0],['name'])['name']
                     r['date'] = currency_date
+
         return res
 
     def name_get(self, cr, uid, ids, context=None):
@@ -109,13 +111,17 @@ class res_currency(osv.osv):
             raise osv.except_osv(_('Error'), _('No rate found \n' \
                     'for the currency: %s \n' \
                     'at the date: %s') % (currency_symbol, date))
+
         return to_currency.rate/from_currency.rate
 
-    def compute(self, cr, uid, from_currency_id, to_currency_id, from_amount, round=True, context=None):
+    def compute(self, cr, uid, from_currency_id, to_currency_id, from_amount, round=True, rate_type=False, context=None):
         if not from_currency_id:
             from_currency_id = to_currency_id
         if not to_currency_id:
             to_currency_id = from_currency_id
+
+        if rate_type:
+            context.update({'currency_rate_type_id': rate_type})
         xc = self.browse(cr, uid, [from_currency_id,to_currency_id], context=context)
         from_currency = (xc[0].id == from_currency_id and xc[0]) or xc[1]
         to_currency = (xc[0].id == to_currency_id and xc[0]) or xc[1]
