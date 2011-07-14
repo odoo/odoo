@@ -66,19 +66,23 @@
 </t>
 <div t-name="ConfigOverview" class="oe-dashboard-config-overview">
     <div class="oe-config-progress" t-att-data-completion="completion"/>
-    <ul>
+    <dl>
+        <t t-foreach="groups" t-as="category">
+            <dt><t t-esc="category"/></dt>
+            <dd><ul>
+                <li t-foreach="category_value" t-as="todo"
+                    t-att-class="todo.to_do ? 'ui-state-error ui-priority-primary' : ''"
+                    t-att-data-action="todo.action">
+                    <span t-if="todo.done" class="ui-icon ui-icon-circle-check"/>
+                    <span t-if="todo.to_do" class="ui-icon ui-icon-circle-close"/>
+                    <span t-att-class="todo.to_do ? 'ui-state-error-text' : ''">
+                        <t t-esc="todo.name"/>
+                    </span>
+                </li>
+            </ul></dd>
+        </t>
 
-        <li t-foreach="todos" t-as="todo"
-            t-att-class="!todo.done ? 'ui-state-error ' + (todo.skipped ? 'ui-priority-secondary' : 'ui-priority-primary') : ''"
-            t-att-data-action="todo.action">
-            <span t-if="todo.done" class="ui-icon ui-icon-circle-check"/>
-            <span t-if="todo.skipped" class="ui-icon ui-icon-circle-minus"/>
-            <span t-if="todo.to_do" class="ui-icon ui-icon-circle-close"/>
-            <span t-att-class="!todo.done ? 'ui-state-error-text' : ''">
-                <t t-esc="todo.name"/>
-            </span>
-        </li>
-    </ul>
+    </dl>
 </div>
 <div t-name="ApplicationTiles" class="oe-dashboard-home-tiles">
     <table width="100%">

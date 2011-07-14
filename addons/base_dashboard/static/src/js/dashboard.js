@@ -284,32 +284,38 @@ openerp.base_dashboard.ConfigOverview = openerp.base.View.extend({
         this._super(parent_or_session, element_id);
         this.dataset = new openerp.base.DataSetSearch(
                 this.session, 'ir.actions.todo');
+        this.dataset.domain = ['|', ['type', '=', 'recurring'],
+                                    '&', ['type', '!=', 'special'],
+                                         ['state', '=', 'open']];
     },
     start: function () {
-        this.dataset.read_slice(['state', 'action_id'], undefined, undefined,
-                        this.on_records_loaded);
+        $.when(this.dataset.read_slice(['state', 'action_id', 'category_id']),
+               this.dataset.call('progress')).then(this.on_records_loaded);
     },
-    on_records_loaded: function (records) {
-        var       self = this,
-          done_records = _(records).filter(function (record) {
-                                return record.state === 'done';}),
-            done_ratio = done_records.length / records.length;
-        this.$element.html(QWeb.render('ConfigOverview', {
-            completion: done_ratio * 100,
-            todos: _(records).map(function (record) {
+    on_records_loaded: function (read_response, progress_response) {
+        var records = read_response[0].records,
+           progress = progress_response[0];
+
+        var grouped_todos = _(records).chain()
+            .map(function (record) {
                 return {
                     action: record.action_id[0],
                     name: record.action_id[1],
-                    state: record.state,
-                    done: record.state === 'done',
-                    skipped: record.state === 'skip',
-                    to_do: (record.state !== 'done' && record.state !== 'skip')
+                    done: record.state !== 'open',
+                    to_do: record.state === 'open',
+                    category: record['category_id'][1] || "Uncategorized"
                 }
             })
+            .groupBy(function (record) {return record.category})
+            .value();
+        this.$element.html(QWeb.render('ConfigOverview', {
+            completion: 100 * progress.done / progress.total,
+            groups: grouped_todos
         }));
         var $progress = this.$element.find('div.oe-config-progress');
         $progress.progressbar({value: $progress.data('completion')});
 
+        var self = this;
         // allow for executing to-do and skipped action
         this.$element.find('div.oe-dashboard-config-overview ul')
                 .delegate('li.ui-state-error', 'click', function () {
