@@ -2054,6 +2054,10 @@ openerp.base.form.FieldBinary = openerp.base.form.Field.extend({
     },
     set_value_from_ui: function() {
     },
+    update_dom: function() {
+        this._super.apply(this, arguments);
+        this.$element.find('.oe-binary').toggle(!this.readonly);
+    },
     human_filesize : function(size) {
         var units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
         var i = 0;
@@ -2151,6 +2155,13 @@ openerp.base.form.FieldBinaryImage = openerp.base.form.FieldBinary.extend({
         this._super.apply(this, arguments);
         this.$image = this.$element.find('img.oe-binary-image');
     },
+    set_value: function(value) {
+        this._super.apply(this, arguments);
+        this.set_image_maxwidth();
+        var url = '/base/binary/image?session_id=' + this.session.session_id + '&model=' +
+            this.view.dataset.model +'&id=' + (this.view.datarecord.id || '') + '&field=' + this.name + '&t=' + (new Date().getTime())
+        this.$image.attr('src', url);
+    },
     set_image_maxwidth: function() {
         this.$image.css('max-width', this.$element.width());
     },
@@ -2166,13 +2177,6 @@ openerp.base.form.FieldBinaryImage = openerp.base.form.FieldBinary.extend({
     on_clear: function() {
         this._super.apply(this, arguments);
         this.$image.attr('src', '/base/static/src/img/placeholder.png');
-    },
-    set_value: function(value) {
-        this._super.apply(this, arguments);
-        this.set_image_maxwidth();
-        var url = '/base/binary/image?session_id=' + this.session.session_id + '&model=' +
-            this.view.dataset.model +'&id=' + (this.view.datarecord.id || '') + '&field=' + this.name + '&t=' + (new Date().getTime())
-        this.$image.attr('src', url);
     }
 });
 
