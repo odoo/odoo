@@ -84,8 +84,16 @@ class Registry(object):
 
         return res
 
-    def start_cron_thread(self):
-        self.get('ir.cron').restart(self.db.dbname)
+    def schedule_cron_jobs(self):
+        """ Make the cron thread care about this registry/database jobs.
+
+        This will initiate the cron thread to check for any pending jobs for
+        this registry/database as soon as possible. Then it will continously
+        monitors the ir.cron model for future jobs. See openerp.cron for
+        details.
+        
+        """
+        openerp.cron.schedule_in_advance(1, self.db.dbname)
 
 
 class RegistryManager(object):
@@ -100,7 +108,6 @@ class RegistryManager(object):
     # Accessed through the methods below.
     registries = {}
 
-
     @classmethod
     def get(cls, db_name, force_demo=False, status=None, update_module=False,
             pooljobs=True):
@@ -112,7 +119,6 @@ class RegistryManager(object):
             registry = cls.new(db_name, force_demo, status,
                 update_module, pooljobs)
         return registry
-
 
     @classmethod
     def new(cls, db_name, force_demo=False, status=None,
@@ -148,10 +154,9 @@ class RegistryManager(object):
             cr.close()
 
         if pooljobs:
-            registry.start_cron_thread()
+            registry.schedule_cron_jobs()
 
         return registry
-
 
     @classmethod
     def delete(cls, db_name):
@@ -169,7 +174,6 @@ class RegistryManager(object):
             del cls.registries[db_name]
         openerp.tools.cache.clean_caches_for_db(db_name)
         openerp.cron.cancel(db_name)
-
 
     @classmethod
     def delete_all(cls):

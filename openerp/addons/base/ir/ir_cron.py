@@ -105,8 +105,7 @@ class ir_cron(osv.osv):
 
     def _handle_callback_exception(self, cr, uid, model, func, args, job_id, job_exception):
         cr.rollback()
-        logger=logging.getLogger('cron')
-        logger.exception("Call of self.pool.get('%s').%s(cr, uid, *%r) failed in Job %s" % (model, func, args, job_id))
+        self._logger.exception("Call of self.pool.get('%s').%s(cr, uid, *%r) failed in Job %s" % (model, func, args, job_id))
 
     def _callback(self, cr, uid, model, func, args, job_id):
         args = str2tuple(args)
@@ -229,16 +228,6 @@ class ir_cron(osv.osv):
             cr.commit()
             cr.close()
 
-    def restart_all(self):
-        import openerp.models.registry
-        for dbname in openerp.models.registry.RegistryManager.registries:
-            self.restart(self, dbname)
-
-    def restart(self, dbname):
-        openerp.cron.cancel(dbname)
-        # Reschedule cron processing job asap, but not in the current thread
-        openerp.cron.schedule_in_advance(time.time(), dbname)
-
     def update_running_cron(self, cr):
         # Verify whether the server is already started and thus whether we need to commit
         # immediately our changes and restart the cron agent in order to apply the change
@@ -249,7 +238,7 @@ class ir_cron(osv.osv):
         # when the server is only starting or loading modules (hence the test on pool._init).
         if not self.pool._init:
             cr.commit()
-            self.restart(cr.dbname)
+            openerp.cron.schedule_in_advance(1, self.pool.db.dbname)
 
     def create(self, cr, uid, vals, context=None):
         res = super(ir_cron, self).create(cr, uid, vals, context=context)
