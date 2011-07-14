@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2011-01-11 11:15+0000\n"
-"PO-Revision-Date: 2011-07-12 19:04+0000\n"
-"Last-Translator: shjerryzhou <Unknown>\n"
+"PO-Revision-Date: 2011-07-13 18:32+0000\n"
+"Last-Translator: openerp-china.Black Jack <onetimespeed@gmail.com>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-07-13 05:14+0000\n"
-"X-Generator: Launchpad (build 13168)\n"
+"X-Launchpad-Export-Date: 2011-07-14 05:21+0000\n"
+"X-Generator: Launchpad (build 13405)\n"
 
 #. module: marketing_campaign
 #: view:marketing.campaign:0
@@ -104,7 +104,7 @@ msgstr "今天"
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
 msgid "March"
-msgstr "3月"
+msgstr "3"
 
 #. module: marketing_campaign
 #: help:marketing.campaign.segment,sync_mode:0
@@ -146,7 +146,7 @@ msgstr "设为草稿"
 #. module: marketing_campaign
 #: field:marketing.campaign.activity,to_ids:0
 msgid "Next Activities"
-msgstr "下面的活动"
+msgstr "下一个活动"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.segment:0
@@ -239,6 +239,10 @@ msgid ""
 "Normal - the campaign runs normally and automatically sends all emails and "
 "reports (be very careful with this mode, you're live!)"
 msgstr ""
+"测试 - 直接生成和处理所有活动（不等待事务的延迟），但是不发送邮件或者生成报表。\n"
+"实时测试 - 直接生成和处理所有活动，但是不发送邮件或者生成报表.\n"
+"手工确认 - 营销活动正常启动，但是用户必须手工验证所有工作项。\n"
+"正常 - 营销活动正常启动，并自动发送所有邮件和报表（请小心使用这个模式，所有的都是实时的！）"
 
 #. module: marketing_campaign
 #: help:marketing.campaign.segment,date_run:0
@@ -294,6 +298,11 @@ msgid ""
 "of the resource record\n"
 "  "
 msgstr ""
+"工作项进入此活动时执行的操作类型，比如：\n"
+"    - 邮件：通过预定义的邮件模板发送邮件\n"
+"    - 报表：打印定义在资源上的报表，并把它保存到指定的目录\n"
+"    - 自定义操作： 执行一个预定义的操作，比如，修改资源记录的字段\n"
+"  "
 
 #. module: marketing_campaign
 #: help:marketing.campaign.segment,date_next_sync:0
@@ -422,12 +431,12 @@ msgstr "报表"
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
 msgid "July"
-msgstr "7月"
+msgstr "7"
 
 #. module: marketing_campaign
 #: model:ir.ui.menu,name:marketing_campaign.menu_marketing_configuration
 msgid "Configuration"
-msgstr "配置"
+msgstr "设置"
 
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,variable_cost:0
@@ -500,7 +509,7 @@ msgstr "9月"
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
 msgid "December"
-msgstr "12月"
+msgstr "12"
 
 #. module: marketing_campaign
 #: view:campaign.analysis:0
@@ -635,11 +644,25 @@ msgid ""
 "application as it depends on CRM Leads.\n"
 "    "
 msgstr ""
+"\n"
+"此模块通过市场营销活动自动提供线索（实际上营销活动可以定义在任何资源上，不仅仅是CRM线索）。\n"
+"         营销活动是自动的，多渠道的。有以下过程：\n"
+"          *像工作流一样设计市场营销活动，包括要发送的邮件模板，打印和通过邮件发送的报表，自定义操作等。\n"
+"          *定义应该进入营销活动的输入段（比如，某些国家/地区的线索等）\n"
+"          *在模拟模式下启动营销活动，以实时或加速测试它，并且对它进行调优\n"
+"          *也可以通过手工模式启动实时的营销活动，每个操作需要手工验证\n"
+"          *最后启动营销活动，由于营销活动会完全自动执行所有操作，你只需要观察统计数字。\n"
+"          当营销活动运行时，你可以继续对参数，输入段，工作流等进行调优。\n"
+"          \n"
+"          "
+"注意：如果你需要演示数据，你可以安装marketing_campaign_crm_demo模块，它同时也会安装CRM应用程序，因为它依赖CRM "
+"线索模块。\n"
+"    "
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
 msgid "August"
-msgstr "8月"
+msgstr "8"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign,mode:0
@@ -661,7 +684,7 @@ msgstr "带信号的活动可以通过编程方式访问。请小心，当信号
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
 msgid "June"
-msgstr "6月"
+msgstr "6"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.segment,sync_mode:0
@@ -682,7 +705,7 @@ msgstr "日期"
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
 msgid "November"
-msgstr "11月"
+msgstr "11"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.activity:0
@@ -705,7 +728,7 @@ msgstr "异常"
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
 msgid "October"
-msgstr "10月"
+msgstr "10"
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:141
@@ -723,7 +746,7 @@ msgstr "邮件模板"
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
 msgid "January"
-msgstr "1月"
+msgstr "1"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.workitem:0
@@ -772,7 +795,7 @@ msgstr "自动迁移"
 #: view:marketing.campaign.segment:0
 #: view:res.partner:0
 msgid "History"
-msgstr "历史记录"
+msgstr "日志"
 
 #. module: marketing_campaign
 #: model:ir.module.module,shortdesc:marketing_campaign.module_meta_information
@@ -789,7 +812,7 @@ msgstr "流程"
 #: selection:marketing.campaign.transition,trigger:0
 #, python-format
 msgid "Cosmetic"
-msgstr ""
+msgstr "装饰"
 
 #. module: marketing_campaign
 #: help:marketing.campaign.transition,trigger:0
@@ -805,6 +828,8 @@ msgid ""
 "could be sending an email template that has previously been created in the "
 "system."
 msgstr ""
+"一个市场营销活动是一个事件或者活动，能帮助你管理和传递特定的信息给你的业务伙伴。营销活动可以拥有许多在特定条件下触发的活动。一个操作可以是发送一条以前在系"
+"统里面创建好的邮件模板。"
 
 #. module: marketing_campaign
 #: view:campaign.analysis:0
@@ -908,7 +933,7 @@ msgstr "活动"
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
 msgid "May"
-msgstr "5月"
+msgstr "5"
 
 #. module: marketing_campaign
 #: view:marketing.campaign:0
@@ -937,7 +962,7 @@ msgstr "截止日期"
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
 msgid "February"
-msgstr "2月"
+msgstr "2"
 
 #. module: marketing_campaign
 #: view:campaign.analysis:0
@@ -983,7 +1008,7 @@ msgstr "如果没有设置日期，此工作项必须由手工启动"
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
 msgid "April"
-msgstr "4月"
+msgstr "4"
 
 #. module: marketing_campaign
 #: view:marketing.campaign:0
@@ -1008,6 +1033,8 @@ msgid ""
 "view of the Resource. If no filter is set, all records are selected without "
 "filtering. The synchronization mode may also add a criterion to the filter."
 msgstr ""
+"过滤器，选择属于此活动段的匹配的资源记录。可以通过资源的列表视图的高级查询来创建和保存新的过滤器。如果没有设置过滤器，所有的都会被选中。同步模式也可以添加"
+"条件到过滤器中。"
 
 #. module: marketing_campaign
 #: model:ir.actions.act_window,name:marketing_campaign.action_marketing_campaign_workitem

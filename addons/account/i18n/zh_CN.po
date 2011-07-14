@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-05-09 10:18+0000\n"
-"PO-Revision-Date: 2011-07-12 07:48+0000\n"
+"PO-Revision-Date: 2011-07-13 19:46+0000\n"
 "Last-Translator: openerp-china.Black Jack <onetimespeed@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-07-13 05:13+0000\n"
-"X-Generator: Launchpad (build 13168)\n"
+"X-Launchpad-Export-Date: 2011-07-14 05:20+0000\n"
+"X-Generator: Launchpad (build 13405)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -104,7 +104,7 @@ msgstr "从发票或支付款导入"
 #. module: account
 #: model:ir.model,name:account.model_wizard_multi_charts_accounts
 msgid "wizard.multi.charts.accounts"
-msgstr ""
+msgstr "wizard.multi.charts.accounts"
 
 #. module: account
 #: view:account.move:0
@@ -217,7 +217,7 @@ msgstr "税模板"
 #. module: account
 #: model:ir.model,name:account.model_account_tax
 msgid "account.tax"
-msgstr ""
+msgstr "Copy text \t account.tax"
 
 #. module: account
 #: code:addons/account/account.py:915
@@ -301,7 +301,7 @@ msgstr "选择辅助核算的会计期间"
 #. module: account
 #: view:account.move.line:0
 msgid "St."
-msgstr ""
+msgstr "银行单据"
 
 #. module: account
 #: code:addons/account/invoice.py:532
@@ -2006,7 +2006,7 @@ msgid ""
 "The default Chart of Accounts is matching your country selection. If no "
 "certified Chart of Accounts exists for your specified country, a generic one "
 "can be installed and will be selected by default."
-msgstr ""
+msgstr "默认的会计科目表和你所选的国家匹配。 如果您所选的国家没有经认证的会计科目表，系统默认会为你选择及安装通用会计科目表。"
 
 #. module: account
 #: view:account.account.type:0
@@ -3729,12 +3729,12 @@ msgstr "关闭现金帐"
 #: view:account.invoice.report:0
 #: field:account.invoice.report,due_delay:0
 msgid "Avg. Due Delay"
-msgstr ""
+msgstr "平均延误"
 
 #. module: account
 #: view:account.entries.report:0
 msgid "Acc.Type"
-msgstr ""
+msgstr "科目类型"
 
 #. module: account
 #: code:addons/account/invoice.py:722
@@ -3794,6 +3794,8 @@ msgid ""
 "the system on document validation (invoices, bank statements...) and will be "
 "created in 'Posted' state."
 msgstr ""
+"所有手工创建的凭证一般都是未过账状态，但你可以在对应的分类账上设置跳过此状态。就像从其他单据（发票、银行单据）生成的会计凭证一样，这个分类账中手工建立的凭"
+"证也可以在新建时就是已过账状态。"
 
 #. module: account
 #: code:addons/account/account_analytic_line.py:90
@@ -3883,6 +3885,8 @@ msgid ""
 "When new move line is created the state will be 'Draft'.\n"
 "* When all the payments are done it will be in 'Valid' state."
 msgstr ""
+"新建的凭证行是草稿状态。\n"
+"当所有付款都完成了就是已审核状态"
 
 #. module: account
 #: field:account.journal,view_id:0
@@ -3985,7 +3989,7 @@ msgstr "手工单据编号"
 #. module: account
 #: view:wizard.multi.charts.accounts:0
 msgid "res_config_contents"
-msgstr ""
+msgstr "res_config_contents"
 
 #. module: account
 #: view:account.unreconcile:0
@@ -4028,6 +4032,8 @@ msgid ""
 "You cannot define children to an account with internal type different of "
 "\"View\"! "
 msgstr ""
+"配置错误！\n"
+"你不能选择内部类型是“视图”的科目作为上级科目！ "
 
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_cost_ledger_journal_report
@@ -4158,7 +4164,7 @@ msgid ""
 "Couldn't create move with currency different from the secondary currency of "
 "the account \"%s - %s\". Clear the secondary currency field of the account "
 "definition if you want to accept all currencies."
-msgstr ""
+msgstr "凭证创建出错。当前货币与科目适用的外币\"%s - %s\"不一致。如果你希望该科目可以交易多种货币，请清空科目上的外币字段。"
 
 #. module: account
 #: field:account.invoice.refund,date:0
@@ -4176,7 +4182,7 @@ msgstr "退税事务"
 msgid ""
 "All draft account entries in this journal and period will be validated. It "
 "means you won't be able to modify their accounting fields anymore."
-msgstr ""
+msgstr "所有选中期间和分类账的凭证草稿都会被审核。也就是说你不能再修改他们的财务字段了。"
 
 #. module: account
 #: report:account.account.balance.landscape:0
@@ -4744,7 +4750,7 @@ msgstr "税事务模板"
 #. module: account
 #: model:ir.model,name:account.model_account_installer
 msgid "account.installer"
-msgstr ""
+msgstr "account.installer"
 
 #. module: account
 #: field:account.tax.template,include_base_amount:0
@@ -4930,7 +4936,7 @@ msgstr "筛选依"
 msgid ""
 "There is no default default credit account defined \n"
 "on journal \"%s\""
-msgstr ""
+msgstr "分类账 \"%s\"上没有定义默认贷方科目"
 
 #. module: account
 #: field:account.entries.report,amount_currency:0
@@ -5012,6 +5018,7 @@ msgid ""
 "impossible any new entry record. Close a fiscal year when you need to "
 "finalize your end of year results definitive "
 msgstr ""
+"如果不希望在这个年度输入会计凭证，可以在这里关闭年度。这样该年度的所有期间都关闭了，不能再记账了。如果你希望会计报表不会变更请关闭会计年度。 "
 
 #. module: account
 #: field:account.central.journal,amount_currency:0
@@ -5087,7 +5094,7 @@ msgstr "税金的计算方法"
 msgid ""
 "This module will support the Anglo-Saxons accounting methodology by changing "
 "the accounting logic with stock transactions."
-msgstr ""
+msgstr "此模块实现了Anglo-Saxons会计方法，改变库存业务的过账规则。"
 
 #. module: account
 #: field:report.invoice.created,create_date:0
@@ -5205,7 +5212,7 @@ msgid ""
 "From this view, have an analysis of your different financial accounts. The "
 "document shows your debit and credit taking in consideration some criteria "
 "you can choose by using the search tool."
-msgstr ""
+msgstr "在这个界面上，你可以对不同的科目做分析。按照你输入的条件出具报表显示这些科目的借贷方发生额。"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_tax_code_list
@@ -5213,7 +5220,7 @@ msgid ""
 "The tax code definition depends on the tax declaration of your country. "
 "OpenERP allows you to define the tax structure and manage it from this menu. "
 "You can define both numeric and alphanumeric tax codes."
-msgstr ""
+msgstr "税码基于你所在国家的税务制度定义。OpenERP允许你定义税收结构并在这个菜单内管理他们。税码可以包含数字和字母。"
 
 #. module: account
 #: help:account.partner.reconcile.process,progress:0
@@ -5228,7 +5235,7 @@ msgid ""
 "Select here the kind of valuation related to this payment term line. Note "
 "that you should have your last line with the type 'Balance' to ensure that "
 "the whole amount will be threated."
-msgstr ""
+msgstr "选择这付款条款明细的相关定价类别。注意您应该在最后一行的类型为“余额”以确保已支付全部金额。"
 
 #. module: account
 #: field:account.invoice,period_id:0
@@ -6140,7 +6147,7 @@ msgstr "合作伙伴明细分类帐"
 #. module: account
 #: report:account.general.ledger_landscape:0
 msgid "JRNL"
-msgstr ""
+msgstr "JRNL"
 
 #. module: account
 #: view:account.partner.balance:0
@@ -6565,7 +6572,7 @@ msgstr "客户欠款金额合计"
 #. module: account
 #: model:ir.model,name:account.model_ir_sequence
 msgid "ir.sequence"
-msgstr ""
+msgstr "ir.sequence"
 
 #. module: account
 #: field:account.journal.period,icon:0
@@ -7317,7 +7324,7 @@ msgstr "预编"
 #. module: account
 #: report:account.analytic.account.cost_ledger:0
 msgid "J.C. /Move name"
-msgstr ""
+msgstr "J.C. /凭证名称"
 
 #. module: account
 #: model:ir.model,name:account.model_account_open_closed_fiscalyear
@@ -7418,7 +7425,7 @@ msgstr "财务结构模板"
 #. module: account
 #: view:account.entries.report:0
 msgid "Int.Type"
-msgstr ""
+msgstr "Int.Type"
 
 #. module: account
 #: field:account.move.line,tax_amount:0
@@ -8061,7 +8068,7 @@ msgstr "配置您的会计设置"
 #: code:addons/account/installer.py:479
 #, python-format
 msgid "SCNJ"
-msgstr ""
+msgstr "SCNJ"
 
 #. module: account
 #: model:process.transition,note:account.process_transition_analyticinvoice0
@@ -8375,7 +8382,7 @@ msgstr "您不能更改此税目，请移除并重新创建凭证！"
 #. module: account
 #: report:account.central.journal:0
 msgid "A/C No."
-msgstr ""
+msgstr "A/C 号"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_journal_2_account_bank_statement
@@ -9289,7 +9296,7 @@ msgstr "打印辅助核算序时薄"
 #. module: account
 #: view:account.analytic.line:0
 msgid "Fin.Account"
-msgstr ""
+msgstr "Fin.Account"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_aged_receivable_graph
@@ -9385,7 +9392,7 @@ msgstr "11月"
 #. module: account
 #: model:ir.model,name:account.model_account_installer_modules
 msgid "account.installer.modules"
-msgstr ""
+msgstr "account.installer.modules"
 
 #. module: account
 #: help:account.invoice.line,account_id:0

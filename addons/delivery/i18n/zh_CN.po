@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:15+0000\n"
-"PO-Revision-Date: 2011-01-19 12:00+0000\n"
-"Last-Translator: Wei \"oldrev\" Li <oldrev@gmail.com>\n"
+"PO-Revision-Date: 2011-07-13 15:17+0000\n"
+"Last-Translator: Jeff Wang <wjfonhand@hotmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-25 06:37+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-07-14 05:20+0000\n"
+"X-Generator: Launchpad (build 13405)\n"
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -50,7 +50,7 @@ msgstr "无价格表可用！"
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_grid_line
 msgid "Delivery Grid Line"
-msgstr ""
+msgstr "发运网格明细"
 
 #. module: delivery
 #: view:delivery.grid:0
@@ -67,7 +67,7 @@ msgstr "体积"
 #. module: delivery
 #: sql_constraint:sale.order:0
 msgid "Order Reference must be unique !"
-msgstr ""
+msgstr "单号必须唯一！"
 
 #. module: delivery
 #: field:delivery.grid,line_ids:0
@@ -92,7 +92,7 @@ msgstr "要开票的分拣单"
 #. module: delivery
 #: help:delivery.grid,sequence:0
 msgid "Gives the sequence order when displaying a list of delivery grid."
-msgstr ""
+msgstr "输入序号用于在发运网格列表上排序"
 
 #. module: delivery
 #: view:delivery.grid:0
@@ -117,7 +117,7 @@ msgid ""
 "the delivery according to the weight of the products and other criteria. You "
 "can define several price lists for one delivery method, per country or a "
 "zone in a specific country defined by a postal code range."
-msgstr ""
+msgstr "送货价格表允许您通过重量或其它条件计算成本和售价。您可以为一个送货方式定义多个价格表。按国家或地区（以邮政编码区分）"
 
 #. module: delivery
 #: selection:delivery.grid.line,price_type:0
@@ -143,12 +143,12 @@ msgstr "库存调拨"
 #: code:addons/delivery/delivery.py:141
 #, python-format
 msgid "No line matched this order in the choosed delivery grids !"
-msgstr ""
+msgstr "在所选的发运网格中没有符合这个销售订单的行"
 
 #. module: delivery
 #: field:stock.picking,carrier_tracking_ref:0
 msgid "Carrier Tracking Ref"
-msgstr ""
+msgstr "承运方跟踪号"
 
 #. module: delivery
 #: field:stock.picking,weight_net:0
@@ -161,7 +161,7 @@ msgid ""
 "Create and manage the delivery methods you need for your sales activities. "
 "Each delivery method can be assigned to a price list which computes the "
 "price of the delivery according to the products sold or delivered."
-msgstr ""
+msgstr "创建和管理你在销售过程中的发运方式。每种发运方式可以指定一个价格表这样可以根据销售和发运的产品计算运费。"
 
 #. module: delivery
 #: code:addons/delivery/stock.py:98
@@ -212,7 +212,7 @@ msgstr "分拣单"
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_sale_order
 msgid "Make Delievery"
-msgstr ""
+msgstr "发运"
 
 #. module: delivery
 #: model:ir.module.module,description:delivery.module_meta_information
@@ -224,6 +224,11 @@ msgid ""
 "\n"
 "     "
 msgstr ""
+"允许你在销售订单或出库单上增加发货方式。\n"
+"你可以定义你自己的承运方和发货网格价格。\n"
+"当基于发货单创建发票时，OpenERP可以增加和自动计算运费行。\n"
+"\n"
+"     "
 
 #. module: delivery
 #: view:delivery.grid.line:0
@@ -240,7 +245,7 @@ msgstr "表格"
 msgid ""
 "If the active field is set to False, it will allow you to hide the delivery "
 "grid without removing it."
-msgstr ""
+msgstr "如果启用的勾去掉，可以不用删除发货网格就隐藏它。"
 
 #. module: delivery
 #: field:delivery.grid,zip_to:0
@@ -265,7 +270,7 @@ msgstr "重量"
 #. module: delivery
 #: field:stock.picking,number_of_packages:0
 msgid "Number of Packages"
-msgstr ""
+msgstr "包装件数"
 
 #. module: delivery
 #: selection:delivery.grid.line,type:0
@@ -281,13 +286,13 @@ msgstr "重量"
 msgid ""
 "If the active field is set to False, it will allow you to hide the delivery "
 "carrier without removing it."
-msgstr ""
+msgstr "如果去掉启用的勾，可以不必删除承运方就隐藏它。"
 
 #. module: delivery
 #: code:addons/delivery/wizard/delivery_sale_order.py:95
 #, python-format
 msgid "No grid available !"
-msgstr ""
+msgstr "没有可用的发货网格"
 
 #. module: delivery
 #: selection:delivery.grid.line,operator:0
@@ -314,7 +319,7 @@ msgstr "批次"
 #. module: delivery
 #: constraint:stock.move:0
 msgid "You try to assign a lot which is not from the same product"
-msgstr ""
+msgstr "你尝试分配一个来自其它产品的批次"
 
 #. module: delivery
 #: field:delivery.carrier,active:0
@@ -351,7 +356,7 @@ msgstr "可变的"
 #. module: delivery
 #: help:res.partner,property_delivery_carrier:0
 msgid "This delivery method will be used when invoicing from picking."
-msgstr ""
+msgstr "这个发货方式会在基于发货单开发票的时候使用。"
 
 #. module: delivery
 #: field:delivery.grid.line,max_value:0
@@ -372,7 +377,7 @@ msgstr "开始邮编"
 #: help:sale.order,carrier_id:0
 msgid ""
 "Complete this field if you plan to invoice the shipping based on picking."
-msgstr ""
+msgstr "如果你计划按发货单开运费发票请输入此字段。"
 
 #. module: delivery
 #: field:delivery.carrier,partner_id:0
@@ -392,12 +397,12 @@ msgstr "<="
 #. module: delivery
 #: constraint:stock.move:0
 msgid "You must assign a production lot for this product"
-msgstr ""
+msgstr "必须为此产品赋予一个生产批次"
 
 #. module: delivery
 #: view:delivery.sale.order:0
 msgid "Create Deliveries"
-msgstr ""
+msgstr "创建发货单"
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_cost
@@ -427,7 +432,7 @@ msgstr "价格"
 #: code:addons/delivery/wizard/delivery_sale_order.py:95
 #, python-format
 msgid "No grid matching for this carrier !"
-msgstr ""
+msgstr "没有发货网格适用于此承运方"
 
 #. module: delivery
 #: model:ir.ui.menu,name:delivery.menu_delivery
@@ -449,7 +454,7 @@ msgstr "="
 #: code:addons/delivery/stock.py:99
 #, python-format
 msgid "The carrier %s (id: %d) has no delivery grid!"
-msgstr ""
+msgstr "承运方 %s (id: %d) 没有发运网格！"
 
 #. module: delivery
 #: field:delivery.grid.line,name:0
@@ -469,7 +474,7 @@ msgstr "运输公司"
 #. module: delivery
 #: view:delivery.sale.order:0
 msgid "_Apply"
-msgstr ""
+msgstr "应用(_A)"
 
 #. module: delivery
 #: field:sale.order,id:0
@@ -481,7 +486,7 @@ msgstr "ID"
 #: code:addons/delivery/wizard/delivery_sale_order.py:98
 #, python-format
 msgid "The order state have to be draft to add delivery lines."
-msgstr ""
+msgstr "只能对草稿状态的订单增加发货行"
 
 #. module: delivery
 #: model:ir.module.module,shortdesc:delivery.module_meta_information

@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-05-09 10:19+0000\n"
-"PO-Revision-Date: 2011-05-10 02:02+0000\n"
-"Last-Translator: Wei \"oldrev\" Li <oldrev@gmail.com>\n"
+"PO-Revision-Date: 2011-07-13 17:11+0000\n"
+"Last-Translator: Jeff Wang <wjfonhand@hotmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-05-11 05:44+0000\n"
-"X-Generator: Launchpad (build 12959)\n"
+"X-Launchpad-Export-Date: 2011-07-14 05:21+0000\n"
+"X-Generator: Launchpad (build 13405)\n"
 
 #. module: product
 #: model:product.template,name:product.product_product_ram512_product_template
@@ -708,7 +708,7 @@ msgstr "新价格 ="
 msgid ""
 "This price will be considered as a price for the supplier UoM if any or the "
 "default Unit of Measure of the product otherwise"
-msgstr ""
+msgstr "这个价格是供应商计量单位的价格。如果没有输入供应商计量单位则此价格是产品基本计量单位的价格。"
 
 #. module: product
 #: model:product.category,name:product.product_category_accessories
@@ -1417,6 +1417,7 @@ msgid ""
 "the level of this product. Different lead times will be summed for all "
 "levels and purchase orders."
 msgstr ""
+"平均制造提前期。这个天数只适用于生产订单，在多层物料清单里他只表述了本层的天数。BOM总计的提前期要根据所有层制造提前期和采购提前期的合计。"
 
 #. module: product
 #: help:product.product,qty_available:0
@@ -1546,7 +1547,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:product.product_price_type_action
 #: model:ir.ui.menu,name:product.menu_product_price_type
 msgid "Price Types"
-msgstr ""
+msgstr "计价基础"
 
 #. module: product
 #: help:product.template,uom_id:0
@@ -1828,7 +1829,7 @@ msgid ""
 "Future stock for this product according to the selected locations or all "
 "internal if none have been selected. Computed as: Real Stock - Outgoing + "
 "Incoming."
-msgstr ""
+msgstr "此产品在所选库位（如未选库位则是在所有内部库位）未来的数量。算法是 账面数量 - 未发出数量 + 未收到数量"
 
 #. module: product
 #: field:product.pricelist,name:0
