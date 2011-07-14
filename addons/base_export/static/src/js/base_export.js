@@ -103,6 +103,26 @@ openerp.base_export.Export = openerp.base.Dialog.extend({
         jQuery($.find('[id^=export-]')).click(function(){
             self.on_field_click(this);
         });
+
+        $('[id^=export-]').keydown(function (e) {
+        var keyCode = e.keyCode || e.which,
+        arrow = {left: 37, up: 38, right: 39, down: 40 };
+        switch (keyCode) {
+            case arrow.left:
+                self.on_click(this.id, result);
+            break;
+            case arrow.up:
+                //..
+            break;
+            case arrow.right:
+                self.on_click(this.id, result);
+            break;
+            case arrow.down:
+                //..
+            break;
+            }
+        });
+
         jQuery($.find('#fields_list')).mouseover(function(event){
             if(event.relatedTarget){
                 if ('id' in event.relatedTarget.attributes && 'string' in event.relatedTarget.attributes){
