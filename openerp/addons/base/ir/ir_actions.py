@@ -163,13 +163,13 @@ class act_window(osv.osv):
 
     def _invalid_model_msg(self, cr, uid, ids, context=None):
         return _('Invalid model name in the action definition.')
-    
+
     _constraints = [
         (_check_model, _invalid_model_msg, ['res_model','src_model'])
     ]
 
     def _views_get_fnc(self, cr, uid, ids, name, arg, context=None):
-        """Returns an ordered list of the specific view modes that should be 
+        """Returns an ordered list of the specific view modes that should be
            enabled when displaying the result of this action, along with the
            ID of the specific view to use for each mode, if any were required.
 
@@ -209,7 +209,7 @@ class act_window(osv.osv):
             if act.search_view_id:
                 search_view_id = act.search_view_id.id
             else:
-                res_view = self.pool.get('ir.ui.view').search(cr, uid, 
+                res_view = self.pool.get('ir.ui.view').search(cr, uid,
                         [('model','=',act.res_model),('type','=','search'),
                         ('inherit_id','=',False)], context=context)
                 if res_view:
@@ -809,7 +809,7 @@ class ir_actions_todo_category(osv.osv):
     _name = 'ir.actions.todo.category'
     _description = "Configuration Wizard Category"
     _columns = {
-         'name':fields.char('Name', size=64, translate=True, required=True), 
+         'name':fields.char('Name', size=64, translate=True, required=True),
          'sequence': fields.integer('Sequence'),
          'wizards_ids': fields.one2many('ir.actions.todo', 'category_id', 'Configuration Wizards'),
     }
@@ -818,9 +818,10 @@ ir_actions_todo_category()
 # This model use to register action services.
 TODO_STATES = [('open', 'To Do'),
                ('done', 'Done'),
-               ('skip','Skipped'),
-               ('cancel','Cancelled')]
-
+               ('cancel', 'Cancelled')]
+TODO_TYPES = [('special', 'Special'),
+              ('normal', 'Normal'),
+              ('recurring', 'Recurring')]
 class ir_actions_todo(osv.osv):
     """
     Configuration Wizards
@@ -834,10 +835,10 @@ class ir_actions_todo(osv.osv):
         'sequence': fields.integer('Sequence'),
         'state': fields.selection(TODO_STATES, string='State', required=True),
         'name': fields.char('Name', size=64),
-        'type': fields.selection([('special','Special'),('normal','Normal'),('normal_recurring','Normal Recurring')], 'Type', required=True,
+        'type': fields.selection(TODO_TYPES, 'Type', required=True,
             help="""Special: the wizard is run whenever the system is reconfigured.
 Normal: the wizard is visible in the configuration panel until it is done.
-Normal Recurring: the wizard is visible in the configuration panel regardless of its state."""),
+Recurring: the wizard is visible in the configuration panel regardless of its state."""),
         'groups_id': fields.many2many('res.groups', 'res_groups_action_rel', 'uid', 'gid', 'Groups'),
         'note': fields.text('Text', translate=True),
         'category_id': fields.many2one('ir.actions.todo.category','Category'),
@@ -870,6 +871,43 @@ Normal Recurring: the wizard is visible in the configuration panel regardless of
     def action_open(self, cr, uid, ids, context=None):
         """ Sets configuration wizard in TODO state"""
         return self.write(cr, uid, ids, {'state': 'open'}, context=context)
+
+    def progress(self, cr, uid, context=None):
+        """ Returns a dict with 3 keys {todo, done, total}.
+
+        These keys all map to integers and provide the number of todos
+        marked as open, the total number of todos and the number of
+        todos not open (which is basically a shortcut to total-todo)
+
+        :rtype: dict
+        """
+        user_groups = set(map(
+            lambda x: x.id,
+            self.pool['res.users'].browse(cr, uid, [uid], context=context)[0].groups_id))
+        def groups_match(todo):
+            """ Checks if the todo's groups match those of the current user
+            """
+            return not todo.groups_id \
+                   or bool(user_groups.intersection((
+                        group.id for group in todo.groups_id)))
+
+        done = filter(
+            groups_match,
+            self.browse(cr, uid,
+                self.search(cr, uid, ['&', ('state', '!=', 'open'), ('type', '!=', 'special')], context=context),
+                        context=context))
+
+        total = filter(
+            groups_match,
+            self.browse(cr, uid,
+                self.search(cr, uid, [('type', '!=', 'special')], context=context),
+                        context=context))
+
+        return {
+            'done': len(done),
+            'total': len(total),
+            'todo': len(total) - len(done)
+        }
 
 ir_actions_todo()
 
@@ -911,4 +949,3 @@ class act_client(osv.osv):
 act_client()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

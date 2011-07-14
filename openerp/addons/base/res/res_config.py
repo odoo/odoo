@@ -37,7 +37,6 @@ class res_config_configurable(osv.osv_memory):
     '''
     _name = 'res.config'
     _inherit = 'ir.wizard.screen'
-    logger = netsvc.Logger()
     __logger = logging.getLogger(_name)
 
     def get_current_progress(self, cr, uid, context=None):
@@ -45,7 +44,7 @@ class res_config_configurable(osv.osv_memory):
         a tuple of (non_open_todos:int, total_todos: int)
         '''
         todo_pool = self.pool.get('ir.actions.todo')
-        return (todo_pool.search_count(cr, uid, [('state','<>','open')], context),
+        return (todo_pool.search_count(cr, uid, [('state','!=','open')], context),
                 todo_pool.search_count(cr, uid, [], context))
 
     def _progress(self, cr, uid, context=None):
@@ -66,7 +65,7 @@ class res_config_configurable(osv.osv_memory):
         todos = self.pool.get('ir.actions.todo')
         self.__logger.info('getting next %s', todos)
         # Don't forget to change the domain in search view, if this condition is changed
-        active_todos = todos.search(cr, uid, [('state','=','open')],
+        active_todos = todos.search(cr, uid, ['|', ('type', '=', 'recurring'), ('state','=','open')],
                                     limit=1)
         if active_todos:
             todo_obj = todos.browse(cr, uid, active_todos[0], context=None)
@@ -119,7 +118,7 @@ class res_config_configurable(osv.osv_memory):
         todo_pool = self.pool.get('ir.actions.todo')
         ids2 = todo_pool.search(cr, uid, [], context=context)
         for todo in todo_pool.browse(cr, uid, ids2, context=context):
-            if (todo.type=='normal_recurring'):
+            if (todo.type=='recurring'):
                 todo.write({'state':'open'})
         return self.next(cr, uid, ids, context)
 
