@@ -76,11 +76,19 @@ openerp.base_graph.GraphView = openerp.base.View.extend({
 
     load_chart: function(data) {
         var self = this;
+        var domain = false;
         if(data){
             this.x_title = this.all_fields[this.chart_info_fields]['string'];
             this.y_title = this.all_fields[this.operator_field]['string'];
             self.schedule_chart(data);
         }else{
+            if(! _.isEmpty(this.view_manager.dataset.domain)){
+                domain = this.view_manager.dataset.domain;
+            }else if(! _.isEmpty(this.view_manager.action.domain)){
+                domain = this.view_manager.action.domain;
+            }
+            this.dataset.domain = domain;
+            this.dataset.context = this.view_manager.dataset.context;
             this.dataset.read_slice(this.fields, 0, false, function(res) {
                 self.schedule_chart(res);
             });
