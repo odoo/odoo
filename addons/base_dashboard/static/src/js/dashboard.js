@@ -40,7 +40,10 @@ openerp.base.form.DashBoard = openerp.base.form.Widget.extend({
             });
         });
 
-        this.$element.find('a.oe-dashboard-action-rename').live('click', this.on_rename);
+        //this.$element.find('a.oe-dashboard-action-rename').live('click', this.on_rename);
+        this.$element.find('.oe-dashboard-action').live('mouseover mouseout', function(event) {
+            $(this).find('.oe-dashboard-action-header .ui-icon, .oe-dashboard-action-header .oe-dashboard-action-rename').toggle(event.type == 'mouseover');
+        });
     },
     on_undo: function() {
         this.rpc('/base/view/undo_custom', {
