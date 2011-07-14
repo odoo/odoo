@@ -155,7 +155,7 @@ class res_partner(osv.osv):
         default.update({'name': name+ _(' (copy)'), 'events':[]})
         return super(res_partner, self).copy(cr, uid, id, default, context)
 
-    def create(self, cr, user, values, context=None):
+    def create(self, cr, user, vals, context=None):
         # add a default address if none is given
         if vals.has_key('address') and not vals.get('address'):
             vals.get('address').append((0, 0, {'type': 'default'}))
