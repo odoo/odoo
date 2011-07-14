@@ -450,9 +450,10 @@ class sugar_import(import_framework):
         }
 
     def import_task(self, val):
-        print  val.get('date_start'), val.get('date_due')
-        val['date'] = val.get('date_start') or datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-        val['date_deadline'] = val.get('date_due') or datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+        date =  val.get('date_start') or datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+        val['date'] = ''.joint(date)
+        date_deadline = val.get('date_due') or datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+        val['date_deadline'] = ''.join(date_deadline)
         return val
 
     def get_task_mapping(self):
