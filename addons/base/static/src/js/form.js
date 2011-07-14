@@ -269,9 +269,8 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
     on_button_new: function() {
         var self = this;
         $.when(this.has_been_loaded).then(function() {
-            self.dataset.default_get(_.keys(self.fields_view.fields), function(result) {
-                self.on_record_loaded(result.result);
-            });
+            self.dataset.default_get(
+                _.keys(self.fields_view.fields), self.on_record_loaded);
         });
     },
     /**
