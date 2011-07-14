@@ -41,7 +41,10 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
     start: function() {
         //this.log('Starting FormView '+this.model+this.view_id)
         if (this.embedded_view) {
-            return $.Deferred().then(this.on_loaded).resolve({fields_view: this.embedded_view});
+            var def = $.Deferred().then(this.on_loaded);
+            var self = this;
+            setTimeout(function() {def.resolve({fields_view: self.embedded_view});}, 0);
+            return def.promise();
         } else {
             var context = new openerp.base.CompoundContext(this.dataset.get_context());
             if (this.view_manager.action && this.view_manager.action.context) {
@@ -611,14 +614,15 @@ openerp.base.form.WidgetFrame = openerp.base.form.Widget.extend({
             if (node.attrs.nolabel != '1') {
                 var label = new (this.view.registry.get_object('label')) (this.view, node);
                 label["for"] = widget;
-                this.add_widget(label);
+                this.add_widget(label, widget.colspan + 1);
             }
         }
         this.add_widget(widget);
     },
-    add_widget: function(widget) {
+    add_widget: function(widget, colspan) {
+        colspan = colspan || widget.colspan;
         var current_row = this.table[this.table.length - 1];
-        if (current_row.length && (this.x + widget.colspan) > this.columns) {
+        if (current_row.length && (this.x + colspan) > this.columns) {
             current_row = this.add_row();
         }
         current_row.push(widget);
@@ -719,10 +723,7 @@ openerp.base.form.WidgetButton = openerp.base.form.Widget.extend({
 
         this.view.execute_action(
             this.node.attrs, this.view.dataset, this.session.action_manager,
-            this.view.datarecord.id, function (result) {
-                self.log("Button returned", result);
-                self.view.reload();
-            }, function() {
+            this.view.datarecord.id, function () {
                 self.view.reload();
             });
     }
@@ -1267,13 +1268,10 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
             if (!self.value) {
                 return;
             }
-            self.session.action_manager.do_action({
-                "res_model": self.field.relation,
-                "views":[[false,"form"]],
-                "res_id": self.value[0],
-                "type":"ir.actions.act_window",
-                "target":"new",
-                "context": self.build_context()
+            var pop = new openerp.base.form.FormOpenPopup(null, self.view.session);
+            pop.show_element(self.field.relation, self.value[0],self.build_context(), {});
+            pop.on_write_completed.add_last(function() {
+                self.set_value(self.value[0]);
             });
         };
         var cmenu = this.$menu_btn.contextMenu(this.cm_id, {'leftClickToo': true,
@@ -1703,6 +1701,20 @@ openerp.base.form.One2ManyListView = openerp.base.ListView.extend({
                 });
             });
         }
+    },
+    do_activate_record: function(index, id) {
+        var self = this;
+        var pop = new openerp.base.form.FormOpenPopup(null, self.o2m.view.session);
+        pop.show_element(self.o2m.field.relation, id, self.o2m.build_context(),{
+            auto_write: false,
+            alternative_form_view: self.o2m.field.views ? self.o2m.field.views["form"] : undefined,
+            parent_view: self.o2m.view
+        });
+        pop.on_write.add(function(id, data) {
+            self.o2m.dataset.write(id, data, function(r) {
+                self.o2m.reload_current_view();
+            });
+        });
     }
 });
 
@@ -1788,15 +1800,11 @@ openerp.base.form.Many2ManyListView = openerp.base.ListView.extend({
         });
     },
     do_activate_record: function(index, id) {
-        this.m2m_field.view.session.action_manager.do_action({
-            "res_model": this.dataset.model,
-            "views": [[false,"form"]],
-            "res_id": id,
-            "type": "ir.actions.act_window",
-            "view_type": "form",
-            "view_mode": "form",
-            "target": "new",
-            "context": this.m2m_field.build_context()
+        var self = this;
+        var pop = new openerp.base.form.FormOpenPopup(null, this.m2m_field.view.session);
+        pop.show_element(this.dataset.model, id, this.m2m_field.build_context(), {});
+        pop.on_write_completed.add_last(function() {
+            self.reload_content();
         });
     }
 });
@@ -1885,7 +1893,7 @@ openerp.base.form.SelectCreatePopup = openerp.base.BaseWidget.extend({
             return;
         var self = this;
         var wdataset = new openerp.base.DataSetSearch(this.session, this.model, this.context, this.domain);
-        wdataset = this.options.parent_view;
+        wdataset.parent_view = this.options.parent_view;
         wdataset.create(data, function(r) {
             self.on_select_elements([r.result]);
         });
@@ -1942,6 +1950,72 @@ openerp.base.form.SelectCreateListView = openerp.base.ListView.extend({
     do_select: function(ids, records) {
         this._super(ids, records);
         this.popup.on_click_element(ids);
+    }
+});
+
+openerp.base.form.FormOpenPopup = openerp.base.BaseWidget.extend({
+    identifier_prefix: "formopenpopup",
+    template: "FormOpenPopup",
+    /**
+     * options:
+     * - alternative_form_view
+     * - auto_write (default true)
+     * - parent_view
+     */
+    show_element: function(model, row_id, context, options) {
+        this.model = model;
+        this.row_id = row_id;
+        this.context = context || {};
+        this.options = _.defaults(options || {}, {"auto_write": true});
+        jQuery(this.render()).dialog({title: '',
+                    modal: true,
+                    width: 960,
+                    height: 600});
+        this.start();
+    },
+    start: function() {
+        this._super();
+        this.dataset = new openerp.base.ReadOnlyDataSetSearch(this.session, this.model,
+            this.context);
+        this.dataset.ids = [this.row_id];
+        this.dataset.index = 0;
+        this.dataset.parent_view = this.options.parent_view;
+        this.setup_form_view();
+    },
+    on_write: function(id, data) {
+        this.stop();
+        if (!this.options.auto_write)
+            return;
+        var self = this;
+        var wdataset = new openerp.base.DataSetSearch(this.session, this.model, this.context, this.domain);
+        wdataset.parent_view = this.options.parent_view;
+        wdataset.write(id, data, function(r) {
+            self.on_write_completed();
+        });
+    },
+    on_write_completed: function() {},
+    setup_form_view: function() {
+        var self = this;
+        this.view_form = new openerp.base.FormView(null, this.session,
+                this.element_id + "_view_form", this.dataset, false);
+        if (this.options.alternative_form_view) {
+            this.view_form.set_embedded_view(this.options.alternative_form_view);
+        }
+        this.view_form.start();
+        this.view_form.on_loaded.add_last(function() {
+            var $buttons = self.view_form.$element.find(".oe_form_buttons");
+            $buttons.html(QWeb.render("FormOpenPopup.form.buttons"));
+            var $nbutton = $buttons.find(".oe_formopenpopup-form-save");
+            $nbutton.click(function() {
+                self.view_form.do_save();
+            });
+            var $cbutton = $buttons.find(".oe_formopenpopup-form-close");
+            $cbutton.click(function() {
+                self.stop();
+            });
+            self.view_form.do_show();
+        });
+        this.dataset.on_write.add(this.on_write);
     }
 });
 

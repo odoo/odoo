@@ -908,7 +908,15 @@
     <button type="button" class="oe_selectcreatepopup-form-save">Save</button>
     <button type="button" class="oe_selectcreatepopup-form-close">Close</button>
 </t>
-
+<t t-name="FormOpenPopup">
+    <div t-att-id="element_id">
+        <div t-att-id="element_id + '_view_form'" style="width:100%"></div>
+    </div>
+</t>
+<t t-name="FormOpenPopup.form.buttons">
+    <button type="button" class="oe_formopenpopup-form-save">Save</button>
+    <button type="button" class="oe_formopenpopup-form-close">Close</button>
+</t>
 <t t-name="ListView.row.frame" t-extend="WidgetFrame">
     <t t-jquery="tr">
         $(document.createElement('t'))

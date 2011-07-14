@@ -930,7 +930,7 @@ openerp.base.Login =  openerp.base.Controller.extend({
     },
     start: function() {
         var self = this;
-        this.rpc("/base/session/get_databases_list", {}, function(result) {
+        this.rpc("/base/database/get_databases_list", {}, function(result) {
             self.db_list = result.db_list;
             self.display();
         }, function() {
