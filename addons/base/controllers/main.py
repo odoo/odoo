@@ -569,14 +569,15 @@ class View(openerpweb.Controller):
         else:
             xml = ElementTree.fromstring(arch)
         fvg['arch'] = Xml2Json.convert_element(xml)
-        for field in fvg['fields'].values():
-            if field.has_key('views') and field['views']:
-                for view in field["views"].values():
+
+        for field in fvg['fields'].itervalues():
+            if field.get('views'):
+                for view in field["views"].itervalues():
                     self.process_view(session, view, None, transform)
             if field.get('domain'):
                 field["domain"] = self.parse_domain(field["domain"], session)
             if field.get('context'):
-                field["context"] = self.parse_domain(field["context"], session)
+                field["context"] = self.parse_context(field["context"], session)
 
     @openerpweb.jsonrequest
     def add_custom(self, request, view_id, arch):
