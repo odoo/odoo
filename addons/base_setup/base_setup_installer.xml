@@ -75,7 +75,7 @@
         <field name="action_id" ref="action_base_setup_installer"/>
         <field name="category_id" ref="base.category_administration_config"/>
         <field name="sequence">2</field>
-        <field name="type">normal_recurring</field>
+        <field name="type">recurring</field>
     </record>
 
 <!--     Migrate data from another application Conf Wiz-->
@@ -126,7 +126,6 @@
       <field name="action_id" ref="action_migrade_application_installer_modules"/>
       <field name="category_id" ref="base.category_administration_config"/>
       <field name="type">normal</field>
-      <field name="state">skip</field>
   </record>
 
           <!-- Import or create customers configartion view  -->
@@ -147,7 +146,6 @@
 	    <field name="category_id" ref="base.category_administration_config"/>
 	    <field name="type">normal</field>
 	    <field name="target">current</field>
-	    <field name="state">skip</field>
 	</record>
 
 	<!--        Define default users preferences-->
@@ -201,7 +199,6 @@
           <field name="action_id" ref="action_user_preferences_config_form"/>
           <field name="category_id" ref="base.category_administration_config"/>
           <field name="type">normal</field>
-          <field name="state">skip</field>
       </record>
 
       <!--     Config Wiz   Create New User's Login   -->
@@ -283,7 +280,6 @@
           <field name="action_id" ref="action_partner_terminology_config_form"/>
           <field name="category_id" ref="base.category_administration_config"/>
           <field name="type">normal</field>
-          <field name="state">skip</field>
       </record>
 
 
@@ -302,7 +298,6 @@
         <field name="category_id" ref="base.category_administration_config"/>
         <field name="sequence">1</field>
         <field name="type">normal</field>
-        <field name="state">skip</field>
     </record>
 
   </data>
