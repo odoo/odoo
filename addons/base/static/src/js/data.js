@@ -396,7 +396,7 @@ openerp.base.DataSetStatic =  openerp.base.DataSet.extend({
         var self = this;
         offset = offset || 0;
         var end_pos = limit && limit !== -1 ? offset + limit : undefined;
-        this.read_ids(this.ids.slice(offset, end_pos), fields, callback);
+        return this.read_ids(this.ids.slice(offset, end_pos), fields, callback);
     },
     set_ids: function (ids) {
         this.ids = ids;
@@ -433,7 +433,7 @@ openerp.base.DataSetSearch =  openerp.base.DataSet.extend({
                 // return read_ids(ids.slice(start,start+limit),fields,callback)
             }
         }
-        this.rpc('/base/dataset/search_read', {
+        return this.rpc('/base/dataset/search_read', {
             model: this.model,
             fields: fields,
             domain: this.domain,
@@ -444,7 +444,9 @@ openerp.base.DataSetSearch =  openerp.base.DataSet.extend({
         }, function (result) {
             self.ids = result.ids;
             self.offset = offset;
-            callback(result.records);
+            if (callback) {
+                callback(result.records);
+            }
         });
     },
     /**
