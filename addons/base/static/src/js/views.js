@@ -68,10 +68,7 @@ openerp.base.ActionManager = openerp.base.Controller.extend({
         }
     },
     'ir.actions.act_window_close': function (action, on_closed) {
-        if (this.current_dialog) {
-            this.current_dialog.stop();
-            this.current_dialog = null;
-        }
+        this.close_dialog();
     },
     'ir.actions.server': function (action, on_closed) {
         var self = this;
@@ -85,6 +82,12 @@ openerp.base.ActionManager = openerp.base.Controller.extend({
     'ir.actions.client': function (action) {
         var Handler = openerp.base.client_actions.get_object(action.tag);
         new Handler(this.session, this.element_id, action['kwargs']).start();
+    },
+    close_dialog: function () {
+        if (this.current_dialog) {
+            this.current_dialog.stop();
+            this.current_dialog = null;
+        }
     }
 });
 
