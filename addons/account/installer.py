@@ -63,7 +63,7 @@ class account_installer(osv.osv_memory):
         'bank_accounts_id': fields.one2many('account.bank.accounts.wizard', 'bank_account_id', 'Your Bank and Cash Accounts'),
         'sale_tax': fields.float('Sale Tax(%)'),
         'purchase_tax': fields.float('Purchase Tax(%)'),
-        'company_id': fields.many2one('res.company', 'Company', required=True),
+        'company_id': fields.many2one('res.company', 'Company'),
     }
 
     def _default_company(self, cr, uid, context=None):
@@ -579,6 +579,9 @@ class account_installer(osv.osv_memory):
         ir_values = self.pool.get('ir.values')
         record = self.browse(cr, uid, ids, context=context)[0]
         company_id = record.company_id
+        if not company_id:
+            user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+            raise osv.except_osv(_('Warning'), _('It seems that there is no company selected or %s already has an accounting configuration. If you want to set the accounting setting for a other company than the main one, please make sure that you belong to the group Usability/Extended View') % (user.company_id.name))
         for res in self.read(cr, uid, ids, context=context):
             if record.charts == 'configurable':
                 fp = tools.file_open(opj('account', 'configurable_account_chart.xml'))
