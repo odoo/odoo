@@ -199,7 +199,8 @@ if os.name == 'posix':
     signal.signal(signal.SIGQUIT, dumpstacks)
 
 def quit():
-    openerp.netsvc.Agent.quit()
+    # stop scheduling new jobs; we will have to wait for the jobs to complete below
+    openerp.netsvc.Agent.cancel_all()
     openerp.netsvc.Server.quitAll()
     if config['pidfile']:
         os.unlink(config['pidfile'])
@@ -215,7 +216,7 @@ def quit():
         if thread != threading.currentThread() and not thread.isDaemon():
             while thread.isAlive():
                 # need a busyloop here as thread.join() masks signals
-                # and would present the forced shutdown
+                # and would prevent the forced shutdown
                 thread.join(0.05)
                 time.sleep(0.05)
     openerp.modules.registry.RegistryManager.delete_all()

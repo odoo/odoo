@@ -37,6 +37,7 @@ from pprint import pformat
 # TODO modules that import netsvc only for things from loglevels must be changed to use loglevels.
 from loglevels import *
 import tools
+import openerp
 
 def close_socket(sock):
     """ Closes a socket instance cleanly
@@ -252,81 +253,65 @@ class Agent(object):
        
             * a timestamp
             * the database on which the task run
-            * the function to call
-            * the arguments and keyword arguments to pass to the function
+            * a boolean attribute specifying if the task is canceled
 
         Implementation details:
         
           - Tasks are stored as list, allowing the cancellation by setting
-            the timestamp to 0.
+            the boolean to True.
           - A heapq is used to store tasks, so we don't need to sort
             tasks ourself.
     """
-    __tasks = []
-    __tasks_by_db = {}
+    _wakeups = []
+    _wakeup_by_db = {}
     _logger = logging.getLogger('netsvc.agent')
 
     @classmethod
-    def setAlarm(cls, function, timestamp, db_name, *args, **kwargs):
-        task = [timestamp, db_name, function, args, kwargs]
-        heapq.heappush(cls.__tasks, task)
-        cls.__tasks_by_db.setdefault(db_name, []).append(task)
-
-    @classmethod
     def cancel(cls, db_name):
-        """Cancel all tasks for a given database. If None is passed, all tasks are cancelled"""
-        cls._logger.debug("Cancel timers for %s db", db_name or 'all')
-        if db_name is None:
-            cls.__tasks, cls.__tasks_by_db = [], {}
-        else:
-            if db_name in cls.__tasks_by_db:
-                for task in cls.__tasks_by_db[db_name]:
-                    task[0] = 0
+        """ Cancel next wakeup for a given database. """
+        cls._logger.debug("Cancel next wake-up for database '%s'.", db_name)
+        if db_name in cls._wakeup_by_db:
+            cls._wakeup_by_db[db_name][2] = True
 
     @classmethod
-    def reschedule_in_advance(cls, function, timestamp, db_name, *args, **kwargs):
+    def cancel_all(cls):
+        cls._wakeups = []
+        cls._wakeup_by_db = {}
+
+    @classmethod
+    def schedule_in_advance(cls, timestamp, db_name):
         if not timestamp:
             return
-        # Cancel the previous task if any.
-        old_timestamp = False
-        if db_name in cls.__tasks_by_db:
-            for task in cls.__tasks_by_db[db_name]:
-                print ">>> function:", function
-                if task[2] == function and (not task[0] or timestamp < task[0]):
-                    old_timestamp = True
-                    task[0] = 0
-        if old_timestamp or db_name not in cls.__tasks_by_db or not cls.__tasks_by_db[db_name]:
+        # Cancel the previous wakeup if any.
+        add_wakeup = False
+        if db_name in cls._wakeup_by_db:
+            task = cls._wakeup_by_db[db_name]
+            if task[2] or timestamp < task[0]:
+                add_wakeup = True
+                task[2] = True
+        else:
+            add_wakeup = True
+        if add_wakeup:
             print ">>> rescheduled earlier", timestamp
-            cls.setAlarm(function, timestamp, db_name, *args, **kwargs)
-
-    @classmethod
-    def quit(cls):
-        cls.cancel(None)
+            task = [timestamp, db_name, False]
+            heapq.heappush(cls._wakeups, task)
+            cls._wakeup_by_db[db_name] = task
 
     @classmethod
     def runner(cls):
         """Neverending function (intended to be ran in a dedicated thread) that
            checks every 60 seconds tasks to run. TODO: make configurable
         """
-        current_thread = threading.currentThread()
         while True:
-            print ">>>>> starting thread for"
-            while cls.__tasks and cls.__tasks[0][0] < time.time():
-                task = heapq.heappop(cls.__tasks)
-                timestamp, dbname, function, args, kwargs = task
-                cls.__tasks_by_db[dbname].remove(task)
-                if not timestamp:
-                    # null timestamp -> cancelled task
+            print ">>>>> cron for"
+            while cls._wakeups and cls._wakeups[0][0] < time.time():
+                task = heapq.heappop(cls._wakeups)
+                timestamp, db_name, canceled = task
+                del cls._wakeup_by_db[db_name]
+                if canceled:
                     continue
-                current_thread.dbname = dbname   # hack hack
-                cls._logger.debug("Run %s.%s(*%s, **%s)", function.im_class.__name__, function.func_name, args, kwargs)
-                delattr(current_thread, 'dbname')
-                task_thread = threading.Thread(target=function, name='netsvc.Agent.task', args=args, kwargs=kwargs)
-                # force non-daemon task threads (the runner thread must be daemon, and this property is inherited by default)
-                task_thread.setDaemon(False)
-                print ">>>>> -", function.func_name
-                task_thread.start()
-                time.sleep(1)
+                ir_cron = openerp.pooler.get_pool(db_name).get('ir.cron')
+                ir_cron._run_jobs()
             time.sleep(60)
 
 def start_agent():

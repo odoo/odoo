@@ -76,10 +76,8 @@ class ir_cron(osv.osv, netsvc.Agent):
         'doall' : lambda *a: 1
     }
 
-    def __init__(self, pool, cr):
-        self.thread_count_lock = threading.Lock()
-        self.thread_count = 2 # maximum allowed number of thread.
-        super(osv.osv, self).__init__(pool, cr)
+    thread_count_lock = threading.Lock()
+    thread_count = 2 # maximum allowed number of thread.
 
     def get_thread_count(self):
         return self.thread_count
@@ -137,25 +135,6 @@ class ir_cron(osv.osv, netsvc.Agent):
             except Exception, e:
                 self._handle_callback_exception(cr, uid, model, func, args, job_id, e)
 
-    def _compute_nextcall(self, job, now):
-        """ Compute the nextcall for a job exactly as _run_job does.
-
-        Return either the nextcall or None if it shouldn't be called.
-
-        """
-        nextcall = datetime.strptime(job['nextcall'], '%Y-%m-%d %H:%M:%S')
-        numbercall = job['numbercall']
-
-        while nextcall < now and numbercall:
-            if numbercall > 0:
-                numbercall -= 1
-            if numbercall:
-                nextcall += _intervalTypes[job['interval_type']](job['interval_number'])
-
-        if not numbercall:
-            return None
-        return nextcall.strftime('%Y-%m-%d %H:%M:%S')
-
     def _run_job(self, cr, job, now):
         """ Run a given job taking care of the repetition. """
         try:
@@ -182,20 +161,17 @@ class ir_cron(osv.osv, netsvc.Agent):
                 print ">>> advance at", nextcall
                 nextcall = time.mktime(time.strptime(nextcall.strftime('%Y-%m-%d %H:%M:%S'), '%Y-%m-%d %H:%M:%S'))
                 with self.thread_count_lock:
-                    self.reschedule_in_advance(self._poolJobs, nextcall, cr.dbname, cr.dbname)
+                    self.schedule_in_advance(nextcall, cr.dbname)
         finally:
             cr.commit()
             cr.close()
             with self.thread_count_lock:
                 self.thread_count += 1
                 # reschedule the master thread in advance, using its saved next_call value.
-                self.reschedule_in_advance(self._poolJobs, self.next_call, cr.dbname, cr.dbname)
+                self.schedule_in_advance(self.next_call, cr.dbname)
                 self.next_call = None
 
-    def _poolJobs(self, db_name):
-        return self._run_jobs(db_name)
-
-    def _run_jobs(self, db_name):
+    def _run_jobs(self):
         # TODO remove 'check' argument from addons/base_action_rule/base_action_rule.py
         """ Process the cron jobs by spawning worker threads.
 
@@ -205,8 +181,9 @@ class ir_cron(osv.osv, netsvc.Agent):
         locked to be taken care of by another thread.
 
         """
+        db_name = self.pool.db.dbname
         try:
-            db, pool = pooler.get_db_and_pool(db_name)
+            db, pool = self.pool.db, self.pool
         except:
             return False
         print ">>> _run_jobs"
@@ -269,7 +246,7 @@ class ir_cron(osv.osv, netsvc.Agent):
                     self.next_call = next_call
                     next_call = int(time.time()) + 3600   # no available thread, it will run again after 1 day
 
-                self.reschedule_in_advance(self._poolJobs, next_call, db_name, db_name)
+                self.schedule_in_advance(next_call, db_name)
 
         except Exception, ex:
             self._logger.warning('Exception in cron:', exc_info=True)
@@ -286,7 +263,7 @@ class ir_cron(osv.osv, netsvc.Agent):
     def restart(self, dbname):
         self.cancel(dbname)
         # Reschedule cron processing job asap, but not in the current thread
-        self.setAlarm(self._poolJobs, time.time(), dbname, dbname)
+        self.schedule_in_advance(time.time(), dbname)
 
     def update_running_cron(self, cr):
         # Verify whether the server is already started and thus whether we need to commit
