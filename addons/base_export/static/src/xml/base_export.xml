@@ -34,7 +34,10 @@
                         <tr>
                             <th class="oe_view_title">Available fields</th>
                             <th class="oe_view_title"></th>
-                            <th class="oe_view_title">Fields to export</th>
+                            <th class="oe_view_title">Fields to export
+                            <a style="color: blue; text-decoration: none;" href="#" id="export_new_list">Save fields list</a>
+                            <div id="savenewlist"></div>
+                            </th>
                         </tr>
                         <tr>
                             <td class="fields-selector-left" height="400px">
@@ -104,5 +107,13 @@
                 </td>
             </tr>
         </t>
+    </t>
+
+    <t t-name="ExportNewList">
+        <tr>
+            <td><label>Save as:</label></td>
+            <td><input size="10" type="text" id="savelist_name"/></td>
+            <td><button id="add_export_list">Ok</button></td>
+        </tr>
     </t>
 </template>

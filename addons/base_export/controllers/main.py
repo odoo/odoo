@@ -58,3 +58,12 @@ class Export(View):
 
         records.reverse()
         return records
+
+    @openerpweb.jsonrequest
+    def save_export_lists(self, req, name, model, field_list):
+        result = {'resource':model, 'name':name, 'export_fields': []}
+        for field in field_list:
+            result['export_fields'].append((0, 0, {'name': field}))
+        req.session.model("ir.exports").create(result, req.session.eval_context(req.context))
+        return True
+

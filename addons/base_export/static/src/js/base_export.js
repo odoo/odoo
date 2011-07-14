@@ -40,7 +40,42 @@ openerp.base_export.Export = openerp.base.Dialog.extend({
         $('#remove_all_field').click(function(){
             jQuery(self.$dialog).find("#fields_list option").remove();
         });
+        $('#export_new_list').click(function(){
+            self.on_show_save_list();
+        });
         this.rpc("/base_export/export/get_fields", {"model": this.dataset.model}, this.on_show_data);
+    },
+    on_show_save_list: function(){
+        var self = this;
+        var current_node = $("#savenewlist");
+        if(!(current_node.find("label")).length){
+            current_node.append(QWeb.render('ExportNewList'));
+            current_node.find("#add_export_list").click(function(){
+                var value = current_node.find("#savelist_name").val();
+                if (value){
+                    self.do_save_export_list(value);
+                }
+                else{
+                    alert("Pleae Enter Save Field List Name");
+                }
+
+            });
+        }
+        else{
+            if (current_node.is(':hidden')){
+                current_node.show();
+            }
+            else{
+               current_node.hide();
+            }
+        }
+    },
+
+    do_save_export_list: function(value){
+        var export_field = this.get_fields()
+        if(export_field.length){
+            this.rpc("/base_export/export/save_export_lists", {"model": this.dataset.model, "name":value, "field_list":export_field}, {});
+        }
     },
 
     on_click: function(id, result) {
@@ -186,9 +221,7 @@ openerp.base_export.Export = openerp.base.Dialog.extend({
         if (! export_field.length){
             alert('Please select fields to export...');
         }
-        else {
-            this.close();
-        }
+        return export_field;
     },
 
     close: function() {
