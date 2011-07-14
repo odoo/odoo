@@ -319,14 +319,14 @@ openerp.base_dashboard.ConfigOverview = openerp.base.View.extend({
         this.$element.find('div.oe-dashboard-config-overview ul')
                 .delegate('li', 'click', function () {
             self.execute_action({
-                type: 'action',
-                name: $(this).data('action')
-            }, self.dataset,
-            new openerp.base.ActionManager(self.session, self.element_id),
-            null, null, function () {
-                // after action popup closed, refresh configuration thingie
-                self.start();
-            });
+                    type: 'action',
+                    name: $(this).data('action')
+                }, self.dataset,
+                self.session.action_manager,
+                null, null, function () {
+                    // after action popup closed, refresh configuration thingie
+                    self.start();
+                });
         });
     }
 });
