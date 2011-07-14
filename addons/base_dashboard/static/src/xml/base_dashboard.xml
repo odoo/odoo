@@ -65,19 +65,20 @@
     </form>
 </t>
 <div t-name="ConfigOverview" class="oe-dashboard-config-overview">
-    <div class="oe-config-progress" t-att-data-completion="completion"/>
+    <div class="oe-config-progress">
+        <h6 class="oe-config-progress-title">
+            <t t-esc="Math.round(completion)"/>% progress
+        </h6>
+        <div class="oe-config-progress-bar" t-att-data-completion="completion"/>
+    </div>
     <dl>
         <t t-foreach="groups" t-as="category">
             <dt><t t-esc="category"/></dt>
             <dd><ul>
                 <li t-foreach="category_value" t-as="todo"
-                    t-att-class="todo.to_do ? 'ui-state-error ui-priority-primary' : ''"
+                    t-att-class="todo.done ? 'oe-done' : undefined"
                     t-att-data-action="todo.action">
-                    <span t-if="todo.done" class="ui-icon ui-icon-circle-check"/>
-                    <span t-if="todo.to_do" class="ui-icon ui-icon-circle-close"/>
-                    <span t-att-class="todo.to_do ? 'ui-state-error-text' : ''">
-                        <t t-esc="todo.name"/>
-                    </span>
+                    <t t-esc="todo.name"/>
                 </li>
             </ul></dd>
         </t>

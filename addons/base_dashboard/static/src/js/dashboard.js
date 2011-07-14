@@ -312,13 +312,12 @@ openerp.base_dashboard.ConfigOverview = openerp.base.View.extend({
             completion: 100 * progress.done / progress.total,
             groups: grouped_todos
         }));
-        var $progress = this.$element.find('div.oe-config-progress');
+        var $progress = this.$element.find('div.oe-config-progress-bar');
         $progress.progressbar({value: $progress.data('completion')});
 
         var self = this;
-        // allow for executing to-do and skipped action
         this.$element.find('div.oe-dashboard-config-overview ul')
-                .delegate('li.ui-state-error', 'click', function () {
+                .delegate('li', 'click', function () {
             self.execute_action({
                 type: 'action',
                 name: $(this).data('action')
