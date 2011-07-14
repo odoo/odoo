@@ -35,10 +35,10 @@ openerp.base_export.Export = openerp.base.Dialog.extend({
             }
         });
         $('#remove_field').click(function(){
-            jQuery(self.$dialog).find("#fields_list option:selected").remove();
+            $("#fields_list option:selected").remove();
         });
         $('#remove_all_field').click(function(){
-            jQuery(self.$dialog).find("#fields_list option").remove();
+            $("#fields_list option").remove();
         });
         $('#export_new_list').click(function(){
             self.on_show_save_list();
@@ -75,6 +75,8 @@ openerp.base_export.Export = openerp.base.Dialog.extend({
         var export_field = this.get_fields()
         if(export_field.length){
             this.rpc("/base_export/export/save_export_lists", {"model": this.dataset.model, "name":value, "field_list":export_field}, {});
+            this.on_show_save_list()
+            $("#fields_list option").remove();
         }
     },
 
@@ -221,7 +223,7 @@ openerp.base_export.Export = openerp.base.Dialog.extend({
 
     get_fields: function (){
         var export_field = [];
-        jQuery("#fields_list option").each(function(){
+        $("#fields_list option").each(function(){
             export_field.push(jQuery(this).val());
         });
         if (! export_field.length){
