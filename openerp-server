@@ -153,7 +153,7 @@ if config["translate_in"]:
 if config["stop_after_init"]:
     sys.exit(0)
 
-openerp.netsvc.start_agent()
+openerp.cron.start_master_thread()
 
 #----------------------------------------------------------
 # Launch Servers
@@ -200,7 +200,7 @@ if os.name == 'posix':
 
 def quit():
     # stop scheduling new jobs; we will have to wait for the jobs to complete below
-    openerp.netsvc.Agent.cancel_all()
+    openerp.cron.cancel_all()
     openerp.netsvc.Server.quitAll()
     if config['pidfile']:
         os.unlink(config['pidfile'])

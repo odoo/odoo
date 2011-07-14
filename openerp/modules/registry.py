@@ -25,7 +25,7 @@
 
 import openerp.sql_db
 import openerp.osv.orm
-import openerp.netsvc
+import openerp.cron
 import openerp.tools
 
 
@@ -161,14 +161,14 @@ class RegistryManager(object):
         cancels the associated cron job. But please note that the cron job can
         be running and take some time before ending, and that you should not
         remove a registry if it can still be used by some thread. So it might
-        be necessary to call yourself openerp.netsvc.Agent.cancel(db_name) and
+        be necessary to call yourself openerp.cron.Agent.cancel(db_name) and
         and join (i.e. wait for) the thread.
 
         """
         if db_name in cls.registries:
             del cls.registries[db_name]
         openerp.tools.cache.clean_caches_for_db(db_name)
-        openerp.netsvc.Agent.cancel(db_name)
+        openerp.cron.cancel(db_name)
 
 
     @classmethod
