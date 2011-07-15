@@ -30,14 +30,14 @@ if object.partner_id.opt_out: self.pool.get('email.template').generate_mail(cr,
 			<field name="def_to">${object.address_invoice_id.email}</field>
 			<field name="object_name" ref="account.model_account_invoice"/>
             <field name="use_sign">True</field>
-			<field name="def_body_text">Hello ${object.partner_id.name},
+			<field name="def_body_text">Hello ${object.address_invoice_id.name},
 
-We just registered the invoice ${object.number} for ${object.amount_total} ${object.currency_id.name} for your company ${object.company_id.name}.
+We just registered the invoice ${object.number} for ${object.amount_total} ${object.currency_id.name} for your company ${object.partner_id.name}.
 You can click on the following link to preview, print and pay this invoice:
 
     ${object._context.get('edi_web_url_view')}
 
-Please note that this invoice has to be paid before ${object.date_due}
+Please note that this invoice has to be paid before ${object.date_due or ''}
 
 Regards,
 </field>
