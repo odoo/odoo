@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-05-09 10:18+0000\n"
-"PO-Revision-Date: 2011-07-13 18:49+0000\n"
+"PO-Revision-Date: 2011-07-14 17:36+0000\n"
 "Last-Translator: Jeff Wang <wjfonhand@hotmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-07-14 05:20+0000\n"
+"X-Launchpad-Export-Date: 2011-07-15 05:53+0000\n"
 "X-Generator: Launchpad (build 13405)\n"
 
 #. module: account_voucher
@@ -600,7 +600,7 @@ msgid ""
 "suppliers. When you select a supplier, the payment method and an amount for "
 "the payment, OpenERP will propose to reconcile your payment with the open "
 "supplier invoices or bills."
-msgstr ""
+msgstr "付款单用于跟踪你对供应商的付款。选择供应商、付款方式和付款金额，OpenERP会自动提示你要针对哪张供应商发票付款。"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -663,13 +663,13 @@ msgstr "已对账金额"
 #. module: account_voucher
 #: field:account.voucher,analytic_id:0
 msgid "Write-Off Analytic Account"
-msgstr ""
+msgstr "核销分析科目"
 
 #. module: account_voucher
 #: selection:account.voucher,pay_now:0
 #: selection:sale.receipt.report,pay_now:0
 msgid "Pay Directly"
-msgstr ""
+msgstr "直接支付"
 
 #. module: account_voucher
 #: selection:sale.receipt.report,month:0
@@ -679,7 +679,7 @@ msgstr "十月"
 #. module: account_voucher
 #: field:account.voucher,pre_line:0
 msgid "Previous Payments ?"
-msgstr ""
+msgstr "预付款？"
 
 #. module: account_voucher
 #: selection:sale.receipt.report,month:0
@@ -690,12 +690,12 @@ msgstr "一月"
 #: model:ir.actions.act_window,name:account_voucher.action_voucher_list
 #: model:ir.ui.menu,name:account_voucher.menu_encode_entries_by_voucher
 msgid "Journal Vouchers"
-msgstr ""
+msgstr "明细帐凭证单据"
 
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Compute Tax"
-msgstr ""
+msgstr "计算税"
 
 #. module: account_voucher
 #: selection:account.voucher.line,type:0
@@ -706,12 +706,12 @@ msgstr "贷方"
 #: code:addons/account_voucher/account_voucher.py:645
 #, python-format
 msgid "Please define a sequence on the journal !"
-msgstr ""
+msgstr "请定义一个序列，在该明细帐！"
 
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Open Supplier Journal Entries"
-msgstr ""
+msgstr "打开供应商的明细帐分录"
 
 #. module: account_voucher
 #: report:voucher.print:0
@@ -732,7 +732,7 @@ msgstr "过账"
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Invoices and outstanding transactions"
-msgstr ""
+msgstr "发票和未完成的交易"
 
 #. module: account_voucher
 #: view:sale.receipt.report:0
@@ -743,7 +743,7 @@ msgstr "不含税总金额"
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Bill Date"
-msgstr ""
+msgstr "草案的日期"
 
 #. module: account_voucher
 #: help:account.voucher,state:0
@@ -757,6 +757,10 @@ msgid ""
 "\n"
 "* The 'Cancelled' state is used when user cancel voucher."
 msgstr ""
+" 新建的凭证是草稿状态\n"
+"当凭证没有编号的时候是形式放票状态\n"
+"当凭证有了编号并生成了会计凭证时是已过帐状态\n"
+"当用户作废了凭证后是作废状态"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -782,14 +786,14 @@ msgstr "九月"
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Sales Information"
-msgstr ""
+msgstr "销售信息"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,name:account_voucher.action_sale_receipt_report_all
 #: model:ir.ui.menu,name:account_voucher.menu_action_sale_receipt_report_all
 #: view:sale.receipt.report:0
 msgid "Sales Receipt Analysis"
-msgstr ""
+msgstr "分析销售收据"
 
 #. module: account_voucher
 #: field:account.voucher.line,voucher_id:0
@@ -805,7 +809,7 @@ msgstr "发票"
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Voucher Items"
-msgstr ""
+msgstr "凭证项"
 
 #. module: account_voucher
 #: view:account.statement.from.invoice:0
@@ -834,7 +838,7 @@ msgstr "日记帐项目"
 #: model:ir.actions.act_window,name:account_voucher.action_vendor_receipt
 #: model:ir.ui.menu,name:account_voucher.menu_action_vendor_receipt
 msgid "Customer Payment"
-msgstr ""
+msgstr "客户付款"
 
 #. module: account_voucher
 #: view:account.statement.from.invoice:0
@@ -855,12 +859,12 @@ msgstr "借方"
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Are you sure to confirm this record ?"
-msgstr ""
+msgstr "你一定要确认这条纪录吗？"
 
 #. module: account_voucher
 #: selection:account.voucher,payment_option:0
 msgid "Reconcile with Write-Off"
-msgstr ""
+msgstr "核对注销"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -905,7 +909,7 @@ msgstr "贷方"
 #. module: account_voucher
 #: field:account.voucher.line,amount_original:0
 msgid "Original Amount"
-msgstr ""
+msgstr "原始金额"
 
 #. module: account_voucher
 #: report:voucher.print:0
@@ -945,12 +949,12 @@ msgstr "二月"
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Supplier Invoices and Outstanding transactions"
-msgstr ""
+msgstr "供应商发票和未完成的业务"
 
 #. module: account_voucher
 #: field:account.voucher,comment:0
 msgid "Write-Off Comment"
-msgstr ""
+msgstr "取消评论"
 
 #. module: account_voucher
 #: selection:sale.receipt.report,month:0
@@ -960,13 +964,13 @@ msgstr "四月"
 #. module: account_voucher
 #: field:account.voucher,type:0
 msgid "Default Type"
-msgstr ""
+msgstr "默认类型"
 
 #. module: account_voucher
 #: model:ir.model,name:account_voucher.model_account_statement_from_invoice
 #: model:ir.model,name:account_voucher.model_account_statement_from_invoice_lines
 msgid "Entries by Statement from Invoices"
-msgstr ""
+msgstr "按发票收付款的凭证行"
 
 #. module: account_voucher
 #: field:account.voucher,move_id:0
@@ -976,17 +980,17 @@ msgstr "凭证"
 #. module: account_voucher
 #: field:sale.receipt.report,state:0
 msgid "Voucher State"
-msgstr ""
+msgstr "正式收据"
 
 #. module: account_voucher
 #: help:account.voucher,date:0
 msgid "Effective date for accounting entries"
-msgstr ""
+msgstr "会计分录的生效日期"
 
 #. module: account_voucher
 #: selection:account.voucher,payment_option:0
 msgid "Keep Open"
-msgstr ""
+msgstr "保持打开"
 
 #. module: account_voucher
 #: view:account.voucher.unreconcile:0
@@ -998,12 +1002,12 @@ msgstr "如果进行未对账处理你必须检验处理的所有操作.因为�
 #. module: account_voucher
 #: field:account.voucher.line,untax_amount:0
 msgid "Untax Amount"
-msgstr ""
+msgstr "未纳税额"
 
 #. module: account_voucher
 #: model:ir.model,name:account_voucher.model_sale_receipt_report
 msgid "Sales Receipt Statistics"
-msgstr ""
+msgstr "销售收入统计"
 
 #. module: account_voucher
 #: view:sale.receipt.report:0
@@ -1021,4 +1025,4 @@ msgstr "期初余额"
 #: view:account.voucher:0
 #: field:account.voucher,amount:0
 msgid "Total"
-msgstr ""
+msgstr "总计"
