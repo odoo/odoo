@@ -236,41 +236,40 @@
     </tr>
     </table>
 </t>
-<table t-name="ListView">
+<table t-name="ListView" class="oe-listview-content">
     <t t-set="columns_count" t-value="visible_columns.length + (options.selectable ? 1 : 0) + (options.deletable ? 1 : 0)"/>
-    <t t-set="actions_span" t-value="Math.floor((options.deletable or options.addable) ? columns_count/2 : 0)"/>
     <thead class="ui-widget-header">
-        <tr>
-            <th t-if="actions_span" t-att-colspan="actions_span"
-                class="oe-actions">
-                <t t-if="flags.action_buttons !== false">
-                    <button type="button" class="oe-list-add"
-                            t-if="options.addable">
-                        <t t-esc="options.addable"/>
-                    </button>
-                    <button type="button" class="oe-list-delete"
-                            t-if="options.selectable and options.deletable">
-                        Delete
-                    </button>
-                </t>
-            </th>
-            <th t-att-colspan="columns_count - actions_span"
-                class="oe-list-pager">
-                <t t-if="flags.pager !== false">
-                    <button type="button" disabled="disabled"
-                            data-pager-action="first">First</button>
-                    <button type="button" disabled="disabled"
-                            data-pager-action="previous"
-                            >&lt;&lt;</button>
+        <tr t-if="flags.action_buttons !== false or flags.pager !== false">
+            <th t-att-colspan="columns_count">
+                <table>
+                    <tr>
+                        <td t-if="flags.action_buttons !== false" class="oe-actions">
+                            <button type="button" class="oe-list-add"
+                                    t-if="options.addable">
+                                <t t-esc="options.addable"/>
+                            </button>
+                            <button type="button" class="oe-list-delete"
+                                    t-if="options.selectable and options.deletable">
+                                Delete
+                            </button>
+                        </td>
+                        <th t-if="flags.pager !== false" class="oe-list-pager">
+                            <button type="button" disabled="disabled"
+                                    data-pager-action="first">First</button>
+                            <button type="button" disabled="disabled"
+                                    data-pager-action="previous"
+                                    >&lt;</button>
 
-                    <span class="oe-pager-state">
-                    </span>
+                            <span class="oe-pager-state">
+                            </span>
 
-                    <button type="button" disabled="disabled"
-                            data-pager-action="next">&gt;&gt;</button>
-                    <button type="button" disabled="disabled"
-                            data-pager-action="last">Last</button>
-                </t>
+                            <button type="button" disabled="disabled"
+                                    data-pager-action="next">&gt;</button>
+                            <button type="button" disabled="disabled"
+                                    data-pager-action="last">Last</button>
+                        </th>
+                    </tr>
+                </table>
             </th>
         </tr>
         <tr t-if="options.header">

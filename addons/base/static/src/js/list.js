@@ -386,7 +386,7 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
     do_show: function () {
         this.$element.show();
         if (this.hidden) {
-            this.$element.find('table').append(
+            this.$element.find('.oe-listview-content').append(
                 this.groups.apoptosis().render());
             this.hidden = false;
         }
@@ -421,7 +421,7 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
      * re-renders the content of the list view
      */
     reload_content: function () {
-        this.$element.find('table').append(
+        this.$element.find('.oe-listview-content').append(
             this.groups.apoptosis().render(
                 $.proxy(this, 'compute_aggregates')));
     },
