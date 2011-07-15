@@ -711,6 +711,8 @@ class account_journal(osv.osv):
             name = rs.name
             if rs.currency:
                 name = "%s (%s)" % (rs.name, rs.currency.name)
+            else:
+                name = "%s (%s)" % (rs.name, rs.company_id.currency_id.name)
             res += [(rs.id, name)]
         return res
 
