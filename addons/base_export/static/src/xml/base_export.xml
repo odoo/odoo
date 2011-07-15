@@ -5,7 +5,7 @@
     </t>
 
     <t t-name="ExportTreeView">
-        <table class="view" cellspacing="5" border="0" width="100%">
+        <table class="view" width="100%">
             <tr>
                 <td class="side_spacing" align="left">
                     This wizard will export all data that matches the current search criteria to a CSV file.
@@ -29,20 +29,21 @@
             </tr>
 
             <tr>
-                <td class="side_spacing">
-                    <table class="fields-selector-export" cellspacing="5" border="0">
+                <td>
+                    <table class="fields-selector-export" width="100%">
                         <tr>
-                            <th class="oe_view_title">Available fields</th>
+                            <th class="oe_view_title" valign="bottom">Available fields</th>
                             <th class="oe_view_title"></th>
                             <th class="oe_view_title">Fields to export
                             <a style="color: blue; text-decoration: none;" href="#" id="export_new_list">Save fields list</a>
                             <div id="savenewlist"></div>
+                            <div id="ExistsExportList"></div>
                             </th>
                         </tr>
                         <tr>
                             <td class="fields-selector-left" height="400px">
                                 <div id="fields_left">
-                                <table class="fields-selector-export" cellspacing="5" border="0">
+                                <table class="fields-selector-export">
                                     <th class="header_title"> Name </th>
                                     <tr>
                                         <td>
@@ -55,7 +56,7 @@
                                 </div>
                             </td>
                             <td class="fields-selector-center">
-                                <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                                <table width="100%">
                                     <tr>
                                         <td align="center">
                                             <button id="add_field">Add </button>
@@ -115,9 +116,24 @@
 
     <t t-name="ExportNewList">
         <tr>
-            <td><label>Save as:</label></td>
+            <th><label>Save as:</label></th>
             <td><input size="10" type="text" id="savelist_name"/></td>
             <td><button id="add_export_list">Ok</button></td>
+        </tr>
+    </t>
+
+    <t t-name="Exists.ExportList">
+        <tr><th align="right"><label >Saved exports:</label></th></tr>
+        <tr align="left">
+            <td>
+                <select id="saved_export_list" style="width: 100%;">
+                    <option></option>
+                    <t t-foreach="existing_exports" t-as="export">
+                        <option t-att-value="export.id"><t t-esc="export.name"/></option>
+                    </t>
+                </select>
+            </td>
+            <td><button id="delete_export_list">Delete</button></td>
         </tr>
     </t>
 </template>

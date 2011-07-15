@@ -29,6 +29,7 @@ openerp.base_export.Export = openerp.base.Dialog.extend({
                        },
                     close: function(event, ui){ self.close();}
                    });
+        this.on_show_exists_export_list();
         $('#add_field').click(function(){
             for (var key in self.selected_fields) {
                 self.add_field(key, self.selected_fields[key])
@@ -44,7 +45,33 @@ openerp.base_export.Export = openerp.base.Dialog.extend({
             self.on_show_save_list();
         });
         this.rpc("/base_export/export/get_fields", {"model": this.dataset.model}, this.on_show_data);
+
     },
+
+    on_show_exists_export_list: function(){
+        var self = this;
+        if($("#saved_export_list").is(":hidden")){
+            $("#ExistsExportList").show();
+        }
+        else{
+	        this.rpc("/base_export/export/exist_export_lists", {"model": this.dataset.model}, function(export_list){
+		        if(export_list.length){
+		            $("#ExistsExportList").append(QWeb.render('Exists.ExportList', {'existing_exports':export_list}));
+			        $('#delete_export_list').click(function(){
+	                    select_exp = $("#saved_export_list option:selected")
+			            if (select_exp.val()){
+	                        self.rpc("/base_export/export/delete_export", {"export_id": parseInt(select_exp.val())}, {});
+	                        select_exp.remove();
+	                        if($("#saved_export_list option").length <= 1){
+                                $("#ExistsExportList").hide();
+	                        }
+			            }
+			        });
+		        }
+	        });
+        }
+    },
+
     on_show_save_list: function(){
         var self = this;
         var current_node = $("#savenewlist");
@@ -58,7 +85,6 @@ openerp.base_export.Export = openerp.base.Dialog.extend({
                 else{
                     alert("Pleae Enter Save Field List Name");
                 }
-
             });
         }
         else{
@@ -72,10 +98,23 @@ openerp.base_export.Export = openerp.base.Dialog.extend({
     },
 
     do_save_export_list: function(value){
-        var export_field = this.get_fields()
+        var self = this;
+        var export_field = self.get_fields()
         if(export_field.length){
-            this.rpc("/base_export/export/save_export_lists", {"model": this.dataset.model, "name":value, "field_list":export_field}, {});
-            this.on_show_save_list()
+            self.rpc("/base_export/export/save_export_lists", {"model": self.dataset.model, "name":value, "field_list":export_field}, function(exp_id){
+                if(exp_id){
+                    if($("#saved_export_list").length > 0){
+                        $("#saved_export_list").append( new Option(value, exp_id));
+                    }
+                    else{
+                        self.on_show_exists_export_list();
+                    }
+                    if($("#saved_export_list").is(":hidden")){
+                        self.on_show_exists_export_list();
+                    }
+                }
+            });
+            self.on_show_save_list()
             $("#fields_list option").remove();
         }
     },
@@ -150,7 +189,11 @@ openerp.base_export.Export = openerp.base.Dialog.extend({
                     }
                 break;
                 case arrow.up:
-                    $(this).prev().find('a').focus();
+                    var elem = this;
+                    while($(elem).prev().is(":visible") == false){
+                        elem = $(elem).prev();
+                    }
+                    $(elem).prev().find('a').focus();
                 break;
                 case arrow.right:
                     if( jQuery(this).find('img').attr('src') == '/base/static/src/img/expand.gif'){

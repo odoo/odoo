@@ -62,6 +62,14 @@ class Export(View):
         result = {'resource':model, 'name':name, 'export_fields': []}
         for field in field_list:
             result['export_fields'].append((0, 0, {'name': field}))
-        req.session.model("ir.exports").create(result, req.session.eval_context(req.context))
-        return True
+        return req.session.model("ir.exports").create(result, req.session.eval_context(req.context))
 
+    @openerpweb.jsonrequest
+    def exist_export_lists(self, req, model):
+        export_model = req.session.model("ir.exports")
+        return export_model.read(export_model.search([('resource', '=', model)]), ['name'])
+
+    @openerpweb.jsonrequest
+    def delete_export(self, req, export_id):
+        req.session.model("ir.exports").unlink(export_id, req.session.eval_context(req.context))
+        return True
