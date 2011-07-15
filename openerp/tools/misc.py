@@ -422,18 +422,15 @@ def generate_tracking_message_id(openobject_id):
 
 
 def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=None, reply_to=False,
-               attach=None, message_id=None, references=None, openobject_id=False, debug=False, subtype='plain', x_headers=None, priority='3',
+               attachments=None, message_id=None, references=None, openobject_id=False, debug=False, subtype='plain', headers=None,
                smtp_server=None, smtp_port=None, ssl=False, smtp_user=None, smtp_password=None, cr=None, uid=None):
+    """Low-level function for sending an email (deprecated).
 
-    """Send an email.
-
-    Arguments:
-
-    `email_from`: A string used to fill the `From` header, if falsy,
-                  config['email_from'] is used instead.  Also used for
-                  the `Reply-To` header if `reply_to` is not provided
-
-    `email_to`: a sequence of addresses to send the mail to.
+    :deprecate: since OpenERP 6.1, please use ir.mail_server.send_email() instead. 
+    :param email_from: A string used to fill the `From` header, if falsy,
+                       config['email_from'] is used instead.  Also used for
+                       the `Reply-To` header if `reply_to` is not provided
+    :param email_to: a sequence of addresses to send the mail to.
     """
 
     # If not cr, get cr from current thread database
@@ -442,26 +439,21 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
         if db_name:
             cr = pooler.get_db_only(db_name).cursor()
         else:
-            raise Exception("No database cursor found!")
-
-    # if not uid, take uid as a root
-    #TOFIX: uid should taken from current thread
-    if not uid:
-        uid = 1
-
-    mail_server_pool = pooler.get_pool(cr.dbname).get('ir.mail_server')
-    
-    # Pack Message into MIME Object
-    msg = mail_server_pool.pack_message(cr, uid, email_from, email_to, subject, body, email_cc, email_bcc, reply_to,
-               attach, message_id, references, openobject_id, debug, subtype, x_headers, priority)
+            raise Exception("No database cursor found, please pass one explicitly")
 
     # Send Email
-    res = False
     try:
-        res = mail_server_pool.send_email(cr, uid, msg,
+        mail_server_pool = pooler.get_pool(cr.dbname).get('ir.mail_server')
+        res = False
+        # Pack Message into MIME Object
+        email_msg = mail_server_pool.build_email(email_from, email_to, subject, body, email_cc, email_bcc, reply_to,
+                   attachments, message_id, references, openobject_id, subtype, headers=headers)
+
+        res = mail_server_pool.send_email(cr, uid or 1, email_msg, mail_server_id=None,
                        smtp_server=smtp_server, smtp_port=smtp_port, smtp_user=smtp_user, smtp_password=smtp_password,
-                       ssl=ssl, tls=True, debug=debug)
+                       smtp_encryption=('ssl' if ssl else None), debug=debug)
     except Exception:
+        _log.exception("tools.email_send failed to deliver email")
         return False
     finally:
         cr.close()

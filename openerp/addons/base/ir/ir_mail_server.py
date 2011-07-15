@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2011 Tiny SPRL (<http://tiny.be>)
+#    Copyright (C) 2011 OpenERP S.A (<http://www.openerp.com>)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,170 +19,143 @@
 #
 ##############################################################################
 
-from osv import osv
-from osv import fields
-from tools.translate import _
-import tools
-from tools import ustr
-from tools import config
-import netsvc
-
-import base64
-import subprocess
-import logging
-import smtplib
-import socket
-import sys
-import time
 from email.MIMEText import MIMEText
 from email.MIMEBase import MIMEBase
 from email.MIMEMultipart import MIMEMultipart
 from email.Header import Header
-from email.Utils import formatdate, COMMASPACE
-from email import Utils
+from email.Utils import formatdate, make_msgid, COMMASPACE
 from email import Encoders
-try:
-    from html2text import html2text
-except ImportError:
-    html2text = None
+import logging
+import smtplib
 
-import openerp.loglevels as loglevels
-from tools import config
-from email.generator import Generator
+from osv import osv
+from osv import fields
+from tools.translate import _
+import tools
 
-# get_encodings, ustr and exception_to_unicode were originally from tools.misc.
-# There are moved to loglevels until we refactor tools.
-from openerp.loglevels import get_encodings, ustr, exception_to_unicode
+# ustr was originally from tools.misc.
+# it is moved to loglevels until we refactor tools.
+from openerp.loglevels import ustr
 
-_logger = logging.getLogger('tools')
-priorities = {
-        '1': '1 (Highest)',
-        '2': '2 (High)',
-        '3': '3 (Normal)',
-        '4': '4 (Low)',
-        '5': '5 (Lowest)',
-}
+_logger = logging.getLogger('ir.mail_server')
 
+class MailDeliveryException(osv.except_osv):
+    """Specific exception subclass for mail delivery errors"""
+    def __init__(self, name, value, exc_type='warning'):
+        super(MailDeliveryException, self).__init__(name, value, exc_type=exc_type)
+
+class WriteToLogger(object):
+    """debugging helper: behave as a fd and pipe to DEBUG logger"""
+    def __init__(self, logger):
+        self.logger = logger
+
+    def write(self, s):
+        self.logger.debug(s)
 
 class ir_mail_server(osv.osv):
-    """
-    mail server
-    """
+    """Represents an SMTP server, able to send outgoing e-mails, with SSL and TLS capabilities."""
     _name = "ir.mail_server"
 
     _columns = {
-        'name': fields.char('Name',
-                        size=64, required=True,
-                        select=True,
-                        ),
-        'smtp_host': fields.char('Server',
-                        size=120, required=True,
-                        help="Hostname or IP of SMTP server"),
-        'smtp_port': fields.integer('SMTP Port',
-                        size=64, required=True,
-                        help="SMTP Port of SMPT server"),
-        'smtp_user': fields.char('User Name',
-                        size=120, required=False,
-                        help="Username for SMTP authentication"),
-        'smtp_pass': fields.char('Password',
-                        size=120,
-                        required=False, help="Password for SMTP authentication"),
-        'smtp_tls': fields.boolean('TLS', help="If True, TLS encryption will be requested at \
-beginning of SMTP transactions. \nDo not use if SSL is \
-enabled, or if the server does not support it."),
-        'smtp_ssl':fields.boolean('SSL/TLS', readonly='SMTP_SSL' not in smtplib.__all__, help="If True, SMTPS (Secure SMTP over SSL encryption) will be used. \
-When selected, change smtp_port to 465. \
-\nDo not use with TLS or if the server does not support it. \
-%s" %('SMTP_SSL' not in smtplib.__all__ and '\nNote: This is a Readonly. You should Install Python2.6 if need Secure SMTP' or '')),
-        'priority': fields.integer('Priority', help="If no specific \
-                  server is requested for a mail, the highest priority one \
-                  is used. Default priority is 10"),
+        'name': fields.char('Name', size=64, required=True, select=True),
+        'smtp_host': fields.char('Server Name', size=128, required=True, help="Hostname or IP of SMTP server"),
+        'smtp_port': fields.integer('SMTP Port', size=5, required=True, help="SMTP Port. Usually 465 for SSL, and 25 or 587 for other cases."),
+        'smtp_user': fields.char('Username', size=64, help="Optional username for SMTP authentication"),
+        'smtp_pass': fields.char('Password', size=64, help="Optional password for SMTP authentication"),
+        'smtp_encryption': fields.selection([('none','None'),
+                                             ('starttls','TLS (STARTTLS)'),
+                                             ('ssl','SSL/TLS')],
+                                            string='Connection Security',
+                                            help="Choose the connection encryption scheme:\n"
+                                                 "- None: SMTP sessions are done in cleartext.\n"
+                                                 "- TLS (STARTTLS): TLS encryption will be requested at start of cleartext SMTP session (Recommended)\n"
+                                                 "- SSL/TLS: Uses Secure SMTP over SSL tunnel, through dedicated SMTP/SSL port (default: 465)"),
+        'smtp_debug': fields.boolean('Debugging', help="If checked, the full output of SMTP sessions will "
+                                                       "be written to the server log (may include confidential info)"),
+        'sequence': fields.integer('Priority', help="When no specific mail server is requested for a mail, the highest priority one "
+                                                    "is used. Default priority is 10 (smaller number = higher priority)"),
     }
 
     _defaults = {
          'smtp_port': 25,
-         'priority': 10,
+         'sequence': 10,
+         'smtp_encryption': 'none',
      }
-
-    _sql_constraints = [
-    ]
-
 
     def name_get(self, cr, uid, ids, context=None):
         return [(a["id"], "(%s)" % (a['name'])) for a in self.read(cr, uid, ids, ['name'], context=context)]
 
     def test_smtp_connection(self, cr, uid, ids, context=None):
-        """
-        Test SMTP connection works
-        """
         for smtp_server in self.browse(cr, uid, ids, context=context):
             smtp = False
             try:
-                smtp = self.connect_smtp_server(smtp_server.smtp_host,
+                smtp = self.connect(smtp_server.smtp_host,
                    smtp_server.smtp_port, user_name=smtp_server.smtp_user,
-                   user_password=smtp_server.smtp_pass, ssl=smtp_server.smtp_ssl,
-                   tls=smtp_server.smtp_tls, debug=False)
-            except Exception, error:
-                raise osv.except_osv(
-                                 _("SMTP Connection: Test failed"),
-                                 _("Reason: %s") % error )
+                   user_password=smtp_server.smtp_pass, encryption=smtp_server.smtp_encryption,
+                   debug=smtp_server.smtp_debug)
+            except Exception, e:
+                raise osv.except_osv(_("Connection test failed!"), _("Here is we got instead: %s") % e)
             finally:
                 try:
-                    if smtp:smtp.quit()
+                    if smtp: smtp.quit()
                 except Exception:
                     # ignored, just a consequence of the previous exception
                     pass
 
-        raise osv.except_osv(_("SMTP Connection: Test Successfully!"), '')
+        raise osv.except_osv(_("Connection test succeeded!"), _("Everything seems properly set up!"))
 
-    def connect_smtp_server(self, server_host, server_port, user_name=None,
-                        user_password=None, ssl=False, tls=False, debug=False):
+    def connect(self, host, port, user=None, password=None, encryption=False, debug=False):
+        """Returns a new SMTP connection to the give SMTP server, authenticated
+           with ``user`` and ``password`` if provided, and encrypted as requested
+           by the ``encryption`` parameter.
+        
+           :param host: host or IP of SMTP server to connect to
+           :param int port: SMTP port to connect to
+           :param user: optional username to authenticate with
+           :param password: optional password to authenticate with
+           :param string encryption: optional: ``'ssl'`` | ``'starttls'``
+           :param bool debug: toggle debugging of SMTP sessions (all i/o
+                              will be output in logs)
         """
-        Connect SMTP Server and returned the (SMTP) object
+        if encryption == 'ssl':
+            if not 'SMTP_SSL' in smtplib.__all__:
+                raise osv.except_osv(
+                             _("SMTP-over-SSL mode unavailable"),
+                             _("Your OpenERP Server does not support SMTP-over-SSL. You could use STARTTLS instead."
+                               "If SSL is needed, an upgrade to Python 2.6 on the server-side should do the trick."))
+            connection = smtplib.SMTP_SSL(host, port)
+        else:
+            connection = smtplib.SMTP(host, port)
+        connection.set_debuglevel(debug)
+        if encryption == 'starttls':
+            # starttls() will perform ehlo if needed first
+            connection.starttls()
+
+        # force load/refresh feature list
+        connection.ehlo()
+
+        if user:
+            # Attempt authentication - will raise if AUTH service not supported
+            connection.login(user, password)
+        return connection
+
+    def build_email(self, email_from, email_to, subject, body, email_cc=None, email_bcc=None, reply_to=False,
+               attachments=None, message_id=None, references=None, openobject_id=False, subtype='plain', headers=None):
+        """Constructs an email.message.Message object based on the keyword arguments passed, returns it.
+
+        :param body: email body, according to the ``subtype`` (by default, plaintext). If html subtype is used,
+                     the message will be automatically converted to plaintext and wrapped in multipart/alternative.
+        :param reply_to: optional value of Reply-To header
+        :param email_cc: optional list of string values for CC header (to be joined with commas)
+        :param email_bcc: optional list of string values for BCC header (to be joined with commas)
+        :param attachments: list of (filename,filecontent) pairs, where filecontent
         """
-        smtp_server = None
-        try:
-            if ssl:
-                # In Python 2.6
-                smtp_server = smtplib.SMTP_SSL(server_host, server_port)
-            else:
-                smtp_server = smtplib.SMTP(server_host, server_port)
+        email_from = email_from or tools.config.get('email_from')
+        assert email_from, "email_from is mandatory"
+        email_from = ustr(email_from).encode('utf-8') # force to 8-bit utf-8
 
-            smtp_server.set_debuglevel(int(bool(debug)))  # 0 or 1
-
-
-            if tls:
-                smtp_server.ehlo()
-                smtp_server.starttls()
-                smtp_server.ehlo()
-
-            #smtp_server.connect(server_host, server_port)
-
-            if smtp_server.has_extn('AUTH') or user_name or user_password:
-                smtp_server.login(user_name, user_password)
-
-
-        except Exception, error:
-            _logger.error('Could not connect to smtp server : %s' %(error), exc_info=True)
-            raise error
-        return smtp_server
-
-    def pack_message(self, cr, uid, email_from, email_to, subject, body, email_cc=None, email_bcc=None, reply_to=False,
-               attach=None, message_id=None, references=None, openobject_id=False, subtype='plain', x_headers=None, priority='3'):
-
-        """
-        Pack all message attributes into one object.
-        Return email.message.Message object after packed all email attribure.
-        """
-
-        if not (email_from or config.get('email_from', False)):
-            raise ValueError("Sending an email requires either providing a sender "
-                             "address or having configured one")
-        if not email_from: email_from = config.get('email_from', False)
-        email_from = tools.ustr(email_from).encode('utf-8')
-
-        if x_headers is None:
-            x_headers = {}
+        if headers is None:
+            headers = {}
 
         if not email_cc: email_cc = []
         if not email_bcc: email_bcc = []
@@ -192,13 +165,14 @@ When selected, change smtp_port to 465. \
         email_text = MIMEText(email_body or '', _subtype=subtype,_charset='utf-8')
         msg = MIMEMultipart()
 
-        if not message_id and openobject_id:
-            message_id = tools.generate_tracking_message_id(openobject_id)
-        else:
-            message_id = Utils.make_msgid()
+        if not message_id:
+            if openobject_id:
+                message_id = tools.generate_tracking_message_id(openobject_id)
+            else:
+                message_id = make_msgid()
+        msg['Message-Id'] = message_id
         if references:
             msg['references'] = references
-        msg['Message-Id'] = message_id
         msg['Subject'] = Header(ustr(subject), 'utf-8')
         msg['From'] = email_from
         del msg['Reply-To']
@@ -212,14 +186,12 @@ When selected, change smtp_port to 465. \
         if email_bcc:
             msg['Bcc'] = COMMASPACE.join(email_bcc)
         msg['Date'] = formatdate(localtime=True)
-
-        msg['X-Priority'] = priorities.get(priority, '3 (Normal)')
-
-        # Add dynamic X Header
+        # Custom headers may override normal headers or provide additional ones
         for key, value in x_headers.iteritems():
             msg['%s' % key] = str(value)
 
         if html2text and subtype == 'html':
+            # Always provide alternative text body if possible.
             text = tools.html2text(email_body.decode('utf-8')).encode('utf-8')
             alternative_part = MIMEMultipart(_subtype="alternative")
             alternative_part.attach(MIMEText(text, _charset='utf-8', _subtype='plain'))
@@ -228,30 +200,43 @@ When selected, change smtp_port to 465. \
         else:
             msg.attach(email_text)
 
-        if attach:
-            for (fname, fcontent) in attach:
+        if attachments:
+            for (fname, fcontent) in attachments:
                 part = MIMEBase('application', "octet-stream")
-                part.set_payload( fcontent )
+                part.set_payload(fcontent)
                 Encoders.encode_base64(part)
                 part.add_header('Content-Disposition', 'attachment; filename="%s"' % (fname,))
                 msg.attach(part)
         return msg
 
-    def send_email(self, cr, uid, message,
-           mail_server_id=None, smtp_server=None, smtp_port=None,
-           smtp_user=None, smtp_password=None, ssl=False, tls=True, debug=False):
+    def send_email(self, cr, uid, message, mail_server_id=None, smtp_server=None, smtp_port=None,
+                   smtp_user=None, smtp_password=None, smtp_encryption='none', smtp_debug=False):
+        """Sends an email directly (no queuing).
 
-        """Send an email.
-        @message : The Object of 'email.message.Message' Class
-        If the mail_server_id is provided, send using this mail server, ignoring other smtp_* arguments.
-        If mail_server_id == None and smtp_server == None, use the default mail server (highest priority).
-        If mail_server_id == None and smtp_server is not None, use the provided smtp_* arguments.
-        Return messageID of message if Successfully sent Email otherwise return False
+        No retries are done, the caller should handle MailDeliveryException in order to ensure that
+        the mail is never lost.
+
+        If the mail_server_id is provided, sends using this mail server, ignoring other smtp_* arguments.
+        If mail_server_id is None and smtp_server is None, use the default mail server (highest priority).
+        If mail_server_id is None and smtp_server is not None, use the provided smtp_* arguments.
+        If both mail_server_id and smtp_server are None, look for an 'smtp_server' value in server config,
+        and fails if not found.
+
+        :param message: the email.message.Message to send
+        :param mail_server_id: optional id of ir.mail_server to use for sending. overrides other smtp_* arguments.
+        :param smtp_server: optional hostname of SMTP server to use
+        :param smtp_encryption: one of 'none', 'starttls' or 'ssl' (see ir.mail_server fields for explanation)
+        :param smtp_port: optional SMTP port, if mail_server_id is not passed
+        :param smtp_user: optional SMTP user, if mail_server_id is not passed
+        :param smtp_password: optional SMTP password to use, if mail_server_id is not passed
+        :param smtp_debug: optional SMTP debug flag, if mail_server_id is not passed
+        :param debug: whether to turn on the SMTP level debugging, output to DEBUG log level
+        :return: the Message-ID of the message that was just sent, if successfully sent, otherwise raises
+                 MailDeliveryException and logs root cause.
         """
         smtp_from = message['From']
         if not smtp_from:
-            raise ValueError("Sending an email requires either providing a sender "
-                             "address or having configured one")
+            raise ValueError("Sending an email requires either providing a sender address or having configured one")
 
         email_to = message['To']
         email_cc = message['Cc']
@@ -259,31 +244,37 @@ When selected, change smtp_port to 465. \
         smtp_to_list = tools.flatten([email_to, email_cc, email_bcc])
 
         # Get SMTP Server Details from Mail Server
-        mail_server = False
+        mail_server = None
         if mail_server_id:
             mail_server = self.browse(cr, uid, mail_server_id)
-        elif not (mail_server_id and smtp_server):
-            mail_server_ids = self.search(cr, uid, [], order='priority', limit=1)
-            mail_server = self.browse(cr, uid, mail_server_ids[0])
+        elif not smtp_server:
+            mail_server_ids = self.search(cr, uid, [], order='sequence', limit=1)
+            if mail_server_ids:
+                mail_server = self.browse(cr, uid, mail_server_ids[0])
+        else:
+            # we were passed an explicit smtp_server or nothing at all
+            smtp_server = smtp_server or tools.config.get('smtp_server')
+            smtp_port = tools.config.get('smtp_port', 25) if smtp_port is None else smtp_port
+            smtp_user = smtp_user or tools.config.get('smtp_user')
+            smtp_password = smtp_password or tools.config.get('smtp_password')
+
         if mail_server:
             smtp_server = mail_server.smtp_host
             smtp_user = mail_server.smtp_user
             smtp_password = mail_server.smtp_pass
             smtp_port = mail_server.smtp_port
-            ssl = mail_server.smtp_ssl
-            tls = mail_server.smtp_tls
+            smtp_encryption = mail_server.smtp_encryption
+            smtp_debug = smtp_debug or mail_server.smtp_debug
 
-        class WriteToLogger(object):
-            def __init__(self):
-                self.logger = loglevels.Logger()
 
-            def write(self, s):
-                self.logger.notifyChannel('email_send', loglevels.LOG_DEBUG, s)
-
+        if not smtp_server:
+            raise osv.except_osv(
+                         _("Missing SMTP Server"),
+                         _("Please define at least one SMTP server, or provide the SMTP parameters explicitly."))
 
         try:
             message_id = message['Message-Id']
-            smtp_server = smtp_server or config.get('smtp_server')
+            smtp_server = smtp_server
 
             # Add email in Maildir if smtp_server contains maildir.
             if smtp_server.startswith('maildir:/'):
@@ -293,52 +284,35 @@ When selected, change smtp_port to 465. \
                 mdir.add(message.as_string(True))
                 return message_id
 
-            if debug:
-                oldstderr = smtplib.stderr
-                smtplib.stderr = WriteToLogger()
-
-            # Open Connection of SMTP Server
-            smtp = self.connect_smtp_server(
-                    smtp_server,
-                    smtp_port or config.get('smtp_port', 25),
-                    user_name=smtp_user or config.get('smtp_user', False),
-                    user_password=smtp_password or config.get('smtp_password', False),
-                    ssl=ssl or config.get('smtp_ssl', False),
-                    tls=tls, debug=debug)
             try:
-                # Send Email
+                if smtp_debug:
+                    oldstderr = smtplib.stderr
+                    smtplib.stderr = WriteToLogger(_logger)
+                smtp = self.connect(smtp_server, smtp_port, smtp_user, smtp_password, smtp_encryption, smtp_debug)
                 smtp.sendmail(smtp_from, smtp_to_list, message.as_string())
-            except Exception:
-                _logger.error('could not deliver Email(s)', exc_info=True)
-                return False
             finally:
+                if debug:
+                    smtplib.stderr = oldstderr
                 try:
                     # Close Connection of SMTP Server
                     smtp.quit()
                 except Exception:
                     # ignored, just a consequence of the previous exception
                     pass
-
-            if debug:
-                smtplib.stderr = oldstderr
-        except Exception:
-            _logger.error('Error on Send Emails Services', exc_info=True)
-
+        except Exception, e:
+            msg = _("Mail delivery failed via SMTP server '%s'.\n%s: %s") % (smtp_server, e.__class__.__name__, e)
+            _logger.exception(msg)
+            raise MailDeliveryException(_("Mail delivery failed"), msg)
         return message_id
 
-    def on_change_ssl(self, cr, uid, ids, smtp_ssl):
-        smtp_port = 0
-        if smtp_ssl:
-            smtp_port = 465
-        return {'value': {'smtp_ssl':smtp_ssl, 'smtp_tls':False, 'smtp_port':smtp_port}}
-
-    def on_change_tls(self, cr, uid, ids, smtp_tls):
-        smtp_port = 0
-        if smtp_tls:
-            smtp_port = 0
-        return {'value': {'smtp_tls':smtp_tls, 'smtp_ssl':False, 'smtp_port':smtp_port}}
-
-
-ir_mail_server()
+    def on_change_encryption(self, cr, uid, ids, smtp_encryption):
+        if smtp_encryption == 'ssl':
+            result = {'value': {'smtp_port': 465}}
+            if not 'SMTP_SSL' in smtplib.__all__:
+                result['warning'] = {'title': _('Warning'),
+                                     'message': _('Your server does not seem to support SSL, you may want to try STARTTLS instead')}
+        else:
+            result = {'value': {'smtp_port': 25}}
+        return result
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
