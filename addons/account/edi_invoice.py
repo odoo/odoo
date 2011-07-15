@@ -39,6 +39,7 @@ class account_invoice(osv.osv, ir_edi.edi):
                 'amount_untaxed': True,
                 'amount_tax': True,
                 'amount_total': True,
+                'reconciled': True,
                 'date_invoice': True,
                 'date_due': True,
                 'partner_id': True,
