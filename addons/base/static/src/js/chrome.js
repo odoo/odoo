@@ -58,7 +58,7 @@ openerp.base.callback = function(obj, method) {
  *
  * @class
  */
-openerp.base.NotFound = Class.extend( /** @lends openerp.base.NotFound# */ {
+openerp.base.NotFound = openerp.base.Class.extend( /** @lends openerp.base.NotFound# */ {
 });
 openerp.base.KeyNotFound = openerp.base.NotFound.extend( /** @lends openerp.base.KeyNotFound# */ {
     /**
@@ -91,7 +91,7 @@ openerp.base.ObjectNotFound = openerp.base.NotFound.extend( /** @lends openerp.b
         return "Could not find any object of path " + this.path;
     }
 });
-openerp.base.Registry = Class.extend( /** @lends openerp.base.Registry# */ {
+openerp.base.Registry = openerp.base.Class.extend( /** @lends openerp.base.Registry# */ {
     /**
      * Stores a mapping of arbitrary key (strings) to object paths (as strings
      * as well).
@@ -185,7 +185,7 @@ openerp.base.Registry = Class.extend( /** @lends openerp.base.Registry# */ {
     }
 });
 
-openerp.base.BasicController = Class.extend( /** @lends openerp.base.BasicController# */{
+openerp.base.BasicController = openerp.base.Class.extend( /** @lends openerp.base.BasicController# */{
     /**
      * rpc operations, event binding and callback calling should be done in
      * start() instead of init so that event can be hooked in between.

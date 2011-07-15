@@ -301,7 +301,7 @@ openerp.base.search.fields = new openerp.base.Registry({
     'many2one': 'openerp.base.search.ManyToOneField',
     'many2many': 'openerp.base.search.ManyToManyField'
 });
-openerp.base.search.Invalid = Class.extend(
+openerp.base.search.Invalid = openerp.base.Class.extend(
     /** @lends openerp.base.search.Invalid# */{
     /**
      * Exception thrown by search widgets when they hold invalid values,
