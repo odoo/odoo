@@ -663,6 +663,10 @@ openerp.base.search.DateField = openerp.base.search.Field.extend(
     get_values: function () {
         var values_array = this.$element.find('input').serializeArray();
 
+        if (!values_array || !values_array[0]) {
+            throw new openerp.base.search.Invalid(
+                this.attrs.name, null, "widget not ready");
+        }
         var from = values_array[0].value;
         var to = values_array[1].value;
 
