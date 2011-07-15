@@ -246,7 +246,7 @@ init: function(view_manager, session, element_id, dataset, view_id) {
             for (i in all_events){
                 res = all_events[i];
                 if ((typeof(res['evt'][3])) == "object"){
-                    res['evt'][3] = self.hours_between(res['evt'][2],res['evt'][3]);
+                    res['evt'][3] = self.hours_between(res['evt'][2],res['evt'][3], true);
                 }
 
                 k = res['evt'][0].toString().indexOf('_');
@@ -356,14 +356,14 @@ init: function(view_manager, session, element_id, dataset, view_id) {
          return dat;
     },
 
-    hours_between: function(date1, date2) {
+    hours_between: function(date1, date2, parent_task) {
 
         var ONE_DAY = 1000 * 60 * 60 * 24;
         var date1_ms = date1.getTime();
         var date2_ms = date2.getTime();
         var difference_ms = Math.abs(date1_ms - date2_ms);
 
-        d = Math.floor(difference_ms / ONE_DAY);
+        d = parent_task? Math.ceil(difference_ms / ONE_DAY) : Math.floor(difference_ms / ONE_DAY);
         h = (difference_ms % ONE_DAY)/(1000 * 60 * 60);
         num = (d * this.day_length) + h;
         return parseFloat(num.toFixed(2));
