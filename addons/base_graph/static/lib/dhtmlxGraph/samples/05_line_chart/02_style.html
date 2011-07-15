@@ -1,0 +1,153 @@
+<!--conf
+<sample>
+              <product version="2.6" edition="std"/>
+                     <modifications>
+                            <modified date="100609"/>
+                     </modifications>
+               </sample>
+ -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+	<title>Style definition</title>
+	<script src="../../codebase/dhtmlxchart.js" type="text/javascript"></script>
+	<link rel="STYLESHEET" type="text/css" href="../../codebase/dhtmlxchart.css">
+	<script>
+	window.onload = function(){
+	var data = [
+		{ sales:"3.0", year:"2000" },
+		{ sales:"3.8", year:"2001" },
+		{ sales:"3.4", year:"2002" },
+		{ sales:"4.1", year:"2003" },
+		{ sales:"4.3", year:"2004" },
+		{ sales:"9.9", year:"2005" },
+		{ sales:"7.4", year:"2006" },
+		{ sales:"9.0", year:"2007" },
+		{ sales:"7.3", year:"2008" },
+		{ sales:"4.8", year:"2009" }
+	];
+	
+	var chart1 =  new dhtmlXChart({
+		view:"line",
+		container:"chart1",
+	    value:"#sales#",
+		label:"#year#",
+		tooltip:{
+			template:"#sales#"
+		},
+		item:{
+			borderColor: "#ffffff",
+			color: "#000000"
+		},
+		line:{
+			color:"#ff9900",
+			width:3
+		}
+	})
+	chart1.parse(data,"json");
+	
+	var chart2 =  new dhtmlXChart({
+		view:"line",
+		container:"chart2",
+	    value:"#sales#",
+		label:"#year#",
+		tooltip:{
+			template:"#sales#"
+		},
+		item:{
+			borderColor: "#3399ff",
+			color: "#ffffff"
+		},
+		line:{
+			color:"#3399ff",
+			width:3
+		}
+	})
+	chart2.parse(data,"json");
+	
+	var data2 = [
+		{ sales:"1.2", year:"2000" },
+		{ sales:"2.4", year:"2001" },
+		{ sales:"3.4", year:"2002" },
+		{ sales:"4.1", year:"2003" },
+		{ sales:"4.3", year:"2004" },
+		{ sales:"5.9", year:"2005" },
+		{ sales:"6.5", year:"2006" },
+		{ sales:"6.1", year:"2007" },
+		{ sales:"6.0", year:"2008" },
+		{ sales:"6.2", year:"2009" }
+	];
+	var chart3 =  new dhtmlXChart({
+		view:"line",
+		container:"chart3",
+	    value:"#sales#",
+		item:{
+			radius:0
+		},
+		line:{
+			color:"#b25151",
+			width:3
+		},
+		xAxis:{
+			title:"Years",
+			template:"#year#",
+			lines:true
+		},
+		yAxis:{
+			start: 0,
+			end: 10,
+			step: 1,
+			title:"Sales, mil"
+		},
+		tooltip:{
+			template:"#year#"
+		}
+	})
+	chart3.parse(data2,"json");
+	
+	var chart4 =  new dhtmlXChart({
+		view:"line",
+		container:"chart4",
+	    value:"#sales#",
+		item:{
+			borderColor: "#000000",
+			color: "#ffffff",
+			borderWidth:1,
+			radius:3
+		},
+		line:{
+			color:"#3399ff",
+			width:3
+		},
+		xAxis:{
+			title:"Years",
+			template:"#year#"
+		},
+		yAxis:{
+			start: 0,
+			end: 10,
+			step: 1,
+			title:"Sales, mil",
+			lines:false
+		},
+		tooltip:{
+			template:"#year#"
+		}
+	})
+	chart4.parse(data2,"json");
+	}
+	</script>
+</head>
+<body >
+	<table>
+		<tr>
+			<td><div id="chart1" style="width:450px;height:300px;border:1px solid #A4BED4;"></div></td>
+			<td><div id="chart2" style="width:450px;height:300px;border:1px solid #A4BED4;"></div></td>
+		</tr>
+		<tr>
+			<td><div id="chart3" style="width:450px;height:300px;border:1px solid #A4BED4;"></div></td>
+			<td><div id="chart4" style="width:450px;height:300px;border:1px solid #A4BED4;"></div></td>
+		</tr>
+	</table>
+</body>
+</html>

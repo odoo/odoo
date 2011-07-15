@@ -477,7 +477,7 @@ init: function(view_manager, session, element_id, dataset, view_id) {
         }, function (results) {
             self.dataset.context = results.context;
             self.dataset.domain = results.domain;
-            return self.reload_gantt();
+            self.reload_gantt();
         });
     }
 

@@ -11,8 +11,8 @@ openerp.base.callback = function(obj, method) {
         for(var i = 0; i < callback.callback_chain.length; i++)  {
             var c = callback.callback_chain[i];
             if(c.unique) {
-                // al: obscure but shortening C-style hack, sorry
-                callback.callback_chain.pop(i--);
+                callback.callback_chain.splice(i, 1);
+                i -= 1;
             }
             r = c.callback.apply(c.self, c.args.concat(args));
             // TODO special value to stop the chain
@@ -284,13 +284,12 @@ openerp.base.generate_null_object_class = function(claz, add) {
         }
         if (prototype.prototype)
             copy_proto(prototype.prototype);
-    }
+    };
     copy_proto(claz.prototype);
-    var init = openerp.base.BasicController.prototype.init;
-    newer.init = init;
+    newer.init = openerp.base.BasicController.prototype.init;
     var tmpclass = claz.extend(newer);
     return tmpclass.extend(add || {});
-}
+};
 
 openerp.base.Notification =  openerp.base.BasicController.extend({
     init: function(element_id) {
@@ -354,27 +353,33 @@ openerp.base.Session = openerp.base.BasicController.extend( /** @lends openerp.b
      * @returns {jQuery.Deferred} jquery-provided ajax deferred
      */
     rpc: function(url, params, success_callback, error_callback) {
+        var self = this;
         // Construct a JSON-RPC2 request, method is currently unused
         params.session_id = this.session_id;
-        params.context = typeof(params.context) != "undefined" ? params.context  : this.context;
-
-        // Use a default error handler unless defined
-        error_callback = typeof(error_callback) != "undefined" ? error_callback : this.on_rpc_error;
 
         // Call using the rpc_mode
-        return this.rpc_ajax(url, {
+        var deferred = $.Deferred();
+        this.rpc_ajax(url, {
             jsonrpc: "2.0",
             method: "call",
             params: params,
             id:null
-        }, success_callback, error_callback);
+        }).then(function () {deferred.resolve.apply(deferred, arguments);},
+                function(error) {deferred.reject(error, $.Event());});
+        return deferred.fail(function() {
+            deferred.fail(function(error, event) {
+                if (!event.isDefaultPrevented()) {
+                    self.on_rpc_error(error, event);
+                }
+            });
+        }).then(success_callback, error_callback).promise();
     },
     /**
      * Raw JSON-RPC call
      *
      * @returns {jQuery.Deferred} ajax-based deferred object
      */
-    rpc_ajax: function(url, payload, success_callback, error_callback) {
+    rpc_ajax: function(url, payload) {
         var self = this;
         this.on_rpc_request();
         // url can be an $.ajax option object
@@ -389,33 +394,40 @@ openerp.base.Session = openerp.base.BasicController.extend( /** @lends openerp.b
             dataType: 'json',
             contentType: 'application/json',
             data: JSON.stringify(payload),
-            processData: false,
-            success: function(response, textStatus, jqXHR) {
-                self.on_rpc_response();
-                if (response.error) {
-                    if (response.error.data.type == "session_invalid") {
-                        self.uid = false;
-                        self.on_session_invalid(function() {
-                            self.rpc(url, payload.params, success_callback, error_callback);
-                        });
-                    } else {
-                        error_callback(response.error);
-                    }
-                } else if (success_callback) {
-                    success_callback(response["result"], textStatus, jqXHR);
-                }
-            },
-            error: function(jqXHR, textStatus, errorThrown) {
-                self.on_rpc_response();
-                var error = {
-                    code: -32098,
-                    message: "XmlHttpRequestError " + errorThrown,
-                    data: {type: "xhr"+textStatus, debug: jqXHR.responseText, objects: [jqXHR, errorThrown] }
-                };
-                error_callback(error);
-            }
+            processData: false
         }, url);
-        return $.ajax(ajax);
+        var deferred = $.Deferred();
+        $.ajax(ajax).done(function(response, textStatus, jqXHR) {
+            self.on_rpc_response();
+            if (!response.error) {
+                deferred.resolve(response["result"], textStatus, jqXHR);
+                return;
+            }
+            if (response.error.data.type !== "session_invalid") {
+                deferred.reject(response.error);
+                return;
+            }
+            self.uid = false;
+            self.on_session_invalid(function() {
+                self.rpc(url, payload.params,
+                    function() {
+                        deferred.resolve.apply(deferred, arguments);
+                    },
+                    function(error, event) {
+                        event.preventDefault();
+                        deferred.reject.apply(deferred, arguments);
+                    });
+            });
+        }).fail(function(jqXHR, textStatus, errorThrown) {
+            self.on_rpc_response();
+            var error = {
+                code: -32098,
+                message: "XmlHttpRequestError " + errorThrown,
+                data: {type: "xhr"+textStatus, debug: jqXHR.responseText, objects: [jqXHR, errorThrown] }
+            };
+            deferred.reject(error);
+        });
+        return deferred.promise();
     },
     on_rpc_request: function() {
     },
@@ -580,7 +592,7 @@ openerp.base.Controller = openerp.base.BasicController.extend( /** @lends opener
      */
     controller_get: function(key) {
         return this.controller_registry[key];
-        // OR should contrustct it ? setting parent correctly ?
+        // OR should build it ? setting parent correctly ?
         // function construct(constructor, args) {
         //     function F() {
         //         return constructor.apply(this, args);
@@ -640,7 +652,7 @@ openerp.base.Controller = openerp.base.BasicController.extend( /** @lends opener
             }
             // TODO if post prefix
             //this.element_id = _.uniqueId(_.toArray(arguments).join('_'));
-        };
+        }
     },
     /**
      * Performs a JSON-RPC call
@@ -837,6 +849,7 @@ openerp.base.Dialog = openerp.base.BaseWidget.extend({
         this.$dialog.dialog('close');
     },
     stop: function () {
+        this.close();
         this.$dialog.dialog('destroy');
     }
 });
@@ -903,23 +916,25 @@ openerp.base.Database = openerp.base.Controller.extend({
 });
 
 openerp.base.Login =  openerp.base.Controller.extend({
+    remember_creditentials: true,
     init: function(session, element_id) {
         this._super(session, element_id);
         this.has_local_storage = typeof(localStorage) != 'undefined';
         this.selected_db = null;
         this.selected_login = null;
-        this.selected_password = null;
-        this.remember = false;
-        if (this.has_local_storage && localStorage.getItem('remember_creditentials') === 'true') {
-            this.remember = true;
+        if (this.has_local_storage && this.remember_creditentials) {
             this.selected_db = localStorage.getItem('last_db_login_success');
             this.selected_login = localStorage.getItem('last_login_login_success');
-            this.selected_password = localStorage.getItem('last_password_login_success');
+        }
+        if (jQuery.deparam(jQuery.param.querystring()).debug != undefined) {
+            this.selected_db = this.selected_db || "trunk";
+            this.selected_login = this.selected_login || "admin";
+            this.selected_password = this.selected_password || "a";
         }
     },
     start: function() {
         var self = this;
-        this.rpc("/base/session/get_databases_list", {}, function(result) {
+        this.rpc("/base/database/get_databases_list", {}, function(result) {
             self.db_list = result.db_list;
             self.display();
         }, function() {
@@ -943,22 +958,17 @@ openerp.base.Login =  openerp.base.Controller.extend({
         var db = $e.find("form [name=db]").val();
         var login = $e.find("form input[name=login]").val();
         var password = $e.find("form input[name=password]").val();
-        var remember = $e.find("form input[name=remember]").attr('checked');
         //$e.hide();
         // Should hide then call callback
         this.session.session_login(db, login, password, function() {
             if(self.session.session_is_valid()) {
                 if (self.has_local_storage) {
-                    if(remember) {
-                        localStorage.setItem('remember_creditentials', 'true');
+                    if(self.remember_creditentials) {
                         localStorage.setItem('last_db_login_success', db);
                         localStorage.setItem('last_login_login_success', login);
-                        localStorage.setItem('last_password_login_success', password);
                     } else {
-                        localStorage.setItem('remember_creditentials', '');
                         localStorage.setItem('last_db_login_success', '');
                         localStorage.setItem('last_login_login_success', '');
-                        localStorage.setItem('last_password_login_success', '');
                     }
                 }
                 self.on_login_valid();

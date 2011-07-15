@@ -577,6 +577,10 @@ background: linear-gradient(top, #ffffff 0%,#d8d8d8 11%,#afafaf 86%,#333333 91%,
     display: none;
 }
 
+.openerp .searchview_extended_delete_prop {
+    text-decoration: none;
+}
+
 .openerp .searchview_extended_delete_group span,
 .openerp .searchview_extended_delete_prop span {
     font-size: 0.9em;
@@ -606,9 +610,16 @@ background: linear-gradient(top, #ffffff 0%,#d8d8d8 11%,#afafaf 86%,#333333 91%,
     vertical-align: middle;
     text-align: left;
 }
-.openerp .oe-listview th.oe-sortable,
-.openerp .oe-listview th.oe-sortable .ui-icon {
+.openerp .oe-listview td.oe-record-delete {
+    text-align: right;
+}
+.openerp .oe-listview th.oe-sortable {
     cursor: pointer;
+}
+.openerp .oe-listview th.oe-sortable .ui-icon {
+    height: 1em;
+    display: inline;
+    display: inline-block;
 }
 
 .openerp .oe-listview .oe-field-cell {
@@ -635,6 +646,17 @@ background: linear-gradient(top, #ffffff 0%,#d8d8d8 11%,#afafaf 86%,#333333 91%,
 }
 .openerp .oe-listview th.oe-list-pager {
     text-align: right;
+}
+.openerp .oe-list-pager .oe-pager-state {
+    cursor: pointer;
+}
+
+.openerp .oe-listview .oe-group-name {
+    padding-right: 1em;
+}
+.openerp .oe-listview .oe-group-name,
+.openerp .oe-listview .oe-group-pagination {
+    white-space: nowrap;
 }
 
 .openerp .oe-listview tfoot td {
@@ -773,13 +795,14 @@ background: linear-gradient(top, #ffffff 0%,#d8d8d8 11%,#afafaf 86%,#333333 91%,
     position: relative;
     vertical-align: top;
 }
-.openerp input.field_date, .openerp input.field_datetime {
-    background: #fff url('../img/ui/field_calendar.png') no-repeat right center;
-    background-origin: content-box;
-    -moz-background-origin: content;
-    -moz-background-origin: content-box;
-    -webkit-background-origin: content-box;
+.openerp img.ui-datepicker-trigger, .openerp img.ui-datepicker-trigger {
+    margin-left: -20px;
+    vertical-align: middle;
+    cursor: pointer;
+    position: relative;
+    top: -1px;
 }
+
 /* http://www.quirksmode.org/dom/inputfile.html
  * http://stackoverflow.com/questions/2855589/replace-input-type-file-by-an-image
  */

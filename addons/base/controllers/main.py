@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
-import base64
-import glob, os
-import pprint
+import base64, glob, os, re
 from xml.etree import ElementTree
 from cStringIO import StringIO
 
@@ -56,6 +54,20 @@ class Xml2Json:
 # OpenERP Web base Controllers
 #----------------------------------------------------------
 
+class Database(openerpweb.Controller):
+    _cp_path = "/base/database"
+
+    @openerpweb.jsonrequest
+    def get_databases_list(self, req):
+        proxy = req.session.proxy("db")
+        dbs = proxy.list()
+        h = req.httprequest.headers['Host'].split(':')[0]
+        d = h.split('.')[0]
+        r = cherrypy.config['openerp.dbfilter'].replace('%h',h).replace('%d',d)
+        print "h,d",h,d,r
+        dbs = [i for i in dbs if re.match(r,i)]
+        return {"db_list": dbs}
+
 class Session(openerpweb.Controller):
     _cp_path = "/base/session"
 
@@ -105,13 +117,6 @@ class Session(openerpweb.Controller):
                                                          req.session.eval_context(req.context))
 
     @openerpweb.jsonrequest
-    def get_databases_list(self, req):
-        proxy = req.session.proxy("db")
-        dbs = proxy.list()
-        
-        return {"db_list": dbs}
-
-    @openerpweb.jsonrequest
     def modules(self, req):
         return {"modules": [name
             for name, manifest in openerpweb.addons_manifest.iteritems()
@@ -125,14 +130,14 @@ class Session(openerpweb.Controller):
     def jslist(self, req, mods='base'):
         return {'files': self.manifest_glob(mods.split(','), 'js')}
 
-    def css(self, req, mods='base,base_hello'):
+    def css(self, req, mods='base'):
         files = self.manifest_glob(mods.split(','), 'css')
         concat = self.concat_files(files)[0]
         # TODO request set the Date of last modif and Etag
         return concat
     css.exposed = True
 
-    def js(self, req, mods='base,base_hello'):
+    def js(self, req, mods='base'):
         files = self.manifest_glob(mods.split(','), 'js')
         concat = self.concat_files(files)[0]
         # TODO request set the Date of last modif and Etag
@@ -171,8 +176,9 @@ class Session(openerpweb.Controller):
                 a list of fields to group by, potentially empty (in which case
                 no group by should be performed)
         """
-        context = req.session.eval_context(openerpweb.nonliterals.CompoundContext(*contexts))
-        domain = req.session.eval_domain(openerpweb.nonliterals.CompoundDomain(*(domains or [])), context)
+        context, domain = eval_context_and_domain(req.session,
+                                                  openerpweb.nonliterals.CompoundContext(*(contexts or [])),
+                                                  openerpweb.nonliterals.CompoundDomain(*(domains or [])))
         
         group_by_sequence = []
         for candidate in (group_by_seq or []):
@@ -230,39 +236,76 @@ class Session(openerpweb.Controller):
         if not saved_actions:
             return None
         return saved_actions["actions"].get(key)
-        
+
 def eval_context_and_domain(session, context, domain=None):
     e_context = session.eval_context(context)
-    e_domain = session.eval_domain(domain or [], e_context)
+    # should we give the evaluated context as an evaluation context to the domain?
+    e_domain = session.eval_domain(domain or [])
 
-    return (e_context, e_domain)
-        
+    return e_context, e_domain
+
 def load_actions_from_ir_values(req, key, key2, models, meta, context):
-    context['bin_size'] = False # Possible upstream bug. Antony says not to loose time on this.
     Values = req.session.model('ir.values')
     actions = Values.get(key, key2, models, meta, context)
 
-    for _, _, action in actions:
-        clean_action(action, req.session)
-
-    return actions
+    return [(id, name, clean_action(action, req.session))
+            for id, name, action in actions]
 
 def clean_action(action, session):
+    if action['type'] != 'ir.actions.act_window':
+        return action
     # values come from the server, we can just eval them
-    if isinstance(action['context'], basestring):
+    if isinstance(action.get('context', None), basestring):
         action['context'] = eval(
             action['context'],
             session.evaluation_context()) or {}
 
-    if isinstance(action['domain'], basestring):
+    if isinstance(action.get('domain', None), basestring):
         action['domain'] = eval(
             action['domain'],
             session.evaluation_context(
                 action['context'])) or []
-    if not action.has_key('flags'):
+    if 'flags' not in action:
         # Set empty flags dictionary for web client.
         action['flags'] = dict()
     return fix_view_modes(action)
+
+def generate_views(action):
+    """
+    While the server generates a sequence called "views" computing dependencies
+    between a bunch of stuff for views coming directly from the database
+    (the ``ir.actions.act_window model``), it's also possible for e.g. buttons
+    to return custom view dictionaries generated on the fly.
+
+    In that case, there is no ``views`` key available on the action.
+
+    Since the web client relies on ``action['views']``, generate it here from
+    ``view_mode`` and ``view_id``.
+
+    Currently handles two different cases:
+
+    * no view_id, multiple view_mode
+    * single view_id, single view_mode
+
+    :param dict action: action descriptor dictionary to generate a views key for
+    """
+    view_id = action.get('view_id', False)
+    if isinstance(view_id, (list, tuple)):
+        view_id = view_id[0]
+
+    # providing at least one view mode is a requirement, not an option
+    view_modes = action['view_mode'].split(',')
+
+    if len(view_modes) > 1:
+        if view_id:
+            raise ValueError('Non-db action dictionaries should provide '
+                             'either multiple view modes or a single view '
+                             'mode and an optional view id.\n\n Got view '
+                             'modes %r and view id %r for action %r' % (
+                view_modes, view_id, action))
+        action['views'] = [(False, mode) for mode in view_modes]
+        return
+    action['views'] = [(view_id, view_modes[0])]
 
 def fix_view_modes(action):
     """ For historical reasons, OpenERP has weird dealings in relation to
@@ -282,16 +325,17 @@ def fix_view_modes(action):
     :param dict action: an action descriptor
     :returns: nothing, the action is modified in place
     """
-    if action.pop('view_type') != 'form':
-        return
+    if 'views' not in action:
+        generate_views(action)
 
-    action['view_mode'] = ','.join(
-        mode if mode != 'tree' else 'list'
-        for mode in action['view_mode'].split(','))
+    if action.pop('view_type') != 'form':
+        return action
+
     action['views'] = [
         [id, mode if mode != 'tree' else 'list']
         for id, mode in action['views']
     ]
+
     return action
 
 class Menu(openerpweb.Controller):
@@ -352,9 +396,10 @@ class DataSet(openerpweb.Controller):
                                                               req.session.eval_context(req.context))}
 
     @openerpweb.jsonrequest
-    def search_read(self, request, model, fields=False, offset=0, limit=False, domain=None, context=None, sort=None):
-        return self.do_search_read(request, model, fields, offset, limit, domain, context, sort)
-    def do_search_read(self, request, model, fields=False, offset=0, limit=False, domain=None, context=None, sort=None):
+    def search_read(self, request, model, fields=False, offset=0, limit=False, domain=None, sort=None):
+        return self.do_search_read(request, model, fields, offset, limit, domain, sort)
+    def do_search_read(self, request, model, fields=False, offset=0, limit=False, domain=None
+                       , sort=None):
         """ Performs a search() followed by a read() (if needed) using the
         provided search criteria
 
@@ -367,22 +412,33 @@ class DataSet(openerpweb.Controller):
         :param int limit: the maximum number of records to return
         :param list domain: the search domain for the query
         :param list sort: sorting directives
-        :returns: a list of result records
+        :returns: A structure (dict) with two keys: ids (all the ids matching
+                  the (domain, context) pair) and records (paginated records
+                  matching fields selection set)
         :rtype: list
         """
         Model = request.session.model(model)
-        context, domain = eval_context_and_domain(request.session, request.context, domain)
-        
-        ids = Model.search(domain, offset or 0, limit or False,
-                           sort or False, context)
+        context, domain = eval_context_and_domain(
+            request.session, request.context, domain)
 
+        ids = Model.search(domain, 0, False, sort or False, context)
+        # need to fill the dataset with all ids for the (domain, context) pair,
+        # so search un-paginated and paginate manually before reading
+        paginated_ids = ids[offset:(offset + limit if limit else None)]
         if fields and fields == ['id']:
             # shortcut read if we only want the ids
-            return map(lambda id: {'id': id}, ids)
+            return {
+                'ids': ids,
+                'records': map(lambda id: {'id': id}, paginated_ids)
+            }
 
-        reads = Model.read(ids, fields or False, context)
-        reads.sort(key=lambda obj: ids.index(obj['id']))
-        return reads
+        records = Model.read(paginated_ids, fields or False, context)
+        records.sort(key=lambda obj: ids.index(obj['id']))
+        return {
+            'ids': ids,
+            'records': records
+        }
+
 
     @openerpweb.jsonrequest
     def get(self, request, model, ids, fields=False):
@@ -435,23 +491,31 @@ class DataSet(openerpweb.Controller):
         return {'result': r}
 
     @openerpweb.jsonrequest
-    def unlink(self, request, model, ids=[]):
+    def unlink(self, request, model, ids=()):
         Model = request.session.model(model)
         return Model.unlink(ids, request.session.eval_context(request.context))
 
-    @openerpweb.jsonrequest
-    def call(self, req, model, method, args, domain_id=None, context_id=None):
+    def call_common(self, req, model, method, args, domain_id=None, context_id=None):
         domain = args[domain_id] if domain_id and len(args) - 1 >= domain_id  else []
         context = args[context_id] if context_id and len(args) - 1 >= context_id  else {}
-        c, d = eval_context_and_domain(req.session, context, domain);
-        if(domain_id and len(args) - 1 >= domain_id):
+        c, d = eval_context_and_domain(req.session, context, domain)
+        if domain_id and len(args) - 1 >= domain_id:
             args[domain_id] = d
-        if(context_id and len(args) - 1 >= context_id):
+        if context_id and len(args) - 1 >= context_id:
             args[context_id] = c
-        
-        m = req.session.model(model)
-        r = getattr(m, method)(*args)
-        return {'result': r}
+
+        return getattr(req.session.model(model), method)(*args)
+
+    @openerpweb.jsonrequest
+    def call(self, req, model, method, args, domain_id=None, context_id=None):
+        return self.call_common(req, model, method, args, domain_id, context_id)
+
+    @openerpweb.jsonrequest
+    def call_button(self, req, model, method, args, domain_id=None, context_id=None):
+        action = self.call_common(req, model, method, args, domain_id, context_id)
+        if isinstance(action, dict) and action.get('type') != '':
+            return {'result': clean_action(action, req.session)}
+        return {'result': False}
 
     @openerpweb.jsonrequest
     def exec_workflow(self, req, model, id, signal):
@@ -460,20 +524,19 @@ class DataSet(openerpweb.Controller):
 
     @openerpweb.jsonrequest
     def default_get(self, req, model, fields):
-        m = req.session.model(model)
-        r = m.default_get(fields, req.session.eval_context(req.context))
-        return {'result': r}
+        Model = req.session.model(model)
+        return Model.default_get(fields, req.session.eval_context(req.context))
 
 class DataGroup(openerpweb.Controller):
     _cp_path = "/base/group"
     @openerpweb.jsonrequest
-    def read(self, request, model, group_by_fields, domain=None):
+    def read(self, request, model, fields, group_by_fields, domain=None, sort=None):
         Model = request.session.model(model)
         context, domain = eval_context_and_domain(request.session, request.context, domain)
 
         return Model.read_group(
-            domain or [], False, group_by_fields, 0, False,
-            dict(context, group_by=group_by_fields))
+            domain or [], fields, group_by_fields, 0, False,
+            dict(context, group_by=group_by_fields), sort or False)
 
 class View(openerpweb.Controller):
     _cp_path = "/base/view"
@@ -486,18 +549,35 @@ class View(openerpweb.Controller):
         # todo fme?: check that we should pass the evaluated context here
         self.process_view(request.session, fvg, context, transform)
         return fvg
-    
+
     def process_view(self, session, fvg, context, transform):
+        # depending on how it feels, xmlrpclib.ServerProxy can translate
+        # XML-RPC strings to ``str`` or ``unicode``. ElementTree does not
+        # enjoy unicode strings which can not be trivially converted to
+        # strings, and it blows up during parsing.
+
+        # So ensure we fix this retardation by converting view xml back to
+        # bit strings.
+        if isinstance(fvg['arch'], unicode):
+            arch = fvg['arch'].encode('utf-8')
+        else:
+            arch = fvg['arch']
+
         if transform:
             evaluation_context = session.evaluation_context(context or {})
-            xml = self.transform_view(fvg['arch'], session, evaluation_context)
+            xml = self.transform_view(arch, session, evaluation_context)
         else:
-            xml = ElementTree.fromstring(fvg['arch'])
+            xml = ElementTree.fromstring(arch)
         fvg['arch'] = Xml2Json.convert_element(xml)
-        for field in fvg['fields'].values():
-            if field.has_key('views') and field['views']:
-                for view in field["views"].values():
+
+        for field in fvg['fields'].itervalues():
+            if field.get('views'):
+                for view in field["views"].itervalues():
                     self.process_view(session, view, None, transform)
+            if field.get('domain'):
+                field["domain"] = self.parse_domain(field["domain"], session)
+            if field.get('context'):
+                field["context"] = self.parse_context(field["context"], session)
 
     @openerpweb.jsonrequest
     def add_custom(self, request, view_id, arch):
@@ -523,36 +603,6 @@ class View(openerpweb.Controller):
             return {'result': True}
         return {'result': False}
 
-    def normalize_attrs(self, elem, context):
-        """ Normalize @attrs, @invisible, @required, @readonly and @states, so
-        the client only has to deal with @attrs.
-
-        See `the discoveries pad <http://pad.openerp.com/discoveries>`_ for
-        the rationale.
-
-        :param elem: the current view node (Python object)
-        :type elem: xml.etree.ElementTree.Element
-        :param dict context: evaluation context
-        """
-        # If @attrs is normalized in json by server, the eval should be replaced by simplejson.loads
-        attrs = openerpweb.ast.literal_eval(elem.get('attrs', '{}'))
-        if 'states' in elem.attrib:
-            attrs.setdefault('invisible', [])\
-                .append(('state', 'not in', elem.attrib.pop('states').split(',')))
-        if attrs:
-            elem.set('attrs', simplejson.dumps(attrs))
-        for a in ['invisible', 'readonly', 'required']:
-            if a in elem.attrib:
-                # In the XML we trust
-                avalue = bool(eval(elem.get(a, 'False'),
-                                   {'context': context or {}}))
-                if not avalue:
-                    del elem.attrib[a]
-                else:
-                    elem.attrib[a] = '1'
-                    if a == 'invisible' and 'attrs' in elem.attrib:
-                        del elem.attrib['attrs']
-
     def transform_view(self, view_string, session, context=None):
         # transform nodes on the fly via iterparse, instead of
         # doing it statically on the parsing result
@@ -562,31 +612,41 @@ class View(openerpweb.Controller):
             if event == "start":
                 if root is None:
                     root = elem
-                self.normalize_attrs(elem, context)
                 self.parse_domains_and_contexts(elem, session)
         return root
 
-    def parse_domain(self, elem, attr_name, session):
-        """ Parses an attribute of the provided name as a domain, transforms it
+    def parse_domain(self, domain, session):
+        """ Parses an arbitrary string containing a domain, transforms it
         to either a literal domain or a :class:`openerpweb.nonliterals.Domain`
 
-        :param elem: the node being parsed
-        :type param: xml.etree.ElementTree.Element
-        :param str attr_name: the name of the attribute which should be parsed
+        :param domain: the domain to parse, if the domain is not a string it is assumed to
+        be a literal domain and is returned as-is
         :param session: Current OpenERP session
         :type session: openerpweb.openerpweb.OpenERPSession
         """
-        domain = elem.get(attr_name, '').strip()
-        if domain:
-            try:
-                elem.set(
-                    attr_name,
-                    openerpweb.ast.literal_eval(
-                        domain))
-            except ValueError:
-                # not a literal
-                elem.set(attr_name,
-                         openerpweb.nonliterals.Domain(session, domain))
+        if not isinstance(domain, (str, unicode)):
+            return domain
+        try:
+            return openerpweb.ast.literal_eval(domain)
+        except ValueError:
+            # not a literal
+            return openerpweb.nonliterals.Domain(session, domain)
+        
+    def parse_context(self, context, session):
+        """ Parses an arbitrary string containing a context, transforms it
+        to either a literal context or a :class:`openerpweb.nonliterals.Context`
+
+        :param context: the context to parse, if the context is not a string it is assumed to
+        be a literal domain and is returned as-is
+        :param session: Current OpenERP session
+        :type session: openerpweb.openerpweb.OpenERPSession
+        """
+        if not isinstance(context, (str, unicode)):
+            return context
+        try:
+            return openerpweb.ast.literal_eval(context)
+        except ValueError:
+            return openerpweb.nonliterals.Context(session, context)
 
     def parse_domains_and_contexts(self, elem, session):
         """ Converts domains and contexts from the view into Python objects,
@@ -599,17 +659,14 @@ class View(openerpweb.Controller):
                         non-literal objects
         :type session: openerpweb.openerpweb.OpenERPSession
         """
-        self.parse_domain(elem, 'domain', session)
-        self.parse_domain(elem, 'filter_domain', session)
-        context_string = elem.get('context', '').strip()
-        if context_string:
-            try:
-                elem.set('context',
-                         openerpweb.ast.literal_eval(context_string))
-            except ValueError:
-                elem.set('context',
-                         openerpweb.nonliterals.Context(
-                             session, context_string))
+        for el in ['domain', 'filter_domain']:
+            domain = elem.get(el, '').strip()
+            if domain:
+                elem.set(el, self.parse_domain(domain, session))
+        for el in ['context', 'default_get']:
+            context_string = elem.get(el, '').strip()
+            if context_string:
+                elem.set(el, self.parse_context(context_string, session))
 
 class FormView(View):
     _cp_path = "/base/formview"
@@ -657,6 +714,12 @@ class SearchView(View):
     def fields_get(self, req, model):
         Model = req.session.model(model)
         fields = Model.fields_get(False, req.session.eval_context(req.context))
+        for field in fields.values():
+            # shouldn't convert the views too?
+            if field.get('domain'):
+                field["domain"] = self.parse_domain(field["domain"], req.session)
+            if field.get('context'):
+                field["context"] = self.parse_domain(field["context"], req.session)
         return {'fields': fields}
 
 class Binary(openerpweb.Controller):
@@ -701,7 +764,7 @@ class Binary(openerpweb.Controller):
         for key, val in cherrypy.request.headers.iteritems():
             headers[key.lower()] = val
         size = int(headers.get('content-length', 0))
-        # TODO: might be usefull to have a configuration flag for max-lenght file uploads
+        # TODO: might be useful to have a configuration flag for max-length file uploads
         try:
             out = """<script language="javascript" type="text/javascript">
                         var win = window.top.window,
@@ -756,7 +819,6 @@ class Action(openerpweb.Controller):
         Actions = req.session.model('ir.actions.actions')
         value = False
         context = req.session.eval_context(req.context)
-        context["bin_size"] = False
         action_type = Actions.read([action_id], ['type'], context)
         if action_type:
             action = req.session.model(action_type[0]['type']).read([action_id], False,
@@ -764,3 +826,10 @@ class Action(openerpweb.Controller):
             if action:
                 value = clean_action(action[0], req.session)
         return {'result': value}
+
+    @openerpweb.jsonrequest
+    def run(self, req, action_id):
+        return clean_action(req.session.model('ir.actions.server').run(
+            [action_id], req.session.eval_context(req.context)), req.session)
+
+#

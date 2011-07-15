@@ -1,0 +1,70 @@
+<!--conf
+<sample>
+              <product version="2.6" edition="std"/>
+                     <modifications>
+                            <modified date="100609"/>
+                     </modifications>
+               </sample>
+ -->
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+<head>
+	<title>Integration with grid</title>
+	<link rel='STYLESHEET' type='text/css' href='../../../dhtmlxGrid/codebase/dhtmlxgrid.css'>
+	<link rel='STYLESHEET' type='text/css' href='../../../dhtmlxGrid/codebase/skins/dhtmlxgrid_dhx_skyblue.css'>
+	<script src='../../../dhtmlxGrid/codebase/dhtmlxcommon.js'></script>
+	<script src='../../../dhtmlxGrid/codebase/dhtmlxgrid.js'></script>
+	<script src='../../../dhtmlxGrid/codebase/dhtmlxgridcell.js'></script>	
+	
+	<script src="../../codebase/dhtmlxchart.js" type="text/javascript"></script>
+	<link rel="STYLESHEET" type="text/css" href="../../codebase/dhtmlxchart.css">
+	<script>
+	var barChart;
+	window.onload = function(){
+	barChart =  new dhtmlXChart({
+		view:"bar",
+		color:"#66ccff",
+		gradient:"3d",
+		container:"chart_container",
+	    value:"#data0#",
+		label:"#data0#",
+		radius:3,
+		tooltip:{
+			template:"#data0#"
+		},
+		width:30,
+		origin:0,
+		yAxis:{},
+		xAxis:{
+			template:function(){return ""}
+		},
+		border:false
+	});
+	
+	function refresh_chart(){
+		barChart.clearAll();
+		barChart.parse(mygrid,"dhtmlxgrid");
+	};
+	
+	mygrid = new dhtmlXGridObject('gridbox');
+	mygrid.setImagePath('../../../dhtmlxGrid/codebase/imgs/');
+	mygrid.setSkin("dhx_skyblue")
+	mygrid.loadXML("../../../dhtmlxGrid/samples/common/gridH.xml",refresh_chart);
+	mygrid.attachEvent("onEditCell",function(stage){
+		if (stage == 2)
+			refresh_chart();
+		return true;
+	});
+    }
+</script>
+</head>
+
+<body>
+	
+	<div id="gridbox" style="width:600px; height:270px; background-color:white;"></div>
+	<hr>
+	<div id="chart_container" style="width:500px;height:300px;"></div>
+	
+</body>
+</html>

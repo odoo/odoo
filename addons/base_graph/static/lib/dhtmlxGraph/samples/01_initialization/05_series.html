@@ -1,0 +1,119 @@
+<!--conf
+<sample>
+              <product version="2.6" edition="std"/>
+                     <modifications>
+                            <modified date="100609"/>
+                     </modifications>
+               </sample>
+ -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+	<title>PieChart: Initiazation</title>
+	<script src="../../codebase/dhtmlxchart.js" type="text/javascript"></script>
+	<link rel="STYLESHEET" type="text/css" href="../../codebase/dhtmlxchart.css">
+</head>
+<body >
+	<h1>BarChart: Scales</h1>
+	
+	<table>
+		<tr>
+			<td>Automatic vertical scale</td>
+			<td>Custom vertical scale</td>
+		</tr>
+		<tr>
+			<td><div id="chart1" style="width:450px;height:300px;border:1px solid #A4BED4;"></div></td>
+			<td><div id="chart2" style="width:350px;height:300px;border:1px solid #A4BED4;"></div></td>
+		</tr>
+	</table>
+	
+	
+	<script>
+	var data = [
+		{ sales:"3.0",sales1:"3.4",sales2:"1.2",sales3:"6.9", year:"2000" },
+		{ sales:"3.8",sales1:"4.5",sales2:"2.5",sales3:"7.5", year:"2001" },
+		{ sales:"3.4",sales1:"4.7",sales2:"1.9",sales3:"5.5", year:"2002" }
+	];
+	
+	
+	
+	var barChart1 =  new dhtmlXChart({
+		view:"bar",
+		container:"chart1",
+	    value:"#sales#",
+		label:"#sales#",
+		width:30,
+		tooltip:{
+			template:"#sales#"
+		},
+		xAxis:{
+			title:"Sales per year",
+			template:"#year#"
+		},
+		yAxis:{
+			title:"Sales,million"
+		},
+		gradient:true,
+		border:false,
+		color: "#66cc33"
+	})
+	barChart1.addSeries({
+	    value:"#sales1#",
+		color:"#ff9933",
+		label:"#sales1#"
+	});
+	barChart1.addSeries({
+	    value:"#sales2#",
+		color:"#ffff99",
+		label:"#sales2#"
+	});
+	barChart1.parse(data,"json");
+	
+	
+	
+	
+	var barChart2 =  new dhtmlXChart({
+		view:"bar",
+		container:"chart2",
+		value:"#sales#",
+		gradient:true,
+		border:false,
+		width:30,
+		color: "#66cc33",
+		label:"#sales#",
+		tooltip:{
+			template:"#sales#"
+		},
+		xAxis:{
+			title:"Years",
+			template:"#year#"
+		},
+		yAxis:{
+		    start: 0,
+			end: 10,
+			step: 1,
+			title:"Sales, mil"
+		}
+		
+	});
+	barChart2.addSeries({
+	    value:"#sales1#",
+		color:"#ff9933",
+		label:"#sales1#"
+	});
+	barChart2.addSeries({
+	    value:"#sales2#",
+		color:"#ffff99",
+		label:"#sales2#"
+	});
+	barChart2.addSeries({
+	    value:"#sales3#",
+		color:"#ccff99",
+		label:"#sales3#"
+	});
+	
+	barChart2.parse(data,"json");
+
+	</script>
+</body>
+</html>

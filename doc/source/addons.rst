@@ -110,6 +110,79 @@ initializing the addon.
         });
     }
 
+Creating new standard roles
+---------------------------
+
+Views
++++++
+
+Views are the standard high-level component in OpenERP. A view type corresponds
+to a way to display a set of data (coming from an OpenERP model).
+
+In OpenERP Web, views are standard objects registered against a dedicated
+object registry, so the :js:class:`~openerp.base.ViewManager` knows where to
+find and how to call them.
+
+Although not mandatory, it is recommended that views inherit from
+:js:class:`openerp.base.View`, which provides a view useful services to its
+children.
+
+Registering a view
+~~~~~~~~~~~~~~~~~~
+
+This is the first task to perform when creating a view, and the simplest by
+far: simply call ``openerp.base.views.add(name, object_path)`` to register
+the object of path ``object_path`` as the view for the view name ``name``.
+
+The view name is the name you gave to your new view in the OpenERP server.
+
+From that point onwards, OpenERP Web will be able to find your object and
+instantiate it.
+
+Standard view behaviors
+~~~~~~~~~~~~~~~~~~~~~~~
+
+In the normal OpenERP Web flow, views have to implement a number of methods so
+view managers can correctly communicate with them:
+
+``start()``
+    This method will always be called after creating the view (via its
+    constructor), but not necessarily immediately.
+
+    It is called with no arguments and should handle the heavy setup work,
+    including remote call (to load the view's setup data from the server via
+    e.g. ``fields_view_get``, for instance).
+
+    ``start`` should return a `promise object`_ which *must* be resolved when
+    the view's setup is completed. This promise is used by view managers to
+    know when they can start interacting with the view.
+
+``do_hide()``
+    Called by the view manager when it wants to replace this view by an other
+    one, but wants to keep this view around to re-activate it later.
+
+    Should put the view in some sort of hibernation mode, and *must* hide its
+    DOM elements.
+
+``do_show()``
+    Called when the view manager wants to re-display the view after having
+    hidden it. The view should refresh its data display upon receiving this
+    notification
+
+``do_search(domains: Array, contexts: Array, groupbys: Array)``
+    If the view is searchable, this method is called to notify it of a search
+    against it.
+
+    It should use the provided query data to perform a search and refresh its
+    internal content (and display).
+
+    All views are searchable by default, but they can be made non-searchable
+    by setting the property ``searchable`` to ``false``.
+
+    This can be done either on the view class itself (at the same level as
+    defining e.g. the ``start`` method) or at the instance level (in the
+    class's ``init``), though you should generally set it on the class.
+
 Utility behaviors
 -----------------
 
@@ -423,3 +496,6 @@ Python
 
 .. _nose:
     http://somethingaboutorange.com/mrl/projects/nose/1.0.0/
+
+.. _promise object:
+    http://api.jquery.com/deferred.promise/
