@@ -19,7 +19,7 @@
 #
 ##############################################################################
 import logging
-from operator import attrgetter
+from operator import attrgetter, itemgetter
 
 from osv import osv, fields
 from tools.translate import _
@@ -43,9 +43,8 @@ class res_config_configurable(osv.osv_memory):
         '''Return a description the current progress of configuration:
         a tuple of (non_open_todos:int, total_todos: int)
         '''
-        todo_pool = self.pool.get('ir.actions.todo')
-        return (todo_pool.search_count(cr, uid, [('state','!=','open')], context),
-                todo_pool.search_count(cr, uid, [], context))
+        return itemgetter('done', 'total')(
+            self.pool.get('ir.actions.todo').progress(cr, uid, context=context))
 
     def _progress(self, cr, uid, context=None):
         closed, total = self.get_current_progress(cr, uid, context=context)
