@@ -301,7 +301,7 @@
                             invisible="context.get('line_type', False)"
                             string="Paid Amount"
                             on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date)"/>
-                        <field name="currency_id"/>
+                        <field name="currency_id" nolabel="1"/>
                         <field name="date" colspan="4" select="1" invisible="context.get('line_type', False)" on_change="onchange_date(partner_id, journal_id, amount, currency_id, type, date)"/>
                         <field name="reference" colspan="4" select="1" invisible="context.get('line_type', False)" string="Payment Ref"/>
                         <field name="name" colspan="4" invisible="context.get('line_type', False)"/>
@@ -314,7 +314,7 @@
                     </group>
                     <notebook colspan="4">
                         <page string="Payment Information">
-                            <field name="line_cr_ids" default_get="{'journal_id':journal_id, 'type':type, 'partner_id':partner_id}" colspan="4" nolabel="1" height="140" on_change="onchange_line_ids(line_dr_ids, line_cr_ids, amount, date, currency_id)">
+                            <field name="line_cr_ids" default_get="{'journal_id':journal_id, 'type':type, 'partner_id':partner_id}" colspan="4" nolabel="1" height="140" on_change="onchange_line_ids(line_dr_ids, line_cr_ids, amount, date)">
                                 <tree string="Invoices and outstanding transactions" editable="bottom">
                                     <field name="move_line_id" context="{'journal_id':parent.journal_id, 'partner_id':parent.partner_id}"
                                         on_change="onchange_move_line_id(move_line_id)"
@@ -327,17 +327,25 @@
                                     <field name="amount_unreconciled" sum="Open Balance" readonly="1"/>
                                     <field name="amount" sum="Payment" on_change="onchange_amount(amount)"/>
                                     <field name="currency_id" readonly="1"/>
-                                    <field name="amount_in_company_currency" sum="Payment" readonly="1"/>
+                                    <field name="amount_in_voucher_currency" readonly="1"/>
+                                    <field name="voucher_currency_id" readonly="1"/>
+                                    <field name="amount_in_company_currency" readonly="1"/>
                                     <field name="company_currency_id" readonly="1"/>
                                 </tree>
                             </field>
-                            <field name="line_dr_ids" colspan="4" nolabel="1" attrs="{'invisible': [('pre_line','=',False)]}" default_get="{'journal_id':journal_id, 'partner_id':partner_id}" on_change="onchange_line_ids(line_dr_ids, line_cr_ids, amount, date, currency_id)">
+                            <field name="line_dr_ids" colspan="4" nolabel="1" attrs="{'invisible': [('pre_line','=',False)]}" default_get="{'journal_id':journal_id, 'partner_id':partner_id}" on_change="onchange_line_ids(line_dr_ids, line_cr_ids, amount, date)">
                                 <tree string="Credits" editable="bottom">
                                     <field name="move_line_id"/>
                                     <field name="account_id"  groups="base.group_extended" domain="[('type','=','receivable')]"/>
                                     <field name="date_original"/>
                                     <field name="amount_original"/>
-                                    <field name="amount" sum="Payment"/>
+                                    <field name="amount_unreconciled" sum="Open Balance" readonly="1"/>
+                                    <field name="amount" sum="Payment" on_change="onchange_amount(amount)"/>
+                                    <field name="currency_id" readonly="1"/>
+                                    <field name="amount_in_voucher_currency" readonly="1"/>
+                                    <field name="voucher_currency_id" readonly="1"/>
+                                    <field name="amount_in_company_currency" readonly="1"/>
+                                    <field name="company_currency_id" readonly="1"/>
                                 </tree>
                             </field>
                             <group col="2" colspan="3">
@@ -345,19 +353,20 @@
                                 <field name="narration" colspan="2" nolabel="1"/>
                             </group>
                             <group col="2" colspan="1">
-                                <group col="2" colspan="1">
-                                    <separator string="Payment Options" colspan="2"/>
-                                    <field name="payment_option" required="1"/>
+                                <group col="4" colspan="1">
+                                    <separator string="Payment Options" colspan="4"/>
+                                    <field name="payment_option" required="1" colspan="4"/>
                                     <field name="writeoff_amount"
                                            attrs="{'invisible':[('payment_option','!=','with_writeoff')]}"/>
+                                    <field name="currency_id2" nolabel="1" attrs="{'invisible':[('payment_option','!=','with_writeoff')]}"/>
                                     <field name="writeoff_acc_id"
                                            attrs="{'invisible':[('payment_option','!=','with_writeoff')], 'required':[('payment_option','=','with_writeoff')]}"
-                                           domain="[('type','=','other')]"/>
+                                           domain="[('type','=','other')]" colspan="4"/>
                                     <field name="comment"
-                                           attrs="{'invisible':[('payment_option','!=','with_writeoff')]}"/>
+                                           attrs="{'invisible':[('payment_option','!=','with_writeoff')]}" colspan="4"/>
                                     <field name="analytic_id"
                                            attrs="{'invisible':[('payment_option','!=','with_writeoff')]}"
-                                           groups="analytic.group_analytic_accounting"/>
+                                           groups="analytic.group_analytic_accounting" colspan="4"/>
                                 </group>
                                 <separator string="Other Information" colspan="2"/>
                                 <group col="4" colspan="1">
