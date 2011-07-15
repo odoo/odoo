@@ -143,8 +143,8 @@ openerp.base.SearchView = openerp.base.Controller.extend({
      * Handle event when the user make a selection in the filters management select box.
      */
     on_filters_management: function(e) {
-        var select = this.$element.find(".oe_search-view-filters-management");
-        var val = select.val();
+        var select = this.$element.find(".oe_search-view-filters-management"),
+               val = select.val();
         select.val("_filters");
         
         if (val.slice(0,1) == "_") // useless action
@@ -172,9 +172,9 @@ openerp.base.SearchView = openerp.base.Controller.extend({
     do_search: function (e) {
         if (e && e.preventDefault) { e.preventDefault(); }
 
-        var domains = [], contexts = [];
-
-        var errors = [];
+        var domains = [],
+           contexts = [],
+             errors = [];
 
         _.each(this.inputs, function (input) {
             try {
@@ -395,8 +395,6 @@ openerp.base.search.add_expand_listener = function($root) {
 };
 openerp.base.search.Group = openerp.base.search.Widget.extend({
     template: 'SearchView.group',
-    // TODO: contain stuff
-    // TODO: @expand
     init: function (view_section, view, fields) {
         this._super(view);
         this.attrs = view_section.attrs;
@@ -437,7 +435,6 @@ openerp.base.search.Input = openerp.base.search.Widget.extend(
 });
 openerp.base.search.Filter = openerp.base.search.Input.extend({
     template: 'SearchView.filter',
-    // TODO: force rendering
     init: function (node, view) {
         this._super(view);
         this.attrs = node.attrs;
@@ -490,9 +487,6 @@ openerp.base.search.Field = openerp.base.search.Input.extend(
     /** @lends openerp.base.search.Field# */ {
     template: 'SearchView.field',
     default_operator: '=',
-    // TODO: set default values
-    // TODO: get context, domain
-    // TODO: holds Filters
     /**
      * @constructs
      * @extends openerp.base.search.Input
@@ -530,9 +524,7 @@ openerp.base.search.Field = openerp.base.search.Input.extend(
     },
     get_domain: function () {
         var val = this.get_value();
-
-        var has_value = (val !== null && val !== '');
-        if(!has_value) {
+        if (val === null || val === '') {
             return;
         }
 
@@ -544,9 +536,7 @@ openerp.base.search.Field = openerp.base.search.Input.extend(
                 this.get_value()
             ]];
         }
-        return _.extend(
-            {}, domain,
-            {own_values: {self: val}});
+        return _.extend({}, domain, {own_values: {self: val}});
     }
 });
 /**
@@ -663,8 +653,12 @@ openerp.base.search.DateField = openerp.base.search.Field.extend(
     get_values: function () {
         var values_array = this.$element.find('input').serializeArray();
 
-        var from = values_array[0].value;
-        var to = values_array[1].value;
+        if (!values_array || !values_array[0]) {
+            throw new openerp.base.search.Invalid(
+                this.attrs.name, null, "widget not ready");
+        }
+        var from = values_array[0].value,
+              to = values_array[1].value;
 
         var field_values = {};
         if (from) {
@@ -893,7 +887,7 @@ openerp.base.search.ExtendedSearchProposition = openerp.base.BaseWidget.extend({
             if (! e instanceof openerp.base.KeyNotFound) {
                 throw e;
             }
-            var type = "char";
+            type = "char";
             this.log('Unknow field type ' + e.key);
         }
         this.value = new (openerp.base.search.custom_filters.get_object(type))
@@ -994,12 +988,11 @@ openerp.base.search.ExtendedSearchProposition.Integer = openerp.base.BaseWidget.
         {value: "<=", text: "less or equal than"}
     ],
     get_value: function() {
-        val = this.$element.val();
-        val2 = parseFloat(val);
-        if(val2 != 0 && !val2) {
+        var value = parseFloat(this.$element.val());
+        if(value != 0 && !value) {
             return "";
         }
-        return Math.round(val2);
+        return Math.round(value);
     }
 });
 openerp.base.search.ExtendedSearchProposition.Float = openerp.base.BaseWidget.extend({
@@ -1014,12 +1007,11 @@ openerp.base.search.ExtendedSearchProposition.Float = openerp.base.BaseWidget.ex
         {value: "<=", text: "less or equal than"}
     ],
     get_value: function() {
-        val = this.$element.val();
-        val2 = parseFloat(val);
-        if(val2 != 0 && !val2) {
+        var value = parseFloat(this.$element.val());
+        if(value != 0 && !value) {
             return "";
         }
-        return val2;
+        return value;
     }
 });
 openerp.base.search.ExtendedSearchProposition.Selection = openerp.base.BaseWidget.extend({

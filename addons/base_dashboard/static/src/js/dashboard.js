@@ -40,7 +40,10 @@ openerp.base.form.DashBoard = openerp.base.form.Widget.extend({
             });
         });
 
-        this.$element.find('a.oe-dashboard-action-rename').live('click', this.on_rename);
+        //this.$element.find('a.oe-dashboard-action-rename').live('click', this.on_rename);
+        this.$element.find('.oe-dashboard-action').live('mouseover mouseout', function(event) {
+            $(this).find('.oe-dashboard-action-header .ui-icon, .oe-dashboard-action-header .oe-dashboard-action-rename').toggle(event.type == 'mouseover');
+        });
     },
     on_undo: function() {
         this.rpc('/base/view/undo_custom', {
@@ -71,7 +74,6 @@ openerp.base.form.DashBoard = openerp.base.form.Widget.extend({
         // TODO: create a Dialog controller which optionally takes an action
         // Should set width & height automatically and take buttons & views callback
         var dialog_id = _.uniqueId('act_window_dialog');
-        var action_manager = new openerp.base.ActionManager(this.session, dialog_id);
         var $dialog = $('<div id=' + dialog_id + '>').dialog({
                             modal : true,
                             title : 'Actions',
@@ -87,8 +89,7 @@ openerp.base.form.DashBoard = openerp.base.form.Widget.extend({
                                 }
                             }
                         });
-        action_manager.start();
-        action_manager.do_action(action);
+        new openerp.base.ViewManagerAction(this.session, dialog_id, action).start();
         // TODO: should bind ListView#select_record in order to catch record clicking
     },
     do_add_widget : function(action_manager) {
@@ -226,9 +227,8 @@ openerp.base.form.DashBoard = openerp.base.form.Widget.extend({
             action_buttons : false,
             pager: false
         };
-        new openerp.base.ActionManager(
-                this.session, this.view.element_id + '_action_' + action.id)
-            .do_action(action);
+        new openerp.base.ViewManagerAction(this.session,
+            this.view.element_id + '_action_' + action.id, action).start();
     },
     render: function() {
         // We should start with three columns available
