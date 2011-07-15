@@ -519,5 +519,5 @@ class edi(object):
                     values[field] = one2many_ids
                 else:
                     values[field] = edi_field_value
-        return self.pool.get(self._name).create(cr, uid, values, context=context)
+        return model_data._update(cr, uid, self._name, edi_module, values, context=context)
 # vim: ts=4 sts=4 sw=4 si et
