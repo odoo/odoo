@@ -723,13 +723,34 @@ openerp.base.search.ManyToOneField = openerp.base.search.CharField.extend({
         this.got_name = $.Deferred().then(function () {
             self.$element.val(self.name);
         });
+        this.dataset = new openerp.base.DataSet(
+                this.view.session, this.attrs['relation']);
     },
     start: function () {
         this._super();
+        this.setup_autocomplete();
         var started = $.Deferred();
         this.got_name.then(function () { started.resolve();},
                            function () { started.resolve(); });
         return started.promise();
+    },
+    setup_autocomplete: function () {
+        var self = this;
+        this.$element.autocomplete({
+            source: function (req, resp) {
+                self.dataset.name_search(
+                    req.term, self.attrs.domain, 'ilike', 8, function (data) {
+                        resp(_.map(data, function (result) {
+                            return {id: result[0], label: result[1]}
+                        }));
+                });
+            },
+            select: function (event, ui) {
+                self.id = ui.item.id;
+                self.name = ui.item.label;
+            },
+            delay: 0
+        })
     },
     on_name_get: function (name_get) {
         if (!name_get.length) {
@@ -745,8 +766,7 @@ openerp.base.search.ManyToOneField = openerp.base.search.CharField.extend({
             this.id = defaults[this.attrs.name];
             // TODO: maybe this should not be completely removed
             delete defaults[this.attrs.name];
-            new openerp.base.DataSet(this.view.session, this.attrs['relation'])
-                .name_get([this.id], $.proxy(this, 'on_name_get'));
+            this.dataset.name_get([this.id], $.proxy(this, 'on_name_get'));
         } else {
             this.got_name.reject();
         }
