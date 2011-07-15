@@ -54,21 +54,35 @@ openerp.base_export.Export = openerp.base.Dialog.extend({
             $("#ExistsExportList").show();
         }
         else{
-	        this.rpc("/base_export/export/exist_export_lists", {"model": this.dataset.model}, function(export_list){
-		        if(export_list.length){
-		            $("#ExistsExportList").append(QWeb.render('Exists.ExportList', {'existing_exports':export_list}));
-			        $('#delete_export_list').click(function(){
-	                    select_exp = $("#saved_export_list option:selected")
-			            if (select_exp.val()){
-	                        self.rpc("/base_export/export/delete_export", {"export_id": parseInt(select_exp.val())}, {});
-	                        select_exp.remove();
-	                        if($("#saved_export_list option").length <= 1){
+            this.rpc("/base_export/export/exist_export_lists", {"model": this.dataset.model}, function(export_list){
+                if(export_list.length){
+                    $("#ExistsExportList").append(QWeb.render('Exists.ExportList', {'existing_exports':export_list}));
+                    $("#saved_export_list").change(function(){
+                        $("#fields_list option").remove();
+                        export_id = $("#saved_export_list option:selected").val();
+                        if (export_id){
+                            self.rpc("/base_export/export/namelist", {"model": self.dataset.model, export_id: parseInt(export_id)}, self.do_load_export_field);
+                        }
+                    });
+                    $('#delete_export_list').click(function(){
+                        select_exp = $("#saved_export_list option:selected")
+                        if (select_exp.val()){
+                            self.rpc("/base_export/export/delete_export", {"export_id": parseInt(select_exp.val())}, {});
+                            select_exp.remove();
+                            if($("#saved_export_list option").length <= 1){
                                 $("#ExistsExportList").hide();
-	                        }
-			            }
-			        });
-		        }
-	        });
+                            }
+                        }
+                    });
+                }
+            });
+        }
+    },
+
+    do_load_export_field: function(field_list){
+        var export_node = $("#fields_list");
+        for (var key in field_list) {
+            export_node.append(new Option(field_list[key], key));
         }
     },
 
