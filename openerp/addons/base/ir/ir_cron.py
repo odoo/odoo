@@ -164,7 +164,7 @@ class ir_cron(osv.osv):
                 # Reschedule our own main cron thread if necessary.
                 # This is really needed if this job run longer that its rescheduling period.
                 print ">>> advance at", nextcall
-                nextcall = time.mktime(time.strptime(nextcall.strftime('%Y-%m-%d %H:%M:%S'), '%Y-%m-%d %H:%M:%S'))
+                nextcall = time.mktime(nextcall.timetuple())
                 openerp.cron.schedule_in_advance(nextcall, cr.dbname)
         finally:
             cr.commit()
