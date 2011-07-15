@@ -14,52 +14,20 @@
 
         <record id="view_marketing_installer" model="ir.ui.view">
             <field name="name">marketing.installer.view</field>
-            <field name="model">marketing.installer</field>
+            <field name="model">base.setup.installer</field>
             <field name="type">form</field>
-            <field name="inherit_id" ref="base.res_config_installer"/>
+            <field name="inherit_id" ref="base_setup.view_base_setup_installer"/>
             <field name="arch" type="xml">
                 <data>
-                  <form position="attributes">
-                    <attribute name="string">Marketing Application Configuration</attribute>
-                  </form>
-                  <separator string="title" position="attributes">
-                    <attribute name="string">Configure Your Marketing Application</attribute>
-                  </separator>
-                  <xpath expr="//label[@string='description']"
-                         position="attributes">
-                    <attribute name="string">OpenERP provides Addons to better manage your sales and marketing processes. Select the ones you would be interested in.</attribute>
-                  </xpath>
-                 <xpath expr='//separator[@string="vsep"]' position='attributes'>
-                       <attribute name='rowspan'>13</attribute>
-                       <attribute name='string'></attribute>
-                 </xpath>
-                  <xpath expr="//button[@string='Install Modules']" position="attributes">
-                            <attribute name="string">Configure</attribute>
-                  </xpath>
-                  <group colspan="8">
+                    <xpath expr="//group[@name='marketing']" position="replace">
+                        <newline/>
+                        <separator  string="Marketing Features" colspan="4" />
                         <field name="marketing_campaign" />
                         <field name="email_template" />
                         <field name="crm_profiling" />
-                  </group>
+                    </xpath>                   
                 </data>
             </field>
         </record>
-
-        <record id="action_marketing_installer" model="ir.actions.act_window">
-            <field name="name">Marketing Applications Configuration</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">marketing.installer</field>
-            <field name="view_id" ref="view_marketing_installer"/>
-            <field name="view_type">form</field>
-            <field name="view_mode">form</field>
-            <field name="target">new</field>
-        </record>
-
-        <record id="marketing_installer_todo" model="ir.actions.todo">
-            <field name="action_id" ref="action_marketing_installer"/>
-            <field name="sequence">3</field>
-            <field name="restart">always</field>
-        </record>
-
     </data>
 </openerp>

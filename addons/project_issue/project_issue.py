@@ -205,14 +205,14 @@ class project_issue(crm.crm_case, osv.osv):
         'duration': fields.float('Duration'),
         'task_id': fields.many2one('project.task', 'Task', domain="[('project_id','=',project_id)]"),
         'day_open': fields.function(_compute_day, string='Days to Open', \
-                                method=True, multi='compute_day', type="float", store=True),
+                                multi='compute_day', type="float", store=True),
         'day_close': fields.function(_compute_day, string='Days to Close', \
-                                method=True, multi='compute_day', type="float", store=True),
+                                multi='compute_day', type="float", store=True),
         'assigned_to': fields.many2one('res.users', 'Assigned to', required=False, select=1),
         'working_hours_open': fields.function(_compute_day, string='Working Hours to Open the Issue', \
-                                method=True, multi='compute_day', type="float", store=True),
+                                multi='compute_day', type="float", store=True),
         'working_hours_close': fields.function(_compute_day, string='Working Hours to Close the Issue', \
-                                method=True, multi='compute_day', type="float", store=True),
+                                multi='compute_day', type="float", store=True),
         'message_ids': fields.one2many('mailgate.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
         'date_action_last': fields.datetime('Last Action', readonly=1),
         'date_action_next': fields.datetime('Next Action', readonly=1),
