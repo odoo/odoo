@@ -499,22 +499,38 @@ class account_voucher(osv.osv):
             ids = move_line_pool.search(cr, uid, [('state','=','valid'), ('account_id.type', '=', account_type), ('reconcile_id', '=', False), ('partner_id', '=', partner_id)], context=context)
         else:
             ids = context['move_line_ids']
+        #order the lines by most old first
         ids.reverse()
-        moves = move_line_pool.browse(cr, uid, ids, context=context)
 
+        moves = move_line_pool.browse(cr, uid, ids, context=context)
         company_currency = journal.company_id.currency_id.id
         if company_currency != voucher_currency_id and ttype == 'payment':
             total_debit = currency_pool.compute(cr, uid, voucher_currency_id, company_currency, total_debit, context=context_multi_currency)
         elif company_currency != voucher_currency_id and ttype == 'receipt':
             total_credit = currency_pool.compute(cr, uid, voucher_currency_id, company_currency, total_credit, context=context_multi_currency)
 
+        invoice_id = context.get('invoice_id', False)
+        move_line_found = False
         for line in moves:
             if line.credit and line.reconcile_partial_id and ttype == 'receipt':
                 continue
             if line.debit and line.reconcile_partial_id and ttype == 'payment':
                 continue
-            total_credit += line.credit or 0.0
-            total_debit += line.debit or 0.0
+            if invoice_id and line.move_id.invoice_id.id == invoice_id:
+                move_line_found = line.id
+                break
+            if voucher_currency_id == company_currency:
+                if line.amount_residual == price:
+                    move_line_found = line.id
+                    break
+                total_credit += line.credit or 0.0
+                total_debit += line.debit or 0.0
+            elif voucher_currency_id == line.currency_id.id:
+                if line.amount_residual_currency == price:
+                    move_line_found = line.id
+                    break
+                total_credit += line.amount_currency or 0.0
+                total_debit += line.amount_currency or 0.0
         for line in moves:
             if line.credit and line.reconcile_partial_id and ttype == 'receipt':
                 continue
@@ -529,7 +545,7 @@ class account_voucher(osv.osv):
                 'move_line_id':line.id,
                 'account_id':line.account_id.id,
                 'amount_original': amount_original,
-                'amount': 0.0, 
+                'amount': (move_line_found == line.id) and min(price, amount_unreconciled) or 0.0, 
                 'currency_id': currency_id,
                 'voucher_currency_id': voucher_currency_id, 
                 'date_original':line.date,
@@ -539,14 +555,26 @@ class account_voucher(osv.osv):
                 'amount_in_company_currency': 0.0,
             }
 
-            #if line.credit:
-            #    amount = min(amount_unreconciled, currency_pool.compute(cr, uid, company_currency, currency_id, abs(total_debit), context=context_multi_currency))
-            #    rs['amount'] = amount
-            #    total_debit -= amount
-            #else:
-            #    amount = min(amount_unreconciled, currency_pool.compute(cr, uid, company_currency, currency_id, abs(total_credit), context=context_multi_currency))
-            #    rs['amount'] = amount
-            #    total_credit -= amount
+            if not move_line_found:
+                #TODO: this part isn't working really: we should assign the voucher amount on only lines that are or the same currency
+                if company_currency == voucher_currency_id:
+                    if line.credit:
+                        amount = min(amount_unreconciled, abs(total_debit))
+                        rs['amount'] = amount
+                        total_debit -= amount
+                    else:
+                        amount = min(amount_unreconciled, abs(total_credit))
+                        rs['amount'] = amount
+                        total_credit -= amount
+                elif voucher_currency_id == line.currency_id.id:
+                    if line.credit:
+                        amount = min(amount_unreconciled, abs(total_debit))
+                        rs['amount'] = amount
+                        total_debit -= amount
+                    else:
+                        amount = min(amount_unreconciled, abs(total_credit))
+                        rs['amount'] = amount
+                        total_credit -= amount
 
             default['value']['line_ids'].append(rs)
             if rs['type'] == 'cr':
