@@ -21,7 +21,7 @@
 import time
 import netsvc
 from osv import fields, osv
-import ir
+import tools
 
 from tools.misc import currency
 from tools.translate import _
@@ -49,12 +49,12 @@ class res_currency(osv.osv):
     _columns = {
         # Note: 'code' column was removed as of v6.0, the 'name' should now hold the ISO code.
         'name': fields.char('Currency', size=32, required=True, help="Currency Code (ISO 4217)"),
-        'symbol': fields.char('Symbol', size=3, help="Currency sign, to be used when printing amounts"),
+        'symbol': fields.char('Symbol', size=3, help="Currency sign, to be used when printing amounts."),
         'rate': fields.function(_current_rate, method=True, string='Current Rate', digits=(12,6),
-            help='The rate of the currency to the currency of rate 1'),
+            help='The rate of the currency to the currency of rate 1.'),
         'rate_ids': fields.one2many('res.currency.rate', 'currency_id', 'Rates'),
         'accuracy': fields.integer('Computational Accuracy'),
-        'rounding': fields.float('Rounding factor', digits=(12,6)),
+        'rounding': fields.float('Rounding Factor', digits=(12,6)),
         'active': fields.boolean('Active'),
         'company_id':fields.many2one('res.company', 'Company'),
         'date': fields.date('Date'),
@@ -77,6 +77,14 @@ class res_currency(osv.osv):
                     currency_date = currency_rate_obj.read(cr,user,rates[0],['name'])['name']
                     r['date'] = currency_date
         return res
+
+    def name_get(self, cr, uid, ids, context=None):
+        if not ids:
+            return []
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        reads = self.read(cr, uid, ids, ['name','symbol'], context=context, load='_classic_write')
+        return [(x['id'], tools.ustr(x['name']) + (x['symbol'] and (' (' + tools.ustr(x['symbol']) + ')') or '')) for x in reads]
 
     def round(self, cr, uid, currency, amount):
         if currency.rounding == 0:
@@ -123,13 +131,6 @@ class res_currency(osv.osv):
             else:
                 return (from_amount * rate)
 
-    def name_search(self, cr, uid, name, args=[], operator='ilike', context={}, limit=100):
-        args2 = args[:]
-        if name:
-            args += [('name', operator, name)]
-        ids = self.search(cr, uid, args, limit=limit)
-        res = self.name_get(cr, uid, ids, context)
-        return res
 res_currency()
 
 class res_currency_rate(osv.osv):

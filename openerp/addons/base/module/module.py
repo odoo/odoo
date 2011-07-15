@@ -30,7 +30,7 @@ import urllib
 import zipfile
 import zipimport
 
-import addons
+import openerp.modules as addons
 import pooler
 import release
 import tools
@@ -39,6 +39,16 @@ from tools.parse_version import parse_version
 from tools.translate import _
 
 from osv import fields, osv, orm
+
+
+ACTION_DICT = {
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'base.module.upgrade',
+            'target': 'new',
+            'type': 'ir.actions.act_window',
+            'nodestroy':True,
+        }
 
 class module_category(osv.osv):
     _name = "ir.module.category"
@@ -79,8 +89,7 @@ class module(osv.osv):
         info = {}
         try:
             info = addons.load_information_from_description_file(name)
-            if 'version' in info:
-                info['version'] = release.major_version + '.' + info['version']
+            info['version'] = release.major_version + '.' + info['version']
         except Exception:
             cls.__logger.debug('Error when trying to fetch informations for '
                                 'module %s', name, exc_info=True)
@@ -286,7 +295,9 @@ class module(osv.osv):
         return demo
 
     def button_install(self, cr, uid, ids, context=None):
-        return self.state_update(cr, uid, ids, 'to install', ['uninstalled'], context)
+        self.state_update(cr, uid, ids, 'to install', ['uninstalled'], context)
+        return dict(ACTION_DICT, name=_('Install'))
+        
 
     def button_install_cancel(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state': 'uninstalled', 'demo':False})
@@ -306,7 +317,7 @@ class module(osv.osv):
             if res:
                 raise orm.except_orm(_('Error'), _('Some installed modules depend on the module you plan to Uninstall :\n %s') % '\n'.join(map(lambda x: '\t%s: %s' % (x[0], x[1]), res)))
         self.write(cr, uid, ids, {'state': 'to remove'})
-        return True
+        return dict(ACTION_DICT, name=_('Uninstall'))
 
     def button_uninstall_cancel(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state': 'installed'})
@@ -343,11 +354,12 @@ class module(osv.osv):
                     to_install.extend(ids2)
 
         self.button_install(cr, uid, to_install, context=context)
-        return True
+        return dict(ACTION_DICT, name=_('Upgrade'))
 
     def button_upgrade_cancel(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state': 'installed'})
         return True
+
     def button_update_translations(self, cr, uid, ids, context=None):
         self.update_translations(cr, uid, ids)
         return True
@@ -479,7 +491,9 @@ class module(osv.osv):
                 categs = categs[1:]
             self.write(cr, uid, [mod_browse.id], {'category_id': p_id})
 
-    def update_translations(self, cr, uid, ids, filter_lang=None, context={}):
+    def update_translations(self, cr, uid, ids, filter_lang=None, context=None):
+        if context is None:
+            context = {}
         logger = logging.getLogger('i18n')
         if not filter_lang:
             pool = pooler.get_pool(cr.dbname)

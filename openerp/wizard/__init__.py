@@ -25,7 +25,6 @@ from openerp.tools.misc import UpdateableStr, UpdateableDict
 from openerp.tools.translate import translate
 from lxml import etree
 
-import openerp.ir as ir
 import openerp.pooler as pooler
 
 from openerp.osv.osv import except_osv
@@ -90,7 +89,8 @@ class interface(netsvc.Service):
                     arch = arch.string
 
                 # fetch user-set defaut values for the field... shouldn't we pass it the uid?
-                defaults = ir.ir_get(cr, uid, 'default', False, [('wizard.'+self.wiz_name, False)])
+                ir_values_obj = pooler.get_pool(cr.dbname).get('ir.values')
+                defaults = ir_values_obj.get(cr, uid, 'default', False, [('wizard.'+self.wiz_name, False)])
                 default_values = dict([(x[1], x[2]) for x in defaults])
                 for val in fields.keys():
                     if 'default' in fields[val]:

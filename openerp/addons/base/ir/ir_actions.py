@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2011 OpenERP S.A. <http://www.openerp.com>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -168,19 +168,32 @@ class act_window(osv.osv):
     ]
 
     def _views_get_fnc(self, cr, uid, ids, name, arg, context=None):
-        res={}
+        """Returns an ordered list of the specific view modes that should be 
+           enabled when displaying the result of this action, along with the
+           ID of the specific view to use for each mode, if any were required.
+
+           This function hides the logic of determining the precedence between
+           the view_modes string, the view_ids o2m, and the view_id m2o that can
+           be set on the action.
+
+           :rtype: dict in the form { action_id: list of pairs (tuples) }
+           :return: { action_id: [(view_id, view_mode), ...], ... }, where view_mode
+                    is one of the possible values for ir.ui.view.type and view_id
+                    is the ID of a specific view to use for this mode, or False for
+                    the default one.
+        """
+        res = {}
         for act in self.browse(cr, uid, ids):
-            res[act.id]=[(view.view_id.id, view.view_mode) for view in act.view_ids]
+            res[act.id] = [(view.view_id.id, view.view_mode) for view in act.view_ids]
+            view_ids_modes = [view.view_mode for view in act.view_ids]
             modes = act.view_mode.split(',')
-            if len(modes)>len(act.view_ids):
-                find = False
-                if act.view_id:
+            missing_modes = [mode for mode in modes if mode not in view_ids_modes]
+            if missing_modes:
+                if act.view_id and act.view_id.type in missing_modes:
+                    # reorder missing modes to put view_id first if present
+                    missing_modes.remove(act.view_id.type)
                     res[act.id].append((act.view_id.id, act.view_id.type))
-                for t in modes[len(act.view_ids):]:
-                    if act.view_id and (t == act.view_id.type) and not find:
-                        find = True
-                        continue
-                    res[act.id].append((False, t))
+                res[act.id].extend([(False, mode) for mode in missing_modes])
         return res
 
     def _search_view(self, cr, uid, ids, name, arg, context=None):
@@ -257,7 +270,10 @@ class act_window(osv.osv):
             help="Comma-separated list of allowed view modes, such as 'form', 'tree', 'calendar', etc. (Default: tree,form)"),
         'usage': fields.char('Action Usage', size=32),
         'view_ids': fields.one2many('ir.actions.act_window.view', 'act_window_id', 'Views'),
-        'views': fields.function(_views_get_fnc, method=True, type='binary', string='Views'),
+        'views': fields.function(_views_get_fnc, method=True, type='binary', string='Views',
+               help="This function field computes the ordered list of views that should be enabled " \
+                    "when displaying the result of an action, federating view mode, views and " \
+                    "reference view. The result is returned as an ordered list of pairs (view_id,view_mode)."),
         'limit': fields.integer('Limit', help='Default limit for the list view'),
         'auto_refresh': fields.integer('Auto-Refresh',
             help='Add an auto-refresh on the view'),
@@ -307,6 +323,7 @@ class act_window_view(osv.osv):
     _name = 'ir.actions.act_window.view'
     _table = 'ir_act_window_view'
     _rec_name = 'view_id'
+    _order = 'sequence'
     _columns = {
         'sequence': fields.integer('Sequence'),
         'view_id': fields.many2one('ir.ui.view', 'View'),
@@ -323,7 +340,11 @@ class act_window_view(osv.osv):
     _defaults = {
         'multi': lambda *a: False,
     }
-    _order = 'sequence'
+    def _auto_init(self, cr, context=None):
+        super(act_window_view, self)._auto_init(cr, context)
+        cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = \'act_window_view_unique_mode_per_action\'')
+        if not cr.fetchone():
+            cr.execute('CREATE UNIQUE INDEX act_window_view_unique_mode_per_action ON ir_act_window_view (act_window_id, view_mode)')
 act_window_view()
 
 class act_wizard(osv.osv):
@@ -782,6 +803,20 @@ class act_window_close(osv.osv):
     }
 act_window_close()
 
+class ir_actions_todo_category(osv.osv):
+    """
+    Category of Configuration Wizards
+    """
+
+    _name = 'ir.actions.todo.category'
+    _description = "Configuration Wizard Category"
+    _columns = {
+         'name':fields.char('Name', size=64, translate=True, required=True), 
+         'sequence': fields.integer('Sequence'),
+         'wizards_ids': fields.one2many('ir.actions.todo', 'category_id', 'Configuration Wizards'),
+    }
+ir_actions_todo_category()
+
 # This model use to register action services.
 TODO_STATES = [('open', 'To Do'),
                ('done', 'Done'),
@@ -789,22 +824,30 @@ TODO_STATES = [('open', 'To Do'),
                ('cancel','Cancelled')]
 
 class ir_actions_todo(osv.osv):
+    """
+    Configuration Wizards
+    """
     _name = 'ir.actions.todo'
+    _description = "Configuration Wizards"
     _columns={
         'action_id': fields.many2one(
             'ir.actions.act_window', 'Action', select=True, required=True,
             ondelete='cascade'),
         'sequence': fields.integer('Sequence'),
         'state': fields.selection(TODO_STATES, string='State', required=True),
-        'name':fields.char('Name', size=64),
-        'restart': fields.selection([('onskip','On Skip'),('always','Always'),('never','Never')],'Restart',required=True),
-        'groups_id':fields.many2many('res.groups', 'res_groups_action_rel', 'uid', 'gid', 'Groups'),
-        'note':fields.text('Text', translate=True),
+        'name': fields.char('Name', size=64),
+        'type': fields.selection([('special','Special'),('normal','Normal'),('normal_recurring','Normal Recurring')], 'Type', required=True,
+            help="""Special: the wizard is run whenever the system is reconfigured.
+Normal: the wizard is visible in the configuration panel until it is done.
+Normal Recurring: the wizard is visible in the configuration panel regardless of its state."""),
+        'groups_id': fields.many2many('res.groups', 'res_groups_action_rel', 'uid', 'gid', 'Groups'),
+        'note': fields.text('Text', translate=True),
+        'category_id': fields.many2one('ir.actions.todo.category','Category'),
     }
     _defaults={
         'state': 'open',
         'sequence': 10,
-        'restart': 'onskip',
+        'type': 'special',
     }
     _order="sequence,name,id"
 
@@ -814,8 +857,16 @@ class ir_actions_todo(osv.osv):
             context = {}
         wizard_id = ids and ids[0] or False
         wizard = self.browse(cr, uid, wizard_id, context=context)
-        res = self.pool.get('ir.actions.act_window').read(cr, uid, wizard.action_id.id, ['name', 'view_type', 'view_mode', 'res_model', 'context', 'views', 'type'], context=context)
-        res.update({'target':'new', 'nodestroy': True})
+        res = self.pool.get('ir.actions.act_window').read(cr, uid, wizard.action_id.id, [], context=context)
+        res.update({'nodestroy': True})
+
+        # Open a specific record when res_id is provided in the context
+        if res.get('context'):
+            user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+            ctx = eval(res['context'], {'user': user})
+            if ctx.get('res_id'):
+                res.update({'res_id': ctx.pop('res_id')})
+                res.update({'context': ctx})
         return res
 
     def action_open(self, cr, uid, ids, context=None):

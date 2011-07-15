@@ -180,11 +180,16 @@
                 </search>
             </field>
         </record>
+
         <!--
     ======================
     Company
     ======================
     -->
+
+        <report id="preview_report" model="res.company" name="preview.report" multi="True"
+            rml="base/report/preview_report.rml" string="Preview Report"/>
+
         <record id="view_company_form" model="ir.ui.view">
             <field name="name">res.company.form</field>
             <field name="model">res.company</field>
@@ -192,18 +197,34 @@
             <field name="arch" type="xml">
                 <form string="Company">
                     <group colspan="4" col="6">
-                        <field colspan="4" name="name" select="1"/>
-                        <field name="partner_id" readonly="1" select="1" required="0"/>
-                        <field name="parent_id" select="1" groups="base.group_multi_company"/>
+                        <group colspan="4" col="4">
+                            <field name="name"/>
+                            <field name="partner_id" readonly="1" required="0"/>
+                            <field name="parent_id"  groups="base.group_multi_company"/>
+                        </group>
+                        <group colspan="2" col="2">
+                            <field name="logo" nolabel="1" widget="image"/>
+                        </group>
                     </group>
                     <notebook colspan="4">
                         <page string="General Information">
+                            <separator string="Address Information" colspan="4"/>
+                            <field name="street"/>
+                            <field name="street2"/>
+                            <field name="zip"/>
+                            <field name="city"/>
+                            <field name="country_id"/>
+                            <field name="state_id"/>
+                            <field name="phone"/>
+                            <field name="email"/>
+                            <separator string="Header/Footer of Reports" colspan="4"/>
                             <field name="rml_header1" colspan="4"/>
                             <field name="rml_footer1" colspan="4"/>
                             <field name="rml_footer2" colspan="4"/>
-                            <field name="currency_id"/>
-                            <separator colspan="4" string="Your Logo - Use a size of about 450x150 pixels."/>
-                            <field colspan="4" name="logo" widget="image"/>
+                            <group colspan="4" col="8">
+                                <label string="" colspan="7"/>
+                                <button name="%(preview_report)d" string="Preview Report" type="action" icon="gtk-print"/>
+                            </group>
                         </page>
                         <page string="Header/Footer" groups="base.group_extended">
                             <field colspan="4" name="rml_header" nolabel="1"/>
@@ -215,6 +236,9 @@
                             <field colspan="2" name="rml_header3" nolabel="1"/>
                         </page>
                         <page string="Configuration">
+                            <separator string="Accounting" colspan="4"/>
+                            <field name="currency_id" colspan="2"/>
+                            <newline/>
                         </page>
                     </notebook>
                 </form>
@@ -231,78 +255,6 @@
                     <field name="partner_id"/>
                 </tree>
             </field>
-        </record>
-
-        <record id="view_users_configuration_form" model="ir.ui.view">
-            <field name="name">res.config.users.confirm.form</field>
-            <field name="model">res.config.users</field>
-            <field name="type">form</field>
-            <field name="inherit_id" ref="res_config_view_base"/>
-            <field name="arch" type="xml">
-              <data>
-                <form position="attributes">
-                  <attribute name="string">Create User</attribute>
-                </form>
-                <xpath expr='//separator[@string="title"]' position='attributes'>
-                    <attribute name='string'>New User</attribute>
-              </xpath>
-                <xpath expr="//label[@string='description']"
-                     position="attributes">
-                <attribute name="string">Create additional users and assign them groups that will allow them to have access to selected functionalities within the system. Click on 'Done' if you do not wish to add more users at this stage, you can always do this later.</attribute>
-              </xpath>
-              <xpath expr='//separator[@string="vsep"]' position='attributes'>
-                        <attribute name='string'></attribute>
-                    </xpath>
-                <group string="res_config_contents" position="replace">
-                  <field name="name"/>
-                  <field name="email"/>
-                  <field name="login"/>
-                  <field name="password" password="True"/>
-                  <field name="context_lang"/>
-                  <field name="context_tz"/>
-
-                  <separator string="Group" colspan="4"/>
-                  <label  align="0.0" colspan="4" string="Groups are used to define access rights on objects and the visibility of screens and menus"/>
-                  <field colspan="4" nolabel="1" name="groups_id"/>
-                </group>
-
-                <xpath expr='//button[@name="action_next"]'
-                       position='attributes'>
-                  <attribute name="name">action_add</attribute>
-                  <attribute name='string'>Add User</attribute>
-                  <attribute name='icon'>gtk-add</attribute>
-                </xpath>
-
-                <xpath expr='//button[@name="action_skip"]'
-                       position='attributes'>
-                  <!-- if this one is performed first, it transforms
-                       the action_skip into action_next, and the
-                       transformation of action_next to action_add,
-                       since it uses first-match, transforms the same
-                       button. And we end up with [add] [next] instead
-                       of [next] [add]
-
-                       Would probably be simpler to just replace both
-                       by nothing and create a pair of brand new
-                       buttons... but we'd have to handle the groups
-                       around the buttons... oh well...
-                  -->
-                  <attribute name="name">action_next</attribute>
-                  <attribute name='string'>Done</attribute>
-                  <attribute name='icon'>gtk-go-forward</attribute>
-                </xpath>
-              </data>
-            </field>
-        </record>
-
-        <record id="action_config_user_form" model="ir.actions.act_window">
-            <field name="name">Create Users</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">res.config.users</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form</field>
-            <field name="view_id" ref="view_users_configuration_form"/>
-            <field name="target">new</field>
         </record>
 
         <record id="view_confirm_simple_view_form" model="ir.ui.view">
@@ -345,17 +297,19 @@
             <field name="view_mode">form</field>
             <field name="target">new</field>
         </record>
+        
+        <record id="category_administration_config" model="ir.actions.todo.category">
+            <field name="name">Administration</field>
+            <field name="sequence">1</field>
+        </record>         
 
-        <record id="config_wizard_step_user" model="ir.actions.todo">
-            <field name="action_id" ref="action_config_user_form"/>
-            <field name="sequence">10</field>
-            <field name="restart">never</field>
-            <field name="state">done</field>
-        </record>
         <record id="config_wizard_simple_view" model="ir.actions.todo">
             <field name="action_id" ref="action_config_simple_view_form"/>
-            <field name="restart">always</field>
+            <field name="category_id" ref="category_administration_config"/>
+            <field name="type">special</field>
             <field name="sequence">1</field>
+            <field name="state">skip</field>
         </record>
+
     </data>
 </openerp>

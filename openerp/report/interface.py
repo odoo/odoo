@@ -27,7 +27,7 @@ import openerp.netsvc as netsvc
 import openerp.pooler as pooler
 
 import openerp.tools as tools
-import openerp.addons as addons
+import openerp.modules
 import print_xml
 import render
 import urllib
@@ -49,6 +49,7 @@ class report_int(netsvc.Service):
         self.name = name
         self.id = 0
         self.name2 = '.'.join(name.split('.')[1:])
+        # TODO the reports have methods with a 'title' kwarg that is redundant with this attribute
         self.title = None
         #self.joinGroup('report')
         self.exportMethod(self.create)
@@ -118,7 +119,7 @@ class report_rml(report_int):
         pos_xml = i.end()
 
         doc = print_xml.document(cr, uid, {}, {})
-        tmpl_path = addons.get_module_resource('base', 'report', 'corporate_defaults.xml')
+        tmpl_path = openerp.modules.get_module_resource('base', 'report', 'corporate_defaults.xml')
         doc.parse(tmpl_path, [uid], 'res.users', context)
         corporate_header = doc.xml_get()
         doc.close()

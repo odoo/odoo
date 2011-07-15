@@ -127,6 +127,8 @@ class users(osv.osv):
     def send_welcome_email(self, cr, uid, id, context=None):
         logger= netsvc.Logger()
         user = self.pool.get('res.users').read(cr, uid, id, context=context)
+        if not user.get('email'):
+            return False
         if not tools.config.get('smtp_server'):
             logger.notifyChannel('mails', netsvc.LOG_WARNING,
                 _('"smtp_server" needs to be set to send mails to users'))
@@ -135,8 +137,6 @@ class users(osv.osv):
             logger.notifyChannel("mails", netsvc.LOG_WARNING,
                 _('"email_from" needs to be set to send welcome mails '
                   'to users'))
-            return False
-        if not user.get('email'):
             return False
 
         return tools.email_send(email_from=None, email_to=[user['email']],
@@ -206,6 +206,9 @@ class users(osv.osv):
             raise osv.except_osv(_('Operation Canceled'), _('Please use the change password wizard (in User Preferences or User menu) to change your own password.'))
         self.write(cr, uid, id, {'password': value})
 
+    def _get_password(self, cr, uid, ids, arg, karg, context=None):
+        return dict.fromkeys(ids, '')
+
     _columns = {
         'name': fields.char('User Name', size=64, required=True, select=True,
                             help="The new user's real name, used for searching"
@@ -213,7 +216,7 @@ class users(osv.osv):
         'login': fields.char('Login', size=64, required=True,
                              help="Used to log into the system"),
         'password': fields.char('Password', size=64, invisible=True, help="Keep empty if you don't want the user to be able to connect on the system."),
-        'new_password': fields.function(lambda *a:'', method=True, type='char', size=64,
+        'new_password': fields.function(_get_password, method=True, type='char', size=64,
                                 fnct_inv=_set_new_password,
                                 string='Change password', help="Only specify a value if you want to change the user password. "
                                 "This user will have to logout and login again!"),
@@ -237,14 +240,13 @@ class users(osv.osv):
 
         'company_ids':fields.many2many('res.company','res_company_users_rel','user_id','cid','Companies'),
         'context_lang': fields.selection(_lang_get, 'Language', required=True,
-            help="Sets the language for the user's user interface, when UI "
-                 "translations are available"),
+            help="The default language used in the graphical user interface, when translations are available. To add a new language, you can use the 'Load an Official Translation' wizard available from the 'Administration' menu."),
         'context_tz': fields.selection(_tz_get,  'Timezone', size=64,
             help="The user's timezone, used to perform timezone conversions "
                  "between the server and the client."),
         'view': fields.function(_get_interface_type, method=True, type='selection', fnct_inv=_set_interface_type,
                                 selection=[('simple','Simplified'),('extended','Extended')],
-                                string='Interface', help="Choose between the simplified interface and the extended one"),
+                                string='Interface', help="OpenERP offers a simplified and an extended user interface. If you use OpenERP for the first time we strongly advise you to select the simplified interface, which has less features but is easier to use. You can switch to the other interface from the User/Preferences menu at any time."),
         'user_email': fields.function(_email_get, method=True, fnct_inv=_email_set, string='Email', type="char", size=240),
         'menu_tips': fields.boolean('Menu Tips', help="Check out this box if you want to always display tips on each menu action"),
         'date': fields.datetime('Last Connection', readonly=True),
@@ -263,7 +265,6 @@ class users(osv.osv):
             if 'password' in o and ( 'id' not in o or o['id'] != uid ):
                 o['password'] = '********'
             return o
-
         result = super(users, self).read(cr, uid, ids, fields, context, load)
         canwrite = self.pool.get('ir.model.access').check(cr, uid, 'res.users', 'write', raise_exception=False)
         if not canwrite:
@@ -365,7 +366,7 @@ class users(osv.osv):
                     break
             else:
                 if 'company_id' in values:
-                    if not (values['company_id'] in self.read(cr, uid, uid, ['company_ids'], context=context)['company_ids']):
+                    if not (values['company_id'] in self.read(cr, 1, uid, ['company_ids'], context=context)['company_ids']):
                         del values['company_id']
                 uid = 1 # safe fields only, so we write as super-user to bypass access rights
 
@@ -458,24 +459,25 @@ class users(osv.osv):
             raise security.ExceptionNoTb('AccessDenied')
 
     def check(self, db, uid, passwd):
+        """Verifies that the given (uid, password) pair is authorized for the database ``db`` and
+           raise an exception if it is not."""
         if not passwd:
-            return False
+            # empty passwords disallowed for obvious security reasons
+            raise security.ExceptionNoTb('AccessDenied')
         if self._uid_cache.get(db, {}).get(uid) == passwd:
-            return True
+            return
         cr = pooler.get_db(db).cursor()
         try:
             cr.execute('SELECT COUNT(1) FROM res_users WHERE id=%s AND password=%s AND active=%s',
                         (int(uid), passwd, True))
             res = cr.fetchone()[0]
-            if not bool(res):
+            if not res:
                 raise security.ExceptionNoTb('AccessDenied')
-            if res:
-                if self._uid_cache.has_key(db):
-                    ulist = self._uid_cache[db]
-                    ulist[uid] = passwd
-                else:
-                    self._uid_cache[db] = {uid:passwd}
-            return bool(res)
+            if self._uid_cache.has_key(db):
+                ulist = self._uid_cache[db]
+                ulist[uid] = passwd
+            else:
+                self._uid_cache[db] = {uid:passwd}
         finally:
             cr.close()
 
@@ -508,58 +510,6 @@ class users(osv.osv):
 
 users()
 
-class config_users(osv.osv_memory):
-    _name = 'res.config.users'
-    _inherit = ['res.users', 'res.config']
-
-    def _generate_signature(self, cr, name, email, context=None):
-        return _('--\n%(name)s %(email)s\n') % {
-            'name': name or '',
-            'email': email and ' <'+email+'>' or '',
-            }
-
-    def create_user(self, cr, uid, new_id, context=None):
-        """ create a new res.user instance from the data stored
-        in the current res.config.users.
-
-        If an email address was filled in for the user, sends a mail
-        composed of the return values of ``get_welcome_mail_subject``
-        and ``get_welcome_mail_body`` (which should be unicode values),
-        with the user's data %-formatted into the mail body
-        """
-        base_data = self.read(cr, uid, new_id, context=context)
-        partner_id = self.pool.get('res.partner').main_partner(cr, uid)
-        address = self.pool.get('res.partner.address').create(
-            cr, uid, {'name': base_data['name'],
-                      'email': base_data['email'],
-                      'partner_id': partner_id,},
-            context)
-        user_data = dict(
-            base_data,
-            signature=self._generate_signature(
-                cr, base_data['name'], base_data['email'], context=context),
-            address_id=address,
-            )
-        new_user = self.pool.get('res.users').create(
-            cr, uid, user_data, context)
-        self.send_welcome_email(cr, uid, new_user, context=context)
-    def execute(self, cr, uid, ids, context=None):
-        'Do nothing on execution, just launch the next action/todo'
-        pass
-    def action_add(self, cr, uid, ids, context=None):
-        'Create a user, and re-display the view'
-        self.create_user(cr, uid, ids[0], context=context)
-        return {
-            'view_type': 'form',
-            "view_mode": 'form',
-            'res_model': 'res.config.users',
-            'view_id':self.pool.get('ir.ui.view')\
-                .search(cr,uid,[('name','=','res.config.users.confirm.form')]),
-            'type': 'ir.actions.act_window',
-            'target':'new',
-            }
-config_users()
-
 class groups2(osv.osv): ##FIXME: Is there a reason to inherit this object ?
     _inherit = 'res.groups'
     _columns = {
@@ -574,9 +524,9 @@ class groups2(osv.osv): ##FIXME: Is there a reason to inherit this object ?
 
         if group_users:
             user_names = [user.name for user in self.pool.get('res.users').browse(cr, uid, group_users, context=context)]
+            user_names = list(set(user_names))
             if len(user_names) >= 5:
-                user_names = user_names[:5]
-                user_names += '...'
+                user_names = user_names[:5] + ['...']
             raise osv.except_osv(_('Warning !'),
                         _('Group(s) cannot be deleted, because some user(s) still belong to them: %s !') % \
                             ', '.join(user_names))

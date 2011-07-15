@@ -68,11 +68,40 @@ class multi_company_default(osv.osv):
 
 multi_company_default()
 
-
 class res_company(osv.osv):
     _name = "res.company"
     _description = 'Companies'
     _order = 'name'
+
+    def _get_address_data(self, cr, uid, ids, field_names, arg, context=None):
+        """ Read the 'address' functional fields. """
+        result = {}
+        part_obj = self.pool.get('res.partner')
+        address_obj = self.pool.get('res.partner.address')
+        for company in self.browse(cr, uid, ids, context=context):
+            result[company.id] = {}.fromkeys(field_names, False)
+            if company.partner_id:
+                address_data = part_obj.address_get(cr, uid, [company.partner_id.id], adr_pref=['default'])
+                if address_data['default']:
+                    address = address_obj.read(cr, uid, address_data['default'], field_names, context=context)
+                    for field in field_names:
+                        result[company.id][field] = address[field] or False
+        return result
+
+    def _set_address_data(self, cr, uid, company_id, name, value, arg, context=None):
+        """ Write the 'address' functional fields. """
+        company = self.browse(cr, uid, company_id, context=context)
+        if company.partner_id:
+            part_obj = self.pool.get('res.partner')
+            address_obj = self.pool.get('res.partner.address')
+            address_data = part_obj.address_get(cr, uid, [company.partner_id.id], adr_pref=['default'])
+            address = address_data['default']
+            if address:
+                address_obj.write(cr, uid, [address], {name: value or False})
+            else:
+                address_obj.create(cr, uid, {name: value or False, 'partner_id': company.partner_id.id}, context=context)
+        return True
+
     _columns = {
         'name': fields.char('Company Name', size=64, required=True),
         'parent_id': fields.many2one('res.company', 'Parent Company', select=True),
@@ -81,14 +110,22 @@ class res_company(osv.osv):
         'rml_header1': fields.char('Report Header', size=200),
         'rml_footer1': fields.char('Report Footer 1', size=200),
         'rml_footer2': fields.char('Report Footer 2', size=200),
-        'rml_header' : fields.text('RML Header', required=True),
-        'rml_header2' : fields.text('RML Internal Header', required=True),
-        'rml_header3' : fields.text('RML Internal Header', required=True),
-        'logo' : fields.binary('Logo'),
+        'rml_header': fields.text('RML Header', required=True),
+        'rml_header2': fields.text('RML Internal Header', required=True),
+        'rml_header3': fields.text('RML Internal Header', required=True),
+        'logo': fields.binary('Logo'),
         'currency_id': fields.many2one('res.currency', 'Currency', required=True),
         'currency_ids': fields.one2many('res.currency', 'company_id', 'Currency'),
         'user_ids': fields.many2many('res.users', 'res_company_users_rel', 'cid', 'user_id', 'Accepted Users'),
         'account_no':fields.char('Account No.', size=64),
+        'street': fields.function(_get_address_data, fnct_inv=_set_address_data, size=128, type='char', string="Street", multi='address'), 
+        'street2': fields.function(_get_address_data, fnct_inv=_set_address_data, size=128, type='char', string="Street2", multi='address'), 
+        'zip': fields.function(_get_address_data, fnct_inv=_set_address_data, size=24, type='char', string="Zip", multi='address'), 
+        'city': fields.function(_get_address_data, fnct_inv=_set_address_data, size=24, type='char', string="City", multi='address'),         
+        'state_id': fields.function(_get_address_data, fnct_inv=_set_address_data, type='many2one', domain="[('country_id', '=', country_id)]", relation='res.country.state', string="State", multi='address'), 
+        'country_id': fields.function(_get_address_data, fnct_inv=_set_address_data, type='many2one', relation='res.country', string="Country", multi='address'), 
+        'email': fields.function(_get_address_data, fnct_inv=_set_address_data, size=64, type='char', string="Email", multi='address'), 
+        'phone': fields.function(_get_address_data, fnct_inv=_set_address_data, size=64, type='char', string="Phone", multi='address'), 
     }
 
     def _search(self, cr, uid, args, offset=0, limit=None, order=None,
@@ -188,40 +225,27 @@ class res_company(osv.osv):
             tools.config['root_path'], '..', 'pixmaps', 'openerp-header.png'),
                     'rb') .read().encode('base64')
 
-    def _get_header3(self,cr,uid,ids):
-        return """
+    _header = """
 <header>
 <pageTemplate>
-    <frame id="first" x1="28.0" y1="28.0" width="786" height="525"/>
+    <frame id="first" x1="28.0" y1="28.0" width="%s" height="%s"/>
     <pageGraphics>
         <fill color="black"/>
         <stroke color="black"/>
         <setFont name="DejaVu Sans" size="8"/>
-        <drawString x="25" y="555"> [[ formatLang(time.strftime("%Y-%m-%d"), date=True) ]]  [[ time.strftime("%H:%M") ]]</drawString>
+        <drawString x="%s" y="%s"> [[ formatLang(time.strftime("%%Y-%%m-%%d"), date=True) ]]  [[ time.strftime("%%H:%%M") ]]</drawString>
         <setFont name="DejaVu Sans Bold" size="10"/>
-        <drawString x="382" y="555">[[ company.partner_id.name ]]</drawString>
+        <drawCentredString x="%s" y="%s">[[ company.partner_id.name ]]</drawCentredString>
         <stroke color="#000000"/>
-        <lines>25 550 818 550</lines>
+        <lines>%s</lines>
     </pageGraphics>
-    </pageTemplate>
+</pageTemplate>
 </header>"""
-    def _get_header2(self,cr,uid,ids):
-        return """
-        <header>
-        <pageTemplate>
-        <frame id="first" x1="28.0" y1="28.0" width="539" height="772"/>
-        <pageGraphics>
-        <fill color="black"/>
-        <stroke color="black"/>
-        <setFont name="DejaVu Sans" size="8"/>
-        <drawString x="1.0cm" y="28.3cm"> [[ formatLang(time.strftime("%Y-%m-%d"), date=True) ]]  [[ time.strftime("%H:%M") ]]</drawString>
-        <setFont name="DejaVu Sans Bold" size="10"/>
-        <drawString x="9.3cm" y="28.3cm">[[ company.partner_id.name ]]</drawString>
-        <stroke color="#000000"/>
-        <lines>1.0cm 28.1cm 20.1cm 28.1cm</lines>
-        </pageGraphics>
-        </pageTemplate>
-</header>"""
+
+    _header2 = _header % (539, 772, "1.0cm", "28.3cm", "11.1cm", "28.3cm", "1.0cm 28.1cm 20.1cm 28.1cm")
+
+    _header3 = _header % (786, 525, 25, 555, 440, 555, "25 550 818 550")
+
     def _get_header(self,cr,uid,ids):
         try :
             header_file = tools.file_open(os.path.join('base', 'report', 'corporate_rml_header.rml'))
@@ -267,14 +291,15 @@ class res_company(osv.osv):
     _defaults = {
         'currency_id': _get_euro,
         'rml_header':_get_header,
-        'rml_header2': _get_header2,
-        'rml_header3': _get_header3,
+        'rml_header2': _header2,
+        'rml_header3': _header3,
         #'logo':_get_logo
     }
 
     _constraints = [
         (osv.osv._check_recursion, 'Error! You can not create recursive companies.', ['parent_id'])
     ]
+
 
 res_company()
 

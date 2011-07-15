@@ -26,10 +26,19 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 ###############################################################################
 
-""" This file contains instance of the http server.
+#.apidoc title: HTTP and XML-RPC Server
 
+""" This module offers the family of HTTP-based servers. These are not a single
+    class/functionality, but a set of network stack layers, implementing
+    extendable HTTP protocols.
 
+    The OpenERP server defines a single instance of a HTTP server, listening at
+    the standard 8069, 8071 ports (well, it is 2 servers, and ports are 
+    configurable, of course). This "single" server then uses a `MultiHTTPHandler`
+    to dispatch requests to the appropriate channel protocol, like the XML-RPC,
+    static HTTP, DAV or other.
 """
+
 from websrv_lib import *
 import openerp.netsvc as netsvc
 import errno

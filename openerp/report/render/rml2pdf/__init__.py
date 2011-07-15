@@ -21,3 +21,5 @@
 
 from trml2pdf import parseString, parseNode
 
+#.apidoc title: RML to PDF engine
+
