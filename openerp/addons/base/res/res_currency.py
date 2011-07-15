@@ -29,18 +29,17 @@ from tools.translate import _
 class res_currency(osv.osv):
     def _current_rate(self, cr, uid, ids, name, arg, context=None):
         currency_rate_obj = self.pool.get('res.currency.rate')
+        res = {}
         if context is None:
             context = {}
-        res = {}
         if 'date' in context:
             date = context['date']
         else:
             date = time.strftime('%Y-%m-%d')
-        date = date or time.strftime('%Y-%m-%d')
-        domain = [('currency_id','in',ids), ('name','<=',date)]
+        domain = [('currency_id', 'in', ids), ('name', '<=', date)]
         currency_rate_type_id = context.get('currency_rate_type_id', False)
         if currency_rate_type_id:
-            domain.append(('currency_rate_type_id','=',currency_rate_type_id))
+            domain.append(('currency_rate_type_id', '=', currency_rate_type_id))
         curr_rate_ids = currency_rate_obj.search(cr, uid, domain, order='name desc', context=context)
         curr_rates = currency_rate_obj.browse(cr, uid, curr_rate_ids, context=context)
         for id in ids:
@@ -49,8 +48,8 @@ class res_currency(osv.osv):
                 if cur.currency_id.id == id:
                     res[id] = cur.rate
                     break
-
         return res
+
     _name = "res.currency"
     _description = "Currency"
     _columns = {
@@ -75,15 +74,14 @@ class res_currency(osv.osv):
     _order = "name"
 
     def read(self, cr, user, ids, fields=None, context=None, load='_classic_read'):
+        currency_rate_obj=  self.pool.get('res.currency.rate')
         res = super(osv.osv, self).read(cr, user, ids, fields, context, load)
         for r in res:
             if r.__contains__('rate_ids'):
                 rates=r['rate_ids']
                 if rates:
-                    currency_rate_obj=  self.pool.get('res.currency.rate')
-                    currency_date = currency_rate_obj.read(cr,user,rates[0],['name'])['name']
+                    currency_date = currency_rate_obj.read(cr, user, rates[0], ['name'])['name']
                     r['date'] = currency_date
-
         return res
 
     def name_get(self, cr, uid, ids, context=None):
