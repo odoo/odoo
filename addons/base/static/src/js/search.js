@@ -14,10 +14,13 @@ openerp.base.SearchView = openerp.base.Controller.extend({
         this.enabled_filters = [];
 
         this.has_focus = false;
+
+        this.ready = $.Deferred();
     },
     start: function() {
         //this.log('Starting SearchView '+this.model+this.view_id)
-        return this.rpc("/base/searchview/load", {"model": this.model, "view_id":this.view_id}, this.on_loaded);
+        this.rpc("/base/searchview/load", {"model": this.model, "view_id":this.view_id}, this.on_loaded);
+        return this.ready.promise();
     },
     show: function () {
         this.$element.show();
@@ -132,12 +135,17 @@ openerp.base.SearchView = openerp.base.Controller.extend({
                 .submit(this.do_search)
                 .bind('reset', this.do_clear);
         // start() all the widgets
-        _(lines).chain().flatten().each(function (widget) {
-            widget.start();
-        });
+        var widget_starts = _(lines).chain().flatten().map(function (widget) {
+            return widget.start();
+        }).value();
         
         // filters management
         this.$element.find(".oe_search-view-filters-management").change(this.on_filters_management);
+
+        var self = this;
+        $.when.apply(null, widget_starts).then(function () {
+            self.ready.resolve();
+        });
     },
     /**
      * Handle event when the user make a selection in the filters management select box.
@@ -703,14 +711,64 @@ openerp.base.search.DateField = openerp.base.search.Field.extend(
 openerp.base.search.DateTimeField = openerp.base.search.DateField.extend({
     // TODO: time?
 });
-openerp.base.search.OneToManyField = openerp.base.search.IntegerField.extend({
+openerp.base.search.OneToManyField = openerp.base.search.CharField.extend({
     // TODO: .relation, .context, .domain
 });
-openerp.base.search.ManyToOneField = openerp.base.search.IntegerField.extend({
+openerp.base.search.ManyToOneField = openerp.base.search.CharField.extend({
     // TODO: @widget
     // TODO: .relation, .selection, .context, .domain
+    init: function (view_section, field, view) {
+        this._super(view_section, field, view);
+        console.log('m2o init', this.attrs.name);
+        var self = this;
+        this.got_name = $.Deferred().then(function () {
+            self.$element.val(self.name);
+        });
+    },
+    start: function () {
+        var self = this;
+        this._super();
+        var started = $.Deferred();
+        this.got_name.then(function () { started.resolve();},
+                           function () { started.resolve(); });
+        return started.promise();
+    },
+    on_name_get: function (name_get) {
+        console.log('m2o name_get', this.attrs.name);
+        if (!name_get.length) {
+            delete this.id;
+            this.got_name.reject();
+            return;
+        }
+        this.name = name_get[0][1];
+        this.got_name.resolve();
+    },
+    render: function (defaults) {
+        if (defaults[this.attrs.name]) {
+            this.id = defaults[this.attrs.name];
+            // TODO: maybe this should not be completely removed
+            delete defaults[this.attrs.name];
+            new openerp.base.DataSet(this.view.session, this.attrs['relation'])
+                .name_get([this.id], $.proxy(this, 'on_name_get'));
+        } else {
+            this.got_name.reject();
+        }
+        return this._super(defaults);
+    },
+    get_domain: function () {
+        console.log('m2o get_domain', this.attrs.name);
+        if (this.id && this.name) {
+            if (this.$element.val() === this.name) {
+                return [[this.attrs.name, '=', this.id]];
+            } else {
+                delete this.id;
+                delete this.name;
+            }
+        }
+        return this._super();
+    }
 });
-openerp.base.search.ManyToManyField = openerp.base.search.IntegerField.extend({
+openerp.base.search.ManyToManyField = openerp.base.search.CharField.extend({
     // TODO: .related_columns (Array), .context, .domain
 });
 
