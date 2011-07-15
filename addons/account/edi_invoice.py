@@ -196,6 +196,9 @@ class account_invoice(osv.osv, ir_edi.edi):
         partner = partner_pool.browse(cr, uid, partner_id, context=context)
         edi_document['partner_id'] = self.edi_m2o(cr, uid, partner, context=context)
 
+        partner_address = partner_address_pool.browse(cr, uid, address_id, context=context)
+        edi_document['address_invoice_id'] = self.edi_m2o(cr, uid, partner_address, context=context)
+
         # change type: out_invoice'<->'in_invoice','out_refund'<->'in_refund'
         invoice_type = invoice_type.startswith('in_') and invoice_type.replace('in_','out_') or invoice_type.replace('out_','in_')
         edi_document['type'] = invoice_type

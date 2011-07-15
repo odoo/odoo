@@ -26,13 +26,11 @@ if object.partner_id.opt_out: self.pool.get('email.template').generate_mail(cr,
         
 		<!--Email template -->
 		<record id="email_template_edi_invoice" model="email.template">
-			<field name="from_account" ref="email_template.default_email_template_account"/>
 			<field name="def_subject">${object.company_id.name} - Invoice ${object.number}</field>
 			<field name="def_to">${object.address_invoice_id.email}</field>
 			<field name="object_name" ref="account.model_account_invoice"/>
             <field name="use_sign">True</field>
-			<field name="def_body_text">
-Hello ${object.partner_id.name},
+			<field name="def_body_text">Hello ${object.partner_id.name},
 
 We just registered the invoice ${object.number} for ${object.amount_total} ${object.currency_id.name} for your company ${object.company_id.name}.
 You can click on the following link to preview, print and pay this invoice:
@@ -41,7 +39,8 @@ You can click on the following link to preview, print and pay this invoice:
 
 Please note that this invoice has to be paid before ${object.date_due}
 
-Regards,</field>
+Regards,
+</field>
 			<field name="template_language">mako</field>
 			<field name="name">Mail Template of Invoice For EDI Document</field>
 			<field name="model_int_name">account.invoice</field>

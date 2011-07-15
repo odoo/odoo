@@ -1,14 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data noupdate="1">
-        <!-- Email Template Default Account -->
-        <record id="default_email_template_account" model="email_template.account">
-			<field name="name">Default EMail Template Account</field>
-            <field name="email_id">test@localhost</field>
-            <field name="state">draft</field>
-        </record>
-
-        
         <record forcecreate="True" id="ir_cron_mail_scheduler_action" model="ir.cron">
             <field name="name">Email Template scheduler</field>
             <field name="user_id" ref="base.user_root"/>
