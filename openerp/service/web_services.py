@@ -62,6 +62,7 @@ class edi(netsvc.ExportService):
         pool = pooler.get_pool(db)
         edi_pool = pool.get('ir.edi.document')
         try:
+            cr.autocommit(True)
             res = edi_pool.import_edi(cr, uid, edi_document=edi_document, context=context)
         finally:
             cr.close()
@@ -73,6 +74,7 @@ class edi(netsvc.ExportService):
         pool = pooler.get_pool(db)
         edi_pool = pool.get('ir.edi.document')
         try:
+            cr.autocommit(True)
             res = edi_pool.import_edi(cr, uid, edi_url=edi_url, context=context)
         finally:
             cr.close()
