@@ -719,14 +719,12 @@ openerp.base.search.ManyToOneField = openerp.base.search.CharField.extend({
     // TODO: .relation, .selection, .context, .domain
     init: function (view_section, field, view) {
         this._super(view_section, field, view);
-        console.log('m2o init', this.attrs.name);
         var self = this;
         this.got_name = $.Deferred().then(function () {
             self.$element.val(self.name);
         });
     },
     start: function () {
-        var self = this;
         this._super();
         var started = $.Deferred();
         this.got_name.then(function () { started.resolve();},
@@ -734,7 +732,6 @@ openerp.base.search.ManyToOneField = openerp.base.search.CharField.extend({
         return started.promise();
     },
     on_name_get: function (name_get) {
-        console.log('m2o name_get', this.attrs.name);
         if (!name_get.length) {
             delete this.id;
             this.got_name.reject();
@@ -756,7 +753,6 @@ openerp.base.search.ManyToOneField = openerp.base.search.CharField.extend({
         return this._super(defaults);
     },
     get_domain: function () {
-        console.log('m2o get_domain', this.attrs.name);
         if (this.id && this.name) {
             if (this.$element.val() === this.name) {
                 return [[this.attrs.name, '=', this.id]];
