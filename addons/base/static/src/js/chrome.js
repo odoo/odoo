@@ -440,57 +440,11 @@ openerp.base.Session = openerp.base.BasicController.extend( /** @lends openerp.b
     }
 });
 
-// A controller takes an already existing element
-// new()
-// start()
+/**
+ * OpenERP session aware controller
+ * a controller takes an already existing dom element and manage it
+ */
 openerp.base.Controller = openerp.base.BasicController.extend( /** @lends openerp.base.Controller# */{
-    /**
-     * Controller manifest used to declare standard controller attributes
-     */
-    controller_manifest: {
-        register: null,
-        template: "",
-        element_post_prefix: false
-    },
-    /**
-     * Controller registry, 
-     */
-    controller_registry: {
-    },
-    /**
-     * Add a new child controller
-     */
-    controller_get: function(key) {
-        return this.controller_registry[key];
-        // OR should build it ? setting parent correctly ?
-        // function construct(constructor, args) {
-        //     function F() {
-        //         return constructor.apply(this, args);
-        //     }
-        //     F.prototype = constructor.prototype;
-        //     return new F();
-        // }
-        // var obj = this.controller_registry[key];
-        // if(obj) {
-        //     return construct(obj, Array.prototype.slice.call(arguments, 1));
-        // }
-    },
-    controller_new: function(key) {
-        var self;
-        // OR should contrustct it ? setting parent correctly ?
-        function construct(constructor, args) {
-            function F() {
-                return constructor.apply(this, args);
-            }
-            F.prototype = constructor.prototype;
-            return new F();
-        }
-        var obj = this.controller_registry[key];
-        if(obj) {
-            // TODO Prepend parent
-            return construct(obj, Array.prototype.slice.call(arguments, 1));
-        }
-    },
     /**
      * @constructs
      * @extends openerp.base.BasicController
@@ -511,18 +465,6 @@ openerp.base.Controller = openerp.base.BasicController.extend( /** @lends opener
                 this.session = parent_or_session;
             }
         }
-        // Apply manifest options
-        if(this.controller_manifest) {
-            var register = this.controller_manifest.register;
-            // TODO accept a simple string
-            if(register) {
-                for(var i=0; i<register.length; i++) {
-                    this.controller_registry[register[i]] = this;
-                }
-            }
-            // TODO if post prefix
-            //this.element_id = _.uniqueId(_.toArray(arguments).join('_'));
-        }
     },
     /**
      * Performs a JSON-RPC call
@@ -539,13 +481,12 @@ openerp.base.Controller = openerp.base.BasicController.extend( /** @lends opener
     }
 });
 
-// A widget is a controller that doesnt take an element_id
-// it render its own html that you should insert into the dom
-// and bind it a start()
-//
-// new()
-// render() and insert it place it where you want
-// start()
+/**
+ * OpenERP session aware widget
+ * A widget is a controller that doesnt take an element_id
+ * it render its own html render() that you should insert into the dom
+ * and bind it a start()
+ */
 openerp.base.BaseWidget = openerp.base.Controller.extend({
     /**
      * The name of the QWeb template that will be used for rendering. Must be
