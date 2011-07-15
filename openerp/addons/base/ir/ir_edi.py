@@ -356,9 +356,9 @@ class edi(object):
                 record = getattr(row, field)
                 if not record:
                     continue
-                if _fields[field].has_key('function') or _fields[field].has_key('related_columns'):
-                    # Do not Export Function Fields and related fields
-                    continue
+                #if _fields[field].has_key('function') or _fields[field].has_key('related_columns'):
+                #    # Do not Export Function Fields and related fields
+                #    continue
                 elif cols['type'] == 'many2one':
                     value = self.edi_m2o(cr, uid, record, context=context)
                 elif cols['type'] == 'many2many':
