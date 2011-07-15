@@ -508,7 +508,7 @@ class DataSet(openerpweb.Controller):
 
     @openerpweb.jsonrequest
     def call(self, req, model, method, args, domain_id=None, context_id=None):
-        return {'result': self.call_common(req, model, method, args, domain_id, context_id)}
+        return self.call_common(req, model, method, args, domain_id, context_id)
 
     @openerpweb.jsonrequest
     def call_button(self, req, model, method, args, domain_id=None, context_id=None):
@@ -524,20 +524,19 @@ class DataSet(openerpweb.Controller):
 
     @openerpweb.jsonrequest
     def default_get(self, req, model, fields):
-        m = req.session.model(model)
-        r = m.default_get(fields, req.session.eval_context(req.context))
-        return {'result': r}
+        Model = req.session.model(model)
+        return Model.default_get(fields, req.session.eval_context(req.context))
 
 class DataGroup(openerpweb.Controller):
     _cp_path = "/base/group"
     @openerpweb.jsonrequest
-    def read(self, request, model, fields, group_by_fields, domain=None):
+    def read(self, request, model, fields, group_by_fields, domain=None, sort=None):
         Model = request.session.model(model)
         context, domain = eval_context_and_domain(request.session, request.context, domain)
 
         return Model.read_group(
             domain or [], fields, group_by_fields, 0, False,
-            dict(context, group_by=group_by_fields))
+            dict(context, group_by=group_by_fields), sort or False)
 
 class View(openerpweb.Controller):
     _cp_path = "/base/view"
@@ -570,10 +569,15 @@ class View(openerpweb.Controller):
         else:
             xml = ElementTree.fromstring(arch)
         fvg['arch'] = Xml2Json.convert_element(xml)
-        for field in fvg['fields'].values():
-            if field.has_key('views') and field['views']:
-                for view in field["views"].values():
+
+        for field in fvg['fields'].itervalues():
+            if field.get('views'):
+                for view in field["views"].itervalues():
                     self.process_view(session, view, None, transform)
+            if field.get('domain'):
+                field["domain"] = self.parse_domain(field["domain"], session)
+            if field.get('context'):
+                field["context"] = self.parse_context(field["context"], session)
 
     @openerpweb.jsonrequest
     def add_custom(self, request, view_id, arch):
@@ -611,27 +615,38 @@ class View(openerpweb.Controller):
                 self.parse_domains_and_contexts(elem, session)
         return root
 
-    def parse_domain(self, elem, attr_name, session):
-        """ Parses an attribute of the provided name as a domain, transforms it
+    def parse_domain(self, domain, session):
+        """ Parses an arbitrary string containing a domain, transforms it
         to either a literal domain or a :class:`openerpweb.nonliterals.Domain`
 
-        :param elem: the node being parsed
-        :type param: xml.etree.ElementTree.Element
-        :param str attr_name: the name of the attribute which should be parsed
+        :param domain: the domain to parse, if the domain is not a string it is assumed to
+        be a literal domain and is returned as-is
         :param session: Current OpenERP session
         :type session: openerpweb.openerpweb.OpenERPSession
         """
-        domain = elem.get(attr_name, '').strip()
-        if domain:
-            try:
-                elem.set(
-                    attr_name,
-                    openerpweb.ast.literal_eval(
-                        domain))
-            except ValueError:
-                # not a literal
-                elem.set(attr_name,
-                         openerpweb.nonliterals.Domain(session, domain))
+        if not isinstance(domain, (str, unicode)):
+            return domain
+        try:
+            return openerpweb.ast.literal_eval(domain)
+        except ValueError:
+            # not a literal
+            return openerpweb.nonliterals.Domain(session, domain)
+        
+    def parse_context(self, context, session):
+        """ Parses an arbitrary string containing a context, transforms it
+        to either a literal context or a :class:`openerpweb.nonliterals.Context`
+
+        :param context: the context to parse, if the context is not a string it is assumed to
+        be a literal domain and is returned as-is
+        :param session: Current OpenERP session
+        :type session: openerpweb.openerpweb.OpenERPSession
+        """
+        if not isinstance(context, (str, unicode)):
+            return context
+        try:
+            return openerpweb.ast.literal_eval(context)
+        except ValueError:
+            return openerpweb.nonliterals.Context(session, context)
 
     def parse_domains_and_contexts(self, elem, session):
         """ Converts domains and contexts from the view into Python objects,
@@ -644,18 +659,14 @@ class View(openerpweb.Controller):
                         non-literal objects
         :type session: openerpweb.openerpweb.OpenERPSession
         """
-        self.parse_domain(elem, 'domain', session)
-        self.parse_domain(elem, 'filter_domain', session)
+        for el in ['domain', 'filter_domain']:
+            domain = elem.get(el, '').strip()
+            if domain:
+                elem.set(el, self.parse_domain(domain, session))
         for el in ['context', 'default_get']:
             context_string = elem.get(el, '').strip()
             if context_string:
-                try:
-                    elem.set(el,
-                             openerpweb.ast.literal_eval(context_string))
-                except ValueError:
-                    elem.set(el,
-                             openerpweb.nonliterals.Context(
-                                 session, context_string))
+                elem.set(el, self.parse_context(context_string, session))
 
 class FormView(View):
     _cp_path = "/base/formview"

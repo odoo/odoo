@@ -283,10 +283,8 @@
             <t t-foreach="columns" t-as="column">
                 <th t-if="!column.meta and column.invisible !== '1'" t-att-data-id="column.id"
                     t-att-class="((options.sortable and column.tag !== 'button') ? 'oe-sortable' : null)">
-                    <t t-if="column.tag !== 'button'">
-                        <t t-esc="column.string"/>
-                        <span t-att-class="(fields_view.sorted.field === column.id) ? ('ui-icon' + (fields_view.sorted.reversed ? ' ui-icon-triangle-1-n' : ' ui-icon-triangle-1-s')) : ''"/>
-                    </t>
+                    <t t-if="column.tag !== 'button'"
+                        ><t t-esc="column.string"/></t>
                 </th>
             </t>
             <th t-if="options.deletable" width="1"/>
@@ -336,8 +334,8 @@
     <t t-raw="frame.render()"/>
 </t>
 <t t-name="FormView">
-    <h2 class="oe_view_title"><t t-esc="view.fields_view.arch.attrs.string"/></h2>
     <div class="oe_form_header" t-att-id="view.element_id + '_header'">
+        <h2 class="oe_view_title"><t t-esc="view.fields_view.arch.attrs.string"/> <button class="oe_get_xml_view">xml</button></h2>
         <div class="oe_form_buttons" t-if="view.flags.action_buttons !== false">
             <!--<button type="button" class="oe_form_button_save">
                 <span class="oe_form_on_update">Save</span>
@@ -811,7 +809,7 @@
         <select class="searchview_extended_prop_op"/>
         <span class="searchview_extended_prop_value"/>
         <a class="searchview_extended_delete_prop"
-                href="javascript:void(0)"><span></span></a>
+                href="javascript:void(0)"><span> </span></a>
     </div>
 </t>
 <t t-name="SearchView.extended_search.proposition.char">
