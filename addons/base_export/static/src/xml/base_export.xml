@@ -89,12 +89,16 @@
                 <td>
                     <table width="100%" border="0">
                         <tr class="row">
-                            <t t-foreach="field.level" t-as="level" >
-                                <td width="18">&amp;nbsp;</td>
+                            <t t-foreach="(field.id).split('/')" t-as="level" >
+                                <t t-if="(field.id).split('/')[0] != level">
+                                    <td width="18">&amp;nbsp;</td>
+                                </t>
                             </t>
                             <td valign="top" align="left" style="cursor: pointer;" width="18">
                                 <t t-if="(field.children).length >= 1">
-                                    <img t-att-id="'parentimg-' + field.id" src="/base/static/src/img/expand.gif" width="16" height="16" border="0"/>
+                                    <t t-if="(field.id).split('/').length != 3">
+                                        <img t-att-id="'parentimg-' + field.id" src="/base/static/src/img/expand.gif" width="16" height="16" border="0"/>
+                                    </t>
                                 </t>
                             </td>
                             <td valign="top" align="left" style="cursor: pointer;">

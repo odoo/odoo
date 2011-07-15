@@ -21,10 +21,8 @@ class Export(View):
 
             id = prefix + (prefix and '/'or '') + key
             nm = name + (name and '/' or '') + value['string']
-            levels = nm.split('/')
-            levels > 1 and levels.remove(levels[0]) or []
             record.update(id=id, string= nm, action='javascript: void(0)',
-                          target=None, icon=None, children=[], level = levels)
+                          target=None, icon=None, children=[])
             records.append(record)
 
             if value.get('relation', False):
