@@ -1185,10 +1185,6 @@ class stock_picking(osv.osv):
                 product_currency = partial_data.get('product_currency') or False
                 prodlot_id = partial_data.get('prodlot_id') or False
                 prodlot_ids[move.id] = prodlot_id
-                product_name = product_obj.browse(cr, uid, partial_data.get('product_id'), context=context).name
-                if product_qty > move.product_qty:
-                    raise osv.except_osv(_('Error'), _('Processing quantity %d for %s is larger than the available quantity %d!')\
-                                         %(product_qty, product_name, move.product_qty))
                 if move.product_qty == product_qty:
                     complete.append(move)
                 elif move.product_qty > product_qty:
@@ -2434,10 +2430,6 @@ class stock_move(osv.osv):
             product_price = partial_data.get('product_price',0.0)
             product_currency = partial_data.get('product_currency',False)
             prodlot_ids[move.id] = partial_data.get('prodlot_id')
-            product_name = product_obj.browse(cr, uid, partial_data.get('product_id'), context=context).name
-            if product_qty > move.product_qty:
-                raise osv.except_osv(_('Error'), _('Processing quantity %d for %s is larger than the available quantity %d!')\
-                                     %(product_qty, product_name, move.product_qty))
             if move.product_qty == product_qty:
                 complete.append(move)
             elif move.product_qty > product_qty:
