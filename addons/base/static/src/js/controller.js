@@ -130,11 +130,18 @@ instance.base.BasicController = instance.base.Class.extend( /** @lends instance.
      *
      *  @constructs
      */
-    init: function(element_id) {
+    init: function(parent, element_id) {
         this.element_id = element_id;
         this.$element = $('#' + element_id);
         if (element_id) {
             instance.screen[element_id] = this;
+        }
+        // save the parent children relationship
+        this.controller_parent = null;
+        this.controller_children = [];
+        this.parent = parent;
+        if(this.parent &&  this.parent.children) {
+            this.parent.children.push(this);
         }
 
         // Transform on_* method into openerp.base.callbacks

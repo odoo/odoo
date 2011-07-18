@@ -87,9 +87,9 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
      *
      * @borrows openerp.base.ActionExecutor#execute_action as #execute_action
      */
-    init: function(view_manager, session, element_id, dataset, view_id, options) {
-        this._super(session, element_id);
-        this.view_manager = view_manager || new openerp.base.NullViewManager();
+    init: function(parent, element_id, dataset, view_id, options) {
+        this._super(parent, element_id);
+        this.view_manager = parent || new openerp.base.NullViewManager();
         this.dataset = dataset;
         this.model = dataset.model;
         this.view_id = view_id;
@@ -100,7 +100,7 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
         this.flags =  this.view_manager.flags || {};
 
         this.set_groups(new openerp.base.ListView.Groups(this));
-        
+
         if (this.dataset instanceof openerp.base.DataSetStatic) {
             this.groups.datagroup = new openerp.base.StaticDataGroup(this.dataset);
         }
@@ -451,7 +451,7 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
         this.dataset.context = results.context;
         this.dataset.domain = results.domain;
         this.groups.datagroup = new openerp.base.DataGroup(
-            this.session, this.model,
+            this, this.model,
             results.domain, results.context,
             results.group_by);
         this.groups.datagroup.sort = this.dataset._sort;

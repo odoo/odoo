@@ -17,9 +17,9 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
      *
      * @property {openerp.base.Registry} registry=openerp.base.form.widgets widgets registry for this form view instance
      */
-    init: function(view_manager, session, element_id, dataset, view_id) {
-        this._super(session, element_id);
-        this.view_manager = view_manager || new openerp.base.NullViewManager();
+    init: function(parent, element_id, dataset, view_id) {
+        this._super(parent, element_id);
+        this.view_manager = parent || new openerp.base.NullViewManager();
         this.dataset = dataset;
         this.model = dataset.model;
         this.view_id = view_id;
@@ -403,7 +403,7 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
         } else {
             // TODO fme: modify this so it doesn't try to load attachments when there is not sidebar
             /*(new openerp.base.DataSetSearch(
-                    this.session, 'ir.attachment', this.dataset.get_context(),
+                    this, 'ir.attachment', this.dataset.get_context(),
                     [['res_model', '=', this.dataset.model],
                      ['res_id', '=', this.datarecord.id],
                      ['type', 'in', ['binary', 'url']]])).read_slice(
@@ -1910,7 +1910,7 @@ openerp.base.form.SelectCreatePopup = openerp.base.BaseWidget.extend({
         if (!this.options.auto_create)
             return;
         var self = this;
-        var wdataset = new openerp.base.DataSetSearch(this.session, this.model, this.context, this.domain);
+        var wdataset = new openerp.base.DataSetSearch(this, this.model, this.context, this.domain);
         wdataset.parent_view = this.options.parent_view;
         wdataset.create(data, function(r) {
             self.on_select_elements([r.result]);
@@ -2005,7 +2005,7 @@ openerp.base.form.FormOpenPopup = openerp.base.BaseWidget.extend({
         if (!this.options.auto_write)
             return;
         var self = this;
-        var wdataset = new openerp.base.DataSetSearch(this.session, this.model, this.context, this.domain);
+        var wdataset = new openerp.base.DataSetSearch(this, this.model, this.context, this.domain);
         wdataset.parent_view = this.options.parent_view;
         wdataset.write(id, data, function(r) {
             self.on_write_completed();
