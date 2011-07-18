@@ -1,5 +1,7 @@
 from base.controllers.main import View
 import openerpweb
+import StringIO
+import csv
 
 class Export(View):
     _cp_path = "/base_export/export"
@@ -89,7 +91,6 @@ class Export(View):
         return name_list
 
     def get_data(self, req, model, context=None):
-
         ids = []
         context = context or {}
         fields_data = {}
@@ -118,8 +119,42 @@ class Export(View):
                         fields2 = self.fields_get(req,  fields[field]['relation'])
                         model_populate(fields2, prefix_node+field+'/', None, st_name+'/', level-1)
             model_populate(fields)
-
             return _fields
-
         return rec(fields)
 
+    def export_csv(self, req, fields, result):
+        fp = StringIO.StringIO()
+        writer = csv.writer(fp, quoting=csv.QUOTE_ALL)
+
+        writer.writerow(fields)
+
+        for data in result:
+            row = []
+            for d in data:
+                if isinstance(d, basestring):
+                    d = d.replace('\n',' ').replace('\t',' ')
+                    try:
+                        d = d.encode('utf-8')
+                    except:
+                        pass
+                if d is False: d = None
+                row.append(d)
+            writer.writerow(row)
+
+        fp.seek(0)
+        data = fp.read()
+        fp.close()
+        return data
+
+    @openerpweb.jsonrequest
+    def export_data(self, req, model, fields, ids, domain, import_compat=False, context=None):
+        context = req.session.eval_context(req.context)
+        modle_obj = req.session.model(model)
+        ids = ids or modle_obj.search(domain, context=context)
+
+        field = fields.keys()
+        result = modle_obj.export_data(ids, field , context).get('datas',[])
+
+        if not import_compat:
+            field = fields.values()
+        return self.export_csv(req, field, result)

@@ -24,7 +24,7 @@ openerp.base_export.Export = openerp.base.Dialog.extend({
                             self.close();
                           },
                         "Export To File" : function() {
-                            self.get_fields();
+                            self.on_click_export_data();
                           }
                        },
                     close: function(event, ui){ self.close();}
@@ -284,9 +284,28 @@ openerp.base_export.Export = openerp.base.Dialog.extend({
             export_field.push(jQuery(this).val());
         });
         if (! export_field.length){
-            alert('Please select fields to export...');
+            alert('Please select fields to save export list...');
         }
         return export_field;
+    },
+    on_click_export_data: function(){
+        var self = this;
+        var export_field = {};
+        var flag = true;
+        $("#fields_list option").each(function(){
+            export_field[jQuery(this).val()] = jQuery(this).text();
+            flag = false;
+        });
+        if (flag){
+            alert('Please select fields to export...');
+            return;
+        }
+
+        import_comp = $("#import_compat option:selected").val()
+        self.rpc("/base_export/export/export_data", {"model": self.dataset.model, "fields":export_field, 'ids': self.dataset.ids, 'domain': self.dataset.domain, "import_compat":parseInt(import_comp)}, function(data){
+            window.location="data:text/csv;charset=utf8," + encodeURIComponent(data)
+            self.close();
+        });
     },
 
     close: function() {
