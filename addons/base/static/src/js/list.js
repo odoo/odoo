@@ -87,9 +87,9 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
      *
      * @borrows openerp.base.ActionExecutor#execute_action as #execute_action
      */
-    init: function(view_manager, session, element_id, dataset, view_id, options) {
-        this._super(session, element_id);
-        this.view_manager = view_manager || new openerp.base.NullViewManager();
+    init: function(parent, element_id, dataset, view_id, options) {
+        this._super(parent, element_id);
+        this.view_manager = parent || new openerp.base.NullViewManager();
         this.dataset = dataset;
         this.model = dataset.model;
         this.view_id = view_id;
@@ -100,7 +100,7 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
         this.flags =  this.view_manager.flags || {};
 
         this.set_groups(new openerp.base.ListView.Groups(this));
-        
+
         if (this.dataset instanceof openerp.base.DataSetStatic) {
             this.groups.datagroup = new openerp.base.StaticDataGroup(this.dataset);
         }
@@ -254,8 +254,10 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
                         })
                         .val(self._limit || 'NaN');
                 });
-
+        if(this.view_manager.sidebar == undefined)
+            debugger;
         this.view_manager.sidebar.set_toolbar(data.fields_view.toolbar);
+
     },
     /**
      * Configures the ListView pager based on the provided dataset's information
@@ -451,7 +453,7 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
         this.dataset.context = results.context;
         this.dataset.domain = results.domain;
         this.groups.datagroup = new openerp.base.DataGroup(
-            this.session, this.model,
+            this, this.model,
             results.domain, results.context,
             results.group_by);
         this.groups.datagroup.sort = this.dataset._sort;
@@ -606,7 +608,7 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
     }
     // TODO: implement reorder (drag and drop rows)
 });
-openerp.base.ListView.List = Class.extend( /** @lends openerp.base.ListView.List# */{
+openerp.base.ListView.List = openerp.base.Class.extend( /** @lends openerp.base.ListView.List# */{
     /**
      * List display for the ListView, handles basic DOM events and transforms
      * them in the relevant higher-level events, to which the list view (or
@@ -842,7 +844,7 @@ openerp.base.ListView.List = Class.extend( /** @lends openerp.base.ListView.List
     }
     // drag and drop
 });
-openerp.base.ListView.Groups = Class.extend( /** @lends openerp.base.ListView.Groups# */{
+openerp.base.ListView.Groups = openerp.base.Class.extend( /** @lends openerp.base.ListView.Groups# */{
     passtrough_events: 'action deleted row_link',
     /**
      * Grouped display for the ListView. Handles basic DOM events and interacts

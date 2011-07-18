@@ -6,13 +6,13 @@ openerp.base.views = function(openerp) {
 
 openerp.base.ActionManager = openerp.base.Controller.extend({
 // process all kind of actions
-    init: function(session, element_id) {
-        this._super(session, element_id);
+    init: function(parent, element_id) {
+        this._super(parent, element_id);
         this.viewmanager = null;
         this.current_dialog = null;
         // Temporary linking view_manager to session.
         // Will use controller_parent to find it when implementation will be done.
-        session.action_manager = this;
+        this.session.action_manager = this;
     },
     /**
      * Process an action
@@ -35,15 +35,12 @@ openerp.base.ActionManager = openerp.base.Controller.extend({
                     action.flags.new_window = true;
                 }
                 if (action.target == 'new') {
-                    var dialog = this.current_dialog = new openerp.base.ActionDialog(this.session, {
-                        title: action.name,
-                        width: '50%'
-                    });
+                    var dialog = this.current_dialog = new openerp.base.ActionDialog(this, { title: action.name, width: '90%' });
                     if (on_closed) {
                         dialog.close_callback = on_closed;
                     }
                     dialog.start(false);
-                    var viewmanager = dialog.viewmanager = new openerp.base.ViewManagerAction(this.session, dialog.element_id, action);
+                    var viewmanager = dialog.viewmanager = new openerp.base.ViewManagerAction(this, dialog.element_id, action);
                     viewmanager.start();
                     dialog.open();
                 } else if (action.flags.new_window) {
@@ -57,7 +54,7 @@ openerp.base.ActionManager = openerp.base.Controller.extend({
                     if (this.viewmanager) {
                         this.viewmanager.stop();
                     }
-                    this.viewmanager = new openerp.base.ViewManagerAction(this.session, this.element_id, action);
+                    this.viewmanager = new openerp.base.ViewManagerAction(this, this.element_id, action);
                     this.viewmanager.start();
                 }
                 break;
@@ -85,8 +82,8 @@ openerp.base.ActionManager = openerp.base.Controller.extend({
 });
 
 openerp.base.ViewManager =  openerp.base.Controller.extend({
-    init: function(session, element_id, dataset, views) {
-        this._super(session, element_id);
+    init: function(parent, element_id, dataset, views) {
+        this._super(parent, element_id);
         this.model = dataset.model;
         this.dataset = dataset;
         this.searchview = null;
@@ -133,7 +130,7 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
         if (!view.controller) {
             // Lazy loading of views
             var controllerclass = this.registry.get_object(view_type);
-            var controller = new controllerclass( this, this.session, this.element_id + "_view_" + view_type,
+            var controller = new controllerclass( this, this.element_id + "_view_" + view_type,
                 this.dataset, view.view_id, view.options);
             if (view.embedded_view) {
                 controller.set_embedded_view(view.embedded_view);
@@ -203,7 +200,7 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
         if (this.searchview) {
             this.searchview.stop();
         }
-        this.searchview = new openerp.base.SearchView(this, this.session, this.element_id + "_search", this.dataset, view_id, search_defaults);
+        this.searchview = new openerp.base.SearchView(this, this.element_id + "_search", this.dataset, view_id, search_defaults);
         if (this.flags.search_view === false) {
             this.searchview.hide();
         }
@@ -253,18 +250,19 @@ openerp.base.NullViewManager = openerp.base.generate_null_object_class(openerp.b
 });
 
 openerp.base.ViewManagerAction = openerp.base.ViewManager.extend({
-    init: function(session, element_id, action) {
+    init: function(parent, element_id, action) {
+        this.session = parent.session;
         var dataset;
         if (!action.res_id) {
-            dataset = new openerp.base.DataSetSearch(session, action.res_model, action.context || null);
+            dataset = new openerp.base.DataSetSearch(this, action.res_model, action.context || null);
         } else {
-            dataset = new openerp.base.DataSetStatic(session, action.res_model, {}, [action.res_id]);
+            dataset = new openerp.base.DataSetStatic(this, action.res_model, {}, [action.res_id]);
             if (action.context) {
                 // TODO fme: should normalize all DataSets constructors to (session, model, context, ...)
                 dataset.context = action.context;
             }
         }
-        this._super(session, element_id, dataset, action.views);
+        this._super(parent, element_id, dataset, action.views);
         this.action = action;
         this.flags = this.action.flags || {};
         if (action.res_model == 'board.board' && action.views.length == 1 && action.views) {
@@ -401,7 +399,6 @@ openerp.base.Sidebar = openerp.base.BaseWidget.extend({
         this.do_refresh(false);
     }
 });
-
 
 openerp.base.NullSidebar = openerp.base.generate_null_object_class(openerp.base.Sidebar);
 
