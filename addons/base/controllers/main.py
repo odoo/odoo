@@ -264,7 +264,7 @@ def clean_action(action, session):
         action['domain'] = eval(
             action['domain'],
             session.evaluation_context(
-                action['context'])) or []
+                action.get('context', {}))) or []
     if 'flags' not in action:
         # Set empty flags dictionary for web client.
         action['flags'] = dict()
