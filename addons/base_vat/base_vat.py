@@ -128,33 +128,6 @@ class res_partner(osv.osv):
         #Valid format and valid date
         return True
 
-    # Sweden VAT number check fails is some cases from vatnumber library..so override this check method here
-    def check_vat_se(self, vat):
-        '''
-        Check Sweden VAT number.
-        '''
-        if len(vat) != 12:
-            return False
-        try:
-            int(vat)
-        except:
-            return False
-        #if int(vat[9:11]) <= 0: Fixed in OpenERP
-        if int(vat[9:11]) < 0:
-            return False
-
-        sum = vatnumber.mult_add(2, int(vat[0])) + int(vat[1]) + \
-              vatnumber.mult_add(2, int(vat[2])) + int(vat[3]) + \
-              vatnumber.mult_add(2, int(vat[4])) + int(vat[5]) + \
-              vatnumber.mult_add(2, int(vat[6])) + int(vat[7]) + \
-              vatnumber.mult_add(2, int(vat[8]))
-        check = 10 - (sum % 10)
-        if check == 10:
-            check = 0
-        if check != int(vat[9]):
-            return False
-        return True
-
 res_partner()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
