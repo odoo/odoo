@@ -19,12 +19,16 @@
 #
 ##############################################################################
 
-from osv import osv
+from osv import osv, fields
 
 class account_balance_report(osv.osv_memory):
     _inherit = "account.common.account.report"
     _name = 'account.balance.report'
     _description = 'Trial Balance Report'
+
+    _columns = {
+        'journal_ids': fields.many2many('account.journal', 'account_balance_report_journal_rel', 'account_id', 'journal_id', 'Journals', required=True),
+    }
 
     _defaults = {
         'journal_ids': [],

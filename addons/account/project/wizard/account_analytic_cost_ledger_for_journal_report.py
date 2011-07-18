@@ -29,7 +29,7 @@ class account_analytic_cost_ledger_journal_report(osv.osv_memory):
     _columns = {
         'date1': fields.date('Start of period', required=True),
         'date2': fields.date('End of period', required=True),
-        'journal': fields.many2many('account.analytic.journal', 'ledger_journal_rel', 'ledger_id', 'Journal_id', 'Journals'),
+        'journal': fields.many2many('account.analytic.journal', 'ledger_journal_rel', 'ledger_id', 'journal_id', 'Journals'),
     }
 
     _defaults = {

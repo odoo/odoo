@@ -45,6 +45,7 @@ class account_bs_report(osv.osv_memory):
                                            '(Profit: Amount will be added, Loss: Amount will be duducted), ' \
                                            'which is calculated from Profilt & Loss Report',
                                       domain = [('type','=','other')]),
+        'journal_ids': fields.many2many('account.journal', 'account_bs_report_journal_rel', 'account_id', 'journal_id', 'Journals', required=True),
     }
 
     _defaults={

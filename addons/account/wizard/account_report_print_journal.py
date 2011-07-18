@@ -30,6 +30,7 @@ class account_print_journal(osv.osv_memory):
         'sort_selection': fields.selection([('date', 'Date'),
                                             ('ref', 'Reference Number'),],
                                             'Entries Sorted by', required=True),
+        'journal_ids': fields.many2many('account.journal', 'account_print_journal_journal_rel', 'account_id', 'journal_id', 'Journals', required=True),
     }
     _defaults = {
         'sort_selection': 'date',
