@@ -285,7 +285,7 @@ openerp.base_dashboard.ConfigOverview = openerp.base.View.extend({
         this.dataset = new openerp.base.DataSetSearch(
                 this.session, 'ir.actions.todo');
         this.dataset.domain = ['|', '&', ['type', '=', 'recurring'],
-                                         ['state', '!=', 'cancel'],
+                                         ['state', '!=', 'hidden'],
                                     '&', ['type', '!=', 'special'],
                                          ['state', '=', 'open']];
     },
@@ -323,7 +323,7 @@ openerp.base_dashboard.ConfigOverview = openerp.base.View.extend({
                 // cancel todo
                 e.stopImmediatePropagation();
                 var todo_id = $(this).parent().data('id');
-                self.dataset.write(todo_id, {state: 'cancel'}, function () {
+                self.dataset.write(todo_id, {state: 'hidden'}, function () {
                     self.start();
                 });
             })
