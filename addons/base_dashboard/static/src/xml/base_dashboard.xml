@@ -67,7 +67,7 @@
 <div t-name="ConfigOverview" class="oe-dashboard-config-overview">
     <div class="oe-config-progress">
         <h6 class="oe-config-progress-title">
-            <t t-esc="Math.round(completion)"/>% progress
+            progress: <t t-esc="Math.round(completion)"/>%
         </h6>
         <div class="oe-config-progress-bar" t-att-data-completion="completion"/>
     </div>
