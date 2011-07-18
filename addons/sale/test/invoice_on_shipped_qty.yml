@@ -74,7 +74,7 @@
     sale_id = sale_obj.browse(cr, uid, ref("sale_order_so6"))
     ids = [x.id for x in sale_id.picking_ids]
     wiz_id = self.create(cr, uid, {'invoice_date': time.strftime('%Y-%m-%d'), 'journal_id': ref('account.sales_journal')},
-      {'active_ids': ids})
+      {'active_ids': ids, 'active_model': 'stock.picking'})
     self.create_invoice(cr, uid, [wiz_id], {"active_ids": ids, "active_id": ids[0]})
 -
   I verify whether the invoice has been generated for SO
