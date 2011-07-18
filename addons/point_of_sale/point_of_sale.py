@@ -425,15 +425,12 @@ class pos_order(osv.osv):
         move_obj = self.pool.get('stock.move')
         pick_name = self.pool.get('ir.sequence').get(cr, uid, 'stock.picking.out')
         orders = self.browse(cr, uid, ids, context=context)
-        partner_obj = self.pool.get('res.partner')
         for order in orders:
-            addr = order.partner_id and partner_obj.address_get(cr, uid, [order.partner_id.id], ['delivery']) or {}
             if not order.picking_id:
                 new = True
                 picking_id = picking_obj.create(cr, uid, {
                     'name': pick_name,
                     'origin': order.name,
-                    'address_id': addr.get('delivery',False),
                     'type': 'out',
                     'state': 'draft',
                     'move_type': 'direct',
@@ -479,7 +476,6 @@ class pos_order(osv.osv):
                             'state': 'waiting',
                             'location_id': location_id,
                             'location_dest_id': stock_dest_id,
-                            'prodlot_id': line.prodlot_id and line.prodlot_id.id or False
                         }, context=context)
 
             wf_service = netsvc.LocalService("workflow")
@@ -650,7 +646,6 @@ class pos_order(osv.osv):
                 'reference': order.name,
                 'partner_id': order.partner_id.id,
                 'comment': order.note or '',
-                'currency_id': order.pricelist_id.currency_id.id, # considering partner's sale pricelist's currency
             }
             inv.update(inv_ref.onchange_partner_id(cr, uid, [], 'out_invoice', order.partner_id.id)['value'])
             if not inv.get('account_id', None):
@@ -897,13 +892,13 @@ class pos_order(osv.osv):
         for pos in self.browse(cr, uid, ids, context=context):
             create_contract_nb = False
             for line in pos.lines:
-                if line.product_id.product_type == 'MD':
+                if line.product_id.type == 'MD':
                     create_contract_nb = True
                     break
             if create_contract_nb:
                 seq = sequence_obj.get(cr, uid, 'pos.user_%s' % pos.user_salesman_id.login)
                 vals['contract_number'] = '%s-%s' % (pos.user_salesman_id.login, seq)
-        self.write(cr, uid, ids, vals, context=context)
+        return self.write(cr, uid, ids, vals, context=context)
 
     def action_paid(self, cr, uid, ids, context=None):
         if context is None:
@@ -1149,7 +1144,6 @@ class pos_order_line(osv.osv):
         'discount': fields.float('Discount (%)', digits=(16, 2)),
         'order_id': fields.many2one('pos.order', 'Order Ref', ondelete='cascade'),
         'create_date': fields.datetime('Creation Date', readonly=True),
-        'prodlot_id': fields.many2one('stock.production.lot', 'Production Lot', help="You can specify Production lot for stock move created when you validate the pos order"),
     }
 
     _defaults = {
@@ -1226,6 +1220,15 @@ class pos_order_line(osv.osv):
 
 pos_order_line()
 
+class pos_category(osv.osv):
+    _name = 'pos.category'
+    _inherit = 'product.category'
+    _columns = {
+        'parent_id': fields.many2one('pos.category','Parent Category', select=True),
+        'child_id': fields.one2many('pos.category', 'parent_id', string='Child Categories'),
+    }
+pos_category()
+
 class product_product(osv.osv):
     _inherit = 'product.product'
     _columns = {
@@ -1233,9 +1236,13 @@ class product_product(osv.osv):
         'expense_pdt': fields.boolean('Product for expenses'),
         'am_out': fields.boolean('Control for Output Operations'),
         'disc_controle': fields.boolean('Discount Control'),
+        'img': fields.binary('Pos Image, must be 50x50'),
+        'pos_ok': fields.boolean('Can be POS-sold'),
+        'pos_categ_id': fields.many2one('pos.category','POS Category', change_default=True, domain="[('type','=','normal')]" ,help="Select a pos category for the current product")
     }
     _defaults = {
         'disc_controle': True,
+        'pos_ok': True,
     }
 product_product()
 

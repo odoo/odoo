@@ -41,7 +41,6 @@
                                     <field name="price_unit"/>
                                     <field name="notice"/>
                                     <field name="serial_number"/>
-                                    <field name="prodlot_id" domain="[('product_id','=',product_id)]"/>
                                 </form>
                             </field>
                             <group colspan="4" col="7">
@@ -89,7 +88,7 @@
                             </group>
                             <group colspan="4">
                                 <field name="sale_journal" domain="[('type','=','sale')]" widget="selection" invisible="1"/>
-                                <field name="pricelist_id" domain="[('type','=','sale')]" widget="selection" invisible="0"/>
+                                <field name="pricelist_id" domain="[('type','=','sale')]" widget="selection" invisible="1"/>
                             </group>
                         </page>
                         <page string="Notes" >
@@ -639,11 +638,12 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="base.view_company_form"/>
             <field name="arch" type="xml">
-                <field name="currency_id" position="after">
-                    <separator string="Point of Sale" colspan="4"/>
-                    <field  name="company_discount" />
-                    <field  name="max_diff" />
-                </field>
+                <notebook position="inside">
+                    <page string="Other">
+                      <field  name="company_discount" colspan="4"/>
+                      <field  name="max_diff" colspan="4"/>
+                    </page>
+                </notebook>
             </field>
            </record>
 
@@ -653,15 +653,43 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
-                  <field name="company_id" position="after">
-                  <separator string="Point of Sale" colspan="2"/>
+                  <field name="purchase_ok" position="after">
+                      <field name="pos_ok"/>
+                  </field>
+                  <field name="active" position="after">
                       <field name="income_pdt"/>
                       <field name="expense_pdt"/>
                       <field name="am_out"/>
                       <field name="disc_controle"/>
+                      <field name="img"/>
+                      <field name="pos_categ_id" />
                   </field>
             </field>
         </record>
+
+        <!-- Categories tree view -->
+        <record id="pos_category_tree_view" model="ir.ui.view">
+            <field name="name">pos.category.tree</field>
+            <field name="model">pos.category</field>
+            <field name="type">tree</field>
+            <field name="field_parent">child_id</field>
+            <field name="arch" type="xml">
+                <tree toolbar="True" string="Product Pos Categories">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+        <record id="pos_category_action" model="ir.actions.act_window">
+            <field name="name">Products by POS-Category</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">pos.category</field>
+            <field name="domain">[('parent_id','=',False)]</field>
+            <field name="view_type">tree</field>
+            <field name="view_id" ref="pos_category_tree_view"/>
+            <field name="help">Here is a list of all your products classified by POS category. You can click a category to get the list of all products linked to this category or to a child of this       category.</field>
+        </record>
+        <menuitem action="pos_category_action" id="menu_pos_category" parent="menu_point_of_sale_product" sequence="0" />
+        <!-- END -->
 
         <record id="product_input_output_form_view" model="ir.ui.view">
             <field name="name">product.normal.form.inherit</field>
