@@ -1162,7 +1162,7 @@ GanttProject.prototype.deleteChildTask = function(task)
  * @type: public
  * @topic: 1
  */
-GanttProject.prototype.insertTask = function(id, name, EST, Duration, PercentCompleted, predecessorTaskId, parentTaskId)
+GanttProject.prototype.insertTask = function(id, name, EST, Duration, PercentCompleted, predecessorTaskId, color, parentTaskId)
 {
     var task = null;
     var _task = null;
@@ -1205,7 +1205,7 @@ GanttProject.prototype.insertTask = function(id, name, EST, Duration, PercentCom
             return false;
         }
 
-        task = new GanttTaskInfo(id, name, EST, Duration, PercentCompleted, predecessorTaskId);
+        task = new GanttTaskInfo(id, name, EST, Duration, PercentCompleted, predecessorTaskId, color);
 
         if (!this.Chart.checkPosParentTask(parentTask, task)) {
             this.Chart.Error.throwError("DATA_INSERT_ERROR", 19, [parentTaskId,id]);

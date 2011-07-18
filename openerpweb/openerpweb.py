@@ -174,10 +174,10 @@ class OpenERPSession(object):
         :returns: the augmented context
         :rtype: dict
         """
-        d = {}
-        d.update(self.base_eval_context)
+        d = dict(self.base_eval_context)
         if context:
             d.update(context)
+        d['context'] = d
         return d
 
     def eval_context(self, context_to_eval, context=None):
@@ -197,7 +197,6 @@ class OpenERPSession(object):
         ctx = dict(
             self.base_eval_context,
             **(context or {}))
-        ctx['context'] = ctx
         
         # adding the context of the session to send to the openerp server
         ccontext = nonliterals.CompoundContext(self.context, context_to_eval or {})
@@ -222,12 +221,9 @@ class OpenERPSession(object):
         if isinstance(domain, list):
             return domain
 
-        ctx = dict(context or {})
-        ctx['context'] = ctx
-
         cdomain = nonliterals.CompoundDomain(domain)
         cdomain.session = self
-        return cdomain.evaluate(ctx)
+        return cdomain.evaluate(context or {})
 
 #----------------------------------------------------------
 # OpenERP Web RequestHandler

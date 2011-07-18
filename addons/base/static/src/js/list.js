@@ -1,5 +1,50 @@
 openerp.base.list = function (openerp) {
 openerp.base.views.add('list', 'openerp.base.ListView');
+openerp.base.list = {
+    /**
+     * Formats the rendring of a given value based on its field type
+     *
+     * @param {Object} row_data record whose values should be displayed in the cell
+     * @param {Object} column column descriptor
+     * @param {"button"|"field"} column.tag base control type
+     * @param {String} column.type widget type for a field control
+     * @param {String} [column.string] button label
+     * @param {String} [column.icon] button icon
+     * @param {String} [value_if_empty=''] what to display if the field's value is ``false``
+     */
+    render_cell: function (row_data, column, value_if_empty) {
+        var attrs = column.modifiers_for(row_data);
+        if (attrs.invisible) { return ''; }
+        if (column.tag === 'button') {
+            return [
+                '<button type="button" title="', column.string || '', '">',
+                    '<img src="/base/static/src/img/icons/', column.icon, '.png"',
+                        ' alt="', column.string || '', '"/>',
+                '</button>'
+            ].join('')
+        }
+
+        var record = row_data[column.id];
+        if (record.value === false) {
+            return value_if_empty === undefined ?  '' : value_if_empty;
+        }
+        switch (column.widget || column.type) {
+            case 'many2one':
+                // name_get value format
+                return record.value[1];
+            case 'float_time':
+                return _.sprintf("%02d:%02d",
+                        Math.floor(record.value),
+                        Math.round((record.value % 1) * 60));
+            case 'progressbar':
+                return _.sprintf(
+                    '<progress value="%.2f" max="100.0">%.2f%%</progress>',
+                        record.value, record.value);
+            default:
+                return record.value;
+        }
+    }
+};
 openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListView# */ {
     defaults: {
         // records can be selected one by one
@@ -147,8 +192,6 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
 
         this.setup_columns(this.fields_view.fields, grouped);
 
-        if (!this.fields_view.sorted) { this.fields_view.sorted = {}; }
-
         this.$element.html(QWeb.render("ListView", this));
 
         // Head hook
@@ -158,13 +201,20 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
         this.$element.find('.oe-list-delete')
                 .attr('disabled', true)
                 .click(this.do_delete_selected);
-        this.$element.find('thead').delegate('th[data-id]', 'click', function (e) {
+        this.$element.find('thead').delegate('th.oe-sortable[data-id]', 'click', function (e) {
             e.stopPropagation();
 
-            self.dataset.sort($(this).data('id'));
+            var $this = $(this);
+            self.dataset.sort($this.data('id'));
+            if ($this.find('span').length) {
+                $this.find('span').toggleClass(
+                    'ui-icon-triangle-1-s ui-icon-triangle-1-n');
+            } else {
+                $this.append('<span class="ui-icon ui-icon-triangle-1-s">')
+                     .siblings('.oe-sortable').find('span').remove();
+            }
 
-            // TODO: should only reload content (and set the right column to a sorted display state)
-            self.reload_view();
+            self.reload_content();
         });
 
         this.$element.find('.oe-list-pager')
@@ -263,6 +313,9 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
                         'invisible': domain_computer(modifiers.invisible, fields)
                     };
                 };
+                if (modifiers['tree_invisible']) {
+                    column.invisible = '1';
+                }
             } else {
                 column.modifiers_for = noop;
             }
@@ -333,7 +386,7 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
     do_show: function () {
         this.$element.show();
         if (this.hidden) {
-            this.$element.find('table').append(
+            this.$element.find('.oe-listview-content').append(
                 this.groups.apoptosis().render());
             this.hidden = false;
         }
@@ -368,7 +421,7 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
      * re-renders the content of the list view
      */
     reload_content: function () {
-        this.$element.find('table').append(
+        this.$element.find('.oe-listview-content').append(
             this.groups.apoptosis().render(
                 $.proxy(this, 'compute_aggregates')));
     },
@@ -401,6 +454,7 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
             this.session, this.model,
             results.domain, results.context,
             results.group_by);
+        this.groups.datagroup.sort = this.dataset._sort;
 
         if (_.isEmpty(results.group_by) && !results.context['group_by_no_leaf']) {
             results.group_by = null;
@@ -453,13 +507,7 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
             return field.name === name;
         });
         if (!action) { return; }
-        this.execute_action(
-            action, this.dataset, this.session.action_manager,
-            id, function () {
-                if (callback) {
-                    callback();
-                }
-        });
+        this.execute_action(action, this.dataset, this.session.action_manager, id, callback);
     },
     /**
      * Handles the activation of a record (clicking on it)
@@ -558,7 +606,7 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
     }
     // TODO: implement reorder (drag and drop rows)
 });
-openerp.base.ListView.List = Class.extend( /** @lends openerp.base.ListView.List# */{
+openerp.base.ListView.List = openerp.base.Class.extend( /** @lends openerp.base.ListView.List# */{
     /**
      * List display for the ListView, handles basic DOM events and transforms
      * them in the relevant higher-level events, to which the list view (or
@@ -640,7 +688,7 @@ openerp.base.ListView.List = Class.extend( /** @lends openerp.base.ListView.List
         this.$current = this.$_element.clone(true);
         this.$current.empty().append(
             QWeb.render('ListView.rows', _.extend({
-                render_cell: this.render_cell}, this)));
+                render_cell: openerp.base.list.render_cell}, this)));
     },
     /**
      * Gets the ids of all currently selected records, if any
@@ -771,48 +819,8 @@ openerp.base.ListView.List = Class.extend( /** @lends openerp.base.ListView.List
             row: this.rows[record_index],
             row_parity: (record_index % 2 === 0) ? 'even' : 'odd',
             row_index: record_index,
-            render_cell: this.render_cell
+            render_cell: openerp.base.list.render_cell
         });
-    },
-    /**
-     * Formats the rendring of a given value based on its field type
-     *
-     * @param {Object} row_data record whose values should be displayed in the cell
-     * @param {Object} column column descriptor
-     * @param {"button"|"field"} column.tag base control type
-     * @param {String} column.type widget type for a field control
-     * @param {String} [column.string] button label
-     * @param {String} [column.icon] button icon
-     */
-    render_cell: function (row_data, column) {
-        var attrs = column.modifiers_for(row_data);
-        if (attrs.invisible) { return ''; }
-        if (column.tag === 'button') {
-            return [
-                '<button type="button" title="', column.string || '', '">',
-                    '<img src="/base/static/src/img/icons/', column.icon, '.png"',
-                        ' alt="', column.string || '', '"/>',
-                '</button>'
-            ].join('')
-        }
-
-        var record = row_data[column.id];
-        if (record.value === false) { return ''; }
-        switch (column.widget || column.type) {
-            case 'many2one':
-                // name_get value format
-                return record.value[1];
-            case 'float_time':
-                return _.sprintf("%02d:%02d",
-                        Math.floor(record.value),
-                        Math.round((record.value % 1) * 60));
-            case 'progressbar':
-                return _.sprintf(
-                    '<progress value="%.2f" max="100.0">%.2f%%</progress>',
-                        record.value, record.value);
-            default:
-                return record.value;
-        }
     },
     /**
      * Stops displaying the records matching the provided ids.
@@ -834,7 +842,7 @@ openerp.base.ListView.List = Class.extend( /** @lends openerp.base.ListView.List
     }
     // drag and drop
 });
-openerp.base.ListView.Groups = Class.extend( /** @lends openerp.base.ListView.Groups# */{
+openerp.base.ListView.Groups = openerp.base.Class.extend( /** @lends openerp.base.ListView.Groups# */{
     passtrough_events: 'action deleted row_link',
     /**
      * Grouped display for the ListView. Handles basic DOM events and interacts
@@ -965,10 +973,15 @@ openerp.base.ListView.Groups = Class.extend( /** @lends openerp.base.ListView.Gr
             placeholder.appendChild($row[0]);
 
             var $group_column = $('<th class="oe-group-name">').appendTo($row);
+            // Don't fill this if group_by_no_leaf but no group_by
             if (group.grouped_on) {
-                // Don't fill this if group_by_no_leaf but no group_by
-                $group_column
-                    .text((group.value instanceof Array ? group.value[1] : group.value));
+                var row_data = {};
+                row_data[group.grouped_on] = group;
+                var group_column = _(self.columns).detect(function (column) {
+                    return column.id === group.grouped_on; });
+                $group_column.text(openerp.base.list.render_cell(
+                        row_data, group_column, "Undefined"
+                ));
                 if (group.openable) {
                     // Make openable if not terminal group & group_by_no_leaf
                     $group_column

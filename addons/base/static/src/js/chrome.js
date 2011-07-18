@@ -4,61 +4,12 @@
 
 openerp.base.chrome = function(openerp) {
 
-openerp.base.callback = function(obj, method) {
-    var callback = function() {
-        var args = Array.prototype.slice.call(arguments);
-        var r;
-        for(var i = 0; i < callback.callback_chain.length; i++)  {
-            var c = callback.callback_chain[i];
-            if(c.unique) {
-                callback.callback_chain.splice(i, 1);
-                i -= 1;
-            }
-            r = c.callback.apply(c.self, c.args.concat(args));
-            // TODO special value to stop the chain
-            // openerp.base.callback_stop
-        }
-        return r;
-    };
-    callback.callback_chain = [];
-    callback.add = function(f) {
-        if(typeof(f) == 'function') {
-            f = { callback: f, args: Array.prototype.slice.call(arguments, 1) };
-        }
-        f.self = f.self || null;
-        f.args = f.args || [];
-        f.unique = !!f.unique;
-        if(f.position == 'last') {
-            callback.callback_chain.push(f);
-        } else {
-            callback.callback_chain.unshift(f);
-        }
-        return callback;
-    };
-    callback.add_first = function(f) {
-        return callback.add.apply(null,arguments);
-    };
-    callback.add_last = function(f) {
-        return callback.add({
-            callback: f,
-            args: Array.prototype.slice.call(arguments, 1),
-            position: "last"
-        });
-    };
-
-    return callback.add({
-        callback: method,
-        self:obj,
-        args:Array.prototype.slice.call(arguments, 2)
-    });
-};
-
 /**
  * Base error for lookup failure
  *
  * @class
  */
-openerp.base.NotFound = Class.extend( /** @lends openerp.base.NotFound# */ {
+openerp.base.NotFound = openerp.base.Class.extend( /** @lends openerp.base.NotFound# */ {
 });
 openerp.base.KeyNotFound = openerp.base.NotFound.extend( /** @lends openerp.base.KeyNotFound# */ {
     /**
@@ -91,7 +42,7 @@ openerp.base.ObjectNotFound = openerp.base.NotFound.extend( /** @lends openerp.b
         return "Could not find any object of path " + this.path;
     }
 });
-openerp.base.Registry = Class.extend( /** @lends openerp.base.Registry# */ {
+openerp.base.Registry = openerp.base.Class.extend( /** @lends openerp.base.Registry# */ {
     /**
      * Stores a mapping of arbitrary key (strings) to object paths (as strings
      * as well).
@@ -182,87 +133,6 @@ openerp.base.Registry = Class.extend( /** @lends openerp.base.Registry# */ {
     clone: function (mapping) {
         return new openerp.base.Registry(
             _.extend({}, this.map, mapping || {}));
-    }
-});
-
-openerp.base.BasicController = Class.extend( /** @lends openerp.base.BasicController# */{
-    /**
-     * rpc operations, event binding and callback calling should be done in
-     * start() instead of init so that event can be hooked in between.
-     *
-     *  @constructs
-     */
-    init: function(element_id) {
-        this.element_id = element_id;
-        this.$element = $('#' + element_id);
-        if (element_id) {
-            openerp.screen[element_id] = this;
-        }
-
-        // Transform on_* method into openerp.base.callbacks
-        for (var name in this) {
-            if(typeof(this[name]) == "function") {
-                this[name].debug_name = name;
-                // bind ALL function to this not only on_and _do ?
-                if((/^on_|^do_/).test(name)) {
-                    this[name] = openerp.base.callback(this, this[name]);
-                }
-            }
-        }
-    },
-    /**
-     * Controller start
-     * event binding, rpc and callback calling required to initialize the
-     * object can happen here
-     *
-     * Returns a promise object letting callers (subclasses and direct callers)
-     * know when this component is done starting
-     *
-     * @returns {jQuery.Deferred}
-     */
-    start: function() {
-        // returns an already fulfilled promise. Maybe we could return nothing?
-        // $.when can take non-deferred and in that case it simply considers
-        // them all as fulfilled promises.
-        // But in thise case we *have* to ensure callers use $.when and don't
-        // try to call deferred methods on this return value.
-        return $.Deferred().done().promise();
-    },
-    stop: function() {
-    },
-    log: function() {
-        var args = Array.prototype.slice.call(arguments);
-        var caller = arguments.callee.caller;
-        // TODO add support for line number using
-        // https://github.com/emwendelin/javascript-stacktrace/blob/master/stacktrace.js
-        // args.unshift("" + caller.debug_name);
-        this.on_log.apply(this,args);
-    },
-    on_log: function() {
-        if(window.openerp.debug || (window.location.search.indexOf('?debug') !== -1)) {
-            var notify = false;
-            var body = false;
-            if(window.console) {
-                console.log(arguments);
-            } else {
-                body = true;
-            }
-            var a = Array.prototype.slice.call(arguments, 0);
-            for(var i = 0; i < a.length; i++) {
-                var v = a[i]==null ? "null" : a[i].toString();
-                if(i==0) {
-                    notify = v.match(/^not/);
-                    body = v.match(/^bod/);
-                }
-                if(body) {
-                    $('<pre></pre>').text(v).appendTo($('body'));
-                }
-                if(notify && this.notification) {
-                    this.notification.notify("Logging:",v);
-                }
-            }
-        }
-
     }
 });
 
@@ -365,7 +235,7 @@ openerp.base.Session = openerp.base.BasicController.extend( /** @lends openerp.b
             params: params,
             id:null
         }).then(function () {deferred.resolve.apply(deferred, arguments);},
-        function(error) {deferred.reject(error, $.Event());});
+                function(error) {deferred.reject(error, $.Event());});
         return deferred.fail(function() {
             deferred.fail(function(error, event) {
                 if (!event.isDefaultPrevented()) {
@@ -398,31 +268,35 @@ openerp.base.Session = openerp.base.BasicController.extend( /** @lends openerp.b
         }, url);
         var deferred = $.Deferred();
         $.ajax(ajax).done(function(response, textStatus, jqXHR) {
-                self.on_rpc_response();
-                if (response.error) {
-                    if (response.error.data.type == "session_invalid") {
-                        self.uid = false;
-                        self.on_session_invalid(function() {
-                            self.rpc(url, payload.params,
-                                function() {deferred.resolve.apply(deferred, arguments);},
-                                function(error, event) {event.preventDefault();
-                                    deferred.reject.apply(deferred, arguments);});
-                        });
-                    } else {
-                        deferred.reject(response.error);
-                    }
-                } else {
-                    deferred.resolve(response["result"], textStatus, jqXHR);
-                }
-            }).fail(function(jqXHR, textStatus, errorThrown) {
-                self.on_rpc_response();
-                var error = {
-                    code: -32098,
-                    message: "XmlHttpRequestError " + errorThrown,
-                    data: {type: "xhr"+textStatus, debug: jqXHR.responseText, objects: [jqXHR, errorThrown] }
-                };
-                deferred.reject(error);
+            self.on_rpc_response();
+            if (!response.error) {
+                deferred.resolve(response["result"], textStatus, jqXHR);
+                return;
+            }
+            if (response.error.data.type !== "session_invalid") {
+                deferred.reject(response.error);
+                return;
+            }
+            self.uid = false;
+            self.on_session_invalid(function() {
+                self.rpc(url, payload.params,
+                    function() {
+                        deferred.resolve.apply(deferred, arguments);
+                    },
+                    function(error, event) {
+                        event.preventDefault();
+                        deferred.reject.apply(deferred, arguments);
+                    });
             });
+        }).fail(function(jqXHR, textStatus, errorThrown) {
+            self.on_rpc_response();
+            var error = {
+                code: -32098,
+                message: "XmlHttpRequestError " + errorThrown,
+                data: {type: "xhr"+textStatus, debug: jqXHR.responseText, objects: [jqXHR, errorThrown] }
+            };
+            deferred.reject(error);
+        });
         return deferred.promise();
     },
     on_rpc_request: function() {
@@ -566,57 +440,11 @@ openerp.base.Session = openerp.base.BasicController.extend( /** @lends openerp.b
     }
 });
 
-// A controller takes an already existing element
-// new()
-// start()
+/**
+ * OpenERP session aware controller
+ * a controller takes an already existing dom element and manage it
+ */
 openerp.base.Controller = openerp.base.BasicController.extend( /** @lends openerp.base.Controller# */{
-    /**
-     * Controller manifest used to declare standard controller attributes
-     */
-    controller_manifest: {
-        register: null,
-        template: "",
-        element_post_prefix: false
-    },
-    /**
-     * Controller registry, 
-     */
-    controller_registry: {
-    },
-    /**
-     * Add a new child controller
-     */
-    controller_get: function(key) {
-        return this.controller_registry[key];
-        // OR should build it ? setting parent correctly ?
-        // function construct(constructor, args) {
-        //     function F() {
-        //         return constructor.apply(this, args);
-        //     }
-        //     F.prototype = constructor.prototype;
-        //     return new F();
-        // }
-        // var obj = this.controller_registry[key];
-        // if(obj) {
-        //     return construct(obj, Array.prototype.slice.call(arguments, 1));
-        // }
-    },
-    controller_new: function(key) {
-        var self;
-        // OR should contrustct it ? setting parent correctly ?
-        function construct(constructor, args) {
-            function F() {
-                return constructor.apply(this, args);
-            }
-            F.prototype = constructor.prototype;
-            return new F();
-        }
-        var obj = this.controller_registry[key];
-        if(obj) {
-            // TODO Prepend parent
-            return construct(obj, Array.prototype.slice.call(arguments, 1));
-        }
-    },
     /**
      * @constructs
      * @extends openerp.base.BasicController
@@ -637,18 +465,6 @@ openerp.base.Controller = openerp.base.BasicController.extend( /** @lends opener
                 this.session = parent_or_session;
             }
         }
-        // Apply manifest options
-        if(this.controller_manifest) {
-            var register = this.controller_manifest.register;
-            // TODO accept a simple string
-            if(register) {
-                for(var i=0; i<register.length; i++) {
-                    this.controller_registry[register[i]] = this;
-                }
-            }
-            // TODO if post prefix
-            //this.element_id = _.uniqueId(_.toArray(arguments).join('_'));
-        }
     },
     /**
      * Performs a JSON-RPC call
@@ -665,13 +481,12 @@ openerp.base.Controller = openerp.base.BasicController.extend( /** @lends opener
     }
 });
 
-// A widget is a controller that doesnt take an element_id
-// it render its own html that you should insert into the dom
-// and bind it a start()
-//
-// new()
-// render() and insert it place it where you want
-// start()
+/**
+ * OpenERP session aware widget
+ * A widget is a controller that doesnt take an element_id
+ * it render its own html render() that you should insert into the dom
+ * and bind it a start()
+ */
 openerp.base.BaseWidget = openerp.base.Controller.extend({
     /**
      * The name of the QWeb template that will be used for rendering. Must be
