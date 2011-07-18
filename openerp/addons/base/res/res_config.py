@@ -67,14 +67,14 @@ class res_config_configurable(osv.osv_memory):
         active_todos = todos.search(cr, uid, ['|', ('type', '=', 'recurring'), ('state','=','open')],
                                     limit=1)
         if active_todos:
-            todo_obj = todos.browse(cr, uid, active_todos[0], context=None)
+            todo_obj = todos.browse(cr, uid, active_todos[0], context=context)
             todo_groups = map(lambda x:x.id, todo_obj.groups_id)
             dont_skip_todo = True
             if todo_groups:
                 cr.execute("select 1 from res_groups_users_rel where uid=%s and gid IN %s",(uid, tuple(todo_groups),))
                 dont_skip_todo = bool(cr.fetchone())
             if dont_skip_todo:
-                res = todos.browse(cr, uid, active_todos[0], context=None)
+                res = todos.browse(cr, uid, active_todos[0], context=context)
                 # A wizard opening directly a form instead of calling
                 # next_action will remain in the todo state so we set it to
                 # done ourselves.
@@ -82,7 +82,7 @@ class res_config_configurable(osv.osv_memory):
                     res.write({'state': 'done'})
                 return res
             else:
-                todos.write(cr, uid, active_todos[0], {'state':'skip'}, context=None)
+                todos.write(cr, uid, active_todos[0], {'state':'skip'}, context=context)
                 return self._next_action(cr, uid)
         return None
 
@@ -105,7 +105,7 @@ class res_config_configurable(osv.osv_memory):
         self.__logger.info('next action is %s', next)
         if next:
             res = next.action_launch(context=context)
-            res.update({'nodestroy': False})
+            res['nodestroy'] = False
             return res
         self.__logger.info('all configuration actions have been executed')
 
@@ -117,7 +117,7 @@ class res_config_configurable(osv.osv_memory):
         todo_pool = self.pool.get('ir.actions.todo')
         ids2 = todo_pool.search(cr, uid, [], context=context)
         for todo in todo_pool.browse(cr, uid, ids2, context=context):
-            if (todo.type=='recurring'):
+            if todo.type == 'recurring':
                 todo.write({'state':'open'})
         return self.next(cr, uid, ids, context)
 
