@@ -254,7 +254,8 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
                         })
                         .val(self._limit || 'NaN');
                 });
-       // debugger;
+        if(this.view_manager.sidebar == undefined)
+            debugger;
         this.view_manager.sidebar.set_toolbar(data.fields_view.toolbar);
 
     },

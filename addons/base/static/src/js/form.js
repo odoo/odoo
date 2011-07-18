@@ -1585,8 +1585,7 @@ openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
         });
         this.views = views;
 
-        this.viewmanager = new openerp.base.ViewManager(this.view,
-            this.element_id, this.dataset, views);
+        this.viewmanager = new openerp.base.ViewManager(this, this.element_id, this.dataset, views);
         this.viewmanager.registry = openerp.base.views.clone({
             list: 'openerp.base.form.One2ManyListView'
         });
@@ -1758,7 +1757,7 @@ openerp.base.form.FieldMany2Many = openerp.base.form.Field.extend({
             self.on_ui_change();
         });
 
-        this.list_view = new openerp.base.form.Many2ManyListView(this, this.list_id, this.dataset, false, {
+        this.list_view = new openerp.base.form.Many2ManyListView(this.view.view_manager, this.list_id, this.dataset, false, {
                     'addable': 'Add',
                     'selectable': self.multi_selection
             });
@@ -1819,7 +1818,7 @@ openerp.base.form.Many2ManyListView = openerp.base.ListView.extend({
     },
     do_activate_record: function(index, id) {
         var self = this;
-        var pop = new openerp.base.form.FormOpenPopup(null, this.m2m_field.view.session);
+        var pop = new openerp.base.form.FormOpenPopup(this);
         pop.show_element(this.dataset.model, id, this.m2m_field.build_context(), {});
         pop.on_write_completed.add_last(function() {
             self.reload_content();
