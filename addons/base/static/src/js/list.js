@@ -386,7 +386,7 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
     do_show: function () {
         this.$element.show();
         if (this.hidden) {
-            this.$element.find('table').append(
+            this.$element.find('.oe-listview-content').append(
                 this.groups.apoptosis().render());
             this.hidden = false;
         }
@@ -421,7 +421,7 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
      * re-renders the content of the list view
      */
     reload_content: function () {
-        this.$element.find('table').append(
+        this.$element.find('.oe-listview-content').append(
             this.groups.apoptosis().render(
                 $.proxy(this, 'compute_aggregates')));
     },
@@ -606,7 +606,7 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
     }
     // TODO: implement reorder (drag and drop rows)
 });
-openerp.base.ListView.List = Class.extend( /** @lends openerp.base.ListView.List# */{
+openerp.base.ListView.List = openerp.base.Class.extend( /** @lends openerp.base.ListView.List# */{
     /**
      * List display for the ListView, handles basic DOM events and transforms
      * them in the relevant higher-level events, to which the list view (or
@@ -842,7 +842,7 @@ openerp.base.ListView.List = Class.extend( /** @lends openerp.base.ListView.List
     }
     // drag and drop
 });
-openerp.base.ListView.Groups = Class.extend( /** @lends openerp.base.ListView.Groups# */{
+openerp.base.ListView.Groups = openerp.base.Class.extend( /** @lends openerp.base.ListView.Groups# */{
     passtrough_events: 'action deleted row_link',
     /**
      * Grouped display for the ListView. Handles basic DOM events and interacts

@@ -235,7 +235,7 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
         }
     },
     on_processed_onchange: function(response, processed) {
-        var result = response.result;
+        var result = response;
         if (result.value) {
             for (var f in result.value) {
                 var field = this.fields[f];
@@ -1381,9 +1381,9 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
 
         dataset.name_search(search_val, self.build_domain(), 'ilike',
                 this.limit + 1, function(data) {
-            self.last_search = data.result;
+            self.last_search = data;
             // possible selections for the m2o
-            var values = _.map(data.result, function(x) {
+            var values = _.map(data, function(x) {
                 return {label: $('<span />').text(x[1]).html(), name:x[1], id:x[0]};
             });
 
@@ -1394,7 +1394,7 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
                     dataset.name_search(search_val, self.build_domain(), 'ilike'
                     , false, function(data) {
                         self._change_int_value(null);
-                        self._search_create_popup("search", data.result);
+                        self._search_create_popup("search", data);
                     });
                 }});
             }
@@ -1421,7 +1421,7 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
         var self = this;
         var dataset = new openerp.base.DataSetStatic(this.session, this.field.relation, self.build_context());
         dataset.name_create(name, function(data) {
-            self._change_int_ext_value(data.result);
+            self._change_int_ext_value(data);
         }).fail(function(error, event) {
             event.preventDefault();
             self._change_int_value(null);
@@ -1441,7 +1441,7 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
         pop.on_select_elements.add(function(element_ids) {
             var dataset = new openerp.base.DataSetStatic(this.session, this.field.relation, self.build_context());
             dataset.name_get([element_ids[0]], function(data) {
-                self._change_int_ext_value(data.result[0]);
+                self._change_int_ext_value(data[0]);
                 pop.stop();
             });
         });
@@ -1479,7 +1479,7 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
         if(typeof(value) === "number") {
             var dataset = new openerp.base.DataSetStatic(this.session, this.field.relation, self.build_context());
             dataset.name_get([value], function(data) {
-                real_set_value(data.result[0]);
+                real_set_value(data[0]);
             }).fail(function() {self.tmp_value = undefined;});
         } else {
             setTimeout(function() {real_set_value(value);}, 0);

@@ -714,6 +714,12 @@ class SearchView(View):
     def fields_get(self, req, model):
         Model = req.session.model(model)
         fields = Model.fields_get(False, req.session.eval_context(req.context))
+        for field in fields.values():
+            # shouldn't convert the views too?
+            if field.get('domain'):
+                field["domain"] = self.parse_domain(field["domain"], req.session)
+            if field.get('context'):
+                field["context"] = self.parse_domain(field["context"], req.session)
         return {'fields': fields}
 
 class Binary(openerpweb.Controller):
