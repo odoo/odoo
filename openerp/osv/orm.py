@@ -781,7 +781,7 @@ class orm_template(object):
                         'You may need to add a dependency on the parent class\' module.' % (name, parent_name))
                 nattr = {}
                 for s in attributes:
-                    new = copy.copy(getattr(pool.get(parent_name), s))
+                    new = copy.copy(getattr(pool.get(parent_name), s, {}))
                     if s == '_columns':
                         # Don't _inherit custom fields.
                         for c in new.keys():
