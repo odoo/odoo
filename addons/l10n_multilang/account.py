@@ -40,14 +40,6 @@ class account_account(osv.osv):
 account_account()
 
 
-class account_tax_code(osv.osv):
-    _inherit = 'account.tax.code'
-    _sql_constraints = [
-        ('code_company_uniq', 'unique (code,company_id)', 'The code of the Tax Case must be unique per company !')
-    ]
-account_tax_code()
-
-
 class account_tax_template(osv.osv):
     _inherit = 'account.tax.template'
     _columns = {
