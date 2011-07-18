@@ -77,8 +77,11 @@
             <dd><ul>
                 <li t-foreach="category_value" t-as="todo"
                     t-att-class="todo.done ? 'oe-done' : undefined"
-                    t-att-data-action="todo.action">
+                    t-att-data-action="todo.action" t-att-data-id="todo.id"
+                    t-att-title="'Execute action \'' + todo.name + '\''">
                     <t t-esc="todo.name"/>
+                    <span class="ui-icon ui-icon-closethick"
+                          title="Cancel task, remove it from list"/>
                 </li>
             </ul></dd>
         </t>

@@ -161,6 +161,8 @@
 }
 .openerp .oe-dashboard-config-overview li {
     cursor: pointer;
+    position: relative;
+    text-indent: 20px;
 }
 .openerp .oe-dashboard-config-overview li:hover {
     cursor: pointer;
@@ -176,6 +178,11 @@
     -moz-column-count: 2;
     -webkit-column-count: 2;
     column-count: 2;
+}
+.openerp .oe-dashboard-config-overview li span.ui-icon {
+    position: absolute;
+    top: 0;
+    left: 0;
 }
 
 .openerp .oe-dashboard-home-tile {

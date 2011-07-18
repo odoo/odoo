@@ -299,6 +299,7 @@ openerp.base_dashboard.ConfigOverview = openerp.base.View.extend({
         var grouped_todos = _(records).chain()
             .map(function (record) {
                 return {
+                    id: record.id,
                     action: record.action_id[0],
                     name: record.action_id[1],
                     done: record.state !== 'open',
@@ -317,17 +318,26 @@ openerp.base_dashboard.ConfigOverview = openerp.base.View.extend({
 
         var self = this;
         this.$element.find('div.oe-dashboard-config-overview ul')
-                .delegate('li', 'click', function () {
-            self.execute_action({
-                    type: 'action',
-                    name: $(this).data('action')
-                }, self.dataset,
-                self.session.action_manager,
-                null, null, function () {
-                    // after action popup closed, refresh configuration thingie
+            .delegate('span.ui-icon', 'click', function (e) {
+                // cancel todo
+                e.stopImmediatePropagation();
+                var todo_id = $(this).parent().data('id');
+                self.dataset.write(todo_id, {state: 'cancel'}, function () {
                     self.start();
                 });
-        });
+            })
+            .delegate('li', 'click', function () {
+                self.execute_action({
+                        type: 'action',
+                        name: $(this).data('action')
+                    }, self.dataset,
+                    self.session.action_manager,
+                    null, null, function () {
+                        // after action popup closed, refresh configuration
+                        // thingie
+                        self.start();
+                    });
+            });
     }
 });
 
