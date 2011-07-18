@@ -78,6 +78,25 @@
         <field name="type">recurring</field>
     </record>
 
+    <record id="action_start_configurator" model="ir.actions.server">
+      <field name="name">Start Configuration</field>
+      <field name="model_id" ref="base.model_ir_actions_todo"/>
+      <field name="state">code</field>
+      <field name="code"
+             eval="'# obj is a browse_record and will provide stupid ids to method\n'
+'action = obj.pool.get(\'ir.actions.todo\').action_launch(cr, uid, ' + str([ref('base_setup_installer_todo')]) + ', context=context)'"/>
+    </record>
+    
+    <menuitem name="Add More Features"
+              action="action_start_configurator"
+              id="menu_view_base_module_configuration" parent="base.menu_config"
+              type="server" icon="STOCK_EXECUTE" sequence="100" />
+    <record id="ir_ui_view_sc_configuration" model="ir.ui.view_sc">
+      <field name="name">Add More Features</field>
+      <field name="resource">ir.ui.menu</field>
+      <field name="user_id" ref="base.user_root"/>
+      <field name="res_id" ref="menu_view_base_module_configuration"/>
+    </record>
 <!--     Migrate data from another application Conf Wiz-->
 
     <record id="view_migrade_application_installer_modules" model="ir.ui.view">
