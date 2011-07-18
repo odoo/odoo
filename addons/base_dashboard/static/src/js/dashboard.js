@@ -284,7 +284,8 @@ openerp.base_dashboard.ConfigOverview = openerp.base.View.extend({
         this._super(parent_or_session, element_id);
         this.dataset = new openerp.base.DataSetSearch(
                 this.session, 'ir.actions.todo');
-        this.dataset.domain = ['|', ['type', '=', 'recurring'],
+        this.dataset.domain = ['|', '&', ['type', '=', 'recurring'],
+                                         ['state', '!=', 'cancel'],
                                     '&', ['type', '!=', 'special'],
                                          ['state', '=', 'open']];
     },
