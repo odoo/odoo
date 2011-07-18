@@ -157,16 +157,6 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
                 self.on_controller_inited(view_type, controller);
             });
             this.views[view_type].controller = controller;
-            if(this.flags && this.flags.sidebar) {
-                if(this.active_view == 'list' || this.active_view == 'form') {
-                    this.views[this.active_view].controller.$element.after(QWeb.render('ExportView'))
-                    this.$element.find('#exportview').click(function(ev) {
-                        var export_view = new openerp.base_export.Export(self.session, self.dataset, self.views);
-                        export_view.start(false);
-                        ev.preventDefault();
-                    });
-                }
-            }
         }
 
 
@@ -191,6 +181,20 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
                 } else {
                     this.views[view_name].controller.do_hide();
                 }
+            }
+        }
+        if(this.flags && this.flags.sidebar) {
+            if(this.$element.find('#exportview')){
+                this.$element.find('#exportview').remove()
+            }
+            if(this.active_view == 'list' || this.active_view == 'form') {
+                console.log("this.views[this.active_view].controller.$element::",this.views[this.active_view].controller.$element)
+                this.views[this.active_view].controller.$element.after(QWeb.render('ExportView'))
+                this.$element.find('#exportview').click(function(ev) {
+                    var export_view = new openerp.base_export.Export(self.session, self.dataset, self.views);
+                    export_view.start(false);
+                    ev.preventDefault();
+                });
             }
         }
         return view_promise;
