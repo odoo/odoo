@@ -180,7 +180,7 @@ class stock_partial_picking(osv.osv_memory):
                 partial_datas['move%s' % (move.move_id.id)] = {
                     'product_id': move.product_id.id,
                     'product_qty': calc_qty,
-                    'product_uom': move.move_id.product_uom.id,
+                    'product_uom': move.product_uom.id,
                     'prodlot_id': move.prodlot_id.id,
                 }
                 if (picking_type == 'in') and (move.product_id.cost_method == 'average'):
