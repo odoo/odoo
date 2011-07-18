@@ -1024,7 +1024,7 @@ class sale_order_line(osv.osv):
         if flag:
             res = self.product_id_change(cr, uid, ids, pricelist=pricelist,
                     product=product, qty=qty, uom=uom, partner_id=partner_id,
-                    packaging=packaging, flag=False)
+                    packaging=packaging, flag=False, context=context)
             warning_msgs = res.get('warning') and res['warning']['message']
 
         products = product_obj.browse(cr, uid, product, context=context)
