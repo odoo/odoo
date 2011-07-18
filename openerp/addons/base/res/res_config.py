@@ -173,7 +173,7 @@ class res_config_configurable(osv.osv_memory):
         an action dictionary -- executes the action provided by calling
         ``next``.
         """
-        self._set_previous_todo(cr, uid, state='skip', context=context)
+        self._set_previous_todo(cr, uid, state='done', context=context)
         next = self.cancel(cr, uid, ids, context=None)
         if next: return next
         return self.next(cr, uid, ids, context=context)
@@ -189,7 +189,7 @@ class res_config_configurable(osv.osv_memory):
         an action dictionary -- executes the action provided by calling
         ``next``.
         """
-        self._set_previous_todo(cr, uid, state='cancel', context=context)
+        self._set_previous_todo(cr, uid, state='hidden', context=context)
         next = self.cancel(cr, uid, ids, context=None)
         if next: return next
         return self.next(cr, uid, ids, context=context)

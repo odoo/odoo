@@ -818,7 +818,7 @@ ir_actions_todo_category()
 # This model use to register action services.
 TODO_STATES = [('open', 'To Do'),
                ('done', 'Done'),
-               ('cancel', 'Cancelled')]
+               ('hidden', 'Hidden')]
 TODO_TYPES = [('special', 'Special'),
               ('normal', 'Normal'),
               ('recurring', 'Recurring')]
