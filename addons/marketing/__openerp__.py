@@ -23,7 +23,7 @@
 {
     "name" : "Marketing",
     "version" : "1.1",
-    "depends" : ["base"],
+    "depends" : ["base", "base_setup"],
     "author" : "OpenERP SA",
     "category": 'Sales',
     'complexity': "expert",

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+    
+        <record model="ir.ui.view" id="asset_modify_form">
+            <field name="name">wizard.asset.modify.form</field>
+            <field name="model">asset.modify</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Modify Asset">
+                    <group colspan="4" col="4">
+                        <separator string="Asset durations to modify" colspan="4"/>
+                        <field name="name" colspan="4"/>
+                        <group colspan="2" col="2">
+                            <field name="method_number"/>
+                            <field name="method_end"/>
+                        </group>
+                        <field name="method_period"/>
+                        <separator string="Notes" colspan="4"/>
+                        <field name="note" nolabel="1" colspan="4"/>
+                    </group>
+                    <newline/>
+                    <group colspan="4" col="4">
+                        <separator string ="" colspan="4"/>
+                        <newline/>
+                        <group colspan="2" col="2"/>
+                        <button special="cancel" string="Cancel" icon="gtk-cancel"/>
+                        <button name="modify" string="Modify" type="object" icon="terp-camera_test"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+	    
+        <record id="action_asset_modify" model="ir.actions.act_window">
+             <field name="name">Modify Asset</field>
+             <field name="res_model">asset.modify</field>
+             <field name="type">ir.actions.act_window</field>
+             <field name="view_type">form</field>
+             <field name="view_mode">tree,form</field>
+             <field name="view_id" ref="asset_modify_form"/>
+             <field name="target">new</field>
+       </record>
+	
+    </data>
+</openerp>

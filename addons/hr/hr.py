@@ -66,16 +66,6 @@ class hr_employee_category(osv.osv):
 
 hr_employee_category()
 
-class hr_employee_marital_status(osv.osv):
-    _name = "hr.employee.marital.status"
-    _description = "Employee Marital Status"
-    _columns = {
-        'name': fields.char('Marital Status', size=32, required=True, translate=True),
-        'description': fields.text('Status Description'),
-    }
-
-hr_employee_marital_status()
-
 class hr_job(osv.osv):
 
     def _no_of_employee(self, cr, uid, ids, name, args, context=None):
@@ -139,8 +129,9 @@ class hr_employee(osv.osv):
         'ssnid': fields.char('SSN No', size=32, help='Social Security Number'),
         'sinid': fields.char('SIN No', size=32, help="Social Insurance Number"),
         'identification_id': fields.char('Identification No', size=32),
+        'otherid': fields.char('Other Id', size=64),
         'gender': fields.selection([('male', 'Male'),('female', 'Female')], 'Gender'),
-        'marital': fields.many2one('hr.employee.marital.status', 'Marital Status'),
+        'marital': fields.selection([('single', 'Single'), ('married', 'Married'), ('widower', 'Widower'), ('divorced', 'Divorced')], 'Marital Status'),
         'department_id':fields.many2one('hr.department', 'Department'),
         'address_id': fields.many2one('res.partner.address', 'Working Address'),
         'address_home_id': fields.many2one('res.partner.address', 'Home Address'),
@@ -152,7 +143,7 @@ class hr_employee(osv.osv):
         'work_location': fields.char('Office Location', size=32),
         'notes': fields.text('Notes'),
         'parent_id': fields.many2one('hr.employee', 'Manager'),
-        'category_ids': fields.many2many('hr.employee.category', 'employee_category_rel', 'emp_id', 'category_id', 'Category'),
+        'category_ids': fields.many2many('hr.employee.category', 'employee_category_rel', 'emp_id', 'category_id', 'Categories'),
         'child_ids': fields.one2many('hr.employee', 'parent_id', 'Subordinates'),
         'resource_id': fields.many2one('resource.resource', 'Resource', ondelete='cascade', required=True),
         'coach_id': fields.many2one('hr.employee', 'Coach'),
