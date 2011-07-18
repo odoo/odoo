@@ -89,7 +89,7 @@ openerp.base.form.DashBoard = openerp.base.form.Widget.extend({
                                 }
                             }
                         });
-        new openerp.base.ViewManagerAction(this.session, dialog_id, action).start();
+        new openerp.base.ViewManagerAction(this, dialog_id, action).start();
         // TODO: should bind ListView#select_record in order to catch record clicking
     },
     do_add_widget : function(action_manager) {
@@ -227,7 +227,7 @@ openerp.base.form.DashBoard = openerp.base.form.Widget.extend({
             action_buttons : false,
             pager: false
         };
-        new openerp.base.ViewManagerAction(this.session,
+        new openerp.base.ViewManagerAction(this,
             this.view.element_id + '_action_' + action.id, action).start();
     },
     render: function() {
