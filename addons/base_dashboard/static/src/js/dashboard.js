@@ -301,7 +301,6 @@ openerp.base_dashboard.ConfigOverview = openerp.base.View.extend({
             .map(function (record) {
                 return {
                     id: record.id,
-                    action: record.action_id[0],
                     name: record.action_id[1],
                     done: record.state !== 'open',
                     to_do: record.state === 'open',
@@ -329,11 +328,11 @@ openerp.base_dashboard.ConfigOverview = openerp.base.View.extend({
             })
             .delegate('li', 'click', function () {
                 self.execute_action({
-                        type: 'action',
-                        name: $(this).data('action')
+                        type: 'object',
+                        name: 'action_launch'
                     }, self.dataset,
                     self.session.action_manager,
-                    null, null, function () {
+                    $(this).data('id'), function () {
                         // after action popup closed, refresh configuration
                         // thingie
                         self.start();
