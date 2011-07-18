@@ -20,6 +20,6 @@
             <field name="view_mode">tree,form,graph</field>
             <field name="domain">[('date','&lt;=',time.strftime('%Y-%m-%d')),('state','=','open')]</field>
         </record>
-        <menuitem action="action_account_analytic_managed_overpassed" id="menu_action_account_analytic_managed_overpassed" sequence="50" parent="menu_invoicing" groups="project.group_project_manager"/>
+        <menuitem action="action_account_analytic_managed_overpassed" id="menu_action_account_analytic_managed_overpassed" sequence="50" parent="menu_invoicing" groups="analytic.group_analytic_accounting"/>
     </data>
 </openerp>
