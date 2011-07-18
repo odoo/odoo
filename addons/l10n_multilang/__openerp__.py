@@ -20,16 +20,15 @@
 ##############################################################################
 
 {
-    "name" : "Belgium - Multi language Chart of Accounts",
+    "name" : "Multi language Chart of Accounts",
     "version" : "1.1",
     "author" : "OpenERP SA",
     "category": 'Localization/Account Charts',
     "description": """
-    * Multilanguage support for Chart of Accounts, Taxes, Tax Codes and Journals
-    * Multilanguage accounting templates
-    * Multilanguage support Analytic Chart of Accounts and Analytic Journals
+    * Multilanguage support for Chart of Accounts, Taxes, Tax Codes , Journals, Accounting Templates,
+        Analytic Chart of Accounts and Analytic Journals
     * Setup wizard changes
-        - Copy translations for CoA, Tax, Tax Code and Fiscal Position from templates to target objects
+        - Copy translations for COA, Tax, Tax Code and Fiscal Position from templates to target objects
         - Add options to install languages during the setup
     """,
     'website': 'http://www.openerp.com',
