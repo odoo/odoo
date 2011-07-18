@@ -1171,8 +1171,8 @@ openerp.base.WebClient = openerp.base.Controller.extend({
         var self = this;
         // TODO: add actual loading if there is url state to unpack, test on window.location.hash
         var ds = new openerp.base.DataSetSearch(this.session, 'res.users');
-        ds.read_ids([parseInt(this.session.uid, 10)], ['action_id'], function (actions) {
-            var home_action = actions[0].action_id;
+        ds.read_ids([parseInt(this.session.uid, 10)], ['action_id'], function (users) {
+            var home_action = users[0].action_id;
             if (!home_action) { return; }
             // oh dear
             openerp.base.View.prototype.execute_action.call(
