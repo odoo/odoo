@@ -6,13 +6,13 @@ openerp.base.views = function(openerp) {
 
 openerp.base.ActionManager = openerp.base.Controller.extend({
 // process all kind of actions
-    init: function(session, element_id) {
-        this._super(session, element_id);
+    init: function(parent, element_id) {
+        this._super(parent, element_id);
         this.viewmanager = null;
         this.current_dialog = null;
         // Temporary linking view_manager to session.
         // Will use controller_parent to find it when implementation will be done.
-        session.action_manager = this;
+        this.session.action_manager = this;
     },
     /**
      * Process an action
