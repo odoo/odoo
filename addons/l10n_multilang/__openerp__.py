@@ -25,16 +25,12 @@
     "author" : "OpenERP SA",
     "category": 'Localization/Account Charts',
     "description": """
-    Belgian localisation (on top of l10n_be):
     * Multilanguage support for Chart of Accounts, Taxes, Tax Codes and Journals
-    * Multilingual accounting templates
+    * Multilanguage accounting templates
     * Multilanguage support Analytic Chart of Accounts and Analytic Journals
-    * Update partner titles for commonly used legal entities
-    * Add constraint to ensure unique Tax Code per Company 
     * Setup wizard changes
         - Copy translations for CoA, Tax, Tax Code and Fiscal Position from templates to target objects
         - Add options to install languages during the setup
-        - Generate Financial Journals from the templates
     """,
     'website': 'http://www.openerp.com',
     'init_xml': [],
