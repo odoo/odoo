@@ -478,6 +478,16 @@ class browse_record(object):
 
     __repr__ = __str__
 
+    def refresh(self):
+        """Force refreshing this browse_record's data and all the data of the
+           records that belong to the same cache, by emptying the cache completely,
+           preserving only the record identifiers (for prefetching optimizations).
+        """
+        for model, model_cache in self._cache.iteritems():
+            # only preserve the ids of the records that were in the cache
+            cached_ids = dict([(i, {'id': i}) for i in model_cache.keys()])
+            self._cache[model].clear()
+            self._cache[model].update(cached_ids)
 
 def get_pg_type(f):
     """
