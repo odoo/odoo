@@ -77,9 +77,21 @@ module_class_list = {}
 ROOT_USER_ID = 1
 
 def transfer_field_to_modifiers(field, modifiers):
-    for a in ('invisible', 'readonly', 'required'):
-        if field.get(a):
-            modifiers[a] = bool(field.get(a))
+    default_values = {}
+    state_exceptions = {}
+    for attr in ('invisible', 'readonly', 'required'):
+        state_exceptions[attr] = []
+        default_values[attr] = bool(field.get(attr))
+    for state, modifs in (field.get("states",{})).items():
+        for modif in modifs:
+            if default_values[modif[0]] != modif[1]:
+                state_exceptions[modif[0]].append(state)
+
+    for attr, default_value in default_values.items():
+        if state_exceptions[attr]:
+            modifiers[attr] = [("state", "not in" if default_value else "in", state_exceptions[attr])]
+        else:
+            modifiers[attr] = default_value
 
 
 # Don't deal with groups, it is done by check_group().
@@ -2484,9 +2496,10 @@ class orm(orm_template):
         :param int offset: optional number of records to skip
         :param int limit: optional max number of records to return
         :param dict context: context arguments, like lang, time zone
-        :param order: optional ``order by`` specification, for overriding the natural
-                      sort ordering of the groups, see also :py:meth:`~osv.osv.osv.search`
-                      (supported only for many2one fields currently)
+        :param list orderby: optional ``order by`` specification, for
+                             overriding the natural sort ordering of the
+                             groups, see also :py:meth:`~osv.osv.osv.search`
+                             (supported only for many2one fields currently)
         :return: list of dictionaries(one dictionary for each record) containing:
 
                     * the values of fields grouped by the fields in ``groupby`` argument

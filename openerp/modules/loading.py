@@ -88,14 +88,14 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
             if new_query:
                 cr.execute(new_query)
 
-    def load_init_xml(cr, m, idref, mode):
-        _load_data(cr, m, idref, mode, 'init_xml')
+    def load_init_xml(cr, module_name, idref, mode):
+        _load_data(cr, module_name, idref, mode, 'init_xml')
 
-    def load_update_xml(cr, m, idref, mode):
-        _load_data(cr, m, idref, mode, 'update_xml')
+    def load_update_xml(cr, module_name, idref, mode):
+        _load_data(cr, module_name, idref, mode, 'update_xml')
 
-    def load_demo_xml(cr, m, idref, mode):
-        _load_data(cr, m, idref, mode, 'demo_xml')
+    def load_demo_xml(cr, module_name, idref, mode):
+        _load_data(cr, module_name, idref, mode, 'demo_xml')
 
     def load_data(cr, module_name, idref, mode):
         _load_data(cr, module_name, idref, mode, 'data')
@@ -152,38 +152,38 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
         status = {}
 
     processed_modules = []
+    loaded_modules = []
     statusi = 0
     pool = pooler.get_pool(cr.dbname)
     migrations = openerp.modules.migration.MigrationManager(cr, graph)
     logger.notifyChannel('init', netsvc.LOG_DEBUG, 'loading %d packages..' % len(graph))
 
-    # register, instanciate and initialize models for each modules
+    # register, instantiate and initialize models for each modules
     for package in graph:
-        if skip_modules and package.name in skip_modules:
+        module_name = package.name
+        module_id = package.id
+
+        if skip_modules and module_name in skip_modules:
             continue
+
         logger.notifyChannel('init', netsvc.LOG_INFO, 'module %s: loading objects' % package.name)
         migrations.migrate_module(package, 'pre')
         register_module_classes(package.name)
         models = pool.instanciate(package.name, cr)
+        loaded_modules.append(package.name)
         if hasattr(package, 'init') or hasattr(package, 'update') or package.state in ('to install', 'to upgrade'):
             init_module_models(cr, package.name, models)
-        cr.commit()
 
-    # load data for each modules
-    modobj = pool.get('ir.module.module')
-    for package in graph:
-        status['progress'] = (float(statusi)+0.1) / len(graph)
-        m = package.name
-        mid = package.id
+        status['progress'] = float(statusi) / len(graph)
 
-        if skip_modules and m in skip_modules:
-            continue
+        # Can't put this line out of the loop: ir.module.module will be
+        # registered by init_module_models() above.
+        modobj = pool.get('ir.module.module')
 
         if perform_checks:
-            modobj.check(cr, 1, [mid])
+            modobj.check(cr, 1, [module_id])
 
         idref = {}
-        status['progress'] = (float(statusi)+0.4) / len(graph)
 
         mode = 'update'
         if hasattr(package, 'init') or package.state == 'to install':
@@ -192,21 +192,21 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
         if hasattr(package, 'init') or hasattr(package, 'update') or package.state in ('to install', 'to upgrade'):
             if package.state=='to upgrade':
                 # upgrading the module information
-                modobj.write(cr, 1, [mid], modobj.get_values_from_terp(package.data))
-            load_init_xml(cr, m, idref, mode)
-            load_update_xml(cr, m, idref, mode)
-            load_data(cr, m, idref, mode)
+                modobj.write(cr, 1, [module_id], modobj.get_values_from_terp(package.data))
+            load_init_xml(cr, module_name, idref, mode)
+            load_update_xml(cr, module_name, idref, mode)
+            load_data(cr, module_name, idref, mode)
             if hasattr(package, 'demo') or (package.dbdemo and package.state != 'installed'):
                 status['progress'] = (float(statusi)+0.75) / len(graph)
-                load_demo_xml(cr, m, idref, mode)
-                load_demo(cr, m, idref, mode)
-                cr.execute('update ir_module_module set demo=%s where id=%s', (True, mid))
+                load_demo_xml(cr, module_name, idref, mode)
+                load_demo(cr, module_name, idref, mode)
+                cr.execute('update ir_module_module set demo=%s where id=%s', (True, module_id))
 
                 # launch tests only in demo mode, as most tests will depend
                 # on demo data. Other tests can be added into the regular
                 # 'data' section, but should probably not alter the data,
                 # as there is no rollback.
-                load_test(cr, m, idref, mode)
+                load_test(cr, module_name, idref, mode)
 
             processed_modules.append(package.name)
 
@@ -214,22 +214,21 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
 
             ver = release.major_version + '.' + package.data['version']
             # Set new modules and dependencies
-            modobj.write(cr, 1, [mid], {'state': 'installed', 'latest_version': ver})
-            cr.commit()
+            modobj.write(cr, 1, [module_id], {'state': 'installed', 'latest_version': ver})
             # Update translations for all installed languages
-            modobj.update_translations(cr, 1, [mid], None)
-            cr.commit()
+            modobj.update_translations(cr, 1, [module_id], None)
 
             package.state = 'installed'
             for kind in ('init', 'demo', 'update'):
                 if hasattr(package, kind):
                     delattr(package, kind)
 
+        cr.commit()
         statusi += 1
 
     cr.commit()
 
-    return processed_modules
+    return loaded_modules, processed_modules
 
 def _check_module_names(cr, module_names):
     mod_names = set(module_names)
@@ -245,11 +244,26 @@ def _check_module_names(cr, module_names):
             incorrect_names = mod_names.difference([x['name'] for x in cr.dictfetchall()])
             logging.getLogger('init').warning('invalid module names, ignored: %s', ", ".join(incorrect_names))
 
+def load_marked_modules(cr, graph, states, force, progressdict, report, loaded_modules):
+    """Loads modules marked with ``states``, adding them to ``graph`` and
+       ``loaded_modules`` and returns a list of installed/upgraded modules."""
+    processed_modules = []
+    while True:
+        cr.execute("SELECT name from ir_module_module WHERE state IN %s" ,(tuple(states),))
+        module_list = [name for (name,) in cr.fetchall() if name not in graph]
+        new_modules_in_graph = graph.add_modules(cr, module_list, force)
+        logger.notifyChannel('init', netsvc.LOG_DEBUG, 'Updating graph with %d more modules' % (len(module_list)))
+        loaded, processed = load_module_graph(cr, graph, progressdict, report=report, skip_modules=loaded_modules)
+        processed_modules.extend(processed)
+        loaded_modules.extend(loaded)
+        if not processed: break
+    return processed_modules
+
+
 def load_modules(db, force_demo=False, status=None, update_module=False):
     # TODO status['progress'] reporting is broken: used twice (and reset each
     # time to zero) in load_module_graph, not fine-grained enough.
     # It should be a method exposed by the pool.
-
     initialize_sys_path()
 
     open_openerp_namespace()
@@ -271,10 +285,9 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         # This is a brand new pool, just created in pooler.get_db_and_pool()
         pool = pooler.get_pool(cr.dbname)
 
-        processed_modules = []
+        processed_modules = [] # for cleanup step after install
+        loaded_modules = [] # to avoid double loading
         report = tools.assertion_report()
-        # NOTE: Try to also load the modules that have been marked as uninstallable previously...
-        STATES_TO_LOAD = ['installed', 'to upgrade', 'uninstallable']
         if 'base' in tools.config['update'] or 'all' in tools.config['update']:
             cr.execute("update ir_module_module set state=%s where name=%s and state=%s", ('to upgrade', 'base', 'installed'))
 
@@ -284,7 +297,8 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         if not graph:
             logger.notifyChannel('init', netsvc.LOG_CRITICAL, 'module base cannot be loaded! (hint: verify addons-path)')
             raise osv.osv.except_osv(_('Could not load base module'), _('module base cannot be loaded! (hint: verify addons-path)'))
-        processed_modules.extend(load_module_graph(cr, graph, status, perform_checks=(not update_module), report=report))
+        loaded, processed = load_module_graph(cr, graph, status, perform_checks=(not update_module), report=report)
+        processed_modules.extend(processed)
 
         if tools.config['load_language']:
             for lang in tools.config['load_language'].split(','):
@@ -313,28 +327,19 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
 
             cr.execute("update ir_module_module set state=%s where name=%s", ('installed', 'base'))
 
-            STATES_TO_LOAD += ['to install']
-
 
         # STEP 3: Load marked modules (skipping base which was done in STEP 1)
-        loop_guardrail = 0
-        while True:
-            loop_guardrail += 1
-            if loop_guardrail > 100:
-                raise ValueError('Possible recursive module tree detected, aborting.')
-            cr.execute("SELECT name from ir_module_module WHERE state IN %s" ,(tuple(STATES_TO_LOAD),))
-
-            module_list = [name for (name,) in cr.fetchall() if name not in graph]
-            if not module_list:
-                break
-
-            new_modules_in_graph = graph.add_modules(cr, module_list, force)
-            if new_modules_in_graph == 0:
-                # nothing to load
-                break
-
-            logger.notifyChannel('init', netsvc.LOG_DEBUG, 'Updating graph with %d more modules' % (len(module_list)))
-            processed_modules.extend(load_module_graph(cr, graph, status, report=report, skip_modules=processed_modules))
+        # IMPORTANT: this is done in two parts, first loading all installed or
+        #            partially installed modules (i.e. installed/to upgrade), to
+        #            offer a consistent system to the second part: installing
+        #            newly selected modules.
+        states_to_load = ['installed', 'to upgrade']
+        processed = load_marked_modules(cr, graph, states_to_load, force, status, report, loaded_modules)
+        processed_modules.extend(processed)
+        if update_module:
+            states_to_load = ['to install']
+            processed = load_marked_modules(cr, graph, states_to_load, force, status, report, loaded_modules)
+            processed_modules.extend(processed)
 
         # load custom models
         cr.execute('select model from ir_model where state=%s', ('manual',))
