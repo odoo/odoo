@@ -381,9 +381,6 @@ openerp.base.DataSetStatic =  openerp.base.DataSet.extend({
         this._super(parent, model, context);
         // all local records
         this.ids = ids || [];
-        if (this.ids.length) {
-            this.index = 0;
-        }
     },
     read_slice: function (fields, offset, limit, callback) {
         var self = this;
@@ -393,8 +390,10 @@ openerp.base.DataSetStatic =  openerp.base.DataSet.extend({
     },
     set_ids: function (ids) {
         this.ids = ids;
-        this.index = this.index <= this.ids.length - 1 ?
-            this.index : (this.ids.length > 0 ? this.length - 1 : 0);
+        if (this.index !== null) {
+            this.index = this.index <= this.ids.length - 1 ?
+                this.index : (this.ids.length > 0 ? this.length - 1 : 0);
+        }
     },
     unlink: function(ids) {
         this.on_unlink(ids);
@@ -470,8 +469,10 @@ openerp.base.DataSetSearch =  openerp.base.DataSet.extend({
         var self = this;
         return this._super(ids, function(result) {
             self.ids = _.without.apply(_, [self.ids].concat(ids));
-            self.index = self.index <= self.ids.length - 1 ?
-                self.index : (self.ids.length > 0 ? self.ids.length -1 : 0);
+            if (this.index !== null) {
+                self.index = self.index <= self.ids.length - 1 ?
+                    self.index : (self.ids.length > 0 ? self.ids.length -1 : 0);
+            }
             if (callback)
                 callback(result);
         }, error_callback);

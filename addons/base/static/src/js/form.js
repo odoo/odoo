@@ -17,7 +17,7 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
      *
      * @property {openerp.base.Registry} registry=openerp.base.form.widgets widgets registry for this form view instance
      */
-    init: function(parent, element_id, dataset, view_id) {
+    init: function(parent, element_id, dataset, view_id, options) {
         this._super(parent, element_id);
         this.view_manager = parent || new openerp.base.NullViewManager();
         this.dataset = dataset;
@@ -37,6 +37,8 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
         this.registry = openerp.base.form.widgets;
         this.has_been_loaded = $.Deferred();
         this.$form_header = null;
+        this.options = options || {};
+        _.defaults(this.options, {"always_show_new_button": true});
     },
     start: function() {
         //this.log('Starting FormView '+this.model+this.view_id)
@@ -88,14 +90,16 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
     },
     do_show: function () {
         var self = this;
+        var promise;
         if (this.dataset.index === null) {
             // null index means we should start a new record
-            this.on_button_new();
+            promise = this.on_button_new();
         } else {
-            this.dataset.read_index(_.keys(this.fields_view.fields), this.on_record_loaded);
+            promise = this.dataset.read_index(_.keys(this.fields_view.fields), this.on_record_loaded);
         }
         self.$element.show();
         this.view_manager.sidebar.do_refresh(true);
+        return promise;
     },
     do_hide: function () {
         this.$element.hide();
@@ -107,7 +111,9 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
         if (!record.id) {
             this.$form_header.find('.oe_form_on_create').show();
             this.$form_header.find('.oe_form_on_update').hide();
-            this.$form_header.find('button.oe_form_button_new').hide();
+            if (!this.options["always_show_new_button"]) {
+                this.$form_header.find('button.oe_form_button_new').hide();
+            }
         } else {
             this.$form_header.find('.oe_form_on_create').hide();
             this.$form_header.find('.oe_form_on_update').show();
@@ -271,10 +277,14 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
     },
     on_button_new: function() {
         var self = this;
+        var def = $.Deferred();
         $.when(this.has_been_loaded).then(function() {
             self.dataset.default_get(
-                _.keys(self.fields_view.fields), self.on_record_loaded);
+                _.keys(self.fields_view.fields)).then(self.on_record_loaded).then(function() {
+                    def.resolve();
+                    });
         });
+        return def.promise();
     },
     /**
      * Triggers saving the form's record. Chooses between creating a new
@@ -1555,6 +1565,7 @@ openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
         this._super(view, node);
         this.template = "FieldOne2Many";
         this.is_started = $.Deferred();
+        this.form_last_update = $.Deferred();
     },
     start: function() {
         this._super.apply(this, arguments);
@@ -1587,14 +1598,19 @@ openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
 
         this.viewmanager = new openerp.base.ViewManager(this, this.element_id, this.dataset, views);
         this.viewmanager.registry = openerp.base.views.clone({
-            list: 'openerp.base.form.One2ManyListView'
+            list: 'openerp.base.form.One2ManyListView',
+            form: 'openerp.base.form.One2ManyFormView'
         });
-
+        var once = $.Deferred().then(function() {
+            self.form_last_update.resolve();
+        });
         this.viewmanager.on_controller_inited.add_last(function(view_type, controller) {
             if (view_type == "list") {
                 controller.o2m = self;
             } else if (view_type == "form") {
-                // TODO niv
+                controller.on_record_loaded.add_last(function() {
+                    once.resolve();
+                });
             }
             self.is_started.resolve();
         });
@@ -1608,7 +1624,12 @@ openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
         if(self.viewmanager.active_view === "list") {
             view.reload_content();
         } else if (self.viewmanager.active_view === "form") {
-            // TODO niv: implement
+            if (this.dataset.index === null && this.dataset.ids.length >= 1) {
+                this.dataset.index = 0;
+            }
+            this.form_last_update.then(function() {
+                this.form_last_update = view.do_show();
+            });
         }
     },
     set_value_from_ui: function() {},
@@ -1697,6 +1718,10 @@ openerp.base.form.One2ManyDataSet = openerp.base.BufferedDataSet.extend({
         this.context = this.o2m.build_context();
         return this.context;
     }
+});
+
+openerp.base.form.One2ManyFormView = openerp.base.FormView.extend({
+    
 });
 
 openerp.base.form.One2ManyListView = openerp.base.ListView.extend({
