@@ -254,8 +254,9 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
                         })
                         .val(self._limit || 'NaN');
                 });
-
+       // debugger;
         this.view_manager.sidebar.set_toolbar(data.fields_view.toolbar);
+
     },
     /**
      * Configures the ListView pager based on the provided dataset's information

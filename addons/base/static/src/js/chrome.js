@@ -528,16 +528,9 @@ openerp.base.BaseWidget = openerp.base.Controller.extend({
      * lets the widgets clean up after themselves.
      */
     stop: function () {
-        var tmp_children = this.children;
-        this.children = [];
-        _.each(tmp_children, function(x) {
-            x.stop();
-        });
         if(this.$element != null) {
             this.$element.remove();
         }
-        this.set_parent(null);
-        this._super();
     },
     /**
      * Render the widget. This.template must be defined.
