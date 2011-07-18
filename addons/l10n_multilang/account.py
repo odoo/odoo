@@ -40,6 +40,14 @@ class account_account(osv.osv):
 account_account()
 
 
+class account_tax(osv.osv):
+    _inherit = 'account.tax'
+    _columns = {
+        'name': fields.char('Tax Name', size=128, required=True, select=True, translate=True),
+    }
+account_tax()
+
+
 class account_tax_template(osv.osv):
     _inherit = 'account.tax.template'
     _columns = {
@@ -60,10 +68,6 @@ class account_chart_template(osv.osv):
     _inherit = 'account.chart.template'
     _columns={
         'name': fields.char('Name', size=64, required=True, translate=True),
-        'bank_from_template':fields.boolean('Banks/Cash from Template', help="Generate Bank/Cash accounts and journals from the Templates."),
-    }
-    _defaults = {
-        'bank_from_template': False,
     }
     _order = 'name'
 account_chart_template()
