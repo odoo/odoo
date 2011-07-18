@@ -61,47 +61,31 @@ class res_config_configurable(osv.osv_memory):
     )
 
     def _next_action(self, cr, uid, context=None):
-        todos = self.pool.get('ir.actions.todo')
-        self.__logger.info('getting next %s', todos)
-        # Don't forget to change the domain in search view, if this condition is changed
-        active_todos = todos.search(cr, uid, ['|', ('type', '=', 'recurring'), ('state','=','open')],
-                                    limit=1)
-        if active_todos:
-            todo_obj = todos.browse(cr, uid, active_todos[0], context=context)
-            todo_groups = map(lambda x:x.id, todo_obj.groups_id)
-            dont_skip_todo = True
-            if todo_groups:
-                cr.execute("select 1 from res_groups_users_rel where uid=%s and gid IN %s",(uid, tuple(todo_groups),))
-                dont_skip_todo = bool(cr.fetchone())
-            if dont_skip_todo:
-                res = todos.browse(cr, uid, active_todos[0], context=context)
-                # A wizard opening directly a form instead of calling
-                # next_action will remain in the todo state so we set it to
-                # done ourselves.
-                if res.action_id.target == 'current':
-                    res.write({'state': 'done'})
-                return res
-            else:
-                todos.write(cr, uid, active_todos[0], {'state':'skip'}, context=context)
-                return self._next_action(cr, uid)
-        return None
+        Todos = self.pool['ir.actions.todo']
+        self.__logger.info('getting next %s', Todos)
 
-    def _set_previous_todo(self, cr, uid, state, context=None):
-        """ lookup the previous (which is still the next at this point)
-        ir.actions.todo, set it to whatever state was provided.
-        """
-        # this is ultra brittle, but apart from storing the todo id
-        # into the res.config view, I'm not sure how to get the
-        # "previous" todo
-        previous_todo = self._next_action(cr, uid, context=context)
-        if not previous_todo:
-            self.__logger.warn(_("Couldn't find previous ir.actions.todo"))
-            return
-        previous_todo.write({'state':state})
+        active_todos = Todos.browse(cr, uid,
+            Todos.search(cr, uid, ['&', ('type', '=', 'special'), ('state','=','open')]),
+                                    context=context)
+
+        user_groups = set(map(
+            lambda g: g.id,
+            self.pool['res.users'].browse(cr, uid, [uid], context=context)[0].groups_id))
+
+        valid_todos_for_user = [
+            todo for todo in active_todos
+            if not todo.groups_id or bool(user_groups.intersection((
+                group.id for group in todo.groups_id)))
+        ]
+
+        if valid_todos_for_user:
+            return valid_todos_for_user[0]
+
+        return None
 
     def _next(self, cr, uid, context=None):
         self.__logger.info('getting next operation')
-        next = self._next_action(cr, uid)
+        next = self._next_action(cr, uid, context=context)
         self.__logger.info('next action is %s', next)
         if next:
             res = next.action_launch(context=context)
@@ -160,8 +144,7 @@ class res_config_configurable(osv.osv_memory):
         an action dictionary -- executes the action provided by calling
         ``next``.
         """
-        self._set_previous_todo(cr, uid, state='done', context=context)
-        next = self.execute(cr, uid, ids, context=None)
+        next = self.execute(cr, uid, ids, context=context)
         if next: return next
         return self.next(cr, uid, ids, context=context)
 
@@ -173,8 +156,7 @@ class res_config_configurable(osv.osv_memory):
         an action dictionary -- executes the action provided by calling
         ``next``.
         """
-        self._set_previous_todo(cr, uid, state='done', context=context)
-        next = self.cancel(cr, uid, ids, context=None)
+        next = self.cancel(cr, uid, ids, context=context)
         if next: return next
         return self.next(cr, uid, ids, context=context)
 
@@ -189,8 +171,7 @@ class res_config_configurable(osv.osv_memory):
         an action dictionary -- executes the action provided by calling
         ``next``.
         """
-        self._set_previous_todo(cr, uid, state='hidden', context=context)
-        next = self.cancel(cr, uid, ids, context=None)
+        next = self.cancel(cr, uid, ids, context=context)
         if next: return next
         return self.next(cr, uid, ids, context=context)
 
