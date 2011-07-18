@@ -289,7 +289,7 @@ init: function(view_manager, session, element_id, dataset, view_id) {
         ganttChartControl.attachEvent("onTaskStartDrag", function(task) {self.on_drag_start(task);});
         ganttChartControl.attachEvent("onTaskEndResize", function(task) {self.on_resize_drag_end(task, "resize");});
         ganttChartControl.attachEvent("onTaskEndDrag", function(task) {self.on_resize_drag_end(task, "drag");});
-        ganttChartControl.attachEvent("onTaskDblClick", function(task) {self.open_popup(task);});
+        ganttChartControl.attachEvent("onTaskDblClick", function(task, evt) {self.open_popup(task); evt.stopPropagation(); evt.preventDefault();});
 
         taskdiv = jQuery("div.taskPanel").parent();
         taskdiv.addClass('ganttTaskPanel');
@@ -372,27 +372,53 @@ init: function(view_manager, session, element_id, dataset, view_id) {
 
     open_popup : function(task) {
         var event_id = task.getId();
-        
         if(event_id.toString().search("_") != -1)
             return;
-        if (event_id) {
-            event_id = parseInt(event_id, 10);
-            var dataset_event_index = jQuery.inArray(event_id, this.ids);
-        } else  {
-            var dataset_event_index = null;
+        if(event_id) event_id = parseInt(event_id, 10);
+
+        var action = {
+            "res_model": this.dataset.model,
+            "res_id": event_id,
+            "views":[[false,"form"]],
+            "type":"ir.actions.act_window",
+            "view_type":"form",
+            "view_mode":"form"
         }
-        this.dataset.index = dataset_event_index;
+
+        action.flags = {
+            search_view: false,
+            sidebar : false,
+            views_switcher : false,
+            action_buttons : false,
+            pager: false
+            }
         var element_id = _.uniqueId("act_window_dialog");
-        var dialog = jQuery('<div>', 
-                        {'id': element_id
-                    }).dialog({
-                        title: 'Gantt Chart',
-                        modal: true,
-                        minWidth: 800,
-                        position: 'top'
-                    });
-        var event_form = new openerp.base.FormView(this.view_manager, this.session, element_id, this.dataset, false);
-        event_form.start();
+        var dialog = jQuery('<div>', {
+            'id': element_id
+            }).dialog({
+                modal: true,
+                width: 'auto',
+                height: 'auto',
+                buttons: {
+                    Cancel: function() {
+                        $(this).dialog("destroy");
+                    },
+                    Save: function() {
+                        var view_manager = action_manager.viewmanager;
+                        var _dialog = this;
+                        view_manager.views[view_manager.active_view].controller.do_save(function(r) {
+                            $(_dialog).dialog("destroy");
+                            self.reload_gantt();
+                        })
+                    }
+                }
+        });
+        var action_manager = new openerp.base.ActionManager(this.session, element_id);
+        action_manager.start();
+        action_manager.do_action(action);
+        
+        //Default_get
+        if(!event_id) action_manager.viewmanager.dataset.index = null;
     },
 
     on_drag_start : function(task){
