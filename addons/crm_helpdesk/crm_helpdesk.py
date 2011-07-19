@@ -71,7 +71,7 @@ class crm_helpdesk(crm.crm_case, osv.osv):
             'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'), 
             'probability': fields.float('Probability (%)'), 
             'categ_id': fields.many2one('crm.case.categ', 'Category', \
-                            domain="[('section_id','=',section_id),\
+                            domain="['|',('section_id','=',False),('section_id','=',section_id),\
                             ('object_id.model', '=', 'crm.helpdesk')]"), 
             'duration': fields.float('Duration', states={'done': [('readonly', True)]}), 
             'state': fields.selection(crm.AVAILABLE_STATES, 'State', size=16, readonly=True, 
