@@ -24,15 +24,33 @@ from osv import fields, osv
 from tools.translate import _
 import time
 
+class stock_partial_picking_memory_out(osv.osv_memory):
+    _name = "stock.picking.memory.out"
+    _rec_name = 'product_id'
+    _columns = {
+        'product_id' : fields.many2one('product.product', string="Product", required=True),
+        'quantity' : fields.float("Quantity", required=True),
+        'product_uom': fields.many2one('product.uom', 'Unit of Measure', required=True),
+        'prodlot_id' : fields.many2one('stock.production.lot', 'Production Lot'),
+        'move_id' : fields.many2one('stock.move', "Move"),
+        'wizard_id' : fields.many2one('stock.partial.picking', string="Wizard"),
+        'cost' : fields.float("Cost", help="Unit Cost for this product line"),
+        'currency' : fields.many2one('res.currency', string="Currency", help="Currency in which Unit cost is expressed"),
+    }
+
+class stock_partial_picking_memory_in(osv.osv_memory):
+    _inherit = "stock.picking.memory.out"
+    _name = "stock.picking.memory.in"
+
 class stock_partial_picking(osv.osv_memory):
     _name = "stock.partial.picking"
     _description = "Partial Picking"
     _columns = {
         'date': fields.datetime('Date', required=True),
-        'product_moves_out' : fields.one2many('stock.move.memory.out', 'wizard_id', 'Moves'),
-        'product_moves_in' : fields.one2many('stock.move.memory.in', 'wizard_id', 'Moves'),
+        'product_moves_out' : fields.one2many('stock.picking.memory.out', 'wizard_id', 'Moves'),
+        'product_moves_in' : fields.one2many('stock.picking.memory.in', 'wizard_id', 'Moves'),
      }
-    
+
     def get_picking_type(self, cr, uid, picking, context=None):
         picking_type = picking.type
         for move in picking.move_lines:
@@ -169,5 +187,7 @@ class stock_partial_picking(osv.osv_memory):
         return {'type': 'ir.actions.act_window_close'}
 
 stock_partial_picking()
+stock_partial_picking_memory_out()
+stock_partial_picking_memory_in()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -25,22 +25,18 @@ import time
 
 
 class stock_partial_move_memory_out(osv.osv_memory):
+    _inherit = "stock.picking.memory.out"
     _name = "stock.move.memory.out"
-    _rec_name = 'product_id'
     _columns = {
-        'product_id' : fields.many2one('product.product', string="Product", required=True),
-        'quantity' : fields.float("Quantity", required=True),
-        'product_uom': fields.many2one('product.uom', 'Unit of Measure', required=True),
-        'prodlot_id' : fields.many2one('stock.production.lot', 'Production Lot'),
-        'move_id' : fields.many2one('stock.move', "Move"),
         'wizard_id' : fields.many2one('stock.partial.move', string="Wizard"),
-        'cost' : fields.float("Cost", help="Unit Cost for this product line"),
-        'currency' : fields.many2one('res.currency', string="Currency", help="Currency in which Unit cost is expressed"),
     }
     
 class stock_partial_move_memory_in(osv.osv_memory):
-    _inherit = "stock.move.memory.out"
+    _inherit = "stock.picking.memory.in"
     _name = "stock.move.memory.in"
+    _columns = {
+        'wizard_id' : fields.many2one('stock.partial.move', string="Wizard"),
+    }
     
 class stock_partial_move(osv.osv_memory):
     _name = "stock.partial.move"
