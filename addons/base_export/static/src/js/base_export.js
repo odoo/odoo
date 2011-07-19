@@ -3,10 +3,15 @@ QWeb.add_template('/base_export/static/src/xml/base_export.xml');
 openerp.base.views.add('export', 'openerp.base_export.Export');
 openerp.base_export.Export = openerp.base.Dialog.extend({
 
-    init: function(parent, dataset){
+    init: function(parent, dataset, views){
         this._super(parent);
         this.dataset = dataset
+        this.views = views
         this.selected_fields = {};
+        this.views_id = {};
+        for (var key in this.views) {
+            this.views_id[key] = this.views[key].view_id
+        }
     },
 
     start: function() {
@@ -44,8 +49,16 @@ openerp.base_export.Export = openerp.base.Dialog.extend({
         $('#export_new_list').click(function(){
             self.on_show_save_list();
         });
-        this.rpc("/base_export/export/get_fields", {"model": this.dataset.model}, this.on_show_data);
-
+        import_comp = $("#import_compat option:selected").val()
+        this.rpc("/base_export/export/get_fields", {"model": this.dataset.model,"import_compat":parseInt(import_comp), "views_id": this.views_id}, this.on_show_data);
+        $("#import_compat").change(function(){
+		    $("#fields_list option").remove();
+		    $("tr[id^='treerow-']").remove();
+		    import_comp = $("#import_compat option:selected").val();
+		    if(import_comp){
+		        self.rpc("/base_export/export/get_fields", {"model": self.dataset.model,"import_compat":parseInt(import_comp), "views_id": this.views_id}, self.on_show_data);
+		    }
+		});
     },
 
     on_show_exists_export_list: function(){
@@ -157,7 +170,8 @@ openerp.base_export.Export = openerp.base.Dialog.extend({
                 if (is_loaded == 0) {
                     if ($("tr[id='treerow-" + self.field_id +"']").find('img').attr('src') == '/base/static/src/img/expand.gif') {
                         if (model){
-                            self.rpc("/base_export/export/get_fields", {"model": model, "prefix": prefix, "field_parent" : self.field_id, "name": name}, function (results) {
+                            import_comp = $("#import_compat option:selected").val()
+                            self.rpc("/base_export/export/get_fields", {"model": model, "prefix": prefix, "name": name,  "field_parent" : self.field_id, "import_compat":parseInt(import_comp), "views_id": this.views_id}, function (results) {
                                 self.on_show_data(results);
                             });
                         }

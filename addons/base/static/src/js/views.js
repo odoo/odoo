@@ -187,7 +187,7 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
             if(this.active_view == 'list' || this.active_view == 'form') {
                 this.views[this.active_view].controller.$element.after(QWeb.render('ExportView'))
                 this.$element.find('#exportview').click(function(ev) {
-                    var export_view = new openerp.base_export.Export(self, self.dataset);
+                    var export_view = new openerp.base_export.Export(self, self.dataset, self.views);
                     export_view.start(false);
                     ev.preventDefault();
                 });
