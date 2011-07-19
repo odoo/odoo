@@ -1,9 +1,9 @@
 openerp.base.search = function(openerp) {
 
 openerp.base.SearchView = openerp.base.Controller.extend({
-    init: function(view_manager, session, element_id, dataset, view_id, defaults) {
-        this._super(session, element_id);
-        this.view_manager = view_manager || new openerp.base.NullViewManager();
+    init: function(parent, element_id, dataset, view_id, defaults) {
+        this._super(parent, element_id);
+        this.view_manager = parent || new openerp.base.NullViewManager();
         this.dataset = dataset;
         this.model = dataset.model;
         this.view_id = view_id;
@@ -115,7 +115,7 @@ openerp.base.SearchView = openerp.base.Controller.extend({
             data.fields_view.fields);
 
         // for extended search view
-        var ext = new openerp.base.search.ExtendedSearch(null, this.session, this.model);
+        var ext = new openerp.base.search.ExtendedSearch(this, this.model);
         lines.push([ext]);
         this.inputs.push(ext);
         
@@ -124,6 +124,7 @@ openerp.base.SearchView = openerp.base.Controller.extend({
             'lines': lines,
             'defaults': this.defaults
         });
+
         // We don't understand why the following commented line does not work in Chrome but
         // the non-commented line does. As far as we investigated, only God knows.
         //this.$element.html(render);
@@ -301,8 +302,7 @@ openerp.base.search.fields = new openerp.base.Registry({
     'many2one': 'openerp.base.search.ManyToOneField',
     'many2many': 'openerp.base.search.ManyToManyField'
 });
-openerp.base.search.Invalid = openerp.base.Class.extend(
-    /** @lends openerp.base.search.Invalid# */{
+openerp.base.search.Invalid = openerp.base.Class.extend( /** @lends openerp.base.search.Invalid# */{
     /**
      * Exception thrown by search widgets when they hold invalid values,
      * which they can not return when asked.
@@ -322,8 +322,7 @@ openerp.base.search.Invalid = openerp.base.Class.extend(
                 ': [' + this.value + '] is ' + this.message);
     }
 });
-openerp.base.search.Widget = openerp.base.Controller.extend(
-    /** @lends openerp.base.search.Widget# */{
+openerp.base.search.Widget = openerp.base.Controller.extend( /** @lends openerp.base.search.Widget# */{
     template: null,
     /**
      * Root class of all search widgets
@@ -420,8 +419,7 @@ openerp.base.search.Group = openerp.base.search.Widget.extend({
     }
 });
 
-openerp.base.search.Input = openerp.base.search.Widget.extend(
-    /** @lends openerp.base.search.Input# */{
+openerp.base.search.Input = openerp.base.search.Widget.extend( /** @lends openerp.base.search.Input# */{
     /**
      * @constructs
      * @extends openerp.base.search.Widget
@@ -491,8 +489,7 @@ openerp.base.search.Filter = openerp.base.search.Input.extend({
         return this.attrs.domain;
     }
 });
-openerp.base.search.Field = openerp.base.search.Input.extend(
-    /** @lends openerp.base.search.Field# */ {
+openerp.base.search.Field = openerp.base.search.Input.extend( /** @lends openerp.base.search.Field# */ {
     template: 'SearchView.field',
     default_operator: '=',
     /**
@@ -557,8 +554,7 @@ openerp.base.search.Field = openerp.base.search.Input.extend(
  * @class
  * @extends openerp.base.search.Field
  */
-openerp.base.search.CharField = openerp.base.search.Field.extend(
-    /** @lends openerp.base.search.CharField# */ {
+openerp.base.search.CharField = openerp.base.search.Field.extend( /** @lends openerp.base.search.CharField# */ {
     default_operator: 'ilike',
     get_value: function () {
         return this.$element.val();
@@ -631,12 +627,7 @@ openerp.base.search.SelectionField = openerp.base.search.Field.extend({
         return this.$element.val();
     }
 });
-/**
- * @class
- * @extends openerp.base.search.Field
- */
-openerp.base.search.DateField = openerp.base.search.Field.extend(
-    /** @lends openerp.base.search.DateField# */{
+openerp.base.search.DateField = openerp.base.search.Field.extend( /** @lends openerp.base.search.DateField# */{
     template: 'SearchView.fields.date',
     /**
      * enables date picker on the HTML widgets
@@ -724,7 +715,7 @@ openerp.base.search.ManyToOneField = openerp.base.search.CharField.extend({
             self.$element.val(self.name);
         });
         this.dataset = new openerp.base.DataSet(
-                this.view.session, this.attrs['relation']);
+                this.view, this.attrs['relation']);
     },
     start: function () {
         this._super();
@@ -791,8 +782,8 @@ openerp.base.search.ManyToManyField = openerp.base.search.CharField.extend({
 openerp.base.search.ExtendedSearch = openerp.base.BaseWidget.extend({
     template: 'SearchView.extended_search',
     identifier_prefix: 'extended-search',
-    init: function (parent, session, model) {
-        this._super(parent, session);
+    init: function (parent, model) {
+        this._super(parent);
         this.model = model;
     },
     add_group: function() {

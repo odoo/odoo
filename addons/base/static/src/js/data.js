@@ -39,18 +39,16 @@ openerp.base.DataGroup =  openerp.base.Controller.extend( /** @lends openerp.bas
      * @param {Array} group_by sequence of fields by which to group
      * @param {Number} [level=0] nesting level of the group
      */
-    init: function(session, model, domain, context, group_by, level) {
+    init: function(parent, model, domain, context, group_by, level) {
+        this._super(parent, null);
         if (group_by) {
             if (group_by.length || context['group_by_no_leaf']) {
-                return new openerp.base.ContainerDataGroup(
-                        session, model, domain, context, group_by, level);
+                return new openerp.base.ContainerDataGroup( this, model, domain, context, group_by, level);
             } else {
-                return new openerp.base.GrouplessDataGroup(
-                        session, model, domain, context, level);
+                return new openerp.base.GrouplessDataGroup( this, model, domain, context, level);
             }
         }
 
-        this._super(session, null);
         this.model = model;
         this.context = context;
         this.domain = domain;
@@ -59,8 +57,7 @@ openerp.base.DataGroup =  openerp.base.Controller.extend( /** @lends openerp.bas
     },
     cls: 'DataGroup'
 });
-openerp.base.ContainerDataGroup = openerp.base.DataGroup.extend(
-    /** @lends openerp.base.ContainerDataGroup# */ {
+openerp.base.ContainerDataGroup = openerp.base.DataGroup.extend( /** @lends openerp.base.ContainerDataGroup# */ {
     /**
      *
      * @constructs
@@ -73,8 +70,8 @@ openerp.base.ContainerDataGroup = openerp.base.DataGroup.extend(
      * @param group_by
      * @param level
      */
-    init: function (session, model, domain, context, group_by, level) {
-        this._super(session, model, domain, context, null, level);
+    init: function (parent, model, domain, context, group_by, level) {
+        this._super(parent, model, domain, context, null, level);
 
         this.group_by = group_by;
     },
@@ -189,7 +186,7 @@ openerp.base.ContainerDataGroup = openerp.base.DataGroup.extend(
                 var child_context = _.extend({}, self.context, group.__context);
                 return _.extend(
                     new openerp.base.DataGroup(
-                        self.session, self.model, group.__domain,
+                        self, self.model, group.__domain,
                         child_context, child_context.group_by,
                         self.level + 1),
                     group, {sort: self.sort});
@@ -197,8 +194,7 @@ openerp.base.ContainerDataGroup = openerp.base.DataGroup.extend(
         });
     }
 });
-openerp.base.GrouplessDataGroup = openerp.base.DataGroup.extend(
-    /** @lends openerp.base.GrouplessDataGroup# */ {
+openerp.base.GrouplessDataGroup = openerp.base.DataGroup.extend( /** @lends openerp.base.GrouplessDataGroup# */ {
     /**
      *
      * @constructs
@@ -210,18 +206,16 @@ openerp.base.GrouplessDataGroup = openerp.base.DataGroup.extend(
      * @param context
      * @param level
      */
-    init: function (session, model, domain, context, level) {
-        this._super(session, model, domain, context, null, level);
+    init: function (parent, model, domain, context, level) {
+        this._super(parent, model, domain, context, null, level);
     },
     list: function (fields, ifGroups, ifRecords) {
         ifRecords(_.extend(
-            new openerp.base.DataSetSearch(this.session, this.model),
+            new openerp.base.DataSetSearch(this, this.model),
             {domain: this.domain, context: this.context, _sort: this.sort}));
     }
 });
-
-openerp.base.StaticDataGroup = openerp.base.GrouplessDataGroup.extend(
-    /** @lends openerp.base.StaticDataGroup# */ {
+openerp.base.StaticDataGroup = openerp.base.GrouplessDataGroup.extend( /** @lends openerp.base.StaticDataGroup# */ {
     /**
      * A specialization of groupless data groups, relying on a single static
      * dataset as its records provider.
@@ -249,8 +243,8 @@ openerp.base.DataSet =  openerp.base.Controller.extend( /** @lends openerp.base.
      * @param {openerp.base.Session} session current OpenERP session
      * @param {String} model the OpenERP model this dataset will manage
      */
-    init: function(session, model, context) {
-        this._super(session);
+    init: function(parent, model, context) {
+        this._super(parent);
         this.model = model;
         this.context = context || {};
         this.index = null;
@@ -382,15 +376,11 @@ openerp.base.DataSet =  openerp.base.Controller.extend( /** @lends openerp.base.
         return this.context;
     }
 });
-
 openerp.base.DataSetStatic =  openerp.base.DataSet.extend({
-    init: function(session, model, context, ids) {
-        this._super(session, model, context);
+    init: function(parent, model, context, ids) {
+        this._super(parent, model, context);
         // all local records
         this.ids = ids || [];
-        if (this.ids.length) {
-            this.index = 0;
-        }
     },
     read_slice: function (fields, offset, limit, callback) {
         var self = this;
@@ -400,8 +390,10 @@ openerp.base.DataSetStatic =  openerp.base.DataSet.extend({
     },
     set_ids: function (ids) {
         this.ids = ids;
-        this.index = this.index <= this.ids.length - 1 ?
-            this.index : (this.ids.length > 0 ? this.length - 1 : 0);
+        if (this.index !== null) {
+            this.index = this.index <= this.ids.length - 1 ?
+                this.index : (this.ids.length > 0 ? this.length - 1 : 0);
+        }
     },
     unlink: function(ids) {
         this.on_unlink(ids);
@@ -411,10 +403,9 @@ openerp.base.DataSetStatic =  openerp.base.DataSet.extend({
         this.set_ids(_.without.apply(null, [this.ids].concat(ids)));
     }
 });
-
 openerp.base.DataSetSearch =  openerp.base.DataSet.extend({
-    init: function(session, model, context, domain) {
-        this._super(session, model, context);
+    init: function(parent, model, context, domain) {
+        this._super(parent, model, context);
         this.domain = domain || [];
         this._sort = [];
         this.offset = 0;
@@ -478,14 +469,15 @@ openerp.base.DataSetSearch =  openerp.base.DataSet.extend({
         var self = this;
         return this._super(ids, function(result) {
             self.ids = _.without.apply(_, [self.ids].concat(ids));
-            self.index = self.index <= self.ids.length - 1 ?
-                self.index : (self.ids.length > 0 ? self.ids.length -1 : 0);
+            if (this.index !== null) {
+                self.index = self.index <= self.ids.length - 1 ?
+                    self.index : (self.ids.length > 0 ? self.ids.length -1 : 0);
+            }
             if (callback)
                 callback(result);
         }, error_callback);
     }
 });
-
 openerp.base.BufferedDataSet = openerp.base.DataSetStatic.extend({
     virtual_id_prefix: "one2many_v_id_",
     virtual_id_regex: /one2many_v_id_.*/,
@@ -590,7 +582,6 @@ openerp.base.BufferedDataSet = openerp.base.DataSetStatic.extend({
         return completion.promise();
     }
 });
-
 openerp.base.ReadOnlyDataSetSearch = openerp.base.DataSetSearch.extend({
     create: function(data, callback, error_callback) {
         this.on_create(data);
