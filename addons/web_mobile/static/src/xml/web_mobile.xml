@@ -55,6 +55,7 @@
              </div>
         </fieldset>
     </div>
+    <div class="login_error_message">Bad username or password</div>
 </t>
 
 <t t-name="HomePage">
@@ -133,7 +134,8 @@
                                 </span>
                                 <span class="ui-icon ui-icon-arrow-d ui-icon-shadow"></span>
                             </span>
-                            <select>
+
+                            <select t-att-id="'selection_'+fields[field.attrs.name].string">
                                 <t t-foreach="fields[field.attrs.name].selection" t-as="opt">
                                     <option t-att-value="opt[0]"><t t-esc="opt[1]"/></option>
                                 </t>
@@ -146,14 +148,23 @@
                         <div data-theme="c" class="ui-btn ui-btn-icon-right ui-btn-corner-all ui-shadow ui-btn-up-c">
                             <span class="ui-btn-inner ui-btn-corner-all">
                                 <span class="ui-btn-text">
-                                    <t t-esc="values[field.attrs.name][1]"/>
+                                    <t t-if="values[field.attrs.name][1]">
+                                        <t t-esc="values[field.attrs.name][1]"/>
+                                    </t>
+                                    <!-- <t t-esc="values[field.attrs.name][1]+values[field.attrs.name]"/> -->
                                 </span>
                                 <span class="ui-icon ui-icon-arrow-d ui-icon-shadow"></span>
                             </span>
-                            <select>
+
+                            <select t-att-id="'selection_'+fields[field.attrs.name].string">
                                 <t t-if="fields[field.attrs.name].selection">
                                     <t t-foreach="fields[field.attrs.name].selection" t-as="opt">
-                                        <option t-att-value="opt[0]"><t t-esc="opt[1]"/></option>
+                                        <t t-if="values[field.attrs.name]==opt[0]">
+                                            <option t-att-value="opt[0]" selected="true" ><t t-esc="opt[1]"/></option>
+                                        </t>
+                                        <t t-if="values[field.attrs.name]!=opt[0]">
+                                            <option t-att-value="opt[0]" ><t t-esc="opt[1]"/></option>
+                                        </t>
                                     </t>
                                 </t>
                             </select>

@@ -20,8 +20,10 @@ openerp.web_mobile.FormView = openerp.base.Controller.extend({
                 }
             }
             self.rpc("/base/formview/load", {"model": model, "view_id": view_id }, function (result) {
+
                 var view_fields = result.fields_view.arch.children;
                 var get_fields = self.get_fields(view_fields);
+                var selection = new openerp.web_mobile.Selection();
 
                 for (var j = 0; j < view_fields.length; j++) {
                     if (view_fields[j].tag == 'notebook') {
@@ -30,6 +32,10 @@ openerp.web_mobile.FormView = openerp.base.Controller.extend({
                 }
                 $("#oe_header").find("h1").html(result.fields_view.arch.attrs.string);
                 self.$element.html(QWeb.render("FormView", {'get_fields': get_fields, 'notebooks': notebooks || false, 'fields' : result.fields_view.fields, 'values' : data }));
+
+                    self.$element.find('select').change(function(ev){
+                        selection.on_select_option(ev);
+                    });
 
                     self.$element.find('a').click(function(){
 
@@ -80,6 +86,10 @@ openerp.web_mobile.FormView = openerp.base.Controller.extend({
                                 }
                             }
                         }
+
+                        self.$element.find('select').change(function(ev){
+                            selection.on_select_option(ev);
+                        });
                     });
                 });
         });
@@ -98,7 +108,7 @@ openerp.web_mobile.FormView = openerp.base.Controller.extend({
             }
         }
         return this.fields;
-    },
+    }
 });
 
 }

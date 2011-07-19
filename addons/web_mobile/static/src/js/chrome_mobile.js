@@ -130,16 +130,18 @@ openerp.web_mobile.Login =  openerp.base.Controller.extend({
 
         jQuery("#oe_header").children().remove();
         this.rpc("/base/session/get_databases_list", {}, function(result) {
+            var selection = new openerp.web_mobile.Selection();
             self.db_list = result.db_list;
             self.$element.html(QWeb.render("Login", self));
-            self.$element.find('#database').click(self.on_db_select);
+            self.$element.find('#database').prev().find(".ui-btn-text").html($('#database').find("option:selected").text());
+            self.$element.find('#database').change(function(ev){
+                selection.on_select_option(ev);
+            });
             self.$element.find("#login").click(self.on_login);
             $.mobile.initializePage();
-        })
-    },
-    on_db_select: function(ev) {
-        var db = this.$element.find("#database option:selected").val();
-        jQuery("#db_text").html(db);
+        });
+        this.$element
+            .removeClass("login_invalid");
     },
     on_login: function(ev) {
         ev.preventDefault();
@@ -188,6 +190,20 @@ openerp.web_mobile.Login =  openerp.base.Controller.extend({
             unique: true,
             callback: continuation
         });
+    }
+});
+openerp.web_mobile.Selection = openerp.base.Controller.extend({
+    init: function (){
+        this._super();
+    },
+    start: function(){
+        this._super();
+        var self = this;
+    },
+    on_select_option: function(ev){
+        ev.preventDefault();
+        var $this = ev.currentTarget;
+        $($this).prev().find(".ui-btn-text").html($($this).find("option:selected").text());
     }
 });
 openerp.web_mobile.MobileWebClient = openerp.base.Controller.extend({
