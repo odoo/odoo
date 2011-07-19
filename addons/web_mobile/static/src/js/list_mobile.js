@@ -38,7 +38,7 @@ openerp.web_mobile.ListView = openerp.base.Controller.extend({
         var dataset = new openerp.base.DataSetStatic(this.session, this.action.res_model, this.action.context);
         dataset.domain=[['name','ilike',search_val]];
         dataset.name_search(search_val, dataset.domain, 'ilike',false ,function(result){
-            self.$element.html(QWeb.render("ListView", {'records' : result.result}));
+            self.$element.html(QWeb.render("ListView", {'records' : result}));
             self.$element.find("#searchid").focus();
             if(request.term){
                 self.$element.find("#searchid").val(request.term);
