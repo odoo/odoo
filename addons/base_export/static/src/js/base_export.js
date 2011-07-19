@@ -50,13 +50,15 @@ openerp.base_export.Export = openerp.base.Dialog.extend({
             self.on_show_save_list();
         });
         import_comp = $("#import_compat option:selected").val()
-        this.rpc("/base_export/export/get_fields", {"model": this.dataset.model,"import_compat":parseInt(import_comp), "views_id": this.views_id}, this.on_show_data);
+        var params = {"import_compat":parseInt(import_comp), "views_id": this.views_id}
+        this.rpc("/base_export/export/get_fields", {"model": this.dataset.model, "params": params}, this.on_show_data);
         $("#import_compat").change(function(){
 		    $("#fields_list option").remove();
 		    $("tr[id^='treerow-']").remove();
 		    import_comp = $("#import_compat option:selected").val();
 		    if(import_comp){
-		        self.rpc("/base_export/export/get_fields", {"model": self.dataset.model,"import_compat":parseInt(import_comp), "views_id": this.views_id}, self.on_show_data);
+		        var params = {"import_compat":parseInt(import_comp), "views_id": this.views_id}
+		        self.rpc("/base_export/export/get_fields", {"model": self.dataset.model, "params": params}, self.on_show_data);
 		    }
 		});
     },
@@ -171,7 +173,8 @@ openerp.base_export.Export = openerp.base.Dialog.extend({
                     if ($("tr[id='treerow-" + self.field_id +"']").find('img').attr('src') == '/base/static/src/img/expand.gif') {
                         if (model){
                             import_comp = $("#import_compat option:selected").val()
-                            self.rpc("/base_export/export/get_fields", {"model": model, "prefix": prefix, "name": name,  "field_parent" : self.field_id, "import_compat":parseInt(import_comp), "views_id": this.views_id}, function (results) {
+                            var params = {"import_compat":parseInt(import_comp), "views_id": this.views_id, "parent_field_type" : record['field_type']}
+                            self.rpc("/base_export/export/get_fields", {"model": model, "prefix": prefix, "name": name,  "field_parent" : self.field_id, "params":params}, function (results) {
                                 self.on_show_data(results);
                             });
                         }

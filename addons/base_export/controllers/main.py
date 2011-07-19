@@ -53,15 +53,21 @@ class Export(View):
         return fields
 
     @openerpweb.jsonrequest
-    def get_fields(self, req, model, prefix='', name= '', field_parent=None, import_compat=False, views_id={}):
-        fields = _fields_get_all(req, model, views=views_id, context=req.session.eval_context(req.context))
+    def get_fields(self, req, model, prefix='', name= '', field_parent=None, params={}):
+        import_compat = params.get("import_compat", False)
+        views_id = params.get("views_id", {})
 
-        if field_parent and import_compat:
+        fields = _fields_get_all(req, model, views=views_id, context=req.session.eval_context(req.context))
+        field_parent_type = params.get("parent_field_type",False)
+
+        if import_compat and field_parent_type and field_parent_type == "many2one":
             fields = {}
+
         fields.update({'id': {'string': 'ID'}, '.id': {'string': 'Database ID'}})
         records = []
         fields_order = fields.keys()
         fields_order.sort(lambda x,y: -cmp(fields[x].get('string', ''), fields[y].get('string', '')))
+
         for index, field in enumerate(fields_order):
             value = fields[field]
             record = {}
@@ -74,9 +80,8 @@ class Export(View):
 
             id = prefix + (prefix and '/'or '') + field
             nm = name + (name and '/' or '') + value['string']
-
             record.update(id=id, string= nm, action='javascript: void(0)',
-                          target=None, icon=None, children=[])
+                          target=None, icon=None, children=[], field_type=value.get('type',False))
             records.append(record)
 
             if len(nm.split('/')) < 3 and value.get('relation', False):
@@ -146,7 +151,6 @@ class Export(View):
 
         name_list = {}
         [name_list.update({field['name']: result.get(field['name'])}) for field in fields]
-        print ":name_list::\n\n\n\n\n:",name_list
         return name_list
 
     def get_data(self, req, model, context=None):
