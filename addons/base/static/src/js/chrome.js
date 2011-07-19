@@ -162,8 +162,8 @@ openerp.base.generate_null_object_class = function(claz, add) {
 };
 
 openerp.base.Notification =  openerp.base.BasicController.extend({
-    init: function(element_id) {
-        this._super(element_id);
+    init: function(parent, element_id) {
+        this._super(parent, element_id);
         this.$element.notify({
             speed: 500,
             expires: 1500
@@ -183,6 +183,7 @@ openerp.base.Notification =  openerp.base.BasicController.extend({
     }
 });
 
+// Session should be a Class not Controller
 openerp.base.Session = openerp.base.BasicController.extend( /** @lends openerp.base.Session# */{
     /**
      * @constructs
@@ -191,7 +192,7 @@ openerp.base.Session = openerp.base.BasicController.extend( /** @lends openerp.b
      * @param server
      * @param port
      */
-    init: function(element_id, server, port) {
+    init: function(parent, element_id, server, port) {
         this._super(element_id);
         this.server = (server == undefined) ? location.hostname : server;
         this.port = (port == undefined) ? location.port : port;
@@ -449,21 +450,10 @@ openerp.base.Controller = openerp.base.BasicController.extend( /** @lends opener
      * @constructs
      * @extends openerp.base.BasicController
      */
-    init: function(parent_or_session, element_id) {
-        this._super(element_id);
-        this.controller_parent = null;
-        this.controller_children = [];
-        if(parent_or_session) {
-            if(parent_or_session.session) {
-                this.parent = parent_or_session;
-                this.session = this.parent.session;
-                if(this.parent.children) {
-                    this.parent.children.push(this);
-                }
-            } else {
-                // TODO remove Backward compatilbility
-                this.session = parent_or_session;
-            }
+    init: function(parent, element_id) {
+        this._super(parent, element_id);
+        if(this.parent && this.parent.session) {
+            this.session = this.parent.session;
         }
     },
     /**
@@ -476,8 +466,10 @@ openerp.base.Controller = openerp.base.BasicController.extend( /** @lends opener
      * @returns {jQuery.Deferred} deferred object for the RPC call
      */
     rpc: function(url, data, success, error) {
-        // TODO: support additional arguments ?
         return this.session.rpc(url, data, success, error);
+    },
+    do_action: function(action, on_finished) {
+        return this.parent.do_action(action, on_finished);
     }
 });
 
@@ -510,11 +502,8 @@ openerp.base.BaseWidget = openerp.base.Controller.extend({
      * @constructs
      * @params {openerp.base.search.BaseWidget} parent The parent widget.
      */
-    init: function (parent, session) {
-        this._super(session);
-        this.children = [];
-        this.parent = null;
-        this.set_parent(parent);
+    init: function (parent) {
+        this._super(parent);
         this.make_id(this.identifier_prefix);
     },
     /**
@@ -542,30 +531,8 @@ openerp.base.BaseWidget = openerp.base.Controller.extend({
      * lets the widgets clean up after themselves.
      */
     stop: function () {
-        var tmp_children = this.children;
-        this.children = [];
-        _.each(tmp_children, function(x) {
-            x.stop();
-        });
         if(this.$element != null) {
             this.$element.remove();
-        }
-        this.set_parent(null);
-        this._super();
-    },
-    /**
-     * Set the parent of this component, also un-register the previous parent
-     * if there was one.
-     * 
-     * @param {openerp.base.BaseWidget} parent The new parent.
-     */
-    set_parent: function(parent) {
-        if(this.parent) {
-            this.parent.children = _.without(this.parent.children, this);
-        }
-        this.parent = parent;
-        if(this.parent) {
-            parent.children.push(this);
         }
     },
     /**
@@ -582,8 +549,8 @@ openerp.base.BaseWidget = openerp.base.Controller.extend({
 openerp.base.Dialog = openerp.base.BaseWidget.extend({
     dialog_title: "",
     identifier_prefix: 'dialog',
-    init: function (session, options) {
-        this._super(null, session);
+    init: function (parent, options) {
+        this._super(parent);
         this.options = {
             modal: true,
             width: 'auto',
@@ -667,8 +634,8 @@ openerp.base.Dialog = openerp.base.BaseWidget.extend({
 
 openerp.base.CrashManager = openerp.base.Dialog.extend({
     identifier_prefix: 'dialog_crash',
-    init: function(session) {
-        this._super(session);
+    init: function(parent) {
+        this._super(parent);
         this.session.on_rpc_error.add(this.on_rpc_error);
     },
     on_button_Ok: function() {
@@ -702,11 +669,8 @@ openerp.base.CrashManager = openerp.base.Dialog.extend({
 });
 
 openerp.base.Loading =  openerp.base.Controller.extend({
-    controller_manifest: {
-        register: ["Loading"]
-    },
-    init: function(session, element_id) {
-        this._super(session, element_id);
+    init: function(parent, element_id) {
+        this._super(parent, element_id);
         this.count = 0;
         this.session.on_rpc_request.add_first(this.on_rpc_event, 1);
         this.session.on_rpc_response.add_last(this.on_rpc_event, -1);
@@ -980,8 +944,8 @@ openerp.base.Database = openerp.base.Controller.extend({
 openerp.base.Login =  openerp.base.Controller.extend({
     remember_creditentials: true,
     
-    init: function(session, element_id) {
-        this._super(session, element_id);
+    init: function(parent, element_id) {
+        this._super(parent, element_id);
         this.has_local_storage = typeof(localStorage) != 'undefined';
         this.selected_db = null;
         this.selected_login = null;
@@ -1069,8 +1033,8 @@ openerp.base.Login =  openerp.base.Controller.extend({
 });
 
 openerp.base.Header =  openerp.base.Controller.extend({
-    init: function(session, element_id) {
-        this._super(session, element_id);
+    init: function(parent, element_id) {
+        this._super(parent, element_id);
     },
     start: function() {
         this.do_update();
@@ -1086,8 +1050,8 @@ openerp.base.Header =  openerp.base.Controller.extend({
 });
 
 openerp.base.Menu =  openerp.base.Controller.extend({
-    init: function(session, element_id, secondary_menu_id) {
-        this._super(session, element_id);
+    init: function(parent, element_id, secondary_menu_id) {
+        this._super(parent, element_id);
         this.secondary_menu_id = secondary_menu_id;
         this.$secondary_menu = $("#" + secondary_menu_id);
         this.menu = false;
@@ -1177,34 +1141,32 @@ openerp.base.ImportExport = openerp.base.Controller.extend({
 
 openerp.base.WebClient = openerp.base.Controller.extend({
     init: function(element_id) {
-        var self = this;
         this._super(null, element_id);
 
         QWeb.add_template("xml/base.xml");
         var params = {};
-        if(jQuery.param != undefined &&
-                jQuery.deparam(jQuery.param.querystring()).kitten != undefined) {
+        if(jQuery.param != undefined && jQuery.deparam(jQuery.param.querystring()).kitten != undefined) {
             this.$element.addClass("kitten-mode-activated");
         }
         this.$element.html(QWeb.render("Interface", params));
 
-        this.session = new openerp.base.Session("oe_errors");
-        this.loading = new openerp.base.Loading(this.session, "oe_loading");
-        this.crashmanager =  new openerp.base.CrashManager(this.session);
+        this.session = new openerp.base.Session(this,"oe_errors");
+        this.loading = new openerp.base.Loading(this,"oe_loading");
+        this.crashmanager =  new openerp.base.CrashManager(this);
         this.crashmanager.start(false);
 
-        // Do you authorize this ?
-        openerp.base.Controller.prototype.notification = new openerp.base.Notification("oe_notification");
+        // Do you autorize this ?
+        openerp.base.Controller.prototype.notification = new openerp.base.Notification(this, "oe_notification");
 
-        this.header = new openerp.base.Header(this.session, "oe_header");
-        this.login = new openerp.base.Login(this.session, "oe_login");
+        this.header = new openerp.base.Header(this, "oe_header");
+        this.login = new openerp.base.Login(this, "oe_login");
         this.header.on_logout.add(this.login.on_logout);
 
         this.session.on_session_invalid.add(this.login.do_ask_login);
         this.session.on_session_valid.add_last(this.header.do_update);
         this.session.on_session_valid.add_last(this.on_logged);
 
-        this.menu = new openerp.base.Menu(this.session, "oe_menu", "oe_secondary_menu");
+        this.menu = new openerp.base.Menu(this, "oe_menu", "oe_secondary_menu");
         this.menu.on_action.add(this.on_menu_action);
         
     },
@@ -1216,9 +1178,9 @@ openerp.base.WebClient = openerp.base.Controller.extend({
         this.notification.notify("OpenERP Client", "The openerp client has been initialized.");
     },
     on_logged: function() {
-        this.action_manager =  new openerp.base.ActionManager(this.session, "oe_app");
+        this.action_manager =  new openerp.base.ActionManager(this, "oe_app");
         this.action_manager.start();
-        
+
         // if using saved actions, load the action and give it to action manager
         var parameters = jQuery.deparam(jQuery.param.querystring());
         if(parameters["s_action"] != undefined) {
