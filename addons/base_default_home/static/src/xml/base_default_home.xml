@@ -1,0 +1,17 @@
+<template>
+    <div t-name="HomeInstallerTiles" class="oe-dashboard-home-tiles">
+        <table width="100%">
+            <tr t-foreach="rows" t-as="row">
+                <td t-foreach="row" t-as="application" width="25%">
+                    <div class="oe-dashboard-home-tile"
+                         t-att-data-menuid="application">
+                        <div class="oe-dashboard-home-tile-icon">
+                            <img t-att-src="'/base_default_home/static/src/img/' + application.replace(new RegExp('\\s', 'g'), '-') + '.png'"/>
+                        </div>
+                        <span><t t-esc="application"/></span>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+</template>
