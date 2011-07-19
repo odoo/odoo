@@ -147,19 +147,15 @@ class res_partner(osv.osv):
     _defaults = {
         'active': lambda *a: 1,
         'customer': lambda *a: 1,
+        'address': [{'type': 'default'}],
         'category_id': _default_category,
         'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'res.partner', context=c),
     }
+
     def copy(self, cr, uid, id, default={}, context={}):
         name = self.read(cr, uid, [id], ['name'])[0]['name']
         default.update({'name': name+ _(' (copy)'), 'events':[]})
         return super(res_partner, self).copy(cr, uid, id, default, context)
-
-    def create(self, cr, user, values, context=None):
-        # add a default address if an empty list is given
-        if ('address' in values) and not values.get('address'):
-            values.get('address').append((0, 0, {'type': 'default'}))
-        return super(res_partner, self).create(cr, user, values, context)
 
     def do_share(self, cr, uid, ids, *args):
         return True
