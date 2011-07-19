@@ -309,7 +309,6 @@ class res_partner_address(osv.osv):
     }
 
     def name_get(self, cr, user, ids, context={}):
-        print 'name get is called'
         if not len(ids):
             return []
         res = []
@@ -320,7 +319,7 @@ class res_partner_address(osv.osv):
                 addr = r['name'] or '/'
                 if r['name'] and (r['city'] or r['country_id']):
                     addr += ', '
-                addr += (r['country_id'] and r['country_id'][1] or '') + '  ' + (r['city'] or '') + '  '  + (r['street'] or '')
+                addr += (r['country_id'] and r['country_id'][1] or '') + ' ' + (r['city'] or '') + ' '  + (r['street'] or '')
                 if (context.get('contact_display', 'contact')=='partner_address') and r['partner_id']:
                     res.append((r['id'], "%s: %s" % (r['partner_id'][1], addr.strip() or '/')))
                 else:
