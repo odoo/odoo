@@ -104,7 +104,6 @@
             <field name="name">Camptocamp</field>
             <field eval="[(6, 0, [ref('res_partner_category_10'), ref('res_partner_category_5')])]" name="category_id"/>
             <field name="supplier">1</field>
-            <field name="address" eval="[]"/>
         </record>
         <record id="res_partner_sednacom" model="res.partner">
             <field name="website">http://www.syleam.fr</field>
@@ -115,7 +114,6 @@
         <record id="res_partner_thymbra" model="res.partner">
             <field name="name">Thymbra</field>
             <field eval="[(6, 0, [ref('res_partner_category_4')])]" name="category_id"/>
-            <field name="address" eval="[]"/>
         </record>
         <record id="res_partner_desertic_hispafuentes" model="res.partner">
             <field name="name">Axelor</field>
@@ -126,7 +124,6 @@
         <record id="res_partner_tinyatwork" model="res.partner">
             <field name="name">Tiny AT Work</field>
             <field eval="[(6, 0, [ref('res_partner_category_5'), ref('res_partner_category_10')])]" name="category_id"/>
-            <field name="address" eval="[]"/>
         </record>
         <record id="res_partner_2" model="res.partner">
             <field name="name">Bank Wealthy and sons</field>
@@ -169,7 +166,6 @@
             <field name="user_id" ref="user_demo"/>
             <field eval="[(6, 0, [ref('res_partner_category_9')])]" name="category_id"/>
             <field name="supplier">1</field>
-            <field name="address" eval="[]"/>
         </record>
         <record id="res_partner_8" model="res.partner">
             <field name="website">http://mediapole.net</field>
@@ -556,12 +552,7 @@
         </record>
 
 
-        <record id="res_partner_address_1" model="res.partner.address">
-            <field name="partner_id" ref="res_partner_fabiendupont0"/>
-        </record>
-
-
-        <record id="res_partner_address_2" model="res.partner.address">
+        <record id="res_partner_address_ericdubois0" model="res.partner.address">
             <field eval="'Mons'" name="city"/>
             <field eval="'7000'" name="zip"/>
             <field name="partner_id" ref="res_partner_ericdubois0"/>
@@ -570,7 +561,7 @@
         </record>
 
 
-        <record id="res_partner_address_3" model="res.partner.address">
+        <record id="res_partner_address_notsotinysarl1" model="res.partner.address">
             <field eval="'Antwerpen'" name="city"/>
             <field eval="'2000'" name="zip"/>
             <field name="partner_id" ref="res_partner_notsotinysarl0"/>
