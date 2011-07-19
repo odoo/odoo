@@ -1173,14 +1173,27 @@ openerp.base.WebClient = openerp.base.Controller.extend({
         var ds = new openerp.base.DataSetSearch(this.session, 'res.users');
         ds.read_ids([parseInt(this.session.uid, 10)], ['action_id'], function (users) {
             var home_action = users[0].action_id;
-            if (!home_action) { return; }
+            if (!home_action) {
+                self.default_home();
+                return;
+            }
             // oh dear
-            openerp.base.View.prototype.execute_action.call(
-                self, {
-                    'name': home_action[0],
-                    'type': 'action'
-                }, ds, self.action_manager);
+            self.execute_home_action(home_action[0], ds);
         })
+    },
+    default_home: function () { console.log('base default home') },
+    /**
+     * Bundles the execution of the home action
+     *
+     * @param {Number} action action id
+     * @param {openerp.base.DataSet} dataset action executor
+     */
+    execute_home_action: function (action, dataset) {
+        openerp.base.View.prototype.execute_action.call(
+            this, {
+                'name': action,
+                'type': 'action'
+            }, dataset, this.action_manager);
     },
     on_menu_action: function(action) {
         this.action_manager.do_action(action);
