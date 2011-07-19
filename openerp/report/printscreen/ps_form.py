@@ -56,15 +56,15 @@ class report_printscreen_list(report_int):
         if not context:
             context={}
         datas['ids'] = ids
-        model = pool.get(datas['model'])
         pool = pooler.get_pool(cr.dbname)
+        model = pool.get(datas['model'])
         # title come from description of model which are specified in py file.
         self.title = model._description
         result = model.fields_view_get(cr, uid, view_type='form', context=context)
 
         fields_order = self._parse_string(result['arch'])
         rows = model.read(cr, uid, datas['ids'], result['fields'].keys() )
-        res = self._create_table(uid, datas['ids'], result['fields'], fields_order, rows, context, model._description)
+        self._create_table(uid, datas['ids'], result['fields'], fields_order, rows, context, model._description)
         return (self.obj.get(), 'pdf')
 
 
