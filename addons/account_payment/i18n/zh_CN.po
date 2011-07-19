@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-05-09 10:18+0000\n"
-"PO-Revision-Date: 2011-07-14 17:00+0000\n"
-"Last-Translator: dquo <Unknown>\n"
+"PO-Revision-Date: 2011-07-15 08:15+0000\n"
+"Last-Translator: Jeff Wang <wjfonhand@hotmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-07-15 05:53+0000\n"
+"X-Launchpad-Export-Date: 2011-07-16 06:00+0000\n"
 "X-Generator: Launchpad (build 13405)\n"
 
 #. module: account_payment
@@ -51,6 +51,11 @@ msgid ""
 "* a basic mechanism to easily plug various automated payment.\n"
 "    "
 msgstr ""
+"\n"
+"此模块提供以下功能：\n"
+"- 更高效地管理发票的付款\n"
+"- 基本的机制用于简单地管理各种自动付款\n"
+"    "
 
 #. module: account_payment
 #: field:payment.order,line_ids:0
@@ -71,6 +76,9 @@ msgid ""
 " Once the bank is confirmed the state is set to 'Confirmed'.\n"
 " Then the order is paid the state is 'Done'."
 msgstr ""
+"新建的申请状态是草稿\n"
+"银行确认了的申请状态是已确认\n"
+"银行已付款则申请状态是完成"
 
 #. module: account_payment
 #: help:account.invoice,amount_to_pay:0
@@ -572,7 +580,7 @@ msgid ""
 "invoice or a customer credit note. Here you can register all payment orders "
 "that should be done, keep track of all payment orders and mention the "
 "invoice reference and the partner the payment should be done for."
-msgstr ""
+msgstr "付款申请是你的公司为支付供应商发票或客户红字发票建立的申请。这里你可以输入所有需要付款的申请，跟踪申请状态并通知业务伙伴你将付款。"
 
 #. module: account_payment
 #: help:payment.line,amount:0
@@ -669,7 +677,7 @@ msgstr "信息"
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_payment_order_create
 msgid "payment.order.create"
-msgstr ""
+msgstr "payment.order.create"
 
 #. module: account_payment
 #: field:payment.line,order_id:0
