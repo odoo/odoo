@@ -33,7 +33,7 @@
                 <div class="ui-select">
                     <div data-theme="c" class="ui-btn ui-btn-icon-right ui-btn-corner-all ui-shadow ui-btn-up-c">
                     <span class="ui-btn-inner ui-btn-corner-all">
-                        <span id="db_text" class="ui-btn-text">Choose Database...</span>
+                        <span id="db_text" class="ui-btn-text"></span>
                         <span class="ui-icon ui-icon-arrow-d ui-icon-shadow"></span>
                     </span>
                     <select id="database" name="database">
@@ -52,10 +52,12 @@
                         <span class="ui-btn-text">Login</span>
                     </span>
                 </a>
+                <div class="login_error_message ui-btn-inner ui-btn-corner-all">
+                    <span class="ui-btn-text">Bad username or password</span>
+                </div>
              </div>
         </fieldset>
     </div>
-    <div class="login_error_message">Bad username or password</div>
 </t>
 
 <t t-name="HomePage">

@@ -2,3 +2,23 @@
 .ui-collapsible-content-expanded {
     display: block;
 }
+
+.login_error_message {
+    display: none;
+    background-color: #9A0404;
+    border-radius: 12px;
+    -moz-border-radius: 12px;
+    -webkit-border-radius: 12px;
+    color: white;
+    font-family: Ubuntu, Helvetica, sans-serif;
+    font-size: 16px;
+    padding: 5px;
+    margin-top: 5px;
+    text-align: center;
+}
+.login_invalid .login_error_message {
+    display: block;
+}
+.login_valid .login_error_message {
+    display: none;
+}
