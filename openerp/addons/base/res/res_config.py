@@ -275,10 +275,24 @@ class res_config_installer(osv.osv_memory):
 
     _install_if = {}
 
+    def already_installed(self, cr, uid, context=None):
+        """ For each module, check if it's already installed and if it
+        is return its name
+
+        :returns: a list of the already installed modules in this
+                  installer
+        :rtype: [str]
+        """
+        return map(attrgetter('name'),
+                   self._already_installed(cr, uid, context=context))
+
     def _already_installed(self, cr, uid, context=None):
         """ For each module (boolean fields in a res.config.installer),
-        check if it's already installed (either 'to install', 'to upgrade' or 'installed')
-        and if it is, check it by default
+        check if it's already installed (either 'to install', 'to upgrade'
+        or 'installed') and if it is return the module's browse_record
+
+        :returns: a list of all installed modules in this installer
+        :rtype: [browse_record]
         """
         modules = self.pool.get('ir.module.module')
 
@@ -330,8 +344,8 @@ class res_config_installer(osv.osv_memory):
                    if base.issuperset(requirements)
                    for module in consequences)
 
-        return (base | hooks_results | additionals) - set(
-            map(attrgetter('name'), self._already_installed(cr, uid, context)))
+        return (base | hooks_results | additionals).difference(
+                    self.already_installed(cr, uid, context))
 
     def default_get(self, cr, uid, fields_list, context=None):
         ''' If an addon is already installed, check it by default
@@ -341,8 +355,7 @@ class res_config_installer(osv.osv_memory):
 
         return dict(defaults,
                     **dict.fromkeys(
-                        map(attrgetter('name'),
-                            self._already_installed(cr, uid, context=context)),
+                        self.already_installed(cr, uid, context=context),
                         True))
 
     def fields_get(self, cr, uid, fields=None, context=None, write_access=True):
@@ -353,12 +366,12 @@ class res_config_installer(osv.osv_memory):
         fields = super(res_config_installer, self).fields_get(
             cr, uid, fields, context, write_access)
 
-        for module in self._already_installed(cr, uid, context=context):
-            if module.name not in fields:
+        for name in self.already_installed(cr, uid, context=context):
+            if name not in fields:
                 continue
-            fields[module.name].update(
+            fields[name].update(
                 readonly=True,
-                help= ustr(fields[module.name].get('help', '')) +
+                help= ustr(fields[name].get('help', '')) +
                      _('\n\nThis addon is already installed on your system'))
         return fields
 
