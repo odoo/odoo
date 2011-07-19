@@ -3,8 +3,8 @@ QWeb.add_template('/base_export/static/src/xml/base_export.xml');
 openerp.base.views.add('export', 'openerp.base_export.Export');
 openerp.base_export.Export = openerp.base.Dialog.extend({
 
-    init: function(session, dataset, views){
-        this._super(session);
+    init: function(parent, dataset){
+        this._super(parent);
         this.dataset = dataset
         this.selected_fields = {};
     },
