@@ -264,24 +264,24 @@ class mailgate_message(osv.osv):
     _description = 'Mailgateway Message'
     _order = 'date desc'
     _columns = {
-        'name':fields.text('Subject', readonly=True),
+        'name':fields.text('Subject'),
         'model': fields.char('Object Name', size=128, select=1, readonly=True),
         'res_id': fields.integer('Resource ID', select=1, readonly=True),
         'ref_id': fields.char('Reference Id', size=256, readonly=True, help="Message Id in Email Server.", select=True),
-        'date': fields.datetime('Date', readonly=True),
+        'date': fields.datetime('Date'),
         'history': fields.boolean('Is History?', readonly=True),
-        'user_id': fields.many2one('res.users', 'User Responsible', readonly=True),
+        'user_id': fields.many2one('res.users', 'User Responsible'),
         'message': fields.text('Message', readonly=True),
-        'email_from': fields.char('From', size=128, help="Email From", readonly=True),
-        'email_to': fields.char('To', help="Email Recipients", size=256, readonly=True),
-        'email_cc': fields.char('Cc', help="Carbon Copy Email Recipients", size=256, readonly=True),
-        'email_bcc': fields.char('Bcc', help='Blind Carbon Copy Email Recipients', size=256, readonly=True),
-        'message_id': fields.char('Message Id', size=1024, readonly=True, help="Message Id on Email.", select=True),
-        'references': fields.text('References', readonly=True, help="References emails."),
-        'description': fields.text('Description', readonly=True),
+        'email_from': fields.char('From', size=128, help="Email From"),
+        'email_to': fields.char('To', help="Email Recipients", size=256),
+        'email_cc': fields.char('Cc', help="Carbon Copy Email Recipients", size=256),
+        'email_bcc': fields.char('Bcc', help='Blind Carbon Copy Email Recipients', size=256),
+        'message_id': fields.char('Message Id', size=1024, help="Message Id on Email.", select=True),
+        'references': fields.text('References', help="References emails."),
+        'description': fields.text('Description'),
         'partner_id': fields.many2one('res.partner', 'Partner', required=False),
-        'attachment_ids': fields.many2many('ir.attachment', 'message_attachment_rel', 'message_id', 'attachment_id', 'Attachments', readonly=True),
-        'display_text': fields.function(_get_display_text, method=True, type='text', size="512", string='Display Text'),
+        'attachment_ids': fields.many2many('ir.attachment', 'message_attachment_rel', 'message_id', 'attachment_id', 'Attachments'),
+        'display_text': fields.function(_get_display_text, method=True, type='text', size="512", string='Notes'),
     }
 
     def init(self, cr):

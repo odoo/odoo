@@ -1,0 +1,58 @@
+<?xml version="1.0" ?>
+<openerp>
+    <data>
+
+    <record model="ir.ui.view" id="project_task_todo_tree">
+        <field name="name">project.task.tree.timebox</field>
+        <field name="model">project.task</field>
+        <field name="type">tree</field>
+        <field name="inherit_id" ref="project.view_task_tree2" />
+        <field name="arch" type="xml">
+            <field name="remaining_hours" position="after">
+            
+            </field>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="project_task_todo_form">
+        <field name="name">project.task.form.timebox</field>
+        <field name="model">project.task</field>
+        <field name="type">form</field>
+        <field name="inherit_id" ref="project.view_task_form2" />
+        <field name="arch" type="xml">
+            <field name="progress" position="after">
+           
+            </field>
+        </field>
+    </record>
+
+    <record id="view_task_search_todo" model="ir.ui.view">
+            <field name="name">project.task.search.todo</field>
+            <field name="model">project.task</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+               <search string="Task Edition">
+                    <group col="20" colspan="4">
+                        <filter string="Current" domain="[('state','in',('open','draft'))]"  name="current" help="Draft and In Progress tasks" icon="terp-check"/>
+                        <separator orientation="vertical"/>
+                        <filter string="Deadlines" context="{'deadline_visible': False}" domain="[('date_deadline','&lt;&gt;',False)]" help="Show only tasks having a deadline" icon="terp-gnome-cpu-frequency-applet+"/>
+                        <separator orientation="vertical"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+    <record model="ir.actions.act_window" id="open_todo_timebox_tree">
+        <field name="name">TODO</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">project.task</field>
+        <field name="view_type">form</field>
+        <field name="view_id" ref="project_task_todo_tree"/>
+        <field name="search_view_id" ref="view_task_search_todo"/>
+        <field name="context">{"search_default_todo":1,'group_by_no_leaf':1}</field>
+        <field name="help">Timeboxes are defined in the "Getting Things Done" methodology. A timebox defines a period of time in order to categorize your tasks: today, this week, this month, long term.</field>
+    </record>
+
+    <menuitem name="TODO" id="menu_open_todo_time_timeboxes" parent="project.menu_project_management" action="open_todo_timebox_tree"/>
+    </data>
+</openerp>

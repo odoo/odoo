@@ -1,0 +1,81 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+        <record model="ir.ui.view" id="project_todo_form">
+            <field name="name">project.todo.form</field>
+            <field name="model">project.todo</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="TODO">
+                    <field name="name"/>
+                    <field name="sequence"/>
+                    <field name="icon"/>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="project_todo_tree">
+            <field name="name">project.todo.tree</field>
+            <field name="model">project.todo</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="TODO">
+                    <field name="name"/>
+                    <field name="sequence" invisible="1"/>
+                    <field name="icon"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="project_todo_search" model="ir.ui.view">
+            <field name="name">project.todo.search</field>
+            <field name="model">project.todo</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+            <search string="TODO">
+                    
+            </search>
+            </field>
+        </record>
+        
+        <!--<record id="action_view_project_todo" model="ir.actions.act_window">
+            <field name="name">Project TODO</field>
+            <field name="res_model">project.todo</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>-->
+
+        <record model="ir.actions.act_window" id="open_project_todo_tree">
+            <field name="name">Title</field>
+            <field name="res_model">project.todo</field>
+            <field name="help">Contexts are defined in the "Getting Things Done" methodology. It allows you to categorize your tasks according to the context in which they have to be done: at the office, at home, when I take my car, etc.</field>
+        </record>
+
+        <menuitem name="TODO" id="menu_open_todo" parent="project.menu_tasks_config" action="open_project_todo_tree"/>
+    
+        <record model="ir.ui.view" id="project_todo_task_tree">
+            <field name="name">project.task.todo</field>
+            <field name="model">project.task</field>
+            <field name="type">tree</field>
+            <field name="inherit_id" ref="project.view_task_tree2" />
+            <field name="arch" type="xml">
+            <field name="remaining_hours" position="before">
+                <field string="TODO" name="todo_id"/>
+            </field>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="project_todo_task">
+            <field name="name">project.todo.form</field>
+            <field name="model">project.task</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="project.view_task_form2" />
+            <field name="arch" type="xml">
+            <field name="progress" position="before">
+                <field name="todo_id" widget="selection"/>
+            </field>
+            </field>
+        </record>
+    </data>
+</openerp>

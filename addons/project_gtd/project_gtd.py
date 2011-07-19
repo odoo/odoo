@@ -108,7 +108,7 @@ class project_task(osv.osv):
         if (res['type'] == 'search') and access_pool.check_groups(cr, uid, "project_gtd.group_project_getting"):
             tt = timebox_obj.browse(cr, uid, timebox_obj.search(cr,uid,[]), context=context)
             search_extended ='''<newline/><group col="%d" expand="%d" string="%s">''' % (len(tt)+7,1,_('Getting Things Done'))
-            search_extended += '''<filter domain="[('timebox_id','=', False)]" context="{'set_editable':True,'set_visible':True,'gtd_visible':True,'user_invisible':True}" icon="gtk-new" help="Undefined Timebox" string="%s"/>''' % (_('Inbox'),)
+            search_extended += '''<filter domain="[('timebox_id','=', False)]" context="{'set_editable':True,'set_visible':True,'gtd_visible':True,'user_invisible':True}" icon="gtk-new" help="Undefined Timebox" string="%s" />''' % (_('Inbox'),)
             search_extended += '''<filter context="{'set_editable':True,'set_visible':True,'gtd_visible':True,'user_invisible':True}" icon="gtk-new" help="Getting things done" string="%s"/>''' % (_('GTD'),)
             search_extended += '''<separator orientation="vertical"/>'''
             for time in tt:

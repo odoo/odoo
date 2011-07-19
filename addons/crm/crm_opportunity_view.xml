@@ -137,11 +137,8 @@
                         </page>
 
                         <page string="Communication &amp; History" groups="base.group_extended">
-                            <group colspan="4">
-                                <field colspan="4" name="email_cc" string="Global CC" widget="char" size="512"/>
-                            </group>
                             <field name="message_ids" colspan="4" nolabel="1" mode="tree,form">
-                                <tree string="History">
+                                <tree string="Note">
                                     <field name="display_text" string="History Information"/>
                                     <field name="history" invisible="1"/>
                                     <button
@@ -150,7 +147,7 @@
                                         context="{'mail':'reply', 'model': 'crm.lead', 'include_original' : True}"
                                         icon="terp-mail-replied" type="action" />
                                 </tree>
-                                <form string="History">
+                                <form string="Note">
                                     <group col="4" colspan="4">
                                         <field name="email_from"/>
                                         <field name="date"/>
@@ -174,7 +171,7 @@
 
                                         </page>
                                         <page string="Attachments">
-                                            <field name="attachment_ids" colspan="4" readonly="1" nolabel="1"/>
+                                            <field name="attachment_ids" colspan="4" nolabel="1"/>
                                         </page>
                                     </notebook>
                                 </form>
@@ -208,6 +205,9 @@
                             <field name="ref2"/>
                         </page>
                         </notebook>
+                        <group colspan="4">
+                            <field colspan="4" name="email_cc" string="Global CC" widget="char" size="512"/>
+                        </group>
                     </form>
                 </field>
             </record>
