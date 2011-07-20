@@ -39,7 +39,7 @@ This module is the base module for other multi-company modules.
     ],
     'init_xml': [],
     'update_xml': [
-        'res_company_view.xml',
+        'res_company_view.xml'
     ],
     'demo_xml': [
         'multi_company_demo.xml'
