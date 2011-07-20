@@ -189,7 +189,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
             <field name="purchase_ok" position="after">
-               <field name="hr_expense_ok"/>
+            <field name="hr_expense_ok" on_change="on_change_hr_expense_ok(hr_expense_ok)"/>
             </field>
             </field>
         </record>

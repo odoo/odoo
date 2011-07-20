@@ -23,6 +23,7 @@
     'name': 'Document Management - Wiki - FAQ',
     'version': '1.0',
     'category': 'Tools',
+    'complexity': "easy",
     'description': """
 This module provides a Wiki FAQ Template.
 =========================================

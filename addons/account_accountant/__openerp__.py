@@ -23,6 +23,7 @@
     "version" : "1.1",
     "author" : "OpenERP SA",
     "category": 'Finance',
+    'complexity': "normal",
     "description": """
 Accounting Access Rights.
 =========================
@@ -38,6 +39,7 @@ user rights to Demo user.
     "depends" : ["account"],
     'update_xml': [
         'security/account_security.xml',
+        'account_accountant_data.xml'
     ],
     'demo_xml': ['account_accountant_demo.xml'],
     'test': [],

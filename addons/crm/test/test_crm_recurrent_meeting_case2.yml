@@ -1,0 +1,98 @@
+-
+  In order to test recurrent meetings in OpenERP, I create meetings with different recurrency using different test cases.
+-
+  I create a recurrent meeting with daily recurrency and fixed amount of time.
+- 
+  !record {model: crm.meeting, id: crm_meeting_testmeeting0}:
+    count: 5
+    date: '2011-04-13 11:04:00'
+    date_deadline: '2011-04-13 12:04:00'
+    day: 0.0
+    duration: 1.0
+    name: Test Meeting
+    recurrency: true
+    recurrent_uid: 0.0
+    rrule_type: daily
+    sequence: 0.0
+-
+  I search for all the recurrent meetings.
+-
+  !python {model: crm.meeting}: |
+     meeting_ids = self.search(cr, uid, [('id', 'in', [ref('crm_meeting_testmeeting0')]),('date','>=','2011-03-13'), ('date_deadline', '<=', '2011-05-13')], context={'virtual_id': True})
+     assert len(meeting_ids) == 5, 'Recurrent daily meetings are not created !'
+-
+  Now I create a weekly meeting till a particular end date.
+-
+  !record {model: crm.meeting, id: crm_meeting_reviewcodewithprogrammer0}:
+    date: '2011-04-18 11:47:00'
+    date_deadline: '2011-04-18 12:47:00'
+    day: 0.0
+    duration: 1.0
+    end_date: '2011-04-30'
+    end_type: end_date
+    fr: true
+    mo: true
+    th: true
+    tu: true
+    we: true
+    name: Review code with programmer
+    recurrency: true
+    recurrent_uid: 0.0
+    rrule_type: weekly
+    sequence: 0.0
+-
+  I search for all the recurrent weekly meetings.
+-
+  !python {model: crm.meeting}: |
+     meeting_ids = self.search(cr, uid, [('id', 'in', [ref('crm_meeting_reviewcodewithprogrammer0')]),('date','>=','2011-03-13'), ('date_deadline', '<=', '2011-05-13')], context={'virtual_id': True})
+     assert len(meeting_ids) == 10, 'Recurrent weekly meetings are not created !'
+-
+  I want to schedule a meeting every month for Sprint review.
+- 
+  !record {model: crm.meeting, id: crm_meeting_sprintreview0}:
+    count: 12
+    date: '2011-04-01 12:01:00'
+    date_deadline: '2011-04-01 13:01:00'
+    day: 1
+    duration: 1.0
+    name: Sprint Review
+    recurrency: true
+    recurrent_uid: 0.0
+    rrule_type: monthly
+    sequence: 0.0
+-
+  I search for all the recurrent monthly meetings.
+-
+  !python {model: crm.meeting}: |
+     meeting_ids = self.search(cr, uid, [('id', 'in', [ref('crm_meeting_sprintreview0')]),('date','>=','2011-03-01'), ('date_deadline', '<=', '2012-05-13')], context={'virtual_id': True})
+     assert len(meeting_ids) == 12, 'Recurrent monthly meetings are not created !'
+-
+  I change name of my monthly Sprint Review meeting.
+-
+  !python {model: crm.meeting}: |
+     from base_calendar import base_calendar
+     base_cal_id = base_calendar.real_id2base_calendar_id(ref('crm_meeting_sprintreview0'), '2011-09-01 13:01:00')
+     self.write(cr, uid, [base_cal_id], {'name': 'Sprint Review for google modules', 'edit_all': True})
+-
+  I check whether all the records are edited or not.
+-
+  !python {model: crm.meeting}: |
+     meeting_ids = self.search(cr, uid, [('id', 'in', [ref('crm_meeting_sprintreview0')]),('date','>=','2011-03-01'), ('date_deadline', '<=', '2012-05-13')], context={'virtual_id': True})
+     meetings = self.browse(cr, uid, meeting_ids, context)
+     for meeting in meetings:
+        assert meeting.name == 'Sprint Review for google modules', 'Name not changed for id: %s' %meeting.id
+-
+  I change description of my weekly meeting Review code with programmer.
+-
+  !python {model: crm.meeting}: |
+     from base_calendar import base_calendar
+     base_cal_id = base_calendar.real_id2base_calendar_id(ref('crm_meeting_reviewcodewithprogrammer0'), '2011-04-25 12:47:00')
+     self.write(cr, uid, [base_cal_id], {'description': 'Review code of the module: sync_google_calendar.'})
+-
+  I check whether the record is edited perfectly or not.
+-
+  !python {model: crm.meeting}: |
+     meeting_ids = self.search(cr, uid, [('recurrent_uid', '=', ref('crm_meeting_reviewcodewithprogrammer0')), ('recurrent_id','=','2011-04-25 12:47:00')], context)
+     assert meeting_ids, 'Meeting is not edited !'
+
+     

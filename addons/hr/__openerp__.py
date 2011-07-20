@@ -24,6 +24,7 @@
     "version": "1.1",
     "author": "OpenERP SA",
     "category": "Human Resources",
+    'complexity': "easy",
     "website": "http://www.openerp.com",
     "description": """
 Module for human resource management.
@@ -37,7 +38,7 @@ You can manage:
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'images': ['images/hr_department.jpeg', 'images/hr_employee.jpeg','images/hr_job_position.jpeg'],
-    'depends': ['resource', 'board'],
+    'depends': ['base_setup', 'resource', 'board'],
     'init_xml': [],
     'update_xml': [
         'security/hr_security.xml',

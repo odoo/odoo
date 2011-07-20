@@ -24,6 +24,7 @@
     'category': 'Sales', 
     'name': 'CRM Helpdesk',
     'version': '1.0',
+    'complexity': "easy",
     'description': """
 Helpdesk Management.
 ====================

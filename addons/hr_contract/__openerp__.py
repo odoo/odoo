@@ -24,6 +24,7 @@
     'name': 'Human Resources Contracts',
     'version': '1.0',
     'category': 'Human Resources',
+    'complexity': "easy",
     'description': """
 Add all information on the employee form to manage contracts.
 =============================================================
@@ -44,7 +45,9 @@ You can assign several contracts per employee.
         'hr_contract_view.xml'
         ],
     'demo_xml': [],
-    'test': ['test/test_hr_contract.yml'],
+    'test': [
+             'test/test_hr_contract.yml'
+             ],
     'installable': True,
     'active': False,
     'certificate': '0046298028637',
