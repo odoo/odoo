@@ -24,6 +24,7 @@
     "version": "1.1",
     "author": "OpenERP SA",
     "category": "Finance",
+    'complexity': "easy",
     "description": """
 Module to manage invoice payment.
 =================================

@@ -45,7 +45,7 @@ class hr_employee_category(osv.osv):
     _description = "Employee Category"
     _columns = {
         'name': fields.char("Category", size=64, required=True),
-        'complete_name': fields.function(_name_get_fnc, method=True, type="char", string='Name'),
+        'complete_name': fields.function(_name_get_fnc, type="char", string='Name'),
         'parent_id': fields.many2one('hr.employee.category', 'Parent Category', select=True),
         'child_ids': fields.one2many('hr.employee.category', 'parent_id', 'Child Categories')
     }
@@ -66,16 +66,6 @@ class hr_employee_category(osv.osv):
 
 hr_employee_category()
 
-class hr_employee_marital_status(osv.osv):
-    _name = "hr.employee.marital.status"
-    _description = "Employee Marital Status"
-    _columns = {
-        'name': fields.char('Marital Status', size=32, required=True, translate=True),
-        'description': fields.text('Status Description'),
-    }
-
-hr_employee_marital_status()
-
 class hr_job(osv.osv):
 
     def _no_of_employee(self, cr, uid, ids, name, args, context=None):
@@ -92,8 +82,8 @@ class hr_job(osv.osv):
     _description = "Job Description"
     _columns = {
         'name': fields.char('Job Name', size=128, required=True, select=True),
-        'expected_employees': fields.function(_no_of_employee, method=True, string='Expected Employees', help='Required number of Employees in total for that job.', multi="no_of_employee"),
-        'no_of_employee': fields.function(_no_of_employee, method=True, string="No of Employee", help='Number of employee with that job.', multi="no_of_employee"),
+        'expected_employees': fields.function(_no_of_employee, string='Expected Employees', help='Required number of Employees in total for that job.', multi="no_of_employee", store=True),
+        'no_of_employee': fields.function(_no_of_employee, string="No of Employee", help='Number of employee with that job.', multi="no_of_employee", store=True),
         'no_of_recruitment': fields.float('Expected in Recruitment'),
         'employee_ids': fields.one2many('hr.employee', 'job_id', 'Employees'),
         'description': fields.text('Job Description'),
@@ -139,8 +129,9 @@ class hr_employee(osv.osv):
         'ssnid': fields.char('SSN No', size=32, help='Social Security Number'),
         'sinid': fields.char('SIN No', size=32, help="Social Insurance Number"),
         'identification_id': fields.char('Identification No', size=32),
+        'otherid': fields.char('Other Id', size=64),
         'gender': fields.selection([('male', 'Male'),('female', 'Female')], 'Gender'),
-        'marital': fields.many2one('hr.employee.marital.status', 'Marital Status'),
+        'marital': fields.selection([('single', 'Single'), ('married', 'Married'), ('widower', 'Widower'), ('divorced', 'Divorced')], 'Marital Status'),
         'department_id':fields.many2one('hr.department', 'Department'),
         'address_id': fields.many2one('res.partner.address', 'Working Address'),
         'address_home_id': fields.many2one('res.partner.address', 'Home Address'),
@@ -152,7 +143,7 @@ class hr_employee(osv.osv):
         'work_location': fields.char('Office Location', size=32),
         'notes': fields.text('Notes'),
         'parent_id': fields.many2one('hr.employee', 'Manager'),
-        'category_ids': fields.many2many('hr.employee.category', 'employee_category_rel', 'emp_id', 'category_id', 'Category'),
+        'category_ids': fields.many2many('hr.employee.category', 'employee_category_rel', 'emp_id', 'category_id', 'Categories'),
         'child_ids': fields.one2many('hr.employee', 'parent_id', 'Subordinates'),
         'resource_id': fields.many2one('resource.resource', 'Resource', ondelete='cascade', required=True),
         'coach_id': fields.many2one('hr.employee', 'Coach'),
@@ -241,16 +232,19 @@ class res_users(osv.osv):
 
     def create(self, cr, uid, data, context=None):
         user_id = super(res_users, self).create(cr, uid, data, context=context)
-        data_obj = self.pool.get('ir.model.data')
-        try:
-            data_id = data_obj._get_id(cr, uid, 'hr', 'ir_ui_view_sc_employee')
-            view_id  = data_obj.browse(cr, uid, data_id, context=context).res_id
-            self.pool.get('ir.ui.view_sc').copy(cr, uid, view_id, default = {
-                                        'user_id': user_id}, context=context)
-        except:
-            # Tolerate a missing shortcut. See product/product.py for similar code.
-            logging.getLogger('orm').debug('Skipped meetings shortcut for user "%s"', data.get('name','<new'))
-
+        
+        # add shortcut unless 'noshortcut' is True in context
+        if not(context and context.get('noshortcut', False)):
+            data_obj = self.pool.get('ir.model.data')
+            try:
+                data_id = data_obj._get_id(cr, uid, 'hr', 'ir_ui_view_sc_employee')
+                view_id  = data_obj.browse(cr, uid, data_id, context=context).res_id
+                self.pool.get('ir.ui.view_sc').copy(cr, uid, view_id, default = {
+                                            'user_id': user_id}, context=context)
+            except:
+                # Tolerate a missing shortcut. See product/product.py for similar code.
+                logging.getLogger('orm').debug('Skipped meetings shortcut for user "%s"', data.get('name','<new'))
+        
         return user_id
 
 res_users()

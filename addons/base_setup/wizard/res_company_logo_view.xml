@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        
+        <record id="view_res_company_logo" model="ir.ui.view">
+            <field name="name">res.company.logo.form</field>
+            <field name="model">res.company.logo</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="base.res_config_view_base"/>
+            <field name="arch" type="xml">
+            <data>
+                <form position="attributes">
+                     <attribute name="string">Upload Your Company Logo</attribute>
+                </form>
+                <xpath expr='//separator[@string="title"]' position='attributes'>
+                   <attribute name='string'> </attribute>
+                </xpath>
+                <xpath expr="//label[@string='description']"
+                      position="attributes">
+                      <attribute name="string">Upload your company logo in JPG or PNG with a format similar to 450*150 pixels </attribute>
+                </xpath>
+                <xpath expr='//separator[@string="vsep"]' position='attributes'>
+                     <attribute name='string'> </attribute>
+                     <attribute name='rowspan'>12</attribute>
+                 </xpath>
+                 <xpath expr="//button[@string='Next']" position="replace">
+                      <button icon="gtk-ok" string="Upload" name="execute" type="object"/>
+                  </xpath>
+                 <group string="res_config_contents" position="replace">
+                    <group colspan="4">
+                        <field colspan="4" height="150" name="logo" widget="image" nolabel="1"/>
+                  </group>
+                </group>
+             </data>
+            </field>
+        </record>
+
+        <record id="action_res_company_logo" model="ir.actions.act_window">
+            <field name="name">Upload Your Company Logo</field>
+            <field name="res_model">res.company.logo</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_res_company_logo"/>
+            <field name="target">new</field>
+        </record>
+        
+    </data>
+</openerp>

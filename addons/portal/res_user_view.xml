@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!-- add partner field in user form -->
+        <record id="view_users_form" model="ir.ui.view">
+            <field name="name">res.portal.users.form</field>
+            <field name="model">res.users</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="base.view_users_form"/>
+            <field name="arch" type="xml">
+                <field name="address_id" position="before">
+                    <field name="partner_id"/>
+                </field>
+            </field>
+        </record>
+    </data>
+</openerp>

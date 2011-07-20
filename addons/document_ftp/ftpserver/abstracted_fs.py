@@ -68,7 +68,7 @@ class abstracted_fs(object):
             db, cr = None, None
             try:
                 try:
-                    db = pooler.get_db_only(db_name)
+                    db = pooler.get_db(db_name)
                     cr = db.cursor()
                     cr.execute("SELECT 1 FROM pg_class WHERE relkind = 'r' AND relname = 'ir_module_module'")
                     if not cr.fetchone():

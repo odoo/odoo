@@ -897,6 +897,7 @@
                     <field name="name"/>
                     <field name="price_include" groups="base.group_extended"/>
                     <field name="description"/>
+                    <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                 </tree>
             </field>
         </record>
@@ -909,6 +910,7 @@
                     <group col="10" colspan="4">
                         <field name="name"/>
                         <field name="description"/>
+                        <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                     </group>
                 </search>
             </field>
@@ -1097,7 +1099,7 @@
                                 <separator colspan="2" string="Analytic"/>
                                 <field name="analytic_account_id" domain="[('parent_id','!=',False)]" groups="analytic.group_analytic_accounting"/>
                             </group>
-                            <separator string="Narration" colspan="4"/>
+                            <separator string="Internal Note" colspan="4"/>
                             <field name="narration" colspan="4" nolabel="1"/>
                         </page>
                         <page string="Analytic Lines" groups="base.group_analytic_accounting">
@@ -1392,7 +1394,7 @@
                                                 <separator colspan="2" string="Analytic"/>
                                                 <field name="analytic_account_id" domain="[('parent_id','!=',False)]" groups="analytic.group_analytic_accounting"/>
                                             </group>
-                                            <separator string="Narration" colspan="4"/>
+                                            <separator string="Internal Note" colspan="4"/>
                                             <field name="narration" colspan="4" nolabel="1"/>
                                         </page>
                                         <page string="Analytic Lines" groups="base.group_analytic_accounting">
@@ -1419,7 +1421,7 @@
                                     <field name="reconcile_partial_id" groups="base.group_extended"/>
                                 </tree>
                             </field>
-                            <separator colspan="4" string="Narration"/>
+                            <separator colspan="4" string="Internal Note"/>
                             <field name="narration" colspan="4" nolabel="1" height="50"/>
                             <group col="4" colspan="4">
                                 <field name="state" select="1"/>
