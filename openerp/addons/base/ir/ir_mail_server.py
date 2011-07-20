@@ -53,6 +53,40 @@ class WriteToLogger(object):
     def write(self, s):
         self.logger.debug(s)
 
+def encode_header(header_text):
+    """Returns an appropriate representation of the given header value,
+       suitable for direct assignment as a header value in an
+       email.message.Message. RFC2822 assumes that headers contain
+       only 7-bit characters, so we ensure it is the case, using
+       RFC2047 encoding when needed.
+
+       :param header_text: unicode or utf-8 encoded string with header value
+       :rtype: string | email.header.Header
+       :return: if ``header_text`` represents a plain ASCII string,
+                return a 7-bit string, otherwise returns an email.header.Header
+                that will perform the appropriate RFC2047 encoding of
+                non-ASCII values.
+    """
+    if not header_text: return ""
+
+    # convert anything to utf-8, suitable for
+    # testing ASCIIness, as 7-bit chars are
+    # encoded as ASCII in utf-8
+    header_text_utf8 = tools.ustr(header_text).encode('utf-8')
+
+    # check for non-ascii content in the header value
+    try:
+        header_text_utf8.decode('ascii')
+        # was plain ascii, we can use it verbatim as 
+        # a header
+        return header_text_utf8
+    except UnicodeDecodeError:
+        # this header contains non-ASCII characters, so
+        # we need to wrap it up in a message.header.Header
+        # that will take care of RFC2047-encoding it as
+        # 7-bit string.
+        return Header(header_text_utf8, 'utf-8')
+ 
 class ir_mail_server(osv.osv):
     """Represents an SMTP server, able to send outgoing e-mails, with SSL and TLS capabilities."""
     _name = "ir.mail_server"
@@ -165,7 +199,7 @@ class ir_mail_server(osv.osv):
            :return: the new RFC2822 email message
         """
         email_from = email_from or tools.config.get('email_from')
-        assert email_from, "email_from is mandatory"
+        assert email_from, "email_from is mandatory or a default should be defined in server config"
 
         # must force all strings to to 8-bit utf-8 when crafting message
         email_from = ustr(email_from).encode('utf-8')
@@ -176,8 +210,8 @@ class ir_mail_server(osv.osv):
         if not email_bcc: email_bcc = []
         if not body: body = u''
 
-        email_body = ustr(body).encode('utf-8')
-        email_text = MIMEText(email_body or '', _subtype=subtype,_charset='utf-8')
+        email_body_utf8 = ustr(body).encode('utf-8')
+        email_text_part = MIMEText(email_body_utf8 or '', _subtype=subtype, _charset='utf-8')
         msg = MIMEMultipart()
 
         if not message_id:
@@ -185,42 +219,44 @@ class ir_mail_server(osv.osv):
                 message_id = tools.generate_tracking_message_id(object_id)
             else:
                 message_id = make_msgid()
-        msg['Message-Id'] = message_id
+        msg['Message-Id'] = encode_header(message_id)
         if references:
-            msg['references'] = references
-        msg['Subject'] = Header(ustr(subject), 'utf-8')
-        msg['From'] = email_from
+            msg['references'] = encode_header(references)
+        msg['Subject'] = encode_header(subject)
+        msg['From'] = encode_header(email_from)
         del msg['Reply-To']
         if reply_to:
-            msg['Reply-To'] = ustr(reply_to).encode('utf-8')
+            msg['Reply-To'] = encode_header(reply_to)
         else:
             msg['Reply-To'] = msg['From']
-        msg['To'] = COMMASPACE.join(email_to)
+        msg['To'] = encode_header(COMMASPACE.join(email_to))
         if email_cc:
-            msg['Cc'] = COMMASPACE.join(email_cc)
+            msg['Cc'] = encode_header(COMMASPACE.join(email_cc))
         if email_bcc:
-            msg['Bcc'] = COMMASPACE.join(email_bcc)
+            msg['Bcc'] = encode_header(COMMASPACE.join(email_bcc))
         msg['Date'] = formatdate(localtime=True)
         # Custom headers may override normal headers or provide additional ones
         for key, value in headers.iteritems():
-            msg[ustr(key).encode('utf-8')] = ustr(value).encode('utf-8')
+            msg[ustr(key).encode('utf-8')] = encode_header(value)
 
         if html2text and subtype == 'html':
             # Always provide alternative text body if possible.
-            text = tools.html2text(email_body.decode('utf-8')).encode('utf-8')
+            text_utf8 = tools.html2text(email_body_utf8.decode('utf-8')).encode('utf-8')
             alternative_part = MIMEMultipart(_subtype="alternative")
-            alternative_part.attach(MIMEText(text, _charset='utf-8', _subtype='plain'))
-            alternative_part.attach(email_text)
+            alternative_part.attach(MIMEText(text_utf8, _charset='utf-8', _subtype='plain'))
+            alternative_part.attach(email_text_part)
             msg.attach(alternative_part)
         else:
-            msg.attach(email_text)
+            msg.attach(email_text_part)
 
         if attachments:
             for (fname, fcontent) in attachments:
+                filename_utf8 = ustr(fname).encode('utf-8')
                 part = MIMEBase('application', "octet-stream")
                 part.set_payload(fcontent)
                 Encoders.encode_base64(part)
-                part.add_header('Content-Disposition', 'attachment; filename="%s"' % (fname,))
+                part.add_header('Content-Disposition', 'attachment',
+                                filename=('utf-8',None,))
                 msg.attach(part)
         return msg
 
