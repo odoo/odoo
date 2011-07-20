@@ -21,6 +21,7 @@
 
 import time
 from datetime import datetime
+from time import mktime
 from dateutil.relativedelta import relativedelta
 from operator import itemgetter
 
@@ -2120,7 +2121,10 @@ class account_model(osv.osv):
         period_id = period_id[0]
 
         for model in self.browse(cr, uid, ids, context=context):
-            entry['name'] = model.name%{'year':context.get('date',time.strftime('%Y')), 'month':context.get('date',time.strftime('%m')), 'date':context.get('date',time.strftime('%d'))}
+            context_date = context.get('date')
+            str_date = time.strptime(context_date,"%Y-%m-%d")
+            date = datetime.fromtimestamp(mktime(str_date))
+            entry['name'] = model.name%{'year':date.strftime("%Y"), 'month':date.strftime("%m"), 'date': date.strftime("%Y-%m")}
             move_id = account_move_obj.create(cr, uid, {
                 'ref': entry['name'],
                 'period_id': period_id,
