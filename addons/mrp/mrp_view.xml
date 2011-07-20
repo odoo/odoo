@@ -145,7 +145,8 @@
                         <field name="active"/>
                         <field name="resource_type"/>
                         <field name="calendar_id" widget="selection"/>
-                        <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
+                        <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/> 
+
                     </group>
                     <notebook colspan="4">
                         <page string="General Information">
@@ -269,7 +270,7 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Routing">
-                    <field name="code"/>
+                    <field name="code"/> 
                     <field name="name"/>
                     <field name="location_id"/>
                     <field name="company_id" groups="base.group_multi_company"/>
@@ -735,7 +736,8 @@
                                        <field name="product_id" readonly="1"/>
                                        <field name="product_qty" readonly="1" string="Qty"/>
                                        <field name="product_uom" readonly="1" string="UOM"/>
-                                       <field name="location_dest_id"  readonly="1" string="Destination Loc." widget="selection"/>
+                                       <field name="location_dest_id"  readonly="1" string="Destination Loc." widget="selection"/> 
+
                                        <field name="prodlot_id" context="{'product_id': product_id}"/>
                                        <field name="scrapped" invisible="1"/>
                                        <field name="state" invisible="1"/>
@@ -973,6 +975,13 @@
             </field>
         </record>
         <act_window
+            domain="[('product_id', '=', active_id)]"
+            id="act_product_manufacturing_open"
+            name="Manufacturing Orders"
+            view_id="mrp_production_tree_view"
+            res_model="mrp.production"
+            src_model="product.product"/>
+        <act_window
             id="action_product_bom_structure"
             name="Product BoM Structure"
             domain="[('product_id', '=', active_id),('bom_id','=',False)]"
@@ -1016,6 +1025,7 @@
         <menuitem action="mrp.mrp_production_action_planning"
                 id="menu_mrp_production_order_action"
                 parent="menu_mrp_planning" sequence="1"/>
+	 
 
     </data>
 </openerp>
