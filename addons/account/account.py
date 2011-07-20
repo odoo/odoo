@@ -2668,15 +2668,15 @@ class wizard_multi_charts_accounts(osv.osv_memory):
 
         ids = self.pool.get('account.chart.template').search(cr, uid, [], context=context)
         if ids:
-            sale_tax_ids = tax_templ_obj.search(cr, uid, [("chart_template_id"
-                                              , "=", ids[0]), ('type_tax_use', 'in', ('sale','all'))], order="sequence")
-            purchase_tax_ids = tax_templ_obj.search(cr, uid, [("chart_template_id"
-                                          , "=", ids[0]), ('type_tax_use', 'in', ('purchase','all'))], order="sequence")
             if 'chart_template_id' in fields:
-                res.update({'chart_template_id':ids[0]})
+                res.update({'chart_template_id': ids[0]})
             if 'sale_tax' in fields:
+                sale_tax_ids = tax_templ_obj.search(cr, uid, [("chart_template_id"
+                                              , "=", ids[0]), ('type_tax_use', 'in', ('sale','all'))], order="sequence")
                 res.update({'sale_tax': sale_tax_ids and sale_tax_ids[0] or False})
             if 'purchase_tax' in fields:
+                purchase_tax_ids = tax_templ_obj.search(cr, uid, [("chart_template_id"
+                                          , "=", ids[0]), ('type_tax_use', 'in', ('purchase','all'))], order="sequence")
                 res.update({'purchase_tax': purchase_tax_ids and purchase_tax_ids[0] or False})
 
         return res
