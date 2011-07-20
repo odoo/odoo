@@ -467,6 +467,9 @@ openerp.base.Controller = openerp.base.BasicController.extend( /** @lends opener
      */
     rpc: function(url, data, success, error) {
         return this.session.rpc(url, data, success, error);
+    },
+    do_action: function(action, on_finished) {
+        return this.parent.do_action(action, on_finished);
     }
 });
 

@@ -72,9 +72,6 @@ openerp.base = function(instance) {
     if (openerp.base.list) {
         openerp.base.list(instance);
     }
-    if (openerp.base.tree) {
-        openerp.base.tree(instance);
-    }
     if (openerp.base. m2o) {
         openerp.base.m2o(instance);
     }
@@ -86,6 +83,9 @@ openerp.base = function(instance) {
     }
     if (openerp.web_mobile) {
         openerp.web_mobile(instance);
+    }
+    if (openerp.base.view_tree) {
+        openerp.base.view_tree(instance);
     }
 };
 

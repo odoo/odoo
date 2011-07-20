@@ -81,6 +81,19 @@ openerp.base.ActionManager = openerp.base.Controller.extend({
     }
 });
 
+openerp.base.ActionDialog = openerp.base.Dialog.extend({
+    identifier_prefix: 'action_dialog',
+    stop: function() {
+        this._super(this, arguments);
+        if (this.close_callback) {
+            this.close_callback();
+        }
+        if (this.viewmanager) {
+            this.viewmanager.stop();
+        }
+    }
+});
+
 openerp.base.ViewManager =  openerp.base.Controller.extend({
     init: function(parent, element_id, dataset, views) {
         this._super(parent, element_id);
@@ -346,19 +359,6 @@ openerp.base.ViewManagerAction = openerp.base.ViewManager.extend({
     }
 });
 
-openerp.base.ActionDialog = openerp.base.Dialog.extend({
-    identifier_prefix: 'action_dialog',
-    stop: function() {
-        this._super(this, arguments);
-        if (this.close_callback) {
-            this.close_callback();
-        }
-        if (this.viewmanager) {
-            this.viewmanager.stop();
-        }
-    }
-});
-
 openerp.base.Sidebar = openerp.base.BaseWidget.extend({
     template: "ViewManager.sidebar",
     init: function(parent, view_manager) {
@@ -502,12 +502,6 @@ openerp.base.View = openerp.base.Controller.extend({
  * Registry for all the main views
  */
 openerp.base.views = new openerp.base.Registry();
-
-openerp.base.ProcessView = openerp.base.Controller.extend({
-});
-
-openerp.base.HelpView = openerp.base.Controller.extend({
-});
 
 openerp.base.json_node_to_xml = function(node, single_quote, indent) {
     // For debugging purpose, this function will convert a json node back to xml
