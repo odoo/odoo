@@ -8,7 +8,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Leave">
-                    <group col='8' colspan='4'>
+                    <group col='8' colspan='6'>
                         <filter icon="terp-camera_test" domain="[('state','=','validate')]" string="Validated"/>
                         <separator orientation="vertical"/>
                         <filter icon="terp-check" domain="[('state','=','draft')]" string="To Confirm"/>
@@ -28,12 +28,9 @@
                                 domain="[('department_id.manager_id','=',uid)]" />
                         </field>
                         <field name="holiday_status_id" widget="selection"/>
-                    </group>
-                    <newline/>
-                    <group expand="0" string="Extended Filters...">
                         <field name="date_from"/>
                         <field name="date_to"/>
-                    </group>
+                    </group>                    
                     <newline />
                     <group expand="0" string="Group By...">
                         <filter name="group_employee" string="Employee" icon="terp-personal" domain="[]" context="{'group_by':'employee_id'}"/>

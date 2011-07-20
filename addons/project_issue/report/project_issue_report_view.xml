@@ -90,15 +90,15 @@
                            </field>
                               <field name="project_id"/>
                           <field name="user_id"  select="1" widget="selection"/>
+                          <field name="partner_id"/>
+                          <field name="version_id" widget="selection" />
                    </group>
                    <newline/>
-                   <group expand="0" string="Extended Filters..." colspan="10" col="12" groups="base.group_extended">
-                       <field name="partner_id"/>
+                   <group expand="0" string="Extended Filters..." colspan="10" col="12" groups="base.group_extended">                       
                        <field name="assigned_to" widget="selection"/>
                        <separator orientation="vertical"/>
                        <field name="priority" />
-                       <separator orientation="vertical"/>
-                       <field name="version_id" widget="selection" />
+                       <separator orientation="vertical"/>                       
                        <field name="categ_id" widget="selection" domain="[('object_id.model', '=', 'project.issue')]"/>
                        <field name="type_id" widget="selection"/>
                        <separator orientation="vertical"/>
