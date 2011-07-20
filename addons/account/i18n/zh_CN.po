@@ -859,6 +859,7 @@ msgstr "创建季度"
 
 #. module: account
 #: report:account.overdue:0
+#: report:account.aged_trial_balance:0
 msgid "Due"
 msgstr "到期"
 
@@ -950,6 +951,10 @@ msgstr "模型项"
 #: field:account.journal,code:0
 #: report:account.partner.balance:0
 #: field:account.period,code:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.balancesheet:0
+#: report:pl.account.horizontal:0
+#: report:pl.account:0
 msgid "Code"
 msgstr "编码"
 
@@ -1269,6 +1274,7 @@ msgstr "序时薄明细分析"
 
 #. module: account
 #: model:ir.ui.menu,name:account.next_id_22
+#: report:account.aged_trial_balance:0
 msgid "Partners"
 msgstr "业务伙伴"
 
@@ -2093,6 +2099,11 @@ msgstr "产品模板"
 #: report:account.third_party_ledger_other:0
 #: report:account.vat.declaration:0
 #: model:ir.model,name:account.model_account_fiscalyear
+#: report:account.balancesheet.horizontal:0
+#: report:account.balancesheet:0
+#: report:pl.account.horizontal:0
+#: report:pl.account:0
+#: report:account.aged_trial_balance:0
 msgid "Fiscal Year"
 msgstr "会计年度"
 
@@ -4479,6 +4490,11 @@ msgstr "辅助核算余额 -"
 #: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
 #: field:account.vat.declaration,target_move:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.balancesheet:0
+#: report:pl.account.horizontal:0
+#: report:pl.account:0
+#: report:account.aged_trial_balance:0
 msgid "Target Moves"
 msgstr "目标"
 
@@ -4595,6 +4611,8 @@ msgstr "核销结果"
 #: view:account.bs.report:0
 #: model:ir.actions.act_window,name:account.action_account_bs_report
 #: model:ir.ui.menu,name:account.menu_account_bs_report
+#: report:account.balancesheet.horizontal:0
+#: report:account.balancesheet:0
 msgid "Balance Sheet"
 msgstr "资产负债表"
 
@@ -6269,6 +6287,8 @@ msgstr "税科目图表"
 #: report:account.general.journal:0
 #: report:account.invoice:0
 #: report:account.partner.balance:0
+#: report:pl.account.horizontal:0
+#: report:pl.account:0
 msgid "Total:"
 msgstr "合计:"
 
@@ -7481,6 +7501,10 @@ msgstr "公司本位币"
 #: report:account.partner.balance:0
 #: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
+#: report:account.balancesheet:0
+#: report:pl.account.horizontal:0
+#: report:pl.account:0
+#: report:account.aged_trial_balance:0
 msgid "Chart of Account"
 msgstr "科目一览表"
 
@@ -7596,6 +7620,10 @@ msgstr "红字发票分录序时薄"
 #: report:account.general.journal:0
 #: report:account.general.ledger_landscape:0
 #: report:account.partner.balance:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.balancesheet:0
+#: report:pl.account.horizontal:0
+#: report:pl.account:0
 msgid "Filter By"
 msgstr "筛选"
 
@@ -8140,6 +8168,7 @@ msgstr "无法找到上一级科目！"
 
 #. module: account
 #: field:account.aged.trial.balance,direction_selection:0
+#: report:account.aged_trial_balance:0
 msgid "Analysis Direction"
 msgstr "分析趋势"
 
@@ -8267,6 +8296,10 @@ msgstr "留空为使用利润科目"
 #: report:account.third_party_ledger_other:0
 #: field:report.account.receivable,balance:0
 #: field:report.aged.receivable,balance:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.balancesheet:0
+#: report:pl.account.horizontal:0
+#: report:pl.account:0
 msgid "Balance"
 msgstr "余额"
 
@@ -8278,6 +8311,10 @@ msgstr "系统的手动或自动分录"
 #. module: account
 #: report:account.account.balance:0
 #: report:account.general.ledger_landscape:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.balancesheet:0
+#: report:pl.account.horizontal:0
+#: report:pl.account:0
 msgid "Display Account"
 msgstr "显示科目"
 
@@ -8579,6 +8616,7 @@ msgstr "周期性凭证"
 #: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
 #: field:account.vat.declaration,date_from:0
+#: report:account.aged_trial_balance:0
 msgid "Start Date"
 msgstr "开始日期"
 
@@ -9044,6 +9082,7 @@ msgstr "状态"
 #: field:report.account.sales,amount_total:0
 #: field:report.account_type.sales,amount_total:0
 #: field:report.invoice.created,amount_total:0
+#: report:account.aged_trial_balance:0
 msgid "Total"
 msgstr "合计"
 
@@ -9538,6 +9577,7 @@ msgstr "account.addtmpl.wizard"
 #: field:account.partner.ledger,result_selection:0
 #: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
+#: report:account.aged_trial_balance:0
 msgid "Partner's"
 msgstr "业务伙伴"
 
@@ -9664,6 +9704,57 @@ msgid ""
 "The residual amount on a receivable or payable of a journal entry expressed "
 "in its currency (maybe different of the company currency)."
 msgstr "基于当前币别的应收或应付款的余额"
+
+#. module: account
+#: report:account.balancesheet.horizontal:0
+#: report:account.balancesheet:0
+msgid "Assets"
+msgstr ""
+
+#. module: account
+#: report:account.balancesheet.horizontal:0
+#: report:account.balancesheet:0
+msgid "Liabilities"
+msgstr ""
+
+#. module: account
+#: report:account.balancesheet.horizontal:0
+#: report:account.balancesheet:0
+#: report:pl.account.horizontal:0
+#: report:pl.account:0
+msgid "Balance:"
+msgstr ""
+
+#. module: account
+#: report:pl.account.horizontal:0
+#: report:pl.account:0
+msgid "Particular"
+msgstr ""
+
+#. module: account
+#: report:account.aged_trial_balance:0
+msgid "Aged Trial Balance"
+msgstr ""
+
+#. module: account
+#: report:account.aged_trial_balance:0
+msgid "Period Length(days)"
+msgstr ""
+
+#. module: account
+#: report:account.aged_trial_balance:0
+msgid "Account Total"
+msgstr ""
+
+#. module: account
+#: report:account.aged_trial_balance:0
+msgid "Account Total"
+msgstr ""
+
+#. module: account
+#: report:account.aged_trial_balance:0
+msgid "Not due"
+msgstr ""
 
 #~ msgid "Print Voucher"
 #~ msgstr "打印原始凭证"
