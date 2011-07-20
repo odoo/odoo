@@ -4,7 +4,7 @@
 
         <record id="view_partner_mass_mail" model="ir.ui.view">
             <field name="name">Mass Mailing</field>
-            <field name="model">partner.wizard.spam</field>
+            <field name="model">partner.massmail.wizard</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
               <form string="Mass Mailing" col="4">
@@ -24,7 +24,7 @@
         </record>
 
        <act_window name="Mass Mailing"
-            res_model="partner.wizard.spam"
+            res_model="partner.massmail.wizard"
             src_model="res.partner"
             view_mode="form"
             target="new"
