@@ -48,40 +48,37 @@ class sale_order_line(osv.osv):
         return invoice_line_ids
 
     def onchange_sale_order_line_view(self, cr, uid, id, type, context={}, *args):
-        temp = {}
-        temp['value'] = {}
-        if (not type):
-            return {}
+        temp = {
+        'value': {
+            'name':'',
+            'product_id': False,
+            'uos_id': False,
+            'account_id': False,
+            'price_unit': 0.0,
+            'price_subtotal': 0.0,
+            'quantity': 0,
+            'discount': 0.0,
+            'invoice_line_tax_id': False,
+            'account_analytic_id': False,
+            'product_uom_qty': 0.0,
+            },
+        }
         if type != 'article':
-            temp = {
-                'value': {
-                'product_id': False,
-                'uos_id': False,
-                'account_id': False,
-                'price_unit': 0.0,
-                'price_subtotal': 0.0,
-                'quantity': 0,
-                'discount': 0.0,
-                'invoice_line_tax_id': False,
-                'account_analytic_id': False,
-                'product_uom_qty': 0.0,
-                },
-            }
             if type == 'line':
-                temp['value']['name'] = ' '
+                temp['value']['name'] = '___'
             if type == 'break':
-                temp['value']['name'] = ' '
+                temp['value']['name'] = '·····Page Break·····'
             if type == 'subtotal':
                 temp['value']['name'] = 'Sub Total'
             return temp
-        return {}
+        return temp
 
     def create(self, cr, user, vals, context=None):
         if vals.has_key('layout_type'):
             if vals['layout_type'] == 'line':
-                vals['name'] = ' '
+                vals['name'] = '___'
             if vals['layout_type'] == 'break':
-                vals['name'] = ' '
+                vals['name'] = '·····Page Break·····'
             if vals['layout_type'] != 'article':
                 vals['product_uom_qty']= 0
         return super(sale_order_line, self).create(cr, user, vals, context)
@@ -89,9 +86,9 @@ class sale_order_line(osv.osv):
     def write(self, cr, user, ids, vals, context=None):
         if vals.has_key('layout_type'):
             if vals['layout_type'] == 'line':
-                vals['name'] = ' '
+                vals['name'] = '___'
             if vals['layout_type'] == 'break':
-                vals['name'] = ' '
+                vals['name'] = '·····Page Break·····'
         return super(sale_order_line, self).write(cr, user, ids, vals, context)
 
     def copy(self, cr, uid, id, default=None, context=None):
