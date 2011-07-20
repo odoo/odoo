@@ -2650,44 +2650,36 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             res['value']["purchase_tax"] = purchase_tax_ids and purchase_tax_ids[0] or False
         return res
 
-    def _get_purchase_tax(self, cr, uid, context=None):
+
+    def default_get(self, cr, uid, fields, context=None):
+        res = super(wizard_multi_charts_accounts, self).default_get(cr, uid, fields, context=context) 
+        tax_templ_obj = self.pool.get('account.tax.template')
+
+        if 'bank_accounts_id' in fields:
+            res.update({'bank_accounts_id': [{'acc_name': _('Current'), 'account_type': 'bank'},
+                    {'acc_name': _('Deposit'), 'account_type': 'bank'},
+                    {'acc_name': _('Cash'), 'account_type': 'cash'}]})
+        if 'company_id' in fields:
+            res.update({'company_id': self.pool.get('res.users').browse(cr, uid, [uid], context=context)[0].company_id.id})
+        if 'code_digits' in fields:
+            res.update({'code_digits': 6})
+        if 'seq_journal' in fields:
+            res.update({'seq_journal': True})
+
         ids = self.pool.get('account.chart.template').search(cr, uid, [], context=context)
         if ids:
-            chart_template_id = ids[0]
-            purchase_tax_ids = self.pool.get('account.tax.template').search(cr, uid, [("chart_template_id"
-                                          , "=", chart_template_id), ('type_tax_use', 'in', ('purchase','all'))], order="sequence")
-            return purchase_tax_ids and purchase_tax_ids[0] or False
-        return False
+            sale_tax_ids = tax_templ_obj.search(cr, uid, [("chart_template_id"
+                                              , "=", ids[0]), ('type_tax_use', 'in', ('sale','all'))], order="sequence")
+            purchase_tax_ids = tax_templ_obj.search(cr, uid, [("chart_template_id"
+                                          , "=", ids[0]), ('type_tax_use', 'in', ('purchase','all'))], order="sequence")
+            if 'chart_template_id' in fields:
+                res.update({'chart_template_id':ids[0]})
+            if 'sale_tax' in fields:
+                res.update({'sale_tax': sale_tax_ids and sale_tax_ids[0] or False})
+            if 'purchase_tax' in fields:
+                res.update({'purchase_tax': purchase_tax_ids and purchase_tax_ids[0] or False})
 
-    def _get_sale_tax(self, cr, uid, context=None):
-        ids = self.pool.get('account.chart.template').search(cr, uid, [], context=context)
-        if ids:
-            chart_template_id = ids[0]
-            sale_tax_ids = self.pool.get('account.tax.template').search(cr, uid, [("chart_template_id"
-                                          , "=", chart_template_id), ('type_tax_use', 'in', ('sale','all'))], order="sequence")
-            return sale_tax_ids and sale_tax_ids[0] or False
-        return False
-
-    def _get_chart(self, cr, uid, context=None):
-        ids = self.pool.get('account.chart.template').search(cr, uid, [], context=context)
-        if ids:
-            return ids[0]
-        return False
-
-    def _get_default_accounts(self, cr, uid, context=None):
-        return [{'acc_name': _('Current'),'account_type':'bank'},
-                    {'acc_name': _('Deposit'),'account_type':'bank'},
-                    {'acc_name': _('Cash'),'account_type':'cash'}]
-
-    _defaults = {
-        'company_id': lambda self, cr, uid, c: self.pool.get('res.users').browse(cr, uid, [uid], c)[0].company_id.id,
-        'chart_template_id': _get_chart,
-        'bank_accounts_id': _get_default_accounts,
-        'sale_tax': _get_sale_tax,
-        'purchase_tax': _get_purchase_tax,
-        'code_digits': 6,
-        'seq_journal': True
-    }
+        return res
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         res = super(wizard_multi_charts_accounts, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar,submenu=False)
