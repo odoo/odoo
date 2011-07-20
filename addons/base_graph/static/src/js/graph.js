@@ -89,7 +89,7 @@ openerp.base_graph.GraphView = openerp.base.View.extend({
             }
             this.dataset.domain = domain;
             this.dataset.context = this.view_manager.dataset.context;
-            this.dataset.read_slice(this.fields, 0, false, function(res) {
+            this.dataset.read_slice(_(this.fields).keys(), 0, false, function(res) {
                 self.schedule_chart(res);
             });
         }
