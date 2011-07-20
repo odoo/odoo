@@ -652,9 +652,9 @@ class actions_server(osv.osv):
                 subject = self.merge_message(cr, uid, action.subject, action, context)
                 body = self.merge_message(cr, uid, action.message, action, context)
 
-                smtp_server_pool = self.pool.get('ir.mail_server')
-                msg = smtp_server_pool.pack_message(cr, uid, user, [address], subject, body, subtype='html')
-                res_email = smtp_server_pool.send_email(cr, uid, msg, debug=False)
+                ir_mail_server = self.pool.get('ir.mail_server')
+                msg = ir_mail_server.build_message(user, [address], subject, body, subtype='html')
+                res_email = ir_mail_server.send_email(cr, uid, msg)
                 if res_email:
                     logger.info('Email successfully sent to: %s', address)
                 else:

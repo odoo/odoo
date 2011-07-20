@@ -31,6 +31,7 @@ import smtplib
 from osv import osv
 from osv import fields
 from tools.translate import _
+from tools import html2text
 import tools
 
 # ustr was originally from tools.misc.
@@ -57,7 +58,7 @@ class ir_mail_server(osv.osv):
     _name = "ir.mail_server"
 
     _columns = {
-        'name': fields.char('Name', size=64, required=True, select=True),
+        'name': fields.char('Description', size=64, required=True, select=True),
         'smtp_host': fields.char('Server Name', size=128, required=True, help="Hostname or IP of SMTP server"),
         'smtp_port': fields.integer('SMTP Port', size=5, required=True, help="SMTP Port. Usually 465 for SSL, and 25 or 587 for other cases."),
         'smtp_user': fields.char('Username', size=64, help="Optional username for SMTP authentication"),
@@ -89,22 +90,20 @@ class ir_mail_server(osv.osv):
         for smtp_server in self.browse(cr, uid, ids, context=context):
             smtp = False
             try:
-                smtp = self.connect(smtp_server.smtp_host,
-                   smtp_server.smtp_port, user_name=smtp_server.smtp_user,
-                   user_password=smtp_server.smtp_pass, encryption=smtp_server.smtp_encryption,
-                   debug=smtp_server.smtp_debug)
+                smtp = self.connect(smtp_server.smtp_host, smtp_server.smtp_port, user=smtp_server.smtp_user,
+                                    password=smtp_server.smtp_pass, encryption=smtp_server.smtp_encryption,
+                                    smtp_debug=smtp_server.smtp_debug)
             except Exception, e:
-                raise osv.except_osv(_("Connection test failed!"), _("Here is we got instead: %s") % e)
+                raise osv.except_osv(_("Connection test failed!"), _("Here is what we got instead:\n %s") % e)
             finally:
                 try:
                     if smtp: smtp.quit()
                 except Exception:
                     # ignored, just a consequence of the previous exception
                     pass
-
         raise osv.except_osv(_("Connection test succeeded!"), _("Everything seems properly set up!"))
 
-    def connect(self, host, port, user=None, password=None, encryption=False, debug=False):
+    def connect(self, host, port, user=None, password=None, encryption=False, smtp_debug=False):
         """Returns a new SMTP connection to the give SMTP server, authenticated
            with ``user`` and ``password`` if provided, and encrypted as requested
            by the ``encryption`` parameter.
@@ -114,7 +113,7 @@ class ir_mail_server(osv.osv):
            :param user: optional username to authenticate with
            :param password: optional password to authenticate with
            :param string encryption: optional: ``'ssl'`` | ``'starttls'``
-           :param bool debug: toggle debugging of SMTP sessions (all i/o
+           :param bool smtp_debug: toggle debugging of SMTP sessions (all i/o
                               will be output in logs)
         """
         if encryption == 'ssl':
@@ -126,7 +125,7 @@ class ir_mail_server(osv.osv):
             connection = smtplib.SMTP_SSL(host, port)
         else:
             connection = smtplib.SMTP(host, port)
-        connection.set_debuglevel(debug)
+        connection.set_debuglevel(smtp_debug)
         if encryption == 'starttls':
             # starttls() will perform ehlo if needed first
             connection.starttls()
@@ -140,22 +139,38 @@ class ir_mail_server(osv.osv):
         return connection
 
     def build_email(self, email_from, email_to, subject, body, email_cc=None, email_bcc=None, reply_to=False,
-               attachments=None, message_id=None, references=None, openobject_id=False, subtype='plain', headers=None):
-        """Constructs an email.message.Message object based on the keyword arguments passed, returns it.
+               attachments=None, message_id=None, references=None, object_id=False, subtype='plain', headers=None):
+        """Constructs an RFC2822 email.message.Message object based on the keyword arguments passed, and returns it.
 
-        :param body: email body, according to the ``subtype`` (by default, plaintext). If html subtype is used,
-                     the message will be automatically converted to plaintext and wrapped in multipart/alternative.
-        :param reply_to: optional value of Reply-To header
-        :param email_cc: optional list of string values for CC header (to be joined with commas)
-        :param email_bcc: optional list of string values for BCC header (to be joined with commas)
-        :param attachments: list of (filename,filecontent) pairs, where filecontent
+           :param string email_from: sender email address
+           :param list email_from: list of recipient addresses (to be joined with commas) 
+           :param string subject: email subject (no pre-encoding/quoting necessary)
+           :param string body: email body, according to the ``subtype`` (by default, plaintext).
+                               If html subtype is used, the message will be automatically converted
+                               to plaintext and wrapped in multipart/alternative.
+           :param string reply_to: optional value of Reply-To header
+           :param string object_id: optional tracking identifier, to be included in the message-id for
+                                    recognizing replies. Suggested format for object-id is "res_id-model",
+                                    e.g. "12345-crm.lead".
+           :param string subtype: optional mime subtype for the text body (usually 'plain' or 'html'),
+                                  must match the format of the ``body`` parameter. Default is 'plain',
+                                  making the content part of the mail "text/plain".
+           :param list attachments: list of (filename, filecontents) pairs, where filecontents is a string
+                                    containing the bytes of the attachment
+           :param list email_cc: optional list of string values for CC header (to be joined with commas)
+           :param list email_bcc: optional list of string values for BCC header (to be joined with commas)
+           :param dict headers: optional map of headers to set on the outgoing mail (may override the
+                                other headers, including Subject, Reply-To, Message-Id, etc.)
+           :rtype: email.message.Message (usually MIMEMultipart)
+           :return: the new RFC2822 email message
         """
         email_from = email_from or tools.config.get('email_from')
         assert email_from, "email_from is mandatory"
-        email_from = ustr(email_from).encode('utf-8') # force to 8-bit utf-8
 
-        if headers is None:
-            headers = {}
+        # must force all strings to to 8-bit utf-8 when crafting message
+        email_from = ustr(email_from).encode('utf-8')
+
+        headers = headers or {} # need valid dict later
 
         if not email_cc: email_cc = []
         if not email_bcc: email_bcc = []
@@ -166,8 +181,8 @@ class ir_mail_server(osv.osv):
         msg = MIMEMultipart()
 
         if not message_id:
-            if openobject_id:
-                message_id = tools.generate_tracking_message_id(openobject_id)
+            if object_id:
+                message_id = tools.generate_tracking_message_id(object_id)
             else:
                 message_id = make_msgid()
         msg['Message-Id'] = message_id
@@ -177,7 +192,7 @@ class ir_mail_server(osv.osv):
         msg['From'] = email_from
         del msg['Reply-To']
         if reply_to:
-            msg['Reply-To'] = reply_to
+            msg['Reply-To'] = ustr(reply_to).encode('utf-8')
         else:
             msg['Reply-To'] = msg['From']
         msg['To'] = COMMASPACE.join(email_to)
@@ -187,8 +202,8 @@ class ir_mail_server(osv.osv):
             msg['Bcc'] = COMMASPACE.join(email_bcc)
         msg['Date'] = formatdate(localtime=True)
         # Custom headers may override normal headers or provide additional ones
-        for key, value in x_headers.iteritems():
-            msg['%s' % key] = str(value)
+        for key, value in headers.iteritems():
+            msg[ustr(key).encode('utf-8')] = ustr(value).encode('utf-8')
 
         if html2text and subtype == 'html':
             # Always provide alternative text body if possible.
@@ -210,7 +225,8 @@ class ir_mail_server(osv.osv):
         return msg
 
     def send_email(self, cr, uid, message, mail_server_id=None, smtp_server=None, smtp_port=None,
-                   smtp_user=None, smtp_password=None, smtp_encryption='none', smtp_debug=False):
+                   smtp_user=None, smtp_password=None, smtp_encryption='none', smtp_debug=False,
+                   context=None):
         """Sends an email directly (no queuing).
 
         No retries are done, the caller should handle MailDeliveryException in order to ensure that
@@ -266,7 +282,6 @@ class ir_mail_server(osv.osv):
             smtp_encryption = mail_server.smtp_encryption
             smtp_debug = smtp_debug or mail_server.smtp_debug
 
-
         if not smtp_server:
             raise osv.except_osv(
                          _("Missing SMTP Server"),
@@ -291,7 +306,7 @@ class ir_mail_server(osv.osv):
                 smtp = self.connect(smtp_server, smtp_port, smtp_user, smtp_password, smtp_encryption, smtp_debug)
                 smtp.sendmail(smtp_from, smtp_to_list, message.as_string())
             finally:
-                if debug:
+                if smtp_debug:
                     smtplib.stderr = oldstderr
                 try:
                     # Close Connection of SMTP Server
