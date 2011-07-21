@@ -5,20 +5,20 @@
     </t>
 
     <t t-name="ExportTreeView">
-        <table class="view" width="100%">
+        <table class="view" style="background-color: #F3F3F3;">
             <tr>
-                <td class="side_spacing" align="left">
+                <td align="left">
                     This wizard will export all data that matches the current search criteria to a CSV file.
                     You can export all data or only the fields that can be reimported after modification.
                 </td>
             </tr>
             <tr>
-                <td class="side_spacing">
+                <td>
                     <table>
                         <tr>
                             <td class="label"><label for="import_compat">Export Type:</label></td>
                             <td>
-                                <select id="import_compat" name="import_compat">
+                                <select id="import_compat" name="import_compat"  style="background-color: #F3F3F3;" >
                                     <option value="1">Import Compatible Export</option>
                                     <option value="0">Export all Data</option>
                                 </select>
@@ -30,7 +30,7 @@
 
             <tr>
                 <td>
-                    <table class="fields-selector-export" width="100%">
+                    <table class="fields-selector-export">
                         <tr>
                             <th class="oe_view_title" valign="bottom">Available fields</th>
                             <th class="oe_view_title"></th>
@@ -41,40 +41,30 @@
                             </th>
                         </tr>
                         <tr>
-                            <td class="fields-selector-left" height="400px">
-                                <div id="fields_left">
-                                <table class="fields-selector-export">
-                                    <th class="header_title"> Name </th>
-                                    <tr>
-                                        <td>
-                                            <table width="100%" border="0">
-                                                <div id="left_field_panel"/>
-                                            </table>
-                                        </td>
-                                    </tr>
-                                </table>
+                            <td class="fields-selector-left">
+                                <div id="left_field_panel">
                                 </div>
                             </td>
                             <td class="fields-selector-center">
-                                <table width="100%">
+                                <table>
                                     <tr>
                                         <td align="center">
-                                            <button id="add_field">Add </button>
+                                            <button id="add_field" class="button">Add </button>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td align="center">
-                                            <button id="remove_field">Remove </button>
+                                            <button id="remove_field" class="button">Remove </button>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td align="center">
-                                            <button id="remove_all_field">Remove All </button>
+                                            <button id="remove_all_field" class="button">Remove All </button>
                                         </td>
                                     </tr>
                                 </table>
                             </td>
-                            <td class="fields-selector-right" height="400px">
+                            <td class="fields-selector-right">
                                 <select name="fields_list" id="fields_list" multiple="multiple"></select>
                             </td>
                         </tr>
@@ -85,10 +75,16 @@
     </t>
 
     <t t-name="ExportTreeView-Secondary">
+        <table id="field-tree-structure" class="fields-selector-export" cellspacing="0" cellpadding="0">
+            <tr><th class="tree_header"> Name </th></tr>
+            <t t-call="ExportTreeView-Secondary.children"/>
+        </table>
+    </t>
+    <t t-name="ExportTreeView-Secondary.children">
         <t t-foreach="fields" t-as="field" >
             <tr t-att-id="'treerow-' + field.id" class="row">
                 <td>
-                    <table width="100%" border="0">
+                    <table class="tree-grid" border="0">
                         <tr class="row">
                             <t t-foreach="(field.id).split('/')" t-as="level" >
                                 <t t-if="(field.id).split('/')[0] != level">
@@ -98,12 +94,12 @@
                             <td valign="top" align="left" style="cursor: pointer;" width="18">
                                 <t t-if="(field.children).length >= 1">
                                     <t t-if="(field.id).split('/').length != 3">
-                                        <img t-att-id="'parentimg-' + field.id" src="/base/static/src/img/expand.gif" width="16" height="16" border="0"/>
+                                        <img t-att-id="'parentimg-' + field.id" src="/base_export/static/src/img/expand.gif" width="16" height="16" border="0"/>
                                     </t>
                                 </t>
                             </td>
                             <td valign="top" align="left" style="cursor: pointer;">
-                                <a t-att-id="'export-' + field.id"  t-att-string="field.string" href="javascript: void(0)" style="text-decoration: none;" class="row">
+                                <a t-att-id="'export-' + field.id"  t-att-string="field.string" href="javascript: void(0)" style="text-decoration: none;">
                                     <t t-esc="field.string"/>
                                 </a>
                             </td>

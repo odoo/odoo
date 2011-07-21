@@ -221,5 +221,5 @@ class Export(View):
         result = modle_obj.export_data(ids, field , context).get('datas',[])
 
         if not import_compat:
-            field = fields.values()
+            field = [val.strip() for val in fields.values()]
         return self.export_csv(req, field, result)

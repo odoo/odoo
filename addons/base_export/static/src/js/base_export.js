@@ -35,6 +35,7 @@ openerp.base_export.Export = openerp.base.Dialog.extend({
                     close: function(event, ui){ self.close();}
                    });
         this.on_show_exists_export_list();
+        jQuery(this.$dialog).removeClass('ui-dialog-content ui-widget-content');
         $('#add_field').click(function(){
             for (var key in self.selected_fields) {
                 self.add_field(key, self.selected_fields[key])
@@ -52,9 +53,10 @@ openerp.base_export.Export = openerp.base.Dialog.extend({
         import_comp = $("#import_compat option:selected").val()
         var params = {"import_compat":parseInt(import_comp), "views_id": this.views_id}
         this.rpc("/base_export/export/get_fields", {"model": this.dataset.model, "params": params}, this.on_show_data);
+
         $("#import_compat").change(function(){
 		    $("#fields_list option").remove();
-		    $("tr[id^='treerow-']").remove();
+		    $("#field-tree-structure").remove();
 		    import_comp = $("#import_compat option:selected").val();
 		    if(import_comp){
 		        var params = {"import_compat":parseInt(import_comp), "views_id": this.views_id}
@@ -170,7 +172,7 @@ openerp.base_export.Export = openerp.base.Dialog.extend({
                     }
                 });
                 if (is_loaded == 0) {
-                    if ($("tr[id='treerow-" + self.field_id +"']").find('img').attr('src') == '/base/static/src/img/expand.gif') {
+                    if ($("tr[id='treerow-" + self.field_id +"']").find('img').attr('src') == '/base_export/static/src/img/expand.gif') {
                         if (model){
                             import_comp = $("#import_compat option:selected").val()
                             var params = {"import_compat":parseInt(import_comp), "views_id": this.views_id, "parent_field_type" : record['field_type']}
@@ -193,8 +195,8 @@ openerp.base_export.Export = openerp.base.Dialog.extend({
         var self = this;
         var current_tr = $("tr[id='treerow-" + self.field_id + "']");
         if (current_tr.length >= 1){
-            current_tr.find('img').attr('src','/base/static/src/img/collapse.gif');
-            current_tr.after(QWeb.render('ExportTreeView-Secondary', {'fields': result}));
+            current_tr.find('img').attr('src','/base_export/static/src/img/collapse.gif');
+            current_tr.after(QWeb.render('ExportTreeView-Secondary.children', {'fields': result}));
         }
         else{
             $('#left_field_panel').append(QWeb.render('ExportTreeView-Secondary',  {'fields': result}));
@@ -215,7 +217,7 @@ openerp.base_export.Export = openerp.base.Dialog.extend({
             arrow = {left: 37, up: 38, right: 39, down: 40 };
             switch (keyCode) {
                 case arrow.left:
-                    if( jQuery(this).find('img').attr('src') == '/base/static/src/img/collapse.gif'){
+                    if( jQuery(this).find('img').attr('src') == '/base_export/static/src/img/collapse.gif'){
                         self.on_click(this.id, result);
                     }
                 break;
@@ -227,7 +229,7 @@ openerp.base_export.Export = openerp.base.Dialog.extend({
                     $(elem).prev().find('a').focus();
                 break;
                 case arrow.right:
-                    if( jQuery(this).find('img').attr('src') == '/base/static/src/img/expand.gif'){
+                    if( jQuery(this).find('img').attr('src') == '/base_export/static/src/img/expand.gif'){
                         self.on_click(this.id, result);
                     }
                 break;
@@ -266,10 +268,10 @@ openerp.base_export.Export = openerp.base.Dialog.extend({
     showcontent: function (id, flag) {
         var first_child = $("tr[id='treerow-" + id + "']").find('img')
         if (flag) {
-            first_child.attr('src', '/base/static/src/img/expand.gif');
+            first_child.attr('src', '/base_export/static/src/img/expand.gif');
         }
         else {
-            first_child.attr('src', '/base/static/src/img/collapse.gif');
+            first_child.attr('src', '/base_export/static/src/img/collapse.gif');
         }
         var child_field = $("tr[id^='treerow-" + id +"/']")
         var child_len = (id.split("/")).length + 1
@@ -279,8 +281,8 @@ openerp.base_export.Export = openerp.base.Dialog.extend({
             }
             else {
                 if(child_len ==  (child_field[i].id.split("/")).length){
-                    if( jQuery(child_field[i]).find('img').attr('src') == '/base/static/src/img/collapse.gif'){
-                        jQuery(child_field[i]).find('img').attr('src', '/base/static/src/img/expand.gif')
+                    if( jQuery(child_field[i]).find('img').attr('src') == '/base_export/static/src/img/collapse.gif'){
+                        jQuery(child_field[i]).find('img').attr('src', '/base_export/static/src/img/expand.gif')
                     }
                     $(child_field[i]).show();
                 }

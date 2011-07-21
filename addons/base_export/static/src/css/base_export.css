@@ -1,34 +1,27 @@
-.row {
+.row tr{
     background-color: #FFFFFF;
+    font-size: 0.9em;
+    height: 22px;
 }
 
-.row:hover {
+.row:hover{
     background-color: #F3F3F3;
-    color : #4F4F4F;
+    color : blue;
 }
 
-.row.selected{
-    background-color: #E0E0E0;
-
-}
 .fields-selector-export {
     width: 100%;
     height: 400px;
-}
-
-.fields-selector-import {
-    width: 100%;
-    height: 300px;
 }
 
 .fields-selector-left {
     width: 45%;
 }
 
-td.fields-selector-left div#fields_left {
+div#left_field_panel {
     overflow: scroll;
     width: 100%;
-    height: 100%;
+    height: 400px;
     border: solid #999999 1px;
 }
 
@@ -36,30 +29,44 @@ td.fields-selector-left div#fields_left {
     width: 15%;
 }
 
-.fields-selector-center td {
-    padding: 2px 3px;
-}
-
-.fields-selector-center a.button-a {
-    float: none;
-}
-
 .fields-selector-right {
     width: 45%;
+    height: 400px;
 }
 
-.fields-selector-export select,
-.fields-selector-import select {
+.fields-selector-export select{
     width: 100%;
     height: 100%;
 }
 
-.fields-selector-export button,
-.fields-selector-import button {
-    width: 100%;
-    margin: 5px 0;
+.tree_header{
+    border: 0.5px solid #E3E3E3;
+    text-align: left;
+    white-space: nowrap;
+    padding: 4px 5px;
+    background: url(/base_export/static/src/img/header.gif);
 }
 
-td.side_spacing {
-     padding: 5px 5px 0px;
+
+table.tree-grid{
+    border: 1px solid #E3E3E3;
+    text-align: left;
+    white-space: nowrap;
+    background-color:#E3E3E3;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+table.tree-grid a:hover {
+    color: blue;
+    border: none;
+}
+
+table.tree-grid a {
+    color: #5F5C5C;
+    border: none;
+}
+
+.button {
+	border: 1px solid #006;
 }
