@@ -246,34 +246,61 @@
         </t>
     </select>
 </t>
-<t t-name="TreeView_Header">
-    <tr>
-        <td align="left" style="padding-left:15px;"><span><b>Name</b></span>
-        </td>
-        <td align="center" style="padding-left:10px;"><span><b>Category Type</b></span>
-        </td>
-        <td align="center" style="padding-left:30px;"><span><b>Sequence</b></span>
-        </td>
-    </tr>
-</t>
 <t t-name="TreeView_Secondry">
-    <t t-foreach="child_data" t-as="field" >
-        <tr t-att-id="'treerow_' + field.id">
-            <td valign="top" align="left" style="cursor: pointer;">
-                <t t-if="(field.child_id).length >= 1">
-                    <img t-att-id="'parentimg_' + field.id" src="/base/static/src/img/expand.gif" width="16" height="16" border="0"/>
-                </t>
-                <span>
-                    <t t-esc="field.name"/>
-                </span>
-            </td>
-            <td valign="top" align="right">
-                <t t-esc="field.type" />
-            </td>
-            <td valign="top" align="right">
-                <t t-esc="field.sequence" />
-            </td>
-        </tr>
+    <t t-if="flag==1">
+        <table>
+            <thead>
+                <tr>
+                    <t t-foreach="fields_view" t-as="fieldsview">
+                        <t t-foreach="fields" t-as="field">
+                            <t t-if="fieldsview['attrs'].name==field">
+                                <td class="treeview-header"><t t-esc="fields[field].string" /></td>
+                            </t>
+                        </t>
+                    </t>
+                </tr>
+            </thead>
+            <t t-foreach="child_data" t-as="field" >
+                <tr t-att-id="'treerow_' + field.id">
+                    <td class="treeview-tr">
+                        <t t-if="(field.child_id).length >= 1">
+                            <img t-att-id="'parentimg_' + field.id" src="/base/static/src/img/expand.gif" width="16" height="16" border="0"/>
+                        </t>
+                        <span>
+                            <t t-esc="field.name"/>
+                        </span>
+                    </td>
+                    <td class="treeview-td">
+                        <t t-esc="field.type" />
+                    </td>
+                    <td class="treeview-td">
+                        <t t-esc="field.sequence" />
+                    </td>
+                </tr>
+            </t>
+        </table>
+    </t>
+    <t t-if="flag==0">
+        <t t-if="child_data">
+            <t t-foreach="child_data" t-as="field" >
+                <tr t-att-id="'treerow_' + field.id">
+                    <td class="treeview-tr">
+                        <t t-if="(field.child_id).length >= 1">
+                            <img t-att-id="'parentimg_' + field.id" src="/base/static/src/img/expand.gif" width="16" height="16" border="0"/>
+                        </t>
+                        <span>
+                            <t t-esc="field.name"/>
+                        </span>
+                    </td>
+                    <td class="treeview-td">
+                        <t t-esc="field.type" />
+                    </td>
+                    <td class="treeview-td">
+                        <t t-esc="field.sequence" />
+                    </td>
+                </tr>
+            </t>
+        </t>
     </t>
 </t>
 <table t-name="ListView">
