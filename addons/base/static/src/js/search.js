@@ -593,32 +593,40 @@ openerp.base.search.BooleanField = openerp.base.search.Field.extend({
         }
     }
 });
-openerp.base.search.IntegerField = openerp.base.search.Field.extend({
+openerp.base.search.NumberField = openerp.base.search.Field.extend(/** @lends openerp.base.search.NumberField# */{
     get_value: function () {
         if (!this.$element.val()) {
             return null;
         }
-        var val = parseInt(this.$element.val());
-        var check = Number(this.$element.val());
-        if (isNaN(check) || val !== check) {
+        var val = this.parse(this.$element.val()),
+          check = Number(this.$element.val());
+        if (isNaN(val) || val !== check) {
             this.$element.addClass('error');
             throw new openerp.base.search.Invalid(
-                this.attrs.name, this.$element.val(), "not a valid integer");
+                this.attrs.name, this.$element.val(), this.error_message);
         }
         this.$element.removeClass('error');
         return val;
     }
 });
-openerp.base.search.FloatField = openerp.base.search.Field.extend({
-    get_value: function () {
-        var val = Number(this.$element.val());
-        if (isNaN(val)) {
-            this.$element.addClass('error');
-            throw new openerp.base.search.Invalid(
-                this.attrs.name, this.$element.val(), "not a valid number");
-        }
-        this.$element.removeClass('error');
-        return val;
+/**
+ * @class
+ * @extends openerp.base.search.NumberField
+ */
+openerp.base.search.IntegerField = openerp.base.search.NumberField.extend(/** @lends openerp.base.search.IntegerField# */{
+    error_message: "not a valid integer",
+    parse: function (value) {
+        return parseInt(value, 10);
+    }
+});
+/**
+ * @class
+ * @extends openerp.base.search.NumberField
+ */
+openerp.base.search.FloatField = openerp.base.search.NumberField.extend(/** @lends openerp.base.search.FloatField# */{
+    error_message: "not a valid number",
+    parse: function (value) {
+        return parseFloat(value);
     }
 });
 openerp.base.search.SelectionField = openerp.base.search.Field.extend({

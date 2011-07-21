@@ -268,8 +268,10 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
 });
 
 openerp.base.NullViewManager = openerp.base.generate_null_object_class(openerp.base.ViewManager, {
-    init: function() {
-        this._super();
+    init: function(parent) {
+        this._super(parent);
+        if(parent)
+            this.session = parent.session;
         this.action = {flags: {}};
         this.sidebar = new openerp.base.NullSidebar();
     }

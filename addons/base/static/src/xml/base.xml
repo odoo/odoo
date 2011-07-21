@@ -143,8 +143,8 @@
         <div class="company_logo" />
     </a>
     <h1 class="header_title" t-if="session.session_is_valid()">
-        <span class="company">$company</span> - (<span class="database">$database</span>)<br/>
-        <small class="username">$username session_id: <t t-esc="session.session_id"/></small>
+        <span class="database"><t t-esc="session.db"/></span> - <t t-esc="session.login"/> <br/>
+        <small class="username">rpc_session_id: <t t-esc="session.session_id"/></small>
     </h1>
     <div class="header_corner">
         <ul class="block" t-if="session.session_is_valid()">
@@ -521,7 +521,7 @@
             <img src="/base/static/src/img/icons/gtk-index.png"/></span>
         <div t-att-id="widget.cm_id" class="contextMenu" style="display:none"><ul>
             <li t-att-id="widget.cm_id + '_open'" style="color:grey">Open...</li>
-            <li t-att-id="widget.cm_id + '_create'">Create and Edit...</li>
+            <li t-att-id="widget.cm_id + '_create'">Create...</li>
             <li t-att-id="widget.cm_id + '_search'">Search...</li>
         </ul></div>
     </div>
