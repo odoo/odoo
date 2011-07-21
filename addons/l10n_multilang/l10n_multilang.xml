@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+  <data>
+    <record id="multi_chart_configuration" model="ir.actions.todo">
+        <field name="action_id" ref="account.action_wizard_multi_chart"/>
+        <field name="sequence">25</field>
+        <field name="restart">onskip</field>
+    </record>
+    <!--  Wizard for Multi Charts of Accounts -->
+    <record id="view_wizard_multi_chart_belgian_coa" model="ir.ui.view">
+      <field name="name">view.wizard.multi.chart</field>
+      <field name="model">wizard.multi.charts.accounts</field>
+      <field name="inherit_id" ref="account.view_wizard_multi_chart"/>
+      <field name="arch" type="xml">
+        <data>
+          <field name="bank_accounts_id" position="before">
+            <field name="bank_from_template" />
+          </field>
+          <field name="bank_accounts_id" position="before">
+            <separator string="Languages" colspan="4"/>
+            <field name="lang_ids" colspan="4" nolabel="1"/>
+          </field>
+          <field name="bank_accounts_id" position="attributes">
+            <attribute name="attrs">{'invisible': [('bank_from_template', '=', False)]}</attribute>
+          </field>
+        </data>
+      </field>
+    </record>
+
+ 
+  </data>
+</openerp>

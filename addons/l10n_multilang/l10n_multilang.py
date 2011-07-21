@@ -19,6 +19,26 @@
 #
 ##############################################################################
 
-import account
-import l10n_multilang
+
+from osv import fields, osv
+
+
+class wizard_multi_charts_accounts(osv.osv_memory):
+    """
+    Change wizard that a new account chart for a company.
+        * load Default languages
+        * Replace creation of financial accounts by copy from template.
+          This change results in adherence to Belgian MAR numbering scheme for cash accounts.
+        * Create financial journals for each account of type liquidity
+    """
+    _inherit = 'wizard.multi.charts.accounts'
+
+    _columns = {
+        'lang_ids': fields.many2many('res.lang', 'res_lang_type_rel', 'wizard_id', 'lang_id', 'Language'),
+        'bank_from_template': fields.boolean('Banks/Cash from Template', 
+            help="If True then Generate Bank/Cash accounts and journals from the Templates.", readonly=True),
+    }
+  
+wizard_multi_charts_accounts()
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
