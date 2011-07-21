@@ -120,6 +120,15 @@ class res_partner_bank(osv.osv):
             return _('The IBAN does not seem to be correct. You should have entered something like this %s'), (iban_example)
         return _('The IBAN is invalid, It should begin with the country code'), ()
 
+    def _check_bank(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        banks = self.browse(cr, uid, ids, context=context)
+        for bank in banks:
+            if bank.state == 'iban' and not bank.bank.bic:
+                return False
+        return True
+
     def name_get(self, cr, uid, ids, context=None):
         res = []
         to_check_ids = []
@@ -172,8 +181,7 @@ class res_partner_bank(osv.osv):
     _columns = {
         'iban': fields.char('IBAN', size=34, readonly=True, help="International Bank Account Number"),
     }
-
-    _constraints = [(check_iban, _construct_constraint_msg, ["iban"])]
+    _constraints = [(check_iban, _construct_constraint_msg, ["iban"]), (_check_bank, '\nPlease define BIC/Swift code on bank for bank type IBAN Account to make valid payments', ['BIC/Swift code'])]
 
 res_partner_bank()
 
