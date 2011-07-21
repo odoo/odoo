@@ -793,7 +793,7 @@ class procurement_order(osv.osv):
             price = pricelist_obj.price_get(cr, uid, [pricelist_id], procurement.product_id.id, qty, partner_id, {'uom': uom_id})[pricelist_id]
 
             order_date = datetime.strptime(procurement.date_planned, '%Y-%m-%d %H:%M:%S')
-            order_date = (order_date - relativedelta(days=company.po_lead)) - relativedelta(days=seller_delay)
+            order_dates = (order_date - relativedelta(days=company.po_lead)) - relativedelta(days=seller_delay)
             schedule_date = (order_date - relativedelta(days=company.po_lead))
 
             #Passing partner_id to context for purchase order line integrity of Line name
@@ -823,7 +823,7 @@ class procurement_order(osv.osv):
                 'partner_address_id': address_id,
                 'location_id': procurement.location_id.id,
                 'pricelist_id': pricelist_id,
-                'date_order': order_date.strftime('%Y-%m-%d %H:%M:%S'),
+                'date_order': order_dates.strftime('%Y-%m-%d %H:%M:%S'),
                 'order_line': [(0,0,line)],
                 'company_id': procurement.company_id.id,
                 'fiscal_position': partner.property_account_position and partner.property_account_position.id or False
