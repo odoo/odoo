@@ -1,7 +1,7 @@
 <template>
 
     <t t-name="ExportView">
-        <button id="exportview">Export</button>
+        <a id="exportview" href="javascript: void(0)" style="text-decoration: none;color: #3D3D3D;">Export</a>
     </t>
 
     <t t-name="ExportTreeView">
@@ -45,21 +45,21 @@
                                 <div id="left_field_panel">
                                 </div>
                             </td>
-                            <td class="fields-selector-center">
-                                <table>
+                            <td>
+                                <table class="fields-selector-center">
                                     <tr>
                                         <td align="center">
-                                            <button id="add_field" class="button">Add </button>
+                                            <button id="add_field" class="button-export">Add</button>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td align="center">
-                                            <button id="remove_field" class="button">Remove </button>
+                                            <button id="remove_field" class="button-export">Remove</button>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td align="center">
-                                            <button id="remove_all_field" class="button">Remove All </button>
+                                            <button id="remove_all_field" class="button-export">Remove All</button>
                                         </td>
                                     </tr>
                                 </table>

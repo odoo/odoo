@@ -20,7 +20,7 @@ openerp.base_export.Export = openerp.base.Dialog.extend({
         self.dialog_title = "Export Data "
         self.open({
                     modal: true,
-                    width: '50%',
+                    width: '55%',
                     height: 'auto',
                     position: 'top',
                     buttons : {
