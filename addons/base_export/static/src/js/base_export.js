@@ -7,7 +7,6 @@ openerp.base_export.Export = openerp.base.Dialog.extend({
         this._super(parent);
         this.dataset = dataset
         this.views = views
-        this.selected_fields = {};
         this.views_id = {};
         for (var key in this.views) {
             this.views_id[key] = this.views[key].view_id
@@ -37,8 +36,14 @@ openerp.base_export.Export = openerp.base.Dialog.extend({
         this.on_show_exists_export_list();
         jQuery(this.$dialog).removeClass('ui-dialog-content ui-widget-content');
         $('#add_field').click(function(){
-            for (var key in self.selected_fields) {
-                self.add_field(key, self.selected_fields[key])
+            if($("#field-tree-structure tr.ui-selected")){
+                var fld = $("#field-tree-structure tr.ui-selected").find('a');
+                for (var i=0;i<fld.length; i++){
+                    var id = $(fld[i]).attr('id').split("-")[1];
+                    var string = $(fld[i]).attr('string');
+                    self.add_field(id,string);
+                }
+                $("#field-tree-structure tr").removeClass("ui-selected");
             }
         });
         $('#remove_field').click(function(){
@@ -55,14 +60,14 @@ openerp.base_export.Export = openerp.base.Dialog.extend({
         this.rpc("/base_export/export/get_fields", {"model": this.dataset.model, "params": params}, this.on_show_data);
 
         $("#import_compat").change(function(){
-		    $("#fields_list option").remove();
-		    $("#field-tree-structure").remove();
-		    import_comp = $("#import_compat option:selected").val();
-		    if(import_comp){
-		        var params = {"import_compat":parseInt(import_comp), "views_id": this.views_id}
-		        self.rpc("/base_export/export/get_fields", {"model": self.dataset.model, "params": params}, self.on_show_data);
-		    }
-		});
+            $("#fields_list option").remove();
+            $("#field-tree-structure").remove();
+            import_comp = $("#import_compat option:selected").val();
+            if(import_comp){
+                var params = {"import_compat":parseInt(import_comp), "views_id": this.views_id}
+                self.rpc("/base_export/export/get_fields", {"model": self.dataset.model, "params": params}, self.on_show_data);
+            }
+        });
     },
 
     on_show_exists_export_list: function(){
@@ -201,51 +206,74 @@ openerp.base_export.Export = openerp.base.Dialog.extend({
         else{
             $('#left_field_panel').append(QWeb.render('ExportTreeView-Secondary',  {'fields': result}));
         }
-        $('img[id ^= parentimg]').click(function(){
-            var elem_id = this.id.split("-")[1];
-            $($.find("tr[id='treerow-" + elem_id + "']")).find('a').focus();
-            self.on_click(this.id, result);
+        _.each(result, function(record) {
+            $("img[id ^='parentimg-" + record.id +"']").click(function(){
+                self.on_click(this.id, result);
+            });
+
+            $("tr[id^='treerow-" + record.id + "']").click(function(e){
+                var selected = $("tr.ui-selected");
+                if ($(this).hasClass("ui-selected") && (e.ctrlKey == true)){
+                    $(this).find('a').blur();
+                    $(this).removeClass("ui-selected");
+                }else if($(this).hasClass("ui-selected") && (e.ctrlKey == false)){
+                    selected.find('a').blur();
+                    selected.removeClass("ui-selected");
+                    $(this).find('a').focus();
+                    $(this).addClass("ui-selected");
+                }else if(!$(this).hasClass("ui-selected") && (e.ctrlKey == false)){
+                    selected.find('a').blur();
+                    selected.removeClass("ui-selected");
+                    $(this).find('a').focus();
+                    $(this).addClass("ui-selected");
+                }else if(!$(this).hasClass("ui-selected") && (e.ctrlKey == true)){
+                    $(this).find('a').focus();
+                    $(this).addClass("ui-selected");
+                }
+            });
+
+            $("tr[id^='treerow-" + record.id + "']").keydown(function (e) {
+                var keyCode = e.keyCode || e.which;
+                arrow = {left: 37, up: 38, right: 39, down: 40 };
+                switch (keyCode) {
+                    case arrow.left:
+                        if( jQuery(this).find('img').attr('src') == '/base_export/static/src/img/collapse.gif'){
+                            self.on_click(this.id, result);
+                        }
+                    break;
+                    case arrow.up:
+                        var elem = this;
+                        $(elem).removeClass("ui-selected");
+                        while($(elem).prev().is(":visible") == false){
+                            elem = $(elem).prev();
+                        }
+                        $(elem).prev().addClass("ui-selected");
+                        $(elem).prev().find('a').focus();
+                    break;
+                    case arrow.right:
+                        if( jQuery(this).find('img').attr('src') == '/base_export/static/src/img/expand.gif'){
+                            self.on_click(this.id, result);
+                        }
+                    break;
+                    case arrow.down:
+                        var elem = this;
+                        $(elem).removeClass("ui-selected");
+                        while($(elem).next().is(":visible") == false){
+                            elem = $(elem).next();
+                        }
+                        $(elem).next().addClass("ui-selected");
+                        $(elem).next().find('a').focus();
+                    break;
+                }
+            });
         });
         $('[id^=export-]').dblclick(function(){
             self.add_field(this.id.split('-')[1], this.text)
         });
-        $('[id^=export-]').click(function(){
-            self.on_field_click(this);
-        });
-        $("tr[id^='treerow-']").keydown(function (e) {
-            var keyCode = e.keyCode || e.which;
-            arrow = {left: 37, up: 38, right: 39, down: 40 };
-            switch (keyCode) {
-                case arrow.left:
-                    if( jQuery(this).find('img').attr('src') == '/base_export/static/src/img/collapse.gif'){
-                        self.on_click(this.id, result);
-                    }
-                break;
-                case arrow.up:
-                    var elem = this;
-                    while($(elem).prev().is(":visible") == false){
-                        elem = $(elem).prev();
-                    }
-                    $(elem).prev().find('a').focus();
-                break;
-                case arrow.right:
-                    if( jQuery(this).find('img').attr('src') == '/base_export/static/src/img/expand.gif'){
-                        self.on_click(this.id, result);
-                    }
-                break;
-                case arrow.down:
-                    var elem = this;
-                    while($(elem).next().is(":visible") == false){
-                        elem = $(elem).next();
-                    }
-                    $(elem).next().find('a').focus();
-                break;
-            }
-        });
 
         $('#fields_list').mouseover(function(event){
             if(event.relatedTarget){
-                if ('id' in event.relatedTarget.attributes && 'string' in event.relatedTarget.attributes){
+                if (event.relatedTarget.attributes['id'] && event.relatedTarget.attributes['string']){
                     field_id = event.relatedTarget.attributes["id"]["value"]
                     if (field_id && field_id.split("-")[0] == 'export'){
                         self.add_field(field_id.split("-")[1], event.relatedTarget.attributes["string"]["value"]);
@@ -253,15 +281,6 @@ openerp.base_export.Export = openerp.base.Dialog.extend({
                 }
             }
         });
-    },
-
-    on_field_click: function(ids){
-        var self = this;
-        field_id = ids.id.split("-")[1];
-        self.selected_fields = {};
-        if (!(field_id in self.selected_fields)){
-            self.selected_fields[field_id] = ids.text;
-        }
     },
 
     // show & hide the contents
