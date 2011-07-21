@@ -28,7 +28,10 @@ from tools.translate import _
 
 class project_project(osv.osv):
     _inherit = 'project.project'
-    
+    def onchange_partner_id(self, cr, uid, ids, part=False, context=None):
+        obj = self.pool.get('hr_timesheet_invoice.factor')
+        factor_ids = obj.search(cr, uid, [('customer_name','=','100%')])
+        return super(project_project, self).onchange_partner_id(cr, uid, ids, part, factor_ids, context=context)
 project_project()
 
 class project_work(osv.osv):
