@@ -532,7 +532,10 @@ class hr_payslip(osv.osv):
                 if line.analytic_account_id:
                     rec['analytic_account_id'] = line.analytic_account_id.id
                 else:
-                    rec['analytic_account_id'] = slip.deg_id.account_id.id
+                    if not slip.deg_id:
+                        raise osv.except_osv(_('Configuration Error !'), _("Payslip cannot be approved due to one of the following reasons: \n 1. The Structure line %s has not been linked with an analytic account. \n Or \n 2. Payslip for %s is missing the configuration of Designation from 'Accounting Details") % (line.name, slip.employee_id.name))
+                    else:
+                        rec['analytic_account_id'] = slip.deg_id.account_id.id
 
                 if line.type == 'allowance' or line.type == 'otherpay':
                     rec['debit'] = amount
