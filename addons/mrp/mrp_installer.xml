@@ -2,55 +2,22 @@
   <data>
     <record id="view_mrp_installer" model="ir.ui.view">
       <field name="name">mrp.installer.view</field>
-      <field name="model">mrp.installer</field>
+      <field name="model">base.setup.installer</field>
       <field name="type">form</field>
-      <field name="inherit_id" ref="base.res_config_installer"/>
+      <field name="inherit_id" ref="base_setup.view_base_setup_installer"/>
       <field name="arch" type="xml">
         <data>
-          <form position="attributes">
-            <attribute name="string">MRP Application Configuration</attribute>
-          </form>
-
-          <separator string="title" position="attributes">
-            <attribute name="string">Configure Your Manufacturing Resource Planning Application</attribute>
-          </separator>
-          <xpath expr="//label[@string='description']"
-                 position="attributes">
-            <attribute name="string">Add more functionalities to the core Manufacturing Application with the following addons.</attribute>
+          <xpath expr="//group[@name='mrp']" position="replace">
+            <newline/>
+            <separator  string="Manufacturing Features" colspan="4" />
+            <field name="stock_location" />
+            <field name="mrp_jit" />
+            <field name="mrp_operations" />
+            <field name="mrp_subproduct" />
+            <field name="mrp_repair" />            
           </xpath>
-          <xpath expr='//separator[@string="vsep"]' position='attributes'>
-                  <attribute name='string'></attribute>
-            </xpath>
-            <xpath expr="//button[@string='Install Modules']" position="attributes">
-                   <attribute name="string">Configure</attribute>
-          </xpath>
-          <group colspan="8">
-            <field name="stock_location"/>
-            <field name="mrp_jit"/>
-            <field name="mrp_operations"/>
-            <field name="mrp_subproduct"/>
-            <field name="mrp_repair"/>
-          </group>
         </data>
       </field>
     </record>
-
-    <record id="action_mrp_installer" model="ir.actions.act_window">
-      <field name="name">MRP Applications Configuration</field>
-      <field name="type">ir.actions.act_window</field>
-      <field name="res_model">mrp.installer</field>
-      <field name="view_id" ref="view_mrp_installer"/>
-      <field name="view_type">form</field>
-      <field name="view_mode">form</field>
-      <field name="target">new</field>
-    </record>
-
-    <record id="mrp_installer_todo" model="ir.actions.todo">
-      <field name="action_id" ref="action_mrp_installer"/>
-      <field name="sequence">3</field>
-        <field name="restart">always</field>
-      <field name="groups_id" eval="[(6,0,[ref('base.group_extended')])]"/>
-    </record>
-
   </data>
 </openerp>

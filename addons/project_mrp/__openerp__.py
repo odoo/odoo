@@ -21,29 +21,31 @@
 
 
 {
-    'name': 'Procurement and Project Management integration',
+    'name': 'Automatic task creation from procurement lines',
     'version': '1.0',
     'category': 'Project Management',
+    'complexity': "easy",
     'description': """
-This module creates a link between procurement orders containing "service" lines and project management tasks.
-==============================================================================================================
+Automatically creates project tasks from procurement lines
+==========================================================
 
-When installed, this module will automatically create a new task
-for each procurement order line, when the corresponding product
+This module will automatically create a new task for each procurement
+order line (e.g. for sale order lines), if the corresponding product
 meets the following characteristics:
 
   * Type = Service
   * Procurement method (Order fulfillment) = MTO (make to order)
   * Supply/Procurement method = Produce
 
-The new task is created outside of any existing project, but
-can be added to a project manually.
+If on top of that a projet is specified on the product form (in the Procurement
+tab), then the new task will be created in that specific project.
+Otherwise, the new task will not belong to any project, and may be added to a
+project manually later.
 
 When the project task is completed or cancelled, the workflow of the corresponding
-procurement line is updated accordingly.
-
-This module is useful to be able to invoice services based on tasks
-automatically created via sale orders.
+procurement line is updated accordingly. For example if this procurement corresponds
+to a sale order line, the sale order line will be considered delivered when the
+task is completed.
 
 """,
     'author': 'OpenERP SA',

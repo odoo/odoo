@@ -21,8 +21,7 @@
 from osv import fields, osv
 
 class knowledge_installer(osv.osv_memory):
-    _name = 'knowledge.installer'
-    _inherit = 'res.config.installer'
+    _inherit = 'base.setup.installer'
 
     _columns = {
         # Knowledge Management
@@ -39,11 +38,11 @@ class knowledge_installer(osv.osv_memory):
                  "to keep track of business knowledge and share it with "
                  "and  between your employees."),
         # Content templates
-        'wiki_faq':fields.boolean('Internal FAQ',
+        'wiki_faq':fields.boolean('Template: Internal FAQ',
             help="Creates a skeleton internal FAQ pre-filled with "
                  "documentation about OpenERP's Document Management "
                  "System."),
-        'wiki_quality_manual':fields.boolean('Quality Manual',
+        'wiki_quality_manual':fields.boolean('Template: Quality Manual',
             help="Creates an example skeleton for a standard quality manual."),
         }
     _defaults = {

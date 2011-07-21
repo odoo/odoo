@@ -23,6 +23,7 @@
     'version': '1.0',
     'category': 'Tools',
     'category': 'Generic Modules/Base',
+    'complexity': "easy",
     'description': """
 Enable VAT Number for a partner and check its validity.
 =======================================================

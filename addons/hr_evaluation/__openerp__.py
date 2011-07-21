@@ -24,6 +24,7 @@
     "version": "0.1",
     "author": "OpenERP SA",
     "category": "Human Resources",
+    'complexity': "easy",
     "website": "http://www.openerp.com",
     "images": ["images/hr_evaluation_analysis.jpeg","images/hr_evaluation.jpeg"],
     "depends": ["hr",'hr_recruitment','survey'],
@@ -48,7 +49,7 @@ in the form of pdf file. Implements a dashboard for My Current Evaluations
         "hr_evaluation_view.xml",
         "report/hr_evaluation_report_view.xml",
         "board_hr_evaluation_view.xml",
-        "hr_evaluation_data.xml"
+        'hr_evaluation_installer_view.xml'
         ],
     "test": ["test/test_hr_evaluation.yml"],
     "active": False,

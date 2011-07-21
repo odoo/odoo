@@ -62,7 +62,7 @@ class campaign_analysis(osv.osv):
         'partner_id': fields.many2one('res.partner', 'Partner', readonly=True),
         'country_id': fields.related('partner_id','address', 'country_id',
                     type='many2one', relation='res.country',string='Country'),
-        'total_cost' : fields.function(_total_cost, string='Cost', method=True,
+        'total_cost' : fields.function(_total_cost, string='Cost',
                                     type="float", digits_compute=dp.get_precision('Purchase Price')),
         'revenue': fields.float('Revenue', readonly=True, digits_compute=dp.get_precision('Sale Price')),
         'count' : fields.integer('# of Actions', readonly=True),

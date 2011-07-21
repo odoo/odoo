@@ -25,19 +25,37 @@
     "maintainer" : "OpenERP SA",
     "website" : "http://www.openerp.com",
     "category" : "Tools",
+    'complexity': "easy",
     "description": """
-This module replaces the cleartext password in the database with a password hash.
-=================================================================================
+Replaces cleartext passwords in the database with a secure hash
+===============================================================
+For your existing user base, the removal of the cleartext
+passwords occurs the first time a user logs into the database,
+after installing base_crypt.
 
-It prevents anyone from reading the original password.
-For your existing user base, the removal of the cleartext passwords occurs the first time
-a user logs into the database, after installing base_crypt.
-After installing this module it won't be possible to recover a forgotten password for your
-users, the only solution is for an admin to set a new password.
+All passwords will be replaced by a secure, salted, cryptographic
+hash, preventing anyone from reading the original password in
+the database.
 
-Note: installing this module does not mean you can ignore basic security measures,
-as the password is still transmitted unencrypted on the network (by the client),
-unless you are using a secure protocol such as XML-RPCS.
+After installing this module it won't be possible to recover a
+forgotten password for your users, the only solution is for an
+admin to set a new password.
+
+Security Warning
+++++++++++++++++
+Installing this module does not mean you can ignore other security measures,
+as the password is still transmitted unencrypted on the network, unless you
+are using a secure protocol such as XML-RPCS.
+It also does not protect the rest of the content of the database, which may
+contain critical data. Appropriate security measures need to be implemented
+by the system administrator in all areas, such as: protection of database
+backups, system files, remote shell access, physical server access, etc.
+
+Interation with LDAP authentication
++++++++++++++++++++++++++++++++++++
+This module is currently not compatible with the ``user_ldap`` module and
+will disable LDAP authentication completely if installed at the same time.
+
                     """,
     "depends" : ["base"],
     "data" : [],

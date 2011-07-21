@@ -118,7 +118,6 @@ class account_installer(osv.osv_memory):
     def execute(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
-        super(account_installer, self).execute(cr, uid, ids, context=context)
         fy_obj = self.pool.get('account.fiscalyear')
         mod_obj = self.pool.get('ir.model.data')
         obj_acc_temp = self.pool.get('account.account.template')
@@ -226,6 +225,7 @@ class account_installer(osv.osv_memory):
                         fy_obj.create_period(cr, uid, [fiscal_id])
                     elif res['period'] == '3months':
                         fy_obj.create_period3(cr, uid, [fiscal_id])
+        super(account_installer, self).execute(cr, uid, ids, context=context)
 
     def modules_to_install(self, cr, uid, ids, context=None):
         modules = super(account_installer, self).modules_to_install(
@@ -240,8 +240,7 @@ class account_installer(osv.osv_memory):
 account_installer()
 
 class account_installer_modules(osv.osv_memory):
-    _name = 'account.installer.modules'
-    _inherit = 'res.config.installer'
+    _inherit = 'base.setup.installer'
     _columns = {
         'account_analytic_plans': fields.boolean('Multiple Analytic Plans',
             help="Allows invoice lines to impact multiple analytic accounts "
@@ -253,16 +252,11 @@ class account_installer_modules(osv.osv_memory):
             help="Helps you generate reminder letters for unpaid invoices, "
                  "including multiple levels of reminding and customized "
                  "per-partner policies."),
-        'account_voucher': fields.boolean('Voucher Management',
-            help="Account Voucher module includes all the basic requirements of "
-                 "Voucher Entries for Bank, Cash, Sales, Purchase, Expenses, Contra, etc... "),
         'account_anglo_saxon': fields.boolean('Anglo-Saxon Accounting',
             help="This module will support the Anglo-Saxons accounting methodology by "
                 "changing the accounting logic with stock transactions."),
-    }
-
-    _defaults = {
-        'account_voucher': True,
+        'account_asset': fields.boolean('Assets Management',
+            help="Helps you to manage your assets and their depreciation entries."),
     }
 
 account_installer_modules()

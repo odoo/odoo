@@ -19,8 +19,10 @@
                    <field name="name"/>
                    <field name="categ_id" widget="selection" operator="child_of" groups="base.group_extended"/>
                    <newline/>
-                   <group expand="0" string="Extended Filters..." groups="base.group_extended">
+                   <group expand="0" string="Context..." groups="base.group_extended">
                        <field name="pricelist_id" widget="selection" context="{'pricelist': self}" />
+                       <separator orientation="vertical" groups="base.group_multi_company" />
+                       <field name="company_id" widget="selection" groups="base.group_multi_company" />
                    </group>
                    <newline/>
                    <group  expand='0' string='Group by...' groups="base.group_extended">
@@ -29,6 +31,8 @@
                        <filter string='Default UOM' icon="terp-mrp" domain="[]" context="{'group_by' : 'uom_id'}" />
                        <separator orientation="vertical"/>
                        <filter string='Type' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'type'}" />
+                       <separator orientation="vertical" groups="base.group_multi_company"/>
+                       <filter string='Company' icon="terp-go-home" domain="[]" context="{'group_by' : 'company_id'}" groups="base.group_multi_company" />
                    </group>
 
                 </search>
@@ -54,6 +58,7 @@
                     <field name="price" invisible="not context.get('pricelist',False)"/>
                     <field name="standard_price"/>
                     <field name="state" groups="base.group_extended"/>
+                    <field name="company_id" groups="base.group_multi_company" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -290,8 +295,7 @@
             <field name="res_model">product.product</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="domain">[('categ_id','child_of',[active_id])]</field>
-            <field name="context">{'categ_id':active_id}</field>
+            <field name="context">{'categ_id':active_id, 'search_default_categ_id':active_id}</field>
         </record>
         <record id="ir_product_category_open" model="ir.values">
             <field eval="'tree_but_open'" name="key2"/>

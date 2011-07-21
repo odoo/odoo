@@ -31,7 +31,7 @@ class sale_report(osv.osv):
         'date': fields.date('Date Order', readonly=True),
         'date_confirm': fields.date('Date Confirm', readonly=True),
         'shipped': fields.boolean('Shipped', readonly=True),
-        'shipped_qty_1': fields.integer('Shipped Qty', readonly=True),
+        'shipped_qty_1': fields.integer('Shipped', readonly=True),
         'year': fields.char('Year', size=4, readonly=True),
         'month': fields.selection([('01', 'January'), ('02', 'February'), ('03', 'March'), ('04', 'April'),
             ('05', 'May'), ('06', 'June'), ('07', 'July'), ('08', 'August'), ('09', 'September'),
