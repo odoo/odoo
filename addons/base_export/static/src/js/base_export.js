@@ -230,6 +230,7 @@ openerp.base_export.Export = openerp.base.Dialog.extend({
                     $(this).find('a').focus();
                     $(this).addClass("ui-selected");
                 }
+                return false;
             });
 
             $("tr[id^='treerow-" + record.id + "']").keydown(function (e) {
@@ -266,11 +267,13 @@ openerp.base_export.Export = openerp.base.Dialog.extend({
                     break;
                 }
             });
+	        $("tr[id^='treerow-" + record.id + "']").dblclick(function (e) {
+                var field_id =  $(this).find("a").attr("id");
+                if(field_id){
+	               self.add_field(field_id.split('-')[1], $(this).find("a").attr("string"))
+	            }
+	        });
         });
-        $('[id^=export-]').dblclick(function(){
-            self.add_field(this.id.split('-')[1], this.text)
-        });
-
         $('#fields_list').mouseover(function(event){
             if(event.relatedTarget){
                 if (event.relatedTarget.attributes['id'] && event.relatedTarget.attributes['string']){
