@@ -532,7 +532,7 @@ class purchase_order(osv.osv):
         new_orders = {}
 
         for porder in [order for order in self.browse(cr, uid, ids, context=context) if order.state == 'draft']:
-            date_orders = sorted([obj.date_order for obj in self.browse(cr, uid, ids, context=context)])
+            date_orders = min([obj.date_order for obj in self.browse(cr, uid, ids, context=context)])
             order_key = make_key(porder, ('partner_id', 'location_id', 'pricelist_id'))
             new_order = new_orders.setdefault(order_key, ({}, []))
             new_order[1].append(porder.id)
@@ -540,7 +540,7 @@ class purchase_order(osv.osv):
             if not order_infos:
                 order_infos.update({
                     'origin': porder.origin,
-                    'date_order': date_orders[0],
+                    'date_order': date_orders,
                     'partner_id': porder.partner_id.id,
                     'partner_address_id': porder.partner_address_id.id,
                     'dest_address_id': porder.dest_address_id.id,
