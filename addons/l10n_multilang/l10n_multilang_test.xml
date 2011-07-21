@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+  <data noupdate="0">
+
+        <!-- Account Types -->
+
+        <record model="account.account.type" id="account_type_receivable" >
+          <field name="name">Receivable</field>
+          <field name="code">receivable</field>
+          <field name="report_type">income</field>
+          <field name="close_method">unreconciled</field>
+        </record>
+
+        <record model="account.account.type" id="account_type_payable" >
+          <field name="name">Payable</field>
+          <field name="code">payable</field>
+          <field name="report_type">expense</field>
+          <field name="close_method">unreconciled</field>
+        </record>
+
+	    <record model="account.account.type" id="acct_type_asset_view">
+	        <field name="name">Asset View</field>
+	        <field name="code">asset</field>
+	        <field name="report_type">asset</field>
+	    </record>
+
+        <record model="account.account.type" id="account_type_view">
+          <field name="name">View</field>
+          <field name="code">view</field>
+          <field name="close_method">none</field>
+        </record>
+	    
+	    <record model="account.account.type" id="acct_type_liability_view">
+	        <field name="name">Liability View</field>
+	        <field name="code">liability</field>
+	        <field name="report_type">liability</field>
+	    </record>
+
+	    <record model="account.account.type" id="acct_type_asset_view">
+	        <field name="name">Asset View</field>
+	        <field name="code">asset</field>
+	        <field name="report_type">asset</field>
+	    </record>
+
+        <!-- Account Templates for A -->
+
+        <record model="account.account.template" id="chart_a_root">
+            <field name="name">Chart of Account A</field>
+            <field name="code">0</field>
+            <field name="type">view</field>
+            <field name="user_type" ref="account_type_view"/>
+            <field name="reconcile" eval="False"/>
+        </record>
+
+        <record model="account.account.template" id="chart_a0">
+            <field name="name">Balance Sheet</field>
+            <field name="code">A00</field>
+            <field name="type">view</field>
+            <field name="user_type" ref="account_type_view"/>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="chart_a_root"/>
+        </record>
+
+        <record model="account.account.template" id="chart_a1">
+            <field name="name">Profit and Loss</field>
+            <field name="code">A01</field>
+            <field name="type">view</field>
+            <field name="user_type" ref="account_type_view"/>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="chart_a_root"/>
+        </record>
+
+        <record id="chart_a2" model="account.account.template">
+            <field name="code">A0011</field>
+            <field name="name">Bank Account</field>
+            <field ref="chart_a0" name="parent_id"/>
+            <field name="type">view</field>
+            <field name="user_type" ref="account_type_view"/>
+        </record>
+
+        <!-- Tax Code template for A-->
+        <record id="atax0" model="account.tax.code.template">
+            <field name="name">Tax Template Root A</field>
+        </record>
+
+        <record id="atax1" model="account.tax.code.template">
+            <field name="name">Tax 001 A</field>
+            <field name="parent_id" ref="atax0"/>
+        </record>
+
+        <record id="atax2" model="account.tax.code.template">
+            <field name="name">Tax 002 A</field>
+            <field name="parent_id" ref="atax0"/>
+        </record>
+
+
+        <!-- Account Templates for B -->
+        <record model="account.account.template" id="chart_b1">
+            <field name="name">Assets B</field>
+            <field name="code">B00012</field>
+            <field name="type">view</field>
+            <field name="user_type" ref="acct_type_asset_view"/>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="chart_a0"/>
+        </record>
+
+        <record model="account.account.template" id="chart_b2">
+            <field name="name">Liabilities B</field>
+            <field name="code">B00014</field>
+            <field name="type">view</field>
+            <field name="user_type" ref="acct_type_liability_view"/>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="chart_a0"/>
+        </record>
+
+        <record model="account.account.template" id="chart_b3">
+            <field name="name">Income B</field>
+            <field name="code">B00021</field>
+            <field name="type">view</field>
+            <field name="user_type" ref="account_type_receivable"/>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="chart_a1"/>
+        </record>
+
+        <record model="account.account.template" id="chart_b4">
+            <field name="name">Expense B</field>
+            <field name="code">B00024</field>
+            <field name="type">view</field>
+            <field name="user_type" ref="account_type_payable"/>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="chart_a1"/>
+        </record>
+
+
+        <!-- Chart template -->
+        <record id="account_chart_template_a" model="account.chart.template">
+            <field name="name">Demo Chart A</field>
+            <field name="account_root_id" ref="chart_a_root"/>
+            <field name="tax_code_root_id" ref="atax0"/>
+            <field name="bank_account_view_id" ref="chart_a2"/>
+        </record>
+
+        <record id="account_chart_template_b" model="account.chart.template">
+            <field name="name">Demo Chart B</field>
+            <field name="account_root_id" ref="chart_a_root"/>
+            <field name="tax_code_root_id" ref="atax0"/>
+            <field name="bank_account_view_id" ref="chart_a2"/>
+            <field name="parent_id" ref="account_chart_template_a"/>
+        </record>
+
+  </data>
+</openerp>
+
