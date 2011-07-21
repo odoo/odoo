@@ -65,6 +65,7 @@ Dashboard for purchase management that includes:
              'purchase_unit_test.xml',
              'test/procurement_buy.yml',
              'test/purchase_report.yml',
+             'test/purchase_order_merge.yml'
     ],
     'demo': ['purchase_demo.xml'],
     'installable': True,
