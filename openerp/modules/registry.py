@@ -25,6 +25,7 @@
 
 import openerp.sql_db
 import openerp.osv.orm
+import openerp.modules.db
 
 
 class Registry(object):
@@ -43,6 +44,10 @@ class Registry(object):
         self._init_parent = {}
         self.db_name = db_name
         self.db = openerp.sql_db.db_connect(db_name)
+
+        cr = self.db.cursor()
+        self.has_unaccent = openerp.modules.db.has_unaccent(cr)
+        cr.close()
 
     def do_parent_store(self, cr):
         for o in self._init_parent:

@@ -250,6 +250,8 @@ class configmanager(object):
                               "osv_memory tables. This is a decimal value expressed in hours, "
                               "and the default is 1 hour.",
                          type="float")
+        group.add_option("--unaccent", dest="unaccent", my_default=False,
+                         help="Use the unaccent function provided by the database when available.")
         parser.add_option_group(group)
 
         # Copy all optparse options (i.e. MyOption) into self.options.
