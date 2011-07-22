@@ -275,6 +275,7 @@ def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval", nocopy=Fal
                 'map': map,
                 'abs': abs,
                 'min': min,
+                'max': max,
                 'reduce': reduce,
                 'filter': filter,
                 'round': round,
