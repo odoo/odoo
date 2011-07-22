@@ -909,6 +909,7 @@ msgstr "Créer des périodes trimestrielles"
 
 #. module: account
 #: report:account.overdue:0
+#: report:account.aged_trial_balance:0
 msgid "Due"
 msgstr "Due"
 
@@ -1003,6 +1004,10 @@ msgstr "Modèle d'écritures"
 #: field:account.journal,code:0
 #: report:account.partner.balance:0
 #: field:account.period,code:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.balancesheet:0
+#: report:pl.account.horizontal:0
+#: report:pl.account:0
 msgid "Code"
 msgstr "Code"
 
@@ -1330,6 +1335,7 @@ msgstr "Analyse des écritures comptables"
 
 #. module: account
 #: model:ir.ui.menu,name:account.next_id_22
+#: report:account.aged_trial_balance:0
 msgid "Partners"
 msgstr "Partenaires"
 
@@ -2202,6 +2208,11 @@ msgstr "Modèle de produit"
 #: report:account.third_party_ledger_other:0
 #: report:account.vat.declaration:0
 #: model:ir.model,name:account.model_account_fiscalyear
+#: report:account.balancesheet.horizontal:0
+#: report:account.balancesheet:0
+#: report:pl.account.horizontal:0
+#: report:pl.account:0
+#: report:account.aged_trial_balance:0
 msgid "Fiscal Year"
 msgstr "Exercice fiscal"
 
@@ -2789,6 +2800,8 @@ msgstr "Comptabilité financière"
 #. module: account
 #: view:account.pl.report:0
 #: model:ir.ui.menu,name:account.menu_account_pl_report
+#: report:pl.account.horizontal:0
+#: report:pl.account:0
 msgid "Profit And Loss"
 msgstr "Pertes et profits"
 
@@ -4707,6 +4720,11 @@ msgstr "Balance Analytique -"
 #: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
 #: field:account.vat.declaration,target_move:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.balancesheet:0
+#: report:pl.account.horizontal:0
+#: report:pl.account:0
+#: report:account.aged_trial_balance:0
 msgid "Target Moves"
 msgstr "Mouvements Cibles"
 
@@ -4823,6 +4841,8 @@ msgstr "Résultat du lettrage"
 #: view:account.bs.report:0
 #: model:ir.actions.act_window,name:account.action_account_bs_report
 #: model:ir.ui.menu,name:account.menu_account_bs_report
+#: report:account.balancesheet.horizontal:0
+#: report:account.balancesheet:0
 msgid "Balance Sheet"
 msgstr "Bilan"
 
@@ -6600,6 +6620,8 @@ msgstr "Plan de taxes comptables"
 #: report:account.general.journal:0
 #: report:account.invoice:0
 #: report:account.partner.balance:0
+#: report:pl.account.horizontal:0
+#: report:pl.account:0
 msgid "Total:"
 msgstr "Total :"
 
@@ -7916,6 +7938,11 @@ msgstr "Devise société"
 #: report:account.partner.balance:0
 #: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.balancesheet:0
+#: report:pl.account.horizontal:0
+#: report:pl.account:0
+#: report:account.aged_trial_balance:0
 msgid "Chart of Account"
 msgstr "Plan comptable"
 
@@ -8037,6 +8064,10 @@ msgstr "Journal d'avoirs"
 #: report:account.general.journal:0
 #: report:account.general.ledger_landscape:0
 #: report:account.partner.balance:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.balancesheet:0
+#: report:pl.account.horizontal:0
+#: report:pl.account:0
 msgid "Filter By"
 msgstr "Filtré par"
 
@@ -8624,6 +8655,7 @@ msgstr "Impossible de trouver le code parent pour le compte modèle !"
 
 #. module: account
 #: field:account.aged.trial.balance,direction_selection:0
+#: report:account.aged_trial_balance:0
 msgid "Analysis Direction"
 msgstr "Direction d'Analyse"
 
@@ -8757,6 +8789,10 @@ msgstr "Laisser vide pour utiliser le compte de revenu"
 #: report:account.third_party_ledger_other:0
 #: field:report.account.receivable,balance:0
 #: field:report.aged.receivable,balance:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.balancesheet:0
+#: report:pl.account.horizontal:0
+#: report:pl.account:0
 msgid "Balance"
 msgstr "Solde de la balance"
 
@@ -8768,6 +8804,10 @@ msgstr "Saisi manuellement ou automatiquement dans le système"
 #. module: account
 #: report:account.account.balance:0
 #: report:account.general.ledger_landscape:0
+#: report:account.balancesheet.horizontal:0
+#: report:account.balancesheet:0
+#: report:pl.account.horizontal:0
+#: report:pl.account:0
 msgid "Display Account"
 msgstr "Afficher le compte"
 
@@ -9579,6 +9619,7 @@ msgstr "États"
 #: field:report.account.sales,amount_total:0
 #: field:report.account_type.sales,amount_total:0
 #: field:report.invoice.created,amount_total:0
+#: report:account.aged_trial_balance:0
 msgid "Total"
 msgstr "Total"
 
@@ -10088,6 +10129,7 @@ msgstr "account.addtmpl.wizard"
 #: field:account.partner.ledger,result_selection:0
 #: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
+#: report:account.aged_trial_balance:0
 msgid "Partner's"
 msgstr "Du partenaire"
 
@@ -10226,6 +10268,50 @@ msgstr ""
 "Le montant restant sur une pièce comptable de charge ou de dépense est "
 "exprimée dans la devise du journal (si elle est différente de la devise de "
 "la société)"
+
+#. module: account
+#: report:account.balancesheet.horizontal:0
+#: report:account.balancesheet:0
+msgid "Assets"
+msgstr ""
+
+#. module: account
+#: report:account.balancesheet.horizontal:0
+#: report:account.balancesheet:0
+msgid "Liabilities"
+msgstr ""
+
+#. module: account
+#: report:account.balancesheet.horizontal:0
+#: report:account.balancesheet:0
+msgid "Balance:"
+msgstr "Solde de la balance:"
+
+#. module: account
+#: report:pl.account.horizontal:0
+#: report:pl.account:0
+msgid "Particular"
+msgstr ""
+
+#. module: account
+#: report:account.aged_trial_balance:0
+msgid "Aged Trial Balance"
+msgstr ""
+
+#. module: account
+#: report:account.aged_trial_balance:0
+msgid "Period Length(days)"
+msgstr ""
+
+#. module: account
+#: report:account.aged_trial_balance:0
+msgid "Account Total"
+msgstr ""
+
+#. module: account
+#: report:account.aged_trial_balance:0
+msgid "Not due"
+msgstr ""
 
 #~ msgid "Print Voucher"
 #~ msgstr "Imprimer la pièce"
