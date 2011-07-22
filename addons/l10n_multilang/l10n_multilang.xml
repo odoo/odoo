@@ -14,7 +14,7 @@
       <field name="arch" type="xml">
         <data>
           <field name="bank_accounts_id" position="before">
-            <field name="bank_from_template" />
+            <field name="bank_from_template" on_change="onchange_bank_from_template(bank_from_template)" />
           </field>
           <field name="bank_accounts_id" position="before">
             <separator string="Languages" colspan="4"/>
