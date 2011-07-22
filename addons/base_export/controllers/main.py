@@ -81,7 +81,7 @@ class Export(View):
             id = prefix + (prefix and '/'or '') + field
             nm = name + (name and '/' or '') + value['string']
             record.update(id=id, string= nm, action='javascript: void(0)',
-                          target=None, icon=None, children=[], field_type=value.get('type',False))
+                          target=None, icon=None, children=[], field_type=value.get('type',False), required=value.get('required', False))
             records.append(record)
 
             if len(nm.split('/')) < 3 and value.get('relation', False):

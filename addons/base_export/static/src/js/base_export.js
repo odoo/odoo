@@ -207,6 +207,10 @@ openerp.base_export.Export = openerp.base.Dialog.extend({
             $('#left_field_panel').append(QWeb.render('ExportTreeView-Secondary',  {'fields': result}));
         }
         _.each(result, function(record) {
+            if ((record.required == true) || record.required == "True"){
+                var required_fld = $("tr[id^='treerow-" + record.id + "']").find('#tree-column');
+                required_fld.addClass("requiredfield");
+            }
             $("img[id ^='parentimg-" + record.id +"']").click(function(){
                 self.on_click(this.id, result);
             });
