@@ -207,6 +207,10 @@ openerp.base_export.Export = openerp.base.Dialog.extend({
             $('#left_field_panel').append(QWeb.render('ExportTreeView-Secondary',  {'fields': result}));
         }
         _.each(result, function(record) {
+            if(record.field_type == "one2many"){
+                var o2m_fld = $("tr[id^='treerow-" + record.id + "']").find('#tree-column');
+                o2m_fld.addClass("readonlyfield");
+            }
             if ((record.required == true) || record.required == "True"){
                 var required_fld = $("tr[id^='treerow-" + record.id + "']").find('#tree-column');
                 required_fld.addClass("requiredfield");
@@ -226,12 +230,16 @@ openerp.base_export.Export = openerp.base.Dialog.extend({
                         if (this.rowIndex >=self.row_index){
                             for (i = (self.row_index-1); i < this.rowIndex; i++) {
                                 scnd_click = $("tr[id^='treerow-']")[i];
-                                $(scnd_click).addClass("ui-selected");
+                                if(!$(scnd_click).find('#tree-column').hasClass("readonlyfield")){
+                                    $(scnd_click).addClass("ui-selected");
+                                }
                             }
                         }else{
                             for (i = (self.row_index-1); i >= (this.rowIndex-1); i--) {
                                 scnd_click = $("tr[id^='treerow-']")[i];
-                                $(scnd_click).addClass("ui-selected");
+                                if(!$(scnd_click).find('#tree-column').hasClass("readonlyfield")){
+                                    $(scnd_click).addClass("ui-selected");
+                                }
                             }
                         }
                     }
@@ -241,7 +249,10 @@ openerp.base_export.Export = openerp.base.Dialog.extend({
                 $("tr[id^='treerow-" + record.id + "']").keyup(function (e) {
                         self.row_index = 0;
                 });
-
+                var o2m_selection = $("tr[id^='treerow-" + record.id + "']").find('#tree-column');
+                if ($(o2m_selection).hasClass("readonlyfield")){
+                    return false;
+                }
                 var selected = $("tr.ui-selected");
                 if ($(this).hasClass("ui-selected") && (e.ctrlKey == true)){
                     $(this).find('a').blur();
@@ -278,7 +289,9 @@ openerp.base_export.Export = openerp.base.Dialog.extend({
                         while($(elem).prev().is(":visible") == false){
                             elem = $(elem).prev();
                         }
-                        $(elem).prev().addClass("ui-selected");
+                        if(!$(elem).prev().find('#tree-column').hasClass("readonlyfield")){
+                            $(elem).prev().addClass("ui-selected");
+                        }
                         $(elem).prev().find('a').focus();
                     break;
                     case arrow.right:
@@ -292,24 +305,31 @@ openerp.base_export.Export = openerp.base.Dialog.extend({
                         while($(elem).next().is(":visible") == false){
                             elem = $(elem).next();
                         }
-                        $(elem).next().addClass("ui-selected");
+                        if(!$(elem).next().find('#tree-column').hasClass("readonlyfield")){
+                            $(elem).next().addClass("ui-selected");
+                        }
                         $(elem).next().find('a').focus();
                     break;
                 }
             });
-	        $("tr[id^='treerow-" + record.id + "']").dblclick(function (e) {
-                var field_id =  $(this).find("a").attr("id");
-                if(field_id){
-	               self.add_field(field_id.split('-')[1], $(this).find("a").attr("string"))
-	            }
-	        });
+            $("tr[id^='treerow-" + record.id + "']").dblclick(function (e) {
+                var o2m_selection = $("tr[id^='treerow-" + record.id + "']").find('#tree-column');
+                if (! $(o2m_selection).hasClass("readonlyfield")){
+                    var field_id =  $(this).find("a").attr("id");
+                    if(field_id){
+                       self.add_field(field_id.split('-')[1], $(this).find("a").attr("string"))
+                   }
+                }
+            });
         });
         $('#fields_list').mouseover(function(event){
             if(event.relatedTarget){
                 if (event.relatedTarget.attributes['id'] && event.relatedTarget.attributes['string']){
                     field_id = event.relatedTarget.attributes["id"]["value"]
                     if (field_id && field_id.split("-")[0] == 'export'){
-                        self.add_field(field_id.split("-")[1], event.relatedTarget.attributes["string"]["value"]);
+                        if(!$("tr[id^='treerow-" + field_id.split("-")[1] + "']").find('#tree-column').hasClass("readonlyfield")){
+                            self.add_field(field_id.split("-")[1], event.relatedTarget.attributes["string"]["value"]);
+                        }
                     }
                 }
             }
