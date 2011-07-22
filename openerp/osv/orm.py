@@ -2410,8 +2410,7 @@ class orm_memory(orm_template):
                 args = [('active', '=', 1)]
         if args:
             import expression
-            e = expression.expression(args)
-            e.parse(cr, user, self, context)
+            e = expression.expression(cr, user, args, self, context)
             res = e.exp
         return res or []
 
@@ -4351,8 +4350,7 @@ class orm(orm_template):
 
         if domain:
             import expression
-            e = expression.expression(domain)
-            e.parse(cr, user, self, context)
+            e = expression.expression(cr, user, domain, self, context)
             tables = e.get_tables()
             where_clause, where_params = e.to_sql()
             where_clause = where_clause and [where_clause] or []

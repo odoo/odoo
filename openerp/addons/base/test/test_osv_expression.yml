@@ -178,6 +178,30 @@
         res_ids.sort()
         assert res_ids == all_ids, "Searching against empty set failed, returns %r" % res_ids
 -
+    Equivalent queries.
+-
+    !python {model: res.partner }: |
+        all_ids = self.search(cr, uid, [])
+        if len(all_ids) > 1:
+            one = all_ids[0]
+            record = self.browse(cr, uid, one)
+            others = all_ids[1:]
+            res_1 = self.search(cr, uid, [('id', '=', one)])
+            # self.search(cr, uid, [('id', '!=', others)]) # not permitted
+            res_2 = self.search(cr, uid, [('id', 'not in', others)])
+            res_3 = self.search(cr, uid, ['!', ('id', '!=', one)])
+            res_4 = self.search(cr, uid, ['!', ('id', 'in', others)])
+            # res_5 = self.search(cr, uid, [('id', 'in', one)]) # TODO make it permitted, just like for child_of
+            res_6 = self.search(cr, uid, [('id', 'in', [one])])
+            res_7 = self.search(cr, uid, [('name', '=', record.name)])
+            assert [one] == res_1
+            assert [one] == res_2
+            assert [one] == res_3
+            assert [one] == res_4
+            #assert [one] == res_5
+            assert [one] == res_6
+            assert [one] == res_7
+-
     Verify that normalize_domain() works.
 -
     !python {model: res.partner}: |
