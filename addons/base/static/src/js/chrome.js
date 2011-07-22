@@ -453,13 +453,13 @@ openerp.base.Session = openerp.base.Controller.extend( /** @lends openerp.base.S
         this.rpc('/base/session/modules', {}, function(result) {
             self.module_list = result['modules'];
             var modules = self.module_list.join(',');
-            self.rpc('/base/session/csslist', {mods: modules}, self.do_load_css);
-            self.rpc('/base/session/jslist', {"mods": modules}, self.debug ? self.do_load_modules_debug : self.do_load_modules_prod);
+            self.rpc('/base/webclient/csslist', {mods: modules}, self.do_load_css);
+            self.rpc('/base/webclient/jslist', {"mods": modules}, self.debug ? self.do_load_modules_debug : self.do_load_modules_prod);
             openerp._modules_loaded = true;
         });
     },
     do_load_css: function (result) {
-        _.each(result.files, function (file) {
+        _.each(result, function (file) {
             $('head').append($('<link>', {
                 'href': file,
                 'rel': 'stylesheet',
@@ -469,7 +469,7 @@ openerp.base.Session = openerp.base.Controller.extend( /** @lends openerp.base.S
     },
     do_load_modules_debug: function(result) {
         $LAB.setOptions({AlwaysPreserveOrder: true})
-            .script(result.files)
+            .script(result)
             .wait(this.on_modules_loaded);
     },
     do_load_modules_prod: function() {
@@ -845,7 +845,7 @@ openerp.base.WebClient = openerp.base.Controller.extend({
     init: function(element_id) {
         this._super(null, element_id);
 
-        QWeb.add_template("xml/base.xml");
+        QWeb.add_template("/base/static/src/xml/base.xml");
         var params = {};
         if(jQuery.param != undefined && jQuery.deparam(jQuery.param.querystring()).kitten != undefined) {
             this.$element.addClass("kitten-mode-activated");
