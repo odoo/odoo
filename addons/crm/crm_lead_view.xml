@@ -309,8 +309,8 @@
             <search string="Search Leads">
                 <filter icon="terp-check"
                     string="Current"
-                    name="current" help="draft, open and pending documents"
-                    domain="[('state','in',('draft','open'))]"/>
+                    name="current" help="Draft, Open and Pending Documents."
+                    domain="[('state','in',('draft','open','pending'))]"/>
                 <filter icon="terp-camera_test"
                     string="Open"
                     domain="[('state','=','open')]"/>
