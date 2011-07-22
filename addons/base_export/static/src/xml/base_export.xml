@@ -16,13 +16,21 @@
                 <td>
                     <table>
                         <tr>
-                            <td class="label"><label for="import_compat">Export Type:</label></td>
+                            <td class="label"><label>Export Type:</label></td>
                             <td>
                                 <select id="import_compat" name="import_compat"  style="background-color: #F3F3F3;" >
                                     <option value="1">Import Compatible Export</option>
                                     <option value="0">Export all Data</option>
                                 </select>
                             </td>
+	                        <td class="label"><label>Export Format</label></td>
+	                        <td>
+	                            <select id="export_format" name="export_format">
+	                                <option value="csv">CSV</option>
+	                                <option value="xls">Excel</option>
+	                            </select>
+	                        </td>
+
                         </tr>
                     </table>
                 </td>
@@ -114,7 +122,7 @@
         <tr>
             <th><label>Save as:</label></th>
             <td><input size="10" type="text" id="savelist_name"/></td>
-            <td><button id="add_export_list">Ok</button></td>
+            <td><button class="button-export" id="add_export_list">Ok</button></td>
         </tr>
     </t>
 
@@ -129,7 +137,7 @@
                     </t>
                 </select>
             </td>
-            <td><button id="delete_export_list">Delete</button></td>
+            <td><button class="button-export" id="delete_export_list">Delete</button></td>
         </tr>
     </t>
 </template>

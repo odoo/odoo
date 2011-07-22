@@ -3,6 +3,61 @@ import openerpweb
 import StringIO
 import csv
 import xml.dom.minidom
+import re
+
+def export_csv(fields, result):
+    fp = StringIO.StringIO()
+    writer = csv.writer(fp, quoting=csv.QUOTE_ALL)
+
+    writer.writerow(fields)
+
+    for data in result:
+        row = []
+        for d in data:
+            if isinstance(d, basestring):
+                d = d.replace('\n',' ').replace('\t',' ')
+                try:
+                    d = d.encode('utf-8')
+                except:
+                    pass
+            if d is False: d = None
+            row.append(d)
+        writer.writerow(row)
+
+    fp.seek(0)
+    data = fp.read()
+    fp.close()
+    return data
+
+def export_xls(fieldnames, table):
+    try:
+        import xlwt
+    except ImportError:
+        common.error(_('Import Error.'), _('Please install xlwt library to export to MS Excel.'))
+
+    workbook = xlwt.Workbook()
+    worksheet = workbook.add_sheet('Sheet 1')
+
+    for i, fieldname in enumerate(fieldnames):
+        worksheet.write(0, i, str(fieldname))
+        worksheet.col(i).width = 8000 # around 220 pixels
+
+    style = xlwt.easyxf('align: wrap yes')
+
+    for row_index, row in enumerate(table):
+        for cell_index, cell_value in enumerate(row):
+            cell_value = str(cell_value)
+            cell_value = re.sub("\r", " ", cell_value)
+            worksheet.write(row_index + 1, cell_index, cell_value, style)
+
+
+    fp = StringIO.StringIO()
+    workbook.save(fp)
+    fp.seek(0)
+    data = fp.read()
+    fp.close()
+    #return data.decode('ISO-8859-1')
+    return unicode(data, 'utf-8', 'replace')
 
 def node_attributes(node):
     attrs = node.attributes
@@ -187,32 +242,8 @@ class Export(View):
             return _fields
         return rec(fields)
 
-    def export_csv(self, req, fields, result):
-        fp = StringIO.StringIO()
-        writer = csv.writer(fp, quoting=csv.QUOTE_ALL)
-
-        writer.writerow(fields)
-
-        for data in result:
-            row = []
-            for d in data:
-                if isinstance(d, basestring):
-                    d = d.replace('\n',' ').replace('\t',' ')
-                    try:
-                        d = d.encode('utf-8')
-                    except:
-                        pass
-                if d is False: d = None
-                row.append(d)
-            writer.writerow(row)
-
-        fp.seek(0)
-        data = fp.read()
-        fp.close()
-        return data
-
     @openerpweb.jsonrequest
-    def export_data(self, req, model, fields, ids, domain, import_compat=False, context=None):
+    def export_data(self, req, model, fields, ids, domain, import_compat=False, export_format="csv", context=None):
         context = req.session.eval_context(req.context)
         modle_obj = req.session.model(model)
         ids = ids or modle_obj.search(domain, context=context)
@@ -222,4 +253,8 @@ class Export(View):
 
         if not import_compat:
             field = [val.strip() for val in fields.values()]
-        return self.export_csv(req, field, result)
+
+        if export_format == 'xls':
+            return export_xls(field, result)
+        else:
+            return export_csv(field, result)

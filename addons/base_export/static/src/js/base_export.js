@@ -373,8 +373,10 @@ openerp.base_export.Export = openerp.base.Dialog.extend({
         }
 
         import_comp = $("#import_compat option:selected").val()
-        self.rpc("/base_export/export/export_data", {"model": self.dataset.model, "fields":export_field, 'ids': self.dataset.ids, 'domain': self.dataset.domain, "import_compat":parseInt(import_comp)}, function(data){
-            window.location="data:text/csv;charset=utf8," + encodeURIComponent(data)
+        export_format = $("#export_format").val()
+
+        self.rpc("/base_export/export/export_data", {"model": self.dataset.model, "fields":export_field, 'ids': self.dataset.ids, 'domain': self.dataset.domain, "import_compat":parseInt(import_comp), "export_format" :export_format}, function(data){
+            window.location="data:text/csv/excel;charset=utf8," + data
             self.close();
         });
     },
