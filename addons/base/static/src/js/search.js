@@ -863,7 +863,9 @@ openerp.base.search.ExtendedSearch = openerp.base.BaseWidget.extend({
     },
     check_last_element: function() {
         _.each(this.children, function(x) {x.set_last_group(false);});
-        this.children[this.children.length - 1].set_last_group(true);
+        if (this.children.length >= 1) {
+            this.children[this.children.length - 1].set_last_group(true);
+        }
     }
 });
 

@@ -202,8 +202,10 @@ instance.base.Controller = instance.base.Class.extend( /** @lends instance.base.
     stop: function() {
         if (this.parent && this.parent.children) {
             this.parent.children = _.without(this.parent.children, this);
+            this.parent.controller_children = this.parent.children;
         }
         this.parent = null;
+        this.controller_parent = null;
     },
     log: function() {
         var args = Array.prototype.slice.call(arguments);
