@@ -140,6 +140,10 @@ openerp.base.SearchView = openerp.base.Controller.extend({
             return widget.start();
         }).value();
         
+        $.when.apply(null, widget_starts).then(function () {
+            self.ready.resolve();
+        });
+        
         // filters management
         var self = this;
         return this.rpc('/base/searchview/get_filters', {
@@ -150,30 +154,28 @@ openerp.base.SearchView = openerp.base.Controller.extend({
             filters.html(QWeb.render("SearchView.managed-filters", {filters: result}));
             filters.change(self.on_filters_management);
         });
-
-        var self = this;
-        $.when.apply(null, widget_starts).then(function () {
-            self.ready.resolve();
-        });
     },
     /**
      * Handle event when the user make a selection in the filters management select box.
      */
     on_filters_management: function(e) {
-        var select = this.$element.find(".oe_search-view-filters-management"),
-               val = select.val();
-        select.val("_filters");
+        var select = this.$element.find(".oe_search-view-filters-management");
+        var val = select.val();
         
-        if (val.slice(0,1) == "_") // useless action
+        if (val.slice(0,1) == "_") { // useless action
+            select.val("_filters");
             return;
+        }
         if (val.slice(0, "get:".length) == "get:") {
             val = val.slice("get:".length);
             val = parseInt(val);
             var filter = this.managed_filters[val];
             this.on_search([filter.domain], [filter.context], []);
         } else if (val == "save_filter") {
+            select.val("_filters");
             //TODO niv
         } else { // manage_filters
+            select.val("_filters");
             //TODO niv
         }
     },
@@ -189,6 +191,10 @@ openerp.base.SearchView = openerp.base.Controller.extend({
      * @param e jQuery event object coming from the "Search" button
      */
     do_search: function (e) {
+        // reset filters management
+        var select = this.$element.find(".oe_search-view-filters-management");
+        select.val("_filters");
+        
         if (e && e.preventDefault) { e.preventDefault(); }
 
         var domains = [],
