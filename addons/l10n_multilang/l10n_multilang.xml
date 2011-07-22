@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
   <data>
-    <record id="multi_chart_configuration" model="ir.actions.todo">
-        <field name="action_id" ref="account.action_wizard_multi_chart"/>
-        <field name="sequence">25</field>
-        <field name="restart">onskip</field>
-    </record>
     <!--  Wizard for Multi Charts of Accounts -->
     <record id="view_wizard_multi_chart_belgian_coa" model="ir.ui.view">
       <field name="name">view.wizard.multi.chart</field>
@@ -14,7 +9,7 @@
       <field name="arch" type="xml">
         <data>
           <field name="bank_accounts_id" position="before">
-            <field name="bank_from_template" />
+            <field name="bank_from_template" on_change="onchange_bank_from_template(bank_from_template)" />
           </field>
           <field name="bank_accounts_id" position="before">
             <separator string="Languages" colspan="4"/>
