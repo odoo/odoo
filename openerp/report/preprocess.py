@@ -66,10 +66,12 @@ class report(object):
                         match = html_parents
                     if txt.group(3):
                         match = [txt.group(3)]
-                    n = node
-                    while n.tag not in match:
-                        n = n.getparent()
-                    n.set('rml_loop', txt.group(2))
+                        if match[0].startswith("'"):
+                            match[0] = match[0][1:-1]
+                    n2= node
+                    while n2.tag not in match:
+                        n2 = n2.getparent()
+                    n2.set('rml_loop', txt.group(2))
                     return '[['+txt.group(1)+"''"+txt.group(4)+']]'
                 t = _regex1.sub(_sub1, node.text or node.tail)
                 if t == " ":
