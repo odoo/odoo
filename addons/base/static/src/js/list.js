@@ -254,9 +254,8 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
                         })
                         .val(self._limit || 'NaN');
                 });
-        if(this.view_manager.sidebar == undefined)
-            debugger;
-        this.view_manager.sidebar.set_toolbar(data.fields_view.toolbar);
+        if(this.view_manager.sidebar)
+            this.view_manager.sidebar.set_toolbar(data.fields_view.toolbar);
 
     },
     /**
@@ -392,7 +391,8 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
                 this.groups.apoptosis().render());
             this.hidden = false;
         }
-        this.view_manager.sidebar.do_refresh(true);
+        if(this.view_manager.sidebar)
+            this.view_manager.sidebar.do_refresh(true);
     },
     do_hide: function () {
         this.$element.hide();

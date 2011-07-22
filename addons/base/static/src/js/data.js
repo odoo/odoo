@@ -186,7 +186,7 @@ openerp.base.ContainerDataGroup = openerp.base.DataGroup.extend( /** @lends open
                 var child_context = _.extend({}, self.context, group.__context);
                 return _.extend(
                     new openerp.base.DataGroup(
-                        self.session, self.model, group.__domain,
+                        self, self.model, group.__domain,
                         child_context, child_context.group_by,
                         self.level + 1),
                     group, {sort: self.sort});
