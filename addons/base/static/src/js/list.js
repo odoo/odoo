@@ -1086,6 +1086,45 @@ openerp.base.ListView.Groups = openerp.base.Class.extend( /** @lends openerp.bas
             });
         return d.promise();
     },
+    setup_resequence_rows: function (list, dataset) {
+        // drag and drop enabled if list is not sorted and there is a
+        // "sequence" column in the view.
+        if ((dataset.sort && dataset.sort())
+            || !_(this.columns).any(function (column) {
+                    return column.name === 'sequence'; })) {
+            return;
+        }
+        // ondrop, move relevant record & fix sequences
+        list.$current.sortable({
+            stop: function (event, ui) {
+                var from = ui.item.data('index'),
+                      to = ui.item.prev().data('index') || 0;
+                if (from === to) { return; }
+                list.rows.splice(to, 0, list.rows.splice(from, 1)[0]);
+
+                ui.item.parent().children().each(function (i, e) {
+                    // reset record-index accelerators on rows and even/odd
+                    var even = i%2 === 0;
+                    $(e).data('index', i)
+                        .toggleClass('even', even)
+                        .toggleClass('odd', !even);
+                });
+
+                // resequencing time!
+                var data, index = to,
+                    // if drag to 1st row (to = 0), start sequencing from 0
+                    // (exclusive lower bound)
+                    seq = to ? list.rows[to - 1].data.sequence.value : 0;
+                while (++seq, data = list.rows[index++].data) {
+                    data.sequence.value = seq;
+                    // write are independent from one another, so we can just
+                    // launch them all at the same time and we don't really
+                    // give a fig about when they're done
+                    dataset.write(data.id.value, {sequence: seq});
+                }
+            }
+        });
+    },
     render: function (post_render) {
         var self = this;
         var $element = $('<tbody>');
@@ -1104,6 +1143,7 @@ openerp.base.ListView.Groups = openerp.base.Class.extend( /** @lends openerp.bas
                     self.children[null] = list;
                     self.elements =
                         [list.$current.replaceAll($element)[0]];
+                    self.setup_resequence_rows(list, dataset);
                     if (post_render) { post_render(); }
                 });
             });
