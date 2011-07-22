@@ -54,6 +54,99 @@ class Xml2Json:
 # OpenERP Web base Controllers
 #----------------------------------------------------------
 
+def manifest_glob(addons, key):
+    files = []
+    for addon in addons:
+        globlist = openerpweb.addons_manifest.get(addon, {}).get(key, [])
+        print globlist
+        for pattern in globlist:
+            for path in glob.glob(os.path.join(openerpweb.path_addons, addon, pattern)):
+                files.append(path[len(openerpweb.path_addons):])
+    return files
+
+def concat_files(file_list):
+    """ Concatenate file content
+    return (concat,timestamp)
+    concat: concatenation of file content
+    timestamp: max(os.path.getmtime of file_list)
+    """
+    root = openerpweb.path_root
+    files_content = []
+    files_timestamp = 0
+    for i in file_list:
+        fname = os.path.join(root, i)
+        ftime = os.path.getmtime(fname)
+        if ftime > files_timestamp:
+            files_timestamp = ftime
+        files_content = open(fname).read()
+    files_concat = "".join(files_content)
+    return files_concat
+
+class WebClient(openerpweb.Controller):
+    _cp_path = "/base/webclient"
+
+    @openerpweb.jsonrequest
+    def csslist(self, req, mods='base'):
+        return manifest_glob(mods.split(','), 'css')
+
+    @openerpweb.jsonrequest
+    def jslist(self, req, mods='base'):
+        return manifest_glob(mods.split(','), 'js')
+
+    @openerpweb.httprequest
+    def css(self, req, mods='base'):
+        cherrypy.response.headers['Content-Type'] = 'text/css'
+        files = manifest_glob(mods.split(','), 'css')
+        concat = concat_files(files)[0]
+        # TODO request set the Date of last modif and Etag
+        return concat
+
+    @openerpweb.httprequest
+    def js(self, req, mods='base'):
+        cherrypy.response.headers['Content-Type'] = 'application/javascript'
+        files = manifest_glob(mods.split(','), 'js')
+        concat = concat_files(files)[0]
+        # TODO request set the Date of last modif and Etag
+        return concat
+
+    @openerpweb.httprequest
+    def home(self, req):
+        template ="""<!DOCTYPE html>
+        <html style="height: 100%%">
+        <head>
+            <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+            <title>OpenERP</title>
+            %s
+            <script type="text/javascript">
+            $(function() {
+                QWeb = new QWeb2.Engine(); 
+                openerp.init().base.webclient("oe"); 
+            });
+            </script>
+            <link rel="shortcut icon" href="/base/static/src/img/favicon.ico" type="image/x-icon"/>
+            %s
+            <!--[if lte IE 7]>
+            <link rel="stylesheet" href="/base/static/src/css/base-ie7.css" type="text/css"/>
+            <![endif]-->
+        </head>
+        <body id="oe" class="openerp"></body>
+        </html>
+        """.replace('\n'+' '*8,'\n')
+
+        # script tags
+        jslist = ['/base/webclient/js']
+        if 1: # debug == 1
+            jslist = manifest_glob(['base'], 'js')
+        js = "\n    ".join(['<script type="text/javascript" src="%s"></script>'%i for i in jslist])
+
+        # css tags
+        csslist = ['/base/webclient/css']
+        if 1: # debug == 1
+            csslist = manifest_glob(['base'], 'css')
+        css = "\n    ".join(['<link rel="stylesheet" href="%s">'%i for i in csslist])
+        r = template % (js, css)
+        return r
+
 class Database(openerpweb.Controller):
     _cp_path = "/base/database"
 
@@ -70,37 +163,6 @@ class Database(openerpweb.Controller):
 
 class Session(openerpweb.Controller):
     _cp_path = "/base/session"
-
-    def manifest_glob(self, addons, key):
-        files = []
-        for addon in addons:
-            globlist = openerpweb.addons_manifest.get(addon, {}).get(key, [])
-
-            files.extend([
-                resource_path[len(openerpweb.path_addons):]
-                for pattern in globlist
-                for resource_path in glob.glob(os.path.join(
-                    openerpweb.path_addons, addon, pattern))
-            ])
-        return files
-
-    def concat_files(self, file_list):
-        """ Concatenate file content
-        return (concat,timestamp)
-        concat: concatenation of file content
-        timestamp: max(os.path.getmtime of file_list)
-        """
-        root = openerpweb.path_root
-        files_content = []
-        files_timestamp = 0
-        for i in file_list:
-            fname = os.path.join(root, i)
-            ftime = os.path.getmtime(fname)
-            if ftime > files_timestamp:
-                files_timestamp = ftime
-            files_content = open(fname).read()
-        files_concat = "".join(files_content)
-        return files_concat
 
     @openerpweb.jsonrequest
     def login(self, req, db, login, password):
@@ -121,28 +183,6 @@ class Session(openerpweb.Controller):
         return {"modules": [name
             for name, manifest in openerpweb.addons_manifest.iteritems()
             if manifest.get('active', True)]}
-
-    @openerpweb.jsonrequest
-    def csslist(self, req, mods='base'):
-        return {'files': self.manifest_glob(mods.split(','), 'css')}
-
-    @openerpweb.jsonrequest
-    def jslist(self, req, mods='base'):
-        return {'files': self.manifest_glob(mods.split(','), 'js')}
-
-    def css(self, req, mods='base'):
-        files = self.manifest_glob(mods.split(','), 'css')
-        concat = self.concat_files(files)[0]
-        # TODO request set the Date of last modif and Etag
-        return concat
-    css.exposed = True
-
-    def js(self, req, mods='base'):
-        files = self.manifest_glob(mods.split(','), 'js')
-        concat = self.concat_files(files)[0]
-        # TODO request set the Date of last modif and Etag
-        return concat
-    js.exposed = True
 
     @openerpweb.jsonrequest
     def eval_domain_and_context(self, req, contexts, domains,

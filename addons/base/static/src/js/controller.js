@@ -66,7 +66,7 @@ openerp.base.controller = function(instance) {
 
     return Class;
   };
-})(instance.base);
+})();
 
 // todo change john resig class to keep window clean
 instance.base.Class = window.Class
@@ -121,14 +121,39 @@ instance.base.callback = function(obj, method) {
 };
 
 /**
- * OpenERP Controller
+ * Generates an inherited class that replaces all the methods by null methods (methods
+ * that does nothing and always return undefined).
+ * 
+ * @param {Class} claz
+ * @param {dict} add Additional functions to override.
+ * @return {Class}
  */
-instance.base.BasicController = instance.base.Class.extend( /** @lends instance.base.BasicController# */{
+instance.base.generate_null_object_class = function(claz, add) {
+    var newer = {};
+    var copy_proto = function(prototype) {
+        for (var name in prototype) {
+            if(typeof prototype[name] == "function") {
+                newer[name] = function() {};
+            }
+        }
+        if (prototype.prototype)
+            copy_proto(prototype.prototype);
+    };
+    copy_proto(claz.prototype);
+    newer.init = instance.base.Controller.prototype.init;
+    var tmpclass = claz.extend(newer);
+    return tmpclass.extend(add || {});
+};
+
+/**
+ * OpenERP Controller
+ * TODO merge BaseWidget with Controller
+ */
+instance.base.Controller = instance.base.Class.extend( /** @lends instance.base.Controller# */{
     /**
+     * @constructs
      * rpc operations, event binding and callback calling should be done in
-     * start() instead of init so that event can be hooked in between.
-     *
-     *  @constructs
+     * start() instead of init so that events can be hooked in between.
      */
     init: function(parent, element_id) {
         this.element_id = element_id;
@@ -137,11 +162,14 @@ instance.base.BasicController = instance.base.Class.extend( /** @lends instance.
             instance.screen[element_id] = this;
         }
         // save the parent children relationship
-        this.children = [];
-        this.parent = parent;
-        if(this.parent &&  this.parent.children) {
-            this.parent.children.push(this);
+        this.controller_parent = parent;
+        this.controller_children = [];
+        if(parent && parent.controller_children) {
+            parent.controller_children.push(this);
         }
+        // backward compatibility
+        this.parent = this.controller_parent;
+        this.children = this.controller_children;
 
         // Transform on_* method into openerp.base.callbacks
         for (var name in this) {
@@ -155,9 +183,8 @@ instance.base.BasicController = instance.base.Class.extend( /** @lends instance.
         }
     },
     /**
-     * Controller start
-     * event binding, rpc and callback calling required to initialize the
-     * object can happen here
+     * Event binding, rpc and callback calling required to initialize the
+     * object should happen here
      *
      * Returns a promise object letting callers (subclasses and direct callers)
      * know when this component is done starting
