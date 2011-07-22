@@ -212,16 +212,42 @@ openerp.base_export.Export = openerp.base.Dialog.extend({
             });
 
             $("tr[id^='treerow-" + record.id + "']").click(function(e){
+                if (e.shiftKey == true){
+                    var frst_click,scnd_click = '';
+                    if (self.row_index == 0){
+                        self.row_index = this.rowIndex;
+                        frst_click = $("tr[id^='treerow-']")[self.row_index-1];
+                        $(frst_click).addClass("ui-selected");
+                    }else{
+                        if (this.rowIndex >=self.row_index){
+                            for (i = (self.row_index-1); i < this.rowIndex; i++) {
+                                scnd_click = $("tr[id^='treerow-']")[i];
+                                $(scnd_click).addClass("ui-selected");
+                            }
+                        }else{
+                            for (i = (self.row_index-1); i >= (this.rowIndex-1); i--) {
+                                scnd_click = $("tr[id^='treerow-']")[i];
+                                $(scnd_click).addClass("ui-selected");
+                            }
+                        }
+                    }
+                }
+                self.row_index = this.rowIndex;
+
+                $("tr[id^='treerow-" + record.id + "']").keyup(function (e) {
+                        self.row_index = 0;
+                });
+
                 var selected = $("tr.ui-selected");
                 if ($(this).hasClass("ui-selected") && (e.ctrlKey == true)){
                     $(this).find('a').blur();
                     $(this).removeClass("ui-selected");
-                }else if($(this).hasClass("ui-selected") && (e.ctrlKey == false)){
+                }else if($(this).hasClass("ui-selected") && (e.ctrlKey == false) && (e.shiftKey == false)){
                     selected.find('a').blur();
                     selected.removeClass("ui-selected");
                     $(this).find('a').focus();
                     $(this).addClass("ui-selected");
-                }else if(!$(this).hasClass("ui-selected") && (e.ctrlKey == false)){
+                }else if(!$(this).hasClass("ui-selected") && (e.ctrlKey == false) && (e.shiftKey == false)){
                     selected.find('a').blur();
                     selected.removeClass("ui-selected");
                     $(this).find('a').focus();
