@@ -314,7 +314,7 @@ class mail_message(osv.osv):
                                     #.. all X- headers...
                                   },
                       'subtype': msg_mime_subtype,
-                      'body': plaintext_body
+                      'body_text': plaintext_body
                       'body_html': html_body,
                       'attachments': { 'file1': 'bytes',
                                        'file2': 'bytes' }
@@ -391,7 +391,7 @@ class mail_message(osv.osv):
                 body = tools.html2plaintext(body)
             else:
                 msg['subtype'] = 'plain'
-            msg['body'] = tools.ustr(body, encoding)
+            msg['body_text'] = tools.ustr(body, encoding)
 
         attachments = {}
         if msg_txt.is_multipart() or 'multipart/alternative' in msg.get('content-type', ''):
@@ -423,7 +423,7 @@ class mail_message(osv.osv):
                         res = part.get_payload(decode=True)
                         body += tools.ustr(res, encoding)
 
-            msg['body'] = body
+            msg['body_text'] = body
             msg['attachments'] = attachments
         return msg
 

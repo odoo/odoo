@@ -149,7 +149,7 @@ class mail_thread(osv.osv):
         """
         return self.history(cr, uid, ids,
                             subject = msg_dict.get('subject'),
-                            body_text = msg_dict.get('body'),
+                            body_text = msg_dict.get('body_text'),
                             email_to = msg_dict.get('to'),
                             email_from = msg_dict.get('from'),
                             email_cc = msg_dict.get('cc'),
@@ -159,7 +159,7 @@ class mail_thread(osv.osv):
                             message_id = msg_dict.get('message-id'),
                             references = msg_dict.get('references')\
                                       or msg_dict.get('in-reply-to'),
-                            attachments = attachments,
+                            attachments = msg_dict.get('attachments'),
                             body_html= msg_dict.get('body_html'),
                             subtype = msg_dict.get('subtype'),
                             headers = msg_dict.get('headers'),
