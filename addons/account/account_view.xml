@@ -2141,9 +2141,10 @@
                 <form string="Chart of Accounts Template">
                     <group>
                     <field name="name"/>
-                    <field name="account_root_id"/>
-                    <field name="bank_account_view_id"/>
-                    <field name="tax_code_root_id"/>
+                    <field name="account_root_id" attrs="{'required': [('parent_id', '=', False)]}"/>
+                    <field name="bank_account_view_id" attrs="{'required': [('parent_id', '=', False)]}"/>
+                    <field name="tax_code_root_id" attrs="{'required': [('parent_id', '=', False)]}"/>
+                    <field name="parent_id" />
                     </group>
                     <field name="tax_template_ids" colspan="4" readonly="1" nolabel="1"/>
                     <separator string="Properties" colspan="4"/>

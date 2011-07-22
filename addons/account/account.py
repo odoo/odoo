@@ -2475,6 +2475,7 @@ class account_chart_template(osv.osv):
 
     _columns={
         'name': fields.char('Name', size=64, required=True),
+        'parent_id': fields.many2one('account.chart.template', 'Parent Chart Template'),
         'account_root_id': fields.many2one('account.account.template','Root Account',required=True,domain=[('parent_id','=',False)]),
         'tax_code_root_id': fields.many2one('account.tax.code.template','Root Tax Code',required=True,domain=[('parent_id','=',False)]),
         'tax_template_ids': fields.one2many('account.tax.template', 'chart_template_id', 'Tax Template List', help='List of all the taxes that have to be installed by the wizard'),
