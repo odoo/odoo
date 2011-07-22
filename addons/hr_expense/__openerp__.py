@@ -24,6 +24,7 @@
     'name': 'Human Resources Expenses Tracking',
     'version': '1.0',
     'category': 'Human Resources',
+    'complexity': "easy",
     'description': """
 This module aims to manage employee's expenses.
 ===============================================

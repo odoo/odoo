@@ -50,22 +50,18 @@ class outlook_installer(osv.osv_memory):
         'name' : 'Openerp-Outlook-Addin.exe',
         'doc_name' : 'Installation Guide to OpenERP Outlook Plug-in.doc',
         'description' : """
-* Save the Outlook plug­-in.
-* Follows these steps to install outlook plug­in.
-Pre-requirements :
-    1. Python 2.6+ .
-    2. Python for Windows extensions - PyWin32 this module for python must be installed for appropriate version of the Python.
-    3.1 If With MS Outlook 2007 it is required to install externally "Collaboration Data Objects, version 1.2.1".
-         - http://www.microsoft.com/downloads/en/details.aspx?FamilyID=2714320D-C997-4DE1-986F-24F081725D36&displaylang=en
-    3.2 With MS Outlook2003 Install inbuilt Collaboration Data Objects(CDO) while installing Outlook.
+System requirements:
+    1.  Python 2.6+.
+    2.  Python for Windows extensions (PyWin32); this module must be installed for the appropriate version of Python.
+    3.1 With MS Outlook 2007, install the package Collaboration Data Objects, version 1.2.1, http://www.microsoft.com/downloads/en/details.aspx?FamilyID=2714320D-C997-4DE1-986F-24F081725D36
+    3.2 With MS Outlook 2003, install the builtin Collaboration Data Objects(CDO) while installing Outlook.
 
-How to install openerp-outlook plug-in?
-    1. Save the executable plug-in file.
-    2. Close Outlook Application if Running.
-    3. Run executable plug-in file and the folllow the instruction.
+Plugin installation:
+    1.  Save the executable plug-in file.
+    2.  Close the Outlook application if it is open.
+    3.  Run the executable plug-in file, and follow the given instructions.
 
-Note :
-    Please refer README file for dependecies external link, openobject-addons/outlook/README.
+Please refer to the README file for dependencies (external link: openobject-addons/outlook/README).
 """
         }
 outlook_installer()
