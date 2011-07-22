@@ -240,11 +240,12 @@ openerp.base.DataSet =  openerp.base.Controller.extend( /** @lends openerp.base.
      * @constructs
      * @extends openerp.base.Controller
      *
-     * @param {openerp.base.Session} session current OpenERP session
      * @param {String} model the OpenERP model this dataset will manage
      */
-    init: function(parent, model, context) {
-        this._super(parent);
+    init: function(source_controller, model, context) {
+        // we don't want the dataset to be a child of anything!
+        this._super(null);
+        this.session = source_controller ? source_controller.session : undefined;
         this.model = model;
         this.context = context || {};
         this.index = null;

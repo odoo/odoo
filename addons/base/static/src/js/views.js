@@ -11,7 +11,7 @@ openerp.base.ActionManager = openerp.base.Controller.extend({
         this.viewmanager = null;
         this.current_dialog = null;
         // Temporary linking view_manager to session.
-        // Will use controller_parent to find it when implementation will be done.
+        // Will use parent to find it when implementation will be done.
         this.session.action_manager = this;
     },
     /**

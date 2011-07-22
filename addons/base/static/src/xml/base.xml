@@ -62,7 +62,7 @@
                         <td><label for="db">Database:</label></td>
                         <td>
                             <t t-if="!db_list">
-                                <input type="text" name="db" value="trunk" autofocus="true"/>
+                                <input type="text" name="db" value="" autofocus="true"/>
                             </t>
                             <t t-if="db_list">
                                 <select name="db">
@@ -664,13 +664,20 @@
             <input type="reset" value="Clear"/>
             <button class="oe_search-view-custom-filter-btn"><span>Advanced Filter</span></button>
             <select class="oe_search-view-filters-management">
-                <option value="_filters">-- Filters --</option>
-                <option value="_actions">-- Actions --</option>
-                <option value="save_filter">Save Filter</option>
-                <option value="manage_filters">Manage Filters</option>
             </select>
         </div>
     </form>
+</t>
+<t t-name="SearchView.managed-filters">
+    <option value="_filters">-- Filters --</option>
+    <t t-set="i" t-value="0"/>
+    <t t-foreach="filters" t-as="filter">
+        <option t-att-value="'get:' + i"><t t-esc="filter.name"/></option>
+        <t t-set="i" t-value="i+1"/>
+    </t>
+    <option value="_actions">-- Actions --</option>
+    <option value="save_filter">Save Filter</option>
+    <option value="manage_filters">Manage Filters</option>
 </t>
 <t t-name="SearchView.render_lines">
     <table class="oe-searchview-render-line" border="0" cellspacing="0" cellpadding="0"

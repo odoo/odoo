@@ -761,6 +761,15 @@ class SearchView(View):
             if field.get('context'):
                 field["context"] = self.parse_domain(field["context"], req.session)
         return {'fields': fields}
+    
+    @openerpweb.jsonrequest
+    def get_filters(self, req, model):
+        Model = req.session.model("ir.filters")
+        filters = Model.get_filters(model)
+        for filter in filters:
+            filter["context"] = req.session.eval_context(self.parse_context(filter["context"], req.session))
+            filter["domain"] = req.session.eval_domain(self.parse_domain(filter["domain"], req.session))
+        return filters
 
 class Binary(openerpweb.Controller):
     _cp_path = "/base/binary"
