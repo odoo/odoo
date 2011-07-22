@@ -2,77 +2,70 @@
 <openerp>
     <data>
 
-        <menuitem name="Configuration" parent="base.menu_tools"
-              id="base.menu_lunch_survey_root" sequence="20"/>
+        <menuitem name="Configuration" parent="base.menu_tools" id="base.menu_lunch_survey_root" sequence="20"/>
 
         <record model="ir.ui.view" id="view_email_message_form">
-            <field name="name">email.message.form</field>
-			<field name="model">email.message</field>
-			<field name="type">form</field>
-			<field name="arch" type="xml">
+            <field name="name">mail.message.form</field>
+            <field name="model">mail.message</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
                 <form string="Email message">
-                    <group colspan="4" col="6">
-                       <field name="subject" widget="char" size="512"/>
+                    <group colspan="4" col="8">
+                       <field name="subject"/>
                        <field name="date"/>
                        <field name="user_id" string="User"/>
                        <field name="partner_id" readonly="1" />
-                       <field name="priority"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Details">
                             <group col="2" colspan="2">
-                                <separator string="Email Followers" colspan="4"/>
+                                <separator string="Recipients" colspan="4"/>
                                 <field name="email_from"/>
                                 <field name="email_to"/>
                                 <field name="email_cc"/>
                                 <field name="email_bcc" groups="base.group_extended"/>
                                 <field name="reply_to"/>
                             </group>
-                            <group col="2" colspan="2">
+                            <group col="4" colspan="2">
                                 <separator string="Message Details" colspan="4"/>
-                                <field name="model" readonly="1"/>
-                                <group col="3" colspan="2">
-                                    <field name="res_id" readonly="1" groups="base.group_extended"/>
-                                    <button name="open_document" string="Open Document" type="object" icon="gtk-jump-to"/>
-	                                <field name="message_id" groups="base.group_extended" colspan="4"/>
-                                </group>
-                                <field name="references" widget="char" size="4096" groups="base.group_extended"/>
+                                <field name="model"/>
+                                <button name="open_document" string="Open" type="object" icon="gtk-jump-to" colspan="2"/>
+                                <field name="res_id" groups="base.group_extended"/>
+                                <field name="message_id" groups="base.group_extended" colspan="4"/>
+                                <field name="references" colspan="4" widget="char" size="4096" groups="base.group_extended"/>
                             </group>
 
                             <notebook colspan="4">
-		                        <page string="Body (Text)" attrs="{'invisible':[('sub_type','=','html')]}">
-		                            <field name="body" colspan="4" widget="text" nolabel="1"/>
-		                        </page>
-		                        <page string="Body (HTML)" attrs="{'invisible':[('sub_type','=','plain')]}">
-		                            <field name="body_html" widget="text_html" nolabel="1" colspan="4"/>
-		                        </page>
-		                    </notebook>
+                                <page string="Body (Plain)" attrs="{'invisible':[('subtype','=','html')]}">
+                                    <field name="body_text" colspan="4" widget="text" nolabel="1"/>
+                                </page>
+                                <page string="Body (Rich)" attrs="{'invisible':[('subtype','=','plain')]}">
+                                    <field name="body_html" widget="text_html" nolabel="1" colspan="4"/>
+                                </page>
+                            </notebook>
 
                             <separator string="" colspan="4"/>
                             <group col="6" colspan="4">
                                 <field name="state" colspan="2"/>
                                 <group col="4" colspan="2">
-                                	<button name="%(action_email_compose_message_wizard)d" string="Reply" type="action" icon="terp-mail-replied"
-	                                context="{'mail':'reply', 'message_id':active_id}" states='received,outgoing,sent,exception,cancel'/>
-	                                <button name="send_email" string="Force Send" type="object" icon="gtk-execute" states='outgoing'/>
-	                                <button name="process_retry" string="Send Again" type="object" icon="gtk-execute" states='exception,cancel'/>
-	                                <button name="do_cancel" string="Cancel" type="object" icon="terp-gtk-stop" states='outgoing'/>
+                                    <button name="%(action_email_compose_message_wizard)d" string="Reply" type="action" icon="terp-mail-replied"
+                                    context="{'mail':'reply', 'message_id':active_id}" states='received,outgoing,sent,exception,cancel'/>
+                                    <button name="send" string="Send Now" type="object" icon="gtk-media-play" states='outgoing'/>
+                                    <button name="mark_outgoing" string="Retry" type="object" icon="gtk-redo" states='exception,cancel'/>
+                                    <button name="cancel" string="Cancel" type="object" icon="terp-gtk-stop" states='outgoing'/>
                                 </group>
                             </group>
                         </page>
                         <page string="Attachments">
                             <separator string="Attachments" colspan="4"/>
-                            <field name="attachment_ids" nolabel="1" colspan="4" readonly="1"/>
+                            <field name="attachment_ids" nolabel="1" colspan="4"/>
                         </page>
                         <page string="Advanced">
-                            <group col="4" colspan="4">
-                                <field name="smtp_server_id"/>
-	                            <field name="sub_type"/>
-	                            <field name="debug" groups="base.group_extended"/>
-	                            <field name="history"/>
-	                            <field name="auto_delete"/>
-	                            <separator string="x-headers" colspan="4"/>
-	                            <field name="headers" colspan="4" nolabel="1" groups="base.group_extended" height="350"/>
+                            <group col="2" colspan="4">
+                                <field name="mail_server_id"/>
+                                <field name="subtype" groups="base.group_extended"/>
+                                <field name="auto_delete"/>
+                                <field name="headers" colspan="4" groups="base.group_extended" height="350"/>
                             </group>
                         </page>
                     </notebook>
@@ -81,39 +74,42 @@
         </record>
 
         <record model="ir.ui.view" id="view_email_message_tree">
-            <field name="name">email.message.tree</field>
-            <field name="model">email.message</field>
+            <field name="name">mail.message.tree</field>
+            <field name="model">mail.message</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-            	<tree string="Emails" colors="grey:state in ('sent', 'cancel');blue:state=='outgoing';red:state=='exception';black:state=='received'">
+                <tree string="Emails" colors="grey:state in ('sent', 'cancel');blue:state=='outgoing';red:state=='exception';black:state=='received'">
                     <field name="date"/>
                     <field name="subject"/>
                     <field name="email_from"/>
                     <field name="user_id" string="User"/>
-                    <field name="message_id" string="Message" invisible="1"/>
+                    <field name="message_id" invisible="1"/>
                     <field name="partner_id" invisible="1"/>
                     <field name="state"/>
-                    <button name="open_document" string="Open Document" type="object" icon="gtk-jump-to"/>
+                    <button name="open_document" string="Open Related Document" type="object" icon="gtk-jump-to"/>
                     <button name="open_attachment" string="Open Attachments" type="object" icon="gtk-jump-to"/>
                 </tree>
             </field>
         </record>
 
         <record model="ir.ui.view" id="view_email_message_search">
-            <field name="name">email.message.search</field>
-            <field name="model">email.message</field>
+            <field name="name">mail.message.search</field>
+            <field name="model">mail.message</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Email Search">
-                    <separator orientation="vertical"/>
                     <filter icon="terp-camera_test" string="Received" domain="[('state','=','received')]"/>
                     <filter icon="terp-call-start" name="outgoing" string="Outgoing" domain="[('state','=','outgoing')]"/>
                     <filter icon="terp-gtk-stop" string="Exception" domain="[('state','=','exception')]"/>
                     <field name="email_from"/>
+                    <field name="email_to"/>
                     <field name="subject"/>
                     <field name="date"/>
+                    <newline/>
+                    <group expand="0" string="Extended Filters..." groups="base.group_extended">
                     <field name="user_id" string="User"/>
                     <field name="partner_id" string="Partner Name"/>
+                    </group>
                     <newline/>
                     <group expand="0" string="Group By..." groups="base.group_extended">
                         <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
@@ -130,30 +126,28 @@
 
         <record id="action_view_mail_message" model="ir.actions.act_window">
             <field name="name">Messages</field>
-            <field name="res_model">email.message</field>
+            <field name="res_model">mail.message</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="domain">[('history', '=', True)]</field>
+            <field name="domain">[('email_from', '!=', False)]</field>
              <field name="context">{'search_default_outgoing':1}</field>
             <field name="search_view_id" ref="view_email_message_search"/>
         </record>
 
-        <act_window domain="[('partner_id', '=', active_id), ('history', '=', True)]"
+        <act_window domain="[('partner_id', '=', active_id), ('email_from', '!=', False)]"
             id="act_res_partner_emails" name="Emails"
-            res_model="email.message"
+            res_model="mail.message"
             src_model="res.partner"
             view_id="view_email_message_tree"/>
 
-        <menuitem name="Email" id="menu_email_message_tools"
-            parent="base.menu_tools" />
+        <menuitem name="Emails" id="menu_email_message_tools" parent="base.menu_tools" />
 
         <menuitem name="Messages"
             id="menu_email_message"
             parent="menu_email_message_tools"
             action="action_view_mail_message" />
 
-
-        <menuitem name="Email" id="menu_config_email" parent="base.menu_lunch_survey_root" sequence="20"/>
+        <menuitem name="Emails" id="menu_config_email" parent="base.menu_lunch_survey_root" sequence="20"/>
 
     </data>
 </openerp>

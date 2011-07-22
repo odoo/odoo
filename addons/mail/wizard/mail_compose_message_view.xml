@@ -3,15 +3,14 @@
 	<data>
 
         <record model="ir.ui.view" id="email_compose_message_wizard_form">
-            <field name="name">email.compose.message.form</field>
-            <field name="model">email.compose.message</field>
+            <field name="name">mail.compose.message.form</field>
+            <field name="model">mail.compose.message</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Compose Email">
                     <group col="6" colspan="4">
                         <field name="model" invisible="context.get('active_model',False)"/>
                         <field name='filter_id' invisible="context.get('active_model',False)"/>
-                        <field name="smtp_server_id" widget="selection" colspan="4" invisible="1"/>
                         <field name="email_from" colspan="4" required="1"/>
                         <field name="email_to" colspan="4" required="1"/>
                         <field name="email_cc" colspan="4"/>
@@ -23,7 +22,7 @@
                     <separator string="" colspan="4"/>
                     <notebook colspan="4">
                         <page string="Body">
-                            <field name="body" colspan="4" nolabel="1"/>
+                            <field name="body_text" colspan="4" nolabel="1"/>
                         </page>
                         <page string="Attachments">
                             <label string="Add here all attachments of the current document you want to include in the Email." colspan="4"/>
@@ -41,16 +40,17 @@
 
         <record id="action_email_compose_message_wizard" model="ir.actions.act_window">
             <field name="name">Compose E-mail</field>
-            <field name="res_model">email.compose.message</field>
-            <field name="src_model">email.compose.message</field>
+            <field name="res_model">mail.compose.message</field>
+            <field name="src_model">mail.compose.message</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="target">new</field>
         </record>
 
-	<act_window name="Mass Mailing"
-            res_model="email.compose.message"
+    <!--  Replace the default mass-mailing wizard in base with the composition wizard -->
+    <act_window name="Mass Mailing"
+            res_model="mail.compose.message"
             src_model="res.partner"
             view_mode="form"
             target="new"

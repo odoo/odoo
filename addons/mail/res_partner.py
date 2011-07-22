@@ -26,7 +26,7 @@ class res_partner(osv.osv):
     """ Inherits partner and adds CRM information in the partner form """
     _inherit = 'res.partner'
     _columns = {
-        'emails': fields.one2many('email.message', 'partner_id', 'Emails', readonly=True, domain=[('history','=',True)]),
+        'emails': fields.one2many('mail.message', 'partner_id', 'Emails', readonly=True, domain=[('email_from','!=',False)]),
     }
 
 res_partner()

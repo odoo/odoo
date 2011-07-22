@@ -20,29 +20,35 @@
 ##############################################################################
 
 {
-    'name': 'Email System',
+    'name': 'Email Subsystem',
     'version': '1.0',
     'category': 'Tools',
     'description': """
-The generic email system allows to send and receive emails.
-===================================================================
+A generic email subsystem with message storage and queuing
+==========================================================
 
-    * SMTP Server Configuration
-    * Provide API for Sending Messages
-    * Store all emails releated messages""",
+    * Uses the global Outgoing Mail Servers for sending mail
+    * Provides an API for sending messages and archiving them,
+      grouped by conversation
+    * Includes queuing mechanism with automated configurable
+      scheduler-based processing
+    * Includes a generic mail composition wizard, including
+      a simple mechanism for mass-mailing with the use of
+      basic templates - see ``email_template`` module for
+      more features
+
+    """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['base', 'base_tools'],
-    'init_xml': [],
-    'update_xml': [
-        "wizard/email_compose_message_view.xml",
-        "email_view.xml",
-        "email_thread_view.xml",
+    'data': [
+        "wizard/mail_compose_message_view.xml",
+        "mail_view.xml",
+        "mail_thread_view.xml",
         "res_partner_view.xml",
         'security/ir.model.access.csv',
-        'email_data.xml',
+        'mail_data.xml',
     ],
-    'demo_xml': [],
     'installable': True,
     'active': False,
     'certificate': '001056784984222247309',
