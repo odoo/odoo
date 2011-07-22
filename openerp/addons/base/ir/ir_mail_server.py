@@ -161,11 +161,13 @@ class ir_mail_server(osv.osv):
             connection = smtplib.SMTP(host, port)
         connection.set_debuglevel(smtp_debug)
         if encryption == 'starttls':
-            # starttls() will perform ehlo if needed first
+            # starttls() will perform ehlo() if needed first
+            # and will discard the previous list of services
+            # after successfully performing STARTTLS command,
+            # (as per RFC 3207) so for example any AUTH
+            # capability that appears only on encrypted channels
+            # will be correctly detected.
             connection.starttls()
-
-        # force load/refresh feature list
-        connection.ehlo()
 
         if user:
             # Attempt authentication - will raise if AUTH service not supported
@@ -293,7 +295,7 @@ class ir_mail_server(osv.osv):
         email_to = message['To']
         email_cc = message['Cc']
         email_bcc = message['Bcc']
-        smtp_to_list = tools.flatten([email_to, email_cc, email_bcc])
+        smtp_to_list = filter(None,tools.flatten([email_to, email_cc, email_bcc]))
 
         # Get SMTP Server Details from Mail Server
         mail_server = None
@@ -325,7 +327,6 @@ class ir_mail_server(osv.osv):
 
         try:
             message_id = message['Message-Id']
-            smtp_server = smtp_server
 
             # Add email in Maildir if smtp_server contains maildir.
             if smtp_server.startswith('maildir:/'):
