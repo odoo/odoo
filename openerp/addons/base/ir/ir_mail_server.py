@@ -30,9 +30,10 @@ import smtplib
 
 from osv import osv
 from osv import fields
-from tools.translate import _
-from tools import html2text
-import tools
+from openerp.tools.translate import _
+from openerp.tools import html2text
+from openerp.tools.func import wraps
+import openerp.tools as tools
 
 # ustr was originally from tools.misc.
 # it is moved to loglevels until we refactor tools.
@@ -46,12 +47,13 @@ class MailDeliveryException(osv.except_osv):
         super(MailDeliveryException, self).__init__(name, value, exc_type=exc_type)
 
 class WriteToLogger(object):
-    """debugging helper: behave as a fd and pipe to DEBUG logger"""
-    def __init__(self, logger):
+    """debugging helper: behave as a fd and pipe to logger at the given level"""
+    def __init__(self, logger, level=logging.DEBUG):
         self.logger = logger
+        self.level = level
 
     def write(self, s):
-        self.logger.debug(s)
+        self.logger.log(self.level, s)
 
 def encode_header(header_text):
     """Returns an appropriate representation of the given header value,
@@ -105,8 +107,9 @@ class ir_mail_server(osv.osv):
                                                  "- None: SMTP sessions are done in cleartext.\n"
                                                  "- TLS (STARTTLS): TLS encryption will be requested at start of cleartext SMTP session (Recommended)\n"
                                                  "- SSL/TLS: Uses Secure SMTP over SSL tunnel, through dedicated SMTP/SSL port (default: 465)"),
-        'smtp_debug': fields.boolean('Debugging', help="If checked, the full output of SMTP sessions will "
-                                                       "be written to the server log (may include confidential info)"),
+        'smtp_debug': fields.boolean('Debugging', help="If enabled, the full output of SMTP sessions will "
+                                                       "be written to the server log at DEBUG level"
+                                                       "(this is very verbose and may include confidential info!)"),
         'sequence': fields.integer('Priority', help="When no specific mail server is requested for a mail, the highest priority one "
                                                     "is used. Default priority is 10 (smaller number = higher priority)"),
     }
@@ -116,6 +119,15 @@ class ir_mail_server(osv.osv):
          'sequence': 10,
          'smtp_encryption': 'none',
      }
+
+    def __init__(self, *args, **kwargs):
+        # Make sure we pipe the smtplib outputs to our own DEBUG logger
+        if not isinstance(smtplib.stderr, WriteToLogger):
+            print "REDIRECTING!!!"
+            logpiper = WriteToLogger(_logger)
+            smtplib.stderr = logpiper
+            smtplib.stdout = logpiper
+        return super(ir_mail_server, self).__init__(*args,**kwargs)
 
     def name_get(self, cr, uid, ids, context=None):
         return [(a["id"], "(%s)" % (a['name'])) for a in self.read(cr, uid, ids, ['name'], context=context)]
@@ -166,7 +178,7 @@ class ir_mail_server(osv.osv):
             # after successfully performing STARTTLS command,
             # (as per RFC 3207) so for example any AUTH
             # capability that appears only on encrypted channels
-            # will be correctly detected.
+            # will be correctly detected for next step
             connection.starttls()
 
         if user:
@@ -339,14 +351,9 @@ class ir_mail_server(osv.osv):
                 return message_id
 
             try:
-                if smtp_debug:
-                    oldstderr = smtplib.stderr
-                    smtplib.stderr = WriteToLogger(_logger)
                 smtp = self.connect(smtp_server, smtp_port, smtp_user, smtp_password, smtp_encryption, smtp_debug)
                 smtp.sendmail(smtp_from, smtp_to_list, message.as_string())
             finally:
-                if smtp_debug:
-                    smtplib.stderr = oldstderr
                 try:
                     # Close Connection of SMTP Server
                     smtp.quit()
