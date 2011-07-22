@@ -664,15 +664,16 @@
             <input type="reset" value="Clear"/>
             <button class="oe_search-view-custom-filter-btn"><span>Advanced Filter</span></button>
             <select class="oe_search-view-filters-management">
-
             </select>
         </div>
     </form>
 </t>
 <t t-name="SearchView.managed-filters">
     <option value="_filters">-- Filters --</option>
+    <t t-set="i" t-value="0"/>
     <t t-foreach="filters" t-as="filter">
-        <option t-att-value="'get:' + filter.id"><t t-esc="filter.name"/></option>
+        <option t-att-value="'get:' + i"><t t-esc="filter.name"/></option>
+        <t t-set="i" t-value="i+1"/>
     </t>
     <option value="_actions">-- Actions --</option>
     <option value="save_filter">Save Filter</option>
