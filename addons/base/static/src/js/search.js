@@ -141,7 +141,13 @@ openerp.base.SearchView = openerp.base.Controller.extend({
         }).value();
         
         // filters management
-        this.$element.find(".oe_search-view-filters-management").change(this.on_filters_management);
+        var self = this;
+        var filters_set = new openerp.base.DataSetStatic(this, "ir.filters");
+        filters_set.call("get_filters", [this.dataset.model]).then(function(result) {
+            var filters = self.$element.find(".oe_search-view-filters-management");
+            filters.html(QWeb.render("SearchView.managed-filters", {filters: result}));
+            filters.change(self.on_filters_management);
+        });
 
         var self = this;
         $.when.apply(null, widget_starts).then(function () {
