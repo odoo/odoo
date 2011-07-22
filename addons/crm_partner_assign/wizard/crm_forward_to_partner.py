@@ -30,7 +30,7 @@ from tools.translate import _
 class crm_lead_forward_to_partner(osv.osv_memory):
     """Forwards lead history"""
     _name = 'crm.lead.forward.to.partner'
-    _inherit = "email.compose.message"
+    _inherit = "mail.compose.message"
 
     _columns = {
         'send_to': fields.selection([('user', 'User'), ('partner', 'Partner'), \
@@ -70,13 +70,13 @@ class crm_lead_forward_to_partner(osv.osv_memory):
         @param hist_id: Id of latest history
         @param context: A standard dictionary for contextual values
         """
-        log_pool = self.pool.get('email.message')
+        log_pool = self.pool.get('mail.message')
         hist = log_pool.browse(cr, uid, hist_id, context=context)
         header = '-------- Original Message --------'
         sender = 'From: %s' %(hist.email_from or '')
         to = 'To: %s' % (hist.email_to or '')
         sentdate = 'Date: %s' % (hist.date or '')
-        desc = '\n%s'%(hist.body)
+        desc = '\n%s'%(hist.body_text)
         original = [header, sender, to, sentdate, desc]
         original = '\n'.join(original)
         return original
@@ -111,7 +111,7 @@ class crm_lead_forward_to_partner(osv.osv_memory):
         res_id = context.get('active_id')
         msg_val = self._get_case_history(cr, uid, history_type, res_id, context=context)
         if msg_val:
-            res = {'value': {'description' : '\n\n' + msg_val}}
+            res = {'value': {'body_text' : '\n\n' + msg_val}}
         return res
 
     def _get_case_history(self, cr, uid, history_type, res_id, context=None):
@@ -127,12 +127,12 @@ class crm_lead_forward_to_partner(osv.osv_memory):
 
         elif history_type == 'whole':
             log_ids = model_pool.browse(cr, uid, res_id, context=context).message_ids
-            log_ids = map(lambda x: x.id, filter(lambda x: x.history, log_ids))
+            log_ids = map(lambda x: x.id, filter(lambda x: x.email_from, log_ids))
             msg_val = case_info + '\n\n' + self.get_whole_history(cr, uid, log_ids, context=context)
 
         elif history_type == 'latest':
             log_ids = model_pool.browse(cr, uid, res_id, context=context).message_ids
-            log_ids = filter(lambda x: x.history and x.id, log_ids)
+            log_ids = filter(lambda x: x.email_from and x.id, log_ids)
             if not log_ids:
                 msg_val = case_info
             else:
@@ -291,13 +291,11 @@ class crm_lead_forward_to_partner(osv.osv_memory):
         body = self._get_case_history(cr, uid, defaults.get('history', 'latest'), lead.id, context=context)
         defaults.update({
             'subject' : '%s: %s - %s' % (_('Fwd'), 'Openerp lead forward', lead.name),
-            'body' : body,
+            'body_text' : body,
             'email_cc' : email_cc,
             'email_to' : email or 'dummy@dummy.ly'
         })
         return defaults
-
-crm_lead_forward_to_partner()
 
 class crm_lead_mass_forward_to_partner(osv.osv_memory):
     _name = 'crm.lead.mass.forward.to.partner'
@@ -318,13 +316,11 @@ class crm_lead_mass_forward_to_partner(osv.osv_memory):
                 continue
 
             context.update({'active_id' : case.id})
-            value = self.default_get(cr, uid, ['body', 'email_to', 'email_cc', 'subject', 'history'], context=context)
+            value = self.default_get(cr, uid, ['body_text', 'email_to', 'email_cc', 'subject', 'history'], context=context)
             self.write(cr, uid, ids, value, context=context)
             self.action_forward(cr,uid, ids, context=context)
 
         return {'type': 'ir.actions.act_window_close'}
 
-
-crm_lead_mass_forward_to_partner()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

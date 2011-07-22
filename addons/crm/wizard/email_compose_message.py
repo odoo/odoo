@@ -23,40 +23,39 @@ from osv import osv
 from osv import fields
 import tools
 
-email_model = [
-        'crm.lead',
-    ]
+SUPPORTED_MODELS = ['crm.lead',]
 
-class email_compose_message(osv.osv_memory):
-    _inherit = 'email.compose.message'
+class mail_compose_message(osv.osv_memory):
+    _inherit = 'mail.compose.message'
 
-    def get_value(self, cr, uid, model, resource_id, context=None):
-        '''
-        To get values of the resource_id for the model
-        @param model: Object
-        @param resource_id: id of a record for which values to be read
+    def get_value(self, cr, uid, model, res_id, context=None):
+        """Returns a defaults-like dict with initial values for the composition
+           wizard when sending an email related to the document record identified
+           by ``model`` and ``res_id``.
 
-        @return: Returns a dictionary
-        '''
-        if context is None:
-            context = {}
-        result = super(email_compose_message, self).get_value(cr, uid,  model, resource_id, context=context)
-        if model in email_model and resource_id:
+           The default implementation returns an empty dictionary, and is meant
+           to be overridden by subclasses.
+
+           :param str model: model name of the document record this mail is related to.
+           :param int res_id: id of the document record this mail is related to.
+           :param dict context: several context values will modify the behavior
+                                of the wizard, cfr. the class description.
+        """
+        result = super(mail_compose_message, self).get_value(cr, uid,  model, res_id, context=context)
+        if model in SUPPORTED_MODELS and res_id:
             model_obj = self.pool.get(model)
-            data = model_obj.browse(cr, uid , resource_id, context)
+            data = model_obj.browse(cr, uid , res_id, context)
             result.update({
                     'subject' : data.name or False,
                     'email_to' : data.email_from or False,
                     'email_from' : data.user_id and data.user_id.address_id and data.user_id.address_id.email or tools.config.get('email_from', False),
-                    'body' : '\n' + (tools.ustr(data.user_id.signature or '')),
+                    'body_text' : '\n' + (tools.ustr(data.user_id.signature or '')),
                     'email_cc' : tools.ustr(data.email_cc or ''),
                     'model': model,
-                    'res_id': resource_id,
+                    'res_id': res_id,
                 })
             if hasattr(data, 'section_id'):
                 result.update({'reply_to' : data.section_id and data.section_id.reply_to or False})
         return result
-
-email_compose_message()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

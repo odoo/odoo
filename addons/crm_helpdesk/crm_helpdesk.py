@@ -38,7 +38,7 @@ class crm_helpdesk(crm.crm_case, osv.osv):
     _name = "crm.helpdesk"
     _description = "Helpdesk"
     _order = "id desc"
-    _inherit = ['email.thread']
+    _inherit = ['mail.thread']
     _columns = {
             'id': fields.integer('ID', readonly=True),
             'name': fields.char('Name', size=128, required=True),
@@ -64,8 +64,7 @@ class crm_helpdesk(crm.crm_case, osv.osv):
             'ref' : fields.reference('Reference', selection=crm._links_get, size=128),
             'ref2' : fields.reference('Reference 2', selection=crm._links_get, size=128),
             'canal_id': fields.many2one('res.partner.canal', 'Channel', \
-                            help="The channels represent the different communication \
- modes available with the customer."),
+                            help="The channels represent the different communication modes available with the customer."),
             'planned_revenue': fields.float('Planned Revenue'),
             'planned_cost': fields.float('Planned Costs'),
             'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),
@@ -79,7 +78,7 @@ class crm_helpdesk(crm.crm_case, osv.osv):
                                   \nIf the case is in progress the state is set to \'Open\'.\
                                   \nWhen the case is over, the state is set to \'Done\'.\
                                   \nIf the case needs to be reviewed then the state is set to \'Pending\'.'),
-            'message_ids': fields.one2many('email.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
+            'message_ids': fields.one2many('mail.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
     }
 
     _defaults = {
@@ -95,19 +94,12 @@ class crm_helpdesk(crm.crm_case, osv.osv):
         'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0],
     }
 
-    def message_new(self, cr, uid, msg, context=None):
-        """
-        Automatically calls when new email message arrives
-
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks
-        @param msg: dictionary object to contain email message data
-        """
-        thread_pool = self.pool.get('email.thread')
-
+    def message_new(self, cr, uid, msg_dict, custom_values=None, context=None):
+        """Automatically called when new email message arrives"""
+        res_id = super(crm_helpdesk,self).message_new(cr, uid, msg_dict, custom_values=custom_values, context=context)
+        thread_pool = self.pool.get('mail.thread')
         subject = msg.get('subject')
-        body = msg.get('body')
+        body = msg.get('body_text')
         msg_from = msg.get('from')
         priority = msg.get('priority')
 
@@ -125,36 +117,14 @@ class crm_helpdesk(crm.crm_case, osv.osv):
         if res:
             vals.update(res)
 
-        res_id = self.create(cr, uid, vals, context)
-
-        attachments = msg.get('attachments', {})
-        self.history(cr, uid, [res_id], _('receive'), history=True,
-                            subject = msg.get('subject'),
-                            email = msg.get('to'),
-                            details = msg.get('body'),
-                            email_from = msg.get('from'),
-                            email_cc = msg.get('cc'),
-                            message_id = msg.get('message-id'),
-                            references = msg.get('references', False) or msg.get('in-reply-to', False),
-                            attach = attachments,
-                            email_date = msg.get('date'),
-                            body_html= msg.get('body_html'),
-                            sub_type = msg.get('sub_type'),
-                            headers = msg.get('headers'),
-                            priority = msg.get('priority'),
-                            context = context)
-
+        self.write(cr, uid, [res_id], vals, context)
         return res_id
 
     def message_update(self, cr, uid, ids, msg, vals={}, default_act='pending', context=None):
-        """
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of update mail’s IDs
-        """
         if isinstance(ids, (str, int, long)):
             ids = [ids]
+
+        super(crm_helpdesk,self).message_update(cr, uid, msg, context=context)
 
         if msg.get('priority') in dict(crm.AVAILABLE_PRIORITIES):
             vals['priority'] = msg.get('priority')
@@ -165,7 +135,7 @@ class crm_helpdesk(crm.crm_case, osv.osv):
             'probability':'probability'
         }
         vls = {}
-        for line in msg['body'].split('\n'):
+        for line in msg['body_text'].split('\n'):
             line = line.strip()
             res = tools.misc.command_re.match(line)
             if res and maps.get(res.group(1).lower()):
@@ -181,26 +151,7 @@ class crm_helpdesk(crm.crm_case, osv.osv):
             if case.state in CRM_HELPDESK_STATES:
                 values.update(state=crm.AVAILABLE_STATES[1][0]) #re-open
             res = self.write(cr, uid, [case.id], values, context=context)
-
-        attachments = msg.get('attachments', {})
-        self.history(cr, uid, ids, _('receive'), history=True,
-                            subject = msg.get('subject'),
-                            email = msg.get('to'),
-                            details = msg.get('body'),
-                            email_from = msg.get('from'),
-                            email_cc = msg.get('cc'),
-                            message_id = msg.get('message-id'),
-                            references = msg.get('references', False) or msg.get('in-reply-to', False),
-                            attach = attachments,
-                            email_date = msg.get('date'),
-                            body_html= msg.get('body_html'),
-                            sub_type = msg.get('sub_type'),
-                            headers = msg.get('headers'),
-                            priority = msg.get('priority'),
-                            context = context)
         return res
-
-crm_helpdesk()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

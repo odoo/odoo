@@ -42,7 +42,7 @@ class crm_meeting(crm_case, osv.osv):
     _name = 'crm.meeting'
     _description = "Meeting"
     _order = "id desc"
-    _inherit = ['email.thread',"calendar.event"]
+    _inherit = ['mail.thread',"calendar.event"]
     _columns = {
         # From crm.case
         'name': fields.char('Summary', size=124, required=True, states={'done': [('readonly', True)]}),
@@ -67,7 +67,7 @@ class crm_meeting(crm_case, osv.osv):
                                  'event_id', 'attendee_id', 'Attendees', states={'done': [('readonly', True)]}),
         'date_closed': fields.datetime('Closed', readonly=True),
         'date_deadline': fields.datetime('Deadline', states={'done': [('readonly', True)]}),
-        'message_ids': fields.one2many('email.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
+        'message_ids': fields.one2many('mail.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
         'state': fields.selection([('open', 'Confirmed'),
                                     ('draft', 'Unconfirmed'),
                                     ('cancel', 'Cancelled'),

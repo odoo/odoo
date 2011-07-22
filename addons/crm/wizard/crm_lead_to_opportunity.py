@@ -132,10 +132,11 @@ class crm_lead2opportunity_partner(osv.osv_memory):
             vals['partner_address_id'] = False
 
         lead.write(vals, context=context)
-        leads.history(cr, uid, [lead], _('Converted to opportunity'), details='Converted to Opportunity', context=context)
+        text = _('Converted to opportunity')
+        leads.history(cr, uid, [lead], text, body_text=text, context=context)
         if lead.partner_id:
             msg_ids = [ x.id for x in lead.message_ids]
-            self.pool.get('email.message').write(cr, uid, msg_ids, {
+            self.pool.get('mail.message').write(cr, uid, msg_ids, {
                         'partner_id': lead.partner_id.id
                     }, context=context)
             leads.log(cr, uid, lead.id, _("Lead '%s' has been converted to an opportunity.") % lead.name)
@@ -144,7 +145,7 @@ class crm_lead2opportunity_partner(osv.osv_memory):
         email_to = lead.user_id and lead.user_id.user_email
         if not email_to:
             return False
-        message_pool = self.pool.get('email.message')
+        message_pool = self.pool.get('mail.message')
         email_from = lead.section_id and lead.section_id.user_id and lead.section_id.user_id.user_email or email_to
         partner = lead.partner_id and lead.partner_id.name or lead.partner_name
         subject = "lead %s converted into opportunity" % lead.name

@@ -41,7 +41,7 @@ class crm_claim(crm.crm_case, osv.osv):
     _name = "crm.claim"
     _description = "Claim"
     _order = "priority,date desc"
-    _inherit = ['email.thread']
+    _inherit = ['mail.thread']
     _columns = {
         'id': fields.integer('ID', readonly=True),
         'name': fields.char('Claim Subject', size=128, required=True),
@@ -81,7 +81,7 @@ class crm_claim(crm.crm_case, osv.osv):
                                   \nIf the case is in progress the state is set to \'Open\'.\
                                   \nWhen the case is over, the state is set to \'Done\'.\
                                   \nIf the case needs to be reviewed then the state is set to \'Pending\'.'),
-        'message_ids': fields.one2many('email.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
+        'message_ids': fields.one2many('mail.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
     }
 
     def stage_next(self, cr, uid, ids, context=None):
@@ -99,12 +99,7 @@ class crm_claim(crm.crm_case, osv.osv):
         return stage
 
     def _get_stage_id(self, cr, uid, context=None):
-        """Finds type of stage according to object.
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param context: A standard dictionary for contextual values
-        """
+        """Finds type of stage according to object."""
         if context is None:
             context = {}
         type = context and context.get('stage_type', '')
@@ -126,12 +121,9 @@ class crm_claim(crm.crm_case, osv.osv):
 
     def onchange_partner_id(self, cr, uid, ids, part, email=False):
         """This function returns value of partner address based on partner
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of case IDs
-        @param part: Partner's id
-        @email: Partner's email ID
+
+           :param part: Partner's id
+           :param email: ignored
         """
         if not part:
             return {'value': {'partner_address_id': False,
@@ -146,12 +138,9 @@ class crm_claim(crm.crm_case, osv.osv):
 
     def onchange_partner_address_id(self, cr, uid, ids, add, email=False):
         """This function returns value of partner email based on Partner Address
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of case IDs
-        @param add: Id of Partner's address
-        @email: Partner's email ID
+
+           :param part: Partner's id
+           :param email: ignored
         """
         if not add:
             return {'value': {'email_from': False}}
@@ -159,9 +148,7 @@ class crm_claim(crm.crm_case, osv.osv):
         return {'value': {'email_from': address.email, 'partner_phone': address.phone, 'partner_mobile': address.mobile}}
 
     def case_open(self, cr, uid, ids, *args):
-        """
-            Opens Claim
-        """
+        """Opens Claim"""
         res = super(crm_claim, self).case_open(cr, uid, ids, *args)
         claims = self.browse(cr, uid, ids)
 
@@ -172,22 +159,16 @@ class crm_claim(crm.crm_case, osv.osv):
 
         return res
 
-    def message_new(self, cr, uid, msg, context=None):
-        """
-        Automatically calls when new email message arrives
-
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks
-        @param msg: dictionary object to contain email message data
-        """
-        thread_pool = self.pool.get('email.thread')
-
+    def message_new(self, cr, uid, msg, custom_values=None, context=None):
+        """Automatically called when new email message arrives"""
+        res_id = super(crm_claim,self).message_new(cr, uid, msg,
+                                                   custom_values=custom_values,
+                                                   context=context)
+        mail_thread = self.pool.get('mail.thread')
         subject = msg.get('subject')
-        body = msg.get('body')
+        body = msg.get('body_text')
         msg_from = msg.get('from')
         priority = msg.get('priority')
-
         vals = {
             'name': subject,
             'email_from': msg_from,
@@ -195,43 +176,19 @@ class crm_claim(crm.crm_case, osv.osv):
             'description': body,
             'user_id': False,
         }
-        if msg.get('priority', False):
+        if priority:
             vals['priority'] = priority
-
-        res = thread_pool.get_partner(cr, uid, msg.get('from', False))
+        res = mail_thread.get_partner(cr, uid, msg.get('from', False))
         if res:
             vals.update(res)
-
-        res_id = self.create(cr, uid, vals, context)
-
-        attachments = msg.get('attachments', {})
-        self.history(cr, uid, [res_id], _('receive'), history=True,
-                            subject = msg.get('subject'),
-                            email = msg.get('to'),
-                            details = msg.get('body'),
-                            email_from = msg.get('from'),
-                            email_cc = msg.get('cc'),
-                            message_id = msg.get('message-id'),
-                            references = msg.get('references', False) or msg.get('in-reply-to', False),
-                            attach = attachments,
-                            email_date = msg.get('date'),
-                            body_html= msg.get('body_html'),
-                            sub_type = msg.get('sub_type'),
-                            headers = msg.get('headers'),
-                            priority = msg.get('priority'),
-                            context = context)
-
+        self.write(cr, uid, [res_id], vals, context=context)
         return res_id
 
     def message_update(self, cr, uid, ids, msg, vals={}, default_act='pending', context=None):
-        """
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of update mail’s IDs
-        """
         if isinstance(ids, (str, int, long)):
             ids = [ids]
+
+        res_id = super(crm_claim,self).message_update(cr, uid, msg, context=context)
 
         if msg.get('priority') in dict(crm.AVAILABLE_PRIORITIES):
             vals['priority'] = msg.get('priority')
@@ -242,7 +199,7 @@ class crm_claim(crm.crm_case, osv.osv):
             'probability':'probability'
         }
         vls = {}
-        for line in msg['body'].split('\n'):
+        for line in msg['body_text'].split('\n'):
             line = line.strip()
             res = tools.misc.command_re.match(line)
             if res and maps.get(res.group(1).lower()):
@@ -258,27 +215,7 @@ class crm_claim(crm.crm_case, osv.osv):
             if case.state in CRM_CLAIM_PENDING_STATES:
                 values.update(state=crm.AVAILABLE_STATES[1][0]) #re-open
             res = self.write(cr, uid, [case.id], values, context=context)
-
-        attachments = msg.get('attachments', {})
-        self.history(cr, uid, ids, _('receive'), history=True,
-                            subject = msg.get('subject'),
-                            email = msg.get('to'),
-                            details = msg.get('body'),
-                            email_from = msg.get('from'),
-                            email_cc = msg.get('cc'),
-                            message_id = msg.get('message-id'),
-                            references = msg.get('references', False) or msg.get('in-reply-to', False),
-                            attach = attachments,
-                            email_date = msg.get('date'),
-                            body_html= msg.get('body_html'),
-                            sub_type = msg.get('sub_type'),
-                            headers = msg.get('headers'),
-                            priority = msg.get('priority'),
-                            context = context)
         return res
-
-crm_claim()
-
 
 class crm_stage_claim(osv.osv):
 
@@ -291,9 +228,5 @@ class crm_stage_claim(osv.osv):
     _columns = {
             'type': fields.selection(_get_type_value, 'Type'),
     }
-
-
-crm_stage_claim()
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

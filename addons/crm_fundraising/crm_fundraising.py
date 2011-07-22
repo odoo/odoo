@@ -31,7 +31,7 @@ class crm_fundraising(crm.crm_case, osv.osv):
     _name = "crm.fundraising"
     _description = "Fund Raising"
     _order = "id desc"
-    _inherit = ['email.thread']
+    _inherit = ['mail.thread']
     _columns = {
             'id': fields.integer('ID'),
             'name': fields.char('Name', size=128, required=True),
@@ -71,14 +71,13 @@ class crm_fundraising(crm.crm_case, osv.osv):
             'ref': fields.reference('Reference', selection=crm._links_get, size=128),
             'ref2': fields.reference('Reference 2', selection=crm._links_get, size=128),
             'canal_id': fields.many2one('res.partner.canal', 'Channel', \
-                        help="The channels represent the different communication \
- modes available with the customer."),
+                        help="The channels represent the different communication modes available with the customer."),
             'state': fields.selection(crm.AVAILABLE_STATES, 'State', size=16, readonly=True,
                                   help='The state is set to \'Draft\', when a case is created.\
                                   \nIf the case is in progress the state is set to \'Open\'.\
                                   \nWhen the case is over, the state is set to \'Done\'.\
                                   \nIf the case needs to be reviewed then the state is set to \'Pending\'.'),
-            'message_ids': fields.one2many('email.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
+            'message_ids': fields.one2many('mail.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
         }
 
     _defaults = {
@@ -96,8 +95,6 @@ class crm_fundraising(crm.crm_case, osv.osv):
             'planned_revenue': lambda *a:0.0,
             }
 
-crm_fundraising()
-
 
 class crm_stage_fundraising(osv.osv):
 
@@ -111,5 +108,3 @@ class crm_stage_fundraising(osv.osv):
             'type': fields.selection(_get_type_value, 'Type'),
     }
 
-
-crm_stage_fundraising()

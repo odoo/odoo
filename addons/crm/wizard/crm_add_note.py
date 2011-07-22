@@ -2,6 +2,7 @@ from crm import crm
 from osv import fields, osv
 from tools.translate import _
 import base64
+from mail.mail_message import truncate_text
 
 AVAILABLE_STATES = crm.AVAILABLE_STATES + [('unchanged', 'Unchanged')]
 
@@ -43,12 +44,11 @@ class crm_add_note(osv.osv_memory):
                                          context=context)
             case = case_list[0]
             user_obj = self.pool.get('res.users')
-            user_name = user_obj.browse(cr, uid, [uid], context=context)[0].name
             attach = dict(
                 (x.name, base64.decodestring(x.binary)) for x in obj.attachment_ids
             )
-            case_pool.history(cr, uid, [case], self.pool.get('email.message').truncate_data(cr, uid, obj.body, context=context), history=False,
-                              details=obj.body, email_from=user_name, attach=attach)
+            case_pool.history(cr, uid, [case], truncate_text(obj.body),
+                              body_text=obj.body, attachments=attach)
 
             if obj.state == 'unchanged':
                 pass

@@ -40,7 +40,7 @@ class crm_lead(crm_case, osv.osv):
     _name = "crm.lead"
     _description = "Lead/Opportunity"
     _order = "date_action, priority, id desc"
-    _inherit = ['email.thread','res.partner.address']
+    _inherit = ['mail.thread','res.partner.address']
     def _compute_day(self, cr, uid, ids, fields, args, context=None):
         """
         @param cr: the current row, from the database cursor,
@@ -100,8 +100,8 @@ class crm_lead(crm_case, osv.osv):
 
     def _history_search(self, cr, uid, obj, name, args, context=None):
         res = []
-        msg_obj = self.pool.get('email.message')
-        message_ids = msg_obj.search(cr, uid, [('history','=',True), ('subject', args[0][1], args[0][2])], context=context)
+        msg_obj = self.pool.get('mail.message')
+        message_ids = msg_obj.search(cr, uid, [('email_from','!=',False), ('subject', args[0][1], args[0][2])], context=context)
         lead_ids = self.search(cr, uid, [('message_ids', 'in', message_ids)], context=context)
 
         if lead_ids:
@@ -114,7 +114,7 @@ class crm_lead(crm_case, osv.osv):
         for obj in self.browse(cr, uid, ids, context=context):
             res[obj.id] = ''
             for msg in obj.message_ids:
-                if msg.history:
+                if msg.email_from:
                     res[obj.id] = msg.subject
                     break
         return res
@@ -169,7 +169,7 @@ class crm_lead(crm_case, osv.osv):
                                   \nIf the case is in progress the state is set to \'Open\'.\
                                   \nWhen the case is over, the state is set to \'Done\'.\
                                   \nIf the case needs to be reviewed then the state is set to \'Pending\'.'),
-        'message_ids': fields.one2many('email.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
+        'message_ids': fields.one2many('mail.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
         'subjects': fields.function(_get_email_subject, fnct_search=_history_search, string='Subject of Email', method=True, type='char', size=64),
     }
 
@@ -301,7 +301,8 @@ class crm_lead(crm_case, osv.osv):
 
         if 'stage_id' in vals and vals['stage_id']:
             stage_obj = self.pool.get('crm.case.stage').browse(cr, uid, vals['stage_id'], context=context)
-            self.history(cr, uid, ids, _("Changed Stage to: %s") % stage_obj.name, details=_("Changed Stage to: %s") % stage_obj.name)
+            text = _("Changed Stage to: %s") % stage_obj.name
+            self.history(cr, uid, ids, text, body_text=text)
             message=''
             for case in self.browse(cr, uid, ids, context=context):
                 if case.type == 'lead' or  context.get('stage_type',False)=='lead':
@@ -336,22 +337,16 @@ class crm_lead(crm_case, osv.osv):
                     _('You can not delete this lead. You should better cancel it.'))
         return super(crm_lead, self).unlink(cr, uid, ids, context)
 
-    def message_new(self, cr, uid, msg, context=None):
-        """
-        Automatically calls when new email message arrives
-
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks
-        @param msg: dictionary object to contain email message data
-        """
-        thread_pool = self.pool.get('email.thread')
-
+    def message_new(self, cr, uid, msg, custom_values=None, context=None):
+        """Automatically calls when new email message arrives"""
+        res_id = super(crm_lead, self).message_new(cr, uid, msg,
+                                                   custom_values=custom_values,
+                                                   context=context)
+        mail_thread = self.pool.get('mail.thread')
         subject = msg.get('subject')
-        body = msg.get('body')
+        body = msg.get('body_text')
         msg_from = msg.get('from')
         priority = msg.get('priority')
-
         vals = {
             'name': subject,
             'email_from': msg_from,
@@ -361,52 +356,29 @@ class crm_lead(crm_case, osv.osv):
         }
         if msg.get('priority', False):
             vals['priority'] = priority
-
-        res = thread_pool.get_partner(cr, uid, msg.get('from', False))
+        res = mail_thread.get_partner(cr, uid, msg.get('from', False))
         if res:
             vals.update(res)
-
-        res_id = self.create(cr, uid, vals, context)
-
-        attachments = msg.get('attachments', {})
-        self.history(cr, uid, [res_id], _('receive'), history=True,
-                            subject = msg.get('subject'),
-                            email = msg.get('to'),
-                            details = msg.get('body'),
-                            email_from = msg.get('from'),
-                            email_cc = msg.get('cc'),
-                            message_id = msg.get('message-id'),
-                            references = msg.get('references', False) or msg.get('in-reply-to', False),
-                            attach = attachments,
-                            email_date = msg.get('date'),
-                            body_html= msg.get('body_html'),
-                            sub_type = msg.get('sub_type'),
-                            headers = msg.get('headers'),
-                            priority = msg.get('priority'),
-                            context = context)
-
+        res_id = self.write(cr, uid, [res_id], vals, context)
         return res_id
 
     def message_update(self, cr, uid, ids, msg, vals={}, default_act='pending', context=None):
-        """
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of update mail’s IDs
-        """
         if isinstance(ids, (str, int, long)):
             ids = [ids]
 
+        super(crm_lead, self).message_update(cr, uid, msg,
+                                             custom_values=custom_values,
+                                             context=context)
+
         if msg.get('priority') in dict(crm.AVAILABLE_PRIORITIES):
             vals['priority'] = msg.get('priority')
-
         maps = {
             'cost':'planned_cost',
             'revenue': 'planned_revenue',
             'probability':'probability'
         }
         vls = {}
-        for line in msg['body'].split('\n'):
+        for line in msg['body_text'].split('\n'):
             line = line.strip()
             res = tools.misc.command_re.match(line)
             if res and maps.get(res.group(1).lower()):
@@ -422,23 +394,6 @@ class crm_lead(crm_case, osv.osv):
             if case.state in CRM_LEAD_PENDING_STATES:
                 values.update(state=crm.AVAILABLE_STATES[1][0]) #re-open
             res = self.write(cr, uid, [case.id], values, context=context)
-
-        attachments = msg.get('attachments', {})
-        self.history(cr, uid, ids, _('receive'), history=True,
-                            subject = msg.get('subject'),
-                            email = msg.get('to'),
-                            details = msg.get('body'),
-                            email_from = msg.get('from'),
-                            email_cc = msg.get('cc'),
-                            message_id = msg.get('message-id'),
-                            references = msg.get('references', False) or msg.get('in-reply-to', False),
-                            attach = attachments,
-                            email_date = msg.get('date'),
-                            body_html= msg.get('body_html'),
-                            sub_type = msg.get('sub_type'),
-                            headers = msg.get('headers'),
-                            priority = msg.get('priority'),
-                            context = context)
         return res
 
     def on_change_optin(self, cr, uid, ids, optin):

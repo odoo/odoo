@@ -45,7 +45,7 @@ AVAILABLE_PRIORITIES = [
 ]
 
 class crm_case(object):
-    """A simple python class to be used for common functions """
+    """A python class to be used as common abstract class for CRM business objects"""
 
     def _find_lost_stage(self, cr, uid, type, section_id):
         return self._find_percent_stage(cr, uid, 0.0, type, section_id)
@@ -54,9 +54,7 @@ class crm_case(object):
         return self._find_percent_stage(cr, uid, 100.0, type, section_id)
 
     def _find_percent_stage(self, cr, uid, percent, type, section_id):
-        """
-            Return the first stage with a probability == percent
-        """
+        """Return the first stage with a probability == percent"""
         stage_pool = self.pool.get('crm.case.stage')
         if section_id :
             ids = stage_pool.search(cr, uid, [("probability", '=', percent), ("type", 'like', type), ("section_ids", 'in', [section_id])])
@@ -69,9 +67,7 @@ class crm_case(object):
 
 
     def _find_first_stage(self, cr, uid, type, section_id):
-        """
-            return the first stage that has a sequence number equal or higher than sequence
-        """
+        """Returns the first stage that has a sequence number equal or higher than sequence"""
         stage_pool = self.pool.get('crm.case.stage')
         if section_id :
             ids = stage_pool.search(cr, uid, [("sequence", '>', 0), ("type", 'like', type), ("section_ids", 'in', [section_id])])
@@ -89,13 +85,6 @@ class crm_case(object):
             return False
 
     def onchange_stage_id(self, cr, uid, ids, stage_id, context={}):
-
-        """ @param self: The object pointer
-            @param cr: the current row, from the database cursor,
-            @param uid: the current user’s ID for security checks,
-            @param ids: List of stage’s IDs
-            @stage_id: change state id on run time """
-
         if not stage_id:
             return {'value':{}}
 
@@ -106,13 +95,7 @@ class crm_case(object):
         return {'value':{'probability': stage.probability}}
 
     def _get_default_partner_address(self, cr, uid, context=None):
-
-        """Gives id of default address for current user
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param context: A standard dictionary for contextual values
-        """
+        """Gives id of default address for current user"""
         if context is None:
             context = {}
         if not context.get('portal', False):
@@ -120,12 +103,7 @@ class crm_case(object):
         return self.pool.get('res.users').browse(cr, uid, uid, context).address_id.id
 
     def _get_default_partner(self, cr, uid, context=None):
-        """Gives id of partner for current user
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param context: A standard dictionary for contextual values
-        """
+        """Gives id of partner for current user"""
         if context is None:
             context = {}
         if not context.get('portal', False):
@@ -136,17 +114,9 @@ class crm_case(object):
         return user.address_id.partner_id.id
 
     def copy(self, cr, uid, id, default=None, context=None):
-        """
-        Overrides orm copy method.
-        @param self: the object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param id: Id of mailgate thread
-        @param default: Dictionary of default values for copy.
-        @param context: A standard dictionary for contextual values
-        """
-        if context is None:
-            context = {}
+        """Overrides orm copy method to avoid copying messages,
+           as well as date_closed and date_open columns if they
+           exist."""
         if default is None:
             default = {}
 
@@ -165,13 +135,8 @@ class crm_case(object):
         return super(osv.osv, self).copy(cr, uid, id, default, context=context)
 
     def _get_default_email(self, cr, uid, context=None):
-        """Gives default email address for current user
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param context: A standard dictionary for contextual values
-        """
-        if not context.get('portal', False):
+        """Gives default email address for current user"""
+        if context and not context.get('portal'):
             return False
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         if not user.address_id:
@@ -179,23 +144,12 @@ class crm_case(object):
         return user.address_id.email
 
     def _get_default_user(self, cr, uid, context=None):
-        """Gives current user id
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param context: A standard dictionary for contextual values
-        """
-        if context and context.get('portal', False):
+        if context and context.get('portal'):
             return False
         return uid
 
     def _get_section(self, cr, uid, context=None):
-        """Gives section id for current User
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param context: A standard dictionary for contextual values
-        """
+        """Gives section id for current User"""
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         return user.context_section_id.id or False
 
@@ -216,9 +170,6 @@ class crm_case(object):
             return self._find_next_stage(cr, uid, stage_list, index + 1, current_seq, stage_pool)
 
     def stage_change(self, cr, uid, ids, context=None, order='sequence'):
-        if context is None:
-            context = {}
-
         stage_pool = self.pool.get('crm.case.stage')
         stage_type = context and context.get('stage_type','')
         current_seq = False
@@ -255,33 +206,22 @@ class crm_case(object):
 
     def stage_next(self, cr, uid, ids, context=None):
         """This function computes next stage for case from its current stage
-             using available stage for that case type
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of case IDs
-        @param context: A standard dictionary for contextual values"""
+           using available stage for that case type
+        """
 
         return self.stage_change(cr, uid, ids, context=context, order='sequence')
 
     def stage_previous(self, cr, uid, ids, context=None):
         """This function computes previous stage for case from its current stage
-             using available stage for that case type
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of case IDs
-        @param context: A standard dictionary for contextual values"""
+           using available stage for that case type
+        """
         return self.stage_change(cr, uid, ids, context=context, order='sequence desc')
 
     def onchange_partner_id(self, cr, uid, ids, part, email=False):
         """This function returns value of partner address based on partner
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of case IDs
-        @param part: Partner's id
-        @email: Partner's email ID
+
+           :param part: Partner id
+           :param email: unused
         """
         data={}
         if  part:
@@ -291,13 +231,10 @@ class crm_case(object):
         return {'value': data}
 
     def onchange_partner_address_id(self, cr, uid, ids, add, email=False):
-        """This function returns value of partner email based on Partner Address
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of case IDs
-        @param add: Id of Partner's address
-        @email: Partner's email ID
+        """Set partner email and phone based on selected address
+
+           :param add: selected address id
+           :param email: unused
         """
         if not add:
             return {'value': {'email_from': False}}
@@ -308,14 +245,7 @@ class crm_case(object):
             return {'value': {'phone': address.phone}}
 
     def case_open(self, cr, uid, ids, *args):
-        """Opens Case
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of case Ids
-        @param *args: Tuple Value for additional Params
-        """
-
+        """Opens Case"""
         cases = self.browse(cr, uid, ids)
         self.history(cr, uid, cases, _('Open'))
         for case in cases:
@@ -323,19 +253,11 @@ class crm_case(object):
             if not case.user_id:
                 data['user_id'] = uid
             self.write(cr, uid, case.id, data)
-
-
         self._action(cr, uid, cases, 'open')
         return True
 
     def case_close(self, cr, uid, ids, *args):
-        """Closes Case
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of case Ids
-        @param *args: Tuple Value for additional Params
-        """
+        """Closes Case"""
         cases = self.browse(cr, uid, ids)
         cases[0].state # to fill the browse record cache
         self.history(cr, uid, cases, _('Close'))
@@ -349,17 +271,10 @@ class crm_case(object):
         return True
 
     def case_escalate(self, cr, uid, ids, *args):
-        """Escalates case to top level
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of case Ids
-        @param *args: Tuple Value for additional Params
-        """
+        """Escalates case to parent level"""
         cases = self.browse(cr, uid, ids)
         for case in cases:
             data = {'active': True}
-
             if case.section_id.parent_id:
                 data['section_id'] = case.section_id.parent_id.id
                 if case.section_id.parent_id.change_responsible:
@@ -374,13 +289,7 @@ class crm_case(object):
         return True
 
     def case_cancel(self, cr, uid, ids, *args):
-        """Cancels Case
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of case Ids
-        @param *args: Tuple Value for additional Params
-        """
+        """Cancels Case"""
         cases = self.browse(cr, uid, ids)
         cases[0].state # to fill the browse record cache
         self.history(cr, uid, cases, _('Cancel'))
@@ -393,13 +302,7 @@ class crm_case(object):
         return True
 
     def case_pending(self, cr, uid, ids, *args):
-        """Marks case as pending
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of case Ids
-        @param *args: Tuple Value for additional Params
-        """
+        """Marks case as pending"""
         cases = self.browse(cr, uid, ids)
         cases[0].state # to fill the browse record cache
         self.history(cr, uid, cases, _('Pending'))
@@ -408,13 +311,7 @@ class crm_case(object):
         return True
 
     def case_reset(self, cr, uid, ids, *args):
-        """Resets case as draft
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of case Ids
-        @param *args: Tuple Value for additional Params
-        """
+        """Resets case as draft"""
         cases = self.browse(cr, uid, ids)
         cases[0].state # to fill the browse record cache
         self.history(cr, uid, cases, _('Draft'))
@@ -423,28 +320,11 @@ class crm_case(object):
         return True
 
     def remind_partner(self, cr, uid, ids, context=None, attach=False):
-
-        """
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of Remind Partner's IDs
-        @param context: A standard dictionary for contextual values
-
-        """
-
         return self.remind_user(cr, uid, ids, context, attach,
                 destination=False)
 
     def remind_user(self, cr, uid, ids, context=None, attach=False, destination=True):
-        """
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of case's IDs to remind
-        @param context: A standard dictionary for contextual values
-        """
-        email_message_obj = self.pool.get('email.message')
+        mail_message = self.pool.get('mail.message')
         for case in self.browse(cr, uid, ids, context=context):
             if not destination and not case.email_from:
                 raise osv.except_osv(_('Error!'), ("Partner Email is not specified in Case"))
@@ -480,27 +360,21 @@ class crm_case(object):
 
             # Send an email
             subject = "Reminder: [%s] %s" % (str(case.id), case.name, )
-            email_message_obj.schedule_with_attach(cr, uid,
+            mail_message.schedule_with_attach(cr, uid,
                 src,
                 [dest],
                 subject,
                 body,
                 model='crm.case',
                 reply_to=case.section_id.reply_to,
-                openobject_id=str(case.id),
-                attach=attach_to_send
+                res_id=str(case.id),
+                attachments=attach_to_send
             )
         return True
 
     def _check(self, cr, uid, ids=False, context=None):
-        """
-        Function called by the scheduler to process cases for date actions
-        Only works on not done and cancelled cases
-
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param context: A standard dictionary for contextual values
+        """Function called by the scheduler to process cases for date actions
+           Only works on not done and cancelled cases
         """
         cr.execute('select * from crm_case \
                 where (date_action_last<%s or date_action_last is null) \
@@ -530,8 +404,6 @@ class crm_case(object):
         return self.pool.get('base.action.rule').format_mail(obj, body)
 
     def thread_followers(self, cr, uid, ids, context=None):
-        """ Get a list of emails of the people following this thread
-        """
         res = {}
         for case in self.browse(cr, uid, ids, context=context):
             l=[]
@@ -544,18 +416,15 @@ class crm_case(object):
 
 
 class crm_case_stage(osv.osv):
-    """ Stage of case """
+    """Stage of case"""
 
     _name = "crm.case.stage"
     _description = "Stage of case"
     _rec_name = 'name'
     _order = "sequence"
 
-
-
     def _get_type_value(self, cr, user, context):
         return [('lead','Lead'),('opportunity','Opportunity')]
-
 
     _columns = {
         'name': fields.char('Stage Name', size=64, required=True, translate=True),
@@ -567,14 +436,8 @@ class crm_case_stage(osv.osv):
         'type': fields.selection(_get_type_value, 'Type', required=True),
     }
 
-
     def _find_stage_type(self, cr, uid, context=None):
-        """Finds type of stage according to object.
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param context: A standard dictionary for contextual values
-        """
+        """Finds type of stage according to record"""
         type = context and context.get('type', '') or ''
         return type
 
@@ -583,8 +446,6 @@ class crm_case_stage(osv.osv):
         'probability': lambda *args: 0.0,
         'type': _find_stage_type,
     }
-
-crm_case_stage()
 
 
 class crm_case_section(osv.osv):
@@ -625,39 +486,12 @@ class crm_case_section(osv.osv):
         ('code_uniq', 'unique (code)', 'The code of the sales team must be unique !')
     ]
 
-    def _check_recursion(self, cr, uid, ids, context=None):
-
-        """
-        Checks for recursion level for sales team
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of Sales team ids
-        """
-        level = 100
-
-        while len(ids):
-            cr.execute('select distinct parent_id from crm_case_section where id IN %s', (tuple(ids),))
-            ids = filter(None, map(lambda x: x[0], cr.fetchall()))
-            if not level:
-                return False
-            level -= 1
-
-        return True
-
     _constraints = [
-        (_check_recursion, 'Error ! You cannot create recursive Sales team.', ['parent_id'])
+        (osv.osv._check_recursion, 'Error ! You cannot create recursive Sales team.', ['parent_id'])
     ]
 
     def name_get(self, cr, uid, ids, context=None):
-        """Overrides orm name_get method
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of sales team ids
-        """
-        if context is None:
-            context = {}
+        """Overrides orm name_get method"""
         if not isinstance(ids, list) : 
             ids = [ids]
         res = []
@@ -672,11 +506,9 @@ class crm_case_section(osv.osv):
             res.append((record['id'], name))
         return res
 
-crm_case_section()
-
 
 class crm_case_categ(osv.osv):
-    """ Category of Case """
+    """Category of Case"""
     _name = "crm.case.categ"
     _description = "Category of Case"
     _columns = {
@@ -686,23 +518,14 @@ class crm_case_categ(osv.osv):
     }
 
     def _find_object_id(self, cr, uid, context=None):
-        """Finds id for case object
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param context: A standard dictionary for contextual values
-        """
-
+        """Finds id for case object"""
         object_id = context and context.get('object_id', False) or False
         ids = self.pool.get('ir.model').search(cr, uid, [('model', '=', object_id)])
         return ids and ids[0]
 
     _defaults = {
         'object_id' : _find_object_id
-
     }
-crm_case_categ()
-
 
 class crm_case_stage(osv.osv):
     _inherit = "crm.case.stage"
@@ -710,11 +533,8 @@ class crm_case_stage(osv.osv):
         'section_ids':fields.many2many('crm.case.section', 'section_stage_rel', 'stage_id', 'section_id', 'Sections'),
     }
 
-crm_case_stage()
-
-
 class crm_case_resource_type(osv.osv):
-    """ Resource Type of case """
+    """Resource Type of case"""
     _name = "crm.case.resource.type"
     _description = "Campaign"
     _rec_name = "name"
@@ -722,16 +542,9 @@ class crm_case_resource_type(osv.osv):
         'name': fields.char('Campaign Name', size=64, required=True, translate=True),
         'section_id': fields.many2one('crm.case.section', 'Sales Team'),
     }
-crm_case_resource_type()
-
 
 def _links_get(self, cr, uid, context=None):
-    """Gets links value for reference field
-    @param self: The object pointer
-    @param cr: the current row, from the database cursor,
-    @param uid: the current user’s ID for security checks,
-    @param context: A standard dictionary for contextual values
-    """
+    """Gets links value for reference field"""
     obj = self.pool.get('res.request.link')
     ids = obj.search(cr, uid, [])
     res = obj.read(cr, uid, ids, ['object', 'name'], context)
@@ -747,11 +560,9 @@ class users(osv.osv):
     def create(self, cr, uid, vals, context=None):
         res = super(users, self).create(cr, uid, vals, context=context)
         section_obj=self.pool.get('crm.case.section')
-
-        if vals.get('context_section_id', False):
+        if vals.get('context_section_id'):
             section_obj.write(cr, uid, [vals['context_section_id']], {'member_ids':[(4, res)]}, context)
         return res
-users()
 
 
 class res_partner(osv.osv):
@@ -759,5 +570,3 @@ class res_partner(osv.osv):
     _columns = {
         'section_id': fields.many2one('crm.case.section', 'Sales Team'),
     }
-res_partner()
-

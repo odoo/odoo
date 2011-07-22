@@ -32,7 +32,7 @@ class crm_phonecall(crm_case, osv.osv):
     _name = "crm.phonecall"
     _description = "Phonecall"
     _order = "id desc"
-    _inherit = ['email.thread']
+    _inherit = ['mail.thread']
     _columns = {
         # From crm.case
         'id': fields.integer('ID'),
@@ -80,7 +80,7 @@ class crm_phonecall(crm_case, osv.osv):
         'date_closed': fields.datetime('Closed', readonly=True),
         'date': fields.datetime('Date'),
         'opportunity_id': fields.many2one ('crm.lead', 'Opportunity'),
-        'message_ids': fields.one2many('email.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
+        'message_ids': fields.one2many('mail.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
     }
 
     _defaults = {
