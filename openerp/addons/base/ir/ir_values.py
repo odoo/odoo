@@ -79,7 +79,10 @@ class ir_values(osv.osv):
             method=True, type='text', string='Value'),
         'object': fields.boolean('Is Object'),
         'key': fields.selection([('action','Action'),('default','Default')], 'Type', size=128, select=True),
-        'key2' : fields.char('Event Type',help="The kind of action or button in the client side that will trigger the action.", size=128, select=True),
+        'key2' : fields.char('Event Type', size=128, select=True, help="The kind of action or button on the client side "
+                                                                       "that will trigger the action. One of: "
+                                                                       "client_action_multi, client_action_relate, tree_but_open, "
+                                                                       "client_print_multi"),
         'meta': fields.text('Meta Datas'),
         'meta_unpickle': fields.function(_value_unpickle, fnct_inv=_value_pickle,
             method=True, type='text', string='Metadata'),
