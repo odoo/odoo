@@ -79,6 +79,33 @@
             <field name="category_ids" eval="[(6, 0, [ref('category_trainee')])]"/>
         </record>
 
+        <record id="employee4" model="hr.employee">
+            <field name="name">Laith Jubair</field>
+            <field name="calendar_id" ref="resource.timesheet_group1"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="category_ids" eval="[(6, 0, [ref('category_sr_exec'),ref('category_ceo')])]"/>
+        </record>
+
+        <record id="employee5" model="hr.employee">
+            <field name="name">Alexendar</field>
+            <field name="calendar_id" ref="resource.timesheet_group1"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="category_ids" eval="[(6, 0, [ref('category_sr_exec'),ref('category_ceo')])]"/>
+        </record>
+
+        <record id="employee6" model="hr.employee">
+            <field name="name">Leonidas Micheal</field>
+            <field name="calendar_id" ref="resource.timesheet_group1"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="category_ids" eval="[(6, 0, [ref('category_sr_exec'),ref('category_ceo')])]"/>
+        </record>
+
+        <record id="employee7" model="hr.employee">
+            <field name="name">Xexers Botha</field>
+            <field name="calendar_id" ref="resource.timesheet_group1"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="category_ids" eval="[(6, 0, [ref('category_sr_exec'),ref('category_ceo')])]"/>
+        </record>
         <record id="ir_ui_view_sc_employees_demo" model="ir.ui.view_sc">
             <field name="name">Employees</field>
             <field name="resource">ir.ui.menu</field>

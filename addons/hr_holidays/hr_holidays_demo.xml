@@ -31,10 +31,34 @@
       <field name="employee_id" ref="hr.employee1"/>
     </record>
 
+    <record model="hr.holidays" id="hr_holidays_employee1_vc">
+      <field name="name">Summer Vacation</field>
+      <field name="holiday_status_id" ref="holiday_status_unpaid"/>
+      <field eval="time.strftime('%Y-%m-20')" name="date_from"/>
+      <field eval="time.strftime('%Y-%m-22')" name="date_to"/>
+      <field name="type">add</field>
+      <field name="state">draft</field>
+      <field name="number_of_days_temp">7</field>
+      <field name="employee_id" ref="hr.employee1"/>
+    </record>
+
+    <record model="hr.holidays" id="hr_holidays_employee1_int_tour">
+      <field name="name">International Tour</field>
+      <field name="holiday_status_id" ref="holiday_status_comp"/>
+      <field eval="time.strftime('%Y-%m-20')" name="date_from"/>
+      <field eval="time.strftime('%Y-%m-22')" name="date_to"/>
+      <field name="type">add</field>
+      <field name="number_of_days_temp">7</field>
+      <field name="employee_id" ref="hr.employee1"/>
+    </record>
+
     <workflow action="confirm" model="hr.holidays" ref="hr_holidays_employee1_allocation_cl"/>
     <workflow action="validate" model="hr.holidays" ref="hr_holidays_employee1_allocation_cl"/>
 
     <workflow action="confirm" model="hr.holidays" ref="hr_holidays_employee1_sl"/>
     <workflow action="validate" model="hr.holidays" ref="hr_holidays_employee1_sl"/>
+
+    <workflow action="confirm" model="hr.holidays" ref="hr_holidays_employee1_int_tour"/>
+    <workflow action="validate" model="hr.holidays" ref="hr_holidays_employee1_int_tour"/>
   </data>
 </openerp>
