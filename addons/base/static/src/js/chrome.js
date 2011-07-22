@@ -469,6 +469,25 @@ openerp.base.Session = openerp.base.Controller.extend( /** @lends openerp.base.S
         });
     },
     do_load_modules_debug: function(result) {
+// function create_script_load_listener(elem,registry_item,flag,onload) {
+// elem.onload = elem.onreadystatechange = function() {
+// if ((elem.readyState && elem.readyState != "complete" && elem.readyState != "loaded") || registry_item[flag]) return;
+// elem.onload = elem.onreadystatechange = null;
+// onload();
+// };
+
+// domscript.onload = function() { 
+// if ( ! domscript.onloadDone ) {
+// domscript.onloadDone = true; 
+// init(); 
+// }
+// };
+// domscript.onreadystatechange = function() { 
+// if ( ( "loaded" === domscript.readyState || "complete" === domscript.readyState ) && ! domscript.onloadDone ) {
+// domscript.onloadDone = true; 
+// init();
+// }
+// }
         $LAB.setOptions({AlwaysPreserveOrder: true})
             .script(result)
             .wait(this.on_modules_loaded);
