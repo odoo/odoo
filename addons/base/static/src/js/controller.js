@@ -167,6 +167,9 @@ instance.base.Controller = instance.base.Class.extend( /** @lends instance.base.
         if(parent && parent.controller_children) {
             parent.controller_children.push(this);
         }
+        // backward compatibility
+        this.parent = this.controller_parent;
+        this.children = this.controller_children;
 
         // Transform on_* method into openerp.base.callbacks
         for (var name in this) {

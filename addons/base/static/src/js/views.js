@@ -18,6 +18,18 @@ openerp.base.ActionManager = openerp.base.Controller.extend({
      * Process an action
      * Supported actions: act_window
      */
+    action_window: function() {
+    },
+    action_window_close: function() {
+    },
+    action_server: function() {
+    },
+    action_url: function() {
+    },
+    action_report: function() {
+    },
+    action_client: function() {
+    },
     do_action: function(action, on_closed) {
         var self = this;
         action.flags = _.extend({
@@ -264,6 +276,7 @@ openerp.base.NullViewManager = openerp.base.generate_null_object_class(openerp.b
     }
 });
 
+// TODO Will move to action Manager
 openerp.base.ViewManagerAction = openerp.base.ViewManager.extend({
     init: function(parent, element_id, action) {
         this.session = parent.session;
