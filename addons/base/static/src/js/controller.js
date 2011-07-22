@@ -137,8 +137,7 @@ instance.base.BasicController = instance.base.Class.extend( /** @lends instance.
             instance.screen[element_id] = this;
         }
         // save the parent children relationship
-        this.controller_parent = null;
-        this.controller_children = [];
+        this.children = [];
         this.parent = parent;
         if(this.parent &&  this.parent.children) {
             this.parent.children.push(this);
@@ -174,6 +173,10 @@ instance.base.BasicController = instance.base.Class.extend( /** @lends instance.
         return $.Deferred().done().promise();
     },
     stop: function() {
+        if (this.parent && this.parent.children) {
+            this.parent.children = _.without(this.parent.children, this);
+        }
+        this.parent = null;
     },
     log: function() {
         var args = Array.prototype.slice.call(arguments);

@@ -534,6 +534,7 @@ openerp.base.BaseWidget = openerp.base.Controller.extend({
         if(this.$element != null) {
             this.$element.remove();
         }
+        this._super();
     },
     /**
      * Render the widget. This.template must be defined.
