@@ -200,7 +200,7 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
             if(this.active_view == 'list' || this.active_view == 'form') {
                 this.views[this.active_view].controller.$element.after(QWeb.render('ExportView'))
                 this.$element.find('#exportview').click(function(ev) {
-                    var export_view = new openerp.base_export.Export(self, self.dataset, self.views);
+                    var export_view = new openerp.base.Export(self, self.dataset, self.views);
                     export_view.start(false);
                     ev.preventDefault();
                 });
@@ -417,6 +417,7 @@ openerp.base.Sidebar = openerp.base.BaseWidget.extend({
 
 openerp.base.NullSidebar = openerp.base.generate_null_object_class(openerp.base.Sidebar);
 
+/*
 openerp.base.Export = openerp.base.Dialog.extend({
     dialog_title: "Export",
     template: 'ExportDialog',
@@ -435,7 +436,7 @@ openerp.base.Export = openerp.base.Dialog.extend({
         this.$element.dialog("close");
     }
 });
-
+*/
 openerp.base.View = openerp.base.Controller.extend({
     /**
      * Fetches and executes the action identified by ``action_data``.
