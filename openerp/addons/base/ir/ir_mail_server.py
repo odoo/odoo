@@ -201,10 +201,12 @@ class ir_mail_server(osv.osv):
            :return: the new RFC2822 email message
         """
         email_from = email_from or tools.config.get('email_from')
-        assert email_from, "email_from is mandatory or a default should be defined in server config"
+        assert email_from, "You must either provide a sender address explicitly or configure "\
+                           "a global sender address in the server configuration or with the "\
+                           "--email-from startup parameter."
 
-        # must force all strings to to 8-bit utf-8 when crafting message
-        email_from = ustr(email_from).encode('utf-8')
+        # Note: we must force all strings to to 8-bit utf-8 when crafting message,
+        #       or use encode_header() for headers, which does it automatically.
 
         headers = headers or {} # need valid dict later
 
@@ -257,8 +259,10 @@ class ir_mail_server(osv.osv):
                 part = MIMEBase('application', "octet-stream")
                 part.set_payload(fcontent)
                 Encoders.encode_base64(part)
+                # Force RFC2231 encoding for attachment filename
+                # See email.message.Message.add_header doc
                 part.add_header('Content-Disposition', 'attachment',
-                                filename=('utf-8',None,))
+                                filename=('utf-8',None,filename_utf8)) 
                 msg.attach(part)
         return msg
 
@@ -289,9 +293,7 @@ class ir_mail_server(osv.osv):
                  MailDeliveryException and logs root cause.
         """
         smtp_from = message['From']
-        if not smtp_from:
-            raise ValueError("Sending an email requires either providing a sender address or having configured one")
-
+        assert smtp_from, "The From header is required in any outbound e-mail"
         email_to = message['To']
         email_cc = message['Cc']
         email_bcc = message['Bcc']
