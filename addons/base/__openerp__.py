@@ -4,7 +4,6 @@
     "depends" : [],
     'active': True,
     'js' : [
-        "static/lib/LABjs/LAB.js",
         "static/lib/datejs/date-en-US.js",
         "static/lib/jquery/jquery-1.5.2.js",
         "static/lib/jquery.ba-bbq/jquery.ba-bbq.js",

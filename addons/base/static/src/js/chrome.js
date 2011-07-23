@@ -454,13 +454,18 @@ openerp.base.Session = openerp.base.Controller.extend( /** @lends openerp.base.S
         this.rpc('/base/session/modules', {}, function(result) {
             self.module_list = result['modules'];
             var modules = self.module_list.join(',');
-            self.rpc('/base/webclient/csslist', {mods: modules}, self.do_load_css);
-            self.rpc('/base/webclient/jslist', {"mods": modules}, self.debug ? self.do_load_modules_debug : self.do_load_modules_prod);
+            if(self.debug || true) {
+                self.rpc('/base/webclient/csslist', {"mods": modules}, self.do_load_css);
+                self.rpc('/base/webclient/jslist', {"mods": modules}, self.do_load_js);
+            } else {
+                self.do_load_css(["/base/webclient/css?mods="+modules]);
+                self.do_load_js(["/base/webclient/js?mods="+modules]);
+            }
             openerp._modules_loaded = true;
         });
     },
-    do_load_css: function (result) {
-        _.each(result, function (file) {
+    do_load_css: function (files) {
+        _.each(files, function (file) {
             $('head').append($('<link>', {
                 'href': file,
                 'rel': 'stylesheet',
@@ -468,35 +473,23 @@ openerp.base.Session = openerp.base.Controller.extend( /** @lends openerp.base.S
             }));
         });
     },
-    do_load_modules_debug: function(result) {
-// function create_script_load_listener(elem,registry_item,flag,onload) {
-// elem.onload = elem.onreadystatechange = function() {
-// if ((elem.readyState && elem.readyState != "complete" && elem.readyState != "loaded") || registry_item[flag]) return;
-// elem.onload = elem.onreadystatechange = null;
-// onload();
-// };
-
-// domscript.onload = function() { 
-// if ( ! domscript.onloadDone ) {
-// domscript.onloadDone = true; 
-// init(); 
-// }
-// };
-// domscript.onreadystatechange = function() { 
-// if ( ( "loaded" === domscript.readyState || "complete" === domscript.readyState ) && ! domscript.onloadDone ) {
-// domscript.onloadDone = true; 
-// init();
-// }
-// }
-        $LAB.setOptions({AlwaysPreserveOrder: true})
-            .script(result)
-            .wait(this.on_modules_loaded);
-    },
-    do_load_modules_prod: function() {
-        // load merged ones
-        // /base/session/css?mod=mod1,mod2,mod3
-        // /base/session/js?mod=mod1,mod2,mod3
-        // use $.getScript(‘your_3rd_party-script.js’); ? i want to keep lineno !
+    do_load_js: function(files) {
+        var self = this;
+        if(files.length != 0) {
+            var file = files.shift();
+            var tag = document.createElement('script');
+            tag.type = 'text/javascript';
+            tag.src = file;
+            tag.onload = tag.onreadystatechange = function() {
+                if ( (tag.readyState && tag.readyState != "loaded" && tag.readyState != "complete") || tag.onload_done )
+                    return;
+                tag.onload_done = true;
+                self.do_load_js(files);
+            };
+            document.head.appendChild(tag);
+        } else {
+            this.on_modules_loaded();
+        }
     },
     on_modules_loaded: function() {
         for(var j=0; j<this.module_list.length; j++) {
