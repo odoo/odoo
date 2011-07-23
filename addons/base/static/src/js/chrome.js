@@ -452,7 +452,7 @@ openerp.base.Session = openerp.base.Controller.extend( /** @lends openerp.base.S
     load_modules: function() {
         var self = this;
         this.rpc('/base/session/modules', {}, function(result) {
-            self.module_list = result['modules'];
+            self.module_list = result;
             var modules = self.module_list.join(',');
             if(self.debug || true) {
                 self.rpc('/base/webclient/csslist', {"mods": modules}, self.do_load_css);
