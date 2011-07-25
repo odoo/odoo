@@ -506,11 +506,17 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
      * @param {Function} callback should be called after the action is executed, if non-null
      */
     do_action: function (name, id, callback) {
-        var action = _.detect(this.columns, function (field) {
+        var   self = this,
+            action = _.detect(this.columns, function (field) {
             return field.name === name;
         });
         if (!action) { return; }
-        this.execute_action(action, this.dataset, this.session.action_manager, id, callback);
+        this.execute_action(
+            action, this.dataset, this.session.action_manager, id, function () {
+                $.when(callback.apply(this, arguments).then(function () {
+                    self.compute_aggregates();
+                }));
+        });
     },
     /**
      * Handles the activation of a record (clicking on it)
@@ -669,7 +675,7 @@ openerp.base.ListView.List = openerp.base.Class.extend( /** @lends openerp.base.
                       index = self.row_position($row);
 
                 $(self).trigger('action', [field, record_id, function () {
-                    self.reload_record(index, true);
+                    return self.reload_record(index, true);
                 }]);
             })
             .delegate('tr', 'click', function (e) {
@@ -807,7 +813,7 @@ openerp.base.ListView.List = openerp.base.Class.extend( /** @lends openerp.base.
 
         return $.when(read_p).then(function () {
             self.$current.children().eq(record_index)
-                .replaceWith(self.render_record(record_index)); })
+                .replaceWith(self.render_record(record_index)); });
     },
     /**
      * Renders a list record to HTML
