@@ -180,9 +180,12 @@ class Session(openerpweb.Controller):
 
     @openerpweb.jsonrequest
     def modules(self, req):
-        return {"modules": [name
-            for name, manifest in openerpweb.addons_manifest.iteritems()
-            if manifest.get('active', True)]}
+        # TODO query server for installed web modules
+        mods = []
+        for name, manifest in openerpweb.addons_manifest.items():
+            if name != 'base' and manifest.get('active', True):
+                mods.append(name)
+        return mods
 
     @openerpweb.jsonrequest
     def eval_domain_and_context(self, req, contexts, domains,
