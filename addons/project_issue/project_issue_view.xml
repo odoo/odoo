@@ -222,12 +222,11 @@
                         </field>
                         <field name="project_id"/>
                         <field name="version_id" widget="selection"/>
+                        <field name="id"/>
                     </group>
                     <newline/>
                     <group expand="0" string="Extended Filters..."  groups="base.group_extended">
-                        <field name="categ_id" widget="selection" domain="[('object_id.model', '=', 'project.issue')]"/>                        
-                        <separator orientation="vertical"/>
-                        <field name="id"/>
+                        <field name="categ_id" widget="selection" domain="[('object_id.model', '=', 'project.issue')]"/>                                                                      
                     </group>
                     <newline/>
                     <group expand="0" string="Group By..."  groups="base.group_extended">
