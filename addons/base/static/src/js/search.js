@@ -211,7 +211,14 @@ openerp.base.SearchView = openerp.base.Controller.extend({
             });
         } else { // manage_filters
             select.val("_filters");
-            //TODO niv
+            this.do_action({
+                res_model: 'ir.filters',
+                views: [[false, 'list'], [false, 'form']],
+                type: 'ir.actions.act_window',
+                context: {"search_default_user_id": this.session.uid,
+                "search_default_model_id": this.dataset.model},
+                target: "current"
+            });
         }
     },
     /**
