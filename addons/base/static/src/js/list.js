@@ -477,6 +477,7 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
         var self = this;
         return $.when(this.dataset.unlink(ids)).then(function () {
             self.groups.drop_records(ids);
+            self.compute_aggregates();
         });
     },
     /**
