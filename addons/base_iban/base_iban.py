@@ -121,11 +121,8 @@ class res_partner_bank(osv.osv):
         return _('The IBAN is invalid, It should begin with the country code'), ()
 
     def _check_bank(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
-        banks = self.browse(cr, uid, ids, context=context)
-        for bank in banks:
-            if bank.state == 'iban' and not bank.bank.bic:
+        for partner_bank in self.browse(cr, uid, ids, context=context):
+            if partner_bank.state == 'iban' and not partner_bank.bank.bic:
                 return False
         return True
 
