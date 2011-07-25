@@ -178,7 +178,7 @@
         res_ids.sort()
         assert res_ids == all_ids, "Searching against empty set failed, returns %r" % res_ids
 -
-    Equivalent queries.
+    Equivalent queries, integer and string.
 -
     !python {model: res.partner }: |
         all_ids = self.search(cr, uid, [])
@@ -194,6 +194,8 @@
             # res_5 = self.search(cr, uid, [('id', 'in', one)]) # TODO make it permitted, just like for child_of
             res_6 = self.search(cr, uid, [('id', 'in', [one])])
             res_7 = self.search(cr, uid, [('name', '=', record.name)])
+            res_8 = self.search(cr, uid, [('name', 'in', [record.name])])
+            # res_9 = self.search(cr, uid, [('name', 'in', record.name)]) # TODO
             assert [one] == res_1
             assert [one] == res_2
             assert [one] == res_3
@@ -201,6 +203,51 @@
             #assert [one] == res_5
             assert [one] == res_6
             assert [one] == res_7
+-
+    Need a company with a parent_id.
+-
+    !record {model: res.company, id: ymltest_company3}:
+        name: Acme 3
+-
+    Need a company with a parent_id.
+-
+    !record {model: res.company, id: ymltest_company4}:
+        name: Acme 4
+        parent_id: ymltest_company3
+-
+    Equivalent queries, one2many.
+-
+    !python {model: res.company }: |
+        # Search the company via its one2many (the one2many must point back at the company).
+        company = self.browse(cr, uid, ref('ymltest_company3'))
+        default_company = self.browse(cr, uid, 1)
+        # one2many towards same model
+        res_1 = self.search(cr, uid, [('child_ids', 'in', [x.id for x in company.child_ids])])
+        res_2 = self.search(cr, uid, [('child_ids', 'in', [company.child_ids[0].id])])
+        # one2many towards another model
+        res_3 = self.search(cr, uid, [('currency_ids', 'in', [x.id for x in default_company.currency_ids])])
+        res_4 = self.search(cr, uid, [('currency_ids', 'in', [default_company.currency_ids[0].id])])
+        assert res_1 == [ref('ymltest_company3')]
+        assert res_2 == [ref('ymltest_company3')]
+        assert res_3 == [1]
+        assert res_4 == [1]
+
+        # child_of x returns x and its children (direct or not).
+        company = self.browse(cr, uid, ref('ymltest_company3'))
+        expected = [ref('ymltest_company3'), ref('ymltest_company4')]
+        expected.sort()
+        res_1 = self.search(cr, uid, [('id', 'child_of', [ref('ymltest_company3')])])
+        res_1.sort()
+        res_2 = self.search(cr, uid, [('id', 'child_of', ref('ymltest_company3'))])
+        res_2.sort()
+        #res_3 = self.search(cr, uid, [('id', 'child_of', [company.name])])
+        #res_3.sort()
+        res_4 = self.search(cr, uid, [('id', 'child_of', company.name)])
+        res_4.sort()
+        assert res_1 == expected
+        assert res_2 == expected
+        #assert res_3 == expected
+        assert res_4 == expected
 -
     Verify that normalize_domain() works.
 -

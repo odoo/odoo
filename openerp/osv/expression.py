@@ -147,6 +147,7 @@ class expression(object):
         # assign self.__exp with the normalized, parsed domain.
         self.parse(cr, uid, normalize(exp), table, context)
 
+    # TODO used only for osv_memory
     @property
     def exp(self):
         return self.__exp[:]
@@ -155,8 +156,8 @@ class expression(object):
         """ transform the leafs of the expression """
         self.__exp = exp
 
-        def _rec_get(right, table, parent=None, left='id', prefix=''):
-            ids = child_of_right_to_ids(right, 'ilike')
+        def child_of_domain(left, right, table, parent=None, prefix=''):
+            ids = right
             if table._parent_store and (not table.pool._init):
 # TODO: Improve where joins are implemented for many with '.', replace by:
 # doms += ['&',(prefix+'.parent_left','<',o.parent_right),(prefix+'.parent_left','>=',o.parent_left)]
@@ -177,7 +178,7 @@ class expression(object):
                 return [(left, 'in', rg(ids, table, parent or table._parent_name))]
 
         # TODO rename this function as it is not strictly for 'child_of', but also for 'in'...
-        def child_of_right_to_ids(value, operator):
+        def child_of_right_to_ids(value, operator, field_obj):
             """ Normalize a single id, or a string, or a list of ids to a list of ids.
             """
             if isinstance(value, basestring):
@@ -198,25 +199,30 @@ class expression(object):
                 continue
             left, operator, right = e
             operator = operator.lower()
-            working_table = table
-            main_table = table
+            working_table = table # The table containing the field (the name provided in the left operand)
             fargs = left.split('.', 1)
+
+            # If the field is _inherits'd, search for the working_table,
+            # and extract the field.
             if fargs[0] in table._inherit_fields:
                 while True:
-                    field = main_table._columns.get(fargs[0])
+                    field = working_table._columns.get(fargs[0])
                     if field:
                         self.__field_tables[i] = working_table
                         break
-                    working_table = main_table.pool.get(main_table._inherit_fields[fargs[0]][0])
-                    if working_table not in self.__all_tables:
-                        self.__joins.append('%s.%s=%s.%s' % (working_table._table, 'id', main_table._table, main_table._inherits[working_table._name]))
-                        self.__all_tables.add(working_table)
-                    main_table = working_table
+                    next_table = working_table.pool.get(working_table._inherit_fields[fargs[0]][0])
+                    if next_table not in self.__all_tables:
+                        self.__joins.append('%s.%s=%s.%s' % (next_table._table, 'id', working_table._table, working_table._inherits[next_table._name]))
+                        self.__all_tables.add(next_table)
+                    working_table = next_table
+            # Or (try to) directly extract the field.
+            else:
+                field = working_table._columns.get(fargs[0])
 
-            field = working_table._columns.get(fargs[0])
             if not field:
                 if left == 'id' and operator == 'child_of':
-                    dom = _rec_get(right, working_table)
+                    ids2 = child_of_right_to_ids(right, 'ilike', table)
+                    dom = child_of_domain(left, ids2, working_table)
                     self.__exp = self.__exp[:i] + dom + self.__exp[i+1:]
                 continue
 
@@ -263,9 +269,11 @@ class expression(object):
                 # Applying recursivity on field(one2many)
                 if operator == 'child_of':
                     if field._obj != working_table._name:
-                        dom = _rec_get(right, field_obj, left=left, prefix=field._obj)
+                        ids2 = child_of_right_to_ids(right, 'ilike', field_obj)
+                        dom = child_of_domain(left, ids2, field_obj, prefix=field._obj)
                     else:
-                        dom = _rec_get(right, working_table, parent=left)
+                        ids2 = child_of_right_to_ids(right, 'ilike', field_obj)
+                        dom = child_of_domain('id', ids2, working_table, parent=left)
                     self.__exp = self.__exp[:i] + dom + self.__exp[i+1:]
 
                 else:
@@ -287,7 +295,6 @@ class expression(object):
                                 call_null = False
                                 self.__exp[i] = FALSE_LEAF
                             else:
-                                call_null = True
                                 operator = 'in' # operator changed because ids are directly related to main object
                         else:
                             call_null = False
@@ -310,7 +317,8 @@ class expression(object):
                             return ids
                         return execute_recursive_in(cr, field._id1, field._rel, field._id2, ids, operator)
 
-                    dom = _rec_get(right, field_obj)
+                    ids2 = child_of_right_to_ids(right, 'ilike', field_obj)
+                    dom = child_of_domain('id', ids2, field_obj)
                     ids2 = field_obj.search(cr, uid, dom, context=context)
                     self.__exp[i] = ('id', 'in', _rec_convert(ids2))
                 else:
@@ -331,7 +339,6 @@ class expression(object):
                                 call_null_m2m = False
                                 self.__exp[i] = FALSE_LEAF
                             else:
-                                call_null_m2m = True
                                 operator = 'in' # operator changed because ids are directly related to main object
                         else:
                             call_null_m2m = False
@@ -349,9 +356,11 @@ class expression(object):
             elif field._type == 'many2one':
                 if operator == 'child_of':
                     if field._obj != working_table._name:
-                        dom = _rec_get(right, field_obj, left=left, prefix=field._obj)
+                        ids2 = child_of_right_to_ids(right, 'ilike', field_obj)
+                        dom = child_of_domain(left, ids2, field_obj, prefix=field._obj)
                     else:
-                        dom = _rec_get(right, working_table, parent=left)
+                        ids2 = child_of_right_to_ids(right, 'ilike', field_obj)
+                        dom = child_of_domain('id', ids2, working_table, parent=left)
                     self.__exp = self.__exp[:i] + dom + self.__exp[i+1:]
                 else:
                     def _get_expression(field_obj,cr, uid, left, right, operator, context=None):
