@@ -217,7 +217,9 @@ openerp.base.SearchView = openerp.base.Controller.extend({
                 type: 'ir.actions.act_window',
                 context: {"search_default_user_id": this.session.uid,
                 "search_default_model_id": this.dataset.model},
-                target: "current"
+                target: "current",
+                limit : 80,
+                auto_search : true
             });
         }
     },
