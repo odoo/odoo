@@ -1,6 +1,5 @@
 openerp.base.export = function(openerp) {
 openerp.base.Export = openerp.base.Dialog.extend({
-
     init: function(parent, dataset, views){
         this._super(parent);
         this.dataset = dataset
@@ -206,18 +205,18 @@ openerp.base.Export = openerp.base.Dialog.extend({
         }
         _.each(result, function(record) {
             if(record.field_type == "one2many"){
-                var o2m_fld = $("tr[id^='treerow-" + record.id + "']").find('#tree-column');
+                var o2m_fld = $("tr[id='treerow-" + record.id + "']").find('#tree-column');
                 o2m_fld.addClass("readonlyfield");
             }
             if ((record.required == true) || record.required == "True"){
-                var required_fld = $("tr[id^='treerow-" + record.id + "']").find('#tree-column');
+                var required_fld = $("tr[id='treerow-" + record.id + "']").find('#tree-column');
                 required_fld.addClass("requiredfield");
             }
-            $("img[id ^='parentimg-" + record.id +"']").click(function(){
+            $("img[id='parentimg-" + record.id +"']").click(function(){
                 self.on_click(this.id, result);
             });
 
-            $("tr[id^='treerow-" + record.id + "']").click(function(e){
+            $("tr[id='treerow-" + record.id + "']").click(function(e){
                 if (e.shiftKey == true){
                     var frst_click,scnd_click = '';
                     if (self.row_index == 0){
@@ -244,10 +243,10 @@ openerp.base.Export = openerp.base.Dialog.extend({
                 }
                 self.row_index = this.rowIndex;
 
-                $("tr[id^='treerow-" + record.id + "']").keyup(function (e) {
+                $("tr[id='treerow-" + record.id + "']").keyup(function (e) {
                         self.row_index = 0;
                 });
-                var o2m_selection = $("tr[id^='treerow-" + record.id + "']").find('#tree-column');
+                var o2m_selection = $("tr[id='treerow-" + record.id + "']").find('#tree-column');
                 if ($(o2m_selection).hasClass("readonlyfield")){
                     return false;
                 }
@@ -272,7 +271,7 @@ openerp.base.Export = openerp.base.Dialog.extend({
                 return false;
             });
 
-            $("tr[id^='treerow-" + record.id + "']").keydown(function (e) {
+            $("tr[id='treerow-" + record.id + "']").keydown(function (e) {
                 var keyCode = e.keyCode || e.which;
                 arrow = {left: 37, up: 38, right: 39, down: 40 };
                 switch (keyCode) {
@@ -310,7 +309,7 @@ openerp.base.Export = openerp.base.Dialog.extend({
                     break;
                 }
             });
-            $("tr[id^='treerow-" + record.id + "']").dblclick(function (e) {
+            $("tr[id='treerow-" + record.id + "']").dblclick(function (e) {
                 var o2m_selection = $("tr[id^='treerow-" + record.id + "']").find('#tree-column');
                 if (! $(o2m_selection).hasClass("readonlyfield")){
                     var field_id =  $(this).find("a").attr("id");
@@ -325,7 +324,7 @@ openerp.base.Export = openerp.base.Dialog.extend({
                 if (event.relatedTarget.attributes['id'] && event.relatedTarget.attributes['string']){
                     field_id = event.relatedTarget.attributes["id"]["value"]
                     if (field_id && field_id.split("-")[0] == 'export'){
-                        if(!$("tr[id^='treerow-" + field_id.split("-")[1] + "']").find('#tree-column').hasClass("readonlyfield")){
+                        if(!$("tr[id='treerow-" + field_id.split("-")[1] + "']").find('#tree-column').hasClass("readonlyfield")){
                             self.add_field(field_id.split("-")[1], event.relatedTarget.attributes["string"]["value"]);
                         }
                     }
