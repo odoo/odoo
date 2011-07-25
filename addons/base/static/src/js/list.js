@@ -24,11 +24,13 @@ openerp.base.list = {
             ].join('')
         }
 
-        var record = row_data[column.id];
+        var value = row_data[column.id].value;
 
         // If NaN value, display as with a `false` (empty cell)
-        if (isNaN(record.value)) { record.value = false; }
-        switch (record.value) {
+        if (typeof value === 'number' && isNaN(value)) {
+            value = false;
+        }
+        switch (value) {
             case false:
             case Infinity:
             case -Infinity:
@@ -36,23 +38,23 @@ openerp.base.list = {
         }
         switch (column.widget || column.type) {
             case 'integer':
-                return _.sprintf('%d', record.value);
+                return _.sprintf('%d', value);
             case 'float':
                 var precision = column.digits ? column.digits[1] : 2;
-                return _.sprintf('%.' + precision + 'f', record.value);
+                return _.sprintf('%.' + precision + 'f', value);
             case 'float_time':
                 return _.sprintf("%02d:%02d",
-                        Math.floor(record.value),
-                        Math.round((record.value % 1) * 60));
+                        Math.floor(value),
+                        Math.round((value % 1) * 60));
             case 'progressbar':
                 return _.sprintf(
                     '<progress value="%.2f" max="100.0">%.2f%%</progress>',
-                        record.value, record.value);
+                        value, value);
             case 'many2one':
                 // name_get value format
-                return record.value[1];
+                return value[1];
             default:
-                return record.value;
+                return value;
         }
     }
 };
