@@ -25,6 +25,9 @@ openerp.base.list = {
         }
 
         var record = row_data[column.id];
+
+        // If NaN value, display as with a `false` (empty cell)
+        if (isNaN(record.value)) { record.value = false; }
         switch (record.value) {
             case false:
             case Infinity:
