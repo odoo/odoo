@@ -38,7 +38,7 @@ class groups(osv.osv):
         'name': fields.char('Group Name', size=64, required=True),
         'model_access': fields.one2many('ir.model.access', 'group_id', 'Access Controls'),
         'rule_groups': fields.many2many('ir.rule', 'rule_group_rel',
-        'group_id', 'rule_group_id', 'Rules', domain=[('global', '=', False)]),
+            'group_id', 'rule_group_id', 'Rules', domain=[('global', '=', False)]),
         'menu_access': fields.many2many('ir.ui.menu', 'ir_ui_menu_group_rel', 'gid', 'menu_id', 'Access Menu'),
         'comment' : fields.text('Comment',size=250),
     }
@@ -127,6 +127,8 @@ class users(osv.osv):
     def send_welcome_email(self, cr, uid, id, context=None):
         logger= netsvc.Logger()
         user = self.pool.get('res.users').read(cr, uid, id, context=context)
+        if not user.get('email'):
+            return False
         if not tools.config.get('smtp_server'):
             logger.notifyChannel('mails', netsvc.LOG_WARNING,
                 _('"smtp_server" needs to be set to send mails to users'))
@@ -135,8 +137,6 @@ class users(osv.osv):
             logger.notifyChannel("mails", netsvc.LOG_WARNING,
                 _('"email_from" needs to be set to send welcome mails '
                   'to users'))
-            return False
-        if not user.get('email'):
             return False
 
         return tools.email_send(email_from=None, email_to=[user['email']],
@@ -175,7 +175,24 @@ class users(osv.osv):
         extended_users = group_obj.read(cr, uid, extended_group_id, ['users'], context=context)['users']
         return dict(zip(ids, ['extended' if user in extended_users else 'simple' for user in ids]))
 
+    def _email_get(self, cr, uid, ids, name, arg, context=None):
+        # perform this as superuser because the current user is allowed to read users, and that includes
+        # the email, even without any direct read access on the res_partner_address object.
+        return dict([(user.id, user.address_id.email) for user in self.browse(cr, 1, ids)]) # no context to avoid potential security issues as superuser
 
+    def _email_set(self, cr, uid, ids, name, value, arg, context=None):
+        if not isinstance(ids,list):
+            ids = [ids]
+        address_obj = self.pool.get('res.partner.address')
+        for user in self.browse(cr, uid, ids, context=context):
+            # perform this as superuser because the current user is allowed to write to the user, and that includes
+            # the email even without any direct write access on the res_partner_address object.
+            if user.address_id:
+                address_obj.write(cr, 1, user.address_id.id, {'email': value or None}) # no context to avoid potential security issues as superuser
+            else:
+                address_id = address_obj.create(cr, 1, {'name': user.name, 'email': value or None}) # no context to avoid potential security issues as superuser
+                self.write(cr, uid, ids, {'address_id': address_id}, context)
+        return True
 
     def _set_new_password(self, cr, uid, id, name, value, args, context=None):
         if value is False:
@@ -189,6 +206,9 @@ class users(osv.osv):
             raise osv.except_osv(_('Operation Canceled'), _('Please use the change password wizard (in User Preferences or User menu) to change your own password.'))
         self.write(cr, uid, id, {'password': value})
 
+    def _get_password(self, cr, uid, ids, arg, karg, context=None):
+        return dict.fromkeys(ids, '')
+
     _columns = {
         'name': fields.char('User Name', size=64, required=True, select=True,
                             help="The new user's real name, used for searching"
@@ -196,17 +216,18 @@ class users(osv.osv):
         'login': fields.char('Login', size=64, required=True,
                              help="Used to log into the system"),
         'password': fields.char('Password', size=64, invisible=True, help="Keep empty if you don't want the user to be able to connect on the system."),
-        'new_password': fields.function(lambda *a:'', method=True, type='char', size=64,
+        'new_password': fields.function(_get_password, method=True, type='char', size=64,
                                 fnct_inv=_set_new_password,
                                 string='Change password', help="Only specify a value if you want to change the user password. "
                                 "This user will have to logout and login again!"),
-        'user_email': fields.char('E-mail', size=64,
+        'email': fields.char('E-mail', size=64,
             help='If an email is provided, the user will be sent a message '
                  'welcoming him.\n\nWarning: if "email_from" and "smtp_server"'
                  " aren't configured, it won't be possible to email new "
                  "users."),
         'signature': fields.text('Signature', size=64),
-       'active': fields.boolean('Active'),
+        'address_id': fields.many2one('res.partner.address', 'Address'),
+        'active': fields.boolean('Active'),
         'action_id': fields.many2one('ir.actions.actions', 'Home Action', help="If specified, this action will be opened at logon for this user, in addition to the standard menu."),
         'menu_id': fields.many2one('ir.actions.actions', 'Menu Action', help="If specified, the action will replace the standard menu for this user."),
         'groups_id': fields.many2many('res.groups', 'res_groups_users_rel', 'uid', 'gid', 'Groups'),
@@ -219,15 +240,15 @@ class users(osv.osv):
 
         'company_ids':fields.many2many('res.company','res_company_users_rel','user_id','cid','Companies'),
         'context_lang': fields.selection(_lang_get, 'Language', required=True,
-            help="Sets the language for the user's user interface, when UI "
-                 "translations are available"),
+            help="The default language used in the graphical user interface, when translations are available. To add a new language, you can use the 'Load an Official Translation' wizard available from the 'Administration' menu."),
         'context_tz': fields.selection(_tz_get,  'Timezone', size=64,
             help="The user's timezone, used to perform timezone conversions "
                  "between the server and the client."),
         'view': fields.function(_get_interface_type, method=True, type='selection', fnct_inv=_set_interface_type,
                                 selection=[('simple','Simplified'),('extended','Extended')],
-                                string='Interface', help="Choose between the simplified interface and the extended one"),
-           'menu_tips': fields.boolean('Menu Tips', help="Check out this box if you want to always display tips on each menu action"),
+                                string='Interface', help="OpenERP offers a simplified and an extended user interface. If you use OpenERP for the first time we strongly advise you to select the simplified interface, which has less features but is easier to use. You can switch to the other interface from the User/Preferences menu at any time."),
+        'user_email': fields.function(_email_get, method=True, fnct_inv=_email_set, string='Email', type="char", size=240),
+        'menu_tips': fields.boolean('Menu Tips', help="Check out this box if you want to always display tips on each menu action"),
         'date': fields.datetime('Last Connection', readonly=True),
     }
 
@@ -244,7 +265,6 @@ class users(osv.osv):
             if 'password' in o and ( 'id' not in o or o['id'] != uid ):
                 o['password'] = '********'
             return o
-
         result = super(users, self).read(cr, uid, ids, fields, context, load)
         canwrite = self.pool.get('ir.model.access').check(cr, uid, 'res.users', 'write', raise_exception=False)
         if not canwrite:
@@ -326,6 +346,7 @@ class users(osv.osv):
         'company_id': _get_company,
         'company_ids': _get_companies,
         'groups_id': _get_group,
+        'address_id': False,
         'menu_tips':True
     }
 
@@ -489,52 +510,6 @@ class users(osv.osv):
 
 users()
 
-class config_users(osv.osv_memory):
-    _name = 'res.config.users'
-    _inherit = ['res.users', 'res.config']
-
-    def _generate_signature(self, cr, name, email, context=None):
-        return _('--\n%(name)s %(email)s\n') % {
-            'name': name or '',
-            'email': email and ' <'+email+'>' or '',
-            }
-
-    def create_user(self, cr, uid, new_id, context=None):
-        """ create a new res.user instance from the data stored
-        in the current res.config.users.
-
-        If an email address was filled in for the user, sends a mail
-        composed of the return values of ``get_welcome_mail_subject``
-        and ``get_welcome_mail_body`` (which should be unicode values),
-        with the user's data %-formatted into the mail body
-        """
-        base_data = self.read(cr, uid, new_id, context=context)
-        user_data = dict(
-            base_data,
-            signature=self._generate_signature(
-                cr, base_data['name'], base_data['email'], context=context)
-            )
-        new_user = self.pool.get('res.users').create(
-            cr, uid, user_data, context)
-        self.send_welcome_email(cr, uid, new_user, context=context)
-
-    def execute(self, cr, uid, ids, context=None):
-        'Do nothing on execution, just launch the next action/todo'
-        pass
-    def action_add(self, cr, uid, ids, context=None):
-        'Create a user, and re-display the view'
-        self.create_user(cr, uid, ids[0], context=context)
-        return {
-            'view_type': 'form',
-            "view_mode": 'form',
-            'res_model': 'res.config.users',
-            'view_id':self.pool.get('ir.ui.view')\
-                .search(cr,uid,[('name','=','res.config.users.confirm.form')]),
-            'type': 'ir.actions.act_window',
-            'target':'new',
-            }
-config_users()
-
 class groups2(osv.osv): ##FIXME: Is there a reason to inherit this object ?
     _inherit = 'res.groups'
     _columns = {
@@ -549,9 +524,9 @@ class groups2(osv.osv): ##FIXME: Is there a reason to inherit this object ?
 
         if group_users:
             user_names = [user.name for user in self.pool.get('res.users').browse(cr, uid, group_users, context=context)]
+            user_names = list(set(user_names))
             if len(user_names) >= 5:
-                user_names = user_names[:5]
-                user_names += '...'
+                user_names = user_names[:5] + ['...']
             raise osv.except_osv(_('Warning !'),
                         _('Group(s) cannot be deleted, because some user(s) still belong to them: %s !') % \
                             ', '.join(user_names))

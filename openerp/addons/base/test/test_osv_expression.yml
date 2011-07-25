@@ -1,4 +1,71 @@
 -
+    Testing for hierarchical search in M2M
+-
+    !python {model: res.partner }: |
+        ids = self.search(cr, uid, [('category_id', 'child_of','supplier')])
+        assert len(ids) >= 1, ids
+
+-
+    Test hierarchical search in M2M with child ID1
+-
+    !python {model: res.partner }: |
+        ids = self.search(cr, uid, [('category_id', 'child_of','Components Supplier')])
+        assert len(ids) >= 1, ids
+-
+    Test hierarchical search in M2M with child ID2
+-
+    !python {model: res.partner }: |
+        ids = self.search(cr, uid, [('category_id', 'child_of','Miscellaneous Suppliers')])
+        assert len(ids) >= 1, ids
+
+-
+    "1.0 Setup test partner categories: parent root"
+-
+    !record {model: res.partner.category, id: categ_root}:
+        name: Root category
+-
+    "1.1 Setup test partner categories: parent category"
+-
+    !record {model: res.partner.category, id: categ_0}:
+        name: Parent category
+        parent_id: categ_root
+-
+    "1.2 Setup test partner categories: child 1"
+-
+    !record {model: res.partner.category, id: categ_1}:
+        name: Child 1
+        parent_id: categ_0
+-
+    Test hierarchical search in M2M with child ID (list of ids)
+-
+    !python {model: res.partner.category }: |
+        ids = self.search(cr, uid, [('id', 'child_of',[ref('categ_root')])])
+        assert len(ids) == 3, ids
+-
+    Test hierarchical search in M2M with child ID (single id)
+-
+    !python {model: res.partner.category }: |
+        ids = self.search(cr, uid, [('id', 'child_of',ref('categ_root'))])
+        assert len(ids) == 3, ids
+-
+    Test hierarchical search in M2M with child IDs
+-
+    !python {model: res.partner.category }: |
+        ids = self.search(cr, uid, [('id', 'child_of',[ref('categ_1'), ref('categ_0')])])
+        assert len(ids) == 2, ids
+-
+    Test hierarchical search in M2M with child IDs
+-
+    !python {model: res.partner.category }: |
+        ids = self.search(cr, uid, [('id', 'child_of',[ref('categ_0')])])
+        assert len(ids) == 2, ids
+-
+    Test hierarchical search in M2M with child IDs
+-
+    !python {model: res.partner.category }: |
+        ids = self.search(cr, uid, [('id', 'child_of',[ref('categ_1')])])
+        assert len(ids) == 1, ids
+-
     Testing that some domain expressions work
 -
     !python {model: res.partner.address }: |
@@ -40,7 +107,7 @@
 -
     !assert {model: res.partner, search: "[('category_id', '=', False)]"}:
         - category_id in (False, None, [])
-- 
+-
     Filtering on invalid value across x2many relationship should return an empty set
 -
     !assert {model: res.partner, search: "[('address.city','=','foo')]", count: 0, string: "Searching for address.city = foo should give empty results"}
@@ -110,4 +177,16 @@
         res_ids = self.search(cr, uid, [('company_id.partner_id', 'not in', [])])
         res_ids.sort()
         assert res_ids == all_ids, "Searching against empty set failed, returns %r" % res_ids
+-
+    Verify that normalize_domain() works.
+-
+    !python {model: res.partner}: |
+        from osv import expression
+        norm_domain = domain = ['&',(1,'=',1),('a','=','b')]
+        assert norm_domain == expression.normalize(domain), "Normalized domains should be left untouched"
+        domain = [('x','in',['y','z']),('a.v','=','e'),'|','|',('a','=','b'),'!',('c','>','d'),('e','!=','f'),('g','=','h')]
+        norm_domain = ['&','&','&'] + domain
+        assert norm_domain == expression.normalize(domain), "Non-normalized domains should be properly normalized"
+
+
 

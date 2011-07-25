@@ -158,7 +158,7 @@ showpage'''
 (No workflow instance defined) show
 showpage'''
                 else:
-                    graph = pydot.Dot(
+                    graph = pydot.Dot(graph_name=data['model'].replace('.','_'),
                         fontsize='16',
                         label="""\\\n\\nWorkflow: %s\\n OSV: %s""" % (wkfinfo['name'],wkfinfo['osv']),
                         size='7.3, 10.1', center='1', ratio='auto', rotate='0', rankdir='TB',

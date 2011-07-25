@@ -19,8 +19,8 @@
        Return a generator which yields full paths in which the *file* name exists
        in a directory that is part of the file name, or on *path*,
        and has the given *mode*.
-       By default, *mode* matches an inclusive OR of os.F_OK and os.X_OK
-        - an existing executable file.
+       By default, *mode* matches an inclusive OR of os.F_OK and os.X_OK - an 
+       existing executable file.
        The *path* is, by default, the ``PATH`` variable on the platform,
        or the string/iterable passed in as *path*.
        In the event that a ``PATH`` variable is not found, :const:`os.defpath` is used.

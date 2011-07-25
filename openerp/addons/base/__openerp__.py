@@ -25,6 +25,7 @@
     'name': 'Base',
     'version': '1.3',
     'category': 'Generic Modules/Base',
+    'complexity': "easy",
     'description': """The kernel of OpenERP, needed for all installation.""",
     'author': 'OpenERP SA',
     'maintainer': 'OpenERP SA',
@@ -94,6 +95,7 @@
         'test/bug_lp541545.xml',
         'test/test_osv_expression.yml',
         'test/test_ir_rule.yml', # <-- These tests modify/add/delete ir_rules.
+        'test/test_ir_values.yml',
     ],
     'installable': True,
     'active': True,

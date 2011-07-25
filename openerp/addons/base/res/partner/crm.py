@@ -20,8 +20,8 @@
 ##############################################################################
 
 import time
-from osv import fields,osv
-
+from osv import osv
+from osv import fields
 
 #
 # Sale/Purchase Canal, Media
@@ -31,7 +31,7 @@ class res_partner_canal(osv.osv):
     _description = "Channels"
     _order = 'name'
     _columns = {
-        'name': fields.char('Channel Name',size=64, required=True),
+        'name': fields.char('Channel Name', size=64, required=True),
         'active': fields.boolean('Active'),
     }
     _defaults = {
@@ -39,16 +39,10 @@ class res_partner_canal(osv.osv):
     }
 res_partner_canal()
 
-def _links_get(self, cr, uid, context={}):
-    obj = self.pool.get('res.request.link')
-    ids = obj.search(cr, uid, [])
-    res = obj.read(cr, uid, ids, ['object', 'name'], context)
-    return [(r['object'], r['name']) for r in res]
-
 class res_partner_event(osv.osv):
     _name = "res.partner.event"
     _columns = {
-        'name': fields.char('Events',size=64, required=True),
+        'name': fields.char('Events', size=64, required=True),
         'description': fields.text('Description'),
         'partner_id': fields.many2one('res.partner', 'Partner', select=True),
         'date': fields.datetime('Date', size=16),
@@ -60,6 +54,5 @@ class res_partner_event(osv.osv):
         'user_id': lambda self, cr, uid, context: uid,
     }
 res_partner_event()
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
