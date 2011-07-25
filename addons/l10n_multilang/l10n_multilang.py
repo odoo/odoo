@@ -21,6 +21,9 @@
 
 from osv import fields, osv
 import os
+import netsvc
+
+logger=netsvc.Logger()
 
 class wizard_multi_charts_accounts(osv.osv_memory):
     """
@@ -31,6 +34,80 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         * Create financial journals for each account of type liquidity
     """
     _inherit = 'wizard.multi.charts.accounts'
+
+    def copy_translation(self, cr, uid, langs, in_obj, in_field, in_ids, out_obj, out_ids):
+        done = False
+        error = False
+        xlat_obj = self.pool.get('ir.translation')
+        while not done:
+            #compare template with Accounts
+            if len(in_ids) != len(out_ids):
+                logger.notifyChannel('addons.'+self._name, netsvc.LOG_ERROR,
+                     'generate translations from template for %s failed (error 1)!' % out_obj._name)
+                error = True
+                break
+            #copy Translation from Source to Destination object
+            for lang in langs:
+                cr.execute("SELECT src, value FROM ir_translation "  \
+                           "WHERE name=%s AND type='model' AND lang=%s AND res_id IN %s "   \
+                           "ORDER by res_id",
+                           (in_obj._name + ',' + in_field, lang, tuple(in_ids)))
+                xlats = cr.fetchall()
+                #IF there is no Translation Available or missing some Translation
+                if len(xlats) != len(out_ids):
+                    logger.notifyChannel('addons.'+self._name, netsvc.LOG_ERROR,
+                        'There is no Translation available for template %s !' % out_obj._name)
+                    error = True
+                    break
+                for i in range(len(out_ids)):
+                    src = xlats[i][0]
+                    value = xlats[i][1]
+                    out_record = out_obj.browse(cr, uid, out_ids[i])
+                    #compare with source to destination object name 
+                    if getattr(out_record, in_field) != src:
+                        logger.notifyChannel('addons.'+self._name, netsvc.LOG_ERROR,
+                             'generate translations from template for %s failed (error 3)!' % out_obj._name)
+                        error = True
+                        break
+                    #Copy Translation
+                    xlat_obj.create(cr, uid, {
+                          'name': out_obj._name + ',' + in_field,
+                          'type': 'model',
+                          'res_id': out_record.id,
+                          'lang': lang,
+                          'src': src,
+                          'value': value,
+                    })
+            done = True
+        if error:
+            raise osv.except_osv(_('Warning!'),
+                 _('The generation of translations from the template for %s failed!' % out_obj._name))
+        
+    def execute(self, cr, uid, ids, context=None):
+        super(wizard_multi_charts_accounts, self).execute(cr, uid, ids, context=context)
+        obj_multi = self.browse(cr, uid, ids[0], context=context)
+        obj_mod = self.pool.get('ir.module.module')
+        obj_acc_template = self.pool.get('account.account.template')
+        obj_acc = self.pool.get('account.account')
+        obj_data = self.pool.get('ir.model.data')
+
+        company_id = obj_multi.company_id.id
+        acc_template_root_id = obj_multi.chart_template_id.account_root_id.id
+        acc_root_id = obj_acc.search(cr, uid, [('company_id', '=', company_id), ('parent_id', '=', None)])[0]                       
+                         
+        # load languages
+        langs = []
+        for lang in obj_multi.lang_ids:
+            langs.append(lang.code)
+        installed_mids = obj_mod.search(cr, uid, [('state', '=', 'installed')])
+        for lang in langs:
+                    obj_mod.update_translations(cr, uid, installed_mids, lang)
+
+        # copy account.account translations
+        in_field = 'name'
+        in_ids = obj_acc_template.search(cr, uid, [('id', 'child_of', [acc_template_root_id])], order='id')[1:]
+        out_ids = obj_acc.search(cr, uid, [('id', 'child_of', [acc_root_id])], order='id')[1:]
+        self.copy_translation(cr, uid, langs, obj_acc_template, in_field, in_ids, obj_acc, out_ids)
 
     def onchange_chart_template_id(self, cr, uid, ids, chart_template_id=False, context=None):
         res = super(wizard_multi_charts_accounts, self).onchange_chart_template_id(cr, uid, ids, chart_template_id, context=context)
