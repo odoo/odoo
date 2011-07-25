@@ -25,8 +25,11 @@ openerp.base.list = {
         }
 
         var record = row_data[column.id];
-        if (record.value === false) {
-            return value_if_empty === undefined ?  '' : value_if_empty;
+        switch (record.value) {
+            case false:
+            case Infinity:
+            case -Infinity:
+                return value_if_empty === undefined ?  '' : value_if_empty;
         }
         switch (column.widget || column.type) {
             case 'integer':
@@ -353,10 +356,6 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
                 }
                 var aggregation_func = column['group_operator'] || 'sum';
 
-                if (!column[aggregation_func]) {
-                    return {};
-                }
-
                 return _.extend({}, column, {
                     'function': aggregation_func,
                     label: column[aggregation_func]
@@ -566,7 +565,6 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
     compute_aggregates: function (records) {
         var columns = _(this.aggregate_columns).filter(function (column) {
             return column['function']; });
-
         if (_.isEmpty(columns)) { return; }
 
         if (_.isEmpty(records)) {
@@ -574,17 +572,39 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
         }
 
         var count = 0, sums = {};
-        _(columns).each(function (column) { sums[column.id] = 0; });
+        _(columns).each(function (column) {
+            switch (column['function']) {
+                case 'max':
+                    sums[column.id] = -Infinity;
+                    break;
+                case 'min':
+                    sums[column.id] = Infinity;
+                    break;
+                default:
+                    sums[column.id] = 0;
+            }
+        });
         _(records).each(function (record) {
             count += record.count || 1;
             _(columns).each(function (column) {
-                var field = column.id;
+                var field = column.id,
+                    value = record.values[field];
                 switch (column['function']) {
                     case 'sum':
-                        sums[field] += record.values[field];
+                        sums[field] += value;
                         break;
                     case 'avg':
-                        sums[field] += record.count * record.values[field];
+                        sums[field] += record.count * value;
+                        break;
+                    case 'min':
+                        if (sums[field] > value) {
+                            sums[field] = value;
+                        }
+                        break;
+                    case 'max':
+                        if (sums[field] < value) {
+                            sums[field] = value;
+                        }
                         break;
                 }
             });
@@ -594,12 +614,11 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
         _(columns).each(function (column) {
             var field = column.id;
             switch (column['function']) {
-                case 'sum':
-                    aggregates[field] = {value: sums[field]};
-                    break;
                 case 'avg':
                     aggregates[field] = {value: sums[field] / count};
                     break;
+                default:
+                    aggregates[field] = {value: sums[field]};
             }
         });
 
