@@ -195,6 +195,7 @@ openerp.base.Export = openerp.base.Dialog.extend({
 
     on_show_data: function(result) {
         var self = this;
+        var imp_cmpt = parseInt($("#import_compat option:selected").val());
         var current_tr = $("tr[id='treerow-" + self.field_id + "']");
         if (current_tr.length >= 1){
             current_tr.find('img').attr('src','/base/static/src/img/collapse.gif');
@@ -204,7 +205,7 @@ openerp.base.Export = openerp.base.Dialog.extend({
             $('#left_field_panel').append(QWeb.render('ExportTreeView-Secondary',  {'fields': result}));
         }
         _.each(result, function(record) {
-            if(record.field_type == "one2many"){
+            if((record.field_type == "one2many") && imp_cmpt){
                 var o2m_fld = $("tr[id='treerow-" + record.id + "']").find('#tree-column');
                 o2m_fld.addClass("readonlyfield");
             }
