@@ -29,9 +29,11 @@ openerp.base.list = {
             return value_if_empty === undefined ?  '' : value_if_empty;
         }
         switch (column.widget || column.type) {
-            case 'many2one':
-                // name_get value format
-                return record.value[1];
+            case 'integer':
+                return _.sprintf('%d', record.value);
+            case 'float':
+                var precision = column.digits ? column.digits[1] : 2;
+                return _.sprintf('%.' + precision + 'f', record.value);
             case 'float_time':
                 return _.sprintf("%02d:%02d",
                         Math.floor(record.value),
@@ -40,6 +42,9 @@ openerp.base.list = {
                 return _.sprintf(
                     '<progress value="%.2f" max="100.0">%.2f%%</progress>',
                         record.value, record.value);
+            case 'many2one':
+                // name_get value format
+                return record.value[1];
             default:
                 return record.value;
         }
@@ -352,12 +357,10 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
                     return {};
                 }
 
-                return {
-                    field: column.id,
-                    type: column.type,
+                return _.extend({}, column, {
                     'function': aggregation_func,
                     label: column[aggregation_func]
-                };
+                });
             });
     },
     /**
@@ -571,11 +574,11 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
         }
 
         var count = 0, sums = {};
-        _(columns).each(function (column) { sums[column.field] = 0; });
+        _(columns).each(function (column) { sums[column.id] = 0; });
         _(records).each(function (record) {
             count += record.count || 1;
             _(columns).each(function (column) {
-                var field = column.field;
+                var field = column.id;
                 switch (column['function']) {
                     case 'sum':
                         sums[field] += record.values[field];
@@ -589,13 +592,13 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
 
         var aggregates = {};
         _(columns).each(function (column) {
-            var field = column.field;
+            var field = column.id;
             switch (column['function']) {
                 case 'sum':
-                    aggregates[field] = sums[field];
+                    aggregates[field] = {value: sums[field]};
                     break;
                 case 'avg':
-                    aggregates[field] = sums[field] / count;
+                    aggregates[field] = {value: sums[field] / count};
                     break;
             }
         });
@@ -608,9 +611,9 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
             if (!column['function']) {
                 return;
             }
-            var pattern = (column.type == 'integer') ? '%d' : '%.2f';
-            $footer_cells.filter(_.sprintf('[data-field=%s]', column.field))
-                .text(_.sprintf(pattern, aggregation[column.field]));
+
+            $footer_cells.filter(_.sprintf('[data-field=%s]', column.id))
+                .html(openerp.base.list.render_cell(aggregation, column));
         });
     }
     // TODO: implement reorder (drag and drop rows)
@@ -988,8 +991,8 @@ openerp.base.ListView.Groups = openerp.base.Class.extend( /** @lends openerp.bas
                 row_data[group.grouped_on] = group;
                 var group_column = _(self.columns).detect(function (column) {
                     return column.id === group.grouped_on; });
-                $group_column.text(openerp.base.list.render_cell(
-                        row_data, group_column, "Undefined"
+                $group_column.html(openerp.base.list.render_cell(
+                    row_data, group_column, "Undefined"
                 ));
                 if (group.openable) {
                     // Make openable if not terminal group & group_by_no_leaf
