@@ -62,7 +62,7 @@
                         <td><label for="db">Database:</label></td>
                         <td>
                             <t t-if="!db_list">
-                                <input type="text" name="db" value="" autofocus="true"/>
+                                <input type="text" name="db" t-att-value="selected_db || ''" autofocus="true"/>
                             </t>
                             <t t-if="db_list">
                                 <select name="db">
