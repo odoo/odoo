@@ -61,6 +61,9 @@ openerp.base.ActionManager = openerp.base.Controller.extend({
                         var url = window.location.protocol + "//" + window.location.host +
                                 window.location.pathname + "?" + jQuery.param({ s_action : "" + key });
                         window.open(url);
+                        if (on_closed) {
+                            on_closed();
+                        }
                     });
                 } else {
                     if (this.viewmanager) {
