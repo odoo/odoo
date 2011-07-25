@@ -110,9 +110,10 @@ openerp.base.SearchView = openerp.base.Controller.extend({
         }
     },
     on_loaded: function(data) {
-        var lines = this.make_widgets(
-            data.fields_view['arch'].children,
-            data.fields_view.fields);
+        var self = this,
+           lines = this.make_widgets(
+                data.fields_view['arch'].children,
+                data.fields_view.fields);
 
         // for extended search view
         var ext = new openerp.base.search.ExtendedSearch(this, this.model);
@@ -145,7 +146,6 @@ openerp.base.SearchView = openerp.base.Controller.extend({
         });
         
         // filters management
-        var self = this;
         return this.rpc('/base/searchview/get_filters', {
             model: this.dataset.model
         }).then(function(result) {
