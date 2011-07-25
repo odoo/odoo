@@ -756,7 +756,7 @@ class account_voucher(osv.osv):
                     rec_ids = [voucher_line, line.move_line_id.id]
                     rec_list_ids.append(rec_ids)
 
-            if not currency_pool.is_zero(cr, uid, inv.currency_id, line_total):
+            if current_currency or inv.journal_id.currency.id or company_currency and not currency_pool.is_zero(cr, uid, inv.currency_id, line_total):
                 diff = line_total
                 account_id = False
                 if inv.payment_option == 'with_writeoff':
