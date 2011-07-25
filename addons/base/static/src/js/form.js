@@ -407,20 +407,19 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
         this.notification.notify("Cancelling form");
     },
     do_update_sidebar: function() {
-        if (this.flags.sidebar === false) {
+        if (this.flags.sidebar === false || this.view_manager.sidebar === undefined) {
             return;
         }
         if (!this.datarecord.id) {
             this.on_attachments_loaded([]);
         } else {
-            // TODO fme: modify this so it doesn't try to load attachments when there is not sidebar
-            /*(new openerp.base.DataSetSearch(
+            (new openerp.base.DataSetSearch(
                     this, 'ir.attachment', this.dataset.get_context(),
                     [['res_model', '=', this.dataset.model],
                      ['res_id', '=', this.datarecord.id],
                      ['type', 'in', ['binary', 'url']]])).read_slice(
                 ['name', 'url', 'type'], false, false,
-                this.on_attachments_loaded);*/
+                this.on_attachments_loaded);
         }
     },
     on_attachments_loaded: function(attachments) {
@@ -2219,8 +2218,10 @@ openerp.base.form.widgets = new openerp.base.Registry({
     'url' : 'openerp.base.form.FieldUrl',
     'text' : 'openerp.base.form.FieldText',
     'text_wiki' : 'openerp.base.form.FieldText',
-    'date' : 'openerp.base.form.FieldDate',
-    'datetime' : 'openerp.base.form.FieldDatetime',
+//    'date' : 'openerp.base.form.FieldDate',
+//    'datetime' : 'openerp.base.form.FieldDatetime',
+    'date' : 'openerp.base.form.FieldChar',
+    'datetime' : 'openerp.base.form.FieldChar',
     'selection' : 'openerp.base.form.FieldSelection',
     'many2one' : 'openerp.base.form.FieldMany2One',
     'many2many' : 'openerp.base.form.FieldMany2Many',
