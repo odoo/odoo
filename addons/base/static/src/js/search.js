@@ -145,7 +145,10 @@ openerp.base.SearchView = openerp.base.Controller.extend({
             self.ready.resolve();
         });
         
-        // filters management
+        this.reload_managed_filters();
+    },
+    reload_managed_filters: function() {
+        var self = this;
         return this.rpc('/base/searchview/get_filters', {
             model: this.dataset.model
         }).then(function(result) {
@@ -159,6 +162,7 @@ openerp.base.SearchView = openerp.base.Controller.extend({
      * Handle event when the user make a selection in the filters management select box.
      */
     on_filters_management: function(e) {
+        var self = this;
         var select = this.$element.find(".oe_search-view-filters-management");
         var val = select.val();
         
@@ -173,10 +177,50 @@ openerp.base.SearchView = openerp.base.Controller.extend({
             this.on_search([filter.domain], [filter.context], []);
         } else if (val == "save_filter") {
             select.val("_filters");
-            //TODO niv
+            var data = this.build_search_data();
+            var context = new openerp.base.CompoundContext();
+            _.each(data.contexts, function(x) {
+                context.add(x);
+            });
+            var domain = new openerp.base.CompoundDomain();
+            _.each(data.domains, function(x) {
+                domain.add(x);
+            });
+            var dial_html = QWeb.render("SearchView.managed-filters.add");
+            var $dial = $(dial_html);
+            $dial.dialog({
+                modal: true,
+                title: "Filter Entry",
+                buttons: {
+                    Cancel: function() {
+                        $(this).dialog("close");
+                    },
+                    OK: function() {
+                        $(this).dialog("close");
+                        var name = $(this).find("input").val();
+                        self.rpc('/base/searchview/save_filter', {
+                            model: self.dataset.model,
+                            context_to_save: context,
+                            domain: domain,
+                            name: name
+                        }).then(function(result) {
+                            self.reload_managed_filters();
+                        });
+                    },
+                }
+            });
         } else { // manage_filters
             select.val("_filters");
-            //TODO niv
+            this.do_action({
+                res_model: 'ir.filters',
+                views: [[false, 'list'], [false, 'form']],
+                type: 'ir.actions.act_window',
+                context: {"search_default_user_id": this.session.uid,
+                "search_default_model_id": this.dataset.model},
+                target: "current",
+                limit : 80,
+                auto_search : true
+            });
         }
     },
     /**
@@ -197,6 +241,16 @@ openerp.base.SearchView = openerp.base.Controller.extend({
         
         if (e && e.preventDefault) { e.preventDefault(); }
 
+        var data = this.build_search_data();
+
+        if (data.errors.length) {
+            this.on_invalid(data.errors);
+            return;
+        }
+
+        this.on_search(data.domains, data.contexts, data.groupbys);
+    },
+    build_search_data: function() {
         var domains = [],
            contexts = [],
              errors = [];
@@ -221,19 +275,13 @@ openerp.base.SearchView = openerp.base.Controller.extend({
             }
         });
 
-        if (errors.length) {
-            this.on_invalid(errors);
-            return;
-        }
-
         // TODO: do we need to handle *fields* with group_by in their context?
         var groupbys = _(this.enabled_filters)
                 .chain()
                 .map(function (filter) { return filter.get_context();})
                 .compact()
                 .value();
-
-        this.on_search(domains, contexts, groupbys);
+        return {domains: domains, contexts: contexts, errors: errors, groupbys: groupbys};
     },
     /**
      * Triggered after the SearchView has collected all relevant domains and

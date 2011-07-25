@@ -62,7 +62,7 @@
                         <td><label for="db">Database:</label></td>
                         <td>
                             <t t-if="!db_list">
-                                <input type="text" name="db" value="" autofocus="true"/>
+                                <input type="text" name="db" t-att-value="selected_db || ''" autofocus="true"/>
                             </t>
                             <t t-if="db_list">
                                 <select name="db">
@@ -678,6 +678,13 @@
     <option value="_actions">-- Actions --</option>
     <option value="save_filter">Save Filter</option>
     <option value="manage_filters">Manage Filters</option>
+</t>
+<t t-name="SearchView.managed-filters.add">
+    <div>
+        <p>Filter Name:</p>
+        <input type="text"/>
+        <p>(Any existing filter with the same name will be replaced)</p>
+    </div>
 </t>
 <t t-name="SearchView.render_lines">
     <table class="oe-searchview-render-line" border="0" cellspacing="0" cellpadding="0"
