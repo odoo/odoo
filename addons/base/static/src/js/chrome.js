@@ -246,7 +246,7 @@ openerp.base.Session = openerp.base.Controller.extend( /** @lends openerp.base.S
      * @param port
      */
     init: function(parent, element_id, server, port) {
-        this._super(element_id);
+        this._super(parent, element_id);
         this.server = (server == undefined) ? location.hostname : server;
         this.port = (port == undefined) ? location.port : port;
         this.rpc_mode = (server == location.hostname) ? "ajax" : "jsonp";
