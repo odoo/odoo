@@ -1006,6 +1006,7 @@
             <!-- Address and Company ID will be set later -->
             <field name="address" eval="[]"/>
             <field name="company_id" eval="None"/>
+            <field name="customer" eval="False"/>
         </record>
         <record id="main_address" model="res.partner.address">
             <field name="partner_id" ref="main_partner"/>
