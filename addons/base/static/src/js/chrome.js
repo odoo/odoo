@@ -425,7 +425,7 @@ openerp.base.Session = openerp.base.Controller.extend( /** @lends openerp.base.S
         for(var i=0; i<cookies.length; ++i) {
             var cookie = cookies[i].replace(/^\s*/, '');
             if(cookie.indexOf(nameEQ) === 0) {
-                return decodeURIComponent(cookie.substring(nameEQ.length));
+                return JSON.parse(decodeURIComponent(cookie.substring(nameEQ.length)));
             }
         }
         return null;
@@ -441,7 +441,7 @@ openerp.base.Session = openerp.base.Controller.extend( /** @lends openerp.base.S
     set_cookie: function (name, value, ttl) {
         ttl = ttl || 24*60*60*365;
         document.cookie = [
-            this.element_id + '|' + name + '=' + encodeURIComponent(value),
+            this.element_id + '|' + name + '=' + encodeURIComponent(JSON.stringify(value)),
             'max-age=' + ttl,
             'expires=' + new Date(new Date().getTime() + ttl*1000).toGMTString()
         ].join(';');
