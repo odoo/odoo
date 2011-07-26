@@ -1,7 +1,7 @@
 openerp.base.form = function (openerp) {
 
 openerp.base.views.add('form', 'openerp.base.FormView');
-openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormView# */{
+openerp.base.FormView = openerp.base.View.extend( /** @lends openerp.base.FormView# */{
     /**
      * Indicates that this view is not searchable, and thus that no search
      * view should be displayed (if there is one active).
@@ -19,6 +19,7 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
      */
     init: function(parent, element_id, dataset, view_id, options) {
         this._super(parent, element_id);
+        this.set_default_options();
         this.view_manager = parent || new openerp.base.NullViewManager();
         this.dataset = dataset;
         this.model = dataset.model;
@@ -53,10 +54,14 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
                 context.add(this.view_manager.action.context);
             }
             return this.rpc("/base/formview/load", {"model": this.model, "view_id": this.view_id,
-                toolbar:!!this.flags.sidebar, context: context}, this.on_loaded);
+                toolbar: this.options.sidebar, context: context}, this.on_loaded);
         }
     },
     stop: function() {
+        if (this.sidebar) {
+            this.sidebar.attachments.stop();
+            this.sidebar.stop();
+        }
         _.each(this.widgets, function(w) {
             w.stop();
         });
@@ -85,12 +90,16 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
             $('<xmp>' + openerp.base.json_node_to_xml(self.fields_view.arch, true) + '</xmp>').dialog({ width: '95%', height: 600});
         });
 
-        if(this.view_manager.sidebar)
-            this.view_manager.sidebar.set_toolbar(data.fields_view.toolbar);
+        if (this.options.sidebar && this.options.sidebar_id) {
+            this.sidebar = new openerp.base.Sidebar(this, this.options.sidebar_id);
+            this.sidebar.start();
+            this.sidebar.attachments = new openerp.base.form.SidebarAttachments(this.sidebar, this.sidebar.add_section("Attachments"), this);
+            this.sidebar.add_toolbar(data.fields_view.toolbar);
+            this.sidebar.do_unfold();
+        }
         this.has_been_loaded.resolve();
     },
     do_show: function () {
-        var self = this;
         var promise;
         if (this.dataset.index === null) {
             // null index means we should start a new record
@@ -98,13 +107,17 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
         } else {
             promise = this.dataset.read_index(_.keys(this.fields_view.fields), this.on_record_loaded);
         }
-        self.$element.show();
-        if(this.view_manager.sidebar)
-            this.view_manager.sidebar.do_refresh(true);
+        this.$element.show();
+        if (this.sidebar) {
+            this.sidebar.$element.show();
+        }
         return promise;
     },
     do_hide: function () {
         this.$element.hide();
+        if (this.sidebar) {
+            this.sidebar.$element.hide();
+        }
     },
     on_record_loaded: function(record) {
         if (!record) {
@@ -144,7 +157,9 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
         this.on_form_changed();
         this.show_invalid = this.ready = true;
         this.do_update_pager(record.id == null);
-        this.do_update_sidebar();
+        if (this.sidebar) {
+            this.sidebar.attachments.do_update();
+        }
         if (this.default_focus_field) {
             this.default_focus_field.focus();
         }
@@ -389,7 +404,9 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
                 this.dataset.index = 0;
             }
             this.do_update_pager();
-            this.do_update_sidebar();
+            if (this.sidebar) {
+                this.sidebar.attachments.do_update();
+            }
             this.notification.notify("Record created", "The record has been created with id #" + this.datarecord.id);
             if (success) {
                 success(_.extend(r, {created: true}));
@@ -405,51 +422,6 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
     },
     do_cancel: function () {
         this.notification.notify("Cancelling form");
-    },
-    do_update_sidebar: function() {
-        if (this.flags.sidebar === false || this.view_manager.sidebar === undefined) {
-            return;
-        }
-        if (!this.datarecord.id) {
-            this.on_attachments_loaded([]);
-        } else {
-            (new openerp.base.DataSetSearch(
-                    this, 'ir.attachment', this.dataset.get_context(),
-                    [['res_model', '=', this.dataset.model],
-                     ['res_id', '=', this.datarecord.id],
-                     ['type', 'in', ['binary', 'url']]])).read_slice(
-                ['name', 'url', 'type'], false, false,
-                this.on_attachments_loaded);
-        }
-    },
-    on_attachments_loaded: function(attachments) {
-        this.$sidebar = this.view_manager.sidebar.$element.find('.sidebar-attachments');
-        this.attachments = attachments;
-        this.$sidebar.html(QWeb.render('FormView.sidebar.attachments', this));
-        this.$sidebar.find('.oe-sidebar-attachment-delete').click(this.on_attachment_delete);
-        this.$sidebar.find('.oe-binary-file').change(this.on_attachment_changed);
-    },
-    on_attachment_changed: function(e) {
-        window[this.element_id + '_iframe'] = this.do_update_sidebar;
-        var $e = $(e.target);
-        if ($e.val() != '') {
-            this.$sidebar.find('form.oe-binary-form').submit();
-            $e.parent().find('input[type=file]').attr('disabled', 'true');
-            $e.parent().find('button').attr('disabled', 'true').find('img, span').toggle();
-        }
-    },
-    on_attachment_delete: function(e) {
-        var self = this, $e = $(e.currentTarget);
-        var name = _.trim($e.parent().find('a.oe-sidebar-attachments-link').text());
-        if (confirm("Do you really want to delete the attachment " + name + " ?")) {
-            this.rpc('/base/dataset/unlink', {
-                model: 'ir.attachment',
-                ids: [parseInt($e.attr('data-id'))]
-            }, function(r) {
-                $e.parent().remove();
-                self.notification.notify("Delete an attachment", "The attachment '" + name + "' has been deleted");
-            });
-        }
     },
     reload: function() {
         if (this.datarecord.id) {
@@ -470,6 +442,54 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
 
 /** @namespace */
 openerp.base.form = {};
+
+openerp.base.form.SidebarAttachments = openerp.base.Controller.extend({
+    init: function(parent, element_id, form_view) {
+        this._super(parent, element_id);
+        this.view = form_view;
+    },
+    do_update: function() {
+        if (!this.view.datarecord.id) {
+            this.on_attachments_loaded([]);
+        } else {
+            (new openerp.base.DataSetSearch(
+                    this, 'ir.attachment', this.view.dataset.get_context(),
+                    [['res_model', '=', this.view.dataset.model],
+                     ['res_id', '=', this.view.datarecord.id],
+                     ['type', 'in', ['binary', 'url']]])).read_slice(
+                ['name', 'url', 'type'], false, false,
+                this.on_attachments_loaded);
+        }
+    },
+    on_attachments_loaded: function(attachments) {
+        this.attachments = attachments;
+        this.$element.html(QWeb.render('FormView.sidebar.attachments', this));
+        this.$element.find('.oe-binary-file').change(this.on_attachment_changed);
+        this.$element.find('.oe-sidebar-attachment-delete').click(this.on_attachment_delete);
+    },
+    on_attachment_changed: function(e) {
+        window[this.element_id + '_iframe'] = this.do_update;
+        var $e = $(e.target);
+        if ($e.val() != '') {
+            this.$element.find('form.oe-binary-form').submit();
+            $e.parent().find('input[type=file]').attr('disabled', 'true');
+            $e.parent().find('button').attr('disabled', 'true').find('img, span').toggle();
+        }
+    },
+    on_attachment_delete: function(e) {
+        var self = this, $e = $(e.currentTarget);
+        var name = _.trim($e.parent().find('a.oe-sidebar-attachments-link').text());
+        if (confirm("Do you really want to delete the attachment " + name + " ?")) {
+            this.rpc('/base/dataset/unlink', {
+                model: 'ir.attachment',
+                ids: [parseInt($e.attr('data-id'))]
+            }, function(r) {
+                $e.parent().remove();
+                self.notification.notify("Delete an attachment", "The attachment '" + name + "' has been deleted");
+            });
+        }
+    }
+});
 
 openerp.base.form.compute_domain = function(expr, fields) {
     var stack = [];

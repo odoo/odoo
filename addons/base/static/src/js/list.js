@@ -102,6 +102,7 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
      */
     init: function(parent, element_id, dataset, view_id, options) {
         this._super(parent, element_id);
+        this.set_default_options();
         this.view_manager = parent || new openerp.base.NullViewManager();
         this.dataset = dataset;
         this.model = dataset.model;
@@ -267,9 +268,11 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
                         })
                         .val(self._limit || 'NaN');
                 });
-        if(this.view_manager.sidebar)
-            this.view_manager.sidebar.set_toolbar(data.fields_view.toolbar);
-
+        if (this.options.sidebar && this.options.sidebar_id) {
+            this.sidebar = new openerp.base.Sidebar(this, this.options.sidebar_id);
+            this.sidebar.start();
+            this.sidebar.add_toolbar(data.fields_view.toolbar);
+        }
     },
     /**
      * Configures the ListView pager based on the provided dataset's information
@@ -393,16 +396,20 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
     },
     do_show: function () {
         this.$element.show();
+        if (this.sidebar) {
+            this.sidebar.$element.show();
+        }
         if (this.hidden) {
             this.$element.find('.oe-listview-content').append(
                 this.groups.apoptosis().render());
             this.hidden = false;
         }
-        if(this.view_manager.sidebar)
-            this.view_manager.sidebar.do_refresh(true);
     },
     do_hide: function () {
         this.$element.hide();
+        if (this.sidebar) {
+            this.sidebar.$element.hide();
+        }
         this.hidden = true;
     },
     /**
@@ -422,7 +429,7 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
                 model: this.model,
                 view_id: this.view_id,
                 context: this.dataset.get_context(),
-                toolbar: !!this.flags.sidebar
+                toolbar: this.options.sidebar
             }, callback);
         }
     },
