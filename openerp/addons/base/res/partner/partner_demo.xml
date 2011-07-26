@@ -104,6 +104,7 @@
             <field name="name">Camptocamp</field>
             <field eval="[(6, 0, [ref('res_partner_category_10'), ref('res_partner_category_5')])]" name="category_id"/>
             <field name="supplier">1</field>
+            <field name="address" eval="[]"/>
         </record>
         <record id="res_partner_sednacom" model="res.partner">
             <field name="website">http://www.syleam.fr</field>
@@ -166,6 +167,7 @@
             <field name="user_id" ref="user_demo"/>
             <field eval="[(6, 0, [ref('res_partner_category_9')])]" name="category_id"/>
             <field name="supplier">1</field>
+            <field name="address" eval="[]"/>
         </record>
         <record id="res_partner_8" model="res.partner">
             <field name="website">http://mediapole.net</field>
@@ -430,17 +432,29 @@
         </record>
         <record id="res_partner_address_13" model="res.partner.address">
             <field name="type">default</field>
+            <field name="city">Paris</field>
+            <field name="zip">75016</field>
+            <field model="res.country" name="country_id" search="[('name','=','France')]"/>
+            <field name="street">1 rue Rockfeller</field>
             <field name="name">Centrale d'achats 1</field>
             <field name="partner_id" ref="res_partner_14"/>
         </record>
         <record id="res_partner_address_14" model="res.partner.address">
             <field name="type">default</field>
             <field name="name">Shop 1</field>
+            <field name="city">Liege</field>
+            <field name="zip">6985</field>
+            <field model="res.country" name="country_id" search="[('name','=','Belgium')]"/>
+            <field name="street">2 Impasse de la Soif</field>
             <field name="partner_id" ref="res_partner_15"/>
         </record>
         <record id="res_partner_address_15" model="res.partner.address">
             <field name="type">default</field>
             <field name="name">Shop 2</field>
+            <field name="city">Shanghai</field>
+            <field name="zip">4785552</field>
+            <field model="res.country" name="country_id" search="[('name','=','China')]"/>
+            <field name="street">52 Chop Suey street</field>
             <field name="partner_id" ref="res_partner_11"/>
         </record>
         <record id="res_partner_address_16" model="res.partner.address">
@@ -454,6 +468,48 @@
             <field name="city">Liège</field>
             <field name="street">Université de Liège</field>
             <field name="partner_id" ref="res_partner_accent"/>
+        </record>
+        <record id="res_partner_address_Camptocamp" model="res.partner.address">
+            <field name="city">Liege</field>
+            <field name="name">Karine Lesbrouffe</field>
+            <field name="zip">6985</field>
+            <field name="phone">+33 (0) 2 33 31 22 10</field>
+            <field model="res.country" name="country_id" search="[('name','=','Belgium')]"/>
+            <field name="street">2 Impasse de la Soif</field>
+            <field name="type">default</field>
+            <field name="partner_id" ref="res_partner_c2c"/>
+        </record>
+        <record id="res_partner_address_seagate" model="res.partner.address">
+            <field name="city">Shanghai</field>
+            <field name="name">seagate</field>
+            <field name="zip">4785552</field>
+            <field name="phone">+33 (0) 2 33 31 22 10</field>
+            <field model="res.country" name="country_id" search="[('name','=','China')]"/>
+            <field name="street">52 Chop Suey street</field>
+            <field name="type">default</field>
+            <field name="partner_id" ref="res_partner_seagate"/>
+        </record>
+        <record id="res_partner_address_thymbra" model="res.partner.address">
+            <field name="city">Alencon</field>
+            <field name="name">Sebastien Thymbra</field>
+            <field name="zip">61000</field>
+            <field name="email">contact@syleam.fr</field>
+            <field name="street">1 place de l'Église</field>
+            <field name="phone">+33 (0) 2 33 31 22 10</field>
+            <field model="res.country" name="country_id" search="[('name','=','France')]"/>
+            <field name="type">default</field>
+            <field name="partner_id" ref="res_partner_thymbra"/>
+        </record>
+        <record id="res_partner_address_tinyatwork" model="res.partner.address">
+            <field name="city">Liege</field>
+            <field name="name">Karine Lesbrouffe</field>
+            <field name="zip">6985</field>
+            <field name="email">contact@tiny.bl</field>
+            <field name="phone">+33 (0) 2 33 31 22 10</field>
+            <field model="res.country" name="country_id" search="[('name','=','Belgium')]"/>
+            <field name="street">2 Impasse de la Soif</field>
+            <field name="type">default</field>
+            <field name="partner_id" ref="res_partner_tinyatwork"/>
         </record>
 
         <!--
