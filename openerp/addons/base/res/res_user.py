@@ -36,6 +36,7 @@ class groups(osv.osv):
     _description = "Access Groups"
     _columns = {
         'name': fields.char('Group Name', size=64, required=True),
+        'users': fields.many2many('res.users', 'res_groups_users_rel', 'gid', 'uid', 'Users'),
         'model_access': fields.one2many('ir.model.access', 'group_id', 'Access Controls'),
         'rule_groups': fields.many2many('ir.rule', 'rule_group_rel',
             'group_id', 'rule_group_id', 'Rules', domain=[('global', '=', False)]),
@@ -75,6 +76,21 @@ class groups(osv.osv):
             if aid:
                 aid.write({'groups_id': [(4, gid)]})
         return gid
+
+    def unlink(self, cr, uid, ids, context=None):
+        group_users = []
+        for record in self.read(cr, uid, ids, ['users'], context=context):
+            if record['users']:
+                group_users.extend(record['users'])
+        if group_users:
+            user_names = [user.name for user in self.pool.get('res.users').browse(cr, uid, group_users, context=context)]
+            user_names = list(set(user_names))
+            if len(user_names) >= 5:
+                user_names = user_names[:5] + ['...']
+            raise osv.except_osv(_('Warning !'),
+                        _('Group(s) cannot be deleted, because some user(s) still belong to them: %s !') % \
+                            ', '.join(user_names))
+        return super(groups, self).unlink(cr, uid, ids, context=context)
 
     def get_extended_interface_group(self, cr, uid, context=None):
         data_obj = self.pool.get('ir.model.data')
@@ -509,30 +525,6 @@ class users(osv.osv):
         raise osv.except_osv(_('Warning!'), _("Setting empty passwords is not allowed for security reasons!"))
 
 users()
-
-class groups2(osv.osv): ##FIXME: Is there a reason to inherit this object ?
-    _inherit = 'res.groups'
-    _columns = {
-        'users': fields.many2many('res.users', 'res_groups_users_rel', 'gid', 'uid', 'Users'),
-    }
-
-    def unlink(self, cr, uid, ids, context=None):
-        group_users = []
-        for record in self.read(cr, uid, ids, ['users'], context=context):
-            if record['users']:
-                group_users.extend(record['users'])
-
-        if group_users:
-            user_names = [user.name for user in self.pool.get('res.users').browse(cr, uid, group_users, context=context)]
-            user_names = list(set(user_names))
-            if len(user_names) >= 5:
-                user_names = user_names[:5] + ['...']
-            raise osv.except_osv(_('Warning !'),
-                        _('Group(s) cannot be deleted, because some user(s) still belong to them: %s !') % \
-                            ', '.join(user_names))
-        return super(groups2, self).unlink(cr, uid, ids, context=context)
-
-groups2()
 
 class res_config_view(osv.osv_memory):
     _name = 'res.config.view'
