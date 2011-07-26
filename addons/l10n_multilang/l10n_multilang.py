@@ -21,70 +21,94 @@
 
 from osv import fields, osv
 import os
-import netsvc
+from tools.translate import _
 
-logger=netsvc.Logger()
+
+class translate_message(osv.osv_memory):
+    _name = "translate.message"
+    _description = "Give Message After Translation completed"
+
+    def default_get(self, cr, uid, fields, context=None):
+        """ Get default values
+        @param self: The object pointer.
+        @param cr: A database cursor
+        @param uid: ID of the user currently logged in
+        @param fields: List of fields for default value
+        @param context: A standard dictionary
+        @return: Default values of fields
+        """
+        if context is None:
+            context = {}
+        res ={}
+        if context.get('warning'):
+            if 'message' in fields:
+                res.update({'message': _(context.get('warning'))})
+        return res
+
+    _columns = {
+        'message' : fields.text('Message', size=64, readonly=True),
+     }
+
+translate_message()
+
 
 class wizard_multi_charts_accounts(osv.osv_memory):
     """
     Change wizard that a new account chart for a company.
-        * load Default languages
-        * Replace creation of financial accounts by copy from template.
-          This change results in adherence to Belgian MAR numbering scheme for cash accounts.
-        * Create financial journals for each account of type liquidity
+        * Add option to install languages during the setup
+        * Copy translations for COA, Tax, Tax Code and Fiscal Position from templates to target objects.
     """
     _inherit = 'wizard.multi.charts.accounts'
 
-    def copy_translation(self, cr, uid, langs, in_obj, in_field, in_ids, out_obj, out_ids):
-        done = False
-        error = False
+    def copy_translations(self, cr, uid, langs, in_obj, in_field, in_ids, out_obj, out_ids, context):
+        result = {}
+        if context is None:
+            context = {}
         xlat_obj = self.pool.get('ir.translation')
-        while not done:
-            #compare template with Accounts
-            if len(in_ids) != len(out_ids):
-                logger.notifyChannel('addons.'+self._name, netsvc.LOG_ERROR,
-                     'generate translations from template for %s failed (error 1)!' % out_obj._name)
-                error = True
-                break
-            #copy Translation from Source to Destination object
-            for lang in langs:
-                cr.execute("SELECT src, value FROM ir_translation "  \
-                           "WHERE name=%s AND type='model' AND lang=%s AND res_id IN %s "   \
-                           "ORDER by res_id",
-                           (in_obj._name + ',' + in_field, lang, tuple(in_ids)))
-                xlats = cr.fetchall()
-                #IF there is no Translation Available or missing some Translation
-                if len(xlats) != len(out_ids):
-                    logger.notifyChannel('addons.'+self._name, netsvc.LOG_ERROR,
-                        'There is no Translation available for template %s !' % out_obj._name)
-                    error = True
-                    break
-                for i in range(len(out_ids)):
-                    src = xlats[i][0]
-                    value = xlats[i][1]
-                    out_record = out_obj.browse(cr, uid, out_ids[i])
-                    #compare with source to destination object name 
-                    if getattr(out_record, in_field) != src:
-                        logger.notifyChannel('addons.'+self._name, netsvc.LOG_ERROR,
-                             'generate translations from template for %s failed (error 3)!' % out_obj._name)
-                        error = True
-                        break
-                    #Copy Translation
+        #find the source from Account Template
+        result = [(x.id, x.name) for x in in_obj.browse(cr, uid, in_ids)]
+        src = dict(result)
+        message = ''
+        for lang in langs:
+            notdone = []
+            #find the value from Translation
+            value = xlat_obj._get_ids(cr, uid, in_obj._name + ',' + in_field, 'model', lang, in_ids)
+            for j in range(len(in_ids)):
+                in_id = in_ids[j]
+                if not value[in_id]:
+                    # if source have no translation available
+                    notdone.append(src[in_id])
+                else:
+                    #copy Translation from Source to Destination object
                     xlat_obj.create(cr, uid, {
-                          'name': out_obj._name + ',' + in_field,
-                          'type': 'model',
-                          'res_id': out_record.id,
-                          'lang': lang,
-                          'src': src,
-                          'value': value,
-                    })
-            done = True
-        if error:
-            raise osv.except_osv(_('Warning!'),
-                 _('The generation of translations from the template for %s failed!' % out_obj._name))
-        
+                      'name': out_obj._name + ',' + in_field,
+                      'type': 'model',
+                      'res_id': out_ids[j],
+                      'lang': lang,
+                      'src': src[in_id],
+                      'value': value,
+                })
+            if notdone:
+                message += '\nLanguage:-%s \n\tThere is no translation available for following accounts: \n\t%s '\
+                            % (lang, '\n\t'.join(notdone))
+            else:
+                message += '\nLanguage:-%s \n\tTranslation successfully done.'  % (lang)
+        resource_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'l10n_multilang', 'view_translate_message_wizard')
+        #open new wizard its for saw warning message
+        if message:
+            context.update({'warning': message})
+            return {
+                'view_type': 'form',
+                'view_mode': 'form',
+                'res_model': 'translate.message',
+                'views': [(resource_id and resource_id[1] or False,'form')],
+                'type': 'ir.actions.act_window',
+                'target': 'new',
+                'context': context
+            }
+
     def execute(self, cr, uid, ids, context=None):
-        super(wizard_multi_charts_accounts, self).execute(cr, uid, ids, context=context)
+        res = super(wizard_multi_charts_accounts, self).execute(cr, uid, ids, context=context)
         obj_multi = self.browse(cr, uid, ids[0], context=context)
         obj_mod = self.pool.get('ir.module.module')
         obj_acc_template = self.pool.get('account.account.template')
@@ -97,17 +121,18 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                          
         # load languages
         langs = []
+        installed_mids = obj_mod.search(cr, uid, [('state', '=', 'installed')])
         for lang in obj_multi.lang_ids:
             langs.append(lang.code)
-        installed_mids = obj_mod.search(cr, uid, [('state', '=', 'installed')])
-        for lang in langs:
-                    obj_mod.update_translations(cr, uid, installed_mids, lang)
+            obj_mod.update_translations(cr, uid, installed_mids, lang.code)
 
         # copy account.account translations
-        in_field = 'name'
         in_ids = obj_acc_template.search(cr, uid, [('id', 'child_of', [acc_template_root_id])], order='id')[1:]
         out_ids = obj_acc.search(cr, uid, [('id', 'child_of', [acc_root_id])], order='id')[1:]
-        self.copy_translation(cr, uid, langs, obj_acc_template, in_field, in_ids, obj_acc, out_ids)
+        result = self.copy_translations(cr, uid, langs, obj_acc_template, 'name', in_ids, obj_acc, out_ids, context)
+        if result:
+            return result
+        return {}
 
     def onchange_chart_template_id(self, cr, uid, ids, chart_template_id=False, context=None):
         res = super(wizard_multi_charts_accounts, self).onchange_chart_template_id(cr, uid, ids, chart_template_id, context=context)
