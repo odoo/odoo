@@ -51,7 +51,7 @@ def normalize(domain):
             result[0:0] = ['&']             # put an extra '&' in front
             expected = 1
         result.append(token)
-        if isinstance(token, (list,tuple)): # domain term
+        if isinstance(token, (list, tuple)): # domain term
             expected -= 1
         else:
             expected += op_arity.get(token, 0) - 1
@@ -118,7 +118,7 @@ def select_from_where(cr, s, f, w, ids, op):
             for i in range(0, len(ids), cr.IN_MAX):
                 subids = ids[i:i+cr.IN_MAX]
                 cr.execute('SELECT "%s" FROM "%s" WHERE "%s" IN %%s' % \
-                    (s, f, w),(tuple(subids),))
+                    (s, f, w), (tuple(subids),))
                 res.extend([r[0] for r in cr.fetchall()])
     return res
 
@@ -234,15 +234,15 @@ class expression(object):
                     else:
                         self.__exp[i] = (fargs[0], 'in', right)
                 # Making search easier when there is a left operand as field.o2m or field.m2m
-                if field._type in ['many2many','one2many']:
+                if field._type in ['many2many', 'one2many']:
                     right = field_obj.search(cr, uid, [(fargs[1], operator, right)], context=context)
-                    right1 = table.search(cr, uid, [(fargs[0],'in', right)], context=context)
+                    right1 = table.search(cr, uid, [(fargs[0], 'in', right)], context=context)
                     if right1 == []:
                         self.__exp[i] = FALSE_LEAF
                     else:
                         self.__exp[i] = ('id', 'in', right1)
 
-                if not isinstance(field,fields.property):
+                if not isinstance(field, fields.property):
                     continue
 
             if field._properties and not field.store:
@@ -284,7 +284,7 @@ class expression(object):
                             if ids2:
                                 operator = 'in'
                         else:
-                            if not isinstance(right,list):
+                            if not isinstance(right, list):
                                 ids2 = [right]
                             else:
                                 ids2 = right
@@ -360,7 +360,7 @@ class expression(object):
                         dom = child_of_domain('id', ids2, working_table, parent=left)
                     self.__exp = self.__exp[:i] + dom + self.__exp[i+1:]
                 else:
-                    def _get_expression(field_obj,cr, uid, left, right, operator, context=None):
+                    def _get_expression(field_obj, cr, uid, left, right, operator, context=None):
                         if context is None:
                             context = {}
                         c = context.copy()
@@ -369,11 +369,11 @@ class expression(object):
                         operator = ( operator in ['<','>','<=','>='] ) and 'in' or operator
 
                         dict_op = {'not in':'!=','in':'=','=':'in','!=':'not in','<>':'not in'}
-                        if isinstance(right,tuple):
+                        if isinstance(right, tuple):
                             right = list(right)
-                        if (not isinstance(right,list)) and operator in ['not in','in']:
+                        if (not isinstance(right, list)) and operator in ['not in','in']:
                             operator = dict_op[operator]
-                        elif isinstance(right,list) and operator in ['<>','!=','=']: #for domain (FIELD,'=',['value1','value2'])
+                        elif isinstance(right, list) and operator in ['<>','!=','=']: #for domain (FIELD,'=',['value1','value2'])
                             operator = dict_op[operator]
                         res_ids = [x[0] for x in field_obj.name_search(cr, uid, right, [], operator, limit=None, context=c)]
                         if not res_ids:
@@ -385,7 +385,7 @@ class expression(object):
                     if right:
                         if isinstance(right, basestring): # and not isinstance(field, fields.related):
                             m2o_str = True
-                        elif isinstance(right,(list,tuple)):
+                        elif isinstance(right, (list, tuple)):
                             m2o_str = True
                             for ele in right:
                                 if not isinstance(ele, basestring):
@@ -403,10 +403,10 @@ class expression(object):
                         if operator in  ['not like','not ilike','not in','<>','!=']:
                             new_op = '!='
                         #Is it ok to put 'left' and not 'id' ?
-                        self.__exp[i] = (left,new_op,False)
+                        self.__exp[i] = (left, new_op, False)
 
                     if m2o_str:
-                        self.__exp[i] = _get_expression(field_obj,cr, uid, left, right, operator, context=context)
+                        self.__exp[i] = _get_expression(field_obj, cr, uid, left, right, operator, context=context)
             else:
                 # other field type
                 # add the time part to datetime field when it's not there:
@@ -458,15 +458,20 @@ class expression(object):
                     self.__exp[i] = ('id', 'inselect', (query1, query2))
 
     def __leaf_to_sql(self, leaf, table):
-        if leaf == TRUE_LEAF:
-            return ('TRUE', [])
-        if leaf == FALSE_LEAF:
-            return ('FALSE', [])
         left, operator, right = leaf
 
-        if operator == 'inselect':
+        if leaf == TRUE_LEAF:
+            query = 'TRUE'
+            params = []
+
+        elif leaf == FALSE_LEAF:
+            query = 'FALSE'
+            params = []
+
+        elif operator == 'inselect':
             query = '(%s.%s in (%s))' % (table._table, left, right[0])
             params = right[1]
+
         elif operator in ['in', 'not in']:
             params = right and right[:] or []
             len_before = len(params)
@@ -478,6 +483,8 @@ class expression(object):
             check_nulls = len_after != len_before
             query = 'FALSE'
 
+            # TODO this code seems broken: 'not in [False]' will become 'true',
+            # i.e. 'not null or null', while I expect it to be 'not null'.
             if len_after:
                 if left == 'id':
                     instr = ','.join(['%s'] * len_after)
@@ -492,15 +499,16 @@ class expression(object):
                     query = '(%s.%s IS NOT NULL)' % (table._table, left)
             if check_nulls:
                 query = '(%s OR %s.%s IS NULL)' % (query, table._table, left)
+
         else:
             params = []
 
-            if right == False and (leaf[0] in table._columns)  and table._columns[leaf[0]]._type=="boolean"  and (operator == '='):
-                query = '(%s.%s IS NULL or %s.%s = false )' % (table._table, left,table._table, left)
+            if right == False and (left in table._columns)  and table._columns[left]._type=="boolean"  and (operator == '='):
+                query = '(%s.%s IS NULL or %s.%s = false )' % (table._table, left, table._table, left)
             elif (((right == False) and (type(right)==bool)) or (right is None)) and (operator == '='):
                 query = '%s.%s IS NULL ' % (table._table, left)
-            elif right == False and (leaf[0] in table._columns)  and table._columns[leaf[0]]._type=="boolean"  and (operator in ['<>', '!=']):
-                query = '(%s.%s IS NOT NULL and %s.%s != false)' % (table._table, left,table._table, left)
+            elif right == False and (left in table._columns)  and table._columns[left]._type=="boolean"  and (operator in ['<>', '!=']):
+                query = '(%s.%s IS NOT NULL and %s.%s != false)' % (table._table, left, table._table, left)
             elif (((right == False) and (type(right)==bool)) or right is None) and (operator in ['<>', '!=']):
                 query = '%s.%s IS NOT NULL' % (table._table, left)
             elif (operator == '=?'):
@@ -522,7 +530,7 @@ class expression(object):
                 else:
                     like = operator in ('like', 'ilike', 'not like', 'not ilike')
 
-                    op = {'=like':'like','=ilike':'ilike'}.get(operator,operator)
+                    op = {'=like':'like','=ilike':'ilike'}.get(operator, operator)
                     if left in table._columns:
                         format = like and '%s' or table._columns[left]._symbol_set[0]
                         query = '(%s.%s %s %s)' % (table._table, left, op, format)
