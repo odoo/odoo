@@ -25,6 +25,7 @@ import time
 import tools
 from osv import fields, osv
 from tools.translate import _
+import netsvc
 
 class account_followup_print(osv.osv_memory):
     _name = 'account.followup.print'
@@ -213,12 +214,16 @@ class account_followup_print_all(osv.osv_memory):
             msg_sent = ''
             msg_unsent = ''
             data_user = user_obj.browse(cr, uid, uid, context=context)
-            move_lines = line_obj.browse(cr, uid, data['partner_ids'], context=context)
+            line_ids = line_obj.search(cr,uid,[('partner_id','in',data['partner_ids'])])
+            move_lines = line_obj.browse(cr, uid, line_ids, context=context)
             partners = []
             dict_lines = {}
             for line in move_lines:
-                partners.append(line.partner_id)
-                dict_lines[line.partner_id.id] =line
+                if line.partner_id.id not in dict_lines.keys():
+                    partners.append(line.partner_id)
+                    dict_lines[line.partner_id.id] = [line]
+                else:
+                    dict_lines[line.partner_id.id].append(line)
             for partner in partners:
                 ids_lines = move_obj.search(cr,uid,[('partner_id','=',partner.id),('reconcile_id','=',False),('account_id.type','in',['receivable'])])
                 data_lines = move_obj.browse(cr, uid, ids_lines, context=context)
@@ -239,8 +244,9 @@ class account_followup_print_all(osv.osv_memory):
                     cxt = context.copy()
                     cxt['lang'] = partner.lang
                     body = user_obj.browse(cr, uid, uid, context=cxt).company_id.follow_up_msg
-
-                total_amt = followup_data.debit - followup_data.credit
+                total_amt = 0.0 
+                for followup_dt in followup_data:
+                    total_amt += followup_dt.debit - followup_dt.credit
                 move_line = ''
                 subtotal_due = 0.0
                 subtotal_paid = 0.0
@@ -274,7 +280,11 @@ class account_followup_print_all(osv.osv_memory):
                 msg = ''
                 if dest:
                     try:
-                        tools.email_send(src, dest, sub, body)
+                        data_dict = {'form':{'partner_ids':[partner.id]}}
+                        datax,frmt = netsvc.LocalService('report.account_followup.followup.print').create(cr, uid, [],data_dict,{})
+                        fname = 'followup-' + str(partner.name) +'.'+frmt
+                        attach = [(fname,datax)]
+                        tools.email_send(src, dest, sub, body,attach=attach)
                         msg_sent += partner.name + '\n'
                     except Exception, e:
                         raise osv.except_osv('Error !', e )
