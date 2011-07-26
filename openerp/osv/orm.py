@@ -2440,6 +2440,9 @@ class orm_memory(orm_template):
                     break
                 f = True
                 for arg in result:
+                    if len(arg) != 3:
+                       # Amazing hack: orm_memory handles only simple domains.
+                       continue
                     if arg[1] == '=':
                         val = eval('data[arg[0]]'+'==' +' arg[2]', locals())
                     elif arg[1] in ['<', '>', 'in', 'not in', '<=', '>=', '<>']:
