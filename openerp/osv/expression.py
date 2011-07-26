@@ -502,58 +502,63 @@ class expression(object):
             if check_nulls:
                 query = '(%s OR %s.%s IS NULL)' % (query, table._table, left)
 
-        else:
+        elif right == False and (left in table._columns) and table._columns[left]._type=="boolean" and (operator == '='):
+            query = '(%s.%s IS NULL or %s.%s = false )' % (table._table, left, table._table, left)
             params = []
 
-            if right == False and (left in table._columns)  and table._columns[left]._type=="boolean"  and (operator == '='):
-                query = '(%s.%s IS NULL or %s.%s = false )' % (table._table, left, table._table, left)
-            elif (((right == False) and (type(right)==bool)) or (right is None)) and (operator == '='):
-                query = '%s.%s IS NULL ' % (table._table, left)
-            elif right == False and (left in table._columns)  and table._columns[left]._type=="boolean"  and (operator in ['<>', '!=']):
-                query = '(%s.%s IS NOT NULL and %s.%s != false)' % (table._table, left, table._table, left)
-            elif (((right == False) and (type(right)==bool)) or right is None) and (operator in ['<>', '!=']):
-                query = '%s.%s IS NOT NULL' % (table._table, left)
-            elif (operator == '=?'):
-                op = '='
-                if (right is False or right is None):
-                    return ('TRUE', [])
-                if left in table._columns:
-                        format = table._columns[left]._symbol_set[0]
-                        query = '(%s.%s %s %s)' % (table._table, left, op, format)
-                        params = table._columns[left]._symbol_set[1](right)
-                else:
-                        query = "(%s.%s %s '%%s')" % (table._table, left, op)
-                        params = right
+        elif (((right == False) and (type(right)==bool)) or (right is None)) and (operator == '='):
+            query = '%s.%s IS NULL ' % (table._table, left)
+            params = []
 
+        elif right == False and (left in table._columns) and table._columns[left]._type=="boolean" and (operator in ['<>', '!=']):
+            query = '(%s.%s IS NOT NULL and %s.%s != false)' % (table._table, left, table._table, left)
+            params = []
+
+        elif (((right == False) and (type(right)==bool)) or right is None) and (operator in ['<>', '!=']):
+            query = '%s.%s IS NOT NULL' % (table._table, left)
+            params = []
+
+        elif (operator == '=?'):
+            if (right is False or right is None):
+                query = 'TRUE'
+                params = []
+            elif left in table._columns:
+                format = table._columns[left]._symbol_set[0]
+                query = '(%s.%s = %s)' % (table._table, left, format)
+                params = table._columns[left]._symbol_set[1](right)
             else:
-                if left == 'id':
-                    query = '%s.id %s %%s' % (table._table, operator)
-                    params = right
+                query = "(%s.%s = '%%s')" % (table._table, left)
+                params = right
+
+        elif left == 'id':
+            query = '%s.id %s %%s' % (table._table, operator)
+            params = right
+
+        else:
+            like = operator in ('like', 'ilike', 'not like', 'not ilike')
+
+            op = {'=like':'like','=ilike':'ilike'}.get(operator, operator)
+            if left in table._columns:
+                format = like and '%s' or table._columns[left]._symbol_set[0]
+                query = '(%s.%s %s %s)' % (table._table, left, op, format)
+            else:
+                query = "(%s.%s %s '%s')" % (table._table, left, op, right)
+
+            add_null = False
+            if like:
+                if isinstance(right, str):
+                    str_utf8 = right
+                elif isinstance(right, unicode):
+                    str_utf8 = right.encode('utf-8')
                 else:
-                    like = operator in ('like', 'ilike', 'not like', 'not ilike')
+                    str_utf8 = str(right)
+                params = '%%%s%%' % str_utf8
+                add_null = not str_utf8
+            elif left in table._columns:
+                params = table._columns[left]._symbol_set[1](right)
 
-                    op = {'=like':'like','=ilike':'ilike'}.get(operator, operator)
-                    if left in table._columns:
-                        format = like and '%s' or table._columns[left]._symbol_set[0]
-                        query = '(%s.%s %s %s)' % (table._table, left, op, format)
-                    else:
-                        query = "(%s.%s %s '%s')" % (table._table, left, op, right)
-
-                    add_null = False
-                    if like:
-                        if isinstance(right, str):
-                            str_utf8 = right
-                        elif isinstance(right, unicode):
-                            str_utf8 = right.encode('utf-8')
-                        else:
-                            str_utf8 = str(right)
-                        params = '%%%s%%' % str_utf8
-                        add_null = not str_utf8
-                    elif left in table._columns:
-                        params = table._columns[left]._symbol_set[1](right)
-
-                    if add_null:
-                        query = '(%s OR %s.%s IS NULL)' % (query, table._table, left)
+            if add_null:
+                query = '(%s OR %s.%s IS NULL)' % (query, table._table, left)
 
         if isinstance(params, basestring):
             params = [params]
