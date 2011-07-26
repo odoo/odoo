@@ -56,9 +56,6 @@ class Xml2Json:
 # OpenERP Web base Controllers
 #----------------------------------------------------------
 
-class DatabaseCreationError(Exception): pass
-class DatabaseCreationCrash(DatabaseCreationError): pass
-
 class Database(openerpweb.Controller):
     _cp_path = "/base/database"
 
@@ -88,25 +85,9 @@ class Database(openerpweb.Controller):
         ok = False
         try:
             return req.session.proxy("db").create(super_admin_pwd, dbname, demo_data, db_lang, admin_pwd)
-#                while True:
-#                    try:
-#                        progress, users = req.session.proxy('db').get_progress(super_admin_pwd, res)
-#                        if progress == 1.0:
-#                            for x in users:
-#                                if x['login'] == 'admin':
-#                                    req.session.login(dbname, 'admin', x['password'])
-#                                    ok = True
-#                            break
-#                        else:
-#                            time.sleep(1)
-#                    except:
-#                        raise DatabaseCreationCrash()
-#            except DatabaseCreationCrash:
-#                return {'error': "The server crashed during installation.\nWe suggest you to drop this database.",
-#                        'title': 'Error during database creation'}
         except Exception, e:
             if e.faultCode and e.faultCode.split(':')[0] == 'AccessDenied':
-                return {'error': 'Bad super admin password !', 'title': 'Create Database'}
+                return {'error': e.faultCode, 'title': 'Create Database'}
             else:
                 return {'error': 'Could not create database !', 'title': 'Create Database'}
 
@@ -119,7 +100,7 @@ class Database(openerpweb.Controller):
             return req.session.proxy("db").drop(password, db)
         except Exception, e:
             if e.faultCode and e.faultCode.split(':')[0] == 'AccessDenied':
-                return {'error': 'Bad super admin password !', 'title': 'Drop Database'}
+                return {'error': e.faultCode, 'title': 'Drop Database'}
             else:
                 return {'error': 'Could not drop database !', 'title': 'Drop Database'}
 
@@ -135,7 +116,7 @@ class Database(openerpweb.Controller):
                 return base64.decodestring(res)
         except Exception, e:
             if e.faultCode and e.faultCode.split(':')[0] == 'AccessDenied':
-                return {'error': 'Bad super admin password !', 'title': 'Backup Database'}
+                return {'error': e.faultCode, 'title': 'Backup Database'}
             else:
                 return {'error': 'Could not drop database !', 'title': 'Backup Database'}
             
@@ -150,7 +131,7 @@ class Database(openerpweb.Controller):
             return req.session.proxy("db").restore(password, db, data)
         except Exception, e:
             if e.faultCode and e.faultCode.split(':')[0] == 'AccessDenied':
-                return {'error': 'Bad super admin password !', 'title': 'Restore Database'}
+                return {'error': e.faultCode, 'title': 'Restore Database'}
             else:
                 return {'error': 'Could not restore database !', 'title': 'Restore Database'}
         
@@ -164,7 +145,7 @@ class Database(openerpweb.Controller):
             return req.session.proxy("db").change_admin_password(old_password, new_password)
         except Exception, e:
             if e.faultCode and e.faultCode.split(':')[0] == 'AccessDenied':
-                return {'error': 'Bad super admin password !', 'title': 'Change Password'}
+                return {'error': e.faultCode, 'title': 'Change Password'}
             else:
                 return {'error': 'Error, password not changed !', 'title': 'Change Password'}
 
@@ -222,8 +203,8 @@ class Session(openerpweb.Controller):
         try:
             lang_list = lang_list + (req.session.proxy("db").list_lang() or [])
         except Exception, e:
-            pass
-        return {"lang_list": lang_list}
+            return {"error": e, "title": "Languages"}
+        return {"lang_list": lang_list, "error": ""}
             
     @openerpweb.jsonrequest
     def modules(self, req):
