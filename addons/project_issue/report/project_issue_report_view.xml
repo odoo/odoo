@@ -89,7 +89,7 @@
 
                            </field>
                               <field name="project_id"/>
-                          <field name="user_id"  select="1" widget="selection"/>
+                          <field name="user_id"  select="1" widget="selection" filter_domain="['|',('user_id','ilike',self),('assigned_to','ilike',self)]"/>
                           <field name="partner_id"/>
                           <field name="version_id" widget="selection" />
                    </group>
