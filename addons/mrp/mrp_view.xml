@@ -146,7 +146,6 @@
                         <field name="resource_type"/>
                         <field name="calendar_id" widget="selection"/>
                         <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/> 
-
                     </group>
                     <notebook colspan="4">
                         <page string="General Information">
@@ -737,7 +736,6 @@
                                        <field name="product_qty" readonly="1" string="Qty"/>
                                        <field name="product_uom" readonly="1" string="UOM"/>
                                        <field name="location_dest_id"  readonly="1" string="Destination Loc." widget="selection"/> 
-
                                        <field name="prodlot_id" context="{'product_id': product_id}"/>
                                        <field name="scrapped" invisible="1"/>
                                        <field name="state" invisible="1"/>
@@ -1025,7 +1023,6 @@
         <menuitem action="mrp.mrp_production_action_planning"
                 id="menu_mrp_production_order_action"
                 parent="menu_mrp_planning" sequence="1"/>
-	 
 
     </data>
 </openerp>
