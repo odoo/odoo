@@ -26,7 +26,7 @@ openerp.base_default_home = function (openerp) {
     openerp.base.WebClient.prototype.default_home = function () {
         var self = this;
         var Installer = new openerp.base.DataSet(
-                this.session, 'base.setup.installer');
+                this, 'base.setup.installer');
         Installer.call('already_installed', [], function (installed_modules) {
             if (!_(installed_modules).isEmpty()) {
                 return old_home.call(self);

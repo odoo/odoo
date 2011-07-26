@@ -40,7 +40,10 @@ openerp.base.form.DashBoard = openerp.base.form.Widget.extend({
             });
         });
 
-        this.$element.find('a.oe-dashboard-action-rename').live('click', this.on_rename);
+        //this.$element.find('a.oe-dashboard-action-rename').live('click', this.on_rename);
+        this.$element.find('.oe-dashboard-action').live('mouseover mouseout', function(event) {
+            $(this).find('.oe-dashboard-action-header .ui-icon, .oe-dashboard-action-header .oe-dashboard-action-rename').toggle(event.type == 'mouseover');
+        });
     },
     on_undo: function() {
         this.rpc('/base/view/undo_custom', {
@@ -70,22 +73,22 @@ openerp.base.form.DashBoard = openerp.base.form.Widget.extend({
         // TODO: create a Dialog controller which optionally takes an action
         // Should set width & height automatically and take buttons & views callback
         var dialog_id = _.uniqueId('act_window_dialog');
-        var action_manager = new openerp.base.ActionManager(this.session, dialog_id);
-        var $dialog = $('<div id=' + dialog_id + '>').dialog({
-                            modal : true,
-                            title : 'Actions',
-                            width : 800,
-                            height : 600,
-                            buttons : {
-                                Cancel : function() {
-                                    $(this).dialog('destroy');
-                                },
-                                Add : function() {
-                                    self.do_add_widget(action_manager);
-                                    $(this).dialog('destroy');
-                                }
-                            }
-                        });
+        var action_manager = new openerp.base.ActionManager(this, dialog_id);
+        $('<div id=' + dialog_id + '>').dialog({
+            modal : true,
+            title : 'Actions',
+            width : 800,
+            height : 600,
+            buttons : {
+                Cancel : function() {
+                    $(this).dialog('destroy');
+                },
+                Add : function() {
+                    self.do_add_widget(action_manager);
+                    $(this).dialog('destroy');
+                }
+            }
+        });
         action_manager.start();
         action_manager.do_action(action);
         // TODO: should bind ListView#select_record in order to catch record clicking
@@ -226,7 +229,7 @@ openerp.base.form.DashBoard = openerp.base.form.Widget.extend({
             pager: false
         };
         new openerp.base.ActionManager(
-                this.session, this.view.element_id + '_action_' + action.id)
+                this, this.view.element_id + '_action_' + action.id)
             .do_action(action);
     },
     render: function() {
@@ -280,10 +283,10 @@ if (!openerp.base_dashboard) {
     openerp.base_dashboard = {};
 }
 openerp.base_dashboard.ConfigOverview = openerp.base.View.extend({
-    init: function (parent_or_session, element_id) {
-        this._super(parent_or_session, element_id);
+    init: function (parent, element_id) {
+        this._super(parent, element_id);
         this.dataset = new openerp.base.DataSetSearch(
-                this.session, 'ir.actions.todo');
+                this, 'ir.actions.todo');
         this.dataset.domain = ['|', '&', ['type', '=', 'recurring'],
                                          ['state', '!=', 'hidden'],
                                     '&', ['type', '!=', 'special'],
@@ -344,10 +347,10 @@ openerp.base_dashboard.ConfigOverview = openerp.base.View.extend({
 openerp.base.client_actions.add(
     'board.home.applications', 'openerp.base_dashboard.ApplicationTiles');
 openerp.base_dashboard.ApplicationTiles = openerp.base.View.extend({
-    init: function (parent_or_session, element_id) {
-        this._super(parent_or_session, element_id);
+    init: function (parent, element_id) {
+        this._super(parent, element_id);
         this.dataset = new openerp.base.DataSetSearch(
-                this.session, 'ir.ui.menu', null, [['parent_id', '=', false]]);
+                this, 'ir.ui.menu', null, [['parent_id', '=', false]]);
     },
     start: function () {
         var self = this;
@@ -374,13 +377,13 @@ openerp.base_dashboard.ApplicationTiles = openerp.base.View.extend({
 openerp.base.client_actions.add(
     'board.home.widgets', 'openerp.base_dashboard.Widgets');
 openerp.base_dashboard.Widgets = openerp.base.View.extend({
-    init: function (parent_or_session, element_id) {
-        this._super(parent_or_session, element_id);
+    init: function (parent, element_id) {
+        this._super(parent, element_id);
         this.user_widgets = new openerp.base.DataSetSearch(
                 this.session, 'res.widget.user', null,
                 ['|', ['user_id', '=', false],
                       ['user_id', '=', parseInt(this.session.uid, 10)]]);
-        this.widgets = new openerp.base.DataSetSearch(this.session, 'res.widget');
+        this.widgets = new openerp.base.DataSetSearch(this, 'res.widget');
     },
     start: function () {
         this.user_widgets.read_slice(['widget_id', 'user_id'], null, null,

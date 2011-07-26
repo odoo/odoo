@@ -54,6 +54,99 @@ class Xml2Json:
 # OpenERP Web base Controllers
 #----------------------------------------------------------
 
+def manifest_glob(addons, key):
+    files = []
+    for addon in addons:
+        globlist = openerpweb.addons_manifest.get(addon, {}).get(key, [])
+        print globlist
+        for pattern in globlist:
+            for path in glob.glob(os.path.join(openerpweb.path_addons, addon, pattern)):
+                files.append(path[len(openerpweb.path_addons):])
+    return files
+
+def concat_files(file_list):
+    """ Concatenate file content
+    return (concat,timestamp)
+    concat: concatenation of file content
+    timestamp: max(os.path.getmtime of file_list)
+    """
+    root = openerpweb.path_root
+    files_content = []
+    files_timestamp = 0
+    for i in file_list:
+        fname = os.path.join(root, i)
+        ftime = os.path.getmtime(fname)
+        if ftime > files_timestamp:
+            files_timestamp = ftime
+        files_content = open(fname).read()
+    files_concat = "".join(files_content)
+    return files_concat
+
+class WebClient(openerpweb.Controller):
+    _cp_path = "/base/webclient"
+
+    @openerpweb.jsonrequest
+    def csslist(self, req, mods='base'):
+        return manifest_glob(mods.split(','), 'css')
+
+    @openerpweb.jsonrequest
+    def jslist(self, req, mods='base'):
+        return manifest_glob(mods.split(','), 'js')
+
+    @openerpweb.httprequest
+    def css(self, req, mods='base'):
+        cherrypy.response.headers['Content-Type'] = 'text/css'
+        files = manifest_glob(mods.split(','), 'css')
+        concat = concat_files(files)[0]
+        # TODO request set the Date of last modif and Etag
+        return concat
+
+    @openerpweb.httprequest
+    def js(self, req, mods='base'):
+        cherrypy.response.headers['Content-Type'] = 'application/javascript'
+        files = manifest_glob(mods.split(','), 'js')
+        concat = concat_files(files)[0]
+        # TODO request set the Date of last modif and Etag
+        return concat
+
+    @openerpweb.httprequest
+    def home(self, req):
+        template ="""<!DOCTYPE html>
+        <html style="height: 100%%">
+        <head>
+            <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+            <title>OpenERP</title>
+            %s
+            <script type="text/javascript">
+            $(function() {
+                QWeb = new QWeb2.Engine(); 
+                openerp.init().base.webclient("oe"); 
+            });
+            </script>
+            <link rel="shortcut icon" href="/base/static/src/img/favicon.ico" type="image/x-icon"/>
+            %s
+            <!--[if lte IE 7]>
+            <link rel="stylesheet" href="/base/static/src/css/base-ie7.css" type="text/css"/>
+            <![endif]-->
+        </head>
+        <body id="oe" class="openerp"></body>
+        </html>
+        """.replace('\n'+' '*8,'\n')
+
+        # script tags
+        jslist = ['/base/webclient/js']
+        if 1: # debug == 1
+            jslist = manifest_glob(['base'], 'js')
+        js = "\n    ".join(['<script type="text/javascript" src="%s"></script>'%i for i in jslist])
+
+        # css tags
+        csslist = ['/base/webclient/css']
+        if 1: # debug == 1
+            csslist = manifest_glob(['base'], 'css')
+        css = "\n    ".join(['<link rel="stylesheet" href="%s">'%i for i in csslist])
+        r = template % (js, css)
+        return r
+
 class Database(openerpweb.Controller):
     _cp_path = "/base/database"
 
@@ -71,37 +164,6 @@ class Database(openerpweb.Controller):
 class Session(openerpweb.Controller):
     _cp_path = "/base/session"
 
-    def manifest_glob(self, addons, key):
-        files = []
-        for addon in addons:
-            globlist = openerpweb.addons_manifest.get(addon, {}).get(key, [])
-
-            files.extend([
-                resource_path[len(openerpweb.path_addons):]
-                for pattern in globlist
-                for resource_path in glob.glob(os.path.join(
-                    openerpweb.path_addons, addon, pattern))
-            ])
-        return files
-
-    def concat_files(self, file_list):
-        """ Concatenate file content
-        return (concat,timestamp)
-        concat: concatenation of file content
-        timestamp: max(os.path.getmtime of file_list)
-        """
-        root = openerpweb.path_root
-        files_content = []
-        files_timestamp = 0
-        for i in file_list:
-            fname = os.path.join(root, i)
-            ftime = os.path.getmtime(fname)
-            if ftime > files_timestamp:
-                files_timestamp = ftime
-            files_content = open(fname).read()
-        files_concat = "".join(files_content)
-        return files_concat
-
     @openerpweb.jsonrequest
     def login(self, req, db, login, password):
         req.session.login(db, login, password)
@@ -118,31 +180,12 @@ class Session(openerpweb.Controller):
 
     @openerpweb.jsonrequest
     def modules(self, req):
-        return {"modules": [name
-            for name, manifest in openerpweb.addons_manifest.iteritems()
-            if manifest.get('active', True)]}
-
-    @openerpweb.jsonrequest
-    def csslist(self, req, mods='base'):
-        return {'files': self.manifest_glob(mods.split(','), 'css')}
-
-    @openerpweb.jsonrequest
-    def jslist(self, req, mods='base'):
-        return {'files': self.manifest_glob(mods.split(','), 'js')}
-
-    def css(self, req, mods='base'):
-        files = self.manifest_glob(mods.split(','), 'css')
-        concat = self.concat_files(files)[0]
-        # TODO request set the Date of last modif and Etag
-        return concat
-    css.exposed = True
-
-    def js(self, req, mods='base'):
-        files = self.manifest_glob(mods.split(','), 'js')
-        concat = self.concat_files(files)[0]
-        # TODO request set the Date of last modif and Etag
-        return concat
-    js.exposed = True
+        # TODO query server for installed web modules
+        mods = []
+        for name, manifest in openerpweb.addons_manifest.items():
+            if name != 'base' and manifest.get('active', True):
+                mods.append(name)
+        return mods
 
     @openerpweb.jsonrequest
     def eval_domain_and_context(self, req, contexts, domains,
@@ -269,7 +312,7 @@ def clean_action(action, session):
         action['domain'] = eval(
             action['domain'],
             session.evaluation_context(
-                action['context'])) or []
+                action.get('context', {}))) or []
     if 'flags' not in action:
         # Set empty flags dictionary for web client.
         action['flags'] = dict()
@@ -574,10 +617,15 @@ class View(openerpweb.Controller):
         else:
             xml = ElementTree.fromstring(arch)
         fvg['arch'] = Xml2Json.convert_element(xml)
-        for field in fvg['fields'].values():
-            if field.has_key('views') and field['views']:
-                for view in field["views"].values():
+
+        for field in fvg['fields'].itervalues():
+            if field.get('views'):
+                for view in field["views"].itervalues():
                     self.process_view(session, view, None, transform)
+            if field.get('domain'):
+                field["domain"] = self.parse_domain(field["domain"], session)
+            if field.get('context'):
+                field["context"] = self.parse_context(field["context"], session)
 
     @openerpweb.jsonrequest
     def add_custom(self, request, view_id, arch):
@@ -615,27 +663,38 @@ class View(openerpweb.Controller):
                 self.parse_domains_and_contexts(elem, session)
         return root
 
-    def parse_domain(self, elem, attr_name, session):
-        """ Parses an attribute of the provided name as a domain, transforms it
+    def parse_domain(self, domain, session):
+        """ Parses an arbitrary string containing a domain, transforms it
         to either a literal domain or a :class:`openerpweb.nonliterals.Domain`
 
-        :param elem: the node being parsed
-        :type param: xml.etree.ElementTree.Element
-        :param str attr_name: the name of the attribute which should be parsed
+        :param domain: the domain to parse, if the domain is not a string it is assumed to
+        be a literal domain and is returned as-is
         :param session: Current OpenERP session
         :type session: openerpweb.openerpweb.OpenERPSession
         """
-        domain = elem.get(attr_name, '').strip()
-        if domain:
-            try:
-                elem.set(
-                    attr_name,
-                    openerpweb.ast.literal_eval(
-                        domain))
-            except ValueError:
-                # not a literal
-                elem.set(attr_name,
-                         openerpweb.nonliterals.Domain(session, domain))
+        if not isinstance(domain, (str, unicode)):
+            return domain
+        try:
+            return openerpweb.ast.literal_eval(domain)
+        except ValueError:
+            # not a literal
+            return openerpweb.nonliterals.Domain(session, domain)
+        
+    def parse_context(self, context, session):
+        """ Parses an arbitrary string containing a context, transforms it
+        to either a literal context or a :class:`openerpweb.nonliterals.Context`
+
+        :param context: the context to parse, if the context is not a string it is assumed to
+        be a literal domain and is returned as-is
+        :param session: Current OpenERP session
+        :type session: openerpweb.openerpweb.OpenERPSession
+        """
+        if not isinstance(context, (str, unicode)):
+            return context
+        try:
+            return openerpweb.ast.literal_eval(context)
+        except ValueError:
+            return openerpweb.nonliterals.Context(session, context)
 
     def parse_domains_and_contexts(self, elem, session):
         """ Converts domains and contexts from the view into Python objects,
@@ -648,18 +707,14 @@ class View(openerpweb.Controller):
                         non-literal objects
         :type session: openerpweb.openerpweb.OpenERPSession
         """
-        self.parse_domain(elem, 'domain', session)
-        self.parse_domain(elem, 'filter_domain', session)
+        for el in ['domain', 'filter_domain']:
+            domain = elem.get(el, '').strip()
+            if domain:
+                elem.set(el, self.parse_domain(domain, session))
         for el in ['context', 'default_get']:
             context_string = elem.get(el, '').strip()
             if context_string:
-                try:
-                    elem.set(el,
-                             openerpweb.ast.literal_eval(context_string))
-                except ValueError:
-                    elem.set(el,
-                             openerpweb.nonliterals.Context(
-                                 session, context_string))
+                elem.set(el, self.parse_context(context_string, session))
 
 class FormView(View):
     _cp_path = "/base/formview"
@@ -707,7 +762,41 @@ class SearchView(View):
     def fields_get(self, req, model):
         Model = req.session.model(model)
         fields = Model.fields_get(False, req.session.eval_context(req.context))
+        for field in fields.values():
+            # shouldn't convert the views too?
+            if field.get('domain'):
+                field["domain"] = self.parse_domain(field["domain"], req.session)
+            if field.get('context'):
+                field["context"] = self.parse_domain(field["context"], req.session)
         return {'fields': fields}
+    
+    @openerpweb.jsonrequest
+    def get_filters(self, req, model):
+        Model = req.session.model("ir.filters")
+        filters = Model.get_filters(model)
+        for filter in filters:
+            filter["context"] = req.session.eval_context(self.parse_context(filter["context"], req.session))
+            filter["domain"] = req.session.eval_domain(self.parse_domain(filter["domain"], req.session))
+        return filters
+    
+    @openerpweb.jsonrequest
+    def save_filter(self, req, model, name, context_to_save, domain):
+        Model = req.session.model("ir.filters")
+        ctx = openerpweb.nonliterals.CompoundContext(context_to_save)
+        ctx.session = req.session
+        ctx = ctx.evaluate()
+        domain = openerpweb.nonliterals.CompoundDomain(domain)
+        domain.session = req.session
+        domain = domain.evaluate()
+        uid = req.session._uid
+        context = req.session.eval_context(req.context)
+        to_return = Model.create_or_replace({"context": ctx,
+                                             "domain": domain,
+                                             "model_id": model,
+                                             "name": name,
+                                             "user_id": uid
+                                             }, context)
+        return to_return
 
 class Binary(openerpweb.Controller):
     _cp_path = "/base/binary"

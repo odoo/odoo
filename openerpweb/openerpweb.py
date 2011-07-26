@@ -179,10 +179,10 @@ class OpenERPSession(object):
         :returns: the augmented context
         :rtype: dict
         """
-        d = {}
-        d.update(self.base_eval_context)
+        d = dict(self.base_eval_context)
         if context:
             d.update(context)
+        d['context'] = d
         return d
 
     def eval_context(self, context_to_eval, context=None):
@@ -202,7 +202,6 @@ class OpenERPSession(object):
         ctx = dict(
             self.base_eval_context,
             **(context or {}))
-        ctx['context'] = ctx
         
         # adding the context of the session to send to the openerp server
         ccontext = nonliterals.CompoundContext(self.context, context_to_eval or {})
@@ -227,12 +226,9 @@ class OpenERPSession(object):
         if isinstance(domain, list):
             return domain
 
-        ctx = dict(context or {})
-        ctx['context'] = ctx
-
         cdomain = nonliterals.CompoundDomain(domain)
         cdomain.session = self
-        return cdomain.evaluate(ctx)
+        return cdomain.evaluate(context or {})
 
 #----------------------------------------------------------
 # OpenERP Web RequestHandler
@@ -416,7 +412,7 @@ class Root(object):
         if path_addons not in sys.path:
             sys.path.insert(0, path_addons)
         for i in os.listdir(path_addons):
-            if i not in sys.modules:
+            if i not in addons_module:
                 manifest_path = os.path.join(path_addons, i, '__openerp__.py')
                 if os.path.isfile(manifest_path):
                     manifest = eval(open(manifest_path).read())
@@ -454,7 +450,7 @@ class Root(object):
             #for the mobile web client we are supposed to use a different url to just add '/mobile'
             raise cherrypy.HTTPRedirect('/web_mobile/static/src/web_mobile.html', 301)
         else:
-            raise cherrypy.HTTPRedirect('/base/static/src/base.html', 301)
+            raise cherrypy.HTTPRedirect('/base/webclient/home', 301)
     default.exposed = True
 
 def main(argv):

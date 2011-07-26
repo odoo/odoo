@@ -62,7 +62,7 @@
                         <td><label for="db">Database:</label></td>
                         <td>
                             <t t-if="!db_list">
-                                <input type="text" name="db" value="trunk" autofocus="true"/>
+                                <input type="text" name="db" t-att-value="selected_db || ''" autofocus="true"/>
                             </t>
                             <t t-if="db_list">
                                 <select name="db">
@@ -143,8 +143,8 @@
         <div class="company_logo" />
     </a>
     <h1 class="header_title" t-if="session.session_is_valid()">
-        <span class="company">$company</span> - (<span class="database">$database</span>)<br/>
-        <small class="username">$username session_id: <t t-esc="session.session_id"/></small>
+        <span class="database"><t t-esc="session.db"/></span> - <t t-esc="session.login"/> <br/>
+        <small class="username">rpc_session_id: <t t-esc="session.session_id"/></small>
     </h1>
     <div class="header_corner">
         <ul class="block" t-if="session.session_is_valid()">
@@ -236,41 +236,40 @@
     </tr>
     </table>
 </t>
-<table t-name="ListView">
+<table t-name="ListView" class="oe-listview-content">
     <t t-set="columns_count" t-value="visible_columns.length + (options.selectable ? 1 : 0) + (options.deletable ? 1 : 0)"/>
-    <t t-set="actions_span" t-value="Math.floor((options.deletable or options.addable) ? columns_count/2 : 0)"/>
     <thead class="ui-widget-header">
-        <tr>
-            <th t-if="actions_span" t-att-colspan="actions_span"
-                class="oe-actions">
-                <t t-if="flags.action_buttons !== false">
-                    <button type="button" class="oe-list-add"
-                            t-if="options.addable">
-                        <t t-esc="options.addable"/>
-                    </button>
-                    <button type="button" class="oe-list-delete"
-                            t-if="options.selectable and options.deletable">
-                        Delete
-                    </button>
-                </t>
-            </th>
-            <th t-att-colspan="columns_count - actions_span"
-                class="oe-list-pager">
-                <t t-if="flags.pager !== false">
-                    <button type="button" disabled="disabled"
-                            data-pager-action="first">First</button>
-                    <button type="button" disabled="disabled"
-                            data-pager-action="previous"
-                            >&lt;&lt;</button>
+        <tr t-if="flags.action_buttons !== false or flags.pager !== false">
+            <th t-att-colspan="columns_count">
+                <table>
+                    <tr>
+                        <td t-if="flags.action_buttons !== false" class="oe-actions">
+                            <button type="button" class="oe-list-add"
+                                    t-if="options.addable">
+                                <t t-esc="options.addable"/>
+                            </button>
+                            <button type="button" class="oe-list-delete"
+                                    t-if="options.selectable and options.deletable">
+                                Delete
+                            </button>
+                        </td>
+                        <th t-if="flags.pager !== false" class="oe-list-pager">
+                            <button type="button" disabled="disabled"
+                                    data-pager-action="first">First</button>
+                            <button type="button" disabled="disabled"
+                                    data-pager-action="previous"
+                                    >&lt;</button>
 
-                    <span class="oe-pager-state">
-                    </span>
+                            <span class="oe-pager-state">
+                            </span>
 
-                    <button type="button" disabled="disabled"
-                            data-pager-action="next">&gt;&gt;</button>
-                    <button type="button" disabled="disabled"
-                            data-pager-action="last">Last</button>
-                </t>
+                            <button type="button" disabled="disabled"
+                                    data-pager-action="next">&gt;</button>
+                            <button type="button" disabled="disabled"
+                                    data-pager-action="last">Last</button>
+                        </th>
+                    </tr>
+                </table>
             </th>
         </tr>
         <tr t-if="options.header">
@@ -294,7 +293,7 @@
         <tr>
             <td t-if="options.selectable"/>
             <td t-foreach="aggregate_columns" t-as="column" class="oe-list-footer oe-number"
-                t-att-data-field="column.field" t-att-title="column.label">
+                t-att-data-field="column.id" t-att-title="column.label">
             </td>
             <td t-if="options.deletable"/>
         </tr>
@@ -334,8 +333,8 @@
     <t t-raw="frame.render()"/>
 </t>
 <t t-name="FormView">
-    <h2 class="oe_view_title"><t t-esc="view.fields_view.arch.attrs.string"/></h2>
     <div class="oe_form_header" t-att-id="view.element_id + '_header'">
+        <h2 class="oe_view_title"><t t-esc="view.fields_view.arch.attrs.string"/> <button class="oe_get_xml_view">xml</button></h2>
         <div class="oe_form_buttons" t-if="view.flags.action_buttons !== false">
             <!--<button type="button" class="oe_form_button_save">
                 <span class="oe_form_on_update">Save</span>
@@ -522,7 +521,7 @@
             <img src="/base/static/src/img/icons/gtk-index.png"/></span>
         <div t-att-id="widget.cm_id" class="contextMenu" style="display:none"><ul>
             <li t-att-id="widget.cm_id + '_open'" style="color:grey">Open...</li>
-            <li t-att-id="widget.cm_id + '_create'">Create and Edit...</li>
+            <li t-att-id="widget.cm_id + '_create'">Create...</li>
             <li t-att-id="widget.cm_id + '_search'">Search...</li>
         </ul></div>
     </div>
@@ -665,13 +664,27 @@
             <input type="reset" value="Clear"/>
             <button class="oe_search-view-custom-filter-btn"><span>Advanced Filter</span></button>
             <select class="oe_search-view-filters-management">
-                <option value="_filters">-- Filters --</option>
-                <option value="_actions">-- Actions --</option>
-                <option value="save_filter">Save Filter</option>
-                <option value="manage_filters">Manage Filters</option>
             </select>
         </div>
     </form>
+</t>
+<t t-name="SearchView.managed-filters">
+    <option value="_filters">-- Filters --</option>
+    <t t-set="i" t-value="0"/>
+    <t t-foreach="filters" t-as="filter">
+        <option t-att-value="'get:' + i"><t t-esc="filter.name"/></option>
+        <t t-set="i" t-value="i+1"/>
+    </t>
+    <option value="_actions">-- Actions --</option>
+    <option value="save_filter">Save Filter</option>
+    <option value="manage_filters">Manage Filters</option>
+</t>
+<t t-name="SearchView.managed-filters.add">
+    <div>
+        <p>Filter Name:</p>
+        <input type="text"/>
+        <p>(Any existing filter with the same name will be replaced)</p>
+    </div>
 </t>
 <t t-name="SearchView.render_lines">
     <table class="oe-searchview-render-line" border="0" cellspacing="0" cellpadding="0"
@@ -809,7 +822,7 @@
         <select class="searchview_extended_prop_op"/>
         <span class="searchview_extended_prop_value"/>
         <a class="searchview_extended_delete_prop"
-                href="javascript:void(0)"><span></span></a>
+                href="javascript:void(0)"><span> </span></a>
     </div>
 </t>
 <t t-name="SearchView.extended_search.proposition.char">
