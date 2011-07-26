@@ -11,7 +11,7 @@
         <field name="tag">board.home.widgets</field>
       </record>
       <record id="view_board_homepage" model="ir.ui.view">
-        <field name="name">board.homepage</field>
+        <field name="name">Homepage Board</field>
         <field name="model">board.board</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
@@ -31,6 +31,7 @@
         <field name="name">Home Page</field>
         <field name="res_model">board.board</field>
         <field name="view_type">form</field>
+        <field name="view_mode">form</field>
         <field name="view_id" ref="view_board_homepage"/>
       </record>
 <!--Board Note Search View  -->
