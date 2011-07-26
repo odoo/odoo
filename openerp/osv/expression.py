@@ -138,8 +138,9 @@ class expression(object):
 
     def __init__(self, cr, uid, exp, table, context):
         # check if the expression is valid
-        if not reduce(lambda acc, val: acc and (is_operator(val) or is_leaf(val)), exp, True):
-            raise ValueError('Bad domain expression: %r' % (exp,))
+        for x in exp:
+            if not (is_operator(x) or is_leaf(x)):
+                raise ValueError('Bad domain expression: %r, %r is not a valid operator or a valid term.' % (exp, x))
         self.__field_tables = {}  # used to store the table to use for the sql generation. key = index of the leaf
         self.__all_tables = set()
         self.__joins = []
@@ -378,12 +379,11 @@ class expression(object):
                             operator = dict_op[operator]
                         elif isinstance(right,list) and operator in ['<>','!=','=']: #for domain (FIELD,'=',['value1','value2'])
                             operator = dict_op[operator]
-                        res_ids = field_obj.name_search(cr, uid, right, [], operator, limit=None, context=c)
+                        res_ids = [x[0] for x in field_obj.name_search(cr, uid, right, [], operator, limit=None, context=c)]
                         if not res_ids:
                            return FALSE_LEAF
                         else:
-                            right = map(lambda x: x[0], res_ids)
-                            return (left, 'in', right)
+                            return (left, 'in', res_ids)
 
                     m2o_str = False
                     if right:

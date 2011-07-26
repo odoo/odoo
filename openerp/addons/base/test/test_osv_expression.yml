@@ -178,6 +178,25 @@
         res_ids.sort()
         assert res_ids == all_ids, "Searching against empty set failed, returns %r" % res_ids
 -
+    Equivalent queries.
+-
+    !python {model: res.currency }: |
+        max_currency_id = max(self.search(cr, uid, []))
+        res_0 = self.search(cr, uid, [])
+        res_1 = self.search(cr, uid, [('name', 'not like', 'probably_unexisting_name')])
+        res_2 = self.search(cr, uid, [('id', 'not in', [max_currency_id + 1003])])
+        res_3 = self.search(cr, uid, [('id', 'not in', [])])
+        res_4 = self.search(cr, uid, [('id', 'not in', False)])
+        res_0.sort()
+        res_1.sort()
+        res_2.sort()
+        res_3.sort()
+        res_4.sort()
+        assert res_0 == res_1
+        assert res_0 == res_2
+        assert res_0 == res_3
+        assert res_0 == res_4
+-
     Equivalent queries, integer and string.
 -
     !python {model: res.partner }: |
@@ -220,6 +239,10 @@
     !python {model: res.company }: |
         # Search the company via its one2many (the one2many must point back at the company).
         company = self.browse(cr, uid, ref('ymltest_company3'))
+        max_currency_id = max(self.pool.get('res.currency').search(cr, uid, []))
+        currency_ids = self.pool.get('res.currency').search(cr, uid, [('name', 'not like', 'probably_unexisting_name')])
+        currency_ids = self.pool.get('res.currency').search(cr, uid, [('id', 'not in', [max_currency_id + 1003])])
+        currency_ids = self.pool.get('res.currency').search(cr, uid, [('id', 'not in', [])])
         default_company = self.browse(cr, uid, 1)
         # one2many towards same model
         res_1 = self.search(cr, uid, [('child_ids', 'in', [x.id for x in company.child_ids])])
@@ -227,10 +250,35 @@
         # one2many towards another model
         res_3 = self.search(cr, uid, [('currency_ids', 'in', [x.id for x in default_company.currency_ids])])
         res_4 = self.search(cr, uid, [('currency_ids', 'in', [default_company.currency_ids[0].id])])
+        res_5 = self.search(cr, uid, [('currency_ids', 'in', default_company.currency_ids[0].id)])
+        # res_6 = self.search(cr, uid, [('currency_ids', 'in', [default_company.currency_ids[0].name])]) # TODO
+        res_7 = self.search(cr, uid, [('currency_ids', '=', default_company.currency_ids[0].name)])
+        res_8 = self.search(cr, uid, [('currency_ids', 'like', default_company.currency_ids[0].name)])
+        res_9 = self.search(cr, uid, [('currency_ids', 'like', 'probably_unexisting_name')])
+        # self.search(cr, uid, [('currency_ids', 'unexisting_op', 'probably_unexisting_name')]) # TODO expected exception
+        res_10 = self.search(cr, uid, [('currency_ids', 'not like', 'probably_unexisting_name')])
+        res_11 = self.search(cr, uid, [('currency_ids', 'not in', [max_currency_id + 1])])
+        res_12 = self.search(cr, uid, [('currency_ids', 'not in', False)])
+        res_13 = self.search(cr, uid, [('currency_ids', 'not in', [])])
+        res_10.sort()
+        res_11.sort()
+        res_12.sort()
+        res_13.sort()
         assert res_1 == [ref('ymltest_company3')]
         assert res_2 == [ref('ymltest_company3')]
         assert res_3 == [1]
         assert res_4 == [1]
+        assert res_5 == [1]
+        assert res_7 == [1]
+        assert res_8 == [1]
+        assert res_9 == []
+        print ">>> 10:", res_10
+        print ">>> 11:", res_11
+        print ">>> 12:", res_12
+        print ">>> 13:", res_13
+        #assert res_10 == res_11
+        #assert res_10 == res_12
+        #assert res_10 == res_13
 
         # child_of x returns x and its children (direct or not).
         company = self.browse(cr, uid, ref('ymltest_company3'))
@@ -240,7 +288,7 @@
         res_1.sort()
         res_2 = self.search(cr, uid, [('id', 'child_of', ref('ymltest_company3'))])
         res_2.sort()
-        #res_3 = self.search(cr, uid, [('id', 'child_of', [company.name])])
+        #res_3 = self.search(cr, uid, [('id', 'child_of', [company.name])]) # TODO
         #res_3.sort()
         res_4 = self.search(cr, uid, [('id', 'child_of', company.name)])
         res_4.sort()
