@@ -48,7 +48,6 @@ class res_partner(osv.osv):
             type = 'many2one',
             relation = 'sale_journal.invoice.type',
             string = "Invoicing Method",
-            method = True,
             view_load = True,
             group_name = "Accounting Properties",
             help = "The type of journal used for sales and picking."),

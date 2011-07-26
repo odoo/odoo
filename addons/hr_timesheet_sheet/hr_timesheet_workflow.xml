@@ -40,13 +40,13 @@
         <record id="t0" model="workflow.transition">
             <field name="act_from" ref="act_new"/>
             <field name="act_to" ref="act_draft"/>
-            <field name="group_id" ref="base.group_hr_user"/>
+            <field name="group_id" ref="base.group_user"/>
         </record>
         <record id="t1" model="workflow.transition">
             <field name="act_from" ref="act_draft"/>
             <field name="act_to" ref="act_confirm"/>
             <field name="signal">confirm</field>
-            <field name="group_id" ref="base.group_hr_user"/>
+            <field name="group_id" ref="base.group_user"/>
         </record>
         <record id="t2" model="workflow.transition">
             <field name="act_from" ref="act_confirm"/>

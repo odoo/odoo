@@ -49,6 +49,14 @@
               action="product.product_uom_form_action" id="menu_purchase_uom_form_action"
               parent="menu_purchase_unit_measure_purchase" sequence="30"/>
 
+        <menuitem
+            id="menu_purchase_partner_cat" name="Address Book"
+            parent="menu_purchase_config_purchase"/>
+
+        <menuitem
+            action="base.action_partner_category_form" id="menu_partner_categories_in_form" name="Partner Categories"
+            parent="purchase.menu_purchase_partner_cat"/>
+
 
         <!--supplier addresses action-->
         <record id="action_supplier_address_form" model="ir.actions.act_window">
@@ -214,9 +222,9 @@
                             <separator string="Purchase Control" colspan="4"/>
                             <field name="validator"/>
                             <field name="date_approve"/>
-                        	<separator string="Invoices" colspan="4"/>
-                        	<newline/>
-                        	<field name="invoice_ids" groups="base.group_extended" nolabel="1" colspan="4" context="{'type':'in_invoice', 'journal_type':'purchase'}"/>
+                            <separator string="Invoices" colspan="4"/>
+                            <newline/>
+                            <field name="invoice_ids" groups="base.group_extended" nolabel="1" colspan="4" context="{'type':'in_invoice', 'journal_type':'purchase'}"/>
                         </page>
                         <page string="Notes">
                             <field colspan="4" name="notes" nolabel="1"/>
@@ -316,8 +324,8 @@
                 <form string="Purchase Order Line">
                     <notebook colspan="4">
                         <page string="Order Line">
-                            <field name="product_id" colspan="4" context="partner_id=parent.partner_id,quantity=product_qty,pricelist=parent.pricelist_id,uom=product_uom,warehouse=parent.warehouse_id" on_change="product_id_change(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id, parent.date_order,parent.fiscal_position,date_planned,name,price_unit,notes)"/>
-                            <field name="product_qty" context="partner_id=parent.partner_id,quantity=product_qty,pricelist=parent.pricelist_id,uom=product_uom,warehouse=parent.warehouse_id" on_change="product_id_change(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id,parent.date_order,parent.fiscal_position,date_planned,name,price_unit,notes)"/>
+                            <field name="product_id" colspan="4" context="{'partner_id':parent.partner_id, 'quantity':product_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom, 'warehouse':parent.warehouse_id}" on_change="product_id_change(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id, parent.date_order,parent.fiscal_position,date_planned,name,price_unit,notes)"/>
+                            <field name="product_qty" context="{'partner_id':parent.partner_id, 'quantity':product_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom, 'warehouse':parent.warehouse_id}" on_change="product_id_change(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id,parent.date_order,parent.fiscal_position,date_planned,name,price_unit,notes)"/>
                             <field name="product_uom" on_change="product_uom_change(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id, parent.date_order,parent.fiscal_position,date_planned,name,price_unit,notes)"/>
                             <field colspan="4" name="name"/>
                             <field name="date_planned" widget="date"/>
@@ -455,7 +463,7 @@
 
 
         <record id="purchase_line_form_action2" model="ir.actions.act_window">
-            <field name="name">Purchase Lines Not Invoiced</field>
+            <field name="name">On Purchase Order Line</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">purchase.order.line</field>
             <field name="domain">[('order_id.invoice_method','&lt;&gt;','picking'), ('state','in',('confirmed','done')), ('invoiced', '=', False)]</field>

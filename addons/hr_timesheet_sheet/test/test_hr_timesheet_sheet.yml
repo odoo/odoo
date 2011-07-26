@@ -25,7 +25,7 @@
     address_home_id: base.res_partner_address_1
     company_id: res_company_openERP
     gender: male
-    marital: hr.hr_employee_marital_status_single
+    marital: single
     name: Mark Johnson
     user_id: base.user_demo
 
@@ -76,7 +76,7 @@
   !record {model: hr.attendance, id: hr_attendance_0}:
     action: sign_in
     employee_id: 'hr_employee_employee0'
-    name: !eval time.strftime('%Y-%m-%d')+' '+'%s:%s:%s' %(datetime.now().hour,datetime.now().minute,datetime.now().second)
+    name: !eval time.strftime('%Y-%m-%d')+' '+'%s:%s:%s' %(max(0,datetime.now().hour-1),max(0,datetime.now().minute-1),max(0,datetime.now().second-1))
 
 -
   At the time of logout, I create attendance and perform "Sign Out".
@@ -84,7 +84,7 @@
   !record {model: hr.attendance, id: hr_attendance_1}:
     action: sign_out
     employee_id: 'hr_employee_employee0'
-    name: !eval time.strftime('%Y-%m-%d')+' '+'%s:%s:%s' %(datetime.now().hour+3,datetime.now().minute,datetime.now().second)
+    name: !eval time.strftime('%Y-%m-%d')+' '+'%s:%s:%s' %(min(23,datetime.now().hour+2),min(59,datetime.now().minute+1),min(59,datetime.now().second+1))
 
 -
   I create Timesheet Entry for time spend on today work.

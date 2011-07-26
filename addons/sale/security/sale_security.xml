@@ -6,10 +6,12 @@
         <field name="name">Sales / Manager</field>
     </record>
     <record id="base.group_sale_salesman" model="res.groups">
-        <field name="name">Sales / User</field>
+        <field name="name">Sales / User - Own Leads Only</field>
+        <field name="users" eval="[(4, ref('base.user_root'))]"/>
     </record>
+
     <record id="base.group_sale_salesman_all_leads" model="res.groups">
-        <field name="name">Sales / User - See All Leads</field>
+        <field name="name">Sales / User - All Leads</field>
     </record>
 
     <record model="ir.ui.menu" id="base.menu_base_partner">
@@ -42,7 +44,7 @@
         <field name="global" eval="True"/>
         <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
     </record>
- 
+
     <!-- Multi - Salesmen sales order assignation rules -->
 
     <record id="sale_order_personal_rule" model="ir.rule">

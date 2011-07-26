@@ -53,8 +53,8 @@
                 <form string="Invoice Line">
                     <notebook>
                         <page string="Line">
-                            <field name="product_id" on_change="product_id_change(product_id, uos_id, quantity, name, parent.type, parent.partner_id, parent.fiscal_position, price_unit, parent.address_invoice_id, parent.currency_id, {'company_id': parent.company_id})"/>
-                            <field name="uos_id"  on_change="uos_id_change(product_id, uos_id, quantity, name, parent.type, parent.partner_id, parent.fiscal_position, price_unit, parent.address_invoice_id, parent.currency_id, {'company_id': parent.company_id})"/>
+                            <field name="product_id" on_change="product_id_change(product_id, uos_id, quantity, name, parent.type, parent.partner_id, parent.fiscal_position, price_unit, parent.address_invoice_id, parent.currency_id, context, parent.company_id)"/>
+                            <field name="uos_id"  on_change="uos_id_change(product_id, uos_id, quantity, name, parent.type, parent.partner_id, parent.fiscal_position, price_unit, parent.address_invoice_id, parent.currency_id, context, parent.company_id)"/>
                             <field name="quantity"/>
                             <field name="price_unit"/>
                             <field name="discount" groups="base.group_extended"/>
@@ -175,7 +175,7 @@
                             <field name="check_total" required="2"/>
                             <field colspan="4" default_get="{'check_total': check_total, 'invoice_line': invoice_line, 'address_invoice_id': address_invoice_id, 'partner_id': partner_id, 'price_type': 'price_type' in dir() and price_type or False}" name="invoice_line" context="{'type': type}" nolabel="1">
                                 <tree string="Invoice lines">
-                                    <field name="product_id" on_change="product_id_change(product_id, uos_id, quantity, name, parent.type, parent.partner_id, parent.fiscal_position, price_unit, parent.address_invoice_id, parent.currency_id, {'company_id': parent.company_id})"/>
+                                    <field name="product_id" on_change="product_id_change(product_id, uos_id, quantity, name, parent.type, parent.partner_id, parent.fiscal_position, price_unit, parent.address_invoice_id, parent.currency_id, context, parent.company_id)"/>
                                     <field domain="[('company_id', '=', parent.company_id), ('journal_id', '=', parent.journal_id), ('type', '&lt;&gt;', 'view')]" name="account_id" on_change="onchange_account_id(parent.fiscal_position,account_id)"/>
                                     <field name="invoice_line_tax_id" view_mode="2" context="{'type':parent.type}" domain="[('parent_id','=',False)]"/>
                                     <field domain="[('type','&lt;&gt;','view'), ('company_id', '=', parent.company_id), ('parent_id', '!=', False)]" name="account_analytic_id" groups="analytic.group_analytic_accounting"/>
@@ -203,7 +203,7 @@
                                 </field>
                             </group>
                             <group col="4" colspan="2">
-                                <button colspan="2" name="button_reset_taxes" states="draft" string="Compute Taxes" type="object" icon="terp-stock_format-scientific"/>
+                                <button colspan="2" name="button_reset_taxes" states="draft" string="Compute Taxes" type="object" icon="terp-stock_format-scientific" help="This action will erase taxes"/>
                                 <field name="amount_untaxed"/>
                                 <label string="" colspan="2"/>
                                 <field name="amount_tax"/>
@@ -297,7 +297,7 @@
                                 </field>
                             </group>
                             <group col="4" colspan="2">
-                                <button colspan="2" name="button_reset_taxes" states="draft" string="Compute Taxes" type="object" groups="base.group_user" icon="terp-stock_format-scientific"/>
+                                <button colspan="2" name="button_reset_taxes" states="draft" string="Compute Taxes" type="object" groups="base.group_user" icon="terp-stock_format-scientific" help="This action will erase taxes"/>
                                 <field name="amount_untaxed"/>
                                 <label string="" colspan="2"/>
                                 <field name="amount_tax"/>

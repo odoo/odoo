@@ -22,10 +22,11 @@
 
 {
     "name" : "Sharing Tools",
-    "version" : "1.3",
+    "version" : "1.5",
     "depends" : ["base"],
     "author" : "OpenERP SA",
     "category": 'Tools',
+    'complexity': "easy",
     "description": """
 This module adds generic sharing tools to your current OpenERP database.
 ========================================================================
