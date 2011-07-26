@@ -920,18 +920,20 @@ openerp.base.WebClient = openerp.base.Controller.extend({
     load_url_state: function () {
         var self = this;
         // TODO: add actual loading if there is url state to unpack, test on window.location.hash
+
+        // not logged in
+        if (!this.session.uid) { return; }
         var ds = new openerp.base.DataSetSearch(this, 'res.users');
-        ds.read_ids([parseInt(this.session.uid, 10)], ['action_id'], function (users) {
+        ds.read_ids([this.session.uid], ['action_id'], function (users) {
             var home_action = users[0].action_id;
             if (!home_action) {
                 self.default_home();
                 return;
             }
-            // oh dear
             self.execute_home_action(home_action[0], ds);
         })
     },
-    default_home: function () { console.log('base default home') },
+    default_home: function () { },
     /**
      * Bundles the execution of the home action
      *
