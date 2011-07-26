@@ -78,12 +78,8 @@ class project(osv.osv):
         addr = partner_obj.address_get(cr, uid, [part], ['contact'])
         pricelist = partner_obj.read(cr, uid, part, ['property_product_pricelist'], context=context)
         pricelist_id = pricelist.get('property_product_pricelist', False) and pricelist.get('property_product_pricelist')[0] or False
-        if not res:
-            return {'value':{'contact_id': addr['contact'], 'pricelist_id': pricelist_id}}
-        else:
-            return {'value':{'contact_id': addr['contact'], 'pricelist_id': pricelist_id, 'to_invoice': res}}
-            
-
+        return {'value':{'contact_id': addr['contact'], 'pricelist_id': pricelist_id}}
+              
     def _progress_rate(self, cr, uid, ids, names, arg, context=None):
         res = {}.fromkeys(ids, 0.0)
         if not ids:
