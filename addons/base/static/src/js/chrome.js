@@ -739,7 +739,6 @@ openerp.base.Database = openerp.base.Controller.extend({
     
     do_db_create: function() {
         var self = this;
-       	self.db_string = "CREATE DATABASE";
        	self.$option_id.html(QWeb.render("CreateDB", self));
        	
        	$("form[name=create_db_form]").validate();
@@ -797,7 +796,6 @@ openerp.base.Database = openerp.base.Controller.extend({
 	
     do_db_drop: function() {
         var self = this;
-        self.db_string = "DROP DATABASE";
        	self.$option_id.html(QWeb.render("DropDB", self));
        	
        	$("form[name=drop_db_form]").validate();
@@ -833,7 +831,6 @@ openerp.base.Database = openerp.base.Controller.extend({
     
     do_db_backup: function() {
         var self = this;
-        self.db_string = "BACKUP DATABASE";
        	self.$option_id.html(QWeb.render("BackupDB", self));
        	
        	$("form[name=backup_db_form]").validate();
@@ -866,7 +863,6 @@ openerp.base.Database = openerp.base.Controller.extend({
     
     do_db_restore: function() {
         var self = this;
-        self.db_string = "RESTORE DATABASE";
        	self.$option_id.html(QWeb.render("RestoreDB", self));
        	
        	$("form[name=restore_db_form]").validate();
@@ -900,7 +896,6 @@ openerp.base.Database = openerp.base.Controller.extend({
 
     do_change_password: function() {
         var self = this;
-       	self.db_string = "CHANGE DATABASE PASSWORD";
        	self.$option_id.html(QWeb.render("Change_DB_Pwd", self));
        	
        	$("form[name=change_pwd_form]").validate();
