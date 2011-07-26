@@ -693,6 +693,9 @@ openerp.base.Database = openerp.base.Controller.extend({
 		this.option_id = option_id;
 		this.$option_id = $('#' + option_id);
 		this.$option_id.html('');
+		if(this.parent && this.parent.session) {
+            this.session = this.parent.session;
+        }
 	},
 	start: function() {
 		this.$element.html(QWeb.render("Database", this));
@@ -717,7 +720,7 @@ openerp.base.Database = openerp.base.Controller.extend({
         this.$element.find('#db-restore').click(this.do_db_restore);
         this.$element.find('#db-change-password').click(this.do_change_password);
        	this.$element.find('#back-to-login').click(function() {
-    		self.header = new openerp.base.Header(self.session, "oe_header");
+    		self.header = new openerp.base.Header(self, "oe_header");
     		self.header.on_logout();	
     	});
 	},
@@ -959,6 +962,9 @@ openerp.base.Login =  openerp.base.Controller.extend({
             this.selected_login = this.selected_login || "admin";
             this.selected_password = this.selected_password || "a";
         }
+        if(this.parent && this.parent.session) {
+            this.session = this.parent.session;
+        }
     },
     start: function() {
         var self = this;
@@ -978,7 +984,7 @@ openerp.base.Login =  openerp.base.Controller.extend({
     	this.$element.closest(".openerp").addClass("login-mode");
     	
         this.$element.find('#oe-db-config').click(function() {
-        	self.database = new openerp.base.Database(self.session, "oe_database", "oe_db_options");
+        	self.database = new openerp.base.Database(self, "oe_database", "oe_db_options");
         	self.database.start();
         });
         
@@ -1035,6 +1041,8 @@ openerp.base.Login =  openerp.base.Controller.extend({
 openerp.base.Header =  openerp.base.Controller.extend({
     init: function(parent, element_id) {
         this._super(parent, element_id);
+        if(parent)
+	        this.session = parent.session;
     },
     start: function() {
         this.do_update();
@@ -1043,10 +1051,7 @@ openerp.base.Header =  openerp.base.Controller.extend({
         this.$element.html(QWeb.render("Header", this));
         this.$element.find(".logout").click(this.on_logout);
     },
-    on_logout: function() {
-   		this.login = new openerp.base.Login(this.session, "oe_login");
-   		this.login.start();
-    }
+    on_logout: function() {}
 });
 
 openerp.base.Menu =  openerp.base.Controller.extend({
