@@ -23,6 +23,7 @@
     "name" : "Basic Calendar Functionality",
     "version" : "1.0",
     "depends" : ["base"],
+    'complexity': "easy",
     'description': """
 This is a full-featured calendar system.
 ========================================

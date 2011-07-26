@@ -23,6 +23,7 @@
     'name': 'Human Resource Payroll',
     'version': '1.0',
     'category': 'Human Resources',
+    'complexity': "expert",
     'description': """
 Generic Payroll system.
 =======================
