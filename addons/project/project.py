@@ -71,7 +71,7 @@ class project(osv.osv):
             res[m.id] = (m.parent_id and (m.parent_id.name + '/') or '') + m.name
         return res
 
-    def onchange_partner_id(self, cr, uid, ids, part=False, res=False, context=None):
+    def onchange_partner_id(self, cr, uid, ids, part=False, context=None):
         partner_obj = self.pool.get('res.partner')
         if not part:
             return {'value':{'contact_id': False, 'pricelist_id': False}}
