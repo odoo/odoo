@@ -532,6 +532,7 @@ openerp.base.Dialog = openerp.base.BaseWidget.extend({
     dialog_title: "",
     identifier_prefix: 'dialog',
     init: function (parent, options) {
+        var self = this;
         this._super(parent);
         this.options = {
             modal: true,
@@ -542,7 +543,10 @@ openerp.base.Dialog = openerp.base.BaseWidget.extend({
             min_height: 0,
             max_height: '100%',
             autoOpen: false,
-            buttons: {}
+            buttons: {},
+            close: function () {
+                self.stop();
+            }
         };
         for (var f in this) {
             if (f.substr(0, 10) == 'on_button_') {
@@ -605,11 +609,7 @@ openerp.base.Dialog = openerp.base.BaseWidget.extend({
         this.set_options(options);
         this.$dialog.dialog(this.options).dialog('open');
     },
-    close: function(options) {
-        this.$dialog.dialog('close');
-    },
     stop: function () {
-        this.close();
         this.$dialog.dialog('destroy');
     }
 });
