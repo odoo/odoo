@@ -22,6 +22,9 @@
                 <xpath expr="/form/notebook/page/group/group/button[@name='%(account.action_account_state_open)d']" position="replace">
                     <button name='%(account.action_account_state_open)d' type='action' string='Re-Open' states='paid' icon="gtk-convert" groups="account.group_account_invoice"/>
                 </xpath>
+                <xpath expr="/form/notebook/page/group/group/button[@name='invoice_cancel']" position="replace">
+                    <button name="invoice_cancel" states="draft,proforma2,sale,open" string="Cancel" icon="gtk-cancel" groups="account.group_account_invoice"/>
+                </xpath>
             </field>
         </record>
 
@@ -33,6 +36,9 @@
             <field name="arch" type="xml">
                 <xpath expr="/form/notebook/page/group/group/button[@name='%(account.action_account_state_open)d']" position="replace">
                     <button name='%(account.action_account_state_open)d' type='action' string='Re-Open' states='paid' icon="gtk-convert" groups="account.group_account_invoice"/>
+                </xpath>
+                <xpath expr="/form/notebook/page/group/group/button[@name='invoice_cancel']" position="replace">
+                    <button name="invoice_cancel" states="draft,proforma2,sale,open" string="Cancel" icon="gtk-cancel" groups="account.group_account_invoice"/>
                 </xpath>
             </field>
         </record>
