@@ -70,16 +70,21 @@ class Database(openerpweb.Controller):
         return {"db_list": dbs}
     
     @openerpweb.jsonrequest
-    def create_db(self, req, **kw):
+    def create_db(self, req, fields):
         
-        super_admin_pwd = kw.get('super_admin_pwd')
-        dbname = kw.get('db') 
-        demo_data = kw.get('demo_data')
-        db_lang = kw.get('db_lang')
-        admin_pwd = kw.get('admin_pwd')
-        confirm_pwd = kw.get('confirm_pwd')
-        
-        if not re.match('^[a-zA-Z][a-zA-Z0-9_]+$', dbname):
+        for field in fields:
+            if field['name'] == 'super_admin_pwd':
+                super_admin_pwd = field['value']
+            elif field['name'] == 'db_name':
+                dbname = field['value']
+            elif field['name'] == 'demo_data':
+                demo_data = field['value']
+            elif field['name'] == 'db_lang':
+                db_lang = field['value']
+            elif field['name'] == 'create_admin_pwd':
+                admin_pwd = field['value']
+                
+        if dbname and not re.match('^[a-zA-Z][a-zA-Z0-9_]+$', dbname):
             return {'error': "You must avoid all accents, space or special characters.", 'title': 'Bad database name'}
         
         ok = False
@@ -92,9 +97,12 @@ class Database(openerpweb.Controller):
                 return {'error': 'Could not create database !', 'title': 'Create Database'}
 
     @openerpweb.jsonrequest
-    def drop_db(self, req, **kw):
-        db = kw.get('db')
-        password = kw.get('password')
+    def drop_db(self, req, fields):
+        for field in fields:
+            if field['name'] == 'drop_db':
+                db = field['value']
+            elif field['name'] == 'drop_pwd':
+                password = field['value']
         
         try:
             return req.session.proxy("db").drop(password, db)
@@ -105,9 +113,13 @@ class Database(openerpweb.Controller):
                 return {'error': 'Could not drop database !', 'title': 'Drop Database'}
 
     @openerpweb.jsonrequest
-    def backup_db(self, req, **kw):
-        db = kw.get('db')
-        password = kw.get('password')
+    def backup_db(self, req, fields):
+        for field in fields:
+            if field['name'] == 'backup_db':
+                db = field['value']
+            elif field['name'] == 'backup_pwd':
+                password = field['value']
+
         try:
             res = req.session.proxy("db").dump(password, db)
             if res:
@@ -121,10 +133,14 @@ class Database(openerpweb.Controller):
                 return {'error': 'Could not drop database !', 'title': 'Backup Database'}
             
     @openerpweb.jsonrequest
-    def restore_db(self, req, **kw):
-        filename = kw.get('filename')
-        db = kw.get('db')
-        password = kw.get('password')
+    def restore_db(self, req, fields):
+        for field in fields:
+            if field['name'] == 'restore_db':
+                filename = field['value']
+            elif field['name'] == 'new_db':
+                db = field['value']
+            elif field['name'] == 'restore_pwd':
+                password = field['value']
         
         try:
             data = base64.encodestring(filename.file.read())
@@ -136,10 +152,12 @@ class Database(openerpweb.Controller):
                 return {'error': 'Could not restore database !', 'title': 'Restore Database'}
         
     @openerpweb.jsonrequest
-    def change_password_db(self, req, **kw):
-        old_password = kw.get('old_password')
-        new_password = kw.get('new_password')
-        confirm_password = kw.get('confirm_password')
+    def change_password_db(self, req, fields):
+        for field in fields:
+            if field['name'] == 'old_pwd':
+                old_password = field['value']
+            elif field['name'] == 'new_pwd':
+                new_password = field['value']
         
         try:
             return req.session.proxy("db").change_admin_password(old_password, new_password)

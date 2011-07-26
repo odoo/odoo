@@ -755,26 +755,9 @@ openerp.base.Database = openerp.base.Controller.extend({
        	self.$option_id.find('form[name=create_db_form]').submit(function(ev) {
        	    ev.preventDefault();
        	
-       	    var super_admin_pwd = self.$option_id.find("input[name=super_admin_pwd]").val();
-       	    var db = self.$option_id.find("input[name=db_name]").val();
-       	    var demo_data = self.$option_id.find("input[name=demo_data]:checked");
-       	    var db_lang = self.$option_id.find("select[name=db_lang]").val();
-       	    var admin_pwd = self.$option_id.find("input[name=create_admin_pwd]").val();
-       	    var confirm_pwd = self.$option_id.find("input[name=create_confirm_pwd]").val();
-
-       	    if (demo_data.length) 
-       	        demo_data = 'True';
-       	    else
-                demo_data = 'False';
+       	    var fields = $(this).serializeArray();
                 
-            self.rpc("/base/database/create_db", {
-                'super_admin_pwd': super_admin_pwd,
-                'db': db, 
-                'demo_data': demo_data,
-                'db_lang': db_lang,
-                'admin_pwd': admin_pwd,
-                'confirm_pwd': confirm_pwd
-            }, 
+            self.rpc("/base/database/create_db", {'fields': fields},
             function(result) {
                 if (result && !result.error) {
                 
@@ -803,29 +786,29 @@ openerp.base.Database = openerp.base.Controller.extend({
         self.$option_id.find('form[name=drop_db_form]').submit(function(ev) {
        	    ev.preventDefault();
        	
-            var db = self.$option_id.find("select[name=drop_db]").val();
-            var password = self.$option_id.find("input[name=drop_pwd]").val();
-        
-        if (confirm("Do you really want to delete the database: " + db + " ?")) {
-        self.rpc("/base/database/drop_db", {'db': db, 'password': password}, 
-            function(result) {
-                    if (result && ! result.error) {
-                        self.$option_id.find("select[name=drop_db] :selected").remove();
-                        self.notification.notify("Dropping database", "The database '" + db + "' has been dropped");
-                    } else if(result.error) {
-                        var db_error_dialog = _.uniqueId("db_error_dialog");
-                        $('<div>', {id: db_error_dialog}).dialog({
-                            modal: true,
-                            title: result.title,
-                            buttons: {
-                                Ok: function() {
-                                    $(this).dialog("close");
-                                }
-                            }
-                        }).html("<center style='padding-top: 15px; font-size: 15px'>" + result.error + "</center>");
-                    }
-               });
-            }
+	        var fields = $(this).serializeArray();
+	        db = $('select[name=drop_db] :selected').val();
+	        
+	        if (confirm("Do you really want to delete the database: " + db + " ?")) {
+	        self.rpc("/base/database/drop_db", {'fields': fields}, 
+	            function(result) {
+	                    if (result && ! result.error) {
+	                        self.$option_id.find("select[name=drop_db] :selected").remove();
+	                        self.notification.notify("Dropping database", "The database '" + db + "' has been dropped");
+	                    } else if(result.error) {
+	                        var db_error_dialog = _.uniqueId("db_error_dialog");
+	                        $('<div>', {id: db_error_dialog}).dialog({
+	                            modal: true,
+	                            title: result.title,
+	                            buttons: {
+	                                Ok: function() {
+	                                    $(this).dialog("close");
+	                                }
+	                            }
+	                        }).html("<center style='padding-top: 15px; font-size: 15px'>" + result.error + "</center>");
+	                    }
+	               });
+	            }
         });
     },
     
@@ -838,10 +821,9 @@ openerp.base.Database = openerp.base.Controller.extend({
        	self.$option_id.find('form[name=backup_db_form]').submit(function(ev) {
        	    ev.preventDefault();
        	
-            var db = self.$option_id.find("select[name=backup_db]").val();
-            var password = self.$option_id.find("input[name=backup_pwd]").val();
+            var fields = $(self).serializeArray();
             
-            self.rpc("/base/database/backup_db", {'db': db, 'password': password}, 
+            self.rpc("/base/database/backup_db", {'fields': fields}, 
             function(result) {
                 if (result && !result.error) {
                     self.notification.notify("Backup Database", "Backup has been created for the database: '" + db + "'");
@@ -870,11 +852,9 @@ openerp.base.Database = openerp.base.Controller.extend({
        	self.$option_id.find('form[name=restore_db_form]').submit(function(ev) {
        	    ev.preventDefault();
        	
-            var db = self.$option_id.find("input[name=restore_db]").val();
-            var password = self.$option_id.find("input[name=restore_pwd]").val();
-            var new_db = self.$option_id.find("input[name=new_db]").val();
+            var fields = $(self).serializeArray();
        	
-            self.rpc("/base/database/restore_db", {'db': db, 'password': password, 'new_db': new_db}, 
+            self.rpc("/base/database/restore_db", {'fields': fields}, 
             function(result) {
                 if (result && !result.error) {
                    self.notification.notify("Restore Database", "You restored your database as: '" + new_db + "'");
@@ -923,12 +903,10 @@ openerp.base.Database = openerp.base.Controller.extend({
         
        	self.$option_id.find('form[name=change_pwd_form]').submit(function(ev) {
        	    ev.preventDefault();
-       	
-       	    var old_pwd = self.$option_id.find("input[name=old_pwd]").val();
-            var new_pwd = self.$option_id.find("input[name=new_pwd]").val();
-            var confirm_pwd = self.$option_id.find("input[name=confirm_pwd]").val();
+       	    
+       	    var fields = $(self).serializeArray();
 
-            self.rpc("/base/database/change_password_db", {'old_password': old_pwd, 'new_password': new_pwd, 'confirm_password': confirm_pwd}, 
+            self.rpc("/base/database/change_password_db", {'fields': fields}, 
                function(result) {
                    if (result && !result.error) {
                       self.notification.notify("Changed Password", "Password has been changed successfully");
