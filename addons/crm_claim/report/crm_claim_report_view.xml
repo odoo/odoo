@@ -101,24 +101,6 @@
                         <field name="partner_id"/>
                     </group>
                     <newline/>
-                    <group  expand="0" string="Extended Filters..." groups="base.group_extended">
-                        <filter icon="terp-dialog-close"
-                            string="Done"
-                            domain="[('state','=','done')]"/>
-                        <filter icon="gtk-cancel"
-                            string="Cancel"
-                            domain="[('state','=','cancel')]"/>                        
-                        <separator orientation="vertical"/>
-                        <field name="stage_id" widget="selection" domain="[('type', '=', 'claim')]"/>
-                        <field name="categ_id" widget="selection" domain="[('object_id.model', '=', 'crm.claim')]"/>
-                        <separator orientation="vertical"/>
-                        <field name="priority" />
-                        <field name="type_action" />
-                        <newline/>
-                        <field name="date_closed" />
-                        <field name="date_deadline" />
-                    </group>
-                    <newline/>
                     <group  expand="1" string="Group By...">
                         <filter string="Salesman" name="Salesman" icon="terp-personal"
                             domain="[]" context="{'group_by':'user_id'}" />
