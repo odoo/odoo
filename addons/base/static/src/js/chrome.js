@@ -692,7 +692,7 @@ openerp.base.Database = openerp.base.Controller.extend({
         this._super(parent, element_id);
         this.option_id = option_id;
         this.$option_id = $('#' + option_id);
-        this.$option_id.html('');
+        
         if(this.parent && this.parent.session) {
             this.session = this.parent.session;
         }
