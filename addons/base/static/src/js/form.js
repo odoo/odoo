@@ -301,6 +301,7 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
         if (!this.ready) {
             return false;
         }
+        var dirty = false;
         var invalid = false,
             values = {},
             first_invalid_field = null;
@@ -313,6 +314,7 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
                     first_invalid_field = f;
                 }
             } else if (f.touched) {
+                dirty = true;
                 values[f.name] = f.get_value();
             }
         }
@@ -320,18 +322,19 @@ openerp.base.FormView =  openerp.base.View.extend( /** @lends openerp.base.FormV
             first_invalid_field.focus();
             this.on_invalid();
             return false;
-        } else {
+        } else if (dirty) {
             this.log("About to save", values);
             if (!this.datarecord.id) {
-                this.dataset.create(values, function(r) {
+                return this.dataset.create(values, function(r) {
                     self.on_created(r, success, prepend_on_create);
                 });
             } else {
-                this.dataset.write(this.datarecord.id, values, function(r) {
+                return this.dataset.write(this.datarecord.id, values, function(r) {
                     self.on_saved(r, success);
                 });
             }
-            return true;
+        } else {
+            return false;
         }
     },
     do_save_edit: function() {
@@ -1612,6 +1615,9 @@ openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
                 controller.on_record_loaded.add_last(function() {
                     once.resolve();
                 });
+                controller.on_form_changed.add_last(function() {
+                    self.save_form_view();
+                });
             }
             self.is_started.resolve();
         });
@@ -1692,6 +1698,7 @@ openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
         var self = this;
         if (!this.dataset)
             return [];
+        this.save_form_view();
         var val = this.dataset.delete_all ? [commands.delete_all()] : [];
         val = val.concat(_.map(this.dataset.ids, function(id) {
             var alter_order = _.detect(self.dataset.to_create, function(x) {return x.id === id;});
@@ -1708,9 +1715,38 @@ openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
             this.dataset.to_delete, function(x) {
                 return commands['delete'](x.id);}));
     },
+    save_form_view: function() {
+        if (this.viewmanager && this.viewmanager.views && this.viewmanager.active_view &&
+            this.viewmanager.views[this.viewmanager.active_view] &&
+            this.viewmanager.views[this.viewmanager.active_view].controller) {
+            var view = this.viewmanager.views[this.viewmanager.active_view].controller;
+            if (this.viewmanager.active_view === "form") {
+                var res = view.do_save();
+                if (res === false) {
+                    // ignore
+                } else if (res.isRejected()) {
+                    throw "Save or create on one2many dataset is not supposed to fail.";
+                } else if (!res.isResolved()) {
+                    throw "Asynchronous get_value() is not supported in form view.";
+                }
+            }
+        }
+    },
     validate: function() {
         this.invalid = false;
-        // TODO niv
+        var self = this;
+        var view = self.viewmanager.views[self.viewmanager.active_view].controller;
+        if(self.viewmanager.active_view === "list") {
+            return;
+        } else if (self.viewmanager.active_view === "form") {
+            for (var f in view.fields) {
+                f = view.fields[f];
+                if (f.invalid) {
+                    this.invalid = true;
+                    return;
+                }
+            }
+        }
     }
 });
 

@@ -492,24 +492,33 @@ openerp.base.BufferedDataSet = openerp.base.DataSetStatic.extend({
         this.to_create.push(cached);
         this.cache.push(cached);
         var to_return =  $.Deferred().then(callback);
-        setTimeout(function() {to_return.resolve({result: cached.id});}, 0);
+        to_return.resolve({result: cached.id});
         return to_return.promise();
     },
     write: function (id, data, callback) {
         var self = this;
         var record = _.detect(this.to_create, function(x) {return x.id === id;});
         record = record || _.detect(this.to_write, function(x) {return x.id === id;});
+        var dirty = false;
         if (record) {
+            for (k in data) {
+                if (record.values[k] === undefined || record.values[k] !== data[k]) {
+                    dirty = true;
+                    break;
+                }
+            }
             $.extend(record.values, data);
         } else {
+            dirty = true;
             record = {id: id, values: data};
             self.to_write.push(record);
         }
         var cached = _.detect(this.cache, function(x) {return x.id === id;});
         $.extend(cached.values, record.values);
-        this.on_change();
+        if (dirty)
+            this.on_change();
         var to_return = $.Deferred().then(callback);
-        setTimeout(function () {to_return.resolve({result: true});}, 0);
+        to_return.resolve({result: true});
         return to_return.promise();
     },
     unlink: function(ids, callback, error_callback) {
