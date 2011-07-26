@@ -939,11 +939,19 @@ openerp.base.WebClient = openerp.base.Controller.extend({
      * @param {openerp.base.DataSet} dataset action executor
      */
     execute_home_action: function (action, dataset) {
-        openerp.base.View.prototype.execute_action.call(
-            this, {
-                'name': action,
-                'type': 'action'
-            }, dataset, this.action_manager);
+        var self = this;
+        this.rpc('/base/action/load', {
+            action_id: action,
+            context: dataset.get_context()
+        }, function (meh) {
+            var action = meh.result;
+            action.context = _.extend(action.context || {}, {
+                active_id: false,
+                active_ids: [false],
+                active_model: dataset.model
+            });
+            self.action_manager.do_action(action);
+        });
     },
     on_menu_action: function(action) {
         this.action_manager.do_action(action);
