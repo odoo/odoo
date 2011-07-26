@@ -79,6 +79,7 @@
                 <form string="Address">
                     <group colspan="4" col="6">
                         <field name="partner_id" colspan="2"/>
+                        <field name="active"/>
                         <field name="company_id" groups="base.group_multi_company" widget="selection" colspan="2"/>
                         <newline/>
                         <field name="name"/>
@@ -127,7 +128,7 @@
             <field name="act_window_id" ref="action_partner_address_form"/>
         </record>
         <menuitem action="action_partner_address_form" id="menu_partner_address_form"
-            groups="base.group_extended"
+            groups="base.group_extended" name="Contacts"
             parent="base.menu_address_book" sequence="30"/>
 
         <!--
@@ -396,8 +397,8 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.partner</field>
             <field name="view_type">form</field>
-            <field name="domain">[('supplier','=',1)]</field>
-            <field name="context">{'default_customer':0, 'search_default_supplier': 1, 'default_supplier':1}</field>
+            <field name="domain">[]</field>
+            <field name="context">{'search_default_supplier': 1}</field>
             <field name="filter" eval="True"/>
             <field name="help">You can access all information regarding your suppliers from the supplier form: accounting data, history of emails, meetings, purchases, etc. You can uncheck the 'Suppliers' filter button in order to search in all your partners, including customers and prospects.</field>
         </record>

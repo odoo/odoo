@@ -1003,8 +1003,10 @@
 
         <record id="main_partner" model="res.partner">
             <field name="name">OpenERP S.A.</field>
-            <!-- Company ID will be set later -->
+            <!-- Address and Company ID will be set later -->
+            <field name="address" eval="[]"/>
             <field name="company_id" eval="None"/>
+            <field name="customer" eval="False"/>
         </record>
         <record id="main_address" model="res.partner.address">
             <field name="partner_id" ref="main_partner"/>
