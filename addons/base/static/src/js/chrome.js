@@ -722,7 +722,7 @@ openerp.base.Database = openerp.base.Controller.extend({
                                 $(this).dialog("close");
                             }
                         }
-                   }).html("<center style='padding-top: 15px; font-size: 15px'>" + result.error + "</center>");
+                   }).html(result.error);
             }
         });
         
@@ -771,7 +771,7 @@ openerp.base.Database = openerp.base.Controller.extend({
                                 $(this).dialog("close");
                             }
                         }
-                    }).html("<center style='padding-top: 15px; font-size: 15px'>" + result.error + "</center>");
+                    }).html(result.error);
                 }
             });
         });
@@ -805,7 +805,7 @@ openerp.base.Database = openerp.base.Controller.extend({
 	                                    $(this).dialog("close");
 	                                }
 	                            }
-	                        }).html("<center style='padding-top: 15px; font-size: 15px'>" + result.error + "</center>");
+	                        }).html(result.error);
 	                    }
 	               });
 	            }
@@ -821,7 +821,7 @@ openerp.base.Database = openerp.base.Controller.extend({
        	self.$option_id.find('form[name=backup_db_form]').submit(function(ev) {
        	    ev.preventDefault();
        	
-            var fields = $(self).serializeArray();
+            var fields = $(this).serializeArray();
             
             self.rpc("/base/database/backup_db", {'fields': fields}, 
             function(result) {
@@ -837,7 +837,7 @@ openerp.base.Database = openerp.base.Controller.extend({
                                 $(this).dialog("close");
                             }
                         }
-                    }).html("<center style='padding-top: 15px; font-size: 15px'>" + result.error + "</center>");
+                    }).html(result.error);
                }
             });
        	});
@@ -852,7 +852,7 @@ openerp.base.Database = openerp.base.Controller.extend({
        	self.$option_id.find('form[name=restore_db_form]').submit(function(ev) {
        	    ev.preventDefault();
        	
-            var fields = $(self).serializeArray();
+            var fields = $(this).serializeArray();
        	
             self.rpc("/base/database/restore_db", {'fields': fields}, 
             function(result) {
@@ -868,7 +868,7 @@ openerp.base.Database = openerp.base.Controller.extend({
                                 $(this).dialog("close");
                             }
                         }
-                    }).html("<center style='padding-top: 15px; font-size: 15px'>" + result.error + "</center>");
+                    }).html(result.error);
                 }
             });
        	});
@@ -904,7 +904,7 @@ openerp.base.Database = openerp.base.Controller.extend({
        	self.$option_id.find('form[name=change_pwd_form]').submit(function(ev) {
        	    ev.preventDefault();
        	    
-       	    var fields = $(self).serializeArray();
+       	    var fields = $(this).serializeArray();
 
             self.rpc("/base/database/change_password_db", {'fields': fields}, 
                function(result) {
@@ -920,7 +920,7 @@ openerp.base.Database = openerp.base.Controller.extend({
                                     $(this).dialog("close");
                                 }
                             }
-                        }).html("<center style='padding-top: 15px; font-size: 15px'>" + result.error + "</center>");
+                        }).html(result.error);
                   }
                });
            	});
