@@ -393,14 +393,20 @@
                 <search string="Filters">
                     <group colspan="4" col="10">
                       <field name="name"/>
-                      <field name="user_id"/>
+                      <field name="user_id">
+                  	  <filter icon="terp-personal"
+                        domain="[('user_id','=', uid)]"
+                        help="Current User" name="My Filters" />
+               			</field>
                       <field name="model_id"/>
                     </group>
-                    <newline/>
-                    <group expand="0" string="Group By" colspan="4">
-                      <filter string="User" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
-                    </group>
-                </search>
+                    
+                   <newline/>
+                   <group expand="0" string="Extended Filters..." groups="base.group_extended">
+                     <field name="domain"/>
+                     <field name="context"/>
+                  </group>
+              </search>
             </field>
         </record>
 

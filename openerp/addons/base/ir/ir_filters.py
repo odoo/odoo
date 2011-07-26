@@ -29,10 +29,11 @@ class ir_filters(osv.osv):
     _name = 'ir.filters'
     _description = 'Filters'
 
-    def _list_all_models(self, cr, uid, context=None):
-        cr.execute("SELECT model, name from ir_model")
-        return cr.fetchall()
-
+    def copy(self, cr, uid, id, default={}, context={}):
+        name = self.read(cr, uid, [id], ['name'])[0]['name']
+        default.update({'name': name+ _(' (copy)'), 'events':[]})
+        return super(ir_filters, self).copy(cr, uid, id, default, context)
+   
     def get_filters(self, cr, uid, model):
         act_ids = self.search(cr,uid,[('model_id','=',model),('user_id','=',uid)])
         my_acts = self.read(cr, uid, act_ids, ['name', 'domain','context'])
@@ -56,11 +57,15 @@ class ir_filters(osv.osv):
             cr.execute('CREATE UNIQUE INDEX "ir_filters_name_model_uid_unique_index" ON ir_filters (lower(name), model_id, user_id)')
 
     _columns = {
-        'name': fields.char('Action Name', size=64, translate=True, required=True),
-        'user_id':fields.many2one('res.users', 'User', help='False means for every user'),
+        'name': fields.char('Filter Name', size=64, translate=True, required=True),
+        'user_id':fields.many2one('res.users', 'User', help='Keep empty if you want this filter to be applied to every user.If you assign a user in this field, only this user will have this filter available.'),
         'domain': fields.text('Domain Value', required=True),
         'context': fields.text('Context Value', required=True),
-        'model_id': fields.selection(_list_all_models, 'Object', size=64, required=True),
+        'model_id': fields.many2one('ir.model', 'Object', size=64, required=True),
+    }
+    _defaults = {
+        'domain': '"[]"',
+        'context':'"{}"',
     }
 
 ir_filters()
