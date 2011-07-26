@@ -89,14 +89,7 @@
                         </field>
                         <field name="partner_id"/>
                     </group>
-                    <newline/>
-                    <group expand="0" string="Extended Filters..."  groups="base.group_extended">
-                        <field name="company_id" groups="base.group_multi_company"/>                        
-                        <field name="creation_date"/>
-                        <field name="opening_date"/>
-                        <field name="date_closed"/>
-                    </group>
-                    <newline/>
+                    <newline/>                  
                     <group expand="1" string="Group By...">
                         <filter string="Salesman" name="Salesman" icon="terp-personal"
                             domain="[]" context="{'group_by':'user_id'}" />
