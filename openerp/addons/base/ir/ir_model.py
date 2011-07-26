@@ -97,7 +97,9 @@ class ir_model(osv.osv):
         'modules': fields.function(_in_modules, method=True, type='char', size=128, string='In modules', help='List of modules in which the object is defined or inherited'),
         'view_ids': fields.function(_view_ids, method=True, type='one2many', obj='ir.ui.view', string='Views'),
     }
-    
+    _sql_constraints = [
+        ('obj_name_uniq', 'unique (name)', 'The object name must be unique !'),
+    ]
     _defaults = {
         'model': lambda *a: 'x_',
         'state': lambda self,cr,uid,ctx=None: (ctx and ctx.get('manual',False)) and 'manual' or 'base',

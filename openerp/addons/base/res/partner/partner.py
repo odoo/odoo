@@ -434,7 +434,7 @@ class res_partner_bank(osv.osv):
         'state_id': lambda obj, cursor, user, context: obj._default_value(
             cursor, user, 'state_id', context=context),
     }
-
+    
     def fields_get(self, cr, uid, fields=None, context=None):
         res = super(res_partner_bank, self).fields_get(cr, uid, fields, context)
         bank_type_obj = self.pool.get('res.partner.bank.type')

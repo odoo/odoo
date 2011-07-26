@@ -127,6 +127,9 @@ class res_company(osv.osv):
         'email': fields.function(_get_address_data, fnct_inv=_set_address_data, size=64, type='char', string="Email", multi='address'), 
         'phone': fields.function(_get_address_data, fnct_inv=_set_address_data, size=64, type='char', string="Phone", multi='address'), 
     }
+    _sql_constraints = [
+        ('com_name_uniq', 'unique (name)', 'The company name must be unique !')
+    ]
 
     def _search(self, cr, uid, args, offset=0, limit=None, order=None,
             context=None, count=False, access_rights_uid=None):

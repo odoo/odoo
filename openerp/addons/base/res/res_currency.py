@@ -65,6 +65,9 @@ class res_currency(osv.osv):
         'active': lambda *a: 1,
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'res.currency', context=c)
     }
+    _sql_constraints = [
+        ('currency_name_uniq', 'unique (name, company_id)', 'The currency code must be unique !'),
+    ]
     _order = "name"
 
     def read(self, cr, user, ids, fields=None, context=None, load='_classic_read'):
