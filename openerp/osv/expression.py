@@ -293,8 +293,6 @@ class expression(object):
                                 #no result found with given search criteria
                                 call_null = False
                                 self.__exp[i] = FALSE_LEAF
-                            else:
-                                operator = 'in' # operator changed because ids are directly related to main object
                         else:
                             call_null = False
                             o2m_op = 'in'
