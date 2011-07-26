@@ -106,27 +106,25 @@ def is_leaf(element, internal=False):
        and (((not internal) and element[1] in OPS) \
             or (internal and element[1] in INTERNAL_OPS))
 
-def execute_recursive_in(cr, s, f, w, ids, op):
+def select_from_where(cr, s, f, w, ids, op):
     # todo: merge into parent query as sub-query
     res = []
     if ids:
         if op in ['<','>','>=','<=']:
-            cr.execute('SELECT "%s"'    \
-                           '  FROM "%s"'    \
-                           ' WHERE "%s" %s %%s' % (s, f, w, op), (ids[0],))
-            res.extend([r[0] for r in cr.fetchall()])
-        else:
+            cr.execute('SELECT "%s" FROM "%s" WHERE "%s" %s %%s' % \
+                (s, f, w, op), (ids[0],)) # TODO shouldn't this be min/max(ids) ?
+            res = [r[0] for r in cr.fetchall()]
+        else: # TODO op is supposed to be 'in'? It is called with child_of...
             for i in range(0, len(ids), cr.IN_MAX):
                 subids = ids[i:i+cr.IN_MAX]
-                cr.execute('SELECT "%s"'    \
-                           '  FROM "%s"'    \
-                           '  WHERE "%s" IN %%s' % (s, f, w),(tuple(subids),))
+                cr.execute('SELECT "%s" FROM "%s" WHERE "%s" IN %%s' % \
+                    (s, f, w),(tuple(subids),))
                 res.extend([r[0] for r in cr.fetchall()])
-    else:
-        cr.execute('SELECT distinct("%s")'    \
-                       '  FROM "%s" where "%s" is not null'  % (s, f, s)),
-        res.extend([r[0] for r in cr.fetchall()])
     return res
+
+def select_distinct_from_where_not_null(cr, s, f):
+    cr.execute('SELECT distinct("%s") FROM "%s" where "%s" is not null' % (s, f, s))
+    return [r[0] for r in cr.fetchall()]
 
 class expression(object):
     """
@@ -302,13 +300,13 @@ class expression(object):
                             o2m_op = 'in'
                             if operator in  ['not like','not ilike','not in','<>','!=']:
                                 o2m_op = 'not in'
-                            self.__exp[i] = ('id', o2m_op, execute_recursive_in(cr, field._fields_id, field_obj._table, 'id', ids2, operator))
+                            self.__exp[i] = ('id', o2m_op, select_from_where(cr, field._fields_id, field_obj._table, 'id', ids2, operator))
 
                     if call_null:
                         o2m_op = 'not in'
                         if operator in  ['not like','not ilike','not in','<>','!=']:
                             o2m_op = 'in'
-                        self.__exp[i] = ('id', o2m_op, execute_recursive_in(cr, field._fields_id, field_obj._table, 'id', [], operator) or [0])
+                        self.__exp[i] = ('id', o2m_op, select_distinct_from_where_not_null(cr, field._fields_id, field_obj._table) or [0])
 
             elif field._type == 'many2many':
                 #FIXME
@@ -316,7 +314,7 @@ class expression(object):
                     def _rec_convert(ids):
                         if field_obj == table:
                             return ids
-                        return execute_recursive_in(cr, field._id1, field._rel, field._id2, ids, operator)
+                        return select_from_where(cr, field._id1, field._rel, field._id2, ids, operator)
 
                     ids2 = child_of_right_to_ids(right, 'ilike', field_obj)
                     dom = child_of_domain('id', ids2, field_obj)
@@ -346,13 +344,13 @@ class expression(object):
                             m2m_op = 'in'
                             if operator in  ['not like','not ilike','not in','<>','!=']:
                                 m2m_op = 'not in'
+                            self.__exp[i] = ('id', m2m_op, select_from_where(cr, field._id1, field._rel, field._id2, res_ids, operator) or [0])
 
-                            self.__exp[i] = ('id', m2m_op, execute_recursive_in(cr, field._id1, field._rel, field._id2, res_ids, operator) or [0])
                     if call_null_m2m:
                         m2m_op = 'not in'
                         if operator in  ['not like','not ilike','not in','<>','!=']:
                             m2m_op = 'in'
-                        self.__exp[i] = ('id', m2m_op, execute_recursive_in(cr, field._id1, field._rel, field._id2, [], operator) or [0])
+                        self.__exp[i] = ('id', m2m_op, select_distinct_from_where_not_null(cr, field._id1, field._rel) or [0])
 
             elif field._type == 'many2one':
                 if operator == 'child_of':
