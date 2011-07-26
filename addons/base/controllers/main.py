@@ -110,7 +110,7 @@ class WebClient(openerpweb.Controller):
         return concat
 
     @openerpweb.httprequest
-    def home(self, req):
+    def home(self, req, s_action=None):
         template ="""<!DOCTYPE html>
         <html style="height: 100%%">
         <head>
