@@ -688,19 +688,18 @@ openerp.base.Loading =  openerp.base.Controller.extend({
 });
 
 openerp.base.Database = openerp.base.Controller.extend({
-	init: function(parent, element_id, option_id) {
-		this._super(parent, element_id);
-		this.option_id = option_id;
-		this.$option_id = $('#' + option_id);
-		this.$option_id.html('');
-		if(this.parent && this.parent.session) {
+    init: function(parent, element_id, option_id) {
+        this._super(parent, element_id);
+        this.option_id = option_id;
+        this.$option_id = $('#' + option_id);
+        this.$option_id.html('');
+        if(this.parent && this.parent.session) {
             this.session = this.parent.session;
         }
-	},
-	start: function() {
-		this.$element.html(QWeb.render("Database", this));
-		
-		this.$element.closest(".openerp").removeClass("login-mode");
+    },
+    start: function() {
+        this.$element.html(QWeb.render("Database", this));
+        this.$element.closest(".openerp").removeClass("login-mode");
         this.$element.closest(".openerp").addClass("database_block");
         
         var self = this;
@@ -710,8 +709,8 @@ openerp.base.Database = openerp.base.Controller.extend({
         });
         
         this.rpc("/base/session/get_lang_list", {}, function(result) {
-        	self.lang_list = result.lang_list;
-        	self.do_db_create();
+            self.lang_list = result.lang_list;
+            self.do_db_create();
         });
         
         this.$element.find('#db-create').click(this.do_db_create);
@@ -720,228 +719,227 @@ openerp.base.Database = openerp.base.Controller.extend({
         this.$element.find('#db-restore').click(this.do_db_restore);
         this.$element.find('#db-change-password').click(this.do_change_password);
        	this.$element.find('#back-to-login').click(function() {
-    		self.header = new openerp.base.Header(self, "oe_header");
-    		self.header.on_logout();	
-    	});
-	},
-	
-	do_db_create: function() {
-		var self = this;
+            self.header = new openerp.base.Header(self, "oe_header");
+            self.header.on_logout();	
+        });
+    },
+    
+    do_db_create: function() {
+        var self = this;
        	self.db_string = "CREATE DATABASE";
        	self.$option_id.html(QWeb.render("CreateDB", self));
        	
        	$("form[name=create_db_form]").validate();
        	
        	$("input[name=create_confirm_pwd]").rules("add", {
-			equalTo: 'input[name=create_admin_pwd]',
-			messages: {
-				required: "Password did not match !"
-			}
-		});
-		
+            equalTo: 'input[name=create_admin_pwd]',
+            messages: {
+                required: "Password did not match !"
+            }
+        });
+        
        	$("input[name=super_admin_pwd]").focus();
        	
        	self.$option_id.find('form[name=create_db_form]').submit(function(ev) {
-       		ev.preventDefault();
-       		
-       		var super_admin_pwd = self.$option_id.find("input[name=super_admin_pwd]").val();
-       		var db = self.$option_id.find("input[name=db_name]").val();
-       		var demo_data = self.$option_id.find("input[name=demo_data]:checked");
-       		var db_lang = self.$option_id.find("select[name=db_lang]").val();
-       		var admin_pwd = self.$option_id.find("input[name=create_admin_pwd]").val();
-       		var confirm_pwd = self.$option_id.find("input[name=create_confirm_pwd]").val();
+       	    ev.preventDefault();
+       	
+       	    var super_admin_pwd = self.$option_id.find("input[name=super_admin_pwd]").val();
+       	    var db = self.$option_id.find("input[name=db_name]").val();
+       	    var demo_data = self.$option_id.find("input[name=demo_data]:checked");
+       	    var db_lang = self.$option_id.find("select[name=db_lang]").val();
+       	    var admin_pwd = self.$option_id.find("input[name=create_admin_pwd]").val();
+       	    var confirm_pwd = self.$option_id.find("input[name=create_confirm_pwd]").val();
 
-       		if (demo_data.length) 
-       			demo_data = 'True';
-       		else
-       			demo_data = 'False';
-       		
-       		self.rpc("/base/database/db_operation", {
-				'flag': 'create', 
-				'super_admin_pwd': super_admin_pwd,
-				'db': db, 
-				'demo_data': demo_data,
-				'db_lang': db_lang,
-				'admin_pwd': admin_pwd,
-				'confirm_pwd': confirm_pwd
-			}, 
-        	function(result) {
-        		if (result && !result.error) {
-	        		
-	        	} else if(result.error) {
-	        		var db_error_dialog = _.uniqueId("db_error_dialog");
-                  		$('<div>', {id: db_error_dialog}).dialog({
-		                modal: true,
-		                title: result.title,
-		                buttons: {
-		                    Ok: function() {
-		                        $(this).dialog("close");
-		                    }
-		                }
-		            }).html("<center style='padding-top: 15px; font-size: 15px'>" + result.error + "</center>");
-	        	}
-       		});
-		});
+       	    if (demo_data.length) 
+       	        demo_data = 'True';
+       	    else
+                demo_data = 'False';
+                
+            self.rpc("/base/database/create_db", {
+                'super_admin_pwd': super_admin_pwd,
+                'db': db, 
+                'demo_data': demo_data,
+                'db_lang': db_lang,
+                'admin_pwd': admin_pwd,
+                'confirm_pwd': confirm_pwd
+            }, 
+            function(result) {
+                if (result && !result.error) {
+                
+               } else if(result.error) {
+                   var db_error_dialog = _.uniqueId("db_error_dialog");
+                        $('<div>', {id: db_error_dialog}).dialog({
+                        modal: true,
+                        title: result.title,
+                        buttons: {
+                            Ok: function() {
+                                $(this).dialog("close");
+                            }
+                        }
+                    }).html("<center style='padding-top: 15px; font-size: 15px'>" + result.error + "</center>");
+                }
+            });
+        });
     },
 	
-	do_db_drop: function() {
-		var self = this;
+    do_db_drop: function() {
+        var self = this;
         self.db_string = "DROP DATABASE";
        	self.$option_id.html(QWeb.render("DropDB", self));
        	
        	$("form[name=drop_db_form]").validate();
        	
         self.$option_id.find('form[name=drop_db_form]').submit(function(ev) {
-       		ev.preventDefault();
-       		
-        	var db = self.$option_id.find("select[name=drop_db]").val();
-	        var password = self.$option_id.find("input[name=drop_pwd]").val();
-        	
-        	if (confirm("Do you really want to delete the database: " + db + " ?")) {
-	        	self.rpc("/base/database/db_operation", {'flag': 'drop', 'db': db, 'password': password}, 
-	        	function(result) {
-	        		if (result && ! result.error) {
-		        		self.$option_id.find("select[name=drop_db] :selected").remove();
-		        		self.notification.notify("Dropping database", "The database '" + db + "' has been dropped");
-		        	} else if(result.error) {
-		        		var db_error_dialog = _.uniqueId("db_error_dialog");
-                   		$('<div>', {id: db_error_dialog}).dialog({
-			                modal: true,
-			                title: result.title,
-			                buttons: {
-			                    Ok: function() {
-			                        $(this).dialog("close");
-			                    }
-			                }
-			            }).html("<center style='padding-top: 15px; font-size: 15px'>" + result.error + "</center>");
-		        	}
-	        	});
-	        }
+       	    ev.preventDefault();
+       	
+            var db = self.$option_id.find("select[name=drop_db]").val();
+            var password = self.$option_id.find("input[name=drop_pwd]").val();
+        
+        if (confirm("Do you really want to delete the database: " + db + " ?")) {
+        self.rpc("/base/database/drop_db", {'db': db, 'password': password}, 
+            function(result) {
+                    if (result && ! result.error) {
+                        self.$option_id.find("select[name=drop_db] :selected").remove();
+                        self.notification.notify("Dropping database", "The database '" + db + "' has been dropped");
+                    } else if(result.error) {
+                        var db_error_dialog = _.uniqueId("db_error_dialog");
+                        $('<div>', {id: db_error_dialog}).dialog({
+                            modal: true,
+                            title: result.title,
+                            buttons: {
+                                Ok: function() {
+                                    $(this).dialog("close");
+                                }
+                            }
+                        }).html("<center style='padding-top: 15px; font-size: 15px'>" + result.error + "</center>");
+                    }
+               });
+            }
         });
     },
     
     do_db_backup: function() {
-    	var self = this;
-    	self.db_string = "BACKUP DATABASE";
+        var self = this;
+        self.db_string = "BACKUP DATABASE";
        	self.$option_id.html(QWeb.render("BackupDB", self));
        	
        	$("form[name=backup_db_form]").validate();
        	
        	self.$option_id.find('form[name=backup_db_form]').submit(function(ev) {
-       		ev.preventDefault();
-       		
-        	var db = self.$option_id.find("select[name=backup_db]").val();
-	        var password = self.$option_id.find("input[name=backup_pwd]").val();
-	        
-        	self.rpc("/base/database/db_operation", {'flag': 'backup', 'db': db, 'password': password}, 
-        	function(result) {
-        		if (result && !result.error) {
-	        		self.notification.notify("Backup Database", "Backup has been created for the database: '" + db + "'");
-	        	} else if(result.error) {
-	        		var db_error_dialog = _.uniqueId("db_error_dialog");
-                  		$('<div>', {id: db_error_dialog}).dialog({
-		                modal: true,
-		                title: result.title,
-		                buttons: {
-		                    Ok: function() {
-		                        $(this).dialog("close");
-		                    }
-		                }
-		            }).html("<center style='padding-top: 15px; font-size: 15px'>" + result.error + "</center>");
-	        	}
-        	});
+       	    ev.preventDefault();
+       	
+            var db = self.$option_id.find("select[name=backup_db]").val();
+            var password = self.$option_id.find("input[name=backup_pwd]").val();
+            
+            self.rpc("/base/database/backup_db", {'db': db, 'password': password}, 
+            function(result) {
+                if (result && !result.error) {
+                    self.notification.notify("Backup Database", "Backup has been created for the database: '" + db + "'");
+                   } else if(result.error) {
+                    var db_error_dialog = _.uniqueId("db_error_dialog");
+                        $('<div>', {id: db_error_dialog}).dialog({
+                    modal: true,
+                        title: result.title,
+                        buttons: {
+                            Ok: function() {
+                                $(this).dialog("close");
+                            }
+                        }
+                    }).html("<center style='padding-top: 15px; font-size: 15px'>" + result.error + "</center>");
+               }
+            });
        	});
     },
     
     do_db_restore: function() {
-    	var self = this;
-    	self.db_string = "RESTORE DATABASE";
+        var self = this;
+        self.db_string = "RESTORE DATABASE";
        	self.$option_id.html(QWeb.render("RestoreDB", self));
        	
        	$("form[name=restore_db_form]").validate();
        	
        	self.$option_id.find('form[name=restore_db_form]').submit(function(ev) {
-       		ev.preventDefault();
-       		
-        	var db = self.$option_id.find("input[name=restore_db]").val();
-	        var password = self.$option_id.find("input[name=restore_pwd]").val();
-	        var new_db = self.$option_id.find("input[name=new_db]").val();
+       	    ev.preventDefault();
        	
-        	self.rpc("/base/database/db_operation", {'flag': 'restore', 'db': db, 'password': password, 'new_db': new_db}, 
-        	function(result) {
-        		if (result && !result.error) {
-	        		self.notification.notify("Restore Database", "You restored your database as: '" + new_db + "'");
-	        	} else if(result.error) {
-	        		var db_error_dialog = _.uniqueId("db_error_dialog");
-                  		$('<div>', {id: db_error_dialog}).dialog({
-		                modal: true,
-		                title: result.title,
-		                buttons: {
-		                    Ok: function() {
-		                        $(this).dialog("close");
-		                    }
-		                }
-		            }).html("<center style='padding-top: 15px; font-size: 15px'>" + result.error + "</center>");
-	        	}
-        	});
+            var db = self.$option_id.find("input[name=restore_db]").val();
+            var password = self.$option_id.find("input[name=restore_pwd]").val();
+            var new_db = self.$option_id.find("input[name=new_db]").val();
+       	
+            self.rpc("/base/database/restore_db", {'db': db, 'password': password, 'new_db': new_db}, 
+            function(result) {
+                if (result && !result.error) {
+                   self.notification.notify("Restore Database", "You restored your database as: '" + new_db + "'");
+                } else if(result.error) {
+                    var db_error_dialog = _.uniqueId("db_error_dialog");
+                        $('<div>', {id: db_error_dialog}).dialog({
+                        modal: true,
+                        title: result.title,
+                        buttons: {
+                            Ok: function() {
+                                $(this).dialog("close");
+                            }
+                        }
+                    }).html("<center style='padding-top: 15px; font-size: 15px'>" + result.error + "</center>");
+                }
+            });
        	});
-	},
-	
-	do_change_password: function() {
-		var self = this;
+    },
+
+    do_change_password: function() {
+        var self = this;
        	self.db_string = "CHANGE DATABASE PASSWORD";
        	self.$option_id.html(QWeb.render("Change_DB_Pwd", self));
        	
        	$("form[name=change_pwd_form]").validate();
        	
        	$("input[name=old_pwd]").rules("add", {
-			minlength: 1,
-			messages: {
-				required: "Please enter password !"
-			}
-		});
-		$("input[name=new_pwd]").rules("add", {
-			minlength: 1,
-			messages: {
-				required: "Please enter password !"
-			}
-		});
-		$("input[name=confirm_pwd]").rules("add", {
-			equalTo: 'input[name=new_pwd]',
-			messages: {
-				required: "Password did not match !"
-			}
-		});
-		
-		$("input[name=old_pwd]").focus();
+            minlength: 1,
+            messages: {
+                required: "Please enter password !"
+            }
+        });
+        $("input[name=new_pwd]").rules("add", {
+            minlength: 1,
+            messages: {
+                required: "Please enter password !"
+            }
+        });
+        $("input[name=confirm_pwd]").rules("add", {
+            equalTo: 'input[name=new_pwd]',
+            messages: {
+                required: "Password did not match !"
+            }
+        });
+
+        $("input[name=old_pwd]").focus();
         
        	self.$option_id.find('form[name=change_pwd_form]').submit(function(ev) {
-       		ev.preventDefault();
-       		
-       		var old_pwd = self.$option_id.find("input[name=old_pwd]").val();
-	        var new_pwd = self.$option_id.find("input[name=new_pwd]").val();
-	        var confirm_pwd = self.$option_id.find("input[name=confirm_pwd]").val();
-       		        		
-        	self.rpc("/base/database/db_operation", {'flag': 'change_password', 'old_password': old_pwd, 'new_password': new_pwd, 'confirm_password': confirm_pwd}, 
-	        	function(result) {
-	        		if (result && !result.error) {
-		        		self.notification.notify("Changed Password", "Password has been changed successfully");
-		        	} else if(result.error) {
-		        		var db_error_dialog = _.uniqueId("db_error_dialog");
-                   		$('<div>', {id: db_error_dialog}).dialog({
-			                modal: true,
-			                title: result.title,
-			                buttons: {
-			                    Ok: function() {
-			                        $(this).dialog("close");
-			                    }
-			                }
-			            }).html("<center style='padding-top: 15px; font-size: 15px'>" + result.error + "</center>");
-		        	}
-	        	});
-	       	});
-	}
-	
+       	    ev.preventDefault();
+       	
+       	    var old_pwd = self.$option_id.find("input[name=old_pwd]").val();
+            var new_pwd = self.$option_id.find("input[name=new_pwd]").val();
+            var confirm_pwd = self.$option_id.find("input[name=confirm_pwd]").val();
+
+            self.rpc("/base/database/change_password_db", {'old_password': old_pwd, 'new_password': new_pwd, 'confirm_password': confirm_pwd}, 
+               function(result) {
+                   if (result && !result.error) {
+                      self.notification.notify("Changed Password", "Password has been changed successfully");
+                  } else if(result.error) {
+                      var db_error_dialog = _.uniqueId("db_error_dialog");
+                   	    $('<div>', {id: db_error_dialog}).dialog({
+                            modal: true,
+                            title: result.title,
+                            buttons: {
+                                Ok: function() {
+                                    $(this).dialog("close");
+                                }
+                            }
+                        }).html("<center style='padding-top: 15px; font-size: 15px'>" + result.error + "</center>");
+                  }
+               });
+           	});
+    }
+
 });
 
 openerp.base.Login =  openerp.base.Controller.extend({
@@ -984,8 +982,8 @@ openerp.base.Login =  openerp.base.Controller.extend({
     	this.$element.closest(".openerp").addClass("login-mode");
     	
         this.$element.find('#oe-db-config').click(function() {
-        	self.database = new openerp.base.Database(self, "oe_database", "oe_db_options");
-        	self.database.start();
+            self.database = new openerp.base.Database(self, "oe_database", "oe_db_options");
+            self.database.start();
         });
         
        this.$element.find("form").submit(this.on_submit);
