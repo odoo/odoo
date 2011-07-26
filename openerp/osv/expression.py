@@ -60,7 +60,8 @@ def normalize(domain):
 
 def combine(operator, unit, zero, domains):
     """Returns a new domain expression where all domain components from ``domains``
-       have been added together using the binary operator ``operator``.
+       have been added together using the binary operator ``operator``. The given
+       domains must be normalized.
 
        :param unit: the identity element of the domains "set" with regard to the operation
                     performed by ``operator``, i.e the domain component ``i`` which, when
@@ -72,6 +73,7 @@ def combine(operator, unit, zero, domains):
                     combined with any domain ``x`` via ``operator``, yields ``z``. 
                     E.g. [(1,'=',1)] is the typical zero for OR_OPERATOR: as soon as
                     you see it in a domain component the resulting domain is the zero.
+       :param domains: a list of normalized domains.
     """
     result = []
     count = 0
