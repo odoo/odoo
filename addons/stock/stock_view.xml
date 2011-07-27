@@ -1687,10 +1687,6 @@
                         <field name="prodlot_id"/>
                     </group>
                     <newline/>
-                    <group expand="0" string="Extended Filters..." groups="base.group_extended">
-                       <field name="tracking_id" context="{'tracking': self}"/>                       
-                    </group>
-                    <newline/>
                     <group expand="0" string="Group By..." colspan="4" col="8" groups="base.group_extended">
                         <filter string="Supplier" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Product" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'product_id'}"/>
