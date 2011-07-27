@@ -262,7 +262,7 @@ class specify_partner_terminology(osv.osv_memory):
                                   ('Guest','Guest'),
                                   ('Tenant','Tenant')
                                   ],
-                                 'Choose how to call a customer', required=True ),
+                                 'Customer / Partner / Patient ?', required=True ),
     }
     _defaults={
                'partner' :'Partner',
