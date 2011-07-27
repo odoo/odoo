@@ -137,63 +137,116 @@ openerp.base.Registry = openerp.base.Class.extend( /** @lends openerp.base.Regis
 });
 
 /**
- * Generates an inherited class that replaces all the methods by null methods (methods
- * that does nothing and always return undefined).
- * 
- * @param {Class} claz
- * @param {dict} add Additional functions to override.
- * @return {Class}
+ * OpenERP session aware controller
+ * a controller takes an already existing dom element and manage it
  */
-openerp.base.generate_null_object_class = function(claz, add) {
-    var newer = {};
-    var copy_proto = function(prototype) {
-        for (var name in prototype) {
-            if(typeof prototype[name] == "function") {
-                newer[name] = function() {};
-            }
-        }
-        if (prototype.prototype)
-            copy_proto(prototype.prototype);
-    };
-    copy_proto(claz.prototype);
-    newer.init = openerp.base.BasicController.prototype.init;
-    var tmpclass = claz.extend(newer);
-    return tmpclass.extend(add || {});
-};
-
-openerp.base.Notification =  openerp.base.BasicController.extend({
+openerp.base.Controller = openerp.base.Controller.extend( /** @lends openerp.base.Controller# */{
     init: function(parent, element_id) {
         this._super(parent, element_id);
-        this.$element.notify({
-            speed: 500,
-            expires: 1500
-        });
+        if(this.controller_parent && this.controller_parent.session) {
+            this.session = this.controller_parent.session;
+        }
     },
-    notify: function(title, text) {
-        this.$element.notify('create', {
-            title: title,
-            text: text
-        });
+    /**
+     * Performs a JSON-RPC call
+     *
+     * @param {String} url endpoint url
+     * @param {Object} data RPC parameters
+     * @param {Function} success RPC call success callback
+     * @param {Function} error RPC call error callback
+     * @returns {jQuery.Deferred} deferred object for the RPC call
+     */
+    rpc: function(url, data, success, error) {
+        return this.session.rpc(url, data, success, error);
     },
-    warn: function(title, text) {
-        this.$element.notify('create', 'oe_notification_alert', {
-            title: title,
-            text: text
-        });
+    do_action: function(action, on_finished) {
+        return this.parent.do_action(action, on_finished);
     }
 });
 
-// Session should be a Class not Controller
-openerp.base.Session = openerp.base.BasicController.extend( /** @lends openerp.base.Session# */{
+/**
+ * OpenERP session aware widget
+ * A widget is a controller that doesnt take an element_id
+ * it render its own html render() that you should insert into the dom
+ * and bind it at start()
+ */
+openerp.base.BaseWidget = openerp.base.Controller.extend({
+    /**
+     * The name of the QWeb template that will be used for rendering. Must be
+     * redefined in subclasses or the render() method can not be used.
+     * 
+     * @type string
+     */
+    template: null,
+    /**
+     * The prefix used to generate an id automatically. Should be redefined in
+     * subclasses. If it is not defined, a default identifier will be used.
+     * 
+     * @type string
+     */
+    identifier_prefix: 'generic-identifier',
+    /**
+     * Base class for widgets. Handle rendering (based on a QWeb template),
+     * identifier generation, parenting and destruction of the widget.
+     * Also initialize the identifier.
+     *
+     * @constructs
+     * @params {openerp.base.search.BaseWidget} parent The parent widget.
+     */
+    init: function (parent) {
+        this._super(parent);
+        this.make_id(this.identifier_prefix);
+    },
+    /**
+     * Sets and returns a globally unique identifier for the widget.
+     *
+     * If a prefix is appended, the identifier will be appended to it.
+     *
+     * @params sections prefix sections, empty/falsy sections will be removed
+     */
+    make_id: function () {
+        this.element_id = _.uniqueId(_.toArray(arguments).join('_'));
+        return this.element_id;
+    },
+    /**
+     * Render the widget. This.template must be defined.
+     * The content of the current object is passed as context to the template.
+     * 
+     * @param {object} additional Additional context arguments to pass to the template.
+     */
+    render: function (additional) {
+        return QWeb.render(this.template, _.extend({}, this, additional != null ? additional : {}));
+    },
+    /**
+     * "Starts" the widgets. Called at the end of the rendering, this allows
+     * to get a jQuery object referring to the DOM ($element attribute).
+     */
+    start: function () {
+        this._super();
+        var tmp = document.getElementById(this.element_id);
+        this.$element = tmp ? $(tmp) : null;
+    },
+    /**
+     * "Stops" the widgets. Called when the view destroys itself, this
+     * lets the widgets clean up after themselves.
+     */
+    stop: function () {
+        if(this.$element != null) {
+            this.$element.remove();
+        }
+        this._super();
+    }
+});
+
+openerp.base.Session = openerp.base.Controller.extend( /** @lends openerp.base.Session# */{
     /**
      * @constructs
-     * @extends openerp.base.BasicController
      * @param element_id to use for exception reporting
      * @param server
      * @param port
      */
     init: function(parent, element_id, server, port) {
-        this._super(element_id);
+        this._super(parent, element_id);
         this.server = (server == undefined) ? location.hostname : server;
         this.port = (port == undefined) ? location.port : port;
         this.rpc_mode = (server == location.hostname) ? "ajax" : "jsonp";
@@ -372,7 +425,7 @@ openerp.base.Session = openerp.base.BasicController.extend( /** @lends openerp.b
         for(var i=0; i<cookies.length; ++i) {
             var cookie = cookies[i].replace(/^\s*/, '');
             if(cookie.indexOf(nameEQ) === 0) {
-                return decodeURIComponent(cookie.substring(nameEQ.length));
+                return JSON.parse(decodeURIComponent(cookie.substring(nameEQ.length)));
             }
         }
         return null;
@@ -388,7 +441,7 @@ openerp.base.Session = openerp.base.BasicController.extend( /** @lends openerp.b
     set_cookie: function (name, value, ttl) {
         ttl = ttl || 24*60*60*365;
         document.cookie = [
-            this.element_id + '|' + name + '=' + encodeURIComponent(value),
+            this.element_id + '|' + name + '=' + encodeURIComponent(JSON.stringify(value)),
             'max-age=' + ttl,
             'expires=' + new Date(new Date().getTime() + ttl*1000).toGMTString()
         ].join(';');
@@ -399,15 +452,20 @@ openerp.base.Session = openerp.base.BasicController.extend( /** @lends openerp.b
     load_modules: function() {
         var self = this;
         this.rpc('/base/session/modules', {}, function(result) {
-            self.module_list = result['modules'];
+            self.module_list = result;
             var modules = self.module_list.join(',');
-            self.rpc('/base/session/csslist', {mods: modules}, self.do_load_css);
-            self.rpc('/base/session/jslist', {"mods": modules}, self.debug ? self.do_load_modules_debug : self.do_load_modules_prod);
+            if(self.debug || true) {
+                self.rpc('/base/webclient/csslist', {"mods": modules}, self.do_load_css);
+                self.rpc('/base/webclient/jslist', {"mods": modules}, self.do_load_js);
+            } else {
+                self.do_load_css(["/base/webclient/css?mods="+modules]);
+                self.do_load_js(["/base/webclient/js?mods="+modules]);
+            }
             openerp._modules_loaded = true;
         });
     },
-    do_load_css: function (result) {
-        _.each(result.files, function (file) {
+    do_load_css: function (files) {
+        _.each(files, function (file) {
             $('head').append($('<link>', {
                 'href': file,
                 'rel': 'stylesheet',
@@ -415,16 +473,23 @@ openerp.base.Session = openerp.base.BasicController.extend( /** @lends openerp.b
             }));
         });
     },
-    do_load_modules_debug: function(result) {
-        $LAB.setOptions({AlwaysPreserveOrder: true})
-            .script(result.files)
-            .wait(this.on_modules_loaded);
-    },
-    do_load_modules_prod: function() {
-        // load merged ones
-        // /base/session/css?mod=mod1,mod2,mod3
-        // /base/session/js?mod=mod1,mod2,mod3
-        // use $.getScript(‘your_3rd_party-script.js’); ? i want to keep lineno !
+    do_load_js: function(files) {
+        var self = this;
+        if(files.length != 0) {
+            var file = files.shift();
+            var tag = document.createElement('script');
+            tag.type = 'text/javascript';
+            tag.src = file;
+            tag.onload = tag.onreadystatechange = function() {
+                if ( (tag.readyState && tag.readyState != "loaded" && tag.readyState != "complete") || tag.onload_done )
+                    return;
+                tag.onload_done = true;
+                self.do_load_js(files);
+            };
+            document.head.appendChild(tag);
+        } else {
+            this.on_modules_loaded();
+        }
     },
     on_modules_loaded: function() {
         for(var j=0; j<this.module_list.length; j++) {
@@ -441,108 +506,25 @@ openerp.base.Session = openerp.base.BasicController.extend( /** @lends openerp.b
     }
 });
 
-/**
- * OpenERP session aware controller
- * a controller takes an already existing dom element and manage it
- */
-openerp.base.Controller = openerp.base.BasicController.extend( /** @lends openerp.base.Controller# */{
-    /**
-     * @constructs
-     * @extends openerp.base.BasicController
-     */
+openerp.base.Notification =  openerp.base.Controller.extend({
     init: function(parent, element_id) {
         this._super(parent, element_id);
-        if(this.parent && this.parent.session) {
-            this.session = this.parent.session;
-        }
+        this.$element.notify({
+            speed: 500,
+            expires: 1500
+        });
     },
-    /**
-     * Performs a JSON-RPC call
-     *
-     * @param {String} url endpoint url
-     * @param {Object} data RPC parameters
-     * @param {Function} success RPC call success callback
-     * @param {Function} error RPC call error callback
-     * @returns {jQuery.Deferred} deferred object for the RPC call
-     */
-    rpc: function(url, data, success, error) {
-        return this.session.rpc(url, data, success, error);
+    notify: function(title, text) {
+        this.$element.notify('create', {
+            title: title,
+            text: text
+        });
     },
-    do_action: function(action, on_finished) {
-        return this.parent.do_action(action, on_finished);
-    }
-});
-
-/**
- * OpenERP session aware widget
- * A widget is a controller that doesnt take an element_id
- * it render its own html render() that you should insert into the dom
- * and bind it a start()
- */
-openerp.base.BaseWidget = openerp.base.Controller.extend({
-    /**
-     * The name of the QWeb template that will be used for rendering. Must be
-     * redefined in subclasses or the render() method can not be used.
-     * 
-     * @type string
-     */
-    template: null,
-    /**
-     * The prefix used to generate an id automatically. Should be redefined in
-     * subclasses. If it is not defined, a default identifier will be used.
-     * 
-     * @type string
-     */
-    identifier_prefix: 'generic-identifier',
-    /**
-     * Base class for widgets. Handle rendering (based on a QWeb template),
-     * identifier generation, parenting and destruction of the widget.
-     * Also initialize the identifier.
-     *
-     * @constructs
-     * @params {openerp.base.search.BaseWidget} parent The parent widget.
-     */
-    init: function (parent) {
-        this._super(parent);
-        this.make_id(this.identifier_prefix);
-    },
-    /**
-     * Sets and returns a globally unique identifier for the widget.
-     *
-     * If a prefix is appended, the identifier will be appended to it.
-     *
-     * @params sections prefix sections, empty/falsy sections will be removed
-     */
-    make_id: function () {
-        this.element_id = _.uniqueId(_.toArray(arguments).join('_'));
-        return this.element_id;
-    },
-    /**
-     * "Starts" the widgets. Called at the end of the rendering, this allows
-     * to get a jQuery object referring to the DOM ($element attribute).
-     */
-    start: function () {
-        this._super();
-        var tmp = document.getElementById(this.element_id);
-        this.$element = tmp ? $(tmp) : null;
-    },
-    /**
-     * "Stops" the widgets. Called when the view destroys itself, this
-     * lets the widgets clean up after themselves.
-     */
-    stop: function () {
-        if(this.$element != null) {
-            this.$element.remove();
-        }
-    },
-    /**
-     * Render the widget. This.template must be defined.
-     * The content of the current object is passed as context to the template.
-     * 
-     * @param {object} additional Additional context arguments to pass to the template.
-     */
-    render: function (additional) {
-        return QWeb.render(this.template, _.extend({}, this, additional != null ? additional : {}));
+    warn: function(title, text) {
+        this.$element.notify('create', 'oe_notification_alert', {
+            title: title,
+            text: text
+        });
     }
 });
 
@@ -550,6 +532,7 @@ openerp.base.Dialog = openerp.base.BaseWidget.extend({
     dialog_title: "",
     identifier_prefix: 'dialog',
     init: function (parent, options) {
+        var self = this;
         this._super(parent);
         this.options = {
             modal: true,
@@ -560,7 +543,10 @@ openerp.base.Dialog = openerp.base.BaseWidget.extend({
             min_height: 0,
             max_height: '100%',
             autoOpen: false,
-            buttons: {}
+            buttons: {},
+            close: function () {
+                self.stop();
+            }
         };
         for (var f in this) {
             if (f.substr(0, 10) == 'on_button_') {
@@ -623,11 +609,7 @@ openerp.base.Dialog = openerp.base.BaseWidget.extend({
         this.set_options(options);
         this.$dialog.dialog(this.options).dialog('open');
     },
-    close: function(options) {
-        this.$dialog.dialog('close');
-    },
     stop: function () {
-        this.close();
         this.$dialog.dialog('destroy');
     }
 });
@@ -1132,7 +1114,7 @@ openerp.base.WebClient = openerp.base.Controller.extend({
     init: function(element_id) {
         this._super(null, element_id);
 
-        QWeb.add_template("xml/base.xml");
+        QWeb.add_template("/base/static/src/xml/base.xml");
         var params = {};
         if(jQuery.param != undefined && jQuery.deparam(jQuery.param.querystring()).kitten != undefined) {
             this.$element.addClass("kitten-mode-activated");
@@ -1144,7 +1126,7 @@ openerp.base.WebClient = openerp.base.Controller.extend({
         this.crashmanager =  new openerp.base.CrashManager(this);
         this.crashmanager.start(false);
 
-        // Do you autorize this ?
+        // Do you autorize this ? will be replaced by notify() in controller
         openerp.base.Controller.prototype.notification = new openerp.base.Notification(this, "oe_notification");
 
         this.header = new openerp.base.Header(this, "oe_header");

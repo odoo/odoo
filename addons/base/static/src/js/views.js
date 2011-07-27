@@ -11,13 +11,25 @@ openerp.base.ActionManager = openerp.base.Controller.extend({
         this.viewmanager = null;
         this.current_dialog = null;
         // Temporary linking view_manager to session.
-        // Will use controller_parent to find it when implementation will be done.
+        // Will use parent to find it when implementation will be done.
         this.session.action_manager = this;
     },
     /**
      * Process an action
      * Supported actions: act_window
      */
+    action_window: function() {
+    },
+    action_window_close: function() {
+    },
+    action_server: function() {
+    },
+    action_url: function() {
+    },
+    action_report: function() {
+    },
+    action_client: function() {
+    },
     do_action: function(action, on_closed) {
         var self = this;
         action.flags = _.extend({
@@ -49,6 +61,9 @@ openerp.base.ActionManager = openerp.base.Controller.extend({
                         var url = window.location.protocol + "//" + window.location.host +
                                 window.location.pathname + "?" + jQuery.param({ s_action : "" + key });
                         window.open(url);
+                        if (on_closed) {
+                            on_closed();
+                        }
                     });
                 } else {
                     if (this.viewmanager) {
@@ -105,7 +120,6 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
             {return x instanceof Array? {view_id: x[0], view_type: x[1]} : x;});
         this.views = {};
         this.flags = this.flags || {};
-        this.sidebar = new openerp.base.NullSidebar();
         this.registry = openerp.base.views;
     },
     /**
@@ -119,7 +133,12 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
             self.on_mode_switch($(this).data('view-type'));
         });
         _.each(this.views_src, function(view) {
-            self.views[view.view_type] = $.extend({}, view, {controller: null});
+            self.views[view.view_type] = $.extend({}, view, {
+                controller : null,
+                options : _.extend({
+                    sidebar_id : self.element_id + '_sidebar_' + view.view_type
+                }, self.flags)
+            });
         });
         if (this.flags.views_switcher === false) {
             this.$element.find('.oe_vm_switch').hide();
@@ -143,7 +162,7 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
         if (!view.controller) {
             // Lazy loading of views
             var controllerclass = this.registry.get_object(view_type);
-            var controller = new controllerclass( this, this.element_id + "_view_" + view_type,
+            var controller = new controllerclass(this, this.element_id + '_view_' + view_type,
                 this.dataset, view.view_id, view.options);
             if (view.embedded_view) {
                 controller.set_embedded_view(view.embedded_view);
@@ -255,13 +274,15 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
 });
 
 openerp.base.NullViewManager = openerp.base.generate_null_object_class(openerp.base.ViewManager, {
-    init: function() {
-        this._super();
+    init: function(parent) {
+        this._super(parent);
+        if(parent)
+            this.session = parent.session;
         this.action = {flags: {}};
-        this.sidebar = new openerp.base.NullSidebar();
     }
 });
 
+// TODO Will move to action Manager
 openerp.base.ViewManagerAction = openerp.base.ViewManager.extend({
     init: function(parent, element_id, action) {
         this.session = parent.session;
@@ -282,18 +303,9 @@ openerp.base.ViewManagerAction = openerp.base.ViewManager.extend({
             // Not elegant but allows to avoid flickering of SearchView#do_hide
             this.flags.search_view = this.flags.pager = this.flags.sidebar = this.flags.action_buttons = false;
         }
-        if (this.flags.sidebar) {
-            this.sidebar = new openerp.base.Sidebar(null, this);
-        }
     },
     start: function() {
         var inital_view_loaded = this._super();
-
-        // init sidebar
-        if (this.flags.sidebar) {
-            this.$element.find('.view-manager-main-sidebar').html(this.sidebar.render());
-            this.sidebar.start();
-        }
 
         var search_defaults = {};
         _.each(this.action.context, function (value, key) {
@@ -319,7 +331,6 @@ openerp.base.ViewManagerAction = openerp.base.ViewManager.extend({
     },
     stop: function() {
         // should be replaced by automatic destruction implemented in BaseWidget
-        this.sidebar.stop();
         this._super();
     },
     /**
@@ -346,61 +357,87 @@ openerp.base.ViewManagerAction = openerp.base.ViewManager.extend({
     }
 });
 
-openerp.base.Sidebar = openerp.base.BaseWidget.extend({
-    template: "ViewManager.sidebar",
-    init: function(parent, view_manager) {
-        this._super(parent, view_manager.session);
-        this.view_manager = view_manager;
-        this.sections = [];
-    },
-    set_toolbar: function(toolbar) {
-        this.sections = [];
-        var self = this;
-        _.each([["print", "Reports"], ["action", "Actions"], ["relate", "Links"]], function(type) {
-            if (toolbar[type[0]].length == 0)
-                return;
-            var section = {elements:toolbar[type[0]], label:type[1]};
-            self.sections.push(section);
-        });
-        this.do_refresh(true);
-    },
-    do_refresh: function(new_view) {
-        var view = this.view_manager.active_view;
-        var the_condition = this.sections.length > 0 && _.detect(this.sections,
-            function(x) {return x.elements.length > 0;}) != undefined
-            && (!new_view || view != 'list');
-
-        this.$element.toggleClass('open-sidebar', the_condition)
-                     .toggleClass('closed-sidebar', !the_condition);
-
-        this.$element.html(QWeb.render("ViewManager.sidebar.internal", { sidebar: this, view: view }));
-
-        var self = this;
-        this.$element.find(".toggle-sidebar").click(function(e) {
-            self.$element.toggleClass('open-sidebar closed-sidebar');
-            e.stopPropagation();
-            e.preventDefault();
-        });
-
-        this.$element.find("a.oe_sidebar_action_a").click(function(e) {
-            var $this = jQuery(this);
-            var index = $this.attr("data-index").split('-');
-            var action = self.sections[index[0]].elements[index[1]];
-            action.flags = {
-                new_window : true
-            };
-            self.session.action_manager.do_action(action);
-            e.stopPropagation();
-            e.preventDefault();
-        });
+openerp.base.Sidebar = openerp.base.Controller.extend({
+    init: function(parent, element_id) {
+        this._super(parent, element_id);
+        this.items = {};
     },
     start: function() {
-        this._super();
-        this.do_refresh(false);
+        var self = this;
+        this._super(this, arguments);
+        this.$element.html(QWeb.render('Sidebar'));
+        this.$element.find(".toggle-sidebar").click(function(e) {
+            self.do_toggle();
+        });
+    },
+    add_toolbar: function(toolbar) {
+        var self = this;
+        _.each([['print', "Reports"], ['action', "Actions"], ['relate', "Links"]], function(type) {
+            var items = toolbar[type[0]];
+            if (items.length) {
+                for (var i = 0; i < items.length; i++) {
+                    items[i] = {
+                        label: items[i]['name'],
+                        action: items[i],
+                        classname: 'oe_sidebar_' + type[0]
+                    }
+                }
+                self.add_section(type[1], items);
+            }
+        });
+    },
+    add_section: function(name, items) {
+        // For each section, we pass a name/label and optionally an array of items.
+        // If no items are passed, then the section will be created as a custom section
+        // returning back an element_id to be used by a custom controller.
+        // Else, the section is a standard section with items displayed as links.
+        // An item is a dictonary : {
+        //    label: label to be displayed for the link,
+        //    action: action to be launch when the link is clicked,
+        //    callback: a function to be executed when the link is clicked,
+        //    classname: optionnal dom class name for the line,
+        // }
+        // Note: The item should have one action or/and a callback
+        var self = this,
+            section_id = _.uniqueId(this.element_id + '_section_');
+        if (items) {
+            for (var i = 0; i < items.length; i++) {
+                items[i].element_id = _.uniqueId(section_id + '_item_');
+                this.items[items[i].element_id] = items[i];
+            }
+        }
+        var $section = $(QWeb.render("Sidebar.section", {
+            section_id: section_id,
+            name: name,
+            items: items
+        }));
+        if (items) {
+            $section.find('a.oe_sidebar_action_a').click(function() {
+                var item = self.items[$(this).attr('id')];
+                if (item.callback) {
+                    item.callback();
+                }
+                if (item.action) {
+                    item.action.flags = item.action.flags || {};
+                    item.action.flags.new_window = true;
+                    self.do_action(item.action);
+                }
+                return false;
+            });
+        }
+        $section.appendTo(this.$element.find('div.sidebar-actions'));
+        return section_id;
+    },
+    do_fold: function() {
+        this.$element.addClass('closed-sidebar').removeClass('open-sidebar');
+    },
+    do_unfold: function() {
+        this.$element.addClass('open-sidebar').removeClass('closed-sidebar');
+    },
+    do_toggle: function() {
+        this.$element.toggleClass('open-sidebar closed-sidebar');
     }
 });
-
-openerp.base.NullSidebar = openerp.base.generate_null_object_class(openerp.base.Sidebar);
 
 openerp.base.Export = openerp.base.Dialog.extend({
     dialog_title: "Export",
@@ -422,6 +459,14 @@ openerp.base.Export = openerp.base.Dialog.extend({
 });
 
 openerp.base.View = openerp.base.Controller.extend({
+    set_default_options: function(options) {
+        this.options = options || {};
+        _.defaults(this.options, {
+            // All possible views options should be defaulted here
+            sidebar_id: null,
+            sidebar: true
+        });
+    },
     /**
      * Fetches and executes the action identified by ``action_data``.
      *

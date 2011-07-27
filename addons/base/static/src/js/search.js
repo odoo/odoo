@@ -110,9 +110,10 @@ openerp.base.SearchView = openerp.base.Controller.extend({
         }
     },
     on_loaded: function(data) {
-        var lines = this.make_widgets(
-            data.fields_view['arch'].children,
-            data.fields_view.fields);
+        var self = this,
+           lines = this.make_widgets(
+                data.fields_view['arch'].children,
+                data.fields_view.fields);
 
         // for extended search view
         var ext = new openerp.base.search.ExtendedSearch(this, this.model);
@@ -140,31 +141,86 @@ openerp.base.SearchView = openerp.base.Controller.extend({
             return widget.start();
         }).value();
         
-        // filters management
-        this.$element.find(".oe_search-view-filters-management").change(this.on_filters_management);
-
-        var self = this;
         $.when.apply(null, widget_starts).then(function () {
             self.ready.resolve();
+        });
+        
+        this.reload_managed_filters();
+    },
+    reload_managed_filters: function() {
+        var self = this;
+        return this.rpc('/base/searchview/get_filters', {
+            model: this.dataset.model
+        }).then(function(result) {
+            self.managed_filters = result;
+            var filters = self.$element.find(".oe_search-view-filters-management");
+            filters.html(QWeb.render("SearchView.managed-filters", {filters: result}));
+            filters.change(self.on_filters_management);
         });
     },
     /**
      * Handle event when the user make a selection in the filters management select box.
      */
     on_filters_management: function(e) {
-        var select = this.$element.find(".oe_search-view-filters-management"),
-               val = select.val();
-        select.val("_filters");
+        var self = this;
+        var select = this.$element.find(".oe_search-view-filters-management");
+        var val = select.val();
         
-        if (val.slice(0,1) == "_") // useless action
+        if (val.slice(0,1) == "_") { // useless action
+            select.val("_filters");
             return;
+        }
         if (val.slice(0, "get:".length) == "get:") {
             val = val.slice("get:".length);
-            //TODO niv
+            val = parseInt(val);
+            var filter = this.managed_filters[val];
+            this.on_search([filter.domain], [filter.context], []);
         } else if (val == "save_filter") {
-            //TODO niv
+            select.val("_filters");
+            var data = this.build_search_data();
+            var context = new openerp.base.CompoundContext();
+            _.each(data.contexts, function(x) {
+                context.add(x);
+            });
+            var domain = new openerp.base.CompoundDomain();
+            _.each(data.domains, function(x) {
+                domain.add(x);
+            });
+            var dial_html = QWeb.render("SearchView.managed-filters.add");
+            var $dial = $(dial_html);
+            $dial.dialog({
+                modal: true,
+                title: "Filter Entry",
+                buttons: {
+                    Cancel: function() {
+                        $(this).dialog("close");
+                    },
+                    OK: function() {
+                        $(this).dialog("close");
+                        var name = $(this).find("input").val();
+                        self.rpc('/base/searchview/save_filter', {
+                            model: self.dataset.model,
+                            context_to_save: context,
+                            domain: domain,
+                            name: name
+                        }).then(function(result) {
+                            self.reload_managed_filters();
+                        });
+                    },
+                }
+            });
         } else { // manage_filters
-            //TODO niv
+            select.val("_filters");
+            this.do_action({
+                res_model: 'ir.filters',
+                views: [[false, 'list'], [false, 'form']],
+                type: 'ir.actions.act_window',
+                context: {"search_default_user_id": this.session.uid,
+                "search_default_model_id": this.dataset.model},
+                target: "current",
+                limit : 80,
+                auto_search : true
+            });
         }
     },
     /**
@@ -179,8 +235,22 @@ openerp.base.SearchView = openerp.base.Controller.extend({
      * @param e jQuery event object coming from the "Search" button
      */
     do_search: function (e) {
+        // reset filters management
+        var select = this.$element.find(".oe_search-view-filters-management");
+        select.val("_filters");
+        
         if (e && e.preventDefault) { e.preventDefault(); }
 
+        var data = this.build_search_data();
+
+        if (data.errors.length) {
+            this.on_invalid(data.errors);
+            return;
+        }
+
+        this.on_search(data.domains, data.contexts, data.groupbys);
+    },
+    build_search_data: function() {
         var domains = [],
            contexts = [],
              errors = [];
@@ -205,19 +275,13 @@ openerp.base.SearchView = openerp.base.Controller.extend({
             }
         });
 
-        if (errors.length) {
-            this.on_invalid(errors);
-            return;
-        }
-
         // TODO: do we need to handle *fields* with group_by in their context?
         var groupbys = _(this.enabled_filters)
                 .chain()
                 .map(function (filter) { return filter.get_context();})
                 .compact()
                 .value();
-
-        this.on_search(domains, contexts, groupbys);
+        return {domains: domains, contexts: contexts, errors: errors, groupbys: groupbys};
     },
     /**
      * Triggered after the SearchView has collected all relevant domains and
@@ -593,32 +657,40 @@ openerp.base.search.BooleanField = openerp.base.search.Field.extend({
         }
     }
 });
-openerp.base.search.IntegerField = openerp.base.search.Field.extend({
+openerp.base.search.NumberField = openerp.base.search.Field.extend(/** @lends openerp.base.search.NumberField# */{
     get_value: function () {
         if (!this.$element.val()) {
             return null;
         }
-        var val = parseInt(this.$element.val());
-        var check = Number(this.$element.val());
-        if (isNaN(check) || val !== check) {
+        var val = this.parse(this.$element.val()),
+          check = Number(this.$element.val());
+        if (isNaN(val) || val !== check) {
             this.$element.addClass('error');
             throw new openerp.base.search.Invalid(
-                this.attrs.name, this.$element.val(), "not a valid integer");
+                this.attrs.name, this.$element.val(), this.error_message);
         }
         this.$element.removeClass('error');
         return val;
     }
 });
-openerp.base.search.FloatField = openerp.base.search.Field.extend({
-    get_value: function () {
-        var val = Number(this.$element.val());
-        if (isNaN(val)) {
-            this.$element.addClass('error');
-            throw new openerp.base.search.Invalid(
-                this.attrs.name, this.$element.val(), "not a valid number");
-        }
-        this.$element.removeClass('error');
-        return val;
+/**
+ * @class
+ * @extends openerp.base.search.NumberField
+ */
+openerp.base.search.IntegerField = openerp.base.search.NumberField.extend(/** @lends openerp.base.search.IntegerField# */{
+    error_message: "not a valid integer",
+    parse: function (value) {
+        return parseInt(value, 10);
+    }
+});
+/**
+ * @class
+ * @extends openerp.base.search.NumberField
+ */
+openerp.base.search.FloatField = openerp.base.search.NumberField.extend(/** @lends openerp.base.search.FloatField# */{
+    error_message: "not a valid number",
+    parse: function (value) {
+        return parseFloat(value);
     }
 });
 openerp.base.search.SelectionField = openerp.base.search.Field.extend({
@@ -839,7 +911,9 @@ openerp.base.search.ExtendedSearch = openerp.base.BaseWidget.extend({
     },
     check_last_element: function() {
         _.each(this.children, function(x) {x.set_last_group(false);});
-        this.children[this.children.length - 1].set_last_group(true);
+        if (this.children.length >= 1) {
+            this.children[this.children.length - 1].set_last_group(true);
+        }
     }
 });
 

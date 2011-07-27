@@ -246,7 +246,7 @@
                         <td><label for="db">Database:</label></td>
                         <td>
                             <t t-if="!db_list">
-                                <input type="text" name="db" value="trunk" autofocus="true"/>
+                                <input type="text" name="db" t-att-value="selected_db || ''" autofocus="true"/>
                             </t>
                             <t t-if="db_list">
                                 <select name="db">
@@ -328,8 +328,8 @@
         <div class="company_logo" />
     </a>
     <h1 class="header_title" t-if="session.session_is_valid()">
-        <span class="company">$company</span> - (<span class="database">$database</span>)<br/>
-        <small class="username">$username session_id: <t t-esc="session.session_id"/></small>
+        <span class="database"><t t-esc="session.db"/></span> - <t t-esc="session.login"/> <br/>
+        <small class="username">rpc_session_id: <t t-esc="session.session_id"/></small>
     </h1>
     <div class="header_corner">
         <ul class="block" t-if="session.session_is_valid()">
@@ -417,9 +417,31 @@
             </t>
         </td>
         <td class="view-manager-main-sidebar" height="100%">
+            <t t-foreach="views" t-as="view">
+                <div t-attf-id="#{prefix}_sidebar_#{view.view_type}" class="sidebar-main-div closed-sidebar" style="display: none"/>
+            </t>
         </td>
     </tr>
     </table>
+</t>
+<t t-name="Sidebar">
+    <a class="toggle-sidebar"></a>
+    <div class="sidebar-content">
+        <div class="sidebar-actions">
+        </div>
+    </div>
+</t>
+<t t-name="Sidebar.section">
+    <h2><t t-esc="name"/></h2>
+    <div t-att-id="section_id">
+        <ul t-if="items">
+            <li t-foreach="items" t-as="item" t-att-class="item.classname">
+                <a class="oe_sidebar_action_a" t-att-id="item.element_id" href="#">
+                    <t t-esc="item.label"/>
+                </a>
+            </li>
+        </ul>
+    </div>
 </t>
 <table t-name="ListView" class="oe-listview-content">
     <t t-set="columns_count" t-value="visible_columns.length + (options.selectable ? 1 : 0) + (options.deletable ? 1 : 0)"/>
@@ -478,7 +500,7 @@
         <tr>
             <td t-if="options.selectable"/>
             <td t-foreach="aggregate_columns" t-as="column" class="oe-list-footer oe-number"
-                t-att-data-field="column.field" t-att-title="column.label">
+                t-att-data-field="column.id" t-att-title="column.label">
             </td>
             <td t-if="options.deletable"/>
         </tr>
@@ -545,21 +567,20 @@
     <t t-raw="frame.render()"/>
 </t>
 <t t-name="FormView.sidebar.attachments">
-    <h2>Attachments</h2>
     <div class="oe-sidebar-attachments-toolbar">
         <div class="oe-binary-file-set" style="float: right">
             <form class="oe-binary-form" t-attf-target="#{element_id}_iframe"
                 method="post" enctype="multipart/form-data" action="/base/binary/upload_attachment">
                 <input type="hidden" name="session_id" t-att-value="session.session_id"/>
                 <input type="hidden" name="callback" t-attf-value="#{element_id}_iframe"/>
-                <input type="hidden" name="model" t-att-value="dataset.model"/>
-                <input type="hidden" name="id" t-att-value="datarecord.id"/>
+                <input type="hidden" name="model" t-att-value="view.dataset.model"/>
+                <input type="hidden" name="id" t-att-value="view.datarecord.id"/>
                 <button class="button" type="button">
                     <img src="/base/static/src/img/throbber.gif" width="16" height="16" style="display: none"/>
                     <span>Add</span>
                 </button>
                 <input type="file" class="oe-binary-file" name="ufile" title="Add attachment"
-                    t-att-onclick="datarecord.id ? null : 'alert(\'No record selected ! You can only attach to existing record.\'); return false;'"/>
+                    t-att-onclick="view.datarecord.id ? null : 'alert(\'No record selected ! You can only attach to existing record.\'); return false;'"/>
             </form>
             <iframe t-attf-id="#{element_id}_iframe" t-attf-name="#{element_id}_iframe" style="display: none"> </iframe>
         </div>
@@ -569,7 +590,7 @@
         <li t-foreach="attachments" t-as="attachment">
             <t t-if="attachment.type == 'binary'" t-set="attachment.url" t-value="'/base/binary/saveas?session_id='
                 + session.session_id + '&amp;model=ir.attachment&amp;id=' + attachment.id
-                + '&amp;field=datas' + '&amp;fieldname=name' + '&amp;t=' + (new Date().getTime())"/>
+                + '&amp;field=datas&amp;fieldname=name&amp;t=' + (new Date().getTime())"/>
             <a class="oe-sidebar-attachments-link" t-att-href="attachment.url" target="_blank">
                 <t t-esc="attachment.name"/>
             </a>
@@ -706,7 +727,7 @@
             <img src="/base/static/src/img/icons/gtk-index.png"/></span>
         <div t-att-id="widget.cm_id" class="contextMenu" style="display:none"><ul>
             <li t-att-id="widget.cm_id + '_open'" style="color:grey">Open...</li>
-            <li t-att-id="widget.cm_id + '_create'">Create and Edit...</li>
+            <li t-att-id="widget.cm_id + '_create'">Create...</li>
             <li t-att-id="widget.cm_id + '_search'">Search...</li>
         </ul></div>
     </div>
@@ -849,13 +870,27 @@
             <input type="reset" value="Clear"/>
             <button class="oe_search-view-custom-filter-btn"><span>Advanced Filter</span></button>
             <select class="oe_search-view-filters-management">
-                <option value="_filters">-- Filters --</option>
-                <option value="_actions">-- Actions --</option>
-                <option value="save_filter">Save Filter</option>
-                <option value="manage_filters">Manage Filters</option>
             </select>
         </div>
     </form>
+</t>
+<t t-name="SearchView.managed-filters">
+    <option value="_filters">-- Filters --</option>
+    <t t-set="i" t-value="0"/>
+    <t t-foreach="filters" t-as="filter">
+        <option t-att-value="'get:' + i"><t t-esc="filter.name"/></option>
+        <t t-set="i" t-value="i+1"/>
+    </t>
+    <option value="_actions">-- Actions --</option>
+    <option value="save_filter">Save Filter</option>
+    <option value="manage_filters">Manage Filters</option>
+</t>
+<t t-name="SearchView.managed-filters.add">
+    <div>
+        <p>Filter Name:</p>
+        <input type="text"/>
+        <p>(Any existing filter with the same name will be replaced)</p>
+    </div>
 </t>
 <t t-name="SearchView.render_lines">
     <table class="oe-searchview-render-line" border="0" cellspacing="0" cellpadding="0"
@@ -1019,29 +1054,6 @@
         <option t-att-value="element[0]"><t t-esc="element[1]"/></option>
         </t>
     </select>
-</t>
-<t t-name="ViewManager.sidebar">
-    <div t-att-id="element_id" class="sidebar-main-div closed-sidebar">
-
-    </div>
-</t>
-<t t-name="ViewManager.sidebar.internal">
-    <a class="toggle-sidebar"></a>
-    <div class="sidebar-content">
-        <div class="sidebar-attachments" t-if="view == 'form'"> </div>
-        <div class="sidebar-actions">
-            <t t-foreach="sidebar.sections" t-as="section" t-if="section.elements.length">
-                <h2><t t-esc="section.label"/></h2>
-                <ul>
-                    <li t-foreach="section.elements" t-as="element">
-                        <a class="oe_sidebar_action_a" t-attf-data-index="#{section_index}-#{element_index}" href="#">
-                            <t t-esc="element.name"/>
-                        </a>
-                    </li>
-                </ul>
-            </t>
-        </div>
-    </div>
 </t>
 <t t-name="DialogWarning">
     <table cellspacing="0" cellpadding="0" border="0" class="oe-dialog-warning">
