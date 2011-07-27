@@ -225,17 +225,6 @@ class res_partner_job(osv.osv):
 
         return {'value': {'address_id': address_id}, 'domain': {'address_id': domain}}
 
-    def onchange_partner(self, cr, uid, _, partner_id, context=None):
-        """
-            @param self: The object pointer
-            @param cr: the current row, from the database cursor,
-            @param uid: the current user,
-            @param _: List of IDs,
-            @partner_id : ID of the Partner selected,
-            @param context: A standard dictionary for contextual values
-        """
-        return {'value': {'address_id': False}}
-
     def onchange_address(self, cr, uid, _, name, address_id, context=None):
         """
             @@param self: The object pointer

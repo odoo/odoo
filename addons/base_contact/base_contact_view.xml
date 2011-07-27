@@ -72,8 +72,8 @@
                             <tree string="Functions and Addresses">
                                 <field name="sequence_contact" string="Seq."/>
                                 <field name="function"/>
-                                <field name="name" on_change="onchange_partner(name)"/> 
-								<field name="address_id" attrs="{'required': [('name', '!=', False)]}" on_change="onchange_address(name, address_id)"/>
+                                <field name="name"/>
+								<field name="address_id" attrs="{'required': [('name', '!=', False)]}" />
                                 <field name="phone"/>
                                 <field name="fax"/>
                                 <field name="extension"/>
@@ -373,7 +373,7 @@
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Contact Functions">
-	             <field name="name" select="1" on_change="onchange_partner(name)"/>
+	             <field name="name" select="1" on_change="onchange_name(name,address_id)"/>
 	             <field name="address_id" select="1" attrs="{'required': [('name', '!=', False)]}" on_change="onchange_address(name, address_id)"/>
 	             <field name="contact_id" select="1"/>
 	             <field name="function" select="1"/>
