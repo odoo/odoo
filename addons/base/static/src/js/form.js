@@ -1289,7 +1289,6 @@ openerp.base.form.dialog = function(content, options) {
     options.autoOpen = true;
     var dialog = new openerp.base.Dialog(null, options);
     dialog.$dialog = $(content).dialog(dialog.options);
-    console.log(dialog.options)
     return dialog.$dialog;
 }
 
