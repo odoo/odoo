@@ -212,11 +212,24 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
                 }
             }
         }
+        if(this.flags && this.flags.sidebar) {
+            if(this.$element.find('#importview')){
+                this.$element.find('#importview').remove()
+            }
+            if(this.active_view == 'list' || this.active_view == 'form') {
+                this.views[this.active_view].controller.$element.after(QWeb.render('ImportView'))
+                this.$element.find('#importview').click(function(ev) {
+                    var import_view = new openerp.base.Import(self, self.dataset, self.views);
+                    import_view.start(false);
+                    ev.preventDefault();
+                });
+            }
+        }
         return view_promise;
     },
     /**
      * Event launched when a controller has been inited.
-     * 
+     *
      * @param {String} view_type type of view
      * @param {String} view the inited controller
      */
@@ -522,7 +535,7 @@ openerp.base.View = openerp.base.Controller.extend({
      * Directly set a view to use instead of calling fields_view_get. This method must
      * be called before start(). When an embedded view is set, underlying implementations
      * of openerp.base.View must use the provided view instead of any other one.
-     * 
+     *
      * @param embedded_view A view.
      */
     set_embedded_view: function(embedded_view) {

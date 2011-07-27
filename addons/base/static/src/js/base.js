@@ -87,6 +87,9 @@ openerp.base = function(instance) {
     if (openerp.base.view_tree) {
         openerp.base.view_tree(instance);
     }
+    if (openerp.base.import){
+        openerp.base.import(instance);
+    }
 };
 
 // vim:et fdc=0 fdl=0 foldnestmax=3 fdm=syntax:

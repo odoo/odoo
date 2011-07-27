@@ -10,7 +10,7 @@ import openerpweb.ast
 import openerpweb.nonliterals
 
 import cherrypy
-
+import csv
 # Should move to openerpweb.Xml2Json
 class Xml2Json:
     # xml2json-direct
@@ -119,8 +119,8 @@ class WebClient(openerpweb.Controller):
             %s
             <script type="text/javascript">
             $(function() {
-                QWeb = new QWeb2.Engine(); 
-                openerp.init().base.webclient("oe"); 
+                QWeb = new QWeb2.Engine();
+                openerp.init().base.webclient("oe");
             });
             </script>
             <link rel="shortcut icon" href="/base/static/src/img/favicon.ico" type="image/x-icon"/>
@@ -222,7 +222,7 @@ class Session(openerpweb.Controller):
         context, domain = eval_context_and_domain(req.session,
                                                   openerpweb.nonliterals.CompoundContext(*(contexts or [])),
                                                   openerpweb.nonliterals.CompoundDomain(*(domains or [])))
-        
+
         group_by_sequence = []
         for candidate in (group_by_seq or []):
             ctx = req.session.eval_context(candidate, context)
@@ -233,7 +233,7 @@ class Session(openerpweb.Controller):
                 group_by_sequence.append(group_by)
             else:
                 group_by_sequence.extend(group_by)
-        
+
         return {
             'context': context,
             'domain': domain,
@@ -246,7 +246,7 @@ class Session(openerpweb.Controller):
         This method store an action object in the session object and returns an integer
         identifying that action. The method get_session_action() can be used to get
         back the action.
-        
+
         :param the_action: The action to save in the session.
         :type the_action: anything
         :return: A key identifying the saved action.
@@ -269,7 +269,7 @@ class Session(openerpweb.Controller):
         """
         Gets back a previously saved action. This method can return None if the action
         was saved since too much time (this case should be handled in a smart way).
-        
+
         :param key: The key given by save_session_action()
         :type key: integer
         :return: The saved action or None.
@@ -404,7 +404,7 @@ class Menu(openerpweb.Controller):
         menu_items = Menus.read(menu_ids, ['name', 'sequence', 'parent_id'], context)
         menu_root = {'id': False, 'name': 'root', 'parent_id': [-1, '']}
         menu_items.append(menu_root)
-        
+
         # make a tree using parent_id
         menu_items_map = dict((menu_item["id"], menu_item) for menu_item in menu_items)
         for menu_item in menu_items:
@@ -511,7 +511,7 @@ class DataSet(openerpweb.Controller):
         record_map = dict((record['id'], record) for record in records)
 
         return [record_map[id] for id in ids if record_map.get(id)]
-    
+
     @openerpweb.jsonrequest
     def load(self, req, model, id, fields):
         m = req.session.model(model)
@@ -674,7 +674,7 @@ class View(openerpweb.Controller):
         except ValueError:
             # not a literal
             return openerpweb.nonliterals.Domain(session, domain)
-        
+
     def parse_context(self, context, session):
         """ Parses an arbitrary string containing a context, transforms it
         to either a literal context or a :class:`openerpweb.nonliterals.Context`
@@ -764,7 +764,7 @@ class SearchView(View):
             if field.get('context'):
                 field["context"] = self.parse_domain(field["context"], req.session)
         return {'fields': fields}
-    
+
     @openerpweb.jsonrequest
     def get_filters(self, req, model):
         Model = req.session.model("ir.filters")
@@ -773,7 +773,7 @@ class SearchView(View):
             filter["context"] = req.session.eval_context(self.parse_context(filter["context"], req.session))
             filter["domain"] = req.session.eval_domain(self.parse_domain(filter["domain"], req.session))
         return filters
-    
+
     @openerpweb.jsonrequest
     def save_filter(self, req, model, name, context_to_save, domain):
         Model = req.session.model("ir.filters")
@@ -903,4 +903,64 @@ class Action(openerpweb.Controller):
         return clean_action(req.session.model('ir.actions.server').run(
             [action_id], req.session.eval_context(req.context)), req.session)
 
-#
+class Import(View):
+    _cp_path = "/base/import"
+
+    @openerpweb.httprequest
+    def import_data(self, req, session_id, callback, model, id, csvfile, csvsep, csvdel, csvcode, csvskip, fields=[]):
+        import StringIO
+        context = req.session.eval_context(req.context)
+        modle_obj = req.session.model(model)
+
+        res = None
+        content = csvfile.file.read()
+        print "\n content++++++++++++++++++++++++++++",content
+        input=StringIO.StringIO(content)
+        limit = 0
+        data = []
+
+        if not (csvdel and len(csvdel) == 1):
+            return "The CSV delimiter must be a single character"
+
+        try:
+            for j, line in enumerate(csv.reader(input, quotechar=str(csvdel), delimiter=str(csvsep))):
+                # If the line contains no data, we should skip it.
+                if not line:
+                    continue
+                if j == limit:
+                    fields = line
+                else:
+                    data.append(line)
+        except:
+            return "CSV Error"
+
+        datas = []
+        ctx = context
+
+        if not isinstance(fields, list):
+            fields = [fields]
+
+        for line in data:
+            try:
+                datas.append(map(lambda x:x.decode(csvcode).encode('utf-8'), line))
+            except:
+                datas.append(map(lambda x:x.decode('latin').encode('utf-8'), line))
+
+        # If the file contains nothing,
+        if not datas:
+            return "The file is empty."
+
+        #Inverting the header into column names
+        try:
+            res = modle_obj.import_data(fields, datas, 'init', '', False, ctx)
+        except:
+            return "Error in Importing Data."
+
+        if res[0]>=0:
+            return "Successfully Imported %d objects." % (res[0],)
+
+        d = ''
+        for key,val in res[1].items():
+            d+= ('%s: %s' % (key,val))
+
+        return "Error trying to import this record :%s. ErrorMessage:%s %s" % (d,res[2],res[3])

@@ -103,7 +103,7 @@
     <div class="oe_login_right_pane">
         <p>We think that daily job activities can be more intuitive, efficient, automated, .. and even fun.</p>
         <h3>OpenERP's vision to be:</h3>
-        
+
         <table cellpadding="0" cellspacing="0" width="100%" style="border:none;">
             <tbody>
             <tr>
@@ -135,7 +135,7 @@
             </tr>
             </tbody>
         </table>
-        
+
     </div>
 </t>
 <t t-name="Header">
@@ -333,7 +333,7 @@
     t-att-data-index="row_index">
     <t t-foreach="columns" t-as="column">
         <td t-if="column.meta">
-            
+
         </td>
     </t>
     <th t-if="options.selectable" class="oe-record-selector" width="1">
@@ -821,7 +821,7 @@
             <option value="all">All the following conditions must match</option>
             <option value="none">None of the following conditions must match</option>
         </select>
-        <a class="searchview_extended_delete_group" 
+        <a class="searchview_extended_delete_group"
                 href="javascript:void(0)"><span></span></a>
         <div class="searchview_extended_propositions_list">
         </div>
@@ -943,5 +943,88 @@
                     'class': 'oe-edit-row-cancel', 'type': 'button'}).text('Cancel')))
             .unwrap();
     </t>
+</t>
+<t t-name="ImportView">
+    <a id="importview" href="javascript: void(0)" style="text-decoration: none;color: #3D3D3D;">Import</a>
+</t>
+<t t-name="ImportDataView">
+<form name="import_data" id="import_data" action="/base/import/import_data" method="post" enctype="multipart/form-data">
+    <input type="hidden" name="session_id" t-att-value="session.session_id"/>
+    <input type="hidden" name="callback" t-attf-value="#{element_id}_iframe"/>
+    <input type="hidden" name="model" t-att-value="dataset.model"/>
+    <input type="hidden" name="id" t-att-value="dataset.id"/>
+     <table cellspacing="5" border="0" width="100%">
+        <tr>
+            <td>
+                <table width="100%">
+                    <tr>
+                        <td width="100%" valign="middle" colspan="4">
+                            <h2>1. Import a .CSV file</h2>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Select a .CSV file to import. If you need a sample of file to import,
+                            you should use the export tool with the "Import Compatible" option.
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <table align="center">
+                    <tr>
+                        <td><label>CSV File:</label></td>
+                        <td>
+                            <input type="file" id="csvfile" size="50" name="csvfile"/>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td height="10px">
+            </td>
+        </tr>
+        <tr>
+            <td width="100%">
+                <div id="record">
+                    <table width="100%">
+                        <tr>
+                            <td width="100%" valign="middle">
+                                <h2>2. Check your file format</h2>
+                            </td>
+                        </tr>
+                    </table>
+                    <table id="records_data" width="100%" style="margin: 5px 0;">
+                    </table>
+                    <fieldset>
+                        <legend style="cursor:pointer;">CSV Options</legend>
+                        <table style="display:block">
+                            <tr>
+                               <td class="label"><label for="csv_separator">Separator:</label></td>
+                                <td><input type="text" name="csvsep" id="csv_separator" value=","/></td>
+                                <td class="label"><label for="csv_delimiter">Delimiter:</label></td>
+                                <td><input type="text" name="csvdel" id="csv_delimiter" value='"'/></td>
+                            </tr>
+                            <tr>
+                                <td><label for="csv_encoding">Encoding:</label></td>
+                                <td>
+                                    <select name="csvcode" id="csv_encoding">
+                                        <option value="utf-8">UTF-8</option>
+                                        <option value="latin1">Latin 1</option>
+                                    </select>
+                                </td>
+                                <td><label>Lines to skip:</label></td>
+                                <td><input type="text" name="csvskip" id="csv_skip" value="1"/></td>
+                            </tr>
+                        </table>
+                    </fieldset>
+                </div>
+            </td>
+        </tr>
+    </table>
+</form>
 </t>
 </templates>
