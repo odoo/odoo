@@ -1475,7 +1475,7 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
                 }, self.build_domain(),
                 new openerp.base.CompoundContext(self.build_context(), context || {}));
         pop.on_select_elements.add(function(element_ids) {
-            var dataset = new openerp.base.DataSetStatic(this, this.field.relation, self.build_context());
+            var dataset = new openerp.base.DataSetStatic(self, self.field.relation, self.build_context());
             dataset.name_get([element_ids[0]], function(data) {
                 self._change_int_ext_value(data[0]);
                 pop.stop();
@@ -1854,7 +1854,7 @@ openerp.base.form.FieldMany2Many = openerp.base.form.Field.extend({
 
         var self = this;
 
-        this.dataset = new openerp.base.form.Many2ManyDataSet( this, this.field.relation);
+        this.dataset = new openerp.base.form.Many2ManyDataSet(this, this.field.relation);
         this.dataset.m2m = this;
         this.dataset.on_unlink.add_last(function(ids) {
             self.on_ui_change();
