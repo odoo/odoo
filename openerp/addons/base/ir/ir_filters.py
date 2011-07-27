@@ -29,9 +29,9 @@ class ir_filters(osv.osv):
     _name = 'ir.filters'
     _description = 'Filters'
 
-    def copy(self, cr, uid, id, default={}, context={}):
+    def copy(self, cr, uid, id, default=None, context=None):
         name = self.read(cr, uid, [id], ['name'])[0]['name']
-        default.update({'name': name+ _(' (copy)'), 'events':[]})
+        default.update({'name': name+ _(' (copy)')})
         return super(ir_filters, self).copy(cr, uid, id, default, context)
    
     def get_filters(self, cr, uid, model):
@@ -64,8 +64,8 @@ class ir_filters(osv.osv):
         'model_id': fields.many2one('ir.model', 'Object', size=64, required=True),
     }
     _defaults = {
-        'domain': '"[]"',
-        'context':'"{}"',
+        'domain': '[]',
+        'context':'{}',
     }
 
 ir_filters()
