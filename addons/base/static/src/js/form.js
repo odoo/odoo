@@ -714,6 +714,10 @@ openerp.base.form.WidgetButton = openerp.base.form.Widget.extend({
     init: function(view, node) {
         this._super(view, node);
         this.template = "WidgetButton";
+        if (this.string) {
+            // We don't have button key bindings in the webclient
+            this.string = this.string.replace(/_/g, '');
+        }
         if (node.attrs.default_focus == '1') {
             // TODO fme: provide enter key binding to widgets
             this.view.default_focus_button = this;
