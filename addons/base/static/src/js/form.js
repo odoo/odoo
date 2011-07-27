@@ -20,7 +20,6 @@ openerp.base.FormView = openerp.base.View.extend( /** @lends openerp.base.FormVi
     init: function(parent, element_id, dataset, view_id, options) {
         this._super(parent, element_id);
         this.set_default_options();
-        this.view_manager = parent || new openerp.base.NullViewManager();
         this.dataset = dataset;
         this.model = dataset.model;
         this.view_id = view_id;
@@ -49,9 +48,6 @@ openerp.base.FormView = openerp.base.View.extend( /** @lends openerp.base.FormVi
             return def.promise();
         } else {
             var context = new openerp.base.CompoundContext(this.dataset.get_context());
-            if (this.view_manager.action && this.view_manager.action.context) {
-                context.add(this.view_manager.action.context);
-            }
             return this.rpc("/base/formview/load", {"model": this.model, "view_id": this.view_id,
                 toolbar: this.options.sidebar, context: context}, this.on_loaded);
         }
