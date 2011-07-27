@@ -81,19 +81,6 @@
                 <field name="user_id"/>
                 </group>
                 <newline/>
-                <group expand="0" string="Extended Filters..." colspan="10" col="12" groups="base.group_extended">                   
-                    <field name="validator"/>
-                    <separator orientation="vertical"/>
-                    <field name="location_id"/>
-                    <field name="warehouse_id" widget="selection"/>
-                    <separator orientation="vertical"/>
-                    <field name="company_id" groups="base.group_multi_company"/>
-                    <newline/>
-                    <field name="date"/>
-                    <field name="date_approve"/>
-                    <field name="expected_date"/>
-                </group>
-                <newline/>
                 <group expand="1" string="Group By..." colspan="10" col="12">
                     <filter string="Supplier" name="group_partner_id" icon="terp-personal" context="{'group_by':'partner_id'}"/>
                     <filter string="Responsible" name="Responsible" icon="terp-personal" context="{'group_by':'user_id'}"/>
