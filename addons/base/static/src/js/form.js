@@ -827,10 +827,12 @@ openerp.base.form.Field = openerp.base.form.Widget.extend({
     },
     update_dom: function() {
         this._super.apply(this, arguments);
-        this.$element.toggleClass('disabled', this.readonly);
-        this.$element.toggleClass('required', this.required);
-        if (this.view.show_invalid) {
-            this.$element.toggleClass('invalid', this.invalid);
+        if (!this.disable_utility_classes) {
+            this.$element.toggleClass('disabled', this.readonly);
+            this.$element.toggleClass('required', this.required);
+            if (this.view.show_invalid) {
+                this.$element.toggleClass('invalid', this.invalid);
+            }
         }
     },
     on_ui_change: function() {
@@ -1589,6 +1591,7 @@ openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
         this.template = "FieldOne2Many";
         this.is_started = $.Deferred();
         this.form_last_update = $.Deferred();
+        this.disable_utility_classes = true;
     },
     start: function() {
         this._super.apply(this, arguments);
@@ -1635,8 +1638,12 @@ openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
                     once.resolve();
                 });
                 controller.on_form_changed.add_last(function() {
-                    self.save_form_view();
+                    if (self.save_form_view() === false) {
+                        // we assume one value was changed to invalid state
+                        self.validate();
+                    }
                 });
+                controller.$element.find(".oe_form_button_save_edit").hide();
             }
             self.is_started.resolve();
         });
@@ -1709,6 +1716,9 @@ openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
             this._super(value);
             this.dataset.reset_ids(value);
         }
+        if (this.dataset.index === null && this.dataset.ids.length > 0) {
+            this.dataset.index = 0;
+        }
         $.when(this.is_started).then(function() {
             self.reload_current_view();
         });
@@ -1717,7 +1727,6 @@ openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
         var self = this;
         if (!this.dataset)
             return [];
-        this.save_form_view();
         var val = this.dataset.delete_all ? [commands.delete_all()] : [];
         val = val.concat(_.map(this.dataset.ids, function(id) {
             var alter_order = _.detect(self.dataset.to_create, function(x) {return x.id === id;});
@@ -1748,8 +1757,10 @@ openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
                 } else if (!res.isResolved()) {
                     throw "Asynchronous get_value() is not supported in form view.";
                 }
+                return res;
             }
         }
+        return false;
     },
     validate: function() {
         this.invalid = false;
@@ -1766,6 +1777,10 @@ openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
                 }
             }
         }
+    },
+    update_dom: function() {
+        this._super.apply(this, arguments);
+        this.$element.toggleClass('disabled', this.readonly);
     }
 });
 
