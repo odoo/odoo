@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
   <data>
+    <record id="multi_chart_configuration" model="ir.actions.todo">
+        <field name="action_id" ref="account.action_wizard_multi_chart"/>
+        <field name="sequence">25</field>
+        <field name="restart">onskip</field>
+    </record>
     <!--  Wizard for Multi Charts of Accounts -->
     <record id="view_wizard_multi_chart_belgian_coa" model="ir.ui.view">
       <field name="name">view.wizard.multi.chart</field>
@@ -20,6 +25,23 @@
           </field>
         </data>
       </field>
+    </record>
+
+
+    <record id="view_translate_message_wizard" model="ir.ui.view">
+        <field name="name">Translation Process</field>
+        <field name="model">translate.message</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Translation Process">
+                <newline/>
+                <separator string="Translation Process Completed" colspan="4" />
+                <field colspan="4" name="message" nolabel="1" width="450" height="250"/>
+                <newline/>
+                <separator string="" colspan="4" />
+                <button special="cancel" string="Close" icon="gtk-ok"/>
+            </form>
+        </field>
     </record>
 
  
