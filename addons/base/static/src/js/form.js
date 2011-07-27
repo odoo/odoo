@@ -1638,10 +1638,9 @@ openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
                     once.resolve();
                 });
                 controller.on_form_changed.add_last(function() {
-                    if (self.save_form_view() === false) {
-                        // we assume one value was changed to invalid state
-                        self.validate();
-                    }
+                    // may not be the better solution but I can't imagine a better one,
+                    // auto-save in form view is way harder to do anyway
+                    self.on_ui_change();
                 });
                 controller.$element.find(".oe_form_button_save_edit").hide();
             }
@@ -1727,6 +1726,7 @@ openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
         var self = this;
         if (!this.dataset)
             return [];
+        self.save_form_view()
         var val = this.dataset.delete_all ? [commands.delete_all()] : [];
         val = val.concat(_.map(this.dataset.ids, function(id) {
             var alter_order = _.detect(self.dataset.to_create, function(x) {return x.id === id;});
