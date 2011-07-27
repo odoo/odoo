@@ -291,14 +291,18 @@ openerp.base.DataSet =  openerp.base.Controller.extend( /** @lends openerp.base.
      * Read the indexed record.
      */
     read_index: function (fields, callback) {
+        var def = $.Deferred().then(callback);
         if (_.isEmpty(this.ids)) {
-            return $.Deferred().reject().promise();
+            def.reject();
         } else {
             fields = fields || false;
-            return this.read_ids([this.ids[this.index]], fields, function(records) {
-                callback(records[0]);
+            return this.read_ids([this.ids[this.index]], fields).then(function(records) {
+                def.resolve(records[0]);
+            }, function() {
+                def.reject.apply(def, arguments);
             });
         }
+        return def.promise();
     },
     default_get: function(fields, callback) {
         return this.rpc('/base/dataset/default_get', {
