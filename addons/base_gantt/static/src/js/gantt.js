@@ -389,7 +389,6 @@ init: function(view_manager, session, element_id, dataset, view_id) {
             search_view: false,
             sidebar : false,
             views_switcher : false,
-            action_buttons : false,
             pager: false
             }
         var element_id = _.uniqueId("act_window_dialog");
