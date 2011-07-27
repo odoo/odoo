@@ -770,11 +770,12 @@ openerp.base.form.WidgetLabel = openerp.base.form.Widget.extend({
         if (this.node.tag == 'label' && this.node.attrs.colspan) {
             this.is_field_label = false;
             this.template = "WidgetParagraph";
+            this.colspan = this.node.attrs.colspan;
         } else {
             this.is_field_label = true;
             this.template = "WidgetLabel";
+            this.colspan = 1;
         }
-        this.colspan = 1;
     },
     render: function () {
         if (this['for'] && this.type !== 'label') {
