@@ -553,7 +553,7 @@ class pos_order(osv.osv):
         args['ref'] = order.contract_number or None
 
         statement_id = statement_obj.search(cr,uid, [
-                                                     ('journal_id', '=', data['journal']),
+                                                     ('journal_id', '=', int(data['journal'])),
                                                      ('company_id', '=', curr_company),
                                                      ('user_id', '=', uid),
                                                      ('state', '=', 'open')], context=context)
@@ -563,7 +563,7 @@ class pos_order(osv.osv):
             statement_id = statement_id[0]
         args['statement_id'] = statement_id
         args['pos_statement_id'] = order_id
-        args['journal_id'] = data['journal']
+        args['journal_id'] = int(data['journal'])
         args['type'] = 'customer'
         args['ref'] = order.name
         statement_line_obj.create(cr, uid, args, context=context)
