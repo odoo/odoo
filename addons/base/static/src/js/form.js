@@ -31,7 +31,7 @@ openerp.base.FormView = openerp.base.View.extend( /** @lends openerp.base.FormVi
         this.datarecord = {};
         this.ready = false;
         this.show_invalid = true;
-        this.touched = false;
+        this.dirty = false;
         this.default_focus_field = null;
         this.default_focus_button = null;
         this.registry = openerp.base.form.widgets;
@@ -133,22 +133,22 @@ openerp.base.FormView = openerp.base.View.extend( /** @lends openerp.base.FormVi
             this.$form_header.find('.oe_form_on_update').show();
             this.$form_header.find('button.oe_form_button_new').show();
         }
-        this.touched = false;
+        this.dirty = false;
         this.datarecord = record;
         for (var f in this.fields) {
             var field = this.fields[f];
-            field.touched = false;
+            field.dirty = false;
             field.set_value(this.datarecord[f] || false);
             field.validate();
         }
         if (!record.id) {
             // New record: Second pass in order to trigger the onchanges
-            this.touched = true;
+            this.dirty = true;
             this.show_invalid = false;
             for (var f in record) {
                 var field = this.fields[f];
                 if (field) {
-                    field.touched = true;
+                    field.dirty = true;
                     this.do_onchange(field);
                 }
             }
@@ -267,7 +267,7 @@ openerp.base.FormView = openerp.base.View.extend( /** @lends openerp.base.FormVi
                     processed.push(field.name);
                     if (field.get_value() != value) {
                         field.set_value(value);
-                        field.touched = true;
+                        field.dirty = true;
                         if (_.indexOf(processed, field.name) < 0) {
                             this.do_onchange(field, processed);
                         }
@@ -315,28 +315,28 @@ openerp.base.FormView = openerp.base.View.extend( /** @lends openerp.base.FormVi
         if (!this.ready) {
             return false;
         }
-        var dirty = false;
-        var invalid = false,
+        var form_dirty = false,
+            form_invalid = false,
             values = {},
             first_invalid_field = null;
         for (var f in this.fields) {
             f = this.fields[f];
-            if (f.invalid) {
-                invalid = true;
+            if (!f.is_valid()) {
+                form_invalid = true;
                 f.update_dom();
                 if (!first_invalid_field) {
                     first_invalid_field = f;
                 }
-            } else if (f.touched) {
-                dirty = true;
+            } else if (f.is_dirty()) {
+                form_dirty = true;
                 values[f.name] = f.get_value();
             }
         }
-        if (invalid) {
+        if (form_invalid) {
             first_invalid_field.focus();
             this.on_invalid();
             return false;
-        } else if (dirty) {
+        } else if (form_dirty) {
             this.log("About to save", values);
             if (!this.datarecord.id) {
                 return this.dataset.create(values, function(r) {
@@ -362,7 +362,7 @@ openerp.base.FormView = openerp.base.View.extend( /** @lends openerp.base.FormVi
     on_invalid: function() {
         var msg = "<ul>";
         _.each(this.fields, function(f) {
-            if (f.invalid) {
+            if (!f.is_valid()) {
                 msg += "<li>" + f.string + "</li>";
             }
         });
@@ -729,7 +729,7 @@ openerp.base.form.WidgetButton = openerp.base.form.Widget.extend({
     },
     on_click: function(saved) {
         var self = this;
-        if (!this.node.attrs.special && this.view.touched && saved !== true) {
+        if (!this.node.attrs.special && this.view.dirty && saved !== true) {
             this.view.do_save(function() {
                 self.on_click(true);
             });
@@ -809,7 +809,7 @@ openerp.base.form.Field = openerp.base.form.Widget.extend({
         this.readonly = this.modifiers['readonly'] === true;
         this.required = this.modifiers['required'] === true;
         this.invalid = false;
-        this.touched = false;
+        this.dirty = false;
     },
     set_value: function(value) {
         this.value = value;
@@ -822,6 +822,12 @@ openerp.base.form.Field = openerp.base.form.Widget.extend({
     get_value: function() {
         return this.value;
     },
+    is_valid: function() {
+        return !this.invalid;
+    },
+    is_dirty: function() {
+        return this.dirty;
+    },
     get_on_change_value: function() {
         return this.get_value();
     },
@@ -830,13 +836,13 @@ openerp.base.form.Field = openerp.base.form.Widget.extend({
         this.$element.toggleClass('disabled', this.readonly);
         this.$element.toggleClass('required', this.required);
         if (this.view.show_invalid) {
-            this.$element.toggleClass('invalid', this.invalid);
+            this.$element.toggleClass('invalid', !this.is_valid());
         }
     },
     on_ui_change: function() {
-        this.touched = this.view.touched = true;
+        this.dirty = this.view.dirty = true;
         this.validate();
-        if (!this.invalid) {
+        if (this.is_valid()) {
             this.set_value_from_ui();
             this.view.do_onchange(this);
             this.view.on_form_changed();
@@ -934,7 +940,7 @@ openerp.base.form.FieldEmail = openerp.base.form.FieldChar.extend({
         this.$element.find('button').click(this.on_button_clicked);
     },
     on_button_clicked: function() {
-        if (!this.value || this.invalid) {
+        if (!this.value || !this.is_valid()) {
             this.notification.warn("E-mail error", "Can't send email to invalid e-mail address");
         } else {
             location.href = 'mailto:' + this.value;
@@ -975,7 +981,7 @@ openerp.base.form.FieldFloat = openerp.base.form.FieldChar.extend({
         if (value === false || value === undefined) {
             // As in GTK client, floats default to 0
             value = 0;
-            this.touched = true;
+            this.dirty = true;
         }
         var show_value = value.toFixed(2);
         this.$element.find('input').val(show_value);
@@ -995,7 +1001,7 @@ openerp.base.form.FieldInteger = openerp.base.form.FieldFloat.extend({
         if (value === false || value === undefined) {
             // TODO fme: check if GTK client default integers to 0 (like it does with floats)
             value = 0;
-            this.touched = true;
+            this.dirty = true;
         }
         var show_value = parseInt(value, 10);
         this.$element.find('input').val(show_value);
@@ -1082,7 +1088,7 @@ openerp.base.form.FieldFloatTime = openerp.base.form.FieldChar.extend({
         if (value === false || value === undefined) {
             // As in GTK client, floats default to 0
             value = 0;
-            this.touched = true;
+            this.dirty = true;
         }
         var show_value = _.sprintf("%02d:%02d", Math.floor(value), Math.round((value % 1) * 60));
         this.$element.find('input').val(show_value);
@@ -1759,7 +1765,7 @@ openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
         } else if (self.viewmanager.active_view === "form") {
             for (var f in view.fields) {
                 f = view.fields[f];
-                if (f.invalid) {
+                if (!f.is_valid()) {
                     this.invalid = true;
                     return;
                 }
