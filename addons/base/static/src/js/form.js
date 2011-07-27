@@ -32,7 +32,6 @@ openerp.base.FormView = openerp.base.View.extend( /** @lends openerp.base.FormVi
         this.ready = false;
         this.show_invalid = true;
         this.touched = false;
-        this.flags = this.view_manager.flags || {};
         this.default_focus_field = null;
         this.default_focus_button = null;
         this.registry = openerp.base.form.widgets;
