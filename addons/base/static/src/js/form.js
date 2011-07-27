@@ -1642,9 +1642,15 @@ openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
                 controller.on_record_loaded.add_last(function() {
                     once.resolve();
                 });
+                controller.on_pager_action.add_first(function() {
+                    self.save_form_view();
+                });
                 controller.$element.find(".oe_form_button_save_edit").hide();
             }
             self.is_started.resolve();
+        });
+        this.viewmanager.on_mode_switch.add_first(function() {
+            self.save_form_view();
         });
         setTimeout(function () {
             self.viewmanager.start();
@@ -1762,27 +1768,26 @@ openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
         return false;
     },
     is_valid: function() {
+        this.validate();
+        return this._super();
+    },
+    validate: function() {
+        this.invalid = false;
         var self = this;
         var view = self.viewmanager.views[self.viewmanager.active_view].controller;
         if (self.viewmanager.active_view === "form") {
             for (var f in view.fields) {
                 f = view.fields[f];
                 if (!f.is_valid()) {
-                    return false;
+                    this.invalid = true;
+                    return;
                 }
             }
         }
-        return true;
     },
     is_dirty: function() {
-        if (!this.dataset)
-            return false;
         this.save_form_view();
-        if (this.dataset.delete_all || this.dataset.to_create.length > 0 || this.dataset.to_write.length > 0
-            || this.dataset.to_delete > 0) {
-            return true;
-        }
-        return false;
+        return this._super();
     },
     update_dom: function() {
         this._super.apply(this, arguments);
