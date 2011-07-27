@@ -526,6 +526,30 @@ class users(osv.osv):
 
 users()
 
+
+
+class groups2(osv.osv):
+    _inherit = 'res.groups'
+    _columns = {
+        'implied_ids': fields.many2many('res.groups', 'res_groups_implied_rel', 'gid', 'hid',
+            string='Inherits', help='Users of this group automatically inherit those groups'),
+    }
+
+    def implied_groups(self, cr, uid, ids, context=None):
+        "return all groups recursively implied by the given ids"
+        closure = set()
+        todo = self.browse(cr, uid, ids, context)
+        while todo:
+            g = todo.pop()
+            if g.id not in closure:
+                closure.add(g.id)
+                todo.extend(g.implied_ids)
+        return list(closure)
+
+groups2()
+
+
+
 class res_config_view(osv.osv_memory):
     _name = 'res.config.view'
     _inherit = 'res.config'
