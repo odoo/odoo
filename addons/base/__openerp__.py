@@ -17,7 +17,7 @@
         "static/lib/qweb/qweb2.js",
         "static/lib/underscore/underscore.js",
         "static/lib/underscore/underscore.string.js",
-        "static/src/js/base.js",
+        "static/src/js/boot.js",
         "static/src/js/chrome.js",
         "static/src/js/controller.js",
         "static/src/js/views.js",
