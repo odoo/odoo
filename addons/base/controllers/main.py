@@ -775,6 +775,25 @@ class SearchView(View):
             filter["context"] = req.session.eval_context(self.parse_context(filter["context"], req.session))
             filter["domain"] = req.session.eval_domain(self.parse_domain(filter["domain"], req.session))
         return filters
+    
+    @openerpweb.jsonrequest
+    def save_filter(self, req, model, name, context_to_save, domain):
+        Model = req.session.model("ir.filters")
+        ctx = openerpweb.nonliterals.CompoundContext(context_to_save)
+        ctx.session = req.session
+        ctx = ctx.evaluate()
+        domain = openerpweb.nonliterals.CompoundDomain(domain)
+        domain.session = req.session
+        domain = domain.evaluate()
+        uid = req.session._uid
+        context = req.session.eval_context(req.context)
+        to_return = Model.create_or_replace({"context": ctx,
+                                             "domain": domain,
+                                             "model_id": model,
+                                             "name": name,
+                                             "user_id": uid
+                                             }, context)
+        return to_return
 
 class Binary(openerpweb.Controller):
     _cp_path = "/base/binary"

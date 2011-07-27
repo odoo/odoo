@@ -246,7 +246,7 @@ openerp.base.Session = openerp.base.Controller.extend( /** @lends openerp.base.S
      * @param port
      */
     init: function(parent, element_id, server, port) {
-        this._super(element_id);
+        this._super(parent, element_id);
         this.server = (server == undefined) ? location.hostname : server;
         this.port = (port == undefined) ? location.port : port;
         this.rpc_mode = (server == location.hostname) ? "ajax" : "jsonp";
@@ -425,7 +425,7 @@ openerp.base.Session = openerp.base.Controller.extend( /** @lends openerp.base.S
         for(var i=0; i<cookies.length; ++i) {
             var cookie = cookies[i].replace(/^\s*/, '');
             if(cookie.indexOf(nameEQ) === 0) {
-                return decodeURIComponent(cookie.substring(nameEQ.length));
+                return JSON.parse(decodeURIComponent(cookie.substring(nameEQ.length)));
             }
         }
         return null;
@@ -441,7 +441,7 @@ openerp.base.Session = openerp.base.Controller.extend( /** @lends openerp.base.S
     set_cookie: function (name, value, ttl) {
         ttl = ttl || 24*60*60*365;
         document.cookie = [
-            this.element_id + '|' + name + '=' + encodeURIComponent(value),
+            this.element_id + '|' + name + '=' + encodeURIComponent(JSON.stringify(value)),
             'max-age=' + ttl,
             'expires=' + new Date(new Date().getTime() + ttl*1000).toGMTString()
         ].join(';');
@@ -532,6 +532,7 @@ openerp.base.Dialog = openerp.base.BaseWidget.extend({
     dialog_title: "",
     identifier_prefix: 'dialog',
     init: function (parent, options) {
+        var self = this;
         this._super(parent);
         this.options = {
             modal: true,
@@ -542,7 +543,10 @@ openerp.base.Dialog = openerp.base.BaseWidget.extend({
             min_height: 0,
             max_height: '100%',
             autoOpen: false,
-            buttons: {}
+            buttons: {},
+            close: function () {
+                self.stop();
+            }
         };
         for (var f in this) {
             if (f.substr(0, 10) == 'on_button_') {
@@ -605,11 +609,7 @@ openerp.base.Dialog = openerp.base.BaseWidget.extend({
         this.set_options(options);
         this.$dialog.dialog(this.options).dialog('open');
     },
-    close: function(options) {
-        this.$dialog.dialog('close');
-    },
     stop: function () {
-        this.close();
         this.$dialog.dialog('destroy');
     }
 });

@@ -18,15 +18,6 @@ $(document).ready(function () {
         }
     }};
 
-    var fuck_that_shit = {
-        action: {
-            flags: {}
-        },
-        sidebar: {
-            set_toolbar: function () {}
-        }
-    };
-
     var openerp;
     module("ListView", {
         setup: function () {
@@ -42,8 +33,7 @@ $(document).ready(function () {
 
     test('render selection checkboxes', 2, function () {
         var listview = new openerp.base.ListView(
-                fuck_that_shit, null,
-                'qunit-fixture', {model: null, ids: [null, null, null], index: 0});
+                null, 'qunit-fixture', {model: null, ids: [null, null, null], index: 0});
 
         listview.on_loaded(fvg);
 
@@ -60,8 +50,7 @@ $(document).ready(function () {
     });
     test('render no checkbox if selectable=false', 1, function () {
         var listview = new openerp.base.ListView(
-                fuck_that_shit, null,
-                'qunit-fixture', {model: null, ids: [null, null, null], index: 0}, false,
+                null, 'qunit-fixture', {model: null, ids: [null, null, null], index: 0}, false,
                 {selectable: false});
 
         listview.on_loaded(fvg);
@@ -75,8 +64,7 @@ $(document).ready(function () {
     });
     test('select a bunch of records', 2, function () {
         var listview = new openerp.base.ListView(
-                fuck_that_shit, null, 'qunit-fixture',
-                {model: null, ids: [1, 2, 3], index: 0});
+                null, 'qunit-fixture', {model: null, ids: [1, 2, 3], index: 0});
         listview.on_loaded(fvg);
 
         listview.do_fill_table({records: [
@@ -94,8 +82,7 @@ $(document).ready(function () {
     });
     test('render deletion button if list is deletable', 1, function () {
         var listview = new openerp.base.ListView(
-                fuck_that_shit, null, 'qunit-fixture',
-                {model: null, ids: [null, null, null], index: 0});
+                null, 'qunit-fixture', {model: null, ids: [null, null, null], index: 0});
 
         listview.on_loaded(fvg);
 
@@ -112,7 +99,7 @@ $(document).ready(function () {
               2, function () {
         var deleted;
         var listview = new openerp.base.ListView(
-                fuck_that_shit, null, 'qunit-fixture',
+                null, 'qunit-fixture',
                 {model: null, unlink: function (ids) {
             deleted = ids;
         }, ids: [1, 2, 3], index: 0});
@@ -132,7 +119,7 @@ $(document).ready(function () {
     test('multiple records deletion', 1, function () {
         var deleted;
         var listview = new openerp.base.ListView(
-                fuck_that_shit, null, 'qunit-fixture',
+                null, 'qunit-fixture',
                 {model: null, unlink: function (ids) {
             deleted = ids;
         }, ids: [1, 2, 3], index: 0});
