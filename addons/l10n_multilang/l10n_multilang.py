@@ -44,13 +44,18 @@ class wizard_multi_charts_accounts(osv.osv_memory):
     _inherit = 'wizard.multi.charts.accounts'
 
     def copy_translations(self, cr, uid, langs, in_obj, in_field, in_ids, out_obj, out_ids):
-        result = {}
+        """
+        * langs: Loaded languages
+        * in_field: 'name' field
+        * in_obj, in_ids: Source object and params.
+        * out_obj, out_ids: Destination object and params.
+        * Return: Translation message.
+        """
+        src = {}
         xlat_obj = self.pool.get('ir.translation')
-        resource_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'l10n_multilang', 'view_translate_message_wizard')
         #find the source from Account Template
         for x in in_obj.browse(cr, uid, in_ids):
-            result.update({x.id: x.name})
-        src = dict(result)
+            src.update({x.id: x.name})
         message = ''
         for lang in langs:
             notdone = []
@@ -72,13 +77,42 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                       'value': value[in_id],
                 })
             if notdone:
-                message += '\nLanguage:-%s \n\tThere is no translation available for following accounts: \n\t%s '\
-                            % (lang, '\n\t'.join(notdone))
+                message += '\nLanguage: %s \n\tThere is no translation available for following %s(s): \n\t%s '\
+                            % (lang, (out_obj._name[8:].replace('.',' ')).title(), '\n\t'.join(notdone))
             else:
-                message += '\nLanguage:-%s \n\tTranslation successfully done.' % (lang)
+                message += '\nLanguage: %s \n\tTranslation successfully done for %s(s) .' % (lang, (out_obj._name[8:].replace('.',' ')).title())
+
+        return message
+
+    def execute(self, cr, uid, ids, context=None):
+        res = super(wizard_multi_charts_accounts, self).execute(cr, uid, ids, context=context)
+        obj_multi = self.browse(cr, uid, ids[0], context=context)
+        obj_mod = self.pool.get('ir.module.module')
+        obj_acc_template = self.pool.get('account.account.template')
+        obj_acc = self.pool.get('account.account')
+        resource_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'l10n_multilang', 'view_translate_message_wizard')
+        
+        company_id = obj_multi.company_id.id
+        acc_template_root_id = obj_multi.chart_template_id.account_root_id.id
+        acc_root_id = obj_acc.search(cr, uid, [('company_id', '=', company_id), ('parent_id', '=', None)])[0]
+
+        # load languages
+        langs = []
+        installed_mids = obj_mod.search(cr, uid, [('state', '=', 'installed')])
+        for lang in obj_multi.lang_ids:
+            langs.append(lang.code)
+            obj_mod.update_translations(cr, uid, installed_mids, lang.code)
+
+        warn_msg = ''
+
+        # copy account.account translations
+        in_ids = obj_acc_template.search(cr, uid, [('id', 'child_of', [acc_template_root_id])], order='id')[1:]
+        out_ids = obj_acc.search(cr, uid, [('id', 'child_of', [acc_root_id])], order='id')[1:]
+        warn_msg += self.copy_translations(cr, uid, langs, obj_acc_template, 'name', in_ids, obj_acc, out_ids)
+
         #open new wizard its for displaying warning message
-        if message:
-            res_id = self.pool.get('translate.message').create(cr, uid, {'message': message})
+        if warn_msg:
+            res_id = self.pool.get('translate.message').create(cr, uid, {'message': warn_msg})
             return {
                 'res_id': res_id,
                 'view_type': 'form',
@@ -88,30 +122,6 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                 'type': 'ir.actions.act_window',
                 'target': 'new',
             }
-
-    def execute(self, cr, uid, ids, context=None):
-        res = super(wizard_multi_charts_accounts, self).execute(cr, uid, ids, context=context)
-        obj_multi = self.browse(cr, uid, ids[0], context=context)
-        obj_mod = self.pool.get('ir.module.module')
-        obj_acc_template = self.pool.get('account.account.template')
-        obj_acc = self.pool.get('account.account')
-
-        company_id = obj_multi.company_id.id
-        acc_template_root_id = obj_multi.chart_template_id.account_root_id.id
-        acc_root_id = obj_acc.search(cr, uid, [('company_id', '=', company_id), ('parent_id', '=', None)])[0] 
-
-        # load languages
-        langs = []
-        installed_mids = obj_mod.search(cr, uid, [('state', '=', 'installed')])
-        for lang in obj_multi.lang_ids:
-            langs.append(lang.code)
-            obj_mod.update_translations(cr, uid, installed_mids, lang.code)
-
-        # copy account.account translations
-        in_ids = obj_acc_template.search(cr, uid, [('id', 'child_of', [acc_template_root_id])], order='id')[1:]
-        out_ids = obj_acc.search(cr, uid, [('id', 'child_of', [acc_root_id])], order='id')[1:]
-        res = self.copy_translations(cr, uid, langs, obj_acc_template, 'name', in_ids, obj_acc, out_ids)
-        return res
 
     def onchange_chart_template_id(self, cr, uid, ids, chart_template_id=False, context=None):
         res = super(wizard_multi_charts_accounts, self).onchange_chart_template_id(cr, uid, ids, chart_template_id, context=context)
