@@ -21,7 +21,6 @@
 from lxml import etree
 from osv import fields, osv
 
-
 class profile_association_config_install_modules_wizard(osv.osv_memory):
     _inherit = 'base.setup.installer'
 
