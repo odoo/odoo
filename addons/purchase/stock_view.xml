@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-       <record id="stock_move_purchase" model="ir.ui.view">
+        <record id="stock_move_purchase" model="ir.ui.view">
             <field name="name">stock.move.form</field>
             <field name="model">stock.move</field>
             <field name="type">form</field>
@@ -29,11 +29,11 @@
             id="act_purchase_order_2_stock_picking"
             name="Receptions"
             res_model="stock.picking"
-	    groups="base.group_extended"
+            groups="base.group_extended"
             src_model="purchase.order"
             context="{'contact_display': 'partner'}" />
        
-       <record id="action_picking_in_tree_view" model="ir.actions.act_window.view">
+        <record id="action_picking_in_tree_view" model="ir.actions.act_window.view">
             <field eval="1" name="sequence"/>
             <field name="view_mode">tree</field>
             <field name="view_id" ref="stock.view_picking_in_tree"/>
@@ -57,5 +57,65 @@
                 </field>
             </field>
         </record>
+        
+        <!-- Picking to Invoice -->
+        <record id="view_picking_in_search_picking_to_invoice" model="ir.ui.view">
+            <field name="name">stock.picking.in.search</field>
+            <field name="model">stock.picking</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Picking to Invoice">
+                    <group col="8" colspan="4">
+                        <filter icon="terp-check" name="available" string="Available"
+                            domain="[('state','=','assigned')]" help="Incoming Shipments Available"/>
+                        <filter icon="terp-dialog-close" name="done" string="Done"
+                            domain="[('state','=','done')]" help="Incoming Shipments already processed"/>
+                        <filter string="To invoice" name="to_invoice" icon="terp-dolar"
+                            domain="[('invoice_state', '=', '2binvoiced')]"/>
+                        <separator orientation="vertical"/>
+                        <filter icon="terp-accessories-archiver-minus" string="Back Orders"
+                            domain="[('backorder_id', '!=', False)]" help="Is a Back Order" groups="base.group_extended"/>
+                        <separator orientation="vertical"/>
+                        <field name="name"/>
+                        <field name="partner_id"/>
+                        <field name="origin"/>
+                        <field name="stock_journal_id" groups="base.group_extended" widget="selection"/>
+                        <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                    </group>                    
+                    <newline/>
+                    <group expand="0" string="Group By..." colspan="4" col="8">
+                        <filter string="Partner" icon="terp-partner"
+                            domain="[]" context="{'group_by':'partner_id'}"/>
+                        <separator orientation="vertical"/>
+                        <filter icon="terp-stock_effects-object-colorize" name="state" string="State"
+                            domain="[]" context="{'group_by':'state'}"/>
+                        <separator orientation="vertical"/>
+                        <filter string="Order Date" icon="terp-go-month"
+                            domain="[]"  context="{'group_by':'date'}"/>
+                        <filter string="Expected Date" icon="terp-go-month"
+                            domain="[]"  context="{'group_by':'min_date'}"/>
+                        <separator orientation="vertical"/>
+                        <filter string="Journal" icon="terp-folder-orange"
+                            domain="[]" context="{'group_by':'stock_journal_id'}"  groups="base.group_extended"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+ 
+        <record id="action_picking_tree4_picking_to_invoice" model="ir.actions.act_window">
+            <field name="name">Pickings to Invoice</field>
+            <field name="res_model">stock.picking</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar</field>
+            <field name="domain">[('type','=','in')]</field>
+            <field name="context">{'search_default_done':1,'search_default_to_invoice':1}</field>
+            <field name="search_view_id" ref="view_picking_in_search_picking_to_invoice"/>
+            <field name="help">Create invoice from reception of products. If you selected this invoice control method in the purchase order, all receptions done are available here to be invoiced.</field>
+       </record>
+
+        <menuitem action="action_picking_tree4_picking_to_invoice"
+            id="menu_action_picking_tree4_picking_to_invoice"
+            parent="purchase.menu_procurement_management_invoice" sequence="90"/>
     </data>
 </openerp>

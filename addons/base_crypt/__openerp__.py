@@ -25,6 +25,7 @@
     "maintainer" : "OpenERP SA",
     "website" : "http://www.openerp.com",
     "category" : "Tools",
+    'complexity': "easy",
     "description": """
 Replaces cleartext passwords in the database with a secure hash
 ===============================================================

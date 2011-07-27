@@ -24,6 +24,7 @@
     'name': 'Attendances Of Employees',
     'version': '1.1',
     'category': 'Human Resources',
+    'complexity': "easy",
     'description': """
 This module aims to manage employee's attendances.
 ==================================================

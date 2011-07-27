@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:14+0000\n"
-"PO-Revision-Date: 2011-06-06 09:30+0000\n"
-"Last-Translator: Phong Nguyen-Thanh <Unknown>\n"
+"PO-Revision-Date: 2011-07-20 09:45+0000\n"
+"Last-Translator: lam nhut tien <Unknown>\n"
 "Language-Team: Vietnamese <vi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-06-07 04:35+0000\n"
-"X-Generator: Launchpad (build 12959)\n"
+"X-Launchpad-Export-Date: 2011-07-21 04:35+0000\n"
+"X-Generator: Launchpad (build 13405)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -142,7 +142,7 @@ msgstr "Các bút toán Kế toán-"
 #: code:addons/account/account.py:1305
 #, python-format
 msgid "You can not delete posted movement: \"%s\"!"
-msgstr "Bạn không thể xóa bút toán \"%s\" mà đã được ghi nhận trước đó!"
+msgstr "Bạn không thể xóa bút toán \"%s\" đã được ghi nhận trước đó!"
 
 #. module: account
 #: report:account.invoice:0
@@ -2056,6 +2056,8 @@ msgid ""
 "Invalid period ! Some periods overlap or the date period is not in the scope "
 "of the fiscal year. "
 msgstr ""
+"Thời gian không hợp lệ! Một số thời gian chồng lên nhau hoặc kỳ ngày không "
+"có trong phạm vi của năm tài chính "
 
 #. module: account
 #: selection:account.invoice,state:0
@@ -2340,6 +2342,12 @@ msgid ""
 "useful because it enables you to preview at any time the tax that you owe at "
 "the start and end of the month or quarter."
 msgstr ""
+"Menu này in một tờ khai thuế GTGT theo hoá đơn hoặc thanh toán. Chọn một "
+"hoặc nhiều thời gian của năm tài chính. Các thông tin cần thiết cho một tờ "
+"khai thuế được tự động tạo ra bởi OpenERP từ hoá đơn (hoặc thanh toán, ở một "
+"số nước). Thông tin này được cập nhật trong thời gian thực. Đó là rất hữu "
+"ích vì nó cho phép bạn xem trước bất cứ lúc nào các bạn nợ thuế khi bắt đầu "
+"và kết thúc của tháng hoặc quý"
 
 #. module: account
 #: selection:account.move.line,centralisation:0
@@ -3363,6 +3371,8 @@ msgstr "Hoạch đồ Kế toán"
 #: view:account.tax.chart:0
 msgid "(If you do not select period it will take all open periods)"
 msgstr ""
+"Bản dịch từ Tiếng Anh sang Tiếng Việt (Nếu bạn không chọn thời gian nó sẽ "
+"mất tất cả các giai đoạn mở)"
 
 #. module: account
 #: field:account.journal,centralisation:0
@@ -7001,7 +7011,7 @@ msgstr ""
 #: code:addons/account/account.py:952
 #, python-format
 msgid "You should have chosen periods that belongs to the same company"
-msgstr ""
+msgstr "Bạn cần phải có thời gian lựa chọn thuộc về cùng một công ty"
 
 #. module: account
 #: field:account.fiscalyear.close,report_name:0
@@ -7507,7 +7517,7 @@ msgstr "Account move line reconcile"
 #: view:account.subscription.generate:0
 #: model:ir.model,name:account.model_account_subscription_generate
 msgid "Subscription Compute"
-msgstr "Subscription Compute"
+msgstr ""
 
 #. module: account
 #: report:account.move.voucher:0
@@ -7861,6 +7871,12 @@ msgid ""
 "useful because it enables you to preview at any time the tax that you owe at "
 "the start and end of the month or quarter."
 msgstr ""
+"Menu này in một tờ khai thuế GTGT theo hoá đơn hoặc thanh toán. Bạn có thể "
+"chọn một hoặc một số thời gian của năm tài chính. Thông tin cần thiết cho "
+"một tờ khai thuế được tự động tạo ra bởi OpenERP từ hoá đơn (hoặc thanh "
+"toán, ở một số nước). Thông tin này được cập nhật trong thời gian thực. Đó "
+"là rất hữu ích vì nó cho phép bạn xem trước bất cứ lúc nào các bạn nợ thuế "
+"khi bắt đầu và kết thúc của tháng hoặc quý."
 
 #. module: account
 #: report:account.invoice:0
@@ -8474,7 +8490,7 @@ msgstr "Registered payment"
 #. module: account
 #: view:account.fiscalyear.close.state:0
 msgid "Close states of Fiscal year and periods"
-msgstr ""
+msgstr "Đóng trạng thái của năm tài chính và thời gian"
 
 #. module: account
 #: view:account.analytic.line:0
@@ -9069,6 +9085,13 @@ msgid ""
 "open period. Close a period when you do not want to record new entries and "
 "want to lock this period for tax related calculation."
 msgstr ""
+"Thời gian là một thời kỳ tài chính của thời gian mà ghi sổ kế toán phải được "
+"ghi lại để hạch toán các hoạt động liên quan. Kỳ hàng tháng là mức nhưng tùy "
+"thuộc vào nhu cầu nước của bạn hoặc công ty, bạn cũng có thể có thời kỳ hàng "
+"quý. Kết thúc một thời gian sẽ làm cho nó không thể ghi ghi sổ kế toán mới, "
+"tất cả các mục mới sau đó phải được thực hiện vào thời kỳ mở cửa sau. Đóng "
+"một thời gian khi bạn không muốn ghi lại các mục mới và muốn khóa thời gian "
+"này để tính thuế liên quan."
 
 #. module: account
 #: view:account.analytic.account:0

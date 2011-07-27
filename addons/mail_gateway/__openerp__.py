@@ -23,6 +23,7 @@
     'name': 'Email Gateway System',
     'version': '1.0',
     'category': 'Tools',
+    'complexity': "easy",
     'description': """
 The generic email gateway system allows to send and receive emails.
 ===================================================================

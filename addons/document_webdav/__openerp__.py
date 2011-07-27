@@ -33,6 +33,7 @@
         "version" : "2.3",
         "author" : "OpenERP SA",
         "category" : "Tools",
+        'complexity': "normal",
         "website": "http://www.openerp.com",
         "description": """
 With this module, the WebDAV server for documents is activated.

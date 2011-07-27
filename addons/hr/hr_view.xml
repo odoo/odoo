@@ -29,7 +29,7 @@
                         <field name="company_id" widget="selection" groups="base.group_multi_company,base.group_extended" on_change="onchange_company(company_id)"/>
                         <field name="active" groups="base.group_extended"/>
                         <newline/>
-                        <field name="department_id" widget="selection" on_change="onchange_department_id(department_id)" />
+                        <field name="department_id" on_change="onchange_department_id(department_id)" />
                         <field name="parent_id" />
                         </group>
                         <group colspan="2" col="1">
@@ -309,8 +309,8 @@
                             <separator colspan="4" string="Requirements"/>
                             <field name="requirements" colspan="4" nolabel="1"/>
                         </page>
-                        <page string="Employee">
-                            <field name="employee_ids" colspan='4' nolabel="1" widget="many2many" mode="tree,form"/>
+                        <page string="Employees">
+                            <field name="employee_ids" colspan="4" nolabel="1" widget="many2many" mode="tree,form"/>
                         </page>
                     </notebook>
                     <group col="6" colspan="4">

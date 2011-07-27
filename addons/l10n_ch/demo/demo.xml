@@ -24,6 +24,7 @@
                 <field name="ref">banq</field>
                 <field name="name">Banque</field>
                 <field name="category_id" model="res.partner.category" search="[('name','=','Partenaire')]"/>
+                <field name="address" eval="[]"/>
         </record>
         
         <record id="res_partner_address_bank1" model="res.partner.address">
@@ -47,6 +48,7 @@
             <field name="website">http://camptocamp.com</field>
             <field name="name">ProLibre</field>
             <field name="category_id" model="res.partner.category" search="[('name','=','Partenaire')]"/>
+            <field name="address" eval="[]"/>
         </record>
 
         <record id="camptocamp" model="res.partner">
@@ -56,6 +58,7 @@
             <field name="website">http://camptocamp.com</field>
             <field name="name">camptocamp SA</field>
             <field name="category_id" model="res.partner.category" search="[('name','=','Partenaire')]"/>
+            <field name="address" eval="[]"/>
         </record>
                 <!--
                 Resource: res.partner.address

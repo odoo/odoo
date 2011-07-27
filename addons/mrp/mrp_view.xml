@@ -229,7 +229,7 @@
                     <separator colspan="4" string="General Information"/>
                     <field colspan="4" name="name" select="1"/>
                     <field name="sequence" select="1"/>
-                    <field name="workcenter_id" select="1" widget="selection"/>
+                    <field name="workcenter_id"/>
                     <field name="cycle_nbr"/>
                     <field name="hour_nbr" widget="float_time"/>
                     <field name="company_id" widget="selection" groups="base.group_multi_company"/>
@@ -1000,7 +1000,7 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="mrp_workcenter_tree_view"/>
             <field name="search_view_id" ref="view_mrp_workcenter_search"/>
-            <field name="help">Work Centers allow you to create and manage manufacturing units consisting of one or more persons and/or machines that can be considered as a unit for capacity and planning forecasting.</field>
+            <field name="help">Work Centers allow you to create and manage manufacturing units.  They consist of workers and/or machines, which are considered as units for capacity and planning forecast.  Keep in mind that the working time and resource leave are not taken into account in the time computation of the work center.</field>
         </record>
 
         <menuitem id="menu_pm_resources_config" name="Resources" parent="menu_mrp_configuration"/>
