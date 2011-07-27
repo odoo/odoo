@@ -1642,11 +1642,6 @@ openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
                 controller.on_record_loaded.add_last(function() {
                     once.resolve();
                 });
-                controller.on_form_changed.add_last(function() {
-                    // may not be the better solution but I can't imagine a better one,
-                    // auto-save in form view is way harder to do anyway
-                    self.on_ui_change();
-                });
                 controller.$element.find(".oe_form_button_save_edit").hide();
             }
             self.is_started.resolve();
@@ -1731,7 +1726,6 @@ openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
         var self = this;
         if (!this.dataset)
             return [];
-        self.save_form_view()
         var val = this.dataset.delete_all ? [commands.delete_all()] : [];
         val = val.concat(_.map(this.dataset.ids, function(id) {
             var alter_order = _.detect(self.dataset.to_create, function(x) {return x.id === id;});
@@ -1767,21 +1761,28 @@ openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
         }
         return false;
     },
-    validate: function() {
-        this.invalid = false;
+    is_valid: function() {
         var self = this;
         var view = self.viewmanager.views[self.viewmanager.active_view].controller;
-        if(self.viewmanager.active_view === "list") {
-            return;
-        } else if (self.viewmanager.active_view === "form") {
+        if (self.viewmanager.active_view === "form") {
             for (var f in view.fields) {
                 f = view.fields[f];
                 if (!f.is_valid()) {
-                    this.invalid = true;
-                    return;
+                    return false;
                 }
             }
         }
+        return true;
+    },
+    is_dirty: function() {
+        if (!this.dataset)
+            return false;
+        this.save_form_view();
+        if (this.dataset.delete_all || this.dataset.to_create.length > 0 || this.dataset.to_write.length > 0
+            || this.dataset.to_delete > 0) {
+            return true;
+        }
+        return false;
     },
     update_dom: function() {
         this._super.apply(this, arguments);
