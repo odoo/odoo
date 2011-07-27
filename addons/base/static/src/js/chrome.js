@@ -544,8 +544,8 @@ openerp.base.Dialog = openerp.base.BaseWidget.extend({
             max_height: '100%',
             autoOpen: false,
             buttons: {},
-            close: function () {
-                self.stop();
+            beforeClose: function () {
+                self.on_close();
             }
         };
         for (var f in this) {
@@ -609,7 +609,15 @@ openerp.base.Dialog = openerp.base.BaseWidget.extend({
         this.set_options(options);
         this.$dialog.dialog(this.options).dialog('open');
     },
+    close: function() {
+        // Closes the dialog but leave it in a state where it could be opened again.
+        this.$dialog.dialog('close');
+    },
+    on_close: function() {
+    },
     stop: function () {
+        // Destroy widget
+        this.close();
         this.$dialog.dialog('destroy');
     }
 });

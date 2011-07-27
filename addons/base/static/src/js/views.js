@@ -98,11 +98,14 @@ openerp.base.ActionManager = openerp.base.Controller.extend({
 
 openerp.base.ActionDialog = openerp.base.Dialog.extend({
     identifier_prefix: 'action_dialog',
-    stop: function() {
+    on_close: function() {
         this._super(this, arguments);
         if (this.close_callback) {
             this.close_callback();
         }
+    },
+    stop: function() {
+        this._super(this, arguments);
         if (this.viewmanager) {
             this.viewmanager.stop();
         }
