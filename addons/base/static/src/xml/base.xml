@@ -271,7 +271,11 @@
                         </span>
                     </td>
                     <td class="treeview-td">
-                        <t t-esc="field.type" />
+                        <t t-foreach="selection_fields" t-as="selection">
+                            <t t-if="selection[0]==field.type">
+                                <t t-esc="selection[1]" />
+                            </t>
+                        </t>
                     </td>
                     <td class="treeview-td">
                         <t t-esc="field.sequence" />
@@ -293,7 +297,11 @@
                         </span>
                     </td>
                     <td class="treeview-td">
-                        <t t-esc="field.type" />
+                        <t t-foreach="selection_fields" t-as="selection">
+                            <t t-if="selection[0]==field.type">
+                                <t t-esc="selection[1]" />
+                            </t>
+                        </t>
                     </td>
                     <td class="treeview-td">
                         <t t-esc="field.sequence" />
