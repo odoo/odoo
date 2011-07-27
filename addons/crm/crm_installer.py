@@ -31,7 +31,7 @@ class crm_installer(osv.osv_memory):
         'crm_fundraising': fields.boolean('Fundraising', help="This may help associations in their fundraising process and tracking."),
         'crm_claim': fields.boolean('Claims', help="Manages the suppliers and customers claims, including your corrective or preventive actions."),
         'crm_caldav': fields.boolean('Calendar Synchronizing', help="Helps you to synchronize the meetings with other calendar clients and mobiles."),
-        'sale_crm': fields.boolean('Opportunity to Quotation', help="Create a Quotation from an Opportunity ."),
+        'sale_crm': fields.boolean('Opportunity to Quotation', help="Create a Quotation from an Opportunity."),
         'fetchmail': fields.boolean('Fetch Emails', help="Allows you to receive E-Mails from POP/IMAP server."),
         'thunderbird': fields.boolean('Thunderbird Plug-In', help="Allows you to link your e-mail to OpenERP's documents. You can attach it to any existing one in OpenERP or create a new one."),
         'outlook': fields.boolean('MS-Outlook Plug-In', help="Allows you to link your e-mail to OpenERP's documents. You can attach it to any existing one in OpenERP or create a new one."),
