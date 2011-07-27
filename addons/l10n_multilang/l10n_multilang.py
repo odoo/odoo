@@ -26,7 +26,7 @@ from tools.translate import _
 
 class translate_message(osv.osv_memory):
     _name = "translate.message"
-    _description = "Give Message After Translation completed"
+    _description = "Translation Message"
 
     _columns = {
         'message' : fields.text('Message', readonly=True),
