@@ -1,5 +1,5 @@
 openerp.web_mobile.form_mobile = function (openerp) {
-openerp.web_mobile.FormView = openerp.base.Controller.extend({
+openerp.web_mobile.FormView = openerp.base.Widget.extend({
     init: function(session, element_id, list_id, action) {
         this._super(session, element_id);
         this.list_id = list_id;

@@ -137,7 +137,7 @@ openerp.base.Registry = openerp.base.Class.extend( /** @lends openerp.base.Regis
 });
 
 
-openerp.base.Session = openerp.base.Controller.extend( /** @lends openerp.base.Session# */{
+openerp.base.Session = openerp.base.Widget.extend( /** @lends openerp.base.Session# */{
     /**
      * @constructs
      * @param element_id to use for exception reporting
@@ -405,7 +405,7 @@ openerp.base.Session = openerp.base.Controller.extend( /** @lends openerp.base.S
     }
 });
 
-openerp.base.Notification =  openerp.base.Controller.extend({
+openerp.base.Notification =  openerp.base.Widget.extend({
     init: function(parent, element_id) {
         this._super(parent, element_id);
         this.$element.notify({
@@ -427,7 +427,7 @@ openerp.base.Notification =  openerp.base.Controller.extend({
     }
 });
 
-openerp.base.Dialog = openerp.base.BaseWidget.extend({
+openerp.base.Dialog = openerp.base.OldWidget.extend({
     dialog_title: "",
     identifier_prefix: 'dialog',
     init: function (parent, options) {
@@ -557,7 +557,7 @@ openerp.base.CrashManager = openerp.base.Dialog.extend({
     }
 });
 
-openerp.base.Loading =  openerp.base.Controller.extend({
+openerp.base.Loading =  openerp.base.Widget.extend({
     init: function(parent, element_id) {
         this._super(parent, element_id);
         this.count = 0;
@@ -576,10 +576,10 @@ openerp.base.Loading =  openerp.base.Controller.extend({
     }
 });
 
-openerp.base.Database = openerp.base.Controller.extend({
+openerp.base.Database = openerp.base.Widget.extend({
 });
 
-openerp.base.Login =  openerp.base.Controller.extend({
+openerp.base.Login =  openerp.base.Widget.extend({
     remember_creditentials: true,
     init: function(parent, element_id) {
         this._super(parent, element_id);
@@ -657,7 +657,7 @@ openerp.base.Login =  openerp.base.Controller.extend({
     }
 });
 
-openerp.base.Header =  openerp.base.Controller.extend({
+openerp.base.Header =  openerp.base.Widget.extend({
     init: function(parent, element_id) {
         this._super(parent, element_id);
     },
@@ -671,7 +671,7 @@ openerp.base.Header =  openerp.base.Controller.extend({
     on_logout: function() {}
 });
 
-openerp.base.Menu =  openerp.base.Controller.extend({
+openerp.base.Menu =  openerp.base.Widget.extend({
     init: function(parent, element_id, secondary_menu_id) {
         this._super(parent, element_id);
         this.secondary_menu_id = secondary_menu_id;
@@ -752,16 +752,16 @@ openerp.base.Menu =  openerp.base.Controller.extend({
     }
 });
 
-openerp.base.Homepage = openerp.base.Controller.extend({
+openerp.base.Homepage = openerp.base.Widget.extend({
 });
 
-openerp.base.Preferences = openerp.base.Controller.extend({
+openerp.base.Preferences = openerp.base.Widget.extend({
 });
 
-openerp.base.ImportExport = openerp.base.Controller.extend({
+openerp.base.ImportExport = openerp.base.Widget.extend({
 });
 
-openerp.base.WebClient = openerp.base.Controller.extend({
+openerp.base.WebClient = openerp.base.Widget.extend({
     init: function(element_id) {
         this._super(null, element_id);
 
@@ -778,7 +778,7 @@ openerp.base.WebClient = openerp.base.Controller.extend({
         this.crashmanager.start(false);
 
         // Do you autorize this ? will be replaced by notify() in controller
-        openerp.base.Controller.prototype.notification = new openerp.base.Notification(this, "oe_notification");
+        openerp.base.Widget.prototype.notification = new openerp.base.Notification(this, "oe_notification");
 
         this.header = new openerp.base.Header(this, "oe_header");
         this.login = new openerp.base.Login(this, "oe_login");

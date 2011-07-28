@@ -4,7 +4,7 @@
 
 openerp.base.views = function(openerp) {
 
-openerp.base.ActionManager = openerp.base.Controller.extend({
+openerp.base.ActionManager = openerp.base.Widget.extend({
 // process all kind of actions
     init: function(parent, element_id) {
         this._super(parent, element_id);
@@ -112,7 +112,7 @@ openerp.base.ActionDialog = openerp.base.Dialog.extend({
     }
 });
 
-openerp.base.ViewManager =  openerp.base.Controller.extend({
+openerp.base.ViewManager =  openerp.base.Widget.extend({
     init: function(parent, element_id, dataset, views) {
         this._super(parent, element_id);
         this.model = dataset.model;
@@ -333,7 +333,7 @@ openerp.base.ViewManagerAction = openerp.base.ViewManager.extend({
         }
     },
     stop: function() {
-        // should be replaced by automatic destruction implemented in BaseWidget
+        // should be replaced by automatic destruction implemented in Widget
         this._super();
     },
     /**
@@ -360,7 +360,7 @@ openerp.base.ViewManagerAction = openerp.base.ViewManager.extend({
     }
 });
 
-openerp.base.Sidebar = openerp.base.Controller.extend({
+openerp.base.Sidebar = openerp.base.Widget.extend({
     init: function(parent, element_id) {
         this._super(parent, element_id);
         this.items = {};
@@ -461,7 +461,7 @@ openerp.base.Export = openerp.base.Dialog.extend({
     }
 });
 
-openerp.base.View = openerp.base.Controller.extend({
+openerp.base.View = openerp.base.Widget.extend({
     set_default_options: function(options) {
         this.options = options || {};
         _.defaults(this.options, {
