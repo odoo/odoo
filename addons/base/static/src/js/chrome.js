@@ -395,6 +395,8 @@ openerp.base.Session = openerp.base.Controller.extend( /** @lends openerp.base.S
     session_restore: function () {
         this.uid = this.get_cookie('uid');
         this.session_id = this.get_cookie('session_id');
+        this.db = this.get_cookie('db');
+        this.login = this.get_cookie('login');
         // we should do an rpc to confirm that this session_id is valid and if it is retrieve the information about db and login
         // then call on_session_valid
         this.on_session_valid();
@@ -405,12 +407,18 @@ openerp.base.Session = openerp.base.Controller.extend( /** @lends openerp.base.S
     session_save: function () {
         this.set_cookie('uid', this.uid);
         this.set_cookie('session_id', this.session_id);
+        this.set_cookie('db', this.db);
+        this.set_cookie('login', this.login);
     },
     logout: function() {
-        this.uid = this.get_cookie('uid');
-        this.session_id = this.get_cookie('session_id');
+        delete this.uid;
+        delete this.session_id;
+        delete this.db;
+        delete this.login;
         this.set_cookie('uid', '');
         this.set_cookie('session_id', '');
+        this.set_cookie('db', '');
+        this.set_cookie('login', '');
         this.on_session_invalid(function() {});
     },
     /**
