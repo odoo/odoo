@@ -148,6 +148,35 @@
             <field name="parent_id" ref="account_chart_template_a"/>
         </record>
 
+        <!-- Tax for template A-->
+        <record id="attn_VAT-OUT-21-S" model="account.tax.template">
+            <field name="sequence">10</field>
+            <field name="description">VAT-OUT-21-S</field>
+            <field name="name">VAT 21%</field>
+            <field name="amount">0.21</field>
+            <field name="type">percent</field>
+            <field name="chart_template_id" ref="account_chart_template_a"/>
+        </record>
+
+        <!-- Tax for template B-->
+        <record id="attn_VAT-OUT-4-S" model="account.tax.template">
+            <field name="sequence">12</field>
+            <field name="description">VAT-OUT-4-S</field>
+            <field name="name">VAT 4%</field>
+            <field name="amount">0.4</field>
+            <field name="type">percent</field>
+            <field name="chart_template_id" ref="account_chart_template_b"/>
+        </record>
+
+        <record id="attn_VAT-OUT-12-S" model="account.tax.template">
+            <field name="sequence">12</field>
+            <field name="description">VAT-OUT-12-S</field>
+            <field name="name">VAT 12%</field>
+            <field name="amount">0.12</field>
+            <field name="type">percent</field>
+            <field name="chart_template_id" ref="account_chart_template_b"/>
+        </record>
+
   </data>
 </openerp>
 

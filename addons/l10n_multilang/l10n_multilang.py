@@ -98,6 +98,8 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         obj_acc = self.pool.get('account.account')
         obj_tax_code_template = self.pool.get('account.tax.code.template')
         obj_tax_code = self.pool.get('account.tax.code')
+        obj_tax_template = self.pool.get('account.tax.template')
+        obj_tax = self.pool.get('account.tax')
         
         resource_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'l10n_multilang', 'view_translate_message_wizard')
         
@@ -125,6 +127,11 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         in_ids = obj_tax_code_template.search(cr, uid, [('id', 'child_of', [tax_code_template_root_id])], order='id')[1:]
         out_ids = obj_tax_code.search(cr, uid, [('id', 'child_of', [tax_code_root_id])], order='id')[1:]
         warn_msg += self.copy_translations(cr, uid, langs, obj_tax_code_template, 'name', in_ids, obj_tax_code, out_ids)
+
+        # copy account.tax translations
+        in_ids = sorted([x.id for x in obj_multi.chart_template_id.tax_template_ids])
+        out_ids = obj_tax.search(cr, uid, [('company_id', '=', company_id)], order='id')
+        warn_msg += self.copy_translations(cr, uid, langs, obj_tax_template, 'name', in_ids, obj_tax, out_ids)
 
         #open new wizard its for displaying warning message
         if warn_msg:
