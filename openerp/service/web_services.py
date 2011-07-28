@@ -50,7 +50,6 @@ from cStringIO import StringIO
 class db(netsvc.ExportService):
     def __init__(self, name="db"):
         netsvc.ExportService.__init__(self, name)
-        self.joinGroup("web-services")
         self.actions = {}
         self.id = 0
         self.id_protect = threading.Semaphore()
@@ -358,7 +357,6 @@ class db(netsvc.ExportService):
 class common(netsvc.ExportService):
     def __init__(self,name="common"):
         netsvc.ExportService.__init__(self,name)
-        self.joinGroup("web-services")
 
     def dispatch(self, method, auth, params):
         logger = netsvc.Logger()
@@ -553,7 +551,6 @@ GNU Public Licence.
 class objects_proxy(netsvc.ExportService):
     def __init__(self, name="object"):
         netsvc.ExportService.__init__(self,name)
-        self.joinGroup('web-services')
 
     def dispatch(self, method, auth, params):
         (db, uid, passwd ) = params[0:3]
@@ -583,7 +580,6 @@ class objects_proxy(netsvc.ExportService):
 class wizard(netsvc.ExportService):
     def __init__(self, name='wizard'):
         netsvc.ExportService.__init__(self,name)
-        self.joinGroup('web-services')
         self.id = 0
         self.wiz_datas = {}
         self.wiz_name = {}
@@ -642,7 +638,6 @@ class ExceptionWithTraceback(Exception):
 class report_spool(netsvc.ExportService):
     def __init__(self, name='report'):
         netsvc.ExportService.__init__(self, name)
-        self.joinGroup('web-services')
         self._reports = {}
         self.id = 0
         self.id_protect = threading.Semaphore()

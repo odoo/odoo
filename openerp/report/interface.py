@@ -51,7 +51,6 @@ class report_int(netsvc.Service):
         self.name2 = '.'.join(name.split('.')[1:])
         # TODO the reports have methods with a 'title' kwarg that is redundant with this attribute
         self.title = None
-        #self.joinGroup('report')
 
     def create(self, cr, uid, ids, datas, context=None):
         return False
