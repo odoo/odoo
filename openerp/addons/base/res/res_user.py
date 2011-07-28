@@ -547,6 +547,21 @@ class groups2(osv.osv):
                 todo.extend(g.implied_ids)
         return list(closure)
 
+    def get_rec_implied(self, cr):
+        "return a dictionary giving the recursively implied groups of each group"
+        groups = self.browse(cr, 1, self.search(cr, 1, []))
+        # compute the transitive closure of implied_ids
+        succs = dict([(g.id, set()) for g in groups])
+        preds = dict([(g.id, set()) for g in groups])
+        for g in groups:
+            for h in g.implied_ids:
+                # link g and its predecessors to h and its successors
+                ps = preds[g.id].union([g.id])
+                ss = succs[h.id].union([h.id])
+                for p in ps: succs[p] |= ss
+                for s in ss: preds[s] |= ps
+        return succs
+
     def get_classified(self, cr, uid, context=None):
         "return a classification (by application, etc.) of all groups"
         # determine the names of apps (that correspond to root menus)
