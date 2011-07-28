@@ -207,11 +207,11 @@ openerp.base.Export = openerp.base.Dialog.extend({
         _.each(result, function(record) {
             if((record.field_type == "one2many") && imp_cmpt){
                 var o2m_fld = $("tr[id='treerow-" + record.id + "']").find('#tree-column');
-                o2m_fld.addClass("readonlyfield");
+                o2m_fld.addClass("oe_export_readonlyfield");
             }
             if ((record.required == true) || record.required == "True"){
                 var required_fld = $("tr[id='treerow-" + record.id + "']").find('#tree-column');
-                required_fld.addClass("requiredfield");
+                required_fld.addClass("oe_export_requiredfield");
             }
             $("img[id='parentimg-" + record.id +"']").click(function(){
                 self.on_click(this.id, result);
@@ -228,14 +228,14 @@ openerp.base.Export = openerp.base.Dialog.extend({
                         if (this.rowIndex >=self.row_index){
                             for (i = (self.row_index-1); i < this.rowIndex; i++) {
                                 scnd_click = $("tr[id^='treerow-']")[i];
-                                if(!$(scnd_click).find('#tree-column').hasClass("readonlyfield")){
+                                if(!$(scnd_click).find('#tree-column').hasClass("oe_export_readonlyfield")){
                                     $(scnd_click).addClass("ui-selected");
                                 }
                             }
                         }else{
                             for (i = (self.row_index-1); i >= (this.rowIndex-1); i--) {
                                 scnd_click = $("tr[id^='treerow-']")[i];
-                                if(!$(scnd_click).find('#tree-column').hasClass("readonlyfield")){
+                                if(!$(scnd_click).find('#tree-column').hasClass("oe_export_readonlyfield")){
                                     $(scnd_click).addClass("ui-selected");
                                 }
                             }
@@ -248,7 +248,7 @@ openerp.base.Export = openerp.base.Dialog.extend({
                         self.row_index = 0;
                 });
                 var o2m_selection = $("tr[id='treerow-" + record.id + "']").find('#tree-column');
-                if ($(o2m_selection).hasClass("readonlyfield")){
+                if ($(o2m_selection).hasClass("oe_export_readonlyfield")){
                     return false;
                 }
                 var selected = $("tr.ui-selected");
@@ -287,7 +287,7 @@ openerp.base.Export = openerp.base.Dialog.extend({
                         while($(elem).prev().is(":visible") == false){
                             elem = $(elem).prev();
                         }
-                        if(!$(elem).prev().find('#tree-column').hasClass("readonlyfield")){
+                        if(!$(elem).prev().find('#tree-column').hasClass("oe_export_readonlyfield")){
                             $(elem).prev().addClass("ui-selected");
                         }
                         $(elem).prev().find('a').focus();
@@ -303,7 +303,7 @@ openerp.base.Export = openerp.base.Dialog.extend({
                         while($(elem).next().is(":visible") == false){
                             elem = $(elem).next();
                         }
-                        if(!$(elem).next().find('#tree-column').hasClass("readonlyfield")){
+                        if(!$(elem).next().find('#tree-column').hasClass("oe_export_readonlyfield")){
                             $(elem).next().addClass("ui-selected");
                         }
                         $(elem).next().find('a').focus();
@@ -312,7 +312,7 @@ openerp.base.Export = openerp.base.Dialog.extend({
             });
             $("tr[id='treerow-" + record.id + "']").dblclick(function (e) {
                 var o2m_selection = $("tr[id^='treerow-" + record.id + "']").find('#tree-column');
-                if (! $(o2m_selection).hasClass("readonlyfield")){
+                if (! $(o2m_selection).hasClass("oe_export_readonlyfield")){
                     var field_id =  $(this).find("a").attr("id");
                     if(field_id){
                        self.add_field(field_id.split('-')[1], $(this).find("a").attr("string"))
@@ -325,7 +325,7 @@ openerp.base.Export = openerp.base.Dialog.extend({
                 if (event.relatedTarget.attributes['id'] && event.relatedTarget.attributes['string']){
                     field_id = event.relatedTarget.attributes["id"]["value"]
                     if (field_id && field_id.split("-")[0] == 'export'){
-                        if(!$("tr[id='treerow-" + field_id.split("-")[1] + "']").find('#tree-column').hasClass("readonlyfield")){
+                        if(!$("tr[id='treerow-" + field_id.split("-")[1] + "']").find('#tree-column').hasClass("oe_export_readonlyfield")){
                             self.add_field(field_id.split("-")[1], event.relatedTarget.attributes["string"]["value"]);
                         }
                     }
