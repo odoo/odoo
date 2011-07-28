@@ -1,5 +1,5 @@
-openerp.base.export = function(openerp) {
-openerp.base.Export = openerp.base.Dialog.extend({
+openerp.base.data_export = function(openerp) {
+openerp.base.DataExport = openerp.base.Dialog.extend({
     init: function(parent, dataset, views){
         this._super(parent);
         this.dataset = dataset

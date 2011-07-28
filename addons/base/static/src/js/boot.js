@@ -86,8 +86,8 @@ openerp.base = function(instance) {
     if (openerp.base.view_tree) {
         openerp.base.view_tree(instance);
     }
-    if (openerp.base.export) {
-        openerp.base.export(instance);
+    if (openerp.base.data_export) {
+        openerp.base.data_export(instance);
     }
 };
 
