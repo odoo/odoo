@@ -149,8 +149,10 @@ instance.base.generate_null_object_class = function(claz, add) {
 // OLD 
 // --------------------------------------------------------
 /**
- * Class for OpenERP session aware classes to extend. Also provides callback mechanism and logging
- * facility.
+ * Utility class that any class is allowed to extend to easy common manipulations.
+ * 
+ * It provides rpc calls, callback on all methods preceded by "on_" or "do_" and a
+ * logging facility.
  */
 instance.base.SessionAware = instance.base.Class.extend({
     init: function(session) {
@@ -214,6 +216,58 @@ instance.base.SessionAware = instance.base.Class.extend({
     }
 });
 
+/**
+ * Base class for all visual components. Provides a lot of functionalities helpful
+ * for the management of a part of the DOM.
+ * 
+ * Widget handles:
+ * - Rendering with QWeb.
+ * - Life-cycle management and parenting (when a parent is destroyed, all its children are
+ *     destroyed too).
+ * - Insertion in DOM.
+ * 
+ * Widget also extends SessionAware for ease of use.
+ * 
+ * Guide to create implementations of this class:
+ * ==============================================
+ * 
+ * Here is a sample child class:
+ * 
+ * MyWidget = openerp.base.Widget.extend({
+ *     // the name of the QWeb template to use for rendering
+ *     template: "MyQWebTemplate",
+ *     // identifier prefix, useful to put an obvious one for debugging
+ *     identifier_prefix: 'my-id-prefix-',
+ * 
+ *     init: function(parent) {
+ *         this._super(parent);
+ *         // stuff that you want to init before the rendering
+ *     },
+ *     start: function() {
+ *         // stuff you want to make after the rendering, `this.$element` holds a value
+ *         this.$element.find(".my_button").click(/* an example of event binding * /);
+ * 
+ *         // if you have some asynchronous operations, it's a good idea to return
+ *         // a promise in start()
+ *         var promise = this.rpc(...);
+ *         return promise;
+ *     }
+ * });
+ * 
+ * Now this class can simply be used with the following syntax:
+ * 
+ * var my_widget = new MyWidget(this);
+ * my_widget.appendTo($(".some-div"));
+ * 
+ * With these two lines, the MyWidget instance was inited, rendered, it was inserted into the
+ * DOM inside the ".some-div" div and its events were binded.
+ * 
+ * And of course, when you don't need that widget anymore, just do:
+ * 
+ * my_widget.stop();
+ * 
+ * That will kill the widget in a clean way and erase its content from the dom.
+ */
 instance.base.Widget = instance.base.SessionAware.extend({
     /**
      * The name of the QWeb template that will be used for rendering. Must be
@@ -228,32 +282,91 @@ instance.base.Widget = instance.base.SessionAware.extend({
      * 
      * @type string
      */
-    identifier_prefix: 'generic-identifier',
+    identifier_prefix: 'generic-identifier-',
     /**
      * @constructs
-     * rpc operations, event binding and callback calling should be done in
-     * start() instead of init so that events can be hooked in between.
+     * Construct the widget and set its parent if a parent is given.
+     * 
+     * @param {Widget} parent Binds the current instance to the given Widget instance.
+     * When that widget is destroyed by calling stop(), the current instance will be
+     * destroyed too. Can be null.
+     * @param {String} element_id Deprecated. Sets the element_id. Only useful when you want
+     * to bind the current Widget to an already existing part of the DOM, which is not compatible
+     * with the DOM insertion methods provided by the current implementation of Widget. So
+     * for new components this argument should not be provided any more.
      */
-    init: function(parent, element_id) {
+    init: function(parent, /** @deprecated */ element_id) {
         this._super((parent || {}).session);
-        //TODO niv: get away the possibility to specify an id
+        // if given an element_id, try to get the associated DOM element and save
+        // a reference in this.$element. Else just generate a unique identifier.
         this.element_id = element_id;
         this.element_id = this.element_id || _.uniqueId(this.identifier_prefix);
+        var tmp = document.getElementById(this.element_id);
+        this.$element = tmp ? $(tmp) : undefined;
         
-        this.$element = $('#' + element_id);
-        if (element_id) {
-            instance.screen[element_id] = this;
-        }
-        // save the parent children relationship
         this.widget_parent = parent;
         this.widget_children = [];
         if(parent && parent.widget_children) {
             parent.widget_children.push(this);
         }
+        // useful to know if the widget was destroyed and should not be used anymore
+        this.widget_is_stopped = false;
     },
     /**
-     * Render the widget. This.template must be defined.
-     * The content of the current object is passed as context to the template.
+     * Render the current widget and appends it to the given jQuery object or Widget.
+     * 
+     * @param target A jQuery object or a Widget instance.
+     */
+    appendTo: function(target) {
+        var self = this;
+        return this._render_and_insert(function(t) {
+            self.$element.appendTo(t);
+        }, target);
+    },
+    /**
+     * Render the current widget and prepends it to the given jQuery object or Widget.
+     * 
+     * @param target A jQuery object or a Widget instance.
+     */
+    prependTo: function(target) {
+        var self = this;
+        return this._render_and_insert(function(t) {
+            self.$element.prependTo(t);
+        }, target);
+    },
+    /**
+     * Render the current widget and inserts it after to the given jQuery object or Widget.
+     * 
+     * @param target A jQuery object or a Widget instance.
+     */
+    insertAfter: function(target) {
+        var self = this;
+        return this._render_and_insert(function(t) {
+            self.$element.insertAfter(t);
+        }, target);
+    },
+    /**
+     * Render the current widget and inserts it before to the given jQuery object or Widget.
+     * 
+     * @param target A jQuery object or a Widget instance.
+     */
+    insertBefore: function(target) {
+        var self = this;
+        return this._render_and_insert(function(t) {
+            self.$element.insertBefore(t);
+        }, target);
+    },
+    _render_and_insert: function(insertion, target) {
+        var rendered = this.render();
+        this.$element = $(rendered);
+        if (target instanceof instance.base.Widget)
+            target = target.$element;
+        insertion(target);
+        return this.start();
+    },
+    /**
+     * Renders the widget using QWeb, `this.template` must be defined.
+     * The context given to QWeb contains the "widget" key that references `this`.
      * 
      * @param {object} additional Additional context arguments to pass to the template.
      */
@@ -261,19 +374,24 @@ instance.base.Widget = instance.base.SessionAware.extend({
         return QWeb.render(this.template, _.extend({widget: this}, additional || {}));
     },
     /**
-     * Event binding, rpc and callback calling required to initialize the
-     * object should happen here
-     *
-     * Returns a promise object letting callers (subclasses and direct callers)
-     * know when this component is done starting
+     * Method called after rendering. Mostly used to bind actions, perform asynchronous
+     * calls, etc...
+     * 
+     * By convention, the method should return a promise to inform the caller when
+     * this widget has been initialized.
      *
      * @returns {jQuery.Deferred}
      */
     start: function() {
-        var tmp = document.getElementById(this.element_id);
-        this.$element = tmp ? $(tmp) : null;
+        if (!this.$element) {
+            var tmp = document.getElementById(this.element_id);
+            this.$element = tmp ? $(tmp) : undefined;
+        }
         return $.Deferred().done().promise();
     },
+    /**
+     * Destroys the current widget, also destory all its children before destroying itself.
+     */
     stop: function() {
         _.each(_.clone(this.widget_children), function(el) {
             el.stop();
@@ -285,15 +403,37 @@ instance.base.Widget = instance.base.SessionAware.extend({
             this.widget_parent.widget_children = _.without(this.widget_parent.widget_children, this);
         }
         this.widget_parent = null;
+        this.widget_is_stopped = true;
     },
+    /**
+     * Inform the action manager to do an action. Of course, this suppose that
+     * the action manager can be found amongst the ancestors of the current widget.
+     * If that's not the case this method will simply return `false`.
+     */
     do_action: function(action, on_finished) {
-        return this.widget_parent.do_action(action, on_finished);
+        if (this.widget_parent) {
+            return this.widget_parent.do_action(action, on_finished);
+        }
+        return false;
+    },
+    rpc: function(url, data, success, error) {
+        var def = $.Deferred().then(success, error);
+        var self = this;
+        this._super(url, data). then(function() {
+            if (!self.widget_is_stopped)
+                def.resolve.apply(def, arguments);
+        }, function() {
+            if (!self.widget_is_stopped)
+                def.reject.apply(def, arguments);
+        });
+        return def.promise();
     }
 });
 
-/*
- * For retro compatibility only, the only difference with is that render takes
- * directly this instead of 
+/**
+ * @deprecated
+ * For retro compatibility only, the only difference with is that render() uses
+ * directly `this` instead of context with a "widget" key.
  */
 instance.base.OldWidget = instance.base.Widget.extend({
     render: function (additional) {
