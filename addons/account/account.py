@@ -2122,8 +2122,7 @@ class account_model(osv.osv):
 
         for model in self.browse(cr, uid, ids, context=context):
             context_date = context.get('date')
-            str_date = time.strptime(context_date,"%Y-%m-%d")
-            date = datetime.fromtimestamp(mktime(str_date))
+            date = datetime.strptime(context_date,"%Y-%m-%d")
             entry['name'] = model.name%{'year':date.strftime("%Y"), 'month':date.strftime("%m"), 'date': date.strftime("%Y-%m")}
             move_id = account_move_obj.create(cr, uid, {
                 'ref': entry['name'],
