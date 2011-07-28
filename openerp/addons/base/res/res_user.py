@@ -29,6 +29,7 @@ import pooler
 from tools.translate import _
 from service import security
 import netsvc
+from lxml import etree
 
 class groups(osv.osv):
     _name = "res.groups"
@@ -535,10 +536,10 @@ class groups2(osv.osv):
             string='Inherits', help='Users of this group automatically inherit those groups'),
     }
 
-    def implied_groups(self, cr, uid, ids, context=None):
-        "return all groups recursively implied by the given ids"
+    def get_closure(self, cr, ids):
+        "return the closure of ids, i.e., all groups recursively implied by ids"
         closure = set()
-        todo = self.browse(cr, uid, ids, context)
+        todo = self.browse(cr, 1, ids)
         while todo:
             g = todo.pop()
             if g.id not in closure:
@@ -547,6 +548,81 @@ class groups2(osv.osv):
         return list(closure)
 
 groups2()
+
+
+
+class users2(osv.osv):
+    _inherit = 'res.users'
+
+    def values_to_groups_id(self, cr, uid, values, context=None):
+        """ transform all fields like 'in_group_ID' into a 'groups_id', adding
+            also the implied groups """
+        add, rem = [], []
+        for k in values.keys():
+            if k.startswith('in_group_'):
+                # remove k from values, and place it in add or rem
+                (add if values.pop(k) else rem).append(int(k[9:]))
+        if add or rem:
+            # remove groups in 'rem' and add all implied groups in 'add'
+            add = self.pool.get('res.groups').get_closure(cr, add)
+            values['groups_id'] = [(3, id) for id in rem] + [(4, id) for id in add]
+        return True
+
+    def create(self, cr, uid, values, context=None):
+        # add processing for boolean fields 'in_group_ID'
+        self.values_to_groups_id(cr, uid, values, context)
+        return super(users2, self).create(cr, uid, values, context)
+
+    def write(self, cr, uid, ids, values, context=None):
+        # add processing for boolean fields 'in_group_ID'
+        self.values_to_groups_id(cr, uid, values, context)
+        return super(users2, self).write(cr, uid, ids, values, context)
+
+    def read(self, cr, uid, ids, fields, context=None, load='_classic_read'):
+        # add processing for boolean fields 'in_group_ID'
+        group_fields = []
+        other_fields = []
+        for f in fields:
+            if f.startswith('in_group_'):
+                group_fields.append(f)
+            else:
+                other_fields.append(f)
+        if group_fields:
+            fields = other_fields + ['groups_id']
+            res = super(users2, self).read(cr, uid, ids, fields, context, load)
+            for record in res:
+                # remove the field 'groups_id' and insert the group_fields
+                groups = record.pop('groups_id')
+                for f in group_fields:
+                    record[f] = int(f[9:]) in groups
+            return res
+        return super(users2, self).read(cr, uid, ids, fields, context, load)
+
+    def fields_view_get(self, cr, uid, view_id=None, view_type='form',
+                context=None, toolbar=False, submenu=False):
+        # in form views, transform 'groups_id' into boolean fields 'in_group_ID'
+        res = super(users2, self).fields_view_get(cr, uid, view_id, view_type,
+                context, toolbar, submenu)
+        if view_type == 'form':
+            root = etree.fromstring(res['arch'])
+            nodes = root.xpath("//field[@name='groups_id']")
+            if nodes:
+                # replace node by the boolean fields 'in_group_ID'
+                fields = res['fields']
+                del fields['groups_id']
+                groups = self.pool.get('res.groups')
+                elems = []
+                for g in groups.browse(cr, 1, groups.search(cr, 1, [])):
+                    name = 'in_group_%d' % g.id
+                    fields[name] = {'type': 'boolean', 'string': g.name, 'views': {}}
+                    elems.append('<field name="%s"/>' % name)
+                new_node = etree.fromstring('<group>' + ''.join(elems) + '</group>')
+                for node in nodes:
+                    node.getparent().replace(node, new_node)
+                res['arch'] = etree.tostring(root)
+        return res
+
+users2()
 
 
 
