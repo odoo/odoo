@@ -140,7 +140,7 @@ instance.base.generate_null_object_class = function(claz, add) {
             copy_proto(prototype.prototype);
     };
     copy_proto(claz.prototype);
-    newer.init = instance.base.Controller.prototype.init;
+    newer.init = instance.base.Widget.prototype.init;
     var tmpclass = claz.extend(newer);
     return tmpclass.extend(add || {});
 };
@@ -214,7 +214,7 @@ instance.base.SessionAware = instance.base.Class.extend({
     }
 });
 
-instance.base.Controller = instance.base.SessionAware.extend({
+instance.base.Widget = instance.base.SessionAware.extend({
     /**
      * The name of the QWeb template that will be used for rendering. Must be
      * redefined in subclasses or the default render() method can not be used.
@@ -295,7 +295,7 @@ instance.base.Controller = instance.base.SessionAware.extend({
  * For retro compatibility only, the only difference with is that render takes
  * directly this instead of 
  */
-instance.base.BaseWidget = instance.base.Controller.extend({
+instance.base.OldWidget = instance.base.Widget.extend({
     render: function (additional) {
         return QWeb.render(this.template, _.extend(_.extend({}, this), additional || {}));
     }
