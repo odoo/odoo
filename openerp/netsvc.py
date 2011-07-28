@@ -66,7 +66,7 @@ class Service(object):
         Functionality here is trusted, no authentication.
     """
     _services = {}
-    def __init__(self, name, audience=''):
+    def __init__(self, name):
         Service._services[name] = self
         self.__name = name
 
@@ -102,7 +102,7 @@ class ExportService(object):
     _services = {}
     _logger = logging.getLogger('web-services')
     
-    def __init__(self, name, audience=''):
+    def __init__(self, name):
         ExportService._services[name] = self
         self.__name = name
         self._logger.debug("Registered an exported service: %s" % name)

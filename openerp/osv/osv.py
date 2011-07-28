@@ -43,7 +43,7 @@ class except_osv(Exception):
 class object_proxy(netsvc.Service):
     def __init__(self):
         self.logger = logging.getLogger('web-services')
-        netsvc.Service.__init__(self, 'object_proxy', audience='')
+        netsvc.Service.__init__(self, 'object_proxy')
 
     def check(f):
         @wraps(f)

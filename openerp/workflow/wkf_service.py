@@ -27,8 +27,8 @@ import openerp.netsvc as netsvc
 import openerp.pooler as pooler
 
 class workflow_service(netsvc.Service):
-    def __init__(self, name='workflow', audience='*'):
-        netsvc.Service.__init__(self, name, audience)
+    def __init__(self, name='workflow'):
+        netsvc.Service.__init__(self, name)
         self.wkf_on_create_cache={}
 
     def clear_cache(self, cr, uid):
