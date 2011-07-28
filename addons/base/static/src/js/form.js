@@ -88,9 +88,10 @@ openerp.base.FormView = openerp.base.View.extend( /** @lends openerp.base.FormVi
         if (this.options.sidebar && this.options.sidebar_id) {
             this.sidebar = new openerp.base.Sidebar(this, this.options.sidebar_id);
             this.sidebar.start();
-            this.sidebar.attachments = new openerp.base.form.SidebarAttachments(this.sidebar, this.sidebar.add_section("Attachments"), this);
-            this.sidebar.add_toolbar(data.fields_view.toolbar);
             this.sidebar.do_unfold();
+            this.sidebar.attachments = new openerp.base.form.SidebarAttachments(this.sidebar, this.sidebar.add_section('attachments', "Attachments"), this);
+            this.sidebar.add_toolbar(data.fields_view.toolbar);
+            this.set_common_sidebar_sections(this.sidebar);
         }
         this.has_been_loaded.resolve();
     },
