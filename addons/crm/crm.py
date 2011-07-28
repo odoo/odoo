@@ -65,7 +65,7 @@ class crm_base(object):
             context = {}
         if not context.get('portal'):
             return False
-        return self.pool.get('res.users').browse(cr, uid, uid, context).address_id.id
+        return self.pool.get('res.partner.address').browse(cr, uid, uid, context)
 
     def _get_default_partner(self, cr, uid, context=None):
         """Gives id of partner for current user
@@ -75,10 +75,8 @@ class crm_base(object):
             context = {}
         if not context.get('portal', False):
             return False
-        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-        if not user.address_id:
-            return False
-        return user.address_id.partner_id.id
+        part_id = self.pool.get('res.partner.address').browse(cr, uid, uid, context=context)
+        return part_id.partner_id
     
     def _get_default_email(self, cr, uid, context=None):
         """Gives default email address for current user
@@ -87,9 +85,7 @@ class crm_base(object):
         if not context.get('portal', False):
             return False
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-        if not user.address_id:
-            return False
-        return user.address_id.email
+        return user.user_email
     
     def _get_default_user(self, cr, uid, context=None):
         """Gives current user id

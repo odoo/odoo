@@ -48,8 +48,8 @@ this if you want the rule to send an email to the partner."),
     def email_send(self, cr, uid, obj, emails, body, emailfrom=tools.config.get('email_from', False), context=None):
         body = self.format_mail(obj, body)
         if not emailfrom:
-            if hasattr(obj, 'user_id')  and obj.user_id and obj.user_id.address_id and obj.user_id.address_id.email:
-                emailfrom = obj.user_id.address_id.email
+            if hasattr(obj, 'user_id')  and obj.user_id and obj.user_id.user_email:
+                emailfrom = obj.user_id.user_email
 
         name = '[%d] %s' % (obj.id, tools.ustr(obj.name))
         emailfrom = tools.ustr(emailfrom)
