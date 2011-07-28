@@ -891,7 +891,7 @@ openerp.base.search.ExtendedSearch = openerp.base.BaseWidget.extend({
         if(this.$element.closest("table.oe-searchview-render-line").css("display") == "none") {
             return null;
         }
-        return _.reduce(this.children,
+        return _.reduce(this.widget_children,
             function(mem, x) { return mem.concat(x.get_domain());}, []);
     },
     on_activate: function() {
@@ -910,9 +910,9 @@ openerp.base.search.ExtendedSearch = openerp.base.BaseWidget.extend({
         }
     },
     check_last_element: function() {
-        _.each(this.children, function(x) {x.set_last_group(false);});
-        if (this.children.length >= 1) {
-            this.children[this.children.length - 1].set_last_group(true);
+        _.each(this.widget_children, function(x) {x.set_last_group(false);});
+        if (this.widget_children.length >= 1) {
+            this.widget_children[this.widget_children.length - 1].set_last_group(true);
         }
     }
 });
@@ -926,7 +926,7 @@ openerp.base.search.ExtendedSearchGroup = openerp.base.BaseWidget.extend({
     },
     add_prop: function() {
         var prop = new openerp.base.search.ExtendedSearchProposition(this, this.fields);
-        var render = prop.render({'index': this.children.length - 1});
+        var render = prop.render({'index': this.widget_children.length - 1});
         this.$element.find('.searchview_extended_propositions_list').append(render);
         prop.start();
     },
@@ -943,7 +943,7 @@ openerp.base.search.ExtendedSearchGroup = openerp.base.BaseWidget.extend({
         });
     },
     get_domain: function() {
-        var props = _(this.children).chain().map(function(x) {
+        var props = _(this.widget_children).chain().map(function(x) {
             return x.get_proposition();
         }).compact().value();
         var choice = this.$element.find(".searchview_extended_group_choice").val();
@@ -953,9 +953,9 @@ openerp.base.search.ExtendedSearchGroup = openerp.base.BaseWidget.extend({
             props);
     },
     stop: function() {
-        var parent = this.parent;
-        if (this.parent.children.length == 1)
-            this.parent.hide();
+        var parent = this.widget_parent;
+        if (this.widget_parent.widget_children.length == 1)
+            this.widget_parent.hide();
         this._super();
         parent.check_last_element();
     },
@@ -992,9 +992,12 @@ openerp.base.search.ExtendedSearchProposition = openerp.base.BaseWidget.extend({
         });
     },
     stop: function() {
-        if (this.parent.children.length == 1)
-            this.parent.stop();
+        var parent;
+        if (this.widget_parent.widget_children.length == 1)
+            parent = this.widget_parent;
         this._super();
+        if (parent)
+            parent.stop();
     },
     changed: function() {
         var nval = this.$element.find(".searchview_extended_prop_field").val();
