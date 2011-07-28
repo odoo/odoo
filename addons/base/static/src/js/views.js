@@ -364,6 +364,7 @@ openerp.base.Sidebar = openerp.base.Widget.extend({
     init: function(parent, element_id) {
         this._super(parent, element_id);
         this.items = {};
+        this.sections = {};
     },
     start: function() {
         var self = this;
@@ -385,11 +386,11 @@ openerp.base.Sidebar = openerp.base.Widget.extend({
                         classname: 'oe_sidebar_' + type[0]
                     }
                 }
-                self.add_section(type[1], items);
+                self.add_section(type[0], type[1], items);
             }
         });
     },
-    add_section: function(name, items) {
+    add_section: function(code, name, items) {
         // For each section, we pass a name/label and optionally an array of items.
         // If no items are passed, then the section will be created as a custom section
         // returning back an element_id to be used by a custom controller.
@@ -398,11 +399,12 @@ openerp.base.Sidebar = openerp.base.Widget.extend({
         //    label: label to be displayed for the link,
         //    action: action to be launch when the link is clicked,
         //    callback: a function to be executed when the link is clicked,
-        //    classname: optionnal dom class name for the line,
+        //    classname: optional dom class name for the line,
+        //    title: optional title for the link
         // }
         // Note: The item should have one action or/and a callback
         var self = this,
-            section_id = _.uniqueId(this.element_id + '_section_');
+            section_id = _.uniqueId(this.element_id + '_section_' + code + '_');
         if (items) {
             for (var i = 0; i < items.length; i++) {
                 items[i].element_id = _.uniqueId(section_id + '_item_');
@@ -412,6 +414,7 @@ openerp.base.Sidebar = openerp.base.Widget.extend({
         var $section = $(QWeb.render("Sidebar.section", {
             section_id: section_id,
             name: name,
+            classname: 'oe_sidebar_' + code,
             items: items
         }));
         if (items) {
@@ -429,6 +432,7 @@ openerp.base.Sidebar = openerp.base.Widget.extend({
             });
         }
         $section.appendTo(this.$element.find('div.sidebar-actions'));
+        this.sections[code] = $section;
         return section_id;
     },
     do_fold: function() {
@@ -530,6 +534,34 @@ openerp.base.View = openerp.base.Widget.extend({
      */
     set_embedded_view: function(embedded_view) {
         this.embedded_view = embedded_view;
+    },
+    set_common_sidebar_sections: function(sidebar) {
+        var items = [];
+        sidebar.add_section('customize', "Customize", [
+            {
+                label: "Manage Views",
+                callback: this.on_sidebar_manage_view,
+                title: "Manage views of the current object"
+            }, {
+                label: "Edit Workflow",
+                callback: this.on_sidebar_edit_workflow,
+                title: "Manage views of the current object",
+                classname: 'oe_hide oe_sidebar_edit_workflow'
+            }, {
+                label: "Customize Object",
+                callback: this.on_sidebar_customize_object,
+                title: "Manage views of the current object"
+            }
+        ]);
+    },
+    on_sidebar_manage_view: function() {
+        console.log('Todo');
+    },
+    on_sidebar_edit_workflow: function() {
+        console.log('Todo');
+    },
+    on_sidebar_customize_object: function() {
+        console.log('Todo');
     }
 });
 
