@@ -36,7 +36,7 @@ class groups(osv.osv):
     _order = 'name'
     _description = "Access Groups"
     _columns = {
-        'name': fields.char('Group Name', size=64, required=True),
+        'name': fields.char('Group Name', size=64, required=True, translate=True),
         'users': fields.many2many('res.users', 'res_groups_users_rel', 'gid', 'uid', 'Users'),
         'model_access': fields.one2many('ir.model.access', 'group_id', 'Access Controls'),
         'rule_groups': fields.many2many('ir.rule', 'rule_group_rel',
