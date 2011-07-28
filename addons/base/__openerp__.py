@@ -28,11 +28,13 @@
         "static/src/js/list-editable.js",
         "static/src/js/search.js",
         "static/src/js/view_tree.js",
+        "static/src/js/data_export.js",
     ],
     'css' : [
         "static/lib/jquery.superfish/css/superfish.css",
         "static/lib/jquery.ui/css/smoothness/jquery-ui-1.8.9.custom.css",
         "static/lib/jquery.ui.notify/css/ui.notify.css",
         "static/src/css/base.css",
+        "static/src/css/data_export.css",
     ],
 }

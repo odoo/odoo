@@ -219,7 +219,7 @@ openerp.base.ViewManager =  openerp.base.Widget.extend({
     },
     /**
      * Event launched when a controller has been inited.
-     * 
+     *
      * @param {String} view_type type of view
      * @param {String} view the inited controller
      */
@@ -446,25 +446,6 @@ openerp.base.Sidebar = openerp.base.Widget.extend({
     }
 });
 
-openerp.base.Export = openerp.base.Dialog.extend({
-    dialog_title: "Export",
-    template: 'ExportDialog',
-    identifier_prefix: 'export_dialog',
-    init: function (session, model, domain) {
-        this._super();
-    },
-    start: function () {
-        this._super();
-        this.$element.html(this.render());
-    },
-    on_button_Export: function() {
-        console.log("Export")
-    },
-    on_button_Cancel: function() {
-        this.$element.dialog("close");
-    }
-});
-
 openerp.base.View = openerp.base.Widget.extend({
     set_default_options: function(options) {
         this.options = options || {};
@@ -529,14 +510,13 @@ openerp.base.View = openerp.base.Widget.extend({
      * Directly set a view to use instead of calling fields_view_get. This method must
      * be called before start(). When an embedded view is set, underlying implementations
      * of openerp.base.View must use the provided view instead of any other one.
-     * 
+     *
      * @param embedded_view A view.
      */
     set_embedded_view: function(embedded_view) {
         this.embedded_view = embedded_view;
     },
     set_common_sidebar_sections: function(sidebar) {
-        var items = [];
         sidebar.add_section('customize', "Customize", [
             {
                 label: "Manage Views",
@@ -553,6 +533,23 @@ openerp.base.View = openerp.base.Widget.extend({
                 title: "Manage views of the current object"
             }
         ]);
+        sidebar.add_section('other', "Other Options", [
+            {
+                label: "Import",
+                callback: this.on_sidebar_import
+            }, {
+                label: "Export",
+                callback: this.on_sidebar_export
+            }, {
+                label: "Translate",
+                callback: this.on_sidebar_translate,
+                classname: 'oe_hide oe_sidebar_translate'
+            }, {
+                label: "View Log",
+                callback: this.on_sidebar_view_log,
+                classname: 'oe_hide oe_sidebar_view_log'
+            }
+        ]);
     },
     on_sidebar_manage_view: function() {
         console.log('Todo');
@@ -562,6 +559,16 @@ openerp.base.View = openerp.base.Widget.extend({
     },
     on_sidebar_customize_object: function() {
         console.log('Todo');
+    },
+    on_sidebar_import: function() {
+    },
+    on_sidebar_export: function() {
+        var export_view = new openerp.base.DataExport(this, this.dataset);
+        export_view.start(false);
+    },
+    on_sidebar_translate: function() {
+    },
+    on_sidebar_view_log: function() {
     }
 });
 
