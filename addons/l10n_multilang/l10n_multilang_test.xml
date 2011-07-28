@@ -177,6 +177,22 @@
             <field name="chart_template_id" ref="account_chart_template_b"/>
         </record>
 
+        <!-- account.fiscal.position.template -->
+        <record id="afptn_national" model="account.fiscal.position.template">
+            <field name="name">National Regime</field>
+            <field name="chart_template_id" ref="account_chart_template_a"/>
+        </record>
+
+        <record id="afptn_intracom" model="account.fiscal.position.template">
+            <field name="name">Intra Community Regime </field>
+            <field name="chart_template_id" ref="account_chart_template_a"/>
+        </record>
+
+        <record id="afptn_extracom" model="account.fiscal.position.template">
+            <field name="name">Extra Community Regime</field>
+            <field name="chart_template_id" ref="account_chart_template_b"/>
+        </record>
+
   </data>
 </openerp>
 
