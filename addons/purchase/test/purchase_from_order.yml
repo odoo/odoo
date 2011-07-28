@@ -52,6 +52,17 @@
 -
   !workflow {model: purchase.order, action: purchase_confirm, ref: purchase_order_po0}
 -
+  I changed Expected Date to Next Day.
+-
+  !python {model: purchase.order}: |
+    from tools.translate import _
+    import time
+    from datetime import datetime
+    from dateutil.relativedelta import relativedelta
+    next_day = datetime.today() + relativedelta(days=1)
+    purod_id=self.browse(cr, uid, ref("purchase_order_po0"))
+    self._set_minimum_planned_date(cr, uid, purod_id.id, 'minimum_planned_date', next_day.strftime('%Y-%m-%d'),None )
+-
   I check that the order which was initially in the draft state has transit to confirm state.
 -
   !assert {model: purchase.order, id: purchase_order_po0}:
