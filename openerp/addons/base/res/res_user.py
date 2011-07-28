@@ -603,17 +603,42 @@ groups2()
 
 
 
+# Naming conventions for reified groups fields:
+# - boolean field 'in_group_ID' is True iff
+#       ID is in 'groups_id'
+# - boolean field 'in_groups_ID1_..._IDk' is True iff
+#       any of ID1, ..., IDk is in 'groups_id'
+# - selection field 'sel_groups_ID1_..._IDk' is ID iff
+#       ID is in 'groups_id' and ID is maximal in the set {ID1, ..., IDk}
+
+def name_boolean_group(id): return 'in_group_' + str(id)
+def name_boolean_groups(ids): return 'in_groups_' + '_'.join(map(str, ids))
+def name_selection_groups(ids): return 'sel_groups_' + '_'.join(map(str, ids))
+
+def is_boolean_group(name): return name.startswith('in_group_')
+def is_boolean_groups(name): return name.startswith('in_groups_')
+def is_selection_groups(name): return name.startswith('sel_groups_')
+
+def get_boolean_group(name): return int(name[9:])
+def get_boolean_groups(name): return map(int, name[10:].split('_'))
+def get_selection_groups(name): return map(int, name[11:].split('_'))
+
 class users2(osv.osv):
     _inherit = 'res.users'
 
     def values_to_groups_id(self, cr, uid, values, context=None):
-        """ transform all fields like 'in_group_ID' into a 'groups_id', adding
+        """ transform all reified group fields into a 'groups_id', adding 
             also the implied groups """
         add, rem = [], []
         for k in values.keys():
-            if k.startswith('in_group_'):
-                # remove k from values, and place it in add or rem
-                (add if values.pop(k) else rem).append(int(k[9:]))
+            if is_boolean_group(k):
+                (add if values.pop(k) else rem).append(get_boolean_group(k))
+            elif is_boolean_groups(k):
+                if not values.pop(k):
+                    rem.extend(get_selection_groups(k))
+            elif is_selection_groups(k):
+                rem.extend(get_selection_groups(k))
+                add.append(int(values.pop(k)))
         if add or rem:
             # remove groups in 'rem' and add all implied groups in 'add'
             add = self.pool.get('res.groups').get_closure(cr, add)
@@ -621,21 +646,20 @@ class users2(osv.osv):
         return True
 
     def create(self, cr, uid, values, context=None):
-        # add processing for boolean fields 'in_group_ID'
+        # add processing for reified group fields
         self.values_to_groups_id(cr, uid, values, context)
         return super(users2, self).create(cr, uid, values, context)
 
     def write(self, cr, uid, ids, values, context=None):
-        # add processing for boolean fields 'in_group_ID'
+        # add processing for reified group fields
         self.values_to_groups_id(cr, uid, values, context)
         return super(users2, self).write(cr, uid, ids, values, context)
 
     def read(self, cr, uid, ids, fields, context=None, load='_classic_read'):
-        # add processing for boolean fields 'in_group_ID'
-        group_fields = []
-        other_fields = []
+        # add processing for reified group fields
+        group_fields, other_fields = [], []
         for f in fields:
-            if f.startswith('in_group_'):
+            if is_boolean_group(f) or is_boolean_groups(f) or is_selection_groups(f):
                 group_fields.append(f)
             else:
                 other_fields.append(f)
@@ -644,31 +668,59 @@ class users2(osv.osv):
             res = super(users2, self).read(cr, uid, ids, fields, context, load)
             for record in res:
                 # remove the field 'groups_id' and insert the group_fields
-                groups = record.pop('groups_id')
+                groups = set(record.pop('groups_id'))
                 for f in group_fields:
-                    record[f] = int(f[9:]) in groups
+                    if is_boolean_group(f):
+                        record[f] = get_boolean_group(f) in groups
+                    elif is_boolean_groups(f):
+                        record[f] = not groups.isdisjoint(get_boolean_groups(f))
+                    elif is_selection_groups(f):
+                        record[f] = False
+                        for gid in get_selection_groups(f):
+                            if gid in groups:
+                                record[f] = gid
+                                break
             return res
         return super(users2, self).read(cr, uid, ids, fields, context, load)
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form',
                 context=None, toolbar=False, submenu=False):
-        # in form views, transform 'groups_id' into boolean fields 'in_group_ID'
+        # in form views, transform 'groups_id' into reified group fields
         res = super(users2, self).fields_view_get(cr, uid, view_id, view_type,
                 context, toolbar, submenu)
         if view_type == 'form':
             root = etree.fromstring(res['arch'])
             nodes = root.xpath("//field[@name='groups_id']")
             if nodes:
-                # replace node by the boolean fields 'in_group_ID'
+                # replace node by the reified group fields
                 fields = res['fields']
-                del fields['groups_id']
-                groups = self.pool.get('res.groups')
                 elems = []
-                for g in groups.browse(cr, 1, groups.search(cr, 1, [])):
-                    name = 'in_group_%d' % g.id
-                    fields[name] = {'type': 'boolean', 'string': g.name, 'views': {}}
-                    elems.append('<field name="%s"/>' % name)
-                new_node = etree.fromstring('<group>' + ''.join(elems) + '</group>')
+                apps, others = self.pool.get('res.groups').get_classified(cr, uid, context)
+                # create section Applications
+                elems.append('<separator colspan="6" string="%s"/>' % _('Applications'))
+                for app, selection in apps:
+                    ids = [id for id, name in selection]
+                    app_name = name_boolean_groups(ids)
+                    sel_name = name_selection_groups(ids)
+                    fields[app_name] = {'type': 'boolean', 'string': app}
+                    fields[sel_name] = {'type': 'selection', 'string': '', 'selection': selection}
+                    elems.append('<field name="%s"/>' % app_name)
+                    elems.append('<field name="%s" nolabel="1"/>' % sel_name)
+                    elems.append('<newline/>')
+                # create other sections
+                sections = sorted(others.items(), key=lambda pair: pair[0])
+                if sections and sections[0][0] is None:
+                    sec, selection = sections.pop(0)
+                    sections.append((_('Others'), selection))
+                for sec, selection in sections:
+                    elems.append('<separator colspan="6" string="%s"/>' % sec)
+                    for id, gname in selection:
+                        name = name_boolean_group(id)
+                        fields[name] = {'type': 'boolean', 'string': gname}
+                        elems.append('<field name="%s"/>' % name)
+                    elems.append('<newline/>')
+                # replace xml node by new arch
+                new_node = etree.fromstring('<group col="6">' + ''.join(elems) + '</group>')
                 for node in nodes:
                     node.getparent().replace(node, new_node)
                 res['arch'] = etree.tostring(root)
