@@ -5,6 +5,7 @@
             <field name="name">Visa Journal</field>
             <field name="code">VIJ</field>
             <field name="type">cash</field>
+            <field eval="1" name="check_dtls"/>
             <field name="view_id" ref="account.account_journal_view"/>
             <field name="sequence_id" ref="account.sequence_journal"/>
             <field model="account.account" name="default_credit_account_id" ref="account.a_sale"/>
@@ -30,6 +31,7 @@
             <field name="name">Bancontact Journal</field>
             <field name="code">BACJ</field>
             <field name="type">cash</field>
+            <field eval="1" name="check_dtls"/>
             <field name="view_id" ref="account.account_journal_view"/>
             <field name="sequence_id" ref="account.sequence_journal"/>
             <field model="account.account" name="default_credit_account_id" ref="account.a_sale"/>
@@ -68,6 +70,7 @@
 
         <record id="account.cash_journal" model="account.journal">
             <field eval="[(6,0,[ref('base.user_root')])]" name="journal_users"/>
+            <field eval="1" name="check_dtls"/>
         </record>
 
     </data>

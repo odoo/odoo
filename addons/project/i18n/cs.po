@@ -1,20 +1,21 @@
 # Translation of OpenERP Server.
 # This file contains the translation of the following modules:
-# 	* project
+#   * project
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:15+0000\n"
-"PO-Revision-Date: 2010-10-30 13:19+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"PO-Revision-Date: 2011-07-15 02:36+0000\n"
+"Last-Translator: Chronos <robie@centrum.cz>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 04:43+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-07-16 04:56+0000\n"
+"X-Generator: Launchpad (build 13405)\n"
+"X-Poedit-Language: Czech\n"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.act_res_users_2_project_task_opened
@@ -24,13 +25,13 @@ msgstr "Přiřazené úkoly"
 #. module: project
 #: help:project.task.delegate,new_task_description:0
 msgid "Reinclude the description of the task in the task of the user"
-msgstr ""
+msgstr "Znovu zahrne popis úkolu v úkolu uživatele"
 
 #. module: project
-#: code:addons/project/project.py:658
+#: code:addons/project/project.py:671
 #, python-format
 msgid "The task '%s' has been delegated to %s."
-msgstr ""
+msgstr "Úkol '%s' byl delegován na %s."
 
 #. module: project
 #: help:res.company,project_time_mode_id:0
@@ -43,20 +44,20 @@ msgstr ""
 #. module: project
 #: constraint:res.users:0
 msgid "The chosen company is not in the allowed companies for this user"
-msgstr ""
+msgstr "VYbraná společnost není v povolených pro tohoto uživatele"
 
 #. module: project
 #: help:project.task.reevaluate,remaining_hours:0
 msgid "Put here the remaining hours required to close the task."
-msgstr ""
+msgstr "Zde dejte zbývající požadované hodiny do uzavření úkolu."
 
 #. module: project
 #: view:project.task:0
 msgid "Deadlines"
-msgstr ""
+msgstr "Konečný termín"
 
 #. module: project
-#: code:addons/project/project.py:121
+#: code:addons/project/project.py:118
 #, python-format
 msgid "Operation Not Permitted !"
 msgstr "Operace není povolena!"
@@ -65,7 +66,7 @@ msgstr "Operace není povolena!"
 #: code:addons/project/wizard/project_task_delegate.py:67
 #, python-format
 msgid "CHECK: %s"
-msgstr ""
+msgstr "KONTROLA: %s"
 
 #. module: project
 #: code:addons/project/wizard/project_task_delegate.py:55
@@ -75,17 +76,17 @@ msgstr ""
 #: code:addons/project/wizard/project_task_delegate.py:67
 #, python-format
 msgid "CHECK: "
-msgstr "Kontrola: "
+msgstr "KONTROLA: "
 
 #. module: project
 #: field:project.installer,project_issue:0
 msgid "Issues Tracker"
-msgstr ""
+msgstr "Sledovač problémů"
 
 #. module: project
 #: field:project.installer,hr_timesheet_sheet:0
 msgid "Timesheets"
-msgstr ""
+msgstr "Časové rozvrhy"
 
 #. module: project
 #: view:project.task:0
@@ -110,21 +111,22 @@ msgid ""
 "Total remaining time, can be re-estimated periodically by the assignee of "
 "the task."
 msgstr ""
+"Celkový zbývající čas může být pravidelně odhadován dle nabyvatele úkolu."
 
 #. module: project
 #: help:project.project,priority:0
 msgid "Gives the sequence order when displaying the list of projects"
-msgstr ""
+msgstr "Dává pořadové číslo, když zobrazuje seznam projektů"
 
 #. module: project
 #: constraint:project.project:0
 msgid "Error! project start-date must be lower then project end-date."
-msgstr ""
+msgstr "Chyba! Počáteční datum projektu musí být menší než datum ukončení."
 
 #. module: project
 #: view:project.task.reevaluate:0
 msgid "Reevaluation Task"
-msgstr ""
+msgstr "Znovu vyhodnocení úkolu"
 
 #. module: project
 #: field:project.project,members:0
@@ -139,12 +141,12 @@ msgstr "Úkoly dle delegace"
 #. module: project
 #: selection:report.project.task.user,month:0
 msgid "March"
-msgstr ""
+msgstr "Březen"
 
 #. module: project
 #: view:project.task:0
 msgid "Delegated tasks"
-msgstr ""
+msgstr "Delegované ůkoly"
 
 #. module: project
 #: field:project.task,child_ids:0
@@ -157,6 +159,8 @@ msgid ""
 "Header added at the beginning of the email for the warning message sent to "
 "the customer when a task is closed."
 msgstr ""
+"Hlavička přidaná na začátek emailu varovací zprávy zaslané zákazníkovi, když "
+"je úkol uzavřen."
 
 #. module: project
 #: view:project.task:0
@@ -166,7 +170,7 @@ msgstr "Mé úkoly"
 #. module: project
 #: constraint:project.task:0
 msgid "Error ! You cannot create recursive tasks."
-msgstr ""
+msgstr "Chyba ! Nemůžete vytvořit rekurzivní úlohy."
 
 #. module: project
 #: field:project.task,company_id:0
@@ -174,27 +178,27 @@ msgstr ""
 #: view:report.project.task.user:0
 #: field:report.project.task.user,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "Společnost"
 
 #. module: project
 #: field:project.installer,project_scrum:0
 msgid "SCRUM"
-msgstr ""
+msgstr "SCRUM"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_project_vs_planned_total_hours_graph
 msgid "Projects: Planned Vs Total hours"
-msgstr ""
+msgstr "Projekty: Plánované vs. Celkem hodin"
 
 #. module: project
 #: view:project.task.close:0
 msgid "Warn Message"
-msgstr ""
+msgstr "Varovná zpráva"
 
 #. module: project
 #: field:project.task.type,name:0
 msgid "Stage Name"
-msgstr ""
+msgstr "Jméno fáze"
 
 #. module: project
 #: model:process.transition.action,name:project.process_transition_action_openpendingtask0
@@ -205,51 +209,51 @@ msgstr "Nastavit nevyřízené"
 #: view:report.project.task.user:0
 #: field:report.project.task.user,opening_days:0
 msgid "Days to Open"
-msgstr ""
+msgstr "Dnů do otevření"
 
 #. module: project
 #: view:project.task:0
 msgid "Change Stage"
-msgstr ""
+msgstr "Změnit fázi"
 
 #. module: project
 #: view:project.project:0
 msgid "New Project Based on Template"
-msgstr "Nový projekt na základě šablony"
+msgstr "Nový projekt ze šablony šablony"
 
 #. module: project
 #: constraint:project.project:0
 msgid "Error! You cannot assign escalation to the same project!"
-msgstr ""
+msgstr "Chyba! Nemůžete přiřadit stupňování ke stejnému projektu!"
 
 #. module: project
 #: selection:project.task,priority:0
 #: selection:report.project.task.user,priority:0
 msgid "Very urgent"
-msgstr "Naléhavé"
+msgstr "Velmi naléhavé"
 
 #. module: project
 #: help:project.task.delegate,user_id:0
 msgid "User you want to delegate this task to"
-msgstr ""
+msgstr "Uživatel, na kterého chcete delegovat tuto úlohu"
 
 #. module: project
 #: view:report.project.task.user:0
 #: field:report.project.task.user,day:0
 #: field:task.by.days,day:0
 msgid "Day"
-msgstr ""
+msgstr "Den"
 
 #. module: project
-#: code:addons/project/project.py:571
+#: code:addons/project/project.py:584
 #, python-format
 msgid "The task '%s' is done"
-msgstr ""
+msgstr "Úloha '%s' je dokončena"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_close
 msgid "Project Close Task"
-msgstr ""
+msgstr "Ukončovací úloha projektu"
 
 #. module: project
 #: model:process.node,name:project.process_node_drafttask0
@@ -266,7 +270,7 @@ msgstr "Úkol"
 #. module: project
 #: view:project.project:0
 msgid "Members"
-msgstr ""
+msgstr "Členové"
 
 #. module: project
 #: help:project.task,planned_hours:0
@@ -274,11 +278,13 @@ msgid ""
 "Estimated time to do the task, usually set by the project manager when the "
 "task is in draft state."
 msgstr ""
+"Odhadovaný čas k provedení úkolu, obvykle nastaveno vedoucím projektu, když "
+"je úkol ve stavu návrhu."
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_work
 msgid "Project Task Work"
-msgstr ""
+msgstr "Práce úkolu projektu"
 
 #. module: project
 #: view:project.project:0
@@ -290,22 +296,22 @@ msgstr "Poznámky"
 #. module: project
 #: view:project.vs.hours:0
 msgid "Project vs remaining hours"
-msgstr ""
+msgstr "Projekt vs. zbývající hodiny"
 
 #. module: project
 #: view:project.project:0
 msgid "Invoice Address"
-msgstr ""
+msgstr "Fakturační adresa"
 
 #. module: project
 #: field:report.project.task.user,name:0
 msgid "Task Summary"
-msgstr ""
+msgstr "Souhrn úlohy"
 
 #. module: project
 #: field:project.task,active:0
 msgid "Not a Template Task"
-msgstr ""
+msgstr "Není šablonová úloha"
 
 #. module: project
 #: view:project.task:0
@@ -318,12 +324,15 @@ msgid ""
 "Helps generate invoices based on time spent on tasks, if activated on the "
 "project."
 msgstr ""
+"Pokud je aktivováno u projektu, tak pomáhá generovat faktury založené na "
+"čase stráveném na úkolech."
 
 #. module: project
 #: view:project.project:0
 msgid ""
 "Automatic variables for headers and footer. Use exactly the same notation."
 msgstr ""
+"Automatické proměnné pro hlavičky a zápatí. Používá přesně stejnou notaci."
 
 #. module: project
 #: selection:project.task,state:0
@@ -337,7 +346,7 @@ msgstr "Zrušeno"
 #: view:board.board:0
 #: model:ir.actions.act_window,name:project.action_view_task_tree
 msgid "My Open Tasks"
-msgstr ""
+msgstr "Moje otevřené úlohy"
 
 #. module: project
 #: view:project.project:0
@@ -348,7 +357,7 @@ msgstr "Hlavička e-mailu"
 #. module: project
 #: view:project.installer:0
 msgid "Configure Your Project Management Application"
-msgstr ""
+msgstr "Nastavit vaši aplikaci Projektového řízení"
 
 #. module: project
 #: model:process.node,name:project.process_node_donetask0
@@ -358,13 +367,13 @@ msgstr "Hotové úkoly"
 #. module: project
 #: help:project.task.delegate,prefix:0
 msgid "Title for your validation task"
-msgstr ""
+msgstr "Nadpis pro vaši ověřovací plohu"
 
 #. module: project
 #: view:report.project.task.user:0
 #: field:report.project.task.user,hours_delay:0
 msgid "Avg. Plan.-Eff."
-msgstr ""
+msgstr "Prům. Plán.-efek."
 
 #. module: project
 #: model:process.node,note:project.process_node_donetask0
@@ -375,29 +384,29 @@ msgstr "Úkol je kompletní"
 #: field:project.task,date_end:0
 #: field:report.project.task.user,date_end:0
 msgid "Ending Date"
-msgstr ""
+msgstr "Datum ukončení"
 
 #. module: project
 #: view:report.project.task.user:0
 msgid "   Month   "
-msgstr ""
+msgstr "   Měsíc   "
 
 #. module: project
 #: model:process.transition,note:project.process_transition_delegate0
 msgid "Delegates tasks to the other user"
-msgstr "Úkol je kompletní"
+msgstr "Delegovat úkol na jiného uživatele"
 
 #. module: project
 #: view:project.project:0
 #: view:project.task:0
 #: view:report.project.task.user:0
 msgid "Group By..."
-msgstr ""
+msgstr "Seskupit podle..."
 
 #. module: project
 #: help:project.task,effective_hours:0
 msgid "Computed using the sum of the task work done."
-msgstr ""
+msgstr "Spočítáno s použitím součtu provedené práce úlohy."
 
 #. module: project
 #: help:project.project,warn_customer:0
@@ -405,32 +414,34 @@ msgid ""
 "If you check this, the user will have a popup when closing a task that "
 "propose a message to send by email to the customer."
 msgstr ""
+"Pokud toto zaškrtnete, uživatel dostane vyskakovací okno při uzavírání "
+"úkolu, které navrhne zprávu k zaslání emailem zákazníkovi."
 
 #. module: project
 #: model:ir.model,name:project.model_res_users
 msgid "res.users"
-msgstr ""
+msgstr "res.users"
 
 #. module: project
 #: model:project.task.type,name:project.project_tt_testing
 msgid "Testing"
-msgstr ""
+msgstr "Testování"
 
 #. module: project
 #: help:project.task.delegate,planned_hours:0
 msgid "Estimated time to close this task by the delegated user"
-msgstr ""
+msgstr "Odhadovaný čas k uzavření tohoto úkolu delegovaným uživatelem"
 
 #. module: project
 #: view:project.project:0
 msgid "Reactivate Project"
-msgstr ""
+msgstr "Znovu aktivovat projekt"
 
 #. module: project
-#: code:addons/project/project.py:553
+#: code:addons/project/project.py:562
 #, python-format
 msgid "Task '%s' closed"
-msgstr ""
+msgstr "Úkol '%s' uzavřen"
 
 #. module: project
 #: model:ir.model,name:project.model_account_analytic_account
@@ -453,14 +464,14 @@ msgstr "Plánování"
 #: field:project.task,date_deadline:0
 #: field:report.project.task.user,date_deadline:0
 msgid "Deadline"
-msgstr ""
+msgstr "Končný termín"
 
 #. module: project
 #: view:project.task.close:0
 #: view:project.task.delegate:0
 #: view:project.task.reevaluate:0
 msgid "_Cancel"
-msgstr ""
+msgstr "_Zrušit"
 
 #. module: project
 #: model:ir.model,name:project.model_res_partner
@@ -474,56 +485,56 @@ msgstr "Partner"
 #. module: project
 #: constraint:account.analytic.account:0
 msgid "Error! You can not create recursive analytic accounts."
-msgstr ""
+msgstr "Chyba! Nemůžete vytvořit rekurzivní analytické účty."
 
 #. module: project
-#: code:addons/project/project.py:225
-#: code:addons/project/project.py:246
+#: code:addons/project/project.py:222
+#: code:addons/project/project.py:243
 #, python-format
 msgid " (copy)"
-msgstr ""
+msgstr " (kopie)"
 
 #. module: project
 #: help:project.installer,hr_timesheet_sheet:0
 msgid ""
 "Tracks and helps employees encode and validate timesheets and attendances."
-msgstr ""
+msgstr "Sleduje a pomáhá kódovat a ověřovat časové rozvrhy a docházku."
 
 #. module: project
 #: view:report.project.task.user:0
 #: field:report.project.task.user,nbr:0
 msgid "# of tasks"
-msgstr ""
+msgstr "# úkolů"
 
 #. module: project
 #: view:project.task:0
 msgid "Previous"
-msgstr ""
+msgstr "Předchozí"
 
 #. module: project
 #: view:project.task.reevaluate:0
 msgid "Reevaluate Task"
-msgstr ""
+msgstr "Znovuvyhodnotit úlohu"
 
 #. module: project
 #: field:report.project.task.user,user_id:0
 msgid "Assigned To"
-msgstr ""
+msgstr "Přiřazeno k"
 
 #. module: project
 #: view:project.project:0
 msgid "Date Stop: %(date)s"
-msgstr ""
+msgstr "Datum zastavení: %(date)s"
 
 #. module: project
 #: sql_constraint:res.users:0
 msgid "You can not have two users with the same login !"
-msgstr ""
+msgstr "Nemůžete mít dva uživatele se stejným přihlašovacím jménem !"
 
 #. module: project
 #: view:project.project:0
 msgid "Reset as Project"
-msgstr ""
+msgstr "Nulovat jako projekt"
 
 #. module: project
 #: selection:project.vs.hours,state:0
@@ -533,7 +544,7 @@ msgstr "Šablona"
 #. module: project
 #: model:project.task.type,name:project.project_tt_specification
 msgid "Specification"
-msgstr ""
+msgstr "Specifikace"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.act_my_project
@@ -543,23 +554,23 @@ msgstr "Mé projekty"
 #. module: project
 #: constraint:res.company:0
 msgid "Error! You can not create recursive companies."
-msgstr ""
+msgstr "Chyba! Nemůžete vytvořit rekurzivní společnosti."
 
 #. module: project
 #: view:project.task:0
 msgid "Next"
-msgstr ""
+msgstr "Další"
 
 #. module: project
 #: model:process.transition,note:project.process_transition_draftopentask0
 msgid "From draft state, it will come into the open state."
-msgstr ""
+msgstr "Z návrhového stavu přejde do otevřeného stavu."
 
 #. module: project
 #: view:report.project.task.user:0
 #: field:report.project.task.user,no_of_days:0
 msgid "# of Days"
-msgstr ""
+msgstr "# dnů"
 
 #. module: project
 #: help:project.task,active:0
@@ -568,11 +579,14 @@ msgid ""
 "boolean 'active' field: if the task is linked to a template or unactivated "
 "project, it will be hidden unless specifically asked."
 msgstr ""
+"Pole je spočítáno automaticky a chová se stejně, jako boolean pole "
+"'aktivní': pokud je úkol napojen na šablonu nebo neaktivovaný projekt, bude "
+"skryt pokud není zadáno jinak."
 
 #. module: project
 #: help:project.project,progress_rate:0
 msgid "Percent of tasks closed according to the total of tasks todo."
-msgstr ""
+msgstr "Procenta uzavřených úkolů podle celkového počtu úkolů k provedení."
 
 #. module: project
 #: view:project.task.delegate:0
@@ -583,44 +597,44 @@ msgstr "Popis nového úkolu"
 #. module: project
 #: model:res.request.link,name:project.req_link_task
 msgid "Project task"
-msgstr ""
+msgstr "Úloha projektu"
 
 #. module: project
 #: view:project.installer:0
 msgid "Methodologies"
-msgstr ""
+msgstr "Metodologie"
 
 #. module: project
 #: help:project.task,total_hours:0
 msgid "Computed as: Time Spent + Remaining Time."
-msgstr ""
+msgstr "spočítáno jako: Čas strávený + Čas zbývající."
 
 #. module: project
 #: help:project.task.close,partner_email:0
 msgid "Email Address of Customer"
-msgstr ""
+msgstr "Emailová adresa zákazníka"
 
 #. module: project
 #: view:report.project.task.user:0
 #: field:report.project.task.user,hours_effective:0
 msgid "Effective Hours"
-msgstr ""
+msgstr "Efektivních hodin"
 
 #. module: project
 #: view:project.task.delegate:0
 msgid "Validation Task Title"
-msgstr ""
+msgstr "Ověřit nadpis úkolu"
 
 #. module: project
 #: view:project.task:0
 msgid "Reevaluate"
-msgstr ""
+msgstr "Přehodnotit"
 
 #. module: project
-#: code:addons/project/project.py:531
+#: code:addons/project/project.py:539
 #, python-format
 msgid "Send Email after close task"
-msgstr ""
+msgstr "Odeslat email po uzavření úkolu"
 
 #. module: project
 #: view:report.project.task.user:0
@@ -647,12 +661,12 @@ msgstr "Zbývající hodiny"
 #: view:project.task:0
 #: view:project.task.work:0
 msgid "Task Work"
-msgstr ""
+msgstr "Práce úkolu"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_view_board_note_tree
 msgid "Public Notes"
-msgstr ""
+msgstr "Veřejné poznámky"
 
 #. module: project
 #: field:project.project,planned_hours:0
@@ -663,12 +677,12 @@ msgstr "Plánovaný čas"
 #: code:addons/project/wizard/project_task_close.py:86
 #, python-format
 msgid "Task '%s' Closed"
-msgstr ""
+msgstr "Úkol '%s' uzavřen"
 
 #. module: project
 #: view:report.project.task.user:0
 msgid "Non Assigned Tasks to users"
-msgstr ""
+msgstr "Nepřiřazené úkoly k uživatelům"
 
 #. module: project
 #: help:project.project,planned_hours:0
@@ -676,16 +690,18 @@ msgid ""
 "Sum of planned hours of all tasks related to this project and its child "
 "projects."
 msgstr ""
+"Součet plánovaných hodin všech úkolů vztažených k tomuto projektu a jeho "
+"podřízených projektech."
 
 #. module: project
 #: field:project.task.delegate,name:0
 msgid "Delegated Title"
-msgstr ""
+msgstr "Název delegovaného"
 
 #. module: project
 #: view:report.project.task.user:0
 msgid "My Projects"
-msgstr ""
+msgstr "Mé projekty"
 
 #. module: project
 #: view:project.task:0
@@ -695,13 +711,13 @@ msgstr "Další informace"
 #. module: project
 #: selection:report.project.task.user,month:0
 msgid "July"
-msgstr ""
+msgstr "Červenec"
 
 #. module: project
 #: model:ir.ui.menu,name:project.menu_definitions
 #: view:res.company:0
 msgid "Configuration"
-msgstr "Konfigurace"
+msgstr "Nastavení"
 
 #. module: project
 #: field:project.task,date_start:0
@@ -710,7 +726,7 @@ msgid "Starting Date"
 msgstr "Počáteční datum"
 
 #. module: project
-#: code:addons/project/project.py:267
+#: code:addons/project/project.py:264
 #: model:ir.actions.act_window,name:project.open_view_project_all
 #: model:ir.ui.menu,name:project.menu_open_view_project_all
 #: view:project.project:0
@@ -724,7 +740,7 @@ msgstr "Projekty"
 #: view:report.project.task.user:0
 #: field:report.project.task.user,type_id:0
 msgid "Stage"
-msgstr ""
+msgstr "Fáze"
 
 #. module: project
 #: model:ir.actions.act_window,help:project.open_task_type_form
@@ -735,10 +751,10 @@ msgid ""
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:622
+#: code:addons/project/project.py:635
 #, python-format
 msgid "The task '%s' is opened."
-msgstr ""
+msgstr "Úkol '%s' je otevřený."
 
 #. module: project
 #: view:project.task:0
@@ -748,12 +764,12 @@ msgstr "Datumy"
 #. module: project
 #: help:project.task.delegate,name:0
 msgid "New title of the task delegated to the user"
-msgstr ""
+msgstr "Název úkolu delegobvaného na uživatele"
 
 #. module: project
 #: view:report.project.task.user:0
 msgid "    Month-1    "
-msgstr ""
+msgstr "    Měsíc-1    "
 
 #. module: project
 #: view:project.installer:0
@@ -761,21 +777,23 @@ msgid ""
 "Various OpenERP applications are available to manage your projects with "
 "different level of control and flexibility."
 msgstr ""
+"Jsou dostupné různé aplikace OpenERP pro správu vašich projektů s různou "
+"úrovní řízení a pružbosti."
 
 #. module: project
 #: view:project.vs.hours:0
 msgid "Project vs Planned and Total Hours"
-msgstr ""
+msgstr "Projekt vs. Plánované a celkové hodiny"
 
 #. module: project
 #: model:process.transition,name:project.process_transition_draftopentask0
 msgid "Draft Open task"
-msgstr ""
+msgstr "Otevřené návrhové úkoly"
 
 #. module: project
 #: view:project.project:0
 msgid "User: %(user_id)s"
-msgstr ""
+msgstr "Uživatel: %(user_id)s"
 
 #. module: project
 #: field:project.task,delay_hours:0
@@ -787,23 +805,23 @@ msgstr "Hodin zpožděno"
 #: model:ir.ui.menu,name:project.menu_project_task_user_tree
 #: view:report.project.task.user:0
 msgid "Tasks Analysis"
-msgstr ""
+msgstr "Analýza úkolů"
 
 #. module: project
 #: model:ir.model,name:project.model_report_project_task_user
 msgid "Tasks by user and project"
-msgstr ""
+msgstr "Úkoly podle uživatele a projektu"
 
 #. module: project
 #: model:process.transition,name:project.process_transition_delegate0
 #: view:project.task:0
 msgid "Delegate"
-msgstr ""
+msgstr "Delegovat"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.open_view_template_project
 msgid "Templates of Projects"
-msgstr ""
+msgstr "Šablony pro projekty"
 
 #. module: project
 #: model:ir.model,name:project.model_project_project
@@ -823,18 +841,18 @@ msgstr "Projekt"
 #. module: project
 #: view:project.task.reevaluate:0
 msgid "_Evaluate"
-msgstr ""
+msgstr "_Vyhodnotit"
 
 #. module: project
 #: view:board.board:0
 msgid "My Board"
-msgstr ""
+msgstr "Moje tabule"
 
 #. module: project
 #: code:addons/project/wizard/project_task_close.py:79
 #, python-format
 msgid "Please specify the email address of Project Manager."
-msgstr ""
+msgstr "Prosíme zadejte emailovou adresu Vedoucího projektu."
 
 #. module: project
 #: model:ir.module.module,shortdesc:project.module_meta_information
@@ -845,13 +863,13 @@ msgstr "Správa projektů"
 #. module: project
 #: selection:report.project.task.user,month:0
 msgid "August"
-msgstr ""
+msgstr "Srpen"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_project_task_delegate
 #: view:project.task.delegate:0
 msgid "Project Task Delegate"
-msgstr ""
+msgstr "Delegace úlohy projektu"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.act_project_project_2_project_task_all
@@ -868,12 +886,12 @@ msgstr "Úkoly"
 #. module: project
 #: view:project.project:0
 msgid "Parent"
-msgstr ""
+msgstr "Nadřazené"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_delegate
 msgid "Task Delegate"
-msgstr ""
+msgstr "Delegace úlohy"
 
 #. module: project
 #: model:ir.actions.act_window,help:project.action_view_task
@@ -891,22 +909,22 @@ msgstr ""
 #. module: project
 #: selection:report.project.task.user,month:0
 msgid "September"
-msgstr ""
+msgstr "Září"
 
 #. module: project
 #: selection:report.project.task.user,month:0
 msgid "December"
-msgstr ""
+msgstr "Prosinec"
 
 #. module: project
 #: field:project.installer,config_logo:0
 msgid "Image"
-msgstr ""
+msgstr "Obrázek"
 
 #. module: project
 #: field:project.task,progress:0
 msgid "Progress (%)"
-msgstr ""
+msgstr "Průběh (%)"
 
 #. module: project
 #: help:project.task,state:0
@@ -917,28 +935,33 @@ msgid ""
 "         \n"
 " If the task is over, the states is set to 'Done'."
 msgstr ""
+"Když je úkol vytvořen, tak je stav 'Koncept'.\n"
+" Když je úkol započat, stav přechází na 'V běhu'.\n"
+" Pokud je požadováno přezkoumání, stav je 'Nevyřízené'.                      "
+"          \n"
+" Pokud je úkol dokončen, stav je nastaven na 'Hotovo'."
 
 #. module: project
 #: help:project.task,progress:0
 msgid "Computed as: Time Spent / Total Time."
-msgstr ""
+msgstr "Vypočítáno jako: Čas strávený / Čas celkový."
 
 #. module: project
 #: view:report.project.task.user:0
 #: field:report.project.task.user,month:0
 msgid "Month"
-msgstr ""
+msgstr "Měsíc"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.dblc_proj
 msgid "Project's tasks"
-msgstr "Projektové úkoly"
+msgstr "Úkoly projektů"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_type
 #: view:project.task.type:0
 msgid "Task Stage"
-msgstr ""
+msgstr "Fáze úkolu"
 
 #. module: project
 #: field:project.task,planned_hours:0
@@ -962,34 +985,34 @@ msgstr "Stav: %(state)s"
 #. module: project
 #: field:project.installer,project_long_term:0
 msgid "Long Term Planning"
-msgstr ""
+msgstr "Dlouhodobé plánovaní"
 
 #. module: project
 #: view:project.project:0
 #: view:project.task:0
 msgid "Start Date"
-msgstr ""
+msgstr "Počáteční datum"
 
 #. module: project
 #: view:project.task:0
 #: field:project.task,parent_ids:0
 msgid "Parent Tasks"
-msgstr ""
+msgstr "Nadřazené úkoly"
 
 #. module: project
 #: field:project.project,warn_customer:0
 msgid "Warn Partner"
-msgstr ""
+msgstr "Varovat partnera"
 
 #. module: project
 #: view:report.project.task.user:0
 msgid "  Year  "
-msgstr ""
+msgstr "  Rok  "
 
 #. module: project
 #: view:project.project:0
 msgid "Billing"
-msgstr ""
+msgstr "Fakturace"
 
 #. module: project
 #: view:project.task:0
@@ -999,33 +1022,33 @@ msgstr "Informace"
 #. module: project
 #: help:project.installer,account_budget:0
 msgid "Helps accountants manage analytic and crossover budgets."
-msgstr ""
+msgstr "Pomáhá účetním spravovat analytický a přechodný rozpočet."
 
 #. module: project
 #: field:project.task,priority:0
 #: field:report.project.task.user,priority:0
 msgid "Priority"
-msgstr ""
+msgstr "Priorita"
 
 #. module: project
 #: view:project.project:0
 msgid "Administration"
-msgstr "Administrace"
+msgstr "Správa"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_reevaluate
 msgid "project.task.reevaluate"
-msgstr ""
+msgstr "project.task.reevaluate"
 
 #. module: project
 #: view:report.project.task.user:0
 msgid "My Task"
-msgstr ""
+msgstr "Můj úkol"
 
 #. module: project
 #: view:project.project:0
 msgid "Member"
-msgstr ""
+msgstr "Člen"
 
 #. module: project
 #: view:project.task:0
@@ -1035,7 +1058,7 @@ msgstr "Projektové úkoly"
 #. module: project
 #: constraint:res.partner:0
 msgid "Error ! You can not create recursive associated members."
-msgstr ""
+msgstr "Chyba ! Nemůžete vytvořit rekurzivní asociované členy."
 
 #. module: project
 #: model:process.transition.action,name:project.process_transition_action_opendrafttask0
@@ -1052,23 +1075,23 @@ msgstr "Koncept"
 #: selection:project.task,priority:0
 #: selection:report.project.task.user,priority:0
 msgid "Low"
-msgstr ""
+msgstr "Nízký"
 
 #. module: project
 #: view:project.project:0
 msgid "Performance"
-msgstr ""
+msgstr "Výkonost"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_view_task_tree_deadline
 msgid "My Task's Deadlines"
-msgstr ""
+msgstr "Moje krajní termíny úkolů"
 
 #. module: project
 #: view:project.project:0
 #: field:project.task,manager_id:0
 msgid "Project Manager"
-msgstr ""
+msgstr "Vedoucí projektu"
 
 #. module: project
 #: view:project.project:0
@@ -1085,18 +1108,18 @@ msgstr "Nevyřízené"
 #. module: project
 #: view:project.task:0
 msgid "Task Edition"
-msgstr ""
+msgstr "Úprava úkolu"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.open_task_type_form
 #: model:ir.ui.menu,name:project.menu_task_types_view
 msgid "Stages"
-msgstr ""
+msgstr "Fáze"
 
 #. module: project
 #: view:project.installer:0
 msgid "Configure"
-msgstr ""
+msgstr "Nastavit"
 
 #. module: project
 #: view:project.project:0
@@ -1110,11 +1133,13 @@ msgid ""
 "New state of your own task. Pending will be reopened automatically when the "
 "delegated task is closed"
 msgstr ""
+"Nový stav vašeho vlastního úkolu. Nevyřízené budou automaticky znovu "
+"otevřený, když je uzavřen delegovaný úkol"
 
 #. module: project
 #: selection:report.project.task.user,month:0
 msgid "June"
-msgstr ""
+msgstr "Červen"
 
 #. module: project
 #: help:project.installer,project_scrum:0
@@ -1122,24 +1147,24 @@ msgid ""
 "Implements and tracks the concepts and task types defined in the SCRUM "
 "methodology."
 msgstr ""
+"Realizuje sledování konceptů a typů úkolů definovaných v metodologii SCRUM."
 
 #. module: project
 #: view:report.project.task.user:0
 #: field:report.project.task.user,closing_days:0
 msgid "Days to Close"
-msgstr ""
+msgstr "Dnů k uzavření"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.open_board_project
 #: model:ir.ui.menu,name:project.menu_board_project
 msgid "Project Dashboard"
-msgstr ""
+msgstr "Nástěnka projektu"
 
 #. module: project
 #: view:project.project:0
-#: field:project.project,parent_id:0
 msgid "Parent Project"
-msgstr "Výchozí projekt"
+msgstr "Nadřazený projekt"
 
 #. module: project
 #: field:project.project,active:0
@@ -1149,53 +1174,53 @@ msgstr "Aktivní"
 #. module: project
 #: model:process.node,note:project.process_node_drafttask0
 msgid "Define the Requirements and Set Planned Hours."
-msgstr ""
+msgstr "Definuje požadavky a nastavuje plánované hodiny"
 
 #. module: project
 #: selection:report.project.task.user,month:0
 msgid "November"
-msgstr ""
+msgstr "Listopad"
 
 #. module: project
 #: view:report.project.task.user:0
 msgid "Extended Filters..."
-msgstr ""
+msgstr "Rozšířené filtry..."
 
 #. module: project
 #: field:project.task.close,partner_email:0
 msgid "Customer Email"
-msgstr ""
+msgstr "Email zákazníka"
 
 #. module: project
-#: code:addons/project/project.py:190
+#: code:addons/project/project.py:187
 #, python-format
 msgid "The project '%s' has been closed."
-msgstr ""
+msgstr "Projekt '%s' byl ukončen."
 
 #. module: project
 #: view:project.task:0
 msgid "Task edition"
-msgstr ""
+msgstr "Úprava úkolu"
 
 #. module: project
 #: selection:report.project.task.user,month:0
 msgid "October"
-msgstr ""
+msgstr "Říjen"
 
 #. module: project
 #: help:project.task.close,manager_warn:0
 msgid "Warn Manager by Email"
-msgstr ""
+msgstr "Varovat vedoucího emailem"
 
 #. module: project
 #: model:process.node,name:project.process_node_opentask0
 msgid "Open task"
-msgstr ""
+msgstr "Otevřít úkol"
 
 #. module: project
 #: field:project.task.close,manager_email:0
 msgid "Manager Email"
-msgstr ""
+msgstr "Email správce"
 
 #. module: project
 #: help:project.project,active:0
@@ -1203,39 +1228,41 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the project "
 "without removing it."
 msgstr ""
+"Pokud je pole aktivní nastaveno na Nepravda, povolí vám to skrýt projekt bez "
+"jeho odebrání."
 
 #. module: project
 #: model:ir.model,name:project.model_res_company
 msgid "Companies"
-msgstr ""
+msgstr "Společnosti"
 
 #. module: project
 #: model:process.transition,note:project.process_transition_opendonetask0
 msgid "When task is completed, it will come into the done state."
-msgstr ""
+msgstr "Když je úkol dokončen, přejde do hotového stavu."
 
 #. module: project
-#: code:addons/project/project.py:212
+#: code:addons/project/project.py:209
 #, python-format
 msgid "The project '%s' has been opened."
-msgstr ""
+msgstr "Projekt '%s' byl otevřen."
 
 #. module: project
 #: field:project.task.work,date:0
 msgid "Date"
-msgstr ""
+msgstr "Datum"
 
 #. module: project
 #: model:ir.ui.menu,name:project.next_id_86
 msgid "Dashboard"
-msgstr ""
+msgstr "Nástěnka"
 
 #. module: project
 #: constraint:account.analytic.account:0
 msgid ""
 "Error! The currency has to be the same as the currency of the selected "
 "company"
-msgstr ""
+msgstr "Chyba! Měna musí být stejná jako měna vybrané společnosti"
 
 #. module: project
 #: code:addons/project/wizard/project_task_close.py:79
@@ -1244,48 +1271,48 @@ msgstr ""
 #: code:addons/project/wizard/project_task_close.py:111
 #, python-format
 msgid "Error"
-msgstr ""
+msgstr "Chyba"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.act_res_users_2_project_project
 msgid "User's projects"
-msgstr ""
+msgstr "Projekty uživatele"
 
 #. module: project
 #: field:project.installer,progress:0
 msgid "Configuration Progress"
-msgstr ""
+msgstr "Průběh nastavení"
 
 #. module: project
 #: view:project.task.delegate:0
 msgid "_Delegate"
-msgstr ""
+msgstr "_Delegovat"
 
 #. module: project
 #: code:addons/project/wizard/project_task_close.py:91
 #, python-format
 msgid "Couldn't send mail because your email address is not configured!"
-msgstr ""
+msgstr "Nelze odeslat poštu, protože není nastavena váše poštovní adresa!"
 
 #. module: project
 #: help:report.project.task.user,opening_days:0
 msgid "Number of Days to Open the task"
-msgstr ""
+msgstr "Počet dnů do otevření úkolů"
 
 #. module: project
 #: field:project.task,delegated_user_id:0
 msgid "Delegated To"
-msgstr ""
+msgstr "Delegováno na"
 
 #. module: project
 #: view:res.partner:0
 msgid "History"
-msgstr ""
+msgstr "Historie"
 
 #. module: project
 #: view:report.project.task.user:0
 msgid "Assigned to"
-msgstr ""
+msgstr "Přiřadit k"
 
 #. module: project
 #: view:project.task.delegate:0
@@ -1307,7 +1334,7 @@ msgstr ""
 #. module: project
 #: help:project.task.close,partner_warn:0
 msgid "Warn Customer by Email"
-msgstr ""
+msgstr "Varovat zákazníka emailem"
 
 #. module: project
 #: model:ir.module.module,description:project.module_meta_information
@@ -1319,11 +1346,18 @@ msgid ""
 "    * Members list of project\n"
 "    "
 msgstr ""
+"Modul Projektové správy sleduje více-úrovňové projekty a úkoly,\n"
+"dokončenou práci na úkolech, aj. Dokáže vykreslit plánování, vytvářet úkoly, "
+"aj.\n"
+" Nástěnka pro členy projektu zahrnuje:\n"
+"    * Seznam otevřených úkolů\n"
+"    * Seznam členů projektu\n"
+"    "
 
 #. module: project
 #: model:ir.actions.act_window,name:project.act_res_users_2_project_task_work_month
 msgid "Month works"
-msgstr ""
+msgstr "Měsíční práce"
 
 #. module: project
 #: field:project.project,priority:0
@@ -1331,7 +1365,7 @@ msgstr ""
 #: field:project.task,sequence:0
 #: field:project.task.type,sequence:0
 msgid "Sequence"
-msgstr ""
+msgstr "Pořadí"
 
 #. module: project
 #: view:project.task:0
@@ -1341,7 +1375,7 @@ msgstr ""
 #: field:report.project.task.user,state:0
 #: field:task.by.days,state:0
 msgid "State"
-msgstr ""
+msgstr "Stav"
 
 #. module: project
 #: model:ir.actions.act_window,help:project.action_project_task_user_tree
@@ -1352,15 +1386,15 @@ msgid ""
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:582
+#: code:addons/project/project.py:595
 #, python-format
 msgid "Task '%s' set in progress"
-msgstr ""
+msgstr "Úkol '%s' je v běhu"
 
 #. module: project
 #: view:project.project:0
 msgid "Date Start: %(date_start)s"
-msgstr ""
+msgstr "Počáteční datum: %(date_start)s"
 
 #. module: project
 #: help:project.project,analytic_account_id:0
@@ -1379,7 +1413,7 @@ msgstr ""
 #: selection:report.project.task.user,state:0
 #: selection:task.by.days,state:0
 msgid "Done"
-msgstr ""
+msgstr "Dokončeno"
 
 #. module: project
 #: model:process.transition.action,name:project.process_transition_action_draftcanceltask0
@@ -1387,30 +1421,30 @@ msgstr ""
 #: view:project.project:0
 #: view:project.task:0
 msgid "Cancel"
-msgstr "Storno"
+msgstr "Zrušit"
 
 #. module: project
 #: selection:project.vs.hours,state:0
 msgid "Close"
-msgstr ""
+msgstr "Uzavřít"
 
 #. module: project
 #: model:process.transition.action,name:project.process_transition_action_draftopentask0
 #: selection:project.vs.hours,state:0
 msgid "Open"
-msgstr ""
+msgstr "Otevřít"
 
 #. module: project
-#: code:addons/project/project.py:121
+#: code:addons/project/project.py:118
 #, python-format
 msgid ""
 "You can not delete a project with tasks. I suggest you to deactivate it."
-msgstr ""
+msgstr "Nemůžete odstarnit projekt s úkoly. Navrhujeme jeho deaktivování."
 
 #. module: project
 #: view:project.project:0
 msgid "ID: %(task_id)s"
-msgstr ""
+msgstr "ID: %(task_id)s"
 
 #. module: project
 #: view:project.task:0
@@ -1418,39 +1452,39 @@ msgstr ""
 #: selection:report.project.task.user,state:0
 #: selection:task.by.days,state:0
 msgid "In Progress"
-msgstr ""
+msgstr "V běhu"
 
 #. module: project
 #: code:addons/project/wizard/project_task_close.py:82
 #, python-format
 msgid "Please specify the email address of Customer."
-msgstr ""
+msgstr "Prosíme zadejte emailovou adresu zákazníka."
 
 #. module: project
 #: view:project.task:0
 msgid "Reactivate"
-msgstr ""
+msgstr "Znovu aktivovat"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_project_task_close
 #: view:project.task.close:0
 msgid "Send Email"
-msgstr ""
+msgstr "Poslat Email"
 
 #. module: project
 #: view:res.users:0
 msgid "Current Activity"
-msgstr ""
+msgstr "Aktuální činnosti"
 
 #. module: project
 #: field:project.task,user_id:0
 msgid "Responsible"
-msgstr ""
+msgstr "Odpovědný"
 
 #. module: project
 #: view:project.project:0
 msgid "Search Project"
-msgstr ""
+msgstr "Hledat projekt"
 
 #. module: project
 #: help:project.installer,project_gtd:0
@@ -1462,31 +1496,31 @@ msgstr ""
 #. module: project
 #: model:ir.model,name:project.model_project_vs_hours
 msgid " Project vs  hours"
-msgstr ""
+msgstr " Projekty vs.  hodiny"
 
 #. module: project
 #: view:project.project:0
 #: view:project.task:0
 #: view:report.project.task.user:0
 msgid "Current"
-msgstr ""
+msgstr "Aktuální"
 
 #. module: project
 #: selection:project.task,priority:0
 #: selection:report.project.task.user,priority:0
 msgid "Very Low"
-msgstr ""
+msgstr "Velmi nízké"
 
 #. module: project
 #: field:project.project,warn_manager:0
 #: field:project.task.close,manager_warn:0
 msgid "Warn Manager"
-msgstr ""
+msgstr "Varovat vedoucího"
 
 #. module: project
 #: field:report.project.task.user,delay_endings_days:0
 msgid "Overpassed Deadline"
-msgstr ""
+msgstr "Překročené krajní termíny"
 
 #. module: project
 #: help:project.project,effective_hours:0
@@ -1494,6 +1528,8 @@ msgid ""
 "Sum of spent hours of all tasks related to this project and its child "
 "projects."
 msgstr ""
+"Součet strávených hodin na všech úkolech vztažených k tomuto projektu a jeho "
+"podřízeným projektům."
 
 #. module: project
 #: help:project.task,delay_hours:0
@@ -1501,11 +1537,13 @@ msgid ""
 "Computed as difference of the time estimated by the project manager and the "
 "real time to close the task."
 msgstr ""
+"Spočítá rozdíl odhadovaného času vedoucím projektu a skutečným časem do "
+"uzavření úkolu."
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_project_task_reevaluate
 msgid "Re-evaluate Task"
-msgstr ""
+msgstr "Znovu vyhodnotit úkol"
 
 #. module: project
 #: help:project.installer,project_long_term:0
@@ -1517,17 +1555,17 @@ msgstr ""
 #. module: project
 #: model:project.task.type,name:project.project_tt_development
 msgid "Development"
-msgstr ""
+msgstr "Ve vývoji"
 
 #. module: project
 #: field:project.installer,project_timesheet:0
 msgid "Bill Time on Tasks"
-msgstr ""
+msgstr "Účtovaný čas úloh"
 
 #. module: project
 #: view:board.board:0
 msgid "My Remaining Hours by Project"
-msgstr ""
+msgstr "Moje zbývající hodiny podle projektu"
 
 #. module: project
 #: field:project.task,description:0
@@ -1536,40 +1574,40 @@ msgstr ""
 #: view:project.task.type:0
 #: field:project.task.type,description:0
 msgid "Description"
-msgstr ""
+msgstr "Popis"
 
 #. module: project
 #: field:project.task.delegate,prefix:0
 msgid "Your Task Title"
-msgstr ""
+msgstr "Nadpis vašeho úkolu"
 
 #. module: project
 #: selection:project.task,priority:0
 #: selection:report.project.task.user,priority:0
 msgid "Urgent"
-msgstr ""
+msgstr "Naléhavé"
 
 #. module: project
 #: selection:report.project.task.user,month:0
 msgid "May"
-msgstr ""
+msgstr "Květen"
 
 #. module: project
 #: view:project.task.delegate:0
 msgid "Validation Task"
-msgstr ""
+msgstr "Ověření úkolů"
 
 #. module: project
 #: field:task.by.days,total_task:0
 msgid "Total tasks"
-msgstr ""
+msgstr "Celkem úkolů"
 
 #. module: project
 #: view:board.board:0
 #: model:ir.actions.act_window,name:project.action_view_delegate_task_tree
 #: view:project.task:0
 msgid "My Delegated Tasks"
-msgstr ""
+msgstr "Moje delegované úkoly"
 
 #. module: project
 #: view:project.project:0
@@ -1580,12 +1618,12 @@ msgstr "Úkoly: %(name)s"
 #: model:ir.actions.act_window,name:project.action_project_installer
 #: view:project.installer:0
 msgid "Project Application Configuration"
-msgstr ""
+msgstr "Nastavení projektové aplikace"
 
 #. module: project
 #: field:project.task.delegate,user_id:0
 msgid "Assign To"
-msgstr ""
+msgstr "Přiřadit k"
 
 #. module: project
 #: field:project.project,effective_hours:0
@@ -1596,17 +1634,17 @@ msgstr "Strávený čas"
 #. module: project
 #: model:ir.actions.act_window,name:project.act_my_account
 msgid "My accounts to invoice"
-msgstr ""
+msgstr "Moje účty k fakturaci"
 
 #. module: project
 #: selection:report.project.task.user,month:0
 msgid "January"
-msgstr ""
+msgstr "Leden"
 
 #. module: project
 #: field:project.project,tasks:0
 msgid "Project tasks"
-msgstr ""
+msgstr "Projektové úkoly"
 
 #. module: project
 #: help:project.project,warn_manager:0
@@ -1614,6 +1652,8 @@ msgid ""
 "If you check this field, the project manager will receive a request each "
 "time a task is completed by his team."
 msgstr ""
+"Pokud zaškrtnete toto pole, vedoucí projektu obdrží požadavek pokaždé, když "
+"je úkol dokončen svým týmem."
 
 #. module: project
 #: help:project.project,total_hours:0
@@ -1621,34 +1661,36 @@ msgid ""
 "Sum of total hours of all tasks related to this project and its child "
 "projects."
 msgstr ""
+"Součet všech hodin všech úkolů vztažených k tomuto projektu a jeho "
+"podřízeným projektům."
 
 #. module: project
 #: help:project.task.close,manager_email:0
 msgid "Email Address of Project's Manager"
-msgstr ""
+msgstr "Emailová adresa Vedoucího projektu"
 
 #. module: project
 #: view:project.project:0
 msgid "Customer"
-msgstr ""
+msgstr "Zákazník"
 
 #. module: project
 #: view:project.project:0
 #: view:project.task:0
 msgid "End Date"
-msgstr ""
+msgstr "Datum ukončení"
 
 #. module: project
 #: selection:report.project.task.user,month:0
 msgid "February"
-msgstr ""
+msgstr "Únor"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_task_by_days_graph
 #: model:ir.model,name:project.model_task_by_days
 #: view:task.by.days:0
 msgid "Task By Days"
-msgstr ""
+msgstr "Úkoly podle dne"
 
 #. module: project
 #: code:addons/project/wizard/project_task_close.py:111
@@ -1656,58 +1698,59 @@ msgstr ""
 msgid ""
 "Couldn't send mail! Check the email ids and smtp configuration settings"
 msgstr ""
+"Nelze odeslat mail! Zkontrolujte id email a nastavení konfigurace smtp"
 
 #. module: project
 #: field:project.task.close,partner_warn:0
 msgid "Warn Customer"
-msgstr ""
+msgstr "Varovat zákazníka"
 
 #. module: project
 #: view:project.task:0
 msgid "Edit"
-msgstr ""
+msgstr "Upravit"
 
 #. module: project
 #: model:process.node,note:project.process_node_opentask0
 msgid "Encode your working hours."
-msgstr ""
+msgstr "Zakódovat vaše pracovní hodiny."
 
 #. module: project
 #: view:report.project.task.user:0
 #: field:report.project.task.user,year:0
 msgid "Year"
-msgstr ""
+msgstr "Rok"
 
 #. module: project
 #: help:report.project.task.user,closing_days:0
 msgid "Number of Days to close the task"
-msgstr ""
+msgstr "Počet dní do uzavření úkolu"
 
 #. module: project
 #: view:board.board:0
 msgid "My Projects: Planned vs Total Hours"
-msgstr ""
+msgstr "Moje projekty: Plánované vs. Celkem hodin"
 
 #. module: project
 #: model:ir.model,name:project.model_project_installer
 msgid "project.installer"
-msgstr ""
+msgstr "project.installer"
 
 #. module: project
 #: selection:report.project.task.user,month:0
 msgid "April"
-msgstr ""
+msgstr "Duben"
 
 #. module: project
 #: field:project.task,effective_hours:0
 msgid "Hours Spent"
-msgstr ""
+msgstr "Strávených hodin"
 
 #. module: project
 #: view:project.project:0
 #: view:project.task:0
 msgid "Miscelleanous"
-msgstr ""
+msgstr "Různé"
 
 #. module: project
 #: model:process.transition,name:project.process_transition_opendonetask0
@@ -1717,18 +1760,18 @@ msgstr "Otevřít hotový úkol"
 #. module: project
 #: field:res.company,project_time_mode_id:0
 msgid "Project Time Unit"
-msgstr ""
+msgstr "Jednotka času projektu"
 
 #. module: project
 #: view:project.task:0
 msgid "Spent Hours"
-msgstr ""
+msgstr "Strávených hodin"
 
 #. module: project
-#: code:addons/project/project.py:665
+#: code:addons/project/project.py:678
 #, python-format
 msgid "The task '%s' is pending."
-msgstr ""
+msgstr "Úkol '%s' je nevyřízený."
 
 #. module: project
 #: field:project.task,total_hours:0
@@ -1736,38 +1779,38 @@ msgstr ""
 #: view:report.project.task.user:0
 #: field:report.project.task.user,total_hours:0
 msgid "Total Hours"
-msgstr ""
+msgstr "Celkem hodin"
 
 #. module: project
 #: help:project.project,sequence:0
 msgid "Gives the sequence order when displaying a list of Projects."
-msgstr ""
+msgstr "Dává pořadí při zobrazení seznamu projektů."
 
 #. module: project
 #: field:project.task,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: project
 #: view:project.task:0
 msgid "Users"
-msgstr ""
+msgstr "Uživatelé"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_view_task_overpassed_draft
 msgid "Overpassed Tasks"
-msgstr ""
+msgstr "Překročené úlohy"
 
 #. module: project
 #: model:project.task.type,name:project.project_tt_merge
 msgid "Merge"
-msgstr ""
+msgstr "Sloučit"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_project_vs_remaining_hours_graph
 #: view:project.vs.hours:0
 msgid "Remaining Hours Per Project"
-msgstr ""
+msgstr "Zbývající hodiny dle projektu"
 
 #. module: project
 #: help:project.project,warn_footer:0
@@ -1775,6 +1818,8 @@ msgid ""
 "Footer added at the beginning of the email for the warning message sent to "
 "the customer when a task is closed."
 msgstr ""
+"Zápatí přidané na začátku emailu pro varovnou zprávu zaslanou zákazníkovi, "
+"když je úkol uzavřen."
 
 #. module: project
 #: model:ir.actions.act_window,help:project.open_view_project_all
@@ -1797,10 +1842,10 @@ msgstr "Celkový čas"
 #. module: project
 #: field:project.task.delegate,state:0
 msgid "Validation State"
-msgstr ""
+msgstr "Stav ověření"
 
 #. module: project
-#: code:addons/project/project.py:602
+#: code:addons/project/project.py:615
 #, python-format
 msgid "Task '%s' cancelled"
 msgstr "Úkol '%s' zrušen"
@@ -1808,7 +1853,7 @@ msgstr "Úkol '%s' zrušen"
 #. module: project
 #: field:project.task,work_ids:0
 msgid "Work done"
-msgstr ""
+msgstr "Dokončená práce"
 
 #. module: project
 #: help:project.task.delegate,planned_hours_me:0
@@ -1816,64 +1861,66 @@ msgid ""
 "Estimated time for you to validate the work done by the user to whom you "
 "delegate this task"
 msgstr ""
+"Odhadovaný čas pro kontrolu dokončení práce uživatelem, který delegoval "
+"tento úkol."
 
 #. module: project
 #: view:project.project:0
 msgid "Manager"
-msgstr ""
+msgstr "Správce"
 
 #. module: project
 #: field:project.task,create_date:0
 msgid "Create Date"
-msgstr ""
+msgstr "Datum vytvoření"
 
 #. module: project
-#: code:addons/project/project.py:610
+#: code:addons/project/project.py:623
 #, python-format
 msgid "The task '%s' is cancelled."
-msgstr ""
+msgstr "Úkol '%s' zrušen."
 
 #. module: project
 #: view:project.task.close:0
 msgid "_Send"
-msgstr ""
+msgstr "_Odeslat"
 
 #. module: project
 #: field:project.task.work,name:0
 msgid "Work summary"
-msgstr ""
+msgstr "Souhrn práce"
 
 #. module: project
 #: view:project.installer:0
 msgid "title"
-msgstr ""
+msgstr "nadpis"
 
 #. module: project
 #: help:project.installer,project_issue:0
 msgid "Automatically synchronizes project tasks and crm cases."
-msgstr ""
+msgstr "Automaticky synchronizovat úkoly projektů a případů crm."
 
 #. module: project
 #: view:project.project:0
 #: field:project.project,type_ids:0
 msgid "Tasks Stages"
-msgstr ""
+msgstr "Fáze úkolu"
 
 #. module: project
 #: model:process.node,note:project.process_node_taskbydelegate0
 msgid "Delegate your task to the other user"
-msgstr ""
+msgstr "Delegovat váš úkol na jiného uživatele"
 
 #. module: project
 #: view:project.project:0
 #: field:project.project,warn_footer:0
 msgid "Mail Footer"
-msgstr ""
+msgstr "Hlavička mailu"
 
 #. module: project
 #: field:project.installer,account_budget:0
 msgid "Budgets"
-msgstr ""
+msgstr "Rozpočty"
 
 #~ msgid "Send Message"
 #~ msgstr "Poslat zprávu"

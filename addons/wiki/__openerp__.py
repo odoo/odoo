@@ -23,6 +23,7 @@
     'name': 'Document Management - Wiki',
     'version': '1.0.1',
     'category': 'Tools',
+    'complexity': "easy",
     'description': """
 The base module to manage documents(wiki).
 ==========================================

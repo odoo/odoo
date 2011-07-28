@@ -22,6 +22,8 @@
 from osv import osv, fields
 from tools.translate import _
 
+import time
+
 class crm_phonecall2phonecall(osv.osv_memory):
     """ Converts Phonecall to Phonecall"""
 
@@ -84,6 +86,10 @@ class crm_phonecall2phonecall(osv.osv_memory):
                         'date': this.date
                           }
                 phonecall_id = phonecall_obj.create(cr, uid, values, context=context)
+                if this.action == 'schedule':
+                    phonecall_obj.case_open(cr, uid, [phonecall_id])
+                elif this.action == 'log':
+                    phonecall_obj.case_close(cr, uid, [phonecall_id])
             
             res = {
                 'name': _('Phone Call'),
@@ -102,11 +108,13 @@ class crm_phonecall2phonecall(osv.osv_memory):
     _columns = {
                 'name' : fields.char('Call summary', size=64, required=True, select=1),
                 'user_id' : fields.many2one('res.users',"Assign To"),
-                'categ_id': fields.many2one('crm.case.categ', 'Category', required=True, \
+                'categ_id': fields.many2one('crm.case.categ', 'Category', \
                         domain="['|',('section_id','=',False),('section_id','=',section_id),\
                         ('object_id.model', '=', 'crm.phonecall')]"), 
-                'date': fields.datetime('Date', required=True),
+                'date': fields.datetime('Date'),
                 'section_id':fields.many2one('crm.case.section','Sales Team'),
+                'action': fields.selection([('schedule','Schedule a call'), ('log','Log a call')], 'Action', required=True),
+                'partner_id' : fields.many2one('res.partner', "Partner"),
                 }
 
     def default_get(self, cr, uid, fields, context=None):
@@ -122,7 +130,7 @@ class crm_phonecall2phonecall(osv.osv_memory):
         """
         res = super(crm_phonecall2phonecall, self).default_get(cr, uid, fields, context=context)
         record_id = context and context.get('active_id', False) or False
-        
+        res.update({'action': 'schedule', 'date': time.strftime('%Y-%m-%d %H:%M:%S')})
         if record_id:
             phonecall = self.pool.get('crm.phonecall').browse(cr, uid, record_id, context=context)
 
@@ -142,6 +150,8 @@ class crm_phonecall2phonecall(osv.osv_memory):
                 res.update({'section_id': phonecall.section_id and phonecall.section_id.id or False})
             if 'categ_id' in fields:
                 res.update({'categ_id': categ_id})
+            if 'partner_id' in fields:
+                res.update({'partner_id': phonecall.partner_id and phonecall.partner_id.id or False})
         return res
 
 crm_phonecall2phonecall()

@@ -24,6 +24,7 @@
     'name': 'Base Setup',
     'version': '1.0',
     'category': 'Tools',
+    'complexity': "easy",
     'description': """
 This module helps to configure the system at the installation of a new database.
 ================================================================================
@@ -37,8 +38,8 @@ It also helps to easily configure your company.
     'depends': ['base'],
     'init_xml': ['base_setup_data.xml'],
     'update_xml': ['security/ir.model.access.csv',
+                   'wizard/res_company_logo_view.xml',
                    'base_setup_installer.xml',
-                   'base_setup_todo.xml',
                    ],
     'demo_xml': ['base_setup_demo.xml'],
     'installable': True,

@@ -47,6 +47,26 @@ class one2many_mod2(fields.one2many):
             res[r[self._fields_id]].append( r['id'] )
         return res
 
+class account_analytic_line(osv.osv):
+    _inherit = 'account.analytic.line'
+    _description = 'Analytic Line'
+
+    def _get_amount(self, cr, uid, ids, name, args, context=None):
+        res = {}
+        for id in ids:
+            res.setdefault(id, 0.0)
+        for line in self.browse(cr, uid, ids, context=context):
+            amount = line.move_id and line.move_id.amount_currency * (line.percentage / 100) or 0.0
+            res[line.id] = amount
+        return res
+
+    _columns = {
+        'amount_currency': fields.function(_get_amount, string="Amount Currency", type="float", store=True, help="The amount expressed in the related account currency if not equal to the company one.", readonly=True),
+        'percentage': fields.float('Percentage')
+    }
+
+account_analytic_line()
+
 class account_analytic_plan(osv.osv):
     _name = "account.analytic.plan"
     _description = "Analytic Plan"
@@ -338,6 +358,7 @@ class account_move_line(osv.osv):
                        'move_id': line.id,
                        'journal_id': line.journal_id.analytic_journal_id.id,
                        'ref': line.ref,
+                       'percentage': line2.rate
                    }
                    analytic_line_obj.create(cr, uid, al_vals, context=context)
         return True

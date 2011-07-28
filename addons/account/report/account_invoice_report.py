@@ -47,7 +47,6 @@ class account_invoice_report(osv.osv):
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'user_id': fields.many2one('res.users', 'Salesman', readonly=True),
         'price_total': fields.float('Total Without Tax', readonly=True),
-        'price_total_tax': fields.float('Total With Tax', readonly=True),
         'price_average': fields.float('Average Price', readonly=True, group_operator="avg"),
         'currency_rate': fields.float('Currency Rate', readonly=True),
         'nbr':fields.integer('# of Lines', readonly=True),
@@ -120,21 +119,6 @@ class account_invoice_report(osv.osv):
                         else
                           ail.price_subtotal
                         end) / cr.rate as price_total,
-
-                    sum(case when ai.type in ('out_refund','in_invoice') then
-                         -ai.amount_total
-                        else
-                         ai.amount_total
-                         end) / (CASE WHEN
-                              (select count(l.id) from account_invoice_line as l
-                               left join account_invoice as a ON (a.id=l.invoice_id)
-                               where a.id=ai.id) <> 0
-                            THEN
-                              (select count(l.id) from account_invoice_line as l
-                               left join account_invoice as a ON (a.id=l.invoice_id)
-                               where a.id=ai.id)
-                            ELSE 1
-                            END) / cr.rate as price_total_tax,
 
                     (case when ai.type in ('out_refund','in_invoice') then
                       sum(-ail.price_subtotal)

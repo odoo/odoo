@@ -20,7 +20,6 @@
 ##############################################################################
 
 from osv import fields, osv
-import ir
 
 class res_partner(osv.osv):
     _inherit = 'res.partner'
@@ -30,7 +29,6 @@ class res_partner(osv.osv):
           type='many2one',
           relation='stock.location',
           string="Customer Location",
-          method=True,
           view_load=True,
           help="This stock location will be used, instead of the default one, as the destination location for goods you send to this partner"),
 
@@ -39,7 +37,6 @@ class res_partner(osv.osv):
           type='many2one',
           relation='stock.location',
           string="Supplier Location",
-          method=True,
           view_load=True,
           help="This stock location will be used, instead of the default one, as the source location for goods you receive from the current partner"),
     }
