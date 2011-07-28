@@ -72,18 +72,27 @@ openerp.base_default_home = function (openerp) {
             });
         },
         install_module: function (module_name) {
-            var self = this;
             var Modules = new openerp.base.DataSetSearch(
                 this, 'ir.module.module', null,
                 [['name', '=', module_name], ['state', '=', 'uninstalled']]),
                 Upgrade = new openerp.base.DataSet(this, 'base.module.upgrade');
+
+            var $overlay = $('<div class="ui-widget-overlay">')
+                    .appendTo(document.body)
+                    .css('z-index', 10001),
+                $wait = $overlay.add(
+                    $('<img src="/base_default_home/static/src/img/throbber.gif">')
+                        .appendTo(document.body)
+                        .css({position: 'absolute', top: '50%', left: '50%'}));
             Modules.read_slice(['id'], null, null, function (records) {
                 if (!(records.length === 1)) { return; }
                 Modules.call('state_update',
                     [_.pluck(records, 'id'), 'to install', ['uninstalled']],
                     function () {
                         Upgrade.call('upgrade_module', [[]], function () {
-                            alert('done');
+                            $wait.remove();
+                            // TODO: less brutal reloading
+                            window.location.reload(true);
                         });
                     }
                 )
