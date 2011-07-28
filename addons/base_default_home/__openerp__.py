@@ -4,4 +4,5 @@
     "depends" : ['base'],
     'active': True,
     'js': ['static/src/js/home.js'],
+    'css': ['static/src/css/home.css']
 }
