@@ -357,23 +357,9 @@ class db(netsvc.ExportService):
                 raise
         return True
 
-class _ObjectService(netsvc.ExportService):
-     "A common base class for those who have fn(db, uid, password,...) "
-
-     def common_dispatch(self, method, auth, params):
-        (db, uid, passwd ) = params[0:3]
-        params = params[3:]
-        security.check(db,uid,passwd)
-        cr = pooler.get_db(db).cursor()
-        fn = getattr(self, 'exp_'+method)
-        res = fn(cr, uid, *params)
-        cr.commit()
-        cr.close()
-        return res
-
-class common(_ObjectService):
+class common(netsvc.ExportService):
     def __init__(self,name="common"):
-        _ObjectService.__init__(self,name)
+        netsvc.ExportService.__init__(self,name)
         self.joinGroup("web-services")
 
     def dispatch(self, method, auth, params):
