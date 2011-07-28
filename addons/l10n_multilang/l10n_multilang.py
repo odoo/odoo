@@ -45,11 +45,17 @@ class wizard_multi_charts_accounts(osv.osv_memory):
 
     def copy_translations(self, cr, uid, langs, in_obj, in_field, in_ids, out_obj, out_ids):
         """
-        * langs: Loaded languages
-        * in_field: 'name' field
-        * in_obj, in_ids: Source object and params.
-        * out_obj, out_ids: Destination object and params.
-        * Return: Translation message.
+        This method copies translations values of templates into new Accounts/Taxes/Journals for languages selected
+        @param cr: A database cursor
+        @param uid: ID of the user currently logged in
+        @param langs: List of languages to load for new records
+        @param in_field: Name of the translatable field of source templates
+        @param in_obj: Name of source object of templates.
+        @param in_ids: List of ids of source object
+        @param out_obj: Destination object for which translation is to be copied
+        @param out_ids: List of ids of destination object
+        
+        @param Return: String containing information of the translations loaded.
         """
         src = {}
         xlat_obj = self.pool.get('ir.translation')
@@ -78,9 +84,9 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                 })
             if notdone:
                 message += '\nLanguage: %s \n\tThere is no translation available for following %s(s): \n\t%s '\
-                            % (lang, (out_obj._name[8:].replace('.',' ')).title(), '\n\t'.join(notdone))
+                            % (lang, out_obj._description, '\n\t'.join(notdone))
             else:
-                message += '\nLanguage: %s \n\tTranslation successfully done for %s(s) .' % (lang, (out_obj._name[8:].replace('.',' ')).title())
+                message += '\nLanguage: %s \n\tTranslation successfully done for %s(s) .' % (lang, out_obj._description)
 
         return message
 
