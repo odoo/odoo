@@ -3380,7 +3380,7 @@ class orm(orm_template):
     #    return _proxy
 
 
-    def fields_get(self, cr, user, fields=None, context=None):
+    def fields_get(self, cr, user, fields=None, context=None, write_access=True):
         """
         Get the description of list of fields
 

@@ -199,7 +199,7 @@ class object_proxy(netsvc.Service):
         return res
 
 
-class osv_memory(orm.orm_memory):
+class osv_memory(orm.orm):
     """ Deprecated class. """
     __metaclass__ = MetaModel
     _register = False # Set to false if the model shouldn't be automatically discovered.
