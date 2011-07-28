@@ -30,38 +30,38 @@ openerp.base.Export = openerp.base.Dialog.extend({
                        },
                     close: function(event, ui){ self.close();}
                    });
-        this.on_show_exists_export_list();
-        jQuery(this.$dialog).removeClass('ui-dialog-content ui-widget-content');
-        $('#add_field').click(function(){
+        self.on_show_exists_export_list();
+        jQuery(self.$dialog).removeClass('ui-dialog-content ui-widget-content');
+        self.$element.find('#add_field').click(function(){
             if($("#field-tree-structure tr.ui-selected")){
-                var fld = $("#field-tree-structure tr.ui-selected").find('a');
+                var fld = self.$element.find("#field-tree-structure tr.ui-selected").find('a');
                 for (var i=0;i<fld.length; i++){
                     var id = $(fld[i]).attr('id').split("-")[1];
                     var string = $(fld[i]).attr('string');
                     self.add_field(id,string);
                 }
-                $("#field-tree-structure tr").removeClass("ui-selected");
+                self.$element.find("#field-tree-structure tr").removeClass("ui-selected");
             }
         });
-        $('#remove_field').click(function(){
-            $("#fields_list option:selected").remove();
+        self.$element.find('#remove_field').click(function(){
+            self.$element.find("#fields_list option:selected").remove();
         });
-        $('#remove_all_field').click(function(){
-            $("#fields_list option").remove();
+        self.$element.find('#remove_all_field').click(function(){
+            self.$element.find("#fields_list option").remove();
         });
-        $('#export_new_list').click(function(){
+        self.$element.find('#export_new_list').click(function(){
             self.on_show_save_list();
         });
-        import_comp = $("#import_compat option:selected").val()
-        var params = {"import_compat":parseInt(import_comp), "views_id": this.views_id}
-        this.rpc("/base/export/get_fields", {"model": this.dataset.model, "params": params}, this.on_show_data);
+        import_comp = self.$element.find("#import_compat option:selected").val()
+        var params = {"import_compat":parseInt(import_comp), "views_id": self.views_id}
+        self.rpc("/base/export/get_fields", {"model": self.dataset.model, "params": params}, self.on_show_data);
 
-        $("#import_compat").change(function(){
-            $("#fields_list option").remove();
-            $("#field-tree-structure").remove();
-            import_comp = $("#import_compat option:selected").val();
+        self.$element.find("#import_compat").change(function(){
+            self.$element.find("#fields_list option").remove();
+            self.$element.find("#field-tree-structure").remove();
+            import_comp = self.$element.find("#import_compat option:selected").val();
             if(import_comp){
-                var params = {"import_compat":parseInt(import_comp), "views_id": this.views_id}
+                var params = {"import_compat":parseInt(import_comp), "views_id": self.views_id}
                 self.rpc("/base/export/get_fields", {"model": self.dataset.model, "params": params}, self.on_show_data);
             }
         });
@@ -69,27 +69,27 @@ openerp.base.Export = openerp.base.Dialog.extend({
 
     on_show_exists_export_list: function(){
         var self = this;
-        if($("#saved_export_list").is(":hidden")){
-            $("#ExistsExportList").show();
+        if(self.$element.find("#saved_export_list").is(":hidden")){
+            self.$element.find("#ExistsExportList").show();
         }
         else{
             this.rpc("/base/export/exist_export_lists", {"model": this.dataset.model}, function(export_list){
                 if(export_list.length){
-                    $("#ExistsExportList").append(QWeb.render('Exists.ExportList', {'existing_exports':export_list}));
-                    $("#saved_export_list").change(function(){
-                        $("#fields_list option").remove();
-                        export_id = $("#saved_export_list option:selected").val();
+                    self.$element.find("#ExistsExportList").append(QWeb.render('Exists.ExportList', {'existing_exports':export_list}));
+                    self.$element.find("#saved_export_list").change(function(){
+                        self.$element.find("#fields_list option").remove();
+                        export_id = self.$element.find("#saved_export_list option:selected").val();
                         if (export_id){
                             self.rpc("/base/export/namelist", {"model": self.dataset.model, export_id: parseInt(export_id)}, self.do_load_export_field);
                         }
                     });
-                    $('#delete_export_list').click(function(){
-                        select_exp = $("#saved_export_list option:selected")
+                    self.$element.find('#delete_export_list').click(function(){
+                        select_exp = self.$element.find("#saved_export_list option:selected")
                         if (select_exp.val()){
                             self.rpc("/base/export/delete_export", {"export_id": parseInt(select_exp.val())}, {});
                             select_exp.remove();
-                            if($("#saved_export_list option").length <= 1){
-                                $("#ExistsExportList").hide();
+                            if(self.$element.find("#saved_export_list option").length <= 1){
+                                self.$element.find("#ExistsExportList").hide();
                             }
                         }
                     });
@@ -99,7 +99,7 @@ openerp.base.Export = openerp.base.Dialog.extend({
     },
 
     do_load_export_field: function(field_list){
-        var export_node = $("#fields_list");
+        var export_node = this.$element.find("#fields_list");
         for (var key in field_list) {
             export_node.append(new Option(field_list[key], key));
         }
@@ -107,7 +107,7 @@ openerp.base.Export = openerp.base.Dialog.extend({
 
     on_show_save_list: function(){
         var self = this;
-        var current_node = $("#savenewlist");
+        var current_node = self.$element.find("#savenewlist");
         if(!(current_node.find("label")).length){
             current_node.append(QWeb.render('ExportNewList'));
             current_node.find("#add_export_list").click(function(){
@@ -123,6 +123,7 @@ openerp.base.Export = openerp.base.Dialog.extend({
         else{
             if (current_node.is(':hidden')){
                 current_node.show();
+                current_node.find("#savelist_name").val("")
             }
             else{
                current_node.hide();
@@ -136,19 +137,19 @@ openerp.base.Export = openerp.base.Dialog.extend({
         if(export_field.length){
             self.rpc("/base/export/save_export_lists", {"model": self.dataset.model, "name":value, "field_list":export_field}, function(exp_id){
                 if(exp_id){
-                    if($("#saved_export_list").length > 0){
-                        $("#saved_export_list").append( new Option(value, exp_id));
+                    if(self.$element.find("#saved_export_list").length > 0){
+                        self.$element.find("#saved_export_list").append( new Option(value, exp_id));
                     }
                     else{
                         self.on_show_exists_export_list();
                     }
-                    if($("#saved_export_list").is(":hidden")){
+                    if(self.$element.find("#saved_export_list").is(":hidden")){
                         self.on_show_exists_export_list();
                     }
                 }
             });
             self.on_show_save_list()
-            $("#fields_list option").remove();
+            self.$element.find("#fields_list option").remove();
         }
     },
 
@@ -165,8 +166,8 @@ openerp.base.Export = openerp.base.Dialog.extend({
                 prefix = record['params']['prefix']
                 name = record['params']['name']
                 $(record['children']).each (function(e, childid) {
-                    if ($("tr[id='treerow-" + childid +"']").length > 0) {
-                        if ($("tr[id='treerow-" + childid +"']").is(':hidden')) {
+                    if (self.$element.find("tr[id='treerow-" + childid +"']").length > 0) {
+                        if (self.$element.find("tr[id='treerow-" + childid +"']").is(':hidden')) {
                             is_loaded = -1;
                         } else {
                             is_loaded++;
@@ -174,9 +175,9 @@ openerp.base.Export = openerp.base.Dialog.extend({
                     }
                 });
                 if (is_loaded == 0) {
-                    if ($("tr[id='treerow-" + self.field_id +"']").find('img').attr('src') == '/base/static/src/img/expand.gif') {
+                    if (self.$element.find("tr[id='treerow-" + self.field_id +"']").find('img').attr('src') == '/base/static/src/img/expand.gif') {
                         if (model){
-                            import_comp = $("#import_compat option:selected").val()
+                            import_comp = self.$element.find("#import_compat option:selected").val()
                             var params = {"import_compat":parseInt(import_comp), "views_id": this.views_id, "parent_field_type" : record['field_type']}
                             self.rpc("/base/export/get_fields", {"model": model, "prefix": prefix, "name": name,  "field_parent" : self.field_id, "params":params}, function (results) {
                                 self.on_show_data(results);
@@ -189,52 +190,51 @@ openerp.base.Export = openerp.base.Dialog.extend({
                     self.showcontent(self.field_id, false);
                 }
             }
-
         });
     },
 
     on_show_data: function(result) {
         var self = this;
-        var imp_cmpt = parseInt($("#import_compat option:selected").val());
-        var current_tr = $("tr[id='treerow-" + self.field_id + "']");
+        var imp_cmpt = parseInt(self.$element.find("#import_compat option:selected").val());
+        var current_tr = self.$element.find("tr[id='treerow-" + self.field_id + "']");
         if (current_tr.length >= 1){
             current_tr.find('img').attr('src','/base/static/src/img/collapse.gif');
             current_tr.after(QWeb.render('ExportTreeView-Secondary.children', {'fields': result}));
         }
         else{
-            $('#left_field_panel').append(QWeb.render('ExportTreeView-Secondary',  {'fields': result}));
+            self.$element.find('#left_field_panel').append(QWeb.render('ExportTreeView-Secondary',  {'fields': result}));
         }
         _.each(result, function(record) {
             if((record.field_type == "one2many") && imp_cmpt){
-                var o2m_fld = $("tr[id='treerow-" + record.id + "']").find('#tree-column');
+                var o2m_fld = self.$element.find("tr[id='treerow-" + record.id + "']").find('#tree-column');
                 o2m_fld.addClass("oe_export_readonlyfield");
             }
             if ((record.required == true) || record.required == "True"){
-                var required_fld = $("tr[id='treerow-" + record.id + "']").find('#tree-column');
+                var required_fld = self.$element.find("tr[id='treerow-" + record.id + "']").find('#tree-column');
                 required_fld.addClass("oe_export_requiredfield");
             }
-            $("img[id='parentimg-" + record.id +"']").click(function(){
+            self.$element.find("img[id='parentimg-" + record.id +"']").click(function(){
                 self.on_click(this.id, result);
             });
 
-            $("tr[id='treerow-" + record.id + "']").click(function(e){
+            self.$element.find("tr[id='treerow-" + record.id + "']").click(function(e){
                 if (e.shiftKey == true){
                     var frst_click,scnd_click = '';
                     if (self.row_index == 0){
                         self.row_index = this.rowIndex;
-                        frst_click = $("tr[id^='treerow-']")[self.row_index-1];
+                        frst_click = self.$element.find("tr[id^='treerow-']")[self.row_index-1];
                         $(frst_click).addClass("ui-selected");
                     }else{
                         if (this.rowIndex >=self.row_index){
                             for (i = (self.row_index-1); i < this.rowIndex; i++) {
-                                scnd_click = $("tr[id^='treerow-']")[i];
+                                scnd_click = self.$element.find("tr[id^='treerow-']")[i];
                                 if(!$(scnd_click).find('#tree-column').hasClass("oe_export_readonlyfield")){
                                     $(scnd_click).addClass("ui-selected");
                                 }
                             }
                         }else{
                             for (i = (self.row_index-1); i >= (this.rowIndex-1); i--) {
-                                scnd_click = $("tr[id^='treerow-']")[i];
+                                scnd_click = self.$element.find("tr[id^='treerow-']")[i];
                                 if(!$(scnd_click).find('#tree-column').hasClass("oe_export_readonlyfield")){
                                     $(scnd_click).addClass("ui-selected");
                                 }
@@ -244,14 +244,14 @@ openerp.base.Export = openerp.base.Dialog.extend({
                 }
                 self.row_index = this.rowIndex;
 
-                $("tr[id='treerow-" + record.id + "']").keyup(function (e) {
+                self.$element.find("tr[id='treerow-" + record.id + "']").keyup(function (e) {
                         self.row_index = 0;
                 });
-                var o2m_selection = $("tr[id='treerow-" + record.id + "']").find('#tree-column');
+                var o2m_selection = self.$element.find("tr[id='treerow-" + record.id + "']").find('#tree-column');
                 if ($(o2m_selection).hasClass("oe_export_readonlyfield")){
                     return false;
                 }
-                var selected = $("tr.ui-selected");
+                var selected = self.$element.find("tr.ui-selected");
                 if ($(this).hasClass("ui-selected") && (e.ctrlKey == true)){
                     $(this).find('a').blur();
                     $(this).removeClass("ui-selected");
@@ -272,7 +272,7 @@ openerp.base.Export = openerp.base.Dialog.extend({
                 return false;
             });
 
-            $("tr[id='treerow-" + record.id + "']").keydown(function (e) {
+            self.$element.find("tr[id='treerow-" + record.id + "']").keydown(function (e) {
                 var keyCode = e.keyCode || e.which;
                 arrow = {left: 37, up: 38, right: 39, down: 40 };
                 switch (keyCode) {
@@ -310,8 +310,8 @@ openerp.base.Export = openerp.base.Dialog.extend({
                     break;
                 }
             });
-            $("tr[id='treerow-" + record.id + "']").dblclick(function (e) {
-                var o2m_selection = $("tr[id^='treerow-" + record.id + "']").find('#tree-column');
+            self.$element.find("tr[id='treerow-" + record.id + "']").dblclick(function (e) {
+                var o2m_selection = self.$element.find("tr[id^='treerow-" + record.id + "']").find('#tree-column');
                 if (! $(o2m_selection).hasClass("oe_export_readonlyfield")){
                     var field_id =  $(this).find("a").attr("id");
                     if(field_id){
@@ -320,12 +320,12 @@ openerp.base.Export = openerp.base.Dialog.extend({
                 }
             });
         });
-        $('#fields_list').mouseover(function(event){
+        self.$element.find('#fields_list').mouseover(function(event){
             if(event.relatedTarget){
                 if (event.relatedTarget.attributes['id'] && event.relatedTarget.attributes['string']){
                     field_id = event.relatedTarget.attributes["id"]["value"]
                     if (field_id && field_id.split("-")[0] == 'export'){
-                        if(!$("tr[id='treerow-" + field_id.split("-")[1] + "']").find('#tree-column').hasClass("oe_export_readonlyfield")){
+                        if(!self.$element.find("tr[id='treerow-" + field_id.split("-")[1] + "']").find('#tree-column').hasClass("oe_export_readonlyfield")){
                             self.add_field(field_id.split("-")[1], event.relatedTarget.attributes["string"]["value"]);
                         }
                     }
@@ -336,14 +336,14 @@ openerp.base.Export = openerp.base.Dialog.extend({
 
     // show & hide the contents
     showcontent: function (id, flag) {
-        var first_child = $("tr[id='treerow-" + id + "']").find('img')
+        var first_child = this.$element.find("tr[id='treerow-" + id + "']").find('img')
         if (flag) {
             first_child.attr('src', '/base/static/src/img/expand.gif');
         }
         else {
             first_child.attr('src', '/base/static/src/img/collapse.gif');
         }
-        var child_field = $("tr[id^='treerow-" + id +"/']")
+        var child_field = this.$element.find("tr[id^='treerow-" + id +"/']")
         var child_len = (id.split("/")).length + 1
         for (var i = 0; i < child_field.length; i++) {
             if (flag) {
@@ -361,15 +361,15 @@ openerp.base.Export = openerp.base.Dialog.extend({
     },
 
     add_field: function(field_id, string) {
-        var field_list = $('#fields_list')
-        if ( $("#fields_list option[value='" + field_id + "']") && !$("#fields_list option[value='" + field_id + "']").length){
+        var field_list = this.$element.find('#fields_list')
+        if ( this.$element.find("#fields_list option[value='" + field_id + "']") && !this.$element.find("#fields_list option[value='" + field_id + "']").length){
             field_list.append( new Option(string, field_id));
         }
     },
 
     get_fields: function (){
         var export_field = [];
-        $("#fields_list option").each(function(){
+        this.$element.find("#fields_list option").each(function(){
             export_field.push(jQuery(this).val());
         });
         if (! export_field.length){
@@ -381,7 +381,7 @@ openerp.base.Export = openerp.base.Dialog.extend({
         var self = this;
         var export_field = {};
         var flag = true;
-        $("#fields_list option").each(function(){
+        self.$element.find("#fields_list option").each(function(){
             export_field[jQuery(this).val()] = jQuery(this).text();
             flag = false;
         });
@@ -390,8 +390,8 @@ openerp.base.Export = openerp.base.Dialog.extend({
             return;
         }
 
-        import_comp = $("#import_compat option:selected").val()
-        export_format = $("#export_format").val()
+        import_comp = self.$element.find("#import_compat option:selected").val()
+        export_format = self.$element.find("#export_format").val()
 
         self.rpc("/base/export/export_data", {"model": self.dataset.model, "fields":export_field, 'ids': self.dataset.ids, 'domain': self.dataset.domain, "import_compat":parseInt(import_comp), "export_format" :export_format}, function(data){
             window.location="data:text/csv/excel;charset=utf8," + data
