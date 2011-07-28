@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+import time
 import pooler
 from report.interface import report_rml
 #from report.interface import toxml
@@ -39,6 +40,7 @@ class report_custom(report_rml):
         workcenter_pool = pool.get('mrp.workcenter')
         user_pool = pool.get('res.users')
         bom_pool = pool.get('mrp.bom')
+        pricelist_pool = pool.get('product.pricelist')
         rml_obj=report_sxw.rml_parse(cr, uid, product_pool._name,context)
         rml_obj.localcontext.update({'lang':context.get('lang',False)})
         company_currency = user_pool.browse(cr, uid, uid).company_id.currency_id
@@ -56,8 +58,12 @@ class report_custom(report_rml):
 
             if prod.seller_id:
                 main_sp_name = "<b>%s</b>\r\n" %(prod.seller_id.name)
-                price = supplier_info_pool.price_get(cr, uid, prod.seller_id.id, prod.id, number*prod_qtty)[prod.seller_id.id]
-                price = product_uom_pool._compute_price(cr, uid, prod.uom_id.id, price, to_uom_id=product_uom.id)
+                pricelist =  prod.seller_id.property_product_pricelist_purchase
+                price = pricelist_pool.price_get(cr,uid,[pricelist.id],
+                     prod.id, number*prod_qtty or 1.0, prod.seller_id.id, {
+                        'uom': prod.uom_po_id.id,
+                        'date': time.strftime('%Y-%m-%d'),
+                        })[pricelist.id]
                 main_sp_price = """<b>"""+rml_obj.formatLang(price)+' '+ company_currency.symbol+"""</b>\r\n"""
                 sum += prod_qtty*price
             std_price = product_uom_pool._compute_price(cr, uid, prod.uom_id.id, prod.standard_price, to_uom_id=product_uom.id)
@@ -65,8 +71,12 @@ class report_custom(report_rml):
             sum_strd = prod_qtty*std_price
             for seller_id in prod.seller_ids:
                 sellers +=  '- <i>'+ seller_id.name.name +'</i>\r\n'
-                price = supplier_info_pool.price_get(cr, uid, seller_id.name.id, prod.id, number*prod_qtty)[seller_id.name.id]
-                price = product_uom_pool._compute_price(cr, uid, prod.uom_id.id, price, to_uom_id=product_uom.id)
+                pricelist = seller_id.name.property_product_pricelist_purchase
+                price = pricelist_pool.price_get(cr,uid,[pricelist.id],
+                     prod.id, number*prod_qtty or 1.0, seller_id.name.id, {
+                        'uom': prod.uom_po_id.id,
+                        'date': time.strftime('%Y-%m-%d'),
+                        })[pricelist.id]
                 sellers_price += """<i>"""+rml_obj.formatLang(price) +' '+ company_currency.symbol +"""</i>\r\n"""
             xml += """<col para='yes'> """+ prod_name +""" </col>
                     <col para='yes'> """+ main_sp_name + sellers + """ </col>
