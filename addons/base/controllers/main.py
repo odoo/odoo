@@ -972,35 +972,6 @@ def node_attributes(node):
     return dict([(str(attrs.item(i).localName), attrs.item(i).nodeValue)
                  for i in range(attrs.length)])
 
-def _fields_get_all(req, model, views, context=None):
-
-    if context is None:
-        context = {}
-
-    def parse(root, fields):
-        for node in root.childNodes:
-            if node.nodeName in ('form', 'notebook', 'page', 'group', 'tree', 'hpaned', 'vpaned'):
-                parse(node, fields)
-            elif node.nodeName=='field':
-                attrs = node_attributes(node)
-                name = attrs['name']
-                fields[name].update(attrs)
-        return fields
-
-    def get_view_fields(view):
-        return parse(
-            xml.dom.minidom.parseString(view['arch'].encode('utf-8')).documentElement,
-            view['fields'])
-
-    model_obj = req.session.model(model)
-    tree_view = model_obj.fields_view_get(views.get('tree', False), 'tree', context)
-    form_view = model_obj.fields_view_get(views.get('form', False), 'form', context)
-    fields = {}
-    fields.update(get_view_fields(tree_view))
-    fields.update(get_view_fields(form_view))
-    return fields
-
-
 class Export(View):
     _cp_path = "/base/export"
 
@@ -1012,9 +983,8 @@ class Export(View):
     @openerpweb.jsonrequest
     def get_fields(self, req, model, prefix='', name= '', field_parent=None, params={}):
         import_compat = params.get("import_compat", False)
-        views_id = params.get("views_id", {})
 
-        fields = _fields_get_all(req, model, views=views_id, context=req.session.eval_context(req.context))
+        fields = self.fields_get(req, model)
         field_parent_type = params.get("parent_field_type",False)
 
         if import_compat and field_parent_type and field_parent_type == "many2one":

@@ -215,19 +215,6 @@ openerp.base.ViewManager =  openerp.base.Widget.extend({
                 }
             }
         }
-        if(this.flags && this.flags.sidebar) {
-            if(this.$element.find('#exportview')){
-                this.$element.find('#exportview').remove()
-            }
-            if(this.active_view == 'list' || this.active_view == 'form') {
-                this.views[this.active_view].controller.$element.after(QWeb.render('ExportView'))
-                this.$element.find('#exportview').click(function(ev) {
-                    var export_view = new openerp.base.DataExport(self, self.dataset, self.views);
-                    export_view.start(false);
-                    ev.preventDefault();
-                });
-            }
-        }
         return view_promise;
     },
     /**
@@ -530,7 +517,6 @@ openerp.base.View = openerp.base.Widget.extend({
         this.embedded_view = embedded_view;
     },
     set_common_sidebar_sections: function(sidebar) {
-        var items = [];
         sidebar.add_section('customize', "Customize", [
             {
                 label: "Manage Views",
@@ -547,6 +533,23 @@ openerp.base.View = openerp.base.Widget.extend({
                 title: "Manage views of the current object"
             }
         ]);
+        sidebar.add_section('other', "Other Options", [
+            {
+                label: "Import",
+                callback: this.on_sidebar_import
+            }, {
+                label: "Export",
+                callback: this.on_sidebar_export
+            }, {
+                label: "Translate",
+                callback: this.on_sidebar_translate,
+                classname: 'oe_hide oe_sidebar_translate'
+            }, {
+                label: "View Log",
+                callback: this.on_sidebar_view_log,
+                classname: 'oe_hide oe_sidebar_view_log'
+            }
+        ]);
     },
     on_sidebar_manage_view: function() {
         console.log('Todo');
@@ -556,6 +559,16 @@ openerp.base.View = openerp.base.Widget.extend({
     },
     on_sidebar_customize_object: function() {
         console.log('Todo');
+    },
+    on_sidebar_import: function() {
+    },
+    on_sidebar_export: function() {
+        var export_view = new openerp.base.DataExport(this, this.dataset);
+        export_view.start(false);
+    },
+    on_sidebar_translate: function() {
+    },
+    on_sidebar_view_log: function() {
     }
 });
 

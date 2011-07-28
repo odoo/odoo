@@ -1,13 +1,8 @@
 openerp.base.data_export = function(openerp) {
 openerp.base.DataExport = openerp.base.Dialog.extend({
-    init: function(parent, dataset, views) {
+    init: function(parent, dataset) {
         this._super(parent);
         this.dataset = dataset;
-        this.views = views;
-        this.views_id = {};
-        for (var key in this.views) {
-            this.views_id[key] = this.views[key].view_id;
-        }
     },
     start: function() {
         var self = this;
@@ -53,8 +48,7 @@ openerp.base.DataExport = openerp.base.Dialog.extend({
         });
         var import_comp = self.$element.find('#import_compat option:selected').val(),
             params = {
-                import_compat: parseInt(import_comp),
-                views_id: self.views_id
+                import_compat: parseInt(import_comp)
             };
         self.rpc('/base/export/get_fields', { model: self.dataset.model, params: params }, self.on_show_data);
 
@@ -64,8 +58,7 @@ openerp.base.DataExport = openerp.base.Dialog.extend({
             var import_comp = self.$element.find("#import_compat option:selected").val();
             if (import_comp) {
                 var params = {
-                    import_compat: parseInt(import_comp),
-                    views_id: self.views_id
+                    import_compat: parseInt(import_comp)
                 }
                 self.rpc("/base/export/get_fields", { model: self.dataset.model, params: params}, self.on_show_data);
             }
@@ -172,7 +165,6 @@ openerp.base.DataExport = openerp.base.Dialog.extend({
                             var import_comp = self.$element.find("#import_compat option:selected").val();
                             var params = {
                                 import_compat: parseInt(import_comp),
-                                views_id: self.views_id,
                                 parent_field_type : record['field_type']
                             }
                             self.rpc("/base/export/get_fields", {
