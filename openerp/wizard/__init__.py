@@ -44,7 +44,6 @@ class interface(netsvc.Service):
     def __init__(self, name):
         assert not self.exists('wizard.'+name), 'The wizard "%s" already exists!' % (name,)
         super(interface, self).__init__('wizard.'+name)
-        self.exportMethod(self.execute)
         self.wiz_name = name
 
     def translate_view(self, cr, node, state, lang):

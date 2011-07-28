@@ -69,7 +69,6 @@ class Service(object):
     def __init__(self, name, audience=''):
         Service._services[name] = self
         self.__name = name
-        self._methods = {}
 
     def joinGroup(self, name):
         raise Exception("No group for local services")
@@ -83,10 +82,6 @@ class Service(object):
     def remove(cls, name):
         if cls.exists(name):
             cls._services.pop(name)
-
-    def exportMethod(self, method):
-        if callable(method):
-            self._methods[method.__name__] = method
 
     def abortResponse(self, error, description, origin, details):
         if not tools.config['debug_mode']:

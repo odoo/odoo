@@ -52,7 +52,6 @@ class report_int(netsvc.Service):
         # TODO the reports have methods with a 'title' kwarg that is redundant with this attribute
         self.title = None
         #self.joinGroup('report')
-        self.exportMethod(self.create)
 
     def create(self, cr, uid, ids, datas, context=None):
         return False

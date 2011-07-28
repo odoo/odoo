@@ -44,8 +44,6 @@ class object_proxy(netsvc.Service):
     def __init__(self):
         self.logger = logging.getLogger('web-services')
         netsvc.Service.__init__(self, 'object_proxy', audience='')
-        self.exportMethod(self.exec_workflow)
-        self.exportMethod(self.execute)
 
     def check(f):
         @wraps(f)
