@@ -860,9 +860,7 @@ openerp.base.search.ExtendedSearch = openerp.base.OldWidget.extend({
     },
     add_group: function() {
         var group = new openerp.base.search.ExtendedSearchGroup(this, this.fields);
-        var render = group.render();
-        this.$element.find('.searchview_extended_groups_list').append(render);
-        group.start();
+        group.appendTo(this.$element.find('.searchview_extended_groups_list'));
         this.check_last_element();
     },
     start: function () {
