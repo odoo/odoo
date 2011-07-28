@@ -144,9 +144,6 @@ class ExportService(object):
     def dispatch(self, method, auth, params):
         raise Exception("stub dispatch at %s" % self.__name)
         
-    def new_dispatch(self,method,auth,params):
-        raise Exception("stub dispatch at %s" % self.__name)
-
     def abortResponse(self, error, description, origin, details):
         if not tools.config['debug_mode']:
             raise Exception("%s -- %s\n\n%s"%(origin, description, details))

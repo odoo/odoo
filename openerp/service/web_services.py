@@ -73,8 +73,6 @@ class db(netsvc.ExportService):
         fn = getattr(self, 'exp_'+method)
         return fn(*params)
 
-    def new_dispatch(self,method,auth,params):
-        pass
     def _create_empty_database(self, name):
         db = sql_db.db_connect('template1')
         cr = db.cursor()
@@ -390,10 +388,6 @@ class common(netsvc.ExportService):
         fn = getattr(self, 'exp_'+method)
         return fn(*params)
 
-
-    def new_dispatch(self,method,auth,params):
-        pass
-
     def exp_about(self, extended=False):
         """Return information about the OpenERP Server.
 
@@ -575,10 +569,6 @@ class objects_proxy(netsvc.ExportService):
         return res
 
 
-    def new_dispatch(self,method,auth,params):
-        pass
-
-
 #
 # Wizard ID: 1
 #    - None = end of wizard
@@ -608,9 +598,6 @@ class wizard(netsvc.ExportService):
         fn = getattr(self, 'exp_'+method)
         res = fn(db, uid, *params)
         return res
-
-    def new_dispatch(self,method,auth,params):
-        pass
 
     def _execute(self, db, uid, wiz_id, datas, action, context):
         self.wiz_datas[wiz_id].update(datas)
@@ -669,10 +656,6 @@ class report_spool(netsvc.ExportService):
         fn = getattr(self, 'exp_' + method)
         res = fn(db, uid, *params)
         return res
-
-
-    def new_dispatch(self,method,auth,params):
-        pass
 
     def exp_report(self, db, uid, object, ids, datas=None, context=None):
         if not datas:
