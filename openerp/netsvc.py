@@ -94,25 +94,8 @@ class Service(object):
         else:
             raise
 
-class LocalService(object):
-    """ Proxy for local services. 
-    
-        Any instance of this class will behave like the single instance
-        of Service(name)
-    """
-    __logger = logging.getLogger('service')
-    def __init__(self, name):
-        self.__name = name
-        try:
-            self._service = Service._services[name]
-            for method_name, method_definition in self._service._methods.items():
-                setattr(self, method_name, method_definition)
-        except KeyError, keyError:
-            self.__logger.error('This service does not exist: %s' % (str(keyError),) )
-            raise
-
-    def __call__(self, method, *params):
-        return getattr(self, method)(*params)
+def LocalService(name):
+  return Service._services[name]
 
 class ExportService(object):
     """ Proxy for exported services. 
