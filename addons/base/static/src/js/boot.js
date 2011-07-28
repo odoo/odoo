@@ -1,5 +1,5 @@
 //---------------------------------------------------------
-// OpenERP initialisation and black magic about the pool
+// OpenERP Web Boostrap
 //---------------------------------------------------------
 
 /**
@@ -57,7 +57,6 @@
 // OpenERP base module split
 //---------------------------------------------------------
 
-/** @namespace */
 openerp.base = function(instance) {
     openerp.base.controller(instance);
     openerp.base.dates(instance);
