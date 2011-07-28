@@ -283,9 +283,11 @@
         -->
 
         <record id="res_partner_address_1" model="res.partner.address">
-            <field name="city">Brussels</field>
+            <field name="city">Bruxelles</field>
+            <field name="name">Michel Schumacher</field>
             <field name="zip">1000</field>
             <field model="res.country" name="country_id" search="[('name','=','Belgium')]"/>
+            <field name="email">info@balmerinc.be</field>
             <field name="phone">(+32)2 211 34 83</field>
             <field name="street">Rue des Palais 51, bte 33</field>
             <field name="type">default</field>
@@ -314,12 +316,11 @@
         </record>
         <record id="res_partner_address_3" model="res.partner.address">
             <field name="city">Louvain-la-Neuve</field>
-            <field name="name">Mediapole sprl</field>
+            <field name="name">Thomas Passot</field>
             <field name="zip">1348</field>
             <field model="res.country" name="country_id" search="[('name','=','Belgium')]"/>
             <field name="phone">(+32).10.45.17.73</field>
-            <field name="street">Rue Croisette, 9</field>
-            <field name="type">default</field>
+            <field name="street">Rue de l'Angelique, 1</field>
             <field name="partner_id" ref="res_partner_8"/>
         </record>
         <record id="res_partner_address_tang" model="res.partner.address">
@@ -430,29 +431,17 @@
         </record>
         <record id="res_partner_address_13" model="res.partner.address">
             <field name="type">default</field>
-            <field name="city">Hong Kong</field>
-            <field name="zip">75016</field>
-            <field model="res.country" name="country_id" search="[('name','=','China')]"/>
-            <field name="street">8 Finance Street</field>
-            <field name="name">Centrale d'achats</field>
+            <field name="name">Centrale d'achats 1</field>
             <field name="partner_id" ref="res_partner_14"/>
         </record>
         <record id="res_partner_address_14" model="res.partner.address">
             <field name="type">default</field>
-            <field name="name">Magazin BML</field>
-            <field name="city">Beijing</field>
-            <field name="zip">100140</field>
-            <field model="res.country" name="country_id" search="[('name','=','China')]"/>
-            <field name="street">7 Financial Street, Xicheng District</field>
+            <field name="name">Shop 1</field>
             <field name="partner_id" ref="res_partner_15"/>
         </record>
         <record id="res_partner_address_15" model="res.partner.address">
             <field name="type">default</field>
-            <field name="name">Leclerc</field>
-            <field name="city">La Hulpe</field>
-            <field name="zip">1310</field>
-            <field model="res.country" name="country_id" search="[('name','=','Belgium')]"/>
-            <field name="street">Avenue Reine Astrid 92</field>
+            <field name="name">Shop 2</field>
             <field name="partner_id" ref="res_partner_11"/>
         </record>
         <record id="res_partner_address_16" model="res.partner.address">
@@ -645,3 +634,4 @@
         </record>
     </data>
 </openerp>
+
