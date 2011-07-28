@@ -13,7 +13,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-07-16 04:56+0000\n"
+"X-Launchpad-Export-Date: 2011-07-23 04:55+0000\n"
 "X-Generator: Launchpad (build 13405)\n"
 "X-Poedit-Language: Czech\n"
 
@@ -27,7 +27,7 @@ msgstr ""
 "potvrzenou nákupní objednávkou."
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:292
+#: code:addons/purchase/purchase.py:282
 #, python-format
 msgid "You can not confirm purchase order without Purchase Order Lines."
 msgstr "Nemůžete potvrdit nákupní objednávku bez řádků Nákupní objednávky."
@@ -45,7 +45,7 @@ msgid "Destination"
 msgstr "Cíl"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:721
+#: code:addons/purchase/purchase.py:710
 #, python-format
 msgid ""
 "You have to select a product UOM in the same category than the purchase UOM "
@@ -73,8 +73,8 @@ msgstr ""
 
 #. module: purchase
 #: selection:purchase.order,invoice_method:0
-msgid "From Picking"
-msgstr "Z navádění"
+msgid "From Reception"
+msgstr ""
 
 #. module: purchase
 #: view:purchase.order:0
@@ -118,7 +118,7 @@ msgstr ""
 "sledovat obdržené výrobky a ovládat faktury dodavatelů."
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:735
+#: code:addons/purchase/purchase.py:722
 #, python-format
 msgid "The selected supplier only sells this product by %s"
 msgstr "Vybraný dodavatel prodává pouze tento výrobek po %s"
@@ -141,7 +141,7 @@ msgid "From a Pick list"
 msgstr "Ze seznamu navádění"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:660
+#: code:addons/purchase/purchase.py:649
 #, python-format
 msgid "No Pricelist !"
 msgstr "Žádný ceník !"
@@ -232,7 +232,7 @@ msgid "Partial Picking"
 msgstr "Částečné navádění"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:296
+#: code:addons/purchase/purchase.py:286
 #, python-format
 msgid "Purchase order '%s' is confirmed."
 msgstr "Nákupní objednávka '%s' je potvrzena."
@@ -279,7 +279,7 @@ msgid "Notes"
 msgstr "Poznámky"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:660
+#: code:addons/purchase/purchase.py:649
 #, python-format
 msgid ""
 "You have to select a pricelist or a supplier in the purchase form !\n"
@@ -355,7 +355,7 @@ msgid "Cancelled"
 msgstr "Zrušeno"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:315
+#: code:addons/purchase/purchase.py:305
 #, python-format
 msgid "Purchase amount over the limit"
 msgstr "Částka nákupu je nad limitem"
@@ -409,7 +409,7 @@ msgid "Reference"
 msgstr "Odkaz"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:244
+#: code:addons/purchase/purchase.py:237
 #, python-format
 msgid "Cannot delete Purchase Order(s) which are in %s State!"
 msgstr "Nelze smazat Nákupní objednávku(y), která je ve stavu %s!"
@@ -431,7 +431,7 @@ msgid "Day"
 msgstr "Den"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:344
+#: code:addons/purchase/purchase.py:334
 #, python-format
 msgid "Purchase order '%s' has been set in draft state."
 msgstr "Nákupní objednávka '%s' byla nasatavena do návrhového stavu."
@@ -448,8 +448,8 @@ msgid "# of Lines"
 msgstr "# z řádek"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:696
-#: code:addons/purchase/purchase.py:735
+#: code:addons/purchase/purchase.py:685
+#: code:addons/purchase/purchase.py:722
 #: code:addons/purchase/wizard/purchase_order_group.py:47
 #, python-format
 msgid "Warning"
@@ -486,7 +486,7 @@ msgid "It indicates that a picking has been done"
 msgstr "Indikuje, že navádění bylo dokončeno"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:721
+#: code:addons/purchase/purchase.py:710
 #, python-format
 msgid "Wrong Product UOM !"
 msgstr "Nesprávná MJ výrobku !"
@@ -588,7 +588,7 @@ msgid "Order Lines"
 msgstr "Řádky objednávky"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:662
+#: code:addons/purchase/purchase.py:651
 #, python-format
 msgid "No Partner!"
 msgstr "Žádný partner!"
@@ -637,9 +637,9 @@ msgid "Invoices generated for a purchase order"
 msgstr "Faktury generované pro nákupní objednávku"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:292
+#: code:addons/purchase/purchase.py:282
+#: code:addons/purchase/purchase.py:352
 #: code:addons/purchase/purchase.py:362
-#: code:addons/purchase/purchase.py:372
 #: code:addons/purchase/wizard/purchase_line_invoice.py:122
 #, python-format
 msgid "Error !"
@@ -700,7 +700,7 @@ msgid "Reservation Destination"
 msgstr "Cíl rezervace"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:244
+#: code:addons/purchase/purchase.py:237
 #, python-format
 msgid "Invalid action !"
 msgstr "Neplatná akce !"
@@ -780,7 +780,7 @@ msgid "    Month-1    "
 msgstr "    Měsíc-1    "
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:373
+#: code:addons/purchase/purchase.py:363
 #, python-format
 msgid "There is no purchase journal defined for this company: \"%s\" (id:%d)"
 msgstr "Pro tuto společnost není určen nákupní deník: \"%s\" (id:%d)"
@@ -791,7 +791,7 @@ msgid "Manual"
 msgstr "Ruční"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:410
+#: code:addons/purchase/purchase.py:400
 #, python-format
 msgid "You must first cancel all picking attached to this purchase order."
 msgstr ""
@@ -908,6 +908,7 @@ msgid "Month"
 msgstr "Měsíc"
 
 #. module: purchase
+#: selection:purchase.order,state:0
 #: selection:purchase.report,state:0
 msgid "Waiting Supplier Ack"
 msgstr "Čekání na potvrzení dodavatelem"
@@ -961,8 +962,14 @@ msgstr "K překontrolování účetním."
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.purchase_line_form_action2
 #: model:ir.ui.menu,name:purchase.menu_purchase_line_order_draft
-msgid "Purchase Lines Not Invoiced"
-msgstr "Nefakturované nákupní řádky"
+msgid "On Purchase Order Line"
+msgstr ""
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.action_picking_tree4_picking_to_invoice
+#: model:ir.ui.menu,name:purchase.action_picking_tree4_picking_to_invoice
+msgid "On Receptions"
+msgstr ""
 
 #. module: purchase
 #: report:purchase.order:0
@@ -1105,7 +1112,7 @@ msgid "Manual Invoices"
 msgstr "Ruční faktury"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:318
+#: code:addons/purchase/purchase.py:308
 #, python-format
 msgid ""
 "Somebody has just confirmed a purchase with an amount over the defined limit"
@@ -1122,14 +1129,14 @@ msgid "Extended Filters..."
 msgstr "Rozšířené filtry..."
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:362
+#: code:addons/purchase/purchase.py:352
 #: code:addons/purchase/wizard/purchase_line_invoice.py:123
 #, python-format
 msgid "There is no expense account defined for this product: \"%s\" (id:%d)"
 msgstr "Pro tento výrobek nebyl definován nákladový účet: \"%s\" (id:%d)"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:418
+#: code:addons/purchase/purchase.py:408
 #, python-format
 msgid "You must first cancel all invoices attached to this purchase order."
 msgstr ""
@@ -1177,7 +1184,7 @@ msgid ""
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:696
+#: code:addons/purchase/purchase.py:685
 #, python-format
 msgid ""
 "The selected supplier has a minimal quantity set to %s, you cannot purchase "
@@ -1440,7 +1447,7 @@ msgid "Date Approved"
 msgstr "Datum schválení"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:417
+#: code:addons/purchase/purchase.py:407
 #, python-format
 msgid "Could not cancel this purchase order !"
 msgstr "Nelze zrušit tuto nákupní objednávku !"
@@ -1552,7 +1559,7 @@ msgid "Total Qty and Amount by month"
 msgstr "Celkové množ. a částka za měsíc"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:409
+#: code:addons/purchase/purchase.py:399
 #, python-format
 msgid "Could not cancel purchase order !"
 msgstr "Nelze zrušit nákupní objednávku !"
@@ -1698,7 +1705,7 @@ msgid ""
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:424
+#: code:addons/purchase/purchase.py:414
 #, python-format
 msgid "Purchase order '%s' is cancelled."
 msgstr "Nákupní objednávka '%s' zrušena."
@@ -1778,7 +1785,7 @@ msgid "Partner"
 msgstr "Partner"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:662
+#: code:addons/purchase/purchase.py:651
 #, python-format
 msgid ""
 "You have to select a partner in the purchase form !\n"
@@ -1827,3 +1834,9 @@ msgstr ""
 #: model:ir.ui.menu,name:purchase.menu_board_purchase
 msgid "Purchase Dashboard"
 msgstr "Nástěnka nákupu"
+
+#~ msgid "From Picking"
+#~ msgstr "Z navádění"
+
+#~ msgid "Purchase Lines Not Invoiced"
+#~ msgstr "Nefakturované nákupní řádky"
