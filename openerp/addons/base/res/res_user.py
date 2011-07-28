@@ -547,6 +547,27 @@ class groups2(osv.osv):
                 todo.extend(g.implied_ids)
         return list(closure)
 
+    def get_classified(self, cr, uid, context=None):
+        "return a classification (by application, etc.) of all groups"
+        # determine the names of apps (that correspond to root menus)
+        menu_obj = self.pool.get('ir.ui.menu')
+        menu_ids = menu_obj.search(cr, uid, [('parent_id','=',False)], context={'ir.ui.menu.full_list': True})
+        apps = set([m.name for m in menu_obj.browse(cr, uid, menu_ids, context)])
+        
+        # classify groups depending on their names
+        groups, others = {}, {}
+        for g in self.browse(cr, uid, self.search(cr, uid, []), context):
+            names = [s.strip() for s in g.name.split('/', 1)]
+            if len(names) > 1:
+                if names[0] in apps:
+                    groups.setdefault(names[0], []).append((g.id, names[1]))
+                else:
+                    others.setdefault(names[0], []).append((g.id, names[1]))
+            else:
+                others.setdefault(None, []).append((g.id, names[0]))
+        
+        return groups, others
+
 groups2()
 
 
