@@ -530,6 +530,10 @@ users()
 
 
 class groups2(osv.osv):
+    """ Extension of res.groups with a relation for implied groups.
+        The data defines a view that inherits from the user form; that view is
+        updated when groups are modified, to reflect their structure.
+    """
     _inherit = 'res.groups'
     _columns = {
         'implied_ids': fields.many2many('res.groups', 'res_groups_implied_rel', 'gid', 'hid',
@@ -572,8 +576,7 @@ class groups2(osv.osv):
         return res
 
     def get_classified(self, cr, uid, context=None):
-        """
-            classify all groups by prefix; return a pair (apps, groups) where
+        """ classify all groups by prefix; return a pair (apps, groups) where
             - apps is a list like [("App", [(id, "Name"), ...]), ...],
             - groups is a dictionary like {'Class': [(id, "Name"), ...], ...}
             - the key None is used in groups for groups not like App/Name
@@ -627,6 +630,8 @@ def name_selection_groups(ids): return 'sel_groups_' + '_'.join(map(str, ids))
 def is_boolean_group(name): return name.startswith('in_group_')
 def is_boolean_groups(name): return name.startswith('in_groups_')
 def is_selection_groups(name): return name.startswith('sel_groups_')
+def is_field_group(name):
+    return is_boolean_group(name) or is_boolean_groups(name) or is_selection_groups(name)
 
 def get_boolean_group(name): return int(name[9:])
 def get_boolean_groups(name): return map(int, name[10:].split('_'))
@@ -668,12 +673,7 @@ class users2(osv.osv):
 
     def read(self, cr, uid, ids, fields, context=None, load='_classic_read'):
         # add processing for reified group fields
-        group_fields, other_fields = [], []
-        for f in fields:
-            if is_boolean_group(f) or is_boolean_groups(f) or is_selection_groups(f):
-                group_fields.append(f)
-            else:
-                other_fields.append(f)
+        group_fields, other_fields = partition(is_field_group, fields)
         if group_fields:
             group_obj = self.pool.get('res.groups')
             fields = other_fields + ['groups_id']
@@ -760,5 +760,17 @@ class res_config_view(osv.osv_memory):
                                  {'view':res['view']}, context=context)
 
 res_config_view()
+
+
+
+def partition(f, xs):
+    "return a pair equivalent to (filter(f, xs), filter(lambda x: not f(x), xs))"
+    yes, nos = [], []
+    for x in xs:
+        if f(x):
+            yes.append(x)
+        else:
+            nos.append(x)
+    return yes, nos
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
