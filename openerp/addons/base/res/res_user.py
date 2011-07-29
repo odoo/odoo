@@ -739,13 +739,18 @@ class users_view(osv.osv):
         add, rem = [], []
         for k in values.keys():
             if is_boolean_group(k):
-                (add if values.pop(k) else rem).append(get_boolean_group(k))
+                if values.pop(k):
+                    add.append(get_boolean_group(k))
+                else:
+                    rem.append(get_boolean_group(k))
             elif is_boolean_groups(k):
                 if not values.pop(k):
                     rem.extend(get_boolean_groups(k))
             elif is_selection_groups(k):
-                rem.extend(get_selection_groups(k))
-                add.append(int(values.pop(k)))
+                gid = values.pop(k)
+                if gid:
+                    rem.extend(get_selection_groups(k))
+                    add.append(gid)
         if add or rem:
             # remove groups in 'rem' and add groups in 'add'
             gdiff = [(3, id) for id in rem] + [(4, id) for id in add]
@@ -767,7 +772,8 @@ class users_view(osv.osv):
             fields.append('groups_id')
             # read the normal fields (and 'groups_id')
             res = super(users_view, self).read(cr, uid, ids, fields, context, load)
-            for record in res:
+            records = res if isinstance(res, list) else [res]
+            for record in records:
                 # get the field 'groups_id' and insert the group_fields
                 groups = set(record['groups_id'])
                 for f in group_fields:
