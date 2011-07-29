@@ -60,6 +60,12 @@ def close_socket(sock):
 #.apidoc title: Common Services: netsvc
 #.apidoc module-mods: member-order: bysource
 
+def abort_response(error, description, origin, details):
+    if not tools.config['debug_mode']:
+        raise Exception("%s -- %s\n\n%s"%(origin, description, details))
+    else:
+        raise
+
 class Service(object):
     """ Base class for *Local* services
 
@@ -86,6 +92,11 @@ class Service(object):
             raise
 
 def LocalService(name):
+  # Special case for addons support, will be removed in a few days when addons
+  # are updated to directly use openerp.osv.osv.service.
+  if name == 'object_proxy':
+      return openerp.osv.osv.service
+
   return Service._services[name]
 
 class ExportService(object):

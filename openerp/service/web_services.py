@@ -344,9 +344,9 @@ class db(netsvc.ExportService):
                 tools.config['update']['base'] = True
                 pooler.restart_pool(db, force_demo=False, update_module=True)
             except except_orm, inst:
-                self.abortResponse(1, inst.name, 'warning', inst.value)
+                netsvc.abort_response(1, inst.name, 'warning', inst.value)
             except except_osv, inst:
-                self.abortResponse(1, inst.name, inst.exc_type, inst.value)
+                netsvc.abort_response(1, inst.name, inst.exc_type, inst.value)
             except Exception:
                 import traceback
                 tb_s = reduce(lambda x, y: x+y, traceback.format_exception( sys.exc_type, sys.exc_value, sys.exc_traceback))
@@ -419,7 +419,7 @@ GNU Public Licence.
             return rc.get_available_updates(rc.id, openerp.modules.get_modules_with_version())
 
         except tm.RemoteContractException, e:
-            self.abortResponse(1, 'Migration Error', 'warning', str(e))
+            netsvc.abort_response(1, 'Migration Error', 'warning', str(e))
 
 
     def exp_get_migration_scripts(self, contract_id, contract_password):
@@ -487,7 +487,7 @@ GNU Public Licence.
 
             return True
         except tm.RemoteContractException, e:
-            self.abortResponse(1, 'Migration Error', 'warning', str(e))
+            netsvc.abort_response(1, 'Migration Error', 'warning', str(e))
         except Exception, e:
             import traceback
             tb_s = reduce(lambda x, y: x+y, traceback.format_exception( sys.exc_type, sys.exc_value, sys.exc_traceback))
@@ -560,8 +560,8 @@ class objects_proxy(netsvc.ExportService):
         if method not in ['execute','exec_workflow']:
             raise NameError("Method not available %s" % method)
         security.check(db,uid,passwd)
-        ls = netsvc.LocalService('object_proxy')
-        fn = getattr(ls, method)
+        assert openerp.osv.osv.service, "The object_proxy class must be started with start_object_proxy."
+        fn = getattr(openerp.osv.osv.service, method)
         res = fn(db, uid, *params)
         return res
 
@@ -701,7 +701,7 @@ class report_spool(netsvc.ExportService):
         result = self._reports[report_id]
         exc = result['exception']
         if exc:
-            self.abortResponse(exc, exc.message, 'warning', exc.traceback)
+            netsvc.abort_response(exc, exc.message, 'warning', exc.traceback)
         res = {'state': result['state']}
         if res['state']:
             if tools.config['reportgz']:
