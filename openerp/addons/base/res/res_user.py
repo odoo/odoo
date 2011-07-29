@@ -549,11 +549,13 @@ res_config_view()
 
 
 
-class groups2(osv.osv):
-    """ Extension of res.groups with a relation for implied groups.
-        The data defines a view that inherits from the user form; that view is
-        updated when groups are modified, to reflect their structure.
-    """
+#
+# Extension of res.groups and res.users with a relation for "implied" or 
+# "inherited" groups.  Once a user belongs to a group, it automatically belongs
+# to the implied groups (transitively).
+#
+
+class groups_implied(osv.osv):
     _inherit = 'res.groups'
     _columns = {
         'implied_ids': fields.many2many('res.groups', 'res_groups_implied_rel', 'gid', 'hid',
@@ -572,27 +574,25 @@ class groups2(osv.osv):
         return list(closure)
 
     def create(self, cr, uid, values, context=None):
-        group_id = super(groups2, self).create(cr, uid, values, context)
-        if values.get('users') or values.get('implied_ids'):
-            # add implied groups to all users of the group
-            group = self.browse(cr, uid, group_id)
-            self.pool.get('res.users').write(cr, uid, map(int, group.users),
-                {'groups_id': [(4, group_id)]}, context)
-        return group_id
+        users = values.pop('users')
+        gid = super(groups_implied, self).create(cr, uid, values, context)
+        if users:
+            # delegate addition of users to add implied groups
+            self.write(cr, uid, [gid], {'users': users}, context)
+        return gid
 
     def write(self, cr, uid, ids, values, context=None):
-        res = super(groups2, self).write(cr, uid, ids, values, context)
+        res = super(groups_implied, self).write(cr, uid, ids, values, context)
         if values.get('users') or values.get('implied_ids'):
             # add implied groups (to all users of each group)
-            users_obj = self.pool.get('res.users')
-            groups = self.browse(cr, uid, ids)
-            for g in groups:
-                users_obj.write(cr, uid, map(int, g.users),
-                    {'groups_id': [(4, g.id)]}, context)
+            for g in self.browse(cr, uid, ids):
+                gids = self.get_closure(cr, uid, [g.id], context)
+                users = [(4, u.id) for u in g.users]
+                super(groups_implied, self).write(cr, uid, gids, {'users': users}, context)
         return res
 
-    def get_rec_implied(self, cr, uid, context=None):
-        "return a dictionary giving the recursively implied groups of each group"
+    def get_trans_implied(self, cr, uid, context=None):
+        "return a dictionary giving the transitively implied groups of each group"
         groups = self.browse(cr, 1, self.search(cr, 1, []))
         # compute the transitive closure of implied_ids
         succs = dict([(g.id, set()) for g in groups])
@@ -608,21 +608,63 @@ class groups2(osv.osv):
 
     def get_maximal(self, cr, uid, ids, context=None):
         "return a maximal element among the group ids"
-        trans_implied = self.get_rec_implied(cr, uid, context)
         res = None
         for gid in ids:
-            if (not res) or (res in trans_implied[gid]):
+            if (not res) or (res in self.get_closure(cr, uid, [gid], context)):
                 res = gid
         return res
 
+groups_implied()
+
+class users_implied(osv.osv):
+    _inherit = 'res.users'
+
+    def create(self, cr, uid, values, context=None):
+        groups = values.pop('groups_id')
+        user_id = super(users_implied, self).create(cr, uid, values, context)
+        if groups:
+            # delegate addition of groups to add implied groups
+            self.write(cr, uid, [user_id], {'groups_id': groups}, context)
+        return user_id
+
+    def write(self, cr, uid, ids, values, context=None):
+        res = super(users_implied, self).write(cr, uid, ids, values, context)
+        if values.get('groups_id'):
+            # add implied groups for all users
+            groups_obj = self.pool.get('res.groups')
+            for u in self.browse(cr, uid, ids):
+                gids = groups_obj.get_closure(cr, uid, map(int, u.groups_id), context)
+                groups = [(6, 0, gids)]
+                super(users_implied, self).write(cr, uid, [u.id], {'groups_id': groups}, context)
+        return res
+
+users_implied()
+
+
+
+#
+# Extension of res.groups and res.users for the special groups view in the users
+# form.  This extension presents groups with selection and boolean widgets:
+# - Groups named as "App/Name" (corresponding to root menu "App") are presented
+#   per application, with one boolean and selection field each.  The selection
+#   field defines a role "Name" for the given application.
+# - Groups named as "Stuff/Name" are presented as boolean fields and grouped
+#   under sections "Stuff".
+# - The remaining groups are presented as boolean fields and grouped in a
+#   section "Others".
+#
+
+class groups_view(osv.osv):
+    _inherit = 'res.groups'
+
     def get_classified(self, cr, uid, context=None):
-        """ classify all groups by prefix; return a pair (apps, groups) where
+        """ classify all groups by prefix; return a pair (apps, others) where
             - apps is a list like [("App", [(id, "Name"), ...]), ...],
-            - groups is a dictionary like {'Class': [(id, "Name"), ...], ...}
+            - others is a dictionary like {'Class': [(id, "Name"), ...], ...}
             - the key None is used in groups for groups not like App/Name
         """
         # get the relation to order groups
-        order_relation = self.get_rec_implied(cr, uid, context)
+        order_relation = self.get_trans_implied(cr, uid, context)
         order = lambda x, y: (x[0] in order_relation[y[0]] and -1 or 1)
         
         # classify groups depending on their names
@@ -650,10 +692,8 @@ class groups2(osv.osv):
             groups.sort(key=lambda pair: pair[1])
         
         return (apps, classified)
-        
-groups2()
 
-
+groups_view()
 
 # Naming conventions for reified groups fields:
 # - boolean field 'in_group_ID' is True iff
@@ -688,11 +728,7 @@ def partition(f, xs):
             nos.append(x)
     return yes, nos
 
-class users2(osv.osv):
-    """ Extension of res.users for:
-        - adding implied groups when added to a group
-        - defining special widgets for field groups_id
-    """
+class users_view(osv.osv):
     _inherit = 'res.users'
 
     def _process_values_groups(self, cr, uid, values, context=None):
@@ -709,43 +745,29 @@ class users2(osv.osv):
                 rem.extend(get_selection_groups(k))
                 add.append(int(values.pop(k)))
         if add or rem:
-            # remove groups in 'rem' and add all implied groups in 'add'
-            add = self.pool.get('res.groups').get_closure(cr, uid, add, context)
-            values['groups_id'] = [(3, id) for id in rem] + [(4, id) for id in add]
-        elif 'groups_id' in values:
-            # add implied groups (only handles (4, ID) and (6, 0, IDs) cases)
-            closure = lambda ids: self.pool.get('res.groups').get_closure(cr, uid, ids, context)
-            groups = []
-            for elem in values['groups_id']:
-                if elem[0] == 4:
-                    groups.extend([(4, id) for id in closure([elem[1]])])
-                elif elem[0] == 6:
-                    groups.append((6, 0, closure(elem[2])))
-                else:
-                    groups.append(elem)
-            values['groups_id'] = groups
+            # remove groups in 'rem' and add groups in 'add'
+            gdiff = [(3, id) for id in rem] + [(4, id) for id in add]
+            values.setdefault('groups_id', []).extend(gdiff)
         return True
 
     def create(self, cr, uid, values, context=None):
-        # add processing for reified group fields
         self._process_values_groups(cr, uid, values, context)
-        return super(users2, self).create(cr, uid, values, context)
+        return super(users_view, self).create(cr, uid, values, context)
 
     def write(self, cr, uid, ids, values, context=None):
-        # add processing for reified group fields
         self._process_values_groups(cr, uid, values, context)
-        return super(users2, self).write(cr, uid, ids, values, context)
+        return super(users_view, self).write(cr, uid, ids, values, context)
 
     def read(self, cr, uid, ids, fields, context=None, load='_classic_read'):
-        # add processing for reified group fields
         group_fields, fields = partition(is_field_group, fields)
         if group_fields:
             group_obj = self.pool.get('res.groups')
             fields.append('groups_id')
-            res = super(users2, self).read(cr, uid, ids, fields, context, load)
+            # read the normal fields (and 'groups_id')
+            res = super(users_view, self).read(cr, uid, ids, fields, context, load)
             for record in res:
-                # remove the field 'groups_id' and insert the group_fields
-                groups = set(record.pop('groups_id'))
+                # get the field 'groups_id' and insert the group_fields
+                groups = set(record['groups_id'])
                 for f in group_fields:
                     if is_boolean_group(f):
                         record[f] = get_boolean_group(f) in groups
@@ -755,12 +777,12 @@ class users2(osv.osv):
                         selected = groups.intersection(get_selection_groups(f))
                         record[f] = group_obj.get_maximal(cr, uid, selected, context)
             return res
-        return super(users2, self).read(cr, uid, ids, fields, context, load)
+        return super(users_view, self).read(cr, uid, ids, fields, context, load)
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form',
                 context=None, toolbar=False, submenu=False):
         # in form views, transform 'groups_id' into reified group fields
-        res = super(users2, self).fields_view_get(cr, uid, view_id, view_type,
+        res = super(users_view, self).fields_view_get(cr, uid, view_id, view_type,
                 context, toolbar, submenu)
         if view_type == 'form':
             root = etree.fromstring(encode(res['arch']))
@@ -806,8 +828,6 @@ class users2(osv.osv):
                 res['arch'] = etree.tostring(root)
         return res
 
-users2()
-
-
+users_view()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
