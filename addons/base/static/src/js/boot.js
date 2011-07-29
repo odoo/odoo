@@ -58,7 +58,7 @@
 //---------------------------------------------------------
 
 openerp.base = function(instance) {
-    openerp.base.controller(instance);
+    openerp.base.core(instance);
     openerp.base.dates(instance);
     openerp.base.chrome(instance);
     openerp.base.data(instance);

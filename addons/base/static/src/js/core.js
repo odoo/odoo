@@ -2,7 +2,7 @@
  * OpenERP controller framework
  *--------------------------------------------------------*/
 
-openerp.base.controller = function(instance) {
+openerp.base.core = function(openerp) {
 /**
  * John Resig Class with factory improvement
  */
@@ -69,9 +69,9 @@ openerp.base.controller = function(instance) {
 })();
 
 // todo change john resig class to keep window clean
-instance.base.Class = window.Class
+openerp.base.Class = window.Class
 
-instance.base.callback = function(obj, method) {
+openerp.base.callback = function(obj, method) {
     var callback = function() {
         var args = Array.prototype.slice.call(arguments);
         var r;
@@ -128,7 +128,7 @@ instance.base.callback = function(obj, method) {
  * @param {dict} add Additional functions to override.
  * @return {Class}
  */
-instance.base.generate_null_object_class = function(claz, add) {
+openerp.base.generate_null_object_class = function(claz, add) {
     var newer = {};
     var copy_proto = function(prototype) {
         for (var name in prototype) {
@@ -140,21 +140,150 @@ instance.base.generate_null_object_class = function(claz, add) {
             copy_proto(prototype.prototype);
     };
     copy_proto(claz.prototype);
-    newer.init = instance.base.Widget.prototype.init;
+    newer.init = openerp.base.Widget.prototype.init;
     var tmpclass = claz.extend(newer);
     return tmpclass.extend(add || {});
 };
 
-// --------------------------------------------------------
-// OLD 
-// --------------------------------------------------------
+/**
+ * Base error for lookup failure
+ *
+ * @class
+ */
+openerp.base.NotFound = openerp.base.Class.extend( /** @lends openerp.base.NotFound# */ {
+});
+openerp.base.KeyNotFound = openerp.base.NotFound.extend( /** @lends openerp.base.KeyNotFound# */ {
+    /**
+     * Thrown when a key could not be found in a mapping
+     *
+     * @constructs
+     * @extends openerp.base.NotFound
+     * @param {String} key the key which could not be found
+     */
+    init: function (key) {
+        this.key = key;
+    },
+    toString: function () {
+        return "The key " + this.key + " was not found";
+    }
+});
+openerp.base.ObjectNotFound = openerp.base.NotFound.extend( /** @lends openerp.base.ObjectNotFound# */ {
+    /**
+     * Thrown when an object path does not designate a valid class or object
+     * in the openerp hierarchy.
+     *
+     * @constructs
+     * @extends openerp.base.NotFound
+     * @param {String} path the invalid object path
+     */
+    init: function (path) {
+        this.path = path;
+    },
+    toString: function () {
+        return "Could not find any object of path " + this.path;
+    }
+});
+openerp.base.Registry = openerp.base.Class.extend( /** @lends openerp.base.Registry# */ {
+    /**
+     * Stores a mapping of arbitrary key (strings) to object paths (as strings
+     * as well).
+     *
+     * Resolves those paths at query time in order to always fetch the correct
+     * object, even if those objects have been overloaded/replaced after the
+     * registry was created.
+     *
+     * An object path is simply a dotted name from the openerp root to the
+     * object pointed to (e.g. ``"openerp.base.Session"`` for an OpenERP
+     * session object).
+     *
+     * @constructs
+     * @param {Object} mapping a mapping of keys to object-paths
+     */
+    init: function (mapping) {
+        this.map = mapping || {};
+    },
+    /**
+     * Retrieves the object matching the provided key string.
+     *
+     * @param {String} key the key to fetch the object for
+     * @returns {Class} the stored class, to initialize
+     *
+     * @throws {openerp.base.KeyNotFound} if the object was not in the mapping
+     * @throws {openerp.base.ObjectNotFound} if the object path was invalid
+     */
+    get_object: function (key) {
+        var path_string = this.map[key];
+        if (path_string === undefined) {
+            throw new openerp.base.KeyNotFound(key);
+        }
+
+        var object_match = openerp;
+        var path = path_string.split('.');
+        // ignore first section
+        for(var i=1; i<path.length; ++i) {
+            object_match = object_match[path[i]];
+
+            if (object_match === undefined) {
+                throw new openerp.base.ObjectNotFound(path_string);
+            }
+        }
+        return object_match;
+    },
+    /**
+     * Tries a number of keys, and returns the first object matching one of
+     * the keys.
+     *
+     * @param {Array} keys a sequence of keys to fetch the object for
+     * @returns {Class} the first class found matching an object
+     *
+     * @throws {openerp.base.KeyNotFound} if none of the keys was in the mapping
+     * @trows {openerp.base.ObjectNotFound} if a found object path was invalid
+     */
+    get_any: function (keys) {
+        for (var i=0; i<keys.length; ++i) {
+            try {
+                return this.get_object(keys[i]);
+            } catch (e) {
+                if (e instanceof openerp.base.KeyNotFound) {
+                    continue;
+                }
+                throw e;
+            }
+        }
+        throw new openerp.base.KeyNotFound(keys.join(','));
+    },
+    /**
+     * Adds a new key and value to the registry.
+     *
+     * This method can be chained.
+     *
+     * @param {String} key
+     * @param {String} object_path fully qualified dotted object path
+     * @returns {openerp.base.Registry} itself
+     */
+    add: function (key, object_path) {
+        this.map[key] = object_path;
+        return this;
+    },
+    /**
+     * Creates and returns a copy of the current mapping, with the provided
+     * mapping argument added in (replacing existing keys if needed)
+     *
+     * @param {Object} [mapping={}] a mapping of keys to object-paths
+     */
+    clone: function (mapping) {
+        return new openerp.base.Registry(
+            _.extend({}, this.map, mapping || {}));
+    }
+});
+
 /**
  * Utility class that any class is allowed to extend to easy common manipulations.
  * 
  * It provides rpc calls, callback on all methods preceded by "on_" or "do_" and a
  * logging facility.
  */
-instance.base.SessionAware = instance.base.Class.extend({
+openerp.base.SessionAware = openerp.base.Class.extend({
     init: function(session) {
         this.session = session;
         
@@ -164,7 +293,7 @@ instance.base.SessionAware = instance.base.Class.extend({
                 this[name].debug_name = name;
                 // bind ALL function to this not only on_and _do ?
                 if((/^on_|^do_/).test(name)) {
-                    this[name] = instance.base.callback(this, this[name]);
+                    this[name] = openerp.base.callback(this, this[name]);
                 }
             }
         }
@@ -268,7 +397,7 @@ instance.base.SessionAware = instance.base.Class.extend({
  * 
  * That will kill the widget in a clean way and erase its content from the dom.
  */
-instance.base.Widget = instance.base.SessionAware.extend({
+openerp.base.Widget = openerp.base.SessionAware.extend({
     /**
      * The name of the QWeb template that will be used for rendering. Must be
      * redefined in subclasses or the default render() method can not be used.
@@ -359,7 +488,7 @@ instance.base.Widget = instance.base.SessionAware.extend({
     _render_and_insert: function(insertion, target) {
         var rendered = this.render();
         this.$element = $(rendered);
-        if (target instanceof instance.base.Widget)
+        if (target instanceof openerp.base.Widget)
             target = target.$element;
         insertion(target);
         return this.start();
@@ -435,7 +564,7 @@ instance.base.Widget = instance.base.SessionAware.extend({
  * For retro compatibility only, the only difference with is that render() uses
  * directly `this` instead of context with a "widget" key.
  */
-instance.base.OldWidget = instance.base.Widget.extend({
+openerp.base.OldWidget = openerp.base.Widget.extend({
     render: function (additional) {
         return QWeb.render(this.template, _.extend(_.extend({}, this), additional || {}));
     }
