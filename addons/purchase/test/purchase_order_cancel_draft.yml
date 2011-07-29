@@ -71,7 +71,7 @@
   !assert {model: purchase.order, id: purchase_order_pendrive1}:
     - state == 'draft'
 -
-  I test onchanged on Wharehouse ,Product , Uom .
+  I test onchanged on Wharehouse ,Product, Uom, Destination Address .
 -
   !python {model: purchase.order}: |
     from tools.translate import _
@@ -91,6 +91,8 @@
     line_id = po_line_obj.search(cr, uid, [('order_id','=',ids[0])])
     po_line_obj.product_id_change(cr, uid, line_id[0], price_id[0], product_id[0], 10, uom_id[0], part_ids[0])
     po_line_obj.product_uom_change(cr, uid, line_id[0], price_id[0], product_id[0], 10, uom_id[0], part_ids[0])
+    address_id = addrss_obj.search(cr, uid, [('partner_id','=',part_ids)])
+    self.onchange_dest_address_id(cr, uid, ids, address_id[0])
 -
   I confirm the purchase order for Pen Drive1.
 -
@@ -135,4 +137,12 @@
 -
   !assert {model: purchase.order, id: purchase_order_pendrive1}:
     - state == 'draft'
+-
+  I test for Delete Perchase order in Draft state.
+-
+  !python {model: purchase.order}: |
+    from tools.translate import _
+    ids = []
+    ids.append(ref("purchase_order_pendrive1"))
+    self.unlink(cr, uid, ids)   
  
