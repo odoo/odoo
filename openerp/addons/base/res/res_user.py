@@ -623,6 +623,8 @@ def get_boolean_group(name): return int(name[9:])
 def get_boolean_groups(name): return map(int, name[10:].split('_'))
 def get_selection_groups(name): return map(int, name[11:].split('_'))
 
+def encode(s): return s.encode('utf8') if isinstance(s, unicode) else s
+
 class users2(osv.osv):
     _inherit = 'res.users'
 
@@ -635,7 +637,7 @@ class users2(osv.osv):
                 (add if values.pop(k) else rem).append(get_boolean_group(k))
             elif is_boolean_groups(k):
                 if not values.pop(k):
-                    rem.extend(get_selection_groups(k))
+                    rem.extend(get_boolean_groups(k))
             elif is_selection_groups(k):
                 rem.extend(get_selection_groups(k))
                 add.append(int(values.pop(k)))
@@ -689,7 +691,7 @@ class users2(osv.osv):
         res = super(users2, self).fields_view_get(cr, uid, view_id, view_type,
                 context, toolbar, submenu)
         if view_type == 'form':
-            root = etree.fromstring(res['arch'])
+            root = etree.fromstring(encode(res['arch']))
             nodes = root.xpath("//field[@name='groups_id']")
             if nodes:
                 # replace node by the reified group fields
@@ -698,6 +700,7 @@ class users2(osv.osv):
                 apps, others = self.pool.get('res.groups').get_classified(cr, uid, context)
                 # create section Applications
                 elems.append('<separator colspan="6" string="%s"/>' % _('Applications'))
+                elems.append('<group colspan="6">')
                 for app, selection in apps:
                     ids = [id for id, name in selection]
                     app_name = name_boolean_groups(ids)
@@ -705,8 +708,9 @@ class users2(osv.osv):
                     fields[app_name] = {'type': 'boolean', 'string': app}
                     fields[sel_name] = {'type': 'selection', 'string': '', 'selection': selection}
                     elems.append('<field name="%s"/>' % app_name)
-                    elems.append('<field name="%s" nolabel="1"/>' % sel_name)
+                    elems.append("""<field name="%s" attrs="{'invisible': [('%s', '=', False)]}"/>""" % (sel_name, app_name))
                     elems.append('<newline/>')
+                elems.append('</group>')
                 # create other sections
                 sections = sorted(others.items(), key=lambda pair: pair[0])
                 if sections and sections[0][0] is None:
