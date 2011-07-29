@@ -183,9 +183,10 @@ the rule to mark CC(mail to any other person defined in actions)."),
                context = {}
             if isinstance(ids, (str, int, long)):
                 ids = [ids]
+            id = old_write(cr, uid, ids, vals, context=context)
             if not context.get('action'):
                 self.pre_action(cr, uid, ids, model, context=context)
-            return old_write(cr, uid, ids, vals, context=context)
+            return id
         return make_call_old
 
     def _register_hook(self, cr, uid, ids, context=None):
