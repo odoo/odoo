@@ -287,14 +287,12 @@ openerp.base_dashboard.ConfigOverview = openerp.base.View.extend({
         this._super(parent, element_id);
         this.dataset = new openerp.base.DataSetSearch(
                 this, 'ir.actions.todo');
-        this.dataset.domain = ['|', '&', ['type', '=', 'recurring'],
-                                         ['state', '!=', 'hidden'],
-                                    '&', ['type', '!=', 'special'],
-                                         ['state', '=', 'open']];
+        this.dataset.domain = [['type', '=', 'manual']];
     },
     start: function () {
         $.when(this.dataset.read_slice(['state', 'action_id', 'category_id']),
-               this.dataset.call('progress')).then(this.on_records_loaded);
+               this.dataset.call('progress'))
+            .then(this.on_records_loaded);
     },
     on_records_loaded: function (read_response, progress_response) {
         var records = read_response[0].records,
@@ -321,15 +319,16 @@ openerp.base_dashboard.ConfigOverview = openerp.base.View.extend({
 
         var self = this;
         this.$element.find('div.oe-dashboard-config-overview ul')
-            .delegate('span.ui-icon', 'click', function (e) {
-                // cancel todo
+            .delegate('input', 'click', function (e) {
+                // switch todo status
                 e.stopImmediatePropagation();
-                var todo_id = $(this).parent().data('id');
-                self.dataset.write(todo_id, {state: 'hidden'}, function () {
+                var new_state = this.checked ? 'done' : 'open',
+                      todo_id = parseInt($(this).val(), 10);
+                self.dataset.write(todo_id, {state: new_state}, function () {
                     self.start();
                 });
             })
-            .delegate('li', 'click', function () {
+            .delegate('li:not(.oe-done)', 'click', function () {
                 self.execute_action({
                         type: 'object',
                         name: 'action_launch'
