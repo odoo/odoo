@@ -14,9 +14,9 @@
           <xpath expr="//label[@string='description']" position="attributes">
                 <attribute name="string">Select the Applications you want your system to cover. If you are not sure about your exact needs at this stage, you can easily install them later.</attribute>
           </xpath>
-          <xpath expr='//separator[@string="vsep"]' position='attributes'>
-                    <attribute name='string'></attribute>
-                    <attribute name='rowspan'>15</attribute>
+          <xpath expr="//separator[@string=&quot;vsep&quot;]" position="attributes">
+                    <attribute name="string"/>
+                    <attribute name="rowspan">15</attribute>
           </xpath>
           <xpath expr="//button[@string='Install Modules']" position="attributes">
                     <attribute name="string">Install</attribute>
@@ -82,15 +82,10 @@
       <field name="name">Start Configuration</field>
       <field name="model_id" ref="base.model_ir_actions_todo"/>
       <field name="state">code</field>
-      <field name="code"
-             eval="'# obj is a browse_record and will provide stupid ids to method\n'
-'action = obj.pool.get(\'ir.actions.todo\').action_launch(cr, uid, ' + str([ref('base_setup_installer_todo')]) + ', context=context)'"/>
+      <field name="code" eval="'# obj is a browse_record and will provide stupid ids to method\n' 'action = obj.pool.get(\'ir.actions.todo\').action_launch(cr, uid, ' + str([ref('base_setup_installer_todo')]) + ', context=context)'"/>
     </record>
     
-    <menuitem name="Add More Features"
-              action="action_start_configurator"
-              id="menu_view_base_module_configuration" parent="base.menu_config"
-              type="server" icon="STOCK_EXECUTE" sequence="100" />
+    <menuitem name="Add More Features" action="action_start_configurator" id="menu_view_base_module_configuration" parent="base.menu_config" type="server" icon="STOCK_EXECUTE" sequence="100"/>
     <record id="ir_ui_view_sc_configuration" model="ir.ui.view_sc">
       <field name="name">Add More Features</field>
       <field name="resource">ir.ui.menu</field>
@@ -118,8 +113,8 @@
                 <xpath expr="//button[@string='Install Modules']" position="attributes">
                     <attribute name="string">Configure</attribute>
                 </xpath>
-                <xpath expr='//separator[@string="vsep"]' position='attributes'>
-                    <attribute name='string'></attribute>
+                <xpath expr="//separator[@string=&quot;vsep&quot;]" position="attributes">
+                    <attribute name="string"/>
                 </xpath>
                 <group colspan="8">
                     <field name="import_saleforce"/>
@@ -179,23 +174,22 @@
               <form position="attributes">
                 <attribute name="string">Define default users preferences</attribute>
               </form>
-            <xpath expr='//separator[@string="title"]' position='attributes'>
-                  <attribute name='string'>Define default users preferences</attribute>
+            <xpath expr="//separator[@string=&quot;title&quot;]" position="attributes">
+                  <attribute name="string">Define default users preferences</attribute>
             </xpath>
-            <xpath expr="//label[@string='description']"
-               position="attributes">
+            <xpath expr="//label[@string='description']" position="attributes">
               <attribute name="string">Specify default values. This will set the default values for each new user, each user is free to change his own preferences.</attribute>
             </xpath>
-            <xpath expr='//separator[@string="vsep"]' position='attributes'>
-                  <attribute name='string'></attribute>
-                  <attribute name='rowspan'>12</attribute>
+            <xpath expr="//separator[@string=&quot;vsep&quot;]" position="attributes">
+                  <attribute name="string"/>
+                  <attribute name="rowspan">12</attribute>
             </xpath>
              <group string="res_config_contents" position="replace">
                     <group colspan="4">
-                        <field colspan="4" name="view" />
-                        <field colspan="4" name="context_lang" />
-                        <field colspan="4" name="context_tz" />
-                        <field colspan="4" name="menu_tips" />
+                        <field colspan="4" name="view"/>
+                        <field colspan="4" name="context_lang"/>
+                        <field colspan="4" name="context_tz"/>
+                        <field colspan="4" name="menu_tips"/>
                   </group>
               </group>
             </data>
@@ -263,20 +257,19 @@
               <form position="attributes">
                 <attribute name="string">Specify Your Terminology</attribute>
               </form>
-            <xpath expr='//separator[@string="title"]' position='attributes'>
-                  <attribute name='string'>Specify Your Terminology</attribute>
+            <xpath expr="//separator[@string=&quot;title&quot;]" position="attributes">
+                  <attribute name="string">Specify Your Terminology</attribute>
             </xpath>
-            <xpath expr="//label[@string='description']"
-               position="attributes">
+            <xpath expr="//label[@string='description']" position="attributes">
               <attribute name="string">Based on the industry needs you can use this wizard to change the terminologies for Partners. </attribute>
             </xpath>
-            <xpath expr='//separator[@string="vsep"]' position='attributes'>
-                  <attribute name='string'></attribute>
-                 <attribute name='rowspan'>12</attribute>
+            <xpath expr="//separator[@string=&quot;vsep&quot;]" position="attributes">
+                  <attribute name="string"/>
+                 <attribute name="rowspan">12</attribute>
             </xpath>
              <group string="res_config_contents" position="replace">
                     <group colspan="4">
-                        <field colspan="4" name="partner" />
+                        <field colspan="4" name="partner"/>
                   </group>
               </group>
             </data>
