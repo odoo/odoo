@@ -116,6 +116,8 @@ class ExportService(object):
     def getService(cls,name):
         return cls._services[name]
 
+    # Dispatch a RPC call w.r.t. the method name. The dispatching
+    # w.r.t. the service (this class) is done by OpenERPDispatcher.
     def dispatch(self, method, auth, params):
         raise Exception("stub dispatch at %s" % self.__name)
         
@@ -397,6 +399,11 @@ def log(title, msg, channel=logging.DEBUG_RPC, depth=None, fn=""):
             logger.log(channel, indent+line)
             indent=indent_after
 
+# This class is used to dispatch a RPC to a service. So it is used
+# for both XMLRPC (with a SimpleXMLRPCRequestHandler), and NETRPC.
+# The service (ExportService) will then dispatch on the method name.
+# This can be re-written as a single function
+#   def dispatch(self, service_name, method, params, auth_provider).
 class OpenERPDispatcher:
     def log(self, title, msg, channel=logging.DEBUG_RPC, depth=None, fn=""):
         log(title, msg, channel=channel, depth=depth, fn=fn)

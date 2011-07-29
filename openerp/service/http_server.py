@@ -213,7 +213,8 @@ class BaseHttpDaemon(threading.Thread, netsvc.Server):
         
         return ret
     
-
+# No need for these two classes: init_server() below can initialize correctly
+# directly the BaseHttpDaemon class.
 class HttpDaemon(BaseHttpDaemon):
     _RealProto = 'HTTP'
     def __init__(self, interface, port):
@@ -270,6 +271,8 @@ def list_http_services(protocol=None):
         raise Exception("Incorrect protocol or no http services")
 
 import SimpleXMLRPCServer
+# Basically, this class extends SimpleXMLRPCRequestHandler to use
+# OpenERPDispatcher as the dispatcher (to select the correct ExportService).
 class XMLRPCRequestHandler(netsvc.OpenERPDispatcher,FixSendError,HttpLogHandler,SimpleXMLRPCServer.SimpleXMLRPCRequestHandler):
     rpc_paths = []
     protocol_version = 'HTTP/1.1'
