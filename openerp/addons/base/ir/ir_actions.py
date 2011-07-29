@@ -852,6 +852,8 @@ Recurring: the wizard is visible in the configuration panel regardless of its st
         """ Launch Action of Wizard"""
         wizard_id = ids and ids[0] or False
         wizard = self.browse(cr, uid, wizard_id, context=context)
+        if wizard.type == 'automatic':
+            wizard.write({'state': 'done'})
 
         res = self.pool.get('ir.actions.act_window').read(cr, uid, wizard.action_id.id, [], context=context)
         res['nodestroy'] = True
