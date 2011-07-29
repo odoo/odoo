@@ -65,7 +65,7 @@ class res_config_configurable(osv.osv_memory):
         self.__logger.info('getting next %s', Todos)
 
         active_todos = Todos.browse(cr, uid,
-            Todos.search(cr, uid, ['&', ('type', '=', 'special'), ('state','=','open')]),
+            Todos.search(cr, uid, ['&', ('type', '=', 'automatic'), ('state','=','open')]),
                                     context=context)
 
         user_groups = set(map(
@@ -98,11 +98,6 @@ class res_config_configurable(osv.osv_memory):
         return self.pool.get(current_user_menu.type).read(cr, uid, current_user_menu.id)
 
     def start(self, cr, uid, ids, context=None):
-        todo_pool = self.pool.get('ir.actions.todo')
-        ids2 = todo_pool.search(cr, uid, [], context=context)
-        for todo in todo_pool.browse(cr, uid, ids2, context=context):
-            if todo.type == 'recurring':
-                todo.write({'state':'open'})
         return self.next(cr, uid, ids, context)
 
     def next(self, cr, uid, ids, context=None):

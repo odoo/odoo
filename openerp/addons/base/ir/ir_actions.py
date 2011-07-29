@@ -817,11 +817,9 @@ ir_actions_todo_category()
 
 # This model use to register action services.
 TODO_STATES = [('open', 'To Do'),
-               ('done', 'Done'),
-               ('hidden', 'Hidden')]
-TODO_TYPES = [('special', 'Special'),
-              ('normal', 'Normal'),
-              ('recurring', 'Recurring')]
+               ('done', 'Done')]
+TODO_TYPES = [('manual', 'Launch Manually'),
+              ('automatic', 'Launch Automatically')]
 class ir_actions_todo(osv.osv):
     """
     Configuration Wizards
@@ -846,7 +844,7 @@ Recurring: the wizard is visible in the configuration panel regardless of its st
     _defaults={
         'state': 'open',
         'sequence': 10,
-        'type': 'special',
+        'type': 'manual',
     }
     _order="sequence,name,id"
 
@@ -854,8 +852,6 @@ Recurring: the wizard is visible in the configuration panel regardless of its st
         """ Launch Action of Wizard"""
         wizard_id = ids and ids[0] or False
         wizard = self.browse(cr, uid, wizard_id, context=context)
-        # mark todo as done immediately
-        wizard.write({'state': 'done'})
 
         res = self.pool.get('ir.actions.act_window').read(cr, uid, wizard.action_id.id, [], context=context)
         res['nodestroy'] = True
@@ -896,13 +892,13 @@ Recurring: the wizard is visible in the configuration panel regardless of its st
         done = filter(
             groups_match,
             self.browse(cr, uid,
-                self.search(cr, uid, ['&', ('state', '!=', 'open'), ('type', '!=', 'special')], context=context),
+                self.search(cr, uid, ['&', ('state', '!=', 'open'), ('type', '=', 'manual')], context=context),
                         context=context))
 
         total = filter(
             groups_match,
             self.browse(cr, uid,
-                self.search(cr, uid, [('type', '!=', 'special')], context=context),
+                self.search(cr, uid, [('type', '=', 'manual')], context=context),
                         context=context))
 
         return {
