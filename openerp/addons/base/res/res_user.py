@@ -633,9 +633,11 @@ class users_implied(osv.osv):
             # add implied groups for all users
             groups_obj = self.pool.get('res.groups')
             for u in self.browse(cr, uid, ids):
-                gids = groups_obj.get_closure(cr, uid, map(int, u.groups_id), context)
-                groups = [(6, 0, gids)]
-                super(users_implied, self).write(cr, uid, [u.id], {'groups_id': groups}, context)
+                old_gids = map(int, u.groups_id)
+                new_gids = groups_obj.get_closure(cr, uid, old_gids, context)
+                if len(old_gids) != len(new_gids):
+                    values = {'groups_id': [(6, 0, new_gids)]}
+                    super(users_implied, self).write(cr, uid, [u.id], values, context)
         return res
 
 users_implied()
