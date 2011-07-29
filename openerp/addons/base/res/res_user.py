@@ -642,7 +642,7 @@ def encode(s): return s.encode('utf8') if isinstance(s, unicode) else s
 class users2(osv.osv):
     _inherit = 'res.users'
 
-    def values_to_groups_id(self, cr, uid, values, context=None):
+    def _values_to_groups_id(self, cr, uid, values, context=None):
         """ transform all reified group fields into a 'groups_id', adding 
             also the implied groups """
         add, rem = [], []
@@ -663,20 +663,20 @@ class users2(osv.osv):
 
     def create(self, cr, uid, values, context=None):
         # add processing for reified group fields
-        self.values_to_groups_id(cr, uid, values, context)
+        self._values_to_groups_id(cr, uid, values, context)
         return super(users2, self).create(cr, uid, values, context)
 
     def write(self, cr, uid, ids, values, context=None):
         # add processing for reified group fields
-        self.values_to_groups_id(cr, uid, values, context)
+        self._values_to_groups_id(cr, uid, values, context)
         return super(users2, self).write(cr, uid, ids, values, context)
 
     def read(self, cr, uid, ids, fields, context=None, load='_classic_read'):
         # add processing for reified group fields
-        group_fields, other_fields = partition(is_field_group, fields)
+        group_fields, fields = partition(is_field_group, fields)
         if group_fields:
             group_obj = self.pool.get('res.groups')
-            fields = other_fields + ['groups_id']
+            fields.append('groups_id')
             res = super(users2, self).read(cr, uid, ids, fields, context, load)
             for record in res:
                 # remove the field 'groups_id' and insert the group_fields
