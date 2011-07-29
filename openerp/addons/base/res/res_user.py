@@ -714,9 +714,13 @@ class users2(osv.osv):
                     sel_name = name_selection_groups(ids)
                     fields[app_name] = {'type': 'boolean', 'string': app}
                     fields[sel_name] = {'type': 'selection', 'string': '', 'selection': selection}
-                    elems.append('<field name="%s"/>' % app_name)
-                    elems.append("""<field name="%s" nolabel="1" attrs="{'invisible': [('%s', '=', False)]}"/>""" % (sel_name, app_name))
-                    elems.append('<newline/>')
+                    elems.append("""
+                        <field name="%(app)s"/>
+                        <field name="%(sel)s" nolabel="1"
+                            attrs="{'invisible': [('%(app)s', '=', False)]}"
+                            modifiers="{'invisible': [('%(app)s', '=', False)]}"/>
+                        <newline/>
+                        """ % {'app': app_name, 'sel': sel_name})
                 elems.append('</group>')
                 # create other sections
                 sections = sorted(others.items(), key=lambda pair: pair[0])
