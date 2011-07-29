@@ -2476,6 +2476,7 @@ class account_chart_template(osv.osv):
     _columns={
         'name': fields.char('Name', size=64, required=True),
         'parent_id': fields.many2one('account.chart.template', 'Parent Chart Template'),
+        'visible': fields.boolean('Can be Visible?', help="Set this to False if you don't want this template to be used actively in the wizard that generate Chart of Accounts from templates, this is useful when you want to generate accounts of this template only when loading its child template."),
         'account_root_id': fields.many2one('account.account.template', 'Root Account', domain=[('parent_id','=',False)]),
         'tax_code_root_id': fields.many2one('account.tax.code.template', 'Root Tax Code', domain=[('parent_id','=',False)]),
         'tax_template_ids': fields.one2many('account.tax.template', 'chart_template_id', 'Tax Template List', help='List of all the taxes that have to be installed by the wizard'),
@@ -2667,7 +2668,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         if 'seq_journal' in fields:
             res.update({'seq_journal': True})
 
-        ids = self.pool.get('account.chart.template').search(cr, uid, [], context=context)
+        ids = self.pool.get('account.chart.template').search(cr, uid, [('visible', '=', True)], context=context)
         if ids:
             if 'chart_template_id' in fields:
                 res.update({'chart_template_id': ids[0]})
@@ -2685,7 +2686,11 @@ class wizard_multi_charts_accounts(osv.osv_memory):
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         res = super(wizard_multi_charts_accounts, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar,submenu=False)
         cmp_select = []
-        company_ids = self.pool.get('res.company').search(cr, uid, [], context=context)
+        acc_template_obj = self.pool.get('account.chart.template')
+        company_obj = self.pool.get('res.company')
+        
+        template_ids = acc_template_obj.search(cr, uid, [('visible', '=', True)], context=context)
+        company_ids = company_obj.search(cr, uid, [], context=context)
         #display in the widget selection of companies, only the companies that haven't been configured yet (but don't care about the demo chart of accounts)
         cr.execute("SELECT company_id FROM account_account WHERE active = 't' AND account_account.parent_id IS NULL AND name != %s", ("Chart For Automated Tests",))
         configured_cmp = [r[0] for r in cr.fetchall()]
@@ -2695,8 +2700,13 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                 res['fields'][field]['domain'] = unconfigured_cmp
                 res['fields'][field]['selection'] = [('', '')]
                 if unconfigured_cmp:
-                    cmp_select = [(line.id, line.name) for line in self.pool.get('res.company').browse(cr, uid, unconfigured_cmp)]
+                    cmp_select = [(line.id, line.name) for line in company_obj.browse(cr, uid, unconfigured_cmp)]
                     res['fields'][field]['selection'] = cmp_select
+            if field == 'chart_template_id':
+                res['fields'][field]['selection'] = [('', '')]
+                if template_ids:
+                    template_select = [(template.id, template.name) for template in acc_template_obj.browse(cr, uid, template_ids)]
+                    res['fields'][field]['selection'] = template_select
         return res
 
     def execute(self, cr, uid, ids, context=None):
