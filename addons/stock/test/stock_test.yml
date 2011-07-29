@@ -205,8 +205,9 @@
 -
   !record {model: product.product, id: product_product_hpcdwriters0}:
     categ_id: stock.product_category_computer0
-    cost_method: standard
-    list_price: 1000.0
+    cost_method: average
+    list_price: 1500.0
+    standard_price: 1500.0
     mes_type: fixed
     name: HP CD writers
     procure_method: make_to_stock
@@ -220,7 +221,47 @@
     uom_po_id: product.product_uom_unit
     property_account_expense: account_account_productpurchase0
     property_account_income: account_account_productsale0
+-
+  I create change product quantity for product HP CD writers.
+-
+  !record {model: stock.change.product.qty, id: stock_change_product_qty0}:
+    product_id: stock.product_product_hpcdwriters0
+    new_quantity: 10
+    location_id: stock.stock_location_stock
 
+-
+  I apply the new quantity on product HP CD writers.
+-
+  !python {model: stock.change.product.qty }: |
+    self.change_product_qty(cr, uid, [ref("stock_change_product_qty0")], {"lang": 'en_US', "active_model":
+      "stock.change.product.qty", "active_ids": ref("stock.product_product_hpcdwriters0"), "tz": False, "active_id":ref('stock.product_product_hpcdwriters0')})
+-
+  I Read quantity on product HP CD writers.
+-
+  !python {model: stock.location }: |
+    self.read(cr, uid, [ref("stock.stock_location_stock")],['stock_real_value','stock_virtual'], {'lang': 'en_GB', 'tz': False, 'active_model': 'product.product', 'bin_size': True, 'active_ids': [ref("stock.product_product_hpcdwriters0")], 'product_id':ref("stock.product_product_hpcdwriters0"), 'active_id': ref("stock.product_product_hpcdwriters0")})
+-
+  I create change location.
+-
+  !python {model: stock.location }: |
+    to=self.browse(cr,uid,ref('stock.stock_location_stock'))
+    form=self.browse(cr,uid,ref('stock.stock_location_locations'))
+    self.picking_type_get(cr, uid, to, form)
+-
+  I create change product standard price for product HP CD writers.
+-
+  !record {model: stock.change.standard.price, id: stock_change_standard_price0}:
+    new_price: 15
+    stock_account_input: account_account_receivable0
+    stock_account_output: account_account_payable0
+    stock_journal: account_journal_purchasejournal0
+    enable_stock_in_out_acc: True
+-
+  I apply the new product standard price on product HP CD writers.
+-
+  !python {model: stock.change.standard.price }: |
+    self.change_price(cr, uid, [ref("stock_change_product_qty0")], {"lang": 'en_US', "active_model":
+      "product.product", "active_ids": [ref("stock.product_product_hpcdwriters0")], "tz": False, "active_id":ref('stock.product_product_hpcdwriters0')})
 -
   I create Physical Inventory for the products.
 -
@@ -241,14 +282,62 @@
         product_uom: product.product_uom_unit
     name: Physical inventory
     state: draft
-
-
+-
+  I create merge Inventory for the products.
+-
+   !record {model: stock.inventory, id: stock_inventory_mergeinventoy0}:
+    company_id: base.main_company
+    date: !eval time.strftime('%Y-%m-%d %H:%M:%S')
+    date_done: !eval time.strftime('%Y-%m-%d %H:%M:%S')
+    inventory_line_id:
+      - company_id: base.main_company
+        location_id: stock.stock_location_stock
+        product_id: stock.product_product_hpcdwriters0
+        product_qty: 20.0
+        product_uom: product.product_uom_unit
+      - company_id: base.main_company
+        location_id: stock.stock_location_stock
+        product_id: stock.product_product_hppaviliondesktoppcs0
+        product_qty: 20.0
+        product_uom: product.product_uom_unit
+    name: Physical inventory
+    state: draft
+-
+  I merge inventory .
+-
+  !python {model: stock.inventory.merge}: |
+    self.do_merge(cr, uid, [ref("stock_inventory_mergeinventoy0")], {"lang": 'en_US',
+      "full": "1", "tz": False, "active_model": "stock.inventory", "active_ids":
+      [ref("stock_inventory_physicalinventoy0"), ref("stock_inventory_mergeinventoy0")], "active_id": ref("stock_inventory_physicalinventoy0"), })
 -
   I confirm the Inventory for HP CD writers.
 -
   !python {model: stock.inventory}: |
    self.action_confirm(cr,uid,[ref('stock_inventory_physicalinventoy0')])
    self.action_done(cr,uid,[ref('stock_inventory_physicalinventoy0')])
+-
+  I create stock.inventory.line.split record.
+-
+  !record {model: stock.inventory.line.split, id: stock_inventory_line_0}:
+    line_ids:
+      - name: '00002-stock-test'
+        quantity: 5
+        use_exist: False
+    product_id: stock.product_product_hpcdwriters0
+    product_uom: product.product_uom_unit
+    use_exist: False
+    qty: 10
+-
+  I Split stock.inventory.line into production line.
+-
+  !python {model: stock.inventory.line.split}: |
+    move_obj=self.pool.get('stock.inventory.line')
+    product_obj=self.pool.get('product.product')
+    product_id=product_obj.search(cr,uid,[('name','=','HP CD writers')])
+    move_ids=move_obj.search(cr,uid,[('product_id','in',product_id)])
+    self.split_lot(cr, uid, [ref("stock_inventory_line_0")], {"lang": 'en_US', "active_model":
+      "stock.inventory.line", "active_ids": move_ids, "tz": False, "active_id":move_ids[0]
+      })
 -
   I create stock.fill.inventory .
 -
@@ -284,7 +373,6 @@
       "stock.move", "active_ids": move_ids, "tz": False, "active_id":move_ids[0]
       })
 -
-
   In Order to test the picking I create picking with move lines.
 -
   !record {model: stock.picking, id: stock_picking_0}:
@@ -307,7 +395,22 @@
     move_type: direct
     type: internal
 
-
+-
+  I create stock split.into quantity record.
+-
+  !record {model: stock.split.into, id: stock_split_into0}:
+    quantity: 1
+-
+  I apply the split quantity.
+-
+  !python {model: stock.split.into}: |
+    move_obj=self.pool.get('stock.move')
+    product_obj=self.pool.get('product.product')
+    product_id=product_obj.search(cr,uid,[('name','=','HP CD writers')])
+    move_ids=move_obj.search(cr,uid,[('product_id','in',product_id)])
+    self.split(cr, uid, [ref("stock_split_into0")], {"lang": 'en_US', "active_model":
+      "stock.move", "active_ids": move_ids, "tz": False, "active_id":move_ids[0]
+      })
 -
   I click on draft_force_assign on picking.
 -
@@ -345,3 +448,4 @@
           'product_uom': move.product_uom.id,
       }
    self.do_partial(cr, uid, [ref('stock_picking_0')],partial_datas)
+
