@@ -20,15 +20,15 @@
 ##############################################################################
 
 from report.interface import report_int
-import netsvc
+import openerp.pooler
 
 class auction_seller(report_int):
     def __init__(self, name):
         report_int.__init__(self, name)
 
     def create(self, cr, uid, ids, datas, context):
-        service = netsvc.LocalService("object_proxy")
-        lots = service.execute(cr.dbname, uid, 'auction.lots', 'read', ids, ['bord_vnd_id'])
+        pool = openerp.pooler.get_pool(cr.dbname)
+        lots = pool.get('auction.lots').read(cr, uid, ids, ['bord_vnd_id'])
 
         bords = {}
         for l in lots:
@@ -37,7 +37,7 @@ class auction_seller(report_int):
         new_ids = bords.keys()
 
         parts = {}
-        partners = service.execute(cr.dbname, uid, 'auction.deposit', 'read', new_ids, ['partner_id'])
+        partners = pool.get('auction.deposit').read(cr, uid, new_ids, ['partner_id'])
         for l in partners:
             if l['partner_id']:
                 parts[l['partner_id'][0]]=True

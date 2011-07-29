@@ -21,14 +21,15 @@
 
 from report.interface import report_int
 import netsvc
+import openerp.pooler
 
 class report_artistlot(report_int):
     def __init__(self, name):
         report_int.__init__(self, name)
 
     def create(self, cr, uid, ids, datas, context):
-        service = netsvc.LocalService("object_proxy")
-        lots = service.execute(cr.dbname, uid, 'auction.lots', 'read', ids, ['artist_id'])
+        pool = pooler.get_pool(cr.dbname)
+        lots = pool.get('auction.lots').read(cr, uid, ids, ['artist_id'])
         artists = []
         for lot in lots:
             if lot['artist_id'] and lot['artist_id'] not in artists:
