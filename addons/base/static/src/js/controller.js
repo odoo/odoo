@@ -140,7 +140,7 @@ instance.base.generate_null_object_class = function(claz, add) {
             copy_proto(prototype.prototype);
     };
     copy_proto(claz.prototype);
-    newer.init = instance.base.Controller.prototype.init;
+    newer.init = instance.base.Widget.prototype.init;
     var tmpclass = claz.extend(newer);
     return tmpclass.extend(add || {});
 };
@@ -148,402 +148,298 @@ instance.base.generate_null_object_class = function(claz, add) {
 // --------------------------------------------------------
 // OLD 
 // --------------------------------------------------------
+/**
+ * Utility class that any class is allowed to extend to easy common manipulations.
+ * 
+ * It provides rpc calls, callback on all methods preceded by "on_" or "do_" and a
+ * logging facility.
+ */
+instance.base.SessionAware = instance.base.Class.extend({
+    init: function(session) {
+        this.session = session;
+        
+        // Transform on_* method into openerp.base.callbacks
+        for (var name in this) {
+            if(typeof(this[name]) == "function") {
+                this[name].debug_name = name;
+                // bind ALL function to this not only on_and _do ?
+                if((/^on_|^do_/).test(name)) {
+                    this[name] = instance.base.callback(this, this[name]);
+                }
+            }
+        }
+    },
+    /**
+     * Performs a JSON-RPC call
+     *
+     * @param {String} url endpoint url
+     * @param {Object} data RPC parameters
+     * @param {Function} success RPC call success callback
+     * @param {Function} error RPC call error callback
+     * @returns {jQuery.Deferred} deferred object for the RPC call
+     */
+    rpc: function(url, data, success, error) {
+        return this.session.rpc(url, data, success, error);
+    },
+    log: function() {
+        var args = Array.prototype.slice.call(arguments);
+        var caller = arguments.callee.caller;
+        // TODO add support for line number using
+        // https://github.com/emwendelin/javascript-stacktrace/blob/master/stacktrace.js
+        // args.unshift("" + caller.debug_name);
+        this.on_log.apply(this,args);
+    },
+    on_log: function() {
+        if(window.openerp.debug || (window.location.search.indexOf('?debug') !== -1)) {
+            var notify = false;
+            var body = false;
+            if(window.console) {
+                console.log(arguments);
+            } else {
+                body = true;
+            }
+            var a = Array.prototype.slice.call(arguments, 0);
+            for(var i = 0; i < a.length; i++) {
+                var v = a[i]==null ? "null" : a[i].toString();
+                if(i==0) {
+                    notify = v.match(/^not/);
+                    body = v.match(/^bod/);
+                }
+                if(body) {
+                    $('<pre></pre>').text(v).appendTo($('body'));
+                }
+                if(notify && this.notification) {
+                    this.notification.notify("Logging:",v);
+                }
+            }
+        }
+    }
+});
 
 /**
- * OpenERP Controller
- * TODO merge BaseWidget with Controller
+ * Base class for all visual components. Provides a lot of functionalities helpful
+ * for the management of a part of the DOM.
+ * 
+ * Widget handles:
+ * - Rendering with QWeb.
+ * - Life-cycle management and parenting (when a parent is destroyed, all its children are
+ *     destroyed too).
+ * - Insertion in DOM.
+ * 
+ * Widget also extends SessionAware for ease of use.
+ * 
+ * Guide to create implementations of this class:
+ * ==============================================
+ * 
+ * Here is a sample child class:
+ * 
+ * MyWidget = openerp.base.Widget.extend({
+ *     // the name of the QWeb template to use for rendering
+ *     template: "MyQWebTemplate",
+ *     // identifier prefix, useful to put an obvious one for debugging
+ *     identifier_prefix: 'my-id-prefix-',
+ * 
+ *     init: function(parent) {
+ *         this._super(parent);
+ *         // stuff that you want to init before the rendering
+ *     },
+ *     start: function() {
+ *         // stuff you want to make after the rendering, `this.$element` holds a value
+ *         this.$element.find(".my_button").click(/* an example of event binding * /);
+ * 
+ *         // if you have some asynchronous operations, it's a good idea to return
+ *         // a promise in start()
+ *         var promise = this.rpc(...);
+ *         return promise;
+ *     }
+ * });
+ * 
+ * Now this class can simply be used with the following syntax:
+ * 
+ * var my_widget = new MyWidget(this);
+ * my_widget.appendTo($(".some-div"));
+ * 
+ * With these two lines, the MyWidget instance was inited, rendered, it was inserted into the
+ * DOM inside the ".some-div" div and its events were binded.
+ * 
+ * And of course, when you don't need that widget anymore, just do:
+ * 
+ * my_widget.stop();
+ * 
+ * That will kill the widget in a clean way and erase its content from the dom.
  */
-instance.base.Controller = instance.base.Class.extend( /** @lends instance.base.Controller# */{
+instance.base.Widget = instance.base.SessionAware.extend({
+    /**
+     * The name of the QWeb template that will be used for rendering. Must be
+     * redefined in subclasses or the default render() method can not be used.
+     * 
+     * @type string
+     */
+    template: null,
+    /**
+     * The prefix used to generate an id automatically. Should be redefined in
+     * subclasses. If it is not defined, a generic identifier will be used.
+     * 
+     * @type string
+     */
+    identifier_prefix: 'generic-identifier-',
     /**
      * @constructs
-     * rpc operations, event binding and callback calling should be done in
-     * start() instead of init so that events can be hooked in between.
+     * Construct the widget and set its parent if a parent is given.
+     * 
+     * @param {Widget} parent Binds the current instance to the given Widget instance.
+     * When that widget is destroyed by calling stop(), the current instance will be
+     * destroyed too. Can be null.
+     * @param {String} element_id Deprecated. Sets the element_id. Only useful when you want
+     * to bind the current Widget to an already existing part of the DOM, which is not compatible
+     * with the DOM insertion methods provided by the current implementation of Widget. So
+     * for new components this argument should not be provided any more.
      */
-    init: function(parent, element_id) {
+    init: function(parent, /** @deprecated */ element_id) {
+        this._super((parent || {}).session);
+        // if given an element_id, try to get the associated DOM element and save
+        // a reference in this.$element. Else just generate a unique identifier.
         this.element_id = element_id;
-        this.$element = $('#' + element_id);
-        if (element_id) {
-            instance.screen[element_id] = this;
+        this.element_id = this.element_id || _.uniqueId(this.identifier_prefix);
+        var tmp = document.getElementById(this.element_id);
+        this.$element = tmp ? $(tmp) : undefined;
+        
+        this.widget_parent = parent;
+        this.widget_children = [];
+        if(parent && parent.widget_children) {
+            parent.widget_children.push(this);
         }
-        // save the parent children relationship
-        this.controller_parent = parent;
-        this.controller_children = [];
-        if(parent && parent.controller_children) {
-            parent.controller_children.push(this);
-        }
-        // backward compatibility
-        this.parent = this.controller_parent;
-        this.children = this.controller_children;
-
-        // Transform on_* method into openerp.base.callbacks
-        for (var name in this) {
-            if(typeof(this[name]) == "function") {
-                this[name].debug_name = name;
-                // bind ALL function to this not only on_and _do ?
-                if((/^on_|^do_/).test(name)) {
-                    this[name] = instance.base.callback(this, this[name]);
-                }
-            }
-        }
+        // useful to know if the widget was destroyed and should not be used anymore
+        this.widget_is_stopped = false;
     },
     /**
-     * Event binding, rpc and callback calling required to initialize the
-     * object should happen here
-     *
-     * Returns a promise object letting callers (subclasses and direct callers)
-     * know when this component is done starting
-     *
-     * @returns {jQuery.Deferred}
-     */
-    start: function() {
-        // returns an already fulfilled promise. Maybe we could return nothing?
-        // $.when can take non-deferred and in that case it simply considers
-        // them all as fulfilled promises.
-        // But in thise case we *have* to ensure callers use $.when and don't
-        // try to call deferred methods on this return value.
-        return $.Deferred().done().promise();
-    },
-    stop: function() {
-        if (this.parent && this.parent.children) {
-            this.parent.children = _.without(this.parent.children, this);
-            this.parent.controller_children = this.parent.children;
-        }
-        this.parent = null;
-        this.controller_parent = null;
-    },
-    log: function() {
-        var args = Array.prototype.slice.call(arguments);
-        var caller = arguments.callee.caller;
-        // TODO add support for line number using
-        // https://github.com/emwendelin/javascript-stacktrace/blob/master/stacktrace.js
-        // args.unshift("" + caller.debug_name);
-        this.on_log.apply(this,args);
-    },
-    on_log: function() {
-        if(window.openerp.debug || (window.location.search.indexOf('?debug') !== -1)) {
-            var notify = false;
-            var body = false;
-            if(window.console) {
-                console.log(arguments);
-            } else {
-                body = true;
-            }
-            var a = Array.prototype.slice.call(arguments, 0);
-            for(var i = 0; i < a.length; i++) {
-                var v = a[i]==null ? "null" : a[i].toString();
-                if(i==0) {
-                    notify = v.match(/^not/);
-                    body = v.match(/^bod/);
-                }
-                if(body) {
-                    $('<pre></pre>').text(v).appendTo($('body'));
-                }
-                if(notify && this.notification) {
-                    this.notification.notify("Logging:",v);
-                }
-            }
-        }
-
-    }
-});
-
-/**
- * OpenERP session aware controller
- * a controller takes an already existing dom element and manage it
- */
-instance.base.Controller = instance.base.Controller.extend( /** @lends openerp.base.Controller# */{
-    init: function(parent, element_id) {
-        this._super(parent, element_id);
-        if(this.controller_parent && this.controller_parent.session) {
-            this.session = this.controller_parent.session;
-        }
-    },
-    /**
-     * Performs a JSON-RPC call
-     *
-     * @param {String} url endpoint url
-     * @param {Object} data RPC parameters
-     * @param {Function} success RPC call success callback
-     * @param {Function} error RPC call error callback
-     * @returns {jQuery.Deferred} deferred object for the RPC call
-     */
-    rpc: function(url, data, success, error) {
-        return this.session.rpc(url, data, success, error);
-    },
-    do_action: function(action, on_finished) {
-        return this.parent.do_action(action, on_finished);
-    }
-});
-
-/**
- * OpenERP session aware widget
- * A widget is a controller that doesnt take an element_id
- * it render its own html render() that you should insert into the dom
- * and bind it at start()
- */
-instance.base.BaseWidget = instance.base.Controller.extend({
-    /**
-     * The name of the QWeb template that will be used for rendering. Must be
-     * redefined in subclasses or the render() method can not be used.
+     * Render the current widget and appends it to the given jQuery object or Widget.
      * 
-     * @type string
+     * @param target A jQuery object or a Widget instance.
      */
-    template: null,
+    appendTo: function(target) {
+        var self = this;
+        return this._render_and_insert(function(t) {
+            self.$element.appendTo(t);
+        }, target);
+    },
     /**
-     * The prefix used to generate an id automatically. Should be redefined in
-     * subclasses. If it is not defined, a default identifier will be used.
+     * Render the current widget and prepends it to the given jQuery object or Widget.
      * 
-     * @type string
+     * @param target A jQuery object or a Widget instance.
      */
-    identifier_prefix: 'generic-identifier',
-    /**
-     * Base class for widgets. Handle rendering (based on a QWeb template),
-     * identifier generation, parenting and destruction of the widget.
-     * Also initialize the identifier.
-     *
-     * @constructs
-     * @params {openerp.base.search.BaseWidget} parent The parent widget.
-     */
-    init: function (parent) {
-        this._super(parent);
-        this.make_id(this.identifier_prefix);
+    prependTo: function(target) {
+        var self = this;
+        return this._render_and_insert(function(t) {
+            self.$element.prependTo(t);
+        }, target);
     },
     /**
-     * Sets and returns a globally unique identifier for the widget.
-     *
-     * If a prefix is appended, the identifier will be appended to it.
-     *
-     * @params sections prefix sections, empty/falsy sections will be removed
+     * Render the current widget and inserts it after to the given jQuery object or Widget.
+     * 
+     * @param target A jQuery object or a Widget instance.
      */
-    make_id: function () {
-        this.element_id = _.uniqueId(_.toArray(arguments).join('_'));
-        return this.element_id;
+    insertAfter: function(target) {
+        var self = this;
+        return this._render_and_insert(function(t) {
+            self.$element.insertAfter(t);
+        }, target);
     },
     /**
-     * Render the widget. This.template must be defined.
-     * The content of the current object is passed as context to the template.
+     * Render the current widget and inserts it before to the given jQuery object or Widget.
+     * 
+     * @param target A jQuery object or a Widget instance.
+     */
+    insertBefore: function(target) {
+        var self = this;
+        return this._render_and_insert(function(t) {
+            self.$element.insertBefore(t);
+        }, target);
+    },
+    _render_and_insert: function(insertion, target) {
+        var rendered = this.render();
+        this.$element = $(rendered);
+        if (target instanceof instance.base.Widget)
+            target = target.$element;
+        insertion(target);
+        return this.start();
+    },
+    /**
+     * Renders the widget using QWeb, `this.template` must be defined.
+     * The context given to QWeb contains the "widget" key that references `this`.
      * 
      * @param {object} additional Additional context arguments to pass to the template.
      */
     render: function (additional) {
-        return QWeb.render(this.template, _.extend({}, this, additional != null ? additional : {}));
+        return QWeb.render(this.template, _.extend({widget: this}, additional || {}));
     },
     /**
-     * "Starts" the widgets. Called at the end of the rendering, this allows
-     * to get a jQuery object referring to the DOM ($element attribute).
-     */
-    start: function () {
-        this._super();
-        var tmp = document.getElementById(this.element_id);
-        this.$element = tmp ? $(tmp) : null;
-    },
-    /**
-     * "Stops" the widgets. Called when the view destroys itself, this
-     * lets the widgets clean up after themselves.
-     */
-    stop: function () {
-        if(this.$element != null) {
-            this.$element.remove();
-        }
-        this._super();
-    }
-});
-
-// --------------------------------------------------------
-// N-style aka New-Style or Niv-Style
-// --------------------------------------------------------
-
-instance.base.NivController = instance.base.Class.extend({
-    init: function(parent) {
-        this.controller_parent = parent;
-        // Take the session of the parent if defined
-        if(this.controller_parent && this.controller_parent.session) {
-            this.session = this.controller_parent.session;
-        }
-        // Transform on_* method into openerp.base.callbacks
-        for (var name in this) {
-            if(typeof(this[name]) == "function") {
-                this[name].debug_name = name;
-                // bind ALL function to this not only on_and _do ?
-                if((/^on_|^do_/).test(name)) {
-                    this[name] = instance.base.callback(this, this[name]);
-                }
-            }
-        }
-    },
-    /**
-     * Event binding, rpc and callback calling required to initialize the
-     * object should happen here
-     *
-     * Returns a promise object letting callers (subclasses and direct callers)
-     * know when this component is done starting
+     * Method called after rendering. Mostly used to bind actions, perform asynchronous
+     * calls, etc...
+     * 
+     * By convention, the method should return a promise to inform the caller when
+     * this widget has been initialized.
      *
      * @returns {jQuery.Deferred}
      */
     start: function() {
-        // returns an already fulfilled promise. Maybe we could return nothing?
-        // $.when can take non-deferred and in that case it simply considers
-        // them all as fulfilled promises.
-        // But in thise case we *have* to ensure callers use $.when and don't
-        // try to call deferred methods on this return value.
+        if (!this.$element) {
+            var tmp = document.getElementById(this.element_id);
+            this.$element = tmp ? $(tmp) : undefined;
+        }
         return $.Deferred().done().promise();
     },
+    /**
+     * Destroys the current widget, also destory all its children before destroying itself.
+     */
     stop: function() {
-    },
-    log: function() {
-        var args = Array.prototype.slice.call(arguments);
-        var caller = arguments.callee.caller;
-        // TODO add support for line number using
-        // https://github.com/emwendelin/javascript-stacktrace/blob/master/stacktrace.js
-        // args.unshift("" + caller.debug_name);
-        this.on_log.apply(this,args);
-    },
-    on_log: function() {
-        if(window.openerp.debug || (window.location.search.indexOf('?debug') !== -1)) {
-            var notify = false;
-            var body = false;
-            if(window.console) {
-                console.log(arguments);
-            } else {
-                body = true;
-            }
-            var a = Array.prototype.slice.call(arguments, 0);
-            for(var i = 0; i < a.length; i++) {
-                var v = a[i]==null ? "null" : a[i].toString();
-                if(i==0) {
-                    notify = v.match(/^not/);
-                    body = v.match(/^bod/);
-                }
-                if(body) {
-                    $('<pre></pre>').text(v).appendTo($('body'));
-                }
-                if(notify && this.notification) {
-                    this.notification.notify("Logging:",v);
-                }
-            }
-        }
-
-    },
-    /**
-     * Performs a JSON-RPC call
-     *
-     * @param {String} url endpoint url
-     * @param {Object} data RPC parameters
-     * @param {Function} success RPC call success callback
-     * @param {Function} error RPC call error callback
-     * @returns {jQuery.Deferred} deferred object for the RPC call
-     */
-    rpc: function(url, data, success, error) {
-        return this.session.rpc(url, data, success, error);
-    },
-    do_action: function(action, on_finished) {
-        return this.controller_parent.do_action(action, on_finished);
-    }
-});
-
-instance.base.NivWidget = instance.base.Controller.extend({
-    /**
-     * The name of the QWeb template that will be used for rendering. Must be
-     * redefined in subclasses or the render() method can not be used.
-     * 
-     * @type string
-     */
-    template: null,
-    /**
-     * The prefix used to generate an id automatically. Should be redefined in
-     * subclasses. If it is not defined, a default identifier will be used.
-     * 
-     * @type string
-     */
-    identifier_prefix: 'generic-identifier',
-    /**
-     * Base class for widgets. Handle rendering (based on a QWeb template),
-     * identifier generation, parenting and destruction of the widget.
-     * Also initialize the identifier.
-     *
-     * @constructs
-     * @params {openerp.base.search.BaseWidget} parent The parent widget.
-     */
-    init: function(parent, element_id) {
-        this._super(parent);
-        this.make_id(this.identifier_prefix);
-        // this.element_id = element_id;
-        // this.$element = $('#' + element_id);
-        // if (element_id) {
-        //     instance.screen[element_id] = this;
-        // }
-        // save the parent children relationship
-        this.controller_children = [];
-        if(parent && parent.controller_children) {
-            parent.controller_children.push(this);
-        }
-        // backward compatibility
-        this.parent = this.controller_parent;
-        this.children = this.controller_children;
-
-    },
-    /**
-     * Event binding, rpc and callback calling required to initialize the
-     * object should happen here
-     *
-     * Returns a promise object letting callers (subclasses and direct callers)
-     * know when this component is done starting
-     *
-     * @returns {jQuery.Deferred}
-     */
-    /**
-     * "Starts" the widgets. Called at the end of the rendering, this allows
-     * to get a jQuery object referring to the DOM ($element attribute).
-     */
-    start: function () {
-        this._super();
-        var tmp = document.getElementById(this.element_id);
-        this.$element = tmp ? $(tmp) : null;
-    },
-    stop: function() {
+        _.each(_.clone(this.widget_children), function(el) {
+            el.stop();
+        });
         if(this.$element != null) {
             this.$element.remove();
         }
-        if (this.parent && this.parent.children) {
-            this.parent.children = _.without(this.parent.children, this);
-            this.parent.controller_children = this.parent.children;
+        if (this.widget_parent && this.widget_parent.widget_children) {
+            this.widget_parent.widget_children = _.without(this.widget_parent.widget_children, this);
         }
-        this.parent = null;
-        this.controller_parent = null;
+        this.widget_parent = null;
+        this.widget_is_stopped = true;
     },
     /**
-     * Sets and returns a globally unique identifier for the widget.
-     *
-     * If a prefix is appended, the identifier will be appended to it.
-     *
-     * @params sections prefix sections, empty/falsy sections will be removed
+     * Inform the action manager to do an action. Of course, this suppose that
+     * the action manager can be found amongst the ancestors of the current widget.
+     * If that's not the case this method will simply return `false`.
      */
-    make_id: function () {
-        this.element_id = _.uniqueId(_.toArray(arguments).join('_'));
-        return this.element_id;
+    do_action: function(action, on_finished) {
+        if (this.widget_parent) {
+            return this.widget_parent.do_action(action, on_finished);
+        }
+        return false;
     },
-    /**
-     * Render the widget. This.template must be defined.
-     * The content of the current object is passed as context to the template.
-     * 
-     * @param {object} additional Additional context arguments to pass to the template.
-     */
-    render: function (additional) {
-        return QWeb.render(this.template, _.extend({}, this, additional != null ? additional : {}));
-    },
-    widget_add: function(element, addfunc) {
-    },
-    widget_append: function(element) {
-    },
-    widget_prepend: function(element) {
-    },
-    widget_append2: function(element) {
-    },
-    widget_prepend2: function(element) {
-    },
+    rpc: function(url, data, success, error) {
+        var def = $.Deferred().then(success, error);
+        var self = this;
+        this._super(url, data). then(function() {
+            if (!self.widget_is_stopped)
+                def.resolve.apply(def, arguments);
+        }, function() {
+            if (!self.widget_is_stopped)
+                def.reject.apply(def, arguments);
+        });
+        return def.promise();
+    }
 });
 
+/**
+ * @deprecated
+ * For retro compatibility only, the only difference with is that render() uses
+ * directly `this` instead of context with a "widget" key.
+ */
+instance.base.OldWidget = instance.base.Widget.extend({
+    render: function (additional) {
+        return QWeb.render(this.template, _.extend(_.extend({}, this), additional || {}));
+    }
+});
 
-};
-
+}
 // vim:et fdc=0 fdl=0 foldnestmax=3 fdm=syntax:

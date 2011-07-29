@@ -5,7 +5,7 @@
 openerp.base.diagram = function (openerp) {
 	
 openerp.base.views.add('diagram', 'openerp.base.DiagramView');
-openerp.base.DiagramView = openerp.base.Controller.extend({
+openerp.base.DiagramView = openerp.base.Widget.extend({
 	init: function(view_manager, session, element_id, dataset, view_id){
 		this._super(session, element_id);
         this.view_manager = view_manager;

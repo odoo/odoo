@@ -88,9 +88,10 @@ openerp.base.FormView = openerp.base.View.extend( /** @lends openerp.base.FormVi
         if (this.options.sidebar && this.options.sidebar_id) {
             this.sidebar = new openerp.base.Sidebar(this, this.options.sidebar_id);
             this.sidebar.start();
-            this.sidebar.attachments = new openerp.base.form.SidebarAttachments(this.sidebar, this.sidebar.add_section("Attachments"), this);
-            this.sidebar.add_toolbar(data.fields_view.toolbar);
             this.sidebar.do_unfold();
+            this.sidebar.attachments = new openerp.base.form.SidebarAttachments(this.sidebar, this.sidebar.add_section('attachments', "Attachments"), this);
+            this.sidebar.add_toolbar(data.fields_view.toolbar);
+            this.set_common_sidebar_sections(this.sidebar);
         }
         this.has_been_loaded.resolve();
     },
@@ -441,7 +442,7 @@ openerp.base.FormView = openerp.base.View.extend( /** @lends openerp.base.FormVi
 /** @namespace */
 openerp.base.form = {};
 
-openerp.base.form.SidebarAttachments = openerp.base.Controller.extend({
+openerp.base.form.SidebarAttachments = openerp.base.Widget.extend({
     init: function(parent, element_id, form_view) {
         this._super(parent, element_id);
         this.view = form_view;
@@ -548,7 +549,7 @@ openerp.base.form.compute_domain = function(expr, fields) {
     return _.all(stack);
 };
 
-openerp.base.form.Widget = openerp.base.Controller.extend({
+openerp.base.form.Widget = openerp.base.Widget.extend({
     template: 'Widget',
     init: function(view, node) {
         this.view = view;
@@ -1934,7 +1935,7 @@ openerp.base.form.Many2ManyListView = openerp.base.ListView.extend({
     }
 });
 
-openerp.base.form.SelectCreatePopup = openerp.base.BaseWidget.extend({
+openerp.base.form.SelectCreatePopup = openerp.base.OldWidget.extend({
     identifier_prefix: "selectcreatepopup",
     template: "SelectCreatePopup",
     /**
@@ -2074,7 +2075,7 @@ openerp.base.form.SelectCreateListView = openerp.base.ListView.extend({
     }
 });
 
-openerp.base.form.FormOpenPopup = openerp.base.BaseWidget.extend({
+openerp.base.form.FormOpenPopup = openerp.base.OldWidget.extend({
     identifier_prefix: "formopenpopup",
     template: "FormOpenPopup",
     /**

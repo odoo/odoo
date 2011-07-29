@@ -18,7 +18,7 @@ openerp.base.serialize_sort = function (criterion) {
         }).join(', ');
 };
 
-openerp.base.DataGroup =  openerp.base.Controller.extend( /** @lends openerp.base.DataGroup# */{
+openerp.base.DataGroup =  openerp.base.Widget.extend( /** @lends openerp.base.DataGroup# */{
     /**
      * Management interface between views and grouped collections of OpenERP
      * records.
@@ -30,7 +30,7 @@ openerp.base.DataGroup =  openerp.base.Controller.extend( /** @lends openerp.bas
      * content of the current grouping level.
      *
      * @constructs
-     * @extends openerp.base.Controller
+     * @extends openerp.base.Widget
      *
      * @param {openerp.base.Session} session Current OpenERP session
      * @param {String} model name of the model managed by this DataGroup
@@ -232,13 +232,13 @@ openerp.base.StaticDataGroup = openerp.base.GrouplessDataGroup.extend( /** @lend
     }
 });
 
-openerp.base.DataSet =  openerp.base.Controller.extend( /** @lends openerp.base.DataSet# */{
+openerp.base.DataSet =  openerp.base.Widget.extend( /** @lends openerp.base.DataSet# */{
     /**
      * DateaManagement interface between views and the collection of selected
      * OpenERP records (represents the view's state?)
      *
      * @constructs
-     * @extends openerp.base.Controller
+     * @extends openerp.base.Widget
      *
      * @param {String} model the OpenERP model this dataset will manage
      */
