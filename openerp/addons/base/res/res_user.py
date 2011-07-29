@@ -540,7 +540,7 @@ class groups2(osv.osv):
             string='Inherits', help='Users of this group automatically inherit those groups'),
     }
 
-    def get_closure(self, cr, ids):
+    def get_closure(self, cr, uid, ids, context=None):
         "return the closure of ids, i.e., all groups recursively implied by ids"
         closure = set()
         todo = self.browse(cr, 1, ids)
@@ -551,7 +551,7 @@ class groups2(osv.osv):
                 todo.extend(g.implied_ids)
         return list(closure)
 
-    def get_rec_implied(self, cr):
+    def get_rec_implied(self, cr, uid, context=None):
         "return a dictionary giving the recursively implied groups of each group"
         groups = self.browse(cr, 1, self.search(cr, 1, []))
         # compute the transitive closure of implied_ids
@@ -566,9 +566,9 @@ class groups2(osv.osv):
                 for s in ss: preds[s] |= ps
         return succs
 
-    def get_maximal(self, cr, ids):
+    def get_maximal(self, cr, uid, ids, context=None):
         "return a maximal element among the group ids"
-        trans_implied = self.get_rec_implied(cr)
+        trans_implied = self.get_rec_implied(cr, uid, context)
         res = None
         for gid in ids:
             if (not res) or (res in trans_implied[gid]):
@@ -582,7 +582,7 @@ class groups2(osv.osv):
             - the key None is used in groups for groups not like App/Name
         """
         # get the relation to order groups
-        order_relation = self.get_rec_implied(cr)
+        order_relation = self.get_rec_implied(cr, uid, context)
         order = lambda x, y: (x[0] in order_relation[y[0]] and -1 or 1)
         
         # classify groups depending on their names
@@ -655,7 +655,7 @@ class users2(osv.osv):
     """
     _inherit = 'res.users'
 
-    def _values_to_groups_id(self, cr, uid, values, context=None):
+    def _process_values_groups(self, cr, uid, values, context=None):
         """ transform all reified group fields into a 'groups_id', adding 
             also the implied groups """
         add, rem = [], []
@@ -670,18 +670,18 @@ class users2(osv.osv):
                 add.append(int(values.pop(k)))
         if add or rem:
             # remove groups in 'rem' and add all implied groups in 'add'
-            add = self.pool.get('res.groups').get_closure(cr, add)
+            add = self.pool.get('res.groups').get_closure(cr, uid, add, context)
             values['groups_id'] = [(3, id) for id in rem] + [(4, id) for id in add]
         return True
 
     def create(self, cr, uid, values, context=None):
         # add processing for reified group fields
-        self._values_to_groups_id(cr, uid, values, context)
+        self._process_values_groups(cr, uid, values, context)
         return super(users2, self).create(cr, uid, values, context)
 
     def write(self, cr, uid, ids, values, context=None):
         # add processing for reified group fields
-        self._values_to_groups_id(cr, uid, values, context)
+        self._process_values_groups(cr, uid, values, context)
         return super(users2, self).write(cr, uid, ids, values, context)
 
     def read(self, cr, uid, ids, fields, context=None, load='_classic_read'):
@@ -701,7 +701,7 @@ class users2(osv.osv):
                         record[f] = not groups.isdisjoint(get_boolean_groups(f))
                     elif is_selection_groups(f):
                         selected = groups.intersection(get_selection_groups(f))
-                        record[f] = group_obj.get_maximal(cr, selected)
+                        record[f] = group_obj.get_maximal(cr, uid, selected, context)
             return res
         return super(users2, self).read(cr, uid, ids, fields, context, load)
 
