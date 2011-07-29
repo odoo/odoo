@@ -75,7 +75,6 @@
         <field name="action_id" ref="action_base_setup_installer"/>
         <field name="category_id" ref="base.category_administration_config"/>
         <field name="sequence">2</field>
-        <field name="type">recurring</field>
     </record>
 
     <record id="action_start_configurator" model="ir.actions.server">
@@ -139,7 +138,6 @@
    <record id="migrade_application_installer_modules_todo" model="ir.actions.todo">
       <field name="action_id" ref="action_migrade_application_installer_modules"/>
       <field name="category_id" ref="base.category_administration_config"/>
-      <field name="type">normal</field>
   </record>
 
           <!-- Import or create customers configartion view  -->
@@ -158,9 +156,7 @@
 	<record id="config_wizard_action_import_create_installer" model="ir.actions.todo">
 	    <field name="action_id" ref="action_import_create_installer"/>
 	    <field name="category_id" ref="base.category_administration_config"/>
-	    <field name="type">normal</field>
-	    <field name="target">current</field>
-	</record>
+    </record>
 
 	<!--        Define default users preferences-->
 
@@ -211,7 +207,6 @@
       <record id="config_action_user_preferences_config_form" model="ir.actions.todo">
           <field name="action_id" ref="action_user_preferences_config_form"/>
           <field name="category_id" ref="base.category_administration_config"/>
-          <field name="type">normal</field>
       </record>
 
       <!--     Config Wiz   Create New User's Login   -->
@@ -230,10 +225,8 @@
       <record id="config_wizard_action_config_user_form" model="ir.actions.todo">
           <field name="action_id" ref="action_config_access_other_user"/>
           <field name="category_id" ref="base.category_administration_config"/>
-          <field name="type">normal</field>
-          <field name="target">current</field>
           <field name="sequence">1000</field>
-          <field name="state">hidden</field>
+          <field name="state">done</field>
       </record>
 
       <!--   register Upload Logo configuration wizard  -->
@@ -241,8 +234,7 @@
       <record id="config_wizard_action_res_company_logo" model="ir.actions.todo">
           <field name="action_id" ref="action_res_company_logo"/>
           <field name="category_id" ref="base.category_administration_config"/>
-          <field name="type">normal</field>
-          <field name="state">hidden</field>
+          <field name="state">done</field>
       </record>
 
             <!--        Specify Your Terminology Config Wiz-->
@@ -291,7 +283,6 @@
       <record id="config_action_partner_terminology_config_form" model="ir.actions.todo">
           <field name="action_id" ref="action_partner_terminology_config_form"/>
           <field name="category_id" ref="base.category_administration_config"/>
-          <field name="type">normal</field>
       </record>
 
 
@@ -309,7 +300,6 @@
         <field name="action_id" ref="action_base_setup_company"/>
         <field name="category_id" ref="base.category_administration_config"/>
         <field name="sequence">1</field>
-        <field name="type">normal</field>
     </record>
 
   </data>
