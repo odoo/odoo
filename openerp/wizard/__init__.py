@@ -155,7 +155,7 @@ class interface(netsvc.Service):
             if isinstance(e, except_wizard) \
                 or isinstance(e, except_osv) \
                 or isinstance(e, except_orm):
-                self.abortResponse(2, e.name, 'warning', e.value)
+                netsvc.abort_response(2, e.name, 'warning', e.value)
             else:
                 import traceback
                 tb_s = reduce(lambda x, y: x+y, traceback.format_exception(

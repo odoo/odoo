@@ -85,12 +85,6 @@ class Service(object):
         if cls.exists(name):
             cls._services.pop(name)
 
-    def abortResponse(self, error, description, origin, details):
-        if not tools.config['debug_mode']:
-            raise Exception("%s -- %s\n\n%s"%(origin, description, details))
-        else:
-            raise
-
 def LocalService(name):
   # Special case for addons support, will be removed in a few days when addons
   # are updated to directly use openerp.osv.osv.service.
