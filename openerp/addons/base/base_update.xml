@@ -24,6 +24,10 @@
                         <page string="Users">
                             <field colspan="4" name="users" nolabel="1"/>
                         </page>
+                        <page string="Inherited">
+                            <label colspan="4" string="Users belonging to this group will be automatically included in the following groups."/>
+                            <field colspan="4" name="implied_ids" nolabel="1"/>
+                        </page>
                         <page string="Menus">
                             <field colspan="4" name="menu_access" nolabel="1"/>
                         </page>
@@ -141,10 +145,9 @@
                                 <separator string="Signature" colspan="2"/>
                                 <field colspan="2" name="signature" nolabel="1"/>
                             </group>
-                            <group colspan="2" col="2" expand="1">
-                                <separator string="Groups" colspan="2"/>
-                                <field colspan="2" nolabel="1" name="groups_id"/>
-                            </group>
+                        </page>
+                        <page string="Access Rights">
+                            <field nolabel="1" name="groups_id" select="1"/>
                         </page>
                         <page string="Companies" groups="base.group_multi_company">
                             <field colspan="4" nolabel="1" name="company_ids" select="1"/>
