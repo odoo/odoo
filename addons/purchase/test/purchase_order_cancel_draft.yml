@@ -138,11 +138,12 @@
   !assert {model: purchase.order, id: purchase_order_pendrive1}:
     - state == 'draft'
 -
-  I test for Delete Perchase order in Draft state.
+  I test for Copy and Delete Perchase order in Draft state.
 -
   !python {model: purchase.order}: |
     from tools.translate import _
     ids = []
     ids.append(ref("purchase_order_pendrive1"))
+    self.copy(cr, uid, ids[0])   
     self.unlink(cr, uid, ids)   
  
