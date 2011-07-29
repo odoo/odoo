@@ -562,6 +562,15 @@ class groups2(osv.osv):
                 for s in ss: preds[s] |= ps
         return succs
 
+    def get_maximal(self, cr, ids):
+        "return a maximal element among the group ids"
+        trans_implied = self.get_rec_implied(cr)
+        res = None
+        for gid in ids:
+            if (not res) or (res in trans_implied[gid]):
+                res = gid
+        return res
+
     def get_classified(self, cr, uid, context=None):
         """
             classify all groups by prefix; return a pair (apps, groups) where
@@ -571,7 +580,7 @@ class groups2(osv.osv):
         """
         # get the relation to order groups
         order_relation = self.get_rec_implied(cr)
-        order = lambda x, y: (x[0] in order_relation[y[0]] and 1 or -1)
+        order = lambda x, y: (x[0] in order_relation[y[0]] and -1 or 1)
         
         # classify groups depending on their names
         classified = {}
@@ -666,6 +675,7 @@ class users2(osv.osv):
             else:
                 other_fields.append(f)
         if group_fields:
+            group_obj = self.pool.get('res.groups')
             fields = other_fields + ['groups_id']
             res = super(users2, self).read(cr, uid, ids, fields, context, load)
             for record in res:
@@ -677,11 +687,8 @@ class users2(osv.osv):
                     elif is_boolean_groups(f):
                         record[f] = not groups.isdisjoint(get_boolean_groups(f))
                     elif is_selection_groups(f):
-                        record[f] = False
-                        for gid in get_selection_groups(f):
-                            if gid in groups:
-                                record[f] = gid
-                                break
+                        selected = groups.intersection(get_selection_groups(f))
+                        record[f] = group_obj.get_maximal(cr, selected)
             return res
         return super(users2, self).read(cr, uid, ids, fields, context, load)
 
@@ -708,7 +715,7 @@ class users2(osv.osv):
                     fields[app_name] = {'type': 'boolean', 'string': app}
                     fields[sel_name] = {'type': 'selection', 'string': '', 'selection': selection}
                     elems.append('<field name="%s"/>' % app_name)
-                    elems.append("""<field name="%s" attrs="{'invisible': [('%s', '=', False)]}"/>""" % (sel_name, app_name))
+                    elems.append("""<field name="%s" nolabel="1" attrs="{'invisible': [('%s', '=', False)]}"/>""" % (sel_name, app_name))
                     elems.append('<newline/>')
                 elems.append('</group>')
                 # create other sections
