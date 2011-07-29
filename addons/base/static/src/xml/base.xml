@@ -252,62 +252,96 @@
             <thead>
                 <tr>
                     <t t-foreach="fields_view" t-as="fieldsview">
-                        <t t-foreach="fields" t-as="field">
-                            <t t-if="fieldsview['attrs'].name==field">
-                                <td class="treeview-header"><t t-esc="fields[field].string" /></td>
+                        <t t-foreach="fieldsview_fields" t-as="view_fields">
+                            <t t-if="fieldsview['attrs'].name==view_fields and !fieldsview['attrs'].invisible">
+                                <td class="treeview-header"><t t-esc="fieldsview_fields[view_fields].string" /></td>
                             </t>
                         </t>
                     </t>
                 </tr>
             </thead>
-            <t t-foreach="child_data" t-as="field" >
-                <tr t-att-id="'treerow_' + field.id">
-                    <td class="treeview-tr">
-                        <t t-if="(field.child_id).length >= 1">
-                            <img t-att-id="'parentimg_' + field.id" src="/base/static/src/img/expand.gif" width="16" height="16" border="0"/>
-                        </t>
-                        <span>
-                            <t t-esc="field.name"/>
-                        </span>
-                    </td>
-                    <td class="treeview-td">
-                        <t t-foreach="selection_fields" t-as="selection">
-                            <t t-if="selection[0]==field.type">
-                                <t t-esc="selection[1]" />
+            <t t-foreach="child_data" t-as="fields" >
+                <tr t-att-id="'treerow_' + fields.id">
+                    <t t-if="(fields.child_id).length >= 1">
+                        <td class="treeview-tr">
+                            <img t-att-id="'parentimg_' + fields.id" src="/base/static/src/img/expand.gif" width="16" height="16" border="0"/>
+                        </td>
+                    </t>
+                    <t t-foreach="fields_view" t-as="fieldsview">
+                        <t t-foreach="fieldsview_fields" t-as="view_fields">
+                            <t t-foreach="field" t-as="f">
+                                <t t-if="fieldsview['attrs'].name==view_fields">
+                                    <t t-if="fieldsview['attrs'].name==f and !fieldsview['attrs'].invisible and field[f].type!='many2one' and field[f].type!='selection'">
+                                        <td class="treeview-td">
+                                            <span>
+                                                <t t-esc="fields[[fieldsview['attrs'].name]]" />
+                                            </span>
+                                        </td>
+                                    </t>
+                                    <t t-if="fieldsview['attrs'].name==f and !fieldsview['attrs'].invisible and field[f].type=='many2one'">
+                                        <td class="treeview-td">
+                                            <span>
+                                                <t t-esc="fields[[fieldsview['attrs'].name]][1]" />
+                                            </span>
+                                        </td>
+                                    </t>
+                                    <t t-if="fieldsview['attrs'].name==f and !fieldsview['attrs'].invisible and field[f].type=='selection'">
+                                        <td class="treeview-td">
+                                            <span>
+                                                <t t-foreach="selection_fields" t-as="selection">
+                                                    <t t-if="selection[0]==fields.type">
+                                                        <t t-esc="selection[1]" />
+                                                    </t>
+                                                </t>
+                                            </span>
+                                        </td>
+                                    </t>
+                                </t>
                             </t>
                         </t>
-                    </td>
-                    <td class="treeview-td">
-                        <t t-esc="field.sequence" />
-                    </td>
+                    </t>
                 </tr>
             </t>
         </table>
     </t>
     <t t-if="flag==0">
-        <t t-if="child_data">
-            <t t-foreach="child_data" t-as="field" >
-                <tr t-att-id="'treerow_' + field.id">
+        <t t-foreach="child_data" t-as="fields" >
+            <tr t-att-id="'treerow_' + fields.id">
+                <t t-if="(fields.child_id).length >= 1">
                     <td class="treeview-tr">
-                        <t t-if="(field.child_id).length >= 1">
-                            <img t-att-id="'parentimg_' + field.id" src="/base/static/src/img/expand.gif" width="16" height="16" border="0"/>
+                        <img t-att-id="'parentimg_' + fields.id" src="/base/static/src/img/expand.gif" width="16" height="16" border="0"/>
+                    </td>
+                </t>
+                <t t-foreach="fields_view" t-as="fieldsview">
+                    <t t-foreach="field" t-as="f">
+                        <t t-if="fieldsview['attrs'].name==f and !fieldsview['attrs'].invisible and field[f].type!='many2one' and field[f].type!='selection'">
+                            <td class="treeview-td">
+                                <span>
+                                    <t t-esc="fields[[fieldsview['attrs'].name]]" />
+                                </span>
+                            </td>
                         </t>
-                        <span>
-                            <t t-esc="field.name"/>
-                        </span>
-                    </td>
-                    <td class="treeview-td">
-                        <t t-foreach="selection_fields" t-as="selection">
-                            <t t-if="selection[0]==field.type">
-                                <t t-esc="selection[1]" />
-                            </t>
+                        <t t-if="fieldsview['attrs'].name==f and !fieldsview['attrs'].invisible and field[f].type=='many2one'">
+                            <td class="treeview-td">
+                                <span>
+                                    <t t-esc="fields[[fieldsview['attrs'].name]][1]" />
+                                </span>
+                            </td>
                         </t>
-                    </td>
-                    <td class="treeview-td">
-                        <t t-esc="field.sequence" />
-                    </td>
-                </tr>
-            </t>
+                        <t t-if="fieldsview['attrs'].name==f and !fieldsview['attrs'].invisible and field[f].type=='selection'">
+                            <td class="treeview-td">
+                                <span>
+                                    <t t-foreach="selection_fields" t-as="selection">
+                                        <t t-if="selection[0]==fields.type">
+                                            <t t-esc="selection[1]" />
+                                        </t>
+                                    </t>
+                                </span>
+                            </td>
+                        </t>
+                    </t>
+                </t>
+            </tr>
         </t>
     </t>
 </t>

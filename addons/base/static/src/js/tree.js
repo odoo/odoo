@@ -64,17 +64,21 @@ openerp.base.TreeView = openerp.base.View.extend({
 
         self.dataset.domain = [['parent_id', '=', parseInt(id, 10)]];
         self.dataset.read_slice([], 0, false, function (response) {
+
             var is_padding, row_id, record_id;
             var curr_node = $('tr #treerow_' + id);
 
             if (curr_node.length == 1) {
-                curr_node.find('td').children(':first-child').attr('src','/base/static/src/img/collapse.gif');
-                curr_node.after(QWeb.render('TreeView_Secondry', {'child_data': response, 'flag': '0', 'selection_fields' : self.fields.type.selection }));
+                curr_node.find('td:first').children(':first-child').attr('src','/base/static/src/img/collapse.gif');
+                curr_node.after(QWeb.render('TreeView_Secondry', {'child_data': response, 'flag': '0', 'fields_view' : self.fields_view.arch.children, 'selection_fields' : self.fields.type.selection,'field' : self.fields}));
 
 
                 for (var i = 0; i < response.length; i++) {
                     row_id = $('tr #treerow_' + response[i].id);
-                    if (row_id && row_id.find('td').children(':first-child').attr('id') == 'parentimg_' + response[i].id) {
+
+                    if (row_id && row_id.find('td:first').children(':first-child').attr('id') == 'parentimg_' + response[i].id) {
+                        row_id.find('td:first').append('<span>'+row_id.find('td:eq(1)').text()+'</span>');
+                        row_id.find('td:eq(1)').remove();
                         is_padding = true;
                     }
                 }
@@ -109,9 +113,13 @@ openerp.base.TreeView = openerp.base.View.extend({
                 if (!flag) {
                     self.$element.find('table').remove();
                 }
+                self.$element.append(QWeb.render('TreeView_Secondry', {'child_data': response, 'flag' : '1', 'fieldsview_fields' : self.fields_view.fields , 'fields_view' : self.fields_view.arch.children, 'selection_fields' : self.fields.type.selection, 'field' : self.fields }));
 
-                self.$element.append(QWeb.render('TreeView_Secondry', {'child_data': response, 'flag' : '1', 'fields' : self.fields_view.fields , 'fields_view' : self.fields_view.arch.children, 'selection_fields' : self.fields.type.selection}));
                 self.$element.find('tr[id ^= treerow_]').each( function() {
+                    if ($(this).find('td:first').children(':first-child').attr('id')) {
+                        $(this).find('td:first').append('<span>' + $(this).find('td:eq(1)').text() + '</span>');
+                        $(this).find('td:eq(1)').remove();
+                    }
                     $(this).find('td').children(':first-child').addClass("parent_top");
                     if (!($(this).find('td').children(':first-child').attr('id'))) {
                         $(this).find('td:first').css('paddingLeft', '20px');
