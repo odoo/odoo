@@ -219,7 +219,7 @@ openerp.base.ViewManager =  openerp.base.Controller.extend({
     },
     /**
      * Event launched when a controller has been inited.
-     * 
+     *
      * @param {String} view_type type of view
      * @param {String} view the inited controller
      */
@@ -525,7 +525,7 @@ openerp.base.View = openerp.base.Controller.extend({
      * Directly set a view to use instead of calling fields_view_get. This method must
      * be called before start(). When an embedded view is set, underlying implementations
      * of openerp.base.View must use the provided view instead of any other one.
-     * 
+     *
      * @param embedded_view A view.
      */
     set_embedded_view: function(embedded_view) {
@@ -541,7 +541,11 @@ openerp.base.views = new openerp.base.Registry();
 openerp.base.json_node_to_xml = function(node, single_quote, indent) {
     // For debugging purpose, this function will convert a json node back to xml
     // Maybe usefull for xml view editor
-    if (typeof(node.tag) !== 'string' || !node.children instanceof Array || !node.attrs instanceof Object) {
+
+    if (typeof(node) === 'string') {
+        return node;
+    }
+    else if (typeof(node.tag) !== 'string' || !node.children instanceof Array || !node.attrs instanceof Object) {
         throw("Node a json node");
     }
     indent = indent || 0;

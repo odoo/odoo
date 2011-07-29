@@ -3,8 +3,10 @@
     "version" : "2.0",
     "depends" : ["base"],
     "js": [
-       "static/src/js/kanban.js"
+        "static/src/js/kanban.js"
     ],
-    "css": [],
+    "css": [
+        "static/src/css/kanban.css"
+    ],
     'active': True
 }
