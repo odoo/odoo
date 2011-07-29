@@ -638,8 +638,21 @@ def get_boolean_groups(name): return map(int, name[10:].split('_'))
 def get_selection_groups(name): return map(int, name[11:].split('_'))
 
 def encode(s): return s.encode('utf8') if isinstance(s, unicode) else s
+def partition(f, xs):
+    "return a pair equivalent to (filter(f, xs), filter(lambda x: not f(x), xs))"
+    yes, nos = [], []
+    for x in xs:
+        if f(x):
+            yes.append(x)
+        else:
+            nos.append(x)
+    return yes, nos
 
 class users2(osv.osv):
+    """ Extension of res.users for:
+        - adding implied groups when added to a group
+        - defining special widgets for field groups_id
+    """
     _inherit = 'res.users'
 
     def _values_to_groups_id(self, cr, uid, values, context=None):
@@ -713,7 +726,7 @@ class users2(osv.osv):
                     app_name = name_boolean_groups(ids)
                     sel_name = name_selection_groups(ids)
                     fields[app_name] = {'type': 'boolean', 'string': app}
-                    fields[sel_name] = {'type': 'selection', 'string': '', 'selection': selection}
+                    fields[sel_name] = {'type': 'selection', 'string': 'Group', 'selection': selection}
                     elems.append("""
                         <field name="%(app)s"/>
                         <field name="%(sel)s" nolabel="1"
@@ -764,17 +777,5 @@ class res_config_view(osv.osv_memory):
                                  {'view':res['view']}, context=context)
 
 res_config_view()
-
-
-
-def partition(f, xs):
-    "return a pair equivalent to (filter(f, xs), filter(lambda x: not f(x), xs))"
-    yes, nos = [], []
-    for x in xs:
-        if f(x):
-            yes.append(x)
-        else:
-            nos.append(x)
-    return yes, nos
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
