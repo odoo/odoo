@@ -551,6 +551,26 @@ class groups2(osv.osv):
                 todo.extend(g.implied_ids)
         return list(closure)
 
+    def create(self, cr, uid, values, context=None):
+        group_id = super(groups2, self).create(cr, uid, values, context)
+        if values.get('users') or values.get('implied_ids'):
+            # add implied groups to all users of the group
+            group = self.browse(cr, uid, group_id)
+            self.pool.get('res.users').write(cr, uid, map(int, group.users),
+                {'groups_id': [(4, group_id)]}, context)
+        return group_id
+
+    def write(self, cr, uid, ids, values, context=None):
+        res = super(groups2, self).write(cr, uid, ids, values, context)
+        if values.get('users') or values.get('implied_ids'):
+            # add implied groups (to all users of each group)
+            users_obj = self.pool.get('res.users')
+            groups = self.browse(cr, uid, ids)
+            for g in groups:
+                users_obj.write(cr, uid, map(int, g.users),
+                    {'groups_id': [(4, g.id)]}, context)
+        return res
+
     def get_rec_implied(self, cr, uid, context=None):
         "return a dictionary giving the recursively implied groups of each group"
         groups = self.browse(cr, 1, self.search(cr, 1, []))
@@ -672,6 +692,18 @@ class users2(osv.osv):
             # remove groups in 'rem' and add all implied groups in 'add'
             add = self.pool.get('res.groups').get_closure(cr, uid, add, context)
             values['groups_id'] = [(3, id) for id in rem] + [(4, id) for id in add]
+        elif 'groups_id' in values:
+            # add implied groups (only handles (4, ID) and (6, 0, IDs) cases)
+            closure = lambda ids: self.pool.get('res.groups').get_closure(cr, uid, ids, context)
+            groups = []
+            for elem in values['groups_id']:
+                if elem[0] == 4:
+                    groups.extend([(4, id) for id in closure([elem[1]])])
+                elif elem[0] == 6:
+                    groups.append((6, 0, closure(elem[2])))
+                else:
+                    groups.append(elem)
+            values['groups_id'] = groups
         return True
 
     def create(self, cr, uid, values, context=None):
