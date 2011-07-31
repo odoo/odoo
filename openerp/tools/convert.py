@@ -883,16 +883,16 @@ form: module.record_id""" % (xml_id,)
 
         for n in de.findall('./data'):
             for rec in n:
-                    if rec.tag in self._tags:
-                        try:
-                            self._tags[rec.tag](self.cr, rec, n)
-                        except:
-                            self.__logger.error('Parse error in %s:%d: \n%s',
-                                                rec.getroottree().docinfo.URL,
-                                                rec.sourceline,
-                                                etree.tostring(rec).strip(), exc_info=True)
-                            self.cr.rollback()
-                            raise
+                if rec.tag in self._tags:
+                    try:
+                        self._tags[rec.tag](self.cr, rec, n)
+                    except:
+                        self.__logger.error('Parse error in %s:%d: \n%s',
+                                            rec.getroottree().docinfo.URL,
+                                            rec.sourceline,
+                                            etree.tostring(rec).strip(), exc_info=True)
+                        self.cr.rollback()
+                        raise
         return True
 
     def __init__(self, cr, module, idref, mode, report=None, noupdate=False):
