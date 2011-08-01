@@ -672,7 +672,6 @@ openerp.base.Loading =  openerp.base.Controller.extend({
 openerp.base.Database = openerp.base.Controller.extend({
     init: function(parent, element_id, option_id) {
         this._super(parent, element_id);
-        this.option_id = option_id;
         this.$option_id = $('#' + option_id);
     },
     start: function() {
