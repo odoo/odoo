@@ -253,12 +253,13 @@ class Session(openerpweb.Controller):
 
     @openerpweb.jsonrequest
     def get_lang_list(self, req):
-        lang_list = [('en_US', 'English (US)')]
         try:
-            lang_list = lang_list + (req.session.proxy("db").list_lang() or [])
+            return {
+                'lang_list': (req.session.proxy("db").list_lang() or []),
+                'error': ""
+            }
         except Exception, e:
             return {"error": e, "title": "Languages"}
-        return {"lang_list": lang_list, "error": ""}
             
     @openerpweb.jsonrequest
     def modules(self, req):

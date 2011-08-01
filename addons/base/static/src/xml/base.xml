@@ -94,13 +94,13 @@
             <tr>
                 <td><label for="db_lang">Default language:</label></td>
                 <td>
-                    <t t-if="lang_list">
-                        <select name="db_lang">
-                          <t t-foreach="lang_list" t-as="lang">
-                                <option t-att-value="lang[0]"><t t-esc="lang[1]"/></option>
-                            </t>
-                        </select>
-                    </t>
+                    <select name="db_lang" t-if="lang_list">
+                        <t t-foreach="lang_list" t-as="lang">
+                            <option t-att-value="lang[0]"
+                                    t-att-selected="lang[0] === 'en_US' ? 'selected' : undefined">
+                                <t t-esc="lang[1]"/></option>
+                        </t>
+                    </select>
                 </td>
             </tr>
             <tr>
@@ -131,13 +131,11 @@
             <tr>
                 <td><label for="drop_db">Database:</label></td>
                 <td>
-                    <t t-if="db_list">
-                        <select name="drop_db" autofocus="autofocus">
-                            <t t-foreach="db_list" t-as="db">
-                                <option t-att-value="db"><t t-esc="db"/></option>
-                            </t>
-                        </select>
-                    </t>
+                    <select t-if="db_list" name="drop_db" autofocus="autofocus">
+                        <t t-foreach="db_list" t-as="db">
+                            <option t-att-value="db"><t t-esc="db"/></option>
+                        </t>
+                    </select>
                 </td>
             </tr>
             <tr>
@@ -163,13 +161,11 @@
             <tr>
                 <td><label for="backup_db">Database:</label></td>
                 <td>
-                    <t t-if="db_list">
-                        <select name="backup_db" autofocus="autofocus">
-                            <t t-foreach="db_list" t-as="db">
-                               	<option t-att-value="db"><t t-esc="db"/></option>
-                            </t>
-                        </select>
-                    </t>
+                    <select t-if="db_list" name="backup_db" autofocus="autofocus">
+                        <t t-foreach="db_list" t-as="db">
+                            <option t-att-value="db"><t t-esc="db"/></option>
+                        </t>
+                    </select>
                 </td>
             </tr>
             <tr>
