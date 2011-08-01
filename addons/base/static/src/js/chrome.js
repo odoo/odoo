@@ -708,8 +708,7 @@ openerp.base.Database = openerp.base.Controller.extend({
         this.$element.find('#db-restore').click(this.do_db_restore);
         this.$element.find('#db-change-password').click(this.do_change_password);
        	this.$element.find('#back-to-login').click(function() {
-            self.header = new openerp.base.Header(self, "oe_header");
-            self.header.on_logout();	
+            window.location.reload();
         });
     },
     /**
