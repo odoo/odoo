@@ -129,6 +129,7 @@ openerp.base.ViewManager =  openerp.base.Widget.extend({
      * @returns {jQuery.Deferred} initial view loading promise
      */
     start: function() {
+        this._super();
         var self = this;
         this.dataset.start();
         this.$element.html(QWeb.render("ViewManager", {"prefix": this.element_id, views: this.views_src}));
