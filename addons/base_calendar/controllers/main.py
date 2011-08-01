@@ -5,6 +5,6 @@ class CalendarView(View):
     _cp_path = "/base_calendar/calendarview"
     
     @openerpweb.jsonrequest
-    def load(self, req, model, view_id):
-        fields_view = self.fields_view_get(req, model, view_id, 'calendar')
+    def load(self, req, model, view_id, toolbar=False):
+        fields_view = self.fields_view_get(req, model, view_id, 'calendar', toolbar=toolbar)
         return {'fields_view': fields_view}

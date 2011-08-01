@@ -15,10 +15,11 @@ openerp.base_calendar.CalendarView = openerp.base.View.extend({
         this.view_id = view_id;
         this.domain = this.dataset.domain || [];
         this.context = this.dataset.context || {};
+        this.has_been_loaded = $.Deferred();
         this.options = options || {};
     },
     start: function() {
-        this.rpc("/base_calendar/calendarview/load", {"model": this.model, "view_id": this.view_id}, this.on_loaded);
+        this.rpc("/base_calendar/calendarview/load", {"model": this.model, "view_id": this.view_id, 'toolbar': true}, this.on_loaded);
     },
     on_loaded: function(data) {
         this.calendar_fields = {};
@@ -54,8 +55,23 @@ openerp.base_calendar.CalendarView = openerp.base.View.extend({
             this.info_fields.push(this.fields_view.arch.children[fld].attrs.name);
         }
         this.$element.html(QWeb.render("CalendarView", {"fields_view": this.fields_view}));
+
+        if (this.options.sidebar && this.options.sidebar_id) {
+            this.sidebar = new openerp.base.Sidebar(this, this.options.sidebar_id);
+            this.sidebar.start();
+            this.sidebar.navigator = new openerp.base_calendar.SidebarNavigator(this.sidebar, this.sidebar.add_section('navigator', "Navigator"), this);
+            this.sidebar.responsible = new openerp.base_calendar.SidebarResponsible(this.sidebar, this.sidebar.add_section('responsible', "Responsible"), this);
+            this.sidebar.add_toolbar(data.fields_view.toolbar);
+            this.set_common_sidebar_sections(this.sidebar);
+            this.sidebar.do_unfold();
+            this.sidebar.do_fold.add_last(this.resize_scheduler);
+            this.sidebar.do_unfold.add_last(this.resize_scheduler);
+            this.sidebar.do_toggle.add_last(this.resize_scheduler);
+        }
+
         this.init_scheduler();
         this.load_scheduler();
+        this.has_been_loaded.resolve();
     },
     init_scheduler: function() {
         var self = this;
@@ -75,8 +91,6 @@ openerp.base_calendar.CalendarView = openerp.base.View.extend({
 
         // Initialize Sceduler
         scheduler.init('openerp_scheduler', null, this.mode);
-
-        this.$element.find('#dhx_minical_icon').bind('click', this.mini_calendar);
 
         // Event Options Click,edit
         scheduler.attachEvent('onDblClick', this.popup_event);
@@ -120,6 +134,17 @@ openerp.base_calendar.CalendarView = openerp.base.View.extend({
                 return true;
             }
         });
+        scheduler.renderCalendar({
+            container: this.sidebar.navigator.element_id,
+            navigation: true,
+            date: scheduler._date,
+            handler: function(date, calendar) {
+                scheduler.setCurrentView(date, 'day');
+            }
+        });
+    },
+    resize_scheduler: function() {
+        scheduler.setCurrentView(scheduler._date);
     },
     load_scheduler: function() {
         var self = this;
@@ -142,7 +167,9 @@ openerp.base_calendar.CalendarView = openerp.base.View.extend({
         scheduler.clearAll();
 
         //To parse Events we have to convert date Format
-        var res_events = [];
+        var res_events = [],
+            sidebar_items = [],
+            sidebar_ids = [];
         for (var e = 0; e < events.length; e++) {
             var evt = events[e];
             if (!evt[this.date_start]) {
@@ -156,10 +183,26 @@ openerp.base_calendar.CalendarView = openerp.base.View.extend({
             if (this.date_stop && evt[this.date_stop] && this.fields[this.date_stop]['type'] == 'date') {
                 evt[this.date_stop] = openerp.base.parse_date(evt[this.date_stop]).set({hour: 17}).toString('yyyy-MM-dd HH:mm:ss');
             }
+            if (this.color_field) {
+                var user = evt[this.color_field];
+                if (user) {
+                    if (_.indexOf(sidebar_ids, user[0]) === -1) {
+                        sidebar_items.push({
+                            id: user[0],
+                            name: user[1],
+                            // TODO: use color table
+                            color: '#dddddd'
+                        });
+                        sidebar_ids.push(user[0]);
+                    }
+                }
+            }
             res_events.push(this.convert_event(evt));
         }
 
         scheduler.parse(res_events, 'json');
+        this.resize_scheduler();
+        this.sidebar.responsible.on_events_loaded(sidebar_items);
     },
     convert_event: function(event) {
         var starts = event[this.date_start],
@@ -240,21 +283,6 @@ openerp.base_calendar.CalendarView = openerp.base.View.extend({
             'title': res_description.join()
         }
     },
-    mini_calendar: function() {
-        if (scheduler.isCalendarVisible()) {
-            scheduler.destroyCalendar();
-        } else {
-            scheduler.renderCalendar({
-                position:"dhx_minical_icon",
-                date:scheduler._date,
-                navigation:true,
-                handler: function(date, calendar) {
-                   scheduler.setCurrentView(date);
-                   scheduler.destroyCalendar()
-                }
-            });
-        }
-    },
     do_search: function(domains, contexts, groupbys) {
         var self = this;
         this.rpc('/base/session/eval_domain_and_context', {
@@ -271,10 +299,19 @@ openerp.base_calendar.CalendarView = openerp.base.View.extend({
         });
     },
     do_show: function () {
-        this.$element.show();
+        var self = this;
+        $.when(this.has_been_loaded).then(function() {
+            self.$element.show();
+            if (self.sidebar) {
+                self.sidebar.$element.show();
+            }
+        });
     },
     do_hide: function () {
         this.$element.hide();
+        if (this.sidebar) {
+            this.sidebar.$element.hide();
+        }
     },
     popup_event: function(event_id) {
         var self = this;
@@ -325,6 +362,27 @@ openerp.base_calendar.CalendarView = openerp.base.View.extend({
         }
     }
 });
+
+openerp.base_calendar.SidebarResponsible = openerp.base.Widget.extend({
+    init: function(parent, element_id, view) {
+        this._super(parent, element_id);
+        this.view = view;
+    },
+    on_events_loaded: function(users) {
+        this.$element.html(QWeb.render('CalendarView.sidebar.responsible', { users : users }));
+        // TODO: bind checkboxes reload sheduler
+    }
+});
+
+openerp.base_calendar.SidebarNavigator = openerp.base.Widget.extend({
+    init: function(parent, element_id, view) {
+        this._super(parent, element_id);
+        this.view = view;
+    },
+    on_events_loaded: function(events) {
+    }
+});
+
 };
 
 // DEBUG_RPC:rpc.request:('execute', 'addons-dsh-l10n_us', 1, '*', ('ir.filters', 'get_filters', u'res.partner'))
