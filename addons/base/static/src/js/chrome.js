@@ -674,15 +674,12 @@ openerp.base.Database = openerp.base.Controller.extend({
         this._super(parent, element_id);
         this.option_id = option_id;
         this.$option_id = $('#' + option_id);
-        
-        if(this.parent && this.parent.session) {
-            this.session = this.parent.session;
-        }
     },
     start: function() {
         this.$element.html(QWeb.render("Database", this));
-        this.$element.closest(".openerp").removeClass("login-mode");
-        this.$element.closest(".openerp").addClass("database_block");
+        this.$element.closest(".openerp")
+                .removeClass("login-mode")
+                .addClass("database_block");
         
         var self = this;
         
