@@ -46,25 +46,25 @@ openerp.base_kanban.KanbanView = openerp.base.View.extend({
 		this.$element.find(".oe_column").sortable({
 		    connectWith: ".oe_column"
 		});
-		this.$element.find(".portlet").addClass("ui-widget ui-widget-content ui-helper-clearfix ui-corner-all")
-		    .find(".portlet-header")
+		this.$element.find(".record").addClass("ui-widget ui-widget-content ui-helper-clearfix ui-corner-all")
+		    .find(".record-header")
 		        .addClass("ui-widget-header ui-corner-all")
 		        .prepend( "<span class='ui-icon ui-icon-closethick'></span><span class='ui-icon ui-icon-minusthick'></span>")
 		        .end()
-		    .find( ".portlet-content" );
+		    .find( ".record-content" );
 
-		this.$element.find(".portlet-header .ui-icon").click(function() {
+		this.$element.find(".record-header .ui-icon").click(function() {
 		    $(this).toggleClass("ui-icon-minusthick").toggleClass("ui-icon-plusthick");
-		    $(this).parents(".portlet:first").find(".portlet-content").toggle();
+		    $(this).parents(".record:first").find(".record-content").toggle();
 		});
-		this.$element.find('.portlet .ui-icon-closethick').click(this.on_close_action);
+		this.$element.find('.record .ui-icon-closethick').click(this.on_close_action);
 		this.$element.find(".oe_column").disableSelection();
-		this.$element.find(".ui.item").css("background-color","#c3dAf9");
+		this.$element.find(".ui.item").css("background-color","red");
 		self.$element.find( ".oe_column" ).css("width", 99 / datas.length +"%");
     },
 
     on_close_action: function(e) {
-        $(e.currentTarget).parents('.portlet:first').remove();
+        $(e.currentTarget).parents('.record:first').remove();
     },
 
     do_search: function (domains, contexts, group_by) {
@@ -96,11 +96,15 @@ openerp.base_kanban.KanbanView = openerp.base.View.extend({
         _.each(datagroups, function (group) {
             self.dataset.context = group.context;
             self.dataset.domain = group.domain;
-            if(!group.value) {
-                group.value = "Undefined"
+            var group_name = group.value;
+            if(!group_name) {
+                group_name = "Undefined"
+            }
+            else if(group_name instanceof Array) {
+                group_name = group_name[1]
             }
 	        self.dataset.read_slice(false, false, false, function(records) {
-                self.columns.push({"value" : group.value, "records": records});
+                self.columns.push({"value" : group_name, "records": records});
                 if (datagroups.length == self.columns.length) {
                     self.on_show_data(self.columns);
 	            }
