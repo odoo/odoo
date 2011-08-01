@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+    # -*- coding: utf-8 -*-
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
@@ -863,7 +863,7 @@ class account_invoice(osv.osv):
                 for t in totlines:
                     if inv.currency_id.id != company_currency:
                         amount_currency = cur_obj.compute(cr, uid,
-                                company_currency, inv.currency_id.id, t[1])
+                                company_currency, inv.currency_id.id, t[1], context={'date':inv.date_invoice})
                     else:
                         amount_currency = False
 
