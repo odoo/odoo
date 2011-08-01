@@ -691,16 +691,15 @@ openerp.base.Database = openerp.base.Controller.extend({
                 self.lang_list = result.lang_list;
                 self.do_db_create();
             } else {
-                var db_error_dialog = _.uniqueId("db_error_dialog");
-                    $('<div>', {id: db_error_dialog}).dialog({
-                        modal: true,
-                        title: result.title,
-                        buttons: {
-                            Ok: function() {
-                                $(this).dialog("close");
-                            }
+                $('<div>').dialog({
+                    modal: true,
+                    title: result.title,
+                    buttons: {
+                        Ok: function() {
+                            $(this).dialog("close");
                         }
-                   }).html(result.error);
+                    }
+               }).html(result.error);
             }
         });
         
