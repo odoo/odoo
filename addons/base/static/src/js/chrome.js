@@ -682,14 +682,12 @@ openerp.base.Database = openerp.base.Controller.extend({
         
         var self = this;
         
-        this.rpc("/base/database/get_databases_list", {}, function(result) {
+        var fetch_db = this.rpc("/base/database/get_databases_list", {}, function(result) {
             self.db_list = result.db_list;
         });
-        
-        this.rpc("/base/session/get_lang_list", {}, function(result) {
+        var fetch_langs = this.rpc("/base/session/get_lang_list", {}, function(result) {
             if (!result.error) {
                 self.lang_list = result.lang_list;
-                self.do_db_create();
             } else {
                 $('<div>').dialog({
                     modal: true,
@@ -702,6 +700,7 @@ openerp.base.Database = openerp.base.Controller.extend({
                }).html(result.error);
             }
         });
+        $.when(fetch_db, fetch_langs).then(function () {self.do_db_create();});
         
         this.$element.find('#db-create').click(this.do_db_create);
         this.$element.find('#db-drop').click(this.do_db_drop);
