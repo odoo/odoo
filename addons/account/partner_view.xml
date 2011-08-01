@@ -97,7 +97,7 @@
                         <form string="Bank account">
                             <field name="state"/>
                             <newline/>
-                            <field name="acc_number" attrs="{'invisible':[('state','=','iban',)]}"/>
+                            <field name="acc_number" attrs="{'invisible':[('state','in',('iban',False))]}"/>
                             <newline/>
                             <field name="bank"/>
                             <newline/>

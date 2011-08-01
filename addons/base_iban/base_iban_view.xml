@@ -37,7 +37,7 @@
             <field name="arch" type="xml">
                 <field name="acc_number" position="after">
                     <newline/>
-                    <field name="iban" attrs="{'invisible':[('state','=','bank')]}"/>
+                    <field name="iban" attrs="{'invisible':[('state','in',('bank',False))]}"/>
                     <newline/>
                 </field>
             </field>
