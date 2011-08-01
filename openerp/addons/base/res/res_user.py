@@ -810,6 +810,9 @@ class users_view(osv.osv):
                     sel_name = name_selection_groups(ids)
                     selection = [(g.id, name) for name, g in groups]
                     fields[app_name] = {'type': 'boolean', 'string': app}
+                    tips = [name + ': ' + (g.comment or '') for name, g in groups]
+                    if tips:
+                        fields[app_name].update(help='\n'.join(tips))
                     fields[sel_name] = {'type': 'selection', 'string': 'Group', 'selection': selection}
                     elems.append("""
                         <field name="%(app)s"/>
@@ -825,6 +828,8 @@ class users_view(osv.osv):
                     for gname, g in groups:
                         name = name_boolean_group(g.id)
                         fields[name] = {'type': 'boolean', 'string': gname}
+                        if g.comment:
+                            fields[name].update(help=g.comment)
                         elems.append('<field name="%s"/>' % name)
                     elems.append('<newline/>')
                 # replace xml node by new arch
