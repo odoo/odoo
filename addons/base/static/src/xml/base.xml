@@ -149,7 +149,9 @@
     </form>
 </t>
 <t t-name="BackupDB">
-    <form name="backup_db_form" method="POST">
+    <form name="backup_db_form" method="POST" target="backup-target"
+          action="/base/database/backup_db">
+        <input type="hidden" name="token"/>
         <table width="100%">
             <tr>
                 <td class="option_string">

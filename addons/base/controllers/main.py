@@ -191,18 +191,16 @@ class Database(openerpweb.Controller):
                 return {'error': e.faultCode, 'title': 'Drop Database'}
         return {'error': 'Could not drop database !', 'title': 'Drop Database'}
 
-    @openerpweb.jsonrequest
-    def backup_db(self, req, fields):
-        password, db = operator.itemgetter(
-            'backup_pwd', 'backup_db')(
-                dict(map(operator.itemgetter('name', 'value'), fields)))
-
+    @openerpweb.httprequest
+    def backup_db(self, req, backup_db, backup_pwd, token):
         try:
-            res = req.session.proxy("db").dump(password, db)
-            if res:
-                cherrypy.response.headers['Content-Type'] = "application/data"
-                cherrypy.response.headers['Content-Disposition'] = 'filename="' + db + '.dump"'
-                return base64.decodestring(res)
+            db_dump = base64.decodestring(
+                req.session.proxy("db").dump(backup_pwd, backup_db))
+            cherrypy.response.headers['Content-Type'] = "application/octet-stream; charset=binary"
+            cherrypy.response.headers['Content-Disposition'] = 'attachment; filename="' + backup_db + '.dump"'
+            cherrypy.response.cookie['fileToken'] = token
+            cherrypy.response.cookie['fileToken']['path'] = '/'
+            return db_dump
         except xmlrpclib.Fault, e:
             if e.faultCode and e.faultCode.split(':')[0] == 'AccessDenied':
                 return {'error': e.faultCode, 'title': 'Backup Database'}

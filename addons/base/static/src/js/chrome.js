@@ -787,30 +787,51 @@ openerp.base.Database = openerp.base.Controller.extend({
             }
         });
     },
-    
+
+    wait_for_file: function (token, cleanup) {
+        var cookie_name = 'fileToken',
+            cookie_length = cookie_name.length;
+        var timer = setInterval(function () {
+            var cookies = document.cookie.split(';');
+            for(var i=0; i<cookies.length; ++i) {
+                var cookie = cookies[i].replace(/^\s*/, '');
+                if(!cookie.indexOf(cookie_name) === 0) { continue; }
+                var cookie_val = cookie.substring(cookie_length + 1);
+                if(parseInt(cookie_val, 10) !== token) { continue; }
+
+                // clear waiter
+                clearInterval(timer);
+                // clear cookie
+                document.cookie = _.sprintf("%s=;expires=%s;path=/",
+                    cookie_name, new Date().toGMTString());
+
+                if (cleanup) { cleanup(); }
+            }
+        }, 100);
+    },
     do_db_backup: function() {
         var self = this;
        	self.$option_id.html(QWeb.render("BackupDB", self));
 
         self.$option_id.find("form[name=backup_db_form]").validate({
             submitHandler: function (form) {
-                var fields = $(form).serializeArray();
+                // need to detect when the file is done downloading (not used
+                // yet, but we'll need it to fix the UI e.g. with a throbber
+                // while dump is being generated), iframe load event only fires
+                // when the iframe content loads, so we need to go smarter:
+                // http://geekswithblogs.net/GruffCode/archive/2010/10/28/detecting-the-file-download-dialog-in-the-browser.aspx
+                var $target = $('#backup-target'),
+                      token = new Date().getTime();
+                if (!$target.length) {
+                    $target = $('<iframe id="backup-target" style="display: none;">')
+                        .appendTo(document.body);
+                }
+                $(form).find('input[name=token]').val(token);
+                form.submit();
 
-                self.rpc("/base/database/backup_db", {'fields': fields}, function(result) {
-                    if (!result.error) {
-                        self.notification.notify("Backup Database", "Backup has been created for the database");
-                    } else {
-                        $('<div>').dialog({
-                            modal: true,
-                            title: result.title,
-                            buttons: {
-                                Ok: function() {
-                                    $(this).dialog("close");
-                                }
-                            }
-                        }).html(result.error);
-                    }
-                });
+                // TODO: implement cleanup function when request-in-flight UI added
+                var cleanup = null;
+                self.wait_for_file(token, cleanup);
             }
         });
     },
