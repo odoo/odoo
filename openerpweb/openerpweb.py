@@ -374,7 +374,10 @@ class HttpRequest(object):
             akw = dict([(key, kw[key] if isinstance(kw[key], basestring) else type(kw[key])) for key in kw.keys()])
             print "POST --> %s.%s %s %r" % (controller.__class__.__name__, f.__name__, request, akw)
         r = f(controller, self, **kw)
-        print "<--", r
+        if isinstance(r, str):
+            print "<--", len(r), 'bytes'
+        else:
+            print "<--", len(r), 'characters'
         print
         return r
 
