@@ -2638,17 +2638,14 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         "purchase_tax": fields.many2one("account.tax.template", "Default Purchase Tax"),
         'sale_tax_rate': fields.float('Sale Tax(%)'),
         'purchase_tax_rate': fields.float('Purchase Tax(%)'),
-        'tracking': fields.boolean('Tracking'),
+        'complete_tax': fields.boolean('Complete Tax'),
     }
     def onchange_chart_template_id(self, cr, uid, ids, chart_template_id=False, context=None):
         res = {}
-        res['value'] = {}
-        res['value']["tracking"] = False
-        res['value']["sale_tax"] = False
-        res['value']["purchase_tax"] = False
+        res['value'] = {'complete_tax': False, 'sale_tax': False, 'purchase_tax': False}
         for template in self.pool.get('account.chart.template').browse(cr, uid, [chart_template_id], context=context):
             if template.set_tax_complete:
-                res['value']["tracking"] = True
+                res['value']["complete_tax"] = True
         if chart_template_id:
             # default tax is given by the lowesst sequence. For same sequence we will take the latest created as it will be the case for tax created while isntalling the generic chart of account
             sale_tax_ids = self.pool.get('account.tax.template').search(cr, uid, [("chart_template_id"
