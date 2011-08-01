@@ -153,13 +153,12 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
 
     processed_modules = []
     loaded_modules = []
-    statusi = 0
     pool = pooler.get_pool(cr.dbname)
     migrations = openerp.modules.migration.MigrationManager(cr, graph)
     logger.notifyChannel('init', netsvc.LOG_DEBUG, 'loading %d packages..' % len(graph))
 
     # register, instantiate and initialize models for each modules
-    for package in graph:
+    for index, package in enumerate(graph):
         module_name = package.name
         module_id = package.id
 
@@ -174,7 +173,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
         if hasattr(package, 'init') or hasattr(package, 'update') or package.state in ('to install', 'to upgrade'):
             init_module_models(cr, package.name, models)
 
-        status['progress'] = float(statusi) / len(graph)
+        status['progress'] = float(index) / len(graph)
 
         # Can't put this line out of the loop: ir.module.module will be
         # registered by init_module_models() above.
@@ -197,7 +196,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
             load_update_xml(cr, module_name, idref, mode)
             load_data(cr, module_name, idref, mode)
             if hasattr(package, 'demo') or (package.dbdemo and package.state != 'installed'):
-                status['progress'] = (float(statusi)+0.75) / len(graph)
+                status['progress'] = (index + 0.75) / len(graph)
                 load_demo_xml(cr, module_name, idref, mode)
                 load_demo(cr, module_name, idref, mode)
                 cr.execute('update ir_module_module set demo=%s where id=%s', (True, module_id))
@@ -224,7 +223,6 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
                     delattr(package, kind)
 
         cr.commit()
-        statusi += 1
 
     cr.commit()
 
