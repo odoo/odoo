@@ -20,13 +20,17 @@
 ##############################################################################
 
 import base64
+import locale
+import logging
 import os
+import platform
 import security
+import sys
 import thread
 import threading
 import time
-import sys
-import platform
+import traceback
+from cStringIO import StringIO
 from openerp.tools.translate import _
 import openerp.netsvc as netsvc
 import openerp.pooler as pooler
@@ -34,9 +38,6 @@ import openerp.release as release
 import openerp.sql_db as sql_db
 import openerp.tools as tools
 import openerp.modules
-import locale
-import logging
-from cStringIO import StringIO
 
 #.apidoc title: Exported Service methods
 #.apidoc module-mods: member-order: bysource
@@ -109,22 +110,13 @@ class db(netsvc.ExportService):
             cr.execute('SELECT login, password, name ' \
                        '  FROM res_users ' \
                        ' ORDER BY login')
-            serv.actions[id].update(
-                users=cr.dictfetchall(),
-                clean=True)
+            serv.actions[id].update(users=cr.dictfetchall(), clean=True)
             cr.commit()
             cr.close()
         except Exception, e:
-            serv.actions[id].update(
-                clean=False,
-                exception=e)
-            import traceback
-            e_str = StringIO()
-            traceback.print_exc(file=e_str)
-            traceback_str = e_str.getvalue()
-            e_str.close()
-            netsvc.Logger().notifyChannel('web-services', netsvc.LOG_ERROR, 'CREATE DATABASE\n%s' % (traceback_str))
-            serv.actions[id]['traceback'] = traceback_str
+            serv.actions[id].update(clean=False, exception=e)
+            logging.getLogger('db.create').exception('CREATE DATABASE failed:')
+            serv.actions[id]['traceback'] = traceback.format_exc()
             if cr:
                 cr.close()
 
@@ -138,8 +130,7 @@ class db(netsvc.ExportService):
 
         self._create_empty_database(db_name)
 
-        logger = netsvc.Logger()
-        logger.notifyChannel("web-services", netsvc.LOG_INFO, 'CREATE DATABASE: %s' % (db_name.lower()))
+        logging.getLogger('db.create').info('CREATE DATABASE %s', db_name.lower())
         create_thread = threading.Thread(target=self._initialize_db,
                 args=(self, id, db_name, demo, lang, user_password))
         create_thread.start()
