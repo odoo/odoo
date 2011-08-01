@@ -24,36 +24,34 @@
 
 """
 
-import os, sys, imp
-from os.path import join as opj
+import base64
+import imp
 import itertools
+import logging
+import os
+import re
+import sys
+import zipfile
 import zipimport
 
-import openerp
-
-import openerp.osv as osv
-import openerp.tools as tools
-import openerp.tools.osutil as osutil
-from openerp.tools.safe_eval import safe_eval as eval
-import openerp.pooler as pooler
-from openerp.tools.translate import _
-
-import openerp.netsvc as netsvc
-
-import zipfile
-import openerp.release as release
-
-import re
-import base64
-from zipfile import PyZipFile, ZIP_DEFLATED
 from cStringIO import StringIO
+from os.path import join as opj
+from zipfile import PyZipFile, ZIP_DEFLATED
 
-import logging
 
+import openerp
 import openerp.modules.db
 import openerp.modules.graph
 import openerp.modules.migration
+import openerp.netsvc as netsvc
+import openerp.osv as osv
+import openerp.pooler as pooler
+import openerp.release as release
+import openerp.tools as tools
+import openerp.tools.osutil as osutil
 
+from openerp.tools.safe_eval import safe_eval as eval
+from openerp.tools.translate import _
 from openerp.modules.module import \
     get_modules, get_modules_with_version, \
     load_information_from_description_file, \
@@ -89,22 +87,13 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
             if new_query:
                 cr.execute(new_query)
 
-    def load_init_xml(cr, module_name, idref, mode):
-        _load_data(cr, module_name, idref, mode, 'init_xml')
+    load_init_xml = lambda *args: _load_data(cr, *args, kind='init_xml')
+    load_update_xml = lambda *args: _load_data(cr, *args, kind='update_xml')
+    load_demo_xml = lambda *args: _load_data(cr, *args, kind='demo_xml')
+    load_data = lambda *args: _load_data(cr, *args, kind='data')
+    load_demo = lambda *args: _load_data(cr, *args, kind='demo')
 
-    def load_update_xml(cr, module_name, idref, mode):
-        _load_data(cr, module_name, idref, mode, 'update_xml')
-
-    def load_demo_xml(cr, module_name, idref, mode):
-        _load_data(cr, module_name, idref, mode, 'demo_xml')
-
-    def load_data(cr, module_name, idref, mode):
-        _load_data(cr, module_name, idref, mode, 'data')
-
-    def load_demo(cr, module_name, idref, mode):
-        _load_data(cr, module_name, idref, mode, 'demo')
-
-    def load_test(cr, module_name, idref, mode):
+    def load_test(module_name, idref, mode):
         cr.commit()
         if not tools.config.options['test_disable']:
             try:
@@ -193,20 +182,20 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
             if package.state=='to upgrade':
                 # upgrading the module information
                 modobj.write(cr, 1, [module_id], modobj.get_values_from_terp(package.data))
-            load_init_xml(cr, module_name, idref, mode)
-            load_update_xml(cr, module_name, idref, mode)
-            load_data(cr, module_name, idref, mode)
+            load_init_xml(module_name, idref, mode)
+            load_update_xml(module_name, idref, mode)
+            load_data(module_name, idref, mode)
             if hasattr(package, 'demo') or (package.dbdemo and package.state != 'installed'):
                 status['progress'] = (index + 0.75) / len(graph)
-                load_demo_xml(cr, module_name, idref, mode)
-                load_demo(cr, module_name, idref, mode)
+                load_demo_xml(module_name, idref, mode)
+                load_demo(module_name, idref, mode)
                 cr.execute('update ir_module_module set demo=%s where id=%s', (True, module_id))
 
                 # launch tests only in demo mode, as most tests will depend
                 # on demo data. Other tests can be added into the regular
                 # 'data' section, but should probably not alter the data,
                 # as there is no rollback.
-                load_test(cr, module_name, idref, mode)
+                load_test(module_name, idref, mode)
 
             processed_modules.append(package.name)
 
