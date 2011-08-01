@@ -661,22 +661,22 @@ class groups_view(osv.osv):
 
     def get_classified(self, cr, uid, context=None):
         """ classify all groups by prefix; return a pair (apps, others) where
-            - apps is a list like [("App", [(id, "Name"), ...]), ...],
-            - others is a dictionary like {'Class': [(id, "Name"), ...], ...}
-            - the key None is used in groups for groups not like App/Name
+            - both are lists like [("App", [("Name", browse_group), ...]), ...];
+            - apps is sorted in menu order;
+            - others are sorted in alphabetic order;
+            - groups not like App/Name are at the end of others, under _('Others')
         """
-        # get the relation to order groups
-        order_relation = self.get_trans_implied(cr, uid, context)
-        order = lambda x, y: (x[0] in order_relation[y[0]] and -1 or 1)
+        # sort groups by implication, with implied groups first
+        trans_implied = self.get_trans_implied(cr, uid, context)
+        groups = self.browse(cr, uid, self.search(cr, uid, []), context)
+        groups.sort(key=lambda g: set([g.id]) | trans_implied[g.id])
         
         # classify groups depending on their names
         classified = {}
-        for g in self.browse(cr, uid, self.search(cr, uid, []), context):
-            names = [s.strip() for s in g.name.split('/', 1)]
-            if len(names) > 1:
-                classified.setdefault(names[0], []).append((g.id, names[1]))
-            else:
-                classified.setdefault(None, []).append((g.id, names[0]))
+        for g in groups:
+            # split() returns 1 or 2 elements, so names[-2] is prefix or None
+            names = [None] + [s.strip() for s in g.name.split('/', 1)]
+            classified.setdefault(names[-2], []).append((names[-1], g))
         
         # determine the apps (that correspond to root menus, in order)
         menu_obj = self.pool.get('ir.ui.menu')
@@ -684,16 +684,17 @@ class groups_view(osv.osv):
         apps = []
         for m in menu_obj.browse(cr, uid, menu_ids, context):
             if m.name in classified:
-                # sort application groups by implication
-                groups = classified.pop(m.name)
-                groups.sort(order)
-                apps.append((m.name, groups))
+                # application groups are already sorted by implication
+                apps.append((m.name, classified.pop(m.name)))
         
-        # sort remaining groups alphabetically in their class
-        for groups in classified.itervalues():
-            groups.sort(key=lambda pair: pair[1])
+        # other groups
+        others = sorted(classified.items(), key=lambda pair: pair[0])
+        if others and others[0][0] is None:
+            others.append((_('Others'), others.pop(0)[1]))
+        for sec, groups in others:
+            groups.sort(key=lambda pair: pair[0])
         
-        return (apps, classified)
+        return (apps, others)
 
 groups_view()
 
@@ -803,10 +804,11 @@ class users_view(osv.osv):
                 # create section Applications
                 elems.append('<separator colspan="6" string="%s"/>' % _('Applications'))
                 elems.append('<group colspan="6">')
-                for app, selection in apps:
-                    ids = [id for id, name in selection]
+                for app, groups in apps:
+                    ids = [g.id for name, g in groups]
                     app_name = name_boolean_groups(ids)
                     sel_name = name_selection_groups(ids)
+                    selection = [(g.id, name) for name, g in groups]
                     fields[app_name] = {'type': 'boolean', 'string': app}
                     fields[sel_name] = {'type': 'selection', 'string': 'Group', 'selection': selection}
                     elems.append("""
@@ -818,14 +820,10 @@ class users_view(osv.osv):
                         """ % {'app': app_name, 'sel': sel_name})
                 elems.append('</group>')
                 # create other sections
-                sections = sorted(others.items(), key=lambda pair: pair[0])
-                if sections and sections[0][0] is None:
-                    sec, selection = sections.pop(0)
-                    sections.append((_('Others'), selection))
-                for sec, selection in sections:
+                for sec, groups in others:
                     elems.append('<separator colspan="6" string="%s"/>' % sec)
-                    for id, gname in selection:
-                        name = name_boolean_group(id)
+                    for gname, g in groups:
+                        name = name_boolean_group(g.id)
                         fields[name] = {'type': 'boolean', 'string': gname}
                         elems.append('<field name="%s"/>' % name)
                     elems.append('<newline/>')
