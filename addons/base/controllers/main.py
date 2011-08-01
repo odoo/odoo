@@ -226,7 +226,7 @@ class Database(openerpweb.Controller):
     @openerpweb.jsonrequest
     def change_password_db(self, req, fields):
         old_password, new_password = operator.itemgetter(
-            'old_pwd', 'value')(
+            'old_pwd', 'new_pwd')(
                 dict(map(operator.itemgetter('name', 'value'), fields)))
         try:
             return req.session.proxy("db").change_admin_password(old_password, new_password)
