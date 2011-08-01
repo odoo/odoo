@@ -2642,19 +2642,16 @@ class wizard_multi_charts_accounts(osv.osv_memory):
     }
     def onchange_chart_template_id(self, cr, uid, ids, chart_template_id=False, context=None):
         res = {}
+        tax_templ_obj = self.pool.get('account.tax.template')
         res['value'] = {'complete_tax': False, 'sale_tax': False, 'purchase_tax': False}
-        for template in self.pool.get('account.chart.template').browse(cr, uid, [chart_template_id], context=context):
-            if template.set_tax_complete:
-                res['value']["complete_tax"] = True
         if chart_template_id:
+            complete_tax = self.pool.get('account.chart.template').browse(cr, uid, chart_template_id, context=context).set_tax_complete
             # default tax is given by the lowesst sequence. For same sequence we will take the latest created as it will be the case for tax created while isntalling the generic chart of account
-            sale_tax_ids = self.pool.get('account.tax.template').search(cr, uid, [("chart_template_id"
+            sale_tax_ids = tax_templ_obj.search(cr, uid, [("chart_template_id"
                                           , "=", chart_template_id), ('type_tax_use', 'in', ('sale','all'))], order="sequence, id desc")
-            purchase_tax_ids = self.pool.get('account.tax.template').search(cr, uid, [("chart_template_id"
+            purchase_tax_ids = tax_templ_obj.search(cr, uid, [("chart_template_id"
                                           , "=", chart_template_id), ('type_tax_use', 'in', ('purchase','all'))], order="sequence, id desc")
-
-            res['value']["sale_tax"] = sale_tax_ids and sale_tax_ids[0] or False
-            res['value']["purchase_tax"] = purchase_tax_ids and purchase_tax_ids[0] or False
+            res['value'] = {'complete_tax': complete_tax, 'sale_tax': sale_tax_ids and sale_tax_ids[0] or False, 'purchase_tax': purchase_tax_ids and purchase_tax_ids[0] or False}
         return res
 
 
