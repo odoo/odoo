@@ -1,0 +1,90 @@
+<!--conf
+<sample>
+              <product version="2.6" edition="std"/>
+                     <modifications>
+                            <modified date="100609"/>
+                     </modifications>
+               </sample>
+ -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+	<title>Scales</title>
+	<script src="../../codebase/dhtmlxchart.js" type="text/javascript"></script>
+	<link rel="STYLESHEET" type="text/css" href="../../codebase/dhtmlxchart.css">
+	<style>
+	.dhx_axis_item_x{
+		font-size: 10px
+	}
+	.dhx_axis_item_y{
+		font-size: 10px
+	}
+	</style>
+	<script>
+	var data = [
+		{ sales:3.0, sales1:2.8, sales2:3.4, year:"2000" },
+		{ sales:3.8, sales1:2.5, sales2:2.0, year:"2001" },
+		{ sales:3.4, sales1:1.7, sales2:3.1, year:"2002" },
+		{ sales:4.1, sales1:2.7, sales2:3.5, year:"2003" },
+		{ sales:4.3, sales1:3.6, sales2:4.0, year:"2004" },
+		{ sales:7.6, sales1:3.1, sales2:4.9, year:"2005" },
+		{ sales:7.8, sales1:3.9, sales2:5.2, year:"2006" },
+		{ sales:7.2, sales1:3.6, sales2:5.6, year:"2007" },
+		{ sales:5.3, sales1:2.9, sales2:4.1, year:"2008" },
+		{ sales:4.8, sales1:2.1, sales2:3.9, year:"2009" }
+	];
+	
+	window.onload = function(){
+	var chart1 =  new dhtmlXChart({
+		view:"area",
+		container:"chart",
+	    value:"#sales#",
+		color:"#00ccff",
+		alpha:0.6,
+		padding:{
+			left:30
+		},
+		yAxis:{
+			start:0,
+			step:1,
+			end:8
+		},
+		xAxis:{
+			lines:true,
+			title:"sales per year",
+			template:"#year#"
+		},
+		legend:{
+				layout:"x",
+				width: 75,
+				align:"center",
+				valign:"top",
+				marker:{
+					type:"round",
+					width:15
+				},
+				values:[
+					{text:"company A",color:"#00ccff"},
+					{text:"company B",color:"#0000ff"},
+					{text:"company C",color:"#cc33ff"}
+				]
+			}
+	})
+	chart1.addSeries({
+		value:"#sales1#",
+		color:"#0000ff"
+	})
+	chart1.addSeries({
+		value:"#sales2#",
+		color:"#cc33ff"
+	})
+	chart1.parse(data,"json");
+	
+	}
+	</script>
+</head>
+<body >
+	<div id="chart" style="width:470px;height:300px;border:1px solid #A4BED4;"></div></td>
+			
+</body>
+</html>

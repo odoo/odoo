@@ -5,11 +5,10 @@
 openerp.base_calendar = function(openerp) {
 QWeb.add_template('/base_calendar/static/src/xml/base_calendar.xml');
 openerp.base.views.add('calendar', 'openerp.base_calendar.CalendarView');
-openerp.base_calendar.CalendarView = openerp.base.Controller.extend({
+openerp.base_calendar.CalendarView = openerp.base.View.extend({
 // Dhtmlx scheduler ?
-	init: function(view_manager, session, element_id, dataset, view_id){
-		this._super(session, element_id);
-		this.view_manager = view_manager;
+    init: function(parent, element_id, dataset, view_id) {
+        this._super(parent, element_id);
         this.dataset = dataset;
         this.model = dataset.model;
         this.view_id = view_id;
@@ -271,7 +270,6 @@ openerp.base_calendar.CalendarView = openerp.base.Controller.extend({
 			});
 		}
 	},
-    
     do_search: function(domains, contexts, groupbys) {
         var self = this;
         this.rpc('/base/session/eval_domain_and_context', {
@@ -287,7 +285,6 @@ openerp.base_calendar.CalendarView = openerp.base.Controller.extend({
             });
         });
     },
-	
 	do_show: function () {
         this.$element.show();
     },
@@ -340,12 +337,13 @@ openerp.base_calendar.CalendarView = openerp.base.Controller.extend({
             		}
             	}
         });
-        var action_manager = new openerp.base.ActionManager(this.session, element_id);
-        action_manager.start();
-        action_manager.do_action(action);
+        //var action_manager = new openerp.base.ActionManager(this.session, element_id);
+        //action_manager.start();
+        //action_manager.do_action(action);
+        this.do_action(action);
         
         //Default_get
-        if(!event_id) action_manager.viewmanager.dataset.index = null;
+        if(!event_id) this.dataset.index = null;
     }
 });
 

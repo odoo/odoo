@@ -7,6 +7,8 @@ can't be sent there themselves).
 import binascii
 import hashlib
 import simplejson.encoder
+import time
+import datetime
 
 __all__ = ['Domain', 'Context', 'NonLiteralEncoder, non_literal_decoder', 'CompoundDomain', 'CompoundContext']
 
@@ -170,17 +172,16 @@ class Context(BaseContext):
         ctx = self.session.evaluation_context(context)
         if self.own:
             ctx.update(self.own)
-        return eval(self.get_context_string(),
-                    SuperDict(ctx))
-        
-def SuperDict(dict):
+        return eval(self.get_context_string(), SuperDict(ctx))
+
+class SuperDict(dict):
     def __getattr__(self, name):
         try:
             return self[name]
         except KeyError:
             raise AttributeError(name)
     def __getitem__(self, key):
-        tmp = super(dict, self)[key]
+        tmp = super(SuperDict, self).__getitem__(key)
         if isinstance(tmp, dict):
             return SuperDict(tmp)
         return tmp
@@ -206,8 +207,7 @@ class CompoundDomain(BaseDomain):
             
             ctx = dict(context or {})
             ctx.update(self.get_eval_context() or {})
-            ctx['context'] = ctx
-            
+
             domain.session = self.session
             final_domain.extend(domain.evaluate(ctx))
         return final_domain
@@ -245,8 +245,7 @@ class CompoundContext(BaseContext):
                 continue
             
             ctx.update(final_context)
-            ctx["context"] = ctx
-            
+
             context_to_eval.session = self.session
             final_context.update(context_to_eval.evaluate(ctx))
         return final_context

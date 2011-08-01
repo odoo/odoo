@@ -103,80 +103,106 @@ openerp.base.list.editable = function (openerp) {
          * Checks if a record is being edited, and if so cancels it
          */
         cancel_pending_edition: function () {
+            var self = this, cancelled = $.Deferred();
             if (!this.edition) {
-                return;
+                cancelled.resolve();
+                return cancelled.promise();
             }
 
             if (this.edition_index !== null) {
-                this.reload_record(this.edition_index);
+                this.reload_record(this.edition_index, true).then(function () {
+                    cancelled.resolve();
+                });
+            } else {
+                cancelled.resolve();
             }
-            this.edition_form.stop();
-            this.edition_form.$element.remove();
-            delete this.edition_form;
-            delete this.edition_index;
-            delete this.edition;
+            cancelled.then(function () {
+                self.edition_form.stop();
+                self.edition_form.$element.remove();
+                delete self.edition_form;
+                delete self.edition_index;
+                delete self.edition;
+            });
+            return cancelled.promise();
+        },
+        /**
+         * Adapts this list's view description to be suitable to the inner form view of a row being edited.
+         *
+         * @returns {Object} fields_view_get's view section suitable for putting into form view of editable rows.
+         */
+        get_form_fields_view: function () {
+            // deep copy of view
+            var view = $.extend(true, {}, this.group.view.fields_view);
+            _(view.arch.children).each(function (widget) {
+                widget.attrs.nolabel = true;
+                if (widget.tag === 'button') {
+                    delete widget.attrs.string;
+                }
+            });
+            view.arch.attrs.col = 2 * view.arch.children.length;
+            return view;
         },
         render_row_as_form: function (row) {
-            this.cancel_pending_edition();
-
             var self = this;
-            var $new_row = $('<tr>', {
-                    id: _.uniqueId('oe-editable-row-'),
-                    'class': $(row).attr('class'),
-                    click: function (e) {e.stopPropagation();}
-                })
-                .delegate('button.oe-edit-row-save', 'click', function () {
-                    self.save_row();
-                })
-                .delegate('button.oe-edit-row-cancel', 'click', function () {
-                    self.cancel_edition();
-                })
-                .delegate('button', 'keyup', function (e) {
-                    e.stopImmediatePropagation();
-                })
-                .keyup(function (e) {
-                    switch (e.which) {
-                        case KEY_RETURN:
-                            self.save_row(true);
-                            break;
-                        case KEY_ESCAPE:
-                            self.cancel_edition();
-                            break;
-                        default:
-                            return;
-                    }
+            this.cancel_pending_edition().then(function () {
+                var $new_row = $('<tr>', {
+                        id: _.uniqueId('oe-editable-row-'),
+                        'class': $(row).attr('class'),
+                        click: function (e) {e.stopPropagation();}
+                    })
+                    .delegate('button.oe-edit-row-save', 'click', function () {
+                        self.save_row();
+                    })
+                    .delegate('button.oe-edit-row-cancel', 'click', function () {
+                        self.cancel_edition();
+                    })
+                    .delegate('button', 'keyup', function (e) {
+                        e.stopImmediatePropagation();
+                    })
+                    .keyup(function (e) {
+                        switch (e.which) {
+                            case KEY_RETURN:
+                                self.save_row(true);
+                                break;
+                            case KEY_ESCAPE:
+                                self.cancel_edition();
+                                break;
+                            default:
+                                return;
+                        }
+                    });
+                if (row) {
+                    $new_row.replaceAll(row);
+                } else if (self.options.editable === 'top') {
+                    self.$current.prepend($new_row);
+                } else if (self.options.editable) {
+                    self.$current.append($new_row);
+                }
+                self.edition = true;
+                self.edition_index = self.dataset.index;
+                self.edition_form = _.extend(new openerp.base.FormView(
+                        null, self.group.view.session, $new_row.attr('id'),
+                        self.dataset, false), {
+                    template: 'ListView.row.form',
+                    registry: openerp.base.list.form.widgets
                 });
-            if (row) {
-                $new_row.replaceAll(row);
-            } else if (this.options.editable === 'top') {
-                this.$current.prepend($new_row);
-            } else if (this.options.editable) {
-                this.$current.append($new_row);
-            }
-            this.edition = true;
-            this.edition_index = this.dataset.index;
-            this.edition_form = _.extend(new openerp.base.FormView(
-                    null, this.group.view.session, $new_row.attr('id'),
-                    this.dataset, false), {
-                template: 'ListView.row.form',
-                registry: openerp.base.list.form.widgets
-            });
-            $.when(this.edition_form.on_loaded({fields_view: this.get_fields_view()})).then(function () {
-                // put in $.when just in case  FormView.on_loaded becomes asynchronous
-                $new_row.find('td')
-                      .addClass('oe-field-cell')
-                      .removeAttr('width')
-                  .end()
-                  .find('td:first').removeClass('oe-field-cell').end()
-                  .find('td:last').removeClass('oe-field-cell').end();
-                // pad in case of groupby
-                _(self.columns).each(function (column) {
-                    if (column.meta) {
-                        $new_row.prepend('<td>');
-                    }
-                });
+                $.when(self.edition_form.on_loaded({fields_view: self.get_form_fields_view()})).then(function () {
+                    // put in $.when just in case  FormView.on_loaded becomes asynchronous
+                    $new_row.find('td')
+                          .addClass('oe-field-cell')
+                          .removeAttr('width')
+                      .end()
+                      .find('td:first').removeClass('oe-field-cell').end()
+                      .find('td:last').removeClass('oe-field-cell').end();
+                    // pad in case of groupby
+                    _(self.columns).each(function (column) {
+                        if (column.meta) {
+                            $new_row.prepend('<td>');
+                        }
+                    });
 
-                self.edition_form.do_show();
+                    self.edition_form.do_show();
+                });
             });
         },
         /**
@@ -188,12 +214,7 @@ openerp.base.list.editable = function (openerp) {
         save_row: function (edit_next) {
             var self = this;
             this.edition_form.do_save(function (result) {
-                self.reload_record(self.dataset.index, true).then(function () {
-                    self.edition_form.stop();
-                    delete self.edition_form;
-                    delete self.edition_index;
-                    delete self.edition;
-
+                self.cancel_pending_edition().then(function () {
                     $(self).trigger('saved', [self.dataset]);
                     if (!edit_next) {
                         return;
@@ -230,7 +251,12 @@ openerp.base.list.editable = function (openerp) {
             this.render_row_as_form();
         }
     });
-    openerp.base.list = {form: {}};
+    if (!openerp.base.list) {
+        openerp.base.list = {};
+    }
+    if (!openerp.base.list.form) {
+        openerp.base.list.form = {};
+    }
     openerp.base.list.form.WidgetFrame = openerp.base.form.WidgetFrame.extend({
         template: 'ListView.row.frame'
     });
@@ -251,10 +277,12 @@ openerp.base.list.editable = function (openerp) {
         openerp.base.list.form[key] = (form_widgets.get_object(key)).extend({
             update_dom: function () {
                 this.$element.children().css('visibility', '');
-                if (this.invisible && this.node.attrs.invisible !== '1') {
+                if (this.invisible) {
                     this.$element.children().css('visibility', 'hidden');
                 } else {
+                    this.invisible = !!this.modifiers.tree_invisible;
                     this._super();
+                    this.invisible = false;
                 }
             }
         });

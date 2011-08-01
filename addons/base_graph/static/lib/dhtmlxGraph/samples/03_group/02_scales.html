@@ -1,0 +1,126 @@
+<!--conf
+<sample>
+              <product version="2.6" edition="std"/>
+                     <modifications>
+                            <modified date="100609"/>
+                     </modifications>
+               </sample>
+ -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+	<title>Scales and grouping</title>
+	
+	<script src="../../codebase/dhtmlxchart.js" type="text/javascript"></script>
+	<link rel="STYLESHEET" type="text/css" href="../../codebase/dhtmlxchart.css">
+	
+	<style>
+		.dhx_chart_title{
+			padding-left:3px
+		}
+	</style>
+	<script>
+	var barChart;
+	window.onload = function(){
+		 barChart =  new dhtmlXChart({
+			view:"bar",
+			container:"chart_container",
+	    	value:"#sales#",
+			color:"#b3e025",
+			gradient:true,
+			border:false,
+			width:70,
+			yAxis:{},
+			xAxis:{
+				template:"#id#",
+				title:"Sales per year (all companies)"
+			},
+			label:"#sales#",
+			sort:{
+				by:"#id#",
+				as:"string",
+				dir:"asc"
+			},
+			group:{
+				by:"#year#",
+				map:{
+					sales:["#sales#","sum"]
+				}
+			}
+		})
+		barChart.load("../common/stat.xml");
+	}
+
+	function  groupA(){
+		barChart.define("xAxis",{
+			template:"#id#",
+			title:"Total sales per companies"
+		});
+		barChart.define("yAxis",{});
+		barChart.group({
+			by:"#company#",
+			map:{
+				sales:["#sales#","sum"]
+			}
+		});
+		barChart.refresh();
+	}	
+	
+	function  groupB(){
+		barChart.define("xAxis",{
+			template:"#id#",
+			title:"Sales per year (all companies)"
+		});
+		barChart.define("yAxis",{});
+		barChart.group({
+			by:"#year#",
+			map:{
+				sales:["#sales#","sum"]
+			}
+		});
+	}	
+	
+	function  groupC(){
+		barChart.define("xAxis",{
+				template:"#id#",
+				title:"Maximum sales per year"
+		});
+		barChart.define("yAxis",{});
+		barChart.group({
+			by:"#year#",
+			map:{
+				sales:["#sales#","max"]
+			}
+		});
+	}
+	
+	function sort(direction){
+		
+		barChart.define("sort",{
+			by:"#sales#",
+			dir:direction,
+			as:"int"
+		});
+		barChart.render();
+	}
+	</script>
+</head>
+<body>
+	<p>To update configuration properties after grouping you need to cal define method with new settings.</p>
+	<div id="chart_container" style="width:600px;height:300px;border:1px solid #A4BED4;"></div>
+	<br/>
+	<input type="button" name="some_name" value="Group by" onclick="window['group'+document.getElementById('groupby').value]()">
+	<select name="groupby" id="groupby">
+		<option value="A">company</option>
+		<option value="B" SELECTED>year (total sales)</option>
+		<option value="C">year (max sales)</option>
+	</select>
+	<br/><br/>
+	<input type="button" name="some_name" value="Sort by sales" onclick="sort(document.getElementById('dir').value)">
+	<select name="dir" id="dir">
+		<option value="asc" selected>asc</option>
+		<option value="desc" >desc</option>
+	</select>
+	
+</body>
+</html>

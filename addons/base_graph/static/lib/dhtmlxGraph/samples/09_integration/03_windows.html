@@ -1,0 +1,77 @@
+<!--conf
+<sample>
+              <product version="2.6" edition="std"/>
+                     <modifications>
+                            <modified date="100609"/>
+                     </modifications>
+               </sample>
+ -->
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+<head>
+	<title>Integration with dhtmlxWindows</title>
+	
+	<link rel="stylesheet" type="text/css" href="../../../dhtmlxWindows/codebase/dhtmlxwindows.css">
+	<link rel="stylesheet" type="text/css" href="../../../dhtmlxWindows/codebase/skins/dhtmlxwindows_dhx_skyblue.css">
+	
+	<script src="../../../dhtmlxWindows/codebase/dhtmlxcommon.js"></script>
+	<script src="../../../dhtmlxWindows/codebase/dhtmlxwindows.js"></script>
+	<script src="../../../dhtmlxWindows/codebase/dhtmlxcontainer.js"></script>
+	
+	<script src="../../codebase/dhtmlxchart.js" type="text/javascript"></script>
+	<link rel="STYLESHEET" type="text/css" href="../../codebase/dhtmlxchart.css">
+	
+</head>
+<style type="text/css" media="screen">
+	html, body{
+		height:100%;
+		padding:0px;
+		margin:0px;
+	}
+</style>
+<body onload="doOnLoad();">
+
+<script>
+	var dhxWins
+	var data = [
+		{ sales:"3.0", year:"2000" },
+		{ sales:"3.8", year:"2001" },
+		{ sales:"3.4", year:"2002" },
+		{ sales:"4.1", year:"2003" },
+		{ sales:"4.3", year:"2004" },
+		{ sales:"9.9", year:"2005" },
+		{ sales:"7.4", year:"2006" },
+		{ sales:"9.0", year:"2007" },
+		{ sales:"7.3", year:"2008" },
+		{ sales:"4.8", year:"2009" }
+	];
+
+	
+	function doOnLoad() {
+		dhxWinsParams = {
+			image_path: "../../../dhtmlxWindows/codebase/imgs/",
+			wins: [ {id: "w1", left: 230, top: 230, width: 420, height: 340}]
+		};
+		dhxWins = new dhtmlXWindows(dhxWinsParams);
+		pieChart2 = dhxWins.window("w1").attachChart({
+			view:"pie",
+			value:"#sales#",
+			pieInnerText:"#sales#",
+			gradient:true,
+			details:{
+				width: 75,
+				align:"right",
+				valign:top,
+				marker:{
+					type:"round",
+					width:15
+				},
+				template:"#year#"
+			}
+		});
+		
+		pieChart2.parse(data,"json");
+	};
+</script>
+</body>
