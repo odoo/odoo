@@ -18,33 +18,33 @@ openerp.base_kanban.KanbanView = openerp.base.View.extend({
     },
     on_loaded: function(data) {
         var self = this;
-        var template_xml = '';
+        this.template_xml = '';
 
         _.each(data.fields_view.arch.children, function(child) {
             if (child.tag == "template"){
-                template_xml = openerp.base.json_node_to_xml(child, true)
+                self.template_xml = openerp.base.json_node_to_xml(child, true)
             }
         });
-
-        if(template_xml){
+        if(this.template_xml){
             self.dataset.read_slice([], 0, false, function (records) {
-                self.on_show_data(records, template_xml);
+                self.on_show_data([{'records': records, 'value':false}]);
 	        });
 	    }
     },
 
-    on_show_data: function(records, template_xml) {
+    on_show_data: function(datas) {
         var self = this;
         var new_qweb = new QWeb2.Engine();
-        new_qweb.add_template('<templates><t t-name="custom_template">' + template_xml + '</t></templates>')
-
-		self.$element.html(QWeb.render("KanbanBiew", {"records" :records}));
-        _.each(records, function(record) {
-            self.$element.find("#data_" + record.id).append(new_qweb.render('custom_template', record));
+        new_qweb.add_template('<templates><t t-name="custom_template">' + this.template_xml + '</t></templates>')
+		self.$element.html(QWeb.render("KanbanBiew", {"datas" :datas}));
+		_.each(datas, function(data) {
+	        _.each(data.records, function(record) {
+	            self.$element.find("#data_" + record.id).append(new_qweb.render('custom_template', record));
+	        });
         });
 
-		this.$element.find(".column").sortable({
-		    connectWith: ".column"
+		this.$element.find(".oe_column").sortable({
+		    connectWith: ".oe_column"
 		});
 		this.$element.find(".portlet").addClass("ui-widget ui-widget-content ui-helper-clearfix ui-corner-all")
 		    .find(".portlet-header")
@@ -58,14 +58,54 @@ openerp.base_kanban.KanbanView = openerp.base.View.extend({
 		    $(this).parents(".portlet:first").find(".portlet-content").toggle();
 		});
 		this.$element.find('.portlet .ui-icon-closethick').click(this.on_close_action);
-		this.$element.find(".column").disableSelection();
+		this.$element.find(".oe_column").disableSelection();
 		this.$element.find(".ui.item").css("background-color","#c3dAf9");
-
-		//self.$element.find( ".column" ).css("width",column_width);
+		self.$element.find( ".oe_column" ).css("width", 99 / datas.length +"%");
     },
 
     on_close_action: function(e) {
         $(e.currentTarget).parents('.portlet:first').remove();
+    },
+
+    do_search: function (domains, contexts, group_by) {
+        var self = this;
+        this.rpc('/base/session/eval_domain_and_context', {
+            domains: domains,
+            contexts: contexts,
+            group_by_seq: group_by
+        }, function (results) {
+            self.dataset.context = results.context;
+            self.dataset.domain = results.domain;
+            self.groups = new openerp.base.DataGroup(
+                self, self.model, results.domain, results.context, results.group_by);
+	        self.groups.list([],
+	            function (groups) {
+                    self.do_render_group(groups);
+	            },
+	            function (dataset) {
+                    self.dataset.read_slice(false, false, false, function(records) {
+                        self.on_show_data([{'records': records, 'value':false}]);
+                    });
+                });
+        });
+    },
+
+    do_render_group : function(datagroups){
+        this.columns = [];
+        var self = this;
+        _.each(datagroups, function (group) {
+            self.dataset.context = group.context;
+            self.dataset.domain = group.domain;
+            if(!group.value) {
+                group.value = "Undefined"
+            }
+	        self.dataset.read_slice(false, false, false, function(records) {
+                self.columns.push({"value" : group.value, "records": records});
+                if (datagroups.length == self.columns.length) {
+                    self.on_show_data(self.columns);
+	            }
+	        });
+        });
     },
 
     do_show: function () {
