@@ -842,21 +842,14 @@ openerp.base.Database = openerp.base.Controller.extend({
        	
        	self.$option_id.find("form[name=restore_db_form]").validate({
             submitHandler: function (form) {
-                var fields = $(form).serializeArray();
-
-                self.rpc("/base/database/restore_db", {'fields': fields}, function(result) {
-                    if (!result.error) {
-                       self.notification.notify("Restore Database", "You restored your database");
-                    } else {
-                        $('<div>').dialog({
-                            modal: true,
-                            title: result.title,
-                            buttons: {
-                                Ok: function() {
-                                    $(this).dialog("close");
-                                }
-                            }
-                        }).html(result.error);
+                $(form).ajaxSubmit({
+                    url: '/base/database/restore_db',
+                    type: 'POST',
+                    dataType: 'json',
+                    resetForm: true,
+                    success: function () {
+                        // TODO: ui manipulations
+                        // note: response objects don't work
                     }
                 });
             }
