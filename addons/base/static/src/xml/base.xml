@@ -80,7 +80,8 @@
         <table align="center" class="db_option_table">
             <tr>
                 <td><label for="super_admin_pwd">Super admin password:</label></td>
-                <td><input type="password" name="super_admin_pwd" class="required"/></td>
+                <td><input type="password" name="super_admin_pwd"
+                           class="required" autofocus="autofocus"/></td>
             </tr>
             <tr>
                 <td><label for="db_name">New database name:</label></td>
@@ -100,7 +101,7 @@
                             </t>
                         </select>
                     </t>
-            </td>
+                </td>
             </tr>
             <tr>
                 <td><label for="create_admin_pwd">Super admin password:</label></td>
@@ -108,7 +109,8 @@
             </tr>
             <tr>
                 <td><label for="create_confirm_pwd">Confirm password:</label></td>
-                <td><input type="password" name="create_confirm_pwd" class="required"/></td>
+                <td><input type="password" name="create_confirm_pwd" class="required"
+                           equalTo="input[name=create_admin_pwd]"/></td>
             </tr>
             <tr>
                 <td colspan="2" align="right"><input type="submit" value="Create"/></td>
@@ -129,9 +131,9 @@
             <tr>
                 <td><label for="drop_db">Database:</label></td>
                 <t t-if="db_list">
-                <select name="drop_db">
+                    <select name="drop_db" autofocus="autofocus">
                         <t t-foreach="db_list" t-as="db">
-                           	<option t-att-value="db"><t t-esc="db"/></option>
+                            <option t-att-value="db"><t t-esc="db"/></option>
                         </t>
                     </select>
                 </t>
@@ -160,7 +162,7 @@
                 <td><label for="backup_db">Database:</label></td>
                 <td>
                     <t t-if="db_list">
-                    <select name="backup_db">
+                        <select name="backup_db" autofocus="autofocus">
                             <t t-foreach="db_list" t-as="db">
                                	<option t-att-value="db"><t t-esc="db"/></option>
                             </t>
@@ -190,7 +192,8 @@
         <table align="center" class="db_option_table">
             <tr>
                 <td><label for="restore_db">File:</label></td>
-                <td><input type="file" name="restore_db" class="required"/></td>
+                <td><input type="file" name="restore_db" class="required"
+                         autofocus="autofocus"/></td>
             </tr>
             <tr>
                 <td><label for="restore_pwd">Password:</label></td>
@@ -218,15 +221,18 @@
         <table align="center" class="db_option_table">
             <tr>
                 <td><label for="old_pwd">Old password:</label></td>
-                <td><input type="password" name="old_pwd" class="required"/></td>
+                <td><input type="password" name="old_pwd" class="required"
+                           minlength="1" autofocus="autofocus"/></td>
             </tr>
             <tr>
             <td><label for="new_pwd">New password:</label></td>
-       	    <td><input type="password" name="new_pwd" class="required"/></td>
+       	    <td><input type="password" name="new_pwd" class="required"
+                       minlength="1"/></td>
             </tr>
    	    <tr>
                 <td><label for="confirm_pwd">Confirm password:</label></td>
-                <td><input type="password" name="confirm_pwd" class="required"/></td>
+                <td><input type="password" name="confirm_pwd" class="required"
+                           equalTo="input[name=new_pwd]" minlength="1"/></td>
             </tr>
             <tr>
                 <td colspan="2" align="right"><input type="submit" value="Change Password"/></td>

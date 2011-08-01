@@ -728,39 +728,27 @@ openerp.base.Database = openerp.base.Controller.extend({
     do_db_create: function() {
         var self = this;
        	self.$option_id.html(QWeb.render("CreateDB", self));
-       	
-       	$("form[name=create_db_form]").validate();
-       	
-       	$("input[name=create_confirm_pwd]").rules("add", {
-            equalTo: 'input[name=create_admin_pwd]',
-            messages: {
-                required: "Password did not match !"
-            }
-        });
-        
-       	$("input[name=super_admin_pwd]").focus();
-       	
-       	self.$option_id.find('form[name=create_db_form]').submit(function(ev) {
-       	    ev.preventDefault();
-       	
-       	    var fields = $(this).serializeArray();
-            self.rpc("/base/database/create_db", {'fields': fields},
-            function(result) {
-                if (!result.error) {
-                    self.db_list.push(self.to_object(fields)['db_name']);
-                    self.db_list.sort();
-                } else {
-                    $('<div>').dialog({
-                        modal: true,
-                        title: result.title,
-                        buttons: {
-                            Ok: function() {
-                                $(this).dialog("close");
+
+        self.$option_id.find("form[name=create_db_form]").validate({
+            submitHandler: function (form) {
+                var fields = $(form).serializeArray();
+                self.rpc("/base/database/create_db", {'fields': fields}, function(result) {
+                    if (!result.error) {
+                        self.db_list.push(self.to_object(fields)['db_name']);
+                        self.db_list.sort();
+                    } else {
+                        $('<div>').dialog({
+                            modal: true,
+                            title: result.title,
+                            buttons: {
+                                Ok: function() {
+                                    $(this).dialog("close");
+                                }
                             }
-                        }
-                    }).html(result.error);
-                }
-            });
+                        }).html(result.error);
+                    }
+                });
+            }
         });
     },
 	
@@ -768,22 +756,23 @@ openerp.base.Database = openerp.base.Controller.extend({
         var self = this;
        	self.$option_id.html(QWeb.render("DropDB", self));
        	
-       	$("form[name=drop_db_form]").validate();
-       	
-        self.$option_id.find('form[name=drop_db_form]').submit(function(ev) {
-       	    ev.preventDefault();
-       	
-	        var fields = $(this).serializeArray();
-	        var db = $('select[name=drop_db] :selected').val();
-	        
-	        if (confirm("Do you really want to delete the database: " + db + " ?")) {
-	            self.rpc("/base/database/drop_db", {'fields': fields}, function(result) {
-                    if (result && ! result.error) {
-                        self.$option_id.find("select[name=drop_db] :selected").remove();
+       	self.$option_id.find("form[name=drop_db_form]").validate({
+            submitHandler: function (form) {
+                var $form = $(form),
+                    fields = $form.serializeArray(),
+                    $db_list = $form.find('select[name=drop_db]'),
+                    db = $db_list.val();
+
+                if (!confirm("Do you really want to delete the database: " + db + " ?")) {
+                    return;
+                }
+                self.rpc("/base/database/drop_db", {'fields': fields}, function(result) {
+                    if (! result.error) {
+                        $db_list.find(':selected').remove();
                         self.db_list.splice(
                                 _.indexOf(self.db_list, db, true), 1);
                         self.notification.notify("Dropping database", "The database '" + db + "' has been dropped");
-                    } else if(result.error) {
+                    } else {
                         $('<div>').dialog({
                             modal: true,
                             title: result.title,
@@ -802,99 +791,15 @@ openerp.base.Database = openerp.base.Controller.extend({
     do_db_backup: function() {
         var self = this;
        	self.$option_id.html(QWeb.render("BackupDB", self));
-       	
-       	$("form[name=backup_db_form]").validate();
-       	
-       	self.$option_id.find('form[name=backup_db_form]').submit(function(ev) {
-       	    ev.preventDefault();
-       	
-            var fields = $(this).serializeArray();
-            
-            self.rpc("/base/database/backup_db", {'fields': fields}, function(result) {
-                if (result && !result.error) {
-                    self.notification.notify("Backup Database", "Backup has been created for the database");
-                } else if(result.error) {
-                    $('<div>').dialog({
-                        modal: true,
-                        title: result.title,
-                        buttons: {
-                            Ok: function() {
-                                $(this).dialog("close");
-                            }
-                        }
-                    }).html(result.error);
-               }
-            });
-       	});
-    },
-    
-    do_db_restore: function() {
-        var self = this;
-       	self.$option_id.html(QWeb.render("RestoreDB", self));
-       	
-       	$("form[name=restore_db_form]").validate();
-       	
-       	self.$option_id.find('form[name=restore_db_form]').submit(function(ev) {
-       	    ev.preventDefault();
-       	
-            var fields = $(this).serializeArray();
-       	
-            self.rpc("/base/database/restore_db", {'fields': fields}, 
-            function(result) {
-                if (result && !result.error) {
-                   self.notification.notify("Restore Database", "You restored your database");
-                } else if(result.error) {
-                    $('<div>').dialog({
-                        modal: true,
-                        title: result.title,
-                        buttons: {
-                            Ok: function() {
-                                $(this).dialog("close");
-                            }
-                        }
-                    }).html(result.error);
-                }
-            });
-       	});
-    },
 
-    do_change_password: function() {
-        var self = this;
-       	self.$option_id.html(QWeb.render("Change_DB_Pwd", self));
-       	
-       	$("form[name=change_pwd_form]").validate();
-       	
-       	$("input[name=old_pwd]").rules("add", {
-            minlength: 1,
-            messages: {
-                required: "Please enter password !"
-            }
-        });
-        $("input[name=new_pwd]").rules("add", {
-            minlength: 1,
-            messages: {
-                required: "Please enter password !"
-            }
-        });
-        $("input[name=confirm_pwd]").rules("add", {
-            equalTo: 'input[name=new_pwd]',
-            messages: {
-                required: "Password did not match !"
-            }
-        });
+        self.$option_id.find("form[name=backup_db_form]").validate({
+            submitHandler: function (form) {
+                var fields = $(form).serializeArray();
 
-        $("input[name=old_pwd]").focus();
-        
-       	self.$option_id.find('form[name=change_pwd_form]').submit(function(ev) {
-       	    ev.preventDefault();
-       	    
-       	    var fields = $(this).serializeArray();
-
-            self.rpc("/base/database/change_password_db", {'fields': fields}, 
-               function(result) {
-                   if (result && !result.error) {
-                      self.notification.notify("Changed Password", "Password has been changed successfully");
-                   } else if(result.error) {
+                self.rpc("/base/database/backup_db", {'fields': fields}, function(result) {
+                    if (!result.error) {
+                        self.notification.notify("Backup Database", "Backup has been created for the database");
+                    } else {
                         $('<div>').dialog({
                             modal: true,
                             title: result.title,
@@ -904,11 +809,73 @@ openerp.base.Database = openerp.base.Controller.extend({
                                 }
                             }
                         }).html(result.error);
-                   }
-               });
-           	});
-    }
+                    }
+                });
+            }
+        });
+    },
+    
+    do_db_restore: function() {
+        var self = this;
+       	self.$option_id.html(QWeb.render("RestoreDB", self));
+       	
+       	self.$option_id.find("form[name=restore_db_form]").validate({
+            submitHandler: function (form) {
+                var fields = $(form).serializeArray();
 
+                self.rpc("/base/database/restore_db", {'fields': fields}, function(result) {
+                    if (!result.error) {
+                       self.notification.notify("Restore Database", "You restored your database");
+                    } else {
+                        $('<div>').dialog({
+                            modal: true,
+                            title: result.title,
+                            buttons: {
+                                Ok: function() {
+                                    $(this).dialog("close");
+                                }
+                            }
+                        }).html(result.error);
+                    }
+                });
+            }
+        });
+    },
+
+    do_change_password: function() {
+        var self = this;
+       	self.$option_id.html(QWeb.render("Change_DB_Pwd", self));
+
+        self.$option_id.find("form[name=change_pwd_form]").validate({
+            messages: {
+                old_pwd: "Please enter your previous password",
+                new_pwd: "Please enter your new password",
+                confirm_pwd: {
+                    required: "Please confirm your new password",
+                    equalTo: "The confirmation does not match the password"
+                }
+            },
+            submitHandler: function (form) {
+                var fields = $(form).serializeArray();
+
+                self.rpc("/base/database/change_password_db", {'fields': fields}, function(result) {
+                    if (!result.error) {
+                        self.notification.notify("Changed Password", "Password has been changed successfully");
+                    } else {
+                        $('<div>').dialog({
+                            modal: true,
+                            title: result.title,
+                            buttons: {
+                                Ok: function() {
+                                    $(this).dialog("close");
+                                }
+                            }
+                        }).html(result.error);
+                    }
+                });
+            }
+        });
+    }
 });
 
 openerp.base.Login =  openerp.base.Controller.extend({
