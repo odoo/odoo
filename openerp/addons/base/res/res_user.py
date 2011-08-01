@@ -803,7 +803,6 @@ class users_view(osv.osv):
                 apps, others = self.pool.get('res.groups').get_classified(cr, uid, context)
                 # create section Applications
                 elems.append('<separator colspan="6" string="%s"/>' % _('Applications'))
-                elems.append('<group colspan="6">')
                 for app, groups in apps:
                     ids = [g.id for name, g in groups]
                     app_name = name_boolean_groups(ids)
@@ -816,12 +815,11 @@ class users_view(osv.osv):
                     fields[sel_name] = {'type': 'selection', 'string': 'Group', 'selection': selection}
                     elems.append("""
                         <field name="%(app)s"/>
-                        <field name="%(sel)s" nolabel="1"
+                        <field name="%(sel)s" nolabel="1" colspan="2"
                             attrs="{'invisible': [('%(app)s', '=', False)]}"
                             modifiers="{'invisible': [('%(app)s', '=', False)]}"/>
                         <newline/>
                         """ % {'app': app_name, 'sel': sel_name})
-                elems.append('</group>')
                 # create other sections
                 for sec, groups in others:
                     elems.append('<separator colspan="6" string="%s"/>' % sec)
