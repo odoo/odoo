@@ -2,10 +2,10 @@
  * OpenERP base library
  *---------------------------------------------------------*/
 
-openerp.base.tree = function(openerp) {
+openerp.base.view_tree = function(openerp) {
 
 openerp.base.views.add('tree', 'openerp.base.TreeView');
-openerp.base.TreeView = openerp.base.Controller.extend({
+openerp.base.TreeView = openerp.base.Widget.extend({
 /**
  * Genuine tree view (the one displayed as a tree, not the list)
  */

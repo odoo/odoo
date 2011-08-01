@@ -30,6 +30,9 @@ body.openerp {
 .openerp .oe-number {
     text-align: right !important;
 }
+.openerp .oe_hide {
+    display: none !important;
+}
 
 /* STATES */
 .openerp .on_logged {
@@ -595,6 +598,10 @@ background: linear-gradient(top, #ffffff 0%,#d8d8d8 11%,#afafaf 86%,#333333 91%,
     border: 1px solid silver;
 }
 
+.openerp .oe-listview thead table {
+    width: 100%;
+    border:  none;
+}
 .openerp .oe-listview tr.odd {
     background-color: #f3f3f3;
 }
@@ -603,6 +610,10 @@ background: linear-gradient(top, #ffffff 0%,#d8d8d8 11%,#afafaf 86%,#333333 91%,
 }
 .openerp .oe-listview tbody tr:hover {
     background-color: #eae9f0;
+}
+.openerp .oe-listview thead table tr,
+.openerp .oe-listview thead table tr:hover {
+    background: none;
 }
 
 .openerp .oe-listview td,
@@ -643,9 +654,11 @@ background: linear-gradient(top, #ffffff 0%,#d8d8d8 11%,#afafaf 86%,#333333 91%,
 
 .openerp .oe-listview th.oe-actions {
     text-align: left;
+    white-space: nowrap;
 }
 .openerp .oe-listview th.oe-list-pager {
     text-align: right;
+    white-space: nowrap;
 }
 .openerp .oe-list-pager .oe-pager-state {
     cursor: pointer;
@@ -675,29 +688,29 @@ background: linear-gradient(top, #ffffff 0%,#d8d8d8 11%,#afafaf 86%,#333333 91%,
     rounded corners are a pain on tables: need to round not only table, but
     also on the first and last children of the first and last row
  */
-.openerp .oe-listview table {
+.openerp .oe-listview table.oe-listview-content {
     -webkit-border-radius: 7px;
     -moz-border-radius: 7px;
     border-radius: 7px;
 }
-.openerp .oe-listview table thead tr:first-child th:first-child {
+.openerp .oe-listview table.oe-listview-content thead tr:first-child th:first-child {
     -webkit-border-top-left-radius: 7px;
     -moz-border-radius-topleft: 7px;
     border-top-left-radius: 7px;
 }
-.openerp .oe-listview table thead tr:first-child th:last-child {
+.openerp .oe-listview table.oe-listview-content thead tr:first-child th:last-child {
     -webkit-border-top-right-radius: 7px;
     -moz-border-radius-topright: 7px;
     border-top-right-radius: 7px;
 }
-.openerp .oe-listview table tfoot td:first-child,
-.openerp .oe-listview table tbody:last-child tr:last-child th:first-child {
+.openerp .oe-listview table.oe-listview-content tfoot td:first-child,
+.openerp .oe-listview table.oe-listview-content tbody:last-child tr:last-child th:first-child {
     -webkit-border-bottom-left-radius: 7px;
     -moz-border-radius-bottomleft: 7px;
     border-bottom-left-radius: 7px;
 }
-.openerp .oe-listview table tfoot td:last-child,
-.openerp .oe-listview table tbody:last-child tr:last-child td:last-child {
+.openerp .oe-listview table.oe-listview-content tfoot td:last-child,
+.openerp .oe-listview table.oe-listview-content tbody:last-child tr:last-child td:last-child {
     -webkit-border-bottom-right-radius: 7px;
     -moz-border-radius-bottomright: 7px;
     border-bottom-right-radius: 7px;
@@ -1009,6 +1022,10 @@ background: linear-gradient(top, #ffffff 0%,#ebe9e9 100%); /* W3C */
 }
 .openerp .closed-sidebar .toggle-sidebar {
     border-left: none;
+}
+.openerp li.oe_sidebar_print {
+    padding-left: 20px;
+    background: 1px 3px url(../img/icons/gtk-print.png) no-repeat;
 }
 
 .openerp.kitten-mode-activated .main_table {

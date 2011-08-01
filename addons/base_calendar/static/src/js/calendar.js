@@ -5,11 +5,11 @@
 openerp.base_calendar = function(openerp) {
 QWeb.add_template('/base_calendar/static/src/xml/base_calendar.xml');
 openerp.base.views.add('calendar', 'openerp.base_calendar.CalendarView');
-openerp.base_calendar.CalendarView = openerp.base.Controller.extend({
+openerp.base_calendar.CalendarView = openerp.base.View.extend({
 // Dhtmlx scheduler ?
-	init: function(view_manager, session, element_id, dataset, view_id){
-		this._super(session, element_id);
-		this.view_manager = view_manager;
+    init: function(parent, element_id, dataset, view_id) {
+        this._super(parent, element_id);
+        this.view_manager = parent || new openerp.base.NullViewManager();
         this.dataset = dataset;
         this.dataset_index = 0;
         this.model = dataset.model;
@@ -194,7 +194,9 @@ openerp.base_calendar.CalendarView = openerp.base.Controller.extend({
 //		self.color_field
 		console.log('Reload Scheduler>>>')
 	},
-	
+    do_search: function (domains, contexts, groupbys) {
+        this.notification.notify("Searching caldendar");
+    },
 	do_show: function () {
         this.$element.show();
     },
