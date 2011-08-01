@@ -81,6 +81,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
        :param skip_modules: optional list of module names (packages) which have previously been loaded and can be skipped
        :return: list of modules that were installed or updated
     """
+    logger = logging.getLogger('init.load')
     def process_sql_file(cr, fp):
         queries = fp.read().split(';')
         for query in queries:
@@ -109,7 +110,8 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
             try:
                 _load_data(cr, module_name, idref, mode, 'test')
             except Exception, e:
-                logging.getLogger('test').exception('Tests failed to execute in module %s', module_name)
+                logging.getLogger('init.test').exception(
+                    'Tests failed to execute in module %s', module_name)
             finally:
                 if tools.config.options['test_commit']:
                     cr.commit()
@@ -126,8 +128,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
 
         """
         for filename in package.data[kind]:
-            log = logging.getLogger('init')
-            log.info("module %s: loading %s", module_name, filename)
+            logger.info("module %s: loading %s", module_name, filename)
             _, ext = os.path.splitext(filename)
             pathname = os.path.join(module_name, filename)
             fp = tools.file_open(pathname)
@@ -155,7 +156,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
     loaded_modules = []
     pool = pooler.get_pool(cr.dbname)
     migrations = openerp.modules.migration.MigrationManager(cr, graph)
-    logger.notifyChannel('init', netsvc.LOG_DEBUG, 'loading %d packages..' % len(graph))
+    logger.debug('loading %d packages...', len(graph))
 
     # register, instantiate and initialize models for each modules
     for index, package in enumerate(graph):
@@ -165,7 +166,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
         if skip_modules and module_name in skip_modules:
             continue
 
-        logger.notifyChannel('init', netsvc.LOG_INFO, 'module %s: loading objects' % package.name)
+        logger.info('module %s: loading objects', package.name)
         migrations.migrate_module(package, 'pre')
         register_module_classes(package.name)
         models = pool.instanciate(package.name, cr)
