@@ -84,6 +84,48 @@ class db(netsvc.ExportService):
         finally:
             cr.close()
 
+    def _initialize_db(self, serv, id, db_name, demo, lang, user_password='admin'):
+        cr = None
+        try:
+            serv.actions[id]['progress'] = 0
+            cr = sql_db.db_connect(db_name).cursor()
+            openerp.modules.db.initialize(cr) # TODO this should be removed as it is done by pooler.restart_pool.
+            tools.config['lang'] = lang
+            cr.commit()
+            cr.close()
+
+            pool = pooler.restart_pool(db_name, demo, serv.actions[id],
+                                       update_module=True)[1]
+
+            cr = sql_db.db_connect(db_name).cursor()
+
+            if lang:
+                modobj = pool.get('ir.module.module')
+                mids = modobj.search(cr, 1, [('state', '=', 'installed')])
+                modobj.update_translations(cr, 1, mids, lang)
+
+            cr.execute('UPDATE res_users SET password=%s, context_lang=%s, active=True WHERE login=%s', (
+                user_password, lang, 'admin'))
+            cr.execute('SELECT login, password, name ' \
+                       '  FROM res_users ' \
+                       ' ORDER BY login')
+            serv.actions[id]['users'] = cr.dictfetchall()
+            serv.actions[id]['clean'] = True
+            cr.commit()
+            cr.close()
+        except Exception, e:
+            serv.actions[id]['clean'] = False
+            serv.actions[id]['exception'] = e
+            import traceback
+            e_str = StringIO()
+            traceback.print_exc(file=e_str)
+            traceback_str = e_str.getvalue()
+            e_str.close()
+            netsvc.Logger().notifyChannel('web-services', netsvc.LOG_ERROR, 'CREATE DATABASE\n%s' % (traceback_str))
+            serv.actions[id]['traceback'] = traceback_str
+            if cr:
+                cr.close()
+
     def exp_create(self, db_name, demo, lang, user_password='admin'):
         self.id_protect.acquire()
         self.id += 1
@@ -94,52 +136,9 @@ class db(netsvc.ExportService):
 
         self._create_empty_database(db_name)
 
-        class DBInitialize(object):
-            def __call__(self, serv, id, db_name, demo, lang, user_password='admin'):
-                cr = None
-                try:
-                    serv.actions[id]['progress'] = 0
-                    cr = sql_db.db_connect(db_name).cursor()
-                    openerp.modules.db.initialize(cr) # TODO this should be removed as it is done by pooler.restart_pool.
-                    tools.config['lang'] = lang
-                    cr.commit()
-                    cr.close()
-
-                    pool = pooler.restart_pool(db_name, demo, serv.actions[id],
-                            update_module=True)[1]
-
-                    cr = sql_db.db_connect(db_name).cursor()
-
-                    if lang:
-                        modobj = pool.get('ir.module.module')
-                        mids = modobj.search(cr, 1, [('state', '=', 'installed')])
-                        modobj.update_translations(cr, 1, mids, lang)
-
-                    cr.execute('UPDATE res_users SET password=%s, context_lang=%s, active=True WHERE login=%s', (
-                        user_password, lang, 'admin'))
-                    cr.execute('SELECT login, password, name ' \
-                               '  FROM res_users ' \
-                               ' ORDER BY login')
-                    serv.actions[id]['users'] = cr.dictfetchall()
-                    serv.actions[id]['clean'] = True
-                    cr.commit()
-                    cr.close()
-                except Exception, e:
-                    serv.actions[id]['clean'] = False
-                    serv.actions[id]['exception'] = e
-                    import traceback
-                    e_str = StringIO()
-                    traceback.print_exc(file=e_str)
-                    traceback_str = e_str.getvalue()
-                    e_str.close()
-                    netsvc.Logger().notifyChannel('web-services', netsvc.LOG_ERROR, 'CREATE DATABASE\n%s' % (traceback_str))
-                    serv.actions[id]['traceback'] = traceback_str
-                    if cr:
-                        cr.close()
         logger = netsvc.Logger()
         logger.notifyChannel("web-services", netsvc.LOG_INFO, 'CREATE DATABASE: %s' % (db_name.lower()))
-        dbi = DBInitialize()
-        create_thread = threading.Thread(target=dbi,
+        create_thread = threading.Thread(target=self._initialize_db,
                 args=(self, id, db_name, demo, lang, user_password))
         create_thread.start()
         self.actions[id]['thread'] = create_thread
