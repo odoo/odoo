@@ -735,14 +735,12 @@ openerp.base.Database = openerp.base.Controller.extend({
        	    ev.preventDefault();
        	
        	    var fields = $(this).serializeArray();
-                
             self.rpc("/base/database/create_db", {'fields': fields},
             function(result) {
                 if (result && !result.error) {
-                
+
                 } else if(result.error) {
-                   var db_error_dialog = _.uniqueId("db_error_dialog");
-                        $('<div>', {id: db_error_dialog}).dialog({
+                    $('<div>').dialog({
                         modal: true,
                         title: result.title,
                         buttons: {
@@ -766,28 +764,26 @@ openerp.base.Database = openerp.base.Controller.extend({
        	    ev.preventDefault();
        	
 	        var fields = $(this).serializeArray();
-	        db = $('select[name=drop_db] :selected').val();
+	        var db = $('select[name=drop_db] :selected').val();
 	        
 	        if (confirm("Do you really want to delete the database: " + db + " ?")) {
-	        self.rpc("/base/database/drop_db", {'fields': fields}, 
-	            function(result) {
-	                    if (result && ! result.error) {
-	                        self.$option_id.find("select[name=drop_db] :selected").remove();
-	                        self.notification.notify("Dropping database", "The database '" + db + "' has been dropped");
-	                    } else if(result.error) {
-	                        var db_error_dialog = _.uniqueId("db_error_dialog");
-	                        $('<div>', {id: db_error_dialog}).dialog({
-	                            modal: true,
-	                            title: result.title,
-	                            buttons: {
-	                                Ok: function() {
-	                                    $(this).dialog("close");
-	                                }
-	                            }
-	                        }).html(result.error);
-	                    }
-	               });
-	            }
+	            self.rpc("/base/database/drop_db", {'fields': fields}, function(result) {
+                    if (result && ! result.error) {
+                        self.$option_id.find("select[name=drop_db] :selected").remove();
+                        self.notification.notify("Dropping database", "The database '" + db + "' has been dropped");
+                    } else if(result.error) {
+                        $('<div>').dialog({
+                            modal: true,
+                            title: result.title,
+                            buttons: {
+                                Ok: function() {
+                                    $(this).dialog("close");
+                                }
+                            }
+                        }).html(result.error);
+                    }
+                });
+            }
         });
     },
     
@@ -802,14 +798,12 @@ openerp.base.Database = openerp.base.Controller.extend({
        	
             var fields = $(this).serializeArray();
             
-            self.rpc("/base/database/backup_db", {'fields': fields}, 
-            function(result) {
+            self.rpc("/base/database/backup_db", {'fields': fields}, function(result) {
                 if (result && !result.error) {
-                    self.notification.notify("Backup Database", "Backup has been created for the database: '" + db + "'");
-                   } else if(result.error) {
-                    var db_error_dialog = _.uniqueId("db_error_dialog");
-                        $('<div>', {id: db_error_dialog}).dialog({
-                    modal: true,
+                    self.notification.notify("Backup Database", "Backup has been created for the database");
+                } else if(result.error) {
+                    $('<div>').dialog({
+                        modal: true,
                         title: result.title,
                         buttons: {
                             Ok: function() {
@@ -836,10 +830,9 @@ openerp.base.Database = openerp.base.Controller.extend({
             self.rpc("/base/database/restore_db", {'fields': fields}, 
             function(result) {
                 if (result && !result.error) {
-                   self.notification.notify("Restore Database", "You restored your database as: '" + new_db + "'");
+                   self.notification.notify("Restore Database", "You restored your database");
                 } else if(result.error) {
-                    var db_error_dialog = _.uniqueId("db_error_dialog");
-                        $('<div>', {id: db_error_dialog}).dialog({
+                    $('<div>').dialog({
                         modal: true,
                         title: result.title,
                         buttons: {
@@ -889,9 +882,8 @@ openerp.base.Database = openerp.base.Controller.extend({
                function(result) {
                    if (result && !result.error) {
                       self.notification.notify("Changed Password", "Password has been changed successfully");
-                  } else if(result.error) {
-                      var db_error_dialog = _.uniqueId("db_error_dialog");
-                   	    $('<div>', {id: db_error_dialog}).dialog({
+                   } else if(result.error) {
+                        $('<div>').dialog({
                             modal: true,
                             title: result.title,
                             buttons: {
@@ -900,7 +892,7 @@ openerp.base.Database = openerp.base.Controller.extend({
                                 }
                             }
                         }).html(result.error);
-                  }
+                   }
                });
            	});
     }
