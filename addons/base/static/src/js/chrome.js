@@ -712,7 +712,19 @@ openerp.base.Database = openerp.base.Controller.extend({
             self.header.on_logout();	
         });
     },
-    
+    /**
+     * Converts a .serializeArray() result into a dict. Does not bother folding
+     * multiple identical keys into an array, last key wins.
+     *
+     * @param {Array} array
+     */
+    to_object: function (array) {
+        var result = {};
+        _(array).each(function (record) {
+            result[record.name] = record.value;
+        });
+        return result;
+    },
     do_db_create: function() {
         var self = this;
        	self.$option_id.html(QWeb.render("CreateDB", self));
@@ -734,9 +746,10 @@ openerp.base.Database = openerp.base.Controller.extend({
        	    var fields = $(this).serializeArray();
             self.rpc("/base/database/create_db", {'fields': fields},
             function(result) {
-                if (result && !result.error) {
-
-                } else if(result.error) {
+                if (!result.error) {
+                    self.db_list.push(self.to_object(fields)['db_name']);
+                    self.db_list.sort();
+                } else {
                     $('<div>').dialog({
                         modal: true,
                         title: result.title,
@@ -767,6 +780,8 @@ openerp.base.Database = openerp.base.Controller.extend({
 	            self.rpc("/base/database/drop_db", {'fields': fields}, function(result) {
                     if (result && ! result.error) {
                         self.$option_id.find("select[name=drop_db] :selected").remove();
+                        self.db_list.splice(
+                                _.indexOf(self.db_list, db, true), 1);
                         self.notification.notify("Dropping database", "The database '" + db + "' has been dropped");
                     } else if(result.error) {
                         $('<div>').dialog({
