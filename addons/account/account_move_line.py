@@ -804,7 +804,7 @@ class account_move_line(osv.osv):
             raise osv.except_osv(_('Error'), _('Some entries are already reconciled !'))
 
         if (not currency_obj.is_zero(cr, uid, account.company_id.currency_id, writeoff)) or \
-           (account.currency_id and (not currency_obj.is_zero(cr, uid, account.currency_id, currency))):
+           (not context.get('fy_closing', False) and account.currency_id and (not currency_obj.is_zero(cr, uid, account.currency_id, currency))):
             if not writeoff_acc_id:
                 raise osv.except_osv(_('Warning'), _('You have to provide an account for the write off entry !'))
             if writeoff > 0:
