@@ -4,6 +4,7 @@ import base64, glob, os, re
 from xml.etree import ElementTree
 from cStringIO import StringIO
 
+import operator
 import simplejson
 
 import openerpweb
@@ -164,54 +165,37 @@ class Database(openerpweb.Controller):
     
     @openerpweb.jsonrequest
     def create_db(self, req, fields):
-        
-        for field in fields:
-            if field['name'] == 'super_admin_pwd':
-                super_admin_pwd = field['value']
-            elif field['name'] == 'db_name':
-                dbname = field['value']
-            elif field['name'] == 'demo_data':
-                demo_data = field['value']
-            elif field['name'] == 'db_lang':
-                db_lang = field['value']
-            elif field['name'] == 'create_admin_pwd':
-                admin_pwd = field['value']
-                
-        if dbname and not re.match('^[a-zA-Z][a-zA-Z0-9_]+$', dbname):
-            return {'error': "You must avoid all accents, space or special characters.", 'title': 'Bad database name'}
-        
-        ok = False
+
+        params = dict(map(operator.itemgetter('name', 'value'), fields))
+        create_attrs = operator.itemgetter(
+            'super_admin_pwd', 'db_name', 'demo_data', 'db_lang', 'create_admin_pwd')(
+            params)
+
         try:
-            return req.session.proxy("db").create(super_admin_pwd, dbname, demo_data, db_lang, admin_pwd)
-        except Exception, e:
+            return req.session.proxy("db").create(*create_attrs)
+        except xmlrpclib.Fault, e:
             if e.faultCode and e.faultCode.split(':')[0] == 'AccessDenied':
                 return {'error': e.faultCode, 'title': 'Create Database'}
-            else:
-                return {'error': 'Could not create database !', 'title': 'Create Database'}
+        return {'error': 'Could not create database !', 'title': 'Create Database'}
 
     @openerpweb.jsonrequest
     def drop_db(self, req, fields):
-        for field in fields:
-            if field['name'] == 'drop_db':
-                db = field['value']
-            elif field['name'] == 'drop_pwd':
-                password = field['value']
+        password, db = operator.itemgetter(
+            'drop_pwd', 'drop_db')(
+                dict(map(operator.itemgetter('name', 'value'), fields)))
         
         try:
             return req.session.proxy("db").drop(password, db)
-        except Exception, e:
+        except xmlrpclib.Fault, e:
             if e.faultCode and e.faultCode.split(':')[0] == 'AccessDenied':
                 return {'error': e.faultCode, 'title': 'Drop Database'}
-            else:
-                return {'error': 'Could not drop database !', 'title': 'Drop Database'}
+        return {'error': 'Could not drop database !', 'title': 'Drop Database'}
 
     @openerpweb.jsonrequest
     def backup_db(self, req, fields):
-        for field in fields:
-            if field['name'] == 'backup_db':
-                db = field['value']
-            elif field['name'] == 'backup_pwd':
-                password = field['value']
+        password, db = operator.itemgetter(
+            'backup_pwd', 'backup_db')(
+                dict(map(operator.itemgetter('name', 'value'), fields)))
 
         try:
             res = req.session.proxy("db").dump(password, db)
@@ -219,46 +203,36 @@ class Database(openerpweb.Controller):
                 cherrypy.response.headers['Content-Type'] = "application/data"
                 cherrypy.response.headers['Content-Disposition'] = 'filename="' + db + '.dump"'
                 return base64.decodestring(res)
-        except Exception, e:
+        except xmlrpclib.Fault, e:
             if e.faultCode and e.faultCode.split(':')[0] == 'AccessDenied':
                 return {'error': e.faultCode, 'title': 'Backup Database'}
-            else:
-                return {'error': 'Could not drop database !', 'title': 'Backup Database'}
+        return {'error': 'Could not drop database !', 'title': 'Backup Database'}
             
     @openerpweb.jsonrequest
     def restore_db(self, req, fields):
-        for field in fields:
-            if field['name'] == 'restore_db':
-                filename = field['value']
-            elif field['name'] == 'new_db':
-                db = field['value']
-            elif field['name'] == 'restore_pwd':
-                password = field['value']
-        
+        password, db, filename = operator.itemgetter(
+            'restore_pwd', 'new_db', 'value')(
+                dict(map(operator.itemgetter('name', 'value'), fields)))
+
         try:
             data = base64.encodestring(filename.file.read())
             return req.session.proxy("db").restore(password, db, data)
-        except Exception, e:
+        except xmlrpclib.Fault, e:
             if e.faultCode and e.faultCode.split(':')[0] == 'AccessDenied':
                 return {'error': e.faultCode, 'title': 'Restore Database'}
-            else:
-                return {'error': 'Could not restore database !', 'title': 'Restore Database'}
+        return {'error': 'Could not restore database !', 'title': 'Restore Database'}
         
     @openerpweb.jsonrequest
     def change_password_db(self, req, fields):
-        for field in fields:
-            if field['name'] == 'old_pwd':
-                old_password = field['value']
-            elif field['name'] == 'new_pwd':
-                new_password = field['value']
-        
+        old_password, new_password = operator.itemgetter(
+            'old_pwd', 'value')(
+                dict(map(operator.itemgetter('name', 'value'), fields)))
         try:
             return req.session.proxy("db").change_admin_password(old_password, new_password)
-        except Exception, e:
+        except xmlrpclib.Fault, e:
             if e.faultCode and e.faultCode.split(':')[0] == 'AccessDenied':
                 return {'error': e.faultCode, 'title': 'Change Password'}
-            else:
-                return {'error': 'Error, password not changed !', 'title': 'Change Password'}
+        return {'error': 'Error, password not changed !', 'title': 'Change Password'}
 
 class Session(openerpweb.Controller):
     _cp_path = "/base/session"
