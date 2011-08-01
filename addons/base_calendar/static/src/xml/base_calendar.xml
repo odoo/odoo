@@ -1,15 +1,9 @@
 <template>
   <t t-name="CalendarView">
-    <h3 class="title"><t t-esc="view.fields_view.arch.attrs.string"/></h3>
+    <h3 class="title"><t t-esc="fields_view.arch.attrs.string"/></h3>
     <table class="calendar-view" width="100%" height="100%" cellspacing="0" cellpadding="0">
       <tr>
-        <td>
-          <div style="height: 1000px;width: 100%;">
-            <div id="calendar-sidebar">
-            </div>
-          </div>
-        </td>
-        <td style="width:85%;" align="left">
+        <td style="width:100%;" align="left">
           <div id="openerp_scheduler" class="dhx_cal_container" style="height: 1000px;width: 100%;">
             <div class="dhx_cal_navline">
               <div class="dhx_cal_prev_button"/>
