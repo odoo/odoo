@@ -109,13 +109,15 @@ class db(netsvc.ExportService):
             cr.execute('SELECT login, password, name ' \
                        '  FROM res_users ' \
                        ' ORDER BY login')
-            serv.actions[id]['users'] = cr.dictfetchall()
-            serv.actions[id]['clean'] = True
+            serv.actions[id].update(
+                users=cr.dictfetchall(),
+                clean=True)
             cr.commit()
             cr.close()
         except Exception, e:
-            serv.actions[id]['clean'] = False
-            serv.actions[id]['exception'] = e
+            serv.actions[id].update(
+                clean=False,
+                exception=e)
             import traceback
             e_str = StringIO()
             traceback.print_exc(file=e_str)
