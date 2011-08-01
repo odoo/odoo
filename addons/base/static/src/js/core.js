@@ -357,7 +357,7 @@ openerp.base.SessionAware = openerp.base.Class.extend({
  * 
  * Widget also extends SessionAware for ease of use.
  * 
- * Guide to create implementations of this class:
+ * Guide to create implementations of the Widget class:
  * ==============================================
  * 
  * Here is a sample child class:
@@ -365,7 +365,7 @@ openerp.base.SessionAware = openerp.base.Class.extend({
  * MyWidget = openerp.base.Widget.extend({
  *     // the name of the QWeb template to use for rendering
  *     template: "MyQWebTemplate",
- *     // identifier prefix, useful to put an obvious one for debugging
+ *     // identifier prefix, it is useful to put an obvious one for debugging
  *     identifier_prefix: 'my-id-prefix-',
  * 
  *     init: function(parent) {
@@ -373,7 +373,8 @@ openerp.base.SessionAware = openerp.base.Class.extend({
  *         // stuff that you want to init before the rendering
  *     },
  *     start: function() {
- *         // stuff you want to make after the rendering, `this.$element` holds a value
+ *         this._super();
+ *         // stuff you want to make after the rendering, `this.$element` holds a correct value
  *         this.$element.find(".my_button").click(/* an example of event binding * /);
  * 
  *         // if you have some asynchronous operations, it's a good idea to return
