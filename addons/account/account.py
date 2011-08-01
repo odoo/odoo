@@ -2477,7 +2477,7 @@ class account_chart_template(osv.osv):
         'name': fields.char('Name', size=64, required=True),
         'parent_id': fields.many2one('account.chart.template', 'Parent Chart Template'),
         'visible': fields.boolean('Can be Visible?', help="Set this to False if you don't want this template to be used actively in the wizard that generate Chart of Accounts from templates, this is useful when you want to generate accounts of this template only when loading its child template."),
-        'set_tax_complete': fields.boolean('Complete Set Of Tax', help="Set this False, then instead of the 2 many2one for default sale and purchase taxes, we display the default sale and purchase rates float field in the wizard"),
+        'set_tax_complete': fields.boolean('Complete Set Of Tax', help="Set this False, then instead of the 2 many2one for default sale and purchase taxes, we display the default sale and purchase rates float field in the wizard that generate Chart of Accounts from templates"),
         'account_root_id': fields.many2one('account.account.template', 'Root Account', domain=[('parent_id','=',False)]),
         'tax_code_root_id': fields.many2one('account.tax.code.template', 'Root Tax Code', domain=[('parent_id','=',False)]),
         'tax_template_ids': fields.one2many('account.tax.template', 'chart_template_id', 'Tax Template List', help='List of all the taxes that have to be installed by the wizard'),
