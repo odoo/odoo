@@ -574,7 +574,7 @@ class groups_implied(osv.osv):
         return list(closure)
 
     def create(self, cr, uid, values, context=None):
-        users = values.pop('users')
+        users = values.pop('users', None)
         gid = super(groups_implied, self).create(cr, uid, values, context)
         if users:
             # delegate addition of users to add implied groups
@@ -767,7 +767,10 @@ class users_view(osv.osv):
         return super(users_view, self).write(cr, uid, ids, values, context)
 
     def read(self, cr, uid, ids, fields, context=None, load='_classic_read'):
-        group_fields, fields = partition(is_field_group, fields)
+        if not fields:
+            group_fields, fields = [], self.fields_get(cr, uid, context).keys()
+        else:
+            group_fields, fields = partition(is_field_group, fields)
         if group_fields:
             group_obj = self.pool.get('res.groups')
             fields.append('groups_id')
