@@ -724,6 +724,28 @@ openerp.base.Database = openerp.base.Controller.extend({
         });
         return result;
     },
+    wait_for_newdb: function (db_creation_id, password) {
+        var self = this;
+        self.rpc('/base/database/progress', {
+            id: db_creation_id,
+            password: password
+        }, function (result) {
+            var progress = result[0];
+            // I'd display a progress bar, but turns out the progress status
+            // the server report kind-of blows goats: it's at 0 for ~75% of
+            // the installation, then jumps to 75%, then jumps down to either
+            // 0 or ~40%, then back up to 75%, then terminates. Let's keep that
+            // mess hidden behind a not-very-useful but not overly weird
+            // message instead.
+            if (progress < 1) {
+                setTimeout(function () {
+                    self.wait_for_newdb(db_creation_id, password);
+                }, 500);
+                return;
+            }
+            $.unblockUI();
+        });
+    },
     do_db_create: function() {
         var self = this;
        	self.$option_id.html(QWeb.render("CreateDB", self));
@@ -731,11 +753,15 @@ openerp.base.Database = openerp.base.Controller.extend({
         self.$option_id.find("form[name=create_db_form]").validate({
             submitHandler: function (form) {
                 var fields = $(form).serializeArray();
+                $.blockUI();
                 self.rpc("/base/database/create_db", {'fields': fields}, function(result) {
                     if (!result.error) {
                         self.db_list.push(self.to_object(fields)['db_name']);
                         self.db_list.sort();
+                        self.wait_for_newdb(
+                            result, self.to_object(fields)['super_admin_pwd']);
                     } else {
+                        $.unblockUI();
                         $('<div>').dialog({
                             modal: true,
                             title: result.title,

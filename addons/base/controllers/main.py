@@ -162,7 +162,11 @@ class Database(openerpweb.Controller):
         r = cherrypy.config['openerp.dbfilter'].replace('%h', h).replace('%d', d)
         dbs = [i for i in dbs if re.match(r, i)]
         return {"db_list": dbs}
-    
+
+    @openerpweb.jsonrequest
+    def progress(self, req, password, id):
+        return req.session.proxy('db').get_progress(password, id)
+
     @openerpweb.jsonrequest
     def create_db(self, req, fields):
 
