@@ -1049,7 +1049,7 @@ class account_move_line(osv.osv):
         result['arch'] = xml
         result['fields'] = self.fields_get(cr, uid, flds, context)
         return result
-
+    
     def _check_moves(self, cr, uid, context=None):
         # use the first move ever created for this journal and period
         if context is None:
