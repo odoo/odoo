@@ -708,8 +708,22 @@ openerp.base.Database = openerp.base.Controller.extend({
         this.$element.find('#db-restore').click(this.do_db_restore);
         this.$element.find('#db-change-password').click(this.do_change_password);
        	this.$element.find('#back-to-login').click(function() {
-            window.location.reload();
+            self.stop();
         });
+    },
+    stop: function () {
+        this.$option_id.empty();
+
+        this.$element
+            .find('#db-create, #db-drop, #db-backup, #db-restore, #db-change-password, #back-to-login')
+                .unbind('click')
+            .end()
+            .closest(".openerp")
+                .addClass("login-mode")
+                .removeClass("database_block")
+            .end()
+            .empty();
+
     },
     /**
      * Converts a .serializeArray() result into a dict. Does not bother folding
@@ -966,18 +980,16 @@ openerp.base.Login =  openerp.base.Controller.extend({
     },
     display: function() {
         var self = this;
-        
+
         this.$element.html(QWeb.render("Login", this));
-        
-        this.$element.closest(".openerp").removeClass("database_block");
-    	this.$element.closest(".openerp").addClass("login-mode");
-    	
+        this.database = new openerp.base.Database(
+                this, "oe_database", "oe_db_options");
+
         this.$element.find('#oe-db-config').click(function() {
-            self.database = new openerp.base.Database(self, "oe_database", "oe_db_options");
             self.database.start();
         });
-        
-       this.$element.find("form").submit(this.on_submit);
+
+        this.$element.find("form").submit(this.on_submit);
     },
     on_login_invalid: function() {
         this.$element.closest(".openerp").addClass("login-mode");
