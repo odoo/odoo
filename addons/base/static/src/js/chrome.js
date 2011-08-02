@@ -874,6 +874,7 @@ openerp.base.Database = openerp.base.Controller.extend({
 
         self.$option_id.find("form[name=backup_db_form]").validate({
             submitHandler: function (form) {
+                $.blockUI();
                 // need to detect when the file is done downloading (not used
                 // yet, but we'll need it to fix the UI e.g. with a throbber
                 // while dump is being generated), iframe load event only fires
@@ -888,9 +889,9 @@ openerp.base.Database = openerp.base.Controller.extend({
                 $(form).find('input[name=token]').val(token);
                 form.submit();
 
-                // TODO: implement cleanup function when request-in-flight UI added
-                var cleanup = null;
-                self.wait_for_file(token, cleanup);
+                self.wait_for_file(token, function () {
+                    $.unblockUI();
+                });
             }
         });
     },
@@ -901,6 +902,7 @@ openerp.base.Database = openerp.base.Controller.extend({
        	
        	self.$option_id.find("form[name=restore_db_form]").validate({
             submitHandler: function (form) {
+                $.blockUI();
                 $(form).ajaxSubmit({
                     url: '/base/database/restore_db',
                     type: 'POST',
@@ -909,6 +911,7 @@ openerp.base.Database = openerp.base.Controller.extend({
                     success: function () {
                         // TODO: ui manipulations
                         // note: response objects don't work
+                        $.unblockUI();
                     }
                 });
             }
