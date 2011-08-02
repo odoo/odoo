@@ -682,7 +682,7 @@ openerp.base.Database = openerp.base.Controller.extend({
         
         var self = this;
         
-        var fetch_db = this.rpc("/base/database/get_databases_list", {}, function(result) {
+        var fetch_db = this.rpc("/base/database/get_list", {}, function(result) {
             self.db_list = result.db_list;
         });
         var fetch_langs = this.rpc("/base/session/get_lang_list", {}, function(result) {
@@ -700,12 +700,12 @@ openerp.base.Database = openerp.base.Controller.extend({
                }).html(result.error);
             }
         });
-        $.when(fetch_db, fetch_langs).then(function () {self.do_db_create();});
+        $.when(fetch_db, fetch_langs).then(function () {self.do_create();});
         
-        this.$element.find('#db-create').click(this.do_db_create);
-        this.$element.find('#db-drop').click(this.do_db_drop);
-        this.$element.find('#db-backup').click(this.do_db_backup);
-        this.$element.find('#db-restore').click(this.do_db_restore);
+        this.$element.find('#db-create').click(this.do_create);
+        this.$element.find('#db-drop').click(this.do_drop);
+        this.$element.find('#db-backup').click(this.do_backup);
+        this.$element.find('#db-restore').click(this.do_restore);
         this.$element.find('#db-change-password').click(this.do_change_password);
        	this.$element.find('#back-to-login').click(function() {
             self.stop();
@@ -795,7 +795,7 @@ openerp.base.Database = openerp.base.Controller.extend({
             }
         }).html(error.error);
     },
-    do_db_create: function() {
+    do_create: function() {
         var self = this;
        	self.$option_id.html(QWeb.render("CreateDB", self));
 
@@ -803,7 +803,7 @@ openerp.base.Database = openerp.base.Controller.extend({
             submitHandler: function (form) {
                 var fields = $(form).serializeArray();
                 $.blockUI();
-                self.rpc("/base/database/create_db", {'fields': fields}, function(result) {
+                self.rpc("/base/database/create", {'fields': fields}, function(result) {
                     if (result.error) {
                         $.unblockUI();
                         self.display_error(result);
@@ -821,7 +821,7 @@ openerp.base.Database = openerp.base.Controller.extend({
         });
     },
 	
-    do_db_drop: function() {
+    do_drop: function() {
         var self = this;
        	self.$option_id.html(QWeb.render("DropDB", self));
        	
@@ -835,7 +835,7 @@ openerp.base.Database = openerp.base.Controller.extend({
                 if (!confirm("Do you really want to delete the database: " + db + " ?")) {
                     return;
                 }
-                self.rpc("/base/database/drop_db", {'fields': fields}, function(result) {
+                self.rpc("/base/database/drop", {'fields': fields}, function(result) {
                     if (result.error) {
                         self.display_error(result);
                         return;
@@ -869,7 +869,7 @@ openerp.base.Database = openerp.base.Controller.extend({
             }
         }, 100);
     },
-    do_db_backup: function() {
+    do_backup: function() {
         var self = this;
        	self.$option_id.html(QWeb.render("BackupDB", self));
 
@@ -897,7 +897,7 @@ openerp.base.Database = openerp.base.Controller.extend({
         });
     },
     
-    do_db_restore: function() {
+    do_restore: function() {
         var self = this;
        	self.$option_id.html(QWeb.render("RestoreDB", self));
        	
@@ -905,7 +905,7 @@ openerp.base.Database = openerp.base.Controller.extend({
             submitHandler: function (form) {
                 $.blockUI();
                 $(form).ajaxSubmit({
-                    url: '/base/database/restore_db',
+                    url: '/base/database/restore',
                     type: 'POST',
                     resetForm: true,
                     success: function (body) {
@@ -950,7 +950,7 @@ openerp.base.Database = openerp.base.Controller.extend({
                 }
             },
             submitHandler: function (form) {
-                self.rpc("/base/database/change_password_db", {
+                self.rpc("/base/database/change_password", {
                     'fields': $(form).serializeArray()
                 }, function(result) {
                     if (result.error) {
@@ -988,7 +988,7 @@ openerp.base.Login =  openerp.base.Controller.extend({
     },
     start: function() {
         var self = this;
-        this.rpc("/base/database/get_databases_list", {}, function(result) {
+        this.rpc("/base/database/get_list", {}, function(result) {
             self.db_list = result.db_list;
             self.display();
         }, function() {

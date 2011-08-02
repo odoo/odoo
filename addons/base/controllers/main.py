@@ -154,7 +154,7 @@ class Database(openerpweb.Controller):
     _cp_path = "/base/database"
 
     @openerpweb.jsonrequest
-    def get_databases_list(self, req):
+    def get_list(self, req):
         proxy = req.session.proxy("db")
         dbs = proxy.list()
         h = req.httprequest.headers['Host'].split(':')[0]
@@ -168,7 +168,7 @@ class Database(openerpweb.Controller):
         return req.session.proxy('db').get_progress(password, id)
 
     @openerpweb.jsonrequest
-    def create_db(self, req, fields):
+    def create(self, req, fields):
 
         params = dict(map(operator.itemgetter('name', 'value'), fields))
         create_attrs = operator.itemgetter(
@@ -183,7 +183,7 @@ class Database(openerpweb.Controller):
         return {'error': 'Could not create database !', 'title': 'Create Database'}
 
     @openerpweb.jsonrequest
-    def drop_db(self, req, fields):
+    def drop(self, req, fields):
         password, db = operator.itemgetter(
             'drop_pwd', 'drop_db')(
                 dict(map(operator.itemgetter('name', 'value'), fields)))
@@ -196,7 +196,7 @@ class Database(openerpweb.Controller):
         return {'error': 'Could not drop database !', 'title': 'Drop Database'}
 
     @openerpweb.httprequest
-    def backup_db(self, req, backup_db, backup_pwd, token):
+    def backup(self, req, backup_db, backup_pwd, token):
         try:
             db_dump = base64.decodestring(
                 req.session.proxy("db").dump(backup_pwd, backup_db))
@@ -211,7 +211,7 @@ class Database(openerpweb.Controller):
         return {'error': 'Could not drop database !', 'title': 'Backup Database'}
             
     @openerpweb.httprequest
-    def restore_db(self, req, db_file, restore_pwd, new_db):
+    def restore(self, req, db_file, restore_pwd, new_db):
         try:
             data = base64.encodestring(db_file.file.read())
             req.session.proxy("db").restore(restore_pwd, new_db, data)
@@ -223,7 +223,7 @@ class Database(openerpweb.Controller):
         raise cherrypy.HTTPError()
 
     @openerpweb.jsonrequest
-    def change_password_db(self, req, fields):
+    def change_password(self, req, fields):
         old_password, new_password = operator.itemgetter(
             'old_pwd', 'new_pwd')(
                 dict(map(operator.itemgetter('name', 'value'), fields)))
