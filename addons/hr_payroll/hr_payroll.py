@@ -852,7 +852,13 @@ class hr_payslip(osv.osv):
                     others += amount
                 elif line.type == 'otherpay':
                     others += amount
-                slip_line_obj.write(cr, uid, [line.id], {'total':amount}, context=context)
+
+                company_contrib = 0.0
+                register_pool = self.pool.get('company.contribution')
+                for contrib_line in line.category_id.contribute_ids:
+                    company_contrib += register_pool.compute(cr, uid, contrib_line.id, amount, context)
+
+                slip_line_obj.write(cr, uid, [line.id], {'total':amount, 'company_contrib':company_contrib}, context=context)
 
             record = {
                 'allounce':allow,
