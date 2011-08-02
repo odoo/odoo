@@ -29,6 +29,7 @@ import pooler
 from tools.translate import _
 from service import security
 import netsvc
+import logging
 from lxml import etree
 
 class groups(osv.osv):
@@ -591,28 +592,19 @@ class groups_implied(osv.osv):
                 super(groups_implied, self).write(cr, uid, gids, {'users': users}, context)
         return res
 
-    def get_trans_implied(self, cr, uid, context=None):
-        "return a dictionary giving the transitively implied groups of each group"
-        groups = self.browse(cr, 1, self.search(cr, 1, []))
-        # compute the transitive closure of implied_ids
-        succs = dict([(g.id, set()) for g in groups])
-        preds = dict([(g.id, set()) for g in groups])
-        for g in groups:
-            for h in g.implied_ids:
-                # link g and its predecessors to h and its successors
-                ps = preds[g.id].union([g.id])
-                ss = succs[h.id].union([h.id])
-                for p in ps: succs[p] |= ss
-                for s in ss: preds[s] |= ps
-        return succs
-
     def get_maximal(self, cr, uid, ids, context=None):
-        "return a maximal element among the group ids"
-        res = None
+        "return the maximal element among the group ids"
+        max_set, max_closure = set(), set()
         for gid in ids:
-            if (not res) or (res in self.get_closure(cr, uid, [gid], context)):
-                res = gid
-        return res
+            if gid not in max_closure:
+                closure = set(self.get_closure(cr, uid, [gid], context))
+                max_set -= closure          # remove implied groups from max_set
+                max_set.add(gid)            # gid is maximal
+                max_closure |= closure      # update closure of max_set
+        if len(max_set) > 1:
+            log = logging.getLogger('res.groups')
+            log.warning('Groups %s are maximal among %s, only one expected.', max_set, ids)
+        return bool(max_set) and max_set.pop()
 
 groups_implied()
 
@@ -667,9 +659,8 @@ class groups_view(osv.osv):
             - groups not like App/Name are at the end of others, under _('Others')
         """
         # sort groups by implication, with implied groups first
-        trans_implied = self.get_trans_implied(cr, uid, context)
         groups = self.browse(cr, uid, self.search(cr, uid, []), context)
-        groups.sort(key=lambda g: set([g.id]) | trans_implied[g.id])
+        groups.sort(key=lambda g: set(self.get_closure(cr, uid, [g.id], context)))
         
         # classify groups depending on their names
         classified = {}
