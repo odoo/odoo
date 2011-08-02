@@ -287,7 +287,7 @@ init: function(parent, element_id, dataset, view_id) {
         ganttChartControl.attachEvent("onTaskStartDrag", function(task) {self.on_drag_start(task);});
         ganttChartControl.attachEvent("onTaskEndResize", function(task) {self.on_resize_drag_end(task, "resize");});
         ganttChartControl.attachEvent("onTaskEndDrag", function(task) {self.on_resize_drag_end(task, "drag");});
-        ganttChartControl.attachEvent("onTaskDblClick", function(task, evt) {self.open_popup(task); evt.stopPropagation(); evt.preventDefault();});
+        ganttChartControl.attachEvent("onTaskDblClick", function(task) {self.open_popup(task);});
 
         taskdiv = jQuery("div.taskPanel").parent();
         taskdiv.addClass('ganttTaskPanel');
