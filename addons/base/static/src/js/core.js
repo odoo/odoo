@@ -9,10 +9,10 @@ openerp.base.core = function(openerp) {
 (function() {
   var initializing = false, fnTest = /xyz/.test(function(){xyz;}) ? /\b_super\b/ : /.*/;
   // The base Class implementation (does nothing)
-  this.Class = function(){};
+  openerp.base.Class = function(){};
 
   // Create a new Class that inherits from this class
-  Class.extend = function(prop) {
+  openerp.base.Class.extend = function(prop) {
     var _super = this.prototype;
 
     // Instantiate a base class (but only create the instance,
@@ -24,7 +24,7 @@ openerp.base.core = function(openerp) {
     // Copy the properties over onto the new prototype
     for (var name in prop) {
       // Check if we're overwriting an existing function
-      prototype[name] = typeof prop[name] == "function" && 
+      prototype[name] = typeof prop[name] == "function" &&
         typeof _super[name] == "function" && fnTest.test(prop[name]) ?
         (function(name, fn){
           return function() {
@@ -67,9 +67,6 @@ openerp.base.core = function(openerp) {
     return Class;
   };
 })();
-
-// todo change john resig class to keep window clean
-openerp.base.Class = window.Class
 
 openerp.base.callback = function(obj, method) {
     var callback = function() {
@@ -123,7 +120,7 @@ openerp.base.callback = function(obj, method) {
 /**
  * Generates an inherited class that replaces all the methods by null methods (methods
  * that does nothing and always return undefined).
- * 
+ *
  * @param {Class} claz
  * @param {dict} add Additional functions to override.
  * @return {Class}
@@ -279,14 +276,14 @@ openerp.base.Registry = openerp.base.Class.extend( /** @lends openerp.base.Regis
 
 /**
  * Utility class that any class is allowed to extend to easy common manipulations.
- * 
+ *
  * It provides rpc calls, callback on all methods preceded by "on_" or "do_" and a
  * logging facility.
  */
 openerp.base.SessionAware = openerp.base.Class.extend({
     init: function(session) {
         this.session = session;
-        
+
         // Transform on_* method into openerp.base.callbacks
         for (var name in this) {
             if(typeof(this[name]) == "function") {
@@ -348,26 +345,26 @@ openerp.base.SessionAware = openerp.base.Class.extend({
 /**
  * Base class for all visual components. Provides a lot of functionalities helpful
  * for the management of a part of the DOM.
- * 
+ *
  * Widget handles:
  * - Rendering with QWeb.
  * - Life-cycle management and parenting (when a parent is destroyed, all its children are
  *     destroyed too).
  * - Insertion in DOM.
- * 
+ *
  * Widget also extends SessionAware for ease of use.
- * 
+ *
  * Guide to create implementations of the Widget class:
  * ==============================================
- * 
+ *
  * Here is a sample child class:
- * 
+ *
  * MyWidget = openerp.base.Widget.extend({
  *     // the name of the QWeb template to use for rendering
  *     template: "MyQWebTemplate",
  *     // identifier prefix, it is useful to put an obvious one for debugging
  *     identifier_prefix: 'my-id-prefix-',
- * 
+ *
  *     init: function(parent) {
  *         this._super(parent);
  *         // stuff that you want to init before the rendering
@@ -376,48 +373,48 @@ openerp.base.SessionAware = openerp.base.Class.extend({
  *         this._super();
  *         // stuff you want to make after the rendering, `this.$element` holds a correct value
  *         this.$element.find(".my_button").click(/* an example of event binding * /);
- * 
+ *
  *         // if you have some asynchronous operations, it's a good idea to return
  *         // a promise in start()
  *         var promise = this.rpc(...);
  *         return promise;
  *     }
  * });
- * 
+ *
  * Now this class can simply be used with the following syntax:
- * 
+ *
  * var my_widget = new MyWidget(this);
  * my_widget.appendTo($(".some-div"));
- * 
+ *
  * With these two lines, the MyWidget instance was inited, rendered, it was inserted into the
  * DOM inside the ".some-div" div and its events were binded.
- * 
+ *
  * And of course, when you don't need that widget anymore, just do:
- * 
+ *
  * my_widget.stop();
- * 
+ *
  * That will kill the widget in a clean way and erase its content from the dom.
  */
 openerp.base.Widget = openerp.base.SessionAware.extend({
     /**
      * The name of the QWeb template that will be used for rendering. Must be
      * redefined in subclasses or the default render() method can not be used.
-     * 
+     *
      * @type string
      */
     template: null,
     /**
      * The prefix used to generate an id automatically. Should be redefined in
      * subclasses. If it is not defined, a generic identifier will be used.
-     * 
+     *
      * @type string
      */
     identifier_prefix: 'generic-identifier-',
     /**
-     * @constructs
      * Construct the widget and set its parent if a parent is given.
-     * 
-     * @param {Widget} parent Binds the current instance to the given Widget instance.
+     *
+     * @constructs
+     * @param {openerp.base.Widget} parent Binds the current instance to the given Widget instance.
      * When that widget is destroyed by calling stop(), the current instance will be
      * destroyed too. Can be null.
      * @param {String} element_id Deprecated. Sets the element_id. Only useful when you want
@@ -433,7 +430,7 @@ openerp.base.Widget = openerp.base.SessionAware.extend({
         this.element_id = this.element_id || _.uniqueId(this.identifier_prefix);
         var tmp = document.getElementById(this.element_id);
         this.$element = tmp ? $(tmp) : undefined;
-        
+
         this.widget_parent = parent;
         this.widget_children = [];
         if(parent && parent.widget_children) {
@@ -444,7 +441,7 @@ openerp.base.Widget = openerp.base.SessionAware.extend({
     },
     /**
      * Render the current widget and appends it to the given jQuery object or Widget.
-     * 
+     *
      * @param target A jQuery object or a Widget instance.
      */
     appendTo: function(target) {
@@ -455,7 +452,7 @@ openerp.base.Widget = openerp.base.SessionAware.extend({
     },
     /**
      * Render the current widget and prepends it to the given jQuery object or Widget.
-     * 
+     *
      * @param target A jQuery object or a Widget instance.
      */
     prependTo: function(target) {
@@ -466,7 +463,7 @@ openerp.base.Widget = openerp.base.SessionAware.extend({
     },
     /**
      * Render the current widget and inserts it after to the given jQuery object or Widget.
-     * 
+     *
      * @param target A jQuery object or a Widget instance.
      */
     insertAfter: function(target) {
@@ -477,7 +474,7 @@ openerp.base.Widget = openerp.base.SessionAware.extend({
     },
     /**
      * Render the current widget and inserts it before to the given jQuery object or Widget.
-     * 
+     *
      * @param target A jQuery object or a Widget instance.
      */
     insertBefore: function(target) {
@@ -497,8 +494,8 @@ openerp.base.Widget = openerp.base.SessionAware.extend({
     /**
      * Renders the widget using QWeb, `this.template` must be defined.
      * The context given to QWeb contains the "widget" key that references `this`.
-     * 
-     * @param {object} additional Additional context arguments to pass to the template.
+     *
+     * @param {Object} additional Additional context arguments to pass to the template.
      */
     render: function (additional) {
         return QWeb.render(this.template, _.extend({widget: this}, additional || {}));
@@ -506,7 +503,7 @@ openerp.base.Widget = openerp.base.SessionAware.extend({
     /**
      * Method called after rendering. Mostly used to bind actions, perform asynchronous
      * calls, etc...
-     * 
+     *
      * By convention, the method should return a promise to inform the caller when
      * this widget has been initialized.
      *
@@ -571,5 +568,5 @@ openerp.base.OldWidget = openerp.base.Widget.extend({
     }
 });
 
-}
+};
 // vim:et fdc=0 fdl=0 foldnestmax=3 fdm=syntax:
