@@ -140,9 +140,9 @@ class wizard(osv.osv_memory):
         for wiz in self.browse(cr, uid, ids, context):
             # determine existing users
             login_cond = [('login', 'in', [u.user_email for u in wiz.user_ids])]
-            user_ids = user_obj.search(cr, ROOT_UID, login_cond)
-            users = user_obj.browse(cr, ROOT_UID, user_ids)
-            logins = [u.login for u in users]
+            existing_uids = user_obj.search(cr, ROOT_UID, login_cond)
+            existing_users = user_obj.browse(cr, ROOT_UID, existing_uids)
+            existing_logins = [u.login for u in existing_users]
             
             # create new users in portal (skip existing logins)
             new_users_data = [ {
@@ -152,7 +152,7 @@ class wizard(osv.osv_memory):
                     'user_email': u.user_email,
                     'context_lang': u.lang,
                     'partner_id': u.partner_id and u.partner_id.id,
-                } for u in wiz.user_ids if u.user_email not in logins ]
+                } for u in wiz.user_ids if u.user_email not in existing_logins ]
             portal_obj.write(cr, ROOT_UID, [wiz.portal_id.id],
                 {'users': [(0, 0, data) for data in new_users_data]}, context0)
             
@@ -164,7 +164,7 @@ class wizard(osv.osv_memory):
                 'db': cr.dbname,
             }
             dest_uids = user_obj.search(cr, ROOT_UID, login_cond)
-            dest_users = user_obj.browse(cr, ROOT_UID, user_ids)
+            dest_users = user_obj.browse(cr, ROOT_UID, dest_uids)
             for dest_user in dest_users:
                 context['lang'] = dest_user.context_lang
                 data['login'] = dest_user.login

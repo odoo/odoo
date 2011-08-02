@@ -43,6 +43,18 @@ class resource_calendar(osv.osv):
         'company_id': lambda self, cr, uid, context: self.pool.get('res.company')._company_default_get(cr, uid, 'resource.calendar', context=context)
     }
 
+    def working_hours_on_day(self, cr, uid, resource_calendar_id, day, context=None):
+        """
+        @param resource_calendar_id: resource.calendar browse record
+        @param day: datetime object
+        @return: returns the working hours (as float) men should work on the given day if is in the attendance_ids of the resource_calendar_id (i.e if that day is a working day), returns 0.0 otherwise
+        """
+        res = 0.0
+        for working_day in resource_calendar_id.attendance_ids:
+            if (int(working_day.dayofweek) + 1) == day.isoweekday():
+                res += working_day.hour_to - working_day.hour_from
+        return res 
+
     def _get_leaves(self, cr, uid, id, resource):
         resource_cal_leaves = self.pool.get('resource.calendar.leaves')
         dt_leave = []

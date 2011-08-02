@@ -110,8 +110,6 @@ class base_setup_installer(osv.osv_memory):
 
 
     def execute(self, cr, uid, ids, context=None):
-        if context is None:
-             context = {}
         module_pool = self.pool.get('ir.module.module')
         modules_selected = []
         datas = self.read(cr, uid, ids, context=context)[0]
@@ -122,16 +120,19 @@ class base_setup_installer(osv.osv_memory):
                 modules_selected.append(mod)
 
         module_ids = module_pool.search(cr, uid, [('name', 'in', modules_selected)], context=context)
+        need_install = False
         for module in module_pool.browse(cr, uid, module_ids, context=context):
             if module.state == 'uninstalled':
                 module_pool.state_update(cr, uid, [module.id], 'to install', ['uninstalled'], context)
+                need_install = True
                 cr.commit()
-                new_db, self.pool = pooler.restart_pool(cr.dbname, update_module=True)
             elif module.state == 'installed':
                 cr.execute("update ir_actions_todo set state='open' \
                                     from ir_model_data as data where data.res_id = ir_actions_todo.id \
                                     and ir_actions_todo.type='special'\
                                     and data.model = 'ir.actions.todo' and data.module=%s", (module.name, ))
+        if need_install:
+            self.pool = pooler.restart_pool(cr.dbname, update_module=True)[1]
         return
     
 base_setup_installer()

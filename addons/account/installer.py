@@ -255,6 +255,8 @@ class account_installer_modules(osv.osv_memory):
         'account_anglo_saxon': fields.boolean('Anglo-Saxon Accounting',
             help="This module will support the Anglo-Saxons accounting methodology by "
                 "changing the accounting logic with stock transactions."),
+        'account_asset': fields.boolean('Assets Management',
+            help="Helps you to manage your assets and their depreciation entries."),
     }
 
 account_installer_modules()

@@ -6,8 +6,7 @@
 
         <menuitem id="base.menu_sales" name="Sales" parent="base.menu_base_partner" sequence="1"/>
 
-        <menuitem id="base.menu_product" name="Products" parent="base.menu_base_partner" sequence="9"/>
-        <menuitem action="product.product_normal_action" id="product.menu_products" parent="base.menu_product" sequence="1"/>
+        <menuitem id="base.menu_product" name="Products" parent="base.menu_base_partner" sequence="9"/>         
 
         <record id="view_shop_form" model="ir.ui.view">
             <field name="name">sale.shop</field>
@@ -128,21 +127,21 @@
                                             <field colspan="4"
                                                 context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'shop':parent.shop_id, 'uom':product_uom}"
                                                 name="product_id"
-                                                on_change="product_id_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, 'lang' in context and context['lang'], True, parent.date_order, product_packaging, parent.fiscal_position, False)"
+                                                on_change="product_id_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, False, True, parent.date_order, product_packaging, parent.fiscal_position, False, context)"
                                                 />
                                             <field
                                                 context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'shop':parent.shop_id, 'uom':product_uom}"
                                                 name="product_uom_qty"
-                                                on_change="product_id_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, 'lang' in context and context['lang'], False, parent.date_order, product_packaging, parent.fiscal_position, True)"
+                                                on_change="product_id_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, False, False, parent.date_order, product_packaging, parent.fiscal_position, True, context)"
                                                 />
                                             <field name="product_uom"
-                                                on_change="product_uom_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, 'lang' in context and context['lang'], False, parent.date_order)"/>
+                                                on_change="product_uom_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, False, False, parent.date_order, context)"/>
                                             <field groups="product.group_uos" name="product_uos_qty"/>
                                             <field groups="product.group_uos" name="product_uos"/>
                                             <field
                                                 name="product_packaging"
                                                 context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'shop':parent.shop_id, 'uom':product_uom}"
-                                                on_change="product_id_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, 'lang' in context and context['lang'], False, parent.date_order, product_packaging, parent.fiscal_position, False)"
+                                                on_change="product_id_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, False, False, parent.date_order, product_packaging, parent.fiscal_position, False, context)"
                                                 domain="[('product_id','=',product_id)]"
                                                 groups="base.group_extended"/>
 
@@ -513,7 +512,7 @@
         <act_window
         context="{'search_default_partner_id': [active_id], 'default_partner_id': active_id}"
         id="act_res_partner_2_sale_order"
-        name="Sales"
+        name="Quotations and Sales"
         groups="base.group_sale_salesman"
         res_model="sale.order"
         src_model="res.partner"/>
@@ -527,7 +526,7 @@
         groups="base.group_sale_salesman"/>
 
         <menuitem id="menu_invoiced" name="Invoicing" parent="base.menu_base_partner" sequence="5"
-            groups="base.group_extended"/>
+            groups="-base.group_extended"/>
         <menuitem action="action_order_line_tree2" id="menu_invoicing_sales_order_lines" parent="menu_invoiced" sequence="2" groups="base.group_sale_salesman,base.group_sale_manager"/>
         <!-- configartion view -->
 

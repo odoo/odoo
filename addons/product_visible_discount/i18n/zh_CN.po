@@ -1,0 +1,89 @@
+# Chinese (Simplified) translation for openobject-addons
+# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"PO-Revision-Date: 2011-07-13 16:17+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2011-07-15 04:51+0000\n"
+"X-Generator: Launchpad (build 13405)\n"
+
+#. module: product_visible_discount
+#: code:addons/product_visible_discount/product_visible_discount.py:147
+#, python-format
+msgid "No Purchase Pricelist Found !"
+msgstr "未找到采购价格表！"
+
+#. module: product_visible_discount
+#: code:addons/product_visible_discount/product_visible_discount.py:155
+#, python-format
+msgid "No Sale Pricelist Found "
+msgstr "未找到销售价格表 "
+
+#. module: product_visible_discount
+#: model:ir.module.module,description:product_visible_discount.module_meta_information
+msgid ""
+"\n"
+"    This module lets you calculate discounts on Sale Order lines and Invoice "
+"lines base on the partner's pricelist.\n"
+"    To this end, a new check box named \"Visible Discount\" is added to the "
+"pricelist form.\n"
+"    Example:\n"
+"        For the product PC1 and the partner \"Asustek\": if listprice=450, "
+"and the price calculated using Asustek's pricelist is 225\n"
+"        If the check box is checked, we will have on the sale order line: "
+"Unit price=450, Discount=50,00, Net price=225\n"
+"        If the check box is unchecked, we will have on Sale Order and "
+"Invoice lines: Unit price=225, Discount=0,00, Net price=225\n"
+"    "
+msgstr ""
+"\n"
+"    此模块允许你在销售订单行和发票行上计算标价和成交价的折扣。安装此模块后，一个新的选项“折扣可见”被添加到价格表界面上。\n"
+"\n"
+"例如：\n"
+"产品PC1销售给Asustek：如果标价是450，按价格表计算的价格是225\n"
+"如果此选项被选中，订单行显示：单价450，折扣50.00，净价225\n"
+"如果此选项未选中，订单行显示：单价225，折扣 0.00，净价225\n"
+"    "
+
+#. module: product_visible_discount
+#: model:ir.module.module,shortdesc:product_visible_discount.module_meta_information
+#: field:product.pricelist,visible_discount:0
+msgid "Visible Discount"
+msgstr "折扣可见"
+
+#. module: product_visible_discount
+#: model:ir.model,name:product_visible_discount.model_account_invoice_line
+msgid "Invoice Line"
+msgstr "发票行"
+
+#. module: product_visible_discount
+#: code:addons/product_visible_discount/product_visible_discount.py:155
+#, python-format
+msgid "You must first define a pricelist for Customer !"
+msgstr "你首先要为客户定义价格表"
+
+#. module: product_visible_discount
+#: model:ir.model,name:product_visible_discount.model_product_pricelist
+msgid "Pricelist"
+msgstr "价格表"
+
+#. module: product_visible_discount
+#: code:addons/product_visible_discount/product_visible_discount.py:147
+#, python-format
+msgid "You must first define a pricelist for Supplier !"
+msgstr "你首先要为供应商定义价格表"
+
+#. module: product_visible_discount
+#: model:ir.model,name:product_visible_discount.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "销售订单明细"

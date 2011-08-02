@@ -24,6 +24,7 @@
     'name': 'Purchase Management',
     'version': '1.1',
     'category': 'Purchases',
+    'complexity': "easy",
     'description': """
 Purchase module is for generating a purchase order for purchase of goods from a supplier.
 =========================================================================================

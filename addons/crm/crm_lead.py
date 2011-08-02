@@ -142,9 +142,8 @@ class crm_lead(crm_case, osv.osv):
         'categ_id': fields.many2one('crm.case.categ', 'Category', \
             domain="['|',('section_id','=',section_id),('section_id','=',False), ('object_id.model', '=', 'crm.lead')]"),
         'type_id': fields.many2one('crm.case.resource.type', 'Campaign', \
-            domain="['|',('section_id','=',section_id),('section_id','=',False)]"),
-        'channel_id': fields.many2one('res.partner.canal', 'Lead Source'),
-
+            domain="['|',('section_id','=',section_id),('section_id','=',False)]", help="From which campaign (seminar, marketing campaign, mass mailing, ...) did this contact come from?"),
+        'channel_id': fields.many2one('res.partner.canal', 'Channel', help="From which channel (mail, direct, phone, ...) did this contact reach you?"),
         'contact_name': fields.char('Contact Name', size=64),
         'partner_name': fields.char("Customer Name", size=64,help='The name of the future partner that will be created while converting the into opportunity'),
         'optin': fields.boolean('Opt-In', help="If opt-in is checked, this contact has accepted to receive emails."),
