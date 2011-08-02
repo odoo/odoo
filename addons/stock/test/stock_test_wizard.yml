@@ -141,15 +141,23 @@
     state: assigned
 
 -
-  I Check  onchange and _getSSCC function of stock.move object
+  I Check  onchange function of stock.move object
 -
   !python {model: stock.move }: |
     self.onchange_lot_id(cr, uid, [ref("stock_move_test0")], ref("stock.stock_production_lot0"), 5, ref("stock.stock_location_suppliers"), ref("product.product_product_pc1"), ref("product.product_uom_unit"), None)
     self.onchange_quantity(cr, uid, [ref("stock_move_test0")], ref("product.product_product_pc1"), 10, ref("product.product_uom_unit"), ref("product.product_uom_unit"))
     self.onchange_uos_quantity(cr, uid, [ref("stock_move_test0")], ref("product.product_product_pc1"), 10, ref("product.product_uom_unit"), ref("product.product_uom_unit"))
     self.onchange_product_id(cr, uid, [ref("stock_move_test0")], ref("product.product_product_pc1"), ref("stock.stock_location_suppliers"), ref("stock.stock_location_shop0"), False)
-    self._getSSCC(cr, uid , {"lang": 'en_US', "default_location_dest_id": ref("stock.stock_location_shop0"), "active_model":
-      "stock.move", "search_default_receive": 1, 'product_receive': True, "default_location_id": ref("stock.stock_location_suppliers"),"active_ids":[ref("stock_move_test0")], "tz": False, "active_id":ref("stock_move_test0")})
+
+-
+  I Check _getSSCC  and action_partial_move function of stock.move object
+-
+  !python {model: stock.move }: |
+    context = {"lang": 'en_US', "default_location_dest_id": ref("stock.stock_location_shop0"), "active_model":
+      "stock.move", "search_default_receive": 1, 'product_receive': True, "default_location_id": ref("stock.stock_location_suppliers"),"active_ids":[ref("stock_move_test0")], "tz": False, "active_id":ref("stock_move_test0")}
+    self._getSSCC(cr, uid , context)
+    self.action_partial_move(cr, uid , [ref("stock_move_test0")], context)
+
 -
   I check write function
 -
