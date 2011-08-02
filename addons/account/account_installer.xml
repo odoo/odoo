@@ -33,10 +33,6 @@
                                 <field name="date_stop"/>
                                 <field name="period" colspan="4"/>
                             </group>
-                            <group colspan="4" attrs="{'invisible':[('charts','!=','configurable')]}">
-                                <field name="sale_tax" on_change="on_change_tax(sale_tax)" attrs="{'required':[('charts','=','configurable')]}"/>
-                                <field name="purchase_tax" groups="base.group_extended"/>
-                            </group>
                         </group>
                     </group>
                 </data>
