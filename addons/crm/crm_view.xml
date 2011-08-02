@@ -350,12 +350,12 @@
             <field name="inherit_id" ref="base.view_users_form_simple_modif" />
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <page string="Current Activity" position="inside">
+                <group name="default_filters" position="inside">
                     <field name="context_section_id" completion="1"
                         widget="selection"
                         context="{'user_prefence':True}"
                         readonly="0"/>
-                </page>
+                </group>
             </field>
         </record>
 

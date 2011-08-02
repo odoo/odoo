@@ -559,9 +559,9 @@
          <field name="type">form</field>
          <field eval="18" name="priority"/>
          <field name="arch" type="xml">
-            <page string="Current Activity" position="inside">
+            <group name="default_filters" position="inside">
                 <field name="context_project_id" completion="1" context="{'user_prefence':True}" widget="selection" readonly="0"/>
-            </page>
+            </group>
        </field>
     </record>
     <act_window context="{'search_default_user_id': [active_id], 'default_user_id': active_id}" domain="[('state', '&lt;&gt;', 'cancelled'),('state', '&lt;&gt;', 'done')]" id="act_res_users_2_project_task_opened" name="Assigned tasks" res_model="project.task" src_model="res.users" view_mode="tree,form,gantt,calendar,graph" view_type="form"/>
