@@ -100,9 +100,6 @@ class account_installer(osv.osv_memory):
                     res['fields'][field]['selection'] = cmp_select
         return res
 
-    def on_change_tax(self, cr, uid, id, tax):
-        return {'value': {'purchase_tax': tax}}
-
     def on_change_start_date(self, cr, uid, id, start_date=False):
         if start_date:
             start_date = datetime.datetime.strptime(start_date, "%Y-%m-%d")
