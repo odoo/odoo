@@ -686,19 +686,11 @@ openerp.base.Database = openerp.base.Controller.extend({
             self.db_list = result.db_list;
         });
         var fetch_langs = this.rpc("/base/session/get_lang_list", {}, function(result) {
-            if (!result.error) {
-                self.lang_list = result.lang_list;
-            } else {
-                $('<div>').dialog({
-                    modal: true,
-                    title: result.title,
-                    buttons: {
-                        Ok: function() {
-                            $(this).dialog("close");
-                        }
-                    }
-               }).html(result.error);
+            if (result.error) {
+                self.display_error(result);
+                return;
             }
+            self.lang_list = result.lang_list;
         });
         $.when(fetch_db, fetch_langs).then(function () {self.do_create();});
         
