@@ -77,25 +77,21 @@
             <field eval="18" name="priority"/>
             <field name="arch" type="xml">
                 <form string="Users">
-                    <notebook colspan="4">
-                        <page string="Current Activity">
-                            <field name="company_id" widget="selection" readonly="0"
-                                    groups="base.group_multi_company"
-                                    on_change="on_change_company_id(company_id)" />
-                            <field name="view" readonly="0"/>
-                            <label string="" colspan="2"/>
-                            <separator string="Default Filters" colspan="4"/>
-                            <newline/>
-                        </page>
-                         <page string="Preferences">
-                            <field name="context_lang" completion="1" readonly="0"/>
-                            <field name="context_tz" completion="1" readonly="0"/>
-                            <field name="menu_tips" colspan="2" readonly="0"/>
-                            <separator string="Email &amp; Signature" colspan="4"/>
-                            <group colspan="4"><field name="user_email" widget="email" readonly="0"/></group>
-                            <field colspan="4" name="signature" readonly="0" nolabel="1"/>
-                          </page>
-                    </notebook>
+                    <field name="name"/>
+                    <field name="company_id" widget="selection" readonly="0" groups="base.group_multi_company" on_change="on_change_company_id(company_id)"/>
+                    <newline/>
+                    <group colspan="2" col="2">
+                        <separator string="Preferences" colspan="2"/>
+                        <field name="context_lang" completion="1" readonly="0"/>
+                        <field name="context_tz" completion="1" readonly="0"/>
+                        <field name="menu_tips" colspan="2" readonly="0"/>
+                    </group>
+                    <group name="default_filters" colspan="2" col="2">
+                        <separator string="Default Filters" colspan="2"/>
+                    </group>
+                    <separator string="Email &amp; Signature" colspan="2"/>
+                    <field colspan="4" name="user_email" widget="email" readonly="0"/>
+                    <field colspan="4" name="signature" readonly="0" nolabel="1"/>
                 </form>
             </field>
         </record>
