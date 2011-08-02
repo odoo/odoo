@@ -2477,6 +2477,7 @@ class account_chart_template(osv.osv):
         'name': fields.char('Name', size=64, required=True),
         'parent_id': fields.many2one('account.chart.template', 'Parent Chart Template'),
         'visible': fields.boolean('Can be Visible?', help="Set this to False if you don't want this template to be used actively in the wizard that generate Chart of Accounts from templates, this is useful when you want to generate accounts of this template only when loading its child template."),
+        'set_tax_complete': fields.boolean('Complete Set Of Tax', help="Set this False, then instead of the 2 many2one for default sale and purchase taxes, we display the default sale and purchase rates float field in the wizard that generate Chart of Accounts from templates"),
         'account_root_id': fields.many2one('account.account.template', 'Root Account', domain=[('parent_id','=',False)]),
         'tax_code_root_id': fields.many2one('account.tax.code.template', 'Root Tax Code', domain=[('parent_id','=',False)]),
         'tax_template_ids': fields.one2many('account.tax.template', 'chart_template_id', 'Tax Template List', help='List of all the taxes that have to be installed by the wizard'),
@@ -2635,21 +2636,24 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         'seq_journal':fields.boolean('Separated Journal Sequences', help="Check this box if you want to use a different sequence for each created journal. Otherwise, all will use the same sequence."),
         "sale_tax": fields.many2one("account.tax.template", "Default Sale Tax"),
         "purchase_tax": fields.many2one("account.tax.template", "Default Purchase Tax"),
+        'sale_tax_rate': fields.float('Sale Tax(%)'),
+        'purchase_tax_rate': fields.float('Purchase Tax(%)'),
+        'complete_tax': fields.boolean('Complete Tax'),
     }
     def onchange_chart_template_id(self, cr, uid, ids, chart_template_id=False, context=None):
         res = {}
-        res['value'] = {}
-        res['value']["sale_tax"] = False
-        res['value']["purchase_tax"] = False
+        tax_templ_obj = self.pool.get('account.tax.template')
+        res['value'] = {'complete_tax': False, 'sale_tax': False, 'purchase_tax': False}
         if chart_template_id:
+            complete_tax = self.pool.get('account.chart.template').browse(cr, uid, chart_template_id, context=context).set_tax_complete
+            if complete_tax:
             # default tax is given by the lowesst sequence. For same sequence we will take the latest created as it will be the case for tax created while isntalling the generic chart of account
-            sale_tax_ids = self.pool.get('account.tax.template').search(cr, uid, [("chart_template_id"
-                                          , "=", chart_template_id), ('type_tax_use', 'in', ('sale','all'))], order="sequence, id desc")
-            purchase_tax_ids = self.pool.get('account.tax.template').search(cr, uid, [("chart_template_id"
-                                          , "=", chart_template_id), ('type_tax_use', 'in', ('purchase','all'))], order="sequence, id desc")
-
-            res['value']["sale_tax"] = sale_tax_ids and sale_tax_ids[0] or False
-            res['value']["purchase_tax"] = purchase_tax_ids and purchase_tax_ids[0] or False
+                sale_tax_ids = tax_templ_obj.search(cr, uid, [("chart_template_id"
+                                              , "=", chart_template_id), ('type_tax_use', 'in', ('sale','all'))], order="sequence, id desc")
+                purchase_tax_ids = tax_templ_obj.search(cr, uid, [("chart_template_id"
+                                              , "=", chart_template_id), ('type_tax_use', 'in', ('purchase','all'))], order="sequence, id desc")
+                res['value'].update({'sale_tax': sale_tax_ids and sale_tax_ids[0] or False, 'purchase_tax': purchase_tax_ids and purchase_tax_ids[0] or False})
+            res['value'].update({'complete_tax': complete_tax})
         return res
 
 
