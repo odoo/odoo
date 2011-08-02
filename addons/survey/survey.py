@@ -508,9 +508,12 @@ class survey_question(osv.osv):
         if context is None:
             context = {}
         data = super(survey_question, self).default_get(cr, uid, fields, context)
-        if context.get('line_order',False):
-            if len(context['line_order'][-1]) > 2 and type(context['line_order'][-1][2]) == type({}) and context['line_order'][-1][2].has_key('sequence'):
-                data['sequence'] = context['line_order'][-1][2]['sequence'] + 1
+        if context.get('line_order',False) and data.get('sequence',0):
+            lines =  context.get('line_order')
+            seq = data['sequence']
+            for line in  lines:
+                seq = seq + 1
+                data.update({'sequence': str(seq)})
 
         if context.has_key('page_id'):
             data['page_id']= context.get('page_id', False)
