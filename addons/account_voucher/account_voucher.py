@@ -39,7 +39,11 @@ class account_voucher(osv.osv):
         if context is None: context = {}
         if context.get('period_id', False):
             return context.get('period_id')
-        periods = self.pool.get('account.period').find(cr, uid)
+        company_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
+        if context.get('invoice_id', False):
+            company_id = self.pool.get('account.invoice').browse(cr, uid, context['invoice_id'], context=context).company_id.id
+        context.update({'company_id': company_id})
+        periods = self.pool.get('account.period').find(cr, uid, context=context)
         return periods and periods[0] or False
 
     def _get_journal(self, cr, uid, context=None):
@@ -535,7 +539,11 @@ class account_voucher(osv.osv):
         """
         period_pool = self.pool.get('account.period')
         res = self.onchange_partner_id(cr, uid, ids, partner_id, journal_id, price, currency_id, ttype, date, context=context)
-        pids = period_pool.search(cr, uid, [('date_start', '<=', date), ('date_stop', '>=', date)])
+        company_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
+        if context.get('invoice_id', False):
+            company_id = self.pool.get('account.invoice').browse(cr, uid, context['invoice_id'], context=context).company_id.id
+        context.update({'company_id': company_id})
+        pids = period_pool.find(cr, uid, date, context=context)
         if pids:
             if not 'value' in res:
                 res['value'] = {}
