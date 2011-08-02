@@ -60,6 +60,7 @@ Account Voucher module includes all the basic requirements of Voucher Entries fo
         "test/sales_receipt.yml",
         "test/sales_payment.yml",
         "test/account_voucher_report.yml",
+        "test/case1_usd_usd.yml",
         "test/case2_usd_eur.yml",
         "test/case3_eur_eur.yml",
         "test/case4_cad_chf.yml",
