@@ -1,33 +1,26 @@
 <template>
-  <t t-name="CalendarView">
-    <h3 class="title"><t t-esc="view.fields_view.arch.attrs.string"/></h3>
-    <table class="calendar-view" width="100%" height="100%" cellspacing="0" cellpadding="0">
-      <tr>
-        <td>
-          <div style="height: 1000px;width: 100%;">
-            <div id="calendar-sidebar">
-            </div>
-          </div>
-        </td>
-        <td style="width:85%;" align="left">
-          <div id="openerp_scheduler" class="dhx_cal_container" style="height: 1000px;width: 100%;">
-            <div class="dhx_cal_navline">
-              <div class="dhx_cal_prev_button"/>
-              <div class="dhx_cal_next_button"/>
-              <div class="dhx_cal_today_button"/>
-              <div class="dhx_cal_date"/>
-              <div class="dhx_minical_icon" id="dhx_minical_icon"/>
-              <div class="dhx_cal_tab" name="day_tab" style="right:204px;"/>
-              <div class="dhx_cal_tab" name="week_tab" style="right:140px;"/>
-              <div class="dhx_cal_tab" name="month_tab" style="right:76px;"/>
-            </div>
-            <div class="dhx_cal_header">
-            </div>
-            <div class="dhx_cal_data">
-            </div>
-          </div>
-        </td>
-      </tr>
-    </table>
-  </t>
+ <t t-name="CalendarView">
+    <h3 class="title"><t t-esc="fields_view.arch.attrs.string"/></h3>
+    <div id="openerp_scheduler" class="dhx_cal_container" style="height: 1000px;">
+        <div class="dhx_cal_navline">
+            <div class="dhx_cal_prev_button"/>
+            <div class="dhx_cal_next_button"/>
+            <div class="dhx_cal_today_button"/>
+            <div class="dhx_cal_date"/>
+            <div class="dhx_cal_tab" name="day_tab" style="right:204px;"/>
+            <div class="dhx_cal_tab" name="week_tab" style="right:140px;"/>
+            <div class="dhx_cal_tab" name="month_tab" style="right:76px;"/>
+        </div>
+        <div class="dhx_cal_header">
+        </div>
+        <div class="dhx_cal_data">
+        </div>
+    </div>
+</t>
+<t t-name="CalendarView.sidebar.responsible">
+    <div t-foreach="users" t-as="user" class="oe_calendar_responsible" t-attf-style="background: #{user.color}">
+        <input type="checkbox" name="selection" t-att-value="user.id"/>
+        <span><t t-esc="user.name"/></span>
+    </div>
+</t>
 </template>
