@@ -2120,10 +2120,10 @@ class account_model(osv.osv):
             raise osv.except_osv(_('No period found !'), _('Unable to find a valid period !'))
         period_id = period_id[0]
 
+        move_date = context.get('date', time.strftime('%Y-%m-%d'))
+        move_date = datetime.strptime(move_date,"%Y-%m-%d")
         for model in self.browse(cr, uid, ids, context=context):
-            context_date = context.get('date')
-            date = datetime.strptime(context_date,"%Y-%m-%d")
-            entry['name'] = model.name%{'year':date.strftime("%Y"), 'month':date.strftime("%m"), 'date': date.strftime("%Y-%m")}
+            entry['name'] = model.name%{'year':move_date.strftime("%Y"), 'month':move_date.strftime("%m"), 'date': move_date.strftime("%Y-%m")}
             move_id = account_move_obj.create(cr, uid, {
                 'ref': entry['name'],
                 'period_id': period_id,
