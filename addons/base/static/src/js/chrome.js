@@ -250,9 +250,9 @@ openerp.base.Session = openerp.base.Widget.extend( /** @lends openerp.base.Sessi
                 if ( (tag.readyState && tag.readyState != "loaded" && tag.readyState != "complete") || tag.onload_done )
                     return;
                 tag.onload_done = true;
-                self.do_load_js(files);
             };
-            document.head.appendChild(tag);
+            $('head').append(tag);
+            self.do_load_js(files);
         } else {
             this.on_modules_loaded();
         }
