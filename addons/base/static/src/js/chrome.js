@@ -724,11 +724,20 @@ openerp.base.Database = openerp.base.Controller.extend({
         });
         return result;
     },
-    wait_for_newdb: function (db_creation_id, password) {
+    /**
+     * Waits until the new database is done creating, then unblocks the UI and
+     * logs the user in as admin
+     *
+     * @param {Number} db_creation_id identifier for the db-creation operation, used to fetch the current installation progress
+     * @param {Object} info info fields for this database creation
+     * @param {String} info.db name of the database being created
+     * @param {String} info.password super-admin password for the database
+     */
+    wait_for_newdb: function (db_creation_id, info) {
         var self = this;
         self.rpc('/base/database/progress', {
             id: db_creation_id,
-            password: password
+            password: info.password
         }, function (result) {
             var progress = result[0];
             // I'd display a progress bar, but turns out the progress status
@@ -739,11 +748,14 @@ openerp.base.Database = openerp.base.Controller.extend({
             // message instead.
             if (progress < 1) {
                 setTimeout(function () {
-                    self.wait_for_newdb(db_creation_id, password);
+                    self.wait_for_newdb(db_creation_id, info);
                 }, 500);
                 return;
             }
             $.unblockUI();
+
+            var admin = result[1][0];
+            self.session.session_login(info.db, admin.login, admin.password)
         });
     },
     do_db_create: function() {
@@ -758,8 +770,12 @@ openerp.base.Database = openerp.base.Controller.extend({
                     if (!result.error) {
                         self.db_list.push(self.to_object(fields)['db_name']);
                         self.db_list.sort();
+                        var form_obj = self.to_object(fields);
                         self.wait_for_newdb(
-                            result, self.to_object(fields)['super_admin_pwd']);
+                            result, {
+                                password: form_obj['super_admin_pwd'],
+                                db: form_obj['db_name']
+                            });
                     } else {
                         $.unblockUI();
                         $('<div>').dialog({
