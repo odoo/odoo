@@ -2493,6 +2493,10 @@ class account_chart_template(osv.osv):
         'property_account_expense_opening': fields.many2one('account.account.template', 'Opening Entries Expense Account'),
     }
 
+    _defaults = {
+        'visible': True,
+    }
+
 account_chart_template()
 
 class account_tax_template(osv.osv):
