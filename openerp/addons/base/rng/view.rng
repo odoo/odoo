@@ -119,6 +119,43 @@
         </rng:element>
     </rng:define>
 
+    <rng:define name="kanban">
+        <rng:element name="kanban">
+            <rng:zeroOrMore>
+                <rng:choice>
+                    <rng:ref name="colors"/>
+                    <rng:ref name="template"/>
+                </rng:choice>
+            </rng:zeroOrMore>
+        </rng:element>
+    </rng:define>
+
+    <rng:define name="colors">
+        <rng:element name="colors">
+            <rng:zeroOrMore>
+                <rng:choice>
+                    <rng:ref name="color"/>
+                </rng:choice>
+            </rng:zeroOrMore>
+        </rng:element>
+    </rng:define>
+
+    <rng:define name="color">
+        <rng:element name="color">
+            <rng:optional><rng:attribute name="condition"/><rng:text/></rng:optional>
+        </rng:element>
+    </rng:define>
+
+    <rng:define name="template">
+        <rng:element name="template">
+            <rng:zeroOrMore>
+                <rng:choice>
+                    <rng:ref name="any"/>
+                </rng:choice>
+            </rng:zeroOrMore>
+        </rng:element>
+    </rng:define>
+
     <rng:define name="tree">
         <rng:element name="tree">
             <rng:ref name="overload"/>
@@ -469,6 +506,7 @@
             <rng:zeroOrMore>
                 <rng:choice>
                     <rng:ref name="diagram"/>
+                    <rng:ref name="kanban"/>
                     <rng:ref name="form"/>
                     <rng:ref name="data"/>
                     <rng:ref name="tree"/>
@@ -628,6 +666,7 @@
     <rng:start>
         <rng:choice>
             <rng:ref name="diagram" />
+            <rng:ref name="kanban" />
             <rng:ref name="form" />
             <rng:ref name="search" />
             <rng:ref name="group" />
