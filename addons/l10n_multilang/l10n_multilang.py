@@ -96,11 +96,20 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         obj_mod = self.pool.get('ir.module.module')
         obj_acc_template = self.pool.get('account.account.template')
         obj_acc = self.pool.get('account.account')
+        obj_tax_code_template = self.pool.get('account.tax.code.template')
+        obj_tax_code = self.pool.get('account.tax.code')
+        obj_tax_template = self.pool.get('account.tax.template')
+        obj_tax = self.pool.get('account.tax')
+        obj_fiscal_position_template = self.pool.get('account.fiscal.position.template')
+        obj_fiscal_position = self.pool.get('account.fiscal.position')
+        
         resource_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'l10n_multilang', 'view_translate_message_wizard')
         
         company_id = obj_multi.company_id.id
         acc_template_root_id = obj_multi.chart_template_id.account_root_id.id
         acc_root_id = obj_acc.search(cr, uid, [('company_id', '=', company_id), ('parent_id', '=', None)])[0]
+        tax_code_template_root_id = obj_multi.chart_template_id.tax_code_root_id.id
+        tax_code_root_id = obj_tax_code.search(cr, uid, [('company_id', '=', company_id), ('parent_id', '=', None)])[0]
 
         # load languages
         langs = []
@@ -115,6 +124,21 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         in_ids = obj_acc_template.search(cr, uid, [('id', 'child_of', [acc_template_root_id])], order='id')[1:]
         out_ids = obj_acc.search(cr, uid, [('id', 'child_of', [acc_root_id])], order='id')[1:]
         warn_msg += self.copy_translations(cr, uid, langs, obj_acc_template, 'name', in_ids, obj_acc, out_ids)
+
+        # copy account.tax.code translations
+        in_ids = obj_tax_code_template.search(cr, uid, [('id', 'child_of', [tax_code_template_root_id])], order='id')[1:]
+        out_ids = obj_tax_code.search(cr, uid, [('id', 'child_of', [tax_code_root_id])], order='id')[1:]
+        warn_msg += self.copy_translations(cr, uid, langs, obj_tax_code_template, 'name', in_ids, obj_tax_code, out_ids)
+
+        # copy account.tax translations
+        in_ids = sorted([x.id for x in obj_multi.chart_template_id.tax_template_ids])
+        out_ids = obj_tax.search(cr, uid, [('company_id', '=', company_id)], order='id')
+        warn_msg += self.copy_translations(cr, uid, langs, obj_tax_template, 'name', in_ids, obj_tax, out_ids)
+
+        # copy account.fiscal.position translations
+        in_ids = obj_fiscal_position_template.search(cr, uid, [('chart_template_id', '=', obj_multi.chart_template_id.id)], order='id')
+        out_ids = obj_fiscal_position.search(cr, uid, [('company_id', '=', company_id)], order='id')
+        warn_msg += self.copy_translations(cr, uid, langs, obj_fiscal_position_template, 'name', in_ids, obj_fiscal_position, out_ids)
 
         #open new wizard its for displaying warning message
         if warn_msg:

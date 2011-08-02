@@ -2145,6 +2145,8 @@
                     <field name="bank_account_view_id" attrs="{'required': [('parent_id', '=', False)]}"/>
                     <field name="tax_code_root_id" attrs="{'required': [('parent_id', '=', False)]}"/>
                     <field name="parent_id" />
+                    <field name="visible" />
+                    <field name="set_tax_complete" />
                     </group>
                     <field name="tax_template_ids" colspan="4" readonly="1" nolabel="1"/>
                     <separator string="Properties" colspan="4"/>
@@ -2398,8 +2400,11 @@
                     <field name ="code_digits" groups="base.group_extended"/>
                     <field name="chart_template_id" widget="selection" on_change="onchange_chart_template_id(chart_template_id)"/>
                     <field name ="seq_journal" groups="base.group_extended"/>
-                    <field name="sale_tax" domain="[('chart_template_id', '=', chart_template_id),('parent_id','=',False),('type_tax_use','in',('sale','all'))]"/>
-                    <field name="purchase_tax" domain="[('chart_template_id', '=', chart_template_id),('parent_id','=',False),('type_tax_use','in',('purchase', 'all'))]"/>
+                    <field name="sale_tax" attrs="{'invisible': [('complete_tax', '!=', True)]}" domain="[('chart_template_id', '=', chart_template_id),('parent_id','=',False),('type_tax_use','in',('sale','all'))]"/>
+                    <field name="purchase_tax" attrs="{'invisible': [('complete_tax', '!=', True)]}" domain="[('chart_template_id', '=', chart_template_id),('parent_id','=',False),('type_tax_use','in',('purchase', 'all'))]"/>
+                    <field name ="sale_tax_rate" attrs="{'invisible': [('complete_tax', '=', True)]}"/>
+                    <field name ="purchase_tax_rate" attrs="{'invisible': [('complete_tax', '=', True)]}"/>
+                    <field name ="complete_tax" invisible="1"/>
                     <newline/> <!-- extended view because the web UI is not good for one2many -->
                     <field colspan="4" mode="tree" name="bank_accounts_id" nolabel="1" widget="one2many_list" groups="base.group_extended">
                         <form string="Bank Information">
