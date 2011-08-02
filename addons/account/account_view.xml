@@ -1102,7 +1102,7 @@
                             <separator string="Internal Note" colspan="4"/>
                             <field name="narration" colspan="4" nolabel="1"/>
                         </page>
-                        <page string="Analytic Lines" groups="base.group_analytic_accounting">
+                        <page string="Analytic Lines" groups="analytic.group_analytic_accounting">
                             <field colspan="4" name="analytic_lines" nolabel="1" context="{'default_general_account_id':account_id, 'default_name': name, 'default_date':date, 'amount': (debit or 0.0)-(credit or 0.0)}"/>
                         </page>
                     </notebook>
@@ -1149,7 +1149,7 @@
                             <field name="reconcile_partial_id"/>
                             <field name="state"/>
                         </page>
-                        <page string="Analytic Lines" groups="base.group_analytic_accounting">
+                        <page string="Analytic Lines" groups="analytic.group_analytic_accounting">
                             <field colspan="4" name="analytic_lines" nolabel="1" />
                         </page>
                     </notebook>
@@ -1397,7 +1397,7 @@
                                             <separator string="Internal Note" colspan="4"/>
                                             <field name="narration" colspan="4" nolabel="1"/>
                                         </page>
-                                        <page string="Analytic Lines" groups="base.group_analytic_accounting">
+                                        <page string="Analytic Lines" groups="analytic.group_analytic_accounting">
                                             <field colspan="4" name="analytic_lines" nolabel="1" context="{'default_general_account_id':account_id, 'default_name': name, 'default_date':date, 'amount': (debit or 0.0)-(credit or 0.0)}"/>
                                         </page>
                                     </notebook>
