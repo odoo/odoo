@@ -2,16 +2,19 @@
 <openerp>
 <data noupdate="0">
 
-    <record id="base.group_sale_manager" model="res.groups">
-        <field name="name">Sales / Manager</field>
+    <record id="base.group_sale_salesman_all_leads" model="res.groups">
+        <field name="name">Sales / User - All Leads</field>
     </record>
+
     <record id="base.group_sale_salesman" model="res.groups">
         <field name="name">Sales / User - Own Leads Only</field>
         <field name="users" eval="[(4, ref('base.user_root'))]"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_sale_salesman_all_leads'))]"/>
     </record>
 
-    <record id="base.group_sale_salesman_all_leads" model="res.groups">
-        <field name="name">Sales / User - All Leads</field>
+    <record id="base.group_sale_manager" model="res.groups">
+        <field name="name">Sales / Manager</field>
+        <field name="implied_ids" eval="[(4, ref('base.group_sale_salesman'))]"/>
     </record>
 
     <record model="ir.ui.menu" id="base.menu_base_partner">
