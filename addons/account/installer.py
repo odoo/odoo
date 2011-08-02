@@ -111,12 +111,6 @@ class account_installer(osv.osv_memory):
         if context is None:
             context = {}
         fy_obj = self.pool.get('account.fiscalyear')
-        mod_obj = self.pool.get('ir.model.data')
-        obj_acc_temp = self.pool.get('account.account.template')
-        obj_tax_code_temp = self.pool.get('account.tax.code.template')
-        obj_tax_temp = self.pool.get('account.tax.template')
-        obj_acc_chart_temp = self.pool.get('account.chart.template')
-        record = self.browse(cr, uid, ids, context=context)[0]
         for res in self.read(cr, uid, ids, context=context):
             if 'date_start' in res and 'date_stop' in res:
                 f_ids = fy_obj.search(cr, uid, [('date_start', '<=', res['date_start']), ('date_stop', '>=', res['date_stop']), ('company_id', '=', res['company_id'][0])], context=context)
