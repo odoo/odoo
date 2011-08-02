@@ -168,14 +168,12 @@
         if move_line.credit == -140.00:
             assert move_line.credit == -175, "Writeoff amount is wrong."
 -
-  I check the residual amount of invoice 1, should be 0 in residual currency and 0 in amount_residual
+  I check the residual amount of Invoice1, should be 0 in residual currency and 0 in amount_residual
 -
   !python {model: account.invoice}: |
     invoice_id = self.browse(cr, uid, ref("account_first_invoice_jan"))
     move_line_obj = self.pool.get('account.move.line')
     move_lines = move_line_obj.search(cr, uid, [('move_id', '=', invoice_id.move_id.id), ('invoice', '=', invoice_id.id), ('account_id', '=', invoice_id.account_id.id)])
     move_line = move_line_obj.browse(cr, uid, move_lines[0])
-    residual_curr = move_line.amount_residual_currency
-    residual = move_line.amount_residual
-    assert (move_line.amount_residual_currency == residual_curr and move_line.amount_residual == residual) , "Residual amount is not correct for first Invoice"
+    assert (move_line.amount_residual_currency == 0.0 and move_line.amount_residual == 0.0) , "Residual amount is not correct for first Invoice"
 -

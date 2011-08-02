@@ -214,7 +214,7 @@
   I check that my write-off entry is created with a credit of 15.00 and amount currency as 0.0
 -
   !python {model: account.voucher}: |
-    voucher = self.search(cr, uid, [('name', '=', 'First payment')])
+    voucher = self.search(cr, uid, [('name', '=', 'First payment'), ('partner_id', '=', ref('res_partner_michael0'))])
     voucher_id = self.browse(cr, uid, voucher[0])
     move_line_obj = self.pool.get('account.move.line')
     move_lines = move_line_obj.search(cr, uid, [('move_id', '=', voucher_id.move_id.id)])
@@ -235,9 +235,7 @@
     move_line_obj = self.pool.get('account.move.line')
     move_lines = move_line_obj.search(cr, uid, [('move_id', '=', invoice_id.move_id.id), ('invoice', '=', invoice_id.id), ('account_id', '=', invoice_id.account_id.id)])
     move_line = move_line_obj.browse(cr, uid, move_lines[0])
-    residual_curr = move_line.amount_residual_currency
-    residual = move_line.amount_residual
-    assert (move_line.amount_residual_currency == residual_curr and move_line.amount_residual == residual) , "Residual amount is not correct for first Invoice"
+    assert (move_line.amount_residual_currency == 20.0 and move_line.amount_residual == 15) , "Residual amount is not correct for first Invoice"
 -    
   I check the residual amuont of Invoice2, should be 30 in residual currency and 24 in amount_residual
 -
@@ -246,9 +244,7 @@
     move_line_obj = self.pool.get('account.move.line')
     move_lines = move_line_obj.search(cr, uid, [('move_id', '=', invoice_id.move_id.id), ('invoice', '=', invoice_id.id), ('account_id', '=', invoice_id.account_id.id)])
     move_line = move_line_obj.browse(cr, uid, move_lines[0])
-    residual_curr = move_line.amount_residual_currency
-    residual = move_line.amount_residual
-    assert (move_line.amount_residual_currency == residual_curr and move_line.amount_residual == residual) , "Residual amount is not correct for second Invoice"
+    assert (move_line.amount_residual_currency == 30 and move_line.amount_residual == 24) , "Residual amount is not correct for second Invoice"
 -  
   I create the second voucher of payment with values, 45 USD, journal USD, and fill amounts 20 for the invoice of 200$ and 30 for the invoice of 100$
 -
@@ -344,9 +340,7 @@
     move_line_obj = self.pool.get('account.move.line')
     move_lines = move_line_obj.search(cr, uid, [('move_id', '=', invoice_id.move_id.id), ('invoice', '=', invoice_id.id), ('account_id', '=', invoice_id.account_id.id)])
     move_line = move_line_obj.browse(cr, uid, move_lines[0])
-    residual_curr = move_line.amount_residual_currency
-    residual = move_line.amount_residual
-    assert (move_line.amount_residual_currency == residual_curr and move_line.amount_residual == residual) , "Residual amount is not correct for first Invoice"
+    assert (move_line.amount_residual_currency == 0.0 and move_line.amount_residual == 0.0) , "Residual amount is not correct for first Invoice"
 -    
   I check the residual amuont of invoice 2, should be 0 in residual currency and 0 in amount_residual
 -
@@ -355,6 +349,4 @@
     move_line_obj = self.pool.get('account.move.line')
     move_lines = move_line_obj.search(cr, uid, [('move_id', '=', invoice_id.move_id.id), ('invoice', '=', invoice_id.id), ('account_id', '=', invoice_id.account_id.id)])
     move_line = move_line_obj.browse(cr, uid, move_lines[0])
-    residual_curr = move_line.amount_residual_currency
-    residual = move_line.amount_residual
-    assert (move_line.amount_residual_currency == residual_curr and move_line.amount_residual == residual) , "Residual amount is not correct for second Invoice"
+    assert (move_line.amount_residual_currency == 0.0 and move_line.amount_residual == 0.0) , "Residual amount is not correct for second Invoice"

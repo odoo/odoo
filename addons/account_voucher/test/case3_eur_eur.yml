@@ -213,9 +213,7 @@
     move_line_obj = self.pool.get('account.move.line')
     move_lines = move_line_obj.search(cr, uid, [('move_id', '=', invoice_id.move_id.id), ('invoice', '=', invoice_id.id), ('account_id', '=', invoice_id.account_id.id)])
     move_line = move_line_obj.browse(cr, uid, move_lines[0])
-    residual_curr = move_line.amount_residual_currency
-    residual = move_line.amount_residual
-    assert (move_line.amount_residual_currency == residual_curr and move_line.amount_residual == residual) , "Residual amount is not correct for first Invoice"
+    assert (move_line.amount_residual_currency == 50.0 and move_line.amount_residual == 50.0) , "Residual amount is not correct for first Invoice"
 -    
   I check the residual amuont of Invoice2 is 60
 -
@@ -224,9 +222,7 @@
     move_line_obj = self.pool.get('account.move.line')
     move_lines = move_line_obj.search(cr, uid, [('move_id', '=', invoice_id.move_id.id), ('invoice', '=', invoice_id.id), ('account_id', '=', invoice_id.account_id.id)])
     move_line = move_line_obj.browse(cr, uid, move_lines[0])
-    residual_curr = move_line.amount_residual_currency
-    residual = move_line.amount_residual
-    assert (move_line.amount_residual_currency == residual_curr and move_line.amount_residual == residual) , "Residual amount is not correct for second Invoice"
+    assert (move_line.amount_residual_currency == 60.0 and move_line.amount_residual == 60.0) , "Residual amount is not correct for second Invoice"
 -
   I create the second voucher of payment and check to let open the debtor overpaid amount.
 -
@@ -315,9 +311,7 @@
     move_line_obj = self.pool.get('account.move.line')
     move_lines = move_line_obj.search(cr, uid, [('move_id', '=', invoice_id.move_id.id), ('invoice', '=', invoice_id.id), ('account_id', '=', invoice_id.account_id.id)])
     move_line = move_line_obj.browse(cr, uid, move_lines[0])
-    residual_curr = move_line.amount_residual_currency
-    residual = move_line.amount_residual
-    assert (move_line.amount_residual_currency == residual_curr and move_line.amount_residual == residual) , "Residual amount is not correct for first Invoice"
+    assert (move_line.amount_residual_currency == 0 and move_line.amount_residual == 0) , "Residual amount is not correct for first Invoice"
 -    
   I check the residual amuont of Invoice2 is -10
 -
@@ -326,6 +320,4 @@
     move_line_obj = self.pool.get('account.move.line')
     move_lines = move_line_obj.search(cr, uid, [('move_id', '=', invoice_id.move_id.id), ('invoice', '=', invoice_id.id), ('account_id', '=', invoice_id.account_id.id)])
     move_line = move_line_obj.browse(cr, uid, move_lines[0])
-    residual_curr = move_line.amount_residual_currency
-    residual = move_line.amount_residual
-    assert (move_line.amount_residual_currency == residual_curr and move_line.amount_residual == residual) , "Residual amount is not correct for second Invoice"
+    assert (move_line.amount_residual_currency == -10.0 and move_line.amount_residual == -10.0) , "Residual amount is not correct for second Invoice"
