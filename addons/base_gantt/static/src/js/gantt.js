@@ -410,10 +410,10 @@ init: function(parent, element_id, dataset, view_id) {
                     }
                 }
         });
-        var action_manager = new openerp.base.ActionManager(this.session, element_id);
+        var action_manager = new openerp.base.ActionManager(this, element_id);
         action_manager.start();
         action_manager.do_action(action);
-        
+
         //Default_get
         if(!event_id) action_manager.viewmanager.dataset.index = null;
     },
