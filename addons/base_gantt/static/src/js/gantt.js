@@ -1,16 +1,14 @@
 /*---------------------------------------------------------
  * OpenERP base_gantt
  *---------------------------------------------------------*/
-
 openerp.base_gantt = function (openerp) {
 QWeb.add_template('/base_gantt/static/src/xml/base_gantt.xml');
 openerp.base.views.add('gantt', 'openerp.base_gantt.GanttView');
-openerp.base_gantt.GanttView = openerp.base.Widget.extend({
+openerp.base_gantt.GanttView = openerp.base.View.extend({
 
-init: function(view_manager, session, element_id, dataset, view_id) {
-
-        this._super(session, element_id);
-        this.view_manager = view_manager;
+init: function(parent, element_id, dataset, view_id) {
+        this._super(parent, element_id);
+        this.view_manager = parent || new openerp.base.NullViewManager();
         this.dataset = dataset;
         this.model = dataset.model;
         this.view_id = view_id;
@@ -29,7 +27,7 @@ init: function(view_manager, session, element_id, dataset, view_id) {
         this.calendar_fields = {};
         this.info_fields = [];
         this.domain = this.dataset._domain ? this.dataset._domain: [];
-        this.context = {};
+        this.context = this.dataset.context || {};
     },
 
     start: function() {
