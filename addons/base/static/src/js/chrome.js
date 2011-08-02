@@ -776,6 +776,25 @@ openerp.base.Database = openerp.base.Controller.extend({
             });
         });
     },
+    /**
+     * Displays an error dialog resulting from the various RPC communications
+     * failing over themselves
+     *
+     * @param {Object} error error description
+     * @param {String} error.title title of the error dialog
+     * @param {String} error.error message of the error dialog
+     */
+    display_error: function (error) {
+        return $('<div>').dialog({
+            modal: true,
+            title: error.title,
+            buttons: {
+                Ok: function() {
+                    $(this).dialog("close");
+                }
+            }
+        }).html(error.error);
+    },
     do_db_create: function() {
         var self = this;
        	self.$option_id.html(QWeb.render("CreateDB", self));
@@ -785,27 +804,18 @@ openerp.base.Database = openerp.base.Controller.extend({
                 var fields = $(form).serializeArray();
                 $.blockUI();
                 self.rpc("/base/database/create_db", {'fields': fields}, function(result) {
-                    if (!result.error) {
-                        self.db_list.push(self.to_object(fields)['db_name']);
-                        self.db_list.sort();
-                        var form_obj = self.to_object(fields);
-                        self.wait_for_newdb(
-                            result, {
-                                password: form_obj['super_admin_pwd'],
-                                db: form_obj['db_name']
-                            });
-                    } else {
+                    if (result.error) {
                         $.unblockUI();
-                        $('<div>').dialog({
-                            modal: true,
-                            title: result.title,
-                            buttons: {
-                                Ok: function() {
-                                    $(this).dialog("close");
-                                }
-                            }
-                        }).html(result.error);
+                        self.display_error(result);
+                        return;
                     }
+                    self.db_list.push(self.to_object(fields)['db_name']);
+                    self.db_list.sort();
+                    var form_obj = self.to_object(fields);
+                    self.wait_for_newdb(result, {
+                        password: form_obj['super_admin_pwd'],
+                        db: form_obj['db_name']
+                    });
                 });
             }
         });
@@ -826,22 +836,13 @@ openerp.base.Database = openerp.base.Controller.extend({
                     return;
                 }
                 self.rpc("/base/database/drop_db", {'fields': fields}, function(result) {
-                    if (! result.error) {
-                        $db_list.find(':selected').remove();
-                        self.db_list.splice(
-                                _.indexOf(self.db_list, db, true), 1);
-                        self.notification.notify("Dropping database", "The database '" + db + "' has been dropped");
-                    } else {
-                        $('<div>').dialog({
-                            modal: true,
-                            title: result.title,
-                            buttons: {
-                                Ok: function() {
-                                    $(this).dialog("close");
-                                }
-                            }
-                        }).html(result.error);
+                    if (result.error) {
+                        self.display_error(result);
+                        return;
                     }
+                    $db_list.find(':selected').remove();
+                    self.db_list.splice(_.indexOf(self.db_list, db, true), 1);
+                    self.notification.notify("Dropping database", "The database '" + db + "' has been dropped");
                 });
             }
         });
@@ -906,11 +907,28 @@ openerp.base.Database = openerp.base.Controller.extend({
                 $(form).ajaxSubmit({
                     url: '/base/database/restore_db',
                     type: 'POST',
-                    dataType: 'json',
                     resetForm: true,
-                    success: function () {
+                    success: function (body) {
                         // TODO: ui manipulations
-                        // note: response objects don't work
+                        // note: response objects don't work, but we have the
+                        // HTTP body of the response~~
+
+                        // If empty body, everything went fine
+                        if (!body) { return; }
+
+                        if (body.indexOf('403 Forbidden') !== -1) {
+                            self.display_error({
+                                title: 'Access Denied',
+                                error: 'Incorrect super-administrator password'
+                            })
+                        } else {
+                            self.display_error({
+                                title: 'Restore Database',
+                                error: 'Could not restore the database'
+                            })
+                        }
+                    },
+                    complete: function () {
                         $.unblockUI();
                     }
                 });
@@ -932,22 +950,14 @@ openerp.base.Database = openerp.base.Controller.extend({
                 }
             },
             submitHandler: function (form) {
-                var fields = $(form).serializeArray();
-
-                self.rpc("/base/database/change_password_db", {'fields': fields}, function(result) {
-                    if (!result.error) {
-                        self.notification.notify("Changed Password", "Password has been changed successfully");
-                    } else {
-                        $('<div>').dialog({
-                            modal: true,
-                            title: result.title,
-                            buttons: {
-                                Ok: function() {
-                                    $(this).dialog("close");
-                                }
-                            }
-                        }).html(result.error);
+                self.rpc("/base/database/change_password_db", {
+                    'fields': $(form).serializeArray()
+                }, function(result) {
+                    if (result.error) {
+                        self.display_error(result);
+                        return;
                     }
+                    self.notification.notify("Changed Password", "Password has been changed successfully");
                 });
             }
         });

@@ -212,20 +212,15 @@ class Database(openerpweb.Controller):
             
     @openerpweb.httprequest
     def restore_db(self, req, db_file, restore_pwd, new_db):
-        response = None
         try:
             data = base64.encodestring(db_file.file.read())
-            response = simplejson.dumps(
-                req.session.proxy("db").restore(restore_pwd, new_db, data))
+            req.session.proxy("db").restore(restore_pwd, new_db, data)
+            return ''
         except xmlrpclib.Fault, e:
             if e.faultCode and e.faultCode.split(':')[0] == 'AccessDenied':
-                response = simplejson.dumps({'error': e.faultCode, 'title': 'Restore Database'})
-        if not response:
-            response = simplejson.dumps({'error': 'Could not restore database !', 'title': 'Restore Database'})
+                raise cherrypy.HTTPError(403)
 
-        cherrypy.response.headers['Content-Type'] = 'application/json'
-        cherrypy.response.headers['Content-Length'] = len(response)
-        return response
+        raise cherrypy.HTTPError()
 
     @openerpweb.jsonrequest
     def change_password_db(self, req, fields):
