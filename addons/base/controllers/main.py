@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
+
 import base64, glob, os, re
 from xml.etree import ElementTree
 from cStringIO import StringIO
 
+import operator
 import simplejson
 
 import openerpweb
@@ -10,8 +12,8 @@ import openerpweb.ast
 import openerpweb.nonliterals
 
 import cherrypy
+import xmlrpclib
 import csv
-import xml.dom.minidom
 
 # Should move to openerpweb.Xml2Json
 class Xml2Json:
@@ -153,15 +155,85 @@ class Database(openerpweb.Controller):
     _cp_path = "/base/database"
 
     @openerpweb.jsonrequest
-    def get_databases_list(self, req):
+    def get_list(self, req):
         proxy = req.session.proxy("db")
         dbs = proxy.list()
         h = req.httprequest.headers['Host'].split(':')[0]
         d = h.split('.')[0]
-        r = cherrypy.config['openerp.dbfilter'].replace('%h',h).replace('%d',d)
-        print "h,d",h,d,r
-        dbs = [i for i in dbs if re.match(r,i)]
+        r = cherrypy.config['openerp.dbfilter'].replace('%h', h).replace('%d', d)
+        dbs = [i for i in dbs if re.match(r, i)]
         return {"db_list": dbs}
+
+    @openerpweb.jsonrequest
+    def progress(self, req, password, id):
+        return req.session.proxy('db').get_progress(password, id)
+
+    @openerpweb.jsonrequest
+    def create(self, req, fields):
+
+        params = dict(map(operator.itemgetter('name', 'value'), fields))
+        create_attrs = operator.itemgetter(
+            'super_admin_pwd', 'db_name', 'demo_data', 'db_lang', 'create_admin_pwd')(
+            params)
+
+        try:
+            return req.session.proxy("db").create(*create_attrs)
+        except xmlrpclib.Fault, e:
+            if e.faultCode and e.faultCode.split(':')[0] == 'AccessDenied':
+                return {'error': e.faultCode, 'title': 'Create Database'}
+        return {'error': 'Could not create database !', 'title': 'Create Database'}
+
+    @openerpweb.jsonrequest
+    def drop(self, req, fields):
+        password, db = operator.itemgetter(
+            'drop_pwd', 'drop_db')(
+                dict(map(operator.itemgetter('name', 'value'), fields)))
+        
+        try:
+            return req.session.proxy("db").drop(password, db)
+        except xmlrpclib.Fault, e:
+            if e.faultCode and e.faultCode.split(':')[0] == 'AccessDenied':
+                return {'error': e.faultCode, 'title': 'Drop Database'}
+        return {'error': 'Could not drop database !', 'title': 'Drop Database'}
+
+    @openerpweb.httprequest
+    def backup(self, req, backup_db, backup_pwd, token):
+        try:
+            db_dump = base64.decodestring(
+                req.session.proxy("db").dump(backup_pwd, backup_db))
+            cherrypy.response.headers['Content-Type'] = "application/octet-stream; charset=binary"
+            cherrypy.response.headers['Content-Disposition'] = 'attachment; filename="' + backup_db + '.dump"'
+            cherrypy.response.cookie['fileToken'] = token
+            cherrypy.response.cookie['fileToken']['path'] = '/'
+            return db_dump
+        except xmlrpclib.Fault, e:
+            if e.faultCode and e.faultCode.split(':')[0] == 'AccessDenied':
+                return 'Backup Database|' + e.faultCode
+        return 'Backup Database|Could not generate database backup'
+            
+    @openerpweb.httprequest
+    def restore(self, req, db_file, restore_pwd, new_db):
+        try:
+            data = base64.encodestring(db_file.file.read())
+            req.session.proxy("db").restore(restore_pwd, new_db, data)
+            return ''
+        except xmlrpclib.Fault, e:
+            if e.faultCode and e.faultCode.split(':')[0] == 'AccessDenied':
+                raise cherrypy.HTTPError(403)
+
+        raise cherrypy.HTTPError()
+
+    @openerpweb.jsonrequest
+    def change_password(self, req, fields):
+        old_password, new_password = operator.itemgetter(
+            'old_pwd', 'new_pwd')(
+                dict(map(operator.itemgetter('name', 'value'), fields)))
+        try:
+            return req.session.proxy("db").change_admin_password(old_password, new_password)
+        except xmlrpclib.Fault, e:
+            if e.faultCode and e.faultCode.split(':')[0] == 'AccessDenied':
+                return {'error': e.faultCode, 'title': 'Change Password'}
+        return {'error': 'Error, password not changed !', 'title': 'Change Password'}
 
 class Session(openerpweb.Controller):
     _cp_path = "/base/session"
@@ -180,6 +252,16 @@ class Session(openerpweb.Controller):
         return req.session.model('ir.ui.view_sc').get_sc(req.session._uid, "ir.ui.menu",
                                                          req.session.eval_context(req.context))
 
+    @openerpweb.jsonrequest
+    def get_lang_list(self, req):
+        try:
+            return {
+                'lang_list': (req.session.proxy("db").list_lang() or []),
+                'error': ""
+            }
+        except Exception, e:
+            return {"error": e, "title": "Languages"}
+            
     @openerpweb.jsonrequest
     def modules(self, req):
         # TODO query server for installed web modules
@@ -906,8 +988,7 @@ class Action(openerpweb.Controller):
             [action_id], req.session.eval_context(req.context)), req.session)
 
 def export_csv(fields, result):
-    import StringIO
-    fp = StringIO.StringIO()
+    fp = StringIO()
     writer = csv.writer(fp, quoting=csv.QUOTE_ALL)
 
     writer.writerow(fields)
@@ -931,7 +1012,6 @@ def export_csv(fields, result):
     return data
 
 def export_xls(fieldnames, table):
-    import StringIO
     try:
         import xlwt
     except ImportError:
@@ -953,24 +1033,13 @@ def export_xls(fieldnames, table):
             worksheet.write(row_index + 1, cell_index, cell_value, style)
 
 
-    fp = StringIO.StringIO()
+    fp = StringIO()
     workbook.save(fp)
     fp.seek(0)
     data = fp.read()
     fp.close()
     #return data.decode('ISO-8859-1')
     return unicode(data, 'utf-8', 'replace')
-
-def node_attributes(node):
-    attrs = node.attributes
-
-    if not attrs:
-        return {}
-    # localName can be a unicode string, we're using attribute names as
-    # **kwargs keys and python-level kwargs don't take unicode keys kindly
-    # (they blow up) so we need to ensure all keys are ``str``
-    return dict([(str(attrs.item(i).localName), attrs.item(i).nodeValue)
-                 for i in range(attrs.length)])
 
 class Export(View):
     _cp_path = "/base/export"
