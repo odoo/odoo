@@ -766,10 +766,14 @@ openerp.base.Database = openerp.base.Controller.extend({
                 }, 500);
                 return;
             }
-            $.unblockUI();
 
             var admin = result[1][0];
-            self.session.session_login(info.db, admin.login, admin.password)
+            setTimeout(function () {
+                self.stop();
+                self.controller_parent.do_login(
+                        info.db, admin.login, admin.password);
+                $.unblockUI();
+            });
         });
     },
     do_db_create: function() {
@@ -999,13 +1003,22 @@ openerp.base.Login =  openerp.base.Controller.extend({
     },
     on_submit: function(ev) {
         ev.preventDefault();
-        var self = this;
         var $e = this.$element;
         var db = $e.find("form [name=db]").val();
         var login = $e.find("form input[name=login]").val();
         var password = $e.find("form input[name=password]").val();
-        //$e.hide();
-        // Should hide then call callback
+
+        this.do_login(db, login, password);
+    },
+    /**
+     * Performs actual login operation, and UI-related stuff
+     *
+     * @param {String} db database to log in
+     * @param {String} login user login
+     * @param {String} password user password
+     */
+    do_login: function (db, login, password) {
+        var self = this;
         this.session.session_login(db, login, password, function() {
             if(self.session.session_is_valid()) {
                 if (self.has_local_storage) {
