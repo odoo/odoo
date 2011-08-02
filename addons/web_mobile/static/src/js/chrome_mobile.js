@@ -1,5 +1,5 @@
 openerp.web_mobile.chrome_mobile = function(openerp) {
-openerp.web_mobile.Shortcuts =  openerp.base.Controller.extend({
+openerp.web_mobile.Shortcuts =  openerp.base.Widget.extend({
     init: function(session, element_id) {
         this._super(session, element_id);
     },
@@ -19,7 +19,7 @@ openerp.web_mobile.Shortcuts =  openerp.base.Controller.extend({
         this.listview.start();
     }
 });
-openerp.web_mobile.Header =  openerp.base.Controller.extend({
+openerp.web_mobile.Header =  openerp.base.Widget.extend({
     init: function(session, element_id) {
         this._super(session, element_id);
     },
@@ -36,7 +36,7 @@ openerp.web_mobile.Header =  openerp.base.Controller.extend({
         }
     }
 });
-openerp.web_mobile.Secondary =  openerp.base.Controller.extend({
+openerp.web_mobile.Secondary =  openerp.base.Widget.extend({
     init: function(session, element_id, secondary_menu_id) {
         this._super(session, element_id);
         this.data = secondary_menu_id;
@@ -74,7 +74,7 @@ openerp.web_mobile.Secondary =  openerp.base.Controller.extend({
     }
 });
 
-openerp.web_mobile.Menu =  openerp.base.Controller.extend({
+openerp.web_mobile.Menu =  openerp.base.Widget.extend({
     init: function(session, element_id, secondary_menu_id) {
         this._super(session, element_id);
         this.secondary_menu_id = secondary_menu_id;
@@ -106,7 +106,7 @@ openerp.web_mobile.Menu =  openerp.base.Controller.extend({
         this.secondary.start();
     }
 });
-openerp.web_mobile.Options =  openerp.base.Controller.extend({
+openerp.web_mobile.Options =  openerp.base.Widget.extend({
     init: function(session, element_id) {
         this._super(session, element_id);
     },
@@ -121,7 +121,7 @@ openerp.web_mobile.Options =  openerp.base.Controller.extend({
         this.login.start();
     }
 });
-openerp.web_mobile.Login =  openerp.base.Controller.extend({
+openerp.web_mobile.Login =  openerp.base.Widget.extend({
     init: function(session, element_id) {
         this._super(session, element_id);
     },
@@ -190,7 +190,7 @@ openerp.web_mobile.Login =  openerp.base.Controller.extend({
         });
     }
 });
-openerp.web_mobile.MobileWebClient = openerp.base.Controller.extend({
+openerp.web_mobile.MobileWebClient = openerp.base.Widget.extend({
     init: function(element_id) {
         var self = this;
         this._super(null, element_id);

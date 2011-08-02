@@ -294,7 +294,7 @@
     <div class="oe_login_right_pane">
         <p>We think that daily job activities can be more intuitive, efficient, automated, .. and even fun.</p>
         <h3>OpenERP's vision to be:</h3>
-        
+
         <table cellpadding="0" cellspacing="0" width="100%" style="border:none;">
             <tbody>
             <tr>
@@ -326,7 +326,7 @@
             </tr>
             </tbody>
         </table>
-        
+
     </div>
 </t>
 <t t-name="Header">
@@ -439,10 +439,10 @@
 </t>
 <t t-name="Sidebar.section">
     <h2><t t-esc="name"/></h2>
-    <div t-att-id="section_id">
+    <div t-att-id="section_id" t-att-class="classname">
         <ul t-if="items">
             <li t-foreach="items" t-as="item" t-att-class="item.classname">
-                <a class="oe_sidebar_action_a" t-att-id="item.element_id" href="#">
+                <a class="oe_sidebar_action_a" t-att-id="item.element_id" t-att-title="item.title" href="#">
                     <t t-esc="item.label"/>
                 </a>
             </li>
@@ -452,11 +452,11 @@
 <table t-name="ListView" class="oe-listview-content">
     <t t-set="columns_count" t-value="visible_columns.length + (options.selectable ? 1 : 0) + (options.deletable ? 1 : 0)"/>
     <thead class="ui-widget-header">
-        <tr t-if="flags.action_buttons !== false or flags.pager !== false">
+        <tr t-if="options.action_buttons !== false or options.pager !== false">
             <th t-att-colspan="columns_count">
                 <table>
                     <tr>
-                        <td t-if="flags.action_buttons !== false" class="oe-actions">
+                        <td t-if="options.action_buttons !== false" class="oe-actions">
                             <button type="button" class="oe-list-add"
                                     t-if="options.addable">
                                 <t t-esc="options.addable"/>
@@ -466,7 +466,7 @@
                                 Delete
                             </button>
                         </td>
-                        <th t-if="flags.pager !== false" class="oe-list-pager">
+                        <th t-if="options.pager !== false" class="oe-list-pager">
                             <button type="button" disabled="disabled"
                                     data-pager-action="first">First</button>
                             <button type="button" disabled="disabled"
@@ -524,7 +524,7 @@
     t-att-data-index="row_index">
     <t t-foreach="columns" t-as="column">
         <td t-if="column.meta">
-            
+
         </td>
     </t>
     <th t-if="options.selectable" class="oe-record-selector" width="1">
@@ -548,7 +548,7 @@
 <t t-name="FormView">
     <div class="oe_form_header" t-att-id="view.element_id + '_header'">
         <h2 class="oe_view_title"><t t-esc="view.fields_view.arch.attrs.string"/> <button class="oe_get_xml_view">xml</button></h2>
-        <div class="oe_form_buttons" t-if="view.flags.action_buttons !== false">
+        <div class="oe_form_buttons" t-if="view.options.action_buttons !== false">
             <!--<button type="button" class="oe_form_button_save">
                 <span class="oe_form_on_update">Save</span>
                 <span class="oe_form_on_create">Create</span>
@@ -560,7 +560,7 @@
             <!--<button type="button" class="oe_form_button_cancel">Cancel</button>-->
             <button type="button" class="oe_form_button_new">New</button>
         </div>
-        <div class="oe_form_pager" t-if="view.flags.pager !== false">
+        <div class="oe_form_pager" t-if="view.options.pager !== false">
             <button type="button" data-pager-action="first">First</button>
             <button type="button" data-pager-action="previous">&lt;&lt;</button>
 
@@ -1012,7 +1012,7 @@
             <option value="all">All the following conditions must match</option>
             <option value="none">None of the following conditions must match</option>
         </select>
-        <a class="searchview_extended_delete_group" 
+        <a class="searchview_extended_delete_group"
                 href="javascript:void(0)"><span></span></a>
         <div class="searchview_extended_propositions_list">
         </div>
@@ -1134,5 +1134,146 @@
                     'class': 'oe-edit-row-cancel', 'type': 'button'}).text('Cancel')))
             .unwrap();
     </t>
+</t>
+
+<t t-name="ExportView">
+    <a id="exportview" href="javascript: void(0)" style="text-decoration: none;color: #3D3D3D;">Export</a>
+</t>
+
+<t t-name="ExportTreeView">
+    <table class="view" style="background-color: #F3F3F3;">
+        <tr>
+            <td align="left">
+                This wizard will export all data that matches the current search criteria to a CSV file.
+                You can export all data or only the fields that can be reimported after modification.
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <table>
+                    <tr>
+                        <td class="label"><label>Export Type:</label></td>
+                        <td>
+                            <select id="import_compat" name="import_compat">
+                                <option value="1">Import Compatible Export</option>
+                                <option value="0">Export all Data</option>
+                            </select>
+                        </td>
+                        <td class="label"><label>Export Format</label></td>
+                        <td>
+                            <select id="export_format" name="export_format">
+                                <option value="csv">CSV</option>
+                                <option value="xls">Excel</option>
+                            </select>
+                        </td>
+
+                    </tr>
+                </table>
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <table class="oe_export_fields_selector_export">
+                    <tr>
+                        <th class="oe_view_title" valign="bottom">Available fields</th>
+                        <th class="oe_view_title"></th>
+                        <th class="oe_view_title">Fields to export
+                        <a style="color: blue; text-decoration: none;" href="#" id="export_new_list">Save fields list</a>
+                        <div id="savenewlist"></div>
+                        <div id="ExistsExportList"></div>
+                        </th>
+                    </tr>
+                    <tr>
+                        <td class="oe_export_fields_selector_left">
+                            <div id="left_field_panel">
+                            </div>
+                        </td>
+                        <td>
+                            <table class="oe_export_fields_selector_center">
+                                <tr>
+                                    <td align="center">
+                                        <button id="add_field" class="oe_export_button_export">Add</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td align="center">
+                                        <button id="remove_field" class="oe_export_button_export">Remove</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td align="center">
+                                        <button id="remove_all_field" class="oe_export_button_export">Remove All</button>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td class="oe_export_fields_selector_right">
+                            <select name="fields_list" id="fields_list" multiple="multiple"></select>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</t>
+
+<t t-name="ExportTreeView-Secondary">
+    <table id="field-tree-structure" class="oe_export_fields_selector_export" cellspacing="0" cellpadding="0">
+        <tr><th class="oe_export_tree_header"> Name </th></tr>
+        <t t-call="ExportTreeView-Secondary.children"/>
+    </table>
+</t>
+<t t-name="ExportTreeView-Secondary.children">
+    <t t-foreach="fields" t-as="field" >
+        <tr t-att-id="'treerow-' + field.id" class="oe_export_row">
+            <td>
+                <table class="tree_grid" border="0">
+                    <tr class="oe_export_row">
+                        <t t-foreach="(field.id).split('/')" t-as="level" >
+                            <t t-if="(field.id).split('/')[0] != level">
+                                <td width="18">&amp;nbsp;</td>
+                            </t>
+                        </t>
+                        <td valign="top" align="left" style="cursor: pointer;" width="18">
+                            <t t-if="(field.children).length >= 1">
+                                <t t-if="(field.id).split('/').length != 3">
+                                    <img t-att-id="'parentimg-' + field.id" src="/base/static/src/img/expand.gif" width="16" height="16" border="0"/>
+                                </t>
+                            </t>
+                        </td>
+                        <td id="tree-column" valign="middle" align="left" style="cursor: pointer;">
+                            <a t-att-id="'export-' + field.id"  t-att-string="field.string" href="javascript: void(0);" style="text-decoration: none;">
+                                <t t-esc="field.string"/>
+                            </a>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </t>
+</t>
+
+<t t-name="ExportNewList">
+    <tr>
+        <th><label>Save as:</label></th>
+        <td><input size="10" type="text" id="savelist_name"/></td>
+        <td><button class="oe_export_button_export" id="add_export_list">Ok</button></td>
+    </tr>
+</t>
+
+<t t-name="Exists.ExportList">
+    <tr><th align="right"><label >Saved exports:</label></th></tr>
+    <tr align="left">
+        <td>
+            <select id="saved_export_list" style="width: 100%;">
+                <option></option>
+                <t t-foreach="existing_exports" t-as="export">
+                    <option t-att-value="export.id"><t t-esc="export.name"/></option>
+                </t>
+            </select>
+        </td>
+        <td><button class="oe_export_button_export" id="delete_export_list">Delete</button></td>
+    </tr>
 </t>
 </templates>

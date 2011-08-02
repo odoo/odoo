@@ -111,7 +111,6 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
         this.columns = [];
 
         this.options = _.extend({}, this.defaults, options || {});
-        this.flags =  this.view_manager.flags || {};
 
         this.set_groups(new openerp.base.ListView.Groups(this));
 
@@ -272,6 +271,7 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
             this.sidebar = new openerp.base.Sidebar(this, this.options.sidebar_id);
             this.sidebar.start();
             this.sidebar.add_toolbar(data.fields_view.toolbar);
+            this.set_common_sidebar_sections(this.sidebar);
         }
     },
     /**

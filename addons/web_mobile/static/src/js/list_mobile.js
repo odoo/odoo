@@ -1,5 +1,5 @@
 openerp.web_mobile.list_mobile = function (openerp) {
-openerp.web_mobile.ListView = openerp.base.Controller.extend({
+openerp.web_mobile.ListView = openerp.base.Widget.extend({
     init: function(session, element_id, list_id) {
         this._super(session, element_id);
         this.list_id = list_id;

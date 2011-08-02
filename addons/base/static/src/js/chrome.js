@@ -4,241 +4,7 @@
 
 openerp.base.chrome = function(openerp) {
 
-/**
- * Base error for lookup failure
- *
- * @class
- */
-openerp.base.NotFound = openerp.base.Class.extend( /** @lends openerp.base.NotFound# */ {
-});
-openerp.base.KeyNotFound = openerp.base.NotFound.extend( /** @lends openerp.base.KeyNotFound# */ {
-    /**
-     * Thrown when a key could not be found in a mapping
-     *
-     * @constructs
-     * @extends openerp.base.NotFound
-     * @param {String} key the key which could not be found
-     */
-    init: function (key) {
-        this.key = key;
-    },
-    toString: function () {
-        return "The key " + this.key + " was not found";
-    }
-});
-openerp.base.ObjectNotFound = openerp.base.NotFound.extend( /** @lends openerp.base.ObjectNotFound# */ {
-    /**
-     * Thrown when an object path does not designate a valid class or object
-     * in the openerp hierarchy.
-     *
-     * @constructs
-     * @extends openerp.base.NotFound
-     * @param {String} path the invalid object path
-     */
-    init: function (path) {
-        this.path = path;
-    },
-    toString: function () {
-        return "Could not find any object of path " + this.path;
-    }
-});
-openerp.base.Registry = openerp.base.Class.extend( /** @lends openerp.base.Registry# */ {
-    /**
-     * Stores a mapping of arbitrary key (strings) to object paths (as strings
-     * as well).
-     *
-     * Resolves those paths at query time in order to always fetch the correct
-     * object, even if those objects have been overloaded/replaced after the
-     * registry was created.
-     *
-     * An object path is simply a dotted name from the openerp root to the
-     * object pointed to (e.g. ``"openerp.base.Session"`` for an OpenERP
-     * session object).
-     *
-     * @constructs
-     * @param {Object} mapping a mapping of keys to object-paths
-     */
-    init: function (mapping) {
-        this.map = mapping || {};
-    },
-    /**
-     * Retrieves the object matching the provided key string.
-     *
-     * @param {String} key the key to fetch the object for
-     * @returns {Class} the stored class, to initialize
-     *
-     * @throws {openerp.base.KeyNotFound} if the object was not in the mapping
-     * @throws {openerp.base.ObjectNotFound} if the object path was invalid
-     */
-    get_object: function (key) {
-        var path_string = this.map[key];
-        if (path_string === undefined) {
-            throw new openerp.base.KeyNotFound(key);
-        }
-
-        var object_match = openerp;
-        var path = path_string.split('.');
-        // ignore first section
-        for(var i=1; i<path.length; ++i) {
-            object_match = object_match[path[i]];
-
-            if (object_match === undefined) {
-                throw new openerp.base.ObjectNotFound(path_string);
-            }
-        }
-        return object_match;
-    },
-    /**
-     * Tries a number of keys, and returns the first object matching one of
-     * the keys.
-     *
-     * @param {Array} keys a sequence of keys to fetch the object for
-     * @returns {Class} the first class found matching an object
-     *
-     * @throws {openerp.base.KeyNotFound} if none of the keys was in the mapping
-     * @trows {openerp.base.ObjectNotFound} if a found object path was invalid
-     */
-    get_any: function (keys) {
-        for (var i=0; i<keys.length; ++i) {
-            try {
-                return this.get_object(keys[i]);
-            } catch (e) {
-                if (e instanceof openerp.base.KeyNotFound) {
-                    continue;
-                }
-                throw e;
-            }
-        }
-        throw new openerp.base.KeyNotFound(keys.join(','));
-    },
-    /**
-     * Adds a new key and value to the registry.
-     *
-     * This method can be chained.
-     *
-     * @param {String} key
-     * @param {String} object_path fully qualified dotted object path
-     * @returns {openerp.base.Registry} itself
-     */
-    add: function (key, object_path) {
-        this.map[key] = object_path;
-        return this;
-    },
-    /**
-     * Creates and returns a copy of the current mapping, with the provided
-     * mapping argument added in (replacing existing keys if needed)
-     *
-     * @param {Object} [mapping={}] a mapping of keys to object-paths
-     */
-    clone: function (mapping) {
-        return new openerp.base.Registry(
-            _.extend({}, this.map, mapping || {}));
-    }
-});
-
-/**
- * OpenERP session aware controller
- * a controller takes an already existing dom element and manage it
- */
-openerp.base.Controller = openerp.base.Controller.extend( /** @lends openerp.base.Controller# */{
-    init: function(parent, element_id) {
-        this._super(parent, element_id);
-        if(this.controller_parent && this.controller_parent.session) {
-            this.session = this.controller_parent.session;
-        }
-    },
-    /**
-     * Performs a JSON-RPC call
-     *
-     * @param {String} url endpoint url
-     * @param {Object} data RPC parameters
-     * @param {Function} success RPC call success callback
-     * @param {Function} error RPC call error callback
-     * @returns {jQuery.Deferred} deferred object for the RPC call
-     */
-    rpc: function(url, data, success, error) {
-        return this.session.rpc(url, data, success, error);
-    },
-    do_action: function(action, on_finished) {
-        return this.parent.do_action(action, on_finished);
-    }
-});
-
-/**
- * OpenERP session aware widget
- * A widget is a controller that doesnt take an element_id
- * it render its own html render() that you should insert into the dom
- * and bind it at start()
- */
-openerp.base.BaseWidget = openerp.base.Controller.extend({
-    /**
-     * The name of the QWeb template that will be used for rendering. Must be
-     * redefined in subclasses or the render() method can not be used.
-     * 
-     * @type string
-     */
-    template: null,
-    /**
-     * The prefix used to generate an id automatically. Should be redefined in
-     * subclasses. If it is not defined, a default identifier will be used.
-     * 
-     * @type string
-     */
-    identifier_prefix: 'generic-identifier',
-    /**
-     * Base class for widgets. Handle rendering (based on a QWeb template),
-     * identifier generation, parenting and destruction of the widget.
-     * Also initialize the identifier.
-     *
-     * @constructs
-     * @params {openerp.base.search.BaseWidget} parent The parent widget.
-     */
-    init: function (parent) {
-        this._super(parent);
-        this.make_id(this.identifier_prefix);
-    },
-    /**
-     * Sets and returns a globally unique identifier for the widget.
-     *
-     * If a prefix is appended, the identifier will be appended to it.
-     *
-     * @params sections prefix sections, empty/falsy sections will be removed
-     */
-    make_id: function () {
-        this.element_id = _.uniqueId(_.toArray(arguments).join('_'));
-        return this.element_id;
-    },
-    /**
-     * Render the widget. This.template must be defined.
-     * The content of the current object is passed as context to the template.
-     * 
-     * @param {object} additional Additional context arguments to pass to the template.
-     */
-    render: function (additional) {
-        return QWeb.render(this.template, _.extend({}, this, additional != null ? additional : {}));
-    },
-    /**
-     * "Starts" the widgets. Called at the end of the rendering, this allows
-     * to get a jQuery object referring to the DOM ($element attribute).
-     */
-    start: function () {
-        this._super();
-        var tmp = document.getElementById(this.element_id);
-        this.$element = tmp ? $(tmp) : null;
-    },
-    /**
-     * "Stops" the widgets. Called when the view destroys itself, this
-     * lets the widgets clean up after themselves.
-     */
-    stop: function () {
-        if(this.$element != null) {
-            this.$element.remove();
-        }
-        this._super();
-    }
-});
-
-openerp.base.Session = openerp.base.Controller.extend( /** @lends openerp.base.Session# */{
+openerp.base.Session = openerp.base.Widget.extend( /** @lends openerp.base.Session# */{
     /**
      * @constructs
      * @param element_id to use for exception reporting
@@ -506,7 +272,7 @@ openerp.base.Session = openerp.base.Controller.extend( /** @lends openerp.base.S
     }
 });
 
-openerp.base.Notification =  openerp.base.Controller.extend({
+openerp.base.Notification =  openerp.base.Widget.extend({
     init: function(parent, element_id) {
         this._super(parent, element_id);
         this.$element.notify({
@@ -528,7 +294,7 @@ openerp.base.Notification =  openerp.base.Controller.extend({
     }
 });
 
-openerp.base.Dialog = openerp.base.BaseWidget.extend({
+openerp.base.Dialog = openerp.base.OldWidget.extend({
     dialog_title: "",
     identifier_prefix: 'dialog',
     init: function (parent, options) {
@@ -544,8 +310,8 @@ openerp.base.Dialog = openerp.base.BaseWidget.extend({
             max_height: '100%',
             autoOpen: false,
             buttons: {},
-            close: function () {
-                self.stop();
+            beforeClose: function () {
+                self.on_close();
             }
         };
         for (var f in this) {
@@ -609,7 +375,15 @@ openerp.base.Dialog = openerp.base.BaseWidget.extend({
         this.set_options(options);
         this.$dialog.dialog(this.options).dialog('open');
     },
+    close: function() {
+        // Closes the dialog but leave it in a state where it could be opened again.
+        this.$dialog.dialog('close');
+    },
+    on_close: function() {
+    },
     stop: function () {
+        // Destroy widget
+        this.close();
         this.$dialog.dialog('destroy');
     }
 });
@@ -650,7 +424,7 @@ openerp.base.CrashManager = openerp.base.Dialog.extend({
     }
 });
 
-openerp.base.Loading =  openerp.base.Controller.extend({
+openerp.base.Loading =  openerp.base.Widget.extend({
     init: function(parent, element_id) {
         this._super(parent, element_id);
         this.count = 0;
@@ -669,7 +443,7 @@ openerp.base.Loading =  openerp.base.Controller.extend({
     }
 });
 
-openerp.base.Database = openerp.base.Controller.extend({
+openerp.base.Database = openerp.base.Widget.extend({
     init: function(parent, element_id, option_id) {
         this._super(parent, element_id);
         this.$option_id = $('#' + option_id);
@@ -968,7 +742,7 @@ openerp.base.Database = openerp.base.Controller.extend({
     }
 });
 
-openerp.base.Login =  openerp.base.Controller.extend({
+openerp.base.Login =  openerp.base.Widget.extend({
     remember_creditentials: true,
     
     init: function(parent, element_id) {
@@ -985,9 +759,6 @@ openerp.base.Login =  openerp.base.Controller.extend({
             this.selected_db = this.selected_db || "trunk";
             this.selected_login = this.selected_login || "admin";
             this.selected_password = this.selected_password || "a";
-        }
-        if(this.parent && this.parent.session) {
-            this.session = this.parent.session;
         }
     },
     start: function() {
@@ -1069,11 +840,9 @@ openerp.base.Login =  openerp.base.Controller.extend({
     }
 });
 
-openerp.base.Header =  openerp.base.Controller.extend({
+openerp.base.Header =  openerp.base.Widget.extend({
     init: function(parent, element_id) {
         this._super(parent, element_id);
-        if(parent)
-	        this.session = parent.session;
     },
     start: function() {
         this.do_update();
@@ -1085,7 +854,7 @@ openerp.base.Header =  openerp.base.Controller.extend({
     on_logout: function() {}
 });
 
-openerp.base.Menu =  openerp.base.Controller.extend({
+openerp.base.Menu =  openerp.base.Widget.extend({
     init: function(parent, element_id, secondary_menu_id) {
         this._super(parent, element_id);
         this.secondary_menu_id = secondary_menu_id;
@@ -1166,16 +935,16 @@ openerp.base.Menu =  openerp.base.Controller.extend({
     }
 });
 
-openerp.base.Homepage = openerp.base.Controller.extend({
+openerp.base.Homepage = openerp.base.Widget.extend({
 });
 
-openerp.base.Preferences = openerp.base.Controller.extend({
+openerp.base.Preferences = openerp.base.Widget.extend({
 });
 
-openerp.base.ImportExport = openerp.base.Controller.extend({
+openerp.base.ImportExport = openerp.base.Widget.extend({
 });
 
-openerp.base.WebClient = openerp.base.Controller.extend({
+openerp.base.WebClient = openerp.base.Widget.extend({
     init: function(element_id) {
         this._super(null, element_id);
 
@@ -1192,7 +961,7 @@ openerp.base.WebClient = openerp.base.Controller.extend({
         this.crashmanager.start(false);
 
         // Do you autorize this ? will be replaced by notify() in controller
-        openerp.base.Controller.prototype.notification = new openerp.base.Notification(this, "oe_notification");
+        openerp.base.Widget.prototype.notification = new openerp.base.Notification(this, "oe_notification");
 
         this.header = new openerp.base.Header(this, "oe_header");
         this.login = new openerp.base.Login(this, "oe_login");
