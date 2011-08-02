@@ -23,9 +23,11 @@ import time
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from operator import itemgetter
+from os.path import join as opj
 
 import netsvc
 import pooler
+import tools
 from osv import fields, osv
 import decimal_precision as dp
 from tools.translate import _
@@ -2684,7 +2686,6 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                 purchase_tax_ids = tax_templ_obj.search(cr, uid, [("chart_template_id"
                                           , "=", ids[0]), ('type_tax_use', 'in', ('purchase','all'))], order="sequence")
                 res.update({'purchase_tax': purchase_tax_ids and purchase_tax_ids[0] or False})
-
         return res
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
@@ -2717,6 +2718,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         obj_multi = self.browse(cr, uid, ids[0])
         obj_acc = self.pool.get('account.account')
         obj_acc_tax = self.pool.get('account.tax')
+        obj_tax_temp = self.pool.get('account.tax.template')
         obj_journal = self.pool.get('account.journal')
         obj_acc_template = self.pool.get('account.account.template')
         obj_fiscal_position_template = self.pool.get('account.fiscal.position.template')
@@ -2737,6 +2739,87 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         tax_code_template_ref = {}
         todo_dict = {}
 
+        # create tax templates and real taxes from purchase_tax_rate,sale_tax_rate fields
+        if not obj_multi.complete_tax:
+            fp = tools.file_open(opj('account', 'configurable_account_chart.xml'))
+            tools.convert_xml_import(cr, 'account', fp, {}, 'init', True, None)
+            fp.close()
+            s_tax = (obj_multi.sale_tax_rate/100)
+            p_tax = (obj_multi.purchase_tax_rate/100)
+            pur_temp_tax = obj_data.get_object_reference(cr, uid, 'account', 'tax_code_base_purchases')
+            pur_temp_tax_id = pur_temp_tax and pur_temp_tax[1] or False
+
+            pur_temp_tax_paid = obj_data.get_object_reference(cr, uid, 'account', 'tax_code_output')
+            pur_temp_tax_paid_id = pur_temp_tax_paid and pur_temp_tax_paid[1] or False
+
+            sale_temp_tax = obj_data.get_object_reference(cr, uid, 'account', 'tax_code_base_sales')
+            sale_temp_tax_id = sale_temp_tax and sale_temp_tax[1] or False
+
+            sale_temp_tax_paid = obj_data.get_object_reference(cr, uid, 'account', 'tax_code_input')
+            sale_temp_tax_paid_id = sale_temp_tax_paid and sale_temp_tax_paid[1] or False
+
+            chart_temp_id = obj_multi.chart_template_id.id or False
+            if s_tax * 100 > 0.0:
+                tax_account_ids = obj_acc_template.search(cr, uid, [('name', '=', 'Tax Received')], context=context)
+                sales_tax_account_id = tax_account_ids and tax_account_ids[0] or False
+                vals_tax_code_temp = {
+                    'name': _('TAX %s%%') % (s_tax*100),
+                    'code': _('TAX %s%%') % (s_tax*100),
+                    'parent_id': sale_temp_tax_id
+                }
+                new_tax_code_temp = obj_tax_code_template.create(cr, uid, vals_tax_code_temp, context=context)
+                vals_paid_tax_code_temp = {
+                    'name': _('TAX Received %s%%') % (s_tax*100),
+                    'code': _('TAX Received %s%%') % (s_tax*100),
+                    'parent_id': sale_temp_tax_paid_id
+                }
+                new_paid_tax_code_temp = obj_tax_code_template.create(cr, uid, vals_paid_tax_code_temp, context=context)
+                sales_tax_temp = obj_tax_temp.create(cr, uid, {
+                                        'name': _('TAX %s%%') % (s_tax*100),
+                                        'description': _('TAX %s%%') % (s_tax*100),
+                                        'amount': s_tax,
+                                        'base_code_id': new_tax_code_temp,
+                                        'tax_code_id': new_paid_tax_code_temp,
+                                        'ref_base_code_id': new_tax_code_temp,
+                                        'ref_tax_code_id': new_paid_tax_code_temp,
+                                        'type_tax_use': 'sale',
+                                        'type': 'percent',
+                                        'sequence': 0,
+                                        'account_collected_id': sales_tax_account_id,
+                                        'account_paid_id': sales_tax_account_id,
+                                        'chart_template_id': chart_temp_id,
+                            }, context=context)
+            if p_tax * 100 > 0.0:
+                tax_account_ids = obj_acc_template.search(cr, uid, [('name', '=', 'Tax Paid')], context=context)
+                purchase_tax_account_id = tax_account_ids and tax_account_ids[0] or False
+                vals_tax_code_temp = {
+                    'name': _('TAX %s%%') % (p_tax*100),
+                    'code': _('TAX %s%%') % (p_tax*100),
+                    'parent_id': pur_temp_tax_id
+                }
+                new_tax_code_temp = obj_tax_code_template.create(cr, uid, vals_tax_code_temp, context=context)
+                vals_paid_tax_code_temp = {
+                    'name': _('TAX Paid %s%%') % (p_tax*100),
+                    'code': _('TAX Paid %s%%') % (p_tax*100),
+                    'parent_id': pur_temp_tax_paid_id
+                }
+                new_paid_tax_code_temp = obj_tax_code_template.create(cr, uid, vals_paid_tax_code_temp, context=context)
+                purchase_tax_temp = obj_tax_temp.create(cr, uid, {
+                                         'name': _('TAX %s%%') % (p_tax*100),
+                                         'description': _('TAX %s%%') % (p_tax*100),
+                                         'amount': p_tax,
+                                         'base_code_id': new_tax_code_temp,
+                                         'tax_code_id': new_paid_tax_code_temp,
+                                         'ref_base_code_id': new_tax_code_temp,
+                                         'ref_tax_code_id': new_paid_tax_code_temp,
+                                         'type_tax_use': 'purchase',
+                                         'type': 'percent',
+                                         'sequence': 0,
+                                         'account_collected_id': purchase_tax_account_id,
+                                         'account_paid_id': purchase_tax_account_id,
+                                         'chart_template_id': chart_temp_id,
+                                }, context=context)
+                
         #create all the tax code
         children_tax_code_template = obj_tax_code_template.search(cr, uid, [('parent_id','child_of',[tax_code_root_id])], order='id')
         children_tax_code_template.sort()
