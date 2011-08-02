@@ -841,9 +841,10 @@ openerp.base.Database = openerp.base.Controller.extend({
     },
 
     wait_for_file: function (token, cleanup) {
-        var cookie_name = 'fileToken',
+        var self = this,
+            cookie_name = 'fileToken',
             cookie_length = cookie_name.length;
-        var timer = setInterval(function () {
+        this.backup_timer = setInterval(function () {
             var cookies = document.cookie.split(';');
             for(var i=0; i<cookies.length; ++i) {
                 var cookie = cookies[i].replace(/^\s*/, '');
@@ -852,7 +853,7 @@ openerp.base.Database = openerp.base.Controller.extend({
                 if(parseInt(cookie_val, 10) !== token) { continue; }
 
                 // clear waiter
-                clearInterval(timer);
+                clearInterval(self.backup_timer);
                 // clear cookie
                 document.cookie = _.sprintf("%s=;expires=%s;path=/",
                     cookie_name, new Date().toGMTString());
@@ -877,7 +878,18 @@ openerp.base.Database = openerp.base.Controller.extend({
                       token = new Date().getTime();
                 if (!$target.length) {
                     $target = $('<iframe id="backup-target" style="display: none;">')
-                        .appendTo(document.body);
+                        .appendTo(document.body)
+                        .load(function () {
+                            $.unblockUI();
+                            clearInterval(self.backup_timer);
+                            var error = this.contentDocument.body
+                                    .firstChild.data
+                                    .split('|');
+                            self.display_error({
+                                title: error[0],
+                                error: error[1]
+                            });
+                        });
                 }
                 $(form).find('input[name=token]').val(token);
                 form.submit();

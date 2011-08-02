@@ -207,8 +207,8 @@ class Database(openerpweb.Controller):
             return db_dump
         except xmlrpclib.Fault, e:
             if e.faultCode and e.faultCode.split(':')[0] == 'AccessDenied':
-                return {'error': e.faultCode, 'title': 'Backup Database'}
-        return {'error': 'Could not drop database !', 'title': 'Backup Database'}
+                return 'Backup Database|' + e.faultCode
+        return 'Backup Database|Could not generate database backup'
             
     @openerpweb.httprequest
     def restore(self, req, db_file, restore_pwd, new_db):
