@@ -3,10 +3,16 @@
     <table style="width:100%;">
         <tr>
             <t t-foreach="datas" t-as="columns">
-                <td class="oe_column" t-att-id="'column_' + columns.value">
+                <td class="oe_column oe_column_heading" t-att-id="'column_' + columns.value">
                     <t t-if="columns.value">
-                        <table><tr><td  class="oe_column_heading"><t t-esc="columns.header"/> (<t t-esc="columns.records.length"/>)</td></tr></table>
+                        <t t-esc="columns.header"/> (<t t-esc="columns.records.length"/>)
                     </t>
+                </td>
+            </t>
+        </tr>
+        <tr>
+            <t t-foreach="datas" t-as="columns">
+                <td class="oe_column" t-att-id="'column_' + columns.value">
                     <t t-foreach="columns.records" t-as="record">
                         <div class="record" t-att-id="'main_' + record.id">
                             <div class="record-header" t-att-id="'header_' + record.id"><t t-esc="record.id"/></div>
