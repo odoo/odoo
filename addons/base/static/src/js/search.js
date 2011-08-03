@@ -203,10 +203,10 @@ openerp.base.SearchView = openerp.base.Widget.extend({
                             context_to_save: context,
                             domain: domain,
                             name: name
-                        }).then(function(result) {
+                        }).then(function() {
                             self.reload_managed_filters();
                         });
-                    },
+                    }
                 }
             });
         } else { // manage_filters
