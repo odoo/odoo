@@ -75,9 +75,11 @@ openerp.base_calendar.CalendarView = openerp.base.View.extend({
     },
     init_scheduler: function() {
         var self = this;
+        scheduler.clearAll();
         scheduler.config.api_date = "%Y-%m-%d %H:%M:%S";
-        scheduler.config.details_on_dblclick = true;
-        scheduler.config.details_on_create = true;
+        //scheduler.config.details_on_dblclick = true;
+        //scheduler.config.details_on_create = true;
+        scheduler.keys.edit_cancel = 27;
 
         if (this.fields[this.date_start]['type'] == 'time') {
             scheduler.config.xml_date = "%H:%M:%S";
@@ -92,48 +94,10 @@ openerp.base_calendar.CalendarView = openerp.base.View.extend({
         // Initialize Sceduler
         scheduler.init('openerp_scheduler', null, this.mode);
 
-        // Event Options Click,edit
-        scheduler.attachEvent('onDblClick', this.popup_event);
+        scheduler.attachEvent('onEventAdded', this.do_create_event);
+        scheduler.attachEvent('onEventDeleted', this.do_delete_event);
+        scheduler.attachEvent('onEventChanged', this.do_save_event);
 
-        scheduler.attachEvent('onEventCreated', function(event_id, e) {
-            //Replace default Lightbox with Popup Form of new Event
-            scheduler.showLightbox = function() {
-                //Delete Newly created Event,Later we reload Scheduler
-                scheduler.deleteEvent(event_id);
-                self.popup_event();
-            }
-        });
-
-        scheduler.attachEvent('onBeforeEventChanged', function(event_obj, native_event, is_new) {
-            var is_event_exist = $.inArray(event_obj.id, self.dataset.ids);
-            if (is_event_exist >= 0 || !is_new) {
-                // try to save Event.
-                var data = {};
-                self.mode = scheduler._mode;
-                var date_format = self.calendar_fields.date_start.kind == 'time' ? 'HH:mm:ss' : 'yyyy-MM-dd HH:mm:ss';
-                data[self.date_start] = event_obj.start_date.toString(date_format);
-
-                if (self.date_stop) {
-                    data[self.date_stop] = event_obj.end_date.toString(date_format);
-                }
-
-                if (self.date_delay) {
-                    var tds = (event_obj.start_date.getOrdinalNumber() / 1e3 >> 0) - (event_obj.start_date.getOrdinalNumber() < 0);
-                    var tde = (event_obj.end_date.getOrdinalNumber() / 1e3 >> 0) - (event_obj.end_date.getOrdinalNumber() < 0);
-                    var n = (tde - tds) / (60 * 60);
-                    if (n > self.day_length) {
-                        var d = Math.floor(n / 24),
-                            h = n % 24;
-                        n = d * self.day_length + h;
-                    }
-                    data[self.date_delay] = n;
-                }
-                self.dataset.write(event_obj.id, data, self.load_scheduler);
-            } else {
-                // new Event.
-                return true;
-            }
-        });
         scheduler.renderCalendar({
             container: this.sidebar.navigator.element_id,
             navigation: true,
@@ -282,6 +246,51 @@ openerp.base_calendar.CalendarView = openerp.base.View.extend({
             'id': event['id'],
             'title': res_description.join()
         }
+    },
+    do_create_event: function(event_id, event_obj) {
+        var self = this,
+            data = this.get_event_data(event_obj);
+        this.dataset.create(data, function(r) {
+            var id = parseInt(r.result, 10);
+            self.dataset.ids.push(id);
+            scheduler.changeEventId(event_id, id);
+        }, function(r, event) {
+            // TODO: open form view
+            self.notification.warn(self.name, "Could not create event");
+            event.preventDefault();
+        });
+    },
+    do_save_event: function(event_id, event_obj) {
+        var self = this,
+            data = this.get_event_data(event_obj);
+        this.dataset.write(event_id, data);
+    },
+    do_delete_event: function(event_id, event_obj) {
+        var self = this;
+        this.dataset.unlink(event_id, function(r) {
+        });
+    },
+    get_event_data: function(event_obj) {
+        var data = {
+            name: event_obj.text
+        };
+        var date_format = this.calendar_fields.date_start.kind == 'time' ? 'HH:mm:ss' : 'yyyy-MM-dd HH:mm:ss';
+        data[this.date_start] = event_obj.start_date.toString(date_format);
+        if (this.date_stop) {
+            data[this.date_stop] = event_obj.end_date.toString(date_format);
+        }
+        if (this.date_delay) {
+            var tds = (event_obj.start_date.getOrdinalNumber() / 1e3 >> 0) - (event_obj.start_date.getOrdinalNumber() < 0);
+            var tde = (event_obj.end_date.getOrdinalNumber() / 1e3 >> 0) - (event_obj.end_date.getOrdinalNumber() < 0);
+            var n = (tde - tds) / (60 * 60);
+            if (n > this.day_length) {
+                var d = Math.floor(n / 24),
+                    h = n % 24;
+                n = d * this.day_length + h;
+            }
+            data[this.date_delay] = n;
+        }
+        return data;
     },
     do_search: function(domains, contexts, groupbys) {
         var self = this;
