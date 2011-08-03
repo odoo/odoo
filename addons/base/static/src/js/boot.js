@@ -1,5 +1,5 @@
 //---------------------------------------------------------
-// OpenERP initialisation and black magic about the pool
+// OpenERP Web Boostrap
 //---------------------------------------------------------
 
 /**
@@ -57,9 +57,8 @@
 // OpenERP base module split
 //---------------------------------------------------------
 
-/** @namespace */
 openerp.base = function(instance) {
-    openerp.base.controller(instance);
+    openerp.base.core(instance);
     openerp.base.dates(instance);
     openerp.base.chrome(instance);
     openerp.base.data(instance);
@@ -86,6 +85,9 @@ openerp.base = function(instance) {
     }
     if (openerp.base.view_tree) {
         openerp.base.view_tree(instance);
+    }
+    if (openerp.base.data_export) {
+        openerp.base.data_export(instance);
     }
     if (openerp.base.import){
         openerp.base.import(instance);

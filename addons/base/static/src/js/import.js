@@ -28,7 +28,7 @@ openerp.base.Import = openerp.base.Dialog.extend({
                                 //self.do_import();
                           }
                        },
-                    close: function(event, ui){ self.close();}
+                    close: function(event, ui){ self.stop();}
                    });
     },
 });

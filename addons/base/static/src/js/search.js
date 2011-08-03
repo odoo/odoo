@@ -1,6 +1,6 @@
 openerp.base.search = function(openerp) {
 
-openerp.base.SearchView = openerp.base.Controller.extend({
+openerp.base.SearchView = openerp.base.Widget.extend({
     init: function(parent, element_id, dataset, view_id, defaults) {
         this._super(parent, element_id);
         this.view_manager = parent || new openerp.base.NullViewManager();
@@ -386,13 +386,13 @@ openerp.base.search.Invalid = openerp.base.Class.extend( /** @lends openerp.base
                 ': [' + this.value + '] is ' + this.message);
     }
 });
-openerp.base.search.Widget = openerp.base.Controller.extend( /** @lends openerp.base.search.Widget# */{
+openerp.base.search.Widget = openerp.base.Widget.extend( /** @lends openerp.base.search.Widget# */{
     template: null,
     /**
      * Root class of all search widgets
      *
      * @constructs
-     * @extends openerp.base.Controller
+     * @extends openerp.base.Widget
      *
      * @param view the ancestor view of this widget
      */
@@ -851,7 +851,7 @@ openerp.base.search.ManyToManyField = openerp.base.search.CharField.extend({
     // TODO: .related_columns (Array), .context, .domain
 });
 
-openerp.base.search.ExtendedSearch = openerp.base.BaseWidget.extend({
+openerp.base.search.ExtendedSearch = openerp.base.OldWidget.extend({
     template: 'SearchView.extended_search',
     identifier_prefix: 'extended-search',
     init: function (parent, model) {
@@ -860,9 +860,7 @@ openerp.base.search.ExtendedSearch = openerp.base.BaseWidget.extend({
     },
     add_group: function() {
         var group = new openerp.base.search.ExtendedSearchGroup(this, this.fields);
-        var render = group.render();
-        this.$element.find('.searchview_extended_groups_list').append(render);
-        group.start();
+        group.appendTo(this.$element.find('.searchview_extended_groups_list'));
         this.check_last_element();
     },
     start: function () {
@@ -891,7 +889,7 @@ openerp.base.search.ExtendedSearch = openerp.base.BaseWidget.extend({
         if(this.$element.closest("table.oe-searchview-render-line").css("display") == "none") {
             return null;
         }
-        return _.reduce(this.children,
+        return _.reduce(this.widget_children,
             function(mem, x) { return mem.concat(x.get_domain());}, []);
     },
     on_activate: function() {
@@ -910,14 +908,14 @@ openerp.base.search.ExtendedSearch = openerp.base.BaseWidget.extend({
         }
     },
     check_last_element: function() {
-        _.each(this.children, function(x) {x.set_last_group(false);});
-        if (this.children.length >= 1) {
-            this.children[this.children.length - 1].set_last_group(true);
+        _.each(this.widget_children, function(x) {x.set_last_group(false);});
+        if (this.widget_children.length >= 1) {
+            this.widget_children[this.widget_children.length - 1].set_last_group(true);
         }
     }
 });
 
-openerp.base.search.ExtendedSearchGroup = openerp.base.BaseWidget.extend({
+openerp.base.search.ExtendedSearchGroup = openerp.base.OldWidget.extend({
     template: 'SearchView.extended_search.group',
     identifier_prefix: 'extended-search-group',
     init: function (parent, fields) {
@@ -926,7 +924,7 @@ openerp.base.search.ExtendedSearchGroup = openerp.base.BaseWidget.extend({
     },
     add_prop: function() {
         var prop = new openerp.base.search.ExtendedSearchProposition(this, this.fields);
-        var render = prop.render({'index': this.children.length - 1});
+        var render = prop.render({'index': this.widget_children.length - 1});
         this.$element.find('.searchview_extended_propositions_list').append(render);
         prop.start();
     },
@@ -943,7 +941,7 @@ openerp.base.search.ExtendedSearchGroup = openerp.base.BaseWidget.extend({
         });
     },
     get_domain: function() {
-        var props = _(this.children).chain().map(function(x) {
+        var props = _(this.widget_children).chain().map(function(x) {
             return x.get_proposition();
         }).compact().value();
         var choice = this.$element.find(".searchview_extended_group_choice").val();
@@ -953,9 +951,9 @@ openerp.base.search.ExtendedSearchGroup = openerp.base.BaseWidget.extend({
             props);
     },
     stop: function() {
-        var parent = this.parent;
-        if (this.parent.children.length == 1)
-            this.parent.hide();
+        var parent = this.widget_parent;
+        if (this.widget_parent.widget_children.length == 1)
+            this.widget_parent.hide();
         this._super();
         parent.check_last_element();
     },
@@ -967,7 +965,7 @@ openerp.base.search.ExtendedSearchGroup = openerp.base.BaseWidget.extend({
     }
 });
 
-openerp.base.search.ExtendedSearchProposition = openerp.base.BaseWidget.extend({
+openerp.base.search.ExtendedSearchProposition = openerp.base.OldWidget.extend({
     template: 'SearchView.extended_search.proposition',
     identifier_prefix: 'extended-search-proposition',
     init: function (parent, fields) {
@@ -992,9 +990,12 @@ openerp.base.search.ExtendedSearchProposition = openerp.base.BaseWidget.extend({
         });
     },
     stop: function() {
-        if (this.parent.children.length == 1)
-            this.parent.stop();
+        var parent;
+        if (this.widget_parent.widget_children.length == 1)
+            parent = this.widget_parent;
         this._super();
+        if (parent)
+            parent.stop();
     },
     changed: function() {
         var nval = this.$element.find(".searchview_extended_prop_field").val();
@@ -1054,7 +1055,7 @@ openerp.base.search.ExtendedSearchProposition = openerp.base.BaseWidget.extend({
     }
 });
 
-openerp.base.search.ExtendedSearchProposition.Char = openerp.base.BaseWidget.extend({
+openerp.base.search.ExtendedSearchProposition.Char = openerp.base.OldWidget.extend({
     template: 'SearchView.extended_search.proposition.char',
     identifier_prefix: 'extended-search-proposition-char',
     operators: [
@@ -1071,7 +1072,7 @@ openerp.base.search.ExtendedSearchProposition.Char = openerp.base.BaseWidget.ext
         return this.$element.val();
     }
 });
-openerp.base.search.ExtendedSearchProposition.DateTime = openerp.base.BaseWidget.extend({
+openerp.base.search.ExtendedSearchProposition.DateTime = openerp.base.OldWidget.extend({
     template: 'SearchView.extended_search.proposition.datetime',
     identifier_prefix: 'extended-search-proposition-datetime',
     operators: [
@@ -1093,7 +1094,7 @@ openerp.base.search.ExtendedSearchProposition.DateTime = openerp.base.BaseWidget
         });
     }
 });
-openerp.base.search.ExtendedSearchProposition.Date = openerp.base.BaseWidget.extend({
+openerp.base.search.ExtendedSearchProposition.Date = openerp.base.OldWidget.extend({
     template: 'SearchView.extended_search.proposition.date',
     identifier_prefix: 'extended-search-proposition-date',
     operators: [
@@ -1115,7 +1116,7 @@ openerp.base.search.ExtendedSearchProposition.Date = openerp.base.BaseWidget.ext
         });
     }
 });
-openerp.base.search.ExtendedSearchProposition.Integer = openerp.base.BaseWidget.extend({
+openerp.base.search.ExtendedSearchProposition.Integer = openerp.base.OldWidget.extend({
     template: 'SearchView.extended_search.proposition.integer',
     identifier_prefix: 'extended-search-proposition-integer',
     operators: [
@@ -1134,7 +1135,7 @@ openerp.base.search.ExtendedSearchProposition.Integer = openerp.base.BaseWidget.
         return Math.round(value);
     }
 });
-openerp.base.search.ExtendedSearchProposition.Float = openerp.base.BaseWidget.extend({
+openerp.base.search.ExtendedSearchProposition.Float = openerp.base.OldWidget.extend({
     template: 'SearchView.extended_search.proposition.float',
     identifier_prefix: 'extended-search-proposition-float',
     operators: [
@@ -1153,7 +1154,7 @@ openerp.base.search.ExtendedSearchProposition.Float = openerp.base.BaseWidget.ex
         return value;
     }
 });
-openerp.base.search.ExtendedSearchProposition.Selection = openerp.base.BaseWidget.extend({
+openerp.base.search.ExtendedSearchProposition.Selection = openerp.base.OldWidget.extend({
     template: 'SearchView.extended_search.proposition.selection',
     identifier_prefix: 'extended-search-proposition-selection',
     operators: [
@@ -1167,7 +1168,7 @@ openerp.base.search.ExtendedSearchProposition.Selection = openerp.base.BaseWidge
         return this.$element.val();
     }
 });
-openerp.base.search.ExtendedSearchProposition.Boolean = openerp.base.BaseWidget.extend({
+openerp.base.search.ExtendedSearchProposition.Boolean = openerp.base.OldWidget.extend({
     template: 'SearchView.extended_search.proposition.boolean',
     identifier_prefix: 'extended-search-proposition-boolean',
     operators: [

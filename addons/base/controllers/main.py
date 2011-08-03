@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
+
 import base64, glob, os, re
 from xml.etree import ElementTree
 from cStringIO import StringIO
 
+import operator
 import simplejson
 
 import openerpweb
@@ -10,7 +12,9 @@ import openerpweb.ast
 import openerpweb.nonliterals
 
 import cherrypy
+import xmlrpclib
 import csv
+
 # Should move to openerpweb.Xml2Json
 class Xml2Json:
     # xml2json-direct
@@ -151,15 +155,85 @@ class Database(openerpweb.Controller):
     _cp_path = "/base/database"
 
     @openerpweb.jsonrequest
-    def get_databases_list(self, req):
+    def get_list(self, req):
         proxy = req.session.proxy("db")
         dbs = proxy.list()
         h = req.httprequest.headers['Host'].split(':')[0]
         d = h.split('.')[0]
-        r = cherrypy.config['openerp.dbfilter'].replace('%h',h).replace('%d',d)
-        print "h,d",h,d,r
-        dbs = [i for i in dbs if re.match(r,i)]
+        r = cherrypy.config['openerp.dbfilter'].replace('%h', h).replace('%d', d)
+        dbs = [i for i in dbs if re.match(r, i)]
         return {"db_list": dbs}
+
+    @openerpweb.jsonrequest
+    def progress(self, req, password, id):
+        return req.session.proxy('db').get_progress(password, id)
+
+    @openerpweb.jsonrequest
+    def create(self, req, fields):
+
+        params = dict(map(operator.itemgetter('name', 'value'), fields))
+        create_attrs = operator.itemgetter(
+            'super_admin_pwd', 'db_name', 'demo_data', 'db_lang', 'create_admin_pwd')(
+            params)
+
+        try:
+            return req.session.proxy("db").create(*create_attrs)
+        except xmlrpclib.Fault, e:
+            if e.faultCode and e.faultCode.split(':')[0] == 'AccessDenied':
+                return {'error': e.faultCode, 'title': 'Create Database'}
+        return {'error': 'Could not create database !', 'title': 'Create Database'}
+
+    @openerpweb.jsonrequest
+    def drop(self, req, fields):
+        password, db = operator.itemgetter(
+            'drop_pwd', 'drop_db')(
+                dict(map(operator.itemgetter('name', 'value'), fields)))
+
+        try:
+            return req.session.proxy("db").drop(password, db)
+        except xmlrpclib.Fault, e:
+            if e.faultCode and e.faultCode.split(':')[0] == 'AccessDenied':
+                return {'error': e.faultCode, 'title': 'Drop Database'}
+        return {'error': 'Could not drop database !', 'title': 'Drop Database'}
+
+    @openerpweb.httprequest
+    def backup(self, req, backup_db, backup_pwd, token):
+        try:
+            db_dump = base64.decodestring(
+                req.session.proxy("db").dump(backup_pwd, backup_db))
+            cherrypy.response.headers['Content-Type'] = "application/octet-stream; charset=binary"
+            cherrypy.response.headers['Content-Disposition'] = 'attachment; filename="' + backup_db + '.dump"'
+            cherrypy.response.cookie['fileToken'] = token
+            cherrypy.response.cookie['fileToken']['path'] = '/'
+            return db_dump
+        except xmlrpclib.Fault, e:
+            if e.faultCode and e.faultCode.split(':')[0] == 'AccessDenied':
+                return 'Backup Database|' + e.faultCode
+        return 'Backup Database|Could not generate database backup'
+
+    @openerpweb.httprequest
+    def restore(self, req, db_file, restore_pwd, new_db):
+        try:
+            data = base64.encodestring(db_file.file.read())
+            req.session.proxy("db").restore(restore_pwd, new_db, data)
+            return ''
+        except xmlrpclib.Fault, e:
+            if e.faultCode and e.faultCode.split(':')[0] == 'AccessDenied':
+                raise cherrypy.HTTPError(403)
+
+        raise cherrypy.HTTPError()
+
+    @openerpweb.jsonrequest
+    def change_password(self, req, fields):
+        old_password, new_password = operator.itemgetter(
+            'old_pwd', 'new_pwd')(
+                dict(map(operator.itemgetter('name', 'value'), fields)))
+        try:
+            return req.session.proxy("db").change_admin_password(old_password, new_password)
+        except xmlrpclib.Fault, e:
+            if e.faultCode and e.faultCode.split(':')[0] == 'AccessDenied':
+                return {'error': e.faultCode, 'title': 'Change Password'}
+        return {'error': 'Error, password not changed !', 'title': 'Change Password'}
 
 class Session(openerpweb.Controller):
     _cp_path = "/base/session"
@@ -177,6 +251,16 @@ class Session(openerpweb.Controller):
     def sc_list(self, req):
         return req.session.model('ir.ui.view_sc').get_sc(req.session._uid, "ir.ui.menu",
                                                          req.session.eval_context(req.context))
+
+    @openerpweb.jsonrequest
+    def get_lang_list(self, req):
+        try:
+            return {
+                'lang_list': (req.session.proxy("db").list_lang() or []),
+                'error': ""
+            }
+        except Exception, e:
+            return {"error": e, "title": "Languages"}
 
     @openerpweb.jsonrequest
     def modules(self, req):
@@ -903,18 +987,231 @@ class Action(openerpweb.Controller):
         return clean_action(req.session.model('ir.actions.server').run(
             [action_id], req.session.eval_context(req.context)), req.session)
 
+def export_csv(fields, result):
+    fp = StringIO()
+    writer = csv.writer(fp, quoting=csv.QUOTE_ALL)
+
+    writer.writerow(fields)
+
+    for data in result:
+        row = []
+        for d in data:
+            if isinstance(d, basestring):
+                d = d.replace('\n',' ').replace('\t',' ')
+                try:
+                    d = d.encode('utf-8')
+                except:
+                    pass
+            if d is False: d = None
+            row.append(d)
+        writer.writerow(row)
+
+    fp.seek(0)
+    data = fp.read()
+    fp.close()
+    return data
+
+def export_xls(fieldnames, table):
+    try:
+        import xlwt
+    except ImportError:
+        common.error(_('Import Error.'), _('Please install xlwt library to export to MS Excel.'))
+
+    workbook = xlwt.Workbook()
+    worksheet = workbook.add_sheet('Sheet 1')
+
+    for i, fieldname in enumerate(fieldnames):
+        worksheet.write(0, i, str(fieldname))
+        worksheet.col(i).width = 8000 # around 220 pixels
+
+    style = xlwt.easyxf('align: wrap yes')
+
+    for row_index, row in enumerate(table):
+        for cell_index, cell_value in enumerate(row):
+            cell_value = str(cell_value)
+            cell_value = re.sub("\r", " ", cell_value)
+            worksheet.write(row_index + 1, cell_index, cell_value, style)
+
+
+    fp = StringIO()
+    workbook.save(fp)
+    fp.seek(0)
+    data = fp.read()
+    fp.close()
+    #return data.decode('ISO-8859-1')
+    return unicode(data, 'utf-8', 'replace')
+
+class Export(View):
+    _cp_path = "/base/export"
+
+    def fields_get(self, req, model):
+        Model = req.session.model(model)
+        fields = Model.fields_get(False, req.session.eval_context(req.context))
+        return fields
+
+    @openerpweb.jsonrequest
+    def get_fields(self, req, model, prefix='', name= '', field_parent=None, params={}):
+        import_compat = params.get("import_compat", False)
+
+        fields = self.fields_get(req, model)
+        field_parent_type = params.get("parent_field_type",False)
+
+        if import_compat and field_parent_type and field_parent_type == "many2one":
+            fields = {}
+
+        fields.update({'id': {'string': 'ID'}, '.id': {'string': 'Database ID'}})
+        records = []
+        fields_order = fields.keys()
+        fields_order.sort(lambda x,y: -cmp(fields[x].get('string', ''), fields[y].get('string', '')))
+
+        for index, field in enumerate(fields_order):
+            value = fields[field]
+            record = {}
+            if import_compat and value.get('readonly', False):
+                ok = False
+                for sl in value.get('states', {}).values():
+                    for s in sl:
+                        ok = ok or (s==['readonly',False])
+                if not ok: continue
+
+            id = prefix + (prefix and '/'or '') + field
+            nm = name + (name and '/' or '') + value['string']
+            record.update(id=id, string= nm, action='javascript: void(0)',
+                          target=None, icon=None, children=[], field_type=value.get('type',False), required=value.get('required', False))
+            records.append(record)
+
+            if len(nm.split('/')) < 3 and value.get('relation', False):
+                if import_compat:
+                    ref = value.pop('relation')
+                    cfields = self.fields_get(req, ref)
+                    if (value['type'] == 'many2many'):
+                        record['children'] = []
+                        record['params'] = {'model': ref, 'prefix': id, 'name': nm}
+
+                    elif value['type'] == 'many2one':
+                        record['children'] = [id + '/id', id + '/.id']
+                        record['params'] = {'model': ref, 'prefix': id, 'name': nm}
+
+                    else:
+                        cfields_order = cfields.keys()
+                        cfields_order.sort(lambda x,y: -cmp(cfields[x].get('string', ''), cfields[y].get('string', '')))
+                        children = []
+                        for j, fld in enumerate(cfields_order):
+                            cid = id + '/' + fld
+                            cid = cid.replace(' ', '_')
+                            children.append(cid)
+                        record['children'] = children or []
+                        record['params'] = {'model': ref, 'prefix': id, 'name': nm}
+                else:
+                    ref = value.pop('relation')
+                    cfields = self.fields_get(req, ref)
+                    cfields_order = cfields.keys()
+                    cfields_order.sort(lambda x,y: -cmp(cfields[x].get('string', ''), cfields[y].get('string', '')))
+                    children = []
+                    for j, fld in enumerate(cfields_order):
+                        cid = id + '/' + fld
+                        cid = cid.replace(' ', '_')
+                        children.append(cid)
+                    record['children'] = children or []
+                    record['params'] = {'model': ref, 'prefix': id, 'name': nm}
+
+        records.reverse()
+        return records
+
+    @openerpweb.jsonrequest
+    def save_export_lists(self, req, name, model, field_list):
+        result = {'resource':model, 'name':name, 'export_fields': []}
+        for field in field_list:
+            result['export_fields'].append((0, 0, {'name': field}))
+        return req.session.model("ir.exports").create(result, req.session.eval_context(req.context))
+
+    @openerpweb.jsonrequest
+    def exist_export_lists(self, req, model):
+        export_model = req.session.model("ir.exports")
+        return export_model.read(export_model.search([('resource', '=', model)]), ['name'])
+
+    @openerpweb.jsonrequest
+    def delete_export(self, req, export_id):
+        req.session.model("ir.exports").unlink(export_id, req.session.eval_context(req.context))
+        return True
+
+    @openerpweb.jsonrequest
+    def namelist(self,req,  model, export_id):
+
+        result = self.get_data(req, model, req.session.eval_context(req.context))
+        ir_export_obj = req.session.model("ir.exports")
+        ir_export_line_obj = req.session.model("ir.exports.line")
+
+        field = ir_export_obj.read(export_id)
+        fields = ir_export_line_obj.read(field['export_fields'])
+
+        name_list = {}
+        [name_list.update({field['name']: result.get(field['name'])}) for field in fields]
+        return name_list
+
+    def get_data(self, req, model, context=None):
+        ids = []
+        context = context or {}
+        fields_data = {}
+        proxy = req.session.model(model)
+        fields = self.fields_get(req, model)
+        if not ids:
+            f1 = proxy.fields_view_get(False, 'tree', context)['fields']
+            f2 = proxy.fields_view_get(False, 'form', context)['fields']
+
+            fields = dict(f1)
+            fields.update(f2)
+            fields.update({'id': {'string': 'ID'}, '.id': {'string': 'Database ID'}})
+
+        def rec(fields):
+            _fields = {'id': 'ID' , '.id': 'Database ID' }
+            def model_populate(fields, prefix_node='', prefix=None, prefix_value='', level=2):
+                fields_order = fields.keys()
+                fields_order.sort(lambda x,y: -cmp(fields[x].get('string', ''), fields[y].get('string', '')))
+
+                for field in fields_order:
+                    fields_data[prefix_node+field] = fields[field]
+                    if prefix_node:
+                        fields_data[prefix_node + field]['string'] = '%s%s' % (prefix_value, fields_data[prefix_node + field]['string'])
+                    st_name = fields[field]['string'] or field
+                    _fields[prefix_node+field] = st_name
+                    if fields[field].get('relation', False) and level>0:
+                        fields2 = self.fields_get(req,  fields[field]['relation'])
+                        fields2.update({'id': {'string': 'ID'}, '.id': {'string': 'Database ID'}})
+                        model_populate(fields2, prefix_node+field+'/', None, st_name+'/', level-1)
+            model_populate(fields)
+            return _fields
+        return rec(fields)
+
+    @openerpweb.jsonrequest
+    def export_data(self, req, model, fields, ids, domain, import_compat=False, export_format="csv", context=None):
+        context = req.session.eval_context(req.context)
+        modle_obj = req.session.model(model)
+
+        ids = ids or modle_obj.search(domain, context=context)
+
+        field = fields.keys()
+        result = modle_obj.export_data(ids, field , context).get('datas',[])
+
+        if not import_compat:
+            field = [val.strip() for val in fields.values()]
+
+        if export_format == 'xls':
+            return export_xls(field, result)
+        else:
+            return export_csv(field, result)
+
 class Import(View):
     _cp_path = "/base/import"
 
     @openerpweb.httprequest
     def import_data(self, req, session_id, callback, model, id, csvfile, csvsep, csvdel, csvcode, csvskip, fields=[]):
         import StringIO
+
         context = req.session.eval_context(req.context)
         modle_obj = req.session.model(model)
-
         res = None
         content = csvfile.file.read()
-        print "\n content++++++++++++++++++++++++++++",content
         input=StringIO.StringIO(content)
         limit = 0
         data = []

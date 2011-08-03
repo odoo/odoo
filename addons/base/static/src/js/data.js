@@ -18,7 +18,7 @@ openerp.base.serialize_sort = function (criterion) {
         }).join(', ');
 };
 
-openerp.base.DataGroup =  openerp.base.Controller.extend( /** @lends openerp.base.DataGroup# */{
+openerp.base.DataGroup =  openerp.base.Widget.extend( /** @lends openerp.base.DataGroup# */{
     /**
      * Management interface between views and grouped collections of OpenERP
      * records.
@@ -30,7 +30,7 @@ openerp.base.DataGroup =  openerp.base.Controller.extend( /** @lends openerp.bas
      * content of the current grouping level.
      *
      * @constructs
-     * @extends openerp.base.Controller
+     * @extends openerp.base.Widget
      *
      * @param {openerp.base.Session} session Current OpenERP session
      * @param {String} model name of the model managed by this DataGroup
@@ -232,13 +232,13 @@ openerp.base.StaticDataGroup = openerp.base.GrouplessDataGroup.extend( /** @lend
     }
 });
 
-openerp.base.DataSet =  openerp.base.Controller.extend( /** @lends openerp.base.DataSet# */{
+openerp.base.DataSet =  openerp.base.Widget.extend( /** @lends openerp.base.DataSet# */{
     /**
      * DateaManagement interface between views and the collection of selected
      * OpenERP records (represents the view's state?)
      *
      * @constructs
-     * @extends openerp.base.Controller
+     * @extends openerp.base.Widget
      *
      * @param {String} model the OpenERP model this dataset will manage
      */
@@ -291,14 +291,18 @@ openerp.base.DataSet =  openerp.base.Controller.extend( /** @lends openerp.base.
      * Read the indexed record.
      */
     read_index: function (fields, callback) {
+        var def = $.Deferred().then(callback);
         if (_.isEmpty(this.ids)) {
-            return $.Deferred().reject().promise();
+            def.reject();
         } else {
             fields = fields || false;
-            return this.read_ids([this.ids[this.index]], fields, function(records) {
-                callback(records[0]);
+            return this.read_ids([this.ids[this.index]], fields).then(function(records) {
+                def.resolve(records[0]);
+            }, function() {
+                def.reject.apply(def, arguments);
             });
         }
+        return def.promise();
     },
     default_get: function(fields, callback) {
         return this.rpc('/base/dataset/default_get', {
@@ -492,24 +496,33 @@ openerp.base.BufferedDataSet = openerp.base.DataSetStatic.extend({
         this.to_create.push(cached);
         this.cache.push(cached);
         var to_return =  $.Deferred().then(callback);
-        setTimeout(function() {to_return.resolve({result: cached.id});}, 0);
+        to_return.resolve({result: cached.id});
         return to_return.promise();
     },
     write: function (id, data, callback) {
         var self = this;
         var record = _.detect(this.to_create, function(x) {return x.id === id;});
         record = record || _.detect(this.to_write, function(x) {return x.id === id;});
+        var dirty = false;
         if (record) {
+            for (k in data) {
+                if (record.values[k] === undefined || record.values[k] !== data[k]) {
+                    dirty = true;
+                    break;
+                }
+            }
             $.extend(record.values, data);
         } else {
+            dirty = true;
             record = {id: id, values: data};
             self.to_write.push(record);
         }
         var cached = _.detect(this.cache, function(x) {return x.id === id;});
         $.extend(cached.values, record.values);
-        this.on_change();
+        if (dirty)
+            this.on_change();
         var to_return = $.Deferred().then(callback);
-        setTimeout(function () {to_return.resolve({result: true});}, 0);
+        to_return.resolve({result: true});
         return to_return.promise();
     },
     unlink: function(ids, callback, error_callback) {
