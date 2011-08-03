@@ -98,12 +98,12 @@ send an Email to Invited Person')
                     user = user_obj.browse(cr, uid, user_id)
                     res = {
                            'user_id': user_id,
-                           'email': user.address_id.email
+                           'email': user.user_email
                            }
                     res.update(ref)
                     vals.append(res)
-                    if user.address_id.email:
-                        mail_to.append(user.address_id.email)
+                    if user.user_email:
+                        mail_to.append(user.user_email)
 
             elif  type == 'external' and datas.get('email'):
                 res = {'email': datas['email']}
