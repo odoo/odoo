@@ -907,10 +907,17 @@ class account_period(osv.osv):
         return False
 
     def find(self, cr, uid, dt=None, context=None):
+        if context is None: context = {}
         if not dt:
             dt = time.strftime('%Y-%m-%d')
 #CHECKME: shouldn't we check the state of the period?
-        ids = self.search(cr, uid, [('date_start','<=',dt),('date_stop','>=',dt)])
+        args = [('date_start', '<=' ,dt), ('date_stop', '>=', dt)]
+        if context.get('company_id', False):
+            args.append(('company_id', '=', context['company_id']))
+        else:
+            company_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
+            args.append(('company_id', '=', company_id))
+        ids = self.search(cr, uid, args, context=context)
         if not ids:
             raise osv.except_osv(_('Error !'), _('No period defined for this date: %s !\nPlease create a fiscal year.')%dt)
         return ids
@@ -1374,7 +1381,7 @@ class account_move(osv.osv):
         cr.execute('SELECT SUM(%s) FROM account_move_line WHERE move_id=%%s AND id!=%%s' % (mode,), (move.id, line_id2))
         result = cr.fetchone()[0] or 0.0
         cr.execute('update account_move_line set '+mode2+'=%s where id=%s', (result, line_id))
-        
+
         #adjust also the amount in currency if needed
         cr.execute("select currency_id, sum(amount_currency) as amount_currency from account_move_line where move_id = %s and currency_id is not null group by currency_id", (move.id,))
         for row in cr.dictfetchall():
