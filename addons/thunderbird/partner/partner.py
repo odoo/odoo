@@ -64,7 +64,9 @@ class email_server_tools(osv.osv_memory):
         if 'From' in fields:
             msg['from'] = self._decode_header(msg_txt.get('From'))
 
-        if 'Delivered-To' in fields:
+        if 'To' in fields:
+            msg['to'] = self._decode_header(msg_txt.get('To'))
+        else:
             msg['to'] = self._decode_header(msg_txt.get('Delivered-To'))
 
         if 'CC' in fields:
