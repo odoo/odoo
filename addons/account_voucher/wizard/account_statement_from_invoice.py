@@ -102,7 +102,7 @@ class account_statement_from_invoice_lines(osv.osv_memory):
             #Updated the amount of voucher in case of partially paid invoice
             amount_res = voucher_line_dict.get('amount_unreconciled',amount)
             voucher_obj.write(cr, uid, voucher_id, {'amount':amount_res}, context=context)
-
+                
             if line.journal_id.type == 'sale':
                 type = 'customer'
             elif line.journal_id.type == 'purchase':
@@ -111,7 +111,7 @@ class account_statement_from_invoice_lines(osv.osv_memory):
                 type = 'general'
             statement_line_obj.create(cr, uid, {
                 'name': line.name or '?',
-                'amount': amount_res,
+                'amount': amount > 0 and amount_res or (amount_res * -1),
                 'type': type,
                 'partner_id': line.partner_id.id,
                 'account_id': line.account_id.id,
