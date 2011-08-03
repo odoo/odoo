@@ -26,7 +26,6 @@ from operator import itemgetter
 
 import netsvc
 import pooler
-import tools
 from osv import fields, osv
 import decimal_precision as dp
 from tools.translate import _
@@ -2685,6 +2684,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                 purchase_tax_ids = tax_templ_obj.search(cr, uid, [("chart_template_id"
                                           , "=", ids[0]), ('type_tax_use', 'in', ('purchase','all'))], order="sequence")
                 res.update({'purchase_tax': purchase_tax_ids and purchase_tax_ids[0] or False})
+
         return res
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
