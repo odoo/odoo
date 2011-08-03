@@ -40,5 +40,6 @@
         "static/lib/jquery.ui.notify/css/ui.notify.css",
         "static/src/css/base.css",
         "static/src/css/data_export.css",
+        "static/src/css/data_import.css",
     ],
 }

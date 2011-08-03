@@ -1204,8 +1204,86 @@ class Export(View):
 class Import(View):
     _cp_path = "/base/import"
 
+    def fields_get(self, req, model):
+        Model = req.session.model(model)
+        fields = Model.fields_get(False, req.session.eval_context(req.context))
+        return fields
+
     @openerpweb.httprequest
-    def import_data(self, req, session_id, callback, model, id, csvfile, csvsep, csvdel, csvcode, csvskip, fields=[]):
+    def detect_data(self, req, session_id, model, id, csvfile, csvsep, csvdel, csvcode, csvskip):
+        import StringIO
+        _fields = {}
+        _fields_invert = {}
+        error = None
+
+        fields = dict(req.session.model(model).fields_get(False, req.session.eval_context(req.context)))
+        fields.update({'id': {'string': 'ID'}, '.id': {'string': 'Database ID'}})
+
+        def model_populate(fields, prefix_node='', prefix=None, prefix_value='', level=2):
+            def str_comp(x,y):
+                if x<y: return 1
+                elif x>y: return -1
+                else: return 0
+
+            fields_order = fields.keys()
+            fields_order.sort(lambda x,y: str_comp(fields[x].get('string', ''), fields[y].get('string', '')))
+            for field in fields_order:
+                if (fields[field].get('type','') not in ('reference',))\
+                            and (not fields[field].get('readonly')\
+                            or not dict(fields[field].get('states', {}).get(
+                            'draft', [('readonly', True)])).get('readonly',True)):
+
+                    st_name = prefix_value+fields[field]['string'] or field
+                    _fields[prefix_node+field] = st_name
+                    _fields_invert[st_name] = prefix_node+field
+
+                    if fields[field].get('type','')=='one2many' and level>0:
+                        fields2 = self.fields_get(req,  fields[field]['relation'])
+                        model_populate(fields2, prefix_node+field+'/', None, st_name+'/', level-1)
+
+                    if fields[field].get('relation',False) and level>0:
+                        model_populate({'/id': {'type': 'char', 'string': 'ID'}, '.id': {'type': 'char', 'string': 'Database ID'}},
+                                       prefix_node+field, None, st_name+'/', level-1)
+        fields.update({'id':{'string':'ID'},'.id':{'string':'Database ID'}})
+        model_populate(fields)
+
+        try:
+            data = csv.reader(csvfile.file, quotechar=str(csvdel), delimiter=str(csvsep))
+        except:
+            raise 'Error opening .CSV file', 'Input Error.'
+
+        records = []
+        fields = []
+        word=''
+        limit = 3
+
+        try:
+            for i, row in enumerate(data):
+                records.append(row)
+                if i == limit:
+                    break
+            for line in records:
+                for word in line:
+                    word = str(word.decode(csvcode))
+                    if word in _fields:
+                        fields.append((word, _fields[word]))
+                    elif word in _fields_invert.keys():
+                        fields.append((_fields_invert[word], word))
+                    else:
+                        error = {'message':("You cannot import the field '%s', because we cannot auto-detect it" % (word,))}
+                break
+        except:
+            error = {'message':('Error processing the first line of the file. Field "%s" is unknown') % (word,)}
+
+        if error:
+            csvfile.file.seek(0)
+            error=dict(error, preview=csvfile.file.read(200))
+            return simplejson.dumps({'error':error})
+
+        return simplejson.dumps({'records':records})
+
+    @openerpweb.httprequest
+    def import_data(self, req, session_id, model, id, csvfile, csvsep, csvdel, csvcode, csvskip, fields=[]):
         import StringIO
 
         context = req.session.eval_context(req.context)
@@ -1217,7 +1295,8 @@ class Import(View):
         data = []
 
         if not (csvdel and len(csvdel) == 1):
-            return "The CSV delimiter must be a single character"
+            error={'message': "The CSV delimiter must be a single character"}
+            return simplejson.dumps({'error':error})
 
         try:
             for j, line in enumerate(csv.reader(input, quotechar=str(csvdel), delimiter=str(csvsep))):
@@ -1228,8 +1307,9 @@ class Import(View):
                     fields = line
                 else:
                     data.append(line)
-        except:
-            return "CSV Error"
+        except csv.Error, e:
+            error={'message': str(e),'title': 'File Format Error'}
+            return simplejson.dumps({'error':error})
 
         datas = []
         ctx = context
@@ -1245,19 +1325,24 @@ class Import(View):
 
         # If the file contains nothing,
         if not datas:
-            return "The file is empty."
+            error = {'message': 'The file is empty !', 'title': 'Importation !'}
+            return simplejson.dumps({'error':error})
 
         #Inverting the header into column names
         try:
             res = modle_obj.import_data(fields, datas, 'init', '', False, ctx)
-        except:
-            return "Error in Importing Data."
+        except Exception, e:
+            error = {'message':str(e), 'title':'XML-RPC error'}
+            return simplejson.dumps({'error':error})
 
         if res[0]>=0:
-            return "Successfully Imported %d objects." % (res[0],)
+            success={'message':'Imported %d objects' % (res[0],)}
+            return simplejson.dumps({'success':success})
 
         d = ''
         for key,val in res[1].items():
-            d+= ('%s: %s' % (key,val))
+            d+= ('%s: %s' % (str(key),str(val)))
+        msg = 'Error trying to import this record:%s. ErrorMessage:%s %s' % (d,res[2],res[3])
+        error = {'message':str(msg), 'title':'ImportationError'}
 
-        return "Error trying to import this record :%s. ErrorMessage:%s %s" % (d,res[2],res[3])
+        return simplejson.dumps({'error':error})
