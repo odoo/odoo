@@ -96,7 +96,7 @@ openerp.base.ActionManager = openerp.base.Controller.extend({
     },
     'ir.actions.client': function (action) {
         var Handler = openerp.base.client_actions.get_object(action.tag);
-        new Handler(this, this.element_id, action['kwargs']).start();
+        new Handler(this, this.element_id, action.params).start();
     },
     close_dialog: function () {
         if (this.current_dialog) {
