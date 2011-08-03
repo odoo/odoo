@@ -527,9 +527,9 @@
 
         <menuitem id="menu_invoiced" name="Invoicing" parent="base.menu_base_partner" sequence="5"
             groups="-base.group_extended"/>
-        <menuitem action="action_order_line_tree2" id="menu_invoicing_sales_order_lines" parent="menu_invoiced" sequence="2" groups="base.group_sale_salesman,base.group_sale_manager"/>
+        <menuitem action="action_order_line_tree2" id="menu_invoicing_sales_order_lines" parent="menu_invoiced" sequence="2" groups="base.group_no_one"/>
         <!-- configartion view -->
-
+           
         <record id="view_config_picking_policy" model="ir.ui.view">
             <field name="name">Set Up Your Invoicing Method</field>
             <field name="model">sale.config.picking_policy</field>
@@ -540,25 +540,49 @@
                 <form position="attributes">
                   <attribute name="string">Sales Application Configuration</attribute>
                 </form>
-                <separator string="title" position="attributes">
-                <attribute name="string">Configure Sales Order Logistics</attribute>
-                  </separator>
-                  <xpath expr="//label[@string='description']" position="attributes">
-                    <attribute name="string">Define your invoice method. A services company usually invoices based on sale orders while a retailer usually invoices based on deliveries.</attribute>
-                  </xpath>
-                <xpath expr='//separator[@string="vsep"]' position='attributes'>
-                      <attribute name='rowspan'>15</attribute>
-                      <attribute name='string'></attribute>
-                  </xpath>
-                <group string="res_config_contents" position="replace">
-                  <field name="order_policy"/>
-                  <newline/>
-                  <field name="step" groups="base.group_extended"/>
+                <group colspan="4" col="8" position="replace">
+                    <group col="4">
+                        <separator string="How do you generate your costumer invoice ?"/>
+                        
+                    </group>
+                    <group col="4">
+                        <separator string="Options"/>
+                    </group>
+                    <newline/>
+                    <group col="2">
+                        <label align="0.0" string="Based on Sales Orders" width="200" colspan="1"/>
+                        <field name="sale_orders" on_change="onchange_order(sale_orders,deli_orders)" nolabel="1"/>
+                        
+                        <label align="0.0" string="Based on Delivery Orders" width="200" colspan="1"/>
+                        <field name="deli_orders" on_change="onchange_order(sale_orders,deli_orders)" nolabel="1"/>
+                        
+                        <label align="0.0" string="Based on Task's Work" width="200" colspan="1"/>
+                        <field name="task_work" nolabel="1"/>
+                        
+                        <label align="0.0" string="Based on Timesheet" width="200" colspan="1"/>
+                        <field name="timesheet" nolabel="1"/>
+                    </group>
+                    <group col="3">
+                		<label align="0.0" string="Main Method Based On" width="200" colspan="1"/>
+                		
+                        <field name="order_policy" attrs="{'readonly':['|',('sale_orders','!=',True),('deli_orders','!=',True)]}" nolabel="1"/>
+                        
+                    	<newline/>
+                    	<label align="0.0" string="Do you charge the delivery" width="200" colspan="1"/>
+            			<field name="charge_delivery" attrs="{'readonly':[('sale_orders','!=',True), ('deli_orders','!=',True)]}" nolabel="1"/>
+            			
+                    	<newline/>
+                    	<label align="0.0" string="Main Working Time Unit" width="200" colspan="1"/>
+                    	<field name="time_unit" attrs="{'readonly':[('task_work','=',False),('timesheet','=',False)]}" widget="selection" domain="[('category_id','=',3)]" nolabel="1"/>
+                  	</group>
+                    
+                    
                 </group>
                 <xpath expr='//button[@name="action_skip"]' position='replace'/>
               </data>
             </field>
         </record>
+        
 
         <record id="action_config_picking_policy" model="ir.actions.act_window">
             <field name="name">Set up your Invoicing Method</field>
