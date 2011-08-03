@@ -10,6 +10,10 @@ openerp.base_kanban.KanbanView = openerp.base.View.extend({
         this.model = this.dataset.model;
         this.view_id = view_id;
         this.element_id = element_id;
+        this.group_by_field = false;
+        this.domains = this.dataset.domain;
+        this.contexts = this.dataset.context;
+        this.group_by = false;
     },
 
     start: function() {
@@ -27,7 +31,7 @@ openerp.base_kanban.KanbanView = openerp.base.View.extend({
         });
         if(this.template_xml){
             self.dataset.read_slice([], 0, false, function (records) {
-                self.on_show_data([{'records': records, 'value':false}]);
+                self.on_show_data([{'records': records, 'value':false, 'header': false}]);
 	        });
 	    }
     },
@@ -42,9 +46,9 @@ openerp.base_kanban.KanbanView = openerp.base.View.extend({
 	            self.$element.find("#data_" + record.id).append(new_qweb.render('custom_template', record));
 	        });
         });
-
 		this.$element.find(".oe_column").sortable({
-		    connectWith: ".oe_column"
+		    connectWith: ".oe_column",
+		    receive: self.on_recieve_record
 		});
 		this.$element.find(".record").addClass("ui-widget ui-widget-content ui-helper-clearfix ui-corner-all")
 		    .find(".record-header")
@@ -66,7 +70,26 @@ openerp.base_kanban.KanbanView = openerp.base.View.extend({
         $(e.currentTarget).parents('.record:first').remove();
     },
 
+    on_recieve_record: function(event, ui) {
+        if(ui.item.attr("id") && this.group_by_field) {
+            var value = this.$element.find("#" + ui.item.attr("id")).closest("td").attr("id")
+            if(value) {
+                var data_val = {};
+                value = value.split("_")[1];
+                if(value == 'false') {
+                    value = false;
+                }
+                data_val[this.group_by_field] = value;
+                this.dataset.write(parseInt(ui.item.attr("id").split("_")[1]), data_val);
+                this.do_search(this.domains, this.contexts, this.group_by);
+            }
+        }
+    },
+
     do_search: function (domains, contexts, group_by) {
+        this.contexts = contexts;
+        this.domains = domains;
+        this.group_by = group_by;
         var self = this;
         this.rpc('/base/session/eval_domain_and_context', {
             domains: domains,
@@ -79,13 +102,17 @@ openerp.base_kanban.KanbanView = openerp.base.View.extend({
                 self, self.model, results.domain, results.context, results.group_by);
 	        self.groups.list([],
 	            function (groups) {
-                    self.do_render_group(groups);
+                    if (group_by.length >= 1) {
+                        self.group_by_field = group_by[0].group_by
+                        self.do_render_group(groups);
+                    }
 	            },
 	            function (dataset) {
                     self.dataset.read_slice(false, false, false, function(records) {
-                        self.on_show_data([{'records': records, 'value':false}]);
+                        self.on_show_data([{'records': records, 'value':false, 'header' : false}]);
                     });
-                });
+                }
+            );
         });
     },
 
@@ -96,14 +123,17 @@ openerp.base_kanban.KanbanView = openerp.base.View.extend({
             self.dataset.context = group.context;
             self.dataset.domain = group.domain;
             var group_name = group.value;
-            if(!group_name) {
-                group_name = "Undefined"
+            var group_value = group.value;
+            if(!group.value) {
+                group_name = "Undefined";
+                group_value = 'false';
             }
-            else if(group_name instanceof Array) {
-                group_name = group_name[1]
+            else if(group.value instanceof Array) {
+                group_name = group.value[1]
+                group_value = group.value[0]
             }
 	        self.dataset.read_slice(false, false, false, function(records) {
-                self.columns.push({"value" : group_name, "records": records});
+                self.columns.push({"value" : group_value, "records": records, 'header':group_name});
                 if (datagroups.length == self.columns.length) {
                     self.on_show_data(self.columns);
 	            }
