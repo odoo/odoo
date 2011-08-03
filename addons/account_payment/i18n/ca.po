@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-05-09 10:18+0000\n"
-"PO-Revision-Date: 2011-01-19 12:00+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"PO-Revision-Date: 2011-07-29 13:38+0000\n"
+"Last-Translator: mgaja (GrupoIsep.com) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-05-10 07:20+0000\n"
-"X-Generator: Launchpad (build 12959)\n"
+"X-Launchpad-Export-Date: 2011-07-30 05:30+0000\n"
+"X-Generator: Launchpad (build 13405)\n"
 
 #. module: account_payment
 #: field:payment.order,date_scheduled:0
@@ -40,7 +40,7 @@ msgstr "Seleccioneu la forma de pagament a aplicar."
 #: view:payment.mode:0
 #: view:payment.order:0
 msgid "Group By..."
-msgstr ""
+msgstr "Agrupa per..."
 
 #. module: account_payment
 #: model:ir.module.module,description:account_payment.module_meta_information
@@ -51,6 +51,12 @@ msgid ""
 "* a basic mechanism to easily plug various automated payment.\n"
 "    "
 msgstr ""
+"\n"
+"Aquest mòdul proporciona:\n"
+"* Una forma més eficient per gestionar el pagament de les factures.\n"
+"* Un mecanisme bàsic per connectar fàcilment diversos pagaments "
+"automatitzats.\n"
+"    "
 
 #. module: account_payment
 #: field:payment.order,line_ids:0
@@ -71,6 +77,9 @@ msgid ""
 " Once the bank is confirmed the state is set to 'Confirmed'.\n"
 " Then the order is paid the state is 'Done'."
 msgstr ""
+"Quan es fa una ordre, l'estat és 'Esborrany'.\n"
+" Una vegada es confirma el banc, l'estat és \"Confirmat\".\n"
+" Quan l'ordre es paga, l'estat és 'Realitzat'."
 
 #. module: account_payment
 #: help:account.invoice,amount_to_pay:0
@@ -84,7 +93,7 @@ msgstr ""
 #. module: account_payment
 #: field:payment.mode,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "Companyia"
 
 #. module: account_payment
 #: field:payment.order,date_prefered:0
@@ -104,7 +113,7 @@ msgstr "Assentaments"
 #. module: account_payment
 #: report:payment.order:0
 msgid "Used Account"
-msgstr ""
+msgstr "Compte utilitzat"
 
 #. module: account_payment
 #: field:payment.line,ml_maturity_date:0
@@ -115,7 +124,7 @@ msgstr "Data venciment"
 #. module: account_payment
 #: constraint:account.move.line:0
 msgid "You can not create move line on closed account."
-msgstr ""
+msgstr "No podeu crear una anotació en un compte tancat."
 
 #. module: account_payment
 #: view:account.move.line:0
@@ -131,7 +140,7 @@ msgstr "_Afegeix a l'ordre de pagament"
 #: model:ir.actions.act_window,name:account_payment.action_account_payment_populate_statement
 #: model:ir.actions.act_window,name:account_payment.action_account_populate_statement_confirm
 msgid "Payment Populate statement"
-msgstr ""
+msgstr "Genera extracte de pagament"
 
 #. module: account_payment
 #: report:payment.order:0
@@ -142,7 +151,7 @@ msgstr "Import"
 #. module: account_payment
 #: sql_constraint:account.move.line:0
 msgid "Wrong credit or debit value in accounting entry !"
-msgstr ""
+msgstr "Valor del deure o haver erroni en l'assentament comptable!"
 
 #. module: account_payment
 #: view:payment.order:0
@@ -168,7 +177,7 @@ msgstr "Referència"
 #. module: account_payment
 #: sql_constraint:payment.line:0
 msgid "The payment line name must be unique!"
-msgstr ""
+msgstr "El nom de la línia de pagament ha de ser únic!"
 
 #. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_payment_order_tree
@@ -208,7 +217,7 @@ msgstr "Data venciment factura"
 #. module: account_payment
 #: report:payment.order:0
 msgid "Execution Type"
-msgstr ""
+msgstr "Tipus d'execució"
 
 #. module: account_payment
 #: selection:payment.line,state:0
@@ -276,7 +285,7 @@ msgstr "Data execució"
 #. module: account_payment
 #: help:payment.mode,journal:0
 msgid "Bank or Cash Journal for the Payment Mode"
-msgstr ""
+msgstr "Diari de banc o caixa per la forma de pagament."
 
 #. module: account_payment
 #: selection:payment.order,date_prefered:0
@@ -297,7 +306,7 @@ msgstr "Compte de destí"
 #. module: account_payment
 #: view:payment.order:0
 msgid "Search Payment Orders"
-msgstr ""
+msgstr "Cerca ordres de pagament"
 
 #. module: account_payment
 #: field:payment.line,create_date:0
@@ -332,7 +341,7 @@ msgstr "Gestió de pagaments"
 #. module: account_payment
 #: field:payment.line,bank_statement_line_id:0
 msgid "Bank statement line"
-msgstr ""
+msgstr "Línia de l'extracte bancari"
 
 #. module: account_payment
 #: selection:payment.order,date_prefered:0
@@ -347,12 +356,12 @@ msgstr "Import a pagar"
 #. module: account_payment
 #: report:payment.order:0
 msgid "Currency"
-msgstr ""
+msgstr "Divises"
 
 #. module: account_payment
 #: view:account.payment.make.payment:0
 msgid "Yes"
-msgstr ""
+msgstr "Si"
 
 #. module: account_payment
 #: help:payment.line,info_owner:0
@@ -381,7 +390,7 @@ msgstr "Forma de pagament"
 #. module: account_payment
 #: report:payment.order:0
 msgid "Value Date"
-msgstr ""
+msgstr "Data valor"
 
 #. module: account_payment
 #: report:payment.order:0
@@ -418,7 +427,7 @@ msgstr "Direcció del client que ordena."
 #. module: account_payment
 #: view:account.payment.populate.statement:0
 msgid "Populate Statement:"
-msgstr ""
+msgstr "Genera extracte:"
 
 #. module: account_payment
 #: view:account.move.line:0
@@ -445,12 +454,13 @@ msgstr "Línies de pagament"
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_move_line
 msgid "Journal Items"
-msgstr ""
+msgstr "Apunts comptables"
 
 #. module: account_payment
 #: constraint:account.move.line:0
 msgid "Company must be same for its related account and period."
 msgstr ""
+"La companyia ha de ser la mateixa per al compte i període relacionats."
 
 #. module: account_payment
 #: help:payment.line,move_line_id:0
@@ -463,7 +473,7 @@ msgstr ""
 #. module: account_payment
 #: view:payment.order.create:0
 msgid "Search"
-msgstr ""
+msgstr "Cerca"
 
 #. module: account_payment
 #: model:ir.actions.report.xml,name:account_payment.payment_order1
@@ -479,7 +489,7 @@ msgstr "Data de pagament"
 #. module: account_payment
 #: report:payment.order:0
 msgid "Total:"
-msgstr ""
+msgstr "Total:"
 
 #. module: account_payment
 #: field:payment.order,date_created:0
@@ -489,7 +499,7 @@ msgstr "Data creació"
 #. module: account_payment
 #: view:account.payment.populate.statement:0
 msgid "ADD"
-msgstr ""
+msgstr "Afegeix"
 
 #. module: account_payment
 #: view:account.bank.statement:0
@@ -514,12 +524,12 @@ msgstr "El client que ordena"
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_payment_make_payment
 msgid "Account make payment"
-msgstr ""
+msgstr "Compte del pagament a realitzar"
 
 #. module: account_payment
 #: report:payment.order:0
 msgid "Invoice Ref"
-msgstr ""
+msgstr "Ref. factura"
 
 #. module: account_payment
 #: field:payment.line,name:0
@@ -551,7 +561,7 @@ msgstr "Realitzat"
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_invoice
 msgid "Invoice"
-msgstr ""
+msgstr "Factura"
 
 #. module: account_payment
 #: field:payment.line,communication:0
@@ -580,6 +590,11 @@ msgid ""
 "that should be done, keep track of all payment orders and mention the "
 "invoice reference and the partner the payment should be done for."
 msgstr ""
+"Una ordre de pagament és una petició de pagament que realitza la seva "
+"companyia per pagar una factura de proveïdor o una anotació de crèdit d'un "
+"client. Aquí podeu registrar totes les ordres de pagament pendents i fer "
+"seguiment de les ordres i indicar la referència de factura i l'entitat a la "
+"qual pagar."
 
 #. module: account_payment
 #: help:payment.line,amount:0
@@ -609,7 +624,7 @@ msgstr "Compte bancari destí"
 #. module: account_payment
 #: view:account.payment.make.payment:0
 msgid "Are you sure you want to make payment?"
-msgstr ""
+msgstr "Esteu segur que voleu realitzar el pagament?"
 
 #. module: account_payment
 #: view:payment.mode:0
@@ -643,7 +658,7 @@ msgstr "Pagaments/Cobraments"
 #. module: account_payment
 #: report:payment.order:0
 msgid "Payment Order / Payment"
-msgstr ""
+msgstr "Ordre de pagament / Pagament"
 
 #. module: account_payment
 #: field:payment.line,move_line_id:0
@@ -667,7 +682,7 @@ msgstr "Nom"
 #. module: account_payment
 #: report:payment.order:0
 msgid "Bank Account"
-msgstr ""
+msgstr "Compte bancari"
 
 #. module: account_payment
 #: view:payment.line:0
@@ -678,7 +693,7 @@ msgstr "Informació de l'assentament"
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_payment_order_create
 msgid "payment.order.create"
-msgstr ""
+msgstr "pagament.ordre.crea"
 
 #. module: account_payment
 #: field:payment.line,order_id:0
@@ -694,7 +709,7 @@ msgstr "Total"
 #: view:account.payment.make.payment:0
 #: model:ir.actions.act_window,name:account_payment.action_account_payment_make_payment
 msgid "Make Payment"
-msgstr ""
+msgstr "Realitza pagament"
 
 #. module: account_payment
 #: field:payment.line,partner_id:0
@@ -705,7 +720,7 @@ msgstr "Empresa"
 #. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_create_payment_order
 msgid "Populate Payment"
-msgstr ""
+msgstr "Genera pagament"
 
 #. module: account_payment
 #: help:payment.mode,bank_id:0
@@ -715,4 +730,4 @@ msgstr "Compte bancari per la forma de pagament"
 #. module: account_payment
 #: constraint:account.move.line:0
 msgid "You can not create move line on view account."
-msgstr ""
+msgstr "No podeu crear un apunt en un compte de tipus \"Vista\"."

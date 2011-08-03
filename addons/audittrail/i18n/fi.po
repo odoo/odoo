@@ -1,25 +1,26 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* audittrail
+# Finnish translation for openobject-addons
+# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2011-01-11 11:14+0000\n"
-"PO-Revision-Date: 2011-08-01 10:23+0000\n"
-"Last-Translator: Stanislav Hanzhin <Unknown>\n"
-"Language-Team: \n"
+"PO-Revision-Date: 2011-07-27 10:47+0000\n"
+"Last-Translator: Juha Kotamäki <Unknown>\n"
+"Language-Team: Finnish <fi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-08-02 05:19+0000\n"
-"X-Generator: Launchpad (build 13552)\n"
+"X-Launchpad-Export-Date: 2011-07-28 05:13+0000\n"
+"X-Generator: Launchpad (build 13405)\n"
 
 #. module: audittrail
 #: model:ir.module.module,shortdesc:audittrail.module_meta_information
 msgid "Audit Trail"
-msgstr "Проведение аудита"
+msgstr "Seuranta"
 
 #. module: audittrail
 #: code:addons/audittrail/audittrail.py:81
@@ -30,58 +31,58 @@ msgstr ""
 #. module: audittrail
 #: field:audittrail.log.line,log_id:0
 msgid "Log"
-msgstr "Журнал"
+msgstr "Loki"
 
 #. module: audittrail
 #: view:audittrail.rule:0
 #: selection:audittrail.rule,state:0
 msgid "Subscribed"
-msgstr "Подписка"
+msgstr "Tilatut"
 
 #. module: audittrail
 #: model:ir.model,name:audittrail.model_audittrail_rule
 msgid "Audittrail Rule"
-msgstr ""
+msgstr "Seurantasääntö"
 
 #. module: audittrail
 #: view:audittrail.view.log:0
 #: model:ir.actions.act_window,name:audittrail.action_audittrail_log_tree
 #: model:ir.ui.menu,name:audittrail.menu_action_audittrail_log_tree
 msgid "Audit Logs"
-msgstr "Логи аудита"
+msgstr "Auditointilokit"
 
 #. module: audittrail
 #: view:audittrail.log:0
 #: view:audittrail.rule:0
 msgid "Group By..."
-msgstr "Группировать по ..."
+msgstr "Ryhmittely.."
 
 #. module: audittrail
 #: view:audittrail.rule:0
 #: field:audittrail.rule,state:0
 msgid "State"
-msgstr "Состояние"
+msgstr "Tila"
 
 #. module: audittrail
 #: view:audittrail.rule:0
 msgid "_Subscribe"
-msgstr "_Подписаться"
+msgstr ""
 
 #. module: audittrail
 #: view:audittrail.rule:0
 #: selection:audittrail.rule,state:0
 msgid "Draft"
-msgstr "Черновик"
+msgstr "Luonnos"
 
 #. module: audittrail
 #: field:audittrail.log.line,old_value:0
 msgid "Old Value"
-msgstr "Старое значение"
+msgstr "Aikaisempi arvo"
 
 #. module: audittrail
 #: model:ir.actions.act_window,name:audittrail.action_audittrail_view_log
 msgid "View log"
-msgstr "Просмотреть журнал"
+msgstr "Katso lokia"
 
 #. module: audittrail
 #: help:audittrail.rule,log_read:0
@@ -89,34 +90,31 @@ msgid ""
 "Select this if you want to keep track of read/open on any record of the "
 "object of this rule"
 msgstr ""
-"Выберите это, если вы хотите отслеживать чтение и открытие любого объекта по "
-"этому правилу"
 
 #. module: audittrail
 #: field:audittrail.log,method:0
 msgid "Method"
-msgstr "Метод"
+msgstr "Metodi"
 
 #. module: audittrail
 #: field:audittrail.view.log,from:0
 msgid "Log From"
-msgstr "Форма лога"
+msgstr "Loki alkaen"
 
 #. module: audittrail
 #: field:audittrail.log.line,log:0
 msgid "Log ID"
-msgstr "Идентификатор лога"
+msgstr "Login ID"
 
 #. module: audittrail
 #: field:audittrail.log,res_id:0
 msgid "Resource Id"
-msgstr "Идентификатор записи"
+msgstr "Resurssi ID"
 
 #. module: audittrail
 #: help:audittrail.rule,user_id:0
 msgid "if  User is not added then it will applicable for all users"
-msgstr ""
-"Если пользователь не добавлен, то будет применяться для всех пользователей"
+msgstr "Jos käyttäjää ei lisätä, koskee kaikkia käyttäjiä"
 
 #. module: audittrail
 #: help:audittrail.rule,log_workflow:0
@@ -124,69 +122,67 @@ msgid ""
 "Select this if you want to keep track of workflow on any record of the "
 "object of this rule"
 msgstr ""
-"Выберите, если требуется отслеживать обработку любой записи объекта по этому "
-"правилу."
+"Valitse tämä jos haluat seurata työnkulua millä tahansa tietueella jota tämä "
+"sääntö koskee"
 
 #. module: audittrail
 #: field:audittrail.rule,user_id:0
 msgid "Users"
-msgstr "Пользователи"
+msgstr "Käyttäjät"
 
 #. module: audittrail
 #: view:audittrail.log:0
 msgid "Log Lines"
-msgstr "Строки лога"
+msgstr "Lokirivit"
 
 #. module: audittrail
 #: view:audittrail.log:0
 #: field:audittrail.log,object_id:0
 #: field:audittrail.rule,object_id:0
 msgid "Object"
-msgstr "Объект"
+msgstr "Objekti"
 
 #. module: audittrail
 #: view:audittrail.rule:0
 msgid "AuditTrail Rule"
-msgstr "Правила проведения аудита"
+msgstr "Seurantasääntö"
 
 #. module: audittrail
 #: field:audittrail.view.log,to:0
 msgid "Log To"
-msgstr "Запись лога по"
+msgstr "Loki kohteeseen"
 
 #. module: audittrail
 #: view:audittrail.log:0
 msgid "New Value Text: "
-msgstr "Новое значение текста: "
+msgstr "Uuden arvon teksti: "
 
 #. module: audittrail
 #: view:audittrail.rule:0
 msgid "Search Audittrail Rule"
-msgstr "Поиск правила"
+msgstr "Hae seurantasääntöä"
 
 #. module: audittrail
 #: model:ir.actions.act_window,name:audittrail.action_audittrail_rule_tree
 #: model:ir.ui.menu,name:audittrail.menu_action_audittrail_rule_tree
 msgid "Audit Rules"
-msgstr "Правила аудита"
+msgstr "Seurantasäännöt"
 
 #. module: audittrail
 #: view:audittrail.log:0
 msgid "Old Value : "
-msgstr ""
-"Старое значение.\\nпредставление пробела. Введите пробел в эквивалентную "
-"позицию перевода "
+msgstr "Aikaisempi arvo: "
 
 #. module: audittrail
 #: field:audittrail.log,name:0
 msgid "Resource Name"
-msgstr "Название ресурса"
+msgstr "Resurssn nimi"
 
 #. module: audittrail
 #: view:audittrail.log:0
 #: field:audittrail.log,timestamp:0
 msgid "Date"
-msgstr "Дата"
+msgstr "Päivämäärä"
 
 #. module: audittrail
 #: help:audittrail.rule,log_write:0
@@ -194,28 +190,26 @@ msgid ""
 "Select this if you want to keep track of modification on any record of the "
 "object of this rule"
 msgstr ""
-"Выберите это, если вы хотите отслеживать изменение любого объекта по этому "
-"правилу"
 
 #. module: audittrail
 #: field:audittrail.rule,log_create:0
 msgid "Log Creates"
-msgstr "Журналировать создание"
+msgstr "Lokien luonnit"
 
 #. module: audittrail
 #: help:audittrail.rule,object_id:0
 msgid "Select object for which you want to generate log."
-msgstr "Выберите объект, для которого вы хотите создать протокол."
+msgstr "Valitse objekti jolle haluat luoda lokin"
 
 #. module: audittrail
 #: view:audittrail.log:0
 msgid "Old Value Text : "
-msgstr "Старое значение текста: "
+msgstr "Aikaisempi arvo tekstinä : "
 
 #. module: audittrail
 #: field:audittrail.rule,log_workflow:0
 msgid "Log Workflow"
-msgstr "Журналировать процессы"
+msgstr "Kirjaa työnkulku"
 
 #. module: audittrail
 #: model:ir.module.module,description:audittrail.module_meta_information
@@ -229,20 +223,11 @@ msgid ""
 "    delete on objects and can check logs.\n"
 "    "
 msgstr ""
-"\n"
-"    Этот модуль позволяет администратору\n"
-"    отслеживать каждую операцию пользователя\n"
-"    с любым объектом в системе.\n"
-"\n"
-"    Администратор может написать правила для\n"
-"    чтения, записи и удаления объектов и смотреть \n"
-"    протокол.\n"
-"    "
 
 #. module: audittrail
 #: field:audittrail.rule,log_read:0
 msgid "Log Reads"
-msgstr "Журналировать чтение"
+msgstr "Lokin lukemiset"
 
 #. module: audittrail
 #: code:addons/audittrail/audittrail.py:82
@@ -253,17 +238,17 @@ msgstr ""
 #. module: audittrail
 #: field:audittrail.log,line_ids:0
 msgid "Log lines"
-msgstr "Строги лога"
+msgstr "Lokirivit"
 
 #. module: audittrail
 #: field:audittrail.log.line,field_id:0
 msgid "Fields"
-msgstr "Поля"
+msgstr "Kentät"
 
 #. module: audittrail
 #: view:audittrail.rule:0
 msgid "AuditTrail Rules"
-msgstr "Правила проведения аудита"
+msgstr "Seurantasäännöt"
 
 #. module: audittrail
 #: help:audittrail.rule,log_unlink:0
@@ -271,93 +256,91 @@ msgid ""
 "Select this if you want to keep track of deletion on any record of the "
 "object of this rule"
 msgstr ""
-"Выберите это, если вы хотите отслеживать удаление любого объекта по этому "
-"правилу"
+"Valitse tämä jos haluat seurata kaikkia poistotapahtumia joita tämä objektin "
+"sääntö koskee"
 
 #. module: audittrail
 #: view:audittrail.log:0
 #: field:audittrail.log,user_id:0
 msgid "User"
-msgstr "Пользователь"
+msgstr "Käyttäjä"
 
 #. module: audittrail
 #: field:audittrail.rule,action_id:0
 msgid "Action ID"
-msgstr "Идентификатор действия"
+msgstr "Toiminnon tunnus"
 
 #. module: audittrail
 #: view:audittrail.rule:0
 msgid "Users (if User is not added then it will applicable for all users)"
-msgstr ""
-"Пользователи (если пользователь не добавлен, то будет применяться для всех "
-"пользователей)"
+msgstr "Käyttäjtä (jos ei lisätty, koskee kaikkia käyttäjiä)"
 
 #. module: audittrail
 #: view:audittrail.rule:0
 msgid "UnSubscribe"
-msgstr "Отписаться"
+msgstr "Peruuta tilaus"
 
 #. module: audittrail
 #: field:audittrail.rule,log_unlink:0
 msgid "Log Deletes"
-msgstr "Журналировать удаление"
+msgstr "Loki poistot"
 
 #. module: audittrail
 #: field:audittrail.log.line,field_description:0
 msgid "Field Description"
-msgstr "Описание поля"
+msgstr "Kentän kuvaus"
 
 #. module: audittrail
 #: view:audittrail.log:0
 msgid "Search Audittrail Log"
-msgstr "Поиск по журналу"
+msgstr "Hae seurantalokeista"
 
 #. module: audittrail
 #: field:audittrail.rule,log_write:0
 msgid "Log Writes"
-msgstr "Журналировать запись"
+msgstr "Lokin kirjoitukset"
 
 #. module: audittrail
 #: view:audittrail.view.log:0
 msgid "Open Logs"
-msgstr "Открыть лог"
+msgstr "Avaa lokit"
 
 #. module: audittrail
 #: field:audittrail.log.line,new_value_text:0
 msgid "New value Text"
-msgstr "Новое значение текста"
+msgstr "Uuden arvon teksti"
 
 #. module: audittrail
 #: field:audittrail.rule,name:0
 msgid "Rule Name"
-msgstr "Название правила"
+msgstr "Säännön nimi"
 
 #. module: audittrail
 #: field:audittrail.log.line,new_value:0
 msgid "New Value"
-msgstr "Новое значение"
+msgstr "Uusi arvo"
 
 #. module: audittrail
 #: view:audittrail.log:0
 msgid "AuditTrail Logs"
-msgstr "Логи проведения аудита"
+msgstr "Seuranalokit"
 
 #. module: audittrail
 #: model:ir.model,name:audittrail.model_audittrail_log
 msgid "Audittrail Log"
-msgstr "Журнал"
+msgstr "Seurantaloki"
 
 #. module: audittrail
 #: help:audittrail.rule,log_action:0
 msgid ""
 "Select this if you want to keep track of actions on the object of this rule"
 msgstr ""
-"Выберите это, если вы хотите отслеживать действия с объектом по этому правилу"
+"Valitse tämä jos haluat seurata toimintoja joihin tämä objekti liittyy"
 
 #. module: audittrail
 #: view:audittrail.log:0
 msgid "New Value : "
-msgstr "Новое значение "
+msgstr "Uusi arvo : "
 
 #. module: audittrail
 #: sql_constraint:audittrail.rule:0
@@ -365,33 +348,31 @@ msgid ""
 "There is a rule defined on this object\n"
 " You can not define other on the same!"
 msgstr ""
-"Уже есть правила, определенные для объекта\n"
-" Вы не можете определить другие !"
 
 #. module: audittrail
 #: field:audittrail.log.line,old_value_text:0
 msgid "Old value Text"
-msgstr "Старое значение текста"
+msgstr "Vanhan arvon teksti"
 
 #. module: audittrail
 #: view:audittrail.view.log:0
 msgid "Cancel"
-msgstr "Отмена"
+msgstr "Peruuta"
 
 #. module: audittrail
 #: model:ir.model,name:audittrail.model_audittrail_view_log
 msgid "View Log"
-msgstr "Просмотреть протокол"
+msgstr "Näytä loki"
 
 #. module: audittrail
 #: model:ir.model,name:audittrail.model_audittrail_log_line
 msgid "Log Line"
-msgstr "Строка протокола"
+msgstr "Lokirivi"
 
 #. module: audittrail
 #: field:audittrail.rule,log_action:0
 msgid "Log Action"
-msgstr "Журналировать действия"
+msgstr "Lokitoiminto"
 
 #. module: audittrail
 #: help:audittrail.rule,log_create:0
@@ -399,4 +380,3 @@ msgid ""
 "Select this if you want to keep track of creation on any record of the "
 "object of this rule"
 msgstr ""
-"Выберите это, если вы хотите отслеживать создание объектов по этому правилу"

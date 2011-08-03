@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-05-09 10:18+0000\n"
-"PO-Revision-Date: 2011-06-25 14:46+0000\n"
-"Last-Translator: openerp-china.Black Jack <onetimespeed@gmail.com>\n"
+"PO-Revision-Date: 2011-08-01 09:25+0000\n"
+"Last-Translator: openerp-china.black-jack <onetimespeed@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-06-26 05:15+0000\n"
-"X-Generator: Launchpad (build 13168)\n"
+"X-Launchpad-Export-Date: 2011-08-02 05:19+0000\n"
+"X-Generator: Launchpad (build 13552)\n"
 
 #. module: hr_expense
 #: model:process.node,name:hr_expense.process_node_confirmedexpenses0
@@ -29,7 +29,7 @@ msgstr "费用明细"
 #. module: hr_expense
 #: model:process.node,note:hr_expense.process_node_reimbursement0
 msgid "The accoutant reimburse the expenses"
-msgstr "会计人员报销这费用"
+msgstr "财务报销这费用"
 
 #. module: hr_expense
 #: field:hr.expense.expense,date_confirm:0
@@ -105,7 +105,7 @@ msgstr "计量单位"
 msgid ""
 "Date of the acceptation of the sheet expense. It's filled when the button "
 "Accept is pressed."
-msgstr "费用表的接受日期，当它填满时按下接受按钮。"
+msgstr "费用表的同意日期，它填好时按下同意按钮。"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -137,15 +137,15 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"    这模块是用来管理员工的费用。\n"
-"   整个工作流程执行：\n"
+"    这模块用来管理员工的费用。\n"
+"   工作流程为：\n"
 "    * 费用草稿\n"
-"    * 确认该员工的申请表\n"
-"    * 他的经理审核\n"
+"    * 员工确认申请表\n"
+"    * 经理审核\n"
 "    * 财务人员审核并开发票\n"
 "    * 按发票付款给员工\n"
 "\n"
-"   这模块还使用管理会计的模块并且它兼容工时表发票模块，所以如果你的工作早计划好，你将能自动重开你客户费用的发票。\n"
+"   这模块还使用管理会计的模块并集成记工单的发票模块，所以如果您的工作是一个项目，将能自动开出您的费用的发票。\n"
 "    "
 
 #. module: hr_expense
@@ -166,24 +166,24 @@ msgstr "等待确认"
 #. module: hr_expense
 #: selection:hr.expense.report,state:0
 msgid "Accepted"
-msgstr "已接受"
+msgstr "已同意"
 
 #. module: hr_expense
 #: view:hr.expense.report:0
 msgid "   Month   "
-msgstr "   月   "
+msgstr "   月份   "
 
 #. module: hr_expense
 #: report:hr.expense:0
 #: field:hr.expense.expense,ref:0
 #: field:hr.expense.line,ref:0
 msgid "Reference"
-msgstr "相关单号"
+msgstr "单号"
 
 #. module: hr_expense
 #: report:hr.expense:0
 msgid "Certified honest and conform,"
-msgstr "已经证明诚实和一致"
+msgstr "已证明真实和一致"
 
 #. module: hr_expense
 #: help:hr.expense.expense,date_confirm:0
@@ -206,7 +206,7 @@ msgstr "拒绝费用"
 #. module: hr_expense
 #: model:product.template,name:hr_expense.product_product_expense_car_product_template
 msgid "Car Travel"
-msgstr "汽车旅游"
+msgstr "汽车历程"
 
 #. module: hr_expense
 #: field:hr.expense.report,price_average:0
@@ -233,7 +233,7 @@ msgstr "会计人员使这表生效"
 #: code:addons/hr_expense/hr_expense.py:159
 #, python-format
 msgid "The employee's home address must have a partner linked."
-msgstr "员工的家庭地址必须有一个业务伙伴的链接"
+msgstr "员工的家庭地址必须有一个链接"
 
 #. module: hr_expense
 #: field:hr.expense.report,delay_valid:0
@@ -243,7 +243,7 @@ msgstr "推延生效"
 #. module: hr_expense
 #: help:hr.expense.line,sequence:0
 msgid "Gives the sequence order when displaying a list of expense lines."
-msgstr "当显示费用明细列表时给一个序列顺序。"
+msgstr "当显示费用明细时指定一个序列顺序。"
 
 #. module: hr_expense
 #: field:hr.expense.line,analytic_account:0
@@ -270,7 +270,7 @@ msgstr "状态"
 msgid ""
 "Please configure Default Expense account for Product purchase, "
 "`property_account_expense_categ`"
-msgstr "请设置默认产品采购费用科目，'类别_费用_-科目_属性'"
+msgstr "请设置产品采购的默认费用科目，'属性_科目_费用_类别'"
 
 #. module: hr_expense
 #: report:hr.expense:0
@@ -335,13 +335,13 @@ msgstr "报销费用"
 #: field:hr.expense.expense,journal_id:0
 #: field:hr.expense.report,journal_id:0
 msgid "Force Journal"
-msgstr "支付日记帐"
+msgstr "强制的账薄"
 
 #. module: hr_expense
 #: view:hr.expense.report:0
 #: field:hr.expense.report,no_of_products:0
 msgid "# of Products"
-msgstr "商品数"
+msgstr "# 产品"
 
 #. module: hr_expense
 #: selection:hr.expense.report,month:0
@@ -351,7 +351,7 @@ msgstr "7月"
 #. module: hr_expense
 #: model:process.transition,note:hr_expense.process_transition_reimburseexpense0
 msgid "After creating invoice, reimburse expenses"
-msgstr "报销费用后创建发票"
+msgstr "创建发票后报销费用"
 
 #. module: hr_expense
 #: model:process.node,name:hr_expense.process_node_reimbursement0
@@ -434,7 +434,7 @@ msgstr "员工所有的费用"
 #: view:hr.expense.report:0
 #: selection:hr.expense.report,state:0
 msgid "Invoiced"
-msgstr "已开发票"
+msgstr "已开票"
 
 #. module: hr_expense
 #: field:product.product,hr_expense_ok:0
@@ -472,7 +472,7 @@ msgstr "草稿"
 #. module: hr_expense
 #: view:hr.expense.expense:0
 msgid "Accounting data"
-msgstr "会计日期"
+msgstr "财务日期"
 
 #. module: hr_expense
 #: model:process.transition,note:hr_expense.process_transition_approveexpense0
@@ -530,7 +530,7 @@ msgstr "11月"
 #. module: hr_expense
 #: view:hr.expense.report:0
 msgid "Extended Filters..."
-msgstr "扩展过滤..."
+msgstr "增加筛选条件"
 
 #. module: hr_expense
 #: code:addons/hr_expense/hr_expense.py:157
@@ -626,7 +626,7 @@ msgstr "其它信息"
 #. module: hr_expense
 #: help:hr.expense.expense,journal_id:0
 msgid "The journal used when the expense is invoiced"
-msgstr "费用都是发票时用这日记帐"
+msgstr "这费开发票时用这账簿"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -642,17 +642,17 @@ msgstr "确认费用"
 #. module: hr_expense
 #: model:process.transition,name:hr_expense.process_transition_approveexpense0
 msgid "Approve expense"
-msgstr "批准费用"
+msgstr "审批费用"
 
 #. module: hr_expense
 #: model:process.transition.action,name:hr_expense.process_transition_action_accept0
 msgid "Accept"
-msgstr "接受"
+msgstr "同意"
 
 #. module: hr_expense
 #: report:hr.expense:0
 msgid "This document must be dated and signed for reimbursement"
-msgstr "这报销单据必须有日期和签名"
+msgstr "这报销单据必须要有日期和签名"
 
 #. module: hr_expense
 #: model:process.transition,note:hr_expense.process_transition_refuseexpense0
@@ -676,7 +676,7 @@ msgstr "产品"
 #. module: hr_expense
 #: view:hr.expense.expense:0
 msgid "Expenses of My Department"
-msgstr "我的部门费用"
+msgstr "我部门的费用"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -714,7 +714,7 @@ msgstr "已拒绝"
 #. module: hr_expense
 #: report:hr.expense:0
 msgid "Ref."
-msgstr "关联单号"
+msgstr "单号"
 
 #. module: hr_expense
 #: field:hr.expense.report,employee_id:0
@@ -731,8 +731,8 @@ msgid ""
 "and the employee can be reimbursed. You can also reinvoice the customer at "
 "the end of the flow."
 msgstr ""
-"系统的费用管理模块允许你跟踪整个流程。每个月员工记录他们的费用。在本月底经理审核这费用表并创建项目成本/辅助核算項。会计人员审核这项目的分录同时员工可以做"
-"报销。你也可以在流程的末尾重开客户发票。"
+"系统的费用管理模块允许你跟踪整个流程。每个月员工记录他们的费用。在本月底经理审核这费用表并创建项目成本/辅助核算項。财务人员审核这项目的分录同时员工可以做"
+"报销。您也可以在流程末尾重开客户发票。"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -764,7 +764,7 @@ msgstr "名称"
 #. module: hr_expense
 #: field:hr.expense.expense,account_move_id:0
 msgid "Ledger Posting"
-msgstr "分类帐过帐"
+msgstr "过账"
 
 #. module: hr_expense
 #: model:process.transition,note:hr_expense.process_transition_approveinvoice0
@@ -798,7 +798,7 @@ msgid ""
 msgstr ""
 "当申请费用建立时状态是“草稿”。\n"
 "它被用户确认后和向admin申请时，它的状态是“等待确认”。\n"
-"如果admin接受，那它的状态是“已接受”。\n"
+"如果admin同意，那它的状态是“已同意”。\n"
 "如果申请费用已经建立一个发票，它的状态是“已开票”。\n"
 "如果该费已支付给用户，那它的状态是“已报销”。"
 
@@ -816,7 +816,7 @@ msgstr "合计"
 #. module: hr_expense
 #: field:hr.expense.line,sequence:0
 msgid "Sequence"
-msgstr "序号"
+msgstr "序列"
 
 #. module: hr_expense
 #: model:process.transition,note:hr_expense.process_transition_confirmexpense0
@@ -845,7 +845,7 @@ msgstr "年"
 #. module: hr_expense
 #: view:hr.expense.expense:0
 msgid "To Approve"
-msgstr "作审批"
+msgstr "待审批"
 
 #. module: hr_expense
 #: help:product.product,hr_expense_ok:0

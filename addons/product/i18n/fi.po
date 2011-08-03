@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2011-05-09 10:19+0000\n"
-"PO-Revision-Date: 2011-06-27 07:09+0000\n"
+"PO-Revision-Date: 2011-08-01 10:12+0000\n"
 "Last-Translator: Juha Kotamäki <Unknown>\n"
 "Language-Team: Finnish <fi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-06-28 05:30+0000\n"
-"X-Generator: Launchpad (build 13168)\n"
+"X-Launchpad-Export-Date: 2011-08-02 05:19+0000\n"
+"X-Generator: Launchpad (build 13552)\n"
 
 #. module: product
 #: model:product.template,name:product.product_product_ram512_product_template
@@ -265,7 +265,7 @@ msgstr "Tuotteen tyyppi"
 #. module: product
 #: view:product.uom:0
 msgid "  e.g: 1 * (this unit) = ratio * (reference unit)"
-msgstr ""
+msgstr "  esim. 1 * (tämä mittayksikkö) = kerroin * (viitemittayksikkö)"
 
 #. module: product
 #: code:addons/product/product.py:380
@@ -900,7 +900,7 @@ msgstr "Tuotteiden kategoriat"
 #. module: product
 #: view:product.uom:0
 msgid "  e.g: 1 * (reference unit) = ratio * (this unit)"
-msgstr ""
+msgstr "  esim. 1* (viitemittayksikkö) = kerroin * (tämä mittayksikkö)"
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_uom_form_action
@@ -1296,6 +1296,8 @@ msgid ""
 "order and the delivery of the finished products. It's the time you promise "
 "to your customers."
 msgstr ""
+"Tämä on keskimääräinen viive päivinä tilausvahvistuksen ja toimituksen "
+"välillä. Se on aika jonka lupaat asiakkaille."
 
 #. module: product
 #: view:product.product:0
@@ -1333,6 +1335,8 @@ msgid ""
 "This supplier's product code will be used when printing a request for "
 "quotation. Keep empty to use the internal one."
 msgstr ""
+"Tätä toimittajan tuotekoodia käytetään tarjouspyynnöissä. Jos jätetään "
+"tyhjäksi niin käytetään sisäisä koodia."
 
 #. module: product
 #: selection:product.template,procure_method:0
@@ -1351,6 +1355,9 @@ msgid ""
 "gives highest priority to lowest sequence and stops as soon as a matching "
 "item is found."
 msgstr ""
+"Antaa järjestyksen missä hinnaston rivit tarkistetaan. Arviointi antaa "
+"korkeimman prioriteetin pienimmälle järjestysnumerolle ja lopettaa kun "
+"sopiva nimike löytyy."
 
 #. module: product
 #: selection:product.template,type:0
@@ -1427,6 +1434,8 @@ msgid ""
 "Conversion from Product UoM m to Default UoM PCE is not possible as they "
 "both belong to different Category!."
 msgstr ""
+"Muunnos tuotteen mittayksikösä m oletusmittayksikköön kpl ei ole mahdollinen "
+"koska ne kuuluvat eri kategorioihin!."
 
 #. module: product
 #: field:product.pricelist.version,date_start:0
@@ -1441,6 +1450,10 @@ msgid ""
 "the level of this product. Different lead times will be summed for all "
 "levels and purchase orders."
 msgstr ""
+"keskimääräinen viive tuotteen valmistamiseksi päivinä. Tämä on vain "
+"tuotantotilausta varten ja jos osaluettelo on monitasoinen, se koskee vain "
+"ensimmäistä tasoa. Eri läpimenoajat summataan eri tasoilta ja "
+"hankintatilauksilta."
 
 #. module: product
 #: help:product.product,qty_available:0
@@ -1569,6 +1582,9 @@ msgid ""
 "How many times this UoM is smaller than the reference UoM in this category:\n"
 "1 * (reference unit) = ratio * (this unit)"
 msgstr ""
+"Kuinka monta kertaa pienempi tämä mittayksikkö on kategorian "
+"viitemittayksikköön nähden.\n"
+"1 * (viitemittayksikkö) = kerroin * (tämä yksikkö"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_price_type_action
@@ -1859,6 +1875,8 @@ msgid ""
 "internal if none have been selected. Computed as: Real Stock - Outgoing + "
 "Incoming."
 msgstr ""
+"Tuleva varasto tälle tuotteelle valituissa paikoissa (tai kaikki sisäiset "
+"jos mitään ei valittu). Lasketaan: todellinen varasto - lähtevät + saapuvat."
 
 #. module: product
 #: field:product.pricelist,name:0
@@ -2003,7 +2021,7 @@ msgstr "Mittayksikön tyyppi"
 #. module: product
 #: help:product.template,product_manager:0
 msgid "This is use as task responsible"
-msgstr ""
+msgstr "Tätä käytetään tehtävän vastuuhenkilönä"
 
 #. module: product
 #: help:product.uom,rounding:0
@@ -2011,6 +2029,8 @@ msgid ""
 "The computed quantity will be a multiple of this value. Use 1.0 for a UoM "
 "that cannot be further split, such as a piece."
 msgstr ""
+"Laskettu määrä on tämän arvon kertoma. Käytä 1.0 mittayksikölle jota ei voi "
+"edelleen jakaa, kuten esim. kpl."
 
 #. module: product
 #: view:product.product:0
@@ -2049,6 +2069,9 @@ msgid ""
 "How many times this UoM is bigger than the reference UoM in this category:\n"
 "1 * (this unit) = ratio * (reference unit)"
 msgstr ""
+"Kuinka monta kertaa suurempi tämä mittayksikkö on kuin kategorian "
+"viitemittayksikkö.\n"
+"1 * (tämä mittayksikkö) = kerroin * (viitemittayksikkö)"
 
 #. module: product
 #: model:product.template,name:product.product_product_shelf0_product_template
@@ -2271,6 +2294,8 @@ msgid ""
 "Gives the different ways to package the same product. This has no impact on "
 "the picking order and is mainly used if you use the EDI module."
 msgstr ""
+"Antaa eri tapoja pakata sama tuote. Ei vaikuta keräilyjärjestykseen ja "
+"käytetään lähinnä EDI moduulissa."
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_pricelist_action
@@ -2308,6 +2333,9 @@ msgid ""
 "Coefficient to convert UOM to UOS\n"
 " uos = uom * coeff"
 msgstr ""
+"Tehokkuuskerroin (Coefficent) muutettaessa valmistusmittayksikköä (UOM) "
+"myyntimittayksiköön (UOS)\n"
+" UOS = UOM * tehokkuuskerroin"
 
 #. module: product
 #: help:product.template,volume:0

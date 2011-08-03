@@ -8,25 +8,25 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2011-05-09 10:18+0000\n"
-"PO-Revision-Date: 2011-06-28 10:49+0000\n"
+"PO-Revision-Date: 2011-08-01 07:10+0000\n"
 "Last-Translator: Juha Kotamäki <Unknown>\n"
 "Language-Team: Finnish <fi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-06-29 05:31+0000\n"
-"X-Generator: Launchpad (build 13168)\n"
+"X-Launchpad-Export-Date: 2011-08-02 05:19+0000\n"
+"X-Generator: Launchpad (build 13552)\n"
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:298
 #, python-format
 msgid "Follwoup Summary"
-msgstr ""
+msgstr "Muistutuksen yhteenveto"
 
 #. module: account_followup
 #: view:account_followup.followup:0
 msgid "Search Followup"
-msgstr ""
+msgstr "Hae muistutusta"
 
 #. module: account_followup
 #: model:ir.module.module,description:account_followup.module_meta_information
@@ -67,6 +67,10 @@ msgid ""
 "E-Mail sent to following Partners successfully. !\n"
 "\n"
 msgstr ""
+"\n"
+"\n"
+"Sähköposti lähetetty onnistuneesti seuraaville kumppaneille !\n"
+"\n"
 
 #. module: account_followup
 #: view:account_followup.followup:0
@@ -139,7 +143,7 @@ msgstr "Nettopäivät"
 #: model:ir.actions.act_window,name:account_followup.action_account_followup_definition_form
 #: model:ir.ui.menu,name:account_followup.account_followup_menu
 msgid "Follow-Ups"
-msgstr ""
+msgstr "Muistutukset"
 
 #. module: account_followup
 #: view:account_followup.stat.by.partner:0
@@ -154,7 +158,7 @@ msgstr "Kokonais debet"
 #. module: account_followup
 #: view:account.followup.print.all:0
 msgid "%(heading)s: Move line header"
-msgstr ""
+msgstr "%(heading)s: Siirtorivin otsiko"
 
 #. module: account_followup
 #: view:res.company:0
@@ -198,7 +202,7 @@ msgstr "Laskumuistutus"
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_followup
 msgid "Account Follow Up"
-msgstr ""
+msgstr "Tilin muistutus"
 
 #. module: account_followup
 #: selection:account_followup.followup.line,start:0
@@ -208,12 +212,12 @@ msgstr "Kuukauden loppu"
 #. module: account_followup
 #: view:account_followup.stat:0
 msgid "Not Litigation"
-msgstr ""
+msgstr "Ei peirttävä"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
 msgid "%(user_signature)s: User name"
-msgstr ""
+msgstr "%(user_signature)s: käyttäjän nimi"
 
 #. module: account_followup
 #: field:account_followup.stat,debit:0
@@ -227,6 +231,9 @@ msgid ""
 "You can send them the default message for unpaid invoices or manually enter "
 "a message should you need to remind them of a specific information."
 msgstr ""
+"Ominaisuus mahdollistaa muistutusten lähettämisen kumppaneille joilla on "
+"odottavia laskuja. Voit lähettää oletusviestin maksamattomista laskuista tai "
+"syöttää viestin käsin jos haluat muistuttaa heitä erityisistä asioista."
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
@@ -236,7 +243,7 @@ msgstr "Viite"
 #. module: account_followup
 #: help:account_followup.followup.line,sequence:0
 msgid "Gives the sequence order when displaying a list of follow-up lines."
-msgstr ""
+msgstr "Antaa järjestyksen näytettäessä muistutusrivejä."
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -247,13 +254,13 @@ msgstr "Sähköposti runko"
 #. module: account_followup
 #: field:account.move.line,followup_line_id:0
 msgid "Follow-up Level"
-msgstr ""
+msgstr "Muistutuksen taso"
 
 #. module: account_followup
 #: field:account_followup.stat,date_followup:0
 #: field:account_followup.stat.by.partner,date_followup:0
 msgid "Latest followup"
-msgstr ""
+msgstr "Viimeisin muistutus"
 
 #. module: account_followup
 #: model:account_followup.followup.line,description:account_followup.demo_followup_line2
@@ -278,6 +285,24 @@ msgid ""
 "\n"
 "Best Regards,\n"
 msgstr ""
+"\n"
+"Hyvä yhteistyökumppanimme %(partner_name)s,\n"
+"\n"
+"Olemme pettyneitä että muistutuksesta huolimatta laskunne ovat pahasti "
+"myöhässä.\n"
+"\n"
+"On tärkeää että maksu suoritetaan välittömästi, muuten meiden on harkitttava "
+"toimitusten keskeyttämistä\n"
+"jollloin emme voi enään toimittaa tuotteita tai palveluita teille.\n"
+"Olkaa hyvä ja suorittakaa maksu seuraavien 8 päivän aikana.\n"
+"\n"
+"Jos laskun maksamisessa on ongelmia joista emme ole tietoisia, olkaa hyvä ja "
+"ottakaa yhteyttä talousosastollemme, jotta ongelma voidaan ratkaista "
+"nopeasti.\n"
+"\n"
+"Erääntyneiden maksujen yksityiskohdat näkyvät alla.\n"
+"\n"
+"Ystävällisin terveisin.\n"
 
 #. module: account_followup
 #: field:account.followup.print.all,partner_lang:0
@@ -301,18 +326,18 @@ msgstr "Tulostettu viesti"
 #: model:ir.actions.act_window,name:account_followup.action_account_followup_print_all
 #: model:ir.ui.menu,name:account_followup.account_followup_print_menu
 msgid "Send followups"
-msgstr ""
+msgstr "Lähetä muistutukset"
 
 #. module: account_followup
 #: view:account_followup.stat.by.partner:0
 msgid "Partner to Remind"
-msgstr ""
+msgstr "Muistutettava kumppani"
 
 #. module: account_followup
 #: field:account_followup.followup.line,followup_id:0
 #: field:account_followup.stat,followup_id:0
 msgid "Follow Ups"
-msgstr ""
+msgstr "Muistutukset"
 
 #. module: account_followup
 #: model:account_followup.followup.line,description:account_followup.demo_followup_line1
@@ -330,6 +355,18 @@ msgid ""
 "\n"
 "Best Regards,\n"
 msgstr ""
+"\n"
+"Hyvä yhteistyökumppanimme %(partner_name)s,\n"
+"\n"
+"Järjestelmämme tietojen mukaan yrityksellänne on seuraavat laskut myöhässä.\n"
+"Olkaa hyvä ja suorittakaa maksu seuraavien 8 päivän aikana.\n"
+"\n"
+"Mikäli laskunne on jo maksettu tämän ilmoituksen jälkeen, tämä ilmoitus on "
+"aiheeton.\n"
+"Tarvittaessa voitte ottaa yhteyttä talousosastollemme asioiden "
+"selvittämiseksi.\n"
+"\n"
+"Ystävällisin terveisin,\n"
 
 #. module: account_followup
 #: model:account_followup.followup.line,description:account_followup.demo_followup_line3
@@ -350,26 +387,40 @@ msgid ""
 "\n"
 "Best Regards,\n"
 msgstr ""
+"\n"
+"Hyvä yhteistyökumppanimme %(partner_name)s,\n"
+"\n"
+"Useista muistutuksista huolimatta, laskunne ovat yhä maksamatta.\n"
+"\n"
+"Jos maksua ei suoriteta seuraavien 8 päivän aikana, käynnistämme "
+"perintätoimet ilman erillistä ilmoitusta.\n"
+"\n"
+"Toivomme että perintätoimia ei tarvita ja maksatte allaolevat laskunne "
+"välittömästi.\n"
+"\n"
+"Tarvittaessa voitte ottaa yhteyttä talousosastollemme lisätietoja varten.\n"
+"\n"
+"Ystävällisin terveisin,\n"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
 msgid "Send Mails"
-msgstr ""
+msgstr "Lähetä viestit"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Currency"
-msgstr ""
+msgstr "Valuutta"
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_stat_by_partner
 msgid "Followup Statistics by Partner"
-msgstr ""
+msgstr "Muistutustilastot kumppaneittain"
 
 #. module: account_followup
 #: model:ir.module.module,shortdesc:account_followup.module_meta_information
 msgid "Accounting follow-ups management"
-msgstr ""
+msgstr "Maksumuistutusten hallinta"
 
 #. module: account_followup
 #: field:account_followup.stat,blocked:0
@@ -391,7 +442,7 @@ msgstr "Erääntyy"
 #: code:addons/account_followup/wizard/account_followup_print.py:56
 #, python-format
 msgid "Select Partners"
-msgstr ""
+msgstr "Valitse kumppanit"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -401,17 +452,17 @@ msgstr "Sähköpostin asetukset"
 #. module: account_followup
 #: view:account.followup.print.all:0
 msgid "Print Follow Ups"
-msgstr ""
+msgstr "Tulosta muistutukset"
 
 #. module: account_followup
 #: field:account.move.line,followup_date:0
 msgid "Latest Follow-up"
-msgstr ""
+msgstr "Viimeisin muistutus"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Sub-Total:"
-msgstr ""
+msgstr "Alasumma:"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
@@ -421,7 +472,7 @@ msgstr "Balanssi"
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_stat
 msgid "Followup Statistics"
-msgstr ""
+msgstr "Maksumuistutusten tilastot"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
@@ -431,17 +482,17 @@ msgstr "Maksettu"
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid "%(user_signature)s: User Name"
-msgstr ""
+msgstr "%(user_signature)s: käyttäjän nimi"
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_move_line
 msgid "Journal Items"
-msgstr ""
+msgstr "Päiväkirjan tapahtumat"
 
 #. module: account_followup
 #: constraint:account.move.line:0
 msgid "Company must be same for its related account and period."
-msgstr ""
+msgstr "Yrityksen tulee olla sama liittyvälle tilille ja jaksolle."
 
 #. module: account_followup
 #: field:account.followup.print.all,email_conf:0
@@ -455,6 +506,8 @@ msgid ""
 "All E-mails have been successfully sent to Partners:.\n"
 "\n"
 msgstr ""
+"Kaikki sähköpostit on lähetetty onnistuneesti kumppaneille:.\n"
+"\n"
 
 #. module: account_followup
 #: constraint:res.company:0
@@ -464,7 +517,7 @@ msgstr "Virhe! Et voi luoda sisäkkäisiä yrityksiä."
 #. module: account_followup
 #: view:account.followup.print.all:0
 msgid "%(company_name)s: User's Company name"
-msgstr ""
+msgstr "%(company_name)s: Käyttäjän yrityksen nimi"
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_res_company
@@ -474,7 +527,7 @@ msgstr "Yritykset"
 #. module: account_followup
 #: view:account_followup.followup:0
 msgid "Followup Lines"
-msgstr ""
+msgstr "Muistutusrivit"
 
 #. module: account_followup
 #: field:account_followup.stat,credit:0
@@ -489,17 +542,17 @@ msgstr "Eräpäivä"
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid "%(partner_name)s: Partner Name"
-msgstr ""
+msgstr "%(partner_name)s: Kumppanin nimi"
 
 #. module: account_followup
 #: view:account_followup.stat:0
 msgid "Follow-Up lines"
-msgstr ""
+msgstr "Muistutusrivit"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
 msgid "%(company_currency)s: User's Company Currency"
-msgstr ""
+msgstr "%(company_currency)s: Käyttäjän yrityksen valuutta"
 
 #. module: account_followup
 #: view:account_followup.stat:0
@@ -517,18 +570,18 @@ msgstr "Termin tyyppi"
 #: model:ir.model,name:account_followup.model_account_followup_print
 #: model:ir.model,name:account_followup.model_account_followup_print_all
 msgid "Print Followup & Send Mail to Customers"
-msgstr ""
+msgstr "Tulosta muistutus ja lähetä sähköpostia asiakkaalle"
 
 #. module: account_followup
 #: field:account_followup.stat,date_move_last:0
 #: field:account_followup.stat.by.partner,date_move_last:0
 msgid "Last move"
-msgstr ""
+msgstr "Viimeisin siirto"
 
 #. module: account_followup
 #: model:ir.actions.report.xml,name:account_followup.account_followup_followup_report
 msgid "Followup Report"
-msgstr ""
+msgstr "Muistutus raportti"
 
 #. module: account_followup
 #: field:account_followup.stat,period_id:0
@@ -544,7 +597,7 @@ msgstr "Peruuta"
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid "Follow-Up Lines"
-msgstr ""
+msgstr "Muistutusrivit"
 
 #. module: account_followup
 #: view:account_followup.stat:0
@@ -554,28 +607,28 @@ msgstr "Oikeudenkäynti"
 #. module: account_followup
 #: field:account_followup.stat.by.partner,max_followup_id:0
 msgid "Max Follow Up Level"
-msgstr ""
+msgstr "Suurin muistutustaso"
 
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.act_account_partner_account_move_payable_all
 msgid "Payable Items"
-msgstr ""
+msgstr "Maksettavat rivit"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
 msgid "%(followup_amount)s: Total Amount Due"
-msgstr ""
+msgstr "%(followup_amount)s: Maksettava kokonaissumma"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
 #: view:account_followup.followup.line:0
 msgid "%(date)s: Current Date"
-msgstr ""
+msgstr "%(date)s: Nykyinen päiväys"
 
 #. module: account_followup
 #: view:account_followup.stat:0
 msgid "Followup Level"
-msgstr ""
+msgstr "Muistutuksen taso"
 
 #. module: account_followup
 #: view:account_followup.followup:0
@@ -587,12 +640,12 @@ msgstr "Kuvaus"
 #. module: account_followup
 #: view:account_followup.stat:0
 msgid "This Fiscal year"
-msgstr ""
+msgstr "Kuluva tilivuosi"
 
 #. module: account_followup
 #: view:account.move.line:0
 msgid "Partner entries"
-msgstr ""
+msgstr "Kumppaniviennit"
 
 #. module: account_followup
 #: help:account.followup.print.all,partner_lang:0
@@ -600,18 +653,20 @@ msgid ""
 "Do not change message text, if you want to send email in partner language, "
 "or configure from company"
 msgstr ""
+"Älä vaihda viestin tekstiä, jos haluat lähettää sähköpostia kumppanin "
+"kielellä tai konfiguroida yrityksestä"
 
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.act_account_partner_account_move_all
 msgid "Receivable Items"
-msgstr ""
+msgstr "Saatavat rivit"
 
 #. module: account_followup
 #: view:account_followup.stat:0
 #: model:ir.actions.act_window,name:account_followup.action_followup_stat
 #: model:ir.ui.menu,name:account_followup.menu_action_followup_stat_follow
 msgid "Follow-ups Sent"
-msgstr ""
+msgstr "Maksumuistutukset lähetetty"
 
 #. module: account_followup
 #: field:account_followup.followup,name:0
@@ -642,6 +697,9 @@ msgid ""
 "E-Mail not sent to following Partners, Email not available !\n"
 "\n"
 msgstr ""
+"Sähköpostia ei lähetetty seuraaville kumppaneille. Sähköpostisosoitetta ei "
+"löydy !\n"
+"\n"
 
 #. module: account_followup
 #: view:account.followup.print:0
@@ -656,7 +714,7 @@ msgstr "Viivästyspäivä"
 #. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Document : Customer account statement"
-msgstr ""
+msgstr "Dokumentti : Asiakkaan tiliote"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -682,7 +740,7 @@ msgstr "Sekvenssi"
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid "%(company_name)s: User's Company Name"
-msgstr ""
+msgstr "%(company_name)s: Käyttäjän yrityksen nimi"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
@@ -692,19 +750,19 @@ msgstr "Asiakkaan viite"
 #. module: account_followup
 #: view:account.followup.print.all:0
 msgid "%(partner_name)s: Partner name"
-msgstr ""
+msgstr "%(partner_name)s: Kumppanin nimi"
 
 #. module: account_followup
 #: view:account_followup.stat:0
 msgid "Latest Followup Date"
-msgstr ""
+msgstr "Viimeisimmän muistutuksen nimi"
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_followup_line
 msgid "Follow-Up Criteria"
-msgstr ""
+msgstr "Muistutuksen kriteeri"
 
 #. module: account_followup
 #: constraint:account.move.line:0
 msgid "You can not create move line on view account."
-msgstr ""
+msgstr "Et voi luoda siirtoriviä näkymätilille."

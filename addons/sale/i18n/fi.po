@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2011-01-11 11:16+0000\n"
-"PO-Revision-Date: 2011-06-22 09:26+0000\n"
+"PO-Revision-Date: 2011-08-02 09:47+0000\n"
 "Last-Translator: Juha Kotamäki <Unknown>\n"
 "Language-Team: Finnish <fi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-06-23 05:58+0000\n"
-"X-Generator: Launchpad (build 13168)\n"
+"X-Launchpad-Export-Date: 2011-08-03 05:13+0000\n"
+"X-Generator: Launchpad (build 13573)\n"
 
 #. module: sale
 #: view:board.board:0
@@ -112,6 +112,10 @@ msgid ""
 "sales orders partially, by lines of sales order. You do not need this list "
 "if you invoice from the delivery orders or if you invoice sales totally."
 msgstr ""
+"Tässä on lista kaikista laskutettavista myyntitilausriveistä. Voit laskuttaa "
+"myyntitilaukset osittain, riveittäin tai myyntitilauksittain. Et tarvitse "
+"listaa, jos laskutat toimitusmääräyksistä tai jos laskutat myyntiä "
+"koontilaskuilla."
 
 #. module: sale
 #: model:process.node,name:sale.process_node_saleprocurement0
@@ -318,6 +322,8 @@ msgid ""
 "There is no income category account defined in default Properties for "
 "Product Category or Fiscal Position is not defined !"
 msgstr ""
+"Tulokategorian tiliä ei ole määritelty tuotekategorian oletusarvoissa tai "
+"taloudellista asemaa ei ole määritelty !"
 
 #. module: sale
 #: view:sale.installer:0
@@ -440,7 +446,7 @@ msgstr ""
 #: code:addons/sale/sale.py:1042
 #, python-format
 msgid "(n/a)"
-msgstr ""
+msgstr "(ei saatavilla)"
 
 #. module: sale
 #: help:sale.advance.payment.inv,product_id:0
@@ -545,6 +551,9 @@ msgid ""
 "Incoterm which stands for 'International Commercial terms' implies its a "
 "series of sales terms which are used in the commercial transaction."
 msgstr ""
+"Incoterm tarkoittaa 'international commercial terms' kansainväliset "
+"toimitushedot, nämä määrittelevät sarjan myyntiehtoa joita käytetään "
+"kaupankäynnissä."
 
 #. module: sale
 #: field:sale.order,partner_invoice_id:0
@@ -1205,7 +1214,7 @@ msgstr "Viitemittayksikkö"
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order_line_make_invoice
 msgid "Sale OrderLine Make_invoice"
-msgstr ""
+msgstr "Myyntiilausrivi tee lasku"
 
 #. module: sale
 #: help:sale.config.picking_policy,step:0
@@ -1215,6 +1224,11 @@ msgid ""
 "and simple methods to deliver products to the customer in one or two "
 "operations by the worker."
 msgstr ""
+"OpenERP pystyy oletusarvoisesti hoitamaan monimutkaisia reitityksiä ja "
+"polkuja tuotteillesi omissa varastoissasi ja kumppanien tiloissa. Tämä "
+"konfiguroi yleisimmät ja yksinkertaisimmat metodit tuotteiden "
+"toimittamiseksi asiakkaalle yhdellä tai kahdella työntekijän tekemällä "
+"operaatiolla."
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree
@@ -1252,6 +1266,9 @@ msgid ""
 "is 'Shipping and Manual in Progress'. The invoice is created automatically "
 "if the shipping policy is 'Payment before Delivery'."
 msgstr ""
+"Myyjä luo laskun käsin, jos myyntitilauksen lähetyssäännöt ovat 'toimitus ja "
+"manuaalinen käynnissä'. Lasku luodaan automaattisesti jos lähetyssääntö on "
+"'maksu ennen toimitusta'."
 
 #. module: sale
 #: help:sale.config.picking_policy,order_policy:0
@@ -1447,6 +1464,8 @@ msgid ""
 "You plan to sell %.2f %s but you only have %.2f %s available !\n"
 "The real stock is %.2f %s. (without reservations)"
 msgstr ""
+"Suunnitelet myyväsi %.2f %s mutta sinulla on vain %.2f %s saatavilla !\n"
+"Todellinen varasto on %.2f %s (ilman varauksia)"
 
 #. module: sale
 #: view:sale.order:0
@@ -1608,6 +1627,11 @@ msgid ""
 "\n"
 "EAN: %s Quantity: %s Type of ul: %s"
 msgstr ""
+"Valitsit määräksi %d yksikköä.\n"
+"Mutta se ei ole yhteensopiva valitun pakkauksen kanssa.\n"
+"Tässä on ehdotus määristä pakkauksen mukaan:\n"
+"\n"
+"EAN: %s määrä %s Tyyppi %s"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order
@@ -1693,6 +1717,9 @@ msgid ""
 "soon as possible when one product is available or you wait that all products "
 "are available.."
 msgstr ""
+"Toimitustyyppiä käytetään määrittelemään tilauksittain, haluatko toimittaa "
+"heti kun jokin tuotteista on saatavilla vai haluatko odottaa kunnes kaikki "
+"tuotteet ovat saatavilla.."
 
 #. module: sale
 #: selection:sale.report,month:0
@@ -1708,6 +1735,9 @@ msgid ""
 "1.The state of this sales order line is either \"draft\" or \"cancel\"!\n"
 "2.The Sales Order Line is Invoiced!"
 msgstr ""
+"Laskua ei voi luoda tälle myyntitilausriville seuraavista syistä:\n"
+"1. Myyntitilausrivin tila on joko luonnos tai peruttu!\n"
+"2. Myyntitilausrivi on laskutettu!"
 
 #. module: sale
 #: field:sale.order.line,th_weight:0
@@ -1740,6 +1770,9 @@ msgid ""
 "production of products regarding to the rules and to the sales order's "
 "parameters. "
 msgstr ""
+"Hankintatilaus luodaan automaattisesti kun myyntitilaus on vahvistettu tai "
+"lasku maksettu. Se ohjaa hankintaa ja tuotantoa myyntitilausten parametrien "
+"ja sääntöjen mukaan. "
 
 #. module: sale
 #: view:sale.order.line:0
@@ -1985,7 +2018,7 @@ msgstr ""
 #. module: sale
 #: help:sale.order,invoiced:0
 msgid "It indicates that an invoice has been paid."
-msgstr ""
+msgstr "Merkitsee että lasku on maksettu"
 
 #. module: sale
 #: report:sale.order:0
@@ -2001,7 +2034,7 @@ msgstr "Toukokuu"
 #. module: sale
 #: help:sale.installer,sale_order_dates:0
 msgid "Adds commitment, requested and effective dates on Sales Orders."
-msgstr ""
+msgstr "Lisää luvatun, pyydetyn ja todellisen päiväyksen myyntitilaukselle."
 
 #. module: sale
 #: view:sale.order:0
@@ -2013,7 +2046,7 @@ msgstr "Asiakas"
 #. module: sale
 #: model:product.template,name:sale.advance_product_0_product_template
 msgid "Advance"
-msgstr ""
+msgstr "Ennakko"
 
 #. module: sale
 #: selection:sale.report,month:0
@@ -2026,6 +2059,8 @@ msgid ""
 "Allows you to group and invoice your delivery orders according to different "
 "invoicing types: daily, weekly, etc."
 msgstr ""
+"Mahdollistaa toimitusten laskujen ryhmittelyn eri jaksoille: päivittäin, "
+"viikottain jne."
 
 #. module: sale
 #: selection:sale.report,month:0
@@ -2040,18 +2075,18 @@ msgstr "Kirjanpito"
 #. module: sale
 #: field:sale.config.picking_policy,step:0
 msgid "Steps To Deliver a Sales Order"
-msgstr ""
+msgstr "Vaiheet myyntitilauksen toimittamiseksi"
 
 #. module: sale
 #: view:sale.order:0
 #: view:sale.order.line:0
 msgid "Search Sales Order"
-msgstr ""
+msgstr "Hae myyntitilausta"
 
 #. module: sale
 #: model:process.node,name:sale.process_node_saleorderprocurement0
 msgid "Sales Order Requisition"
-msgstr ""
+msgstr "Myyntitilausehdotus"
 
 #. module: sale
 #: report:sale.order:0
@@ -2063,7 +2098,7 @@ msgstr "Maksuehto"
 #: help:sale.installer,sale_layout:0
 msgid ""
 "Provides some features to improve the layout of the Sales Order reports."
-msgstr ""
+msgstr "Lisää joitaikin ominaisuuksia myyntitilausraporttien asetteluun."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_order_report_all

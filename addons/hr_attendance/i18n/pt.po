@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:15+0000\n"
-"PO-Revision-Date: 2011-07-12 18:33+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"PO-Revision-Date: 2011-08-01 15:56+0000\n"
+"Last-Translator: DReis <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-07-13 05:14+0000\n"
-"X-Generator: Launchpad (build 13168)\n"
+"X-Launchpad-Export-Date: 2011-08-02 05:19+0000\n"
+"X-Generator: Launchpad (build 13552)\n"
 
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_time_tracking
@@ -78,6 +78,10 @@ msgid ""
 "Sign in/Sign out actions. You can also link this feature to an attendance "
 "device using OpenERP's web service features."
 msgstr ""
+"A funcionalidade de registo do tempo destina-se a gerir as presenças a "
+"partir dos registos de entrada e saída do serviço. Pode interligar esta "
+"funcionalidade com um aparelho de recolha de marcações de ponto usando as "
+"capacidade de web services do Open ERP."
 
 #. module: hr_attendance
 #: view:hr.action.reason:0
@@ -121,6 +125,7 @@ msgstr "Definir motivo de presença"
 msgid ""
 "Error ! You cannot select a department for which the employee is the manager."
 msgstr ""
+"Erro ! Não pode seleccionar um departamento cujo gestor é o funcionário."
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_month
@@ -131,7 +136,7 @@ msgstr "Pontualidade por Mês"
 #: field:hr.sign.in.out,name:0
 #: field:hr.sign.in.out.ask,name:0
 msgid "Employees name"
-msgstr "Nomes de Empregados"
+msgstr "Nomes dos funcionários"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.open_view_attendance_reason
@@ -157,7 +162,7 @@ msgstr "Data Final"
 #. module: hr_attendance
 #: view:hr.attendance:0
 msgid "Employee attendance"
-msgstr "Presença do funcionário"
+msgstr "Assiduidade do funcionário"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/hr_attendance.py:136
@@ -208,6 +213,12 @@ msgid ""
 "    actions(Sign in/Sign out) performed by them.\n"
 "       "
 msgstr ""
+"\n"
+"    Este módulo destina-se à gestão da pontualidade e assiduidade dos "
+"funcionários.\n"
+"    Mantém um registo de presenças baseado nos registos de entrada e saída\n"
+"    efetuados por estes.\n"
+"       "
 
 #. module: hr_attendance
 #: constraint:hr.attendance:0
@@ -347,7 +358,7 @@ msgstr "Novembro"
 #. module: hr_attendance
 #: constraint:hr.employee:0
 msgid "Error ! You cannot create recursive Hierarchy of Employees."
-msgstr ""
+msgstr "Erro! Não pode criar hierarquias de funcionários com recursividade."
 
 #. module: hr_attendance
 #: selection:hr.attendance.month,month:0
@@ -400,11 +411,14 @@ msgid ""
 "tool. If each employee has been linked to a system user, then they can "
 "encode their time with this action button."
 msgstr ""
+"Se pretende que os seus colaboradores registem a entrada e saída do serviço, "
+"pode fazê-lo usando este botão para efetuar esse registo. Para isso, cada "
+"funcionário deve estar associado ao respectivo utilizador da aplicação."
 
 #. module: hr_attendance
 #: field:hr.sign.in.out,emp_id:0
 msgid "Employee ID"
-msgstr ""
+msgstr "ID do funcionário"
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_attendance_week
@@ -414,7 +428,7 @@ msgstr "Imprimir Relatório Semanal de Pontualidade"
 #. module: hr_attendance
 #: field:hr.sign.in.out.ask,emp_id:0
 msgid "Empoyee ID"
-msgstr "ID do Empregado"
+msgstr "ID do funcionário"
 
 #. module: hr_attendance
 #: view:hr.attendance.error:0
@@ -512,11 +526,15 @@ msgid ""
 "has been linked to a system user, then they can encode their time with this "
 "action button."
 msgstr ""
+"Registar entrada / saída. Nalgumas organizações, o pessoal deve registar "
+"entrada quando se apsresentam ao serviço e depois registar saída no filnal "
+"da jornada de trabalho. Se os funcionários estiverem associados a um "
+"utilizador da aplicação, então podem fazê-lo usando este botão."
 
 #. module: hr_attendance
 #: field:hr.attendance,employee_id:0
 msgid "Employee's Name"
-msgstr "Nome do Empregado"
+msgstr "Nome do funcionário"
 
 #. module: hr_attendance
 #: selection:hr.employee,state:0

@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-05-09 10:18+0000\n"
-"PO-Revision-Date: 2011-07-13 16:53+0000\n"
-"Last-Translator: Jeff Wang <wjfonhand@hotmail.com>\n"
+"PO-Revision-Date: 2011-08-02 16:42+0000\n"
+"Last-Translator: openerp-china.black-jack <onetimespeed@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-07-14 05:20+0000\n"
-"X-Generator: Launchpad (build 13405)\n"
+"X-Launchpad-Export-Date: 2011-08-03 05:13+0000\n"
+"X-Generator: Launchpad (build 13573)\n"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:188
@@ -23,7 +23,7 @@ msgstr ""
 msgid ""
 "You can not have 2 timesheets that overlaps !\n"
 "Please use the menu 'My Current Timesheet' to avoid this problem."
-msgstr "你不能有两个重叠的工作时间表! 请使用菜单\"我的当前工作时间表\"来避免这问题"
+msgstr "您不能有两个重叠的记工单! 请使用菜单\"我的当前记工单\"来避免这问题"
 
 #. module: hr_timesheet_sheet
 #: field:hr.analytic.timesheet,sheet_id:0
@@ -55,7 +55,7 @@ msgstr "分组..."
 #: field:hr_timesheet_sheet.sheet,total_attendance:0
 #: field:hr_timesheet_sheet.sheet,total_attendance_day:0
 msgid "Total Attendance"
-msgstr "出勤合计"
+msgstr "考勤合计"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
@@ -68,7 +68,7 @@ msgstr "部门"
 #. module: hr_timesheet_sheet
 #: model:process.transition,name:hr_timesheet_sheet.process_transition_tasktimesheet0
 msgid "Task timesheet"
-msgstr "任务工作时间表"
+msgstr "工作记工单"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
@@ -80,7 +80,7 @@ msgstr "今天"
 #, python-format
 msgid ""
 "Please verify that the total difference of the sheet is lower than %.2f !"
-msgstr "请核实这表的总误差少于0.2%f ！"
+msgstr "请核实这表的总差异少于  %.2f  ！"
 
 #. module: hr_timesheet_sheet
 #: selection:hr.timesheet.report,month:0
@@ -106,7 +106,7 @@ msgstr "公司"
 #: model:process.node,name:hr_timesheet_sheet.process_node_timesheet0
 #: view:timesheet.report:0
 msgid "Timesheet"
-msgstr "工作时间表"
+msgstr "记工单"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
@@ -122,7 +122,7 @@ msgstr "日期到"
 #. module: hr_timesheet_sheet
 #: model:process.node,note:hr_timesheet_sheet.process_node_invoiceonwork0
 msgid "Based on the timesheet"
-msgstr "根据工作时间表"
+msgstr "根据记工单"
 
 #. module: hr_timesheet_sheet
 #: model:process.transition.action,name:hr_timesheet_sheet.process_transition_action_validatetimesheet0
@@ -167,7 +167,7 @@ msgstr "拒绝"
 #, python-format
 msgid ""
 "You cannot enter an attendance date outside the current timesheet dates!"
-msgstr "你不能输入当前工作时间表日期外的出勤日期！"
+msgstr "您不能输入一个超过当前记工单日期的考勤日期！"
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,help:hr_timesheet_sheet.action_hr_timesheet_current_open
@@ -179,14 +179,14 @@ msgid ""
 "the user and can be validated by his manager. If required, as defined on the "
 "project, you can generate the invoices based on the timesheet."
 msgstr ""
-"我的工作时间表开启你的工作时间表，使你进入系统能预定你的活动。用相同方式，你能记录你的出勤（签入/签出）同时记录在不同项目的工作时间。在公司定义的期末，确"
-"认用户的工作时间表和通过经理使其生效。如果需要，可以定义为一个项目，你能给予这工作时间表开发票。"
+"用\"我的记工单\"菜单开启您的记工单所以您能在系统预定你的活动。用相同方式，您能记录您的考勤（签入/签出）同时记录在不同项目的工作时间。在公司定义的期末"
+"，确认用户的记工单和经由经理使其生效。如果需要，可以定义为一个项目，你能给这记工单开发票。"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:246
 #, python-format
 msgid "You can not sign in from an other date than today"
-msgstr "你无法签入今天外的其它日期"
+msgstr "您不能签入今天外的其它日期"
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.report:0
@@ -208,7 +208,7 @@ msgstr "警告！"
 #. module: hr_timesheet_sheet
 #: model:process.node,note:hr_timesheet_sheet.process_node_attendance0
 msgid "Employee's timesheet entry"
-msgstr "员工工作时间表登记"
+msgstr "员工记工单"
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.report:0
@@ -245,7 +245,7 @@ msgstr " 月份 "
 #: model:ir.ui.menu,name:hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form
 #: view:res.company:0
 msgid "Timesheets"
-msgstr "工作时间表列表"
+msgstr "记工单"
 
 #. module: hr_timesheet_sheet
 #: selection:hr_timesheet_sheet.sheet,state:0
@@ -260,7 +260,7 @@ msgstr "已确认"
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_attendance
 #: model:process.node,name:hr_timesheet_sheet.process_node_attendance0
 msgid "Attendance"
-msgstr "出勤"
+msgstr "考勤"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
@@ -293,21 +293,21 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"这模块帮助你轻松编码和生效工作时间表和出勤表。\n"
-"在一些视图上半部分为出勤和跟踪每次（签入/签出）下半部分为工作时间表。\n"
+"这模块帮助您轻松编码和生效记工单和考勤表。\n"
+"在一些视图上半部分为考勤和跟踪每次（签入/签出）下半部分为记工单。\n"
 "\n"
-"其它标签包括统计视图帮助你核算你团队花费的时间：\n"
-"* 每天花费的时间（出勤）\n"
+"其它标签包括统计视图帮助你分析您或者您团队花费的时间：\n"
+"* 每天花费的时间（考勤）\n"
 "* 项目花费的时间\n"
 "\n"
 "此模块还实现一个完整的审核过程：\n"
-"* 工作时间表草稿\n"
-"* 员工在期末确认\n"
+"* 记工单草稿\n"
+"* 确认员工在期末\n"
 "* 项目经理审核\n"
 "\n"
 "在公司能设置审核：\n"
 "* 周期大小（天，周，月，年）\n"
-"* 工作时间表和出勤表最大的区别\n"
+"*记工单和考勤表最大的差异\n"
 "    "
 
 #. module: hr_timesheet_sheet
@@ -342,12 +342,12 @@ msgstr "新的"
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:174
 #, python-format
 msgid "You cannot duplicate a timesheet !"
-msgstr "你不能复制工作时间表！"
+msgstr "您不能有重复的记工单！"
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.action_week_attendance_graph
 msgid "My Total Attendances By Week"
-msgstr "周我的总出勤"
+msgstr "周我的总考勤"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:174
@@ -372,7 +372,7 @@ msgstr "总时间"
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_sheet_2_hr_analytic_timesheet
 msgid "Timesheet Lines"
-msgstr "工作时间表明细"
+msgstr "记工单明细"
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.report:0
@@ -400,12 +400,12 @@ msgstr "没定义员工"
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:374
 #, python-format
 msgid "Invalid action !"
-msgstr "无效动作！"
+msgstr "无效操作！"
 
 #. module: hr_timesheet_sheet
 #: model:process.transition,note:hr_timesheet_sheet.process_transition_validatetimesheet0
 msgid "The project manager validates the timesheets."
-msgstr "项目经理审核工作时间表"
+msgstr "项目经理审核记工单"
 
 #. module: hr_timesheet_sheet
 #: selection:hr.timesheet.report,month:0
@@ -425,7 +425,7 @@ msgstr "设置"
 msgid ""
 "You cannot create a timesheet for an employee that does not have any user "
 "defined !"
-msgstr "员工没有定义用户你不能创建工作时间表！"
+msgstr "用户没定义员工您不能创建记工单！"
 
 #. module: hr_timesheet_sheet
 #: model:process.node,name:hr_timesheet_sheet.process_node_workontask0
@@ -448,12 +448,12 @@ msgstr "# 数量"
 #: field:hr_timesheet_sheet.sheet,total_timesheet_day:0
 #: field:hr_timesheet_sheet.sheet.day,total_timesheet:0
 msgid "Total Timesheet"
-msgstr "总工作时间表"
+msgstr "总记工单"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
 msgid "Available Attendance"
-msgstr "可出勤"
+msgstr "可用的考勤"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
@@ -464,7 +464,7 @@ msgstr "签入"
 #: view:timesheet.report:0
 #: field:timesheet.report,total_timesheet:0
 msgid "#Total Timesheet"
-msgstr "# 总工作时间表"
+msgstr "# 总记工单"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_current_open
@@ -491,7 +491,7 @@ msgstr "12月"
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.current.open:0
 msgid "It will open your current timesheet"
-msgstr "它将开启你当前工作时间表"
+msgstr "它将开启您当前记工单"
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.report:0
@@ -506,7 +506,7 @@ msgstr "月份"
 #: view:timesheet.report:0
 #: field:timesheet.report,total_diff:0
 msgid "#Total Diff"
-msgstr "# 总差别"
+msgstr "# 总差异"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
@@ -521,19 +521,19 @@ msgstr "签入/签出"
 #. module: hr_timesheet_sheet
 #: model:process.transition,name:hr_timesheet_sheet.process_transition_invoiceontimesheet0
 msgid "Billing"
-msgstr "发票"
+msgstr "开发票"
 
 #. module: hr_timesheet_sheet
 #: model:process.transition,note:hr_timesheet_sheet.process_transition_timesheetdraft0
 msgid ""
 "The timesheet line represents the time spent by the employee on a specific "
 "service provided."
-msgstr "工作时间表明细代表员工在提供的特定服务所花费的时间。"
+msgstr "记工单明细代表员工在特定服务所花费的时间。"
 
 #. module: hr_timesheet_sheet
 #: constraint:hr_timesheet_sheet.sheet:0
 msgid "You must select a Current date which is in the timesheet dates !"
-msgstr "你选择的当前日期必须要在工作时间表里！"
+msgstr "您选择的当前日期必须要在记工单里！"
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,help:hr_timesheet_sheet.action_hr_timesheet_report_stat_all
@@ -542,7 +542,7 @@ msgid ""
 "in the system. It allows you to have a full overview of  entries done by "
 "your employees. You can group them by specific selection criteria thanks to "
 "the search tool."
-msgstr "这报表执行在系统的人力资源创建工作时间表分析算，它可以使你一览你的员工的工作。你可以在搜索工具选择具体的选择标准来分组。"
+msgstr "在系统里这报表分析创建的记工单，它可以使您一览您的员工的工作。您可以在搜索工具选择具体的标准来分组。"
 
 #. module: hr_timesheet_sheet
 #: selection:hr_timesheet_sheet.sheet,state:0
@@ -554,17 +554,17 @@ msgstr "草稿"
 #. module: hr_timesheet_sheet
 #: field:res.company,timesheet_max_difference:0
 msgid "Timesheet allowed difference(Hours)"
-msgstr "工作时间表允许的差异（小时）"
+msgstr "记工单允许的差异（小时）"
 
 #. module: hr_timesheet_sheet
 #: model:process.transition,note:hr_timesheet_sheet.process_transition_invoiceontimesheet0
 msgid "The invoice is created based on the timesheet."
-msgstr "这发票创建基于这工作时间表"
+msgstr "这发票创建基于这记工单"
 
 #. module: hr_timesheet_sheet
 #: model:process.node,name:hr_timesheet_sheet.process_node_drafttimesheetsheet0
 msgid "Draft Timesheet"
-msgstr "工作时间表草稿"
+msgstr "记工单草稿"
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.report:0
@@ -599,13 +599,13 @@ msgstr "当前状态"
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:631
 #, python-format
 msgid "You cannot modify an entry in a confirmed timesheet !"
-msgstr "你不能修改一个已确认的工作时间表！"
+msgstr "您不能修改一个已确认的记工单！"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_sheet_sheet_account
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_sheet_sheet_day
 msgid "Timesheets by Period"
-msgstr "工作时间表周期"
+msgstr "记工单周期"
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.report:0
@@ -619,7 +619,7 @@ msgstr "用户"
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_sheet_by_day
 msgid "Timesheet by Account"
-msgstr "账户工作时间表"
+msgstr "辅助核算项的记工单"
 
 #. module: hr_timesheet_sheet
 #: field:hr.timesheet.report,date:0
@@ -642,17 +642,17 @@ msgstr "增加筛选条件"
 #. module: hr_timesheet_sheet
 #: field:res.company,timesheet_range:0
 msgid "Timesheet range"
-msgstr "工作时间表范围"
+msgstr "记工单范围"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,timesheet_ids:0
 msgid "Timesheet lines"
-msgstr "工作时间表明细"
+msgstr "记工单明细"
 
 #. module: hr_timesheet_sheet
 #: view:board.board:0
 msgid "My Total Attendance By Week"
-msgstr "周我的总出勤"
+msgstr "周我的总考勤"
 
 #. module: hr_timesheet_sheet
 #: selection:hr.timesheet.report,month:0
@@ -666,7 +666,7 @@ msgid ""
 "Check your timesheets for a specific period. You can also encode time spent "
 "on a project (i.e. an analytic account) thus generating costs in the "
 "analytic account concerned."
-msgstr "在一个具体周期检查你的工作时间表。你也可以在项目花费的时间进行编码（即辅助核算项）因此在这辅助核算项生成有关成本。"
+msgstr "在指定的周期检查您的记工单。您也可以在项目花费的时间进行编码（即辅助核算项）因此在这辅助核算项生成有关成本。"
 
 #. module: hr_timesheet_sheet
 #: selection:hr.timesheet.report,month:0
@@ -695,19 +695,19 @@ msgstr "数量"
 #: view:timesheet.report:0
 #: field:timesheet.report,general_account_id:0
 msgid "General Account"
-msgstr "一般科目"
+msgstr "辅助核算项"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet.account:0
 msgid "Search Account"
-msgstr "搜索账户"
+msgstr "查找辅助核算项"
 
 #. module: hr_timesheet_sheet
 #: help:res.company,timesheet_max_difference:0
 msgid ""
 "Allowed difference in hours between the sign in/out and the timesheet "
 "computation for one sheet. Set this to 0 if you do not want any control."
-msgstr "签入/签容许的误差在小时内同时在一种表里进行工作时间表计算。如果你不想这样控制设为0."
+msgstr "签入/签出和在一个记工单里的容许的差异小时。如果您不想这样控制设为0."
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
@@ -720,7 +720,7 @@ msgstr "周期"
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:494
 #, python-format
 msgid "You can not modify an entry in a confirmed timesheet !"
-msgstr "你不能修改一张已确认的工作时间表！"
+msgstr "您不能修改一张已确认的记工单！"
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.current.open:0
@@ -728,14 +728,14 @@ msgstr "你不能修改一张已确认的工作时间表！"
 #: model:ir.actions.server,name:hr_timesheet_sheet.ir_actions_server_timsheet_sheet
 #: model:ir.ui.menu,name:hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form_my_current
 msgid "My Timesheet"
-msgstr "我的工作时间表"
+msgstr "我的计工单"
 
 #. module: hr_timesheet_sheet
 #: selection:hr_timesheet_sheet.sheet,state:0
 #: view:timesheet.report:0
 #: selection:timesheet.report,state:0
 msgid "Done"
-msgstr "已完成"
+msgstr "完成"
 
 #. module: hr_timesheet_sheet
 #: model:process.node,note:hr_timesheet_sheet.process_node_drafttimesheetsheet0
@@ -760,13 +760,13 @@ msgstr "这周的发票"
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet.account:0
 msgid "Timesheet by Accounts"
-msgstr "工作时间表账户"
+msgstr "辅助核算项记工单"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/wizard/hr_timesheet_current.py:51
 #, python-format
 msgid "Open Timesheet"
-msgstr "开始的工作时间表"
+msgstr "开始的记工单"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:372
@@ -789,21 +789,21 @@ msgid ""
 "* The 'Done' state is used when users timesheet is accepted by his/her "
 "senior."
 msgstr ""
-" * “草稿”状态用于一个新的用户编码和未确认的工作时间表。\n"
-"* \"已确认\"状态用于用户确认一个工作时间表。\n"
-"* “完成”状态用于用户工作时间表已被他/她的上级接受。"
+" * “草稿”状态用于一个新的和未确认的记工单。\n"
+"* \"已确认\"状态用于用户确认一个记工单。\n"
+"* “完成”状态用于用户记工单已被他/她的上级审核。"
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.report:0
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.action_hr_timesheet_report_stat_all
 #: model:ir.ui.menu,name:hr_timesheet_sheet.menu_hr_timesheet_report_all
 msgid "Timesheet Analysis"
-msgstr "工作时间表分析"
+msgstr "记工单分析"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
 msgid "Search Timesheet"
-msgstr "搜索工作时间表"
+msgstr "查找记工单"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:170
@@ -811,12 +811,12 @@ msgstr "搜索工作时间表"
 msgid ""
 "The timesheet cannot be validated as it does not contain equal no. of sign "
 "ins and sign outs!"
-msgstr "这工作时间表不能生效因为它不包含或没有签入和签出！"
+msgstr "这记工单不能生效因为它签入和签出！"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_analytic_timesheet
 msgid "Timesheet Line"
-msgstr "工作时间表明细"
+msgstr "记工单明细"
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.report:0
@@ -831,7 +831,7 @@ msgstr "产品"
 #: field:hr_timesheet_sheet.sheet,attendances_ids:0
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_sheet_2_hr_attendance
 msgid "Attendances"
-msgstr "出勤"
+msgstr "考勤"
 
 #. module: hr_timesheet_sheet
 #: field:hr.timesheet.report,name:0
@@ -843,7 +843,7 @@ msgstr "说明"
 #. module: hr_timesheet_sheet
 #: model:process.transition,note:hr_timesheet_sheet.process_transition_confirmtimesheet0
 msgid "The employee periodically confirms his own timesheets."
-msgstr "员工定期确认自己的工作时间表。"
+msgstr "员工定期确认自己的记工单"
 
 #. module: hr_timesheet_sheet
 #: selection:hr.timesheet.report,month:0
@@ -865,12 +865,12 @@ msgstr "签出"
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:374
 #, python-format
 msgid "Cannot delete Sheet(s) which have attendance entries encoded !"
-msgstr "无法删除工作时间表因为它有出勤记录！"
+msgstr "无法删除这记工单因为它有考勤记录！"
 
 #. module: hr_timesheet_sheet
 #: model:process.transition,note:hr_timesheet_sheet.process_transition_tasktimesheet0
 msgid "Moves task entry into the timesheet line"
-msgstr "移动任务记录到工作时间表明细"
+msgstr "把工作调入记工单明细中"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
@@ -881,7 +881,7 @@ msgstr "按天"
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.action_timesheet_report_stat_all
 #: model:ir.ui.menu,name:hr_timesheet_sheet.menu_timesheet_report_all
 msgid "Timesheet Sheet Analysis"
-msgstr "工作时间表分析"
+msgstr "记工单分析"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,total_difference:0
@@ -904,7 +904,7 @@ msgstr "2月"
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
 msgid "Employees"
-msgstr "员工列表"
+msgstr "员工"
 
 #. module: hr_timesheet_sheet
 #: model:process.node,note:hr_timesheet_sheet.process_node_timesheet0
@@ -947,7 +947,7 @@ msgstr "开票类型"
 #: view:timesheet.report:0
 #: field:timesheet.report,total_attendance:0
 msgid "#Total Attendance"
-msgstr "#总出勤"
+msgstr "#总考勤"
 
 #. module: hr_timesheet_sheet
 #: field:hr.timesheet.report,cost:0
@@ -963,7 +963,7 @@ msgstr "当前日期"
 #. module: hr_timesheet_sheet
 #: model:process.process,name:hr_timesheet_sheet.process_process_hrtimesheetprocess0
 msgid "Hr Timesheet"
-msgstr "人力资源 工作时间表"
+msgstr "人力资源 记工单"
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.report:0
@@ -982,7 +982,7 @@ msgstr "开始"
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
 msgid "To Approve"
-msgstr "去审批"
+msgstr "待审批"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet.account:0
@@ -992,4 +992,4 @@ msgstr "合计"
 #. module: hr_timesheet_sheet
 #: field:hr.timesheet.report,journal_id:0
 msgid "Journal"
-msgstr "日记账"
+msgstr "账簿"
