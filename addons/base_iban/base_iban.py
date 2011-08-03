@@ -125,12 +125,14 @@ class res_partner_bank(osv.osv):
         to_check_ids = []
         for id in self.browse(cr, uid, ids, context=context):
             if id.state=='iban':
-                res.append((id.id,id.iban))
+                iban = id.iban
+                iban = iban[:4]+'-'+iban[3:(len(iban)-2)]+'-'+iban[len(iban)-2:]
+                res.append((id.id,iban))
             else:
                 to_check_ids.append(id.id)
-        res += super(res_partner_bank, self).name_get(cr, uid, to_check_ids, context=context)
+                if to_check_ids:
+                    res += super(res_partner_bank, self).name_get(cr, uid, to_check_ids, context=context)
         return res
-
     def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
     #overwrite the search method in order to search not only on bank type == basic account number but also on type == iban
         res = super(res_partner_bank,self).search(cr, uid, args, offset, limit, order, context=context, count=count)
