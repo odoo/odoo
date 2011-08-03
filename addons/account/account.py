@@ -2742,10 +2742,8 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         if not obj_multi.complete_tax:
             tax_dict = {'sale': obj_multi.sale_tax_rate, 'purchase': obj_multi.purchase_tax_rate}
             for tax_type, value in tax_dict.items():
-                tax_name = 'TAX Paid'
+                tax_name = tax_type == 'sale' and 'TAX Received' or 'TAX Paid'
                 if value > 0.0:
-                    if tax_type == 'sale':
-                        tax_name = 'TAX Received'
                     new_tax_code_temp = obj_tax_code_template.create(cr, uid, {'name': _('TAX %s%%') % (value), 'code': _('TAX %s%%') % (value)}, context=context)
                     new_paid_tax_code_temp = obj_tax_code_template.create(cr, uid, {'name': _('%s %s%%') % (tax_name, value), 'code': _('%s %s%%') % (tax_name, value)}, context=context)
                     sales_tax_temp = obj_tax_temp.create(cr, uid, {
