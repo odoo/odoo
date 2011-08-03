@@ -1156,12 +1156,14 @@ openerp.base.ListView.Groups = openerp.base.Class.extend( /** @lends openerp.bas
                     // if drag to 1st row (to = 0), start sequencing from 0
                     // (exclusive lower bound)
                     seq = to ? list.rows[to - 1].data.sequence.value : 0;
-                while (++seq, data = list.rows[index++].data) {
+                while (++seq, list.rows[index]) {
+                    data = list.rows[index].data;
                     data.sequence.value = seq;
                     // write are independent from one another, so we can just
                     // launch them all at the same time and we don't really
                     // give a fig about when they're done
                     dataset.write(data.id.value, {sequence: seq});
+                    list.reload_record(index++);
                 }
             }
         });
