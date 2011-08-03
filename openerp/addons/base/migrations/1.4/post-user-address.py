@@ -26,4 +26,6 @@ def migrate(cr, version):
         SET user_email = res_partner_address.email
         FROM res_partner_address
         WHERE res_users.address_id = res_partner_address.id""")
+    cr.execute("""
+        ALTER TABLE res_users DROP COLUMN address_id""")
 
