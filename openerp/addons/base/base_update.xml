@@ -78,7 +78,6 @@
             <field name="arch" type="xml">
                 <form string="Users">
                     <field name="name"/>
-                    <field name="company_id" widget="selection" readonly="0" groups="base.group_multi_company" on_change="on_change_company_id(company_id)"/>
                     <newline/>
                     <group colspan="2" col="2">
                         <separator string="Preferences" colspan="2"/>
@@ -88,6 +87,8 @@
                     </group>
                     <group name="default_filters" colspan="2" col="2">
                         <separator string="Default Filters" colspan="2"/>
+                        <field name="company_id" widget="selection" readonly="0"
+                            groups="base.group_multi_company" on_change="on_change_company_id(company_id)"/>
                     </group>
                     <separator string="Email &amp; Signature" colspan="2"/>
                     <field colspan="4" name="user_email" widget="email" readonly="0"/>
