@@ -19,23 +19,31 @@
     </div>
     <table border="0" cellpadding="0" cellspacing="0" width="100%" height="100%" class="main_table">
     <tr>
-        <td colspan="2">
+        <td colspan="2" valign="top">
             <div id="oe_header" class="header"></div>
             <div id="oe_menu" class="menu"></div>
         </td>
     </tr>
     <tr>
-        <td valign="top" id="oe_secondary_menu" class="secondary_menu">
+        <td valign="top" class="login-container" colspan="2">
+            <div id="oe_login" class="login"></div>
         </td>
-        <td valign="top" >
-            <div id="oe_app" class="oe-application">
-                <div style="width:100%;">&amp;nbsp;</div>
-            </div>
+    </tr>
+    <tr class="db_options_row">
+        <td valign="top" class="db_container">
+            <div id="oe_database" class="database"></div>
+        </td>
+        <td valign="top">
+        	<div id="oe_db_options"></div>
         </td>
     </tr>
     <tr>
-        <td valign="top" class="login-container" colspan="2">
-            <div id="oe_login" class="login"></div>
+        <td valign="top" id="oe_secondary_menu" class="secondary_menu">
+        </td>
+        <td valign="top">
+            <div id="oe_app" class="oe-application">
+                <div style="width: 100%;">&amp;nbsp;</div>
+            </div>
         </td>
     </tr>
     <tr>
@@ -49,6 +57,188 @@
 </t>
 <t t-name="Loading">
     Loading...
+</t>
+<t t-name="Database">
+    <ul class="db_options" style="padding: 0px; display: inline;">
+        <li id="db-create">Create</li>
+        <li id="db-drop">Drop</li>
+        <li id="db-backup">Backup</li>
+        <li id="db-restore">Restore</li>
+        <li id="db-change-password">Password</li>
+        <li id="back-to-login">Back to Login</li>
+    </ul>
+</t>
+<t t-name="CreateDB">
+    <form name="create_db_form" method="POST">
+        <table width="100%">
+            <tr>
+                <td class="option_string">
+                    CREATE DATABASE
+                </td>
+            </tr>
+        </table>
+        <table align="center" class="db_option_table">
+            <tr>
+                <td><label for="super_admin_pwd">Super admin password:</label></td>
+                <td><input type="password" name="super_admin_pwd"
+                           class="required" autofocus="autofocus"/></td>
+            </tr>
+            <tr>
+                <td><label for="db_name">New database name:</label></td>
+                <td><input type="text" name="db_name" class="required"/></td>
+            </tr>
+            <tr>
+                <td><label for="demo_data">Load Demonstration data:</label></td>
+                <td><input type="checkbox" name="demo_data" checked='checked'/></td>
+            </tr>
+            <tr>
+                <td><label for="db_lang">Default language:</label></td>
+                <td>
+                    <select name="db_lang" t-if="lang_list">
+                        <t t-foreach="lang_list" t-as="lang">
+                            <option t-att-value="lang[0]"
+                                    t-att-selected="lang[0] === 'en_US' ? 'selected' : undefined">
+                                <t t-esc="lang[1]"/></option>
+                        </t>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td><label for="create_admin_pwd">Super admin password:</label></td>
+                <td><input type="password" name="create_admin_pwd" class="required"/></td>
+            </tr>
+            <tr>
+                <td><label for="create_confirm_pwd">Confirm password:</label></td>
+                <td><input type="password" name="create_confirm_pwd" class="required"
+                           equalTo="input[name=create_admin_pwd]"/></td>
+            </tr>
+            <tr>
+                <td colspan="2" align="right"><input type="submit" value="Create"/></td>
+            </tr>
+        </table>
+    </form>
+</t>
+<t t-name="DropDB">
+    <form name="drop_db_form" method="POST">
+        <table width="100%">
+            <tr>
+                <td class="option_string">
+                    DROP DATABASE
+                </td>
+            </tr>
+        </table>
+        <table align="center" class="db_option_table">
+            <tr>
+                <td><label for="drop_db">Database:</label></td>
+                <td>
+                    <select t-if="db_list" name="drop_db" autofocus="autofocus">
+                        <t t-foreach="db_list" t-as="db">
+                            <option t-att-value="db"><t t-esc="db"/></option>
+                        </t>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td><label for="drop_password">Password:</label></td>
+                <td><input type="password" name="drop_pwd" class="required"/></td>
+            </tr>
+            <tr>
+                <td colspan="2" align="right"><input type="submit" value="Drop"/></td>
+            </tr>
+        </table>
+    </form>
+</t>
+<t t-name="BackupDB">
+    <form name="backup_db_form" method="POST" target="backup-target"
+          action="/base/database/backup">
+        <input type="hidden" name="token"/>
+        <table width="100%">
+            <tr>
+                <td class="option_string">
+                    BACKUP DATABASE
+                </td>
+            </tr>
+        </table>
+        <table align="center" class="db_option_table">
+            <tr>
+                <td><label for="backup_db">Database:</label></td>
+                <td>
+                    <select t-if="db_list" name="backup_db" autofocus="autofocus">
+                        <t t-foreach="db_list" t-as="db">
+                            <option t-att-value="db"><t t-esc="db"/></option>
+                        </t>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td><label for="backup_pwd">Password:</label></td>
+                <td><input type="password" name="backup_pwd" class="required"/></td>
+            </tr>
+            <tr>
+                <td colspan="2" align="right"><input type="submit" value="Backup"/></td>
+            </tr>
+        </table>
+    </form>
+</t>
+<t t-name="RestoreDB">
+    <form name="restore_db_form" method="POST">
+        <table width="100%">
+            <tr>
+                <td class="option_string">
+                    RESTORE DATABASE
+                </td>
+            </tr>
+        </table>
+        <table align="center" class="db_option_table">
+            <tr>
+                <td><label for="restore_db">File:</label></td>
+                <td><input type="file" name="db_file" class="required"
+                         autofocus="autofocus"/></td>
+            </tr>
+            <tr>
+                <td><label for="restore_pwd">Password:</label></td>
+                <td><input type="password" name="restore_pwd" class="required"/></td>
+            </tr>
+        <tr>
+                <td><label for="new_db">New database name:</label></td>
+                <td><input type="text" name="new_db" class="required"/></td>
+            </tr>
+        <tr>
+            <td colspan="2" align="right"><input type="submit" value="Restore"/></td>
+            </tr>
+        </table>
+    </form>
+</t>
+<t t-name="Change_DB_Pwd">
+    <form name="change_pwd_form" method="POST">
+        <table width="100%">
+            <tr>
+                <td class="option_string">
+                    CHANGE DATABASE PASSWORD
+                </td>
+            </tr>
+        </table>
+        <table align="center" class="db_option_table">
+            <tr>
+                <td><label for="old_pwd">Old password:</label></td>
+                <td><input type="password" name="old_pwd" class="required"
+                           minlength="1" autofocus="autofocus"/></td>
+            </tr>
+            <tr>
+            <td><label for="new_pwd">New password:</label></td>
+       	    <td><input type="password" name="new_pwd" class="required"
+                       minlength="1"/></td>
+            </tr>
+   	    <tr>
+                <td><label for="confirm_pwd">Confirm password:</label></td>
+                <td><input type="password" name="confirm_pwd" class="required"
+                           equalTo="input[name=new_pwd]" minlength="1"/></td>
+            </tr>
+            <tr>
+                <td colspan="2" align="right"><input type="submit" value="Change Password"/></td>
+            </tr>
+        </table>
+    </form>
 </t>
 <t t-name="Login">
     <form>
@@ -92,6 +282,7 @@
                     <tr>
                         <td></td>
                         <td>
+                        	<button type="button" id="oe-db-config">Database</button>
                             <button type="submit" name="submit">Login</button>
                         </td>
                     </tr>
