@@ -52,7 +52,7 @@
             <field name="flow_stop" invisible="1"/>
             <field name="subflow_id" invisible="1"/>
           </node>
-          <arrow object="workflow.transition" source="act_from" destination="act_to" label="['signal','condition']">
+          <arrow object="workflow.transition" source="act_from" destination="act_to" label="['signal','condition','group_id']">
             <field name="act_from"/>
             <field name="act_to"/>
             <field name="signal"/>
@@ -329,7 +329,7 @@
       <field name="type">form</field>
       <field name="arch" type="xml">
         <form string="Workflow Workitems">
-          <field name="wkf_id" readonly="1"/>  
+          <field name="wkf_id" readonly="1"/>
           <field name="act_id" readonly="1"/>
           <field name="subflow_id" readonly="1"/>
           <field name="inst_id" readonly="1"/>
@@ -343,7 +343,7 @@
       <field name="type">tree</field>
       <field name="arch" type="xml">
         <tree string="Workflow Workitems">
-          <field name="wkf_id"/>  
+          <field name="wkf_id"/>
           <field name="act_id"/>
           <field name="subflow_id"/>
           <field name="inst_id"/>
@@ -359,7 +359,7 @@
         <search string="Workflow Workitems">
           <filter icon="terp-camera_test" string="Active" name="active" domain="[('state','=','active')]"/>
           <separator orientation="vertical"/>
-          <field name="wkf_id" widget="selection"/>  
+          <field name="wkf_id" widget="selection"/>
           <field name="act_id"/>
           <field name="subflow_id"/>
           <field name="inst_id"/>

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -46,21 +46,21 @@ class workflow(osv.osv):
         return super(workflow, self).write(cr, user, ids, vals, context=context)
 
     def get_active_workitems(self, cr, uid, res, res_id, context={}):
-        
+
         cr.execute('select * from wkf where osv=%s limit 1',(res,))
         wkfinfo = cr.dictfetchone()
         workitems = []
-        
+
         if wkfinfo:
             cr.execute('SELECT id FROM wkf_instance \
                             WHERE res_id=%s AND wkf_id=%s \
                             ORDER BY state LIMIT 1',
                             (res_id, wkfinfo['id']))
             inst_id = cr.fetchone()
-         
+
             cr.execute('select act_id,count(*) from wkf_workitem where inst_id=%s group by act_id', (inst_id,))
-            workitems = dict(cr.fetchall())        
-         
+            workitems = dict(cr.fetchall())
+
         return {'wkf': wkfinfo, 'workitems':  workitems}
 
 
@@ -148,12 +148,12 @@ class wkf_transition(osv.osv):
     _columns = {
         'trigger_model': fields.char('Trigger Object', size=128),
         'trigger_expr_id': fields.char('Trigger Expression', size=128),
-        'signal': fields.char('Signal (button Name)', size=64, 
+        'signal': fields.char('Signal (button Name)', size=64,
                               help="When the operation of transition comes from a button pressed in the client form, "\
                               "signal tests the name of the pressed button. If signal is NULL, no button is necessary to validate this transition."),
-        'group_id': fields.many2one('res.groups', 'Group Required', 
+        'group_id': fields.many2one('res.groups', 'Group Required',
                                    help="The group that a user must have to be authorized to validate this transition."),
-        'condition': fields.char('Condition', required=True, size=128, 
+        'condition': fields.char('Condition', size=128,
                                  help="Expression to be satisfied if we want the transition done."),
         'act_from': fields.many2one('workflow.activity', 'Source Activity', required=True, select=True, ondelete='cascade',
                                     help="Source activity. When this activity is over, the condition is tested to determine if we can start the ACT_TO activity."),
@@ -161,9 +161,7 @@ class wkf_transition(osv.osv):
                                   help="The destination activity."),
         'wkf_id': fields.related('act_from','wkf_id', type='many2one', relation='workflow', string='Workflow', select=True),
     }
-    _defaults = {
-        'condition': lambda *a: 'True',
-    }
+
 wkf_transition()
 
 class wkf_instance(osv.osv):

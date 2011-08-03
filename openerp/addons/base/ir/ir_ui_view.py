@@ -158,10 +158,10 @@ class view(osv.osv):
                 label_string = ""
                 if label:
                     for lbl in eval(label):
-                        if t.has_key(str(lbl)) and str(t[lbl])=='False':
+                        if t.has_key(tools.ustr(lbl)) and tools.ustr(t[lbl])=='False':
                             label_string = label_string + ' '
                         else:
-                            label_string = label_string + " " + t[lbl]
+                            label_string = label_string + " " + tools.ustr(t[lbl])
                 labels[str(t['id'])] = (a['id'],label_string)
         g  = graph(nodes, transitions, no_ancester)
         g.process(start)
