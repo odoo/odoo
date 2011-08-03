@@ -2740,43 +2740,29 @@ class wizard_multi_charts_accounts(osv.osv_memory):
 
         # create tax templates and real taxes from purchase_tax_rate,sale_tax_rate fields
         if not obj_multi.complete_tax:
-            s_tax = (obj_multi.sale_tax_rate/100)
-            p_tax = (obj_multi.purchase_tax_rate/100)
-
+            tax_dict = {'sale': obj_multi.sale_tax_rate, 'purchase': obj_multi.purchase_tax_rate}
             chart_temp_id = obj_multi.chart_template_id.id or False
-            if s_tax * 100 > 0.0:
-                new_tax_code_temp = obj_tax_code_template.create(cr, uid, {'name': _('TAX %s%%') % (s_tax*100), 'code': _('TAX %s%%') % (s_tax*100)}, context=context)
-                new_paid_tax_code_temp = obj_tax_code_template.create(cr, uid, {'name': _('TAX Received %s%%') % (s_tax*100), 'code': _('TAX Received %s%%') % (s_tax*100)}, context=context)
-                sales_tax_temp = obj_tax_temp.create(cr, uid, {
-                                        'name': _('TAX %s%%') % (s_tax*100),
-                                        'description': _('TAX %s%%') % (s_tax*100),
-                                        'amount': s_tax,
-                                        'base_code_id': new_tax_code_temp,
-                                        'tax_code_id': new_paid_tax_code_temp,
-                                        'ref_base_code_id': new_tax_code_temp,
-                                        'ref_tax_code_id': new_paid_tax_code_temp,
-                                        'type_tax_use': 'sale',
-                                        'type': 'percent',
-                                        'sequence': 0,
-                                        'chart_template_id': chart_temp_id,
-                            }, context=context)
-            if p_tax * 100 > 0.0:
-                new_tax_code_temp = obj_tax_code_template.create(cr, uid, {'name': _('TAX %s%%') % (p_tax*100), 'code': _('TAX %s%%') % (p_tax*100)}, context=context)
-                new_paid_tax_code_temp = obj_tax_code_template.create(cr, uid, {'name': _('TAX Paid %s%%') % (p_tax*100), 'code': _('TAX Paid %s%%') % (p_tax*100)}, context=context)
-                purchase_tax_temp = obj_tax_temp.create(cr, uid, {
-                                         'name': _('TAX %s%%') % (p_tax*100),
-                                         'description': _('TAX %s%%') % (p_tax*100),
-                                         'amount': p_tax,
-                                         'base_code_id': new_tax_code_temp,
-                                         'tax_code_id': new_paid_tax_code_temp,
-                                         'ref_base_code_id': new_tax_code_temp,
-                                         'ref_tax_code_id': new_paid_tax_code_temp,
-                                         'type_tax_use': 'purchase',
-                                         'type': 'percent',
-                                         'sequence': 0,
-                                         'chart_template_id': chart_temp_id,
+            for tax_type, value in tax_dict.items():
+                tax_name = 'TAX Paid'
+                if value > 0.0:
+                    if tax_type == 'sale':
+                        tax_name = 'TAX Received'
+                    new_tax_code_temp = obj_tax_code_template.create(cr, uid, {'name': _('TAX %s%%') % (value), 'code': _('TAX %s%%') % (value)}, context=context)
+                    new_paid_tax_code_temp = obj_tax_code_template.create(cr, uid, {'name': _('%s %s%%') % (tax_name, value), 'code': _('%s %s%%') % (tax_name, value)}, context=context)
+                    sales_tax_temp = obj_tax_temp.create(cr, uid, {
+                                            'name': _('TAX %s%%') % (value),
+                                            'description': _('TAX %s%%') % (value),
+                                            'amount': (value/100),
+                                            'base_code_id': new_tax_code_temp,
+                                            'tax_code_id': new_paid_tax_code_temp,
+                                            'ref_base_code_id': new_tax_code_temp,
+                                            'ref_tax_code_id': new_paid_tax_code_temp,
+                                            'type_tax_use': tax_type,
+                                            'type': 'percent',
+                                            'sequence': 0,
+                                            'chart_template_id': chart_temp_id,
                                 }, context=context)
-                
+
         #create all the tax code
         children_tax_code_template = obj_tax_code_template.search(cr, uid, [('parent_id','child_of',[tax_code_root_id])], order='id')
         children_tax_code_template.sort()
