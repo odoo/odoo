@@ -59,7 +59,6 @@ openerp.base_kanban.KanbanView = openerp.base.View.extend({
 		});
 		this.$element.find('.record .ui-icon-closethick').click(this.on_close_action);
 		this.$element.find(".oe_column").disableSelection();
-		this.$element.find(".ui.item").css("background-color","red");
 		self.$element.find( ".oe_column" ).css("width", 99 / datas.length +"%");
     },
 
