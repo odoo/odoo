@@ -2741,7 +2741,6 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         # create tax templates and real taxes from purchase_tax_rate,sale_tax_rate fields
         if not obj_multi.complete_tax:
             tax_dict = {'sale': obj_multi.sale_tax_rate, 'purchase': obj_multi.purchase_tax_rate}
-            chart_temp_id = obj_multi.chart_template_id.id or False
             for tax_type, value in tax_dict.items():
                 tax_name = 'TAX Paid'
                 if value > 0.0:
@@ -2752,7 +2751,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                     sales_tax_temp = obj_tax_temp.create(cr, uid, {
                                             'name': _('TAX %s%%') % (value),
                                             'description': _('TAX %s%%') % (value),
-                                            'amount': (value/100),
+                                            'amount': value/100,
                                             'base_code_id': new_tax_code_temp,
                                             'tax_code_id': new_paid_tax_code_temp,
                                             'ref_base_code_id': new_tax_code_temp,
@@ -2760,7 +2759,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                                             'type_tax_use': tax_type,
                                             'type': 'percent',
                                             'sequence': 0,
-                                            'chart_template_id': chart_temp_id,
+                                            'chart_template_id': obj_multi.chart_template_id.id or False,
                                 }, context=context)
 
         #create all the tax code
