@@ -193,25 +193,6 @@ class users(osv.osv):
         extended_users = group_obj.read(cr, uid, extended_group_id, ['users'], context=context)['users']
         return dict(zip(ids, ['extended' if user in extended_users else 'simple' for user in ids]))
 
-    def _email_get(self, cr, uid, ids, name, arg, context=None):
-        # perform this as superuser because the current user is allowed to read users, and that includes
-        # the email, even without any direct read access on the res_partner_address object.
-        return dict([(user.id, user.address_id.email) for user in self.browse(cr, 1, ids)]) # no context to avoid potential security issues as superuser
-
-    def _email_set(self, cr, uid, ids, name, value, arg, context=None):
-        if not isinstance(ids,list):
-            ids = [ids]
-        address_obj = self.pool.get('res.partner.address')
-        for user in self.browse(cr, uid, ids, context=context):
-            # perform this as superuser because the current user is allowed to write to the user, and that includes
-            # the email even without any direct write access on the res_partner_address object.
-            if user.address_id:
-                address_obj.write(cr, 1, user.address_id.id, {'email': value or None}) # no context to avoid potential security issues as superuser
-            else:
-                address_id = address_obj.create(cr, 1, {'name': user.name, 'email': value or None}) # no context to avoid potential security issues as superuser
-                self.write(cr, uid, ids, {'address_id': address_id}, context)
-        return True
-
     def _set_new_password(self, cr, uid, id, name, value, args, context=None):
         if value is False:
             # Do not update the password if no value is provided, ignore silently.
@@ -238,13 +219,8 @@ class users(osv.osv):
                                 fnct_inv=_set_new_password,
                                 string='Change password', help="Only specify a value if you want to change the user password. "
                                 "This user will have to logout and login again!"),
-        'email': fields.char('E-mail', size=64,
-            help='If an email is provided, the user will be sent a message '
-                 'welcoming him.\n\nWarning: if "email_from" and "smtp_server"'
-                 " aren't configured, it won't be possible to email new "
-                 "users."),
+        'user_email': fields.char('E-mail', size=64),
         'signature': fields.text('Signature', size=64),
-        'address_id': fields.many2one('res.partner.address', 'Address'),
         'active': fields.boolean('Active'),
         'action_id': fields.many2one('ir.actions.actions', 'Home Action', help="If specified, this action will be opened at logon for this user, in addition to the standard menu."),
         'menu_id': fields.many2one('ir.actions.actions', 'Menu Action', help="If specified, the action will replace the standard menu for this user."),
@@ -265,7 +241,6 @@ class users(osv.osv):
         'view': fields.function(_get_interface_type, method=True, type='selection', fnct_inv=_set_interface_type,
                                 selection=[('simple','Simplified'),('extended','Extended')],
                                 string='Interface', help="OpenERP offers a simplified and an extended user interface. If you use OpenERP for the first time we strongly advise you to select the simplified interface, which has less features but is easier to use. You can switch to the other interface from the User/Preferences menu at any time."),
-        'user_email': fields.function(_email_get, method=True, fnct_inv=_email_set, string='Email', type="char", size=240),
         'menu_tips': fields.boolean('Menu Tips', help="Check out this box if you want to always display tips on each menu action"),
         'date': fields.datetime('Last Connection', readonly=True),
     }
@@ -364,7 +339,6 @@ class users(osv.osv):
         'company_id': _get_company,
         'company_ids': _get_companies,
         'groups_id': _get_group,
-        'address_id': False,
         'menu_tips':True
     }
 
@@ -432,7 +406,6 @@ class users(osv.osv):
         copy_pattern = _("%s (copy)")
         copydef = dict(login=(copy_pattern % user2copy['login']),
                        name=(copy_pattern % user2copy['name']),
-                       address_id=False, # avoid sharing the address of the copied user!
                        )
         copydef.update(default)
         return super(users, self).copy(cr, uid, id, copydef, context)
