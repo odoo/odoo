@@ -611,7 +611,7 @@
     <t t-raw="console.log('Unhandled widget', widget)"/>
 </t>
 <t t-name="WidgetFrame">
-    <table border="0" width="100%" cellpadding="0" cellspacing="0" class="oe_frame">
+    <table border="0" width="100%" cellpadding="0" cellspacing="0" class="oe_frame oe_forms">
     <tr t-foreach="widget.table" t-as="row">
         <t t-foreach="row" t-as="td">
             <td t-att-colspan="td.colspan gt 1 ? td.colspan : undefined"
@@ -869,7 +869,7 @@
 </t>
 <t t-name="SearchView">
     <h2 class="oe_view_title"><t t-esc="view.attrs['string']"/></h2>
-    <form>
+    <form class="oe_forms">
         <t t-call="SearchView.render_lines"/>
         <div class="oe_search-view-buttons" style="text-align: right;">
             <input type="submit" value="Search"/>

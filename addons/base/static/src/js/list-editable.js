@@ -147,7 +147,7 @@ openerp.base.list.editable = function (openerp) {
             this.cancel_pending_edition().then(function () {
                 var $new_row = $('<tr>', {
                         id: _.uniqueId('oe-editable-row-'),
-                        'class': $(row).attr('class'),
+                        'class': $(row).attr('class') + ' oe_forms',
                         click: function (e) {e.stopPropagation();}
                     })
                     .delegate('button.oe-edit-row-save', 'click', function () {
