@@ -2721,6 +2721,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         obj_multi = self.browse(cr, uid, ids[0])
         obj_acc = self.pool.get('account.account')
         obj_acc_tax = self.pool.get('account.tax')
+        obj_tax_temp = self.pool.get('account.tax.template')
         obj_journal = self.pool.get('account.journal')
         obj_acc_template = self.pool.get('account.account.template')
         obj_fiscal_position_template = self.pool.get('account.fiscal.position.template')
@@ -2740,6 +2741,29 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         tax_template_ref = {}
         tax_code_template_ref = {}
         todo_dict = {}
+
+        # create tax templates and real taxes from purchase_tax_rate,sale_tax_rate fields
+        if not obj_multi.complete_tax:
+            tax_dict = {'sale': obj_multi.sale_tax_rate, 'purchase': obj_multi.purchase_tax_rate}
+            for tax_type, value in tax_dict.items():
+                tax_name = tax_type == 'sale' and 'TAX Received' or 'TAX Paid'
+                if value > 0.0:
+                    tax_string = _('TAX %s%%') % (value)
+                    new_tax_code_temp = obj_tax_code_template.create(cr, uid, {'name': tax_string, 'code': tax_string}, context=context)
+                    new_paid_tax_code_temp = obj_tax_code_template.create(cr, uid, {'name': _('%s %s%%') % (tax_name, value), 'code': _('%s %s%%') % (tax_name, value)}, context=context)
+                    sales_tax_temp = obj_tax_temp.create(cr, uid, {
+                                            'name': tax_string,
+                                            'description': tax_string,
+                                            'amount': value/100,
+                                            'base_code_id': new_tax_code_temp,
+                                            'tax_code_id': new_paid_tax_code_temp,
+                                            'ref_base_code_id': new_tax_code_temp,
+                                            'ref_tax_code_id': new_paid_tax_code_temp,
+                                            'type_tax_use': tax_type,
+                                            'type': 'percent',
+                                            'sequence': 0,
+                                            'chart_template_id': obj_multi.chart_template_id.id or False,
+                                }, context=context)
 
         #create all the tax code
         children_tax_code_template = obj_tax_code_template.search(cr, uid, [('parent_id','child_of',[tax_code_root_id])], order='id')
