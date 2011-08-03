@@ -1022,7 +1022,7 @@ class sale_order_line(osv.osv):
 
         if not product:
             return {'value': {'th_weight': 0, 'product_packaging': False,
-                'product_uos_qty': qty}, 'domain': {'product_uom': [],
+                'product_uos_qty': qty, 'tax_id':[]}, 'domain': {'product_uom': [],
                    'product_uos': []}}
         if not date_order:
             date_order = time.strftime('%Y-%m-%d')
