@@ -10,7 +10,7 @@
         "static/lib/jquery.validate/jquery.validate.js",
         "static/lib/jquery.ba-bbq/jquery.ba-bbq.js",
         "static/lib/jquery.contextmenu/jquery.contextmenu.r2.packed.js",
-        "static/lib/jquery.blockui/jquery.blockUI.js",
+        "static/lib/jquery.blockUI/jquery.blockUI.js",
         "static/lib/jquery.superfish/js/hoverIntent.js",
         "static/lib/jquery.superfish/js/superfish.js",
         "static/lib/jquery.ui/js/jquery-ui-1.8.9.custom.min.js",
