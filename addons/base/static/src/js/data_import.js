@@ -1,13 +1,8 @@
-openerp.base.import = function(openerp) {
-openerp.base.Import = openerp.base.Dialog.extend({
-    init: function(parent, dataset, views){
+openerp.base.data_import = function(openerp) {
+openerp.base.DataImport = openerp.base.Dialog.extend({
+    init: function(parent, dataset){
         this._super(parent);
         this.dataset = dataset;
-        this.views = views;
-        this.views_id = {};
-        for (var key in this.views) {
-            this.views_id[key] = this.views[key].view_id
-        }
     },
     start: function() {
         var self = this

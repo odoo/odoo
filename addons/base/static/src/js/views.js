@@ -216,19 +216,6 @@ openerp.base.ViewManager =  openerp.base.Widget.extend({
                 }
             }
         }
-        if(this.flags && this.flags.sidebar) {
-            if(this.$element.find('#importview')){
-                this.$element.find('#importview').remove()
-            }
-            if(this.active_view == 'list' || this.active_view == 'form') {
-                this.views[this.active_view].controller.$element.after(QWeb.render('ImportView'))
-                this.$element.find('#importview').click(function(ev) {
-                    var import_view = new openerp.base.Import(self, self.dataset, self.views);
-                    import_view.start(false);
-                    ev.preventDefault();
-                });
-            }
-        }
         return view_promise;
     },
     /**
@@ -575,6 +562,8 @@ openerp.base.View = openerp.base.Widget.extend({
         console.log('Todo');
     },
     on_sidebar_import: function() {
+        var import_view = new openerp.base.DataImport(this, this.dataset);
+        import_view.start(false);
     },
     on_sidebar_export: function() {
         var export_view = new openerp.base.DataExport(this, this.dataset);

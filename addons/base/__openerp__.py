@@ -27,12 +27,12 @@
         "static/src/js/views.js",
         "static/src/js/data.js",
         "static/src/js/data_export.js",
+        "static/src/js/data_import.js",
         "static/src/js/form.js",
         "static/src/js/list.js",
         "static/src/js/list-editable.js",
         "static/src/js/search.js",
         "static/src/js/view_tree.js",
-        "static/src/js/import.js",
     ],
     'css' : [
         "static/lib/jquery.superfish/css/superfish.css",

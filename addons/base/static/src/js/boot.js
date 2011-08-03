@@ -89,8 +89,8 @@ openerp.base = function(instance) {
     if (openerp.base.data_export) {
         openerp.base.data_export(instance);
     }
-    if (openerp.base.import){
-        openerp.base.import(instance);
+    if (openerp.base.data_import){
+        openerp.base.data_import(instance);
     }
 };
 
