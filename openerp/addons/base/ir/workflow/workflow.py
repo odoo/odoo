@@ -153,13 +153,17 @@ class wkf_transition(osv.osv):
                               "signal tests the name of the pressed button. If signal is NULL, no button is necessary to validate this transition."),
         'group_id': fields.many2one('res.groups', 'Group Required',
                                    help="The group that a user must have to be authorized to validate this transition."),
-        'condition': fields.char('Condition', size=128,
+        'condition': fields.char('Condition', required=True, size=128,
                                  help="Expression to be satisfied if we want the transition done."),
         'act_from': fields.many2one('workflow.activity', 'Source Activity', required=True, select=True, ondelete='cascade',
                                     help="Source activity. When this activity is over, the condition is tested to determine if we can start the ACT_TO activity."),
         'act_to': fields.many2one('workflow.activity', 'Destination Activity', required=True, select=True, ondelete='cascade',
                                   help="The destination activity."),
         'wkf_id': fields.related('act_from','wkf_id', type='many2one', relation='workflow', string='Workflow', select=True),
+    }
+
+    _defaults = {
+        'condition': lambda *a: 'False',
     }
 
 wkf_transition()
