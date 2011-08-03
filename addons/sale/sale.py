@@ -1225,8 +1225,7 @@ class sale_config_picking_policy(osv.osv_memory):
         module_name = []
         group_ids=[]
         group_name = ['group_sale_salesman','group_sale_manager']
-        print cr, uid, ids
-        print self.read(cr,uid,ids)
+        
         for name in group_name:
             data_id = data_obj.name_search(cr, uid, name)
             group_ids.append(data_obj.browse(cr,uid,data_id[0][0]).res_id)
@@ -1236,14 +1235,12 @@ class sale_config_picking_policy(osv.osv_memory):
         if wizard.sale_orders:
             menu_name = 'menu_invoicing_sales_order_lines'
             data_id = data_obj.name_search(cr, uid, menu_name)
-            print data_id
             menu_id = data_obj.browse(cr,uid,data_id[0][0]).res_id
             menu_obj.write(cr, uid, menu_id, {'groups_id':[(4,group_ids[0]),(4,group_ids[1])]}) 
         
         if wizard.deli_orders:
             menu_name = 'menu_action_picking_list_to_invoice'
             data_id = data_obj.name_search(cr, uid, menu_name)
-            print data_id
             menu_id = data_obj.browse(cr,uid,data_id[0][0]).res_id
             menu_obj.write(cr, uid, menu_id, {'groups_id':[(4,group_ids[0]),(4,group_ids[1])]})
         
@@ -1258,8 +1255,10 @@ class sale_config_picking_policy(osv.osv_memory):
             module_name.append('delivery')    
         
         if wizard.time_unit:
-            print "xyz"
-          
+            product_obj = self.pool.get('product.product')
+            product_id = product_obj.name_search(cr, uid, 'Employee')
+            product_obj.write(cr, uid, product_id[0][0], {'uom_id':wizard.time_unit.id})
+            
         if len(module_name):
             module_ids = []
             need_install = False

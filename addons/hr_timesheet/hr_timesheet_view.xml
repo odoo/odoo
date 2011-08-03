@@ -101,12 +101,17 @@
             <field name="model">hr.employee</field>
             <field name="inherit_id" ref="hr.view_employee_form"/>
             <field name="arch" type="xml">
+                
+                <xpath expr="/form/group/group/field[@name='parent_id']" position="after">
+                    <field name="uom_id"/>
+                </xpath>
                 <page string="Categories" position="after">
                     <page string="Timesheets" groups="base.group_hr_user">
                         <field name="product_id" domain="[('type','=','service')]"/>
                         <field name="journal_id" widget="selection"/>
                     </page>
                 </page>
+                         
             </field>
         </record>
 
