@@ -41,7 +41,7 @@
     company_id: base.main_company
     view_id: account.account_journal_bank_view
 -
-  I assign accounts for 'Income Curreny Rate' and 'Expense Currency Rate'
+  I set up some accounts for currency rate expense/income in my company
 -
   !record {model: res.company, id: base.main_company}:
     property_expense_currency_exchange: account.o_expense
@@ -84,7 +84,7 @@
 -
   !workflow {model: account.invoice, action: invoice_open, ref: account_first_invoice_jan_eur}
 -
-  I check that first invoice move is correct 
+  I check that first invoice move is correct for debtor account(debit - credit == 150)
 -
   !python {model: account.invoice}: |
     invoice_id = self.browse(cr, uid, ref("account_first_invoice_jan_eur"))
@@ -94,7 +94,7 @@
     move_line = move_line_obj.browse(cr, uid, move_lines[0])
     assert (move_line.debit - move_line.credit == 150.00), "Invoice move is incorrect for debtors account"
 -
-  I create the first invoice on 1st February for 80 EUR
+  I create the second invoice on 1st February for 80 EUR
 -
   !record {model: account.invoice, id: account_second_invoice_feb_eur}:
     account_id: account.a_recv
@@ -119,7 +119,7 @@
 -
   !workflow {model: account.invoice, action: invoice_open, ref: account_second_invoice_feb_eur}
 -
-  I check that second invoice move is correct 
+  I check that second invoice move is correct for debtor account (debit - credit == 80)
 -
   !python {model: account.invoice}: |
     invoice_id = self.browse(cr, uid, ref("account_second_invoice_feb_eur"))
@@ -129,7 +129,8 @@
     move_line = move_line_obj.browse(cr, uid, move_lines[0])
     assert (move_line.debit - move_line.credit == 80.00), "Invoice move is incorrect for debtors account"
 -
-  I create the first voucher of payment with values 120 EUR, journal EUR, and fill amounts 100 for the invoice of 150 and 20 for the 80 EUR invoice.
+  I create the first voucher of payment
+  <create with values 120 EUR, journal EUR, and fill amounts 100 for the invoice of 150 EUR and 20 for the invoice of 80 EUR>
 -
   !python {model: account.voucher}: |
     import netsvc, time
@@ -162,7 +163,7 @@
     voucher_id = self.browse(cr, uid, id)
     assert (voucher_id.state=='draft'), "Voucher is not in draft state"
 -
-  I check that writeoff amount computed is 0
+  I check that writeoff amount computed is 0.00
 -
   !python {model: account.voucher}: |
     voucher = self.search(cr, uid, [('name', '=', 'First payment'),('partner_id', '=', ref('res_partner_peter0'))])
@@ -184,16 +185,19 @@
     wf_service = netsvc.LocalService("workflow")
     wf_service.trg_validate(uid, 'account.voucher', voucher[0], 'proforma_voucher', cr)
 -
-  I check that my voucher state is posted
+  I check that the move of my first voucher is valid
 -
   !python {model: account.voucher}: |
     voucher = self.search(cr, uid, [('name', '=', 'First payment'),('partner_id', '=', ref('res_partner_peter0'))])
     voucher_id = self.browse(cr, uid, voucher[0])
-    assert voucher_id.state == 'posted', "Voucher state is not posted"
+    move_line_obj = self.pool.get('account.move.line')
+    move_lines = move_line_obj.search(cr, uid, [('move_id', '=', voucher_id.move_id.id)])
+    for move_line in move_line_obj.browse(cr, uid, move_lines):
+        assert move_line.state == 'valid', "Voucher move is not valid"
 -
   I check that my debtor account is correct
 -
-  I check that the debtor account has 2 new lines with 0.00 and 0.00 as amount_currency columns and their credit are 20 and 100 respectively
+  I check that the debtor account has 2 new lines with 0.00 and 0.00 in amount_currency columns and their credit are 20 and 100 respectively
 -
   !python {model: account.voucher}: |
     voucher = self.search(cr, uid, [('name', '=', 'First payment'),('partner_id', '=', ref('res_partner_peter0'))])
@@ -203,7 +207,7 @@
     for move_line in move_line_obj.browse(cr, uid, move_lines):
         if move_line.credit == 20:
             assert move_line.amount_currency == 0.00, "Debtor account has wrong entry."
-        if move_line.credit == 100:
+        elif move_line.credit == 100:
             assert move_line.amount_currency == 0.00, "Debtor account has wrong entry."
 -
   I check the residual amount of Invoice1 is 50
@@ -225,8 +229,7 @@
     assert (move_line.amount_residual_currency == 60.0 and move_line.amount_residual == 60.0) , "Residual amount is not correct for second Invoice"
 -
   I create the second voucher of payment and check to let open the debtor overpaid amount.
--
-  I create the second voucher of payment with Paid Amount as 120, journal EUR, and fill amount 50 for the residual amount 50 for the invoice of 150 and 70 for the residual amount 60 for the invoice of 80
+  <create with values 120 EUR, journal EUR, and fill amounts 50 for the invoice of 150 EUR and 70 for the invoice of 80 EUR>
 -
   !python {model: account.voucher}: |
     import netsvc, time
@@ -282,16 +285,19 @@
     wf_service = netsvc.LocalService("workflow")
     wf_service.trg_validate(uid, 'account.voucher', voucher[0], 'proforma_voucher', cr)
 -
-  I check that my voucher state is posted
+  I check that the move of my second voucher is valid
 -
   !python {model: account.voucher}: |
     voucher = self.search(cr, uid, [('name', '=', 'Second payment'), ('partner_id', '=', ref('res_partner_peter0'))])
     voucher_id = self.browse(cr, uid, voucher[0])
-    assert voucher_id.state == 'posted', "Voucher state is not posted"
+    move_line_obj = self.pool.get('account.move.line')
+    move_lines = move_line_obj.search(cr, uid, [('move_id', '=', voucher_id.move_id.id)])
+    for move_line in move_line_obj.browse(cr, uid, move_lines):
+        assert move_line.state == 'valid', "Voucher move is not valid"
 -
   I check that my debtor account is correct
 -
-  I check that the debtor account has 2 new lines with 0.00 and 0.00 as amount_currency columns and their credit are 70 and 50
+  I check that the debtor account has 2 new lines with 0.00 and 0.00 in amount_currency columns and their credit are 70 and 50
 -
   !python {model: account.voucher}: |
     voucher = self.search(cr, uid, [('name', '=', 'Second payment'), ('partner_id', '=', ref('res_partner_peter0'))])
@@ -301,7 +307,7 @@
     for move_line in move_line_obj.browse(cr, uid, move_lines):
         if move_line.credit == 70.00:
             assert move_line.amount_currency == 0.00, "Debtor account has wrong entry."
-        if move_line.credit == 50.00:
+        elif move_line.credit == 50.00:
             assert move_line.amount_currency == 0.00, "Debtor account has wrong entry."
 -
   I check the residual amount of Invoice1 is 0
