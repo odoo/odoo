@@ -681,6 +681,7 @@ openerp.base.ListView.List = openerp.base.Class.extend( /** @lends openerp.base.
         var self = this;
         this.group = group;
         this.view = group.view;
+        this.session = this.view.session;
 
         this.options = opts.options;
         this.columns = opts.columns;

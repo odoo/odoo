@@ -181,8 +181,7 @@ openerp.base.list.editable = function (openerp) {
                 self.edition = true;
                 self.edition_index = self.dataset.index;
                 self.edition_form = _.extend(new openerp.base.FormView(
-                        null, self.group.view.session, $new_row.attr('id'),
-                        self.dataset, false), {
+                        self, $new_row.attr('id'), self.dataset, false), {
                     template: 'ListView.row.form',
                     registry: openerp.base.list.form.widgets
                 });
