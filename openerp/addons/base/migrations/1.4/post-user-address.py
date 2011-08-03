@@ -20,14 +20,10 @@
 ##############################################################################
 
 def migrate(cr, version):
-    """ copy emails from user.address_id.email to user.user_email, then drop
-        the column address_id
-    """
+    "copy emails from user.address_id.email to user.user_email"
     cr.execute("""
         UPDATE res_users
         SET user_email = res_partner_address.email
         FROM res_partner_address
         WHERE res_users.address_id = res_partner_address.id""")
-    cr.execute("""
-        ALTER TABLE res_users DROP COLUMN address_id""")
 
