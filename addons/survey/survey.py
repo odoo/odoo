@@ -516,7 +516,7 @@ class survey_question(osv.osv):
         if context is None:
             context = {}
         data = super(survey_question, self).default_get(cr, uid, fields, context)
-        a=self.data_get(cr,uid,data,context)
+        self.data_get(cr,uid,data,context)
         if context.has_key('page_id'):
             data['page_id']= context.get('page_id', False)
         return data
