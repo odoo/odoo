@@ -31,7 +31,7 @@ class ir_filters(osv.osv):
 
     def copy(self, cr, uid, id, default=None, context=None):
         name = self.read(cr, uid, [id], ['name'])[0]['name']
-        default.update({'name': name+ _(' (copy)')})
+        default.update({'name':_('%s (copy)') % name})
         return super(ir_filters, self).copy(cr, uid, id, default, context)
    
     def get_filters(self, cr, uid, model):
@@ -58,10 +58,10 @@ class ir_filters(osv.osv):
 
     _columns = {
         'name': fields.char('Filter Name', size=64, translate=True, required=True),
-        'user_id':fields.many2one('res.users', 'User', help='Keep empty if you want this filter to be applied to every user.If you assign a user in this field, only this user will have this filter available.'),
+        'user_id':fields.many2one('res.users', 'User', help="The user this filter is available to. Keep empty to make it available to all users."),
         'domain': fields.text('Domain Value', required=True),
         'context': fields.text('Context Value', required=True),
-        'model_id': fields.many2one('ir.model', 'Object', size=64, required=True),
+        'model_id': fields.many2one('ir.model', 'Object',required=True),
     }
     _defaults = {
         'domain': '[]',

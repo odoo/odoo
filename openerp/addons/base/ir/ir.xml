@@ -356,7 +356,7 @@
                         <field name="model_id"/>
                         <field name="user_id"/>
                     </group>
-                    <group col="4" expand="1">
+                    <group col="4" expand="1" groups="base.group_extended">
                         <separator string="Domain" colspan="2" />
                         <separator string="Context" colspan="2" />
                         <field name="domain" nolabel="1" colspan="2"/>
@@ -377,8 +377,8 @@
                     <field name="name"/>
                     <field name="user_id"/>
                     <field name="model_id"/>
-                    <field name="domain"/>
-                    <field name="context"/>
+                    <field name="domain" groups="base.group_extended"/>
+                    <field name="context" groups="base.group_extended"/>
                 </tree>
             </field>
         </record>
@@ -395,17 +395,11 @@
                       <field name="name"/>
                       <field name="user_id">
                   	  <filter icon="terp-personal"
-                        domain="[('user_id','=', uid)]"
+                        domain="[('user_id','in', ('uid', 'False'))]"
                         help="Current User" name="My Filters" />
                			</field>
                       <field name="model_id"/>
                     </group>
-                    
-                   <newline/>
-                   <group expand="0" string="Extended Filters..." groups="base.group_extended">
-                     <field name="domain"/>
-                     <field name="context"/>
-                  </group>
               </search>
             </field>
         </record>
