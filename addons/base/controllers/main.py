@@ -178,9 +178,13 @@ class Database(openerpweb.Controller):
     def create(self, req, fields):
 
         params = dict(map(operator.itemgetter('name', 'value'), fields))
-        create_attrs = operator.itemgetter(
-            'super_admin_pwd', 'db_name', 'demo_data', 'db_lang', 'create_admin_pwd')(
-            params)
+        create_attrs = (
+            params['super_admin_pwd'],
+            params['db_name'],
+            bool(params.get('demo_data')),
+            params['db_lang'],
+            params['create_admin_pwd']
+        )
 
         try:
             return req.session.proxy("db").create(*create_attrs)
