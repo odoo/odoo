@@ -553,7 +553,11 @@ openerp.base.View = openerp.base.Widget.extend({
         ]);
     },
     on_sidebar_manage_view: function() {
-        console.log('Todo');
+        if (this.fields_view && this.fields_view.arch) {
+            $('<xmp>' + openerp.base.json_node_to_xml(this.fields_view.arch, true) + '</xmp>').dialog({ width: '95%', height: 600});
+        } else {
+            this.notification.warn("Manage Views", "Could not find current view declaration");
+        }
     },
     on_sidebar_edit_workflow: function() {
         console.log('Todo');

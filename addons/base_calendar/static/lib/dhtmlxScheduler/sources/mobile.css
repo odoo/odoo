@@ -1,0 +1,380 @@
+/*
+This software is allowed to use under GPL or you need to obtain Commercial or Enterise License
+to use it in not GPL project. Please contact sales@dhtmlx.com for details
+*/
+/**Toolbar**/
+
+.dhx_schedulerbar{
+	background: -webkit-gradient(linear, left top, left bottom,from(#d7d7d7), to(#b7b7b7));  
+	background: -moz-linear-gradient(top,  #d7d7d7, #b7b7b7);
+}	
+.dhx_el_button input {
+	border-radius:4px;
+	-moz-border-radius:4px;
+	-webkit-border-radius:4px;
+	background: -webkit-gradient(linear, left top, left bottom, from(#9dbcc7),color-stop(0.4,#80a9b8),color-stop(0.6,#6799aa),to(#4f899d));  
+	background: -moz-linear-gradient(top,  #9dbcc7,  #518a9e);
+	text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.6);
+	font-size: 14px;
+	color: #ffffff;
+	padding: 0px 10px;
+	border:1px solid #636363;
+	-moz-box-shadow: 0px 1px #ffffff;
+	-webkit-box-shadow:0px 1px #ffffff;
+	box-shadow: 0px 1px #ffffff;
+}
+.add .dhx_el_button input{
+	background-image: url(./imgs_mobile/add.png),-webkit-gradient(linear, left top, left bottom, from(#9dbcc7),color-stop(0.4,#80a9b8),color-stop(0.6,#6799aa),to(#4f899d));  
+	background-image: url(./imgs_mobile/add.png),-moz-linear-gradient(top,  #9dbcc7,  #518a9e);
+	background-position: center center;
+	background-repeat:no-repeat;
+	width:34px;
+}
+.dhx_schedulerbar .dhx_el_segmented{
+	border-radius:4px;
+	-moz-border-radius:4px;
+	-webkit-border-radius:4px;
+	float:none !important;
+	border:1px solid #636363;
+	-moz-box-shadow: 0px 1px #ffffff;
+	-webkit-box-shadow:0px 1px #ffffff;
+	height:32px;
+}
+
+
+.dhx_schedulerbar .dhx_el_segmented .segment_0,.dhx_schedulerbar .dhx_el_segmented .segment_1, .dhx_schedulerbar .dhx_el_segmented .segment_N {
+	background: -webkit-gradient(linear, left top, left bottom, from(#f8f8f8),color-stop(0.3,#eeeeee),color-stop(0.6,#dcdcdc),to(#d5d5d5));  
+	background: -moz-linear-gradient(top,  #f8f8f8,  #d5d5d5);
+	
+}
+.dhx_schedulerbar .dhx_el_segmented .selected.segment_0 ,.dhx_schedulerbar .dhx_el_segmented .selected.segment_1, .dhx_schedulerbar .dhx_el_segmented .selected.segment_N {
+	background: -webkit-gradient(linear, left top, left bottom, from(#9dbcc7),color-stop(0.4,#80a9b8),color-stop(0.6,#6799aa),to(#4f899d));  
+	background: -moz-linear-gradient(top,  #9dbcc7,  #518a9e);
+}
+.dhx_el_segmented .segment_N, .dhx_el_segmented .selected.segment_N {
+    border-left: 0;
+}
+.dhx_schedulerbar .dhx_el_segmented div {
+	text-shadow: 0 1px 0 #ffffff;
+	font-size: 14px;
+	color: #757575;
+	border:0px;
+	height:30px;
+}
+.dhx_schedulerbar .dhx_el_segmented div.selected {
+	text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.6);
+	color: #ffffff;
+	height:30px;
+}
+
+
+.dhx_schedulerbar .dhx_el_segmented .segment_0{
+    -webkit-border-top-left-radius: 4px;
+    -webkit-border-bottom-left-radius: 4px;
+    -moz-border-radius-topleft: 4px;
+    -moz-border-radius-bottomleft: 4px;
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+	padding:0 11px 0 14px;
+}
+.dhx_schedulerbar .dhx_el_segmented .segment_1{
+	border-left:1px solid #ababab;
+	border-right:1px solid #ababab;
+	padding:0 11px;
+}
+.dhx_schedulerbar .dhx_el_segmented .segment_N{
+    -webkit-border-top-right-radius: 4px;
+    -webkit-border-bottom-right-radius: 4px;
+    -moz-border-radius-topright: 4px;
+    -moz-border-radius-bottomright: 4px;
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+	padding:0 14px 0 11px;
+}
+
+
+/**Day Events**/
+
+/*scale:*/
+/*scale item container*/
+.dhx_dayevents_scale_item {
+	-moz-user-select:-moz-none;
+	border-bottom:1px solid #D4D4D4;
+	color:#303030;
+	font-family:"Helvetica World","HelveticaNeue","Helvetica Neue","HelveticaNeueRoman","Helvetica","Tahoma","Geneva","Arial",sans-serif;
+	white-space:nowrap;
+}
+/*hour container*/
+.dhx_dayevents_scale_hour{
+	float: left;
+	text-align: center;
+	font-size: 16px;
+	vertical-align:middle;
+	font-weight: bold;
+	/*background-color:#E1E6FF;*/
+	/*background-color: #EEE;*/
+}
+/*scale items*/
+.dhx_dayevents_scale_top, .dhx_dayevents_scale_bottom {
+	font-size: 10px;
+	float: left;
+	text-align:center;
+}
+.dhx_dayevents_scale_top{
+	border-bottom:1px dotted #D4D4D4;
+}
+/*minutes container*/
+.dhx_dayevents_scale_minute{
+	/*background-color:#E1E6FF;*/
+	background-color: #EEE;
+	border-right:1px dotted #D4D4D4;
+	float:left;
+}
+/*event container*/
+.dhx_dayevents_scale_event {
+	float:left;
+}
+/*event:*/
+.dhx_dayevents_event_item{
+	position:absolute;
+	border-radius: 4px;
+	-moz-border-radius: 4px;
+	-webkit-border-radius:4px;
+	font-size: 12px;
+	background-color: #e6f8ff;
+	border:1px solid #78a5b4;
+	font-family:"Helvetica World","HelveticaNeue","Helvetica Neue","HelveticaNeueRoman","Helvetica","Tahoma","Geneva","Arial",sans-serif;
+	/*-moz-box-shadow: 1px 1px 1px #888;
+	-webkit-box-shadow: 1px 1px 1px #888;
+	box-shadow: 1px 1px 1px #888;*/
+}
+/*toolbar*/
+.dhx_topbar{
+	font-size:18px;
+	background: -webkit-gradient(linear, left top, left bottom, from(#fdfdfd),color-stop(0.5, #ededed), to(#c8c8c8)) !important;  
+	background: -moz-linear-gradient(top,  #fdfdfd,  #c8c8c8) !important;
+}	
+
+
+/**List view**/
+.dhx_list_events_item{
+	position:relative;
+	background-color:#ffffff;
+}
+.dhx_list_events_item .dhx_day_title{
+	height:16px;
+	line-height:16px;
+	width:75px;
+	position:absolute;
+	left:1px;
+	top:0px;
+	/*background-color: #d23530;*/
+	background: #518A9E;
+	border-radius: 2px;
+	text-align:center;
+	-moz-border-radius: 2px;
+	-moz-box-shadow: 1px 1px 1px #1c2329;
+	-webkit-box-shadow: 1px 1px 1px #1c2329;
+	box-shadow: 1px 1px 1px #1c2329;
+	-webkit-border-radius:2px;
+	text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.6);
+	font-size: 14px;
+	color: #ffffff;
+}
+.dhx_list_events_item .dhx_event_marker{	
+	display:inline-block;
+	margin-left:5px;
+	margin-top:5px;
+	height:10px;
+	/*line-height:22px;*/
+	width:10px;
+	border-radius: 6px;
+	-moz-border-radius: 6px;
+	-webkit-border-radius:6px;
+	background-color: #e6f8ff;
+	border:1px solid #78a5b4;
+	vertical-align:top;
+}
+
+.dhx_list_events_item .dhx_event_time{
+	display:inline-block;
+	width:70px;
+	font-size:16px;
+	padding-top:8px;
+}
+
+.dhx_list_events_item .dhx_event_text{
+	display:inline-block;
+	padding-left:4px;
+	overflow:hidden;
+	height:22px;
+	vertical-align:top;
+	/*width:208px;*/
+	white-space:nowrap;
+}
+
+
+/**Month events**/
+
+/*calendar*/
+.dhx_cal_day_num.dhx_cal_selected_day, .dhx_cal_day_num.dhx_cal_current_day.dhx_cal_selected_day{
+	background: -webkit-gradient(linear, left top, left bottom, from(#a0bfc9), to(#4f899d)) !important;  
+	background: -moz-linear-gradient(top,  #a0bfc9,  #4f899d);
+	text-shadow:0 1px 0 rgba(0, 0, 0, 0.6);
+}
+.dhx_cal_day_num.dhx_cal_current_day {
+	background: -webkit-gradient(linear, left top, left bottom, from(#bababa), to(#eeeeee)) !important;  
+	background: -moz-linear-gradient(top,  #bababa,  #eeeeee);
+	border-color:#636363;
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.6);
+}
+.dhx_cal_day_num.dhx_cal_selected_day span{
+	color:#ffffff;
+}
+.dhx_cal_day_num{
+	position:relative;
+}
+.dhx_cal_day_num .day_with_events{
+	position:absolute;
+	bottom:0px;
+	right:0px;
+	background-image:url(./imgs_mobile/event.png);
+	background-repeat:no-repeat;
+	width:12px;
+	height:12px;
+}
+.dhx_cal_day_num.dhx_cal_selected_day .day_with_events{
+	background-image:url(./imgs_mobile/event_focus.png);
+}
+.dhx_cal_prev_button div {
+	background-image:url("./imgs_mobile/arrow_left.png");
+	background-position:0;
+	width:28px;
+	height:29px;
+	top:6px;
+}
+.dhx_cal_next_button div {
+	background-image:url("./imgs_mobile/arrow_right.png");
+	background-position:0;
+	width:28px;
+	height:29px;
+	top:6px;
+}
+/*events list*/
+.dhx_list_day_events_item{
+	background-color:#ffffff;
+}
+.dhx_list_day_events_item .dhx_event_marker{	
+	display:inline-block;
+	margin-top:16px;
+	margin-left:5px;
+	height:10px;
+	width:10px;
+	border-radius: 6px;
+	-moz-border-radius: 6px;
+	-webkit-border-radius:6px;
+	background-color: #e6f8ff;
+	border:1px solid #78a5b4;
+}
+.dhx_list_day_events_item .dhx_event_time{
+	display:inline-block;
+	width:auto;
+	height:42px;
+	line-height:42px;
+	padding-left:5px;
+}
+
+.dhx_list_day_events_item .dhx_event_text{
+	display:inline-block;
+	padding-left:10px;
+	line-height:42px;
+}
+
+/*No events BG*/
+.no_events{
+	background-image:url(./imgs_mobile/noevents.png);
+	background-repeat:no-repeat;
+}
+
+
+/**Selected event view**/
+.selected_event{
+	width: 290px;
+	margin:5px;
+	background-color: #e6f8ff;
+	border:1px solid #78a5b4;
+	border-radius: 5px;
+	-moz-border-radius: 5px;
+	-webkit-border-radius:5px;
+	padding:3px 6px;
+}
+.selected_event .event_title{
+   font-weight:bold
+}
+.selected_event .event_text{
+   font-size:12px;
+}
+/*toolbar*/
+/*
+.dhx_topbar.single_event{
+	background: -webkit-gradient(linear, left top, left bottom,from(#d6d6d6), to(#b8b8b8)) !important;  
+	background: -moz-linear-gradient(top,  #d6d6d6, #b8b8b8) !important;
+}
+*/
+
+
+/**Editing form**/
+.dhx_el_formbutton.delete .dhx_inp_form_button{
+	background: -webkit-gradient(linear, left top, left bottom, from(#f8f8f8), to(#d4d4d4));  
+	background: -moz-linear-gradient(top,  #f8f8f8,  #d4d4d4); 
+	border-top:1px solid #888;
+	font-size:18px;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	border:1px solid #8f8f8f;
+	color:#606060;
+	text-shadow: 0 1px 0 #ffffff;
+	height:40px;
+	 
+}
+.dhx_el_button.cancel input{
+	background: -webkit-gradient(linear, left top, left bottom, from(#f8f8f8),color-stop(0.3,#eeeeee),color-stop(0.6,#dcdcdc),to(#d5d5d5));  
+	background: -moz-linear-gradient(top,  #f8f8f8,  #d5d5d5);
+	color:#6E6E6E;
+	text-shadow:0 1px 0 #FFFFFF
+}
+.invalid .dhx_inp_text_border{
+	border-color:#cc0000;
+}
+.invalid .dhx_inp_list {
+    color:#cc0000;
+}
+
+/*confirm*/
+
+
+
+
+.dhx_win_body{
+	font-weight:bold;
+	color:#3f2317;
+	text-shadow: 0px 1px #e2d3b6;
+	background:url(../images/confirm_main_bgr.png);
+}
+.dhx_win_body .dhx_view{
+	background:transparent;
+}
+.dhx_el_bigbutton input, .dhx_el_bigroundbutton input{
+	height:40px;
+	line-height:40px;
+}
+.dhx_el_bigroundbutton input, .alert .dhx_el_bigbutton input{
+	background: #83a41f;
+	background: -webkit-gradient(linear, left top, left bottom, from(#9dbcc7),color-stop(0.4,#80a9b8),color-stop(0.6,#6799aa),to(#4f899d));  
+	background: -moz-linear-gradient(top,  #9dbcc7,  #518a9e);
+}
+.dhx_el_bigroundbutton{
+	padding-top:0px;
+}
+

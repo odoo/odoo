@@ -1,34 +1,63 @@
+/*
+This software is allowed to use under GPL or you need to obtain Commercial or Enterise License
+to use it in not GPL project. Please contact sales@dhtmlx.com for details
+*/
 scheduler._props = {};
-scheduler.createUnitsView=function(name,property,list,size,step){
+scheduler.createUnitsView=function(name,property,list,size,step,skip_incorrect){
 	if (typeof name == "object"){
 		list = name.list;
 		property = name.property;
 		size = name.size||0;
 		step = name.step||1;
+		skip_incorrect = name.skip_incorrect;
 		name = name.name;		
 	}
+
+	scheduler._props[name]={map_to:property, options:list, step:step, position:0 };
+    if(size>scheduler._props[name].options.length){
+        scheduler._props[name]._original_size = size;
+        size = 0;
+    }
+    scheduler._props[name].size = size;
+	scheduler._props[name].skip_incorrect = skip_incorrect||false;
+	
 	scheduler.date[name+"_start"]= scheduler.date.day_start;
 	scheduler.templates[name+"_date"] = function(date){
 		return scheduler.templates.day_date(date);
-	}
+	};
+	
 	scheduler.templates[name+"_scale_date"] = function(date){
+		var list = scheduler._props[name].options;
 		if (!list.length) return "";
 		var index = (scheduler._props[name].position||0)+Math.floor((scheduler._correct_shift(date.valueOf(),1)-scheduler._min_date.valueOf())/(60*60*24*1000));
 		if (list[index].css) 
 			return "<span class='"+list[index].css+"'>"+list[index].label+"</span>";
 		else
 			return list[index].label;
-	}
-	scheduler.date["add_"+name]=function(date,inc){ return scheduler.date.add(date,inc,"day"); }
-	scheduler.date["get_"+name+"_end"]=function(date){ return scheduler.date.add(date,size||list.length,"day"); }
-	
-	scheduler._props[name]={map_to:property, options:list, size:size, step:step, position:0 };	
+	};
+
+	scheduler.date["add_"+name]=function(date,inc){ return scheduler.date.add(date,inc,"day"); };
+	scheduler.date["get_"+name+"_end"]=function(date){
+		return scheduler.date.add(date,scheduler._props[name].size||scheduler._props[name].options.length,"day");
+	};
 	
 	scheduler.attachEvent("onOptionsLoad",function(){
-		var order = scheduler._props[name].order = {};
+        var pr = scheduler._props[name];
+		var order = pr.order = {};
+		var list = pr.options;
 		for(var i=0; i<list.length;i++)
-			order[list[i].key]=i;	
-		if (scheduler._date) 
+			order[list[i].key]=i;
+        if(pr._original_size && pr.size==0){
+            pr.size = pr._original_size;
+            delete pr.original_size;
+        }
+		if(pr.size > list.length) {
+            pr._original_size = pr.size;
+            pr.size = 0;
+        }
+        else
+            pr.size = pr._original_size||pr.size;
+		if (scheduler._date && scheduler._mode == name) 
 			scheduler.setCurrentView(scheduler._date, scheduler._mode);
 	});
 	scheduler.callEvent("onOptionsLoad",[]);
@@ -40,8 +69,31 @@ scheduler.scrollUnit=function(step){
 		this.update_view();		
 	}
 };
-
 (function(){
+	var _removeIncorrectEvents = function(evs) {
+		var pr = scheduler._props[scheduler._mode];
+		if(pr && pr.order && pr.skip_incorrect) {
+            var correct_events = [];
+			for(var i=0; i<evs.length; i++) {
+				if(typeof pr.order[evs[i][pr.map_to]] != "undefined") {
+                    correct_events.push(evs[i]);
+				}
+			}
+            evs.splice(0,evs.length);
+			evs.push.apply(evs,correct_events);
+		}
+		return evs;
+	};
+	var old_pre_render_events_table = scheduler._pre_render_events_table;
+	scheduler._pre_render_events_table=function(evs,hold) {
+		evs = _removeIncorrectEvents(evs);
+		return old_pre_render_events_table.apply(this, [evs, hold]);
+	};
+	var old_pre_render_events_line = scheduler._pre_render_events_line;
+	scheduler._pre_render_events_line = function(evs,hold){ 
+		evs = _removeIncorrectEvents(evs);
+		return old_pre_render_events_line.apply(this, [evs, hold]);
+	};
 	var fix_und=function(pr,ev){
 		if (pr && typeof pr.order[ev[pr.map_to]] == "undefined"){
 			var s = scheduler;
@@ -52,23 +104,22 @@ scheduler.scrollUnit=function(step){
 			ev[pr.map_to] = pr.options[Math.min(ind+pr.position,pr.options.length-1)].key;
 			return true;
 		}
-	}
+	};
 	var t = scheduler._reset_scale;
-	
+    
 	var oldive = scheduler.is_visible_events;
 	scheduler.is_visible_events = function(e){
 		var res = oldive.apply(this,arguments);
 		if (res){
 			var pr = scheduler._props[this._mode];
 			if (pr && pr.size){
-				 var val = pr.order[e[pr.map_to]];
-				 if (val < pr.position || val >= pr.size+pr.position )
-				 	return false;
+				var val = pr.order[e[pr.map_to]];
+				if (val < pr.position || val >= pr.size+pr.position )
+					return false;
 			}
 		}
 		return res;
-	}
-	
+	};
 	scheduler._reset_scale = function(){
 		var pr = scheduler._props[this._mode];
 		var ret = t.apply(this,arguments);
@@ -106,7 +157,7 @@ scheduler.scrollUnit=function(step){
 		}
 		return ret;
 		
-	}
+	};
 	var r = scheduler._get_event_sday;
 	scheduler._get_event_sday=function(ev){
 		var pr = scheduler._props[this._mode];
@@ -115,7 +166,7 @@ scheduler.scrollUnit=function(step){
 			return pr.order[ev[pr.map_to]]-pr.position;	
 		}
 		return r.call(this,ev);
-	}
+	};
 	var l = scheduler.locate_holder_day;
 	scheduler.locate_holder_day=function(a,b,ev){
 		var pr = scheduler._props[this._mode];
@@ -124,23 +175,25 @@ scheduler.scrollUnit=function(step){
 			return pr.order[ev[pr.map_to]]*1+(b?1:0)-pr.position;	
 		}
 		return l.apply(this,arguments);
-	}
+	};
 	var p = scheduler._mouse_coords;
 	scheduler._mouse_coords=function(){
 		var pr = scheduler._props[this._mode];
 		var pos=p.apply(this,arguments);
 		if (pr){
+			if(!this._drag_event) this._drag_event = {};
 			var ev = this._drag_event;
-			if (this._drag_id){
+			if (this._drag_id && this._drag_mode){
 				ev = this.getEvent(this._drag_id);
 				this._drag_event._dhx_changed = true;
 			}
 			var unit_ind = Math.min(pos.x+pr.position,pr.options.length-1);
 			ev[pr.map_to]=pr.options[unit_ind].key;
-			pos.x = unit_ind/10000000;
+			pos.x = 0;
+			pos.custom = true;
 		}
 		return pos;
-	}
+	};
 	var o = scheduler._time_order;
 	scheduler._time_order = function(evs){
 		var pr = scheduler._props[this._mode];
@@ -150,8 +203,7 @@ scheduler.scrollUnit=function(step){
 			});
 		} else
 			o.apply(this,arguments);
-	}
-	
+	};
 	scheduler.attachEvent("onEventAdded",function(id,ev){
 		if (this._loading) return true;
 		for (var a in scheduler._props){
@@ -160,7 +212,7 @@ scheduler.scrollUnit=function(step){
 				ev[pr.map_to] = pr.options[0].key;
 		}
 		return true;
-	})
+	});
 	scheduler.attachEvent("onEventCreated",function(id,n_ev){
 		var pr = scheduler._props[this._mode];
 		if (pr){
@@ -170,6 +222,20 @@ scheduler.scrollUnit=function(step){
 			this.event_updated(ev);
 		}
 		return true;
-	})
-			
+	})		
 })();
+
+
+/* just in case, there shouldn't be any need for this
+
+	scheduler.getUnitSection = function(event_id) {
+		var ev = scheduler.getEvent(event_id);
+		var options = scheduler._props['unit'].options;
+		var section;
+		for(var i=0; i<options.length; i++) {
+			if(ev.section_id == options[i].key)
+				section = options[i];
+		}
+		return section;
+	};
+*/	

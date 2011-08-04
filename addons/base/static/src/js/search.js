@@ -140,7 +140,7 @@ openerp.base.SearchView = openerp.base.Widget.extend({
         var widget_starts = _(lines).chain().flatten().map(function (widget) {
             return widget.start();
         }).value();
-        
+
         $.when.apply(null, widget_starts).then(function () {
             self.ready.resolve();
         });
@@ -203,10 +203,10 @@ openerp.base.SearchView = openerp.base.Widget.extend({
                             context_to_save: context,
                             domain: domain,
                             name: name
-                        }).then(function(result) {
+                        }).then(function() {
                             self.reload_managed_filters();
                         });
-                    },
+                    }
                 }
             });
         } else { // manage_filters
@@ -475,11 +475,11 @@ openerp.base.search.Group = openerp.base.search.Widget.extend({
     },
     start: function () {
         this._super();
-        _(this.lines)
-            .chain()
-            .flatten()
-            .each(function (widget) { widget.start(); });
         openerp.base.search.add_expand_listener(this.$element);
+        var widget_starts = _(this.lines).chain().flatten()
+                .map(function (widget) { return widget.start(); })
+            .value();
+        return $.when.apply(null, widget_starts);
     }
 });
 
@@ -779,7 +779,7 @@ openerp.base.search.OneToManyField = openerp.base.search.CharField.extend({
 });
 openerp.base.search.ManyToOneField = openerp.base.search.CharField.extend({
     // TODO: @widget
-    // TODO: .relation, .selection, .context, .domain
+    // TODO: .selection, .context, .domain
     init: function (view_section, field, view) {
         this._super(view_section, field, view);
         var self = this;

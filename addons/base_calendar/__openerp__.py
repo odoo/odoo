@@ -3,7 +3,7 @@
     "version": "2.0",
     "depends": ['base'],
     "js": [
-        'static/lib/dhtmlxScheduler/codebase/dhtmlxscheduler.js',
+        'static/lib/dhtmlxScheduler/codebase/dhtmlxscheduler_debug.js',
         'static/lib/dhtmlxScheduler/codebase/ext/dhtmlxscheduler_minical.js',
         'static/src/js/calendar.js'
     ],

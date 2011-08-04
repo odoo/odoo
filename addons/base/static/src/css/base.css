@@ -197,7 +197,7 @@ table.db_option_table input.required {
     background-color: #D2D2FF;	
 }
 
-.db_option_table input[type="text"], input[type="password"], select {
+.db_option_table input[type="text"], .db_option_table input[type="password"], .db_option_table select {
     width: 300px;	
 }
 
@@ -853,7 +853,7 @@ label.error {
 }
 
 /* Inputs */
-.openerp input[type="text"], .openerp input[type="password"], .openerp select, .openerp textarea {
+.openerp .oe_forms input[type="text"], .openerp .oe_forms input[type="password"], .openerp .oe_forms select, .openerp .oe_forms textarea {
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
     -ms-box-sizing: border-box;
@@ -867,17 +867,17 @@ label.error {
     min-width: 90px;
     color: #1f1f1f;
 }
-.openerp textarea {
+.openerp .oe_forms textarea {
     resize:vertical;
 }
-.openerp input[type="text"], .openerp input[type="password"], .openerp select, .openerp .button {
+.openerp .oe_forms input[type="text"], .openerp .oe_forms input[type="password"], .openerp .oe_forms select, .openerp .oe_forms .button {
     height: 22px;
 }
-.openerp .button {
+.openerp .oe_forms .button {
     color: #4c4c4c;
     white-space: nowrap;
 }
-.openerp .button span {
+.openerp .oe_forms .button span {
     position: relative;
     vertical-align: top;
 }

@@ -1,3 +1,7 @@
+/*
+This software is allowed to use under GPL or you need to obtain Commercial or Enterise License
+to use it in not GPL project. Please contact sales@dhtmlx.com for details
+*/
 .dhx_cal_container{
 	background-color:#C2D5FC;
 	font-family:Tahoma; 
@@ -52,18 +56,28 @@
 	text-decoration:underline;
 }
 .dhx_cal_tab{
-	background-image:url(imgs/white_tab.png);
-	width:61px; height:19px;
+	width:59px; height:19px;
 	text-align:center;
 	text-decoration:underline;
-	padding-top:3px; cursor:pointer;
+	padding-top:2px;
+    cursor:pointer;
+    background-color: #D8E1EA;
+
+    -webkit-border-top-left-radius: 4px;
+    -webkit-border-top-right-radius: 4px;
+    -moz-border-radius-topleft: 4px;
+    -moz-border-radius-topright: 4px;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
 }
 .dhx_cal_tab.active{
-	background-image:url(imgs/blue_tab.png);
 	text-decoration:none;
-	height:20px;
-	padding-top:2px; cursor:default;
+
+    cursor:default;
 	font-weight:bold;
+    border: 1px dotted #586A7E;
+    border-bottom: 0;
+    background-color: #C2D5FC;
 }
 .dhx_cal_header{
 	position:absolute;
@@ -154,11 +168,13 @@
 	z-index:9999;
 }
 .dhx_multi_day_icon, .dhx_multi_day{
-	position:absolute;
 	background-color:#E1E6FF;
 	background-repeat:no-repeat;
-	border-bottom:1px dotted #8894A3;
-	border-left:1px dotted #8894A3;
+	border-right:1px dotted #8894A3;
+}
+.dhx_multi_day{
+	position: absolute;
+	border-top:1px dotted #8894A3;
 }
 .dhx_multi_day_icon{
 	background-image:url(imgs/clock_big.gif);
@@ -168,11 +184,10 @@
 }
 .dhx_multi_day_icon, .dhx_multi_day_icon_small{
 	background-position: center center;
-	position:absolute;
 	background-color:#E1E6FF;
 	background-repeat:no-repeat;
 	border-bottom:1px dotted #8894A3;
-	border-left:1px dotted #8894A3;	
+	border-right:1px dotted #8894A3;	
 }
 .dhtmlxLayoutPolyContainer_dhx_skyblue 	.dhx_cal_container {
 	background-color: #d0e5ff;

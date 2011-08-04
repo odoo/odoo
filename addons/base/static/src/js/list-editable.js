@@ -147,7 +147,7 @@ openerp.base.list.editable = function (openerp) {
             this.cancel_pending_edition().then(function () {
                 var $new_row = $('<tr>', {
                         id: _.uniqueId('oe-editable-row-'),
-                        'class': $(row).attr('class'),
+                        'class': $(row).attr('class') + ' oe_forms',
                         click: function (e) {e.stopPropagation();}
                     })
                     .delegate('button.oe-edit-row-save', 'click', function () {
@@ -181,8 +181,7 @@ openerp.base.list.editable = function (openerp) {
                 self.edition = true;
                 self.edition_index = self.dataset.index;
                 self.edition_form = _.extend(new openerp.base.FormView(
-                        null, self.group.view.session, $new_row.attr('id'),
-                        self.dataset, false), {
+                        self, $new_row.attr('id'), self.dataset, false), {
                     template: 'ListView.row.form',
                     registry: openerp.base.list.form.widgets
                 });
@@ -277,12 +276,13 @@ openerp.base.list.editable = function (openerp) {
         openerp.base.list.form[key] = (form_widgets.get_object(key)).extend({
             update_dom: function () {
                 this.$element.children().css('visibility', '');
-                if (this.invisible) {
-                    this.$element.children().css('visibility', 'hidden');
-                } else {
+                if (this.modifiers.tree_invisible) {
+                    var old_invisible = this.invisible;
                     this.invisible = !!this.modifiers.tree_invisible;
                     this._super();
-                    this.invisible = false;
+                    this.invisible = old_invisible;
+                } else if (this.invisible) {
+                    this.$element.children().css('visibility', 'hidden');
                 }
             }
         });
