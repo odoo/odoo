@@ -114,7 +114,7 @@ class WebClient(openerpweb.Controller):
         return concat
 
     @openerpweb.httprequest
-    def home(self, req):
+    def home(self, req, s_action=None):
         template ="""<!DOCTYPE html>
         <html style="height: 100%%">
         <head>
@@ -364,6 +364,11 @@ class Session(openerpweb.Controller):
             return None
         return saved_actions["actions"].get(key)
 
+    @openerpweb.jsonrequest
+    def check(self, req):
+        req.session.assert_valid()
+        return None
+
 def eval_context_and_domain(session, context, domain=None):
     e_context = session.eval_context(context)
     # should we give the evaluated context as an evaluation context to the domain?
@@ -379,22 +384,21 @@ def load_actions_from_ir_values(req, key, key2, models, meta, context):
             for id, name, action in actions]
 
 def clean_action(action, session):
+    action.setdefault('flags', {})
     if action['type'] != 'ir.actions.act_window':
         return action
     # values come from the server, we can just eval them
-    if isinstance(action.get('context', None), basestring):
+    if isinstance(action.get('context'), basestring):
         action['context'] = eval(
             action['context'],
             session.evaluation_context()) or {}
 
-    if isinstance(action.get('domain', None), basestring):
+    if isinstance(action.get('domain'), basestring):
         action['domain'] = eval(
             action['domain'],
             session.evaluation_context(
                 action.get('context', {}))) or []
-    if 'flags' not in action:
-        # Set empty flags dictionary for web client.
-        action['flags'] = dict()
+
     return fix_view_modes(action)
 
 def generate_views(action):

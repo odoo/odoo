@@ -546,7 +546,7 @@ openerp.base.form.compute_domain = function(expr, fields) {
                 this.log("Unsupported operator in modifiers :", op);
         }
     }
-    return _.all(stack);
+    return _.all(stack, _.identity);
 };
 
 openerp.base.form.Widget = openerp.base.Widget.extend({
