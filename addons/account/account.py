@@ -21,7 +21,6 @@
 
 import time
 from datetime import datetime
-from time import mktime
 from dateutil.relativedelta import relativedelta
 from operator import itemgetter
 
