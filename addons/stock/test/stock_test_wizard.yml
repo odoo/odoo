@@ -86,20 +86,32 @@
       "active_id": ref("stock.menu_action_picking_tree4"), })
 
 -
-  I confirm the picking.
+  I create a record for partial picking.
 -
-
-  !python {model: stock.picking }: |
-    import time
-    pick=self.browse(cr,uid,ref('stock_picking_in0'))
-    partial_datas={}
-    partial_move_id = self.pool.get('stock.partial.move').create(cr, uid,{})
-    for move in pick.move_lines:
-        partial_datas['move%s'%(move.id)]= {
-          'product_id': move.product_id,
-          'product_qty': move.product_qty,
-        }
-    self.do_partial(cr, uid,  [partial_move_id],partial_datas)
+  !record {model: stock.partial.picking, id: stock_partial_picking_0}:
+    date: !eval time.strftime('%Y-%m-%d %H:%M:%S')
+-
+  I make picking order Done.
+-
+  !python {model: stock.partial.picking}: |
+     pick_obj = self.pool.get('stock.picking')
+     partial = self.browse(cr, uid, ref('stock_partial_picking_0'), context)
+     partial_datas = {
+            'delivery_date' : partial.date
+     }
+     for pick in pick_obj.browse(cr, uid, [ref('stock_picking_in0')]):
+        for m in pick.move_lines:
+           partial_datas['move%s'%(m.id)] = {
+                    'product_id' : m.product_id.id,
+                    'product_qty' : m.product_qty,
+                    'product_uom' : m.product_uom.id
+           }
+     context = {"lang": "en_US", "search_default_available":
+      1, "tz": False, "active_model": "ir.ui.menu", "contact_display": "partner",
+      "active_ids": [ref('stock_picking_in0')], "active_id": ref("purchase.menu_action_picking_tree4"),
+      }
+     self.fields_view_get(cr, uid, False,"form", context)
+     self.do_partial(cr, uid, [ref('stock_partial_picking_0')], context)
 
 -
   I create stock.tracking record.
@@ -184,23 +196,30 @@
    self.action_assign(cr,uid,[ref('stock_move_test0')])
 
 -
+  I create a record for partial move.
+-
+  !record {model: stock.partial.move, id: stock_partial_move_0}:
+    date: !eval time.strftime('%Y-%m-%d %H:%M:%S')
+
+-
   I done stock.move record.
 -
-  !python {model: stock.move }: |
+  !python {model: stock.partial.move }: |
     import time
     pick_obj = self.pool.get('stock.picking')
+    move_obj = self.pool.get('stock.move')
     pick=pick_obj.browse(cr,uid,ref('stock_picking_in0'))
-    partial_move_id = self.pool.get('stock.partial.move').create(cr, uid,{})
-    search_id = self.search(cr, uid, [('picking_id', '=', pick.id)])
+    search_id = move_obj.search(cr, uid, [('picking_id', '=', pick.id)])
     partial_datas={}
     for move in pick.move_lines:
         partial_datas['move%s'%(move.id)]= {
           'quantity': move.product_qty,
           'product_uom': move.product_uom.id,
           'prodlot_id': move.prodlot_id and move.prodlot_id.id or False,
-          'wizard_id': partial_move_id,
+          'wizard_id': ref('stock_partial_move_0'),
         }
-    self.do_partial(cr, uid, [partial_move_id],partial_datas,{"lang": 'en_US', "default_location_dest_id": ref("stock.stock_location_shop0"), "active_model":
-      "stock.move", "search_default_receive": 1, 'product_receive': True, "default_location_id": ref("stock.stock_location_suppliers"),"active_ids": search_id, "tz": False, "active_id":search_id[0]})
-
+    context = {"lang": 'en_US', "default_location_dest_id": ref("stock.stock_location_shop0"),
+     "active_model": "stock.move", "search_default_receive": 1, 'product_receive': True, "default_location_id": ref("stock.stock_location_suppliers"),"active_ids": search_id, "tz": False, "active_id":search_id[0]}
+    self.fields_view_get(cr, uid, False,"form", context)
+    self.do_partial(cr, uid, [ref('stock_partial_move_0')], context)
     
