@@ -2786,44 +2786,44 @@ class wizard_multi_charts_accounts(osv.osv_memory):
 
         #create all the tax
         tax_template_to_tax = {}
-        for tax in obj_multi.chart_template_id.tax_template_ids:
-            #Tax template must be installable True to create Tax object
-            if tax.installable:
-                #create it
-                vals_tax = {
-                    'name':tax.name,
-                    'sequence': tax.sequence,
-                    'amount':tax.amount,
-                    'type':tax.type,
-                    'applicable_type': tax.applicable_type,
-                    'domain':tax.domain,
-                    'parent_id': tax.parent_id and ((tax.parent_id.id in tax_template_ref) and tax_template_ref[tax.parent_id.id]) or False,
-                    'child_depend': tax.child_depend,
-                    'python_compute': tax.python_compute,
-                    'python_compute_inv': tax.python_compute_inv,
-                    'python_applicable': tax.python_applicable,
-                    'base_code_id': tax.base_code_id and ((tax.base_code_id.id in tax_code_template_ref) and tax_code_template_ref[tax.base_code_id.id]) or False,
-                    'tax_code_id': tax.tax_code_id and ((tax.tax_code_id.id in tax_code_template_ref) and tax_code_template_ref[tax.tax_code_id.id]) or False,
-                    'base_sign': tax.base_sign,
-                    'tax_sign': tax.tax_sign,
-                    'ref_base_code_id': tax.ref_base_code_id and ((tax.ref_base_code_id.id in tax_code_template_ref) and tax_code_template_ref[tax.ref_base_code_id.id]) or False,
-                    'ref_tax_code_id': tax.ref_tax_code_id and ((tax.ref_tax_code_id.id in tax_code_template_ref) and tax_code_template_ref[tax.ref_tax_code_id.id]) or False,
-                    'ref_base_sign': tax.ref_base_sign,
-                    'ref_tax_sign': tax.ref_tax_sign,
-                    'include_base_amount': tax.include_base_amount,
-                    'description':tax.description,
-                    'company_id': company_id,
-                    'type_tax_use': tax.type_tax_use,
-                    'price_include': tax.price_include
-                }
-                new_tax = obj_acc_tax.create(cr, uid, vals_tax)
-                tax_template_to_tax[tax.id] = new_tax
-                #as the accounts have not been created yet, we have to wait before filling these fields
-                todo_dict[new_tax] = {
-                    'account_collected_id': tax.account_collected_id and tax.account_collected_id.id or False,
-                    'account_paid_id': tax.account_paid_id and tax.account_paid_id.id or False,
-                }
-                tax_template_ref[tax.id] = new_tax
+        tax_templates_load = [x for x in obj_multi.chart_template_id.tax_template_ids if x.installable]
+        #Tax template must be installable True to create Tax object
+        for tax in tax_templates_load:
+            #create it
+            vals_tax = {
+                'name':tax.name,
+                'sequence': tax.sequence,
+                'amount':tax.amount,
+                'type':tax.type,
+                'applicable_type': tax.applicable_type,
+                'domain':tax.domain,
+                'parent_id': tax.parent_id and ((tax.parent_id.id in tax_template_ref) and tax_template_ref[tax.parent_id.id]) or False,
+                'child_depend': tax.child_depend,
+                'python_compute': tax.python_compute,
+                'python_compute_inv': tax.python_compute_inv,
+                'python_applicable': tax.python_applicable,
+                'base_code_id': tax.base_code_id and ((tax.base_code_id.id in tax_code_template_ref) and tax_code_template_ref[tax.base_code_id.id]) or False,
+                'tax_code_id': tax.tax_code_id and ((tax.tax_code_id.id in tax_code_template_ref) and tax_code_template_ref[tax.tax_code_id.id]) or False,
+                'base_sign': tax.base_sign,
+                'tax_sign': tax.tax_sign,
+                'ref_base_code_id': tax.ref_base_code_id and ((tax.ref_base_code_id.id in tax_code_template_ref) and tax_code_template_ref[tax.ref_base_code_id.id]) or False,
+                'ref_tax_code_id': tax.ref_tax_code_id and ((tax.ref_tax_code_id.id in tax_code_template_ref) and tax_code_template_ref[tax.ref_tax_code_id.id]) or False,
+                'ref_base_sign': tax.ref_base_sign,
+                'ref_tax_sign': tax.ref_tax_sign,
+                'include_base_amount': tax.include_base_amount,
+                'description':tax.description,
+                'company_id': company_id,
+                'type_tax_use': tax.type_tax_use,
+                'price_include': tax.price_include
+            }
+            new_tax = obj_acc_tax.create(cr, uid, vals_tax)
+            tax_template_to_tax[tax.id] = new_tax
+            #as the accounts have not been created yet, we have to wait before filling these fields
+            todo_dict[new_tax] = {
+                'account_collected_id': tax.account_collected_id and tax.account_collected_id.id or False,
+                'account_paid_id': tax.account_paid_id and tax.account_paid_id.id or False,
+            }
+            tax_template_ref[tax.id] = new_tax
         #deactivate the parent_store functionnality on account_account for rapidity purpose
         ctx = context and context.copy() or {}
         ctx['defer_parent_store_computation'] = True
