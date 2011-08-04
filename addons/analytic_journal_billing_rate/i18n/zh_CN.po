@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-03 16:56+0000\n"
-"PO-Revision-Date: 2011-07-14 17:27+0000\n"
-"Last-Translator: Jeff Wang <wjfonhand@hotmail.com>\n"
+"PO-Revision-Date: 2011-08-03 19:45+0000\n"
+"Last-Translator: openerp-china.black-jack <onetimespeed@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-07-15 05:53+0000\n"
-"X-Generator: Launchpad (build 13405)\n"
+"X-Launchpad-Export-Date: 2011-08-04 05:14+0000\n"
+"X-Generator: Launchpad (build 13573)\n"
 
 #. module: analytic_journal_billing_rate
 #: model:ir.module.module,description:analytic_journal_billing_rate.module_meta_information
@@ -34,15 +34,14 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"    此模块允许你输入某个用户默认的工时价格。常用于员工输入计工单，此价格会默认填充对应字段，当然，可以修改。\n"
-"如果没有定义默认价格，则默认值会从产品数据去取这样此模块与原有的配置兼容。\n"
+"    这模块允许您定义辅助核算项目的指定账簿的默认开票税率，这主要用在用户记工单：这值自动检索和填上。。但可以修改。\n"
 "\n"
 "    "
 
 #. module: analytic_journal_billing_rate
 #: field:analytic_journal_rate_grid,journal_id:0
 msgid "Analytic Journal"
-msgstr "辅助核算记录集合"
+msgstr "辅助核算账薄"
 
 #. module: analytic_journal_billing_rate
 #: model:ir.model,name:analytic_journal_billing_rate.model_account_invoice
@@ -52,7 +51,7 @@ msgstr "发票"
 #. module: analytic_journal_billing_rate
 #: view:analytic_journal_rate_grid:0
 msgid "Billing Rate per Journal for this Analytic Account"
-msgstr "辅助核算记录集合中每个记录集合的开单税率"
+msgstr "辅助核算项目每个账簿的开单税率"
 
 #. module: analytic_journal_billing_rate
 #: field:analytic_journal_rate_grid,account_id:0
@@ -63,19 +62,19 @@ msgstr "辅助核算项"
 #. module: analytic_journal_billing_rate
 #: model:ir.model,name:analytic_journal_billing_rate.model_analytic_journal_rate_grid
 msgid "Relation table between journals and billing rates"
-msgstr "记录集合和开票税率的关系表"
+msgstr "账簿和开票税率的关系表"
 
 #. module: analytic_journal_billing_rate
 #: field:account.analytic.account,journal_rate_ids:0
 msgid "Invoicing Rate per Journal"
-msgstr "每个记录集合的的开票税率"
+msgstr "每个账簿的开票税率"
 
 #. module: analytic_journal_billing_rate
 #: model:ir.module.module,shortdesc:analytic_journal_billing_rate.module_meta_information
 msgid ""
 "Analytic Journal Billing Rate, Define the default invoicing rate for a "
 "specific journal"
-msgstr "辅助核算分类账发票费率，为特定辅助核算分类账定义默认发票费率。"
+msgstr "辅助核算账簿的开票税率，为特定辅助核算账簿定义默认开票税率。"
 
 #. module: analytic_journal_billing_rate
 #: constraint:account.analytic.account:0
