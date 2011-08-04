@@ -19,9 +19,9 @@
                 <xpath expr="//button[@string='Install Modules']" position="attributes">
                     <attribute name="string">Configure</attribute>
                 </xpath>
-                <xpath expr='//separator[@string="vsep"]' position='attributes'>
-                    <attribute name='rowspan'>23</attribute>
-                    <attribute name='string'></attribute>
+                <xpath expr="//separator[@string=&quot;vsep&quot;]" position="attributes">
+                    <attribute name="rowspan">23</attribute>
+                    <attribute name="string"/>
                 </xpath>
                 <group colspan="8">
                     <group colspan="4" width="600">
@@ -52,7 +52,7 @@
                 <data>
                     <xpath expr="//group[@name='account_accountant']" position="replace">
                     <newline/>
-                    <separator  string="Accounting &amp; Finance Features" colspan="4" />
+                    <separator string="Accounting &amp; Finance Features" colspan="4"/>
                     <field name="account_followup"/>
                     <field name="account_payment"/>
                     <field name="account_analytic_plans"/>
@@ -82,8 +82,7 @@
             <field name="action_id" ref="action_account_configuration_installer"/>
             <field name="category_id" ref="category_accounting_configuration"/>
             <field name="sequence">3</field>
-            <field name="type">normal</field>
-            <field name="state">open</field>
+            <field name="type">automatic</field>
         </record>
 
     </data>
