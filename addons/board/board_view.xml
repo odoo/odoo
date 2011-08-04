@@ -24,11 +24,14 @@
             <field eval="1" name="priority"/>
             <field name="arch" type="xml">
                 <form string="Dashboard">
-                    <field name="name"/>
-                    <button colspan="2"
-                        name="%(action_board_menu_create)d"
-                        string="Create Menu" type="action"
-                        icon="gtk-justify-fill" />
+                    <group col="6" colspan="4">
+                        <field name="name"/>
+                        <field name="view_id"/>
+                        <button colspan="2"
+                            name="%(action_board_menu_create)d"
+                            string="Create Menu" type="action"
+                            icon="gtk-justify-fill" />
+                    </group>
                     <field colspan="4" name="line_ids" nolabel="1">
                         <tree string="Dashboard View">
                             <field name="name"/>
@@ -74,7 +77,7 @@
 
         <menuitem
             action="action_view_board_list_form"
-            id="menu_view_board_form" parent="base.reporting_menu" sequence="1"/>
+            id="menu_view_board_form" parent="base.reporting_menu" groups="base.group_no_one" sequence="1"/>
 
         <act_window context="{'view': active_id}" id="dashboard_open"
             multi="True" name="Open Dashboard" res_model="board.board"
