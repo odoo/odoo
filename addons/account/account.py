@@ -2538,6 +2538,7 @@ class account_tax_template(osv.osv):
         'description': fields.char('Internal Name', size=32),
         'type_tax_use': fields.selection([('sale','Sale'),('purchase','Purchase'),('all','All')], 'Tax Use In', required=True,),
         'price_include': fields.boolean('Tax Included in Price', help="Check this if the price you use on the product and invoices includes this tax."),
+        'installable': fields.boolean('Should be Installed', help="Set this to False if you do not want to create real tax object from this template.")
     }
 
     def name_get(self, cr, uid, ids, context=None):
@@ -2569,6 +2570,7 @@ class account_tax_template(osv.osv):
         'include_base_amount': False,
         'type_tax_use': 'all',
         'price_include': 0,
+        'installable': True
     }
     _order = 'sequence'
 
@@ -2760,6 +2762,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                                             'ref_base_code_id': new_tax_code_temp,
                                             'ref_tax_code_id': new_paid_tax_code_temp,
                                             'type_tax_use': tax_type,
+                                            'installable': True,
                                             'type': 'percent',
                                             'sequence': 0,
                                             'chart_template_id': obj_multi.chart_template_id.id or False,
@@ -2783,7 +2786,9 @@ class wizard_multi_charts_accounts(osv.osv_memory):
 
         #create all the tax
         tax_template_to_tax = {}
-        for tax in obj_multi.chart_template_id.tax_template_ids:
+        tax_templates_load = [x for x in obj_multi.chart_template_id.tax_template_ids if x.installable]
+        #Tax template must be installable True to create Tax object
+        for tax in tax_templates_load:
             #create it
             vals_tax = {
                 'name':tax.name,
@@ -3093,11 +3098,10 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                         'position_id': new_fp,
                     }
                     obj_ac_fp.create(cr, uid, vals_acc)
-
-        if obj_multi.sale_tax:
+        if obj_multi.sale_tax and tax_template_to_tax:
             ir_values_obj.set(cr, uid, key='default', key2=False, name="taxes_id", company=obj_multi.company_id.id,
                             models =[('product.product',False)], value=[tax_template_to_tax[obj_multi.sale_tax.id]])
-        if obj_multi.purchase_tax:
+        if obj_multi.purchase_tax and tax_template_to_tax:
             ir_values_obj.set(cr, uid, key='default', key2=False, name="supplier_taxes_id", company=obj_multi.company_id.id,
                             models =[('product.product',False)], value=[tax_template_to_tax[obj_multi.purchase_tax.id]])
 
