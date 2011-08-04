@@ -53,6 +53,7 @@ class report_pl_account_horizontal(report_sxw.rml_parse, common_report_header):
             'get_end_date':self._get_end_date,
             'get_company':self._get_company,
             'get_target_move': self._get_target_move,
+            'get_trans':self._get_trans
         })
         self.context = context
 
@@ -79,6 +80,9 @@ class report_pl_account_horizontal(report_sxw.rml_parse, common_report_header):
             self.result_sum_cr += self.res_pl['balance']
         return self.result_sum_cr
 
+    def _get_trans(self, source):
+        return _(source)
+    
     def get_data(self, data):
         cr, uid = self.cr, self.uid
         db_pool = pooler.get_pool(self.cr.dbname)
