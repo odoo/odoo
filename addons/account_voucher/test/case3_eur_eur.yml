@@ -138,7 +138,7 @@
     res = self.onchange_partner_id(cr, uid, [], ref("res_partner_peter0"), ref('bank_journal_EUR'), 120.00, 2, ttype='receipt', date=False)
     vals = {
         'account_id': ref('account.cash'),
-        'amount': 120.0,
+        'amount': 120.00,
         'company_id': ref('base.main_company'),
         'currency_id': ref('base.EUR'),
         'journal_id': ref('bank_journal_EUR'),
@@ -154,10 +154,10 @@
     if not res['value']['line_cr_ids']:
       res['value']['line_cr_ids'] = [{'type': 'cr', 'account_id': ref('account.a_recv'),}]
     for item in res['value']['line_cr_ids']:
-        if item['amount_unreconciled'] == 150:
-            item['amount'] = 100
+        if item['amount_unreconciled'] == 150.00:
+            item['amount'] = 100.00
         else:
-            item['amount'] = 20
+            item['amount'] = 20.00
     vals['line_cr_ids'] = [(0,0,i) for i in res['value']['line_cr_ids']]
     id = self.create(cr, uid, vals)
     voucher_id = self.browse(cr, uid, id)
@@ -168,14 +168,14 @@
   !python {model: account.voucher}: |
     voucher = self.search(cr, uid, [('name', '=', 'First payment'),('partner_id', '=', ref('res_partner_peter0'))])
     voucher_id = self.browse(cr, uid, voucher[0])
-    assert (voucher_id.writeoff_amount == 0), "writeoff amount is not 0"
+    assert (voucher_id.writeoff_amount == 0.00), "Writeoff amount is not 0.00"
 -
   I check that currency rate difference is 0.00
 -
   !python {model: account.voucher}: |
     voucher = self.search(cr, uid, [('name', '=', 'First payment'),('partner_id', '=', ref('res_partner_peter0'))])
     voucher_id = self.browse(cr, uid, voucher[0])
-    assert (voucher_id.currency_rate_difference == 0.00), "currency rate difference is not 0.00"
+    assert (voucher_id.currency_rate_difference == 0.00), "Currency rate difference is not 0.00"
 -
   I confirm the voucher
 -
@@ -205,9 +205,9 @@
     move_line_obj = self.pool.get('account.move.line')
     move_lines = move_line_obj.search(cr, uid, [('move_id', '=', voucher_id.move_id.id)])
     for move_line in move_line_obj.browse(cr, uid, move_lines):
-        if move_line.credit == 20:
+        if move_line.credit == 20.00:
             assert move_line.amount_currency == 0.00, "Debtor account has wrong entry."
-        elif move_line.credit == 100:
+        elif move_line.credit == 100.00:
             assert move_line.amount_currency == 0.00, "Debtor account has wrong entry."
 -
   I check the residual amount of Invoice1 is 50
@@ -234,10 +234,10 @@
   !python {model: account.voucher}: |
     import netsvc, time
     vals = {}
-    res = self.onchange_partner_id(cr, uid, [], ref("res_partner_peter0"), ref('bank_journal_EUR'), 120.0, 2, ttype='receipt', date=False)
+    res = self.onchange_partner_id(cr, uid, [], ref("res_partner_peter0"), ref('bank_journal_EUR'), 120.00, 2, ttype='receipt', date=False)
     vals = {
         'account_id': ref('account.cash'),
-        'amount': 120.0,
+        'amount': 120.00,
         'company_id': ref('base.main_company'),
         'currency_id': ref('base.EUR'),
         'journal_id': ref('bank_journal_EUR'),
@@ -267,15 +267,14 @@
   !python {model: account.voucher}: |
     voucher = self.search(cr, uid, [('name', '=', 'Second payment'),('partner_id', '=', ref('res_partner_peter0'))])
     voucher_id = self.browse(cr, uid, voucher[0])
-    assert (voucher_id.writeoff_amount == 0.00), "writeoff amount is not 0"
+    assert (voucher_id.writeoff_amount == 0.00), "Writeoff amount is not 0"
 -
   I check that currency rate difference is 0.00
 -
   !python {model: account.voucher}: |
     voucher = self.search(cr, uid, [('name', '=', 'Second payment'), ('partner_id', '=', ref('res_partner_peter0'))])
     voucher_id = self.browse(cr, uid, voucher[0])
-    curr_diff = voucher_id.currency_rate_difference
-    assert (voucher_id.currency_rate_difference == curr_diff), "currency rate difference is not 0"
+    assert (voucher_id.currency_rate_difference == 0.00), "Currency rate difference is not 0"
 -
   I confirm the voucher
 -

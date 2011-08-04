@@ -1,10 +1,12 @@
 -
   I create a currency rate for USD for january of 1.333333
 -
-  !record {model: res.currency.rate, id: janu_usd}:
-    currency_id: base.USD
-    name: !eval "'%s-01-01' %(datetime.now().year)"
-    rate: 1.333333
+  !python {model: res.currency.rate}: |
+    from datetime import datetime
+    curr_id = self.pool.get('res.currency').search(cr, uid, [('name', '=', 'USD')])
+    date = '%s-01-01' %(datetime.now().year)
+    ids = self.search(cr, uid, [('currency_id', '=', curr_id), ('name', '=', date)])
+    self.write(cr, uid, ids, {'rate': 1.333333})
 -
   I create a currency rate for USD for february of 1.250000
 -
@@ -168,28 +170,28 @@
     if not res['value']['line_cr_ids']:
       res['value']['line_cr_ids'] = [{'type': 'cr', 'account_id': ref('account.a_recv'),}]
     for item in res['value']['line_cr_ids']:
-        if item['amount_unreconciled'] == 200:
-            item['amount'] = 180
+        if item['amount_unreconciled'] == 200.00:
+            item['amount'] = 180.00
         else:
-            item['amount'] = 70
+            item['amount'] = 70.00
     vals['line_cr_ids'] = [(0,0,i) for i in res['value']['line_cr_ids']]
     id = self.create(cr, uid, vals)
     voucher_id = self.browse(cr, uid, id)
     assert (voucher_id.state=='draft'), "Voucher is not in draft state"
 -
-  I check that writeoff amount computed is 15
+  I check that writeoff amount computed is 15.0
 -
   !python {model: account.voucher}: |
     voucher = self.search(cr, uid, [('name', '=', 'First payment'), ('partner_id', '=', ref('res_partner_michael0'))])
     voucher_id = self.browse(cr, uid, voucher[0])
-    assert (voucher_id.writeoff_amount == 15), "writeoff amount is not 15"
+    assert (voucher_id.writeoff_amount == 15.0), "Writeoff amount is not 15.0"
 -
-  I check that currency rate difference is -34
+  I check that currency rate difference is -34.0
 -
   !python {model: account.voucher}: |
     voucher = self.search(cr, uid, [('name', '=', 'First payment'), ('partner_id', '=', ref('res_partner_michael0'))])
     voucher_id = self.browse(cr, uid, voucher[0])
-    assert (voucher_id.currency_rate_difference == -34), "currency rate difference is not -34"
+    assert (voucher_id.currency_rate_difference == -34.0), "Currency rate difference is not -34.0"
 -
   I confirm the voucher
 -
@@ -223,11 +225,11 @@
     move_line_obj = self.pool.get('account.move.line')
     move_lines = move_line_obj.search(cr, uid, [('move_id', '=', voucher_id.move_id.id)])
     for move_line in move_line_obj.browse(cr, uid, move_lines):
-        if move_line.amount_currency == -180:
-            assert move_line.credit == 135, "Debtor account has wrong entry."
-        elif move_line.amount_currency == -70:
+        if move_line.amount_currency == -180.00:
+            assert move_line.credit == 135.00, "Debtor account has wrong entry."
+        elif move_line.amount_currency == -70.00:
             assert move_line.credit == 56.00, "Debtor account has wrong entry."
-        elif move_line.credit == 34:
+        elif move_line.credit == 34.00:
             assert move_line.amount_currency == 0.00, "Incorrect Currency Difference."
         elif move_line.credit == 15.00:
             assert move_line.amount_currency == 0.00, "Writeoff amount is wrong."
@@ -275,28 +277,28 @@
     if not res['value']['line_cr_ids']:
       res['value']['line_cr_ids'] = [{'type': 'cr', 'account_id': ref('account.a_recv'),}]
     for item in res['value']['line_cr_ids']:
-        if item['amount_unreconciled'] == 20:
-            item['amount'] = 20
+        if item['amount_unreconciled'] == 20.00:
+            item['amount'] = 20.00
         else:
-            item['amount'] = 30
+            item['amount'] = 30.00
     vals['line_cr_ids'] = [(0,0,i) for i in res['value']['line_cr_ids']]
     id = self.create(cr, uid, vals)
     voucher_id = self.browse(cr, uid, id)
     assert (voucher_id.state=='draft'), "Voucher is not in draft state"
 -
-  I check that writeoff amount computed is -5
+  I check that writeoff amount computed is -5.0
 -
   !python {model: account.voucher}: |
     voucher = self.search(cr, uid, [('name', '=', 'Second payment'), ('partner_id', '=', ref('res_partner_michael0'))])
     voucher_id = self.browse(cr, uid, voucher[0])
-    assert (voucher_id.writeoff_amount == -5), "writeoff amount is not -5"
+    assert (voucher_id.writeoff_amount == -5.0), "Writeoff amount is not -5.0"
 -
   I check that currency rate difference is -8.50
 -
   !python {model: account.voucher}: |
     voucher = self.search(cr, uid, [('name', '=', 'Second payment'), ('partner_id', '=', ref('res_partner_michael0'))])
     voucher_id = self.browse(cr, uid, voucher[0])
-    assert (voucher_id.currency_rate_difference == -8.50), "currency rate difference is not -8.50"
+    assert (voucher_id.currency_rate_difference == -8.50), "Currency rate difference is not -8.50"
 -
   I confirm the voucher
 -
@@ -327,13 +329,13 @@
     move_line_obj = self.pool.get('account.move.line')
     move_lines = move_line_obj.search(cr, uid, [('move_id', '=', voucher_id.move_id.id)])
     for move_line in move_line_obj.browse(cr, uid, move_lines):
-        if move_line.amount_currency == -20:
-            assert move_line.credit == 15, "Debtor account has wrong entry."
-        elif move_line.amount_currency == -30:
-            assert move_line.credit == 24, "Debtor account has wrong entry."
-        elif move_line.credit == 8.5:
+        if move_line.amount_currency == -20.00:
+            assert move_line.credit == 15.00, "Debtor account has wrong entry."
+        elif move_line.amount_currency == -30.00:
+            assert move_line.credit == 24.00, "Debtor account has wrong entry."
+        elif move_line.credit == 8.50:
             assert move_line.amount_currency == 0.00, "Incorrect Currency Difference."
-        elif move_line.amount_currency == 5:
+        elif move_line.amount_currency == 5.00:
             assert move_line.debit == 4.75, "Writeoff amount is wrong."
 -
   I check the residual amount of invoice 1, should be 0 in residual currency and 0 in amount_residual and paid
