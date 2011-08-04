@@ -155,11 +155,11 @@ class account_voucher(osv.osv):
         for l in line_dr_ids:
             real_amount -= l.get('amount_in_company_currency', 0.0)
             counter_for_writeoff -= currency_pool.compute(cr, uid, l['company_currency_id'], l['voucher_currency_id'], l.get('amount_in_company_currency',0.0), context=ctx)
-            counter_for_currency_diff -= currency_pool.compute(cr, uid, l['currency_id'], l['company_currency_id'], l['amount'], context=ctx) 
+            counter_for_currency_diff -= currency_pool.compute(cr, uid, l['currency_id'], l['company_currency_id'], l['amount'], context=ctx)
         for l in line_cr_ids:
             real_amount += l.get('amount_in_company_currency', 0.0)
             counter_for_writeoff += currency_pool.compute(cr, uid, l['company_currency_id'], l['voucher_currency_id'], l.get('amount_in_company_currency',0.0), context=ctx)
-            counter_for_currency_diff += currency_pool.compute(cr, uid, l['currency_id'], l['company_currency_id'], l['amount'], context=ctx) 
+            counter_for_currency_diff += currency_pool.compute(cr, uid, l['currency_id'], l['company_currency_id'], l['amount'], context=ctx)
         writeoff_amount = amount - counter_for_writeoff
         currency_rate_difference = real_amount - counter_for_currency_diff
         return writeoff_amount, currency_rate_difference
@@ -170,7 +170,7 @@ class account_voucher(osv.osv):
         line_osv = self.pool.get("account.voucher.line")
         line_dr_ids = resolve_o2m_operations(cr, uid, line_osv, line_dr_ids, ['amount'], context)
         line_cr_ids = resolve_o2m_operations(cr, uid, line_osv, line_cr_ids, ['amount'], context)
-        writeoff_amount, currency_rate_diff = self._compute_writeoff_amount(cr, uid, line_dr_ids, line_cr_ids, amount, voucher_date, context=context) 
+        writeoff_amount, currency_rate_diff = self._compute_writeoff_amount(cr, uid, line_dr_ids, line_cr_ids, amount, voucher_date, context=context)
         return {'value': {'writeoff_amount': writeoff_amount,}}# 'currency_rate_difference': currency_rate_diff}}
 
     def _get_writeoff_amount(self, cr, uid, ids, name, args, context=None):
@@ -188,15 +188,15 @@ class account_voucher(osv.osv):
                 counter_for_writeoff -= (l.voucher_currency_id.id == l.company_currency_id.id) and l.amount_in_company_currency or l.amount_in_voucher_currency
                 #ctx.update({'date': l.date_original})
                 #counter_for_writeoff -= currency_pool.compute(cr, uid, voucher.company_id.currency_id.id, voucher.currency_id.id, l.amount_in_company_currency, context=ctx)
-                counter_for_currency_diff -= currency_pool.compute(cr, uid, l.currency_id.id, voucher.company_id.currency_id.id, l.amount, context=ctx) 
+                counter_for_currency_diff -= currency_pool.compute(cr, uid, l.currency_id.id, voucher.company_id.currency_id.id, l.amount, context=ctx)
             for l in voucher.line_cr_ids:
                 real_amount += l.amount_in_company_currency
                 counter_for_writeoff += (l.voucher_currency_id.id == l.company_currency_id.id) and l.amount_in_company_currency or l.amount_in_voucher_currency
                 #ctx.update({'date': l.date_original})
                 #counter_for_writeoff += currency_pool.compute(cr, uid, voucher.company_id.currency_id.id, voucher.currency_id.id, l.amount_in_company_currency, context=ctx)
-                counter_for_currency_diff += currency_pool.compute(cr, uid, l.currency_id.id, voucher.company_id.currency_id.id, l.amount, context=ctx) 
+                counter_for_currency_diff += currency_pool.compute(cr, uid, l.currency_id.id, voucher.company_id.currency_id.id, l.amount, context=ctx)
             writeoff_amount = voucher.amount - counter_for_writeoff
-            res[voucher.id]['writeoff_amount'] = writeoff_amount 
+            res[voucher.id]['writeoff_amount'] = writeoff_amount
             res[voucher.id]['currency_rate_difference'] = real_amount - counter_for_currency_diff
         return res
 
@@ -548,9 +548,9 @@ class account_voucher(osv.osv):
                 'move_line_id':line.id,
                 'account_id':line.account_id.id,
                 'amount_original': amount_original,
-                'amount': (move_line_found == line.id) and min(price, amount_unreconciled) or 0.0, 
+                'amount': (move_line_found == line.id) and min(price, amount_unreconciled) or 0.0,
                 'currency_id': currency_id,
-                'voucher_currency_id': voucher_currency_id, 
+                'voucher_currency_id': voucher_currency_id,
                 'date_original':line.date,
                 'company_currency_id': line.company_id.currency_id.id,
                 'date_due':line.date_maturity,
@@ -777,7 +777,7 @@ class account_voucher(osv.osv):
                     account_id = voucher.company_id.property_income_currency_exchange
                     if not account_id:
                         raise osv.except_osv(_('Warning'),_("Unable to create accounting entry for currency rate difference. You have to configure the field 'Expense Currency Rate' on the company! "))
-                
+
                 currency_diff_line = {
                     'name': _('Currency Difference'),
                     'debit': voucher.currency_rate_difference > 0 and voucher.currency_rate_difference or 0.0,
@@ -844,7 +844,7 @@ class account_voucher(osv.osv):
 
             if not currency_pool.is_zero(cr, uid, voucher.currency_id, voucher.writeoff_amount):
                 #create one line for the write off if needed
-                diff = currency_pool.compute(cr, uid, voucher_currency, company_currency, voucher.writeoff_amount, context=context_multi_currency) 
+                diff = currency_pool.compute(cr, uid, voucher_currency, company_currency, voucher.writeoff_amount, context=context_multi_currency)
                 account_id = False
                 write_off_name = ''
                 if voucher.payment_option == 'with_writeoff':
@@ -950,7 +950,7 @@ class account_voucher_line(osv.osv):
     def _get_amount_in_company_currency(self, cr, uid, ids, name, args, context=None):
         res = {}
         for line in self.browse(cr, uid, ids, context=context):
-            amount_in_company_currency, amount_in_voucher_currency = self.__company_currency_amount(cr, uid, line, line.amount, context=context) 
+            amount_in_company_currency, amount_in_voucher_currency = self.__company_currency_amount(cr, uid, line, line.amount, context=context)
             res[line.id] = {
                  'amount_in_company_currency': amount_in_company_currency,
                  'amount_in_voucher_currency': amount_in_voucher_currency,
@@ -959,7 +959,7 @@ class account_voucher_line(osv.osv):
 
     _columns = {
         'voucher_id':fields.many2one('account.voucher', 'Voucher', required=1, ondelete='cascade'),
-        'move_line_id': fields.many2one('account.move.line', 'Journal Item', required=True),
+        'move_line_id': fields.many2one('account.move.line', 'Journal Item'),
         'type':fields.selection([('dr','Debit'),('cr','Credit')], 'Dr/Cr'),
         'name':fields.char('Description', size=256),
         'account_id':fields.many2one('account.account','Account', required=True),
@@ -972,8 +972,8 @@ class account_voucher_line(osv.osv):
         'voucher_currency_id': fields.related('voucher_id', 'currency_id', type='many2one', relation='res.currency', string="Voucher Currency"),
 
         'amount':fields.float('Amount', digits_compute=dp.get_precision('Account')),
-        'amount_in_company_currency': fields.function(_get_amount_in_company_currency, string='Amount in Company Currency', type='float', digits_compute=dp.get_precision('Account'), multi="voucher_line_amount"), 
-        'amount_in_voucher_currency': fields.function(_get_amount_in_company_currency, string='Amount in Voucher Currency', type='float', digits_compute=dp.get_precision('Account'), multi="voucher_line_amount"), 
+        'amount_in_company_currency': fields.function(_get_amount_in_company_currency, string='Amount in Company Currency', type='float', digits_compute=dp.get_precision('Account'), multi="voucher_line_amount"),
+        'amount_in_voucher_currency': fields.function(_get_amount_in_company_currency, string='Amount in Voucher Currency', type='float', digits_compute=dp.get_precision('Account'), multi="voucher_line_amount"),
 
         'date_original': fields.related('move_line_id','date', type='date', relation='account.move.line', string='Date', readonly=1),
         'date_due': fields.related('move_line_id','date_maturity', type='date', relation='account.move.line', string='Due Date', readonly=1),

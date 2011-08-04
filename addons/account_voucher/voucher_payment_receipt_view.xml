@@ -108,7 +108,7 @@
                         <page string="Payment Information">
                             <field name="line_dr_ids" attrs="{'invisible': [('type', '=', 'receipt')]}" default_get="{'journal_id':journal_id, 'type':type, 'partner_id':partner_id}" colspan="4" nolabel="1" height="140" on_change="onchange_line_ids(line_dr_ids, line_cr_ids, amount)">
                                 <tree string="Open Supplier Journal Entries" editable="bottom">
-                                    <field name="move_line_id" context="{'journal_id':parent.journal_id, 'partner_id':parent.partner_id}"
+                                    <field name="move_line_id" required="1" context="{'journal_id':parent.journal_id, 'partner_id':parent.partner_id}"
                                         on_change="onchange_move_line_id(move_line_id)"
                                         domain="[('account_id.type','=','payable'), ('reconcile_id','=', False), ('partner_id','=',parent.partner_id)]"
                                         />
@@ -122,7 +122,7 @@
                             </field>
                             <field name="line_cr_ids" colspan="4" nolabel="1" attrs="{'invisible': [('type', '=', 'payment')]}" default_get="{'journal_id':journal_id, 'partner_id':partner_id}" on_change="onchange_line_ids(line_dr_ids, line_cr_ids, amount)">
                                 <tree string="Open Customer Journal Entries" editable="bottom">
-                                    <field name="move_line_id"/>
+                                    <field name="move_line_id" required="1"/>
                                     <field name="account_id" groups="base.group_extended" domain="[('type','=','receivable')]"/>
                                     <field name="date_original"/>
                                     <field name="amount_original"/>
@@ -173,7 +173,7 @@
                         <page string="Payment Information">
                             <field name="line_dr_ids" default_get="{'journal_id':journal_id, 'type':type, 'partner_id':partner_id}" colspan="4" nolabel="1" height="140">
                                 <tree string="Supplier Invoices and Outstanding transactions" editable="bottom">
-                                    <field name="move_line_id" context="{'journal_id':parent.journal_id, 'partner_id':parent.partner_id}"
+                                    <field name="move_line_id" required="1" context="{'journal_id':parent.journal_id, 'partner_id':parent.partner_id}"
                                         on_change="onchange_move_line_id(move_line_id)"
                                         domain="[('account_id.type','=','payable'), ('reconcile_id','=', False), ('partner_id','=',parent.partner_id)]"
                                         />
@@ -187,7 +187,7 @@
                             </field>
                             <field name="line_cr_ids" colspan="4" nolabel="1" attrs="{'invisible': [('pre_line','=',False)]}" default_get="{'journal_id':journal_id, 'partner_id':partner_id}">
                                 <tree string="Credits" editable="bottom">
-                                    <field name="move_line_id"/>
+                                    <field name="move_line_id" required="1"/>
                                     <field name="account_id" groups="base.group_extended" domain="[('type','=','receivable')]"/>
                                     <field name="date_original"/>
                                     <field name="amount_original"/>
@@ -306,7 +306,7 @@
                         <field name="reference" colspan="4" select="1" invisible="context.get('line_type', False)" string="Payment Ref"/>
                         <field name="name" colspan="4" invisible="context.get('line_type', False)"/>
                         <field name="company_id" colspan="4" widget="selection" groups="base.group_multi_company"/>
-                        <field name="account_id" colspan="4" 
+                        <field name="account_id" colspan="4"
                             widget="selection"
                             invisible="True"/>
                         <field name="pre_line" colspan="4" invisible="1"/>
@@ -316,7 +316,7 @@
                         <page string="Payment Information">
                             <field name="line_cr_ids" default_get="{'journal_id':journal_id, 'type':type, 'partner_id':partner_id}" colspan="4" nolabel="1" height="140" on_change="onchange_line_ids(line_dr_ids, line_cr_ids, amount, date)">
                                 <tree string="Invoices and outstanding transactions" editable="bottom">
-                                    <field name="move_line_id" context="{'journal_id':parent.journal_id, 'partner_id':parent.partner_id}"
+                                    <field name="move_line_id" required="1" context="{'journal_id':parent.journal_id, 'partner_id':parent.partner_id}"
                                         on_change="onchange_move_line_id(move_line_id)"
                                         domain="[('account_id.type','in',('receivable','payable')), ('reconcile_id','=', False), ('partner_id','=',parent.partner_id)]"
                                         />
@@ -335,7 +335,7 @@
                             </field>
                             <field name="line_dr_ids" colspan="4" nolabel="1" attrs="{'invisible': [('pre_line','=',False)]}" default_get="{'journal_id':journal_id, 'partner_id':partner_id}" on_change="onchange_line_ids(line_dr_ids, line_cr_ids, amount, date)">
                                 <tree string="Credits" editable="bottom">
-                                    <field name="move_line_id" context="{'journal_id':parent.journal_id, 'partner_id':parent.partner_id}"
+                                    <field name="move_line_id" required="1" context="{'journal_id':parent.journal_id, 'partner_id':parent.partner_id}"
                                         on_change="onchange_move_line_id(move_line_id)"
                                         domain="[('account_id.type','in',('receivable','payable')), ('reconcile_id','=', False), ('partner_id','=',parent.partner_id)]"
                                         />
