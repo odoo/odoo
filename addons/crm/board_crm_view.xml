@@ -33,7 +33,7 @@
             <field name="arch" type="xml">
                 <tree string="Opportunities"  colors="blue:state=='pending';grey:state in ('cancel', 'done');red:date_deadline and (date_deadline &lt; current_date)">
                     <field name="name" string="Opportunity"/>
-                    <field name="partner_id"/>
+                    <field name="partner_id" string="Customer"/>
                     <field name="stage_id"/>
                     <button name="stage_previous" string="Previous Stage"
                         states="open,pending" type="object" icon="gtk-go-back" />
