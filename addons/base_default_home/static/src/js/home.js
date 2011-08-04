@@ -69,6 +69,9 @@ openerp.base_default_home = function (openerp) {
                     self.install_module($(this).val());
                 })
 
+            }, function (err, event) {
+                event.preventDefault();
+                return old_home.call(self);
             });
         },
         install_module: function (module_name) {
