@@ -133,7 +133,9 @@ class res_partner_bank(osv.osv):
         to_check_ids = []
         for val in self.browse(cr, uid, ids, context=context):
             if val.state=='iban':
-                res.append((val.id, _pretty_iban(val.iban or '')))
+                iban = _pretty_iban(val.iban or '')
+                bic = val.bank.bic or ''
+                res.append((val.id, _('IBAN: %s / BIC: %s') % (iban, bic)))
             else:
                 to_check_ids.append(val.id)
         res += super(res_partner_bank, self).name_get(cr, uid, to_check_ids, context=context)
