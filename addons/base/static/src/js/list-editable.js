@@ -213,6 +213,9 @@ openerp.base.list.editable = function (openerp) {
         save_row: function (edit_next) {
             var self = this;
             this.edition_form.do_save(function (result) {
+                if (result.created && !self.edition_index) {
+                    self.edition_index = self.dataset.index;
+                }
                 self.cancel_pending_edition().then(function () {
                     $(self).trigger('saved', [self.dataset]);
                     if (!edit_next) {
