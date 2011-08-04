@@ -46,9 +46,10 @@ openerp.base_kanban.KanbanView = openerp.base.View.extend({
 	            self.$element.find("#data_" + record.id).append(new_qweb.render('custom_template', record));
 	        });
         });
+        this.$element.find( ".oe_table_column " ).css("width", 99 / datas.length +"%");
 		this.$element.find(".oe_column").sortable({
 		    connectWith: ".oe_column",
-		    receive: self.on_recieve_record
+		    stop: self.on_recieve_record,
 		});
 		this.$element.find(".record").addClass("ui-widget ui-widget-content ui-helper-clearfix ui-corner-all")
 		    .find(".record-header")
@@ -63,8 +64,6 @@ openerp.base_kanban.KanbanView = openerp.base.View.extend({
 		});
 		this.$element.find('.record .ui-icon-closethick').click(this.on_close_action);
 		this.$element.find(".oe_column").disableSelection();
-		this.$element.find( ".oe_column" ).css("width", 99 / datas.length +"%");
-
     },
 
     on_close_action: function(e) {
@@ -73,7 +72,7 @@ openerp.base_kanban.KanbanView = openerp.base.View.extend({
 
     on_recieve_record: function(event, ui) {
         if(ui.item.attr("id") && this.group_by_field) {
-            var value = this.$element.find("#" + ui.item.attr("id")).closest("td").attr("id")
+            var value = ui.item.closest("td").attr("id")
             if(value) {
                 var data_val = {};
                 value = value.split("_")[1];
