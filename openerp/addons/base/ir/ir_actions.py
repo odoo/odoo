@@ -918,15 +918,15 @@ class act_client(osv.osv):
     _sequence = 'ir_actions_id_seq'
     _order = 'name'
 
-    def _get_kwargs(self, cr, uid, ids, field_name, arg, context):
+    def _get_params(self, cr, uid, ids, field_name, arg, context):
         return dict([
-            ((record.id, ast.literal_eval(record.kwargs_store))
-             if record.kwargs_store else (record.id, False))
+            ((record.id, ast.literal_eval(record.params_store))
+             if record.params_store else (record.id, False))
             for record in self.browse(cr, uid, ids, context=context)
         ])
 
-    def _set_kwargs(self, cr, uid, ids, field_name, field_value, arg, context):
-        assert isinstance(field_value, dict), "kwargs can only be dictionaries"
+    def _set_params(self, cr, uid, ids, field_name, field_value, arg, context):
+        assert isinstance(field_value, dict), "params can only be dictionaries"
         for record in self.browse(cr, uid, ids, context=context):
             record.write({field_name: repr(field_value)})
 
@@ -935,12 +935,12 @@ class act_client(osv.osv):
                            help="An arbitrary string, interpreted by the client"
                                 " according to its own needs and wishes. There "
                                 "is no central tag repository across clients."),
-        'kwargs': fields.function(_get_kwargs, fnct_inv=_set_kwargs,
+        'params': fields.function(_get_params, fnct_inv=_set_params,
                                   type='binary', method=True,
                                   string="Supplementary arguments",
                                   help="Arguments sent to the client along with"
                                        "the view tag"),
-        'kwargs_store': fields.binary("Kwargs storage", readonly=True)
+        'params_store': fields.binary("Params storage", readonly=True)
     }
     _defaults = {
         'type': 'ir.actions.client',
