@@ -315,10 +315,26 @@ openerp.base.SearchView = openerp.base.Widget.extend({
     on_invalid: function (errors) {
         this.notification.notify("Invalid Search", "triggered from search view");
     },
-    do_clear: function (e) {
-        if (e && e.preventDefault) { e.preventDefault(); }
-        this.on_clear();
-    },
+    do_clear: function () {
+		this.$element.find(':input').each(function(){
+            switch(this.type) {
+                case 'text':
+                case 'string':
+                    $(this).val('');
+                break;
+            }
+			});
+            var string = ($("div.expanded").not("#oe_app_search table:first-child .expanded"));
+		    if (string){
+            $(string).removeClass('expanded');
+            $(string).addClass('folded');
+            }
+        $('#oe_app_search table:last').css('display', 'none');
+        $('.searchview_extended_groups_list').empty();
+		$('.filter_label').removeClass('enabled');
+        this.$element.find('form').submit();       
+        
+     },
     /**
      * Triggered when the search view gets cleared
      *
