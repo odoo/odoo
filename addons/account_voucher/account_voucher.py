@@ -39,7 +39,10 @@ class account_voucher(osv.osv):
         if context is None: context = {}
         if context.get('period_id', False):
             return context.get('period_id')
-        periods = self.pool.get('account.period').find(cr, uid)
+        if context.get('invoice_id', False):
+            company_id = self.pool.get('account.invoice').browse(cr, uid, context['invoice_id'], context=context).company_id.id
+            context.update({'company_id': company_id})
+        periods = self.pool.get('account.period').find(cr, uid, context=context)
         return periods and periods[0] or False
 
     def _get_journal(self, cr, uid, context=None):
@@ -228,7 +231,7 @@ class account_voucher(osv.osv):
         'currency_id': fields.function(_currency_id, type='many2one', relation='res.currency', string='Currency', store=True, readonly=True, multi="currency"),
          #duplicated field for display purposes
         'currency_id2': fields.function(_currency_id, type='many2one', relation='res.currency', string='Currency', store=True, readonly=True, multi="currency"),
-        'company_id': fields.many2one('res.company', 'Company', required=True, readonly=True, states={'draft':[('readonly',False)]}),
+        'company_id': fields.related('journal_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True),
         'company_currency': fields.related('company_id','currency_id', type='many2one', relation='res.currency', string='Currency', readonly=True),
         'state':fields.selection(
             [('draft','Draft'),
@@ -596,9 +599,13 @@ class account_voucher(osv.osv):
         @param context: context arguments, like lang, time zone
         @return: Returns a dict which contains new values, and context
         """
+        if context is None: context = {}
         period_pool = self.pool.get('account.period')
         res = self.onchange_partner_id(cr, uid, ids, partner_id, journal_id, price, currency_id, ttype, date, context=context)
-        pids = period_pool.search(cr, uid, [('date_start', '<=', date), ('date_stop', '>=', date)])
+        if context.get('invoice_id', False):
+            company_id = self.pool.get('account.invoice').browse(cr, uid, context['invoice_id'], context=context).company_id.id
+            context.update({'company_id': company_id})
+        pids = period_pool.find(cr, uid, date, context=context)
         if pids:
             if not 'value' in res:
                 res['value'] = {}
@@ -606,6 +613,7 @@ class account_voucher(osv.osv):
         return res
 
     def onchange_journal(self, cr, uid, ids, journal_id, line_ids, tax_id, partner_id, context=None):
+        if context is None: context = {}
         if not journal_id:
             return {}
         journal_pool = self.pool.get('account.journal')
@@ -621,6 +629,9 @@ class account_voucher(osv.osv):
         if journal.currency:
             currency_id = journal.currency.id
         vals['value'].update({'currency_id':currency_id})
+        context.update({'company_id': journal.company_id.id})
+        periods = self.pool.get('account.period').find(cr, uid, context=context)
+        vals['value'].update({'period_id':periods[0]})
         return vals
 
     def proforma_voucher(self, cr, uid, ids, context=None):
