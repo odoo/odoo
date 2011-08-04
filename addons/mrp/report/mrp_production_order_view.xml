@@ -69,20 +69,6 @@
                         <field name="location_dest_id" />
                    </group>
                    <newline/>
-                    <group expand="0" string="Extended Filters..." groups="base.group_extended">
-                        <filter icon="terp-emblem-important" string="Picking Exception" domain="[('state','=','picking_except')]"/>
-                        <filter icon="terp-gtk-media-pause" string="Waiting Goods" domain="[('state','=','confirmed')]"/>
-                        <filter icon="terp-camera_test" string="Ready to Produce" domain="[('state','=','ready')]"/>
-                        <separator orientation="vertical"/>
-                      <field name="priority"/>
-                      <separator orientation="vertical"/>
-                      <field name="company_id" groups="base.group_multi_company"/>
-                      <newline/>
-                        <field name="date_start"/>
-                      <field name="date_planned"/>
-                      <field name="date_finished"/>
-                    </group>
-                   <newline/>
                    <group expand="1" string="Group By...">
                     	<filter string="Raw Material Location" icon="terp-gtk-jump-to-rtl" context="{'group_by':'location_src_id'}"/>
                     	<filter string="Finished Products Location" icon="terp-gtk-jump-to-ltr" context="{'group_by':'location_dest_id'}"/>

@@ -116,19 +116,6 @@
                         </field>
                     </group>
                     <newline/>
-                    <group  expand="0" string="Extended Filters..." groups="base.group_extended">
-                        <filter icon="terp-dialog-close"
-                            string="Done"
-                            domain="[('state','=','done')]"/>
-                        <filter icon="gtk-cancel"
-                            string="Cancel"
-                            domain="[('state','=','cancel')]"/>
-                        <group>
-                            <separator orientation="vertical"/>
-                            <field name="categ_id" widget="selection" domain="[('object_id.model', '=', 'crm.fundraising')]"/>
-                        </group>
-                    </group>
-                    <newline/>
                     <group  expand="1" string="Group By...">
                         <filter string="Salesman" name="Salesman" icon="terp-personal"
                             domain="[]" context="{'group_by':'user_id'}" />

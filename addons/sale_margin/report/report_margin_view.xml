@@ -41,18 +41,6 @@
 	                	<filter string="Done" icon="terp-dialog-close" domain="[('state','=','paid')]" help="Done Invoices"/>
                     </group>
                     <newline/>
-                    <group expand="0" string="Extended Filters..." groups="base.group_extended">
-                        <field name="date" string="Date Invoiced"/>
-                        <separator orientation="vertical"/>
-                        <field name="partner_id" widget="selection"/>
-                        <separator orientation="vertical"/>
-                        <field name="amount" />
-                        <field name="state"/>
-                        <newline/>
-                        <field name="product_id"/>
-                        <field name="categ_id"/>
-                    </group>
-                    <newline/>
                     <group expand="1" string="Group By..." colspan="4" col="10">
                         <filter string="Partner" icon="terp-partner" context="{'group_by':'partner_id'}"/>
                         <separator orientation="vertical"/>
