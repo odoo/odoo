@@ -1198,15 +1198,31 @@ class sale_config_picking_policy(osv.osv_memory):
     }
 
     def execute(self, cr, uid, ids, context=None):
-        for o in self.browse(cr, uid, ids, context=context):
-            ir_values_obj = self.pool.get('ir.values')
-            ir_values_obj.set(cr, uid, 'default', False, 'picking_policy', ['sale.order'], o.picking_policy)
-            ir_values_obj.set(cr, uid, 'default', False, 'order_policy', ['sale.order'], o.order_policy)
-            if o.step == 'two':
-                md = self.pool.get('ir.model.data')
-                location_id = md.get_object_reference(cr, uid, 'stock', 'stock_location_output')
-                location_id = location_id and location_id[1] or False
-                self.pool.get('stock.location').write(cr, uid, [location_id], {'chained_auto_packing': 'manual'})
+        ir_values_obj = self.pool.get('ir.values')
+        ir_model_data_obj = self.pool.get('ir.model.data')
+        stock_location_obj = self.pool.get('stock.location')
+        
+        comp_id = self.pool.get('res.users').browse(cr, uid, uid).company_id.id
+        
+        warehouse_obj = self.pool.get('stock.warehouse')
+        warehouse_ids = warehouse_obj.search(cr, uid, [('company_id', '=', comp_id)])
+        if warehouse_ids:
+            warehouses = warehouse_obj.browse(cr, uid, warehouse_ids, context=context)
+            
+            location_ids = []
+            for output_loc_ids in warehouses:
+                location_ids.append(output_loc_ids.lot_output_id.id)
+            
+            chaining_type = False
+            for o in self.browse(cr, uid, ids, context=context):
+                ir_values_obj.set(cr, uid, 'default', False, 'picking_policy', ['sale.order'], o.picking_policy)
+                ir_values_obj.set(cr, uid, 'default', False, 'order_policy', ['sale.order'], o.order_policy)
+                if o.step == 'one':
+                    chaining_type = 'transparent'
+                else:
+                    chaining_type = 'manual'
+                for record in location_ids:
+                    stock_location_obj.write(cr, uid, [record], {'chained_auto_packing': chaining_type})
 
 sale_config_picking_policy()
 
