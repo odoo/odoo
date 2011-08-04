@@ -788,6 +788,14 @@ openerp.base.form.WidgetLabel = openerp.base.form.Widget.extend({
         }
         // Actual label widgets should not have a false and have type label
         return QWeb.render(this.template, {widget: this});
+    },
+    start: function() {
+        this._super();
+        var self = this;
+        this.$element.find("label").dblclick(function() {
+            var widget = self['for'] || self;
+            console.log(widget.element_id , widget);
+        });
     }
 });
 
