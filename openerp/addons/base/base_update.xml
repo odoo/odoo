@@ -24,6 +24,10 @@
                         <page string="Users">
                             <field colspan="4" name="users" nolabel="1"/>
                         </page>
+                        <page string="Inherited">
+                            <label colspan="4" string="Users added to this group are automatically added in the following groups."/>
+                            <field colspan="4" name="implied_ids" nolabel="1"/>
+                        </page>
                         <page string="Menus">
                             <field colspan="4" name="menu_access" nolabel="1"/>
                         </page>
@@ -77,25 +81,23 @@
             <field eval="18" name="priority"/>
             <field name="arch" type="xml">
                 <form string="Users">
-                    <notebook colspan="4">
-                        <page string="Current Activity">
-                            <field name="company_id" widget="selection" readonly="0"
-                                    groups="base.group_multi_company"
-                                    on_change="on_change_company_id(company_id)" />
-                            <field name="view" readonly="0"/>
-                            <label string="" colspan="2"/>
-                            <separator string="Default Filters" colspan="4"/>
-                            <newline/>
-                        </page>
-                         <page string="Preferences">
-                            <field name="context_lang" completion="1" readonly="0"/>
-                            <field name="context_tz" completion="1" readonly="0"/>
-                            <field name="menu_tips" colspan="2" readonly="0"/>
-                            <separator string="Email &amp; Signature" colspan="4"/>
-                            <group colspan="4"><field name="user_email" widget="email" readonly="0"/></group>
-                            <field colspan="4" name="signature" readonly="0" nolabel="1"/>
-                          </page>
-                    </notebook>
+                    <field name="name"/>
+                    <newline/>
+                    <group colspan="2" col="2">
+                        <separator string="Preferences" colspan="2"/>
+                        <field name="view"/>
+                        <field name="context_lang"/>
+                        <field name="context_tz"/>
+                        <field name="menu_tips"/>
+                    </group>
+                    <group name="default_filters" colspan="2" col="2">
+                        <separator string="Default Filters" colspan="2"/>
+                        <field name="company_id" widget="selection"
+                            groups="base.group_multi_company" on_change="on_change_company_id(company_id)"/>
+                    </group>
+                    <separator string="Email &amp; Signature" colspan="2"/>
+                    <field colspan="4" name="user_email" widget="email"/>
+                    <field colspan="4" name="signature" nolabel="1"/>
                 </form>
             </field>
         </record>
@@ -106,45 +108,40 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Users">
-                    <field name="name" select="1"/>
-                    <field name="active"/>
-                    <field name="login" select="1"/>
-                    <field name="new_password" password="True"/>
-                    <newline/>
+                    <group colspan="4" col="6">
+                        <field name="name" select="1"/>
+                        <field name="login" select="1"/>
+                        <field name="new_password" password="True"/>
+                        <field name="active"/>
+                    </group>
                     <notebook colspan="4">
                         <page string="User">
                             <group colspan="1" col="2">
-                                <separator string="Contact" colspan="2"/>
+                                <separator string="Preferences" colspan="2"/>
+                                <field name="context_lang"/>
+                                <field name="context_tz"/>
+                                <field name="menu_tips"/>
+                            </group>
+                            <group name="default_filters" colspan="1" col="2">
+                                <separator string="Default Filters" colspan="2"/>
                                 <field name="company_id" required="1"
                                     context="{'user_preference': 0}"
-                                    groups="base.group_multi_company"
-                                    />
-                                <field name="address_id"/>
-                                <field name="user_email" widget="email"/>
+                                    groups="base.group_multi_company"/>
                             </group>
                             <group colspan="1" col="2" groups="base.group_extended">
                                 <separator string="Action" colspan="2"/>
                                 <field name="action_id"/>
                                 <field domain="[('usage','=','menu')]" name="menu_id" required="True"/>
                             </group>
-                            <group colspan="1" col="2">
-                                <separator string="Preferences" colspan="2"/>
-                                <field name="context_lang"/>
-                                <field name="context_tz"/>
-                                <group colspan="2" col="4">
-                                     <field name="view" readonly="0"/>
-                                     <field name="menu_tips" colspan="2"/>
-                                </group>
-                            </group>
                             <newline/>
-                            <group colspan="2" col="2">
-                                <separator string="Signature" colspan="2"/>
-                                <field colspan="2" name="signature" nolabel="1"/>
+                            <separator string="Email &amp; Signature" colspan="2"/>
+                            <group colspan="4">
+                                <field name="user_email" widget="email"/>
                             </group>
-                            <group colspan="2" col="2" expand="1">
-                                <separator string="Groups" colspan="2"/>
-                                <field colspan="2" nolabel="1" name="groups_id"/>
-                            </group>
+                            <field colspan="4" name="signature" nolabel="1"/>
+                        </page>
+                        <page string="Access Rights">
+                            <field nolabel="1" name="groups_id"/>
                         </page>
                         <page string="Companies" groups="base.group_multi_company">
                             <field colspan="4" nolabel="1" name="company_ids" select="1"/>
@@ -175,7 +172,6 @@
                 <search string="Users">
                     <field name="name"/>
                     <field name="login"/>
-                    <field name="address_id" string="Address"/>
                     <field name="company_ids" string="Company" groups="base.group_multi_company"/>
                 </search>
             </field>
