@@ -106,6 +106,11 @@ CREATE TABLE ir_act_server (
 )
 INHERITS (ir_actions);
 
+CREATE TABLE ir_act_client (
+    primary key(id)
+)
+INHERITS (ir_actions);
+
 
 CREATE TABLE ir_ui_view (
     id serial NOT NULL,
