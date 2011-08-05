@@ -24,7 +24,7 @@ openerp.base_kanban.KanbanView = openerp.base.View.extend({
     on_loaded: function(data) {
         var self = this;
         this.template_xml = '';
-
+        this.columns = data.all_fields;
         _.each(data.fields_view.arch.children, function(child) {
             if (child.tag == "template"){
                 self.template_xml = openerp.base.json_node_to_xml(child, true)
@@ -80,7 +80,7 @@ openerp.base_kanban.KanbanView = openerp.base.View.extend({
         var self = this;
         var from = ui.item.index(), to = ui.item.prev().index() || 0;
         this.flag = false;
-        if(self.destination_index != from){
+        if(this.columns.sequence && self.destination_index != from){
 	        var child_record = ui.item.parent().children();
 	        var data, sequence=1, index = to;
 	        child_record.splice(0, to);
