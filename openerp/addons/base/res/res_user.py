@@ -593,6 +593,8 @@ class users_implied(osv.osv):
         return user_id
 
     def write(self, cr, uid, ids, values, context=None):
+        if not isinstance(ids,list):
+            ids = [ids]
         res = super(users_implied, self).write(cr, uid, ids, values, context)
         if values.get('groups_id'):
             # add implied groups for all users
