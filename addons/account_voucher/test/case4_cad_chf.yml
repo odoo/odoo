@@ -1,28 +1,31 @@
 -
-  I create a currency rate for CAD for january of 1.338800
+  In order to check the Account_voucher module with multi-currency in OpenERP,
+  I create an invoice in CAD and make its Payment in CHF based on the currency rating on that particular date.
+-
+  I create currency CAD in OpenERP for January of 1.338800 Rate
 -
   !record {model: res.currency.rate, id: jan_cad}:
     currency_id: base.CAD
     name: !eval "'%s-01-01' %(datetime.now().year)"
     rate: 1.338800
 -
-  I create a currency rate for CAD for march of 2.000000
+  I create currency CAD in OpenERP for March of 2.000000 Rate
 -
   !record {model: res.currency.rate, id: mar_cad}:
     currency_id: base.CAD
     name: !eval "'%s-03-01' %(datetime.now().year)"
     rate: 2.000000
 -
-  I create a currency rate for CHF for january of 1.308600
+  I create currency CHF in OpenERP for January of 1.308600 Rate
 -
   !record {model: res.currency.rate, id: jan_chf}:
     currency_id: base.CHF
     name: !eval "'%s-01-01' %(datetime.now().year)"
     rate: 1.308600
 -
-  I create a currency rate for CHF for march of 1.250000
+  I create currency CHF in OpenERP for March of 1.250000 Rate
 -
-  !record {model: res.currency.rate, id: jan_chf}:
+  !record {model: res.currency.rate, id: mar_chf}:
     currency_id: base.CHF
     name: !eval "'%s-03-01' %(datetime.now().year)"
     rate: 1.250000

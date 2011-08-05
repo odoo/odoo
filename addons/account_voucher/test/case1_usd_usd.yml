@@ -1,5 +1,8 @@
 -
-  I create a currency rate for USD for january of 1.333333
+  In order to check the Account_voucher module with multi-currency in OpenERP, 
+  I create 2 Invoices in USD and make 2 Payments in USD based on the currency rating on that particular date
+-
+  I create currency USD in OpenERP for January of 1.333333 Rate
 -
   !python {model: res.currency.rate}: |
     from datetime import datetime
@@ -8,7 +11,7 @@
     ids = self.search(cr, uid, [('currency_id','=',curr_id), ('name', '=', date)])
     self.write(cr, uid, ids, {'rate': 1.333333})
 -
-  I create a currency rate for USD for february of 1.250000
+  I create currency USD in OpenERP for February of 1.250000 Rate
 -
   !record {model: res.currency.rate, id: feb_usd}:
     currency_id: base.USD
@@ -16,7 +19,7 @@
     rate: 1.250000
 
 -
-  I create a currency rate for USD for march of 1.111111
+  I create currency USD in OpenERP for March of 1.111111 Rate
 -
   !record {model: res.currency.rate, id: mar_usd}:
     currency_id: base.USD
@@ -24,7 +27,7 @@
     rate: 1.111111
 
 -
-  I create a currency rate for USD for april of 1.052632
+  I create currency USD in OpenERP for April of 1.052632 Rate
 -
   !record {model: res.currency.rate, id: apr_usd}:
     currency_id: base.USD

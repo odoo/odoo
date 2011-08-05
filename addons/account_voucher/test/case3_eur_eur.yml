@@ -1,26 +1,29 @@
 -
-  I create a currency rate for EUR for january of 1.000000
+  In order to check the Account_voucher module with multi-currency in OpenERP, 
+  I create 2 Invoices in EUR and make 2 Payments in EUR based on the currency rating on that particular date.
+-
+  I create currency EUR in OpenERP for January of 1.000000 Rate
 -
   !record {model: res.currency.rate, id: jan_eur}:
     currency_id: base.EUR
     name: !eval "'%s-01-01' %(datetime.now().year)"
     rate: 1.000000
 -
-  I create a currency rate for EUR for february of 1.000000
+  I create currency EUR in OpenERP for February of 1.000000 Rate
 -
   !record {model: res.currency.rate, id: feb_eur}:
     currency_id: base.EUR
     name: !eval "'%s-02-01' %(datetime.now().year)"
     rate: 1.000000
 -
-  I create a currency rate for EUR for march of 1.000000
+  I create currency EUR in OpenERP for March of 1.000000 Rate
 -
   !record {model: res.currency.rate, id: mar_eur}:
     currency_id: base.EUR
     name: !eval "'%s-03-01' %(datetime.now().year)"
     rate: 1.000000
 -
-  I create a currency rate for EUR for april of 1.000000
+  I create currency EUR in OpenERP for April of 1.000000 Rate
 -
   !record {model: res.currency.rate, id: apr_eur}:
     currency_id: base.EUR
