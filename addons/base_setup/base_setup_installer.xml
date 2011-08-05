@@ -143,13 +143,13 @@
           <!-- Import or create customers configartion view  -->
 
 	 <record id="action_import_create_installer" model="ir.actions.act_window">
-	     <field name="name">Import or create customers </field>
+	     <field name="name">Import or Create Customers</field>
 	     <field name="type">ir.actions.act_window</field>
 	     <field name="res_model">res.partner</field>
 	     <field name="view_type">form</field>
 	     <field name="view_mode">tree,form</field>
 	     <field name="view_id" ref="base.view_partner_tree"/>
-	     <field name="help">Create some customers, suppliers and their contacts manually or import a CSV spreadsheet by clicking on the import link</field>
+	     <field name="help">Create some Customers, Suppliers and their contacts manually from this form or you can import your existing partners by CSV spreadsheet from "Import Data" wizard</field>
 	 </record>
 
     <!--          register configuration wizard -->
@@ -269,7 +269,7 @@
       </record>
 
       <record id="action_partner_terminology_config_form" model="ir.actions.act_window">
-          <field name="name">Specify Your Terminology</field>
+          <field name="name">Customer / Partner / Patient ?</field>
           <field name="type">ir.actions.act_window</field>
           <field name="res_model">specify.partner.terminology</field>
           <field name="view_type">form</field>
