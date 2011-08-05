@@ -2736,10 +2736,10 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             vals_tax = {
                 'name':tax.name,
                 'sequence': tax.sequence,
-                'amount':tax.amount,
-                'type':tax.type,
+                'amount': tax.amount,
+                'type': tax.type,
                 'applicable_type': tax.applicable_type,
-                'domain':tax.domain,
+                'domain': tax.domain,
                 'parent_id': tax.parent_id and ((tax.parent_id.id in tax_template_ref) and tax_template_ref[tax.parent_id.id]) or False,
                 'child_depend': tax.child_depend,
                 'python_compute': tax.python_compute,
@@ -2754,8 +2754,8 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                 'ref_base_sign': tax.ref_base_sign,
                 'ref_tax_sign': tax.ref_tax_sign,
                 'include_base_amount': tax.include_base_amount,
-                'description':tax.description,
-                'company_id': self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id,
+                'description': tax.description,
+                'company_id': company_id,
                 'type_tax_use': tax.type_tax_use,
                 'price_include': tax.price_include
             }
