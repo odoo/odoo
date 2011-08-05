@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:14+0000\n"
-"PO-Revision-Date: 2011-07-11 21:37+0000\n"
-"Last-Translator: doingit.cl <Unknown>\n"
+"PO-Revision-Date: 2011-07-26 01:09+0000\n"
+"Last-Translator: Juano <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-07-12 04:35+0000\n"
-"X-Generator: Launchpad (build 13168)\n"
+"X-Launchpad-Export-Date: 2011-07-27 04:33+0000\n"
+"X-Generator: Launchpad (build 13405)\n"
 
 #. module: base
 #: view:ir.filters:0
@@ -119,6 +119,8 @@ msgid ""
 "You can not write in this document (%s) ! Be sure your user belongs to one "
 "of these groups: %s."
 msgstr ""
+"¡No puede escribir en este documento (%s)! Asegúrese que su usuario "
+"pertenezca a alguno de los siguientes grupos: %s."
 
 #. module: base
 #: help:ir.model.fields,domain:0
@@ -127,6 +129,9 @@ msgid ""
 "specified as a Python expression defining a list of triplets. For example: "
 "[('color','=','red')]"
 msgstr ""
+"El dominio opcional para restringir los posibles valores para los campos de "
+"relación, se especifica como una expresión Python compuesta por una lista de "
+"trios. Por ejemplo: [('color','=',' red')]"
 
 #. module: base
 #: field:res.partner,ref:0
@@ -151,12 +156,15 @@ msgid ""
 "Properties of base fields cannot be altered in this manner! Please modify "
 "them through Python code, preferably through a custom addon!"
 msgstr ""
+"¡Las propiedades de los campos base no se pueden modificar de esta forma!. "
+"Modifique las propiedades mediante código Python, preferentemente a través "
+"de un módulo (addon) personalizado."
 
 #. module: base
 #: code:addons/osv.py:133
 #, python-format
 msgid "Constraint Error"
-msgstr ""
+msgstr "Error en la restricción (constraint)"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_ui_view_custom
@@ -173,7 +181,7 @@ msgstr "Suazilandia"
 #: code:addons/orm.py:3653
 #, python-format
 msgid "created."
-msgstr ""
+msgstr "creado."
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_woodsuppliers0
@@ -828,6 +836,8 @@ msgid ""
 "Language with code \"%s\" is not defined in your system !\n"
 "Define it through the Administration menu."
 msgstr ""
+"¡No se ha definido el idioma con el código \"%s\" en su sistema!\n"
+"Defínalo a través del menú de Administración."
 
 #. module: base
 #: model:res.country,name:base.gu
@@ -844,6 +854,8 @@ msgstr "Tablero de recursos humanos"
 #, python-format
 msgid "Setting empty passwords is not allowed for security reasons!"
 msgstr ""
+"¡No se permite establecer contraseñas vacías por evidentes motivos de "
+"seguridad!"
 
 #. module: base
 #: selection:ir.actions.server,state:0
@@ -877,7 +889,7 @@ msgstr "Transiciones"
 #: code:addons/orm.py:4020
 #, python-format
 msgid "Record #%d of %s not found, cannot copy!"
-msgstr ""
+msgstr "¡No se ha encontrado el registro #%d de %s, no se puede copiar!"
 
 #. module: base
 #: field:ir.module.module,contributors:0
@@ -983,7 +995,7 @@ msgstr "Islas Marshall"
 #: code:addons/base/ir/ir_model.py:328
 #, python-format
 msgid "Changing the model of a field is forbidden!"
-msgstr ""
+msgstr "¡Está prohibido cambiar el modelo de un campo!"
 
 #. module: base
 #: model:res.country,name:base.ht
@@ -1005,6 +1017,11 @@ msgid ""
 "reference it\n"
 "- creation/update: a mandatory field is not correctly set"
 msgstr ""
+"No puede completarse la operación, probablemente debido a lo siguiente:\n"
+"- eliminación: es posible que esté intentando eliminar un registro mientras "
+"que otros registros todavía tengan referencias a el.\n"
+"- creación o actualización: un campo obligatorio no se encuentra introducido "
+"correctamente."
 
 #. module: base
 #: view:ir.rule:0
@@ -1018,7 +1035,7 @@ msgstr ""
 #: code:addons/base/res/res_user.py:206
 #, python-format
 msgid "Operation Canceled"
-msgstr ""
+msgstr "Operación Cancelada"
 
 #. module: base
 #: help:base.language.export,lang:0
@@ -1684,6 +1701,7 @@ msgstr ""
 #, python-format
 msgid "A document was modified since you last viewed it (%s:%d)"
 msgstr ""
+"Un documento ha sido modificado desde la última vez que lo vió (%s:%d)"
 
 #. module: base
 #: view:workflow:0
@@ -1951,7 +1969,7 @@ msgstr "Pakistán"
 #: code:addons/orm.py:1350
 #, python-format
 msgid "Invalid Object Architecture!"
-msgstr ""
+msgstr "¡Estructura del objeto no válida!"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_email_gateway_form
@@ -2002,6 +2020,8 @@ msgid ""
 "One of the records you are trying to modify has already been deleted "
 "(Document type: %s)."
 msgstr ""
+"Uno de los registros que está intentando modificar ya ha sido eliminado "
+"(tipo documento: %s)."
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_country
@@ -2032,7 +2052,7 @@ msgstr "Koreano"
 #. module: base
 #: help:ir.model.fields,model:0
 msgid "The technical name of the model this field belongs to"
-msgstr ""
+msgstr "El nombre técnico del modelo al que pertenece este campo."
 
 #. module: base
 #: field:ir.actions.server,action_id:0
@@ -2079,7 +2099,7 @@ msgstr "res.empresa.evento"
 #. module: base
 #: model:res.widget,title:base.facebook_widget
 msgid "Facebook"
-msgstr ""
+msgstr "Facebook"
 
 #. module: base
 #: model:res.country,name:base.am
@@ -2190,6 +2210,9 @@ msgid ""
 "separated list of valid field names (optionally followed by asc/desc for the "
 "direction)"
 msgstr ""
+"Se ha indicado un \"order\" no válido. Una especificación \"order\" válida "
+"es una lista separada por comas (CSV)de nombres de campos válidos "
+"(opcionalmente seguidos por asc/desc para indicar la dirección)"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_module_module_dependency
@@ -2250,7 +2273,7 @@ msgstr "Empresa principal"
 #. module: base
 #: field:ir.ui.menu,web_icon_hover:0
 msgid "Web Icon File (hover)"
-msgstr ""
+msgstr "Archivo icono web (inmóvil)"
 
 #. module: base
 #: view:ir.actions.server:0
@@ -2297,6 +2320,8 @@ msgid ""
 "Reference of the target resource, whose model/table depends on the 'Resource "
 "Name' field."
 msgstr ""
+"Referencia al recurso destino, cuyo modelo/tabla depende del campo 'Nombre "
+"recurso'."
 
 #. module: base
 #: field:ir.model.fields,select_level:0
@@ -2352,7 +2377,7 @@ msgstr "Sr."
 #: code:addons/orm.py:1622
 #, python-format
 msgid "There is no view of type '%s' defined for the structure!"
-msgstr ""
+msgstr "¡No existe una vista del tipo '%s' definida para la estructura!"
 
 #. module: base
 #: field:ir.default,ref_id:0
@@ -2647,6 +2672,8 @@ msgid ""
 "Operation prohibited by access rules, or performed on an already deleted "
 "document (Operation: read, Document type: %s)."
 msgstr ""
+"Operación prohibida por las reglas de acceso o a sido realizada en un "
+"documento ya eliminado (Operación: lectura, Tipo documento: %s)."
 
 #. module: base
 #: model:res.country,name:base.nr
@@ -2737,7 +2764,7 @@ msgstr "EAN13"
 #: code:addons/orm.py:1622
 #, python-format
 msgid "Invalid Architecture!"
-msgstr ""
+msgstr "¡Estructura no válida!"
 
 #. module: base
 #: model:res.country,name:base.pt
@@ -2997,7 +3024,7 @@ msgstr "Tipo de secuencia"
 #. module: base
 #: view:ir.ui.view.custom:0
 msgid "Customized Architecture"
-msgstr ""
+msgstr "Estructura personalizada."
 
 #. module: base
 #: field:ir.module.module,license:0
@@ -3160,7 +3187,7 @@ msgstr "Flujos"
 #. module: base
 #: field:ir.translation,xml_id:0
 msgid "XML Id"
-msgstr ""
+msgstr "Id XML"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_config_user_form
@@ -3307,6 +3334,8 @@ msgid ""
 "You can not create this document (%s) ! Be sure your user belongs to one of "
 "these groups: %s."
 msgstr ""
+"¡No puede crear este documento (%s)! Asegúrese que su usuario pertenezca a "
+"uno de los siguientes grupos: %s."
 
 #. module: base
 #: model:res.country,name:base.mu
@@ -3477,6 +3506,7 @@ msgstr "Aplicar para Eliminar"
 #, python-format
 msgid "Cannot rename column to %s, because that column already exists!"
 msgstr ""
+"¡No se puede renombrar la columna a %s, dado que ya existe esa columna!"
 
 #. module: base
 #: view:ir.attachment:0
@@ -3645,6 +3675,15 @@ msgid ""
 "plugin, don't forget to register emails to each contact so that the gateway "
 "will automatically attach incoming emails to the right partner."
 msgstr ""
+"Un cliente es una entidad con quien hace o realiza negocios, como una "
+"empresa o una organización. Un cliente puede tener varios contactos o "
+"direcciones que pueden ser las personas que trabajan para esta empresa. "
+"Puede utilizar la pestaña historial para seguir todas las transacciones "
+"relacionadas con un cliente como por ejemplo: pedidos de venta, correos "
+"electrónicos, oportunidades, reclamaciones, etc. Si utiliza la pasarela de "
+"correo electrónico, el conector Outlook o Thunderbird, no olvide introducir "
+"el correo electrónico de cada contacto de modo que la pasarela adjuntará "
+"automáticamente los correos electrónicos entrantes a la empresa correcta."
 
 #. module: base
 #: field:ir.actions.report.xml,name:0
@@ -3695,6 +3734,8 @@ msgid ""
 "The Selection Options expression is not a valid Pythonic expression.Please "
 "provide an expression in the [('key','Label'), ...] format."
 msgstr ""
+"La expresión de opciones de selección no es una expresión \"Pythonica\" "
+"válida. Proporcione una expresión en el formato [('clave', 'Etiqueta'), ...]."
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_translation_app
@@ -4028,6 +4069,8 @@ msgid ""
 "Whether values for this field can be translated (enables the translation "
 "mechanism for that field)"
 msgstr ""
+"Si los valores de este campo se pueden traducir (activa el mecanismo de "
+"traducción para este campo)."
 
 #. module: base
 #: view:res.lang:0
@@ -4365,6 +4408,9 @@ msgid ""
 "You cannot perform this operation. New Record Creation is not allowed for "
 "this object as this object is for reporting purpose."
 msgstr ""
+"No puede realizar esta operación. La creación de nuevos registros no está "
+"permitida para este objeto ya que este objeto tiene como finalidad la "
+"generación de informes o reportes."
 
 #. module: base
 #: view:base.language.import:0
@@ -4389,7 +4435,7 @@ msgstr ""
 #. module: base
 #: help:ir.model.fields,relation:0
 msgid "For relationship fields, the technical name of the target model"
-msgstr ""
+msgstr "Para campos de relación, el nombre técnico del modelo destino."
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -4414,7 +4460,7 @@ msgstr "Proyecto"
 #. module: base
 #: field:ir.ui.menu,web_icon_hover_data:0
 msgid "Web Icon Image (hover)"
-msgstr ""
+msgstr "Imagen de icono web (inmóvil)"
 
 #. module: base
 #: view:base.module.import:0
@@ -4637,6 +4683,8 @@ msgstr "Contactos"
 msgid ""
 "Unable to delete this document because it is used as a default property"
 msgstr ""
+"No se ha podido eliminar este documento ya que se utiliza como una propiedad "
+"por defecto."
 
 #. module: base
 #: view:res.widget.wizard:0
@@ -4672,6 +4720,10 @@ msgid ""
 "OpenERP. They are launched during the installation of new modules, but you "
 "can choose to restart some wizards manually from this menu."
 msgstr ""
+"Los asistentes de configuración se utilizan para ayudarle a configurar una "
+"nueva instalación de OpenERP. Son ejecutados durante la instalación de "
+"nuevos módulos, pero desde este menú, usted puede seleccionar algunos "
+"asistentes para ejecutarlos manualmente."
 
 #. module: base
 #: code:addons/base/res/res_user.py:206
@@ -4680,12 +4732,14 @@ msgid ""
 "Please use the change password wizard (in User Preferences or User menu) to "
 "change your own password."
 msgstr ""
+"Utilice el \"asistente de cambio de contraseña\" (en Preferencias de usuario "
+"o menú Usuario) para cambiar su propia contraseña."
 
 #. module: base
 #: code:addons/orm.py:1350
 #, python-format
 msgid "Insufficient fields for Calendar View!"
-msgstr ""
+msgstr "¡Campos insuficientes para la vista calendario!"
 
 #. module: base
 #: selection:ir.property,type:0
@@ -5104,7 +5158,7 @@ msgstr "Acciones cliente"
 #: code:addons/orm.py:1806
 #, python-format
 msgid "The exists method is not implemented on this object !"
-msgstr ""
+msgstr "¡El método exists no se encuentra implementado en este objeto!"
 
 #. module: base
 #: code:addons/base/module/module.py:336
@@ -5237,7 +5291,7 @@ msgstr "Usuarios aceptados"
 #. module: base
 #: field:ir.ui.menu,web_icon_data:0
 msgid "Web Icon Image"
-msgstr ""
+msgstr "Imagen de icono web"
 
 #. module: base
 #: view:ir.values:0
@@ -5367,6 +5421,8 @@ msgid ""
 "Invalid value for reference field \"%s\" (last part must be a non-zero "
 "integer): \"%s\""
 msgstr ""
+"Valor no válido para el campo referencia \"%s\" (la última parte debe ser un "
+"entero distinto de cero): \"%s\""
 
 #. module: base
 #: help:ir.cron,args:0
@@ -5389,7 +5445,7 @@ msgstr ""
 #: model:ir.ui.menu,name:base.menu_action_ui_view_custom
 #: view:ir.ui.view.custom:0
 msgid "Customized Views"
-msgstr ""
+msgstr "Vistas Personalizadas"
 
 #. module: base
 #: view:partner.sms.send:0
@@ -5443,7 +5499,7 @@ msgstr "Tailandés / ภาษาไทย"
 #: code:addons/orm.py:158
 #, python-format
 msgid "Object %s does not exists"
-msgstr ""
+msgstr "El objeto %s no existe"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -5603,6 +5659,8 @@ msgstr "Reunión (Francesa)"
 msgid ""
 "New column name must still start with x_ , because it is a custom field!"
 msgstr ""
+"¡El nuevo nombre de columna debe empezar con x_ , dado que es un campo "
+"personalizado!"
 
 #. module: base
 #: view:ir.model.access:0
@@ -6249,7 +6307,7 @@ msgstr "res.log"
 #: help:ir.translation,module:0
 #: help:ir.translation,xml_id:0
 msgid "Maps to the ir_model_data for which this translation is provided."
-msgstr ""
+msgstr "Mapeo hacia el ir_model_data cuya traducción se proporciona."
 
 #. module: base
 #: view:workflow.activity:0
@@ -6570,6 +6628,8 @@ msgid ""
 "You can not read this document (%s) ! Be sure your user belongs to one of "
 "these groups: %s."
 msgstr ""
+"¡No puede leer este documento: (%s)!. Asegúrese que su usuario pertenezca a "
+"alguno de los siguientes grupos: %s."
 
 #. module: base
 #: view:res.bank:0
@@ -6675,6 +6735,8 @@ msgid ""
 "Customized views are used when users reorganize the content of their "
 "dashboard views (via web client)"
 msgstr ""
+"Las vistas personalizadas se utilizan cuando los usuarios reorganizan el "
+"contenido de sus vistas de tablero (mediante el cliente web)."
 
 #. module: base
 #: field:ir.model,name:0
@@ -6713,7 +6775,7 @@ msgstr "Icono"
 #. module: base
 #: help:ir.model.fields,model_id:0
 msgid "The model this field belongs to"
-msgstr ""
+msgstr "El modelo al que pertenece este campo."
 
 #. module: base
 #: model:res.country,name:base.mq
@@ -6747,7 +6809,7 @@ msgstr "O"
 #: model:ir.actions.act_window,name:base.res_log_act_window
 #: model:ir.ui.menu,name:base.menu_res_log_act_window
 msgid "Client Logs"
-msgstr ""
+msgstr "Registros de cliente(s)"
 
 #. module: base
 #: model:res.country,name:base.al
@@ -6885,7 +6947,7 @@ msgstr "Todo parado"
 #: code:addons/orm.py:412
 #, python-format
 msgid "The read_group method is not implemented on this object !"
-msgstr ""
+msgstr "¡El método read_group no está implementado en este objeto!"
 
 #. module: base
 #: view:ir.model.data:0
@@ -7141,7 +7203,7 @@ msgstr ""
 #: code:addons/osv.py:156
 #, python-format
 msgid "Integrity Error"
-msgstr ""
+msgstr "Error de integridad."
 
 #. module: base
 #: model:ir.model,name:base.model_ir_wizard_screen
@@ -7191,7 +7253,7 @@ msgstr "Argumentos"
 #: code:addons/orm.py:716
 #, python-format
 msgid "Database ID doesn't exist: %s : %s"
-msgstr ""
+msgstr "No existe el ID de la base de datos: %s : %s"
 
 #. module: base
 #: selection:ir.module.module,license:0
@@ -7207,7 +7269,7 @@ msgstr "GPL Versión 3"
 #: code:addons/orm.py:836
 #, python-format
 msgid "key '%s' not found in selection field '%s'"
-msgstr ""
+msgstr "No se ha encontrado la clave '%s' en el campo selección '%s'"
 
 #. module: base
 #: view:partner.wizard.ean.check:0
@@ -7316,7 +7378,7 @@ msgstr "Cancelar instalación"
 #. module: base
 #: field:ir.model.fields,selection:0
 msgid "Selection Options"
-msgstr ""
+msgstr "Opciones de Selección"
 
 #. module: base
 #: field:res.partner.category,parent_right:0
@@ -7394,6 +7456,9 @@ msgid ""
 "\n"
 "[object with reference: %s - %s]"
 msgstr ""
+"\n"
+"\n"
+"[objeto con referencia: %s - %s]"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_default
@@ -7433,6 +7498,8 @@ msgid ""
 "Changing the type of a column is not yet supported. Please drop it and "
 "create it again!"
 msgstr ""
+"El cambio de tipo de una columna todavía no está soportado. ¡Elimine la "
+"columna y créela de nuevo!"
 
 #. module: base
 #: field:ir.ui.view_sc,user_id:0
@@ -7448,7 +7515,7 @@ msgstr "¡Aviso!"
 #. module: base
 #: model:res.widget,title:base.google_maps_widget
 msgid "Google Maps"
-msgstr ""
+msgstr "Google Maps"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_base_config
@@ -7745,7 +7812,7 @@ msgstr "workflow.instancia"
 #: code:addons/orm.py:278
 #, python-format
 msgid "Unknown attribute %s in %s "
-msgstr ""
+msgstr "Atributo desconocido %s en %s "
 
 #. module: base
 #: view:res.lang:0
@@ -7770,6 +7837,9 @@ msgid ""
 "Only specify a value if you want to change the user password. This user will "
 "have to logout and login again!"
 msgstr ""
+"Introduzca un valor si desea cambiar la contraseña del usuario. ¡Este "
+"usuario deberá encontrarse desconectado o desconectarse (si se encontrase "
+"conectado) y posteriormente volverse a conectar!"
 
 #. module: base
 #: model:res.partner.title,name:base.res_partner_title_madam
@@ -7795,7 +7865,7 @@ msgstr "Fichero binario de URL externa"
 #: field:res.config.users,new_password:0
 #: field:res.users,new_password:0
 msgid "Change password"
-msgstr ""
+msgstr "Cambiar la Contraseña"
 
 #. module: base
 #: model:res.country,name:base.nl
@@ -7830,6 +7900,11 @@ msgid ""
 "button \"Schedule for Installation\" from the form view, then click on "
 "\"Apply Scheduled Upgrades\" to migrate your system."
 msgstr ""
+"Puede instalar nuevos módulos para activar nuevas características, menús, "
+"informes o datos en su instalación de OpenERP. Para instalar nuevos módulos, "
+"haga clic en el botón \"Programar para instalación\" desde la vista "
+"formulario, y luego haga clic en \"Aplicar actualizaciones programadas\" "
+"para actualizar su sistema."
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_emails
@@ -8107,6 +8182,8 @@ msgid ""
 "The Selection Options expression is must be in the [('key','Label'), ...] "
 "format!"
 msgstr ""
+"¡La expresión de opciones de selección debe estar en el formato "
+"[('clave','Etiqueta'), ...]!"
 
 #. module: base
 #: view:ir.actions.report.xml:0
@@ -8367,6 +8444,8 @@ msgid ""
 "Operation prohibited by access rules, or performed on an already deleted "
 "document (Operation: %s, Document type: %s)."
 msgstr ""
+"Operación prohibida por las reglas de acceso o la operación a sido realizada "
+"en un documento ya eliminado (Operación: %s, Tipo documento: %s)."
 
 #. module: base
 #: model:res.country,name:base.zr
@@ -8564,7 +8643,7 @@ msgstr "Danés / Dansk"
 #. module: base
 #: selection:ir.model.fields,select_level:0
 msgid "Advanced Search (deprecated)"
-msgstr ""
+msgstr "Búsqueda Avanzada (obsoleto)"
 
 #. module: base
 #: model:res.country,name:base.cx
@@ -8702,6 +8781,8 @@ msgid ""
 "Invalid group_by specification: \"%s\".\n"
 "A group_by specification must be a list of valid fields."
 msgstr ""
+"La especificación group_by no es válida: \"%s\".\n"
+"Una especificación group_by debe contener una lista de campos válidos."
 
 #. module: base
 #: model:res.country,name:base.sa
@@ -8967,7 +9048,7 @@ msgstr "Recurso"
 #. module: base
 #: field:ir.ui.menu,web_icon:0
 msgid "Web Icon File"
-msgstr ""
+msgstr "Archivo de icono web"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -9001,6 +9082,8 @@ msgid ""
 "You can not delete this document (%s) ! Be sure your user belongs to one of "
 "these groups: %s."
 msgstr ""
+"¡No puede eliminar este documento (%s)! Asegúrese que su usuario pertenezca "
+"a alguno de los siguientes grupos: %s."
 
 #. module: base
 #: model:ir.model,name:base.model_base_module_configuration
@@ -9169,6 +9252,11 @@ msgid ""
 "uncheck the 'Suppliers' filter button in order to search in all your "
 "partners, including customers and prospects."
 msgstr ""
+"Puede acceder a toda la información relacionada con sus proveedores desde el "
+"formulario de proveedor como por ejemplo: Datos contables, historial de "
+"correos, reuniones, compras, etc. Puede desmarcar el botón de filtrado "
+"'Proveedores' para buscar en todas sus empresas, incluyendo clientes y "
+"clientes potenciales."
 
 #. module: base
 #: model:res.country,name:base.rw
@@ -9301,7 +9389,7 @@ msgstr "Vertical"
 #: code:addons/base/ir/ir_model.py:317
 #, python-format
 msgid "Can only rename one column at a time!"
-msgstr ""
+msgstr "¡Sólo puede renombrar una sola columna a la vez!"
 
 #. module: base
 #: selection:ir.translation,type:0
