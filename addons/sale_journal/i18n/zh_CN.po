@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:16+0000\n"
-"PO-Revision-Date: 2011-07-12 18:48+0000\n"
-"Last-Translator: shjerryzhou <Unknown>\n"
+"PO-Revision-Date: 2011-08-04 15:46+0000\n"
+"Last-Translator: openerp-china.black-jack <onetimespeed@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-07-13 05:14+0000\n"
-"X-Generator: Launchpad (build 13168)\n"
+"X-Launchpad-Export-Date: 2011-08-05 05:11+0000\n"
+"X-Generator: Launchpad (build 13604)\n"
 
 #. module: sale_journal
 #: field:sale_journal.invoice.type,note:0
@@ -24,7 +24,7 @@ msgstr "备注"
 #. module: sale_journal
 #: help:res.partner,property_invoice_type:0
 msgid "The type of journal used for sales and picking."
-msgstr "用于销售和拣货的日记账类型。"
+msgstr "用于销售和拣货的账簿类型。"
 
 #. module: sale_journal
 #: sql_constraint:sale.order:0
@@ -86,23 +86,23 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"    销售日记账模块允许你对你的销售订单和发货订单（拣货单）的日记账进行分类。\n"
+"    销售账簿模块允许你对你的销售订单和发货订单（拣货单）的账簿进行分类。\n"
 "    这个模块对按部门核算的大公司非常有用。\n"
 "\n"
-"    你可以把日记账用于不同的目的，比如：\n"
+"    你可以把账簿用于不同的目的，比如：\n"
 "    *不同部门的独立销售\n"
-"    *按卡车或UPS发货的日记账\n"
+"    *按卡车或UPS发货的账簿\n"
 "\n"
-"    日记账可以在不同的状态之间进行转换：\n"
+"    账簿可以在不同的状态之间进行转换：\n"
 "    *草稿，启动，取消，已完成。\n"
 "\n"
-"    可以在不同的日记账上执行批量的操作，以确认所有销售订单，验证或装箱开票，...\n"
+"    可以在不同的账簿上执行批量的操作，以确认所有销售订单，验证或装箱开票，...\n"
 "\n"
 "    它也支持批量开票方式， 可以按业务伙伴或销售订单配置，比如：\n"
 "    *每天开票。\n"
 "    *每月开票，...\n"
 "\n"
-"    同时提供了按日记账的一些统计。\n"
+"    同时提供了按账簿的一些统计。\n"
 "    "
 
 #. module: sale_journal
@@ -113,12 +113,12 @@ msgstr "没分组"
 #. module: sale_journal
 #: selection:sale_journal.invoice.type,invoicing_method:0
 msgid "Grouped"
-msgstr "组"
+msgstr "已分组"
 
 #. module: sale_journal
 #: constraint:res.partner:0
 msgid "Error ! You can not create recursive associated members."
-msgstr "错误！您不能创建递归的相关成员。"
+msgstr "错误！您不能创建递归的协会会员。"
 
 #. module: sale_journal
 #: model:ir.actions.act_window,help:sale_journal.action_definition_journal_invoice_type
@@ -126,8 +126,7 @@ msgid ""
 "Invoice types are used for partners, sales orders and delivery orders. You "
 "can create a specific invoicing journal to group your invoicing according to "
 "your customer's needs: daily, each Wednesday, monthly, etc."
-msgstr ""
-"发票类型对业务伙伴，销售订单和发货订单是有用的。你可以根据用户的需要生成专门的发票日记账来对你的发票进行分组：每天，每周三，每周，每月等。"
+msgstr "发票类型对业务伙伴，销售订单和发货订单是有用的。你可以根据用户的需要生成专门的发票账簿来对你的发票进行分组：每天，每周三，每周，每月等。"
 
 #. module: sale_journal
 #: field:sale_journal.invoice.type,invoicing_method:0
@@ -167,9 +166,9 @@ msgstr "发票类型"
 #. module: sale_journal
 #: model:ir.model,name:sale_journal.model_stock_picking
 msgid "Picking List"
-msgstr "分拣单"
+msgstr "装箱单"
 
 #. module: sale_journal
 #: model:ir.module.module,shortdesc:sale_journal.module_meta_information
 msgid "Managing sales and deliveries by journal"
-msgstr "管理销售和送货分类帐"
+msgstr "管理销售和送货的账簿"

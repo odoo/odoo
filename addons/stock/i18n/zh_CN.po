@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-05-09 10:19+0000\n"
-"PO-Revision-Date: 2011-07-11 10:12+0000\n"
-"Last-Translator: openerp-china.Black Jack <onetimespeed@gmail.com>\n"
+"PO-Revision-Date: 2011-08-04 15:59+0000\n"
+"Last-Translator: openerp-china.black-jack <onetimespeed@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-07-12 05:23+0000\n"
-"X-Generator: Launchpad (build 13168)\n"
+"X-Launchpad-Export-Date: 2011-08-05 05:11+0000\n"
+"X-Generator: Launchpad (build 13604)\n"
 
 #. module: stock
 #: field:product.product,track_outgoing:0
@@ -163,7 +163,7 @@ msgstr "实物盘点表"
 #: view:report.stock.move:0
 #: field:stock.change.standard.price,stock_journal:0
 msgid "Stock journal"
-msgstr "库存凭证簿"
+msgstr "库存账簿"
 
 #. module: stock
 #: view:report.stock.move:0
@@ -177,7 +177,7 @@ msgid ""
 "outgoing stock moves will be posted in this account. This is the default "
 "value for all products in this category, it can also directly be set on each "
 "product."
-msgstr "在进行实时库存估值时,所有出库调拨等价的凭证簿项将被登记在这科目.它是该类型所有产品的默认值,它可以直接设在每个产品上."
+msgstr "在进行实时库存估值时,所有出库调拨等价的分录将被登记在这科目.它是该类型所有产品的默认值,它可以直接设在每个产品上."
 
 #. module: stock
 #: code:addons/stock/stock.py:1170
@@ -460,7 +460,7 @@ msgid ""
 "When doing real-time inventory valuation, counterpart Journal Items for all "
 "incoming stock moves will be posted in this account. If not set on the "
 "product, the one from the product category is used."
-msgstr "在进行实时库存估值时,所有入库调拨对应的凭证簿项将登记入这科目.如果不是设置在这产品上就是设置在这产品的类别上."
+msgstr "在进行实时库存估值时,所有入库调拨对应的分录将登记入这科目.如果不是设置在这产品上就是设置在这产品的类别上."
 
 #. module: stock
 #: field:report.stock.inventory,location_type:0
@@ -616,7 +616,7 @@ msgid ""
 "specific journal according to the type of operation to perform or the "
 "worker/team that should perform the operation. Examples of stock journals "
 "may be: quality control, pick lists, packing, etc."
-msgstr "系统允许你根据执行操作的类型或员工/团队将执行的操作对每个库存操作指定一个具体的凭证簿.例如质量控制,领料单,装箱单等."
+msgstr "系统允许你根据执行操作的类型或员工/团队将执行的操作对每个库存操作指定一个具体的账簿.例如质量控制,领料单,装箱单等."
 
 #. module: stock
 #: field:stock.location,complete_name:0
@@ -709,7 +709,7 @@ msgstr "盘点表明细"
 msgid ""
 "When doing real-time inventory valuation, this is the Accounting Journal in "
 "which entries will be automatically posted when stock moves are processed."
-msgstr "在做实时库存估值时,库存调拨处理将自动登入这凭证簿条目里."
+msgstr "在做实时库存估值时,库存调拨处理将自动登入这账簿的明细里."
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_partial_picking
@@ -871,7 +871,7 @@ msgstr "紧急"
 #: view:stock.picking:0
 #: report:stock.picking.list:0
 msgid "Journal"
-msgstr "凭证簿"
+msgstr "账簿"
 
 #. module: stock
 #: help:stock.picking,location_id:0
@@ -1185,7 +1185,7 @@ msgstr "对当前产品,这存货地点将被使用,替代默认的作为按生�
 msgid ""
 "Can not create Journal Entry, Output Account defined on this product and "
 "Variant account on category of this product are same."
-msgstr "这产品定义这出库科目或用同类别的科目,无法创建凭证."
+msgstr "这产品定义这出库科目或用同类别的科目,无法创建分录."
 
 #. module: stock
 #: code:addons/stock/stock.py:1319
@@ -1759,7 +1759,7 @@ msgstr "输入退货的数量"
 msgid ""
 "Can not create Journal Entry, Input Account defined on this product and "
 "Variant account on category of this product are same."
-msgstr "无法建立凭证,请为产品或产品分类定义科目"
+msgstr "无法建立分录,请为产品或产品分类定义科目"
 
 #. module: stock
 #: view:stock.change.standard.price:0
@@ -1969,7 +1969,7 @@ msgstr "总计"
 msgid ""
 "Inventory Journal in which the chained move will be written, if the Chaining "
 "Type is not Transparent (no journal is used if left empty)"
-msgstr "库存凭证簿在连锁调拨将被记录,如果连锁类型不清楚(如左为空,凭证簿不记录)"
+msgstr "库存账簿在连锁调拨将被记录,如果连锁类型不清楚(如左为空,账簿不记录)"
 
 #. module: stock
 #: view:board.board:0
@@ -2106,7 +2106,7 @@ msgstr "设为报价单"
 #: model:ir.actions.act_window,name:stock.action_stock_journal_form
 #: model:ir.ui.menu,name:stock.menu_action_stock_journal_form
 msgid "Stock Journals"
-msgstr "库存日志"
+msgstr "库存账簿"
 
 #. module: stock
 #: selection:report.stock.move,type:0
@@ -2275,7 +2275,7 @@ msgid ""
 "current inventory value, and the stock input and stock output account will "
 "hold the counterpart moves for incoming and outgoing products."
 msgstr ""
-"如果一产品开启实时估价,系统将自动用凭证记录库存调拨.这库存变动科目设置在这产品类别上,它将表示这库存产品的价格.库存入库出库科目将记录调拨的入库产品和出"
+"如果一产品开启实时估价,系统将自动用分录记录库存调拨.这库存变动科目设置在这产品类别上,它将表示这库存产品的价格.库存入库出库科目将记录调拨的入库产品和出"
 "库产品."
 
 #. module: stock
@@ -2425,7 +2425,7 @@ msgstr "库存量预报"
 #: field:stock.journal,name:0
 #: field:stock.picking,stock_journal_id:0
 msgid "Stock Journal"
-msgstr "库存凭证簿"
+msgstr "库存账簿"
 
 #. module: stock
 #: selection:report.stock.inventory,location_type:0
@@ -2578,7 +2578,7 @@ msgid ""
 "incoming stock moves will be posted in this account. This is the default "
 "value for all products in this category, it can also directly be set on each "
 "product."
-msgstr "当进行实时库存估值时,对应的所有入库调拨凭证项将记录到这科目上,它是产品分类的默认值,它能直接设定在每个产品上."
+msgstr "当进行实时库存估值时,对应的所有入库调拨分录将记录到这科目上,它是产品分类的默认值,它能直接设定在每个产品上."
 
 #. module: stock
 #: field:stock.production.lot.revision,date:0
@@ -2820,7 +2820,7 @@ msgstr "盘点分析"
 #. module: stock
 #: field:stock.invoice.onshipping,journal_id:0
 msgid "Destination Journal"
-msgstr "目标凭证簿"
+msgstr "目标账簿"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_stock_tracking_lot_2_stock_report_tracklots
@@ -2969,8 +2969,8 @@ msgid ""
 "preconfigured logistics rules, but you can also record manual stock "
 "operations."
 msgstr ""
-"内部调拨显示您仓库里必须要执行的操作.所有操作都能被划分入库存凭证簿使每个员工都有自己的日志记录自己执行的操作,大多数操作系统根据您预先设置物流规则自动准"
-"备,但您也可以记录手动的库存操作."
+"内部调拨显示您仓库里必须要执行的操作.所有操作都能被划分入库存账簿使每个员工都有自己的账簿记录自己执行的操作,大多数操作系统根据您预先设置物流规则自动准备"
+",但您也可以记录手动的库存操作."
 
 #. module: stock
 #: view:stock.move:0
@@ -3393,7 +3393,7 @@ msgstr ""
 #. module: stock
 #: field:stock.location,chained_journal_id:0
 msgid "Chaining Journal"
-msgstr "连锁存货地点凭证簿"
+msgstr "连锁库位账簿"
 
 #. module: stock
 #: code:addons/stock/stock.py:732
@@ -3641,7 +3641,7 @@ msgstr "11月"
 #: code:addons/stock/stock.py:2018
 #, python-format
 msgid "There is no journal defined on the product category: \"%s\" (id: %d)"
-msgstr "这产品分类: \"%s\" (id: %d)没定义凭证簿."
+msgstr "这产品分类: \"%s\" (id: %d)没定义账簿."
 
 #. module: stock
 #: code:addons/stock/product.py:382
@@ -3872,7 +3872,7 @@ msgid ""
 "When doing real-time inventory valuation, counterpart Journal Items for all "
 "outgoing stock moves will be posted in this account. If not set on the "
 "product, the one from the product category is used."
-msgstr "在进行实时库存估值时,对应的出库调拨分录项将被记录在这个科目;如果没设置在这产品上就是设置在这产品分类里."
+msgstr "在进行实时库存估值时,对应的出库调拨分录将被记录在这个科目;如果没设置在这产品上就是设置在这产品分类里."
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action5
