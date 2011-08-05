@@ -816,6 +816,7 @@ class hr_payslip(osv.osv):
 
     def _calculate(self, cr, uid, ids, field_names, arg, context=None):
         slip_line_obj = self.pool.get('hr.payslip.line')
+        register_pool = self.pool.get('company.contribution')
         res = {}
         for rs in self.browse(cr, uid, ids, context=context):
             allow = 0.0
@@ -852,7 +853,12 @@ class hr_payslip(osv.osv):
                     others += amount
                 elif line.type == 'otherpay':
                     others += amount
-                slip_line_obj.write(cr, uid, [line.id], {'total':amount}, context=context)
+
+                company_contrib = 0.0
+                for contrib_line in line.category_id.contribute_ids:
+                    company_contrib += register_pool.compute(cr, uid, contrib_line.id, amount, context)
+
+                slip_line_obj.write(cr, uid, [line.id], {'total':amount, 'company_contrib':company_contrib}, context=context)
 
             record = {
                 'allounce':allow,
