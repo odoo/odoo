@@ -1,19 +1,23 @@
 # -*- coding: utf-8 -*-
 
-import base64, glob, os, re
+import base64
+import csv
+import glob
+import operator
+import os
+import re
+import simplejson
+import textwrap
+import xmlrpclib
 from xml.etree import ElementTree
 from cStringIO import StringIO
 
-import operator
-import simplejson
+import cherrypy
 
 import openerpweb
 import openerpweb.ast
 import openerpweb.nonliterals
 
-import cherrypy
-import xmlrpclib
-import csv
 
 # Should move to openerpweb.Xml2Json
 class Xml2Json:
@@ -86,6 +90,27 @@ def concat_files(file_list):
     files_concat = "".join(files_content)
     return files_concat
 
+home_template = textwrap.dedent("""<!DOCTYPE html>
+<html style="height: 100%%">
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+        <title>OpenERP</title>
+        %(javascript)s
+        <script type="text/javascript">
+            $(function() {
+                QWeb = new QWeb2.Engine();
+                openerp.init().base.webclient("oe");
+            });
+        </script>
+        <link rel="shortcut icon" href="/base/static/src/img/favicon.ico" type="image/x-icon"/>
+        %(css)s
+        <!--[if lte IE 7]>
+        <link rel="stylesheet" href="/base/static/src/css/base-ie7.css" type="text/css"/>
+        <![endif]-->
+    </head>
+    <body id="oe" class="openerp"></body>
+</html>
+""")
 class WebClient(openerpweb.Controller):
     _cp_path = "/base/webclient"
 
@@ -114,41 +139,22 @@ class WebClient(openerpweb.Controller):
         return concat
 
     @openerpweb.httprequest
-    def home(self, req):
-        template ="""<!DOCTYPE html>
-        <html style="height: 100%%">
-        <head>
-            <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-            <title>OpenERP</title>
-            %s
-            <script type="text/javascript">
-            $(function() {
-                QWeb = new QWeb2.Engine(); 
-                openerp.init().base.webclient("oe"); 
-            });
-            </script>
-            <link rel="shortcut icon" href="/base/static/src/img/favicon.ico" type="image/x-icon"/>
-            %s
-            <!--[if lte IE 7]>
-            <link rel="stylesheet" href="/base/static/src/css/base-ie7.css" type="text/css"/>
-            <![endif]-->
-        </head>
-        <body id="oe" class="openerp"></body>
-        </html>
-        """.replace('\n'+' '*8,'\n')
-
+    def home(self, req, s_action=None):
         # script tags
         jslist = ['/base/webclient/js']
         if 1: # debug == 1
             jslist = manifest_glob(['base'], 'js')
-        js = "\n    ".join(['<script type="text/javascript" src="%s"></script>'%i for i in jslist])
+        js = "\n        ".join(['<script type="text/javascript" src="%s"></script>'%i for i in jslist])
 
         # css tags
         csslist = ['/base/webclient/css']
         if 1: # debug == 1
             csslist = manifest_glob(['base'], 'css')
-        css = "\n    ".join(['<link rel="stylesheet" href="%s">'%i for i in csslist])
-        r = template % (js, css)
+        css = "\n        ".join(['<link rel="stylesheet" href="%s">'%i for i in csslist])
+        r = home_template % {
+            'javascript': js,
+            'css': css
+        }
         return r
 
 class Database(openerpweb.Controller):
@@ -172,9 +178,13 @@ class Database(openerpweb.Controller):
     def create(self, req, fields):
 
         params = dict(map(operator.itemgetter('name', 'value'), fields))
-        create_attrs = operator.itemgetter(
-            'super_admin_pwd', 'db_name', 'demo_data', 'db_lang', 'create_admin_pwd')(
-            params)
+        create_attrs = (
+            params['super_admin_pwd'],
+            params['db_name'],
+            bool(params.get('demo_data')),
+            params['db_lang'],
+            params['create_admin_pwd']
+        )
 
         try:
             return req.session.proxy("db").create(*create_attrs)
@@ -364,6 +374,11 @@ class Session(openerpweb.Controller):
             return None
         return saved_actions["actions"].get(key)
 
+    @openerpweb.jsonrequest
+    def check(self, req):
+        req.session.assert_valid()
+        return None
+
 def eval_context_and_domain(session, context, domain=None):
     e_context = session.eval_context(context)
     # should we give the evaluated context as an evaluation context to the domain?
@@ -379,22 +394,21 @@ def load_actions_from_ir_values(req, key, key2, models, meta, context):
             for id, name, action in actions]
 
 def clean_action(action, session):
+    action.setdefault('flags', {})
     if action['type'] != 'ir.actions.act_window':
         return action
     # values come from the server, we can just eval them
-    if isinstance(action.get('context', None), basestring):
+    if isinstance(action.get('context'), basestring):
         action['context'] = eval(
             action['context'],
             session.evaluation_context()) or {}
 
-    if isinstance(action.get('domain', None), basestring):
+    if isinstance(action.get('domain'), basestring):
         action['domain'] = eval(
             action['domain'],
             session.evaluation_context(
                 action.get('context', {}))) or []
-    if 'flags' not in action:
-        # Set empty flags dictionary for web client.
-        action['flags'] = dict()
+
     return fix_view_modes(action)
 
 def generate_views(action):

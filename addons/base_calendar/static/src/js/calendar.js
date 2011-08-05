@@ -21,6 +21,9 @@ openerp.base_calendar.CalendarView = openerp.base.View.extend({
     start: function() {
         this.rpc("/base_calendar/calendarview/load", {"model": this.model, "view_id": this.view_id, 'toolbar': true}, this.on_loaded);
     },
+    stop: function() {
+        scheduler.clearAll();
+    },
     on_loaded: function(data) {
         this.calendar_fields = {};
         this.ids = this.dataset.ids;
@@ -64,41 +67,41 @@ openerp.base_calendar.CalendarView = openerp.base.View.extend({
             this.sidebar.add_toolbar(data.fields_view.toolbar);
             this.set_common_sidebar_sections(this.sidebar);
             this.sidebar.do_unfold();
-            this.sidebar.do_fold.add_last(this.resize_scheduler);
-            this.sidebar.do_unfold.add_last(this.resize_scheduler);
-            this.sidebar.do_toggle.add_last(this.resize_scheduler);
+            this.sidebar.do_fold.add_last(this.refresh_scheduler);
+            this.sidebar.do_unfold.add_last(this.refresh_scheduler);
+            this.sidebar.do_toggle.add_last(this.refresh_scheduler);
         }
 
         this.init_scheduler();
-        this.load_scheduler();
         this.has_been_loaded.resolve();
+        if (this.dataset.ids.length) {
+            this.dataset.read_ids(this.dataset.ids, _.keys(this.fields), this.on_events_loaded);
+        }
     },
     init_scheduler: function() {
         var self = this;
         scheduler.clearAll();
-        scheduler.config.api_date = "%Y-%m-%d %H:%M:%S";
-        //scheduler.config.details_on_dblclick = true;
-        //scheduler.config.details_on_create = true;
-        scheduler.keys.edit_cancel = 27;
-
         if (this.fields[this.date_start]['type'] == 'time') {
             scheduler.config.xml_date = "%H:%M:%S";
         } else {
-            scheduler.config.xml_date = "%Y-%m-%d %H:%M:%S";
+            scheduler.config.xml_date = "%Y-%m-%d %H:%i";
         }
-
-        this.mode = this.mode || 'month';
-
+        scheduler.config.api_date = "%Y-%m-%d %H:%i";
         scheduler.config.multi_day = true; //Multi day events are not rendered in daily and weekly views
+        scheduler.config.start_on_monday = true;
+        scheduler.config.scroll_hour = 8;
+        scheduler.config.drag_resize = scheduler.config.drag_create = !!this.date_stop;
 
         // Initialize Sceduler
+        this.mode = this.mode || 'month';
         scheduler.init('openerp_scheduler', null, this.mode);
 
+        scheduler.detachAllEvents();
         scheduler.attachEvent('onEventAdded', this.do_create_event);
         scheduler.attachEvent('onEventDeleted', this.do_delete_event);
         scheduler.attachEvent('onEventChanged', this.do_save_event);
 
-        scheduler.renderCalendar({
+        this.mini_calendar = scheduler.renderCalendar({
             container: this.sidebar.navigator.element_id,
             navigation: true,
             date: scheduler._date,
@@ -107,8 +110,11 @@ openerp.base_calendar.CalendarView = openerp.base.View.extend({
             }
         });
     },
-    resize_scheduler: function() {
+    refresh_scheduler: function() {
         scheduler.setCurrentView(scheduler._date);
+    },
+    refresh_minical: function() {
+        scheduler.updateCalendar(this.mini_calendar);
     },
     load_scheduler: function() {
         var self = this;
@@ -119,14 +125,14 @@ openerp.base_calendar.CalendarView = openerp.base.View.extend({
                     '/base_calendar/static/lib/dhtmlxScheduler/sources/locale_' + self.session.locale_code + '.js',
                     '/base_calendar/static/lib/dhtmlxScheduler/sources/locale_recurring_' + self.session.locale_code + '.js'
                 ]).wait(function() {
-                    self.schedule_events(events);
+                    self.on_events_loaded(events);
                 });
             } else {
-                self.schedule_events(events);
+                self.on_events_loaded(events);
             }
         });
     },
-    schedule_events: function(events) {
+    on_events_loaded: function(events) {
         var self = this;
         scheduler.clearAll();
 
@@ -163,9 +169,9 @@ openerp.base_calendar.CalendarView = openerp.base.View.extend({
             }
             res_events.push(this.convert_event(evt));
         }
-
         scheduler.parse(res_events, 'json');
-        this.resize_scheduler();
+        this.refresh_scheduler();
+        this.refresh_minical();
         this.sidebar.responsible.on_events_loaded(sidebar_items);
     },
     convert_event: function(event) {
@@ -254,21 +260,27 @@ openerp.base_calendar.CalendarView = openerp.base.View.extend({
             var id = parseInt(r.result, 10);
             self.dataset.ids.push(id);
             scheduler.changeEventId(event_id, id);
+            self.refresh_minical();
         }, function(r, event) {
             // TODO: open form view
             self.notification.warn(self.name, "Could not create event");
-            event.preventDefault();
         });
     },
     do_save_event: function(event_id, event_obj) {
         var self = this,
             data = this.get_event_data(event_obj);
-        this.dataset.write(event_id, data);
+        this.dataset.write(parseInt(event_id, 10), data, function() {
+            self.refresh_minical();
+        });
     },
     do_delete_event: function(event_id, event_obj) {
-        var self = this;
-        this.dataset.unlink(event_id, function(r) {
-        });
+        // dhtmlx sends this event even when it does not exist in openerp.
+        // Eg: use cancel in dhtmlx new event dialog
+        if (_.indexOf(this.dataset.ids, event_id) > -1) {
+            this.dataset.unlink(parseInt(event_id, 10, function() {
+                self.refresh_minical();
+            }));
+        }
     },
     get_event_data: function(event_obj) {
         var data = {
@@ -302,9 +314,7 @@ openerp.base_calendar.CalendarView = openerp.base.View.extend({
             // TODO: handle non-empty results.group_by with read_group
             self.dataset.context = self.context = results.context;
             self.dataset.domain = self.domain = results.domain;
-            self.dataset.read_slice(_.keys(self.fields), 0, self.limit, function(events) {
-                self.schedule_events(events);
-            });
+            self.dataset.read_slice(_.keys(self.fields), 0, self.limit, self.on_events_loaded);
         });
     },
     do_show: function () {

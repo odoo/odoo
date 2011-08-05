@@ -5,7 +5,7 @@
     'active': True,
     'js' : [
         "static/lib/datejs/date-en-US.js",
-        "static/lib/jquery/jquery-1.5.2.js",
+        "static/lib/jquery/jquery-1.6.2.js",
         "static/lib/jquery.form/jquery.form.js",
         "static/lib/jquery.validate/jquery.validate.js",
         "static/lib/jquery.ba-bbq/jquery.ba-bbq.js",

@@ -107,15 +107,20 @@ class OpenERPSession(object):
         if uid: self.get_context()
         return uid
 
-    def execute(self, model, func, *l, **d):
+    def assert_valid(self):
+        """
+        Ensures this session is valid (logged into the openerp server)
+        """
         if not (self._db and self._uid and self._password):
             raise OpenERPUnboundException()
+
+    def execute(self, model, func, *l, **d):
+        self.assert_valid()
         r = self.proxy('object').execute(self._db, self._uid, self._password, model, func, *l, **d)
         return r
 
     def exec_workflow(self, model, id, signal):
-        if not (self._db and self._uid and self._password):
-            raise OpenERPUnboundException()
+        self.assert_valid()
         r = self.proxy('object').exec_workflow(self._db, self._uid, self._password, model, signal, id)
         return r
 
@@ -366,7 +371,7 @@ class HttpRequest(object):
         self.context = kw.get('context', {})
         host = cherrypy.config['openerp.server.host']
         port = cherrypy.config['openerp.server.port']
-        self.session = self.httpsession.setdefault(kw.get('session_id'), OpenERPSession(host, port))
+        self.session = self.httpsession.setdefault(kw.pop('session_id', None), OpenERPSession(host, port))
         self.result = ""
         if request.method == 'GET':
             print "GET --> %s.%s %s %r" % (controller.__class__.__name__, f.__name__, request, kw)

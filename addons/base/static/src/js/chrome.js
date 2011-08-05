@@ -161,6 +161,8 @@ openerp.base.Session = openerp.base.Widget.extend( /** @lends openerp.base.Sessi
     session_restore: function () {
         this.uid = this.get_cookie('uid');
         this.session_id = this.get_cookie('session_id');
+        this.db = this.get_cookie('db');
+        this.login = this.get_cookie('login');
         // we should do an rpc to confirm that this session_id is valid and if it is retrieve the information about db and login
         // then call on_session_valid
         this.on_session_valid();
@@ -171,12 +173,18 @@ openerp.base.Session = openerp.base.Widget.extend( /** @lends openerp.base.Sessi
     session_save: function () {
         this.set_cookie('uid', this.uid);
         this.set_cookie('session_id', this.session_id);
+        this.set_cookie('db', this.db);
+        this.set_cookie('login', this.login);
     },
     logout: function() {
-        this.uid = this.get_cookie('uid');
-        this.session_id = this.get_cookie('session_id');
+        delete this.uid;
+        delete this.session_id;
+        delete this.db;
+        delete this.login;
         this.set_cookie('uid', '');
         this.set_cookie('session_id', '');
+        this.set_cookie('db', '');
+        this.set_cookie('login', '');
         this.on_session_invalid(function() {});
     },
     /**
@@ -858,7 +866,7 @@ openerp.base.Menu =  openerp.base.Widget.extend({
     init: function(parent, element_id, secondary_menu_id) {
         this._super(parent, element_id);
         this.secondary_menu_id = secondary_menu_id;
-        this.$secondary_menu = $("#" + secondary_menu_id);
+        this.$secondary_menu = $("#" + secondary_menu_id).hide();
         this.menu = false;
     },
     start: function() {
@@ -917,7 +925,7 @@ openerp.base.Menu =  openerp.base.Widget.extend({
                     this.on_menu_action_loaded);
         }
 
-        $('.active', this.$element.add(this.$secondary_menu)).removeClass('active');
+        $('.active', this.$element.add(this.$secondary_menu.show())).removeClass('active');
         $parent.addClass('active');
         $menu.addClass('active');
         $menu.parent('h4').addClass('active');
@@ -988,13 +996,63 @@ openerp.base.WebClient = openerp.base.Widget.extend({
 
         // if using saved actions, load the action and give it to action manager
         var parameters = jQuery.deparam(jQuery.param.querystring());
-        if(parameters["s_action"] != undefined) {
-            var key = parseInt(parameters["s_action"]);
+        if (parameters["s_action"] != undefined) {
+            var key = parseInt(parameters["s_action"], 10);
             var self = this;
             this.rpc("/base/session/get_session_action", {key:key}, function(action) {
                 self.action_manager.do_action(action);
             });
+        } else if (openerp._modules_loaded) { // TODO: find better option than this
+            this.load_url_state()
+        } else {
+            this.session.on_modules_loaded.add({
+                callback: $.proxy(this, 'load_url_state'),
+                unique: true,
+                position: 'last'
+            })
         }
+    },
+    /**
+     * Loads state from URL if any, or checks if there is a home action and
+     * loads that, assuming we're at the index
+     */
+    load_url_state: function () {
+        var self = this;
+        // TODO: add actual loading if there is url state to unpack, test on window.location.hash
+
+        // not logged in
+        if (!this.session.uid) { return; }
+        var ds = new openerp.base.DataSetSearch(this, 'res.users');
+        ds.read_ids([this.session.uid], ['action_id'], function (users) {
+            var home_action = users[0].action_id;
+            if (!home_action) {
+                self.default_home();
+                return;
+            }
+            self.execute_home_action(home_action[0], ds);
+        })
+    },
+    default_home: function () { },
+    /**
+     * Bundles the execution of the home action
+     *
+     * @param {Number} action action id
+     * @param {openerp.base.DataSet} dataset action executor
+     */
+    execute_home_action: function (action, dataset) {
+        var self = this;
+        this.rpc('/base/action/load', {
+            action_id: action,
+            context: dataset.get_context()
+        }, function (meh) {
+            var action = meh.result;
+            action.context = _.extend(action.context || {}, {
+                active_id: false,
+                active_ids: [false],
+                active_model: dataset.model
+            });
+            self.action_manager.do_action(action);
+        });
     },
     on_menu_action: function(action) {
         this.action_manager.do_action(action);
