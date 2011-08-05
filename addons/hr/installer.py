@@ -24,7 +24,7 @@ class hr_installer(osv.osv_memory):
     _inherit = 'base.setup.installer'
     _columns = {
         # Human Resources Management
-        'hr_holidays': fields.boolean('Holidays / Leaves Management',
+        'hr_holidays': fields.boolean('Leaves Management',
             help="Tracks employee leaves, allocation requests and planning."),
         'hr_expense': fields.boolean('Expenses',
             help="Tracks and manages employee expenses, and can "
