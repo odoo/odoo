@@ -63,7 +63,6 @@
                                 <tree string="Members">
                                     <field name="name"/>
                                     <field name="user_email"/>
-                                    <field name="address_id"/>
                                 </tree>
                             </field>
                         </page>
@@ -397,7 +396,7 @@
             <field name="arch" type="xml">
                <search string="Task Edition">
                     <group col="20" colspan="4">
-                        <filter string="Current" domain="[('state','in',('open','draft'))]"  name="current" help="Draft and In Progress tasks" icon="terp-check"/>
+                        <filter string="Current" domain="[('state','in',('open','draft','pending'))]"  name="current" help="Draft, In Progress and Pending Tasks" icon="terp-check"/>
                         <filter string="In Progress" domain="[('state','=','open')]" help="In Progress Tasks" icon="terp-camera_test"/>
                         <filter string="Pending" domain="[('state','=','pending')]" context="{'show_delegated':False}" help="Pending Tasks" icon="terp-gtk-media-pause"/>
                         <separator orientation="vertical"/>
@@ -546,9 +545,9 @@
           <field name="inherit_id" ref="base.view_users_form"/>
           <field eval="18" name="priority"/>
           <field name="arch" type="xml">
-              <xpath expr="/form/notebook" position="before">
+              <group name="default_filters" position="inside">
                    <field name="context_project_id"/>
-              </xpath>
+              </group>
           </field>
      </record>
 
@@ -559,9 +558,9 @@
          <field name="type">form</field>
          <field eval="18" name="priority"/>
          <field name="arch" type="xml">
-            <page string="Current Activity" position="inside">
-                <field name="context_project_id" completion="1" context="{'user_prefence':True}" widget="selection" readonly="0"/>
-            </page>
+            <group name="default_filters" position="inside">
+                <field name="context_project_id" context="{'user_prefence':True}" widget="selection"/>
+            </group>
        </field>
     </record>
     <act_window context="{'search_default_user_id': [active_id], 'default_user_id': active_id}" domain="[('state', '&lt;&gt;', 'cancelled'),('state', '&lt;&gt;', 'done')]" id="act_res_users_2_project_task_opened" name="Assigned tasks" res_model="project.task" src_model="res.users" view_mode="tree,form,gantt,calendar,graph" view_type="form"/>
