@@ -14,6 +14,7 @@ openerp.base_kanban.KanbanView = openerp.base.View.extend({
         this.domains = this.dataset.domain;
         this.contexts = this.dataset.context;
         this.group_by = false;
+        this.destination_index = false;
     },
 
     start: function() {
@@ -51,6 +52,9 @@ openerp.base_kanban.KanbanView = openerp.base.View.extend({
         this.$element.find( ".oe_table_column " ).css("width", 99 / datas.length +"%");
 		this.$element.find(".oe_column").sortable({
 		    connectWith: ".oe_column",
+		    start: function(event, ui) {
+                self.destination_index = ui.item.index();
+            },
 		    stop: self.on_recieve_record,
 		});
 		this.$element.find(".record").addClass("ui-widget ui-widget-content ui-helper-clearfix ui-corner-all")
@@ -75,32 +79,32 @@ openerp.base_kanban.KanbanView = openerp.base.View.extend({
     on_recieve_record: function(event, ui) {
         var self = this;
         var from = ui.item.index(), to = ui.item.prev().index() || 0;
-        var child_record = ui.item.parent().children();
-        var data, sequence=1, index = to;
         this.flag = false;
-        child_record.splice(0, to);
-        if(to >= 0 && child_record) {
-            var record_id = child_record.attr('id').split("_");
-            if(record_id.length >= 2) {
-	            _.each(this.all_records, function(record){
-	                if(parseInt(record_id[1]) == record.id && record.sequence) {
-	                    sequence = record.sequence;
-	                }
-	            });
-            }
+        if(self.destination_index != from){
+	        var child_record = ui.item.parent().children();
+	        var data, sequence=1, index = to;
+	        child_record.splice(0, to);
+	        if(to >= 0 && child_record) {
+	            var record_id = child_record.attr('id').split("_");
+	            if(record_id.length >= 2) {
+		            _.each(this.all_records, function(record){
+		                if(parseInt(record_id[1]) == record.id && record.sequence) {
+		                    sequence = record.sequence;
+		                }
+		            });
+	            }
+	        }
+	        _.each(child_record, function (child) {
+	            var child_id = parseInt($(child).attr("id").split("_")[1]);
+	            if(child_id) {
+	                self.dataset.write(child_id, {sequence: sequence});
+	                sequence++;
+	                self.flag = true;
+	            }
+	        });
         }
-        _.each(child_record, function (child) {
-            var child_id = parseInt($(child).attr("id").split("_")[1]);
-            if(child_id) {
-                self.dataset.write(child_id, {sequence: sequence});
-                sequence++;
-                self.flag = true;
-            }
-        });
-        console.log(":this.group_by_field:::",this.group_by_field);
         if(ui.item.attr("id") && this.group_by_field) {
             var value = ui.item.closest("td").attr("id")
-            console.log("value:::",value);
             if(value) {
                 var data_val = {};
                 value = value.split("_")[1];
@@ -108,7 +112,6 @@ openerp.base_kanban.KanbanView = openerp.base.View.extend({
                     value = false;
                 }
                 data_val[this.group_by_field] = value;
-                console.log("D:D:::::",data_val, parseInt(ui.item.attr("id").split("_")[1]));
                 this.dataset.write(parseInt(ui.item.attr("id").split("_")[1]), data_val);
                 this.flag = true;
             }
@@ -116,6 +119,7 @@ openerp.base_kanban.KanbanView = openerp.base.View.extend({
         if(this.flag) {
             this.do_actual_search(this.domains, this.contexts, this.group_by);
         }
+        this.destination_index = false;
     },
 
     on_reload_kanban: function(datas){
