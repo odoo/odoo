@@ -173,7 +173,7 @@ init: function(parent, element_id, dataset, view_id) {
                     }
 
                     if (grp_key == false){
-                        grp_key = "False";
+                        grp_key = "Undefined";
                     }
 
                     if (j == 0){
