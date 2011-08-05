@@ -856,7 +856,11 @@ Normal Recurring: the wizard is visible in the configuration panel regardless of
         wizard = self.browse(cr, uid, wizard_id, context=context)
         res = self.pool.get('ir.actions.act_window').read(cr, uid, wizard.action_id.id, [], context=context)
         res.update({'nodestroy': True})
-
+        
+        # disable log when running wizard
+        res['context'] = res.get('context') or {}
+        res['context'].update({'disable_log': True})
+        
         # Open a specific record when res_id is provided in the context
         if res.get('context'):
             user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
@@ -864,6 +868,8 @@ Normal Recurring: the wizard is visible in the configuration panel regardless of
             if ctx.get('res_id'):
                 res.update({'res_id': ctx.pop('res_id')})
                 res.update({'context': ctx})
+        
+        #
         return res
 
     def action_open(self, cr, uid, ids, context=None):
