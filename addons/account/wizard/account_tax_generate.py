@@ -37,35 +37,10 @@ class account_tax_generate(osv.osv_memory):
     }
 
     def tax_generate(self, cr, uid, ids, context=None):
-        for tax in self.browse(cr, uid, ids, context=context)[0].template_ids:
-            vals_tax = {
-                'name':tax.name,
-                'sequence': tax.sequence,
-                'amount':tax.amount,
-                'type':tax.type,
-                'applicable_type': tax.applicable_type,
-                'domain':tax.domain,
-                'parent_id': tax.parent_id and ((tax.parent_id.id in tax_template_ref) and tax_template_ref[tax.parent_id.id]) or False,
-                'child_depend': tax.child_depend,
-                'python_compute': tax.python_compute,
-                'python_compute_inv': tax.python_compute_inv,
-                'python_applicable': tax.python_applicable,
-                'base_code_id': tax.base_code_id and ((tax.base_code_id.id in tax_code_template_ref) and tax_code_template_ref[tax.base_code_id.id]) or False,
-                'tax_code_id': tax.tax_code_id and ((tax.tax_code_id.id in tax_code_template_ref) and tax_code_template_ref[tax.tax_code_id.id]) or False,
-                'base_sign': tax.base_sign,
-                'tax_sign': tax.tax_sign,
-                'ref_base_code_id': tax.ref_base_code_id and ((tax.ref_base_code_id.id in tax_code_template_ref) and tax_code_template_ref[tax.ref_base_code_id.id]) or False,
-                'ref_tax_code_id': tax.ref_tax_code_id and ((tax.ref_tax_code_id.id in tax_code_template_ref) and tax_code_template_ref[tax.ref_tax_code_id.id]) or False,
-                'ref_base_sign': tax.ref_base_sign,
-                'ref_tax_sign': tax.ref_tax_sign,
-                'include_base_amount': tax.include_base_amount,
-                'description':tax.description,
-                'company_id': self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id,
-                'type_tax_use': tax.type_tax_use,
-                'price_include': tax.price_include
-            }
-            new_tax = self.pool.get('account.tax').create(cr, uid, vals_tax)
-            self.pool.get('account.tax.template').write(cr, uid , [tax.id], {'installable': True})
+        context.update({'false_tax_template': True})
+        tax_templates_load = [x for x in self.browse(cr, uid, ids, context=context)[0].template_ids]
+        taxes_ids = self.pool.get('wizard.multi.charts.accounts').generate_tax(cr, uid, ids, tax_templates_load, {}, context=context)
+        self.pool.get('account.tax.template').write(cr, uid , taxes_ids['taxes_id'].keys(), {'installable': True})
         return {}
 
 account_tax_generate()
