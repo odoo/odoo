@@ -24,6 +24,7 @@
     'name': 'Customer & Supplier Relationship Management',
     'version': '1.0',
     'category': 'Sales',
+    'complexity': "easy",
     'description': """
 The generic OpenERP Customer Relationship Management.
 =====================================================
@@ -56,6 +57,7 @@ Creates a dashboard for CRM that includes:
     'depends': [
         'base',
         'base_action_rule',
+        'base_setup',
         'process',
         'mail_gateway',
         'base_calendar',

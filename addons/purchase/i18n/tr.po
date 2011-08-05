@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 04:53+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-07-23 04:56+0000\n"
+"X-Generator: Launchpad (build 13405)\n"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_confirmingpurchaseorder0
@@ -22,12 +22,15 @@ msgid ""
 "The buyer has to approve the RFQ before being sent to the supplier. The RFQ "
 "becomes a confirmed Purchase Order."
 msgstr ""
+"Alıcı, tedarikçiye gönderilmeden önce RFQ'yu onaylamalıdır. RFQ onaylanmış "
+"bir Satınalma Siparişi haline gelir."
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:282
 #, python-format
 msgid "You can not confirm purchase order without Purchase Order Lines."
 msgstr ""
+"Satınalma siparişini, Alış Sipariş Kalemleri olmadan onaylayamazsınız."
 
 #. module: purchase
 #: field:purchase.order,invoiced:0
@@ -48,11 +51,13 @@ msgid ""
 "You have to select a product UOM in the same category than the purchase UOM "
 "of the product"
 msgstr ""
+"Aynı kategoride, ürün satınalma biriminden başka, bir ürün birimi seçmeniz "
+"gerekir"
 
 #. module: purchase
 #: help:purchase.report,date:0
 msgid "Date on which this document has been created"
-msgstr ""
+msgstr "Bu belgenin oluşturulduğu tarih"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_rfq
@@ -66,16 +71,24 @@ msgid ""
 "supplier invoices: based on the order, based on the receptions or manual "
 "encoding."
 msgstr ""
+"Ürün almak istediğinizde bir tedarikçiye teklif isteği oluşturabilirsiniz, "
+"ancak satınalma henüz onaylamış değildir. Bu menüyü lojistik kurallarınız "
+"(minimum stok, MTO vb.) bazında otomatik olarak oluşturulan teklif "
+"isteklerini gözden geçirmek için de kullanabilirsiniz. Sipariş "
+"onaylandığında, teklif talebini bir satınalma siparişine "
+"dönüştürebilirsiniz. Uzatılmış arayüzü kullanırsanız (kullanıcı tercihleri), "
+"tedarikçi faturalarınızı kontrol etme yönteminizi seçebilirsiniz: sipariş "
+"bazında, manuel kodlama veya resepsiyon bazında."
 
 #. module: purchase
 #: selection:purchase.order,invoice_method:0
-msgid "From Picking"
-msgstr "İrsaliyeden"
+msgid "From Reception"
+msgstr ""
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "Not Invoiced"
-msgstr ""
+msgstr "Faturalandırılmadı"
 
 #. module: purchase
 #: field:purchase.order,dest_address_id:0
@@ -100,7 +113,7 @@ msgstr "Tedarikçi"
 #. module: purchase
 #: view:purchase.order.line_invoice:0
 msgid "Do you want to generate the supplier invoices ?"
-msgstr ""
+msgstr "Tedarikçi faturalarını oluşturmak istiyor musunuz?"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_form_action
@@ -109,35 +122,38 @@ msgid ""
 "products, etc. For each purchase order, you can track the products received, "
 "and control the supplier invoices."
 msgstr ""
+"Bu menüyü referanslar, tedarikçi, ürün vb. göre satınalma siparişlerinizde "
+"arama yapmak için kullanın. Her bir satın alma siparişi için, alınan "
+"ürünleri izleyebilir ve tedarikçi faturalarını kontrol edebilirsiniz."
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:722
 #, python-format
 msgid "The selected supplier only sells this product by %s"
-msgstr ""
+msgstr "Seçilen tedarikçi bu ürünün sadece %s'ini satar"
 
 #. module: purchase
 #: code:addons/purchase/wizard/purchase_line_invoice.py:156
 #, python-format
 msgid "Supplier Invoices"
-msgstr ""
+msgstr "Tedarikçi Faturaları"
 
 #. module: purchase
 #: sql_constraint:purchase.order:0
 msgid "Order Reference must be unique !"
-msgstr ""
+msgstr "Sipariş Referansı özgün olmalıdır!"
 
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_packinginvoice0
 #: model:process.transition,name:purchase.process_transition_productrecept0
 msgid "From a Pick list"
-msgstr ""
+msgstr "Alım listesinden"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:649
 #, python-format
 msgid "No Pricelist !"
-msgstr ""
+msgstr "Fiyat listesi yok!"
 
 #. module: purchase
 #: field:purchase.order.line,product_qty:0
@@ -149,7 +165,7 @@ msgstr "Miktar"
 #. module: purchase
 #: view:purchase.order.line_invoice:0
 msgid "Select an Open Sale Order"
-msgstr ""
+msgstr "Bir Açık Satış Siparişi Seçin"
 
 #. module: purchase
 #: field:purchase.order,company_id:0
@@ -157,14 +173,14 @@ msgstr ""
 #: view:purchase.report:0
 #: field:purchase.report,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "Şirket"
 
 #. module: purchase
 #: view:board.board:0
 #: model:ir.actions.act_window,name:purchase.action_purchase_order_monthly_categ_graph
 #: view:purchase.report:0
 msgid "Monthly Purchase by Category"
-msgstr ""
+msgstr "Kategoriye göre Aylık Satınalma"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -185,7 +201,7 @@ msgstr "Varsayılan Alış Fiyat Listesi"
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_current_purchases
 msgid "Current purchases"
-msgstr ""
+msgstr "Mevcut satınalmalar"
 
 #. module: purchase
 #: help:purchase.order,dest_address_id:0
@@ -194,6 +210,9 @@ msgid ""
 "customer.In this case, it will remove the warehouse link and set the "
 "customer location."
 msgstr ""
+"Doğrudan tedarikçiden müşteriye teslim etmek istiyorsanız, bir adres girin. "
+"Bu durumda, depo bağlantısını kaldıracak ve müşteri lokasyonunu "
+"ayarlayacaktır."
 
 #. module: purchase
 #: help:res.partner,property_product_pricelist_purchase:0
@@ -201,11 +220,13 @@ msgid ""
 "This pricelist will be used, instead of the default one, for purchases from "
 "the current partner"
 msgstr ""
+"Mevcut ortaktan satınalmalarda, varsayılan yerine bu fiyat listesi "
+"kullanılacaktır"
 
 #. module: purchase
 #: report:purchase.order:0
 msgid "Fax :"
-msgstr ""
+msgstr "Faks:"
 
 #. module: purchase
 #: help:purchase.order,pricelist_id:0
@@ -213,17 +234,20 @@ msgid ""
 "The pricelist sets the currency used for this purchase order. It also "
 "computes the supplier price for the selected products/quantities."
 msgstr ""
+"Fiyat listesi bu satınalma siparişi için kullanılacak para birimini "
+"belirler. Ayrıca, seçilen ürünler/miktarlar için tedarikçi fiyatını da "
+"hesaplar."
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_stock_partial_picking
 msgid "Partial Picking"
-msgstr ""
+msgstr "Kısmi Alım"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:286
 #, python-format
 msgid "Purchase order '%s' is confirmed."
-msgstr ""
+msgstr "Satınalma siparişi '%s' onaylandı."
 
 #. module: purchase
 #: view:purchase.order:0
@@ -241,7 +265,7 @@ msgstr "Onaylanmış"
 #. module: purchase
 #: view:purchase.report:0
 msgid "Reference UOM"
-msgstr ""
+msgstr "Referans UOM"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -251,12 +275,12 @@ msgstr "Menşei"
 #. module: purchase
 #: field:purchase.report,product_uom:0
 msgid "Reference UoM"
-msgstr ""
+msgstr "Referans UoM"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_line_product_tree
 msgid "Purchases"
-msgstr ""
+msgstr "Satınalmalar"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -273,11 +297,13 @@ msgid ""
 "You have to select a pricelist or a supplier in the purchase form !\n"
 "Please set one before choosing a product."
 msgstr ""
+"Satınalma formunda bir fiyat listesi veya bir tedarikçi seçmeniz gerekiyor!\n"
+"Lütfen bir ürün seçmeden önce birini belirtin."
 
 #. module: purchase
 #: selection:purchase.report,month:0
 msgid "September"
-msgstr ""
+msgstr "Eylül"
 
 #. module: purchase
 #: report:purchase.order:0
@@ -313,18 +339,18 @@ msgstr "Net Toplam :"
 #. module: purchase
 #: view:purchase.installer:0
 msgid "Configure Your Purchases Management Application"
-msgstr ""
+msgstr "Satınalma Yönetim Uygulamanızı Yapılandırın"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_procurement_management_product
 #: model:ir.ui.menu,name:purchase.menu_procurement_partner_contact_form
 msgid "Products"
-msgstr ""
+msgstr "Ürünler"
 
 #. module: purchase
 #: field:purchase.installer,progress:0
 msgid "Configuration Progress"
-msgstr ""
+msgstr "Yapılandırma İlerleyişi"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_packinginvoice0
@@ -332,6 +358,8 @@ msgid ""
 "A Pick list generates an invoice. Depending on the Invoicing control of the "
 "sale order, the invoice is based on delivered or on ordered quantities."
 msgstr ""
+"Alım listesi bir fatura oluşturur. Satış siparişi faturalama kontrolüne "
+"bağlı olarak, fatura teslimata ya da sipariş edilen miktarlara bağlıdır."
 
 #. module: purchase
 #: selection:purchase.order,state:0
@@ -344,12 +372,12 @@ msgstr "İptal Edildi"
 #: code:addons/purchase/purchase.py:305
 #, python-format
 msgid "Purchase amount over the limit"
-msgstr ""
+msgstr "Satınalma miktarı limitin üzerinde"
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "Convert to Purchase Order"
-msgstr ""
+msgstr "Satınalma Siparişine Dönüştür"
 
 #. module: purchase
 #: field:purchase.order,pricelist_id:0
@@ -366,7 +394,7 @@ msgstr "İstisnai Sevkiyat"
 #. module: purchase
 #: field:purchase.order.line,invoice_lines:0
 msgid "Invoice Lines"
-msgstr ""
+msgstr "Fatura Kalemleri"
 
 #. module: purchase
 #: model:process.node,name:purchase.process_node_packinglist0
@@ -377,17 +405,17 @@ msgstr "Gelen Ürünler"
 #. module: purchase
 #: model:process.node,name:purchase.process_node_packinginvoice0
 msgid "Outgoing Products"
-msgstr ""
+msgstr "Giden Ürünler"
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "Manually Corrected"
-msgstr ""
+msgstr "Manuel Olarak Düzeltildi"
 
 #. module: purchase
 #: view:purchase.report:0
 msgid "   Month   "
-msgstr ""
+msgstr "   Ay   "
 
 #. module: purchase
 #: view:purchase.order:0
@@ -398,29 +426,29 @@ msgstr "Referans"
 #: code:addons/purchase/purchase.py:237
 #, python-format
 msgid "Cannot delete Purchase Order(s) which are in %s State!"
-msgstr ""
+msgstr "%s Durumundaki Satınalma Sipariş(ler)i silinemez!"
 
 #. module: purchase
 #: field:purchase.report,dest_address_id:0
 msgid "Dest. Address Contact Name"
-msgstr ""
+msgstr "Varılacak Adres İlgili Kişi"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_stock_move
 msgid "Stock Move"
-msgstr ""
+msgstr "Stok Hareketi"
 
 #. module: purchase
 #: view:purchase.report:0
 #: field:purchase.report,day:0
 msgid "Day"
-msgstr ""
+msgstr "Gün"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:334
 #, python-format
 msgid "Purchase order '%s' has been set in draft state."
-msgstr ""
+msgstr "Satınalma siparişi '%s' taslak olarak ayarlandı."
 
 #. module: purchase
 #: field:purchase.order.line,account_analytic_id:0
@@ -431,7 +459,7 @@ msgstr "Analiz Hesabı"
 #: view:purchase.report:0
 #: field:purchase.report,nbr:0
 msgid "# of Lines"
-msgstr ""
+msgstr "# / Satır"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:685
@@ -439,22 +467,22 @@ msgstr ""
 #: code:addons/purchase/wizard/purchase_order_group.py:47
 #, python-format
 msgid "Warning"
-msgstr ""
+msgstr "Uyarı"
 
 #. module: purchase
 #: field:purchase.installer,purchase_analytic_plans:0
 msgid "Purchase Analytic Plans"
-msgstr ""
+msgstr "Satınalma Analitik Planları"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_installer
 msgid "purchase.installer"
-msgstr ""
+msgstr "purchase.installer"
 
 #. module: purchase
 #: selection:purchase.order.line,state:0
 msgid "Draft"
-msgstr ""
+msgstr "Taslak"
 
 #. module: purchase
 #: report:purchase.order:0
@@ -469,13 +497,13 @@ msgstr "Sipariş Kalemi"
 #. module: purchase
 #: help:purchase.order,shipped:0
 msgid "It indicates that a picking has been done"
-msgstr ""
+msgstr "Bir alım gerçekleştirildiğini gösterir"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:710
 #, python-format
 msgid "Wrong Product UOM !"
-msgstr ""
+msgstr "Hatalı Birim!"
 
 #. module: purchase
 #: model:process.node,name:purchase.process_node_confirmpurchaseorder0
@@ -487,7 +515,7 @@ msgstr "Onaylandı"
 #: view:purchase.report:0
 #: field:purchase.report,price_average:0
 msgid "Average Price"
-msgstr ""
+msgstr "Ortalama Fiyat"
 
 #. module: purchase
 #: report:purchase.order:0
@@ -509,17 +537,17 @@ msgstr "Fatura Kontrolü"
 #. module: purchase
 #: constraint:res.company:0
 msgid "Error! You can not create recursive companies."
-msgstr ""
+msgstr "Hata! Yinelemeli şirketler oluşturamazsınız."
 
 #. module: purchase
 #: field:purchase.order,partner_ref:0
 msgid "Supplier Reference"
-msgstr ""
+msgstr "Tedarikçi Referansı"
 
 #. module: purchase
 #: help:purchase.order,amount_tax:0
 msgid "The tax amount"
-msgstr ""
+msgstr "Vergi miktarı"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_productrecept0
@@ -528,6 +556,9 @@ msgid ""
 "of the purchase order, the invoice is based on received or on ordered "
 "quantities."
 msgstr ""
+"Alım listesi bir tedarikçi faturası oluşturur. Satınalma siparişi faturalama "
+"kontrolüne bağlı olarak, fatura alınanlara ya da sipariş edilen miktarlara "
+"dayanır."
 
 #. module: purchase
 #: view:purchase.order:0
@@ -536,7 +567,7 @@ msgstr ""
 #: field:purchase.order.line,state:0
 #: view:purchase.report:0
 msgid "State"
-msgstr ""
+msgstr "Durum"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.action_stock_move_report_po
@@ -544,11 +575,14 @@ msgid ""
 "Reception Analysis allows you to easily check and analyse your company order "
 "receptions and the performance of your supplier's deliveries."
 msgstr ""
+"Resepsiyon Analizi şirketinizin sipariş resepsiyonlarını ve tedarikçi "
+"teslimatlarınızın performansını kolayca kontrol ve analiz edebilmenizi "
+"sağlar."
 
 #. module: purchase
 #: report:purchase.quotation:0
 msgid "Tel.:"
-msgstr ""
+msgstr "Tel.:"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_stock_picking
@@ -559,12 +593,12 @@ msgstr "Hazırlık Listesi"
 #. module: purchase
 #: view:purchase.order:0
 msgid "Print"
-msgstr ""
+msgstr "Yazdır"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_view_purchase_order_group
 msgid "Merge Purchase orders"
-msgstr ""
+msgstr "Satınalma siparişlerini birleştir"
 
 #. module: purchase
 #: field:purchase.order,order_line:0
@@ -575,7 +609,7 @@ msgstr "Sipariş Kalemleri"
 #: code:addons/purchase/purchase.py:651
 #, python-format
 msgid "No Partner!"
-msgstr ""
+msgstr "Ortak yok!"
 
 #. module: purchase
 #: report:purchase.quotation:0
@@ -586,7 +620,7 @@ msgstr "Fax:"
 #: view:purchase.report:0
 #: field:purchase.report,price_total:0
 msgid "Total Price"
-msgstr ""
+msgstr "Toplam Fiyat"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -597,12 +631,12 @@ msgstr "Tutar"
 #: model:ir.ui.menu,name:purchase.menu_product_pricelist_action2_purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_config_pricelist
 msgid "Pricelists"
-msgstr ""
+msgstr "Fiyat listeleri"
 
 #. module: purchase
 #: field:purchase.report,partner_address_id:0
 msgid "Address Contact Name"
-msgstr ""
+msgstr "Adres İlgili Kişi"
 
 #. module: purchase
 #: help:purchase.order,invoice_method:0
@@ -614,11 +648,17 @@ msgid ""
 "Manual: allows you to generate suppliers invoices by chosing in the "
 "uninvoiced lines of all manual purchase orders."
 msgstr ""
+"Şiparişten: satınalma siparişine dayanarak önceden bir taslak fatura "
+"oluşturulacaktır. Hesap uzmanının bu kontrol faturasını onaylaması gerekir.\n"
+"İrsaliyeden: onaylanan resepsiyonlara dayanarak önceden bir taslak fatura "
+"oluşturulacaktır.\n"
+"Manuel: tüm manuel satınalma siparişlerinin faturalanmamış kalemleri "
+"arasından seçim yaparak tedarikçi faturaları oluşturmanızı sağlar."
 
 #. module: purchase
 #: help:purchase.order,invoice_ids:0
 msgid "Invoices generated for a purchase order"
-msgstr ""
+msgstr "Bir satınalma siparişi için oluşturulan faturalar"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:282
@@ -627,17 +667,17 @@ msgstr ""
 #: code:addons/purchase/wizard/purchase_line_invoice.py:122
 #, python-format
 msgid "Error !"
-msgstr ""
+msgstr "Hata!"
 
 #. module: purchase
 #: view:purchase.order.line:0
 msgid "General Information"
-msgstr ""
+msgstr "Genel Bilgiler"
 
 #. module: purchase
 #: view:board.board:0
 msgid "My Board"
-msgstr ""
+msgstr "My Board"
 
 #. module: purchase
 #: report:purchase.order:0
@@ -651,11 +691,14 @@ msgid ""
 "purchase history and performance. From this menu you can track your "
 "negotiation performance, the delivery performance of your suppliers, etc."
 msgstr ""
+"Satınalma Analizi şirketinizin satınalma geçmişi ve performansını kolayca "
+"kontrol ve analiz etmenizi sağlar. Bu menüden ciro performansınızı, "
+"tedarikçilerinizin teslimat performansını vb. takip edebilirsiniz."
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "Approved by Supplier"
-msgstr ""
+msgstr "Tedarikçi tarafından onaylandı"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_invoicefrompackinglist0
@@ -664,6 +707,9 @@ msgid ""
 "order is 'On picking'. The invoice can also be generated manually by the "
 "accountant (Invoice control = Manual)."
 msgstr ""
+"Satınalma siparişi  'Alım' durumundaysa, fatura otomatik olarak oluşturulur. "
+"Fatura hesap uzmanı tarafından manuel olarak da oluşturulabilir (Fatura "
+"kontrolü = Manuel)."
 
 #. module: purchase
 #: selection:purchase.order,invoice_method:0
@@ -684,7 +730,7 @@ msgstr "Rezervasyon Yeri"
 #: code:addons/purchase/purchase.py:237
 #, python-format
 msgid "Invalid action !"
-msgstr ""
+msgstr "Geçersiz işlem!"
 
 #. module: purchase
 #: selection:purchase.order,state:0
@@ -696,19 +742,19 @@ msgstr "Bitti"
 #. module: purchase
 #: selection:purchase.report,month:0
 msgid "July"
-msgstr ""
+msgstr "Temmuz"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_config_purchase
 #: view:res.company:0
 msgid "Configuration"
-msgstr ""
+msgstr "Yapılandırma"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_by_supplier
 #: view:purchase.report:0
 msgid "Purchase by supplier"
-msgstr ""
+msgstr "Tedarikçiye göre satınalma"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -718,7 +764,7 @@ msgstr "Toplam Tutar"
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.act_purchase_order_2_stock_picking
 msgid "Receptions"
-msgstr ""
+msgstr "Resepsiyonlar"
 
 #. module: purchase
 #: field:purchase.order,validator:0
@@ -734,6 +780,10 @@ msgid ""
 "according to your settings. Once you receive a supplier invoice, you can "
 "match it with the draft invoice and validate it."
 msgstr ""
+"Bu menüyü tedarikçinizden alınacak faturaları kontrol etmek için kullanın. "
+"OpenERP, ayarlarınıza bağlı olarak satınalma siparişlerinizden veya "
+"resepsiyonlarınızdan önceden taslak faturalar oluşturur. Bir tedarikçi "
+"faturası aldığınızda, taslak faturayla karşılaştırıp onaylayabilirsiniz."
 
 #. module: purchase
 #: model:process.node,name:purchase.process_node_draftpurchaseorder0
@@ -744,7 +794,7 @@ msgstr "Teklif İsteği"
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_procurement_management_pending_invoice
 msgid "Supplier Invoices to Receive"
-msgstr ""
+msgstr "Alınacak Tedarikçi Faturaları"
 
 #. module: purchase
 #: help:purchase.installer,purchase_requisition:0
@@ -752,17 +802,20 @@ msgid ""
 "Manages your Purchase Requisition and allows you to easily keep track and "
 "manage all your purchase orders."
 msgstr ""
+"Satınalma Talebinizi yönetir ve tüm satınalma siparişlerinizi kolayca takip "
+"edip yönetmenizi sağlar."
 
 #. module: purchase
 #: view:purchase.report:0
 msgid "    Month-1    "
-msgstr ""
+msgstr "    Ay-1    "
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:363
 #, python-format
 msgid "There is no purchase journal defined for this company: \"%s\" (id:%d)"
 msgstr ""
+"Bu şirket tarafından belirtilen satınalma günlüğü yok: \"%s\" (id:%d)"
 
 #. module: purchase
 #: selection:purchase.order,invoice_method:0
@@ -774,28 +827,29 @@ msgstr "Manuel"
 #, python-format
 msgid "You must first cancel all picking attached to this purchase order."
 msgstr ""
+"Öncelikle bu satınalma siparişine bağlı tüm alımları iptal etmeniz gerekir."
 
 #. module: purchase
 #: view:purchase.order:0
 #: field:purchase.order.line,date_order:0
 #: field:purchase.report,date:0
 msgid "Order Date"
-msgstr ""
+msgstr "Sipariş Tarihi"
 
 #. module: purchase
 #: model:process.node,note:purchase.process_node_productrecept0
 msgid "Incoming products to control"
-msgstr ""
+msgstr "Kontrol edilecek gelen ürünler"
 
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_approvingpurchaseorder0
 msgid "Approbation"
-msgstr ""
+msgstr "Onay"
 
 #. module: purchase
 #: view:purchase.report:0
 msgid "Purchase Orders Statistics"
-msgstr ""
+msgstr "Satınalma Siparişi İstatistikleri"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_line_form_action2
@@ -805,6 +859,11 @@ msgid ""
 "supplier invoice yet. Once you are ready to receive a supplier invoice, you "
 "can generate a draft supplier invoice based on the lines from this menu."
 msgstr ""
+"Bir satınalma siparişindeki faturalama kontrolünü \"Manuel\" olarak "
+"ayarlarsanız, tedarikçiden henüz faturasını almadığınız tüm satınalma "
+"sipariş kalemlerinizi buradan takip edebilirsiniz. Bir tedarikçi faturası "
+"almak için hazır olduğunuzda, bu menüdeki satırlar bazında bir taslak "
+"tedarikçi faturası hazırlayabilirsiniz."
 
 #. module: purchase
 #: model:process.node,name:purchase.process_node_invoiceafterpacking0
@@ -815,7 +874,7 @@ msgstr "Taslak Fatura"
 #. module: purchase
 #: help:purchase.installer,purchase_analytic_plans:0
 msgid "Manages analytic distribution and purchase orders."
-msgstr ""
+msgstr "Analitik dağıtım ve satınalma siparişlerini yönetir."
 
 #. module: purchase
 #: help:purchase.order,minimum_planned_date:0
@@ -823,71 +882,73 @@ msgid ""
 "This is computed as the minimum scheduled date of all purchase order lines' "
 "products."
 msgstr ""
+"Bu, tüm satınalma sipariş kalemine ait ürünleri minimum zamanlanan tarih "
+"olarak hesaplar."
 
 #. module: purchase
 #: selection:purchase.report,month:0
 msgid "August"
-msgstr ""
+msgstr "Ağustos"
 
 #. module: purchase
 #: field:purchase.installer,purchase_requisition:0
 msgid "Purchase Requisition"
-msgstr ""
+msgstr "Satınalma Talebi"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_uom_categ_form_action
 msgid "Units of Measure Categories"
-msgstr ""
+msgstr "Kategori Ölçüm Birimleri"
 
 #. module: purchase
 #: view:purchase.report:0
 #: field:purchase.report,delay_pass:0
 msgid "Days to Deliver"
-msgstr ""
+msgstr "Teslimat Günleri"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_action_picking_tree_in_move
 #: model:ir.ui.menu,name:purchase.menu_procurement_management_inventory
 msgid "Receive Products"
-msgstr ""
+msgstr "Ürünleri Al"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_procurement_order
 msgid "Procurement"
-msgstr ""
+msgstr "Satınalma"
 
 #. module: purchase
 #: view:purchase.order:0
 #: field:purchase.order,invoice_ids:0
 msgid "Invoices"
-msgstr ""
+msgstr "Faturalar"
 
 #. module: purchase
 #: model:process.node,note:purchase.process_node_purchaseorder0
 msgid "Confirmed purchase order to invoice"
-msgstr ""
+msgstr "Faturalandırılacak onaylanan satınalma siparişi"
 
 #. module: purchase
 #: field:purchase.installer,config_logo:0
 msgid "Image"
-msgstr ""
+msgstr "Görüntü"
 
 #. module: purchase
 #: view:purchase.report:0
 msgid "Total Orders Lines by User per month"
-msgstr ""
+msgstr "Aylık Toplam Kullanıcı Sipariş Kalemleri"
 
 #. module: purchase
 #: view:purchase.report:0
 #: field:purchase.report,month:0
 msgid "Month"
-msgstr ""
+msgstr "Ay"
 
 #. module: purchase
 #: selection:purchase.order,state:0
 #: selection:purchase.report,state:0
 msgid "Waiting Supplier Ack"
-msgstr ""
+msgstr "Tedarikçi Onayı Bekleniyor"
 
 #. module: purchase
 #: report:purchase.quotation:0
@@ -903,7 +964,7 @@ msgstr "Onay Bekleyen Alış Siparişi"
 #. module: purchase
 #: view:purchase.order:0
 msgid "Total Untaxed amount"
-msgstr ""
+msgstr "Vergilendirilmemiş toplam tutar"
 
 #. module: purchase
 #: field:purchase.order,shipped:0
@@ -914,13 +975,13 @@ msgstr "Alınan"
 #. module: purchase
 #: model:process.node,note:purchase.process_node_packinglist0
 msgid "List of ordered products."
-msgstr ""
+msgstr "Sipariş edilen ürün listesi."
 
 #. module: purchase
 #: help:purchase.order,picking_ids:0
 msgid ""
 "This is the list of picking list that have been generated for this purchase"
-msgstr ""
+msgstr "Bu satınalma için oluşturulmuş satınalma listesidir"
 
 #. module: purchase
 #: model:ir.module.module,shortdesc:purchase.module_meta_information
@@ -932,12 +993,18 @@ msgstr "Satınalma Yönetimi"
 #: model:process.node,note:purchase.process_node_invoiceafterpacking0
 #: model:process.node,note:purchase.process_node_invoicecontrol0
 msgid "To be reviewed by the accountant."
-msgstr ""
+msgstr "Hesap uzmanı tarafından incelenecek."
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.purchase_line_form_action2
 #: model:ir.ui.menu,name:purchase.menu_purchase_line_order_draft
-msgid "Purchase Lines Not Invoiced"
+msgid "On Purchase Order Line"
+msgstr ""
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.action_picking_tree4_picking_to_invoice
+#: model:ir.ui.menu,name:purchase.action_picking_tree4_picking_to_invoice
+msgid "On Receptions"
 msgstr ""
 
 #. module: purchase
@@ -955,28 +1022,28 @@ msgstr "Faturalandı"
 #: view:purchase.report:0
 #: field:purchase.report,category_id:0
 msgid "Category"
-msgstr ""
+msgstr "Kategori"
 
 #. module: purchase
 #: model:process.node,note:purchase.process_node_approvepurchaseorder0
 #: model:process.node,note:purchase.process_node_confirmpurchaseorder0
 msgid "State of the Purchase Order."
-msgstr ""
+msgstr "Satınalma Siparişinin Durumu."
 
 #. module: purchase
 #: view:purchase.report:0
 msgid "  Year  "
-msgstr ""
+msgstr "  Yıl  "
 
 #. module: purchase
 #: field:purchase.report,state:0
 msgid "Order State"
-msgstr ""
+msgstr "Sipariş Durumu"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_view_purchase_line_invoice
 msgid "Create invoices"
-msgstr ""
+msgstr "Fatura oluştur"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_order_line
@@ -988,7 +1055,7 @@ msgstr "Alış Sipariş Kalemi"
 #. module: purchase
 #: constraint:res.partner:0
 msgid "Error ! You can not create recursive associated members."
-msgstr ""
+msgstr "Hata! Yinelemeli üyeler oluşturamazsınız."
 
 #. module: purchase
 #: view:purchase.order:0
@@ -998,23 +1065,23 @@ msgstr "Takvimi Göster"
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_order_group
 msgid "Purchase Order Merge"
-msgstr ""
+msgstr "Satınalma Siparişi Birleştirme"
 
 #. module: purchase
 #: report:purchase.quotation:0
 msgid "Regards,"
-msgstr ""
+msgstr "Saygılar,"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_negotiation_by_supplier
 #: view:purchase.report:0
 msgid "Negotiation by Supplier"
-msgstr ""
+msgstr "Tedarikçi Cirosu"
 
 #. module: purchase
 #: view:res.partner:0
 msgid "Purchase Properties"
-msgstr ""
+msgstr "Satınalma Özellikleri"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_purchaseinvoice0
@@ -1023,6 +1090,9 @@ msgid ""
 "the buyer. Depending on the Invoicing control of the purchase order, the "
 "invoice is based on received or on ordered quantities."
 msgstr ""
+"Satınalma siparişi, alıcı tarafından onaylandığı anda bir tedarikçi faturası "
+"oluşturur. Satınalma siparişi faturalama kontrolüne göre, fatura alınanlara "
+"ya da sipariş edilen miktarlara dayanır."
 
 #. module: purchase
 #: field:purchase.order,amount_untaxed:0
@@ -1032,104 +1102,106 @@ msgstr "Tutar"
 #. module: purchase
 #: help:purchase.order,invoiced:0
 msgid "It indicates that an invoice has been paid"
-msgstr ""
+msgstr "Bir faturanın ödendiğini gösterir"
 
 #. module: purchase
 #: model:process.node,note:purchase.process_node_packinginvoice0
 msgid "Outgoing products to invoice"
-msgstr ""
+msgstr "Faturalandırılacak giden ürünler"
 
 #. module: purchase
 #: view:purchase.installer:0
 msgid "Configure"
-msgstr ""
+msgstr "Yapılandır"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_qty_per_product
 #: view:purchase.report:0
 msgid "Qty. per product"
-msgstr ""
+msgstr "Ürün miktarı"
 
 #. module: purchase
 #: constraint:stock.move:0
 msgid "You try to assign a lot which is not from the same product"
-msgstr ""
+msgstr "Aynı üründen olmayan bir lot atamaya çalışıyorsunuz"
 
 #. module: purchase
 #: help:purchase.order,date_order:0
 msgid "Date on which this document has been created."
-msgstr ""
+msgstr "Bu belgenin oluşturulduğu tarih."
 
 #. module: purchase
 #: view:res.partner:0
 msgid "Sales & Purchases"
-msgstr ""
+msgstr "Satışlar ve Satınalmalar"
 
 #. module: purchase
 #: selection:purchase.report,month:0
 msgid "June"
-msgstr ""
+msgstr "Haziran"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_report
 msgid "Purchases Orders"
-msgstr ""
+msgstr "Satınalma Siparişleri"
 
 #. module: purchase
 #: view:purchase.order.line:0
 msgid "Manual Invoices"
-msgstr ""
+msgstr "Manuel Faturalar"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:308
 #, python-format
 msgid ""
 "Somebody has just confirmed a purchase with an amount over the defined limit"
-msgstr ""
+msgstr "Bir satınalma belirtilen sınırın üzerindeki bir tutarla onaylandı"
 
 #. module: purchase
 #: selection:purchase.report,month:0
 msgid "November"
-msgstr ""
+msgstr "Kasım"
 
 #. module: purchase
 #: view:purchase.report:0
 msgid "Extended Filters..."
-msgstr ""
+msgstr "Uzatılmış Filtreler..."
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:352
 #: code:addons/purchase/wizard/purchase_line_invoice.py:123
 #, python-format
 msgid "There is no expense account defined for this product: \"%s\" (id:%d)"
-msgstr ""
+msgstr "Bu ürün için belirtilen masraf tutarı yok: \"%s\" (id:%d)"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:408
 #, python-format
 msgid "You must first cancel all invoices attached to this purchase order."
 msgstr ""
+"Öncelikle bu satınalma siparişine bağlı tüm faturaları iptal etmeniz gerekir."
 
 #. module: purchase
 #: code:addons/purchase/wizard/purchase_order_group.py:48
 #, python-format
 msgid "Please select multiple order to merge in the list view."
 msgstr ""
+"Lütfen liste görünümünde birleştirmek için birden fazla sipariş seçin."
 
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_createpackinglist0
 msgid "Pick list generated"
-msgstr ""
+msgstr "Alım listesi oluşturuldu"
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "Exception"
-msgstr ""
+msgstr "İstisna"
 
 #. module: purchase
 #: selection:purchase.report,month:0
 msgid "October"
-msgstr ""
+msgstr "Ekim"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -1150,6 +1222,16 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"    Satınalma modülü, bir tedarikçiden mal satın almak üzere bir satınalma "
+"siparişi oluşturmak içindir.\n"
+"    Belirli mevcut sipariş için bir tedarikçi faturası oluşturulur\n"
+"    Şunları içeren satınalma yönetimi performans tablosu:\n"
+"    * Mevcut Satınalma Siparişleri\n"
+"    * Taslak Satınalma Siparişleri\n"
+"    * Aylık tutar ve miktar grafiği    \n"
+"\n"
+"    "
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:685
@@ -1158,16 +1240,18 @@ msgid ""
 "The selected supplier has a minimal quantity set to %s, you cannot purchase "
 "less."
 msgstr ""
+"Seçilen tedarikçi %s'a ayarlanan minimum miktara sahiptir, daha düşük bir "
+"satınalma yapamazsınız."
 
 #. module: purchase
 #: selection:purchase.report,month:0
 msgid "January"
-msgstr ""
+msgstr "Ocak"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_res_company
 msgid "Companies"
-msgstr ""
+msgstr "Şirketler"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -1177,40 +1261,40 @@ msgstr "Alış Siparişini İptal Et"
 #. module: purchase
 #: constraint:stock.move:0
 msgid "You must assign a production lot for this product"
-msgstr ""
+msgstr "Bu ürüne bir üretim grubu atamanız gerekir"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_createpackinglist0
 msgid "A pick list is generated to track the incoming products."
-msgstr ""
+msgstr "Gelen ürünleri izlemek için bir alım listesi oluşturulur."
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_deshboard
 msgid "Dashboard"
-msgstr ""
+msgstr "Performans tablosu"
 
 #. module: purchase
 #: view:purchase.report:0
 #: field:purchase.report,price_standard:0
 msgid "Products Value"
-msgstr ""
+msgstr "Ürün Tutarı"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_product_pricelist_type
 msgid "Pricelists Types"
-msgstr ""
+msgstr "Fiyat Listesi Türleri"
 
 #. module: purchase
 #: view:purchase.order:0
 #: view:purchase.report:0
 msgid "Quotations"
-msgstr ""
+msgstr "Teklifler"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_po_per_month_tree
 #: view:purchase.report:0
 msgid "Purchase order per month"
-msgstr ""
+msgstr "Aylık satınalma siparişi"
 
 #. module: purchase
 #: view:purchase.order.line:0
@@ -1220,18 +1304,18 @@ msgstr "Geçmiş Bilgisi"
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_by_category_purchase_form
 msgid "Products by Category"
-msgstr ""
+msgstr "Kategoriye göre ürünler"
 
 #. module: purchase
 #: view:purchase.report:0
 #: field:purchase.report,delay:0
 msgid "Days to Validate"
-msgstr ""
+msgstr "Onaylama Günleri"
 
 #. module: purchase
 #: help:purchase.order,origin:0
 msgid "Reference of the document that generated this purchase order request."
-msgstr ""
+msgstr "Bu satınalma sipariş talebini oluşturan belge referansı."
 
 #. module: purchase
 #: help:purchase.order,state:0
@@ -1243,6 +1327,13 @@ msgid ""
 "received, the state becomes 'Done'. If a cancel action occurs in the invoice "
 "or in the reception of goods, the state becomes in exception."
 msgstr ""
+"Satınalma siparişi ya da teklif talebi durumu. Teklif, 'Taslak' durumundaki "
+"bir satınalma siparişidir. Daha sonra sipariş kullanıcı tarafından "
+"onaylanarak 'Onaylandı' durumuna geçmelidir. Ardından sipariş tedarikçi "
+"tarafından onaylanarak 'Onaylandı' durumuna geçmelidir. Satınalma siparişi "
+"ödenip alındığında, durum 'Tamamlandı' olarak değişir. Malların "
+"resepsiyonunda ya da faturada bir iptal etme işlemi meydana gelirse, durum "
+"istisna olarak değişir."
 
 #. module: purchase
 #: field:purchase.order.line,price_subtotal:0
@@ -1253,12 +1344,12 @@ msgstr "Alt Toplam"
 #: model:ir.actions.act_window,name:purchase.purchase_rfq
 #: model:ir.ui.menu,name:purchase.menu_purchase_rfq
 msgid "Requests for Quotation"
-msgstr ""
+msgstr "Teklif Talepleri"
 
 #. module: purchase
 #: help:purchase.order,date_approve:0
 msgid "Date on which purchase order has been approved"
-msgstr ""
+msgstr "Satınalma siparişinin onaylandığı tarih"
 
 #. module: purchase
 #: selection:purchase.order,state:0
@@ -1275,13 +1366,13 @@ msgstr "Varsayılan Alış Fiyat Listesi Vers."
 #: view:purchase.installer:0
 msgid ""
 "Extend your Purchases Management Application with additional functionalities."
-msgstr ""
+msgstr "Satınalma Yönetim Uygulamanızı ilave işlevselliklerle genişletin."
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_install_module
 #: view:purchase.installer:0
 msgid "Purchases Application Configuration"
-msgstr ""
+msgstr "Satınalma Uygulama Yapılandırması"
 
 #. module: purchase
 #: field:purchase.order,fiscal_position:0
@@ -1302,7 +1393,7 @@ msgstr "Fatura"
 #. module: purchase
 #: selection:purchase.report,month:0
 msgid "December"
-msgstr ""
+msgstr "Aralık"
 
 #. module: purchase
 #: model:process.transition.action,name:purchase.process_transition_action_approvingcancelpurchaseorder0
@@ -1322,7 +1413,7 @@ msgstr "Alış Sipariş Kalemleri"
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_approvingpurchaseorder0
 msgid "The supplier approves the Purchase Order."
-msgstr ""
+msgstr "Tedarikçi Satınalma Siparişini onaylar."
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.act_res_partner_2_purchase_order
@@ -1335,27 +1426,27 @@ msgstr "Alış Siparişleri"
 #. module: purchase
 #: field:purchase.order,origin:0
 msgid "Source Document"
-msgstr ""
+msgstr "Kaynak Belge"
 
 #. module: purchase
 #: view:purchase.order.group:0
 msgid "Merge orders"
-msgstr ""
+msgstr "Siparişleri birleştir"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_order_line_invoice
 msgid "Purchase Order Line Make Invoice"
-msgstr ""
+msgstr "Satınalma Sipariş Kalemi Faturalandırma"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_action_picking_tree4
 msgid "Incoming Shipments"
-msgstr ""
+msgstr "Gelen Sevkıyatlar"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_order_by_user_all
 msgid "Total Orders by User per month"
-msgstr ""
+msgstr "Aylık Toplam Kullanıcı Siparişi"
 
 #. module: purchase
 #: model:ir.actions.report.xml,name:purchase.report_purchase_quotation
@@ -1367,14 +1458,14 @@ msgstr "Teklif İsteği"
 #. module: purchase
 #: report:purchase.order:0
 msgid "Tél. :"
-msgstr ""
+msgstr "Tél. :"
 
 #. module: purchase
 #: field:purchase.order,create_uid:0
 #: view:purchase.report:0
 #: field:purchase.report,user_id:0
 msgid "Responsible"
-msgstr ""
+msgstr "Sorumlu"
 
 #. module: purchase
 #: report:purchase.order:0
@@ -1385,7 +1476,7 @@ msgstr "Bizim Sipariş Referansımız"
 #: view:purchase.order:0
 #: view:purchase.order.line:0
 msgid "Search Purchase Order"
-msgstr ""
+msgstr "Satınalma Siparişi Arama"
 
 #. module: purchase
 #: field:purchase.order,warehouse_id:0
@@ -1398,12 +1489,12 @@ msgstr "Depo"
 #: model:process.node,note:purchase.process_node_draftpurchaseorder0
 #: model:process.node,note:purchase.process_node_draftpurchaseorder1
 msgid "Request for Quotations."
-msgstr ""
+msgstr "Teklif talebi."
 
 #. module: purchase
 #: report:purchase.order:0
 msgid "Date Req."
-msgstr ""
+msgstr "Talep Tarihi."
 
 #. module: purchase
 #: field:purchase.order,date_approve:0
@@ -1415,7 +1506,7 @@ msgstr "Onaylanmış Tarih"
 #: code:addons/purchase/purchase.py:407
 #, python-format
 msgid "Could not cancel this purchase order !"
-msgstr ""
+msgstr "Bu satınalma siparişi iptal edilemedi!"
 
 #. module: purchase
 #: report:purchase.order:0
@@ -1426,12 +1517,12 @@ msgstr "Birim Fiyat"
 #. module: purchase
 #: view:purchase.order:0
 msgid "Delivery & Invoicing"
-msgstr ""
+msgstr "Teslimat ve Faturalama"
 
 #. module: purchase
 #: field:purchase.order.line,date_planned:0
 msgid "Scheduled Date"
-msgstr ""
+msgstr "Zamanlanan Tarih"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_in_config_purchase
@@ -1447,7 +1538,7 @@ msgstr "Ürün"
 #: model:process.transition,name:purchase.process_transition_confirmingpurchaseorder0
 #: model:process.transition,name:purchase.process_transition_confirmingpurchaseorder1
 msgid "Confirmation"
-msgstr ""
+msgstr "Onaylama"
 
 #. module: purchase
 #: report:purchase.order:0
@@ -1459,7 +1550,7 @@ msgstr "Açıklama"
 #. module: purchase
 #: help:res.company,po_lead:0
 msgid "This is the leads/security time for each purchase order."
-msgstr ""
+msgstr "Bu, her bir satınalma siparişi için tedarik/emniyet süresidir."
 
 #. module: purchase
 #: report:purchase.quotation:0
@@ -1470,12 +1561,12 @@ msgstr "Tahmini Teslimat Adresi"
 #: model:ir.actions.act_window,name:purchase.action_stock_move_report_po
 #: model:ir.ui.menu,name:purchase.menu_action_stock_move_report_po
 msgid "Receptions Analysis"
-msgstr ""
+msgstr "Resepsiyon Analizi"
 
 #. module: purchase
 #: help:purchase.order,amount_untaxed:0
 msgid "The amount without tax"
-msgstr ""
+msgstr "Vergilendirilmemiş tutar"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.action_supplier_address_form
@@ -1484,6 +1575,9 @@ msgid ""
 "suppliers. You can track all your interactions with them through the History "
 "tab: emails, orders, meetings, etc."
 msgstr ""
+"Tedarikçi kayıtlarınıza erişin ve tedarikçilerinizle olan iyi ilişkilerinizi "
+"sürdürün. Geçmiş sekmesiyle tüm işlemlerinizi izleyebilirsiniz: e-postalar, "
+"siparişler, toplantılar vb."
 
 #. module: purchase
 #: view:purchase.order:0
@@ -1494,7 +1588,7 @@ msgstr "Teslimat"
 #: view:board.board:0
 #: model:ir.actions.act_window,name:purchase.purchase_draft
 msgid "Request for Quotations"
-msgstr ""
+msgstr "Kotasyon Talebi"
 
 #. module: purchase
 #: field:purchase.order.line,product_uom:0
@@ -1510,7 +1604,7 @@ msgstr "Mik."
 #. module: purchase
 #: field:purchase.order,partner_address_id:0
 msgid "Address"
-msgstr ""
+msgstr "Adres"
 
 #. module: purchase
 #: field:purchase.order.line,move_ids:0
@@ -1521,13 +1615,13 @@ msgstr "Rezervasyon"
 #: model:ir.actions.act_window,name:purchase.action_purchase_order_report_graph
 #: view:purchase.report:0
 msgid "Total Qty and Amount by month"
-msgstr ""
+msgstr "Aylık Toplam Miktar ve Tutar"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:399
 #, python-format
 msgid "Could not cancel purchase order !"
-msgstr ""
+msgstr "Satınalma siparişi iptal edilemedi!"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_confirmingpurchaseorder1
@@ -1535,22 +1629,24 @@ msgid ""
 "In case there is no supplier for this product, the buyer can fill the form "
 "manually and confirm it. The RFQ becomes a confirmed Purchase Order."
 msgstr ""
+"Bu ürün için tedarikçi olmaması durumunda, alıcı formu manuel olarak "
+"doldurup onaylayabilir. RFQ, onaylanan bir Satınalma Siparişi haline gelir."
 
 #. module: purchase
 #: selection:purchase.report,month:0
 msgid "February"
-msgstr ""
+msgstr "Şubat"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_category_config_purchase
 msgid "Products Categories"
-msgstr ""
+msgstr "Ürün Kategorileri"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_order_report_all
 #: model:ir.ui.menu,name:purchase.menu_action_purchase_order_report_all
 msgid "Purchase Analysis"
-msgstr ""
+msgstr "Satınalma Analizi"
 
 #. module: purchase
 #: report:purchase.order:0
@@ -1569,12 +1665,12 @@ msgstr "Tahmini Tarih"
 #: model:ir.actions.act_window,name:purchase.action_total_price_by_product_by_state
 #: view:purchase.report:0
 msgid "Total price by product by state"
-msgstr ""
+msgstr "Ürün durumuna göre toplam fiyat"
 
 #. module: purchase
 #: report:purchase.quotation:0
 msgid "TVA:"
-msgstr ""
+msgstr "TVA:"
 
 #. module: purchase
 #: report:purchase.order:0
@@ -1595,12 +1691,12 @@ msgstr "Alış Kontrolü"
 #. module: purchase
 #: selection:purchase.report,month:0
 msgid "March"
-msgstr ""
+msgstr "Mart"
 
 #. module: purchase
 #: selection:purchase.report,month:0
 msgid "April"
-msgstr ""
+msgstr "Nisan"
 
 #. module: purchase
 #: view:purchase.order.group:0
@@ -1617,17 +1713,29 @@ msgid ""
 "\n"
 " "
 msgstr ""
+" Lütfen şunlara dikkat edin: \n"
+" \n"
+" Siparişler sadece şu durumlarda birleştirilecektir: \n"
+" * Satınalma Siparişleri taslak halindeyken \n"
+" * Satınalma Siparişleri aynı tedarikçiye ait olduğunda \n"
+" * Satınalma Siparişleri aynı stok lokasyonu ve aynı fiyat listesine sahip "
+"olduğunda \n"
+" \n"
+" Kalemler sadece şu durumlarda birleştirilebilir: \n"
+" * Sipariş kalemleri, ürün, miktar ve birim haricinde tamamen aynı olduğunda "
+"\n"
+" "
 
 #. module: purchase
 #: view:purchase.report:0
 #: field:purchase.report,name:0
 msgid "Year"
-msgstr ""
+msgstr "Yıl"
 
 #. module: purchase
 #: field:purchase.report,negociation:0
 msgid "Purchase-Standard Price"
-msgstr ""
+msgstr "Satınalma-Standart Fiyat"
 
 #. module: purchase
 #: model:product.pricelist.type,name:purchase.pricelist_type_purchase
@@ -1648,7 +1756,7 @@ msgstr "Onayla"
 #. module: purchase
 #: view:purchase.order:0
 msgid "To Approve"
-msgstr ""
+msgstr "Onaylamak için"
 
 #. module: purchase
 #: view:purchase.order.line:0
@@ -1666,12 +1774,20 @@ msgid ""
 "                                      \n"
 "* The 'Cancelled' state is set automatically when user cancel purchase order."
 msgstr ""
+" * Satınalma siparişi taslak durumundayken, otomatik olarak 'Taslak' durumu "
+"ayarlanır.                                        \n"
+"* Satınalma siparişi onay durumundayken, otomatik olarak 'Onaylandı' durumu "
+"ayarlanır.                                        \n"
+"* Satınalma siparişi yapıldı olarak ayarlandığında, otomatik olarak "
+"'Yapıldı' durumu ayarlanır.                                        \n"
+"* Kullanıcı satınalma siparişini iptal ettiğinde, otomatik olarak 'İptal "
+"edildi' durumu ayarlanır."
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:414
 #, python-format
 msgid "Purchase order '%s' is cancelled."
-msgstr ""
+msgstr "Satınalma siparişi '%s' iptal edildi."
 
 #. module: purchase
 #: field:purchase.order,amount_total:0
@@ -1681,49 +1797,49 @@ msgstr "Toplam"
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_pricelist_action_purhase
 msgid "Pricelist Versions"
-msgstr ""
+msgstr "Fiyat Listesi Sürümleri"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_supplier_address_form
 msgid "Addresses"
-msgstr ""
+msgstr "Adresler"
 
 #. module: purchase
 #: view:purchase.order.group:0
 msgid "Are you sure you want to merge these orders ?"
-msgstr ""
+msgstr "Bu siparişleri birleştirmek istiyor musunuz?"
 
 #. module: purchase
 #: view:purchase.order:0
 #: view:purchase.order.line:0
 #: view:purchase.report:0
 msgid "Group By..."
-msgstr ""
+msgstr "...'ya Göre Grupla"
 
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_purchaseinvoice0
 msgid "From a purchase order"
-msgstr ""
+msgstr "Satınalma siparişinden"
 
 #. module: purchase
 #: report:purchase.order:0
 msgid "TVA :"
-msgstr ""
+msgstr "TVA :"
 
 #. module: purchase
 #: help:purchase.order,amount_total:0
 msgid "The total amount"
-msgstr ""
+msgstr "Toplam tutar"
 
 #. module: purchase
 #: selection:purchase.report,month:0
 msgid "May"
-msgstr ""
+msgstr "Mayıs"
 
 #. module: purchase
 #: field:res.company,po_lead:0
 msgid "Purchase Lead Time"
-msgstr ""
+msgstr "Satınalma Tedarik Süresii"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_invoicefrompurchase0
@@ -1732,17 +1848,20 @@ msgid ""
 "order is 'On order'. The invoice can also be generated manually by the "
 "accountant (Invoice control = Manual)."
 msgstr ""
+"Satınalma siparişinin fatura kontrolü 'İşlemde' ise, fatura otomatik olarak "
+"oluşturulur. Fatura hesap uzmanı tarafından manuel olarak da oluşturulabilir "
+"(Fatura kontrolü = Manuel)."
 
 #. module: purchase
 #: model:process.process,name:purchase.process_process_purchaseprocess0
 msgid "Purchase"
-msgstr ""
+msgstr "Satınalma"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_res_partner
 #: field:purchase.order.line,partner_id:0
 msgid "Partner"
-msgstr ""
+msgstr "Ortak"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:651
@@ -1751,16 +1870,18 @@ msgid ""
 "You have to select a partner in the purchase form !\n"
 "Please set one partner before choosing a product."
 msgstr ""
+"Satınalma formunda bir ortak seçmeniz gerekir !\n"
+"Lütfen bir ürün seçmeden önce bir ortak seçin."
 
 #. module: purchase
 #: view:purchase.installer:0
 msgid "title"
-msgstr ""
+msgstr "başlık"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_stock_partial_move
 msgid "Partial Move"
-msgstr ""
+msgstr "Kısmi Hareket"
 
 #. module: purchase
 #: view:purchase.order.line:0
@@ -1771,12 +1892,12 @@ msgstr "Stok Hareketi"
 #: model:ir.ui.menu,name:purchase.menu_purchase_unit_measure_purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_uom_form_action
 msgid "Units of Measure"
-msgstr ""
+msgstr "Ölçü Birimleri"
 
 #. module: purchase
 #: view:purchase.report:0
 msgid "Orders"
-msgstr ""
+msgstr "Siparişler"
 
 #. module: purchase
 #: help:purchase.order,name:0
@@ -1784,15 +1905,20 @@ msgid ""
 "unique number of the purchase order,computed automatically when the purchase "
 "order is created"
 msgstr ""
+"özgün satınalma siparişi numarası, satınalma siparişi oluşturulduğunda "
+"otomatik olarak belirlenir"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.open_board_purchase
 #: model:ir.ui.menu,name:purchase.menu_board_purchase
 msgid "Purchase Dashboard"
-msgstr ""
+msgstr "Satınalma Performans Tablosu"
 
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "Görüntüleme mimarisi için Geçersiz XML"
+
+#~ msgid "From Picking"
+#~ msgstr "İrsaliyeden"
 
 #~ msgid "Confirmed Purchase"
 #~ msgstr "Onaylanan Alış"
@@ -1901,3 +2027,6 @@ msgstr ""
 
 #~ msgid "Approving Purchase Order"
 #~ msgstr "Alış Sipariş Onaylaması"
+
+#~ msgid "Purchase Lines Not Invoiced"
+#~ msgstr "Satınalma Kalemleri Faturalandırılmadı"

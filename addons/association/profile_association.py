@@ -22,17 +22,13 @@
 from osv import fields, osv
 
 class profile_association_config_install_modules_wizard(osv.osv_memory):
-    _name='profile.association.config.install_modules_wizard'
-    _inherit = 'res.config.installer'
+    _inherit = 'base.setup.installer'
 
     _columns = {
-        'hr_expense':fields.boolean('Expenses Tracking',  help="Tracks and manages employee expenses, and can "
+        'hr_expense':fields.boolean('Resources Management: Expenses Tracking',  help="Tracks and manages employee expenses, and can "
                  "automatically re-invoice clients if the expenses are "
                  "project-related."),
-        'project':fields.boolean('Project Management', 
-                              help="Helps you manage your projects and tasks by tracking them, "
-                 "generating plannings, etc..."),
-        'event_project':fields.boolean('Events', help="Helps you to manage and organize your events."),
+        'event_project':fields.boolean('Event Management: Events', help="Helps you to manage and organize your events."),
         'project_gtd':fields.boolean('Getting Things Done',
             help="GTD is a methodology to efficiently organise yourself and your tasks. This module fully integrates GTD principle with OpenERP's project management."),
         'wiki': fields.boolean('Wiki', help="Lets you create wiki pages and page groups in order "

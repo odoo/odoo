@@ -250,7 +250,6 @@ class pos_order(osv.osv):
             states={'draft': [('readonly', False)]}, readonly=True),
         'date_order': fields.datetime('Date Ordered', readonly=True, select=True),
         'date_validation': fields.function(_get_date_payment,
-                                           method=True,
                                            string='Validation Date',
                                            type='date', select=True, store=True),
         'date_payment': fields.function(_get_date_payment2,
@@ -1231,7 +1230,7 @@ class product_product(osv.osv):
     _inherit = 'product.product'
     _columns = {
         'income_pdt': fields.boolean('Product for Input'),
-        'expense_pdt': fields.boolean('Product for expenses'),
+        'expense_pdt': fields.boolean('Product for Output'),
         'am_out': fields.boolean('Control for Output Operations'),
         'disc_controle': fields.boolean('Discount Control'),
     }

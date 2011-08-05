@@ -2,68 +2,59 @@
   <data>
     <record id="view_crm_installer" model="ir.ui.view">
       <field name="name">crm.installer.view</field>
-      <field name="model">crm.installer</field>
+      <field name="model">base.setup.installer</field>
       <field name="type">form</field>
-      <field name="inherit_id" ref="base.res_config_installer"/>
+      <field name="inherit_id" ref="base_setup.view_base_setup_installer"/>
       <field name="arch" type="xml">
         <data>
-          <form position="attributes">
-            <attribute name="string">CRM Application Configuration</attribute>
-          </form>
-
-          <separator string="title" position="attributes">
-            <attribute name="string">Configure Your CRM Application</attribute>
-          </separator>
-          <xpath expr="//label[@string='description']"
-                 position="attributes">
-            <attribute name="string">Enhance your core CRM Application with additional functionalities.</attribute>
+          <xpath expr="//group[@name='crm']" position="replace">
+            <newline/>
+            <separator string="Customer Relationship Management Features" colspan="4"/>
+            <field name="crm_claim" groups="base.group_extended"/>
+            <field name="crm_helpdesk" groups="base.group_extended"/>
+            <field name="crm_fundraising" groups="base.group_extended"/>
+            <field name="wiki_sale_faq" groups="base.group_extended"/>
+            <field name="sale_crm" invisible="1" groups="base.group_extended"/>
+            <field name="crm_caldav"/>
+            <field name="fetchmail"/>
+            <field name="thunderbird"/>
+            <field name="outlook"/>
           </xpath>
-          <xpath expr='//separator[@string="vsep"]' position='attributes'>
-              <attribute name='rowspan'>8</attribute>
-              <attribute name='string'></attribute>
-          </xpath>
-          <xpath expr="//button[@string='Install Modules']" position="attributes">
-            <attribute name="string">Configure</attribute>
-          </xpath>
-            <group colspan="8">
-            <group colspan="4" col="4" groups="base.group_extended" name="other">
-                  <field name="crm_claim" />
-                  <field name="crm_helpdesk" />
-                  <field name="crm_fundraising" />
-                  <field name="wiki_sale_faq"/>
-                    <field name="sale_crm" invisible="1"/>
-            </group>
-            <group colspan="2" col="2">
-                <separator string="Synchronization" colspan="4" />
-                <field name="crm_caldav" />
-                <field name="fetchmail" />
-                <field name="import_google"/>
-            </group>
-            <group colspan="2" col="2">
-              <separator string="Plug-In" colspan="4" />
-                  <field name="thunderbird" />
-                  <field name="outlook" />
-              </group>
-          </group>
         </data>
       </field>
     </record>
-
-    <record id="action_crm_installer" model="ir.actions.act_window">
-      <field name="name">CRM Application Configuration</field>
-      <field name="type">ir.actions.act_window</field>
-      <field name="res_model">crm.installer</field>
-      <field name="view_id" ref="view_crm_installer"/>
-      <field name="view_type">form</field>
-      <field name="view_mode">form</field>
-      <field name="target">new</field>
+    
+    <record model="ir.actions.act_window" id="crm_case_section_view_form_installer">
+        <field name="name">Create Sales Team</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">crm.case.section</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="crm.crm_case_section_view_tree"/>
+        <field name="help">Define sales teams to structure your sales organization and assign users to each team. You should also define the sales stage to each team. As an example, if you use Solutions Selling techniques to track your opportunities, you can assign the following stage to the team: Territory, Qualified, Qualified Sponsors, Proposition, Negociaton, Won/Lost.</field>
     </record>
 
-    <record id="crm_installer_todo" model="ir.actions.todo">
-        <field name="action_id" ref="action_crm_installer"/>
-        <field name="sequence">3</field>
-        <field name="restart">always</field>
-        <field eval="[(6,0,[ref('base.group_extended')])]" name="groups_id"/>
+    <record id="crm_case_section_installer_todo" model="ir.actions.todo">
+        <field name="action_id" ref="crm_case_section_view_form_installer"/>
+        <field name="category_id" ref="base.category_sales_management_config"/>
+        <field name="sequence">10</field>
     </record>
+
+    <record model="ir.actions.act_window" id="crm_case_stage_form_installer">
+        <field name="name">Review Sales Stages</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">crm.case.stage</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="crm.crm_case_stage_tree"/>
+        <field name="help">Stages will allow salesmen to easily track how a specific opportunity is positioned in the sales cycle. In order to efficiently manage your sales pipeline, it's important to define conditions to go to the next step. Example: to set an opportunity as 'Qualified', you must set the "Expected Revenue" and the "Expected Closing Date." You should also have a look at the tooltip of the field "Change Probability Automatically".</field>
+    </record>
+
+    <record id="crm_case_stage_installer_todo" model="ir.actions.todo">
+        <field name="action_id" ref="crm_case_stage_form_installer"/>
+        <field name="category_id" ref="base.category_sales_management_config"/>
+        <field name="sequence">10</field>
+    </record>
+
   </data>
 </openerp>

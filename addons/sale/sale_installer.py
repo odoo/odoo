@@ -22,8 +22,7 @@
 from osv import fields, osv
 
 class sale_installer(osv.osv_memory):
-    _name = 'sale.installer'
-    _inherit = 'res.config.installer'
+    _inherit = 'base.setup.installer'
 
     _columns = {
         'delivery': fields.boolean('Delivery Costs', 

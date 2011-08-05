@@ -21,8 +21,7 @@
 from osv import fields, osv
 
 class hr_installer(osv.osv_memory):
-    _name = 'hr.installer'
-    _inherit = 'res.config.installer'
+    _inherit = 'base.setup.installer'
     _columns = {
         # Human Resources Management
         'hr_holidays': fields.boolean('Holidays / Leaves Management',

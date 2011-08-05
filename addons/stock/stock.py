@@ -486,7 +486,7 @@ class stock_tracking(osv.osv):
             return sequence
 
     _columns = {
-        'name': fields.char('Pack Reference', size=64, required=True, select=True),
+        'name': fields.char('Pack Reference', size=64, required=True, select=True, help="By default, the pack reference is generated following the sscc standard. (Serial number + 1 check digit)"),
         'active': fields.boolean('Active', help="By unchecking the active field, you may hide a pack without deleting it."),
         'serial': fields.char('Additional Reference', size=64, select=True, help="Other reference or serial number"),
         'move_ids': fields.one2many('stock.move', 'tracking_id', 'Moves for this pack', readonly=True),
@@ -636,11 +636,11 @@ class stock_picking(osv.osv):
                  "* Done: has been processed, can't be modified or cancelled anymore\n"\
                  "* Cancelled: has been cancelled, can't be confirmed anymore"),
         'min_date': fields.function(get_min_max_date, fnct_inv=_set_minimum_date, multi="min_max_date",
-                 method=True, store=True, type='datetime', string='Expected Date', select=1, help="Expected date for the picking to be processed"),
+                 store=True, type='datetime', string='Expected Date', select=1, help="Expected date for the picking to be processed"),
         'date': fields.datetime('Order Date', help="Date of Order", select=True),
         'date_done': fields.datetime('Date Done', help="Date of Completion"),
         'max_date': fields.function(get_min_max_date, fnct_inv=_set_maximum_date, multi="min_max_date",
-                 method=True, store=True, type='datetime', string='Max. Expected Date', select=2),
+                 store=True, type='datetime', string='Max. Expected Date', select=2),
         'move_lines': fields.one2many('stock.move', 'picking_id', 'Internal Moves', states={'done': [('readonly', True)], 'cancel': [('readonly', True)]}),
         'auto_picking': fields.boolean('Auto-Picking'),
         'address_id': fields.many2one('res.partner.address', 'Address', help="Address of partner"),

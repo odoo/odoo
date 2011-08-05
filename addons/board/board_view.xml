@@ -1,6 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+
+      <record id="action_application_tiles" model="ir.actions.client">
+        <field name="name">Applications Tiles</field>
+        <field name="tag">board.home.applications</field>
+      </record>
+      <record id="action_res_widgets_display" model="ir.actions.client">
+        <field name="name">Homepage Widgets</field>
+        <field name="tag">board.home.widgets</field>
+      </record>
+      <record id="view_board_homepage" model="ir.ui.view">
+        <field name="name">Homepage Board</field>
+        <field name="model">board.board</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+          <form string="">
+            <hpaned>
+              <child1>
+                <action name="%(action_application_tiles)d"/>
+              </child1>
+              <child2>
+                <action name="%(action_res_widgets_display)d"/>
+              </child2>
+            </hpaned>
+          </form>
+        </field>
+      </record>
+      <record id="homepage_action" model="ir.actions.act_window">
+        <field name="name">Home Page</field>
+        <field name="res_model">board.board</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_board_homepage"/>
+      </record>
 <!--Board Note Search View  -->
         <record id="view_board_note_search" model="ir.ui.view">
             <field name="name">board.note.search</field>

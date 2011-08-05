@@ -1013,7 +1013,9 @@ class sale_order_line(osv.osv):
 
     def product_id_change(self, cr, uid, ids, pricelist, product, qty=0,
             uom=False, qty_uos=0, uos=False, name='', partner_id=False,
-            lang=False, update_tax=True, date_order=False, packaging=False, fiscal_position=False, flag=False):
+            lang=False, update_tax=True, date_order=False, packaging=False, fiscal_position=False, flag=False, context=None):
+        context = context or {}
+        lang = lang or ('lang' in context and context['lang'])
         if not  partner_id:
             raise osv.except_osv(_('No Customer Defined !'), _('You have to select a customer in the sales form !\nPlease set one customer before choosing a product.'))
         warning = {}
@@ -1146,7 +1148,9 @@ class sale_order_line(osv.osv):
 
     def product_uom_change(self, cursor, user, ids, pricelist, product, qty=0,
             uom=False, qty_uos=0, uos=False, name='', partner_id=False,
-            lang=False, update_tax=True, date_order=False):
+            lang=False, update_tax=True, date_order=False, context=None):
+        context = context or {}
+        lang = lang or ('lang' in context and context['lang'])
         res = self.product_id_change(cursor, user, ids, pricelist, product,
                 qty=qty, uom=uom, qty_uos=qty_uos, uos=uos, name=name,
                 partner_id=partner_id, lang=lang, update_tax=update_tax,
@@ -1174,17 +1178,11 @@ class sale_config_picking_policy(osv.osv_memory):
 
     _columns = {
         'name': fields.char('Name', size=64),
-        'picking_policy': fields.selection([
-            ('direct', 'Direct Delivery'),
-            ('one', 'All at Once')
-        ], 'Picking Default Policy', required=True, help="If you are sure that you have enough stock to send complete order at once please select 'All at Once'. If you want to send the order in the partial shipments please select 'Direct Delivery'..."),
         'order_policy': fields.selection([
             ('manual', 'Invoice Based on Sales Orders'),
             ('picking', 'Invoice Based on Deliveries'),
-        ], 'Shipping Default Policy', required=True,
-           help="""The Shipping Policy is used to synchronise invoice and delivery operations.
-        - The "Invoice Based on Sales Orders" option will create the picking order directly and wait for the user to manually click on the 'Invoice' button to generate the draft invoice.  
-        - The "Invoice Based on Deliveries" option is used to create an invoice during the picking process."""),
+        ], 'Invoicing Method', required=True,
+           help="You can generate invoices based on sales orders or based on shippings."),
         'step': fields.selection([
             ('one', 'Delivery Order Only'),
             ('two', 'Picking List & Delivery Order')
@@ -1195,7 +1193,6 @@ class sale_config_picking_policy(osv.osv_memory):
            "in one or two operations by the worker.")
     }
     _defaults = {
-        'picking_policy': 'direct',
         'order_policy': 'manual',
         'step': 'one'
     }
@@ -1208,7 +1205,6 @@ class sale_config_picking_policy(osv.osv_memory):
         location_id = location_id and location_id[1] or False
         chaining_type = False
         for o in self.browse(cr, uid, ids, context=context):
-            ir_values_obj.set(cr, uid, 'default', False, 'picking_policy', ['sale.order'], o.picking_policy)
             ir_values_obj.set(cr, uid, 'default', False, 'order_policy', ['sale.order'], o.order_policy)
             if o.step == 'one':
                 chaining_type = 'transparent'

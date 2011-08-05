@@ -921,7 +921,7 @@ class account_period(osv.osv):
 #CHECKME: shouldn't we check the state of the period?
         ids = self.search(cr, uid, [('date_start','<=',dt),('date_stop','>=',dt)])
         if not ids:
-            raise osv.except_osv(_('Error !'), _('No period defined for this date: %s !\nPlease create a fiscal year.')%dt)
+            raise osv.except_osv(_('Error !'), _('No period defined for this date: %s !\nPlease create one.')%dt)
         return ids
 
     def action_draft(self, cr, uid, ids, *args):
@@ -1141,7 +1141,7 @@ class account_move(osv.osv):
         'partner_id': fields.related('line_id', 'partner_id', type="many2one", relation="res.partner", string="Partner", store=True),
         'amount': fields.function(_amount_compute, string='Amount', digits_compute=dp.get_precision('Account'), type='float', fnct_search=_search_amount),
         'date': fields.date('Date', required=True, states={'posted':[('readonly',True)]}, select=True),
-        'narration':fields.text('Narration'),
+        'narration':fields.text('Internal Note'),
         'company_id': fields.related('journal_id','company_id',type='many2one',relation='res.company',string='Company', store=True, readonly=True),
     }
     _defaults = {

@@ -322,3 +322,48 @@ class resource_calendar_leaves(osv.osv):
 
 resource_calendar_leaves()
 
+
+class hr_employee(osv.osv):
+   _inherit="hr.employee"
+
+   def _set_remaining_days(self, cr, uid, empl_id, name, value, arg, context=None):
+        employee = self.browse(cr, uid, empl_id, context=context)
+        diff = value - employee.remaining_leaves
+        type_obj = self.pool.get('hr.holidays.status')
+        holiday_obj = self.pool.get('hr.holidays')
+        # Find for holidays status
+        status_ids = type_obj.search(cr, uid, [('limit', '=', False)], context=context)
+        if len(status_ids) != 1 :
+            raise osv.except_osv(_('Warning !'),_("To use this feature, you must have only one leave type without the option 'Allow to Override Limit' set. (%s Found).") % (len(status_ids)))
+        status_id = status_ids and status_ids[0] or False
+        if not status_id:
+            return False
+        if diff > 0:
+            leave_id = holiday_obj.create(cr, uid, {'name': _('Allocation for %s') % employee.name, 'employee_id': employee.id, 'holiday_status_id': status_id, 'type': 'add', 'holiday_type': 'employee', 'number_of_days_temp': diff}, context=context)
+        elif diff < 0:
+            leave_id = holiday_obj.create(cr, uid, {'name': _('Leave Request for %s') % employee.name, 'employee_id': employee.id, 'holiday_status_id': status_id, 'type': 'remove', 'holiday_type': 'employee', 'number_of_days_temp': abs(diff)}, context=context)
+        else:
+            return False
+        holiday_obj.holidays_confirm(cr, uid, [leave_id])
+        holiday_obj.holidays_validate2(cr, uid, [leave_id])
+        return True
+
+   def _get_remaining_days(self, cr, uid, ids, name, args, context=None):
+        cr.execute("SELECT sum(h.number_of_days_temp) as days, h.employee_id from hr_holidays h join hr_holidays_status s on (s.id=h.holiday_status_id) where h.type='add' and h.state='validate' and s.limit=False group by h.employee_id")
+        res = cr.dictfetchall()
+        remaining = {}
+        for r in res:
+            remaining[r['employee_id']] = r['days']
+        for employee_id in ids:
+            if not remaining.get(employee_id):
+                remaining[employee_id] = 0.0
+        return remaining
+
+
+   _columns = {
+        'remaining_leaves': fields.function(_get_remaining_days, string='Remaining Legal Leaves', fnct_inv=_set_remaining_days, type="float", help='Total number of legal leaves allocated to this employee, change this value to create allocation/leave requests.', store=True),
+    }
+
+hr_employee()
+
+
