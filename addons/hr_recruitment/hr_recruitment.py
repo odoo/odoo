@@ -73,6 +73,9 @@ class hr_recruitment_degree(osv.osv):
     _defaults = {
         'sequence': 1,
     }
+    _sql_constraints = [
+        ('name_uniq', 'unique (name)', 'The name of the Degree of Recruitment must be unique!')
+    ]
 hr_recruitment_degree()
 
 class hr_applicant(crm.crm_case, osv.osv):

@@ -365,6 +365,9 @@ class product_template(osv.osv):
     _constraints = [
         (_check_uom, 'Error: The default UOM and the purchase UOM must be in the same category.', ['uom_id']),
     ]
+    _sql_constraints = [
+        ('name_ref_uniq', 'unique(name, company_id)', 'The name of the product must be unique per company!'),
+    ]
 
     def name_get(self, cr, user, ids, context=None):
         if context is None:

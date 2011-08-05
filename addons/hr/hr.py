@@ -97,6 +97,11 @@ class hr_job(osv.osv):
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'hr.job', context=c),
         'state': 'open',
     }
+    
+    _sql_constraints = [
+        ('name_company_uniq', 'unique(name, company_id)', 'The name of the job position must be unique per company !'),
+    ]
+
 
     def on_change_expected_employee(self, cr, uid, ids, no_of_recruitment, no_of_employee, context=None):
         if context is None:

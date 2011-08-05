@@ -880,7 +880,10 @@ class account_period(osv.osv):
         'state': 'draft',
     }
     _order = "date_start, special desc"
-
+    _sql_constraints = [
+        ('name_company_uniq', 'unique(name, company_id)', 'The name of the period must be unique per company !'),
+    ]
+    
     def _check_duration(self,cr,uid,ids,context=None):
         obj_period = self.browse(cr, uid, ids[0], context=context)
         if obj_period.date_stop < obj_period.date_start:
@@ -1762,6 +1765,9 @@ class account_tax(osv.osv):
         'type_tax_use': fields.selection([('sale','Sale'),('purchase','Purchase'),('all','All')], 'Tax Application', required=True)
 
     }
+    _sql_constraints = [
+        ('name_company_uniq', 'unique(name, company_id)', 'Tax Name must be unique per company!'),
+    ]
 
     def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=80):
         """
