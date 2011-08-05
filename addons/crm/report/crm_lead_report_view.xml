@@ -18,7 +18,8 @@
                 <field name="channel_id" invisible="1"/>
                 <field name="type" invisible="1"/>
                 <field name="priority" invisible="1"/>
-                <field name="month" invisible="1"/>
+                <field name="creation_month" invisible="1"/>
+                <field name="deadline_month" invisible="1"/>
                 <field name="section_id" invisible="1"/>
                 <field name="user_id" invisible="1"/>
                 <field name="company_id" invisible="1"/>
@@ -158,9 +159,9 @@
                             domain="[]" context="{'group_by':'state'}" />
                         <separator orientation="vertical" />
                         <filter string="Creation Date" icon="terp-go-month"
-                            domain="[]" context="{'group_by':'month'}"/>
-                        <filter string="Exp.Closing"  icon="terp-go-month"
-                            domain="[]" context="{'group_by':'month'}"/>
+                            domain="[]" context="{'group_by':'creation_month'}"/>
+                        <filter string="Exp. Closing"  icon="terp-go-month"
+                            domain="[]" context="{'group_by':'deadline_month'}"/>
                         </group>
                 </search>
             </field>
@@ -175,7 +176,8 @@
             <field name="arch" type="xml">
             <tree colors="blue:state in ('draft');black:state in ('open','pending','done');gray:state in ('cancel') " string="Opportunities Analysis">
                 <field name="name" invisible="1"/>
-                <field name="month" invisible="1"/>
+                <field name="creation_month" invisible="1"/>
+                <field name="deadline_month" invisible="1"/>
                 <field name="section_id" invisible="1" groups="base.group_extended"/>
                 <field name="user_id" invisible="1"/>
                 <field name="partner_id" invisible="1"/>
