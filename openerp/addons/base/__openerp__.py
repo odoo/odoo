@@ -23,7 +23,7 @@
 
 {
     'name': 'Base',
-    'version': '1.3',
+    'version': '1.4',
     'category': 'Generic Modules/Base',
     'complexity': "easy",
     'description': """The kernel of OpenERP, needed for all installation.""",
@@ -54,7 +54,6 @@
         'module/wizard/base_import_language_view.xml',
         'module/wizard/base_module_upgrade_view.xml',
         'module/wizard/base_module_configuration_view.xml',
-        'module/wizard/base_module_shortcut_data.xml',
         'module/wizard/base_export_language_view.xml',
         'module/wizard/base_update_translations_view.xml',
         'res/res_request_view.xml',
