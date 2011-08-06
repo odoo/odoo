@@ -457,12 +457,25 @@
             <field name="filter" eval="True"/>
         </record>
 
-        <act_window context="{'search_default_partner_id': [active_id], 'default_partner_id': active_id}" id="act_res_partner_2_sale_order" name="Quotations and Sales" groups="base.group_sale_salesman" res_model="sale.order" src_model="res.partner"/>
+        <act_window
+            context="{'search_default_partner_id': [active_id], 'default_partner_id': active_id}"
+            id="act_res_partner_2_sale_order"
+            name="Quotations and Sales"
+            groups="base.group_sale_salesman"
+            res_model="sale.order"
+            src_model="res.partner"/>
 
-        <act_window context="{'search_default_product_id': [active_id], 'default_product_id': active_id}" id="action_order_line_product_tree" name="Sales Order Lines" res_model="sale.order.line" src_model="product.product" groups="base.group_sale_salesman"/>
+        <act_window
+            context="{'search_default_product_id': [active_id], 'default_product_id': active_id}"
+            id="action_order_line_product_tree"
+            name="Sales Order Lines"
+            res_model="sale.order.line"
+            src_model="product.product"
+            groups="base.group_sale_salesman"/>
 
         <menuitem id="menu_invoiced" name="Invoicing" parent="base.menu_base_partner" sequence="5" groups="-base.group_extended"/>
-        <menuitem action="action_order_line_tree2" id="menu_invoicing_sales_order_lines" parent="menu_invoiced" sequence="2" groups="base.group_sale_salesman,base.group_sale_manager"/>
+        <menuitem id="menu_invoicing_sales_order_lines" parent="menu_invoiced" action="action_order_line_tree2" sequence="2" groups="base.group_no_one"/>
+
         <!-- configartion view -->
 
         <record id="view_config_picking_policy" model="ir.ui.view">
@@ -475,20 +488,37 @@
                 <form position="attributes">
                   <attribute name="string">Sales Application Configuration</attribute>
                 </form>
-                <separator string="title" position="attributes">
-                <attribute name="string">Configure Sales Order Logistics</attribute>
-                  </separator>
-                  <xpath expr="//label[@string='description']" position="attributes">
-                    <attribute name="string">Define your invoice method. A services company usually invoices based on sale orders while a retailer usually invoices based on deliveries.</attribute>
-                  </xpath>
-                <xpath expr="//separator[@string=&quot;vsep&quot;]" position="attributes">
-                      <attribute name="rowspan">15</attribute>
-                      <attribute name="string"/>
-                  </xpath>
-                <group string="res_config_contents" position="replace">
-                  <field name="order_policy"/>
-                  <newline/>
-                  <field name="step" groups="base.group_extended"/>
+                <group colspan="4" col="8" position="replace">
+                    <group colspan="8">
+                        <separator string="How do you generate your costumer invoice ?"/>
+                    </group>
+                    <group colspan="8" col="2">
+                        <label align="0.0" string="Based on Sales Orders" width="200" colspan="1"/>
+                        <field name="sale_orders" on_change="onchange_order(sale_orders,deli_orders)" nolabel="1"/>
+                        <label align="0.0" string="Based on Delivery Orders" width="200" colspan="1"/>
+                        <field name="deli_orders" on_change="onchange_order(sale_orders,deli_orders)" nolabel="1"/>
+                        <label align="0.0" string="Based on Task's Work" width="200" colspan="1"/>
+                        <field name="task_work" nolabel="1"/>
+                        <label align="0.0" string="Based on Timesheet" width="200" colspan="1"/>
+                        <field name="timesheet" nolabel="1"/>
+                    </group>
+                    <group colspan="8">
+                        <separator string="Options"/>
+                    </group>
+                    <group colspan="8">
+                        <group colspan="4" col="2" attrs="{'invisible':['|',('sale_orders','!=',True),('deli_orders','!=',True)]}">
+                            <label align="0.0" string="Main Method Based On" width="200" colspan="1"/>
+                            <field name="order_policy" nolabel="1"/>
+                        </group>
+                        <group colspan="4" col="2" attrs="{'invisible':[('sale_orders','!=',True), ('deli_orders','!=',True)]}">
+                            <label align="0.0" string="Do you charge the delivery" width="200" colspan="1"/>
+                            <field name="charge_delivery" nolabel="1"/>
+                        </group>
+                        <group colspan="4" col="2" attrs="{'invisible':[('task_work','=',False),('timesheet','=',False)]}">
+                            <label align="0.0" string="Main Working Time Unit" width="200" colspan="1"/>
+                            <field name="time_unit" widget="selection" domain="[('category_id','=',3)]" nolabel="1"/>
+                        </group>
+                    </group>
                 </group>
                 <xpath expr="//button[@name=&quot;action_skip&quot;]" position="replace"/>
               </data>
@@ -509,7 +539,6 @@
         <record id="config_wizard_step_sale_picking_policy" model="ir.actions.todo">
             <field name="action_id" ref="action_config_picking_policy"/>
             <field name="category_id" ref="base.category_sales_management_config"/>
-            <field name="groups_id" eval="[(6,0,[ref('base.group_extended')])]"/>
         </record>
 
     </data>
