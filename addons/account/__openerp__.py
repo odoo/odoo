@@ -125,7 +125,7 @@ module named account_voucher.
         "wizard/account_report_balance_sheet_view.xml"
     ],
     'demo_xml': [
-        'account_demo.xml',
+        'demo/account_demo.xml',
         'project/project_demo.xml',
         'project/analytic_account_demo.xml',
         'demo/account_minimal.xml',

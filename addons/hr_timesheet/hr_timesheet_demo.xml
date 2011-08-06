@@ -78,47 +78,5 @@
             <field name="journal_id" ref="analytic_journal"/>
         </record>
 
-        <record id="working_hours_Training" model="hr.analytic.timesheet">
-            <field name="name">Training to partner</field>
-            <field name="user_id" ref="base.user_root"/>
-            <field eval="time.strftime('%Y-%m-%d')" name="date"/>
-            <field eval="01.00" name="unit_amount"/>
-            <field name="product_id" ref="product_consultant"/>
-            <field name="product_uom_id" ref="product.uom_hour"/>
-            <field name="account_id" model="account.analytic.account" search="[('code','=','1')]"></field>
-            <field eval="-30.00" name="amount"/>
-            <field name="general_account_id" model="account.account" ref="account.a_expense"/>
-            <field name="invoice_id" ref="account.account_invoice_6"/>
-            <field name="journal_id" ref="analytic_journal"/>
-        </record>
-
-        <record id="working_hours_presentation" model="hr.analytic.timesheet">
-            <field name="name">Presentation</field>
-            <field name="user_id" ref="base.user_root"/>
-            <field eval="time.strftime('%Y-%m-%d')" name="date"/>
-            <field eval="01.00" name="unit_amount"/>
-            <field name="product_id" ref="product_consultant"/>
-            <field name="product_uom_id" ref="product.uom_hour"/>
-            <field name="account_id" model="account.analytic.account" search="[('code','=','1')]"></field>
-            <field eval="-30.00" name="amount"/>
-            <field name="general_account_id" model="account.account" ref="account.a_expense"/>
-            <field name="invoice_id" ref="account.account_invoice_5"/>
-            <field name="journal_id" ref="analytic_journal"/>
-        </record>
-
-        <record id="working_hours_trainee" model="hr.analytic.timesheet">
-            <field name="name">Training to trainee</field>
-            <field name="user_id" ref="base.user_root"/>
-            <field eval="time.strftime('%Y-%m-%d')" name="date"/>
-            <field eval="01.00" name="unit_amount"/>
-            <field name="product_id" ref="product_consultant"/>
-            <field name="product_uom_id" ref="product.uom_hour"/>
-            <field name="account_id" model="account.analytic.account" search="[('code','=','1')]"></field>
-            <field eval="-30.00" name="amount"/>
-            <field name="general_account_id" model="account.account" ref="account.a_expense"/>
-            <field name="invoice_id" ref="account.account_invoice_4"/>
-            <field name="journal_id" ref="analytic_journal"/>
-        </record>
-        
     </data>
 </openerp>
