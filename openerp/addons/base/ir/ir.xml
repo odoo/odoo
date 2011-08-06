@@ -375,10 +375,10 @@
             <field name="arch" type="xml">
                 <tree string="Filters">
                     <field name="name"/>
-                    <field name="user_id"/>
                     <field name="model_id"/>
-                    <field name="domain"/>
-                    <field name="context"/>
+                    <field name="user_id"/>
+                    <field name="domain" groups="base.group_extended"/>
+                    <field name="context" groups="base.group_extended"/>
                 </tree>
             </field>
         </record>
@@ -391,15 +391,11 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Filters">
-                    <group colspan="4" col="10">
-                      <field name="name"/>
-                      <field name="user_id"/>
-                      <field name="model_id"/>
-                    </group>
-                    <newline/>
-                    <group expand="0" string="Group By" colspan="4">
-                      <filter string="User" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
-                    </group>
+                    <field name="name"/>
+                    <field name="model_id"/>
+                    <field name="user_id">
+                        <filter icon="terp-personal" domain="[('user_id','in', (uid, False))]" help="Current User" name="My Filters" />
+                    </field>
                 </search>
             </field>
         </record>
