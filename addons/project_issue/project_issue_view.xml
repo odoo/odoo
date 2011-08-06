@@ -221,12 +221,7 @@
                             <filter domain="[('assigned_to','=',False)]"  help="Unassigned Issues" icon="terp-personal-" separator="1"/>
                         </field>
                         <field name="project_id"/>
-                    </group>
-                    <newline/>
-                    <group expand="0" string="Extended Filters..."  groups="base.group_extended">
-                        <field name="categ_id" widget="selection" domain="[('object_id.model', '=', 'project.issue')]"/>
                         <field name="version_id" widget="selection"/>
-                        <separator orientation="vertical"/>
                         <field name="id"/>
                     </group>
                     <newline/>

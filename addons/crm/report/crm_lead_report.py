@@ -31,6 +31,21 @@ AVAILABLE_STATES = [
     ('pending','Pending')
 ]
 
+MONTHS = [
+    ('01', 'January'),
+    ('02', 'February'),
+    ('03', 'March'),
+    ('04', 'April'),
+    ('05', 'May'),
+    ('06', 'June'),
+    ('07', 'July'),
+    ('08', 'August'),
+    ('09', 'September'),
+    ('10', 'October'),
+    ('11', 'November'),
+    ('12', 'December')
+]
+
 class crm_lead_report(osv.osv):
     """ CRM Lead Report """
     _name = "crm.lead.report"
@@ -45,12 +60,8 @@ class crm_lead_report(osv.osv):
         'channel_id':fields.many2one('res.partner.canal', 'Channel', readonly=True),
         'type_id':fields.many2one('crm.case.resource.type', 'Campaign', readonly=True),
         'state': fields.selection(AVAILABLE_STATES, 'State', size=16, readonly=True),
-        'month':fields.selection([('01', 'January'), ('02', 'February'), \
-                                  ('03', 'March'), ('04', 'April'),\
-                                  ('05', 'May'), ('06', 'June'), \
-                                  ('07', 'July'), ('08', 'August'),\
-                                  ('09', 'September'), ('10', 'October'),\
-                                  ('11', 'November'), ('12', 'December')], 'Month', readonly=True),
+        'creation_month':fields.selection(MONTHS, 'Creation Date', readonly=True),
+        'deadline_month':fields.selection(MONTHS, 'Exp. Closing', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'create_date': fields.datetime('Create Date', readonly=True, select=True),
         'day': fields.char('Day', size=128, readonly=True),
@@ -88,8 +99,9 @@ class crm_lead_report(osv.osv):
                 SELECT
                     id,
                     to_char(c.date_deadline, 'YYYY') as name,
-                    to_char(c.date_deadline, 'MM') as month,
+                    to_char(c.date_deadline, 'MM') as deadline_month,
                     to_char(c.date_deadline, 'YYYY-MM-DD') as day,
+                    to_char(c.create_date, 'MM') as creation_month,
                     to_char(c.create_date, 'YYYY-MM-DD') as creation_date,
                     to_char(c.date_open, 'YYYY-MM-DD') as opening_date,
                     to_char(c.date_closed, 'YYYY-mm-dd') as date_closed,

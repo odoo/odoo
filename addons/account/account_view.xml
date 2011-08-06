@@ -1201,13 +1201,6 @@
                         <field name="period_id" context="{'period_id':self, 'search_default_period_id':self}"/>
                     </group>
                     <newline/>
-                    <group expand="0" string="Extended Filters...">
-                        <field name="ref" select="1" string="Reference"/>
-                        <field name="name" select="1"/>
-                        <field name="narration" select="1"/>
-                        <field name="balance" string="Debit/Credit" select='1'/>
-                    </group>
-                    <newline/>
                     <group expand="0" string="Group By..." colspan="12" col="10">
                         <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
                         <separator orientation="vertical"/>
@@ -1266,8 +1259,8 @@
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_move_line_tree"/>
             <field name="search_view_id" ref="view_account_move_line_filter"/>
-            <field name="domain">[('account_id', 'child_of', active_id)]</field>
-            <field name="context">{'account_id':active_id}</field>
+            <field name="domain">[]</field>
+            <field name="context">{'search_default_account_id': [active_id]}</field>
         </record>
 
         <record id="ir_account_move_line_select" model="ir.values">
