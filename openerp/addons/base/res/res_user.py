@@ -501,28 +501,6 @@ class users(osv.osv):
 
 users()
 
-class res_config_view(osv.osv_memory):
-    _name = 'res.config.view'
-    _inherit = 'res.config'
-    _columns = {
-        'name':fields.char('Name', size=64),
-        'view': fields.selection([('simple','Simplified'),
-                                  ('extended','Extended')],
-                                 'Interface', required=True ),
-    }
-    _defaults={
-        'view':lambda self,cr,uid,*args: self.pool.get('res.users').browse(cr, uid, uid).view or 'simple',
-    }
-
-    def execute(self, cr, uid, ids, context=None):
-        res = self.read(cr, uid, ids)[0]
-        self.pool.get('res.users').write(cr, uid, [uid],
-                                 {'view':res['view']}, context=context)
-
-res_config_view()
-
-
-
 #
 # Extension of res.groups and res.users with a relation for "implied" or 
 # "inherited" groups.  Once a user belongs to a group, it automatically belongs

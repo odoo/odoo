@@ -252,59 +252,10 @@
                 </tree>
             </field>
         </record>
-
-        <record id="view_confirm_simple_view_form" model="ir.ui.view">
-            <field name="name">Configure Your Interface</field>
-            <field name="model">res.config.view</field>
-            <field name="type">form</field>
-            <field name="inherit_id" ref="res_config_view_base"/>
-            <field name="arch" type="xml">
-              <data>
-                <form position="attributes">
-                  <attribute name="string">Configure Your Interface</attribute>
-                </form>
-                <xpath expr="//label[@string='description']"
-                     position="attributes">
-                <attribute name="string">If you use OpenERP for the first time we strongly advise you to select the simplified interface, which has less features but is easier. You can always switch later from the user preferences.</attribute>
-              </xpath>
-              <xpath expr='//separator[@string="title"]' position='attributes'>
-                    <attribute name='string'>Configure Your Interface</attribute>
-              </xpath>
-              <xpath expr='//separator[@string="vsep"]' position='attributes'>
-                    <attribute name='string'></attribute>
-                    <attribute name='rowspan'>12</attribute>
-              </xpath>
-               <group string="res_config_contents" position="replace">
-                      <group colspan="4">
-                          <field colspan="4" name="view" nolabel="1"/>
-                    </group>
-                </group>
-                <xpath expr='//button[@name="action_skip"]' position='replace'/>
-              </data>
-            </field>
-        </record>
-
-        <record id="action_config_simple_view_form" model="ir.actions.act_window">
-            <field name="name">Configure Your Interface</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">res.config.view</field>
-            <field name="view_type">form</field>
-            <field name="view_id" ref="view_confirm_simple_view_form"/>
-            <field name="view_mode">form</field>
-            <field name="target">new</field>
-        </record>
         
         <record id="category_administration_config" model="ir.actions.todo.category">
             <field name="name">Administration</field>
             <field name="sequence">1</field>
-        </record>         
-
-        <record id="config_wizard_simple_view" model="ir.actions.todo">
-            <field name="action_id" ref="action_config_simple_view_form"/>
-            <field name="category_id" ref="category_administration_config"/>
-            <field name="type">automatic</field>
-            <field name="sequence">1</field>
         </record>
-
     </data>
 </openerp>

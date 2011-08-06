@@ -104,6 +104,7 @@
             <field name="name">Camptocamp</field>
             <field eval="[(6, 0, [ref('res_partner_category_10'), ref('res_partner_category_5')])]" name="category_id"/>
             <field name="supplier">1</field>
+            <field name="address" eval="[]"/>
         </record>
         <record id="res_partner_sednacom" model="res.partner">
             <field name="website">http://www.syleam.fr</field>
@@ -166,6 +167,7 @@
             <field name="user_id" ref="user_demo"/>
             <field eval="[(6, 0, [ref('res_partner_category_9')])]" name="category_id"/>
             <field name="supplier">1</field>
+            <field name="address" eval="[]"/>
         </record>
         <record id="res_partner_8" model="res.partner">
             <field name="website">http://mediapole.net</field>
@@ -317,7 +319,6 @@
             <field name="name">Thomas Passot</field>
             <field name="zip">1348</field>
             <field model="res.country" name="country_id" search="[('name','=','Belgium')]"/>
-            <field name="email">info@mediapole.net</field>
             <field name="phone">(+32).10.45.17.73</field>
             <field name="street">Rue de l'Angelique, 1</field>
             <field name="partner_id" ref="res_partner_8"/>
@@ -341,7 +342,7 @@
             <field name="partner_id" ref="res_partner_maxtor"/>
         </record>
         <record id="res_partner_address_6" model="res.partner.address">
-            <field name="city">Bruxelles</field>
+            <field name="city">Brussels</field>
             <field name="name">Etienne Lacarte</field>
             <field name="zip">2365</field>
             <field model="res.country" name="country_id" search="[('name','=','Belgium')]"/>
@@ -454,6 +455,48 @@
             <field name="city">Liège</field>
             <field name="street">Université de Liège</field>
             <field name="partner_id" ref="res_partner_accent"/>
+        </record>
+        <record id="res_partner_address_Camptocamp" model="res.partner.address">
+            <field name="city">Lausanne</field>
+            <field name="name">Luc Maurer</field>
+            <field name="zip">1015</field>
+            <field name="phone">+41 21 619 10 04</field>
+            <field model="res.country" name="country_id" search="[('name','=','Switzerland')]"/>
+            <field name="street">PSE-A, EPFL </field>
+            <field name="type">default</field>
+            <field name="partner_id" ref="res_partner_c2c"/>
+        </record>
+        <record id="res_partner_address_seagate" model="res.partner.address">
+            <field name="city">Cupertino</field>
+            <field name="name">Seagate Technology</field>
+            <field name="zip">95014</field>
+            <field model="res.country" name="country_id" search="[('name','=','United States')]"/>
+            <field name="street">10200 S. De Anza Blvd</field>
+            <field name="type">default</field>
+            <field name="partner_id" ref="res_partner_seagate"/>
+        </record>
+        <record id="res_partner_address_thymbra" model="res.partner.address">
+            <field name="city">Buenos Aires</field>
+            <field name="name">Thymbra</field>
+            <field name="zip">1659</field>
+            <field name="email">contact@thymbra.ar</field>
+            <field name="street">Palermo, Capital Federal </field>
+            <field name="street2">C1414CMS Capital Federal </field>
+            <field name="phone">(5411) 4773-9666 </field>
+            <field model="res.country" name="country_id" search="[('name','=','Argentina')]"/>
+            <field name="type">default</field>
+            <field name="partner_id" ref="res_partner_thymbra"/>
+        </record>
+        <record id="res_partner_address_tinyatwork" model="res.partner.address">
+            <field name="city">Boston</field>
+            <field name="name">Tiny Work</field>
+            <field name="zip">5501</field>
+            <field name="email">info@tinyatwork.com</field>
+            <field name="phone">+33 (0) 2 33 31 22 10</field>
+            <field model="res.country" name="country_id" search="[('name','=','United States')]"/>
+            <field name="street">One Lincoln Street</field>
+            <field name="type">default</field>
+            <field name="partner_id" ref="res_partner_tinyatwork"/>
         </record>
 
         <!--
@@ -591,3 +634,4 @@
         </record>
     </data>
 </openerp>
+
