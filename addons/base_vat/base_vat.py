@@ -1080,13 +1080,13 @@ class res_partner(osv.osv):
     
     def check_vat_no(self, vat):
         '''
-        Check Norway VAT number.
+        Check Norway VAT number.See http://www.brreg.no/english/coordination/number.html
         '''
         if len(vat) != 9:
             return False
         try:
             int(vat)
-        except:
+        except ValueError:
             return False
 
         sum = (3 * int(vat[0])) + (2 * int(vat[1])) + \
@@ -1099,10 +1099,8 @@ class res_partner(osv.osv):
             check = 0
         if check == 10:
             check -1
-            return False
-        if check != int(vat[8]):
-            return False
-        return True    
+        return check == int(vat[8])
+
     
 res_partner()
 
