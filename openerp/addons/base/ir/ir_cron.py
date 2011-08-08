@@ -162,7 +162,7 @@ class ir_cron(osv.osv):
 
             if numbercall:
                 # Reschedule our own main cron thread if necessary.
-                # This is really needed if this job run longer that its rescheduling period.
+                # This is really needed if this job runs longer than its rescheduling period.
                 print ">>> advance at", nextcall
                 nextcall = time.mktime(nextcall.timetuple())
                 openerp.cron.schedule_in_advance(nextcall, cr.dbname)
