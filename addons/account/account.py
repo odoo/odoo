@@ -2003,6 +2003,7 @@ class account_tax(osv.osv):
                 cur_price_unit -= tax.amount
 
         for tax in taxes:
+            amount = 0.0
             if tax.type=='percent':
                 if tax.include_base_amount:
                     amount = cur_price_unit - (cur_price_unit / (1 + tax.amount))
