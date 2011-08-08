@@ -276,10 +276,10 @@ openerp.base_calendar.CalendarView = openerp.base.View.extend({
     do_delete_event: function(event_id, event_obj) {
         // dhtmlx sends this event even when it does not exist in openerp.
         // Eg: use cancel in dhtmlx new event dialog
-        if (_.indexOf(this.dataset.ids, event_id) > -1) {
-            this.dataset.unlink(parseInt(event_id, 10, function() {
+        if (_.indexOf(this.dataset.ids, parseInt(event_id, 10)) > -1) {
+            this.dataset.unlink(parseInt(event_id, 10), function() {
                 self.refresh_minical();
-            }));
+            });
         }
     },
     get_event_data: function(event_obj) {
