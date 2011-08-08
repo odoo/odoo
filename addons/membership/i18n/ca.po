@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:15+0000\n"
-"PO-Revision-Date: 2011-06-08 03:34+0000\n"
+"PO-Revision-Date: 2011-08-06 14:43+0000\n"
 "Last-Translator: mgaja (GrupoIsep.com) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-06-09 05:43+0000\n"
-"X-Generator: Launchpad (build 13168)\n"
+"X-Launchpad-Export-Date: 2011-08-07 05:05+0000\n"
+"X-Generator: Launchpad (build 13613)\n"
 
 #. module: membership
 #: model:process.transition,name:membership.process_transition_invoicetoassociate0
@@ -207,6 +207,19 @@ msgid ""
 "                    -Paid Member: A member who has paid the membership "
 "amount."
 msgstr ""
+"Indica l'estat del soci.\n"
+"                    -No soci: Un membre que no ha sol·licitat la seva "
+"afiliació.\n"
+"                    -Soci cancel·lat: Un membre que ha cancel·lat la seva "
+"afiliació.\n"
+"                    -Soci antic: Un membre la data del qual de soci ha "
+"expirat.\n"
+"                    -Soci en espera: Un membre que ha sol·licitat la seva "
+"afiliació i la factura de la qual es va a crear.\n"
+"                    -Soci facturat: Un membre la factura del qual ha estat "
+"creada.\n"
+"                    -Soci pagat: Un membre que ha pagat l'import de la quota "
+"de soci."
 
 #. module: membership
 #: model:process.transition.action,name:membership.process_transition_action_create0
@@ -368,6 +381,18 @@ msgid ""
 "invoice and send propositions for membership renewal.\n"
 "    "
 msgstr ""
+"\n"
+"Aquest mòdul li permet administrar totes les operacions de gestió de socis.\n"
+"És compatible amb diferents tipus de membres:\n"
+"* Soci gratuït\n"
+"* Soci associat (per exemple: un grup se subscriu com a soci per a tots\n"
+"  els membres subsidiaris)\n"
+"* Socis pagats\n"
+"* Preus especials de soci, ...\n"
+"\n"
+"S'integra amb vendes i comptabilitat per poder facturar automàticament\n"
+"i enviar propostes per a la renovació de la quota de soci.\n"
+"    "
 
 #. module: membership
 #: model:ir.model,name:membership.model_account_invoice_line
@@ -391,6 +416,19 @@ msgid ""
 "                        -Paid Member: A member who has paid the membership "
 "amount."
 msgstr ""
+"Indica l'estat del soci.\n"
+"                        -No soci: Un membre que no ha sol·licitat la seva "
+"afiliació.\n"
+"                        -Soci cancel·lat: Un membre que ha cancel·lat la "
+"seva afiliació.\n"
+"                        -Soci antic: Un membre la data del qual de soci ha "
+"expirat.\n"
+"                        -Soci en espera: Un membre que ha sol·licitat la "
+"seva afiliació i la factura de la qual es va a crear.\n"
+"                        -Soci facturat: Un membre la factura del qual ha "
+"estat creada.\n"
+"                        -Soci pagat: Un membre que ha pagat l'import de la "
+"quota de soci."
 
 #. module: membership
 #: view:report.membership:0
@@ -442,7 +480,7 @@ msgstr "Factura soci"
 #: field:report.membership,user_id:0
 #: view:res.partner:0
 msgid "Salesman"
-msgstr ""
+msgstr "Venedor"
 
 #. module: membership
 #: model:process.node,note:membership.process_node_membershipproduct0
@@ -626,7 +664,7 @@ msgstr "Soci bàsic"
 #. module: membership
 #: help:product.product,membership:0
 msgid "Select if a product is a membership product."
-msgstr ""
+msgstr "Marqueu aquesta opció si un producte és un producte per a socis."
 
 #. module: membership
 #: selection:membership.membership_line,state:0
@@ -645,17 +683,17 @@ msgstr "Fins"
 #: field:report.membership,membership_state:0
 #: field:res.partner,membership_state:0
 msgid "Current Membership State"
-msgstr ""
+msgstr "Estat actual soci"
 
 #. module: membership
 #: view:report.membership:0
 msgid "Last 365 Days"
-msgstr ""
+msgstr "Últims 365 dies"
 
 #. module: membership
 #: view:product.product:0
 msgid "General"
-msgstr ""
+msgstr "General"
 
 #. module: membership
 #: model:process.transition,note:membership.process_transition_waitingtoinvoice0
@@ -665,27 +703,27 @@ msgstr "Factura esborrany ara està oberta."
 #. module: membership
 #: view:product.product:0
 msgid "Inactive"
-msgstr ""
+msgstr "Inactiu"
 
 #. module: membership
 #: view:report.membership:0
 msgid "Last 30 Days"
-msgstr ""
+msgstr "Últims 30 dies"
 
 #. module: membership
 #: selection:report.membership,month:0
 msgid "December"
-msgstr ""
+msgstr "Desembre"
 
 #. module: membership
 #: view:membership.invoice:0
 msgid "Close"
-msgstr ""
+msgstr "Tanca"
 
 #. module: membership
 #: view:res.partner:0
 msgid "All non Members"
-msgstr ""
+msgstr "Tots no socis"
 
 #. module: membership
 #: view:product.product:0
@@ -700,7 +738,7 @@ msgstr "Línia factura"
 #. module: membership
 #: view:product.product:0
 msgid "Categorization"
-msgstr ""
+msgstr "Categorizació"
 
 #. module: membership
 #: model:process.node,note:membership.process_node_waitingmember0
@@ -718,17 +756,17 @@ msgstr "Preu soci"
 #. module: membership
 #: view:product.product:0
 msgid "Purchase Description"
-msgstr ""
+msgstr "Descripció de compra"
 
 #. module: membership
 #: model:ir.model,name:membership.model_product_product
 msgid "Product"
-msgstr ""
+msgstr "Producte"
 
 #. module: membership
 #: view:product.product:0
 msgid "Description"
-msgstr ""
+msgstr "Descripció"
 
 #. module: membership
 #: field:res.partner,free_member:0
@@ -738,28 +776,28 @@ msgstr "Soci gratis"
 #. module: membership
 #: selection:report.membership,month:0
 msgid "May"
-msgstr ""
+msgstr "Maig"
 
 #. module: membership
 #: model:product.template,name:membership.membership_1_product_template
 msgid "Silver Membership"
-msgstr ""
+msgstr "Soci plata"
 
 #. module: membership
 #: view:product.product:0
 msgid "Sale Taxes"
-msgstr ""
+msgstr "Impostos de vendes"
 
 #. module: membership
 #: field:report.membership,date_to:0
 #: view:res.partner:0
 msgid "End Date"
-msgstr ""
+msgstr "Data de finalització"
 
 #. module: membership
 #: selection:report.membership,month:0
 msgid "February"
-msgstr ""
+msgstr "Febrer"
 
 #. module: membership
 #: model:process.node,name:membership.process_node_invoicedmember0
@@ -769,12 +807,12 @@ msgstr "Soci facturat"
 #. module: membership
 #: selection:report.membership,month:0
 msgid "April"
-msgstr ""
+msgstr "Abril"
 
 #. module: membership
 #: help:res.partner,membership_cancel:0
 msgid "Date on which membership has been cancelled"
-msgstr ""
+msgstr "Data en la qual el soci ha estat cancel·lat."
 
 #. module: membership
 #: field:membership.membership_line,date_cancel:0
@@ -790,7 +828,7 @@ msgstr "Soci en espera"
 #: field:report.membership,date_from:0
 #: view:res.partner:0
 msgid "Start Date"
-msgstr ""
+msgstr "Data d'inici"
 
 #. module: membership
 #: model:process.node,name:membership.process_node_membershipproduct0
@@ -800,14 +838,14 @@ msgstr "Producte per socis"
 #. module: membership
 #: help:membership.membership_line,member_price:0
 msgid "Amount for the membership"
-msgstr ""
+msgstr "Import per ser soci."
 
 #. module: membership
 #: selection:membership.membership_line,state:0
 #: selection:report.membership,membership_state:0
 #: selection:res.partner,membership_state:0
 msgid "Cancelled Member"
-msgstr ""
+msgstr "Membre cancel·lat"
 
 #. module: membership
 #: constraint:product.product:0
@@ -823,4 +861,4 @@ msgstr "Any"
 #. module: membership
 #: view:report.membership:0
 msgid "Revenue Done"
-msgstr ""
+msgstr "Ingrés realitzat"

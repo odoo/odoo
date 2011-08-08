@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-05-09 10:18+0000\n"
-"PO-Revision-Date: 2011-06-06 06:40+0000\n"
+"PO-Revision-Date: 2011-08-06 12:11+0000\n"
 "Last-Translator: mgaja (GrupoIsep.com) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-06-08 05:43+0000\n"
-"X-Generator: Launchpad (build 12959)\n"
+"X-Launchpad-Export-Date: 2011-08-07 05:05+0000\n"
+"X-Generator: Launchpad (build 13613)\n"
 
 #. module: hr_expense
 #: model:process.node,name:hr_expense.process_node_confirmedexpenses0
@@ -138,6 +138,22 @@ msgid ""
 "    re-invoice your customer's expenses if your work by project.\n"
 "    "
 msgstr ""
+"\n"
+"    Aquest mòdul permet gestionar les despeses dels treballadors.\n"
+"\n"
+"    S'ha implementat el flux complet:\n"
+"    * Despesa en esborrany\n"
+"    * Confirmació del full de despeses per l'empleat\n"
+"    * Validació pel seu responsable\n"
+"    * Validació pel comptable i creació de la factura\n"
+"    * Pagament de la factura a l'empleat\n"
+"\n"
+"    Aquest mòdul també utilitza la comptabilitat analítica i és compatible "
+"amb\n"
+"    el mòdul de facturació de fulls de serveis de forma que pugui\n"
+"    re-facturar automàticament les  seves despeses de clients si treballa "
+"per projectes.\n"
+"    "
 
 #. module: hr_expense
 #: selection:hr.expense.report,state:0
@@ -478,7 +494,7 @@ msgstr "Despesa està aprovada."
 #. module: hr_expense
 #: selection:hr.expense.report,month:0
 msgid "August"
-msgstr ""
+msgstr "Agost"
 
 #. module: hr_expense
 #: model:process.node,note:hr_expense.process_node_approved0
@@ -493,7 +509,7 @@ msgstr "Import total"
 #. module: hr_expense
 #: selection:hr.expense.report,month:0
 msgid "June"
-msgstr ""
+msgstr "Juny"
 
 #. module: hr_expense
 #: model:process.node,name:hr_expense.process_node_draftexpenses0
@@ -503,7 +519,7 @@ msgstr "Despeses esborrany"
 #. module: hr_expense
 #: view:hr.expense.expense:0
 msgid "Customer Project"
-msgstr ""
+msgstr "Projecte del client"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -521,12 +537,12 @@ msgstr "Data"
 #. module: hr_expense
 #: selection:hr.expense.report,month:0
 msgid "November"
-msgstr ""
+msgstr "Novembre"
 
 #. module: hr_expense
 #: view:hr.expense.report:0
 msgid "Extended Filters..."
-msgstr ""
+msgstr "Filtres estesos..."
 
 #. module: hr_expense
 #: code:addons/hr_expense/hr_expense.py:157
@@ -537,7 +553,7 @@ msgstr ""
 #. module: hr_expense
 #: selection:hr.expense.report,month:0
 msgid "October"
-msgstr ""
+msgstr "Octubre"
 
 #. module: hr_expense
 #: report:hr.expense:0
@@ -547,7 +563,7 @@ msgstr "Total:"
 #. module: hr_expense
 #: selection:hr.expense.report,month:0
 msgid "January"
-msgstr ""
+msgstr "Gener"
 
 #. module: hr_expense
 #: report:hr.expense:0
@@ -578,13 +594,13 @@ msgstr "Full de despeses"
 #. module: hr_expense
 #: view:hr.expense.report:0
 msgid "Waiting"
-msgstr ""
+msgstr "En espera"
 
 #. module: hr_expense
 #: view:hr.expense.report:0
 #: field:hr.expense.report,day:0
 msgid "Day"
-msgstr ""
+msgstr "Dia"
 
 #. module: hr_expense
 #: model:ir.module.module,shortdesc:hr_expense.module_meta_information
@@ -594,7 +610,7 @@ msgstr "Seguiment de les despeses dels recursos humans"
 #. module: hr_expense
 #: view:hr.expense.expense:0
 msgid "References"
-msgstr ""
+msgstr "Referències"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -612,7 +628,7 @@ msgstr "Refactura"
 #: view:board.board:0
 #: model:ir.actions.act_window,name:hr_expense.action_employee_expense
 msgid "All Employee Expenses"
-msgstr ""
+msgstr "Totes les despeses del treballador"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -622,7 +638,7 @@ msgstr "Altra info."
 #. module: hr_expense
 #: help:hr.expense.expense,journal_id:0
 msgid "The journal used when the expense is invoiced"
-msgstr ""
+msgstr "El diari utilitzat quan es factura la despesa"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -672,7 +688,7 @@ msgstr "Producte"
 #. module: hr_expense
 #: view:hr.expense.expense:0
 msgid "Expenses of My Department"
-msgstr ""
+msgstr "Despeses del meu departament"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -684,7 +700,7 @@ msgstr "Descripció"
 #. module: hr_expense
 #: selection:hr.expense.report,month:0
 msgid "May"
-msgstr ""
+msgstr "Maig"
 
 #. module: hr_expense
 #: field:hr.expense.line,unit_quantity:0
@@ -694,12 +710,12 @@ msgstr "Quantitats"
 #. module: hr_expense
 #: report:hr.expense:0
 msgid "Price"
-msgstr ""
+msgstr "Preu"
 
 #. module: hr_expense
 #: field:hr.expense.report,no_of_account:0
 msgid "# of Accounts"
-msgstr ""
+msgstr "Núm. de comptes"
 
 #. module: hr_expense
 #: selection:hr.expense.expense,state:0
@@ -715,7 +731,7 @@ msgstr "Ref."
 #. module: hr_expense
 #: field:hr.expense.report,employee_id:0
 msgid "Employee's Name"
-msgstr ""
+msgstr "Nom del treballador"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,help:hr_expense.expense_all
@@ -727,11 +743,17 @@ msgid ""
 "and the employee can be reimbursed. You can also reinvoice the customer at "
 "the end of the flow."
 msgstr ""
+"El mòdul de gestió de despeses d'OpenERP li permet fer un seguiment de tot "
+"el procés. Cada mes, els treballadors introdueixen les seves despeses. Al "
+"final del mes, els seus responsables validen els fulls de despeses les quals "
+"creen costos en comptes analítics. El comptable valida les entrades "
+"proposades i es pot reemborsar al treballador. Podeu re-facturar al client "
+"al final del procés."
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
 msgid "This Month"
-msgstr ""
+msgstr "Aquest mes"
 
 #. module: hr_expense
 #: field:hr.expense.expense,user_valid:0
@@ -748,7 +770,7 @@ msgstr "(Data i signatura)"
 #. module: hr_expense
 #: selection:hr.expense.report,month:0
 msgid "February"
-msgstr ""
+msgstr "Febrer"
 
 #. module: hr_expense
 #: report:hr.expense:0
@@ -758,7 +780,7 @@ msgstr "Nom"
 #. module: hr_expense
 #: field:hr.expense.expense,account_move_id:0
 msgid "Ledger Posting"
-msgstr ""
+msgstr "Fixat llibre comptable"
 
 #. module: hr_expense
 #: model:process.transition,note:hr_expense.process_transition_approveinvoice0
@@ -768,17 +790,17 @@ msgstr "Crea factura de proveïdor."
 #. module: hr_expense
 #: model:product.template,name:hr_expense.product_product_expense_hotel_product_template
 msgid "Hotel Accommodation"
-msgstr ""
+msgstr "Allotjament hotel"
 
 #. module: hr_expense
 #: selection:hr.expense.report,month:0
 msgid "April"
-msgstr ""
+msgstr "Abril"
 
 #. module: hr_expense
 #: field:hr.expense.line,name:0
 msgid "Expense Note"
-msgstr ""
+msgstr "Nota de despesa"
 
 #. module: hr_expense
 #: help:hr.expense.expense,state:0
@@ -790,11 +812,17 @@ msgid ""
 " If an invoice is made for the expense request, the state is 'Invoiced'.\n"
 " If the expense is paid to user, the state is 'Reimbursed'."
 msgstr ""
+"Quan la sol·licitud de despesa és creada l'estat és 'esborrany'.\n"
+" Si l'usuari la confirma i s'envia al responsable, l'estat és 'esperant "
+"confirmació'.            \n"
+"Si el responsable l'accepta, l'estat és 'acceptada'.\n"
+" Si es factura, l'estat és 'facturada'.\n"
+" Si es paga a l'usuari, l'estat és 'reemborsada'"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
 msgid "Approve"
-msgstr ""
+msgstr "Aprova"
 
 #. module: hr_expense
 #: view:hr.expense.line:0
@@ -823,18 +851,18 @@ msgstr "Despeses"
 #. module: hr_expense
 #: constraint:product.product:0
 msgid "Error: Invalid ean code"
-msgstr ""
+msgstr "Error: Codi EAN no vàlid"
 
 #. module: hr_expense
 #: view:hr.expense.report:0
 #: field:hr.expense.report,year:0
 msgid "Year"
-msgstr ""
+msgstr "Any"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
 msgid "To Approve"
-msgstr ""
+msgstr "Per aprovar"
 
 #. module: hr_expense
 #: help:product.product,hr_expense_ok:0
@@ -842,6 +870,8 @@ msgid ""
 "Determines if the product can be visible in the list of product within a "
 "selection from an HR expense sheet line."
 msgstr ""
+"Determina si el producte es pot visualitzar en la llista de productes a "
+"seleccionar en una línia del full de despeses."
 
 #. module: hr_expense
 #: model:process.node,name:hr_expense.process_node_reinvoicing0
