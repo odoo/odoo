@@ -9,7 +9,7 @@ openerp.base_calendar.CalendarView = openerp.base.View.extend({
 // Dhtmlx scheduler ?
     init: function(parent, element_id, dataset, view_id, options) {
         this._super(parent, element_id);
-        this.set_default_options();
+        this.set_default_options(options);
         this.dataset = dataset;
         this.model = dataset.model;
         this.view_id = view_id;

@@ -101,14 +101,12 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
      */
     init: function(parent, element_id, dataset, view_id, options) {
         this._super(parent, element_id);
-        this.set_default_options();
+        this.set_default_options(_.extend({}, this.defaults, options || {}));
         this.dataset = dataset;
         this.model = dataset.model;
         this.view_id = view_id;
 
         this.columns = [];
-
-        this.options = _.extend({}, this.defaults, options || {});
 
         this.set_groups(new openerp.base.ListView.Groups(this));
 

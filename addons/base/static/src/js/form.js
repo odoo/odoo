@@ -19,7 +19,7 @@ openerp.base.FormView = openerp.base.View.extend( /** @lends openerp.base.FormVi
      */
     init: function(parent, element_id, dataset, view_id, options) {
         this._super(parent, element_id);
-        this.set_default_options();
+        this.set_default_options(options);
         this.dataset = dataset;
         this.model = dataset.model;
         this.view_id = view_id;
@@ -36,7 +36,6 @@ openerp.base.FormView = openerp.base.View.extend( /** @lends openerp.base.FormVi
         this.registry = openerp.base.form.widgets;
         this.has_been_loaded = $.Deferred();
         this.$form_header = null;
-        this.options = options || {};
         _.defaults(this.options, {"always_show_new_button": true});
     },
     start: function() {
@@ -1634,14 +1633,16 @@ openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
         modes = !!modes ? modes.split(",") : ["tree", "form"];
         var views = [];
         _.each(modes, function(mode) {
-            var view = {view_id: false, view_type: mode == "tree" ? "list" : mode};
+            var view = {
+                view_id: false,
+                view_type: mode == "tree" ? "list" : mode,
+                options: { sidebar : false }
+            };
             if (self.field.views && self.field.views[mode]) {
                 view.embedded_view = self.field.views[mode];
             }
             if(view.view_type === "list") {
-                view.options = {
-                    'selectable': self.multi_selection
-                };
+                view.options.selectable = self.multi_selection;
             }
             views.push(view);
         });
