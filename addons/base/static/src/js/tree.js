@@ -43,6 +43,11 @@ openerp.base.TreeView = openerp.base.View.extend({
     on_loaded: function (fields_view) {
         var self = this;
         this.fields_view = fields_view;
+        _(this.fields_view.arch.children).each(function (field) {
+            if (field.attrs.modifiers) {
+                field.attrs.modifiers = JSON.parse(field.attrs.modifiers);
+            }
+        });
         this.fields = fields_view.fields;
 
         self.dataset.domain = [['parent_id', '=', '']];
@@ -72,9 +77,8 @@ openerp.base.TreeView = openerp.base.View.extend({
 
             if (curr_node.length == 1) {
                 curr_node.find('td:first').children(':first-child').attr('src','/base/static/src/img/collapse.gif');
-                curr_node.after(QWeb.render('TreeView_Secondry', {
-                    'child_data': response,
-                    'flag': '0',
+                curr_node.after(QWeb.render('TreeView.rows', {
+                    'records': response,
                     'fields_view' : self.fields_view.arch.children,
                     'field' : self.fields
                 }));
@@ -120,12 +124,10 @@ openerp.base.TreeView = openerp.base.View.extend({
                 if (!flag) {
                     self.$element.find('table').remove();
                 }
-                self.$element.append(QWeb.render('TreeView_Secondry', {
-                    'child_data': response,
-                    'flag' : '1',
-                    'fieldsview_fields': self.fields,
-                    'fields_view' : self.fields_view.arch.children,
-                    'field' : self.fields
+                self.$element.append(QWeb.render('TreeView.architecture', {
+                    'records': response,
+                    'fields_view': self.fields_view.arch.children,
+                    'fields': self.fields
                 }));
 
                 self.$element.find('tr[id ^= treerow_]').each( function() {

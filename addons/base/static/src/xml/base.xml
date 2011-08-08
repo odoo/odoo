@@ -244,82 +244,36 @@
         </option>
     </select>
 </t>
-<t t-name="TreeView_Secondry">
-    <t t-if="flag==1">
-        <table>
-            <thead>
-                <tr>
-                    <t t-foreach="fields_view" t-as="fieldsview">
-                        <t t-foreach="fieldsview_fields" t-as="view_fields">
-                            <t t-if="fieldsview['attrs'].name==view_fields and !fieldsview['attrs'].invisible">
-                                <td class="treeview-header"><t t-esc="fieldsview_fields[view_fields].string" /></td>
-                            </t>
-                        </t>
-                    </t>
-                </tr>
-            </thead>
-            <t t-foreach="child_data" t-as="fields" >
-                <tr t-att-id="'treerow_' + fields.id">
-                    <t t-if="(fields.child_id).length >= 1">
-                        <td class="treeview-tr">
-                            <img t-att-id="'parentimg_' + fields.id" src="/base/static/src/img/expand.gif" width="16" height="16" border="0"/>
-                        </td>
-                    </t>
-                    <t t-foreach="fields_view" t-as="fieldsview">
-                        <t t-foreach="fieldsview_fields" t-as="view_fields">
-                            <t t-foreach="field" t-as="f">
-                                <t t-if="fieldsview['attrs'].name==view_fields">
-                                    <t t-if="fieldsview['attrs'].name==f and !fieldsview['attrs'].invisible and field[f].type!='many2one' and field[f].type!='selection'">
-                                        <td class="treeview-td">
-                                            <span>
-                                                <t t-esc="fields[[fieldsview['attrs'].name]]" />
-                                            </span>
-                                        </td>
-                                    </t>
-                                    <t t-if="fieldsview['attrs'].name==f and !fieldsview['attrs'].invisible and field[f].type=='many2one'">
-                                        <td class="treeview-td">
-                                            <span>
-                                                <t t-esc="fields[[fieldsview['attrs'].name]][1]" />
-                                            </span>
-                                        </td>
-                                    </t>
-                                </t>
-                            </t>
-                        </t>
-                    </t>
-                </tr>
-            </t>
-        </table>
-    </t>
-    <t t-if="flag==0">
-        <t t-foreach="child_data" t-as="fields" >
-            <tr t-att-id="'treerow_' + fields.id">
-                <t t-if="(fields.child_id).length >= 1">
-                    <td class="treeview-tr">
-                        <img t-att-id="'parentimg_' + fields.id" src="/base/static/src/img/expand.gif" width="16" height="16" border="0"/>
-                    </td>
-                </t>
-                <t t-foreach="fields_view" t-as="fieldsview">
-                    <t t-foreach="field" t-as="f">
-                        <t t-if="fieldsview['attrs'].name==f and !fieldsview['attrs'].invisible and field[f].type!='many2one' and field[f].type!='selection'">
-                            <td class="treeview-td">
-                                <span>
-                                    <t t-esc="fields[[fieldsview['attrs'].name]]" />
-                                </span>
-                            </td>
-                        </t>
-                        <t t-if="fieldsview['attrs'].name==f and !fieldsview['attrs'].invisible and field[f].type=='many2one'">
-                            <td class="treeview-td">
-                                <span>
-                                    <t t-esc="fields[[fieldsview['attrs'].name]][1]" />
-                                </span>
-                            </td>
-                        </t>
-                    </t>
-                </t>
-            </tr>
+<table t-name="TreeView.architecture">
+    <thead>
+        <tr>
+            <!-- TODO: invisible fields -->
+            <th t-foreach="fields_view" t-as="field"
+                t-if="!field.attrs.modifiers.tree_invisible"
+                class="treeview-header">
+                <t t-esc="fields[field.attrs.name].string" />
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <t t-call="TreeView.rows"/>
+    </tbody>
+</table>
+<t t-name="TreeView.rows" t-foreach="records" t-as="record" >
+    <tr t-att-id="'treerow_' + record.id">
+        <t t-if="record.child_id and record.child_id.length >= 1">
+            <td class="treeview-tr">
+                <img t-att-id="'parentimg_' + record.id" src="/base/static/src/img/expand.gif" width="16" height="16" border="0"/>
+            </td>
         </t>
-    </t>
+        <td t-foreach="fields_view" t-as="field"
+            t-if="!field.attrs.modifiers.tree_invisible"
+            class="treeview-td">
+            <span t-if="!field.attrs.modifiers.invisible">
+                <t t-esc="record[field.attrs.name]" />
+            </span>
+        </td>
+    </tr>
 </t>
 <table t-name="ListView">
     <t t-set="columns_count" t-value="visible_columns.length + (options.selectable ? 1 : 0) + (options.deletable ? 1 : 0)"/>
