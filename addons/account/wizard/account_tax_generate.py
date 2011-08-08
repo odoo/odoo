@@ -26,7 +26,11 @@ class account_tax_generate(osv.osv_memory):
     _description = 'Tax Generate'
 
     def _get_templates(self, cr, uid, context=None):
-        return self.pool.get('account.tax.template').search(cr, uid, [('installable', '=', False)], context=context)
+        company_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
+        cr.execute("SELECT description from account_tax where company_id=%s" % (company_id))
+        taxes = cr.fetchall()
+        tax_names = [x[0] for x in taxes]
+        return self.pool.get('account.tax.template').search(cr, uid, [('installable', '=', False), ('description', 'not in', tax_names)], context=context)
 
     _columns = {
         'template_ids': fields.many2many('account.tax.template', 'tax_template_rel', 'wizard_id', 'template_id', 'Taxes Template', domain = [('installable','=',False)]),
@@ -41,7 +45,6 @@ class account_tax_generate(osv.osv_memory):
         obj_tax_temp = self.pool.get('account.tax.template')
         tax_templates = [x for x in self.browse(cr, uid, ids, context=context)[0].template_ids]
         taxes_ids = obj_tax_temp.generate_tax(cr, uid, tax_templates, {}, company_id, context=context)
-        obj_tax_temp.write(cr, uid , taxes_ids['taxes_id'].keys(), {'installable': True})
         return {}
 
 account_tax_generate()
