@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="view_account_tax_generate" model="ir.ui.view">
+            <field name="name">account.tax.generate.form</field>
+            <field name="model">account.tax.generate</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Tax Generate">
+                    <separator string="Taxes Generate from Templates..." colspan="4"/>
+                    <newline/>
+                    <field name="template_ids" nolabel="1"/>
+                    <separator colspan="4" />
+                    <group colspan="4" col="6">
+                        <label string ="" colspan="2"/>
+                        <button icon="gtk-cancel" special="cancel" string="Cancel" />
+                        <button icon="gtk-execute" string="Generate Taxes"
+                        name="tax_generate" type="object" />
+                    </group>
+               </form>
+            </field>
+        </record>
+
+        <record id="action_account_tax_generate" model="ir.actions.act_window">
+            <field name="name">Generate Taxes</field>
+            <field name="res_model">account.tax.generate</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_account_tax_generate"/>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem sequence="30" action="action_account_tax_generate" id="menu_generate_taxes" parent="next_id_27" />
+
+    </data>
+</openerp>

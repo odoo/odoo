@@ -65,6 +65,8 @@ import account_change_currency
 
 import account_report_balance_sheet
 import account_report_profit_loss
+import account_tax_generate
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
 

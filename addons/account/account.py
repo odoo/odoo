@@ -2574,6 +2574,65 @@ class account_tax_template(osv.osv):
     }
     _order = 'sequence'
 
+    def generate_tax(self, cr, uid, tax_templates, tax_code_template_ref, company_id, context=None):
+        """
+        This method generate taxes from templates.
+        @param cr: A database cursor.
+        @param uid: ID of the user currently logged in.
+        @param tax_templates: Tax templates.
+        @param tax_code_template_ref: Taxcode templates reference.
+        @param company_id: if tax generated from account multi wizard at that time company_id is wizard company_id field
+        or logged user company_id.
+        @param Return: 
+        {'taxes_id': New generated taxes ids, 
+         'account_dict': Used this reference value for Account Tax, 
+         'tax_template_ref': Used this reference value for Fiscal Position
+        }
+        """
+        if context is None:
+            context = {}
+        res = {}
+        todo_dict = {}
+        tax_template_ref = {}
+        tax_template_to_tax = {}
+        for tax in tax_templates:
+            vals_tax = {
+                'name':tax.name,
+                'sequence': tax.sequence,
+                'amount': tax.amount,
+                'type': tax.type,
+                'applicable_type': tax.applicable_type,
+                'domain': tax.domain,
+                'parent_id': tax.parent_id and ((tax.parent_id.id in tax_template_ref) and tax_template_ref[tax.parent_id.id]) or False,
+                'child_depend': tax.child_depend,
+                'python_compute': tax.python_compute,
+                'python_compute_inv': tax.python_compute_inv,
+                'python_applicable': tax.python_applicable,
+                'base_code_id': tax.base_code_id and ((tax.base_code_id.id in tax_code_template_ref) and tax_code_template_ref[tax.base_code_id.id]) or False,
+                'tax_code_id': tax.tax_code_id and ((tax.tax_code_id.id in tax_code_template_ref) and tax_code_template_ref[tax.tax_code_id.id]) or False,
+                'base_sign': tax.base_sign,
+                'tax_sign': tax.tax_sign,
+                'ref_base_code_id': tax.ref_base_code_id and ((tax.ref_base_code_id.id in tax_code_template_ref) and tax_code_template_ref[tax.ref_base_code_id.id]) or False,
+                'ref_tax_code_id': tax.ref_tax_code_id and ((tax.ref_tax_code_id.id in tax_code_template_ref) and tax_code_template_ref[tax.ref_tax_code_id.id]) or False,
+                'ref_base_sign': tax.ref_base_sign,
+                'ref_tax_sign': tax.ref_tax_sign,
+                'include_base_amount': tax.include_base_amount,
+                'description': tax.description,
+                'company_id': company_id,
+                'type_tax_use': tax.type_tax_use,
+                'price_include': tax.price_include
+            }
+            new_tax = self.pool.get('account.tax').create(cr, uid, vals_tax)
+            tax_template_to_tax[tax.id] = new_tax
+            #as the accounts have not been created yet, we have to wait before filling these fields
+            todo_dict[new_tax] = {
+                'account_collected_id': tax.account_collected_id and tax.account_collected_id.id or False,
+                'account_paid_id': tax.account_paid_id and tax.account_paid_id.id or False,
+            }
+            tax_template_ref[tax.id] = new_tax
+        res.update({'taxes_id': tax_template_to_tax, 'account_dict': todo_dict, 'tax_template_ref': tax_template_ref})
+        return res
+
 account_tax_template()
 
 # Fiscal Position Templates
@@ -2719,6 +2778,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                     res['fields'][field]['selection'] = template_select
         return res
 
+
     def execute(self, cr, uid, ids, context=None):
         obj_multi = self.browse(cr, uid, ids[0])
         obj_acc = self.pool.get('account.account')
@@ -2740,9 +2800,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
 
         #new code
         acc_template_ref = {}
-        tax_template_ref = {}
         tax_code_template_ref = {}
-        todo_dict = {}
 
         # create tax templates and real taxes from purchase_tax_rate,sale_tax_rate fields
         if not obj_multi.complete_tax:
@@ -2786,44 +2844,8 @@ class wizard_multi_charts_accounts(osv.osv_memory):
 
         #create all the tax
         tax_template_to_tax = {}
-        tax_templates_load = [x for x in obj_multi.chart_template_id.tax_template_ids if x.installable]
-        #Tax template must be installable True to create Tax object
-        for tax in tax_templates_load:
-            #create it
-            vals_tax = {
-                'name':tax.name,
-                'sequence': tax.sequence,
-                'amount':tax.amount,
-                'type':tax.type,
-                'applicable_type': tax.applicable_type,
-                'domain':tax.domain,
-                'parent_id': tax.parent_id and ((tax.parent_id.id in tax_template_ref) and tax_template_ref[tax.parent_id.id]) or False,
-                'child_depend': tax.child_depend,
-                'python_compute': tax.python_compute,
-                'python_compute_inv': tax.python_compute_inv,
-                'python_applicable': tax.python_applicable,
-                'base_code_id': tax.base_code_id and ((tax.base_code_id.id in tax_code_template_ref) and tax_code_template_ref[tax.base_code_id.id]) or False,
-                'tax_code_id': tax.tax_code_id and ((tax.tax_code_id.id in tax_code_template_ref) and tax_code_template_ref[tax.tax_code_id.id]) or False,
-                'base_sign': tax.base_sign,
-                'tax_sign': tax.tax_sign,
-                'ref_base_code_id': tax.ref_base_code_id and ((tax.ref_base_code_id.id in tax_code_template_ref) and tax_code_template_ref[tax.ref_base_code_id.id]) or False,
-                'ref_tax_code_id': tax.ref_tax_code_id and ((tax.ref_tax_code_id.id in tax_code_template_ref) and tax_code_template_ref[tax.ref_tax_code_id.id]) or False,
-                'ref_base_sign': tax.ref_base_sign,
-                'ref_tax_sign': tax.ref_tax_sign,
-                'include_base_amount': tax.include_base_amount,
-                'description':tax.description,
-                'company_id': company_id,
-                'type_tax_use': tax.type_tax_use,
-                'price_include': tax.price_include
-            }
-            new_tax = obj_acc_tax.create(cr, uid, vals_tax)
-            tax_template_to_tax[tax.id] = new_tax
-            #as the accounts have not been created yet, we have to wait before filling these fields
-            todo_dict[new_tax] = {
-                'account_collected_id': tax.account_collected_id and tax.account_collected_id.id or False,
-                'account_paid_id': tax.account_paid_id and tax.account_paid_id.id or False,
-            }
-            tax_template_ref[tax.id] = new_tax
+        tax_templates = [x for x in obj_multi.chart_template_id.tax_template_ids if x.installable]
+        taxes_ids = obj_tax_temp.generate_tax(cr, uid, tax_templates, tax_code_template_ref, company_id, context=context)
         #deactivate the parent_store functionnality on account_account for rapidity purpose
         ctx = context and context.copy() or {}
         ctx['defer_parent_store_computation'] = True
@@ -2861,7 +2883,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         #reactivate the parent_store functionnality on account_account
         obj_acc._parent_store_compute(cr)
 
-        for key,value in todo_dict.items():
+        for key,value in taxes_ids['account_dict'].items():
             if value['account_collected_id'] or value['account_paid_id']:
                 obj_acc_tax.write(cr, uid, [key], {
                     'account_collected_id': acc_template_ref.get(value['account_collected_id'], False),
@@ -3085,8 +3107,8 @@ class wizard_multi_charts_accounts(osv.osv_memory):
 
                 for tax in position.tax_ids:
                     vals_tax = {
-                        'tax_src_id': tax_template_ref[tax.tax_src_id.id],
-                        'tax_dest_id': tax.tax_dest_id and tax_template_ref[tax.tax_dest_id.id] or False,
+                        'tax_src_id': taxes_ids['tax_template_ref'][tax.tax_src_id.id],
+                        'tax_dest_id': tax.tax_dest_id and taxes_ids['tax_template_ref'][tax.tax_dest_id.id] or False,
                         'position_id': new_fp,
                     }
                     obj_tax_fp.create(cr, uid, vals_tax)
@@ -3098,12 +3120,12 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                         'position_id': new_fp,
                     }
                     obj_ac_fp.create(cr, uid, vals_acc)
-        if obj_multi.sale_tax and tax_template_to_tax:
+        if obj_multi.sale_tax and taxes_ids['taxes_id']:
             ir_values_obj.set(cr, uid, key='default', key2=False, name="taxes_id", company=obj_multi.company_id.id,
-                            models =[('product.product',False)], value=[tax_template_to_tax[obj_multi.sale_tax.id]])
-        if obj_multi.purchase_tax and tax_template_to_tax:
+                            models =[('product.product',False)], value=[taxes_ids['taxes_id'][obj_multi.sale_tax.id]])
+        if obj_multi.purchase_tax and taxes_ids['taxes_id']:
             ir_values_obj.set(cr, uid, key='default', key2=False, name="supplier_taxes_id", company=obj_multi.company_id.id,
-                            models =[('product.product',False)], value=[tax_template_to_tax[obj_multi.purchase_tax.id]])
+                            models =[('product.product',False)], value=[taxes_ids['taxes_id'][obj_multi.purchase_tax.id]])
 
 wizard_multi_charts_accounts()
 
