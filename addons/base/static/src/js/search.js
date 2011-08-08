@@ -144,7 +144,7 @@ openerp.base.SearchView = openerp.base.Widget.extend({
         $.when.apply(null, widget_starts).then(function () {
             self.ready.resolve();
         });
-        
+        this.shortcut_check();
         this.reload_managed_filters();
     },
     reload_managed_filters: function() {
@@ -344,7 +344,34 @@ openerp.base.SearchView = openerp.base.Widget.extend({
             // triggers refresh
             this.$element.find('form').submit();
         }
-    }
+    },
+    shortcut_check: function(){
+        var img = "shortcut-add";
+        for(var list_shortcut=0; list_shortcut<this.session.sc_list.length; list_shortcut++){
+            if (this.session.sc_list[list_shortcut]['res_id'] == this.session.active_id)
+                {img = "shortcut-remove"}}
+        $('#shortcut_add_remove').addClass(img);
+        this.shortcut_add_remove();
+    },
+    shortcut_add_remove : function(session){
+        var self = this;
+        var shortcut_selector =$('#shortcut_add_remove');
+        var dataset_shortcut = new openerp.base.DataSet(this, 'ir.ui.view_sc');
+        shortcut_selector.click(function(ev,id){
+          if(shortcut_selector.hasClass("shortcut-remove")){
+                  var unlink_id = $("li[id="+self.session.active_id+"]").attr('shortcut-id');  
+                  dataset_shortcut.unlink([parseInt(unlink_id)]);
+                  shortcut_selector.removeClass("shortcut-remove");     
+                  shortcut_selector.addClass("shortcut-add"); }
+          else {
+                var data = {'user_id': self.uid, 'res_id': self.session.active_id, 'resource': 'ir.ui.menu', 'name': self.session.active_menu_name};
+                dataset_shortcut.create(data);
+                shortcut_selector.removeClass("shortcut-add");        
+                shortcut_selector.addClass("shortcut-remove"); }  
+           this.header = new openerp.base.Header(self, "oe_header");
+           this.header.shortcut_load(); 
+        });
+    },
 });
 
 /** @namespace */
@@ -482,7 +509,6 @@ openerp.base.search.Group = openerp.base.search.Widget.extend({
         return $.when.apply(null, widget_starts);
     }
 });
-
 openerp.base.search.Input = openerp.base.search.Widget.extend( /** @lends openerp.base.search.Input# */{
     /**
      * @constructs

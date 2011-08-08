@@ -1180,3 +1180,57 @@ background: linear-gradient(top, #ffffff 0%,#ebe9e9 100%); /* W3C */
     -webkit-box-shadow: none;
     box-shadow: none;
 }
+/* Shortcuts*/
+#shortcut_add_remove {
+    height: 20px;
+    padding: 0;
+    width: 24px;
+    cursor: pointer;
+    display: inline; /*IE7 */
+    display: inline-block;
+}
+.shortcut-add {
+    background: url(../img/add-shortcut.png) no-repeat;
+    background-position: bottom;
+}
+.shortcut-remove{
+    background: url(../img/remove-shortcut.png) no-repeat;
+    background-position: bottom;
+}
+/* ================ */
+#shortcuts {
+    position: absolute;
+    
+    margin: 0;
+    padding: 6px 5px;
+    top: 37px;
+    left: 197px;
+    right: 0;
+    height: 17px;
+    line-height: 1.2;
+}
+#shortcuts ul {
+    display: block;
+    overflow: hidden;
+    list-style: none;
+    white-space: nowrap;
+    padding: 0;
+    margin: 0;
+}
+#shortcuts li {
+    cursor: pointer;
+    display: -moz-inline-stack;    
+    display: inline-block;
+    display: inline; /*IE7 */
+    color: #fff;
+    text-align: center;
+    border-left: 1px solid #909090;
+    padding-left: 4px;
+    font-size: 90%;
+    font-weight: normal;
+}
+#shortcuts li:first-child,
+#shortcuts li.first {
+    border-left: none;
+    padding-left: 0;
+}

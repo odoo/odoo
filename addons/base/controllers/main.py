@@ -259,9 +259,9 @@ class Session(openerpweb.Controller):
 
     @openerpweb.jsonrequest
     def sc_list(self, req):
-        return req.session.model('ir.ui.view_sc').get_sc(req.session._uid, "ir.ui.menu",
-                                                         req.session.eval_context(req.context))
-
+		return sorted(req.session.model('ir.ui.view_sc').get_sc(req.session._uid, "ir.ui.menu",
+                                                     req.session.eval_context(req.context)), key=lambda k: k['id'])
+                                                     
     @openerpweb.jsonrequest
     def get_lang_list(self, req):
         try:
