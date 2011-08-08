@@ -178,7 +178,7 @@ class ir_cron(osv.osv):
         This selects in database all the jobs that should be processed. It then
         tries to lock each of them and, if it succeeds, spawns a thread to run
         the cron job (if it doesn't succeed, it means the job was already
-        locked to be taken care of by another thread.
+        locked to be taken care of by another thread).
 
         The cursor used to lock the job in database is given to the worker
         thread (which has to close it itself).
@@ -206,11 +206,12 @@ class ir_cron(osv.osv):
                     task_job = task_cr.dictfetchall()[0]
                 except psycopg2.OperationalError, e:
                     if e.pgcode == '55P03':
-                        # Class 55: Object not in prerequisite state, 55P03: lock_not_available
-                        # ... and fail.
+                        # Class 55: Object not in prerequisite state; 55P03: lock_not_available
+                        # ... and fail (in a good way for our purpose).
                         print ">>>", job['name'], " is already being processed"
                         continue
                     else:
+                        # ... and fail (badly).
                         raise
                 finally:
                     if not task_job:
