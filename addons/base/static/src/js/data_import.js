@@ -19,7 +19,6 @@ openerp.base.DataImport = openerp.base.Dialog.extend({
                             self.stop();
                           },
                         "Import File" : function() {
-                                //$("#import_data").submit();
                                 self.do_import();
                           }
                        },
@@ -53,47 +52,17 @@ openerp.base.DataImport = openerp.base.Dialog.extend({
             });
     },
     import_results:function(res){
-        var self = this;
         var results = $.parseJSON(res);
-
+        $('#result, #success').empty();
+        var result_node = $("#result");
         if (results['records']){
-            var result = results['records'];
-            if ($('#error').find('table')){
-                $("#error table").remove();
-            }
-            if ($('#records_data').find('tr')){
-                $("#records_data tr").remove();
-            }
-            for (i in result) {
-                if (i == 0){
-                    $('#records_data').append('<tr class="grid-header"></tr>');
-                    for (m in result[i]){
-                        $('.grid-header').append('<th class="grid-cell">'+result[i][m]+'</th>');
-                    }
-                }else{
-                    $('#records_data tr:last').after('<tr id='+i+' class="grid-row"></tr>');
-                    for (n in result[i]){
-                        $("tr[id="+i+"]").append('<td class="grid-cell">'+result[i][n]+'</td>');
-                    }
-                }
-            }
+            records = {'header':results['fields'],'row':results['records']};
+            result_node.append(QWeb.render('ImportView-result',{'records':records}));
         }else if(results['error']){
-            var result = results['error'];
-            if ($('#records_data').find('tr')){
-                $("#records_data tr").remove();
-            }
-            if ($('#error').find('table')){
-                $("#error table").remove();
-            }
-            $("#error").append('<table id="error_tbl"><tr style="white-space: pre-line;">The import failed due to:'+result['message']+'</tr></table>');
-            if (result['preview']){
-                $("#error_tbl tr:last").after('<tr>Here is a preview of the file we could not import:</tr>');
-                $("#error_tbl tr:last").after('<tr><pre>'+result['preview']+'</pre></tr>');
-            }
+            result_node.append(QWeb.render('ImportView-result',{'error': results['error']}));
         }else if(results['success']){
-            var result = results['success'];
-            $("#imported_success").css('display','block');
-            $("#res").append('<td>'+result['message']+'</td>')
+            var success_node = $("#success");
+            success_node.append(QWeb.render('ImportView-result',{'success': results['success']}));
         }
     },
     stop: function() {

@@ -1256,7 +1256,6 @@ class Import(View):
         fields = []
         word=''
         limit = 3
-
         try:
             for i, row in enumerate(data):
                 records.append(row)
@@ -1280,7 +1279,7 @@ class Import(View):
             error=dict(error, preview=csvfile.file.read(200))
             return simplejson.dumps({'error':error})
 
-        return simplejson.dumps({'records':records})
+        return simplejson.dumps({'records':records[1:],'fields':fields})
 
     @openerpweb.httprequest
     def import_data(self, req, session_id, model, id, csvfile, csvsep, csvdel, csvcode, csvskip, fields=[]):

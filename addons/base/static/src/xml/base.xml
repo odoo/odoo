@@ -1328,10 +1328,7 @@
                             </td>
                         </tr>
                     </table>
-                    <div id="error">
-                    </div>
-                    <table id="records_data" class="grid" width="100%" style="margin: 5px 0;">
-                    </table>
+                    <div id="result"></div>
                     <fieldset>
                         <legend style="cursor:pointer;">CSV Options</legend>
                         <table style="display:none">
@@ -1359,20 +1356,55 @@
         </tr>
         <tr>
             <td width="100%">
-                <div id="imported_success" style="display:none;">
-                    <table width="100%">
-                        <tr>
-                            <td width="100%" valign="middle" colspan="4">
-                                <h2 class="separator horizontal">3. File imported</h2>
-                            </td>
-                        </tr>
-                        <tr id="res">
-                        </tr>
-                    </table>
-                </div>
+                <div id="success"></div>
             </td>
         </tr>
     </table>
 </form>
+</t>
+<t t-name="ImportView-result">
+    <t t-if="error">
+        <table id="error_tbl">
+            <tr style="white-space:pre-line;">The import failed due to:<t t-esc="error.message"/></tr>
+            <t t-if="error.preview">
+                <tr>Here is a preview of the file we could not import:</tr>
+                <tr><pre><t t-esc="error.preview"/></pre></tr>
+            </t>
+        </table>
+    </t>
+    <t t-if="records">
+        <table id="records_data" class="grid" width="100%" style="margin: 5px 0;">
+            <t t-foreach="records" t-as="record">
+                <t t-if="record=='header'">
+                    <tr class="grid-header">
+                        <t t-foreach="records.header" t-as="header">
+                            <th class="grid-cell"><t t-esc="header[0]"/></th>
+                        </t>
+                    </tr>
+                </t>
+                <t t-if="record=='row'">
+                    <t t-foreach="records.row" t-as="row">
+                        <tr class="grid-row">
+                            <t t-foreach="row" t-as="column">
+                                <td class="grid-cell"><t t-esc="column"/></td>
+                            </t>
+                        </tr>
+                    </t>
+                </t>
+            </t>
+        </table>
+    </t>
+    <t t-if="success">
+        <table width="100%">
+            <tr>
+                <td width="100%" valign="middle" colspan="4">
+                    <h2 class="separator horizontal">3. File imported</h2>
+                </td>
+            </tr>
+            <tr>
+                <t t-esc="success.message"/>
+            </tr>
+        </table>
+    </t>
 </t>
 </templates>
