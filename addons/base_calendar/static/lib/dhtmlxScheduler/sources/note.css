@@ -1,3 +1,7 @@
+/*
+This software is allowed to use under GPL or you need to obtain Commercial or Enterise License
+to use it in not GPL project. Please contact sales@dhtmlx.com for details
+*/
 .dhx_cal_event div{
 	background-color:#FFE763;
 	border:1px solid #B7A543;
@@ -46,6 +50,7 @@
 .dhx_cal_event_line{
 	background-color:#FFE763;
 	border:1px solid #B7A543;
+	border-radius:3px;
 	font-family:Tahoma;
 	font-size:8pt;
 	height:13px;
@@ -112,4 +117,18 @@ div.icon_cancel{
 }
 div.icon_delete{
 	background-position: -42px 0px;
+}
+div.dhx_now_time{
+	position:absolute;
+	width:100%;
+	border-bottom:2px dotted red;
+	z-index:1;
+}
+div.dhx_time_block{
+	position:absolute;
+	width:100%;
+	background:silver;
+	opacity:0.4;
+	filter:alpha(opacity=40);
+	z-index:1;
 }

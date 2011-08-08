@@ -1,3 +1,37 @@
+/*
+This software is allowed to use under GPL or you need to obtain Commercial or Enterise License
+to use it in not GPL project. Please contact sales@dhtmlx.com for details
+*/
+dhtmlx=function(obj){
+	for (var a in obj) dhtmlx[a]=obj[a];
+	return dhtmlx; //simple singleton
+};
+dhtmlx.extend_api=function(name,map,ext){
+	var t = window[name];
+	if (!t) return; //component not defined
+	window[name]=function(obj){
+		if (obj && typeof obj == "object" && !obj.tagName && !(obj instanceof Array)){
+			var that = t.apply(this,(map._init?map._init(obj):arguments));
+			//global settings
+			for (var a in dhtmlx)
+				if (map[a]) this[map[a]](dhtmlx[a]);			
+			//local settings
+			for (var a in obj){
+				if (map[a]) this[map[a]](obj[a]);
+				else if (a.indexOf("on")==0){
+					this.attachEvent(a,obj[a]);
+				}
+			}
+		} else
+			var that = t.apply(this,arguments);
+		if (map._patch) map._patch(this);
+		return that||this;
+	};
+	window[name].prototype=t.prototype;
+	if (ext)
+		dhtmlXHeir(window[name].prototype,ext);
+};
+
 dhtmlxAjax={
 	get:function(url,callback){
 		var t=new dtmlXMLLoaderObject(true);
@@ -546,12 +580,15 @@ dhtmlDragAndDropObject.prototype.initFrameRoute=function(win, mode){
 	}
 }
 
-var _isFF = false;
-var _isIE = false;
-var _isOpera = false;
-var _isKHTML = false;
-var _isMacOS = false;
-var _isChrome = false;
+_isFF = false;
+_isIE = false;
+_isOpera = false;
+_isKHTML = false;
+_isMacOS = false;
+_isChrome = false;
+_KHTMLrv = false;
+_OperaRv = false;
+_FFrv = false;
 
 if (navigator.userAgent.indexOf('Macintosh') != -1)
 	_isMacOS=true;
@@ -866,6 +903,12 @@ dhtmlxEventable=function(obj){
 			if (id != false){
 				var list = id.split(':');           //get EventName and ID
 				this[list[0]].removeEvent(list[1]); //remove event
+			}
+		}
+		obj.detachAllEvents = function(){
+			for (var name in this){
+				if (name.indexOf("ev_")==0) 
+					delete this[name];
 			}
 		}
 }

@@ -88,7 +88,7 @@ initializing the addon.
     /** @namespace */
     openerp.example = function (openerp) {
         // basic initialization code (e.g. templates loading)
-        openerp.example.SomeClass = Class.extend(
+        openerp.example.SomeClass = openerp.base.Class.extend(
             /** @lends openerp.example.SomeClass# */{
             /**
              * Description for SomeClass's constructor here

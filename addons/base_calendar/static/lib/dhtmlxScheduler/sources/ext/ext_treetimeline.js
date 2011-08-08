@@ -1,8 +1,16 @@
+/*
+This software is allowed to use under GPL or you need to obtain Commercial or Enterise License
+to use it in not GPL project. Please contact sales@dhtmlx.com for details
+*/
 scheduler.attachEvent("onTimelineCreated", function (obj){
 
 	if(obj.render == "tree") {
 		obj.y_unit_original = obj.y_unit;
 		obj.y_unit = scheduler._getArrayToDisplay(obj.y_unit_original);
+
+        scheduler.attachEvent('onOptionsLoadStart', function(){
+            obj.y_unit = scheduler._getArrayToDisplay(obj.y_unit_original);
+        });
 		
 		scheduler.form_blocks[obj.name]={
 			render:function(sns) {
@@ -33,7 +41,7 @@ scheduler.attachEvent("onTimelineCreated", function (obj){
 			focus:function(node){
 			}
 		};
-	};
+	}
 });	
 
 scheduler.attachEvent("onBeforeViewRender", function (render_name, y_unit, timeline){
@@ -61,7 +69,7 @@ scheduler.attachEvent("onBeforeViewRender", function (render_name, y_unit, timel
 			div_expand = '';
 			table_className = "dhx_data_table";
 		}
-		td_content = "<div class='dhx_scell_level"+y_unit.level+"'>"+div_expand+"<div class='dhx_scell_name'>"+(scheduler.templates[timeline.name+'_scale_label'](y_unit.key, y_unit.label, timeline)||y_unit.label)+"</div></div>";
+		td_content = "<div class='dhx_scell_level"+y_unit.level+"'>"+div_expand+"<div class='dhx_scell_name'>"+(scheduler.templates[timeline.name+'_scale_label'](y_unit.key, y_unit.label, y_unit)||y_unit.label)+"</div></div>";
 		
 		res = {
 			height: height,
@@ -81,7 +89,7 @@ var section_id_before; // section id of the event before dragging (to bring it b
 
 scheduler.attachEvent("onBeforeEventChanged", function(event_object, native_event, is_new) {
 	if (scheduler._isRender("tree")) { // if mode's render == tree
-		var section = scheduler.getSection(event_object.section_id);
+		var section = scheduler.getSection(event_object[scheduler.matrix[scheduler._mode].y_property]);
 		if (typeof section.children != 'undefined' && !scheduler.matrix[scheduler._mode].folder_events_available) {
 			if (!is_new) { //if old - move back
 				event_object[scheduler.matrix[scheduler._mode].y_property] = section_id_before;
@@ -140,7 +148,7 @@ scheduler._getArrayForSelect = function(array, mode){ // function to flatten out
 			}
 			if(array[i].children) 
 				fillResultArray(array[i].children, mode);
-		};
+		}
 	};
 	fillResultArray(array);
 	return result;
@@ -226,6 +234,14 @@ scheduler.deleteSection = function(id){
 		scheduler.callEvent("onOptionsLoad",[]);	
 		return result;
 	}	
+};
+
+scheduler.deleteAllSections = function(){
+    if(scheduler._isRender("tree")) {
+        scheduler.matrix[scheduler._mode].y_unit_original = [];
+        scheduler.matrix[scheduler._mode].y_unit = scheduler._getArrayToDisplay(scheduler.matrix[scheduler._mode].y_unit_original);
+        scheduler.callEvent("onOptionsLoad",[]);
+    }
 };
 
 scheduler.addSection = function(obj, parent_id){

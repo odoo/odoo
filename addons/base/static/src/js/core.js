@@ -7,65 +7,96 @@ openerp.base.core = function(openerp) {
  * John Resig Class with factory improvement
  */
 (function() {
-  var initializing = false, fnTest = /xyz/.test(function(){xyz;}) ? /\b_super\b/ : /.*/;
-  // The base Class implementation (does nothing)
-  openerp.base.Class = function(){};
+    var initializing = false,
+        fnTest = /xyz/.test(function(){xyz;}) ? /\b_super\b/ : /.*/;
+    // The base Class implementation (does nothing)
+    openerp.base.Class = function(){};
 
-  // Create a new Class that inherits from this class
-  openerp.base.Class.extend = function(prop) {
-    var _super = this.prototype;
+    // Create a new Class that inherits from this class
+    openerp.base.Class.extend = function(prop) {
+        var _super = this.prototype;
 
-    // Instantiate a base class (but only create the instance,
-    // don't run the init constructor)
-    initializing = true;
-    var prototype = new this();
-    initializing = false;
+        // Instantiate a base class (but only create the instance,
+        // don't run the init constructor)
+        initializing = true;
+        var prototype = new this();
+        initializing = false;
 
-    // Copy the properties over onto the new prototype
-    for (var name in prop) {
-      // Check if we're overwriting an existing function
-      prototype[name] = typeof prop[name] == "function" &&
-        typeof _super[name] == "function" && fnTest.test(prop[name]) ?
-        (function(name, fn){
-          return function() {
-            var tmp = this._super;
+        // Copy the properties over onto the new prototype
+        for (var name in prop) {
+            // Check if we're overwriting an existing function
+            prototype[name] = typeof prop[name] == "function" &&
+                              typeof _super[name] == "function" &&
+                              fnTest.test(prop[name]) ?
+                    (function(name, fn) {
+                        return function() {
+                            var tmp = this._super;
 
-            // Add a new ._super() method that is the same method
-            // but on the super-class
-            this._super = _super[name];
+                            // Add a new ._super() method that is the same
+                            // method but on the super-class
+                            this._super = _super[name];
 
-            // The method only need to be bound temporarily, so we
-            // remove it when we're done executing
-            var ret = fn.apply(this, arguments);
-            this._super = tmp;
+                            // The method only need to be bound temporarily, so
+                            // we remove it when we're done executing
+                            var ret = fn.apply(this, arguments);
+                            this._super = tmp;
 
-            return ret;
-          };
-        })(name, prop[name]) :
-        prop[name];
-    }
+                            return ret;
+                        };
+                    })(name, prop[name]) :
+                    prop[name];
+        }
 
-    // The dummy class constructor
-    function Class() {
-      // All construction is actually done in the init method
-      if ( !initializing && this.init ) {
-        var ret = this.init.apply(this, arguments);
-        if (ret) { return ret; }
-      }
-      return this;
-    }
+        // The dummy class constructor
+        function Class() {
+            // All construction is actually done in the init method
+            if (!initializing && this.init) {
+                var ret = this.init.apply(this, arguments);
+                if (ret) { return ret; }
+            }
+            return this;
+        }
+        Class.include = function (properties) {
+            for (var name in properties) {
+                if (typeof properties[name] !== 'function'
+                        || !fnTest.test(properties[name])) {
+                    prototype[name] = properties[name];
+                } else if (typeof prototype[name] === 'function'
+                           && prototype.hasOwnProperty(name)) {
+                    prototype[name] = (function (name, fn, previous) {
+                        return function () {
+                            var tmp = this._super;
+                            this._super = previous;
+                            var ret = fn.apply(this, arguments);
+                            this._super = tmp;
+                            return ret;
+                        }
+                    })(name, properties[name], prototype[name]);
+                } else if (typeof _super[name] === 'function') {
+                    prototype[name] = (function (name, fn) {
+                        return function () {
+                            var tmp = this._super;
+                            this._super = _super[name];
+                            var ret = fn.apply(this, arguments);
+                            this._super = tmp;
+                            return ret;
+                        }
+                    })(name, properties[name]);
+                }
+            }
+        };
 
-    // Populate our constructed prototype object
-    Class.prototype = prototype;
+        // Populate our constructed prototype object
+        Class.prototype = prototype;
 
-    // Enforce the constructor to be what we expect
-    Class.constructor = Class;
+        // Enforce the constructor to be what we expect
+        Class.constructor = Class;
 
-    // And make this class extendable
-    Class.extend = arguments.callee;
+        // And make this class extendable
+        Class.extend = arguments.callee;
 
-    return Class;
-  };
+        return Class;
+    };
 })();
 
 openerp.base.callback = function(obj, method) {

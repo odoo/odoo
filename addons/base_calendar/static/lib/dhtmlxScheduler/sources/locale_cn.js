@@ -1,4 +1,8 @@
 /*
+This software is allowed to use under GPL or you need to obtain Commercial or Enterise License
+to use it in not GPL project. Please contact sales@dhtmlx.com for details
+*/
+/*
 Translation by FreezeSoul
 */
 scheduler.config.day_date="%M %d日 %D";
@@ -40,7 +44,10 @@ scheduler.locale={
 		description:"说明",
 		
 		/*year view extension*/
-		year_tab:"今年"
+		year_tab:"今年",
+
+		/*week agenda view extension*/
+		week_agenda_tab: "议程"        
 	}
 };
 

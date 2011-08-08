@@ -4,6 +4,7 @@
 
 openerp.base.views = function(openerp) {
 
+openerp.base.client_actions = new openerp.base.Registry();
 openerp.base.ActionManager = openerp.base.Widget.extend({
 // process all kind of actions
     init: function(parent, element_id) {
@@ -14,24 +15,7 @@ openerp.base.ActionManager = openerp.base.Widget.extend({
         // Will use parent to find it when implementation will be done.
         this.session.action_manager = this;
     },
-    /**
-     * Process an action
-     * Supported actions: act_window
-     */
-    action_window: function() {
-    },
-    action_window_close: function() {
-    },
-    action_server: function() {
-    },
-    action_url: function() {
-    },
-    action_report: function() {
-    },
-    action_client: function() {
-    },
     do_action: function(action, on_closed) {
-        var self = this;
         action.flags = _.extend({
             sidebar : action.target != 'new',
             search_view : action.target != 'new',
@@ -41,54 +25,64 @@ openerp.base.ActionManager = openerp.base.Widget.extend({
             pager : action.target != 'new'
         }, action.flags || {});
         // instantiate the right controllers by understanding the action
-        switch (action.type) {
-            case 'ir.actions.act_window':
-                if (!action.target && this.current_dialog) {
-                    action.flags.new_window = true;
+        if (!(action.type in this)) {
+            console.log("Action manager can't handle action of type " + action.type, action);
+            return;
+        }
+        this[action.type](action, on_closed);
+    },
+
+    'ir.actions.act_window': function (action, on_closed) {
+        if (!action.target && this.current_dialog) {
+            action.flags.new_window = true;
+        }
+        if (action.target == 'new') {
+            var dialog = this.current_dialog = new openerp.base.ActionDialog(this, {
+                title: action.name,
+                width: '50%'
+            });
+            if (on_closed) {
+                dialog.close_callback = on_closed;
+            }
+            dialog.start(false);
+            var viewmanager = dialog.viewmanager = new openerp.base.ViewManagerAction(this, dialog.element_id, action);
+            viewmanager.start();
+            dialog.open();
+        } else if (action.flags.new_window) {
+            action.flags.new_window = false;
+            this.rpc("/base/session/save_session_action", { the_action : action}, function(key) {
+                var url = window.location.protocol + "//" + window.location.host +
+                        window.location.pathname + "?" + jQuery.param({ s_action : "" + key });
+                window.open(url);
+                if (on_closed) {
+                    on_closed();
                 }
-                if (action.target == 'new') {
-                    var dialog = this.current_dialog = new openerp.base.ActionDialog(this, { title: action.name, width: '90%' });
-                    if (on_closed) {
-                        dialog.close_callback = on_closed;
-                    }
-                    dialog.start(false);
-                    var viewmanager = dialog.viewmanager = new openerp.base.ViewManagerAction(this, dialog.element_id, action);
-                    viewmanager.start();
-                    dialog.open();
-                } else if (action.flags.new_window) {
-                    action.flags.new_window = false;
-                    this.rpc("/base/session/save_session_action", { the_action : action}, function(key) {
-                        var url = window.location.protocol + "//" + window.location.host +
-                                window.location.pathname + "?" + jQuery.param({ s_action : "" + key });
-                        window.open(url);
-                        if (on_closed) {
-                            on_closed();
-                        }
-                    });
-                } else {
-                    if (this.viewmanager) {
-                        this.viewmanager.stop();
-                    }
-                    this.viewmanager = new openerp.base.ViewManagerAction(this, this.element_id, action);
-                    this.viewmanager.start();
-                }
-                break;
-            case 'ir.actions.act_window_close':
-                this.close_dialog();
-                break;
-            case 'ir.actions.server':
-                this.rpc('/base/action/run', {
-                    action_id: action.id,
-                    context: {active_id: 66, active_ids: [66], active_model: 'ir.ui.menu'}
-                }).then(function (action) {
-                    self.do_action(action, on_closed)
-                });
-                break;
-            default:
-                console.log("Action manager can't handle action of type " + action.type, action);
+            });
+        } else {
+            if (this.viewmanager) {
+                this.viewmanager.stop();
+            }
+            this.viewmanager = new openerp.base.ViewManagerAction(this, this.element_id, action);
+            this.viewmanager.start();
         }
     },
-    close_dialog: function() {
+    'ir.actions.act_window_close': function (action, on_closed) {
+        this.close_dialog();
+    },
+    'ir.actions.server': function (action, on_closed) {
+        var self = this;
+        this.rpc('/base/action/run', {
+            action_id: action.id,
+            context: {active_id: 66, active_ids: [66], active_model: 'ir.ui.menu'}
+        }).then(function (action) {
+            self.do_action(action, on_closed)
+        });
+    },
+    'ir.actions.client': function (action) {
+        var Handler = openerp.base.client_actions.get_object(action.tag);
+        new Handler(this, this.element_id, action.params).start();
+    },
+    close_dialog: function () {
         if (this.current_dialog) {
             this.current_dialog.stop();
             this.current_dialog = null;
@@ -553,7 +547,11 @@ openerp.base.View = openerp.base.Widget.extend({
         ]);
     },
     on_sidebar_manage_view: function() {
-        console.log('Todo');
+        if (this.fields_view && this.fields_view.arch) {
+            $('<xmp>' + openerp.base.json_node_to_xml(this.fields_view.arch, true) + '</xmp>').dialog({ width: '95%', height: 600});
+        } else {
+            this.notification.warn("Manage Views", "Could not find current view declaration");
+        }
     },
     on_sidebar_edit_workflow: function() {
         console.log('Todo');

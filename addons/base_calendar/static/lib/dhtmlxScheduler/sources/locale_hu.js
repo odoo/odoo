@@ -1,40 +1,47 @@
+/*
+This software is allowed to use under GPL or you need to obtain Commercial or Enterise License
+to use it in not GPL project. Please contact sales@dhtmlx.com for details
+*/
 scheduler.locale={
 	date:{
-		month_full:["Január", "Február", "Március", "Április", "Május", "Június", "Július", "Augusztus", "Szeptember", "Október", "November", "December"],
-		month_short:["Jan", "Feb", "Már", "Ápr", "Máj", "Jún", "Júl", "Aug", "Sep", "Okt", "Nov", "Dec"],
-		day_full:["Vasárnap", "Hétfõ", "Kedd", "Szerda", "Csütörtök", "Péntek", "szombat"],
-    	day_short:["Va", "Hé", "Ke", "Sze", "Csü", "Pé", "Szo"]
+		month_full:["Januï¿½r", "Februï¿½r", "Mï¿½rcius", "ï¿½prilis", "Mï¿½jus", "Jï¿½nius", "Jï¿½lius", "Augusztus", "Szeptember", "Oktï¿½ber", "November", "December"],
+		month_short:["Jan", "Feb", "Mï¿½r", "ï¿½pr", "Mï¿½j", "Jï¿½n", "Jï¿½l", "Aug", "Sep", "Okt", "Nov", "Dec"],
+		day_full:["Vasï¿½rnap", "Hï¿½tfï¿½", "Kedd", "Szerda", "Csï¿½tï¿½rtï¿½k", "Pï¿½ntek", "szombat"],
+    	day_short:["Va", "Hï¿½", "Ke", "Sze", "Csï¿½", "Pï¿½", "Szo"]
     },
     labels:{
     	dhx_cal_today_button:"Ma",
     	day_tab:"Nap",
-    	week_tab:"Hét",
-    	month_tab:"Hónap",
-    	new_event:"Új esemény",
-		icon_save:"Mentés",
-		icon_cancel:"Mégse",
-		icon_details:"Részletek",
-		icon_edit:"Szerkesztés",
-		icon_delete:"Törlés",
-		confirm_closing:"",//A változások elvesznek, biztosan folytatja? "
-		confirm_deleting:"Az esemény törölve lesz, biztosan folytatja?",
-		section_description:"Leírás",
-		section_time:"Idõszak",
+    	week_tab:"Hï¿½t",
+    	month_tab:"Hï¿½nap",
+    	new_event:"ï¿½j esemï¿½ny",
+		icon_save:"Mentï¿½s",
+		icon_cancel:"Mï¿½gse",
+		icon_details:"Rï¿½szletek",
+		icon_edit:"Szerkesztï¿½s",
+		icon_delete:"Tï¿½rlï¿½s",
+		confirm_closing:"",//A vï¿½ltozï¿½sok elvesznek, biztosan folytatja? "
+		confirm_deleting:"Az esemï¿½ny tï¿½rï¿½lve lesz, biztosan folytatja?",
+		section_description:"Leï¿½rï¿½s",
+		section_time:"Idï¿½szak",
 		full_day:"Egesz napos",
 		
-		/*ismétlõdõ események*/
-		confirm_recurring:"Biztosan szerkeszteni akarod az összes ismétlõdõ esemény beállítását?",
-		section_recurring:"Esemény ismétlése",
-		button_recurring:"Tiltás",
-		button_recurring_open:"Engedélyezés",
+		/*ismï¿½tlï¿½dï¿½ esemï¿½nyek*/
+		confirm_recurring:"Biztosan szerkeszteni akarod az ï¿½sszes ismï¿½tlï¿½dï¿½ esemï¿½ny beï¿½llï¿½tï¿½sï¿½t?",
+		section_recurring:"Esemï¿½ny ismï¿½tlï¿½se",
+		button_recurring:"Tiltï¿½s",
+		button_recurring_open:"Engedï¿½lyezï¿½s",
 		
-		/*napirendi nézet*/
+		/*napirendi nï¿½zet*/
 		agenda_tab:"Napirend",
-		date:"Dátum",
-		description:"Leírás",
+		date:"Dï¿½tum",
+		description:"Leï¿½rï¿½s",
 		
-		/*éves nézet*/
-		year_tab:"Év"
+		/*ï¿½ves nï¿½zet*/
+		year_tab:"ï¿½v",
+
+		/*week agenda view extension*/
+		week_agenda_tab: "Napirend"            
     }
-}
+};
 

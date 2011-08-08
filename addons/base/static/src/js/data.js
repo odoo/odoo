@@ -318,13 +318,13 @@ openerp.base.DataSet =  openerp.base.Widget.extend( /** @lends openerp.base.Data
             context: this.get_context()
         }, callback, error_callback);
     },
-    write: function (id, data, callback) {
+    write: function (id, data, callback, error_callback) {
         return this.rpc('/base/dataset/save', {
             model: this.model,
             id: id,
             data: data,
             context: this.get_context()
-        }, callback);
+        }, callback, error_callback);
     },
     unlink: function(ids, callback, error_callback) {
         var self = this;
@@ -409,6 +409,14 @@ openerp.base.DataSetStatic =  openerp.base.DataSet.extend({
     }
 });
 openerp.base.DataSetSearch =  openerp.base.DataSet.extend({
+    /**
+     * @constructs
+     *
+     * @param {Object} parent
+     * @param {String} model
+     * @param {Object} context
+     * @param {Array} domain
+     */
     init: function(parent, model, context, domain) {
         this._super(parent, model, context);
         this.domain = domain || [];

@@ -1,3 +1,7 @@
+/*
+This software is allowed to use under GPL or you need to obtain Commercial or Enterise License
+to use it in not GPL project. Please contact sales@dhtmlx.com for details
+*/
 scheduler.locale={
 	date:{
 		month_full:["Tammikuu", "Helmikuu", "Maaliskuu", "Huhtikuu", "Toukokuu", "Kes&auml;kuu", "Hein&auml;kuu", "Elokuu", "Syyskuu", "Lokakuu", "Marraskuu", "Joulukuu"],
@@ -33,8 +37,11 @@ scheduler.locale={
 		description:"Kuvaus",
 		
 		/*year view extension*/
-		year_tab:"Vuoden"
+		year_tab:"Vuoden",
+
+		/*week agenda view extension*/
+		week_agenda_tab: "Esityslista"                
 	}
-}
+};
 
 

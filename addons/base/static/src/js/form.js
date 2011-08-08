@@ -546,7 +546,7 @@ openerp.base.form.compute_domain = function(expr, fields) {
                 this.log("Unsupported operator in modifiers :", op);
         }
     }
-    return _.all(stack);
+    return _.all(stack, _.identity);
 };
 
 openerp.base.form.Widget = openerp.base.Widget.extend({
@@ -679,6 +679,16 @@ openerp.base.form.WidgetNotebook = openerp.base.form.Widget.extend({
     start: function() {
         this._super.apply(this, arguments);
         this.$element.tabs();
+        this.view.on_button_new.add_last(this.do_select_first_visible_tab);
+    },
+    do_select_first_visible_tab: function() {
+        for (var i = 0; i < this.pages.length; i++) {
+            var page = this.pages[i];
+            if (page.invisible === false) {
+                this.$element.tabs('select', page.index);
+                break;
+            }
+        }
     }
 });
 
@@ -696,8 +706,8 @@ openerp.base.form.WidgetNotebookPage = openerp.base.form.WidgetFrame.extend({
         this.$element_tab = $('#' + this.element_tab_id);
     },
     update_dom: function() {
-        if (this.invisible) {
-            this.notebook.$element.tabs('select', 0);
+        if (this.invisible && this.index === this.notebook.$element.tabs('option', 'selected')) {
+            this.notebook.do_select_first_visible_tab();
         }
         this.$element_tab.toggle(!this.invisible);
         this.$element.toggle(!this.invisible);
@@ -788,6 +798,14 @@ openerp.base.form.WidgetLabel = openerp.base.form.Widget.extend({
         }
         // Actual label widgets should not have a false and have type label
         return QWeb.render(this.template, {widget: this});
+    },
+    start: function() {
+        this._super();
+        var self = this;
+        this.$element.find("label").dblclick(function() {
+            var widget = self['for'] || self;
+            console.log(widget.element_id , widget);
+        });
     }
 });
 

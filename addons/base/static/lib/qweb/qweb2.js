@@ -19,7 +19,7 @@ var QWeb2 = {
             if (context.template) {
                 prefix += " - template['" + context.template + "']";
             }
-            throw prefix + ": " + message;
+            throw new Error(prefix + ": " + message);
         },
         trim: function(s, mode) {
             switch (mode) {

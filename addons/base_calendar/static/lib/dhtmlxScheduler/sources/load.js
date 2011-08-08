@@ -1,3 +1,7 @@
+/*
+This software is allowed to use under GPL or you need to obtain Commercial or Enterise License
+to use it in not GPL project. Please contact sales@dhtmlx.com for details
+*/
 scheduler._loaded={};
 scheduler._load=function(url,from){
 	url=url||this._load_url;
@@ -38,13 +42,14 @@ scheduler._load=function(url,from){
 		dhtmlxAjax.get(url,function(l){scheduler.on_load(l);});
 	this.callEvent("onXLS",[]);
 	return true;
-}
+};
 scheduler.on_load=function(loader){
 	this._loading=true;
+    var evs;
 	if (this._process)
-		var evs=this[this._process].parse(loader.xmlDoc.responseText);
+		evs=this[this._process].parse(loader.xmlDoc.responseText);
 	else
-		var evs=this._magic_parser(loader);
+		evs=this._magic_parser(loader);
 	
 	this._not_render=true;
 	for (var i=0; i<evs.length; i++){
@@ -53,12 +58,13 @@ scheduler.on_load=function(loader){
 	}
 	this._not_render=false;
 	if (this._render_wait) this.render_view_data();
-	
+
+    this._loading=false;
 	if (this._after_call) this._after_call();
 	this._after_call=null;
-	this._loading=false;
+
 	this.callEvent("onXLE",[]);
-}
+};
 scheduler.json={};
 scheduler.json.parse = function(data){
 	if (typeof data == "string"){
@@ -72,11 +78,11 @@ scheduler.json.parse = function(data){
 		evs.push(data[i]);
 	}
 	return evs;
-}
+};
 scheduler.parse=function(data,type){
 	this._process=type;
 	this.on_load({xmlDoc:{responseText:data}});
-}
+};
 scheduler.load=function(url,call){
 	if (typeof call == "string"){
 		this._process=call;
@@ -100,20 +106,23 @@ scheduler.refresh=function(refresh_all){
 	this._loaded={};
 	this._load();
 	*/
-}
-scheduler.serverList=function(name){
+};
+scheduler.serverList=function(name, array){
+	if(array) {
+		return this.serverList[name] = array.slice(0);
+	}
 	return this.serverList[name] = (this.serverList[name]||[]);
-}
-
+};
 scheduler._userdata={};
 scheduler._magic_parser=function(loader){
+    var xml;
 	if (!loader.getXMLTopNode){ //from a string
 		var xml_string = loader.xmlDoc.responseText;
 		loader = new dtmlXMLLoaderObject(function(){});
 		loader.loadXMLString(xml_string);
 	}
 	
-	var xml=loader.getXMLTopNode("data");
+	xml=loader.getXMLTopNode("data");
 	if (xml.tagName!="data") return [];//not an xml
 	
 	var opts = loader.doXPath("//coll_options");
@@ -123,8 +132,18 @@ scheduler._magic_parser=function(loader){
 		if (!arr) continue;
 		arr.splice(0,arr.length);	//clear old options
 		var itms = loader.doXPath(".//item",opts[i]);
-		for (var j=0; j < itms.length; j++)
-			arr.push({ key:itms[j].getAttribute("value"), label:itms[j].getAttribute("label")});
+		for (var j=0; j < itms.length; j++) {
+			var itm = itms[j];
+			var attrs = itm.attributes;
+			var obj = { key:itms[j].getAttribute("value"), label:itms[j].getAttribute("label")};
+			for (var k = 0; k < attrs.length; k++) {
+				var attr = attrs[k];
+				if(attr.nodeName == "value" || attr.nodeName == "label")
+					continue;
+				obj[attr.nodeName] = attr.nodeValue;
+			}
+			arr.push(obj);
+		}
 	}
 	if (opts.length)
 		scheduler.callEvent("onOptionsLoad",[]);
@@ -133,21 +152,21 @@ scheduler._magic_parser=function(loader){
 	for (var i=0; i < ud.length; i++) {
 		var udx = this.xmlNodeToJSON(ud[i]);
 		this._userdata[udx.name]=udx.text;
-	};
+	}
 	
 	var evs=[];
-	var xml=loader.doXPath("//event");
+	xml=loader.doXPath("//event");
 	
 	
 	for (var i=0; i < xml.length; i++) {
-		evs[i]=this.xmlNodeToJSON(xml[i])
+		evs[i]=this.xmlNodeToJSON(xml[i]);
 		
 		evs[i].text=evs[i].text||evs[i]._tagvalue;
 		evs[i].start_date=this.templates.xml_date(evs[i].start_date);
 		evs[i].end_date=this.templates.xml_date(evs[i].end_date);
 	}
 	return evs;
-}
+};
 scheduler.xmlNodeToJSON = function(node){
         var t={};
         for (var i=0; i<node.attributes.length; i++)
@@ -162,8 +181,7 @@ scheduler.xmlNodeToJSON = function(node){
         if (!t.text) t.text=node.firstChild?node.firstChild.nodeValue:"";
         
         return t;
-}
-
+};
 scheduler.attachEvent("onXLS",function(){
 	if (this.config.show_loading===true){
 		var t;

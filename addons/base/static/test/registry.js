@@ -3,7 +3,7 @@ $(document).ready(function () {
     module('Registry', {
         setup: function () {
             openerp = window.openerp.init(true);
-            window.openerp.base.chrome(openerp);
+            window.openerp.base.core(openerp);
             openerp.base.Foo = {};
             openerp.base.Bar = {};
         }
