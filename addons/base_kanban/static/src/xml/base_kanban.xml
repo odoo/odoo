@@ -3,9 +3,9 @@
     <table style="width:100%;" id="kanbanview">
         <tr>
             <t t-foreach="datas" t-as="columns">
-                <td class="oe_table_column oe_column_heading">
+                <td class="oe_table_column oe_column_heading" t-att-id="'column_' + columns.value">
                     <t t-if="columns.value">
-                        <t t-esc="columns.header"/> (<t t-esc="columns.records.length"/>)
+                        <t t-esc="columns.header"/>
                     </t>
                 </td>
             </t>
