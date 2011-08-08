@@ -33,8 +33,6 @@ of paths.
 import deprecation
 
 # Maximum number of threads processing concurrently cron jobs.
-# Access to this variable must be thread-safe; they have to be done
-# through the functions in openerp.cron.
 max_cron_threads = 4 # Actually the default value here is meaningless,
                      # look at tools.config for the default value.
 

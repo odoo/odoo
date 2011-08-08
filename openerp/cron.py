@@ -34,6 +34,9 @@ wake-up, it will call ir_cron._run_jobs() for the given database. _run_jobs
 will check the jobs defined in the ir_cron table and spawn accordingly threads
 to process them.
 
+This module behavior depends on the following configuration variable:
+openerp.conf.max_cron_threads.
+
 """
 
 import heapq
@@ -64,8 +67,11 @@ _wakeup_by_db = {}
 # while spawning a few threads.
 _wakeups_lock = threading.RLock()
 
-# A (non re-entrant) lock to protect the openerp.conf.max_cron_threads
-# variable.
+# Maximum number of threads allowed to process cron jobs concurrently. This
+# variable is set by start_master_thread using openerp.conf.max_cron_threads.
+_thread_count = None
+
+# A (non re-entrant) lock to protect the above _thread_count variable.
 _thread_count_lock = threading.Lock()
 
 _logger = logging.getLogger('cron')
@@ -73,19 +79,21 @@ _logger = logging.getLogger('cron')
 
 def get_thread_count():
     """ Return the number of available threads. """
-    return openerp.conf.max_cron_threads
+    return _thread_count
 
 
 def inc_thread_count():
     """ Increment by the number of available threads. """
+    global _thread_count
     with _thread_count_lock:
-        openerp.conf.max_cron_threads += 1
+        _thread_count += 1
 
 
 def dec_thread_count():
     """ Decrement by the number of available threads. """
+    global _thread_count
     with _thread_count_lock:
-        openerp.conf.max_cron_threads -= 1
+        _thread_count -= 1
 
 
 def cancel(db_name):
@@ -169,6 +177,8 @@ def start_master_thread():
     threads it spawns are not marked daemon).
 
     """
+    global _thread_count
+    _thread_count = openerp.conf.max_cron_threads
     t = threading.Thread(target=runner, name="openerp.cron.master_thread")
     t.setDaemon(True)
     t.start()
