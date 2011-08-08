@@ -67,7 +67,7 @@ $(document).ready(function () {
             },
             bar: 3
         });
-        C0.mix({
+        C0.include({
             foo: function () {
                 return 5;
             },
@@ -94,7 +94,7 @@ $(document).ready(function () {
         strictEqual(new C1().foo(), 2);
         strictEqual(new C1().bar(), 1);
 
-        C1.mix({
+        C1.include({
             foo: function () { return 2 + this._super(); },
             bar: function () { return 1 + this._super(); }
         });
@@ -110,7 +110,7 @@ $(document).ready(function () {
         strictEqual(instance.foo(), 1);
         strictEqual(instance.bar(), 1);
 
-        C0.mix({
+        C0.include({
             foo: function () { return 2; },
             bar: function () { return 2 + this._super(); }
         });
@@ -128,7 +128,7 @@ $(document).ready(function () {
         });
         var instance = new C1();
         strictEqual(instance.foo(), 2);
-        C0.mix({
+        C0.include({
             foo: function () { return 2; },
             bar: function () { return 2 + this._super(); }
         });

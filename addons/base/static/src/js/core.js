@@ -56,7 +56,7 @@ openerp.base.core = function(openerp) {
             }
             return this;
         }
-        Class.mix = function (properties) {
+        Class.include = function (properties) {
             for (var name in properties) {
                 if (typeof properties[name] !== 'function'
                         || !fnTest.test(properties[name])) {
