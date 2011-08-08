@@ -60,7 +60,7 @@ JOB = {
 }
 
 class ir_cron(osv.osv):
-    """ This is the ORM object that periodically executes actions.
+    """ Model describing cron jobs (also called actions or tasks).
     """
     _name = "ir.cron"
     _order = 'name'
@@ -71,13 +71,13 @@ class ir_cron(osv.osv):
         'interval_number': fields.integer('Interval Number',help="Repeat every x."),
         'interval_type': fields.selection( [('minutes', 'Minutes'),
             ('hours', 'Hours'), ('work_days','Work Days'), ('days', 'Days'),('weeks', 'Weeks'), ('months', 'Months')], 'Interval Unit'),
-        'numbercall': fields.integer('Number of Calls', help='Number of time the function is called,\na negative number indicates no limit'),
-        'doall' : fields.boolean('Repeat Missed', help="Enable this if you want to execute missed occurences as soon as the server restarts."),
-        'nextcall' : fields.datetime('Next Execution Date', required=True, help="Next planned execution date for this scheduler"),
-        'model': fields.char('Object', size=64, help="Name of object whose function will be called when this scheduler will run. e.g. 'res.partener'"),
-        'function': fields.char('Function', size=64, help="Name of the method to be called on the object when this scheduler is executed."),
-        'args': fields.text('Arguments', help="Arguments to be passed to the method. e.g. (uid,)"),
-        'priority': fields.integer('Priority', help='0=Very Urgent\n10=Not urgent')
+        'numbercall': fields.integer('Number of Calls', help='How many times the method is called,\na negative number indicates no limit.'),
+        'doall' : fields.boolean('Repeat Missed', help="Specify if missed occurrences should be executed when the server restarts."),
+        'nextcall' : fields.datetime('Next Execution Date', required=True, help="Next planned execution date for this job."),
+        'model': fields.char('Object', size=64, help="Model name on which the method to be called is located, e.g. 'res.partner'."),
+        'function': fields.char('Method', size=64, help="Name of the method to be called when this job is processed."),
+        'args': fields.text('Arguments', help="Arguments to be passed to the method, e.g. (uid,)."),
+        'priority': fields.integer('Priority', help='The priority of the job, as an integer: 0 means higher priority, 10 means lower priority.')
     }
 
     _defaults = {
@@ -118,30 +118,58 @@ class ir_cron(osv.osv):
         (_check_args, 'Invalid arguments', ['args']),
     ]
 
-    def _handle_callback_exception(self, cr, uid, model, func, args, job_id, job_exception):
-        cr.rollback()
-        self._logger.exception("Call of self.pool.get('%s').%s(cr, uid, *%r) failed in Job %s" % (model, func, args, job_id))
+    def _handle_callback_exception(self, cr, uid, model_name, method_name, args, job_id, job_exception):
+        """ Method called when an exception is raised by a job.
 
-    def _callback(self, cr, uid, model, func, args, job_id):
+        Simply logs the exception and rollback the transaction.
+
+        :param model_name: model name on which the job method is located.
+        :param method_name: name of the method to call when this job is processed.
+        :param args: arguments of the method (without the usual self, cr, uid).
+        :param job_id: job id.
+        :param job_exception: exception raised by the job.
+
+        """
+        cr.rollback()
+        self._logger.exception("Call of self.pool.get('%s').%s(cr, uid, *%r) failed in Job %s" % (model_name, method_name, args, job_id))
+
+    def _callback(self, cr, uid, model_name, method_name, args, job_id):
+        """ Run the method associated to a given job
+
+        It takes care of logging and exception handling.
+
+        :param model_name: model name on which the job method is located.
+        :param method_name: name of the method to call when this job is processed.
+        :param args: arguments of the method (without the usual self, cr, uid).
+        :param job_id: job id.
+        """
         args = str2tuple(args)
-        m = self.pool.get(model)
-        if m and hasattr(m, func):
-            f = getattr(m, func)
+        model = self.pool.get(model_name)
+        if model and hasattr(model, method_name):
+            method = getattr(model, method_name)
             try:
-                netsvc.log('cron', (cr.dbname,uid,'*',model,func)+tuple(args), channel=logging.DEBUG,
+                netsvc.log('cron', (cr.dbname,uid,'*',model_name,method_name)+tuple(args), channel=logging.DEBUG,
                             depth=(None if self._logger.isEnabledFor(logging.DEBUG_RPC_ANSWER) else 1), fn='object.execute')
                 logger = logging.getLogger('execution time')
                 if logger.isEnabledFor(logging.DEBUG):
                     start_time = time.time()
-                f(cr, uid, *args)
+                method(cr, uid, *args)
                 if logger.isEnabledFor(logging.DEBUG):
                     end_time = time.time()
-                    logger.log(logging.DEBUG, '%.3fs (%s, %s)' % (end_time - start_time, model, func))
+                    logger.log(logging.DEBUG, '%.3fs (%s, %s)' % (end_time - start_time, model_name, method_name))
             except Exception, e:
-                self._handle_callback_exception(cr, uid, model, func, args, job_id, e)
+                self._handle_callback_exception(cr, uid, model_name, method_name, args, job_id, e)
 
     def _run_job(self, cr, job, now):
-        """ Run a given job taking care of the repetition. """
+        """ Run a given job taking care of the repetition.
+
+        The cursor has a lock on the job (aquired by _run_jobs()) and this
+        method is run in a worker thread (spawned by _run_jobs())).
+
+        :param job: job to be run (as a dictionary).
+        :param now: timestamp (result of datetime.now(), no need to call it multiple time).
+
+        """
         try:
             nextcall = datetime.strptime(job['nextcall'], '%Y-%m-%d %H:%M:%S')
             numbercall = job['numbercall']
@@ -176,9 +204,12 @@ class ir_cron(osv.osv):
         """ Process the cron jobs by spawning worker threads.
 
         This selects in database all the jobs that should be processed. It then
-        try to lock each of them and, if it succeeds, spawn a thread to run the
-        cron job (if doesn't succeed, it means another the job was already
+        tries to lock each of them and, if it succeeds, spawns a thread to run
+        the cron job (if it doesn't succeed, it means the job was already
         locked to be taken care of by another thread.
+
+        The cursor used to lock the job in database is given to the worker
+        thread (which has to close it itself).
 
         """
         print ">>> _run_jobs"
@@ -244,6 +275,7 @@ class ir_cron(osv.osv):
             cr.close()
 
     def update_running_cron(self, cr):
+        """ Schedule as soon as possible a wake-up for this database. """
         # Verify whether the server is already started and thus whether we need to commit
         # immediately our changes and restart the cron agent in order to apply the change
         # immediately. The commit() is needed because as soon as the cron is (re)started it
