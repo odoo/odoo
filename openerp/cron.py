@@ -64,10 +64,8 @@ _wakeup_by_db = {}
 # while spawning a few threads.
 _wakeups_lock = threading.RLock()
 
-# Maximum number of threads allowed to process cron jobs concurrently.
-_thread_count = 2 # TODO make it configurable
-
-# A (non re-entrant) lock to protect the above _thread_count variable.
+# A (non re-entrant) lock to protect the openerp.conf.max_cron_threads
+# variable.
 _thread_count_lock = threading.Lock()
 
 _logger = logging.getLogger('cron')
@@ -75,21 +73,19 @@ _logger = logging.getLogger('cron')
 
 def get_thread_count():
     """ Return the number of available threads. """
-    return _thread_count
+    return openerp.conf.max_cron_threads
 
 
 def inc_thread_count():
     """ Increment by the number of available threads. """
-    global _thread_count
     with _thread_count_lock:
-        _thread_count += 1
+        openerp.conf.max_cron_threads += 1
 
 
 def dec_thread_count():
     """ Decrement by the number of available threads. """
-    global _thread_count
     with _thread_count_lock:
-        _thread_count -= 1
+        openerp.conf.max_cron_threads -= 1
 
 
 def cancel(db_name):

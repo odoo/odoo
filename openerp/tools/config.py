@@ -24,6 +24,7 @@ import optparse
 import os
 import sys
 import openerp
+import openerp.conf
 import openerp.loglevels as loglevels
 import logging
 import openerp.release as release
@@ -250,6 +251,9 @@ class configmanager(object):
                               "osv_memory tables. This is a decimal value expressed in hours, "
                               "and the default is 1 hour.",
                          type="float")
+        group.add_option("--max-cron-threads", dest="max_cron_threads", my_default=4,
+                         help="Maximum number of threads processing concurrently cron jobs.",
+                         type="int")
         parser.add_option_group(group)
 
         # Copy all optparse options (i.e. MyOption) into self.options.
@@ -335,7 +339,7 @@ class configmanager(object):
             'stop_after_init', 'logrotate', 'without_demo', 'netrpc', 'xmlrpc', 'syslog',
             'list_db', 'xmlrpcs',
             'test_file', 'test_disable', 'test_commit', 'test_report_directory',
-            'osv_memory_count_limit', 'osv_memory_age_limit',
+            'osv_memory_count_limit', 'osv_memory_age_limit', 'max_cron_threads',
         ]
 
         for arg in keys:
@@ -416,6 +420,8 @@ class configmanager(object):
 
         if opt.save:
             self.save()
+
+        openerp.conf.max_cron_threads = self.options['max_cron_threads']
 
     def _generate_pgpassfile(self):
         """
