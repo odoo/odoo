@@ -47,10 +47,24 @@ openerp.base_kanban.KanbanView = openerp.base.View.extend({
 		    start: function(event, ui) {
                 self.source_index['index'] = ui.item.index();
                 self.source_index['column'] = ui.item.parent().attr('id');
-                console.log("self.source_index::",self.source_index);
             },
 		    stop: self.on_recieve_record,
 		});
+        this.$element.find('button').click(function(){
+            var record_id = $(this).closest(".record").attr("id");
+            if(record_id) {
+                record_id = parseInt(record_id.split("_")[1])
+                if(record_id) {
+                    if($(this).data("type") == "edit") {
+                        self.do_edit(record_id);
+                    }
+                    if($(this).data("type") == "delete") {
+                        self.do_delete(record_id);
+                    }
+                }
+            }
+        });
+
 		this.$element.find(".record").addClass("ui-widget ui-widget-content ui-helper-clearfix ui-corner-all")
 		    .find(".record-header")
 		        .addClass("ui-widget-header ui-corner-all")
@@ -66,8 +80,37 @@ openerp.base_kanban.KanbanView = openerp.base.View.extend({
 		this.$element.find(".oe_column").disableSelection();
     },
 
+    do_edit: function(id){
+    },
+
+    do_delete: function (id) {
+        var self = this;
+        return $.when(this.dataset.unlink([id])).then(function () {
+            self.drop_records(id);
+        });
+    },
+
+    drop_records: function (id) {
+        var self = this;
+        _.each(self.all_display_data, function(data, index) {
+            _.each(data.records, function(record, index_row) {
+                if(parseInt(record.id) == id) {
+                    self.all_display_data[index]['records'].splice(index_row, 1)
+                    return false;
+                }
+            });
+        });
+        self.$element.find("#main_" + id).remove()
+    },
+
     on_close_action: function(e) {
-        $(e.currentTarget).parents('.record:first').remove();
+        var record_id = $(e.currentTarget).parents('.record:first').attr("id")
+        if(record_id) {
+            record_id = parseInt(record_id.split("_")[1])
+            if(record_id) {
+                this.do_delete(record_id);
+            }
+        }
     },
 
     on_recieve_record: function(event, ui) {
