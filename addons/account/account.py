@@ -2596,7 +2596,6 @@ class account_tax_template(osv.osv):
         tax_template_ref = {}
         tax_template_to_tax = {}
         for tax in tax_templates:
-#            #create it
             vals_tax = {
                 'name':tax.name,
                 'sequence': tax.sequence,
@@ -2781,8 +2780,6 @@ class wizard_multi_charts_accounts(osv.osv_memory):
 
 
     def execute(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         obj_multi = self.browse(cr, uid, ids[0])
         obj_acc = self.pool.get('account.account')
         obj_acc_tax = self.pool.get('account.tax')
@@ -2847,7 +2844,6 @@ class wizard_multi_charts_accounts(osv.osv_memory):
 
         #create all the tax
         tax_template_to_tax = {}
-        context.update({'false_tax_template': False}) 
         tax_templates = [x for x in obj_multi.chart_template_id.tax_template_ids if x.installable]
         taxes_ids = obj_tax_temp.generate_tax(cr, uid, tax_templates, tax_code_template_ref, company_id, context=context)
         #deactivate the parent_store functionnality on account_account for rapidity purpose
