@@ -156,7 +156,7 @@ openerp.base.FormView = openerp.base.View.extend( /** @lends openerp.base.FormVi
         if (this.sidebar) {
             this.sidebar.attachments.do_update();
         }
-        if (this.default_focus_field) {
+        if (this.default_focus_field && !this.embedded_view) {
             this.default_focus_field.focus();
         }
     },
