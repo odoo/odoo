@@ -865,7 +865,7 @@ class account_invoice(osv.osv):
                     ctx = {'date':inv.date_invoice}
                     if inv.currency_id.id != company_currency:
                         amount_currency = cur_obj.compute(cr, uid,
-                                company_currency, inv.currency_id.id, t[1])
+                                company_currency, inv.currency_id.id, t[1], context=ctx)
                     else:
                         amount_currency = False
 
