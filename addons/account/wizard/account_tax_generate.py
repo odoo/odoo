@@ -38,9 +38,10 @@ class account_tax_generate(osv.osv_memory):
 
     def tax_generate(self, cr, uid, ids, context=None):
         context.update({'false_tax_template': True})
+        company_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
         obj_tax_temp = self.pool.get('account.tax.template')
         tax_templates = [x for x in self.browse(cr, uid, ids, context=context)[0].template_ids]
-        taxes_ids = obj_tax_temp.generate_tax(cr, uid, ids, tax_templates, {}, context=context)
+        taxes_ids = obj_tax_temp.generate_tax(cr, uid, ids, tax_templates, {}, company_id, context=context)
         obj_tax_temp.write(cr, uid , taxes_ids['taxes_id'].keys(), {'installable': True})
         return {}
 

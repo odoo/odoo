@@ -2574,7 +2574,7 @@ class account_tax_template(osv.osv):
     }
     _order = 'sequence'
 
-    def generate_tax(self, cr, uid, ids, tax_templates_load, tax_code_template_ref, context=None):
+    def generate_tax(self, cr, uid, ids, tax_templates_load, tax_code_template_ref, company_id, context=None):
         """
         This method generate taxes from templates.
         @param cr: A database cursor.
@@ -2596,10 +2596,8 @@ class account_tax_template(osv.osv):
         todo_dict = {}
         tax_template_ref = {}
         tax_template_to_tax = {}
-        company_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
         if not context.get('false_tax_template'):
             obj_multi = self.browse(cr, uid, ids[0])
-            company_id = obj_multi.company_id.id
         ir_values_obj = self.pool.get('ir.values')
         for tax in tax_templates_load:
 #            #create it
@@ -2861,7 +2859,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         tax_template_to_tax = {}
         context.update({'false_tax_template': False}) 
         tax_templates = [x for x in obj_multi.chart_template_id.tax_template_ids if x.installable]
-        taxes_ids = obj_tax_temp.generate_tax(cr, uid, ids, tax_templates, tax_code_template_ref, context=context)
+        taxes_ids = obj_tax_temp.generate_tax(cr, uid, ids, tax_templates, tax_code_template_ref, company_id, context=context)
         #deactivate the parent_store functionnality on account_account for rapidity purpose
         ctx = context and context.copy() or {}
         ctx['defer_parent_store_computation'] = True
