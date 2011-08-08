@@ -239,11 +239,9 @@
 <t t-name="TreeView">
     <h2 class="oe_view_title"><t t-esc="title"/></h2>
     <select name="parent" id="parent_id" style="width: 30%">
-        <t t-foreach="field_data" t-as="field" >
-            <option t-att-value="field.id">
-                <t t-esc="field.name"/>
-            </option>
-        </t>
+        <option t-foreach="first_level" t-as="record" t-att-value="record.id">
+            <t t-esc="record.name"/>
+        </option>
     </select>
 </t>
 <t t-name="TreeView_Secondry">
@@ -285,17 +283,6 @@
                                             </span>
                                         </td>
                                     </t>
-                                    <t t-if="fieldsview['attrs'].name==f and !fieldsview['attrs'].invisible and field[f].type=='selection'">
-                                        <td class="treeview-td">
-                                            <span>
-                                                <t t-foreach="selection_fields" t-as="selection">
-                                                    <t t-if="selection[0]==fields.type">
-                                                        <t t-esc="selection[1]" />
-                                                    </t>
-                                                </t>
-                                            </span>
-                                        </td>
-                                    </t>
                                 </t>
                             </t>
                         </t>
@@ -325,17 +312,6 @@
                             <td class="treeview-td">
                                 <span>
                                     <t t-esc="fields[[fieldsview['attrs'].name]][1]" />
-                                </span>
-                            </td>
-                        </t>
-                        <t t-if="fieldsview['attrs'].name==f and !fieldsview['attrs'].invisible and field[f].type=='selection'">
-                            <td class="treeview-td">
-                                <span>
-                                    <t t-foreach="selection_fields" t-as="selection">
-                                        <t t-if="selection[0]==fields.type">
-                                            <t t-esc="selection[1]" />
-                                        </t>
-                                    </t>
                                 </span>
                             </td>
                         </t>

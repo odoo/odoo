@@ -40,15 +40,17 @@ openerp.base.TreeView = openerp.base.View.extend({
         }, this.on_loaded);
     },
 
-    on_loaded: function (data) {
-
+    on_loaded: function (fields_view) {
         var self = this;
-        this.fields_view = data.field_parent;
-        this.fields = data.fields;
+        this.fields_view = fields_view;
+        this.fields = fields_view.fields;
 
         self.dataset.domain = [['parent_id', '=', '']];
         this.dataset.read_slice([], 0, false, function (response) {
-            self.$element.html(QWeb.render('TreeView', { 'field_data': response, 'title': self.fields_view.arch.attrs.string }));
+            self.$element.html(QWeb.render('TreeView', {
+                "first_level": response,
+                'title': self.fields_view.arch.attrs.string
+            }));
 
             self.$element.find('#parent_id').bind('change', function(){
                 self.getdata($('#parent_id').val(), false);
@@ -70,7 +72,12 @@ openerp.base.TreeView = openerp.base.View.extend({
 
             if (curr_node.length == 1) {
                 curr_node.find('td:first').children(':first-child').attr('src','/base/static/src/img/collapse.gif');
-                curr_node.after(QWeb.render('TreeView_Secondry', {'child_data': response, 'flag': '0', 'fields_view' : self.fields_view.arch.children, 'selection_fields' : self.fields.type.selection,'field' : self.fields}));
+                curr_node.after(QWeb.render('TreeView_Secondry', {
+                    'child_data': response,
+                    'flag': '0',
+                    'fields_view' : self.fields_view.arch.children,
+                    'field' : self.fields
+                }));
 
 
                 for (var i = 0; i < response.length; i++) {
@@ -113,7 +120,13 @@ openerp.base.TreeView = openerp.base.View.extend({
                 if (!flag) {
                     self.$element.find('table').remove();
                 }
-                self.$element.append(QWeb.render('TreeView_Secondry', {'child_data': response, 'flag' : '1', 'fieldsview_fields' : self.fields_view.fields , 'fields_view' : self.fields_view.arch.children, 'selection_fields' : self.fields.type.selection, 'field' : self.fields }));
+                self.$element.append(QWeb.render('TreeView_Secondry', {
+                    'child_data': response,
+                    'flag' : '1',
+                    'fieldsview_fields': self.fields,
+                    'fields_view' : self.fields_view.arch.children,
+                    'field' : self.fields
+                }));
 
                 self.$element.find('tr[id ^= treerow_]').each( function() {
                     if ($(this).find('td:first').children(':first-child').attr('id')) {
