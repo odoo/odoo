@@ -122,13 +122,14 @@ class ir_edi_document(osv.osv):
 
         :param edi_dicts: list of edi_dict
         """
-       
+        res = []
         for edi_document in edi_documents:
             model = edi_document.get('__model')
             assert model, _('model should be provided in EDI Dict')
             model_obj = self.pool.get(model)
-            model_obj.edi_import(cr, uid, edi_document, context=context)
-        return True
+            record_id = model_obj.edi_import(cr, uid, edi_document, context=context)
+            res.append((model,record_id))
+        return res
     
     def deserialize(self, edi_document_string):
         """ Deserialized the edi document string
@@ -175,7 +176,6 @@ class ir_edi_document(osv.osv):
         
         if edi_url and not edi_document:
             edi_document = urllib2.urlopen(edi_url).read()
-
         assert edi_document, _('EDI Document should be provided')
         edi_documents = self.deserialize(edi_document)
         return self.load_edi(cr, uid, edi_documents, context=context)
@@ -204,7 +204,7 @@ class edi(object):
                 'module': edi_module,
                 'res_id': record.id}, context=context)
         xml_record = model_data_pool.browse(cr, uid, xml_record_id, context=context)
-        db_uuid = '%s:%s.%s' % (uuid, xml_record.module, xml_record.name)
+        db_uuid = '%s:%s' % (uuid, xml_record.name)
         return db_uuid
     
     def edi_metadata(self, cr, uid, records, context=None):
@@ -356,9 +356,9 @@ class edi(object):
                 record = getattr(row, field)
                 if not record:
                     continue
-                if _fields[field].has_key('function') or _fields[field].has_key('related_columns'):
-                    # Do not Export Function Fields and related fields
-                    continue
+                #if _fields[field].has_key('function') or _fields[field].has_key('related_columns'):
+                #    # Do not Export Function Fields and related fields
+                #    continue
                 elif cols['type'] == 'many2one':
                     value = self.edi_m2o(cr, uid, record, context=context)
                 elif cols['type'] == 'many2many':
@@ -519,6 +519,5 @@ class edi(object):
                     values[field] = one2many_ids
                 else:
                     values[field] = edi_field_value
-        
         return model_data._update(cr, uid, self._name, edi_module, values, context=context)
 # vim: ts=4 sts=4 sw=4 si et

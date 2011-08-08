@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data noupdate="1">
+        <record id="parameter_web_base_url" model="ir.config_parameter">
+            <field name="key">web.base.url</field>
+            <field name="value">http://localhost:8002</field>
+        </record>
         <record id="view_menu" model="ir.ui.view">
             <field name="name">ir.ui.menu.tree</field>
             <field name="model">ir.ui.menu</field>
