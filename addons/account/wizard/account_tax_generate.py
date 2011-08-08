@@ -38,9 +38,10 @@ class account_tax_generate(osv.osv_memory):
 
     def tax_generate(self, cr, uid, ids, context=None):
         context.update({'false_tax_template': True})
+        obj_tax_temp = self.pool.get('account.tax.template')
         tax_templates_load = [x for x in self.browse(cr, uid, ids, context=context)[0].template_ids]
-        taxes_ids = self.pool.get('wizard.multi.charts.accounts').generate_tax(cr, uid, ids, tax_templates_load, {}, context=context)
-        self.pool.get('account.tax.template').write(cr, uid , taxes_ids['taxes_id'].keys(), {'installable': True})
+        taxes_ids = obj_tax_temp.generate_tax(cr, uid, ids, tax_templates_load, {}, context=context)
+        obj_tax_temp.write(cr, uid , taxes_ids['taxes_id'].keys(), {'installable': True})
         return {}
 
 account_tax_generate()
