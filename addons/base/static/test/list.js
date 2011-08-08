@@ -22,6 +22,7 @@ $(document).ready(function () {
     module("ListView", {
         setup: function () {
             openerp = window.openerp.init(true);
+            window.openerp.base.core(openerp);
             window.openerp.base.chrome(openerp);
             // views loader stuff
             window.openerp.base.data(openerp);
