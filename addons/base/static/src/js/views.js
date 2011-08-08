@@ -165,6 +165,7 @@ openerp.base.ViewManager =  openerp.base.Widget.extend({
             if (view.embedded_view) {
                 controller.set_embedded_view(view.embedded_view);
             }
+            controller.do_switch_view.add_last(this.on_mode_switch);
             if (view_type === 'list' && this.flags.search_view === false && this.action && this.action['auto_search']) {
                 // In case the search view is not instantiated: manually call ListView#search
                 var domains = !_(self.action.domain).isEmpty()
@@ -510,6 +511,8 @@ openerp.base.View = openerp.base.Widget.extend({
      */
     set_embedded_view: function(embedded_view) {
         this.embedded_view = embedded_view;
+    },
+    do_switch_view: function(view) {
     },
     set_common_sidebar_sections: function(sidebar) {
         sidebar.add_section('customize', "Customize", [
