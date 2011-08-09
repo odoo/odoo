@@ -1104,8 +1104,7 @@ class res_partner(osv.osv):
         
         #Valid format and valid date
         return True
-<<<<<<< TREE
-    
+
     def check_vat_no(self, vat):
         '''
         Check Norway VAT number.See http://www.brreg.no/english/coordination/number.html
@@ -1121,10 +1120,7 @@ class res_partner(osv.osv):
             (7 * int(vat[2])) + (6 * int(vat[3])) + \
             (5 * int(vat[4])) + (4 * int(vat[5])) + \
             (3 * int(vat[6])) + (2 * int(vat[7])) 
-=======
->>>>>>> MERGE-SOURCE
-        
-<<<<<<< TREE
+
         check = 11 -(sum % 11)
         if check == 11:
             check = 0
@@ -1132,10 +1128,7 @@ class res_partner(osv.osv):
             # 10 is not a valid check digit for an organization number
             return False
         return check == int(vat[8])
-
     
-=======
->>>>>>> MERGE-SOURCE
 res_partner()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
