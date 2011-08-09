@@ -58,8 +58,10 @@ openerp.base.TreeView = openerp.base.View.extend({
     },
     on_loaded: function (fields_view) {
         var self = this;
-        // field name in OpenERP is kinda stupid: this is the field holding
-        // the ids to the children of the current node
+        var has_toolbar = !!fields_view.arch.attrs.toolbar;
+        // field name in OpenERP is kinda stupid: this is the name of the field
+        // holding the ids to the children of the current node, why call it
+        // field_parent?
         this.children_field = fields_view['field_parent'];
         this.fields_view = fields_view;
         _(this.fields_view.arch.children).each(function (field) {
@@ -68,13 +70,22 @@ openerp.base.TreeView = openerp.base.View.extend({
             }
         });
         this.fields = fields_view.fields;
+        this.hook_row_click();
+        this.$element.html(QWeb.render('TreeView', {
+            'title': this.fields_view.arch.attrs.string,
+            'fields_view': this.fields_view.arch.children,
+            'fields': this.fields,
+            'toolbar': has_toolbar
+        }));
 
         this.dataset.read_slice(this.fields_list(), 0, false, function (records) {
-            self.$element.html(QWeb.render('TreeView', {
-                'title': self.fields_view.arch.attrs.string,
-                'fields_view': self.fields_view.arch.children,
-                'fields': self.fields
-            }));
+            if (!has_toolbar) {
+                // WARNING: will do a second read on the same ids, but only on
+                //          first load so not very important
+                self.getdata(null, _(records).pluck('id'));
+                return;
+            }
+
             var $select = self.$element.find('select')
                 .change(function () {
                     var $option = $(this).find(':selected');
@@ -91,7 +102,6 @@ openerp.base.TreeView = openerp.base.View.extend({
 
             $select.change();
         });
-        this.hook_row_click();
     },
     /**
      * Sets up opening a row

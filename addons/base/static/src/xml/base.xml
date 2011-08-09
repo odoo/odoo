@@ -238,7 +238,7 @@
 </t>
 <t t-name="TreeView">
     <h2 class="oe_view_title"><t t-esc="title"/></h2>
-    <select name="parent" style="width: 30%">
+    <select t-if="toolbar" style="width: 30%">
     </select>
     <table>
         <thead>
