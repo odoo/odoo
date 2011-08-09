@@ -219,7 +219,7 @@ openerp.base.ViewManager =  openerp.base.Widget.extend({
     },
     /**
      * Event launched when a controller has been inited.
-     *
+     * 
      * @param {String} view_type type of view
      * @param {String} view the inited controller
      */
@@ -291,11 +291,11 @@ openerp.base.ViewManagerAction = openerp.base.ViewManager.extend({
         this.session = parent.session;
         var dataset;
         if (!action.res_id) {
-            dataset = new openerp.base.DataSetSearch(this, action.res_model, action.context || null);
+            dataset = new openerp.base.DataSetSearch(this, action.res_model, action.context || null, action.domain || null);
         } else {
             dataset = new openerp.base.DataSetStatic(this, action.res_model, {}, [action.res_id]);
             if (action.context) {
-                // TODO fme: should normalize all DataSets constructors to (session, model, context, ...)
+                // TODO fme: should normalize all DataSets constructors to (session, model, context, domain, ...)
                 dataset.context = action.context;
             }
         }
@@ -512,7 +512,7 @@ openerp.base.View = openerp.base.Widget.extend({
      * Directly set a view to use instead of calling fields_view_get. This method must
      * be called before start(). When an embedded view is set, underlying implementations
      * of openerp.base.View must use the provided view instead of any other one.
-     *
+     * 
      * @param embedded_view A view.
      */
     set_embedded_view: function(embedded_view) {

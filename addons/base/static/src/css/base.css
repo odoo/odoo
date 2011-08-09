@@ -269,7 +269,7 @@ label.error {
     border-radius: 4px;
     -moz-border-radius: 4px;
     -webkit-border-radius: 4px;
-    
+
     color: #eee;
     text-shadow: #222 0 1px 0;
     text-decoration: none;
@@ -1053,7 +1053,7 @@ label.error {
     padding-left: 10px;
     padding-right: 21px;
     height: 21px;
-    
+
 background: #ffffff; /* Old browsers */
 background: -moz-linear-gradient(top, #ffffff 0%, #ebe9e9 100%); /* FF3.6+ */
 background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%,#ebe9e9)); /* Chrome,Safari4+ */
@@ -1062,7 +1062,7 @@ background: -o-linear-gradient(top, #ffffff 0%,#ebe9e9 100%); /* Opera11.10+ */
 background: -ms-linear-gradient(top, #ffffff 0%,#ebe9e9 100%); /* IE10+ */
 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#FFFFFF', endColorstr='#EBE9E9',GradientType=0 ); /* IE6-9 */
 background: linear-gradient(top, #ffffff 0%,#ebe9e9 100%); /* W3C */
-    
+
     border: 1px solid #D2CFCF;
     border-right-width: 0;
     border-left-width: 0;
@@ -1167,7 +1167,9 @@ background: linear-gradient(top, #ffffff 0%,#ebe9e9 100%); /* W3C */
 .openerp .oe-m2o-disabled-cm {
     color: grey;
 }
-
+.parent_top {
+    vertical-align: text-top;
+}
 .openerp .oe-dialog-warning p {
     padding-left: 1em;
     font-size: 1.2em;
@@ -1179,4 +1181,31 @@ background: linear-gradient(top, #ffffff 0%,#ebe9e9 100%); /* W3C */
     -khtml-box-shadow: none;
     -webkit-box-shadow: none;
     box-shadow: none;
+}
+
+.openerp .oe-treeview-table {
+    width: 100%;
+}
+.treeview-tr, .treeview-td {
+    cursor: pointer;
+    vertical-align: top;
+    text-align: left;
+}
+.treeview-tr span, .treeview-td span {
+    display: block;
+}
+.treeview-tr:first-of-type {
+    background: transparent url(/base/static/src/img/expand.gif) 0 50% no-repeat;
+}
+.oe-open .treeview-tr:first-of-type {
+    background-image: url(/base/static/src/img/collapse.gif);
+}
+.treeview-tr:first-of-type span,
+.treeview-td:first-of-type span {
+    margin-left: 16px;
+}
+
+.treeview-header {
+    text-align: left;
+    vertical-align: top;
 }
