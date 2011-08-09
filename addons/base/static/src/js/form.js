@@ -19,7 +19,7 @@ openerp.base.FormView = openerp.base.View.extend( /** @lends openerp.base.FormVi
      */
     init: function(parent, element_id, dataset, view_id, options) {
         this._super(parent, element_id);
-        this.set_default_options();
+        this.set_default_options(options);
         this.dataset = dataset;
         this.model = dataset.model;
         this.view_id = view_id;
@@ -36,7 +36,6 @@ openerp.base.FormView = openerp.base.View.extend( /** @lends openerp.base.FormVi
         this.registry = openerp.base.form.widgets;
         this.has_been_loaded = $.Deferred();
         this.$form_header = null;
-        this.options = options || {};
         _.defaults(this.options, {"always_show_new_button": true});
     },
     start: function() {
@@ -156,7 +155,7 @@ openerp.base.FormView = openerp.base.View.extend( /** @lends openerp.base.FormVi
         if (this.sidebar) {
             this.sidebar.attachments.do_update();
         }
-        if (this.default_focus_field) {
+        if (this.default_focus_field && !this.embedded_view) {
             this.default_focus_field.focus();
         }
     },
@@ -679,6 +678,16 @@ openerp.base.form.WidgetNotebook = openerp.base.form.Widget.extend({
     start: function() {
         this._super.apply(this, arguments);
         this.$element.tabs();
+        this.view.on_button_new.add_last(this.do_select_first_visible_tab);
+    },
+    do_select_first_visible_tab: function() {
+        for (var i = 0; i < this.pages.length; i++) {
+            var page = this.pages[i];
+            if (page.invisible === false) {
+                this.$element.tabs('select', page.index);
+                break;
+            }
+        }
     }
 });
 
@@ -696,8 +705,8 @@ openerp.base.form.WidgetNotebookPage = openerp.base.form.WidgetFrame.extend({
         this.$element_tab = $('#' + this.element_tab_id);
     },
     update_dom: function() {
-        if (this.invisible) {
-            this.notebook.$element.tabs('select', 0);
+        if (this.invisible && this.index === this.notebook.$element.tabs('option', 'selected')) {
+            this.notebook.do_select_first_visible_tab();
         }
         this.$element_tab.toggle(!this.invisible);
         this.$element.toggle(!this.invisible);
@@ -1306,7 +1315,7 @@ openerp.base.form.dialog = function(content, options) {
     }, options || {});
     options.autoOpen = true;
     var dialog = new openerp.base.Dialog(null, options);
-    dialog.$dialog = $(content).dialog(dialog.options);
+    dialog.$dialog = $(content).dialog(dialog.dialog_options);
     return dialog.$dialog;
 }
 
@@ -1624,14 +1633,16 @@ openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
         modes = !!modes ? modes.split(",") : ["tree", "form"];
         var views = [];
         _.each(modes, function(mode) {
-            var view = {view_id: false, view_type: mode == "tree" ? "list" : mode};
+            var view = {
+                view_id: false,
+                view_type: mode == "tree" ? "list" : mode,
+                options: { sidebar : false }
+            };
             if (self.field.views && self.field.views[mode]) {
                 view.embedded_view = self.field.views[mode];
             }
             if(view.view_type === "list") {
-                view.options = {
-                    'selectable': self.multi_selection
-                };
+                view.options.selectable = self.multi_selection;
             }
             views.push(view);
         });

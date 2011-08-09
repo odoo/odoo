@@ -244,8 +244,8 @@ openerp.base.form.DashBoard = openerp.base.form.Widget.extend({
         return QWeb.render(this.template, this);
     },
     do_reload: function() {
-        this.view.view_manager.stop();
-        this.view.view_manager.start();
+        this.view.widget_parent.stop();
+        this.view.widget_parent.start();
     }
 });
 openerp.base.form.DashBoardLegacy = openerp.base.form.DashBoard.extend({

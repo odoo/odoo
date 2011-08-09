@@ -4,7 +4,8 @@
 
 /**
  * @name openerp
- * @namespace
+ * @namespace openerp
+ * @namespace window.openerp
  */
 (function() {
     if (this.openerp)
