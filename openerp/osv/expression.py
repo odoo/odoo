@@ -29,6 +29,9 @@ NOT_OPERATOR = '!'
 OR_OPERATOR = '|'
 AND_OPERATOR = '&'
 
+OPS = ('=', '!=', '<>', '<=', '<', '>', '>=', '=?', '=like', '=ilike', 'like', 'not like', 'ilike', 'not ilike', 'in', 'not in', 'child_of')
+NEGATIVE_OPS = ('!=', '<>', 'not like', 'not ilike', 'not in')
+
 TRUE_LEAF = (1, '=', 1)
 FALSE_LEAF = (0, '=', 1)
 
@@ -101,7 +104,6 @@ def is_operator(element):
 
 # TODO change the share wizard to use this function.
 def is_leaf(element, internal=False):
-    OPS = ('=', '!=', '<>', '<=', '<', '>', '>=', '=?', '=like', '=ilike', 'like', 'not like', 'ilike', 'not ilike', 'in', 'not in', 'child_of')
     INTERNAL_OPS = OPS + ('inselect',)
     return (isinstance(element, tuple) or isinstance(element, list)) \
        and len(element) == 3 \
@@ -297,15 +299,11 @@ class expression(object):
                                 self.__exp[i] = FALSE_LEAF
                         else:
                             call_null = False
-                            o2m_op = 'in'
-                            if operator in  ['not like','not ilike','not in','<>','!=']:
-                                o2m_op = 'not in'
+                            o2m_op = 'not in' if operator in NEGATIVE_OPS else 'in'
                             self.__exp[i] = ('id', o2m_op, select_from_where(cr, field._fields_id, field_obj._table, 'id', ids2, operator))
 
                     if call_null:
-                        o2m_op = 'not in'
-                        if operator in  ['not like','not ilike','not in','<>','!=']:
-                            o2m_op = 'in'
+                        o2m_op = 'in' if operator in NEGATIVE_OPS else 'not in'
                         self.__exp[i] = ('id', o2m_op, select_distinct_from_where_not_null(cr, field._fields_id, field_obj._table) or [0])
 
             elif field._type == 'many2many':
@@ -341,15 +339,11 @@ class expression(object):
                                 operator = 'in' # operator changed because ids are directly related to main object
                         else:
                             call_null_m2m = False
-                            m2m_op = 'in'
-                            if operator in  ['not like','not ilike','not in','<>','!=']:
-                                m2m_op = 'not in'
+                            m2m_op = 'not in' if operator in NEGATIVE_OPS else 'in'
                             self.__exp[i] = ('id', m2m_op, select_from_where(cr, field._id1, field._rel, field._id2, res_ids, operator) or [0])
 
                     if call_null_m2m:
-                        m2m_op = 'not in'
-                        if operator in  ['not like','not ilike','not in','<>','!=']:
-                            m2m_op = 'in'
+                        m2m_op = 'in' if operator in NEGATIVE_OPS else 'not in'
                         self.__exp[i] = ('id', m2m_op, select_distinct_from_where_not_null(cr, field._id1, field._rel) or [0])
 
             elif field._type == 'many2one':
@@ -393,22 +387,19 @@ class expression(object):
                                 if not isinstance(ele, basestring):
                                     m2o_str = False
                                     break
+                        if m2o_str:
+                            self.__exp[i] = _get_expression(field_obj, cr, uid, left, right, operator, context=context)
                     elif right == []:
-                        m2o_str = False
                         if operator in ('not in', '!=', '<>'):
                             # (many2one not in []) should return all records
                             self.__exp[i] = TRUE_LEAF
                         else:
                             self.__exp[i] = FALSE_LEAF
                     else:
-                        new_op = '='
-                        if operator in  ['not like','not ilike','not in','<>','!=']:
-                            new_op = '!='
+                        new_op = '!=' if operator in NEGATIVE_OPS else '='
                         #Is it ok to put 'left' and not 'id' ?
                         self.__exp[i] = (left, new_op, False)
 
-                    if m2o_str:
-                        self.__exp[i] = _get_expression(field_obj, cr, uid, left, right, operator, context=context)
             else:
                 # other field type
                 # add the time part to datetime field when it's not there:
