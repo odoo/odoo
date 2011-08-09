@@ -2476,6 +2476,7 @@ class account_chart_template(osv.osv):
     _columns={
         'name': fields.char('Name', size=64, required=True),
         'parent_id': fields.many2one('account.chart.template', 'Parent Chart Template'),
+        'code_digits': fields.integer('# of Digits', required=True, help="No. of Digits to use for account code"), 
         'visible': fields.boolean('Can be Visible?', help="Set this to False if you don't want this template to be used actively in the wizard that generate Chart of Accounts from templates, this is useful when you want to generate accounts of this template only when loading its child template."),
         'set_tax_complete': fields.boolean('Complete Set of Tax', help="Check this if you want to create new default Sales and Purchase taxes from selected rate instead of choosing it from list of taxes."),
         'account_root_id': fields.many2one('account.account.template', 'Root Account', domain=[('parent_id','=',False)]),
@@ -2495,6 +2496,7 @@ class account_chart_template(osv.osv):
 
     _defaults = {
         'visible': True,
+        'code_digits': 6
     }
 
 account_chart_template()
@@ -2708,9 +2710,10 @@ class wizard_multi_charts_accounts(osv.osv_memory):
     def onchange_chart_template_id(self, cr, uid, ids, chart_template_id=False, context=None):
         res = {}
         tax_templ_obj = self.pool.get('account.tax.template')
-        res['value'] = {'complete_tax': False, 'sale_tax': False, 'purchase_tax': False}
+        res['value'] = {'complete_tax': False, 'sale_tax': False, 'purchase_tax': False, 'code_digits': 0}
         if chart_template_id:
-            complete_tax = self.pool.get('account.chart.template').browse(cr, uid, chart_template_id, context=context).set_tax_complete
+            data = self.pool.get('account.chart.template').browse(cr, uid, chart_template_id, context=context)
+            complete_tax = data.set_tax_complete
             if complete_tax:
             # default tax is given by the lowesst sequence. For same sequence we will take the latest created as it will be the case for tax created while isntalling the generic chart of account
                 sale_tax_ids = tax_templ_obj.search(cr, uid, [("chart_template_id"
@@ -2718,7 +2721,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                 purchase_tax_ids = tax_templ_obj.search(cr, uid, [("chart_template_id"
                                               , "=", chart_template_id), ('type_tax_use', 'in', ('purchase','all'))], order="sequence, id desc")
                 res['value'].update({'sale_tax': sale_tax_ids and sale_tax_ids[0] or False, 'purchase_tax': purchase_tax_ids and purchase_tax_ids[0] or False})
-            res['value'].update({'complete_tax': complete_tax})
+            res['value'].update({'complete_tax': complete_tax, 'code_digits': data.code_digits})
         return res
 
 
@@ -2732,8 +2735,6 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                     {'acc_name': _('Cash'), 'account_type': 'cash'}]})
         if 'company_id' in fields:
             res.update({'company_id': self.pool.get('res.users').browse(cr, uid, [uid], context=context)[0].company_id.id})
-        if 'code_digits' in fields:
-            res.update({'code_digits': 6})
         if 'seq_journal' in fields:
             res.update({'seq_journal': True})
 
