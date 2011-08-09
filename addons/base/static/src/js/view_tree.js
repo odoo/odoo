@@ -146,8 +146,9 @@ openerp.base.TreeView = openerp.base.View.extend({
                 'records': records,
                 'children_field': self.children_field,
                 'fields_view': self.fields_view.arch.children,
-                'field': self.fields,
-                'level': $curr_node.data('level') || 0
+                'fields': self.fields,
+                'level': $curr_node.data('level') || 0,
+                'render': openerp.base.format_value
             });
 
             if ($curr_node.length) {
