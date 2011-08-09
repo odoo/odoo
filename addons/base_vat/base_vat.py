@@ -1105,6 +1105,7 @@ class res_partner(osv.osv):
         #Valid format and valid date
         return True
 
+
     def check_vat_no(self, vat):
         '''
         Check Norway VAT number.See http://www.brreg.no/english/coordination/number.html
