@@ -333,12 +333,12 @@ openerp.base.Dialog = openerp.base.OldWidget.extend({
     },
     set_options: function(options) {
         options = options || {};
-        options.width = this.get_width(options.width || this.options.width);
-        options.min_width = this.get_width(options.min_width || this.options.min_width);
-        options.max_width = this.get_width(options.max_width || this.options.max_width);
-        options.height = this.get_height(options.height || this.options.height);
-        options.min_height = this.get_height(options.min_height || this.options.min_height);
-        options.max_height = this.get_height(options.max_height || this.options.max_width);
+        options.width = this.get_width(options.width || this.dialog_options.width);
+        options.min_width = this.get_width(options.min_width || this.dialog_options.min_width);
+        options.max_width = this.get_width(options.max_width || this.dialog_options.max_width);
+        options.height = this.get_height(options.height || this.dialog_options.height);
+        options.min_height = this.get_height(options.min_height || this.dialog_options.min_height);
+        options.max_height = this.get_height(options.max_height || this.dialog_options.max_width);
 
         if (options.width !== 'auto') {
             if (options.width > options.max_width) options.width = options.max_width;
@@ -461,9 +461,9 @@ openerp.base.Database = openerp.base.Widget.extend({
         this.$element.closest(".openerp")
                 .removeClass("login-mode")
                 .addClass("database_block");
-        
+
         var self = this;
-        
+
         var fetch_db = this.rpc("/base/database/get_list", {}, function(result) {
             self.db_list = result.db_list;
         });
@@ -475,7 +475,7 @@ openerp.base.Database = openerp.base.Widget.extend({
             self.lang_list = result.lang_list;
         });
         $.when(fetch_db, fetch_langs).then(function () {self.do_create();});
-        
+
         this.$element.find('#db-create').click(this.do_create);
         this.$element.find('#db-drop').click(this.do_drop);
         this.$element.find('#db-backup').click(this.do_backup);
@@ -594,11 +594,11 @@ openerp.base.Database = openerp.base.Widget.extend({
             }
         });
     },
-	
+
     do_drop: function() {
         var self = this;
        	self.$option_id.html(QWeb.render("DropDB", self));
-       	
+
        	self.$option_id.find("form[name=drop_db_form]").validate({
             submitHandler: function (form) {
                 var $form = $(form),
@@ -682,11 +682,11 @@ openerp.base.Database = openerp.base.Widget.extend({
             }
         });
     },
-    
+
     do_restore: function() {
         var self = this;
        	self.$option_id.html(QWeb.render("RestoreDB", self));
-       	
+
        	self.$option_id.find("form[name=restore_db_form]").validate({
             submitHandler: function (form) {
                 $.blockUI();
@@ -752,7 +752,7 @@ openerp.base.Database = openerp.base.Widget.extend({
 
 openerp.base.Login =  openerp.base.Widget.extend({
     remember_creditentials: true,
-    
+
     init: function(parent, element_id) {
         this._super(parent, element_id);
         this.has_local_storage = typeof(localStorage) != 'undefined';
@@ -981,7 +981,7 @@ openerp.base.WebClient = openerp.base.Widget.extend({
 
         this.menu = new openerp.base.Menu(this, "oe_menu", "oe_secondary_menu");
         this.menu.on_action.add(this.on_menu_action);
-        
+
     },
     start: function() {
         this.session.start();

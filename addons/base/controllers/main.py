@@ -1225,13 +1225,13 @@ class Import(View):
         return fields
 
     @openerpweb.httprequest
-    def detect_data(self, req, session_id, model, id, csvfile, csvsep, csvdel, csvcode, csvskip):
+    def detect_data(self, req, **params):
         import StringIO
         _fields = {}
         _fields_invert = {}
         error = None
 
-        fields = dict(req.session.model(model).fields_get(False, req.session.eval_context(req.context)))
+        fields = dict(req.session.model(params.get('model')).fields_get(False, req.session.eval_context(req.context)))
         fields.update({'id': {'string': 'ID'}, '.id': {'string': 'Database ID'}})
 
         def model_populate(fields, prefix_node='', prefix=None, prefix_value='', level=2):
@@ -1263,7 +1263,7 @@ class Import(View):
         model_populate(fields)
 
         try:
-            data = csv.reader(csvfile.file, quotechar=str(csvdel), delimiter=str(csvsep))
+            data = csv.reader(params.get('csvfile').file, quotechar=str(params.get('csvdel')), delimiter=str(params.get('csvsep')))
         except:
             raise 'Error opening .CSV file', 'Input Error.'
 
@@ -1278,7 +1278,7 @@ class Import(View):
                     break
             for line in records:
                 for word in line:
-                    word = str(word.decode(csvcode))
+                    word = str(word.decode(params.get('csvcode')))
                     if word in _fields:
                         fields.append((word, _fields[word]))
                     elif word in _fields_invert.keys():
@@ -1290,30 +1290,30 @@ class Import(View):
             error = {'message':('Error processing the first line of the file. Field "%s" is unknown') % (word,)}
 
         if error:
-            csvfile.file.seek(0)
-            error=dict(error, preview=csvfile.file.read(200))
+            params.get('csvfile').file.seek(0)
+            error=dict(error, preview=params.get('csvfile').file.read(200))
             return simplejson.dumps({'error':error})
 
         return simplejson.dumps({'records':records[1:],'fields':fields})
 
     @openerpweb.httprequest
-    def import_data(self, req, session_id, model, id, csvfile, csvsep, csvdel, csvcode, csvskip, fields=[]):
+    def import_data(self, req, **params):
         import StringIO
 
         context = req.session.eval_context(req.context)
-        modle_obj = req.session.model(model)
+        modle_obj = req.session.model(params.get('model'))
         res = None
-        content = csvfile.file.read()
+        content = params.get('csvfile').file.read()
         input=StringIO.StringIO(content)
         limit = 0
         data = []
 
-        if not (csvdel and len(csvdel) == 1):
+        if not (params.get('csvdel') and len(params.get('csvdel')) == 1):
             error={'message': "The CSV delimiter must be a single character"}
             return simplejson.dumps({'error':error})
 
         try:
-            for j, line in enumerate(csv.reader(input, quotechar=str(csvdel), delimiter=str(csvsep))):
+            for j, line in enumerate(csv.reader(input, quotechar=str(params.get('csvdel')), delimiter=str(params.get('csvsep')))):
                 # If the line contains no data, we should skip it.
                 if not line:
                     continue
@@ -1333,7 +1333,7 @@ class Import(View):
 
         for line in data:
             try:
-                datas.append(map(lambda x:x.decode(csvcode).encode('utf-8'), line))
+                datas.append(map(lambda x:x.decode(params.get('csvcode')).encode('utf-8'), line))
             except:
                 datas.append(map(lambda x:x.decode('latin').encode('utf-8'), line))
 
