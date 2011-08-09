@@ -105,7 +105,7 @@
                     </group>
                     <group colspan="2" col="3">
                         <separator string="Communication" colspan="4" col="3"/>
-                        <field name="email_from" widget="email"/><button string="Send Email"
+                        <field name="email_from" widget="email"/><button string="Mail"
                         name="%(crm.action_crm_send_mail)d"
                         context="{'mail':'new', 'model': 'crm.lead'}"
                         icon="terp-mail-message-new" type="action" colspan="1"/>
@@ -309,8 +309,8 @@
             <search string="Search Leads">
                 <filter icon="terp-check"
                     string="Current"
-                    name="current" help="Draft and Open Leads"
-                    domain="[('state','in',('draft','open'))]"/>
+                    name="current" help="Draft, Open and Pending Leads"
+                    domain="[('state','in',('draft','open','pending'))]"/>
                 <filter icon="terp-camera_test"
                     string="Open"
                     domain="[('state','=','open')]"/>
@@ -327,15 +327,14 @@
                     domain="[('create_date','&lt;', time.strftime('%%Y-%%m-%%d 23:59:59')),('create_date','&gt;=',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d 00:00:00'))]"
                 />
                 <separator orientation="vertical"/>
-                <field name="name" string="Subject"/>
-                <field name="partner_name"/>
-                <field name="email_from"/>
+                <field name="name" string="Lead / Customer"
+                    domain="['|','|',('partner_name','ilike',self),('email_from','ilike',self),('name','ilike',self)]"/>
                 <field name="user_id">
                     <filter icon="terp-personal-"
                         domain="[('user_id','=', False)]"
                         help="Unassigned Leads" />
                 </field>
-                <field name="subjects"/>
+                <field name="subjects" groups="base.group_extended"/>
                 <field name="section_id" widget="selection"
                     context="{'invisible_section': False}">
                     <filter icon="terp-personal+" groups="base.group_extended"
@@ -347,21 +346,10 @@
                         domain="[]"
                         help="Show Sales Team"/>
                 </field>
-                <newline/>
-
-                <group expand="0" string="Extended Filters..." groups="base.group_extended">
-                      <field name="stage_id" widget="selection" domain="[('type', '=', 'lead')]"/>
-                      <field name="categ_id" widget="selection" domain="[('object_id.model', '=', 'crm.lead')]"/>
-                      <separator orientation="vertical"/>
-                      <field name="country_id" context="{'invisible_country': False}">
-                          <filter icon="terp-personal+" context="{'invisible_country': False}" help="Show countries"/>
-                      </field>
-                      <separator orientation="vertical"/>
-                      <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                      <newline/>
-                      <field name="create_date" string="Creation Date"/>
-                      <field name="date_closed"/>
-                </group>
+                <separator orientation="vertical"/>
+                <field name="country_id" context="{'invisible_country': False}">
+                	<filter icon="terp-personal+" context="{'invisible_country': False}" help="Show countries"/>
+                </field>
                 <newline/>
                 <group expand="0" string="Group By...">
                     <filter string="Salesman" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>

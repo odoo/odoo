@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-19 04:41+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-07-23 04:55+0000\n"
+"X-Generator: Launchpad (build 13405)\n"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_confirmingpurchaseorder0
@@ -85,8 +85,8 @@ msgstr ""
 
 #. module: purchase
 #: selection:purchase.order,invoice_method:0
-msgid "From Picking"
-msgstr "Rechnung durch Lieferung"
+msgid "From Reception"
+msgstr ""
 
 #. module: purchase
 #: view:purchase.order:0
@@ -1014,8 +1014,14 @@ msgstr "Zu erneuern durch den Finanzbuchhalter"
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.purchase_line_form_action2
 #: model:ir.ui.menu,name:purchase.menu_purchase_line_order_draft
-msgid "Purchase Lines Not Invoiced"
-msgstr "Nicht berechnete Produktzugänge"
+msgid "On Purchase Order Line"
+msgstr ""
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.action_picking_tree4_picking_to_invoice
+#: model:ir.ui.menu,name:purchase.action_picking_tree4_picking_to_invoice
+msgid "On Receptions"
+msgstr ""
 
 #. module: purchase
 #: report:purchase.order:0
@@ -2278,6 +2284,9 @@ msgstr "Pinnwand Einkauf"
 #~ msgid "Rules are not supported for osv_memory objects !"
 #~ msgstr "Rules werden nicht durch osv_memory Objekte unterstützt!"
 
+#~ msgid "From Picking"
+#~ msgstr "Rechnung durch Lieferung"
+
 #~ msgid ""
 #~ "If you set the invoicing control on a purchase order as \"Manual\", you can "
 #~ "track here all the purchase order lines for which you did not received the "
@@ -2291,3 +2300,14 @@ msgstr "Pinnwand Einkauf"
 #~ "Eingangsrechnung empfangen, können Sie auch eine Eingangsrechnung zunächst "
 #~ "im Status Entwurf auf Basis der Auftragspositionen über dieses Menü "
 #~ "erstellen."
+
+#~ msgid "Purchase Lines Not Invoiced"
+#~ msgstr "Nicht berechnete Produktzugänge"
+
+#, python-format
+#~ msgid ""
+#~ "You have to select a pricelist in the purchase form !\n"
+#~ "Please set one before choosing a product."
+#~ msgstr ""
+#~ "Sie müssen eine Preisliste im Einkaufsformular auswählen, bevor Sie ein "
+#~ "Produkt auswählen."

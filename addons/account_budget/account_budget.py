@@ -190,15 +190,15 @@ class crossovered_budget_lines(osv.osv):
     _description = "Budget Line"
     _columns = {
         'crossovered_budget_id': fields.many2one('crossovered.budget', 'Budget', ondelete='cascade', select=True, required=True),
-        'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account',required=False),
+        'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account',required=True),
         'general_budget_id': fields.many2one('account.budget.post', 'Budgetary Position',required=True),
         'date_from': fields.date('Start Date', required=True),
         'date_to': fields.date('End Date', required=True),
         'paid_date': fields.date('Paid Date'),
         'planned_amount':fields.float('Planned Amount', required=True, digits_compute=dp.get_precision('Account')),
-        'practical_amount':fields.function(_prac, method=True, string='Practical Amount', type='float', digits_compute=dp.get_precision('Account')),
-        'theoritical_amount':fields.function(_theo, method=True, string='Theoretical Amount', type='float', digits_compute=dp.get_precision('Account')),
-        'percentage':fields.function(_perc, method=True, string='Percentage', type='float'),
+        'practical_amount':fields.function(_prac, string='Practical Amount', type='float', digits_compute=dp.get_precision('Account')),
+        'theoritical_amount':fields.function(_theo, string='Theoretical Amount', type='float', digits_compute=dp.get_precision('Account')),
+        'percentage':fields.function(_perc, string='Percentage', type='float'),
         'company_id': fields.related('crossovered_budget_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True)
     }
 

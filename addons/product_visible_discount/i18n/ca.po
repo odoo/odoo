@@ -14,20 +14,20 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-15 05:51+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-04-29 05:44+0000\n"
+"X-Generator: Launchpad (build 12758)\n"
 
 #. module: product_visible_discount
 #: code:addons/product_visible_discount/product_visible_discount.py:147
 #, python-format
 msgid "No Purchase Pricelist Found !"
-msgstr ""
+msgstr "No s'ha trobat tarifa de compra!"
 
 #. module: product_visible_discount
 #: code:addons/product_visible_discount/product_visible_discount.py:155
 #, python-format
 msgid "No Sale Pricelist Found "
-msgstr ""
+msgstr "No s'ha trobat tarifa de venda "
 
 #. module: product_visible_discount
 #: model:ir.module.module,description:product_visible_discount.module_meta_information
@@ -46,6 +46,20 @@ msgid ""
 "Invoice lines: Unit price=225, Discount=0,00, Net price=225\n"
 "    "
 msgstr ""
+"\n"
+"    Aquest mòdul permet calcular descomptes en les línies de la Comanda de "
+"Vendes i en les de la Factura basats en la tarifa de l'empresa.\n"
+"    Per a això s'afegeix al formulari de la tarifa una nova opció anomenada "
+"\"Descompte visible\".\n"
+"    Exemple:\n"
+"        Per al producte PC1 i l'empresa \"Asustek\": si el preu de venda és "
+"450 i el preu calculat amb la tarifa de Asustek és 225:\n"
+"        Si l'opció \"Descompte visible\" està activada, en la línia de la "
+"comanda apareixerà: preu unitari=450, Descompte=50,00, Preu net=225\n"
+"        Si l'opció \"Descompte visible\" està desactivada, en la línia de la "
+"comanda i en la factura apareixerà: Preu unitari=225, Descompte=0,00, Preu "
+"net=225\n"
+"    "
 
 #. module: product_visible_discount
 #: model:ir.module.module,shortdesc:product_visible_discount.module_meta_information
@@ -56,29 +70,29 @@ msgstr "Descompte visible"
 #. module: product_visible_discount
 #: model:ir.model,name:product_visible_discount.model_account_invoice_line
 msgid "Invoice Line"
-msgstr ""
+msgstr "Línia de factura"
 
 #. module: product_visible_discount
 #: code:addons/product_visible_discount/product_visible_discount.py:155
 #, python-format
 msgid "You must first define a pricelist for Customer !"
-msgstr ""
+msgstr "Primer heu de definir una tarifa per al client!"
 
 #. module: product_visible_discount
 #: model:ir.model,name:product_visible_discount.model_product_pricelist
 msgid "Pricelist"
-msgstr ""
+msgstr "Llista de preus"
 
 #. module: product_visible_discount
 #: code:addons/product_visible_discount/product_visible_discount.py:147
 #, python-format
 msgid "You must first define a pricelist for Supplier !"
-msgstr ""
+msgstr "Primer heu de definir una tarifa per al proveïdor!"
 
 #. module: product_visible_discount
 #: model:ir.model,name:product_visible_discount.model_sale_order_line
 msgid "Sales Order Line"
-msgstr ""
+msgstr "Línia comanda de venda"
 
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "XML no vàlid per a la definició de la vista!"

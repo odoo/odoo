@@ -67,7 +67,6 @@ class crm_send_new_email(osv.osv_memory):
 
         context.update({'mail' : 'new'})
         actives_ids = context.get('active_ids')
-        print "mass_mail", context.get('mass_mail')
         model = context.get('active_model')
         case_pool = self.pool.get(model)
         for id in actives_ids:

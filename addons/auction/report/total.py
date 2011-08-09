@@ -19,13 +19,9 @@
 #
 ##############################################################################
 
-import os, time, datetime
+import time
+import netsvc
 
-import netsvc, tools
-
-import report.print_xml
-import report.render
-import report.common
 from report.interface import report_rml
 
 def toxml(val):
@@ -47,7 +43,6 @@ class report_custom(report_rml):
         unpaid_ids = []
         buyer = {}
         seller = {}
-        debit = 0
 
         for l in lots:
             if l['lot_est2']:

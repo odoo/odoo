@@ -14,18 +14,18 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-15 05:29+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-04-29 05:17+0000\n"
+"X-Generator: Launchpad (build 12758)\n"
 
 #. module: idea
 #: help:idea.category,visibility:0
 msgid "If True creator of the idea will be visible to others"
-msgstr ""
+msgstr "Si està marcada, el creador de la idea serà visible per als altres."
 
 #. module: idea
 #: model:ir.actions.act_window,name:idea.action_idea_select
 msgid "Idea select"
-msgstr ""
+msgstr "Selecciona idea"
 
 #. module: idea
 #: view:idea.idea:0
@@ -43,13 +43,13 @@ msgstr "Comentaris"
 #. module: idea
 #: view:idea.idea:0
 msgid "Submit Vote"
-msgstr ""
+msgstr "Envia vot"
 
 #. module: idea
 #: model:ir.actions.act_window,name:idea.action_report_vote_all
 #: model:ir.ui.menu,name:idea.menu_report_vote_all
 msgid "Ideas Analysis"
-msgstr ""
+msgstr "Anàlisi d'idees"
 
 #. module: idea
 #: view:idea.category:0
@@ -57,7 +57,7 @@ msgstr ""
 #: view:idea.vote:0
 #: view:report.vote:0
 msgid "Group By..."
-msgstr ""
+msgstr "Agrupa per..."
 
 #. module: idea
 #: model:ir.module.module,description:idea.module_meta_information
@@ -72,6 +72,17 @@ msgid ""
 "    The managers can obtain an easy view on best ideas from all the users.\n"
 "    Once installed, check the menu 'Ideas' in the 'Tools' main menu."
 msgstr ""
+"\n"
+"    Aquest mòdul permet als vostres usuaris participar de forma fàcil i "
+"eficaç en la innovació de l'empresa.\n"
+"    Permet a tots expressar les idees sobre diferents temes.\n"
+"    Després, altres usuaris poden comentar aquestes idees i votar a favor "
+"d'algunes de les idees.\n"
+"    Cada idea té una puntuació basada en les diferents votacions.\n"
+"    Els administradors poden obtenir una visió fàcil de les millors idees de "
+"tots els usuaris.\n"
+"    Una vegada instal·lat, apareixerà el menú 'Idees' dins del menú "
+"principal 'Eines'."
 
 #. module: idea
 #: model:ir.module.module,shortdesc:idea.module_meta_information
@@ -81,24 +92,24 @@ msgstr "Gestió d'idees"
 #. module: idea
 #: selection:report.vote,month:0
 msgid "March"
-msgstr ""
+msgstr "Març"
 
 #. module: idea
 #: code:addons/idea/wizard/idea_post_vote.py:92
 #, python-format
 msgid "Idea must be in 'Open' state before vote for that idea."
-msgstr ""
+msgstr "La idea ha d'estar en estat 'Oberta' abans de votar-la."
 
 #. module: idea
 #: view:report.vote:0
 #: field:report.vote,day:0
 msgid "Day"
-msgstr ""
+msgstr "Dia"
 
 #. module: idea
 #: view:idea.idea:0
 msgid "Refuse"
-msgstr ""
+msgstr "Rebutja"
 
 #. module: idea
 #: field:idea.idea,count_votes:0
@@ -108,7 +119,7 @@ msgstr "Còmput de vots"
 #. module: idea
 #: model:ir.model,name:idea.model_report_vote
 msgid "Idea Vote Statistics"
-msgstr ""
+msgstr "Estadística de votos de ideas"
 
 #. module: idea
 #: selection:idea.idea,my_vote:0
@@ -121,7 +132,7 @@ msgstr "Dolenta"
 #. module: idea
 #: selection:report.vote,idea_state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "Cancel·lada"
 
 #. module: idea
 #: view:idea.category:0
@@ -134,7 +145,7 @@ msgstr "Categoria d'idees"
 #: code:addons/idea/wizard/idea_post_vote.py:92
 #, python-format
 msgid "Warning !"
-msgstr ""
+msgstr "Avís!"
 
 #. module: idea
 #: view:idea.idea:0
@@ -144,12 +155,12 @@ msgstr "El vostre comentari"
 #. module: idea
 #: view:report.vote:0
 msgid "   Month   "
-msgstr ""
+msgstr "   Mes   "
 
 #. module: idea
 #: model:ir.model,name:idea.model_idea_vote
 msgid "Idea Vote"
-msgstr ""
+msgstr "Vot d'idea"
 
 #. module: idea
 #: field:idea.category,parent_id:0
@@ -167,24 +178,24 @@ msgstr "Molt dolenta"
 #. module: idea
 #: view:idea.vote:0
 msgid "Ideas vote"
-msgstr ""
+msgstr "Voto de ideas"
 
 #. module: idea
 #: view:report.vote:0
 #: field:report.vote,nbr:0
 msgid "# of Lines"
-msgstr ""
+msgstr "# de línies"
 
 #. module: idea
 #: code:addons/idea/wizard/idea_post_vote.py:89
 #, python-format
 msgid "You can not give Vote for this idea more than %s times"
-msgstr ""
+msgstr "No puede votar esta idea más de %s veces"
 
 #. module: idea
 #: view:idea.category:0
 msgid "Ideas Categories"
-msgstr ""
+msgstr "Categories d'idees"
 
 #. module: idea
 #: help:idea.idea,description:0
@@ -194,7 +205,7 @@ msgstr "Contingut de la idea"
 #. module: idea
 #: model:ir.model,name:idea.model_idea_category
 msgid "Idea Category"
-msgstr ""
+msgstr "Categoria d'idea"
 
 #. module: idea
 #: view:idea.idea:0
@@ -213,12 +224,12 @@ msgstr "No votada"
 #. module: idea
 #: sql_constraint:idea.category:0
 msgid "The name of the category must be unique"
-msgstr ""
+msgstr "El nom de la categoria ha de ser únic"
 
 #. module: idea
 #: model:ir.model,name:idea.model_idea_select
 msgid "select idea"
-msgstr ""
+msgstr "selecciona idea"
 
 #. module: idea
 #: view:idea.stat:0
@@ -233,7 +244,7 @@ msgstr "Categories filles"
 #. module: idea
 #: view:idea.select:0
 msgid "Next"
-msgstr ""
+msgstr "Següent"
 
 #. module: idea
 #: view:idea.idea:0
@@ -241,7 +252,7 @@ msgstr ""
 #: view:report.vote:0
 #: field:report.vote,idea_state:0
 msgid "State"
-msgstr ""
+msgstr "Estat"
 
 #. module: idea
 #: selection:idea.idea,my_vote:0
@@ -254,12 +265,12 @@ msgstr "Bona"
 #. module: idea
 #: help:idea.idea,open_date:0
 msgid "Date when an idea opened"
-msgstr ""
+msgstr "Data d'apertura de la idea."
 
 #. module: idea
 #: view:idea.idea:0
 msgid "Idea Detail"
-msgstr ""
+msgstr "Detall d'idea"
 
 #. module: idea
 #: help:idea.idea,state:0
@@ -268,17 +279,20 @@ msgid ""
 " It is             opened by the user, the state is 'Opened'.            \n"
 "If the idea is accepted, the state is 'Accepted'."
 msgstr ""
+"Quan es crea la idea l'estat és 'Esborrany'.\n"
+"Si l'usuari l'obre, l'estat es 'Oberta'.            \n"
+"Si la idea és acceptada, l'estat és 'Acceptada'."
 
 #. module: idea
 #: field:idea.category,visibility:0
 #: field:idea.idea,visibility:0
 msgid "Open Idea?"
-msgstr ""
+msgstr "Idea oberta?"
 
 #. module: idea
 #: selection:report.vote,month:0
 msgid "July"
-msgstr ""
+msgstr "Juliol"
 
 #. module: idea
 #: view:idea.idea:0
@@ -286,7 +300,7 @@ msgstr ""
 #: view:report.vote:0
 #: selection:report.vote,idea_state:0
 msgid "Accepted"
-msgstr ""
+msgstr "Acceptada"
 
 #. module: idea
 #: model:ir.actions.act_window,name:idea.action_idea_category
@@ -297,12 +311,12 @@ msgstr "Categories"
 #. module: idea
 #: view:report.vote:0
 msgid "    Month-1    "
-msgstr ""
+msgstr "    Mes-1    "
 
 #. module: idea
 #: field:idea.idea,open_date:0
 msgid "Open date"
-msgstr ""
+msgstr "Data d'apertura"
 
 #. module: idea
 #: field:idea.idea,vote_ids:0
@@ -319,12 +333,12 @@ msgstr "Estadístiques de vots"
 #. module: idea
 #: field:idea.idea,vote_limit:0
 msgid "Maximum Vote per User"
-msgstr ""
+msgstr "Vots màxims per usuari"
 
 #. module: idea
 #: view:idea.category:0
 msgid "Parent Category"
-msgstr ""
+msgstr "Categoria pare"
 
 #. module: idea
 #: field:idea.comment,content:0
@@ -338,18 +352,18 @@ msgstr "Comentari"
 #. module: idea
 #: selection:report.vote,month:0
 msgid "September"
-msgstr ""
+msgstr "Setembre"
 
 #. module: idea
 #: selection:report.vote,month:0
 msgid "December"
-msgstr ""
+msgstr "Desembre"
 
 #. module: idea
 #: view:report.vote:0
 #: field:report.vote,month:0
 msgid "Month"
-msgstr ""
+msgstr "Mes"
 
 #. module: idea
 #: model:ir.actions.act_window,name:idea.action_idea_idea_categ_open
@@ -378,7 +392,7 @@ msgstr "Molt bona"
 #. module: idea
 #: view:report.vote:0
 msgid "  Year  "
-msgstr ""
+msgstr "  Any  "
 
 #. module: idea
 #: selection:idea.idea,state:0
@@ -389,7 +403,7 @@ msgstr "Oberta"
 #. module: idea
 #: model:ir.actions.act_window,name:idea.action_idea_vote
 msgid "Idea's Votes"
-msgstr ""
+msgstr "Vots de la idea"
 
 #. module: idea
 #: view:idea.idea:0
@@ -416,7 +430,7 @@ msgstr "Esborrany"
 #. module: idea
 #: selection:report.vote,month:0
 msgid "August"
-msgstr ""
+msgstr "Agost"
 
 #. module: idea
 #: selection:idea.idea,my_vote:0
@@ -429,13 +443,13 @@ msgstr "Normal"
 #. module: idea
 #: selection:report.vote,month:0
 msgid "June"
-msgstr ""
+msgstr "Juny"
 
 #. module: idea
 #: field:report.vote,creater_id:0
 #: field:report.vote,user_id:0
 msgid "User Name"
-msgstr ""
+msgstr "Nom de l'usuari"
 
 #. module: idea
 #: model:ir.model,name:idea.model_idea_vote_stat
@@ -453,12 +467,12 @@ msgstr "Usuari"
 #. module: idea
 #: field:idea.vote,date:0
 msgid "Date"
-msgstr ""
+msgstr "Data"
 
 #. module: idea
 #: view:idea.post.vote:0
 msgid "Post"
-msgstr ""
+msgstr "Envia"
 
 #. module: idea
 #: field:idea.idea,my_vote:0
@@ -468,7 +482,7 @@ msgstr "El meu vot"
 #. module: idea
 #: selection:report.vote,month:0
 msgid "October"
-msgstr ""
+msgstr "Octubre"
 
 #. module: idea
 #: field:idea.comment,create_date:0
@@ -479,7 +493,7 @@ msgstr "Data de creació"
 #. module: idea
 #: selection:report.vote,month:0
 msgid "January"
-msgstr ""
+msgstr "Gener"
 
 #. module: idea
 #: model:ir.model,name:idea.model_idea_idea
@@ -499,22 +513,22 @@ msgstr "Resum de la idea"
 #. module: idea
 #: selection:report.vote,month:0
 msgid "November"
-msgstr ""
+msgstr "Novembre"
 
 #. module: idea
 #: view:idea.idea:0
 msgid "History"
-msgstr ""
+msgstr "Història"
 
 #. module: idea
 #: view:idea.idea:0
 msgid "Vots Statistics"
-msgstr ""
+msgstr "Estadístiques de vots"
 
 #. module: idea
 #: field:report.vote,date:0
 msgid "Date Order"
-msgstr ""
+msgstr "Data ordre"
 
 #. module: idea
 #: view:idea.idea:0
@@ -527,12 +541,12 @@ msgstr "Autor"
 #: view:idea.post.vote:0
 #: model:ir.ui.menu,name:idea.menu_give_vote
 msgid "Give Vote"
-msgstr ""
+msgstr "Dona vot"
 
 #. module: idea
 #: help:idea.idea,vote_limit:0
 msgid "Set to one if  you require only one Vote per user"
-msgstr ""
+msgstr "Estableix a un si només requereix un vot per usuari"
 
 #. module: idea
 #: view:idea.post.vote:0
@@ -548,12 +562,12 @@ msgstr "Tanca"
 #: view:idea.idea:0
 #: view:report.vote:0
 msgid "Open"
-msgstr "Oberta"
+msgstr "Obre"
 
 #. module: idea
 #: view:report.vote:0
 msgid "Idea Vote Analysis"
-msgstr ""
+msgstr "Anàlisi de vots"
 
 #. module: idea
 #: view:idea.idea:0
@@ -567,12 +581,12 @@ msgstr "Idees"
 #. module: idea
 #: model:ir.model,name:idea.model_idea_post_vote
 msgid "Post vote"
-msgstr ""
+msgstr "Envia vot"
 
 #. module: idea
 #: view:idea.idea:0
 msgid "Current"
-msgstr ""
+msgstr "Actual"
 
 #. module: idea
 #: field:idea.vote.stat,score:0
@@ -583,7 +597,7 @@ msgstr "Puntuació"
 #. module: idea
 #: view:idea.vote:0
 msgid "Comments:"
-msgstr ""
+msgstr "Comentaris:"
 
 #. module: idea
 #: view:idea.category:0
@@ -595,34 +609,34 @@ msgstr "Descripció"
 #. module: idea
 #: selection:report.vote,month:0
 msgid "May"
-msgstr ""
+msgstr "Maig"
 
 #. module: idea
 #: selection:idea.idea,state:0
 #: view:report.vote:0
 msgid "Refused"
-msgstr ""
+msgstr "Rebutjada"
 
 #. module: idea
 #: code:addons/idea/idea.py:253
 #, python-format
 msgid "Draft/Accepted/Cancelled ideas Could not be voted"
-msgstr ""
+msgstr "No podeu votar idees esborrany/acceptada/cancel·lada"
 
 #. module: idea
 #: view:idea.vote:0
 msgid "Vote date"
-msgstr ""
+msgstr "Data vot"
 
 #. module: idea
 #: selection:report.vote,month:0
 msgid "February"
-msgstr ""
+msgstr "Febrer"
 
 #. module: idea
 #: view:report.vote:0
 msgid "    Today    "
-msgstr ""
+msgstr "    Avui    "
 
 #. module: idea
 #: field:idea.vote.stat,nbr:0
@@ -632,7 +646,7 @@ msgstr "Número de vots"
 #. module: idea
 #: selection:report.vote,month:0
 msgid "April"
-msgstr ""
+msgstr "Abril"
 
 #. module: idea
 #: field:idea.idea,count_comments:0
@@ -642,7 +656,7 @@ msgstr "Còmput de comentaris"
 #. module: idea
 #: field:idea.vote,score:0
 msgid "Vote Status"
-msgstr ""
+msgstr "Estat vot"
 
 #. module: idea
 #: field:idea.idea,vote_avg:0
@@ -664,23 +678,23 @@ msgstr "Idea"
 #. module: idea
 #: view:idea.idea:0
 msgid "Accept"
-msgstr ""
+msgstr "Accepta"
 
 #. module: idea
 #: field:idea.post.vote,vote:0
 msgid "Post Vote"
-msgstr ""
+msgstr "Envia vot"
 
 #. module: idea
 #: view:report.vote:0
 #: field:report.vote,year:0
 msgid "Year"
-msgstr ""
+msgstr "Any"
 
 #. module: idea
 #: view:idea.select:0
 msgid "Select Idea for Vote"
-msgstr ""
+msgstr "Selecciona idea a votar"
 
 #~ msgid "My Ideas"
 #~ msgstr "Les meves idees"

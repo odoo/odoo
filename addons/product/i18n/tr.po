@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-15 05:31+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-04-29 05:19+0000\n"
+"X-Generator: Launchpad (build 12758)\n"
 
 #. module: product
 #: model:product.template,name:product.product_product_ram512_product_template
@@ -41,6 +41,8 @@ msgid ""
 "Set a template if this rule only apply to a template of product. Keep empty "
 "for all products"
 msgstr ""
+"Bu ürün bir ürün şablonuna uygun ise şablonu seçin. Diğer ürünler için boş "
+"bırakın"
 
 #. module: product
 #: model:product.category,name:product.cat1
@@ -70,7 +72,7 @@ msgstr "Birim"
 #. module: product
 #: model:product.template,name:product.product_product_pc2_product_template
 msgid "Basic+ PC (assembly on order)"
-msgstr ""
+msgstr "Temel + PC (siparişte toplama)"
 
 #. module: product
 #: field:product.product,incoming_qty:0
@@ -155,6 +157,8 @@ msgid ""
 "The minimal quantity to trigger this rule, expressed in the supplier UoM if "
 "any or in the default UoM of the product otherrwise."
 msgstr ""
+"Bu kuralı tetiklemesi için en az miktar, tedarikçinin ölçü biriminde (UoM) "
+"ya da ürünün öntanımlı ölçü birimi  ifade edilmeli."
 
 #. module: product
 #: model:product.template,name:product.product_product_24_product_template
@@ -199,7 +203,7 @@ msgstr "Processor AMD Athlon XP 1800+"
 #. module: product
 #: model:product.template,name:product.product_product_20_product_template
 msgid "HDD on demand"
-msgstr ""
+msgstr "HDD isteğe göre"
 
 #. module: product
 #: field:product.price_list,price_list:0
@@ -232,6 +236,7 @@ msgid ""
 "Determines if the product can be visible in the list of product within a "
 "selection from a sale order line."
 msgstr ""
+"Ürünün sipariş kalemi ekleme listesinde görünüp görünmeyeceğini belirler."
 
 #. module: product
 #: model:product.pricelist.version,name:product.ver0
@@ -277,6 +282,8 @@ msgid ""
 "Quantities of products that are planned to leave in selected locations or "
 "all internal if none have been selected."
 msgstr ""
+"seçilen yerlede ya da bütün iç lokasyonlardan çıkması planlanan ürünlerin "
+"miktarı."
 
 #. module: product
 #: help:product.template,procure_method:0
@@ -285,6 +292,9 @@ msgid ""
 "supplying. 'Make to Order': When needed, purchase or produce for the "
 "procurement request."
 msgstr ""
+"'Stoğa Üret':Ürün gerektiğinde  varsa ürünü stoktan alır ya da tekrar stoğa "
+"girene kadar bekler. 'Siparişe Üret': Gerektiğinde üretim emri ya da "
+"satınalma siparişi açar."
 
 #. module: product
 #: model:process.node,note:product.process_node_supplier0
@@ -294,7 +304,7 @@ msgstr "Tedarikçi adı, fiyat, ürün kodu, ..."
 #. module: product
 #: model:product.template,name:product.product_product_hdd3_product_template
 msgid "HDD Seagate 7200.8 160GB"
-msgstr ""
+msgstr "HDD Seagate 7200.8 160GB"
 
 #. module: product
 #: field:product.product,ean13:0
@@ -332,7 +342,7 @@ msgstr ""
 #. module: product
 #: model:product.template,name:product.product_product_woodmm0_product_template
 msgid "Wood 2mm"
-msgstr ""
+msgstr "Tahta 2mm"
 
 #. module: product
 #: field:product.price_list,qty1:0
@@ -400,7 +410,7 @@ msgstr "Tedarikçi tarafındaki ürün adı"
 #. module: product
 #: model:product.template,name:product.product_product_pc3_product_template
 msgid "Medium PC"
-msgstr ""
+msgstr "Orta boy PC"
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_normal_action_puchased
@@ -410,6 +420,10 @@ msgid ""
 "information about your products related to procurement logistics, sales "
 "price, product category, suppliers and so on."
 msgstr ""
+"Alınabilir ve/veya satılabilir ürünler. Bunlar hammadde, stoklanabilir ürün, "
+"tüketilebilir ürün ya da hizmet olabilir. Ürün formu, ürünleriniz ile ilgili "
+"tedarik planları, satış fiyatı, ürün kategorisi ve tedarikçi firma bigileri "
+"gibi detayları içerir."
 
 #. module: product
 #: view:product.pricelist:0
@@ -458,7 +472,7 @@ msgstr "Yükseklik"
 #. module: product
 #: help:product.pricelist.version,date_end:0
 msgid "Ending date for this pricelist version to be valid."
-msgstr ""
+msgstr "Bu fiyat listesinin geçerli olduğu son gün"
 
 #. module: product
 #: model:product.category,name:product.cat0
@@ -516,6 +530,11 @@ msgid ""
 "each version has several rules. Example: the customer price of a product "
 "category will be based on the supplier price multiplied by 1.80."
 msgstr ""
+"Fiyat listesi bütün iş ortakları için alım ve satım fiyatlarının "
+"hesaplanması için çeşitli kurallar içerir. Fiyat listesinin çeşitli "
+"versiyonları bulunur (2010, 2011, Şubat Promosyonu 2010 vb.) ve her "
+"versiyonun farklı kuralları vardır. Örneğin, ürün kategorisindeki müşteri "
+"fiyatları tedarikçi fiyatlarının 1.8 katıdır."
 
 #. module: product
 #: help:product.product,active:0
@@ -529,7 +548,7 @@ msgstr ""
 #. module: product
 #: model:product.template,name:product.product_product_metalcleats0_product_template
 msgid "Metal Cleats"
-msgstr ""
+msgstr "Metal takoz"
 
 #. module: product
 #: code:addons/product/pricelist.py:340
@@ -549,7 +568,7 @@ msgstr "Ürün Birim Grubu"
 #. module: product
 #: model:product.ul,name:product.product_ul_box
 msgid "Box 20x20x40"
-msgstr ""
+msgstr "Kutu 20x20x20"
 
 #. module: product
 #: view:product.pricelist.item:0
@@ -564,7 +583,7 @@ msgstr "Satın alınabilir"
 #. module: product
 #: model:product.template,name:product.product_product_cpu2_product_template
 msgid "High speed processor config"
-msgstr ""
+msgstr "Yüksek hızlı işlemci kurulumu"
 
 #. module: product
 #: model:process.transition,note:product.process_transition_supplierofproduct0
@@ -597,7 +616,7 @@ msgstr "Sanal Stok"
 #. module: product
 #: selection:product.category,type:0
 msgid "View"
-msgstr ""
+msgstr "Görüntüle"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_template_action_tree
@@ -638,7 +657,7 @@ msgstr "Taban Fiyatı"
 #. module: product
 #: model:product.template,name:product.product_product_fan2_product_template
 msgid "Silent fan"
-msgstr ""
+msgstr "Sessiz vantilatör"
 
 #. module: product
 #: help:product.supplierinfo,name:0
@@ -652,11 +671,14 @@ msgid ""
 "not overlaps with original version. You should change the dates and "
 "reactivate the pricelist"
 msgstr ""
+"Bir versiyon kopyalanıp çoğaltılırsa pasif moda geçer, böylelikle tarihler "
+"orjinal versiyon ile çakışmaz. Fiyatları değiştirip yeniden aktive etmeniz "
+"gerekir."
 
 #. module: product
 #: model:product.template,name:product.product_product_kitshelfofcm0_product_template
 msgid "KIT Shelf of 100cm"
-msgstr ""
+msgstr "100 cm KIT rafı"
 
 #. module: product
 #: field:product.supplierinfo,name:0
@@ -671,7 +693,7 @@ msgstr "Yan Panel"
 #. module: product
 #: model:product.template,name:product.product_product_26_product_template
 msgid "Kit Keyboard + Mouse"
-msgstr ""
+msgstr "KIT klavye + fare"
 
 #. module: product
 #: field:product.price.type,name:0
@@ -681,7 +703,7 @@ msgstr "Fiyat Adı"
 #. module: product
 #: model:product.template,name:product.product_product_cpu3_product_template
 msgid "Processor AMD Athlon XP 2200+"
-msgstr ""
+msgstr "İşlemci AMD Athlon XP 2200+"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.action_product_price_list
@@ -710,6 +732,8 @@ msgid ""
 "Product UoM if not empty, in the default unit of measure of the product "
 "otherwise."
 msgstr ""
+"Tedarikçiden alınabilecek en az miktar. Doldurulursa tedarikçinin ölçü "
+"biriminde ifade edilir aksi halde ürünün ölçü biriminde ifade edilir."
 
 #. module: product
 #: view:product.pricelist.item:0
@@ -722,6 +746,9 @@ msgid ""
 "This price will be considered as a price for the supplier UoM if any or the "
 "default Unit of Measure of the product otherwise"
 msgstr ""
+"Bu fiyat tedarikçinin ölçü biriminin (UoM) fiyatı olarak değerlendirlecek. "
+"Eğer tedarikçinin ölçü birimi tanımlı değil ise ürünün standart fiyatı "
+"olarak değerlendirilir."
 
 #. module: product
 #: model:product.category,name:product.product_category_accessories
@@ -745,6 +772,9 @@ msgid ""
 "management. For example, in food industries, you will manage a stock of ham "
 "but invoice in Kg. Keep empty to use the default UOM."
 msgstr ""
+"İki farklı ölçü birimi kullanan firmalar tarafından kullanılır: Faturalama "
+"ve stok kontrolü olarak. Mesela, butları adet olarak stoklayıp Kg olarak "
+"faturalamak. Varsayılan UOM yi kullanmak için boş bırakın."
 
 #. module: product
 #: view:product.pricelist.item:0
@@ -797,7 +827,7 @@ msgstr "Anahtar"
 #. module: product
 #: view:product.pricelist.item:0
 msgid "Rules Test Match"
-msgstr ""
+msgstr "Kural test birleştirmesi"
 
 #. module: product
 #: help:product.pricelist.item,product_id:0
@@ -805,6 +835,8 @@ msgid ""
 "Set a product if this rule only apply to one product. Keep empty for all "
 "products"
 msgstr ""
+"Bu kural sadece bir ürüne uygulanacaksa bir ürün seçin. Aksi halde boş "
+"bırakın"
 
 #. module: product
 #: view:product.product:0
@@ -815,7 +847,7 @@ msgstr "Satınalma & Lokasyonlar"
 #. module: product
 #: model:product.template,name:product.product_product_kitchendesignproject0_product_template
 msgid "Kitchen Design Project"
-msgstr ""
+msgstr "Mutfak tasarım projesi"
 
 #. module: product
 #: model:product.uom,name:product.uom_hour
@@ -830,7 +862,7 @@ msgstr "Geliştirilmekte"
 #. module: product
 #: model:product.template,name:product.product_product_shelfofcm1_product_template
 msgid "Shelf of 200cm"
-msgstr ""
+msgstr "200 cm Raf"
 
 #. module: product
 #: view:product.uom:0
@@ -851,7 +883,7 @@ msgstr "IT Parça Kitleri"
 #: selection:product.category,type:0
 #: selection:product.template,state:0
 msgid "Normal"
-msgstr ""
+msgstr "Normal"
 
 #. module: product
 #: model:process.node,name:product.process_node_supplier0
@@ -869,7 +901,7 @@ msgstr "Para Birimi"
 #. module: product
 #: model:product.template,name:product.product_product_ram_product_template
 msgid "DDR 256MB PC400"
-msgstr ""
+msgstr "DDR 256MB PC400"
 
 #. module: product
 #: view:product.category:0
@@ -908,6 +940,8 @@ msgid ""
 "Product's cost for accounting stock valuation. It is the base price for the "
 "supplier price."
 msgstr ""
+"Ürünün stok muhasebesi için maliyet fiyatı. Tedarikçi fiyatı için temel "
+"alınan değer."
 
 #. module: product
 #: view:product.price.type:0
@@ -922,7 +956,7 @@ msgstr "Değişken Fiyat İlavesi"
 #. module: product
 #: model:product.template,name:product.product_product_fan_product_template
 msgid "Regular case fan 80mm"
-msgstr ""
+msgstr "Standart kasa fanı 80mm"
 
 #. module: product
 #: model:ir.model,name:product.model_product_supplierinfo
@@ -944,7 +978,7 @@ msgstr "Satın Alma Açıklaması"
 #. module: product
 #: constraint:product.pricelist.version:0
 msgid "You cannot have 2 pricelist versions that overlap!"
-msgstr ""
+msgstr "Aynı anda çakışan iki fiyat listesi kullanamazsınız"
 
 #. module: product
 #: help:product.supplierinfo,delay:0
@@ -953,6 +987,9 @@ msgid ""
 "reception of the products in your warehouse. Used by the scheduler for "
 "automatic computation of the purchase order planning."
 msgstr ""
+"Gün olarak  termin süresi,  (siparişin onaylanması ile ürünlerin depomuza "
+"gelişine kadar geçen süre) sistem tarafından sipariş emirlerinin "
+"planlanmasında kullanılır"
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_pricelist_action
@@ -961,6 +998,9 @@ msgid ""
 "manage new versions of a price list. Some examples of versions: 2010, 2011, "
 "Summer Promotion, etc."
 msgstr ""
+"Birden fazla fiyat listesi olabilir. Buradan yeni fiyat listesi "
+"oluşturabilir ve yönetebilirsiniz. Versiyonlara bazı örnekler: 2010, 2011, "
+"Yaz İndirimi, vb."
 
 #. module: product
 #: selection:product.template,type:0
@@ -980,12 +1020,12 @@ msgstr "Sıra No"
 #. module: product
 #: view:product.price_list:0
 msgid "Calculate Product Price per unit base on pricelist version."
-msgstr ""
+msgstr "Fiyat listesi versiyonunu temel alarak birim ücretini hesapla"
 
 #. module: product
 #: model:ir.model,name:product.model_product_ul
 msgid "Shipping Unit"
-msgstr ""
+msgstr "Nakliye Birimi"
 
 #. module: product
 #: field:pricelist.partnerinfo,suppinfo_id:0
@@ -1007,7 +1047,7 @@ msgstr "Bilgi"
 #. module: product
 #: view:product.pricelist.item:0
 msgid "Products Listprices Items"
-msgstr ""
+msgstr "Ürünler Liste fiyatları Öğeler"
 
 #. module: product
 #: view:product.packaging:0
@@ -1027,11 +1067,15 @@ msgid ""
 "be converted to each other. For example, in the unit of measure category "
 "\"Time\", you will have the following UoM: Hours, Days."
 msgstr ""
+"Sisteminizde kullanılan Ölçü Birimlerini UoM oluşturup yönetmenize yarar. "
+"Eğer farklı ölçü birimleri aynı kategoride ise birbirlerine "
+"çevirilebilirler. Mesela, 'ZAMAN' Ölçü birimi kategorisi içinde Saat, Gün "
+"gibi ölçü birimleri olabilir."
 
 #. module: product
 #: selection:product.uom,uom_type:0
 msgid "Bigger than the reference UoM"
-msgstr ""
+msgstr "Referans Ölçü biriminden büyük"
 
 #. module: product
 #: model:ir.module.module,shortdesc:product.module_meta_information
@@ -1041,27 +1085,27 @@ msgstr "Ürünler & Fiyat Listeleri"
 #. module: product
 #: view:product.product:0
 msgid "To Sell"
-msgstr ""
+msgstr "Satmak için"
 
 #. module: product
 #: model:product.category,name:product.product_category_services0
 msgid "Marketable Services"
-msgstr ""
+msgstr "Pazarlanabilir Hizmetler"
 
 #. module: product
 #: field:product.pricelist.item,price_surcharge:0
 msgid "Price Surcharge"
-msgstr ""
+msgstr "Fiyat artırımı"
 
 #. module: product
 #: model:product.template,name:product.product_product_mb1_product_template
 msgid "Mainboard ASUStek A7N8X"
-msgstr ""
+msgstr "Anakart ASUStek A7N8X"
 
 #. module: product
 #: field:product.product,packaging:0
 msgid "Logistical Units"
-msgstr ""
+msgstr "Lojistik Birimleri"
 
 #. module: product
 #: field:product.category,complete_name:0
@@ -1080,12 +1124,12 @@ msgstr "Adı"
 #. module: product
 #: view:product.product:0
 msgid "Stockable"
-msgstr ""
+msgstr "Depolanabilir"
 
 #. module: product
 #: model:product.template,name:product.product_product_woodlintelm0_product_template
 msgid "Wood Lintel 4m"
-msgstr ""
+msgstr "Ağaç Pervaz 4mm"
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_normal_action
@@ -1095,16 +1139,20 @@ msgid ""
 "contains detailed information about your products related to procurement "
 "logistics, sales price, product category, suppliers and so on."
 msgstr ""
+"Alınan ve satılan herşey için Ürün tanımı yapılmalıdır. Ürünler, hammadde, "
+"depolanabilir ürünler, tüketim malzemeleri ve hizmetler olabilir. Ürün "
+"formu, tedarik süreci, satış fiyatı, ürün kategorisi, tedarikçi firma "
+"bilgileri gibi detayları içermektedir."
 
 #. module: product
 #: model:product.uom,name:product.product_uom_kgm
 msgid "kg"
-msgstr ""
+msgstr "Kg"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_meter
 msgid "m"
-msgstr ""
+msgstr "m"
 
 #. module: product
 #: selection:product.template,state:0
@@ -1114,7 +1162,7 @@ msgstr "Artık Kullanılmıyor (Demode Olmuş)"
 #. module: product
 #: model:product.uom,name:product.product_uom_km
 msgid "km"
-msgstr ""
+msgstr "Km"
 
 #. module: product
 #: help:product.template,cost_method:0
@@ -1123,18 +1171,21 @@ msgid ""
 "at the end of the year), Average Price: the cost price is recomputed at each "
 "reception of products."
 msgstr ""
+"Standart Fiyat: Maliyet fiyatı sabittir ve periyodik olarak tekrar "
+"hesaplanır (genellikle yıl sonunda), Ortalama Fiyat: maliyet fiyatı malzeme "
+"her alındığında tekrar hesaplanır"
 
 #. module: product
 #: help:product.category,sequence:0
 msgid ""
 "Gives the sequence order when displaying a list of product categories."
-msgstr ""
+msgstr "Ürün kategorilerini gösterirken sıra numarası verir"
 
 #. module: product
 #: field:product.uom,factor:0
 #: field:product.uom,factor_inv:0
 msgid "Ratio"
-msgstr ""
+msgstr "Oran"
 
 #. module: product
 #: help:product.template,purchase_ok:0
@@ -1142,6 +1193,8 @@ msgid ""
 "Determine if the product is visible in the list of products within a "
 "selection from a purchase order line."
 msgstr ""
+"Satınalma emri kalemlerini seçerken çıkan listede ürünün listelenip "
+"listenemeyeceğini işaret eder."
 
 #. module: product
 #: field:product.template,weight_net:0
@@ -1156,22 +1209,22 @@ msgstr "Genişlik"
 #. module: product
 #: help:product.price.type,field:0
 msgid "Associated field in the product form."
-msgstr ""
+msgstr "Ürün formu ile ilgili alan"
 
 #. module: product
 #: view:product.product:0
 msgid "Unit of Measure"
-msgstr ""
+msgstr "Ölçü Birimi"
 
 #. module: product
 #: field:product.template,procure_method:0
 msgid "Procurement Method"
-msgstr ""
+msgstr "Satınalma Yöntemi"
 
 #. module: product
 #: report:product.pricelist:0
 msgid "Printing Date"
-msgstr ""
+msgstr "Basım Tarihi"
 
 #. module: product
 #: field:product.template,uos_id:0
@@ -1201,6 +1254,22 @@ msgid ""
 "    Print product labels with barcode.\n"
 "    "
 msgstr ""
+"\n"
+"    Bu modül ürünler ve fiyat listelerinin yönetimi için OpenERP'deki temel "
+"modüldür.\n"
+"\n"
+"    Ürün destek parçaları, farklı fiyatlama metodları ve tedarikçiler\n"
+"    Bilgi, depo ve sipariş, farklı ölçü birimleri\n"
+"    Paketleme ve özellikler\n"
+"\n"
+"    Fiyat listesi desteği:\n"
+"    *Farklı indirim tanımları (ürün, kategori ve miktar bazında)\n"
+"    *Farklı bir kritere göre fiyat hesapla:\n"
+"        *Diğer fiyat listeleri\n"
+"        *Maliyet fiyatı,\n"
+"        *Liste fiyatı,\n"
+"        *Tedarikçi fiyatı, ...\n"
+"    "
 
 #. module: product
 #: help:product.template,seller_delay:0
@@ -1209,11 +1278,14 @@ msgid ""
 "and the reception of goods for this product and for the default supplier. It "
 "is used by the scheduler to order requests based on reordering delays."
 msgstr ""
+"Bu satınalma emrinin onaylanması ile ürünlerin varsayılan tedarikçiden "
+"depomuza gelmesi arasında geçen süre. Bu değer sistem tarafından "
+"satınalmaların gecikmelerini hesaplamak için kullanılır."
 
 #. module: product
 #: help:product.template,seller_id:0
 msgid "Main Supplier who has highest priority in Supplier List."
-msgstr ""
+msgstr "Tedarikçi listesindeki en yüksek önceliğe sahip ana Tedarikçi"
 
 #. module: product
 #: model:product.category,name:product.product_category_services
@@ -1238,12 +1310,12 @@ msgstr "Stok Kartları"
 #. module: product
 #: help:product.packaging,rows:0
 msgid "The number of layers on a pallet or box"
-msgstr ""
+msgstr "Palet ya da kutudaki kat sayısı"
 
 #. module: product
 #: help:product.pricelist.item,base:0
 msgid "The mode for computing the price for this rule."
-msgstr ""
+msgstr "Bu kural için fiyat hesaplama modu"
 
 #. module: product
 #: view:product.packaging:0
@@ -1255,7 +1327,7 @@ msgstr "Palet Boyutu"
 #: code:addons/product/product.py:603
 #, python-format
 msgid " (copy)"
-msgstr ""
+msgstr " (kopya)"
 
 #. module: product
 #: field:product.template,seller_ids:0
@@ -1269,6 +1341,9 @@ msgid ""
 "order and the delivery of the finished products. It's the time you promise "
 "to your customers."
 msgstr ""
+"Bu değer müşterinin siparişi kesinleştirmeri ile bitmiş ürünün sevk "
+"edileceği tarih arasında geçen gün sayısı. Bu süre müşteriye söz verdiğiniz "
+"süredir."
 
 #. module: product
 #: view:product.product:0
@@ -1280,7 +1355,7 @@ msgstr "İkinci Birim"
 #: code:addons/product/product.py:142
 #, python-format
 msgid "Error !"
-msgstr ""
+msgstr "Hata !"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_uom_form_action
@@ -1298,7 +1373,7 @@ msgstr "Min. Miktar"
 #. module: product
 #: model:product.category,name:product.product_category_pc
 msgid "PC"
-msgstr ""
+msgstr "PC"
 
 #. module: product
 #: help:product.supplierinfo,product_code:0
@@ -1306,6 +1381,8 @@ msgid ""
 "This supplier's product code will be used when printing a request for "
 "quotation. Keep empty to use the internal one."
 msgstr ""
+"Bu tedarikçinin ürün kodu. Teklif isteği formuna bu kod basılacak. Kendi iç "
+"kodunuzu kullanmak için boş bırakın."
 
 #. module: product
 #: selection:product.template,procure_method:0
@@ -1324,6 +1401,8 @@ msgid ""
 "gives highest priority to lowest sequence and stops as soon as a matching "
 "item is found."
 msgstr ""
+"Fiyat listesi öğelerinin kontrol sırasını verir. Değerlendirmede en yüksek "
+"öncelik en küçük sırayı alır ve eşleşen kayıt bulunduğunda durur."
 
 #. module: product
 #: selection:product.template,type:0
@@ -1333,7 +1412,7 @@ msgstr "Sarf Malzemesi"
 #. module: product
 #: help:product.price.type,currency_id:0
 msgid "The currency the field is expressed in."
-msgstr ""
+msgstr "alanın yazıldığı para birimi"
 
 #. module: product
 #: help:product.template,weight:0
@@ -1359,7 +1438,7 @@ msgstr "Raf"
 #. module: product
 #: field:product.template,uom_po_id:0
 msgid "Purchase Unit of Measure"
-msgstr ""
+msgstr "Satınalma Ölçü Birimi"
 
 #. module: product
 #: field:product.template,supply_method:0
@@ -1373,16 +1452,19 @@ msgid ""
 "category to get the list of all products linked to this category or to a "
 "child of this category."
 msgstr ""
+"Kategorilerine göre sınıflanmış bütün ürünleriniz  listesi. Bir kategoriye "
+"tıklayarak bu kategoriye ilişkilendirilmiş bütün ürünleri ya da alt "
+"kategorileri listeleyebilirsiniz."
 
 #. module: product
 #: view:product.product:0
 msgid "Group by..."
-msgstr ""
+msgstr "Grupla ..."
 
 #. module: product
 #: model:product.template,name:product.product_product_cpu_gen_product_template
 msgid "Regular processor config"
-msgstr ""
+msgstr "Düzenli işlem ayarları"
 
 #. module: product
 #: code:addons/product/product.py:142
@@ -1391,6 +1473,8 @@ msgid ""
 "Conversion from Product UoM m to Default UoM PCE is not possible as they "
 "both belong to different Category!."
 msgstr ""
+"farklı kategorilere dahil oldukları için. ürün ölçi biriminden Varsayılan "
+"ölçü birimine çevirim yapılamıyor."
 
 #. module: product
 #: field:product.pricelist.version,date_start:0
@@ -1405,6 +1489,9 @@ msgid ""
 "the level of this product. Different lead times will be summed for all "
 "levels and purchase orders."
 msgstr ""
+"Bu ürünü üretmek için gereken ortalama süre. Bu sadece üretim emri için ve "
+"çok katlı ürün reçeteleri için sadece bu ürünün seviyesi için gereken süre. "
+"Çeşitli katmanlar için olan süreler toplanacaktır."
 
 #. module: product
 #: help:product.product,qty_available:0
@@ -1412,6 +1499,8 @@ msgid ""
 "Current quantities of products in selected locations or all internal if none "
 "have been selected."
 msgstr ""
+"Şeçili yerlerdeki ürünlerin şu anki sayısı eğer seçim yapılmamış ise bütün "
+"dahili lokasyonlardaki sayıları"
 
 #. module: product
 #: model:product.template,name:product.product_product_pc1_product_template
@@ -1424,6 +1513,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the pricelist "
 "without removing it."
 msgstr ""
+"Eğer aktif alan HAYIR olarak ayarlanmış ise. Fiyat listesini çıkarmadan "
+"gizlemenize olanak sağlayacak."
 
 #. module: product
 #: field:product.product,qty_available:0
@@ -1433,7 +1524,7 @@ msgstr "Fiili Stok"
 #. module: product
 #: model:product.uom,name:product.product_uom_cm
 msgid "cm"
-msgstr ""
+msgstr "cm"
 
 #. module: product
 #: model:ir.model,name:product.model_product_uom
@@ -1445,6 +1536,7 @@ msgstr "Stok Birimi"
 msgid ""
 "Error: The default UOM and the purchase UOM must be in the same category."
 msgstr ""
+"Hata: Varsayılan ölçü birimi ile satış ölçü birimi aynı kategoride bulunmalı."
 
 #. module: product
 #: field:product.uom,rounding:0
@@ -1454,12 +1546,12 @@ msgstr "Yuvarlama Hassasiyeti"
 #. module: product
 #: view:product.uom:0
 msgid "Unit of Measure Properties"
-msgstr ""
+msgstr "Ölçü birimi Özellikleri"
 
 #. module: product
 #: model:product.template,name:product.product_product_shelf1_product_template
 msgid "Rack 200cm"
-msgstr ""
+msgstr "Raf 200cm"
 
 #. module: product
 #: selection:product.template,supply_method:0
@@ -1474,12 +1566,12 @@ msgstr "Ölçü Birimi Kategorileri"
 #. module: product
 #: help:product.packaging,weight_ul:0
 msgid "The weight of the empty UL"
-msgstr ""
+msgstr "Boş UL nin ağırlığı"
 
 #. module: product
 #: selection:product.uom,uom_type:0
 msgid "Smaller than the reference UoM"
-msgstr ""
+msgstr "Referans ölçü biriminden daha küçük"
 
 #. module: product
 #: field:product.price.type,active:0
@@ -1498,17 +1590,17 @@ msgstr "Değişken Fiyat Marjı"
 #. module: product
 #: sql_constraint:product.uom:0
 msgid "The conversion ratio for a unit of measure cannot be 0!"
-msgstr ""
+msgstr "Ölçü birimi çevrimi için çevrim oranı 0 olamaz !"
 
 #. module: product
 #: help:product.packaging,ean:0
 msgid "The EAN code of the package unit."
-msgstr ""
+msgstr "Paketin EAN barkodu"
 
 #. module: product
 #: field:product.packaging,weight_ul:0
 msgid "Empty Package Weight"
-msgstr ""
+msgstr "Boş paket ağırlığı"
 
 #. module: product
 #: field:product.price.type,field:0
@@ -1527,21 +1619,23 @@ msgid ""
 "How many times this UoM is smaller than the reference UoM in this category:\n"
 "1 * (reference unit) = ratio * (this unit)"
 msgstr ""
+"Bu ölçü birimi referans ölçü biriminden kaç kat küçük:\n"
+"1 * (referans birim) = oran * (bu ölçü birimi)"
 
 #. module: product
 #: help:product.template,uom_id:0
 msgid "Default Unit of Measure used for all stock operation."
-msgstr ""
+msgstr "Bütün stok hareketleri için kullanılan öntanımlı ölçü birimi"
 
 #. module: product
 #: model:product.category,name:product.product_category_misc0
 msgid "Misc"
-msgstr ""
+msgstr "Muhtelif"
 
 #. module: product
 #: model:product.template,name:product.product_product_pc4_product_template
 msgid "Customizable PC"
-msgstr ""
+msgstr "Toplama PC"
 
 #. module: product
 #: field:pricelist.partnerinfo,price:0
@@ -1552,7 +1646,7 @@ msgstr "Birim Fiyat"
 #: model:product.category,name:product.product_category_7
 #: model:product.template,name:product.product_product_1_product_template
 msgid "Onsite Intervention"
-msgstr ""
+msgstr "Yerinde Müdahale"
 
 #. module: product
 #: model:product.pricelist,name:product.list0
@@ -1562,22 +1656,22 @@ msgstr "Genel Fiyat Listesi"
 #. module: product
 #: model:product.category,name:product.product_category_marketableproduct0
 msgid "Marketable Products"
-msgstr ""
+msgstr "Pazarlanabilir Ürünler"
 
 #. module: product
 #: field:product.supplierinfo,product_code:0
 msgid "Supplier Product Code"
-msgstr ""
+msgstr "Tedarikçi Ürün Kodu"
 
 #. module: product
 #: view:product.product:0
 msgid "Default UOM"
-msgstr ""
+msgstr "Varsayılan Ölçü Birimi"
 
 #. module: product
 #: selection:product.ul,type:0
 msgid "Pallet"
-msgstr ""
+msgstr "Palet"
 
 #. module: product
 #: field:product.packaging,ul_qty:0
@@ -1595,6 +1689,8 @@ msgid ""
 "Set a category of product if this rule only apply to products of a category "
 "and his children. Keep empty for all products"
 msgstr ""
+"Bu kural bir kategoriye altındaki ürün ve alt kategorilerle birlikte "
+"uygulanacaksa bir kategori seçin. Bütün ürünler için boş bırakın."
 
 #. module: product
 #: model:ir.model,name:product.model_product_product
@@ -1622,7 +1718,7 @@ msgstr "Siparişe Üretim"
 #. module: product
 #: help:product.packaging,qty:0
 msgid "The total number of products you can put by pallet or box."
-msgstr ""
+msgstr "Palete veya kutuya koyabileceğiniz toplam ürün sayısı"
 
 #. module: product
 #: field:product.product,variants:0
@@ -1649,17 +1745,17 @@ msgstr "Birim -> 2.Br. Dönüş Çarpanı"
 #. module: product
 #: help:product.supplierinfo,sequence:0
 msgid "Assigns the priority to the list of product supplier."
-msgstr ""
+msgstr "Ürün tedarikçilerine öncelik atar"
 
 #. module: product
 #: field:product.template,uom_id:0
 msgid "Default Unit Of Measure"
-msgstr ""
+msgstr "Varsayılan Ölçü Birimi"
 
 #. module: product
 #: model:product.template,name:product.product_product_tow1_product_template
 msgid "ATX Mid-size Tower"
-msgstr ""
+msgstr "ATX Orta Boy Tower kasa"
 
 #. module: product
 #: field:product.packaging,ean:0
@@ -1669,7 +1765,7 @@ msgstr "Barkod"
 #. module: product
 #: view:product.pricelist.item:0
 msgid "Rounding Method"
-msgstr ""
+msgstr "Yuvarlama yöntemi"
 
 #. module: product
 #: model:ir.actions.report.xml,name:product.report_product_label
@@ -1679,7 +1775,7 @@ msgstr "Ürün Etiketleri"
 #. module: product
 #: model:product.ul,name:product.product_ul_big_box
 msgid "Box 30x40x60"
-msgstr ""
+msgstr "Kutu 30x40x60"
 
 #. module: product
 #: selection:product.template,type:0
@@ -1716,22 +1812,24 @@ msgid ""
 "Base price for computing the customer price. Sometimes called the catalog "
 "price."
 msgstr ""
+"Müşteri fiyatını hesaplamak için temel fiyat. Bazen katalog/liste fiyatı "
+"olarak da geçer."
 
 #. module: product
 #: code:addons/product/pricelist.py:515
 #, python-format
 msgid "Partner section of the product form"
-msgstr ""
+msgstr "Ürün formunun İş ortağı bölümü"
 
 #. module: product
 #: help:product.price.type,name:0
 msgid "Name of this kind of price."
-msgstr ""
+msgstr "Bu tip fiyatın adı"
 
 #. module: product
 #: field:product.supplierinfo,product_uom:0
 msgid "Supplier UoM"
-msgstr ""
+msgstr "tedarikçi Ölçü Birimi"
 
 #. module: product
 #: help:product.pricelist.version,date_start:0
@@ -1744,11 +1842,13 @@ msgid ""
 "Default Unit of Measure used for purchase orders. It must be in the same "
 "category than the default unit of measure."
 msgstr ""
+"Satınalma emirlerinde kullanılan varsayılan ölçü birimi. Varsayılan ölçü "
+"birimi ile aynı kategoride olmak zorundadır."
 
 #. module: product
 #: model:product.template,description:product.product_product_cpu1_product_template
 msgid "This product is configured with example of push/pull flows"
-msgstr ""
+msgstr "Bu ürün push/pull akış tiplerine örnek olarak ayarlanmıştır"
 
 #. module: product
 #: field:product.packaging,length:0
@@ -1758,12 +1858,12 @@ msgstr "Boy/Uzunluk"
 #. module: product
 #: model:product.uom.categ,name:product.uom_categ_length
 msgid "Length / Distance"
-msgstr ""
+msgstr "Uzunluk / Mesafe"
 
 #. module: product
 #: model:product.template,name:product.product_product_0_product_template
 msgid "Onsite Senior Intervention"
-msgstr ""
+msgstr "Yerinde kıdemli müdahalesi"
 
 #. module: product
 #: model:ir.model,name:product.model_product_pricelist_type
@@ -1775,17 +1875,17 @@ msgstr "Fiyat Listesi Tipi"
 #. module: product
 #: model:product.category,name:product.product_category_otherproducts0
 msgid "Other Products"
-msgstr ""
+msgstr "Diğer Ürünler"
 
 #. module: product
 #: view:product.product:0
 msgid "Characteristics"
-msgstr ""
+msgstr "Nitelikler"
 
 #. module: product
 #: field:product.template,sale_ok:0
 msgid "Can be Sold"
-msgstr ""
+msgstr "Satılabilir"
 
 #. module: product
 #: field:product.template,produce_delay:0
@@ -1800,12 +1900,12 @@ msgstr "Tedarikçi Fiyat Listesi"
 #. module: product
 #: field:product.pricelist.item,base:0
 msgid "Based on"
-msgstr ""
+msgstr "Temelinde"
 
 #. module: product
 #: model:product.category,name:product.product_category_rawmaterial0
 msgid "Raw Materials"
-msgstr ""
+msgstr "Hammaddeler"
 
 #. module: product
 #: help:product.product,virtual_available:0
@@ -1814,6 +1914,9 @@ msgid ""
 "internal if none have been selected. Computed as: Real Stock - Outgoing + "
 "Incoming."
 msgstr ""
+"Seçilen yerlere göre ürünün gelecekteki stoğu. (herhangi bir seçim "
+"yapılmamış ise bütün iç lokasyonlarda) Hesaplama yöntemi: Gerçek stok -"
+"çıkacaklar +girecekler"
 
 #. module: product
 #: field:product.pricelist,name:0
@@ -1830,27 +1933,27 @@ msgstr "Fiyat Listesi Versiyonu"
 #. module: product
 #: view:product.pricelist.item:0
 msgid "* ( 1 + "
-msgstr ""
+msgstr "* ( 1 + "
 
 #. module: product
 #: help:product.packaging,weight:0
 msgid "The weight of a full package, pallet or box."
-msgstr ""
+msgstr "Bütün paketin ağırlığı(palet ya da kutu)"
 
 #. module: product
 #: model:product.template,name:product.product_product_hdd2_product_template
 msgid "HDD Seagate 7200.8 120GB"
-msgstr ""
+msgstr "Harddisk Seagate 7200.8 120GB"
 
 #. module: product
 #: model:product.template,name:product.product_product_employee0_product_template
 msgid "Employee"
-msgstr ""
+msgstr "Personel"
 
 #. module: product
 #: model:product.template,name:product.product_product_shelfofcm0_product_template
 msgid "Shelf of 100cm"
-msgstr ""
+msgstr "Raf 100cm"
 
 #. module: product
 #: model:ir.model,name:product.model_product_category
@@ -1861,12 +1964,12 @@ msgstr "Ürün Kategorisi"
 #. module: product
 #: report:product.pricelist:0
 msgid "Price List Name"
-msgstr ""
+msgstr "Fiyat Listesi Adı"
 
 #. module: product
 #: field:product.supplierinfo,delay:0
 msgid "Delivery Lead Time"
-msgstr ""
+msgstr "Teslimat Süresi"
 
 #. module: product
 #: help:product.uom,active:0
@@ -1874,6 +1977,8 @@ msgid ""
 "By unchecking the active field you can disable a unit of measure without "
 "deleting it."
 msgstr ""
+"Aktif kutudaki seçimi kaldırırsanız ölçü birimini silmeden etkisiz "
+"kılabilirsiniz."
 
 #. module: product
 #: field:product.template,seller_delay:0
@@ -1890,12 +1995,12 @@ msgstr "Kutu"
 msgid ""
 "Create and manage your packaging dimensions and types you want to be "
 "maintained in your system."
-msgstr ""
+msgstr "Sisteminizde kullanılan paket boylarını oluşturup yönetin."
 
 #. module: product
 #: model:product.template,name:product.product_product_rearpanelarm1_product_template
 msgid "Rear Panel SHE200"
-msgstr ""
+msgstr "Arka panel SHE200"
 
 #. module: product
 #: help:product.pricelist.type,key:0
@@ -1903,6 +2008,7 @@ msgid ""
 "Used in the code to select specific prices based on the context. Keep "
 "unchanged."
 msgstr ""
+"içeriğe göre özel fiyatlar kodlanmasında kullanılır. Değiştirmeyiniz."
 
 #. module: product
 #: model:product.template,name:product.product_product_hdd1_product_template
@@ -1912,7 +2018,7 @@ msgstr "HDD Seagate 7200.8 80GB"
 #. module: product
 #: help:product.supplierinfo,qty:0
 msgid "This is a quantity which is converted into Default Uom."
-msgstr ""
+msgstr "Bu varsayılan ölçü birimine çevrilmiş miktardır"
 
 #. module: product
 #: field:product.packaging,ul:0
@@ -1922,12 +2028,12 @@ msgstr "Paket Tipi"
 #. module: product
 #: selection:product.ul,type:0
 msgid "Pack"
-msgstr ""
+msgstr "Paket"
 
 #. module: product
 #: model:product.category,name:product.product_category_4
 msgid "Dello Computer"
-msgstr ""
+msgstr "Dell Bilgisayar"
 
 #. module: product
 #: model:product.uom.categ,name:product.product_uom_categ_kgm
@@ -1937,22 +2043,22 @@ msgstr "Ağırlık"
 #. module: product
 #: model:product.template,name:product.product_product_22_product_template
 msgid "Processor on demand"
-msgstr ""
+msgstr "Talep anında İşlemci"
 
 #. module: product
 #: model:product.template,name:product.product_product_25_product_template
 msgid "Mouse"
-msgstr ""
+msgstr "Fare"
 
 #. module: product
 #: field:product.uom,uom_type:0
 msgid "UoM Type"
-msgstr ""
+msgstr "Ölçü Birimi Tipi"
 
 #. module: product
 #: help:product.template,product_manager:0
 msgid "This is use as task responsible"
-msgstr ""
+msgstr "Bu görev sorumlusu olarak kullanılır"
 
 #. module: product
 #: help:product.uom,rounding:0
@@ -1960,6 +2066,8 @@ msgid ""
 "The computed quantity will be a multiple of this value. Use 1.0 for a UoM "
 "that cannot be further split, such as a piece."
 msgstr ""
+"Hesaplanan miktar bu değerin katı olacaktır. Daha fazla bölünemeyecek ölçü "
+"birimleri için 1.0 kullanın örnek: adet"
 
 #. module: product
 #: view:product.product:0
@@ -1975,12 +2083,12 @@ msgstr "Sıra"
 #. module: product
 #: model:product.template,name:product.product_product_rearpanelarm0_product_template
 msgid "Rear Panel SHE100"
-msgstr ""
+msgstr "Arka Panel SHE100"
 
 #. module: product
 #: model:product.template,name:product.product_product_23_product_template
 msgid "Complete PC With Peripherals"
-msgstr ""
+msgstr "Tam Bilgisayar +Aksesuarları"
 
 #. module: product
 #: view:product.product:0
@@ -1991,12 +2099,12 @@ msgstr "Ağırlık Bilgisi"
 #. module: product
 #: constraint:res.partner:0
 msgid "Error ! You can not create recursive associated members."
-msgstr ""
+msgstr "Hata ! Kendine referanslı ilişkili taraf ekleyemezsiniz."
 
 #. module: product
 #: model:product.template,name:product.product_product_hotelexpenses0_product_template
 msgid "Hotel Expenses"
-msgstr ""
+msgstr "Otel masrafları"
 
 #. module: product
 #: help:product.uom,factor_inv:0
@@ -2004,26 +2112,28 @@ msgid ""
 "How many times this UoM is bigger than the reference UoM in this category:\n"
 "1 * (this unit) = ratio * (reference unit)"
 msgstr ""
+"Bu ölçü birimi referans ölçü biriminden kaç kat büyüktür:\n"
+"1 * (bu ölçü birimi) = oran * (referans birim)"
 
 #. module: product
 #: model:product.template,name:product.product_product_shelf0_product_template
 msgid "Rack 100cm"
-msgstr ""
+msgstr "Raf 100cm"
 
 #. module: product
 #: help:product.packaging,sequence:0
 msgid "Gives the sequence order when displaying a list of packaging."
-msgstr ""
+msgstr "Paketlerin listesini gösteriken sıra numarasını verir"
 
 #. module: product
 #: field:product.pricelist.item,price_round:0
 msgid "Price Rounding"
-msgstr ""
+msgstr "Fiyat Yuvarlama"
 
 #. module: product
 #: field:product.pricelist.item,price_max_margin:0
 msgid "Max. Price Margin"
-msgstr ""
+msgstr "En fazla fiyat marjı"
 
 #. module: product
 #: help:product.supplierinfo,product_name:0
@@ -2031,16 +2141,18 @@ msgid ""
 "This supplier's product name will be used when printing a request for "
 "quotation. Keep empty to use the internal one."
 msgstr ""
+"Teklif isteği yazdırılırken  tedarikçinin ürün adı kullanılacaktır. Eğer boş "
+"bırakılırsa dahilde kullanılan ürün adı kullanılır."
 
 #. module: product
 #: selection:product.template,mes_type:0
 msgid "Variable"
-msgstr ""
+msgstr "Değişken"
 
 #. module: product
 #: field:product.template,rental:0
 msgid "Can be Rent"
-msgstr ""
+msgstr "Kiralanabilir"
 
 #. module: product
 #: model:product.price.type,name:product.standard_price
@@ -2051,7 +2163,7 @@ msgstr "Maliyet Fiyatı"
 #. module: product
 #: field:product.pricelist.item,price_min_margin:0
 msgid "Min. Price Margin"
-msgstr ""
+msgstr "En az fiyat marjı"
 
 #. module: product
 #: field:product.template,weight:0
@@ -2061,12 +2173,12 @@ msgstr "Bürüt ağırlık"
 #. module: product
 #: model:product.template,name:product.product_product_assemblysection0_product_template
 msgid "Assembly Section"
-msgstr ""
+msgstr "Montaj Kısmı"
 
 #. module: product
 #: model:product.category,name:product.product_category_3
 msgid "Computer Stuff"
-msgstr ""
+msgstr "Bilgisayar Eşyası"
 
 #. module: product
 #: model:product.category,name:product.product_category_8
@@ -2080,11 +2192,15 @@ msgid ""
 "Rounding is applied after the discount and before the surcharge.\n"
 "To have prices that end in 9.99, set rounding 10, surcharge -0.01"
 msgstr ""
+"Fiyatı bu değerin katı olarak ayarlar.\n"
+"Yuvarlama indirimden sonra ek ücretten önce yapılır.\n"
+"9.99 şeklinde bir fiyat elde etmek için yuvarlamayı 10, ek ücreti -0.01 "
+"olarak ayarlayın."
 
 #. module: product
 #: view:product.price_list:0
 msgid "Close"
-msgstr ""
+msgstr "Kapat"
 
 #. module: product
 #: model:ir.model,name:product.model_product_pricelist_item
@@ -2094,7 +2210,7 @@ msgstr "Fiyat Listesi Ögesi"
 #. module: product
 #: model:product.template,name:product.product_product_21_product_template
 msgid "RAM on demand"
-msgstr ""
+msgstr "İstek üzerine RAM"
 
 #. module: product
 #: view:res.partner:0
@@ -2104,7 +2220,7 @@ msgstr "Satış Özellikleri"
 #. module: product
 #: model:product.uom,name:product.product_uom_ton
 msgid "tonne"
-msgstr ""
+msgstr "ton"
 
 #. module: product
 #: view:product.product:0
@@ -2115,7 +2231,7 @@ msgstr "Gecikmeler"
 #. module: product
 #: model:process.node,note:product.process_node_product0
 msgid "Creation of the product"
-msgstr ""
+msgstr "Ürün oluşturma"
 
 #. module: product
 #: help:product.template,type:0
@@ -2124,6 +2240,8 @@ msgid ""
 "products with infinite stock, or for use when you have no inventory "
 "management in the system."
 msgstr ""
+"Satınalmaların işleme şeklini değiştirir. Sarf malzemeleri sonsuz stoğu olan "
+"ürünlerdir ya da sistemden stok takibi yapmak istemediğiniz ürünlerdir."
 
 #. module: product
 #: field:pricelist.partnerinfo,name:0
@@ -2142,6 +2260,8 @@ msgid ""
 "Could not resolve product category, you have defined cyclic categories of "
 "products!"
 msgstr ""
+"Ürün kategorisini çözümlenemedi. Birbirine referanslı ürün kategorileri "
+"tanımlanışsınız !"
 
 #. module: product
 #: view:product.template:0
@@ -2151,7 +2271,7 @@ msgstr "Ürün Açıklaması"
 #. module: product
 #: view:product.pricelist.item:0
 msgid " ) + "
-msgstr ""
+msgstr " ) + "
 
 #. module: product
 #: help:product.product,incoming_qty:0
@@ -2159,6 +2279,8 @@ msgid ""
 "Quantities of products that are planned to arrive in selected locations or "
 "all internal if none have been selected."
 msgstr ""
+"Seçilen yerlere gelmesi planlanan ürünlerin listesi. (eğer belirli bir yer "
+"şeçmediyseniz bütün depolarınızı gösterir)"
 
 #. module: product
 #: field:product.template,volume:0
@@ -2178,7 +2300,7 @@ msgstr "Ürün Değişkeni"
 #. module: product
 #: model:product.category,name:product.product_category_shelves0
 msgid "Shelves"
-msgstr ""
+msgstr "Raflar"
 
 #. module: product
 #: code:addons/product/pricelist.py:514
@@ -2216,6 +2338,8 @@ msgid ""
 "Gives the different ways to package the same product. This has no impact on "
 "the picking order and is mainly used if you use the EDI module."
 msgstr ""
+"Aynı ürünü paketlemek için farklı yollar sunar. Bunun teslimata herhangi bir "
+"etkisi yoktur genelde EDI modülü ile kullanılır."
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_pricelist_action
@@ -2240,12 +2364,12 @@ msgstr "Satış Fiyatı"
 #. module: product
 #: field:product.category,type:0
 msgid "Category Type"
-msgstr ""
+msgstr "Kategori Tipi"
 
 #. module: product
 #: model:product.category,name:product.cat2
 msgid "Private"
-msgstr ""
+msgstr "Özel"
 
 #. module: product
 #: help:product.template,uos_coeff:0
@@ -2253,6 +2377,8 @@ msgid ""
 "Coefficient to convert UOM to UOS\n"
 " uos = uom * coeff"
 msgstr ""
+"UOM yi UOS ye çevirmek için katsayı\n"
+"UOS = UOM * katsayı"
 
 #. module: product
 #: help:product.template,volume:0

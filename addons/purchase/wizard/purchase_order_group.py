@@ -77,7 +77,7 @@ class purchase_order_group(osv.osv_memory):
 
         return {
             'domain': "[('id','in', [" + ','.join(map(str, allorders.keys())) + "])]",
-            'name': 'Purchase Orders',
+            'name': _('Purchase Orders'),
             'view_type': 'form',
             'view_mode': 'tree,form',
             'res_model': 'purchase.order',

@@ -1,10 +1,6 @@
 <?xml version="1.0"?>
 <openerp>
      <data>
-          <record model="board.note.type" id="note_crm_type">
-               <field name="name">CRM Configuration</field>
-          </record>
-
           <record model="ir.ui.view" id="view_crm_opportunity_user_graph1">
                <field name="name">crm.opportunity.user.graph1</field>
                <field name="model">crm.lead.report</field>
@@ -37,7 +33,7 @@
             <field name="arch" type="xml">
                 <tree string="Opportunities"  colors="blue:state=='pending';grey:state in ('cancel', 'done');red:date_deadline and (date_deadline &lt; current_date)">
                     <field name="name" string="Opportunity"/>
-                    <field name="partner_id"/>
+                    <field name="partner_id" string="Customer"/>
                     <field name="stage_id"/>
                     <button name="stage_previous" string="Previous Stage"
                         states="open,pending" type="object" icon="gtk-go-back" />
@@ -87,6 +83,7 @@
         </record>
 
           <record model="ir.actions.act_window" id="act_my_meetings">
+               <field name="name">My Meetings</field>
                <field name="res_model">crm.meeting</field>
                <field name="view_type">form</field>
                <field name="view_mode">tree,form</field>
@@ -95,6 +92,7 @@
           </record>
 
           <record model="ir.actions.act_window" id="act_my_oppor_stage">
+               <field name="name">Planned Revenue By Stage</field>
                <field name="res_model">crm.lead.report</field>
                <field name="view_type">form</field>
                <field name="view_mode">graph,tree,form</field>
@@ -104,6 +102,7 @@
           </record>
 
           <record model="ir.actions.act_window" id="act_sales_pipeline">
+               <field name="name">My Win/Lost Ratio for The Last Year</field>
                <field name="res_model">crm.lead.report</field>
                <field name="view_type">form</field>
                <field name="view_mode">graph,tree,form</field>

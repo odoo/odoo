@@ -129,6 +129,7 @@ class board_board(osv.osv):
         if vids:
             view_id = vids[0]
             arch = self.pool.get('ir.ui.view.custom').browse(cr, user, view_id, context=context)
+            res['custom_view_id'] = view_id
             res['arch'] = arch.arch
         res['arch'] = self._arch_preprocessing(cr, user, res['arch'], context=context)
         res['toolbar'] = {'print': [], 'action': [], 'relate': []}
@@ -193,51 +194,6 @@ class board_line(osv.osv):
     }
 
 board_line()
-
-
-class board_note_type(osv.osv):
-    """
-    Board note Type
-    """
-    _name = 'board.note.type'
-    _description = "Note Type"
-
-    _columns = {
-        'name': fields.char('Note Type', size=64, required=True),
-    }
-
-board_note_type()
-
-def _type_get(self, cr, uid, context=None):
-    """
-    Get by default Note type.
-    """
-    obj = self.pool.get('board.note.type')
-    ids = obj.search(cr, uid, [])
-    res = obj.read(cr, uid, ids, ['name'], context=context)
-    res = [(r['name'], r['name']) for r in res]
-    return res
-
-
-class board_note(osv.osv):
-    """
-    Board Note
-    """
-    _name = 'board.note'
-    _description = "Note"
-    _columns = {
-        'name': fields.char('Subject', size=128, required=True),
-        'note': fields.text('Note'),
-        'user_id': fields.many2one('res.users', 'Author', size=64),
-        'date': fields.date('Date', size=64, required=True),
-        'type': fields.selection(_type_get, 'Note type', size=64),
-    }
-    _defaults = {
-        'user_id': lambda object, cr, uid, context: uid,
-        'date': lambda object, cr, uid, context: time.strftime('%Y-%m-%d'),
-    }
-
-board_note()
 
 class res_log_report(osv.osv):
     """ Log Report """

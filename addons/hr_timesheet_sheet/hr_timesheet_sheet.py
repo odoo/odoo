@@ -251,7 +251,7 @@ class hr_timesheet_sheet(osv.osv):
         if context is None:
             context = {}
         if not sheet.date_current == time.strftime('%Y-%m-%d'):
-            raise osv.except_osv(_('Error !'), _('You can not sign in from an other date than today'))
+            raise osv.except_osv(_('Error !'), _('You cannot sign in/sign out from an other date than today'))
         emp_id = sheet.employee_id.id
         context['sheet_id']=ids[0]
         emp_obj.attendance_action_change(cr, uid, [emp_id], type=typ, context=context,)
@@ -286,13 +286,13 @@ class hr_timesheet_sheet(osv.osv):
             help=' * The \'Draft\' state is used when a user is encoding a new and unconfirmed timesheet. \
                 \n* The \'Confirmed\' state is used for to confirm the timesheet by user. \
                 \n* The \'Done\' state is used when users timesheet is accepted by his/her senior.'),
-        'state_attendance' : fields.function(_state_attendance, method=True, type='selection', selection=[('absent', 'Absent'), ('present', 'Present'),('none','No employee defined')], string='Current Status'),
-        'total_attendance_day': fields.function(_total_day, method=True, string='Total Attendance', multi="_total_day"),
-        'total_timesheet_day': fields.function(_total_day, method=True, string='Total Timesheet', multi="_total_day"),
-        'total_difference_day': fields.function(_total_day, method=True, string='Difference', multi="_total_day"),
-        'total_attendance': fields.function(_total, method=True, string='Total Attendance', multi="_total_sheet"),
-        'total_timesheet': fields.function(_total, method=True, string='Total Timesheet', multi="_total_sheet"),
-        'total_difference': fields.function(_total, method=True, string='Difference', multi="_total_sheet"),
+        'state_attendance' : fields.function(_state_attendance, type='selection', selection=[('absent', 'Absent'), ('present', 'Present'),('none','No employee defined')], string='Current Status'),
+        'total_attendance_day': fields.function(_total_day, string='Total Attendance', multi="_total_day"),
+        'total_timesheet_day': fields.function(_total_day, string='Total Timesheet', multi="_total_day"),
+        'total_difference_day': fields.function(_total_day, string='Difference', multi="_total_day"),
+        'total_attendance': fields.function(_total, string='Total Attendance', multi="_total_sheet"),
+        'total_timesheet': fields.function(_total, string='Total Timesheet', multi="_total_sheet"),
+        'total_difference': fields.function(_total, string='Difference', multi="_total_sheet"),
         'period_ids': fields.one2many('hr_timesheet_sheet.sheet.day', 'sheet_id', 'Period', readonly=True),
         'account_ids': fields.one2many('hr_timesheet_sheet.sheet.account', 'sheet_id', 'Analytic accounts', readonly=True),
         'company_id': fields.many2one('res.company', 'Company'),
@@ -473,7 +473,7 @@ class hr_timesheet_line(osv.osv):
         return [('id', 'in', [x[0] for x in res])]
 
     _columns = {
-        'sheet_id': fields.function(_sheet, method=True, string='Sheet',
+        'sheet_id': fields.function(_sheet, string='Sheet',
             type='many2one', relation='hr_timesheet_sheet.sheet',
             fnct_search=_sheet_search),
     }
@@ -481,20 +481,23 @@ class hr_timesheet_line(osv.osv):
         'date': _get_default_date,
     }
 
-    def create(self, cr, uid, vals, *args, **kwargs):
-        if vals.get('sheet_id', False):
-            ts = self.pool.get('hr_timesheet_sheet.sheet').browse(cr, uid, vals['sheet_id'])
-            if not ts.state in ('draft', 'new'):
-                raise osv.except_osv(_('Error !'), _('You can not modify an entry in a confirmed timesheet !'))
-        return super(hr_timesheet_line,self).create(cr, uid, vals, *args, **kwargs)
+    def _check_sheet_state(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        for timesheet_line in self.browse(cr, uid, ids, context=context):
+            if timesheet_line.sheet_id and timesheet_line.sheet_id.state not in ('draft', 'new'):
+                return False
+        return True
+
+    _constraints = [
+        (_check_sheet_state, 'You can not modify an entry in a Confirmed/Done timesheet !.', ['state']),
+    ]
 
     def unlink(self, cr, uid, ids, *args, **kwargs):
+        if isinstance(ids, (int, long)):
+            ids = [ids]
         self._check(cr, uid, ids)
         return super(hr_timesheet_line,self).unlink(cr, uid, ids,*args, **kwargs)
-
-    def write(self, cr, uid, ids, *args, **kwargs):
-        self._check(cr, uid, ids)
-        return super(hr_timesheet_line,self).write(cr, uid, ids,*args, **kwargs)
 
     def _check(self, cr, uid, ids):
         for att in self.browse(cr, uid, ids):
@@ -595,7 +598,7 @@ class hr_attendance(osv.osv):
         return [('id', 'in', [x[0] for x in res])]
 
     _columns = {
-        'sheet_id': fields.function(_sheet, method=True, string='Sheet',
+        'sheet_id': fields.function(_sheet, string='Sheet',
             type='many2one', relation='hr_timesheet_sheet.sheet',
             fnct_search=_sheet_search),
     }
@@ -618,12 +621,16 @@ class hr_attendance(osv.osv):
         return res
 
     def unlink(self, cr, uid, ids, *args, **kwargs):
+        if isinstance(ids, (int, long)):
+            ids = [ids]
         self._check(cr, uid, ids)
         return super(hr_attendance,self).unlink(cr, uid, ids,*args, **kwargs)
 
     def write(self, cr, uid, ids, vals, context=None):
         if context is None:
             context = {}
+        if isinstance(ids, (int, long)):
+            ids = [ids]
         self._check(cr, uid, ids)
         res = super(hr_attendance,self).write(cr, uid, ids, vals, context=context)
         if 'sheet_id' in context:

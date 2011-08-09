@@ -59,7 +59,7 @@
                                     colspan="1" />
                                 <group col="3" colspan="2">
                                     <field name="email_from" string="Email" />
-                                    <button string="Send Email"
+                                    <button string="Mail"
                                     name="%(crm.action_crm_send_mail)d"
                                     context="{'mail':'new', 'model': 'crm.lead'}"
                                     icon="terp-mail-message-new" type="action" />
@@ -132,7 +132,7 @@
                             <group colspan="2" col="2">
                                 <separator string="Mailings" colspan="2"/>
                                 <field name="optin" on_change="on_change_optin(optin)"/>
-                        		<field name="optout" on_change="on_change_optout(optout)"/>
+                                <field name="optout" on_change="on_change_optout(optout)"/>
                             </group>
                         </page>
 
@@ -281,9 +281,9 @@
                 <field name="arch" type="xml">
                     <search string="Search Opportunities">
                         <filter icon="terp-check"
-                            string="Current"  help="Draft and Open Opportunities"
+                            string="Current"  help="Draft, Open and Pending Opportunities"
                             name="current"
-                            domain="[('state','in',('draft','open'))]"/>
+                            domain="[('state','in',('draft','open','pending'))]"/>
                         <filter icon="terp-camera_test"
                             string="Open"  help="Open Opportunities"
                             domain="[('state','=','open')]"/>
@@ -310,23 +310,7 @@
                                 domain="[]"
                                 help="Show Sales Team"/>
                         </field>
-                        <field name="subjects"/>
-                        <newline/>
-                        <group  expand="0" string="Extended Filters..." groups="base.group_extended">
-                              <field name="stage_id" widget="selection" domain="[('type', '=', 'opportunity')]"/>
-                              <field name="categ_id" widget="selection" domain="[('object_id.model', '=', 'crm.lead')]"/>
-                              <separator orientation="vertical"/>
-                              <field name="country_id" context="{'invisible_country': False}">
-                                  <filter icon="terp-personal+" context="{'invisible_country': False}" help="Show countries"/>
-                              </field>
-                              <separator orientation="vertical"/>
-                              <field name="email_from"/>
-                              <separator orientation="vertical"/>
-                              <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                              <newline/>
-                              <field name="create_date" string="Creation Date"/>
-                              <field name="date_closed"/>
-                        </group>
+
                         <newline/>
                         <group expand="0" string="Group By..." colspan="16">
                             <filter string="Salesman" icon="terp-personal"

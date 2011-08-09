@@ -23,6 +23,7 @@
     "version" : "1.1",
     "author" : "OpenERP SA",
     "category": 'Finance',
+    'complexity': "normal",
     "description": """
 Accounting and Financial Management.
 ====================================
@@ -52,13 +53,14 @@ module named account_voucher.
     'website': 'http://www.openerp.com',
     'images' : ['images/accounts.jpeg','images/bank_statement.jpeg','images/cash_register.jpeg','images/chart_of_accounts.jpeg','images/customer_invoice.jpeg','images/journal_entries.jpeg'],
     'init_xml': [],
-    "depends" : ["product", "analytic", "process","board"],
+    "depends" : ["base_setup", "product", "analytic", "process","board"],
     'update_xml': [
         'security/account_security.xml',
         'security/ir.model.access.csv',
         'account_menuitem.xml',
         'report/account_invoice_report_view.xml',
         'report/account_entries_report_view.xml',
+        'report/account_treasury_report_view.xml',
         'report/account_report_view.xml',
         'report/account_analytic_entries_report_view.xml',
         'wizard/account_move_bank_reconcile_view.xml',
@@ -123,10 +125,11 @@ module named account_voucher.
         "wizard/account_report_balance_sheet_view.xml"
     ],
     'demo_xml': [
-        'account_demo.xml',
+        'demo/account_demo.xml',
         'project/project_demo.xml',
         'project/analytic_account_demo.xml',
         'demo/account_minimal.xml',
+        'demo/account_invoice_demo.xml',
 #        'account_unit_test.xml',
     ],
     'test': [

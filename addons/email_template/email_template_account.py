@@ -253,7 +253,7 @@ unless it is already specified in the From Email, e.g: John Doe <john@doe.com>",
         except Exception, error:
             raise osv.except_osv(
                                  _("Out going connection test failed"),
-                                 _("Reason: %s") % error
+                                 _("Reason: %s") % tools.ustr(error)
                                  )
     
     def do_approval(self, cr, uid, ids, context=None):
@@ -272,7 +272,7 @@ unless it is already specified in the From Email, e.g: John Doe <john@doe.com>",
             try:
                 serv = self.get_outgoing_server(cursor, user, id, context)
             except Exception, error:
-                logger.notifyChannel(_("Email Template"), netsvc.LOG_ERROR, _("Mail from Account %s failed on login. Probable Reason:Could not login to server\nError: %s") % (id, error))
+                logger.notifyChannel(_("Email Template"), netsvc.LOG_ERROR, _("Mail from Account %s failed on login. Probable Reason:Could not login to server\nError: %s") % (id, tools.ustr(error)))
                 return False
             #Everything is complete, now return the connection
             return serv
@@ -359,13 +359,13 @@ unless it is already specified in the From Email, e.g: John Doe <john@doe.com>",
                             Encoders.encode_base64(part)
                             payload_part.attach(part)
                 except Exception, error:
-                    logger.notifyChannel(_("Email Template"), netsvc.LOG_ERROR, _("Mail from Account %s failed. Probable Reason:MIME Error\nDescription: %s") % (id, error))
+                    logger.notifyChannel(_("Email Template"), netsvc.LOG_ERROR, _("Mail from Account %s failed. Probable Reason:MIME Error\nDescription: %s") % (id, tools.ustr(error)))
                     return {'error_msg': _("Server Send Error\nDescription: %s")%error}
                 try:
                     serv.sendmail(payload_part['From'], addresses_l['all-recipients'], payload_part.as_string())
                 except Exception, error:
-                    logging.getLogger('email_template').error(_("Mail from Account %s failed. Probable Reason: Server Send Error\n Description: %s"), id, error, exc_info=True)
-                    return {'error_msg': _("Server Send Error\nDescription: %s")%error}
+                    logging.getLogger('email_template').error(_("Mail from Account %s failed. Probable Reason: Server Send Error\n Description: %s"), id, tools.ustr(error), exc_info=True)
+                    return {'error_msg': _("Server Send Error\nDescription: %s") % tools.ustr(error)}
                 #The mail sending is complete
                 serv.close()
                 logger.notifyChannel(_("Email Template"), netsvc.LOG_INFO, _("Mail from Account %s successfully Sent.") % (id))
@@ -427,7 +427,7 @@ unless it is already specified in the From Email, e.g: John Doe <john@doe.com>",
                       "Datetime Extraction failed.Date:%s \
                       \tError:%s") % (
                                     time_as_string,
-                                    e)
+                                    tools.ustr(e))
                       )
         return date_as_date
         

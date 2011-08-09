@@ -1,0 +1,181 @@
+# Chinese (Simplified) translation for openobject-addons
+# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"PO-Revision-Date: 2011-07-13 15:51+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2011-07-15 04:51+0000\n"
+"X-Generator: Launchpad (build 13405)\n"
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_stock_production_lot
+msgid "Production lot"
+msgstr "生产批次"
+
+#. module: product_expiry
+#: model:product.template,name:product_expiry.product_product_from_product_template
+msgid "Ham"
+msgstr "Ham"
+
+#. module: product_expiry
+#: model:product.template,name:product_expiry.product_product_lait_product_template
+msgid "Cow milk"
+msgstr "牛奶"
+
+#. module: product_expiry
+#: model:ir.module.module,shortdesc:product_expiry.module_meta_information
+msgid "Products date of expiry"
+msgstr "产品过期日期"
+
+#. module: product_expiry
+#: field:product.product,life_time:0
+msgid "Product Life Time"
+msgstr "产品生命周期"
+
+#. module: product_expiry
+#: help:stock.production.lot,use_date:0
+msgid ""
+"The date on which the lot starts deteriorating without becoming dangerous."
+msgstr "此日期这个批次的产品开始变质但不危险"
+
+#. module: product_expiry
+#: field:product.product,use_time:0
+msgid "Product Use Time"
+msgstr "产品使用时间"
+
+#. module: product_expiry
+#: sql_constraint:stock.production.lot:0
+msgid ""
+"The combination of serial number and internal reference must be unique !"
+msgstr "序列号和内部单号的组合必须是唯一."
+
+#. module: product_expiry
+#: help:stock.production.lot,removal_date:0
+msgid "The date on which the lot should be removed."
+msgstr "此日期该批次产品应移除"
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_product_product
+msgid "Product"
+msgstr "产品"
+
+#. module: product_expiry
+#: help:product.product,alert_time:0
+msgid ""
+"The number of days after which an alert should be notified about the "
+"production lot."
+msgstr "这里输入一个天数，在这些天以后应该对该批次产品发出警告信息"
+
+#. module: product_expiry
+#: field:product.product,removal_time:0
+msgid "Product Removal Time"
+msgstr "产品移除时间"
+
+#. module: product_expiry
+#: field:stock.production.lot,removal_date:0
+msgid "Removal Date"
+msgstr "移除日期"
+
+#. module: product_expiry
+#: help:stock.production.lot,life_date:0
+msgid ""
+"The date on which the lot may become dangerous and should not be consumed."
+msgstr "此日期这个批次的产品已经危险了不能消费"
+
+#. module: product_expiry
+#: model:ir.module.module,description:product_expiry.module_meta_information
+msgid ""
+"Track different dates on products and production lots:\n"
+" - end of life\n"
+" - best before date\n"
+" - removal date\n"
+" - alert date\n"
+"Used, for example, in food industries."
+msgstr ""
+"跟踪产品或批次的多个日期：\n"
+"- 报废日期\n"
+"- 在此日期前食用\n"
+"- 移除日期\n"
+"- 警告日期"
+
+#. module: product_expiry
+#: model:product.template,name:product_expiry.product_product_pain_product_template
+msgid "Bread"
+msgstr "面包"
+
+#. module: product_expiry
+#: model:product.uom,name:product_expiry.product_uom_ltr
+#: model:product.uom.categ,name:product_expiry.product_uom_categ_vol
+msgid "LTR"
+msgstr "升"
+
+#. module: product_expiry
+#: view:product.product:0
+#: view:stock.production.lot:0
+msgid "Dates"
+msgstr "日期"
+
+#. module: product_expiry
+#: field:stock.production.lot,life_date:0
+msgid "End of Life Date"
+msgstr "报废日期"
+
+#. module: product_expiry
+#: field:stock.production.lot,use_date:0
+msgid "Best before Date"
+msgstr "此日期前食用"
+
+#. module: product_expiry
+#: model:product.template,name:product_expiry.product_product_jambon_product_template
+msgid "French cheese Camenbert"
+msgstr "法式奶油蛋糕"
+
+#. module: product_expiry
+#: help:product.product,removal_time:0
+msgid "The number of days before a production lot should be removed."
+msgstr "这个批次产品被移除前的天数"
+
+#. module: product_expiry
+#: field:stock.production.lot,alert_date:0
+msgid "Alert Date"
+msgstr "警告日期"
+
+#. module: product_expiry
+#: help:product.product,use_time:0
+msgid ""
+"The number of days before a production lot starts deteriorating without "
+"becoming dangerous."
+msgstr "此批次产品开始变质但无害之前的天数"
+
+#. module: product_expiry
+#: constraint:product.product:0
+msgid "Error: Invalid ean code"
+msgstr "错误：无效的(EAN)条码"
+
+#. module: product_expiry
+#: help:product.product,life_time:0
+msgid ""
+"The number of days before a production lot may become dangerous and should "
+"not be consumed."
+msgstr "这个批次的产品已经危险不能食用之前的天数"
+
+#. module: product_expiry
+#: help:stock.production.lot,alert_date:0
+msgid ""
+"The date on which an alert should be notified about the production lot."
+msgstr "此日期这个批次的产品需要一个提醒"
+
+#. module: product_expiry
+#: field:product.product,alert_time:0
+msgid "Product Alert Time"
+msgstr "产品提醒时间"

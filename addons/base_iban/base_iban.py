@@ -70,6 +70,14 @@ def _format_iban(string):
             res += char.upper()
     return res
 
+def _pretty_iban(string):
+    "return string in groups of four characters separated by a single space"
+    res = []
+    while string:
+        res.append(string[:4])
+        string = string[4:]
+    return ' '.join(res)
+
 class res_partner_bank(osv.osv):
     _inherit = "res.partner.bank"
 
@@ -123,11 +131,13 @@ class res_partner_bank(osv.osv):
     def name_get(self, cr, uid, ids, context=None):
         res = []
         to_check_ids = []
-        for id in self.browse(cr, uid, ids, context=context):
-            if id.state=='iban':
-                res.append((id.id,id.iban))
+        for val in self.browse(cr, uid, ids, context=context):
+            if val.state=='iban':
+                iban = _pretty_iban(val.iban or '')
+                bic = val.bank.bic or ''
+                res.append((val.id, _('IBAN: %s / BIC: %s') % (iban, bic)))
             else:
-                to_check_ids.append(id.id)
+                to_check_ids.append(val.id)
         res += super(res_partner_bank, self).name_get(cr, uid, to_check_ids, context=context)
         return res
 

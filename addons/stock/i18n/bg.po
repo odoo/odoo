@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-03-18 04:39+0000\n"
-"X-Generator: Launchpad (build 12559)\n"
+"X-Launchpad-Export-Date: 2011-04-29 04:45+0000\n"
+"X-Generator: Launchpad (build 12758)\n"
 
 #. module: stock
 #: field:product.product,track_outgoing:0
@@ -101,7 +101,7 @@ msgstr ""
 #. module: stock
 #: view:stock.picking:0
 msgid "Picking list"
-msgstr ""
+msgstr "Избирателен списък"
 
 #. module: stock
 #: report:lot.stock.overview:0
@@ -513,7 +513,7 @@ msgstr "Вътрешни движения"
 #. module: stock
 #: field:stock.move,location_dest_id:0
 msgid "Destination Location"
-msgstr ""
+msgstr "Местонахождение цел"
 
 #. module: stock
 #: code:addons/stock/stock.py:751
@@ -634,7 +634,7 @@ msgstr ""
 #. module: stock
 #: constraint:stock.move:0
 msgid "You try to assign a lot which is not from the same product"
-msgstr ""
+msgstr "Опитвате да свържете партида, която не е от същия продукт"
 
 #. module: stock
 #: view:res.partner:0
@@ -796,7 +796,7 @@ msgstr ""
 #: view:stock.move:0
 #: view:stock.picking:0
 msgid "Scrap"
-msgstr ""
+msgstr "Брак"
 
 #. module: stock
 #: field:stock.location,child_ids:0
@@ -1200,7 +1200,7 @@ msgstr ""
 #: view:stock.picking:0
 #: view:stock.split.into:0
 msgid "_Cancel"
-msgstr ""
+msgstr "_Отказ"
 
 #. module: stock
 #: view:stock.move:0
@@ -1624,7 +1624,7 @@ msgstr "Табло"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move_track
 msgid "Track moves"
-msgstr ""
+msgstr "Проследяване на движенията"
 
 #. module: stock
 #: field:stock.incoterms,code:0
@@ -1867,6 +1867,27 @@ msgid ""
 "day)\n"
 "    "
 msgstr ""
+"OpenERP Управление на запасите модул може да управлява няколко складови "
+"помещения, множество и структуриран места състав.\n"
+"Благодарение на двойното управление на влизане, описът на контрол е мощен и "
+"гъвкав:\n"
+"* Премества история и планиране,\n"
+"* Различни методи на инвентаризация (FIFO, LIFO, ...)\n"
+"* оценка на запасите (стандартна или средната цена, ...)\n"
+"* Устойчивост изправени пред разлики инвентаризация\n"
+"* Автоматично пренареждане правила (равнище запаси, СЕР, ...)\n"
+"* бар код подкрепени\n"
+"* за бързо откриване на грешки чрез двустранно система\n"
+"* Възможност за проследяване (нагоре / надолу по веригата, сериен, сериен "
+"номер, ...)\n"
+"* таблото за склад, който включва:\n"
+"     * Продукти за получаване на закъснение (дата <= днес)\n"
+"     * поръчки по изключение\n"
+"     * Графика: Брой Получаване на продукта срещу планираните (бар графиката "
+"на дневна седмица ал)\n"
+"     * Графика: Брой на доставка продукти срещу планираните (бар графиката "
+"на дневна седмица ал)\n"
+"    "
 
 #. module: stock
 #: help:product.template,property_stock_inventory:0
@@ -1932,13 +1953,13 @@ msgstr "Входящ продукт"
 #. module: stock
 #: view:stock.move:0
 msgid "Creation"
-msgstr ""
+msgstr "Създаване"
 
 #. module: stock
 #: field:stock.move.memory.in,cost:0
 #: field:stock.move.memory.out,cost:0
 msgid "Cost"
-msgstr ""
+msgstr "Разход"
 
 #. module: stock
 #: field:product.category,property_stock_account_input_categ:0
@@ -1951,7 +1972,7 @@ msgstr "Сметка на входящ склад"
 #: model:ir.ui.menu,name:stock.menu_stock_warehouse_mgmt
 #: model:ir.ui.menu,name:stock.menu_warehouse_config
 msgid "Warehouse Management"
-msgstr "Управление на складове"
+msgstr "Складово стопанство"
 
 #. module: stock
 #: selection:stock.picking,move_type:0
@@ -2284,7 +2305,7 @@ msgstr "Наличност"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_picking
 msgid "Picking List"
-msgstr ""
+msgstr "Списък за товарене"
 
 #. module: stock
 #: sql_constraint:stock.production.lot:0
@@ -2340,7 +2361,7 @@ msgstr "Юли"
 #. module: stock
 #: view:report.stock.lines.date:0
 msgid "Consumable"
-msgstr ""
+msgstr "Консумативи"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_stock_line_date
@@ -2661,7 +2682,7 @@ msgstr "Име на ревизия"
 #: model:ir.ui.menu,name:stock.menu_stock_root
 #: view:stock.warehouse:0
 msgid "Warehouse"
-msgstr "Складове"
+msgstr "Склад"
 
 #. module: stock
 #: view:stock.location.product:0
@@ -3374,13 +3395,13 @@ msgstr ""
 #: view:stock.move:0
 #: field:stock.move,tracking_id:0
 msgid "Pack"
-msgstr ""
+msgstr "Пакет"
 
 #. module: stock
 #: view:stock.move:0
 #: view:stock.picking:0
 msgid "Date Expected"
-msgstr ""
+msgstr "Очакван на дата"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_picking_tree4
@@ -3399,17 +3420,17 @@ msgstr "Автоматична проверка"
 #. module: stock
 #: report:stock.picking.list:0
 msgid "Weight"
-msgstr ""
+msgstr "Тегло"
 
 #. module: stock
 #: model:ir.model,name:stock.model_product_template
 msgid "Product Template"
-msgstr ""
+msgstr "Шаблон на продукт"
 
 #. module: stock
 #: selection:report.stock.move,month:0
 msgid "December"
-msgstr ""
+msgstr "Декември"
 
 #. module: stock
 #: selection:stock.location,chained_auto_packing:0
@@ -3454,7 +3475,7 @@ msgstr "Фактуриран"
 #. module: stock
 #: field:stock.move,address_id:0
 msgid "Destination Address"
-msgstr ""
+msgstr "Адрес назначение"
 
 #. module: stock
 #: field:stock.picking,max_date:0
@@ -3474,7 +3495,7 @@ msgstr ""
 #. module: stock
 #: constraint:res.partner:0
 msgid "Error ! You can not create recursive associated members."
-msgstr ""
+msgstr "Грешка ! Не може да създадете рекурсивно свързани членове"
 
 #. module: stock
 #: view:report.stock.inventory:0
@@ -3559,7 +3580,7 @@ msgstr ""
 #. module: stock
 #: selection:report.stock.move,month:0
 msgid "November"
-msgstr ""
+msgstr "Ноември"
 
 #. module: stock
 #: code:addons/stock/product.py:101
@@ -3587,7 +3608,7 @@ msgstr "Проверка за наличност"
 #. module: stock
 #: selection:report.stock.move,month:0
 msgid "January"
-msgstr ""
+msgstr "Януари"
 
 #. module: stock
 #: help:product.product,track_incoming:0
@@ -3665,7 +3686,7 @@ msgstr "Проследяемост"
 #. module: stock
 #: view:stock.picking:0
 msgid "To invoice"
-msgstr ""
+msgstr "Към фактура"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_location_form
@@ -3682,7 +3703,7 @@ msgstr "Обща информация"
 #. module: stock
 #: field:stock.production.lot,prefix:0
 msgid "Prefix"
-msgstr ""
+msgstr "Префикс"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_splitinto.py:53
@@ -3729,7 +3750,7 @@ msgstr ""
 #. module: stock
 #: constraint:stock.move:0
 msgid "You must assign a production lot for this product"
-msgstr ""
+msgstr "Задавате много за производство на този продукт"
 
 #. module: stock
 #: view:stock.move:0
@@ -3776,13 +3797,13 @@ msgstr "Описание"
 #. module: stock
 #: selection:report.stock.move,month:0
 msgid "May"
-msgstr ""
+msgstr "Май"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_partial_move.py:133
 #, python-format
 msgid "Deliver"
-msgstr ""
+msgstr "Доставка"
 
 #. module: stock
 #: help:product.template,property_stock_account_output:0
@@ -3836,7 +3857,7 @@ msgstr "Клиент"
 #. module: stock
 #: selection:report.stock.move,month:0
 msgid "February"
-msgstr ""
+msgstr "Февруари"
 
 #. module: stock
 #: view:stock.production.lot:0
@@ -3847,18 +3868,18 @@ msgstr ""
 #: field:stock.location,scrap_location:0
 #: view:stock.move.scrap:0
 msgid "Scrap Location"
-msgstr ""
+msgstr "Месстонахождение на брак"
 
 #. module: stock
 #: selection:report.stock.move,month:0
 msgid "April"
-msgstr ""
+msgstr "Април"
 
 #. module: stock
 #: view:report.stock.inventory:0
 #: view:stock.move:0
 msgid "Future"
-msgstr ""
+msgstr "Бъдеще"
 
 #. module: stock
 #: field:stock.invoice.onshipping,invoice_date:0
@@ -3874,7 +3895,7 @@ msgstr ""
 #: code:addons/stock/wizard/stock_return_picking.py:204
 #, python-format
 msgid "Warning !"
-msgstr ""
+msgstr "Предупреждение!"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_output
@@ -4772,3 +4793,7 @@ msgstr ""
 #, python-format
 #~ msgid "Product "
 #~ msgstr "Продукт "
+
+#, python-format
+#~ msgid "quantity."
+#~ msgstr "количество."

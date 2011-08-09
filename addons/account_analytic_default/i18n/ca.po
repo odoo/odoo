@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-15 05:36+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-04-29 05:24+0000\n"
+"X-Generator: Launchpad (build 12758)\n"
 
 #. module: account_analytic_default
 #: model:ir.module.module,shortdesc:account_analytic_default.module_meta_information
@@ -29,6 +29,10 @@ msgid ""
 "default (eg. create new cutomer invoice or Sale order if we select this "
 "partner, it will automatically take this as an analytical account)"
 msgstr ""
+"Seleccioneu una empresa que utilitzarà aquest compte analític com el compte "
+"analític per defecte (per exemple, en crear noves factures de client o "
+"comandes de venda, si es selecciona aquesta empresa, automàticament "
+"s'utilitzarà aquest compte analític)."
 
 #. module: account_analytic_default
 #: model:ir.actions.act_window,name:account_analytic_default.analytic_rule_action_partner
@@ -40,27 +44,27 @@ msgstr "Regles analítiques"
 #. module: account_analytic_default
 #: help:account.analytic.default,analytic_id:0
 msgid "Analytical Account"
-msgstr ""
+msgstr "Compte analític"
 
 #. module: account_analytic_default
 #: view:account.analytic.default:0
 msgid "Current"
-msgstr ""
+msgstr "Actual"
 
 #. module: account_analytic_default
 #: view:account.analytic.default:0
 msgid "Group By..."
-msgstr ""
+msgstr "Agrupa per..."
 
 #. module: account_analytic_default
 #: help:account.analytic.default,date_stop:0
 msgid "Default end date for this Analytical Account"
-msgstr ""
+msgstr "Data final per defecte per a aquest compte analític."
 
 #. module: account_analytic_default
 #: model:ir.model,name:account_analytic_default.model_stock_picking
 msgid "Picking List"
-msgstr ""
+msgstr "Albarà"
 
 #. module: account_analytic_default
 #: view:account.analytic.default:0
@@ -74,11 +78,15 @@ msgid ""
 "default (eg. create new cutomer invoice or Sale order if we select this "
 "company, it will automatically take this as an analytical account)"
 msgstr ""
+"Seleccioneu una companyia que utilitzarà aquest compte analític com el "
+"compte analític per defecte (per exemple, en crear noves factures de client "
+"o comandes de venda, si es selecciona aquesta companyia, automàticament "
+"s'utilitzarà aquest compte analític)."
 
 #. module: account_analytic_default
 #: help:account.analytic.default,date_start:0
 msgid "Default start date for this Analytical Account"
-msgstr ""
+msgstr "Data inicial per defecte per a aquest compte analític."
 
 #. module: account_analytic_default
 #: view:account.analytic.default:0
@@ -89,7 +97,7 @@ msgstr "Producte"
 #. module: account_analytic_default
 #: model:ir.model,name:account_analytic_default.model_account_analytic_default
 msgid "Analytic Distribution"
-msgstr ""
+msgstr "Distribució analítica"
 
 #. module: account_analytic_default
 #: view:account.analytic.default:0
@@ -118,6 +126,8 @@ msgstr "Data final"
 msgid ""
 "select a user which will use analytical account specified in analytic default"
 msgstr ""
+"Seleccioneu un usuari que utilitzarà aquest compte analític com el compte "
+"analític per defecte."
 
 #. module: account_analytic_default
 #: view:account.analytic.default:0
@@ -138,6 +148,15 @@ msgid ""
 "* Date\n"
 "    "
 msgstr ""
+"\n"
+"Permet seleccionar automàticament comptes analítics segons aquests "
+"criteris:\n"
+"* Producte\n"
+"* Empresa\n"
+"* Usuari\n"
+"* Companyia\n"
+"* Data\n"
+"    "
 
 #. module: account_analytic_default
 #: help:account.analytic.default,product_id:0
@@ -146,6 +165,10 @@ msgid ""
 "default (eg. create new cutomer invoice or Sale order if we select this "
 "product, it will automatically take this as an analytical account)"
 msgstr ""
+"Seleccioneu un producte que utilitzarà aquest compte analític com el compte "
+"analític per defecte (per exemple, en crear noves factures de client o "
+"comandes de venda, si es selecciona aquest producte, automàticament "
+"s'utilitzarà aquest compte analític)."
 
 #. module: account_analytic_default
 #: field:account.analytic.default,sequence:0
@@ -155,7 +178,7 @@ msgstr "Seqüència"
 #. module: account_analytic_default
 #: model:ir.model,name:account_analytic_default.model_account_invoice_line
 msgid "Invoice Line"
-msgstr ""
+msgstr "Línia de factura"
 
 #. module: account_analytic_default
 #: view:account.analytic.default:0
@@ -166,7 +189,7 @@ msgstr "Compte analític"
 #. module: account_analytic_default
 #: view:account.analytic.default:0
 msgid "Accounts"
-msgstr ""
+msgstr "Comptes"
 
 #. module: account_analytic_default
 #: view:account.analytic.default:0
@@ -184,11 +207,13 @@ msgstr "Data inicial"
 msgid ""
 "Gives the sequence order when displaying a list of analytic distribution"
 msgstr ""
+"Indica l'ordre de la seqüència quan es mostra una llista de distribució "
+"analítica."
 
 #. module: account_analytic_default
 #: model:ir.model,name:account_analytic_default.model_sale_order_line
 msgid "Sales Order Line"
-msgstr ""
+msgstr "Línia comanda de venda"
 
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "﻿XML invàlid per a la definició de la vista!"

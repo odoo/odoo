@@ -8,13 +8,14 @@ msgstr ""
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:15+0000\n"
 "PO-Revision-Date: 2010-08-03 09:31+0000\n"
-"Last-Translator: Raimon Esteve (Zikzakmedia) <resteve@zikzakmedia.com>\n"
+"Last-Translator: Raimon Esteve (www.zikzakmedia.com) "
+"<resteve@zikzakmedia.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-15 05:34+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-04-29 05:23+0000\n"
+"X-Generator: Launchpad (build 12758)\n"
 
 #. module: project_mrp
 #: model:process.node,note:project_mrp.process_node_procuretasktask0
@@ -24,12 +25,12 @@ msgstr "Per cada producte, sobre tipus servei i sobre ordre"
 #. module: project_mrp
 #: model:process.transition,name:project_mrp.process_transition_procuretask0
 msgid "Procurement Task"
-msgstr ""
+msgstr "Tasca proveïment"
 
 #. module: project_mrp
 #: model:ir.module.module,shortdesc:project_mrp.module_meta_information
 msgid "Procurement and Project Management integration"
-msgstr ""
+msgstr "Integració de proveïments i gestió de projectes"
 
 #. module: project_mrp
 #: model:process.transition,note:project_mrp.process_transition_createtask0
@@ -44,22 +45,22 @@ msgstr "si tipus de producte és 'servei' aleshores es crea la tasca."
 #. module: project_mrp
 #: constraint:project.task:0
 msgid "Error ! You cannot create recursive tasks."
-msgstr ""
+msgstr "Error! No es poden crear tasques recursivas."
 
 #. module: project_mrp
 #: model:ir.model,name:project_mrp.model_product_product
 msgid "Product"
-msgstr ""
+msgstr "Producte"
 
 #. module: project_mrp
 #: constraint:product.product:0
 msgid "Error: Invalid ean code"
-msgstr ""
+msgstr "Error: Codi EAN no vàlid"
 
 #. module: project_mrp
 #: field:product.product,project_id:0
 msgid "Project"
-msgstr ""
+msgstr "Projecte"
 
 #. module: project_mrp
 #: model:ir.model,name:project_mrp.model_procurement_order
@@ -120,11 +121,32 @@ msgid ""
 "automatically created via sale orders.\n"
 "\n"
 msgstr ""
+"\n"
+"Aquest mòdul crea un enllaç entre ordres de proveïment\n"
+"contenint línies de \"servei\" i tasques de gestió de projectes.\n"
+"\n"
+"Quan s'instal·la, aquest mòdul crearà una nova tasca per cada línia\n"
+"d'ordre de proveïment, quan el producte corresponent\n"
+"compleixi les següents característiques:\n"
+"  * Tipus = Servei\n"
+"  * Mètode proveïment (cobrir la comanda) = OSC (obtenir sota comanda)\n"
+"  * Mètode subministrament/proveïment = Produir\n"
+"\n"
+"La nova tasca es crea fora dels projectes existents, però\n"
+"pot ser afegida a un projecte manualment.\n"
+"\n"
+"Quan la tasca de projecte es completa o cancel·la, conseqüentment\n"
+"s'actualitza el flux de treball de la corresponent línia de proveïment.\n"
+"\n"
+"Aquest mòdul és útil per poder facturar serveis basats en tasques creades\n"
+"automàticament a través de comandes de venda.\n"
+"\n"
 
 #. module: project_mrp
 #: model:process.transition,note:project_mrp.process_transition_ordertask0
 msgid "If procurement method is Make to order and supply method is produce"
 msgstr ""
+"Si mètode proveïment és obtenir sota comanda i mètode subministro és produir"
 
 #. module: project_mrp
 #: model:process.node,note:project_mrp.process_node_saleordertask0

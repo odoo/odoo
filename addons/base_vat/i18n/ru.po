@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-15 05:16+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-04-29 05:02+0000\n"
+"X-Generator: Launchpad (build 12758)\n"
 
 #. module: base_vat
 #: code:addons/base_vat/base_vat.py:87
@@ -22,7 +22,7 @@ msgstr ""
 msgid ""
 "The Vat does not seems to be correct. You should have entered something like "
 "this %s"
-msgstr "НДС не кажется верным. Вы должны ввести что-то вроде этого: %s"
+msgstr "Похоже, НДС указан неверно. Вы должны ввести что-то вроде %s"
 
 #. module: base_vat
 #: model:ir.module.module,description:base_vat.module_meta_information
@@ -37,11 +37,20 @@ msgid ""
 "countries.\n"
 "    "
 msgstr ""
+"\n"
+"    Включить номер НДС для контрагента. Проверить правильность этого номера "
+"НДС.\n"
+"\n"
+"    Этот модуль использует метод, описанный на http://sima-pc.com/nif.php "
+"для\n"
+"    проверки корректности номера НДС, назначенного контрагентам в "
+"европейских странах.\n"
+"    "
 
 #. module: base_vat
 #: model:ir.module.module,shortdesc:base_vat.module_meta_information
 msgid "Base VAT - To check VAT number validity"
-msgstr "База НДС - для проверки правильности НДС"
+msgstr "Базовый НДС. Проверка правильности номера НДС."
 
 #. module: base_vat
 #: constraint:res.partner:0
@@ -52,7 +61,7 @@ msgstr "Ошибка! Вы не можете создать рекурсивно
 #: code:addons/base_vat/base_vat.py:88
 #, python-format
 msgid "The VAT is invalid, It should begin with the country code"
-msgstr "НДС неправильный, он должен начинаться с кода страны"
+msgstr "НДС неверен, он должен начинаться с кода страны"
 
 #. module: base_vat
 #: help:res.partner,vat_subjected:0
@@ -60,17 +69,17 @@ msgid ""
 "Check this box if the partner is subjected to the VAT. It will be used for "
 "the VAT legal statement."
 msgstr ""
-"Отметьте, если партнер -плательщик НДС. Используется для заявления НДС."
+"Отметьте, если контрагент — плательщик НДС. Используется для заявления НДС."
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_partner
 msgid "Partner"
-msgstr "Партнёр"
+msgstr "Контрагент"
 
 #. module: base_vat
 #: field:res.partner,vat_subjected:0
 msgid "VAT Legal Statement"
-msgstr "Действующий код налога"
+msgstr "Заявление НДС"
 
 #~ msgid "VAT"
 #~ msgstr "Код налога"

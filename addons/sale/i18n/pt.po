@@ -13,14 +13,14 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-15 05:28+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-04-29 05:16+0000\n"
+"X-Generator: Launchpad (build 12758)\n"
 
 #. module: sale
 #: view:board.board:0
 #: model:ir.actions.act_window,name:sale.action_sales_by_salesman
 msgid "Sales by Salesman in last 90 days"
-msgstr ""
+msgstr "Vendas por vendedor nos últimos 90 dias"
 
 #. module: sale
 #: help:sale.installer,delivery:0
@@ -39,7 +39,7 @@ msgstr ""
 #. module: sale
 #: help:sale.order,partner_shipping_id:0
 msgid "Shipping address for current sales order."
-msgstr ""
+msgstr "Morada de entrega para esta ordem de venda."
 
 #. module: sale
 #: field:sale.advance.payment.inv,qtty:0
@@ -68,7 +68,7 @@ msgstr "Configurar logística das ordens de venda"
 #: code:addons/sale/sale.py:603
 #, python-format
 msgid "The quotation '%s' has been converted to a sales order."
-msgstr ""
+msgstr "A cotação '%s' foi convertida numa ordem de venda."
 
 #. module: sale
 #: selection:sale.order,order_policy:0
@@ -111,6 +111,10 @@ msgid ""
 "sales orders partially, by lines of sales order. You do not need this list "
 "if you invoice from the delivery orders or if you invoice sales totally."
 msgstr ""
+"Aqui está uma lista de todas as linhas de encomendas a serem facturadas. "
+"Pode facturar encomendas parcialmente, por linha da encomenda. Não necessita "
+"desta lista se factura mediante guias de transporte ou se factura sempre "
+"pela totalidade da encomenda."
 
 #. module: sale
 #: model:process.node,name:sale.process_node_saleprocurement0
@@ -225,7 +229,7 @@ msgid ""
 "The invoice is created automatically if the shipping policy is 'Invoice from "
 "pick' or 'Invoice on order after delivery'."
 msgstr ""
-"A fatura é criada automaticamente se a política de transport é 'fatura "
+"A fatura é criada automaticamente se a política de transporte é 'fatura "
 "baseada na recolha' ou 'fatura baseada na ordem após entrega'."
 
 #. module: sale
@@ -266,7 +270,7 @@ msgstr "Embalagem"
 #. module: sale
 #: model:process.transition,name:sale.process_transition_saleinvoice0
 msgid "From a sales order"
-msgstr ""
+msgstr "A partir de ordem de venda"
 
 #. module: sale
 #: field:sale.shop,name:0
@@ -322,7 +326,7 @@ msgstr ""
 #. module: sale
 #: view:sale.installer:0
 msgid "Configure"
-msgstr ""
+msgstr "Configurar"
 
 #. module: sale
 #: constraint:stock.move:0
@@ -344,7 +348,7 @@ msgstr "Junho"
 #: code:addons/sale/sale.py:584
 #, python-format
 msgid "Could not cancel this sales order !"
-msgstr ""
+msgstr "Não foi possível cancelar esta ordem de venda!"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_report
@@ -354,7 +358,7 @@ msgstr "Estatísticas de ordens de venda"
 #. module: sale
 #: help:sale.order,project_id:0
 msgid "The analytic account related to a sales order."
-msgstr ""
+msgstr "A conta analítica relacionada com uma ordem de venda."
 
 #. module: sale
 #: selection:sale.report,month:0
@@ -372,7 +376,7 @@ msgstr "Cotações"
 #. module: sale
 #: help:sale.order,pricelist_id:0
 msgid "Pricelist for current sales order."
-msgstr ""
+msgstr "Lista de Preços para esta ordem de venda."
 
 #. module: sale
 #: selection:sale.config.picking_policy,step:0
@@ -432,6 +436,8 @@ msgstr ""
 #, python-format
 msgid "You must first cancel stock moves attached to this sales order line."
 msgstr ""
+"Deve primeiro cancelar as movimentações de stock anexadas a esta linha de "
+"ordem de venda."
 
 #. module: sale
 #: code:addons/sale/sale.py:1042
@@ -470,7 +476,7 @@ msgstr "Notas"
 #. module: sale
 #: help:sale.order,partner_invoice_id:0
 msgid "Invoice address for current sales order."
-msgstr ""
+msgstr "Morada de facturação para esta ordem de venda."
 
 #. module: sale
 #: view:sale.installer:0
@@ -511,7 +517,7 @@ msgstr "Março"
 #. module: sale
 #: help:sale.order,amount_total:0
 msgid "The total amount."
-msgstr ""
+msgstr "Montante total."
 
 #. module: sale
 #: field:sale.order.line,price_subtotal:0
@@ -567,7 +573,7 @@ msgstr ""
 #: model:ir.model,name:sale.model_sale_order_line
 #: field:stock.move,sale_line_id:0
 msgid "Sales Order Line"
-msgstr ""
+msgstr "Linha da ordem de venda"
 
 #. module: sale
 #: view:sale.config.picking_policy:0
@@ -714,7 +720,7 @@ msgstr "Vendas, por mês"
 #: code:addons/sale/sale.py:970
 #, python-format
 msgid "Could not cancel sales order line!"
-msgstr ""
+msgstr "Não foi possível cancelar a linha da ordem de venda."
 
 #. module: sale
 #: field:res.company,security_lead:0
@@ -808,6 +814,9 @@ msgid ""
 "The same sales order may have been invoiced in several times (by line for "
 "example)."
 msgstr ""
+"Esta é a lista de facturas que foram geradas por esta ordem de venda. A "
+"mesma ordem de venda pode ter sido facturada várias vezes (por linha, por "
+"exemplo)."
 
 #. module: sale
 #: report:sale.order:0
@@ -825,7 +834,7 @@ msgstr ""
 #: code:addons/sale/sale.py:966
 #, python-format
 msgid "You cannot cancel a sales order line that has already been invoiced !"
-msgstr ""
+msgstr "Não pode cancelar uma linha de ordem de venda já facturada!"
 
 #. module: sale
 #: view:sale.order:0
@@ -876,7 +885,7 @@ msgstr "Fusão de ordens de vendas"
 #. module: sale
 #: view:sale.order:0
 msgid "Total Tax Excluded"
-msgstr ""
+msgstr "Total sem impostos"
 
 #. module: sale
 #: view:sale.order:0
@@ -947,7 +956,7 @@ msgstr "Endereço de Envio :"
 #: view:board.board:0
 #: model:ir.actions.act_window,name:sale.action_sales_by_partner
 msgid "Sales per Customer in last 90 days"
-msgstr ""
+msgstr "Vendas por cliente nos últimos 90 dias"
 
 #. module: sale
 #: model:process.node,note:sale.process_node_quotation0
@@ -957,7 +966,7 @@ msgstr ""
 #. module: sale
 #: model:process.transition,name:sale.process_transition_deliver0
 msgid "Create Delivery Order"
-msgstr ""
+msgstr "Criar ordem de entrega"
 
 #. module: sale
 #: field:sale.installer,delivery:0
@@ -967,7 +976,7 @@ msgstr "Custos de expedição"
 #. module: sale
 #: view:sale.order:0
 msgid "Total Tax Included"
-msgstr ""
+msgstr "Total com impostos"
 
 #. module: sale
 #: model:process.transition,name:sale.process_transition_packing0
@@ -1010,7 +1019,7 @@ msgstr "Recriar Factura"
 #: model:ir.actions.act_window,name:sale.outgoing_picking_list_to_invoice
 #: model:ir.ui.menu,name:sale.menu_action_picking_list_to_invoice
 msgid "Deliveries to Invoice"
-msgstr ""
+msgstr "Entregas a facturar"
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -1021,7 +1030,7 @@ msgstr "A Espera da Agenda"
 #. module: sale
 #: field:sale.order.line,type:0
 msgid "Procurement Method"
-msgstr ""
+msgstr "Método de aprovisionamento"
 
 #. module: sale
 #: view:sale.config.picking_policy:0
@@ -1057,7 +1066,7 @@ msgstr "Confirmar Ordem"
 #. module: sale
 #: model:process.transition,name:sale.process_transition_saleprocurement0
 msgid "Create Procurement Order"
-msgstr ""
+msgstr "Criar ordem de aprovisionamento"
 
 #. module: sale
 #: view:sale.order:0
@@ -1074,7 +1083,7 @@ msgstr "Política de expedição"
 #. module: sale
 #: help:sale.order,create_date:0
 msgid "Date on which sales order is created."
-msgstr ""
+msgstr "Data em que a ordem de venda é criada."
 
 #. module: sale
 #: model:ir.model,name:sale.model_stock_move
@@ -1129,7 +1138,7 @@ msgstr "Erro !"
 #: code:addons/sale/sale.py:570
 #, python-format
 msgid "Could not cancel sales order !"
-msgstr ""
+msgstr "Não foi possível cancelar a ordem de venda!"
 
 #. module: sale
 #: selection:sale.report,month:0
@@ -1155,7 +1164,7 @@ msgstr "Agrupar as facturas"
 #. module: sale
 #: selection:sale.order,order_policy:0
 msgid "Shipping & Manual Invoice"
-msgstr "Expedição & Factura Manual"
+msgstr "Expedição e Factura Manual"
 
 #. module: sale
 #: code:addons/sale/sale.py:1051
@@ -1245,7 +1254,7 @@ msgstr ""
 #: help:sale.config.picking_policy,order_policy:0
 msgid ""
 "You can generate invoices based on sales orders or based on shippings."
-msgstr ""
+msgstr "Pode gerar facturas baseadas em ordens de venda ou em envios."
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.act_res_partner_2_sale_order

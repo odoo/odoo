@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2011-01-03 16:58+0000\n"
-"PO-Revision-Date: 2010-12-23 16:16+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"PO-Revision-Date: 2011-07-23 03:01+0000\n"
+"Last-Translator: Raphael Collet (OpenERP) <Unknown>\n"
 "Language-Team: Serbian latin <sr@latin@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-06 04:48+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-07-24 04:34+0000\n"
+"X-Generator: Launchpad (build 13405)\n"
 
 #. module: point_of_sale
 #: field:pos.discount,discount_notes:0
@@ -802,7 +802,7 @@ msgstr ""
 
 #. module: point_of_sale
 #: field:product.product,expense_pdt:0
-msgid "Product for expenses"
+msgid "Product for Output"
 msgstr "Proizvodi za Troskove"
 
 #. module: point_of_sale
@@ -2356,11 +2356,330 @@ msgstr "danasnji korisnik prodaje"
 msgid "Year"
 msgstr "Godina"
 
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Pogrešno ime modela u definiciji akcije."
+
 #~ msgid "Net Total"
 #~ msgstr "Neto Ukupno"
+
+#~ msgid "Close Registers"
+#~ msgstr "Zatvori Registre"
+
+#~ msgid "Open Register"
+#~ msgstr "Otvori Registre"
+
+#~ msgid ""
+#~ "Person who uses the the register. It could be a reliever, a student or an "
+#~ "interim employee."
+#~ msgstr ""
+#~ "Osoba koja koristi registre. To mogu biti volonteri, studenti ili privremeni "
+#~ "radnici."
+
+#~ msgid "Sortie de caisse"
+#~ msgstr "Gotovina Van"
+
+#~ msgid "Register management"
+#~ msgstr "Menadzment Registara"
+
+#~ msgid "You try to assign a lot which is not from the same product"
+#~ msgstr "Pokusavate da pridodate lot koji nije iz istog proizvoda"
+
+#, python-format
+#~ msgid ""
+#~ "You have to select a pricelist in the sale form !\n"
+#~ "' \\n                'Please set one before choosing a product."
+#~ msgstr ""
+#~ "Trebas selektovati cenovnik u formi prodaje !\n"
+#~ "' \\n 'Molim selektujte jedan pre izbora proizvoda."
 
 #~ msgid "Partner Ref."
 #~ msgstr "Ref. Partner"
 
+#~ msgid "Register"
+#~ msgstr "Registar"
+
+#, python-format
+#~ msgid ""
+#~ "Couldn't find a pricelist line matching this product\" \\n                   "
+#~ " \" and quantity.\n"
+#~ "You have to change either the product,\" \\n                    \" the "
+#~ "quantity or the pricelist."
+#~ msgstr ""
+#~ "Ne mogu naci u cenovniku proizvod \" \\n \" i kolicinu.\n"
+#~ "treba da promenis ili proizvod, \" \\n \" kolicine, ili cenovnik,"
+
+#~ msgid "Error: Invalid Bvr Number (wrong checksum)."
+#~ msgstr "Greska: Neispravan Bvr Borj ( pogresan cheksum)"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Nevažeći XML za pregled arhitekture"
+
+#~ msgid "Product for expenses"
+#~ msgstr "Proizvodi za Troskove"
+
+#~ msgid "Bancontact Journal"
+#~ msgstr "Dnevnik kontakata Banke"
+
 #~ msgid "Document"
 #~ msgstr "Dokument"
+
+#~ msgid "Error: BVR reference is required."
+#~ msgstr "GRESKA: BVR referenca je neophodna"
+
+#, python-format
+#~ msgid ""
+#~ "You can not open a Cashbox for \"%s\".\n"
+#~ "Please close its related Register.' %(journal.name)))\n"
+#~ "            \n"
+#~ "            number = ''\n"
+#~ "            if journal.sequence_id:\n"
+#~ "                number = sequence_obj.get_id(cr, uid, "
+#~ "journal.sequence_id.id)\n"
+#~ "            else:\n"
+#~ "                number = sequence_obj.get(cr, uid, 'account.cash.statement"
+#~ msgstr ""
+#~ "Ne mozete otvoriti kasu za \"%s\".\n"
+#~ "Molim zatvorite dati Registar.' %(journal.name)))\n"
+#~ "             \n"
+#~ "             broj = \"\n"
+#~ "             ako je journal.sequence_id:\n"
+#~ "                 broj = sequence_obj.get_id(cr, uid, "
+#~ "journal.sequence_id.id)\n"
+#~ "             inace\n"
+#~ "                 broj = sequence_obj.get(cr, uid, 'account.cash.statement"
+
+#, python-format
+#~ msgid ""
+#~ "Couldn't find a pricelist line matching this product\" \\n                \" "
+#~ "and quantity.\n"
+#~ "You have to change either the product,\" \\n                \" the quantity "
+#~ "or the pricelist."
+#~ msgstr ""
+#~ "Ne mogu naci u cenovniku proizvod \" \\n\"  date kolicine.\n"
+#~ "Moras promeniti ili proizvod, \" \\n \" kolicinu ili cenovnik."
+
+#~ msgid "Open Registers"
+#~ msgstr "Otvori Registre"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Greska ! Ne mozes kreirati rekursivni meni."
+
+#~ msgid "The register must be opened to be able to execute a payment."
+#~ msgstr "REgistar mora biti otvoren da bi bio u mogucnosti da primi uplatu."
+
+#, python-format
+#~ msgid ""
+#~ "You have to select a pricelist in the sale form !\n"
+#~ "' \\n                    'Please set one before choosing a product."
+#~ msgstr ""
+#~ "Trebas selektovati cenovnik iz forme prodaje !\n"
+#~ " ' \\n ' Molim izaberi neki pre nego izaberis proizvod."
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Ime objekta mora da počne sa x_ i ne sme da sadrži specijalne karaktere !"
+
+#~ msgid "Close Register"
+#~ msgstr "Zatvori Registar"
+
+#, python-format
+#~ msgid ""
+#~ "There is no receivable account defined for this journal:'\\n                 "
+#~ "   ' \"%s\" (id:%d)"
+#~ msgstr ""
+#~ "Ne postoji prijemni nalog definisan za ovaj dnevnik: '\\n ' \"%s\" (id:%d)"
+
+#~ msgid "Registers"
+#~ msgstr "Registri"
+
+#~ msgid "Visa Journal"
+#~ msgstr "Visa Dnevnik"
+
+#, python-format
+#~ msgid "Registers are already closed."
+#~ msgstr "Registri su vec zatvoreni"
+
+#, python-format
+#~ msgid ""
+#~ "There is no income '\\n                        'account defined for this "
+#~ "product: \"%s\" (id:%d)"
+#~ msgstr ""
+#~ "Ne postoji ulazni '\\n ' nalog definisan za ovaj proizvod: \"%s\" (id:%d)"
+
+#~ msgid "You must assign a production lot for this product"
+#~ msgstr "Moras da pridodas produkcionu seriju za ovaj prozivod"
+
+#~ msgid "Cash Journal"
+#~ msgstr "Dnevnik Gotovine"
+
+#~ msgid "Piece number"
+#~ msgstr "Br.Komada"
+
+#~ msgid "Scan Product"
+#~ msgstr "Skeniraj Proizvod"
+
+#~ msgid "Discount :"
+#~ msgstr "Popust :"
+
+#~ msgid ","
+#~ msgstr ","
+
+#~ msgid "This is the logged in user (not necessarily the salesman)."
+#~ msgstr "Ovo je prijavljeni korisnik( ne nuzno prodavac)"
+
+#~ msgid "Tel : + 32 (0) 2 231 04 35"
+#~ msgstr "Tel : + 32 (0) 2 231 04 35"
+
+#~ msgid "Ok"
+#~ msgstr "U redu"
+
+#~ msgid "Detail of Sales"
+#~ msgstr "Detalji Prodaje"
+
+#~ msgid "Logged in User"
+#~ msgstr "Logovani korisnik"
+
+#~ msgid "VAT(%)"
+#~ msgstr "PDV(%)"
+
+#~ msgid "Date :"
+#~ msgstr "Datum :"
+
+#~ msgid "Ma_ke Payment"
+#~ msgstr "Izvrsi Uplatu"
+
+#~ msgid "Add products"
+#~ msgstr "Dodaj proizvod"
+
+#~ msgid "E-mail :"
+#~ msgstr "E-mail :"
+
+#~ msgid "Discount"
+#~ msgstr "Popust"
+
+#~ msgid "Payment Name"
+#~ msgstr "Naziv Isplate"
+
+#~ msgid "Sales of the day"
+#~ msgstr "Dnevni promet"
+
+#~ msgid "Create _Invoice"
+#~ msgstr "Kreiraj_Fakturu"
+
+#~ msgid "Period:"
+#~ msgstr "Period:"
+
+#~ msgid "All the sales"
+#~ msgstr "Sve Prodaje"
+
+#~ msgid "Compute"
+#~ msgstr "Izracunaj"
+
+#~ msgid "_Add product"
+#~ msgstr "_Dodaj proizvod"
+
+#~ msgid ":"
+#~ msgstr ":"
+
+#~ msgid "Ma_ke payment"
+#~ msgstr "Izvrsi Isplatu"
+
+#~ msgid "Mode of payment"
+#~ msgstr "Nacin placanja"
+
+#~ msgid "Discount percentage"
+#~ msgstr "Procenat popusta"
+
+#~ msgid "Pos Payment"
+#~ msgstr "POS Isplate"
+
+#~ msgid "Refund "
+#~ msgstr "Refunidraj "
+
+#~ msgid "Invoicing"
+#~ msgstr "Fakturisanje"
+
+#~ msgid "D_iscount"
+#~ msgstr "P_opust"
+
+#~ msgid "Sales of the month"
+#~ msgstr "Mesecna prodaja"
+
+#~ msgid "Piece Number"
+#~ msgstr "Br. Komada"
+
+#~ msgid "Payment Term"
+#~ msgstr "Uslovi plaćanja"
+
+#~ msgid "Actions"
+#~ msgstr "Radnje"
+
+#~ msgid "Company:"
+#~ msgstr "Firma:"
+
+#~ msgid "Print Date:"
+#~ msgstr "Datum Stampe"
+
+#~ msgid "OPERATION N° :"
+#~ msgstr "Br.OPERACIJE :"
+
+#~ msgid "Orders of the day"
+#~ msgstr "Današnje narudžbe"
+
+#~ msgid "Refund Orders"
+#~ msgstr "Storno"
+
+#~ msgid "Select default journals"
+#~ msgstr "Izaberi POdrazumevani Dnevnik(knjigu)"
+
+#~ msgid "Disc"
+#~ msgstr "Popust"
+
+#~ msgid "Order Payments"
+#~ msgstr "Nalozi Plaćanja"
+
+#~ msgid "Point of Sale journal configuration."
+#~ msgstr "Dnevnik konfiguracije Prodajnog Mesta ( POS)"
+
+#~ msgid "Default Receivable"
+#~ msgstr "Osnovna Potrazivanja"
+
+#~ msgid "Get From Order"
+#~ msgstr "Uzmi iz Naloga"
+
+#~ msgid "POS Lines of the day"
+#~ msgstr "Dnevna prodaja blagajne"
+
+#~ msgid "Default journals"
+#~ msgstr "Osnovni Dnevnik"
+
+#~ msgid "Default journal"
+#~ msgstr "Glavna Knjiga"
+
+#~ msgid "POS Lines"
+#~ msgstr "Blagajne"
+
+#~ msgid "Define default journals"
+#~ msgstr "Definisi Glavnu Knjigu"
+
+#~ msgid "Default rebate journal"
+#~ msgstr "Osnovni Dnevnik Rabat-a"
+
+#~ msgid "Wizard default journals"
+#~ msgstr "Carobnjak Glavne Knjige"
+
+#~ msgid "Refund order :"
+#~ msgstr "Nalog Refundacije"
+
+#~ msgid "Canceled Invoice"
+#~ msgstr "Poništen račun"
+
+#~ msgid "All orders"
+#~ msgstr "Svi Nalozi"
+
+#~ msgid "Default gift journal"
+#~ msgstr "Glavna Knjiga Poklona"
+
+#~ msgid "This is the salesman actually making the order."
+#~ msgstr "Ovaj prodavac upravo pravi nalog"

@@ -8,7 +8,7 @@
             <field name="res_model">account.analytic.line</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="domain">[('invoice_id','=',False),('to_invoice','!=',False)]</field>
+            <field name="domain">[('invoice_id','=',False)]</field>
             <field name="search_view_id" ref="account.view_account_analytic_line_filter"/>
         </record>
         <menuitem action="action_hr_tree_invoiced_all" id="menu_action_hr_tree_invoiced_all" parent="menu_invoicing" groups="base.group_extended"/>

@@ -23,6 +23,9 @@ import string
 
 from osv import osv, fields
 from tools.translate import _
+from tools.misc import ustr
+import re
+import datetime
 
 _ref_vat = {
     'be': 'BE0477472701', 'at': 'ATU12345675',
@@ -59,11 +62,17 @@ class res_partner(osv.osv):
         Check the VAT number depending of the country.
         http://sima-pc.com/nif.php
         '''
+        country_obj = self.pool.get('res.country')
         for partner in self.browse(cr, uid, ids, context=context):
             if not partner.vat:
                 continue
             vat_country, vat_number = self._split_vat(partner.vat)
             if not hasattr(self, 'check_vat_' + vat_country):
+                #We didn't find the validation method for the country code. If that country code can be found in openerp, this means that it is a valid country code 
+                #and we simply didn't have implemented that function. In that case we continue.
+                if country_obj.search(cr, uid, [('code', 'ilike', vat_country)], context=context):
+                    continue
+                #Otherwise, it means that the country code isn't valid and we return False.
                 return False
             check = getattr(self, 'check_vat_' + vat_country)
             if not check(vat_number):
@@ -1066,17 +1075,36 @@ class res_partner(osv.osv):
                 return False
         return True
 
+    __check_vat_mx_re = re.compile(r"(?P<primeras>[A-Za-z\xd1\xf1&]{3,4})" \
+                                    r"[ \-_]?" \
+                                    r"(?P<ano>[0-9]{2})(?P<mes>[01][0-9])(?P<dia>[0-3][0-9])" \
+                                    r"[ \-_]?" \
+                                    r"(?P<code>[A-Za-z0-9&\xd1\xf1]{3})$")
+    
     def check_vat_mx(self, vat):
+        ''' Mexican VAT verification
+        
+        Verificar RFC México
         '''
-        Verificar RFC mÃ©xico
-        '''
-        if not 12 <= len(vat) <= 13:
+        # we convert to 8-bit encoding, to help the regex parse only bytes
+        vat = ustr(vat).encode('iso8859-1')
+        m = self.__check_vat_mx_re.match(vat)
+        if not m:
+            #No valid format
             return False
-        elif len(vat)==12 and not vat[:3].isalpha() | vat[3:9].isdigit() | vat[-3:].isalnum():
+        try:
+            ano = int(m.group('ano'))
+            if ano > 30:
+                ano = 1900 + ano
+            else:
+                ano = 2000 + ano
+            datetime.date(ano, int(m.group('mes')), int(m.group('dia')))
+        except ValueError:
             return False
-        elif len(vat)==13 and not vat[:4].isalpha() | vat[4:10].isdigit() | vat[-3:].isalnum():
-            return False
+        
+        #Valid format and valid date
         return True
+<<<<<<< TREE
     
     def check_vat_no(self, vat):
         '''
@@ -1093,7 +1121,10 @@ class res_partner(osv.osv):
             (7 * int(vat[2])) + (6 * int(vat[3])) + \
             (5 * int(vat[4])) + (4 * int(vat[5])) + \
             (3 * int(vat[6])) + (2 * int(vat[7])) 
+=======
+>>>>>>> MERGE-SOURCE
         
+<<<<<<< TREE
         check = 11 -(sum % 11)
         if check == 11:
             check = 0
@@ -1103,6 +1134,8 @@ class res_partner(osv.osv):
         return check == int(vat[8])
 
     
+=======
+>>>>>>> MERGE-SOURCE
 res_partner()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

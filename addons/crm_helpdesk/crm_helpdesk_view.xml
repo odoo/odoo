@@ -61,7 +61,7 @@
                             <group col="2" colspan="2">
                                 <separator colspan="4" string="Categorization"/>
                                 <field name="priority"/>
-                                <field name="categ_id"/>
+                                <field name="categ_id" context="{'object_id':'crm.helpdesk'}"/>
                                 <field name="canal_id"/>
                             </group>
 
@@ -148,6 +148,7 @@
                             <group colspan="2" col="2">
                                 <separator colspan="4" string="Dates"/>
                                 <field name="create_date"/>
+                                <field name="write_date"/>
                                 <field name="date_closed"/>
                             </group>
                             <group colspan="2" col="2">
@@ -179,7 +180,7 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Helpdesk Support Tree"
-                    colors="black:state=='open';blue:state=='pending';gray:state in ('cancel','close')">
+                    colors="black:state=='open';blue:state=='pending';gray:state in ('cancel','done')">
                     <field name="name" string="Query" />
                     <field name="partner_id" string="Partner"/>
                     <field name="date" string="Date"/>
@@ -253,7 +254,7 @@
                             domain="['|', ('section_id', '=', context.get('section_id')), '|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
                             help="My Sales Team(s)" />
                     </field>
-                    <newline/>
+                    <newline/>                         
                     <group expand="0" string="Group By...">
                         <filter string="Partner" icon="terp-partner"
                             domain="[]" help="Partner"

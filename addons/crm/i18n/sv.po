@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.14\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:15+0000\n"
-"PO-Revision-Date: 2010-12-21 14:37+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"PO-Revision-Date: 2011-08-03 22:39+0000\n"
+"Last-Translator: Stefan Lind <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-03-18 04:45+0000\n"
-"X-Generator: Launchpad (build 12559)\n"
+"X-Launchpad-Export-Date: 2011-08-05 04:40+0000\n"
+"X-Generator: Launchpad (build 13604)\n"
 
 #. module: crm
 #: view:crm.lead.report:0
@@ -46,7 +46,7 @@ msgstr "Schemalägg telefonsamtal"
 #. module: crm
 #: model:ir.model,name:crm.model_crm_case_stage
 msgid "Stage of case"
-msgstr ""
+msgstr "Uppgiftsstatus"
 
 #. module: crm
 #: view:crm.meeting:0
@@ -92,7 +92,7 @@ msgstr " "
 #: view:crm.lead.report:0
 #: field:crm.phonecall.report,delay_close:0
 msgid "Delay to close"
-msgstr ""
+msgstr "Vänta med att stänga"
 
 #. module: crm
 #: view:crm.lead:0
@@ -108,7 +108,7 @@ msgstr "Kan inte lägga till anteckning!"
 #. module: crm
 #: field:crm.case.stage,name:0
 msgid "Stage Name"
-msgstr ""
+msgstr "Statusnamn"
 
 #. module: crm
 #: view:crm.lead.report:0
@@ -124,10 +124,10 @@ msgid "The code of the sales team must be unique !"
 msgstr "Koden för säljteamet måste vara unikt!"
 
 #. module: crm
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:93
+#: code:addons/crm/wizard/crm_lead_to_opportunity.py:95
 #, python-format
 msgid "Lead '%s' has been converted to an opportunity."
-msgstr ""
+msgstr "Lead '%s' har konverterats till en affärsmöjlighet."
 
 #. module: crm
 #: code:addons/crm/crm_lead.py:228
@@ -141,8 +141,8 @@ msgid "No Repeat"
 msgstr "Ingen repetition"
 
 #. module: crm
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:133
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:258
+#: code:addons/crm/wizard/crm_lead_to_opportunity.py:135
+#: code:addons/crm/wizard/crm_lead_to_opportunity.py:260
 #: code:addons/crm/wizard/crm_lead_to_partner.py:55
 #: code:addons/crm/wizard/crm_phonecall_to_partner.py:52
 #, python-format
@@ -536,9 +536,9 @@ msgstr ""
 
 #. module: crm
 #: code:addons/crm/crm_lead.py:278
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:195
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:229
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:297
+#: code:addons/crm/wizard/crm_lead_to_opportunity.py:197
+#: code:addons/crm/wizard/crm_lead_to_opportunity.py:231
+#: code:addons/crm/wizard/crm_lead_to_opportunity.py:299
 #: view:crm.lead2opportunity:0
 #: view:crm.partner2opportunity:0
 #: model:ir.actions.act_window,name:crm.action_crm_lead2opportunity
@@ -675,7 +675,7 @@ msgstr ""
 #. module: crm
 #: view:crm.phonecall.report:0
 msgid "#Phone calls"
-msgstr ""
+msgstr "# Telefonsamtal"
 
 #. module: crm
 #: help:crm.segmentation,categ_id:0
@@ -809,8 +809,8 @@ msgid "Statistics Dashboard"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:86
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:96
+#: code:addons/crm/wizard/crm_lead_to_opportunity.py:88
+#: code:addons/crm/wizard/crm_lead_to_opportunity.py:98
 #: code:addons/crm/wizard/crm_partner_to_opportunity.py:101
 #: code:addons/crm/wizard/crm_phonecall_to_opportunity.py:117
 #: view:crm.lead:0
@@ -1086,7 +1086,7 @@ msgstr ""
 
 #. module: crm
 #: code:addons/crm/crm_opportunity.py:208
-#: code:addons/crm/crm_phonecall.py:184
+#: code:addons/crm/crm_phonecall.py:185
 #: code:addons/crm/wizard/crm_phonecall_to_meeting.py:55
 #: code:addons/crm/wizard/crm_phonecall_to_meeting.py:137
 #: view:crm.meeting:0
@@ -1182,7 +1182,7 @@ msgstr ""
 #: model:crm.case.stage,name:crm.stage_opportunity5
 #: view:crm.lead:0
 msgid "Won"
-msgstr ""
+msgstr "Vunnit"
 
 #. module: crm
 #: field:crm.lead.report,delay_expected:0
@@ -2590,7 +2590,7 @@ msgid "Meeting Type"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:312
+#: code:addons/crm/wizard/crm_lead_to_opportunity.py:314
 #, python-format
 msgid "Merge with Existing Opportunity"
 msgstr ""
@@ -3104,8 +3104,8 @@ msgid "Schedule Call"
 msgstr ""
 
 #. module: crm
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:133
-#: code:addons/crm/wizard/crm_lead_to_opportunity.py:258
+#: code:addons/crm/wizard/crm_lead_to_opportunity.py:135
+#: code:addons/crm/wizard/crm_lead_to_opportunity.py:260
 #, python-format
 msgid "Closed/Cancelled Leads Could not convert into Opportunity"
 msgstr ""

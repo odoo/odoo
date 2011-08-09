@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:15+0000\n"
-"PO-Revision-Date: 2011-04-15 19:44+0000\n"
-"Last-Translator: Chertykov Denis <chertykov@gmail.com>\n"
+"PO-Revision-Date: 2011-04-25 08:48+0000\n"
+"Last-Translator: Stanislav Hanzhin <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-16 04:58+0000\n"
-"X-Generator: Launchpad (build 12735)\n"
+"X-Launchpad-Export-Date: 2011-04-29 04:59+0000\n"
+"X-Generator: Launchpad (build 12758)\n"
 
 #. module: crm
 #: view:crm.lead.report:0
@@ -271,6 +271,10 @@ msgid ""
 "sort out your leads analysis by different groups to get accurate grained "
 "analysis."
 msgstr ""
+"Анализ кандидатов позволяет контролировать различную информацию о "
+"взаимоотношениях с клиентами. Проверять частоту обращений, количество "
+"ответов и отосланных писем. Вы можете разбить анализ кандидатов на группы "
+"для получения более подробного анализа."
 
 #. module: crm
 #: view:crm.lead:0
@@ -448,6 +452,11 @@ msgid ""
 "customer. You can also import a .CSV file with a list of calls to be done by "
 "your sales team."
 msgstr ""
+"\"Исходящие звонки\" - список всех звонков, которые предстоит сделать вашему "
+"отделу продаж. Менеджер продаж может записывать информацию о звонке. Эта "
+"информация будет привязана к контрагенту для отслеживания каждого контакта с "
+"ним. Так же вы можете импортировать файл в формате CSV со списком "
+"необходимых звонков звонков вашего отдела продаж."
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead2opportunity_action
@@ -660,6 +669,8 @@ msgid ""
 "Default state of mind for period preceeding the 'Max Interval' computation. "
 "This is the starting state of mind by default if the partner has no event."
 msgstr ""
+"Мнение по умолчанию для периода предшествующего вычислению 'Макс. интервал'. "
+"Это мнение по умолчанию для контрагентов без обращений."
 
 #. module: crm
 #: selection:crm.meeting,end_type:0
@@ -1317,7 +1328,7 @@ msgstr "Рассылки"
 #. module: crm
 #: field:crm.meeting,class:0
 msgid "Mark as"
-msgstr "Пометить как"
+msgstr "Отметить как"
 
 #. module: crm
 #: field:crm.meeting,count:0
@@ -1327,7 +1338,7 @@ msgstr "Повторить"
 #. module: crm
 #: help:crm.meeting,rrule_type:0
 msgid "Let the event automatically repeat at that interval"
-msgstr "Пусть события автоматически повторяются с этим интервалом"
+msgstr "Пусть событие автоматически повторяется с этим интервалом"
 
 #. module: crm
 #: view:base.action.rule:0
@@ -1434,7 +1445,7 @@ msgstr "crm.lead"
 #. module: crm
 #: field:crm.meeting,write_date:0
 msgid "Write Date"
-msgstr ""
+msgstr "Дата записи"
 
 #. module: crm
 #: view:crm.meeting:0
@@ -1537,7 +1548,7 @@ msgstr "Предложения по категориям"
 #. module: crm
 #: view:crm.meeting:0
 msgid "Choose day in the month where repeat the meeting"
-msgstr "Выбери день месяца, когда повторить встречу."
+msgstr "Выберите день месяца, когда повторить встречу."
 
 #. module: crm
 #: view:crm.segmentation:0
@@ -1622,7 +1633,7 @@ msgstr "Объединить два предложения"
 #. module: crm
 #: selection:crm.meeting,end_type:0
 msgid "Fix amout of times"
-msgstr ""
+msgstr "Определенное количество раз"
 
 #. module: crm
 #: view:crm.lead:0
@@ -1785,6 +1796,10 @@ msgid ""
 "sent/to be sent to your colleagues/partners. You can not only invite OpenERP "
 "users, but also external parties, such as a customer."
 msgstr ""
+"Используя \"Приглашения\" вы можете создавать и управлять приглашениями на "
+"совещания, которые отправлены или будут отправлены вашим "
+"коллегам/контрагентам. Вы можете приглашать не только пользователей OpenERP, "
+"но и внешних адресатов, например заказчиков."
 
 #. module: crm
 #: selection:crm.meeting,week_list:0
@@ -1940,6 +1955,10 @@ msgid ""
 "with a partner. From the phone call form, you can trigger a request for "
 "another call, a meeting or an opportunity."
 msgstr ""
+"Функция \"Входящие звонки\" позволяет вам быстро описывать входящие звонки. "
+"Каждый звонок будет связан с контрагентом для отслеживания каждого контакта. "
+"Из формы ввода звонка вы можете запланировать следующий звонок, совещание "
+"или предложение."
 
 #. module: crm
 #: help:crm.meeting,recurrency:0
@@ -2472,7 +2491,7 @@ msgstr ""
 #. module: crm
 #: help:crm.installer,crm_fundraising:0
 msgid "This may help associations in their fundraising process and tracking."
-msgstr ""
+msgstr "Это может помочь ассоциациям в сборе средств и их отслеживании."
 
 #. module: crm
 #: field:crm.lead2opportunity.partner,action:0
@@ -2527,7 +2546,7 @@ msgstr "Другое"
 #: selection:crm.meeting,state:0
 #: selection:crm.phonecall,state:0
 msgid "Done"
-msgstr "Готово"
+msgstr "Сделано"
 
 #. module: crm
 #: help:crm.meeting,interval:0
@@ -2587,7 +2606,7 @@ msgstr "Техподдержка"
 #. module: crm
 #: field:crm.meeting,recurrency:0
 msgid "Recurrent"
-msgstr "Повторение"
+msgstr "Повторяющийся"
 
 #. module: crm
 #: code:addons/crm/crm.py:397
@@ -2742,7 +2761,7 @@ msgstr "Кандидат в Предложение"
 #. module: crm
 #: model:ir.model,name:crm.model_calendar_attendee
 msgid "Attendee information"
-msgstr "Информация о участнике"
+msgstr "Информация об участнике"
 
 #. module: crm
 #: view:crm.segmentation:0
@@ -2940,7 +2959,7 @@ msgstr "Кем предложено"
 #: view:crm.lead:0
 #: model:ir.model,name:crm.model_crm_add_note
 msgid "Add Internal Note"
-msgstr "Добавить внутреннею запись"
+msgstr "Добавить внутреннею заметку"
 
 #. module: crm
 #: code:addons/crm/crm_lead.py:304
@@ -3916,7 +3935,7 @@ msgstr "Подтвердить"
 #. module: crm
 #: field:crm.segmentation.line,expr_name:0
 msgid "Control Variable"
-msgstr ""
+msgstr "Управляющая переменная"
 
 #. module: crm
 #: selection:crm.meeting,byday:0

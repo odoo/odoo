@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+  <data noupdate="0">
+
+        <!-- Chart template -->
+        <record id="l10nbe_chart_template" model="account.chart.template">
+            <field name="name">Belgian PCMN</field>
+            <field name="account_root_id" ref="a_root"/>
+            <field name="tax_code_root_id" ref="atctn_I"/>
+            <field name="bank_account_view_id" ref="a550"/>
+            <field name="property_account_receivable" ref="a_recv"/>
+            <field name="property_account_payable" ref="a_pay"/>
+            <field name="property_account_expense_categ" ref="a_expense"/>
+            <field name="property_account_income_categ" ref="a_sale"/>
+        </record>
+
+
+  </data>
+</openerp>

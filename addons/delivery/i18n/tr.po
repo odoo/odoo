@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-15 05:08+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-04-29 04:51+0000\n"
+"X-Generator: Launchpad (build 12758)\n"
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -34,18 +34,18 @@ msgstr "Hedef"
 #. module: delivery
 #: field:stock.move,weight_net:0
 msgid "Net weight"
-msgstr ""
+msgstr "Net Ağırlık"
 
 #. module: delivery
 #: view:stock.picking:0
 msgid "Delivery Order"
-msgstr ""
+msgstr "Teslim Emri"
 
 #. module: delivery
 #: code:addons/delivery/delivery.py:141
 #, python-format
 msgid "No price available !"
-msgstr ""
+msgstr "Fiyat bulunamadı !"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_grid_line
@@ -67,7 +67,7 @@ msgstr "Hacim"
 #. module: delivery
 #: sql_constraint:sale.order:0
 msgid "Order Reference must be unique !"
-msgstr ""
+msgstr "Sipariş referans no'su tek olmalı !"
 
 #. module: delivery
 #: field:delivery.grid,line_ids:0
@@ -77,7 +77,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.actions.report.xml,name:delivery.report_shipping
 msgid "Delivery order"
-msgstr ""
+msgstr "Teslim Emri"
 
 #. module: delivery
 #: view:res.partner:0
@@ -87,7 +87,7 @@ msgstr "Teslimat Özellikleri"
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_picking_tree4
 msgid "Picking to be invoiced"
-msgstr ""
+msgstr "Faturalanmak üzere seçilen"
 
 #. module: delivery
 #: help:delivery.grid,sequence:0
@@ -108,7 +108,7 @@ msgstr ""
 #. module: delivery
 #: field:delivery.grid.line,variable_factor:0
 msgid "Variable Factor"
-msgstr ""
+msgstr "Değişken Faktör"
 
 #. module: delivery
 #: model:ir.actions.act_window,help:delivery.action_delivery_grid_form
@@ -137,7 +137,7 @@ msgstr "Teslimat Yöntemi"
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_move
 msgid "Stock Move"
-msgstr ""
+msgstr "Stok Hareketi"
 
 #. module: delivery
 #: code:addons/delivery/delivery.py:141
@@ -153,7 +153,7 @@ msgstr ""
 #. module: delivery
 #: field:stock.picking,weight_net:0
 msgid "Net Weight"
-msgstr ""
+msgstr "Net Ağırlık"
 
 #. module: delivery
 #: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
@@ -162,12 +162,15 @@ msgid ""
 "Each delivery method can be assigned to a price list which computes the "
 "price of the delivery according to the products sold or delivered."
 msgstr ""
+"Satış aktiviteleri için gerekli teslim yöntemlerini oluştur ve yönet. Her "
+"teslim yöntemi bir fiyat listesine yönlendirilir ve bu da satılan ya da "
+"teslim edilen ürünün teslimat fiyatının hesaplanmasını sağlar."
 
 #. module: delivery
 #: code:addons/delivery/stock.py:98
 #, python-format
 msgid "Warning"
-msgstr ""
+msgstr "Uyarı"
 
 #. module: delivery
 #: view:delivery.grid:0
@@ -177,22 +180,22 @@ msgstr ""
 #. module: delivery
 #: view:delivery.sale.order:0
 msgid "_Cancel"
-msgstr ""
+msgstr "_İptal"
 
 #. module: delivery
 #: field:delivery.grid.line,operator:0
 msgid "Operator"
-msgstr ""
+msgstr "Operatör"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_res_partner
 msgid "Partner"
-msgstr ""
+msgstr "İş ortağı"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_sale_order
 msgid "Sales Order"
-msgstr ""
+msgstr "Satış Siparişi"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_grid
@@ -202,17 +205,17 @@ msgstr "Teslimat Gridi"
 #. module: delivery
 #: report:sale.shipping:0
 msgid "Invoiced to"
-msgstr ""
+msgstr "Fatura Edilen"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_picking
 msgid "Picking List"
-msgstr ""
+msgstr "Toplama Listesi"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_sale_order
 msgid "Make Delievery"
-msgstr ""
+msgstr "Teslimatı Gerçekleştir"
 
 #. module: delivery
 #: model:ir.module.module,description:delivery.module_meta_information
@@ -250,7 +253,7 @@ msgstr "Bitiş P. Kodu"
 #. module: delivery
 #: report:sale.shipping:0
 msgid "Order Date"
-msgstr ""
+msgstr "Sipariş Tarihi"
 
 #. module: delivery
 #: field:delivery.grid,name:0
@@ -260,12 +263,12 @@ msgstr "Grid Adı"
 #. module: delivery
 #: view:stock.move:0
 msgid "Weights"
-msgstr ""
+msgstr "Ağırlığı"
 
 #. module: delivery
 #: field:stock.picking,number_of_packages:0
 msgid "Number of Packages"
-msgstr ""
+msgstr "Paket Sayısı"
 
 #. module: delivery
 #: selection:delivery.grid.line,type:0
@@ -292,14 +295,14 @@ msgstr ""
 #. module: delivery
 #: selection:delivery.grid.line,operator:0
 msgid ">="
-msgstr ""
+msgstr ">="
 
 #. module: delivery
 #: code:addons/delivery/wizard/delivery_sale_order.py:66
 #: code:addons/delivery/wizard/delivery_sale_order.py:98
 #, python-format
 msgid "Order not in draft state !"
-msgstr ""
+msgstr "Sipariş taslak modunda değil !"
 
 #. module: delivery
 #: constraint:res.partner:0
@@ -325,7 +328,7 @@ msgstr "Aktif"
 #. module: delivery
 #: report:sale.shipping:0
 msgid "Shipping Date"
-msgstr ""
+msgstr "Nakliye Tarihi"
 
 #. module: delivery
 #: field:delivery.carrier,product_id:0
@@ -346,7 +349,7 @@ msgstr "Maliyeti"
 #: selection:delivery.grid.line,price_type:0
 #: field:delivery.grid.line,type:0
 msgid "Variable"
-msgstr ""
+msgstr "Değişken"
 
 #. module: delivery
 #: help:res.partner,property_delivery_carrier:0
@@ -361,7 +364,7 @@ msgstr "Max. Değer"
 #. module: delivery
 #: report:sale.shipping:0
 msgid "Quantity"
-msgstr ""
+msgstr "Adet"
 
 #. module: delivery
 #: field:delivery.grid,zip_from:0
@@ -408,7 +411,7 @@ msgstr "Teslimat Maliyeti"
 #. module: delivery
 #: report:sale.shipping:0
 msgid "Description"
-msgstr ""
+msgstr "Açıklama"
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_grid_form
@@ -443,7 +446,7 @@ msgstr "Ağırlık * Hacim"
 #. module: delivery
 #: selection:delivery.grid.line,operator:0
 msgid "="
-msgstr ""
+msgstr "="
 
 #. module: delivery
 #: code:addons/delivery/stock.py:99
@@ -469,7 +472,7 @@ msgstr "Nakliyeci"
 #. module: delivery
 #: view:delivery.sale.order:0
 msgid "_Apply"
-msgstr ""
+msgstr "_Uygula"
 
 #. module: delivery
 #: field:sale.order,id:0

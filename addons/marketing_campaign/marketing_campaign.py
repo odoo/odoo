@@ -281,7 +281,7 @@ class marketing_campaign_segment(osv.osv):
                                    'State',),
         'date_run': fields.datetime('Launch Date', help="Initial start date of this segment."),
         'date_done': fields.datetime('End Date', help="Date this segment was last closed or cancelled."),
-        'date_next_sync': fields.function(_get_next_sync, method=True, string='Next Synchronization', type='datetime', help="Next time the synchronization job is scheduled to run automatically"),
+        'date_next_sync': fields.function(_get_next_sync, string='Next Synchronization', type='datetime', help="Next time the synchronization job is scheduled to run automatically"),
     }
 
     _defaults = {
@@ -548,7 +548,7 @@ class marketing_campaign_transition(osv.osv):
 
 
     _columns = {
-        'name': fields.function(_get_name, method=True, string='Name',
+        'name': fields.function(_get_name, string='Name',
                                 type='char', size=128),
         'activity_from_id': fields.many2one('marketing.campaign.activity',
                                             'Previous Activity', select=1,
@@ -649,7 +649,7 @@ class marketing_campaign_workitem(osv.osv):
         'object_id': fields.related('activity_id', 'campaign_id', 'object_id',
              type='many2one', relation='ir.model', string='Resource', select=1, readonly=True, store=True),
         'res_id': fields.integer('Resource ID', select=1, readonly=True),
-        'res_name': fields.function(_res_name_get, method=True, string='Resource Name', fnct_search=_resource_search, type="char", size=64),
+        'res_name': fields.function(_res_name_get, string='Resource Name', fnct_search=_resource_search, type="char", size=64),
         'date': fields.datetime('Execution Date', help='If date is not set, this workitem has to be run manually', readonly=True),
         'partner_id': fields.many2one('res.partner', 'Partner', select=1, readonly=True),
         'state': fields.selection([('todo', 'To Do'),

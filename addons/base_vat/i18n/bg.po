@@ -8,13 +8,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:14+0000\n"
 "PO-Revision-Date: 2011-02-27 10:03+0000\n"
-"Last-Translator: Dimitar Markov <Unknown>\n"
+"Last-Translator: Dimitar Markov <dimitar.markov@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-03-01 04:37+0000\n"
-"X-Generator: Launchpad (build 12351)\n"
+"X-Launchpad-Export-Date: 2011-04-29 05:02+0000\n"
+"X-Generator: Launchpad (build 12758)\n"
 
 #. module: base_vat
 #: code:addons/base_vat/base_vat.py:87
@@ -23,7 +23,7 @@ msgid ""
 "The Vat does not seems to be correct. You should have entered something like "
 "this %s"
 msgstr ""
-"ДДС, не изглежда да е вярно. Вие трябва да сте въвели нещо подобнона това %s"
+"ДДС номерът не изглежда верен. Трябва да въведете нещо подобно на това %s"
 
 #. module: base_vat
 #: model:ir.module.module,description:base_vat.module_meta_information
@@ -38,11 +38,17 @@ msgid ""
 "countries.\n"
 "    "
 msgstr ""
+"\n"
+"    Включва ДДС номер за партньора. Проверява валидността на ДДС номера.\n"
+"\n"
+"    Модулът използва методите указани на http://sima-pc.com/nif.php за\n"
+"    проверка валидността на ДДС номера на партньори от европейските страни.\n"
+"    "
 
 #. module: base_vat
 #: model:ir.module.module,shortdesc:base_vat.module_meta_information
 msgid "Base VAT - To check VAT number validity"
-msgstr ""
+msgstr "ДДС - модул за проверка валидността на ДДС номер"
 
 #. module: base_vat
 #: constraint:res.partner:0
@@ -53,7 +59,7 @@ msgstr "Грешка ! Не може да създадете рекурсивн�
 #: code:addons/base_vat/base_vat.py:88
 #, python-format
 msgid "The VAT is invalid, It should begin with the country code"
-msgstr ""
+msgstr "ДДС номерът е невалиден, трябва да започва с кода на държавата"
 
 #. module: base_vat
 #: help:res.partner,vat_subjected:0
@@ -61,8 +67,8 @@ msgid ""
 "Check this box if the partner is subjected to the VAT. It will be used for "
 "the VAT legal statement."
 msgstr ""
-"Отметнете това ако партньорът ви е регистриран по ДДС.  It will be used for "
-"the VAT legal statement."
+"Отметнете тук ако партньорът ви е регистриран по ДДС.  Ще бъде използвано за "
+"ДДС декларацията."
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_partner
