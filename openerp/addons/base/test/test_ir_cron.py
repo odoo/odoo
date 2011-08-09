@@ -19,12 +19,14 @@
 #
 ##############################################################################
 
+import time
 from datetime import datetime
+from dateutil.relativedelta import relativedelta
 
 import openerp
 
 JOB = {
-    'function': u'f',
+    'function': u'_0_seconds',
     'interval_type': u'minutes',
     'user_id': 1,
     'name': u'test',
@@ -82,6 +84,33 @@ class test_ir_cron(openerp.osv.osv.osv):
         self.create(cr, uid, dict(JOB, name='test_3 _80_seconds A', function='_80_seconds', nextcall=t1))
         self.create(cr, uid, dict(JOB, name='test_3 _20_seconds B', function='_20_seconds', nextcall=t2))
         self.create(cr, uid, dict(JOB, name='test_3 _20_seconds C', function='_20_seconds', nextcall=t3))
+
+    # This test assumes 4 cron threads.
+    def test_00(self, cr, uid):
+        self.test_00_set = set()
+        now = datetime.now()
+        t1 = (now + relativedelta(minutes=1)).strftime('%Y-%m-%d %H:%M:%S')
+        t2 = (now + relativedelta(minutes=1, seconds=5)).strftime('%Y-%m-%d %H:%M:%S')
+        t3 = (now + relativedelta(minutes=1, seconds=10)).strftime('%Y-%m-%d %H:%M:%S')
+        self.create(cr, uid, dict(JOB, name='test_00 _20_seconds_A', function='_20_seconds_A', nextcall=t1))
+        self.create(cr, uid, dict(JOB, name='test_00 _20_seconds_B', function='_20_seconds_B', nextcall=t2))
+        self.create(cr, uid, dict(JOB, name='test_00 _20_seconds_C', function='_20_seconds_C', nextcall=t3))
+
+    def _expect(self, cr, uid, to_add, to_sleep, to_expect_in, to_expect_out):
+        assert self.test_00_set == to_expect_in
+        self.test_00_set.add(to_add)
+        time.sleep(to_sleep)
+        self.test_00_set.discard(to_add)
+        assert self.test_00_set == to_expect_out
+
+    def _20_seconds_A(self, cr, uid):
+        self._expect(cr, uid, 'A', 20, set(), set(['B', 'C']))
+
+    def _20_seconds_B(self, cr, uid):
+        self._expect(cr, uid, 'B', 20, set('A'), set('C'))
+
+    def _20_seconds_C(self, cr, uid):
+        self._expect(cr, uid, 'C', 20, set(['A', 'B']), set())
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

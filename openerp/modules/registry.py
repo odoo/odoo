@@ -88,8 +88,8 @@ class Registry(object):
         """ Make the cron thread care about this registry/database jobs.
 
         This will initiate the cron thread to check for any pending jobs for
-        this registry/database as soon as possible. Then it will continously
-        monitors the ir.cron model for future jobs. See openerp.cron for
+        this registry/database as soon as possible. Then it will continuously
+        monitor the ir.cron model for future jobs. See openerp.cron for
         details.
         
         """

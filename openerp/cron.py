@@ -151,22 +151,25 @@ def runner():
        checks every 60 seconds the next database wake-up. TODO: make configurable
     """
     while True:
-        with _wakeups_lock:
-            while _wakeups and _wakeups[0][0] < time.time() and get_thread_count():
-                task = heapq.heappop(_wakeups)
-                timestamp, db_name, canceled = task
-                if canceled:
-                    continue
-                task[2] = True
-                registry = openerp.pooler.get_pool(db_name)
-                if not registry._init:
-                    registry['ir.cron']._run_jobs()
-        amount = 60
-        with _wakeups_lock:
-            # Sleep less than 60s if the next known wake-up will happen before.
-            if _wakeups and get_thread_count():
-                amount = min(60, _wakeups[0][0] - time.time())
-        time.sleep(amount)
+        runner_body()
+
+def runner_body():
+    with _wakeups_lock:
+        while _wakeups and _wakeups[0][0] < time.time() and get_thread_count():
+            task = heapq.heappop(_wakeups)
+            timestamp, db_name, canceled = task
+            if canceled:
+                continue
+            task[2] = True
+            registry = openerp.pooler.get_pool(db_name)
+            if not registry._init:
+                registry['ir.cron']._run_jobs()
+    amount = 60
+    with _wakeups_lock:
+        # Sleep less than 60s if the next known wake-up will happen before.
+        if _wakeups and get_thread_count():
+            amount = min(60, _wakeups[0][0] - time.time())
+    time.sleep(amount)
 
 
 def start_master_thread():
