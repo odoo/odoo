@@ -27,9 +27,6 @@ openerp.base.TreeView = openerp.base.View.extend({
 
         this.view_manager.flags.search_view = this.view_manager.action.flags.search_view = false;
         this.view_manager.flags.sidebar = this.view_manager.action.flags.sidebar = false;
-
-        this.actionmanager = new openerp.base.ActionManager(this.session, this.element_id);
-        this.actionmanager.start();
     },
 
     start: function () {
@@ -108,6 +105,11 @@ openerp.base.TreeView = openerp.base.View.extend({
      */
     hook_row_click: function () {
         var self = this;
+        this.$element.delegate('.treeview-td span, .treeview-tr span', 'click', function (e) {
+            e.stopImmediatePropagation();
+            self.activate($(this).closest('tr').data('id'));
+        });
+
         this.$element.delegate('.treeview-tr', 'click', function () {
             var is_loaded = 0,
                 $this = $(this),
@@ -157,48 +159,28 @@ openerp.base.TreeView = openerp.base.View.extend({
             } else {
                 self.$element.find('tbody').html(children_rows);
             }
-
-            self.$element.find('tr[id ^= treerow_] td > :last-child').click( function(e) {
-                var row_id = $(this).parent().parent().attr('id');
-                var record_id = row_id.split('_')[1];
-                self.showrecord(record_id, self.model);
-                e.stopImmediatePropagation();
-            });
         });
     },
 
     // Get details in listview
-    showrecord: function(id, model){
-        var self = this;
-        self.dataset.model = 'product.product';
-        self.dataset.domain = [['categ_id', 'child_of', parseInt(id, 10)]];
-        var modes = !!modes ? modes.split(",") : ["tree", "form"];
-        var views = [];
-        _.each(modes, function(mode) {
-            var view = [false, mode == "tree" ? "list" : mode];
-            if (self.fields.views && self.fields.views[mode]) {
-                view.push(self.fields.views[mode]);
-            }
-            views.push(view);
+    activate: function(id) {
+        var action_manager = new openerp.base.ActionManager(
+                this.session, this.element_id);
+        action_manager.start();
+        this.rpc('/base/treeview/action', {
+            id: id,
+            model: this.dataset.model,
+            context: new openerp.base.CompoundContext(
+                this.dataset.get_context(), {
+                    active_model: this.dataset.model,
+                    active_id: id,
+                    active_ids: [id]})
+        }, function (actions) {
+            if (!actions.length) { return; }
+            var action = actions[0][2];
+            action.flags.new_window = true;
+            action_manager.do_action(action);
         });
-        this.actionmanager.do_action({
-            "res_model" : self.dataset.model,
-            "domain" : self.dataset.domain,
-            "views" : views,
-            "type" : "ir.actions.act_window",
-            "auto_search" : true,
-            "view_mode" : "list",
-            "flags": {
-                search_view: true,
-                sidebar : true,
-                views_switcher : true,
-                action_buttons : true,
-                pager: true,
-                new_window : true
-            }
-        });
-
-        self.dataset.model = model;
     },
 
     // show & hide the contents

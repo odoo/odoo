@@ -242,17 +242,17 @@ def load_actions_from_ir_values(req, key, key2, models, meta, context):
     Values = req.session.model('ir.values')
     actions = Values.get(key, key2, models, meta, context)
 
-    return [(id, name, clean_action(action, req.session))
+    return [(id, name, clean_action(action, req.session, context=context))
             for id, name, action in actions]
 
-def clean_action(action, session):
+def clean_action(action, session, context=None):
     if action['type'] != 'ir.actions.act_window':
         return action
     # values come from the server, we can just eval them
     if isinstance(action.get('context', None), basestring):
         action['context'] = eval(
             action['context'],
-            session.evaluation_context()) or {}
+            session.evaluation_context(context=context)) or {}
 
     if isinstance(action.get('domain', None), basestring):
         action['domain'] = eval(
@@ -823,3 +823,9 @@ class TreeView(View):
     @openerpweb.jsonrequest
     def load(self, req, model, view_id, toolbar=False):
         return self.fields_view_get(req, model, view_id, 'tree', toolbar=toolbar)
+
+    @openerpweb.jsonrequest
+    def action(self, req, model, id):
+        return load_actions_from_ir_values(
+            req,'action', 'tree_but_open',[(model, id)],
+            False, req.session.eval_context(req.context))

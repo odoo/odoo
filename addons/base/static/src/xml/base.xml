@@ -257,7 +257,7 @@
 <tr t-name="TreeView.rows"
         t-foreach="records" t-as="record"
         t-att-id="'treerow_' + record.id"
-        t-att-data-level="level + 1">
+        t-att-data-id="record.id" t-att-data-level="level + 1">
     <t t-set="children" t-value="record[children_field]"/>
     <t t-set="has_children" t-value="children and children.length"/>
 
