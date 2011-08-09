@@ -46,6 +46,7 @@
                         <filter icon="terp-camera_test" string="Certified" domain="[('certificate','&lt;&gt;', False)]"/>
                         <separator orientation="vertical"/>
                         <field name="name"/>
+                        <field name="complexity"/>
                         <field name="description"/>
                         <field name="dependencies_id"/>
                         <field name="state"/>
@@ -90,6 +91,7 @@
                     <field name="certificate" />
                     <field colspan="4" name="shortdesc" select="2"/>
                     <field name="category_id"/>
+                    <field name="complexity"/>
                     <field name="demo" readonly="1"/>
                     <notebook colspan="4">
                         <page string="Module">
@@ -149,16 +151,12 @@
                     <field name="name"/>
                     <field name="category_id"/>
                     <field name="shortdesc"/>
+                    <field name="complexity"/>
                     <field name="author"/>
                     <field name="installed_version"/>
                     <field name="latest_version"/>
                     <field name="state"/>
                     <button name="button_install" states="uninstalled" string="Install" icon="terp-gtk-jump-to-ltr" type="object"/>
-                    <button name="button_install_cancel" states="to install" string="Cancel Install" icon="gtk-cancel" type="object"/>
-                    <button name="button_upgrade" states="installed" string="Upgrade" icon="terp-gtk-go-back-rtl" type="object"/>
-                    <button name="button_uninstall" states="installed" string="Uninstall (beta)" icon="terp-dialog-close" type="object"/>
-                    <button name="button_uninstall_cancel" states="to remove" string="Cancel Uninstall" icon="gtk-cancel" type="object"/>
-                    <button name="button_upgrade_cancel" states="to upgrade" string="Cancel Upgrade" icon="gtk-cancel" type="object"/>
                 </tree>
             </field>
         </record>

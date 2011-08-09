@@ -375,10 +375,10 @@
             <field name="arch" type="xml">
                 <tree string="Filters">
                     <field name="name"/>
-                    <field name="user_id"/>
                     <field name="model_id"/>
-                    <field name="domain"/>
-                    <field name="context"/>
+                    <field name="user_id"/>
+                    <field name="domain" groups="base.group_extended"/>
+                    <field name="context" groups="base.group_extended"/>
                 </tree>
             </field>
         </record>
@@ -391,15 +391,11 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Filters">
-                    <group colspan="4" col="10">
-                      <field name="name"/>
-                      <field name="user_id"/>
-                      <field name="model_id"/>
-                    </group>
-                    <newline/>
-                    <group expand="0" string="Group By" colspan="4">
-                      <filter string="User" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
-                    </group>
+                    <field name="name"/>
+                    <field name="model_id"/>
+                    <field name="user_id">
+                        <filter icon="terp-personal" domain="[('user_id','in', (uid, False))]" help="Current User" name="My Filters" />
+                    </field>
                 </search>
             </field>
         </record>
@@ -1362,7 +1358,7 @@
         </record>
 
         <record id="action_translation" model="ir.actions.act_window">
-            <field name="name">Translation Terms</field>
+            <field name="name">Translated Terms</field>
             <field name="res_model">ir.translation</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="view_translation_tree"/>
@@ -1724,12 +1720,8 @@
                         <filter string="Write Access" icon="terp-tools" domain="[('perm_write','=',True)]"/>
                         <separator orientation="vertical"/>
                         <field name="model_id"/>
-                        <field name="global"/>
+                        <field name="name"/>
                         <field name="groups"/>
-                    </group>
-                    <newline/>
-                    <group expand="0" string="Group By..." colspan="11" col="11" groups="base.group_extended">
-                        <filter string="Object" icon="terp-stock_align_left_24" domain="[]" context="{'group_by':'model_id'}"/>
                     </group>
                 </search>
             </field>
@@ -1889,7 +1881,7 @@
                     <field name="type"/>
                     <field name="state" readonly="1"/>
                     <button name="action_launch" states="open" string="Launch" type="object" icon="gtk-execute" help="Launch Configuration Wizard"/>
-                    <button name="action_open" states="cancel,skip,done"
+                    <button name="action_open" states="done"
                             string="Todo" type="object" help="Set as Todo"
                             icon="gtk-convert"/>
                 </tree>
@@ -1913,7 +1905,7 @@
                     <group colspan="4" col="4">
                         <field name="state" colspan="2" readonly="1"/>
                         <button name="action_launch" states="open" string="Launch" type="object" icon="gtk-execute" help="Launch Configuration Wizard"/>
-                        <button name="action_open" states="cancel,skip,done"
+                        <button name="action_open" states="done"
                             string="Set as Todo" type="object"
                             icon="gtk-convert"/>
                     </group>
