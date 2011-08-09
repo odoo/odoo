@@ -631,7 +631,8 @@ class account_voucher(osv.osv):
         vals['value'].update({'currency_id':currency_id})
         context.update({'company_id': journal.company_id.id})
         periods = self.pool.get('account.period').find(cr, uid, context=context)
-        vals['value'].update({'period_id':periods[0]})
+        if periods:
+            vals['value'].update({'period_id':periods[0]})
         return vals
 
     def proforma_voucher(self, cr, uid, ids, context=None):
