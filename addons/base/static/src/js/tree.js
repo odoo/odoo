@@ -116,10 +116,8 @@ openerp.base.TreeView = openerp.base.View.extend({
                 if ($this.attr('src') == '/base/static/src/img/expand.gif') {
                     self.getdata(record_id, children_ids, true);
                 }
-            } else if (is_loaded > 0) {
-                self.showcontent(record_id, true, children_ids);
             } else {
-                self.showcontent(record_id, false, children_ids);
+                self.showcontent(record_id, is_loaded < 0);
             }
         });
     },
@@ -254,43 +252,19 @@ openerp.base.TreeView = openerp.base.View.extend({
     },
 
     // show & hide the contents
-    showcontent: function (id, flag, childid) {
-        var self = this;
+    showcontent: function (record_id, show) {
+        this.$element.find('#parentimg_' + record_id)
+            .attr('src', show ? '/base/static/src/img/collapse.gif' : '/base/static/src/img/expand.gif');
 
-        var first_child = $('tr #treerow_' + id).find('td').children(':first-child');
-        if (flag) {
-            first_child.attr('src', '/base/static/src/img/expand.gif');
-        }
-        else {
-            first_child.attr('src', '/base/static/src/img/collapse.gif');
-        }
+        var descendants = this.records[record_id][this.children_field];
+        for (var i = 0; i < descendants.length; i++) {
+            var child_id = descendants[i];
 
-        for (var i = 0; i < childid.length; i++) {
-            if (flag) {
-                self.dataset.domain = [['parent_id', '=', parseInt(childid[i], 10)]];
-                var childimg = $('tr #treerow_' + childid[i]).find('td').children(':first-child').attr('src');
-
-                if (childimg == "/base/static/src/img/collapse.gif") {
-                    $('tr #treerow_' + childid[i]).find('td').children(':first-child').attr('src','/base/static/src/img/expand.gif');
-                }
-
-                self.dataset.read_slice([], 0, false, function (response) {
-                    for (var j = 0; j < response.length; j++) {
-                        var res_ids = $('tr #treerow_' + response[j].id);
-                        if (res_ids.length > 0) {
-                            res_ids.hide();
-                            var subchildids = response[j].child_id;
-                            if (subchildids.length > 0) {
-                                self.showcontent(response[j].id, true, subchildids);
-                            }
-                        }
-                    }
-                });
-                $ ('tr #treerow_' + childid[i]).hide();
+            if (this.$element.find('img#parentimg_' + child_id).length) {
+                this.showcontent(child_id, false);
             }
-            else {
-                $ ('tr #treerow_' + childid[i]).show();
-            }
+
+            this.$element.find('#treerow_' + child_id).toggle(show);
         }
     },
 
