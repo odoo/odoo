@@ -6,14 +6,14 @@
             <field name="name">res.company.mrp.config</field>
             <field name="model">res.company</field>
             <field name="type">form</field>
-            <field name="priority">17</field>
+            <field name="priority">25</field>
             <field name="inherit_id" ref="base.view_company_form"/>
             <field name="arch" type="xml">
-                <page string="Configuration" position="inside">
+                <xpath expr="/form/notebook/page/group[@name='mrp']" position="after">
                     <separator string="MRP &amp; Logistics Scheduler" colspan="4"/>
-                    <field name="schedule_range"/>
-                </page>
-            </field>
+                       <field name="schedule_range"/>
+                </xpath>
+          </field>
        </record>
     
     </data>

@@ -527,13 +527,16 @@
             <field name="name">res.company.task.config</field>
             <field name="model">res.company</field>
             <field name="type">form</field>
+            <field name="priority">22</field>
             <field name="inherit_id" ref="base.view_company_form"/>
             <field name="arch" type="xml">
-                <page string="Configuration" position="inside">
-                    <separator string="Project Management" colspan="4"/>
+                <xpath expr="/form/notebook/page/group[@name='accounting']" position="after">
+                    <group col="2" colspan="2" name="project" sequence="15"> 
+                    <separator string="Project Management" colspan="2"/>
                     <field name="project_time_mode_id"/>
                     <newline/>
-                </page>
+                     </group>
+                </xpath>
             </field>
         </record>
 
