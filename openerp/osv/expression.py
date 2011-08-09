@@ -20,6 +20,8 @@
 #
 ##############################################################################
 
+import logging
+
 from openerp.tools import flatten, reverse_enumerate
 import fields
 
@@ -29,14 +31,16 @@ NOT_OPERATOR = '!'
 OR_OPERATOR = '|'
 AND_OPERATOR = '&'
 
-OPS = ('=', '!=', '<>', '<=', '<', '>', '>=', '=?', '=like', '=ilike', 'like', 'not like', 'ilike', 'not ilike', 'in', 'not in', 'child_of')
-NEGATIVE_OPS = ('!=', '<>', 'not like', 'not ilike', 'not in')
+OPS = ('=', '!=', '<=', '<', '>', '>=', '=?', '=like', '=ilike', 'like', 'not like', 'ilike', 'not ilike', 'in', 'not in', 'child_of')
+NEGATIVE_OPS = ('!=', 'not like', 'not ilike', 'not in')
 
 TRUE_LEAF = (1, '=', 1)
 FALSE_LEAF = (0, '=', 1)
 
 TRUE_DOMAIN = [TRUE_LEAF]
 FALSE_DOMAIN = [FALSE_LEAF]
+
+_logger = logging.getLogger('expression')
 
 def normalize(domain):
     """Returns a normalized version of ``domain_expr``, where all implicit '&' operators
@@ -109,6 +113,12 @@ def is_leaf(element, internal=False):
        and len(element) == 3 \
        and (((not internal) and element[1] in OPS) \
             or (internal and element[1] in INTERNAL_OPS))
+
+def normalize_operator(operator):
+    operator = operator.lower()
+    if operator == '<>':
+        operator = '!='
+    return operator
 
 def select_from_where(cr, s, f, w, ids, op):
     # todo: merge into parent query as sub-query
@@ -201,7 +211,7 @@ class expression(object):
             if is_operator(e) or e == TRUE_LEAF or e == FALSE_LEAF:
                 continue
             left, operator, right = e
-            operator = operator.lower()
+            operator = normalize_operator(operator)
             working_table = table # The table containing the field (the name provided in the left operand)
             fargs = left.split('.', 1)
 
@@ -348,11 +358,10 @@ class expression(object):
 
             elif field._type == 'many2one':
                 if operator == 'child_of':
+                    ids2 = child_of_right_to_ids(right, 'ilike', field_obj)
                     if field._obj != working_table._name:
-                        ids2 = child_of_right_to_ids(right, 'ilike', field_obj)
                         dom = child_of_domain(left, ids2, field_obj, prefix=field._obj)
                     else:
-                        ids2 = child_of_right_to_ids(right, 'ilike', field_obj)
                         dom = child_of_domain('id', ids2, working_table, parent=left)
                     self.__exp = self.__exp[:i] + dom + self.__exp[i+1:]
                 else:
@@ -364,12 +373,12 @@ class expression(object):
                         #Special treatment to ill-formed domains
                         operator = ( operator in ['<','>','<=','>='] ) and 'in' or operator
 
-                        dict_op = {'not in':'!=','in':'=','=':'in','!=':'not in','<>':'not in'}
+                        dict_op = {'not in':'!=','in':'=','=':'in','!=':'not in'}
                         if isinstance(right, tuple):
                             right = list(right)
                         if (not isinstance(right, list)) and operator in ['not in','in']:
                             operator = dict_op[operator]
-                        elif isinstance(right, list) and operator in ['<>','!=','=']: #for domain (FIELD,'=',['value1','value2'])
+                        elif isinstance(right, list) and operator in ['!=','=']: #for domain (FIELD,'=',['value1','value2'])
                             operator = dict_op[operator]
                         res_ids = [x[0] for x in field_obj.name_search(cr, uid, right, [], operator, limit=None, context=c)]
                         if not res_ids:
@@ -390,14 +399,14 @@ class expression(object):
                         if m2o_str:
                             self.__exp[i] = _get_expression(field_obj, cr, uid, left, right, operator, context=context)
                     elif right == []:
-                        if operator in ('not in', '!=', '<>'):
-                            # (many2one not in []) should return all records
-                            self.__exp[i] = TRUE_LEAF
-                        else:
-                            self.__exp[i] = FALSE_LEAF
-                    else:
+                        if operator not in ('in', 'not in'):
+                            _logger.warning("The domain term '%s' should use a set operator ('in' or 'not in')." % (self.__exp[i]),)
+                        # (many2one not in []) returns all records, (many2one in []) returns no record at all.
+                        self.__exp[i] = TRUE_LEAF if operator in NEGATIVE_OPS else FALSE_LEAF
+                    else: # right is False
+                        if operator not in ('=', '!='):
+                            _logger.warning("The domain term '%s' should use the '=' or '!=' operator." % (self.__exp[i],))
                         new_op = '!=' if operator in NEGATIVE_OPS else '='
-                        #Is it ok to put 'left' and not 'id' ?
                         self.__exp[i] = (left, new_op, False)
 
             else:
@@ -452,6 +461,7 @@ class expression(object):
 
     def __leaf_to_sql(self, leaf, table):
         left, operator, right = leaf
+        operator = normalize_operator(operator)
 
         if leaf == TRUE_LEAF:
             query = 'TRUE'
@@ -501,11 +511,11 @@ class expression(object):
             query = '%s.%s IS NULL ' % (table._table, left)
             params = []
 
-        elif right == False and (left in table._columns) and table._columns[left]._type=="boolean" and (operator in ['<>', '!=']):
+        elif right == False and (left in table._columns) and table._columns[left]._type=="boolean" and (operator == '!='):
             query = '(%s.%s IS NOT NULL and %s.%s != false)' % (table._table, left, table._table, left)
             params = []
 
-        elif (((right == False) and (type(right)==bool)) or right is None) and (operator in ['<>', '!=']):
+        elif (((right == False) and (type(right)==bool)) or right is None) and (operator == '!='):
             query = '%s.%s IS NOT NULL' % (table._table, left)
             params = []
 
