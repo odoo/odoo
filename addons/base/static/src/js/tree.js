@@ -256,16 +256,13 @@ openerp.base.TreeView = openerp.base.View.extend({
         this.$element.find('#parentimg_' + record_id)
             .attr('src', show ? '/base/static/src/img/collapse.gif' : '/base/static/src/img/expand.gif');
 
-        var descendants = this.records[record_id][this.children_field];
-        for (var i = 0; i < descendants.length; i++) {
-            var child_id = descendants[i];
-
+        _(this.records[record_id][this.children_field]).each(function (child_id) {
             if (this.$element.find('img#parentimg_' + child_id).length) {
                 this.showcontent(child_id, false);
             }
 
             this.$element.find('#treerow_' + child_id).toggle(show);
-        }
+        }, this);
     },
 
     do_show: function () {
