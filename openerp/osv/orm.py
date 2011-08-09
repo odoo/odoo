@@ -607,6 +607,8 @@ class orm_template(object):
 
     CONCURRENCY_CHECK_FIELD = '__last_update'
     def log(self, cr, uid, id, message, secondary=False, context=None):
+        if context and context.get('disable_log'):
+            return True
         return self.pool.get('res.log').create(cr, uid,
                 {
                     'name': message,
@@ -1555,8 +1557,10 @@ class orm_template(object):
                             attrs['selection'].append((False, ''))
                 fields[node.get('name')] = attrs
 
-                field = model_fields[node.get('name')]
-                transfer_field_to_modifiers(field, modifiers)
+                field = model_fields.get(node.get('name'))
+                if field:
+                    transfer_field_to_modifiers(field, modifiers)
+ 
 
         elif node.tag in ('form', 'tree'):
             result = self.view_header_get(cr, user, False, node.tag, context)

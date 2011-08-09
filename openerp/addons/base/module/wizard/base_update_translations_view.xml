@@ -2,11 +2,11 @@
 <openerp>
     <data>
          <record id="wizard_update_translations" model="ir.ui.view">
-            <field name="name">Synchronize Translations</field>
+            <field name="name">Synchronize Terms</field>
             <field name="model">base.update.translations</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Synchronize Translations">
+                <form string="Synchronize Terms">
                     <group col="8">
                         <group colspan="3">
                             <field name="config_logo" widget="image" width="220" height="130" nolabel="1" colspan="1"/>
@@ -29,7 +29,7 @@
             </field>
         </record>
         <record id="action_wizard_update_translations" model="ir.actions.act_window">
-            <field name="name">Synchronize Translations</field>
+            <field name="name">Synchronize Terms</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">base.update.translations</field>
             <field name="view_type">form</field>

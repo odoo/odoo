@@ -15,7 +15,7 @@
             <field name="module_info" nolabel="1" colspan="4"/>
              <separator string="" colspan="4"/>
             <button special="cancel" string="Cancel" icon="gtk-cancel"/>
-            <button name="upgrade_module" string="Start update" type="object" icon="gtk-ok"/>
+            <button name="upgrade_module" string="Update" type="object" icon="gtk-go-forward"/>
             </group>
              </form>
             </field>
@@ -37,11 +37,6 @@
        parent="menu_management"
        sequence="3"/>
        
-       <act_window id="action_view_base_module_upgrade_window"
-            key2="client_action_multi" name="Apply Scheduled Upgrades"
-            res_model="base.module.upgrade" src_model="ir.module.module"
-            view_mode="form" target="new" view_type="form" />
-
        <record id="view_base_module_upgrade_install" model="ir.ui.view">
             <field name="name">Module Upgrade Install</field>
             <field name="model">base.module.upgrade</field>
