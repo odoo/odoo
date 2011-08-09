@@ -202,12 +202,6 @@ openerp.base.TreeView = openerp.base.View.extend({
                 });
             }
 
-            self.$element.find('tbody tr').find('td:first').mouseover( function() {
-                $(this).addClass('mouse-over');
-            }).mouseout( function() {
-                $(this).removeClass('mouse-over');
-            });
-
             self.$element.find('tr[id ^= treerow_]').find('td').children(':last-child').click( function(e) {
                 row_id = $(this).parent().parent().attr('id');
                 var record_id = row_id.split('_')[1];
