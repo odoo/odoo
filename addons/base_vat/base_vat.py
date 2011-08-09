@@ -1098,7 +1098,8 @@ class res_partner(osv.osv):
         if check == 11:
             check = 0
         if check == 10:
-            check -1
+            # 10 is not a valid check digit for an organization number
+            return False
         return check == int(vat[8])
 
     
