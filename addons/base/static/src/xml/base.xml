@@ -263,13 +263,9 @@
 
     <td t-foreach="fields_view" t-as="field"
         t-if="!field.attrs.modifiers.tree_invisible"
-        t-att-style="!field_index ? 'padding-left: ' + 19*level + 'px' : undefined"
+        t-att-data-id="record.id"
+        t-att-style="!field_index ? 'background-position: ' + 19*level + 'px; padding-left: ' + 19*level + 'px' : undefined"
         t-att-class="!field_index and has_children ? 'treeview-tr' : 'treeview-td'">
-        <img t-if="!field_index and has_children"
-             t-att-id="'parentimg_' + record.id"
-             t-att-data-id="record.id"
-             src="/base/static/src/img/expand.gif"
-             width="16" height="16" border="0"/>
         <span t-if="!field.attrs.modifiers.invisible">
             <t t-esc="record[field.attrs.name]" />
         </span>

@@ -98,25 +98,25 @@ openerp.base.TreeView = openerp.base.View.extend({
      */
     hook_row_click: function () {
         var self = this;
-        this.$element.delegate('.treeview-tr img', 'click', function () {
-            var is_loaded = false,
+        this.$element.delegate('.treeview-tr', 'click', function () {
+            var is_loaded = 0,
                 $this = $(this),
                 record_id = $this.data('id'),
                 record = self.records[record_id],
                 children_ids = record[self.children_field];
 
             _(children_ids).each(function(childid) {
-                if ($('tr #treerow_' + childid).length) {
-                    if ($('tr #treerow_' + childid).is(':hidden')) {
+                if (self.$element.find('#treerow_' + childid).length) {
+                    if (self.$element.find('#treerow_' + childid).is(':hidden')) {
                         is_loaded = -1;
                     } else {
                         is_loaded++;
                     }
                 }
             });
-            if (is_loaded == 0) {
-                if ($this.attr('src') == '/base/static/src/img/expand.gif') {
-                    self.getdata(record_id, children_ids, true);
+            if (is_loaded === 0) {
+                if (!$this.parent().hasClass('oe-open')) {
+                    self.getdata(record_id, children_ids);
                 }
             } else {
                 self.showcontent(record_id, is_loaded < 0);
@@ -142,7 +142,7 @@ openerp.base.TreeView = openerp.base.View.extend({
             });
 
             if ($curr_node.length) {
-                $curr_node.find('td:first > :first-child').attr('src','/base/static/src/img/collapse.gif');
+                $curr_node.addClass('oe-open');
                 $curr_node.after(children_rows);
             } else {
                 self.$element.find('tbody').html(children_rows);
@@ -193,15 +193,15 @@ openerp.base.TreeView = openerp.base.View.extend({
 
     // show & hide the contents
     showcontent: function (record_id, show) {
-        this.$element.find('#parentimg_' + record_id)
-            .attr('src', show ? '/base/static/src/img/collapse.gif' : '/base/static/src/img/expand.gif');
+        this.$element.find('#treerow_' + record_id)
+                .toggleClass('oe-open', show);
 
         _(this.records[record_id][this.children_field]).each(function (child_id) {
-            if (this.$element.find('img#parentimg_' + child_id).length) {
+            var $child_row = this.$element.find('#treerow_' + child_id);
+            if ($child_row.hasClass('oe-open')) {
                 this.showcontent(child_id, false);
             }
-
-            this.$element.find('#treerow_' + child_id).toggle(show);
+            $child_row.toggle(show);
         }, this);
     },
 

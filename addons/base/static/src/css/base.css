@@ -1081,13 +1081,21 @@ background: linear-gradient(top, #ffffff 0%,#ebe9e9 100%); /* W3C */
     vertical-align: top;
     text-align: left;
 }
+.treeview-tr:first-of-type {
+    background: transparent url(/base/static/src/img/expand.gif) 0 50% no-repeat;
+}
+.oe-open .treeview-tr:first-of-type {
+    background-image: url(/base/static/src/img/collapse.gif);
+}
+.treeview-tr:first-of-type span,
 .treeview-td:first-of-type span {
-    padding-left: 21px;
+    display: block;
+    margin-left: 16px;
 }
 
 .treeview-header {
     text-align: left;
-    padding-left: 21px;
+    padding-left: 16px;
     font-weight: bold;
     vertical-align: top;
 }
