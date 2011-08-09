@@ -949,9 +949,6 @@ openerp.base.Homepage = openerp.base.Widget.extend({
 openerp.base.Preferences = openerp.base.Widget.extend({
 });
 
-openerp.base.ImportExport = openerp.base.Widget.extend({
-});
-
 openerp.base.WebClient = openerp.base.Widget.extend({
     init: function(element_id) {
         this._super(null, element_id);
