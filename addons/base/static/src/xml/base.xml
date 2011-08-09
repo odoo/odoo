@@ -256,23 +256,24 @@
         <t t-call="TreeView.rows"/>
     </tbody>
 </table>
-<t t-name="TreeView.rows" t-foreach="records" t-as="record">
+<tr t-name="TreeView.rows"
+        t-foreach="records" t-as="record"
+        t-att-id="'treerow_' + record.id">
     <t t-set="children" t-value="record[children_field]"/>
-    <tr t-att-id="'treerow_' + record.id">
-        <t t-if="children and children.length">
-            <td class="treeview-tr">
-                <img t-att-id="'parentimg_' + record.id" src="/base/static/src/img/expand.gif" width="16" height="16" border="0"/>
-            </td>
-        </t>
-        <td t-foreach="fields_view" t-as="field"
-            t-if="!field.attrs.modifiers.tree_invisible"
-            class="treeview-td">
-            <span t-if="!field.attrs.modifiers.invisible">
-                <t t-esc="record[field.attrs.name]" />
-            </span>
-        </td>
-    </tr>
-</t>
+    <td t-if="children and children.length"
+            class="treeview-tr">
+        <img t-att-id="'parentimg_' + record.id"
+             src="/base/static/src/img/expand.gif"
+             width="16" height="16" border="0"/>
+    </td>
+    <td t-foreach="fields_view" t-as="field"
+        t-if="!field.attrs.modifiers.tree_invisible"
+        class="treeview-td">
+        <span t-if="!field.attrs.modifiers.invisible">
+            <t t-esc="record[field.attrs.name]" />
+        </span>
+    </td>
+</tr>
 <table t-name="ListView">
     <t t-set="columns_count" t-value="visible_columns.length + (options.selectable ? 1 : 0) + (options.deletable ? 1 : 0)"/>
     <t t-set="actions_span" t-value="Math.floor((options.deletable or options.addable) ? columns_count/2 : 0)"/>
