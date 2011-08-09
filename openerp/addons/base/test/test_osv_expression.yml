@@ -178,6 +178,57 @@
         res_ids.sort()
         assert res_ids == all_ids, "Searching against empty set failed, returns %r" % res_ids
 -
+    Test the '(not) like/in' behavior. res.partner and its parent_id column are used because
+    parent_id is a many2one, allowing to test the Null value, and there are actually some
+    null and non-null values in the demo data.
+-
+    !python {model: res.partner }: |
+        partner_ids = self.search(cr, uid, [])
+        max_partner_id = max(partner_ids)
+        partners = self.browse(cr, uid, partner_ids)
+        with_parent = []
+        without_parent = []
+        for x in partners:
+            if x.parent_id and x.parent_id.id in partner_ids:
+                with_parent.append(x.id)
+        for x in partners:
+            if not x.parent_id:
+                without_parent.append(x.id)
+        print "with_parent", with_parent
+        print "without_parent", without_parent
+        res_0 = self.search(cr, uid, [('parent_id', 'not like', 'probably_unexisting_name')])
+        res_1 = self.search(cr, uid, [('parent_id', 'not in', [max_partner_id + 1])])
+        res_2 = self.search(cr, uid, [('parent_id', 'not in', False)])
+        res_3 = self.search(cr, uid, [('parent_id', 'not in', [])])
+        res_4 = self.search(cr, uid, [('parent_id', 'not in', [False])])
+        print ">>>  0:", res_0
+        print ">>>  1:", res_1
+        print ">>>  2:", res_2
+        print ">>>  3:", res_3
+        print ">>>  4:", res_4
+        print ">>> ----------"
+        res_5 = self.search(cr, uid, [('parent_id', 'like', 'probably_unexisting_name')])
+        res_6 = self.search(cr, uid, [('parent_id', 'in', [max_partner_id + 1])])
+        res_7 = self.search(cr, uid, [('parent_id', 'in', False)])
+        res_8 = self.search(cr, uid, [('parent_id', 'in', [])])
+        res_9 = self.search(cr, uid, [('parent_id', 'in', [False])])
+        print ">>>  5:", res_5
+        print ">>>  6:", res_6
+        print ">>>  7:", res_7
+        print ">>>  8:", res_8
+        print ">>>  9:", res_9
+        print ">>> ----------"
+        res_10 = self.search(cr, uid, ['!', ('parent_id', 'like', 'probably_unexisting_name')])
+        res_11 = self.search(cr, uid, ['!', ('parent_id', 'in', [max_partner_id + 1])])
+        res_12 = self.search(cr, uid, ['!', ('parent_id', 'in', False)])
+        res_13 = self.search(cr, uid, ['!', ('parent_id', 'in', [])])
+        res_14 = self.search(cr, uid, ['!', ('parent_id', 'in', [False])])
+        print ">>> 10:", res_10
+        print ">>> 11:", res_11
+        print ">>> 12:", res_12
+        print ">>> 13:", res_13
+        print ">>> 14:", res_14
+-
     Property of the query (one2many not in False).
 -
     !python {model: res.currency }: |
@@ -273,6 +324,8 @@
         res_8 = self.search(cr, uid, [('currency_ids', 'like', default_company.currency_ids[0].name)])
         res_9 = self.search(cr, uid, [('currency_ids', 'like', 'probably_unexisting_name')])
         # self.search(cr, uid, [('currency_ids', 'unexisting_op', 'probably_unexisting_name')]) # TODO expected exception
+
+        # get the companies referenced by some currency (this is normally the main company)
         res_10 = self.search(cr, uid, [('currency_ids', 'not like', 'probably_unexisting_name')])
         res_11 = self.search(cr, uid, [('currency_ids', 'not in', [max_currency_id + 1])])
         res_12 = self.search(cr, uid, [('currency_ids', 'not in', False)])
