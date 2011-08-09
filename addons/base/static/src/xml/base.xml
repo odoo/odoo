@@ -238,10 +238,7 @@
 </t>
 <t t-name="TreeView">
     <h2 class="oe_view_title"><t t-esc="title"/></h2>
-    <select name="parent" id="parent_id" style="width: 30%">
-        <option t-foreach="first_level" t-as="record" t-att-value="record.id">
-            <t t-esc="record.name"/>
-        </option>
+    <select name="parent" style="width: 30%">
     </select>
 </t>
 <table t-name="TreeView.architecture">
@@ -259,9 +256,10 @@
         <t t-call="TreeView.rows"/>
     </tbody>
 </table>
-<t t-name="TreeView.rows" t-foreach="records" t-as="record" >
+<t t-name="TreeView.rows" t-foreach="records" t-as="record">
+    <t t-set="children" t-value="record[children_field]"/>
     <tr t-att-id="'treerow_' + record.id">
-        <t t-if="record.child_id and record.child_id.length >= 1">
+        <t t-if="children and children.length">
             <td class="treeview-tr">
                 <img t-att-id="'parentimg_' + record.id" src="/base/static/src/img/expand.gif" width="16" height="16" border="0"/>
             </td>

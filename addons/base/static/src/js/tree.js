@@ -39,9 +39,27 @@ openerp.base.TreeView = openerp.base.View.extend({
             toolbar: this.view_manager ? !!this.view_manager.sidebar : false
         }, this.on_loaded);
     },
-
+    /**
+     * Returns the list of fields needed to correctly read objects.
+     *
+     * Gathers the names of all fields in fields_view_get, and adds the
+     * field_parent (children_field in the tree view) if it's not already one
+     * of the fields to fetch
+     *
+     * @returns {Array} an array of fields which can be provided to DataSet.read_slice and others
+     */
+    fields_list: function () {
+        var fields = _.keys(this.fields);
+        if (!_(fields).contains(this.children_field)) {
+            fields.push(this.children_field);
+        }
+        return fields;
+    },
     on_loaded: function (fields_view) {
         var self = this;
+        // field name in OpenERP is kinda stupid: this is the field holding
+        // the ids to the children of the current node
+        this.children_field = fields_view['field_parent'];
         this.fields_view = fields_view;
         _(this.fields_view.arch.children).each(function (field) {
             if (field.attrs.modifiers) {
@@ -50,43 +68,50 @@ openerp.base.TreeView = openerp.base.View.extend({
         });
         this.fields = fields_view.fields;
 
-        this.dataset.read_slice(_.keys(this.fields), 0, false, function (response) {
+        this.dataset.read_slice(this.fields_list(), 0, false, function (records) {
             self.$element.html(QWeb.render('TreeView', {
-                "first_level": response,
                 'title': self.fields_view.arch.attrs.string
             }));
-
-            self.$element.find('#parent_id').bind('change', function(){
-                self.getdata($('#parent_id').val(), false);
+            var $select = self.$element.find('select')
+                .change(function () {
+                    var $option = $(this).find(':selected');
+                    self.getdata($option.val(), $option.data('children'));
+                });
+            _(records).each(function (record) {
+                $('<option>')
+                        .val(record.id)
+                        .text(record.name)
+                        .data('children', record[self.children_field])
+                    .appendTo($select);
             });
-            self.getdata(self.dataset.ids[0], true);
+
+            $select.change();
         });
     },
 
     // get child data of selected value
-    getdata: function (id, flag) {
-
+    getdata: function (id, children_ids, flag) {
         var self = this;
 
-        self.dataset.domain = [['parent_id', '=', parseInt(id, 10)]];
-        self.dataset.read_slice([], 0, false, function (response) {
+        self.dataset.read_ids(children_ids, this.fields_list(), function (records) {
 
-            var is_padding, row_id, record_id;
+            var is_padding, row_id;
             var curr_node = $('tr #treerow_' + id);
 
             if (curr_node.length == 1) {
                 curr_node.find('td:first').children(':first-child').attr('src','/base/static/src/img/collapse.gif');
                 curr_node.after(QWeb.render('TreeView.rows', {
-                    'records': response,
+                    'records': records,
+                    'children_field': self.children_field,
                     'fields_view' : self.fields_view.arch.children,
                     'field' : self.fields
                 }));
 
 
-                for (var i = 0; i < response.length; i++) {
-                    row_id = $('tr #treerow_' + response[i].id);
+                for (var i = 0; i < records.length; i++) {
+                    row_id = $('tr #treerow_' + records[i].id);
 
-                    if (row_id && row_id.find('td:first').children(':first-child').attr('id') == 'parentimg_' + response[i].id) {
+                    if (row_id && row_id.find('td:first').children(':first-child').attr('id') == 'parentimg_' + records[i].id) {
                         row_id.find('td:first').append('<span>'+row_id.find('td:eq(1)').text()+'</span>');
                         row_id.find('td:eq(1)').remove();
                         is_padding = true;
@@ -97,8 +122,8 @@ openerp.base.TreeView = openerp.base.View.extend({
                 var padd = parseInt(padding.replace('px',''), 10);
                 var fixpadding;
 
-                for (var i = 0; i < response.length; i++) {
-                    row_id = $('tr #treerow_' + response[i].id);
+                for (var i = 0; i < records.length; i++) {
+                    row_id = $('tr #treerow_' + records[i].id);
                     if (row_id) {
                         if (!is_padding) {
                             fixpadding = padd + 40;
@@ -111,7 +136,7 @@ openerp.base.TreeView = openerp.base.View.extend({
                             }
                             var curr_node_elem = row_id.find('td:first');
                             curr_node_elem.children(':first-child').addClass("parent_top");
-                            if (curr_node_elem.children(':first-child').attr('id') == "parentimg_" + response[i].id) {
+                            if (curr_node_elem.children(':first-child').attr('id') == "parentimg_" + records[i].id) {
                                 curr_node_elem.css('paddingLeft', fixpadding );
                             } else {
                                 curr_node_elem.css('paddingLeft', (fixpadding + 20));
@@ -124,7 +149,8 @@ openerp.base.TreeView = openerp.base.View.extend({
                     self.$element.find('table').remove();
                 }
                 self.$element.append(QWeb.render('TreeView.architecture', {
-                    'records': response,
+                    'records': records,
+                    'children_field': self.children_field,
                     'fields_view': self.fields_view.arch.children,
                     'fields': self.fields
                 }));
@@ -148,37 +174,38 @@ openerp.base.TreeView = openerp.base.View.extend({
             });
 
             self.$element.find('tr[id ^= treerow_] td').children(':first-child').click( function() {
-                var is_loaded = 0;
-                if ($(this).length == 1) {
-                    record_id = (this.id).split('_')[1];
-                    for (var i = 0; i < response.length; i++) {
-                        if (record_id == response[i].id && response[i].child_id.length > 0) {
-                            $(response[i].child_id).each (function(e, childid) {
-                                if ($('tr #treerow_' + childid).length > 0) {
-                                    if ($('tr #treerow_' + childid).is(':hidden')) {
-                                        is_loaded = -1;
-                                    } else {
-                                        is_loaded++;
-                                    }
+                var is_loaded = 0,
+                        $this = $(this);
+
+                var record_id = (this.id).split('_')[1];
+                _(records).each(function (record) {
+                    var children_ids = record[self.children_field];
+                    if (record_id == record.id && children_ids.length) {
+                        _(children_ids).each(function(childid) {
+                            if ($('tr #treerow_' + childid).length) {
+                                if ($('tr #treerow_' + childid).is(':hidden')) {
+                                    is_loaded = -1;
+                                } else {
+                                    is_loaded++;
                                 }
-                            });
-                            if (is_loaded == 0) {
-                                if ($(this).attr('src') == '/base/static/src/img/expand.gif') {
-                                    self.getdata(record_id, true);
-                                }
-                            } else if (is_loaded > 0) {
-                                self.showcontent(record_id, true, response[i].child_id);
-                            } else {
-                                self.showcontent(record_id, false, response[i].child_id);
                             }
+                        });
+                        if (is_loaded == 0) {
+                            if ($this.attr('src') == '/base/static/src/img/expand.gif') {
+                                self.getdata(record_id, children_ids, true);
+                            }
+                        } else if (is_loaded > 0) {
+                            self.showcontent(record_id, true, children_ids);
+                        } else {
+                            self.showcontent(record_id, false, children_ids);
                         }
                     }
-                }
+                });
             });
 
             self.$element.find('tr[id ^= treerow_]').find('td').children(':last-child').click( function(e) {
                 row_id = $(this).parent().parent().attr('id');
-                record_id = row_id.split('_')[1];
+                var record_id = row_id.split('_')[1];
                 self.showrecord(record_id, self.model);
                 e.stopImmediatePropagation();
             });
