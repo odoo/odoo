@@ -85,8 +85,7 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
      * the default behaviors and possible options for the list view.
      *
      * @constructs
-     * @param view_manager
-     * @param session An OpenERP session object
+     * @param parent parent object
      * @param element_id the id of the DOM elements this view should link itself to
      * @param {openerp.base.DataSet} dataset the dataset the view should work with
      * @param {String} view_id the listview's identifier, if any
@@ -102,15 +101,12 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
      */
     init: function(parent, element_id, dataset, view_id, options) {
         this._super(parent, element_id);
-        this.set_default_options();
-        this.view_manager = parent || new openerp.base.NullViewManager();
+        this.set_default_options(_.extend({}, this.defaults, options || {}));
         this.dataset = dataset;
         this.model = dataset.model;
         this.view_id = view_id;
 
         this.columns = [];
-
-        this.options = _.extend({}, this.defaults, options || {});
 
         this.set_groups(new openerp.base.ListView.Groups(this));
 
@@ -123,7 +119,7 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
     /**
      * Retrieves the view's number of records per page (|| section)
      *
-     * options > defaults > view_manager.action.limit > indefinite
+     * options > defaults > indefinite
      *
      * @returns {Number|null}
      */
@@ -131,7 +127,6 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
         if (this._limit === undefined) {
             this._limit = (this.options.limit
                         || this.defaults.limit
-                        || (this.view_manager.action || {}).limit
                         || null);
         }
         return this._limit;
@@ -267,7 +262,7 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
                         })
                         .val(self._limit || 'NaN');
                 });
-        if (this.options.sidebar && this.options.sidebar_id) {
+        if (!this.sidebar && this.options.sidebar && this.options.sidebar_id) {
             this.sidebar = new openerp.base.Sidebar(this, this.options.sidebar_id);
             this.sidebar.start();
             this.sidebar.add_toolbar(data.fields_view.toolbar);
@@ -389,9 +384,7 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
         view = view || 'form';
         this.dataset.index = index;
         _.delay(_.bind(function () {
-            if(this.view_manager) {
-                this.view_manager.on_mode_switch(view);
-            }
+            this.do_switch_view(view);
         }, this));
     },
     do_show: function () {

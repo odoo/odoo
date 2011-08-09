@@ -305,10 +305,10 @@ openerp.base.Notification =  openerp.base.Widget.extend({
 openerp.base.Dialog = openerp.base.OldWidget.extend({
     dialog_title: "",
     identifier_prefix: 'dialog',
-    init: function (parent, options) {
+    init: function (parent, dialog_options) {
         var self = this;
         this._super(parent);
-        this.options = {
+        this.dialog_options = {
             modal: true,
             width: 'auto',
             min_width: 0,
@@ -324,11 +324,11 @@ openerp.base.Dialog = openerp.base.OldWidget.extend({
         };
         for (var f in this) {
             if (f.substr(0, 10) == 'on_button_') {
-                this.options.buttons[f.substr(10)] = this[f];
+                this.dialog_options.buttons[f.substr(10)] = this[f];
             }
         }
-        if (options) {
-            this.set_options(options);
+        if (dialog_options) {
+            this.set_options(dialog_options);
         }
     },
     set_options: function(options) {
@@ -351,7 +351,7 @@ openerp.base.Dialog = openerp.base.OldWidget.extend({
         if (!options.title && this.dialog_title) {
             options.title = this.dialog_title;
         }
-        _.extend(this.options, options);
+        _.extend(this.dialog_options, options);
     },
     get_width: function(val) {
         return this.get_size(val.toString(), $(window.top).width());
@@ -369,19 +369,19 @@ openerp.base.Dialog = openerp.base.OldWidget.extend({
         }
     },
     start: function (auto_open) {
-        this.$dialog = $('<div id="' + this.element_id + '"></div>').dialog(this.options);
+        this.$dialog = $('<div id="' + this.element_id + '"></div>').dialog(this.dialog_options);
         if (auto_open !== false) {
             this.open();
         }
         this._super();
     },
-    open: function(options) {
+    open: function(dialog_options) {
         // TODO fme: bind window on resize
         if (this.template) {
             this.$element.html(this.render());
         }
-        this.set_options(options);
-        this.$dialog.dialog(this.options).dialog('open');
+        this.set_options(dialog_options);
+        this.$dialog.dialog(this.dialog_options).dialog('open');
     },
     close: function() {
         // Closes the dialog but leave it in a state where it could be opened again.

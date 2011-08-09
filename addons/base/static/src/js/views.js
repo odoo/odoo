@@ -130,13 +130,17 @@ openerp.base.ViewManager =  openerp.base.Widget.extend({
         this.$element.find('.oe_vm_switch button').click(function() {
             self.on_mode_switch($(this).data('view-type'));
         });
+        var views_ids = {};
         _.each(this.views_src, function(view) {
             self.views[view.view_type] = $.extend({}, view, {
                 controller : null,
                 options : _.extend({
-                    sidebar_id : self.element_id + '_sidebar_' + view.view_type
-                }, self.flags)
+                    sidebar_id : self.element_id + '_sidebar_' + view.view_type,
+                    action : self.action,
+                    action_views_ids : views_ids
+                }, self.flags, view.options || {})
             });
+            views_ids[view.view_type] = view.view_id;
         });
         if (this.flags.views_switcher === false) {
             this.$element.find('.oe_vm_switch').hide();
@@ -165,6 +169,7 @@ openerp.base.ViewManager =  openerp.base.Widget.extend({
             if (view.embedded_view) {
                 controller.set_embedded_view(view.embedded_view);
             }
+            controller.do_switch_view.add_last(this.on_mode_switch);
             if (view_type === 'list' && this.flags.search_view === false && this.action && this.action['auto_search']) {
                 // In case the search view is not instantiated: manually call ListView#search
                 var domains = !_(self.action.domain).isEmpty()
@@ -447,7 +452,9 @@ openerp.base.View = openerp.base.Widget.extend({
         _.defaults(this.options, {
             // All possible views options should be defaulted here
             sidebar_id: null,
-            sidebar: true
+            sidebar: true,
+            action: null,
+            action_views_ids: {}
         });
     },
     /**
@@ -510,6 +517,9 @@ openerp.base.View = openerp.base.Widget.extend({
      */
     set_embedded_view: function(embedded_view) {
         this.embedded_view = embedded_view;
+        this.options.sidebar = false;
+    },
+    do_switch_view: function(view) {
     },
     set_common_sidebar_sections: function(sidebar) {
         sidebar.add_section('customize', "Customize", [
