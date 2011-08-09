@@ -116,6 +116,11 @@ class project_issue(crm.crm_case, osv.osv):
                         hours = cal_obj.interval_hours_get(cr, uid, issue.project_id.resource_calendar_id.id,
                                 datetime.strptime(issue.create_date, '%Y-%m-%d %H:%M:%S'),
                                 datetime.strptime(issue.date_closed, '%Y-%m-%d %H:%M:%S'))
+                elif field in ['inactivity_days']:
+                    if issue.date_action_last:
+                        inactive_days = datetime.today() - datetime.strptime(issue.date_action_last, '%Y-%m-%d %H:%M:%S')
+                        res[issue.id][field] = inactive_days.days
+                        break
                 if ans:
                     resource_id = False
                     if issue.user_id:
@@ -213,6 +218,8 @@ class project_issue(crm.crm_case, osv.osv):
                                 multi='compute_day', type="float", store=True),
         'working_hours_close': fields.function(_compute_day, string='Working Hours to Close the Issue', \
                                 multi='compute_day', type="float", store=True),
+        'inactivity_days': fields.function(_compute_day, string='Days since last action', \
+                                multi='compute_day', type="integer", help="Difference in days between last action and current date"),
         'message_ids': fields.one2many('mailgate.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
         'date_action_last': fields.datetime('Last Action', readonly=1),
         'date_action_next': fields.datetime('Next Action', readonly=1),
