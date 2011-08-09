@@ -94,7 +94,9 @@ openerp.base.TreeView = openerp.base.View.extend({
                     .appendTo($select);
             });
 
-            $select.change();
+            if (!_.isEmpty(records)) {
+                $select.change();
+            }
         });
     },
     /**
