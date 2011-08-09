@@ -6,33 +6,31 @@ openerp.base.views = function(openerp) {
 
 openerp.base.client_actions = new openerp.base.Registry();
 openerp.base.ActionManager = openerp.base.Widget.extend({
-// process all kind of actions
     init: function(parent, element_id) {
         this._super(parent, element_id);
         this.viewmanager = null;
         this.current_dialog = null;
-        // Temporary linking view_manager to session.
-        // Will use parent to find it when implementation will be done.
+        // TODO remove this and use do_action() of Widget.
         this.session.action_manager = this;
     },
     do_action: function(action, on_closed) {
         action.flags = _.extend({
-            sidebar : action.target != 'new',
-            search_view : action.target != 'new',
             new_window : false,
             views_switcher : action.target != 'new',
+            search_view : action.target != 'new',
             action_buttons : action.target != 'new',
+            sidebar : action.target != 'new',
             pager : action.target != 'new'
         }, action.flags || {});
+        var type = action.type.replace(/\./g,'_');
         // instantiate the right controllers by understanding the action
-        if (!(action.type in this)) {
+        if (!(type in this)) {
             console.log("Action manager can't handle action of type " + action.type, action);
             return;
         }
-        this[action.type](action, on_closed);
+        this[type](action, on_closed);
     },
-
-    'ir.actions.act_window': function (action, on_closed) {
+    ir_actions_act_window: function (action, on_closed) {
         if (!action.target && this.current_dialog) {
             action.flags.new_window = true;
         }
@@ -66,10 +64,10 @@ openerp.base.ActionManager = openerp.base.Widget.extend({
             this.viewmanager.start();
         }
     },
-    'ir.actions.act_window_close': function (action, on_closed) {
+    ir_actions_act_window_close: function (action, on_closed) {
         this.close_dialog();
     },
-    'ir.actions.server': function (action, on_closed) {
+    ir_actions_server: function (action, on_closed) {
         var self = this;
         this.rpc('/base/action/run', {
             action_id: action.id,
@@ -78,7 +76,7 @@ openerp.base.ActionManager = openerp.base.Widget.extend({
             self.do_action(action, on_closed)
         });
     },
-    'ir.actions.client': function (action) {
+    ir_actions_client: function (action) {
         var Handler = openerp.base.client_actions.get_object(action.tag);
         new Handler(this, this.element_id, action.params).start();
     },
