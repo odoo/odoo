@@ -333,12 +333,12 @@ openerp.base.Dialog = openerp.base.OldWidget.extend({
     },
     set_options: function(options) {
         options = options || {};
-        options.width = this.get_width(options.width || this.options.width);
-        options.min_width = this.get_width(options.min_width || this.options.min_width);
-        options.max_width = this.get_width(options.max_width || this.options.max_width);
-        options.height = this.get_height(options.height || this.options.height);
-        options.min_height = this.get_height(options.min_height || this.options.min_height);
-        options.max_height = this.get_height(options.max_height || this.options.max_width);
+        options.width = this.get_width(options.width || this.dialog_options.width);
+        options.min_width = this.get_width(options.min_width || this.dialog_options.min_width);
+        options.max_width = this.get_width(options.max_width || this.dialog_options.max_width);
+        options.height = this.get_height(options.height || this.dialog_options.height);
+        options.min_height = this.get_height(options.min_height || this.dialog_options.min_height);
+        options.max_height = this.get_height(options.max_height || this.dialog_options.max_width);
 
         if (options.width !== 'auto') {
             if (options.width > options.max_width) options.width = options.max_width;
