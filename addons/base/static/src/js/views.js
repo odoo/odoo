@@ -264,11 +264,11 @@ openerp.base.ViewManagerAction = openerp.base.ViewManager.extend({
     init: function(session, element_id, action) {
         var dataset;
         if (!action.res_id) {
-            dataset = new openerp.base.DataSetSearch(session, action.res_model, action.context || null);
+            dataset = new openerp.base.DataSetSearch(session, action.res_model, action.context || null, action.domain || null);
         } else {
             dataset = new openerp.base.DataSetStatic(session, action.res_model, {}, [action.res_id]);
             if (action.context) {
-                // TODO fme: should normalize all DataSets constructors to (session, model, context, ...)
+                // TODO fme: should normalize all DataSets constructors to (session, model, context, domain, ...)
                 dataset.context = action.context;
             }
         }

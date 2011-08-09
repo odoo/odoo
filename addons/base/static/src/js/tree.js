@@ -50,7 +50,6 @@ openerp.base.TreeView = openerp.base.View.extend({
         });
         this.fields = fields_view.fields;
 
-        self.dataset.domain = [['parent_id', '=', '']];
         this.dataset.read_slice([], 0, false, function (response) {
             self.$element.html(QWeb.render('TreeView', {
                 "first_level": response,
