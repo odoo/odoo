@@ -262,6 +262,7 @@
     <td t-if="children and children.length"
             class="treeview-tr">
         <img t-att-id="'parentimg_' + record.id"
+             t-att-data-id="record.id"
              src="/base/static/src/img/expand.gif"
              width="16" height="16" border="0"/>
     </td>

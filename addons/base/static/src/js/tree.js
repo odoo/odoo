@@ -18,7 +18,8 @@ openerp.base.TreeView = openerp.base.View.extend({
         this.model = dataset.model;
         this.view_id = view_id;
         this.session = session;
-        this.columns = [];
+
+        this.records = {};
 
         this.options = _.extend({}, this.defaults, options || {});
 
@@ -78,6 +79,7 @@ openerp.base.TreeView = openerp.base.View.extend({
                     self.getdata($option.val(), $option.data('children'));
                 });
             _(records).each(function (record) {
+                self.records[record.id] = record;
                 $('<option>')
                         .val(record.id)
                         .text(record.name)
@@ -87,13 +89,48 @@ openerp.base.TreeView = openerp.base.View.extend({
 
             $select.change();
         });
+        this.hook_row_click();
     },
+    /**
+     * Sets up opening a row
+     */
+    hook_row_click: function () {
+        var self = this;
+        this.$element.delegate('.treeview-tr img', 'click', function () {
+            var is_loaded = false,
+                $this = $(this),
+                record_id = $this.data('id'),
+                record = self.records[record_id],
+                children_ids = record[self.children_field];
 
+            _(children_ids).each(function(childid) {
+                if ($('tr #treerow_' + childid).length) {
+                    if ($('tr #treerow_' + childid).is(':hidden')) {
+                        is_loaded = -1;
+                    } else {
+                        is_loaded++;
+                    }
+                }
+            });
+            if (is_loaded == 0) {
+                if ($this.attr('src') == '/base/static/src/img/expand.gif') {
+                    self.getdata(record_id, children_ids, true);
+                }
+            } else if (is_loaded > 0) {
+                self.showcontent(record_id, true, children_ids);
+            } else {
+                self.showcontent(record_id, false, children_ids);
+            }
+        });
+    },
     // get child data of selected value
     getdata: function (id, children_ids, flag) {
         var self = this;
 
         self.dataset.read_ids(children_ids, this.fields_list(), function (records) {
+            _(records).each(function (record) {
+                self.records[record.id] = record;
+            });
 
             var is_padding, row_id;
             var curr_node = $('tr #treerow_' + id);
@@ -171,36 +208,6 @@ openerp.base.TreeView = openerp.base.View.extend({
                 $(this).addClass('mouse-over');
             }).mouseout( function() {
                 $(this).removeClass('mouse-over');
-            });
-
-            self.$element.find('tr[id ^= treerow_] td').children(':first-child').click( function() {
-                var is_loaded = 0,
-                        $this = $(this);
-
-                var record_id = (this.id).split('_')[1];
-                _(records).each(function (record) {
-                    var children_ids = record[self.children_field];
-                    if (record_id == record.id && children_ids.length) {
-                        _(children_ids).each(function(childid) {
-                            if ($('tr #treerow_' + childid).length) {
-                                if ($('tr #treerow_' + childid).is(':hidden')) {
-                                    is_loaded = -1;
-                                } else {
-                                    is_loaded++;
-                                }
-                            }
-                        });
-                        if (is_loaded == 0) {
-                            if ($this.attr('src') == '/base/static/src/img/expand.gif') {
-                                self.getdata(record_id, children_ids, true);
-                            }
-                        } else if (is_loaded > 0) {
-                            self.showcontent(record_id, true, children_ids);
-                        } else {
-                            self.showcontent(record_id, false, children_ids);
-                        }
-                    }
-                });
             });
 
             self.$element.find('tr[id ^= treerow_]').find('td').children(':last-child').click( function(e) {
