@@ -1,7 +1,11 @@
+/*
+This software is allowed to use under GPL or you need to obtain Commercial or Enterise License
+to use it in not GPL project. Please contact sales@dhtmlx.com for details
+*/
 scheduler.locale={
 	date:{
 		month_full:["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"],
-		month_short:["Jan", "Fev", "Mar", "Avr", "Mai", "Juin", "Juil", "Aou", "Sep", "Oct", "Nov", "Dec"],	
+		month_short:["Jan", "Fév", "Mar", "Avr", "Mai", "Juin", "Juil", "Aôu", "Sep", "Oct", "Nov", "Déc"],	
 		day_full:["Dimanche", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"],
     	day_short:["Dim", "Lun", "Mar", "Mer", "Jeu", "Ven", "Sam"]
     },
@@ -33,6 +37,9 @@ scheduler.locale={
 		description:"Description",
 		
 		/*year view extension*/
-		year_tab:"Ans"
+		year_tab:"Année",
+
+		/*week agenda view extension*/
+		week_agenda_tab: "Jour"
 	}
-}
+};

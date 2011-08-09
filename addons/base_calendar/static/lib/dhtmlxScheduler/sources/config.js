@@ -1,4 +1,8 @@
 /*
+This software is allowed to use under GPL or you need to obtain Commercial or Enterise License
+to use it in not GPL project. Please contact sales@dhtmlx.com for details
+*/
+/*
 %e	Day of the month without leading zeros (01..31)
 %d	Day of the month, 2 digits with leading zeros (01..31)
 %j	Day of the year, 3 digits with leading zeros (001..366)
@@ -39,27 +43,35 @@ scheduler.config={
 	edit_on_create:1,
 	details_on_create:0,
 	click_form_details:0,
-	
+    cascade_event_display: false,
+    cascade_event_count:4,
+	cascade_event_margin: 30,
+	drag_lightbox:true,
+    preserve_scroll:true,
+
 	server_utc:false,
 
 	positive_closing:false,
 
 	icons_edit:["icon_save","icon_cancel"],
 	icons_select:["icon_details","icon_edit","icon_delete"],
-	
+	buttons_left:["dhx_save_btn","dhx_cancel_btn"],
+	buttons_right:["dhx_delete_btn"],
 	lightbox:{
 		sections:[	{name:"description", height:200, map_to:"text", type:"textarea" , focus:true},
 					{name:"time", height:72, type:"time", map_to:"auto"}	]
-	}
+	},
+
+    repeat_date_of_end: "01.01.2010"
 };
-scheduler.templates={}
+scheduler.templates={};
 scheduler.init_templates=function(){
 	var d=scheduler.date.date_to_str;
 	var c=scheduler.config;
 	var f = function(a,b){
 		for (var c in b)
 			if (!a[c]) a[c]=b[c];
-	}
+	};
 	f(scheduler.templates,{
 		day_date:d(c.default_date),
 		month_date:d(c.month_date),
@@ -99,7 +111,7 @@ scheduler.init_templates=function(){
 			return ev.text;
 		}
 	});
-	this.callEvent("onTemplatesReady",[])
-}
+	this.callEvent("onTemplatesReady",[]);
+};
 
 

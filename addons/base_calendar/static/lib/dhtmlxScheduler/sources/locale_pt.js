@@ -1,4 +1,8 @@
 /*
+This software is allowed to use under GPL or you need to obtain Commercial or Enterise License
+to use it in not GPL project. Please contact sales@dhtmlx.com for details
+*/
+/*
 
 	TRANSLATION BY MATTHEUS PIROVANI RORIZ GONЗALVES
 	
@@ -44,8 +48,11 @@ scheduler.locale={
 		description:"Descrição",
 		
 		/*year view extension*/
-		year_tab:"Ano"
+		year_tab:"Ano",
+
+        /*week agenda view extension*/
+        week_agenda_tab: "Dia"        
 	}
-}
+};
 
 

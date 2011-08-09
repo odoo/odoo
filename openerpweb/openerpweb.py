@@ -107,15 +107,20 @@ class OpenERPSession(object):
         if uid: self.get_context()
         return uid
 
-    def execute(self, model, func, *l, **d):
+    def assert_valid(self):
+        """
+        Ensures this session is valid (logged into the openerp server)
+        """
         if not (self._db and self._uid and self._password):
             raise OpenERPUnboundException()
+
+    def execute(self, model, func, *l, **d):
+        self.assert_valid()
         r = self.proxy('object').execute(self._db, self._uid, self._password, model, func, *l, **d)
         return r
 
     def exec_workflow(self, model, id, signal):
-        if not (self._db and self._uid and self._password):
-            raise OpenERPUnboundException()
+        self.assert_valid()
         r = self.proxy('object').exec_workflow(self._db, self._uid, self._password, model, signal, id)
         return r
 
@@ -174,10 +179,10 @@ class OpenERPSession(object):
         :returns: the augmented context
         :rtype: dict
         """
-        d = {}
-        d.update(self.base_eval_context)
+        d = dict(self.base_eval_context)
         if context:
             d.update(context)
+        d['context'] = d
         return d
 
     def eval_context(self, context_to_eval, context=None):
@@ -197,7 +202,6 @@ class OpenERPSession(object):
         ctx = dict(
             self.base_eval_context,
             **(context or {}))
-        ctx['context'] = ctx
         
         # adding the context of the session to send to the openerp server
         ccontext = nonliterals.CompoundContext(self.context, context_to_eval or {})
@@ -222,12 +226,9 @@ class OpenERPSession(object):
         if isinstance(domain, list):
             return domain
 
-        ctx = dict(context or {})
-        ctx['context'] = ctx
-
         cdomain = nonliterals.CompoundDomain(domain)
         cdomain.session = self
-        return cdomain.evaluate(ctx)
+        return cdomain.evaluate(context or {})
 
 #----------------------------------------------------------
 # OpenERP Web RequestHandler
@@ -270,6 +271,9 @@ class JsonRequest(object):
         self.request = request
         self.params = request.get("params", {})
         self.applicationsession = applicationsession
+        self.httprequest = cherrypy.request
+        self.httpresponse = cherrypy.response
+        self.httpsession = cherrypy.session
         self.httpsession_id = "cookieid"
         self.httpsession = cherrypy.session
         self.session_id = self.params.pop("session_id", None) or uuid.uuid4().hex
@@ -367,7 +371,7 @@ class HttpRequest(object):
         self.context = kw.get('context', {})
         host = cherrypy.config['openerp.server.host']
         port = cherrypy.config['openerp.server.port']
-        self.session = self.httpsession.setdefault(kw.get('session_id'), OpenERPSession(host, port))
+        self.session = self.httpsession.setdefault(kw.pop('session_id', None), OpenERPSession(host, port))
         self.result = ""
         if request.method == 'GET':
             print "GET --> %s.%s %s %r" % (controller.__class__.__name__, f.__name__, request, kw)
@@ -375,7 +379,10 @@ class HttpRequest(object):
             akw = dict([(key, kw[key] if isinstance(kw[key], basestring) else type(kw[key])) for key in kw.keys()])
             print "POST --> %s.%s %s %r" % (controller.__class__.__name__, f.__name__, request, akw)
         r = f(controller, self, **kw)
-        print "<--", r
+        if isinstance(r, str):
+            print "<--", len(r), 'bytes'
+        else:
+            print "<--", len(r), 'characters'
         print
         return r
 
@@ -408,7 +415,7 @@ class Root(object):
         if path_addons not in sys.path:
             sys.path.insert(0, path_addons)
         for i in os.listdir(path_addons):
-            if i not in sys.modules:
+            if i not in addons_module:
                 manifest_path = os.path.join(path_addons, i, '__openerp__.py')
                 if os.path.isfile(manifest_path):
                     manifest = eval(open(manifest_path).read())
@@ -446,7 +453,7 @@ class Root(object):
             #for the mobile web client we are supposed to use a different url to just add '/mobile'
             raise cherrypy.HTTPRedirect('/web_mobile/static/src/web_mobile.html', 301)
         else:
-            raise cherrypy.HTTPRedirect('/base/static/src/base.html', 301)
+            raise cherrypy.HTTPRedirect('/base/webclient/home', 301)
     default.exposed = True
 
 def main(argv):
@@ -454,22 +461,19 @@ def main(argv):
     os.environ["TZ"] = "UTC"
 
     DEFAULT_CONFIG = {
-        'openerp.server.host': '127.0.0.1',
-        'openerp.server.port': 8069,
-        'server.socket_port': 8002,
         'server.socket_host': '0.0.0.0',
         'tools.sessions.on': True,
         'tools.sessions.storage_type': 'file',
-        'tools.sessions.storage_path': os.path.join(tempfile.gettempdir(), "cpsessions"),
         'tools.sessions.timeout': 60
     }
 
     # Parse config
     op = optparse.OptionParser()
-    op.add_option("-p", "--port", dest="server.socket_port", help="listening port", type="int", metavar="NUMBER")
-    op.add_option("-s", "--session-path", dest="tools.sessions.storage_path", help="directory used for session storage", metavar="DIR")
-    op.add_option("--server-host", dest="openerp.server.host", help="OpenERP server hostname", metavar="HOST")
-    op.add_option("--server-port", dest="openerp.server.port", help="OpenERP server port", type="int", metavar="NUMBER")
+    op.add_option("-p", "--port", dest="server.socket_port", default=8002, help="listening port", type="int", metavar="NUMBER")
+    op.add_option("-s", "--session-path", dest="tools.sessions.storage_path", default=os.path.join(tempfile.gettempdir(), "cpsessions"),  help="directory used for session storage", metavar="DIR")
+    op.add_option("--server-host", dest="openerp.server.host", default='127.0.0.1', help="OpenERP server hostname", metavar="HOST")
+    op.add_option("--server-port", dest="openerp.server.port", default=8069, help="OpenERP server port", type="int", metavar="NUMBER")
+    op.add_option("--db-filter", dest="openerp.dbfilter", default='.*', help="Filter listed database", metavar="REGEXP")
     (o, args) = op.parse_args(argv[1:])
     o = vars(o)
     for k in o.keys():
@@ -480,8 +484,8 @@ def main(argv):
     cherrypy.tree.mount(Root())
 
     cherrypy.config.update(config=DEFAULT_CONFIG)
-    if os.path.exists(os.path.join(os.path.dirname( os.path.dirname(__file__)),'openerp-web.cfg')):
-        cherrypy.config.update(os.path.join(os.path.dirname( os.path.dirname(__file__)),'openerp-web.cfg'))
+    if os.path.exists(os.path.join(path_root,'openerp-web.cfg')):
+        cherrypy.config.update(os.path.join(path_root,'openerp-web.cfg'))
     if os.path.exists(os.path.expanduser('~/.openerp_webrc')):
         cherrypy.config.update(os.path.expanduser('~/.openerp_webrc'))
     cherrypy.config.update(o)

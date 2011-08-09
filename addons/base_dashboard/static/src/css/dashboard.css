@@ -7,11 +7,16 @@
 }
 .openerp .oe-dashboard-action {
     margin: 0 0.5em 0.5em 0;
+    padding: 2px;
 }
+.openerp .oe-dashboard-action:hover {
+    border: 1px dashed #ccc;
+    padding: 1px;
+}
+
 .openerp .oe-dashboard-action .oe-dashboard-action-header {
-    margin: 0.3em;
-    padding-bottom: 4px;
-    padding-left: 0.2em
+    font-size: 125%;
+    font-weight: bold;
 }
 .openerp a.oe-dashboard-action-rename {
     float: left;
@@ -40,10 +45,6 @@
 
 .openerp .oe-dashboard-action .oe-dashboard-action-header .ui-icon {
     float: right;
-}
-
-.openerp .oe-dashboard-action .oe-dashboard-action-content {
-    padding: 0.4em;
 }
 
 .openerp .oe-dashboard .ui-sortable-placeholder {
@@ -125,4 +126,115 @@
     position: absolute;
     top: 0px;
     right: 0px;
+}
+
+.openerp .oe-dashboard-config-overview .oe-config-progress {
+    border: 1px inset #d9d9d9;
+    background-color: #f2f2f2;
+    padding: 0.5em;
+    -webkit-border-radius: 0.5em;
+    -moz-border-radius: 0.5em;
+    border-radius: 0.5em;
+}
+.openerp .oe-dashboard-config-overview .oe-config-progress-title {
+    font-size: 1.1em;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin: 0 0 0.5em 0;
+}
+.openerp .oe-dashboard-config-overview dt {
+    font-weight: bold;
+    text-transform: uppercase;
+    border-top: 1px solid #eee;
+    padding-top: 0.5em;
+}
+.openerp .oe-dashboard-config-overview dt:first-child {
+    border-top: none;
+}
+.openerp .oe-dashboard-config-overview dd {
+    margin-left: 1em;
+    padding-bottom: 0.5em;
+}
+.openerp .oe-dashboard-config-overview ul {
+    list-style: none;
+    padding:  0;
+    margin: 0;
+}
+.openerp .oe-dashboard-config-overview li {
+    cursor: pointer;
+    position: relative;
+    text-indent: 20px;
+}
+.openerp .oe-dashboard-config-overview li:hover {
+    cursor: pointer;
+    background-color: #f7f7f7;
+}
+
+.openerp .oe-dashboard-config-overview li.oe-done {
+    cursor: default;
+    color: #999999;
+    text-decoration: line-through;
+}
+
+.openerp .oe-dashboard-layout_2-1 .index_0 .oe-dashboard-config-overview ul,
+.openerp .oe-dashboard-layout_1-2 .index_1 .oe-dashboard-config-overview ul {
+    -moz-column-count: 2;
+    -webkit-column-count: 2;
+    column-count: 2;
+}
+.openerp .oe-dashboard-config-overview li span.ui-icon {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.openerp .oe-dashboard-home-tile {
+    text-align: center;
+    margin:  10px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    -webkit-box-shadow: 3px 3px 5px 3px #DADDDD;
+    -moz-box-shadow: 3px 3px 5px 3px #DADDDD;
+    box-shadow: 3px 3px 5px 3px #DADDDD;
+}
+.openerp .oe-dashboard-home-tile span {
+    display: block;
+    padding: 0 0 15px;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #555;
+    white-space: nowrap;
+}
+.openerp .oe-dashboard-home-tile-icon {
+    height: 100px;
+}
+.openerp .oe-dashboard-home-tile-icon img {
+    display: block;
+    margin: 0 auto;
+}
+.openerp .oe-dashboard-home-tile-icon img.hover {
+    display: none;
+}
+.openerp .oe-dashboard-home-tile:hover {
+    background-color: #fafafa;
+    -webkit-box-shadow: 3px 3px 5px 3px #979797;
+    -moz-box-shadow: 3px 3px 5px 3px #979797;
+    box-shadow: 3px 3px 5px 3px #979797;
+}
+.openerp .oe-dashboard-home-tile:hover img {
+    display: none;
+}
+.openerp .oe-dashboard-home-tile:hover img.hover {
+    display: block;
+}
+.openerp .oe-dashboard-home-tile:hover span {
+    color: black;
+}
+
+.openerp .oe-dashboard-action .view-manager-main-content {
+    padding: 2px;
+}
+.openerp .oe-dashboard-action-header .ui-icon, .openerp .oe-dashboard-action-header .oe-dashboard-action-rename {
+    display: none;
 }

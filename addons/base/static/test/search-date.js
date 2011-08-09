@@ -11,6 +11,7 @@ $(document).ready(function () {
     module('search-date', {
         setup: function () {
             openerp = window.openerp.init(true);
+            window.openerp.base.core(openerp);
             window.openerp.base.chrome(openerp);
             window.openerp.base.views(openerp);
             window.openerp.base.search(openerp);

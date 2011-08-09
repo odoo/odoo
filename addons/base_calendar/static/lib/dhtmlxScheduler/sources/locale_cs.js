@@ -1,3 +1,7 @@
+/*
+This software is allowed to use under GPL or you need to obtain Commercial or Enterise License
+to use it in not GPL project. Please contact sales@dhtmlx.com for details
+*/
 scheduler.locale={
 	date:{
 		month_full:["Leden", "Únor", "Březen", "Duben", "Květen", "Červen", "Červenec", "Srpen", "Září", "Říjen", "Listopad", "Prosinec"],
@@ -34,7 +38,10 @@ scheduler.locale={
 		
 		/*year view extension*/
 		year_tab:"Rok",
-		full_day:"Full day"
+		full_day:"Full day",
+
+		/*week agenda view extension*/
+		week_agenda_tab: "Program"              
     }
-}
+};
 

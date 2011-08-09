@@ -1,8 +1,14 @@
-window.dhtmlXScheduler=window.scheduler={version:2.2};
+/*
+This software is allowed to use under GPL or you need to obtain Commercial or Enterise License
+to use it in not GPL project. Please contact sales@dhtmlx.com for details
+*/
+window.dhtmlXScheduler=window.scheduler={version:3.0};
 dhtmlxEventable(scheduler);
 scheduler.init=function(id,date,mode){
 	date=date||(new Date());
 	mode=mode||"week";
+
+	scheduler.date.init();
 	
 	this._obj=(typeof id == "string")?document.getElementById(id):id;
 	this._els=[];
@@ -19,9 +25,9 @@ scheduler.init=function(id,date,mode){
 			if (scheduler.callEvent("onSchedulerResize",[]))
 				scheduler.update_view();
 		}, 100);
-	})
-	
+	});
 	this.set_sizes();
+	scheduler.callEvent('onSchedulerReady', []);
 	this.setCurrentView(date,mode);
 };
 scheduler.xy={
@@ -57,7 +63,7 @@ scheduler.set_sizes=function(){
 	
 	var data_y=this.xy.scale_height+this.xy.nav_height+(this._quirks?-2:0);
 	this.set_xy(this._els["dhx_cal_data"][0],w,h-(data_y+2),0,data_y+2);
-}
+};
 scheduler.set_xy=function(node,w,h,x,y){
 	node.style.width=Math.max(0,w)+"px";
 	node.style.height=Math.max(0,h)+"px";
@@ -65,7 +71,7 @@ scheduler.set_xy=function(node,w,h,x,y){
 		node.style.left=x+"px";
 		node.style.top=y+"px";	
 	}
-}
+};
 scheduler.get_elements=function(){
 	//get all child elements as named hash
 	var els=this._obj.getElementsByTagName("DIV");
@@ -78,26 +84,26 @@ scheduler.get_elements=function(){
 		var t=scheduler.locale.labels[els[i].getAttribute("name")||name];
 		if (t) els[i].innerHTML=t;
 	}
-}
+};
 scheduler.set_actions=function(){
 	for (var a in this._els)
 		if (this._click[a])
 			for (var i=0; i < this._els[a].length; i++)
 				this._els[a][i].onclick=scheduler._click[a];
-	this._obj.onselectstart=function(e){ return false; }
+	this._obj.onselectstart=function(e){ return false; };
 	this._obj.onmousemove=function(e){
 		scheduler._on_mouse_move(e||event);
-	}
+	};
 	this._obj.onmousedown=function(e){
 		scheduler._on_mouse_down(e||event);
-	}
+	};
 	this._obj.onmouseup=function(e){
 		scheduler._on_mouse_up(e||event);
-	}
+	};
 	this._obj.ondblclick=function(e){
 		scheduler._on_dbl_click(e||event);
 	}
-}
+};
 scheduler.select=function(id){
 	if (this._table_view || !this.getEvent(id)._timed) return; //temporary block
 	if (this._select_id==id) return;
@@ -105,13 +111,13 @@ scheduler.select=function(id){
 	this.unselect();
 	this._select_id = id;
 	this.updateEvent(id);
-}
+};
 scheduler.unselect=function(id){
 	if (id && id!=this._select_id) return;
 	var t=this._select_id;
 	this._select_id = null;
 	if (t) this.updateEvent(t);
-}
+};
 scheduler.getState=function(){
 	return {
 		mode: this._mode,
@@ -119,11 +125,13 @@ scheduler.getState=function(){
 		min_date: this._min_date,
 		max_date: this._max_date,
 		editor_id: this._edit_id,
-		lightbox_id: this._lightbox_id
+		lightbox_id: this._lightbox_id,
+        new_event: this._new_event
 	};
-}
+};
 scheduler._click={
 	dhx_cal_data:function(e){
+        //debugger;
 		var trg = e?e.target:event.srcElement;
 		var id = scheduler._locate_event(trg);
 		
@@ -149,7 +157,8 @@ scheduler._click={
 		scheduler.setCurrentView(new Date());
 	},
 	dhx_cal_tab:function(){
-		var mode = this.getAttribute("name").split("_")[0];
+		var name = this.getAttribute("name");
+		var mode = name.substring(0, name.search("_tab"));
 		scheduler.setCurrentView(scheduler._date,mode);
 	},
 	buttons:{
@@ -159,11 +168,10 @@ scheduler._click={
 		details:function(id){ scheduler.showLightbox(id); },
 		cancel:function(id){ scheduler.editStop(false); }
 	}
-}
-
+};
 scheduler.addEventNow=function(start,end,e){
 	var base = {};
-	if (typeof start == "object"){
+	if (start && start.constructor.toString().match(/object/i) !== null){
 		base = start;
 		start = null;
 	}
@@ -179,14 +187,18 @@ scheduler.addEventNow=function(start,end,e){
 		}
 		end = start+d;
 	}
-	
-	
+	var end_date = new Date(end);
+
+	// scheduler.addEventNow(new Date(), new Date()) + collision though get_visible events defect (such event was not retrieved)
+	if(start_date.valueOf() == end_date.valueOf())
+		end_date.setTime(end_date.valueOf()+d);
+
 	base.start_date = base.start_date||start_date;
-	base.end_date =  base.end_date||new Date(end);
+	base.end_date =  base.end_date||end_date;
 	base.text = base.text||this.locale.labels.new_event;
 	base.id = this._drag_id = this.uid();
 	this._drag_mode="new-size";
-	
+
 	this._loading=true;
 	this.addEvent(base);
 	this.callEvent("onEventCreated",[this._drag_id,e]);
@@ -194,7 +206,7 @@ scheduler.addEventNow=function(start,end,e){
 	
 	this._drag_event={}; //dummy , to trigger correct event updating logic
 	this._on_mouse_up(e);	
-}
+};
 scheduler._on_dbl_click=function(e,src){
 	src = src||(e.target||e.srcElement);
 	if (this.config.readonly) return;
@@ -203,6 +215,7 @@ scheduler._on_dbl_click=function(e,src){
 		case "dhx_scale_holder":
 		case "dhx_scale_holder_now":
 		case "dhx_month_body":
+		case "dhx_wa_day_data":
 			if (!scheduler.config.dblclick_create) break;
 			var pos=this._mouse_coords(e);
 			var start=this._min_date.valueOf()+(pos.y*this.config.time_step+(this._table_view?0:pos.x)*24*60)*60000;
@@ -210,6 +223,7 @@ scheduler._on_dbl_click=function(e,src){
 			this.addEventNow(start,null,e);
 			break;
 		case "dhx_body":
+		case "dhx_wa_ev_body":
 		case "dhx_cal_event_line":
 		case "dhx_cal_event_clear":
 			var id = this._locate_event(src);
@@ -227,7 +241,7 @@ scheduler._on_dbl_click=function(e,src){
 			if (t) t.call(this,e);
 			break;
 	}
-}
+};
 
 scheduler._mouse_coords=function(ev){
 	var pos;
@@ -238,17 +252,17 @@ scheduler._mouse_coords=function(ev){
 	else pos={
 	    x:ev.clientX + (b.scrollLeft||d.scrollLeft||0) - b.clientLeft,
 	    y:ev.clientY + (b.scrollTop||d.scrollTop||0) - b.clientTop
-	}
+	};
 
 	//apply layout
 	pos.x-=getAbsoluteLeft(this._obj)+(this._table_view?0:this.xy.scale_width);
 	pos.y-=getAbsoluteTop(this._obj)+this.xy.nav_height+(this._dy_shift||0)+this.xy.scale_height-this._els["dhx_cal_data"][0].scrollTop;
 	pos.ev = ev;
-	
+
 	var handler = this["mouse_"+this._mode];
 	if (handler)
 		return handler.call(this,pos);
-		
+
 	//transform to date
 	if (!this._table_view){
 		pos.x=Math.max(0,Math.ceil(pos.x/this._cols[0])-1);
@@ -258,7 +272,7 @@ scheduler._mouse_coords=function(ev){
 		for (dy=1; dy < this._colsS.heights.length; dy++)
 			if (this._colsS.heights[dy]>pos.y) break;
 
-		pos.y=(Math.max(0,Math.ceil(pos.x/this._cols[0])-1)+Math.max(0,dy-1)*7)*24*60/this.config.time_step; 
+		pos.y=(Math.max(0,Math.ceil(pos.x/this._cols[0])-1)+Math.max(0,dy-1)*7)*24*60/this.config.time_step;
 		pos.x=0;
 	}
 
@@ -270,14 +284,14 @@ scheduler._close_not_saved=function(){
 		if (!c || confirm(c))
 			scheduler.editStop(scheduler.config.positive_closing);
 	}
-}
+};
 scheduler._correct_shift=function(start, back){
 	return start-=((new Date(scheduler._min_date)).getTimezoneOffset()-(new Date(start)).getTimezoneOffset())*60000*(back?-1:1);	
-}
+};
 scheduler._on_mouse_move=function(e){
 	if (this._drag_mode){
 		var pos=this._mouse_coords(e);
-		if (!this._drag_pos || this._drag_pos.x!=pos.x || this._drag_pos.y!=pos.y){
+		if (!this._drag_pos || pos.custom || this._drag_pos.x!=pos.x || this._drag_pos.y!=pos.y){
 			
 			if (this._edit_id!=this._drag_id)
 				this._close_not_saved();
@@ -316,8 +330,11 @@ scheduler._on_mouse_move=function(e){
 				end = ev.end_date.valueOf()-(ev.start_date.valueOf()-start);
 			} else {
 				start = ev.start_date.valueOf();
-				if (this._table_view)
+				if (this._table_view) {
 					end = this._min_date.valueOf()+pos.y*this.config.time_step*60000 + (pos.custom?0:24*60*60000);
+					if (this._mode == "month")
+						end = this._correct_shift(end, false);
+				}
 				else{
 					end = this.date.date_part(new Date(ev.end_date)).valueOf()+pos.y*this.config.time_step*60000;
 					this._els["dhx_cal_data"][0].style.cursor="s-resize";
@@ -327,7 +344,7 @@ scheduler._on_mouse_move=function(e){
 				if (this._drag_mode == "new-size"){ 
 					if (end <= this._drag_start){
 						var shift = pos.shift||((this._table_view && !pos.custom)?24*60*60000:0);
-						start = end-shift;
+						start = end-(pos.shift?0:shift);
 						end = this._drag_start+(shift||(this.config.time_step*60000));
 					} else {
 						start = this._drag_start;
@@ -339,7 +356,7 @@ scheduler._on_mouse_move=function(e){
 			var new_end = new Date(end-1);			
 			var new_start = new Date(start);
 			//prevent out-of-borders situation for day|week view
-			if (this._table_view || (new_end.getDate()==new_start.getDate() && new_end.getHours()<this.config.last_hour)){
+			if ( this._table_view || (new_end.getDate()==new_start.getDate() && new_end.getHours()<this.config.last_hour) || (scheduler._wa && scheduler._wa._dnd) ){
 				ev.start_date=new_start;
 				ev.end_date=new Date(end);
 				if (this.config.update_render)
@@ -354,14 +371,15 @@ scheduler._on_mouse_move=function(e){
 		}
 	}  else {
 		if (scheduler.checkEvent("onMouseMove")){
+			
 			var id = this._locate_event(e.target||e.srcElement);
 			this.callEvent("onMouseMove",[id,e]);
 		}
 	}
-}
+};
 scheduler._on_mouse_context=function(e,src){
 	return this.callEvent("onContextMenu",[this._locate_event(src),e]);
-}
+};
 scheduler._on_mouse_down=function(e,src){
 	if (this.config.readonly || this._drag_mode) return;
 	src = src||(e.target||e.srcElement);
@@ -374,6 +392,7 @@ scheduler._on_mouse_down=function(e,src){
 			break;
 		case "dhx_header":
 		case "dhx_title":
+		case "dhx_wa_ev_body":
 			this._drag_mode="move"; //item in table mode
 			break;
 		case "dhx_footer":
@@ -398,11 +417,11 @@ scheduler._on_mouse_down=function(e,src){
 			this._drag_mode=this._drag_id=0;
 		else {
 			this._drag_id= id;
-			this._drag_event=this._copy_event(this.getEvent(this._drag_id)||{});
+            this._drag_event=scheduler._lame_copy({},this._copy_event(this.getEvent(this._drag_id)||{}));
 		}
 	}
 	this._drag_start=null;
-}
+};
 scheduler._on_mouse_up=function(e){
 	if (this._drag_mode && this._drag_id){
 		this._els["dhx_cal_data"][0].style.cursor="default";
@@ -414,8 +433,8 @@ scheduler._on_mouse_up=function(e){
 				if (is_new) 
 					this.deleteEvent(ev.id, true);
 				else {
-					ev.start_date = this._drag_event.start_date;
-					ev.end_date = this._drag_event.end_date;
+                    this._drag_event._dhx_changed = false;
+                    scheduler._lame_copy(ev, this._drag_event);
 					this.updateEvent(ev.id);
 				}
 			} else {
@@ -436,44 +455,58 @@ scheduler._on_mouse_up=function(e){
 	}
 	this._drag_mode=null;
 	this._drag_pos=null;
-}	
+};
 scheduler.update_view=function(){
-	//this.set_sizes();
 	this._reset_scale();
 	if (this._load_mode && this._load()) return this._render_wait = true;
 	this.render_view_data();
-}
+};
 scheduler.setCurrentView=function(date,mode){
+	date = date || this._date;
+    mode = mode || this._mode;
 	
 	if (!this.callEvent("onBeforeViewChange",[this._mode,this._date,mode,date])) return;
+
+    var dhx_cal_data = 'dhx_cal_data';
+    var prev_scroll = (this._mode == mode && this.config.preserve_scroll)?this._els[dhx_cal_data][0].scrollTop:false; // saving current scroll
+
 	//hide old custom view
 	if (this[this._mode+"_view"] && mode && this._mode!=mode)
 		this[this._mode+"_view"](false);
 		
 	this._close_not_saved();
+
+    var dhx_multi_day = 'dhx_multi_day';
+	if(this._els[dhx_multi_day]) {
+		this._els[dhx_multi_day][0].parentNode.removeChild(this._els[dhx_multi_day][0]);
+		this._els[dhx_multi_day] = null;
+	}
 	
-	this._mode=mode||this._mode;
+	this._mode=mode;
 	this._date=date;
 	this._table_view=(this._mode=="month");
 	
 	var tabs=this._els["dhx_cal_tab"];
 	for (var i=0; i < tabs.length; i++) {
 		tabs[i].className="dhx_cal_tab"+((tabs[i].getAttribute("name")==this._mode+"_tab")?" active":"");
-	};
+	}
 	
 	//show new view
 	var view=this[this._mode+"_view"];
 	view?view(true):this.update_view();
+
+    if(typeof prev_scroll == "number") // if we are updating or working with the same view scrollTop should be saved
+        this._els[dhx_cal_data][0].scrollTop = prev_scroll; // restoring original scroll
 	
 	this.callEvent("onViewChange",[this._mode,this._date]);
-}
+};
 scheduler._render_x_header = function(i,left,d,h){
 	//header scale	
 	var head=document.createElement("DIV"); head.className="dhx_scale_bar";
 	this.set_xy(head,this._cols[i]-1,this.xy.scale_height-2,left,0);//-1 for border
 	head.innerHTML=this.templates[this._mode+"_scale_date"](d,this._mode); //TODO - move in separate method
 	h.appendChild(head);
-}
+};
 scheduler._reset_scale=function(){
 	//current mode doesn't support scales
 	//we mustn't call reset_scale for such modes, so it just to be sure
@@ -518,8 +551,7 @@ scheduler._reset_scale=function(){
 	this._min_date=d;
 	this._els["dhx_cal_date"][0].innerHTML=this.templates[this._mode+"_date"](dd,ed,this._mode);
 	
-	
-	for (var i=0; i<count; i++){
+	for (var i=0; i<count; i++){ 
 		this._cols[i]=Math.floor(summ/(count-i));
 	
 		this._render_x_header(i,left,d,h);
@@ -530,36 +562,62 @@ scheduler._reset_scale=function(){
 			scales.className=cls+" "+this.templates.week_date_class(d,today);
 			this.set_xy(scales,this._cols[i]-1,c.hour_size_px*(c.last_hour-c.first_hour),left+this.xy.scale_width+1,0);//-1 for border
 			b.appendChild(scales);
+			this.callEvent("onScaleAdd",[scales, d]);
 		}
 		
-		d=this.date.add(d,1,"day")
+		d=this.date.add(d,1,"day");
 		summ-=this._cols[i];
 		left+=this._cols[i];
 		this._colsS[i]=(this._cols[i-1]||0)+(this._colsS[i-1]||(this._table_view?0:this.xy.scale_width+2));
+		this._colsS['col_length'] = count+1;
 	}
 	this._max_date=d;
 	this._colsS[count]=this._cols[count-1]+this._colsS[count-1];
 	
-	if (this._table_view)
+	if (this._table_view) // month view
 		this._reset_month_scale(b,dd,sd);
 	else{
 		this._reset_hours_scale(b,dd,sd);
 		if (c.multi_day){
-			var c1 = document.createElement("DIV");
-			c1.className="dhx_multi_day";
-			c1.style.visibility="hidden";
-			this.set_xy(c1,parseInt(h.style.width),0,this.xy.scale_width,0);
-			b.appendChild(c1);
-			var c2 = c1.cloneNode(true);
-			c2.className="dhx_multi_day_icon";
-			c2.style.visibility="hidden";
-			this.set_xy(c2,this.xy.scale_width-1,0,0,0);
-			b.appendChild(c2);
+            var dhx_multi_day = 'dhx_multi_day';
+
+			if(this._els[dhx_multi_day]) {
+				this._els[dhx_multi_day][0].parentNode.removeChild(this._els[dhx_multi_day][0]);
+				this._els[dhx_multi_day] = null;
+			}
 			
-			this._els["dhx_multi_day"]=[c1,c2];
+			var navline = this._els["dhx_cal_navline"][0];
+			var top = navline.offsetHeight + this._els["dhx_cal_header"][0].offsetHeight+1;
+			
+			var c1 = document.createElement("DIV");
+			c1.className = dhx_multi_day;
+			c1.style.visibility="hidden";
+			this.set_xy(c1, this._colsS[this._colsS.col_length-1]+this.xy.scroll_width, 0, 0, top); // 2 extra borders, dhx_header has -1 bottom margin
+			b.parentNode.insertBefore(c1,b);
+			
+			var c2 = c1.cloneNode(true);
+			c2.className = dhx_multi_day+"_icon";
+			c2.style.visibility="hidden";
+			this.set_xy(c2, this.xy.scale_width, 0, 0, top); // dhx_header has -1 bottom margin
+			
+			c1.appendChild(c2);
+			this._els[dhx_multi_day]=[c1,c2];
+            this._els[dhx_multi_day][0].onclick = this._click.dhx_cal_data;
 		}
+		
+		if (this.config.mark_now){
+			var now = new Date();
+			if (now < this._max_date && now > this._min_date && now.getHours() >= this.config.first_hour && now.getHours()<this.config.last_hour){
+				var day = this.locate_holder_day(now);
+				var sm = now.getHours()*60+now.getMinutes();
+				var now_time = document.createElement("DIV");
+				now_time.className = "dhx_now_time";
+				now_time.style.top = (Math.round((sm*60*1000-this.config.first_hour*60*60*1000)*this.config.hour_size_px/(60*60*1000)))%(this.config.hour_size_px*24)+1+"px"; 
+				b.childNodes[day].appendChild(now_time);
+			}
+		}			
 	}
-}
+};
 scheduler._reset_hours_scale=function(b,dd,sd){
 	var c=document.createElement("DIV");
 	c.className="dhx_scale_holder";
@@ -578,7 +636,7 @@ scheduler._reset_hours_scale=function(b,dd,sd){
 	b.appendChild(c);
 	if (this.config.scroll_hour)
 		b.scrollTop = this.config.hour_size_px*(this.config.scroll_hour-this.config.first_hour);
-}
+};
 scheduler._reset_month_scale=function(b,dd,sd){
 	var ed=scheduler.date.add(dd,1,"month");
 	
@@ -586,8 +644,8 @@ scheduler._reset_month_scale=function(b,dd,sd){
 	var cd=new Date();
 	this.date.date_part(cd);
 	this.date.date_part(sd);
-	
-	var rows=Math.ceil((ed.valueOf()-sd.valueOf())/(60*60*24*1000*7));
+
+	var rows=Math.ceil(Math.round((ed.valueOf()-sd.valueOf()) / (60*60*24*1000) ) / 7);
 	var tdcss=[];
 	var height=(Math.floor(b.clientHeight/rows)-22);
 	
@@ -613,7 +671,7 @@ scheduler._reset_month_scale=function(b,dd,sd){
 				else if (sd.valueOf()==cd.valueOf())
 					cls='dhx_now';
 				html+=" class='"+cls+" "+this.templates.month_date_class(sd,cd)+"' ";
-				html+="><div class='dhx_month_head'>"+this.templates.month_day(sd)+"</div><div class='dhx_month_body' "+tdcss[j]+"></div></td>"
+				html+="><div class='dhx_month_head'>"+this.templates.month_day(sd)+"</div><div class='dhx_month_body' "+tdcss[j]+"></div></td>";
 				sd=this.date.add(sd,1,"day");
 			}
 		html+="</tr>";
@@ -625,7 +683,7 @@ scheduler._reset_month_scale=function(b,dd,sd){
 	
 	b.innerHTML=html;	
 	return sd;
-}
+};
 scheduler.getLabel = function(property, key) {
 	var sections = this.config.lightbox.sections;
 	for (var i=0; i<sections.length; i++) {
@@ -639,4 +697,18 @@ scheduler.getLabel = function(property, key) {
 		}
 	}
 	return "";
+};
+scheduler.updateCollection = function(list_name, collection){
+    var list = scheduler.serverList(list_name);
+    if(!list) return false;
+    list.splice(0,list.length);
+    list.push.apply(list, collection||[]);
+    scheduler.callEvent("onOptionsLoad", []);
+    scheduler.resetLightbox();
+    return true;
+};
+scheduler._lame_copy=function(target, source){
+    for(var key in source)
+        target[key] = source[key];
+    return target;
 };

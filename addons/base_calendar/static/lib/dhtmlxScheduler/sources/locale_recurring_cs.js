@@ -1,3 +1,7 @@
+/*
+This software is allowed to use under GPL or you need to obtain Commercial or Enterise License
+to use it in not GPL project. Please contact sales@dhtmlx.com for details
+*/
 scheduler.__recurring_template='
 <div class="dhx_form_repeat"> 
   <form> 
@@ -145,7 +149,7 @@ scheduler.__recurring_template='
       <label>
         <input class="dhx_repeat_radio" type="radio" name="end" />Konec
       </label>
-      <input class="dhx_repeat_date" type="text" name="date_of_end" value="01.01.2010" /><br /> 
+      <input class="dhx_repeat_date" type="text" name="date_of_end" value="'+scheduler.config.repeat_date_of_end+'" /><br />
     </div> 
   </form> 
 </div> 

@@ -29,15 +29,15 @@
     </table>
 </t>
 <t t-name="DashBoard.action">
-    <div t-att-data-id="action.attrs.name" class="oe-dashboard-action ui-widget ui-widget-content ui-helper-clearfix ui-corner-all">
-        <div class="oe-dashboard-action-header ui-widget-header ui-corner-all">
-            <a href="#" class="oe-dashboard-action-rename"><img src="/base/static/src/img/icons/gtk-edit.png" width="16" height="16"/></a>
-            <span class="oe-dashboard-action-title"><t t-esc="action.attrs.string"/></span>
+    <div t-att-data-id="action.attrs.name" class="oe-dashboard-action">
+        <h2 class="oe-dashboard-action-header oe_view_title">
+            <t t-esc="action.attrs.string"/>
+            <!--<a href="#" class="oe-dashboard-action-rename"><img src="/base/static/src/img/icons/gtk-edit.png" width="16" height="16"/></a>-->
             <input class="oe-dashboard-action-input" type="text" name="title" value="" style="display: none"/>
             <span class='ui-icon ui-icon-closethick'></span>
             <span class='ui-icon ui-icon-minusthick oe-dashboard-fold' t-if="!action.attrs.fold"></span>
             <span class='ui-icon ui-icon-plusthick oe-dashboard-fold' t-if="action.attrs.fold"></span>
-        </div>
+        </h2>
         <div t-att-id="view.element_id + '_action_' + action.attrs.name" class="oe-dashboard-action-content" t-att-style="action.attrs.fold ? 'display: none' : null"></div>
     </div>
 </t>
@@ -64,4 +64,54 @@
         </board>
     </form>
 </t>
+<div t-name="ConfigOverview" class="oe-dashboard-config-overview">
+    <div class="oe-config-progress">
+        <h6 class="oe-config-progress-title">
+            progress: <t t-esc="Math.round(completion)"/>%
+        </h6>
+        <div class="oe-config-progress-bar" t-att-data-completion="completion"/>
+    </div>
+    <dl>
+        <t t-foreach="groups" t-as="category">
+            <dt><t t-esc="category"/></dt>
+            <dd><ul>
+                <li t-foreach="category_value" t-as="todo"
+                    t-att-class="todo.done ? 'oe-done' : undefined"
+                    t-att-data-id="todo.id"
+                    t-att-title="!todo.done ? 'Execute task \'' + todo.name + '\'' : undefined">
+                    <input type="checkbox" t-att-value="todo.id"
+                       t-att-title="!todo.done ? 'Mark this task as done' : undefined"
+                       t-att-checked="todo.done ? 'checked' : undefined"/>
+                    <t t-esc="todo.name"/>
+                </li>
+            </ul></dd>
+        </t>
+
+    </dl>
+</div>
+<div t-name="ApplicationTiles" class="oe-dashboard-home-tiles">
+    <table width="100%">
+        <tr t-foreach="rows" t-as="row">
+            <td t-foreach="row" t-as="application" width="33.3%">
+                <div class="oe-dashboard-home-tile"
+                     t-att-data-menuid="application.id">
+                    <div class="oe-dashboard-home-tile-icon">
+                        <img t-if="application.web_icon_data"
+                            t-att-src="'data:image/png;base64,' + application.web_icon_data"
+                        /><img t-if="application.web_icon_hover_data" class="hover"
+                            t-att-src="'data:image/png;base64,' + application.web_icon_hover_data"/>
+                    </div>
+                    <span><t t-esc="application.name"/></span>
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>
+<div t-name="HomeWidgets" class="oe-dashboard-home-widgets">
+    <div class="oe-dashboard-home-widgets-widget"
+         t-foreach="widgets" t-as="widget">
+        <h3><t t-esc="widget.title"/></h3>
+        <iframe width="100%" frameborder="0" t-att-src="url + widget.id"/>
+    </div>
+</div>
 </template>

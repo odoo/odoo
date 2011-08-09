@@ -16,9 +16,9 @@ QWeb.add_template('/base_graph/static/src/xml/base_graph.xml');
 openerp.base.views.add('graph', 'openerp.base_graph.GraphView');
 openerp.base_graph.GraphView = openerp.base.View.extend({
 
-    init: function(view_manager, session, element_id, dataset, view_id) {
-        this._super(session, element_id);
-        this.view_manager = view_manager;
+    init: function(parent, element_id, dataset, view_id) {
+        this._super(parent, element_id);
+        this.view_manager = parent;
         this.dataset = dataset;
         this.dataset_index = 0;
         this.model = this.dataset.model;
@@ -76,12 +76,20 @@ openerp.base_graph.GraphView = openerp.base.View.extend({
 
     load_chart: function(data) {
         var self = this;
+        var domain = false;
         if(data){
             this.x_title = this.all_fields[this.chart_info_fields]['string'];
             this.y_title = this.all_fields[this.operator_field]['string'];
             self.schedule_chart(data);
         }else{
-            this.dataset.read_slice(this.fields, 0, false, function(res) {
+            if(! _.isEmpty(this.view_manager.dataset.domain)){
+                domain = this.view_manager.dataset.domain;
+            }else if(! _.isEmpty(this.view_manager.action.domain)){
+                domain = this.view_manager.action.domain;
+            }
+            this.dataset.domain = domain;
+            this.dataset.context = this.view_manager.dataset.context;
+            this.dataset.read_slice(_(this.fields).keys(), 0, false, function(res) {
                 self.schedule_chart(res);
             });
         }
@@ -434,9 +442,7 @@ openerp.base_graph.GraphView = openerp.base.View.extend({
             }
             views.push(view);
         });
-        this.actionmanager = new openerp.base.ActionManager(this.session, "oe_app");
-        this.actionmanager.start();
-        this.actionmanager.do_action({
+        this.session.action_manager.do_action({
             "res_model" : this.dataset.model,
             "domain" : this.dataset.domain,
             "views" : views,

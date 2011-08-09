@@ -1,4 +1,8 @@
 /*
+This software is allowed to use under GPL or you need to obtain Commercial or Enterise License
+to use it in not GPL project. Please contact sales@dhtmlx.com for details
+*/
+/*
 Copyright DHTMLX LTD. http://www.dhtmlx.com
 You allowed to use this component or parts of it under GPL terms
 To use it on other terms please contact us at sales@dhtmlx.com
@@ -40,6 +44,9 @@ scheduler.locale={
 		description:"Beskrivning",
 		
 		/*year view extension*/
-		year_tab:"År"
+		year_tab:"År",
+		
+        /*week agenda view extension*/
+        week_agenda_tab: "Dagordning"     
 	}
 }
