@@ -83,7 +83,7 @@ class project_scrum_email(osv.osv_memory):
 
         email_from = tools.config.get('email_from', False)
         user = user_pool.browse(cr, uid, uid, context=context)
-        user_email = email_from or user.address_id.email
+        user_email = email_from or user.user_email
 
         body = "%s\n" %(data.message)
         body += "\n%s\n" %_('Tasks since yesterday')

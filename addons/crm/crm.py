@@ -44,8 +44,177 @@ AVAILABLE_PRIORITIES = [
     ('5', 'Lowest'),
 ]
 
-class crm_case(object):
-    """A python class to be used as common abstract class for CRM business objects"""
+class crm_base(object):
+    """
+        Base classe for crm object,
+        Object that inherit from this class should have
+            date_open
+            date_closed
+            user_id
+            partner_id
+            partner_address_id
+        as field to be compatible with this class
+    """
+    def _get_default_partner_address(self, cr, uid, context=None):
+        """Gives id of default address for current user
+        :param context: if portal in context is false return false anyway
+        """
+        if context is None:
+            context = {}
+        if not context.get('portal'):
+            return False
+        # was user.address_id.id, but address_id has been removed
+        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+        if hasattr(user, 'partner_address_id') and user.partner_address_id:
+            return user.partner_address_id
+        return False
+
+    def _get_default_partner(self, cr, uid, context=None):
+        """Gives id of partner for current user
+        :param context: if portal in context is false return false anyway
+        """
+        if context is None:
+            context = {}
+        if not context.get('portal', False):
+            return False
+        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+        if hasattr(user, 'partner_address_id') and user.partner_address_id:
+            return user.partner_address_id
+        return user.company_id.partner_id.id
+
+    def _get_default_email(self, cr, uid, context=None):
+        """Gives default email address for current user
+        :param context: if portal in context is false return false anyway
+        """
+        if not context.get('portal', False):
+            return False
+        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+        return user.user_email
+
+    def _get_default_user(self, cr, uid, context=None):
+        """Gives current user id
+       :param context: if portal in context is false return false anyway
+        """
+        if context and context.get('portal', False):
+            return False
+        return uid
+
+    def _get_section(self, cr, uid, context=None):
+        """Gives section id for current User
+        """
+        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+        return user.context_section_id.id or False
+
+    def onchange_partner_address_id(self, cr, uid, ids, add, email=False):
+        """This function returns value of partner email based on Partner Address
+        :param ids: List of case IDs
+        :param add: Id of Partner's address
+        :param email: Partner's email ID
+        """
+        if not add:
+            return {'value': {'email_from': False}}
+        address = self.pool.get('res.partner.address').browse(cr, uid, add)
+        if address.email:
+            return {'value': {'email_from': address.email, 'phone': address.phone}}
+        else:
+            return {'value': {'phone': address.phone}}
+
+    def onchange_partner_id(self, cr, uid, ids, part, email=False):
+        """This function returns value of partner address based on partner
+        :param ids: List of case IDs
+        :param part: Partner's id
+        :param email: Partner's email ID
+        """
+        data={}
+        if  part:
+            addr = self.pool.get('res.partner').address_get(cr, uid, [part], ['contact'])
+            data = {'partner_address_id': addr['contact']}
+            data.update(self.onchange_partner_address_id(cr, uid, ids, addr['contact'])['value'])
+        return {'value': data}
+
+
+    def case_open(self, cr, uid, ids, *args):
+        """Opens Case
+        :param ids: List of case Ids
+        """
+        cases = self.browse(cr, uid, ids)
+        for case in cases:
+            data = {'state': 'open', 'active': True}
+            if not case.user_id:
+                data['user_id'] = uid
+            self.write(cr, uid, case.id, data)
+
+
+        self._action(cr, uid, cases, 'open')
+        return True
+
+    def case_close(self, cr, uid, ids, *args):
+        """Closes Case
+        :param ids: List of case Ids
+        """
+        cases = self.browse(cr, uid, ids)
+        cases[0].state # to fill the browse record cache
+        self.write(cr, uid, ids, {'state': 'done',
+                                  'date_closed': time.strftime('%Y-%m-%d %H:%M:%S'),
+                                  })
+        #
+        # We use the cache of cases to keep the old case state
+        #
+        self._action(cr, uid, cases, 'done')
+        return True
+
+    def case_cancel(self, cr, uid, ids, *args):
+        """Cancels Case
+        :param ids: List of case Ids
+        """
+        cases = self.browse(cr, uid, ids)
+        cases[0].state # to fill the browse record cache
+        self.write(cr, uid, ids, {'state': 'cancel',
+                                  'active': True})
+        self._action(cr, uid, cases, 'cancel')
+        for case in cases:
+            message = _("The case '%s' has been cancelled.") % (case.name,)
+            self.log(cr, uid, case.id, message)
+        return True
+
+    def case_pending(self, cr, uid, ids, *args):
+        """Marks case as pending
+        :param ids: List of case Ids
+        """
+        cases = self.browse(cr, uid, ids)
+        cases[0].state # to fill the browse record cache
+        self.write(cr, uid, ids, {'state': 'pending', 'active': True})
+        self._action(cr, uid, cases, 'pending')
+        return True
+
+    def case_reset(self, cr, uid, ids, *args):
+        """Resets case as draft
+        :param ids: List of case Ids
+        """
+        cases = self.browse(cr, uid, ids)
+        cases[0].state # to fill the browse record cache
+        self.write(cr, uid, ids, {'state': 'draft', 'active': True})
+        self._action(cr, uid, cases, 'draft')
+        return True
+
+    def _action(self, cr, uid, cases, state_to, scrit=None, context=None):
+        if context is None:
+            context = {}
+        context['state_to'] = state_to
+        rule_obj = self.pool.get('base.action.rule')
+        model_obj = self.pool.get('ir.model')
+        model_ids = model_obj.search(cr, uid, [('model','=',self._name)])
+        rule_ids = rule_obj.search(cr, uid, [('model_id','=',model_ids[0])])
+        return rule_obj._action(cr, uid, rule_ids, cases, scrit=scrit, context=context)
+
+class crm_case(crm_base):
+    """
+        A simple python class to be used for common functions
+        Object that inherit from this class should inherit from mailgate.thread
+        And need a stage_id field
+
+        And object that inherit (orm inheritance) from a class the overwrite copy
+    """
 
     def _find_lost_stage(self, cr, uid, type, section_id):
         return self._find_percent_stage(cr, uid, 0.0, type, section_id)
@@ -94,25 +263,6 @@ class crm_case(object):
             return {'value':{}}
         return {'value':{'probability': stage.probability}}
 
-    def _get_default_partner_address(self, cr, uid, context=None):
-        """Gives id of default address for current user"""
-        if context is None:
-            context = {}
-        if not context.get('portal', False):
-            return False
-        return self.pool.get('res.users').browse(cr, uid, uid, context).address_id.id
-
-    def _get_default_partner(self, cr, uid, context=None):
-        """Gives id of partner for current user"""
-        if context is None:
-            context = {}
-        if not context.get('portal', False):
-            return False
-        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-        if not user.address_id:
-            return False
-        return user.address_id.partner_id.id
-
     def copy(self, cr, uid, id, default=None, context=None):
         """Overrides orm copy method to avoid copying messages,
            as well as date_closed and date_open columns if they
@@ -133,25 +283,6 @@ class crm_case(object):
                     'date_open': False
                 })
         return super(osv.osv, self).copy(cr, uid, id, default, context=context)
-
-    def _get_default_email(self, cr, uid, context=None):
-        """Gives default email address for current user"""
-        if context and not context.get('portal'):
-            return False
-        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-        if not user.address_id:
-            return False
-        return user.address_id.email
-
-    def _get_default_user(self, cr, uid, context=None):
-        if context and context.get('portal'):
-            return False
-        return uid
-
-    def _get_section(self, cr, uid, context=None):
-        """Gives section id for current User"""
-        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-        return user.context_section_id.id or False
 
     def _find_next_stage(self, cr, uid, stage_list, index, current_seq, stage_pool, context=None):
         if index + 1 == len(stage_list):
@@ -200,7 +331,6 @@ class crm_case(object):
                     value.update({'probability': next_stage.probability})
             self.write(cr, uid, [case.id], value, context=context)
 
-
         return next_stage_id #FIXME should return a list of all id
 
 
@@ -216,33 +346,6 @@ class crm_case(object):
            using available stage for that case type
         """
         return self.stage_change(cr, uid, ids, context=context, order='sequence desc')
-
-    def onchange_partner_id(self, cr, uid, ids, part, email=False):
-        """This function returns value of partner address based on partner
-
-           :param part: Partner id
-           :param email: unused
-        """
-        data={}
-        if  part:
-            addr = self.pool.get('res.partner').address_get(cr, uid, [part], ['contact'])
-            data = {'partner_address_id': addr['contact']}
-            data.update(self.onchange_partner_address_id(cr, uid, ids, addr['contact'])['value'])
-        return {'value': data}
-
-    def onchange_partner_address_id(self, cr, uid, ids, add, email=False):
-        """Set partner email and phone based on selected address
-
-           :param add: selected address id
-           :param email: unused
-        """
-        if not add:
-            return {'value': {'email_from': False}}
-        address = self.pool.get('res.partner.address').browse(cr, uid, add)
-        if address.email:
-            return {'value': {'email_from': address.email, 'phone': address.phone}}
-        else:
-            return {'value': {'phone': address.phone}}
 
     def case_open(self, cr, uid, ids, *args):
         """Opens Case"""
@@ -312,11 +415,14 @@ class crm_case(object):
 
     def case_reset(self, cr, uid, ids, *args):
         """Resets case as draft"""
+        state = 'draft'
+        if 'crm.phonecall' in args:
+            state = 'open'
         cases = self.browse(cr, uid, ids)
         cases[0].state # to fill the browse record cache
         self.history(cr, uid, cases, _('Draft'))
-        self.write(cr, uid, ids, {'state': 'draft', 'active': True})
-        self._action(cr, uid, cases, 'draft')
+        self.write(cr, uid, ids, {'state': state, 'active': True})
+        self._action(cr, uid, cases, state)
         return True
 
     def remind_partner(self, cr, uid, ids, context=None, attach=False):
@@ -327,10 +433,9 @@ class crm_case(object):
         mail_message = self.pool.get('mail.message')
         for case in self.browse(cr, uid, ids, context=context):
             if not destination and not case.email_from:
-                raise osv.except_osv(_('Error!'), ("Partner Email is not specified in Case"))
+                return False
             if not case.user_id.user_email:
-               raise osv.except_osv(_('Error!'), ("User Email is not specified in Case"))
-
+                return False
             if destination and case.section_id.user_id:
                 case_email = case.section_id.user_id.user_email
             else:
@@ -387,15 +492,7 @@ class crm_case(object):
         cases = self.browse(cr, uid, ids2, context=context)
         return self._action(cr, uid, cases, False, context=context)
 
-    def _action(self, cr, uid, cases, state_to, scrit=None, context=None):
-        if context is None:
-            context = {}
-        context['state_to'] = state_to
-        rule_obj = self.pool.get('base.action.rule')
-        model_obj = self.pool.get('ir.model')
-        model_ids = model_obj.search(cr, uid, [('model','=',self._name)])
-        rule_ids = rule_obj.search(cr, uid, [('model_id','=',model_ids[0])])
-        return rule_obj._action(cr, uid, rule_ids, cases, scrit=scrit, context=context)
+
 
     def format_body(self, body):
         return self.pool.get('base.action.rule').format_body(body)
@@ -460,7 +557,7 @@ class crm_case_section(osv.osv):
 
     _columns = {
         'name': fields.char('Sales Team', size=64, required=True, translate=True),
-        'complete_name': fields.function(get_full_name, method=True, type='char', size=256, readonly=True, store=True),
+        'complete_name': fields.function(get_full_name, type='char', size=256, readonly=True, store=True),
         'code': fields.char('Code', size=8),
         'active': fields.boolean('Active', help="If the active field is set to "\
                         "true, it will allow you to hide the sales team without removing it."),
@@ -492,7 +589,7 @@ class crm_case_section(osv.osv):
 
     def name_get(self, cr, uid, ids, context=None):
         """Overrides orm name_get method"""
-        if not isinstance(ids, list) : 
+        if not isinstance(ids, list) :
             ids = [ids]
         res = []
         if not ids:

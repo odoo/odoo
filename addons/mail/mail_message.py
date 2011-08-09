@@ -20,6 +20,7 @@
 ##############################################################################
 
 import base64
+import dateutil.parser
 import email
 import logging
 import re
@@ -367,7 +368,8 @@ class mail_message(osv.osv):
             msg['reply'] = decode(msg_txt.get('Reply-To'))
 
         if 'Date' in fields:
-            msg['date'] = decode(msg_txt.get('Date'))
+            date_hdr = decode(msg_txt.get('Date'))
+            msg['date'] = dateutil.parser.parse(date_hdr).strftime("%Y-%m-%d %H:%M:%S")
 
         if 'Content-Transfer-Encoding' in fields:
             msg['encoding'] = msg_txt.get('Content-Transfer-Encoding')

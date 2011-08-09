@@ -155,7 +155,7 @@ class product_pricelist(osv.osv):
 
         currency_obj = self.pool.get('res.currency')
         product_obj = self.pool.get('product.product')
-        product_temp_obj = self.pool.get('product.template')
+        product_template_obj = self.pool.get('product.template')
         product_category_obj = self.pool.get('product.category')
         product_uom_obj = self.pool.get('product.uom')
         supplierinfo_obj = self.pool.get('product.supplierinfo')
@@ -234,6 +234,7 @@ class product_pricelist(osv.osv):
                                         [res['base_pricelist_id']], product_id,
                                         qty, context=context)[res['base_pricelist_id']]
                                 ptype_src = self.browse(cr, uid, res['base_pricelist_id']).currency_id.id
+                                uom_price_already_computed = True
                                 price = currency_obj.compute(cr, uid, ptype_src, res['currency_id'], price_tmp, round=False)
                         elif res['base'] == -2:
                             # this section could be improved by moving the queries outside the loop:
@@ -245,7 +246,7 @@ class product_pricelist(osv.osv):
                             price = 0.0
                             if sinfo:
                                 qty_in_product_uom = qty
-                                product_default_uom = product_temp_obj.read(cr, uid, [tmpl_id], ['uom_id'])[0]['uom_id'][0]
+                                product_default_uom = product_template_obj.read(cr, uid, [tmpl_id], ['uom_id'])[0]['uom_id'][0]
                                 supplier = supplierinfo_obj.browse(cr, uid, sinfo, context=context)[0]
                                 seller_uom = supplier.product_uom and supplier.product_uom.id or False
                                 if seller_uom and product_default_uom and product_default_uom != seller_uom:
@@ -265,11 +266,10 @@ class product_pricelist(osv.osv):
                             price = currency_obj.compute(cr, uid,
                                     price_type.currency_id.id, res['currency_id'],
                                     product_obj.price_get(cr, uid, [product_id],
-                                        price_type.field, context=context)[product_id], round=False, context=context)
+                                    price_type.field, context=context)[product_id], round=False, context=context)
 
-                        if price >= 0.0:
+                        if price is not False:
                             price_limit = price
-
                             price = price * (1.0+(res['price_discount'] or 0.0))
                             price = rounding(price, res['price_round'])
                             price += (res['price_surcharge'] or 0.0)
@@ -417,7 +417,7 @@ class product_pricelist(osv.osv):
                         price = currency_obj.compute(cr, uid,
                                 price_type.currency_id.id, res['currency_id'],
                                 product_obj.price_get(cr, uid, [prod_id],
-                                    price_type.field, context=context)[prod_id], round=False, context=context)
+                                price_type.field, context=context)[prod_id], round=False, context=context)
 
                     if price:
                         price_limit = price

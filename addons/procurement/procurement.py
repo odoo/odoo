@@ -289,9 +289,15 @@ class procurement_order(osv.osv):
                 return False
             partner = procurement.product_id.seller_id #Taken Main Supplier of Product of Procurement.
 
+            if not partner:
+                cr.execute('update procurement_order set message=%s where id=%s',
+                           (_('No default supplier defined for this product'), procurement.id))
+                return False
+
             if user.company_id and user.company_id.partner_id:
                 if partner.id == user.company_id.partner_id.id:
                     return False
+
             address_id = partner_obj.address_get(cr, uid, [partner.id], ['delivery'])['delivery']
             if not address_id:
                 cr.execute('update procurement_order set message=%s where id=%s',
@@ -521,7 +527,7 @@ class stock_warehouse_orderpoint(osv.osv):
             help="The procurement quantity will be rounded up to this multiple."),
         'procurement_id': fields.many2one('procurement.order', 'Latest procurement', ondelete="set null"),
         'company_id': fields.many2one('res.company','Company',required=True),
-        'procurement_draft_ids': fields.function(_get_draft_procurements, method=True, type='many2many', relation="procurement.order", \
+        'procurement_draft_ids': fields.function(_get_draft_procurements, type='many2many', relation="procurement.order", \
                                 string="Related Procurement Orders",help="Draft procurement of the product and location of that orderpoint"),
     }
     _defaults = {

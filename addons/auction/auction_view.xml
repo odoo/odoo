@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <openerp>
 <data>
-    <menuitem name="Auction" id="auction_menu_root" icon="terp-purchase" sequence="26" 
+    <menuitem name="Auction" id="auction_menu_root" icon="terp-purchase" sequence="26"
                 groups="group_auction_manager,group_auction_user"/>
     <menuitem name="Configuration" parent="auction_menu_root" id="auction_config_menu" sequence="7" groups="group_auction_manager"/>
     <menuitem name="Tools Bar Codes" id="auction_outils_menu" parent="auction_menu_root" sequence="5" />
@@ -39,6 +39,7 @@
         </field>
     </record>
     <record model="ir.actions.act_window" id="action_auction_artist">
+        <field name="name">Auction Artists</field>
         <field name="res_model">auction.artists</field>
         <field name="view_type">form</field>
         <field name="view_id" ref="view_auction_artist_tree"/>
@@ -76,12 +77,13 @@
     </record>
 
     <record model="ir.actions.act_window" id="action_auction_object_categories">
+        <field name="name">Auction object Categories</field>
         <field name="res_model">auction.lot.category</field>
         <field name="view_type">form</field>
         <field name="view_id" ref="view_auction_object_categories_tree"/>
     </record>
 
-    <menuitem name="Object Categories" parent="auction_config_menu" action="action_auction_object_categories" 
+    <menuitem name="Object Categories" parent="auction_config_menu" action="action_auction_object_categories"
                 id="menu_auction_object_cat" groups="group_auction_manager"/>
 
    <!--  Auction Management/Auction Dates/New Auction Dates  -->
@@ -373,7 +375,7 @@
                       </group>
                    </page>
                    <page string="Bids">
-                       <field name="bid_lines" colspan="4" nolabel="1" editable="top">
+                       <field name="bid_lines" colspan="4" nolabel="1">
                             <tree string="Bids Details"  editable="top">
                                 <field name="bid_id"/>
                                 <field name="price"/>
@@ -707,7 +709,7 @@
                         <field name="price"/>
                         <field name="call"/>
                     </tree>
-                    <form string="Bids Lines" editable="top">
+                    <form string="Bids Lines">
                         <field name="lot_id" domain="[('auction_id','=',parent.auction_id)]"/>
                         <field name="price"/>
                         <field name="call"/>
@@ -759,6 +761,7 @@
     </record>
 
     <record model="ir.actions.act_window" id="action_bid_open">
+        <field name="name">Open Bids</field>
         <field name="res_model">auction.bid</field>
         <field name="view_mode">tree,form</field>
     </record>

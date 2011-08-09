@@ -158,9 +158,9 @@ class hr_applicant(crm.crm_case, osv.osv):
         'response': fields.integer("Response"),
         'reference': fields.char('Reference', size=128),
         'day_open': fields.function(_compute_day, string='Days to Open', \
-                                method=True, multi='day_open', type="float", store=True),
+                                multi='day_open', type="float", store=True),
         'day_close': fields.function(_compute_day, string='Days to Close', \
-                                method=True, multi='day_close', type="float", store=True),
+                                multi='day_close', type="float", store=True),
     }
 
     def _get_stage(self, cr, uid, context=None):
@@ -299,15 +299,9 @@ class hr_applicant(crm.crm_case, osv.osv):
         return value
 
     def message_new(self, cr, uid, msg, context=None):
-        """
-        Automatically calls when new email message arrives
-
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks
-        """
-        thread_pool = self.pool.get('email.thread')
-        subject = msg.get('subject')
+        """Automatically calls when new email message arrives"""
+        thread_pool = self.pool.get('mail.thread')
+        subject = msg.get('subject') or _("No Subject")
         body = msg.get('body')
         msg_from = msg.get('from')
         priority = msg.get('priority')

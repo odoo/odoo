@@ -85,6 +85,8 @@ class stock_change_product_qty(osv.osv_memory):
 
         res_original = prod_obj_pool.browse(cr, uid, rec_id, context=context)
         for data in self.browse(cr, uid, ids, context=context):
+            if data.new_quantity < 0:
+                raise osv.except_osv(_('Warning!'), _('Quantity cannot be negative.'))
             inventory_id = inventry_obj.create(cr , uid, {'name': _('INV: %s') % tools.ustr(res_original.name)}, context=context)
             line_data ={
                 'inventory_id' : inventory_id,
@@ -99,15 +101,7 @@ class stock_change_product_qty(osv.osv_memory):
             inventry_obj.action_confirm(cr, uid, [inventory_id], context=context)
             inventry_obj.action_done(cr, uid, [inventory_id], context=context)
 
-        return {
-            'domain': "[('id','=', %s)]" % (inventory_id),
-            'name' : _('Physical Inventories'),
-            'view_type': 'form',
-            'view_mode': 'tree,form',
-            'res_model': 'stock.inventory',
-            'context': context,
-            'type': 'ir.actions.act_window',
-        }
+        return {}
 
 stock_change_product_qty()
 

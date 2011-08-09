@@ -23,6 +23,7 @@
     'name': 'Reminders',
     'version': '1.0',
     'category': 'Finance',
+    'complexity': "normal",
     'description': """
 Modules to automate letters for unpaid invoices, with multi-level recalls.
 ==========================================================================

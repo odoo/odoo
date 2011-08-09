@@ -25,6 +25,7 @@ import time
 from crm import wizard
 import binascii
 import tools
+from tools.translate import _
 
 CRM_HELPDESK_STATES = (
     crm.AVAILABLE_STATES[2][0], # Cancelled
@@ -98,7 +99,7 @@ class crm_helpdesk(crm.crm_case, osv.osv):
         """Automatically called when new email message arrives"""
         res_id = super(crm_helpdesk,self).message_new(cr, uid, msg_dict, custom_values=custom_values, context=context)
         thread_pool = self.pool.get('mail.thread')
-        subject = msg.get('subject')
+        subject = msg.get('subject')  or _("No Subject")
         body = msg.get('body_text')
         msg_from = msg.get('from')
         priority = msg.get('priority')

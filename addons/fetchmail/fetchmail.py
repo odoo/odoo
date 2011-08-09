@@ -59,10 +59,10 @@ class email_server(osv.osv):
         'password' : fields.char('Password', size=1024, invisible=True, required=True, readonly=True, states={'draft':[('readonly', False)]}),
         'note': fields.text('Description'),
         'action_id':fields.many2one('ir.actions.server', 'Email Server Action', required=False, domain="[('state','=','email')]", help="An Email Server Action. It will be run whenever an e-mail is fetched from server."),
-        'object_id': fields.many2one('ir.model', "Model", required=True, help="OpenObject Model. Generates a record of this model.\nSelect Object with message_new attrbutes."),
+        'object_id': fields.many2one('ir.model', "Object To Create", required=True, help="Whenever an email arrives, it automatically creates the object of this type with all the information attached."),
         'priority': fields.integer('Server Priority', readonly=True, states={'draft':[('readonly', False)]}, help="Priority between 0 to 10, select define the order of Processing"),
-        'user_id':fields.many2one('res.users', 'User', required=False),
-        'message_ids': fields.one2many('email.message', 'server_id', 'Messages', readonly=True),
+        'user_id':fields.many2one('res.users', 'User', required=False,  help="This is the user that runs the cron"),
+        'message_ids': fields.one2many('mail.message', 'server_id', 'Messages', readonly=True),
     }
     _defaults = {
         'state': lambda *a: "draft",
@@ -105,7 +105,7 @@ class email_server(osv.osv):
             context = {}
         for server in self.browse(cr, uid, ids, context=context):
             logger.notifyChannel(server.type, netsvc.LOG_INFO, 'fetchmail start checking for new emails on %s' % (server.name))
-            context.update({'server_id': server.id})
+            context.update({'server_id': server.id, 'server_type': server.type})
             try:
                 if server.type == 'imap':
                     imap_server = None
@@ -189,6 +189,8 @@ class email_server(osv.osv):
                             action_pool.run(cr, user, [server.action_id.id], {'active_id': res_id, 'active_ids':[res_id]})
 
                         pop_server.dele(num)
+
+                    pop_server.quit()
                     logger.notifyChannel(server.type, netsvc.LOG_INFO, 'fetchmail fetch %s email(s) from %s' % (numMsgs, server.name))
                 except Exception, e:
                     logger.notifyChannel(server.type, netsvc.LOG_ERROR, '%s' % (tools.ustr(e)))

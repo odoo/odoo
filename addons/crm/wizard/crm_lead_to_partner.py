@@ -51,7 +51,7 @@ class crm_lead2partner(osv.osv_memory):
         rec_ids = context and context.get('active_ids', [])
         for lead in lead_obj.browse(cr, uid, rec_ids, context=context):
             if lead.partner_id:
-                     raise osv.except_osv(_('Warning !'),
+                raise osv.except_osv(_('Warning !'),
                         _('A partner is already defined on this lead.'))
 
     def default_get(self, cr, uid, fields, context=None):
@@ -68,7 +68,6 @@ class crm_lead2partner(osv.osv_memory):
 
         lead_obj = self.pool.get('crm.lead')
         partner_obj = self.pool.get('res.partner')
-        contact_obj = self.pool.get('res.partner.address')
         partner_id = False
 
         data = list(context and context.get('active_ids', []) or [])
@@ -150,7 +149,6 @@ class crm_lead2partner(osv.osv_memory):
         contact_obj = self.pool.get('res.partner.address')
         partner_ids = []
         partner_id = False
-        contact_id = False
         rec_ids = context and context.get('active_ids', [])
 
         for data in self.browse(cr, uid, ids, context=context):
@@ -161,7 +159,7 @@ class crm_lead2partner(osv.osv_memory):
                         'user_id': lead.user_id.id,
                         'comment': lead.description,
                     })
-                    contact_id = contact_obj.create(cr, uid, {
+                    contact_obj.create(cr, uid, {
                         'partner_id': partner_id,
                         'name': lead.contact_name,
                         'phone': lead.phone,
@@ -181,7 +179,6 @@ class crm_lead2partner(osv.osv_memory):
                 else:
                     if data.partner_id:
                         partner_id = data.partner_id.id
-                        contact_id = partner_obj.address_get(cr, uid, [partner_id])['default']
                 self.assign_partner(cr, uid, lead.id, partner_id)
                 partner_ids.append(partner_id)
         return partner_ids
@@ -206,9 +203,6 @@ class crm_lead2partner(osv.osv_memory):
             context = {}
 
         partner_ids = self._create_partner(cr, uid, ids, context=context)
-        mod_obj = self.pool.get('ir.model.data')
-        result = mod_obj._get_id(cr, uid, 'base', 'view_res_partner_filter')
-        res = mod_obj.read(cr, uid, result, ['res_id'])
         return {'type': 'ir.actions.act_window_close'}
 
 crm_lead2partner()

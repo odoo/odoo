@@ -26,7 +26,8 @@ Lines will only be merged if: &#10;
             </field>
         </record>
 
-        <act_window name="Merge Purchase orders"            
+        <act_window name="Merge Purchase orders"
+            context="{'search_default_draft': 1, 'search_default_approved': False}"
             res_model="purchase.order.group"
             src_model="purchase.order"
             view_mode="form"

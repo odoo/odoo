@@ -23,13 +23,6 @@
                         <field name="journal_id" widget="selection" context="{'journal_id': self, 'set_visible':False}" domain="[('type','in',('bank','cash'))]"/>
                         <field name="period_id" groups="base.group_extended"/>
                     </group>
-                    <newline/>
-                    <group expand="0" string="Extended Filters..." col='8' colspan='4'>
-                        <field name="reference"/>
-                        <field name="name"/>
-                        <field name="narration"/>
-                        <field name="amount"/>
-                   </group>
                    <newline/>
                     <group expand="0" string="Group By..." colspan="4" col="10">
                         <filter string="Customer" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>
@@ -63,13 +56,6 @@
                         <field name="journal_id" widget="selection" context="{'journal_id': self, 'set_visible':False}" domain="[('type','in',('bank','cash'))]"/>
                         <field name="period_id" groups="base.group_extended"/>
                     </group>
-                    <newline/>
-                    <group expand="0" string="Extended Filters..." col='8' colspan='4'>
-                        <field name="reference"/>
-                        <field name="name"/>
-                        <field name="narration"/>
-                        <field name="amount"/>
-                   </group>
                    <newline/>
                     <group expand="0" string="Group By..." colspan="4" col="10">
                         <filter string="Supplier" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>
@@ -162,6 +148,7 @@
                         <field name="date" select="1" invisible="context.get('line_type', False)" on_change="onchange_date(partner_id, journal_id, amount, currency_id, type, date)"/>
                         <field name="reference" select="1" invisible="context.get('line_type', False)" string="Payment Ref"/>
                         <field name="name" colspan="2" invisible="context.get('line_type', False)"/>
+                        <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                         <field name="account_id"
                             widget="selection"
                             invisible="True"/>
@@ -221,7 +208,6 @@
                         </page>
                         <page string="Journal Items" groups="base.group_extended" attrs="{'invisible': [('state','!=','posted')]}">
                             <group col="6" colspan="4">
-                                <field name="company_id" select="1" widget="selection" groups="base.group_multi_company"/>
                                 <field name="period_id"/>
                                 <field name="audit"/>
                             </group>
@@ -303,6 +289,7 @@
                         <field name="date" select="1" invisible="context.get('line_type', False)" on_change="onchange_date(partner_id, journal_id, amount, currency_id, type, date)"/>
                         <field name="reference" select="1" invisible="context.get('line_type', False)" string="Payment Ref"/>
                         <field name="name" colspan="2" invisible="context.get('line_type', False)"/>
+                        <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                         <field name="account_id"
                             widget="selection"
                             invisible="True"/>
@@ -362,7 +349,6 @@
                         </page>
                         <page string="Journal Items" groups="base.group_extended" attrs="{'invisible': [('state','!=','posted')]}">
                             <group col="6" colspan="4">
-                                <field name="company_id" select="1" widget="selection" groups="base.group_multi_company"/>
                                 <field name="period_id"/>
                                 <field name="audit"/>
                             </group>

@@ -21,7 +21,10 @@
             <field eval="-1" name="days2"/>
             <field eval="account_payment_term" name="payment_id"/>
         </record>
-
+        <record forcecreate="True" id="decimal_payment" model="decimal.precision">
+            <field name="name">Payment Term</field>
+            <field name="digits">6</field>
+        </record>
         <!--
         Account Journal View
         -->

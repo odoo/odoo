@@ -168,6 +168,10 @@ class survey_send_invitation(osv.osv_memory):
                             res_user+= "- %s (Login: %s,  Password: %s)\n" % \
                                  (user_email.name, user_email.login, user_email.password)
                     continue
+                else:
+                    error += "- No User found linked to email address '%s'.\n Impossible to send a reminder to a partner never invited before \n"%(addr.email)
+                    continue
+
                 passwd= self.genpasswd()
                 out+= addr.email + ',' + passwd + '\n'
                 mail= record['mail'] % {'login' : addr.email, 'passwd' : passwd, 'name' : addr.name}

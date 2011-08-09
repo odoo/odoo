@@ -13,11 +13,11 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-02-01 04:42+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-04-29 05:53+0000\n"
+"X-Generator: Launchpad (build 12758)\n"
 
 #. module: lunch
-#: view:lunch.cashbox.clean:0
+#: wizard_view:lunch.cashbox.clean,init:0
 msgid "Reset cashbox"
 msgstr "Kézi pénztár ürítése"
 
@@ -29,12 +29,11 @@ msgid "Lunch Orders"
 msgstr "Ebédrendelések"
 
 #. module: lunch
-#: view:lunch.order.cancel:0
+#: wizard_view:lunch.order.cancel,init:0
 msgid "Are you sure you want to cancel this order ?"
 msgstr "Biztos, hogy törölni akarja ezt a rendelést?"
 
 #. module: lunch
-#: model:ir.actions.act_window,name:lunch.action_lunch_cashmove_form
 #: model:ir.ui.menu,name:lunch.menu_lunch_cashmove_form
 msgid "Cash Moves"
 msgstr "Pénzmozgások"
@@ -100,11 +99,8 @@ msgid "Day"
 msgstr "Nap"
 
 #. module: lunch
-#: model:ir.actions.act_window,name:lunch.action_lunch_order_cancel
-#: model:ir.actions.act_window,name:lunch.action_lunch_order_cancel_values
-#: model:ir.model,name:lunch.model_lunch_order_cancel
-#: view:lunch.order:0
-#: view:lunch.order.cancel:0
+#: model:ir.actions.wizard,name:lunch.wizard_id_cancel
+#: wizard_view:lunch.order.cancel,init:0
 msgid "Cancel Order"
 msgstr "Rendelés törlése"
 
@@ -115,7 +111,6 @@ msgid "Amount"
 msgstr "Összeg"
 
 #. module: lunch
-#: model:ir.actions.act_window,name:lunch.action_lunch_product_form
 #: model:ir.ui.menu,name:lunch.menu_lunch_product_form
 #: view:lunch.product:0
 msgid "Products"
@@ -137,13 +132,13 @@ msgid "Lunch Orders Statistics"
 msgstr "Ebédrendelés statisztika"
 
 #. module: lunch
+#: model:ir.actions.act_window,name:lunch.action_lunch_cashmove_form
 #: view:lunch.cashmove:0
 #: field:lunch.order,cashmove:0
 msgid "CashMove"
 msgstr "Pénzmozgás"
 
 #. module: lunch
-#: view:lunch.order:0
 #: selection:lunch.order,state:0
 msgid "Confirmed"
 msgstr "Megerősített"
@@ -174,6 +169,7 @@ msgid "Total Price"
 msgstr "Teljes ár"
 
 #. module: lunch
+#: model:ir.ui.menu,name:lunch.menu_lunch_report_amount_tree
 #: view:report.lunch.amount:0
 msgid "Box Amount by User"
 msgstr "Felhasználó része a pénztárban"
@@ -194,10 +190,8 @@ msgid "Description Order"
 msgstr "Rendelés leírása"
 
 #. module: lunch
-#: model:ir.actions.act_window,name:lunch.action_lunch_order_confirm
-#: model:ir.actions.act_window,name:lunch.action_lunch_order_confirm_values
-#: view:lunch.order:0
-#: view:lunch.order.confirm:0
+#: model:ir.actions.wizard,name:lunch.lunch_order_confirm
+#: wizard_button:lunch.order.confirm,init,go:0
 msgid "Confirm Order"
 msgstr "Rendelés megerősítése"
 
@@ -235,7 +229,7 @@ msgid " Product Categories "
 msgstr " Termék kategóriák "
 
 #. module: lunch
-#: view:lunch.cashbox.clean:0
+#: wizard_button:lunch.cashbox.clean,init,zero:0
 msgid "Set to Zero"
 msgstr "Beállítás nullára"
 
@@ -270,20 +264,18 @@ msgid "Month"
 msgstr "Hónap"
 
 #. module: lunch
-#: field:lunch.order.confirm,confirm_cashbox:0
+#: wizard_field:lunch.order.confirm,init,confirm_cashbox:0
 msgid "Name of box"
 msgstr "Doboz megnevezése"
 
 #. module: lunch
-#: view:lunch.order.cancel:0
+#: wizard_button:lunch.order.cancel,init,cancel:0
 msgid "Yes"
 msgstr "Igen"
 
 #. module: lunch
 #: model:ir.model,name:lunch.model_lunch_category
 #: view:lunch.category:0
-#: view:lunch.order:0
-#: field:lunch.order,category:0
 #: field:lunch.product,category_id:0
 msgid "Category"
 msgstr "Kategória"
@@ -299,18 +291,17 @@ msgid "Product Categories"
 msgstr "Termékkategóriák"
 
 #. module: lunch
-#: view:lunch.cashbox.clean:0
-#: view:lunch.order.cancel:0
+#: wizard_button:lunch.order.cancel,init,end:0
 msgid "No"
 msgstr "Nem"
 
 #. module: lunch
-#: view:lunch.order.confirm:0
+#: wizard_view:lunch.order.confirm,init:0
 msgid "Orders Confirmation"
 msgstr "Rendelések megerősítése"
 
 #. module: lunch
-#: view:lunch.cashbox.clean:0
+#: wizard_view:lunch.cashbox.clean,init:0
 msgid "Are you sure you want to reset this cashbox ?"
 msgstr "Biztos benne hogy törli a kassza összes előzményét és üríti azt?"
 
@@ -341,7 +332,6 @@ msgstr "Június"
 #: field:lunch.cashmove,user_cashmove:0
 #: field:lunch.order,user_id:0
 #: field:report.lunch.amount,user_id:0
-#: field:report.lunch.order,user_id:0
 msgid "User Name"
 msgstr "Felhasználónév"
 
@@ -351,7 +341,7 @@ msgid "Sales Analysis"
 msgstr "Értékesítési elemzés"
 
 #. module: lunch
-#: model:ir.ui.menu,name:lunch.menu_lunch_category_root_configuration
+#: model:ir.ui.menu,name:lunch.menu_lunch
 msgid "Lunch"
 msgstr "Ebéd"
 
@@ -362,7 +352,6 @@ msgid "User"
 msgstr "Felhasználó"
 
 #. module: lunch
-#: view:lunch.cashmove:0
 #: field:lunch.order,date:0
 msgid "Date"
 msgstr "Dátum"
@@ -407,8 +396,7 @@ msgid "Cashbox for Lunch "
 msgstr "Ebédpénz kassza "
 
 #. module: lunch
-#: model:ir.actions.act_window,name:lunch.action_lunch_cashbox_clean
-#: model:ir.actions.act_window,name:lunch.action_lunch_cashbox_clean_values
+#: model:ir.actions.wizard,name:lunch.wizard_clean_cashbox
 msgid "Set CashBox to Zero"
 msgstr "Kassza nullázása"
 
@@ -419,7 +407,8 @@ msgid "Box Name"
 msgstr "Doboz megnevezése"
 
 #. module: lunch
-#: view:lunch.order.confirm:0
+#: wizard_button:lunch.cashbox.clean,init,end:0
+#: wizard_button:lunch.order.confirm,init,end:0
 msgid "Cancel"
 msgstr "Mégse"
 
@@ -429,18 +418,18 @@ msgid " Cashboxes "
 msgstr " Kézi kasszák "
 
 #. module: lunch
-#: report:lunch.order:0
+#: rml:lunch.order:0
 msgid "Unit Price"
 msgstr "Egységár"
 
 #. module: lunch
+#: model:ir.actions.act_window,name:lunch.action_lunch_product_form
 #: field:lunch.order,product:0
 msgid "Product"
 msgstr "Termék"
 
 #. module: lunch
-#: field:lunch.cashmove,name:0
-#: report:lunch.order:0
+#: rml:lunch.order:0
 #: field:lunch.product,description:0
 msgid "Description"
 msgstr "Leírás"
@@ -490,9 +479,10 @@ msgstr "Február"
 
 #. module: lunch
 #: field:lunch.cashbox,name:0
+#: field:lunch.cashmove,name:0
 #: field:lunch.category,name:0
+#: rml:lunch.order:0
 #: field:lunch.product,name:0
-#: field:report.lunch.order,box_name:0
 msgid "Name"
 msgstr "Név"
 
@@ -514,7 +504,7 @@ msgstr "Kasszák"
 
 #. module: lunch
 #: view:lunch.category:0
-#: report:lunch.order:0
+#: rml:lunch.order:0
 #: view:lunch.order:0
 msgid "Order"
 msgstr "Megrendelés"

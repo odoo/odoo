@@ -97,7 +97,7 @@
                         <form string="Bank account">
                             <field name="state"/>
                             <newline/>
-                            <field name="acc_number" select="1"/>
+                            <field name="acc_number" attrs="{'invisible':[('state','!=','bank')]}"/>
                             <newline/>
                             <field name="bank"/>
                             <newline/>
@@ -129,7 +129,7 @@
 
         <act_window
             id="action_analytic_open"
-            name="Analytic Accounts"
+            name="Contracts/Analytic Accounts"
             res_model="account.analytic.account"
             context="{'search_default_partner_id':[active_id], 'default_partner_id': active_id}"
             src_model="res.partner"

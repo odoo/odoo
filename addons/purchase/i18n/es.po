@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-15 05:09+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-07-23 04:55+0000\n"
+"X-Generator: Launchpad (build 13405)\n"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_confirmingpurchaseorder0
@@ -75,16 +75,16 @@ msgstr ""
 "Puede crear una petición de presupuesto cuando quiera obtener productos de "
 "un proveedor pero la compra todavía no se haya confirmado. Utilice asimismo "
 "este menú para revisar las peticiones de compra creadas automáticamente en "
-"base a sus reglas de logística (stock mínimo, MTO, etc). Puede convertir la "
-"petición en una compra una vez el pedido se haya confirmado. Si utiliza la "
-"interfaz extendida (desde las Preferencias de Usuario), puede elegir la "
-"forma de controlar sus facturas de proveedor: basadas en pedido, basadas en "
-"recepciones o codificación manual."
+"base a sus reglas de logística (stock mínimo, obtener bajo pedido, etc). "
+"Puede convertir la petición en una compra una vez el pedido se haya "
+"confirmado. Si utiliza la interfaz extendida (desde las Preferencias de "
+"Usuario), puede elegir la forma de controlar sus facturas de proveedor: "
+"basadas en pedido, basadas en recepciones o codificación manual."
 
 #. module: purchase
 #: selection:purchase.order,invoice_method:0
-msgid "From Picking"
-msgstr "Desde albarán"
+msgid "From Reception"
+msgstr ""
 
 #. module: purchase
 #: view:purchase.order:0
@@ -265,7 +265,7 @@ msgstr "Aprobado"
 #. module: purchase
 #: view:purchase.report:0
 msgid "Reference UOM"
-msgstr "Referecnia UdM"
+msgstr "Referencia UdM"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -497,7 +497,7 @@ msgstr "Línea del pedido"
 #. module: purchase
 #: help:purchase.order,shipped:0
 msgid "It indicates that a picking has been done"
-msgstr "Indica que un albarán ha sido realizado"
+msgstr "Indica que un albarán ha sido realizado."
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:710
@@ -681,7 +681,7 @@ msgstr "Mi tablero"
 #. module: purchase
 #: report:purchase.order:0
 msgid "Purchase Order Confirmation N°"
-msgstr "Confirmación de orden de compra Nº"
+msgstr "Confirmación pedido de compra Nº"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.action_purchase_order_report_all
@@ -781,8 +781,8 @@ msgid ""
 "match it with the draft invoice and validate it."
 msgstr ""
 "Use este menú para controlar las facturas a recibir de su proveedor. OpenERP "
-"pregenera facturas borrador a aprtir de sus órdenes de compra o recepciones, "
-"en fución de los parámetros. En cuanto reciba la factura del proveedor, "
+"pregenera facturas borrador a partir de sus pedidos de compra o recepciones, "
+"en función de los parámetros. En cuanto reciba la factura del proveedor, "
 "puede verificarla con la factura borrador y validarla."
 
 #. module: purchase
@@ -859,11 +859,11 @@ msgid ""
 "supplier invoice yet. Once you are ready to receive a supplier invoice, you "
 "can generate a draft supplier invoice based on the lines from this menu."
 msgstr ""
-"Si establece el control de facturación de una órden de compra a \"Manual\", "
-"puede seguir aquí todas las líneas de las órdenes de compra para las cuales "
-"no ha recibido todavía la factura de proveedor correspondiente. Una vez esté "
-"listo para recibir una factura de proveedor, puede generar una factura de "
-"proveedor en borrador basada en las lineas desde este menú."
+"Si establece el control de facturación de un pedido de compra a \"Manual\", "
+"puede controlar aquí todas las líneas de los pedidos de compra para los "
+"cuales no ha recibido todavía la factura de proveedor correspondiente. Una "
+"vez esté listo para recibir una factura de proveedor, puede generar una "
+"factura de proveedor en borrador basada en las lineas desde este menú."
 
 #. module: purchase
 #: model:process.node,name:purchase.process_node_invoiceafterpacking0
@@ -998,8 +998,14 @@ msgstr "Para ser revisado por el contable."
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.purchase_line_form_action2
 #: model:ir.ui.menu,name:purchase.menu_purchase_line_order_draft
-msgid "Purchase Lines Not Invoiced"
-msgstr "Líneas de compra no facturadas"
+msgid "On Purchase Order Line"
+msgstr ""
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.action_picking_tree4_picking_to_invoice
+#: model:ir.ui.menu,name:purchase.action_picking_tree4_picking_to_invoice
+msgid "On Receptions"
+msgstr ""
 
 #. module: purchase
 #: report:purchase.order:0
@@ -1220,12 +1226,11 @@ msgstr ""
 "\n"
 "    El módulo de compras permite generar pedidos de compra para adquirir "
 "bienes de un proveedor.\n"
-"    Una factura de proveedor se crea para el pedido realizado en "
-"particular.\n"
-"    Cuadro de mandos para la gestión de compras que incluye:\n"
+"    Se crea una factura de proveedor para un pedido en concreto.\n"
+"    El tablero para la gestión de compras incluye:\n"
 "    * Pedidos actuales de compra.\n"
 "    * Pedidos de compra en borrador.\n"
-"    * Gráfico de cantidad y monto por mes.    \n"
+"    * Gráfico de cantidad e importe por mes.    \n"
 "\n"
 "    "
 
@@ -1278,7 +1283,7 @@ msgstr "Valor productos"
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_product_pricelist_type
 msgid "Pricelists Types"
-msgstr "Tipos de listas de precios"
+msgstr "Tipos de tarifas"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -1406,7 +1411,7 @@ msgstr "Cancelar"
 #: view:purchase.order:0
 #: view:purchase.order.line:0
 msgid "Purchase Order Lines"
-msgstr "Líneas orden de compra"
+msgstr "Líneas pedido de compra"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_approvingpurchaseorder0
@@ -1439,7 +1444,7 @@ msgstr "Línea pedido de compra realiza factura"
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_action_picking_tree4
 msgid "Incoming Shipments"
-msgstr "Envíos de entrada"
+msgstr "Albaranes de entrada"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_order_by_user_all
@@ -1548,7 +1553,7 @@ msgstr "Descripción"
 #. module: purchase
 #: help:res.company,po_lead:0
 msgid "This is the leads/security time for each purchase order."
-msgstr "Este es el tiempo inicial/seguridad para cada pedido de compra."
+msgstr "Este es el plazo de tiempo de seguridad para cada pedido de compra."
 
 #. module: purchase
 #: report:purchase.quotation:0
@@ -1935,6 +1940,9 @@ msgstr "Tablero de compras"
 #~ msgid "Supplier Invoice pre-generated on receptions for control"
 #~ msgstr "Factura de proveedor pre-generada en la recepción para control"
 
+#~ msgid "From Picking"
+#~ msgstr "Desde albarán"
+
 #~ msgid ""
 #~ "Please note that orders will only be merged if they are to the same partner "
 #~ "and going to the same location, and lines will only be merged if they are "
@@ -2160,6 +2168,9 @@ msgstr "Tablero de compras"
 
 #~ msgid "An invoice generated for a purchase order"
 #~ msgstr "Una factura generada por un pedido de compra."
+
+#~ msgid "Purchase Lines Not Invoiced"
+#~ msgstr "Líneas de compra no facturadas"
 
 #~ msgid "Error ! You can not create recursive Menu."
 #~ msgstr "¡Error! No puede crear menús recursivos."

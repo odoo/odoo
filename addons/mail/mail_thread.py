@@ -260,8 +260,7 @@ class mail_thread(osv.osv):
                     'body_text': body_text,
                     'email_to': email_to,
                     'email_from': email_from or \
-                        (hasattr(thread, 'user_id') and thread.user_id and thread.user_id.address_id and \
-                         thread.user_id.address_id.email),
+                        (hasattr(thread, 'user_id') and thread.user_id and thread.user_id.user_email),
                     'email_cc': email_cc,
                     'email_bcc': email_bcc,
                     'partner_id': partner_id,

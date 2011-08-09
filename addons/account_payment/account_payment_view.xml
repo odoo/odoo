@@ -150,6 +150,7 @@
                         <tree string="Payment Line">
                             <field name="ml_inv_ref" />
                             <field name="partner_id" select="1"/>
+                            <field name="communication"/>
                             <field name="bank_id" domain="[('partner_id', '=', partner_id)]"/>
                             <field name="ml_maturity_date"/>
                             <field name="date"/>
@@ -291,6 +292,7 @@
                     <field name="ml_inv_ref" />
                     <field name="ml_maturity_date"/>
                     <field name="partner_id" select="1"/>
+                    <field name="communication"/>
                     <field name="amount" sum="Amount Total"/>
                     <field name="amount_currency" sum="Currency Amount Total"/>
                     <field name="currency"/>

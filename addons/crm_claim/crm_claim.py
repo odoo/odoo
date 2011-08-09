@@ -34,6 +34,7 @@ CRM_CLAIM_PENDING_STATES = (
     crm.AVAILABLE_STATES[4][0], # Pending
 )
 
+
 class crm_claim(crm.crm_case, osv.osv):
     """
     Crm claim
@@ -216,6 +217,15 @@ class crm_claim(crm.crm_case, osv.osv):
                 values.update(state=crm.AVAILABLE_STATES[1][0]) #re-open
             res = self.write(cr, uid, [case.id], values, context=context)
         return res
+
+    def msg_send(self, cr, uid, id, *args, **argv):
+        return True
+
+class res_partner(osv.osv):
+    _inherit = 'res.partner'
+    _columns = {
+        'claims_ids': fields.one2many('crm.claim', 'partner_id', 'Claims'),
+    }
 
 class crm_stage_claim(osv.osv):
 

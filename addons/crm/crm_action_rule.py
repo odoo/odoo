@@ -19,17 +19,12 @@
 #
 ##############################################################################
 
-import time
 import re
-import os
-import base64
 import tools
 
 from tools.translate import _
 from osv import fields
 from osv import osv
-from osv import orm
-from osv.orm import except_orm
 
 import crm
 
@@ -53,8 +48,8 @@ class base_action_rule(osv.osv):
         mail_message = self.pool.get('mail.message')
         body = self.format_mail(obj, body)
         if not emailfrom:
-            if hasattr(obj, 'user_id')  and obj.user_id and obj.user_id.address_id and obj.user_id.address_id.email:
-                emailfrom = obj.user_id.address_id.email
+            if hasattr(obj, 'user_id')  and obj.user_id and obj.user_id.user_email:
+                emailfrom = obj.user_id.user_email
 
         name = '[%d] %s' % (obj.id, tools.ustr(obj.name))
         emailfrom = tools.ustr(emailfrom)
@@ -70,9 +65,9 @@ class base_action_rule(osv.osv):
         ok = super(base_action_rule, self).do_check(cr, uid, action, obj, context=context)
 
         if hasattr(obj, 'section_id'):
-            ok = ok and (not action.trg_section_id or action.trg_section_id.id==obj.section_id.id)
+            ok = ok and (not action.trg_section_id or action.trg_section_id.id == obj.section_id.id)
         if hasattr(obj, 'categ_id'):
-            ok = ok and (not action.trg_categ_id or action.trg_categ_id.id==obj.categ_id.id)
+            ok = ok and (not action.trg_categ_id or action.trg_categ_id.id == obj.categ_id.id)
 
         #Cheking for history
         regex = action.regex_history
@@ -106,7 +101,7 @@ class base_action_rule(osv.osv):
             if '@' in (obj.email_cc or ''):
                 emails = obj.email_cc.split(",")
                 if  obj.act_email_cc not in emails:# and '<'+str(action.act_email_cc)+">" not in emails:
-                    write['email_cc'] = obj.email_cc+','+obj.act_email_cc
+                    write['email_cc'] = obj.email_cc + ',' + obj.act_email_cc
             else:
                 write['email_cc'] = obj.act_email_cc
 
@@ -129,7 +124,7 @@ class base_action_rule(osv.osv):
     def state_get(self, cr, uid, context=None):
         """Gets available states for crm"""
         res = super(base_action_rule, self).state_get(cr, uid, context=context)
-        return res  + crm.AVAILABLE_STATES
+        return res + crm.AVAILABLE_STATES
 
     def priority_get(self, cr, uid, context=None):
         res = super(base_action_rule, self).priority_get(cr, uid, context=context)

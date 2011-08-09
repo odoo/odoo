@@ -13,7 +13,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-22 04:38+0000\n"
+"X-Launchpad-Export-Date: 2011-04-29 05:16+0000\n"
 "X-Generator: Launchpad (build 12758)\n"
 
 #. module: sale
@@ -293,7 +293,7 @@ msgstr "Заказчик не определен !"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree2
 msgid "Sales in Exception"
-msgstr "Продажи в исключительном состоянии"
+msgstr "Продажи в состоянии \"Исключение\""
 
 #. module: sale
 #: view:sale.order:0
@@ -327,6 +327,8 @@ msgid ""
 "There is no income category account defined in default Properties for "
 "Product Category or Fiscal Position is not defined !"
 msgstr ""
+"Не определен счет входящих ТМЦ по умолчанию в настройках категории ТМЦ или "
+"не определена система налогообложения !"
 
 #. module: sale
 #: view:sale.installer:0
@@ -555,6 +557,9 @@ msgid ""
 "Incoterm which stands for 'International Commercial terms' implies its a "
 "series of sales terms which are used in the commercial transaction."
 msgstr ""
+"Инкоте́рмс (англ. Incoterms, International commerce terms) — международные "
+"правила по толкованию наиболее широко используемых торговых терминов в "
+"области внешней торговли."
 
 #. module: sale
 #: field:sale.order,partner_invoice_id:0
@@ -880,7 +885,7 @@ msgstr "Даты заказа на продажу"
 #. module: sale
 #: selection:sale.order.line,state:0
 msgid "Exception"
-msgstr "Исключительная ситуация"
+msgstr "Исключение"
 
 #. module: sale
 #: model:process.transition,name:sale.process_transition_invoice0
@@ -1168,7 +1173,7 @@ msgstr "Снабжение"
 #: selection:sale.order,state:0
 #: selection:sale.report,state:0
 msgid "Shipping Exception"
-msgstr "Исключительная ситуация доставки"
+msgstr "Исключение при доставке"
 
 #. module: sale
 #: field:sale.make.invoice,grouped:0
@@ -1297,7 +1302,7 @@ msgstr "Цена за ед."
 #: selection:sale.order.line,state:0
 #: selection:sale.report,state:0
 msgid "Done"
-msgstr "Выполнено"
+msgstr "Сделано"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_installer
@@ -1401,6 +1406,12 @@ msgid ""
 "The 'Waiting Schedule' state is set when the invoice is confirmed but "
 "waiting for the scheduler to run on the date 'Ordered Date'."
 msgstr ""
+"Состояние предложения цен или заказа на покупку. \n"
+"Состояние \"Исключение\" автоматически устанавливается при отмене в процессе "
+"утверждения счета (исключение счета) или при обработке комплектовочного "
+"листа (исключение при доставке). \n"
+"Состояние \"Ожидание планировщика\" устанавливается при подтверждении счета "
+"и ожидании запуска планировщика по дате \"Дата заказа\"."
 
 #. module: sale
 #: field:sale.order,invoice_quantity:0
@@ -1447,7 +1458,7 @@ msgstr "Не определен счет доходов для ТМЦ: \"%s\" (i
 #. module: sale
 #: view:sale.order:0
 msgid "Ignore Exception"
-msgstr "Игнорировать исключительную ситуацию"
+msgstr "Игнорировать исключение"
 
 #. module: sale
 #: model:process.transition,note:sale.process_transition_saleinvoice0
@@ -1557,7 +1568,7 @@ msgstr "Сумма аванса в выставляемом счете."
 #: selection:sale.order,state:0
 #: selection:sale.report,state:0
 msgid "Invoice Exception"
-msgstr "Исключительная ситуация счета"
+msgstr "Исключение счета"
 
 #. module: sale
 #: help:sale.order,picking_ids:0
@@ -1843,8 +1854,8 @@ msgid ""
 msgstr ""
 "* 'Черновик' - это черновик заказа на продажу.                     \n"
 "* 'Подтвержден' - заказа на продажу подтвержден.                     \n"
-"* 'Исключительная ситуация'  - заказ приостановлен из-за особой ситуации.    "
-"                 \n"
+"* 'Исключение'  - заказ приостановлен из-за особой ситуации.                 "
+"    \n"
 "* 'Сделано' - позиция заказа на продажу скомплектована.                     "
 "\n"
 "* 'Отменен' - пользователь отменил соответствующий заказ на продажу."
@@ -2132,6 +2143,12 @@ msgid ""
 "having invoiced yet. If you want to analyse your turnover, you should use "
 "the Invoice Analysis report in the Accounting application."
 msgstr ""
+"Этот отчет проводит анализ предложений цен  и заказов на продажу. Анализ "
+"учитывает доходы от продаж и сортирует их по различным группам критериев "
+"(ответственный, контрагент, ТМЦ и т.д.). Используйте этот отчет для "
+"проведения анализа по продажам без выставления счетов. Если вы хотите "
+"анализировать оборот, вы должны использовать отчет \"Анализ счетов\" в "
+"приложении \"Бухгалтерия\"."
 
 #. module: sale
 #: report:sale.order:0

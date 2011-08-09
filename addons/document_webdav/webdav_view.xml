@@ -50,6 +50,7 @@
         </record>
 
     <record model="ir.actions.act_window" id="action_dir_props_form">
+        <field name="name">DAV Properties for Folders</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">document.webdav.dir.property</field>
         <field name="view_type">form</field>
@@ -57,11 +58,17 @@
         <field name="search_view_id" ref="view_dir_props_filter"/>
     </record>
    <menuitem
-        name="DAV properties for folders"
-        action="action_dir_props_form"
-        id="menu_dir_props"
+        name="DAV Properties"
+        id="menu_properties"
         groups="base.group_extended"
         parent="document.menu_document_management_configuration"/>
+
+      <menuitem
+        name="Folders"
+        action="action_dir_props_form"
+        id="menu_folder_props"
+        groups="base.group_extended"
+        parent="menu_properties"/>
 
     <!-- Add the properties to the directory form -->
     <record model="ir.ui.view" id="view_document_directory_form1">
@@ -73,7 +80,7 @@
 	    <page string="Dynamic context" position="after">
 		<page string="WebDAV properties">
 		    <label string="These properties will be added to WebDAV requests" colspan="4" />
-		    
+
 		    <field name="dav_prop_ids" nolabel="1" colspan="4">
 			<tree string="Properties">
 			    <field name="namespace"/>
@@ -92,7 +99,7 @@
 	    </page>
 	</field>
     </record>
-    
+
     <!-- File properties -->
     <record model="ir.ui.view" id="view_file_props_form">
         <field name="name">document.webdav.file.property.form</field>
@@ -142,6 +149,7 @@
         </record>
 
     <record model="ir.actions.act_window" id="action_file_props_form">
+        <field name="name">DAV Properties for Documents</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">document.webdav.file.property</field>
         <field name="view_type">form</field>
@@ -149,11 +157,10 @@
         <field name="search_view_id" ref="view_file_props_filter"/>
     </record>
    <menuitem
-        name="DAV properties for documents"
+        name="Documents"
         action="action_file_props_form"
-        id="menu_file_props"
-        groups="base.group_no_one"
-        parent="document.menu_document_management_configuration"/>
-
+        id="menu_document_props"
+        groups="base.group_extended"
+        parent="menu_properties"/>
 </data>
 </openerp>

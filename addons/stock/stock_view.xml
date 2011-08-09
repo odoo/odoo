@@ -57,7 +57,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Stock Inventory Lines">
-                    <field context="location=location_id,uom=product_uom,to_date=parent.date" name="product_id" on_change="on_change_product_id(location_id,product_id,product_uom,parent.date)" select="1" domain="[('type','&lt;&gt;','service')]"/>
+                    <field context="{'location':location_id, 'uom':product_uom, 'to_date':parent.date}" name="product_id" on_change="on_change_product_id(location_id,product_id,product_uom,parent.date)" select="1" domain="[('type','&lt;&gt;','service')]"/>
                     <field name="product_qty"/>
                     <field name="product_uom"/>
                     <field name="prod_lot_id" groups="base.group_extended"/>
@@ -117,7 +117,7 @@
                         <field colspan="4" name="inventory_line_id" nolabel="1" widget="one2many_list">
                             <tree string="Products" editable="bottom">
                                 <field colspan="4" domain="[('usage','=','internal')]" name="location_id"/>
-                                <field context="location=location_id,uom=product_uom,to_date=parent.date" name="product_id" on_change="on_change_product_id(location_id,product_id,product_uom,parent.date)"  domain="[('type','&lt;&gt;','service')]"/>
+                                <field context="{'location':location_id, 'uom':product_uom, 'to_date':parent.date}" name="product_id" on_change="on_change_product_id(location_id,product_id,product_uom,parent.date)"  domain="[('type','&lt;&gt;','service')]"/>
                                 <field name="product_qty"/>
                                 <field name="product_uom"/>
                                 <field name="prod_lot_id" groups="base.group_extended"/>
@@ -129,7 +129,7 @@
                             <form string="Products ">
                                 <field domain="[('usage','=','internal')]" name="location_id"/>
                                 <newline/>
-                                <field context="location=location_id,uom=product_uom,to_date=parent.date" name="product_id" on_change="on_change_product_id(location_id,product_id,product_uom,parent.date)"  domain="[('type','&lt;&gt;','service')]"/>
+                                <field context="{'location':location_id, 'uom':product_uom, 'to_date':parent.date}" name="product_id" on_change="on_change_product_id(location_id,product_id,product_uom,parent.date)"  domain="[('type','&lt;&gt;','service')]"/>
                                 <field name="product_qty"/>
                                 <field name="product_uom"/>
                                 <group colspan="2" col="4">
@@ -437,7 +437,6 @@
                     <field name="date" string="Date"/>
                     <field name="date_expected" string="Date Expected"/>
                     <field name="state"/>
-                    <button name="action_done" states="confirmed,assigned" string="Process" type="object" icon="gtk-go-forward"/>
                 </tree>
             </field>
         </record>
@@ -1248,15 +1247,13 @@
                         <separator orientation="vertical" />
                         <filter icon="terp-accessories-archiver-minus" string="Back Orders" domain="[('backorder_id', '!=', False)]" help="Is a Back Order" groups="base.group_extended"/>
                         <separator orientation="vertical"/>
+                        <filter string="To invoice" name="to_invoice" icon="terp-dolar" domain="[('invoice_state', '=', '2binvoiced')]" />
+                        <separator orientation="vertical"/>
                         <field name="name"/>
                         <field name="partner_id"/>
                         <field name="origin"/>
                         <field name="stock_journal_id" groups="base.group_extended" widget="selection"/>
                         <field name="company_id" widget="selection" groups="base.group_multi_company" />
-                    </group>
-                    <newline/>
-                    <group expand="0" string="Extended Filters..." colspan="4" col="8">
-                        <filter string="To invoice" name="to_invoice" icon="terp-dolar" domain="[('invoice_state', '=', '2binvoiced')]" />
                     </group>
                     <newline/>
                     <group expand="0" string="Group By..." colspan="4" col="8">
@@ -1499,14 +1496,8 @@
                         <field name="location_id" string="Location" filter_domain="['|',('location_id','ilike',self),('location_dest_id','ilike',self)]"/>
                         <field name="address_id" string="Partner" context="{'contact_display':'partner'}" filter_domain="[('picking_id.address_id','ilike',self)]"/>
                         <field name="date"/>
-                    </group>
-                    <newline/>
-                    <group expand="0" string="Extended Filters..." colspan="4" col="8" groups="base.group_extended">
-                            <field name="origin"/>
-                            <field name="picking_id"/>
-                            <field name="prodlot_id"/>
-                            <field name="tracking_id"/>
-                            <field name="state"/>
+                        <field name="origin"/>
+                        <field name="prodlot_id"/>
                     </group>
                     <newline/>
                     <group expand="0" string="Group By..." colspan="4" col="8" groups="base.group_extended">
@@ -1670,7 +1661,7 @@
                         <button name="action_cancel" states="assigned,confirmed" string="_Cancel" type="object" icon="gtk-cancel"/>
                         <button name="action_confirm" states="draft" string="Process Later" type="object" icon="gtk-apply"/>
                         <button name="force_assign" states="confirmed" string="Set Available" type="object" icon="gtk-yes"/>
-                        <button name="%(action_partial_move_server)d" states="assigned" string="Process" type="action" icon="gtk-go-forward"/>
+                        <button name="%(action_partial_move_server)d" string="Process" type="action" states="assigned" icon="gtk-go-forward"/>
                     </group>
                 </form>
             </field>
@@ -1692,11 +1683,7 @@
                         <field name="origin"/>
                         <field name="partner_id" string="Partner"/>
                         <field name="product_id"/>
-                    </group>
-                    <newline/>
-                    <group expand="0" string="Extended Filters..." groups="base.group_extended">
-                       <field name="tracking_id" context="{'tracking': self}"/>
-                       <field name="prodlot_id"/>
+                        <field name="prodlot_id"/>
                     </group>
                     <newline/>
                     <group expand="0" string="Group By..." colspan="4" col="8" groups="base.group_extended">
@@ -1729,11 +1716,7 @@
                         <field name="origin"/>
                         <field name="partner_id" string="Partner"/>
                         <field name="product_id"/>
-                    </group>
-                    <newline/>
-                    <group expand="0" string="Extended Filters..." groups="base.group_extended">
-                       <field name="tracking_id" context="{'tracking_id': self}"/>
-                       <field name="prodlot_id"/>
+                        <field name="prodlot_id"/>
                     </group>
                     <newline/>
                     <group expand="0" string="Group By..." colspan="4" col="8" groups="base.group_extended">

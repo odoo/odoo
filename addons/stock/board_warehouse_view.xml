@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <record id="note_warehouse_type" model="board.note.type">
-            <field name="name">Warehouse</field>
-        </record>
-
-
         <record id="action_incoming_product_board" model="ir.actions.act_window">
             <field name="name">Incoming Product</field>
             <field name="res_model">stock.move</field>
@@ -27,6 +22,7 @@
         </record>
 
         <record model="ir.actions.act_window" id="action_stock_incoming_product_delay">
+            <field name="name">Incoming Products Delay</field>
             <field name="res_model">report.stock.move</field>
             <field name="view_type">form</field>
             <field name="view_mode">graph,tree</field>
@@ -35,6 +31,7 @@
             <field name="context">{'search_default_month-1':1,'search_default_in':1,'group_by':['day'], 'group_by_no_leaf':1}</field>
          </record>
         <record model="ir.actions.act_window" id="action_stock_outgoing_product_delay">
+            <field name="name">Outgoing Products Delay</field>
             <field name="res_model">report.stock.move</field>
             <field name="view_type">form</field>
             <field name="view_mode">graph,tree</field>

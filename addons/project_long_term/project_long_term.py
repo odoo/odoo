@@ -23,6 +23,7 @@ from datetime import datetime
 from tools.translate import _
 from osv import fields, osv
 from resource.faces import task as Task 
+from operator import itemgetter
 
 class project_phase(osv.osv):
     _name = "project.phase"
@@ -119,7 +120,7 @@ class project_phase(osv.osv):
         'state': fields.selection([('draft', 'Draft'), ('open', 'In Progress'), ('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done')], 'State', readonly=True, required=True,
                                   help='If the phase is created the state \'Draft\'.\n If the phase is started, the state becomes \'In Progress\'.\n If review is needed the phase is in \'Pending\' state.\
                                   \n If the phase is over, the states is set to \'Done\'.'),
-        'total_hours': fields.function(_compute, method=True, string='Total Hours'),
+        'total_hours': fields.function(_compute, string='Total Hours'),
      }
     _defaults = {
         'responsible_id': lambda obj,cr,uid,context: uid,
@@ -379,8 +380,8 @@ def Phase_%d():
                 end_date = task.end.to_datetime()
                 
                 task_pool.write(cr, uid, [task_id], {
-                                      'date_start': start_date.strftime('%Y-%m-%d'),
-                                      'date_end': end_date.strftime('%Y-%m-%d')
+                                      'date_start': start_date.strftime('%Y-%m-%d %H:%M:%S'),
+                                      'date_end': end_date.strftime('%Y-%m-%d %H:%M:%S')
                                     }, context=context)
         return True
 project_phase()
@@ -398,7 +399,7 @@ class project_resource_allocation(osv.osv):
             res[allocation.id] = name
         return res
     _columns = {
-        'name': fields.function(get_name, method=True, type='char', size=256),
+        'name': fields.function(get_name, type='char', size=256),
         'resource_id': fields.many2one('resource.resource', 'Resource', required=True),
         'phase_id': fields.many2one('project.phase', 'Project Phase', ondelete='cascade', required=True),
         'project_id': fields.related('phase_id', 'project_id', type='many2one', relation="project.project", string='Project', store=True),
@@ -570,8 +571,8 @@ def Project_%d():
 
 
                 phase_pool.write(cr, uid, [phase_id], {
-                                      'date_start': start_date.strftime('%Y-%m-%d'),
-                                      'date_end': end_date.strftime('%Y-%m-%d')
+                                        'date_start': start_date.strftime('%Y-%m-%d'),
+                                        'date_end': end_date.strftime('%Y-%m-%d')
                                     }, context=context)
         return True            
 
@@ -695,8 +696,8 @@ def Project_%d():
                 end_date = task.end.to_datetime()
                 
                 task_pool.write(cr, uid, [task_id], {
-                                      'date_start': start_date.strftime('%Y-%m-%d'),
-                                      'date_end': end_date.strftime('%Y-%m-%d')
+                                      'date_start': start_date.strftime('%Y-%m-%d %H:%M:%S'),
+                                      'date_end': end_date.strftime('%Y-%m-%d %H:%M:%S')
                                     }, context=context)
         return True
 
@@ -729,7 +730,7 @@ class project_task(osv.osv):
         if context is None:
             context = {}
         task = self.browse(cr, uid, task_id, context=context)
-        duration = str(task.planned_hours )+ 'H'
+        duration = str(task.planned_hours)+ 'H'
         str_resource = False
         parent = task.parent_ids
         if task.phase_id.resource_ids:
@@ -743,10 +744,12 @@ class project_task(osv.osv):
             effort = \'%s\'
             resource = %s
 '''%(task.id, task.name, duration, str_resource)
-            if parent:
+            if task.child_ids:
+                seq = [[child.planned_hours, child.id] for child in task.child_ids]
+                seq.sort(key=itemgetter(0))
                 s +='''
             start = up.Task_%s.end
-'''%(parent[0].id)
+    '''%(seq[-1][1])
         else:
             s = '''
     def Task_%s():
@@ -754,10 +757,12 @@ class project_task(osv.osv):
         effort = \'%s\'
         resource = %s
 '''%(task.id, task.name, duration, str_resource)
-            if parent:
+            if task.child_ids:
+                seq = [[child.planned_hours, child.id] for child in task.child_ids]
+                seq.sort(key=itemgetter(0))
                 s +='''
         start = up.Task_%s.end
-'''%(parent[0].id)
+'''%(seq[-1][1])
         s += '\n'
         return s
 project_task()

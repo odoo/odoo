@@ -187,7 +187,8 @@ class email_template(osv.osv):
                 if template.ref_ir_act_window:
                     self.pool.get('ir.actions.act_window').unlink(cr, uid, template.ref_ir_act_window.id, context)
                 if template.ref_ir_value:
-                    self.pool.get('ir.values').unlink(cr, uid, template.ref_ir_value.id, context)
+                    ir_values_obj = self.pool.get('ir.values')
+                    ir_values_obj.unlink(cr, uid, template.ref_ir_value.id, context)
             except:
                 raise osv.except_osv(_("Warning"), _("Deletion of Record failed"))
 

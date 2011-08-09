@@ -217,7 +217,7 @@
          <menuitem action="crm_case_resource_type_act"
             id="menu_crm_case_resource_type_act" sequence="4"
             groups="base.group_extended"
-            parent="base.menu_sale_config_sales" />
+            parent="base.menu_crm_config_lead" />
 
         <record id="crm_case_section_act_tree" model="ir.actions.act_window">
             <field name="name">Cases by Sales Team</field>
@@ -350,12 +350,12 @@
             <field name="inherit_id" ref="base.view_users_form_simple_modif" />
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <page string="Current Activity" position="inside">
+                <group name="default_filters" position="inside">
                     <field name="context_section_id" completion="1"
                         widget="selection"
                         context="{'user_prefence':True}"
                         readonly="0"/>
-                </page>
+                </group>
             </field>
         </record>
 
@@ -366,9 +366,9 @@
                 <field name="inherit_id" ref="base.view_users_form"/>
                 <field eval="18" name="priority"/>
                 <field name="arch" type="xml">
-                    <xpath expr="/form/notebook" position="before">
+                    <group name="default_filters" position="inside">
                         <field name="context_section_id" completion="1" widget="selection"/>
-                    </xpath>
+                    </group>
                 </field>
         </record>
 

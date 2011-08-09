@@ -28,8 +28,8 @@ class account_report_general_ledger(osv.osv_memory):
 
     _columns = {
         'landscape': fields.boolean("Landscape Mode"),
-        'initial_balance': fields.boolean("Include Initial Balances",
-                                          help='It adds initial balance row on report which display previous sum amount of debit/credit/balance'),
+        'initial_balance': fields.boolean('Include Initial Balances',
+                                    help='If you selected to filter by date or period, this field allow you to add a row to display the amount of debit/credit/balance that precedes the filter you\'ve set.'),
         'amount_currency': fields.boolean("With Currency", help="It adds the currency column if the currency is different then the company currency"),
         'sortby': fields.selection([('sort_date', 'Date'), ('sort_journal_partner', 'Journal & Partner')], 'Sort by', required=True),
     }

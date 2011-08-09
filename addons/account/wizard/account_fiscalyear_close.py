@@ -103,6 +103,14 @@ class account_fiscalyear_close(osv.osv_memory):
             if accnt_type_data.close_method=='none' or account.type == 'view':
                 continue
             if accnt_type_data.close_method=='balance':
+                balance_in_currency = 0.0
+                if account.currency_id:
+                    cr.execute('SELECT sum(amount_currency) as balance_in_currency FROM account_move_line ' \
+                            'WHERE account_id = %s ' \
+                                'AND ' + query_line + ' ' \
+                                'AND currency_id = %s', (account.id, account.currency_id.id)) 
+                    balance_in_currency = cr.dictfetchone()['balance_in_currency']
+
                 if abs(account.balance)>0.0001:
                     obj_acc_move_line.create(cr, uid, {
                         'debit': account.balance>0 and account.balance,
@@ -111,7 +119,9 @@ class account_fiscalyear_close(osv.osv_memory):
                         'date': period.date_start,
                         'journal_id': new_journal.id,
                         'period_id': period.id,
-                        'account_id': account.id
+                        'account_id': account.id,
+                        'currency_id': account.currency_id and account.currency_id.id or False,
+                        'amount_currency': balance_in_currency,
                     }, {'journal_id': new_journal.id, 'period_id':period.id})
             if accnt_type_data.close_method == 'unreconciled':
                 offset = 0
