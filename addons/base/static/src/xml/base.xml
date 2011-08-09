@@ -240,35 +240,36 @@
     <h2 class="oe_view_title"><t t-esc="title"/></h2>
     <select name="parent" style="width: 30%">
     </select>
+    <table>
+        <thead>
+            <tr>
+                <th t-foreach="fields_view" t-as="field"
+                    t-if="!field.attrs.modifiers.tree_invisible"
+                    class="treeview-header">
+                    <t t-esc="fields[field.attrs.name].string" />
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
 </t>
-<table t-name="TreeView.architecture">
-    <thead>
-        <tr>
-            <th t-foreach="fields_view" t-as="field"
-                t-if="!field.attrs.modifiers.tree_invisible"
-                class="treeview-header">
-                <t t-esc="fields[field.attrs.name].string" />
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-        <t t-call="TreeView.rows"/>
-    </tbody>
-</table>
 <tr t-name="TreeView.rows"
         t-foreach="records" t-as="record"
-        t-att-id="'treerow_' + record.id">
+        t-att-id="'treerow_' + record.id"
+        t-att-data-level="level + 1">
     <t t-set="children" t-value="record[children_field]"/>
-    <td t-if="children and children.length"
-            class="treeview-tr">
-        <img t-att-id="'parentimg_' + record.id"
+    <t t-set="has_children" t-value="children and children.length"/>
+
+    <td t-foreach="fields_view" t-as="field"
+        t-if="!field.attrs.modifiers.tree_invisible"
+        t-att-style="!field_index ? 'padding-left: ' + 19*level + 'px' : undefined"
+        t-att-class="!field_index and has_children ? 'treeview-tr' : 'treeview-td'">
+        <img t-if="!field_index and has_children"
+             t-att-id="'parentimg_' + record.id"
              t-att-data-id="record.id"
              src="/base/static/src/img/expand.gif"
              width="16" height="16" border="0"/>
-    </td>
-    <td t-foreach="fields_view" t-as="field"
-        t-if="!field.attrs.modifiers.tree_invisible"
-        class="treeview-td">
         <span t-if="!field.attrs.modifiers.invisible">
             <t t-esc="record[field.attrs.name]" />
         </span>

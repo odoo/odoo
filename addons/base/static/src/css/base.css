@@ -1076,22 +1076,18 @@ background: linear-gradient(top, #ffffff 0%,#ebe9e9 100%); /* W3C */
     font-size: 1.2em;
     font-weight: bold;
 }
-.mouse-over {
-    color: #0000FF;
-}
-.treeview-tr {
+.treeview-tr, .treeview-td {
     cursor: pointer;
-    text-align: left;
     vertical-align: top;
-}
-.treeview-td {
     text-align: left;
-    vertical-align: top;
-    padding-left: 15px;
 }
+.treeview-td:first-of-type span {
+    padding-left: 21px;
+}
+
 .treeview-header {
     text-align: left;
-    padding-left: 15px;
+    padding-left: 21px;
     font-weight: bold;
     vertical-align: top;
 }

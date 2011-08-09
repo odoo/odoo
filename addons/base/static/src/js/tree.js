@@ -71,7 +71,9 @@ openerp.base.TreeView = openerp.base.View.extend({
 
         this.dataset.read_slice(this.fields_list(), 0, false, function (records) {
             self.$element.html(QWeb.render('TreeView', {
-                'title': self.fields_view.arch.attrs.string
+                'title': self.fields_view.arch.attrs.string,
+                'fields_view': self.fields_view.arch.children,
+                'fields': self.fields
             }));
             var $select = self.$element.find('select')
                 .change(function () {
@@ -122,7 +124,7 @@ openerp.base.TreeView = openerp.base.View.extend({
         });
     },
     // get child data of selected value
-    getdata: function (id, children_ids, flag) {
+    getdata: function (id, children_ids) {
         var self = this;
 
         self.dataset.read_ids(children_ids, this.fields_list(), function (records) {
@@ -130,80 +132,24 @@ openerp.base.TreeView = openerp.base.View.extend({
                 self.records[record.id] = record;
             });
 
-            var is_padding, row_id;
-            var curr_node = $('tr #treerow_' + id);
+            var $curr_node = self.$element.find('#treerow_' + id);
+            var children_rows = QWeb.render('TreeView.rows', {
+                'records': records,
+                'children_field': self.children_field,
+                'fields_view': self.fields_view.arch.children,
+                'field': self.fields,
+                'level': $curr_node.data('level') || 0
+            });
 
-            if (curr_node.length == 1) {
-                curr_node.find('td:first').children(':first-child').attr('src','/base/static/src/img/collapse.gif');
-                curr_node.after(QWeb.render('TreeView.rows', {
-                    'records': records,
-                    'children_field': self.children_field,
-                    'fields_view' : self.fields_view.arch.children,
-                    'field' : self.fields
-                }));
-
-
-                for (var i = 0; i < records.length; i++) {
-                    row_id = $('tr #treerow_' + records[i].id);
-
-                    if (row_id && row_id.find('td:first').children(':first-child').attr('id') == 'parentimg_' + records[i].id) {
-                        row_id.find('td:first').append('<span>'+row_id.find('td:eq(1)').text()+'</span>');
-                        row_id.find('td:eq(1)').remove();
-                        is_padding = true;
-                    }
-                }
-
-                var padding = curr_node.find('td').css('paddingLeft');
-                var padd = parseInt(padding.replace('px',''), 10);
-                var fixpadding;
-
-                for (var i = 0; i < records.length; i++) {
-                    row_id = $('tr #treerow_' + records[i].id);
-                    if (row_id) {
-                        if (!is_padding) {
-                            fixpadding = padd + 40;
-                            row_id.find('td:first').css('paddingLeft', fixpadding);
-                        } else {
-                            if (padd == 1) {
-                                fixpadding = padd + 17;
-                            } else {
-                                fixpadding = padd + 20;
-                            }
-                            var curr_node_elem = row_id.find('td:first');
-                            curr_node_elem.children(':first-child').addClass("parent_top");
-                            if (curr_node_elem.children(':first-child').attr('id') == "parentimg_" + records[i].id) {
-                                curr_node_elem.css('paddingLeft', fixpadding );
-                            } else {
-                                curr_node_elem.css('paddingLeft', (fixpadding + 20));
-                            }
-                        }
-                    }
-                }
+            if ($curr_node.length) {
+                $curr_node.find('td:first > :first-child').attr('src','/base/static/src/img/collapse.gif');
+                $curr_node.after(children_rows);
             } else {
-                if (!flag) {
-                    self.$element.find('table').remove();
-                }
-                self.$element.append(QWeb.render('TreeView.architecture', {
-                    'records': records,
-                    'children_field': self.children_field,
-                    'fields_view': self.fields_view.arch.children,
-                    'fields': self.fields
-                }));
-
-                self.$element.find('tr[id ^= treerow_]').each( function() {
-                    if ($(this).find('td:first').children(':first-child').attr('id')) {
-                        $(this).find('td:first').append('<span>' + $(this).find('td:eq(1)').text() + '</span>');
-                        $(this).find('td:eq(1)').remove();
-                    }
-                    $(this).find('td').children(':first-child').addClass("parent_top");
-                    if (!($(this).find('td').children(':first-child').attr('id'))) {
-                        $(this).find('td:first').css('paddingLeft', '20px');
-                    }
-                });
+                self.$element.find('tbody').html(children_rows);
             }
 
-            self.$element.find('tr[id ^= treerow_]').find('td').children(':last-child').click( function(e) {
-                row_id = $(this).parent().parent().attr('id');
+            self.$element.find('tr[id ^= treerow_] td > :last-child').click( function(e) {
+                var row_id = $(this).parent().parent().attr('id');
                 var record_id = row_id.split('_')[1];
                 self.showrecord(record_id, self.model);
                 e.stopImmediatePropagation();
