@@ -12,6 +12,7 @@ openerp.base_kanban.KanbanView = openerp.base.View.extend({
         this.group_by_field = false;
         this.source_index = {};
         this.all_display_data = false;
+        this.groups = [];
     },
 
     start: function() {
@@ -81,6 +82,37 @@ openerp.base_kanban.KanbanView = openerp.base.View.extend({
     },
 
     do_edit: function(id){
+        var self = this;
+        this.flag = false;
+        _.each(this.groups, function (group) {
+            self.dataset.context = group.context;
+            self.dataset.domain = group.domain;
+            group.list([],
+                function (groups) {},
+                function (dataset) {
+                    self.dataset.read_slice(false, false, false, function(records) {
+                        var index = parseInt(_.indexOf(self.dataset.ids, id));
+                        if(index >= 0) {
+                            self.select_record(index);
+                            self.flag = true;
+                            return false;
+                        }
+                    });
+                }
+            );
+            if(self.flag) {return false;}
+        });
+        if(!self.flag) {
+            var index = parseInt(_.indexOf(self.dataset.ids, id));
+            if(index >= 0) {self.select_record(index);}
+        }
+    },
+
+    select_record:function (index) {
+        if(this.view_manager) {
+            this.dataset.index = index;
+            this.view_manager.on_mode_switch('form');
+        }
     },
 
     do_delete: function (id) {
@@ -219,9 +251,10 @@ openerp.base_kanban.KanbanView = openerp.base.View.extend({
 	        self.group_by_field = false;
 	        self.dataset.context = results.context;
 	        self.dataset.domain = results.domain;
-	        self.groups = new openerp.base.DataGroup(self, self.model, results.domain, results.context, results.group_by || []);
-	        self.groups.list([],
+	        self.datagroup = new openerp.base.DataGroup(self, self.model, results.domain, results.context, results.group_by || []);
+	        self.datagroup.list([],
 	            function (groups) {
+                    self.groups = groups;
 	                if (group_by.length >= 1) {
 	                    self.group_by_field = group_by[0].group_by;
 	                    self.do_render_group(groups);
