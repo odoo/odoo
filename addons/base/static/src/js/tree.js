@@ -50,7 +50,7 @@ openerp.base.TreeView = openerp.base.View.extend({
         });
         this.fields = fields_view.fields;
 
-        this.dataset.read_slice([], 0, false, function (response) {
+        this.dataset.read_slice(_.keys(this.fields), 0, false, function (response) {
             self.$element.html(QWeb.render('TreeView', {
                 "first_level": response,
                 'title': self.fields_view.arch.attrs.string
