@@ -223,7 +223,7 @@ class users(osv.osv):
                                 fnct_inv=_set_new_password,
                                 string='Change password', help="Only specify a value if you want to change the user password. "
                                 "This user will have to logout and login again!"),
-        'user_email': fields.char('E-mail', size=64),
+        'user_email': fields.char('Email', size=64),
         'signature': fields.text('Signature', size=64),
         'active': fields.boolean('Active'),
         'action_id': fields.many2one('ir.actions.actions', 'Home Action', help="If specified, this action will be opened at logon for this user, in addition to the standard menu."),

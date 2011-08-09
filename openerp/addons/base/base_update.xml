@@ -95,9 +95,9 @@
                         <field name="company_id" widget="selection"
                             groups="base.group_multi_company" on_change="on_change_company_id(company_id)"/>
                     </group>
-                    <separator string="Email &amp; Signature" colspan="2"/>
+                    <separator string="Email Preferences" colspan="4"/>
                     <field colspan="4" name="user_email" widget="email"/>
-                    <field colspan="4" name="signature" nolabel="1"/>
+                    <field colspan="4" name="signature"/>
                 </form>
             </field>
         </record>
@@ -116,29 +116,32 @@
                     </group>
                     <notebook colspan="4">
                         <page string="User">
-                            <group colspan="1" col="2">
-                                <separator string="Preferences" colspan="2"/>
-                                <field name="context_lang"/>
-                                <field name="context_tz"/>
-                                <field name="menu_tips"/>
+                          <group colspan="4" col="6">
+                            <!-- Second nested group to avoid misalignment with email prefs groups
+                                 in simplified view -->
+                            <group colspan="6" col="6">
+                                <group col="2" colspan="2">
+                                    <separator string="Preferences" colspan="2"/>
+                                    <field name="context_lang"/>
+                                    <field name="context_tz"/>
+                                    <field name="menu_tips"/>
+                                </group>
+                                <group name="default_filters" colspan="2" col="2">
+                                    <separator string="Default Filters" colspan="2"/>
+                                    <field name="company_id" required="1" context="{'user_preference': 0}" groups="base.group_multi_company"/>
+                                </group>
+                                <group colspan="2" col="2" groups="base.group_extended">
+                                    <separator string="Action" colspan="2"/>
+                                    <field name="action_id"/>
+                                    <field domain="[('usage','=','menu')]" name="menu_id" required="True"/>
+                                </group>
                             </group>
-                            <group name="default_filters" colspan="1" col="2">
-                                <separator string="Default Filters" colspan="2"/>
-                                <field name="company_id" required="1"
-                                    context="{'user_preference': 0}"
-                                    groups="base.group_multi_company"/>
-                            </group>
-                            <group colspan="1" col="2" groups="base.group_extended">
-                                <separator string="Action" colspan="2"/>
-                                <field name="action_id"/>
-                                <field domain="[('usage','=','menu')]" name="menu_id" required="True"/>
-                            </group>
-                            <newline/>
-                            <separator string="Email &amp; Signature" colspan="2"/>
-                            <group colspan="4">
+                            <group colspan="6" col="2">
+                                <separator string="Email Preferences" colspan="2"/>
                                 <field name="user_email" widget="email"/>
+                                <field name="signature"/>
                             </group>
-                            <field colspan="4" name="signature" nolabel="1"/>
+                          </group>
                         </page>
                         <page string="Access Rights">
                             <field nolabel="1" name="groups_id"/>
