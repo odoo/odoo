@@ -57,7 +57,6 @@ openerp.base.ActionManager = openerp.base.Widget.extend({
         }
     },
     do_action: function(action, on_closed) {
-        console.log("action",action);
         var type = action.type.replace(/\./g,'_');
         var popup = action.target === 'new';
         action.flags = _.extend({
@@ -232,7 +231,7 @@ openerp.base.ViewManager =  openerp.base.Widget.extend({
     },
     /**
      * Event launched when a controller has been inited.
-     * 
+     *
      * @param {String} view_type type of view
      * @param {String} view the inited controller
      */
@@ -506,13 +505,13 @@ openerp.base.View = openerp.base.Widget.extend({
             return this.rpc('/base/action/load', { action_id: parseInt(action_data.name, 10), context: context }, handler);
         } else  {
             return dataset.exec_workflow(record_id, action_data.name, handler);
-        } 
+        }
     },
     /**
      * Directly set a view to use instead of calling fields_view_get. This method must
      * be called before start(). When an embedded view is set, underlying implementations
      * of openerp.base.View must use the provided view instead of any other one.
-     * 
+     *
      * @param embedded_view A view.
      */
     set_embedded_view: function(embedded_view) {

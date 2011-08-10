@@ -50,22 +50,6 @@ openerp.base_kanban.KanbanView = openerp.base.View.extend({
             },
 		    stop: self.on_recieve_record,
 		});
-        this.$element.find('button').click(function(){
-            var record_id = $(this).closest(".record").attr("id");
-            if(record_id) {
-                record_id = parseInt(record_id.split("_")[1])
-                if(record_id) {
-                    if($(this).data("type") == "delete") {
-                        self.do_delete(record_id);
-                    }
-                    else{
-                        var button_attrs = $(this).data()
-                        self.on_button_click(button_attrs, record_id);
-                    }
-                }
-            }
-        });
-
 		this.$element.find(".record").addClass("ui-widget ui-widget-content ui-helper-clearfix ui-corner-all")
 		    .find(".record-header")
 		        .addClass("ui-widget-header ui-corner-all")
@@ -143,11 +127,14 @@ openerp.base_kanban.KanbanView = openerp.base.View.extend({
         this.execute_action(
             button_attrs, this.dataset, this.session.action_manager,
             record_id, function () {
-                self.do_change_data();
-            });
-    },
-
-    do_change_data: function() {
+                _.each(self.all_display_data, function(data, index) {
+                    self.dataset.read_ids( data.ids, [], function(records){
+                        self.all_display_data[index].records = records;
+                        self.on_reload_kanban();
+                    });
+                });
+            }
+        );
     },
 
     on_close_action: function(e) {
@@ -230,7 +217,7 @@ openerp.base_kanban.KanbanView = openerp.base.View.extend({
             }
         }
         if(self.flag) {
-            self.on_reload_kanban(this.all_display_data);
+            self.on_reload_kanban();
         }
         this.source_index = {};
     },
@@ -254,6 +241,21 @@ openerp.base_kanban.KanbanView = openerp.base.View.extend({
             }
         });
         this.$element.find( ".oe_table_column " ).css("width", 99 / self.all_display_data.length +"%");
+        this.$element.find('button').click(function(){
+            var record_id = $(this).closest(".record").attr("id");
+            if(record_id) {
+                record_id = parseInt(record_id.split("_")[1])
+                if(record_id) {
+                    if($(this).data("type") == "delete") {
+                        self.do_delete(record_id);
+                    }
+                    else{
+                        var button_attrs = $(this).data()
+                        self.on_button_click(button_attrs, record_id);
+                    }
+                }
+            }
+        });
     },
 
     do_search: function (domains, contexts, group_by) {
