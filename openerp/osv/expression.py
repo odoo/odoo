@@ -109,11 +109,11 @@ def is_operator(element):
 
 # TODO change the share wizard to use this function.
 def is_leaf(element, internal=False):
-    INTERNAL_OPS = OPS + ('inselect', '<>')
+    INTERNAL_OPS = OPS + ('inselect',)
     return (isinstance(element, tuple) or isinstance(element, list)) \
        and len(element) == 3 \
-       and (((not internal) and element[1] in OPS) \
-            or (internal and element[1] in INTERNAL_OPS))
+       and (((not internal) and element[1] in OPS + ('<>',)) \
+            or (internal and element[1] in INTERNAL_OPS + ('<>',)))
 
 def normalize_operator(operator):
     operator = operator.lower()
@@ -515,7 +515,7 @@ class expression(object):
             query = '(%s.%s IS NULL or %s.%s = false )' % (table._table, left, table._table, left)
             params = []
 
-        elif (((right == False) and (type(right)==bool)) or (right is None)) and (operator == '='):
+        elif (right is False or right is None) and (operator == '='):
             query = '%s.%s IS NULL ' % (table._table, left)
             params = []
 
@@ -523,7 +523,7 @@ class expression(object):
             query = '(%s.%s IS NOT NULL and %s.%s != false)' % (table._table, left, table._table, left)
             params = []
 
-        elif (((right == False) and (type(right)==bool)) or right is None) and (operator == '!='):
+        elif (right is False or right is None) and (operator == '!='):
             query = '%s.%s IS NOT NULL' % (table._table, left)
             params = []
 
