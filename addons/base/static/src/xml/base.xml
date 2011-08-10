@@ -78,7 +78,7 @@
         </table>
         <table align="center" class="db_option_table">
             <tr>
-                <td><label for="super_admin_pwd">Super admin password:</label></td>
+                <td><label for="super_admin_pwd">Master password:</label></td>
                 <td><input type="password" name="super_admin_pwd"
                            class="required" autofocus="autofocus"/></td>
             </tr>
@@ -103,7 +103,7 @@
                 </td>
             </tr>
             <tr>
-                <td><label for="create_admin_pwd">Super admin password:</label></td>
+                <td><label for="create_admin_pwd">Admin password:</label></td>
                 <td><input type="password" name="create_admin_pwd" class="required"/></td>
             </tr>
             <tr>
@@ -138,7 +138,7 @@
                 </td>
             </tr>
             <tr>
-                <td><label for="drop_password">Password:</label></td>
+                <td><label for="drop_password">Master Password:</label></td>
                 <td><input type="password" name="drop_pwd" class="required"/></td>
             </tr>
             <tr>
@@ -170,7 +170,7 @@
                 </td>
             </tr>
             <tr>
-                <td><label for="backup_pwd">Password:</label></td>
+                <td><label for="backup_pwd">Master Password:</label></td>
                 <td><input type="password" name="backup_pwd" class="required"/></td>
             </tr>
             <tr>
@@ -195,7 +195,7 @@
                          autofocus="autofocus"/></td>
             </tr>
             <tr>
-                <td><label for="restore_pwd">Password:</label></td>
+                <td><label for="restore_pwd">Master Password:</label></td>
                 <td><input type="password" name="restore_pwd" class="required"/></td>
             </tr>
         <tr>
@@ -213,23 +213,23 @@
         <table width="100%">
             <tr>
                 <td class="option_string">
-                    CHANGE DATABASE PASSWORD
+                    CHANGE MASTER PASSWORD
                 </td>
             </tr>
         </table>
         <table align="center" class="db_option_table">
             <tr>
-                <td><label for="old_pwd">Old password:</label></td>
+                <td><label for="old_pwd">Master password:</label></td>
                 <td><input type="password" name="old_pwd" class="required"
                            minlength="1" autofocus="autofocus"/></td>
             </tr>
             <tr>
-            <td><label for="new_pwd">New password:</label></td>
+            <td><label for="new_pwd">New master password:</label></td>
        	    <td><input type="password" name="new_pwd" class="required"
                        minlength="1"/></td>
             </tr>
    	    <tr>
-                <td><label for="confirm_pwd">Confirm password:</label></td>
+                <td><label for="confirm_pwd">Confirm new master password:</label></td>
                 <td><input type="password" name="confirm_pwd" class="required"
                            equalTo="input[name=new_pwd]" minlength="1"/></td>
             </tr>
