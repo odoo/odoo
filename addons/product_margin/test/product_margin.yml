@@ -1,0 +1,52 @@
+
+-
+  In order to test the product_margin module, I will create product and product.category,
+
+-
+  I create  product.category .
+-
+  !record {model: product.category, id: product_category_computer0}:
+    name: Computer
+
+-
+   I create  product HP Desktop PCs .
+-
+  !record {model: product.product, id: product_product_hpdesktoppcs0}:
+    categ_id: product_margin.product_category_computer0
+    cost_method: standard
+    mes_type: fixed
+    list_price: 450
+    standard_price: 300
+    name: HP Desktop PCs
+    procure_method: make_to_stock
+    supply_method: buy
+    type: product
+    uom_id: product.product_uom_unit
+    uom_po_id: product.product_uom_unit
+
+-
+   I create  product margin record .
+-
+  !record {model: product.margin, id: product_margin_wiz0}:
+    from_date: !eval "'%s-01-01' %(datetime.now().year)"
+    to_date: !eval "'%s-12-31' %(datetime.now().year)"
+    invoice_state: open_paid
+
+-
+  I open margin for HP Desktop PCs.
+-
+  !python {model: product.margin}: |
+    self.action_open_window(cr, uid, [ref("product_margin_wiz0")], {"lang": 'en_US',
+      "search_default_filter_to_sell": "1", "tz": False, "active_model": "product.product", "disable_log": True, 
+      "active_ids": [ref("product_product_hpdesktoppcs0")], "active_id": ref("product_product_hpdesktoppcs0")})
+-
+  I Read the Fields of Product.
+-
+  !python {model: product.product}: |
+    fields = ['sale_avg_price', 'expected_margin_rate', 'total_margin_rate', 'total_cost', 'sale_num_invoiced', 
+      'total_margin', 'sales_gap', 'purchase_num_invoiced', 'expected_margin', 'turnover']
+    self.read(cr, uid, [ref("product_margin_wiz0")], fields, {"lang": 'en_US',
+      "search_default_filter_to_sell": "1", "tz": False, "active_model": "product.product", 
+      "bin_size": True, "active_ids": [ref("product_product_hpdesktoppcs0")], 
+      "active_id": ref("product_product_hpdesktoppcs0")})
+
