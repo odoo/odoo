@@ -14,22 +14,6 @@ openerp.base.client_actions = new openerp.base.Registry();
  */
 openerp.base.views = new openerp.base.Registry();
 
-openerp.base.ActionDialog = openerp.base.Dialog.extend({
-    identifier_prefix: 'action_dialog',
-    on_close: function() {
-        this._super(this, arguments);
-        if (this.close_callback) {
-            this.close_callback();
-        }
-    },
-    stop: function() {
-        this._super(this, arguments);
-        if (this.viewmanager) {
-            this.viewmanager.stop();
-        }
-    }
-});
-
 openerp.base.ActionManager = openerp.base.Widget.extend({
     identifier_prefix: "actionmanager",
     init: function(parent) {
@@ -77,8 +61,8 @@ openerp.base.ActionManager = openerp.base.Widget.extend({
     ir_actions_act_window: function (action, on_closed) {
         if (action.flags.popup) {
             if (this.dialog == null) {
-                this.dialog = new openerp.base.ActionDialog(this, { title: action.name, width: '80%' });
-                this.dialog.close_callback = on_closed;
+                this.dialog = new openerp.base.Dialog(this, { title: action.name, width: '80%' });
+                this.dialog.on_closed.add(on_closed);
                 this.dialog.start();
                 this.dialog_viewmanager = new openerp.base.ViewManagerAction(this, action);
                 this.dialog_viewmanager.appendTo(this.dialog.$element);
