@@ -370,7 +370,7 @@
       </tr>
       <tr>
         <td>
-          <para style="terp_default_9">[[ format((o.partner_id and o.partner_id.property_payment_term and o.partner_id.property_payment_term.note) or '') ]]</para>
+          <para style="terp_default_9">[[ format((o.partner_id and o.payment_term and o.payment_term.note) or '') ]]</para>
         </td>
       </tr>
     </blockTable>
