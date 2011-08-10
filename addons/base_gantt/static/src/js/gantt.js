@@ -50,8 +50,7 @@ init: function(parent, element_id, dataset, view_id) {
         this.color_field = this.fields_view.arch.attrs.color;
         this.day_length = this.fields_view.arch.attrs.day_length || 8;
         this.colors = this.fields_view.arch.attrs.colors;
-
-        this.text = this.fields_view.arch.children[0].children[0].attrs.name;
+        this.text = this.fields_view.arch.children[0].attrs.name;
         this.parent = this.fields_view.arch.children[0].attrs.link;
 
         this.format = "yyyy-MM-dd";
@@ -98,7 +97,7 @@ init: function(parent, element_id, dataset, view_id) {
 
         if (result.length != 0){
             var show_event = [];
-            for (i in result){
+            for (var i in result){
                 var res = result[i];
                 if (res[this.date_start] != false){
                     
@@ -130,7 +129,7 @@ init: function(parent, element_id, dataset, view_id) {
         var child_event = {};
         var temp_id = "";
         var final_events = [];
-        for (i in show_event) {
+        for (var i in show_event) {
 
             var res = show_event[i];
 
@@ -159,11 +158,8 @@ init: function(parent, element_id, dataset, view_id) {
             if (duration == false)
                 duration = 0
 
-            if (self.grp.length == 0){
-               self.grp.push({'group_by' : this.parent})
-            }
-            if (self.grp != undefined){
-                for (j in self.grp){
+            if (self.grp.length){
+                for (var j in self.grp){
                     var grp_key = res[self.grp[j]['group_by']];
                     if (typeof(grp_key) == "object"){
                         grp_key = res[self.grp[j]['group_by']][1];
@@ -205,9 +201,18 @@ init: function(parent, element_id, dataset, view_id) {
                 all_events[id] = {'parent': temp_id, 'evt':[id , text, start_date, duration, 100, "", color_box[color]]};
                 final_events.push(id);
             }
+            else {
+                if (i == 0) {
+                    var mod_id = "_" + i;
+                    child_event[mod_id] = {};
+                    all_events[mod_id] = {'parent': "", 'evt': [mod_id, this.name, start_date, start_date, 100, "", "white"]};
+                }
+                all_events[id] = {'parent': mod_id, 'evt':[id , text, start_date, duration, 100, "", color_box[color]]};
+                final_events.push(id);
+            }
         }
 
-        for (i in final_events){
+        for (var i in final_events){
             var evt_id = final_events[i];
             var evt_date = all_events[evt_id]['evt'][2];
             while (all_events[evt_id]['parent'] != "") {
@@ -223,7 +228,7 @@ init: function(parent, element_id, dataset, view_id) {
         var evt_duration = "";
         var evt_end_date = "";
 
-        for (i in final_events){
+        for (var i in final_events){
             evt_id = final_events[i];
             evt_date = all_events[evt_id]['evt'][2];
             evt_duration = all_events[evt_id]['evt'][3];
@@ -240,32 +245,17 @@ init: function(parent, element_id, dataset, view_id) {
             }
         }
 
-        for (j in self.grp){
-            for (i in all_events){
-                res = all_events[i];
-                if ((typeof(res['evt'][3])) == "object"){
-                    res['evt'][3] = self.hours_between(res['evt'][2],res['evt'][3], true);
-                }
-
-                k = res['evt'][0].toString().indexOf('_');
-                if (k != -1){
-                    if (res['evt'][0].substring(k) == "_"+j){
-                        if (j == 0){
-                            task = new GanttTaskInfo(res['evt'][0], res['evt'][1], res['evt'][2], res['evt'][3], res['evt'][4], "",res['evt'][6]);
-                            project.addTask(task);
-                        } else {
-                            task = new GanttTaskInfo(res['evt'][0], res['evt'][1], res['evt'][2], res['evt'][3], res['evt'][4], "",res['evt'][6]);
-                            prt = project.getTaskById(res['parent']);
-                            prt.addChildTask(task);
-                        }
-                    }
-                }
-            }
+        for (var j in self.grp) {
+            self.render_events(all_events, j);
         }
-        for (i in final_events){
+
+        if (!self.grp.length) {
+            self.render_events(all_events, 0);
+        }
+
+        for (var i in final_events){
             evt_id = final_events[i];
             res = all_events[evt_id];
-
             task=new GanttTaskInfo(res['evt'][0], res['evt'][1], res['evt'][2], res['evt'][3], res['evt'][4], "",res['evt'][6]);
             prt = project.getTaskById(res['parent']);
             prt.addChildTask(task);
@@ -366,6 +356,32 @@ init: function(parent, element_id, dataset, view_id) {
         num = (d * this.day_length) + h;
         return parseFloat(num.toFixed(2));
 
+    },
+
+    render_events : function(all_events, j) {
+
+        var self = this;
+        for (var i in all_events){
+            var res = all_events[i];
+            if ((typeof(res['evt'][3])) == "object"){
+                res['evt'][3] = self.hours_between(res['evt'][2],res['evt'][3], true);
+            }
+
+            k = res['evt'][0].toString().indexOf('_');
+
+            if (k != -1) {
+                if (res['evt'][0].substring(k) == "_"+j){
+                    if (j == 0){
+                        task = new GanttTaskInfo(res['evt'][0], res['evt'][1], res['evt'][2], res['evt'][3], res['evt'][4], "",res['evt'][6]);
+                        project.addTask(task);
+                    } else {
+                        task = new GanttTaskInfo(res['evt'][0], res['evt'][1], res['evt'][2], res['evt'][3], res['evt'][4], "",res['evt'][6]);
+                        prt = project.getTaskById(res['parent']);
+                        prt.addChildTask(task);
+                    }
+                }
+            }
+        }
     },
 
     open_popup : function(task) {
