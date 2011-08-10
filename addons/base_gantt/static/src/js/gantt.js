@@ -50,7 +50,8 @@ init: function(parent, element_id, dataset, view_id) {
         this.color_field = this.fields_view.arch.attrs.color;
         this.day_length = this.fields_view.arch.attrs.day_length || 8;
         this.colors = this.fields_view.arch.attrs.colors;
-        this.text = this.fields_view.arch.children[0].attrs.name;
+        var arch_children = this.fields_view.arch.children[0];
+        this.text = arch_children.children[0] ? arch_children.children[0].attrs.name : arch_children.attrs.name;
         this.parent = this.fields_view.arch.children[0].attrs.link;
 
         this.format = "yyyy-MM-dd";
@@ -65,7 +66,7 @@ init: function(parent, element_id, dataset, view_id) {
 
     create_gantt: function() {
 
-        ganttChartControl = new GanttChart(this.day_length);
+        var ganttChartControl = new GanttChart(this.day_length);
         ganttChartControl.setImagePath("/base_gantt/static/lib/dhtmlxGantt/codebase/imgs/");
         ganttChartControl.setEditable(true);
         ganttChartControl.showTreePanel(true);
@@ -204,7 +205,6 @@ init: function(parent, element_id, dataset, view_id) {
             else {
                 if (i == 0) {
                     var mod_id = "_" + i;
-                    child_event[mod_id] = {};
                     all_events[mod_id] = {'parent': "", 'evt': [mod_id, this.name, start_date, start_date, 100, "", "white"]};
                 }
                 all_events[id] = {'parent': mod_id, 'evt':[id , text, start_date, duration, 100, "", color_box[color]]};
@@ -261,11 +261,11 @@ init: function(parent, element_id, dataset, view_id) {
             prt.addChildTask(task);
         }
 
-        oth_hgt = 264;
-        min_hgt = 150;
-        name_min_wdt = 150;
-        gantt_hgt = jQuery(window).height() - oth_hgt;
-        search_wdt = jQuery("#oe_app_search").width();
+        var oth_hgt = 264;
+        var min_hgt = 150;
+        var name_min_wdt = 150;
+        var gantt_hgt = jQuery(window).height() - oth_hgt;
+        var search_wdt = jQuery("#oe_app_search").width();
 
         if (gantt_hgt > min_hgt){
             jQuery('#GanttDiv').height(gantt_hgt).width(search_wdt);
@@ -279,13 +279,13 @@ init: function(parent, element_id, dataset, view_id) {
         ganttChartControl.attachEvent("onTaskEndDrag", function(task) {self.on_resize_drag_end(task, "drag");});
         ganttChartControl.attachEvent("onTaskDblClick", function(task) {self.open_popup(task);});
 
-        taskdiv = jQuery("div.taskPanel").parent();
+        var taskdiv = jQuery("div.taskPanel").parent();
         taskdiv.addClass('ganttTaskPanel');
         taskdiv.prev().addClass('ganttDayPanel');
-        $gantt_panel = jQuery(".ganttTaskPanel , .ganttDayPanel");
+        var $gantt_panel = jQuery(".ganttTaskPanel , .ganttDayPanel");
 
-        ganttrow = jQuery('.taskPanel').closest('tr');
-        gtd =  ganttrow.children(':first-child');
+        var ganttrow = jQuery('.taskPanel').closest('tr');
+        var gtd =  ganttrow.children(':first-child');
         gtd.children().addClass('task-name');
 
         jQuery(".toggle-sidebar").click(function(e) {
@@ -307,9 +307,8 @@ init: function(parent, element_id, dataset, view_id) {
         $gantt_panel.width(1);
         jQuery(".ganttTaskPanel").parent().width(1);
 
-        search_wdt = jQuery("#oe_app_search").width();
-        day_wdt = jQuery(".ganttDayPanel").children().children().width();
-        name_wdt = jQuery('.task-name').width();
+        var search_wdt = jQuery("#oe_app_search").width();
+        var day_wdt = jQuery(".ganttDayPanel").children().children().width();
         jQuery('#GanttDiv').css('width','100%');
 
         if (search_wdt - day_wdt <= name_min_wdt){
@@ -333,7 +332,7 @@ init: function(parent, element_id, dataset, view_id) {
 
          var self = this;
 
-         dat = this.convert_str_date(dat);
+         var dat = this.convert_str_date(dat);
 
          var day = Math.floor(duration/self.day_length);
          var hrs = duration % self.day_length;
@@ -351,9 +350,9 @@ init: function(parent, element_id, dataset, view_id) {
         var date2_ms = date2.getTime();
         var difference_ms = Math.abs(date1_ms - date2_ms);
 
-        d = parent_task? Math.ceil(difference_ms / ONE_DAY) : Math.floor(difference_ms / ONE_DAY);
-        h = (difference_ms % ONE_DAY)/(1000 * 60 * 60);
-        num = (d * this.day_length) + h;
+        var d = parent_task? Math.ceil(difference_ms / ONE_DAY) : Math.floor(difference_ms / ONE_DAY);
+        var h = (difference_ms % ONE_DAY)/(1000 * 60 * 60);
+        var num = (d * this.day_length) + h;
         return parseFloat(num.toFixed(2));
 
     },
@@ -435,7 +434,7 @@ init: function(parent, element_id, dataset, view_id) {
     },
 
     on_drag_start : function(task){
-        st_date = task.getEST();
+        var st_date = task.getEST();
         if(st_date.getHours()){
             self.hh = st_date.getHours();
             self.mm = st_date.getMinutes();
