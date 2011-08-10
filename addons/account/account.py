@@ -2650,6 +2650,47 @@ class account_fiscal_position_template(osv.osv):
         'tax_ids': fields.one2many('account.fiscal.position.tax.template', 'position_id', 'Tax Mapping')
     }
 
+    def generate_fiscal_position(self, cr, uid, chart_temp_id, taxes_ids, acc_template_ref, company_id, context=None):
+        """
+        This method generate Fiscal Position , Fiscal Position Accounts and Fiscal Position Taxes from templates.
+        @param cr: A database cursor.
+        @param uid: ID of the user currently logged in.
+        @param chart_temp_id: Chart Template Id.
+        @param taxes_ids: Taxes templates reference for generating account.fiscal.position.tax.
+        @param acc_template_ref: Account templates reference for generating account.fiscal.position.account.
+        @param company_id: company_id selected from wizard.multi.charts.accounts.
+        """
+
+        if context is None:
+            context = {}
+        obj_tax_fp = self.pool.get('account.fiscal.position.tax')
+        obj_ac_fp = self.pool.get('account.fiscal.position.account')
+        obj_fiscal_position = self.pool.get('account.fiscal.position')
+        fp_ids = self.search(cr, uid, [('chart_template_id', '=', chart_temp_id)])
+        if fp_ids:
+            for position in self.browse(cr, uid, fp_ids, context=context):
+                vals_fp = {
+                    'company_id': company_id,
+                    'name': position.name,
+                }
+                new_fp = obj_fiscal_position.create(cr, uid, vals_fp)
+
+                for tax in position.tax_ids:
+                    vals_tax = {
+                        'tax_src_id': taxes_ids['tax_template_ref'][tax.tax_src_id.id],
+                        'tax_dest_id': tax.tax_dest_id and taxes_ids['tax_template_ref'][tax.tax_dest_id.id] or False,
+                        'position_id': new_fp,
+                    }
+                    obj_tax_fp.create(cr, uid, vals_tax)
+                for acc in position.account_ids:
+                    vals_acc = {
+                        'account_src_id': acc_template_ref[acc.account_src_id.id],
+                        'account_dest_id': acc_template_ref[acc.account_dest_id.id],
+                        'position_id': new_fp,
+                    }
+                    obj_ac_fp.create(cr, uid, vals_acc)
+        return {}
+
 account_fiscal_position_template()
 
 class account_fiscal_position_tax_template(osv.osv):
@@ -2788,7 +2829,6 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         obj_journal = self.pool.get('account.journal')
         obj_acc_template = self.pool.get('account.account.template')
         obj_fiscal_position_template = self.pool.get('account.fiscal.position.template')
-        obj_fiscal_position = self.pool.get('account.fiscal.position')
         obj_data = self.pool.get('ir.model.data')
         analytic_journal_obj = self.pool.get('account.analytic.journal')
         obj_tax_code = self.pool.get('account.tax.code')
@@ -2798,6 +2838,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         obj_acc_root = obj_multi.chart_template_id.account_root_id
         tax_code_root_id = obj_multi.chart_template_id.tax_code_root_id.id
         company_id = obj_multi.company_id.id
+        chart_temp_id = obj_multi.chart_template_id.id
 
         #new code
         acc_template_ref = {}
@@ -2824,7 +2865,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                                             'installable': True,
                                             'type': 'percent',
                                             'sequence': 0,
-                                            'chart_template_id': obj_multi.chart_template_id.id or False,
+                                            'chart_template_id': chart_temp_id or False,
                                 }, context=context)
 
         #create all the tax code
@@ -3092,35 +3133,9 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                 #create the property
                 property_obj.create(cr, uid, vals)
 
-        fp_ids = obj_fiscal_position_template.search(cr, uid, [('chart_template_id', '=', obj_multi.chart_template_id.id)])
+        #Generate Fiscal Position , Fiscal Position Accounts and Fiscal Position Taxes from templates
+        obj_fiscal_position_template.generate_fiscal_position(cr, uid, chart_temp_id, taxes_ids, acc_template_ref, company_id, context=context)
 
-        if fp_ids:
-            obj_tax_fp = self.pool.get('account.fiscal.position.tax')
-            obj_ac_fp = self.pool.get('account.fiscal.position.account')
-
-            for position in obj_fiscal_position_template.browse(cr, uid, fp_ids, context=context):
-
-                vals_fp = {
-                    'company_id': company_id,
-                    'name': position.name,
-                }
-                new_fp = obj_fiscal_position.create(cr, uid, vals_fp)
-
-                for tax in position.tax_ids:
-                    vals_tax = {
-                        'tax_src_id': taxes_ids['tax_template_ref'][tax.tax_src_id.id],
-                        'tax_dest_id': tax.tax_dest_id and taxes_ids['tax_template_ref'][tax.tax_dest_id.id] or False,
-                        'position_id': new_fp,
-                    }
-                    obj_tax_fp.create(cr, uid, vals_tax)
-
-                for acc in position.account_ids:
-                    vals_acc = {
-                        'account_src_id': acc_template_ref[acc.account_src_id.id],
-                        'account_dest_id': acc_template_ref[acc.account_dest_id.id],
-                        'position_id': new_fp,
-                    }
-                    obj_ac_fp.create(cr, uid, vals_acc)
         if obj_multi.sale_tax and taxes_ids['taxes_id']:
             ir_values_obj.set(cr, uid, key='default', key2=False, name="taxes_id", company=obj_multi.company_id.id,
                             models =[('product.product',False)], value=[taxes_ids['taxes_id'][obj_multi.sale_tax.id]])

@@ -78,6 +78,21 @@
             <field name="user_type" ref="account_type_view"/>
         </record>
 
+        <record id="a7000" model="account.account.template">
+            <field name="name">Sales in India</field>
+            <field name="code">7000</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account_type_view"/>
+            <field ref="chart_a0" name="parent_id"/>
+        </record>
+        <record id="a7001" model="account.account.template">
+            <field name="name">Sales in the member countries of the C.E.E.</field>
+            <field name="code">7001</field>
+            <field name="type">other</field>
+            <field name="user_type" ref="account_type_view"/>
+            <field ref="chart_a0" name="parent_id"/>
+        </record>
+
         <!-- Tax Code template for A-->
         <record id="atax0" model="account.tax.code.template">
             <field name="name">Tax Template Root A</field>
@@ -158,6 +173,15 @@
             <field name="chart_template_id" ref="account_chart_template_a"/>
         </record>
 
+        <record id="attn_VAT-OUT-00-EU-S" model="account.tax.template">
+            <field name="sequence">60</field>
+            <field name="description">VAT-OUT-00-EU-S</field>
+            <field name="name">Services EU</field>
+            <field name="amount">0</field>
+            <field name="type">percent</field>
+            <field name="chart_template_id" ref="account_chart_template_a"/>
+        </record>
+
         <!-- Tax for template B-->
         <record id="attn_VAT-OUT-4-S" model="account.tax.template">
             <field name="sequence">12</field>
@@ -192,6 +216,18 @@
             <field name="name">Extra Community Regime</field>
             <field name="chart_template_id" ref="account_chart_template_b"/>
         </record>
+
+        <record id="afpttn_intracom_7" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="afptn_intracom"/>
+            <field name="tax_src_id" ref="attn_VAT-OUT-21-S"/>
+            <field name="tax_dest_id" ref="attn_VAT-OUT-00-EU-S"/>
+        </record>
+
+    <record id="fiscal_position_account_template_3" model="account.fiscal.position.account.template">
+            <field name="position_id" ref="afptn_intracom"  />
+            <field name="account_src_id" ref="a7000" />
+            <field name="account_dest_id" ref="a7001" />
+    </record>
 
   </data>
 </openerp>
