@@ -359,12 +359,17 @@ openerp.base.DataSet =  openerp.base.Widget.extend( /** @lends openerp.base.Data
     name_get: function(ids, callback) {
         return this.call_and_eval('name_get', [ids, this.get_context()], null, 1, callback);
     },
-    /*
-     * args = domain
+    /**
+     * 
+     * @param {String} name name to perform a search for/on
+     * @param {Array} [domain=[]] filters for the objects returned, OpenERP domain
+     * @param {String} [operator='ilike'] matching operator to use with the provided name value
+     * @param {Number} [limit=100] maximum number of matches to return
+     * @param {Function} callback function to call with name_search result
      */
-    name_search: function (name, args, operator, limit, callback) {
+    name_search: function (name, domain, operator, limit, callback) {
         return this.call_and_eval('name_search',
-            [name || '', args || false, operator || 'ilike', this.get_context(), limit || 100],
+            [name || '', domain || false, operator || 'ilike', this.get_context(), limit || 100],
             1, 3, callback);
     },
     name_create: function(name, callback) {
