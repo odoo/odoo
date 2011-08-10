@@ -318,6 +318,7 @@ openerp.base.Dialog = openerp.base.OldWidget.extend({
             max_height: '100%',
             autoOpen: false,
             buttons: {},
+            beforeClose: function () { self.on_close(); }
         };
         for (var f in this) {
             if (f.substr(0, 10) == 'on_button_') {
@@ -381,7 +382,6 @@ openerp.base.Dialog = openerp.base.OldWidget.extend({
     close: function() {
         // Closes the dialog but leave it in a state where it could be opened again.
         this.$dialog.dialog('close');
-        this.on_close();
     },
     on_close: function() {
     },
