@@ -48,14 +48,19 @@ openerp.base_calendar.CalendarView = openerp.base.View.extend({
         this.fields =  this.fields_view.fields;
 
         //* Calendar Fields *
-        this.calendar_fields['date_start'] = {'name': this.date_start, 'kind': this.fields[this.date_start]['type']};
+        this.calendar_fields.date_start = {'name': this.date_start, 'kind': this.fields[this.date_start].type};
 
         if (this.date_delay) {
-             this.calendar_fields['date_delay'] = {'name': this.date_delay, 'kind': this.fields[this.date_delay]['type']};
+            if (this.fields[this.date_delay].type != 'float') {
+                throw new Error("Calendar view has a 'date_delay' type != float");
+            }
+            this.calendar_fields.date_delay = {'name': this.date_delay, 'kind': this.fields[this.date_delay].type};
         }
-
         if (this.date_stop) {
-            this.calendar_fields['date_stop'] = {'name': this.date_stop, 'kind': this.fields[this.date_stop]['type']};
+            this.calendar_fields.date_stop = {'name': this.date_stop, 'kind': this.fields[this.date_stop].type};
+        }
+        if (!this.date_delay && !this.date_stop) {
+            throw new Error("Calendar view has none of the following attributes : 'date_stop', 'date_delay'");
         }
 
         for (var fld = 0; fld < this.fields_view.arch.children.length; fld++) {
@@ -307,10 +312,9 @@ openerp.base_calendar.CalendarView = openerp.base.View.extend({
         var data = {
             name: event_obj.text
         };
-        var date_format = this.calendar_fields.date_start.kind == 'time' ? 'HH:mm:ss' : 'yyyy-MM-dd HH:mm:ss';
-        data[this.date_start] = event_obj.start_date.toString(date_format);
+        data[this.date_start] = openerp.base.format_datetime(event_obj.start_date);
         if (this.date_stop) {
-            data[this.date_stop] = event_obj.end_date.toString(date_format);
+            data[this.date_stop] = openerp.base.format_datetime(event_obj.end_date);
         }
         if (this.date_delay) {
             var tds = (event_obj.start_date.getOrdinalNumber() / 1e3 >> 0) - (event_obj.start_date.getOrdinalNumber() < 0);
