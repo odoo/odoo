@@ -127,10 +127,14 @@ openerp.base_kanban.KanbanView = openerp.base.View.extend({
         this.execute_action(
             button_attrs, this.dataset, this.session.action_manager,
             record_id, function () {
+                var count = 1;
                 _.each(self.all_display_data, function(data, index) {
                     self.dataset.read_ids( data.ids, [], function(records){
                         self.all_display_data[index].records = records;
-                        self.on_reload_kanban();
+                        if(self.all_display_data.length == count) {
+                            self.on_reload_kanban();
+                        }
+                        count++;
                     });
                 });
             }
