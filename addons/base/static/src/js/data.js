@@ -633,48 +633,51 @@ openerp.base.ReadOnlyDataSetSearch = openerp.base.DataSetSearch.extend({
     on_unlink: function(ids) {}
 });
 
-openerp.base.CompoundContext = function() {
-    this.__ref = "compound_context";
-    this.__contexts = [];
-    this.__eval_context = null;
-    var self = this;
-    _.each(arguments, function(x) {
-        self.add(x);
-    });
-};
-openerp.base.CompoundContext.prototype.add = function(context) {
-    this.__contexts.push(context);
-    return this;
-};
-openerp.base.CompoundContext.prototype.set_eval_context = function(eval_context) {
-    this.__eval_context = eval_context;
-    return this;
-};
-openerp.base.CompoundContext.prototype.get_eval_context = function() {
-    return this.__eval_context;
-};
+openerp.base.CompoundContext = openerp.base.Class.extend({
+    init: function () {
+        this.__ref = "compound_context";
+        this.__contexts = [];
+        this.__eval_context = null;
+        var self = this;
+        _.each(arguments, function(x) {
+            self.add(x);
+        });
+    },
+    add: function (context) {
+        this.__contexts.push(context);
+        return this;
+    },
+    set_eval_context: function (eval_context) {
+        this.__eval_context = eval_context;
+        return this;
+    },
+    get_eval_context: function () {
+        return this.__eval_context;
+    }
+});
 
-openerp.base.CompoundDomain = function() {
-    this.__ref = "compound_domain";
-    this.__domains = [];
-    this.__eval_context = null;
-    var self = this;
-    _.each(arguments, function(x) {
-        self.add(x);
-    });
-};
-openerp.base.CompoundDomain.prototype.add = function(domain) {
-    this.__domains.push(domain);
-    return this;
-};
-openerp.base.CompoundDomain.prototype.set_eval_context = function(eval_context) {
-    this.__eval_context = eval_context;
-    return this;
-};
-openerp.base.CompoundDomain.prototype.get_eval_context = function() {
-    return this.__eval_context;
-};
-
+openerp.base.CompoundDomain = openerp.base.Class.extend({
+    init: function () {
+        this.__ref = "compound_domain";
+        this.__domains = [];
+        this.__eval_context = null;
+        var self = this;
+        _.each(arguments, function(x) {
+            self.add(x);
+        });
+    },
+    add: function(domain) {
+        this.__domains.push(domain);
+        return this;
+    },
+    set_eval_context: function(eval_context) {
+        this.__eval_context = eval_context;
+        return this;
+    },
+    get_eval_context: function() {
+        return this.__eval_context;
+    }
+});
 };
 
 // vim:et fdc=0 fdl=0 foldnestmax=3 fdm=syntax:
