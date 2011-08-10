@@ -217,13 +217,13 @@
             <field name="chart_template_id" ref="account_chart_template_b"/>
         </record>
 
-        <record id="afpttn_intracom_7" model="account.fiscal.position.tax.template">
+        <record id="fiscal_position_tax_temp_intracom" model="account.fiscal.position.tax.template">
             <field name="position_id" ref="fiscal_temp_intracom"/>
             <field name="tax_src_id" ref="TAX-VAT-OUT-21-S"/>
             <field name="tax_dest_id" ref="TAX-VAT-OUT-00-EU-S"/>
         </record>
 
-    <record id="fiscal_position_account_template_3" model="account.fiscal.position.account.template">
+    <record id="fiscal_position_account_temp_intracom" model="account.fiscal.position.account.template">
             <field name="position_id" ref="fiscal_temp_intracom"  />
             <field name="account_src_id" ref="a_sales_india" />
             <field name="account_dest_id" ref="a_sales_member_cee" />
