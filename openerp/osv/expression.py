@@ -128,6 +128,48 @@ def normalize_leaf(left, operator, right):
         operator = 'in' if operator == '=' else 'not in'
     return left, operator, right
 
+def distribute_not(domain):
+    """ Distribute the '!' operator on a normalized domain.
+    """
+    def negate(leaf):
+        left, operator, right = leaf
+        mapping = {
+            '<': '>=',
+            '>': '<=',
+            '<=': '>',
+            '>=': '<',
+            '=': '!=',
+            '!=': '=',
+        }
+        if operator in ('in', 'like', 'ilike'):
+            operator = 'not ' + operator
+            return [(left, operator, right)]
+        if operator in ('not in', 'not like', 'not ilike'):
+            operator = operator[4:]
+            return [(left, operator, right)]
+        if operator in mapping:
+            operator = mapping[operator]
+            return [(left, operator, right)]
+        return ['!', (left, operator, right)]
+    def distribute(domain):
+        if is_leaf(domain[0]):
+            return negate(domain[0]), domain[1:]
+        if domain[0] == '&':
+            done1, todo1 = distribute(domain[1:])
+            done2, todo2 = distribute(todo1)
+            return ['|'] + done1 + done2, todo2
+        if domain[0] == '|':
+            done1, todo1 = distribute(domain[1:])
+            done2, todo2 = distribute(todo1)
+            return ['&'] + done1 + done2, todo2
+    if not domain:
+        return []
+    if domain[0] != '!':
+        return [domain[0]] + distribute_not(domain[1:])
+    if domain[0] == '!':
+        done, todo = distribute(domain[1:])
+        return done + distribute_not(todo)
+
 def select_from_where(cr, s, f, w, ids, op):
     # todo: merge into parent query as sub-query
     res = []
@@ -162,7 +204,7 @@ class expression(object):
         self.__joins = []
         self.__main_table = None # 'root' table. set by parse()
         # assign self.__exp with the normalized, parsed domain.
-        self.parse(cr, uid, normalize(exp), table, context)
+        self.parse(cr, uid, distribute_not(normalize(exp)), table, context)
 
     # TODO used only for osv_memory
     @property

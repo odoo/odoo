@@ -240,32 +240,40 @@
         assert res_2 == with_parent
         assert res_3 == partner_ids
         assert res_4 == with_parent
-        print ">>> ----------"
         # The results of these queries, when combined with queries 0..4 must
         # give the whole set of ids.
         res_5 = self.search(cr, uid, [('parent_id', 'like', 'probably_unexisting_name')])
+        res_5.sort()
         res_6 = self.search(cr, uid, [('parent_id', 'in', [max_partner_id + 1])])
+        res_6.sort()
         res_7 = self.search(cr, uid, [('parent_id', 'in', False)])
+        res_7.sort()
         res_8 = self.search(cr, uid, [('parent_id', 'in', [])])
+        res_8.sort()
         res_9 = self.search(cr, uid, [('parent_id', 'in', [False])])
-        print ">>>  5:", res_5
-        print ">>>  6:", res_6
-        print ">>>  7:", res_7
-        print ">>>  8:", res_8
-        print ">>>  9:", res_9
-        print ">>> ----------"
+        res_9.sort()
+        assert res_5 == []
+        assert res_6 == []
+        assert res_7 == without_parent
+        assert res_8 == []
+        assert res_9 == without_parent
         # These queries must return exactly the results than the queries 0..4,
         # i.e. not ... in ... must be the same as ... not in ... .
         res_10 = self.search(cr, uid, ['!', ('parent_id', 'like', 'probably_unexisting_name')])
+        res_10.sort()
         res_11 = self.search(cr, uid, ['!', ('parent_id', 'in', [max_partner_id + 1])])
+        res_11.sort()
         res_12 = self.search(cr, uid, ['!', ('parent_id', 'in', False)])
+        res_12.sort()
         res_13 = self.search(cr, uid, ['!', ('parent_id', 'in', [])])
+        res_13.sort()
         res_14 = self.search(cr, uid, ['!', ('parent_id', 'in', [False])])
-        print ">>> 10:", res_10
-        print ">>> 11:", res_11
-        print ">>> 12:", res_12
-        print ">>> 13:", res_13
-        print ">>> 14:", res_14
+        res_14.sort()
+        assert res_0 == res_10
+        assert res_1 == res_11
+        assert res_2 == res_12
+        assert res_3 == res_13
+        assert res_4 == res_14
 
         # Testing many2one field is not enough, a regular char field is tested
         # with in [] and must not return any result.
