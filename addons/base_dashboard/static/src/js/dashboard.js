@@ -333,7 +333,6 @@ openerp.base_dashboard.ConfigOverview = openerp.base.View.extend({
                         type: 'object',
                         name: 'action_launch'
                     }, self.dataset,
-                    self.session.action_manager,
                     $(this).data('id'), function () {
                         // after action popup closed, refresh configuration
                         // thingie

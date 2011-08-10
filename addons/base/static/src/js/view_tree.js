@@ -177,7 +177,7 @@ openerp.base.TreeView = openerp.base.View.extend({
             if (!actions.length) { return; }
             var action = actions[0][2];
             action.flags.new_window = true;
-            self.session.action_manager.do_action(action);
+            self.do_action(action);
         });
     },
 

@@ -442,7 +442,7 @@ openerp.base_graph.GraphView = openerp.base.View.extend({
             }
             views.push(view);
         });
-        this.session.action_manager.do_action({
+        this.do_action({
             "res_model" : this.dataset.model,
             "domain" : this.dataset.domain,
             "views" : views,

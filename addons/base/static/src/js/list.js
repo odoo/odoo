@@ -460,11 +460,10 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
             return field.name === name;
         });
         if (!action) { return; }
-        this.execute_action(
-            action, this.dataset, this.session.action_manager, id, function () {
-                $.when(callback.apply(this, arguments).then(function () {
-                    self.compute_aggregates();
-                }));
+        this.execute_action(action, this.dataset, id, function () {
+            $.when(callback.apply(this, arguments).then(function () {
+                self.compute_aggregates();
+            }));
         });
     },
     /**
