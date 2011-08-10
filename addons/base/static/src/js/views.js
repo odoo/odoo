@@ -40,7 +40,7 @@ openerp.base.ActionManager = openerp.base.Widget.extend({
             this.inner_viewmanager = null;
         }
     },
-    do_action: function(action, on_closed) {
+    do_action: function(action, on_close) {
         console.log("action",action);
         var type = action.type.replace(/\./g,'_');
         var popup = action.target === 'new';
@@ -56,22 +56,21 @@ openerp.base.ActionManager = openerp.base.Widget.extend({
             console.log("Action manager can't handle action of type " + action.type, action);
             return;
         }
-        this[type](action, on_closed);
+        this[type](action, on_close);
     },
-    ir_actions_act_window: function (action, on_closed) {
+    ir_actions_act_window: function (action, on_close) {
         if (action.flags.popup) {
             if (this.dialog == null) {
                 this.dialog = new openerp.base.Dialog(this, { title: action.name, width: '80%' });
-                this.dialog.on_closed.add(on_closed);
+                if(on_close)
+                    this.dialog.on_close.add(on_close);
                 this.dialog.start();
-                this.dialog_viewmanager = new openerp.base.ViewManagerAction(this, action);
-                this.dialog_viewmanager.appendTo(this.dialog.$element);
-                this.dialog.open();
             } else {
                 this.dialog_viewmanager.stop();
-                this.dialog_viewmanager = new openerp.base.ViewManagerAction(this, action);
-                this.dialog_viewmanager.appendTo(this.dialog.$element);
             }
+            this.dialog_viewmanager = new openerp.base.ViewManagerAction(this, action);
+            this.dialog_viewmanager.appendTo(this.dialog.$element);
+            this.dialog.open();
         } else  {
             this.dialog_stop();
             this.inner_stop();
