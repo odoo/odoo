@@ -510,36 +510,40 @@ openerp.base.form.compute_domain = function(expr, fields) {
             }
         }
 
-        var field = fields[ex[0]].get_value ? fields[ex[0]].get_value() : fields[ex[0]].value;
+        var field = fields[ex[0]];
+        if (!field) {
+            throw new Error("Domain references unknown field : " + ex[0]);
+        }
+        var field_value = field.get_value ? fields[ex[0]].get_value() : fields[ex[0]].value;
         var op = ex[1];
         var val = ex[2];
 
         switch (op.toLowerCase()) {
             case '=':
             case '==':
-                stack.push(field == val);
+                stack.push(field_value == val);
                 break;
             case '!=':
             case '<>':
-                stack.push(field != val);
+                stack.push(field_value != val);
                 break;
             case '<':
-                stack.push(field < val);
+                stack.push(field_value < val);
                 break;
             case '>':
-                stack.push(field > val);
+                stack.push(field_value > val);
                 break;
             case '<=':
-                stack.push(field <= val);
+                stack.push(field_value <= val);
                 break;
             case '>=':
-                stack.push(field >= val);
+                stack.push(field_value >= val);
                 break;
             case 'in':
-                stack.push(_(val).contains(field));
+                stack.push(_(val).contains(field_value));
                 break;
             case 'not in':
-                stack.push(!_(val).contains(field));
+                stack.push(!_(val).contains(field_value));
                 break;
             default:
                 this.log("Unsupported operator in modifiers :", op);
