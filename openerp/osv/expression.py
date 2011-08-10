@@ -109,7 +109,7 @@ def is_operator(element):
 
 # TODO change the share wizard to use this function.
 def is_leaf(element, internal=False):
-    INTERNAL_OPS = OPS + ('inselect',)
+    INTERNAL_OPS = OPS + ('inselect', '<>')
     return (isinstance(element, tuple) or isinstance(element, list)) \
        and len(element) == 3 \
        and (((not internal) and element[1] in OPS) \
@@ -164,11 +164,6 @@ class expression(object):
 
     def parse(self, cr, uid, exp, table, context):
         """ transform the leafs of the expression """
-        # check if the expression is valid
-        for x in exp:
-            if not (is_operator(x) or is_leaf(x)):
-                raise ValueError('Bad domain expression: %r, %r is not a valid operator or a valid term.' % (exp, x))
-
         self.__exp = exp
 
         def child_of_domain(left, right, table, parent=None, prefix=''):
@@ -212,8 +207,14 @@ class expression(object):
             e = self.__exp[i]
             if is_operator(e) or e == TRUE_LEAF or e == FALSE_LEAF:
                 continue
+
+            # check if the expression is valid
+            if not is_leaf(e):
+                raise ValueError('Bad domain expression: %r, %r is not a valid term.' % (exp, e))
+
             left, operator, right = e
             operator = normalize_operator(operator)
+
             working_table = table # The table containing the field (the name provided in the left operand)
             fargs = left.split('.', 1)
 
@@ -401,10 +402,7 @@ class expression(object):
                         if m2o_str:
                             self.__exp[i] = _get_expression(field_obj, cr, uid, left, right, operator, context=context)
                     elif right == []:
-                        if operator not in ('in', 'not in'):
-                            _logger.warning("The domain term '%s' should use a set operator ('in' or 'not in')." % (self.__exp[i]),)
-                        # (many2one not in []) returns all records, (many2one in []) returns no record at all.
-                        self.__exp[i] = TRUE_LEAF if operator in NEGATIVE_OPS else FALSE_LEAF
+                        pass # Handled by __leaf_to_sql().
                     else: # right is False
                         if operator not in ('=', '!='):
                             _logger.warning("The domain term '%s' should use the '=' or '!=' operator." % (self.__exp[i],))
@@ -478,32 +476,40 @@ class expression(object):
             params = right[1]
 
         elif operator in ['in', 'not in']:
-            params = right and right[:] or []
-            len_before = len(params)
-            for i in range(len_before)[::-1]:
-                if params[i] == False:
-                    del params[i]
-
-            len_after = len(params)
-            check_nulls = len_after != len_before
-            query = 'FALSE'
-
-            # TODO this code seems broken: 'not in [False]' will become 'true',
-            # i.e. 'not null or null', while I expect it to be 'not null'.
-            if len_after:
-                if left == 'id':
-                    instr = ','.join(['%s'] * len_after)
-                else:
-                    instr = ','.join([table._columns[left]._symbol_set[0]] * len_after)
-                query = '(%s.%s %s (%s))' % (table._table, left, operator, instr)
-            else:
-                # the case for [field, 'in', []] or [left, 'not in', []]
+            # Two cases: right is a boolean or a list. The boolean case is an
+            # abuse and handled for backward compatibility.
+            if isinstance(right, bool):
+                _logger.warning("The domain term '%s' should use the '=' or '!=' operator." % (leaf,))
                 if operator == 'in':
-                    query = '(%s.%s IS NULL)' % (table._table, left)
+                    r = 'NOT NULL' if right else 'NULL'
                 else:
-                    query = '(%s.%s IS NOT NULL)' % (table._table, left)
-            if check_nulls:
-                query = '(%s OR %s.%s IS NULL)' % (query, table._table, left)
+                    r = 'NULL' if right else 'NOT NULL'
+                query = '(%s.%s IS %s)' % (table._table, left, r)
+                params = []
+            elif isinstance(right, (list, tuple)):
+                params = right[:]
+                check_nulls = False
+                for i in range(len(params))[::-1]:
+                    if params[i] == False:
+                        check_nulls = True
+                        del params[i]
+
+                if params:
+                    if left == 'id':
+                        instr = ','.join(['%s'] * len(params))
+                    else:
+                        instr = ','.join([table._columns[left]._symbol_set[0]] * len(params))
+                    query = '(%s.%s %s (%s))' % (table._table, left, operator, instr)
+                else:
+                    # The case for (left, 'in', []) or (left, 'not in', []).
+                    if operator == 'in':
+                        query = 'FALSE'
+                    else:
+                        query = 'TRUE'
+                if check_nulls:
+                    query = '(%s OR %s.%s IS NULL)' % (query, table._table, left) # TODO not necessary for TRUE
+            else: # Must not happen.
+                pass
 
         elif right == False and (left in table._columns) and table._columns[left]._type=="boolean" and (operator == '='):
             query = '(%s.%s IS NULL or %s.%s = false )' % (table._table, left, table._table, left)

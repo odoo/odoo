@@ -184,6 +184,7 @@
 -
     !python {model: res.partner }: |
         partner_ids = self.search(cr, uid, [])
+        partner_ids.sort()
         max_partner_id = max(partner_ids)
         partners = self.browse(cr, uid, partner_ids)
         with_parent = []
@@ -194,6 +195,11 @@
         for x in partners:
             if not x.parent_id:
                 without_parent.append(x.id)
+        with_website = []
+        for x in partners:
+            if x.website:
+                with_website.append(x.id)
+        with_website.sort()
         print "with_parent", with_parent
         print "without_parent", without_parent
         res_0 = self.search(cr, uid, [('parent_id', 'not like', 'probably_unexisting_name')])
@@ -228,6 +234,19 @@
         print ">>> 12:", res_12
         print ">>> 13:", res_13
         print ">>> 14:", res_14
+
+        # Testing many2one field is not enough, a regular char field is tested
+        # with in [] and must not return any result.
+        res_15 = self.search(cr, uid, [('website', 'in', [])])
+        assert res_15 == []
+        # not in [] must return everything.
+        res_16 = self.search(cr, uid, [('website', 'not in', [])])
+        res_16.sort()
+        assert res_16 == partner_ids
+
+        res_17 = self.search(cr, uid, [('website', 'not in', False)])
+        res_17.sort()
+        assert res_17 == with_website
 -
     Property of the query (one2many not in False).
 -
