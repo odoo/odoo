@@ -192,9 +192,11 @@
         for x in partners:
             if x.parent_id and x.parent_id.id in partner_ids:
                 with_parent.append(x.id)
+        with_parent.sort()
         for x in partners:
             if not x.parent_id:
                 without_parent.append(x.id)
+        without_parent.sort()
         with_website = []
         for x in partners:
             if x.website:
@@ -202,17 +204,45 @@
         with_website.sort()
         print "with_parent", with_parent
         print "without_parent", without_parent
-        res_0 = self.search(cr, uid, [('parent_id', 'not like', 'probably_unexisting_name')])
-        res_1 = self.search(cr, uid, [('parent_id', 'not in', [max_partner_id + 1])])
-        res_2 = self.search(cr, uid, [('parent_id', 'not in', False)])
-        res_3 = self.search(cr, uid, [('parent_id', 'not in', [])])
-        res_4 = self.search(cr, uid, [('parent_id', 'not in', [False])])
-        print ">>>  0:", res_0
-        print ">>>  1:", res_1
-        print ">>>  2:", res_2
-        print ">>>  3:", res_3
-        print ">>>  4:", res_4
+
+        # We treat null values differently than in SQL. For instance in SQL:
+        #   SELECT id FROM res_partner WHERE parent_id NOT IN (0)
+        # will return only the records with non-null parent_id.
+        #   SELECT id FROM res_partner WHERE parent_id IN (0)
+        # will return expectedly nothing (our ids always begin at 1).
+        # This means the union of those two results will give only some
+        # records, but not all present in database.
+        #
+        # When using domains and the ORM's search method, we think it is
+        # more intuitive that the union returns all the records, and that
+        # a domain like ('parent_id', 'not in', [0]) will return all
+        # the records. For instance, if you perform a search for the companies
+        # that don't have OpenERP has a parent company, you expect to find,
+        # among others, the companies that don't have parent company.
+        #
+        # ('parent_id', 'not in', [0]) must give the same result than
+        # ('parent_id', 'not in', []), i.e. a empty set or a set with non-
+        # existing values be treated similarly if we simply check that some
+        # existing value belongs to them.
+
+        res_0 = self.search(cr, uid, [('parent_id', 'not like', 'probably_unexisting_name')]) # get all rows, included null parent_id
+        res_0.sort()
+        res_1 = self.search(cr, uid, [('parent_id', 'not in', [max_partner_id + 1])]) # get all rows, included null parent_id
+        res_1.sort()
+        res_2 = self.search(cr, uid, [('parent_id', 'not in', False)]) # get rows with not null parent_id, deprecated syntax
+        res_2.sort()
+        res_3 = self.search(cr, uid, [('parent_id', 'not in', [])]) # get all rows, included null parent_id
+        res_3.sort()
+        res_4 = self.search(cr, uid, [('parent_id', 'not in', [False])]) # get rows with not null parent_id
+        res_4.sort()
+        assert res_0 == partner_ids
+        assert res_1 == partner_ids
+        assert res_2 == with_parent
+        assert res_3 == partner_ids
+        assert res_4 == with_parent
         print ">>> ----------"
+        # The results of these queries, when combined with queries 0..4 must
+        # give the whole set of ids.
         res_5 = self.search(cr, uid, [('parent_id', 'like', 'probably_unexisting_name')])
         res_6 = self.search(cr, uid, [('parent_id', 'in', [max_partner_id + 1])])
         res_7 = self.search(cr, uid, [('parent_id', 'in', False)])
@@ -224,6 +254,8 @@
         print ">>>  8:", res_8
         print ">>>  9:", res_9
         print ">>> ----------"
+        # These queries must return exactly the results than the queries 0..4,
+        # i.e. not ... in ... must be the same as ... not in ... .
         res_10 = self.search(cr, uid, ['!', ('parent_id', 'like', 'probably_unexisting_name')])
         res_11 = self.search(cr, uid, ['!', ('parent_id', 'in', [max_partner_id + 1])])
         res_12 = self.search(cr, uid, ['!', ('parent_id', 'in', False)])

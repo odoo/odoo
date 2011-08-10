@@ -387,6 +387,8 @@ class expression(object):
                         elif isinstance(right, list) and operator in ['!=','=']: #for domain (FIELD,'=',['value1','value2'])
                             operator = dict_op[operator]
                         res_ids = [x[0] for x in field_obj.name_search(cr, uid, right, [], operator, limit=None, context=c)]
+                        if operator in NEGATIVE_OPS:
+                            res_ids.append(False) # TODO this should not be appended if False was in 'right'
                         return (left, 'in', res_ids)
 
                     m2o_str = False
@@ -499,8 +501,13 @@ class expression(object):
                 else:
                     # The case for (left, 'in', []) or (left, 'not in', []).
                     query = 'FALSE' if operator == 'in' else 'TRUE'
-                if check_nulls:
-                    query = '(%s OR %s.%s IS NULL)' % (query, table._table, left) # TODO not necessary for TRUE
+
+                if check_nulls and operator == 'in':
+                    query = '(%s OR %s.%s IS NULL)' % (query, table._table, left)
+                elif not check_nulls and operator == 'not in':
+                    query = '(%s OR %s.%s IS NULL)' % (query, table._table, left)
+                elif check_nulls and operator == 'not in':
+                    query = '(%s AND %s.%s IS NOT NULL)' % (query, table._table, left) # needed only for TRUE.
             else: # Must not happen.
                 pass
 
