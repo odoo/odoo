@@ -374,6 +374,7 @@ openerp.base.Dialog = openerp.base.OldWidget.extend({
             this.open();
         }
         this._super();
+        return this;
     },
     open: function(dialog_options) {
         // TODO fme: bind window on resize
@@ -988,6 +989,8 @@ openerp.base.WebClient = openerp.base.Widget.extend({
         this.notification.notify("OpenERP Client", "The openerp client has been initialized.");
     },
     on_logged: function() {
+        if(this.action_manager)
+            this.action_manager.stop();
         this.action_manager = new openerp.base.ActionManager(this);
         this.action_manager.appendTo($("#oe_app"));
 
