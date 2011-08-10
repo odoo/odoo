@@ -384,10 +384,7 @@ class expression(object):
                         elif isinstance(right, list) and operator in ['!=','=']: #for domain (FIELD,'=',['value1','value2'])
                             operator = dict_op[operator]
                         res_ids = [x[0] for x in field_obj.name_search(cr, uid, right, [], operator, limit=None, context=c)]
-                        if not res_ids:
-                           return FALSE_LEAF
-                        else:
-                            return (left, 'in', res_ids)
+                        return (left, 'in', res_ids)
 
                     m2o_str = False
                     if right:
@@ -404,10 +401,7 @@ class expression(object):
                     elif right == []:
                         pass # Handled by __leaf_to_sql().
                     else: # right is False
-                        if operator not in ('=', '!='):
-                            _logger.warning("The domain term '%s' should use the '=' or '!=' operator." % (self.__exp[i],))
-                        new_op = '!=' if operator in NEGATIVE_OPS else '='
-                        self.__exp[i] = (left, new_op, False)
+                        pass # Handled by __leaf_to_sql().
 
             else:
                 # other field type
@@ -502,10 +496,7 @@ class expression(object):
                     query = '(%s.%s %s (%s))' % (table._table, left, operator, instr)
                 else:
                     # The case for (left, 'in', []) or (left, 'not in', []).
-                    if operator == 'in':
-                        query = 'FALSE'
-                    else:
-                        query = 'TRUE'
+                    query = 'FALSE' if operator == 'in' else 'TRUE'
                 if check_nulls:
                     query = '(%s OR %s.%s IS NULL)' % (query, table._table, left) # TODO not necessary for TRUE
             else: # Must not happen.
