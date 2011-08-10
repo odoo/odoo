@@ -1884,7 +1884,7 @@ openerp.base.form.FieldMany2Many = openerp.base.form.Field.extend({
             self.on_ui_change();
         });
 
-        this.list_view = new openerp.base.form.Many2ManyListView(new openerp.base.NullViewManager(this), this.list_id, this.dataset, false, {
+        this.list_view = new openerp.base.form.Many2ManyListView(this, this.list_id, this.dataset, false, {
                     'addable': 'Add',
                     'selectable': self.multi_selection
             });

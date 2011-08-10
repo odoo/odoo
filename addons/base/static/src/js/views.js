@@ -290,15 +290,6 @@ openerp.base.ViewManager =  openerp.base.Widget.extend({
     }
 });
 
-openerp.base.NullViewManager = openerp.base.generate_null_object_class(openerp.base.ViewManager, {
-    init: function(parent) {
-        this._super(parent);
-        if(parent)
-            this.session = parent.session;
-        this.action = {flags: {}};
-    }
-});
-
 // Move parts or everything to ActionManager
 openerp.base.ViewManagerAction = openerp.base.ViewManager.extend({
     init: function(parent, action) {
