@@ -287,7 +287,6 @@ class pos_order(osv.osv):
         'nb_print': fields.integer('Number of Print', readonly=True),
         'sale_journal': fields.many2one('account.journal', 'Journal', required=True, states={'draft': [('readonly', False)]}, readonly=True),
         'invoice_wanted': fields.boolean('Create Invoice'),
-        'note_2': fields.char('Customer Note', size=64),
         'type_rec': fields.char('Type of Receipt', size=64),
         'remboursed': fields.boolean('Remboursed'),
         'contract_number': fields.char('Contract Number', size=512, select=1),
@@ -1237,12 +1236,10 @@ class product_product(osv.osv):
         'am_out': fields.boolean('Control for Output Operations'),
         'disc_controle': fields.boolean('Discount Control'),
         'img': fields.binary('Pos Image, must be 50x50'),
-        'pos_ok': fields.boolean('Can be POS-sold'),
         'pos_categ_id': fields.many2one('pos.category','POS Category', change_default=True, domain="[('type','=','normal')]" ,help="Select a pos category for the current product")
     }
     _defaults = {
         'disc_controle': True,
-        'pos_ok': True,
     }
 product_product()
 
