@@ -79,7 +79,7 @@ openerp.base.ActionManager = openerp.base.Widget.extend({
             if (this.dialog == null) {
                 this.dialog = new openerp.base.ActionDialog(this, { title: action.name, width: '80%' });
                 this.dialog.close_callback = on_closed;
-                this.dialog.start(false);
+                this.dialog.start();
                 this.dialog_viewmanager = new openerp.base.ViewManagerAction(this, action);
                 this.dialog_viewmanager.appendTo(this.dialog.$element);
                 this.dialog.open();
@@ -572,7 +572,7 @@ openerp.base.View = openerp.base.Widget.extend({
     },
     on_sidebar_export: function() {
         var export_view = new openerp.base.DataExport(this, this.dataset);
-        export_view.start(false);
+        export_view.start();
     },
     on_sidebar_translate: function() {
     },

@@ -411,7 +411,7 @@ openerp.base_calendar.CalendarFormDialog = openerp.base.Dialog.extend({
         this.view = view;
     },
     start: function() {
-        this._super(false);
+        this._super();
         this.form = new openerp.base.FormView(this, this.element_id, this.dataset, this.view_id, {
             sidebar: false,
             pager: false

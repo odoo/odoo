@@ -368,11 +368,8 @@ openerp.base.Dialog = openerp.base.OldWidget.extend({
             return parseInt(val, 10);
         }
     },
-    start: function (auto_open) {
+    start: function () {
         this.$dialog = $('<div id="' + this.element_id + '"></div>').dialog(this.dialog_options);
-        if (auto_open !== false) {
-            this.open();
-        }
         this._super();
         return this;
     },
@@ -964,7 +961,7 @@ openerp.base.WebClient = openerp.base.Widget.extend({
         this.session = new openerp.base.Session(this,"oe_errors");
         this.loading = new openerp.base.Loading(this,"oe_loading");
         this.crashmanager =  new openerp.base.CrashManager(this);
-        this.crashmanager.start(false);
+        this.crashmanager.start();
 
         // Do you autorize this ? will be replaced by notify() in controller
         openerp.base.Widget.prototype.notification = new openerp.base.Notification(this, "oe_notification");
