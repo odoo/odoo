@@ -2667,28 +2667,20 @@ class account_fiscal_position_template(osv.osv):
         obj_ac_fp = self.pool.get('account.fiscal.position.account')
         obj_fiscal_position = self.pool.get('account.fiscal.position')
         fp_ids = self.search(cr, uid, [('chart_template_id', '=', chart_temp_id)])
-        if fp_ids:
-            for position in self.browse(cr, uid, fp_ids, context=context):
-                vals_fp = {
-                    'company_id': company_id,
-                    'name': position.name,
-                }
-                new_fp = obj_fiscal_position.create(cr, uid, vals_fp)
-
-                for tax in position.tax_ids:
-                    vals_tax = {
-                        'tax_src_id': taxes_ids['tax_template_ref'][tax.tax_src_id.id],
-                        'tax_dest_id': tax.tax_dest_id and taxes_ids['tax_template_ref'][tax.tax_dest_id.id] or False,
-                        'position_id': new_fp,
-                    }
-                    obj_tax_fp.create(cr, uid, vals_tax)
-                for acc in position.account_ids:
-                    vals_acc = {
-                        'account_src_id': acc_template_ref[acc.account_src_id.id],
-                        'account_dest_id': acc_template_ref[acc.account_dest_id.id],
-                        'position_id': new_fp,
-                    }
-                    obj_ac_fp.create(cr, uid, vals_acc)
+        for position in self.browse(cr, uid, fp_ids, context=context):
+            new_fp = obj_fiscal_position.create(cr, uid, {'company_id': company_id, 'name': position.name})
+            for tax in position.tax_ids:
+                obj_tax_fp.create(cr, uid, {
+                    'tax_src_id': taxes_ids['tax_template_ref'][tax.tax_src_id.id],
+                    'tax_dest_id': tax.tax_dest_id and taxes_ids['tax_template_ref'][tax.tax_dest_id.id] or False,
+                    'position_id': new_fp
+                })
+            for acc in position.account_ids:
+                obj_ac_fp.create(cr, uid, {
+                    'account_src_id': acc_template_ref[acc.account_src_id.id],
+                    'account_dest_id': acc_template_ref[acc.account_dest_id.id],
+                    'position_id': new_fp
+                })
         return {}
 
 account_fiscal_position_template()
