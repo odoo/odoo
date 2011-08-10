@@ -78,14 +78,14 @@
             <field name="user_type" ref="account_type_view"/>
         </record>
 
-        <record id="a7000" model="account.account.template">
+        <record id="a_sales_india" model="account.account.template">
             <field name="name">Sales in India</field>
             <field name="code">7000</field>
             <field name="type">other</field>
             <field name="user_type" ref="account_type_view"/>
             <field ref="chart_a0" name="parent_id"/>
         </record>
-        <record id="a7001" model="account.account.template">
+        <record id="a_sales_member_cee" model="account.account.template">
             <field name="name">Sales in the member countries of the C.E.E.</field>
             <field name="code">7001</field>
             <field name="type">other</field>
@@ -94,18 +94,18 @@
         </record>
 
         <!-- Tax Code template for A-->
-        <record id="atax0" model="account.tax.code.template">
+        <record id="acc_tax_code_root_A" model="account.tax.code.template">
             <field name="name">Tax Template Root A</field>
         </record>
 
-        <record id="atax1" model="account.tax.code.template">
+        <record id="acc_tax_code_001_A" model="account.tax.code.template">
             <field name="name">Tax 001 A</field>
-            <field name="parent_id" ref="atax0"/>
+            <field name="parent_id" ref="acc_tax_code_root_A"/>
         </record>
 
-        <record id="atax2" model="account.tax.code.template">
+        <record id="acc_tax_code_002_A" model="account.tax.code.template">
             <field name="name">Tax 002 A</field>
-            <field name="parent_id" ref="atax0"/>
+            <field name="parent_id" ref="acc_tax_code_root_A"/>
         </record>
 
 
@@ -151,20 +151,20 @@
         <record id="account_chart_template_a" model="account.chart.template">
             <field name="name">Demo Chart A</field>
             <field name="account_root_id" ref="chart_a_root"/>
-            <field name="tax_code_root_id" ref="atax0"/>
+            <field name="tax_code_root_id" ref="acc_tax_code_root_A"/>
             <field name="bank_account_view_id" ref="chart_a2"/>
         </record>
 
         <record id="account_chart_template_b" model="account.chart.template">
             <field name="name">Demo Chart B</field>
             <field name="account_root_id" ref="chart_a_root"/>
-            <field name="tax_code_root_id" ref="atax0"/>
+            <field name="tax_code_root_id" ref="acc_tax_code_root_A"/>
             <field name="bank_account_view_id" ref="chart_a2"/>
             <field name="parent_id" ref="account_chart_template_a"/>
         </record>
 
         <!-- Tax for template A-->
-        <record id="attn_VAT-OUT-21-S" model="account.tax.template">
+        <record id="TAX-VAT-OUT-21-S" model="account.tax.template">
             <field name="sequence">10</field>
             <field name="description">VAT-OUT-21-S</field>
             <field name="name">VAT 21%</field>
@@ -173,7 +173,7 @@
             <field name="chart_template_id" ref="account_chart_template_a"/>
         </record>
 
-        <record id="attn_VAT-OUT-00-EU-S" model="account.tax.template">
+        <record id="TAX-VAT-OUT-00-EU-S" model="account.tax.template">
             <field name="sequence">60</field>
             <field name="description">VAT-OUT-00-EU-S</field>
             <field name="name">Services EU</field>
@@ -183,7 +183,7 @@
         </record>
 
         <!-- Tax for template B-->
-        <record id="attn_VAT-OUT-4-S" model="account.tax.template">
+        <record id="TAX-VAT-OUT-4-S" model="account.tax.template">
             <field name="sequence">12</field>
             <field name="description">VAT-OUT-4-S</field>
             <field name="name">VAT 4%</field>
@@ -192,7 +192,7 @@
             <field name="chart_template_id" ref="account_chart_template_b"/>
         </record>
 
-        <record id="attn_VAT-OUT-12-S" model="account.tax.template">
+        <record id="TAX-VAT-OUT-12-S" model="account.tax.template">
             <field name="sequence">12</field>
             <field name="description">VAT-OUT-12-S</field>
             <field name="name">VAT 12%</field>
@@ -202,31 +202,31 @@
         </record>
 
         <!-- account.fiscal.position.template -->
-        <record id="afptn_national" model="account.fiscal.position.template">
+        <record id="fiscal_temp_national" model="account.fiscal.position.template">
             <field name="name">National Regime</field>
             <field name="chart_template_id" ref="account_chart_template_a"/>
         </record>
 
-        <record id="afptn_intracom" model="account.fiscal.position.template">
+        <record id="fiscal_temp_intracom" model="account.fiscal.position.template">
             <field name="name">Intra Community Regime </field>
             <field name="chart_template_id" ref="account_chart_template_a"/>
         </record>
 
-        <record id="afptn_extracom" model="account.fiscal.position.template">
+        <record id="fiscal_temp_extracom" model="account.fiscal.position.template">
             <field name="name">Extra Community Regime</field>
             <field name="chart_template_id" ref="account_chart_template_b"/>
         </record>
 
         <record id="afpttn_intracom_7" model="account.fiscal.position.tax.template">
-            <field name="position_id" ref="afptn_intracom"/>
-            <field name="tax_src_id" ref="attn_VAT-OUT-21-S"/>
-            <field name="tax_dest_id" ref="attn_VAT-OUT-00-EU-S"/>
+            <field name="position_id" ref="fiscal_temp_intracom"/>
+            <field name="tax_src_id" ref="TAX-VAT-OUT-21-S"/>
+            <field name="tax_dest_id" ref="TAX-VAT-OUT-00-EU-S"/>
         </record>
 
     <record id="fiscal_position_account_template_3" model="account.fiscal.position.account.template">
-            <field name="position_id" ref="afptn_intracom"  />
-            <field name="account_src_id" ref="a7000" />
-            <field name="account_dest_id" ref="a7001" />
+            <field name="position_id" ref="fiscal_temp_intracom"  />
+            <field name="account_src_id" ref="a_sales_india" />
+            <field name="account_dest_id" ref="a_sales_member_cee" />
     </record>
 
   </data>
