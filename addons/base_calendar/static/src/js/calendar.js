@@ -327,15 +327,17 @@ openerp.base_calendar.CalendarView = openerp.base.View.extend({
     },
     do_search: function(domains, contexts, groupbys) {
         var self = this;
-        this.rpc('/base/session/eval_domain_and_context', {
-            domains: domains,
-            contexts: contexts,
-            group_by_seq: groupbys
-        }, function (results) {
-            // TODO: handle non-empty results.group_by with read_group
-            self.dataset.context = self.context = results.context;
-            self.dataset.domain = self.domain = results.domain;
-            self.dataset.read_slice(_.keys(self.fields), 0, self.limit, self.on_events_loaded);
+        $.when(this.has_been_loaded).then(function() {
+            self.rpc('/base/session/eval_domain_and_context', {
+                domains: domains,
+                contexts: contexts,
+                group_by_seq: groupbys
+            }, function (results) {
+                // TODO: handle non-empty results.group_by with read_group
+                self.dataset.context = self.context = results.context;
+                self.dataset.domain = self.domain = results.domain;
+                self.dataset.read_slice(_.keys(self.fields), 0, self.limit, self.on_events_loaded);
+            });
         });
     },
     do_show: function () {
