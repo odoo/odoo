@@ -115,11 +115,18 @@ def is_leaf(element, internal=False):
        and (((not internal) and element[1] in OPS + ('<>',)) \
             or (internal and element[1] in INTERNAL_OPS + ('<>',)))
 
-def normalize_operator(operator):
+def normalize_leaf(left, operator, right):
+    original = operator
     operator = operator.lower()
     if operator == '<>':
         operator = '!='
-    return operator
+    if isinstance(right, bool) and operator in ('in', 'not in'):
+        _logger.warning("The domain term '%s' should use the '=' or '!=' operator." % ((left, original, right),))
+        operator = '=' if operator == 'in' else '!='
+    if isinstance(right, (list, tuple)) and operator in ('=', '!='):
+        _logger.warning("The domain term '%s' should use the 'in' or 'not in' operator." % ((left, original, right),))
+        operator = 'in' if operator == '=' else 'not in'
+    return left, operator, right
 
 def select_from_where(cr, s, f, w, ids, op):
     # todo: merge into parent query as sub-query
@@ -212,8 +219,10 @@ class expression(object):
             if not is_leaf(e):
                 raise ValueError('Bad domain expression: %r, %r is not a valid term.' % (exp, e))
 
+            # normalize the leaf's operator
+            e = normalize_leaf(*e)
+            self.__exp[i] = e
             left, operator, right = e
-            operator = normalize_operator(operator)
 
             working_table = table # The table containing the field (the name provided in the left operand)
             fargs = left.split('.', 1)
@@ -246,18 +255,12 @@ class expression(object):
             if len(fargs) > 1:
                 if field._type == 'many2one':
                     right = field_obj.search(cr, uid, [(fargs[1], operator, right)], context=context)
-                    if right == []:
-                        self.__exp[i] = FALSE_LEAF
-                    else:
-                        self.__exp[i] = (fargs[0], 'in', right)
+                    self.__exp[i] = (fargs[0], 'in', right)
                 # Making search easier when there is a left operand as field.o2m or field.m2m
                 if field._type in ['many2many', 'one2many']:
                     right = field_obj.search(cr, uid, [(fargs[1], operator, right)], context=context)
                     right1 = table.search(cr, uid, [(fargs[0], 'in', right)], context=context)
-                    if right1 == []:
-                        self.__exp[i] = FALSE_LEAF
-                    else:
-                        self.__exp[i] = ('id', 'in', right1)
+                    self.__exp[i] = ('id', 'in', right1)
 
                 if not isinstance(field, fields.property):
                     continue
@@ -317,7 +320,7 @@ class expression(object):
 
                     if call_null:
                         o2m_op = 'in' if operator in NEGATIVE_OPS else 'not in'
-                        self.__exp[i] = ('id', o2m_op, select_distinct_from_where_not_null(cr, field._fields_id, field_obj._table) or [0])
+                        self.__exp[i] = ('id', o2m_op, select_distinct_from_where_not_null(cr, field._fields_id, field_obj._table))
 
             elif field._type == 'many2many':
                 #FIXME
@@ -357,7 +360,7 @@ class expression(object):
 
                     if call_null_m2m:
                         m2m_op = 'in' if operator in NEGATIVE_OPS else 'not in'
-                        self.__exp[i] = ('id', m2m_op, select_distinct_from_where_not_null(cr, field._id1, field._rel) or [0])
+                        self.__exp[i] = ('id', m2m_op, select_distinct_from_where_not_null(cr, field._id1, field._rel))
 
             elif field._type == 'many2one':
                 if operator == 'child_of':
@@ -455,7 +458,6 @@ class expression(object):
 
     def __leaf_to_sql(self, leaf, table):
         left, operator, right = leaf
-        operator = normalize_operator(operator)
 
         if leaf == TRUE_LEAF:
             query = 'TRUE'
