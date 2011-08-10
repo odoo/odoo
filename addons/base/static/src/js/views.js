@@ -4,89 +4,15 @@
 
 openerp.base.views = function(openerp) {
 
+/**
+ * Registry for all the client actions key: tag value: widget
+ */
 openerp.base.client_actions = new openerp.base.Registry();
-openerp.base.ActionManager = openerp.base.Widget.extend({
-    init: function(parent, element_id) {
-        this._super(parent, element_id);
-        this.viewmanager = null;
-        this.current_dialog = null;
-        // TODO remove this and use do_action() of Widget.
-        this.session.action_manager = this;
-    },
-    do_action: function(action, on_closed) {
-        action.flags = _.extend({
-            new_window : false,
-            views_switcher : action.target != 'new',
-            search_view : action.target != 'new',
-            action_buttons : action.target != 'new',
-            sidebar : action.target != 'new',
-            pager : action.target != 'new'
-        }, action.flags || {});
-        var type = action.type.replace(/\./g,'_');
-        // instantiate the right controllers by understanding the action
-        if (!(type in this)) {
-            console.log("Action manager can't handle action of type " + action.type, action);
-            return;
-        }
-        this[type](action, on_closed);
-    },
-    ir_actions_act_window: function (action, on_closed) {
-        if (!action.target && this.current_dialog) {
-            action.flags.new_window = true;
-        }
-        if (action.target == 'new') {
-            var dialog = this.current_dialog = new openerp.base.ActionDialog(this, {
-                title: action.name,
-                width: '50%'
-            });
-            if (on_closed) {
-                dialog.close_callback = on_closed;
-            }
-            dialog.start(false);
-            var viewmanager = dialog.viewmanager = new openerp.base.ViewManagerAction(this, dialog.element_id, action);
-            viewmanager.start();
-            dialog.open();
-        } else if (action.flags.new_window) {
-            action.flags.new_window = false;
-            this.rpc("/base/session/save_session_action", { the_action : action}, function(key) {
-                var url = window.location.protocol + "//" + window.location.host +
-                        window.location.pathname + "?" + jQuery.param({ s_action : "" + key });
-                window.open(url);
-                if (on_closed) {
-                    on_closed();
-                }
-            });
-        } else {
-            if (this.viewmanager) {
-                this.viewmanager.stop();
-            }
-            this.viewmanager = new openerp.base.ViewManagerAction(this, this.element_id, action);
-            this.viewmanager.start();
-        }
-    },
-    ir_actions_act_window_close: function (action, on_closed) {
-        this.close_dialog();
-    },
-    ir_actions_server: function (action, on_closed) {
-        var self = this;
-        this.rpc('/base/action/run', {
-            action_id: action.id,
-            context: {active_id: 66, active_ids: [66], active_model: 'ir.ui.menu'}
-        }).then(function (action) {
-            self.do_action(action, on_closed)
-        });
-    },
-    ir_actions_client: function (action) {
-        var Handler = openerp.base.client_actions.get_object(action.tag);
-        new Handler(this, this.element_id, action.params).start();
-    },
-    close_dialog: function () {
-        if (this.current_dialog) {
-            this.current_dialog.stop();
-            this.current_dialog = null;
-        }
-    }
-});
+
+/**
+ * Registry for all the main views
+ */
+openerp.base.views = new openerp.base.Registry();
 
 openerp.base.ActionDialog = openerp.base.Dialog.extend({
     identifier_prefix: 'action_dialog',
@@ -104,18 +30,105 @@ openerp.base.ActionDialog = openerp.base.Dialog.extend({
     }
 });
 
+openerp.base.ActionManager = openerp.base.Widget.extend({
+    identifier_prefix: "actionmanager",
+    init: function(parent) {
+        this._super(parent);
+        this.inner_viewmanager = null;
+        this.dialog = null;
+        this.dialog_viewmanager = null;
+        this.client_widget = null;
+        // TODO remove this and use do_action() of Widget.
+        this.session.action_manager = this;
+    },
+    render: function() {
+        return "<div id='"+this.element_id+"'></div>";
+    },
+    close_dialog: function () {
+        if (this.dialog) {
+            this.dialog_viewmanager.stop();
+            this.dialog.stop();
+            this.dialog = null;
+        }
+    },
+    do_action: function(action, on_closed) {
+        console.log("action",action);
+        var type = action.type.replace(/\./g,'_');
+        var popup = action.target === 'new';
+        action.flags = _.extend({
+            popup: popup,
+            views_switcher : !popup,
+            search_view : !popup,
+            action_buttons : !popup,
+            sidebar : !popup,
+            pager : !popup
+        }, action.flags || {});
+        if (!(type in this)) {
+            console.log("Action manager can't handle action of type " + action.type, action);
+            return;
+        }
+        this[type](action, on_closed);
+    },
+    ir_actions_act_window: function (action, on_closed) {
+        if (action.flags.popup) {
+            if (this.dialog == null) {
+                this.dialog = new openerp.base.ActionDialog(this, { title: action.name, width: '80%' });
+                this.dialog.close_callback = on_closed;
+                this.dialog.start(false);
+                this.dialog_viewmanager = new openerp.base.ViewManagerAction(this, action);
+                this.dialog_viewmanager.appendTo($(dialog.element_id));
+                this.dialog.open();
+            } else {
+                this.dialog_viewmanager.stop();
+                this.dialog_viewmanager = new openerp.base.ViewManagerAction(this, action);
+                this.dialog_viewmanager.appendTo($(dialog.element_id));
+            }
+        } else  {
+            this.close_dialog();
+            if(this.inner_viewmanager)
+                this.inner_viewmanager.stop();
+            this.inner_viewmanager = new openerp.base.ViewManagerAction(this, action);
+            this.inner_viewmanager.appendTo(this.$element);
+        }
+        /* new window code
+            this.rpc("/base/session/save_session_action", { the_action : action}, function(key) {
+                var url = window.location.protocol + "//" + window.location.host + window.location.pathname + "?" + jQuery.param({ s_action : "" + key });
+                window.open(url,'_blank');
+            });
+        */
+    },
+    ir_actions_act_window_close: function (action, on_closed) {
+        this.close_dialog();
+    },
+    ir_actions_server: function (action, on_closed) {
+        var self = this;
+        this.rpc('/base/action/run', {
+            action_id: action.id,
+            context: {active_id: 66, active_ids: [66], active_model: 'ir.ui.menu'}
+        }).then(function (action) {
+            self.do_action(action, on_closed)
+        });
+    },
+    ir_actions_client: function (action) {
+        this.client_widget = openerp.base.client_actions.get_object(action.tag);
+        new this.client_widget(this, this.element_id, action.params).start();
+    },
+});
+
 openerp.base.ViewManager =  openerp.base.Widget.extend({
-    init: function(parent, element_id, dataset, views) {
-        this._super(parent, element_id);
+    init: function(parent, dataset, views) {
+        this._super(parent);
         this.model = dataset.model;
         this.dataset = dataset;
         this.searchview = null;
         this.active_view = null;
-        this.views_src = _.map(views, function(x)
-            {return x instanceof Array? {view_id: x[0], view_type: x[1]} : x;});
+        this.views_src = _.map(views, function(x) {return x instanceof Array? {view_id: x[0], view_type: x[1]} : x;});
         this.views = {};
         this.flags = this.flags || {};
         this.registry = openerp.base.views;
+    },
+    render: function() {
+        return QWeb.render("ViewManager", {"prefix": this.element_id, views: this.views_src})
     },
     /**
      * @returns {jQuery.Deferred} initial view loading promise
@@ -124,7 +137,6 @@ openerp.base.ViewManager =  openerp.base.Widget.extend({
         this._super();
         var self = this;
         this.dataset.start();
-        this.$element.html(QWeb.render("ViewManager", {"prefix": this.element_id, views: this.views_src}));
         this.$element.find('.oe_vm_switch button').click(function() {
             self.on_mode_switch($(this).data('view-type'));
         });
@@ -145,8 +157,6 @@ openerp.base.ViewManager =  openerp.base.Widget.extend({
         }
         // switch to the first one in sequence
         return this.on_mode_switch(this.views_src[0].view_type);
-    },
-    stop: function() {
     },
     /**
      * Asks the view manager to switch visualization mode.
@@ -283,10 +293,8 @@ openerp.base.NullViewManager = openerp.base.generate_null_object_class(openerp.b
     }
 });
 
-// TODO Will move to action Manager
 openerp.base.ViewManagerAction = openerp.base.ViewManager.extend({
-    init: function(parent, element_id, action) {
-        this.session = parent.session;
+    init: function(parent, action) {
         var dataset;
         if (!action.res_id) {
             dataset = new openerp.base.DataSetSearch(this, action.res_model, action.context || null, action.domain || null);
@@ -297,7 +305,7 @@ openerp.base.ViewManagerAction = openerp.base.ViewManager.extend({
                 dataset.context = action.context;
             }
         }
-        this._super(parent, element_id, dataset, action.views);
+        this._super(parent, dataset, action.views);
         this.action = action;
         this.flags = this.action.flags || {};
         if (action.res_model == 'board.board' && action.views.length == 1 && action.views) {
@@ -329,10 +337,6 @@ openerp.base.ViewManagerAction = openerp.base.ViewManager.extend({
                     .then(this.searchview.do_search);
             }
         }
-    },
-    stop: function() {
-        // should be replaced by automatic destruction implemented in Widget
-        this._super();
     },
     /**
      * adds action domain to the search domains
@@ -578,11 +582,6 @@ openerp.base.View = openerp.base.Widget.extend({
     on_sidebar_view_log: function() {
     }
 });
-
-/**
- * Registry for all the main views
- */
-openerp.base.views = new openerp.base.Registry();
 
 openerp.base.json_node_to_xml = function(node, single_quote, indent) {
     // For debugging purpose, this function will convert a json node back to xml

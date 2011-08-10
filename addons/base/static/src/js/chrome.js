@@ -978,7 +978,7 @@ openerp.base.WebClient = openerp.base.Widget.extend({
 
         this.menu = new openerp.base.Menu(this, "oe_menu", "oe_secondary_menu");
         this.menu.on_action.add(this.on_menu_action);
-        
+
     },
     start: function() {
         this.session.start();
@@ -988,8 +988,8 @@ openerp.base.WebClient = openerp.base.Widget.extend({
         this.notification.notify("OpenERP Client", "The openerp client has been initialized.");
     },
     on_logged: function() {
-        this.action_manager =  new openerp.base.ActionManager(this, "oe_app");
-        this.action_manager.start();
+        this.action_manager = new openerp.base.ActionManager(this);
+        this.action_manager.appendTo($("#oe_app"));
 
         // if using saved actions, load the action and give it to action manager
         var parameters = jQuery.deparam(jQuery.param.querystring());
@@ -1029,7 +1029,8 @@ openerp.base.WebClient = openerp.base.Widget.extend({
             self.execute_home_action(home_action[0], ds);
         })
     },
-    default_home: function () { },
+    default_home: function () { 
+    },
     /**
      * Bundles the execution of the home action
      *
