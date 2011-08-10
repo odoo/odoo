@@ -74,15 +74,16 @@ openerp.base.parse_time = function(str) {
 };
 
 /*
- * Just a simple function to add some '0' if an integer it too small.
+ * Left-pad provided arg 1 with zeroes until reaching size provided by second
+ * argument.
+ *
+ * @param {Number|String} str value to pad
+ * @param {Number} size size to reach on the final padded value
+ * @returns {String} padded string
  */
-var fts = function(str, size) {
+var zpad = function(str, size) {
     str = "" + str;
-    var to_add = "";
-    _.each(_.range(size - str.length), function() {
-        to_add = to_add + "0";
-    });
-    return to_add + str;
+    return new Array(size - str.length).join('0') + str;
 };
 
 /**
@@ -99,9 +100,9 @@ openerp.base.format_datetime = function(obj) {
     if (!obj) {
         return false;
     }
-    return fts(obj.getUTCFullYear(),4) + "-" + fts(obj.getUTCMonth() + 1,2) + "-"
-        + fts(obj.getUTCDate(),2) + " " + fts(obj.getUTCHours(),2) + ":"
-        + fts(obj.getUTCMinutes(),2) + ":" + fts(obj.getUTCSeconds(),2);
+    return zpad(obj.getUTCFullYear(),4) + "-" + zpad(obj.getUTCMonth() + 1,2) + "-"
+         + zpad(obj.getUTCDate(),2) + " " + zpad(obj.getUTCHours(),2) + ":"
+         + zpad(obj.getUTCMinutes(),2) + ":" + zpad(obj.getUTCSeconds(),2);
 };
 
 /**
@@ -115,8 +116,8 @@ openerp.base.format_date = function(obj) {
     if (!obj) {
         return false;
     }
-    return fts(obj.getFullYear(),4) + "-" + fts(obj.getMonth() + 1,2) + "-"
-        + fts(obj.getDate(),2);
+    return zpad(obj.getFullYear(),4) + "-" + zpad(obj.getMonth() + 1,2) + "-"
+         + zpad(obj.getDate(),2);
 };
 
 /**
@@ -130,8 +131,8 @@ openerp.base.format_time = function(obj) {
     if (!obj) {
         return false;
     }
-    return fts(obj.getHours(),2) + ":" + fts(obj.getMinutes(),2) + ":"
-        + fts(obj.getSeconds(),2);
+    return zpad(obj.getHours(),2) + ":" + zpad(obj.getMinutes(),2) + ":"
+         + zpad(obj.getSeconds(),2);
 };
 
 /**
