@@ -31,6 +31,7 @@ NOT_OPERATOR = '!'
 OR_OPERATOR = '|'
 AND_OPERATOR = '&'
 
+# This doesn't contain <> as it is simpified to != by normalize_operator().
 OPS = ('=', '!=', '<=', '<', '>', '>=', '=?', '=like', '=ilike', 'like', 'not like', 'ilike', 'not ilike', 'in', 'not in', 'child_of')
 NEGATIVE_OPS = ('!=', 'not like', 'not ilike', 'not in')
 
@@ -149,10 +150,6 @@ class expression(object):
     """
 
     def __init__(self, cr, uid, exp, table, context):
-        # check if the expression is valid
-        for x in exp:
-            if not (is_operator(x) or is_leaf(x)):
-                raise ValueError('Bad domain expression: %r, %r is not a valid operator or a valid term.' % (exp, x))
         self.__field_tables = {}  # used to store the table to use for the sql generation. key = index of the leaf
         self.__all_tables = set()
         self.__joins = []
@@ -167,6 +164,11 @@ class expression(object):
 
     def parse(self, cr, uid, exp, table, context):
         """ transform the leafs of the expression """
+        # check if the expression is valid
+        for x in exp:
+            if not (is_operator(x) or is_leaf(x)):
+                raise ValueError('Bad domain expression: %r, %r is not a valid operator or a valid term.' % (exp, x))
+
         self.__exp = exp
 
         def child_of_domain(left, right, table, parent=None, prefix=''):
