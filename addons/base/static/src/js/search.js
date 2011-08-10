@@ -624,39 +624,6 @@ openerp.base.search.CharField = openerp.base.search.Field.extend( /** @lends ope
         return this.$element.val();
     }
 });
-openerp.base.search.BooleanField = openerp.base.search.Field.extend({
-    template: 'SearchView.field.selection',
-    init: function () {
-        this._super.apply(this, arguments);
-        this.attrs.selection = [
-            ['true', 'Yes'],
-            ['false', 'No']
-        ];
-    },
-    /**
-     * Search defaults likely to be boolean values (for a boolean field).
-     *
-     * In the HTML, we only get strings, and our strings here are
-     * <code>'true'</code> and <code>'false'</code>, so ensure we get only
-     * those by truth-testing the default value.
-     *
-     * @param {Object} defaults default values for this search view
-     */
-    render: function (defaults) {
-        var name = this.attrs.name;
-        if (name in defaults) {
-            defaults[name] = defaults[name] ? "true" : "false";
-        }
-        return this._super(defaults);
-    },
-    get_value: function () {
-        switch (this.$element.val()) {
-            case 'false': return false;
-            case 'true': return true;
-            default: return null;
-        }
-    }
-});
 openerp.base.search.NumberField = openerp.base.search.Field.extend(/** @lends openerp.base.search.NumberField# */{
     get_value: function () {
         if (!this.$element.val()) {
@@ -693,10 +660,51 @@ openerp.base.search.FloatField = openerp.base.search.NumberField.extend(/** @len
         return parseFloat(value);
     }
 });
-openerp.base.search.SelectionField = openerp.base.search.Field.extend({
+/**
+ * @class
+ * @extends openerp.base.search.Field
+ */
+openerp.base.search.SelectionField = openerp.base.search.Field.extend(/** @lends openerp.base.search.SelectionField# */{
     template: 'SearchView.field.selection',
     get_value: function () {
         return this.$element.val();
+    }
+});
+openerp.base.search.BooleanField = openerp.base.search.SelectionField.extend(/** @lends openerp.base.search.BooleanField# */{
+    /**
+     * @constructs
+     * @extends openerp.base.search.BooleanField
+     */
+    init: function () {
+        this._super.apply(this, arguments);
+        this.attrs.selection = [
+            ['true', 'Yes'],
+            ['false', 'No']
+        ];
+    },
+    /**
+     * Search defaults likely to be boolean values (for a boolean field).
+     *
+     * In the HTML, we only want/get strings, and our strings here are ``true``
+     * and ``false``, so ensure we use precisely those by truth-testing the
+     * default value (iif there is one in the view's defaults).
+     *
+     * @param {Object} defaults default values for this search view
+     * @returns {String} rendered boolean field
+     */
+    render: function (defaults) {
+        var name = this.attrs.name;
+        if (name in defaults) {
+            defaults[name] = defaults[name] ? "true" : "false";
+        }
+        return this._super(defaults);
+    },
+    get_value: function () {
+        switch (this.$element.val()) {
+            case 'false': return false;
+            case 'true': return true;
+            default: return null;
+        }
     }
 });
 openerp.base.search.DateField = openerp.base.search.Field.extend( /** @lends openerp.base.search.DateField# */{
