@@ -283,7 +283,7 @@ openerp.base.FormView = openerp.base.View.extend( /** @lends openerp.base.FormVi
             });
         }
         if (result.domain) {
-            // TODO: 
+            // TODO:
         }
         this.ready = true;
     },
@@ -1674,7 +1674,7 @@ openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
             self.save_form_view();
         });
         setTimeout(function () {
-            self.viewmanager.appendTo(this.$element);
+            self.viewmanager.appendTo(self.$element);
         }, 0);
     },
     reload_current_view: function() {
@@ -1824,7 +1824,7 @@ openerp.base.form.One2ManyDataSet = openerp.base.BufferedDataSet.extend({
 });
 
 openerp.base.form.One2ManyFormView = openerp.base.FormView.extend({
-    
+
 });
 
 openerp.base.form.One2ManyListView = openerp.base.ListView.extend({
