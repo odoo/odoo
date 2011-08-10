@@ -727,9 +727,6 @@ openerp.base.search.DateField = openerp.base.search.Field.extend( /** @lends ope
 openerp.base.search.DateTimeField = openerp.base.search.DateField.extend({
     // TODO: time?
 });
-openerp.base.search.OneToManyField = openerp.base.search.CharField.extend({
-    // TODO: .relation, .context, .domain
-});
 openerp.base.search.ManyToOneField = openerp.base.search.CharField.extend({
     // TODO: @widget
     // TODO: .selection, .context, .domain
@@ -799,9 +796,6 @@ openerp.base.search.ManyToOneField = openerp.base.search.CharField.extend({
         }
         return this._super();
     }
-});
-openerp.base.search.ManyToManyField = openerp.base.search.CharField.extend({
-    // TODO: .related_columns (Array), .context, .domain
 });
 
 openerp.base.search.ExtendedSearch = openerp.base.OldWidget.extend({
