@@ -547,14 +547,9 @@
     </tfoot>
 </table>
 <t t-name="ListView.rows" t-foreach="rows" t-as="row">
-    <t t-call="ListView.row">
-        <t t-set="style" t-value="null"/>
-        <t-if test="row.color">
-            <t t-set="style" t-value="'color: ' + row.color"/>
-        </t-if>
-    </t>
+    <t t-call="ListView.row"/>
 </t>
-<tr t-name="ListView.row" t-att-style="style" t-att-class="row_parity"
+<tr t-name="ListView.row" t-att-class="row_parity"
     t-att-data-index="row_index">
     <t t-foreach="columns" t-as="column">
         <td t-if="column.meta">
