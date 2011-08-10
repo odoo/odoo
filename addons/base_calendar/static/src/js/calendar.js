@@ -16,7 +16,11 @@ openerp.base_calendar.CalendarView = openerp.base.View.extend({
         this.domain = this.dataset.domain || [];
         this.context = this.dataset.context || {};
         this.has_been_loaded = $.Deferred();
-        this.options = options || {};
+        this.creating_event_id = null;
+        if (this.options.action_views_ids.form) {
+            this.form_dialog = new openerp.base_calendar.CalendarFormDialog(this, {}, this.options.action_views_ids.form, dataset);
+            this.form_dialog.start();
+        }
     },
     start: function() {
         this.rpc("/base_calendar/calendarview/load", {"model": this.model, "view_id": this.view_id, 'toolbar': true}, this.on_loaded);
@@ -100,6 +104,7 @@ openerp.base_calendar.CalendarView = openerp.base.View.extend({
         scheduler.attachEvent('onEventAdded', this.do_create_event);
         scheduler.attachEvent('onEventDeleted', this.do_delete_event);
         scheduler.attachEvent('onEventChanged', this.do_save_event);
+        scheduler.attachEvent('onDblClick', this.do_edit_event);
 
         this.mini_calendar = scheduler.renderCalendar({
             container: this.sidebar.navigator.element_id,
@@ -115,6 +120,9 @@ openerp.base_calendar.CalendarView = openerp.base.View.extend({
     },
     refresh_minical: function() {
         scheduler.updateCalendar(this.mini_calendar);
+    },
+    reload_event: function(id) {
+        this.dataset.read_ids([id], _.keys(this.fields), this.on_events_loaded);
     },
     load_scheduler: function() {
         var self = this;
@@ -134,7 +142,6 @@ openerp.base_calendar.CalendarView = openerp.base.View.extend({
     },
     on_events_loaded: function(events) {
         var self = this;
-        scheduler.clearAll();
 
         //To parse Events we have to convert date Format
         var res_events = [],
@@ -262,8 +269,10 @@ openerp.base_calendar.CalendarView = openerp.base.View.extend({
             scheduler.changeEventId(event_id, id);
             self.refresh_minical();
         }, function(r, event) {
-            // TODO: open form view
-            self.notification.warn(self.name, "Could not create event");
+            self.creating_event_id = event_id;
+            self.form_dialog.form.on_record_loaded(data);
+            self.form_dialog.open();
+            event.preventDefault();
         });
     },
     do_save_event: function(event_id, event_obj) {
@@ -274,12 +283,24 @@ openerp.base_calendar.CalendarView = openerp.base.View.extend({
         });
     },
     do_delete_event: function(event_id, event_obj) {
+        var self = this;
         // dhtmlx sends this event even when it does not exist in openerp.
         // Eg: use cancel in dhtmlx new event dialog
         if (_.indexOf(this.dataset.ids, parseInt(event_id, 10)) > -1) {
             this.dataset.unlink(parseInt(event_id, 10), function() {
                 self.refresh_minical();
             });
+        }
+    },
+    do_edit_event: function(event_id) {
+        event_id = parseInt(event_id, 10);
+        var index = _.indexOf(this.dataset.ids, event_id);
+        if (index > -1) {
+            this.dataset.index = index;
+            this.form_dialog.form.do_show();
+            this.form_dialog.open();
+        } else {
+            this.notification.warn("Edit event", "Could not find event #" + event_id);
         }
     },
     get_event_data: function(event_obj) {
@@ -378,6 +399,40 @@ openerp.base_calendar.CalendarView = openerp.base.View.extend({
         //Default_get
         if (!event_id) {
             this.dataset.index = null;
+        }
+    }
+});
+
+openerp.base_calendar.CalendarFormDialog = openerp.base.Dialog.extend({
+    init: function(view, options, view_id, dataset) {
+        this._super(view, options);
+        this.dataset = dataset;
+        this.view_id = view_id;
+        this.view = view;
+    },
+    start: function() {
+        this._super(false);
+        this.form = new openerp.base.FormView(this, this.element_id, this.dataset, this.view_id, {
+            sidebar: false,
+            pager: false
+        });
+        this.form.start();
+        this.form.on_created.add_last(this.on_form_dialog_saved);
+        this.form.on_saved.add_last(this.on_form_dialog_saved);
+    },
+    on_form_dialog_saved: function() {
+        var id = this.dataset.ids[this.dataset.index];
+        if (this.view.creating_event_id) {
+            scheduler.changeEventId(this.view.creating_event_id, id);
+            this.view.creating_event_id = null;
+        }
+        this.view.reload_event(id);
+        this.close();
+    },
+    on_close: function() {
+        if (this.view.creating_event_id) {
+            scheduler.deleteEvent(this.view.creating_event_id);
+            this.view.creating_event_id = null;
         }
     }
 });

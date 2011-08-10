@@ -1648,7 +1648,7 @@ openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
         });
         this.views = views;
 
-        this.viewmanager = new openerp.base.ViewManager(this, this.element_id, this.dataset, views);
+        this.viewmanager = new openerp.base.ViewManager(this, this.dataset, views);
         this.viewmanager.registry = openerp.base.views.clone({
             list: 'openerp.base.form.One2ManyListView',
             form: 'openerp.base.form.One2ManyFormView'
@@ -1674,7 +1674,7 @@ openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
             self.save_form_view();
         });
         setTimeout(function () {
-            self.viewmanager.start();
+            self.viewmanager.appendTo(this.$element);
         }, 0);
     },
     reload_current_view: function() {

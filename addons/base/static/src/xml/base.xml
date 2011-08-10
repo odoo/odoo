@@ -42,7 +42,6 @@
         </td>
         <td valign="top">
             <div id="oe_app" class="oe-application">
-                <div style="width: 100%;">&amp;nbsp;</div>
             </div>
         </td>
     </tr>
@@ -449,6 +448,41 @@
         </ul>
     </div>
 </t>
+<t t-name="TreeView">
+    <h2 class="oe_view_title"><t t-esc="title"/></h2>
+    <select t-if="toolbar" style="width: 30%">
+    </select>
+    <table class="oe-treeview-table">
+        <thead>
+            <tr>
+                <th t-foreach="fields_view" t-as="field"
+                    t-if="!field.attrs.modifiers.tree_invisible"
+                    class="treeview-header">
+                    <t t-esc="fields[field.attrs.name].string" />
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</t>
+<tr t-name="TreeView.rows"
+        t-foreach="records" t-as="record"
+        t-att-id="'treerow_' + record.id"
+        t-att-data-id="record.id" t-att-data-level="level + 1">
+    <t t-set="children" t-value="record[children_field]"/>
+    <t t-set="has_children" t-value="children and children.length"/>
+
+    <td t-foreach="fields_view" t-as="field"
+        t-if="!field.attrs.modifiers.tree_invisible"
+        t-att-data-id="record.id"
+        t-att-style="!field_index ? 'background-position: ' + 19*level + 'px; padding-left: ' + 19*level + 'px' : undefined"
+        t-att-class="!field_index and has_children ? 'treeview-tr' : 'treeview-td'">
+        <span t-if="!field.attrs.modifiers.invisible">
+            <t t-esc="render(record[field.attrs.name], fields[field.attrs.name])" />
+        </span>
+    </td>
+</tr>
 <table t-name="ListView" class="oe-listview-content">
     <t t-set="columns_count" t-value="visible_columns.length + (options.selectable ? 1 : 0) + (options.deletable ? 1 : 0)"/>
     <thead class="ui-widget-header">

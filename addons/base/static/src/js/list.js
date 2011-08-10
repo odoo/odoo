@@ -1,63 +1,5 @@
 openerp.base.list = function (openerp) {
 openerp.base.views.add('list', 'openerp.base.ListView');
-openerp.base.list = {
-    /**
-     * Formats the rendring of a given value based on its field type
-     *
-     * @param {Object} row_data record whose values should be displayed in the cell
-     * @param {Object} column column descriptor
-     * @param {"button"|"field"} column.tag base control type
-     * @param {String} column.type widget type for a field control
-     * @param {String} [column.string] button label
-     * @param {String} [column.icon] button icon
-     * @param {String} [value_if_empty=''] what to display if the field's value is ``false``
-     */
-    render_cell: function (row_data, column, value_if_empty) {
-        var attrs = column.modifiers_for(row_data);
-        if (attrs.invisible) { return ''; }
-        if (column.tag === 'button') {
-            return [
-                '<button type="button" title="', column.string || '', '">',
-                    '<img src="/base/static/src/img/icons/', column.icon, '.png"',
-                        ' alt="', column.string || '', '"/>',
-                '</button>'
-            ].join('')
-        }
-
-        var value = row_data[column.id].value;
-
-        // If NaN value, display as with a `false` (empty cell)
-        if (typeof value === 'number' && isNaN(value)) {
-            value = false;
-        }
-        switch (value) {
-            case false:
-            case Infinity:
-            case -Infinity:
-                return value_if_empty === undefined ?  '' : value_if_empty;
-        }
-        switch (column.widget || column.type) {
-            case 'integer':
-                return _.sprintf('%d', value);
-            case 'float':
-                var precision = column.digits ? column.digits[1] : 2;
-                return _.sprintf('%.' + precision + 'f', value);
-            case 'float_time':
-                return _.sprintf("%02d:%02d",
-                        Math.floor(value),
-                        Math.round((value % 1) * 60));
-            case 'progressbar':
-                return _.sprintf(
-                    '<progress value="%.2f" max="100.0">%.2f%%</progress>',
-                        value, value);
-            case 'many2one':
-                // name_get value format
-                return value[1];
-            default:
-                return value;
-        }
-    }
-};
 openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListView# */ {
     defaults: {
         // records can be selected one by one
@@ -637,7 +579,7 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
             }
 
             $footer_cells.filter(_.sprintf('[data-field=%s]', column.id))
-                .html(openerp.base.list.render_cell(aggregation, column));
+                .html(openerp.base.format_cell(aggregation, column));
         });
     }
     // TODO: implement reorder (drag and drop rows)
@@ -725,7 +667,7 @@ openerp.base.ListView.List = openerp.base.Class.extend( /** @lends openerp.base.
         this.$current = this.$_element.clone(true);
         this.$current.empty().append(
             QWeb.render('ListView.rows', _.extend({
-                render_cell: openerp.base.list.render_cell}, this)));
+                render_cell: openerp.base.format_cell}, this)));
     },
     /**
      * Gets the ids of all currently selected records, if any
@@ -856,7 +798,7 @@ openerp.base.ListView.List = openerp.base.Class.extend( /** @lends openerp.base.
             row: this.rows[record_index],
             row_parity: (record_index % 2 === 0) ? 'even' : 'odd',
             row_index: record_index,
-            render_cell: openerp.base.list.render_cell
+            render_cell: openerp.base.format_cell
         });
     },
     /**
@@ -1016,7 +958,7 @@ openerp.base.ListView.Groups = openerp.base.Class.extend( /** @lends openerp.bas
                 row_data[group.grouped_on] = group;
                 var group_column = _(self.columns).detect(function (column) {
                     return column.id === group.grouped_on; });
-                $group_column.html(openerp.base.list.render_cell(
+                $group_column.html(openerp.base.format_cell(
                     row_data, group_column, "Undefined"
                 ));
                 if (group.openable) {

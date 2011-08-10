@@ -228,9 +228,9 @@ openerp.base.form.DashBoard = openerp.base.form.Widget.extend({
             action_buttons : false,
             pager: false
         };
-        new openerp.base.ActionManager(
-                this, this.view.element_id + '_action_' + action.id)
-            .do_action(action);
+        var am = new openerp.base.ActionManager(this);
+        am.appendTo($("#"+this.view.element_id + '_action_' + action.id));
+        am.do_action(action);
     },
     render: function() {
         // We should start with three columns available
