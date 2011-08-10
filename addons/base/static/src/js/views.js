@@ -77,7 +77,6 @@ openerp.base.ActionManager = openerp.base.Widget.extend({
     ir_actions_act_window: function (action, on_closed) {
         if (action.flags.popup) {
             if (this.dialog == null) {
-                debugger;
                 this.dialog = new openerp.base.ActionDialog(this, { title: action.name, width: '80%' });
                 this.dialog.close_callback = on_closed;
                 this.dialog.start(false);
@@ -300,6 +299,7 @@ openerp.base.NullViewManager = openerp.base.generate_null_object_class(openerp.b
     }
 });
 
+// Move parts or everything to ActionManager
 openerp.base.ViewManagerAction = openerp.base.ViewManager.extend({
     init: function(parent, action) {
         this.session = parent.session;
