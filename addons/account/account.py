@@ -681,6 +681,7 @@ class account_journal(osv.osv):
         seq = {
             'name': name,
             'code': code,
+            'company_id': vals['company_id'],
             'active': True,
             'prefix': code + "/%(year)s/",
             'padding': 4,
