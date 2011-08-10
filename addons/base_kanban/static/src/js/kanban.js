@@ -30,8 +30,7 @@ openerp.base_kanban.KanbanView = openerp.base.View.extend({
         });
         if(this.template_xml){
             self.dataset.read_slice([], 0, false, function (records) {
-                self.all_display_data = [];
-                self.all_display_data.push({'records': records, 'value':false, 'header': false});
+                self.all_display_data = [{'records': records, 'value':false, 'header': false, 'ids': self.dataset.ids}];
                 self.on_show_data(self.all_display_data);
 	        });
 	    }
@@ -59,9 +58,13 @@ openerp.base_kanban.KanbanView = openerp.base.View.extend({
                     if($(this).data("type") == "edit") {
                         self.do_edit(record_id);
                     }
-                    if($(this).data("type") == "delete") {
+                    else  if($(this).data("type") == "delete") {
                         self.do_delete(record_id);
                     }
+                    /*else{
+                        var button_attrs = $(this).data()
+                        self.on_button_click(button_attrs, record_id);
+                    }*/
                 }
             }
         });
@@ -87,24 +90,20 @@ openerp.base_kanban.KanbanView = openerp.base.View.extend({
         _.each(this.groups, function (group) {
             self.dataset.context = group.context;
             self.dataset.domain = group.domain;
-            group.list([],
-                function (groups) {},
-                function (dataset) {
-                    self.dataset.read_slice(false, false, false, function(records) {
-                        var index = parseInt(_.indexOf(self.dataset.ids, id));
-                        if(index >= 0) {
-                            self.select_record(index);
-                            self.flag = true;
-                            return false;
-                        }
-                    });
+            self.dataset.read_slice(false, false, false, function(records) {
+                var index = parseInt(_.indexOf(self.dataset.ids, id));
+                if(index >= 0) {
+                    self.select_record(index);
+                    self.flag = true;
+                    return false;
                 }
-            );
-            if(self.flag) {return false;}
+            });
         });
         if(!self.flag) {
             var index = parseInt(_.indexOf(self.dataset.ids, id));
-            if(index >= 0) {self.select_record(index);}
+            if(index >= 0) {
+                self.select_record(index);
+            }
         }
     },
 
@@ -134,6 +133,18 @@ openerp.base_kanban.KanbanView = openerp.base.View.extend({
         });
         self.$element.find("#main_" + id).remove()
     },
+
+    /*on_button_click: function(button_attrs, record_id) {
+        var self = this;
+        this.execute_action(
+            button_attrs, this.dataset, this.session.action_manager,
+            record_id, function () {
+                self.do_change_data();
+            });
+    },
+
+    do_change_data: function() {
+    },*/
 
     on_close_action: function(e) {
         var record_id = $(e.currentTarget).parents('.record:first').attr("id")
@@ -249,8 +260,6 @@ openerp.base_kanban.KanbanView = openerp.base.View.extend({
             group_by_seq: group_by
         }, function (results) {
 	        self.group_by_field = false;
-	        self.dataset.context = results.context;
-	        self.dataset.domain = results.domain;
 	        self.datagroup = new openerp.base.DataGroup(self, self.model, results.domain, results.context, results.group_by || []);
 	        self.datagroup.list([],
 	            function (groups) {
@@ -261,9 +270,8 @@ openerp.base_kanban.KanbanView = openerp.base.View.extend({
 	                }
 	            },
 	            function (dataset) {
-	                self.dataset.read_slice(false, false, false, function(records) {
-	                    self.all_display_data = [];
-	                    self.all_display_data.push({'records': records, 'value':false, 'header' : false});
+	                dataset.read_slice(false, false, false, function(records) {
+	                    self.all_display_data = [{'records': records, 'value':false, 'header' : false, 'ids': dataset.ids}];
 	                    self.$element.find("#kanbanview").remove();
 	                    self.on_show_data(self.all_display_data);
 	                });
@@ -290,7 +298,7 @@ openerp.base_kanban.KanbanView = openerp.base.View.extend({
                 group_value = group.value[0]
             }
 	        self.dataset.read_slice(false, false, false, function(records) {
-                self.all_display_data.push({"value" : group_value, "records": records, 'header':group_name});
+                self.all_display_data.push({"value" : group_value, "records": records, 'header':group_name, 'ids': self.dataset.ids});
                 if (datagroups.length == self.all_display_data.length) {
                     self.$element.find("#kanbanview").remove();
                     self.on_show_data(self.all_display_data);
