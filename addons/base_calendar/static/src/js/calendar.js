@@ -99,7 +99,8 @@ openerp.base_calendar.CalendarView = openerp.base.View.extend({
         scheduler.config.multi_day = true; //Multi day events are not rendered in daily and weekly views
         scheduler.config.start_on_monday = true;
         scheduler.config.scroll_hour = 8;
-        scheduler.config.drag_resize = scheduler.config.drag_create = !!this.date_stop;
+        scheduler.config.drag_resize = true;
+        scheduler.config.drag_create = true;
 
         // Initialize Sceduler
         this.mode = this.mode || 'month';
@@ -131,7 +132,9 @@ openerp.base_calendar.CalendarView = openerp.base.View.extend({
     },
     load_scheduler: function() {
         var self = this;
-        this.dataset.read_slice({}, function(events) {
+        this.dataset.read_slice({
+                fields: _.keys(self.fields_view.fields)
+            }, function(events) {
             if (self.session.locale_code) {
                 // TODO: replace $LAB
                 $LAB.setOptions({AlwaysPreserveOrder: true}).script([
@@ -186,82 +189,35 @@ openerp.base_calendar.CalendarView = openerp.base.View.extend({
         this.refresh_minical();
         this.sidebar.responsible.on_events_loaded(sidebar_items);
     },
-    convert_event: function(event) {
-        var starts = event[this.date_start],
-            ends = event[this.date_delay] || 1,
-            span = 0,
+    convert_event: function(evt) {
+        var date_start = openerp.base.parse_datetime(evt[this.date_start]),
+            date_stop = this.date_stop ? openerp.base.parse_datetime(evt[this.date_stop]) : null,
+            date_delay = evt[this.date_delay] || null,
             res_text = '',
             res_description = [];
 
-        var parse_start_date = openerp.base.parse_datetime(starts);
-        if (event[this.date_stop]) {
-            var parse_end_date = openerp.base.parse_datetime(event[this.date_stop]);
-        }
         if (this.info_fields) {
-            var fld = event[this.info_fields[0]];
-
-            if (typeof fld == 'object') {
-                res_text = fld[fld.length -1];
-            } else {
-                res_text = fld;
-            }
+            var fld = evt[this.info_fields[0]];
+            res_text = (typeof fld == 'object') ? fld[fld.length -1] : res_text = fld;
 
             var sliced_info_fields = this.info_fields.slice(1);
-            for (sl_fld in sliced_info_fields) {
-                var slc_fld = event[sliced_info_fields[sl_fld]];
-
+            for (var sl_fld in sliced_info_fields) {
+                var slc_fld = evt[sliced_info_fields[sl_fld]];
                 if (typeof slc_fld == 'object') {
                     res_description.push(slc_fld[slc_fld.length - 1]);
-                } else {
-                    if(slc_fld) res_description.push(slc_fld);
+                } else if (slc_fld) {
+                    res_description.push(slc_fld);
                 }
             }
         }
-
-        if (starts && ends) {
-            var n = 0,
-                h = ends;
-            if (ends == this.day_length) {
-                span = 1;
-            } else if (ends > this.day_length) {
-                n = ends / this.day_length;
-                h = ends % this.day_length;
-                n = parseInt(Math.floor(n));
-
-                if (h > 0) {
-                    span = n + 1;
-                } else {
-                    span = n;
-                }
-            }
-            var start = parse_start_date.setTime((parse_start_date.getTime() + (h * 60 * 60) + (n * 24 * 60 * 60)));
-            ends = parse_start_date;
-        }
-
-        if (starts && this.date_stop) {
-            ends = parse_end_date;
-            if (event[this.date_stop] == undefined) {
-                var start = parse_start_date.setTime((parse_start_date.getTime() + (h * 60 * 60) + (n * 24 * 60 * 60)));
-                ends = parse_start_date;
-            }
-            var tds = parse_start_date.getTime(),
-                tde = parse_end_date.getTime();
-
-            if (tds >= tde) {
-                tde = tds + 60 * 60;
-                parse_end_date.setTime(tde);
-                ends = parse_end_date;
-            }
-            n = (tde - tds) / (60 * 60);
-            if (n >= this.day_length) {
-                span = Math.ceil(n / 24);
-            }
+        if (!date_stop && date_delay) {
+            date_stop = date_start.clone().addHours(date_delay);
         }
         return {
-            'start_date': parse_start_date.toString('yyyy-MM-dd HH:mm:ss'),
-            'end_date': ends.toString('yyyy-MM-dd HH:mm:ss'),
+            'start_date': date_start.toString('yyyy-MM-dd HH:mm:ss'),
+            'end_date': date_stop.toString('yyyy-MM-dd HH:mm:ss'),
             'text': res_text,
-            'id': event['id'],
+            'id': evt.id,
             'title': res_description.join()
         }
     },
@@ -317,15 +273,8 @@ openerp.base_calendar.CalendarView = openerp.base.View.extend({
             data[this.date_stop] = openerp.base.format_datetime(event_obj.end_date);
         }
         if (this.date_delay) {
-            var tds = (event_obj.start_date.getOrdinalNumber() / 1e3 >> 0) - (event_obj.start_date.getOrdinalNumber() < 0);
-            var tde = (event_obj.end_date.getOrdinalNumber() / 1e3 >> 0) - (event_obj.end_date.getOrdinalNumber() < 0);
-            var n = (tde - tds) / (60 * 60);
-            if (n > this.day_length) {
-                var d = Math.floor(n / 24),
-                    h = n % 24;
-                n = d * this.day_length + h;
-            }
-            data[this.date_delay] = n;
+            var diff_seconds = Math.round((event_obj.end_date.getTime() - event_obj.start_date.getTime()) / 1000);
+            data[this.date_delay] = diff_seconds / 3600;
         }
         return data;
     },
@@ -361,54 +310,6 @@ openerp.base_calendar.CalendarView = openerp.base.View.extend({
         this.$element.hide();
         if (this.sidebar) {
             this.sidebar.$element.hide();
-        }
-    },
-    popup_event: function(event_id) {
-        var self = this;
-        if (event_id) event_id = parseInt(event_id, 10);
-        var action = {
-            res_model: this.dataset.model,
-            res_id: event_id,
-            views: [[false, 'form']],
-            type: 'ir.actions.act_window',
-            view_type: 'form',
-            view_mode: 'form',
-            flags : {
-                search_view: false,
-                sidebar : false,
-                views_switcher : false,
-                action_buttons : false,
-                pager: false
-            }
-        }
-        var element_id = _.uniqueId("act_window_dialog");
-        var dialog = $('<div>', {
-            'id': element_id
-        }).dialog({
-            modal: true,
-            width: 'auto',
-            height: 'auto',
-            buttons: {
-                Cancel: function() {
-                    $(this).dialog("destroy");
-                },
-                Save: function() {
-                    var view_manager = action_manager.viewmanager;
-                    var _dialog = this;
-                    view_manager.views[view_manager.active_view].controller.do_save(function(r) {
-                        $(_dialog).dialog("destroy");
-                        // self.start();
-                        self.load_scheduler();
-                    })
-                }
-            }
-        });
-        var action_manager = new openerp.base.ActionManager(this, element_id);
-        action_manager.start();
-        action_manager.do_action(action);
-        //Default_get
-        if (!event_id) {
-            this.dataset.index = null;
         }
     }
 });
