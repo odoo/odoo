@@ -1248,7 +1248,7 @@ class stock_picking(osv.osv):
                             'picking_id' : new_picking,
                             'state': 'assigned',
                             'move_dest_id': False,
-                            'price_unit': price_unit or 0.0
+                            'price_unit': price_unit
                     }
                     prodlot_id = prodlot_ids[move.id]
                     if prodlot_id:
