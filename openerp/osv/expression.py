@@ -20,10 +20,65 @@
 #
 ##############################################################################
 
+""" Domain expression processing
+
+The main duty of this module is to compile a domain expression into a SQL
+query. A lot of things should be documented here, but as a first step in the
+right direction, some tests in test_osv_expression.yml might give you some
+additional information.
+
+For legacy reasons, a domain uses an inconsistent two-levels abstract syntax
+(domains are regular Python data structures). At the first level, a domain
+is an expression made of terms (sometimes called leaves) and (domain) operators
+used in prefix notation. The available operators at this level are '!', '&',
+and '|'. '!' is a unary 'not', '&' is a binary 'and', and '|' is a binary 'or'.
+For instance, here is a possible domain. (<term> stands for an arbitrary term,
+more on this later.)
+
+    ['&', '!', <term1>, '|', <term2>, <term3>]
+
+It is equivalent to this pseudo code using infix notation:
+
+    (not <term1>) and (<term2> or <term3>)
+
+The second level of syntax deals with the term representation. A term is
+a triple of the form (left, operator, right). That is, a term uses an infix
+notation, and the available operators, and possible left and right operands
+differ with those of the previous level. Here is a possible term:
+
+    ('company_id.name', '=', 'OpenERP')
+
+The left and right operand don't have the same possible values. The left
+operand is field name (related to the model for which the domain applies).
+Actually, the field name can use the dot-notation to traverse relationships.
+The right operand is a Python value whose type should match the used operator
+and field type. In the above example, a string is used because the name field
+of a company has type string, and because we use the '=' operator. When
+appropriate, a 'in' operator can be used, and thus the right operand should be
+a list.
+
+Note: the non-uniform syntax could have been more uniform, but this would hide
+an important limitation of the domain syntax. Say that the term representation
+was ['=', 'company_id.name', 'OpenERP']. Used in a complete domain, this would
+look like:
+
+  ['!', ['=', 'company_id.name', 'OpenERP']]
+
+and you would be tempted to believe something like this would be possible:
+
+  ['!', ['=', 'company_id.name', ['&', ..., ...]]]
+
+That is, a domain could be a valid operand. But this is not the case. A domain
+is really limited to a two-level nature, and can not takes a recursive form: a
+domain is not a valid second-level operand.
+
+"""
+
 import logging
 
 from openerp.tools import flatten, reverse_enumerate
 import fields
+import openerp.modules
 
 #.apidoc title: Domain Expressions
 
@@ -31,8 +86,19 @@ NOT_OPERATOR = '!'
 OR_OPERATOR = '|'
 AND_OPERATOR = '&'
 
-# This doesn't contain <> as it is simpified to != by normalize_operator().
+# List of available term operators. It is also possible to use the '<>'
+# operator, which is strictly the same as '!='; the later should be prefered
+# for consistency. This list doesn't contain '<>' as it is simpified to '!='
+# by the normalize_operator() function (so later part of the code deals with
+# only one representation).
+# An internal (i.e. not available to the user) 'inselect' operator is also
+# used. In this case its right operand has the form (subselect, params).
 OPS = ('=', '!=', '<=', '<', '>', '>=', '=?', '=like', '=ilike', 'like', 'not like', 'ilike', 'not ilike', 'in', 'not in', 'child_of')
+
+# A subset of the above operators, with a 'negative' semantic. When the
+# expressions 'in NEGATIVE_OPS' or 'not in NEGATIVE_OPS' are used in the code
+# below, this doesn't necessarily mean that any of those NEGATIVE_OPS is
+# legal in the processed term.
 NEGATIVE_OPS = ('!=', 'not like', 'not ilike', 'not in')
 
 TRUE_LEAF = (1, '=', 1)
@@ -105,10 +171,17 @@ def OR(domains):
     return combine(OR_OPERATOR, FALSE_DOMAIN, TRUE_DOMAIN, domains)
 
 def is_operator(element):
+    """ Test whether an object is a valid domain operator. """
     return isinstance(element, (str, unicode)) and element in [AND_OPERATOR, OR_OPERATOR, NOT_OPERATOR]
 
 # TODO change the share wizard to use this function.
 def is_leaf(element, internal=False):
+    """ Test whether an object is a valid domain term.
+
+    :param internal: allow or not the 'inselect' internal operator in the term.
+    This normally should be always left to False.
+
+    """
     INTERNAL_OPS = OPS + ('inselect',)
     return (isinstance(element, tuple) or isinstance(element, list)) \
        and len(element) == 3 \
@@ -116,6 +189,9 @@ def is_leaf(element, internal=False):
             or (internal and element[1] in INTERNAL_OPS + ('<>',)))
 
 def normalize_leaf(left, operator, right):
+    """ Change a term's operator to some canonical form, simplifying later
+    processing.
+    """
     original = operator
     operator = operator.lower()
     if operator == '<>':
@@ -130,6 +206,17 @@ def normalize_leaf(left, operator, right):
 
 def distribute_not(domain):
     """ Distribute the '!' operator on a normalized domain.
+
+    Because we don't use SQL semantic for processing a 'left not in right'
+    query (i.e. our 'not in' is not simply translated to a SQL 'not in'),
+    it means that a '! left in right' can not be simply processed
+    by __leaf_to_sql by first emitting code for 'left in right' then wrapping
+    the result with 'not (...)', as it would result in a 'not in' at the SQL
+    level.
+
+    This function is thus responsible for pushing the '!' operator inside the
+    terms.
+
     """
     def negate(leaf):
         left, operator, right = leaf
@@ -199,6 +286,7 @@ class expression(object):
     """
 
     def __init__(self, cr, uid, exp, table, context):
+        self.has_unaccent = openerp.modules.registry.RegistryManager.get(cr.dbname).has_unaccent
         self.__field_tables = {}  # used to store the table to use for the sql generation. key = index of the leaf
         self.__all_tables = set()
         self.__joins = []
@@ -214,6 +302,8 @@ class expression(object):
     def parse(self, cr, uid, exp, table, context):
         """ transform the leafs of the expression """
         self.__exp = exp
+        self.__main_table = table
+        self.__all_tables.add(table)
 
         def child_of_domain(left, right, table, parent=None, prefix=''):
             ids = right
@@ -237,18 +327,15 @@ class expression(object):
                 return [(left, 'in', rg(ids, table, parent or table._parent_name))]
 
         # TODO rename this function as it is not strictly for 'child_of', but also for 'in'...
-        def child_of_right_to_ids(value, operator, field_obj):
+        def child_of_right_to_ids(value, field_obj):
             """ Normalize a single id, or a string, or a list of ids to a list of ids.
             """
             if isinstance(value, basestring):
-                return [x[0] for x in field_obj.name_search(cr, uid, value, [], operator, context=context, limit=None)]
+                return [x[0] for x in field_obj.name_search(cr, uid, value, [], 'ilike', context=context, limit=None)]
             elif isinstance(value, (int, long)):
                 return [value]
             else:
                 return list(value)
-
-        self.__main_table = table
-        self.__all_tables.add(table)
 
         i = -1
         while i + 1<len(self.__exp):
@@ -288,7 +375,7 @@ class expression(object):
 
             if not field:
                 if left == 'id' and operator == 'child_of':
-                    ids2 = child_of_right_to_ids(right, 'ilike', table)
+                    ids2 = child_of_right_to_ids(right, table)
                     dom = child_of_domain(left, ids2, working_table)
                     self.__exp = self.__exp[:i] + dom + self.__exp[i+1:]
                 continue
@@ -330,10 +417,10 @@ class expression(object):
                 # Applying recursivity on field(one2many)
                 if operator == 'child_of':
                     if field._obj != working_table._name:
-                        ids2 = child_of_right_to_ids(right, 'ilike', field_obj)
+                        ids2 = child_of_right_to_ids(right, field_obj)
                         dom = child_of_domain(left, ids2, field_obj, prefix=field._obj)
                     else:
-                        ids2 = child_of_right_to_ids(right, 'ilike', field_obj)
+                        ids2 = child_of_right_to_ids(right, field_obj)
                         dom = child_of_domain('id', ids2, working_table, parent=left)
                     self.__exp = self.__exp[:i] + dom + self.__exp[i+1:]
 
@@ -372,7 +459,7 @@ class expression(object):
                             return ids
                         return select_from_where(cr, field._id1, field._rel, field._id2, ids, operator)
 
-                    ids2 = child_of_right_to_ids(right, 'ilike', field_obj)
+                    ids2 = child_of_right_to_ids(right, field_obj)
                     dom = child_of_domain('id', ids2, field_obj)
                     ids2 = field_obj.search(cr, uid, dom, context=context)
                     self.__exp[i] = ('id', 'in', _rec_convert(ids2))
@@ -406,7 +493,7 @@ class expression(object):
 
             elif field._type == 'many2one':
                 if operator == 'child_of':
-                    ids2 = child_of_right_to_ids(right, 'ilike', field_obj)
+                    ids2 = child_of_right_to_ids(right, field_obj)
                     if field._obj != working_table._name:
                         dom = child_of_domain(left, ids2, field_obj, prefix=field._obj)
                     else:
@@ -470,7 +557,7 @@ class expression(object):
 
                     operator = operator == '=like' and 'like' or operator
 
-                    query1 = '( SELECT res_id'          \
+                    subselect = '( SELECT res_id'          \
                              '    FROM ir_translation'  \
                              '   WHERE name = %s'       \
                              '     AND lang = %s'       \
@@ -479,26 +566,26 @@ class expression(object):
                     #Covering in,not in operators with operands (%s,%s) ,etc.
                     if operator in ['in','not in']:
                         instr = ','.join(['%s'] * len(right))
-                        query1 += '     AND value ' + operator +  ' ' +" (" + instr + ")"   \
+                        subselect += '     AND value ' + operator +  ' ' +" (" + instr + ")"   \
                              ') UNION ('                \
                              '  SELECT id'              \
                              '    FROM "' + working_table._table + '"'       \
                              '   WHERE "' + left + '" ' + operator + ' ' +" (" + instr + "))"
                     else:
-                        query1 += '     AND value ' + operator + instr +   \
+                        subselect += '     AND value ' + operator + instr +   \
                              ') UNION ('                \
                              '  SELECT id'              \
                              '    FROM "' + working_table._table + '"'       \
                              '   WHERE "' + left + '" ' + operator + instr + ")"
 
-                    query2 = [working_table._name + ',' + left,
+                    params = [working_table._name + ',' + left,
                               context.get('lang', False) or 'en_US',
                               'model',
                               right,
                               right,
                              ]
 
-                    self.__exp[i] = ('id', 'inselect', (query1, query2))
+                    self.__exp[i] = ('id', 'inselect', (subselect, params))
 
     def __leaf_to_sql(self, leaf, table):
         left, operator, right = leaf
@@ -626,14 +713,13 @@ class expression(object):
                 q, p = self.__leaf_to_sql(e, table)
                 params.insert(0, p)
                 stack.append(q)
+            elif e == NOT_OPERATOR:
+                stack.append('(NOT (%s))' % (stack.pop(),))
             else:
-                if e == NOT_OPERATOR:
-                    stack.append('(NOT (%s))' % (stack.pop(),))
-                else:
-                    ops = {AND_OPERATOR: ' AND ', OR_OPERATOR: ' OR '}
-                    q1 = stack.pop()
-                    q2 = stack.pop()
-                    stack.append('(%s %s %s)' % (q1, ops[e], q2,))
+                ops = {AND_OPERATOR: ' AND ', OR_OPERATOR: ' OR '}
+                q1 = stack.pop()
+                q2 = stack.pop()
+                stack.append('(%s %s %s)' % (q1, ops[e], q2,))
 
         assert len(stack) == 1
         query = stack[0]
