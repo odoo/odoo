@@ -105,7 +105,7 @@ class stock_picking(osv.osv):
         return super(stock_picking, self)._get_taxes_invoice(cursor, user, move_line, type)
 
     def _get_account_analytic_invoice(self, cursor, user, picking, move_line):
-        if move_line.purchase_line_id:
+        if picking.purchase_id and move_line.purchase_line_id:
             return move_line.purchase_line_id.account_analytic_id.id
         return super(stock_picking, self)._get_account_analytic_invoice(cursor, user, picking, move_line)
 
