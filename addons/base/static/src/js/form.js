@@ -1679,7 +1679,7 @@ openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
             self.save_form_view();
         });
         setTimeout(function () {
-            self.viewmanager.appendTo(this.$element);
+            self.viewmanager.appendTo(self.$element);
         }, 0);
     },
     reload_current_view: function() {
