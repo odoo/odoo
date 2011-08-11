@@ -50,7 +50,7 @@ openerp.base.ActionManager = openerp.base.Widget.extend({
             this.log("Action manager can't handle action of type " + action.type, action);
             return;
         }
-        this[type](action, on_close);
+        this[type](action, on_closed);
     },
     ir_actions_act_window: function (action, on_close) {
         if (action.flags.popup) {
