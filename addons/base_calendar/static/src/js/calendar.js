@@ -48,14 +48,19 @@ openerp.base_calendar.CalendarView = openerp.base.View.extend({
         this.fields =  this.fields_view.fields;
 
         //* Calendar Fields *
-        this.calendar_fields['date_start'] = {'name': this.date_start, 'kind': this.fields[this.date_start]['type']};
+        this.calendar_fields.date_start = {'name': this.date_start, 'kind': this.fields[this.date_start].type};
 
         if (this.date_delay) {
-             this.calendar_fields['date_delay'] = {'name': this.date_delay, 'kind': this.fields[this.date_delay]['type']};
+            if (this.fields[this.date_delay].type != 'float') {
+                throw new Error("Calendar view has a 'date_delay' type != float");
+            }
+            this.calendar_fields.date_delay = {'name': this.date_delay, 'kind': this.fields[this.date_delay].type};
         }
-
         if (this.date_stop) {
-            this.calendar_fields['date_stop'] = {'name': this.date_stop, 'kind': this.fields[this.date_stop]['type']};
+            this.calendar_fields.date_stop = {'name': this.date_stop, 'kind': this.fields[this.date_stop].type};
+        }
+        if (!this.date_delay && !this.date_stop) {
+            throw new Error("Calendar view has none of the following attributes : 'date_stop', 'date_delay'");
         }
 
         for (var fld = 0; fld < this.fields_view.arch.children.length; fld++) {
@@ -126,7 +131,7 @@ openerp.base_calendar.CalendarView = openerp.base.View.extend({
     },
     load_scheduler: function() {
         var self = this;
-        this.dataset.read_slice([], 0, false, function(events) {
+        this.dataset.read_slice({}, function(events) {
             if (self.session.locale_code) {
                 // TODO: replace $LAB
                 $LAB.setOptions({AlwaysPreserveOrder: true}).script([
@@ -307,10 +312,9 @@ openerp.base_calendar.CalendarView = openerp.base.View.extend({
         var data = {
             name: event_obj.text
         };
-        var date_format = this.calendar_fields.date_start.kind == 'time' ? 'HH:mm:ss' : 'yyyy-MM-dd HH:mm:ss';
-        data[this.date_start] = event_obj.start_date.toString(date_format);
+        data[this.date_start] = openerp.base.format_datetime(event_obj.start_date);
         if (this.date_stop) {
-            data[this.date_stop] = event_obj.end_date.toString(date_format);
+            data[this.date_stop] = openerp.base.format_datetime(event_obj.end_date);
         }
         if (this.date_delay) {
             var tds = (event_obj.start_date.getOrdinalNumber() / 1e3 >> 0) - (event_obj.start_date.getOrdinalNumber() < 0);
@@ -327,15 +331,21 @@ openerp.base_calendar.CalendarView = openerp.base.View.extend({
     },
     do_search: function(domains, contexts, groupbys) {
         var self = this;
-        this.rpc('/base/session/eval_domain_and_context', {
-            domains: domains,
-            contexts: contexts,
-            group_by_seq: groupbys
-        }, function (results) {
-            // TODO: handle non-empty results.group_by with read_group
-            self.dataset.context = self.context = results.context;
-            self.dataset.domain = self.domain = results.domain;
-            self.dataset.read_slice(_.keys(self.fields), 0, self.limit, self.on_events_loaded);
+        $.when(this.has_been_loaded).then(function() {
+            self.rpc('/base/session/eval_domain_and_context', {
+                domains: domains,
+                contexts: contexts,
+                group_by_seq: groupbys
+            }, function (results) {
+                // TODO: handle non-empty results.group_by with read_group
+                self.dataset.context = self.context = results.context;
+                self.dataset.domain = self.domain = results.domain;
+                self.dataset.read_slice({
+                        fields: _.keys(self.fields),
+                        offset:0,
+                        limit: self.limit
+                    }, self.on_events_loaded);
+            });
         });
     },
     do_show: function () {
@@ -411,7 +421,7 @@ openerp.base_calendar.CalendarFormDialog = openerp.base.Dialog.extend({
         this.view = view;
     },
     start: function() {
-        this._super(false);
+        this._super();
         this.form = new openerp.base.FormView(this, this.element_id, this.dataset, this.view_id, {
             sidebar: false,
             pager: false

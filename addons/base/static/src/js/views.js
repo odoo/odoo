@@ -9,27 +9,6 @@ openerp.base.views = function(openerp) {
  */
 openerp.base.client_actions = new openerp.base.Registry();
 
-/**
- * Registry for all the main views
- */
-openerp.base.views = new openerp.base.Registry();
-
-openerp.base.ActionDialog = openerp.base.Dialog.extend({
-    identifier_prefix: 'action_dialog',
-    on_close: function() {
-        this._super(this, arguments);
-        if (this.close_callback) {
-            this.close_callback();
-        }
-    },
-    stop: function() {
-        this._super(this, arguments);
-        if (this.viewmanager) {
-            this.viewmanager.stop();
-        }
-    }
-});
-
 openerp.base.ActionManager = openerp.base.Widget.extend({
     identifier_prefix: "actionmanager",
     init: function(parent) {
@@ -68,25 +47,24 @@ openerp.base.ActionManager = openerp.base.Widget.extend({
             pager : !popup
         }, action.flags || {});
         if (!(type in this)) {
-            console.log("Action manager can't handle action of type " + action.type, action);
+            this.log("Action manager can't handle action of type " + action.type, action);
             return;
         }
-        this[type](action, on_closed);
+        this[type](action, on_close);
     },
-    ir_actions_act_window: function (action, on_closed) {
+    ir_actions_act_window: function (action, on_close) {
         if (action.flags.popup) {
             if (this.dialog == null) {
-                this.dialog = new openerp.base.ActionDialog(this, { title: action.name, width: '80%' });
-                this.dialog.close_callback = on_closed;
-                this.dialog.start(false);
-                this.dialog_viewmanager = new openerp.base.ViewManagerAction(this, action);
-                this.dialog_viewmanager.appendTo(this.dialog.$element);
-                this.dialog.open();
+                this.dialog = new openerp.base.Dialog(this, { title: action.name, width: '80%' });
+                if(on_close)
+                    this.dialog.on_close.add(on_close);
+                this.dialog.start();
             } else {
                 this.dialog_viewmanager.stop();
-                this.dialog_viewmanager = new openerp.base.ViewManagerAction(this, action);
-                this.dialog_viewmanager.appendTo(this.dialog.$element);
             }
+            this.dialog_viewmanager = new openerp.base.ViewManagerAction(this, action);
+            this.dialog_viewmanager.appendTo(this.dialog.$element);
+            this.dialog.open();
         } else  {
             this.dialog_stop();
             this.inner_stop();
@@ -101,7 +79,7 @@ openerp.base.ActionManager = openerp.base.Widget.extend({
         */
     },
     ir_actions_act_window_close: function (action, on_closed) {
-        this.close_dialog();
+        this.dialog_stop();
     },
     ir_actions_server: function (action, on_closed) {
         var self = this;
@@ -253,9 +231,8 @@ openerp.base.ViewManager =  openerp.base.Widget.extend({
             this.searchview.hide();
         }
         this.searchview.on_search.add(function(domains, contexts, groupbys) {
-            self.views[self.active_view].controller.do_search.call(
-                self, domains.concat(self.domains()),
-                      contexts.concat(self.contexts()), groupbys);
+            var controller = self.views[self.active_view].controller;
+            controller.do_search.call(controller, domains, contexts, groupbys);
         });
         return this.searchview.start();
     },
@@ -269,49 +246,19 @@ openerp.base.ViewManager =  openerp.base.Widget.extend({
     on_remove: function() {
     },
     on_edit: function() {
-    },
-    /**
-     * Domains added on searches by the view manager, to override in subsequent
-     * view manager in order to add new pieces of domains to searches
-     *
-     * @returns an empty list
-     */
-    domains: function () {
-        return [];
-    },
-    /**
-     * Contexts added on searches by the view manager.
-     *
-     * @returns an empty list
-     */
-    contexts: function () {
-        return [];
     }
 });
 
-openerp.base.NullViewManager = openerp.base.generate_null_object_class(openerp.base.ViewManager, {
-    init: function(parent) {
-        this._super(parent);
-        if(parent)
-            this.session = parent.session;
-        this.action = {flags: {}};
-    }
-});
-
-// Move parts or everything to ActionManager
 openerp.base.ViewManagerAction = openerp.base.ViewManager.extend({
     init: function(parent, action) {
         this.session = parent.session;
         var dataset;
         if (!action.res_id) {
-            dataset = new openerp.base.DataSetSearch(this, action.res_model, action.context || null, action.domain || null);
+            dataset = new openerp.base.DataSetSearch(this, action.res_model, action.context, action.domain);
         } else {
-            dataset = new openerp.base.DataSetStatic(this, action.res_model, {}, [action.res_id]);
-            if (action.context) {
-                // TODO fme: should normalize all DataSets constructors to (session, model, context, domain, ...)
-                dataset.context = action.context;
-            }
+            dataset = new openerp.base.DataSetStatic(this, action.res_model, action.context, [action.res_id]);
         }
+        this.action = action;
         this._super(parent, dataset, action.views);
         this.action = action;
         this.flags = this.action.flags || {};
@@ -344,28 +291,6 @@ openerp.base.ViewManagerAction = openerp.base.ViewManager.extend({
                     .then(this.searchview.do_search);
             }
         }
-    },
-    /**
-     * adds action domain to the search domains
-     *
-     * @returns the action's domain
-     */
-    domains: function () {
-        if (!this.action.domain) {
-            return [];
-        }
-        return [this.action.domain];
-    },
-    /**
-     * adds action context to the search contexts
-     *
-     * @returns the action's context
-     */
-    contexts: function () {
-        if (!this.action.context) {
-            return [];
-        }
-        return [this.action.context];
     }
 });
 
@@ -475,11 +400,10 @@ openerp.base.View = openerp.base.Widget.extend({
      * @param {String} [action_data.type='workflow'] the action type, if present, one of ``'object'``, ``'action'`` or ``'workflow'``
      * @param {Object} [action_data.context=null] additional action context, to add to the current context
      * @param {openerp.base.DataSet} dataset a dataset object used to communicate with the server
-     * @param {openerp.base.ActionManager} action_manager object able to actually execute the action, if any is fetched
      * @param {Object} [record_id] the identifier of the object on which the action is to be applied
      * @param {Function} on_closed callback to execute when dialog is closed or when the action does not generate any result (no new action)
      */
-    execute_action: function (action_data, dataset, action_manager, record_id, on_closed) {
+    execute_action: function (action_data, dataset, record_id, on_closed) {
         var self = this;
         var handler = function (r) {
             var action = r.result;
@@ -497,8 +421,9 @@ openerp.base.View = openerp.base.Widget.extend({
         };
 
         var context = new openerp.base.CompoundContext(dataset.get_context(), action_data.context || {});
+
         if (action_data.special) {
-            // dunno
+            handler({result: {"type":"ir.actions.act_window_close"}});
         } else if (action_data.type=="object") {
             return dataset.call_button(action_data.name, [[record_id], context], handler);
         } else if (action_data.type=="action") {
@@ -563,22 +488,27 @@ openerp.base.View = openerp.base.Widget.extend({
         }
     },
     on_sidebar_edit_workflow: function() {
-        console.log('Todo');
+        this.log('Todo');
     },
     on_sidebar_customize_object: function() {
-        console.log('Todo');
+        this.log('Todo');
     },
     on_sidebar_import: function() {
     },
     on_sidebar_export: function() {
         var export_view = new openerp.base.DataExport(this, this.dataset);
-        export_view.start(false);
+        export_view.start();
     },
     on_sidebar_translate: function() {
     },
     on_sidebar_view_log: function() {
     }
 });
+
+/**
+ * Registry for all the main views
+ */
+openerp.base.views = new openerp.base.Registry();
 
 openerp.base.json_node_to_xml = function(node, single_quote, indent) {
     // For debugging purpose, this function will convert a json node back to xml

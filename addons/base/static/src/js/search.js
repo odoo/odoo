@@ -3,7 +3,6 @@ openerp.base.search = function(openerp) {
 openerp.base.SearchView = openerp.base.Widget.extend({
     init: function(parent, element_id, dataset, view_id, defaults) {
         this._super(parent, element_id);
-        this.view_manager = parent || new openerp.base.NullViewManager();
         this.dataset = dataset;
         this.model = dataset.model;
         this.view_id = view_id;
@@ -624,39 +623,6 @@ openerp.base.search.CharField = openerp.base.search.Field.extend( /** @lends ope
         return this.$element.val();
     }
 });
-openerp.base.search.BooleanField = openerp.base.search.Field.extend({
-    template: 'SearchView.field.selection',
-    init: function () {
-        this._super.apply(this, arguments);
-        this.attrs.selection = [
-            ['true', 'Yes'],
-            ['false', 'No']
-        ];
-    },
-    /**
-     * Search defaults likely to be boolean values (for a boolean field).
-     *
-     * In the HTML, we only get strings, and our strings here are
-     * <code>'true'</code> and <code>'false'</code>, so ensure we get only
-     * those by truth-testing the default value.
-     *
-     * @param {Object} defaults default values for this search view
-     */
-    render: function (defaults) {
-        var name = this.attrs.name;
-        if (name in defaults) {
-            defaults[name] = defaults[name] ? "true" : "false";
-        }
-        return this._super(defaults);
-    },
-    get_value: function () {
-        switch (this.$element.val()) {
-            case 'false': return false;
-            case 'true': return true;
-            default: return null;
-        }
-    }
-});
 openerp.base.search.NumberField = openerp.base.search.Field.extend(/** @lends openerp.base.search.NumberField# */{
     get_value: function () {
         if (!this.$element.val()) {
@@ -693,89 +659,72 @@ openerp.base.search.FloatField = openerp.base.search.NumberField.extend(/** @len
         return parseFloat(value);
     }
 });
-openerp.base.search.SelectionField = openerp.base.search.Field.extend({
+/**
+ * @class
+ * @extends openerp.base.search.Field
+ */
+openerp.base.search.SelectionField = openerp.base.search.Field.extend(/** @lends openerp.base.search.SelectionField# */{
     template: 'SearchView.field.selection',
     get_value: function () {
         return this.$element.val();
     }
 });
+openerp.base.search.BooleanField = openerp.base.search.SelectionField.extend(/** @lends openerp.base.search.BooleanField# */{
+    /**
+     * @constructs
+     * @extends openerp.base.search.BooleanField
+     */
+    init: function () {
+        this._super.apply(this, arguments);
+        this.attrs.selection = [
+            ['true', 'Yes'],
+            ['false', 'No']
+        ];
+    },
+    /**
+     * Search defaults likely to be boolean values (for a boolean field).
+     *
+     * In the HTML, we only want/get strings, and our strings here are ``true``
+     * and ``false``, so ensure we use precisely those by truth-testing the
+     * default value (iif there is one in the view's defaults).
+     *
+     * @param {Object} defaults default values for this search view
+     * @returns {String} rendered boolean field
+     */
+    render: function (defaults) {
+        var name = this.attrs.name;
+        if (name in defaults) {
+            defaults[name] = defaults[name] ? "true" : "false";
+        }
+        return this._super(defaults);
+    },
+    get_value: function () {
+        switch (this.$element.val()) {
+            case 'false': return false;
+            case 'true': return true;
+            default: return null;
+        }
+    }
+});
 openerp.base.search.DateField = openerp.base.search.Field.extend( /** @lends openerp.base.search.DateField# */{
-    template: 'SearchView.fields.date',
     /**
      * enables date picker on the HTML widgets
      */
     start: function () {
         this._super();
-        this.$element.find('input').datepicker({
+        this.$element.addClass('field_date').datepicker({
             dateFormat: 'yy-mm-dd'
         });
     },
     stop: function () {
-        this.$element.find('input').datepicker('destroy');
+        this.$element.datepicker('destroy');
     },
-    /**
-     * Returns an object with two optional keys ``from`` and ``to`` providing
-     * the values for resp. the from and to sections of the date widget.
-     *
-     * If a key is absent, then the corresponding field was not filled.
-     *
-     * @returns {Object}
-     */
-    get_values: function () {
-        var values_array = this.$element.find('input').serializeArray();
-
-        if (!values_array || !values_array[0]) {
-            throw new openerp.base.search.Invalid(
-                this.attrs.name, null, "widget not ready");
-        }
-        var from = values_array[0].value,
-              to = values_array[1].value;
-
-        var field_values = {};
-        if (from) {
-            field_values.from = from;
-        }
-        if (to) {
-            field_values.to = to;
-        }
-        return field_values;
-    },
-    get_context: function () {
-        var values = this.get_values();
-        if (!this.attrs.context || _.isEmpty(values)) {
-            return null;
-        }
-        return _.extend(
-            {}, this.attrs.context,
-            {own_values: {self: values}});
-    },
-    get_domain: function () {
-        var values = this.get_values();
-        if (_.isEmpty(values)) {
-            return null;
-        }
-        var domain = this.attrs['filter_domain'];
-        if (!domain) {
-            domain = [];
-            if (values.from) {
-                domain.push([this.attrs.name, '>=', values.from]);
-            }
-            if (values.to) {
-                domain.push([this.attrs.name, '<=', values.to]);
-            }
-            return domain;
-        }
-
-        return _.extend(
-                {}, domain,
-                {own_values: {self: values}});
+    get_value: function () {
+        return this.$element.val();
     }
 });
 openerp.base.search.DateTimeField = openerp.base.search.DateField.extend({
     // TODO: time?
-});
-openerp.base.search.OneToManyField = openerp.base.search.CharField.extend({
-    // TODO: .relation, .context, .domain
 });
 openerp.base.search.ManyToOneField = openerp.base.search.CharField.extend({
     // TODO: @widget
@@ -846,9 +795,6 @@ openerp.base.search.ManyToOneField = openerp.base.search.CharField.extend({
         }
         return this._super();
     }
-});
-openerp.base.search.ManyToManyField = openerp.base.search.CharField.extend({
-    // TODO: .related_columns (Array), .context, .domain
 });
 
 openerp.base.search.ExtendedSearch = openerp.base.OldWidget.extend({

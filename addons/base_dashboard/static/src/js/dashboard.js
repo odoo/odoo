@@ -290,7 +290,7 @@ openerp.base_dashboard.ConfigOverview = openerp.base.View.extend({
         this.dataset.domain = [['type', '=', 'manual']];
     },
     start: function () {
-        $.when(this.dataset.read_slice(['state', 'action_id', 'category_id']),
+        $.when(this.dataset.read_slice({fields: ['state', 'action_id', 'category_id']}),
                this.dataset.call('progress'))
             .then(this.on_records_loaded);
     },
@@ -333,7 +333,6 @@ openerp.base_dashboard.ConfigOverview = openerp.base.View.extend({
                         type: 'object',
                         name: 'action_launch'
                     }, self.dataset,
-                    self.session.action_manager,
                     $(this).data('id'), function () {
                         // after action popup closed, refresh configuration
                         // thingie
@@ -354,8 +353,8 @@ openerp.base_dashboard.ApplicationTiles = openerp.base.View.extend({
     start: function () {
         var self = this;
         this.dataset.read_slice(
-            ['name', 'web_icon_data', 'web_icon_hover_data'],
-            null, null, function (applications) {
+            {fields: ['name', 'web_icon_data', 'web_icon_hover_data']},
+            function (applications) {
                 // Create a matrix of 3*x applications
                 var rows = [];
                 while (applications.length) {
@@ -385,7 +384,8 @@ openerp.base_dashboard.Widgets = openerp.base.View.extend({
         this.widgets = new openerp.base.DataSetSearch(this, 'res.widget');
     },
     start: function () {
-        this.user_widgets.read_slice(['widget_id', 'user_id'], null, null,
+        this.user_widgets.read_slice(
+            {fields: ['widget_id', 'user_id']},
             this.on_widgets_list_loaded);
     },
     on_widgets_list_loaded: function (user_widgets) {

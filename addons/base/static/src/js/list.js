@@ -61,7 +61,7 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
     /**
      * Retrieves the view's number of records per page (|| section)
      *
-     * options > defaults > indefinite
+     * options > defaults > parent.action.limit > indefinite
      *
      * @returns {Number|null}
      */
@@ -69,6 +69,7 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
         if (this._limit === undefined) {
             this._limit = (this.options.limit
                         || this.defaults.limit
+                        || (this.widget_parent.action || {}).limit
                         || null);
         }
         return this._limit;
@@ -94,7 +95,7 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
                 self.do_delete(ids);
             },
             'action': function (e, action_name, id, callback) {
-                self.do_action(action_name, id, callback);
+                self.do_button_action(action_name, id, callback);
             },
             'row_link': function (e, id, dataset) {
                 self.do_activate_record(dataset.index, id, dataset);
@@ -399,11 +400,10 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
      * @param {Object} results results of evaluating domain and process for a search
      */
     do_actual_search: function (results) {
-        this.dataset.context = results.context;
-        this.dataset.domain = results.domain;
         this.groups.datagroup = new openerp.base.DataGroup(
             this, this.model,
-            results.domain, results.context,
+            this.dataset.get_domain(results.domain),
+            this.dataset.get_context(results.context),
             results.group_by);
         this.groups.datagroup.sort = this.dataset._sort;
 
@@ -454,17 +454,16 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
      * @param {Object} id id of the record the action should be called on
      * @param {Function} callback should be called after the action is executed, if non-null
      */
-    do_action: function (name, id, callback) {
+    do_button_action: function (name, id, callback) {
         var   self = this,
             action = _.detect(this.columns, function (field) {
             return field.name === name;
         });
         if (!action) { return; }
-        this.execute_action(
-            action, this.dataset, this.session.action_manager, id, function () {
-                $.when(callback.apply(this, arguments).then(function () {
-                    self.compute_aggregates();
-                }));
+        this.execute_action(action, this.dataset, id, function () {
+            $.when(callback.apply(this, arguments).then(function () {
+                self.compute_aggregates();
+            }));
         });
     },
     /**
@@ -476,11 +475,11 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
      */
     do_activate_record: function (index, id, dataset) {
         var self = this;
-        _.extend(this.dataset, {
-            domain: dataset.domain,
-            context: dataset.get_context()
-        }).read_slice([], 0, false, function () {
-            self.select_record(index);
+        this.dataset.read_slice({
+                context: dataset.get_context(),
+                domain: dataset.get_domain()
+            }, function () {
+                self.select_record(index);
         });
     },
     /**
@@ -1034,10 +1033,11 @@ openerp.base.ListView.Groups = openerp.base.Class.extend( /** @lends openerp.bas
                d = new $.Deferred(),
             page = this.datagroup.openable ? this.page : view.page;
 
-        dataset.read_slice(
-            _.filter(_.pluck(_.select(this.columns, function(x) {return x.tag == "field";}), 'name'), _.identity),
-            page * limit, limit,
-            function (records) {
+        dataset.read_slice({
+                fields: _.filter(_.pluck(_.select(this.columns, function(x) {return x.tag == "field";}), 'name'), _.identity),
+                offset: page * limit,
+                limit: limit
+            }, function (records) {
                 if (!self.datagroup.openable) {
                     view.configure_pager(dataset);
                 } else {

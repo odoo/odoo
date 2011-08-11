@@ -451,12 +451,14 @@ openerp.base.form.SidebarAttachments = openerp.base.Widget.extend({
             this.on_attachments_loaded([]);
         } else {
             (new openerp.base.DataSetSearch(
-                    this, 'ir.attachment', this.view.dataset.get_context(),
-                    [['res_model', '=', this.view.dataset.model],
-                     ['res_id', '=', this.view.datarecord.id],
-                     ['type', 'in', ['binary', 'url']]])).read_slice(
-                ['name', 'url', 'type'], false, false,
-                this.on_attachments_loaded);
+                this, 'ir.attachment', this.view.dataset.get_context(),
+                [
+                    ['res_model', '=', this.view.dataset.model],
+                    ['res_id', '=', this.view.datarecord.id],
+                    ['type', 'in', ['binary', 'url']]
+                ])).read_slice(
+                    {fields: ['name', 'url', 'type']},
+                    this.on_attachments_loaded);
         }
     },
     on_attachments_loaded: function(attachments) {
@@ -510,36 +512,40 @@ openerp.base.form.compute_domain = function(expr, fields) {
             }
         }
 
-        var field = fields[ex[0]].get_value ? fields[ex[0]].get_value() : fields[ex[0]].value;
+        var field = fields[ex[0]];
+        if (!field) {
+            throw new Error("Domain references unknown field : " + ex[0]);
+        }
+        var field_value = field.get_value ? fields[ex[0]].get_value() : fields[ex[0]].value;
         var op = ex[1];
         var val = ex[2];
 
         switch (op.toLowerCase()) {
             case '=':
             case '==':
-                stack.push(field == val);
+                stack.push(field_value == val);
                 break;
             case '!=':
             case '<>':
-                stack.push(field != val);
+                stack.push(field_value != val);
                 break;
             case '<':
-                stack.push(field < val);
+                stack.push(field_value < val);
                 break;
             case '>':
-                stack.push(field > val);
+                stack.push(field_value > val);
                 break;
             case '<=':
-                stack.push(field <= val);
+                stack.push(field_value <= val);
                 break;
             case '>=':
-                stack.push(field >= val);
+                stack.push(field_value >= val);
                 break;
             case 'in':
-                stack.push(_(val).contains(field));
+                stack.push(_(val).contains(field_value));
                 break;
             case 'not in':
-                stack.push(!_(val).contains(field));
+                stack.push(!_(val).contains(field_value));
                 break;
             default:
                 this.log("Unsupported operator in modifiers :", op);
@@ -767,8 +773,7 @@ openerp.base.form.WidgetButton = openerp.base.form.Widget.extend({
         var self = this;
 
         this.view.execute_action(
-            this.node.attrs, this.view.dataset, this.session.action_manager,
-            this.view.datarecord.id, function () {
+            this.node.attrs, this.view.dataset, this.view.datarecord.id, function () {
                 self.view.reload();
             });
     }
@@ -803,7 +808,7 @@ openerp.base.form.WidgetLabel = openerp.base.form.Widget.extend({
         var self = this;
         this.$element.find("label").dblclick(function() {
             var widget = self['for'] || self;
-            console.log(widget.element_id , widget);
+            self.log(widget.element_id , widget);
         });
     }
 });
@@ -1885,7 +1890,7 @@ openerp.base.form.FieldMany2Many = openerp.base.form.Field.extend({
             self.on_ui_change();
         });
 
-        this.list_view = new openerp.base.form.Many2ManyListView(new openerp.base.NullViewManager(this), this.list_id, this.dataset, false, {
+        this.list_view = new openerp.base.form.Many2ManyListView(this, this.list_id, this.dataset, false, {
                     'addable': 'Add',
                     'selectable': self.multi_selection
             });
@@ -2210,8 +2215,8 @@ openerp.base.form.FieldBinary = openerp.base.form.Field.extend({
         delete(window[this.iframe]);
         if (size === false) {
             this.notification.warn("File Upload", "There was a problem while uploading your file");
-            // TODO: use openerp web exception handler
-            console.log("Error while uploading file : ", name);
+            // TODO: use openerp web crashmanager
+            this.log("Error while uploading file : ", name);
         } else {
             this.on_file_uploaded_and_valid.apply(this, arguments);
             this.on_ui_change();
@@ -2320,10 +2325,8 @@ openerp.base.form.widgets = new openerp.base.Registry({
     'url' : 'openerp.base.form.FieldUrl',
     'text' : 'openerp.base.form.FieldText',
     'text_wiki' : 'openerp.base.form.FieldText',
-//    'date' : 'openerp.base.form.FieldDate',
-//    'datetime' : 'openerp.base.form.FieldDatetime',
-    'date' : 'openerp.base.form.FieldChar',
-    'datetime' : 'openerp.base.form.FieldChar',
+    'date' : 'openerp.base.form.FieldDate',
+    'datetime' : 'openerp.base.form.FieldDatetime',
     'selection' : 'openerp.base.form.FieldSelection',
     'many2one' : 'openerp.base.form.FieldMany2One',
     'many2many' : 'openerp.base.form.FieldMany2Many',

@@ -72,7 +72,7 @@ openerp.base.TreeView = openerp.base.View.extend({
             'toolbar': has_toolbar
         }));
 
-        this.dataset.read_slice(this.fields_list(), 0, false, function (records) {
+        this.dataset.read_slice({fields: this.fields_list()}, function (records) {
             if (!has_toolbar) {
                 // WARNING: will do a second read on the same ids, but only on
                 //          first load so not very important
@@ -177,7 +177,7 @@ openerp.base.TreeView = openerp.base.View.extend({
             if (!actions.length) { return; }
             var action = actions[0][2];
             action.flags.new_window = true;
-            self.session.action_manager.do_action(action);
+            self.do_action(action);
         });
     },
 
