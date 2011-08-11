@@ -61,7 +61,7 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
     /**
      * Retrieves the view's number of records per page (|| section)
      *
-     * options > defaults > indefinite
+     * options > defaults > parent.action.limit > indefinite
      *
      * @returns {Number|null}
      */
@@ -69,6 +69,7 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
         if (this._limit === undefined) {
             this._limit = (this.options.limit
                         || this.defaults.limit
+                        || (this.widget_parent.action || {}).limit
                         || null);
         }
         return this._limit;
