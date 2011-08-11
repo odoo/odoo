@@ -210,7 +210,7 @@ Section OpenERP_Server SectionOpenERP_Server
     WriteIniStr "$INSTDIR\openerp-server.conf" "options" "db_user" $TextPostgreSQLUsername
     WriteIniStr "$INSTDIR\openerp-server.conf" "options" "db_password" $TextPostgreSQLPassword
     WriteIniStr "$INSTDIR\openerp-server.conf" "options" "db_port" $TextPostgreSQLPort
-    WriteIniStr "$INSTDIR\Server\openerp-server.conf" "options" "pg_path" "$INSTDIR\PostgreSQL\bin"
+    WriteIniStr "$INSTDIR\openerp-server.conf" "options" "pg_path" "$INSTDIR\PostgreSQL\bin"
 
     nsExec::Exec '"$INSTDIR\openerp-server.exe" --stop-after-init --logfile "$INSTDIR\openerp-server.log" -s'
     nsExec::Exec '"$INSTDIR\service\OpenERPServerService.exe" -auto -install'
