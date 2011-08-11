@@ -184,7 +184,7 @@ class stock_return_picking(osv.osv_memory):
                     'picking_id': new_picking, 'state': 'draft',
                     'location_id': new_location, 'location_dest_id': move.location_id.id,
                     'date': date_cur,
-                    'price_unit': move.price_unit})
+                    'price_unit': data_get.price_unit})
                 move_obj.write(cr, uid, [move.id], {'move_history_ids2':[(4,new_move)]})
         if not returned_lines:
             raise osv.except_osv(_('Warning !'), _("Please specify at least one non-zero quantity!"))
