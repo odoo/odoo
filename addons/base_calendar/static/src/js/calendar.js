@@ -155,7 +155,7 @@ openerp.base_calendar.CalendarView = openerp.base.View.extend({
                         label: (typeof filter === 'object') ? filter[1] : filter,
                         color: evt.color
                     }
-                    if (fn_filter && !fn_filter(filter_item.value)) {
+                    if (typeof(fn_filter) === 'function') {
                         continue;
                     }
                     if (_.indexOf(sidebar_ids, filter_item.value) === -1) {
