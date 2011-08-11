@@ -66,7 +66,7 @@ init: function(parent, element_id, dataset, view_id) {
 
     create_gantt: function() {
 
-        var ganttChartControl = new GanttChart(this.day_length);
+        ganttChartControl = new GanttChart(this.day_length);
         ganttChartControl.setImagePath("/base_gantt/static/lib/dhtmlxGantt/codebase/imgs/");
         ganttChartControl.setEditable(true);
         ganttChartControl.showTreePanel(true);
