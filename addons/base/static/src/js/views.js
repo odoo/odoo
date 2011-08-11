@@ -39,7 +39,6 @@ openerp.base.ActionManager = openerp.base.Widget.extend({
         var type = action.type.replace(/\./g,'_');
         var popup = action.target === 'new';
         action.flags = _.extend({
-            popup: popup,
             views_switcher : !popup,
             search_view : !popup,
             action_buttons : !popup,
@@ -53,7 +52,7 @@ openerp.base.ActionManager = openerp.base.Widget.extend({
         this[type](action, on_close);
     },
     ir_actions_act_window: function (action, on_close) {
-        if (action.flags.popup) {
+        if (action.target === 'new') {
             if (this.dialog == null) {
                 this.dialog = new openerp.base.Dialog(this, { title: action.name, width: '80%' });
                 if(on_close)
@@ -252,13 +251,15 @@ openerp.base.ViewManager =  openerp.base.Widget.extend({
 openerp.base.ViewManagerAction = openerp.base.ViewManager.extend({
     init: function(parent, action) {
         this.session = parent.session;
+        this.action = action;
         var dataset;
         if (!action.res_id) {
             dataset = new openerp.base.DataSetSearch(this, action.res_model, action.context, action.domain);
         } else {
+            this.action.flags.search_view = false;
             dataset = new openerp.base.DataSetStatic(this, action.res_model, action.context, [action.res_id]);
+            dataset.index = 0;
         }
-        this.action = action;
         this._super(parent, dataset, action.views);
         this.action = action;
         this.flags = this.action.flags || {};
