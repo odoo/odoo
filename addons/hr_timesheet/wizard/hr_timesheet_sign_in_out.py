@@ -145,9 +145,9 @@ class hr_si_project(osv.osv_memory):
         return {
             'name': 'Sign in / Sign out',
             'view_type': 'form',
-            'view_mode': 'tree,form',
+            'view_mode': 'form',
             'res_model': 'hr.sign.%s.project' % in_out,
-            'views': [(False,'tree'), (resource_id,'form')],
+            'views': [(resource_id,'form')],
             'type': 'ir.actions.act_window',
             'target': 'new'
         }
