@@ -81,7 +81,7 @@ init: function(view_manager, session, element_id, dataset, view_id) {
     get_events: function() {
 
         var self = this;
-        this.dataset.read_slice(false, false, false, function(result) {
+        this.dataset.read_slice({}, function(result) {
             self.load_event(result);
         });
 
@@ -460,7 +460,7 @@ init: function(view_manager, session, element_id, dataset, view_id) {
 
     reload_gantt: function() {
         var self = this;
-        this.dataset.read_slice(false, false, false, function(response) {
+        this.dataset.read_slice({}, function(response) {
             ganttChartControl.clearAll();
             jQuery("#GanttDiv").children().remove();
             self.load_event(response);

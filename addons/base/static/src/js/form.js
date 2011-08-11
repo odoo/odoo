@@ -451,12 +451,14 @@ openerp.base.form.SidebarAttachments = openerp.base.Widget.extend({
             this.on_attachments_loaded([]);
         } else {
             (new openerp.base.DataSetSearch(
-                    this, 'ir.attachment', this.view.dataset.get_context(),
-                    [['res_model', '=', this.view.dataset.model],
-                     ['res_id', '=', this.view.datarecord.id],
-                     ['type', 'in', ['binary', 'url']]])).read_slice(
-                ['name', 'url', 'type'], false, false,
-                this.on_attachments_loaded);
+                this, 'ir.attachment', this.view.dataset.get_context(),
+                [
+                    ['res_model', '=', this.view.dataset.model],
+                    ['res_id', '=', this.view.datarecord.id],
+                    ['type', 'in', ['binary', 'url']]
+                ])).read_slice(
+                    {fields: ['name', 'url', 'type']},
+                    this.on_attachments_loaded);
         }
     },
     on_attachments_loaded: function(attachments) {

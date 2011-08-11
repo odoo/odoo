@@ -270,12 +270,11 @@ openerp.base.DataSet =  openerp.base.Widget.extend( /** @lends openerp.base.Data
      * Read records.
      *
      * @param {Array} ids identifiers of the records to read
-     * @param {Array} [fields] fields to read and return, by default all fields are returned
+     * @param {Array} fields fields to read and return, by default all fields are returned
      * @param {Function} callback function called with read result
      * @returns {$.Deferred}
      */
     read_ids: function (ids, fields, callback) {
-        var self = this;
         return this.rpc('/base/dataset/get', {
             model: this.model,
             ids: ids,
@@ -287,14 +286,14 @@ openerp.base.DataSet =  openerp.base.Widget.extend( /** @lends openerp.base.Data
      * Read a slice of the records represented by this DataSet, based on its
      * domain and context.
      *
-     * @param {Array} [fields] fields to read and return, by default all fields are returned
-     * @param {Number} [offset=0] The index from which selected records should be returned
-     * @param {Number} [limit=null] The maximum number of records to return
+     * @params {Object} options
+     * @param {Array} [options.fields] fields to read and return, by default all fields are returned
+     * @param {Number} [options.offset=0] The index from which selected records should be returned
+     * @param {Number} [options.limit=null] The maximum number of records to return
      * @param {Function} callback function called with read_slice result
      * @returns {$.Deferred}
      */
-    read_slice: function (fields, offset, limit, callback) {
-    },
+    read_slice: function (options, callback) { return null; },
     /**
      * Reads the current dataset record (from its index)
      *
@@ -476,9 +475,11 @@ openerp.base.DataSetStatic =  openerp.base.DataSet.extend({
         // all local records
         this.ids = ids || [];
     },
-    read_slice: function (fields, offset, limit, callback) {
-        var self = this;
-        offset = offset || 0;
+    read_slice: function (options, callback) {
+        var self = this,
+            offset = options.offset || 0,
+            limit = options.limit || false,
+            fields = options.fields || false;
         var end_pos = limit && limit !== -1 ? offset + limit : undefined;
         return this.read_ids(this.ids.slice(offset, end_pos), fields, callback);
     },
@@ -515,25 +516,28 @@ openerp.base.DataSetSearch =  openerp.base.DataSet.extend({
         // is it necessary ?
         this.ids = [];
     },
-    read_slice: function (fields, offset, limit, callback) {
+    /**
+     * Read a slice of the records represented by this DataSet, based on its
+     * domain and context.
+     *
+     * @params {Object} options
+     * @param {Array} [options.fields] fields to read and return, by default all fields are returned
+     * @param {Number} [options.offset=0] The index from which selected records should be returned
+     * @param {Number} [options.limit=null] The maximum number of records to return
+     * @param {Function} callback function called with read_slice result
+     * @returns {$.Deferred}
+     */
+    read_slice: function (options, callback) {
         var self = this;
-        offset = offset || 0;
-        // cached search, not sure it's a good idea
-        if(this.offset <= offset) {
-            var start = offset - this.offset;
-            if(this.ids.length - start >= limit) {
-                // TODO: check if this could work do only read if possible
-                // return read_ids(ids.slice(start,start+limit),fields,callback)
-            }
-        }
+        var offset = options.offset || 0;
         return this.rpc('/base/dataset/search_read', {
             model: this.model,
-            fields: fields,
+            fields: options.fields || false,
             domain: this.domain,
             context: this.get_context(),
             sort: this.sort(),
             offset: offset,
-            limit: limit
+            limit: options.limit || false
         }, function (result) {
             self.ids = result.ids;
             self.offset = offset;

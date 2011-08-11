@@ -131,7 +131,7 @@ openerp.base_calendar.CalendarView = openerp.base.View.extend({
     },
     load_scheduler: function() {
         var self = this;
-        this.dataset.read_slice([], 0, false, function(events) {
+        this.dataset.read_slice({}, function(events) {
             if (self.session.locale_code) {
                 // TODO: replace $LAB
                 $LAB.setOptions({AlwaysPreserveOrder: true}).script([
@@ -340,7 +340,11 @@ openerp.base_calendar.CalendarView = openerp.base.View.extend({
                 // TODO: handle non-empty results.group_by with read_group
                 self.dataset.context = self.context = results.context;
                 self.dataset.domain = self.domain = results.domain;
-                self.dataset.read_slice(_.keys(self.fields), 0, self.limit, self.on_events_loaded);
+                self.dataset.read_slice({
+                        fields: _.keys(self.fields),
+                        offset:0,
+                        limit: self.limit
+                    }, self.on_events_loaded);
             });
         });
     },
