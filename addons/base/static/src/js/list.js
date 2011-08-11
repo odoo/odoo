@@ -94,7 +94,7 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
                 self.do_delete(ids);
             },
             'action': function (e, action_name, id, callback) {
-                self.do_action(action_name, id, callback);
+                self.do_button_action(action_name, id, callback);
             },
             'row_link': function (e, id, dataset) {
                 self.do_activate_record(dataset.index, id, dataset);
@@ -454,7 +454,7 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
      * @param {Object} id id of the record the action should be called on
      * @param {Function} callback should be called after the action is executed, if non-null
      */
-    do_action: function (name, id, callback) {
+    do_button_action: function (name, id, callback) {
         var   self = this,
             action = _.detect(this.columns, function (field) {
             return field.name === name;
