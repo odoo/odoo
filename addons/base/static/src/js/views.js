@@ -9,11 +9,6 @@ openerp.base.views = function(openerp) {
  */
 openerp.base.client_actions = new openerp.base.Registry();
 
-/**
- * Registry for all the main views
- */
-openerp.base.views = new openerp.base.Registry();
-
 openerp.base.ActionManager = openerp.base.Widget.extend({
     identifier_prefix: "actionmanager",
     init: function(parent) {
@@ -85,7 +80,7 @@ openerp.base.ActionManager = openerp.base.Widget.extend({
         */
     },
     ir_actions_act_window_close: function (action, on_closed) {
-        this.close_dialog();
+        this.dialog_stop();
     },
     ir_actions_server: function (action, on_closed) {
         var self = this;
@@ -273,19 +268,14 @@ openerp.base.ViewManager =  openerp.base.Widget.extend({
     }
 });
 
-// Move parts or everything to ActionManager
 openerp.base.ViewManagerAction = openerp.base.ViewManager.extend({
     init: function(parent, action) {
         this.session = parent.session;
         var dataset;
         if (!action.res_id) {
-            dataset = new openerp.base.DataSetSearch(this, action.res_model, action.context || null, action.domain || null);
+            dataset = new openerp.base.DataSetSearch(this, action.res_model, action.context, action.domain);
         } else {
-            dataset = new openerp.base.DataSetStatic(this, action.res_model, {}, [action.res_id]);
-            if (action.context) {
-                // TODO fme: should normalize all DataSets constructors to (session, model, context, domain, ...)
-                dataset.context = action.context;
-            }
+            dataset = new openerp.base.DataSetStatic(this, action.res_model, action.context, [action.res_id]);
         }
         this._super(parent, dataset, action.views);
         this.action = action;
@@ -471,8 +461,9 @@ openerp.base.View = openerp.base.Widget.extend({
         };
 
         var context = new openerp.base.CompoundContext(dataset.get_context(), action_data.context || {});
+
         if (action_data.special) {
-            // dunno
+            handler({result: {"type":"ir.actions.act_window_close"}});
         } else if (action_data.type=="object") {
             return dataset.call_button(action_data.name, [[record_id], context], handler);
         } else if (action_data.type=="action") {
@@ -553,6 +544,11 @@ openerp.base.View = openerp.base.Widget.extend({
     on_sidebar_view_log: function() {
     }
 });
+
+/**
+ * Registry for all the main views
+ */
+openerp.base.views = new openerp.base.Registry();
 
 openerp.base.json_node_to_xml = function(node, single_quote, indent) {
     // For debugging purpose, this function will convert a json node back to xml
