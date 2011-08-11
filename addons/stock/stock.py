@@ -2597,6 +2597,7 @@ class stock_inventory(osv.osv):
                         'product_uom': line.product_uom.id,
                         'prodlot_id': lot_id,
                         'date': inv.date,
+                        'price_unit': line.product_id.standard_price
                     }
                     if change > 0:
                         value.update( {
