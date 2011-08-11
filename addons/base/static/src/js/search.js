@@ -361,7 +361,6 @@ openerp.base.search.fields = new openerp.base.Registry({
     'selection': 'openerp.base.search.SelectionField',
     'datetime': 'openerp.base.search.DateTimeField',
     'date': 'openerp.base.search.DateField',
-    'one2many': 'openerp.base.search.OneToManyField',
     'many2one': 'openerp.base.search.ManyToOneField',
     'many2many': 'openerp.base.search.ManyToManyField'
 });
@@ -796,6 +795,12 @@ openerp.base.search.ManyToOneField = openerp.base.search.CharField.extend({
         return this._super();
     }
 });
+/**
+ * m2m search field behaves pretty much exactly like a char field
+ *
+ * @class
+ */
+openerp.base.search.ManyToManyField = openerp.base.search.CharField.extend({});
 
 openerp.base.search.ExtendedSearch = openerp.base.OldWidget.extend({
     template: 'SearchView.extended_search',
