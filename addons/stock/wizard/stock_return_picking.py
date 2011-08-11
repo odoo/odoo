@@ -21,7 +21,7 @@
 
 import netsvc
 import time
-
+import decimal_precision as dp
 from osv import osv,fields
 from tools.translate import _
 
@@ -33,7 +33,7 @@ class stock_return_picking_memory(osv.osv_memory):
         'quantity' : fields.float("Quantity", required=True),
         'wizard_id' : fields.many2one('stock.return.picking', string="Wizard"),
         'move_id' : fields.many2one('stock.move', "Move"),
-        'price_unit' : fields.float('Cost Price', digits=(16,2), help="Historical cost price of product")
+        'price_unit' : fields.float('Cost Price', digits_compute=dp.get_precision('Purchase Price'), help="Historical cost price of product")
     }
 
 stock_return_picking_memory()
