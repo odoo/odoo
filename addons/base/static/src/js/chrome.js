@@ -1,9 +1,8 @@
 /*---------------------------------------------------------
- * OpenERP base library
+ * OpenERP Web chrome
  *---------------------------------------------------------*/
 
 openerp.base.chrome = function(openerp) {
-
 
 openerp.base.Notification =  openerp.base.Widget.extend({
     init: function(parent, element_id) {

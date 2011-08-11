@@ -1,5 +1,5 @@
 /*---------------------------------------------------------
- * OpenERP controller framework
+ * OpenERP Web core
  *--------------------------------------------------------*/
 
 openerp.base.core = function(openerp) {
@@ -888,4 +888,5 @@ openerp.base.Session = openerp.base.Widget.extend( /** @lends openerp.base.Sessi
 });
 
 };
+
 // vim:et fdc=0 fdl=0 foldnestmax=3 fdm=syntax:
