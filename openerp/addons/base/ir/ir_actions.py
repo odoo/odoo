@@ -435,14 +435,15 @@ server_object_lines()
 class actions_server(osv.osv):
 
     def _select_signals(self, cr, uid, context=None):
-        cr.execute("SELECT distinct w.osv, t.signal FROM wkf w, wkf_activity a, wkf_transition t \
-        WHERE w.id = a.wkf_id  AND t.act_from = a.id OR t.act_to = a.id AND t.signal!='' \
-        AND t.signal NOT IN (null, NULL)")
+        cr.execute("""SELECT distinct w.osv, t.signal FROM wkf w, wkf_activity a, wkf_transition t
+                      WHERE w.id = a.wkf_id AND
+                            (t.act_from = a.id OR t.act_to = a.id) AND
+                            t.signal IS NOT NULL""")
         result = cr.fetchall() or []
         res = []
         for rs in result:
             if rs[0] is not None and rs[1] is not None:
-                line = rs[0], "%s - (%s)" % (rs[1], rs[0])
+                line = rs[1], "%s - (%s)" % (rs[1], rs[0])
                 res.append(line)
         return res
 
@@ -488,9 +489,9 @@ class actions_server(osv.osv):
         'sequence': fields.integer('Sequence', help="Important when you deal with multiple actions, the execution order will be decided based on this, low number is higher priority."),
         'model_id': fields.many2one('ir.model', 'Object', required=True, help="Select the object on which the action will work (read, write, create)."),
         'action_id': fields.many2one('ir.actions.actions', 'Client Action', help="Select the Action Window, Report, Wizard to be executed."),
-        'trigger_name': fields.selection(_select_signals, string='Trigger Name', size=128, help="Select the Signal name that is to be used as the trigger."),
-        'wkf_model_id': fields.many2one('ir.model', 'Workflow On', help="Workflow to be executed on this model."),
-        'trigger_obj_id': fields.many2one('ir.model.fields','Trigger On', help="Select the object from the model on which the workflow will executed."),
+        'trigger_name': fields.selection(_select_signals, string='Trigger Signal', size=128, help="The workflow signal to trigger"),
+        'wkf_model_id': fields.many2one('ir.model', 'Target Object', help="The object that should receive the workflow signal (must have an associated workflow)"),
+        'trigger_obj_id': fields.many2one('ir.model.fields','Relation Field', help="The field on the current object that links to the target object record (must be a many2one, or an integer field with the record ID)"),
         'email': fields.char('Email Address', size=512, help="Provides the fields that will be used to fetch the email address, e.g. when you select the invoice, then `object.invoice_address_id.email` is the field which gives the correct address"),
         'subject': fields.char('Subject', size=1024, translate=True, help="Specify the subject. You can use fields from the object, e.g. `Hello [[ object.partner_id.name ]]`"),
         'message': fields.text('Message', translate=True, help="Specify the message. You can use the fields from the object. e.g. `Dear [[ object.partner_id.name ]]`"),
@@ -661,10 +662,10 @@ class actions_server(osv.osv):
             if action.state == 'trigger':
                 wf_service = netsvc.LocalService("workflow")
                 model = action.wkf_model_id.model
-                obj_pool = self.pool.get(action.model_id.model)
-                res_id = self.pool.get(action.model_id.model).read(cr, uid, [context.get('active_id')], [action.trigger_obj_id.name])
-                id = res_id [0][action.trigger_obj_id.name]
-                wf_service.trg_validate(uid, model, int(id), action.trigger_name, cr)
+                m2o_field_name = action.trigger_obj_id.name
+                target_id = obj_pool.read(cr, uid, context.get('active_id'), [m2o_field_name])[m2o_field_name]
+                target_id = target_id[0] if isinstance(target_id,tuple) else target_id
+                wf_service.trg_validate(uid, model, int(target_id), action.trigger_name, cr)
 
             if action.state == 'sms':
                 #TODO: set the user and password from the system
