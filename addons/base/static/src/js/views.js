@@ -36,7 +36,7 @@ openerp.base.ActionManager = openerp.base.Widget.extend({
         }
     },
     do_action: function(action, on_close) {
-        console.log("action",action);
+        this.log("action",action);
         var type = action.type.replace(/\./g,'_');
         var popup = action.target === 'new';
         action.flags = _.extend({
@@ -48,7 +48,7 @@ openerp.base.ActionManager = openerp.base.Widget.extend({
             pager : !popup
         }, action.flags || {});
         if (!(type in this)) {
-            console.log("Action manager can't handle action of type " + action.type, action);
+            this.log("Action manager can't handle action of type " + action.type, action);
             return;
         }
         this[type](action, on_close);
@@ -528,10 +528,10 @@ openerp.base.View = openerp.base.Widget.extend({
         }
     },
     on_sidebar_edit_workflow: function() {
-        console.log('Todo');
+        this.log('Todo');
     },
     on_sidebar_customize_object: function() {
-        console.log('Todo');
+        this.log('Todo');
     },
     on_sidebar_import: function() {
     },

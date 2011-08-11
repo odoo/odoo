@@ -806,7 +806,7 @@ openerp.base.form.WidgetLabel = openerp.base.form.Widget.extend({
         var self = this;
         this.$element.find("label").dblclick(function() {
             var widget = self['for'] || self;
-            console.log(widget.element_id , widget);
+            self.log(widget.element_id , widget);
         });
     }
 });
@@ -2213,8 +2213,8 @@ openerp.base.form.FieldBinary = openerp.base.form.Field.extend({
         delete(window[this.iframe]);
         if (size === false) {
             this.notification.warn("File Upload", "There was a problem while uploading your file");
-            // TODO: use openerp web exception handler
-            console.log("Error while uploading file : ", name);
+            // TODO: use openerp web crashmanager
+            this.log("Error while uploading file : ", name);
         } else {
             this.on_file_uploaded_and_valid.apply(this, arguments);
             this.on_ui_change();

@@ -14,13 +14,8 @@
 
     /** @lends openerp */
     var openerp = this.openerp =  {
-        /**
-         * Debug flag turns on logging
-         */
+        // debug flag
         debug: true,
-        // element_ids registry linked to all controllers on the page
-        // TODO rename to elements, or keep gtk naming?
-        screen: {},
         // Per session namespace
         // openerp.<module> will map to
         // openerp.sessions.sessionname.<module> using a closure
@@ -40,8 +35,6 @@
                 // this unique id will be replaced by hostname_databasename by
                 // openerp.base.Connection on the first connection
                 _session_id: "session" + session_counter++,
-                screen: openerp.screen,
-                sessions: openerp.sessions,
                 base: {},
                 web_mobile: {}
             };
