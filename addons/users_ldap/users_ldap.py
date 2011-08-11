@@ -50,7 +50,8 @@ class CompanyLDAP(osv.osv):
             args = []
         cr.execute("""
             SELECT id, company, ldap_server, ldap_server_port, ldap_binddn,
-                   ldap_password, ldap_filter, ldap_base, "user", create_user
+                   ldap_password, ldap_filter, ldap_base, "user", create_user,
+                   ldap_tls
             FROM res_company_ldap
             WHERE ldap_server != '' """ + id_clause + """ ORDER BY sequence
         """, args)
@@ -94,6 +95,8 @@ class CompanyLDAP(osv.osv):
             if results and len(results) == 1:
                 dn = results[0][0]
                 conn = self.connect(conf)
+                if conf['ldap_tls']:
+                    conn.start_tls_s()
                 conn.simple_bind_s(dn, password)
                 conn.unbind()
                 entry = results[0]
@@ -131,6 +134,8 @@ class CompanyLDAP(osv.osv):
         logger = logging.getLogger('orm.ldap')
         try:
             conn = self.connect(conf)
+            if conf['ldap_tls']:
+                conn.start_tls_s()
             conn.simple_bind_s(conf['ldap_binddn'] or '',
                                conf['ldap_password'] or '')
             results = conn.search_st(conf['ldap_base'], ldap.SCOPE_SUBTREE,
@@ -211,12 +216,15 @@ class CompanyLDAP(osv.osv):
             help="Model used for user creation"),
         'create_user': fields.boolean('Create user',
             help="Create the user if not in database"),
+        'ldap_tls': fields.boolean('Use TLS',
+            help="Use STARTTLS to connect to the LDAP server"),
     }
     _defaults = {
         'ldap_server': '127.0.0.1',
         'ldap_server_port': 389,
         'sequence': 10,
         'create_user': True,
+        'ldap_tls': True,
     }
 
 CompanyLDAP()
