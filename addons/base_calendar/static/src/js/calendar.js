@@ -22,6 +22,10 @@ openerp.base_calendar.CalendarView = openerp.base.View.extend({
             this.form_dialog = new openerp.base_calendar.CalendarFormDialog(this, {}, this.options.action_views_ids.form, dataset);
             this.form_dialog.start();
         }
+        this.COLOR_PALETTE = ['#f57900', '#cc0000', '#d400a8', '#75507b', '#3465a4', '#73d216', '#c17d11', '#edd400',
+             '#fcaf3e', '#ef2929', '#ff00c9', '#ad7fa8', '#729fcf', '#8ae234', '#e9b96e', '#fce94f',
+             '#ff8e00', '#ff0000', '#b0008c', '#9000ff', '#0078ff', '#00ff00', '#e6ff00', '#ffff00',
+             '#905000', '#9b0000', '#840067', '#510090', '#0000c9', '#009b00', '#9abe00', '#ffc900' ];
     },
     start: function() {
         this.rpc("/base_calendar/calendarview/load", {"model": this.model, "view_id": this.view_id, 'toolbar': true}, this.on_loaded);
@@ -132,6 +136,10 @@ openerp.base_calendar.CalendarView = openerp.base.View.extend({
     reload_event: function(id) {
         this.dataset.read_ids([id], _.keys(this.fields), this.on_events_loaded);
     },
+    get_color: function(index) {
+        index = index % this.COLOR_PALETTE.length;
+        return this.COLOR_PALETTE[index];
+    },
     on_events_loaded: function(events, fn_filter, no_filter_reload) {
         var self = this;
 
@@ -149,30 +157,31 @@ openerp.base_calendar.CalendarView = openerp.base.View.extend({
             if (this.color_field) {
                 var filter = evt[this.color_field];
                 if (filter) {
-                    //evt.color = '#dddddd';
                     var filter_item = {
                         value: (typeof filter === 'object') ? filter[0] : filter,
-                        label: (typeof filter === 'object') ? filter[1] : filter,
-                        color: evt.color
+                        label: (typeof filter === 'object') ? filter[1] : filter
                     }
                     if (typeof(fn_filter) === 'function' && !fn_filter(filter_item.value)) {
                         continue;
                     }
-                    if (_.indexOf(sidebar_ids, filter_item.value) === -1) {
+                    var filter_index = _.indexOf(sidebar_ids, filter_item.value);
+                    if (filter_index === -1) {
+                        evt.color = filter_item.color = this.get_color(sidebar_ids.length);
                         sidebar_items.push(filter_item);
                         sidebar_ids.push(filter_item.value);
+                    } else {
+                        evt.color = this.get_color(filter_index);
                     }
+                    evt.textColor = '#ffffff';
                 }
             }
 
-            /*
-             * TODO: check dates of type date
-             * if (this.fields[this.date_start]['type'] == 'date') {
+            if (this.fields[this.date_start]['type'] == 'date') {
                 evt[this.date_start] = openerp.base.parse_date(evt[this.date_start]).set({hour: 9}).toString('yyyy-MM-dd HH:mm:ss');
             }
             if (this.date_stop && evt[this.date_stop] && this.fields[this.date_stop]['type'] == 'date') {
                 evt[this.date_stop] = openerp.base.parse_date(evt[this.date_stop]).set({hour: 17}).toString('yyyy-MM-dd HH:mm:ss');
-            }*/
+            }
             res_events.push(this.convert_event(evt));
         }
         scheduler.parse(res_events, 'json');
