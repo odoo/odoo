@@ -1506,7 +1506,6 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
             var dataset = new openerp.base.DataSetStatic(self, self.field.relation, self.build_context());
             dataset.name_get([element_ids[0]], function(data) {
                 self._change_int_ext_value(data[0]);
-                pop.stop();
             });
         });
     },
@@ -1842,16 +1841,16 @@ openerp.base.form.One2ManyListView = openerp.base.ListView.extend({
             pop.select_element(self.o2m.field.relation,{
                 initial_view: "form",
                 alternative_form_view: self.o2m.field.views ? self.o2m.field.views["form"] : undefined,
-                auto_create: false,
+                create_function: function(data) {
+                    return self.o2m.dataset.create(data, function(r) {
+                        self.o2m.dataset.set_ids(self.o2m.dataset.ids.concat([r.result]));
+                        self.o2m.dataset.on_change();
+                    });
+                },
                 parent_view: self.o2m.view
             }, self.o2m.build_domain(), self.o2m.build_context());
-            pop.on_create.add(function(data) {
-                self.o2m.dataset.create(data, function(r) {
-                    self.o2m.dataset.set_ids(self.o2m.dataset.ids.concat([r.result]));
-                    self.o2m.dataset.on_change();
-                    pop.stop();
-                    self.o2m.reload_current_view();
-                });
+            pop.on_select_elements.add_last(function() {
+                self.o2m.reload_current_view();
             });
         }
     },
@@ -1946,7 +1945,6 @@ openerp.base.form.Many2ManyListView = openerp.base.ListView.extend({
                     self.reload_content();
                 }
             });
-            pop.stop();
         });
     },
     do_activate_record: function(index, id) {
@@ -1968,16 +1966,22 @@ openerp.base.form.SelectCreatePopup = openerp.base.OldWidget.extend({
      * - initial_view: form or search (default search)
      * - disable_multiple_selection
      * - alternative_form_view
-     * - auto_create (default true)
+     * - create_function (defaults to a naive saving behavior)
      * - parent_view
      */
     select_element: function(model, options, domain, context) {
+        var self = this;
         this.model = model;
         this.domain = domain || [];
         this.context = context || {};
-        this.options = _.defaults(options || {}, {"initial_view": "search", "auto_create": true});
+        this.options = _.defaults(options || {}, {"initial_view": "search", "create_function": function() {
+            return self.create_row.apply(self, arguments);
+        }});
         this.initial_ids = this.options.initial_ids;
-        openerp.base.form.dialog(this.render());
+        this.created_elements = [];
+        openerp.base.form.dialog(this.render(), {close:function() {
+            self.check_exit();
+        }});
         this.start();
     },
     start: function() {
@@ -2023,6 +2027,7 @@ openerp.base.form.SelectCreatePopup = openerp.base.OldWidget.extend({
             }
             $sbutton.click(function() {
                 self.on_select_elements(self.selected_ids);
+                self.stop();
             });
             self.view_list = new openerp.base.form.SelectCreateListView(self,
                     self.element_id + "_view_list", self.dataset, false,
@@ -2035,15 +2040,11 @@ openerp.base.form.SelectCreatePopup = openerp.base.OldWidget.extend({
         });
         this.searchview.start();
     },
-    on_create: function(data) {
-        if (!this.options.auto_create)
-            return;
+    create_row: function(data) {
         var self = this;
         var wdataset = new openerp.base.DataSetSearch(this, this.model, this.context, this.domain);
         wdataset.parent_view = this.options.parent_view;
-        wdataset.create(data, function(r) {
-            self.on_select_elements([r.result]);
-        });
+        return wdataset.create(data);
     },
     on_select_elements: function(element_ids) {
     },
@@ -2071,18 +2072,43 @@ openerp.base.form.SelectCreatePopup = openerp.base.OldWidget.extend({
         this.view_form.start();
         this.view_form.on_loaded.add_last(function() {
             var $buttons = self.view_form.$element.find(".oe_form_buttons");
-            $buttons.html(QWeb.render("SelectCreatePopup.form.buttons"));
+            $buttons.html(QWeb.render("SelectCreatePopup.form.buttons", {widget:self}));
+            var $nbutton = $buttons.find(".oe_selectcreatepopup-form-save-new");
+            $nbutton.click(function() {
+                self._created = $.Deferred().then(function() {
+                    self._created = undefined;
+                    self.view_form.on_button_new();
+                });
+                self.view_form.do_save();
+            });
             var $nbutton = $buttons.find(".oe_selectcreatepopup-form-save");
             $nbutton.click(function() {
+                self._created = $.Deferred().then(function() {
+                    self._created = undefined;
+                    self.check_exit();
+                });
                 self.view_form.do_save();
             });
             var $cbutton = $buttons.find(".oe_selectcreatepopup-form-close");
             $cbutton.click(function() {
-                self.stop();
+                self.check_exit();
             });
         });
-        this.dataset.on_create.add(this.on_create);
+        this.dataset.on_create.add(function(data) {
+            self.options.create_function(data).then(function(r) {
+                self.created_elements.push(r.result);
+                if (self._created) {
+                    self._created.resolve();
+                }
+            });
+        });
         this.view_form.do_show();
+    },
+    check_exit: function() {
+        if (this.created_elements.length > 0) {
+            this.on_select_elements(this.created_elements);
+        }
+        this.stop();
     }
 });
 
@@ -2092,6 +2118,7 @@ openerp.base.form.SelectCreateListView = openerp.base.ListView.extend({
     },
     select_record: function(index) {
         this.popup.on_select_elements([this.dataset.ids[index]]);
+        this.popup.stop();
     },
     do_select: function(ids, records) {
         this._super(ids, records);
