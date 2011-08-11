@@ -465,7 +465,10 @@ openerp.base.DataSet =  openerp.base.Widget.extend( /** @lends openerp.base.Data
             signal: signal
         }, callback);
     },
-    get_context: function() {
+    get_context: function(request_context) {
+        if (request_context) {
+            return new openerp.base.CompoundContext(this.context, request_context);
+        }
         return this.context;
     }
 });
@@ -522,6 +525,8 @@ openerp.base.DataSetSearch =  openerp.base.DataSet.extend({
      *
      * @params {Object} options
      * @param {Array} [options.fields] fields to read and return, by default all fields are returned
+     * @param {Object} [options.context] context data to add to the request payload, on top of the DataSet's own context
+     * @param {Array} [options.domain] domain data to add to the request payload, ANDed with the dataset's domain
      * @param {Number} [options.offset=0] The index from which selected records should be returned
      * @param {Number} [options.limit=null] The maximum number of records to return
      * @param {Function} callback function called with read_slice result
@@ -533,8 +538,8 @@ openerp.base.DataSetSearch =  openerp.base.DataSet.extend({
         return this.rpc('/base/dataset/search_read', {
             model: this.model,
             fields: options.fields || false,
-            domain: this.domain,
-            context: this.get_context(),
+            domain: this.get_domain(options.domain),
+            context: this.get_context(options.context),
             sort: this.sort(),
             offset: offset,
             limit: options.limit || false
@@ -545,6 +550,12 @@ openerp.base.DataSetSearch =  openerp.base.DataSet.extend({
                 callback(result.records);
             }
         });
+    },
+    get_domain: function (other_domain) {
+        if (other_domain) {
+            return new openerp.base.CompoundDomain(this.domain, other_domain);
+        }
+        return this.domain;
     },
     /**
      * Reads or changes sort criteria on the dataset.

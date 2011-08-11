@@ -399,11 +399,10 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
      * @param {Object} results results of evaluating domain and process for a search
      */
     do_actual_search: function (results) {
-        this.dataset.context = results.context;
-        this.dataset.domain = results.domain;
         this.groups.datagroup = new openerp.base.DataGroup(
             this, this.model,
-            results.domain, results.context,
+            this.dataset.get_domain(results.domain),
+            this.dataset.get_context(results.context),
             results.group_by);
         this.groups.datagroup.sort = this.dataset._sort;
 
@@ -475,11 +474,11 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
      */
     do_activate_record: function (index, id, dataset) {
         var self = this;
-        _.extend(this.dataset, {
-            domain: dataset.domain,
-            context: dataset.get_context()
-        }).read_slice({}, function () {
-            self.select_record(index);
+        this.dataset.read_slice({
+                context: dataset.get_context(),
+                domain: dataset.get_domain()
+            }, function () {
+                self.select_record(index);
         });
     },
     /**

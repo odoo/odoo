@@ -36,7 +36,6 @@ openerp.base.ActionManager = openerp.base.Widget.extend({
         }
     },
     do_action: function(action, on_close) {
-        this.log("action",action);
         var type = action.type.replace(/\./g,'_');
         var popup = action.target === 'new';
         action.flags = _.extend({
@@ -232,9 +231,8 @@ openerp.base.ViewManager =  openerp.base.Widget.extend({
             this.searchview.hide();
         }
         this.searchview.on_search.add(function(domains, contexts, groupbys) {
-            self.views[self.active_view].controller.do_search.call(
-                self, domains.concat(self.domains()),
-                      contexts.concat(self.contexts()), groupbys);
+            var controller = self.views[self.active_view].controller;
+            controller.do_search.call(controller, domains, contexts, groupbys);
         });
         return this.searchview.start();
     },
@@ -248,23 +246,6 @@ openerp.base.ViewManager =  openerp.base.Widget.extend({
     on_remove: function() {
     },
     on_edit: function() {
-    },
-    /**
-     * Domains added on searches by the view manager, to override in subsequent
-     * view manager in order to add new pieces of domains to searches
-     *
-     * @returns an empty list
-     */
-    domains: function () {
-        return [];
-    },
-    /**
-     * Contexts added on searches by the view manager.
-     *
-     * @returns an empty list
-     */
-    contexts: function () {
-        return [];
     }
 });
 
@@ -310,28 +291,6 @@ openerp.base.ViewManagerAction = openerp.base.ViewManager.extend({
                     .then(this.searchview.do_search);
             }
         }
-    },
-    /**
-     * adds action domain to the search domains
-     *
-     * @returns the action's domain
-     */
-    domains: function () {
-        if (!this.action.domain) {
-            return [];
-        }
-        return [this.action.domain];
-    },
-    /**
-     * adds action context to the search contexts
-     *
-     * @returns the action's context
-     */
-    contexts: function () {
-        if (!this.action.context) {
-            return [];
-        }
-        return [this.action.context];
     }
 });
 
