@@ -277,6 +277,7 @@ openerp.base.ViewManagerAction = openerp.base.ViewManager.extend({
         } else {
             dataset = new openerp.base.DataSetStatic(this, action.res_model, action.context, [action.res_id]);
         }
+        this.action = action;
         this._super(parent, dataset, action.views);
         this.action = action;
         this.flags = this.action.flags || {};
