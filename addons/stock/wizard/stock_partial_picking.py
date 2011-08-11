@@ -127,7 +127,7 @@ class stock_partial_picking(osv.osv_memory):
     
         if pick_type == 'in':
             move_memory.update({
-                'cost' : picking.product_id.standard_price, 
+                'cost' : picking.price_unit, 
                 'currency' : picking.product_id.company_id and picking.product_id.company_id.currency_id and picking.product_id.company_id.currency_id.id or False, 
             })
         return move_memory
