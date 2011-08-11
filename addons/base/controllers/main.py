@@ -406,10 +406,10 @@ def load_actions_from_ir_values(req, key, key2, models, meta, context):
     Values = req.session.model('ir.values')
     actions = Values.get(key, key2, models, meta, context)
 
-    return [(id, name, clean_action(action, req.session))
+    return [(id, name, clean_action(action, req.session, context=context))
             for id, name, action in actions]
 
-def clean_action(action, session):
+def clean_action(action, session, context=None):
     action.setdefault('flags', {})
     if action['type'] != 'ir.actions.act_window':
         return action
@@ -417,7 +417,7 @@ def clean_action(action, session):
     if isinstance(action.get('context'), basestring):
         action['context'] = eval(
             action['context'],
-            session.evaluation_context()) or {}
+            session.evaluation_context(context=context)) or {}
 
     if isinstance(action.get('domain'), basestring):
         action['domain'] = eval(
@@ -575,6 +575,7 @@ class DataSet(openerpweb.Controller):
         :rtype: list
         """
         Model = request.session.model(model)
+
         context, domain = eval_context_and_domain(
             request.session, request.context, domain)
 
@@ -598,8 +599,13 @@ class DataSet(openerpweb.Controller):
 
 
     @openerpweb.jsonrequest
+    def read(self, request, model, ids, fields=False):
+        return self.do_search_read(request, model, ids, fields)
+
+    @openerpweb.jsonrequest
     def get(self, request, model, ids, fields=False):
         return self.do_get(request, model, ids, fields)
+
     def do_get(self, request, model, ids, fields=False):
         """ Fetches and returns the records of the model ``model`` whose ids
         are in ``ids``.
@@ -683,6 +689,12 @@ class DataSet(openerpweb.Controller):
     def default_get(self, req, model, fields):
         Model = req.session.model(model)
         return Model.default_get(fields, req.session.eval_context(req.context))
+
+    @openerpweb.jsonrequest
+    def name_search(self, req, model, search_str, domain=[], context={}):
+        m = req.session.model(model)
+        r = m.name_search(search_str+'%', domain, '=ilike', context)
+        return {'result': r}
 
 class DataGroup(openerpweb.Controller):
     _cp_path = "/base/group"
@@ -1017,6 +1029,19 @@ class Action(openerpweb.Controller):
         return clean_action(req.session.model('ir.actions.server').run(
             [action_id], req.session.eval_context(req.context)), req.session)
 
+class TreeView(View):
+    _cp_path = "/base/treeview"
+
+    @openerpweb.jsonrequest
+    def load(self, req, model, view_id, toolbar=False):
+        return self.fields_view_get(req, model, view_id, 'tree', toolbar=toolbar)
+
+    @openerpweb.jsonrequest
+    def action(self, req, model, id):
+        return load_actions_from_ir_values(
+            req,'action', 'tree_but_open',[(model, id)],
+            False, req.session.eval_context(req.context))
+
 def export_csv(fields, result):
     fp = StringIO()
     writer = csv.writer(fp, quoting=csv.QUOTE_ALL)
@@ -1229,4 +1254,3 @@ class Export(View):
             return export_xls(field, result)
         else:
             return export_csv(field, result)
-

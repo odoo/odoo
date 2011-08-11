@@ -9,14 +9,18 @@ openerp.base_calendar.CalendarView = openerp.base.View.extend({
 // Dhtmlx scheduler ?
     init: function(parent, element_id, dataset, view_id, options) {
         this._super(parent, element_id);
-        this.set_default_options();
+        this.set_default_options(options);
         this.dataset = dataset;
         this.model = dataset.model;
         this.view_id = view_id;
         this.domain = this.dataset.domain || [];
         this.context = this.dataset.context || {};
         this.has_been_loaded = $.Deferred();
-        this.options = options || {};
+        this.creating_event_id = null;
+        if (this.options.action_views_ids.form) {
+            this.form_dialog = new openerp.base_calendar.CalendarFormDialog(this, {}, this.options.action_views_ids.form, dataset);
+            this.form_dialog.start();
+        }
     },
     start: function() {
         this.rpc("/base_calendar/calendarview/load", {"model": this.model, "view_id": this.view_id, 'toolbar': true}, this.on_loaded);
@@ -44,14 +48,19 @@ openerp.base_calendar.CalendarView = openerp.base.View.extend({
         this.fields =  this.fields_view.fields;
 
         //* Calendar Fields *
-        this.calendar_fields['date_start'] = {'name': this.date_start, 'kind': this.fields[this.date_start]['type']};
+        this.calendar_fields.date_start = {'name': this.date_start, 'kind': this.fields[this.date_start].type};
 
         if (this.date_delay) {
-             this.calendar_fields['date_delay'] = {'name': this.date_delay, 'kind': this.fields[this.date_delay]['type']};
+            if (this.fields[this.date_delay].type != 'float') {
+                throw new Error("Calendar view has a 'date_delay' type != float");
+            }
+            this.calendar_fields.date_delay = {'name': this.date_delay, 'kind': this.fields[this.date_delay].type};
         }
-
         if (this.date_stop) {
-            this.calendar_fields['date_stop'] = {'name': this.date_stop, 'kind': this.fields[this.date_stop]['type']};
+            this.calendar_fields.date_stop = {'name': this.date_stop, 'kind': this.fields[this.date_stop].type};
+        }
+        if (!this.date_delay && !this.date_stop) {
+            throw new Error("Calendar view has none of the following attributes : 'date_stop', 'date_delay'");
         }
 
         for (var fld = 0; fld < this.fields_view.arch.children.length; fld++) {
@@ -90,7 +99,8 @@ openerp.base_calendar.CalendarView = openerp.base.View.extend({
         scheduler.config.multi_day = true; //Multi day events are not rendered in daily and weekly views
         scheduler.config.start_on_monday = true;
         scheduler.config.scroll_hour = 8;
-        scheduler.config.drag_resize = scheduler.config.drag_create = !!this.date_stop;
+        scheduler.config.drag_resize = true;
+        scheduler.config.drag_create = true;
 
         // Initialize Sceduler
         this.mode = this.mode || 'month';
@@ -100,6 +110,7 @@ openerp.base_calendar.CalendarView = openerp.base.View.extend({
         scheduler.attachEvent('onEventAdded', this.do_create_event);
         scheduler.attachEvent('onEventDeleted', this.do_delete_event);
         scheduler.attachEvent('onEventChanged', this.do_save_event);
+        scheduler.attachEvent('onDblClick', this.do_edit_event);
 
         this.mini_calendar = scheduler.renderCalendar({
             container: this.sidebar.navigator.element_id,
@@ -116,9 +127,14 @@ openerp.base_calendar.CalendarView = openerp.base.View.extend({
     refresh_minical: function() {
         scheduler.updateCalendar(this.mini_calendar);
     },
+    reload_event: function(id) {
+        this.dataset.read_ids([id], _.keys(this.fields), this.on_events_loaded);
+    },
     load_scheduler: function() {
         var self = this;
-        this.dataset.read_slice([], 0, false, function(events) {
+        this.dataset.read_slice({
+                fields: _.keys(self.fields_view.fields)
+            }, function(events) {
             if (self.session.locale_code) {
                 // TODO: replace $LAB
                 $LAB.setOptions({AlwaysPreserveOrder: true}).script([
@@ -134,7 +150,6 @@ openerp.base_calendar.CalendarView = openerp.base.View.extend({
     },
     on_events_loaded: function(events) {
         var self = this;
-        scheduler.clearAll();
 
         //To parse Events we have to convert date Format
         var res_events = [],
@@ -174,82 +189,35 @@ openerp.base_calendar.CalendarView = openerp.base.View.extend({
         this.refresh_minical();
         this.sidebar.responsible.on_events_loaded(sidebar_items);
     },
-    convert_event: function(event) {
-        var starts = event[this.date_start],
-            ends = event[this.date_delay] || 1,
-            span = 0,
+    convert_event: function(evt) {
+        var date_start = openerp.base.parse_datetime(evt[this.date_start]),
+            date_stop = this.date_stop ? openerp.base.parse_datetime(evt[this.date_stop]) : null,
+            date_delay = evt[this.date_delay] || null,
             res_text = '',
             res_description = [];
 
-        var parse_start_date = openerp.base.parse_datetime(starts);
-        if (event[this.date_stop]) {
-            var parse_end_date = openerp.base.parse_datetime(event[this.date_stop]);
-        }
         if (this.info_fields) {
-            var fld = event[this.info_fields[0]];
-
-            if (typeof fld == 'object') {
-                res_text = fld[fld.length -1];
-            } else {
-                res_text = fld;
-            }
+            var fld = evt[this.info_fields[0]];
+            res_text = (typeof fld == 'object') ? fld[fld.length -1] : res_text = fld;
 
             var sliced_info_fields = this.info_fields.slice(1);
-            for (sl_fld in sliced_info_fields) {
-                var slc_fld = event[sliced_info_fields[sl_fld]];
-
+            for (var sl_fld in sliced_info_fields) {
+                var slc_fld = evt[sliced_info_fields[sl_fld]];
                 if (typeof slc_fld == 'object') {
                     res_description.push(slc_fld[slc_fld.length - 1]);
-                } else {
-                    if(slc_fld) res_description.push(slc_fld);
+                } else if (slc_fld) {
+                    res_description.push(slc_fld);
                 }
             }
         }
-
-        if (starts && ends) {
-            var n = 0,
-                h = ends;
-            if (ends == this.day_length) {
-                span = 1;
-            } else if (ends > this.day_length) {
-                n = ends / this.day_length;
-                h = ends % this.day_length;
-                n = parseInt(Math.floor(n));
-
-                if (h > 0) {
-                    span = n + 1;
-                } else {
-                    span = n;
-                }
-            }
-            var start = parse_start_date.setTime((parse_start_date.getTime() + (h * 60 * 60) + (n * 24 * 60 * 60)));
-            ends = parse_start_date;
-        }
-
-        if (starts && this.date_stop) {
-            ends = parse_end_date;
-            if (event[this.date_stop] == undefined) {
-                var start = parse_start_date.setTime((parse_start_date.getTime() + (h * 60 * 60) + (n * 24 * 60 * 60)));
-                ends = parse_start_date;
-            }
-            var tds = parse_start_date.getTime(),
-                tde = parse_end_date.getTime();
-
-            if (tds >= tde) {
-                tde = tds + 60 * 60;
-                parse_end_date.setTime(tde);
-                ends = parse_end_date;
-            }
-            n = (tde - tds) / (60 * 60);
-            if (n >= this.day_length) {
-                span = Math.ceil(n / 24);
-            }
+        if (!date_stop && date_delay) {
+            date_stop = date_start.clone().addHours(date_delay);
         }
         return {
-            'start_date': parse_start_date.toString('yyyy-MM-dd HH:mm:ss'),
-            'end_date': ends.toString('yyyy-MM-dd HH:mm:ss'),
+            'start_date': date_start.toString('yyyy-MM-dd HH:mm:ss'),
+            'end_date': date_stop.toString('yyyy-MM-dd HH:mm:ss'),
             'text': res_text,
-            'id': event['id'],
+            'id': evt.id,
             'title': res_description.join()
         }
     },
@@ -262,8 +230,10 @@ openerp.base_calendar.CalendarView = openerp.base.View.extend({
             scheduler.changeEventId(event_id, id);
             self.refresh_minical();
         }, function(r, event) {
-            // TODO: open form view
-            self.notification.warn(self.name, "Could not create event");
+            self.creating_event_id = event_id;
+            self.form_dialog.form.on_record_loaded(data);
+            self.form_dialog.open();
+            event.preventDefault();
         });
     },
     do_save_event: function(event_id, event_obj) {
@@ -274,6 +244,7 @@ openerp.base_calendar.CalendarView = openerp.base.View.extend({
         });
     },
     do_delete_event: function(event_id, event_obj) {
+        var self = this;
         // dhtmlx sends this event even when it does not exist in openerp.
         // Eg: use cancel in dhtmlx new event dialog
         if (_.indexOf(this.dataset.ids, parseInt(event_id, 10)) > -1) {
@@ -282,39 +253,48 @@ openerp.base_calendar.CalendarView = openerp.base.View.extend({
             });
         }
     },
+    do_edit_event: function(event_id) {
+        event_id = parseInt(event_id, 10);
+        var index = _.indexOf(this.dataset.ids, event_id);
+        if (index > -1) {
+            this.dataset.index = index;
+            this.form_dialog.form.do_show();
+            this.form_dialog.open();
+        } else {
+            this.notification.warn("Edit event", "Could not find event #" + event_id);
+        }
+    },
     get_event_data: function(event_obj) {
         var data = {
             name: event_obj.text
         };
-        var date_format = this.calendar_fields.date_start.kind == 'time' ? 'HH:mm:ss' : 'yyyy-MM-dd HH:mm:ss';
-        data[this.date_start] = event_obj.start_date.toString(date_format);
+        data[this.date_start] = openerp.base.format_datetime(event_obj.start_date);
         if (this.date_stop) {
-            data[this.date_stop] = event_obj.end_date.toString(date_format);
+            data[this.date_stop] = openerp.base.format_datetime(event_obj.end_date);
         }
         if (this.date_delay) {
-            var tds = (event_obj.start_date.getOrdinalNumber() / 1e3 >> 0) - (event_obj.start_date.getOrdinalNumber() < 0);
-            var tde = (event_obj.end_date.getOrdinalNumber() / 1e3 >> 0) - (event_obj.end_date.getOrdinalNumber() < 0);
-            var n = (tde - tds) / (60 * 60);
-            if (n > this.day_length) {
-                var d = Math.floor(n / 24),
-                    h = n % 24;
-                n = d * this.day_length + h;
-            }
-            data[this.date_delay] = n;
+            var diff_seconds = Math.round((event_obj.end_date.getTime() - event_obj.start_date.getTime()) / 1000);
+            data[this.date_delay] = diff_seconds / 3600;
         }
         return data;
     },
     do_search: function(domains, contexts, groupbys) {
         var self = this;
-        this.rpc('/base/session/eval_domain_and_context', {
-            domains: domains,
-            contexts: contexts,
-            group_by_seq: groupbys
-        }, function (results) {
-            // TODO: handle non-empty results.group_by with read_group
-            self.dataset.context = self.context = results.context;
-            self.dataset.domain = self.domain = results.domain;
-            self.dataset.read_slice(_.keys(self.fields), 0, self.limit, self.on_events_loaded);
+        $.when(this.has_been_loaded).then(function() {
+            self.rpc('/base/session/eval_domain_and_context', {
+                domains: domains,
+                contexts: contexts,
+                group_by_seq: groupbys
+            }, function (results) {
+                // TODO: handle non-empty results.group_by with read_group
+                self.dataset.context = self.context = results.context;
+                self.dataset.domain = self.domain = results.domain;
+                self.dataset.read_slice({
+                        fields: _.keys(self.fields),
+                        offset:0,
+                        limit: self.limit
+                    }, self.on_events_loaded);
+            });
         });
     },
     do_show: function () {
@@ -331,53 +311,39 @@ openerp.base_calendar.CalendarView = openerp.base.View.extend({
         if (this.sidebar) {
             this.sidebar.$element.hide();
         }
+    }
+});
+
+openerp.base_calendar.CalendarFormDialog = openerp.base.Dialog.extend({
+    init: function(view, options, view_id, dataset) {
+        this._super(view, options);
+        this.dataset = dataset;
+        this.view_id = view_id;
+        this.view = view;
     },
-    popup_event: function(event_id) {
-        var self = this;
-        if (event_id) event_id = parseInt(event_id, 10);
-        var action = {
-            res_model: this.dataset.model,
-            res_id: event_id,
-            views: [[false, 'form']],
-            type: 'ir.actions.act_window',
-            view_type: 'form',
-            view_mode: 'form',
-            flags : {
-                search_view: false,
-                sidebar : false,
-                views_switcher : false,
-                action_buttons : false,
-                pager: false
-            }
-        }
-        var element_id = _.uniqueId("act_window_dialog");
-        var dialog = $('<div>', {
-            'id': element_id
-        }).dialog({
-            modal: true,
-            width: 'auto',
-            height: 'auto',
-            buttons: {
-                Cancel: function() {
-                    $(this).dialog("destroy");
-                },
-                Save: function() {
-                    var view_manager = action_manager.viewmanager;
-                    var _dialog = this;
-                    view_manager.views[view_manager.active_view].controller.do_save(function(r) {
-                        $(_dialog).dialog("destroy");
-                        // self.start();
-                        self.load_scheduler();
-                    })
-                }
-            }
+    start: function() {
+        this._super();
+        this.form = new openerp.base.FormView(this, this.element_id, this.dataset, this.view_id, {
+            sidebar: false,
+            pager: false
         });
-        var action_manager = new openerp.base.ActionManager(this, element_id);
-        action_manager.start();
-        action_manager.do_action(action);
-        //Default_get
-        if (!event_id) {
-            this.dataset.index = null;
+        this.form.start();
+        this.form.on_created.add_last(this.on_form_dialog_saved);
+        this.form.on_saved.add_last(this.on_form_dialog_saved);
+    },
+    on_form_dialog_saved: function() {
+        var id = this.dataset.ids[this.dataset.index];
+        if (this.view.creating_event_id) {
+            scheduler.changeEventId(this.view.creating_event_id, id);
+            this.view.creating_event_id = null;
+        }
+        this.view.reload_event(id);
+        this.close();
+    },
+    on_close: function() {
+        if (this.view.creating_event_id) {
+            scheduler.deleteEvent(this.view.creating_event_id);
+            this.view.creating_event_id = null;
         }
     }
 });
