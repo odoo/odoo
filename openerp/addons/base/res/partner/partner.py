@@ -454,8 +454,11 @@ class res_partner_bank(osv.osv):
         if not len(ids):
             return []
         res = []
-        for id in self.browse(cr, uid, ids):
-            res.append((id.id,id.acc_number))
+        for val in self.browse(cr, uid, ids):
+            if val.bank.code:
+                res.append((val.id, val.bank.code + ': ' + val.acc_number))
+            else:
+                res.append((val.id, val.acc_number))
         return res
 
 res_partner_bank()

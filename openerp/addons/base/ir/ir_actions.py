@@ -854,17 +854,22 @@ Automatic: Runs whenever the system is reconfigured."""),
         if wizard.type == 'automatic':
             wizard.write({'state': 'done'})
 
+        # Load action
         res = self.pool.get('ir.actions.act_window').read(cr, uid, wizard.action_id.id, [], context=context)
+        res.setdefault('context','{}')
         res['nodestroy'] = True
 
         # Open a specific record when res_id is provided in the context
-        if res.get('context'):
-            user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-            ctx = eval(res['context'], {'user': user})
-            if ctx.get('res_id'):
-                res.update(
-                    res_id=ctx.pop('res_id'),
-                    context=ctx)
+        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+        ctx = eval(res['context'], {'user': user})
+        if ctx.get('res_id'):
+            res.update({'res_id': ctx.pop('res_id')})
+
+        # disable log for automatic wizards
+        if wizard.type == 'automatic':
+            ctx.update({'disable_log': True})
+        res.update({'context': ctx})
+
         return res
 
     def action_open(self, cr, uid, ids, context=None):
