@@ -18,6 +18,7 @@ import openerpweb
 import openerpweb.ast
 import openerpweb.nonliterals
 
+from babel.messages.pofile import read_po
 
 # Should move to openerpweb.Xml2Json
 class Xml2Json:
@@ -156,6 +157,21 @@ class WebClient(openerpweb.Controller):
             'css': css
         }
         return r
+    
+    @openerpweb.jsonrequest
+    def translations(self, addon_name, lang):
+        f_name = os.path.join(openerpweb.path_addons, addon_name, "po", lang + ".po")
+        with open(f_name) as t_file:
+            po = read_po(t_file)
+        
+        transl = {"messages":[]}
+        
+        for x in po:
+            if x.id:
+                transl["messages"].append({'id': x.id, 'string': x.string})
+
+        return transl
+    
 
 class Database(openerpweb.Controller):
     _cp_path = "/base/database"
