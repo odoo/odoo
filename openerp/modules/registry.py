@@ -23,10 +23,12 @@
 
 """
 
+import logging
+
 import openerp.sql_db
 import openerp.osv.orm
 import openerp.modules.db
-
+import openerp.tools.config
 
 class Registry(object):
     """ Model registry for a particular database.
@@ -46,7 +48,11 @@ class Registry(object):
         self.db = openerp.sql_db.db_connect(db_name)
 
         cr = self.db.cursor()
-        self.has_unaccent = openerp.modules.db.has_unaccent(cr)
+        has_unaccent = openerp.modules.db.has_unaccent(cr)
+        if openerp.tools.config['unaccent'] and not has_unaccent:
+            logger = logging.getLogger('unaccent')
+            logger.warning("The option --unaccent was given but no unaccent() function was found in database.")
+        self.has_unaccent = openerp.tools.config['unaccent'] and has_unaccent
         cr.close()
 
     def do_parent_store(self, cr):

@@ -72,6 +72,47 @@ That is, a domain could be a valid operand. But this is not the case. A domain
 is really limited to a two-level nature, and can not takes a recursive form: a
 domain is not a valid second-level operand.
 
+Unaccent - Accent-insensitive search
+
+OpenERP will use the SQL function 'unaccent' when available for the 'ilike' and
+'not ilike' operators. Normally the 'unaccent' function is obtained from the
+PostgreSQL 'unaccent' contrib module[0]. The steps to install the module might
+differ on specific PostgreSQL versions. We give here some instruction for
+PostgreSQL 9.x on a Ubuntu system.
+
+Ubuntu doesn't come yet with PostgreSQL 9.x, so an alternive package source
+is used. We use Martin Pitt's PPA available at ppa:pitti/postgresql[1]. See
+[2] for instructions. Basically:
+
+    > sudo add-apt-repository ppa:pitti/postgresql
+    > sudo apt-get update
+
+Once the package list is up-to-date, you have to install PostgreSQL 9.0 and
+its contrib modules.
+
+    > sudo apt-get install postgresql-9.0 postgresql-contrib-9.0
+
+When you want to enable unaccent on some database:
+
+    > psql9 <database> -f /usr/share/postgresql/9.0/contrib/unaccent.sql
+
+Here 'psql9' is an alias for the newly installed PostgreSQL 9.0 tool, together
+with the correct port if necessary (for instance if PostgreSQL 8.4 is running
+on 5432). (Other aliases can be used for createdb and dropdb.)
+
+    > alias psql9='/usr/lib/postgresql/9.0/bin/psql -p 5433'
+
+You can check unaccent is working:
+
+    > psql9 <database> -c"select unaccent('hélène')"
+
+Finally, to instruct OpenERP to really use the unaccent function, you have to
+start the server specifying the --unaccent flag.
+
+[0] http://developer.postgresql.org/pgdocs/postgres/unaccent.html
+[1] https://launchpad.net/~pitti/+archive/postgresql
+[2] https://launchpad.net/+help/soyuz/ppa-sources-list.html
+
 """
 
 import logging
@@ -82,6 +123,7 @@ import openerp.modules
 
 #.apidoc title: Domain Expressions
 
+# Domain operators.
 NOT_OPERATOR = '!'
 OR_OPERATOR = '|'
 AND_OPERATOR = '&'
@@ -678,9 +720,15 @@ class expression(object):
             op = {'=like':'like','=ilike':'ilike'}.get(operator, operator)
             if left in table._columns:
                 format = like and '%s' or table._columns[left]._symbol_set[0]
-                query = '(%s.%s %s %s)' % (table._table, left, op, format)
+                if self.has_unaccent and op in ('ilike', 'not ilike'):
+                    query = '(unaccent(%s.%s) %s unaccent(%s))' % (table._table, left, op, format)
+                else:
+                    query = '(%s.%s %s %s)' % (table._table, left, op, format)
             else:
-                query = "(%s.%s %s '%s')" % (table._table, left, op, right)
+                if self.has_unaccent and op in ('ilike', 'not ilike'):
+                    query = "(unaccent(%s.%s) %s unaccent('%s'))" % (table._table, left, op, right)
+                else:
+                    query = "(%s.%s %s '%s')" % (table._table, left, op, right)
 
             add_null = False
             if like:

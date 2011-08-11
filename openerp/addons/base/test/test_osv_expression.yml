@@ -435,6 +435,23 @@
         domain = [('x','in',['y','z']),('a.v','=','e'),'|','|',('a','=','b'),'!',('c','>','d'),('e','!=','f'),('g','=','h')]
         norm_domain = ['&','&','&'] + domain
         assert norm_domain == expression.normalize(domain), "Non-normalized domains should be properly normalized"
-
+-
+    Unaccent. Create a company with an accent in its name.
+-
+    !record {model: res.company, id: ymltest_unaccent_company}:
+        name: Hélène
+-
+    Test the unaccent-enabled 'ilike'.
+-
+    !python {model: res.company}: |
+        if self.pool.has_unaccent:
+            ids = self.search(cr, uid, [('name','ilike','Helene')], {})
+            assert ids == [ref('ymltest_unaccent_company')]
+            ids = self.search(cr, uid, [('name','ilike','hélène')], {})
+            assert ids == [ref('ymltest_unaccent_company')]
+            ids = self.search(cr, uid, [('name','not ilike','Helene')], {})
+            assert ref('ymltest_unaccent_company') not in ids
+            ids = self.search(cr, uid, [('name','not ilike','hélène')], {})
+            assert ref('ymltest_unaccent_company') not in ids
 
 
