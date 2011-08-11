@@ -112,6 +112,7 @@ openerp.base_calendar.CalendarView = openerp.base.View.extend({
         scheduler.attachEvent('onEventDeleted', this.do_delete_event);
         scheduler.attachEvent('onEventChanged', this.do_save_event);
         scheduler.attachEvent('onDblClick', this.do_edit_event);
+        scheduler.attachEvent('onBeforeLightbox', this.do_edit_event);
 
         this.mini_calendar = scheduler.renderCalendar({
             container: this.sidebar.navigator.element_id,
@@ -259,9 +260,9 @@ openerp.base_calendar.CalendarView = openerp.base.View.extend({
             this.dataset.index = index;
             this.form_dialog.form.do_show();
             this.form_dialog.open();
-        } else {
-            this.notification.warn("Edit event", "Could not find event #" + event_id);
+            return false;
         }
+        return true;
     },
     get_event_data: function(event_obj) {
         var data = {
