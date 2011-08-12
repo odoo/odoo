@@ -862,7 +862,7 @@ class account_invoice(osv.osv):
                 i = 0
                 for t in totlines:
                     ctx = context.copy()
-                    ctx = {'date':inv.date_invoice}
+                    ctx.update({'date':inv.date_invoice})
                     if inv.currency_id.id != company_currency:
                         amount_currency = cur_obj.compute(cr, uid,
                                 company_currency, inv.currency_id.id, t[1], context=ctx)
