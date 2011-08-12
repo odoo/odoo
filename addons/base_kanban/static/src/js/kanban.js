@@ -126,6 +126,7 @@ openerp.base_kanban.KanbanView = openerp.base.View.extend({
             _.each(data.records, function(record, index_row) {
                 if(parseInt(record.id) == id) {
                     self.all_display_data[index]['records'].splice(index_row, 1)
+                    self.all_display_data[index]['ids'].splice(index_row, 1)
                     return false;
                 }
             });
