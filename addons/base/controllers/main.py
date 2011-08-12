@@ -159,7 +159,7 @@ class WebClient(openerpweb.Controller):
         return r
     
     @openerpweb.jsonrequest
-    def translations(self, mods, lang):
+    def translations(self, req, mods, lang):
         transs = {}
         for addon_name in mods:
             transl = {"messages":[]}
@@ -175,7 +175,7 @@ class WebClient(openerpweb.Controller):
             for x in po:
                 if x.id:
                     transl["messages"].append({'id': x.id, 'string': x.string})
-        return transs
+        return {"modules": transs}
     
 
 class Database(openerpweb.Controller):

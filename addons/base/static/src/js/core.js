@@ -563,6 +563,38 @@ openerp.base.OldWidget = openerp.base.Widget.extend({
     }
 });
 
+openerp.base.TranslationDataBase = openerp.base.Class.extend({
+    init: function() {
+        this.db = {};
+    },
+    set_bundle: function(translation_bundle) {
+        var self = this;
+        this.db = {};
+        _.each(translation_bundle.modules, function(mod, name) {
+            var tmp = self.db[name] = {};
+            _.each(mod.messages, function(message) {
+                tmp[message.id] = message.string;
+            });
+        });
+    },
+    build_translation_function: function(addon_name) {
+        var self = this;
+        var fcnt = function(str) {
+            var tmp = self.get(addon_name, str);
+            return tmp === undefined ? str : tmp;
+        }
+        fcnt.database = this;
+        return fcnt;
+    },
+    get: function(addon_name, key) {
+        if (this.db[addon_name] && this.db[addon_name].messages[key])
+            this.db[addon_name].message[key];
+        return undefined;
+    }
+});
+
+openerp.base._t = new openerp.base.TranslationDataBase().build_translation_function();
+
 openerp.base.Session = openerp.base.CallbackEnabled.extend( /** @lends openerp.base.Session# */{
     /**
      * @constructs
@@ -786,15 +818,19 @@ openerp.base.Session = openerp.base.CallbackEnabled.extend( /** @lends openerp.b
         var self = this;
         this.rpc('/base/session/modules', {}, function(result) {
             self.module_list = result;
-            var modules = self.module_list.join(',');
-            if(self.debug || true) {
-                self.rpc('/base/webclient/csslist', {"mods": modules}, self.do_load_css);
-                self.rpc('/base/webclient/jslist', {"mods": modules}, self.do_load_js);
-            } else {
-                self.do_load_css(["/base/webclient/css?mods="+modules]);
-                self.do_load_js(["/base/webclient/js?mods="+modules]);
-            }
-            openerp._modules_loaded = true;
+            self.rpc('/base/webclient/translations', {mods: ["base"].concat(result), lang: "fr"})
+                .then(function(transs) {
+                openerp.base._t.database.set_bundle(transs);
+                var modules = self.module_list.join(',');
+                if(self.debug || true) {
+                    self.rpc('/base/webclient/csslist', {"mods": modules}, self.do_load_css);
+                    self.rpc('/base/webclient/jslist', {"mods": modules}, self.do_load_js);
+                } else {
+                    self.do_load_css(["/base/webclient/css?mods="+modules]);
+                    self.do_load_js(["/base/webclient/js?mods="+modules]);
+                }
+                openerp._modules_loaded = true;
+            });
         });
     },
     do_load_css: function (files) {
@@ -832,6 +868,7 @@ openerp.base.Session = openerp.base.CallbackEnabled.extend( /** @lends openerp.b
             openerp[mod] = {};
             // init module mod
             if(openerp._openerp[mod] != undefined) {
+                openerp._openerp[mod]._T = openerp.base._t.database.build_translation_function(mod);
                 openerp._openerp[mod](openerp);
                 this.module_loaded[mod] = true;
             }
