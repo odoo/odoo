@@ -784,8 +784,8 @@ class function(_column):
 
         Implements the function field.
 
-        :param orm_template model: model to which the field belongs (should be ``self`` for
-                                   a model method)
+        :param orm model: model to which the field belongs (should be ``self`` for
+                          a model method)
         :param field_name(s): name of the field to compute, or if ``multi`` is provided,
                               list of field names to compute.
         :type field_name(s): str | [str]
@@ -848,8 +848,8 @@ class function(_column):
 
         Callable that implements the ``write`` operation for the function field.
 
-        :param orm_template model: model to which the field belongs (should be ``self`` for
-                                   a model method)
+        :param orm model: model to which the field belongs (should be ``self`` for
+                          a model method)
         :param str field_name: name of the field to set
         :param fnct_inv_arg: arbitrary value passed when declaring the function field
         :return: True
@@ -869,10 +869,10 @@ class function(_column):
         a search criterion based on the function field into a new domain based only on
         columns that are stored in the database.
 
-        :param orm_template model: model to which the field belongs (should be ``self`` for
-                                   a model method)
-        :param orm_template model_again: same value as ``model`` (seriously! this is for backwards
-                                         compatibility)
+        :param orm model: model to which the field belongs (should be ``self`` for
+                          a model method)
+        :param orm model_again: same value as ``model`` (seriously! this is for backwards
+                                compatibility)
         :param str field_name: name of the field to search on
         :param list criterion: domain component specifying the search criterion on the field.
         :rtype: list
@@ -917,7 +917,7 @@ class function(_column):
                 corresponding records in the source model (whose field values
                 need to be recomputed).
 
-                :param orm_template model: trigger_model
+                :param orm model: trigger_model
                 :param list trigger_ids: ids of the records of trigger_model that were
                                          modified
                 :rtype: list
