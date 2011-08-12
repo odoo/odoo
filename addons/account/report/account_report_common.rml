@@ -1,0 +1,187 @@
+<?xml version="1.0"?>
+<document filename="Account Reports.pdf">
+  <template pageSize="(595.0,842.0)" title="Account Reports" author="Martin Simon" allowSplitting="20">
+    <pageTemplate id="first">
+      <frame id="first" x1="57.0" y1="57.0" width="481" height="728"/>
+    </pageTemplate>
+  </template>
+  <stylesheet>
+    <blockTableStyle id="Standard_Outline">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+    </blockTableStyle>
+    <blockTableStyle id="Table1">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <lineStyle kind="GRID" colorName="black"/>
+    </blockTableStyle>
+    <blockTableStyle id="Table2">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <lineStyle kind="GRID" colorName="black"/>
+    </blockTableStyle>
+    <blockTableStyle id="Table8">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <lineStyle kind="GRID" colorName="black"/>
+    </blockTableStyle>
+    <blockTableStyle id="Table10">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <lineStyle kind="GRID" colorName="black"/>
+    </blockTableStyle>
+    <blockTableStyle id="Table11">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+    </blockTableStyle>
+    <blockTableStyle id="Table3">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <lineStyle kind="GRID" colorName="black"/>
+    </blockTableStyle>
+    <initialize>
+      <paraStyle name="all" alignment="justify"/>
+    </initialize>
+    <paraStyle name="P1" fontName="Helvetica" fontSize="11.0" leading="14" alignment="CENTER"/>
+    <paraStyle name="P2" fontName="Helvetica-Bold" fontSize="11.0" leading="14" alignment="CENTER"/>
+    <paraStyle name="P3" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="CENTER" spaceBefore="6.0" spaceAfter="6.0"/>
+    <paraStyle name="P4" fontName="Helvetica" fontSize="8.0" leading="10" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="P5" fontName="Helvetica-Bold" fontSize="2.0" leading="3" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="P6" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="Standard" fontName="Times-Roman"/>
+    <paraStyle name="Heading" fontName="Helvetica" fontSize="14.0" leading="17" spaceBefore="12.0" spaceAfter="6.0"/>
+    <paraStyle name="Text body" fontName="Times-Roman" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="List" fontName="Times-Roman" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="Caption" fontName="Times-Roman" fontSize="12.0" leading="15" spaceBefore="6.0" spaceAfter="6.0"/>
+    <paraStyle name="Index" fontName="Times-Roman"/>
+    <paraStyle name="Preformatted Text" fontName="Helvetica" fontSize="10.0" leading="13" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="Table Contents" fontName="Times-Roman"/>
+    <paraStyle name="terp_header" fontName="Helvetica-Bold" fontSize="15.0" leading="19" alignment="LEFT" spaceBefore="12.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_tblheader_General" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="6.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_tblheader_General_Centre" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="CENTER" spaceBefore="6.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_default_8" fontName="Helvetica" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_Centre_8" fontName="Helvetica" fontSize="8.0" leading="10" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_tblheader_Details" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="Table Heading" fontName="Times-Roman" alignment="CENTER"/>
+  </stylesheet>
+  <story>
+    <para style="Preformatted Text">
+        <font color="white"> </font>
+    </para>
+    <blockTable colWidths="56.0,53.0,380.0" style="Table8">
+      <tr>
+        <td>
+          <para style="P3">Chart of Account</para>
+        </td>
+        <td>
+          <para style="P3">Fiscal Year</para>
+        </td>
+        <td>
+          <para style="P3">Filters By [[ get_filter(data)!='No Filter' and get_filter(data) ]]</para>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <para style="terp_default_Centre_8">[[ get_account(data) or '' ]]</para>
+        </td>
+        <td>
+          <para style="terp_default_Centre_8">[[ get_fiscalyear(data) or '' ]]</para>
+        </td>
+        <td>
+          <blockTable colWidths="179.0,195.0" style="Table10">
+            <tr>
+              <td>
+                <para style="P5">[[ get_filter(data)=='Date' or removeParentNode('blockTable') ]]</para>
+                <para style="P6">Start Date</para>
+              </td>
+              <td>
+                <para style="P6">End Date</para>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <para style="terp_default_Centre_8">[[ get_start_date(data) ]]</para>
+              </td>
+              <td>
+                <para style="terp_default_Centre_8">[[ get_end_date(data) ]]</para>
+              </td>
+            </tr>
+          </blockTable>
+          <blockTable colWidths="176.0,195.0" style="Table11">
+            <tr>
+              <td>
+                <para style="P5">[[ get_filter(data)=='Periods' or removeParentNode('blockTable')]] </para>
+                <para style="P6">]]Start Period</para>
+              </td>
+              <td>
+                <para style="P6">End Period</para>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <para style="P4">[[ get_start_period(data) or removeParentNode('para') ]]</para>
+              </td>
+              <td>
+                <para style="P4">[[ get_end_period(data) or removeParentNode('para') ]]</para>
+              </td>
+            </tr>
+          </blockTable>
+          <para style="terp_default_Centre_8">
+            <font color="white"> </font>
+          </para>
+        </td>
+      </tr>
+    </blockTable>
+     <para style="Preformatted Text">
+          <font color="white"> </font>
+     </para>
+    <blockTable colWidths="490.0" style="Table1">
+      <para style="P2">[[ repeatIn(get_report_name(data),'r') ]] </para>
+      <tr>
+        <td>
+            <para style="P2">[[ r['name'] ]]</para>
+            <blockTable colWidths="482.0" style="Table2">
+              <tr>
+                <td>
+                  <para style="P3">Account Details</para>
+                </td>
+              </tr>
+            </blockTable>
+            <blockTable colWidths="95.0,223.0,163.0" style="Table3">
+              <tr>
+                <td>
+                  <para style="P3">Code</para>
+                </td>
+                <td>
+                  <para style="P3">Name</para>
+                </td>
+                <td>
+                  <para style="P3">Balance</para>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <para style="terp_default_8">
+                    [[ repeatIn(get_account_details(r['id']), 'a') ]] [[ a['code'] ]]
+                  </para>
+                </td>
+                <td>
+                  <para style="terp_default_8">
+                    [[ a['name'] ]]
+                  </para>
+                </td>
+                <td>
+                  <para style="terp_default_8">
+                    [[ a['bal'] ]]
+                  </para>
+                </td>
+              </tr>
+            </blockTable>
+         </td>
+      </tr>
+    </blockTable>
+    <para style="Standard">
+      <font color="white"> </font>
+    </para>
+  </story>
+</document>

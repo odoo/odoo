@@ -21,25 +21,27 @@
 
 from osv import fields, osv
 
-class account_report(osv.osv_memory):
-    _name = "account.report"
+class accounting_report(osv.osv_memory):
+    _name = "accounting.report"
     _inherit = "account.common.report"
     _description = "Account Report"
 
     _columns = {
-        'parent_id': fields.many2one('account.report', 'Report'),
-        'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of invoice tax."),
-        'type': fields.selection([
-            ('sum','Sum'),
-            ('accounts','Accounts'),
-            ('account_report','Account Report'),
-            ],'Type'),
-        'account_ids': fields.many2many('account.account', 'account_account_report', 'report_line_id', 'account_id', 'Accounts'),
-        'note': fields.text('Notes'),
-        'account_report_id':  fields.many2one('account.report', 'Account Reports'),
         'enable_comparison': fields.boolean('Enable Comparison'),
+        'display_details_per_account': fields.boolean('Display Details per Account'),
+        'account_report_id':  fields.many2one('account.report', 'Account Reports', required=True),
     }
 
-account_report()
+    def _print_report(self, cr, uid, ids, data, context=None):
+        if context is None:
+            context = {}
+        data['form'].update(self.read(cr, uid, ids, ['account_report_id'], context=context)[0])
+        return {
+            'type': 'ir.actions.report.xml',
+            'report_name': 'account.common',
+            'datas': data,
+        }
+
+accounting_report()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

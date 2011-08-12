@@ -2703,5 +2703,54 @@ action = self.pool.get('res.config').next(cr, uid, [], context)
             parent="menu_finance_payables"
             action="base.action_partner_supplier_form" sequence="100"/>
 
+        <!--
+            Account Reports
+        -->
+
+        <record id="view_account_report_form" model="ir.ui.view">
+            <field name="name">account.report.form</field>
+            <field name="model">account.report</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Account Report">
+                    <field name="name"/>
+                    <field name="parent_id"/>
+                    <field name="sequence"/>
+                    <field name="type"/>
+                    <field name="account_report_id"/>
+                    <separator string="Accounts" colspan="4"/>
+                    <field name="account_ids" nolabel="1" colspan="4"/>
+                    <separator string="Notes" colspan="4"/>
+                    <field name="note" nolabel="1" colspan="4"/>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_account_report_tree" model="ir.ui.view">
+            <field name="name">account.report.tree</field>
+            <field name="model">account.report</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Account Report">
+                    <field name="sequence"/>
+                    <field name="name"/>
+                    <field name="parent_id"/>
+                    <field name="type"/>
+                    <field name="account_report_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_account_report_tree" model="ir.actions.act_window">
+            <field name="name">Account Reports</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account.report</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_account_report_tree"/>
+        </record>
+
+        <menuitem id="menu_account_reports_tree" name="Account Reports" parent="menu_account_reports" action="action_account_report_tree"/>
+
     </data>
 </openerp>

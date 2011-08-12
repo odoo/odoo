@@ -2,19 +2,16 @@
 <openerp>
      <data>
 
-        <record id="account_report_view" model="ir.ui.view">
+        <record id="accounting_report_view" model="ir.ui.view">
             <field name="name">Account Report</field>
-            <field name="model">account.report</field>
+            <field name="model">accounting.report</field>
             <field name="type">form</field>
             <field name="inherit_id" ref="account.account_common_report_view"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='chart_account_id']" position="replace">
-                    <field name="account_report_id"/>
-                    <field name="sequence"/>
-                    <field name="type"/>
-                </xpath>
-                <xpath expr="//field[@name='target_move']" position="replace">
+                <xpath expr="//field[@name='target_move']" position="after">
+                    <field name="account_report_id" domain="[('parent_id','=',False)]"/>
                     <field name="enable_comparison"/>
+                    <field name="display_details_per_account"/>
                 </xpath>
                 <xpath expr="//notebook/page[@string='Filters']" position="replace">
                     <page string="Comparison" attrs="{'invisible': [('enable_comparison','=',False)]}">
@@ -28,25 +25,22 @@
                    </page>
                 </xpath>
                 <xpath expr="//notebook/page[@string='Journals']" position="replace">
-                    <page string="Accounts">
-                        <field name="account_ids" nolabel="1"/>
-                    </page>
                 </xpath>
             </field>
         </record>
 
         <record id="action_account_report" model="ir.actions.act_window">
-             <field name="name">Mail Report</field>
-             <field name="res_model">account.report</field>
+             <field name="name">Report</field>
+             <field name="res_model">accounting.report</field>
              <field name="type">ir.actions.act_window</field>
              <field name="view_type">form</field>
              <field name="view_mode">form</field>
-             <field name="view_id" ref="account_report_view"/>
+             <field name="view_id" ref="accounting_report_view"/>
              <field name="target">new</field>
        </record>
 
        <menuitem icon="STOCK_PRINT"
-            name="Mail Report"
+            name="Report"
             action="action_account_report"
             groups="group_account_user,group_account_manager"
             id="menu_account_report"

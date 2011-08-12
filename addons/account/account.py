@@ -1331,7 +1331,7 @@ class account_move(osv.osv):
 
     def _centralise(self, cr, uid, move, mode, context=None):
         assert mode in ('debit', 'credit'), 'Invalid Mode' #to prevent sql injection
-        currency_obj = self.pool.get('res.currency') 
+        currency_obj = self.pool.get('res.currency')
         if context is None:
             context = {}
 
@@ -1593,7 +1593,7 @@ class account_tax_code(osv.osv):
                        (parent_ids,) + where_params)
         res=dict(cr.fetchall())
         obj_precision = self.pool.get('decimal.precision')
-        res2 = {} 
+        res2 = {}
         for record in self.browse(cr, uid, ids, context=context):
             def _rec_get(record):
                 amount = res.get(record.id, 0.0)
@@ -2606,6 +2606,30 @@ class account_fiscal_position_account_template(osv.osv):
     }
 
 account_fiscal_position_account_template()
+
+class account_report(osv.osv):
+    _name = "account.report"
+    _description = "Account Report"
+
+    _columns = {
+        'name': fields.char('Report Name', size=64, required=True),
+        'parent_id': fields.many2one('account.report', 'Parent Report'),
+        'sequence': fields.integer('Sequence'),
+        'type': fields.selection([
+            ('sum','Sum'),
+            ('accounts','Accounts'),
+            ('account_report','Account Report'),
+            ],'Type'),
+        'account_ids': fields.many2many('account.account', 'account_account_report', 'report_line_id', 'account_id', 'Accounts'),
+        'note': fields.text('Notes'),
+        'account_report_id':  fields.many2one('account.report', 'Account Report'),
+    }
+
+    _defaults = {
+        'type': 'sum',
+    }
+
+account_report()
 
     # Multi charts of Accounts wizard
 
