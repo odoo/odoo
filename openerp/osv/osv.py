@@ -277,7 +277,7 @@ class osv_memory(orm.orm):
 
     def create(self, cr, uid, vals, context=None):
         self.vacuum(cr, uid)
-        super(osv_memory, self).create(cr, uid, vals, context)
+        return super(osv_memory, self).create(cr, uid, vals, context)
 
     def unlink(self, cr, uid, ids, context=None):
         super(osv_memory, self).unlink(cr, uid, ids, context)
