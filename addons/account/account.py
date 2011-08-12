@@ -2750,9 +2750,9 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             if complete_tax:
             # default tax is given by the lowesst sequence. For same sequence we will take the latest created as it will be the case for tax created while isntalling the generic chart of account
                 sale_tax_ids = tax_templ_obj.search(cr, uid, [("chart_template_id"
-                                              , "=", chart_template_id), ('type_tax_use', 'in', ('sale','all'))], order="sequence, id desc")
+                                              , "=", chart_template_id), ('type_tax_use', 'in', ('sale','all')), ('installable', '=', True)], order="sequence, id desc")
                 purchase_tax_ids = tax_templ_obj.search(cr, uid, [("chart_template_id"
-                                              , "=", chart_template_id), ('type_tax_use', 'in', ('purchase','all'))], order="sequence, id desc")
+                                              , "=", chart_template_id), ('type_tax_use', 'in', ('purchase','all')), ('installable', '=', True)], order="sequence, id desc")
                 res['value'].update({'sale_tax': sale_tax_ids and sale_tax_ids[0] or False, 'purchase_tax': purchase_tax_ids and purchase_tax_ids[0] or False})
             res['value'].update({'complete_tax': complete_tax, 'code_digits': data.code_digits})
         return res
@@ -2777,11 +2777,11 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                 res.update({'chart_template_id': ids[0]})
             if 'sale_tax' in fields:
                 sale_tax_ids = tax_templ_obj.search(cr, uid, [("chart_template_id"
-                                              , "=", ids[0]), ('type_tax_use', 'in', ('sale','all'))], order="sequence")
+                                              , "=", ids[0]), ('type_tax_use', 'in', ('sale','all')), ('installable', '=', True)], order="sequence")
                 res.update({'sale_tax': sale_tax_ids and sale_tax_ids[0] or False})
             if 'purchase_tax' in fields:
                 purchase_tax_ids = tax_templ_obj.search(cr, uid, [("chart_template_id"
-                                          , "=", ids[0]), ('type_tax_use', 'in', ('purchase','all'))], order="sequence")
+                                          , "=", ids[0]), ('type_tax_use', 'in', ('purchase','all')), ('installable', '=', True)], order="sequence")
                 res.update({'purchase_tax': purchase_tax_ids and purchase_tax_ids[0] or False})
 
         return res
