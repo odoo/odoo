@@ -615,6 +615,7 @@ openerp.base.Session = openerp.base.CallbackEnabled.extend( /** @lends openerp.b
         this.db = "";
         this.login = "";
         this.password = "";
+        this.user_context= {};
         this.uid = false;
         this.session_id = false;
         this.module_list = [];
@@ -741,6 +742,7 @@ openerp.base.Session = openerp.base.CallbackEnabled.extend( /** @lends openerp.b
         this.rpc("/base/session/login", params, function(result) {
             self.session_id = result.session_id;
             self.uid = result.uid;
+            self.user_context = result.context;
             self.session_save();
             self.on_session_valid();
             if (success_callback)
@@ -758,6 +760,7 @@ openerp.base.Session = openerp.base.CallbackEnabled.extend( /** @lends openerp.b
         this.session_id = this.get_cookie('session_id');
         this.db = this.get_cookie('db');
         this.login = this.get_cookie('login');
+        this.user_context = this.get_cookie("user_context");
         // we should do an rpc to confirm that this session_id is valid and if it is retrieve the information about db and login
         // then call on_session_valid
         this.on_session_valid();
@@ -770,6 +773,7 @@ openerp.base.Session = openerp.base.CallbackEnabled.extend( /** @lends openerp.b
         this.set_cookie('session_id', this.session_id);
         this.set_cookie('db', this.db);
         this.set_cookie('login', this.login);
+        this.set_cookie('user_context', this.user_context);
     },
     logout: function() {
         delete this.uid;
@@ -822,7 +826,9 @@ openerp.base.Session = openerp.base.CallbackEnabled.extend( /** @lends openerp.b
         var self = this;
         this.rpc('/base/session/modules', {}, function(result) {
             self.module_list = result;
-            self.rpc('/base/webclient/translations', {mods: ["base"].concat(result), lang: "fr"})
+            self.rpc('/base/webclient/translations',{
+                    mods: ["base"].concat(result),
+                    lang: self.user_context.lang})
                 .then(function(transs) {
                 openerp.base._t.database.set_bundle(transs);
                 var modules = self.module_list.join(',');

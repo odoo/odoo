@@ -272,10 +272,12 @@ class Session(openerpweb.Controller):
     @openerpweb.jsonrequest
     def login(self, req, db, login, password):
         req.session.login(db, login, password)
+        ctx = req.session.get_context()
 
         return {
             "session_id": req.session_id,
             "uid": req.session._uid,
+            "context": ctx
         }
 
     @openerpweb.jsonrequest
