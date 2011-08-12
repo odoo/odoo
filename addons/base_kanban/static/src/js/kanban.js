@@ -42,7 +42,6 @@ openerp.base_kanban.KanbanView = openerp.base.View.extend({
 
     on_show_data: function(datas) {
         var self = this;
-        this.all_records = [];
         var new_qweb = new QWeb2.Engine();
         self.$element.html(QWeb.render("KanbanBiew", {"datas" :datas}));
 
@@ -166,40 +165,49 @@ openerp.base_kanban.KanbanView = openerp.base.View.extend({
     on_recieve_record: function(event, ui) {
         var self = this;
         var from = ui.item.index();
-        this.flag = false;
+        var search_action = false;
         var to = ui.item.prev().index() || 0;
         if(!ui.item.attr("id")){
             return false;
         }
-        if(self.columns.sequence && self.source_index.index && self.source_index.index != from) {
+        if(self.columns.sequence && (self.source_index.index >= 0 && self.source_index.index != from) ||
+                (self.source_index.column && self.source_index.column != ui.item.parent().attr('id'))) {
             var child_record = ui.item.parent().children();
             var data, sequence = 1, index = to;
             child_record.splice(0, to);
             if(to >= 0 && child_record) {
-                var record_id = child_record.attr('id').split("_");
-                if(record_id.length >= 2) {
-                    _.each(self.all_records, function(record){
-                        if(parseInt(record_id[1]) == record.id && record.sequence) {
-                            sequence = record.sequence;
-                            return false;
-                        }
+                var record_id = parseInt($(child_record).attr("id").split("_")[1]);
+                if(record_id) {
+                    var flag = false;
+                    _.each(self.all_display_data, function(data, index) {
+                        _.each(data.records, function(record, index_row) {
+	                        if(record_id == record.id && record.sequence) {
+	                            sequence = record.sequence;
+	                            flag = true;
+	                            return false;
+	                        }
+                        });
+                        if(flag) {return false;}
                     });
                 }
             }
             _.each(child_record, function (child) {
                 var child_id = parseInt($(child).attr("id").split("_")[1]);
                 if(child_id) {
+                    var flag = false;
                     _.each(self.all_display_data, function(data, index) {
                         _.each(data.records, function(record, index_row) {
                             if(parseInt(record.id) == child_id) {
                                 self.all_display_data[index]['records'][index_row]['sequence'] = sequence;
+                                flag = true;
                                 return false;
                             }
                         });
+                        if(flag) {return false;}
                     });
                     self.dataset.write(child_id, {sequence: sequence});
                     sequence++;
-                    self.flag = true;
+                    search_action = true;
                 }
             });
         }
@@ -221,6 +229,7 @@ openerp.base_kanban.KanbanView = openerp.base.View.extend({
                             return false;
                         }
                     });
+                    if(update_record) {return false;}
                 });
                 _.each(self.all_display_data, function(data, index) {
                     if (data.value == value || (data.value == 'false' && value == false)) {
@@ -229,10 +238,10 @@ openerp.base_kanban.KanbanView = openerp.base.View.extend({
                 });
                 data_val[self.group_by_field] = value;
                 self.dataset.write(wirte_id, data_val);
-                self.flag = true;
+                search_action = true;
             }
         }
-        if(self.flag) {
+        if(search_action) {
             self.on_reload_kanban();
         }
         this.source_index = {};
@@ -241,14 +250,12 @@ openerp.base_kanban.KanbanView = openerp.base.View.extend({
     on_reload_kanban: function(){
         var self = this;
         var new_qweb = new QWeb2.Engine();
-        this.all_records = []
         new_qweb.add_template('<templates><t t-name="custom_template">' + this.template_xml + '</t></templates>')
         _.each(self.all_display_data, function(data, index) {
             if(data.records.length > 0){
                 _.each(data.records, function(record) {
                     self.$element.find("#data_" + record.id).children().remove()
                     self.$element.find("#data_" + record.id).append(new_qweb.render('custom_template', record));
-                    self.all_records.push(record);
                 });
             }
             else{
