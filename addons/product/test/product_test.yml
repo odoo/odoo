@@ -1,0 +1,51 @@
+-
+  In order to test product,I start by creating a Category
+-
+ !record {model: product.category, id: product_category_suger}:
+    name: vehicle
+    type: normal
+-
+  I create a 20KG UOM for 'Suger'  
+-
+ !record {model: product.uom, id: product_20k_uom_suger}:
+    name: 20KG
+    uom_type: bigger
+    category_id: 2
+    rounding: 0.010
+    factor_inv: 20
+-
+  I create a 10KG UOM for 'Suger'  
+-
+ !record {model: product.uom, id: product_10k_uom_suger}:
+    name: 10KG
+    uom_type: bigger
+    category_id: 2
+    rounding: 0.010
+    factor_inv: 10
+-
+  I create a new product 'Suger'
+-
+ !record {model: product.product, id: product_suger_id1}:
+    categ_id: 'product.product_category_suger'
+    cost_method: standard
+    name: Cycle
+    procure_method: make_to_order
+    seller_delay: '1'
+    standard_price: 400.0
+    uom_id: product.product_20k_uom_suger
+    uom_po_id: product.product_20k_uom_suger
+    volume: 0.0
+    warranty: 0.0
+    weight: 0.0
+    weight_net: 0.0
+-
+  I test onchanged on Uom, Create Dublicate Product and Delete original Product.
+-
+  !python {model: product.product}: |
+    from tools.translate import _
+    ids = []
+    ids.append(ref("product_suger_id1"))
+    self.onchange_uom(cr ,uid, ids, ref("product.product_20k_uom_suger"), ref("product_10k_uom_suger"))
+    self.copy(cr, uid, ids[0])
+    self.unlink(cr, uid, ids)
+-
