@@ -362,7 +362,8 @@ openerp.base.search.fields = new openerp.base.Registry({
     'datetime': 'openerp.base.search.DateTimeField',
     'date': 'openerp.base.search.DateField',
     'many2one': 'openerp.base.search.ManyToOneField',
-    'many2many': 'openerp.base.search.ManyToManyField'
+    'many2many': 'openerp.base.search.CharField',
+    'one2many': 'openerp.base.search.CharField'
 });
 openerp.base.search.Invalid = openerp.base.Class.extend( /** @lends openerp.base.search.Invalid# */{
     /**
@@ -723,11 +724,8 @@ openerp.base.search.DateField = openerp.base.search.Field.extend( /** @lends ope
     }
 });
 openerp.base.search.DateTimeField = openerp.base.search.DateField.extend({
-    // TODO: time?
 });
 openerp.base.search.ManyToOneField = openerp.base.search.CharField.extend({
-    // TODO: @widget
-    // TODO: .selection, .context, .domain
     init: function (view_section, field, view) {
         this._super(view_section, field, view);
         var self = this;
@@ -795,12 +793,6 @@ openerp.base.search.ManyToOneField = openerp.base.search.CharField.extend({
         return this._super();
     }
 });
-/**
- * m2m search field behaves pretty much exactly like a char field
- *
- * @class
- */
-openerp.base.search.ManyToManyField = openerp.base.search.CharField.extend({});
 
 openerp.base.search.ExtendedSearch = openerp.base.OldWidget.extend({
     template: 'SearchView.extended_search',
