@@ -570,25 +570,29 @@ openerp.base.TranslationDataBase = openerp.base.Class.extend({
     set_bundle: function(translation_bundle) {
         var self = this;
         this.db = {};
-        _.each(translation_bundle.modules, function(mod, name) {
-            var tmp = self.db[name] = {};
+        var modules = _.keys(translation_bundle.modules);
+        if (_.include(modules, "base")) {
+            modules = _.without(modules, "base").concat(["base"]);
+        }
+        _.each(modules, function(name) {
+            var mod = translation_bundle.modules[name];
             _.each(mod.messages, function(message) {
-                tmp[message.id] = message.string;
+                self.db[message.id] = message.string;
             });
         });
     },
-    build_translation_function: function(addon_name) {
+    build_translation_function: function() {
         var self = this;
         var fcnt = function(str) {
-            var tmp = self.get(addon_name, str);
+            var tmp = self.get(str);
             return tmp === undefined ? str : tmp;
         }
         fcnt.database = this;
         return fcnt;
     },
-    get: function(addon_name, key) {
-        if (this.db[addon_name] && this.db[addon_name].messages[key])
-            this.db[addon_name].message[key];
+    get: function(key) {
+        if (this.db[key])
+            return this.db[key];
         return undefined;
     }
 });
@@ -868,7 +872,7 @@ openerp.base.Session = openerp.base.CallbackEnabled.extend( /** @lends openerp.b
             openerp[mod] = {};
             // init module mod
             if(openerp._openerp[mod] != undefined) {
-                openerp._openerp[mod]._T = openerp.base._t.database.build_translation_function(mod);
+                openerp._openerp[mod]._T = openerp.base._t.database.build_translation_function();
                 openerp._openerp[mod](openerp);
                 this.module_loaded[mod] = true;
             }
