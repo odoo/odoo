@@ -284,6 +284,8 @@ def init_module_models(cr, module_name, obj_list):
         cr.commit()
     for obj in obj_list:
         obj._auto_end(cr, {'module': module_name})
+        if obj._transient:
+            obj.vacuum(cr, openerp.SUPERUSER)
         cr.commit()
     todo.sort()
     for t in todo:

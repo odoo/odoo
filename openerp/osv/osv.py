@@ -22,11 +22,13 @@
 #.apidoc title: Objects Services (OSV)
 
 import orm
+import openerp
 import openerp.netsvc as netsvc
 import openerp.pooler as pooler
 import openerp.sql_db as sql_db
 import logging
 from psycopg2 import IntegrityError, errorcodes
+from openerp.tools.config import config
 from openerp.tools.func import wraps
 from openerp.tools.translate import translate
 from openerp.osv.orm import MetaModel
@@ -203,12 +205,70 @@ class osv_memory(orm.orm):
     """ Deprecated class. """
     __metaclass__ = MetaModel
     _register = False # Set to false if the model shouldn't be automatically discovered.
+    _transient = True
+    _max_count = None
+    _max_hours = None
+    _check_time = 20
+
+    def __init__(self, pool, cr):
+        super(osv_memory, self).__init__(pool, cr)
+        self.check_id = 0
+        self._max_count = config.get('osv_memory_count_limit')
+        self._max_hours = config.get('osv_memory_age_limit')
+
+    def _clean_transient_rows_older_than(self, cr, seconds):
+        if not self._log_access:
+            self.logger = logging.getLogger('orm').warning(
+                "Transient model without write_date: %s" % (self._name,))
+            return
+
+        cr.execute("SELECT id FROM " + self._table + " WHERE "
+            "COALESCE(write_date, create_date, now())::timestamp < "
+            "(now() - interval %s)", ("%s seconds" % seconds,))
+        ids = [x[0] for x in cr.fetchall()]
+        self.unlink(cr, openerp.SUPERUSER, ids)
+
+    def _clean_old_transient_rows(self, cr, count):
+        if not self._log_access:
+            self.logger = logging.getLogger('orm').warning(
+                "Transient model without write_date: %s" % (self._name,))
+            return
+
+        cr.execute(
+            "SELECT id, COALESCE(write_date, create_date, now())::timestamp"
+            " AS t FROM " + self._table +
+            " ORDER BY t LIMIT %s", (count,))
+        ids = [x[0] for x in cr.fetchall()]
+        self.unlink(cr, openerp.SUPERUSER, ids)
+
+    def vacuum(self, cr, uid, force=False):
+        """ Run the vacuum cleaner, i.e. unlink old records from the
+        virtual osv_memory tables if the "max count" or "max age" conditions are enabled
+        and have been reached. This method can be called very often (e.g. everytime a record
+        is created), but will only actually trigger the cleanup process once out of
+        "_check_time" times (by default once out of 20 calls)."""
+        self.check_id += 1
+        if (not force) and (self.check_id % self._check_time):
+            self.check_id = 0
+            return True
+        tounlink = []
+
+        # Age-based expiration
+        if self._max_hours:
+            self._clean_transient_rows_older_than(cr, self._max_hours * 60 * 60)
+
+        # Count-based expiration
+        if self._max_count:
+            self._clean_old_transient_rows(cr, self._max_count)
+
+        return True
 
 
 class osv(orm.orm):
     """ Deprecated class. """
     __metaclass__ = MetaModel
     _register = False # Set to false if the model shouldn't be automatically discovered.
+    _transient = False
 
 
 def start_object_proxy():

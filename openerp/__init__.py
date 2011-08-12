@@ -42,5 +42,8 @@ import tools
 import wizard
 import workflow
 
+# The hard-coded super-user id (a.k.a. administrator, or root user).
+SUPERUSER = 1
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
