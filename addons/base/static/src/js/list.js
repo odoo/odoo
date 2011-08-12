@@ -772,7 +772,7 @@ openerp.base.ListView.List = openerp.base.Class.extend( /** @lends openerp.base.
             var old_index = this.dataset.index;
             this.dataset.index = record_index;
             read_p = this.dataset.read_index(
-                _.filter(_.pluck(this.columns, 'name'), _.identity),
+                _.pluck(_(this.columns).filter(function (r) {return r.tag === 'field';}), 'name'),
                 function (record) {
                     var form_record = self.transform_record(record);
                     self.rows.splice(record_index, 1, form_record);
@@ -1035,7 +1035,7 @@ openerp.base.ListView.Groups = openerp.base.Class.extend( /** @lends openerp.bas
             page = this.datagroup.openable ? this.page : view.page;
 
         dataset.read_slice({
-                fields: _.filter(_.pluck(_.select(this.columns, function(x) {return x.tag == "field";}), 'name'), _.identity),
+                fields: _.pluck(_.select(this.columns, function(x) {return x.tag == "field"}), 'name'),
                 offset: page * limit,
                 limit: limit
             }, function (records) {

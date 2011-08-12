@@ -793,8 +793,8 @@ class View(openerpweb.Controller):
         """ Parses an arbitrary string containing a domain, transforms it
         to either a literal domain or a :class:`openerpweb.nonliterals.Domain`
 
-        :param domain: the domain to parse, if the domain is not a string it is assumed to
-        be a literal domain and is returned as-is
+        :param domain: the domain to parse, if the domain is not a string it
+                       is assumed to be a literal domain and is returned as-is
         :param session: Current OpenERP session
         :type session: openerpweb.openerpweb.OpenERPSession
         """
@@ -810,8 +810,8 @@ class View(openerpweb.Controller):
         """ Parses an arbitrary string containing a context, transforms it
         to either a literal context or a :class:`openerpweb.nonliterals.Context`
 
-        :param context: the context to parse, if the context is not a string it is assumed to
-        be a literal domain and is returned as-is
+        :param context: the context to parse, if the context is not a string it
+               is assumed to be a literal domain and is returned as-is
         :param session: Current OpenERP session
         :type session: openerpweb.openerpweb.OpenERPSession
         """
