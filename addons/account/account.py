@@ -881,7 +881,7 @@ class account_period(osv.osv):
     }
     _order = "date_start, special desc"
     _sql_constraints = [
-        ('name_company_uniq', 'unique(name, company_id)', 'The name of the period must be unique per company !'),
+        ('name_company_uniq', 'unique(name, company_id)', 'The name of the period must be unique per company!'),
     ]
     
     def _check_duration(self,cr,uid,ids,context=None):
