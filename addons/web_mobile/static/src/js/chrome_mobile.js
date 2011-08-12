@@ -1,5 +1,5 @@
 openerp.web_mobile.chrome_mobile = function(openerp) {
-openerp.web_mobile.Shortcuts =  openerp.base.Controller.extend({
+openerp.web_mobile.Shortcuts =  openerp.base.Widget.extend({
     init: function(session, element_id) {
         this._super(session, element_id);
     },
@@ -15,11 +15,11 @@ openerp.web_mobile.Shortcuts =  openerp.base.Controller.extend({
         id = $shortcut.data('menu');
         res_id = $shortcut.data('res');
         jQuery("#oe_header").find("h1").html($shortcut.data('name'));
-        this.listview = new openerp.web_mobile.ListView(this.session, "oe_app", res_id);
+        this.listview = new openerp.web_mobile.ListView(this, "oe_app", res_id);
         this.listview.start();
     }
 });
-openerp.web_mobile.Header =  openerp.base.Controller.extend({
+openerp.web_mobile.Header =  openerp.base.Widget.extend({
     init: function(session, element_id) {
         this._super(session, element_id);
     },
@@ -31,12 +31,12 @@ openerp.web_mobile.Header =  openerp.base.Controller.extend({
         $opt = $(ev.currentTarget);
         current_id = $opt.attr('id');
         if (current_id == 'home') {
-            this.homepage = new openerp.web_mobile.Login(this.session, "oe_app");
+            this.homepage = new openerp.web_mobile.Login(this, "oe_app");
             this.homepage.on_login_valid();
         }
     }
 });
-openerp.web_mobile.Secondary =  openerp.base.Controller.extend({
+openerp.web_mobile.Secondary =  openerp.base.Widget.extend({
     init: function(session, element_id, secondary_menu_id) {
         this._super(session, element_id);
         this.data = secondary_menu_id;
@@ -62,19 +62,19 @@ openerp.web_mobile.Secondary =  openerp.base.Controller.extend({
                 .removeClass("secondary_menu")
                 .addClass("content_menu");
                 //.hide();
-            this.secondary = new openerp.web_mobile.Secondary(this.session, "oe_app", this.children);
+            this.secondary = new openerp.web_mobile.Secondary(this, "oe_app", this.children);
             this.secondary.start();
         }
         else {
             if (id) {
-                this.listview = new openerp.web_mobile.ListView(this.session, "oe_app", id);
+                this.listview = new openerp.web_mobile.ListView(this, "oe_app", id);
                 this.listview.start();
             }
         }
     }
 });
 
-openerp.web_mobile.Menu =  openerp.base.Controller.extend({
+openerp.web_mobile.Menu =  openerp.base.Widget.extend({
     init: function(session, element_id, secondary_menu_id) {
         this._super(session, element_id);
         this.secondary_menu_id = secondary_menu_id;
@@ -102,11 +102,11 @@ openerp.web_mobile.Menu =  openerp.base.Controller.extend({
             .removeClass("login_valid")
             .addClass("secondary_menu");
             //.hide();
-        this.secondary = new openerp.web_mobile.Secondary(this.session, "oe_app", this.children);
+        this.secondary = new openerp.web_mobile.Secondary(this, "oe_app", this.children);
         this.secondary.start();
     }
 });
-openerp.web_mobile.Options =  openerp.base.Controller.extend({
+openerp.web_mobile.Options =  openerp.base.Widget.extend({
     init: function(session, element_id) {
         this._super(session, element_id);
     },
@@ -117,11 +117,11 @@ openerp.web_mobile.Options =  openerp.base.Controller.extend({
     },
     on_logout: function(ev) {
         this.session.logout();
-        this.login = new openerp.web_mobile.Login(this.session, "oe_app");
+        this.login = new openerp.web_mobile.Login(this, "oe_app");
         this.login.start();
     }
 });
-openerp.web_mobile.Login =  openerp.base.Controller.extend({
+openerp.web_mobile.Login =  openerp.base.Widget.extend({
     init: function(session, element_id) {
         this._super(session, element_id);
     },
@@ -129,7 +129,8 @@ openerp.web_mobile.Login =  openerp.base.Controller.extend({
         var self = this;
 
         jQuery("#oe_header").children().remove();
-        this.rpc("/base/database/get_databases_list", {}, function(result) {
+
+        this.rpc("/base/database/get_list", {}, function(result) {
             var selection = new openerp.web_mobile.Selection();
             self.db_list = result.db_list;
             self.$element.html(QWeb.render("Login", self));
@@ -172,10 +173,10 @@ openerp.web_mobile.Login =  openerp.base.Controller.extend({
             .addClass("login_valid");
             //.hide();
         this.$element.html(QWeb.render("HomePage", {}));
-        this.header = new openerp.web_mobile.Header(this.session, "oe_header");
-        this.shortcuts = new openerp.web_mobile.Shortcuts(this.session, "oe_shortcuts");
-        this.menu = new openerp.web_mobile.Menu(this.session, "oe_menu", "oe_secondary_menu");
-        this.options = new openerp.web_mobile.Options(this.session, "oe_options");
+        this.header = new openerp.web_mobile.Header(this, "oe_header");
+        this.shortcuts = new openerp.web_mobile.Shortcuts(this, "oe_shortcuts");
+        this.menu = new openerp.web_mobile.Menu(this, "oe_menu", "oe_secondary_menu");
+        this.options = new openerp.web_mobile.Options(this, "oe_options");
         this.header.start();
         this.shortcuts.start();
         this.menu.start();
@@ -192,7 +193,7 @@ openerp.web_mobile.Login =  openerp.base.Controller.extend({
         });
     }
 });
-openerp.web_mobile.Selection = openerp.base.Controller.extend({
+openerp.web_mobile.Selection = openerp.base.Widget.extend({
     init: function (){
         this._super();
     },
@@ -206,17 +207,18 @@ openerp.web_mobile.Selection = openerp.base.Controller.extend({
         $($this).prev().find(".ui-btn-text").html($($this).find("option:selected").text());
     }
 });
-openerp.web_mobile.MobileWebClient = openerp.base.Controller.extend({
+openerp.web_mobile.MobileWebClient = openerp.base.Widget.extend({
     init: function(element_id) {
         var self = this;
+
         this._super(null, element_id);
         QWeb.add_template("xml/web_mobile.xml");
         var params = {};
 
         this.$element.html(QWeb.render("WebClient", {}));
         this.session = new openerp.base.Session("oe_errors");
-        this.crashmanager =  new openerp.base.CrashManager(this.session);
-        this.login = new openerp.web_mobile.Login(this.session, "oe_app");
+        this.crashmanager =  new openerp.base.CrashManager(this);
+        this.login = new openerp.web_mobile.Login(this, "oe_app");
         this.session.on_session_invalid.add(this.login.do_ask_login);
     },
     start: function() {

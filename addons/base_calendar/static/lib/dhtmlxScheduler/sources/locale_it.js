@@ -1,3 +1,7 @@
+/*
+This software is allowed to use under GPL or you need to obtain Commercial or Enterise License
+to use it in not GPL project. Please contact sales@dhtmlx.com for details
+*/
 scheduler.locale={
 	date:{
 		month_full:["Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno", "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre"],
@@ -33,6 +37,9 @@ scheduler.locale={
 		description:"Descrizione",
 		
 		/*year view extension*/
-		year_tab:"Anni"
+		year_tab:"Anni",
+
+		/*week agenda view extension*/
+		week_agenda_tab: "Giorno"                
 	}
-}
+};

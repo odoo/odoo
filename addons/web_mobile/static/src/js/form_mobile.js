@@ -1,5 +1,5 @@
 openerp.web_mobile.form_mobile = function (openerp) {
-openerp.web_mobile.FormView = openerp.base.Controller.extend({
+openerp.web_mobile.FormView = openerp.base.Widget.extend({
     init: function(session, element_id, list_id, action) {
         this._super(session, element_id);
         this.list_id = list_id;
@@ -11,9 +11,9 @@ openerp.web_mobile.FormView = openerp.base.Controller.extend({
         model = this.action.res_model;
         view_id = this.action.views[1][0];
 
-        this.dataset = new openerp.base.DataSetSearch(this.session, this.action.res_model, null, null);
-        this.dataset.read_slice([], 0, false, function (result) {
-            for (var i = 0; i < result.length; i++) {
+        this.dataset = new openerp.base.DataSetSearch(this, this.action.res_model, null, null);
+        this.dataset.read_slice([],function (result) {
+                        for (var i = 0; i < result.length; i++) {
                 if (result[i].id == id) {
                     var data = result[i];
                 }

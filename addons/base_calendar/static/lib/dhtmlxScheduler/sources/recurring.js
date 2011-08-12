@@ -1,9 +1,14 @@
+/*
+This software is allowed to use under GPL or you need to obtain Commercial or Enterise License
+to use it in not GPL project. Please contact sales@dhtmlx.com for details
+*/
 scheduler.form_blocks["recurring"]={
 	render:function(sns){
 		return scheduler.__recurring_template;
 	},
-	set_value:function(node,value,ev){
-		var ds = {start:ev.start_date, end:ev._end_date};
+    _ds: {},
+    _init_set_value:function(node, value, ev){
+		scheduler.form_blocks["recurring"]._ds = {start:ev.start_date, end:ev._end_date};
 		var str_date=scheduler.date.str_to_date(scheduler.config.repeat_date);
 			var date_str=scheduler.date.date_to_str(scheduler.config.repeat_date);
 
@@ -11,7 +16,7 @@ scheduler.form_blocks["recurring"]={
 	 	var els = [];
 	 	function register_els(inps){
 		 	for (var i=0; i<inps.length; i++){
-		 		var inp = inps[i]; 
+		 		var inp = inps[i];
 		 		if (inp.type=="checkbox" || inp.type=="radio"){
 	 				if (!els[inp.name])
 	 					els[inp.name]=[];
@@ -22,7 +27,7 @@ scheduler.form_blocks["recurring"]={
 	 	}
 	 	register_els(top.getElementsByTagName("INPUT"));
 	 	register_els(top.getElementsByTagName("SELECT"));
-	 	
+
 	 	var $ = function(a){ return document.getElementById(a); };
 	 	function get_radio_value(name){
 	 		var col = els[name];
@@ -36,11 +41,11 @@ scheduler.form_blocks["recurring"]={
 	 		$("dhx_repeat_year").style.display="none";
 	 		$("dhx_repeat_"+this.value).style.display="block";
 	 	}
-	 	
+
 	 	function get_repeat_code(dates){
 	 		var code = [get_radio_value("repeat")];
 	 		get_rcode[code[0]](code,dates);
-	 		
+
 	 		while (code.length < 5) code.push("");
 	 		var repeat = "";
 	 		if (els["end"][0].checked){
@@ -50,15 +55,16 @@ scheduler.form_blocks["recurring"]={
 	 		else if (els["end"][2].checked){
 	 			dates.end = str_date(els["date_of_end"].value);
 	 		}
-	 		else { 
+	 		else {
 	 			scheduler.transpose_type(code.join("_"));
 	 			repeat=Math.max(1,els["occurences_count"].value);
 	 			var transp = ((code[0]=="week" && code[4] && code[4].toString().indexOf(scheduler.config.start_on_monday?1:0)==-1)?1:0);
-	 			dates.end = scheduler.date.add(new Date(dates.start),repeat+transp,code.join("_")); 
+	 			dates.end = scheduler.date.add(new Date(dates.start),repeat+transp,code.join("_"));
 	 		}
-	 			
+
 	 		return code.join("_")+"#"+repeat;
 	 	}
+        scheduler.form_blocks["recurring"]._get_repeat_code = get_repeat_code;
 	 	var get_rcode={
 			month:function(code,dates){
 		 		if (get_radio_value("month_type")=="d"){
@@ -66,7 +72,7 @@ scheduler.form_blocks["recurring"]={
 		 			dates.start.setDate(els["month_day"].value);
 		 		} else {
 		 			code.push(Math.max(1,els["month_count2"].value));
-		 			code.push(els["month_day2"].value);	
+		 			code.push(els["month_day2"].value);
 		 			code.push(Math.max(1,els["month_week2"].value));
 		 			dates.start.setDate(1);
 		 		}
@@ -82,27 +88,28 @@ scheduler.form_blocks["recurring"]={
 				}
 				if (!t.length)
 					t.push(dates.start.getDay());
-					
+
 				dates.start=scheduler.date.week_start(dates.start);
 				dates._start = true;
-				
+
 				code.push(t.sort().join(","));
-			 },
-			 day:function(code){
-		 		if (get_radio_value("day_type")=="d"){
-		 			code.push(Math.max(1,els["day_count"].value));
-		 		} else {
-		 			code.push("week");code.push(1);code.push("");code.push("");code.push("1,2,3,4,5");
-		 			code.splice(0,1);
-		 		}
-	 		 },
-	 		 year:function(code,dates){
+			},
+			day:function(code){
+                if (get_radio_value("day_type")=="d"){
+                    code.push(Math.max(1,els["day_count"].value));
+                }
+                else {
+                    code.push("week");code.push(1);code.push("");code.push("");code.push("1,2,3,4,5");
+                    code.splice(0,1);
+                }
+	 	    },
+	 		year:function(code,dates){
 		 		if (get_radio_value("year_type")=="d"){
 		 			code.push("1");
 		 			dates.start.setMonth(0);
 		 			dates.start.setDate(els["year_day"].value);
 		 			dates.start.setMonth(els["year_month"].value);
-		 			
+
 		 		} else {
 		 			code.push("1");
 		 			code.push(els["year_day2"].value);
@@ -111,7 +118,7 @@ scheduler.form_blocks["recurring"]={
 		 			dates.start.setMonth(els["year_month2"].value);
 		 		}
 		 		dates._start = true;
-	 		} 	
+	 		}
  		};
  		var set_rcode={
  			week:function(code,dates){
@@ -169,10 +176,11 @@ scheduler.form_blocks["recurring"]={
 	 				els["occurences_count"].value=data[1];
 	 				break;
 	 		}
-	 		 		
+
 	 		e.checked=true;
 	 		e.onclick();
 	 	}
+        scheduler.form_blocks["recurring"]._set_repeat_code = set_repeat_code;
 
 		for (var i=0; i<top.elements.length; i++){
 			var el = top.elements[i];
@@ -182,39 +190,43 @@ scheduler.form_blocks["recurring"]={
 					break;
 			}
 		}
-		scheduler.form_blocks["recurring"].set_value=function(node,value,ev){
-			node.open=!ev.rec_type;
-			if (ev.event_pid && ev.event_pid!="0") node.blocked=true;
-			else node.blocked=false;
-			
-			ds.start = ev.start_date;
-			ds.end = ev._end_date;
-			
-			scheduler.form_blocks["recurring"].button_click(0,node.previousSibling.firstChild.firstChild,node,node);
-			if (value)
-				set_repeat_code(value,ds);
-			
-		};
-		scheduler.form_blocks["recurring"].get_value=function(node,ev){
-			if (node.open){
-				ev.rec_type=get_repeat_code(ds);
-				if (ds._start){
-					ev._start_date = ev.start_date = ds.start;
-					ds._start=false;
-				} else 
-					ev._start_date = null;
-					
-				ev._end_date = ev.end_date = ds.end;
-				ev.rec_pattern = ev.rec_type.split("#")[0];
-			} else {
-				ev.rec_type= ev.rec_pattern = "";
-				ev._end_date = ev.end_date;
-			}
-			return ev.rec_type;
-		};
-		scheduler.form_blocks["recurring"].set_value(node,value,ev);
+        scheduler._lightbox._rec_init_done = true;
+    },
+	set_value:function(node,value,ev){
+        var rf = scheduler.form_blocks["recurring"];
+        if(!scheduler._lightbox._rec_init_done)
+            rf._init_set_value(node, value, ev);
+        node.open=!ev.rec_type;
+        if(ev.event_pid && ev.event_pid!="0")
+            node.blocked=true;
+        else node.blocked=false;
+
+        var ds = rf._ds;
+        ds.start = ev.start_date;
+        ds.end = ev._end_date;
+
+        rf.button_click(0,node.previousSibling.firstChild.firstChild,node,node);
+        if (value)
+            rf._set_repeat_code(value, ds);
 	},
 	get_value:function(node,ev){
+        if (node.open){
+            var ds = scheduler.form_blocks["recurring"]._ds;
+            ev.rec_type=scheduler.form_blocks["recurring"]._get_repeat_code(ds);
+            if (ds._start){
+                ev.start_date = new Date(ds.start);
+                ev._start_date = new Date(ds.start);
+                ds._start=false;
+            } else
+                ev._start_date = null;
+
+            ev._end_date = ev.end_date = ds.end;
+            ev.rec_pattern = ev.rec_type.split("#")[0];
+        } else {
+            ev.rec_type= ev.rec_pattern = "";
+            ev._end_date = ev.end_date;
+        }
+        return ev.rec_type;
 	},
 	focus:function(node){
 	},
@@ -276,24 +288,30 @@ scheduler.attachEvent("onEventIdChange",function(id,new_id){
 });
 scheduler.attachEvent("onBeforeEventDelete",function(id){
 	var ev = this.getEvent(id);
-	if (id.toString().indexOf("#")!=-1) {
-		var id = id.split("#");
+	if (id.toString().indexOf("#")!=-1 || (ev.event_pid && ev.event_pid != "0" && ev.rec_type != 'none')) {
+		id = id.split("#");
 		var nid = this.uid();
-		
+        var tid = (id[1])?id[1]:(ev._pid_time/1000);
+
 		var nev = this._copy_event(ev);
-		nev.id = nid; 
-		nev.event_pid = id[0];
-		nev.event_length = id[1];
+		nev.id = nid;
+		nev.event_pid = ev.event_pid||id[0];
+		nev.event_length = tid;
 		nev.rec_type = nev.rec_pattern = "none";
 		this.addEvent(nev);
-		
-		this._add_rec_marker(this.getEvent(nid), id[1]*1000);
+
+		this._add_rec_marker(nev, tid*1000);
 	} else {
 		if (ev.rec_type)
 			this._roll_back_dates(ev);
 		var sub = this._get_rec_markers(id);
-		for (var i in sub)
-			this.deleteEvent(sub[i].id,true);		
+		for (var i in sub) {
+            if(sub.hasOwnProperty(i)){
+                id = sub[i].id;
+                if(this.getEvent(id))
+                    this.deleteEvent(id,true);
+            }
+        }
 	}
 	return true;
 });
@@ -310,23 +328,32 @@ scheduler.attachEvent("onEventChanged",function(id){
 		var nev = this._copy_event(ev);
 		nev.id = nid;
 		nev.event_pid = id[0];
-		nev.event_length=id[1];
+		nev.event_length = id[1];
 		nev.rec_type = nev.rec_pattern = "";
 		this.addEvent(nev);
 		
 		this._not_render=false;
-		this._add_rec_marker(this.getEvent(nid),id[1]*1000);
+		this._add_rec_marker(nev,id[1]*1000);
 	} else{
 		if (ev.rec_type)
 			this._roll_back_dates(ev);
 		var sub = this._get_rec_markers(id);
 		for (var i in sub) {
-			delete this._rec_markers[sub[i].id];
-			this.deleteEvent(sub[i].id,true);		
-		};
+            if(sub.hasOwnProperty(i)){
+                delete this._rec_markers[sub[i].id];
+                this.deleteEvent(sub[i].id,true);
+            }
+		}
 		delete this._rec_markers_pull[id];
-		
-		this._select_id = null; //remove selectin , because now was can have complex-ids
+
+        // it's possible that after editing event is no longer exists, in such case we need to remove _select_id flag
+        var isEventFound = false;
+        for(var k=0; k<this._rendered.length; k++) {
+            if(this._rendered[k].getAttribute('event_id') == id)
+                isEventFound = true;
+        }
+        if(!isEventFound)
+            this._select_id = null;
 	}
 	return true;
 });
@@ -338,10 +365,16 @@ scheduler.attachEvent("onEventAdded",function(id){
 	}
 	return true;
 });
+scheduler.attachEvent("onEventSave",function(id,data,is_new_event){
+    var ev = this.getEvent(id);
+    if(!ev.rec_type && data.rec_type && (id+'').indexOf('#')==-1)
+        this._select_id = null;
+    return true;
+});
 scheduler.attachEvent("onEventCreated",function(id){
 	var ev = this.getEvent(id);
 	if (!ev.rec_type)
-		ev.rec_type = ev.rec_pattern = "";
+		ev.rec_type = ev.rec_pattern = ev.event_length = ev.event_pid = "";
 	return true;
 });
 scheduler.attachEvent("onEventCancel",function(id){
@@ -349,7 +382,7 @@ scheduler.attachEvent("onEventCancel",function(id){
 	if (ev.rec_type){
 		this._roll_back_dates(ev);
 		// a bit expensive, but we need to be sure that event re-rendered, because view can be corrupted by resize , during edit process
-		this.render_view_data(ev.id);
+		this.render_view_data();
 	}
 });
 scheduler._roll_back_dates=function(ev){
@@ -364,11 +397,9 @@ scheduler._roll_back_dates=function(ev){
 	}
 };
 
-
 scheduler.validId=function(id){
 	return id.toString().indexOf("#")==-1;
 };
-
 
 scheduler.showLightbox_rec=scheduler.showLightbox;
 scheduler.showLightbox=function(id){
@@ -399,6 +430,7 @@ scheduler.get_visible_events=function(){
 	}
 	return out;
 };
+
 
 (function(){
 var old = scheduler.is_one_day_event;
@@ -500,6 +532,7 @@ scheduler.repeat_date=function(ev,stack,non_render,from,to){
 			var ted = new Date(td.valueOf()+ev.event_length*1000);
 			var copy=this._copy_event(ev);
 			//copy._timed = ev._timed;
+            copy.text = ev.text;
 			copy.start_date = td;
 			copy.event_pid = ev.id;
 			copy.id = ev.id+"#"+Math.ceil(td.valueOf()/1000);
@@ -537,7 +570,6 @@ scheduler.getRecDates = function(id, max){
 	var result = [];
 	max = max || 1000;
 	
-	
 	var td = new Date(ev.start_date.valueOf());
 	var from = new Date(td.valueOf());
 	
@@ -551,14 +583,22 @@ scheduler.getRecDates = function(id, max){
 		td = this.date.add(td,1,ev.rec_pattern);
 	while (td < ev.end_date){
 		var ch = this._get_rec_marker(td.valueOf(),ev.id);
+        var res = true;
 		if (!ch){ //not changed element of serie
 			var ted = new Date(td.valueOf()+ev.event_length*1000);
 			var sed = new Date(td);
 			result.push({start_date:sed, end_date:ted});
-			td = this.date.add(td,1,ev.rec_pattern);
-			count++;
-		}
-		if (count == max) break;
+		} else {
+            (ch.rec_type == "none")?
+                    (res=false):
+                    result.push({ start_date: ch.start_date, end_date: ch.end_date });
+        }
+        td = this.date.add(td,1,ev.rec_pattern);
+        if(res){
+            count++;
+            if (count == max)
+                break;
+        }
 	}
 	return result;
 };
@@ -571,10 +611,13 @@ scheduler.getEvents = function(from,to){
 				if (ev.rec_pattern=="none") continue;				
 				var sev = [];
 				this.repeat_date(ev,sev,true,from,to);
-				for (var i=0; i < sev.length; i++)
-					if (!sev[i].rec_pattern && sev[i].start_date<to && sev[i].end_date>from)
-						result.push(sev[i]);
-			} else if (!ev.event_pid || ev.event_pid==0){
+                for (var i=0; i < sev.length; i++) {
+                    // if event is in rec_markers then it will be checked by himself, here need to skip it
+					if (!sev[i].rec_pattern && sev[i].start_date<to && sev[i].end_date>from && !this._rec_markers[sev[i].id]) {
+                        result.push(sev[i]);
+                    }
+                }
+			} else if (ev.id.toString().indexOf("#")==-1){ // if it's virtual event we can skip it
 				result.push(ev);
 			}
 		}
@@ -585,7 +628,7 @@ scheduler.getEvents = function(from,to){
 scheduler.config.repeat_date="%m.%d.%Y";
 scheduler.config.lightbox.sections=[	
 	{name:"description", height:130, map_to:"text", type:"textarea" , focus:true},
-	{name:"recurring", height:115, type:"recurring", map_to:"rec_type", button:"recurring"},
+	{name:"recurring", type:"recurring", map_to:"rec_type", button:"recurring"},
 	{name:"time", height:72, type:"time", map_to:"auto"}
 ];
 //drop secondary attributes

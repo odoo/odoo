@@ -1,3 +1,7 @@
+/*
+This software is allowed to use under GPL or you need to obtain Commercial or Enterise License
+to use it in not GPL project. Please contact sales@dhtmlx.com for details
+*/
 scheduler.templates.calendar_month =  scheduler.date.date_to_str("%F %Y");
 scheduler.templates.calendar_scale_date =  scheduler.date.date_to_str("%D");
 scheduler.templates.calendar_date =  scheduler.date.date_to_str("%d");
@@ -25,7 +29,7 @@ scheduler.renderCalendar=function(obj, _prev){
 				top:tpos.top + pos.offsetHeight,
 				left:tpos.left
 			};
-		};
+		}
 		if (!cont)
 			cont = scheduler._get_def_cont(pos);
 			
@@ -50,7 +54,7 @@ scheduler.renderCalendar=function(obj, _prev){
 		cal = this._render_calendar(_prev.parentNode, date, obj, _prev);
 		scheduler.unmarkCalendar(cal);
 	}
-		
+	
 	
 	var start = scheduler.date.month_start(date);
 	var end   = scheduler.date.add(start,1,"month");
@@ -60,7 +64,8 @@ scheduler.renderCalendar=function(obj, _prev){
 		var d = ev.start_date;
 		if (d.valueOf()<start.valueOf()) 
 			d = start;
-		while (d<=ev.end_date){
+		d = scheduler.date.date_part(new Date(d.valueOf()));
+		while (d<ev.end_date){
 			this.markCalendar(cal,d,"dhx_year_event");
 			d = this.date.add(d,1,"day");
 			if (d.valueOf()>=end.valueOf()) 
@@ -68,6 +73,8 @@ scheduler.renderCalendar=function(obj, _prev){
 		}
 	}
 	
+	
+	this._markCalendarCurrentDate(cal);
 
 	
 	cal.conf = obj;
@@ -145,7 +152,7 @@ scheduler._render_calendar=function(obj,sd,conf, previous){
 	if (previous)
 		d = previous;
 	else {
-		var d = document.createElement("DIV");
+		d = document.createElement("DIV");
 		d.className="dhx_cal_container dhx_mini_calendar";
 	}
 	d.setAttribute("date",this.templates.xml_format(sd));
@@ -160,6 +167,9 @@ scheduler._render_calendar=function(obj,sd,conf, previous){
 		d.firstChild.appendChild(arrow);
 		arrow.onclick=function(){
 			scheduler.updateCalendar(d, scheduler.date.add(d._date, -1, "month"));
+			if(scheduler._date.getMonth() == d._date.getMonth() && scheduler._date.getFullYear() == d._date.getFullYear()) {
+				scheduler._markCalendarCurrentDate(d);
+			}			
 		};
 		
 		arrow = document.createElement("DIV");
@@ -169,10 +179,14 @@ scheduler._render_calendar=function(obj,sd,conf, previous){
 		d.firstChild.appendChild(arrow);
 		arrow.onclick=function(){
 			scheduler.updateCalendar(d, scheduler.date.add(d._date, 1, "month"));
+			if(scheduler._date.getMonth() == d._date.getMonth() && scheduler._date.getFullYear() == d._date.getFullYear()) {
+				scheduler._markCalendarCurrentDate(d);
+			}
 		};
-		d._date = new Date(sd);
+		
 	}
-	
+	d._date = new Date(sd);
+
 	d.week_start = (sd.getDay()-(this.config.start_on_monday?1:0)+7)%7;
 	
 	var dd = this.date.week_start(sd);
@@ -180,14 +194,20 @@ scheduler._render_calendar=function(obj,sd,conf, previous){
 	
 	var r=d.childNodes[2].firstChild.rows;
 	for (var k=r.length; k<6; k++) {
-		r[0].parentNode.appendChild(r[0].cloneNode(true));
+        var last_row = r[r.length-1];
+		r[0].parentNode.appendChild(last_row.cloneNode(true));
+        var last_day_number = parseInt(last_row.childNodes[last_row.childNodes.length-1].childNodes[0].innerHTML);
+        last_day_number = (last_day_number<10)?last_day_number:0; // previous week could end on 28-31, so we should start with 0
 		for (var ri=0; ri < r[k].childNodes.length; ri++) {
 		   r[k].childNodes[ri].className = "dhx_after";
-		};
+           r[k].childNodes[ri].childNodes[0].innerHTML = scheduler.date.to_fixed(++last_day_number);
+		}
 	}
 	
 	if (!previous)
 		obj.appendChild(d);
+
+	d.childNodes[1].style.height = (d.childNodes[1].childNodes[0].offsetHeight-1)+"px"; // dhx_year_week should have height property so that day dates would get correct position. dhx_year_week height = height of it's child (with the day name)
 	
 	/*restore*/ this._cols=temp; this._mode = temp2; this._colsS = temp3; this._min_date=temp4; this._max_date=temp5; scheduler._date = temp6; ts.month_day=temp7;
 	return d;
@@ -235,7 +255,7 @@ scheduler.form_blocks.calendar_time={
 		
 		var full_day = scheduler.config.full_day;
 		
-		return "<div style='height:30px; padding-top:0px; font-size:inherit;' class='dhx_cal_lsection dhx_section_time'>"+html+"<span style='font-weight:normal; font-size:10pt;'> &nbsp;&ndash;&nbsp; </span>"+html+"</div>";
+		return "<div style='height:30px;padding-top:0; font-size:inherit;' class='dhx_section_time'>"+html+"<span style='font-weight:normal; font-size:10pt;'> &nbsp;&ndash;&nbsp; </span>"+html+"</div>";
 	},
 	set_value:function(node,value,ev){
 	
@@ -253,7 +273,7 @@ scheduler.form_blocks.calendar_time={
 						inp.value = scheduler.templates.calendar_time(new_date);
 						inp._date = new Date(new_date);
 						scheduler.destroyCalendar();
-						if(scheduler.config.event_duration && number == 0) { //first element = start date
+						if(scheduler.config.event_duration && scheduler.config.auto_end_date && number == 0) { //first element = start date
 							_update_minical_select();
 						}
 					}
@@ -263,7 +283,10 @@ scheduler.form_blocks.calendar_time={
 		
 		if(scheduler.config.full_day) {
 			if (!node._full_day){
-				node.previousSibling.innerHTML+="<div class='dhx_fullday_checkbox'><label><input type='checkbox' name='full_day' value='true'> "+scheduler.locale.labels.full_day+"&nbsp;</label></input></div>";
+				var html = "<label class='dhx_fullday'><input type='checkbox' name='full_day' value='true'> "+scheduler.locale.labels.full_day+"&nbsp;</label></input>";
+				if (!scheduler.config.wide_form)
+					html = node.previousSibling.innerHTML+html;
+				node.previousSibling.innerHTML=html;
 				node._full_day=true;
 			}
 			var input=node.previousSibling.getElementsByTagName("input")[0];
@@ -272,7 +295,7 @@ scheduler.form_blocks.calendar_time={
 			input.checked = isFulldayEvent;
 			for(var i in selects)
 				selects[i].disabled=input.checked;			
-			for(var i=0; i<inputs.length-1; i++)  //last input = checkbox
+			for(var i=0; i<inputs.length; i++)
 				inputs[i].disabled=input.checked;	
 				
 			input.onclick = function(){ 
@@ -293,13 +316,13 @@ scheduler.form_blocks.calendar_time={
 				
 				for(var i in selects)
 					selects[i].disabled=input.checked;
-				for(var i=0; i<inputs.length-1; i++)  //last input = checkbox
+				for(var i=0; i<inputs.length; i++) 
 					inputs[i].disabled=input.checked;	
 				
 			};
-		};
+		}
 		
-		if(scheduler.config.event_duration) {
+		if(scheduler.config.event_duration && scheduler.config.auto_end_date) {
 			
 			function _update_minical_select() {
 				ev.start_date = scheduler.date.add(inputs[0]._date, selects[0].value, "minute");
@@ -311,8 +334,7 @@ scheduler.form_blocks.calendar_time={
 				selects[1].value=ev.end_date.getHours()*60+ev.end_date.getMinutes();				
 			}
 			
-			for(var i in selects)
-				selects[i].onchange = _update_minical_select;
+				selects[0].onchange = _update_minical_select; // only update on first select should trigger update so user could define other end date if he wishes too
 		}
 	
 		function _attach_action(inp, date, number){
@@ -345,27 +367,10 @@ scheduler.form_blocks.calendar_time={
 scheduler.linkCalendar=function(calendar, datediff){
 	var action = function(){
 		var date = scheduler._date;
-		var mode = scheduler._mode;
-		
 		var dateNew = new Date(date.valueOf());
 		if (datediff) dateNew = datediff(dateNew);
 		dateNew.setDate(1);
 		scheduler.updateCalendar(calendar, dateNew);
-		
-		if (!datediff){
-			if (mode == 'day') {
-				scheduler.markCalendar(calendar,date, "dhx_calendar_click");
-			} else if (mode == 'week') {
-				dateNew = scheduler.date.week_start(new Date(date.valueOf()));
-				for (i = 0; i < 7; i++) {
-					var diff = dateNew.getMonth() + dateNew.getYear()*12 - date.getMonth() - date.getYear()*12;
-					if (diff && diff>0)
-						continue;
-					scheduler.markCalendar(calendar, dateNew, "dhx_calendar_click");
-					dateNew = scheduler.date.add(dateNew,1,"day");					
-				}
-			}
-		}
 		return true;
 	};
 	
@@ -375,4 +380,23 @@ scheduler.linkCalendar=function(calendar, datediff){
 	scheduler.attachEvent("onEventChanged", action);
 	scheduler.attachEvent("onAfterEventDelete", action);
 	action();
+};
+
+scheduler._markCalendarCurrentDate = function(calendar) {
+	var date = scheduler._date;
+	var mode = scheduler._mode;
+
+	if(calendar._date.getMonth() == date.getMonth() && calendar._date.getFullYear() == date.getFullYear()) {
+        if (mode == 'day' || (this._props && !!this._props[mode])) {
+			scheduler.markCalendar(calendar,date, "dhx_calendar_click");
+		} else if (mode == 'week') {
+			var dateNew = scheduler.date.week_start(new Date(date.valueOf()));
+			for (var i = 0; i < 7; i++) {
+				var diff = dateNew.getMonth() + dateNew.getYear()*12 - date.getMonth() - date.getYear()*12;
+				if (!diff)	
+					scheduler.markCalendar(calendar, dateNew, "dhx_calendar_click");
+				dateNew = scheduler.date.add(dateNew,1,"day");					
+			}
+		}	
+	}
 };

@@ -1,20 +1,24 @@
+/*
+This software is allowed to use under GPL or you need to obtain Commercial or Enterise License
+to use it in not GPL project. Please contact sales@dhtmlx.com for details
+*/
 scheduler.date.add_agenda = function(date){
 	return (new Date(date.valueOf()));
-}
+};
 
 scheduler.dblclick_dhx_agenda_area=function(){
 	if (!this.config.readonly && this.config.dblclick_create)
 		this.addEventNow();
-}
+};
 scheduler.templates.agenda_time = function(start,end,ev){
 	if (ev._timed) 
 		return this.day_date(ev.start_date, ev.end_date, ev)+" "+this.event_date(start);
 	else
 		return scheduler.templates.day_date(start)+" &ndash; "+scheduler.templates.day_date(end);
-}
-scheduler.templates.agenda_text = function(ev){
-	return ev.text;
-}
+};
+scheduler.templates.agenda_text = function(start,end,event){
+	return event.text;
+};
 scheduler.date.agenda_start=function(d){ return d; };
 	
 scheduler.attachEvent("onTemplatesReady",function(){
@@ -36,6 +40,19 @@ scheduler.attachEvent("onTemplatesReady",function(){
    			fill_agenda_tab();
    		else
    			return old.apply(this,arguments);
+	}
+	
+	var old_render_view_data = scheduler.render_view_data;
+	scheduler.render_view_data=function(){
+		if(this._mode == "agenda") {
+			scheduler._agendaScrollTop = scheduler._els["dhx_cal_data"][0].childNodes[0].scrollTop;
+			scheduler._els["dhx_cal_data"][0].childNodes[0].scrollTop = 0;
+			scheduler._els["dhx_cal_data"][0].style.overflowY = 'hidden';
+		}
+		else {
+			scheduler._els["dhx_cal_data"][0].style.overflowY = 'auto';
+		}
+		return old_render_view_data.apply(this,arguments);
 	}
 
 
@@ -59,15 +76,18 @@ scheduler.attachEvent("onTemplatesReady",function(){
 		//generate html for the view
 		var html="<div class='dhx_agenda_area'>";
 		for (var i=0; i<events.length; i++){
-			html+="<div class='dhx_agenda_line' event_id='"+events[i].id+"' style='"+(events[i]._text_style||"")+"'><div>"+scheduler.templates.agenda_time(events[i].start_date, events[i].end_date,events[i])+"</div>";
+			var ev = events[i];
+            var bg_color = (ev.color?("background-color:"+ev.color+";"):"");
+            var color = (ev.textColor?("color:"+ev.textColor+";"):"");
+			html+="<div class='dhx_agenda_line' event_id='"+ev.id+"' style='"+color+""+bg_color+""+(ev._text_style||"")+"'><div>"+scheduler.templates.agenda_time(ev.start_date, ev.end_date,ev)+"</div>";
 			html+="<div class='dhx_event_icon icon_details'>&nbsp</div>";
-			html+="<span>"+scheduler.templates.agenda_text(events[i])+"</span></div>";
+			html+="<span>"+scheduler.templates.agenda_text(ev.start_date, ev.end_date, ev)+"</span></div>";
 		}
 		html+="<div class='dhx_v_border'></div></div>";
 			
 		//render html
-                scheduler._els["dhx_cal_data"][0].scrollTop = 0; //fix flickering in FF
 		scheduler._els["dhx_cal_data"][0].innerHTML = html;
+		scheduler._els["dhx_cal_data"][0].childNodes[0].scrollTop = scheduler._agendaScrollTop||0;
 		
 		var t=scheduler._els["dhx_cal_data"][0].firstChild.childNodes;
 		scheduler._els["dhx_cal_date"][0].innerHTML="";

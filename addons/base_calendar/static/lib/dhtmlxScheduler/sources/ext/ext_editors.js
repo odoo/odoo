@@ -1,3 +1,7 @@
+/*
+This software is allowed to use under GPL or you need to obtain Commercial or Enterise License
+to use it in not GPL project. Please contact sales@dhtmlx.com for details
+*/
 scheduler.form_blocks['combo']={
 	render:function(sns) {
 		var res = '';
@@ -40,7 +44,7 @@ scheduler.form_blocks['combo']={
 scheduler.form_blocks['radio']={
 	render:function(sns) {
 		var res = '';
-		res += "<div class='"+sns.type+"' style='height:"+sns.height+"px;' >";
+		res += "<div class='dhx_cal_ltext dhx_cal_radio' style='height:"+sns.height+"px;' >";
 		for (var i=0; i<sns.options.length; i++) {
 			var id = scheduler.uid();
 			res += "<input id='"+id+"' type='radio' name='"+sns.name+"' value='"+sns.options[i].key+"'><label for='"+id+"'>"+" "+sns.options[i].label+"</label>";
@@ -74,20 +78,32 @@ scheduler.form_blocks['radio']={
 
 scheduler.form_blocks['checkbox']={
 	render:function(sns) {
-		return '';
+		if (scheduler.config.wide_form)
+			return '<div class="dhx_cal_wide_checkbox"></div>';
+		else
+			return '';
 	},
 	set_value:function(node,value,ev,config){
+        node=document.getElementById(config.id);
 		var id = scheduler.uid();
 		var isChecked = false;
 		if (typeof config.checked_value != 'undefined' && ev[config.map_to] == config.checked_value) {
 			isChecked = true;
 		}
-		node.previousSibling.className += " dhx_cal_checkbox";
-		node.previousSibling.innerHTML="<input id='"+id+"' type='checkbox' value='true' name='"+config.name+"'"+((isChecked)?"checked='true'":'')+"'><label for='"+id+"'>"+(scheduler.locale.labels["section_"+config.name]||config.name)+"</label>";
-		
+		node.className += " dhx_cal_checkbox";
+		var check_html = "<input id='"+id+"' type='checkbox' value='true' name='"+config.name+"'"+((isChecked)?"checked='true'":'')+"'>"; 
+		var label_html = "<label for='"+id+"'>"+(scheduler.locale.labels["section_"+config.name]||config.name)+"</label>";
+		if (scheduler.config.wide_form){
+			node.innerHTML = label_html;
+			node.nextSibling.innerHTML=check_html;
+		} else 
+			node.innerHTML=check_html+label_html;
 	},
 	get_value:function(node,ev,config){
-		var checkbox = node.previousSibling.getElementsByTagName('input')[0]; // moved to the header
+        node=document.getElementById(config.id);
+		var checkbox = node.getElementsByTagName('input')[0]; // moved to the header
+		if (!checkbox)
+			checkbox = node.nextSibling.getElementsByTagName('input')[0];
 		return (checkbox.checked)?(config.checked_value||true):(config.unchecked_value||false);
 	},
 	focus:function(node){

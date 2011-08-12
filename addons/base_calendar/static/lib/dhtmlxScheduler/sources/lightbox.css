@@ -1,151 +1,239 @@
-	.dhx_cal_light{
-		height:400px;
-		light:300px;		
-		background-color:#FFE763;
-		
-		font-family:Tahoma;
-		font-size:8pt;
-		border:1px solid #B7A64B;
-		color:#887A2E;		
-		
-		position:absolute;
-		z-index:10001;
-		
-		width:580px;
-		height:300px;
-	}
-	.dhx_mark{
-		position:relative; top:3px;
-		background-image:url('./imgs/controls.gif');
-		background-position: 0px -43px;
-		padding-left:10px;
-	}
-	.dhx_ie6 .dhx_mark{
-		background-position: 6px -41px;
-	}
-	
-	.dhx_cal_light select{
-		font-family:Tahoma;
-		font-size:8pt;
-		color:#887A2E;		
-		padding:2px;
-		margin:0px;
-	}
-	.dhx_cal_ltitle{
-		padding:2px 0px 2px 5px;
-		overflow:hidden;
-		white-space:nowrap;
-	}
-	.dhx_cal_ltitle span{
-		white-space:nowrap;
-	}
-	.dhx_cal_lsection{
-		background-color:#DBCF8C;
-		color:#FFF4B5;
-		font-size:18pt;
-		font-weight:bold;
-		padding:5px 0px 3px 10px;
-	}
-	.dhx_cal_ltext{
-		padding:2px	0px 2px 10px;
-		height:130px;
-		height=140px;
-		overflow:hidden;
-	}
-	.dhx_cal_ltext textarea{
-		background-color:transparent;
-		overflow:auto;
-		border:none;
-		color:#887A2E;
-		height:100%;
-		width:100%;
-		outline:none !important;
-	}
-	.dhx_time{
-		font-weight:bold;
-	}
-	.dhx_cal_light .dhx_title{
-		padding-left:10px;
-	}
-	.dhx_cal_larea{
-		border:1px solid #DCC43E;
-		background-color:#FFF4B5;
-		overflow:hidden;
-		
-		margin-left:3px;
-		
-		width:572px;
-		height:1px;
-	}
-	.dhx_btn_set{
-		padding:5px 10px 0px 10px;
-		float:left;
-	}
-	.dhx_btn_set div{
-		float:left;
-		height:21px;
-		line-height:21px;
-		vertical-align:middle;
-		cursor:pointer;
-	}
-	.dhx_save_btn{
-		background-image:url('./imgs/controls.gif');
-		background-position:-84px 0px;
-		width:21px;
-		
-	}
-	.dhx_cancel_btn{
-		background-image:url('./imgs/controls.gif');
-		background-position:-63px 0px;
-		width:20px;
-	}
-	.dhx_delete_btn{
-		background-image:url('./imgs/controls.gif');
-		background-position:-42px 0px;
-		width:20px;
-	}
-	.dhx_cal_cover{
-		width:100%;
-		height:100%;	
-		position:absolute;
-		z-index:10000;
-		top:0px;
-		left:0px;
-		background-color:black;
-		
-		opacity:0.1;
-		filter:alpha(opacity=10);
-	}
-	.dhx_custom_button{
-		padding:0px 3px 0px 3px;
-		color:#887A2E;
-		font-family:Tahoma;
-		font-size:8pt;
-		background-color:#FFE763;
-		font-weight:normal;
-		margin-right:5px;
-		margin-top:5px;
-		cursor:pointer;
-	}
-	.dhx_custom_button div{
-		cursor:pointer;
-		float:left;
-		height:21px;
-		line-height:21px;
-		vertical-align:middle;
-	}	
-	
-	.dhx_fullday_checkbox {
-		padding-top: 5px;
-		float:right;
-	}
-	
-	.dhx_fullday_checkbox input{
-		vertical-align: middle;
-	}
-	
-	.dhx_fullday_checkbox label{
-		font-size: 12pt;
-		font-weight: bold;
-		vertical-align: middle;		
-	}
+/*
+This software is allowed to use under GPL or you need to obtain Commercial or Enterise License
+to use it in not GPL project. Please contact sales@dhtmlx.com for details
+*/
+.dhx_unselectable, .dhx_unselectable div{
+    -webkit-user-select:none;
+    -moz-user-select:none;
+    -moz-user-select:-moz-none;
+}
+.dhx_cal_light{
+    background-color:#FFE763;
+    border-radius:5px;
+    font-family:Tahoma;
+    font-size:8pt;
+    border:1px solid #B7A64B;
+    color:#887A2E;
+
+    position:absolute;
+    z-index:10001;
+
+    width:580px;
+    height:300px;
+
+    box-shadow:5px 5px 5px #888;
+}
+.dhx_cal_light_wide{
+    width:650px;
+}
+.dhx_mark{
+    position:relative; top:3px;
+    background-image:url('./imgs/controls.gif');
+    background-position: 0px -43px;
+    padding-left:10px;
+}
+.dhx_ie6 .dhx_mark{
+    background-position: 6px -41px;
+}
+
+.dhx_cal_light select{
+    font-family:Tahoma;
+    font-size:8pt;
+    color:#887A2E;
+    padding:2px;
+    margin:0px;
+}
+.dhx_cal_ltitle{
+    padding:2px 0px 2px 5px;
+    overflow:hidden;
+    white-space:nowrap;
+}
+.dhx_cal_ltitle span{
+    white-space:nowrap;
+}
+.dhx_cal_lsection{
+    background-color:#DBCF8C;
+    color:#FFF4B5;
+    font-weight:bold;
+    padding:5px 0px 3px 10px;
+}
+.dhx_section_time{
+    background-color:#DBCF8C;
+}
+.dhx_cal_lsection .dhx_fullday{
+    float:right;
+    margin-right:5px;
+    color:#887A2E;
+    font-size:12px;
+    font-weight:normal;
+    line-height:20px;
+    vertical-align:top;
+    cursor:pointer;
+}
+.dhx_cal_lsection{
+    font-size:18px;
+    font-family:Arial;
+}
+.dhx_cal_ltext{
+    padding:2px	0px 2px 10px;
+    overflow:hidden;
+}
+.dhx_cal_ltext textarea{
+    background-color: #FFF4B5; /* #FFF4B5; should be the same for dhx_cal_larea, was transperent */
+    overflow:auto;
+    border:none;
+    color:#887A2E;
+    height:100%;
+    width:100%;
+    outline:none !important;
+}
+.dhx_time{
+    font-weight:bold;
+}
+.dhx_cal_light .dhx_title{
+    padding-left:10px;
+}
+.dhx_cal_larea{
+    border:1px solid #DCC43E;
+    background-color:#FFF4B5;
+    overflow:hidden;
+
+    margin-left:3px;
+
+    width:572px;
+    height:1px;
+}
+.dhx_btn_set{
+    padding:5px 10px 0px 10px;
+    float:left;
+}
+.dhx_btn_set div{
+    float:left;
+    height:21px;
+    line-height:21px;
+    vertical-align:middle;
+    cursor:pointer;
+}
+.dhx_save_btn{
+    background-image:url('./imgs/controls.gif');
+    background-position:-84px 0px;
+    width:21px;
+
+}
+.dhx_cancel_btn{
+    background-image:url('./imgs/controls.gif');
+    background-position:-63px 0px;
+    width:20px;
+}
+.dhx_delete_btn{
+    background-image:url('./imgs/controls.gif');
+    background-position:-42px 0px;
+    width:20px;
+}
+.dhx_cal_cover{
+    width:100%;
+    height:100%;
+    position:absolute;
+    z-index:10000;
+    top:0px;
+    left:0px;
+    background-color:black;
+
+    opacity:0.1;
+    filter:alpha(opacity=10);
+}
+.dhx_custom_button{
+    padding:0px 3px 0px 3px;
+    color:#887A2E;
+    font-family:Tahoma;
+    font-size:8pt;
+    background-color:#FFE763;
+    font-weight:normal;
+    margin-right:5px;
+    margin-top:0px;
+    cursor:pointer;
+}
+.dhx_custom_button div{
+    cursor:pointer;
+    float:left;
+    height:21px;
+    line-height:21px;
+    vertical-align:middle;
+}
+
+
+.dhx_cal_light_wide .dhx_cal_larea{
+    border-top-width:0px;
+}
+.dhx_cal_light_wide .dhx_cal_lsection{
+    border:0px;
+    float:left;
+    text-align:right;
+    width:100px;
+    height:20px;
+    font-size:16px;
+    padding: 5px 0px 0px 10px;
+}
+.dhx_cal_light_wide .dhx_wrap_section{
+    border-top:1px solid #DBCF8C;
+    position:relative;
+    background-color:#DBCF8C;
+    overflow:hidden;
+}
+.dhx_cal_light_wide .dhx_section_time{
+    padding-top:2px !important;
+    height:20px !important;
+}
+.dhx_section_time{
+    text-align: center;
+}
+.dhx_cal_light_wide .dhx_cal_larea{
+    width:730px;
+}
+.dhx_cal_light_wide{
+    width:738px;
+}
+
+.dhx_cal_light_wide .dhx_section_time{
+    background:transparent;
+}
+.dhx_cal_light_wide .dhx_cal_checkbox label{
+    padding-left:0px;
+}
+.dhx_cal_wide_checkbox input{
+    margin-top:8px;
+    margin-left:14px;
+}
+.dhx_cal_light input{
+    font-family:Tahoma;
+    font-size:8pt;
+    color:#887A2E;
+}
+.dhx_cal_light_wide .dhx_cal_lsection .dhx_fullday{
+    float:none;
+    margin-right:0px;
+    color:#FFF4B5;
+    font-weight:bold;
+    font-size:16px;
+    font-family:Arial;
+    cursor:pointer;
+}
+.dhx_custom_button{
+    float: right;
+    height: 21px;
+	width:90px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    -ms-border-radius: 4px;
+    -o-border-radius: 4px;
+    border-radius: 4px;
+}
+.dhx_cal_light_wide .dhx_custom_button {
+    position:absolute;
+    top:0;
+    right:0;
+    margin-top: 2px;
+}
+.dhx_cal_light_wide .dhx_repeat_right {
+    margin-right: 55px;
+}

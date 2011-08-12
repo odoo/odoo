@@ -107,15 +107,20 @@ class OpenERPSession(object):
         if uid: self.get_context()
         return uid
 
-    def execute(self, model, func, *l, **d):
+    def assert_valid(self):
+        """
+        Ensures this session is valid (logged into the openerp server)
+        """
         if not (self._db and self._uid and self._password):
             raise OpenERPUnboundException()
+
+    def execute(self, model, func, *l, **d):
+        self.assert_valid()
         r = self.proxy('object').execute(self._db, self._uid, self._password, model, func, *l, **d)
         return r
 
     def exec_workflow(self, model, id, signal):
-        if not (self._db and self._uid and self._password):
-            raise OpenERPUnboundException()
+        self.assert_valid()
         r = self.proxy('object').exec_workflow(self._db, self._uid, self._password, model, signal, id)
         return r
 
@@ -366,7 +371,7 @@ class HttpRequest(object):
         self.context = kw.get('context', {})
         host = cherrypy.config['openerp.server.host']
         port = cherrypy.config['openerp.server.port']
-        self.session = self.httpsession.setdefault(kw.get('session_id'), OpenERPSession(host, port))
+        self.session = self.httpsession.setdefault(kw.pop('session_id', None), OpenERPSession(host, port))
         self.result = ""
         if request.method == 'GET':
             print "GET --> %s.%s %s %r" % (controller.__class__.__name__, f.__name__, request, kw)
@@ -374,7 +379,10 @@ class HttpRequest(object):
             akw = dict([(key, kw[key] if isinstance(kw[key], basestring) else type(kw[key])) for key in kw.keys()])
             print "POST --> %s.%s %s %r" % (controller.__class__.__name__, f.__name__, request, akw)
         r = f(controller, self, **kw)
-        print "<--", r
+        if isinstance(r, str):
+            print "<--", len(r), 'bytes'
+        else:
+            print "<--", len(r), 'characters'
         print
         return r
 
@@ -407,7 +415,7 @@ class Root(object):
         if path_addons not in sys.path:
             sys.path.insert(0, path_addons)
         for i in os.listdir(path_addons):
-            if i not in sys.modules:
+            if i not in addons_module:
                 manifest_path = os.path.join(path_addons, i, '__openerp__.py')
                 if os.path.isfile(manifest_path):
                     manifest = eval(open(manifest_path).read())
@@ -445,7 +453,7 @@ class Root(object):
             #for the mobile web client we are supposed to use a different url to just add '/mobile'
             raise cherrypy.HTTPRedirect('/web_mobile/static/src/web_mobile.html', 301)
         else:
-            raise cherrypy.HTTPRedirect('/base/static/src/base.html', 301)
+            raise cherrypy.HTTPRedirect('/base/webclient/home', 301)
     default.exposed = True
 
 def main(argv):
