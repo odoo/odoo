@@ -2376,6 +2376,57 @@ class account_account_template(osv.osv):
             res.append((record['id'],name ))
         return res
 
+    def generate_account(self, cr, uid, account_root_id, tax_template_ref, code_digits, company_id, context=None):
+        """
+        This method for generating accounts from templates.
+        @param cr: A database cursor.
+        @param uid: ID of the user currently logged in.
+        @param account_root_id: Root account id getting from current template.
+        @param tax_template_ref: Taxes templates reference for write taxes_id in account_account.
+        @param code_digits: Digit getting from wizard.multi.charts.accounts.,this is use for account code.
+        @param company_id: company_id selected from wizard.multi.charts.accounts.
+        @return :{acc_template_ref : Pass acconting_ids for reference purpose}
+        
+        """
+        if context is None:
+            context = {}
+        obj_acc = self.pool.get('account.account')
+        acc_template_ref = {}
+        #deactivate the parent_store functionnality on account_account for rapidity purpose
+        ctx = context and context.copy() or {}
+        ctx['defer_parent_store_computation'] = True
+        children_acc_template = self.search(cr, uid, [('parent_id','child_of', account_root_id),('nocreate','!=',True)])
+        children_acc_template.sort()
+
+        for account_template in self.browse(cr, uid, children_acc_template, context=context):
+            tax_ids = []
+            for tax in account_template.tax_ids:
+                tax_ids.append(tax_template_ref[tax.id])
+
+            code_main = account_template.code and len(account_template.code) or 0
+            code_acc = account_template.code or ''
+            if code_main > 0 and code_main <= code_digits and account_template.type != 'view':
+                code_acc = str(code_acc) + (str('0'*(code_digits-code_main)))
+            vals={
+                'name': (account_root_id[0] == account_template.id) and company_id.name or account_template.name,
+                'currency_id': account_template.currency_id and account_template.currency_id.id or False,
+                'code': code_acc,
+                'type': account_template.type,
+                'user_type': account_template.user_type and account_template.user_type.id or False,
+                'reconcile': account_template.reconcile,
+                'shortcut': account_template.shortcut,
+                'note': account_template.note,
+                'parent_id': account_template.parent_id and ((account_template.parent_id.id in acc_template_ref) and acc_template_ref[account_template.parent_id.id]) or False,
+                'tax_ids': [(6,0,tax_ids)],
+                'company_id': company_id.id,
+            }
+            new_account = obj_acc.create(cr, uid, vals, context=ctx)
+            acc_template_ref[account_template.id] = new_account
+
+        #reactivate the parent_store functionnality on account_account
+        obj_acc._parent_store_compute(cr)
+        return {'acc_template_ref': acc_template_ref}
+
 account_account_template()
 
 class account_add_tmpl_wizard(osv.osv_memory):
@@ -2832,8 +2883,6 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         company_id = obj_multi.company_id.id
         chart_temp_id = obj_multi.chart_template_id.id
 
-        #new code
-        acc_template_ref = {}
         tax_code_template_ref = {}
 
         # create tax templates and real taxes from purchase_tax_rate,sale_tax_rate fields
@@ -2880,48 +2929,14 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         tax_template_to_tax = {}
         tax_templates = [x for x in obj_multi.chart_template_id.tax_template_ids if x.installable]
         taxes_ids = obj_tax_temp.generate_tax(cr, uid, tax_templates, tax_code_template_ref, company_id, context=context)
-        #deactivate the parent_store functionnality on account_account for rapidity purpose
-        ctx = context and context.copy() or {}
-        ctx['defer_parent_store_computation'] = True
 
-        children_acc_template = obj_acc_template.search(cr, uid, [('parent_id','child_of',[obj_acc_root.id]),('nocreate','!=',True)])
-        children_acc_template.sort()
-        for account_template in obj_acc_template.browse(cr, uid, children_acc_template, context=context):
-            tax_ids = []
-            for tax in account_template.tax_ids:
-                tax_ids.append(tax_template_ref[tax.id])
-            #create the account_account
-
-            dig = obj_multi.code_digits
-            code_main = account_template.code and len(account_template.code) or 0
-            code_acc = account_template.code or ''
-            if code_main>0 and code_main<=dig and account_template.type != 'view':
-                code_acc=str(code_acc) + (str('0'*(dig-code_main)))
-            vals={
-                'name': (obj_acc_root.id == account_template.id) and obj_multi.company_id.name or account_template.name,
-                'currency_id': account_template.currency_id and account_template.currency_id.id or False,
-                'code': code_acc,
-                'type': account_template.type,
-                'user_type': account_template.user_type and account_template.user_type.id or False,
-                'reconcile': account_template.reconcile,
-                'shortcut': account_template.shortcut,
-                'note': account_template.note,
-                'parent_id': account_template.parent_id and ((account_template.parent_id.id in acc_template_ref) and acc_template_ref[account_template.parent_id.id]) or False,
-                'tax_ids': [(6,0,tax_ids)],
-                'company_id': company_id,
-            }
-            new_account = obj_acc.create(cr, uid, vals, context=ctx)
-            acc_template_ref[account_template.id] = new_account
-
-
-        #reactivate the parent_store functionnality on account_account
-        obj_acc._parent_store_compute(cr)
+        acc_ids = obj_acc_template.generate_account(cr, uid, [obj_acc_root.id], taxes_ids['tax_template_ref'], obj_multi.code_digits, obj_multi.company_id, context=context)
 
         for key,value in taxes_ids['account_dict'].items():
             if value['account_collected_id'] or value['account_paid_id']:
                 obj_acc_tax.write(cr, uid, [key], {
-                    'account_collected_id': acc_template_ref.get(value['account_collected_id'], False),
-                    'account_paid_id': acc_template_ref.get(value['account_paid_id'], False),
+                    'account_collected_id': acc_ids['acc_template_ref'].get(value['account_collected_id'], False),
+                    'account_paid_id': acc_ids['acc_template_ref'].get(value['account_paid_id'], False),
                 })
 
         # Creating Journals
@@ -2943,8 +2958,8 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         }
 
         if obj_multi.chart_template_id.property_account_receivable:
-            vals_journal['default_credit_account_id'] = acc_template_ref[obj_multi.chart_template_id.property_account_income_categ.id]
-            vals_journal['default_debit_account_id'] = acc_template_ref[obj_multi.chart_template_id.property_account_income_categ.id]
+            vals_journal['default_credit_account_id'] = acc_ids['acc_template_ref'][obj_multi.chart_template_id.property_account_income_categ.id]
+            vals_journal['default_debit_account_id'] = acc_ids['acc_template_ref'][obj_multi.chart_template_id.property_account_income_categ.id]
 
         obj_journal.create(cr,uid,vals_journal)
 
@@ -2962,8 +2977,8 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         }
 
         if obj_multi.chart_template_id.property_account_payable:
-            vals_journal['default_credit_account_id'] = acc_template_ref[obj_multi.chart_template_id.property_account_expense_categ.id]
-            vals_journal['default_debit_account_id'] = acc_template_ref[obj_multi.chart_template_id.property_account_expense_categ.id]
+            vals_journal['default_credit_account_id'] = acc_ids['acc_template_ref'][obj_multi.chart_template_id.property_account_expense_categ.id]
+            vals_journal['default_debit_account_id'] = acc_ids['acc_template_ref'][obj_multi.chart_template_id.property_account_expense_categ.id]
         obj_journal.create(cr,uid,vals_journal)
 
         # Creating Journals Sales Refund and Purchase Refund
@@ -2982,8 +2997,8 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         }
 
         if obj_multi.chart_template_id.property_account_receivable:
-            vals_journal['default_credit_account_id'] = acc_template_ref[obj_multi.chart_template_id.property_account_income_categ.id]
-            vals_journal['default_debit_account_id'] = acc_template_ref[obj_multi.chart_template_id.property_account_income_categ.id]
+            vals_journal['default_credit_account_id'] = acc_ids['acc_template_ref'][obj_multi.chart_template_id.property_account_income_categ.id]
+            vals_journal['default_debit_account_id'] = acc_ids['acc_template_ref'][obj_multi.chart_template_id.property_account_income_categ.id]
 
         obj_journal.create(cr, uid, vals_journal, context=context)
 
@@ -2998,8 +3013,8 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         }
 
         if obj_multi.chart_template_id.property_account_payable:
-            vals_journal['default_credit_account_id'] = acc_template_ref[obj_multi.chart_template_id.property_account_expense_categ.id]
-            vals_journal['default_debit_account_id'] = acc_template_ref[obj_multi.chart_template_id.property_account_expense_categ.id]
+            vals_journal['default_credit_account_id'] = acc_ids['acc_template_ref'][obj_multi.chart_template_id.property_account_expense_categ.id]
+            vals_journal['default_debit_account_id'] = acc_ids['acc_template_ref'][obj_multi.chart_template_id.property_account_expense_categ.id]
 
         obj_journal.create(cr, uid, vals_journal, context=context)
 
@@ -3031,8 +3046,8 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                 'view_id': view_id,
                 'company_id': company_id,
                 'centralisation': True,
-                'default_credit_account_id': acc_template_ref[obj_multi.chart_template_id.property_account_income_opening.id],
-                'default_debit_account_id': acc_template_ref[obj_multi.chart_template_id.property_account_expense_opening.id]
+                'default_credit_account_id': acc_ids['acc_template_ref'][obj_multi.chart_template_id.property_account_income_opening.id],
+                'default_debit_account_id': acc_ids['acc_template_ref'][obj_multi.chart_template_id.property_account_expense_opening.id]
                 }
             obj_journal.create(cr, uid, vals_journal, context=context)
 
@@ -3068,7 +3083,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                 'type': 'liquidity',
                 'user_type': account_template.user_type and account_template.user_type.id or False,
                 'reconcile': True,
-                'parent_id': acc_template_ref[ref_acc_bank.id] or False,
+                'parent_id': acc_ids['acc_template_ref'][ref_acc_bank.id] or False,
                 'company_id': company_id,
             }
             acc_cash_id  = obj_acc.create(cr,uid,vals)
@@ -3115,7 +3130,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                 'name': record[0],
                 'company_id': company_id,
                 'fields_id': field[0],
-                'value': account and 'account.account,' + str(acc_template_ref[account.id]) or False,
+                'value': account and 'account.account,' + str(acc_ids['acc_template_ref'][account.id]) or False,
             }
 
             if r:
@@ -3126,7 +3141,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                 property_obj.create(cr, uid, vals)
 
         #Generate Fiscal Position , Fiscal Position Accounts and Fiscal Position Taxes from templates
-        obj_fiscal_position_template.generate_fiscal_position(cr, uid, chart_temp_id, taxes_ids['tax_template_ref'], acc_template_ref, company_id, context=context)
+        obj_fiscal_position_template.generate_fiscal_position(cr, uid, chart_temp_id, taxes_ids['tax_template_ref'], acc_ids['acc_template_ref'], company_id, context=context)
 
         if obj_multi.sale_tax and taxes_ids['taxes_id']:
             ir_values_obj.set(cr, uid, key='default', key2=False, name="taxes_id", company=obj_multi.company_id.id,
