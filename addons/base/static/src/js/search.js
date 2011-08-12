@@ -875,11 +875,10 @@ openerp.base.search.ExtendedSearchGroup = openerp.base.OldWidget.extend({
         this._super();
         var _this = this;
         this.add_prop();
-        this.$element.find('.searchview_extended_add_proposition').click(function (e) {
+        this.$element.find('.searchview_extended_add_proposition').click(function () {
             _this.add_prop();
         });
-        var delete_btn = this.$element.find('.searchview_extended_delete_group');
-        delete_btn.click(function (e) {
+        this.$element.find('.searchview_extended_delete_group').click(function () {
             _this.stop();
         });
     },
@@ -889,7 +888,7 @@ openerp.base.search.ExtendedSearchGroup = openerp.base.OldWidget.extend({
         }).compact().value();
         var choice = this.$element.find(".searchview_extended_group_choice").val();
         var op = choice == "all" ? "&" : "|";
-        return [].concat(choice == "none" ? ['!'] : [],
+        return choice == "none" ? ['!'] : [].concat(
             _.map(_.range(_.max([0,props.length - 1])), function() { return op; }),
             props);
     },
@@ -901,10 +900,7 @@ openerp.base.search.ExtendedSearchGroup = openerp.base.OldWidget.extend({
         parent.check_last_element();
     },
     set_last_group: function(is_last) {
-        if(is_last)
-            this.$element.addClass("last_group");
-        else
-            this.$element.removeClass("last_group");
+        this.$element.toggleClass('last_group', is_last);
     }
 });
 
@@ -927,8 +923,7 @@ openerp.base.search.ExtendedSearchProposition = openerp.base.OldWidget.extend({
         this.$element.find(".searchview_extended_prop_field").change(function() {
             _this.changed();
         });
-        var delete_btn = this.$element.find('.searchview_extended_delete_prop');
-        delete_btn.click(function (e) {
+        this.$element.find('.searchview_extended_delete_prop').click(function () {
             _this.stop();
         });
     },
