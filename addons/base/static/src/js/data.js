@@ -268,9 +268,13 @@ openerp.base.DataSet =  openerp.base.Widget.extend( /** @lends openerp.base.Data
     },
     /**
      * Read records.
+     *
+     * @param {Array} ids identifiers of the records to read
+     * @param {Array} fields fields to read and return, by default all fields are returned
+     * @param {Function} callback function called with read result
+     * @returns {$.Deferred}
      */
     read_ids: function (ids, fields, callback) {
-        var self = this;
         return this.rpc('/base/dataset/get', {
             model: this.model,
             ids: ids,
@@ -282,13 +286,20 @@ openerp.base.DataSet =  openerp.base.Widget.extend( /** @lends openerp.base.Data
      * Read a slice of the records represented by this DataSet, based on its
      * domain and context.
      *
-     * @param {Number} [offset=0] The index from which selected records should be returned
-     * @param {Number} [limit=null] The maximum number of records to return
+     * @params {Object} options
+     * @param {Array} [options.fields] fields to read and return, by default all fields are returned
+     * @param {Number} [options.offset=0] The index from which selected records should be returned
+     * @param {Number} [options.limit=null] The maximum number of records to return
+     * @param {Function} callback function called with read_slice result
+     * @returns {$.Deferred}
      */
-    read_slice: function (fields, offset, limit, callback) {
-    },
+    read_slice: function (options, callback) { return null; },
     /**
-     * Read the indexed record.
+     * Reads the current dataset record (from its index)
+     *
+     * @params {Array} [fields] fields to read and return, by default all fields are returned
+     * @params {Function} callback function called with read_index result
+     * @returns {$.Deferred}
      */
     read_index: function (fields, callback) {
         var def = $.Deferred().then(callback);
@@ -304,6 +315,13 @@ openerp.base.DataSet =  openerp.base.Widget.extend( /** @lends openerp.base.Data
         }
         return def.promise();
     },
+    /**
+     * Reads default values for the current model
+     *
+     * @param {Array} [fields] fields to get default values for, by default all defaults are read
+     * @param {Function} callback function called with default_get result
+     * @returns {$.Deferred}
+     */
     default_get: function(fields, callback) {
         return this.rpc('/base/dataset/default_get', {
             model: this.model,
@@ -311,6 +329,14 @@ openerp.base.DataSet =  openerp.base.Widget.extend( /** @lends openerp.base.Data
             context: this.get_context()
         }, callback);
     },
+    /**
+     * Creates a new record in db
+     *
+     * @param {Object} data field values to set on the new record
+     * @param {Function} callback function called with operation result
+     * @param {Function} error_callback function called in case of creation error
+     * @returns {$.Deferred}
+     */
     create: function(data, callback, error_callback) {
         return this.rpc('/base/dataset/create', {
             model: this.model,
@@ -318,19 +344,44 @@ openerp.base.DataSet =  openerp.base.Widget.extend( /** @lends openerp.base.Data
             context: this.get_context()
         }, callback, error_callback);
     },
-    write: function (id, data, callback) {
+    /**
+     * Saves the provided data in an existing db record
+     *
+     * @param {Number|String} id identifier for the record to alter
+     * @param {Object} data field values to write into the record
+     * @param {Function} callback function called with operation result
+     * @param {Function} error_callback function called in case of write error
+     * @returns {$.Deferred}
+     */
+    write: function (id, data, callback, error_callback) {
         return this.rpc('/base/dataset/save', {
             model: this.model,
             id: id,
             data: data,
             context: this.get_context()
-        }, callback);
+        }, callback, error_callback);
     },
+    /**
+     * Deletes an existing record from the database
+     *
+     * @param {Number|String} ids identifier of the record to delete
+     * @param {Function} callback function called with operation result
+     * @param {Function} error_callback function called in case of deletion error
+     */
     unlink: function(ids, callback, error_callback) {
         var self = this;
         return this.call_and_eval("unlink", [ids, this.get_context()], null, 1,
             callback, error_callback);
     },
+    /**
+     * Calls an arbitrary RPC method
+     *
+     * @param {String} method name of the method (on the current model) to call
+     * @param {Array} [args] arguments to pass to the method
+     * @param {Function} callback
+     * @param {Function} error_callback
+     * @returns {$.Deferred}
+     */
     call: function (method, args, callback, error_callback) {
         return this.rpc('/base/dataset/call', {
             model: this.model,
@@ -338,6 +389,17 @@ openerp.base.DataSet =  openerp.base.Widget.extend( /** @lends openerp.base.Data
             args: args || []
         }, callback, error_callback);
     },
+    /**
+     * Calls an arbitrary method, with more crazy
+     *
+     * @param {String} method
+     * @param {Array} [args]
+     * @param {Number} [domain_id] index of a domain to evaluate in the args array
+     * @param {Number} [context_id] index of a context to evaluate in the args array
+     * @param {Function} callback
+     * @param {Function }error_callback
+     * @returns {$.Deferred}
+     */
     call_and_eval: function (method, args, domain_id, context_id, callback, error_callback) {
         return this.rpc('/base/dataset/call', {
             model: this.model,
@@ -347,6 +409,15 @@ openerp.base.DataSet =  openerp.base.Widget.extend( /** @lends openerp.base.Data
             args: args || []
         }, callback, error_callback);
     },
+    /**
+     * Calls a button method, usually returning some sort of action
+     *
+     * @param {String} method
+     * @param {Array} [args]
+     * @param {Function} callback
+     * @param {Function} error_callback
+     * @returns {$.Deferred}
+     */
     call_button: function (method, args, callback, error_callback) {
         return this.rpc('/base/dataset/call_button', {
             model: this.model,
@@ -356,17 +427,34 @@ openerp.base.DataSet =  openerp.base.Widget.extend( /** @lends openerp.base.Data
             args: args || []
         }, callback, error_callback);
     },
+    /**
+     * Fetches the "readable name" for records, based on intrinsic rules
+     *
+     * @param {Array} ids
+     * @param {Function} callback
+     * @returns {$.Deferred}
+     */
     name_get: function(ids, callback) {
         return this.call_and_eval('name_get', [ids, this.get_context()], null, 1, callback);
     },
-    /*
-     * args = domain
+    /**
+     * 
+     * @param {String} name name to perform a search for/on
+     * @param {Array} [domain=[]] filters for the objects returned, OpenERP domain
+     * @param {String} [operator='ilike'] matching operator to use with the provided name value
+     * @param {Number} [limit=100] maximum number of matches to return
+     * @param {Function} callback function to call with name_search result
+     * @returns {$.Deferred}
      */
-    name_search: function (name, args, operator, limit, callback) {
+    name_search: function (name, domain, operator, limit, callback) {
         return this.call_and_eval('name_search',
-            [name || '', args || false, operator || 'ilike', this.get_context(), limit || 100],
+            [name || '', domain || false, operator || 'ilike', this.get_context(), limit || 100],
             1, 3, callback);
     },
+    /**
+     * @param name
+     * @param callback
+     */
     name_create: function(name, callback) {
         return this.call_and_eval('name_create', [name, this.get_context()], null, 1, callback);
     },
@@ -377,7 +465,10 @@ openerp.base.DataSet =  openerp.base.Widget.extend( /** @lends openerp.base.Data
             signal: signal
         }, callback);
     },
-    get_context: function() {
+    get_context: function(request_context) {
+        if (request_context) {
+            return new openerp.base.CompoundContext(this.context, request_context);
+        }
         return this.context;
     }
 });
@@ -387,9 +478,11 @@ openerp.base.DataSetStatic =  openerp.base.DataSet.extend({
         // all local records
         this.ids = ids || [];
     },
-    read_slice: function (fields, offset, limit, callback) {
-        var self = this;
-        offset = offset || 0;
+    read_slice: function (options, callback) {
+        var self = this,
+            offset = options.offset || 0,
+            limit = options.limit || false,
+            fields = options.fields || false;
         var end_pos = limit && limit !== -1 ? offset + limit : undefined;
         return this.read_ids(this.ids.slice(offset, end_pos), fields, callback);
     },
@@ -426,25 +519,30 @@ openerp.base.DataSetSearch =  openerp.base.DataSet.extend({
         // is it necessary ?
         this.ids = [];
     },
-    read_slice: function (fields, offset, limit, callback) {
+    /**
+     * Read a slice of the records represented by this DataSet, based on its
+     * domain and context.
+     *
+     * @params {Object} options
+     * @param {Array} [options.fields] fields to read and return, by default all fields are returned
+     * @param {Object} [options.context] context data to add to the request payload, on top of the DataSet's own context
+     * @param {Array} [options.domain] domain data to add to the request payload, ANDed with the dataset's domain
+     * @param {Number} [options.offset=0] The index from which selected records should be returned
+     * @param {Number} [options.limit=null] The maximum number of records to return
+     * @param {Function} callback function called with read_slice result
+     * @returns {$.Deferred}
+     */
+    read_slice: function (options, callback) {
         var self = this;
-        offset = offset || 0;
-        // cached search, not sure it's a good idea
-        if(this.offset <= offset) {
-            var start = offset - this.offset;
-            if(this.ids.length - start >= limit) {
-                // TODO: check if this could work do only read if possible
-                // return read_ids(ids.slice(start,start+limit),fields,callback)
-            }
-        }
+        var offset = options.offset || 0;
         return this.rpc('/base/dataset/search_read', {
             model: this.model,
-            fields: fields,
-            domain: this.domain,
-            context: this.get_context(),
+            fields: options.fields || false,
+            domain: this.get_domain(options.domain),
+            context: this.get_context(options.context),
             sort: this.sort(),
             offset: offset,
-            limit: limit
+            limit: options.limit || false
         }, function (result) {
             self.ids = result.ids;
             self.offset = offset;
@@ -452,6 +550,12 @@ openerp.base.DataSetSearch =  openerp.base.DataSet.extend({
                 callback(result.records);
             }
         });
+    },
+    get_domain: function (other_domain) {
+        if (other_domain) {
+            return new openerp.base.CompoundDomain(this.domain, other_domain);
+        }
+        return this.domain;
     },
     /**
      * Reads or changes sort criteria on the dataset.
@@ -628,48 +732,51 @@ openerp.base.ReadOnlyDataSetSearch = openerp.base.DataSetSearch.extend({
     on_unlink: function(ids) {}
 });
 
-openerp.base.CompoundContext = function() {
-    this.__ref = "compound_context";
-    this.__contexts = [];
-    this.__eval_context = null;
-    var self = this;
-    _.each(arguments, function(x) {
-        self.add(x);
-    });
-};
-openerp.base.CompoundContext.prototype.add = function(context) {
-    this.__contexts.push(context);
-    return this;
-};
-openerp.base.CompoundContext.prototype.set_eval_context = function(eval_context) {
-    this.__eval_context = eval_context;
-    return this;
-};
-openerp.base.CompoundContext.prototype.get_eval_context = function() {
-    return this.__eval_context;
-};
+openerp.base.CompoundContext = openerp.base.Class.extend({
+    init: function () {
+        this.__ref = "compound_context";
+        this.__contexts = [];
+        this.__eval_context = null;
+        var self = this;
+        _.each(arguments, function(x) {
+            self.add(x);
+        });
+    },
+    add: function (context) {
+        this.__contexts.push(context);
+        return this;
+    },
+    set_eval_context: function (eval_context) {
+        this.__eval_context = eval_context;
+        return this;
+    },
+    get_eval_context: function () {
+        return this.__eval_context;
+    }
+});
 
-openerp.base.CompoundDomain = function() {
-    this.__ref = "compound_domain";
-    this.__domains = [];
-    this.__eval_context = null;
-    var self = this;
-    _.each(arguments, function(x) {
-        self.add(x);
-    });
-};
-openerp.base.CompoundDomain.prototype.add = function(domain) {
-    this.__domains.push(domain);
-    return this;
-};
-openerp.base.CompoundDomain.prototype.set_eval_context = function(eval_context) {
-    this.__eval_context = eval_context;
-    return this;
-};
-openerp.base.CompoundDomain.prototype.get_eval_context = function() {
-    return this.__eval_context;
-};
-
+openerp.base.CompoundDomain = openerp.base.Class.extend({
+    init: function () {
+        this.__ref = "compound_domain";
+        this.__domains = [];
+        this.__eval_context = null;
+        var self = this;
+        _.each(arguments, function(x) {
+            self.add(x);
+        });
+    },
+    add: function(domain) {
+        this.__domains.push(domain);
+        return this;
+    },
+    set_eval_context: function(eval_context) {
+        this.__eval_context = eval_context;
+        return this;
+    },
+    get_eval_context: function() {
+        return this.__eval_context;
+    }
+});
 };
 
 // vim:et fdc=0 fdl=0 foldnestmax=3 fdm=syntax:

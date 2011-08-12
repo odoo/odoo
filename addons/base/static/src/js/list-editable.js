@@ -8,15 +8,11 @@ openerp.base.list.editable = function (openerp) {
     // editability status of list rows
     openerp.base.ListView.prototype.defaults.editable = null;
 
-    var old_init = openerp.base.ListView.prototype.init,
-        old_actual_search = openerp.base.ListView.prototype.do_actual_search,
-        old_add_record = openerp.base.ListView.prototype.do_add_record,
-        old_on_loaded = openerp.base.ListView.prototype.on_loaded;
     // TODO: not sure second @lends on existing item is correct, to check
-    _.extend(openerp.base.ListView.prototype, /** @lends openerp.base.ListView# */{
+    openerp.base.ListView.include(/** @lends openerp.base.ListView# */{
         init: function () {
             var self = this;
-            old_init.apply(this, arguments);
+            this._super.apply(this, arguments);
             $(this.groups).bind({
                 'edit': function (e, id, dataset) {
                     self.do_edit(dataset.index, id, dataset);
@@ -63,7 +59,7 @@ openerp.base.list.editable = function (openerp) {
          */
         do_actual_search: function (results) {
             this.set_editable(results.context['set_editable']);
-            old_actual_search.call(this, results);
+            this._super(results);
         },
         /**
          * Replace do_add_record to handle editability (and adding new record
@@ -73,17 +69,17 @@ openerp.base.list.editable = function (openerp) {
             if (this.options.editable) {
                 this.groups.new_record();
             } else {
-                old_add_record.call(this);
+                this._super();
             }
         },
         on_loaded: function (data, grouped) {
             // tree/@editable takes priority on everything else if present.
             this.options.editable = data.fields_view.arch.attrs.editable || this.options.editable;
-            return old_on_loaded.call(this, data, grouped);
+            return this._super(data, grouped);
         }
     });
 
-    _.extend(openerp.base.ListView.Groups.prototype, /** @lends openerp.base.ListView.Groups# */{
+    openerp.base.ListView.Groups.include(/** @lends openerp.base.ListView.Groups# */{
         passtrough_events: openerp.base.ListView.Groups.prototype.passtrough_events + " edit saved",
         new_record: function () {
             // TODO: handle multiple children
@@ -91,11 +87,10 @@ openerp.base.list.editable = function (openerp) {
         }
     });
 
-    var old_list_row_clicked = openerp.base.ListView.List.prototype.row_clicked;
-    _.extend(openerp.base.ListView.List.prototype, /** @lends openerp.base.ListView.List */{
+    openerp.base.ListView.List.include(/** @lends openerp.base.ListView.List */{
         row_clicked: function (event) {
             if (!this.options.editable) {
-                return old_list_row_clicked.call(this, event);
+                return this._super(event);
             }
             this.edit_record();
         },
@@ -213,6 +208,9 @@ openerp.base.list.editable = function (openerp) {
         save_row: function (edit_next) {
             var self = this;
             this.edition_form.do_save(function (result) {
+                if (result.created && !self.edition_index) {
+                    self.edition_index = self.dataset.index;
+                }
                 self.cancel_pending_edition().then(function () {
                     $(self).trigger('saved', [self.dataset]);
                     if (!edit_next) {

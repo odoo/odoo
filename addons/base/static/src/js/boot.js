@@ -1,10 +1,11 @@
-//---------------------------------------------------------
-// OpenERP Web Boostrap
-//---------------------------------------------------------
+/*---------------------------------------------------------
+ * OpenERP Web Boostrap Code
+ *---------------------------------------------------------*/
 
 /**
  * @name openerp
- * @namespace
+ * @namespace openerp
+ * @namespace window.openerp
  */
 (function() {
     if (this.openerp)
@@ -13,13 +14,8 @@
 
     /** @lends openerp */
     var openerp = this.openerp =  {
-        /**
-         * Debug flag turns on logging
-         */
+        // debug flag
         debug: true,
-        // element_ids registry linked to all controllers on the page
-        // TODO rename to elements, or keep gtk naming?
-        screen: {},
         // Per session namespace
         // openerp.<module> will map to
         // openerp.sessions.sessionname.<module> using a closure
@@ -39,8 +35,6 @@
                 // this unique id will be replaced by hostname_databasename by
                 // openerp.base.Connection on the first connection
                 _session_id: "session" + session_counter++,
-                screen: openerp.screen,
-                sessions: openerp.sessions,
                 base: {},
                 web_mobile: {}
             };
@@ -50,16 +44,17 @@
             }
             return new_instance;
         }
+        // TODO add initrpc to init core only for RPC
     };
 })();
 
-//---------------------------------------------------------
-// OpenERP base module split
-//---------------------------------------------------------
+/*---------------------------------------------------------
+ * OpenERP Web base module split
+ *---------------------------------------------------------*/
 
 openerp.base = function(instance) {
     openerp.base.core(instance);
-    openerp.base.dates(instance);
+    openerp.base.formats(instance);
     openerp.base.chrome(instance);
     openerp.base.data(instance);
     if (openerp.base.views) {

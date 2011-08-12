@@ -1,7 +1,7 @@
 <template>
  <t t-name="CalendarView">
     <h3 class="title"><t t-esc="fields_view.arch.attrs.string"/></h3>
-    <div id="openerp_scheduler" class="dhx_cal_container" style="height: 1000px;">
+    <div id="openerp_scheduler" class="dhx_cal_container" style="height: 600px;">
         <div class="dhx_cal_navline">
             <div class="dhx_cal_prev_button">&amp;nbsp;</div>
             <div class="dhx_cal_next_button">&amp;nbsp;</div>
@@ -18,9 +18,9 @@
     </div>
 </t>
 <t t-name="CalendarView.sidebar.responsible">
-    <div t-foreach="users" t-as="user" class="oe_calendar_responsible" t-attf-style="background: #{user.color}">
-        <input type="checkbox" name="selection" t-att-value="user.id"/>
-        <span><t t-esc="user.name"/></span>
+    <div t-foreach="filters" t-as="filter" class="oe_calendar_responsible" t-attf-style="background: #{filter.color}">
+        <input type="checkbox" name="selection" t-att-value="filter.value"/>
+        <span><t t-esc="filter.label"/></span>
     </div>
 </t>
 </template>

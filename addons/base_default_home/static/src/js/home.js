@@ -1,8 +1,6 @@
 openerp.base_default_home = function (openerp) {
     QWeb.add_template('/base_default_home/static/src/xml/base_default_home.xml');
 
-    var old_home = openerp.base.WebClient.prototype.default_home;
-
     openerp.base_default_home = {
         applications: [
             [
@@ -51,9 +49,14 @@ openerp.base_default_home = function (openerp) {
         ]
     };
 
-    _.extend(openerp.base.WebClient.prototype, {
+    openerp.base.WebClient.include({
         default_home: function () {
-            var self = this;
+            var self = this,
+                // resig class can't handle _super in async contexts, by the
+                // time async callback comes back, _super has already been
+                // reset to a baseline value of this.prototype (or something
+                // like that)
+                old_home = this._super;
             var Installer = new openerp.base.DataSet(
                     this, 'base.setup.installer');
             Installer.call('already_installed', [], function (installed_modules) {
@@ -83,7 +86,7 @@ openerp.base_default_home = function (openerp) {
             $.blockUI({
                 message: '<img src="/base_default_home/static/src/img/throbber.gif">'
             });
-            Modules.read_slice(['id'], null, null, function (records) {
+            Modules.read_slice({fields: ['id']}, function (records) {
                 if (!(records.length === 1)) { return; }
                 Modules.call('state_update',
                     [_.pluck(records, 'id'), 'to install', ['uninstalled']],
