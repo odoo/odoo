@@ -5,12 +5,12 @@
 <!--
  Users Groups
 -->
-    <record model="res.groups" id="group_system">
-        <field name="name">Administration / Configuration</field>
-    </record>
-
     <record model="res.groups" id="group_erp_manager">
         <field name="name">Administration / Access Rights</field>
+    </record>
+    <record model="res.groups" id="group_system">
+        <field name="name">Administration / Configuration</field>
+        <field name="implied_ids" eval="[(4, ref('group_erp_manager'))]"/>
     </record>
 
     <record model="res.groups" id="group_user">
@@ -29,11 +29,12 @@
         <field name="name">Useability / No One</field>
     </record>
 
-    <record id="group_sale_manager" context="{'noadmin':True}" model="res.groups">
-        <field name="name">Sales / Manager</field>
-    </record>
     <record id="group_sale_salesman" context="{'noadmin':True}" model="res.groups">
         <field name="name">Sales / User</field>
+    </record>
+    <record id="group_sale_manager" context="{'noadmin':True}" model="res.groups">
+        <field name="name">Sales / Manager</field>
+        <field name="implied_ids" eval="[(4, ref('group_sale_salesman'))]"/>
     </record>
 
     <!-- Set accesses to menu -->

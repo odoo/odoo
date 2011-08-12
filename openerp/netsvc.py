@@ -95,8 +95,8 @@ class Service(object):
             raise
 
 class LocalService(object):
-    """ Proxy for local services. 
-    
+    """ Proxy for local services.
+
         Any instance of this class will behave like the single instance
         of Service(name)
     """
@@ -115,20 +115,20 @@ class LocalService(object):
         return getattr(self, method)(*params)
 
 class ExportService(object):
-    """ Proxy for exported services. 
+    """ Proxy for exported services.
 
     All methods here should take an AuthProxy as their first parameter. It
     will be appended by the calling framework.
 
-    Note that this class has no direct proxy, capable of calling 
-    eservice.method(). Rather, the proxy should call 
+    Note that this class has no direct proxy, capable of calling
+    eservice.method(). Rather, the proxy should call
     dispatch(method,auth,params)
     """
-    
+
     _services = {}
     _groups = {}
     _logger = logging.getLogger('web-services')
-    
+
     def __init__(self, name, audience=''):
         ExportService._services[name] = self
         self.__name = name
@@ -143,7 +143,7 @@ class ExportService(object):
 
     def dispatch(self, method, auth, params):
         raise Exception("stub dispatch at %s" % self.__name)
-        
+
     def new_dispatch(self,method,auth,params):
         raise Exception("stub dispatch at %s" % self.__name)
 
@@ -247,16 +247,16 @@ def init_alternative_logger():
 class Agent(object):
     """ Singleton that keeps track of cancellable tasks to run at a given
         timestamp.
-       
+
         The tasks are characterised by:
-       
+
             * a timestamp
             * the database on which the task run
             * the function to call
             * the arguments and keyword arguments to pass to the function
 
         Implementation details:
-        
+
           - Tasks are stored as list, allowing the cancellation by setting
             the timestamp to 0.
           - A heapq is used to store tasks, so we don't need to sort
@@ -357,7 +357,7 @@ class Server:
 
     def start(self):
         self.__logger.debug("called stub Server.start")
-        
+
     def _late_start(self):
         self.start()
         for thr in Server.__starter_threads:
@@ -449,7 +449,7 @@ class OpenERPDispatcher:
             self.log('exception', tools.exception_to_unicode(e))
             tb = getattr(e, 'traceback', sys.exc_info())
             tb_s = "".join(traceback.format_exception(*tb))
-            if tools.config['debug_mode'] and isinstance(tb, types.TracebackType):
+            if tools.config['debug_mode'] and isinstance(tb[2], types.TracebackType):
                 import pdb
                 pdb.post_mortem(tb[2])
             raise OpenERPDispatcherException(e, tb_s)

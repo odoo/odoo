@@ -16,28 +16,5 @@
             </field>
         </record>
 
-
-        <record id="action_start_configurator" model="ir.actions.server">
-            <field name="name">Start Configuration</field>
-            <field name="model_id" ref="model_base_module_configuration"/>
-            <field name="state">code</field>
-            <field name="code">action = obj.start()</field>
-        </record>
-
-        <menuitem name="Add More Features"
-            action="action_start_configurator"
-            id="menu_view_base_module_configuration" parent="base.menu_config"
-            type="server" icon="STOCK_EXECUTE" sequence="100" />
-
-        <record model="ir.values" id="action_todo_config">
-            <field name="model_id" ref="model_ir_actions_todo" />
-            <field name="object" eval="1" />
-            <field name="name">Start Configuration</field>
-            <field name="key2">client_action_multi</field>
-            <field name="value" eval="'ir.actions.server,' + str(ref('action_start_configurator'))" />
-            <field name="key">action</field>
-            <field name="model">ir.actions.todo</field>
-        </record>
-
     </data>
 </openerp>

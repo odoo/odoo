@@ -147,9 +147,11 @@ class res_partner(osv.osv):
     _defaults = {
         'active': lambda *a: 1,
         'customer': lambda *a: 1,
+        'address': [{'type': 'default'}],
         'category_id': _default_category,
         'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'res.partner', context=c),
     }
+
     def copy(self, cr, uid, id, default={}, context={}):
         name = self.read(cr, uid, [id], ['name'])[0]['name']
         default.update({'name': name+ _(' (copy)'), 'events':[]})
@@ -222,8 +224,10 @@ class res_partner(osv.osv):
         return True
 
     def address_get(self, cr, uid, ids, adr_pref=['default']):
-        cr.execute('select type,id from res_partner_address where partner_id IN %s',(tuple(ids),))
-        res = cr.fetchall()
+        address_obj = self.pool.get('res.partner.address')
+        address_ids = address_obj.search(cr, uid, [('partner_id', '=', ids)])
+        address_rec = address_obj.read(cr, uid, address_ids, ['type'])
+        res = list(tuple(addr.values()) for addr in address_rec)
         adr = dict(res)
         # get the id of the (first) default address if there is one,
         # otherwise get the id of the first address in the list
@@ -310,14 +314,13 @@ class res_partner_address(osv.osv):
             if context.get('contact_display', 'contact')=='partner' and r['partner_id']:
                 res.append((r['id'], r['partner_id'][1]))
             else:
-                addr = r['name'] or ''
-                if r['name'] and (r['city'] or r['country_id']):
-                    addr += ', '
-                addr += (r['country_id'] and r['country_id'][1] or '') + ' ' + (r['city'] or '') + ' '  + (r['street'] or '')
+                # make a comma-separated list with the following non-empty elements
+                elems = [r['name'], r['country_id'] and r['country_id'][1], r['city'], r['street']]
+                addr = ', '.join(filter(bool, elems))
                 if (context.get('contact_display', 'contact')=='partner_address') and r['partner_id']:
-                    res.append((r['id'], "%s: %s" % (r['partner_id'][1], addr.strip() or '/')))
+                    res.append((r['id'], "%s: %s" % (r['partner_id'][1], addr or '/')))
                 else:
-                    res.append((r['id'], addr.strip() or '/'))
+                    res.append((r['id'], addr or '/'))
         return res
 
     def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=100):
@@ -451,8 +454,11 @@ class res_partner_bank(osv.osv):
         if not len(ids):
             return []
         res = []
-        for id in self.browse(cr, uid, ids):
-            res.append((id.id,id.acc_number))
+        for val in self.browse(cr, uid, ids):
+            if val.bank.code:
+                res.append((val.id, val.bank.code + ': ' + val.acc_number))
+            else:
+                res.append((val.id, val.acc_number))
         return res
 
 res_partner_bank()
