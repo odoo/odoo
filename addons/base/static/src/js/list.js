@@ -352,8 +352,9 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
      * Reloads the list view based on the current settings (dataset & al)
      *
      * @param {Boolean} [grouped] Should the list be displayed grouped
+     * @param {Object} [context] context to send the server while loading the view
      */
-    reload_view: function (grouped) {
+    reload_view: function (grouped, context) {
         var self = this;
         var callback = function (field_view_get) {
             self.on_loaded(field_view_get, grouped);
@@ -364,7 +365,7 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
             return this.rpc('/base/listview/load', {
                 model: this.model,
                 view_id: this.view_id,
-                context: this.dataset.get_context(),
+                context: this.dataset.get_context(context),
                 toolbar: this.options.sidebar
             }, callback);
         }
@@ -411,7 +412,7 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
             results.group_by = null;
         }
 
-        this.reload_view(!!results.group_by).then(
+        this.reload_view(!!results.group_by, results.context).then(
             $.proxy(this, 'reload_content'));
     },
     /**

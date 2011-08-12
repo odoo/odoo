@@ -1114,11 +1114,17 @@
 </t>
 <t t-name="SelectCreatePopup.search.buttons">
     <button type="button" class="oe_selectcreatepopup-search-select" disabled="disabled">Select</button>
-    <button type="button" class="oe_selectcreatepopup-search-close">Close</button>
+    <button type="button" class="oe_selectcreatepopup-search-close">Cancel</button>
 </t>
 <t t-name="SelectCreatePopup.form.buttons">
-    <button type="button" class="oe_selectcreatepopup-form-save">Save</button>
-    <button type="button" class="oe_selectcreatepopup-form-close">Close</button>
+    <t t-if="widget.options.disable_multiple_selection">
+        <button type="button" class="oe_selectcreatepopup-form-save">Save</button>
+    </t>
+    <t t-if="! widget.options.disable_multiple_selection">
+        <button type="button" class="oe_selectcreatepopup-form-save-new">Save &amp; New</button>
+        <button type="button" class="oe_selectcreatepopup-form-save">Save &amp; Close</button>
+    </t>
+    <button type="button" class="oe_selectcreatepopup-form-close">Cancel</button>
 </t>
 <t t-name="FormOpenPopup">
     <div t-att-id="element_id">
@@ -1127,7 +1133,7 @@
 </t>
 <t t-name="FormOpenPopup.form.buttons">
     <button type="button" class="oe_formopenpopup-form-save">Save</button>
-    <button type="button" class="oe_formopenpopup-form-close">Close</button>
+    <button type="button" class="oe_formopenpopup-form-close">Cancel</button>
 </t>
 <t t-name="ListView.row.frame" t-extend="WidgetFrame">
     <t t-jquery="tr">
