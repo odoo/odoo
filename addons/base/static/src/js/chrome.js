@@ -4,7 +4,7 @@
 
 openerp.base.chrome = function(openerp) {
 
-<<<<<<< TREE
+
 openerp.base.Session = openerp.base.Widget.extend( /** @lends openerp.base.Session# */{
     /**
      * @constructs
@@ -273,8 +273,6 @@ openerp.base.Session = openerp.base.Widget.extend( /** @lends openerp.base.Sessi
     }
 });
 
-=======
->>>>>>> MERGE-SOURCE
 openerp.base.Notification =  openerp.base.Widget.extend({
     init: function(parent, element_id) {
         this._super(parent, element_id);
