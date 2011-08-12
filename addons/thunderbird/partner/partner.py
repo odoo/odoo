@@ -192,7 +192,7 @@ class thunderbird_partner(osv.osv_memory):
                 res['res_model'] = model
                 res['name'] = msg.get('subject','NO-SUBJECT')+".eml"
                 res['datas_fname'] = fn
-                res['datas'] = base64.b64encode(mail)
+                res['datas'] = base64.b64encode(mail.encode('utf-8'))
                 res['res_id'] = res_id
                 obj_attch.create(cr, uid, res)
             server_tools_pool.history_message(cr, uid, model, res_id, msg_new)
