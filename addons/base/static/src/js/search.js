@@ -316,24 +316,13 @@ openerp.base.SearchView = openerp.base.Widget.extend({
         this.notification.notify("Invalid Search", "triggered from search view");
     },
     do_clear: function () {
-		this.$element.find(':input').each(function(){
-            switch(this.type) {
-                case 'text':
-                case 'string':
-                    $(this).val('');
-                break;
-            }
-			});
-            var string = ($("div.expanded").not("#oe_app_search table:first-child .expanded"));
-		    if (string){
-            $(string).removeClass('expanded');
-            $(string).addClass('folded');
-            }
-        $('#oe_app_search table:last').css('display', 'none');
+        var string = $('a.searchview_group_string');
+        _.each(string, function(str){
+            $(str).closest('div.searchview_group').removeClass("expanded").addClass('folded');
+         });
+        this.$element.find('table:last').hide();
         $('.searchview_extended_groups_list').empty();
 		$('.filter_label').removeClass('enabled');
-        this.$element.find('form').submit();       
-        
      },
     /**
      * Triggered when the search view gets cleared
@@ -475,7 +464,7 @@ openerp.base.search.FilterGroup = openerp.base.search.Widget.extend({
 });
 openerp.base.search.add_expand_listener = function($root) {
     $root.find('a.searchview_group_string').click(function (e) {
-        $root.toggleClass('folded expanded');
+		 $root.toggleClass('folded expanded');
         e.stopPropagation();
         e.preventDefault();
     });
