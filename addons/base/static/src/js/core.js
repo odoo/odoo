@@ -305,16 +305,8 @@ openerp.base.Registry = openerp.base.Class.extend( /** @lends openerp.base.Regis
     }
 });
 
-/**
- * Utility class that any class is allowed to extend to easy common manipulations.
- *
- * It provides rpc calls, callback on all methods preceded by "on_" or "do_" and a
- * logging facility.
- */
-openerp.base.SessionAware = openerp.base.Class.extend({
-    init: function(session) {
-        this.session = session;
-
+openerp.base.CallbackEnabled = openerp.base.Class.extend({
+    init: function() {
         // Transform on_* method into openerp.base.callbacks
         for (var name in this) {
             if(typeof(this[name]) == "function") {
@@ -325,6 +317,19 @@ openerp.base.SessionAware = openerp.base.Class.extend({
                 }
             }
         }
+    }
+});
+
+/**
+ * Utility class that any class is allowed to extend to easy common manipulations.
+ *
+ * It provides rpc calls, callback on all methods preceded by "on_" or "do_" and a
+ * logging facility.
+ */
+openerp.base.SessionAware = openerp.base.CallbackEnabled.extend({
+    init: function(session) {
+        this._super();
+        this.session = session;
     },
     /**
      * Performs a JSON-RPC call
@@ -611,15 +616,15 @@ openerp.base.OldWidget = openerp.base.Widget.extend({
     }
 });
 
-openerp.base.Session = openerp.base.Widget.extend( /** @lends openerp.base.Session# */{
+openerp.base.Session = openerp.base.CallbackEnabled.extend( /** @lends openerp.base.Session# */{
     /**
      * @constructs
      * @param element_id to use for exception reporting
      * @param server
      * @param port
      */
-    init: function(parent, element_id, server, port) {
-        this._super(parent, element_id);
+    init: function(server, port) {
+        this._super();
         this.server = (server == undefined) ? location.hostname : server;
         this.port = (port == undefined) ? location.port : port;
         this.rpc_mode = (server == location.hostname) ? "ajax" : "jsonp";

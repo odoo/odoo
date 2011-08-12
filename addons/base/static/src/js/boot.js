@@ -53,6 +53,7 @@
  *---------------------------------------------------------*/
 
 openerp.base = function(instance) {
+    openerp.base._t = function(x) { return x; };
     openerp.base.core(instance);
     openerp.base.formats(instance);
     openerp.base.chrome(instance);

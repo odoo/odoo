@@ -681,7 +681,7 @@ openerp.base.WebClient = openerp.base.Widget.extend({
         }
         this.$element.html(QWeb.render("Interface", params));
 
-        this.session = new openerp.base.Session(this,"oe_errors");
+        this.session = new openerp.base.Session();
         this.loading = new openerp.base.Loading(this,"oe_loading");
         this.crashmanager =  new openerp.base.CrashManager(this);
         this.crashmanager.start();
