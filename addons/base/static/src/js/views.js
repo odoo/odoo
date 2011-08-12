@@ -15,6 +15,7 @@ openerp.base.ActionManager = openerp.base.Widget.extend({
         // Will use parent to find it when implementation will be done.
         this.session.action_manager = this;
     },
+    
     do_action: function(action, on_closed) {
         action.flags = _.extend({
             sidebar : action.target != 'new',
@@ -87,7 +88,7 @@ openerp.base.ActionManager = openerp.base.Widget.extend({
             this.current_dialog.stop();
             this.current_dialog = null;
         }
-    }
+    },
 });
 
 openerp.base.ActionDialog = openerp.base.Dialog.extend({
@@ -143,6 +144,7 @@ openerp.base.ViewManager =  openerp.base.Widget.extend({
         }
         // switch to the first one in sequence
         return this.on_mode_switch(this.views_src[0].view_type);
+        
     },
     stop: function() {
     },
@@ -157,6 +159,7 @@ openerp.base.ViewManager =  openerp.base.Widget.extend({
             view_promise;
         this.active_view = view_type;
         var view = this.views[view_type];
+        this.shortcut_check(view.view_id,view_type);
         if (!view.controller) {
             // Lazy loading of views
             var controllerclass = this.registry.get_object(view_type);
@@ -268,6 +271,51 @@ openerp.base.ViewManager =  openerp.base.Widget.extend({
      */
     contexts: function () {
         return [];
+    },
+    shortcut_check: function(view_id,view_type){
+        var self =  this;
+        $('#shortcut_add_remove').show();
+        if (view_type == "tree" || typeof view_id != "boolean" && this.views_src[0].view_id == view_id
+        //to check view is either from menu or it is tree view... 
+        {  
+            var img = "shortcut-add";
+            for(var list_shortcut=0; list_shortcut<this.session.sc_list.length; list_shortcut++){
+                if (this.session.sc_list[list_shortcut]['res_id'] == this.session.active_id)
+                    {img = "shortcut-remove"}}
+            $('#shortcut_add_remove').addClass(img);
+        }
+        else {
+            $('#shortcut_add_remove').hide();
+         }
+        this.shortcut_add_remove();
+      },
+    shortcut_add_remove : function(){
+        var self = this;
+        var shortcut_selector =$('#shortcut_add_remove');
+        var dataset_shortcut = new openerp.base.DataSet(this, 'ir.ui.view_sc');
+        shortcut_selector.click(function(ev,id){
+            if(shortcut_selector.hasClass("shortcut-remove")){
+                var unlink_id = $("li[id="+self.session.active_id+"]").attr('shortcut-id');  
+                dataset_shortcut.unlink([parseInt(unlink_id)]);
+                shortcut_selector.removeClass("shortcut-remove");     
+                shortcut_selector.addClass("shortcut-add"); 
+            }
+            else {
+            var data = {'user_id': self.uid, 'res_id': self.session.active_id, 'resource': 'ir.ui.menu', 'name': self.action.name};
+
+            dataset_shortcut.create(data);
+            shortcut_selector.removeClass("shortcut-add");        
+            shortcut_selector.addClass("shortcut-remove");
+            
+           } 
+            self.rpc('/base/session/sc_list', {}, function(sc_list_data){  
+            self.session.sc_list = sc_list_data;        
+            $('#shortcuts').html(QWeb.render('Shortcuts', {'shortcuts_pass': sc_list_data}));
+            });
+        });
+        //$('#shortcuts').html(QWeb.render('Shortcuts', {'shortcuts_pass': {}}));
+        //self.session.sc_list = sc_list_data;
+        //self.$element.find('#shortcuts').html(QWeb.render('Shortcuts', {'shortcuts_pass': sc_list_data}));
     }
 });
 
@@ -326,6 +374,7 @@ openerp.base.ViewManagerAction = openerp.base.ViewManager.extend({
                     .then(this.searchview.do_search);
             }
         }
+        
     },
     stop: function() {
         // should be replaced by automatic destruction implemented in Widget
@@ -352,7 +401,7 @@ openerp.base.ViewManagerAction = openerp.base.ViewManager.extend({
             return [];
         }
         return [this.action.context];
-    }
+    },
 });
 
 openerp.base.Sidebar = openerp.base.Widget.extend({

@@ -366,10 +366,11 @@
 <t t-name="Shortcuts">
     <ul class="first">
             <li t-foreach="shortcuts_pass" t-as="sc" t-att-id="sc.res_id"  t-att-shortcut-id = "sc.id" >
-                <a><t t-esc="sc.name"/></a>
+                <a ><t t-esc="sc.name"/></a>
             </li>
     </ul>
 </t>
+
 <t t-name="Menu">
     <table align="center">
         <tr>
@@ -419,6 +420,9 @@
     <tr>
         <td class="view-manager-main-content">
             <!-- TODO prefix id with the element_id of the controller t-attf-id="#{prefix}_localid" -->
+            <t t-if="view.view_type != form" t-foreach="views" t-as="view">
+                <a id = "shortcut_add_remove" title="Add / Remove Shortcut..." href="javascript: void(0)"> </a>
+            </t>
             <div class="oe_vm_switch">
                 <t t-if="views.length != 1" t-foreach="views" t-as="view">
                     <button type="button" t-att-data-view-type="view.view_type">
@@ -876,7 +880,7 @@
     </button>
 </t>
 <t t-name="SearchView">
-    <h2 class="oe_view_title"> <a id = "shortcut_add_remove" title="Add / Remove Shortcut..."> </a><t t-esc="view.attrs['string']"/></h2>
+    <h2 class="oe_view_title"> <t t-esc="view.attrs['string']"/></h2>
     <form class="oe_forms">
         <t t-call="SearchView.render_lines"/>
         <div class="oe_search-view-buttons" style="text-align: right;">

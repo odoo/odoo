@@ -27,7 +27,6 @@ openerp.base.Session = openerp.base.Widget.extend( /** @lends openerp.base.Sessi
         this.context = {};
         this.sc_list ={};
         this.active_id = "";
-        this.active_menu_name = "";
     },
     start: function() {
         this.session_restore();
@@ -860,37 +859,37 @@ openerp.base.Header =  openerp.base.Widget.extend({
     },
     do_update: function() {
         this.$element.html(QWeb.render("Header", this));
-        this.$element.find(".logout").click(this.on_logout);
         this.shortcut_load();
+        this.shortcut_menu_load();
+        this.$element.find(".logout").click(this.on_logout);
     },
     shortcut_load :function(){
         var self = this;
         this.rpc('/base/session/sc_list', {}, function(sc_list_data){
-            self.session.sc_list = sc_list_data
+            self.session.sc_list = sc_list_data;
             self.$element.find('#shortcuts').html(QWeb.render('Shortcuts', {'shortcuts_pass': sc_list_data}));
-            self.shortcut_menu_load();
+            
         });
      },
 
     shortcut_menu_load :function(){
-        var self = this 
+        var self = this; 
         this.$element.find('#shortcuts ul li').click(function(ev, id){
             self.session.active_id = this.id;
+            self.active_shortcut = "ir.ui.menu";
             self.rpc('/base/menu/action', {'menu_id':this.id},function(ir_menu_data){
                 if (ir_menu_data.action.length){
-                    this.action_manager =  new openerp.base.ActionManager(self, "oe_app");
-                    this.action_manager.do_action(ir_menu_data.action[0][2]);
-                    self.session.active_menu_name = ir_menu_data.action[0][2]['name'];
+                    self.on_action(ir_menu_data.action[0][2]);
                 }
             });
     });  
     },
+    on_action: function(action) {
+    },
+
     on_logout: function() {
-        this.remove();
-    },
-    remove:function(){
-        this.$element.find('#shortcuts').html(QWeb.render('Shortcuts', {'shortcuts_pass': {}}));
-    },
+        this.$element.find('#shortcuts ul li').remove();
+    }
 });
 
 openerp.base.Menu =  openerp.base.Widget.extend({
@@ -953,6 +952,7 @@ openerp.base.Menu =  openerp.base.Widget.extend({
 
         if (id) {
             this.session.active_id = id;
+            this.active_shortcut = "ir.ui.menu";
             this.rpc('/base/menu/action', {'menu_id': id},
                     this.on_menu_action_loaded);
         }
@@ -967,7 +967,6 @@ openerp.base.Menu =  openerp.base.Widget.extend({
     on_menu_action_loaded: function(data) {
         var self = this;
         if (data.action.length) {
-            this.session.active_menu_name = data.action[0][2]['name'];
             var action = data.action[0][2];
             self.on_action(action);
         }
@@ -1014,6 +1013,8 @@ openerp.base.WebClient = openerp.base.Widget.extend({
 
         this.menu = new openerp.base.Menu(this, "oe_menu", "oe_secondary_menu");
         this.menu.on_action.add(this.on_menu_action);
+        this.header.on_action.add(this.on_menu_action);
+       
         
     },
     start: function() {
