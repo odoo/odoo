@@ -15,7 +15,6 @@ openerp.base.ActionManager = openerp.base.Widget.extend({
         // Will use parent to find it when implementation will be done.
         this.session.action_manager = this;
     },
-    
     do_action: function(action, on_closed) {
         action.flags = _.extend({
             sidebar : action.target != 'new',
@@ -88,7 +87,7 @@ openerp.base.ActionManager = openerp.base.Widget.extend({
             this.current_dialog.stop();
             this.current_dialog = null;
         }
-    },
+    }
 });
 
 openerp.base.ActionDialog = openerp.base.Dialog.extend({
@@ -127,10 +126,12 @@ openerp.base.ViewManager =  openerp.base.Widget.extend({
         this._super();
         var self = this;
         this.dataset.start();
+        
         this.$element.html(QWeb.render("ViewManager", {"prefix": this.element_id, views: this.views_src}));
         this.$element.find('.oe_vm_switch button').click(function() {
             self.on_mode_switch($(this).data('view-type'));
         });
+        
         _.each(this.views_src, function(view) {
             self.views[view.view_type] = $.extend({}, view, {
                 controller : null,
@@ -168,7 +169,7 @@ openerp.base.ViewManager =  openerp.base.Widget.extend({
             if (view.embedded_view) {
                 controller.set_embedded_view(view.embedded_view);
             }
-            if (view_type === 'list' && this.flags.search_view === false && this.action && this.action['auto_search']) {
+            if (view_type === 'list' && this.flags.search_view === false && this.action && this.action['auto_search'])  {
                 // In case the search view is not instantiated: manually call ListView#search
                 var domains = !_(self.action.domain).isEmpty()
                                 ? [self.action.domain] : [],
@@ -272,51 +273,43 @@ openerp.base.ViewManager =  openerp.base.Widget.extend({
     contexts: function () {
         return [];
     },
-    shortcut_check: function(view_id,view_type){
-        var self =  this;
-        $('#shortcut_add_remove').show();
-        if (view_type == "tree" || typeof view_id != "boolean" && this.views_src[0].view_id == view_id
-        //to check view is either from menu or it is tree view... 
-        {  
+    shortcut_check : function(view_id,view_type){
+        main_view = this.session.action_manager.viewmanager.views_src[0];
+        if (view_type == "tree" || main_view.view_id == view_id && main_view.view_type == view_type && 
+            this.element_id == "oe_app"){
+            $('#shortcut_add_remove').show();
             var img = "shortcut-add";
-            for(var list_shortcut=0; list_shortcut<this.session.sc_list.length; list_shortcut++){
+                for(var list_shortcut=0; list_shortcut<this.session.sc_list.length; list_shortcut++){
                 if (this.session.sc_list[list_shortcut]['res_id'] == this.session.active_id)
-                    {img = "shortcut-remove"}}
+                    {img = "shortcut-remove"}
+                }
             $('#shortcut_add_remove').addClass(img);
+        }        
+        else{
+           $('#shortcut_add_remove').hide();
         }
-        else {
-            $('#shortcut_add_remove').hide();
-         }
         this.shortcut_add_remove();
-      },
-    shortcut_add_remove : function(){
+    },
+    shortcut_add_remove: function(){
         var self = this;
         var shortcut_selector =$('#shortcut_add_remove');
         var dataset_shortcut = new openerp.base.DataSet(this, 'ir.ui.view_sc');
         shortcut_selector.click(function(ev,id){
-            if(shortcut_selector.hasClass("shortcut-remove")){
-                var unlink_id = $("li[id="+self.session.active_id+"]").attr('shortcut-id');  
-                dataset_shortcut.unlink([parseInt(unlink_id)]);
-                shortcut_selector.removeClass("shortcut-remove");     
-                shortcut_selector.addClass("shortcut-add"); 
-            }
-            else {
-            var data = {'user_id': self.uid, 'res_id': self.session.active_id, 'resource': 'ir.ui.menu', 'name': self.action.name};
-
-            dataset_shortcut.create(data);
-            shortcut_selector.removeClass("shortcut-add");        
-            shortcut_selector.addClass("shortcut-remove");
-            
-           } 
-            self.rpc('/base/session/sc_list', {}, function(sc_list_data){  
-            self.session.sc_list = sc_list_data;        
-            $('#shortcuts').html(QWeb.render('Shortcuts', {'shortcuts_pass': sc_list_data}));
-            });
+             if(shortcut_selector.hasClass("shortcut-remove")){
+                  var unlink_id = $("li[id="+self.session.active_id+"]").attr('shortcut-id');  
+                  dataset_shortcut.unlink([parseInt(unlink_id)]);
+                  shortcut_selector.removeClass("shortcut-remove");     
+                  shortcut_selector.addClass("shortcut-add"); }
+          else {
+                var data = {'user_id': self.uid, 'res_id': self.session.active_id, 'resource': 'ir.ui.menu', 'name': self.action.name};
+                dataset_shortcut.create(data);
+                shortcut_selector.removeClass("shortcut-add");        
+                shortcut_selector.addClass("shortcut-remove"); } 
         });
-        //$('#shortcuts').html(QWeb.render('Shortcuts', {'shortcuts_pass': {}}));
-        //self.session.sc_list = sc_list_data;
-        //self.$element.find('#shortcuts').html(QWeb.render('Shortcuts', {'shortcuts_pass': sc_list_data}));
+
+
     }
+
 });
 
 openerp.base.NullViewManager = openerp.base.generate_null_object_class(openerp.base.ViewManager, {
@@ -352,7 +345,6 @@ openerp.base.ViewManagerAction = openerp.base.ViewManager.extend({
     },
     start: function() {
         var inital_view_loaded = this._super();
-
         var search_defaults = {};
         _.each(this.action.context, function (value, key) {
             var match = /^search_default_(.*)$/.exec(key);
@@ -367,14 +359,13 @@ openerp.base.ViewManagerAction = openerp.base.ViewManager.extend({
 
             var searchview_loaded = this.setup_search_view(
                     searchview_id || false, search_defaults);
-
+            
             // schedule auto_search
             if (searchview_loaded != null && this.action['auto_search']) {
                 $.when(searchview_loaded, inital_view_loaded)
                     .then(this.searchview.do_search);
             }
         }
-        
     },
     stop: function() {
         // should be replaced by automatic destruction implemented in Widget
@@ -401,7 +392,7 @@ openerp.base.ViewManagerAction = openerp.base.ViewManager.extend({
             return [];
         }
         return [this.action.context];
-    },
+    }
 });
 
 openerp.base.Sidebar = openerp.base.Widget.extend({

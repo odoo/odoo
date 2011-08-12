@@ -860,7 +860,6 @@ openerp.base.Header =  openerp.base.Widget.extend({
     do_update: function() {
         this.$element.html(QWeb.render("Header", this));
         this.shortcut_load();
-        this.shortcut_menu_load();
         this.$element.find(".logout").click(this.on_logout);
     },
     shortcut_load :function(){
@@ -868,7 +867,7 @@ openerp.base.Header =  openerp.base.Widget.extend({
         this.rpc('/base/session/sc_list', {}, function(sc_list_data){
             self.session.sc_list = sc_list_data;
             self.$element.find('#shortcuts').html(QWeb.render('Shortcuts', {'shortcuts_pass': sc_list_data}));
-            
+            self.shortcut_menu_load();
         });
      },
 
