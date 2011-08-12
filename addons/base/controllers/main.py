@@ -1,17 +1,23 @@
 # -*- coding: utf-8 -*-
-import base64, glob, os, re
+
+import base64
+import csv
+import glob
+import operator
+import os
+import re
+import simplejson
+import textwrap
+import xmlrpclib
 from xml.etree import ElementTree
 from cStringIO import StringIO
 
-import simplejson
+import cherrypy
 
 import openerpweb
 import openerpweb.ast
 import openerpweb.nonliterals
 
-import cherrypy
-import csv
-import xml.dom.minidom
 
 # Should move to openerpweb.Xml2Json
 class Xml2Json:
@@ -84,6 +90,27 @@ def concat_files(file_list):
     files_concat = "".join(files_content)
     return files_concat
 
+home_template = textwrap.dedent("""<!DOCTYPE html>
+<html style="height: 100%%">
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+        <title>OpenERP</title>
+        %(javascript)s
+        <script type="text/javascript">
+            $(function() {
+                QWeb = new QWeb2.Engine();
+                openerp.init().base.webclient("oe");
+            });
+        </script>
+        <link rel="shortcut icon" href="/base/static/src/img/favicon.ico" type="image/x-icon"/>
+        %(css)s
+        <!--[if lte IE 7]>
+        <link rel="stylesheet" href="/base/static/src/css/base-ie7.css" type="text/css"/>
+        <![endif]-->
+    </head>
+    <body id="oe" class="openerp"></body>
+</html>
+""")
 class WebClient(openerpweb.Controller):
     _cp_path = "/base/webclient"
 
@@ -112,56 +139,111 @@ class WebClient(openerpweb.Controller):
         return concat
 
     @openerpweb.httprequest
-    def home(self, req):
-        template ="""<!DOCTYPE html>
-        <html style="height: 100%%">
-        <head>
-            <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-            <title>OpenERP</title>
-            %s
-            <script type="text/javascript">
-            $(function() {
-                QWeb = new QWeb2.Engine(); 
-                openerp.init().base.webclient("oe"); 
-            });
-            </script>
-            <link rel="shortcut icon" href="/base/static/src/img/favicon.ico" type="image/x-icon"/>
-            %s
-            <!--[if lte IE 7]>
-            <link rel="stylesheet" href="/base/static/src/css/base-ie7.css" type="text/css"/>
-            <![endif]-->
-        </head>
-        <body id="oe" class="openerp"></body>
-        </html>
-        """.replace('\n'+' '*8,'\n')
-
+    def home(self, req, s_action=None):
         # script tags
         jslist = ['/base/webclient/js']
         if 1: # debug == 1
             jslist = manifest_glob(['base'], 'js')
-        js = "\n    ".join(['<script type="text/javascript" src="%s"></script>'%i for i in jslist])
+        js = "\n        ".join(['<script type="text/javascript" src="%s"></script>'%i for i in jslist])
 
         # css tags
         csslist = ['/base/webclient/css']
         if 1: # debug == 1
             csslist = manifest_glob(['base'], 'css')
-        css = "\n    ".join(['<link rel="stylesheet" href="%s">'%i for i in csslist])
-        r = template % (js, css)
+        css = "\n        ".join(['<link rel="stylesheet" href="%s">'%i for i in csslist])
+        r = home_template % {
+            'javascript': js,
+            'css': css
+        }
         return r
 
 class Database(openerpweb.Controller):
     _cp_path = "/base/database"
 
     @openerpweb.jsonrequest
-    def get_databases_list(self, req):
+    def get_list(self, req):
         proxy = req.session.proxy("db")
         dbs = proxy.list()
         h = req.httprequest.headers['Host'].split(':')[0]
         d = h.split('.')[0]
-        r = cherrypy.config['openerp.dbfilter'].replace('%h',h).replace('%d',d)
-        print "h,d",h,d,r
-        dbs = [i for i in dbs if re.match(r,i)]
+        r = cherrypy.config['openerp.dbfilter'].replace('%h', h).replace('%d', d)
+        dbs = [i for i in dbs if re.match(r, i)]
         return {"db_list": dbs}
+
+    @openerpweb.jsonrequest
+    def progress(self, req, password, id):
+        return req.session.proxy('db').get_progress(password, id)
+
+    @openerpweb.jsonrequest
+    def create(self, req, fields):
+
+        params = dict(map(operator.itemgetter('name', 'value'), fields))
+        create_attrs = (
+            params['super_admin_pwd'],
+            params['db_name'],
+            bool(params.get('demo_data')),
+            params['db_lang'],
+            params['create_admin_pwd']
+        )
+
+        try:
+            return req.session.proxy("db").create(*create_attrs)
+        except xmlrpclib.Fault, e:
+            if e.faultCode and e.faultCode.split(':')[0] == 'AccessDenied':
+                return {'error': e.faultCode, 'title': 'Create Database'}
+        return {'error': 'Could not create database !', 'title': 'Create Database'}
+
+    @openerpweb.jsonrequest
+    def drop(self, req, fields):
+        password, db = operator.itemgetter(
+            'drop_pwd', 'drop_db')(
+                dict(map(operator.itemgetter('name', 'value'), fields)))
+        
+        try:
+            return req.session.proxy("db").drop(password, db)
+        except xmlrpclib.Fault, e:
+            if e.faultCode and e.faultCode.split(':')[0] == 'AccessDenied':
+                return {'error': e.faultCode, 'title': 'Drop Database'}
+        return {'error': 'Could not drop database !', 'title': 'Drop Database'}
+
+    @openerpweb.httprequest
+    def backup(self, req, backup_db, backup_pwd, token):
+        try:
+            db_dump = base64.decodestring(
+                req.session.proxy("db").dump(backup_pwd, backup_db))
+            cherrypy.response.headers['Content-Type'] = "application/octet-stream; charset=binary"
+            cherrypy.response.headers['Content-Disposition'] = 'attachment; filename="' + backup_db + '.dump"'
+            cherrypy.response.cookie['fileToken'] = token
+            cherrypy.response.cookie['fileToken']['path'] = '/'
+            return db_dump
+        except xmlrpclib.Fault, e:
+            if e.faultCode and e.faultCode.split(':')[0] == 'AccessDenied':
+                return 'Backup Database|' + e.faultCode
+        return 'Backup Database|Could not generate database backup'
+            
+    @openerpweb.httprequest
+    def restore(self, req, db_file, restore_pwd, new_db):
+        try:
+            data = base64.encodestring(db_file.file.read())
+            req.session.proxy("db").restore(restore_pwd, new_db, data)
+            return ''
+        except xmlrpclib.Fault, e:
+            if e.faultCode and e.faultCode.split(':')[0] == 'AccessDenied':
+                raise cherrypy.HTTPError(403)
+
+        raise cherrypy.HTTPError()
+
+    @openerpweb.jsonrequest
+    def change_password(self, req, fields):
+        old_password, new_password = operator.itemgetter(
+            'old_pwd', 'new_pwd')(
+                dict(map(operator.itemgetter('name', 'value'), fields)))
+        try:
+            return req.session.proxy("db").change_admin_password(old_password, new_password)
+        except xmlrpclib.Fault, e:
+            if e.faultCode and e.faultCode.split(':')[0] == 'AccessDenied':
+                return {'error': e.faultCode, 'title': 'Change Password'}
+        return {'error': 'Error, password not changed !', 'title': 'Change Password'}
 
 class Session(openerpweb.Controller):
     _cp_path = "/base/session"
@@ -180,6 +262,16 @@ class Session(openerpweb.Controller):
         return req.session.model('ir.ui.view_sc').get_sc(req.session._uid, "ir.ui.menu",
                                                          req.session.eval_context(req.context))
 
+    @openerpweb.jsonrequest
+    def get_lang_list(self, req):
+        try:
+            return {
+                'lang_list': (req.session.proxy("db").list_lang() or []),
+                'error': ""
+            }
+        except Exception, e:
+            return {"error": e, "title": "Languages"}
+            
     @openerpweb.jsonrequest
     def modules(self, req):
         # TODO query server for installed web modules
@@ -282,6 +374,11 @@ class Session(openerpweb.Controller):
             return None
         return saved_actions["actions"].get(key)
 
+    @openerpweb.jsonrequest
+    def check(self, req):
+        req.session.assert_valid()
+        return None
+
 def eval_context_and_domain(session, context, domain=None):
     e_context = session.eval_context(context)
     # should we give the evaluated context as an evaluation context to the domain?
@@ -293,26 +390,25 @@ def load_actions_from_ir_values(req, key, key2, models, meta, context):
     Values = req.session.model('ir.values')
     actions = Values.get(key, key2, models, meta, context)
 
-    return [(id, name, clean_action(action, req.session))
+    return [(id, name, clean_action(action, req.session, context=context))
             for id, name, action in actions]
 
-def clean_action(action, session):
+def clean_action(action, session, context=None):
+    action.setdefault('flags', {})
     if action['type'] != 'ir.actions.act_window':
         return action
     # values come from the server, we can just eval them
-    if isinstance(action.get('context', None), basestring):
+    if isinstance(action.get('context'), basestring):
         action['context'] = eval(
             action['context'],
-            session.evaluation_context()) or {}
+            session.evaluation_context(context=context)) or {}
 
-    if isinstance(action.get('domain', None), basestring):
+    if isinstance(action.get('domain'), basestring):
         action['domain'] = eval(
             action['domain'],
             session.evaluation_context(
                 action.get('context', {}))) or []
-    if 'flags' not in action:
-        # Set empty flags dictionary for web client.
-        action['flags'] = dict()
+
     return fix_view_modes(action)
 
 def generate_views(action):
@@ -463,6 +559,7 @@ class DataSet(openerpweb.Controller):
         :rtype: list
         """
         Model = request.session.model(model)
+
         context, domain = eval_context_and_domain(
             request.session, request.context, domain)
 
@@ -486,8 +583,13 @@ class DataSet(openerpweb.Controller):
 
 
     @openerpweb.jsonrequest
+    def read(self, request, model, ids, fields=False):
+        return self.do_search_read(request, model, ids, fields)
+
+    @openerpweb.jsonrequest
     def get(self, request, model, ids, fields=False):
         return self.do_get(request, model, ids, fields)
+
     def do_get(self, request, model, ids, fields=False):
         """ Fetches and returns the records of the model ``model`` whose ids
         are in ``ids``.
@@ -571,6 +673,12 @@ class DataSet(openerpweb.Controller):
     def default_get(self, req, model, fields):
         Model = req.session.model(model)
         return Model.default_get(fields, req.session.eval_context(req.context))
+
+    @openerpweb.jsonrequest
+    def name_search(self, req, model, search_str, domain=[], context={}):
+        m = req.session.model(model)
+        r = m.name_search(search_str+'%', domain, '=ilike', context)
+        return {'result': r}
 
 class DataGroup(openerpweb.Controller):
     _cp_path = "/base/group"
@@ -905,9 +1013,21 @@ class Action(openerpweb.Controller):
         return clean_action(req.session.model('ir.actions.server').run(
             [action_id], req.session.eval_context(req.context)), req.session)
 
+class TreeView(View):
+    _cp_path = "/base/treeview"
+
+    @openerpweb.jsonrequest
+    def load(self, req, model, view_id, toolbar=False):
+        return self.fields_view_get(req, model, view_id, 'tree', toolbar=toolbar)
+
+    @openerpweb.jsonrequest
+    def action(self, req, model, id):
+        return load_actions_from_ir_values(
+            req,'action', 'tree_but_open',[(model, id)],
+            False, req.session.eval_context(req.context))
+
 def export_csv(fields, result):
-    import StringIO
-    fp = StringIO.StringIO()
+    fp = StringIO()
     writer = csv.writer(fp, quoting=csv.QUOTE_ALL)
 
     writer.writerow(fields)
@@ -931,7 +1051,6 @@ def export_csv(fields, result):
     return data
 
 def export_xls(fieldnames, table):
-    import StringIO
     try:
         import xlwt
     except ImportError:
@@ -953,24 +1072,13 @@ def export_xls(fieldnames, table):
             worksheet.write(row_index + 1, cell_index, cell_value, style)
 
 
-    fp = StringIO.StringIO()
+    fp = StringIO()
     workbook.save(fp)
     fp.seek(0)
     data = fp.read()
     fp.close()
     #return data.decode('ISO-8859-1')
     return unicode(data, 'utf-8', 'replace')
-
-def node_attributes(node):
-    attrs = node.attributes
-
-    if not attrs:
-        return {}
-    # localName can be a unicode string, we're using attribute names as
-    # **kwargs keys and python-level kwargs don't take unicode keys kindly
-    # (they blow up) so we need to ensure all keys are ``str``
-    return dict([(str(attrs.item(i).localName), attrs.item(i).nodeValue)
-                 for i in range(attrs.length)])
 
 class Export(View):
     _cp_path = "/base/export"
@@ -1130,4 +1238,3 @@ class Export(View):
             return export_xls(field, result)
         else:
             return export_csv(field, result)
-

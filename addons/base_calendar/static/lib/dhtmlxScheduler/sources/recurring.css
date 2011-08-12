@@ -1,11 +1,16 @@
+/*
+This software is allowed to use under GPL or you need to obtain Commercial or Enterise License
+to use it in not GPL project. Please contact sales@dhtmlx.com for details
+*/
 /*IE*/
-div input.radio 	{ margin:-4px 0 0 -4px !ie; }
-div input.checkbox 	{ margin:0 0 0 -4px !ie; }
+div.dhx_form_repeat input.radio 	{ margin:-4px 0 0 -4px !ie; }
+div.dhx_form_repeat input.checkbox 	{ margin:0 0 0 -4px !ie; }
 
 /*All*/  
 .dhx_form_repeat, .dhx_form_repeat input {
     padding:0;
     margin:0;
+    padding-left:5px;
     font-family:Tahoma, Verdana;
     font-size:11px;
     line-height:24px;
@@ -17,6 +22,10 @@ div input.checkbox 	{ margin:0 0 0 -4px !ie; }
     height:0px;
     background-color: #FFF4B5;
     /*border: 1px solid #DCC43E;*/
+}
+
+.dhx_cal_light_wide .dhx_form_repeat {
+    background-color: transparent;
 }
 
 
@@ -88,24 +97,34 @@ input.dhx_repeat_checkbox {
 .dhx_repeat_days td {
     padding-right:5px;
 }
-
 .dhx_repeat_days label {
     font-size:10px;
 }
-
+.dhx_custom_button{
+	width:90px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    -ms-border-radius: 4px;
+    -o-border-radius: 4px;
+    border-radius: 4px;
+}
 .dhx_custom_button_recurring{
-	background-image:url(imgs/but_repeat.gif);
+	background-image:url(./imgs/but_repeat.gif);
 	background-position:-5px 20px;
 	width:20px;
 	margin-right:10px;
 }
-.dhx_custom_button{
-	width:90px;
-}
+
 /* increase width of lightbox */
-.dhx_cal_light{
-	width:640px;
+.dhx_cal_light_rec{
+    width:640px;
 }
-.dhx_cal_larea{
-	width:632px;
+.dhx_cal_light_rec .dhx_cal_larea{
+    width:632px;
+}
+.dhx_cal_light_rec.dhx_cal_light_wide{
+    width:816px;
+}
+.dhx_cal_light_rec.dhx_cal_light_wide .dhx_cal_larea{
+    width:808px;
 }

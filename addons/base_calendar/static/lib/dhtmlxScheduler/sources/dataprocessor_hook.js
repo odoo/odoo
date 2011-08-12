@@ -1,3 +1,7 @@
+/*
+This software is allowed to use under GPL or you need to obtain Commercial or Enterise License
+to use it in not GPL project. Please contact sales@dhtmlx.com for details
+*/
 scheduler._dp_init=function(dp){
 	dp._methods=["setEventTextStyle","","changeEventId","deleteEvent"];
 	
@@ -5,7 +9,7 @@ scheduler._dp_init=function(dp){
 		if (!this._loading && this.validId(id))
 			dp.setUpdated(id,true,"inserted");
 	});
-	this.attachEvent("onBeforeEventDelete",function(id){
+	this.attachEvent("onConfirmedBeforeEventDelete", function(id){
 		if (!this.validId(id)) return;
         var z=dp.getState(id);
         

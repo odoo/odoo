@@ -1,3 +1,7 @@
+/*
+This software is allowed to use under GPL or you need to obtain Commercial or Enterise License
+to use it in not GPL project. Please contact sales@dhtmlx.com for details
+*/
 dataProcessor.prototype._o_init = dataProcessor.prototype.init;
 dataProcessor.prototype.init=function(obj){
     this._console=this._console||this._createConsole();
@@ -86,7 +90,7 @@ dataProcessor.wrap("sendData",function(rowId){
         	if (!this.obj._idpull[rowId])
 	    		this._log("&nbsp;Error! item with such ID not exists <b>"+rowId+"</b>");
 		} else {
-			if (!this.obj.rowsAr[rowId])
+			if (this.rowsAr && !this.obj.rowsAr[rowId])
 	        	this._log("&nbsp;Error! row with such ID not exists <b>"+rowId+"</b>");
         }
 	}
@@ -150,7 +154,7 @@ dataProcessor.wrap("afterUpdateCallback",function(sid,tid,action){
 	if (this.obj.mytype=="tree"){
 		if (!this.obj._idpull[sid]) this._log("Incorrect SID, item with such ID not exists in grid");
 	} else {
-		if (!this.obj.rowsAr[sid]) this._log("Incorrect SID, row with such ID not exists in grid");
+		if (this.obj.rowsAr && !this.obj.rowsAr[sid]) this._log("Incorrect SID, row with such ID not exists in grid");
 	}
 	this._log("&nbsp;Action: "+action+" SID:"+sid+" TID:"+tid);
 },function(){

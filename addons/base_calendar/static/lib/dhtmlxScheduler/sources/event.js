@@ -1,3 +1,7 @@
+/*
+This software is allowed to use under GPL or you need to obtain Commercial or Enterise License
+to use it in not GPL project. Please contact sales@dhtmlx.com for details
+*/
 scheduler.uid=function(){
 	if (!this._seed) this._seed=(new Date).valueOf();
 	return this._seed++;
@@ -9,6 +13,8 @@ scheduler.clearAll=function(){
 	this.clear_view();
 };
 scheduler.addEvent=function(start_date,end_date,text,id,extra_data){
+	if(!arguments.length)
+		return this.addEventNow();
 	var ev=start_date;
 	if (arguments.length!=1){
 		ev=extra_data||{};
@@ -16,12 +22,17 @@ scheduler.addEvent=function(start_date,end_date,text,id,extra_data){
 		ev.end_date=end_date;
 		ev.text=text;
 		ev.id=id;
-	};
+	}
 	ev.id = ev.id||scheduler.uid();
 	ev.text = ev.text||"";
-	
+
 	if (typeof ev.start_date == "string")  ev.start_date=this.templates.api_date(ev.start_date);
 	if (typeof ev.end_date == "string")  ev.end_date=this.templates.api_date(ev.end_date);
+
+	var d = (this.config.event_duration||this.config.time_step)*60000;
+	if(ev.start_date.valueOf() == ev.end_date.valueOf())
+		ev.end_date.setTime(ev.end_date.valueOf()+d);
+
 	ev._timed=this.is_one_day_event(ev);
 
 	var is_new=!this._events[ev.id];
@@ -30,15 +41,17 @@ scheduler.addEvent=function(start_date,end_date,text,id,extra_data){
 	if (!this._loading)
 		this.callEvent(is_new?"onEventAdded":"onEventChanged",[ev.id,ev]);
 };
-scheduler.deleteEvent=function(id,silent){ 
+scheduler.deleteEvent=function(id,silent){
 	var ev=this._events[id];
-	if (!silent && !this.callEvent("onBeforeEventDelete",[id,ev])) return;
-	
+	if (!silent && (!this.callEvent("onBeforeEventDelete",[id,ev]) || !this.callEvent("onConfirmedBeforeEventDelete", [id,ev])))
+        return;
 	if (ev){
 		delete this._events[id];
 		this.unselect(id);
 		this.event_updated(ev);
 	}
+
+    this.callEvent("onEventDeleted", [id]);
 };
 scheduler.getEvent=function(id){
 	return this._events[id];
@@ -64,6 +77,7 @@ scheduler.changeEventId=function(id,new_id){
 	});
 	if (this._select_id==id) this._select_id=new_id;
 	if (this._edit_id==id) this._edit_id=new_id;
+    //if (this._drag_id==id) this._drag_id=new_id;
 	this.callEvent("onEventIdChange",[id,new_id]);
 };
 
@@ -92,8 +106,7 @@ scheduler.event_updated=function(ev,force){
 	else this.clear_event(ev.id);
 };
 scheduler.is_visible_events=function(ev){
-	if (ev.start_date<this._max_date && this._min_date<ev.end_date) return true;
-	return false;
+    return (ev.start_date<this._max_date && this._min_date<ev.end_date);
 };
 scheduler.is_one_day_event=function(ev){
 	var delta = ev.end_date.getDate()-ev.start_date.getDate();
@@ -119,17 +132,20 @@ scheduler.get_visible_events=function(){
 				
 	return stack;
 };
-scheduler.render_view_data=function(){
-	if (this._not_render) {
-		this._render_wait=true;
-		return;
+scheduler.render_view_data=function(evs, hold){
+	if(!evs){
+		if (this._not_render) {
+			this._render_wait=true;
+			return;
+		}
+		this._render_wait=false;
+
+		this.clear_view();
+		evs=this.get_visible_events();
 	}
-	this._render_wait=false;
-	
-	this.clear_view();
-	var evs=this.get_visible_events();
-	
+
 	if (this.config.multi_day && !this._table_view){
+		
 		var tvs = [];
 		var tvd = [];
 		for (var i=0; i < evs.length; i++){
@@ -137,17 +153,30 @@ scheduler.render_view_data=function(){
 				tvs.push(evs[i]);
 			else
 				tvd.push(evs[i]);
-		};
+		}
+
+		// multiday events
+        
+
+        
+		this._rendered_location = this._els['dhx_multi_day'][0];
 		this._table_view=true;
-		this.render_data(tvd);
-		this._table_view=false;		
-		this.render_data(tvs);
-	} else 
-		this.render_data(evs);	
+		this.render_data(tvd, hold);
+		this._table_view=false;
+
+		// normal events
+		this._rendered_location = this._els['dhx_cal_data'][0];
+		this._table_view=false;
+		this.render_data(tvs, hold);
+
+	} else {
+		this._rendered_location = this._els['dhx_cal_data'][0];
+		this.render_data(evs, hold);
+	}
 };
 scheduler.render_data=function(evs,hold){
 	evs=this._pre_render_events(evs,hold);
-	for (var i=0; i<evs.length; i++)
+    for (var i=0; i<evs.length; i++)
 		if (this._table_view)
 			this.render_event_bar(evs[i]);
 		else
@@ -155,17 +184,18 @@ scheduler.render_data=function(evs,hold){
 };
 scheduler._pre_render_events=function(evs,hold){
 	var hb = this.xy.bar_height;
-	var h_old = this._colsS.heights;	
+	var h_old = this._colsS.heights;
 	var h=this._colsS.heights=[0,0,0,0,0,0,0];
-	
+    var data = this._els["dhx_cal_data"][0];
+
 	if (!this._table_view) evs=this._pre_render_events_line(evs,hold); //ignore long events for now
 	else evs=this._pre_render_events_table(evs,hold);
-	
+
 	if (this._table_view){
 		if (hold)
 			this._colsS.heights = h_old;
 		else {
-			var evl = this._els["dhx_cal_data"][0].firstChild;
+			var evl = data.firstChild;
 			if (evl.rows){
 				for (var i=0; i<evl.rows.length; i++){
 					h[i]++;
@@ -178,7 +208,7 @@ scheduler._pre_render_events=function(evs,hold){
 						h[i]=(h[i-1]||0)+cells[0].offsetHeight;
 					}
 					h[i]=(h[i-1]||0)+evl.rows[i].cells[0].offsetHeight;
-				}	
+				}
 				h.unshift(0);
 				if (evl.parentNode.offsetHeight<evl.parentNode.scrollHeight && !evl._h_fix){
 					//we have v-scroll, decrease last day cell
@@ -187,44 +217,43 @@ scheduler._pre_render_events=function(evs,hold){
 						var w = cell.offsetWidth-scheduler.xy.scroll_width+"px";
 						cell.style.width = w;
 						cell.nextSibling.style.width = w;
-					}		
+					}
 					evl._h_fix=true;
 				}
 			} else{
-				
 				if (!evs.length && this._els["dhx_multi_day"][0].style.visibility == "visible")
 					h[0]=-1;
 				if (evs.length || h[0]==-1){
 					//shift days to have space for multiday events
 					var childs = evl.parentNode.childNodes;
-					var dh = (h[0]+1)*hb+"px";
-					for (var i=0; i<childs.length; i++)
-						if (this._colsS[i])
-							childs[i].style.top=dh;
+					var dh = ((h[0]+1)*hb+1)+"px"; // +1 so multiday events would have 2px from top and 2px from bottom by default
+					data.style.top = (this._els["dhx_cal_navline"][0].offsetHeight + this._els["dhx_cal_header"][0].offsetHeight + parseInt(dh)) + 'px';
+					data.style.height = (this._obj.offsetHeight - parseInt(data.style.top) - (this.xy.margin_top||0)) + 'px';
 					var last = this._els["dhx_multi_day"][0];
-					last.style.top = "0px";
 					last.style.height=dh;
 					last.style.visibility=(h[0]==-1?"hidden":"visible");
 					last=this._els["dhx_multi_day"][1];
 					last.style.height=dh;
 					last.style.visibility=(h[0]==-1?"hidden":"visible");
 					last.className=h[0]?"dhx_multi_day_icon":"dhx_multi_day_icon_small";
-					
 					this._dy_shift=(h[0]+1)*hb;
 					h[0] = 0;
-				}				
-				
+				}
 			}
 		}
 	}
-	
+
 	return evs;
 };
 scheduler._get_event_sday=function(ev){
 	return Math.floor((ev.start_date.valueOf()-this._min_date.valueOf())/(24*60*60*1000));
 };
 scheduler._pre_render_events_line=function(evs,hold){
-	evs.sort(function(a,b){ return a.start_date>b.start_date?1:-1; });
+	evs.sort(function(a,b){
+        if(a.start_date.valueOf()==b.start_date.valueOf())
+            return a.id>b.id?1:-1;
+        return a.start_date>b.start_date?1:-1;
+    });
 	var days=[]; //events by weeks
 	var evs_originals = [];
 	for (var i=0; i < evs.length; i++) {
@@ -239,12 +268,70 @@ scheduler._pre_render_events_line=function(evs,hold){
 		
 		if (!hold){
 			ev._inner=false;
+
 			var stack=days[ev._sday];
 			while (stack.length && stack[stack.length-1].end_date<=ev.start_date)
 				stack.splice(stack.length-1,1);
-			if (stack.length) stack[stack.length-1]._inner=true;
-			ev._sorder=stack.length; stack.push(ev);
-			if (stack.length>(stack.max_count||0)) stack.max_count=stack.length;
+
+            var sorderSet = false;
+            for(var j=0; j<stack.length; j++){
+                if(stack[j].end_date.valueOf()<ev.start_date.valueOf()){
+                    sorderSet = true;
+                    ev._sorder=stack[j]._sorder;
+                    stack.splice(j,1);
+                    ev._inner=true;
+                    break;
+                }
+            }
+
+            if (stack.length)
+                stack[stack.length-1]._inner=true;
+
+
+            if (!sorderSet) {
+                if (stack.length) {
+                    if (stack.length <= stack[stack.length - 1]._sorder) {
+                        if (!stack[stack.length - 1]._sorder)
+                            ev._sorder = 0;
+                        else
+                            for (j = 0; j < stack.length; j++) {
+                                var _is_sorder = false;
+                                for (k = 0; k < stack.length; k++) {
+                                    if (stack[k]._sorder == j) {
+                                        _is_sorder = true;
+                                        break;
+                                    }
+                                }
+                                if (!_is_sorder) {
+                                    ev._sorder = j;
+                                    break;
+                                }
+                            }
+                        ev._inner = true;
+                    }
+                    else {
+                        var _max_sorder = stack[0]._sorder;
+                        for (j = 1; j < stack.length; j++)
+                            if (stack[j]._sorder > _max_sorder)
+                                _max_sorder = stack[j]._sorder;
+                        ev._sorder = _max_sorder + 1;
+                        ev._inner = false;
+                    }
+
+                }
+                else
+                    ev._sorder = 0;
+            }
+
+			stack.push(ev);            
+
+            if (stack.length>(stack.max_count||0)) {
+                stack.max_count=stack.length;
+                ev._count=stack.length;
+            }
+            else {
+                ev._count=(ev._count)?ev._count:1;
+            }
 		}
 		
 		if (sh < this.config.first_hour || eh >= this.config.last_hour){
@@ -262,23 +349,23 @@ scheduler._pre_render_events_line=function(evs,hold){
 				evs.splice(i,1); i--; continue;
 			}
 		}
-				
 	}
 	if (!hold){
-		for (var i=0; i < evs.length; i++) 
-			evs[i]._count=days[evs[i]._sday].max_count;
-		for (var i=0; i < evs_originals.length; i++) 
+		for (var i=0; i < evs.length; i++) {
+            evs[i]._count = days[evs[i]._sday].max_count;
+        }
+		for (var i=0; i < evs_originals.length; i++)
 			evs_originals[i]._count=days[evs_originals[i]._sday].max_count;
 	}
 	
 	return evs;
 };
 scheduler._time_order=function(evs){
-	evs.sort(function(a,b){ 
+	evs.sort(function(a,b){
 		if (a.start_date.valueOf()==b.start_date.valueOf()){
 			if (a._timed && !b._timed) return 1;
 			if (!a._timed && b._timed) return -1;
-			return 0;
+			return a.id>b.id?1:-1;
 		}
 		return a.start_date>b.start_date?1:-1;
 	});
@@ -317,8 +404,10 @@ scheduler._pre_render_events_table=function(evs,hold){ // max - max height of we
 		for (stack_line=0; stack_line<stack.length; stack_line++)
 			if (stack[stack_line]._eday<=ev._sday)
 				break;
-		ev._sorder=stack_line; 
-		
+
+		if(!ev._sorder || !hold ) {
+			ev._sorder=stack_line;
+		}
 		
 		if (ev._sday+ev._length<=cols){
 			start_date=null;
@@ -340,7 +429,7 @@ scheduler._pre_render_events_table=function(evs,hold){ // max - max height of we
 			max[ev._sweek]=stack.length-1;
 			i--; continue;  //repeat same step
 		}
-	};
+	}
 	
 	return out;
 };
@@ -364,8 +453,8 @@ scheduler.clear_view=function(){
 scheduler.updateEvent=function(id){
 	var ev=this.getEvent(id);
 	this.clear_event(id);
-	if (ev && this.is_visible_events(ev)) 
-		this.render_data([ev],true);
+	if (ev && this.is_visible_events(ev))
+		this.render_view_data([ev], true);
 };
 scheduler.clear_event=function(id){
 	this.for_rendered(id,function(node,i){
@@ -388,9 +477,14 @@ scheduler.render_event=function(ev){
 	var width=Math.floor((parent.clientWidth-menu)/ev._count);
 	var left=ev._sorder*width+1;
 	if (!ev._inner) width=width*(ev._count-ev._sorder);
-	
-	
-	
+    if(this.config.cascade_event_display) {
+        var limit = this.config.cascade_event_count;
+        var margin = this.config.cascade_event_margin;
+        left = ev._sorder%limit*margin;
+        var right = (ev._inner)?(ev._count-ev._sorder-1)%limit*margin/2:0;
+        width=Math.floor(parent.clientWidth-menu-left-right);
+    }
+		
 	var d=this._render_v_bar(ev.id,menu+left,top,width,height,ev._text_style,scheduler.templates.event_header(ev.start_date,ev.end_date,ev),scheduler.templates.event_text(ev.start_date,ev.end_date,ev));
 		
 	this._rendered.push(d);
@@ -398,11 +492,11 @@ scheduler.render_event=function(ev){
 	
 	left=left+parseInt(parent.style.left,10)+menu;
 	
-	top+=this._dy_shift; //corrupt top, to include possible multi-day shift
 	if (this._edit_id==ev.id){
+
 		d.style.zIndex = 1; //fix overlapping issue
 		width=Math.max(width-4,scheduler.xy.editor_width);
-		var d=document.createElement("DIV");
+		d=document.createElement("DIV");
 		d.setAttribute("event_id",ev.id);
 		this.set_xy(d,width,height-20,left,top+14);
 		d.className="dhx_cal_editor";
@@ -429,15 +523,18 @@ scheduler.render_event=function(ev){
 		//IE and opera can add x-scroll during focusing
 		this._els["dhx_cal_data"][0].scrollLeft=0;
 		d2.firstChild.select();
+		
 	}
-	
 	if (this._select_id==ev.id){
-		//d.style.zIndex = 1; //fix overlapping issue
+        if(this.config.cascade_event_display && this._drag_mode)
+		    d.style.zIndex = 1; //fix overlapping issue for cascade view in case of dnd of selected event
 		var icons=this.config["icons_"+((this._edit_id==ev.id)?"edit":"select")];
 		var icons_str="";
+        var bg_color = (ev.color?("background-color:"+ev.color+";"):"");
+        var color = (ev.textColor?("color:"+ev.textColor+";"):"");
 		for (var i=0; i<icons.length; i++)
-			icons_str+="<div class='dhx_menu_icon "+icons[i]+"' title='"+this.locale.labels[icons[i]]+"'></div>";
-		var obj = this._render_v_bar(ev.id,left-menu+1,top,menu,icons.length*20+26,"","<div class='dhx_menu_head'></div>",icons_str,true);
+			icons_str+="<div class='dhx_menu_icon "+icons[i]+"' style='"+bg_color+""+color+"' title='"+this.locale.labels[icons[i]]+"'></div>";
+		var obj = this._render_v_bar(ev.id,left-menu+1,top,menu,icons.length*20+26,"","<div style='"+bg_color+""+color+"' class='dhx_menu_head'></div>",icons_str,true);
 		obj.style.left=left-menu+1;
 		this._els["dhx_cal_data"][0].appendChild(obj);
 		this._rendered.push(obj);
@@ -445,17 +542,19 @@ scheduler.render_event=function(ev){
 };
 scheduler._render_v_bar=function(id,x,y,w,h,style,contentA,contentB,bottom){
 	var d=document.createElement("DIV");
-	
 	var ev = this.getEvent(id);
 	var cs = "dhx_cal_event";
 	var cse = scheduler.templates.event_class(ev.start_date,ev.end_date,ev);
 	if (cse) cs=cs+" "+cse;
+
+    var bg_color = (ev.color?("background-color:"+ev.color+";"):"");
+    var color = (ev.textColor?("color:"+ev.textColor+";"):"");
 	
 	var html='<div event_id="'+id+'" class="'+cs+'" style="position:absolute; top:'+y+'px; left:'+x+'px; width:'+(w-4)+'px; height:'+h+'px;'+(style||"")+'">';
-	html+='<div class="dhx_header" style=" width:'+(w-6)+'px;" >&nbsp;</div>';
-	html+='<div class="dhx_title">'+contentA+'</div>';
-	html+='<div class="dhx_body" style=" width:'+(w-(this._quirks?4:14))+'px; height:'+(h-(this._quirks?20:30))+'px;">'+contentB+'</div>';
-	html+='<div class="dhx_footer" style=" width:'+(w-8)+'px;'+(bottom?' margin-top:-1px;':'')+'" ></div></div>';
+	html+='<div class="dhx_header" style=" width:'+(w-6)+'px;'+bg_color+'" >&nbsp;</div>';
+	html+='<div class="dhx_title" style="'+bg_color+''+color+'">'+contentA+'</div>';
+	html+='<div class="dhx_body" style=" width:'+(w-(this._quirks?4:14))+'px; height:'+(h-(this._quirks?20:30))+'px;'+bg_color+''+color+'">'+contentB+'</div>';
+	html+='<div class="dhx_footer" style=" width:'+(w-8)+'px;'+(bottom?' margin-top:-1px;':'')+''+bg_color+''+color+'" ></div></div>';
 	
 	d.innerHTML=html;
 	return d.firstChild;
@@ -471,22 +570,25 @@ scheduler.locate_holder_day=function(date,past){
 	return day;
 };
 scheduler.render_event_bar=function(ev){
-	var parent=this._els["dhx_cal_data"][0];
+	var parent=this._rendered_location;
 
 	var x=this._colsS[ev._sday];
 	var x2=this._colsS[ev._eday];
 	if (x2==x) x2=this._colsS[ev._eday+1];
 	var hb = this.xy.bar_height;
 	
-	var y=this._colsS.heights[ev._sweek]+(this._colsS.height?(this.xy.month_scale_height+2):2)+ev._sorder*hb; 
+	var y=this._colsS.heights[ev._sweek]+(this._colsS.height?(this.xy.month_scale_height+2):2)+(ev._sorder*hb);
 			
 	var d=document.createElement("DIV");
 	var cs = ev._timed?"dhx_cal_event_clear":"dhx_cal_event_line";
 	var cse = scheduler.templates.event_class(ev.start_date,ev.end_date,ev);
-	if (cse) cs=cs+" "+cse; 
+	if (cse) cs=cs+" "+cse;
+
+    var bg_color = (ev.color?("background-color:"+ev.color+";"):"");
+    var color = (ev.textColor?("color:"+ev.textColor+";"):"");
 	
-	var html='<div event_id="'+ev.id+'" class="'+cs+'" style="position:absolute; top:'+y+'px; left:'+x+'px; width:'+(x2-x-15)+'px;'+(ev._text_style||"")+'">';
-		
+	var html='<div event_id="'+ev.id+'" class="'+cs+'" style="position:absolute; top:'+y+'px; left:'+x+'px; width:'+(x2-x-15)+'px;'+color+''+bg_color+''+(ev._text_style||"")+'">';
+	
 	if (ev._timed)
 		html+=scheduler.templates.event_bar_date(ev.start_date,ev.end_date,ev);
 	html+=scheduler.templates.event_bar_text(ev.start_date,ev.end_date,ev)+'</div>';

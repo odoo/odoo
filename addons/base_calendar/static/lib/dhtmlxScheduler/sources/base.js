@@ -1,4 +1,19 @@
+/*
+This software is allowed to use under GPL or you need to obtain Commercial or Enterise License
+to use it in not GPL project. Please contact sales@dhtmlx.com for details
+*/
 scheduler.date={
+	init:function(){
+		var s = scheduler.locale.date.month_short;
+		var t = scheduler.locale.date.month_short_hash = {};
+		for (var i = 0; i < s.length; i++)
+			t[s[i]]=i;
+
+		var s = scheduler.locale.date.month_full;
+		var t = scheduler.locale.date.month_full_hash = {};
+		for (var i = 0; i < s.length; i++)
+			t[s[i]]=i;
+	},
 	date_part:function(date){
 		date.setHours(0);
 		date.setMinutes(0);
@@ -12,7 +27,7 @@ scheduler.date={
 	week_start:function(date){
 			var shift=date.getDay();
 			if (scheduler.config.start_on_monday){
-				if (shift==0) shift=6
+				if (shift===0) shift=6;
 				else shift--;
 			}
 			return this.date_part(this.add(date,-1*shift,"day"));
@@ -31,7 +46,14 @@ scheduler.date={
 	add:function(date,inc,mode){
 		var ndate=new Date(date.valueOf());
 		switch(mode){
-			case "day": ndate.setDate(ndate.getDate()+inc); break;
+			case "day":
+				ndate.setDate(ndate.getDate()+inc);
+				if(date.getDate()==ndate.getDate() && !!inc) {
+					do {
+						ndate.setTime(ndate.getTime()+60*60*1000);
+					} while (date.getDate() == ndate.getDate())
+				}
+				break;
 			case "week": ndate.setDate(ndate.getDate()+7*inc); break;
 			case "month": ndate.setMonth(ndate.getMonth()+inc); break;
 			case "year": ndate.setYear(ndate.getFullYear()+inc); break;
@@ -73,7 +95,7 @@ scheduler.date={
 				case "%W": return "\"+scheduler.date.to_fixed(scheduler.date.getISOWeek(date))+\"";
 				default: return a;
 			}
-		})
+		});
 		if (utc) format=format.replace(/date\.get/g,"date.getUTC");
 		return new Function("date","return \""+format+"\";");
 	},
@@ -106,6 +128,12 @@ scheduler.date={
 					break;					
 				case "%s":  splt+="set[5]=temp["+i+"]||0;";
 					break;
+				case "%M":  splt+="set[1]=scheduler.locale.date.month_short_hash[temp["+i+"]]||0;";
+					break;
+				case "%F":  splt+="set[1]=scheduler.locale.date.month_full_hash[temp["+i+"]]||0;";
+					break;
+				default:
+					break;
 			}
 		}
 		var code ="set[0],set[1],set[2],set[3],set[4],set[5]";
@@ -116,18 +144,18 @@ scheduler.date={
 	getISOWeek: function(ndate) {
 		if(!ndate) return false;
 		var nday = ndate.getDay();
-		if (nday == 0) {
+		if (nday === 0) {
 			nday = 7;
 		}
 		var first_thursday = new Date(ndate.valueOf());
 		first_thursday.setDate(ndate.getDate() + (4 - nday));
 		var year_number = first_thursday.getFullYear(); // year of the first Thursday
-		var ordinal_date = Math.floor( (first_thursday.getTime() - new Date(year_number, 0, 1).getTime()) / 86400000); //ordinal date of the first Thursday - 1 (so not really ordinal date)
+		var ordinal_date = Math.round( (first_thursday.getTime() - new Date(year_number, 0, 1).getTime()) / 86400000); //ordinal date of the first Thursday - 1 (so not really ordinal date)
 		var week_number = 1 + Math.floor( ordinal_date / 7);	
 		return week_number;
 	},
 	
 	getUTCISOWeek: function(ndate){
-   	return this.getISOWeek(ndate);
-   }
-}
+		return this.getISOWeek(ndate);
+    }
+};

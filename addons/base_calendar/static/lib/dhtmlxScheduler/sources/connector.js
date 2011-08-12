@@ -1,4 +1,8 @@
 /*
+This software is allowed to use under GPL or you need to obtain Commercial or Enterise License
+to use it in not GPL project. Please contact sales@dhtmlx.com for details
+*/
+/*
 	dhx_sort[index]=direction
 	dhx_filter[index]=mask
 */
@@ -7,10 +11,10 @@ if (window.dhtmlXGridObject){
 	dhtmlXGridObject.prototype._init_point=function(){
 		var clear_url=function(url){
 			url=url.replace(/(\?|\&)connector[^\f]*/g,"");
-			return url+(url.indexOf("?")!=-1?"&":"?")+"connector=true"+(mygrid.hdr.rows.length > 0 ? "&dhx_no_header=1":"");
+			return url+(url.indexOf("?")!=-1?"&":"?")+"connector=true"+(this.hdr.rows.length > 0 ? "&dhx_no_header=1":"");
 		};
 		var combine_urls=function(url){
-			return clear_url(url)+(this._connector_sorting||"")+(this._connector_filter||"");
+			return clear_url.call(this,url)+(this._connector_sorting||"")+(this._connector_filter||"");
 		};
 		var sorting_url=function(url,ind,dir){
 			this._connector_sorting="&dhx_sort["+ind+"]="+dir;
@@ -112,14 +116,10 @@ if (window.dhtmlXGridObject){
 				}
 				if (this._con_f_used[f*1])
 					this._con_f_used[f*1]=v;
-			};
+			}
 			this._colls_loaded=true;
 		}
-	};	
-	
-	
-	
-
+	};
 }
 
 if (window.dataProcessor){
@@ -131,7 +131,9 @@ if (window.dataProcessor){
 		this.setTransactionMode("POST",true);
 		this.serverProcessor+=(this.serverProcessor.indexOf("?")!=-1?"&":"?")+"editing=true";
 	};
-};
+}
 dhtmlxError.catchError("LoadXML",function(a,b,c){
-	alert(c[0].responseText);
+    if (c[0].status != 0) {
+        alert(c[0].responseText);
+    }
 });

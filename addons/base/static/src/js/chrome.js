@@ -1,9 +1,10 @@
 /*---------------------------------------------------------
- * OpenERP base library
+ * OpenERP Web chrome
  *---------------------------------------------------------*/
 
 openerp.base.chrome = function(openerp) {
 
+<<<<<<< TREE
 openerp.base.Session = openerp.base.Widget.extend( /** @lends openerp.base.Session# */{
     /**
      * @constructs
@@ -272,6 +273,8 @@ openerp.base.Session = openerp.base.Widget.extend( /** @lends openerp.base.Sessi
     }
 });
 
+=======
+>>>>>>> MERGE-SOURCE
 openerp.base.Notification =  openerp.base.Widget.extend({
     init: function(parent, element_id) {
         this._super(parent, element_id);
@@ -297,10 +300,10 @@ openerp.base.Notification =  openerp.base.Widget.extend({
 openerp.base.Dialog = openerp.base.OldWidget.extend({
     dialog_title: "",
     identifier_prefix: 'dialog',
-    init: function (parent, options) {
+    init: function (parent, dialog_options) {
         var self = this;
         this._super(parent);
-        this.options = {
+        this.dialog_options = {
             modal: true,
             width: 'auto',
             min_width: 0,
@@ -310,27 +313,25 @@ openerp.base.Dialog = openerp.base.OldWidget.extend({
             max_height: '100%',
             autoOpen: false,
             buttons: {},
-            beforeClose: function () {
-                self.on_close();
-            }
+            beforeClose: function () { self.on_close(); }
         };
         for (var f in this) {
             if (f.substr(0, 10) == 'on_button_') {
-                this.options.buttons[f.substr(10)] = this[f];
+                this.dialog_options.buttons[f.substr(10)] = this[f];
             }
         }
-        if (options) {
-            this.set_options(options);
+        if (dialog_options) {
+            this.set_options(dialog_options);
         }
     },
     set_options: function(options) {
         options = options || {};
-        options.width = this.get_width(options.width || this.options.width);
-        options.min_width = this.get_width(options.min_width || this.options.min_width);
-        options.max_width = this.get_width(options.max_width || this.options.max_width);
-        options.height = this.get_height(options.height || this.options.height);
-        options.min_height = this.get_height(options.min_height || this.options.min_height);
-        options.max_height = this.get_height(options.max_height || this.options.max_width);
+        options.width = this.get_width(options.width || this.dialog_options.width);
+        options.min_width = this.get_width(options.min_width || this.dialog_options.min_width);
+        options.max_width = this.get_width(options.max_width || this.dialog_options.max_width);
+        options.height = this.get_height(options.height || this.dialog_options.height);
+        options.min_height = this.get_height(options.min_height || this.dialog_options.min_height);
+        options.max_height = this.get_height(options.max_height || this.dialog_options.max_width);
 
         if (options.width !== 'auto') {
             if (options.width > options.max_width) options.width = options.max_width;
@@ -343,7 +344,7 @@ openerp.base.Dialog = openerp.base.OldWidget.extend({
         if (!options.title && this.dialog_title) {
             options.title = this.dialog_title;
         }
-        _.extend(this.options, options);
+        _.extend(this.dialog_options, options);
     },
     get_width: function(val) {
         return this.get_size(val.toString(), $(window.top).width());
@@ -360,20 +361,18 @@ openerp.base.Dialog = openerp.base.OldWidget.extend({
             return parseInt(val, 10);
         }
     },
-    start: function (auto_open) {
-        this.$dialog = $('<div id="' + this.element_id + '"></div>').dialog(this.options);
-        if (auto_open !== false) {
-            this.open();
-        }
+    start: function () {
+        this.$dialog = $('<div id="' + this.element_id + '"></div>').dialog(this.dialog_options);
         this._super();
+        return this;
     },
-    open: function(options) {
+    open: function(dialog_options) {
         // TODO fme: bind window on resize
         if (this.template) {
             this.$element.html(this.render());
         }
-        this.set_options(options);
-        this.$dialog.dialog(this.options).dialog('open');
+        this.set_options(dialog_options);
+        this.$dialog.dialog(this.dialog_options).dialog('open');
     },
     close: function() {
         // Closes the dialog but leave it in a state where it could be opened again.
@@ -417,8 +416,8 @@ openerp.base.CrashManager = openerp.base.Dialog.extend({
             this.dialog_title = "OpenERP Error";
             this.template = 'DialogTraceback';
             this.open({
-                width: '80%',
-                height: '80%'
+                width: 'auto',
+                height: 'auto'
             });
         }
     }
@@ -444,15 +443,313 @@ openerp.base.Loading =  openerp.base.Widget.extend({
 });
 
 openerp.base.Database = openerp.base.Widget.extend({
+    init: function(parent, element_id, option_id) {
+        this._super(parent, element_id);
+        this.$option_id = $('#' + option_id);
+    },
+    start: function() {
+        this.$element.html(QWeb.render("Database", this));
+        this.$element.closest(".openerp")
+                .removeClass("login-mode")
+                .addClass("database_block");
+        
+        var self = this;
+        
+        var fetch_db = this.rpc("/base/database/get_list", {}, function(result) {
+            self.db_list = result.db_list;
+        });
+        var fetch_langs = this.rpc("/base/session/get_lang_list", {}, function(result) {
+            if (result.error) {
+                self.display_error(result);
+                return;
+            }
+            self.lang_list = result.lang_list;
+        });
+        $.when(fetch_db, fetch_langs).then(function () {self.do_create();});
+        
+        this.$element.find('#db-create').click(this.do_create);
+        this.$element.find('#db-drop').click(this.do_drop);
+        this.$element.find('#db-backup').click(this.do_backup);
+        this.$element.find('#db-restore').click(this.do_restore);
+        this.$element.find('#db-change-password').click(this.do_change_password);
+       	this.$element.find('#back-to-login').click(function() {
+            self.stop();
+        });
+    },
+    stop: function () {
+        this.$option_id.empty();
+
+        this.$element
+            .find('#db-create, #db-drop, #db-backup, #db-restore, #db-change-password, #back-to-login')
+                .unbind('click')
+            .end()
+            .closest(".openerp")
+                .addClass("login-mode")
+                .removeClass("database_block")
+            .end()
+            .empty();
+
+    },
+    /**
+     * Converts a .serializeArray() result into a dict. Does not bother folding
+     * multiple identical keys into an array, last key wins.
+     *
+     * @param {Array} array
+     */
+    to_object: function (array) {
+        var result = {};
+        _(array).each(function (record) {
+            result[record.name] = record.value;
+        });
+        return result;
+    },
+    /**
+     * Waits until the new database is done creating, then unblocks the UI and
+     * logs the user in as admin
+     *
+     * @param {Number} db_creation_id identifier for the db-creation operation, used to fetch the current installation progress
+     * @param {Object} info info fields for this database creation
+     * @param {String} info.db name of the database being created
+     * @param {String} info.password super-admin password for the database
+     */
+    wait_for_newdb: function (db_creation_id, info) {
+        var self = this;
+        self.rpc('/base/database/progress', {
+            id: db_creation_id,
+            password: info.password
+        }, function (result) {
+            var progress = result[0];
+            // I'd display a progress bar, but turns out the progress status
+            // the server report kind-of blows goats: it's at 0 for ~75% of
+            // the installation, then jumps to 75%, then jumps down to either
+            // 0 or ~40%, then back up to 75%, then terminates. Let's keep that
+            // mess hidden behind a not-very-useful but not overly weird
+            // message instead.
+            if (progress < 1) {
+                setTimeout(function () {
+                    self.wait_for_newdb(db_creation_id, info);
+                }, 500);
+                return;
+            }
+
+            var admin = result[1][0];
+            setTimeout(function () {
+                self.stop();
+                self.widget_parent.do_login(
+                        info.db, admin.login, admin.password);
+                $.unblockUI();
+            });
+        });
+    },
+    /**
+     * Displays an error dialog resulting from the various RPC communications
+     * failing over themselves
+     *
+     * @param {Object} error error description
+     * @param {String} error.title title of the error dialog
+     * @param {String} error.error message of the error dialog
+     */
+    display_error: function (error) {
+        return $('<div>').dialog({
+            modal: true,
+            title: error.title,
+            buttons: {
+                Ok: function() {
+                    $(this).dialog("close");
+                }
+            }
+        }).html(error.error);
+    },
+    do_create: function() {
+        var self = this;
+       	self.$option_id.html(QWeb.render("CreateDB", self));
+
+        self.$option_id.find("form[name=create_db_form]").validate({
+            submitHandler: function (form) {
+                var fields = $(form).serializeArray();
+                $.blockUI();
+                self.rpc("/base/database/create", {'fields': fields}, function(result) {
+                    if (result.error) {
+                        $.unblockUI();
+                        self.display_error(result);
+                        return;
+                    }
+                    self.db_list.push(self.to_object(fields)['db_name']);
+                    self.db_list.sort();
+                    var form_obj = self.to_object(fields);
+                    self.wait_for_newdb(result, {
+                        password: form_obj['super_admin_pwd'],
+                        db: form_obj['db_name']
+                    });
+                });
+            }
+        });
+    },
+	
+    do_drop: function() {
+        var self = this;
+       	self.$option_id.html(QWeb.render("DropDB", self));
+       	
+       	self.$option_id.find("form[name=drop_db_form]").validate({
+            submitHandler: function (form) {
+                var $form = $(form),
+                    fields = $form.serializeArray(),
+                    $db_list = $form.find('select[name=drop_db]'),
+                    db = $db_list.val();
+
+                if (!confirm("Do you really want to delete the database: " + db + " ?")) {
+                    return;
+                }
+                self.rpc("/base/database/drop", {'fields': fields}, function(result) {
+                    if (result.error) {
+                        self.display_error(result);
+                        return;
+                    }
+                    $db_list.find(':selected').remove();
+                    self.db_list.splice(_.indexOf(self.db_list, db, true), 1);
+                    self.notification.notify("Dropping database", "The database '" + db + "' has been dropped");
+                });
+            }
+        });
+    },
+
+    wait_for_file: function (token, cleanup) {
+        var self = this,
+            cookie_name = 'fileToken',
+            cookie_length = cookie_name.length;
+        this.backup_timer = setInterval(function () {
+            var cookies = document.cookie.split(';');
+            for(var i=0; i<cookies.length; ++i) {
+                var cookie = cookies[i].replace(/^\s*/, '');
+                if(!cookie.indexOf(cookie_name) === 0) { continue; }
+                var cookie_val = cookie.substring(cookie_length + 1);
+                if(parseInt(cookie_val, 10) !== token) { continue; }
+
+                // clear waiter
+                clearInterval(self.backup_timer);
+                // clear cookie
+                document.cookie = _.sprintf("%s=;expires=%s;path=/",
+                    cookie_name, new Date().toGMTString());
+
+                if (cleanup) { cleanup(); }
+            }
+        }, 100);
+    },
+    do_backup: function() {
+        var self = this;
+       	self.$option_id.html(QWeb.render("BackupDB", self));
+
+        self.$option_id.find("form[name=backup_db_form]").validate({
+            submitHandler: function (form) {
+                $.blockUI();
+                // need to detect when the file is done downloading (not used
+                // yet, but we'll need it to fix the UI e.g. with a throbber
+                // while dump is being generated), iframe load event only fires
+                // when the iframe content loads, so we need to go smarter:
+                // http://geekswithblogs.net/GruffCode/archive/2010/10/28/detecting-the-file-download-dialog-in-the-browser.aspx
+                var $target = $('#backup-target'),
+                      token = new Date().getTime();
+                if (!$target.length) {
+                    $target = $('<iframe id="backup-target" style="display: none;">')
+                        .appendTo(document.body)
+                        .load(function () {
+                            $.unblockUI();
+                            clearInterval(self.backup_timer);
+                            var error = this.contentDocument.body
+                                    .firstChild.data
+                                    .split('|');
+                            self.display_error({
+                                title: error[0],
+                                error: error[1]
+                            });
+                        });
+                }
+                $(form).find('input[name=token]').val(token);
+                form.submit();
+
+                self.wait_for_file(token, function () {
+                    $.unblockUI();
+                });
+            }
+        });
+    },
+    
+    do_restore: function() {
+        var self = this;
+       	self.$option_id.html(QWeb.render("RestoreDB", self));
+       	
+       	self.$option_id.find("form[name=restore_db_form]").validate({
+            submitHandler: function (form) {
+                $.blockUI();
+                $(form).ajaxSubmit({
+                    url: '/base/database/restore',
+                    type: 'POST',
+                    resetForm: true,
+                    success: function (body) {
+                        // TODO: ui manipulations
+                        // note: response objects don't work, but we have the
+                        // HTTP body of the response~~
+
+                        // If empty body, everything went fine
+                        if (!body) { return; }
+
+                        if (body.indexOf('403 Forbidden') !== -1) {
+                            self.display_error({
+                                title: 'Access Denied',
+                                error: 'Incorrect super-administrator password'
+                            })
+                        } else {
+                            self.display_error({
+                                title: 'Restore Database',
+                                error: 'Could not restore the database'
+                            })
+                        }
+                    },
+                    complete: function () {
+                        $.unblockUI();
+                    }
+                });
+            }
+        });
+    },
+
+    do_change_password: function() {
+        var self = this;
+       	self.$option_id.html(QWeb.render("Change_DB_Pwd", self));
+
+        self.$option_id.find("form[name=change_pwd_form]").validate({
+            messages: {
+                old_pwd: "Please enter your previous password",
+                new_pwd: "Please enter your new password",
+                confirm_pwd: {
+                    required: "Please confirm your new password",
+                    equalTo: "The confirmation does not match the password"
+                }
+            },
+            submitHandler: function (form) {
+                self.rpc("/base/database/change_password", {
+                    'fields': $(form).serializeArray()
+                }, function(result) {
+                    if (result.error) {
+                        self.display_error(result);
+                        return;
+                    }
+                    self.notification.notify("Changed Password", "Password has been changed successfully");
+                });
+            }
+        });
+    }
 });
 
 openerp.base.Login =  openerp.base.Widget.extend({
     remember_creditentials: true,
+    
     init: function(parent, element_id) {
         this._super(parent, element_id);
         this.has_local_storage = typeof(localStorage) != 'undefined';
         this.selected_db = null;
         this.selected_login = null;
+
         if (this.has_local_storage && this.remember_creditentials) {
             this.selected_db = localStorage.getItem('last_db_login_success');
             this.selected_login = localStorage.getItem('last_login_login_success');
@@ -465,7 +762,7 @@ openerp.base.Login =  openerp.base.Widget.extend({
     },
     start: function() {
         var self = this;
-        this.rpc("/base/database/get_databases_list", {}, function(result) {
+        this.rpc("/base/database/get_list", {}, function(result) {
             self.db_list = result.db_list;
             self.display();
         }, function() {
@@ -473,7 +770,16 @@ openerp.base.Login =  openerp.base.Widget.extend({
         });
     },
     display: function() {
+        var self = this;
+
         this.$element.html(QWeb.render("Login", this));
+        this.database = new openerp.base.Database(
+                this, "oe_database", "oe_db_options");
+
+        this.$element.find('#oe-db-config').click(function() {
+            self.database.start();
+        });
+
         this.$element.find("form").submit(this.on_submit);
     },
     on_login_invalid: function() {
@@ -484,13 +790,22 @@ openerp.base.Login =  openerp.base.Widget.extend({
     },
     on_submit: function(ev) {
         ev.preventDefault();
-        var self = this;
         var $e = this.$element;
         var db = $e.find("form [name=db]").val();
         var login = $e.find("form input[name=login]").val();
         var password = $e.find("form input[name=password]").val();
-        //$e.hide();
-        // Should hide then call callback
+
+        this.do_login(db, login, password);
+    },
+    /**
+     * Performs actual login operation, and UI-related stuff
+     *
+     * @param {String} db database to log in
+     * @param {String} login user login
+     * @param {String} password user password
+     */
+    do_login: function (db, login, password) {
+        var self = this;
         this.session.session_login(db, login, password, function() {
             if(self.session.session_is_valid()) {
                 if (self.has_local_storage) {
@@ -542,7 +857,7 @@ openerp.base.Menu =  openerp.base.Widget.extend({
     init: function(parent, element_id, secondary_menu_id) {
         this._super(parent, element_id);
         this.secondary_menu_id = secondary_menu_id;
-        this.$secondary_menu = $("#" + secondary_menu_id);
+        this.$secondary_menu = $("#" + secondary_menu_id).hide();
         this.menu = false;
     },
     start: function() {
@@ -601,7 +916,7 @@ openerp.base.Menu =  openerp.base.Widget.extend({
                     this.on_menu_action_loaded);
         }
 
-        $('.active', this.$element.add(this.$secondary_menu)).removeClass('active');
+        $('.active', this.$element.add(this.$secondary_menu.show())).removeClass('active');
         $parent.addClass('active');
         $menu.addClass('active');
         $menu.parent('h4').addClass('active');
@@ -625,12 +940,10 @@ openerp.base.Homepage = openerp.base.Widget.extend({
 openerp.base.Preferences = openerp.base.Widget.extend({
 });
 
-openerp.base.ImportExport = openerp.base.Widget.extend({
-});
-
 openerp.base.WebClient = openerp.base.Widget.extend({
     init: function(element_id) {
         this._super(null, element_id);
+        openerp.webclient = this;
 
         QWeb.add_template("/base/static/src/xml/base.xml");
         var params = {};
@@ -642,7 +955,7 @@ openerp.base.WebClient = openerp.base.Widget.extend({
         this.session = new openerp.base.Session(this,"oe_errors");
         this.loading = new openerp.base.Loading(this,"oe_loading");
         this.crashmanager =  new openerp.base.CrashManager(this);
-        this.crashmanager.start(false);
+        this.crashmanager.start();
 
         // Do you autorize this ? will be replaced by notify() in controller
         openerp.base.Widget.prototype.notification = new openerp.base.Notification(this, "oe_notification");
@@ -657,6 +970,7 @@ openerp.base.WebClient = openerp.base.Widget.extend({
 
         this.menu = new openerp.base.Menu(this, "oe_menu", "oe_secondary_menu");
         this.menu.on_action.add(this.on_menu_action);
+
     },
     start: function() {
         this.session.start();
@@ -666,18 +980,71 @@ openerp.base.WebClient = openerp.base.Widget.extend({
         this.notification.notify("OpenERP Client", "The openerp client has been initialized.");
     },
     on_logged: function() {
-        this.action_manager =  new openerp.base.ActionManager(this, "oe_app");
-        this.action_manager.start();
+        if(this.action_manager)
+            this.action_manager.stop();
+        this.action_manager = new openerp.base.ActionManager(this);
+        this.action_manager.appendTo($("#oe_app"));
 
         // if using saved actions, load the action and give it to action manager
         var parameters = jQuery.deparam(jQuery.param.querystring());
-        if(parameters["s_action"] != undefined) {
-            var key = parseInt(parameters["s_action"]);
+        if (parameters["s_action"] != undefined) {
+            var key = parseInt(parameters["s_action"], 10);
             var self = this;
             this.rpc("/base/session/get_session_action", {key:key}, function(action) {
                 self.action_manager.do_action(action);
             });
+        } else if (openerp._modules_loaded) { // TODO: find better option than this
+            this.load_url_state()
+        } else {
+            this.session.on_modules_loaded.add({
+                callback: $.proxy(this, 'load_url_state'),
+                unique: true,
+                position: 'last'
+            })
         }
+    },
+    /**
+     * Loads state from URL if any, or checks if there is a home action and
+     * loads that, assuming we're at the index
+     */
+    load_url_state: function () {
+        var self = this;
+        // TODO: add actual loading if there is url state to unpack, test on window.location.hash
+
+        // not logged in
+        if (!this.session.uid) { return; }
+        var ds = new openerp.base.DataSetSearch(this, 'res.users');
+        ds.read_ids([this.session.uid], ['action_id'], function (users) {
+            var home_action = users[0].action_id;
+            if (!home_action) {
+                self.default_home();
+                return;
+            }
+            self.execute_home_action(home_action[0], ds);
+        })
+    },
+    default_home: function () { 
+    },
+    /**
+     * Bundles the execution of the home action
+     *
+     * @param {Number} action action id
+     * @param {openerp.base.DataSet} dataset action executor
+     */
+    execute_home_action: function (action, dataset) {
+        var self = this;
+        this.rpc('/base/action/load', {
+            action_id: action,
+            context: dataset.get_context()
+        }, function (meh) {
+            var action = meh.result;
+            action.context = _.extend(action.context || {}, {
+                active_id: false,
+                active_ids: [false],
+                active_model: dataset.model
+            });
+            self.action_manager.do_action(action);
+        });
     },
     on_menu_action: function(action) {
         this.action_manager.do_action(action);

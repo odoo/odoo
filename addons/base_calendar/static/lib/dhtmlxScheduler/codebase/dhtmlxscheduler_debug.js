@@ -1,11 +1,38 @@
 /*
-dhtmlxScheduler v.2.3
-
 This software is allowed to use under GPL or you need to obtain Commercial or Enterise License
 to use it in not GPL project. Please contact sales@dhtmlx.com for details
-
-(c) DHTMLX Ltd.
 */
+
+window.dhtmlx || (dhtmlx=function(obj){
+	for (var a in obj) dhtmlx[a]=obj[a];
+	return dhtmlx; //simple singleton
+})
+dhtmlx.extend_api=function(name,map,ext){
+	var t = window[name];
+	if (!t) return; //component not defined
+	window[name]=function(obj){
+		if (obj && typeof obj == "object" && !obj.tagName && !(obj instanceof Array)){
+			var that = t.apply(this,(map._init?map._init(obj):arguments));
+			//global settings
+			for (var a in dhtmlx)
+				if (map[a]) this[map[a]](dhtmlx[a]);			
+			//local settings
+			for (var a in obj){
+				if (map[a]) this[map[a]](obj[a]);
+				else if (a.indexOf("on")==0){
+					this.attachEvent(a,obj[a]);
+				}
+			}
+		} else
+			var that = t.apply(this,arguments);
+		if (map._patch) map._patch(this);
+		return that||this;
+	};
+	window[name].prototype=t.prototype;
+	if (ext)
+		dhtmlXHeir(window[name].prototype,ext);
+};
+
 dhtmlxAjax={
 	get:function(url,callback){
 		var t=new dtmlXMLLoaderObject(true);
@@ -554,12 +581,15 @@ dhtmlDragAndDropObject.prototype.initFrameRoute=function(win, mode){
 	}
 }
 
-var _isFF = false;
-var _isIE = false;
-var _isOpera = false;
-var _isKHTML = false;
-var _isMacOS = false;
-var _isChrome = false;
+_isFF = false;
+_isIE = false;
+_isOpera = false;
+_isKHTML = false;
+_isMacOS = false;
+_isChrome = false;
+_KHTMLrv = false;
+_OperaRv = false;
+_FFrv = false;
 
 if (navigator.userAgent.indexOf('Macintosh') != -1)
 	_isMacOS=true;
@@ -874,6 +904,12 @@ dhtmlxEventable=function(obj){
 			if (id != false){
 				var list = id.split(':');           //get EventName and ID
 				this[list[0]].removeEvent(list[1]); //remove event
+			}
+		}
+		obj.detachAllEvents = function(){
+			for (var name in this){
+				if (name.indexOf("ev_")==0) 
+					delete this[name];
 			}
 		}
 }
@@ -1242,6 +1278,8 @@ dataProcessor.prototype={
 	    var soid = sid;
 	
 	    switch (action) {
+		case "update":
+		case "updated":
 	    case "inserted":
 	    case "insert":
 	        if (tid != sid) {
@@ -1547,7 +1585,7 @@ dataProcessor.wrap("sendData",function(rowId){
         	if (!this.obj._idpull[rowId])
 	    		this._log("&nbsp;Error! item with such ID not exists <b>"+rowId+"</b>");
 		} else {
-			if (!this.obj.rowsAr[rowId])
+			if (this.rowsAr && !this.obj.rowsAr[rowId])
 	        	this._log("&nbsp;Error! row with such ID not exists <b>"+rowId+"</b>");
         }
 	}
@@ -1611,7 +1649,7 @@ dataProcessor.wrap("afterUpdateCallback",function(sid,tid,action){
 	if (this.obj.mytype=="tree"){
 		if (!this.obj._idpull[sid]) this._log("Incorrect SID, item with such ID not exists in grid");
 	} else {
-		if (!this.obj.rowsAr[sid]) this._log("Incorrect SID, row with such ID not exists in grid");
+		if (this.obj.rowsAr && !this.obj.rowsAr[sid]) this._log("Incorrect SID, row with such ID not exists in grid");
 	}
 	this._log("&nbsp;Action: "+action+" SID:"+sid+" TID:"+tid);
 },function(){
@@ -1633,10 +1671,10 @@ if (window.dhtmlXGridObject){
 	dhtmlXGridObject.prototype._init_point=function(){
 		var clear_url=function(url){
 			url=url.replace(/(\?|\&)connector[^\f]*/g,"");
-			return url+(url.indexOf("?")!=-1?"&":"?")+"connector=true"+(mygrid.hdr.rows.length > 0 ? "&dhx_no_header=1":"");
+			return url+(url.indexOf("?")!=-1?"&":"?")+"connector=true"+(this.hdr.rows.length > 0 ? "&dhx_no_header=1":"");
 		};
 		var combine_urls=function(url){
-			return clear_url(url)+(this._connector_sorting||"")+(this._connector_filter||"");
+			return clear_url.call(this,url)+(this._connector_sorting||"")+(this._connector_filter||"");
 		};
 		var sorting_url=function(url,ind,dir){
 			this._connector_sorting="&dhx_sort["+ind+"]="+dir;
@@ -1738,14 +1776,10 @@ if (window.dhtmlXGridObject){
 				}
 				if (this._con_f_used[f*1])
 					this._con_f_used[f*1]=v;
-			};
+			}
 			this._colls_loaded=true;
 		}
-	};	
-	
-	
-	
-
+	};
 }
 
 if (window.dataProcessor){
@@ -1757,16 +1791,20 @@ if (window.dataProcessor){
 		this.setTransactionMode("POST",true);
 		this.serverProcessor+=(this.serverProcessor.indexOf("?")!=-1?"&":"?")+"editing=true";
 	};
-};
+}
 dhtmlxError.catchError("LoadXML",function(a,b,c){
-	alert(c[0].responseText);
+    if (c[0].status != 0) {
+        alert(c[0].responseText);
+    }
 });
 
-window.dhtmlXScheduler=window.scheduler={version:2.2};
+window.dhtmlXScheduler=window.scheduler={version:3.0};
 dhtmlxEventable(scheduler);
 scheduler.init=function(id,date,mode){
 	date=date||(new Date());
 	mode=mode||"week";
+
+	scheduler.date.init();
 	
 	this._obj=(typeof id == "string")?document.getElementById(id):id;
 	this._els=[];
@@ -1783,9 +1821,9 @@ scheduler.init=function(id,date,mode){
 			if (scheduler.callEvent("onSchedulerResize",[]))
 				scheduler.update_view();
 		}, 100);
-	})
-	
+	});
 	this.set_sizes();
+	scheduler.callEvent('onSchedulerReady', []);
 	this.setCurrentView(date,mode);
 };
 scheduler.xy={
@@ -1821,7 +1859,7 @@ scheduler.set_sizes=function(){
 	
 	var data_y=this.xy.scale_height+this.xy.nav_height+(this._quirks?-2:0);
 	this.set_xy(this._els["dhx_cal_data"][0],w,h-(data_y+2),0,data_y+2);
-}
+};
 scheduler.set_xy=function(node,w,h,x,y){
 	node.style.width=Math.max(0,w)+"px";
 	node.style.height=Math.max(0,h)+"px";
@@ -1829,7 +1867,7 @@ scheduler.set_xy=function(node,w,h,x,y){
 		node.style.left=x+"px";
 		node.style.top=y+"px";	
 	}
-}
+};
 scheduler.get_elements=function(){
 	//get all child elements as named hash
 	var els=this._obj.getElementsByTagName("DIV");
@@ -1842,26 +1880,26 @@ scheduler.get_elements=function(){
 		var t=scheduler.locale.labels[els[i].getAttribute("name")||name];
 		if (t) els[i].innerHTML=t;
 	}
-}
+};
 scheduler.set_actions=function(){
 	for (var a in this._els)
 		if (this._click[a])
 			for (var i=0; i < this._els[a].length; i++)
 				this._els[a][i].onclick=scheduler._click[a];
-	this._obj.onselectstart=function(e){ return false; }
+	this._obj.onselectstart=function(e){ return false; };
 	this._obj.onmousemove=function(e){
 		scheduler._on_mouse_move(e||event);
-	}
+	};
 	this._obj.onmousedown=function(e){
 		scheduler._on_mouse_down(e||event);
-	}
+	};
 	this._obj.onmouseup=function(e){
 		scheduler._on_mouse_up(e||event);
-	}
+	};
 	this._obj.ondblclick=function(e){
 		scheduler._on_dbl_click(e||event);
 	}
-}
+};
 scheduler.select=function(id){
 	if (this._table_view || !this.getEvent(id)._timed) return; //temporary block
 	if (this._select_id==id) return;
@@ -1869,13 +1907,13 @@ scheduler.select=function(id){
 	this.unselect();
 	this._select_id = id;
 	this.updateEvent(id);
-}
+};
 scheduler.unselect=function(id){
 	if (id && id!=this._select_id) return;
 	var t=this._select_id;
 	this._select_id = null;
 	if (t) this.updateEvent(t);
-}
+};
 scheduler.getState=function(){
 	return {
 		mode: this._mode,
@@ -1883,11 +1921,13 @@ scheduler.getState=function(){
 		min_date: this._min_date,
 		max_date: this._max_date,
 		editor_id: this._edit_id,
-		lightbox_id: this._lightbox_id
+		lightbox_id: this._lightbox_id,
+        new_event: this._new_event
 	};
-}
+};
 scheduler._click={
 	dhx_cal_data:function(e){
+        //debugger;
 		var trg = e?e.target:event.srcElement;
 		var id = scheduler._locate_event(trg);
 		
@@ -1913,7 +1953,8 @@ scheduler._click={
 		scheduler.setCurrentView(new Date());
 	},
 	dhx_cal_tab:function(){
-		var mode = this.getAttribute("name").split("_")[0];
+		var name = this.getAttribute("name");
+		var mode = name.substring(0, name.search("_tab"));
 		scheduler.setCurrentView(scheduler._date,mode);
 	},
 	buttons:{
@@ -1923,11 +1964,10 @@ scheduler._click={
 		details:function(id){ scheduler.showLightbox(id); },
 		cancel:function(id){ scheduler.editStop(false); }
 	}
-}
-
+};
 scheduler.addEventNow=function(start,end,e){
 	var base = {};
-	if (typeof start == "object"){
+	if (start && start.constructor.toString().match(/object/i) !== null){
 		base = start;
 		start = null;
 	}
@@ -1943,14 +1983,18 @@ scheduler.addEventNow=function(start,end,e){
 		}
 		end = start+d;
 	}
-	
-	
+	var end_date = new Date(end);
+
+	// scheduler.addEventNow(new Date(), new Date()) + collision though get_visible events defect (such event was not retrieved)
+	if(start_date.valueOf() == end_date.valueOf())
+		end_date.setTime(end_date.valueOf()+d);
+
 	base.start_date = base.start_date||start_date;
-	base.end_date =  base.end_date||new Date(end);
+	base.end_date =  base.end_date||end_date;
 	base.text = base.text||this.locale.labels.new_event;
 	base.id = this._drag_id = this.uid();
 	this._drag_mode="new-size";
-	
+
 	this._loading=true;
 	this.addEvent(base);
 	this.callEvent("onEventCreated",[this._drag_id,e]);
@@ -1958,7 +2002,7 @@ scheduler.addEventNow=function(start,end,e){
 	
 	this._drag_event={}; //dummy , to trigger correct event updating logic
 	this._on_mouse_up(e);	
-}
+};
 scheduler._on_dbl_click=function(e,src){
 	src = src||(e.target||e.srcElement);
 	if (this.config.readonly) return;
@@ -1967,6 +2011,7 @@ scheduler._on_dbl_click=function(e,src){
 		case "dhx_scale_holder":
 		case "dhx_scale_holder_now":
 		case "dhx_month_body":
+		case "dhx_wa_day_data":
 			if (!scheduler.config.dblclick_create) break;
 			var pos=this._mouse_coords(e);
 			var start=this._min_date.valueOf()+(pos.y*this.config.time_step+(this._table_view?0:pos.x)*24*60)*60000;
@@ -1974,6 +2019,7 @@ scheduler._on_dbl_click=function(e,src){
 			this.addEventNow(start,null,e);
 			break;
 		case "dhx_body":
+		case "dhx_wa_ev_body":
 		case "dhx_cal_event_line":
 		case "dhx_cal_event_clear":
 			var id = this._locate_event(src);
@@ -1991,7 +2037,7 @@ scheduler._on_dbl_click=function(e,src){
 			if (t) t.call(this,e);
 			break;
 	}
-}
+};
 
 scheduler._mouse_coords=function(ev){
 	var pos;
@@ -2002,17 +2048,17 @@ scheduler._mouse_coords=function(ev){
 	else pos={
 	    x:ev.clientX + (b.scrollLeft||d.scrollLeft||0) - b.clientLeft,
 	    y:ev.clientY + (b.scrollTop||d.scrollTop||0) - b.clientTop
-	}
+	};
 
 	//apply layout
 	pos.x-=getAbsoluteLeft(this._obj)+(this._table_view?0:this.xy.scale_width);
 	pos.y-=getAbsoluteTop(this._obj)+this.xy.nav_height+(this._dy_shift||0)+this.xy.scale_height-this._els["dhx_cal_data"][0].scrollTop;
 	pos.ev = ev;
-	
+
 	var handler = this["mouse_"+this._mode];
 	if (handler)
 		return handler.call(this,pos);
-		
+
 	//transform to date
 	if (!this._table_view){
 		pos.x=Math.max(0,Math.ceil(pos.x/this._cols[0])-1);
@@ -2022,7 +2068,7 @@ scheduler._mouse_coords=function(ev){
 		for (dy=1; dy < this._colsS.heights.length; dy++)
 			if (this._colsS.heights[dy]>pos.y) break;
 
-		pos.y=(Math.max(0,Math.ceil(pos.x/this._cols[0])-1)+Math.max(0,dy-1)*7)*24*60/this.config.time_step; 
+		pos.y=(Math.max(0,Math.ceil(pos.x/this._cols[0])-1)+Math.max(0,dy-1)*7)*24*60/this.config.time_step;
 		pos.x=0;
 	}
 
@@ -2034,14 +2080,14 @@ scheduler._close_not_saved=function(){
 		if (!c || confirm(c))
 			scheduler.editStop(scheduler.config.positive_closing);
 	}
-}
+};
 scheduler._correct_shift=function(start, back){
 	return start-=((new Date(scheduler._min_date)).getTimezoneOffset()-(new Date(start)).getTimezoneOffset())*60000*(back?-1:1);	
-}
+};
 scheduler._on_mouse_move=function(e){
 	if (this._drag_mode){
 		var pos=this._mouse_coords(e);
-		if (!this._drag_pos || this._drag_pos.x!=pos.x || this._drag_pos.y!=pos.y){
+		if (!this._drag_pos || pos.custom || this._drag_pos.x!=pos.x || this._drag_pos.y!=pos.y){
 			
 			if (this._edit_id!=this._drag_id)
 				this._close_not_saved();
@@ -2080,8 +2126,11 @@ scheduler._on_mouse_move=function(e){
 				end = ev.end_date.valueOf()-(ev.start_date.valueOf()-start);
 			} else {
 				start = ev.start_date.valueOf();
-				if (this._table_view)
+				if (this._table_view) {
 					end = this._min_date.valueOf()+pos.y*this.config.time_step*60000 + (pos.custom?0:24*60*60000);
+					if (this._mode == "month")
+						end = this._correct_shift(end, false);
+				}
 				else{
 					end = this.date.date_part(new Date(ev.end_date)).valueOf()+pos.y*this.config.time_step*60000;
 					this._els["dhx_cal_data"][0].style.cursor="s-resize";
@@ -2091,7 +2140,7 @@ scheduler._on_mouse_move=function(e){
 				if (this._drag_mode == "new-size"){ 
 					if (end <= this._drag_start){
 						var shift = pos.shift||((this._table_view && !pos.custom)?24*60*60000:0);
-						start = end-shift;
+						start = end-(pos.shift?0:shift);
 						end = this._drag_start+(shift||(this.config.time_step*60000));
 					} else {
 						start = this._drag_start;
@@ -2103,7 +2152,7 @@ scheduler._on_mouse_move=function(e){
 			var new_end = new Date(end-1);			
 			var new_start = new Date(start);
 			//prevent out-of-borders situation for day|week view
-			if (this._table_view || (new_end.getDate()==new_start.getDate() && new_end.getHours()<this.config.last_hour)){
+			if ( this._table_view || (new_end.getDate()==new_start.getDate() && new_end.getHours()<this.config.last_hour) || (scheduler._wa && scheduler._wa._dnd) ){
 				ev.start_date=new_start;
 				ev.end_date=new Date(end);
 				if (this.config.update_render)
@@ -2118,14 +2167,15 @@ scheduler._on_mouse_move=function(e){
 		}
 	}  else {
 		if (scheduler.checkEvent("onMouseMove")){
+			
 			var id = this._locate_event(e.target||e.srcElement);
 			this.callEvent("onMouseMove",[id,e]);
 		}
 	}
-}
+};
 scheduler._on_mouse_context=function(e,src){
 	return this.callEvent("onContextMenu",[this._locate_event(src),e]);
-}
+};
 scheduler._on_mouse_down=function(e,src){
 	if (this.config.readonly || this._drag_mode) return;
 	src = src||(e.target||e.srcElement);
@@ -2138,6 +2188,7 @@ scheduler._on_mouse_down=function(e,src){
 			break;
 		case "dhx_header":
 		case "dhx_title":
+		case "dhx_wa_ev_body":
 			this._drag_mode="move"; //item in table mode
 			break;
 		case "dhx_footer":
@@ -2162,11 +2213,11 @@ scheduler._on_mouse_down=function(e,src){
 			this._drag_mode=this._drag_id=0;
 		else {
 			this._drag_id= id;
-			this._drag_event=this._copy_event(this.getEvent(this._drag_id)||{});
+            this._drag_event=scheduler._lame_copy({},this._copy_event(this.getEvent(this._drag_id)||{}));
 		}
 	}
 	this._drag_start=null;
-}
+};
 scheduler._on_mouse_up=function(e){
 	if (this._drag_mode && this._drag_id){
 		this._els["dhx_cal_data"][0].style.cursor="default";
@@ -2178,8 +2229,8 @@ scheduler._on_mouse_up=function(e){
 				if (is_new) 
 					this.deleteEvent(ev.id, true);
 				else {
-					ev.start_date = this._drag_event.start_date;
-					ev.end_date = this._drag_event.end_date;
+                    this._drag_event._dhx_changed = false;
+                    scheduler._lame_copy(ev, this._drag_event);
 					this.updateEvent(ev.id);
 				}
 			} else {
@@ -2200,44 +2251,58 @@ scheduler._on_mouse_up=function(e){
 	}
 	this._drag_mode=null;
 	this._drag_pos=null;
-}	
+};
 scheduler.update_view=function(){
-	//this.set_sizes();
 	this._reset_scale();
 	if (this._load_mode && this._load()) return this._render_wait = true;
 	this.render_view_data();
-}
+};
 scheduler.setCurrentView=function(date,mode){
+	date = date || this._date;
+    mode = mode || this._mode;
 	
 	if (!this.callEvent("onBeforeViewChange",[this._mode,this._date,mode,date])) return;
+
+    var dhx_cal_data = 'dhx_cal_data';
+    var prev_scroll = (this._mode == mode && this.config.preserve_scroll)?this._els[dhx_cal_data][0].scrollTop:false; // saving current scroll
+
 	//hide old custom view
 	if (this[this._mode+"_view"] && mode && this._mode!=mode)
 		this[this._mode+"_view"](false);
 		
 	this._close_not_saved();
+
+    var dhx_multi_day = 'dhx_multi_day';
+	if(this._els[dhx_multi_day]) {
+		this._els[dhx_multi_day][0].parentNode.removeChild(this._els[dhx_multi_day][0]);
+		this._els[dhx_multi_day] = null;
+	}
 	
-	this._mode=mode||this._mode;
+	this._mode=mode;
 	this._date=date;
 	this._table_view=(this._mode=="month");
 	
 	var tabs=this._els["dhx_cal_tab"];
 	for (var i=0; i < tabs.length; i++) {
 		tabs[i].className="dhx_cal_tab"+((tabs[i].getAttribute("name")==this._mode+"_tab")?" active":"");
-	};
+	}
 	
 	//show new view
 	var view=this[this._mode+"_view"];
 	view?view(true):this.update_view();
+
+    if(typeof prev_scroll == "number") // if we are updating or working with the same view scrollTop should be saved
+        this._els[dhx_cal_data][0].scrollTop = prev_scroll; // restoring original scroll
 	
 	this.callEvent("onViewChange",[this._mode,this._date]);
-}
+};
 scheduler._render_x_header = function(i,left,d,h){
 	//header scale	
 	var head=document.createElement("DIV"); head.className="dhx_scale_bar";
 	this.set_xy(head,this._cols[i]-1,this.xy.scale_height-2,left,0);//-1 for border
 	head.innerHTML=this.templates[this._mode+"_scale_date"](d,this._mode); //TODO - move in separate method
 	h.appendChild(head);
-}
+};
 scheduler._reset_scale=function(){
 	//current mode doesn't support scales
 	//we mustn't call reset_scale for such modes, so it just to be sure
@@ -2282,8 +2347,7 @@ scheduler._reset_scale=function(){
 	this._min_date=d;
 	this._els["dhx_cal_date"][0].innerHTML=this.templates[this._mode+"_date"](dd,ed,this._mode);
 	
-	
-	for (var i=0; i<count; i++){
+	for (var i=0; i<count; i++){ 
 		this._cols[i]=Math.floor(summ/(count-i));
 	
 		this._render_x_header(i,left,d,h);
@@ -2294,36 +2358,62 @@ scheduler._reset_scale=function(){
 			scales.className=cls+" "+this.templates.week_date_class(d,today);
 			this.set_xy(scales,this._cols[i]-1,c.hour_size_px*(c.last_hour-c.first_hour),left+this.xy.scale_width+1,0);//-1 for border
 			b.appendChild(scales);
+			this.callEvent("onScaleAdd",[scales, d]);
 		}
 		
-		d=this.date.add(d,1,"day")
+		d=this.date.add(d,1,"day");
 		summ-=this._cols[i];
 		left+=this._cols[i];
 		this._colsS[i]=(this._cols[i-1]||0)+(this._colsS[i-1]||(this._table_view?0:this.xy.scale_width+2));
+		this._colsS['col_length'] = count+1;
 	}
 	this._max_date=d;
 	this._colsS[count]=this._cols[count-1]+this._colsS[count-1];
 	
-	if (this._table_view)
+	if (this._table_view) // month view
 		this._reset_month_scale(b,dd,sd);
 	else{
 		this._reset_hours_scale(b,dd,sd);
 		if (c.multi_day){
-			var c1 = document.createElement("DIV");
-			c1.className="dhx_multi_day";
-			c1.style.visibility="hidden";
-			this.set_xy(c1,parseInt(h.style.width),0,this.xy.scale_width,0);
-			b.appendChild(c1);
-			var c2 = c1.cloneNode(true);
-			c2.className="dhx_multi_day_icon";
-			c2.style.visibility="hidden";
-			this.set_xy(c2,this.xy.scale_width-1,0,0,0);
-			b.appendChild(c2);
+            var dhx_multi_day = 'dhx_multi_day';
+
+			if(this._els[dhx_multi_day]) {
+				this._els[dhx_multi_day][0].parentNode.removeChild(this._els[dhx_multi_day][0]);
+				this._els[dhx_multi_day] = null;
+			}
 			
-			this._els["dhx_multi_day"]=[c1,c2];
+			var navline = this._els["dhx_cal_navline"][0];
+			var top = navline.offsetHeight + this._els["dhx_cal_header"][0].offsetHeight+1;
+			
+			var c1 = document.createElement("DIV");
+			c1.className = dhx_multi_day;
+			c1.style.visibility="hidden";
+			this.set_xy(c1, this._colsS[this._colsS.col_length-1]+this.xy.scroll_width, 0, 0, top); // 2 extra borders, dhx_header has -1 bottom margin
+			b.parentNode.insertBefore(c1,b);
+			
+			var c2 = c1.cloneNode(true);
+			c2.className = dhx_multi_day+"_icon";
+			c2.style.visibility="hidden";
+			this.set_xy(c2, this.xy.scale_width, 0, 0, top); // dhx_header has -1 bottom margin
+			
+			c1.appendChild(c2);
+			this._els[dhx_multi_day]=[c1,c2];
+            this._els[dhx_multi_day][0].onclick = this._click.dhx_cal_data;
 		}
+		
+		if (this.config.mark_now){
+			var now = new Date();
+			if (now < this._max_date && now > this._min_date && now.getHours() >= this.config.first_hour && now.getHours()<this.config.last_hour){
+				var day = this.locate_holder_day(now);
+				var sm = now.getHours()*60+now.getMinutes();
+				var now_time = document.createElement("DIV");
+				now_time.className = "dhx_now_time";
+				now_time.style.top = (Math.round((sm*60*1000-this.config.first_hour*60*60*1000)*this.config.hour_size_px/(60*60*1000)))%(this.config.hour_size_px*24)+1+"px"; 
+				b.childNodes[day].appendChild(now_time);
+			}
+		}			
 	}
-}
+};
 scheduler._reset_hours_scale=function(b,dd,sd){
 	var c=document.createElement("DIV");
 	c.className="dhx_scale_holder";
@@ -2342,7 +2432,7 @@ scheduler._reset_hours_scale=function(b,dd,sd){
 	b.appendChild(c);
 	if (this.config.scroll_hour)
 		b.scrollTop = this.config.hour_size_px*(this.config.scroll_hour-this.config.first_hour);
-}
+};
 scheduler._reset_month_scale=function(b,dd,sd){
 	var ed=scheduler.date.add(dd,1,"month");
 	
@@ -2350,8 +2440,8 @@ scheduler._reset_month_scale=function(b,dd,sd){
 	var cd=new Date();
 	this.date.date_part(cd);
 	this.date.date_part(sd);
-	
-	var rows=Math.ceil((ed.valueOf()-sd.valueOf())/(60*60*24*1000*7));
+
+	var rows=Math.ceil(Math.round((ed.valueOf()-sd.valueOf()) / (60*60*24*1000) ) / 7);
 	var tdcss=[];
 	var height=(Math.floor(b.clientHeight/rows)-22);
 	
@@ -2377,7 +2467,7 @@ scheduler._reset_month_scale=function(b,dd,sd){
 				else if (sd.valueOf()==cd.valueOf())
 					cls='dhx_now';
 				html+=" class='"+cls+" "+this.templates.month_date_class(sd,cd)+"' ";
-				html+="><div class='dhx_month_head'>"+this.templates.month_day(sd)+"</div><div class='dhx_month_body' "+tdcss[j]+"></div></td>"
+				html+="><div class='dhx_month_head'>"+this.templates.month_day(sd)+"</div><div class='dhx_month_body' "+tdcss[j]+"></div></td>";
 				sd=this.date.add(sd,1,"day");
 			}
 		html+="</tr>";
@@ -2389,7 +2479,7 @@ scheduler._reset_month_scale=function(b,dd,sd){
 	
 	b.innerHTML=html;	
 	return sd;
-}
+};
 scheduler.getLabel = function(property, key) {
 	var sections = this.config.lightbox.sections;
 	for (var i=0; i<sections.length; i++) {
@@ -2404,7 +2494,33 @@ scheduler.getLabel = function(property, key) {
 	}
 	return "";
 };
+scheduler.updateCollection = function(list_name, collection){
+    var list = scheduler.serverList(list_name);
+    if(!list) return false;
+    list.splice(0,list.length);
+    list.push.apply(list, collection||[]);
+    scheduler.callEvent("onOptionsLoad", []);
+    scheduler.resetLightbox();
+    return true;
+};
+scheduler._lame_copy=function(target, source){
+    for(var key in source)
+        target[key] = source[key];
+    return target;
+};
+
 scheduler.date={
+	init:function(){
+		var s = scheduler.locale.date.month_short;
+		var t = scheduler.locale.date.month_short_hash = {};
+		for (var i = 0; i < s.length; i++)
+			t[s[i]]=i;
+
+		var s = scheduler.locale.date.month_full;
+		var t = scheduler.locale.date.month_full_hash = {};
+		for (var i = 0; i < s.length; i++)
+			t[s[i]]=i;
+	},
 	date_part:function(date){
 		date.setHours(0);
 		date.setMinutes(0);
@@ -2418,7 +2534,7 @@ scheduler.date={
 	week_start:function(date){
 			var shift=date.getDay();
 			if (scheduler.config.start_on_monday){
-				if (shift==0) shift=6
+				if (shift===0) shift=6;
 				else shift--;
 			}
 			return this.date_part(this.add(date,-1*shift,"day"));
@@ -2437,7 +2553,14 @@ scheduler.date={
 	add:function(date,inc,mode){
 		var ndate=new Date(date.valueOf());
 		switch(mode){
-			case "day": ndate.setDate(ndate.getDate()+inc); break;
+			case "day":
+				ndate.setDate(ndate.getDate()+inc);
+				if(date.getDate()==ndate.getDate() && !!inc) {
+					do {
+						ndate.setTime(ndate.getTime()+60*60*1000);
+					} while (date.getDate() == ndate.getDate())
+				}
+				break;
 			case "week": ndate.setDate(ndate.getDate()+7*inc); break;
 			case "month": ndate.setMonth(ndate.getMonth()+inc); break;
 			case "year": ndate.setYear(ndate.getFullYear()+inc); break;
@@ -2479,7 +2602,7 @@ scheduler.date={
 				case "%W": return "\"+scheduler.date.to_fixed(scheduler.date.getISOWeek(date))+\"";
 				default: return a;
 			}
-		})
+		});
 		if (utc) format=format.replace(/date\.get/g,"date.getUTC");
 		return new Function("date","return \""+format+"\";");
 	},
@@ -2512,6 +2635,12 @@ scheduler.date={
 					break;					
 				case "%s":  splt+="set[5]=temp["+i+"]||0;";
 					break;
+				case "%M":  splt+="set[1]=scheduler.locale.date.month_short_hash[temp["+i+"]]||0;";
+					break;
+				case "%F":  splt+="set[1]=scheduler.locale.date.month_full_hash[temp["+i+"]]||0;";
+					break;
+				default:
+					break;
 			}
 		}
 		var code ="set[0],set[1],set[2],set[3],set[4],set[5]";
@@ -2522,22 +2651,21 @@ scheduler.date={
 	getISOWeek: function(ndate) {
 		if(!ndate) return false;
 		var nday = ndate.getDay();
-		if (nday == 0) {
+		if (nday === 0) {
 			nday = 7;
 		}
 		var first_thursday = new Date(ndate.valueOf());
 		first_thursday.setDate(ndate.getDate() + (4 - nday));
 		var year_number = first_thursday.getFullYear(); // year of the first Thursday
-		var ordinal_date = Math.floor( (first_thursday.getTime() - new Date(year_number, 0, 1).getTime()) / 86400000); //ordinal date of the first Thursday - 1 (so not really ordinal date)
+		var ordinal_date = Math.round( (first_thursday.getTime() - new Date(year_number, 0, 1).getTime()) / 86400000); //ordinal date of the first Thursday - 1 (so not really ordinal date)
 		var week_number = 1 + Math.floor( ordinal_date / 7);	
 		return week_number;
 	},
 	
 	getUTCISOWeek: function(ndate){
-   	return this.getISOWeek(ndate);
-   }
-}
-
+		return this.getISOWeek(ndate);
+    }
+};
 scheduler.locale={
 	date:{
 		month_full:["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
@@ -2574,9 +2702,12 @@ scheduler.locale={
 		description:"Description",
 		
 		/*year view extension*/
-		year_tab:"Year"
+		year_tab:"Year",
+
+        /* week agenda extension */
+        week_agenda_tab: "Agenda"
     }
-}
+};
 
 
 /*
@@ -2620,27 +2751,35 @@ scheduler.config={
 	edit_on_create:1,
 	details_on_create:0,
 	click_form_details:0,
-	
+    cascade_event_display: false,
+    cascade_event_count:4,
+	cascade_event_margin: 30,
+	drag_lightbox:true,
+    preserve_scroll:true,
+
 	server_utc:false,
 
 	positive_closing:false,
 
 	icons_edit:["icon_save","icon_cancel"],
 	icons_select:["icon_details","icon_edit","icon_delete"],
-	
+	buttons_left:["dhx_save_btn","dhx_cancel_btn"],
+	buttons_right:["dhx_delete_btn"],
 	lightbox:{
 		sections:[	{name:"description", height:200, map_to:"text", type:"textarea" , focus:true},
 					{name:"time", height:72, type:"time", map_to:"auto"}	]
-	}
+	},
+
+    repeat_date_of_end: "01.01.2010"
 };
-scheduler.templates={}
+scheduler.templates={};
 scheduler.init_templates=function(){
 	var d=scheduler.date.date_to_str;
 	var c=scheduler.config;
 	var f = function(a,b){
 		for (var c in b)
 			if (!a[c]) a[c]=b[c];
-	}
+	};
 	f(scheduler.templates,{
 		day_date:d(c.default_date),
 		month_date:d(c.month_date),
@@ -2680,8 +2819,8 @@ scheduler.init_templates=function(){
 			return ev.text;
 		}
 	});
-	this.callEvent("onTemplatesReady",[])
-}
+	this.callEvent("onTemplatesReady",[]);
+};
 
 
 
@@ -2696,6 +2835,8 @@ scheduler.clearAll=function(){
 	this.clear_view();
 };
 scheduler.addEvent=function(start_date,end_date,text,id,extra_data){
+	if(!arguments.length)
+		return this.addEventNow();
 	var ev=start_date;
 	if (arguments.length!=1){
 		ev=extra_data||{};
@@ -2703,12 +2844,17 @@ scheduler.addEvent=function(start_date,end_date,text,id,extra_data){
 		ev.end_date=end_date;
 		ev.text=text;
 		ev.id=id;
-	};
+	}
 	ev.id = ev.id||scheduler.uid();
 	ev.text = ev.text||"";
-	
+
 	if (typeof ev.start_date == "string")  ev.start_date=this.templates.api_date(ev.start_date);
 	if (typeof ev.end_date == "string")  ev.end_date=this.templates.api_date(ev.end_date);
+
+	var d = (this.config.event_duration||this.config.time_step)*60000;
+	if(ev.start_date.valueOf() == ev.end_date.valueOf())
+		ev.end_date.setTime(ev.end_date.valueOf()+d);
+
 	ev._timed=this.is_one_day_event(ev);
 
 	var is_new=!this._events[ev.id];
@@ -2717,15 +2863,17 @@ scheduler.addEvent=function(start_date,end_date,text,id,extra_data){
 	if (!this._loading)
 		this.callEvent(is_new?"onEventAdded":"onEventChanged",[ev.id,ev]);
 };
-scheduler.deleteEvent=function(id,silent){ 
+scheduler.deleteEvent=function(id,silent){
 	var ev=this._events[id];
-	if (!silent && !this.callEvent("onBeforeEventDelete",[id,ev])) return;
-	
+	if (!silent && (!this.callEvent("onBeforeEventDelete",[id,ev]) || !this.callEvent("onConfirmedBeforeEventDelete", [id,ev])))
+        return;
 	if (ev){
 		delete this._events[id];
 		this.unselect(id);
 		this.event_updated(ev);
 	}
+
+    this.callEvent("onEventDeleted", [id]);
 };
 scheduler.getEvent=function(id){
 	return this._events[id];
@@ -2751,6 +2899,7 @@ scheduler.changeEventId=function(id,new_id){
 	});
 	if (this._select_id==id) this._select_id=new_id;
 	if (this._edit_id==id) this._edit_id=new_id;
+    //if (this._drag_id==id) this._drag_id=new_id;
 	this.callEvent("onEventIdChange",[id,new_id]);
 };
 
@@ -2779,8 +2928,7 @@ scheduler.event_updated=function(ev,force){
 	else this.clear_event(ev.id);
 };
 scheduler.is_visible_events=function(ev){
-	if (ev.start_date<this._max_date && this._min_date<ev.end_date) return true;
-	return false;
+    return (ev.start_date<this._max_date && this._min_date<ev.end_date);
 };
 scheduler.is_one_day_event=function(ev){
 	var delta = ev.end_date.getDate()-ev.start_date.getDate();
@@ -2806,17 +2954,20 @@ scheduler.get_visible_events=function(){
 				
 	return stack;
 };
-scheduler.render_view_data=function(){
-	if (this._not_render) {
-		this._render_wait=true;
-		return;
+scheduler.render_view_data=function(evs, hold){
+	if(!evs){
+		if (this._not_render) {
+			this._render_wait=true;
+			return;
+		}
+		this._render_wait=false;
+
+		this.clear_view();
+		evs=this.get_visible_events();
 	}
-	this._render_wait=false;
-	
-	this.clear_view();
-	var evs=this.get_visible_events();
-	
+
 	if (this.config.multi_day && !this._table_view){
+		
 		var tvs = [];
 		var tvd = [];
 		for (var i=0; i < evs.length; i++){
@@ -2824,17 +2975,30 @@ scheduler.render_view_data=function(){
 				tvs.push(evs[i]);
 			else
 				tvd.push(evs[i]);
-		};
+		}
+
+		// multiday events
+        
+
+        
+		this._rendered_location = this._els['dhx_multi_day'][0];
 		this._table_view=true;
-		this.render_data(tvd);
-		this._table_view=false;		
-		this.render_data(tvs);
-	} else 
-		this.render_data(evs);	
+		this.render_data(tvd, hold);
+		this._table_view=false;
+
+		// normal events
+		this._rendered_location = this._els['dhx_cal_data'][0];
+		this._table_view=false;
+		this.render_data(tvs, hold);
+
+	} else {
+		this._rendered_location = this._els['dhx_cal_data'][0];
+		this.render_data(evs, hold);
+	}
 };
 scheduler.render_data=function(evs,hold){
 	evs=this._pre_render_events(evs,hold);
-	for (var i=0; i<evs.length; i++)
+    for (var i=0; i<evs.length; i++)
 		if (this._table_view)
 			this.render_event_bar(evs[i]);
 		else
@@ -2842,17 +3006,18 @@ scheduler.render_data=function(evs,hold){
 };
 scheduler._pre_render_events=function(evs,hold){
 	var hb = this.xy.bar_height;
-	var h_old = this._colsS.heights;	
+	var h_old = this._colsS.heights;
 	var h=this._colsS.heights=[0,0,0,0,0,0,0];
-	
+    var data = this._els["dhx_cal_data"][0];
+
 	if (!this._table_view) evs=this._pre_render_events_line(evs,hold); //ignore long events for now
 	else evs=this._pre_render_events_table(evs,hold);
-	
+
 	if (this._table_view){
 		if (hold)
 			this._colsS.heights = h_old;
 		else {
-			var evl = this._els["dhx_cal_data"][0].firstChild;
+			var evl = data.firstChild;
 			if (evl.rows){
 				for (var i=0; i<evl.rows.length; i++){
 					h[i]++;
@@ -2865,7 +3030,7 @@ scheduler._pre_render_events=function(evs,hold){
 						h[i]=(h[i-1]||0)+cells[0].offsetHeight;
 					}
 					h[i]=(h[i-1]||0)+evl.rows[i].cells[0].offsetHeight;
-				}	
+				}
 				h.unshift(0);
 				if (evl.parentNode.offsetHeight<evl.parentNode.scrollHeight && !evl._h_fix){
 					//we have v-scroll, decrease last day cell
@@ -2874,44 +3039,43 @@ scheduler._pre_render_events=function(evs,hold){
 						var w = cell.offsetWidth-scheduler.xy.scroll_width+"px";
 						cell.style.width = w;
 						cell.nextSibling.style.width = w;
-					}		
+					}
 					evl._h_fix=true;
 				}
 			} else{
-				
 				if (!evs.length && this._els["dhx_multi_day"][0].style.visibility == "visible")
 					h[0]=-1;
 				if (evs.length || h[0]==-1){
 					//shift days to have space for multiday events
 					var childs = evl.parentNode.childNodes;
-					var dh = (h[0]+1)*hb+"px";
-					for (var i=0; i<childs.length; i++)
-						if (this._colsS[i])
-							childs[i].style.top=dh;
+					var dh = ((h[0]+1)*hb+1)+"px"; // +1 so multiday events would have 2px from top and 2px from bottom by default
+					data.style.top = (this._els["dhx_cal_navline"][0].offsetHeight + this._els["dhx_cal_header"][0].offsetHeight + parseInt(dh)) + 'px';
+					data.style.height = (this._obj.offsetHeight - parseInt(data.style.top) - (this.xy.margin_top||0)) + 'px';
 					var last = this._els["dhx_multi_day"][0];
-					last.style.top = "0px";
 					last.style.height=dh;
 					last.style.visibility=(h[0]==-1?"hidden":"visible");
 					last=this._els["dhx_multi_day"][1];
 					last.style.height=dh;
 					last.style.visibility=(h[0]==-1?"hidden":"visible");
 					last.className=h[0]?"dhx_multi_day_icon":"dhx_multi_day_icon_small";
-					
 					this._dy_shift=(h[0]+1)*hb;
 					h[0] = 0;
-				}				
-				
+				}
 			}
 		}
 	}
-	
+
 	return evs;
 };
 scheduler._get_event_sday=function(ev){
 	return Math.floor((ev.start_date.valueOf()-this._min_date.valueOf())/(24*60*60*1000));
 };
 scheduler._pre_render_events_line=function(evs,hold){
-	evs.sort(function(a,b){ return a.start_date>b.start_date?1:-1; });
+	evs.sort(function(a,b){
+        if(a.start_date.valueOf()==b.start_date.valueOf())
+            return a.id>b.id?1:-1;
+        return a.start_date>b.start_date?1:-1;
+    });
 	var days=[]; //events by weeks
 	var evs_originals = [];
 	for (var i=0; i < evs.length; i++) {
@@ -2926,12 +3090,70 @@ scheduler._pre_render_events_line=function(evs,hold){
 		
 		if (!hold){
 			ev._inner=false;
+
 			var stack=days[ev._sday];
 			while (stack.length && stack[stack.length-1].end_date<=ev.start_date)
 				stack.splice(stack.length-1,1);
-			if (stack.length) stack[stack.length-1]._inner=true;
-			ev._sorder=stack.length; stack.push(ev);
-			if (stack.length>(stack.max_count||0)) stack.max_count=stack.length;
+
+            var sorderSet = false;
+            for(var j=0; j<stack.length; j++){
+                if(stack[j].end_date.valueOf()<ev.start_date.valueOf()){
+                    sorderSet = true;
+                    ev._sorder=stack[j]._sorder;
+                    stack.splice(j,1);
+                    ev._inner=true;
+                    break;
+                }
+            }
+
+            if (stack.length)
+                stack[stack.length-1]._inner=true;
+
+
+            if (!sorderSet) {
+                if (stack.length) {
+                    if (stack.length <= stack[stack.length - 1]._sorder) {
+                        if (!stack[stack.length - 1]._sorder)
+                            ev._sorder = 0;
+                        else
+                            for (j = 0; j < stack.length; j++) {
+                                var _is_sorder = false;
+                                for (k = 0; k < stack.length; k++) {
+                                    if (stack[k]._sorder == j) {
+                                        _is_sorder = true;
+                                        break;
+                                    }
+                                }
+                                if (!_is_sorder) {
+                                    ev._sorder = j;
+                                    break;
+                                }
+                            }
+                        ev._inner = true;
+                    }
+                    else {
+                        var _max_sorder = stack[0]._sorder;
+                        for (j = 1; j < stack.length; j++)
+                            if (stack[j]._sorder > _max_sorder)
+                                _max_sorder = stack[j]._sorder;
+                        ev._sorder = _max_sorder + 1;
+                        ev._inner = false;
+                    }
+
+                }
+                else
+                    ev._sorder = 0;
+            }
+
+			stack.push(ev);            
+
+            if (stack.length>(stack.max_count||0)) {
+                stack.max_count=stack.length;
+                ev._count=stack.length;
+            }
+            else {
+                ev._count=(ev._count)?ev._count:1;
+            }
 		}
 		
 		if (sh < this.config.first_hour || eh >= this.config.last_hour){
@@ -2949,23 +3171,23 @@ scheduler._pre_render_events_line=function(evs,hold){
 				evs.splice(i,1); i--; continue;
 			}
 		}
-				
 	}
 	if (!hold){
-		for (var i=0; i < evs.length; i++) 
-			evs[i]._count=days[evs[i]._sday].max_count;
-		for (var i=0; i < evs_originals.length; i++) 
+		for (var i=0; i < evs.length; i++) {
+            evs[i]._count = days[evs[i]._sday].max_count;
+        }
+		for (var i=0; i < evs_originals.length; i++)
 			evs_originals[i]._count=days[evs_originals[i]._sday].max_count;
 	}
 	
 	return evs;
 };
 scheduler._time_order=function(evs){
-	evs.sort(function(a,b){ 
+	evs.sort(function(a,b){
 		if (a.start_date.valueOf()==b.start_date.valueOf()){
 			if (a._timed && !b._timed) return 1;
 			if (!a._timed && b._timed) return -1;
-			return 0;
+			return a.id>b.id?1:-1;
 		}
 		return a.start_date>b.start_date?1:-1;
 	});
@@ -3004,8 +3226,10 @@ scheduler._pre_render_events_table=function(evs,hold){ // max - max height of we
 		for (stack_line=0; stack_line<stack.length; stack_line++)
 			if (stack[stack_line]._eday<=ev._sday)
 				break;
-		ev._sorder=stack_line; 
-		
+
+		if(!ev._sorder || !hold ) {
+			ev._sorder=stack_line;
+		}
 		
 		if (ev._sday+ev._length<=cols){
 			start_date=null;
@@ -3027,7 +3251,7 @@ scheduler._pre_render_events_table=function(evs,hold){ // max - max height of we
 			max[ev._sweek]=stack.length-1;
 			i--; continue;  //repeat same step
 		}
-	};
+	}
 	
 	return out;
 };
@@ -3051,8 +3275,8 @@ scheduler.clear_view=function(){
 scheduler.updateEvent=function(id){
 	var ev=this.getEvent(id);
 	this.clear_event(id);
-	if (ev && this.is_visible_events(ev)) 
-		this.render_data([ev],true);
+	if (ev && this.is_visible_events(ev))
+		this.render_view_data([ev], true);
 };
 scheduler.clear_event=function(id){
 	this.for_rendered(id,function(node,i){
@@ -3075,9 +3299,14 @@ scheduler.render_event=function(ev){
 	var width=Math.floor((parent.clientWidth-menu)/ev._count);
 	var left=ev._sorder*width+1;
 	if (!ev._inner) width=width*(ev._count-ev._sorder);
-	
-	
-	
+    if(this.config.cascade_event_display) {
+        var limit = this.config.cascade_event_count;
+        var margin = this.config.cascade_event_margin;
+        left = ev._sorder%limit*margin;
+        var right = (ev._inner)?(ev._count-ev._sorder-1)%limit*margin/2:0;
+        width=Math.floor(parent.clientWidth-menu-left-right);
+    }
+		
 	var d=this._render_v_bar(ev.id,menu+left,top,width,height,ev._text_style,scheduler.templates.event_header(ev.start_date,ev.end_date,ev),scheduler.templates.event_text(ev.start_date,ev.end_date,ev));
 		
 	this._rendered.push(d);
@@ -3085,11 +3314,11 @@ scheduler.render_event=function(ev){
 	
 	left=left+parseInt(parent.style.left,10)+menu;
 	
-	top+=this._dy_shift; //corrupt top, to include possible multi-day shift
 	if (this._edit_id==ev.id){
+
 		d.style.zIndex = 1; //fix overlapping issue
 		width=Math.max(width-4,scheduler.xy.editor_width);
-		var d=document.createElement("DIV");
+		d=document.createElement("DIV");
 		d.setAttribute("event_id",ev.id);
 		this.set_xy(d,width,height-20,left,top+14);
 		d.className="dhx_cal_editor";
@@ -3116,15 +3345,18 @@ scheduler.render_event=function(ev){
 		//IE and opera can add x-scroll during focusing
 		this._els["dhx_cal_data"][0].scrollLeft=0;
 		d2.firstChild.select();
+		
 	}
-	
 	if (this._select_id==ev.id){
-		//d.style.zIndex = 1; //fix overlapping issue
+        if(this.config.cascade_event_display && this._drag_mode)
+		    d.style.zIndex = 1; //fix overlapping issue for cascade view in case of dnd of selected event
 		var icons=this.config["icons_"+((this._edit_id==ev.id)?"edit":"select")];
 		var icons_str="";
+        var bg_color = (ev.color?("background-color:"+ev.color+";"):"");
+        var color = (ev.textColor?("color:"+ev.textColor+";"):"");
 		for (var i=0; i<icons.length; i++)
-			icons_str+="<div class='dhx_menu_icon "+icons[i]+"' title='"+this.locale.labels[icons[i]]+"'></div>";
-		var obj = this._render_v_bar(ev.id,left-menu+1,top,menu,icons.length*20+26,"","<div class='dhx_menu_head'></div>",icons_str,true);
+			icons_str+="<div class='dhx_menu_icon "+icons[i]+"' style='"+bg_color+""+color+"' title='"+this.locale.labels[icons[i]]+"'></div>";
+		var obj = this._render_v_bar(ev.id,left-menu+1,top,menu,icons.length*20+26,"","<div style='"+bg_color+""+color+"' class='dhx_menu_head'></div>",icons_str,true);
 		obj.style.left=left-menu+1;
 		this._els["dhx_cal_data"][0].appendChild(obj);
 		this._rendered.push(obj);
@@ -3132,17 +3364,19 @@ scheduler.render_event=function(ev){
 };
 scheduler._render_v_bar=function(id,x,y,w,h,style,contentA,contentB,bottom){
 	var d=document.createElement("DIV");
-	
 	var ev = this.getEvent(id);
 	var cs = "dhx_cal_event";
 	var cse = scheduler.templates.event_class(ev.start_date,ev.end_date,ev);
 	if (cse) cs=cs+" "+cse;
+
+    var bg_color = (ev.color?("background-color:"+ev.color+";"):"");
+    var color = (ev.textColor?("color:"+ev.textColor+";"):"");
 	
 	var html='<div event_id="'+id+'" class="'+cs+'" style="position:absolute; top:'+y+'px; left:'+x+'px; width:'+(w-4)+'px; height:'+h+'px;'+(style||"")+'">';
-	html+='<div class="dhx_header" style=" width:'+(w-6)+'px;" >&nbsp;</div>';
-	html+='<div class="dhx_title">'+contentA+'</div>';
-	html+='<div class="dhx_body" style=" width:'+(w-(this._quirks?4:14))+'px; height:'+(h-(this._quirks?20:30))+'px;">'+contentB+'</div>';
-	html+='<div class="dhx_footer" style=" width:'+(w-8)+'px;'+(bottom?' margin-top:-1px;':'')+'" ></div></div>';
+	html+='<div class="dhx_header" style=" width:'+(w-6)+'px;'+bg_color+'" >&nbsp;</div>';
+	html+='<div class="dhx_title" style="'+bg_color+''+color+'">'+contentA+'</div>';
+	html+='<div class="dhx_body" style=" width:'+(w-(this._quirks?4:14))+'px; height:'+(h-(this._quirks?20:30))+'px;'+bg_color+''+color+'">'+contentB+'</div>';
+	html+='<div class="dhx_footer" style=" width:'+(w-8)+'px;'+(bottom?' margin-top:-1px;':'')+''+bg_color+''+color+'" ></div></div>';
 	
 	d.innerHTML=html;
 	return d.firstChild;
@@ -3158,22 +3392,25 @@ scheduler.locate_holder_day=function(date,past){
 	return day;
 };
 scheduler.render_event_bar=function(ev){
-	var parent=this._els["dhx_cal_data"][0];
+	var parent=this._rendered_location;
 
 	var x=this._colsS[ev._sday];
 	var x2=this._colsS[ev._eday];
 	if (x2==x) x2=this._colsS[ev._eday+1];
 	var hb = this.xy.bar_height;
 	
-	var y=this._colsS.heights[ev._sweek]+(this._colsS.height?(this.xy.month_scale_height+2):2)+ev._sorder*hb; 
+	var y=this._colsS.heights[ev._sweek]+(this._colsS.height?(this.xy.month_scale_height+2):2)+(ev._sorder*hb);
 			
 	var d=document.createElement("DIV");
 	var cs = ev._timed?"dhx_cal_event_clear":"dhx_cal_event_line";
 	var cse = scheduler.templates.event_class(ev.start_date,ev.end_date,ev);
-	if (cse) cs=cs+" "+cse; 
+	if (cse) cs=cs+" "+cse;
+
+    var bg_color = (ev.color?("background-color:"+ev.color+";"):"");
+    var color = (ev.textColor?("color:"+ev.textColor+";"):"");
 	
-	var html='<div event_id="'+ev.id+'" class="'+cs+'" style="position:absolute; top:'+y+'px; left:'+x+'px; width:'+(x2-x-15)+'px;'+(ev._text_style||"")+'">';
-		
+	var html='<div event_id="'+ev.id+'" class="'+cs+'" style="position:absolute; top:'+y+'px; left:'+x+'px; width:'+(x2-x-15)+'px;'+color+''+bg_color+''+(ev._text_style||"")+'">';
+	
 	if (ev._timed)
 		html+=scheduler.templates.event_bar_date(ev.start_date,ev.end_date,ev);
 	html+=scheduler.templates.event_bar_text(ev.start_date,ev.end_date,ev)+'</div>';
@@ -3230,6 +3467,7 @@ scheduler.getEvents = function(from,to){
 	}
 	return result;
 };
+
 scheduler._loaded={};
 scheduler._load=function(url,from){
 	url=url||this._load_url;
@@ -3270,13 +3508,14 @@ scheduler._load=function(url,from){
 		dhtmlxAjax.get(url,function(l){scheduler.on_load(l);});
 	this.callEvent("onXLS",[]);
 	return true;
-}
+};
 scheduler.on_load=function(loader){
 	this._loading=true;
+    var evs;
 	if (this._process)
-		var evs=this[this._process].parse(loader.xmlDoc.responseText);
+		evs=this[this._process].parse(loader.xmlDoc.responseText);
 	else
-		var evs=this._magic_parser(loader);
+		evs=this._magic_parser(loader);
 	
 	this._not_render=true;
 	for (var i=0; i<evs.length; i++){
@@ -3285,12 +3524,13 @@ scheduler.on_load=function(loader){
 	}
 	this._not_render=false;
 	if (this._render_wait) this.render_view_data();
-	
+
+    this._loading=false;
 	if (this._after_call) this._after_call();
 	this._after_call=null;
-	this._loading=false;
+
 	this.callEvent("onXLE",[]);
-}
+};
 scheduler.json={};
 scheduler.json.parse = function(data){
 	if (typeof data == "string"){
@@ -3304,11 +3544,11 @@ scheduler.json.parse = function(data){
 		evs.push(data[i]);
 	}
 	return evs;
-}
+};
 scheduler.parse=function(data,type){
 	this._process=type;
 	this.on_load({xmlDoc:{responseText:data}});
-}
+};
 scheduler.load=function(url,call){
 	if (typeof call == "string"){
 		this._process=call;
@@ -3332,20 +3572,23 @@ scheduler.refresh=function(refresh_all){
 	this._loaded={};
 	this._load();
 	*/
-}
-scheduler.serverList=function(name){
+};
+scheduler.serverList=function(name, array){
+	if(array) {
+		return this.serverList[name] = array.slice(0);
+	}
 	return this.serverList[name] = (this.serverList[name]||[]);
-}
-
+};
 scheduler._userdata={};
 scheduler._magic_parser=function(loader){
+    var xml;
 	if (!loader.getXMLTopNode){ //from a string
 		var xml_string = loader.xmlDoc.responseText;
 		loader = new dtmlXMLLoaderObject(function(){});
 		loader.loadXMLString(xml_string);
 	}
 	
-	var xml=loader.getXMLTopNode("data");
+	xml=loader.getXMLTopNode("data");
 	if (xml.tagName!="data") return [];//not an xml
 	
 	var opts = loader.doXPath("//coll_options");
@@ -3355,8 +3598,18 @@ scheduler._magic_parser=function(loader){
 		if (!arr) continue;
 		arr.splice(0,arr.length);	//clear old options
 		var itms = loader.doXPath(".//item",opts[i]);
-		for (var j=0; j < itms.length; j++)
-			arr.push({ key:itms[j].getAttribute("value"), label:itms[j].getAttribute("label")});
+		for (var j=0; j < itms.length; j++) {
+			var itm = itms[j];
+			var attrs = itm.attributes;
+			var obj = { key:itms[j].getAttribute("value"), label:itms[j].getAttribute("label")};
+			for (var k = 0; k < attrs.length; k++) {
+				var attr = attrs[k];
+				if(attr.nodeName == "value" || attr.nodeName == "label")
+					continue;
+				obj[attr.nodeName] = attr.nodeValue;
+			}
+			arr.push(obj);
+		}
 	}
 	if (opts.length)
 		scheduler.callEvent("onOptionsLoad",[]);
@@ -3365,21 +3618,21 @@ scheduler._magic_parser=function(loader){
 	for (var i=0; i < ud.length; i++) {
 		var udx = this.xmlNodeToJSON(ud[i]);
 		this._userdata[udx.name]=udx.text;
-	};
+	}
 	
 	var evs=[];
-	var xml=loader.doXPath("//event");
+	xml=loader.doXPath("//event");
 	
 	
 	for (var i=0; i < xml.length; i++) {
-		evs[i]=this.xmlNodeToJSON(xml[i])
+		evs[i]=this.xmlNodeToJSON(xml[i]);
 		
 		evs[i].text=evs[i].text||evs[i]._tagvalue;
 		evs[i].start_date=this.templates.xml_date(evs[i].start_date);
 		evs[i].end_date=this.templates.xml_date(evs[i].end_date);
 	}
 	return evs;
-}
+};
 scheduler.xmlNodeToJSON = function(node){
         var t={};
         for (var i=0; i<node.attributes.length; i++)
@@ -3394,8 +3647,7 @@ scheduler.xmlNodeToJSON = function(node){
         if (!t.text) t.text=node.firstChild?node.firstChild.nodeValue:"";
         
         return t;
-}
-
+};
 scheduler.attachEvent("onXLS",function(){
 	if (this.config.show_loading===true){
 		var t;
@@ -3480,7 +3732,39 @@ scheduler.ical={
 	e_end:"END:VEVENT",
 	c_end:"END:VCALENDAR"	
 };
+scheduler.formSection = function(name){
+	var config = this.config.lightbox.sections;
+	var i =0;
+	for (i; i < config.length; i++)
+		if (config[i].name == name)
+			break;
+	var section = config[i];
+	var node = document.getElementById(section.id).nextSibling;
+
+	return {
+		getValue:function(ev){
+			return scheduler.form_blocks[section.type].get_value(node, (ev||{}), section);
+		},
+		setValue:function(value, ev){
+			return scheduler.form_blocks[section.type].set_value(node, value, (ev||{}), section);
+		}
+	};
+};
 scheduler.form_blocks={
+    template:{
+        render: function(sns){
+        	var height=(sns.height||"30")+"px";
+            return "<div class='dhx_cal_ltext dhx_cal_template' style='height:"+height+";'></div>";
+        },
+        set_value:function(node,value,ev,config){ 
+            node.innerHTML = value||"";
+        },
+        get_value:function(node,ev,config){
+            return node.innerHTML||"";
+        },
+        focus: function(node){
+        }
+    },
 	textarea:{
 		render:function(sns){
 			var height=(sns.height||"130")+"px";
@@ -3499,7 +3783,7 @@ scheduler.form_blocks={
 	select:{
 		render:function(sns){
 			var height=(sns.height||"23")+"px";
-			var html="<div class='dhx_cal_ltext' style='height:"+height+";'><select style='width:552px;'>";
+			var html="<div class='dhx_cal_ltext' style='height:"+height+";'><select style='width:100%;'>";
 			for (var i=0; i < sns.options.length; i++)
 				html+="<option value='"+sns.options[i].key+"'>"+sns.options[i].label+"</option>";
 			html+="</select></div>";
@@ -3530,10 +3814,16 @@ scheduler.form_blocks={
 			}
 				
 			var html="<select>";
-			for (var i=first; i<last; i+=this.config.time_step*1){
+			var i = first;
+			var tdate = dt.getDate();
+
+			while(i<last){
 				var time=this.templates.time_picker(dt);
 				html+="<option value='"+i+"'>"+time+"</option>";
-				dt=this.date.add(dt,this.config.time_step,"minute");
+
+				dt.setTime(dt.valueOf()+this.config.time_step*60*1000);
+                var diff = (dt.getDate()!=tdate)?1:0; // moved or not to the next day
+                i=diff*24*60+dt.getHours()*60+dt.getMinutes();
 			}
 			
 			//days
@@ -3553,20 +3843,24 @@ scheduler.form_blocks={
 				html+="<option value='"+(dt+i)+"'>"+(dt+i)+"</option>";
 			html+="</select> ";
 			
-			return "<div style='height:30px; padding-top:0px; font-size:inherit;' class='dhx_cal_lsection dhx_section_time'>"+html+"<span style='font-weight:normal; font-size:10pt;'> &nbsp;&ndash;&nbsp; </span>"+html+"</div>";			
+			return "<div style='height:30px;padding-top:0px;font-size:inherit;' class='dhx_section_time'>"+html+"<span style='font-weight:normal; font-size:10pt;'> &nbsp;&ndash;&nbsp; </span>"+html+"</div>";			
 
 		},
 		set_value:function(node,value,ev){
+
 
 			var s=node.getElementsByTagName("select");
 
 			if(scheduler.config.full_day) {
 				if (!node._full_day){
-					node.previousSibling.innerHTML+="<div class='dhx_fullday_checkbox'><label><input type='checkbox' name='full_day' value='true'> "+scheduler.locale.labels.full_day+"&nbsp;</label></input></div>";
+					var html = "<label class='dhx_fullday'><input type='checkbox' name='full_day' value='true'> "+scheduler.locale.labels.full_day+"&nbsp;</label></input>";
+					if (!scheduler.config.wide_form)
+						html = node.previousSibling.innerHTML+html;
+					node.previousSibling.innerHTML=html;
 					node._full_day=true;
 				}
 				var input=node.previousSibling.getElementsByTagName("input")[0];
-				var isFulldayEvent = (scheduler.date.time_part(ev.start_date)==0 && scheduler.date.time_part(ev.end_date)==0 && ev.end_date.valueOf()-ev.start_date.valueOf() < 2*24*60*60*1000);
+				var isFulldayEvent = (scheduler.date.time_part(ev.start_date)===0 && scheduler.date.time_part(ev.end_date)===0 && ev.end_date.valueOf()-ev.start_date.valueOf() < 2*24*60*60*1000);
 				input.checked = isFulldayEvent;
 				
 				for(var k in s)
@@ -3578,14 +3872,14 @@ scheduler.form_blocks={
 						var end_date = new Date(ev.end_date);
 						
 						scheduler.date.date_part(start_date);
-						end_date = scheduler.date.add(start_date, 1, "day")
+						end_date = scheduler.date.add(start_date, 1, "day");
 					} 
 					for(var i in s)
 						s[i].disabled=input.checked;
 					
 					_fill_lightbox_select(s,0,start_date||ev.start_date);
 					_fill_lightbox_select(s,4,end_date||ev.end_date);
-				}
+				};
 			}
 			
 			if(scheduler.config.auto_end_date && scheduler.config.event_duration) {
@@ -3620,16 +3914,29 @@ scheduler.form_blocks={
 			node.getElementsByTagName("select")[0].focus(); 
 		}
 	}
-}
+};
 scheduler.showCover=function(box){
-	this.show_cover();
 	if (box){
 		box.style.display="block";
-		var pos = getOffset(this._obj);
-		box.style.top=Math.round(pos.top+(this._obj.offsetHeight-box.offsetHeight)/2)+"px";
-		box.style.left=Math.round(pos.left+(this._obj.offsetWidth-box.offsetWidth)/2)+"px";	
+
+		var scroll_top = window.pageYOffset||document.body.scrollTop||document.documentElement.scrollTop;
+		var scroll_left = window.pageXOffset||document.body.scrollLeft||document.documentElement.scrollLeft;
+
+        var view_height = window.innerHeight||document.documentElement.clientHeight;
+
+        if(scroll_top) // if vertical scroll on window
+			box.style.top=Math.round(scroll_top+Math.max((view_height-box.offsetHeight)/2, 0))+"px";
+		else // vertical scroll on body
+			box.style.top=Math.round(Math.max(((view_height-box.offsetHeight)/2), 0) + 9)+"px"; // +9 for compatibility with auto tests
+
+		// not quite accurate but used for compatibility reasons
+		if(document.documentElement.scrollWidth > document.body.offsetWidth) // if horizontal scroll on the window
+			box.style.left=Math.round(scroll_left+(document.body.offsetWidth-box.offsetWidth)/2)+"px";
+		else // horizontal scroll on the body
+			box.style.left=Math.round((document.body.offsetWidth-box.offsetWidth)/2)+"px";
 	}
-}
+    this.show_cover();
+};
 scheduler.showLightbox=function(id){
 	if (!id) return;
 	if (!this.callEvent("onBeforeLightbox",[id])) return;
@@ -3637,7 +3944,7 @@ scheduler.showLightbox=function(id){
 	this.showCover(box);
 	this._fill_lightbox(id,box);
 	this.callEvent("onLightbox",[id]);
-}
+};
 scheduler._fill_lightbox=function(id,box){ 
 	var ev=this.getEvent(id);
 	var s=box.getElementsByTagName("span");
@@ -3654,24 +3961,25 @@ scheduler._fill_lightbox=function(id,box){
 	for (var i=0; i < sns.length; i++) {
 		var node=document.getElementById(sns[i].id).nextSibling;
 		var block=this.form_blocks[sns[i].type];
-		block.set_value.call(this,node,ev[sns[i].map_to],ev, sns[i])
+		block.set_value.call(this,node,ev[sns[i].map_to],ev, sns[i]);
 		if (sns[i].focus)
 			block.focus.call(this,node);
-	};
+	}
 	
 	scheduler._lightbox_id=id;
-}
+};
 scheduler._lightbox_out=function(ev){
 	var sns = this.config.lightbox.sections;	
 	for (var i=0; i < sns.length; i++) {
-		var node=document.getElementById(sns[i].id).nextSibling;
+        var node = document.getElementById(sns[i].id);
+		node=(node?node.nextSibling:node);
 		var block=this.form_blocks[sns[i].type];
 		var res=block.get_value.call(this,node,ev, sns[i]);
 		if (sns[i].map_to!="auto")
 			ev[sns[i].map_to]=res;
 	}
 	return ev;
-}
+};
 scheduler._empty_lightbox=function(){
 	var id=scheduler._lightbox_id;
 	var ev=this.getEvent(id);
@@ -3681,38 +3989,41 @@ scheduler._empty_lightbox=function(){
 	
 	ev._timed=this.is_one_day_event(ev);
 	this.setEvent(ev.id,ev);
-	this._edit_stop_event(ev,true)
+	this._edit_stop_event(ev,true);
 	this.render_view_data();
-}
+};
 scheduler.hide_lightbox=function(id){
 	this.hideCover(this._get_lightbox());
 	this._lightbox_id=null;
 	this.callEvent("onAfterLightbox",[]);
-}
+};
 scheduler.hideCover=function(box){
 	if (box) box.style.display="none";
 	this.hide_cover();
-}
+};
 scheduler.hide_cover=function(){
 	if (this._cover) 
 		this._cover.parentNode.removeChild(this._cover);
 	this._cover=null;
-}
+};
 scheduler.show_cover=function(){
 	this._cover=document.createElement("DIV");
 	this._cover.className="dhx_cal_cover";
+	var _document_height = ((document.height !== undefined) ? document.height : document.body.offsetHeight);
+	var _scroll_height = ((document.documentElement) ? document.documentElement.scrollHeight : 0);
+	this._cover.style.height = Math.max(_document_height, _scroll_height) + 'px';
 	document.body.appendChild(this._cover);
-}
+};
 scheduler.save_lightbox=function(){
-	if (this.checkEvent("onEventSave") && 						!this.callEvent("onEventSave",[this._lightbox_id,this._lightbox_out({ id: this._lightbox_id}), this._new_event]))
+	if (this.checkEvent("onEventSave") && !this.callEvent("onEventSave",[this._lightbox_id,this._lightbox_out({ id: this._lightbox_id}), this._new_event]))
 		return;
-	this._empty_lightbox()
+	this._empty_lightbox();
 	this.hide_lightbox();
 };
 scheduler.startLightbox = function(id, box){
 	this._lightbox_id=id;
 	this.showCover(box);
-}
+};
 scheduler.endLightbox = function(mode, box){
 	this._edit_stop_event(scheduler.getEvent(this._lightbox_id),mode);
 	if (mode)
@@ -3720,6 +4031,8 @@ scheduler.endLightbox = function(mode, box){
 	this.hideCover(box);
 };
 scheduler.resetLightbox = function(){
+	if (scheduler._lightbox) 
+		scheduler._lightbox.parentNode.removeChild(scheduler._lightbox);
 	scheduler._lightbox = null;
 };
 scheduler.cancel_lightbox=function(){
@@ -3749,15 +4062,18 @@ scheduler._init_lightbox_events=function(){
 					break;
 					
 				default:
-					if (src.className.indexOf("dhx_custom_button_")!=-1){
+					if (src.getAttribute("dhx_button")){
+						scheduler.callEvent("onLightboxButton", [src.className, src, e]);
+					} else if (src.className.indexOf("dhx_custom_button_")!=-1){
 						var index = src.parentNode.getAttribute("index");
 						var block=scheduler.form_blocks[scheduler.config.lightbox.sections[index].type];
 						var sec = src.parentNode.parentNode;
 						block.button_click(index,src,sec,sec.nextSibling);	
 					}
+					break;
 			}
 	};
-	this._get_lightbox().onkeypress=function(e){
+	this._get_lightbox().onkeydown=function(e){
 		switch((e||event).keyCode){
 			case scheduler.keys.edit_save:
 				if ((e||event).shiftKey) return;
@@ -3766,9 +4082,11 @@ scheduler._init_lightbox_events=function(){
 			case scheduler.keys.edit_cancel:
 				scheduler.cancel_lightbox();
 				break;
+			default:
+				break;
 		}
-	}
-}
+	};
+};
 scheduler.setLightboxSize=function(){
 	var d = this._lightbox;
 	if (!d) return;
@@ -3778,36 +4096,92 @@ scheduler.setLightboxSize=function(){
 	con.style.height=con.scrollHeight+"px";		
 	d.style.height=con.scrollHeight+50+"px";		
 	con.style.height=con.scrollHeight+"px";		 //it is incredible , how ugly IE can be 	
-}
+};
 
-scheduler._get_lightbox=function(){
+scheduler._init_dnd_events = function(){
+	dhtmlxEvent(document.body, "mousemove", scheduler._move_while_dnd);
+	dhtmlxEvent(document.body, "mouseup", scheduler._finish_dnd);
+	scheduler._init_dnd_events = function(){};
+};
+scheduler._move_while_dnd = function(e){
+	if (scheduler._dnd_start_lb){
+		if (!document.dhx_unselectable){
+			document.body.className += " dhx_unselectable";
+			document.dhx_unselectable = true;
+		}
+		var lb = scheduler._get_lightbox();	
+		var now = (e&&e.target)?[e.pageX, e.pageY]:[event.clientX, event.clientY];
+		lb.style.top = scheduler._lb_start[1]+now[1]-scheduler._dnd_start_lb[1]+"px";
+		lb.style.left = scheduler._lb_start[0]+now[0]-scheduler._dnd_start_lb[0]+"px";
+	}
+};
+scheduler._ready_to_dnd = function(e){
+	var lb = scheduler._get_lightbox();
+	scheduler._lb_start = [parseInt(lb.style.left,10), parseInt(lb.style.top,10)];
+	scheduler._dnd_start_lb = (e&&e.target)?[e.pageX, e.pageY]:[event.clientX, event.clientY];
+};
+scheduler._finish_dnd = function(){
+	if (scheduler._lb_start){
+		scheduler._lb_start = scheduler._dnd_start_lb = false;
+		document.body.className = document.body.className.replace(" dhx_unselectable","");
+		document.dhx_unselectable = false;
+	}
+};
+scheduler._get_lightbox=function(){ //scheduler.config.wide_form=true;
 	if (!this._lightbox){
 		var d=document.createElement("DIV");
 		d.className="dhx_cal_light";
+		if (scheduler.config.wide_form)
+			d.className+=" dhx_cal_light_wide";
+		if (scheduler.form_blocks.recurring)
+			d.className+=" dhx_cal_light_rec";
+			
 		if (/msie|MSIE 6/.test(navigator.userAgent))
 			d.className+=" dhx_ie6";
 		d.style.visibility="hidden";
-		d.innerHTML=this._lightbox_template;
+		var html = this._lightbox_template
+		var buttons = this.config.buttons_left;
+		scheduler.locale.labels["dhx_save_btn"] = scheduler.locale.labels.icon_save;
+		scheduler.locale.labels["dhx_cancel_btn"] = scheduler.locale.labels.icon_cancel;
+		scheduler.locale.labels["dhx_delete_btn"] = scheduler.locale.labels.icon_delete;
+		for (var i = 0; i < buttons.length; i++)
+			html+="<div class='dhx_btn_set'><div dhx_button='1' class='"+buttons[i]+"'></div><div>"+scheduler.locale.labels[buttons[i]]+"</div></div>";
+		buttons = this.config.buttons_right;
+		for (var i = 0; i < buttons.length; i++)
+			html+="<div class='dhx_btn_set' style='float:right;'><div dhx_button='1' class='"+buttons[i]+"'></div><div>"+scheduler.locale.labels[buttons[i]]+"</div></div>";
+		
+		html+="</div>";
+		d.innerHTML=html;
+		if (scheduler.config.drag_lightbox){
+			d.firstChild.onmousedown = scheduler._ready_to_dnd;
+			d.firstChild.onselectstart = function(){ return false; };
+			d.firstChild.style.cursor = "pointer";
+			scheduler._init_dnd_events();
+			
+		}
 		document.body.insertBefore(d,document.body.firstChild);
 		this._lightbox=d;
 		
 		var sns=this.config.lightbox.sections;
-		var html="";
+		html="";
 		for (var i=0; i < sns.length; i++) {
 			var block=this.form_blocks[sns[i].type];
 			if (!block) continue; //ignore incorrect blocks
 			sns[i].id="area_"+this.uid();
 			var button = "";
-			if (sns[i].button) button = "<div style='float:right;' class='dhx_custom_button' index='"+i+"'><div class='dhx_custom_button_"+sns[i].name+"'></div><div>"+this.locale.labels["button_"+sns[i].button]+"</div></div>";
+			if (sns[i].button){
+			 	button = "<div class='dhx_custom_button' index='"+i+"'><div class='dhx_custom_button_"+sns[i].button+"'></div><div>"+this.locale.labels["button_"+sns[i].button]+"</div></div>";
+			 }
+			
+			if (this.config.wide_form){
+				html+="<div class='dhx_wrap_section'>";
+			}
 			html+="<div id='"+sns[i].id+"' class='dhx_cal_lsection'>"+button+this.locale.labels["section_"+sns[i].name]+"</div>"+block.render.call(this,sns[i]);
-		};
+			html+="</div>"
+		}
 		
-	
 		//localization
 		var ds=d.getElementsByTagName("div");
-		ds[4].innerHTML=scheduler.locale.labels.icon_save;
-		ds[7].innerHTML=scheduler.locale.labels.icon_cancel;
-		ds[10].innerHTML=scheduler.locale.labels.icon_delete;
 		//sections
 		ds[1].innerHTML=html;
 		//sizes
@@ -3818,8 +4192,9 @@ scheduler._get_lightbox=function(){
 		d.style.visibility="visible";
 	}
 	return this._lightbox;
-}
-scheduler._lightbox_template="<div class='dhx_cal_ltitle'><span class='dhx_mark'>&nbsp;</span><span class='dhx_time'></span><span class='dhx_title'></span></div><div class='dhx_cal_larea'></div><div class='dhx_btn_set'><div class='dhx_save_btn'></div><div>&nbsp;</div></div><div class='dhx_btn_set'><div class='dhx_cancel_btn'></div><div>&nbsp;</div></div><div class='dhx_btn_set' style='float:right;'><div class='dhx_delete_btn'></div><div>&nbsp;</div></div>";
+};
+scheduler._lightbox_template="<div class='dhx_cal_ltitle'><span class='dhx_mark'>&nbsp;</span><span class='dhx_time'></span><span class='dhx_title'></span></div><div class='dhx_cal_larea'></div>";
+
 scheduler._dp_init=function(dp){
 	dp._methods=["setEventTextStyle","","changeEventId","deleteEvent"];
 	
@@ -3827,7 +4202,7 @@ scheduler._dp_init=function(dp){
 		if (!this._loading && this.validId(id))
 			dp.setUpdated(id,true,"inserted");
 	});
-	this.attachEvent("onBeforeEventDelete",function(id){
+	this.attachEvent("onConfirmedBeforeEventDelete", function(id){
 		if (!this.validId(id)) return;
         var z=dp.getState(id);
         

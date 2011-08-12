@@ -64,4 +64,54 @@
         </board>
     </form>
 </t>
+<div t-name="ConfigOverview" class="oe-dashboard-config-overview">
+    <div class="oe-config-progress">
+        <h6 class="oe-config-progress-title">
+            progress: <t t-esc="Math.round(completion)"/>%
+        </h6>
+        <div class="oe-config-progress-bar" t-att-data-completion="completion"/>
+    </div>
+    <dl>
+        <t t-foreach="groups" t-as="category">
+            <dt><t t-esc="category"/></dt>
+            <dd><ul>
+                <li t-foreach="category_value" t-as="todo"
+                    t-att-class="todo.done ? 'oe-done' : undefined"
+                    t-att-data-id="todo.id"
+                    t-att-title="!todo.done ? 'Execute task \'' + todo.name + '\'' : undefined">
+                    <input type="checkbox" t-att-value="todo.id"
+                       t-att-title="!todo.done ? 'Mark this task as done' : undefined"
+                       t-att-checked="todo.done ? 'checked' : undefined"/>
+                    <t t-esc="todo.name"/>
+                </li>
+            </ul></dd>
+        </t>
+
+    </dl>
+</div>
+<div t-name="ApplicationTiles" class="oe-dashboard-home-tiles">
+    <table width="100%">
+        <tr t-foreach="rows" t-as="row">
+            <td t-foreach="row" t-as="application" width="33.3%">
+                <div class="oe-dashboard-home-tile"
+                     t-att-data-menuid="application.id">
+                    <div class="oe-dashboard-home-tile-icon">
+                        <img t-if="application.web_icon_data"
+                            t-att-src="'data:image/png;base64,' + application.web_icon_data"
+                        /><img t-if="application.web_icon_hover_data" class="hover"
+                            t-att-src="'data:image/png;base64,' + application.web_icon_hover_data"/>
+                    </div>
+                    <span><t t-esc="application.name"/></span>
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>
+<div t-name="HomeWidgets" class="oe-dashboard-home-widgets">
+    <div class="oe-dashboard-home-widgets-widget"
+         t-foreach="widgets" t-as="widget">
+        <h3><t t-esc="widget.title"/></h3>
+        <iframe width="100%" frameborder="0" t-att-src="url + widget.id"/>
+    </div>
+</div>
 </template>
