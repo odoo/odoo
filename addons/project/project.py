@@ -82,12 +82,12 @@ class project(osv.osv):
 
     def get_childs(self, cr, uid, ids, context=None):
         cr.execute("""SELECT id FROM project_project WHERE analytic_account_id IN (
-                SELECT id FROM account_analytic_account WHERE parent_id = (
-                    SELECT id FROM account_analytic_account WHERE id = ( 
-                        SELECT analytic_account_id FROM project_project WHERE id = %s 
-                    )
-                )
-            )"""%(ids))            
+                        SELECT id FROM account_analytic_account WHERE parent_id = (
+	                        SELECT  analytic_account_id FROM project_project project
+		                        LEFT JOIN account_analytic_account account ON account.id = project.analytic_account_id
+		                        WHERE project.id = %s
+                            )
+                        )"""%(ids))            
         return cr.fetchall()
 
     def _progress_rate(self, cr, uid, ids, names, arg, context=None):
