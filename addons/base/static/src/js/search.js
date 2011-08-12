@@ -362,7 +362,8 @@ openerp.base.search.fields = new openerp.base.Registry({
     'datetime': 'openerp.base.search.DateTimeField',
     'date': 'openerp.base.search.DateField',
     'many2one': 'openerp.base.search.ManyToOneField',
-    'many2many': 'openerp.base.search.ManyToManyField'
+    'many2many': 'openerp.base.search.CharField',
+    'one2many': 'openerp.base.search.CharField'
 });
 openerp.base.search.Invalid = openerp.base.Class.extend( /** @lends openerp.base.search.Invalid# */{
     /**
@@ -723,11 +724,8 @@ openerp.base.search.DateField = openerp.base.search.Field.extend( /** @lends ope
     }
 });
 openerp.base.search.DateTimeField = openerp.base.search.DateField.extend({
-    // TODO: time?
 });
 openerp.base.search.ManyToOneField = openerp.base.search.CharField.extend({
-    // TODO: @widget
-    // TODO: .selection, .context, .domain
     init: function (view_section, field, view) {
         this._super(view_section, field, view);
         var self = this;
@@ -795,12 +793,6 @@ openerp.base.search.ManyToOneField = openerp.base.search.CharField.extend({
         return this._super();
     }
 });
-/**
- * m2m search field behaves pretty much exactly like a char field
- *
- * @class
- */
-openerp.base.search.ManyToManyField = openerp.base.search.CharField.extend({});
 
 openerp.base.search.ExtendedSearch = openerp.base.OldWidget.extend({
     template: 'SearchView.extended_search',
@@ -883,11 +875,10 @@ openerp.base.search.ExtendedSearchGroup = openerp.base.OldWidget.extend({
         this._super();
         var _this = this;
         this.add_prop();
-        this.$element.find('.searchview_extended_add_proposition').click(function (e) {
+        this.$element.find('.searchview_extended_add_proposition').click(function () {
             _this.add_prop();
         });
-        var delete_btn = this.$element.find('.searchview_extended_delete_group');
-        delete_btn.click(function (e) {
+        this.$element.find('.searchview_extended_delete_group').click(function () {
             _this.stop();
         });
     },
@@ -897,7 +888,7 @@ openerp.base.search.ExtendedSearchGroup = openerp.base.OldWidget.extend({
         }).compact().value();
         var choice = this.$element.find(".searchview_extended_group_choice").val();
         var op = choice == "all" ? "&" : "|";
-        return [].concat(choice == "none" ? ['!'] : [],
+        return choice == "none" ? ['!'] : [].concat(
             _.map(_.range(_.max([0,props.length - 1])), function() { return op; }),
             props);
     },
@@ -909,10 +900,7 @@ openerp.base.search.ExtendedSearchGroup = openerp.base.OldWidget.extend({
         parent.check_last_element();
     },
     set_last_group: function(is_last) {
-        if(is_last)
-            this.$element.addClass("last_group");
-        else
-            this.$element.removeClass("last_group");
+        this.$element.toggleClass('last_group', is_last);
     }
 });
 
@@ -935,8 +923,7 @@ openerp.base.search.ExtendedSearchProposition = openerp.base.OldWidget.extend({
         this.$element.find(".searchview_extended_prop_field").change(function() {
             _this.changed();
         });
-        var delete_btn = this.$element.find('.searchview_extended_delete_prop');
-        delete_btn.click(function (e) {
+        this.$element.find('.searchview_extended_delete_prop').click(function () {
             _this.stop();
         });
     },
