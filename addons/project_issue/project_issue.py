@@ -183,8 +183,8 @@ class project_issue(crm.crm_case, osv.osv):
         'active': fields.boolean('Active', required=False),
         'create_date': fields.datetime('Creation Date', readonly=True,select=True),
         'write_date': fields.datetime('Update Date', readonly=True),
-        'days_since_creation': fields.function(_compute_day, string='Days since create date', \
-                                               multi='compute_day', type="float", help="Difference in days between create date and current date"),
+        'days_since_creation': fields.function(_compute_day, string='Days since creation date', \
+                                               multi='compute_day', type="integer", help="Difference in days between creation date and current date"),
         'date_deadline': fields.date('Deadline'),
         'section_id': fields.many2one('crm.case.section', 'Sales Team', \
                         select=True, help='Sales team to which Case belongs to.\
