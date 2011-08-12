@@ -215,6 +215,7 @@ class osv_memory(orm.orm):
         self.check_id = 0
         self._max_count = config.get('osv_memory_count_limit')
         self._max_hours = config.get('osv_memory_age_limit')
+        cr.execute('delete from wkf_instance where res_type=%s', (self._name,))
 
     def _clean_transient_rows_older_than(self, cr, seconds):
         if not self._log_access:
@@ -222,9 +223,9 @@ class osv_memory(orm.orm):
                 "Transient model without write_date: %s" % (self._name,))
             return
 
-        cr.execute("SELECT id FROM " + self._table + " WHERE "
-            "COALESCE(write_date, create_date, now())::timestamp < "
-            "(now() - interval %s)", ("%s seconds" % seconds,))
+        cr.execute("SELECT id FROM " + self._table + " WHERE"
+            " COALESCE(write_date, create_date, now())::timestamp <"
+            " (now() - interval %s)", ("%s seconds" % seconds,))
         ids = [x[0] for x in cr.fetchall()]
         self.unlink(cr, openerp.SUPERUSER, ids)
 
@@ -262,6 +263,38 @@ class osv_memory(orm.orm):
             self._clean_old_transient_rows(cr, self._max_count)
 
         return True
+
+    def check_access_rule(self, cr, uid, ids, operation, context=None):
+        # No access rules for osv_memory
+        if self._log_access and uid != openerp.SUPERUSER:
+            cr.execute("SELECT distinct create_uid FROM " + self._table + " WHERE"
+                " id in ", (tuple(ids),))
+            uids = [x[0] for x in cr.fetchall()]
+            if len(uids) != 1 or uids[0] != uid:
+                raise orm.except_orm(_('AccessError'), '%s access is '
+                    'restricted to your own records for osv_memory objects '
+                    '(except for the super-user).' % mode.capitalize())
+
+    def create(self, cr, uid, vals, context=None):
+        self.vacuum(cr, uid)
+        super(osv_memory, self).create(cr, uid, vals, context)
+
+    def unlink(self, cr, uid, ids, context=None):
+        super(osv_memory, self).unlink(cr, uid, ids, context)
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        if ids:
+            cr.execute('delete from wkf_instance where res_type=%s and res_id IN %s', (self._name, tuple(ids)))
+        return True
+
+    def _search(self, cr, uid, domain, offset=0, limit=None, order=None, context=None, count=False, access_rights_uid=None):
+
+        # Restrict acces to the current user, except for the super-user.
+        if self._log_access and uid != openerp.SUPERUSER:
+            domain = expression.expression_and(('create_uid', '=', uid), domain)
+
+        # TODO unclear: shoudl access_rights_uid be set to None (effectively ignoring it) or used instead of uid?
+        return self._search(cr, uid, domain, offset, limit, order, context, count, access_rights_uid)
 
 
 class osv(orm.orm):
