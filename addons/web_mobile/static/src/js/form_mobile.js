@@ -12,15 +12,14 @@ openerp.web_mobile.FormView = openerp.base.Controller.extend({
         view_id = this.action.views[1][0];
 
         this.dataset = new openerp.base.DataSetSearch(this.session, this.action.res_model, null, null);
-        this.dataset.read_slice(false, false, false, function (result) {
-
+        this.dataset.read_slice([], 0, false, function (result) {
             for (var i = 0; i < result.length; i++) {
                 if (result[i].id == id) {
                     var data = result[i];
                 }
             }
             self.rpc("/base/formview/load", {"model": model, "view_id": view_id }, function (result) {
-
+                var fields = result.fields_view.fields;
                 var view_fields = result.fields_view.arch.children;
                 var get_fields = self.get_fields(view_fields);
                 var selection = new openerp.web_mobile.Selection();
@@ -31,7 +30,7 @@ openerp.web_mobile.FormView = openerp.base.Controller.extend({
                     }
                 }
                 $("#oe_header").find("h1").html(result.fields_view.arch.attrs.string);
-                self.$element.html(QWeb.render("FormView", {'get_fields': get_fields, 'notebooks': notebooks || false, 'fields' : result.fields_view.fields, 'values' : data }));
+                self.$element.html(QWeb.render("FormView", {'get_fields': get_fields, 'notebooks': notebooks || false, 'fields' : fields, 'values' : data }));
 
                     self.$element.find('select').change(function(ev){
                         selection.on_select_option(ev);
@@ -82,6 +81,15 @@ openerp.web_mobile.FormView = openerp.base.Controller.extend({
                                     next.addClass(collapsed_class);
                                 }
                                 if (!next.find('.detail').html().length) {
+
+                                    for (var i = 0; i < get_fields.length; i++) {
+
+                                        if (fields[get_fields[i].attrs.name].type == 'one2many'){
+                                            var get_fields_test = self.get_fields(fields[get_fields[i].attrs.name].views.form.arch.children);
+                                            var fields_test = fields[get_fields[i].attrs.name]['views'].form.fields;
+                                            next.find('.detail').append(QWeb.render("FormView", {'get_fields': get_fields_test,'fields' : fields_test, 'values' : data }));
+                                        }
+                                    }
                                     next.find('.detail').append(QWeb.render("FormView", {'get_fields': get_fields,'fields' : result.fields_view.fields, 'values' : data }));
                                 }
                             }
@@ -103,12 +111,8 @@ openerp.web_mobile.FormView = openerp.base.Controller.extend({
             if (view_fields[i].tag == 'group') {
                 this.get_fields(view_fields[i].children, this.fields);
             }
-            if (view_fields[i].tag == 'separator') {
-                this.get_fields(view_fields[i].children, this.fields);
-            }
         }
         return this.fields;
     }
 });
-
 }
