@@ -116,9 +116,7 @@
 -
   !python {model: purchase.order}: |
     from tools.translate import _
-    ids = []
-    ids.append(ref("purchase_order_pendrive1"))
-    self.action_cancel(cr, uid, ids)
+    self.action_cancel(cr, uid, [ref("purchase_order_pendrive1")])
 -
   I check that the order which was in approved state has transmit to cancel state.
 -
@@ -129,9 +127,7 @@
 -
   !python {model: purchase.order}: |
     from tools.translate import _
-    ids = []
-    ids.append(ref("purchase_order_pendrive1"))
-    self.action_cancel_draft(cr, uid, ids)   
+    self.action_cancel_draft(cr, uid, [ref("purchase_order_pendrive1")])   
 -
   I check that the order which was in cancel state has transmit to draft state.
 -
@@ -142,8 +138,6 @@
 -
   !python {model: purchase.order}: |
     from tools.translate import _
-    ids = []
-    ids.append(ref("purchase_order_pendrive1"))
-    self.copy(cr, uid, ids[0])   
-    self.unlink(cr, uid, ids)   
+    self.copy(cr, uid, ref("purchase_order_pendrive1"))   
+    self.unlink(cr, uid, [ref("purchase_order_pendrive1")])   
  
