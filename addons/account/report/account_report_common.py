@@ -30,7 +30,7 @@ class report_account_common(report_sxw.rml_parse, common_report_header):
         super(report_account_common, self).__init__(cr, uid, name, context=context)
         self.localcontext.update( {
             'time': time,
-            'get_report_name': self._get_report_name,
+            'get_report_details': self._get_report_details,
             'get_fiscalyear': self._get_fiscalyear,
             'get_account': self._get_account,
             'get_start_period': self.get_start_period,
@@ -51,20 +51,32 @@ class report_account_common(report_sxw.rml_parse, common_report_header):
             objects = self.pool.get('account.account').browse(self.cr, self.uid, new_ids)
         return super(report_account_common, self).set_context(objects, data, new_ids, report_type=report_type)
 
-    def _get_report_name(self, data):
+    def _get_report_details(self, data):
         cr, uid = self.cr, self.uid
         db_pool = pooler.get_pool(self.cr.dbname)
 
         report_obj = db_pool.get('account.report')
-        children =  []
+        datas =  []
+        balance = 0.0
         name = data['form'].get('account_report_id') and data['form']['account_report_id'][1] or ''
         report_id = data['form'].get('account_report_id') and data['form']['account_report_id'][0] or False
-        children.append({'id': report_id, 'name': name})
+        datas.append({'id': report_id})
         if report_id:
             child_ids = report_obj.search(cr, uid, [('parent_id','=',report_id)])
+            child_ids.append(datas[0]['id'])
             for chld in report_obj.browse(cr, uid, child_ids):
-                children.append({'id': chld.id, 'name': chld.name})
-        return children
+                if chld.type == 'accounts':
+                    for a in chld.account_ids:
+                        balance += a.balance
+                if chld.type == 'account_report':
+                    pass # TDDO: it's the balance of the linked account.report (so it means it's only a way to reuse figures coming from another report)
+                if chld.type == 'sum':
+                    pass # TDDO: it's the sum of balance of the children of this account.report (if there isn't, then it's 0.0)
+                if chld.id == datas[0]['id']:
+                    datas[0].update({'name': chld.name, 'balance': balance})
+                else:
+                    datas.append({'id': chld.id, 'name': chld.name, 'balance': balance})
+        return datas
 
     def get_account_details(self, acc_id):
         cr, uid = self.cr, self.uid
@@ -77,6 +89,10 @@ class report_account_common(report_sxw.rml_parse, common_report_header):
                 for acc in rpt.account_ids:
                     accounts.append({'code': acc.code, 'name': acc.name, 'bal': acc.balance})
         return accounts
+
+    def get_report_balance(self):
+        balance = 0.0
+        return balance
 
 report_sxw.report_sxw('report.account.common', 'account.account',
     'addons/account/report/account_report_common.rml', parser=report_account_common, header='internal')

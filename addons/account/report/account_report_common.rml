@@ -136,10 +136,30 @@
           <font color="white"> </font>
      </para>
     <blockTable colWidths="490.0" style="Table1">
-      <para style="P2">[[ repeatIn(get_report_name(data),'r') ]] </para>
+      <para style="P2">[[ repeatIn(get_report_details(data),'r') ]] </para>
       <tr>
         <td>
-            <para style="P2">[[ r['name'] ]]</para>
+            <blockTable colWidths="176.0,195.0" style="Table2">
+              <tr>
+                <td>
+                    <para style="P3">Report Name</para>
+                </td>
+                <td>
+                    <para style="P3">Report Balance</para>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <para style="terp_default_8">[[ r['name'] ]]</para>
+                </td>
+                <td>
+                    <para style="terp_default_8">[[ r['balance'] ]]</para>
+                </td>
+              </tr>
+            </blockTable>
+            <para style="Preformatted Text">
+                <font color="white"> </font>
+            </para>
             <blockTable colWidths="482.0" style="Table2">
               <tr>
                 <td>
