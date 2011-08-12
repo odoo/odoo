@@ -75,11 +75,6 @@
   I have merged first and second purchase order which are in draft state, belong to the same supplier,have same stock location, same pricelist.
 -
   !python {model: purchase.order.group}: |
-    pur_obj=self.pool.get('purchase.order')
-    pur_id11=pur_obj.browse(cr, uid, ref("purchase_order_po_nokia1"))
-    pur_id1=pur_id11.id
-    pur_id22=pur_obj.browse(cr, uid, ref("purchase_order_po_nokia2"))
-    pur_id2=pur_id22.id
-    ids = [pur_id1,pur_id2]
+    ids = [ref("purchase_order_po_nokia1"),ref("purchase_order_po_nokia2")]
     self.fields_view_get(cr, uid, context={'active_ids': ids})	
     self.merge_orders(cr, uid, [1], context={'active_ids': ids})
