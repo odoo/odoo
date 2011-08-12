@@ -83,7 +83,7 @@ openerp.base.parse_time = function(str) {
  */
 var zpad = function(str, size) {
     str = "" + str;
-    return new Array(size - str.length).join('0') + str;
+    return new Array(_.range(size - str.length)).join('0') + str;
 };
 
 /**
