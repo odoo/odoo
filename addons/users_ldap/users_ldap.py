@@ -68,7 +68,11 @@ class CompanyLDAP(osv.osv):
 
         uri = 'ldap://%s:%d' % (conf['ldap_server'],
                                 conf['ldap_server_port'])
-        return ldap.initialize(uri)
+
+        connection = ldap.initialize(uri)
+        if conf['ldap_tls']:
+            connection.start_tls_s()
+        return connection
 
     def authenticate(self, conf, login, password):
         """
@@ -95,8 +99,6 @@ class CompanyLDAP(osv.osv):
             if results and len(results) == 1:
                 dn = results[0][0]
                 conn = self.connect(conf)
-                if conf['ldap_tls']:
-                    conn.start_tls_s()
                 conn.simple_bind_s(dn, password)
                 conn.unbind()
                 entry = results[0]
@@ -134,8 +136,6 @@ class CompanyLDAP(osv.osv):
         logger = logging.getLogger('orm.ldap')
         try:
             conn = self.connect(conf)
-            if conf['ldap_tls']:
-                conn.start_tls_s()
             conn.simple_bind_s(conf['ldap_binddn'] or '',
                                conf['ldap_password'] or '')
             results = conn.search_st(conf['ldap_base'], ldap.SCOPE_SUBTREE,
