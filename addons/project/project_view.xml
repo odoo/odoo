@@ -247,7 +247,7 @@
                             </group>
 
                             <field colspan="4" name="description" nolabel="1"  attrs="{'readonly':[('state','=','done')]}" widget="text_wiki"/>
-                            <field colspan="4" name="work_ids" nolabel="1" attrs="{'invisible':[('state','in',['draft'])],'readonly':[('state','=','done')]}">
+                            <field colspan="4" name="work_ids" nolabel="1" attrs="{'readonly':[('state','in',['done','draft'])]}">
                                 <tree string="Task Work" editable="top">
                                     <field name="name" />
                                     <field name="hours" widget="float_time" sum="Spent Hours"/>
@@ -481,8 +481,11 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Task Stage">
+                    <group colspan="4" col="6">
                     <field name="name" select="1"/>
+                    <field name="project_default"/>
                     <field name="sequence"/>
+                    </group>
                     <separator string="Description" colspan="4"/>
                     <field colspan="4" name="description" nolabel="1"/>
                 </form>
