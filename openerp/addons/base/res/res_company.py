@@ -147,7 +147,6 @@ class res_company(osv.osv):
     def on_change_header(self, cr, uid, ids, phone, email, fax, website, vat, context={}):
         val = []
         if phone: val.append(_('Phone: ')+phone)
-        if email: val.append(_('Email: ')+email)
         if fax: val.append(_('Fax: ')+fax)
         if website: val.append(_('Website: ')+website)
         if vat: val.append(_('VAT: ')+vat)
