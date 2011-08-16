@@ -50,10 +50,9 @@ LDAP account that is used to verify if a user exists before
 attempting to authenticate it.
 
 Securing the connection with STARTTLS is available for LDAP
-servers support STARTTLS. The default is to require STARTTLS.
-Configuration of the LDAP connection (certificates etc) should
-be done through ``/etc/ldap/ldap.conf`` (or distribution
-specific location).
+servers supporting STARTTLS. The default is to require STARTTLS.
+For further options configuring the LDAP settings, refer to the
+ldap.conf manpage :manpage:`ldap.conf(5)`.
 
 Security Considerations
 +++++++++++++++++++++++
@@ -116,7 +115,7 @@ will disable LDAP authentication if installed at the same time.
     "website" : "http://www.openerp.com",
     "category" : "Tools",
     "data" : [
-        "users_ldap_view.xml",
+        "users_ldap_view.xml",w
     ],
     "active": False,
     "installable": True,
