@@ -21,6 +21,7 @@ openerp.base_kanban.KanbanView = openerp.base.View.extend({
         this.rpc("/base_kanban/kanbanview/load",
         {"model": this.model, "view_id": this.view_id}, this.on_loaded);
     },
+
     on_loaded: function(data) {
         var self = this;
         this.template_xml = '';
@@ -67,6 +68,7 @@ openerp.base_kanban.KanbanView = openerp.base.View.extend({
         });
         this.$element.find('.record .ui-icon-closethick').click(this.on_close_action);
         this.$element.find(".oe_column").disableSelection();
+        this.$element.find('button.oe_kanban_button_new').click(this.do_add_record);
     },
 
     on_button_click: function(button_attrs, record_id){
@@ -100,6 +102,10 @@ openerp.base_kanban.KanbanView = openerp.base.View.extend({
         } else{
             this.on_execute_button_click(dataset, button_attrs, record_id)
         }
+    },
+
+    do_add_record: function () {
+        this.do_edit_record(this.dataset, null);
     },
 
     do_edit_record: function (dataset, index) {

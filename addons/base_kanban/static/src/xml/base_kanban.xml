@@ -2,6 +2,13 @@
 <t t-name="KanbanBiew">
     <table style="width:100%;" id="kanbanview">
         <tr>
+            <td>
+                <div class="oe_form_header">
+                    <button type="button" class="oe_kanban_button_new">New</button>
+                </div>
+            </td>
+        </tr>
+        <tr>
             <t t-foreach="datas" t-as="columns">
                 <td class="oe_table_column oe_column_heading" t-att-id="'column_' + columns.value">
                     <t t-if="columns.value">
