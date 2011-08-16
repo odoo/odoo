@@ -1186,9 +1186,9 @@ background: linear-gradient(top, #ffffff 0%,#ebe9e9 100%); /* W3C */
     padding: 0;
     width: 24px;
     cursor: pointer;
-    display: inline; /*IE7 */
-    display: inline-block;
+    display: block;
     background: url(/base/static/src/img/add-shortcut.png) no-repeat bottom;
+    float: left;
 }
 .oe-shortcut-remove{
     background: url(/base/static/src/img/remove-shortcut.png) no-repeat bottom;
@@ -1221,12 +1221,11 @@ background: linear-gradient(top, #ffffff 0%,#ebe9e9 100%); /* W3C */
     color: #fff;
     text-align: center;
     border-left: 1px solid #909090;
-    padding-left: 4px;
+    padding: 4px;
     font-size: 90%;
     font-weight: normal;
 }
-.oe-shortcuts li:first-child,
-.oe-shortcuts li.first {
+.oe-shortcuts li:first-child {
     border-left: none;
     padding-left: 0;
 }
