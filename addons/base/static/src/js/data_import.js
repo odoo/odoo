@@ -25,6 +25,7 @@ openerp.base.DataImport = openerp.base.Dialog.extend({
                     close: function(event, ui){ self.stop();}
                    });
         this.$element.find('#csvfile').change(this.on_autodetect_data);
+        this.$element.find('fieldset').change(this.on_autodetect_data);
         this.$element.find('fieldset legend').click(function () {
                 $(this).next().toggle();
         });
@@ -52,8 +53,8 @@ openerp.base.DataImport = openerp.base.Dialog.extend({
             });
     },
     import_results:function(res){
-        var results = $.parseJSON(res);
         $('#result, #success').empty();
+        var results = $.parseJSON(res);
         var result_node = $("#result");
         if (results['records']){
             records = {'header':results['fields'],'row':results['records']};

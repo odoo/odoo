@@ -1290,7 +1290,8 @@ class Import(View):
         try:
             data = csv.reader(params.get('csvfile').file, quotechar=str(params.get('csvdel')), delimiter=str(params.get('csvsep')))
         except:
-            raise 'Error opening .CSV file', 'Input Error.'
+            error={'message': 'error opening .CSV file. Input Error.'}
+            return simplejson.dumps({'error':error})
 
         records = []
         fields = []
@@ -1370,8 +1371,8 @@ class Import(View):
         #Inverting the header into column names
         try:
             res = modle_obj.import_data(fields, datas, 'init', '', False, ctx)
-        except Exception, e:
-            error = {'message':str(e), 'title':'XML-RPC error'}
+        except xmlrpclib.Fault, e:
+            error = {"message":e.faultCode}
             return simplejson.dumps({'error':error})
 
         if res[0]>=0:
