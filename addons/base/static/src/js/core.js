@@ -893,7 +893,6 @@ openerp.base.Session = openerp.base.CallbackEnabled.extend( /** @lends openerp.b
             openerp[mod] = {};
             // init module mod
             if(openerp._openerp[mod] != undefined) {
-                openerp._openerp[mod]._T = openerp.base._t.database.build_translation_function();
                 openerp._openerp[mod](openerp);
                 this.module_loaded[mod] = true;
             }
