@@ -88,6 +88,18 @@ class res_company(osv.osv):
                         result[company.id][field] = address[field] or False
         return result
 
+
+    def _get_bank_data(self, cr, uid, ids, field_names, arg, context=None):
+        """ Read the 'address' functional fields. """
+        result = {}
+        for company in self.browse(cr, uid, ids, context=context):
+            r = []
+            for bank in company.bank_ids:
+                if bank.footer:
+                    r.append(bank.name_get(context=context)[0][1])
+            result[company.id] = ' | '.join(r)
+        return result
+
     def _set_address_data(self, cr, uid, company_id, name, value, arg, context=None):
         """ Write the 'address' functional fields. """
         company = self.browse(cr, uid, company_id, context=context)
@@ -102,14 +114,15 @@ class res_company(osv.osv):
                 address_obj.create(cr, uid, {name: value or False, 'partner_id': company.partner_id.id}, context=context)
         return True
 
+
     _columns = {
         'name': fields.char('Company Name', size=64, required=True),
         'parent_id': fields.many2one('res.company', 'Parent Company', select=True),
         'child_ids': fields.one2many('res.company', 'parent_id', 'Child Companies'),
         'partner_id': fields.many2one('res.partner', 'Partner', required=True),
-        'rml_header1': fields.char('Report Header', size=200),
-        'rml_footer1': fields.char('Report Footer 1', size=200),
-        'rml_footer2': fields.char('Report Footer 2', size=200),
+        'rml_header1': fields.char('Report Header / Company Slogan', size=200),
+        'rml_footer1': fields.char('General Information Footer', size=200),
+        'rml_footer2': fields.function(_get_bank_data, type="char", string='Bank Accounts Footer', size=250, help="This field is computed automatically based on bank accounts defined, having the display on footer checkbox set."),
         'rml_header': fields.text('RML Header', required=True),
         'rml_header2': fields.text('RML Internal Header', required=True),
         'rml_header3': fields.text('RML Internal Header', required=True),
@@ -123,10 +136,22 @@ class res_company(osv.osv):
         'zip': fields.function(_get_address_data, fnct_inv=_set_address_data, size=24, type='char', string="Zip", multi='address'), 
         'city': fields.function(_get_address_data, fnct_inv=_set_address_data, size=24, type='char', string="City", multi='address'),         
         'state_id': fields.function(_get_address_data, fnct_inv=_set_address_data, type='many2one', domain="[('country_id', '=', country_id)]", relation='res.country.state', string="State", multi='address'), 
+        'bank_ids': fields.one2many('res.partner.bank','company_id', 'Bank Accounts', help='Bank accounts related to this company'),
         'country_id': fields.function(_get_address_data, fnct_inv=_set_address_data, type='many2one', relation='res.country', string="Country", multi='address'), 
         'email': fields.function(_get_address_data, fnct_inv=_set_address_data, size=64, type='char', string="Email", multi='address'), 
         'phone': fields.function(_get_address_data, fnct_inv=_set_address_data, size=64, type='char', string="Phone", multi='address'), 
+        'fax': fields.function(_get_address_data, fnct_inv=_set_address_data, size=64, type='char', string="Fax", multi='address'), 
+        'website': fields.related('partner_id', 'website', string="Website", type="char", size=64), 
+        'vat': fields.related('partner_id', 'vat', string="Tax ID", type="char", size=32), 
     }
+    def on_change_header(self, cr, uid, ids, phone, email, fax, website, vat, context={}):
+        val = []
+        if phone: val.append(_('Phone: ')+phone)
+        if fax: val.append(_('Fax: ')+fax)
+        if website: val.append(_('Website: ')+website)
+        if vat: val.append(_('VAT: ')+vat)
+        return {'value': {'rml_footer1':' | '.join(val)}}
+
 
     def _search(self, cr, uid, args, offset=0, limit=None, order=None,
             context=None, count=False, access_rights_uid=None):
@@ -222,7 +247,7 @@ class res_company(osv.osv):
 
     def _get_logo(self, cr, uid, ids):
         return open(os.path.join(
-            tools.config['root_path'], '..', 'pixmaps', 'openerp-header.png'),
+            tools.config['root_path'], '..', 'pixmaps', 'your_logo.png'),
                     'rb') .read().encode('base64')
 
     _header = """
@@ -293,7 +318,7 @@ class res_company(osv.osv):
         'rml_header':_get_header,
         'rml_header2': _header2,
         'rml_header3': _header3,
-        #'logo':_get_logo
+        'logo':_get_logo
     }
 
     _constraints = [

@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+    <!-- Banks -->
+
+        <record id="view_res_bank_form" model="ir.ui.view">
+            <field name="name">res.bank.form</field>
+            <field name="model">res.bank</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Bank">
+                    <group colspan="4" col="6">
+                        <field name="name" select="1"/>
+                        <field name="bic" select="1"/>
+                        <field name="active" select="2"/>
+                    </group>
+                    <newline/>
+                    <group  colspan="2" col="4">
+                        <separator string="Address" colspan="4"/>
+                        <field name="street" select="2"/>
+                        <field name="street2" select="2"/>
+                        <field name="zip"/>
+                        <field name="city"/>
+                        <field name="country" select="2"/>
+                        <field name="state" select="2"/>
+                    </group>
+                    <group colspan="2" col="2">
+                        <separator string="Communication" colspan="2"/>
+                        <field name="phone"/>
+                        <field name="fax"/>
+                        <field name="email" widget="email"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_res_bank_tree" model="ir.ui.view">
+            <field name="name">res.bank.tree</field>
+            <field name="model">res.bank</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Banks">
+                    <field name="name"/>
+                    <field name="bic"/>
+                    <field name="country"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_res_bank_form" model="ir.actions.act_window">
+            <field name="name">Banks</field>
+            <field name="res_model">res.bank</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help">Manage bank records you want to be used in the system.</field>
+        </record>
+
+        <menuitem action="action_res_bank_form" id="menu_action_res_bank_form"
+            parent="base.menu_config_address_book" sequence="11"
+	    groups="base.group_no_one"/>
+
+
+
+        <record id="view_partner_bank_type_form" model="ir.ui.view">
+            <field name="name">res.partner.bank.type.form</field>
+            <field name="model">res.partner.bank.type</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Bank Account Type">
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="field_ids" colspan="4"/>
+                    <field name="format_layout" colspan="4"/>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_partner_bank_type_tree" model="ir.ui.view">
+            <field name="name">res.partner.bank.type.tree</field>
+            <field name="model">res.partner.bank.type</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Bank Account Type">
+                    <field name="name" select="1"/>
+                    <field name="code" select="1"/>
+                </tree>
+            </field>
+        </record>
+
+
+        <record id="view_partner_bank_form" model="ir.ui.view">
+            <field name="name">res.partner.bank.form</field>
+            <field name="model">res.partner.bank</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Bank account">
+                    <group colspan="4" col="6">
+                        <field name="state"/>
+                        <field name="company_id" on_change="onchange_company_id(company_id)" invisible="context.get('company_hide', True)" widget="selection"/>
+			<field name="footer" attrs="{'invisible': [('company_id','=',False)]}"/>
+                        <newline/>
+                        <field name="acc_number"/>
+                    </group>
+                    <group name="owner" colspan="2" col="2">
+                        <separator colspan="4" string="Bank Account Owner"/>
+                        <field name="partner_id" on_change="onchange_partner_id(partner_id)"/>
+                        <field name="owner_name"/>
+                        <field name="street"/>
+                        <field name="city"/>
+                        <field name="zip"/>
+                        <field name="state_id"/>
+                        <field name="country_id"/>
+                    </group>
+                    <group name="bank" colspan="2" col="2">
+                        <separator colspan="2" string="Information About the Bank"/>
+                        <field name="bank" on_change="onchange_bank_id(bank)" groups="base.group_extended"/>
+                        <field name="bank_name" attrs="{'required': [('company_id','&lt;&gt;',False)]}"/>
+                        <field name="bank_bic"/>
+                    </group>
+
+                </form>
+            </field>
+        </record>
+
+        <record id="view_partner_bank_search" model="ir.ui.view">
+            <field name="name">res.partner.bank.search</field>
+            <field name="model">res.partner.bank</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Bank Accounts">
+		    <filter name="my_bank" icon="terp-check" string="My Banks" domain="[('company_id','&lt;&gt;',False)]" help="Bank accounts belonging to one of your companies"/>
+                    <separator orientation="vertical"/>
+                    <field name="acc_number"/>
+		    <field name="company_id" invisible="context.get('company_hide', True)"/>
+                    <field name="partner_id"/>
+                    <field name="bank_name"/>
+                </search>
+            </field>
+        </record>
+
+
+        <record id="view_partner_bank_tree" model="ir.ui.view">
+            <field name="name">res.partner.bank.tree</field>
+            <field name="model">res.partner.bank</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Bank Accounts">
+                    <field name="sequence" invisible="1"/>
+                    <field name="acc_number"/>
+                    <field name="bank_name"/>
+		    <field name="company_id" invisible="context.get('company_hide', True)"/>
+		    <field name="footer" invisible="context.get('company_hide', True)"/>
+                    <field name="partner_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_res_partner_bank_account_form" model="ir.actions.act_window">
+            <field name="name">Bank Accounts</field>
+            <field name="res_model">res.partner.bank</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem action="action_res_partner_bank_account_form"
+            id="menu_action_res_partner_bank_form"
+            parent="base.menu_config_address_book"
+            groups="base.group_no_one"
+            sequence="9"/>
+
+
+        <record id="action_res_partner_bank_type_form" model="ir.actions.act_window">
+            <field name="name">Bank Account Types</field>
+            <field name="res_model">res.partner.bank.type</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem action="action_res_partner_bank_type_form"
+            id="menu_action_res_partner_bank_typeform"
+            parent="base.menu_config_address_book"
+	    groups="base.group_no_one"
+            sequence="15"/>
+
+
+
+    </data>
+</openerp>
+

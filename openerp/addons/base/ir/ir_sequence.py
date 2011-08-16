@@ -75,15 +75,15 @@ class ir_sequence(osv.osv):
 
     def get_id(self, cr, uid, sequence_id, test='id', context=None):
         assert test in ('code','id')
-        company_id = self.pool.get('res.users').read(cr, uid, uid, ['company_id'], context=context)['company_id'][0] or None
+        company_ids = self.pool.get('res.company').search(cr, uid, [], context=context)
         cr.execute('''SELECT id, number_next, prefix, suffix, padding
                       FROM ir_sequence
                       WHERE %s=%%s
                        AND active=true
-                       AND (company_id = %%s or company_id is NULL)
+                       AND (company_id in %%s or company_id is NULL)
                       ORDER BY company_id, id
                       FOR UPDATE NOWAIT''' % test,
-                      (sequence_id, company_id))
+                      (sequence_id, tuple(company_ids)))
         res = cr.dictfetchone()
         if res:
             cr.execute('UPDATE ir_sequence SET number_next=number_next+number_increment WHERE id=%s AND active=true', (res['id'],))

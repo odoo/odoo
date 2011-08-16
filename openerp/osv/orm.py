@@ -607,6 +607,8 @@ class orm_template(object):
 
     CONCURRENCY_CHECK_FIELD = '__last_update'
     def log(self, cr, uid, id, message, secondary=False, context=None):
+        if context and context.get('disable_log'):
+            return True
         return self.pool.get('res.log').create(cr, uid,
                 {
                     'name': message,
@@ -1091,7 +1093,20 @@ class orm_template(object):
                     if line[i] and skip:
                         return False
                     continue
+                
+                #set the mode for m2o, o2m, m2m : xml_id/id/name
+                if len(field) == len(prefix)+1:
+                    mode = False
+                else:
+                    mode = field[len(prefix)+1]
 
+                # TODO: improve this by using csv.csv_reader
+                def many_ids(line, relation, current_module, mode):
+                    res = []
+                    for db_id in line.split(config.get('csv_internal_sep')):
+                        res.append(_get_id(relation, db_id, current_module, mode))
+                    return [(6,0,res)]
+                    
                 # ID of the record using a XML ID
                 if field[len(prefix)]=='id':
                     try:
@@ -1111,10 +1126,13 @@ class orm_template(object):
                     if field[len(prefix)] in done:
                         continue
                     done[field[len(prefix)]] = True
-                    relation_obj = self.pool.get(fields_def[field[len(prefix)]]['relation'])
+                    relation = fields_def[field[len(prefix)]]['relation']
+                    relation_obj = self.pool.get(relation)
                     newfd = relation_obj.fields_get( cr, uid, context=context )
                     pos = position
-                    res = []
+                    
+                    res = many_ids(line[i], relation, current_module, mode)
+                    
                     first = 0
                     while pos < len(datas):
                         res2 = process_liness(self, datas, prefix + [field[len(prefix)]], current_module, relation_obj._name, newfd, pos, first)
@@ -1124,30 +1142,23 @@ class orm_template(object):
                         nbrmax = max(nbrmax, pos)
                         warning += w2
                         first += 1
+                        
+                        if data_res_id2:
+                            res.append((4, data_res_id2))
+                                
                         if (not newrow) or not reduce(lambda x, y: x or y, newrow.values(), 0):
                             break
+
                         res.append( (data_res_id2 and 1 or 0, data_res_id2 or 0, newrow) )
+                        
 
                 elif fields_def[field[len(prefix)]]['type']=='many2one':
                     relation = fields_def[field[len(prefix)]]['relation']
-                    if len(field) == len(prefix)+1:
-                        mode = False
-                    else:
-                        mode = field[len(prefix)+1]
                     res = _get_id(relation, line[i], current_module, mode)
 
                 elif fields_def[field[len(prefix)]]['type']=='many2many':
                     relation = fields_def[field[len(prefix)]]['relation']
-                    if len(field) == len(prefix)+1:
-                        mode = False
-                    else:
-                        mode = field[len(prefix)+1]
-
-                    # TODO: improve this by using csv.csv_reader
-                    res = []
-                    for db_id in line[i].split(config.get('csv_internal_sep')):
-                        res.append( _get_id(relation, db_id, current_module, mode) )
-                    res = [(6,0,res)]
+                    res = many_ids(line[i], relation, current_module, mode)
 
                 elif fields_def[field[len(prefix)]]['type'] == 'integer':
                     res = line[i] and int(line[i]) or 0
@@ -1168,7 +1179,7 @@ class orm_template(object):
 
                 else:
                     res = line[i]
-
+                    
                 row[field[len(prefix)]] = res or False
 
             result = (row, nbrmax, warning, data_res_id, xml_id)
@@ -1182,7 +1193,7 @@ class orm_template(object):
         position = 0
         while position<len(datas):
             res = {}
-
+            
             (res, position, warning, res_id, xml_id) = \
                     process_liness(self, datas, [], current_module, self._name, fields_def, position=position)
             if len(warning):
@@ -1546,8 +1557,10 @@ class orm_template(object):
                             attrs['selection'].append((False, ''))
                 fields[node.get('name')] = attrs
 
-                field = model_fields[node.get('name')]
-                transfer_field_to_modifiers(field, modifiers)
+                field = model_fields.get(node.get('name'))
+                if field:
+                    transfer_field_to_modifiers(field, modifiers)
+ 
 
         elif node.tag in ('form', 'tree'):
             result = self.view_header_get(cr, user, False, node.tag, context)
@@ -1754,7 +1767,7 @@ class orm_template(object):
         :param view_type: type of the view to return if view_id is None ('form', tree', ...)
         :param context: context arguments, like lang, time zone
         :param toolbar: true to include contextual actions
-        :param submenu: example (portal_project module)
+        :param submenu: deprecated
         :return: dictionary describing the composition of the requested view (including inherited views and extensions)
         :raise AttributeError:
                             * if the inherited view has unknown position to work with other than 'before', 'after', 'inside', 'replace'
@@ -1986,14 +1999,6 @@ class orm_template(object):
         result['arch'] = xarch
         result['fields'] = xfields
 
-        if submenu:
-            if context and context.get('active_id', False):
-                data_menu = self.pool.get('ir.ui.menu').browse(cr, user, context['active_id'], context).action
-                if data_menu:
-                    act_id = data_menu.id
-                    if act_id:
-                        data_action = self.pool.get('ir.actions.act_window').browse(cr, user, [act_id], context)[0]
-                        result['submenu'] = getattr(data_action, 'menus', False)
         if toolbar:
             def clean(x):
                 x = x[2]
