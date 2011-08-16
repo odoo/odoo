@@ -305,16 +305,8 @@ openerp.base.Registry = openerp.base.Class.extend( /** @lends openerp.base.Regis
     }
 });
 
-/**
- * Utility class that any class is allowed to extend to easy common manipulations.
- *
- * It provides rpc calls, callback on all methods preceded by "on_" or "do_" and a
- * logging facility.
- */
-openerp.base.SessionAware = openerp.base.Class.extend({
-    init: function(session) {
-        this.session = session;
-
+openerp.base.CallbackEnabled = openerp.base.Class.extend({
+    init: function() {
         // Transform on_* method into openerp.base.callbacks
         for (var name in this) {
             if(typeof(this[name]) == "function") {
@@ -325,6 +317,19 @@ openerp.base.SessionAware = openerp.base.Class.extend({
                 }
             }
         }
+    }
+});
+
+/**
+ * Utility class that any class is allowed to extend to easy common manipulations.
+ *
+ * It provides rpc calls, callback on all methods preceded by "on_" or "do_" and a
+ * logging facility.
+ */
+openerp.base.SessionAware = openerp.base.CallbackEnabled.extend({
+    init: function(session) {
+        this._super();
+        this.session = session;
     },
     /**
      * Performs a JSON-RPC call
@@ -558,15 +563,56 @@ openerp.base.OldWidget = openerp.base.Widget.extend({
     }
 });
 
-openerp.base.Session = openerp.base.Widget.extend( /** @lends openerp.base.Session# */{
+openerp.base.TranslationDataBase = openerp.base.Class.extend({
+    init: function() {
+        this.db = {};
+    },
+    set_bundle: function(translation_bundle) {
+        var self = this;
+        this.db = {};
+        var modules = _.keys(translation_bundle.modules).sort();
+        if (_.include(modules, "base")) {
+            modules = ["base"].concat(_.without(modules, "base"));
+        }
+        _.each(modules, function(name) {
+            self.add_module_translation(translation_bundle.modules[name]);
+        });
+    },
+    add_module_translation: function(mod) {
+        var self = this;
+        _.each(mod.messages, function(message) {
+            if (self.db[message.id] === undefined) {
+                self.db[message.id] = message.string;
+            }
+        });
+    },
+    build_translation_function: function() {
+        var self = this;
+        var fcnt = function(str) {
+            var tmp = self.get(str);
+            return tmp === undefined ? str : tmp;
+        }
+        fcnt.database = this;
+        return fcnt;
+    },
+    get: function(key) {
+        if (this.db[key])
+            return this.db[key];
+        return undefined;
+    }
+});
+
+openerp.base._t = new openerp.base.TranslationDataBase().build_translation_function();
+
+openerp.base.Session = openerp.base.CallbackEnabled.extend( /** @lends openerp.base.Session# */{
     /**
      * @constructs
      * @param element_id to use for exception reporting
      * @param server
      * @param port
      */
-    init: function(parent, element_id, server, port) {
-        this._super(parent, element_id);
+    init: function(server, port) {
+        this._super();
         this.server = (server == undefined) ? location.hostname : server;
         this.port = (port == undefined) ? location.port : port;
         this.rpc_mode = (server == location.hostname) ? "ajax" : "jsonp";
@@ -574,6 +620,7 @@ openerp.base.Session = openerp.base.Widget.extend( /** @lends openerp.base.Sessi
         this.db = "";
         this.login = "";
         this.password = "";
+        this.user_context= {};
         this.uid = false;
         this.session_id = false;
         this.module_list = [];
@@ -700,6 +747,7 @@ openerp.base.Session = openerp.base.Widget.extend( /** @lends openerp.base.Sessi
         this.rpc("/base/session/login", params, function(result) {
             self.session_id = result.session_id;
             self.uid = result.uid;
+            self.user_context = result.context;
             self.session_save();
             self.on_session_valid();
             if (success_callback)
@@ -717,6 +765,7 @@ openerp.base.Session = openerp.base.Widget.extend( /** @lends openerp.base.Sessi
         this.session_id = this.get_cookie('session_id');
         this.db = this.get_cookie('db');
         this.login = this.get_cookie('login');
+        this.user_context = this.get_cookie("user_context");
         // we should do an rpc to confirm that this session_id is valid and if it is retrieve the information about db and login
         // then call on_session_valid
         this.on_session_valid();
@@ -729,6 +778,7 @@ openerp.base.Session = openerp.base.Widget.extend( /** @lends openerp.base.Sessi
         this.set_cookie('session_id', this.session_id);
         this.set_cookie('db', this.db);
         this.set_cookie('login', this.login);
+        this.set_cookie('user_context', this.user_context);
     },
     logout: function() {
         delete this.uid;
@@ -781,15 +831,22 @@ openerp.base.Session = openerp.base.Widget.extend( /** @lends openerp.base.Sessi
         var self = this;
         this.rpc('/base/session/modules', {}, function(result) {
             self.module_list = result;
-            var modules = self.module_list.join(',');
-            if(self.debug || true) {
-                self.rpc('/base/webclient/csslist', {"mods": modules}, self.do_load_css);
-                self.rpc('/base/webclient/jslist', {"mods": modules}, self.do_load_js);
-            } else {
-                self.do_load_css(["/base/webclient/css?mods="+modules]);
-                self.do_load_js(["/base/webclient/js?mods="+modules]);
-            }
-            openerp._modules_loaded = true;
+            var lang = self.user_context.lang;
+            self.rpc('/base/webclient/translations',{
+                    mods: ["base"].concat(result),
+                    lang: lang})
+                .then(function(transs) {
+                openerp.base._t.database.set_bundle(transs);
+                var modules = self.module_list.join(',');
+                if(self.debug || true) {
+                    self.rpc('/base/webclient/csslist', {"mods": modules}, self.do_load_css);
+                    self.rpc('/base/webclient/jslist', {"mods": modules}, self.do_load_js);
+                } else {
+                    self.do_load_css(["/base/webclient/css?mods="+modules]);
+                    self.do_load_js(["/base/webclient/js?mods="+modules]);
+                }
+                openerp._modules_loaded = true;
+            });
         });
     },
     do_load_css: function (files) {
@@ -827,6 +884,7 @@ openerp.base.Session = openerp.base.Widget.extend( /** @lends openerp.base.Sessi
             openerp[mod] = {};
             // init module mod
             if(openerp._openerp[mod] != undefined) {
+                openerp._openerp[mod]._T = openerp.base._t.database.build_translation_function();
                 openerp._openerp[mod](openerp);
                 this.module_loaded[mod] = true;
             }
