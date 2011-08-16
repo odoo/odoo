@@ -161,7 +161,7 @@ class ir_model(osv.osv):
             pass
         x_custom_model._name = model
         x_custom_model._module = False
-        a = x_custom_model.createInstance(self.pool, cr)
+        a = x_custom_model.create_instance(self.pool, cr)
         if (not a._columns) or ('x_name' in a._columns.keys()):
             x_name = 'x_name'
         else:

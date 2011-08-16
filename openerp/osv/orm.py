@@ -562,22 +562,26 @@ class MetaModel(type):
         self.module_to_models.setdefault(self._module, []).append(self)
 
 
-class orm(object):
+class Model(object):
     """ Base class for OpenERP models.
 
-    OpenERP models are created by inheriting from this class (although
-    not directly; more specifically by inheriting from osv or
-    osv_memory). The constructor is called once, usually directly
-    after the class definition, e.g.:
+    OpenERP models are created by inheriting from this class (or from
+    TransientModel)
 
-        class user(osv):
+        class user(Model):
             ...
-        user()
 
     The system will later instanciate the class once per database (on
     which the class' module is installed).
 
+    To create a class that should not be instanciated (because it is not a
+    model per se, but a class to be inherited to really create a model later),
+    the _register class attribute should be set to False.   
+
     """
+    __metaclass__ = MetaModel
+    _register = False # Set to false if the model shouldn't be automatically discovered.
+    _transient = False # True in a TransientModel
     _name = None
     _columns = {}
     _constraints = []
@@ -736,7 +740,7 @@ class orm(object):
     #       put objects in the pool var
     #
     @classmethod
-    def makeInstance(cls, pool, cr, attributes):
+    def create_instance(cls, pool, cr):
         """ Instanciate a given model.
 
         This class method instanciates the class of some model (i.e. a class
@@ -751,6 +755,9 @@ class orm(object):
         this method. This is probably unnecessary.
 
         """
+        attributes = ['_columns', '_defaults', '_inherits', '_constraints',
+            '_sql_constraints']
+
         parent_names = getattr(cls, '_inherit', None)
         if parent_names:
             if isinstance(parent_names, (str, unicode)):
@@ -806,9 +813,6 @@ class orm(object):
 
         This doesn't create an instance but simply register the model
         as being part of the module where it is defined.
-
-        TODO make it possible to not even have to call the constructor
-        to be registered.
 
         """
 
@@ -2926,11 +2930,6 @@ class orm(object):
                     cr.execute(line2)
                     cr.commit()
 
-    @classmethod
-    def createInstance(cls, pool, cr):
-        return cls.makeInstance(pool, cr, ['_columns', '_defaults',
-            '_inherits', '_constraints', '_sql_constraints'])
-
     #
     # Update objects that uses this one to update their _inherits fields
     #
@@ -3067,8 +3066,6 @@ class orm(object):
                     res[f]['selection'] = sel2
 
         return res
-
-
 
     def read(self, cr, user, ids, fields=None, context=None, load='_classic_read'):
         """ Read records with given ids with the given fields
