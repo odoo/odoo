@@ -374,11 +374,13 @@ Deletion can be overridden by replacing the
 calls :js:func:`~openerp.base.DataSet.unlink` in order to remove the records
 entirely.
 
-.. note:: the list-wise deletion button (next to the record addition button)
-          simply proxies to :js:func:`~openerp.base.ListView.do_delete` after
-          obtaining all selected record ids, but it is possible to override it
-          alone by replacing
-          :js:func:`~openerp.base.ListView.do_delete_selected`.
+.. note::
+
+ the list-wise deletion button (next to the record addition button)
+  simply proxies to :js:func:`~openerp.base.ListView.do_delete` after
+  obtaining all selected record ids, but it is possible to override it
+  alone by replacing
+  :js:func:`~openerp.base.ListView.do_delete_selected`.
 
 Internal API Doc
 ----------------
