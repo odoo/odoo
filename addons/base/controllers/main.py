@@ -175,7 +175,15 @@ class WebClient(openerpweb.Controller):
             for x in po:
                 if x.id:
                     transl["messages"].append({'id': x.id, 'string': x.string})
-        return {"modules": transs}
+        lang_model = req.session.model('res.lang')
+        ids = lang_model.search([("code", "=", lang)])
+        if ids:
+            lang_obj = lang_model.read(ids[0], ["direction", "date_format", "time_format",
+                                                "grouping", "decimal_point", "thousands_sep"])
+        else:
+            lang_obj = None
+        return {"modules": transs,
+                "lang_parameters": lang_obj}
     
 
 class Database(openerpweb.Controller):
