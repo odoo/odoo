@@ -160,22 +160,39 @@ class WebClient(openerpweb.Controller):
     
     @openerpweb.jsonrequest
     def translations(self, req, mods, lang):
+        lang_model = req.session.model('res.lang')
+        ids = lang_model.search([("code", "=", lang)])
+        if ids:
+            lang_obj = lang_model.read(ids[0], ["direction", "date_format", "time_format",
+                                                "grouping", "decimal_point", "thousands_sep"])
+        else:
+            lang_obj = None
+            
+        if lang.count("_") > 0:
+            separator = "_"
+        else:
+            separator = "@"
+        langs = lang.split(separator)
+        langs = [separator.join(langs[:x]) for x in range(1, len(langs) + 1)]
+        
         transs = {}
         for addon_name in mods:
             transl = {"messages":[]}
             transs[addon_name] = transl
-            f_name = os.path.join(openerpweb.path_addons, addon_name, "po", lang + ".po")
-            if not os.path.exists(f_name):
-                continue
-            try:
-                with open(f_name) as t_file:
-                    po = read_po(t_file)
-            except:
-                continue
-            for x in po:
-                if x.id:
-                    transl["messages"].append({'id': x.id, 'string': x.string})
-        return {"modules": transs}
+            for l in langs:
+                f_name = os.path.join(openerpweb.path_addons, addon_name, "po", l + ".po")
+                if not os.path.exists(f_name):
+                    continue
+                try:
+                    with open(f_name) as t_file:
+                        po = read_po(t_file)
+                except:
+                    continue
+                for x in po:
+                    if x.id and x.string:
+                        transl["messages"].append({'id': x.id, 'string': x.string})
+        return {"modules": transs,
+                "lang_parameters": lang_obj}
     
 
 class Database(openerpweb.Controller):

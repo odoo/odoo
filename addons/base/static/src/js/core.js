@@ -566,6 +566,12 @@ openerp.base.OldWidget = openerp.base.Widget.extend({
 openerp.base.TranslationDataBase = openerp.base.Class.extend({
     init: function() {
         this.db = {};
+        this.parameters = {"direction": 'ltr',
+                        "date_format": '%m/%d/%Y',
+                        "time_format": '%H:%M:%S',
+                        "grouping": "[]",
+                        "decimal_point": ".",
+                        "thousands_sep": ","};
     },
     set_bundle: function(translation_bundle) {
         var self = this;
@@ -577,6 +583,9 @@ openerp.base.TranslationDataBase = openerp.base.Class.extend({
         _.each(modules, function(name) {
             self.add_module_translation(translation_bundle.modules[name]);
         });
+        if (translation_bundle.lang_parameters) {
+            this.parameters = translation_bundle.lang_parameters;
+        }
     },
     add_module_translation: function(mod) {
         var self = this;
@@ -884,7 +893,6 @@ openerp.base.Session = openerp.base.CallbackEnabled.extend( /** @lends openerp.b
             openerp[mod] = {};
             // init module mod
             if(openerp._openerp[mod] != undefined) {
-                openerp._openerp[mod]._T = openerp.base._t.database.build_translation_function();
                 openerp._openerp[mod](openerp);
                 this.module_loaded[mod] = true;
             }
