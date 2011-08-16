@@ -2395,9 +2395,7 @@ class account_account_template(osv.osv):
         #deactivate the parent_store functionnality on account_account for rapidity purpose
         ctx = context.copy()
         ctx['defer_parent_store_computation'] = True
-        children_acc_template = self.search(cr, uid, [('parent_id','child_of', [account_root_id]),('nocreate','!=',True)])
-        children_acc_template.sort()
-
+        children_acc_template = self.search(cr, uid, [('parent_id','child_of', [account_root_id]),('nocreate','!=',True)], order='id')
         for account_template in self.browse(cr, uid, children_acc_template, context=context):
             tax_ids = []
             for tax in account_template.tax_ids:
