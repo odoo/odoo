@@ -294,7 +294,7 @@ class osv_memory(Model):
             domain = expression.expression_and(('create_uid', '=', uid), domain)
 
         # TODO unclear: shoudl access_rights_uid be set to None (effectively ignoring it) or used instead of uid?
-        return self._search(cr, uid, domain, offset, limit, order, context, count, access_rights_uid)
+        return super(osv_memory, self)._search(cr, uid, domain, offset, limit, order, context, count, access_rights_uid)
 
 
 class osv(Model):
