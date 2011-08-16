@@ -25,8 +25,8 @@ openerp.base.Session = openerp.base.Widget.extend( /** @lends openerp.base.Sessi
         this.module_list = [];
         this.module_loaded = {"base": true};
         this.context = {};
-        this.sc_list ={};
-        this.active_id = "";
+        this.shortcuts = [];
+        this.active_id = null;
     },
     start: function() {
         this.session_restore();
@@ -863,9 +863,37 @@ openerp.base.Header =  openerp.base.Widget.extend({
         return this.shortcut_load();
     },
     shortcut_load :function(){
-        var self = this;
+        var self = this,
+            sc = self.session.shortcuts,
+            shortcuts_ds = new openerp.base.DataSet(this, 'ir.ui.view_sc');
+        // TODO: better way to communicate between sections.
+        // sc.bindings, because jquery does not bind/trigger on arrays...
+        if (!sc.binding) {
+            sc.binding = {};
+            $(sc.binding).bind({
+                'add': function (e, attrs) {
+                    var $shortcut = $('<li>', {
+                            'data-id': attrs.res_id
+                        }).text(attrs.name)
+                        .appendTo(self.$element.find('.oe-shortcuts ul'));
+                    shortcuts_ds.create(attrs, function (out) {
+                        $shortcut.data('shortcut-id', out.result);
+                    });
+                },
+                'remove-current': function () {
+                    var menu_id = self.session.active_id;
+                    var $shortcut = self.$element
+                            .find('.oe-shortcuts li[data-id=' + menu_id + ']');
+                    var shortcut_id = $shortcut.data('shortcut-id');
+                    $shortcut.remove();
+                    shortcuts_ds.unlink([shortcut_id]);
+                }
+            });
+        }
         return this.rpc('/base/session/sc_list', {}, function(shortcuts) {
-            self.session.sc_list = shortcuts;
+            sc.splice(0, sc.length);
+            sc.push.apply(sc, shortcuts);
+
             self.$element.find('.oe-shortcuts')
                 .html(QWeb.render('Shortcuts', {'shortcuts': shortcuts}))
                 .undelegate('li', 'click')

@@ -369,7 +369,7 @@ openerp.base.ViewManagerAction = openerp.base.ViewManager.extend({
             return;
         }
         $shortcut_toggle.removeClass('oe-shortcut-remove').show();
-        if (_(this.session.sc_list).detect(function (shortcut) {
+        if (_(this.session.shortcuts).detect(function (shortcut) {
                     return shortcut.res_id === self.session.active_id; })) {
             $shortcut_toggle.addClass("oe-shortcut-remove");
         }
@@ -378,15 +378,13 @@ openerp.base.ViewManagerAction = openerp.base.ViewManager.extend({
     shortcut_add_remove: function() {
         var self = this;
         var $shortcut_toggle = this.$element.find('.oe-shortcut-toggle');
-        var dataset_shortcut = new openerp.base.DataSet(this, 'ir.ui.view_sc');
         $shortcut_toggle.click(function() {
             if ($shortcut_toggle.hasClass("oe-shortcut-remove")) {
-                var unlink_id = $(".oe-shortcuts li[data-id=" + self.session.active_id + "]").data('shortcut-id');
-                dataset_shortcut.unlink([parseInt(unlink_id)]);
+                $(self.session.shortcuts.binding).trigger('remove-current');
                 $shortcut_toggle.removeClass("oe-shortcut-remove");
             } else {
-                dataset_shortcut.create({
-                    'user_id': self.uid,
+                $(self.session.shortcuts.binding).trigger('add', {
+                    'user_id': self.session.uid,
                     'res_id': self.session.active_id,
                     'resource': 'ir.ui.menu',
                     'name': self.action.name
