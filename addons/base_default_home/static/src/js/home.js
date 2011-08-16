@@ -86,7 +86,7 @@ openerp.base_default_home = function (openerp) {
             $.blockUI({
                 message: '<img src="/base_default_home/static/src/img/throbber.gif">'
             });
-            Modules.read_slice(['id'], null, null, function (records) {
+            Modules.read_slice({fields: ['id']}, function (records) {
                 if (!(records.length === 1)) { return; }
                 Modules.call('state_update',
                     [_.pluck(records, 'id'), 'to install', ['uninstalled']],

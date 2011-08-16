@@ -1,12 +1,11 @@
-RE:lib/(?!populate.sh).*
 .*
 *.egg-info
 *.orig
-bin/
 build/
-dist/
-include/
+RE:^bin/
+RE:^dist/
+RE:^include/
 
-share/
-man/
-lib/
+RE:^share/
+RE:^man/
+RE:^lib/

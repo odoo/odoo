@@ -1,5 +1,7 @@
 // TODO: trim support
 // TODO: line number -> https://bugzilla.mozilla.org/show_bug.cgi?id=618650
+// TODO: templates orverwritten could be called by t-call="__super__" ?
+// TODO: t-set + t-value + children node == scoped variable ?
 var QWeb2 = {
     expressions_cache: {},
     reserved_words: 'true,false,NaN,null,undefined,debugger,in,instanceof,new,function,return,this,typeof,eval,Math,RegExp,Array,Object,Date'.split(','),
@@ -20,6 +22,11 @@ var QWeb2 = {
                 prefix += " - template['" + context.template + "']";
             }
             throw new Error(prefix + ": " + message);
+        },
+        warning : function(message) {
+            if (typeof(window) !== 'undefined' && window.console) {
+                window.console.warn(message);
+            }
         },
         trim: function(s, mode) {
             switch (mode) {
@@ -638,6 +645,9 @@ QWeb2.Element = (function() {
         compile_action_set : function(value) {
             var variable = this.format_expression(value);
             if (this.actions['value']) {
+                if (this.children.length) {
+                    this.engine.tools.warning("@set with @value plus node chidren found. Children are ignored.");
+                }
                 this.top(variable + " = (" + (this.format_expression(this.actions['value'])) + ");");
                 this.process_children = false;
             } else {

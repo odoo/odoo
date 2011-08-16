@@ -18,6 +18,7 @@ import openerpweb
 import openerpweb.ast
 import openerpweb.nonliterals
 
+from babel.messages.pofile import read_po
 
 # Should move to openerpweb.Xml2Json
 class Xml2Json:
@@ -156,6 +157,43 @@ class WebClient(openerpweb.Controller):
             'css': css
         }
         return r
+    
+    @openerpweb.jsonrequest
+    def translations(self, req, mods, lang):
+        lang_model = req.session.model('res.lang')
+        ids = lang_model.search([("code", "=", lang)])
+        if ids:
+            lang_obj = lang_model.read(ids[0], ["direction", "date_format", "time_format",
+                                                "grouping", "decimal_point", "thousands_sep"])
+        else:
+            lang_obj = None
+            
+        if lang.count("_") > 0:
+            separator = "_"
+        else:
+            separator = "@"
+        langs = lang.split(separator)
+        langs = [separator.join(langs[:x]) for x in range(1, len(langs) + 1)]
+        
+        transs = {}
+        for addon_name in mods:
+            transl = {"messages":[]}
+            transs[addon_name] = transl
+            for l in langs:
+                f_name = os.path.join(openerpweb.path_addons, addon_name, "po", l + ".po")
+                if not os.path.exists(f_name):
+                    continue
+                try:
+                    with open(f_name) as t_file:
+                        po = read_po(t_file)
+                except:
+                    continue
+                for x in po:
+                    if x.id and x.string:
+                        transl["messages"].append({'id': x.id, 'string': x.string})
+        return {"modules": transs,
+                "lang_parameters": lang_obj}
+    
 
 class Database(openerpweb.Controller):
     _cp_path = "/base/database"
@@ -251,10 +289,12 @@ class Session(openerpweb.Controller):
     @openerpweb.jsonrequest
     def login(self, req, db, login, password):
         req.session.login(db, login, password)
+        ctx = req.session.get_context()
 
         return {
             "session_id": req.session_id,
             "uid": req.session._uid,
+            "context": ctx
         }
 
     @openerpweb.jsonrequest
@@ -390,10 +430,10 @@ def load_actions_from_ir_values(req, key, key2, models, meta, context):
     Values = req.session.model('ir.values')
     actions = Values.get(key, key2, models, meta, context)
 
-    return [(id, name, clean_action(action, req.session))
+    return [(id, name, clean_action(action, req.session, context=context))
             for id, name, action in actions]
 
-def clean_action(action, session):
+def clean_action(action, session, context=None):
     action.setdefault('flags', {})
     if action['type'] != 'ir.actions.act_window':
         return action
@@ -401,7 +441,7 @@ def clean_action(action, session):
     if isinstance(action.get('context'), basestring):
         action['context'] = eval(
             action['context'],
-            session.evaluation_context()) or {}
+            session.evaluation_context(context=context)) or {}
 
     if isinstance(action.get('domain'), basestring):
         action['domain'] = eval(
@@ -559,6 +599,7 @@ class DataSet(openerpweb.Controller):
         :rtype: list
         """
         Model = request.session.model(model)
+
         context, domain = eval_context_and_domain(
             request.session, request.context, domain)
 
@@ -582,8 +623,13 @@ class DataSet(openerpweb.Controller):
 
 
     @openerpweb.jsonrequest
+    def read(self, request, model, ids, fields=False):
+        return self.do_search_read(request, model, ids, fields)
+
+    @openerpweb.jsonrequest
     def get(self, request, model, ids, fields=False):
         return self.do_get(request, model, ids, fields)
+
     def do_get(self, request, model, ids, fields=False):
         """ Fetches and returns the records of the model ``model`` whose ids
         are in ``ids``.
@@ -667,6 +713,12 @@ class DataSet(openerpweb.Controller):
     def default_get(self, req, model, fields):
         Model = req.session.model(model)
         return Model.default_get(fields, req.session.eval_context(req.context))
+
+    @openerpweb.jsonrequest
+    def name_search(self, req, model, search_str, domain=[], context={}):
+        m = req.session.model(model)
+        r = m.name_search(search_str+'%', domain, '=ilike', context)
+        return {'result': r}
 
 class DataGroup(openerpweb.Controller):
     _cp_path = "/base/group"
@@ -760,8 +812,8 @@ class View(openerpweb.Controller):
         """ Parses an arbitrary string containing a domain, transforms it
         to either a literal domain or a :class:`openerpweb.nonliterals.Domain`
 
-        :param domain: the domain to parse, if the domain is not a string it is assumed to
-        be a literal domain and is returned as-is
+        :param domain: the domain to parse, if the domain is not a string it
+                       is assumed to be a literal domain and is returned as-is
         :param session: Current OpenERP session
         :type session: openerpweb.openerpweb.OpenERPSession
         """
@@ -777,8 +829,8 @@ class View(openerpweb.Controller):
         """ Parses an arbitrary string containing a context, transforms it
         to either a literal context or a :class:`openerpweb.nonliterals.Context`
 
-        :param context: the context to parse, if the context is not a string it is assumed to
-        be a literal domain and is returned as-is
+        :param context: the context to parse, if the context is not a string it
+               is assumed to be a literal domain and is returned as-is
         :param session: Current OpenERP session
         :type session: openerpweb.openerpweb.OpenERPSession
         """
@@ -1001,6 +1053,19 @@ class Action(openerpweb.Controller):
         return clean_action(req.session.model('ir.actions.server').run(
             [action_id], req.session.eval_context(req.context)), req.session)
 
+class TreeView(View):
+    _cp_path = "/base/treeview"
+
+    @openerpweb.jsonrequest
+    def load(self, req, model, view_id, toolbar=False):
+        return self.fields_view_get(req, model, view_id, 'tree', toolbar=toolbar)
+
+    @openerpweb.jsonrequest
+    def action(self, req, model, id):
+        return load_actions_from_ir_values(
+            req,'action', 'tree_but_open',[(model, id)],
+            False, req.session.eval_context(req.context))
+
 def export_csv(fields, result):
     fp = StringIO()
     writer = csv.writer(fp, quoting=csv.QUOTE_ALL)
@@ -1213,4 +1278,3 @@ class Export(View):
             return export_xls(field, result)
         else:
             return export_csv(field, result)
-
