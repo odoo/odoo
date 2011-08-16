@@ -16,9 +16,9 @@
           	<xpath expr="//label[@string='description']" position="attributes">
             <attribute name="string">Choose the following Resouces to auto directory configuration.</attribute>
           </xpath>
-          <xpath expr='//separator[@string="vsep"]' position='attributes'>
-  				<attribute name='rowspan'>12</attribute>
-      			<attribute name='string'></attribute>
+          <xpath expr="//separator[@string=&quot;vsep&quot;]" position="attributes">
+  				<attribute name="rowspan">12</attribute>
+      			<attribute name="string"/>
 	      	</xpath>
             <group string="res_config_contents" position="replace">
                 <group col="6" colspan="4">
@@ -51,8 +51,7 @@
         <field name="action_id" ref="action_config_auto_directory"/>
         <field name="category_id" ref="category_knowledge_mgmt_config"/>
         <field name="groups_id" eval="[(6,0,[ref('base.group_extended')])]"/>
-        <field name="type">special</field>
-        <field name="state">skip</field>
+        <field name="type">automatic</field>
     </record>
   </data>
 </openerp>

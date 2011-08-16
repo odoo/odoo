@@ -97,27 +97,30 @@
                         <form string="Bank account">
                             <field name="state"/>
                             <newline/>
-                            <field name="acc_number" select="1"/>
+                            <field name="acc_number"/>
                             <newline/>
-                            <field name="bank"/>
-                            <newline/>
-                            <field name="sequence"/>
-                            <field colspan="4" name="name"/>
-                            <separator colspan="4" string="Bank account owner"/>
-                            <field colspan="4" name="owner_name"/>
-                            <field colspan="4" name="street"/>
-                            <newline/>
-                            <field name="zip"/>
-                            <field name="city"/>
-                            <newline/>
-                            <field completion="1" name="country_id"/>
-                            <field name="state_id"/>
+                            <group name="owner" colspan="2" col="2">
+                                <separator colspan="4" string="Bank Account Owner"/>
+                                <field name="partner_id" on_change="onchange_partner_id(partner_id)"/>
+                                <field name="owner_name"/>
+                                <field name="street"/>
+                                <field name="city"/>
+                                <field name="zip"/>
+                                <field name="state_id"/>
+                                <field name="country_id"/>
+                            </group>
+                            <group name="bank" colspan="2" col="2">
+                                <separator colspan="2" string="Information About the Bank"/>
+                                <field name="bank" on_change="onchange_bank_id(bank)" groups="base.group_extended"/>
+                                <field name="bank_name"/>
+                                <field name="bank_bic"/>
+                            </group>
                         </form>
                         <tree string="Bank Details">
-                            <field name="state"/>
-                            <field name="bank"/>
-                            <field name="owner_name"/>
+                            <field name="sequence" invisible="1"/>
                             <field name="acc_number"/>
+                            <field name="bank_name"/>
+                            <field name="owner_name"/>
                         </tree>
                     </field>
                 </page>

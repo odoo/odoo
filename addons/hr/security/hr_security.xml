@@ -2,12 +2,13 @@
 <openerp>
 <data noupdate="1">
 
+    <record id="base.group_hr_user" model="res.groups">
+        <field name="name">Human Resources / HR Officer</field>
+    </record>
     <record id="base.group_hr_manager" model="res.groups">
-        <field name="name">Human Resources / Manager</field>
+        <field name="name">Human Resources / HR Manager</field>
+        <field name="implied_ids" eval="[(4, ref('base.group_hr_user'))]"/>
     </record>
 
-    <record id="base.group_hr_user" model="res.groups">
-        <field name="name">Human Resources / Officer</field>
-    </record>
 </data>
 </openerp>
