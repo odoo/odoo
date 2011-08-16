@@ -2861,6 +2861,127 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                     res['fields'][field]['selection'] = template_select
         return res
 
+    def generate_journals(self, cr, uid, chart_template_id, acc_template_ref, company_id, context=None):
+        """
+        This method used for creating journals.
+        @param cr: A database cursor.
+        @param uid: ID of the user currently logged in.
+        @param chart_temp_id: Chart Template Id.
+        @param acc_template_ref: Account templates reference.
+        @param company_id: company_id selected from wizard.multi.charts.accounts.
+        """
+        
+        if context is None:
+            context = {}
+        obj_data = self.pool.get('ir.model.data')
+        analytic_journal_obj = self.pool.get('account.analytic.journal')
+        obj_journal = self.pool.get('account.journal')
+
+        data_id = obj_data.search(cr, uid, [('model','=','account.journal.view'), ('name','=','account_sp_journal_view')])
+        data = obj_data.browse(cr, uid, data_id[0], context=context)
+        view_id = data.res_id
+
+        #Sales Journal
+        analytical_sale_ids = analytic_journal_obj.search(cr,uid,[('type','=','sale')])
+        analytical_journal_sale = analytical_sale_ids and analytical_sale_ids[0] or False
+
+        vals_journal = {
+            'name': _('Sales Journal'),
+            'type': 'sale',
+            'code': _('SAJ'),
+            'view_id': view_id,
+            'company_id': company_id,
+            'analytic_journal_id': analytical_journal_sale,
+        }
+
+        if chart_template_id.property_account_receivable:
+            vals_journal['default_credit_account_id'] = acc_template_ref[chart_template_id.property_account_income_categ.id]
+            vals_journal['default_debit_account_id'] = acc_template_ref[chart_template_id.property_account_income_categ.id]
+        obj_journal.create(cr,uid,vals_journal)
+
+        # Purchase Journal
+        analytical_purchase_ids = analytic_journal_obj.search(cr,uid,[('type','=','purchase')])
+        analytical_journal_purchase = analytical_purchase_ids and analytical_purchase_ids[0] or False
+
+        vals_journal = {
+            'name': _('Purchase Journal'),
+            'type': 'purchase',
+            'code': _('EXJ'),
+            'view_id': view_id,
+            'company_id':  company_id,
+            'analytic_journal_id': analytical_journal_purchase,
+        }
+
+        if chart_template_id.property_account_payable:
+            vals_journal['default_credit_account_id'] = acc_template_ref[chart_template_id.property_account_expense_categ.id]
+            vals_journal['default_debit_account_id'] = acc_template_ref[chart_template_id.property_account_expense_categ.id]
+        obj_journal.create(cr,uid,vals_journal)
+        
+        # Creating Journals Sales Refund and Purchase Refund
+        data_id = obj_data.search(cr, uid, [('model', '=', 'account.journal.view'), ('name', '=', 'account_sp_refund_journal_view')], context=context)
+        data = obj_data.browse(cr, uid, data_id[0], context=context)
+        view_id = data.res_id
+
+        #Sales Refund Journal
+        vals_journal = {
+            'name': _('Sales Refund Journal'),
+            'type': 'sale_refund',
+            'code': _('SCNJ'),
+            'view_id': view_id,
+            'analytic_journal_id': analytical_journal_sale,
+            'company_id': company_id
+        }
+
+        if chart_template_id.property_account_receivable:
+            vals_journal['default_credit_account_id'] = acc_template_ref[chart_template_id.property_account_income_categ.id]
+            vals_journal['default_debit_account_id'] = acc_template_ref[chart_template_id.property_account_income_categ.id]
+        obj_journal.create(cr, uid, vals_journal, context=context)
+
+        # Purchase Refund Journal
+        vals_journal = {
+            'name': _('Purchase Refund Journal'),
+            'type': 'purchase_refund',
+            'code': _('ECNJ'),
+            'view_id': view_id,
+            'analytic_journal_id': analytical_journal_purchase,
+            'company_id': company_id
+        }
+
+        if chart_template_id.property_account_payable:
+            vals_journal['default_credit_account_id'] = acc_template_ref[chart_template_id.property_account_expense_categ.id]
+            vals_journal['default_debit_account_id'] = acc_template_ref[chart_template_id.property_account_expense_categ.id]
+        obj_journal.create(cr, uid, vals_journal, context=context)
+        
+        # Miscellaneous Journal
+        data_id = obj_data.search(cr, uid, [('model','=','account.journal.view'), ('name','=','account_journal_view')])
+        data = obj_data.browse(cr, uid, data_id[0], context=context)
+        view_id = data.res_id
+
+        analytical_miscellaneous_ids = analytic_journal_obj.search(cr, uid, [('type', '=', 'situation')], context=context)
+
+        vals_journal = {
+            'name': _('Miscellaneous Journal'),
+            'type': 'general',
+            'code': _('MISC'),
+            'view_id': view_id,
+            'analytic_journal_id': analytical_miscellaneous_ids and analytical_miscellaneous_ids[0] or False,
+            'company_id': company_id
+        }
+        obj_journal.create(cr, uid, vals_journal, context=context)
+        # Opening Entries Journal
+        if chart_template_id.property_account_income_opening and chart_template_id.property_account_expense_opening:
+            vals_journal = {
+                'name': _('Opening Entries Journal'),
+                'type': 'situation',
+                'code': _('OPEJ'),
+                'view_id': view_id,
+                'company_id': company_id,
+                'centralisation': True,
+                'default_credit_account_id': acc_template_ref[chart_template_id.property_account_income_opening.id],
+                'default_debit_account_id': acc_template_ref[chart_template_id.property_account_expense_opening.id]
+                }
+            obj_journal.create(cr, uid, vals_journal, context=context)
+        return {}
 
     def execute(self, cr, uid, ids, context=None):
         obj_multi = self.browse(cr, uid, ids[0])
@@ -2937,118 +3058,8 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                     'account_collected_id': acc_template_ref.get(value['account_collected_id'], False),
                     'account_paid_id': acc_template_ref.get(value['account_paid_id'], False),
                 })
-
-        # Creating Journals
-        data_id = obj_data.search(cr, uid, [('model','=','account.journal.view'), ('name','=','account_sp_journal_view')])
-        data = obj_data.browse(cr, uid, data_id[0], context=context)
-        view_id = data.res_id
-
-        #Sales Journal
-        analytical_sale_ids = analytic_journal_obj.search(cr,uid,[('type','=','sale')])
-        analytical_journal_sale = analytical_sale_ids and analytical_sale_ids[0] or False
-
-        vals_journal = {
-            'name': _('Sales Journal'),
-            'type': 'sale',
-            'code': _('SAJ'),
-            'view_id': view_id,
-            'company_id': company_id,
-            'analytic_journal_id': analytical_journal_sale,
-        }
-
-        if obj_multi.chart_template_id.property_account_receivable:
-            vals_journal['default_credit_account_id'] = acc_template_ref[obj_multi.chart_template_id.property_account_income_categ.id]
-            vals_journal['default_debit_account_id'] = acc_template_ref[obj_multi.chart_template_id.property_account_income_categ.id]
-
-        obj_journal.create(cr,uid,vals_journal)
-
-        # Purchase Journal
-        analytical_purchase_ids = analytic_journal_obj.search(cr,uid,[('type','=','purchase')])
-        analytical_journal_purchase = analytical_purchase_ids and analytical_purchase_ids[0] or False
-
-        vals_journal = {
-            'name': _('Purchase Journal'),
-            'type': 'purchase',
-            'code': _('EXJ'),
-            'view_id': view_id,
-            'company_id':  company_id,
-            'analytic_journal_id': analytical_journal_purchase,
-        }
-
-        if obj_multi.chart_template_id.property_account_payable:
-            vals_journal['default_credit_account_id'] = acc_template_ref[obj_multi.chart_template_id.property_account_expense_categ.id]
-            vals_journal['default_debit_account_id'] = acc_template_ref[obj_multi.chart_template_id.property_account_expense_categ.id]
-        obj_journal.create(cr,uid,vals_journal)
-
-        # Creating Journals Sales Refund and Purchase Refund
-        data_id = obj_data.search(cr, uid, [('model', '=', 'account.journal.view'), ('name', '=', 'account_sp_refund_journal_view')], context=context)
-        data = obj_data.browse(cr, uid, data_id[0], context=context)
-        view_id = data.res_id
-
-        #Sales Refund Journal
-        vals_journal = {
-            'name': _('Sales Refund Journal'),
-            'type': 'sale_refund',
-            'code': _('SCNJ'),
-            'view_id': view_id,
-            'analytic_journal_id': analytical_journal_sale,
-            'company_id': company_id
-        }
-
-        if obj_multi.chart_template_id.property_account_receivable:
-            vals_journal['default_credit_account_id'] = acc_template_ref[obj_multi.chart_template_id.property_account_income_categ.id]
-            vals_journal['default_debit_account_id'] = acc_template_ref[obj_multi.chart_template_id.property_account_income_categ.id]
-
-        obj_journal.create(cr, uid, vals_journal, context=context)
-
-        # Purchase Refund Journal
-        vals_journal = {
-            'name': _('Purchase Refund Journal'),
-            'type': 'purchase_refund',
-            'code': _('ECNJ'),
-            'view_id': view_id,
-            'analytic_journal_id': analytical_journal_purchase,
-            'company_id': company_id
-        }
-
-        if obj_multi.chart_template_id.property_account_payable:
-            vals_journal['default_credit_account_id'] = acc_template_ref[obj_multi.chart_template_id.property_account_expense_categ.id]
-            vals_journal['default_debit_account_id'] = acc_template_ref[obj_multi.chart_template_id.property_account_expense_categ.id]
-
-        obj_journal.create(cr, uid, vals_journal, context=context)
-
-        # Miscellaneous Journal
-        data_id = obj_data.search(cr, uid, [('model','=','account.journal.view'), ('name','=','account_journal_view')])
-        data = obj_data.browse(cr, uid, data_id[0], context=context)
-        view_id = data.res_id
-
-        analytical_miscellaneous_ids = analytic_journal_obj.search(cr, uid, [('type', '=', 'situation')], context=context)
-        analytical_journal_miscellaneous = analytical_miscellaneous_ids and analytical_miscellaneous_ids[0] or False
-
-        vals_journal = {
-            'name': _('Miscellaneous Journal'),
-            'type': 'general',
-            'code': _('MISC'),
-            'view_id': view_id,
-            'analytic_journal_id': analytical_journal_miscellaneous,
-            'company_id': company_id
-        }
-
-        obj_journal.create(cr, uid, vals_journal, context=context)
-
-        # Opening Entries Journal
-        if obj_multi.chart_template_id.property_account_income_opening and obj_multi.chart_template_id.property_account_expense_opening:
-            vals_journal = {
-                'name': _('Opening Entries Journal'),
-                'type': 'situation',
-                'code': _('OPEJ'),
-                'view_id': view_id,
-                'company_id': company_id,
-                'centralisation': True,
-                'default_credit_account_id': acc_template_ref[obj_multi.chart_template_id.property_account_income_opening.id],
-                'default_debit_account_id': acc_template_ref[obj_multi.chart_template_id.property_account_expense_opening.id]
-                }
-            obj_journal.create(cr, uid, vals_journal, context=context)
+        #This method for creating Journals.
+        self.generate_journals(cr, uid, obj_multi.chart_template_id, acc_template_ref, company_id, context)
 
         # Bank Journals
         data_id = obj_data.search(cr, uid, [('model','=','account.journal.view'), ('name','=','account_journal_bank_view')])
