@@ -63,7 +63,7 @@ class ir_model(osv.osv):
         models = self.browse(cr, uid, ids, context=context)
         res = dict.fromkeys(ids)
         for model in models:
-            res[model.id] = isinstance(self.pool.get(model.model), osv.osv_memory)
+            res[model.id] = self.pool.get(model.model).is_transient()
         return res
 
     def _search_osv_memory(self, cr, uid, model, name, domain, context=None):
@@ -483,7 +483,7 @@ class ir_model_access(osv.osv):
         # osv_memory objects can be read by everyone, as they only return
         # results that belong to the current user (except for superuser)
         model_obj = self.pool.get(model_name)
-        if isinstance(model_obj, osv.osv_memory):
+        if model_obj.is_transient():
             return True
 
         # We check if a specific rule exists

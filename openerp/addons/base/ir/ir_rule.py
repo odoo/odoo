@@ -68,7 +68,7 @@ class ir_rule(osv.osv):
         return res
 
     def _check_model_obj(self, cr, uid, ids, context=None):
-        return not any(isinstance(self.pool.get(rule.model_id.model), osv.osv_memory) for rule in self.browse(cr, uid, ids, context))
+        return not any(self.pool.get(rule.model_id.model).is_transient() for rule in self.browse(cr, uid, ids, context))
 
     _columns = {
         'name': fields.char('Name', size=128, select=1),

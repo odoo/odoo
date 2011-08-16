@@ -202,7 +202,12 @@ class object_proxy(netsvc.Service):
 
 
 class osv_memory(Model):
-    """ Deprecated class. """
+    """ Model for transient records.
+
+    A TransientModel works similarly to a regular Model but the assiociated
+    records will be cleaned automatically from the database after some time.
+
+    """
     __metaclass__ = MetaModel
     _register = False # Set to false if the model shouldn't be automatically discovered.
     _transient = True
@@ -212,7 +217,7 @@ class osv_memory(Model):
 
     def __init__(self, pool, cr):
         super(osv_memory, self).__init__(pool, cr)
-        self.check_id = 0
+        self.check_count = 0
         self._max_count = config.get('osv_memory_count_limit')
         self._max_hours = config.get('osv_memory_age_limit')
         cr.execute('delete from wkf_instance where res_type=%s', (self._name,))
@@ -243,16 +248,18 @@ class osv_memory(Model):
         self.unlink(cr, openerp.SUPERUSER, ids)
 
     def vacuum(self, cr, uid, force=False):
-        """ Run the vacuum cleaner, i.e. unlink old records from the
-        virtual osv_memory tables if the "max count" or "max age" conditions are enabled
-        and have been reached. This method can be called very often (e.g. everytime a record
-        is created), but will only actually trigger the cleanup process once out of
-        "_check_time" times (by default once out of 20 calls)."""
-        self.check_id += 1
-        if (not force) and (self.check_id % self._check_time):
-            self.check_id = 0
+        """ Clean the TransientModel records.
+
+        This unlinks old records from the transient model tables whenever the
+        "_max_count" or "_max_age" conditions (if any) are reached.
+        Actual cleaning will happen only once every "_check_time" calls.
+        This means this method can be called frequently called (e.g. whenever
+        a new record is created).
+        """
+        self.check_count += 1
+        if (not force) and (self.check_count % self._check_time):
+            self.check_count = 0
             return True
-        tounlink = []
 
         # Age-based expiration
         if self._max_hours:
