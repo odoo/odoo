@@ -264,7 +264,7 @@ label.error {
     background: -ms-linear-gradient(top, #bd5e54 0%,#90322a 60%); /* IE10+ */
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#BD5E54', endColorstr='#90322A',GradientType=0 ); /* IE6-9 */
     background: linear-gradient(top, #bd5e54 0%,#90322a 60%); /* W3C */
-    
+
     border: 1px solid #6E2A24;
     border-radius: 4px;
     -moz-border-radius: 4px;
@@ -1054,14 +1054,14 @@ label.error {
     padding-right: 21px;
     height: 21px;
 
-background: #ffffff; /* Old browsers */
-background: -moz-linear-gradient(top, #ffffff 0%, #ebe9e9 100%); /* FF3.6+ */
-background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%,#ebe9e9)); /* Chrome,Safari4+ */
-background: -webkit-linear-gradient(top, #ffffff 0%,#ebe9e9 100%); /* Chrome10+,Safari5.1+ */
-background: -o-linear-gradient(top, #ffffff 0%,#ebe9e9 100%); /* Opera11.10+ */
-background: -ms-linear-gradient(top, #ffffff 0%,#ebe9e9 100%); /* IE10+ */
-filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#FFFFFF', endColorstr='#EBE9E9',GradientType=0 ); /* IE6-9 */
-background: linear-gradient(top, #ffffff 0%,#ebe9e9 100%); /* W3C */
+    background: #ffffff; /* Old browsers */
+    background: -moz-linear-gradient(top, #ffffff 0%, #ebe9e9 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%,#ebe9e9)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top, #ffffff 0%,#ebe9e9 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top, #ffffff 0%,#ebe9e9 100%); /* Opera11.10+ */
+    background: -ms-linear-gradient(top, #ffffff 0%,#ebe9e9 100%); /* IE10+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#FFFFFF', endColorstr='#EBE9E9',GradientType=0 ); /* IE6-9 */
+    background: linear-gradient(top, #ffffff 0%,#ebe9e9 100%); /* W3C */
 
     border: 1px solid #D2CFCF;
     border-right-width: 0;
@@ -1170,6 +1170,7 @@ background: linear-gradient(top, #ffffff 0%,#ebe9e9 100%); /* W3C */
 .parent_top {
     vertical-align: text-top;
 }
+
 .openerp .oe-dialog-warning p {
     padding-left: 1em;
     font-size: 1.2em;
@@ -1182,7 +1183,6 @@ background: linear-gradient(top, #ffffff 0%,#ebe9e9 100%); /* W3C */
     -webkit-box-shadow: none;
     box-shadow: none;
 }
-
 .openerp .oe-treeview-table {
     width: 100%;
 }
@@ -1208,4 +1208,53 @@ background: linear-gradient(top, #ffffff 0%,#ebe9e9 100%); /* W3C */
 .treeview-header {
     text-align: left;
     vertical-align: top;
+}
+/* Shortcuts*/
+.oe-shortcut-toggle {
+    height: 20px;
+    padding: 0;
+    width: 24px;
+    cursor: pointer;
+    display: block;
+    background: url(/base/static/src/img/add-shortcut.png) no-repeat bottom;
+    float: left;
+}
+.oe-shortcut-remove{
+    background: url(/base/static/src/img/remove-shortcut.png) no-repeat bottom;
+}
+/* ================ */
+.oe-shortcuts {
+    position: absolute;
+
+    margin: 0;
+    padding: 6px 5px;
+    top: 37px;
+    left: 197px;
+    right: 0;
+    height: 17px;
+    line-height: 1.2;
+}
+.oe-shortcuts ul {
+    display: block;
+    overflow: hidden;
+    list-style: none;
+    white-space: nowrap;
+    padding: 0;
+    margin: 0;
+}
+.oe-shortcuts li {
+    cursor: pointer;
+    display: -moz-inline-stack;
+    display: inline-block;
+    display: inline; /*IE7 */
+    color: #fff;
+    text-align: center;
+    border-left: 1px solid #909090;
+    padding: 4px;
+    font-size: 90%;
+    font-weight: normal;
+}
+.oe-shortcuts li:first-child {
+    border-left: none;
+    padding-left: 0;
 }

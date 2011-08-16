@@ -635,6 +635,8 @@ openerp.base.Session = openerp.base.CallbackEnabled.extend( /** @lends openerp.b
         this.module_list = [];
         this.module_loaded = {"base": true};
         this.context = {};
+        this.shortcuts = [];
+        this.active_id = null;
     },
     start: function() {
         this.session_restore();
