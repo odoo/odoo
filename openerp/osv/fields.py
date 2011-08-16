@@ -110,12 +110,6 @@ class _column(object):
     def set(self, cr, obj, id, name, value, user=None, context=None):
         cr.execute('update '+obj._table+' set '+name+'='+self._symbol_set[0]+' where id=%s', (self._symbol_set[1](value), id))
 
-    def set_memory(self, cr, obj, id, name, value, user=None, context=None):
-        raise Exception(_('Not implemented set_memory method !'))
-
-    def get_memory(self, cr, obj, ids, name, user=None, context=None, values=None):
-        raise Exception(_('Not implemented get_memory method !'))
-
     def get(self, cr, obj, ids, name, user=None, offset=0, context=None, values=None):
         raise Exception(_('undefined get method !'))
 
@@ -123,9 +117,6 @@ class _column(object):
         ids = obj.search(cr, uid, args+self._domain+[(name, 'ilike', value)], offset, limit, context=context)
         res = obj.read(cr, uid, ids, [name], context=context)
         return [x[name] for x in res]
-
-    def search_memory(self, cr, obj, args, name, value, offset=0, limit=None, uid=None, context=None):
-        raise Exception(_('Not implemented search_memory method !'))
 
 
 # ---------------------------------------------------------
@@ -259,7 +250,7 @@ class binary(_column):
         _column.__init__(self, string=string, **args)
         self.filters = filters
 
-    def get_memory(self, cr, obj, ids, name, user=None, context=None, values=None):
+    def get(self, cr, obj, ids, name, user=None, context=None, values=None):
         if not context:
             context = {}
         if not values:
@@ -282,9 +273,6 @@ class binary(_column):
             else:
                 res[i] = val
         return res
-
-    get = get_memory
-
 
 class selection(_column):
     _type = 'selection'
@@ -344,30 +332,6 @@ class many2one(_column):
     def __init__(self, obj, string='unknown', **args):
         _column.__init__(self, string=string, **args)
         self._obj = obj
-
-    def set_memory(self, cr, obj, id, field, values, user=None, context=None):
-        obj.datas.setdefault(id, {})
-        obj.datas[id][field] = values
-
-    def get_memory(self, cr, obj, ids, name, user=None, context=None, values=None):
-        result = {}
-        for id in ids:
-            result[id] = obj.datas[id].get(name, False)
-
-        # build a dictionary of the form {'id_of_distant_resource': name_of_distant_resource}
-        # we use uid=1 because the visibility of a many2one field value (just id and name)
-        # must be the access right of the parent form and not the linked object itself.
-        obj = obj.pool.get(self._obj)
-        records = dict(obj.name_get(cr, 1,
-                                    list(set([x for x in result.values() if x and isinstance(x, (int,long))])),
-                                    context=context))
-        for id in ids:
-            if result[id] in records:
-                result[id] = (result[id], records[result[id]])
-            else:
-                result[id] = False
-
-        return result
 
     def get(self, cr, obj, ids, name, user=None, context=None, values=None):
         if context is None:
@@ -436,55 +400,6 @@ class one2many(_column):
         self._limit = limit
         #one2many can't be used as condition for defaults
         assert(self.change_default != True)
-
-    def get_memory(self, cr, obj, ids, name, user=None, offset=0, context=None, values=None):
-        if context is None:
-            context = {}
-        if self._context:
-            context = context.copy()
-            context.update(self._context)
-        if not values:
-            values = {}
-        res = {}
-        for id in ids:
-            res[id] = []
-        ids2 = obj.pool.get(self._obj).search(cr, user, [(self._fields_id, 'in', ids)], limit=self._limit, context=context)
-        for r in obj.pool.get(self._obj).read(cr, user, ids2, [self._fields_id], context=context, load='_classic_write'):
-            if r[self._fields_id] in res:
-                res[r[self._fields_id]].append(r['id'])
-        return res
-
-    def set_memory(self, cr, obj, id, field, values, user=None, context=None):
-        if not context:
-            context = {}
-        if self._context:
-            context = context.copy()
-        context.update(self._context)
-        if not values:
-            return
-        obj = obj.pool.get(self._obj)
-        for act in values:
-            if act[0] == 0:
-                act[2][self._fields_id] = id
-                obj.create(cr, user, act[2], context=context)
-            elif act[0] == 1:
-                obj.write(cr, user, [act[1]], act[2], context=context)
-            elif act[0] == 2:
-                obj.unlink(cr, user, [act[1]], context=context)
-            elif act[0] == 3:
-                obj.datas[act[1]][self._fields_id] = False
-            elif act[0] == 4:
-                obj.datas[act[1]][self._fields_id] = id
-            elif act[0] == 5:
-                for o in obj.datas.values():
-                    if o[self._fields_id] == id:
-                        o[self._fields_id] = False
-            elif act[0] == 6:
-                for id2 in (act[2] or []):
-                    obj.datas[id2][self._fields_id] = id
-
-    def search_memory(self, cr, obj, args, name, value, offset=0, limit=None, uid=None, operator='like', context=None):
-        raise _('Not Implemented')
 
     def get(self, cr, obj, ids, name, user=None, offset=0, context=None, values=None):
         if context is None:
@@ -683,32 +598,6 @@ class many2many(_column):
     #
     def search(self, cr, obj, args, name, value, offset=0, limit=None, uid=None, operator='like', context=None):
         return obj.pool.get(self._obj).search(cr, uid, args+self._domain+[('name', operator, value)], offset, limit, context=context)
-
-    def get_memory(self, cr, obj, ids, name, user=None, offset=0, context=None, values=None):
-        result = {}
-        for id in ids:
-            result[id] = obj.datas[id].get(name, [])
-        return result
-
-    def set_memory(self, cr, obj, id, name, values, user=None, context=None):
-        if not values:
-            return
-        for act in values:
-            # TODO: use constants instead of these magic numbers
-            if act[0] == 0:
-                raise _('Not Implemented')
-            elif act[0] == 1:
-                raise _('Not Implemented')
-            elif act[0] == 2:
-                raise _('Not Implemented')
-            elif act[0] == 3:
-                raise _('Not Implemented')
-            elif act[0] == 4:
-                raise _('Not Implemented')
-            elif act[0] == 5:
-                raise _('Not Implemented')
-            elif act[0] == 6:
-                obj.datas[id][name] = act[2]
 
 
 def get_nice_size(value):
@@ -1041,14 +930,11 @@ class function(_column):
                 result[id] = self.postprocess(cr, uid, obj, name, result[id], context)
         return result
 
-    get_memory = get
-
     def set(self, cr, obj, id, name, value, user=None, context=None):
         if not context:
             context = {}
         if self._fnct_inv:
             self._fnct_inv(obj, cr, user, id, name, value, self._fnct_inv_arg, context)
-    set_memory = set
 
 # ---------------------------------------------------------
 # Related fields
