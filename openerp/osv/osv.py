@@ -201,11 +201,13 @@ class object_proxy(netsvc.Service):
         return res
 
 
-class osv_memory(Model):
+class TransientModel(Model):
     """ Model for transient records.
 
     A TransientModel works similarly to a regular Model but the assiociated
     records will be cleaned automatically from the database after some time.
+
+    A TransientModel has no access rules.
 
     """
     __metaclass__ = MetaModel
@@ -216,7 +218,7 @@ class osv_memory(Model):
     _check_time = 20
 
     def __init__(self, pool, cr):
-        super(osv_memory, self).__init__(pool, cr)
+        super(TransientModel, self).__init__(pool, cr)
         self.check_count = 0
         self._max_count = config.get('osv_memory_count_limit')
         self._max_hours = config.get('osv_memory_age_limit')
@@ -272,22 +274,22 @@ class osv_memory(Model):
         return True
 
     def check_access_rule(self, cr, uid, ids, operation, context=None):
-        # No access rules for osv_memory
+        # No access rules for transient models.
         if self._log_access and uid != openerp.SUPERUSER:
             cr.execute("SELECT distinct create_uid FROM " + self._table + " WHERE"
                 " id in ", (tuple(ids),))
             uids = [x[0] for x in cr.fetchall()]
             if len(uids) != 1 or uids[0] != uid:
                 raise orm.except_orm(_('AccessError'), '%s access is '
-                    'restricted to your own records for osv_memory objects '
+                    'restricted to your own records for transient models '
                     '(except for the super-user).' % mode.capitalize())
 
     def create(self, cr, uid, vals, context=None):
         self.vacuum(cr, uid)
-        return super(osv_memory, self).create(cr, uid, vals, context)
+        return super(TransientModel, self).create(cr, uid, vals, context)
 
     def unlink(self, cr, uid, ids, context=None):
-        super(osv_memory, self).unlink(cr, uid, ids, context)
+        super(TransientModel, self).unlink(cr, uid, ids, context)
         if isinstance(ids, (int, long)):
             ids = [ids]
         if ids:
@@ -301,13 +303,12 @@ class osv_memory(Model):
             domain = expression.expression_and(('create_uid', '=', uid), domain)
 
         # TODO unclear: shoudl access_rights_uid be set to None (effectively ignoring it) or used instead of uid?
-        return super(osv_memory, self)._search(cr, uid, domain, offset, limit, order, context, count, access_rights_uid)
+        return super(TransientModel, self)._search(cr, uid, domain, offset, limit, order, context, count, access_rights_uid)
 
 
-class osv(Model):
-    """ Deprecated class. """
-    __metaclass__ = MetaModel
-    _register = False # Set to false if the model shouldn't be automatically discovered.
+# For backward compatibility.
+osv = Model
+osv_memory = TransientModel
 
 
 def start_object_proxy():
