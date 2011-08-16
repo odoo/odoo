@@ -160,7 +160,6 @@ openerp.base.ViewManager =  openerp.base.Widget.extend({
             view_promise;
         this.active_view = view_type;
         var view = this.views[view_type];
-        this.shortcut_check(view.view_id,view_type);
         if (!view.controller) {
             // Lazy loading of views
             var controllerclass = this.registry.get_object(view_type);
@@ -272,44 +271,7 @@ openerp.base.ViewManager =  openerp.base.Widget.extend({
      */
     contexts: function () {
         return [];
-    },
-    shortcut_check : function(view_id,view_type){
-        main_view = this.session.action_manager.viewmanager.views_src[0];
-        if (view_type == "tree" || main_view.view_id == view_id && main_view.view_type == view_type && 
-            this.element_id == "oe_app"){
-            $('#shortcut_add_remove').show();
-            var img = "shortcut-add";
-                for(var list_shortcut=0; list_shortcut<this.session.sc_list.length; list_shortcut++){
-                if (this.session.sc_list[list_shortcut]['res_id'] == this.session.active_id)
-                    {img = "shortcut-remove"}
-                }
-            $('#shortcut_add_remove').addClass(img);
-        }        
-        else{
-           $('#shortcut_add_remove').hide();
-        }
-        this.shortcut_add_remove();
-    },
-    shortcut_add_remove: function(){
-        var self = this;
-        var shortcut_selector =$('#shortcut_add_remove');
-        var dataset_shortcut = new openerp.base.DataSet(this, 'ir.ui.view_sc');
-        shortcut_selector.click(function(ev,id){
-             if(shortcut_selector.hasClass("shortcut-remove")){
-                  var unlink_id = $("li[id="+self.session.active_id+"]").attr('shortcut-id');  
-                  dataset_shortcut.unlink([parseInt(unlink_id)]);
-                  shortcut_selector.removeClass("shortcut-remove");     
-                  shortcut_selector.addClass("shortcut-add"); }
-          else {
-                var data = {'user_id': self.uid, 'res_id': self.session.active_id, 'resource': 'ir.ui.menu', 'name': self.action.name};
-                dataset_shortcut.create(data);
-                shortcut_selector.removeClass("shortcut-add");        
-                shortcut_selector.addClass("shortcut-remove"); } 
-        });
-
-
     }
-
 });
 
 openerp.base.NullViewManager = openerp.base.generate_null_object_class(openerp.base.ViewManager, {
@@ -392,6 +354,48 @@ openerp.base.ViewManagerAction = openerp.base.ViewManager.extend({
             return [];
         }
         return [this.action.context];
+    },
+    on_mode_switch: function (view_type) {
+        this._super(view_type);
+        this.shortcut_check(this.views[view_type]);
+    },
+    shortcut_check : function(view) {
+        var self = this;
+        // display shortcuts if on the first view for the action
+        var $shortcut_toggle = this.$element.find('.oe-shortcut-toggle');
+        if (!(view.view_type === this.views_src[0].view_type
+                && view.view_id === this.views_src[0].view_id)) {
+            $shortcut_toggle.hide();
+            return;
+        }
+        $shortcut_toggle.removeClass('oe-shortcut-remove').show();
+        if (_(this.session.sc_list).detect(function (shortcut) {
+                    return shortcut.res_id === self.session.active_id; })) {
+            $shortcut_toggle.addClass("oe-shortcut-remove");
+        }
+        this.shortcut_add_remove();
+    },
+    shortcut_add_remove: function() {
+        var self = this;
+        var $shortcut_toggle = this.$element.find('.oe-shortcut-toggle');
+        var dataset_shortcut = new openerp.base.DataSet(this, 'ir.ui.view_sc');
+        $shortcut_toggle.click(function() {
+            if ($shortcut_toggle.hasClass("oe-shortcut-remove")) {
+                var unlink_id = $(".oe-shortcuts li[id=" + self.session.active_id + "]").data('shortcut-id');
+                dataset_shortcut.unlink([parseInt(unlink_id)]);
+                $shortcut_toggle.removeClass("oe-shortcut-remove");
+            } else {
+                dataset_shortcut.create({
+                    'user_id': self.uid,
+                    'res_id': self.session.active_id,
+                    'resource': 'ir.ui.menu',
+                    'name': self.action.name
+                });
+                $shortcut_toggle.addClass("oe-shortcut-remove");
+            }
+        });
+
+
     }
 });
 

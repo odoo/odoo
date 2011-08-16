@@ -417,10 +417,8 @@
     <table class="view-manager-main-table">
     <tr>
         <td class="view-manager-main-content">
-            <!-- TODO prefix id with the element_id of the controller t-attf-id="#{prefix}_localid" -->
-            <t t-if="view.view_type != form" t-foreach="views" t-as="view">
-                <a id = "shortcut_add_remove" title="Add / Remove Shortcut..." href="javascript: void(0)"> </a>
-            </t>
+            <a class="oe-shortcut-toggle" title="Add / Remove Shortcut..."
+               href="javascript: void(0)"> </a>
             <div class="oe_vm_switch">
                 <t t-if="views.length != 1" t-foreach="views" t-as="view">
                     <button type="button" t-att-data-view-type="view.view_type">

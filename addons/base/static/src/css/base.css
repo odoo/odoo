@@ -1181,21 +1181,17 @@ background: linear-gradient(top, #ffffff 0%,#ebe9e9 100%); /* W3C */
     box-shadow: none;
 }
 /* Shortcuts*/
-#shortcut_add_remove {
+.oe-shortcut-toggle {
     height: 20px;
     padding: 0;
     width: 24px;
     cursor: pointer;
     display: inline; /*IE7 */
     display: inline-block;
+    background: url(/base/static/src/img/add-shortcut.png) no-repeat bottom;
 }
-.shortcut-add {
-    background: url(/base/static/src/img/add-shortcut.png) no-repeat;
-    background-position: bottom;
-}
-.shortcut-remove{
-    background: url(/base/static/src/img/remove-shortcut.png) no-repeat;
-    background-position: bottom;
+.oe-shortcut-remove{
+    background: url(/base/static/src/img/remove-shortcut.png) no-repeat bottom;
 }
 /* ================ */
 .oe-shortcuts {
