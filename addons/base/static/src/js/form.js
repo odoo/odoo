@@ -1,4 +1,6 @@
 openerp.base.form = function (openerp) {
+    
+var _t = openerp.base._t;
 
 openerp.base.views.add('form', 'openerp.base.FormView');
 openerp.base.FormView = openerp.base.View.extend( /** @lends openerp.base.FormView# */{
@@ -1454,7 +1456,7 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
             // search more... if more results that max
             if (values.length > self.limit) {
                 values = values.slice(0, self.limit);
-                values.push({label: "<em>   Search More...</em>", action: function() {
+                values.push({label: _t("<em>   Search More...</em>"), action: function() {
                     dataset.name_search(search_val, self.build_domain(), 'ilike'
                     , false, function(data) {
                         self._change_int_value(null);
@@ -1467,13 +1469,13 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
             if (search_val.length > 0 &&
                 !_.include(raw_result, search_val) &&
                 (!self.value || search_val !== self.value[1])) {
-                values.push({label: '<em>   Create "<strong>' +
-                        $('<span />').text(search_val).html() + '</strong>"</em>', action: function() {
+                values.push({label: _.sprintf(_t('<em>   Create "<strong>%s</strong>"</em>'),
+                        $('<span />').text(search_val).html()), action: function() {
                     self._quick_create(search_val);
                 }});
             }
             // create...
-            values.push({label: "<em>   Create and Edit...</em>", action: function() {
+            values.push({label: _t("<em>   Create and Edit...</em>"), action: function() {
                 self._change_int_value(null);
                 self._search_create_popup("form", undefined, {"default_name": search_val});
             }});

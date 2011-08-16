@@ -570,15 +570,20 @@ openerp.base.TranslationDataBase = openerp.base.Class.extend({
     set_bundle: function(translation_bundle) {
         var self = this;
         this.db = {};
-        var modules = _.keys(translation_bundle.modules);
+        var modules = _.keys(translation_bundle.modules).sort();
         if (_.include(modules, "base")) {
-            modules = _.without(modules, "base").concat(["base"]);
+            modules = ["base"].concat(_.without(modules, "base"));
         }
         _.each(modules, function(name) {
-            var mod = translation_bundle.modules[name];
-            _.each(mod.messages, function(message) {
+            self.add_module_translation(translation_bundle.modules[name]);
+        });
+    },
+    add_module_translation: function(mod) {
+        var self = this;
+        _.each(mod.messages, function(message) {
+            if (self.db[message.id] === undefined) {
                 self.db[message.id] = message.string;
-            });
+            }
         });
     },
     build_translation_function: function() {
@@ -826,9 +831,10 @@ openerp.base.Session = openerp.base.CallbackEnabled.extend( /** @lends openerp.b
         var self = this;
         this.rpc('/base/session/modules', {}, function(result) {
             self.module_list = result;
+            var lang = self.user_context.lang;
             self.rpc('/base/webclient/translations',{
                     mods: ["base"].concat(result),
-                    lang: self.user_context.lang})
+                    lang: lang})
                 .then(function(transs) {
                 openerp.base._t.database.set_bundle(transs);
                 var modules = self.module_list.join(',');
