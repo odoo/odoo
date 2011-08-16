@@ -1296,7 +1296,7 @@ class account_move_line(osv.osv):
                         'user_id': uid
             })]
 
-        result = super(osv.osv, self).create(cr, uid, vals, context=context)
+        result = super(account_move_line, self).create(cr, uid, vals, context=context)
         # CREATE Taxes
         if vals.get('account_tax_id', False):
             tax_id = tax_obj.browse(cr, uid, vals['account_tax_id'])

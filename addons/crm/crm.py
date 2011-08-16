@@ -300,7 +300,7 @@ class crm_case(crm_base):
                 default.update({
                     'date_open': False
                 })
-        return super(osv.osv, self).copy(cr, uid, id, default, context=context)
+        return super(crm_case, self).copy(cr, uid, id, default, context=context)
 
     
 
