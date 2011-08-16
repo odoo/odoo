@@ -855,33 +855,28 @@ openerp.base.Header =  openerp.base.Widget.extend({
         this._super(parent, element_id);
     },
     start: function() {
-        this.do_update();
+        return this.do_update();
     },
-    do_update: function() {
+    do_update: function () {
         this.$element.html(QWeb.render("Header", this));
-        this.shortcut_load();
         this.$element.find(".logout").click(this.on_logout);
+        return this.shortcut_load();
     },
     shortcut_load :function(){
         var self = this;
-        this.rpc('/base/session/sc_list', {}, function(sc_list_data){
-            self.session.sc_list = sc_list_data;
-            self.$element.find('#shortcuts').html(QWeb.render('Shortcuts', {'shortcuts_pass': sc_list_data}));
-            self.shortcut_menu_load();
+        return this.rpc('/base/session/sc_list', {}, function(shortcuts) {
+            self.session.sc_list = shortcuts;
+            self.$element.find('.oe-shortcuts')
+                .html(QWeb.render('Shortcuts', {'shortcuts': shortcuts}))
+                .delegate('li', 'click', function() {
+                    self.session.active_id = this.id;
+                    self.rpc('/base/menu/action', {'menu_id':this.id}, function(ir_menu_data) {
+                        if (ir_menu_data.action.length){
+                            self.on_action(ir_menu_data.action[0][2]);
+                        }
+                    });
+                });
         });
-     },
-
-    shortcut_menu_load :function(){
-        var self = this; 
-        this.$element.find('#shortcuts ul li').click(function(ev, id){
-            self.session.active_id = this.id;
-            self.active_shortcut = "ir.ui.menu";
-            self.rpc('/base/menu/action', {'menu_id':this.id},function(ir_menu_data){
-                if (ir_menu_data.action.length){
-                    self.on_action(ir_menu_data.action[0][2]);
-                }
-            });
-    });  
     },
     on_action: function(action) {
     },
@@ -951,7 +946,6 @@ openerp.base.Menu =  openerp.base.Widget.extend({
 
         if (id) {
             this.session.active_id = id;
-            this.active_shortcut = "ir.ui.menu";
             this.rpc('/base/menu/action', {'menu_id': id},
                     this.on_menu_action_loaded);
         }
