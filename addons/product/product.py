@@ -469,8 +469,8 @@ class product_product(osv.osv):
     _inherits = {'product.template': 'product_tmpl_id'}
     _order = 'default_code,name_template'
     _columns = {
-        'qty_available': fields.function(_product_qty_available, type='float', string='Real Stock'),
-        'virtual_available': fields.function(_product_virtual_available, type='float', string='Virtual Stock'),
+        'qty_available': fields.function(_product_qty_available, type='float', string='Quantity On Hand'),
+        'virtual_available': fields.function(_product_virtual_available, type='float', string='Quantity On Order'),
         'incoming_qty': fields.function(_product_incoming_qty, type='float', string='Incoming'),
         'outgoing_qty': fields.function(_product_outgoing_qty, type='float', string='Outgoing'),
         'price': fields.function(_product_price, type='float', string='Pricelist', digits_compute=dp.get_precision('Sale Price')),
