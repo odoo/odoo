@@ -868,7 +868,9 @@ openerp.base.Header =  openerp.base.Widget.extend({
             self.session.sc_list = shortcuts;
             self.$element.find('.oe-shortcuts')
                 .html(QWeb.render('Shortcuts', {'shortcuts': shortcuts}))
-                .delegate('li', 'click', function() {
+                .undelegate('li', 'click')
+                .delegate('li', 'click', function(e) {
+                    e.stopPropagation();
                     self.session.active_id = this.id;
                     self.rpc('/base/menu/action', {'menu_id':this.id}, function(ir_menu_data) {
                         if (ir_menu_data.action.length){
