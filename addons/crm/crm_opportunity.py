@@ -50,7 +50,7 @@ class crm_opportunity(osv.osv):
         'date_deadline': fields.date('Expected Closing'),
         'date_action': fields.date('Next Action Date'),
         'title_action': fields.char('Next Action', size=64),
-        'stage_id': fields.many2one('crm.case.stage', 'Stage', domain="[('type','=','opportunity')]"),
+        'stage_id': fields.many2one('crm.case.stage', 'Stage', domain="[(section_ids', '=', section_id)]"),
      }
     
     def _case_close_generic(self, cr, uid, ids, find_stage, *args):

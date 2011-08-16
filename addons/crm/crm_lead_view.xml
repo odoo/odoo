@@ -74,7 +74,7 @@
                     <newline />
                     <field name="user_id" />
                     <field name="section_id" widget="selection" />
-                    <field name="stage_id" domain="[('type','=','lead'),('section_ids', '=', section_id)]" />
+                    <field name="stage_id" domain="[('section_ids', '=', section_id)]" />
                     <group col="2" colspan="1">
                         <button name="stage_previous" string=""
                             states="open,pending,draft" type="object"
