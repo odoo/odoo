@@ -42,7 +42,6 @@
         </td>
         <td valign="top">
             <div id="oe_app" class="oe-application">
-                <div style="width: 100%;">&amp;nbsp;</div>
             </div>
         </td>
     </tr>
@@ -79,7 +78,7 @@
         </table>
         <table align="center" class="db_option_table">
             <tr>
-                <td><label for="super_admin_pwd">Super admin password:</label></td>
+                <td><label for="super_admin_pwd">Master password:</label></td>
                 <td><input type="password" name="super_admin_pwd"
                            class="required" autofocus="autofocus"/></td>
             </tr>
@@ -104,7 +103,7 @@
                 </td>
             </tr>
             <tr>
-                <td><label for="create_admin_pwd">Super admin password:</label></td>
+                <td><label for="create_admin_pwd">Admin password:</label></td>
                 <td><input type="password" name="create_admin_pwd" class="required"/></td>
             </tr>
             <tr>
@@ -139,7 +138,7 @@
                 </td>
             </tr>
             <tr>
-                <td><label for="drop_password">Password:</label></td>
+                <td><label for="drop_password">Master Password:</label></td>
                 <td><input type="password" name="drop_pwd" class="required"/></td>
             </tr>
             <tr>
@@ -171,7 +170,7 @@
                 </td>
             </tr>
             <tr>
-                <td><label for="backup_pwd">Password:</label></td>
+                <td><label for="backup_pwd">Master Password:</label></td>
                 <td><input type="password" name="backup_pwd" class="required"/></td>
             </tr>
             <tr>
@@ -196,7 +195,7 @@
                          autofocus="autofocus"/></td>
             </tr>
             <tr>
-                <td><label for="restore_pwd">Password:</label></td>
+                <td><label for="restore_pwd">Master Password:</label></td>
                 <td><input type="password" name="restore_pwd" class="required"/></td>
             </tr>
         <tr>
@@ -214,23 +213,23 @@
         <table width="100%">
             <tr>
                 <td class="option_string">
-                    CHANGE DATABASE PASSWORD
+                    CHANGE MASTER PASSWORD
                 </td>
             </tr>
         </table>
         <table align="center" class="db_option_table">
             <tr>
-                <td><label for="old_pwd">Old password:</label></td>
+                <td><label for="old_pwd">Master password:</label></td>
                 <td><input type="password" name="old_pwd" class="required"
                            minlength="1" autofocus="autofocus"/></td>
             </tr>
             <tr>
-            <td><label for="new_pwd">New password:</label></td>
+            <td><label for="new_pwd">New master password:</label></td>
        	    <td><input type="password" name="new_pwd" class="required"
                        minlength="1"/></td>
             </tr>
    	    <tr>
-                <td><label for="confirm_pwd">Confirm password:</label></td>
+                <td><label for="confirm_pwd">Confirm new master password:</label></td>
                 <td><input type="password" name="confirm_pwd" class="required"
                            equalTo="input[name=new_pwd]" minlength="1"/></td>
             </tr>
@@ -449,6 +448,41 @@
         </ul>
     </div>
 </t>
+<t t-name="TreeView">
+    <h2 class="oe_view_title"><t t-esc="title"/></h2>
+    <select t-if="toolbar" style="width: 30%">
+    </select>
+    <table class="oe-treeview-table">
+        <thead>
+            <tr>
+                <th t-foreach="fields_view" t-as="field"
+                    t-if="!field.attrs.modifiers.tree_invisible"
+                    class="treeview-header">
+                    <t t-esc="fields[field.attrs.name].string" />
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</t>
+<tr t-name="TreeView.rows"
+        t-foreach="records" t-as="record"
+        t-att-id="'treerow_' + record.id"
+        t-att-data-id="record.id" t-att-data-level="level + 1">
+    <t t-set="children" t-value="record[children_field]"/>
+    <t t-set="has_children" t-value="children and children.length"/>
+
+    <td t-foreach="fields_view" t-as="field"
+        t-if="!field.attrs.modifiers.tree_invisible"
+        t-att-data-id="record.id"
+        t-att-style="!field_index ? 'background-position: ' + 19*level + 'px; padding-left: ' + 19*level + 'px' : undefined"
+        t-att-class="!field_index and has_children ? 'treeview-tr' : 'treeview-td'">
+        <span t-if="!field.attrs.modifiers.invisible">
+            <t t-esc="render(record[field.attrs.name], fields[field.attrs.name])" />
+        </span>
+    </td>
+</tr>
 <table t-name="ListView" class="oe-listview-content">
     <t t-set="columns_count" t-value="visible_columns.length + (options.selectable ? 1 : 0) + (options.deletable ? 1 : 0)"/>
     <thead class="ui-widget-header">
@@ -513,14 +547,9 @@
     </tfoot>
 </table>
 <t t-name="ListView.rows" t-foreach="rows" t-as="row">
-    <t t-call="ListView.row">
-        <t t-set="style" t-value="null"/>
-        <t-if test="row.color">
-            <t t-set="style" t-value="'color: ' + row.color"/>
-        </t-if>
-    </t>
+    <t t-call="ListView.row"/>
 </t>
-<tr t-name="ListView.row" t-att-style="style" t-att-class="row_parity"
+<tr t-name="ListView.row" t-att-class="row_parity"
     t-att-data-index="row_index">
     <t t-foreach="columns" t-as="column">
         <td t-if="column.meta">
@@ -934,22 +963,6 @@
         <t t-if="filters.length" t-raw="filters.render(defaults)"/>
     </div>
 </t>
-<t t-name="SearchView.fields.date">
-    <label style="display: block" t-att-title="attrs.help"
-           t-att-for="element_id">
-        <t t-esc="attrs.string || attrs.name"/>
-        <span t-if="attrs.help">(?)</span>
-    </label>
-    <div style="white-space: nowrap;" t-att-id="element_id">
-        <input t-att-name="attrs.name" type="text" class="field_date"
-               t-att-value="defaults[attrs.name] || ''"
-               t-att-autofocus="attrs.default_focus === '1' ? 'autofocus' : undefined"/>
-        to
-        <input t-att-name="attrs.name" type="text" class="field_date"
-               t-att-value="defaults[attrs.name] || ''"/>
-        <t t-if="filters.length" t-raw="filters.render(defaults)"/>
-    </div>
-</t>
 <t t-name="SearchView.field.selection">
     <label style="display: block" t-att-title="attrs.help"
            t-att-for="element_id">
@@ -1101,11 +1114,17 @@
 </t>
 <t t-name="SelectCreatePopup.search.buttons">
     <button type="button" class="oe_selectcreatepopup-search-select" disabled="disabled">Select</button>
-    <button type="button" class="oe_selectcreatepopup-search-close">Close</button>
+    <button type="button" class="oe_selectcreatepopup-search-close">Cancel</button>
 </t>
 <t t-name="SelectCreatePopup.form.buttons">
-    <button type="button" class="oe_selectcreatepopup-form-save">Save</button>
-    <button type="button" class="oe_selectcreatepopup-form-close">Close</button>
+    <t t-if="widget.options.disable_multiple_selection">
+        <button type="button" class="oe_selectcreatepopup-form-save">Save</button>
+    </t>
+    <t t-if="! widget.options.disable_multiple_selection">
+        <button type="button" class="oe_selectcreatepopup-form-save-new">Save &amp; New</button>
+        <button type="button" class="oe_selectcreatepopup-form-save">Save &amp; Close</button>
+    </t>
+    <button type="button" class="oe_selectcreatepopup-form-close">Cancel</button>
 </t>
 <t t-name="FormOpenPopup">
     <div t-att-id="element_id">
@@ -1114,7 +1133,7 @@
 </t>
 <t t-name="FormOpenPopup.form.buttons">
     <button type="button" class="oe_formopenpopup-form-save">Save</button>
-    <button type="button" class="oe_formopenpopup-form-close">Close</button>
+    <button type="button" class="oe_formopenpopup-form-close">Cancel</button>
 </t>
 <t t-name="ListView.row.frame" t-extend="WidgetFrame">
     <t t-jquery="tr">

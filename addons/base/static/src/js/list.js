@@ -1,63 +1,5 @@
 openerp.base.list = function (openerp) {
 openerp.base.views.add('list', 'openerp.base.ListView');
-openerp.base.list = {
-    /**
-     * Formats the rendring of a given value based on its field type
-     *
-     * @param {Object} row_data record whose values should be displayed in the cell
-     * @param {Object} column column descriptor
-     * @param {"button"|"field"} column.tag base control type
-     * @param {String} column.type widget type for a field control
-     * @param {String} [column.string] button label
-     * @param {String} [column.icon] button icon
-     * @param {String} [value_if_empty=''] what to display if the field's value is ``false``
-     */
-    render_cell: function (row_data, column, value_if_empty) {
-        var attrs = column.modifiers_for(row_data);
-        if (attrs.invisible) { return ''; }
-        if (column.tag === 'button') {
-            return [
-                '<button type="button" title="', column.string || '', '">',
-                    '<img src="/base/static/src/img/icons/', column.icon, '.png"',
-                        ' alt="', column.string || '', '"/>',
-                '</button>'
-            ].join('')
-        }
-
-        var value = row_data[column.id].value;
-
-        // If NaN value, display as with a `false` (empty cell)
-        if (typeof value === 'number' && isNaN(value)) {
-            value = false;
-        }
-        switch (value) {
-            case false:
-            case Infinity:
-            case -Infinity:
-                return value_if_empty === undefined ?  '' : value_if_empty;
-        }
-        switch (column.widget || column.type) {
-            case 'integer':
-                return _.sprintf('%d', value);
-            case 'float':
-                var precision = column.digits ? column.digits[1] : 2;
-                return _.sprintf('%.' + precision + 'f', value);
-            case 'float_time':
-                return _.sprintf("%02d:%02d",
-                        Math.floor(value),
-                        Math.round((value % 1) * 60));
-            case 'progressbar':
-                return _.sprintf(
-                    '<progress value="%.2f" max="100.0">%.2f%%</progress>',
-                        value, value);
-            case 'many2one':
-                // name_get value format
-                return value[1];
-            default:
-                return value;
-        }
-    }
-};
 openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListView# */ {
     defaults: {
         // records can be selected one by one
@@ -119,7 +61,7 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
     /**
      * Retrieves the view's number of records per page (|| section)
      *
-     * options > defaults > indefinite
+     * options > defaults > parent.action.limit > indefinite
      *
      * @returns {Number|null}
      */
@@ -127,6 +69,7 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
         if (this._limit === undefined) {
             this._limit = (this.options.limit
                         || this.defaults.limit
+                        || (this.widget_parent.action || {}).limit
                         || null);
         }
         return this._limit;
@@ -152,7 +95,7 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
                 self.do_delete(ids);
             },
             'action': function (e, action_name, id, callback) {
-                self.do_action(action_name, id, callback);
+                self.do_button_action(action_name, id, callback);
             },
             'row_link': function (e, id, dataset) {
                 self.do_activate_record(dataset.index, id, dataset);
@@ -409,8 +352,9 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
      * Reloads the list view based on the current settings (dataset & al)
      *
      * @param {Boolean} [grouped] Should the list be displayed grouped
+     * @param {Object} [context] context to send the server while loading the view
      */
-    reload_view: function (grouped) {
+    reload_view: function (grouped, context) {
         var self = this;
         var callback = function (field_view_get) {
             self.on_loaded(field_view_get, grouped);
@@ -421,7 +365,7 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
             return this.rpc('/base/listview/load', {
                 model: this.model,
                 view_id: this.view_id,
-                context: this.dataset.get_context(),
+                context: this.dataset.get_context(context),
                 toolbar: this.options.sidebar
             }, callback);
         }
@@ -457,11 +401,10 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
      * @param {Object} results results of evaluating domain and process for a search
      */
     do_actual_search: function (results) {
-        this.dataset.context = results.context;
-        this.dataset.domain = results.domain;
         this.groups.datagroup = new openerp.base.DataGroup(
             this, this.model,
-            results.domain, results.context,
+            this.dataset.get_domain(results.domain),
+            this.dataset.get_context(results.context),
             results.group_by);
         this.groups.datagroup.sort = this.dataset._sort;
 
@@ -469,7 +412,7 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
             results.group_by = null;
         }
 
-        this.reload_view(!!results.group_by).then(
+        this.reload_view(!!results.group_by, results.context).then(
             $.proxy(this, 'reload_content'));
     },
     /**
@@ -512,17 +455,16 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
      * @param {Object} id id of the record the action should be called on
      * @param {Function} callback should be called after the action is executed, if non-null
      */
-    do_action: function (name, id, callback) {
+    do_button_action: function (name, id, callback) {
         var   self = this,
             action = _.detect(this.columns, function (field) {
             return field.name === name;
         });
         if (!action) { return; }
-        this.execute_action(
-            action, this.dataset, this.session.action_manager, id, function () {
-                $.when(callback.apply(this, arguments).then(function () {
-                    self.compute_aggregates();
-                }));
+        this.execute_action(action, this.dataset, id, function () {
+            $.when(callback.apply(this, arguments).then(function () {
+                self.compute_aggregates();
+            }));
         });
     },
     /**
@@ -534,11 +476,11 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
      */
     do_activate_record: function (index, id, dataset) {
         var self = this;
-        _.extend(this.dataset, {
-            domain: dataset.domain,
-            context: dataset.get_context()
-        }).read_slice([], 0, false, function () {
-            self.select_record(index);
+        this.dataset.read_slice({
+                context: dataset.get_context(),
+                domain: dataset.get_domain()
+            }, function () {
+                self.select_record(index);
         });
     },
     /**
@@ -637,7 +579,7 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
             }
 
             $footer_cells.filter(_.sprintf('[data-field=%s]', column.id))
-                .html(openerp.base.list.render_cell(aggregation, column));
+                .html(openerp.base.format_cell(aggregation, column));
         });
     }
     // TODO: implement reorder (drag and drop rows)
@@ -725,7 +667,7 @@ openerp.base.ListView.List = openerp.base.Class.extend( /** @lends openerp.base.
         this.$current = this.$_element.clone(true);
         this.$current.empty().append(
             QWeb.render('ListView.rows', _.extend({
-                render_cell: openerp.base.list.render_cell}, this)));
+                render_cell: openerp.base.format_cell}, this)));
     },
     /**
      * Gets the ids of all currently selected records, if any
@@ -830,7 +772,7 @@ openerp.base.ListView.List = openerp.base.Class.extend( /** @lends openerp.base.
             var old_index = this.dataset.index;
             this.dataset.index = record_index;
             read_p = this.dataset.read_index(
-                _.filter(_.pluck(this.columns, 'name'), _.identity),
+                _.pluck(_(this.columns).filter(function (r) {return r.tag === 'field';}), 'name'),
                 function (record) {
                     var form_record = self.transform_record(record);
                     self.rows.splice(record_index, 1, form_record);
@@ -856,7 +798,7 @@ openerp.base.ListView.List = openerp.base.Class.extend( /** @lends openerp.base.
             row: this.rows[record_index],
             row_parity: (record_index % 2 === 0) ? 'even' : 'odd',
             row_index: record_index,
-            render_cell: openerp.base.list.render_cell
+            render_cell: openerp.base.format_cell
         });
     },
     /**
@@ -1016,7 +958,7 @@ openerp.base.ListView.Groups = openerp.base.Class.extend( /** @lends openerp.bas
                 row_data[group.grouped_on] = group;
                 var group_column = _(self.columns).detect(function (column) {
                     return column.id === group.grouped_on; });
-                $group_column.html(openerp.base.list.render_cell(
+                $group_column.html(openerp.base.format_cell(
                     row_data, group_column, "Undefined"
                 ));
                 if (group.openable) {
@@ -1092,10 +1034,11 @@ openerp.base.ListView.Groups = openerp.base.Class.extend( /** @lends openerp.bas
                d = new $.Deferred(),
             page = this.datagroup.openable ? this.page : view.page;
 
-        dataset.read_slice(
-            _.filter(_.pluck(_.select(this.columns, function(x) {return x.tag == "field";}), 'name'), _.identity),
-            page * limit, limit,
-            function (records) {
+        dataset.read_slice({
+                fields: _.pluck(_.select(this.columns, function(x) {return x.tag == "field"}), 'name'),
+                offset: page * limit,
+                limit: limit
+            }, function (records) {
                 if (!self.datagroup.openable) {
                     view.configure_pager(dataset);
                 } else {

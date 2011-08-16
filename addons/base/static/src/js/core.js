@@ -1,5 +1,5 @@
 /*---------------------------------------------------------
- * OpenERP controller framework
+ * OpenERP Web core
  *--------------------------------------------------------*/
 
 openerp.base.core = function(openerp) {
@@ -373,59 +373,6 @@ openerp.base.SessionAware = openerp.base.Class.extend({
     }
 });
 
-/**
- * Base class for all visual components. Provides a lot of functionalities helpful
- * for the management of a part of the DOM.
- *
- * Widget handles:
- * - Rendering with QWeb.
- * - Life-cycle management and parenting (when a parent is destroyed, all its children are
- *     destroyed too).
- * - Insertion in DOM.
- *
- * Widget also extends SessionAware for ease of use.
- *
- * Guide to create implementations of the Widget class:
- * ==============================================
- *
- * Here is a sample child class:
- *
- * MyWidget = openerp.base.Widget.extend({
- *     // the name of the QWeb template to use for rendering
- *     template: "MyQWebTemplate",
- *     // identifier prefix, it is useful to put an obvious one for debugging
- *     identifier_prefix: 'my-id-prefix-',
- *
- *     init: function(parent) {
- *         this._super(parent);
- *         // stuff that you want to init before the rendering
- *     },
- *     start: function() {
- *         this._super();
- *         // stuff you want to make after the rendering, `this.$element` holds a correct value
- *         this.$element.find(".my_button").click(/* an example of event binding * /);
- *
- *         // if you have some asynchronous operations, it's a good idea to return
- *         // a promise in start()
- *         var promise = this.rpc(...);
- *         return promise;
- *     }
- * });
- *
- * Now this class can simply be used with the following syntax:
- *
- * var my_widget = new MyWidget(this);
- * my_widget.appendTo($(".some-div"));
- *
- * With these two lines, the MyWidget instance was inited, rendered, it was inserted into the
- * DOM inside the ".some-div" div and its events were binded.
- *
- * And of course, when you don't need that widget anymore, just do:
- *
- * my_widget.stop();
- *
- * That will kill the widget in a clean way and erase its content from the dom.
- */
 openerp.base.Widget = openerp.base.SessionAware.extend({
     /**
      * The name of the QWeb template that will be used for rendering. Must be
@@ -574,6 +521,18 @@ openerp.base.Widget = openerp.base.SessionAware.extend({
         }
         return false;
     },
+    do_notify: function() {
+        if (this.widget_parent) {
+            return this.widget_parent.do_notify.apply(this,arguments);
+        }
+        return false;
+    },
+    do_warn: function() {
+        if (this.widget_parent) {
+            return this.widget_parent.do_warn.apply(this,arguments);
+        }
+        return false;
+    },
     rpc: function(url, data, success, error) {
         var def = $.Deferred().then(success, error);
         var self = this;
@@ -599,5 +558,282 @@ openerp.base.OldWidget = openerp.base.Widget.extend({
     }
 });
 
+openerp.base.Session = openerp.base.Widget.extend( /** @lends openerp.base.Session# */{
+    /**
+     * @constructs
+     * @param element_id to use for exception reporting
+     * @param server
+     * @param port
+     */
+    init: function(parent, element_id, server, port) {
+        this._super(parent, element_id);
+        this.server = (server == undefined) ? location.hostname : server;
+        this.port = (port == undefined) ? location.port : port;
+        this.rpc_mode = (server == location.hostname) ? "ajax" : "jsonp";
+        this.debug = true;
+        this.db = "";
+        this.login = "";
+        this.password = "";
+        this.uid = false;
+        this.session_id = false;
+        this.module_list = [];
+        this.module_loaded = {"base": true};
+        this.context = {};
+    },
+    start: function() {
+        this.session_restore();
+    },
+    /**
+     * Executes an RPC call, registering the provided callbacks.
+     *
+     * Registers a default error callback if none is provided, and handles
+     * setting the correct session id and session context in the parameter
+     * objects
+     *
+     * @param {String} url RPC endpoint
+     * @param {Object} params call parameters
+     * @param {Function} success_callback function to execute on RPC call success
+     * @param {Function} error_callback function to execute on RPC call failure
+     * @returns {jQuery.Deferred} jquery-provided ajax deferred
+     */
+    rpc: function(url, params, success_callback, error_callback) {
+        var self = this;
+        // Construct a JSON-RPC2 request, method is currently unused
+        params.session_id = this.session_id;
+
+        // Call using the rpc_mode
+        var deferred = $.Deferred();
+        this.rpc_ajax(url, {
+            jsonrpc: "2.0",
+            method: "call",
+            params: params,
+            id:null
+        }).then(function () {deferred.resolve.apply(deferred, arguments);},
+                function(error) {deferred.reject(error, $.Event());});
+        return deferred.fail(function() {
+            deferred.fail(function(error, event) {
+                if (!event.isDefaultPrevented()) {
+                    self.on_rpc_error(error, event);
+                }
+            });
+        }).then(success_callback, error_callback).promise();
+    },
+    /**
+     * Raw JSON-RPC call
+     *
+     * @returns {jQuery.Deferred} ajax-based deferred object
+     */
+    rpc_ajax: function(url, payload) {
+        var self = this;
+        this.on_rpc_request();
+        // url can be an $.ajax option object
+        if (_.isString(url)) {
+            url = {
+                url: url
+            }
+        }
+        var ajax = _.extend({
+            type: "POST",
+            url: url,
+            dataType: 'json',
+            contentType: 'application/json',
+            data: JSON.stringify(payload),
+            processData: false
+        }, url);
+        var deferred = $.Deferred();
+        $.ajax(ajax).done(function(response, textStatus, jqXHR) {
+            self.on_rpc_response();
+            if (!response.error) {
+                deferred.resolve(response["result"], textStatus, jqXHR);
+                return;
+            }
+            if (response.error.data.type !== "session_invalid") {
+                deferred.reject(response.error);
+                return;
+            }
+            self.uid = false;
+            self.on_session_invalid(function() {
+                self.rpc(url, payload.params,
+                    function() {
+                        deferred.resolve.apply(deferred, arguments);
+                    },
+                    function(error, event) {
+                        event.preventDefault();
+                        deferred.reject.apply(deferred, arguments);
+                    });
+            });
+        }).fail(function(jqXHR, textStatus, errorThrown) {
+            self.on_rpc_response();
+            var error = {
+                code: -32098,
+                message: "XmlHttpRequestError " + errorThrown,
+                data: {type: "xhr"+textStatus, debug: jqXHR.responseText, objects: [jqXHR, errorThrown] }
+            };
+            deferred.reject(error);
+        });
+        return deferred.promise();
+    },
+    on_rpc_request: function() {
+    },
+    on_rpc_response: function() {
+    },
+    on_rpc_error: function(error) {
+    },
+    /**
+     * The session is validated either by login or by restoration of a previous session
+     */
+    on_session_valid: function() {
+        if(!openerp._modules_loaded)
+            this.load_modules();
+    },
+    on_session_invalid: function(contination) {
+    },
+    session_is_valid: function() {
+        return this.uid;
+    },
+    session_login: function(db, login, password, success_callback) {
+        var self = this;
+        this.db = db;
+        this.login = login;
+        this.password = password;
+        var params = { db: this.db, login: this.login, password: this.password };
+        this.rpc("/base/session/login", params, function(result) {
+            self.session_id = result.session_id;
+            self.uid = result.uid;
+            self.session_save();
+            self.on_session_valid();
+            if (success_callback)
+                success_callback();
+        });
+    },
+    session_logout: function() {
+        this.uid = false;
+    },
+    /**
+     * Reloads uid and session_id from local storage, if they exist
+     */
+    session_restore: function () {
+        this.uid = this.get_cookie('uid');
+        this.session_id = this.get_cookie('session_id');
+        this.db = this.get_cookie('db');
+        this.login = this.get_cookie('login');
+        // we should do an rpc to confirm that this session_id is valid and if it is retrieve the information about db and login
+        // then call on_session_valid
+        this.on_session_valid();
+    },
+    /**
+     * Saves the session id and uid locally
+     */
+    session_save: function () {
+        this.set_cookie('uid', this.uid);
+        this.set_cookie('session_id', this.session_id);
+        this.set_cookie('db', this.db);
+        this.set_cookie('login', this.login);
+    },
+    logout: function() {
+        delete this.uid;
+        delete this.session_id;
+        delete this.db;
+        delete this.login;
+        this.set_cookie('uid', '');
+        this.set_cookie('session_id', '');
+        this.set_cookie('db', '');
+        this.set_cookie('login', '');
+        this.on_session_invalid(function() {});
+    },
+    /**
+     * Fetches a cookie stored by an openerp session
+     *
+     * @private
+     * @param name the cookie's name
+     */
+    get_cookie: function (name) {
+        var nameEQ = this.element_id + '|' + name + '=';
+        var cookies = document.cookie.split(';');
+        for(var i=0; i<cookies.length; ++i) {
+            var cookie = cookies[i].replace(/^\s*/, '');
+            if(cookie.indexOf(nameEQ) === 0) {
+                return JSON.parse(decodeURIComponent(cookie.substring(nameEQ.length)));
+            }
+        }
+        return null;
+    },
+    /**
+     * Create a new cookie with the provided name and value
+     *
+     * @private
+     * @param name the cookie's name
+     * @param value the cookie's value
+     * @param ttl the cookie's time to live, 1 year by default, set to -1 to delete
+     */
+    set_cookie: function (name, value, ttl) {
+        ttl = ttl || 24*60*60*365;
+        document.cookie = [
+            this.element_id + '|' + name + '=' + encodeURIComponent(JSON.stringify(value)),
+            'max-age=' + ttl,
+            'expires=' + new Date(new Date().getTime() + ttl*1000).toGMTString()
+        ].join(';');
+    },
+    /**
+     * Load additional web addons of that instance and init them
+     */
+    load_modules: function() {
+        var self = this;
+        this.rpc('/base/session/modules', {}, function(result) {
+            self.module_list = result;
+            var modules = self.module_list.join(',');
+            if(self.debug || true) {
+                self.rpc('/base/webclient/csslist', {"mods": modules}, self.do_load_css);
+                self.rpc('/base/webclient/jslist', {"mods": modules}, self.do_load_js);
+            } else {
+                self.do_load_css(["/base/webclient/css?mods="+modules]);
+                self.do_load_js(["/base/webclient/js?mods="+modules]);
+            }
+            openerp._modules_loaded = true;
+        });
+    },
+    do_load_css: function (files) {
+        _.each(files, function (file) {
+            $('head').append($('<link>', {
+                'href': file,
+                'rel': 'stylesheet',
+                'type': 'text/css'
+            }));
+        });
+    },
+    do_load_js: function(files) {
+        var self = this;
+        if(files.length != 0) {
+            var file = files.shift();
+            var tag = document.createElement('script');
+            tag.type = 'text/javascript';
+            tag.src = file;
+            tag.onload = tag.onreadystatechange = function() {
+                if ( (tag.readyState && tag.readyState != "loaded" && tag.readyState != "complete") || tag.onload_done )
+                    return;
+                tag.onload_done = true;
+                self.do_load_js(files);
+            };
+            document.head.appendChild(tag);
+        } else {
+            this.on_modules_loaded();
+        }
+    },
+    on_modules_loaded: function() {
+        for(var j=0; j<this.module_list.length; j++) {
+            var mod = this.module_list[j];
+            if(this.module_loaded[mod])
+                continue;
+            openerp[mod] = {};
+            // init module mod
+            if(openerp._openerp[mod] != undefined) {
+                openerp._openerp[mod](openerp);
+                this.module_loaded[mod] = true;
+            }
+        }
+    }
+});
+
 };
+
 // vim:et fdc=0 fdl=0 foldnestmax=3 fdm=syntax:

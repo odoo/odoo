@@ -22,7 +22,7 @@
         "static/lib/underscore/underscore.string.js",
         "static/src/js/boot.js",
         "static/src/js/core.js",
-        "static/src/js/dates.js",
+        "static/src/js/formats.js",
         "static/src/js/chrome.js",
         "static/src/js/views.js",
         "static/src/js/data.js",
