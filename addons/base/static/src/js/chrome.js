@@ -871,8 +871,9 @@ openerp.base.Header =  openerp.base.Widget.extend({
                 .undelegate('li', 'click')
                 .delegate('li', 'click', function(e) {
                     e.stopPropagation();
-                    self.session.active_id = this.id;
-                    self.rpc('/base/menu/action', {'menu_id':this.id}, function(ir_menu_data) {
+                    var id = $(this).data('id');
+                    self.session.active_id = id;
+                    self.rpc('/base/menu/action', {'menu_id':id}, function(ir_menu_data) {
                         if (ir_menu_data.action.length){
                             self.on_action(ir_menu_data.action[0][2]);
                         }

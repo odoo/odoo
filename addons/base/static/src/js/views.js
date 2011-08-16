@@ -381,7 +381,7 @@ openerp.base.ViewManagerAction = openerp.base.ViewManager.extend({
         var dataset_shortcut = new openerp.base.DataSet(this, 'ir.ui.view_sc');
         $shortcut_toggle.click(function() {
             if ($shortcut_toggle.hasClass("oe-shortcut-remove")) {
-                var unlink_id = $(".oe-shortcuts li[id=" + self.session.active_id + "]").data('shortcut-id');
+                var unlink_id = $(".oe-shortcuts li[data-id=" + self.session.active_id + "]").data('shortcut-id');
                 dataset_shortcut.unlink([parseInt(unlink_id)]);
                 $shortcut_toggle.removeClass("oe-shortcut-remove");
             } else {

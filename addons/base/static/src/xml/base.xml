@@ -364,7 +364,7 @@
 </t>
 <ul t-name="Shortcuts">
     <li t-foreach="shortcuts" t-as="shortcut"
-            t-att-id="shortcut.res_id"
+            t-att-data-id="shortcut.res_id"
             t-att-data-shortcut-id="shortcut.id"
         ><t t-esc="shortcut.name"/></li>
 </ul>
