@@ -35,7 +35,7 @@ then
     $0  addons/base/static/src/ addons/base/po/base.pot    
 elif [ -n "$2" ]
 then
-    pybabel extract -F babel.cfg -o $2 -k _t --no-default-keywords $1
+    ./npybabel.py extract -F babel.cfg -o $2 -k _t --no-default-keywords $1
 else
     usage
 fi
