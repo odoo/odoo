@@ -573,13 +573,66 @@ openerp.base.Header =  openerp.base.Widget.extend({
         this._super(parent, element_id);
     },
     start: function() {
-        this.do_update();
+        return this.do_update();
     },
-    do_update: function() {
+    do_update: function () {
         this.$element.html(QWeb.render("Header", this));
         this.$element.find(".logout").click(this.on_logout);
+        return this.shortcut_load();
     },
-    on_logout: function() {}
+    shortcut_load :function(){
+        var self = this,
+            sc = self.session.shortcuts,
+            shortcuts_ds = new openerp.base.DataSet(this, 'ir.ui.view_sc');
+        // TODO: better way to communicate between sections.
+        // sc.bindings, because jquery does not bind/trigger on arrays...
+        if (!sc.binding) {
+            sc.binding = {};
+            $(sc.binding).bind({
+                'add': function (e, attrs) {
+                    var $shortcut = $('<li>', {
+                            'data-id': attrs.res_id
+                        }).text(attrs.name)
+                        .appendTo(self.$element.find('.oe-shortcuts ul'));
+                    shortcuts_ds.create(attrs, function (out) {
+                        $shortcut.data('shortcut-id', out.result);
+                    });
+                },
+                'remove-current': function () {
+                    var menu_id = self.session.active_id;
+                    var $shortcut = self.$element
+                            .find('.oe-shortcuts li[data-id=' + menu_id + ']');
+                    var shortcut_id = $shortcut.data('shortcut-id');
+                    $shortcut.remove();
+                    shortcuts_ds.unlink([shortcut_id]);
+                }
+            });
+        }
+        return this.rpc('/base/session/sc_list', {}, function(shortcuts) {
+            sc.splice(0, sc.length);
+            sc.push.apply(sc, shortcuts);
+
+            self.$element.find('.oe-shortcuts')
+                .html(QWeb.render('Shortcuts', {'shortcuts': shortcuts}))
+                .undelegate('li', 'click')
+                .delegate('li', 'click', function(e) {
+                    e.stopPropagation();
+                    var id = $(this).data('id');
+                    self.session.active_id = id;
+                    self.rpc('/base/menu/action', {'menu_id':id}, function(ir_menu_data) {
+                        if (ir_menu_data.action.length){
+                            self.on_action(ir_menu_data.action[0][2]);
+                        }
+                    });
+                });
+        });
+    },
+    on_action: function(action) {
+    },
+
+    on_logout: function() {
+        this.$element.find('.oe-shortcuts ul').empty();
+    }
 });
 
 openerp.base.Menu =  openerp.base.Widget.extend({
@@ -641,6 +694,7 @@ openerp.base.Menu =  openerp.base.Widget.extend({
         $secondary.show();
 
         if (id) {
+            this.session.active_id = id;
             this.rpc('/base/menu/action', {'menu_id': id},
                     this.on_menu_action_loaded);
         }
@@ -699,7 +753,7 @@ openerp.base.WebClient = openerp.base.Widget.extend({
 
         this.menu = new openerp.base.Menu(this, "oe_menu", "oe_secondary_menu");
         this.menu.on_action.add(this.on_menu_action);
-
+        this.header.on_action.add(this.on_menu_action);
     },
     start: function() {
         this.session.start();
