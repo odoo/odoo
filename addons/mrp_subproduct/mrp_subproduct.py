@@ -103,8 +103,7 @@ class mrp_production(osv.osv):
         sub_id = sub_obj.search(cr, uid,[('product_id', '=', move_obj.product_id.id)] )
         if sub_id:
             sub_qty = sub_obj.browse(cr ,uid, sub_id[0]).product_qty
-        res = {'product_qty': obj.product_qty * sub_qty, 'sub_qty': sub_qty}
-        return res
+        return {'product_qty': obj.product_qty * sub_qty, 'sub_qty': sub_qty}
 
 mrp_production()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
