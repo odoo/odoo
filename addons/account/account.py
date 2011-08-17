@@ -2990,6 +2990,51 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             obj_journal.create(cr, uid, vals_journal, context=context)
         return True
 
+    def generate_properties(self, cr, uid, chart_template_id, acc_template_ref, company_id, context=None):
+        """
+        This method used for creating properties.
+        @param cr: A database cursor.
+        @param uid: ID of the user currently logged in.
+        @param chart_temp_id: Chart Template Id.
+        @param acc_template_ref: Account templates reference.
+        @param company_id: company_id selected from wizard.multi.charts.accounts.
+        """
+        
+        if context is None:
+            context = {}
+        property_obj = self.pool.get('ir.property')
+
+        todo_list = [
+            ('property_account_receivable','res.partner','account.account'),
+            ('property_account_payable','res.partner','account.account'),
+            ('property_account_expense_categ','product.category','account.account'),
+            ('property_account_income_categ','product.category','account.account'),
+            ('property_account_expense','product.template','account.account'),
+            ('property_account_income','product.template','account.account'),
+            ('property_reserve_and_surplus_account','res.company','account.account')
+        ]
+        template_id = self.pool.get('account.chart.template').browse(cr, uid, chart_template_id, context=context)
+        for record in todo_list:
+            rec_list = []
+            rec_list = property_obj.search(cr, uid, [('name','=', record[0]),('company_id', '=', company_id)], context=context)
+            account = getattr(template_id, record[0])
+            field = self.pool.get('ir.model.fields').search(cr, uid, [('name', '=', record[0]),('model', '=', record[1]),('relation', '=', record[2])], context=context)
+            vals = {
+                'name': record[0],
+                'company_id': company_id,
+                'fields_id': field[0],
+                'value': account and 'account.account,' + str(acc_template_ref[account.id]) or False,
+            }
+
+            if rec_list:
+                #the property exist: modify it
+                property_obj.write(cr, uid, rec_list, vals, context=context)
+            else:
+                #create the property
+                property_obj.create(cr, uid, vals, context=context)
+        
+        return True
+
     def execute(self, cr, uid, ids, context=None):
         obj_multi = self.browse(cr, uid, ids[0])
         obj_acc = self.pool.get('account.account')
@@ -3125,37 +3170,8 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             current_num += 1
             valid = True
 
-        #create the properties
-        property_obj = self.pool.get('ir.property')
-        fields_obj = self.pool.get('ir.model.fields')
-
-        todo_list = [
-            ('property_account_receivable','res.partner','account.account'),
-            ('property_account_payable','res.partner','account.account'),
-            ('property_account_expense_categ','product.category','account.account'),
-            ('property_account_income_categ','product.category','account.account'),
-            ('property_account_expense','product.template','account.account'),
-            ('property_account_income','product.template','account.account'),
-            ('property_reserve_and_surplus_account','res.company','account.account')
-        ]
-        for record in todo_list:
-            r = []
-            r = property_obj.search(cr, uid, [('name','=', record[0] ),('company_id','=',company_id)])
-            account = getattr(obj_multi.chart_template_id, record[0])
-            field = fields_obj.search(cr, uid, [('name','=',record[0]),('model','=',record[1]),('relation','=',record[2])])
-            vals = {
-                'name': record[0],
-                'company_id': company_id,
-                'fields_id': field[0],
-                'value': account and 'account.account,' + str(acc_template_ref[account.id]) or False,
-            }
-
-            if r:
-                #the property exist: modify it
-                property_obj.write(cr, uid, r, vals)
-            else:
-                #create the property
-                property_obj.create(cr, uid, vals)
+        #This method used for creating properties.
+        self.generate_properties(cr, uid, chart_temp_id, acc_template_ref, company_id, context=context)
 
         #Generate Fiscal Position , Fiscal Position Accounts and Fiscal Position Taxes from templates
         obj_fiscal_position_template.generate_fiscal_position(cr, uid, chart_temp_id, taxes_ids['tax_template_ref'], acc_template_ref, company_id, context=context)
