@@ -103,8 +103,7 @@ class mrp_production(osv.osv):
         sub_id = sub_obj.search(cr, uid,[('product_id', '=', move_obj.product_id.id)] )
         if sub_id:
             sub_qty = sub_obj.browse(cr ,uid, sub_id[0]).product_qty
-        qty = obj.product_qty * sub_qty
-        res = {'product_qty': qty, 'sub_qty': sub_qty}
+        res = {'product_qty': obj.product_qty * sub_qty, 'sub_qty': sub_qty}
         return res
 
 mrp_production()
