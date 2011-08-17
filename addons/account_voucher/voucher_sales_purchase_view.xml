@@ -22,13 +22,6 @@
                         <field name="journal_id" widget="selection" context="{'journal_id': self, 'set_visible':False}" domain="[('type','in',('purchase','purchase_refund'))]"/>
                         <field name="period_id" groups="base.group_extended"/>
                     </group>
-                    <newline/>
-                    <group expand="0" string="Extended Filters..." col='8' colspan='4'>
-                        <field name="reference"/>
-                        <field name="name"/>
-                        <field name="narration"/>
-                        <field name="amount"/>
-                   </group>
                    <newline/>
                     <group expand="0" string="Group By..." colspan="4" col="10">
                         <filter string="Supplier" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>
@@ -61,13 +54,6 @@
                         <field name="journal_id" widget="selection" context="{'journal_id': self, 'set_visible':False}" domain="[('type','in',('sale','sale_refund'))]"/>
                         <field name="period_id" groups="base.group_extended"/>
                     </group>
-                    <newline/>
-                    <group expand="0" string="Extended Filters..." col='8' colspan='4'>
-                        <field name="reference"/>
-                        <field name="name"/>
-                        <field name="narration"/>
-                        <field name="amount"/>
-                   </group>
                    <newline/>
                     <group expand="0" string="Group By..." colspan="4" col="10">
                         <filter string="Customer" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>

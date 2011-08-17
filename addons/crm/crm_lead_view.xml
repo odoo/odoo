@@ -309,8 +309,8 @@
             <search string="Search Leads">
                 <filter icon="terp-check"
                     string="Current"
-                    name="current" help="Draft and Open Leads"
-                    domain="[('state','in',('draft','open'))]"/>
+                    name="current" help="Draft, Open and Pending Leads"
+                    domain="[('state','in',('draft','open','pending'))]"/>
                 <filter icon="terp-camera_test"
                     string="Open"
                     domain="[('state','=','open')]"/>
@@ -346,21 +346,10 @@
                         domain="[]"
                         help="Show Sales Team"/>
                 </field>
-                <newline/>
-
-                <group expand="0" string="Extended Filters..." groups="base.group_extended">
-                      <field name="stage_id" widget="selection" domain="[('type', '=', 'lead')]"/>
-                      <field name="categ_id" widget="selection" domain="[('object_id.model', '=', 'crm.lead')]"/>
-                      <separator orientation="vertical"/>
-                      <field name="country_id" context="{'invisible_country': False}">
-                          <filter icon="terp-personal+" context="{'invisible_country': False}" help="Show countries"/>
-                      </field>
-                      <separator orientation="vertical"/>
-                      <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                      <newline/>
-                      <field name="create_date" string="Creation Date"/>
-                      <field name="date_closed"/>
-                </group>
+                <separator orientation="vertical"/>
+                <field name="country_id" context="{'invisible_country': False}">
+                	<filter icon="terp-personal+" context="{'invisible_country': False}" help="Show countries"/>
+                </field>
                 <newline/>
                 <group expand="0" string="Group By...">
                     <filter string="Salesman" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>

@@ -2,11 +2,12 @@
 <openerp>
 <data noupdate="0">
 
-    <record id="group_auction_manager" model="res.groups">
-        <field name="name">Auction / Manager</field>
-    </record>
     <record id="group_auction_user" model="res.groups">
         <field name="name">Auction / User</field>
+    </record>
+    <record id="group_auction_manager" model="res.groups">
+        <field name="name">Auction / Manager</field>
+        <field name="implied_ids" eval="[(4, ref('group_auction_user'))]"/>
     </record>
 
 </data>

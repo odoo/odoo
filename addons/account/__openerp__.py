@@ -123,13 +123,15 @@ module named account_voucher.
         'company_view.xml',
         'board_account_view.xml',
         "wizard/account_report_profit_loss_view.xml",
-        "wizard/account_report_balance_sheet_view.xml"
+        "wizard/account_report_balance_sheet_view.xml",
+        "account_bank_view.xml"
     ],
     'demo_xml': [
-        'account_demo.xml',
+        'demo/account_demo.xml',
         'project/project_demo.xml',
         'project/analytic_account_demo.xml',
         'demo/account_minimal.xml',
+        'demo/account_invoice_demo.xml',
 #        'account_unit_test.xml',
     ],
     'test': [
