@@ -131,6 +131,14 @@
             <field name="parent_id" ref="chart_a1"/>
         </record>
 
+        <record model="account.account.template" id="chart_b5">
+            <field name="name">Creditors B</field>
+            <field name="code">B00025</field>
+            <field name="type">view</field>
+            <field name="user_type" ref="account_type_payable"/>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="chart_a1"/>
+        </record>
 
         <!-- Chart template -->
         <record id="account_chart_template_a" model="account.chart.template">
@@ -149,48 +157,55 @@
         </record>
 
         <!-- Tax for template A-->
-        <record id="attn_VAT-OUT-21-S" model="account.tax.template">
+        <record id="tax_temp_21" model="account.tax.template">
             <field name="sequence">10</field>
-            <field name="description">VAT-OUT-21-S</field>
-            <field name="name">VAT 21%</field>
+            <field name="description">Tax 21%</field>
+            <field name="name">Tax 21%</field>
             <field name="amount">0.21</field>
             <field name="type">percent</field>
             <field name="chart_template_id" ref="account_chart_template_a"/>
         </record>
 
         <!-- Tax for template B-->
-        <record id="attn_VAT-OUT-4-S" model="account.tax.template">
+        <record id="tax_temp_4" model="account.tax.template">
             <field name="sequence">12</field>
-            <field name="description">VAT-OUT-4-S</field>
+            <field name="description">VAT 4%</field>
             <field name="name">VAT 4%</field>
             <field name="amount">0.4</field>
             <field name="type">percent</field>
             <field name="chart_template_id" ref="account_chart_template_b"/>
         </record>
 
-        <record id="attn_VAT-OUT-12-S" model="account.tax.template">
+        <record id="tax_temp_12" model="account.tax.template">
             <field name="sequence">12</field>
-            <field name="description">VAT-OUT-12-S</field>
-            <field name="name">VAT 12%</field>
+            <field name="description">Tax 12%</field>
+            <field name="name">Tax 12%</field>
             <field name="amount">0.12</field>
             <field name="type">percent</field>
             <field name="chart_template_id" ref="account_chart_template_b"/>
         </record>
 
         <!-- account.fiscal.position.template -->
-        <record id="afptn_national" model="account.fiscal.position.template">
-            <field name="name">National Regime</field>
+        <record id="acc_fisc_pos_temp_a" model="account.fiscal.position.template">
+            <field name="name">Fiscal Position Template A</field>
+            <field name="chart_template_id" ref="account_chart_template_a"/>
+        </record>
+ 
+        <record id="acc_fisc_pos_temp_b" model="account.fiscal.position.template">
+            <field name="name">Fiscal Position Template B</field>
             <field name="chart_template_id" ref="account_chart_template_a"/>
         </record>
 
-        <record id="afptn_intracom" model="account.fiscal.position.template">
-            <field name="name">Intra Community Regime </field>
-            <field name="chart_template_id" ref="account_chart_template_a"/>
+        <record id="acc_fisc_pos_tax_temp_a" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="acc_fisc_pos_temp_a"/>
+            <field name="tax_src_id" ref="tax_temp_12"/>
+            <field name="tax_dest_id" ref="tax_temp_21"/>
         </record>
 
-        <record id="afptn_extracom" model="account.fiscal.position.template">
-            <field name="name">Extra Community Regime</field>
-            <field name="chart_template_id" ref="account_chart_template_b"/>
+        <record id="acc_fisc_pos_acc_temp_b" model="account.fiscal.position.account.template">
+            <field name="position_id" ref="acc_fisc_pos_temp_b" />
+            <field name="account_src_id" ref="chart_b4" />
+            <field name="account_dest_id" ref="chart_b5" />
         </record>
 
   </data>
