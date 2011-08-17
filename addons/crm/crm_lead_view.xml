@@ -11,9 +11,9 @@
         <field name="arch" type="xml">
             <search string="Stage Search">
                 <filter icon="terp-personal" name="lead"
-                    string="Lead" domain="[('type', '=', 'lead')]" context="{'type' : 'lead'}"/>
+                    string="Lead" domain="[('section_ids', '=', section_id')]"/>
                 <filter icon="terp-personal+" name="opportunity"
-                    string="Opportunity" domain="[('type', '=', 'opportunity')]" context="{'type' : 'opportunity'}"/>
+                    string="Opportunity" domain="[('section_ids', '=', section_id)]"/>
                 <field name="name"/>
             </search>
         </field>
@@ -26,7 +26,6 @@
         <field name="res_model">crm.case.stage</field>
         <field name="view_type">form</field>
         <field name="view_id" ref="crm.crm_case_stage_tree"/>
-        <field name="context">{'search_default_opportunity':1}</field>
         <field name="search_view_id" ref="crm_lead_stage_search"/>
         <field name="help">Add specific stages to leads and opportunities allowing your sales to better organise their sales pipeline. Stages will allow them to easily track how a specific lead or opportunity is positioned in the sales cycle.</field>
     </record>

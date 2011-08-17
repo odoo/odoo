@@ -632,8 +632,8 @@ class crm_case_stage(osv.osv):
 
 
 
-    def _get_type_value(self, cr, user, context):
-        return [('lead','Lead'),('opportunity','Opportunity')]
+#    def _get_type_value(self, cr, user, context):
+#        return [('lead','Lead'),('opportunity','Opportunity')]
 
 
     _columns = {
@@ -643,7 +643,7 @@ class crm_case_stage(osv.osv):
         'on_change': fields.boolean('Change Probability Automatically', \
                          help="Change Probability on next and previous stages."),
         'requirements': fields.text('Requirements'),
-        'type': fields.selection(_get_type_value, 'Type', required=True),
+#        'type': fields.selection(_get_type_value, 'Type', required=True),
     }
 
 
@@ -660,7 +660,7 @@ class crm_case_stage(osv.osv):
     _defaults = {
         'sequence': lambda *args: 1,
         'probability': lambda *args: 0.0,
-        'type': _find_stage_type,
+#        'type': _find_stage_type,
     }
 
 crm_case_stage()
