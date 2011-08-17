@@ -115,7 +115,7 @@ will disable LDAP authentication if installed at the same time.
     "website" : "http://www.openerp.com",
     "category" : "Tools",
     "data" : [
-        "users_ldap_view.xml",w
+        "users_ldap_view.xml",
     ],
     "active": False,
     "installable": True,
