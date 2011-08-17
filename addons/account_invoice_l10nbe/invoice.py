@@ -80,7 +80,7 @@ class account_invoice(osv.osv):
                         algorithm = 'random' 
                     reference = self.generate_bbacomm(cr, uid, ids, type, reference_type, algorithm, partner_id, '')['value']['reference']
         res_update = {       
-            'reference_type': reference_type,
+            'reference_type': reference_type or 'none',
             'reference': reference,
         }
         result['value'].update(res_update)

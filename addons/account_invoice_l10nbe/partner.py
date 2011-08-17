@@ -45,4 +45,8 @@ class res_partner(osv.osv):
             ], 'Communication Algorithm',
             help='Select Algorithm to generate the Structured Communication on Outgoing Invoices.' ),
     }
+
+    _default = {
+        'out_inv_comm_type': 'none',
+    }
 res_partner()    
