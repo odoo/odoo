@@ -19,7 +19,7 @@
 ##############################################################################
 
 import time
-import pooler
+
 from report import report_sxw
 from common_report_header import common_report_header
 from tools.translate import _
@@ -53,9 +53,8 @@ class report_account_common(report_sxw.rml_parse, common_report_header):
 
     def _get_report_details(self, data):
         cr, uid = self.cr, self.uid
-        db_pool = pooler.get_pool(self.cr.dbname)
 
-        report_obj = db_pool.get('account.report')
+        report_obj = self.pool.get('account.report')
         datas =  []
         balance = 0.0
         name = data['form'].get('account_report_id') and data['form']['account_report_id'][1] or ''
@@ -64,27 +63,31 @@ class report_account_common(report_sxw.rml_parse, common_report_header):
         if report_id:
             child_ids = report_obj.search(cr, uid, [('parent_id','=',report_id)])
             child_ids.append(datas[0]['id'])
-            for chld in report_obj.browse(cr, uid, child_ids):
-                if chld.type == 'accounts':
-                    for a in chld.account_ids:
+            for child in report_obj.browse(cr, uid, child_ids):
+                if child.type == 'accounts':
+                    for a in child.account_ids:
                         balance += a.balance
-                if chld.type == 'account_report':
-                    pass # TDDO: it's the balance of the linked account.report (so it means it's only a way to reuse figures coming from another report)
-                if chld.type == 'sum':
-                    pass # TDDO: it's the sum of balance of the children of this account.report (if there isn't, then it's 0.0)
-                if chld.id == datas[0]['id']:
-                    datas[0].update({'name': chld.name, 'balance': balance})
+                # it's the balance of the linked account.report (so it means it's only a way to reuse figures coming from another report)
+                if child.type == 'account_report' and child.account_report_id:
+                    for a in child.account_report_id.account_ids:
+                        balance +=a.balance
+                #it's the sum of balance of the children of this account.report (if there isn't, then it's 0.0)
+                if child.type == 'sum':
+                    for child in report_obj.browse(cr, uid, child_ids):
+                        for a in child.account_ids:
+                            balance += a.balance
+                if child.id == datas[0]['id']:
+                    datas[0].update({'name': child.name, 'balance': balance})
                 else:
-                    datas.append({'id': chld.id, 'name': chld.name, 'balance': balance})
+                    datas.append({'id': child.id, 'name': child.name, 'balance': balance})
         return datas
 
-    def get_account_details(self, acc_id):
+    def get_account_details(self, acc_id, data):
         cr, uid = self.cr, self.uid
-        db_pool = pooler.get_pool(self.cr.dbname)
 
-        report_obj = db_pool.get('account.report')
+        report_obj = self.pool.get('account.report')
         accounts = []
-        if acc_id:
+        if acc_id and data['form'].get('display_details_per_account', False):
             for rpt in report_obj.browse(cr, uid, [acc_id]):
                 for acc in rpt.account_ids:
                     accounts.append({'code': acc.code, 'name': acc.name, 'bal': acc.balance})

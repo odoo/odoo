@@ -59,6 +59,7 @@
     <paraStyle name="terp_header" fontName="Helvetica-Bold" fontSize="15.0" leading="19" alignment="LEFT" spaceBefore="12.0" spaceAfter="6.0"/>
     <paraStyle name="terp_tblheader_General" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="6.0" spaceAfter="6.0"/>
     <paraStyle name="terp_tblheader_General_Centre" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="CENTER" spaceBefore="6.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_tblheader_Details_Centre" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="CENTER" spaceBefore="6.0" spaceAfter="6.0"/>
     <paraStyle name="terp_default_8" fontName="Helvetica" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_Centre_8" fontName="Helvetica" fontSize="8.0" leading="10" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_tblheader_Details" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
@@ -68,133 +69,74 @@
     <para style="Preformatted Text">
         <font color="white"> </font>
     </para>
-    <blockTable colWidths="56.0,53.0,380.0" style="Table8">
+    <blockTable colWidths="163.0,163.0,163.0" style="Table8">
       <tr>
-        <td>
-          <para style="P3">Chart of Account</para>
-        </td>
-        <td>
-          <para style="P3">Fiscal Year</para>
-        </td>
-        <td>
-          <para style="P3">Filters By [[ get_filter(data)!='No Filter' and get_filter(data) ]]</para>
-        </td>
+        <td><para style="terp_tblheader_General_Centre">Chart of Account </para></td>
+        <td><para style="terp_tblheader_General_Centre">Fiscal Year</para></td>
+        <td><para style="terp_tblheader_General_Centre">Filter By <font>[[ get_filter(data)!='No Filter' and '' or removeParentNode('font') ]]</font></para></td>
       </tr>
-      <tr>
-        <td>
-          <para style="terp_default_Centre_8">[[ get_account(data) or '' ]]</para>
+	  <tr>
+     	<td><para style="terp_default_Centre_8">[[ get_account(data) or removeParentNode('para') ]]</para></td>
+       	<td><para style="terp_default_Centre_8">[[ get_fiscalyear(data)  or '' ]]</para></td>
+        <td><para style="terp_default_Centre_8">[[ get_filter(data)=='No Filter' and get_filter(data) or removeParentNode('para') ]] </para>
+        <blockTable colWidths="80.0,80.0" style="Table3">[[ get_filter(data)=='Date' or removeParentNode('blockTable') ]]
+        	<tr>
+              <td><para style="terp_tblheader_Details_Centre">Start Date</para></td>
+              <td><para style="terp_tblheader_Details_Centre">End Date</para></td>
+            </tr>
+            <tr>
+              <td><para style="terp_default_Centre_8">[[ formatLang(get_start_date(data),date=True) ]]</para></td>
+              <td><para style="terp_default_Centre_8">[[ formatLang(get_end_date(data),date=True) ]]</para></td>
+            </tr>
+        </blockTable>
+        <blockTable colWidths="80.0,80.0" style="Table3">[[ get_filter(data)=='Periods' or removeParentNode('blockTable') ]]
+        	<tr>
+              <td><para style="terp_tblheader_Details_Centre">Start Period</para></td>
+              <td><para style="terp_tblheader_Details_Centre">End Period</para></td>
+            </tr>
+            <tr>
+              <td><para style="terp_default_Centre_8">[[ get_start_period(data) or removeParentNode('para') ]]</para></td>
+              <td><para style="terp_default_Centre_8">[[ get_end_period(data) or removeParentNode('para') ]]</para></td>
+            </tr>
+        </blockTable>
         </td>
-        <td>
-          <para style="terp_default_Centre_8">[[ get_fiscalyear(data) or '' ]]</para>
-        </td>
-        <td>
-          <blockTable colWidths="179.0,195.0" style="Table10">
-            <tr>
-              <td>
-                <para style="P5">[[ get_filter(data)=='Date' or removeParentNode('blockTable') ]]</para>
-                <para style="P6">Start Date</para>
-              </td>
-              <td>
-                <para style="P6">End Date</para>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <para style="terp_default_Centre_8">[[ get_start_date(data) ]]</para>
-              </td>
-              <td>
-                <para style="terp_default_Centre_8">[[ get_end_date(data) ]]</para>
-              </td>
-            </tr>
-          </blockTable>
-          <blockTable colWidths="176.0,195.0" style="Table11">
-            <tr>
-              <td>
-                <para style="P5">[[ get_filter(data)=='Periods' or removeParentNode('blockTable')]] </para>
-                <para style="P6">]]Start Period</para>
-              </td>
-              <td>
-                <para style="P6">End Period</para>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <para style="P4">[[ get_start_period(data) or removeParentNode('para') ]]</para>
-              </td>
-              <td>
-                <para style="P4">[[ get_end_period(data) or removeParentNode('para') ]]</para>
-              </td>
-            </tr>
-          </blockTable>
-          <para style="terp_default_Centre_8">
-            <font color="white"> </font>
-          </para>
-        </td>
-      </tr>
+  	</tr>
     </blockTable>
-     <para style="Preformatted Text">
-          <font color="white"> </font>
-     </para>
+	<para style="Preformatted Text">
+		<font color="white"> </font>
+	</para>
     <blockTable colWidths="490.0" style="Table1">
       <para style="P2">[[ repeatIn(get_report_details(data),'r') ]] </para>
       <tr>
         <td>
-            <blockTable colWidths="176.0,195.0" style="Table2">
+            <blockTable colWidths="327.0,163.0" style="Table2">
               <tr>
-                <td>
-                    <para style="P3">Report Name</para>
-                </td>
-                <td>
-                    <para style="P3">Report Balance</para>
-                </td>
+                <td><para style="P3">Report Name</para></td>
+                <td><para style="P3">Report Balance</para></td>
               </tr>
               <tr>
-                <td>
-                  <para style="terp_default_8">[[ r['name'] ]]</para>
-                </td>
-                <td>
-                    <para style="terp_default_8">[[ r['balance'] ]]</para>
-                </td>
+                <td><para style="terp_default_8">[[ r['name'] ]]</para></td>
+                <td><para style="terp_default_8">[[ r['balance'] ]]</para></td>
               </tr>
             </blockTable>
             <para style="Preformatted Text">
                 <font color="white"> </font>
             </para>
-            <blockTable colWidths="482.0" style="Table2">
+            <blockTable colWidths="490.0" style="Table2">
               <tr>
-                <td>
-                  <para style="P3">Account Details</para>
-                </td>
+                <td><para style="P3">Account Details</para></td>
               </tr>
             </blockTable>
-            <blockTable colWidths="95.0,223.0,163.0" style="Table3">
+            <blockTable colWidths="95.0,232.0,163.0" style="Table3">
               <tr>
-                <td>
-                  <para style="P3">Code</para>
-                </td>
-                <td>
-                  <para style="P3">Name</para>
-                </td>
-                <td>
-                  <para style="P3">Balance</para>
-                </td>
+                <td><para style="P3">Code</para></td>
+                <td><para style="P3">Name</para></td>
+                <td><para style="P3">Balance</para></td>
               </tr>
               <tr>
-                <td>
-                  <para style="terp_default_8">
-                    [[ repeatIn(get_account_details(r['id']), 'a') ]] [[ a['code'] ]]
-                  </para>
-                </td>
-                <td>
-                  <para style="terp_default_8">
-                    [[ a['name'] ]]
-                  </para>
-                </td>
-                <td>
-                  <para style="terp_default_8">
-                    [[ a['bal'] ]]
-                  </para>
-                </td>
+                <td><para style="terp_default_8">[[ repeatIn(get_account_details(r['id'], data), 'a') ]] [[ a['code'] ]]</para></td>
+                <td><para style="terp_default_8">[[ a['name'] ]]</para></td>
+                <td><para style="terp_default_8">[[ a['bal'] ]]</para></td>
               </tr>
             </blockTable>
          </td>
