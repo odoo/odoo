@@ -4,7 +4,7 @@
 
     <record model="ir.ui.view" id="crm_todo_form">
         <field name="name">crm.todo.form</field>
-        <field name="model">crm.todo</field>
+        <field name="model">crm.lead</field>
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Category of ideas">
@@ -15,11 +15,25 @@
 
     <record model="ir.actions.act_window" id="crm_todo_action">
         <field name="name">CRM TODO</field>
-        <field name="res_model">crm.todo</field>
+        <field name="res_model">crm.lead</field>
         <field name="view_type">form</field>
         <field name="view_mode">form</field>
     </record>
-
+	<record id="crm_todo_opportunity_add" model="ir.ui.view">
+          <field name="name">TODO</field>
+          <field name="model">crm.lead</field>
+          <field name="type">form</field>
+          <field name="inherit_id" ref="crm.crm_case_form_view_oppor" />
+          <field name="arch" type="xml">
+            <data>
+            <xpath expr="/form/group/field[@name = 'message_ids']" position="after">
+               		<field name="todo_ids" colspan="4" nolabel="1"/>
+             
+            </xpath>
+            
+            </data>
+          </field>
+        </record>
     <menuitem name="TODOs" id="menu_crm_todo" parent="base.menu_sales" action="crm_todo_action"/>
     </data>
 </openerp>

@@ -29,7 +29,7 @@
     """,
     'author': 'OpenERP SA',
     #'images': ['images/project_gtd.jpeg'],
-    'depends': ['crm'],
+    'depends': ['crm','project_gtd'],
     'init_xml': [],
     'update_xml': [
         #'project_todo_view.xml',

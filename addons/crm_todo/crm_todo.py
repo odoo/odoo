@@ -26,10 +26,11 @@ import tools
 from tools.translate import _
 
 class crm_todo(osv.osv):
-    _name ="crm.todo"
+    """_name = 'crm.todo'"""
     _description = "TODO"
+    _inherit = 'crm.lead'
     _columns = {
-        'todo_ids': fields.one2many('project.gtd.timebox', 'name', 'TODO'),
+        'todo_ids': fields.one2many('project.gtd.timebox', 'todo_id', 'TODO'),
     }
 crm_todo()
 
