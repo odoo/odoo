@@ -166,6 +166,16 @@
             <field name="chart_template_id" ref="account_chart_template_a"/>
         </record>
 
+        <record id="tax_temp_6" model="account.tax.template">
+            <field name="sequence">15</field>
+            <field name="description">VAT 6%</field>
+            <field name="name">VAT 6%</field>
+            <field name="amount">0.6</field>
+            <field name="type">percent</field>
+            <field name="chart_template_id" ref="account_chart_template_a"/>
+        </record>
+
+
         <!-- Tax for template B-->
         <record id="tax_temp_4" model="account.tax.template">
             <field name="sequence">12</field>
@@ -198,7 +208,7 @@
 
         <record id="acc_fisc_pos_tax_temp_a" model="account.fiscal.position.tax.template">
             <field name="position_id" ref="acc_fisc_pos_temp_a"/>
-            <field name="tax_src_id" ref="tax_temp_12"/>
+            <field name="tax_src_id" ref="tax_temp_6"/>
             <field name="tax_dest_id" ref="tax_temp_21"/>
         </record>
 
