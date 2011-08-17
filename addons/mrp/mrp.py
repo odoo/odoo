@@ -682,7 +682,7 @@ class mrp_production(osv.osv):
         return res
     
     def rest_qty_compute(self, cr, uid, obj, move_obj=None, context=None):
-        qty = obj.product_qty * sub_qty
+        qty = obj.product_qty
         res = {'product_qty': qty, 'sub_qty': 1}
         return res
 
