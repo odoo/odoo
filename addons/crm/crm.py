@@ -213,20 +213,20 @@ class crm_case(crm_base):
     """
 
     def _find_lost_stage(self, cr, uid, type, section_id):
-        return self._find_percent_stage(cr, uid, 0.0, type, section_id)
+        return self._find_percent_stage(cr, uid, 0.0, section_id)
 
     def _find_won_stage(self, cr, uid, type, section_id):
-        return self._find_percent_stage(cr, uid, 100.0, type, section_id)
+        return self._find_percent_stage(cr, uid, 100.0, section_id)
 
-    def _find_percent_stage(self, cr, uid, percent, type, section_id):
+    def _find_percent_stage(self, cr, uid, percent, section_id):
         """
             Return the first stage with a probability == percent
         """
         stage_pool = self.pool.get('crm.case.stage')
         if section_id :
-            ids = stage_pool.search(cr, uid, [("probability", '=', percent), ("type", 'like', type), ("section_ids", 'in', [section_id])])
+            ids = stage_pool.search(cr, uid, [("probability", '=', percent), ("section_ids", 'in', [section_id])])
         else :
-            ids = stage_pool.search(cr, uid, [("probability", '=', percent), ("type", 'like', type)])
+            ids = stage_pool.search(cr, uid, [("probability", '=', percent)])
 
         if ids:
             return ids[0]
