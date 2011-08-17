@@ -536,6 +536,7 @@ class account_voucher(osv.osv):
         @param context: context arguments, like lang, time zone
         @return: Returns a dict which contains new values, and context
         """
+        if context is None: context = {}
         period_pool = self.pool.get('account.period')
         res = self.onchange_partner_id(cr, uid, ids, partner_id, journal_id, price, currency_id, ttype, date, context=context)
         if context.get('invoice_id', False):
