@@ -2873,16 +2873,17 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         
         if context is None:
             context = {}
+        vals_journal_payable = {}
+        vals_journal_receivable = {}
         obj_data = self.pool.get('ir.model.data')
         analytic_journal_obj = self.pool.get('account.analytic.journal')
         obj_journal = self.pool.get('account.journal')
 
-        data_id = obj_data.search(cr, uid, [('model','=','account.journal.view'), ('name','=','account_sp_journal_view')])
-        data = obj_data.browse(cr, uid, data_id[0], context=context)
-        view_id = data.res_id
+        data = obj_data.get_object_reference(cr, uid, 'account', 'account_sp_journal_view') 
+        view_id = data and data[1] or False
 
         #Sales Journal
-        analytical_sale_ids = analytic_journal_obj.search(cr,uid,[('type','=','sale')])
+        analytical_sale_ids = analytic_journal_obj.search(cr, uid, [('type','=','sale')], context=context)
         analytical_journal_sale = analytical_sale_ids and analytical_sale_ids[0] or False
 
         vals_journal = {
@@ -2895,12 +2896,15 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         }
 
         if chart_template_id.property_account_receivable:
-            vals_journal['default_credit_account_id'] = acc_template_ref[chart_template_id.property_account_income_categ.id]
-            vals_journal['default_debit_account_id'] = acc_template_ref[chart_template_id.property_account_income_categ.id]
-        obj_journal.create(cr,uid,vals_journal)
+            vals_journal_receivable = {
+                                       'default_credit_account_id': acc_template_ref[chart_template_id.property_account_income_categ.id],
+                                       'default_debit_account_id': acc_template_ref[chart_template_id.property_account_income_categ.id]
+                                       }
+        vals_journal.update(vals_journal_receivable)
+        obj_journal.create(cr, uid, vals_journal, context=context)
 
         # Purchase Journal
-        analytical_purchase_ids = analytic_journal_obj.search(cr,uid,[('type','=','purchase')])
+        analytical_purchase_ids = analytic_journal_obj.search(cr,uid,[('type','=','purchase')], context=context)
         analytical_journal_purchase = analytical_purchase_ids and analytical_purchase_ids[0] or False
 
         vals_journal = {
@@ -2908,19 +2912,21 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             'type': 'purchase',
             'code': _('EXJ'),
             'view_id': view_id,
-            'company_id':  company_id,
+            'company_id': company_id,
             'analytic_journal_id': analytical_journal_purchase,
         }
 
         if chart_template_id.property_account_payable:
-            vals_journal['default_credit_account_id'] = acc_template_ref[chart_template_id.property_account_expense_categ.id]
-            vals_journal['default_debit_account_id'] = acc_template_ref[chart_template_id.property_account_expense_categ.id]
-        obj_journal.create(cr,uid,vals_journal)
+            vals_journal_payable = {
+                                    'default_credit_account_id': acc_template_ref[chart_template_id.property_account_expense_categ.id],
+                                    'default_debit_account_id': acc_template_ref[chart_template_id.property_account_expense_categ.id]
+                                 }
+        vals_journal.update(vals_journal_payable)
+        obj_journal.create(cr, uid, vals_journal, context=context)
         
         # Creating Journals Sales Refund and Purchase Refund
-        data_id = obj_data.search(cr, uid, [('model', '=', 'account.journal.view'), ('name', '=', 'account_sp_refund_journal_view')], context=context)
-        data = obj_data.browse(cr, uid, data_id[0], context=context)
-        view_id = data.res_id
+        data = obj_data.get_object_reference(cr, uid, 'account', 'account_sp_refund_journal_view') 
+        view_id = data and data[1] or False
 
         #Sales Refund Journal
         vals_journal = {
@@ -2931,10 +2937,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             'analytic_journal_id': analytical_journal_sale,
             'company_id': company_id
         }
-
-        if chart_template_id.property_account_receivable:
-            vals_journal['default_credit_account_id'] = acc_template_ref[chart_template_id.property_account_income_categ.id]
-            vals_journal['default_debit_account_id'] = acc_template_ref[chart_template_id.property_account_income_categ.id]
+        vals_journal.update(vals_journal_receivable)
         obj_journal.create(cr, uid, vals_journal, context=context)
 
         # Purchase Refund Journal
@@ -2946,16 +2949,12 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             'analytic_journal_id': analytical_journal_purchase,
             'company_id': company_id
         }
-
-        if chart_template_id.property_account_payable:
-            vals_journal['default_credit_account_id'] = acc_template_ref[chart_template_id.property_account_expense_categ.id]
-            vals_journal['default_debit_account_id'] = acc_template_ref[chart_template_id.property_account_expense_categ.id]
+        vals_journal.update(vals_journal_payable)
         obj_journal.create(cr, uid, vals_journal, context=context)
         
         # Miscellaneous Journal
-        data_id = obj_data.search(cr, uid, [('model','=','account.journal.view'), ('name','=','account_journal_view')])
-        data = obj_data.browse(cr, uid, data_id[0], context=context)
-        view_id = data.res_id
+        data = obj_data.get_object_reference(cr, uid, 'account', 'account_journal_view') 
+        view_id = data and data[1] or False
 
         analytical_miscellaneous_ids = analytic_journal_obj.search(cr, uid, [('type', '=', 'situation')], context=context)
 
