@@ -327,7 +327,6 @@ class crm_case(crm_base):
             context = {}
 
         stage_pool = self.pool.get('crm.case.stage')
-        stage_type = context and context.get('stage_type','')
         current_seq = False
         next_stage_id = False
 
@@ -336,9 +335,7 @@ class crm_case(crm_base):
             next_stage = False
             value = {}
             if case.section_id.id :
-                domain = [('type', '=', stage_type),('section_ids', '=', case.section_id.id)]
-            else :
-                domain = [('type', '=', stage_type)]
+                domain = [('section_ids', '=', case.section_id.id)]
 
 
             stages = stage_pool.search(cr, uid, domain, order=order)
