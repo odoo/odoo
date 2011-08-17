@@ -2980,7 +2980,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                 'default_debit_account_id': acc_template_ref[chart_template_id.property_account_expense_opening.id]
                 }
             obj_journal.create(cr, uid, vals_journal, context=context)
-        return {}
+        return True
 
     def execute(self, cr, uid, ids, context=None):
         obj_multi = self.browse(cr, uid, ids[0])
