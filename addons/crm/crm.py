@@ -212,10 +212,10 @@ class crm_case(crm_base):
         And object that inherit (orm inheritance) from a class the overwrite copy 
     """
 
-    def _find_lost_stage(self, cr, uid, type, section_id):
+    def _find_lost_stage(self, cr, uid, section_id):
         return self._find_percent_stage(cr, uid, 0.0, section_id)
 
-    def _find_won_stage(self, cr, uid, type, section_id):
+    def _find_won_stage(self, cr, uid, section_id):
         return self._find_percent_stage(cr, uid, 100.0, section_id)
 
     def _find_percent_stage(self, cr, uid, percent, section_id):

@@ -61,7 +61,7 @@ class crm_opportunity(osv.osv):
                 return res
                 
             value = {}
-            stage_id = find_stage(cr, uid, 'opportunity', case.section_id.id or False)
+            stage_id = find_stage(cr, uid, case.section_id.id or False)
             if stage_id:
                 stage_obj = self.pool.get('crm.case.stage').browse(cr, uid, stage_id)
                 value.update({'stage_id': stage_id})
