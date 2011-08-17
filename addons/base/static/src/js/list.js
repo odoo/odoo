@@ -1241,6 +1241,11 @@ var Record = openerp.base.Class.extend(/** @lends Record# */{
 Record.include(Events);
 var Collection = openerp.base.Class.extend(/** @lends Collection# */{
     /**
+     * Smarter collections, with events, very strongly inspired by Backbone's.
+     *
+     * Using a "dumb" array of records makes synchronization between the
+     * various serious 
+     *
      * @constructs
      * @extends openerp.base.Class
      * @borrows Events#bind as this.bind
