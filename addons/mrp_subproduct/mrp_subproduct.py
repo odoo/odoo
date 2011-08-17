@@ -97,5 +97,15 @@ class mrp_production(osv.osv):
                 self.pool.get('stock.move').create(cr, uid, data)
         return picking_id
 
+    def rest_qty_compute(self, cr, uid, obj, move_obj=None, context=None):
+        sub_obj = self.pool.get('mrp.subproduct')
+        sub_qty = 1
+        sub_id = sub_obj.search(cr, uid,[('product_id', '=', move_obj.product_id.id)] )
+        if sub_id:
+            sub_qty = sub_obj.browse(cr ,uid, sub_id[0]).product_qty
+        qty = obj.product_qty * sub_qty
+        res = {'product_qty': qty, 'sub_qty': sub_qty}
+        return res
+
 mrp_production()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

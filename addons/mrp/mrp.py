@@ -680,6 +680,11 @@ class mrp_production(osv.osv):
             if production.move_created_ids:
                 res = False
         return res
+    
+    def rest_qty_compute(self, cr, uid, obj, move_obj=None, context=None):
+        qty = obj.product_qty * sub_qty
+        res = {'product_qty': qty, 'sub_qty': 1}
+        return res
 
     def action_produce(self, cr, uid, production_id, production_qty, production_mode, context=None):
         """ To produce final product based on production mode (consume/consume&produce).
@@ -693,7 +698,6 @@ class mrp_production(osv.osv):
         """
         stock_mov_obj = self.pool.get('stock.move')
         production = self.browse(cr, uid, production_id, context=context)
-
 
         produced_qty = 0
         if production_mode == 'consume_produce':
@@ -749,11 +753,12 @@ class mrp_production(osv.osv):
 
             for produce_product in production.move_created_ids:
                 produced_qty = produced_products.get(produce_product.product_id.id, 0)
-                rest_qty = production.product_qty - produced_qty
+                get_qty = self.rest_qty_compute(cr, uid, production, produce_product)
+                rest_qty = get_qty['product_qty'] - produced_qty
                 if rest_qty <= production_qty:
                     production_qty = rest_qty
                 if rest_qty > 0 :
-                    stock_mov_obj.action_consume(cr, uid, [produce_product.id], production_qty, context=context)
+                    stock_mov_obj.action_consume(cr, uid, [produce_product.id], production_qty * get_qty['sub_qty'], context=context)
 
         for raw_product in production.move_lines2:
             new_parent_ids = []
