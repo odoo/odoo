@@ -270,8 +270,6 @@ class crm_case(crm_base):
             return {'value':{}}
         return {'value':{'probability': stage.probability}}
 
-    
-
     def copy(self, cr, uid, id, default=None, context=None):
         """
         Overrides orm copy method.
@@ -301,10 +299,6 @@ class crm_case(crm_base):
                     'date_open': False
                 })
         return super(osv.osv, self).copy(cr, uid, id, default, context=context)
-
-    
-
-    
 
     def _find_next_stage(self, cr, uid, stage_list, index, current_seq, stage_pool, context=None):
         if index + 1 == len(stage_list):
@@ -377,10 +371,6 @@ class crm_case(crm_base):
         @param ids: List of case IDs
         @param context: A standard dictionary for contextual values"""
         return self.stage_change(cr, uid, ids, context=context, order='sequence desc')
-
-    
-
-    
 
     def _history(self, cr, uid, cases, keyword, history=False, subject=None, email=False, details=None, email_from=False, message_id=False, attach=[], context=None):
         mailgate_pool = self.pool.get('mailgate.thread')
