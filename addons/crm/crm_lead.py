@@ -217,7 +217,7 @@ class crm_lead(crm_case, osv.osv):
             if leads[i].state == 'draft':
                 value = {}
                 if not leads[i].stage_id :
-                    stage_id = self._find_first_stage(cr, uid, leads[i].type, leads[i].section_id.id or False)
+                    stage_id = self._find_first_stage(cr, uid, leads[i].section_id.id or False)
                     value.update({'stage_id' : stage_id})
                 value.update({'date_open': time.strftime('%Y-%m-%d %H:%M:%S')})
                 self.write(cr, uid, [ids[i]], value)

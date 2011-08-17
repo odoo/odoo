@@ -233,15 +233,15 @@ class crm_case(crm_base):
         return False
 
 
-    def _find_first_stage(self, cr, uid, type, section_id):
+    def _find_first_stage(self, cr, uid, section_id):
         """
             return the first stage that has a sequence number equal or higher than sequence
         """
         stage_pool = self.pool.get('crm.case.stage')
         if section_id :
-            ids = stage_pool.search(cr, uid, [("sequence", '>', 0), ("type", 'like', type), ("section_ids", 'in', [section_id])])
+            ids = stage_pool.search(cr, uid, [("sequence", '>', 0), ("section_ids", 'in', [section_id])])
         else :
-            ids = stage_pool.search(cr, uid, [("sequence", '>', 0), ("type", 'like', type)])
+            ids = stage_pool.search(cr, uid, [("sequence", '>', 0)])
 
         if ids:
             stages = stage_pool.browse(cr, uid, ids)
