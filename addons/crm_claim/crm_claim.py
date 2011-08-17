@@ -73,7 +73,7 @@ class crm_claim(crm.crm_case, osv.osv):
         'email_cc': fields.text('Watchers Emails', size=252, help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma"), 
         'email_from': fields.char('Email', size=128, help="These people will receive email."), 
         'partner_phone': fields.char('Phone', size=32), 
-        'stage_id': fields.many2one ('crm.case.stage', 'Stage', domain="[('type','=','claim')]"), 
+        'stage_id': fields.many2one ('crm.case.stage', 'Stage', domain="[('section_ids','=',section_id)]"), 
         'cause': fields.text('Root Cause'), 
         'state': fields.selection(crm.AVAILABLE_STATES, 'State', size=16, readonly=True, 
                                   help='The state is set to \'Draft\', when a case is created.\
@@ -273,21 +273,5 @@ class res_partner(osv.osv):
         'claims_ids': fields.one2many('crm.claim', 'partner_id', 'Claims'),
     }
 res_partner()
-
-class crm_stage_claim(osv.osv):
-    
-    def _get_type_value(self, cr, user, context):
-        list = super(crm_stage_claim, self)._get_type_value(cr, user, context)
-        list.append(('claim','Claim'))
-        return list
-    
-    _inherit = "crm.case.stage"
-    _columns = {
-            'type': fields.selection(_get_type_value, 'Type'),
-    }
-   
-    
-crm_stage_claim()
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

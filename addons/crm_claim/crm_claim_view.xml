@@ -32,7 +32,7 @@
                 <data>
                     <xpath expr="//field[@name='name']" position="before">
                         <filter icon="terp-personal-" name="claim"
-                            string="Claim" domain="[('type', '=', 'claim')]" context="{'type' : 'claim'}"/>
+                            string="Claim" domain="[('section_ids', '=', section_id)]"/>
                     </xpath>
                 </data>
             </field>
@@ -101,7 +101,7 @@
                         <field name="section_id" widget="selection" />
 
                         <group colspan="2" col="4">
-                            <field name="stage_id" domain="[('type','=','claim')]"/>
+                            <field name="stage_id" domain="[('section_ids','=',section_id)]"/>
                             <button name="stage_previous" string="" type="object" icon="gtk-go-back" />
                             <button icon="gtk-go-forward" string="" name="stage_next" type="object"/>
                         </group>
