@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:15+0000\n"
-"PO-Revision-Date: 2011-07-09 17:18+0000\n"
-"Last-Translator: Jeff Wang <wjfonhand@hotmail.com>\n"
+"PO-Revision-Date: 2011-08-15 11:51+0000\n"
+"Last-Translator: openerp-china.black-jack <onetimespeed@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-07-10 05:16+0000\n"
-"X-Generator: Launchpad (build 13168)\n"
+"X-Launchpad-Export-Date: 2011-08-16 04:57+0000\n"
+"X-Generator: Launchpad (build 13687)\n"
 
 #. module: process
 #: model:ir.model,name:process.model_process_node
@@ -44,7 +44,7 @@ msgstr "按钮"
 #: view:process.node:0
 #: view:process.process:0
 msgid "Group By..."
-msgstr "分组于"
+msgstr "分组..."
 
 #. module: process
 #: selection:process.node,kind:0
@@ -54,7 +54,7 @@ msgstr "状态"
 #. module: process
 #: view:process.node:0
 msgid "Kind Of Node"
-msgstr "节点种类"
+msgstr "节点类型"
 
 #. module: process
 #: field:process.node,help_url:0
@@ -85,7 +85,7 @@ msgstr "条件"
 #. module: process
 #: view:process.transition:0
 msgid "Search Process Transition"
-msgstr "搜索流程转换"
+msgstr "搜索节点迁移"
 
 #. module: process
 #: field:process.condition,node_id:0
@@ -105,7 +105,7 @@ msgstr "说明"
 #. module: process
 #: model:ir.model,name:process.model_process_transition_action
 msgid "Process Transitions Actions"
-msgstr "处理转换生效"
+msgstr "节点迁移操作"
 
 #. module: process
 #: field:process.condition,model_id:0
@@ -125,7 +125,7 @@ msgstr "源节点"
 #: view:process.transition:0
 #: field:process.transition,transition_ids:0
 msgid "Workflow Transitions"
-msgstr "工作流转换"
+msgstr "工作流迁移"
 
 #. module: process
 #: field:process.transition.action,action:0
@@ -136,7 +136,7 @@ msgstr "动作ID"
 #: model:ir.model,name:process.model_process_transition
 #: view:process.transition:0
 msgid "Process Transition"
-msgstr "处理转换"
+msgstr "节点迁移"
 
 #. module: process
 #: model:ir.model,name:process.model_process_condition
@@ -152,7 +152,7 @@ msgstr "哑元"
 #: model:ir.actions.act_window,name:process.action_process_form
 #: model:ir.ui.menu,name:process.menu_process_form
 msgid "Processes"
-msgstr "流程列表"
+msgstr "节点"
 
 #. module: process
 #: field:process.condition,name:0
@@ -166,7 +166,7 @@ msgstr "名称"
 #. module: process
 #: field:process.node,transition_in:0
 msgid "Starting Transitions"
-msgstr "开始转换"
+msgstr "启动迁移"
 
 #. module: process
 #: view:process.node:0
@@ -175,17 +175,17 @@ msgstr "开始转换"
 #: field:process.process,note:0
 #: view:process.transition:0
 msgid "Notes"
-msgstr "节点"
+msgstr "备注"
 
 #. module: process
 #: field:process.transition.action,transition_id:0
 msgid "Transition"
-msgstr "转换"
+msgstr "迁移"
 
 #. module: process
 #: view:process.process:0
 msgid "Search Process"
-msgstr "搜索流程"
+msgstr "搜索节点"
 
 #. module: process
 #: selection:process.node,kind:0
@@ -216,7 +216,7 @@ msgstr "动作"
 #. module: process
 #: field:process.node,flow_start:0
 msgid "Starting Flow"
-msgstr "开始流程"
+msgstr "启动流程"
 
 #. module: process
 #: model:ir.module.module,description:process.module_meta_information
@@ -247,13 +247,13 @@ msgstr "表达"
 #. module: process
 #: field:process.transition,group_ids:0
 msgid "Required Groups"
-msgstr "要求的用户组"
+msgstr "请求的用户组"
 
 #. module: process
 #: view:process.node:0
 #: view:process.process:0
 msgid "Incoming Transitions"
-msgstr "传入转换"
+msgstr "迁移入口"
 
 #. module: process
 #: field:process.transition.action,state:0
@@ -263,14 +263,14 @@ msgstr "类型"
 #. module: process
 #: field:process.node,transition_out:0
 msgid "Ending Transitions"
-msgstr "结束转换"
+msgstr "结束迁移"
 
 #. module: process
 #: model:ir.model,name:process.model_process_process
 #: field:process.node,process_id:0
 #: view:process.process:0
 msgid "Process"
-msgstr "处理"
+msgstr "节点"
 
 #. module: process
 #: view:process.node:0
@@ -304,7 +304,7 @@ msgstr "属性"
 #: model:ir.actions.act_window,name:process.action_process_transition_form
 #: model:ir.ui.menu,name:process.menu_process_transition_form
 msgid "Process Transitions"
-msgstr "处理转换"
+msgstr "处理迁移"
 
 #. module: process
 #: field:process.transition,target_node_id:0
@@ -314,19 +314,19 @@ msgstr "目标节点"
 #. module: process
 #: field:process.node,kind:0
 msgid "Kind of Node"
-msgstr "分类节点"
+msgstr "节点类型"
 
 #. module: process
 #: view:process.node:0
 #: view:process.process:0
 msgid "Outgoing Transitions"
-msgstr "输出转换"
+msgstr "迁移出口"
 
 #. module: process
 #: view:process.node:0
 #: view:process.process:0
 msgid "Transitions"
-msgstr "转换"
+msgstr "迁移"
 
 #. module: process
 #: selection:process.transition.action,state:0

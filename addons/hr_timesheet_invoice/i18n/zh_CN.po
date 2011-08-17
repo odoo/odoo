@@ -7,20 +7,20 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-05-09 10:18+0000\n"
-"PO-Revision-Date: 2011-08-02 16:39+0000\n"
+"PO-Revision-Date: 2011-08-15 15:00+0000\n"
 "Last-Translator: openerp-china.black-jack <onetimespeed@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-08-03 05:13+0000\n"
-"X-Generator: Launchpad (build 13573)\n"
+"X-Launchpad-Export-Date: 2011-08-16 04:57+0000\n"
+"X-Generator: Launchpad (build 13687)\n"
 
 #. module: hr_timesheet_invoice
 #: view:report.timesheet.line:0
 #: view:report_timesheet.user:0
 msgid "Timesheet by user"
-msgstr "用户记工单"
+msgstr "用户计工单"
 
 #. module: hr_timesheet_invoice
 #: view:hr_timesheet_invoice.factor:0
@@ -41,7 +41,7 @@ msgstr "辅助核算项不完整"
 #. module: hr_timesheet_invoice
 #: model:ir.model,name:hr_timesheet_invoice.model_hr_timesheet_invoice_create_final
 msgid "Create invoice from timesheet final"
-msgstr "创建最终记工单的发票"
+msgstr "创建最终计工单的发票"
 
 #. module: hr_timesheet_invoice
 #: view:hr.timesheet.invoice.create:0
@@ -66,7 +66,7 @@ msgstr "开票"
 #. module: hr_timesheet_invoice
 #: model:ir.model,name:hr_timesheet_invoice.model_report_timesheet_user
 msgid "Timesheet per day"
-msgstr "每天记工单"
+msgstr "每天计工单"
 
 #. module: hr_timesheet_invoice
 #: selection:report.account.analytic.line.to.invoice,month:0
@@ -173,7 +173,7 @@ msgstr "每个完成的工作将显示在发票上"
 #. module: hr_timesheet_invoice
 #: model:ir.model,name:hr_timesheet_invoice.model_hr_timesheet_invoice_create
 msgid "Create invoice from timesheet"
-msgstr "创建记工单发票"
+msgstr "创建计工单发票"
 
 #. module: hr_timesheet_invoice
 #: report:account.analytic.profit:0
@@ -205,7 +205,7 @@ msgstr "创建发票"
 #: model:ir.model,name:hr_timesheet_invoice.model_report_timesheet_account_date
 #: view:report_timesheet.account.date:0
 msgid "Daily timesheet per account"
-msgstr "每个辅助核算项每天的记工单"
+msgstr "每天计工单每个辅助核算项"
 
 #. module: hr_timesheet_invoice
 #: view:hr.timesheet.invoice.create.final:0
@@ -377,7 +377,7 @@ msgstr "如果您计划根据在辅助核算项的成本 (工作时间表，费�
 #: model:ir.actions.report.xml,name:hr_timesheet_invoice.report_analytical_profit
 #: model:ir.ui.menu,name:hr_timesheet_invoice.menu_hr_timesheet_analytic_profit
 msgid "Timesheet Profit"
-msgstr "记工单收益"
+msgstr "计工单收益"
 
 #. module: hr_timesheet_invoice
 #: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:80
@@ -435,12 +435,12 @@ msgstr "辅助核算明细开出发票的报表"
 #. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.action_timesheet_user_stat_all
 msgid "Timesheet by User"
-msgstr "用户记工单"
+msgstr "用户计工单"
 
 #. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.action_timesheet_invoice_stat_all
 msgid "Timesheet by Invoice"
-msgstr "发票的记工单"
+msgstr "发票的计工单"
 
 #. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.action_analytic_account_tree
@@ -522,7 +522,7 @@ msgstr "用户"
 #. module: hr_timesheet_invoice
 #: view:report.timesheet.line:0
 msgid "Non Assigned timesheets to users"
-msgstr "没有给用户分配记工单"
+msgstr "没有给用户分配计工单"
 
 #. module: hr_timesheet_invoice
 #: field:report.timesheet.line,invoice_id:0
@@ -547,7 +547,7 @@ msgstr "用户的发票税率"
 #. module: hr_timesheet_invoice
 #: view:report_timesheet.account:0
 msgid "Timesheet by account"
-msgstr "辅助核算项的记工单"
+msgstr "辅助核算项的计工单"
 
 #. module: hr_timesheet_invoice
 #: field:hr.timesheet.analytic.profit,date_from:0
@@ -613,12 +613,12 @@ msgstr "在这工作日志显示日期"
 #: model:ir.model,name:hr_timesheet_invoice.model_report_timesheet_account
 #: view:report_timesheet.account:0
 msgid "Timesheet per account"
-msgstr "每个辅助核算项的记工单"
+msgstr "每个辅助核算项的计工单"
 
 #. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.action_timesheet_account_stat_all
 msgid "Timesheet by Account"
-msgstr "辅助核算项的记工单"
+msgstr "辅助核算项的计工单"
 
 #. module: hr_timesheet_invoice
 #: field:hr.timesheet.invoice.create,date:0
@@ -735,7 +735,7 @@ msgstr "辅助核算项"
 #. module: hr_timesheet_invoice
 #: model:ir.model,name:hr_timesheet_invoice.model_hr_timesheet_analytic_profit
 msgid "Print Timesheet Profit"
-msgstr "打印记工单收益"
+msgstr "打印计工单收益"
 
 #. module: hr_timesheet_invoice
 #: field:account.analytic.account,to_invoice:0
@@ -867,7 +867,7 @@ msgstr "最少有一行没产品！"
 #. module: hr_timesheet_invoice
 #: view:report_timesheet.invoice:0
 msgid "Timesheets to invoice"
-msgstr "给记工单开发票"
+msgstr "给计工单开发票"
 
 #. module: hr_timesheet_invoice
 #: field:hr.timesheet.analytic.cost.ledger,date1:0
@@ -877,7 +877,7 @@ msgstr "开始日期"
 #. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.action_timesheet_account_date_stat_all
 msgid "Daily Timesheet by Account"
-msgstr "辅助核算项每日记工单"
+msgstr "辅助核算项每日计工单"
 
 #. module: hr_timesheet_invoice
 #: field:hr.timesheet.invoice.create,product:0
@@ -937,7 +937,7 @@ msgstr "这报表没相应的记录！"
 #. module: hr_timesheet_invoice
 #: view:report_timesheet.invoice:0
 msgid "Timesheet by invoice"
-msgstr "记工单发票"
+msgstr "计工单发票"
 
 #. module: hr_timesheet_invoice
 #: view:report.account.analytic.line.to.invoice:0
@@ -975,7 +975,7 @@ msgstr "辅助核算明细的发票"
 #. module: hr_timesheet_invoice
 #: view:report_timesheet.account.date:0
 msgid "Daily timesheet by account"
-msgstr "辅助核算项每天的记工单"
+msgstr "辅助核算项每天的计工单"
 
 #. module: hr_timesheet_invoice
 #: field:report.account.analytic.line.to.invoice,sale_price:0
@@ -985,7 +985,7 @@ msgstr "售价"
 #. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.act_res_users_2_report_timesheet_user
 msgid "Timesheets per day"
-msgstr "每天记工单"
+msgstr "每天计工单"
 
 #. module: hr_timesheet_invoice
 #: selection:report.account.analytic.line.to.invoice,month:0
@@ -1014,7 +1014,7 @@ msgstr "发票类型"
 #. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.act_res_users_2_report_timehsheet_account
 msgid "Timesheets per account"
-msgstr "每个辅助核算项的记工单"
+msgstr "每个辅助核算项的计工单"
 
 #. module: hr_timesheet_invoice
 #: field:hr.timesheet.invoice.create,name:0

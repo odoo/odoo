@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2011-05-09 10:19+0000\n"
-"PO-Revision-Date: 2011-08-06 18:14+0000\n"
+"PO-Revision-Date: 2011-08-17 00:28+0000\n"
 "Last-Translator: mgaja (GrupoIsep.com) <Unknown>\n"
 "Language-Team: Catalan <ca@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-08-07 05:05+0000\n"
-"X-Generator: Launchpad (build 13613)\n"
+"X-Launchpad-Export-Date: 2011-08-17 05:19+0000\n"
+"X-Generator: Launchpad (build 13697)\n"
 
 #. module: project_long_term
 #: model:ir.module.module,shortdesc:project_long_term.module_meta_information
@@ -48,6 +48,25 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Mòdul de gestió de projectes a llarg termini que realitza el seguiment de "
+"planificació, programació, assignació de recursos.\n"
+"Característiques.\n"
+"    - Gestió de projectes grans.\n"
+"    - Defineix les diferents fases del projecte.\n"
+"    - Càlcul de la fase de programació: calcular la data d'inici i "
+"finalització de les fases del projecte que estan en estat obert, esborrany i "
+"pendent del projecte concret.\n"
+"      Si no hi ha cap projecte concret, llavors tots els estats de les fases "
+"en esborrany, obert i pendent seran preses\n"
+"    - Càlcul de Programació de tasques: Això funciona igual que el botó del "
+"planificador en project.phase. Es pren el projecte com a argument i calcula "
+"totes les tasques obertes, en esborrany i pendents\n"
+"    - Programació de Tasques: Totes les tasques que estan en l'estat "
+"esborrador, pendent i oberta són programades prenent la data d'inici de la "
+"fase\n"
+"\n"
+"    "
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -170,7 +189,7 @@ msgstr "Cancel·lada"
 #: code:addons/project_long_term/project_long_term.py:616
 #, python-format
 msgid "Warning !"
-msgstr ""
+msgstr "Avís!"
 
 #. module: project_long_term
 #: help:project.resource.allocation,date_end:0
@@ -250,7 +269,7 @@ msgstr "Calcula planificació de tasques"
 #: code:addons/project_long_term/project_long_term.py:690
 #, python-format
 msgid "Error !"
-msgstr ""
+msgstr "Error !"
 
 #. module: project_long_term
 #: field:project.phase,constraint_date_start:0
@@ -284,6 +303,9 @@ msgid ""
 "view.\n"
 "\t           "
 msgstr ""
+"Per programar les fases de tots els projectes, o un d'específic. A "
+"continuació, obrirà una vista de Gantt.\n"
+"\t           "
 
 #. module: project_long_term
 #: help:project.resource.allocation,date_start:0
@@ -343,6 +365,8 @@ msgid ""
 "Task Scheduling is not possible.\n"
 "Project should have the Start date for scheduling."
 msgstr ""
+"La programació de tasques no és possible.\n"
+"El projecte ha de tenir la data d'inici per a la programació."
 
 #. module: project_long_term
 #: help:project.phase,date_start:0
@@ -379,6 +403,13 @@ msgid ""
 "human resources, convert your phases into a series of tasks when you start "
 "working on the project."
 msgstr ""
+"Un projecte es pot dividir en diferents fases. Per a cada fase, podeu "
+"definir la seva assignació de recursos, descriure diferents tasques i "
+"vincular la seva fase a fases prèvies i posteriors, afegir restriccions de "
+"data per a la programació automàtica. Quan comenceu a treballar en el "
+"projecte, utilitzeu el planejament a llarg termini per planificar els seus "
+"recursos humans disponibles i convertir les seves fases en una sèrie de "
+"tasques."
 
 #. module: project_long_term
 #: field:project.phase,date_start:0
@@ -427,6 +458,7 @@ msgstr "Detall de la tasca"
 #: help:project.project,resource_calendar_id:0
 msgid "Timetable working hours to adjust the gantt diagram report"
 msgstr ""
+"Hores de treball de l'horari per a ajustar l'informe del diagrama de Gantt"
 
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_project_compute_tasks
@@ -436,7 +468,7 @@ msgstr "Calcula tasques del projecte"
 #. module: project_long_term
 #: view:project.phase:0
 msgid "Constraints"
-msgstr ""
+msgstr "Restriccions"
 
 #. module: project_long_term
 #: help:project.phase,sequence:0
@@ -479,6 +511,7 @@ msgstr "Hores restants"
 #: constraint:project.task:0
 msgid "Error ! Task end-date must be greater then task start-date"
 msgstr ""
+"Error ! La data final de la tasca ha de ser major que la data d'inici"
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -569,7 +602,7 @@ msgstr "Detalls de tasques"
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_resource_resource
 msgid "Resource Detail"
-msgstr ""
+msgstr "Detall del recurs"
 
 #. module: project_long_term
 #: model:ir.ui.menu,name:project_long_term.menu_phase_schedule
@@ -600,7 +633,7 @@ msgstr "Missatge"
 #: code:addons/project_long_term/project_long_term.py:616
 #, python-format
 msgid "Resource(s) %s is(are) not member(s) of the project '%s' ."
-msgstr ""
+msgstr "Recurs/os %s no és/són membre/s del projecte '%s' ."
 
 #. module: project_long_term
 #: constraint:project.phase:0

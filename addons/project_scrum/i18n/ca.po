@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-05-09 10:19+0000\n"
-"PO-Revision-Date: 2011-08-07 22:15+0000\n"
+"PO-Revision-Date: 2011-08-11 19:49+0000\n"
 "Last-Translator: mgaja (GrupoIsep.com) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-08-08 05:15+0000\n"
-"X-Generator: Launchpad (build 13613)\n"
+"X-Launchpad-Export-Date: 2011-08-12 05:07+0000\n"
+"X-Generator: Launchpad (build 13662)\n"
 
 #. module: project_scrum
 #: help:project.scrum.email,scrum_master_email:0
@@ -68,6 +68,28 @@ msgid ""
 "    * http://controlchaos.com\n"
 "    "
 msgstr ""
+"\n"
+"    Aquest mòdul implementa tots els conceptes definits per la metodologia\n"
+"    Scrum de gestió de projectes per a empreses de TI:\n"
+"    * Projecte amb sprints, product owner, scrum master\n"
+"    * Sprints amb revisions, reunions diàries, comentaris\n"
+"    * Product backlog\n"
+"    * Sprint backlog\n"
+"\n"
+"    Afegexiu alguns conceptes al mòdul de gestió de projectes:\n"
+"    * Full de ruta a mig termini, a llarg termini\n"
+"    * Sol·licituds clients/funcional versus sol·licituds tècniques\n"
+"\n"
+"    També crea un nou informe:\n"
+"    * Gràfic de treball pendent\n"
+"\n"
+"    Els projectes i tasques scrum hereten dels projectes i tasques\n"
+"    reals, així podeu seguir treballant en tasques normals que també\n"
+"    inclouen tasques dels projectes scrum.\n"
+"\n"
+"    Més informació sobre la metodologia:\n"
+"    * http://controlchaos.com\n"
+"    "
 
 #. module: project_scrum
 #: view:project.scrum.meeting:0
@@ -83,6 +105,11 @@ msgid ""
 "which the team implements a list of product backlogs. The sprint review is "
 "organized when the team presents its work to the customer and product owner."
 msgstr ""
+"La metodologia àgil scrum s'utilitza en projectes de desenvolupament de "
+"programari. En aquesta metodologia, un sprint és un curt període de temps "
+"(p. ex. un mes) durant el qual l'equip implementa un munt d'elements de la "
+"pila de producte. S'organitza la revisió del sprint quan l'equip presenta el "
+"seu treball al client i el propietari del producte."
 
 #. module: project_scrum
 #: view:project.scrum.meeting:0
@@ -178,7 +205,7 @@ msgstr "Reunió de Scrum: %s"
 #. module: project_scrum
 #: view:project.task:0
 msgid "Backlog"
-msgstr ""
+msgstr "Pila"
 
 #. module: project_scrum
 #: model:ir.model,name:project_scrum.model_project_scrum_email
@@ -217,6 +244,10 @@ msgid ""
 "this methodology, a daily meeting is organized by the scrum master with his "
 "team in order to detect the difficulties the team faced/will face."
 msgstr ""
+"La metodologia àgil scrum s'utilitza en el desenvolupament de projectes de "
+"programari. En aquesta metodologia, el responsable de scrum organitza una "
+"reunió diària amb el seu equip per detectar les dificultats al fet que "
+"s'enfronten/s'enfrontaran el seu equip."
 
 #. module: project_scrum
 #: code:addons/project_scrum/project_scrum.py:316
@@ -693,7 +724,7 @@ msgstr "Informació opcional"
 #. module: project_scrum
 #: model:ir.model,name:project_scrum.model_project_scrum_backlog_create_task
 msgid "Create Tasks from Product Backlogs"
-msgstr ""
+msgstr "Crea tasques a partir de piles del producte"
 
 #. module: project_scrum
 #: help:project.project,sprint_size:0
@@ -731,7 +762,7 @@ msgstr "Gràcies"
 #. module: project_scrum
 #: help:project.scrum.backlog.assign.sprint,convert_to_task:0
 msgid "Create Task for Product Backlog"
-msgstr ""
+msgstr "Crea tasque per la pila del producte"
 
 #. module: project_scrum
 #: field:project.scrum.product.backlog,active:0
@@ -752,7 +783,7 @@ msgstr "Temps total estimat a causa del Backlog"
 #. module: project_scrum
 #: help:project.scrum.backlog.merge,project_id:0
 msgid "Select project for the new product backlog"
-msgstr ""
+msgstr "Seleccioneu un projecte per a la nova pila de producte"
 
 #. module: project_scrum
 #: view:project.scrum.backlog.merge:0
@@ -806,7 +837,7 @@ msgstr "Envia al propietari del producte"
 #: model:ir.actions.act_window,name:project_scrum.action_view_backlog_progress_graph
 #: view:project.scrum.product.backlog:0
 msgid "Backlog Progress"
-msgstr ""
+msgstr "Progrés de la pila"
 
 #. module: project_scrum
 #: code:addons/project_scrum/project_scrum.py:301
@@ -862,6 +893,7 @@ msgstr "Hores restants"
 #: constraint:project.task:0
 msgid "Error ! Task end-date must be greater then task start-date"
 msgstr ""
+"Error ! La data final de la tasca ha de ser major que la data d'inici"
 
 #. module: project_scrum
 #: view:project.scrum.sprint:0
@@ -1012,6 +1044,9 @@ msgid ""
 "This wizard merge backlogs and create one new backlog with draft state (Old "
 "backlogs Will be deleted). And it also merge old tasks from backlogs"
 msgstr ""
+"Aquest assistent combina piles i crea una nova pila amb estat esborrador "
+"(les piles antigues s'esborraran). També fusiona les tasques antigues de les "
+"piles"
 
 #. module: project_scrum
 #: code:addons/project_scrum/project_scrum.py:325
@@ -1030,7 +1065,7 @@ msgstr ""
 #. module: project_scrum
 #: view:project.scrum.backlog.merge:0
 msgid "Select the project for merged backlogs"
-msgstr ""
+msgstr "Seleccioneu el projecte per les piles fusionades"
 
 #. module: project_scrum
 #: view:board.board:0
@@ -1097,7 +1132,7 @@ msgstr "Assigna a"
 #. module: project_scrum
 #: view:postpone.wizard:0
 msgid "Are you sure to postpone Backlog ?"
-msgstr ""
+msgstr "Segur que desitgeu postposar la pila ?"
 
 #. module: project_scrum
 #: field:project.scrum.backlog.assign.sprint,sprint_id:0
@@ -1114,7 +1149,7 @@ msgstr "Sprint"
 #: code:addons/project_scrum/wizard/project_scrum_backlog_merger.py:39
 #, python-format
 msgid "Please select at least two product Backlogs"
-msgstr ""
+msgstr "Si us plau, seleccioneu almenys dues piles de producte"
 
 #. module: project_scrum
 #: field:project.scrum.sprint,review:0

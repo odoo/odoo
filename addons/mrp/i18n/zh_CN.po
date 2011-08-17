@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-05-09 10:19+0000\n"
-"PO-Revision-Date: 2011-08-04 14:51+0000\n"
+"PO-Revision-Date: 2011-08-15 12:40+0000\n"
 "Last-Translator: openerp-china.black-jack <onetimespeed@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-08-05 05:11+0000\n"
-"X-Generator: Launchpad (build 13604)\n"
+"X-Launchpad-Export-Date: 2011-08-16 04:57+0000\n"
+"X-Generator: Launchpad (build 13687)\n"
 
 #. module: mrp
 #: field:mrp.production,move_created_ids:0
@@ -74,7 +74,7 @@ msgstr "最小库存规则允许系统在达到最小库存数量的时候立即
 #: field:mrp.production,picking_id:0
 #: field:mrp.production.order,picking_id:0
 msgid "Picking list"
-msgstr "分拣单"
+msgstr "移库单"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:121
@@ -138,12 +138,12 @@ msgstr "工作中心完成这道工序需要执行的次数"
 #: view:mrp.production:0
 #: field:mrp.production,name:0
 msgid "Reference"
-msgstr "参照"
+msgstr "生产订单编号"
 
 #. module: mrp
 #: view:mrp.production:0
 msgid "Finished Products"
-msgstr "成品"
+msgstr "已完工数量"
 
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_servicerfq0
@@ -171,7 +171,7 @@ msgstr "系统将自动向首选供应商发起询价单。"
 #. module: mrp
 #: view:mrp.production:0
 msgid "Products to Finish"
-msgstr "预期成品"
+msgstr "未完工数量"
 
 #. module: mrp
 #: selection:mrp.bom,method:0
@@ -216,7 +216,7 @@ msgstr "计量单位"
 #: field:mrp.production.order,product_qty:0
 #: field:mrp.production.product.line,product_qty:0
 msgid "Product Qty"
-msgstr "产品数量"
+msgstr "数量"
 
 #. module: mrp
 #: help:mrp.workcenter,product_id:0
@@ -238,7 +238,7 @@ msgstr "版本"
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.next_id_77
 msgid "Reporting"
-msgstr "内部报表"
+msgstr "报告"
 
 #. module: mrp
 #: field:mrp.workcenter,costs_cycle_account_id:0
@@ -296,7 +296,7 @@ msgstr "业务伙伴参考"
 #. module: mrp
 #: selection:mrp.workcenter.load,measure_unit:0
 msgid "Amount in hours"
-msgstr "每小时金额"
+msgstr "工时数"
 
 #. module: mrp
 #: field:mrp.production,product_lines:0
@@ -371,7 +371,7 @@ msgstr "数量"
 #. module: mrp
 #: field:mrp.production.workcenter.line,hour:0
 msgid "Nbr of hours"
-msgstr "小时数"
+msgstr "工时数"
 
 #. module: mrp
 #: view:mrp.production:0
@@ -424,7 +424,7 @@ msgstr "实现质保期和维修管理（极其对库存和发票的影响）"
 #: report:mrp.production.order:0
 #: field:mrp.production.order,date_planned:0
 msgid "Scheduled Date"
-msgstr "安排日期"
+msgstr "下单日期"
 
 #. module: mrp
 #: report:mrp.production.order:0
@@ -442,7 +442,7 @@ msgstr "如果你在本地生产这成品你需要留空"
 #. module: mrp
 #: view:board.board:0
 msgid "Stock Value Variation"
-msgstr "库存价值差异"
+msgstr "库存值预测"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action2
@@ -606,7 +606,7 @@ msgstr "产品工艺"
 #: report:mrp.production.order:0
 #: field:mrp.production.order,consumed_products:0
 msgid "Consumed Products"
-msgstr "已消耗原料"
+msgstr "已投料数量"
 
 #. module: mrp
 #: constraint:mrp.bom:0
@@ -927,7 +927,7 @@ msgstr "代码"
 #. module: mrp
 #: report:mrp.production.order:0
 msgid "No. Of Hours"
-msgstr "小时编号"
+msgstr "工时数"
 
 #. module: mrp
 #: field:mrp.installer,mrp_jit:0
@@ -1031,7 +1031,7 @@ msgstr "生产仪表盘"
 #. module: mrp
 #: view:mrp.production:0
 msgid "Source Loc."
-msgstr "来源位置"
+msgstr "原料库位"
 
 #. module: mrp
 #: field:mrp.bom,position:0
@@ -1252,7 +1252,7 @@ msgstr "工艺允许创建或管理在工作中心上要执行的操作。它被
 #. module: mrp
 #: field:report.workcenter.load,hour:0
 msgid "Nbr of hour"
-msgstr "小时数"
+msgstr "工时数"
 
 #. module: mrp
 #: view:mrp.routing:0
@@ -1470,7 +1470,7 @@ msgstr "时间科目"
 #. module: mrp
 #: view:mrp.production:0
 msgid "Destination Loc."
-msgstr "目的库位"
+msgstr "成品库位"
 
 #. module: mrp
 #: field:mrp.production.order,product_id2:0
@@ -1630,7 +1630,7 @@ msgstr "产品"
 #: view:mrp.production:0
 #: field:mrp.production,hour_total:0
 msgid "Total Hours"
-msgstr "总小时数"
+msgstr "总工时"
 
 #. module: mrp
 #: field:mrp.production,location_src_id:0
@@ -1668,7 +1668,7 @@ msgstr "消耗的产品"
 #: field:mrp.production.order,product_uom:0
 #: field:mrp.production.product.line,product_uom:0
 msgid "Product UOM"
-msgstr "产品计量单位"
+msgstr "计量单位"
 
 #. module: mrp
 #: model:process.node,name:mrp.process_node_stock0
@@ -1792,7 +1792,7 @@ msgstr ""
 #: view:mrp.production:0
 #: report:mrp.production.order:0
 msgid "Work Orders"
-msgstr "工作单"
+msgstr "工票"
 
 #. module: mrp
 #: field:mrp.workcenter,costs_cycle:0
@@ -1948,14 +1948,14 @@ msgstr "产品舍入"
 #: model:ir.model,name:mrp.model_mrp_production_workcenter_line
 #: field:mrp.production.workcenter.line,name:0
 msgid "Work Order"
-msgstr "工作单"
+msgstr "工票"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.action_report_mrp_production_order
 msgid ""
 "This reporting allows you to analyse your manufacturing activities and "
 "performance."
-msgstr "此报表可以分析你的生产状况和绩效"
+msgstr "此报告可以分析你的生产状况和绩效"
 
 #. module: mrp
 #: selection:mrp.product.produce,mode:0
@@ -1965,7 +1965,7 @@ msgstr "废料"
 #. module: mrp
 #: view:mrp.production:0
 msgid "Recreate Picking"
-msgstr "重新创建分拣单"
+msgstr "重建领料/提货"
 
 #. module: mrp
 #: help:mrp.bom,type:0
@@ -2031,7 +2031,7 @@ msgstr "总数量"
 #. module: mrp
 #: field:mrp.routing.workcenter,hour_nbr:0
 msgid "Number of Hours"
-msgstr "小时数"
+msgstr "工时数"
 
 #. module: mrp
 #: view:mrp.workcenter:0
@@ -2265,7 +2265,7 @@ msgstr "生产工序"
 #. module: mrp
 #: field:mrp.production,date_planned:0
 msgid "Scheduled date"
-msgstr "安排日期"
+msgstr "下单日期"
 
 #. module: mrp
 #: constraint:stock.move:0
@@ -2461,7 +2461,7 @@ msgstr "输入序号用于物料清单列表排序"
 #: report:mrp.production.order:0
 #: field:mrp.production.order,products_to_consume:0
 msgid "Products to Consume"
-msgstr "原料"
+msgstr "未投料数量"
 
 #. module: mrp
 #: view:mrp.production.order:0

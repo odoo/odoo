@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:16+0000\n"
-"PO-Revision-Date: 2011-08-04 15:36+0000\n"
+"PO-Revision-Date: 2011-08-15 12:29+0000\n"
 "Last-Translator: openerp-china.black-jack <onetimespeed@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-08-05 05:11+0000\n"
-"X-Generator: Launchpad (build 13604)\n"
+"X-Launchpad-Export-Date: 2011-08-16 04:57+0000\n"
+"X-Generator: Launchpad (build 13687)\n"
 
 #. module: sale
 #: view:board.board:0
@@ -60,7 +60,7 @@ msgstr "取消订单"
 #. module: sale
 #: view:sale.config.picking_policy:0
 msgid "Configure Sales Order Logistics"
-msgstr "配置销售单物流信息"
+msgstr "设置销售单物流信息"
 
 #. module: sale
 #: code:addons/sale/sale.py:603
@@ -138,8 +138,8 @@ msgid ""
 "you just have to confirm it when you want to bill your customer."
 msgstr ""
 "销售订单管理能帮助你管理报价单和客户订单。 OpenERP建议你先创建报价单， "
-"一旦报价单被确认后，系统会自动把报价单转换成销售订单。OpenERP能处理多种类型产品使一个销售订单可能触发任务，发货单，生产订单，采购等。根据销售订单的"
-"配置，将会产生一张发票草稿以便当你需要向客户开账单的时候，你只需要确认一下即可。"
+"一旦报价单被确认后，系统会自动把报价单转换成销售订单。OpenERP能处理多种类型产品使一个销售订单可能触发任务，发货单，生产订单，采购等。\r\n"
+"根据销售订单的设置，将会产生一张发票草稿以便当你需要向客户开票的时候，你只需要确认一下即可。"
 
 #. module: sale
 #: help:sale.order,invoice_quantity:0
@@ -161,7 +161,7 @@ msgstr "默认付款条件"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_config_picking_policy
 msgid "Configure Picking Policy for Sales Order"
-msgstr "配置销售订单的提货政策"
+msgstr "设置销售订单的提货政策"
 
 #. module: sale
 #: view:sale.order:0
@@ -303,10 +303,10 @@ msgid ""
 "during the picking process."
 msgstr ""
 "运送方式是用于同步发票和发货操作的。\n"
-"  - ‘款到发货’选项是先生成发票，然后当收到发票的付款后生成分拣单。\n"
-"  - ‘运送并且手工开票’是直接创建分拣单，并且等待用户手工点击‘开票’按钮生成发票草稿。\n"
-"  - ‘先发货后开票’选项是在所有分拣单完成之后根据销售订单生成发票草稿。\n"
-"  - ‘按分拣单开票’选项是在分拣的过程中生成发票。"
+"  - ‘款到发货’选项是先生成发票，然后当收到发票的付款后生成装箱单。\n"
+"  - ‘运送并且手工开票’是直接创建装箱单，并且等待用户手工点击‘开票’按钮生成发票草稿。\n"
+"  - ‘先发货后开票’选项是在所有装箱单完成之后根据销售订单生成发票草稿。\n"
+"  - ‘按装箱单开票’选项是在分拣的过程中生成发票。"
 
 #. module: sale
 #: code:addons/sale/sale.py:939
@@ -319,7 +319,7 @@ msgstr "没有为产品类别定义缺省的收入类科目，或者没有定义
 #. module: sale
 #: view:sale.installer:0
 msgid "Configure"
-msgstr "配置:"
+msgstr "设置"
 
 #. module: sale
 #: constraint:stock.move:0
@@ -351,7 +351,7 @@ msgstr "销售订单统"
 #. module: sale
 #: help:sale.order,project_id:0
 msgid "The analytic account related to a sales order."
-msgstr "销售订单相关的辅助核算科目。"
+msgstr "销售订单相关的辅助核算项。"
 
 #. module: sale
 #: selection:sale.report,month:0
@@ -420,7 +420,7 @@ msgstr "进展"
 msgid ""
 "The salesman confirms the quotation. The state of the sales order becomes "
 "'In progress' or 'Manual in progress'."
-msgstr "业务员确认报价。销售订单的状态变成‘进展’或‘手工进展’。"
+msgstr "业务员确认报价。销售订单的状态变成‘进度’或‘手工进度’。"
 
 #. module: sale
 #: code:addons/sale/sale.py:971
@@ -593,7 +593,7 @@ msgstr "未完税金额"
 #: model:ir.actions.act_window,name:sale.action_order_line_tree2
 #: model:ir.ui.menu,name:sale.menu_invoicing_sales_order_lines
 msgid "Lines to Invoice"
-msgstr "需开票的销售订单明细\""
+msgstr "需开票的销售订单明细"
 
 #. module: sale
 #: field:sale.order.line,product_uom_qty:0
@@ -736,7 +736,7 @@ msgstr "运送地址"
 msgid ""
 "It indicates that the sales order has been delivered. This field is updated "
 "only after the scheduler(s) have been launched."
-msgstr "它表示销售订单已经发货了。只有运行调度程序（scheduler）后这个字段才会被修改。"
+msgstr "它表示销售订单已经发货了。只有运行日程表（scheduler）后这个字段才会被修改。"
 
 #. module: sale
 #: view:sale.report:0
@@ -771,20 +771,18 @@ msgid ""
 msgstr ""
 "\n"
 "    管理报价单和销售订单的基础模块。\n"
+"  * 工作流和验证步骤： - 报价 -> 销售订单 -> 开票\n"
+"  * 开票方式：\n"
+"    - 按订单开票（运送前或后）\n"
+"    - 按发货单开票 - 按工时单开票\n"
+"    - 预付款发票\n"
+"  * 业务伙伴首选项（运送，开票方式...）\n"
+"  * 产品库存与价格\n"
+"  * 送货方式:\n"
+"    - 所有一起，多个包裹\n"
+"    - 交货成本\n"
 "\n"
-"    * 工作流和验证步骤：\n"
-"        - 报价 -> 销售订单 -> 开票\n"
-"    * 开票方式：\n"
-"        - 按订单开票（运送前或后）\n"
-"        - 按发货单开票\n"
-"        - 按工时单开票\n"
-"        - 预付款发票\n"
-"    * 业务伙伴首选项（运送，开票，贸易术语，...）\n"
-"    * 产品库存与价格\n"
-"    * 送货方式:\n"
-"        - 所有一起，多个包裹\n"
-"        - 交货成本\n"
-"    * 业务员仪表盘包括:\n"
+"  * 业务员控制台包括:\n"
 "    * 你的未关闭报价单\n"
 "    * 月销售前10\n"
 "    * 业务个案统计\n"
@@ -887,7 +885,7 @@ msgstr "创建发票"
 #. module: sale
 #: field:sale.installer,sale_margin:0
 msgid "Margins in Sales Orders"
-msgstr "\"销售订单利润率"
+msgstr "销售订单利润"
 
 #. module: sale
 #: view:sale.order:0
@@ -926,7 +924,7 @@ msgstr "价格"
 #: view:sale.config.picking_policy:0
 #: view:sale.installer:0
 msgid "Sales Application Configuration"
-msgstr "销售应用程序配置"
+msgstr "销售应用程序设置"
 
 #. module: sale
 #: view:sale.report:0
@@ -947,7 +945,7 @@ msgstr "基于已运送或被订购的数据。"
 #. module: sale
 #: field:sale.order,picking_ids:0
 msgid "Related Picking"
-msgstr "关联的分拣单"
+msgstr "装箱单"
 
 #. module: sale
 #: field:sale.config.picking_policy,name:0
@@ -1008,7 +1006,7 @@ msgstr "确认报价单"
 #. module: sale
 #: help:sale.order,origin:0
 msgid "Reference of the document that generated this sales order request."
-msgstr "生成此销售订单请求的参考资料。"
+msgstr "生成此销售订单请求的单据"
 
 #. module: sale
 #: view:sale.order:0
@@ -1131,7 +1129,7 @@ msgstr "基于销售订单开票"
 #. module: sale
 #: model:ir.model,name:sale.model_stock_picking
 msgid "Picking List"
-msgstr "分拣单"
+msgstr "装箱单"
 
 #. module: sale
 #: code:addons/sale/sale.py:387
@@ -1177,7 +1175,7 @@ msgstr "发货和手工发票"
 #: code:addons/sale/sale.py:1051
 #, python-format
 msgid "Picking Information !"
-msgstr "分拣单信息 ！"
+msgstr "装箱单信息 ！"
 
 #. module: sale
 #: view:sale.report:0
@@ -1193,7 +1191,7 @@ msgstr "销售管理"
 #. module: sale
 #: selection:sale.order,order_policy:0
 msgid "Invoice From The Picking"
-msgstr "来自分拣单的发票"
+msgstr "来自装箱单的发票"
 
 #. module: sale
 #: model:process.node,note:sale.process_node_invoice0
@@ -1209,7 +1207,7 @@ msgstr "参考计量单位（UoM）"
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order_line_make_invoice
 msgid "Sale OrderLine Make_invoice"
-msgstr "销售订单明细Make_invoice"
+msgstr "销售订单明细开票"
 
 #. module: sale
 #: help:sale.config.picking_policy,step:0
@@ -1219,7 +1217,7 @@ msgid ""
 "and simple methods to deliver products to the customer in one or two "
 "operations by the worker."
 msgstr ""
-"默认情况下，OpenERP能够管理仓库和业务伙伴库位之间复杂的路线和路径。此配置能够配置最常用、最简单的方式来发货给各户，工人只需1或2个操作。"
+"默认情况下，OpenERP能够管理仓库和业务伙伴库位之间复杂的路线和路径。此设置能够配置最常用、最简单的方式来发货给各户，员工只需1或2个操作。"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree
@@ -1310,7 +1308,7 @@ msgstr ""
 #. module: sale
 #: selection:sale.config.picking_policy,step:0
 msgid "Picking List & Delivery Order"
-msgstr "分拣单 & 发货单"
+msgstr "装箱单 & 发货单"
 
 #. module: sale
 #: field:sale.order,origin:0
@@ -1325,7 +1323,7 @@ msgstr "待处理"
 #. module: sale
 #: field:sale.order,picking_policy:0
 msgid "Picking Policy"
-msgstr "分拣方式"
+msgstr "装箱方式"
 
 #. module: sale
 #: model:process.node,note:sale.process_node_deliveryorder0
@@ -1341,7 +1339,7 @@ msgstr "除税后总额。"
 #: code:addons/sale/sale.py:571
 #, python-format
 msgid "You must first cancel all picking attached to this sales order."
-msgstr "你必须先取消销售订单上的所有分拣单。"
+msgstr "你必须先取消销售订单上的所有装箱单。"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_advance_payment_inv
@@ -1374,7 +1372,7 @@ msgstr "取消指定"
 #. module: sale
 #: model:ir.model,name:sale.model_sale_config_picking_policy
 msgid "sale.config.picking_policy"
-msgstr "销售设置领料/提货方式"
+msgstr "sale.config.picking_policy"
 
 #. module: sale
 #: help:sale.order,state:0
@@ -1387,8 +1385,8 @@ msgid ""
 "waiting for the scheduler to run on the date 'Ordered Date'."
 msgstr ""
 "指定报价单或销售订单的状态\n"
-"当发票验证被取消（发票异常），或分拣货物被取消（运输异常）的时候，会被设置为异常状态。\n"
-"当发票被确认，但是处于等待调度器在‘订购日期’那天运行的时候，会被设置为‘等待安排’状态。"
+"当发票验证被取消（发票异常），或取消装箱单里的产品（运输异常）的时候，会被设置为异常状态。\n"
+"当发票被确认但在“订单日期”那天正等待日程安排会被设置为‘等待日程安排’状态。"
 
 #. module: sale
 #: field:sale.order,invoice_quantity:0
@@ -1444,7 +1442,9 @@ msgid ""
 "based on delivered or on ordered quantities. Thus, a sales order can "
 "generates an invoice or a delivery order as soon as it is confirmed by the "
 "salesman."
-msgstr "依据销售定单的开票方式， 可根据交货或者订购数据生成发票。因此，一旦销售订单被业务员确认，就会为它生产发票或者发货单。"
+msgstr ""
+"根据销售订单的开票方式， 根据交货或者订购数据生成发票。\r\n"
+"因此，一旦销售订单被业务员确认，就会为它生产发票或者发货单。"
 
 #. module: sale
 #: code:addons/sale/sale.py:1116
@@ -1489,7 +1489,7 @@ msgid ""
 "Depending on the configuration of the location Output, the move between the "
 "output area and the customer is done through the Delivery Order manually or "
 "automatically."
-msgstr "根据输出位置的配置，输出区域和客户之间的库存转移是通过发货单手工或自动完成的。"
+msgstr "根据出库库位的设置，出库和客户之间的库存转移是通过发货单手工或自动完成的。"
 
 #. module: sale
 #: code:addons/sale/sale.py:1165
@@ -1544,7 +1544,7 @@ msgstr "发票异常"
 #: help:sale.order,picking_ids:0
 msgid ""
 "This is a list of picking that has been generated for this sales order."
-msgstr "此销售订单的分拣单列表。"
+msgstr "此销售订单的装箱单。"
 
 #. module: sale
 #: help:sale.installer,sale_margin:0
@@ -1640,7 +1640,7 @@ msgid ""
 "the same time as the procurement order. It represents the assignment of "
 "parts to the sales order. There is 1 pick list by sales order line which "
 "evolves with the availability of parts."
-msgstr "一旦销售订单被确认，拣货单表格就会和采购订单一起被生成。它代表部分销售订单分配。每行有效的销售订单明细会对应一张拣货单。"
+msgstr "一旦销售订单被确认，装箱单就会和采购订单一起被生成。它代表部分销售订单分配。每行有效的销售订单明细会对应一张装箱单。"
 
 #. module: sale
 #: selection:sale.order.line,state:0
@@ -1701,7 +1701,7 @@ msgid ""
 "The Shipping Policy is used to configure per order if you want to deliver as "
 "soon as possible when one product is available or you wait that all products "
 "are available.."
-msgstr "运输方式是用于配置每张销售订单是否有一个产品有效时尽可能早发货，还是等所有产品都准备好了才尽可能早发货。"
+msgstr "运输方式是用于设置每张销售订单是否有一个产品有效时尽可能早发货，还是等所有产品都准备好了才尽可能早发货。"
 
 #. module: sale
 #: selection:sale.report,month:0
@@ -1751,7 +1751,7 @@ msgid ""
 "confirmed or as the invoice is paid. It drives the purchasing and the "
 "production of products regarding to the rules and to the sales order's "
 "parameters. "
-msgstr "采购订单会在销售订单确认或发票付款后立刻自动生成。它促使了规则和销售订单参数中相关产品的采购和生成。 "
+msgstr "采购订单会在销售订单确认或发票付款后立刻自动生成。根据产品的采购和生产规则和销售订单参数。 "
 
 #. module: sale
 #: view:sale.order.line:0
@@ -1832,7 +1832,7 @@ msgstr "装箱单"
 #: field:sale.config.picking_policy,progress:0
 #: field:sale.installer,progress:0
 msgid "Configuration Progress"
-msgstr "配置进度"
+msgstr "设置进度"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_line_product_tree
@@ -1891,7 +1891,7 @@ msgstr "1月"
 #. module: sale
 #: view:sale.installer:0
 msgid "Configure Your Sales Management Application"
-msgstr "配置销售管理应用程序"
+msgstr "设置销售管理应用程序"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree4
@@ -1920,7 +1920,7 @@ msgstr "承诺延迟"
 msgid ""
 "One Procurement order for each sales order line and for each of the "
 "components."
-msgstr "有一个采购订单对应每行销售订单明细的每个部件。"
+msgstr "销售订单的对应一个采购订单"
 
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_assign0
@@ -1994,8 +1994,8 @@ msgid ""
 "warehouse from which the products will be delivered for each particular "
 "sales."
 msgstr ""
-"如果有有超过一个商店转售你公司的产品，你可以在这里创建和管理它们。无论什么时候生成一个报价单或者销售订单，它都必须和一个商店关联起来。商店也会为各自的销售"
-"订单指定产品会从那个仓库发货。"
+"如果有有超过一个商店转售你公司的产品，你可以在这里创建和管理它们。\r\n"
+"每当生成一个报价单或者销售订单都必须和一个商店关联起来。商店也会为各自的销售订单指定产品会从那个仓库发货。"
 
 #. module: sale
 #: help:sale.order,invoiced:0

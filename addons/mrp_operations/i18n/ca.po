@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-05-09 10:19+0000\n"
-"PO-Revision-Date: 2011-08-06 17:59+0000\n"
+"PO-Revision-Date: 2011-08-11 17:21+0000\n"
 "Last-Translator: mgaja (GrupoIsep.com) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-08-07 05:05+0000\n"
-"X-Generator: Launchpad (build 13613)\n"
+"X-Launchpad-Export-Date: 2011-08-12 05:07+0000\n"
+"X-Generator: Launchpad (build 13662)\n"
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_action_form
@@ -282,6 +282,11 @@ msgid ""
 "different impacts on the costs of manufacturing and planning depending on "
 "the available workload."
 msgstr ""
+"Per fabricar o ensamblar productes, i utilitzar matèries primeres i "
+"productes acabats també heu de controlar les operacions de fabricació. Les "
+"operacions de fabricació normalment, es diuen ordres de treball. Les "
+"diferents intervencions tindran diferents impactes en els costos de "
+"fabricació i la planificació en funció de la càrrega de treball disponible."
 
 #. module: mrp_operations
 #: field:mrp_operations.operation,order_date:0
@@ -463,6 +468,40 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"     Aquest mòdul afegeix estat, data de començament, data de finalització a "
+"les línies d'operació de les ordres de producció\n"
+"(en la pestanya \"Centres de Treball\")\n"
+"    Estat: esborrany, confirmat, fet, cancel·lat\n"
+"    Quan es finalitzen, confirmen o cancel·len les ordres de producció "
+"s'estableixen tots les línies a l'estat corresponent\n"
+"    Menús creats:\n"
+"        Gestió de productes > Totes les operacions\n"
+"        Gestió de productes > Totes les operacions > Operacions a realitzar "
+"(estat=\"confirmada\")\n"
+"    La qual és una vista en les línies de \"Centres de Treball\" en les "
+"ordres de producció,\n"
+"    arbre editable\n"
+"\n"
+"    Afegeix botons a la vista formulari de les ordres de producció sota la "
+"pestanya de centres de treball:\n"
+"    * comença (canvia l'estat a 'confirmada'), omple la data d'inici\n"
+"    * finalitza (canvia l'estat a 'finalitzada'), omple la data de "
+"finalització\n"
+"    * canvia a esborrany (canvia l'estat a 'esborrany')\n"
+"    * cancel·la (canvia l'estat a cancel·lada)\n"
+"\n"
+"    Quan les ordress de producció estiguin \"preparades per produir-se\", "
+"les operacions han de\n"
+"    confirmar-se. Quan es realitzi l'ordre de producció, totes les "
+"operacions\n"
+"    quedar realitzades.\n"
+"\n"
+"    El camp 'retard' és el retard (data de finalització - data de "
+"començament).\n"
+"    Així podreu comparar el retard teòric amb el retard real.\n"
+"\n"
+"    "
 
 #. module: mrp_operations
 #: selection:mrp.workorder,month:0
@@ -568,7 +607,7 @@ msgstr "L'operació ja està cancel·lada!"
 #. module: mrp_operations
 #: model:ir.module.module,shortdesc:mrp_operations.module_meta_information
 msgid "Work Center Production start end workflow"
-msgstr ""
+msgstr "Flux d'inici-final de la producció en els centres de producció"
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,name:mrp_operations.mrp_production_code_action
@@ -612,6 +651,11 @@ msgid ""
 "latest operation of a manufacturing order, the MO is automatically done and "
 "the related products are produced."
 msgstr ""
+"Les ordres de treball és la llista d'operacions que es realitzaran per a "
+"cada ordre de producció. Una vegada que s'inicia el primer treball d'una "
+"ordre de producció, aquesta es marca automàticament com iniciada. Una vegada "
+"que acabi l'última operació d'una ordre de producció, aquesta es realitza "
+"automàticament i els productes relacionats són produïts."
 
 #. module: mrp_operations
 #: model:process.node,name:mrp_operations.process_node_startoperation0
@@ -626,17 +670,17 @@ msgstr "Informació"
 #. module: mrp_operations
 #: model:ir.actions.report.xml,name:mrp_operations.report_wc_barcode
 msgid "Work Centers Barcode"
-msgstr ""
+msgstr "Codi de barra de centres de producció"
 
 #. module: mrp_operations
 #: constraint:stock.move:0
 msgid "You must assign a production lot for this product"
-msgstr ""
+msgstr "Heu d'assignar un lot de producció per aquest producte"
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
 msgid "Late"
-msgstr ""
+msgstr "Retardat"
 
 #. module: mrp_operations
 #: field:mrp.workorder,delay:0
