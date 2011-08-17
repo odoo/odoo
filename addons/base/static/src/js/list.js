@@ -1179,7 +1179,164 @@ openerp.base.ListView.Groups = openerp.base.Class.extend( /** @lends openerp.bas
         });
     }
 });
+
+/**
+ * @class
+ * @extends openerp.base.Class
+ */
+var Events = {
+    /**
+     * @param {String} event event to listen to on the current object, null for all events
+     * @param {Function} handler event handler to bind to the relevant event
+     * @returns this
+     */
+    bind: function (event, handler) {
+        var calls = this['_callbacks'] || (this._callbacks = {});
+
+        if (event in calls) {
+            calls[event].push(handler);
+        } else {
+            calls[event] = [handler];
+        }
+        return this;
+    },
+    /**
+     * @param {String} event
+     * @returns this
+     */
+    trigger: function (event) {
+        var calls;
+        if (!(calls = this._callbacks)) { return this; }
+        var callbacks = (calls[event] || []).concat(calls[null] || []);
+        for(var i=0, length=callbacks.length; i<length; ++i) {
+            callbacks[i].apply(this, arguments);
+        }
+        return this;
+    }
 };
+var Record = openerp.base.Class.extend(/** @lends Record# */{
+    /**
+     * @constructs
+     * @extends openerp.base.Class
+     * @borrows Events#bind as this.bind
+     * @borrows Events#trigger as this.trigger
+     * @param {Object} [data]
+     */
+    init: function (data) {
+        this.data = data || {};
+    },
+    /**
+     * @param {String} key
+     * @returns {Object}
+     */
+    get: function (key) {
+        return this.data[key];
+    },
+    /**
+     * @param key
+     * @param value
+     * @returns {Record}
+     */
+    set: function (key, value) {
+        this.data[key] = value;
+        this.trigger('change:' + key, this, value);
+        this.trigger('change', this);
+        return this;
+    }
+});
+Record.include(Events);
+var Collection = openerp.base.Class.extend(/** @lends Collection# */{
+    /**
+     * @constructs
+     * @extends openerp.base.Class
+     * @borrows Events#bind as this.bind
+     * @borrows Events#trigger as this.trigger
+     * @param {Array} [records] records to initialize the collection with
+     * @param {Object} [options]
+     */
+    init: function (records, options) {
+        options = options || {};
+        _.bindAll(this, '_onRecordEvent');
+        this.records = [];
+        this._byId = {};
+        this._proxies = {};
+        this._key = options.key;
+        this._parent = options.parent;
 
+        if (records) {
+            this.add(records);
+        }
+    },
+    /**
+     * @param {Object|Array} record
+     * @returns this
+     */
+    add: function (record) {
+        var records = record instanceof Array ? record : [record];
+
+        for(var i=0, length=records.length; i<length; ++i) {
+            var instance = (records[i] instanceof Record) ? records[i] : new Record(records[i]);
+            instance.bind(null, this._onRecordEvent);
+            this._byId[instance.get('id')] = instance;
+            this.records.push(instance);
+        }
+        return this;
+    },
+
+    /**
+     * Get a record by its index in the collection, can also take a group if
+     * the collection is not degenerate
+     *
+     * @param {Number} index
+     * @param {String} [group]
+     * @returns {Record|undefined}
+     */
+    at: function (index, group) {
+        if (group) {
+            var groups = group.split('.');
+            return this._proxies[groups[0]].at(index, groups.join('.'));
+        }
+        return this.records[index];
+    },
+    /**
+     * Get a record by its database id
+     *
+     * @param {Number} id
+     * @returns {Record|undefined}
+     */
+    get: function (id) {
+        if (!_(this._proxies).isEmpty()) {
+            var record = null;
+            _(this._proxies).detect(function (proxy) {
+                return record = proxy.get(id);
+            });
+            return record;
+        }
+        return this._byId[id];
+    },
+    /**
+     * Builds a proxy (insert/retrieve) to a subtree of the collection, by
+     * the subtree's group
+     *
+     * @param {String} section group path section
+     * @returns {Collection}
+     */
+    proxy: function (section) {
+        return this._proxies[section] = new Collection(null, {
+            parent: this,
+            key: section
+        }).bind(null, this._onRecordEvent);
+    },
+
+    _onRecordEvent: function (event, record, options) {
+        this.trigger.apply(this, arguments);
+    }
+});
+Collection.include(Events);
+openerp.base.list = {
+    Events: Events,
+    Record: Record,
+    Collection: Collection
+}
+};
 // vim:et fdc=0 fdl=0 foldnestmax=3 fdm=syntax:
-
