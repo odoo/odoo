@@ -254,10 +254,6 @@
                             domain="['|', ('section_id', '=', context.get('section_id')), '|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
                             help="My Sales Team(s)" />
                     </field>
-                    <newline/>
-					<group  expand="0" string="Extended Filters..." groups="base.group_extended">
-                            <field name="write_date" string="Updated Date"/>
-                    </group>
                     <newline/>                         
                     <group expand="0" string="Group By...">
                         <filter string="Partner" icon="terp-partner"

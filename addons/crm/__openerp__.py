@@ -24,6 +24,7 @@
     'name': 'Customer & Supplier Relationship Management',
     'version': '1.0',
     'category': 'Sales',
+    'complexity': "easy",
     'description': """
 The generic OpenERP Customer Relationship Management.
 =====================================================

@@ -104,7 +104,7 @@
             <field name="res_model">pos.order</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="view_pos_pos_form"/>
-            <field name="domain">[['date_order','>=',time.strftime('%Y-%m-%d')]]</field>
+            <field name="domain">[]</field>
         </record>
         <record model="ir.ui.view" id="view_pos_order_tree">
             <field name="name">Sales</field>

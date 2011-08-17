@@ -84,8 +84,8 @@ class project_task_close(osv.osv_memory):
             elif data.manager_warn or data.partner_warn:
                 project = task.project_id
                 subject = _("Task '%s' Closed") % task.name
-                if task.user_id and task.user_id.address_id and task.user_id.address_id.email:
-                    from_adr = task.user_id.address_id.email
+                if task.user_id  and task.user_id.user_email:
+                    from_adr = task.user_id.user_email
                     signature = task.user_id.signature
                 else:
                     raise osv.except_osv(_('Error'), _("Couldn't send mail because your email address is not configured!"))

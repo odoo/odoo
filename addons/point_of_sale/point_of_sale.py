@@ -1232,7 +1232,7 @@ class product_product(osv.osv):
     _inherit = 'product.product'
     _columns = {
         'income_pdt': fields.boolean('Product for Input'),
-        'expense_pdt': fields.boolean('Product for expenses'),
+        'expense_pdt': fields.boolean('Product for Output'),
         'am_out': fields.boolean('Control for Output Operations'),
         'disc_controle': fields.boolean('Discount Control'),
         'img': fields.binary('Pos Image, must be 50x50'),

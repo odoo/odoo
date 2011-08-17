@@ -23,6 +23,7 @@
     "version" : "1.1",
     "author" : "OpenERP SA",
     "category": 'Finance',
+    'complexity': "normal",
     "description": """
 Accounting and Financial Management.
 ====================================
@@ -124,10 +125,11 @@ module named account_voucher.
         "wizard/account_report_balance_sheet_view.xml"
     ],
     'demo_xml': [
-        'account_demo.xml',
+        'demo/account_demo.xml',
         'project/project_demo.xml',
         'project/analytic_account_demo.xml',
         'demo/account_minimal.xml',
+        'demo/account_invoice_demo.xml',
 #        'account_unit_test.xml',
     ],
     'test': [
