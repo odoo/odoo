@@ -107,10 +107,12 @@ $(document).ready(function () {
     });
     test('Fetch from collection', function () {
         var c = new openerp.base.list.Collection();
+        strictEqual(c.length, 0);
         c.add({id: 1, value: 2});
         c.add({id: 2, value: 3});
         c.add({id: 3, value: 5});
         c.add({id: 4, value: 7});
+        strictEqual(c.length, 4);
         var r = c.at(2), r2 = c.get(1);
 
         ok(r instanceof openerp.base.list.Record);
@@ -121,6 +123,52 @@ $(document).ready(function () {
         strictEqual(r2.get('id'), 1);
         strictEqual(r2.get('value'), 2);
     });
+    test('Add at index', function () {
+        var c = new openerp.base.list.Collection([
+            {id: 1, value: 5},
+            {id: 2, value: 10},
+            {id: 3, value: 20}
+        ]);
+        strictEqual(c.at(1).get('value'), 10);
+        equal(c.at(3), undefined);
+        c.add({id:4, value: 55}, {at: 1});
+        strictEqual(c.at(1).get('value'), 55);
+        strictEqual(c.at(3).get('value'), 20);
+    });
+    test('Remove record', function () {
+        var c = new openerp.base.list.Collection([
+            {id: 1, value: 5},
+            {id: 2, value: 10},
+            {id: 3, value: 20}
+        ]);
+        var record = c.get(2);
+        strictEqual(c.length, 3);
+        c.remove(record);
+        strictEqual(c.length, 2);
+        equal(c.get(2), undefined);
+        strictEqual(c.at(1).get('value'), 20);
+    });
+    test('Reset', function () {
+        var event, obj, c = new openerp.base.list.Collection([
+            {id: 1, value: 5},
+            {id: 2, value: 10},
+            {id: 3, value: 20}
+        ]);
+        c.bind(null, function (e, instance) { event = e; obj = instance; });
+        c.reset();
+        strictEqual(c.length, 0);
+        strictEqual(event, 'reset');
+        strictEqual(obj, c);
+        c.add([
+            {id: 1, value: 5},
+            {id: 2, value: 10},
+            {id: 3, value: 20}
+        ]);
+        c.reset([{id: 42, value: 55}]);
+        strictEqual(c.length, 1);
+        strictEqual(c.get(42).get('value'), 55);
+    });
+
     test('Events propagation', function () {
         var values = [];
         var c = new openerp.base.list.Collection([
