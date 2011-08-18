@@ -3035,17 +3035,15 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         
         return True
 
-    def _install_template(self, cr, uid, ids, template_id, tax_data={}, context=None):
+    def _install_template(self, cr, uid, ids, template_id, company_id, tax_data={}, context=None):
         template = self.pool.get('account.chart.template').browse(cr, uid, template_id, context=context)
         if template.parent_id:
-            self._install_template(cr, uid, ids, template.parent_id.id, context=context)
-        return self._load_template(cr, uid, ids, template_id, tax_data=tax_data, context=context)
+            self._install_template(cr, uid, ids, template.parent_id.id, company_id, context=context)
+        return self._load_template(cr, uid, ids, template_id, company_id, tax_data=tax_data, context=context)
 
-    def _load_template(self, cr, uid, ids, template_id, tax_data={}, context=None):
-        return True
-
-    def execute(self, cr, uid, ids, context=None):
-        obj_multi = self.browse(cr, uid, ids[0])
+    def _load_template(self, cr, uid, ids, template_id, company_id, tax_data={}, context=None):
+        template = self.pool.get('account.chart.template').browse(cr, uid, template_id, context=context)
+        company_rec = self.pool.get('res.company').browse(cr, uid, company_id, context=context)
         obj_acc = self.pool.get('account.account')
         obj_acc_tax = self.pool.get('account.tax')
         obj_tax_temp = self.pool.get('account.tax.template')
@@ -3058,13 +3056,32 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         obj_tax_code_template = self.pool.get('account.tax.code.template')
         ir_values_obj = self.pool.get('ir.values')
         # Creating Account
-        obj_acc_root = obj_multi.chart_template_id.account_root_id
-        tax_code_root_id = obj_multi.chart_template_id.tax_code_root_id.id
-        company_id = obj_multi.company_id.id
-        chart_temp_id = obj_multi.chart_template_id.id
+        obj_acc_root = template.account_root_id
+        tax_code_root_id = template.tax_code_root_id.id
 
         tax_code_template_ref = {}
 
+        #create all the tax code
+        children_tax_code_template = obj_tax_code_template.search(cr, uid, [('parent_id','child_of',[tax_code_root_id])], order='id')
+        children_tax_code_template.sort()
+        for tax_code_template in obj_tax_code_template.browse(cr, uid, children_tax_code_template, context=context):
+            vals = {
+                'name': (tax_code_root_id == tax_code_template.id) and company_rec.name or tax_code_template.name,
+                'code': tax_code_template.code,
+                'info': tax_code_template.info,
+                'parent_id': tax_code_template.parent_id and ((tax_code_template.parent_id.id in tax_code_template_ref) and tax_code_template_ref[tax_code_template.parent_id.id]) or False,
+                'company_id': company_id,
+                'sign': tax_code_template.sign,
+            }
+            new_tax_code = obj_tax_code.create(cr, uid, vals)
+            #recording the new tax code to do the mapping
+            tax_code_template_ref[tax_code_template.id] = new_tax_code
+        
+        return True
+
+    def execute(self, cr, uid, ids, context=None):
+        obj_multi = self.browse(cr, uid, ids[0])
+        company_id = obj_multi.company_id.id
         tax_data = {
                     'sale_rate': obj_multi.sale_tax_rate, 
                     'purchase_rate': obj_multi.purchase_tax_rate, 
@@ -3095,22 +3112,6 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                                             'sequence': 0,
                                             'chart_template_id': chart_temp_id or False,
                                 }, context=context)
-
-        #create all the tax code
-        children_tax_code_template = obj_tax_code_template.search(cr, uid, [('parent_id','child_of',[tax_code_root_id])], order='id')
-        children_tax_code_template.sort()
-        for tax_code_template in obj_tax_code_template.browse(cr, uid, children_tax_code_template, context=context):
-            vals = {
-                'name': (tax_code_root_id == tax_code_template.id) and obj_multi.company_id.name or tax_code_template.name,
-                'code': tax_code_template.code,
-                'info': tax_code_template.info,
-                'parent_id': tax_code_template.parent_id and ((tax_code_template.parent_id.id in tax_code_template_ref) and tax_code_template_ref[tax_code_template.parent_id.id]) or False,
-                'company_id': company_id,
-                'sign': tax_code_template.sign,
-            }
-            new_tax_code = obj_tax_code.create(cr, uid, vals)
-            #recording the new tax code to do the mapping
-            tax_code_template_ref[tax_code_template.id] = new_tax_code
 
         #Generate taxes from templates.
         tax_template_to_tax = {}
