@@ -349,7 +349,7 @@ class pos_order(osv.osv):
                             (location_id, stock_dest_id)= (stock_dest_id, location_id)
 
                         self.pool.get('stock.move').create(cr, uid, {
-                            'name': 'Stock move (POS %d)' % (order.id, ),
+                            'name': 'Stock move (%s) ' % (order.name, ) + line.product_id.partner_ref,
                             'product_uom': line.product_id.uom_id.id,
                             'product_uos': line.product_id.uom_id.id,
                             'picking_id': picking_id,
