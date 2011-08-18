@@ -103,7 +103,7 @@
                                     name="%(action_hr_recruitment_partner_create)d"
                                     icon="gtk-index" type="action" attrs="{'readonly':[('partner_id','!=',False)]}" groups="base.group_partner_manager"/>
                             <newline/>
-                            <field name="partner_address_id" on_change="onchange_partner_address_id(partner_address_id, email_from)" colspan="3" attrs="{'readonly':[('state','not in','done')]}"/>
+                            <field name="partner_address_id" on_change="onchange_partner_address_id(partner_address_id, email_from)" colspan="3"/>
                             <field name="email_from" colspan="3"/>
                             <field name="partner_phone" colspan="3"/>
                             <field name="partner_mobile" colspan="3"/>
