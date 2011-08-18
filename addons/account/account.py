@@ -602,7 +602,7 @@ class account_journal(osv.osv):
     _description = "Journal"
     _columns = {
         'name': fields.char('Journal Name', size=64, required=True),
-        'code': fields.char('Code', size=5, required=True, help="The code will be used to generate the numbers of the journal entries of this journal."),
+        'code': fields.char('Code', size=5, required=True, help="The code will be displayed on reports."),
         'type': fields.selection([('sale', 'Sale'),('sale_refund','Sale Refund'), ('purchase', 'Purchase'), ('purchase_refund','Purchase Refund'), ('cash', 'Cash'), ('bank', 'Bank and Cheques'), ('general', 'General'), ('situation', 'Opening/Closing Situation')], 'Type', size=32, required=True,
                                  help="Select 'Sale' for Sale journal to be used at the time of making invoice."\
                                  " Select 'Purchase' for Purchase Journal to be used at the time of approving purchase order."\
@@ -2675,9 +2675,10 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         return False
 
     def _get_default_accounts(self, cr, uid, context=None):
-        return [{'acc_name': _('Current'),'account_type':'bank'},
-                    {'acc_name': _('Deposit'),'account_type':'bank'},
-                    {'acc_name': _('Cash'),'account_type':'cash'}]
+        return [
+            {'acc_name': _('Bank Account'),'account_type':'bank'},
+            {'acc_name': _('Cash'),'account_type':'cash'}
+        ]
 
     _defaults = {
         'company_id': lambda self, cr, uid, c: self.pool.get('res.users').browse(cr, uid, [uid], c)[0].company_id.id,
