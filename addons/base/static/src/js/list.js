@@ -376,6 +376,7 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
      * re-renders the content of the list view
      */
     reload_content: function () {
+        this.records.reset();
         this.$element.find('.oe-listview-content').append(
             this.groups.apoptosis().render(
                 $.proxy(this, 'compute_aggregates')));
@@ -537,7 +538,7 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
             count += record.count || 1;
             _(columns).each(function (column) {
                 var field = column.id,
-                    value = record.values.get(field);
+                    value = record.values[field];
                 switch (column['function']) {
                     case 'sum':
                         sums[field] += value;
@@ -685,7 +686,7 @@ openerp.base.ListView.List = openerp.base.Class.extend( /** @lends openerp.base.
                 .closest('tr').each(function () {
             var record = records.at($(this).data('index'));
             result.ids.push(record.get('id'));
-            result.records.push(record);
+            result.records.push(record.attributes);
         });
         return result;
     },
@@ -718,14 +719,9 @@ openerp.base.ListView.List = openerp.base.Class.extend( /** @lends openerp.base.
         this.$_element.remove();
     },
     get_records: function () {
-        var records = [];
-        for(var i=0, length=this.records.length; i<length; ++i) {
-            records.push({
-                count: 1,
-                values: this.records.at(i)
-            })
-        }
-        return records;
+        return this.records.map(function (record) {
+            return {count: 1, values: record.attributes};
+        });
     },
     /**
      * Reloads the record at index ``row_index`` in the list's rows.
@@ -1340,6 +1336,9 @@ var Collection = openerp.base.Class.extend(/** @lends Collection# */{
      * @returns this
      */
     reset: function (records) {
+        _(this._proxies).each(function (proxy) {
+            proxy.reset();
+        });
         this.length = 0;
         this.records = [];
         this._byId = {};
@@ -1368,6 +1367,25 @@ var Collection = openerp.base.Class.extend(/** @lends Collection# */{
 
     _onRecordEvent: function (event, record, options) {
         this.trigger.apply(this, arguments);
+    },
+
+    // underscore-type methods
+    each: function (callback) {
+        for(var section in this._proxies) {
+            if (this._proxies.hasOwnProperty(section)) {
+                this._proxies[section].each(callback);
+            }
+        }
+        for(var i=0; i<this.length; ++i) {
+            callback(this.records[i]);
+        }
+    },
+    map: function (callback) {
+        var results = [];
+        this.each(function (record) {
+            results.push(callback(record));
+        });
+        return results;
     }
 });
 Collection.include(Events);

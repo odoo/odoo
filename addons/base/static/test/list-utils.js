@@ -200,4 +200,76 @@ $(document).ready(function () {
         c.at(1).set('wealth', 5);
         strictEqual(total, 47);
     });
+
+    module('list-hofs', {
+        setup: function () {
+            openerp = window.openerp.init();
+            window.openerp.base.list(openerp);
+        }
+    });
+    test('each, degenerate', function () {
+        var c = new openerp.base.list.Collection([
+            {id: 1, value: 5},
+            {id: 2, value: 10},
+            {id: 3, value: 20}
+        ]), ids = [];
+        c.each(function (record) {
+            ids.push(record.get('id'));
+        });
+        deepEqual(
+            ids, [1, 2, 3],
+            'degenerate collections should be iterated in record order');
+    });
+    test('each, deep', function () {
+        var root = new openerp.base.list.Collection(),
+            ids = [];
+        root.proxy('foo').add([
+            {id: 1, value: 5},
+            {id: 2, value: 10},
+            {id: 3, value: 20}]);
+        root.proxy('bar').add([
+            {id: 10, value: 5},
+            {id: 20, value: 10},
+            {id: 30, value: 20}]);
+        root.each(function (record) {
+            ids.push(record.get('id'));
+        });
+        // No contract on sub-collection iteration order (for now anyway)
+        ids.sort(function (a, b) { return a - b; });
+        deepEqual(
+            ids, [1, 2, 3, 10, 20, 30],
+            'tree collections should be deeply iterated');
+    });
+    test('map, degenerate', function () {
+        var c = new openerp.base.list.Collection([
+            {id: 1, value: 5},
+            {id: 2, value: 10},
+            {id: 3, value: 20}
+        ]);
+        var ids = c.map(function (record) {
+            return record.get('id');
+        });
+        deepEqual(
+            ids, [1, 2, 3],
+            'degenerate collections should be iterated in record order');
+    });
+    test('map, deep', function () {
+        var root = new openerp.base.list.Collection();
+        root.proxy('foo').add([
+            {id: 1, value: 5},
+            {id: 2, value: 10},
+            {id: 3, value: 20}]);
+        root.proxy('bar').add([
+            {id: 10, value: 5},
+            {id: 20, value: 10},
+            {id: 30, value: 20}]);
+        var ids = root.map(function (record) {
+            return record.get('id');
+        });
+        // No contract on sub-collection iteration order (for now anyway)
+        ids.sort(function (a, b) { return a - b; });
+        deepEqual(
+            ids, [1, 2, 3, 10, 20, 30],
+            'tree collections should be deeply iterated');
+    });
 });
