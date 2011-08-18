@@ -245,7 +245,7 @@
                     domain="[('date_action','&lt;&gt;',False)]"
                     help="Filter and view on next actions and date"/>
                <separator orientation="vertical"/>
-               <field name="partner_name" filter_domain="['|','|',('name','ilike',self),('partner_name','ilike',self),('email_from','ilike',self)]" string="Applicant"/>
+               <field name="partner_name" filter_domain="['|','|',('name','ilike',self),('partner_name','ilike',self),('email_from','ilike',self)]" string="Subject / Applicant"/>
                <field name="job_id" widget="selection"/>
                <field name="user_id">
                     <filter domain="[('user_id','=',False)]" help="Unassigned Recruitments" icon="terp-personal-" separator="1"/>
