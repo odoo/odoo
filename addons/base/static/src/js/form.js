@@ -1,5 +1,5 @@
 openerp.base.form = function (openerp) {
-    
+
 var _t = openerp.base._t;
 
 openerp.base.views.add('form', 'openerp.base.FormView');
@@ -811,6 +811,7 @@ openerp.base.form.WidgetLabel = openerp.base.form.Widget.extend({
         this.$element.find("label").dblclick(function() {
             var widget = self['for'] || self;
             self.log(widget.element_id , widget);
+            window.w = widget;
         });
     }
 });
@@ -841,9 +842,12 @@ openerp.base.form.Field = openerp.base.form.Widget.extend({
         this.value = value;
         this.invalid = false;
         this.update_dom();
+        this.on_value_changed();
     },
     set_value_from_ui: function() {
-        this.value = undefined;
+        this.on_value_changed();
+    },
+    on_value_changed: function() {
     },
     get_value: function() {
         return this.value;
@@ -942,6 +946,7 @@ openerp.base.form.FieldChar = openerp.base.form.Field.extend({
     },
     set_value_from_ui: function() {
         this.value = this.$element.find('input').val();
+        this._super();
     },
     validate: function() {
         this.invalid = false;
@@ -1016,6 +1021,7 @@ openerp.base.form.FieldFloat = openerp.base.form.FieldChar.extend({
     },
     set_value_from_ui: function() {
         this.value = Number(this.$element.find('input').val().replace(/,/g, '.'));
+        this._super();
     }
 });
 
@@ -1036,6 +1042,7 @@ openerp.base.form.FieldInteger = openerp.base.form.FieldFloat.extend({
     },
     set_value_from_ui: function() {
         this.value = Number(this.$element.find('input').val());
+        this._super();
     }
 });
 
@@ -1073,6 +1080,7 @@ openerp.base.form.FieldDatetime = openerp.base.form.Field.extend({
         if (this.value) {
             this.value = this.format(this.value);
         }
+        this._super();
     },
     update_dom: function() {
         this._super.apply(this, arguments);
@@ -1124,6 +1132,7 @@ openerp.base.form.FieldFloatTime = openerp.base.form.FieldChar.extend({
     set_value_from_ui: function() {
         var time = this.$element.find('input').val().split(':');
         this.set_value(parseInt(time[0], 10) + parseInt(time[1], 10) / 60);
+        this._super();
     }
 });
 
@@ -1148,6 +1157,7 @@ openerp.base.form.FieldText = openerp.base.form.Field.extend({
     },
     set_value_from_ui: function() {
         this.value = this.$element.find('textarea').val();
+        this._super();
     },
     validate: function() {
         this.invalid = false;
@@ -1183,6 +1193,7 @@ openerp.base.form.FieldBoolean = openerp.base.form.Field.extend({
     },
     set_value_from_ui: function() {
         this.value = this.$element.find('input').is(':checked');
+        this._super();
     },
     update_dom: function() {
         this._super.apply(this, arguments);
@@ -1265,6 +1276,7 @@ openerp.base.form.FieldSelection = openerp.base.form.Field.extend({
         var ikey = this.$element.find('select').val();
         var option = _.detect(this.field_index, function(x) {return x.ikey === ikey;});
         this.value = option === undefined ? false : option.ekey;
+        this._super();
     },
     update_dom: function() {
         this._super.apply(this, arguments);
@@ -1529,7 +1541,6 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
             this.on_ui_change();
         }
     },
-    set_value_from_ui: function() {},
     set_value: function(value) {
         value = value || null;
         var self = this;
@@ -1697,7 +1708,6 @@ openerp.base.form.FieldOne2Many = openerp.base.form.Field.extend({
             });
         }
     },
-    set_value_from_ui: function() {},
     set_value: function(value) {
         value = value || [];
         var self = this;
@@ -1918,7 +1928,6 @@ openerp.base.form.FieldMany2Many = openerp.base.form.Field.extend({
     get_value: function() {
         return [commands.replace_with(this.dataset.ids)];
     },
-    set_value_from_ui: function() {},
     validate: function() {
         this.invalid = false;
         // TODO niv
@@ -2192,13 +2201,6 @@ openerp.base.form.FormOpenPopup = openerp.base.OldWidget.extend({
     }
 });
 
-openerp.base.form.FieldReference = openerp.base.form.FieldChar.extend({
-    init: function(view, node) {
-        this._super(view, node);
-        //this.template = "FieldReference";
-    }
-});
-
 openerp.base.form.FieldBinary = openerp.base.form.Field.extend({
     init: function(view, node) {
         this._super(view, node);
@@ -2210,8 +2212,6 @@ openerp.base.form.FieldBinary = openerp.base.form.Field.extend({
         this.$element.find('input.oe-binary-file').change(this.on_file_change);
         this.$element.find('button.oe-binary-file-save').click(this.on_save_as);
         this.$element.find('.oe-binary-file-clear').click(this.on_clear);
-    },
-    set_value_from_ui: function() {
     },
     update_dom: function() {
         this._super.apply(this, arguments);
