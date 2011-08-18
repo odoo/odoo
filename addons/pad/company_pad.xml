@@ -6,12 +6,9 @@
       <field name="type">form</field>
       <field name="inherit_id" ref="base.view_company_form"/>
       <field name="arch" type="xml">
-        <xpath expr="/form/notebook/page/group[@name='mrp']" position="after">
-            <newline/>
-            <group col="2" colspan="2" name="pad" sequence="100"> 
-                  <separator string="Pad" colspan="4"/>
-                  <field name="pad_index"/>
-             </group>
+        <xpath expr="//page[@string='Configuration']" position="inside">
+          <separator string="Pad" colspan="4"/>
+          <field name="pad_index"/>
         </xpath>
       </field>
     </record>

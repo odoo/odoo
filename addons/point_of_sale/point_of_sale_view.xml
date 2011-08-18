@@ -637,16 +637,13 @@
             <field name="name">view.company.form.pos</field>
             <field name="model">res.company</field>
             <field name="type">form</field>
-            <field name="priority">25</field>
             <field name="inherit_id" ref="base.view_company_form"/>
             <field name="arch" type="xml">
-                <xpath expr="/form/notebook/page/group[@name='accounting']" position="after" >
-                   <group col="2" colspan="2" name="pos" sequence="5"> 
-                     <separator string="Point of Sale" colspan="2" />
-                     <field name="company_discount" colspan="2" />
-                     <field name="max_diff" />
-                   </group>
-                </xpath>
+                <field name="currency_id" position="after">
+                    <separator string="Point of Sale" colspan="4"/>
+                    <field  name="company_discount" />
+                    <field  name="max_diff" />
+                </field>
             </field>
            </record>
 
