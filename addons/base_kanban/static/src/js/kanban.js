@@ -44,8 +44,13 @@ openerp.base_kanban.KanbanView = openerp.base.View.extend({
         self.$element.html(QWeb.render("KanbanBiew", {"datas" :datas}));
 
         this.on_reload_kanban();
+        var drag_handel = false;
+        if (this.$element.find(".oe-kanban-draghandle").length > 0) {
+            drag_handel = ".oe-kanban-draghandle";
+        }
         this.$element.find(".oe_column").sortable({
             connectWith: ".oe_column",
+            handle : drag_handel,
             start: function(event, ui) {
                 self.source_index['index'] = ui.item.index();
                 self.source_index['column'] = ui.item.parent().attr('id');
@@ -53,6 +58,7 @@ openerp.base_kanban.KanbanView = openerp.base.View.extend({
             stop: self.on_recieve_record,
         });
         this.$element.find(".record").addClass( "ui-widget ui-widget-content ui-corner-all" )
+        this.$element.find(".oe_column").disableSelection()
         this.$element.find('button.oe_kanban_button_new').click(this.do_add_record);
     },
     on_button_click: function (button_attrs, record_id) {
