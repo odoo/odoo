@@ -684,7 +684,7 @@ class crm_case_section(osv.osv):
                         "true, it will allow you to hide the sales team without removing it."),
         'allow_unlink': fields.boolean('Allow Delete', help="Allows to delete non draft cases"),
         'change_responsible': fields.boolean('Change Responsible', help="Thick this box if you want that on escalation, the responsible of this sale team automatically becomes responsible of the lead/opportunity escaladed"),
-        'user_id': fields.many2one('res.users', 'Responsible User'),
+        'user_id': fields.many2one('res.users', 'Team Leader'),
         'member_ids':fields.many2many('res.users', 'sale_member_rel', 'section_id', 'member_id', 'Team Members'),
         'reply_to': fields.char('Reply-To', size=64, help="The email address put in the 'Reply-To' of all emails sent by OpenERP about cases in this sales team"),
         'parent_id': fields.many2one('crm.case.section', 'Parent Team'),
