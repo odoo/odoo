@@ -180,7 +180,7 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Helpdesk Support Tree"
-                    colors="black:state=='open';blue:state=='pending';gray:state in ('cancel','close')">
+                    colors="black:state=='open';blue:state=='pending';gray:state in ('cancel','done')">
                     <field name="name" string="Query" />
                     <field name="partner_id" string="Partner"/>
                     <field name="date" string="Date"/>
@@ -254,10 +254,6 @@
                             domain="['|', ('section_id', '=', context.get('section_id')), '|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
                             help="My Sales Team(s)" />
                     </field>
-                    <newline/>
-					<group  expand="0" string="Extended Filters..." groups="base.group_extended">
-                            <field name="write_date" string="Updated Date"/>
-                    </group>
                     <newline/>                         
                     <group expand="0" string="Group By...">
                         <filter string="Partner" icon="terp-partner"

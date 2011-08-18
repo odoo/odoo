@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 04:52+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-07-23 04:55+0000\n"
+"X-Generator: Launchpad (build 13405)\n"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_confirmingpurchaseorder0
@@ -73,8 +73,8 @@ msgstr ""
 
 #. module: purchase
 #: selection:purchase.order,invoice_method:0
-msgid "From Picking"
-msgstr "Из прихода"
+msgid "From Reception"
+msgstr ""
 
 #. module: purchase
 #: view:purchase.order:0
@@ -121,7 +121,7 @@ msgstr ""
 #: code:addons/purchase/purchase.py:722
 #, python-format
 msgid "The selected supplier only sells this product by %s"
-msgstr ""
+msgstr "Выбранный поставщик продает ТМЦ только по %s"
 
 #. module: purchase
 #: code:addons/purchase/wizard/purchase_line_invoice.py:156
@@ -463,7 +463,7 @@ msgstr "Предупреждение"
 #. module: purchase
 #: field:purchase.installer,purchase_analytic_plans:0
 msgid "Purchase Analytic Plans"
-msgstr ""
+msgstr "План счетов аналитики для закупок"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_installer
@@ -843,7 +843,7 @@ msgstr "Черновик счета"
 #. module: purchase
 #: help:purchase.installer,purchase_analytic_plans:0
 msgid "Manages analytic distribution and purchase orders."
-msgstr ""
+msgstr "Управление разнесением аналитики и заказами на закупку."
 
 #. module: purchase
 #: help:purchase.order,minimum_planned_date:0
@@ -968,8 +968,14 @@ msgstr "Будет проверено бухгалтером."
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.purchase_line_form_action2
 #: model:ir.ui.menu,name:purchase.menu_purchase_line_order_draft
-msgid "Purchase Lines Not Invoiced"
-msgstr "Закупаемые позиции без счетов"
+msgid "On Purchase Order Line"
+msgstr ""
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.action_picking_tree4_picking_to_invoice
+#: model:ir.ui.menu,name:purchase.action_picking_tree4_picking_to_invoice
+msgid "On Receptions"
+msgstr ""
 
 #. module: purchase
 #: report:purchase.order:0
@@ -1690,7 +1696,7 @@ msgstr "Утвердить"
 #. module: purchase
 #: view:purchase.order:0
 msgid "To Approve"
-msgstr "Утвердить"
+msgstr "Одобрить"
 
 #. module: purchase
 #: view:purchase.order.line:0
@@ -2024,6 +2030,9 @@ msgstr "Панель закупок"
 #~ msgid "Waiting Schedule"
 #~ msgstr "Расписание ожидания"
 
+#~ msgid "From Picking"
+#~ msgstr "Из прихода"
+
 #, python-format
 #~ msgid ""
 #~ "You have to select a pricelist in the purchase form !\n"
@@ -2088,6 +2097,9 @@ msgstr "Панель закупок"
 
 #~ msgid "An invoice generated for a purchase order"
 #~ msgstr "Счет созданный для заказа на закупку"
+
+#~ msgid "Purchase Lines Not Invoiced"
+#~ msgstr "Закупаемые позиции без счетов"
 
 #~ msgid "The name of the group must be unique !"
 #~ msgstr "Название группы должно быть уникальным !"

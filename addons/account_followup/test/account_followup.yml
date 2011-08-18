@@ -1,8 +1,12 @@
 -
   In order to test account followup module in OpenERP I create a FollowUp structure
 -
+  !record {model: res.company, id: ymltest_company_2}:
+        name: Acme 2
+-
   !record {model: account_followup.followup, id: account_followup_followup_testfollowups0}:
     description: First letter after 15 net days, 30 net days and 45 days end of month levels.
+    company_id: ymltest_company_2
     followup_line:
       - delay: 15
         name: 'level 0: 15 days'

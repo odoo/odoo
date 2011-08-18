@@ -106,9 +106,9 @@ class project_scrum_sprint(osv.osv):
         'review': fields.text('Sprint Review'),
         'retrospective': fields.text('Sprint Retrospective'),
         'backlog_ids': fields.one2many('project.scrum.product.backlog', 'sprint_id', 'Sprint Backlog'),
-        'progress': fields.function(_compute, group_operator="avg", type='float', multi="progress", method=True, string='Progress (0-100)', help="Computed as: Time Spent / Total Time."),
-        'effective_hours': fields.function(_compute, multi="effective_hours", method=True, string='Effective hours', help="Computed using the sum of the task work done."),
-        'expected_hours': fields.function(_compute, multi="expected_hours", method=True, string='Planned Hours', help='Estimated time to do the task.'),
+        'progress': fields.function(_compute, group_operator="avg", type='float', multi="progress", string='Progress (0-100)', help="Computed as: Time Spent / Total Time."),
+        'effective_hours': fields.function(_compute, multi="effective_hours", string='Effective hours', help="Computed using the sum of the task work done."),
+        'expected_hours': fields.function(_compute, multi="expected_hours", string='Planned Hours', help='Estimated time to do the task.'),
         'state': fields.selection([('draft','Draft'),('open','Open'),('pending','Pending'),('cancel','Cancelled'),('done','Done')], 'State', required=True),
     }
     _defaults = {
@@ -230,11 +230,11 @@ class project_scrum_product_backlog(osv.osv):
         'sequence' : fields.integer('Sequence', help="Gives the sequence order when displaying a list of product backlog."),
         'tasks_id': fields.one2many('project.task', 'product_backlog_id', 'Tasks Details'),
         'state': fields.selection([('draft','Draft'),('open','Open'),('pending','Pending'),('done','Done'),('cancel','Cancelled')], 'State', required=True),
-        'progress': fields.function(_compute, multi="progress", group_operator="avg", type='float', method=True, string='Progress', help="Computed as: Time Spent / Total Time."),
-        'effective_hours': fields.function(_compute, multi="effective_hours", method=True, string='Spent Hours', help="Computed using the sum of the time spent on every related tasks", store=True),
+        'progress': fields.function(_compute, multi="progress", group_operator="avg", type='float', string='Progress', help="Computed as: Time Spent / Total Time."),
+        'effective_hours': fields.function(_compute, multi="effective_hours", string='Spent Hours', help="Computed using the sum of the time spent on every related tasks", store=True),
         'expected_hours': fields.float('Planned Hours', help='Estimated total time to do the Backlog'),
         'create_date': fields.datetime("Creation Date", readonly=True),
-        'task_hours': fields.function(_compute, multi="task_hours", method=True, string='Task Hours', help='Estimated time of the total hours of the tasks')
+        'task_hours': fields.function(_compute, multi="task_hours", string='Task Hours', help='Estimated time of the total hours of the tasks')
     }
     _defaults = {
         'state': 'draft',

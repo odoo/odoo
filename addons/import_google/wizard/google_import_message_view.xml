@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <!-- Import Message Form View -->
+        <record model="ir.ui.view" id="view_google_import_message_form">
+            <field name="name">google.import.message.form</field>
+            <field name="model">google.import.message</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Import Google Data">
+                    <group colspan="4" col="4" width="300">
+                        <field name='name' nolabel='1'/>
+                    </group>
+                    <separator string="" colspan="4"/>
+                    <group colspan="4">
+                        <group colspan="2"/>
+                        <group colspan="2">
+                            <button  icon="gtk-ok" special="cancel" string="_Ok"/>
+                        </group>        
+                    </group>
+                </form>
+            </field>
+        </record>
+    </data>
+</openerp>
