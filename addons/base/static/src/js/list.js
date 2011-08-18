@@ -1119,6 +1119,7 @@ openerp.base.ListView.Groups = openerp.base.Class.extend( /** @lends openerp.bas
         });
         this.children = {};
         $(this.elements).remove();
+        this.records.reset();
         return this;
     },
     get_records: function () {
@@ -1339,6 +1340,7 @@ var Collection = openerp.base.Class.extend(/** @lends Collection# */{
         _(this._proxies).each(function (proxy) {
             proxy.reset();
         });
+        this._proxies = {};
         this.length = 0;
         this.records = [];
         this._byId = {};
