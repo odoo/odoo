@@ -3003,7 +3003,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         if context is None:
             context = {}
         property_obj = self.pool.get('ir.property')
-
+        field_obj = self.pool.get('ir.model.fields')
         todo_list = [
             ('property_account_receivable','res.partner','account.account'),
             ('property_account_payable','res.partner','account.account'),
@@ -3018,7 +3018,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             rec_list = []
             rec_list = property_obj.search(cr, uid, [('name','=', record[0]),('company_id', '=', company_id)], context=context)
             account = getattr(template_id, record[0])
-            field = self.pool.get('ir.model.fields').search(cr, uid, [('name', '=', record[0]),('model', '=', record[1]),('relation', '=', record[2])], context=context)
+            field = field_obj.search(cr, uid, [('name', '=', record[0]),('model', '=', record[1]),('relation', '=', record[2])], context=context)
             vals = {
                 'name': record[0],
                 'company_id': company_id,
