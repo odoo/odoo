@@ -1,9 +1,15 @@
 /* TODO: separate openerp web client page css from openerp views css */
-body {
+body.openerp {
     padding: 0;
     margin: 0;
-    font-family: helvetica, arial, sans-serif;
+    height: 100%;
+    min-width: 1000px;
+    overflow-y: scroll;
     font-size: 80%;
+}
+
+body.openerp, .openerp textarea, .openerp input, .openerp select, .openerp option, .openerp button, .openerp .ui-widget {
+    font-family: Ubuntu, Helvetica, sans-serif;
 }
 
 .oe_box {
@@ -18,13 +24,6 @@ body {
 
 #oe_errors pre {
     margin: 0;
-}
-
-
-body.openerp {
-    height: 100%;
-    min-width: 1000px;
-    overflow-y: scroll;
 }
 
 .openerp .oe-number {
@@ -120,7 +119,6 @@ body.openerp {
     -moz-border-radius: 3px;
     -webkit-border-radius: 3px;
     color: white;
-    font-family: Ubuntu, Helvetica, sans-serif;
     font-size: 16px;
     font-weight: bold;
     padding: 5px;
@@ -497,7 +495,6 @@ label.error {
     color: #666666;
     font-weight: bold;
     font-size: 0.8em;
-    font-family: Ubuntu, Helvetica, sans-serif;
     text-align: center;
 }
 .openerp div.oe_footer p.oe_footer_powered a {
@@ -515,7 +512,6 @@ label.error {
 .openerp h2.oe_view_title {
     font-size: 175%;
     font-weight: normal;
-    font-family: Ubuntu, Helvetica, sans-serif;
     margin: 2px 0;
     color: #252424;
     text-shadow: white 0 1px 0;
@@ -859,7 +855,7 @@ label.error {
     -webkit-box-sizing: border-box;
     -ms-box-sizing: border-box;
     box-sizing: border-box;
-    padding: 2px;
+    padding: 0 2px 0 2px;
     border: 1px solid #999;
     -moz-border-radius: 3px;
     -webkit-border-radius: 3px;
@@ -988,7 +984,6 @@ label.error {
     margin: 0;
     width: 180px;
     height: 100%;
-    font-family: Ubuntu, Helvetica, sans-serif;
     font-size: 0.9em;
 }
 
@@ -1046,7 +1041,6 @@ label.error {
 
 .openerp .view-manager-main-sidebar h2 {
     margin:0;
-    font-family: Ubuntu, Helvetica, sans-serif;
     font-size: 1.15em;
     color: #8E8E8E;
     text-shadow: white 0 1px 0;
