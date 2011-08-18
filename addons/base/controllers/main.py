@@ -87,9 +87,9 @@ def concat_files(file_list):
         ftime = os.path.getmtime(fname)
         if ftime > files_timestamp:
             files_timestamp = ftime
-        files_content = open(fname).read()
+        files_content.append(open(fname).read())
     files_concat = "".join(files_content)
-    return files_concat
+    return (files_concat,files_timestamp)
 
 home_template = textwrap.dedent("""<!DOCTYPE html>
 <html style="height: 100%%">
@@ -127,17 +127,17 @@ class WebClient(openerpweb.Controller):
     def css(self, req, mods='base'):
         cherrypy.response.headers['Content-Type'] = 'text/css'
         files = manifest_glob(mods.split(','), 'css')
-        concat = concat_files(files)[0]
+        content,timestamp = concat_files(files)
         # TODO request set the Date of last modif and Etag
-        return concat
+        return content
 
     @openerpweb.httprequest
     def js(self, req, mods='base'):
         cherrypy.response.headers['Content-Type'] = 'application/javascript'
         files = manifest_glob(mods.split(','), 'js')
-        concat = concat_files(files)[0]
+        content,timestamp = concat_files(files)
         # TODO request set the Date of last modif and Etag
-        return concat
+        return content
 
     @openerpweb.httprequest
     def home(self, req, s_action=None):
@@ -157,7 +157,7 @@ class WebClient(openerpweb.Controller):
             'css': css
         }
         return r
-    
+
     @openerpweb.jsonrequest
     def translations(self, req, mods, lang):
         lang_model = req.session.model('res.lang')
@@ -193,7 +193,6 @@ class WebClient(openerpweb.Controller):
                         transl["messages"].append({'id': x.id, 'string': x.string})
         return {"modules": transs,
                 "lang_parameters": lang_obj}
-    
 
 class Database(openerpweb.Controller):
     _cp_path = "/base/database"
@@ -439,18 +438,16 @@ def clean_action(action, session, context=None):
         return action
     # values come from the server, we can just eval them
     if isinstance(action.get('context'), basestring):
-        action['context'] = eval(
-            action['context'],
-            session.evaluation_context(context=context)) or {}
+        localvars = session.evaluation_context(context=context)
+        action['context'] = eval( action['context'], localvars ) or {}
 
     if isinstance(action.get('domain'), basestring):
-        action['domain'] = eval(
-            action['domain'],
-            session.evaluation_context(
-                action.get('context', {}))) or []
+        localvars = session.evaluation_context( action.get('context', {}))
+        action['domain'] = eval( action['domain'], localvars ) or []
 
     return fix_view_modes(action)
 
+# I think generate_views,fix_view_modes should go into js ActionManager
 def generate_views(action):
     """
     While the server generates a sequence called "views" computing dependencies
