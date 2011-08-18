@@ -1,0 +1,27 @@
+<!DOCTYPE html> 
+<html style="height: 100%"> 
+    <head> 
+        <meta http-equiv="content-type" content="text/html; charset=utf-8" /> 
+        <title>OpenERP RPC example</title> 
+        <script type="text/javascript" src="http://localhost:8002/base/webclient/js?mods=web_rpc"></script> 
+        <script type="text/javascript">
+        $(function() {
+        });
+        </script> 
+    </head> 
+    <body>
+        <h2>Example 1 <button id="button">Run it !</button> </h2>
+        <h3>Code: </h3>
+        <pre id="ex1" style="border: 1px solid black;">
+QWeb = new QWeb2.Engine();
+var o_db = openerp.init();
+var o_sess = new o_db.Session();
+//.base.webclient("oe");
+        </pre>
+        <h3>div id="ex1res" to output results:</h3>
+        <div id="ex1res" style="border: 1px solid black;">
+        &nbsp;
+        </div>
+    </body> 
+</html> 
+
