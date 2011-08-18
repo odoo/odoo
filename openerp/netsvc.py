@@ -121,11 +121,6 @@ class ExportService(object):
     def dispatch(self, method, auth, params):
         raise Exception("stub dispatch at %s" % self.__name)
         
-    def abortResponse(self, error, description, origin, details):
-        if not tools.config['debug_mode']:
-            raise Exception("%s -- %s\n\n%s"%(origin, description, details))
-        else:
-            raise
 
 BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE, _NOTHING, DEFAULT = range(10)
 #The background is set with 40 plus the number of the color, and the foreground with 30
