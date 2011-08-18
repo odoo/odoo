@@ -143,6 +143,7 @@ class res_company(osv.osv):
         'fax': fields.function(_get_address_data, fnct_inv=_set_address_data, size=64, type='char', string="Fax", multi='address'), 
         'website': fields.related('partner_id', 'website', string="Website", type="char", size=64), 
         'vat': fields.related('partner_id', 'vat', string="Tax ID", type="char", size=32), 
+        'company_registry': fields.char('Company Registry', size=64),
     }
     def on_change_header(self, cr, uid, ids, phone, email, fax, website, vat, context={}):
         val = []
