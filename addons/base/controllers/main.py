@@ -125,7 +125,7 @@ class WebClient(openerpweb.Controller):
 
     @openerpweb.httprequest
     def css(self, req, mods='base'):
-        cherrypy.response.headers['Content-Type'] = 'text/css'
+        req.httpresponse.headers['Content-Type'] = 'text/css'
         files = manifest_glob(mods.split(','), 'css')
         content,timestamp = concat_files(files)
         # TODO request set the Date of last modif and Etag
@@ -133,7 +133,7 @@ class WebClient(openerpweb.Controller):
 
     @openerpweb.httprequest
     def js(self, req, mods='base'):
-        cherrypy.response.headers['Content-Type'] = 'application/javascript'
+        req.httpresponse.headers['Content-Type'] = 'application/javascript'
         files = manifest_glob(mods.split(','), 'js')
         content,timestamp = concat_files(files)
         # TODO request set the Date of last modif and Etag
@@ -248,16 +248,16 @@ class Database(openerpweb.Controller):
         try:
             db_dump = base64.decodestring(
                 req.session.proxy("db").dump(backup_pwd, backup_db))
-            cherrypy.response.headers['Content-Type'] = "application/octet-stream; charset=binary"
-            cherrypy.response.headers['Content-Disposition'] = 'attachment; filename="' + backup_db + '.dump"'
-            cherrypy.response.cookie['fileToken'] = token
-            cherrypy.response.cookie['fileToken']['path'] = '/'
+            req.httpresponse.headers['Content-Type'] = "application/octet-stream; charset=binary"
+            req.httpresponse.headers['Content-Disposition'] = 'attachment; filename="' + backup_db + '.dump"'
+            req.httpresponse.cookie['fileToken'] = token
+            req.httpresponse.cookie['fileToken']['path'] = '/'
             return db_dump
         except xmlrpclib.Fault, e:
             if e.faultCode and e.faultCode.split(':')[0] == 'AccessDenied':
                 return 'Backup Database|' + e.faultCode
         return 'Backup Database|Could not generate database backup'
-            
+
     @openerpweb.httprequest
     def restore(self, req, db_file, restore_pwd, new_db):
         try:
@@ -266,9 +266,7 @@ class Database(openerpweb.Controller):
             return ''
         except xmlrpclib.Fault, e:
             if e.faultCode and e.faultCode.split(':')[0] == 'AccessDenied':
-                raise cherrypy.HTTPError(403)
-
-        raise cherrypy.HTTPError()
+                raise Exception("AccessDenied")
 
     @openerpweb.jsonrequest
     def change_password(self, req, fields):
@@ -385,10 +383,10 @@ class Session(openerpweb.Controller):
         :return: A key identifying the saved action.
         :rtype: integer
         """
-        saved_actions = cherrypy.session.get('saved_actions')
+        saved_actions = req.httpsession.get('saved_actions')
         if not saved_actions:
             saved_actions = {"next":0, "actions":{}}
-            cherrypy.session['saved_actions'] = saved_actions
+            req.httpsession['saved_actions'] = saved_actions
         # we don't allow more than 10 stored actions
         if len(saved_actions["actions"]) >= 10:
             del saved_actions["actions"][min(saved_actions["actions"].keys())]
@@ -408,7 +406,7 @@ class Session(openerpweb.Controller):
         :return: The saved action or None.
         :rtype: anything
         """
-        saved_actions = cherrypy.session.get('saved_actions')
+        saved_actions = req.httpsession.get('saved_actions')
         if not saved_actions:
             return None
         return saved_actions["actions"].get(key)
@@ -944,10 +942,10 @@ class Binary(openerpweb.Controller):
     _cp_path = "/base/binary"
 
     @openerpweb.httprequest
-    def image(self, request, model, id, field, **kw):
-        cherrypy.response.headers['Content-Type'] = 'image/png'
-        Model = request.session.model(model)
-        context = request.session.eval_context(request.context)
+    def image(self, req, model, id, field, **kw):
+        req.httpresponse.headers['Content-Type'] = 'image/png'
+        Model = req.session.model(model)
+        context = req.session.eval_context(req.context)
         try:
             if not id:
                 res = Model.default_get([field], context).get(field, '')
@@ -960,26 +958,26 @@ class Binary(openerpweb.Controller):
         return open(os.path.join(openerpweb.path_addons, 'base', 'static', 'src', 'img', 'placeholder.png'), 'rb').read()
 
     @openerpweb.httprequest
-    def saveas(self, request, model, id, field, fieldname, **kw):
-        Model = request.session.model(model)
-        context = request.session.eval_context(request.context)
+    def saveas(self, req, model, id, field, fieldname, **kw):
+        Model = req.session.model(model)
+        context = req.session.eval_context(req.context)
         res = Model.read([int(id)], [field, fieldname], context)[0]
         filecontent = res.get(field, '')
         if not filecontent:
             raise cherrypy.NotFound
         else:
-            cherrypy.response.headers['Content-Type'] = 'application/octet-stream'
+            req.httpresponse.headers['Content-Type'] = 'application/octet-stream'
             filename = '%s_%s' % (model.replace('.', '_'), id)
             if fieldname:
                 filename = res.get(fieldname, '') or filename
-            cherrypy.response.headers['Content-Disposition'] = 'attachment; filename=' +  filename
+            req.httpresponse.headers['Content-Disposition'] = 'attachment; filename=' +  filename
             return base64.decodestring(filecontent)
 
     @openerpweb.httprequest
-    def upload(self, request, callback, ufile=None):
+    def upload(self, req, callback, ufile=None):
         cherrypy.response.timeout = 500
         headers = {}
-        for key, val in cherrypy.request.headers.iteritems():
+        for key, val in req.httprequest.headers.iteritems():
             headers[key.lower()] = val
         size = int(headers.get('content-length', 0))
         # TODO: might be useful to have a configuration flag for max-length file uploads
@@ -1003,10 +1001,10 @@ class Binary(openerpweb.Controller):
         return out % (simplejson.dumps(callback), simplejson.dumps(args))
 
     @openerpweb.httprequest
-    def upload_attachment(self, request, callback, model, id, ufile=None):
+    def upload_attachment(self, req, callback, model, id, ufile=None):
         cherrypy.response.timeout = 500
-        context = request.session.eval_context(request.context)
-        Model = request.session.model('ir.attachment')
+        context = req.session.eval_context(req.context)
+        Model = req.session.model('ir.attachment')
         try:
             out = """<script language="javascript" type="text/javascript">
                         var win = window.top.window,
