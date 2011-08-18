@@ -34,8 +34,9 @@ denom = ( '',
           'Decillion',    'Undecillion',     'Duodecillion',  'Tredecillion',   'Quattuordecillion',
           'Sexdecillion', 'Septendecillion', 'Octodecillion', 'Novemdecillion', 'Vigintillion' )
 
-# convert a value < 100 to English.
 def _convert_nn(val):
+    """convert a value < 100 to English.
+    """
     if val < 20:
         return to_19[val]
     for (dcap, dval) in ((k, 20 + (10 * v)) for (v, k) in enumerate(tens)):
@@ -44,10 +45,12 @@ def _convert_nn(val):
                 return dcap + '-' + to_19[val % 10]
             return dcap
 
-# convert a value < 1000 to english, special cased because it is the level that kicks 
-# off the < 100 special case.  The rest are more general.  This also allows you to
-# get strings in the form of 'forty-five hundred' if called directly.
 def _convert_nnn(val):
+    """
+        convert a value < 1000 to english, special cased because it is the level that kicks 
+        off the < 100 special case.  The rest are more general.  This also allows you to
+        get strings in the form of 'forty-five hundred' if called directly.
+    """
     word = ''
     (mod, rem) = (val % 100, val // 100)
     if rem > 0:
@@ -94,10 +97,11 @@ _translate_funcs = {'en' : amount_to_text}
 #TODO: we should use the country AND language (ex: septante VS soixante dix)
 #TODO: we should use en by default, but the translation func is yet to be implemented
 def amount_to_text(nbr, lang='en', currency='euro'):
-    """
-    Converts an integer to its textual representation, using the language set in the context if any.
-    Example:
-        1654: thousands six cent cinquante-quatre.
+    """ Converts an integer to its textual representation, using the language set in the context if any.
+    
+        Example::
+        
+            1654: thousands six cent cinquante-quatre.
     """
     import openerp.loglevels as loglevels
 #    if nbr > 10000000:

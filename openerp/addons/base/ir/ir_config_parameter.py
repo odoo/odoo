@@ -62,7 +62,7 @@ class ir_config_parameter(osv.osv):
             if not ids:
                 self.set_param(cr, 1, key, func())
 
-    def get_param(self, cr, uid, key, context=None):
+    def get_param(self, cr, uid, key, default=False, context=None):
         """ Get the value of a parameter.
         
         @param key: The key of the parameter.
@@ -72,7 +72,7 @@ class ir_config_parameter(osv.osv):
         """
         ids = self.search(cr, uid, [('key','=',key)], context=context)
         if not ids:
-            return False
+            return default
         param = self.browse(cr, uid, ids[0], context=context)
         value = param.value
         return value

@@ -3,44 +3,62 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
-#    The refactoring about the OpenSSL support come from Tryton
-#    Copyright (C) 2007-2009 Cédric Krier.
-#    Copyright (C) 2007-2009 Bertrand Chenal.
-#    Copyright (C) 2008 B2CK SPRL.
+#    Copyright (C) 2004-2011 OpenERP SA (<http://www.openerp.com>)
 #
 #    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
+#    GNU Affero General Public License for more details.
 #
-#    You should have received a copy of the GNU General Public License
+#    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
-import cgitb
 import errno
+import heapq
 import logging
 import logging.handlers
 import os
+import platform
+import release
 import socket
 import sys
 import threading
 import time
-import release
+import types
 from pprint import pformat
-import warnings
-import heapq
 
 # TODO modules that import netsvc only for things from loglevels must be changed to use loglevels.
 from loglevels import *
 import tools
+
+def close_socket(sock):
+    """ Closes a socket instance cleanly
+
+    :param sock: the network socket to close
+    :type sock: socket.socket
+    """
+    try:
+        sock.shutdown(socket.SHUT_RDWR)
+    except socket.error, e:
+        # On OSX, socket shutdowns both sides if any side closes it
+        # causing an error 57 'Socket is not connected' on shutdown
+        # of the other side (or something), see
+        # http://bugs.python.org/issue4397
+        # note: stdlib fixed test, not behavior
+        if e.errno != errno.ENOTCONN or platform.system() != 'Darwin':
+            raise
+    sock.close()
+
+
+#.apidoc title: Common Services: netsvc
+#.apidoc module-mods: member-order: bysource
 
 class Service(object):
     """ Base class for *Local* services
@@ -77,8 +95,8 @@ class Service(object):
             raise
 
 class LocalService(object):
-    """ Proxy for local services. 
-    
+    """ Proxy for local services.
+
         Any instance of this class will behave like the single instance
         of Service(name)
     """
@@ -97,20 +115,20 @@ class LocalService(object):
         return getattr(self, method)(*params)
 
 class ExportService(object):
-    """ Proxy for exported services. 
+    """ Proxy for exported services.
 
     All methods here should take an AuthProxy as their first parameter. It
     will be appended by the calling framework.
 
-    Note that this class has no direct proxy, capable of calling 
-    eservice.method(). Rather, the proxy should call 
+    Note that this class has no direct proxy, capable of calling
+    eservice.method(). Rather, the proxy should call
     dispatch(method,auth,params)
     """
-    
+
     _services = {}
     _groups = {}
     _logger = logging.getLogger('web-services')
-    
+
     def __init__(self, name, audience=''):
         ExportService._services[name] = self
         self.__name = name
@@ -125,7 +143,7 @@ class ExportService(object):
 
     def dispatch(self, method, auth, params):
         raise Exception("stub dispatch at %s" % self.__name)
-        
+
     def new_dispatch(self,method,auth,params):
         raise Exception("stub dispatch at %s" % self.__name)
 
@@ -166,7 +184,6 @@ class ColoredFormatter(DBFormatter):
         return DBFormatter.format(self, record)
 
 def init_logger():
-    import os
     from tools.translate import resetlocale
     resetlocale()
 
@@ -228,19 +245,22 @@ def init_alternative_logger():
     logger.setLevel(logging.ERROR)
 
 class Agent(object):
-    """Singleton that keeps track of cancellable tasks to run at a given
-       timestamp.
-       The tasks are caracterised by:
+    """ Singleton that keeps track of cancellable tasks to run at a given
+        timestamp.
+
+        The tasks are characterised by:
+
             * a timestamp
             * the database on which the task run
             * the function to call
             * the arguments and keyword arguments to pass to the function
 
         Implementation details:
-          Tasks are stored as list, allowing the cancellation by setting
-          the timestamp to 0.
-          A heapq is used to store tasks, so we don't need to sort
-          tasks ourself.
+
+          - Tasks are stored as list, allowing the cancellation by setting
+            the timestamp to 0.
+          - A heapq is used to store tasks, so we don't need to sort
+            tasks ourself.
     """
     __tasks = []
     __tasks_by_db = {}
@@ -337,7 +357,7 @@ class Server:
 
     def start(self):
         self.__logger.debug("called stub Server.start")
-        
+
     def _late_start(self):
         self.start()
         for thr in Server.__starter_threads:
@@ -381,19 +401,7 @@ class Server:
         return '\n'.join(res)
 
     def _close_socket(self):
-        if os.name != 'nt':
-            try:
-                self.socket.shutdown(getattr(socket, 'SHUT_RDWR', 2))
-            except socket.error, e:
-                if e.errno != errno.ENOTCONN: raise
-                # OSX, socket shutdowns both sides if any side closes it
-                # causing an error 57 'Socket is not connected' on shutdown
-                # of the other side (or something), see
-                # http://bugs.python.org/issue4397
-                self.__logger.debug(
-                    '"%s" when shutting down server socket, '
-                    'this is normal under OS X', e)
-        self.socket.close()
+        close_socket(self.socket)
 
 class OpenERPDispatcherException(Exception):
     def __init__(self, exception, traceback):
@@ -422,17 +430,26 @@ class OpenERPDispatcher:
         log(title, msg, channel=channel, depth=depth, fn=fn)
     def dispatch(self, service_name, method, params):
         try:
-            logger = logging.getLogger('result')
-            self.log('service', tuple(replace_request_password(params)), depth=(None if logger.isEnabledFor(logging.DEBUG_RPC_ANSWER) else 1), fn='%s.%s'%(service_name,method))
             auth = getattr(self, 'auth_provider', None)
+            logger = logging.getLogger('result')
+            start_time = end_time = 0
+            if logger.isEnabledFor(logging.DEBUG_RPC_ANSWER):
+                self.log('service', tuple(replace_request_password(params)), depth=None, fn='%s.%s'%(service_name,method))
+            if logger.isEnabledFor(logging.DEBUG_RPC):
+                start_time = time.time()
             result = ExportService.getService(service_name).dispatch(method, auth, params)
+            if logger.isEnabledFor(logging.DEBUG_RPC):
+                end_time = time.time()
+            if not logger.isEnabledFor(logging.DEBUG_RPC_ANSWER):
+                self.log('service (%.3fs)' % (end_time - start_time), tuple(replace_request_password(params)), depth=1, fn='%s.%s'%(service_name,method))
+            self.log('execution time', '%.3fs' % (end_time - start_time), channel=logging.DEBUG_RPC_ANSWER)
             self.log('result', result, channel=logging.DEBUG_RPC_ANSWER)
             return result
         except Exception, e:
             self.log('exception', tools.exception_to_unicode(e))
             tb = getattr(e, 'traceback', sys.exc_info())
-            tb_s = cgitb.text(tb)
-            if tools.config['debug_mode']:
+            tb_s = "".join(traceback.format_exception(*tb))
+            if tools.config['debug_mode'] and isinstance(tb[2], types.TracebackType):
                 import pdb
                 pdb.post_mortem(tb[2])
             raise OpenERPDispatcherException(e, tb_s)

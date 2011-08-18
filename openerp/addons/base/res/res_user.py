@@ -20,22 +20,29 @@
 #
 ##############################################################################
 
+import logging
+from functools import partial
+from xml.sax.saxutils import quoteattr
+
+import simplejson
+import pytz
+from lxml import etree
+
+import netsvc
+import pooler
+import tools
 from osv import fields,osv
 from osv.orm import browse_record
-import tools
-from functools import partial
-import pytz
-import pooler
-from tools.translate import _
 from service import security
-import netsvc
+from tools.translate import _
 
 class groups(osv.osv):
     _name = "res.groups"
     _order = 'name'
     _description = "Access Groups"
     _columns = {
-        'name': fields.char('Group Name', size=64, required=True),
+        'name': fields.char('Group Name', size=64, required=True, translate=True),
+        'users': fields.many2many('res.users', 'res_groups_users_rel', 'gid', 'uid', 'Users'),
         'model_access': fields.one2many('ir.model.access', 'group_id', 'Access Controls'),
         'rule_groups': fields.many2many('ir.rule', 'rule_group_rel',
             'group_id', 'rule_group_id', 'Rules', domain=[('global', '=', False)]),
@@ -75,6 +82,21 @@ class groups(osv.osv):
             if aid:
                 aid.write({'groups_id': [(4, gid)]})
         return gid
+
+    def unlink(self, cr, uid, ids, context=None):
+        group_users = []
+        for record in self.read(cr, uid, ids, ['users'], context=context):
+            if record['users']:
+                group_users.extend(record['users'])
+        if group_users:
+            user_names = [user.name for user in self.pool.get('res.users').browse(cr, uid, group_users, context=context)]
+            user_names = list(set(user_names))
+            if len(user_names) >= 5:
+                user_names = user_names[:5] + ['...']
+            raise osv.except_osv(_('Warning !'),
+                        _('Group(s) cannot be deleted, because some user(s) still belong to them: %s !') % \
+                            ', '.join(user_names))
+        return super(groups, self).unlink(cr, uid, ids, context=context)
 
     def get_extended_interface_group(self, cr, uid, context=None):
         data_obj = self.pool.get('ir.model.data')
@@ -175,25 +197,6 @@ class users(osv.osv):
         extended_users = group_obj.read(cr, uid, extended_group_id, ['users'], context=context)['users']
         return dict(zip(ids, ['extended' if user in extended_users else 'simple' for user in ids]))
 
-    def _email_get(self, cr, uid, ids, name, arg, context=None):
-        # perform this as superuser because the current user is allowed to read users, and that includes
-        # the email, even without any direct read access on the res_partner_address object.
-        return dict([(user.id, user.address_id.email) for user in self.browse(cr, 1, ids)]) # no context to avoid potential security issues as superuser
-
-    def _email_set(self, cr, uid, ids, name, value, arg, context=None):
-        if not isinstance(ids,list):
-            ids = [ids]
-        address_obj = self.pool.get('res.partner.address')
-        for user in self.browse(cr, uid, ids, context=context):
-            # perform this as superuser because the current user is allowed to write to the user, and that includes
-            # the email even without any direct write access on the res_partner_address object.
-            if user.address_id:
-                address_obj.write(cr, 1, user.address_id.id, {'email': value or None}) # no context to avoid potential security issues as superuser
-            else:
-                address_id = address_obj.create(cr, 1, {'name': user.name, 'email': value or None}) # no context to avoid potential security issues as superuser
-                self.write(cr, uid, ids, {'address_id': address_id}, context)
-        return True
-
     def _set_new_password(self, cr, uid, id, name, value, args, context=None):
         if value is False:
             # Do not update the password if no value is provided, ignore silently.
@@ -220,13 +223,8 @@ class users(osv.osv):
                                 fnct_inv=_set_new_password,
                                 string='Change password', help="Only specify a value if you want to change the user password. "
                                 "This user will have to logout and login again!"),
-        'email': fields.char('E-mail', size=64,
-            help='If an email is provided, the user will be sent a message '
-                 'welcoming him.\n\nWarning: if "email_from" and "smtp_server"'
-                 " aren't configured, it won't be possible to email new "
-                 "users."),
+        'user_email': fields.char('Email', size=64),
         'signature': fields.text('Signature', size=64),
-        'address_id': fields.many2one('res.partner.address', 'Address'),
         'active': fields.boolean('Active'),
         'action_id': fields.many2one('ir.actions.actions', 'Home Action', help="If specified, this action will be opened at logon for this user, in addition to the standard menu."),
         'menu_id': fields.many2one('ir.actions.actions', 'Menu Action', help="If specified, the action will replace the standard menu for this user."),
@@ -240,15 +238,13 @@ class users(osv.osv):
 
         'company_ids':fields.many2many('res.company','res_company_users_rel','user_id','cid','Companies'),
         'context_lang': fields.selection(_lang_get, 'Language', required=True,
-            help="Sets the language for the user's user interface, when UI "
-                 "translations are available"),
+            help="The default language used in the graphical user interface, when translations are available. To add a new language, you can use the 'Load an Official Translation' wizard available from the 'Administration' menu."),
         'context_tz': fields.selection(_tz_get,  'Timezone', size=64,
             help="The user's timezone, used to perform timezone conversions "
                  "between the server and the client."),
         'view': fields.function(_get_interface_type, method=True, type='selection', fnct_inv=_set_interface_type,
                                 selection=[('simple','Simplified'),('extended','Extended')],
-                                string='Interface', help="Choose between the simplified interface and the extended one"),
-        'user_email': fields.function(_email_get, method=True, fnct_inv=_email_set, string='Email', type="char", size=240),
+                                string='Interface', help="OpenERP offers a simplified and an extended user interface. If you use OpenERP for the first time we strongly advise you to select the simplified interface, which has less features but is easier to use. You can switch to the other interface from the User/Preferences menu at any time."),
         'menu_tips': fields.boolean('Menu Tips', help="Check out this box if you want to always display tips on each menu action"),
         'date': fields.datetime('Last Connection', readonly=True),
     }
@@ -347,7 +343,6 @@ class users(osv.osv):
         'company_id': _get_company,
         'company_ids': _get_companies,
         'groups_id': _get_group,
-        'address_id': False,
         'menu_tips':True
     }
 
@@ -415,7 +410,6 @@ class users(osv.osv):
         copy_pattern = _("%s (copy)")
         copydef = dict(login=(copy_pattern % user2copy['login']),
                        name=(copy_pattern % user2copy['name']),
-                       address_id=False, # avoid sharing the address of the copied user!
                        )
         copydef.update(default)
         return super(users, self).copy(cr, uid, id, copydef, context)
@@ -511,104 +505,291 @@ class users(osv.osv):
 
 users()
 
-class config_users(osv.osv_memory):
-    _name = 'res.config.users'
-    _inherit = ['res.users', 'res.config']
+#
+# Extension of res.groups and res.users with a relation for "implied" or 
+# "inherited" groups.  Once a user belongs to a group, it automatically belongs
+# to the implied groups (transitively).
+#
 
-    def _generate_signature(self, cr, name, email, context=None):
-        return _('--\n%(name)s %(email)s\n') % {
-            'name': name or '',
-            'email': email and ' <'+email+'>' or '',
-            }
-
-    def create_user(self, cr, uid, new_id, context=None):
-        """ create a new res.user instance from the data stored
-        in the current res.config.users.
-
-        If an email address was filled in for the user, sends a mail
-        composed of the return values of ``get_welcome_mail_subject``
-        and ``get_welcome_mail_body`` (which should be unicode values),
-        with the user's data %-formatted into the mail body
-        """
-        base_data = self.read(cr, uid, new_id, context=context)
-        partner_id = self.pool.get('res.partner').main_partner(cr, uid)
-        address = self.pool.get('res.partner.address').create(
-            cr, uid, {'name': base_data['name'],
-                      'email': base_data['email'],
-                      'partner_id': partner_id,},
-            context)
-        # Change the read many2one values from (id,name) to id, and
-        # the one2many from ids to (6,0,ids).
-        base_data.update({'menu_id' : base_data.get('menu_id') and base_data['menu_id'][0],
-                          'company_id' : base_data.get('company_id') and base_data['company_id'][0],
-                          'action_id' :  base_data.get('action_id') and base_data['action_id'][0],
-                          'signature' : self._generate_signature(cr, base_data['name'], base_data['email'], context=context),
-                          'address_id' : address,
-                          'groups_id' : [(6,0, base_data.get('groups_id',[]))],
-                })
-        new_user = self.pool.get('res.users').create(
-            cr, uid, base_data, context)
-        self.send_welcome_email(cr, uid, new_user, context=context)
-
-    def execute(self, cr, uid, ids, context=None):
-        'Do nothing on execution, just launch the next action/todo'
-        pass
-    def action_add(self, cr, uid, ids, context=None):
-        'Create a user, and re-display the view'
-        self.create_user(cr, uid, ids[0], context=context)
-        return {
-            'view_type': 'form',
-            "view_mode": 'form',
-            'res_model': 'res.config.users',
-            'view_id':self.pool.get('ir.ui.view')\
-                .search(cr,uid,[('name','=','res.config.users.confirm.form')]),
-            'type': 'ir.actions.act_window',
-            'target':'new',
-            }
-config_users()
-
-class groups2(osv.osv): ##FIXME: Is there a reason to inherit this object ?
+class groups_implied(osv.osv):
     _inherit = 'res.groups'
     _columns = {
-        'users': fields.many2many('res.users', 'res_groups_users_rel', 'gid', 'uid', 'Users'),
+        'implied_ids': fields.many2many('res.groups', 'res_groups_implied_rel', 'gid', 'hid',
+            string='Inherits', help='Users of this group automatically inherit those groups'),
     }
 
-    def unlink(self, cr, uid, ids, context=None):
-        group_users = []
-        for record in self.read(cr, uid, ids, ['users'], context=context):
-            if record['users']:
-                group_users.extend(record['users'])
+    def get_closure(self, cr, uid, ids, context=None):
+        "return the closure of ids, i.e., all groups recursively implied by ids"
+        closure = set()
+        todo = self.browse(cr, 1, ids)
+        while todo:
+            g = todo.pop()
+            if g.id not in closure:
+                closure.add(g.id)
+                todo.extend(g.implied_ids)
+        return list(closure)
 
-        if group_users:
-            user_names = [user.name for user in self.pool.get('res.users').browse(cr, uid, group_users, context=context)]
-            if len(user_names) >= 5:
-                user_names = user_names[:5]
-                user_names += '...'
-            raise osv.except_osv(_('Warning !'),
-                        _('Group(s) cannot be deleted, because some user(s) still belong to them: %s !') % \
-                            ', '.join(user_names))
-        return super(groups2, self).unlink(cr, uid, ids, context=context)
+    def create(self, cr, uid, values, context=None):
+        users = values.pop('users', None)
+        gid = super(groups_implied, self).create(cr, uid, values, context)
+        if users:
+            # delegate addition of users to add implied groups
+            self.write(cr, uid, [gid], {'users': users}, context)
+        return gid
 
-groups2()
+    def write(self, cr, uid, ids, values, context=None):
+        res = super(groups_implied, self).write(cr, uid, ids, values, context)
+        if values.get('users') or values.get('implied_ids'):
+            # add implied groups (to all users of each group)
+            for g in self.browse(cr, uid, ids):
+                gids = self.get_closure(cr, uid, [g.id], context)
+                users = [(4, u.id) for u in g.users]
+                super(groups_implied, self).write(cr, uid, gids, {'users': users}, context)
+        return res
 
-class res_config_view(osv.osv_memory):
-    _name = 'res.config.view'
-    _inherit = 'res.config'
-    _columns = {
-        'name':fields.char('Name', size=64),
-        'view': fields.selection([('simple','Simplified'),
-                                  ('extended','Extended')],
-                                 'Interface', required=True ),
-    }
-    _defaults={
-        'view':lambda self,cr,uid,*args: self.pool.get('res.users').browse(cr, uid, uid).view or 'simple',
-    }
+    def get_maximal(self, cr, uid, ids, context=None):
+        "return the maximal element among the group ids"
+        max_set, max_closure = set(), set()
+        for gid in ids:
+            if gid not in max_closure:
+                closure = set(self.get_closure(cr, uid, [gid], context))
+                max_set -= closure          # remove implied groups from max_set
+                max_set.add(gid)            # gid is maximal
+                max_closure |= closure      # update closure of max_set
+        if len(max_set) > 1:
+            log = logging.getLogger('res.groups')
+            log.warning('Groups %s are maximal among %s, only one expected.', max_set, ids)
+        return bool(max_set) and max_set.pop()
 
-    def execute(self, cr, uid, ids, context=None):
-        res = self.read(cr, uid, ids)[0]
-        self.pool.get('res.users').write(cr, uid, [uid],
-                                 {'view':res['view']}, context=context)
+groups_implied()
 
-res_config_view()
+class users_implied(osv.osv):
+    _inherit = 'res.users'
+
+    def create(self, cr, uid, values, context=None):
+        groups = values.pop('groups_id')
+        user_id = super(users_implied, self).create(cr, uid, values, context)
+        if groups:
+            # delegate addition of groups to add implied groups
+            self.write(cr, uid, [user_id], {'groups_id': groups}, context)
+        return user_id
+
+    def write(self, cr, uid, ids, values, context=None):
+        if not isinstance(ids,list):
+            ids = [ids]
+        res = super(users_implied, self).write(cr, uid, ids, values, context)
+        if values.get('groups_id'):
+            # add implied groups for all users
+            groups_obj = self.pool.get('res.groups')
+            for u in self.browse(cr, uid, ids):
+                old_gids = map(int, u.groups_id)
+                new_gids = groups_obj.get_closure(cr, uid, old_gids, context)
+                if len(old_gids) != len(new_gids):
+                    values = {'groups_id': [(6, 0, new_gids)]}
+                    super(users_implied, self).write(cr, uid, [u.id], values, context)
+        return res
+
+users_implied()
+
+
+
+#
+# Extension of res.groups and res.users for the special groups view in the users
+# form.  This extension presents groups with selection and boolean widgets:
+# - Groups named as "App/Name" (corresponding to root menu "App") are presented
+#   per application, with one boolean and selection field each.  The selection
+#   field defines a role "Name" for the given application.
+# - Groups named as "Stuff/Name" are presented as boolean fields and grouped
+#   under sections "Stuff".
+# - The remaining groups are presented as boolean fields and grouped in a
+#   section "Others".
+#
+
+class groups_view(osv.osv):
+    _inherit = 'res.groups'
+
+    def get_classified(self, cr, uid, context=None):
+        """ classify all groups by prefix; return a pair (apps, others) where
+            - both are lists like [("App", [("Name", browse_group), ...]), ...];
+            - apps is sorted in menu order;
+            - others are sorted in alphabetic order;
+            - groups not like App/Name are at the end of others, under _('Others')
+        """
+        # sort groups by implication, with implied groups first
+        groups = self.browse(cr, uid, self.search(cr, uid, []), context)
+        groups.sort(key=lambda g: set(self.get_closure(cr, uid, [g.id], context)))
+        
+        # classify groups depending on their names
+        classified = {}
+        for g in groups:
+            # split() returns 1 or 2 elements, so names[-2] is prefix or None
+            names = [None] + [s.strip() for s in g.name.split('/', 1)]
+            classified.setdefault(names[-2], []).append((names[-1], g))
+        
+        # determine the apps (that correspond to root menus, in order)
+        menu_obj = self.pool.get('ir.ui.menu')
+        menu_ids = menu_obj.search(cr, uid, [('parent_id','=',False)], context={'ir.ui.menu.full_list': True})
+        apps = []
+        for m in menu_obj.browse(cr, uid, menu_ids, context):
+            if m.name in classified:
+                # application groups are already sorted by implication
+                apps.append((m.name, classified.pop(m.name)))
+        
+        # other groups
+        others = sorted(classified.items(), key=lambda pair: pair[0])
+        if others and others[0][0] is None:
+            others.append((_('Others'), others.pop(0)[1]))
+        for sec, groups in others:
+            groups.sort(key=lambda pair: pair[0])
+        
+        return (apps, others)
+
+groups_view()
+
+# Naming conventions for reified groups fields:
+# - boolean field 'in_group_ID' is True iff
+#       ID is in 'groups_id'
+# - boolean field 'in_groups_ID1_..._IDk' is True iff
+#       any of ID1, ..., IDk is in 'groups_id'
+# - selection field 'sel_groups_ID1_..._IDk' is ID iff
+#       ID is in 'groups_id' and ID is maximal in the set {ID1, ..., IDk}
+
+def name_boolean_group(id): return 'in_group_' + str(id)
+def name_boolean_groups(ids): return 'in_groups_' + '_'.join(map(str, ids))
+def name_selection_groups(ids): return 'sel_groups_' + '_'.join(map(str, ids))
+
+def is_boolean_group(name): return name.startswith('in_group_')
+def is_boolean_groups(name): return name.startswith('in_groups_')
+def is_selection_groups(name): return name.startswith('sel_groups_')
+def is_field_group(name):
+    return is_boolean_group(name) or is_boolean_groups(name) or is_selection_groups(name)
+
+def get_boolean_group(name): return int(name[9:])
+def get_boolean_groups(name): return map(int, name[10:].split('_'))
+def get_selection_groups(name): return map(int, name[11:].split('_'))
+
+def encode(s): return s.encode('utf8') if isinstance(s, unicode) else s
+def partition(f, xs):
+    "return a pair equivalent to (filter(f, xs), filter(lambda x: not f(x), xs))"
+    yes, nos = [], []
+    for x in xs:
+        if f(x):
+            yes.append(x)
+        else:
+            nos.append(x)
+    return yes, nos
+
+class users_view(osv.osv):
+    _inherit = 'res.users'
+
+    def _process_values_groups(self, cr, uid, values, context=None):
+        """ transform all reified group fields into a 'groups_id', adding 
+            also the implied groups """
+        add, rem = [], []
+        for k in values.keys():
+            if is_boolean_group(k):
+                if values.pop(k):
+                    add.append(get_boolean_group(k))
+                else:
+                    rem.append(get_boolean_group(k))
+            elif is_boolean_groups(k):
+                if not values.pop(k):
+                    rem.extend(get_boolean_groups(k))
+            elif is_selection_groups(k):
+                gid = values.pop(k)
+                if gid:
+                    rem.extend(get_selection_groups(k))
+                    add.append(gid)
+        if add or rem:
+            # remove groups in 'rem' and add groups in 'add'
+            gdiff = [(3, id) for id in rem] + [(4, id) for id in add]
+            values.setdefault('groups_id', []).extend(gdiff)
+        return True
+
+    def create(self, cr, uid, values, context=None):
+        self._process_values_groups(cr, uid, values, context)
+        return super(users_view, self).create(cr, uid, values, context)
+
+    def write(self, cr, uid, ids, values, context=None):
+        self._process_values_groups(cr, uid, values, context)
+        return super(users_view, self).write(cr, uid, ids, values, context)
+
+    def read(self, cr, uid, ids, fields, context=None, load='_classic_read'):
+        if not fields:
+            group_fields, fields = [], self.fields_get(cr, uid, context).keys()
+        else:
+            group_fields, fields = partition(is_field_group, fields)
+        if group_fields:
+            group_obj = self.pool.get('res.groups')
+            fields.append('groups_id')
+            # read the normal fields (and 'groups_id')
+            res = super(users_view, self).read(cr, uid, ids, fields, context, load)
+            records = res if isinstance(res, list) else [res]
+            for record in records:
+                # get the field 'groups_id' and insert the group_fields
+                groups = set(record['groups_id'])
+                for f in group_fields:
+                    if is_boolean_group(f):
+                        record[f] = get_boolean_group(f) in groups
+                    elif is_boolean_groups(f):
+                        record[f] = not groups.isdisjoint(get_boolean_groups(f))
+                    elif is_selection_groups(f):
+                        selected = groups.intersection(get_selection_groups(f))
+                        record[f] = group_obj.get_maximal(cr, uid, selected, context)
+            return res
+        return super(users_view, self).read(cr, uid, ids, fields, context, load)
+
+    def fields_view_get(self, cr, uid, view_id=None, view_type='form',
+                context=None, toolbar=False, submenu=False):
+        # in form views, transform 'groups_id' into reified group fields
+        res = super(users_view, self).fields_view_get(cr, uid, view_id, view_type,
+                context, toolbar, submenu)
+        if view_type == 'form':
+            root = etree.fromstring(encode(res['arch']))
+            nodes = root.xpath("//field[@name='groups_id']")
+            if nodes:
+                # replace node by the reified group fields
+                fields = res['fields']
+                elems = []
+                apps, others = self.pool.get('res.groups').get_classified(cr, uid, context)
+                # create section Applications
+                elems.append('<separator colspan="6" string="%s"/>' % _('Applications'))
+                for app, groups in apps:
+                    ids = [g.id for name, g in groups]
+                    app_name = name_boolean_groups(ids)
+                    sel_name = name_selection_groups(ids)
+                    selection = [(g.id, name) for name, g in groups]
+                    fields[app_name] = {'type': 'boolean', 'string': app}
+                    tips = [name + ': ' + (g.comment or '') for name, g in groups]
+                    if tips:
+                        fields[app_name].update(help='\n'.join(tips))
+                    fields[sel_name] = {'type': 'selection', 'string': 'Group', 'selection': selection}
+                    attrs = {'invisible': [('%s' % app_name, '=', False)]}
+                    elems.append("""
+                        <field name="%(app)s"/>
+                        <field name="%(sel)s" nolabel="1" colspan="2"
+                            attrs=%(attrs)s modifiers=%(json_attrs)s/>
+                        <newline/>
+                        """ % {'app': app_name, 'sel': sel_name,
+                               'attrs': quoteattr(str(attrs)),
+                               'json_attrs': quoteattr(simplejson.dumps(attrs))})
+                # create other sections
+                for sec, groups in others:
+                    elems.append('<separator colspan="6" string="%s"/>' % sec)
+                    for gname, g in groups:
+                        name = name_boolean_group(g.id)
+                        fields[name] = {'type': 'boolean', 'string': gname}
+                        if g.comment:
+                            fields[name].update(help=g.comment)
+                        elems.append('<field name="%s"/>' % name)
+                    elems.append('<newline/>')
+                # replace xml node by new arch
+                new_node = etree.fromstring('<group col="6">' + ''.join(elems) + '</group>')
+                for node in nodes:
+                    node.getparent().replace(node, new_node)
+                res['arch'] = etree.tostring(root)
+        return res
+
+users_view()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

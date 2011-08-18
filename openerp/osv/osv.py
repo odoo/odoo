@@ -19,22 +19,18 @@
 #
 ##############################################################################
 
-#
-# OSV: Objects Services
-#
+#.apidoc title: Objects Services (OSV)
 
-import sys
-import inspect
 import orm
 import openerp.netsvc as netsvc
 import openerp.pooler as pooler
 import openerp.sql_db as sql_db
-import copy
 import logging
 from psycopg2 import IntegrityError, errorcodes
 from openerp.tools.func import wraps
 from openerp.tools.translate import translate
-from openerp.osv.orm import module_class_list
+from openerp.osv.orm import MetaModel
+
 
 class except_osv(Exception):
     def __init__(self, name, value, exc_type='warning'):
@@ -79,7 +75,7 @@ class object_proxy(netsvc.Service):
                 # We open a *new* cursor here, one reason is that failed SQL
                 # queries (as in IntegrityError) will invalidate the current one.
                 cr = False
-                
+
                 if hasattr(src, '__call__'):
                     # callable. We need to find the right parameters to call
                     # the  orm._sql_message(self, cr, uid, ids, context) function,
@@ -92,18 +88,18 @@ class object_proxy(netsvc.Service):
                                 ids = args[3]
                             else:
                                 ids = []
-                        cr = sql_db.db_connect(db_name).cursor()
+                        cr = sql_db.db_connect(dbname).cursor()
                         return src(obj, cr, uid, ids, context=(ctx or {}))
                     except Exception:
                         pass
                     finally:
                         if cr: cr.close()
-                   
+
                     return False # so that the original SQL error will
                                  # be returned, it is the best we have.
 
                 try:
-                    cr = sql_db.db_connect(db_name).cursor()
+                    cr = sql_db.db_connect(dbname).cursor()
                     res = translate(cr, name=False, source_type=ttype,
                                     lang=lang, source=src)
                     if res:
@@ -203,59 +199,16 @@ class object_proxy(netsvc.Service):
         return res
 
 
-class osv_pool(object):
-    """ Model registry for a particular database.
-
-    The registry is essentially a mapping between model names and model
-    instances. There is one registry instance per database.
-
-    """
-
-    def __init__(self):
-        self.obj_pool = {} # model name/model instance mapping
-        self._sql_error = {}
-        self._store_function = {}
-        self._init = True
-        self._init_parent = {}
-
-    def do_parent_store(self, cr):
-        for o in self._init_parent:
-            self.get(o)._parent_store_compute(cr)
-        self._init = False
-
-    def obj_list(self):
-        """ Return the list of model names in this registry."""
-        return self.obj_pool.keys()
-
-    def add(self, model_name, model):
-        """ Add or replace a model in the registry."""
-        self.obj_pool[model_name] = model
-
-    def get(self, name):
-        """ Return a model for a given name or None if it doesn't exist."""
-        return self.obj_pool.get(name)
-
-    def instanciate(self, module, cr):
-        """ Instanciate all the classes of a given module for a particular db."""
-
-        res = []
-
-        # Instanciate classes registered through their constructor and
-        # add them to the pool.
-        for klass in module_class_list.get(module, []):
-            res.append(klass.createInstance(self, cr))
-
-        return res
-
-
 class osv_memory(orm.orm_memory):
     """ Deprecated class. """
-    pass
+    __metaclass__ = MetaModel
+    _register = False # Set to false if the model shouldn't be automatically discovered.
 
 
 class osv(orm.orm):
     """ Deprecated class. """
-    pass
+    __metaclass__ = MetaModel
+    _register = False # Set to false if the model shouldn't be automatically discovered.
 
 
 def start_object_proxy():

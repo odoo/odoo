@@ -20,13 +20,17 @@
 ##############################################################################
 
 import base64
+import locale
+import logging
 import os
+import platform
 import security
+import sys
 import thread
 import threading
 import time
-import sys
-import platform
+import traceback
+from cStringIO import StringIO
 from openerp.tools.translate import _
 import openerp.netsvc as netsvc
 import openerp.pooler as pooler
@@ -34,10 +38,6 @@ import openerp.release as release
 import openerp.sql_db as sql_db
 import openerp.tools as tools
 import openerp.modules
-import locale
-import logging
-from cStringIO import StringIO
-import threading
 
 class edi(netsvc.ExportService):
     def exp_get_edi_document(self, edi_token, db_name=None):
@@ -97,6 +97,51 @@ class edi(netsvc.ExportService):
         fn = getattr(self, 'exp_'+method)
         return fn(*params)
 
+#.apidoc title: Exported Service methods
+#.apidoc module-mods: member-order: bysource
+
+""" This python module defines the RPC methods available to remote clients.
+
+    Each 'Export Service' is a group of 'methods', which in turn are RPC
+    procedures to be called. Each method has its own arguments footprint.
+"""
+
+# This should be moved to openerp.modules.db, along side initialize().
+def _initialize_db(serv, id, db_name, demo, lang, user_password):
+    cr = None
+    try:
+        serv.actions[id]['progress'] = 0
+        cr = sql_db.db_connect(db_name).cursor()
+        openerp.modules.db.initialize(cr) # TODO this should be removed as it is done by pooler.restart_pool.
+        tools.config['lang'] = lang
+        cr.commit()
+        cr.close()
+
+        pool = pooler.restart_pool(db_name, demo, serv.actions[id],
+                                   update_module=True)[1]
+
+        cr = sql_db.db_connect(db_name).cursor()
+
+        if lang:
+            modobj = pool.get('ir.module.module')
+            mids = modobj.search(cr, 1, [('state', '=', 'installed')])
+            modobj.update_translations(cr, 1, mids, lang)
+
+        cr.execute('UPDATE res_users SET password=%s, context_lang=%s, active=True WHERE login=%s', (
+            user_password, lang, 'admin'))
+        cr.execute('SELECT login, password, name ' \
+                   '  FROM res_users ' \
+                   ' ORDER BY login')
+        serv.actions[id].update(users=cr.dictfetchall(), clean=True)
+        cr.commit()
+        cr.close()
+    except Exception, e:
+        serv.actions[id].update(clean=False, exception=e)
+        logging.getLogger('db.create').exception('CREATE DATABASE failed:')
+        serv.actions[id]['traceback'] = traceback.format_exc()
+        if cr:
+            cr.close()
+
 class db(netsvc.ExportService):
     def __init__(self, name="db"):
         netsvc.ExportService.__init__(self, name)
@@ -144,52 +189,8 @@ class db(netsvc.ExportService):
 
         self._create_empty_database(db_name)
 
-        class DBInitialize(object):
-            def __call__(self, serv, id, db_name, demo, lang, user_password='admin'):
-                cr = None
-                try:
-                    serv.actions[id]['progress'] = 0
-                    cr = sql_db.db_connect(db_name).cursor()
-                    openerp.modules.db.initialize(cr) # TODO this should be removed as it is done by pooler.restart_pool.
-                    tools.config['lang'] = lang
-                    cr.commit()
-                    cr.close()
-
-                    pool = pooler.restart_pool(db_name, demo, serv.actions[id],
-                            update_module=True)[1]
-
-                    cr = sql_db.db_connect(db_name).cursor()
-
-                    if lang:
-                        modobj = pool.get('ir.module.module')
-                        mids = modobj.search(cr, 1, [('state', '=', 'installed')])
-                        modobj.update_translations(cr, 1, mids, lang)
-
-                    cr.execute('UPDATE res_users SET password=%s, context_lang=%s, active=True WHERE login=%s', (
-                        user_password, lang, 'admin'))
-                    cr.execute('SELECT login, password, name ' \
-                               '  FROM res_users ' \
-                               ' ORDER BY login')
-                    serv.actions[id]['users'] = cr.dictfetchall()
-                    serv.actions[id]['clean'] = True
-                    cr.commit()
-                    cr.close()
-                except Exception, e:
-                    serv.actions[id]['clean'] = False
-                    serv.actions[id]['exception'] = e
-                    import traceback
-                    e_str = StringIO()
-                    traceback.print_exc(file=e_str)
-                    traceback_str = e_str.getvalue()
-                    e_str.close()
-                    netsvc.Logger().notifyChannel('web-services', netsvc.LOG_ERROR, 'CREATE DATABASE\n%s' % (traceback_str))
-                    serv.actions[id]['traceback'] = traceback_str
-                    if cr:
-                        cr.close()
-        logger = netsvc.Logger()
-        logger.notifyChannel("web-services", netsvc.LOG_INFO, 'CREATE DATABASE: %s' % (db_name.lower()))
-        dbi = DBInitialize()
-        create_thread = threading.Thread(target=dbi,
+        logging.getLogger('db.create').info('CREATE DATABASE %s', db_name.lower())
+        create_thread = threading.Thread(target=_initialize_db,
                 args=(self, id, db_name, demo, lang, user_password))
         create_thread.start()
         self.actions[id]['thread'] = create_thread

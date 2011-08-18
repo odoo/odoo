@@ -231,16 +231,6 @@ class rml_parse(object):
         self.lang_dict_called = False
         for obj in self.objects:
             obj._context['lang'] = lang
-            for table in obj._cache:
-                for id in obj._cache[table]:
-                    self._lang_cache.setdefault(obj._context['lang'], {}).setdefault(table,
-                            {}).update(obj._cache[table][id])
-                    if lang in self._lang_cache \
-                            and table in self._lang_cache[lang] \
-                            and id in self._lang_cache[lang][table]:
-                        obj._cache[table][id] = self._lang_cache[lang][table][id]
-                    else:
-                        obj._cache[table][id] = {'id': id}
 
     def _get_lang_dict(self):
         pool_lang = self.pool.get('res.lang')

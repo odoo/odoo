@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2011 OpenERP S.A. <http://www.openerp.com>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -15,22 +15,18 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
-from osv import fields,osv
+from report import report_sxw
 
-class board(osv.osv):
-    _name = 'ir.board'
-    def create(self, cr, user, vals, context={}):
-        return False
-    def copy(self, cr, uid, id, default=None, context={}):
-        return False
-    _columns = {
-        'name': fields.char('Board', size=64),
-    }
-board()
+class rmlparser(report_sxw.rml_parse):
+    def set_context(self, objects, data, ids, report_type = None):
+        super(rmlparser,self).set_context(objects, data, ids, report_type)
+        self.setCompany(objects[0])
+
+report_sxw.report_sxw('report.preview.report', 'res.company',
+      'addons/base/report/preview_report.rml', parser=rmlparser, header='external')
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
