@@ -302,8 +302,7 @@ openerp.base_calendar.CalendarView = openerp.base.View.extend({
                 // TODO: handle non-empty results.group_by with read_group
                 self.dataset.context = self.context = results.context;
                 self.dataset.domain = self.domain = results.domain;
-                self.dataset.read_slice({
-                        fields: _.keys(self.fields),
+                self.dataset.read_slice(_.keys(self.fields), {
                         offset:0,
                         limit: self.limit
                     }, function(events) {

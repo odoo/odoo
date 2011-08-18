@@ -17,6 +17,7 @@ openerp.base.ActionManager = openerp.base.Widget.extend({
         this.dialog = null;
         this.dialog_viewmanager = null;
         this.client_widget = null;
+        this.url = {}
     },
     render: function() {
         return "<div id='"+this.element_id+"'></div>";
@@ -34,6 +35,28 @@ openerp.base.ActionManager = openerp.base.Widget.extend({
             this.inner_viewmanager.stop();
             this.inner_viewmanager = null;
         }
+    },
+    url_update: function(action) {
+        // this.url = {
+        //     "model": action.model,
+        //     "domain": action.domain,
+        // };
+        // action.res_model
+        // action.domain
+        // action.context
+        // after
+        // action.views
+        // action.res_id
+        // mode
+        // menu
+    },
+    url_stringify: function(action) {
+    },
+    url_parse: function(action) {
+    },
+    on_url_update: function(url) {
+    },
+    do_url_action: function(url) {
     },
     do_action: function(action, on_close) {
         var type = action.type.replace(/\./g,'_');
@@ -69,6 +92,7 @@ openerp.base.ActionManager = openerp.base.Widget.extend({
             this.inner_stop();
             this.inner_viewmanager = new openerp.base.ViewManagerAction(this, action);
             this.inner_viewmanager.appendTo(this.$element);
+            this.url_update(action);
         }
         /* new window code
             this.rpc("/base/session/save_session_action", { the_action : action}, function(key) {

@@ -458,9 +458,7 @@ openerp.base.form.SidebarAttachments = openerp.base.Widget.extend({
                     ['res_model', '=', this.view.dataset.model],
                     ['res_id', '=', this.view.datarecord.id],
                     ['type', 'in', ['binary', 'url']]
-                ])).read_slice(
-                    {fields: ['name', 'url', 'type']},
-                    this.on_attachments_loaded);
+                ])).read_slice(['name', 'url', 'type'], this.on_attachments_loaded);
         }
     },
     on_attachments_loaded: function(attachments) {

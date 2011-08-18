@@ -286,14 +286,16 @@ openerp.base.DataSet =  openerp.base.Widget.extend( /** @lends openerp.base.Data
      * Read a slice of the records represented by this DataSet, based on its
      * domain and context.
      *
+     * @param {Array} [fields] fields to read and return, by default all fields are returned
      * @params {Object} options
-     * @param {Array} [options.fields] fields to read and return, by default all fields are returned
      * @param {Number} [options.offset=0] The index from which selected records should be returned
      * @param {Number} [options.limit=null] The maximum number of records to return
      * @param {Function} callback function called with read_slice result
      * @returns {$.Deferred}
      */
-    read_slice: function (options, callback) { return null; },
+    read_slice: function (fields, options, callback) { 
+        return null; 
+    },
     /**
      * Reads the current dataset record (from its index)
      *
@@ -478,11 +480,12 @@ openerp.base.DataSetStatic =  openerp.base.DataSet.extend({
         // all local records
         this.ids = ids || [];
     },
-    read_slice: function (options, callback) {
+    read_slice: function (fields, options, callback) {
+        // TODO remove fields from options
         var self = this,
             offset = options.offset || 0,
             limit = options.limit || false,
-            fields = options.fields || false;
+            fields = fields || false;
         var end_pos = limit && limit !== -1 ? offset + limit : undefined;
         return this.read_ids(this.ids.slice(offset, end_pos), fields, callback);
     },
@@ -532,12 +535,12 @@ openerp.base.DataSetSearch =  openerp.base.DataSet.extend({
      * @param {Function} callback function called with read_slice result
      * @returns {$.Deferred}
      */
-    read_slice: function (options, callback) {
+    read_slice: function (fields, options, callback) {
         var self = this;
         var offset = options.offset || 0;
         return this.rpc('/base/dataset/search_read', {
             model: this.model,
-            fields: options.fields || false,
+            fields: fields || false,
             domain: this.get_domain(options.domain),
             context: this.get_context(options.context),
             sort: this.sort(),
