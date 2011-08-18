@@ -323,7 +323,6 @@ openerp.base.CallbackEnabled = openerp.base.Class.extend({
 openerp.base.Session = openerp.base.CallbackEnabled.extend( /** @lends openerp.base.Session# */{
     /**
      * @constructs
-     * @param element_id to use for exception reporting
      * @param server
      * @param port
      */
@@ -344,6 +343,7 @@ openerp.base.Session = openerp.base.CallbackEnabled.extend( /** @lends openerp.b
         this.context = {};
         this.shortcuts = [];
         this.active_id = null;
+        this.session = this;
     },
     start: function() {
         this.session_restore();

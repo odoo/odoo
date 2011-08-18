@@ -537,6 +537,7 @@ openerp.base.DataSetSearch =  openerp.base.DataSet.extend({
      */
     read_slice: function (fields, options, callback) {
         var self = this;
+        var options = options || {};
         var offset = options.offset || 0;
         return this.rpc('/base/dataset/search_read', {
             model: this.model,
