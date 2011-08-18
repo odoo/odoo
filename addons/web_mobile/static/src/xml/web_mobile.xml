@@ -70,6 +70,87 @@
     </div>
 </t>
 
+<t t-name="Shortcuts">
+    <ul data-dividertheme="b" data-theme="c" data-inset="true" data-role="listview" class="ui-listview ui-listview-inset ui-corner-all ui-shadow">
+        <li data-role="list-divider" role="heading" class="ui-li ui-li-divider ui-btn ui-bar-b ui-corner-top ui-btn-up-undefined">
+            Shortcuts
+        </li>
+        <li data-theme="c" class="ui-btn ui-btn-icon-right ui-li ui-btn-up-c" t-foreach="sc" t-as="opt">
+            <div class="ui-btn-inner ui-li">
+                <div class="ui-btn-text">
+                    <a href="#" class="ui-link-inherit" t-att-data-menu="opt.id" t-att-data-name="opt.name" t-att-data-res="opt.res_id">
+                        <span><t t-esc="opt.name"/></span>
+                    </a>
+                </div>
+                <span class="ui-icon ui-icon-arrow-r"></span>
+            </div>
+        </li>
+    </ul>
+</t>
+
+<t t-name="Menu">
+    <ul data-dividertheme="b" data-theme="c" data-inset="true" data-role="listview" class="ui-listview ui-listview-inset ui-corner-all ui-shadow">
+        <li data-role="list-divider" role="heading" class="ui-li ui-li-divider ui-btn ui-bar-b ui-corner-top ui-btn-up-undefined">
+            Menu
+        </li>
+        <li data-theme="c" class="ui-btn ui-btn-icon-right ui-li ui-btn-up-c" t-foreach="data.children" t-as="menu">
+            <div class="ui-btn-inner ui-li">
+                <div class="ui-btn-text">
+                    <a href="#" class="ui-link-inherit" t-att-data-menu="menu.id" t-att-data-name="menu.name">
+                        <span><t t-esc="menu.name"/></span>
+                    </a>
+                </div>
+                <span class="ui-icon ui-icon-arrow-r"></span>
+            </div>
+        </li>
+    </ul>
+</t>
+
+<t t-name="Menu.secondary">
+    <div role="main" class="ui-content" data-role="content">
+        <ul data-role="listview" class="ui-listview">
+            <li data-theme="c" class="ui-btn ui-btn-icon-right ui-li ui-btn-up-c" t-foreach="menu.children" t-as="menu">
+                <div class="ui-btn-inner ui-li">
+                    <div class="ui-btn-text">
+                        <a href="#" class="ui-link-inherit" t-attf-id="menu_#{menu.id}" t-att-data-menu="menu.id" t-att-data-name="menu.name">
+                            <span><t t-esc="menu.name"/></span>
+                        </a>
+                    </div>
+                        <span class="ui-icon ui-icon-arrow-r"></span>
+                </div>
+            </li>
+        </ul>
+    </div>
+</t>
+
+<t t-name="Options">
+    <ul data-dividertheme="b" data-theme="c" data-inset="true" data-role="listview" class="ui-listview ui-listview-inset ui-corner-all ui-shadow">
+        <li data-role="list-divider" role="heading" class="ui-li ui-li-divider ui-btn ui-bar-b ui-corner-top ui-btn-up-undefined">
+            Options
+        </li>
+        <li data-theme="c" class="ui-btn ui-btn-icon-right ui-li ui-btn-up-c">
+            <div class="ui-btn-inner ui-li">
+                <div class="ui-btn-text">
+                    <a id="logout" href="#" class="ui-link-inherit">
+                        Logout
+                    </a>
+                </div>
+                    <span class="ui-icon ui-icon-arrow-r"></span>
+            </div>
+        </li>
+        <li data-theme="c" class="ui-btn ui-btn-icon-right ui-li ui-btn-up-c">
+            <div class="ui-btn-inner ui-li">
+                <div class="ui-btn-text">
+                    <a id="pref" href="#" class="ui-link-inherit">
+                        Preferences
+                    </a>
+                </div>
+                    <span class="ui-icon ui-icon-arrow-r"></span>
+            </div>
+        </li>
+    </ul>
+</t>
+
 <t t-name="ListView">
     <div role="main" class="ui-content" data-role="content">
         <form class="ui-listview-filter ui-bar-c" role="search">
@@ -252,88 +333,6 @@
             </t>
         </form>
     </div>
-</t>
-
-
-<t t-name="Shortcuts">
-    <ul data-dividertheme="b" data-theme="c" data-inset="true" data-role="listview" class="ui-listview ui-listview-inset ui-corner-all ui-shadow">
-        <li data-role="list-divider" role="heading" class="ui-li ui-li-divider ui-btn ui-bar-b ui-corner-top ui-btn-up-undefined">
-            Shortcuts
-        </li>
-        <li data-theme="c" class="ui-btn ui-btn-icon-right ui-li ui-btn-up-c" t-foreach="sc" t-as="opt">
-            <div class="ui-btn-inner ui-li">
-                <div class="ui-btn-text">
-                    <a href="#" class="ui-link-inherit" t-att-data-menu="opt.id" t-att-data-name="opt.name" t-att-data-res="opt.res_id">
-                        <span><t t-esc="opt.name"/></span>
-                    </a>
-                </div>
-                <span class="ui-icon ui-icon-arrow-r"></span>
-            </div>
-        </li>
-    </ul>
-</t>
-
-<t t-name="Menu">
-    <ul data-dividertheme="b" data-theme="c" data-inset="true" data-role="listview" class="ui-listview ui-listview-inset ui-corner-all ui-shadow">
-        <li data-role="list-divider" role="heading" class="ui-li ui-li-divider ui-btn ui-bar-b ui-corner-top ui-btn-up-undefined">
-            Menu
-        </li>
-        <li data-theme="c" class="ui-btn ui-btn-icon-right ui-li ui-btn-up-c" t-foreach="data.children" t-as="menu">
-            <div class="ui-btn-inner ui-li">
-                <div class="ui-btn-text">
-                    <a href="#" class="ui-link-inherit" t-att-data-menu="menu.id" t-att-data-name="menu.name">
-                        <span><t t-esc="menu.name"/></span>
-                    </a>
-                </div>
-                <span class="ui-icon ui-icon-arrow-r"></span>
-            </div>
-        </li>
-    </ul>
-</t>
-
-<t t-name="Menu.secondary">
-    <div role="main" class="ui-content" data-role="content">
-        <ul data-role="listview" class="ui-listview">
-            <li data-theme="c" class="ui-btn ui-btn-icon-right ui-li ui-btn-up-c" t-foreach="menu.children" t-as="menu">
-                <div class="ui-btn-inner ui-li">
-                    <div class="ui-btn-text">
-                        <a href="#" class="ui-link-inherit" t-attf-id="menu_#{menu.id}" t-att-data-menu="menu.id" t-att-data-name="menu.name">
-                            <span><t t-esc="menu.name"/></span>
-                        </a>
-                    </div>
-                        <span class="ui-icon ui-icon-arrow-r"></span>
-                </div>
-            </li>
-        </ul>
-    </div>
-</t>
-
-<t t-name="Options">
-    <ul data-dividertheme="b" data-theme="c" data-inset="true" data-role="listview" class="ui-listview ui-listview-inset ui-corner-all ui-shadow">
-        <li data-role="list-divider" role="heading" class="ui-li ui-li-divider ui-btn ui-bar-b ui-corner-top ui-btn-up-undefined">
-            Options
-        </li>
-        <li data-theme="c" class="ui-btn ui-btn-icon-right ui-li ui-btn-up-c">
-            <div class="ui-btn-inner ui-li">
-                <div class="ui-btn-text">
-                    <a id="logout" href="#" class="ui-link-inherit">
-                        Logout
-                    </a>
-                </div>
-                    <span class="ui-icon ui-icon-arrow-r"></span>
-            </div>
-        </li>
-        <li data-theme="c" class="ui-btn ui-btn-icon-right ui-li ui-btn-up-c">
-            <div class="ui-btn-inner ui-li">
-                <div class="ui-btn-text">
-                    <a id="pref" href="#" class="ui-link-inherit">
-                        Preferences
-                    </a>
-                </div>
-                    <span class="ui-icon ui-icon-arrow-r"></span>
-            </div>
-        </li>
-    </ul>
 </t>
 
 </templates>
