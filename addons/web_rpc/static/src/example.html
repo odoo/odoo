@@ -6,17 +6,28 @@
         <script type="text/javascript" src="http://localhost:8002/base/webclient/js?mods=web_rpc"></script> 
         <script type="text/javascript">
         $(function() {
+            $("#ex1but").bind("click",function(){
+                eval($("#ex1").html());
+            });
         });
         </script> 
     </head> 
     <body>
-        <h2>Example 1 <button id="button">Run it !</button> </h2>
+        <h2>Example 1: Display all res_users in an html table <button id="ex1but">Run it !</button> </h2>
         <h3>Code: </h3>
         <pre id="ex1" style="border: 1px solid black;">
 QWeb = new QWeb2.Engine();
 var o_db = openerp.init();
-var o_sess = new o_db.Session();
-//.base.webclient("oe");
+var o_sess = new o_db.base.Session();
+o_sess.debug = 1;
+o_sess.session_login("web_trunk", "admin", "admin", function() {
+    var o_ds = new o_db.base.DataSet(o_sess,"res.users",{});
+    // search for res.users
+    //o_ds.sear()
+    // read res.users
+    // display them
+    $("#ex1res").html(o_sess.debug.toString());
+});
         </pre>
         <h3>div id="ex1res" to output results:</h3>
         <div id="ex1res" style="border: 1px solid black;">
