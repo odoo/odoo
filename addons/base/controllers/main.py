@@ -67,7 +67,6 @@ def manifest_glob(addons, key):
     files = []
     for addon in addons:
         globlist = openerpweb.addons_manifest.get(addon, {}).get(key, [])
-        print globlist
         for pattern in globlist:
             for path in glob.glob(os.path.join(openerpweb.path_addons, addon, pattern)):
                 files.append(path[len(openerpweb.path_addons):])
@@ -79,11 +78,11 @@ def concat_files(file_list):
     concat: concatenation of file content
     timestamp: max(os.path.getmtime of file_list)
     """
-    root = openerpweb.path_root
     files_content = []
     files_timestamp = 0
     for i in file_list:
-        fname = os.path.join(root, i)
+        fname = os.path.join(openerpweb.path_addons, i[1:])
+        print fname
         ftime = os.path.getmtime(fname)
         if ftime > files_timestamp:
             files_timestamp = ftime
@@ -96,6 +95,11 @@ home_template = textwrap.dedent("""<!DOCTYPE html>
     <head>
         <meta http-equiv="content-type" content="text/html; charset=utf-8" />
         <title>OpenERP</title>
+        <link rel="shortcut icon" href="/base/static/src/img/favicon.ico" type="image/x-icon"/>
+        %(css)s
+        <!--[if lte IE 7]>
+        <link rel="stylesheet" href="/base/static/src/css/base-ie7.css" type="text/css"/>
+        <![endif]-->
         %(javascript)s
         <script type="text/javascript">
             $(function() {
@@ -103,11 +107,6 @@ home_template = textwrap.dedent("""<!DOCTYPE html>
                 openerp.init().base.webclient("oe");
             });
         </script>
-        <link rel="shortcut icon" href="/base/static/src/img/favicon.ico" type="image/x-icon"/>
-        %(css)s
-        <!--[if lte IE 7]>
-        <link rel="stylesheet" href="/base/static/src/css/base-ie7.css" type="text/css"/>
-        <![endif]-->
     </head>
     <body id="oe" class="openerp"></body>
 </html>
@@ -143,13 +142,13 @@ class WebClient(openerpweb.Controller):
     def home(self, req, s_action=None):
         # script tags
         jslist = ['/base/webclient/js']
-        if 1: # debug == 1
+        if req.debug:
             jslist = manifest_glob(['base'], 'js')
         js = "\n        ".join(['<script type="text/javascript" src="%s"></script>'%i for i in jslist])
 
         # css tags
         csslist = ['/base/webclient/css']
-        if 1: # debug == 1
+        if req.debug:
             csslist = manifest_glob(['base'], 'css')
         css = "\n        ".join(['<link rel="stylesheet" href="%s">'%i for i in csslist])
         r = home_template % {

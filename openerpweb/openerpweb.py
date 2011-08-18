@@ -249,7 +249,9 @@ class CherryPyRequest(object):
         host = cherrypy.config['openerp.server.host']
         port = cherrypy.config['openerp.server.port']
         self.session = self.httpsession.setdefault(self.session_id, OpenERPSession(host, port))
+        # Request attributes
         self.context = self.params.pop('context', None)
+        self.debug = self.params.pop('debug',False) != False
 
 class JsonRequest(CherryPyRequest):
     """ JSON-RPC2 over HTTP.
@@ -361,7 +363,13 @@ class HttpRequest(CherryPyRequest):
     """
     def dispatch(self, controller, method, **kw):
         self.init(kw)
-        print "%s --> %s %s.%s %r" % (self.httprequest.method, controller.__class__.__name__, method.__name__, self.httprequest, kw)
+        akw = {}
+        for key in kw.keys():
+            if isinstance(kw[key], basestring) and len(kw[key]) < 1024:
+                akw[key] = kw[key]
+            else:
+                akw[key] = str(type(kw[key]))
+        print "%s --> %s.%s %r" % (self.httprequest.method, controller.__class__.__name__, method.__name__, akw)
         r = method(controller, self, **kw)
         print "<--", 'size:', len(r)
         print
