@@ -3035,6 +3035,12 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         
         return True
 
+    def _install_template(self, cr, uid, ids, template_id, context=None):
+        template = self.pool.get('account.chart.template').browse(cr, uid, template_id, context=context)
+        if template.parent_id:
+            self._install_template(cr, uid, ids, template.parent_id.id, context=context)
+        return self._load_template(cr, uid, ids, template_id, context=context)
+
     def execute(self, cr, uid, ids, context=None):
         obj_multi = self.browse(cr, uid, ids[0])
         obj_acc = self.pool.get('account.account')
