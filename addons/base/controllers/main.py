@@ -18,6 +18,7 @@ import openerpweb
 import openerpweb.ast
 import openerpweb.nonliterals
 
+from babel.messages.pofile import read_po
 
 # Should move to openerpweb.Xml2Json
 class Xml2Json:
@@ -156,6 +157,43 @@ class WebClient(openerpweb.Controller):
             'css': css
         }
         return r
+    
+    @openerpweb.jsonrequest
+    def translations(self, req, mods, lang):
+        lang_model = req.session.model('res.lang')
+        ids = lang_model.search([("code", "=", lang)])
+        if ids:
+            lang_obj = lang_model.read(ids[0], ["direction", "date_format", "time_format",
+                                                "grouping", "decimal_point", "thousands_sep"])
+        else:
+            lang_obj = None
+            
+        if lang.count("_") > 0:
+            separator = "_"
+        else:
+            separator = "@"
+        langs = lang.split(separator)
+        langs = [separator.join(langs[:x]) for x in range(1, len(langs) + 1)]
+        
+        transs = {}
+        for addon_name in mods:
+            transl = {"messages":[]}
+            transs[addon_name] = transl
+            for l in langs:
+                f_name = os.path.join(openerpweb.path_addons, addon_name, "po", l + ".po")
+                if not os.path.exists(f_name):
+                    continue
+                try:
+                    with open(f_name) as t_file:
+                        po = read_po(t_file)
+                except:
+                    continue
+                for x in po:
+                    if x.id and x.string:
+                        transl["messages"].append({'id': x.id, 'string': x.string})
+        return {"modules": transs,
+                "lang_parameters": lang_obj}
+    
 
 class Database(openerpweb.Controller):
     _cp_path = "/base/database"
@@ -251,16 +289,18 @@ class Session(openerpweb.Controller):
     @openerpweb.jsonrequest
     def login(self, req, db, login, password):
         req.session.login(db, login, password)
+        ctx = req.session.get_context()
 
         return {
             "session_id": req.session_id,
             "uid": req.session._uid,
+            "context": ctx
         }
 
     @openerpweb.jsonrequest
     def sc_list(self, req):
-        return req.session.model('ir.ui.view_sc').get_sc(req.session._uid, "ir.ui.menu",
-                                                         req.session.eval_context(req.context))
+        return req.session.model('ir.ui.view_sc').get_sc(
+            req.session._uid, "ir.ui.menu", req.session.eval_context(req.context))
 
     @openerpweb.jsonrequest
     def get_lang_list(self, req):
@@ -907,7 +947,7 @@ class Binary(openerpweb.Controller):
     _cp_path = "/base/binary"
 
     @openerpweb.httprequest
-    def image(self, request, session_id, model, id, field, **kw):
+    def image(self, request, model, id, field, **kw):
         cherrypy.response.headers['Content-Type'] = 'image/png'
         Model = request.session.model(model)
         context = request.session.eval_context(request.context)
@@ -923,7 +963,7 @@ class Binary(openerpweb.Controller):
         return open(os.path.join(openerpweb.path_addons, 'base', 'static', 'src', 'img', 'placeholder.png'), 'rb').read()
 
     @openerpweb.httprequest
-    def saveas(self, request, session_id, model, id, field, fieldname, **kw):
+    def saveas(self, request, model, id, field, fieldname, **kw):
         Model = request.session.model(model)
         context = request.session.eval_context(request.context)
         res = Model.read([int(id)], [field, fieldname], context)[0]
@@ -939,7 +979,7 @@ class Binary(openerpweb.Controller):
             return base64.decodestring(filecontent)
 
     @openerpweb.httprequest
-    def upload(self, request, session_id, callback, ufile=None):
+    def upload(self, request, callback, ufile=None):
         cherrypy.response.timeout = 500
         headers = {}
         for key, val in cherrypy.request.headers.iteritems():
@@ -966,7 +1006,7 @@ class Binary(openerpweb.Controller):
         return out % (simplejson.dumps(callback), simplejson.dumps(args))
 
     @openerpweb.httprequest
-    def upload_attachment(self, request, session_id, callback, model, id, ufile=None):
+    def upload_attachment(self, request, callback, model, id, ufile=None):
         cherrypy.response.timeout = 500
         context = request.session.eval_context(request.context)
         Model = request.session.model('ir.attachment')
