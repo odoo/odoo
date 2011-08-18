@@ -784,7 +784,16 @@
     <div t-att-id="widget.list_id"></div>
 </t>
 <t t-name="FieldReference">
-    <input type="text" t-att-name="widget.name" t-att-id="widget.element_id" t-att-class="'field_' + widget.type" style="width: 100%" placeholder="Widget Reference"/>
+    <table border="0" width="100%" cellpadding="0" cellspacing="0" class="oe_frame oe_forms">
+    <tr>
+        <td t-att-id="widget.selection.element_id" class="oe_form_frame_cell oe_form_selection">
+            <t t-raw="widget.selection.render()"/>
+        </td>
+        <td t-att-id="widget.m2o.element_id" class="oe_form_frame_cell oe_form_many2one" nowrap="true">
+            <t t-raw="widget.m2o.render()"/>
+        </td>
+    </tr>
+    </table>
 </t>
 <t t-name="FieldBoolean">
     <input type="checkbox"

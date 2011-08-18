@@ -2201,6 +2201,70 @@ openerp.base.form.FormOpenPopup = openerp.base.OldWidget.extend({
     }
 });
 
+openerp.base.form.FieldReference = openerp.base.form.Field.extend({
+    init: function(view, node) {
+        this._super(view, node);
+        this.template = "FieldReference";
+        this.fields_view = {
+            fields: {
+                selection: {
+                    selection: view.fields_view.fields[this.name].selection
+                },
+                m2o: {
+                    relation: null
+                }
+            }
+        }
+        this.get_fields_values = view.get_fields_values;
+        this.do_onchange = this.on_form_changed = this.on_nop;
+        this.widgets = {};
+        this.fields = {};
+        this.selection = new openerp.base.form.FieldSelection(this, { attrs: {
+            name: 'selection',
+            widget: 'selection'
+        }});
+        this.selection.on_value_changed.add_last(this.on_selection_changed);
+        this.m2o = new openerp.base.form.FieldMany2One(this, { attrs: {
+            name: 'm2o',
+            widget: 'many2one'
+        }});
+    },
+    on_nop: function() {
+    },
+    on_selection_changed: function() {
+        this.m2o.field.relation = this.selection.get_value();
+        this.m2o.set_value(null);
+    },
+    start: function() {
+        this._super();
+        this.selection.start();
+        this.m2o.start();
+    },
+    is_valid: function() {
+        return this.required === false || typeof(this.get_value()) === 'string';
+    },
+    is_dirty: function() {
+        return this.selection.is_dirty() || this.m2o.is_dirty();
+    },
+    set_value: function(value) {
+        this._super(value);
+        if (typeof(value) === 'string') {
+            var vals = value.split(',');
+            this.selection.set_value(vals[0]);
+            this.m2o.set_value(parseInt(vals[1], 10));
+        }
+    },
+    get_value: function() {
+        var model = this.selection.get_value(),
+            id = this.m2o.get_value();
+        if (typeof(model) === 'string' && typeof(id) === 'number') {
+            return model + ',' + id;
+        } else {
+            return false;
+        }
+    }
+});
+
 openerp.base.form.FieldBinary = openerp.base.form.Field.extend({
     init: function(view, node) {
         this._super(view, node);
