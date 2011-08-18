@@ -52,19 +52,7 @@ openerp.base_kanban.KanbanView = openerp.base.View.extend({
             },
             stop: self.on_recieve_record,
         });
-        this.$element.find(".record").addClass("ui-widget ui-widget-content ui-helper-clearfix ui-corner-all")
-            .find(".record-header")
-                .addClass("ui-widget-header ui-corner-all")
-                .prepend( "<span class='ui-icon ui-icon-closethick'></span><span class='ui-icon ui-icon-minusthick'></span>")
-                .end()
-            .find( ".record-content" );
-
-        this.$element.find(".record-header .ui-icon").click(function() {
-            $(this).toggleClass("ui-icon-minusthick").toggleClass("ui-icon-plusthick");
-            $(this).parents(".record:first").find(".record-content").toggle();
-        });
-        this.$element.find('.record .ui-icon-closethick').click(this.on_close_action);
-        this.$element.find(".oe_column").disableSelection();
+        this.$element.find(".record").addClass( "ui-widget ui-widget-content ui-corner-all" )
         this.$element.find('button.oe_kanban_button_new').click(this.do_add_record);
     },
     on_button_click: function (button_attrs, record_id) {
@@ -147,15 +135,6 @@ openerp.base_kanban.KanbanView = openerp.base.View.extend({
                 });
             }
         );
-    },
-    on_close_action: function (e) {
-        var record_id = $(e.currentTarget).parents('.record:first').attr("id");
-        if (record_id) {
-            record_id = parseInt(record_id.split("_")[1]);
-            if (record_id) {
-                this.do_delete(record_id);
-            }
-        }
     },
     on_recieve_record: function (event, ui) {
         var self = this;
@@ -248,8 +227,8 @@ openerp.base_kanban.KanbanView = openerp.base.View.extend({
         _.each(self.all_display_data, function(data, index) {
             if (data.records.length > 0){
                 _.each(data.records, function(record) {
-                    self.$element.find("#data_" + record.id).children().remove();
-                    self.$element.find("#data_" + record.id).append(new_qweb.render('custom_template', record));
+                    self.$element.find("#main_" + record.id).children().remove();
+                    self.$element.find("#main_" + record.id).append(new_qweb.render('custom_template', record));
                 });
             } else {
                 self.$element.find("#column_" + data.value).remove();

@@ -22,10 +22,7 @@
                 <td class="oe_table_column" t-att-id="'column_' + columns.value">
                     <div class="oe_column" t-att-id="'column_' + columns.value">
                         <t t-foreach="columns.records" t-as="record">
-                            <div class="record" t-att-id="'main_' + record.id">
-                                <div class="record-header" t-att-id="'header_' + record.id"><t t-esc="record.id"/></div>
-                                <div class="record-content" t-att-id="'data_' + record.id"></div>
-                            </div>
+                            <div class="record" t-att-id="'main_' + record.id"/>
                         </t>
                     </div>
                 </td>
