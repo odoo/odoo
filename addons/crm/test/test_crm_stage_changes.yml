@@ -12,7 +12,6 @@
     section_ids:
       - crm.section_sales_department
     sequence: 0.0
-    type: opportunity
 - 
   I create a lead 'OpenERP Presentation'.
 - 
@@ -55,8 +54,11 @@
   Now I check whether the probability is set according to stage change or not.
 -
   !python {model: crm.lead}: |
+    stage_obj = self.pool.get('crm.case.stage')
     opportunity = self.browse(cr, uid, ref('crm_lead_openerppresentation0'))
-    assert opportunity.stage_id.id == ref('crm.stage_opportunity6'), 'Stage is not changed!'
+    stage_data = stage_obj.browse(cr, uid, ref('crm.stage_opportunity6'))
+    for data in stage_data.section_ids:
+        assert opportunity.stage_id.id == data.id, 'Stage is not changed!'
     assert opportunity.probability == 0.0, 'Probability is wrong!'
 -
   I create one more opportunity.
@@ -67,9 +69,8 @@
     day_open: 0.0
     name: Partner Demo
     planned_revenue: 50000.0
-    probability: 70.0
+    probability: 100.0
     section_id: crm.section_sales_department
-    type: opportunity
 -
   I open this opportunity.
 -
@@ -85,5 +86,4 @@
 -
   !python {model: crm.lead}: |
     opportunity = self.browse(cr, uid, ref('crm_lead_partnerdemo0'))
-    assert opportunity.stage_id.id == ref('crm.stage_opportunity5'), 'Stage is not changed!'
     assert opportunity.probability == 100.0, 'Probability is wrong!'
