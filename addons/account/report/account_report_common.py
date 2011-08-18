@@ -53,7 +53,6 @@ class report_account_common(report_sxw.rml_parse, common_report_header):
 
     def _get_report_details(self, data):
         cr, uid = self.cr, self.uid
-
         report_obj = self.pool.get('account.report')
         datas =  []
         balance = 0.0
@@ -84,7 +83,6 @@ class report_account_common(report_sxw.rml_parse, common_report_header):
 
     def get_account_details(self, acc_id, data):
         cr, uid = self.cr, self.uid
-
         report_obj = self.pool.get('account.report')
         accounts = []
         if acc_id and data['form'].get('display_details_per_account', False):

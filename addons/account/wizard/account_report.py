@@ -31,14 +31,7 @@ class accounting_report(osv.osv_memory):
         'display_details_per_account': fields.boolean('Display Details per Account'),
         'account_report_id':  fields.many2one('account.report', 'Account Reports', required=True),
     }
-
-    _defaults={
-        'enable_comparison': False,
-        'display_details_per_account': False,
-    }
     def _print_report(self, cr, uid, ids, data, context=None):
-        if context is None:
-            context = {}
         data['form'].update(self.read(cr, uid, ids, ['account_report_id', 'enable_comparison', 'display_details_per_account'], context=context)[0])
         return {
             'type': 'ir.actions.report.xml',

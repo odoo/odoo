@@ -2612,8 +2612,8 @@ class account_report(osv.osv):
     _description = "Account Report"
 
     _columns = {
-        'name': fields.char('Report Name', size=64, required=True),
-        'parent_id': fields.many2one('account.report', 'Parent Report'),
+        'name': fields.char('Report Name', size=32, required=True),
+        'parent_id': fields.many2one('account.report', 'Parent'),
         'sequence': fields.integer('Sequence'),
         'type': fields.selection([
             ('sum','Sum'),
