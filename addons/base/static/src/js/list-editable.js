@@ -241,7 +241,7 @@ openerp.base.list.editable = function (openerp) {
                             this.dataset.index)));
             $(this).trigger(
                 'edit',
-                [this.rows[this.dataset.index].data.id.value, this.dataset]);
+                [this.records.at(this.dataset.index).get('id'), this.dataset]);
         },
         new_record: function () {
             this.dataset.index = null;
