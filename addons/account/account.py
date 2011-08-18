@@ -3035,11 +3035,14 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         
         return True
 
-    def _install_template(self, cr, uid, ids, template_id, context=None):
+    def _install_template(self, cr, uid, ids, template_id, tax_data={}, context=None):
         template = self.pool.get('account.chart.template').browse(cr, uid, template_id, context=context)
         if template.parent_id:
             self._install_template(cr, uid, ids, template.parent_id.id, context=context)
-        return self._load_template(cr, uid, ids, template_id, context=context)
+        return self._load_template(cr, uid, ids, template_id, tax_data=tax_data, context=context)
+
+    def _load_template(self, cr, uid, ids, template_id, tax_data={}, context=None):
+        return True
 
     def execute(self, cr, uid, ids, context=None):
         obj_multi = self.browse(cr, uid, ids[0])
@@ -3062,6 +3065,13 @@ class wizard_multi_charts_accounts(osv.osv_memory):
 
         tax_code_template_ref = {}
 
+        tax_data = {
+                    'sale_rate': obj_multi.sale_tax_rate, 
+                    'purchase_rate': obj_multi.purchase_tax_rate, 
+                    'sale_tax': obj_multi.complete_tax and obj_multi.sale_tax or False, 
+                    'purchase_tax': obj_multi.complete_tax and obj_multi.purchase_tax or False, 
+                     }
+        self._install_template(cr, uid, ids, obj_multi.chart_template_id.id, company_id, tax_data=tax_data, context=context)
         # create tax templates and real taxes from purchase_tax_rate,sale_tax_rate fields
         if not obj_multi.complete_tax:
             tax_dict = {'sale': obj_multi.sale_tax_rate, 'purchase': obj_multi.purchase_tax_rate}
