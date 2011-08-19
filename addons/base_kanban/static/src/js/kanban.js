@@ -30,7 +30,7 @@ openerp.base_kanban.KanbanView = openerp.base.View.extend({
             }
         });
         if (this.template_xml) {
-            self.dataset.read_slice({
+            self.dataset.read_slice([], {
                 context: self.dataset.get_context(),
                 domain: self.dataset.get_domain()}, function (records) {
                 self.all_display_data = [{'records': records, 'value':false, 'header': false, 'ids': self.dataset.ids}];
@@ -68,7 +68,7 @@ openerp.base_kanban.KanbanView = openerp.base.View.extend({
                 group.list([],
                     function (groups) {},
                     function (dataset) {
-                        dataset.read_slice({}, function(records) {
+                        dataset.read_slice([], {}, function(records) {
                             var index = parseInt(_.indexOf(dataset.ids, record_id));
                             if(index >= 0) {
                                 self.on_confirm_click(dataset, button_attrs, index, record_id);
@@ -100,7 +100,7 @@ openerp.base_kanban.KanbanView = openerp.base.View.extend({
         _.extend(this.dataset, {
             domain: dataset.domain,
             context: dataset.get_context()
-        }).read_slice({}, function () {
+        }).read_slice([], {}, function () {
             self.dataset.index = index;
             self.do_switch_view('form');
         });
@@ -281,7 +281,7 @@ openerp.base_kanban.KanbanView = openerp.base.View.extend({
                     self.domain = dataset.domain;
                     self.context = dataset.context;
                     self.groups = [];
-                    self.dataset.read_slice({}, function(records) {
+                    self.dataset.read_slice([], {}, function(records) {
                         self.all_display_data = [{'records': records, 'value':false, 'header' : false, 'ids': self.dataset.ids}];
                         self.$element.find("#kanbanview").remove();
                         self.on_show_data(self.all_display_data);
@@ -306,7 +306,7 @@ openerp.base_kanban.KanbanView = openerp.base.View.extend({
                 group_name = group.value[1];
                 group_value = group.value[0];
             }
-            self.dataset.read_slice({}, function(records) {
+            self.dataset.read_slice([], {}, function(records) {
                 self.all_display_data.push({"value" : group_value, "records": records, 'header':group_name, 'ids': self.dataset.ids});
                 if (datagroups.length == self.all_display_data.length) {
                     self.$element.find("#kanbanview").remove();
