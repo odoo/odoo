@@ -5,7 +5,7 @@
   I want to change the probability to 0.0 when the opportunity is marked as lost.
   So I set its Change probability automatically true.
 - 
-  !record {model: crm.case.stage, id: crm.stage_opportunity6}:
+  !record {model: crm.case.stage, id: crm.stage_lead6}:
     name: Lost
     on_change: true
     probability: 0.0
@@ -54,11 +54,8 @@
   Now I check whether the probability is set according to stage change or not.
 -
   !python {model: crm.lead}: |
-    stage_obj = self.pool.get('crm.case.stage')
     opportunity = self.browse(cr, uid, ref('crm_lead_openerppresentation0'))
-    stage_data = stage_obj.browse(cr, uid, ref('crm.stage_opportunity6'))
-    for data in stage_data.section_ids:
-        assert opportunity.stage_id.id == data.id, 'Stage is not changed!'
+    assert opportunity.stage_id.id == ref('crm.stage_lead6'), 'Stage is not changed!'
     assert opportunity.probability == 0.0, 'Probability is wrong!'
 -
   I create one more opportunity.
@@ -86,4 +83,5 @@
 -
   !python {model: crm.lead}: |
     opportunity = self.browse(cr, uid, ref('crm_lead_partnerdemo0'))
+    assert opportunity.stage_id.id == ref('crm.stage_lead1'), 'Stage is not changed!'
     assert opportunity.probability == 100.0, 'Probability is wrong!'
