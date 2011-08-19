@@ -476,7 +476,8 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
      */
     do_activate_record: function (index, id, dataset) {
         var self = this;
-        this.dataset.read_slice({
+        // TODO is it needed ?
+        this.dataset.read_slice([],{
                 context: dataset.get_context(),
                 domain: dataset.get_domain()
             }, function () {
@@ -1034,11 +1035,9 @@ openerp.base.ListView.Groups = openerp.base.Class.extend( /** @lends openerp.bas
                d = new $.Deferred(),
             page = this.datagroup.openable ? this.page : view.page;
 
-        dataset.read_slice({
-                fields: _.pluck(_.select(this.columns, function(x) {return x.tag == "field"}), 'name'),
-                offset: page * limit,
-                limit: limit
-            }, function (records) {
+        var fields = _.pluck(_.select(this.columns, function(x) {return x.tag == "field"}), 'name');
+        var options = { offset: page * limit, limit: limit };
+        dataset.read_slice(fields, options , function (records) {
                 if (!self.datagroup.openable) {
                     view.configure_pager(dataset);
                 } else {

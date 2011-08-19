@@ -67,7 +67,7 @@
         <li id="back-to-login">Back to Login</li>
     </ul>
 </t>
-<t t-name="CreateDB">
+<t t-name="Database.CreateDB">
     <form name="create_db_form" class="oe_forms" method="POST">
         <table width="100%">
             <tr>
@@ -79,8 +79,7 @@
         <table align="center" class="db_option_table">
             <tr>
                 <td><label for="super_admin_pwd">Master password:</label></td>
-                <td><input type="password" name="super_admin_pwd"
-                           class="required" autofocus="autofocus"/></td>
+                <td><input type="password" name="super_admin_pwd" class="required" value="admin"/></td>
             </tr>
             <tr>
                 <td><label for="db_name">New database name:</label></td>
@@ -95,9 +94,7 @@
                 <td>
                     <select name="db_lang" t-if="lang_list">
                         <t t-foreach="lang_list" t-as="lang">
-                            <option t-att-value="lang[0]"
-                                    t-att-selected="lang[0] === 'en_US' ? 'selected' : undefined">
-                                <t t-esc="lang[1]"/></option>
+                            <option t-att-value="lang[0]" t-att-selected="lang[0] === 'en_US' ? 'selected' : undefined"><t t-esc="lang[1]"/></option>
                         </t>
                     </select>
                 </td>
@@ -367,7 +364,6 @@
             t-att-data-shortcut-id="shortcut.id"
         ><t t-esc="shortcut.name"/></li>
 </ul>
-
 <t t-name="Menu">
     <table align="center">
         <tr>
@@ -784,7 +780,16 @@
     <div t-att-id="widget.list_id"></div>
 </t>
 <t t-name="FieldReference">
-    <input type="text" t-att-name="widget.name" t-att-id="widget.element_id" t-att-class="'field_' + widget.type" style="width: 100%" placeholder="Widget Reference"/>
+    <table border="0" width="100%" cellpadding="0" cellspacing="0" class="oe_frame oe_forms">
+    <tr>
+        <td t-att-id="widget.selection.element_id" class="oe_form_frame_cell oe_form_selection">
+            <t t-raw="widget.selection.render()"/>
+        </td>
+        <td t-att-id="widget.m2o.element_id" class="oe_form_frame_cell oe_form_many2one" nowrap="true">
+            <t t-raw="widget.m2o.render()"/>
+        </td>
+    </tr>
+    </table>
 </t>
 <t t-name="FieldBoolean">
     <input type="checkbox"
@@ -1166,7 +1171,6 @@
 <t t-name="ExportView">
     <a id="exportview" href="javascript: void(0)" style="text-decoration: none;color: #3D3D3D;">Export</a>
 </t>
-
 <t t-name="ExportTreeView">
     <table class="view" style="background-color: #F3F3F3;">
         <tr>

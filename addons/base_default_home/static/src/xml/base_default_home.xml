@@ -1,17 +1,11 @@
 <template>
     <div t-name="StaticHome" class="oe-static-home">
+        <h1>Welcome to your new OpenERP instance.</h1>
         <div class="oe-static-home-banner">
-            <h1>Welcome to OpenERP</h1>
-            <p>
-                Don't forget to bookmark your application address to come back
-                later:
-            </p>
-            <address>
-                URL: <a t-att-href="url"><t t-esc="url"/></a><br/>
-                login: <t t-esc="session.login"/>
-            </address>
+            <li>Bookmark this <a t-att-href="url">page</a></li>
+            <li>Remember your login: <i><t t-esc="session.login"/></i></li>
+            <li>Choose the first OpenERP Application you want to install..</li>
         </div>
-
         <div class="oe-static-home-tiles">
             <table width="100%">
                 <tr t-foreach="rows" t-as="row">
@@ -27,9 +21,7 @@
                                     <div class="oe-static-home-tile-text">
                                         <h2><t t-esc="application.name"/></h2>
                                         <p><t t-esc="application.help"/></p>
-                                        <button type="button"
-                                                t-att-value="application.module">
-                                            Install</button>
+                                        <button type="button" t-att-value="application.module"> Install</button>
                                     </div>
                                 </td>
                             </tr>

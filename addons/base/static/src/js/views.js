@@ -17,6 +17,7 @@ openerp.base.ActionManager = openerp.base.Widget.extend({
         this.dialog = null;
         this.dialog_viewmanager = null;
         this.client_widget = null;
+        this.url = {}
     },
     render: function() {
         return "<div id='"+this.element_id+"'></div>";
@@ -35,7 +36,29 @@ openerp.base.ActionManager = openerp.base.Widget.extend({
             this.inner_viewmanager = null;
         }
     },
-    do_action: function(action, on_closed) {
+    url_update: function(action) {
+        // this.url = {
+        //     "model": action.model,
+        //     "domain": action.domain,
+        // };
+        // action.res_model
+        // action.domain
+        // action.context
+        // after
+        // action.views
+        // action.res_id
+        // mode
+        // menu
+    },
+    url_stringify: function(action) {
+    },
+    url_parse: function(action) {
+    },
+    on_url_update: function(url) {
+    },
+    do_url_action: function(url) {
+    },
+    do_action: function(action, on_close) {
         var type = action.type.replace(/\./g,'_');
         var popup = action.target === 'new';
         action.flags = _.extend({
@@ -49,7 +72,7 @@ openerp.base.ActionManager = openerp.base.Widget.extend({
             this.log("Action manager can't handle action of type " + action.type, action);
             return;
         }
-        this[type](action, on_closed);
+        this[type](action, on_close);
     },
     ir_actions_act_window: function (action, on_close) {
         if (action.target === 'new') {
@@ -69,6 +92,7 @@ openerp.base.ActionManager = openerp.base.Widget.extend({
             this.inner_stop();
             this.inner_viewmanager = new openerp.base.ViewManagerAction(this, action);
             this.inner_viewmanager.appendTo(this.$element);
+            this.url_update(action);
         }
         /* new window code
             this.rpc("/base/session/save_session_action", { the_action : action}, function(key) {
@@ -285,7 +309,7 @@ openerp.base.ViewManagerAction = openerp.base.ViewManager.extend({
 
             var searchview_loaded = this.setup_search_view(
                     searchview_id || false, search_defaults);
-            
+
             // schedule auto_search
             if (searchview_loaded != null && this.action['auto_search']) {
                 $.when(searchview_loaded, inital_view_loaded)
