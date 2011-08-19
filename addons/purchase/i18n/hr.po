@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-05-09 10:19+0000\n"
-"PO-Revision-Date: 2011-01-19 12:00+0000\n"
-"Last-Translator: <>\n"
+"PO-Revision-Date: 2011-08-18 13:24+0000\n"
+"Last-Translator: Marko Carevic <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-08-11 05:27+0000\n"
-"X-Generator: Launchpad (build 13644)\n"
+"X-Launchpad-Export-Date: 2011-08-19 05:14+0000\n"
+"X-Generator: Launchpad (build 13697)\n"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_confirmingpurchaseorder0
@@ -27,19 +27,19 @@ msgstr ""
 #: code:addons/purchase/purchase.py:292
 #, python-format
 msgid "You can not confirm purchase order without Purchase Order Lines."
-msgstr ""
+msgstr "Ne možete potvrditi narudžbu bez stavaka."
 
 #. module: purchase
 #: field:purchase.order,invoiced:0
 msgid "Invoiced & Paid"
-msgstr ""
+msgstr "Fakturirano i plaćeno"
 
 #. module: purchase
 #: field:purchase.order,location_id:0
 #: view:purchase.report:0
 #: field:purchase.report,location_id:0
 msgid "Destination"
-msgstr ""
+msgstr "Odredište"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:721
@@ -48,11 +48,12 @@ msgid ""
 "You have to select a product UOM in the same category than the purchase UOM "
 "of the product"
 msgstr ""
+"Zadana jedinica mjere mora biti u istoj kategoriji kao nabavna jedinica mjere"
 
 #. module: purchase
 #: help:purchase.report,date:0
 msgid "Date on which this document has been created"
-msgstr ""
+msgstr "Datum izrade dokumenta"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_rfq
@@ -75,12 +76,12 @@ msgstr ""
 #. module: purchase
 #: view:purchase.order:0
 msgid "Not Invoiced"
-msgstr ""
+msgstr "Nefakturirano"
 
 #. module: purchase
 #: field:purchase.order,dest_address_id:0
 msgid "Destination Address"
-msgstr ""
+msgstr "Adresa odredišta"
 
 #. module: purchase
 #: report:purchase.order:0
@@ -156,7 +157,7 @@ msgstr ""
 #: view:purchase.report:0
 #: field:purchase.report,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "Tvrtka"
 
 #. module: purchase
 #: view:board.board:0
@@ -168,7 +169,7 @@ msgstr ""
 #. module: purchase
 #: view:purchase.order:0
 msgid "Set to Draft"
-msgstr ""
+msgstr "Postavi kao nacrt"
 
 #. module: purchase
 #: selection:purchase.order,state:0
@@ -497,7 +498,7 @@ msgstr ""
 #: model:process.transition.action,name:purchase.process_transition_action_confirmpurchaseorder0
 #: view:purchase.order.line_invoice:0
 msgid "Confirm"
-msgstr ""
+msgstr "Potvrdi"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_procurement_management_invoice
@@ -1315,7 +1316,7 @@ msgstr ""
 #: view:purchase.order.group:0
 #: view:purchase.order.line_invoice:0
 msgid "Cancel"
-msgstr ""
+msgstr "Odustani"
 
 #. module: purchase
 #: view:purchase.order:0
