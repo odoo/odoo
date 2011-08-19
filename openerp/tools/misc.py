@@ -282,7 +282,7 @@ email_re = re.compile(r"""
     """, re.VERBOSE)
 res_re = re.compile(r"\[([0-9]+)\]", re.UNICODE)
 command_re = re.compile("^Set-([a-z]+) *: *(.+)$", re.I + re.UNICODE)
-reference_re = re.compile("<.*-openobject-(\\d+)@(.*)>", re.UNICODE)
+reference_re = re.compile("<.*-open(?:object|erp)-(\\d+).*@(.*)>", re.UNICODE)
 
 def html2plaintext(html, body_id=None, encoding='utf-8'):
     """ From an HTML text, convert the HTML to plain text.
@@ -348,13 +348,13 @@ def html2plaintext(html, body_id=None, encoding='utf-8'):
 
     return html
 
-def generate_tracking_message_id(openobject_id):
+def generate_tracking_message_id(res_id):
     """Returns a string that can be used in the Message-ID RFC822 header field
     
        Used to track the replies related to a given object thanks to the "In-Reply-To"
        or "References" fields that Mail User Agents will set.
     """
-    return "<%s-openobject-%s@%s>" % (time.time(), openobject_id, socket.gethostname())
+    return "<%s-openerp-%s@%s>" % (time.time(), res_id, socket.gethostname())
 
 def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=None, reply_to=False,
                attachments=None, message_id=None, references=None, openobject_id=False, debug=False, subtype='plain', headers=None,
