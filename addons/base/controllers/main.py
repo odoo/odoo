@@ -82,7 +82,6 @@ def concat_files(file_list):
     files_timestamp = 0
     for i in file_list:
         fname = os.path.join(openerpweb.path_addons, i[1:])
-        print fname
         ftime = os.path.getmtime(fname)
         if ftime > files_timestamp:
             files_timestamp = ftime

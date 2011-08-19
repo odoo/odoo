@@ -305,8 +305,9 @@ class JsonRequest(CherryPyRequest):
                 self.jsonrequest = simplejson.load(requestf, object_hook=nonliterals.non_literal_decoder)
             else:
                 self.jsonrequest = simplejson.loads(request, object_hook=nonliterals.non_literal_decoder)
-            print "--> %s.%s %s" % (controller.__class__.__name__, method.__name__, self.jsonrequest)
             self.init(self.jsonrequest.get("params", {}))
+            if self.debug or 1:
+                print "--> %s.%s %s" % (controller.__class__.__name__, method.__name__, self.jsonrequest)
             response['id'] = self.jsonrequest.get('id')
             response["result"] = method(controller, self, **self.params)
         except OpenERPUnboundException:
@@ -343,8 +344,9 @@ class JsonRequest(CherryPyRequest):
         if error:
             response["error"] = error
 
-        print "<--", response
-        print
+        if self.debug or 1:
+            print "<--", response
+            print
 
         content = simplejson.dumps(response, cls=nonliterals.NonLiteralEncoder)
         cherrypy.response.headers['Content-Type'] = 'application/json'
@@ -368,11 +370,13 @@ class HttpRequest(CherryPyRequest):
             if isinstance(kw[key], basestring) and len(kw[key]) < 1024:
                 akw[key] = kw[key]
             else:
-                akw[key] = str(type(kw[key]))
-        print "%s --> %s.%s %r" % (self.httprequest.method, controller.__class__.__name__, method.__name__, akw)
+                akw[key] = type(kw[key])
+        if self.debug or 1:
+            print "%s --> %s.%s %r" % (self.httprequest.method, controller.__class__.__name__, method.__name__, akw)
         r = method(controller, self, **kw)
-        print "<--", 'size:', len(r)
-        print
+        if self.debug or 1:
+            print "<--", 'size:', len(r)
+            print
         return r
 
 def httprequest(f):
