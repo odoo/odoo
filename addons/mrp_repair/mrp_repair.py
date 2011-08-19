@@ -255,6 +255,10 @@ class mrp_repair(osv.osv):
     def action_invoice_create(self, cr, uid, ids, group=False, context=None):
         res={}
         invoices_group = {}
+        inv_obj = self.pool.get('account.invoice')
+        invoice_line_obj = self.pool.get('account.invoice.line')
+        repair_fee_obj = self.pool.get('mrp.repair.fee')
+        repair_line_obj = self.pool.get('mrp.repair.line')
         for repair in self.browse(cr, uid, ids, context=context):
             res[repair.id]=False
             if repair.state in ('draft','cancel') or repair.invoice_id:
@@ -264,14 +268,14 @@ class mrp_repair(osv.osv):
             comment=repair.quotation_notes
             if (repair.invoice_method != 'none'):
                 if group and repair.partner_invoice_id.id in invoices_group:
-                    inv_id= invoices_group[repair.partner_invoice_id.id]
-                    invoice=invoice_obj.browse(cr, uid,inv_id)
+                    inv_id = invoices_group[repair.partner_invoice_id.id]
+                    invoice = inv_obj.browse(cr, uid,inv_id)
                     invoice_vals = {
                         'name': invoice.name +', '+repair.name,
                         'origin': invoice.origin+', '+repair.name,
                         'comment':(comment and (invoice.comment and invoice.comment+"\n"+comment or comment)) or (invoice.comment and invoice.comment or ''),
                     }
-                    invoice_obj.write(cr, uid, [inv_id],invoice_vals,context=context)
+                    inv_obj.write(cr, uid, [inv_id],invoice_vals,context=context)
                 else:
                     if not repair.partner_id.property_account_receivable:
                         raise osv.except_osv(_('Error !'), _('No account defined for partner "%s".') % repair.partner_id.name )
@@ -287,7 +291,6 @@ class mrp_repair(osv.osv):
                         'comment': repair.quotation_notes,
                         'fiscal_position': repair.partner_id.property_account_position.id
                     }
-                    inv_obj = self.pool.get('account.invoice')
                     inv_id = inv_obj.create(cr, uid, inv)
                     invoices_group[repair.partner_invoice_id.id] = inv_id
                 self.write(cr, uid, repair.id , {'invoiced':True,'invoice_id' : inv_id})
@@ -306,7 +309,7 @@ class mrp_repair(osv.osv):
                         else:
                             raise osv.except_osv(_('Error !'), _('No account defined for product "%s".') % operation.product_id.name )
 
-                        invoice_line_id = self.pool.get('account.invoice.line').create(cr, uid, {
+                        invoice_line_id = invoice_line_obj.create(cr, uid, {
                             'invoice_id': inv_id,
                             'name': name,
                             'origin':repair.name,
@@ -318,7 +321,7 @@ class mrp_repair(osv.osv):
                             'price_subtotal' : operation.product_uom_qty*operation.price_unit,
                             'product_id' : operation.product_id and operation.product_id.id or False
                             })
-                        self.pool.get('mrp.repair.line').write(cr, uid, [operation.id], {'invoiced':True,'invoice_line_id':invoice_line_id})
+                        repair_line_obj.write(cr, uid, [operation.id], {'invoiced':True,'invoice_line_id':invoice_line_id})
                 for fee in repair.fees_lines:
                     if fee.to_invoice == True:
                         if group:
@@ -333,7 +336,7 @@ class mrp_repair(osv.osv):
                             account_id = fee.product_id.categ_id.property_account_income_categ.id
                         else:
                             raise osv.except_osv(_('Error !'), _('No account defined for product "%s".') % fee.product_id.name)
-                        invoice_fee_id = self.pool.get('account.invoice.line').create(cr, uid, {
+                        invoice_fee_id = invoice_line_obj.create(cr, uid, {
                             'invoice_id': inv_id,
                             'name': name,
                             'origin':repair.name,
@@ -345,7 +348,7 @@ class mrp_repair(osv.osv):
                             'price_unit': fee.price_unit,
                             'price_subtotal': fee.product_uom_qty*fee.price_unit
                             })
-                        self.pool.get('mrp.repair.fee').write(cr, uid, [fee.id], {'invoiced':True,'invoice_line_id':invoice_fee_id})
+                        repair_fee_obj.write(cr, uid, [fee.id], {'invoiced':True,'invoice_line_id':invoice_fee_id})
                 res[repair.id]=inv_id
         #self.action_invoice_end(cr, uid, ids)
         return res
