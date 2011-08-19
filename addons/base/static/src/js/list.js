@@ -1204,9 +1204,12 @@ var Record = openerp.base.Class.extend(/** @lends Record# */{
      * @returns {Record}
      */
     set: function (key, value) {
+        if (this.attributes[key] === value) {
+            return this;
+        }
         this.attributes[key] = value;
         this.trigger('change:' + key, this, value);
-        this.trigger('change', this);
+        this.trigger('change', this, key, value);
         return this;
     },
     /**
