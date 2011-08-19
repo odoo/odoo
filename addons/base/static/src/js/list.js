@@ -435,7 +435,9 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
         }
         var self = this;
         return $.when(this.dataset.unlink(ids)).then(function () {
-            self.groups.drop_records(ids);
+            _(ids).each(function (id) {
+                self.records.remove(self.records.get(id));
+            });
             self.compute_aggregates();
         });
     },
@@ -627,6 +629,14 @@ openerp.base.ListView.List = openerp.base.Class.extend( /** @lends openerp.base.
         this.dataset = opts.dataset;
         this.records = opts.records;
 
+        this.records.bind('remove', function (event, record) {
+            var $row = self.$current.find('[data-id=' + record.get('id') + ']');
+            var index = $row.data('index');
+            $row.nextAll().each(function (row) {
+                $(row).data('index', index++);
+            });
+            $row.remove();
+        });
         this.records.bind('reset', $.proxy(this, 'on_records_reset'));
         this.records.bind('change', function (event, record) {
             var $row = self.$current.find('[data-id=' + record.get('id') + ']');
@@ -769,18 +779,7 @@ openerp.base.ListView.List = openerp.base.Class.extend( /** @lends openerp.base.
             row_index: record_index,
             render_cell: openerp.base.format_cell
         });
-    },
-    /**
-     * Stops displaying the records matching the provided ids.
-     *
-     * @param {Array} ids identifiers of the records to remove
-     */
-    drop_records: function (ids) {
-        for(var i=ids.length-1; i>=0; --i) {
-            this.records.remove(this.records.get(ids[i]));
-        }
     }
-    // drag and drop
 });
 openerp.base.ListView.Groups = openerp.base.Class.extend( /** @lends openerp.base.ListView.Groups# */{
     passtrough_events: 'action deleted row_link',
@@ -1129,19 +1128,6 @@ openerp.base.ListView.Groups = openerp.base.Class.extend( /** @lends openerp.bas
                 return child.get_records();
             }).flatten().value();
     },
-    /**
-     * Stops displaying the records with the linked ids, assumes these records
-     * were deleted from the DB.
-     *
-     * This is the up-signal from the `deleted` event on groups and lists.
-     *
-     * @param {Array} ids list of identifier of the records to remove.
-     */
-    drop_records: function (ids) {
-        _.each(this.children, function (child) {
-            child.drop_records(ids);
-        });
-    }
 });
 
 /**
@@ -1356,8 +1342,14 @@ var Collection = openerp.base.Class.extend(/** @lends Collection# */{
      * @returns this
      */
     remove: function (record) {
+        var self = this;
         var index = _(this.records).indexOf(record);
-        if (index === -1) { return this; }
+        if (index === -1) {
+            _(this._proxies).each(function (proxy) {
+                proxy.remove(record);
+            });
+            return this;
+        }
 
         this.records.splice(index, 1);
         delete this._byId[record.get('id')];
