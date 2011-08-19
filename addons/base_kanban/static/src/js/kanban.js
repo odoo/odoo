@@ -12,7 +12,6 @@ openerp.base_kanban.KanbanView = openerp.base.View.extend({
         this.model = this.dataset.model;
         this.view_id = view_id;
         this.group_by = [];
-        this.group_by_field = false;
         this.source_index = {};
         this.all_display_data = false;
         this.groups = [];
@@ -192,7 +191,7 @@ openerp.base_kanban.KanbanView = openerp.base.View.extend({
                 }
             });
         }
-        if (self.group_by_field && self.source_index.column && self.source_index.column != ui.item.parent().attr('id')) {
+        if (self.group_by.length > 0 && self.source_index.column && self.source_index.column != ui.item.parent().attr('id')) {
             var value = ui.item.closest("td").attr("id");
             if (value) {
                 var data_val = {};
@@ -205,7 +204,7 @@ openerp.base_kanban.KanbanView = openerp.base.View.extend({
                 _.each(self.all_display_data, function(data, index) {
                     _.each(data.records, function(record, index_row) {
                         if(parseInt(record.id) == wirte_id) {
-                            self.all_display_data[index]['records'][index_row][self.group_by_field] = value;
+                            self.all_display_data[index]['records'][index_row][self.group_by[0]] = value;
                             update_record = self.all_display_data[index]['records'].splice(index_row,1)
                             return false;
                         }
@@ -217,7 +216,7 @@ openerp.base_kanban.KanbanView = openerp.base.View.extend({
                         self.all_display_data[index]['records'].push(update_record[0]);
                     }
                 });
-                data_val[self.group_by_field] = value;
+                data_val[self.group_by[0]] = value;
                 self.dataset.write(wirte_id, data_val);
                 search_action = true;
             }
@@ -274,17 +273,13 @@ openerp.base_kanban.KanbanView = openerp.base.View.extend({
     },
     do_actual_search : function () {
         var self = this;
-        self.group_by_field = false;
         self.datagroup = new openerp.base.DataGroup(self, self.model, self.domain, self.context, self.group_by || []);
         self.dataset.context = self.context;
         self.dataset.domain = self.domain;
         self.datagroup.list([],
             function (groups) {
                 self.groups = groups;
-                if (self.group_by.length >= 1) {
-                    self.group_by_field = self.group_by[0].group_by;
-                    self.do_render_group(groups);
-                }
+                self.do_render_group(groups);
             },
             function (dataset) {
                 self.domain = dataset.domain;
