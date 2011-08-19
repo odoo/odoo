@@ -190,17 +190,17 @@ class project_issue(crm.crm_case, osv.osv):
                         select=True, help='Sales team to which Case belongs to.\
                              Define Responsible user and Email account for mail gateway.'),
         'user_id': fields.related('project_id', 'user_id', type='many2one', relation='res.users', store=True, select=1, string='Responsible'),
-        'partner_id': fields.many2one('res.partner', 'Partner'),
+        'partner_id': fields.many2one('res.partner', 'Partner', select=1),
         'partner_address_id': fields.many2one('res.partner.address', 'Partner Contact', \
                                  domain="[('partner_id','=',partner_id)]"),
         'company_id': fields.many2one('res.company', 'Company'),
         'description': fields.text('Description'),
-        'state': fields.selection([('draft', 'Draft'), ('open', 'To Do'), ('cancel', 'Cancelled'), ('done', 'Closed'),('pending', 'Pending'), ], 'State', size=16, readonly=True,
+        'state': fields.selection([('draft', 'New'), ('open', 'To Do'), ('cancel', 'Cancelled'), ('done', 'Closed'),('pending', 'Pending'), ], 'State', size=16, readonly=True,
                                   help='The state is set to \'Draft\', when a case is created.\
                                   \nIf the case is in progress the state is set to \'Open\'.\
                                   \nWhen the case is over, the state is set to \'Done\'.\
                                   \nIf the case needs to be reviewed then the state is set to \'Pending\'.'),
-        'email_from': fields.char('Email', size=128, help="These people will receive email."),
+        'email_from': fields.char('Email', size=128, help="These people will receive email.", select=1),
         'email_cc': fields.char('Watchers Emails', size=256, help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma"),
         'date_open': fields.datetime('Opened', readonly=True,select=True),
         # Project Issue fields
@@ -211,7 +211,7 @@ class project_issue(crm.crm_case, osv.osv):
         'categ_id': fields.many2one('crm.case.categ', 'Category', domain="[('object_id.model', '=', 'crm.project.bug')]"),
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),
         'version_id': fields.many2one('project.issue.version', 'Version'),
-        'partner_name': fields.char("Employee's Name", size=64),
+        'partner_name': fields.char("Partner Name", size=64),
         'partner_mobile': fields.char('Mobile', size=32),
         'partner_phone': fields.char('Phone', size=32),
         'type_id': fields.many2one ('project.task.type', 'Resolution', domain="[('project_ids', '=', project_id)]"),
