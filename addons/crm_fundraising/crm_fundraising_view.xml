@@ -6,24 +6,6 @@
             groups="base.group_extended"
             parent="base.menu_base_config" sequence="8" />
 
-        <!-- Fund Stage Search view -->
-
-        <record id="fund_stage_search" model="ir.ui.view">
-            <field name="name">Fund Stage - Search</field>
-            <field name="model">crm.case.stage</field>
-            <field name="type">search</field>
-            <field name="inherit_id" ref="crm.crm_lead_stage_search"/>
-            <field name="arch" type="xml">
-                <data>
-                    <xpath expr="//field[@name='name']" position="before">
-                        <filter icon="terp-dolar" name="fundraising"
-                            string="Fundraising" domain="[('section_ids', '=', section_id)]"/>
-                    </xpath>
-                </data>
-            </field>
-        </record>
-
-
         <!-- Fund Raising Categories Form View -->
 
         <record id="crm_fund_categ_action" model="ir.actions.act_window">
@@ -33,7 +15,6 @@
             <field name="view_id" ref="crm.crm_case_categ_tree-view"/>
             <field name="domain">[('object_id.model', '=', 'crm.fundraising')]</field>
             <field name="context">{'object_id':'crm.fundraising'}</field>
-            <field name="search_view_id" ref="fund_stage_search"/>
             <field name="help">Manage and define the fund raising categories you want to be maintained in the system.</field>
         </record>
 

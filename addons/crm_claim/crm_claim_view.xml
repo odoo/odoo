@@ -21,23 +21,6 @@
         <menuitem action="crm_claim_categ_action" name="Categories"
             id="menu_crm_case_claim-act" parent="menu_config_claim" />
 
-        <!-- Claim Stage Search view -->
-
-        <record id="claim_stage_search" model="ir.ui.view">
-            <field name="name">Claim Stage - Search</field>
-            <field name="model">crm.case.stage</field>
-            <field name="type">search</field>
-            <field name="inherit_id" ref="crm.crm_lead_stage_search"/>
-            <field name="arch" type="xml">
-                <data>
-                    <xpath expr="//field[@name='name']" position="before">
-                        <filter icon="terp-personal-" name="claim"
-                            string="Claim" domain="[('section_ids', '=', section_id)]"/>
-                    </xpath>
-                </data>
-            </field>
-        </record>
-
         <!-- Claim Stages -->
 
         <record id="crm_claim_stage_act" model="ir.actions.act_window">
@@ -45,7 +28,6 @@
             <field name="res_model">crm.case.stage</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="crm.crm_case_stage_tree"/>
-            <field name="search_view_id" ref="claim_stage_search"/>
             <field name="context">{'search_default_claim':1}</field>
             <field name="help">You can create claim stages to categorize the status of every claim entered in the system. The stages define all the steps required for the resolution of a claim.</field>
         </record>
