@@ -342,6 +342,7 @@ openerp.base.ViewManagerAction = openerp.base.ViewManager.extend({
     shortcut_add_remove: function() {
         var self = this;
         var $shortcut_toggle = this.$element.find('.oe-shortcut-toggle');
+        $shortcut_toggle.unbind("click").click();
         $shortcut_toggle.click(function() {
             if ($shortcut_toggle.hasClass("oe-shortcut-remove")) {
                 $(self.session.shortcuts.binding).trigger('remove-current');

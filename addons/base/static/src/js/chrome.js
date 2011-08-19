@@ -584,13 +584,17 @@ openerp.base.Header =  openerp.base.Widget.extend({
             sc.binding = {};
             $(sc.binding).bind({
                 'add': function (e, attrs) {
-                    var $shortcut = $('<li>', {
-                            'data-id': attrs.res_id
+                    shortcuts_ds.create(attrs, function (out) {
+                        var $shortcut = $('<li>', {
+                        'data-shortcut-id':out.result,
+                        'data-id': attrs.res_id
                         }).text(attrs.name)
                         .appendTo(self.$element.find('.oe-shortcuts ul'));
-                    shortcuts_ds.create(attrs, function (out) {
-                        $shortcut.data('shortcut-id', out.result);
+                        attrs.id = out.result;
+                        sc.splice(sc.lenght,0,attrs);
+                        sc.push.apply(sc);
                     });
+                    
                 },
                 'remove-current': function () {
                     var menu_id = self.session.active_id;
@@ -599,6 +603,9 @@ openerp.base.Header =  openerp.base.Widget.extend({
                     var shortcut_id = $shortcut.data('shortcut-id');
                     $shortcut.remove();
                     shortcuts_ds.unlink([shortcut_id]);
+                    sc1 = _.reject(sc, function(shortcut){ return shortcut_id === shortcut.id});
+                    sc.splice(0, sc.length);
+                    sc.push.apply(sc ,sc1);
                 }
             });
         }
@@ -609,6 +616,7 @@ openerp.base.Header =  openerp.base.Widget.extend({
             self.$element.find('.oe-shortcuts')
                 .html(QWeb.render('Shortcuts', {'shortcuts': shortcuts}))
                 .undelegate('li', 'click')
+
                 .delegate('li', 'click', function(e) {
                     e.stopPropagation();
                     var id = $(this).data('id');
