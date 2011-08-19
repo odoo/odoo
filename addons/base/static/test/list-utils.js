@@ -65,6 +65,28 @@ $(document).ready(function () {
 
         ok(triggered);
     });
+    test('Unbind all handlers', function () {
+        var e = create(openerp.base.list.Events), passed = 0;
+        e.bind('foo', function () { passed++; });
+        e.trigger('foo');
+        strictEqual(passed, 1);
+        e.unbind('foo');
+        e.trigger('foo');
+        strictEqual(passed, 1);
+    });
+    test('Unbind one handler', function () {
+        var e = create(openerp.base.list.Events), p1 = 0, p2 = 0,
+            h1 = function () { p1++; }, h2 = function () { p2++; };
+        e.bind('foo', h1);
+        e.bind('foo', h2);
+        e.trigger('foo');
+        strictEqual(p1, 1);
+        strictEqual(p2, 1);
+        e.unbind('foo', h1);
+        e.trigger('foo');
+        strictEqual(p1, 1);
+        strictEqual(p2, 2);
+    });
 
     module('list-records', {
         setup: function () {

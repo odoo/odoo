@@ -629,19 +629,24 @@ openerp.base.ListView.List = openerp.base.Class.extend( /** @lends openerp.base.
         this.dataset = opts.dataset;
         this.records = opts.records;
 
-        this.records.bind('remove', function (event, record) {
-            var $row = self.$current.find('[data-id=' + record.get('id') + ']');
-            var index = $row.data('index');
-            $row.nextAll().each(function (row) {
-                $(row).data('index', index++);
-            });
-            $row.remove();
-        });
-        this.records.bind('reset', $.proxy(this, 'on_records_reset'));
-        this.records.bind('change', function (event, record) {
-            var $row = self.$current.find('[data-id=' + record.get('id') + ']');
-            $row.replaceWith(self.render_record($row.data('index')));
-        });
+        this.record_callbacks = {
+            'remove': function (event, record) {
+                var $row = self.$current.find('[data-id=' + record.get('id') + ']');
+                var index = $row.data('index');
+                $row.nextAll().each(function (row) {
+                    $(row).data('index', index++);
+                });
+                $row.remove();
+            },
+            'reset': $.proxy(this, 'on_records_reset'),
+            'change': function (event, record) {
+                var $row = self.$current.find('[data-id=' + record.get('id') + ']');
+                $row.replaceWith(self.render_record($row.data('index')));
+            }
+        };
+        _(this.record_callbacks).each(function (callback, event) {
+            this.records.bind(event, callback);
+        }, this);
 
         this.$_element = $('<tbody class="ui-widget-content">')
             .appendTo(document.body)
@@ -729,7 +734,10 @@ openerp.base.ListView.List = openerp.base.Class.extend( /** @lends openerp.base.
     /**
      * Death signal, cleans up list display
      */
-    on_records_reset: function (ev, records) {
+    on_records_reset: function () {
+        _(this.record_callbacks).each(function (callback, event) {
+            this.records.unbind(event, callback);
+        }, this);
         if (!this.$current) { return; }
         this.$current.remove();
         this.$current = null;
@@ -1127,7 +1135,7 @@ openerp.base.ListView.Groups = openerp.base.Class.extend( /** @lends openerp.bas
             .map(function (child) {
                 return child.get_records();
             }).flatten().value();
-    },
+    }
 });
 
 /**
@@ -1147,6 +1155,24 @@ var Events = {
             calls[event].push(handler);
         } else {
             calls[event] = [handler];
+        }
+        return this;
+    },
+    /**
+     * @param {String} event event to unbind on the current object
+     * @param {function} [handler] specific event handler to remove (otherwise unbind all handlers for the event)
+     * @returns this
+     */
+    unbind: function (event, handler) {
+        var calls = this._callbacks || {};
+        if (!(event in calls)) { return this; }
+        if (!handler) {
+            delete calls[event];
+        } else {
+            var handlers = calls[event];
+            handlers.splice(
+                _(handlers).indexOf(handler),
+                1);
         }
         return this;
     },
