@@ -40,10 +40,6 @@ openerp.web_mobile.Login =  openerp.base.Widget.extend({
             var selection = new openerp.web_mobile.Selection();
             self.db_list = result.db_list;
             self.$element.html(QWeb.render("Login", self));
-            self.$element.find('#database').prev().find(".ui-btn-text").html($('#database').find("option:selected").text());
-            self.$element.find('#database').change(function(ev){
-                selection.on_select_option(ev);
-            });
             self.$element.find("#login").click(self.on_login);
             $.mobile.initializePage();
         });
@@ -78,9 +74,7 @@ openerp.web_mobile.Login =  openerp.base.Widget.extend({
             .removeClass("login_invalid")
             .addClass("login_valid");
             //.hide();
-        this.header = new openerp.web_mobile.Header(this, "oe_header");
         this.homepage = new openerp.web_mobile.HomePage(this, "oe_app");
-        this.header.start();
         this.homepage.start();
     },
     do_ask_login: function(continuation) {
@@ -99,9 +93,11 @@ openerp.web_mobile.HomePage =  openerp.base.Widget.extend({
     },
     start: function() {
         this.$element.html(QWeb.render("HomePage", {}));
+        this.header = new openerp.web_mobile.Header(this, "oe_header");
         this.shortcuts = new openerp.web_mobile.Shortcuts(this, "oe_shortcuts");
         this.menu = new openerp.web_mobile.Menu(this, "oe_menu", "oe_secondary_menu");
         this.options = new openerp.web_mobile.Options(this, "oe_options");
+        this.header.start();
         this.shortcuts.start();
         this.menu.start();
         this.options.start();
@@ -115,8 +111,9 @@ openerp.web_mobile.Header =  openerp.base.Widget.extend({
         this._super(session, element_id);
     },
     start: function() {
-        this.$element.html(QWeb.render("Header", this));
-        this.$element.find("a").click(this.on_clicked);
+        var self = this;
+        self.$element.html(QWeb.render("Header", this));
+        self.$element.find("a").click(this.on_clicked);
     },
     on_clicked: function(ev) {
         $opt = $(ev.currentTarget);
@@ -230,8 +227,8 @@ openerp.web_mobile.Options =  openerp.base.Widget.extend({
     },
     on_logout: function(ev) {
         this.session.logout();
-        this.login = new openerp.web_mobile.Login(this, "oe_app");
-        this.login.start();
+//        this.login = new openerp.web_mobile.Login(this, "oe_app");
+//        this.login.start();
     }
 });
 

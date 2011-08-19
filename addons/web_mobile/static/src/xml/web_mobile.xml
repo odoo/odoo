@@ -4,47 +4,27 @@
 <templates id="template" xml:space="preserve">
 
 <t t-name="WebClient">
-    <div class="ui-page ui-body-c ui-page-active" data-role="page">
+    <div data-role="page">
         <div id="oe_header"></div>
         <div id="oe_app"></div>
     </div>
 </t>
 
-<t t-name="Header">
-     <div role="banner" class="ui-bar-b ui-header" data-role="header" data-theme="b">
-        <h1 aria-level="1" role="heading" tabindex="0" class="ui-title">OpenERP</h1>
-        <a id="home" class="ui-btn-right jqm-home ui-btn ui-btn-icon-notext ui-btn-corner-all ui-shadow ui-btn-up-b" data-direction="reverse" data-iconpos="notext" data-icon="home" href="#" title="Home" data-theme="b">
-            <span class="ui-btn-inner ui-btn-corner-all">
-                <span class="ui-btn-text">Home</span>
-                <span class="ui-icon ui-icon-home ui-icon-shadow"></span>
-            </span>
-        </a>
-    </div>
-</t>
-
 <t t-name="Login">
-     <div role="banner" class="ui-bar-b ui-header" data-role="header" data-theme="b">
+     <div data-role="header" data-theme="b">
         <h1 aria-level="1" role="heading" tabindex="0" class="ui-title">OpenERP</h1>
     </div>
-    <div role="main" class="ui-content" data-role="content">
+    <div data-role="content">
         <fieldset>
-            <div class="ui-field-contain ui-body ui-br" data-role="fieldcontain">
-                <label for="database" class="select ui-select">Database:</label>
-                <div class="ui-select">
-                    <div data-theme="c" class="ui-btn ui-btn-icon-right ui-btn-corner-all ui-shadow ui-btn-up-c">
-                    <span class="ui-btn-inner ui-btn-corner-all">
-                        <span id="db_text" class="ui-btn-text"></span>
-                        <span class="ui-icon ui-icon-arrow-d ui-icon-shadow"></span>
-                    </span>
-                    <select id="database" name="database">
-                        <t t-if="db_list">
+            <div data-role="fieldcontain">
+                <label for="database" class="select">Database:</label>
+                <select id="database" name="database" data-native-menu="false">
+                    <t t-if="db_list">
                         <t t-foreach="db_list" t-as="opt">
                             <option t-att-value="opt"><t t-esc="opt"/></option>
                         </t>
-                        </t>
-                    </select>
-                    </div>
-                </div>
+                    </t>
+                </select>
                 <label class="ui-input-text" for="name">Login:</label>
                 <input class="ui-input-text ui-body-null ui-corner-all ui-shadow-inset ui-body-c" type="text" name="login" value=""/><br/>
                 <label class="ui-input-text" for="name">Password:</label>
@@ -68,6 +48,18 @@
         <div id="oe_menu" class="menu"></div>
         <div id="oe_options" class="options"></div>
     </div>
+</t>
+
+<t t-name="Header">
+<div role="banner" class="ui-bar-b ui-header" data-role="header" data-theme="b">
+        <h1 aria-level="1" role="heading" tabindex="0" class="ui-title">OpenERP</h1>
+        <a id="home" class="ui-btn-right jqm-home ui-btn ui-btn-icon-notext ui-btn-corner-all ui-shadow ui-btn-up-b" data-direction="reverse" data-iconpos="notext" data-icon="home" href="#" title="Home" data-theme="b">
+            <span class="ui-btn-inner ui-btn-corner-all">
+                <span class="ui-btn-text">Home</span>
+                <span class="ui-icon ui-icon-home ui-icon-shadow"></span>
+            </span>
+        </a>
+</div>
 </t>
 
 <t t-name="Shortcuts">
