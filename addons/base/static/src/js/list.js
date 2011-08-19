@@ -338,9 +338,7 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
             this.sidebar.$element.show();
         }
         if (this.hidden) {
-            this.$element.find('.oe-listview-content').append(
-                this.groups.apoptosis().render());
-            this.hidden = false;
+            this.reload_content();
         }
     },
     do_hide: function () {
@@ -378,7 +376,7 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
     reload_content: function () {
         this.records.reset();
         this.$element.find('.oe-listview-content').append(
-            this.groups.apoptosis().render(
+            this.groups.render(
                 $.proxy(this, 'compute_aggregates')));
     },
     /**
@@ -626,6 +624,8 @@ openerp.base.ListView.List = openerp.base.Class.extend( /** @lends openerp.base.
         this.dataset = opts.dataset;
         this.records = opts.records;
 
+        this.records.bind('reset', $.proxy(this, 'on_records_reset'));
+
         this.$_element = $('<tbody class="ui-widget-content">')
             .appendTo(document.body)
             .delegate('th.oe-record-selector', 'click', function (e) {
@@ -710,9 +710,9 @@ openerp.base.ListView.List = openerp.base.Class.extend( /** @lends openerp.base.
         return this.records.at(this.row_position(row)).get('id');
     },
     /**
-     * Death signal, cleans up list
+     * Death signal, cleans up list display
      */
-    apoptosis: function () {
+    on_records_reset: function (ev, records) {
         if (!this.$current) { return; }
         this.$current.remove();
         this.$current = null;
@@ -811,6 +811,8 @@ openerp.base.ListView.Groups = openerp.base.Class.extend( /** @lends openerp.bas
         this.children = {};
 
         this.page = 0;
+
+        this.records.bind('reset', $.proxy(this, 'on_records_reset'));
     },
     make_fragment: function () {
         return document.createDocumentFragment();
@@ -871,7 +873,7 @@ openerp.base.ListView.Groups = openerp.base.Class.extend( /** @lends openerp.bas
     },
     close: function () {
         this.$row.children().last().empty();
-        this.apoptosis();
+        this.records.reset();
     },
     /**
      * Prefixes ``$node`` with floated spaces in order to indent it relative
@@ -892,7 +894,7 @@ openerp.base.ListView.Groups = openerp.base.Class.extend( /** @lends openerp.bas
         var placeholder = this.make_fragment();
         _(datagroups).each(function (group) {
             if (self.children[group.value]) {
-                self.children[group.value].apoptosis();
+                self.records.proxy(group.value).reset();
                 delete self.children[group.value];
             }
             var child = self.children[group.value] = new openerp.base.ListView.Groups(self.view, {
@@ -1025,7 +1027,7 @@ openerp.base.ListView.Groups = openerp.base.Class.extend( /** @lends openerp.bas
                             .attr('disabled', page === pages - 1);
                 }
 
-                self.records.reset(records);
+                self.records.add(records);
                 list.render();
                 d.resolve(list);
             });
@@ -1113,14 +1115,9 @@ openerp.base.ListView.Groups = openerp.base.Class.extend( /** @lends openerp.bas
 
         return {ids: ids, records: records};
     },
-    apoptosis: function () {
-        _(this.children).each(function (child) {
-            child.apoptosis();
-        });
+    on_records_reset: function () {
         this.children = {};
         $(this.elements).remove();
-        this.records.reset();
-        return this;
     },
     get_records: function () {
         if (_(this.children).isEmpty()) {
@@ -1368,6 +1365,8 @@ var Collection = openerp.base.Class.extend(/** @lends Collection# */{
     },
 
     _onRecordEvent: function (event, record, options) {
+        // don't propagate reset events
+        if (event === 'reset') { return; }
         this.trigger.apply(this, arguments);
     },
 
