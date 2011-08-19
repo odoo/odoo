@@ -11,6 +11,7 @@ openerp.base_kanban.KanbanView = openerp.base.View.extend({
         this.context = dataset.context;
         this.model = this.dataset.model;
         this.view_id = view_id;
+        this.group_by = [];
         this.group_by_field = false;
         this.source_index = {};
         this.all_display_data = false;
@@ -134,7 +135,7 @@ openerp.base_kanban.KanbanView = openerp.base.View.extend({
                     self.dataset.read_ids( data.ids, [], function(records){
                         self.all_display_data[index].records = records;
                         if(self.all_display_data.length == count) {
-                            self.on_reload_kanban();
+                            self.do_actual_search();
                         }
                         count++;
                     });
@@ -161,11 +162,11 @@ openerp.base_kanban.KanbanView = openerp.base.View.extend({
                 if (record_id) {
                     _.each(self.all_display_data, function(data, index) {
                         _.each(data.records, function(record, index_row) {
-	                        if(record_id == record.id && record.sequence) {
-	                            sequence = record.sequence;
-	                            flag = true;
-	                            return false;
-	                        }
+                            if(record_id == record.id && record.sequence) {
+                                sequence = record.sequence;
+                                flag = true;
+                                return false;
+                            }
                         });
                         if(flag) {return false;}
                     });
@@ -265,31 +266,37 @@ openerp.base_kanban.KanbanView = openerp.base.View.extend({
             contexts: contexts,
             group_by_seq: group_by
         }, function (results) {
-            self.group_by_field = false;
-            self.datagroup = new openerp.base.DataGroup(self, self.model, results.domain, results.context, results.group_by || []);
-            self.dataset.context = results.context;
-            self.dataset.domain = results.domain;
-            self.datagroup.list([],
-                function (groups) {
-                    self.groups = groups;
-                    if (group_by.length >= 1) {
-                        self.group_by_field = group_by[0].group_by;
-                        self.do_render_group(groups);
-                    }
-                },
-                function (dataset) {
-                    self.domain = dataset.domain;
-                    self.context = dataset.context;
-                    self.groups = [];
-                    self.dataset.read_slice([], {}, function(records) {
-                        self.all_display_data = [{'records': records, 'value':false, 'header' : false, 'ids': self.dataset.ids}];
-                        self.$element.find("#kanbanview").remove();
-                        self.on_show_data(self.all_display_data);
-                    });
-                }
-            );
-
+            self.domain = results.domain;
+            self.context = results.context;
+            self.group_by = results.group_by;
+            self.do_actual_search();
         });
+    },
+    do_actual_search : function () {
+        var self = this;
+        self.group_by_field = false;
+        self.datagroup = new openerp.base.DataGroup(self, self.model, self.domain, self.context, self.group_by || []);
+        self.dataset.context = self.context;
+        self.dataset.domain = self.domain;
+        self.datagroup.list([],
+            function (groups) {
+                self.groups = groups;
+                if (self.group_by.length >= 1) {
+                    self.group_by_field = self.group_by[0].group_by;
+                    self.do_render_group(groups);
+                }
+            },
+            function (dataset) {
+                self.domain = dataset.domain;
+                self.context = dataset.context;
+                self.groups = [];
+                self.dataset.read_slice([], {}, function(records) {
+                    self.all_display_data = [{'records': records, 'value':false, 'header' : false, 'ids': self.dataset.ids}];
+                    self.$element.find("#kanbanview").remove();
+                    self.on_show_data(self.all_display_data);
+                });
+            }
+        );
     },
     do_render_group : function (datagroups) {
         this.all_display_data = [];
