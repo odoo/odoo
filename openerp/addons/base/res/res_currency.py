@@ -118,17 +118,17 @@ class res_currency(osv.osv):
 
         return to_currency.rate/from_currency.rate
 
-    def compute(self, cr, uid, from_currency_id, to_currency_id, from_amount, round=True, rate_type=False, context=None):
+    def compute(self, cr, uid, from_currency_id, to_currency_id, from_amount,
+                round=True, currency_rate_type_from=False, currency_rate_type_to=False, context=None):
         if not from_currency_id:
             from_currency_id = to_currency_id
         if not to_currency_id:
             to_currency_id = from_currency_id
 
-        if rate_type:
-            context.update({'currency_rate_type_id': rate_type})
-        xc = self.browse(cr, uid, [from_currency_id,to_currency_id], context=context)
+        xc = self.browse(cr, uid, [from_currency_id], context={'currency_rate_type_id': currency_rate_type_from})
+        xc1 = self.browse(cr, uid, [to_currency_id], context={'currency_rate_type_id': currency_rate_type_to})
         from_currency = (xc[0].id == from_currency_id and xc[0]) or xc[1]
-        to_currency = (xc[0].id == to_currency_id and xc[0]) or xc[1]
+        to_currency = (xc1[0].id == to_currency_id and xc1[0]) or xc1[1]
         if to_currency_id == from_currency_id:
             if round:
                 return self.round(cr, uid, to_currency, from_amount)
