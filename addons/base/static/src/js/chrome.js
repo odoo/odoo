@@ -572,6 +572,7 @@ openerp.base.Header =  openerp.base.Widget.extend({
     do_update: function () {
         this.$element.html(QWeb.render("Header", this));
         this.$element.find(".logout").click(this.on_logout);
+        this.$element.find("a.preferences").click(this.on_preferences);
         return this.shortcut_load();
     },
     shortcut_load :function(){
@@ -621,9 +622,98 @@ openerp.base.Header =  openerp.base.Widget.extend({
                 });
         });
     },
+    
     on_action: function(action) {
     },
-
+    on_preferences: function(){
+        var self = this;
+        var action_manager = new openerp.base.ActionManager(this);
+        this.rpc('/base/dataset/call', {model: 'res.users',method:"action_get",args: []},function(result){
+            self.rpc('/base/action/load', { action_id: result}, function(result){
+                result['result']['res_id'] = self.session.uid;
+                result['result']['res_model']= 'res.users';
+                result['result']['view_id']=result['result']['views'][0][0];
+                result['result']['flags']['action_buttons']=false;
+                result['result']['flags']['search_view']=false;
+                result['result']['flags']['sidebar']=false;
+                result['result']['view_mode']="form";
+                result['result']['flags']['views_switcher']=false;
+                result['result']['flags']['pager']=false;
+                action_manager.do_action(result['result']);
+            });
+     });
+        this.dialog = new openerp.base.Dialog(this,{
+            modal: true,
+            title: 'Preferences',
+            width: 600,
+            height: 500,
+            buttons: {
+                "Change password": function(){
+                    self.change_password();
+            },
+                Cancel: function(){
+                     $(this).dialog('destroy');
+            },
+                Save: function(){
+                    var inner_viewmanager = action_manager.inner_viewmanager;
+                    inner_viewmanager.views[inner_viewmanager.active_view].controller.do_save(function(){
+                        inner_viewmanager.start();
+                    });
+                    $(this).dialog('destroy');
+                },
+            },
+        });
+       this.dialog.start();
+       this.dialog.open();
+       action_manager.appendTo(this.dialog);
+       action_manager.render(this.dialog);
+    },
+    
+    change_password :function() {
+        var self = this;
+        this.dialog = new openerp.base.Dialog(this,{
+            modal : true,
+            title : 'Change Password',
+            width : 'auto',
+            height : 'auto',
+        });
+        this.dialog.start();
+        this.dialog.open();
+        this.dialog.$element.html(QWeb.render("Change_Pwd", self));
+        this.dialog.$element.find("form[name=change_password_form]").validate({
+            messages: {
+                old_password: "Please enter your previous password",
+                new_password: "Please enter your new password",
+                confirm_password: {
+                    required: "Please confirm your new password",
+                    equalTo: "The confirmation does not match the password"
+                },
+            },
+            submitHandler: function (form) {
+                self.rpc("/base/session/change_password",{
+                    'fields': $("form[name=change_password_form]").serializeArray()
+                }, function(result) {
+                    if (result.error) {
+                        self.display_error(result);
+                        return;
+                    }
+                    self.notification.notify("Changed Password", "Password has been changed successfully");
+                    self.dialog.close();
+                });
+            },
+        });
+},
+    display_error: function (error) {
+        return $('<div>').dialog({
+            modal: true,
+            title: error.title,
+            buttons: {
+                Ok: function() {
+                    $(this).dialog("close");
+                }
+            }
+        }).html(error.error);
+    },
     on_logout: function() {
         this.$element.find('.oe-shortcuts ul').empty();
     }

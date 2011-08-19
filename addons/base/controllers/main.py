@@ -278,7 +278,7 @@ class Database(openerpweb.Controller):
         except xmlrpclib.Fault, e:
             if e.faultCode and e.faultCode.split(':')[0] == 'AccessDenied':
                 return {'error': e.faultCode, 'title': 'Change Password'}
-        return {'error': 'Error, password not changed !', 'title': 'Change Password'}
+                return {'error': 'Error, password not changed !', 'title': 'Change Password'}
 
 class Session(openerpweb.Controller):
     _cp_path = "/base/session"
@@ -293,7 +293,19 @@ class Session(openerpweb.Controller):
             "uid": req.session._uid,
             "context": ctx
         }
-
+    @openerpweb.jsonrequest
+    def change_password (self,req,fields):
+        old_password, new_password,confirm_password = operator.itemgetter('old_pwd', 'new_pwd','confirm_pwd')(
+                dict(map(operator.itemgetter('name', 'value'), fields)))
+        try:
+            if req.session.model('res.users').change_password(
+                old_password, new_password):
+                req.session.password = new_password
+            return dict(changed=True)
+            raise redirect('/')
+        except xmlrpclib.Fault, e:
+            return {'error': 'Original password incorrect, your password was not changed.', 'title': 'Change Password'}
+            
     @openerpweb.jsonrequest
     def sc_list(self, req):
         return req.session.model('ir.ui.view_sc').get_sc(
