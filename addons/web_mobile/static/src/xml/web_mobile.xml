@@ -11,10 +11,10 @@
 </t>
 
 <t t-name="Login">
-     <div data-role="header" data-theme="b">
+     <div role="banner" data-role="header" data-theme="b">
         <h1 aria-level="1" role="heading" tabindex="0" class="ui-title">OpenERP</h1>
     </div>
-    <div data-role="content">
+    <div role="main" data-role="content">
         <fieldset>
             <div data-role="fieldcontain">
                 <label for="database" class="select">Database:</label>
@@ -29,11 +29,7 @@
                 <input class="ui-input-text ui-body-null ui-corner-all ui-shadow-inset ui-body-c" type="text" name="login" value=""/><br/>
                 <label class="ui-input-text" for="name">Password:</label>
                 <input class="ui-input-text ui-body-null ui-corner-all ui-shadow-inset ui-body-c" type="password" name="password" value=""/><br/>
-                <a id="login" class="ui-btn ui-btn-corner-all ui-shadow ui-btn-up-c" data-theme="c" href="#" data-role="button">
-                    <span class="ui-btn-inner ui-btn-corner-all">
-                        <span class="ui-btn-text">Login</span>
-                    </span>
-                </a>
+                <a id="login" data-theme="c" href="#" data-role="button">Login</a>
                 <div class="login_error_message ui-btn-inner ui-btn-corner-all">
                     <span class="ui-btn-text">Bad username or password</span>
                 </div>
@@ -51,7 +47,7 @@
 </t>
 
 <t t-name="Header">
-<div role="banner" class="ui-bar-b ui-header" data-role="header" data-theme="b">
+    <div role="banner" class="ui-bar-b ui-header" data-role="header" data-theme="b">
         <h1 aria-level="1" role="heading" tabindex="0" class="ui-title">OpenERP</h1>
         <a id="home" class="ui-btn-right jqm-home ui-btn ui-btn-icon-notext ui-btn-corner-all ui-shadow ui-btn-up-b" data-direction="reverse" data-iconpos="notext" data-icon="home" href="#" title="Home" data-theme="b">
             <span class="ui-btn-inner ui-btn-corner-all">
@@ -59,7 +55,7 @@
                 <span class="ui-icon ui-icon-home ui-icon-shadow"></span>
             </span>
         </a>
-</div>
+    </div>
 </t>
 
 <t t-name="Shortcuts">
