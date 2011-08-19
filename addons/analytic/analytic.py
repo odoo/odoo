@@ -217,16 +217,31 @@ class account_analytic_account(osv.osv):
         if partner:
             res['value']['partner_id'] = partner
         return res
-
-    def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=100):
-        if not args:
-            args=[]
+    
+    def search(self, cr, user, args, offset=0, limit=None, order=None, context=None, count=False):
         if context is None:
-            context={}
+            context = {}
         if context.get('current_model') == 'project.project':
             cr.execute("select analytic_account_id from project_project")
             project_ids = [x[0] for x in cr.fetchall()]
-            return self.name_get(cr, uid, project_ids, context=context)
+            args += [('id', 'in',project_ids)]
+        return super(account_analytic_account, self).search(cr, user, args, offset=offset, limit=limit, order=order,
+            context=context, count=count)
+
+    def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=100):
+        if not args:
+            args = []
+        if context is None:
+            context={}
+#        if context.get('current_model') == 'project.project':
+#            cr.execute("select analytic_account_id from project_project ")
+#            project_ids = [x[0] for x in cr.fetchall()]
+#            # We cannot return here with normal project_ids, the following process also has to be followed.
+#            # The search should consider the name inhere, earlier it was just bypassing it.
+#            # Hence, we added the args and let the below mentioned procedure do the trick
+#            # Let the search method manage this.
+#            args += [('id', 'in', project_ids)]
+#            return self.name_get(cr, uid, project_ids, context=context)
         account = self.search(cr, uid, [('code', '=', name)]+args, limit=limit, context=context)
         if not account:
             account = self.search(cr, uid, [('name', 'ilike', '%%%s%%' % name)]+args, limit=limit, context=context)
