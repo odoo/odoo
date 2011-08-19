@@ -131,7 +131,7 @@ class account_account_type(osv.osv):
     _name = "account.account.type"
     _description = "Account Type"
     _columns = {
-        'name': fields.char('Acc. Type Name', size=64, required=True),
+        'name': fields.char('Account Type', size=64, required=True),
         'code': fields.char('Code', size=32, required=True),
         'close_method': fields.selection([('none', 'None'), ('balance', 'Balance'), ('detail', 'Detail'), ('unreconciled', 'Unreconciled')], 'Deferral Method', required=True, help="""Set here the method that will be used to generate the end of year journal entries for all the accounts of this type.
 
@@ -358,13 +358,13 @@ class account_account(osv.osv):
             ('liquidity','Liquidity'),
             ('consolidation', 'Consolidation'),
             ('closed', 'Closed'),
-        ], 'Internal Type', required=True, help="This type is used to differentiate types with "\
-            "special effects in OpenERP: view can not have entries, consolidation are accounts that "\
+        ], 'Internal Type', required=True, help="The 'Internal Type' is used for features available on "\
+            "different types of accounts: view can not have journal items, consolidation are accounts that "\
             "can have children accounts for multi-company consolidations, payable/receivable are for "\
             "partners accounts (for debit/credit computations), closed for depreciated accounts."),
         'user_type': fields.many2one('account.account.type', 'Account Type', required=True,
-            help="These types are defined according to your country. The type contains more information "\
-            "about the account and its specificities."),
+            help="Account Type is used for information purpose, to generate "
+              "country-specific legal reports, and set the rules to close a fiscal year and generate opening entries."),
         'parent_id': fields.many2one('account.account', 'Parent', ondelete='cascade', domain=[('type','=','view')]),
         'child_parent_ids': fields.one2many('account.account','parent_id','Children'),
         'child_consol_ids': fields.many2many('account.account', 'account_account_consol_rel', 'child_id', 'parent_id', 'Consolidated Children'),
