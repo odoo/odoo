@@ -345,14 +345,11 @@ openerp.base_dashboard.ConfigOverview = openerp.base.View.extend({
 openerp.base.client_actions.add(
     'board.home.applications', 'openerp.base_dashboard.ApplicationTiles');
 openerp.base_dashboard.ApplicationTiles = openerp.base.View.extend({
-    init: function (parent, element_id) {
-        this._super(parent, element_id);
-        this.dataset = new openerp.base.DataSetSearch(
-                this, 'ir.ui.menu', null, [['parent_id', '=', false]]);
-    },
     start: function () {
         var self = this;
-        this.dataset.read_slice( ['name', 'web_icon_data', 'web_icon_hover_data'], {}, function (applications) {
+        return new openerp.base.DataSetSearch(
+                this, 'ir.ui.menu', null, [['parent_id', '=', false]])
+            .read_slice( ['name', 'web_icon_data', 'web_icon_hover_data'], {}, function (applications) {
                 // Create a matrix of 3*x applications
                 var rows = [];
                 while (applications.length) {
@@ -367,22 +364,18 @@ openerp.base_dashboard.ApplicationTiles = openerp.base.View.extend({
                             $this.closest('.openerp')
                                  .find('.menu a[data-menu=' + $this.data('menuid') + ']')
                                  .click();});
-        });
+            });
     }
 });
 openerp.base.client_actions.add(
     'board.home.widgets', 'openerp.base_dashboard.Widgets');
 openerp.base_dashboard.Widgets = openerp.base.View.extend({
-    init: function (parent, element_id) {
-        this._super(parent, element_id);
-        this.user_widgets = new openerp.base.DataSetSearch(
+    start: function () {
+        return new openerp.base.DataSetSearch(
                 this, 'res.widget.user', null,
                 ['|', ['user_id', '=', false],
-                      ['user_id', '=', parseInt(this.session.uid, 10)]]);
-        this.widgets = new openerp.base.DataSetSearch(this, 'res.widget');
-    },
-    start: function () {
-        this.user_widgets.read_slice(['widget_id', 'user_id'], {}, this.on_widgets_list_loaded);
+                      ['user_id', '=', parseInt(this.session.uid, 10)]])
+            .read_slice(['widget_id', 'user_id'], {}, this.on_widgets_list_loaded);
     },
     on_widgets_list_loaded: function (user_widgets) {
         var self = this;
@@ -394,18 +387,19 @@ openerp.base_dashboard.Widgets = openerp.base.View.extend({
                 user_widget_id: widget['id']
             };
         });
-        this.widgets.read_ids(_(user_widgets).pluck('widget_id'), ['title'], function (widgets) {
-            _(widgets).each(function (widget) {
-                _.extend(widget, widget_user[widget['id']]);
+        new openerp.base.DataSetSearch(this, 'res.widget')
+            .read_ids(_(user_widgets).pluck('widget_id'), ['title'], function (widgets) {
+                _(widgets).each(function (widget) {
+                    _.extend(widget, widget_user[widget['id']]);
+                });
+                var url = _.sprintf(
+                    '/base_dashboard/widgets/content?session_id=%s&widget_id=',
+                    self.session.session_id);
+                self.$element.html(QWeb.render('HomeWidgets', {
+                    widgets: widgets,
+                    url: url
+                }));
             });
-            var url = _.sprintf(
-                '/base_dashboard/widgets/content?session_id=%s&widget_id=',
-                self.session.session_id);
-            self.$element.html(QWeb.render('HomeWidgets', {
-                widgets: widgets,
-                url: url
-            }));
-        })
     }
 });
 };
