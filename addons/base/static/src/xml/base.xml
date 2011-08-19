@@ -563,7 +563,7 @@
     </t>
 </t>
 <tr t-name="ListView.row" t-att-class="row_parity"
-    t-att-data-index="row_index">
+    t-att-data-index="row_index" t-att-data-id="record.get('id')">
     <t t-foreach="columns" t-as="column">
         <td t-if="column.meta">
 

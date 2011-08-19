@@ -105,7 +105,7 @@ openerp.base.list.editable = function (openerp) {
             }
 
             if (this.edition_index !== null) {
-                this.reload_record(this.edition_index, true).then(function () {
+                this.reload_record(this.edition_index).then(function () {
                     cancelled.resolve();
                 });
             } else {

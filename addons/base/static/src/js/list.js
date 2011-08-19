@@ -42,6 +42,7 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
      * @borrows openerp.base.ActionExecutor#execute_action as #execute_action
      */
     init: function(parent, element_id, dataset, view_id, options) {
+        var self = this;
         this._super(parent, element_id);
         this.set_default_options(_.extend({}, this.defaults, options || {}));
         this.dataset = dataset;
@@ -59,6 +60,13 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
         }
 
         this.page = 0;
+        this.records.bind('change', function (event, record, key) {
+            if (!_(self.aggregate_columns).chain()
+                    .pluck('name').contains(key).value()) {
+                return;
+            }
+            self.compute_aggregates();
+        });
     },
     /**
      * Retrieves the view's number of records per page (|| section)
@@ -457,16 +465,11 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
      * @param {Function} callback should be called after the action is executed, if non-null
      */
     do_button_action: function (name, id, callback) {
-        var   self = this,
-            action = _.detect(this.columns, function (field) {
+        var action = _.detect(this.columns, function (field) {
             return field.name === name;
         });
         if (!action) { return; }
-        this.execute_action(action, this.dataset, id, function () {
-            $.when(callback.apply(this, arguments).then(function () {
-                self.compute_aggregates();
-            }));
-        });
+        this.execute_action(action, this.dataset, id, callback);
     },
     /**
      * Handles the activation of a record (clicking on it)
@@ -625,6 +628,10 @@ openerp.base.ListView.List = openerp.base.Class.extend( /** @lends openerp.base.
         this.records = opts.records;
 
         this.records.bind('reset', $.proxy(this, 'on_records_reset'));
+        this.records.bind('change', function (event, record) {
+            var $row = self.$current.find('[data-id=' + record.get('id') + ']');
+            $row.replaceWith(self.render_record($row.data('index')));
+        });
 
         this.$_element = $('<tbody class="ui-widget-content">')
             .appendTo(document.body)
@@ -648,7 +655,7 @@ openerp.base.ListView.List = openerp.base.Class.extend( /** @lends openerp.base.
                       index = self.row_position($row);
 
                 $(self).trigger('action', [field, record_id, function () {
-                    return self.reload_record(index, true);
+                    return self.reload_record(index);
                 }]);
             })
             .delegate('tr', 'click', function (e) {
@@ -707,7 +714,7 @@ openerp.base.ListView.List = openerp.base.Class.extend( /** @lends openerp.base.
      * @returns {Number|String} the identifier of the row's object
      */
     row_id: function (row) {
-        return this.records.at(this.row_position(row)).get('id');
+        return $(row).data('id');
     },
     /**
      * Death signal, cleans up list display
@@ -732,28 +739,20 @@ openerp.base.ListView.List = openerp.base.Class.extend( /** @lends openerp.base.
      * @param {Number} record_index index of the record to reload
      * @param {Boolean} fetch fetches the record from remote before reloading it
      */
-    reload_record: function (record_index, fetch) {
-        var self = this;
-        var read_p = null;
-        if (fetch) {
-            // save index to restore it later, if already set
-            var old_index = this.dataset.index;
-            this.dataset.index = record_index;
-            read_p = this.dataset.read_index(
-                _.pluck(_(this.columns).filter(function (r) {return r.tag === 'field';}), 'name'),
-                function (record) {
-                    var r = self.records.get(record.id);
-                    _(record).each(function (value, key) {
-                        r.set(key, value);
-                    });
-                    self.dataset.index = old_index;
-                }
-            )
-        }
+    reload_record: function (record_index) {
+        var r = this.records.at(record_index);
 
-        return $.when(read_p).then(function () {
-            self.$current.children().eq(record_index)
-                .replaceWith(self.render_record(record_index)); });
+        return this.dataset.read_ids(
+            [r.get('id')],
+            _.pluck(_(this.columns).filter(function (r) {
+                    return r.tag === 'field';
+                }), 'name'),
+            function (record) {
+                _(record[0]).each(function (value, key) {
+                    r.set(key, value);
+                });
+            }
+        );
     },
     /**
      * Renders a list record to HTML
@@ -1065,12 +1064,11 @@ openerp.base.ListView.Groups = openerp.base.Class.extend( /** @lends openerp.bas
                     // (exclusive lower bound)
                     seq = to ? list.records.at(to - 1).get('sequence') : 0;
                 while (++seq, record = list.records.at(index)) {
-                    record.set('sequence', seq);
                     // write are independent from one another, so we can just
                     // launch them all at the same time and we don't really
                     // give a fig about when they're done
                     dataset.write(record.get('id'), {sequence: seq});
-                    list.reload_record(index++);
+                    record.set('sequence', seq);
                 }
             }
         });
