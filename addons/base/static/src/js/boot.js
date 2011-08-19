@@ -12,7 +12,6 @@
         return;
     var session_counter = 0;
 
-    /** @lends openerp */
     var openerp = this.openerp =  {
         // Per session namespace
         // openerp.<module> will map to
@@ -42,7 +41,6 @@
             }
             return new_instance;
         }
-        // TODO add initrpc to init core only for RPC
     };
 })();
 
