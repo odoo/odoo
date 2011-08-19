@@ -1,9 +1,15 @@
 /* TODO: separate openerp web client page css from openerp views css */
-body {
+body.openerp {
     padding: 0;
     margin: 0;
-    font-family: helvetica, arial, sans-serif;
+    height: 100%;
+    min-width: 1000px;
+    overflow-y: scroll;
     font-size: 80%;
+}
+
+body.openerp, .openerp textarea, .openerp input, .openerp select, .openerp option, .openerp button, .openerp .ui-widget {
+    font-family: Ubuntu, Helvetica, sans-serif;
 }
 
 .oe_box {
@@ -18,13 +24,6 @@ body {
 
 #oe_errors pre {
     margin: 0;
-}
-
-
-body.openerp {
-    height: 100%;
-    min-width: 1000px;
-    overflow-y: scroll;
 }
 
 .openerp .oe-number {
@@ -120,7 +119,6 @@ body.openerp {
     -moz-border-radius: 3px;
     -webkit-border-radius: 3px;
     color: white;
-    font-family: Ubuntu, Helvetica, sans-serif;
     font-size: 16px;
     font-weight: bold;
     padding: 5px;
@@ -264,7 +262,7 @@ label.error {
     background: -ms-linear-gradient(top, #bd5e54 0%,#90322a 60%); /* IE10+ */
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#BD5E54', endColorstr='#90322A',GradientType=0 ); /* IE6-9 */
     background: linear-gradient(top, #bd5e54 0%,#90322a 60%); /* W3C */
-    
+
     border: 1px solid #6E2A24;
     border-radius: 4px;
     -moz-border-radius: 4px;
@@ -381,7 +379,7 @@ label.error {
 /* Header */
 .openerp .header {
     height: 65px;
-    background: url("../img/header-background.png") repeat-x scroll left top transparent;
+    background: url("/base/static/src/img/header-background.png") repeat-x scroll left top transparent;
     color: #FFFFFF;
     letter-spacing: 0.5px;
     text-shadow: 0 1px 0 #333333;
@@ -497,7 +495,6 @@ label.error {
     color: #666666;
     font-weight: bold;
     font-size: 0.8em;
-    font-family: Ubuntu, Helvetica, sans-serif;
     text-align: center;
 }
 .openerp div.oe_footer p.oe_footer_powered a {
@@ -515,7 +512,6 @@ label.error {
 .openerp h2.oe_view_title {
     font-size: 175%;
     font-weight: normal;
-    font-family: Ubuntu, Helvetica, sans-serif;
     margin: 2px 0;
     color: #252424;
     text-shadow: white 0 1px 0;
@@ -859,7 +855,7 @@ label.error {
     -webkit-box-sizing: border-box;
     -ms-box-sizing: border-box;
     box-sizing: border-box;
-    padding: 2px;
+    padding: 0 2px 0 2px;
     border: 1px solid #999;
     -moz-border-radius: 3px;
     -webkit-border-radius: 3px;
@@ -988,7 +984,6 @@ label.error {
     margin: 0;
     width: 180px;
     height: 100%;
-    font-family: Ubuntu, Helvetica, sans-serif;
     font-size: 0.9em;
 }
 
@@ -1046,7 +1041,6 @@ label.error {
 
 .openerp .view-manager-main-sidebar h2 {
     margin:0;
-    font-family: Ubuntu, Helvetica, sans-serif;
     font-size: 1.15em;
     color: #8E8E8E;
     text-shadow: white 0 1px 0;
@@ -1054,14 +1048,14 @@ label.error {
     padding-right: 21px;
     height: 21px;
 
-background: #ffffff; /* Old browsers */
-background: -moz-linear-gradient(top, #ffffff 0%, #ebe9e9 100%); /* FF3.6+ */
-background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%,#ebe9e9)); /* Chrome,Safari4+ */
-background: -webkit-linear-gradient(top, #ffffff 0%,#ebe9e9 100%); /* Chrome10+,Safari5.1+ */
-background: -o-linear-gradient(top, #ffffff 0%,#ebe9e9 100%); /* Opera11.10+ */
-background: -ms-linear-gradient(top, #ffffff 0%,#ebe9e9 100%); /* IE10+ */
-filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#FFFFFF', endColorstr='#EBE9E9',GradientType=0 ); /* IE6-9 */
-background: linear-gradient(top, #ffffff 0%,#ebe9e9 100%); /* W3C */
+    background: #ffffff; /* Old browsers */
+    background: -moz-linear-gradient(top, #ffffff 0%, #ebe9e9 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%,#ebe9e9)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top, #ffffff 0%,#ebe9e9 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top, #ffffff 0%,#ebe9e9 100%); /* Opera11.10+ */
+    background: -ms-linear-gradient(top, #ffffff 0%,#ebe9e9 100%); /* IE10+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#FFFFFF', endColorstr='#EBE9E9',GradientType=0 ); /* IE6-9 */
+    background: linear-gradient(top, #ffffff 0%,#ebe9e9 100%); /* W3C */
 
     border: 1px solid #D2CFCF;
     border-right-width: 0;
@@ -1170,6 +1164,7 @@ background: linear-gradient(top, #ffffff 0%,#ebe9e9 100%); /* W3C */
 .parent_top {
     vertical-align: text-top;
 }
+
 .openerp .oe-dialog-warning p {
     padding-left: 1em;
     font-size: 1.2em;
@@ -1182,7 +1177,6 @@ background: linear-gradient(top, #ffffff 0%,#ebe9e9 100%); /* W3C */
     -webkit-box-shadow: none;
     box-shadow: none;
 }
-
 .openerp .oe-treeview-table {
     width: 100%;
 }
@@ -1208,4 +1202,53 @@ background: linear-gradient(top, #ffffff 0%,#ebe9e9 100%); /* W3C */
 .treeview-header {
     text-align: left;
     vertical-align: top;
+}
+/* Shortcuts*/
+.oe-shortcut-toggle {
+    height: 20px;
+    padding: 0;
+    width: 24px;
+    cursor: pointer;
+    display: block;
+    background: url(/base/static/src/img/add-shortcut.png) no-repeat bottom;
+    float: left;
+}
+.oe-shortcut-remove{
+    background: url(/base/static/src/img/remove-shortcut.png) no-repeat bottom;
+}
+/* ================ */
+.oe-shortcuts {
+    position: absolute;
+
+    margin: 0;
+    padding: 6px 5px;
+    top: 37px;
+    left: 197px;
+    right: 0;
+    height: 17px;
+    line-height: 1.2;
+}
+.oe-shortcuts ul {
+    display: block;
+    overflow: hidden;
+    list-style: none;
+    white-space: nowrap;
+    padding: 0;
+    margin: 0;
+}
+.oe-shortcuts li {
+    cursor: pointer;
+    display: -moz-inline-stack;
+    display: inline-block;
+    display: inline; /*IE7 */
+    color: #fff;
+    text-align: center;
+    border-left: 1px solid #909090;
+    padding: 4px;
+    font-size: 90%;
+    font-weight: normal;
+}
+.oe-shortcuts li:first-child {
+    border-left: none;
+    padding-left: 0;
 }

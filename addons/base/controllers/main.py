@@ -18,6 +18,7 @@ import openerpweb
 import openerpweb.ast
 import openerpweb.nonliterals
 
+from babel.messages.pofile import read_po
 
 # Should move to openerpweb.Xml2Json
 class Xml2Json:
@@ -66,7 +67,6 @@ def manifest_glob(addons, key):
     files = []
     for addon in addons:
         globlist = openerpweb.addons_manifest.get(addon, {}).get(key, [])
-        print globlist
         for pattern in globlist:
             for path in glob.glob(os.path.join(openerpweb.path_addons, addon, pattern)):
                 files.append(path[len(openerpweb.path_addons):])
@@ -78,35 +78,36 @@ def concat_files(file_list):
     concat: concatenation of file content
     timestamp: max(os.path.getmtime of file_list)
     """
-    root = openerpweb.path_root
     files_content = []
     files_timestamp = 0
     for i in file_list:
-        fname = os.path.join(root, i)
+        fname = os.path.join(openerpweb.path_addons, i[1:])
         ftime = os.path.getmtime(fname)
         if ftime > files_timestamp:
             files_timestamp = ftime
-        files_content = open(fname).read()
+        files_content.append(open(fname).read())
     files_concat = "".join(files_content)
-    return files_concat
+    return (files_concat,files_timestamp)
 
 home_template = textwrap.dedent("""<!DOCTYPE html>
 <html style="height: 100%%">
     <head>
         <meta http-equiv="content-type" content="text/html; charset=utf-8" />
         <title>OpenERP</title>
-        %(javascript)s
-        <script type="text/javascript">
-            $(function() {
-                QWeb = new QWeb2.Engine();
-                openerp.init().base.webclient("oe");
-            });
-        </script>
         <link rel="shortcut icon" href="/base/static/src/img/favicon.ico" type="image/x-icon"/>
         %(css)s
         <!--[if lte IE 7]>
         <link rel="stylesheet" href="/base/static/src/css/base-ie7.css" type="text/css"/>
         <![endif]-->
+        %(javascript)s
+        <script type="text/javascript">
+            $(function() {
+                QWeb = new QWeb2.Engine();
+                var c = new openerp.init();
+                var wc = new c.base.WebClient("oe");
+                wc.start();
+            });
+        </script>
     </head>
     <body id="oe" class="openerp"></body>
 </html>
@@ -124,32 +125,32 @@ class WebClient(openerpweb.Controller):
 
     @openerpweb.httprequest
     def css(self, req, mods='base'):
-        cherrypy.response.headers['Content-Type'] = 'text/css'
+        req.httpresponse.headers['Content-Type'] = 'text/css'
         files = manifest_glob(mods.split(','), 'css')
-        concat = concat_files(files)[0]
+        content,timestamp = concat_files(files)
         # TODO request set the Date of last modif and Etag
-        return concat
+        return content
 
     @openerpweb.httprequest
     def js(self, req, mods='base'):
-        cherrypy.response.headers['Content-Type'] = 'application/javascript'
+        req.httpresponse.headers['Content-Type'] = 'application/javascript'
         files = manifest_glob(mods.split(','), 'js')
-        concat = concat_files(files)[0]
+        content,timestamp = concat_files(files)
         # TODO request set the Date of last modif and Etag
-        return concat
+        return content
 
     @openerpweb.httprequest
     def home(self, req, s_action=None):
 
         # script tags
         jslist = ['/base/webclient/js']
-        if 1: # debug == 1
+        if req.debug:
             jslist = manifest_glob(['base'], 'js')
         js = "\n        ".join(['<script type="text/javascript" src="%s"></script>'%i for i in jslist])
 
         # css tags
         csslist = ['/base/webclient/css']
-        if 1: # debug == 1
+        if req.debug:
             csslist = manifest_glob(['base'], 'css')
         css = "\n        ".join(['<link rel="stylesheet" href="%s">'%i for i in csslist])
         r = home_template % {
@@ -157,6 +158,42 @@ class WebClient(openerpweb.Controller):
             'css': css
         }
         return r
+
+    @openerpweb.jsonrequest
+    def translations(self, req, mods, lang):
+        lang_model = req.session.model('res.lang')
+        ids = lang_model.search([("code", "=", lang)])
+        if ids:
+            lang_obj = lang_model.read(ids[0], ["direction", "date_format", "time_format",
+                                                "grouping", "decimal_point", "thousands_sep"])
+        else:
+            lang_obj = None
+            
+        if lang.count("_") > 0:
+            separator = "_"
+        else:
+            separator = "@"
+        langs = lang.split(separator)
+        langs = [separator.join(langs[:x]) for x in range(1, len(langs) + 1)]
+        
+        transs = {}
+        for addon_name in mods:
+            transl = {"messages":[]}
+            transs[addon_name] = transl
+            for l in langs:
+                f_name = os.path.join(openerpweb.path_addons, addon_name, "po", l + ".po")
+                if not os.path.exists(f_name):
+                    continue
+                try:
+                    with open(f_name) as t_file:
+                        po = read_po(t_file)
+                except:
+                    continue
+                for x in po:
+                    if x.id and x.string:
+                        transl["messages"].append({'id': x.id, 'string': x.string})
+        return {"modules": transs,
+                "lang_parameters": lang_obj}
 
 class Database(openerpweb.Controller):
     _cp_path = "/base/database"
@@ -212,10 +249,10 @@ class Database(openerpweb.Controller):
         try:
             db_dump = base64.decodestring(
                 req.session.proxy("db").dump(backup_pwd, backup_db))
-            cherrypy.response.headers['Content-Type'] = "application/octet-stream; charset=binary"
-            cherrypy.response.headers['Content-Disposition'] = 'attachment; filename="' + backup_db + '.dump"'
-            cherrypy.response.cookie['fileToken'] = token
-            cherrypy.response.cookie['fileToken']['path'] = '/'
+            req.httpresponse.headers['Content-Type'] = "application/octet-stream; charset=binary"
+            req.httpresponse.headers['Content-Disposition'] = 'attachment; filename="' + backup_db + '.dump"'
+            req.httpresponse.cookie['fileToken'] = token
+            req.httpresponse.cookie['fileToken']['path'] = '/'
             return db_dump
         except xmlrpclib.Fault, e:
             if e.faultCode and e.faultCode.split(':')[0] == 'AccessDenied':
@@ -230,9 +267,7 @@ class Database(openerpweb.Controller):
             return ''
         except xmlrpclib.Fault, e:
             if e.faultCode and e.faultCode.split(':')[0] == 'AccessDenied':
-                raise cherrypy.HTTPError(403)
-
-        raise cherrypy.HTTPError()
+                raise Exception("AccessDenied")
 
     @openerpweb.jsonrequest
     def change_password(self, req, fields):
@@ -252,16 +287,18 @@ class Session(openerpweb.Controller):
     @openerpweb.jsonrequest
     def login(self, req, db, login, password):
         req.session.login(db, login, password)
+        ctx = req.session.get_context()
 
         return {
             "session_id": req.session_id,
             "uid": req.session._uid,
+            "context": ctx
         }
 
     @openerpweb.jsonrequest
     def sc_list(self, req):
-        return req.session.model('ir.ui.view_sc').get_sc(req.session._uid, "ir.ui.menu",
-                                                         req.session.eval_context(req.context))
+        return req.session.model('ir.ui.view_sc').get_sc(
+            req.session._uid, "ir.ui.menu", req.session.eval_context(req.context))
 
     @openerpweb.jsonrequest
     def get_lang_list(self, req):
@@ -347,10 +384,10 @@ class Session(openerpweb.Controller):
         :return: A key identifying the saved action.
         :rtype: integer
         """
-        saved_actions = cherrypy.session.get('saved_actions')
+        saved_actions = req.httpsession.get('saved_actions')
         if not saved_actions:
             saved_actions = {"next":0, "actions":{}}
-            cherrypy.session['saved_actions'] = saved_actions
+            req.httpsession['saved_actions'] = saved_actions
         # we don't allow more than 10 stored actions
         if len(saved_actions["actions"]) >= 10:
             del saved_actions["actions"][min(saved_actions["actions"].keys())]
@@ -370,7 +407,7 @@ class Session(openerpweb.Controller):
         :return: The saved action or None.
         :rtype: anything
         """
-        saved_actions = cherrypy.session.get('saved_actions')
+        saved_actions = req.httpsession.get('saved_actions')
         if not saved_actions:
             return None
         return saved_actions["actions"].get(key)
@@ -400,18 +437,16 @@ def clean_action(action, session, context=None):
         return action
     # values come from the server, we can just eval them
     if isinstance(action.get('context'), basestring):
-        action['context'] = eval(
-            action['context'],
-            session.evaluation_context(context=context)) or {}
+        localvars = session.evaluation_context(context=context)
+        action['context'] = eval( action['context'], localvars ) or {}
 
     if isinstance(action.get('domain'), basestring):
-        action['domain'] = eval(
-            action['domain'],
-            session.evaluation_context(
-                action.get('context', {}))) or []
+        localvars = session.evaluation_context( action.get('context', {}))
+        action['domain'] = eval( action['domain'], localvars ) or []
 
     return fix_view_modes(action)
 
+# I think generate_views,fix_view_modes should go into js ActionManager
 def generate_views(action):
     """
     While the server generates a sequence called "views" computing dependencies
@@ -908,10 +943,10 @@ class Binary(openerpweb.Controller):
     _cp_path = "/base/binary"
 
     @openerpweb.httprequest
-    def image(self, request, session_id, model, id, field, **kw):
-        cherrypy.response.headers['Content-Type'] = 'image/png'
-        Model = request.session.model(model)
-        context = request.session.eval_context(request.context)
+    def image(self, req, model, id, field, **kw):
+        req.httpresponse.headers['Content-Type'] = 'image/png'
+        Model = req.session.model(model)
+        context = req.session.eval_context(req.context)
         try:
             if not id:
                 res = Model.default_get([field], context).get(field, '')
@@ -924,26 +959,26 @@ class Binary(openerpweb.Controller):
         return open(os.path.join(openerpweb.path_addons, 'base', 'static', 'src', 'img', 'placeholder.png'), 'rb').read()
 
     @openerpweb.httprequest
-    def saveas(self, request, session_id, model, id, field, fieldname, **kw):
-        Model = request.session.model(model)
-        context = request.session.eval_context(request.context)
+    def saveas(self, req, model, id, field, fieldname, **kw):
+        Model = req.session.model(model)
+        context = req.session.eval_context(req.context)
         res = Model.read([int(id)], [field, fieldname], context)[0]
         filecontent = res.get(field, '')
         if not filecontent:
             raise cherrypy.NotFound
         else:
-            cherrypy.response.headers['Content-Type'] = 'application/octet-stream'
+            req.httpresponse.headers['Content-Type'] = 'application/octet-stream'
             filename = '%s_%s' % (model.replace('.', '_'), id)
             if fieldname:
                 filename = res.get(fieldname, '') or filename
-            cherrypy.response.headers['Content-Disposition'] = 'attachment; filename=' +  filename
+            req.httpresponse.headers['Content-Disposition'] = 'attachment; filename=' +  filename
             return base64.decodestring(filecontent)
 
     @openerpweb.httprequest
-    def upload(self, request, session_id, callback, ufile=None):
+    def upload(self, req, callback, ufile=None):
         cherrypy.response.timeout = 500
         headers = {}
-        for key, val in cherrypy.request.headers.iteritems():
+        for key, val in req.httprequest.headers.iteritems():
             headers[key.lower()] = val
         size = int(headers.get('content-length', 0))
         # TODO: might be useful to have a configuration flag for max-length file uploads
@@ -967,10 +1002,10 @@ class Binary(openerpweb.Controller):
         return out % (simplejson.dumps(callback), simplejson.dumps(args))
 
     @openerpweb.httprequest
-    def upload_attachment(self, request, session_id, callback, model, id, ufile=None):
+    def upload_attachment(self, req, callback, model, id, ufile=None):
         cherrypy.response.timeout = 500
-        context = request.session.eval_context(request.context)
-        Model = request.session.model('ir.attachment')
+        context = req.session.eval_context(req.context)
+        Model = req.session.model('ir.attachment')
         try:
             out = """<script language="javascript" type="text/javascript">
                         var win = window.top.window,

@@ -17,6 +17,7 @@ openerp.base.ActionManager = openerp.base.Widget.extend({
         this.dialog = null;
         this.dialog_viewmanager = null;
         this.client_widget = null;
+        this.url = {}
     },
     render: function() {
         return "<div id='"+this.element_id+"'></div>";
@@ -34,6 +35,28 @@ openerp.base.ActionManager = openerp.base.Widget.extend({
             this.inner_viewmanager.stop();
             this.inner_viewmanager = null;
         }
+    },
+    url_update: function(action) {
+        // this.url = {
+        //     "model": action.model,
+        //     "domain": action.domain,
+        // };
+        // action.res_model
+        // action.domain
+        // action.context
+        // after
+        // action.views
+        // action.res_id
+        // mode
+        // menu
+    },
+    url_stringify: function(action) {
+    },
+    url_parse: function(action) {
+    },
+    on_url_update: function(url) {
+    },
+    do_url_action: function(url) {
     },
     do_action: function(action, on_close) {
         var type = action.type.replace(/\./g,'_');
@@ -69,6 +92,7 @@ openerp.base.ActionManager = openerp.base.Widget.extend({
             this.inner_stop();
             this.inner_viewmanager = new openerp.base.ViewManagerAction(this, action);
             this.inner_viewmanager.appendTo(this.$element);
+            this.url_update(action);
         }
         /* new window code
             this.rpc("/base/session/save_session_action", { the_action : action}, function(key) {
@@ -92,7 +116,7 @@ openerp.base.ActionManager = openerp.base.Widget.extend({
     ir_actions_client: function (action) {
         this.client_widget = openerp.base.client_actions.get_object(action.tag);
         new this.client_widget(this, this.element_id, action.params).start();
-    },
+    }
 });
 
 openerp.base.ViewManager =  openerp.base.Widget.extend({
@@ -285,13 +309,53 @@ openerp.base.ViewManagerAction = openerp.base.ViewManager.extend({
 
             var searchview_loaded = this.setup_search_view(
                     searchview_id || false, search_defaults);
-
+            
             // schedule auto_search
             if (searchview_loaded != null && this.action['auto_search']) {
                 $.when(searchview_loaded, inital_view_loaded)
                     .then(this.searchview.do_search);
             }
         }
+    },
+    on_mode_switch: function (view_type) {
+        this._super(view_type);
+        this.shortcut_check(this.views[view_type]);
+    },
+    shortcut_check : function(view) {
+        var self = this;
+        var grandparent = this.widget_parent && this.widget_parent.widget_parent;
+        // display shortcuts if on the first view for the action
+        var $shortcut_toggle = this.$element.find('.oe-shortcut-toggle');
+        if (!(grandparent instanceof openerp.base.WebClient) ||
+            !(view.view_type === this.views_src[0].view_type
+                && view.view_id === this.views_src[0].view_id)) {
+            $shortcut_toggle.hide();
+            return;
+        }
+        $shortcut_toggle.removeClass('oe-shortcut-remove').show();
+        if (_(this.session.shortcuts).detect(function (shortcut) {
+                    return shortcut.res_id === self.session.active_id; })) {
+            $shortcut_toggle.addClass("oe-shortcut-remove");
+        }
+        this.shortcut_add_remove();
+    },
+    shortcut_add_remove: function() {
+        var self = this;
+        var $shortcut_toggle = this.$element.find('.oe-shortcut-toggle');
+        $shortcut_toggle.click(function() {
+            if ($shortcut_toggle.hasClass("oe-shortcut-remove")) {
+                $(self.session.shortcuts.binding).trigger('remove-current');
+                $shortcut_toggle.removeClass("oe-shortcut-remove");
+            } else {
+                $(self.session.shortcuts.binding).trigger('add', {
+                    'user_id': self.session.uid,
+                    'res_id': self.session.active_id,
+                    'resource': 'ir.ui.menu',
+                    'name': self.action.name
+                });
+                $shortcut_toggle.addClass("oe-shortcut-remove");
+            }
+        });
     }
 });
 

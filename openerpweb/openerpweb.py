@@ -233,7 +233,27 @@ class OpenERPSession(object):
 #----------------------------------------------------------
 # OpenERP Web RequestHandler
 #----------------------------------------------------------
-class JsonRequest(object):
+class CherryPyRequest(object):
+    """ CherryPy request handling
+    """
+    def init(self,params):
+        self.params = params
+        # Move cherrypy thread local objects to attributes
+        self.applicationsession = applicationsession
+        self.httprequest = cherrypy.request
+        self.httpresponse = cherrypy.response
+        self.httpsession = cherrypy.session
+        self.httpsession_id = "cookieid"
+        # OpenERP session setup
+        self.session_id = self.params.pop("session_id", None) or uuid.uuid4().hex
+        host = cherrypy.config['openerp.server.host']
+        port = cherrypy.config['openerp.server.port']
+        self.session = self.httpsession.setdefault(self.session_id, OpenERPSession(host, port))
+        # Request attributes
+        self.context = self.params.pop('context', None)
+        self.debug = self.params.pop('debug',False) != False
+
+class JsonRequest(CherryPyRequest):
     """ JSON-RPC2 over HTTP.
 
     Sucessful request::
@@ -267,48 +287,28 @@ class JsonRequest(object):
 
     """
 
-    def parse(self, request):
-        self.request = request
-        self.params = request.get("params", {})
-        self.applicationsession = applicationsession
-        self.httprequest = cherrypy.request
-        self.httpresponse = cherrypy.response
-        self.httpsession = cherrypy.session
-        self.httpsession_id = "cookieid"
-        self.httpsession = cherrypy.session
-        self.session_id = self.params.pop("session_id", None) or uuid.uuid4().hex
-        host = cherrypy.config['openerp.server.host']
-        port = cherrypy.config['openerp.server.port']
-        self.session = self.httpsession.setdefault(self.session_id, OpenERPSession(host, port))
-        self.context = self.params.pop('context', None)
-        return self.params
-
     def dispatch(self, controller, method, requestf=None, request=None):
         """ Calls the method asked for by the JSON-RPC2 request
 
         :param controller: the instance of the controller which received the request
-        :type controller: type
         :param method: the method which received the request
-        :type method: callable
         :param requestf: a file-like object containing an encoded JSON-RPC2 request
-        :type requestf: <read() -> bytes>
-        :param request: an encoded JSON-RPC2 request
-        :type request: bytes
+        :param request: a JSON-RPC2 request
 
-        :returns: a string-encoded JSON-RPC2 reply
-        :rtype: bytes
+        :returns: an utf8 encoded JSON-RPC2 reply
         """
-        # Read POST content or POST Form Data named "request"
-        if requestf:
-            request = simplejson.load(requestf, object_hook=nonliterals.non_literal_decoder)
-        else:
-            request = simplejson.loads(request, object_hook=nonliterals.non_literal_decoder)
-
-        response = {"jsonrpc": "2.0", "id": request.get('id')}
+        response = {"jsonrpc": "2.0" }
+        error = None
         try:
-            print "--> %s.%s %s" % (controller.__class__.__name__, method.__name__, request)
-            error = None
-            self.parse(request)
+            # Read POST content or POST Form Data named "request"
+            if requestf:
+                self.jsonrequest = simplejson.load(requestf, object_hook=nonliterals.non_literal_decoder)
+            else:
+                self.jsonrequest = simplejson.loads(request, object_hook=nonliterals.non_literal_decoder)
+            self.init(self.jsonrequest.get("params", {}))
+            if self.debug or 1:
+                print "--> %s.%s %s" % (controller.__class__.__name__, method.__name__, self.jsonrequest)
+            response['id'] = self.jsonrequest.get('id')
             response["result"] = method(controller, self, **self.params)
         except OpenERPUnboundException:
             error = {
@@ -344,8 +344,9 @@ class JsonRequest(object):
         if error:
             response["error"] = error
 
-        print "<--", response
-        print
+        if self.debug or 1:
+            print "<--", response
+            print
 
         content = simplejson.dumps(response, cls=nonliterals.NonLiteralEncoder)
         cherrypy.response.headers['Content-Type'] = 'application/json'
@@ -357,40 +358,32 @@ def jsonrequest(f):
     @functools.wraps(f)
     def json_handler(controller):
         return JsonRequest().dispatch(controller, f, requestf=cherrypy.request.body)
-
     return json_handler
 
-class HttpRequest(object):
+class HttpRequest(CherryPyRequest):
     """ Regular GET/POST request
     """
-    def dispatch(self, controller, f, request, **kw):
-        self.request = request
-        self.applicationsession = applicationsession
-        self.httpsession_id = "cookieid"
-        self.httpsession = cherrypy.session
-        self.context = kw.get('context', {})
-        host = cherrypy.config['openerp.server.host']
-        port = cherrypy.config['openerp.server.port']
-        self.session = self.httpsession.setdefault(kw.pop('session_id', None), OpenERPSession(host, port))
-        self.result = ""
-        if request.method == 'GET':
-            print "GET --> %s.%s %s %r" % (controller.__class__.__name__, f.__name__, request, kw)
-        else:
-            akw = dict([(key, kw[key] if isinstance(kw[key], basestring) else type(kw[key])) for key in kw.keys()])
-            print "POST --> %s.%s %s %r" % (controller.__class__.__name__, f.__name__, request, akw)
-        r = f(controller, self, **kw)
-        if isinstance(r, str):
-            print "<--", len(r), 'bytes'
-        else:
-            print "<--", len(r), 'characters'
-        print
+    def dispatch(self, controller, method, **kw):
+        self.init(kw)
+        akw = {}
+        for key in kw.keys():
+            if isinstance(kw[key], basestring) and len(kw[key]) < 1024:
+                akw[key] = kw[key]
+            else:
+                akw[key] = type(kw[key])
+        if self.debug or 1:
+            print "%s --> %s.%s %r" % (self.httprequest.method, controller.__class__.__name__, method.__name__, akw)
+        r = method(controller, self, **kw)
+        if self.debug or 1:
+            print "<--", 'size:', len(r)
+            print
         return r
 
 def httprequest(f):
     # check cleaner wrapping:
     # functools.wraps(f)(lambda x: JsonRequest().dispatch(x, f))
-    def http_handler(self,*l, **kw):
-        return HttpRequest().dispatch(self, f, cherrypy.request, **kw)
+    def http_handler(controller,*l, **kw):
+        return HttpRequest().dispatch(controller, f, **kw)
     http_handler.exposed = 1
     return http_handler
 
