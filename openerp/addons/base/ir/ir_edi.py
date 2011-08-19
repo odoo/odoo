@@ -26,6 +26,8 @@ import time
 import base64
 import urllib2
 import openerp.release as release
+from tools.translate import _
+import netsvc
 
 edi_module = 'edi_import'
 
@@ -122,13 +124,19 @@ class ir_edi_document(osv.osv):
 
         :param edi_dicts: list of edi_dict
         """
+        module_obj =self.pool.get('ir.module.module')
         res = []
         for edi_document in edi_documents:
-            model = edi_document.get('__model')
-            assert model, _('model should be provided in EDI Dict')
-            model_obj = self.pool.get(model)
-            record_id = model_obj.edi_import(cr, uid, edi_document, context=context)
-            res.append((model,record_id))
+            module = edi_document.get('__module')
+            module_id = module_obj.search(cr, uid, [('name','=',module),('state','=','installed')])
+            if module_id:
+                model = edi_document.get('__model')
+                assert model, _('model should be provided in EDI Dict')
+                model_obj = self.pool.get(model)
+                record_id = model_obj.edi_import(cr, uid, edi_document, context=context)
+                res.append((model,record_id))
+            else:
+                raise osv.except_osv(_('Invalid action !'), _('Module is not Installed'))
         return res
     
     def deserialize(self, edi_document_string):

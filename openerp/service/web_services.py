@@ -40,10 +40,8 @@ from cStringIO import StringIO
 import threading
 
 class edi(netsvc.ExportService):
-    def exp_get_edi_document(self, edi_token, db_name=None):
+    def exp_get_edi_document(self, edi_token, db_name):
         res = None
-        if not db_name:
-            db_name = getattr(threading.currentThread(), 'dbname', None)
         if db_name:
             cr = pooler.get_db(db_name).cursor()
         else:
@@ -74,8 +72,8 @@ class edi(netsvc.ExportService):
         pool = pooler.get_pool(db)
         edi_pool = pool.get('ir.edi.document')
         try:
-            cr.autocommit(True)
             res = edi_pool.import_edi(cr, uid, edi_url=edi_url, context=context)
+            cr.commit()
         finally:
             cr.close()
         return res

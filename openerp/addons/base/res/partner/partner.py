@@ -111,7 +111,7 @@ class res_partner(osv.osv):
     _order = "name"
     _columns = {
         'name': fields.char('Name', size=128, required=True, select=True),
-        'opt_out':fields.boolean('Opt-out'),
+        'opt_out':fields.boolean('Opt-out', help='After enable opt-out, Automated Mail will not be sent to provided email address of partner'),
         'date': fields.date('Date', select=1),
         'title': fields.many2one('res.partner.title','Partner Firm'),
         'parent_id': fields.many2one('res.partner','Parent Partner'),
@@ -150,7 +150,7 @@ class res_partner(osv.osv):
         'customer': lambda *a: 1,
         'category_id': _default_category,
         'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'res.partner', context=c),
-        'opt_out' : False
+        'opt_out' : True
     }
     def copy(self, cr, uid, id, default={}, context={}):
         name = self.read(cr, uid, [id], ['name'])[0]['name']
