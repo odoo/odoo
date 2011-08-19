@@ -701,7 +701,7 @@ openerp.base.ListView.List = openerp.base.Class.extend( /** @lends openerp.base.
         var result = {ids: [], records: []};
         this.$current.find('th.oe-record-selector input:checked')
                 .closest('tr').each(function () {
-            var record = records.at($(this).data('index'));
+            var record = records.get($(this).data('id'));
             result.ids.push(record.get('id'));
             result.records.push(record.attributes);
         });
@@ -1381,6 +1381,9 @@ var Collection = openerp.base.Class.extend(/** @lends Collection# */{
             results.push(callback(record));
         });
         return results;
+    },
+    indexOf: function (record) {
+        return _(this.records).indexOf(record);
     }
 });
 Collection.include(Events);
