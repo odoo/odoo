@@ -27,6 +27,7 @@ openerp.base_diagram.DiagramView = openerp.base.View.extend({
 	},
 	
 	on_loaded: function(result) {
+		
 		var self = this;
 		if(this.ids && this.ids.length) {
 			this.id = this.ids[self.dataset.index || 0];
@@ -100,6 +101,8 @@ openerp.base_diagram.DiagramView = openerp.base.View.extend({
             var action = $(this).data('pager-action');
             self.on_pager_action(action);
         });
+		
+		this.do_update_pager()
 		
         if(this.id) {
         	self.get_diagram_info()
@@ -257,6 +260,34 @@ openerp.base_diagram.DiagramView = openerp.base.View.extend({
                 self.schedule_events(events)
             });
         });
+    },
+    
+    on_pager_action: function(action) {
+    	switch (action) {
+	        case 'first':
+	            this.dataset.index = 0;
+	            break;
+	        case 'previous':
+	            this.dataset.previous();
+	            break;
+	        case 'next':
+	            this.dataset.next();
+	            break;
+	        case 'last':
+	            this.dataset.index = this.dataset.ids.length - 1;
+	            break;
+    	}
+	    this.dataset.read_index(_.keys(this.fields_view.fields), this.on_diagram_loaded);
+	    this.do_update_pager();
+    },
+    
+    do_update_pager: function(hide_index) {
+        var $pager = this.$element.find('div.oe_diagram_pager');
+        var index = hide_index ? '-' : this.dataset.index + 1;
+        if(!this.dataset.count)
+        	this.dataset.count = this.dataset.ids.length
+        $pager.find('span.oe_pager_index').html(index);
+        $pager.find('span.oe_pager_count').html(this.dataset.count);
     },
 	
 	do_show: function () {
