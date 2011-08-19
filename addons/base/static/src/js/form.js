@@ -1098,8 +1098,8 @@ openerp.base.form.FieldDatetime = openerp.base.form.Field.extend({
     focus: function() {
         this.$element.find('input').focus();
     },
-    parse: openerp.base.parse_datetime,
-    format: openerp.base.format_datetime
+    parse: openerp.base.str_to_datetime,
+    format: openerp.base.datetime_to_str
 });
 
 openerp.base.form.FieldDate = openerp.base.form.FieldDatetime.extend({
@@ -1108,8 +1108,8 @@ openerp.base.form.FieldDate = openerp.base.form.FieldDatetime.extend({
         this.jqueryui_object = 'datepicker';
         this.validation_regex = /^\d+-\d+-\d+$/;
     },
-    parse: openerp.base.parse_date,
-    format: openerp.base.format_date
+    parse: openerp.base.str_to_date,
+    format: openerp.base.date_to_str
 });
 
 openerp.base.form.FieldFloatTime = openerp.base.form.FieldChar.extend({

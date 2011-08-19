@@ -11,7 +11,7 @@ openerp.base.formats = function(openerp) {
  * @param {String} str A string representing a datetime.
  * @returns {Date}
  */
-openerp.base.parse_datetime = function(str) {
+openerp.base.str_to_datetime = function(str) {
     if(!str) {
         return str;
     }
@@ -34,7 +34,7 @@ openerp.base.parse_datetime = function(str) {
  * @param {String} str A string representing a date.
  * @returns {Date}
  */
-openerp.base.parse_date = function(str) {
+openerp.base.str_to_date = function(str) {
     if(!str) {
         return str;
     }
@@ -57,7 +57,7 @@ openerp.base.parse_date = function(str) {
  * @param {String} str A string representing a time.
  * @returns {Date}
  */
-openerp.base.parse_time = function(str) {
+openerp.base.str_to_time = function(str) {
     if(!str) {
         return str;
     }
@@ -96,7 +96,7 @@ var zpad = function(str, size) {
  * @param {Date} obj
  * @returns {String} A string representing a datetime.
  */
-openerp.base.format_datetime = function(obj) {
+openerp.base.datetime_to_str = function(obj) {
     if (!obj) {
         return false;
     }
@@ -112,7 +112,7 @@ openerp.base.format_datetime = function(obj) {
  * @param {Date} obj
  * @returns {String} A string representing a date.
  */
-openerp.base.format_date = function(obj) {
+openerp.base.date_to_str = function(obj) {
     if (!obj) {
         return false;
     }
@@ -127,7 +127,7 @@ openerp.base.format_date = function(obj) {
  * @param {Date} obj
  * @returns {String} A string representing a time.
  */
-openerp.base.format_time = function(obj) {
+openerp.base.time_to_str = function(obj) {
     if (!obj) {
         return false;
     }
