@@ -108,7 +108,6 @@
                     <field name="sequence"/>
                     <field name="name"/>
                     <field name="probability"/>
-                   <!--  <field name="type" /> -->
                 </tree>
             </field>
         </record>
@@ -124,8 +123,6 @@
                 <form string="Stage">
                     <separator string="Stage Definition" colspan="4"/>
                     <field name="name" select="1"/>
-                 <!--    <field name="type" groups="base.group_extended" /> -->
-
                     <field name="sequence"/>
                     <field name="probability"/>
                     <group colspan="4" col="2" >
@@ -133,7 +130,8 @@
                     </group>
                     <separator string="Requirements" colspan="4"/>
                     <field name="requirements" nolabel="1" colspan="4"/>
-            <field name="section_ids" invisible="1" />
+                    <separator string="Sections" colspan="4"/>
+                    <field name="section_ids" colspan="4" nolabel="1"/>
                 </form>
             </field>
         </record>
