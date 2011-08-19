@@ -1363,9 +1363,9 @@
                         <legend style="cursor:pointer;">CSV Options</legend>
                         <table style="display:none">
                             <tr>
-                               <td class="label"><label for="csv_separator">Separator:</label></td>
+                               <td><label for="csv_separator">Separator:</label></td>
                                 <td><input type="text" name="csvsep" id="csv_separator" value=","/></td>
-                                <td class="label"><label for="csv_delimiter">Delimiter:</label></td>
+                                <td><label for="csv_delimiter">Delimiter:</label></td>
                                 <td><input type="text" name="csvdel" id="csv_delimiter" value='"'/></td>
                             </tr>
                             <tr>
@@ -1403,20 +1403,20 @@
         </table>
     </t>
     <t t-if="records">
-        <table id="records_data" class="grid" width="100%" style="margin: 5px 0;">
+        <table id="records_data" class="oe_import_grid" width="100%" style="margin: 5px 0;">
             <t t-foreach="records" t-as="record">
                 <t t-if="record=='header'">
-                    <tr class="grid-header">
+                    <tr class="oe_import_grid-header">
                         <t t-foreach="records.header" t-as="header">
-                            <th class="grid-cell"><t t-esc="header[0]"/></th>
+                            <th class="oe_import_grid-cell"><t t-esc="header[0]"/></th>
                         </t>
                     </tr>
                 </t>
                 <t t-if="record=='row'">
                     <t t-foreach="records.row" t-as="row">
-                        <tr class="grid-row">
+                        <tr class="oe_import_grid-row">
                             <t t-foreach="row" t-as="column">
-                                <td class="grid-cell"><t t-esc="column"/></td>
+                                <td class="oe_import_grid-cell"><t t-esc="column"/></td>
                             </t>
                         </tr>
                     </t>

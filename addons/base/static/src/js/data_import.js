@@ -71,4 +71,4 @@ openerp.base.DataImport = openerp.base.Dialog.extend({
         this._super();
     },
 });
-}
+};
