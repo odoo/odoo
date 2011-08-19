@@ -10,11 +10,11 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='target_move']" position="after">
                     <field name="account_report_id" domain="[('parent_id','=',False)]"/>
-                    <field name="enable_comparison"/>
-                    <field name="display_details_per_account"/>
+                    <field name="comparison"/>
+                    <field name="account_details"/>
                 </xpath>
                 <xpath expr="//notebook/page[@string='Filters']" position="replace">
-                    <page string="Comparison" attrs="{'invisible': [('enable_comparison','=',False)]}">
+                    <page string="Comparison" attrs="{'invisible': [('comparison','=',False)]}">
                         <field name="filter" on_change="onchange_filter(filter, fiscalyear_id)" colspan="4"/>
                         <separator string="Dates" colspan="4"/>
                         <field name="date_from" attrs="{'readonly':[('filter', '!=', 'filter_date')], 'required':[('filter', '=', 'filter_date')]}" colspan="4"/>
