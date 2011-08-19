@@ -2,51 +2,6 @@
 <openerp>
 <data noupdate="1">
 
-     <!--        CASE STATUS(stage_id)        -->
-
-        <record model="crm.case.stage" id="stage_opportunity6">
-            <field name="name">Lost</field>
-            <field eval="'0'" name="probability"/>
-            <field eval="'11'" name="sequence"/>
-            <field name="type">opportunity</field>
-        </record>
-
-        <record model="crm.case.stage" id="stage_opportunity1">
-            <field name="name">New</field>
-            <field eval="'10'" name="probability"/>
-            <field eval="'12'" name="sequence"/>
-            <field name="type">opportunity</field>
-        </record>
-
-        <record model="crm.case.stage" id="stage_opportunity2">
-            <field name="name">Qualification</field>
-            <field eval="'20'" name="probability"/>
-            <field eval="'13'" name="sequence"/>
-            <field name="type">opportunity</field>
-        </record>
-
-        <record model="crm.case.stage" id="stage_opportunity3">
-            <field name="name">Proposition</field>
-            <field eval="'40'" name="probability"/>
-            <field eval="'14'" name="sequence"/>
-            <field name="type">opportunity</field>
-        </record>
-
-        <record model="crm.case.stage" id="stage_opportunity4">
-            <field name="name">Negotiation</field>
-            <field eval="'60'" name="probability"/>
-            <field eval="'15'" name="sequence"/>
-            <field name="type">opportunity</field>
-        </record>
-
-        <record model="crm.case.stage" id="stage_opportunity5">
-            <field name="name">Won</field>
-            <field eval="'100'" name="probability"/>
-            <field eval="'16'" name="sequence"/>
-            <field eval="1" name="on_change"/>
-            <field name="type">opportunity</field>
-        </record>
-
         <record model="crm.case.section" id="section_sales_department">
             <field name="name">Sales Department</field>
             <field name="code">Sales</field>
