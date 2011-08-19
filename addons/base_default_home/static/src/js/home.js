@@ -79,7 +79,7 @@ openerp.base_default_home = function (openerp) {
     openerp.base_default_home.DefaultHome = openerp.base.View.extend({
         template: 'StaticHome',
         start: function () {
-            var r = this._super();
+            var r = this._super(), self = this;
             this.$element.delegate('.oe-static-home-tile-text button', 'click', function () {
                 self.install_module($(this).val());
             });
