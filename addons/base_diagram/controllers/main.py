@@ -6,10 +6,15 @@ class DiagramView(View):
 
     @openerpweb.jsonrequest
     def load(self, req, model, view_id):
-        print req
-        print dir(req)
         fields_view = self.fields_view_get(req, model, view_id, 'diagram')
         return {'fields_view': fields_view}
+    
+    @openerpweb.jsonrequest
+    def get_activity(self, req, id, name, kind, active_model, model):
+        
+        activity_id = req.session.model(model).search([('name','=',name),('kind','=',kind),('wkf_id','=',active_model)], 0, 0, 0, req.session.context)
+        ids = req.session.model(model).search([], 0, 0, 0, req.session.context)
+        return {'activity_id':activity_id, 'ids': ids}
     
     @openerpweb.jsonrequest
     def get_diagram_info(self, req, **kw):
@@ -19,7 +24,6 @@ class DiagramView(View):
         connector = kw['connector']
         src_node = kw['src_node']
         des_node = kw['des_node']
-        
         visible_node_fields = kw.get('visible_node_fields',[])
         invisible_node_fields = kw.get('invisible_node_fields',[])
         node_fields_string = kw.get('node_fields_string',[])
@@ -44,13 +48,11 @@ class DiagramView(View):
                     shapes[shape_colour] = shape_color_state
                     
         ir_view = req.session.model('ir.ui.view')
-        graphs = ir_view.graph_get(id, model, node, connector, src_node, des_node, False,
+        graphs = ir_view.graph_get(int(id), model, node, connector, src_node, des_node, False,
                           (140, 180), req.session.context)
-        
         nodes = graphs['nodes']
         transitions = graphs['transitions']
         isolate_nodes = {}
-        
         for node in graphs['blank_nodes']:
             isolate_nodes[node['id']] = node
         else:
@@ -87,7 +89,6 @@ class DiagramView(View):
         fields = req.session.model('ir.model.fields')
         field_ids = fields.search([('model', '=', model), ('relation', '=', node)], 0, 0, 0, req.session.context)
         field_data = fields.read(field_ids, ['relation_field'], req.session.context)
-        
         node_act = req.session.model(node)
         search_acts = node_act.search([(field_data[0]['relation_field'], '=', id)], 0, 0, 0, req.session.context)
         data_acts = node_act.read(search_acts, invisible_node_fields + visible_node_fields, req.session.context)
@@ -123,5 +124,6 @@ class DiagramView(View):
 
         out_transition_field_id = fields.search([('relation', '=', connector), ('relation_field', '=', src_node), ('model', '=', node)], 0, 0, 0, req.session.context)
         out_transition_field = fields.read(out_transition_field_id[0], ['name'], req.session.context)['name']
-
-        return dict(nodes=nodes, conn=connectors, in_transition_field=in_transition_field, out_transition_field=out_transition_field)
+        
+        id_model = req.session.model(model).read([id],['name'], req.session.context)[0]['name']
+        return dict(nodes=nodes, conn=connectors, in_transition_field=in_transition_field, out_transition_field=out_transition_field, id_model = id_model)

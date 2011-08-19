@@ -2,25 +2,25 @@
  * OpenERP base library
  *---------------------------------------------------------*/
 
-openerp.base.diagram = function (openerp) {
-	
-openerp.base.views.add('diagram', 'openerp.base.DiagramView');
-openerp.base.DiagramView = openerp.base.Widget.extend({
-	init: function(view_manager, session, element_id, dataset, view_id){
-		this._super(session, element_id);
-        this.view_manager = view_manager;
+openerp.base_diagram = function (openerp) {
+QWeb.add_template('/base_diagram/static/src/xml/base_diagram.xml');
+openerp.base.views.add('diagram', 'openerp.base_diagram.DiagramView');
+openerp.base_diagram.DiagramView = openerp.base.View.extend({
+//	init: function(view_manager, session, element_id, dataset, view_id) {
+	init: function(parent, element_id, dataset, view_id, options) {
+		this._super(parent, element_id);
+		this.set_default_options(options);
+        this.view_manager = parent;
         this.dataset = dataset;
-        this.model = dataset.model;
+        this.model = this.dataset.model;
         this.view_id = view_id;
         this.name = "";
 		this.domain = this.dataset._domain ? this.dataset._domain: [];
 		this.context = {};
 		this.ids = this.dataset.ids;
-		
-		console.log('data set>>',this.dataset)
 	},
 	start: function() {
-		this.rpc("/base_diagram/diagram/load", {"model": this.model, "view_id": this.view_id}, this.on_loaded);
+		return this.rpc("/base_diagram/diagram/load", {"model": this.model, "view_id": this.view_id}, this.on_loaded);
 	},
 	
 	toTitleCase: function(str) {
@@ -28,19 +28,18 @@ openerp.base.DiagramView = openerp.base.Widget.extend({
 	},
 	
 	on_loaded: function(result) {
-		
 		var self = this;
 		if(this.ids && this.ids.length) {
-			this.id = this.ids[0];
+			this.id = this.ids[self.dataset.index || 0];
 		}
-		
 		this.fields_view = result.fields_view;
+		
 		this.view_id = this.fields_view.view_id;
 		this.name = this.fields_view.name;
 		
 		this.fields = this.fields_view.fields;
-		
 		var children = this.fields_view.arch.children;
+		
 		/*
 		 * For Nodes (Fields)
 		 */
@@ -95,80 +94,183 @@ openerp.base.DiagramView = openerp.base.Widget.extend({
 				}
 			}
 		}
+		
 		this.$element.html(QWeb.render("DiagramView", {"fields_view": this.fields_view}));
 		
-		if(this.id) {
-			this.rpc(
-			'/base_diagram/diagram/get_diagram_info',
-			{
-				'id': this.id,
-				'model': this.model,
-				'bgcolor': this.bgcolor,
-				'shape': this.shape,
-				'node': this.node,
-				'connector': this.connector,
-				'src_node': this.src_node,
-				'des_node': this.des_node,
-				'visible_node_fields': this.visible_fields_nodes,
-				'invisible_node_fields': this.invisible_fields_nodes,
-				'node_fields_string': this.fields_nodes_string,
-				'connector_fields': this.connector_fields,
-				'connector_fields_string': this.fields_connector_string
-			},
-			function(result) {
-				self.draw_diagram(result);
-			}
-			)
-		}
+		this.$element.find('div.oe_diagram_pager button[data-pager-action]').click(function() {
+            var action = $(this).data('pager-action');
+            self.on_pager_action(action);
+        });
+		
+        if(this.id) {
+        	self.get_diagram_info()
+        }
 	},
 	
-	draw_diagram: function(result) {
-		console.log('this>>>',this)
-		var g = new Graph();
-//		var raphel = new 
-		this.in_transition_field = result['in_transition_field'];
-		this.out_transition_field = result['out_transition_field'];
-		var res_nodes = result['nodes'];
-		var res_connectors = result['conn'];
-		
-		var render = function(r, n) {
-			var set;
-			if (n.node.shape == 'ellipse') {
-				set = r.set().push(
-				r.ellipse(n.node.x - 30, n.node.y - 13, 40, 40).attr({
-					"fill": n.node.color,
-					r: "12px",
-					"stroke-width": n.distance == 0 ? "3px" : "1px"
-				})).push(r.text(n.node.x - 30, n.node.y - 10, (n.label || n.id)));
-			} else  {
-				set = r.set().push(
-                r.rect(n.node.x-30, n.node.y-13, 60, 44).attr({"fill": n.node.color, r : "12px", "stroke-width" : n.distance == 0 ? "3px" : "1px" })).push(
-                r.text(n.point[0], n.point[1] + 10, (n.label || n.id) + "\n(" + (n.distance == undefined ? "Infinity" : n.distance) + ")"));
-				
-			}
-            return set;
-        };
-		
-		for(nd in res_nodes) {
-			var res_node = res_nodes[nd];
-			g.addNode(res_node['name'],
-			{
-				node: res_node,
-				render: render
-			});
-		}
-		
-		for(cr in res_connectors) {
-			var res_connector = res_connectors[cr];
-			g.addEdge(res_connector['source'], res_connector['destination']);
-		}
-		
-		var layouter = new Graph.Layout.Spring(g);
-		layouter.layout();
-		
-		var renderer = new Graph.Renderer.Raphael('dia-canvas', g, 800, 800);
-		renderer.draw();
+	get_diagram_info: function() {
+		var self = this;
+        this.rpc(
+            '/base_diagram/diagram/get_diagram_info',
+            {
+                'id': this.id,
+                'model': this.model,
+                'bgcolor': this.bgcolor,
+                'shape': this.shape,
+                'node': this.node,
+                'connector': this.connector,
+                'src_node': this.src_node,
+                'des_node': this.des_node,
+                'visible_node_fields': this.visible_fields_nodes,
+                'invisible_node_fields': this.invisible_fields_nodes,
+                'node_fields_string': this.fields_nodes_string,
+                'connector_fields': this.connector_fields,
+                'connector_fields_string': this.fields_connector_string
+            },
+            function(result) {
+            	self.draw_diagram(result);
+            }
+        );
 	},
+	
+	on_diagram_loaded: function(record) {
+    	var self = this;
+    	var id_record = record['id']
+    	if(id_record) {
+        	self.get_diagram_info();
+        }
+    },
+    
+    draw_diagram: function(result) {
+        var dia = new Graph();
+        
+        this.active_model = result['id_model'];
+        this.in_transition_field = result['in_transition_field'];
+        this.out_transition_field = result['out_transition_field'];
+        var res_nodes = result['nodes'];
+        var res_connectors = result['conn'];
+        
+        //Custom logic
+        var self = this;
+        var renderer= function(r, n) {
+        var node;
+        var set;
+        if (n.node.shape == 'ellipse') {
+            var node = r.ellipse(n.node.x - 30, n.node.y - 13, 40, 20).attr({
+                    "fill": n.node.color,
+                    r: "12px",
+                    "stroke-width": n.distance == 0 ? "3px" : "1px"
+                });
+            
+            set = r.set().push(node).push(r.text(n.node.x - 30, n.node.y - 10, (n.label || n.id)));
+        } 
+		else if(n.node.shape == 'rectangle')
+		{
+			var node = r.rect(n.node.x-30, n.node.y-13, 60, 44).attr({
+             	"fill": n.node.color, 
+                 r : "12px", 
+                "stroke-width" : n.distance == 0 ? "3px" : "1px" 
+                });
+        	set = r.set().push(node).push(r.text(n.node.x , n.node.y+5 , (n.label || n.id)));
+		} 
+		else 
+		{
+            var node = r.circle(n.node.x, n.node.y, 150).attr({
+                        "fill": n.node.color, 
+                        r : "30px", 
+                        "stroke-width" : n.distance == 0 ? "3px" : "1px" 
+                });
+           	set = r.set().push(node).push(r.text(n.node.x , n.node.y , (n.label || n.id)));
+		}
+            jQuery(node.node).attr({
+                'id': n.node.id,
+                'name': n.id,
+                'kind': n.node.options['Kind'] || n.node.options['kind']
+            })
+            jQuery(node.node).dblclick(function() {
+                var $this = jQuery(this);
+                self.search_activity($this.attr('id'), $this.attr('name'), $this.attr('kind'))
+            })
+            return set;
+        }
+        
+        
+        for(node in res_nodes) {
+            var res_node = res_nodes[node];
+            dia.addNode(res_node['name'],{node: res_node,render: renderer});
+        }
+        
+        for(cr in res_connectors) {
+        	var res_connector = res_connectors[cr];
+        	dia.addEdge(res_connector['source'], res_connector['destination']);
+        }
+        
+        
+        var layouter = new Graph.Layout.Spring(dia);
+        layouter.layout();
+        if ($('div#dia-canvas').children().length > 0) {
+        	$('div#dia-canvas').children().remove();
+        }
+        var renderer = new Graph.Renderer.Raphael('dia-canvas', dia, 600, 600);
+        renderer.draw();
+		
+    },
+    
+    search_activity: function(id, name, kind) {
+        var self = this;
+        this.rpc(
+        '/base_diagram/diagram/get_activity',
+        {
+            'id': id,
+            'name': name,
+            'kind': kind,
+            'active_model': this.active_model,
+            'model': this.node
+        },
+        function(result) {
+            self.popup_activity(result)
+        }
+        )
+    },
+    
+    popup_activity: function(result) {
+        
+        this.dataset.ids = result.ids;
+        this.dataset.model = this.node;
+        this.dataset.count = result.ids.length;
+        this.dataset.index = jQuery.inArray(parseInt(result.activity_id,10), result.ids)
+        
+        var element_id = _.uniqueId("act_window_dialog");
+        var dialog = jQuery('<div>', 
+                        {'id': element_id
+                    }).dialog({
+                        title: 'Workflow Activity',
+                        modal: true,
+                        buttons: {
+                            Cancel: function() {
+                                $(this).dialog("close");
+                            }
+                        }
+                    });
+        
+        var activity_form = new openerp.base.FormView(this.view_manager, this.session, element_id, this.dataset, false);
+        activity_form.start();
+    },
+    
+    do_search: function(domains, contexts, groupbys) {
+        var self = this;
+        this.rpc('/base/session/eval_domain_and_context', {
+            domains: domains,
+            contexts: contexts,
+            group_by_seq: groupbys
+        }, function (results) {
+            // TODO: handle non-empty results.group_by with read_group
+            self.dataset.context = self.context = results.context;
+            self.dataset.domain = self.domain = results.domain;
+            self.dataset.read_slice(self.fields, 0, self.limit,function(events){
+                self.schedule_events(events)
+            });
+        });
+    },
 	
 	do_show: function () {
         this.$element.show();
