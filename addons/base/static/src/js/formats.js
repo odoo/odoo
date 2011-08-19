@@ -27,7 +27,9 @@ openerp.base.format_value = function (value, descriptor, value_if_empty) {
             return _.sprintf('%d', value);
         case 'float':
             var precision = descriptor.digits ? descriptor.digits[1] : 2;
-            return _.sprintf('%.' + precision + 'f', value);
+            var int_part = Math.floor(value);
+            var dec_part = Math.floor((value % 1) * Math.pow(10, precision));
+            return _.sprintf('%d' + openerp.base._t.database.parameters.decimal_point + '%d', int_part, dec_part);
         case 'float_time':
             return _.sprintf("%02d:%02d",
                     Math.floor(value),
@@ -39,6 +41,32 @@ openerp.base.format_value = function (value, descriptor, value_if_empty) {
         case 'many2one':
             // name_get value format
             return value[1];
+        case 'datetime':
+            if (typeof(value) == "string")
+                value = openerp.base.str_to_datetime(value);
+            try {
+                return value.strftime(_.sprintf("%s %s", openerp.base._t.database.parameters.date_format, 
+                    openerp.base._t.database.parameters.time_format));
+            } catch (e) {
+                return openerp.base.datetime_to_str(value);
+            }
+            return value;
+        case 'date':
+            if (typeof(value) == "string")
+                value = openerp.base.str_to_date(value);
+            try {
+                return value.strftime(openerp.base._t.database.parameters.date_format);
+            } catch (e) {
+                return openerp.base.date_to_str(value);
+            }
+        case 'datetime':
+            if (typeof(value) == "string")
+                value = openerp.base.str_to_time(value);
+            try {
+                return value.strftime(openerp.base._t.database.parameters.time_format);
+            } catch (e) {
+                return openerp.base.time_to_str(value);
+            }
         default:
             return value;
     }
