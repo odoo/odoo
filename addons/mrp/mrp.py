@@ -815,8 +815,8 @@ class mrp_procurement(osv.osv):
                     phantom_bom_id = self.pool.get('mrp.bom').search(cr, uid, [
                         ('product_id', '=', procurement.move_id.product_id.id),
                         ('bom_id', '=', False),
-                        ('type', '=', 'phantom')]) 
-                    return phantom_bom_id 
+                        ('type', '=', 'phantom')])
+                    return phantom_bom_id
         return False
 
     def check_move_cancel(self, cr, uid, ids, context={}):
@@ -993,8 +993,12 @@ class mrp_procurement(osv.osv):
     def action_produce_assign_product(self, cr, uid, ids, context={}):
         produce_id = False
         company = self.pool.get('res.users').browse(cr, uid, uid, context).company_id
+        move_obj = self.pool.get('stock.move')
         for procurement in self.browse(cr, uid, ids):
-            res_id = procurement.move_id.id
+            res_id = procurement.move_id.id or False
+            if not res_id:
+                raise osv.except_osv(_('Warning !'), _('No reservation is defined for the selected procurement.'))
+            move_obj.write(cr, uid, [res_id],{'location_id':procurement.location_id.id})
             loc_id = procurement.location_id.id
             newdate = DateTime.strptime(procurement.date_planned, '%Y-%m-%d %H:%M:%S') - DateTime.RelativeDateTime(days=procurement.product_id.product_tmpl_id.produce_delay or 0.0)
             newdate = newdate - DateTime.RelativeDateTime(days=company.manufacturing_lead)
@@ -1011,20 +1015,19 @@ class mrp_procurement(osv.osv):
                 'date_planned': newdate.strftime('%Y-%m-%d %H:%M:%S'),
                 'move_prod_id': res_id,
             })
+
             self.write(cr, uid, [procurement.id], {'state':'running'})
             bom_result = self.pool.get('mrp.production').action_compute(cr, uid,
                     [produce_id], properties=[x.id for x in procurement.property_ids])
             wf_service = netsvc.LocalService("workflow")
             wf_service.trg_validate(uid, 'mrp.production', produce_id, 'button_confirm', cr)
-            self.pool.get('stock.move').write(cr, uid, [res_id],
-                    {'location_id':procurement.location_id.id})
         return produce_id
 
     def action_po_assign(self, cr, uid, ids, context={}):
         purchase_id = False
         company = self.pool.get('res.users').browse(cr, uid, uid, context).company_id
         for procurement in self.browse(cr, uid, ids):
-            res_id = procurement.move_id.id
+            res_id = procurement.move_id.id or False
             partner = procurement.product_id.seller_ids[0].name
             partner_id = partner.id
             address_id = self.pool.get('res.partner').address_get(cr, uid, [partner_id], ['delivery'])['delivery']
@@ -1035,7 +1038,7 @@ class mrp_procurement(osv.osv):
             qty = self.pool.get('product.uom')._compute_qty(cr, uid, procurement.product_uom.id, procurement.product_qty, uom_id)
             if procurement.product_id.seller_ids[0].qty:
                 qty=max(qty,procurement.product_id.seller_ids[0].qty)
-                
+
             price = self.pool.get('product.pricelist').price_get(cr, uid, [pricelist_id], procurement.product_id.id, qty, partner_id, {'uom': uom_id})[pricelist_id]
 
             newdate = DateTime.strptime(procurement.date_planned, '%Y-%m-%d %H:%M:%S')
@@ -1044,7 +1047,7 @@ class mrp_procurement(osv.osv):
 
             #Passing partner_id to context for purchase order line integrity of Line name
             context.update({'lang':partner.lang, 'partner_id':partner_id})
-            
+
             product=self.pool.get('product.product').browse(cr,uid,procurement.product_id.id,context=context)
 
             line = {
@@ -1161,11 +1164,11 @@ class stock_warehouse_orderpoint(osv.osv):
         'name': lambda x,y,z,c: x.pool.get('ir.sequence').get(y,z,'mrp.warehouse.orderpoint') or '',
         'product_uom': lambda sel, cr, uid, context: context.get('product_uom', False),
     }
-    
+
     _sql_constraints = [
         ( 'qty_multiple_check', 'CHECK( qty_multiple > 0 )', _('Qty Multiple must be greater than zero.')),
     ]
-    
+
     def onchange_warehouse_id(self, cr, uid, ids, warehouse_id, context={}):
         if warehouse_id:
             w=self.pool.get('stock.warehouse').browse(cr,uid,warehouse_id, context)
