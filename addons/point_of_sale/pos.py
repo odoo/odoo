@@ -303,6 +303,7 @@ class pos_order(osv.osv):
         """Create a picking for each order and validate it."""
         picking_obj = self.pool.get('stock.picking')
         partner_obj = self.pool.get('res.partner')
+        move_obj = self.pool.get('stock.move')
         address_id = False
         orders = self.browse(cr, uid, ids, context)
         for order in orders:
@@ -348,8 +349,8 @@ class pos_order(osv.osv):
                         if line.qty < 0:
                             (location_id, stock_dest_id)= (stock_dest_id, location_id)
 
-                        self.pool.get('stock.move').create(cr, uid, {
-                            'name': 'Stock move (POS %d)' % (order.id, ),
+                        move_obj.create(cr, uid, {
+                            'name': 'Stock move (%s) ' % (order.name, ) + line.product_id.partner_ref,
                             'product_uom': line.product_id.uom_id.id,
                             'product_uos': line.product_id.uom_id.id,
                             'picking_id': picking_id,
