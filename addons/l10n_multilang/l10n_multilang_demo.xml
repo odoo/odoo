@@ -72,7 +72,7 @@
 
         <record id="chart_a2" model="account.account.template">
             <field name="code">A0011</field>
-            <field name="name">Bank Account</field>
+            <field name="name">Bank Account A</field>
             <field ref="chart_a0" name="parent_id"/>
             <field name="type">view</field>
             <field name="user_type" ref="account_type_view"/>
@@ -140,6 +140,60 @@
             <field name="parent_id" ref="chart_a1"/>
         </record>
 
+        <record id="chart_b6" model="account.account.template">
+            <field name="code">B0031</field>
+            <field name="name">Bank Account B</field>
+            <field ref="chart_b3" name="parent_id"/>
+            <field name="type">view</field>
+            <field name="user_type" ref="account_type_view"/>
+        </record>
+
+        <!-- Account Templates for C -->
+
+        <record model="account.account.template" id="chart_c1">
+            <field name="name">Assets C</field>
+            <field name="code">C00012</field>
+            <field name="type">view</field>
+            <field name="user_type" ref="acct_type_asset_view"/>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="chart_a0"/>
+        </record>
+
+        <record model="account.account.template" id="chart_c2">
+            <field name="name">Liabilities C</field>
+            <field name="code">C00014</field>
+            <field name="type">view</field>
+            <field name="user_type" ref="acct_type_liability_view"/>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="chart_a0"/>
+        </record>
+
+        <record model="account.account.template" id="chart_c3">
+            <field name="name">Income C</field>
+            <field name="code">C00021</field>
+            <field name="type">view</field>
+            <field name="user_type" ref="account_type_receivable"/>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="chart_a1"/>
+        </record>
+
+        <record model="account.account.template" id="chart_c4">
+            <field name="name">Expense C</field>
+            <field name="code">C00024</field>
+            <field name="type">view</field>
+            <field name="user_type" ref="account_type_payable"/>
+            <field name="reconcile" eval="False"/>
+            <field name="parent_id" ref="chart_a1"/>
+        </record>
+
+        <record id="chart_c5" model="account.account.template">
+            <field name="code">C0026</field>
+            <field name="name">Bank Account C</field>
+            <field ref="chart_c3" name="parent_id"/>
+            <field name="type">view</field>
+            <field name="user_type" ref="account_type_view"/>
+        </record>
+
         <!-- Chart template -->
         <record id="account_chart_template_a" model="account.chart.template">
             <field name="name">Demo Chart A</field>
@@ -152,7 +206,15 @@
             <field name="name">Demo Chart B</field>
             <field name="account_root_id" ref="chart_a_root"/>
             <field name="tax_code_root_id" ref="atax0"/>
-            <field name="bank_account_view_id" ref="chart_a2"/>
+            <field name="bank_account_view_id" ref="chart_b6"/>
+            <field name="parent_id" ref="account_chart_template_a"/>
+        </record>
+
+        <record id="account_chart_template_c" model="account.chart.template">
+            <field name="name">Demo Chart C</field>
+            <field name="account_root_id" ref="chart_a_root"/>
+            <field name="tax_code_root_id" ref="atax0"/>
+            <field name="bank_account_view_id" ref="chart_c5"/>
             <field name="parent_id" ref="account_chart_template_a"/>
         </record>
 
