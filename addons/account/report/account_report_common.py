@@ -63,18 +63,7 @@ class report_account_common(report_sxw.rml_parse, common_report_header):
             child_ids = report_obj.search(cr, uid, [('parent_id','=',report_id)])
             child_ids.append(datas[0]['id'])
             for child in report_obj.browse(cr, uid, child_ids):
-                if child.type == 'accounts':
-                    for a in child.account_ids:
-                        balance += a.balance
-                # it's the balance of the linked account.report (so it means it's only a way to reuse figures coming from another report)
-                if child.type == 'account_report' and child.account_report_id:
-                    for a in child.account_report_id.account_ids:
-                        balance +=a.balance
-                #it's the sum of balance of the children of this account.report (if there isn't, then it's 0.0)
-                if child.type == 'sum':
-                    for child in report_obj.browse(cr, uid, child_ids):
-                        for a in child.account_ids:
-                            balance += a.balance
+                balance = self.get_report_balance(child)
                 if child.id == datas[0]['id']:
                     datas[0].update({'name': child.name, 'balance': balance})
                 else:
@@ -85,14 +74,26 @@ class report_account_common(report_sxw.rml_parse, common_report_header):
         cr, uid = self.cr, self.uid
         report_obj = self.pool.get('account.report')
         accounts = []
-        if acc_id and data['form'].get('display_details_per_account', False):
+        if acc_id and data['form'].get('account_details', False):
             for rpt in report_obj.browse(cr, uid, [acc_id]):
                 for acc in rpt.account_ids:
                     accounts.append({'code': acc.code, 'name': acc.name, 'bal': acc.balance})
         return accounts
 
-    def get_report_balance(self):
+    def get_report_balance(self, child):
         balance = 0.0
+        if child.type == 'accounts':
+            for a in child.account_ids:
+                balance += a.balance
+        # it's the balance of the linked account.report (so it means it's only a way to reuse figures coming from another report)
+        if child.type == 'account_report' and child.account_report_id:
+            for a in child.account_report_id.account_ids:
+                balance += a.balance
+        #it's the sum of balance of the children of this account.report (if there isn't, then it's 0.0)
+        if child.type == 'sum':
+            for child in report_obj.browse(cr, uid, child_ids):
+                for a in child.account_ids:
+                    balance += a.balance
         return balance
 
 report_sxw.report_sxw('report.account.common', 'account.account',

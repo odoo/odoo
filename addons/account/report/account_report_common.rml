@@ -105,29 +105,31 @@
 	<para style="Preformatted Text">
 		<font color="white"> </font>
 	</para>
-    <blockTable colWidths="490.0" style="Table1">
+    <blockTable colWidths="482.0" style="Table1">
       <para style="P2">[[ repeatIn(get_report_details(data),'r') ]] </para>
       <tr>
         <td>
-            <blockTable colWidths="327.0,163.0" style="Table2">
+            <blockTable colWidths="314.0,156.0" style="Table2">
               <tr>
                 <td><para style="P3">Report Name</para></td>
                 <td><para style="P3">Report Balance</para></td>
               </tr>
               <tr>
                 <td><para style="terp_default_8">[[ r['name'] ]]</para></td>
-                <td><para style="terp_default_8">[[ r['balance'] ]]</para></td>
+                <td><para style="terp_default_8">[[ formatLang(r['balance']) ]]</para></td>
               </tr>
             </blockTable>
             <para style="Preformatted Text">
                 <font color="white"> </font>
             </para>
-            <blockTable colWidths="490.0" style="Table2">
+            <blockTable colWidths="470.0" style="Table2">
               <tr>
-                <td><para style="P3">Account Details</para></td>
+                <td>
+                  <para style="P3">Account Details</para>
+                </td>
               </tr>
             </blockTable>
-            <blockTable colWidths="95.0,232.0,163.0" style="Table3">
+            <blockTable colWidths="157.0,157.0,157.0" style="Table3">
               <tr>
                 <td><para style="P3">Code</para></td>
                 <td><para style="P3">Name</para></td>
@@ -136,7 +138,7 @@
               <tr>
                 <td><para style="terp_default_8">[[ repeatIn(get_account_details(r['id'], data), 'a') ]] [[ a['code'] ]]</para></td>
                 <td><para style="terp_default_8">[[ a['name'] ]]</para></td>
-                <td><para style="terp_default_8">[[ a['bal'] ]]</para></td>
+                <td><para style="terp_default_8">[[ formatLang(a['bal']) ]]</para></td>
               </tr>
             </blockTable>
          </td>
