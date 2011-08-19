@@ -62,7 +62,7 @@
         'res/partner/partner_report.xml',
         'res/partner/partner_view.xml',
         'res/partner/partner_shortcut_data.xml',
-        'res/bank_view.xml',
+        'res/partner/bank_view.xml',
         'res/country_view.xml',
         'res/res_currency_view.xml',
         'res/partner/crm_view.xml',
@@ -71,11 +71,9 @@
         'res/partner/wizard/partner_clear_ids_view.xml',
         'res/partner/wizard/partner_wizard_ean_check_view.xml',
         'res/partner/partner_data.xml',
-
         'res/ir_property_view.xml',
         'security/base_security.xml',
         'publisher_warranty/publisher_warranty_view.xml',
-
         'security/ir.model.access.csv',
         'res/res_widget_view.xml',
         'res/res_widget_data.xml',
