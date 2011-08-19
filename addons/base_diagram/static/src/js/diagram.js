@@ -6,7 +6,6 @@ openerp.base_diagram = function (openerp) {
 QWeb.add_template('/base_diagram/static/src/xml/base_diagram.xml');
 openerp.base.views.add('diagram', 'openerp.base_diagram.DiagramView');
 openerp.base_diagram.DiagramView = openerp.base.View.extend({
-//	init: function(view_manager, session, element_id, dataset, view_id) {
 	init: function(parent, element_id, dataset, view_id, options) {
 		this._super(parent, element_id);
 		this.set_default_options(options);
@@ -233,27 +232,15 @@ openerp.base_diagram.DiagramView = openerp.base.View.extend({
     },
     
     popup_activity: function(result) {
-        
         this.dataset.ids = result.ids;
         this.dataset.model = this.node;
         this.dataset.count = result.ids.length;
-        this.dataset.index = jQuery.inArray(parseInt(result.activity_id,10), result.ids)
-        
-        var element_id = _.uniqueId("act_window_dialog");
-        var dialog = jQuery('<div>', 
-                        {'id': element_id
-                    }).dialog({
-                        title: 'Workflow Activity',
-                        modal: true,
-                        buttons: {
-                            Cancel: function() {
-                                $(this).dialog("close");
-                            }
-                        }
-                    });
-        
-        var activity_form = new openerp.base.FormView(this.view_manager, this.session, element_id, this.dataset, false);
-        activity_form.start();
+        this.dataset.index = jQuery.inArray(parseInt(result.activity_id,10), result.ids);
+        this.form_dialog = new openerp.base_diagram.DiagramFormDialog(this, {}, this.options.action_views_ids.form, this.dataset);
+        this.form_dialog.start();
+        this.form_dialog.form.do_show();
+        this.form_dialog.open();
+        return false;
     },
     
     do_search: function(domains, contexts, groupbys) {
@@ -278,6 +265,40 @@ openerp.base_diagram.DiagramView = openerp.base.View.extend({
 	
     do_hide: function () {
         this.$element.hide();
+    }
+});
+
+openerp.base_diagram.DiagramFormDialog = openerp.base.Dialog.extend({
+    init: function(view, options, view_id, dataset) {
+        this._super(view, options);
+        this.dataset = dataset;
+        this.view_id = view_id;
+        this.view = view;
+    },
+    start: function() {
+        this._super();
+        this.form = new openerp.base.FormView(this, this.element_id, this.dataset, this.view_id, {
+            sidebar: false,
+            pager: false
+        });
+        this.form.start();
+        this.form.on_created.add_last(this.on_form_dialog_saved);
+        this.form.on_saved.add_last(this.on_form_dialog_saved);
+    },
+    on_form_dialog_saved: function() {
+        var id = this.dataset.ids[this.dataset.index];
+//        if (this.view.creating_event_id) {
+////            scheduler.changeEventId(this.view.creating_event_id, id);
+//            this.view.creating_event_id = null;
+//        }
+//        this.view.reload_event(id);
+        this.close();
+    },
+    on_close: function() {
+//        if (this.view.creating_event_id) {
+////            scheduler.deleteEvent(this.view.creating_event_id);
+//            this.view.creating_event_id = null;
+//        }
     }
 });
 };
