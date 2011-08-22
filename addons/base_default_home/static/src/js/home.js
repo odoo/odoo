@@ -63,22 +63,38 @@ openerp.base_default_home = function (openerp) {
                 if (!_(installed_modules).isEmpty()) {
                     return old_home.call(self);
                 }
-                self.$element.find('.oe-application').html(
-                    QWeb.render('StaticHome', {
-                        url: window.location.protocol + '//' + window.location.host + window.location.pathname,
-                        session: self.session,
-                        rows: openerp.base_default_home.applications
-                })).delegate('.oe-static-home-tile-text button', 'click', function () {
-                    self.install_module($(this).val());
+                self.action_manager.do_action({
+                    type: 'ir.actions.client',
+                    tag: 'home.default'
                 })
-
             }, function (err, event) {
                 event.preventDefault();
                 return old_home.call(self);
             });
+        }
+    });
+
+    openerp.base.client_actions.add(
+        'home.default', 'openerp.base_default_home.DefaultHome');
+    openerp.base_default_home.DefaultHome = openerp.base.View.extend({
+        template: 'StaticHome',
+        start: function () {
+            var r = this._super(), self = this;
+            this.$element.delegate('.oe-static-home-tile-text button', 'click', function () {
+                self.install_module($(this).val());
+            });
+            return r;
+        },
+        render: function () {
+            return this._super({
+                url: window.location.protocol + '//' + window.location.host + window.location.pathname,
+                session: this.session,
+                rows: openerp.base_default_home.applications
+            })
         },
         install_module: function (module_name) {
-            var Modules = new openerp.base.DataSetSearch( this, 'ir.module.module', null, [['name', '=', module_name], ['state', '=', 'uninstalled']]);
+            var Modules = new openerp.base.DataSetSearch(
+                this, 'ir.module.module', null, [['name', '=', module_name], ['state', '=', 'uninstalled']]);
             var Upgrade = new openerp.base.DataSet(this, 'base.module.upgrade');
 
             $.blockUI({
