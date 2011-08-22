@@ -631,12 +631,11 @@ openerp.base.ListView.List = openerp.base.Class.extend( /** @lends openerp.base.
 
         this.record_callbacks = {
             'remove': function (event, record) {
-                var $row = self.$current.find('[data-id=' + record.get('id') + ']');
+                var $row = self.$current.find(
+                        '[data-id=' + record.get('id') + ']');
                 var index = $row.data('index');
-                $row.nextAll().each(function (row) {
-                    $(row).data('index', index++);
-                });
                 $row.remove();
+                self.refresh_zebra(index);
             },
             'reset': $.proxy(this, 'on_records_reset'),
             'change': function (event, record) {
@@ -644,18 +643,10 @@ openerp.base.ListView.List = openerp.base.Class.extend( /** @lends openerp.base.
                 $row.replaceWith(self.render_record($row.data('index')));
             },
             'add': function (ev, records, record, index) {
-                var $row = $('<tr>').attr({
-                        'data-id': record.get('id'),
-                        'data-index': index
-                    });
-                if (index === 0) {
-                    $row.prependTo(self.$current);
-                } else {
-                    $row.insertAfter(self.$current.children().eq(index));
-                }
-                $row.nextAll().each(function (row) {
-                    $(row).data('index', ++index);
-                });
+                $('<tr>').attr({
+                    'data-id': record.get('id')
+                }).insertAfter(self.$current.children(':eq(' + index + ')'));
+                self.refresh_zebra(index, 1);
             }
         };
         _(this.record_callbacks).each(function (callback, event) {
@@ -801,6 +792,26 @@ openerp.base.ListView.List = openerp.base.Class.extend( /** @lends openerp.base.
             row_parity: (record_index % 2 === 0) ? 'even' : 'odd',
             row_index: record_index,
             render_cell: openerp.base.format_cell
+        });
+    },
+    /**
+     * Fixes @data-index on all table rows, and fixes the even/odd classes
+     *
+     * @param {Number} [from_index] index from which to resequence
+     * @param {Number} [offset = 0] selection offset for DOM, in case there are rows to ignore in the table
+     */
+    refresh_zebra: function (from_index, offset) {
+        offset = offset || 0;
+        from_index = from_index || 0;
+        var dom_offset = offset + from_index;
+        var sel = dom_offset ? ':gt(' + (dom_offset - 1) + ')' : null;
+        this.$current.children(sel).each(function (i, e) {
+            var index = from_index + i;
+            // reset record-index accelerators on rows and even/odd
+            var even = index%2 === 0;
+            $(e).attr('data-index', index)
+                .toggleClass('even', even)
+                .toggleClass('odd', !even);
         });
     }
 });
@@ -1072,13 +1083,7 @@ openerp.base.ListView.Groups = openerp.base.Class.extend( /** @lends openerp.bas
                 list.records.remove(to_move);
                 list.records.add(to_move, {at: to});
 
-                ui.item.parent().children().each(function (i, e) {
-                    // reset record-index accelerators on rows and even/odd
-                    var even = i%2 === 0;
-                    $(e).attr('data-index', i)
-                        .toggleClass('even', even)
-                        .toggleClass('odd', !even);
-                });
+                list.refresh_zebra();
 
                 // resequencing time!
                 var record, index = to,
