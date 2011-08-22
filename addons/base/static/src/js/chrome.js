@@ -102,6 +102,7 @@ openerp.base.Dialog = openerp.base.OldWidget.extend({
         }
         this.set_options(dialog_options);
         this.$dialog.dialog(this.dialog_options).dialog('open');
+        return this;
     },
     close: function() {
         // Closes the dialog but leave it in a state where it could be opened again.
