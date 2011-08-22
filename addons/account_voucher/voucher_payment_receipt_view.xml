@@ -275,20 +275,35 @@
             <field name="arch" type="xml">
                 <form string="Customer Payment">
                     <group col="12" colspan="4">
-                        <field name="partner_id" colspan="4" required="1" invisible="context.get('line_type', False)" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date)" string="Customer"/>
+                        <field name="partner_id" 
+                            colspan="4" 
+                            required="1" 
+                            invisible="context.get('line_type', False)" 
+                            on_change="onchange_partner_id(partner_id, journal_id, amount, 
+                                       currency_id, type, date, context)" 
+                            string="Customer"/>
                         <field name="journal_id"
                             domain="[('type','in',['bank', 'cash'])]"
                             invisible="context.get('line_type', False)"
-                            widget="selection" select="1"
-                            on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date)"
-                            string="Payment Method" colspan="4"/>
+                            widget="selection" 
+                            select="1"
+                            on_change="onchange_partner_id(partner_id, journal_id, amount, 
+                                       currency_id, type, date, context)"
+                            string="Payment Method" 
+                            colspan="4"/>
                         <field name="amount"
                             colspan="1"
                             invisible="context.get('line_type', False)"
                             string="Paid Amount"
-                            on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date)"/>
+                            on_change="onchange_partner_id(partner_id, journal_id, amount, 
+                                       currency_id, type, date, context)"/>
                         <field name="currency_id" nolabel="1" invisible="1"/>
-                        <field name="date" colspan="4" select="1" invisible="context.get('line_type', False)" on_change="onchange_date(partner_id, journal_id, amount, currency_id, type, date)"/>
+                        <field name="date" 
+                            colspan="4" 
+                            select="1" 
+                            invisible="context.get('line_type', False)" 
+                            on_change="onchange_date(partner_id, journal_id, amount, 
+                                       currency_id, type, datei, context)"/>
                         <field name="reference" colspan="4" select="1" invisible="context.get('line_type', False)" string="Payment Ref"/>
                         <field name="name" colspan="4" invisible="context.get('line_type', False)"/>
                         <field name="company_id" colspan="4" widget="selection" groups="base.group_multi_company"/>
@@ -300,7 +315,7 @@
                     </group>
                     <notebook colspan="4">
                         <page string="Payment Information">
-                            <field name="line_cr_ids" default_get="{'journal_id':journal_id, 'type':type, 'partner_id':partner_id}" colspan="4" nolabel="1" height="140" on_change="onchange_line_ids(line_dr_ids, line_cr_ids, amount, date)">
+                            <field name="line_cr_ids" default_get="{'journal_id':journal_id, 'type':type, 'partner_id':partner_id}" colspan="4" nolabel="1" height="140" on_change="onchange_line_ids(line_dr_ids, line_cr_ids, amount, date, context)">
                                 <tree string="Invoices and outstanding transactions" editable="bottom">
                                     <field name="move_line_id" required="1" context="{'journal_id':parent.journal_id, 'partner_id':parent.partner_id}"
                                         on_change="onchange_move_line_id(move_line_id)"
@@ -319,7 +334,7 @@
                                     <field name="company_currency_id" readonly="1" invisible="1"/>
                                 </tree>
                             </field>
-                            <field name="line_dr_ids" colspan="4" nolabel="1" attrs="{'invisible': [('pre_line','=',False)]}" default_get="{'journal_id':journal_id, 'partner_id':partner_id}" on_change="onchange_line_ids(line_dr_ids, line_cr_ids, amount, date)">
+                            <field name="line_dr_ids" colspan="4" nolabel="1" attrs="{'invisible': [('pre_line','=',False)]}" default_get="{'journal_id':journal_id, 'partner_id':partner_id}" on_change="onchange_line_ids(line_dr_ids, line_cr_ids, amount, date, context)">
                                 <tree string="Credits" editable="bottom">
                                     <field name="move_line_id" required="1" context="{'journal_id':parent.journal_id, 'partner_id':parent.partner_id}"
                                         on_change="onchange_move_line_id(move_line_id)"

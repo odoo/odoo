@@ -515,10 +515,11 @@ class account_voucher(osv.osv):
                 continue
             if line.debit and line.reconcile_partial_id and ttype == 'payment':
                 continue
-            if invoice_id and line.move_id.invoice_id.id == invoice_id:
-                move_line_found = line.id
-                break
-            if voucher_currency_id == company_currency:
+            if invoice_id:
+                if line.invoice.id == invoice_id:
+                    move_line_found = line.id
+                    break
+            elif voucher_currency_id == company_currency:
                 if line.amount_residual == price:
                     move_line_found = line.id
                     break
