@@ -148,7 +148,6 @@ class account_voucher(osv.osv):
     def _compute_writeoff_amount(self, cr, uid, line_dr_ids, line_cr_ids, amount, voucher_date, context=None):
         if context is None:
             context = {}
-        print 'ici changer'
         currency_pool = self.pool.get('res.currency')
         ctx = context.copy()
         counter_for_writeoff = counter_for_currency_diff = real_amount = 0.0
