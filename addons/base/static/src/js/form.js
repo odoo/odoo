@@ -427,10 +427,10 @@ openerp.base.FormView = openerp.base.View.extend( /** @lends openerp.base.FormVi
         this.notification.notify("Cancelling form");
     },
     reload: function() {
-        if (this.datarecord.id) {
-            this.dataset.read_index(_.keys(this.fields_view.fields), this.on_record_loaded);
-        } else {
+        if (this.dataset.index == null || this.dataset.index < 0) {
             this.on_button_new();
+        } else {
+            this.dataset.read_index(_.keys(this.fields_view.fields), this.on_record_loaded);
         }
     },
     get_fields_values: function() {
