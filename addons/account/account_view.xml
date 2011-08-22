@@ -767,7 +767,7 @@
             <field name="search_view_id" ref="view_account_type_search"/>
             <field name="help">An account type is used to determine how an account is used in each journal. The deferral method of an account type determines the process for the annual closing. Reports such as the Balance Sheet and the Profit and Loss report use the category (profit/loss or balance sheet). For example, the account type could be linked to an asset account, expense account or payable account. From this view, you can create and manage the account types you need for your company.</field>
         </record>
-        <menuitem action="action_account_type_form" sequence="6" id="menu_action_account_type_form" parent="account_account_menu"/>
+        <menuitem action="action_account_type_form" sequence="6" id="menu_action_account_type_form" parent="account_account_menu" groups="base.group_extended"/>
         <!--
     Entries
     -->

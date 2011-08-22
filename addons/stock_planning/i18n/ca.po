@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2011-01-11 11:16+0000\n"
-"PO-Revision-Date: 2011-03-06 00:07+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2011-08-17 22:47+0000\n"
+"Last-Translator: mgaja (GrupoIsep.com) <Unknown>\n"
 "Language-Team: Catalan <ca@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 05:48+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-08-20 04:53+0000\n"
+"X-Generator: Launchpad (build 13697)\n"
 
 #. module: stock_planning
 #: code:addons/stock_planning/wizard/stock_planning_createlines.py:73
@@ -23,6 +23,8 @@ msgstr ""
 msgid ""
 "No forecasts for selected period or no products in selected category !"
 msgstr ""
+"No hi ha previsions per al període seleccionat o no hi ha productes en la "
+"categoria seleccionada!"
 
 #. module: stock_planning
 #: help:stock.planning,stock_only:0
@@ -31,22 +33,25 @@ msgid ""
 "selected calculation is made for input, stock and output location of "
 "warehouse."
 msgstr ""
+"Marqueu aquesta opció per calcular l'estoc només de la ubicació estoc del "
+"magatzem seleccionat. Si no es marca, el càlcul es realitza per a les "
+"ubicacions d'entrada i sortida d'estoc del magatzem."
 
 #. module: stock_planning
 #: field:stock.planning,maximum_op:0
 msgid "Maximum Rule"
-msgstr ""
+msgstr "Regla màxim"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period1_per_company:0
 msgid "This Copmany Period1"
-msgstr ""
+msgstr "Aquesta empresa període1"
 
 #. module: stock_planning
 #: view:stock.planning:0
 #: view:stock.sale.forecast:0
 msgid "Group By..."
-msgstr ""
+msgstr "Agrupa per..."
 
 #. module: stock_planning
 #: help:stock.sale.forecast,product_amt:0
@@ -54,13 +59,15 @@ msgid ""
 "Forecast value which will be converted to Product Quantity according to "
 "prices."
 msgstr ""
+"Valor de la previsió que serà convertit en quantitat de producte en funció "
+"de preus."
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:621
 #: code:addons/stock_planning/stock_planning.py:663
 #, python-format
 msgid "Incoming Left must be greater than 0 !"
-msgstr ""
+msgstr "Entrades restants ha de ser major que 0!"
 
 #. module: stock_planning
 #: help:stock.planning,outgoing_before:0
@@ -68,12 +75,15 @@ msgid ""
 "Planned Out in periods before calculated. Between start date of current "
 "period and one day before start of calculated period."
 msgstr ""
+"Sortides planificades en períodes anteriors al calculat. Entreu la data "
+"d'inici del període actual i un dia abans del començament del període "
+"calculat."
 
 #. module: stock_planning
-#: code:addons/stock_planning/wizard/stock_planning_forecast.py:59
+#: code:addons/stock_planning/wizard/stock_planning_forecast.py:60
 #, python-format
 msgid "No products in selected category !"
-msgstr ""
+msgstr "No hi ha productes en la categoria seleccionada!"
 
 #. module: stock_planning
 #: help:stock.sale.forecast.createlines,warehouse_id:0
@@ -81,41 +91,44 @@ msgid ""
 "Warehouse which forecasts will concern. If during stock planning you will "
 "need sales forecast for all warehouses choose any warehouse now."
 msgstr ""
+"Magatzem al que les previsions es refereixen. Si durant la planificació "
+"d'estoc necessita previsions de vendes per a tots els magatzems de triar "
+"qualsevol magatzem ara."
 
 #. module: stock_planning
 #: field:stock.planning,outgoing_left:0
 msgid "Expected Out"
-msgstr ""
+msgstr "Sortides previstes"
 
 #. module: stock_planning
 #: view:stock.sale.forecast:0
 msgid " "
-msgstr ""
+msgstr " "
 
 #. module: stock_planning
 #: field:stock.planning,incoming_left:0
 msgid "Incoming Left"
-msgstr ""
+msgstr "Entrades restants"
 
 #. module: stock_planning
 #: view:stock.planning:0
 msgid "Requisition history"
-msgstr ""
+msgstr "Historial comandes"
 
 #. module: stock_planning
 #: view:stock.sale.forecast.createlines:0
 msgid "Create Forecasts Lines"
-msgstr ""
+msgstr "Crea línies de previsions"
 
 #. module: stock_planning
 #: help:stock.planning,outgoing:0
 msgid "Quantity of all confirmed outgoing moves in calculated Period."
-msgstr ""
+msgstr "Quantitats de totes les sortides confirmades en el període calculat."
 
 #. module: stock_planning
 #: view:stock.period.createlines:0
 msgid "Create Daily Periods"
-msgstr ""
+msgstr "Crea períodes diaris"
 
 #. module: stock_planning
 #: view:stock.planning:0
@@ -125,7 +138,7 @@ msgstr ""
 #: field:stock.sale.forecast,company_id:0
 #: field:stock.sale.forecast.createlines,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "Companyia"
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:640
@@ -135,6 +148,8 @@ msgid ""
 "\n"
 " Initial Stock: "
 msgstr ""
+"\n"
+" Estoc inicial: "
 
 #. module: stock_planning
 #: help:stock.planning,warehouse_forecast:0
@@ -142,32 +157,35 @@ msgid ""
 "All sales forecasts for selected Warehouse of selected Product during "
 "selected Period."
 msgstr ""
+"Totes les previsions de vendes per als magatzems seleccionats de productes "
+"seleccionats durant el període seleccionat."
 
 #. module: stock_planning
 #: model:ir.ui.menu,name:stock_planning.menu_stock_period_creatlines
 msgid "Create Stock and Sales Periods"
-msgstr ""
+msgstr "Crea períodes d'estoc i vendes"
 
 #. module: stock_planning
 #: view:stock.planning:0
 msgid "Minimum Stock Rule Indicators"
-msgstr ""
+msgstr "Indicadors de regles d'estoc mínim"
 
 #. module: stock_planning
 #: help:stock.sale.forecast.createlines,period_id:0
 msgid "Period which forecasts will concern."
-msgstr ""
+msgstr "Període al que concerneixen les previsions."
 
 #. module: stock_planning
 #: field:stock.planning,stock_only:0
 msgid "Stock Location Only"
-msgstr ""
+msgstr "Només ubicacions d'estoc"
 
 #. module: stock_planning
 #: help:stock.planning,already_out:0
 msgid ""
 "Quantity which is already dispatched out of this warehouse in current period."
 msgstr ""
+"Quantitats que ja es van enviar fora d'aquest magatzem en el període actual."
 
 #. module: stock_planning
 #: help:stock.planning,procure_to_stock:0
@@ -175,16 +193,19 @@ msgid ""
 "Chect to make procurement to stock location of selected warehouse. If not "
 "selected procurement will be made into input location of warehouse."
 msgstr ""
+"Marqueu aquesta opció per realitzar els proveïments en la ubicació estoc del "
+"magatzem seleccionat. Si no es marca, el proveïment es realitzarà en la "
+"ubicació d'entrada del magatzem."
 
 #. module: stock_planning
 #: view:stock.planning:0
 msgid "Current Period Situation"
-msgstr ""
+msgstr "Situació del període actual"
 
 #. module: stock_planning
 #: view:stock.period.createlines:0
 msgid "Create Monthly Periods"
-msgstr ""
+msgstr "Crea períodes mensuals"
 
 #. module: stock_planning
 #: help:stock.planning,supply_warehouse_id:0
@@ -192,69 +213,73 @@ msgid ""
 "Warehouse used as source in supply pick move created by 'Supply from Another "
 "Warhouse'."
 msgstr ""
+"Magatzem utilitzat com a origen en el moviment de subministrament creat per "
+"'Subministra des d'un altre magatzem'."
 
 #. module: stock_planning
 #: model:ir.model,name:stock_planning.model_stock_period_createlines
 msgid "stock.period.createlines"
-msgstr ""
+msgstr "estoc.període.crealínies"
 
 #. module: stock_planning
 #: field:stock.planning,outgoing_before:0
 msgid "Planned Out Before"
-msgstr ""
+msgstr "Sortides planificades abans"
 
 #. module: stock_planning
 #: field:stock.planning.createlines,forecasted_products:0
 msgid "All Products with Forecast"
-msgstr ""
+msgstr "Tots els productes amb previsió"
 
 #. module: stock_planning
 #: view:stock.sale.forecast:0
 msgid "Periods :"
-msgstr ""
+msgstr "Períodes :"
 
 #. module: stock_planning
 #: help:stock.planning,already_in:0
 msgid ""
 "Quantity which is already picked up to this warehouse in current period."
 msgstr ""
+"Quantitats que ja han estat recollides en aquest magatzem en el període "
+"actual."
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:644
 #: code:addons/stock_planning/stock_planning.py:686
 #, python-format
 msgid "    Confirmed In Before: "
-msgstr ""
+msgstr "    Entrades confirmades abans: "
 
 #. module: stock_planning
 #: view:stock.sale.forecast:0
 msgid "Stock and Sales Forecast"
-msgstr ""
+msgstr "Previsions d'estoc i vendes"
 
 #. module: stock_planning
 #: model:ir.model,name:stock_planning.model_stock_sale_forecast
 msgid "stock.sale.forecast"
-msgstr ""
+msgstr "estoc.vendes.previsió"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_dept_id:0
 msgid "This Department"
-msgstr ""
+msgstr "Aquest departament"
 
 #. module: stock_planning
 #: field:stock.planning,to_procure:0
 msgid "Planned In"
-msgstr ""
+msgstr "Entrades planificades"
 
 #. module: stock_planning
 #: field:stock.planning,stock_simulation:0
 msgid "Stock Simulation"
-msgstr ""
+msgstr "Simulació d'estoc"
 
 #. module: stock_planning
 #: model:ir.model,name:stock_planning.model_stock_planning_createlines
 msgid "stock.planning.createlines"
-msgstr ""
+msgstr "estoc.planificació.crealínies"
 
 #. module: stock_planning
 #: help:stock.planning,incoming_before:0
@@ -263,21 +288,26 @@ msgid ""
 "Between start date of current period and one day before start of calculated "
 "period."
 msgstr ""
+"Entrades confirmades en períodes anteriors al calculat (incloent les "
+"entrades realitzades). Entreu la data d'inici del període actual i un dia "
+"abans del començament del període calculat."
 
 #. module: stock_planning
 #: view:stock.sale.forecast:0
 msgid "Search  Sales Forecast"
-msgstr ""
+msgstr "Cerca previsions de vendes"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period5_per_user:0
 msgid "This User Period5"
-msgstr ""
+msgstr "El període d'aquest usuari5"
 
 #. module: stock_planning
 #: help:stock.planning,history:0
 msgid "History of procurement or internal supply of this planning line."
 msgstr ""
+"Historial de proveïment o subministrament intern d'aquesta línia de "
+"planificació."
 
 #. module: stock_planning
 #: help:stock.planning,company_forecast:0
@@ -285,51 +315,53 @@ msgid ""
 "All sales forecasts for whole company (for all Warehouses) of selected "
 "Product during selected Period."
 msgstr ""
+"Totes les previsions de vendes per a tota l'empresa (per a tots els "
+"magatzems) dels productes seleccionats durant el període seleccionat."
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period1_per_user:0
 msgid "This User Period1"
-msgstr ""
+msgstr "Aquest usuari periode1"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period3_per_user:0
 msgid "This User Period3"
-msgstr ""
+msgstr "Aquest usuari periode3"
 
 #. module: stock_planning
 #: model:ir.ui.menu,name:stock_planning.menu_stock_planning_main
 #: view:stock.planning:0
 msgid "Stock Planning"
-msgstr ""
+msgstr "Planificació d'estoc"
 
 #. module: stock_planning
 #: field:stock.planning,minimum_op:0
 msgid "Minimum Rule"
-msgstr ""
+msgstr "Regla de mínims"
 
 #. module: stock_planning
 #: view:stock.planning:0
 msgid "Procure Incoming Left"
-msgstr ""
+msgstr "Entrades proveïment restant"
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:646
 #: code:addons/stock_planning/stock_planning.py:688
 #, python-format
 msgid "    Incoming Left: "
-msgstr ""
+msgstr "    Entrades restant: "
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:719
 #, python-format
 msgid "%s Pick List %s (%s,  %s) %s %s \n"
-msgstr ""
+msgstr "%s Llista de selecció %s (%s,  %s) %s %s \n"
 
 #. module: stock_planning
 #: view:stock.planning.createlines:0
 #: view:stock.sale.forecast.createlines:0
 msgid "Create"
-msgstr ""
+msgstr "Crea"
 
 #. module: stock_planning
 #: model:ir.actions.act_window,name:stock_planning.action_view_stock_planning_form
@@ -337,14 +369,14 @@ msgstr ""
 #: model:ir.ui.menu,name:stock_planning.menu_stock_planning
 #: view:stock.planning:0
 msgid "Master Procurement Schedule"
-msgstr ""
+msgstr "Pla mestre de proveïment"
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:636
 #: code:addons/stock_planning/stock_planning.py:678
 #, python-format
 msgid "  Creation Date: "
-msgstr ""
+msgstr "  Data de creació: "
 
 #. module: stock_planning
 #: field:stock.planning,period_id:0
@@ -352,7 +384,7 @@ msgstr ""
 #: field:stock.sale.forecast,period_id:0
 #: field:stock.sale.forecast.createlines,period_id:0
 msgid "Period"
-msgstr ""
+msgstr "Període"
 
 #. module: stock_planning
 #: view:stock.period:0
@@ -360,22 +392,22 @@ msgstr ""
 #: field:stock.planning,state:0
 #: field:stock.sale.forecast,state:0
 msgid "State"
-msgstr ""
+msgstr "Estat"
 
 #. module: stock_planning
 #: help:stock.sale.forecast.createlines,product_categ_id:0
 msgid "Product Category of products which created forecasts will concern."
-msgstr ""
+msgstr "Categoria dels productes dels quals es crearan les previsions ."
 
 #. module: stock_planning
 #: model:ir.model,name:stock_planning.model_stock_period
 msgid "stock period"
-msgstr ""
+msgstr "període estoc"
 
 #. module: stock_planning
 #: model:ir.model,name:stock_planning.model_stock_sale_forecast_createlines
 msgid "stock.sale.forecast.createlines"
-msgstr ""
+msgstr "estoc.venda.previsió.crealínies"
 
 #. module: stock_planning
 #: field:stock.planning,warehouse_id:0
@@ -383,7 +415,7 @@ msgstr ""
 #: field:stock.sale.forecast,warehouse_id:0
 #: field:stock.sale.forecast.createlines,warehouse_id:0
 msgid "Warehouse"
-msgstr ""
+msgstr "Magatzem"
 
 #. module: stock_planning
 #: help:stock.planning,stock_simulation:0
@@ -395,32 +427,40 @@ msgid ""
 "Initial Stock - Planned Out Before + Incoming Before - Planned Out + Planned "
 "In."
 msgstr ""
+"Simulació d'estoc al final del període seleccionat.\n"
+" Per al període actual és: \n"
+"Estoc inicial – sortides + entrades – sortides previstes + entrades "
+"esperades.\n"
+"Per als següents períodes és: \n"
+"Estoc inicial – sortides previstes anteriors + entrades anteriors – sortides "
+"previstes + entrades previstes."
 
 #. module: stock_planning
 #: help:stock.sale.forecast,analyze_company:0
 msgid "Check this box to see the sales for whole company."
 msgstr ""
+"Seleccioneu aquesta casella per veure les vendes de tota l'a companyia."
 
 #. module: stock_planning
 #: field:stock.sale.forecast,name:0
 msgid "Name"
-msgstr ""
+msgstr "Nom"
 
 #. module: stock_planning
 #: view:stock.planning:0
 msgid "Search Stock Planning"
-msgstr ""
+msgstr "Cerca planificació d'estoc"
 
 #. module: stock_planning
 #: field:stock.planning,incoming_before:0
 msgid "Incoming Before"
-msgstr ""
+msgstr "Entrades abans"
 
 #. module: stock_planning
 #: field:stock.planning.createlines,product_categ_id:0
 #: field:stock.sale.forecast.createlines,product_categ_id:0
 msgid "Product Category"
-msgstr ""
+msgstr "Categoria del producte"
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:621
@@ -428,7 +468,7 @@ msgstr ""
 #: code:addons/stock_planning/stock_planning.py:665
 #: code:addons/stock_planning/stock_planning.py:667
 #: code:addons/stock_planning/wizard/stock_planning_createlines.py:73
-#: code:addons/stock_planning/wizard/stock_planning_forecast.py:59
+#: code:addons/stock_planning/wizard/stock_planning_forecast.py:60
 #, python-format
 msgid "Error !"
 msgstr "Error!"
@@ -437,12 +477,12 @@ msgstr "Error!"
 #: code:addons/stock_planning/stock_planning.py:626
 #, python-format
 msgid "Manual planning for %s"
-msgstr ""
+msgstr "Manual per a la planificació de %s"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_user_id:0
 msgid "This User"
-msgstr ""
+msgstr "Aquest usuari"
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:643
@@ -452,21 +492,23 @@ msgid ""
 "\n"
 " Confirmed Out: "
 msgstr ""
+"\n"
+" Sortides confirmades: "
 
 #. module: stock_planning
 #: view:stock.planning:0
 msgid "Forecasts"
-msgstr ""
+msgstr "Previsions"
 
 #. module: stock_planning
 #: view:stock.planning:0
 msgid "Supply from Another Warehouse"
-msgstr ""
+msgstr "Proveir des d'un altre magatzem"
 
 #. module: stock_planning
 #: view:stock.planning:0
 msgid "Calculate Planning"
-msgstr ""
+msgstr "Calcula planificació"
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:636
@@ -493,54 +535,56 @@ msgstr ""
 #: code:addons/stock_planning/stock_planning.py:140
 #, python-format
 msgid "Invalid action !"
-msgstr ""
+msgstr "Acció no vàlida!"
 
 #. module: stock_planning
 #: help:stock.planning,stock_start:0
 msgid "Stock quantity one day before current period."
-msgstr ""
+msgstr "Quantitat d'estoc un dia abans del període actual."
 
 #. module: stock_planning
 #: view:stock.period.createlines:0
 msgid "Create Weekly Periods"
-msgstr ""
+msgstr "Crea períodes setmanals"
 
 #. module: stock_planning
 #: help:stock.planning,maximum_op:0
 msgid "Maximum quantity set in Minimum Stock Rules for this Warhouse"
 msgstr ""
+"Quantitat màxima establerta en les regles d'estoc mínim per a aquest "
+"magatzem."
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:665
 #, python-format
 msgid "You must specify a Source Warehouse !"
-msgstr ""
+msgstr "Heu d'especificar un magatzem origen!"
 
 #. module: stock_planning
 #: view:stock.planning.createlines:0
 msgid "Creates planning lines for selected period and warehouse."
-msgstr ""
+msgstr "Crea línies de planificació per al període i almacen seleccionats."
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period4_per_user:0
 msgid "This User Period4"
-msgstr ""
+msgstr "Aquest usuari període 4"
 
 #. module: stock_planning
 #: view:stock.planning.createlines:0
 #: view:stock.sale.forecast.createlines:0
 msgid "Note: Doesn't duplicate existing lines created by you."
-msgstr ""
+msgstr "Nota: No duplica les línies creades per vostè."
 
 #. module: stock_planning
 #: view:stock.period:0
 msgid "Stock and Sales Period"
-msgstr ""
+msgstr "Període d'estoc i vendes"
 
 #. module: stock_planning
 #: field:stock.planning,company_forecast:0
 msgid "Company Forecast"
-msgstr ""
+msgstr "Previsió de la companyia"
 
 #. module: stock_planning
 #: help:stock.planning,product_uom:0
@@ -549,60 +593,63 @@ msgid ""
 "Unit of Measure used to show the quanities of stock calculation.You can use "
 "units form default category or from second category (UoS category)."
 msgstr ""
+"Unitat de mesura utilitzada per mostrar les quantitats calculades d'estoc. "
+"Podeu utilitzar les unitats de la categoria per defecte o les de la segona "
+"categoria (categoria UdV)."
 
 #. module: stock_planning
 #: view:stock.sale.forecast:0
 msgid "Per User :"
-msgstr ""
+msgstr "Per usuari :"
 
 #. module: stock_planning
 #: model:ir.ui.menu,name:stock_planning.menu_stock_sale_forecast
 #: model:ir.ui.menu,name:stock_planning.menu_stock_sale_forecast_all
 #: view:stock.sale.forecast:0
 msgid "Sales Forecasts"
-msgstr ""
+msgstr "Previsions de vendes"
 
 #. module: stock_planning
 #: field:stock.period,name:0
 #: field:stock.period.createlines,name:0
 msgid "Period Name"
-msgstr ""
+msgstr "Nom del període"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,user_id:0
 msgid "Created/Validated by"
-msgstr ""
+msgstr "Creat/Validat per"
 
 #. module: stock_planning
 #: view:stock.planning:0
 msgid "Internal Supply"
-msgstr ""
+msgstr "Subministrament intern"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period4_per_company:0
 msgid "This Company Period4"
-msgstr ""
+msgstr "El període d'aquesta companyia4"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period5_per_company:0
 msgid "This Company Period5"
-msgstr ""
+msgstr "El període d'aquesta companyia5"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period2_per_company:0
 msgid "This Company Period2"
-msgstr ""
+msgstr "El període d'aquesta companyia2"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period3_per_company:0
 msgid "This Company Period3"
-msgstr ""
+msgstr "El període d'aquesta companyia3"
 
 #. module: stock_planning
 #: field:stock.period,date_start:0
 #: field:stock.period.createlines,date_start:0
 msgid "Start Date"
-msgstr ""
+msgstr "Data d'inici"
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:642
@@ -612,11 +659,13 @@ msgid ""
 "\n"
 " Already Out: "
 msgstr ""
+"\n"
+" Sortides realitzades: "
 
 #. module: stock_planning
 #: field:stock.planning,confirmed_forecasts_only:0
 msgid "Validated Forecasts"
-msgstr ""
+msgstr "Previsions validades"
 
 #. module: stock_planning
 #: help:stock.planning.createlines,product_categ_id:0
@@ -624,39 +673,42 @@ msgid ""
 "Planning will be created for products from Product Category selected by this "
 "field. This field is ignored when you check \"All Forecasted Product\" box."
 msgstr ""
+"Es crearà la planificació per als productes de la categoria de productes "
+"seleccionada amb aquest camp. Aquest camp s'ignora quan es marca l'opció "
+"\"Totes les previsions de productes”."
 
 #. module: stock_planning
 #: field:stock.planning,planned_outgoing:0
 msgid "Planned Out"
-msgstr ""
+msgstr "Sortides planificades"
 
 #. module: stock_planning
 #: view:stock.sale.forecast:0
 msgid "Per Department :"
-msgstr ""
+msgstr "Per departament:"
 
 #. module: stock_planning
 #: view:stock.planning:0
 msgid "Forecast"
-msgstr ""
+msgstr "Previsió"
 
 #. module: stock_planning
 #: selection:stock.period,state:0
 #: selection:stock.planning,state:0
 #: selection:stock.sale.forecast,state:0
 msgid "Draft"
-msgstr ""
+msgstr "Esborrany"
 
 #. module: stock_planning
 #: view:stock.period:0
 msgid "Closed"
-msgstr ""
+msgstr "Tancat"
 
 #. module: stock_planning
 #: view:stock.planning:0
 #: view:stock.sale.forecast:0
 msgid "Warehouse "
-msgstr ""
+msgstr "Magatzem "
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:646
@@ -666,11 +718,13 @@ msgid ""
 "\n"
 " Expected Out: "
 msgstr ""
+"\n"
+" Sortides previstes: "
 
 #. module: stock_planning
 #: view:stock.period.createlines:0
 msgid "Create periods for Stock and Sales Planning"
-msgstr ""
+msgstr "Crea períodes per la planificació d'estoc i vendes"
 
 #. module: stock_planning
 #: help:stock.planning,planned_outgoing:0
@@ -679,6 +733,11 @@ msgid ""
 "Period of selected Product. To plan this value look at Confirmed Out or "
 "Sales Forecasts. This value should be equal or greater than Confirmed Out."
 msgstr ""
+"Introduïu la quantitat sortint planificada per al magatzem seleccionat "
+"durant el període seleccionat i per al producte seleccionat. Per planificar "
+"aquest valor podeu fixar-se en les sortides confirmades o les previsions de "
+"vendes. Aquest valor hauria de ser igual o superior a les sortides "
+"confirmades."
 
 #. module: stock_planning
 #: model:ir.module.module,description:stock_planning.module_meta_information
@@ -912,12 +971,264 @@ msgid ""
 "periods for the same product, warehouse and company because results can be "
 "unpredictable. The same apply to Forecasts lines.\n"
 msgstr ""
+"\n"
+"Aquest mòdul es basa en la versió original d'OpenERP Estoc_planning SA mòdul "
+"1.0 del mateix nom Programador de Compres Mestres. \n"
+"\n"
+"El propòsit de la MPS és permetre crear un manual de contractació (sol "
+"licitud), a part del programador MRP (que funciona automàticament, basant-se "
+"en regles d'existències mínimes). \n"
+"\n"
+"Els termes utilitzats en el mòdul: \n"
+"- Estoc i Període de vendes - és el temps (entre data d'inici i data de "
+"finalització) per al qual planifica l'Estoc i la Previsió de Vendes i fa la "
+"Planificació de les compres. \n"
+"- Estoc i pronòstic de vendes - és la quantitat de productes que planeja "
+"vendre en el període. \n"
+"- Planificació de Estoc - és la quantitat de productes que planeja comprar o "
+"produir per al període. \n"
+"\n"
+"Perquè tenim una altra mòdul sale_forecast que utilitza els termes "
+"\"Pronòstic de Vendes\" i \"Planificació\" com a valors de quantitat, "
+"utilitzarem termes \"Estoc i Pronòstic de Vendes\" i \"Planificació del "
+"Estoc\" per fer èmfasi que fem servir els valors de quantitat. \n"
+"\n"
+"L'activitat amb aquest mòdul es divideix en tres passos: \n"
+"- Creació de Períodes. Pas obligatori. \n"
+"- Creació de Pronòstics de Venda i introducció de les seves quantitats. Un "
+"pas opcional però útil per a una major planificació. \n"
+"- Creació de línies de Planificació, introducció de les seves quantitats i "
+"fer Adquisicions. Fer compres és el pas final per al període. \n"
+"\n"
+"Períodes \n"
+"========= \n"
+"Té dues opcions de menú per Períodes en \"Gestió de Vendes - Configuració\". "
+"Són les següents: \n"
+"- \"Crear els Períodes de Vendes\" - Que automatitza la creació de períodes "
+"diaris, setmanals o mensuals. \n"
+"- \"Estoc i Períodes de vendes\" - Que permet crear qualsevol tipus de "
+"períodes, el canvi de les dates i el canvi de l'Estat del període. \n"
+"\n"
+"Creació de períodes és el primer pas que ha de fer per utilitzar les "
+"funcions dels mòduls. Podeu crear períodes personalitzats mitjançant el botó "
+"\"Nou\" al formulari o vista d'\"Estoc i Períodes de Vendes\", però es "
+"recomana utilitzar l'eina automàtica. \n"
+"\n"
+"Observacions: \n"
+"- Aquests períodes (Estoc oficial i Períodes de Vendes) estan separen de "
+"Finances o d'altres períodes en el sistema. \n"
+"- Els Períodes no s'assignen a les companyies (en cap cas quan s'utilitza la "
+"funció multicompanyia). El mòdul suposa que utilitza els mateixos períodes a "
+"través de les companyies. Si voleu utilitzar períodes diferents per a "
+"diferents companyies definiu al seu gust (poden solapar). Més endavant en "
+"aquest text s'indica com utilitzar aquests períodes. \n"
+"- Quan els períodes són creats automàticament les seves dates d'inici i "
+"final s'inicien amb l'hora 00:00:00 i 23:59:00 com a hora final. Quan crea "
+"períodes diaris tindran data d'inici 2010.01.31 00:00:00 i data de "
+"finalització 2010.01.31 23:59:00. Funciona només en la creació automàtica "
+"dels períodes. Quan creeu períodes manualment cal anar amb compte amb les "
+"hores, ja que pot tenir valors incorrectes en vendes i estoc. \n"
+"- Si utilitzeu períodes solapats per al mateix producte, magatzem i "
+"companyia, els resultats poden ser imprevisibles. \n"
+"- Si la data actual no pertany a cap període o si té forats entre els "
+"períodes els resultats poden ser imprevisibles. \n"
+"\n"
+"Previsió de vendes \n"
+"==================== \n"
+"Té menús poques vendes previst en \"Gestió de Vendes - Pronòstics de "
+"Vendes\". \n"
+"- \"Creació de Pronòstics de Vendes per als Períodes de Vendes\" - que "
+"automatitza la creació de línies de previsions d'acord amb alguns "
+"paràmetres. \n"
+"- \"Les Previsions de Vendes\" - alguns menús per a treballar amb llistes de "
+"les previsions i les formes. \n"
+"\n"
+"Menú \"Crear Pronòstics de Vendes per Períodes de Vendes\" crea Pronòstics "
+"per als productes de la categoria seleccionada, per al període i Magatzem "
+"seleccionat. És una opció \"Còpia de l'Últim Pronòstic\" per copiar "
+"previsions i altres ajustaments del període anterior a aquest per crear un. "
+"\n"
+"\n"
+"Observacions: \n"
+"- Aquesta eina no crea línies, si les línies oportunes (per al mateix "
+"producte, Període i Magatzem, i validat o creat per vostè) ja existeixen. Si "
+"voleu crear un altre pronòstic, si les línies pertinents hi ha de fer-ho "
+"manualment usant els menús que es descriuen a continuació. \n"
+"- Quan les línies es creen són validades per una altra persona que pot "
+"utilitzar aquesta eina per crear altres línies per al mateix període, "
+"Producte i Magatzem. \n"
+"- Quan es tria \"Copiar Últim Pronòstic\" la línia creada té la quantitat i "
+"alguns ajustos del seu (validat o creades per vostè, si no s'ha validat "
+"encara) pronòstic que per a l'últim període anterior al període de la "
+"previsió creada. Si hi ha pocs pronòstics per al període anterior a aquest "
+"(és possible) el sistema pren una d'ells (no hi ha regla sobre quina). \n"
+"\n"
+"\n"
+"Menús \"Previsió de Vendes\" \n"
+"En el formulari \"Previsió de Vendes\" principalment ha d'introduir una "
+"quantitat prevista a la \"Quantitat de Producte\". A més del càlcul pot "
+"funcionar per a les previsions esborrany. No obstant això, la validació pot "
+"guardar les seves dades contra qualsevol canvi accidental. Podeu fer clic en "
+"botó \"Validar\", però no és obligatori. \n"
+"\n"
+"En lloc de la quantitat prevista es pot introduir la quantitat de previsió "
+"de vendes en el camp \"Quantitat de Producte\". El sistema comptarà la "
+"quantitat en funció del Preu de Venda del producte. \n"
+"\n"
+"Tots els valors del formulari s'expressen en la unitat de mesura "
+"seleccionada en el formulari. Vostè pot seleccionar un de la unitat de "
+"mesura de la categoria per defecte o de segona categoria. Quan es canvia la "
+"unitat de mesura les quantitats es tornaran a calcular d'acord amb la nova "
+"UOM: els valors editables (camps blaus) immediatament, els camps no "
+"editables després de fer clic al botó \"Calcular Planificació\". \n"
+"\n"
+"Per trobar el valor adequat per Previsió de Venda es pot utilitzar la taula "
+"\"Historial de vendes\" per a aquest producte. Has d'introduir els "
+"paràmetres en la part superior esquerra d'aquesta taula i el sistema "
+"comptarà les quantitats de venda d'acord amb aquests paràmetres. Així que "
+"vostè pot seleccionar, per exemple. del seu departament (a la part superior) "
+"i després (a l'esquerra): l'últim període, el període anterior a l'últim i "
+"el període de fa un any. \n"
+"\n"
+"Observacions: \n"
+"\n"
+"\n"
+"Planificació de les compres \n"
+"==================== \n"
+"Menú per a la Planificació del que pots trobar a \"Magatzem - Planificació "
+"del Estoc\". \n"
+"- \"Crea un fitxer de Planificació Líneas\" - li permet automatitzar la "
+"creació de línies de planificació d'acord amb alguns paràmetres. \n"
+"- \"Programador Mestre d'Adquisicions\" - és el menú més important del mòdul "
+"que permet la creació de la contractació. \n"
+"\n"
+"D'acord amb les previsions de vendes, és la fase de planificació de vendes. "
+"La planificació de compres (planificació) és la fase de programació de "
+"compres o de producció. Vostè pot crear la planificació de les compres "
+"ràpidament amb l'eina del menú \"Crea Línies de Planificació de Estoc\", "
+"llavors pot revisar la planificació creada i fer compres usant el menú "
+"\"Llista Mestra d'Adquisicions\". \n"
+"\n"
+"Menú \"Crear Línies de Planificació d'Estoc\" li permet crear ràpidament les "
+"Línies de Planificació de productes de la categoria seleccionada, en "
+"determinats períodes, i per al magatzem seleccionat. Al marcar l'opció "
+"\"Tots els productes amb Pronòstic\" el sistema crea les línies per a tots "
+"els productes que té previst per al període seleccionat i Magatzem. La "
+"Categoria seleccionada es tindrà en compte en aquest cas. \n"
+"\n"
+"Sota el menú \"Programador Mestre d'Adquisicions\" en general, pot canviar "
+"els valors \"Sortides planificades\" i \"Entrades planificades\" per "
+"observar el camp \"Simulació de Estoc\" i decidir si aquest valor és exacte "
+"per al final del període. \n"
+"\"Planejat\" pot basar en la \"Previsió de magatzem\", que és la suma de "
+"totes les previsions per al període i Magatzem. Però la planificació es pot "
+"basar en qualsevol altra informació que tingui. No cal tenir cap pronòstic. "
+"\n"
+"\"Entrades planificades\" la quantitat s'utilitza per calcular el camp "
+"\"Entrades Restants\" que és la quantitat que falta per adquirir per assolir "
+"l'estoc, com s'indica en la \"Simulació de Estoc\" al final del període. "
+"Vostè pot comparar la \"Simulació de Estoc\" amb les normes de quantitat "
+"mínima d'existències visibles en el formulari. Però pot planejar una "
+"quantitat diferent al de les Regles Mínimes de Estoc. El càlcul està fet per "
+"a tot el magatzem per defecte. Però si vostè vol veure els valors de la "
+"ubicació de l'estoc del magatzem calculat, podeu utilitzar la casella "
+"\"Només Ubicació del Estoc\". \n"
+"\n"
+"Si després de diversos intents decideix que les quantitats són correctes per "
+"a la qual \"Sortides planificades\" i el \"Entrades planificades\" i que "
+"està satisfet amb el final d'existències del període calculat en la "
+"\"Simulació del Estoc\" pot fer clic a \"Adquirir Entrades Restants \"per "
+"obtenir la quantitat del camp\" Entrades Restants \"al Magatzem. El sistema "
+"crea la corresponent ordre de Compres. Vostè pot decidir si la contractació "
+"es farà per l'estoc o per a la ubicació d'entrada del Magatzem calculat. \n"
+"\n"
+"Si no vols Produir o Comprar el producte, però només has de triar la "
+"quantitat calculada, des d'un altre magatzem pot fer clic a "
+"\"Subministrament des Altre Magatzem\" (en lloc de \"Adquirir Entrades "
+"Restants\"). El sistema crea la llista de selecció des del Magatzem origen "
+"seleccionat fins el Magatzem calculat (com a destinació). També pot decidir "
+"si aquesta selecció s'ha de fer de magatzem o la ubicació de sortida del "
+"magatzem d'origen. La ubicació de destinació (magatzem o entrada) del "
+"magatzem de destinació, s'utilitzarà com establert per \"Adquirir Entrades "
+"Restants\". \n"
+"\n"
+"Per veure les quantitats adequades en els camps \"Entrada confirmada\", "
+"\"Sortida Confirmada\", \"Entrada Confirmada Abans\", \"Sortides "
+"planificades abans\" i \"Simulació de Estoc\" ha de fer clic al botó "
+"\"Calcular Planificació\". \n"
+"\n"
+"Tots els valors en el formulari s'expressen en la unitat de mesura "
+"seleccionada en el formulari. Vostè pot seleccionar un de la unitat de "
+"mesura de la categoria per defecte o d'una segona categoria. Quan es canvia "
+"la unitat de mesura les quantitats es tornaran a calcular d'acord amb UOM: "
+"els valors editables immediatament (camps blaus), els camps no editables "
+"després de fer clic al botó \"Calcular Planificació\". \n"
+"\n"
+"Com es calcula el camp Simulació del Estoc: \n"
+"Generalment la Simulació del Estoc mostra l'estoc al final període calculat "
+"d'acord amb alguns moviments d'estoc previst o confirmat. El càlcul s'inicia "
+"sempre amb la quantitat d'estoc real del inici del període actual. Després "
+"es calcula la suma o resta de les quantitats del període o períodes abans "
+"calculats. \n"
+"Quan està en el mateix període (període actual és el mateix que el calculat) "
+"la Simulació del Estoc es calcula de la manera següent: \n"
+"Simulació de Estoc = \n"
+"[Tab] Estoc inicial del període actual \n"
+"[Tab] - Sortides planificades \n"
+"[Tab] + Entrades planificades \n"
+"\n"
+"Quan es calcula el període següent a l'actual: \n"
+"Simulació del Estoc = \n"
+"[Tab] Estoc inicial del període actual \n"
+"[Tab] - Planificació de Sortides del Període actual \n"
+"[Tab] + Entrades Confirmades en el període actual (incl. les Entrades ja "
+"existents) \n"
+"[Tab] - Sortides planificades del Període calculat \n"
+"[Tab] + Entrades planificades en el Període calculat. \n"
+"\n"
+"Com pot veure el període calculat es pren de la mateixa manera que en el cas "
+"anterior. No obstant això, el càlcul del període actual es fa de manera una "
+"mica diferent. En primer lloc ha de tenir en compte que el sistema té per al "
+"Període actual només Confirmats els moviments d'entrada. Això significa que "
+"ha de fer la planificació i la compra per Període actual abans d'aquest "
+"càlcul (per al Pròxim període a l'actual). \n"
+"\n"
+"Quan es calcula el període següent: \n"
+"Col lecció de simulació = \n"
+"[Tab] Estoc inicial del Període actual \n"
+"[Tab] - Suma de Planificació de sortida dels períodes abans calculats \n"
+"[Tab] + Suma Confirmats En períodes anteriors calculats (incl. les entrades "
+"ja existents) \n"
+"[Tab] - Sortides planificades del Període calculat \n"
+"[Tab] + Entrades planificades del Període calculat. \n"
+"\n"
+"Els períodes anteriors calculats, significa que els període comença en "
+"l'actual fins al període abans calculat. \n"
+"\n"
+"Observacions: \n"
+"- Recordeu fer la planificació per a tots els períodes abans calculats a "
+"causa de ometre aquestes quantitats i les adquisicions poden causar "
+"suggeriments errònies per a les compres d'alguns períodes posteriors. \n"
+"- Si ha realitzat la planificació d'uns pocs períodes posteriors i troba que "
+"les Sortides Confirmades reals són més grans del que preveu en alguns "
+"períodes abans que pugui repetir la Planificació i realitzar una altra "
+"adquisició. Ho ha de fer en la mateixa línia de la planificació. Si es crea "
+"una altra línia de planificació de suggeriments pot estar equivocada. \n"
+"- Quan vol treballar amb diferents períodes per a una part dels productes, "
+"defineixi dos tipus de períodes (pe setmanal i mensual) i els utilitzi'ls "
+"per a diferents productes. Exemple: si utilitza sempre els períodes "
+"setmanals per als productes A, i els períodes mensuals dels productes B tots "
+"els seus càlculs funcionaran correctament. També pot utilitzar diferents "
+"tipus de períodes per als mateixos productes de diferents magatzems de "
+"diferents companyies. Però no es poden utilitzar períodes solapats per al "
+"mateix producte d'un magatzem, i companyia perquè els resultats poden ser "
+"imprevisibles. El mateix s'aplica a les línies de Previsions\n"
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:140
 #, python-format
 msgid "Cannot delete Validated Sale Forecasts !"
-msgstr ""
+msgstr "No es poden esborrar previsions de vendes validades !"
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:641
@@ -927,6 +1238,8 @@ msgid ""
 "\n"
 " Planned Out: "
 msgstr ""
+"\n"
+" Sortides planificades: "
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:667
@@ -935,29 +1248,31 @@ msgid ""
 "You must specify a Source Warehouse different than calculated (destination) "
 "Warehouse !"
 msgstr ""
+"Heu d'especificar un magatzem d'origen diferent del magatzem calculat (de "
+"destinació)!"
 
 #. module: stock_planning
 #: model:ir.actions.act_window,name:stock_planning.action_stock_sale_forecast_createlines_form
 #: model:ir.ui.menu,name:stock_planning.menu_stock_sale_forecast_createlines
 msgid "Create Sales Forecasts"
-msgstr ""
+msgstr "Crea previsions de vendes"
 
 #. module: stock_planning
 #: view:stock.sale.forecast.createlines:0
 msgid "Creates forecast lines for selected warehouse and period."
-msgstr ""
+msgstr "Crea línies de previsió per al magatzem i període seleccionats."
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:656
 #, python-format
 msgid "%s Requisition (%s,  %s) %s %s \n"
-msgstr ""
+msgstr "%s requisició (%s,  %s) %s %s \n"
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:655
 #, python-format
 msgid "Requisition ("
-msgstr ""
+msgstr "Sol·licitud ("
 
 #. module: stock_planning
 #: help:stock.planning,outgoing_left:0
@@ -966,120 +1281,123 @@ msgid ""
 "Planned Out and Confirmed Out. For current period Already Out is also "
 "calculated"
 msgstr ""
+"Quantitat prevista per sortir en el període seleccionat. Diferència entre "
+"les sortides previstes i les sortides confirmades. Per al període actual "
+"també es calculen les sortides realitzades."
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period4_id:0
 msgid "Period4"
-msgstr ""
+msgstr "Període4"
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:642
 #: code:addons/stock_planning/stock_planning.py:684
 #, python-format
 msgid "    Already In: "
-msgstr ""
+msgstr "    Entrades realitzades: "
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period2_id:0
 msgid "Period2"
-msgstr ""
+msgstr "Període2"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period3_id:0
 msgid "Period3"
-msgstr ""
+msgstr "Període3"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period1_id:0
 msgid "Period1"
-msgstr ""
+msgstr "Període1"
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:647
 #: code:addons/stock_planning/stock_planning.py:689
 #, python-format
 msgid "    Minimum stock: "
-msgstr ""
+msgstr "    Estoc mínim: "
 
 #. module: stock_planning
 #: field:stock.planning,active_uom:0
 #: field:stock.sale.forecast,active_uom:0
 msgid "Active UoM"
-msgstr ""
+msgstr "UdM activa"
 
 #. module: stock_planning
 #: model:ir.actions.act_window,name:stock_planning.action_stock_planning_createlines_form
 #: model:ir.ui.menu,name:stock_planning.menu_stock_planning_createlines
 #: view:stock.planning.createlines:0
 msgid "Create Stock Planning Lines"
-msgstr ""
+msgstr "Crea línies de planificació d'estoc"
 
 #. module: stock_planning
 #: view:stock.planning:0
 msgid "General Info"
-msgstr ""
+msgstr "Informació general"
 
 #. module: stock_planning
 #: model:ir.actions.act_window,name:stock_planning.action_view_stock_sale_forecast_form
 msgid "Sales Forecast"
-msgstr ""
+msgstr "Previsió de vendes"
 
 #. module: stock_planning
 #: view:stock.planning:0
 msgid "Planning and Situation for Calculated Period"
-msgstr ""
+msgstr "Planificació i situació per al període calculat"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period1_per_warehouse:0
 msgid "This Warehouse Period1"
-msgstr ""
+msgstr "Peridodo d'aquest magatzem1"
 
 #. module: stock_planning
 #: field:stock.planning,warehouse_forecast:0
 msgid "Warehouse Forecast"
-msgstr ""
+msgstr "Previsió magatzem"
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:643
 #: code:addons/stock_planning/stock_planning.py:685
 #, python-format
 msgid "    Confirmed In: "
-msgstr ""
+msgstr "    Entrades confirmades: "
 
 #. module: stock_planning
 #: view:stock.sale.forecast:0
 msgid "Sales history"
-msgstr ""
+msgstr "Històric de vendes"
 
 #. module: stock_planning
 #: field:stock.planning,supply_warehouse_id:0
 msgid "Source Warehouse"
-msgstr ""
+msgstr "Magatzem d'origen"
 
 #. module: stock_planning
 #: help:stock.sale.forecast,product_qty:0
 msgid "Forecasted quantity."
-msgstr ""
+msgstr "Quantitat prevista."
 
 #. module: stock_planning
 #: view:stock.planning:0
 msgid "Stock"
-msgstr ""
+msgstr "Estoc"
 
 #. module: stock_planning
 #: field:stock.planning,stock_supply_location:0
 msgid "Stock Supply Location"
-msgstr ""
+msgstr "Ubicació proveïment d'estoc"
 
 #. module: stock_planning
 #: help:stock.period.createlines,date_stop:0
 msgid "Ending date for planning period."
-msgstr ""
+msgstr "Data de finalització per al període planificat."
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period2_per_user:0
 msgid "This User Period2"
-msgstr ""
+msgstr "El període d'aquest usuari2"
 
 #. module: stock_planning
 #: help:stock.planning.createlines,forecasted_products:0
@@ -1087,70 +1405,73 @@ msgid ""
 "Check this box to create planning for all products having any forecast for "
 "selected Warehouse and Period. Product Category field will be ignored."
 msgstr ""
+"Marqueu aquesta opció per crear la planificació de tots els productes que "
+"tinguin qualsevol previsió en el magatzem i període seleccionat. El camp "
+"categoria de producte serà ignorat."
 
 #. module: stock_planning
 #: field:stock.planning,already_in:0
 msgid "Already In"
-msgstr ""
+msgstr "Entrades realitzades"
 
 #. module: stock_planning
 #: field:stock.planning,product_uom_categ:0
 #: field:stock.planning,product_uos_categ:0
 #: field:stock.sale.forecast,product_uom_categ:0
 msgid "Product UoM Category"
-msgstr ""
+msgstr "Categoria UdM producte"
 
 #. module: stock_planning
 #: field:stock.planning,incoming:0
 msgid "Confirmed In"
-msgstr ""
+msgstr "Entrades confirmades"
 
 #. module: stock_planning
 #: field:stock.planning,line_time:0
 msgid "Past/Future"
-msgstr ""
+msgstr "Passat/Futur"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,product_uos_categ:0
 msgid "Product UoS Category"
-msgstr ""
+msgstr "Categoria UdV producte"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,product_qty:0
 msgid "Product Quantity"
-msgstr ""
+msgstr "Quantitat de producte"
 
 #. module: stock_planning
 #: field:stock.sale.forecast.createlines,copy_forecast:0
 msgid "Copy Last Forecast"
-msgstr ""
+msgstr "Copia última previsió"
 
 #. module: stock_planning
 #: help:stock.sale.forecast,product_id:0
 msgid "Shows which product this forecast concerns."
-msgstr ""
+msgstr "Mostra a quin producte es refereix aquesta previsió."
 
 #. module: stock_planning
 #: selection:stock.planning,state:0
 msgid "Done"
-msgstr ""
+msgstr "Fet"
 
 #. module: stock_planning
 #: field:stock.period.createlines,period_ids:0
 msgid "Periods"
-msgstr ""
+msgstr "Períodes"
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:638
 #: code:addons/stock_planning/stock_planning.py:680
 #, python-format
 msgid " according to state:"
-msgstr ""
+msgstr " segons l'estat:"
 
 #. module: stock_planning
 #: view:stock.period.createlines:0
 msgid "Cancel"
-msgstr ""
+msgstr "Cancel·la"
 
 #. module: stock_planning
 #: view:stock.period:0
@@ -1158,94 +1479,94 @@ msgstr ""
 #: view:stock.planning.createlines:0
 #: view:stock.sale.forecast.createlines:0
 msgid "Close"
-msgstr ""
+msgstr "Tanca"
 
 #. module: stock_planning
 #: view:stock.sale.forecast:0
 #: selection:stock.sale.forecast,state:0
 msgid "Validated"
-msgstr ""
+msgstr "Validat"
 
 #. module: stock_planning
 #: view:stock.period:0
 #: selection:stock.period,state:0
 msgid "Open"
-msgstr ""
+msgstr "Obre"
 
 #. module: stock_planning
 #: help:stock.sale.forecast.createlines,copy_forecast:0
 msgid "Copy quantities from last Stock and Sale Forecast."
-msgstr ""
+msgstr "Copia quantitats des de l'estoc passat i previsió de vendes"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period1_per_dept:0
 msgid "This Dept Period1"
-msgstr ""
+msgstr "El període d'aquest dept.1"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period3_per_dept:0
 msgid "This Dept Period3"
-msgstr ""
+msgstr "El període d'aquest dept.3"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period2_per_dept:0
 msgid "This Dept Period2"
-msgstr ""
+msgstr "El període d'aquest dept.2"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period5_per_dept:0
 msgid "This Dept Period5"
-msgstr ""
+msgstr "El període d'aquest dept.5"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period4_per_dept:0
 msgid "This Dept Period4"
-msgstr ""
+msgstr "El període d'aquest dept.4"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period2_per_warehouse:0
 msgid "This Warehouse Period2"
-msgstr ""
+msgstr "El període d'aquest magatzem2"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period3_per_warehouse:0
 msgid "This Warehouse Period3"
-msgstr ""
+msgstr "El període d'aquest magatzem3"
 
 #. module: stock_planning
 #: field:stock.planning,outgoing:0
 msgid "Confirmed Out"
-msgstr ""
+msgstr "Sortides confirmades"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,create_uid:0
 msgid "Responsible"
-msgstr ""
+msgstr "Responsable"
 
 #. module: stock_planning
 #: view:stock.sale.forecast:0
 msgid "Default UOM"
-msgstr ""
+msgstr "UdM per defecte"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period4_per_warehouse:0
 msgid "This Warehouse Period4"
-msgstr ""
+msgstr "El període d'aquest magatzem4"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period5_per_warehouse:0
 msgid "This Warehouse Period5"
-msgstr ""
+msgstr "El període d'aquest magatzem5"
 
 #. module: stock_planning
 #: view:stock.period:0
 msgid "Current"
-msgstr ""
+msgstr "Actual"
 
 #. module: stock_planning
 #: model:ir.model,name:stock_planning.model_stock_planning
 msgid "stock.planning"
-msgstr ""
+msgstr "estoc.planificació"
 
 #. module: stock_planning
 #: help:stock.sale.forecast,warehouse_id:0
@@ -1253,11 +1574,14 @@ msgid ""
 "Shows which warehouse this forecast concerns. If during stock planning you "
 "will need sales forecast for all warehouses choose any warehouse now."
 msgstr ""
+"Mostra a quin magatzem es refereix aquesta previsió. Si durant la "
+"planificació d'estoc necessita previsions de vendes per a tots els magatzems "
+"escolliu ara un magatzem qualsevol."
 
 #. module: stock_planning
 #: help:stock.planning.createlines,warehouse_id:0
 msgid "Warehouse which planning will concern."
-msgstr ""
+msgstr "Magatzem que es referirà la planificació."
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:647
@@ -1267,6 +1591,8 @@ msgid ""
 "\n"
 " Stock Simulation: "
 msgstr ""
+"\n"
+" Simulació d'estoc: "
 
 #. module: stock_planning
 #: help:stock.planning,to_procure:0
@@ -1275,26 +1601,29 @@ msgid ""
 "observe Stock simulation. This value should be equal or greater than "
 "Confirmed In."
 msgstr ""
+"Introduïu la quantitat que (pel seu pla) ha d'entrar. Canvieu aquest valor i "
+"observeu la simulació d'estoc. Aquest valor hauria de ser igual o superior a "
+"les entrades confirmades."
 
 #. module: stock_planning
 #: help:stock.planning.createlines,period_id:0
 msgid "Period which planning will concern."
-msgstr ""
+msgstr "Període al que es refereix la planificació."
 
 #. module: stock_planning
 #: field:stock.planning,already_out:0
 msgid "Already Out"
-msgstr ""
+msgstr "Sortides realitzades"
 
 #. module: stock_planning
 #: help:stock.planning,product_id:0
 msgid "Product which this planning is created for."
-msgstr ""
+msgstr "Producte pel qual ha estat creada aquesta planificació."
 
 #. module: stock_planning
 #: view:stock.sale.forecast:0
 msgid "Per Warehouse :"
-msgstr ""
+msgstr "Per magatzem:"
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:639
@@ -1304,28 +1633,30 @@ msgid ""
 "\n"
 " Warehouse Forecast: "
 msgstr ""
+"\n"
+" Previsió magatzem: "
 
 #. module: stock_planning
 #: field:stock.planning,history:0
 msgid "Procurement History"
-msgstr ""
+msgstr "Històric proveïments"
 
 #. module: stock_planning
 #: help:stock.period.createlines,date_start:0
 msgid "Starting date for planning period."
-msgstr ""
+msgstr "Data inicial per al període planificat."
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:641
 #: code:addons/stock_planning/stock_planning.py:683
 #, python-format
 msgid "    Planned In: "
-msgstr ""
+msgstr "    Entrades planificades: "
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyze_company:0
 msgid "Per Company"
-msgstr ""
+msgstr "Per empresa"
 
 #. module: stock_planning
 #: help:stock.planning,incoming_left:0
@@ -1334,17 +1665,21 @@ msgid ""
 "between Planned In and Confirmed In. For current period Already In is also "
 "calculated. This value is used to create procurement for lacking quantity."
 msgstr ""
+"Quantitat restant de la quantitat entrant planificada. Es calcula mitjançant "
+"la diferència entre les entrades planificades i les entrades confirmades. "
+"Per al període actual les entrades realitzades també es calculen. Aquest "
+"valor s'utilitza per crear proveïments per a la quantitat restant."
 
 #. module: stock_planning
 #: help:stock.planning,incoming:0
 msgid "Quantity of all confirmed incoming moves in calculated Period."
-msgstr ""
+msgstr "Quantitats de totes les entrades confirmades en el període calculat."
 
 #. module: stock_planning
 #: field:stock.period,date_stop:0
 #: field:stock.period.createlines,date_stop:0
 msgid "End Date"
-msgstr ""
+msgstr "Data final"
 
 #. module: stock_planning
 #: help:stock.planning,stock_supply_location:0
@@ -1353,31 +1688,36 @@ msgid ""
 "supply will be made from Output location of Supply Warehouse. Used in "
 "'Supply from Another Warhouse' with Supply Warehouse."
 msgstr ""
+"Marqueu aquesta opció per subministrar des de la ubicació estoc del magatzem "
+"de subministrament. Si no es marca, el subministrament es realitzarà des de "
+"la ubicació de sortida del magatzem de subministrament. Utilitzat "
+"'Subministrar des d'un altre magatzem' amb un magatzem de subministrament."
 
 #. module: stock_planning
 #: view:stock.planning:0
 msgid "No Requisition"
-msgstr ""
+msgstr "Núm. sol·licitud"
 
 #. module: stock_planning
 #: help:stock.planning,minimum_op:0
 msgid "Minimum quantity set in Minimum Stock Rules for this Warhouse"
 msgstr ""
+"Quantitat mínima establerta en les regles d'estoc mínim per aquest magatzem."
 
 #. module: stock_planning
 #: help:stock.sale.forecast,period_id:0
 msgid "Shows which period this forecast concerns."
-msgstr ""
+msgstr "Mostra a quin període es refereix aquesta previsió."
 
 #. module: stock_planning
 #: field:stock.planning,product_uom:0
 msgid "UoM"
-msgstr ""
+msgstr "UdM"
 
 #. module: stock_planning
 #: view:stock.planning:0
 msgid "Calculated Period Simulation"
-msgstr ""
+msgstr "Simulació calculada del període"
 
 #. module: stock_planning
 #: view:stock.planning:0
@@ -1385,7 +1725,7 @@ msgstr ""
 #: view:stock.sale.forecast:0
 #: field:stock.sale.forecast,product_id:0
 msgid "Product"
-msgstr ""
+msgstr "Producte"
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:638
@@ -1395,11 +1735,13 @@ msgid ""
 "\n"
 "For period: "
 msgstr ""
+"\n"
+"Per període: "
 
 #. module: stock_planning
 #: field:stock.sale.forecast,product_uom:0
 msgid "Product UoM"
-msgstr ""
+msgstr "UdM de producte"
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:627
@@ -1407,7 +1749,7 @@ msgstr ""
 #: code:addons/stock_planning/stock_planning.py:697
 #, python-format
 msgid "MPS(%s) %s"
-msgstr ""
+msgstr "MPS(%s) %s"
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:627
@@ -1415,7 +1757,7 @@ msgstr ""
 #: code:addons/stock_planning/stock_planning.py:693
 #, python-format
 msgid "MPS("
-msgstr ""
+msgstr "MPS("
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:680
@@ -1438,12 +1780,12 @@ msgstr ""
 #. module: stock_planning
 #: field:stock.planning,procure_to_stock:0
 msgid "Procure To Stock Location"
-msgstr ""
+msgstr "Proveïment a ubicació estoc"
 
 #. module: stock_planning
 #: view:stock.sale.forecast:0
 msgid "Approve"
-msgstr ""
+msgstr "Aprova"
 
 #. module: stock_planning
 #: help:stock.planning,period_id:0
@@ -1451,16 +1793,18 @@ msgid ""
 "Period for this planning. Requisition will be created for beginning of the "
 "period."
 msgstr ""
+"Període per a aquesta planificació. Es crearà una sol·licitud al principi "
+"del període."
 
 #. module: stock_planning
 #: view:stock.sale.forecast:0
 msgid "Calculate Sales History"
-msgstr ""
+msgstr "Calcula històric de vendes"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,product_amt:0
 msgid "Product Amount"
-msgstr ""
+msgstr "Quantitat de producte"
 
 #. module: stock_planning
 #: help:stock.planning,confirmed_forecasts_only:0
@@ -1468,21 +1812,23 @@ msgid ""
 "Check to take validated forecasts only. If not checked system takes "
 "validated and draft forecasts."
 msgstr ""
+"Marcque per utilitzar només les previsions validades. Si no es marca el "
+"sistema utilitza les previsions validades i esborrany."
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period5_id:0
 msgid "Period5"
-msgstr ""
+msgstr "Període5"
 
 #. module: stock_planning
 #: model:ir.actions.act_window,name:stock_planning.action_stock_period_createlines_form
 msgid "Stock and Sales Planning Periods"
-msgstr ""
+msgstr "Períodes de planificació d'estoc i vendes"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_warehouse_id:0
 msgid "This Warehouse"
-msgstr ""
+msgstr "Aquest magatzem"
 
 #. module: stock_planning
 #: model:ir.actions.act_window,name:stock_planning.action_stock_period_form
@@ -1491,12 +1837,12 @@ msgstr ""
 #: view:stock.period:0
 #: view:stock.period.createlines:0
 msgid "Stock and Sales Periods"
-msgstr ""
+msgstr "Períodes d'estoc i vendes"
 
 #. module: stock_planning
 #: help:stock.sale.forecast,user_id:0
 msgid "Shows who created this forecast, or who validated."
-msgstr ""
+msgstr "Mostra qui va crear aquesta previsió, o qui la va validar."
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:644
@@ -1506,8 +1852,26 @@ msgid ""
 "\n"
 " Planned Out Before: "
 msgstr ""
+"\n"
+" Sortides planificades abans: "
 
 #. module: stock_planning
 #: field:stock.planning,stock_start:0
 msgid "Initial Stock"
-msgstr ""
+msgstr "Estoc inicial"
+
+#, python-format
+#~ msgid "Pick List "
+#~ msgstr "Llista de recollida "
+
+#, python-format
+#~ msgid "Manual planning for "
+#~ msgstr "Planificació manual per a "
+
+#, python-format
+#~ msgid "Procurement created in MPS by user: "
+#~ msgstr "Proveïment creat en MPS per l'usuari: "
+
+#, python-format
+#~ msgid "Pick created from MPS by user: "
+#~ msgstr "Albarà creat des de MPS per l'usuari: "

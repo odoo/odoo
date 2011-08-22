@@ -324,7 +324,7 @@
                 />
                 <separator orientation="vertical"/>
                 <field name="name" string="Lead / Customer"
-                    domain="['|','|',('partner_name','ilike',self),('email_from','ilike',self),('name','ilike',self)]"/>
+                    filter_domain="['|','|',('partner_name','ilike',self),('email_from','ilike',self),('name','ilike',self)]"/>
                 <field name="user_id">
                     <filter icon="terp-personal-"
                         domain="[('user_id','=', False)]"

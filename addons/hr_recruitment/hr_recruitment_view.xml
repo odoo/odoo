@@ -53,6 +53,7 @@
                 <button name="stage_next" string="Next" states="open,pending" type="object" icon="gtk-go-forward"/>
                 <field name="title_action" invisible="context.get('invisible_next_action', True)"/>
                 <field name="date_action" invisible="context.get('invisible_next_date', True)"/>
+                <field name="source_id" invisible="1"/>
                 <field name="survey" invisible="1"/>
                 <field name="response" invisible="1"/>
                 <field name="priority"/>
@@ -81,7 +82,7 @@
                     <newline/>
                     <field name="department_id" widget="selection" on_change="onchange_department_id(department_id)"/>
                     <group colspan="2" col="4">
-                        <field name="stage_id" domain="[('department_id','=',department_id)]"/>
+                        <field name="stage_id" domain="['|',('department_id','=',department_id),('department_id','=',False)]"/>
                         <button name="stage_previous" string="" type="object" icon="gtk-go-back"/>
                         <button icon="gtk-go-forward" string="" name="stage_next" type="object"/>
                     </group>
@@ -97,27 +98,29 @@
                     <page string="Job Info">
                         <group col="3" colspan="2">
                             <separator colspan="3" string="Contact"/>
-                            <field name="partner_id" on_change="onchange_partner_id(partner_id, email_from)" attrs="{'readonly':[('state','not in','done')]}"/>
+                            <field name="partner_id" on_change="onchange_partner_id(partner_id, email_from)"/>
                             <button string="Create Partner"
                                     name="%(action_hr_recruitment_partner_create)d"
-                                    icon="gtk-index" type="action" attrs="{'readonly':['!',('partner_id','!=',False),('state','not in','done')]}" groups="base.group_partner_manager"/>
+                                    icon="gtk-index" type="action" attrs="{'readonly':[('partner_id','!=',False)]}" groups="base.group_partner_manager"/>
                             <newline/>
-                            <field name="partner_address_id" on_change="onchange_partner_address_id(partner_address_id, email_from)" colspan="3" attrs="{'readonly':[('state','not in','done')]}"/>
-                            <field name="email_from" colspan="3" attrs="{'readonly':[('state','not in','done')]}"/>
-                            <field name="partner_phone" colspan="3" attrs="{'readonly':[('state','not in','done')]}"/>
-                            <field name="partner_mobile" colspan="3" attrs="{'readonly':[('state','not in','done')]}"/>
+                            <field name="partner_address_id" on_change="onchange_partner_address_id(partner_address_id, email_from)" colspan="3"/>
+                            <field name="email_from" colspan="3"/>
+                            <field name="partner_phone" colspan="3"/>
+                            <field name="partner_mobile" colspan="3"/>
                         </group>
-                        <group col="2" colspan="2">
-                            <separator colspan="2" string="Contract Data"/>
-                            <field name="availability"/>
+                        <group col="3" colspan="2">
+                            <separator colspan="3" string="Contract Data"/>
+                            <field name="availability" colspan="3"/>
                             <field name="salary_expected"/>
+                            <field name="salary_expected_extra" nolabel="1"/>
                             <field name="salary_proposed"/>
+                            <field name="salary_proposed_extra" nolabel="1"/>
                         </group>
                         <group col="2" colspan="2">
                             <separator colspan="2" string="Qualification"/>
-                            <!-- <field name="type_id" domain="[('object_id.model', '=', 'hr.applicant')]"/>-->
-                            <field name="type_id" widget="selection"/>
+                            <field name="type_id"/>
                             <field name="priority" string="Appreciation"/>
+                            <field name="source_id"/>
                             <field name="reference"/>
                         </group>
                         <group col="2" colspan="2">
@@ -218,6 +221,7 @@
                    help="All new and in progress jobs"
                    name="current"
                />
+               <separator orientation="vertical"/>
                <filter icon="terp-document-new" string="New"
                    domain="[('state','=','draft')]"
                    help="All Initial Jobs"
@@ -233,19 +237,13 @@
                <separator orientation="vertical"/>
                <filter icon="terp-gtk-jump-to-ltr" string="Next Actions"
                     context="{'invisible_next_action':False, 'invisible_next_date':False}"
-                    domain="[]"
-                    help="View Next Action and Date"/>
+                    domain="[('date_action','&lt;&gt;',False)]"
+                    help="Filter and view on next actions and date"/>
                <separator orientation="vertical"/>
-               <field name="partner_name"/>
-               <field name="email_from"/>
+               <field name="partner_name" filter_domain="['|','|',('name','ilike',self),('partner_name','ilike',self),('email_from','ilike',self)]" string="Subject / Applicant"/>
                <field name="job_id" widget="selection"/>
                <field name="user_id">
                     <filter domain="[('user_id','=',False)]" help="Unassigned Recruitments" icon="terp-personal-" separator="1"/>
-               </field>
-               <field name="department_id" widget="selection" string="Department" context="{'invisible_department': False}">
-                   <filter icon="terp-personal+" context="{'invisible_department': False}"
-                       domain="[('department_id','=',context.get('department_id',False))]"
-                       help="My Department"/>
                </field>
                <newline/>
                 <group expand="0" string="Group By..." colspan="11" col="20">
@@ -259,6 +257,7 @@
                     <filter string="Appreciation" icon="terp-face-plain" domain="[]" context="{'group_by':'priority'}"/>
                     <filter string="Stage" icon="terp-stage" domain="[]" context="{'group_by':'stage_id'}"/>
                     <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
+                    <filter string="Source" icon="terp-face-plain" domain="[]" context="{'group_by':'source_id'}"/>
                     <separator orientation="vertical"/>
                     <filter string="Creation Date" icon="terp-go-month" domain="[]" context="{'group_by':'create_date'}"/>
                 </group>
@@ -395,6 +394,41 @@
             parent="menu_hr_recruitment_recruitment"
             action="hr_recruitment_degree_action"
             sequence="1"/>
+
+<!-- Source Tree View -->
+
+    <record model="ir.ui.view" id="hr_recruitment_source_tree">
+        <field name="name">hr.recruitment.source.tree</field>
+        <field name="model">hr.recruitment.source</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Sources of Applicants">
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="hr_recruitment_source_form">
+        <field name="name">hr.recruitment.source.form</field>
+        <field name="model">hr.recruitment.source</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Sources of Applicants">
+                <field name="name"/>
+            </form>
+        </field>
+    </record>
+    <record id="hr_recruitment_source_action" model="ir.actions.act_window">
+        <field name="name">Sources of Applicants</field>
+        <field name="res_model">hr.recruitment.source</field>
+        <field name="view_type">form</field>
+    </record>
+
+     <menuitem
+            id="menu_hr_recruitment_source"
+            parent="menu_hr_recruitment_recruitment"
+            action="hr_recruitment_source_action"
+            sequence="1"/>
+
 
     </data>
 </openerp>
