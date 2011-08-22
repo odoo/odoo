@@ -1315,7 +1315,7 @@ var Collection = openerp.base.Class.extend(/** @lends Collection# */{
             var instance = (records[i] instanceof Record) ? records[i] : new Record(records[i]);
             instance.bind(null, this._onRecordEvent);
             this._byId[instance.get('id')] = instance;
-            if (options.at === undefined) {
+            if (options.at == undefined) {
                 this.records.push(instance);
                 if (!options.silent) {
                     this.trigger('add', this, instance, this.records.length-1);
