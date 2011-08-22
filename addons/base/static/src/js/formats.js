@@ -45,27 +45,27 @@ openerp.base.format_value = function (value, descriptor, value_if_empty) {
             if (typeof(value) == "string")
                 value = openerp.base.str_to_datetime(value);
             try {
-                return value.strftime(_.sprintf("%s %s", openerp.base._t.database.parameters.date_format, 
+                return value.format(_.sprintf("%s %s", openerp.base._t.database.parameters.date_format, 
                     openerp.base._t.database.parameters.time_format));
             } catch (e) {
-                return value.strftime("%m/%d/%Y %H:%M:%S");
+                return value.format("%m/%d/%Y %H:%M:%S");
             }
             return value;
         case 'date':
             if (typeof(value) == "string")
                 value = openerp.base.str_to_date(value);
             try {
-                return value.strftime(openerp.base._t.database.parameters.date_format);
+                return value.format(openerp.base._t.database.parameters.date_format);
             } catch (e) {
-                return value.strftime("%m/%d/%Y");
+                return value.format("%m/%d/%Y");
             }
         case 'time':
             if (typeof(value) == "string")
                 value = openerp.base.str_to_time(value);
             try {
-                return value.strftime(openerp.base._t.database.parameters.time_format);
+                return value.format(openerp.base._t.database.parameters.time_format);
             } catch (e) {
-                return value.strftime("%H:%M:%S");
+                return value.format("%H:%M:%S");
             }
         default:
             return value;
@@ -88,13 +88,13 @@ openerp.base.parse_value = function (value, descriptor, value_if_empty) {
             var tmp = Number(value);
             if (!isNaN(tmp))
                 return tmp;
-            tmp = tmp.replace(openerp.base._t.database.parameters.decimal_point, ".");
+            tmp = value.replace(openerp.base._t.database.parameters.decimal_point, ".");
             var tmp2 = tmp;
             do {
                 tmp = tmp2;
                 tmp2 = tmp.replace(openerp.base._t.database.parameters.thousands_sep, "");
             } while(tmp !== tmp2);
-            tmp = Number(value);
+            tmp = Number(tmp);
             if (isNaN(tmp))
                 throw value + " is not a correct float";
             return tmp;
