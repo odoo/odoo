@@ -296,7 +296,7 @@ openerp.base.Database = openerp.base.Widget.extend({
         self.$option_id.find("form[name=create_db_form]").validate({
             submitHandler: function (form) {
                 var fields = $(form).serializeArray();
-                $.blockUI();
+                $.blockUI({message:'<img src="/base/static/src/img/throbber2.gif">'});
                 self.rpc("/base/database/create", {'fields': fields}, function(result) {
                     if (result.error) {
                         $.unblockUI();
@@ -367,7 +367,7 @@ openerp.base.Database = openerp.base.Widget.extend({
 
         self.$option_id.find("form[name=backup_db_form]").validate({
             submitHandler: function (form) {
-                $.blockUI();
+                $.blockUI({message:'<img src="/base/static/src/img/throbber2.gif">'});
                 // need to detect when the file is done downloading (not used
                 // yet, but we'll need it to fix the UI e.g. with a throbber
                 // while dump is being generated), iframe load event only fires
@@ -405,7 +405,7 @@ openerp.base.Database = openerp.base.Widget.extend({
        	
        	self.$option_id.find("form[name=restore_db_form]").validate({
             submitHandler: function (form) {
-                $.blockUI();
+                $.blockUI({message:'<img src="/base/static/src/img/throbber2.gif">'});
                 $(form).ajaxSubmit({
                     url: '/base/database/restore',
                     type: 'POST',
