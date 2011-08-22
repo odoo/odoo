@@ -346,7 +346,10 @@ openerp.base.FormView = openerp.base.View.extend( /** @lends openerp.base.FormVi
                 });
             }
         } else {
-            return false;
+            setTimeout(function() {
+                self.on_saved({ result: true }, success);
+            });
+            return true;
         }
     },
     do_save_edit: function() {

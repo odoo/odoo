@@ -7,6 +7,7 @@ openerp.base.form.DashBoard = openerp.base.form.Widget.extend({
         this._super(view, node);
         this.template = 'DashBoard';
         this.actions_attrs = {};
+        this.action_managers = [];
     },
     start: function() {
         var self = this;
@@ -23,8 +24,9 @@ openerp.base.form.DashBoard = openerp.base.form.Widget.extend({
         this.$element.find('.oe-dashboard-link-reset').click(this.on_reset);
         this.$element.find('.oe-dashboard-link-add_widget').click(this.on_add_widget);
         this.$element.find('.oe-dashboard-link-change_layout').click(this.on_change_layout);
-        this.$element.find('.oe-dashboard-column .oe-dashboard-fold').click(this.on_fold_action);
-        this.$element.find('.oe-dashboard-column .ui-icon-closethick').click(this.on_close_action);
+
+        this.$element.delegate('.oe-dashboard-column .oe-dashboard-fold', 'click', this.on_fold_action);
+        this.$element.delegate('.oe-dashboard-column .ui-icon-closethick', 'click', this.on_close_action);
 
         this.actions_attrs = {};
         // Init actions
@@ -58,7 +60,23 @@ openerp.base.form.DashBoard = openerp.base.form.Widget.extend({
     },
     on_add_widget: function() {
         var self = this;
-        var action = {
+        var action_manager = new openerp.base.ActionManager(this);
+        var dialog = new openerp.base.Dialog(this, {
+            title : 'Actions',
+            width: 800,
+            height: 600,
+            buttons : {
+                Cancel : function() {
+                    $(this).dialog('destroy');
+                },
+                Add : function() {
+                    self.do_add_widget(action_manager.inner_viewmanager.views.list.controller);
+                    $(this).dialog('destroy');
+                }
+            }
+        }).start().open();
+        action_manager.appendTo(dialog.$element);
+        action_manager.do_action({
             res_model : 'ir.actions.actions',
             views : [[false, 'list']],
             type : 'ir.actions.act_window',
@@ -69,33 +87,12 @@ openerp.base.form.DashBoard = openerp.base.form.Widget.extend({
                 views_switcher : false,
                 action_buttons : false
             }
-        };
-        // TODO: create a Dialog controller which optionally takes an action
-        // Should set width & height automatically and take buttons & views callback
-        var dialog_id = _.uniqueId('act_window_dialog');
-        var action_manager = new openerp.base.ActionManager(this, dialog_id);
-        $('<div id=' + dialog_id + '>').dialog({
-            modal : true,
-            title : 'Actions',
-            width : 800,
-            height : 600,
-            buttons : {
-                Cancel : function() {
-                    $(this).dialog('destroy');
-                },
-                Add : function() {
-                    self.do_add_widget(action_manager);
-                    $(this).dialog('destroy');
-                }
-            }
         });
-        action_manager.start();
-        action_manager.do_action(action);
         // TODO: should bind ListView#select_record in order to catch record clicking
     },
-    do_add_widget : function(action_manager) {
+    do_add_widget : function(listview) {
         var self = this,
-            actions = action_manager.viewmanager.views.list.controller.groups.get_selection().ids,
+            actions = listview.groups.get_selection().ids,
             results = [],
             qdict = { view : this.view };
         // TODO: should load multiple actions at once
@@ -229,6 +226,7 @@ openerp.base.form.DashBoard = openerp.base.form.Widget.extend({
             pager: false
         };
         var am = new openerp.base.ActionManager(this);
+        this.action_managers.push(am);
         am.appendTo($("#"+this.view.element_id + '_action_' + action.id));
         am.do_action(action);
     },
@@ -244,8 +242,12 @@ openerp.base.form.DashBoard = openerp.base.form.Widget.extend({
         return QWeb.render(this.template, this);
     },
     do_reload: function() {
-        this.view.widget_parent.stop();
-        this.view.widget_parent.start();
+        _.each(this.action_managers, function(am) {
+            am.stop();
+        });
+        this.action_managers = [];
+        this.view.stop();
+        this.view.start();
     }
 });
 openerp.base.form.DashBoardLegacy = openerp.base.form.DashBoard.extend({
