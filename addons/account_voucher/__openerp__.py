@@ -35,7 +35,7 @@ to reconcile your entry with its invoice.
 Account Voucher module multi-currency support
 =============================================
 
-Thanks to the contribution of CampToCamp, the vouchers fully support the multi currency and compute the 
+Thanks to the contribution of Camptocamp, the vouchers fully support the multi currency and compute the 
 currency rate difference besides the write off amount. Of course, the accounting entries are also created
 accordingly.
     """,
