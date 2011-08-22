@@ -412,8 +412,8 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
     do_actual_search: function (results) {
         this.groups.datagroup = new openerp.base.DataGroup(
             this, this.model,
-            this.dataset.get_domain(results.domain),
-            this.dataset.get_context(results.context),
+            results.domain,
+            results.context,
             results.group_by);
         this.groups.datagroup.sort = this.dataset._sort;
 
