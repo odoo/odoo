@@ -148,17 +148,18 @@ class account_voucher(osv.osv):
     def _compute_writeoff_amount(self, cr, uid, line_dr_ids, line_cr_ids, amount, voucher_date, context=None):
         if context is None:
             context = {}
+        print 'ici changer'
         currency_pool = self.pool.get('res.currency')
         ctx = context.copy()
         counter_for_writeoff = counter_for_currency_diff = real_amount = 0.0
         ctx.update({'date': voucher_date})
         for l in line_dr_ids:
             real_amount -= l.get('amount_in_company_currency', 0.0)
-            counter_for_writeoff -= currency_pool.compute(cr, uid, l['company_currency_id'], l['voucher_currency_id'], l.get('amount_in_company_currency',0.0), context=ctx)
+            counter_for_writeoff -= l.get('voucher_currency_id') == l.get('currency_id') and l['amount'] or  l.get('amount_in_voucher_currency',0.0)
             counter_for_currency_diff -= currency_pool.compute(cr, uid, l['currency_id'], l['company_currency_id'], l['amount'], context=ctx)
         for l in line_cr_ids:
             real_amount += l.get('amount_in_company_currency', 0.0)
-            counter_for_writeoff += currency_pool.compute(cr, uid, l['company_currency_id'], l['voucher_currency_id'], l.get('amount_in_company_currency',0.0), context=ctx)
+            counter_for_writeoff += l.get('voucher_currency_id') == l.get('currency_id') and l['amount'] or  l.get('amount_in_voucher_currency',0.0)
             counter_for_currency_diff += currency_pool.compute(cr, uid, l['currency_id'], l['company_currency_id'], l['amount'], context=ctx)
         writeoff_amount = amount - counter_for_writeoff
         currency_rate_difference = real_amount - counter_for_currency_diff
@@ -171,7 +172,7 @@ class account_voucher(osv.osv):
         line_dr_ids = resolve_o2m_operations(cr, uid, line_osv, line_dr_ids, ['amount'], context)
         line_cr_ids = resolve_o2m_operations(cr, uid, line_osv, line_cr_ids, ['amount'], context)
         writeoff_amount, currency_rate_diff = self._compute_writeoff_amount(cr, uid, line_dr_ids, line_cr_ids, amount, voucher_date, context=context)
-        return {'value': {'writeoff_amount': writeoff_amount,}}# 'currency_rate_difference': currency_rate_diff}}
+        return {'value': {'writeoff_amount': writeoff_amount, 'currency_rate_difference': currency_rate_diff}}
 
     def _get_writeoff_amount(self, cr, uid, ids, name, args, context=None):
         if not ids: return {}
