@@ -1075,7 +1075,7 @@ openerp.base.ListView.Groups = openerp.base.Class.extend( /** @lends openerp.bas
                 ui.item.parent().children().each(function (i, e) {
                     // reset record-index accelerators on rows and even/odd
                     var even = i%2 === 0;
-                    $(e).data('index', i)
+                    $(e).attr('data-index', i)
                         .toggleClass('even', even)
                         .toggleClass('odd', !even);
                 });
@@ -1085,7 +1085,7 @@ openerp.base.ListView.Groups = openerp.base.Class.extend( /** @lends openerp.bas
                     // if drag to 1st row (to = 0), start sequencing from 0
                     // (exclusive lower bound)
                     seq = to ? list.records.at(to - 1).get('sequence') : 0;
-                while (++seq, record = list.records.at(index)) {
+                while (++seq, record = list.records.at(index++)) {
                     // write are independent from one another, so we can just
                     // launch them all at the same time and we don't really
                     // give a fig about when they're done
