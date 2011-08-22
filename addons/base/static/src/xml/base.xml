@@ -326,7 +326,7 @@
     </div>
 </t>
 <t t-name="Header">
-    <a href="/" class="company_logo_link">
+    <a t-att-href="'/' + qs" class="company_logo_link">
         <div class="company_logo" />
     </a>
     <h1 class="header_title" t-if="session.session_is_valid()">

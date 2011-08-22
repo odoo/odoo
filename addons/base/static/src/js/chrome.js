@@ -566,6 +566,11 @@ openerp.base.Login =  openerp.base.Widget.extend({
 openerp.base.Header =  openerp.base.Widget.extend({
     init: function(parent, element_id) {
         this._super(parent, element_id);
+        if (jQuery.deparam(jQuery.param.querystring()).debug !== undefined) {
+            this.qs = '?debug'
+        } else {
+            this.qs = ''
+        }
     },
     start: function() {
         return this.do_update();
