@@ -24,8 +24,8 @@ from osv import fields
 import tools
 from tools.translate import _
 
-class email_compose_message(osv.osv_memory):
-    _inherit = 'email.compose.message'
+class mail_compose_message(osv.osv_memory):
+    _inherit = 'mail.compose.message'
 
     def get_value(self, cr, uid, model, resource_id, context=None):
         '''
@@ -37,7 +37,7 @@ class email_compose_message(osv.osv_memory):
         '''
         if context is None:
             context = {}
-        result = super(email_compose_message, self).get_value(cr, uid,  model, resource_id, context=context)
+        result = super(mail_compose_message, self).get_value(cr, uid,  model, resource_id, context=context)
         if model == 'hr.evaluation.interview' and resource_id:
             model_pool = self.pool.get(model)
             record_data = model_pool.browse(cr, uid, resource_id, context)
@@ -47,7 +47,7 @@ class email_compose_message(osv.osv_memory):
                         'email_from': tools.config.get('email_from',''),
                         'email_to': record_data.user_to_review_id.work_email or False,
                         'subject': _("Reminder to fill up Survey"),
-                        'body': msg,
+                        'body_text': msg,
                         'res_id': resource_id,
                         'model': model,
                         'email_cc': False,
@@ -56,6 +56,5 @@ class email_compose_message(osv.osv_memory):
                     })
         return result
 
-email_compose_message()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

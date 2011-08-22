@@ -24,7 +24,7 @@ from osv import fields
 from tools.translate import _
 
 class email_compose_message(osv.osv_memory):
-    _inherit = 'email.compose.message'
+    _inherit = 'mail.compose.message'
 
     def get_value(self, cr, uid, model, resource_id, context=None):
         '''
@@ -34,8 +34,6 @@ class email_compose_message(osv.osv_memory):
 
         @return: Returns a dictionary
         '''
-        if context is None:
-            context = {}
         result = super(email_compose_message, self).get_value(cr, uid,  model, resource_id, context=context)
         if model == 'project.task' and resource_id:
             task_pool = self.pool.get('project.task')
@@ -61,7 +59,7 @@ class email_compose_message(osv.osv_memory):
             if partner and len(partner.address):
                 result.update({'email_to': result.get('email_to',False) and result.get('email_to') + ',' + partner.address[0].email})
             result.update({
-                       'body': description or False,
+                       'body_text': description or False,
                        'email_to':   task_data.project_id.user_id and task_data.project_id.user_id.user_email or False,
                        'subject':  _("Task '%s' Closed") % task_data.name,
                        'model': model,
@@ -70,6 +68,5 @@ class email_compose_message(osv.osv_memory):
 
         return result
 
-email_compose_message()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

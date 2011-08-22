@@ -36,10 +36,12 @@ class res_company(osv.osv):
     }
 
     _defaults = {
-        'overdue_msg': 'Please note that the following payments are now due. If your payment \
-                        has been sent, kindly forward your payment details. If payment will be \
-                        delayed further, please contact us to discuss. \
-                        \nWould your payment have been carried out after this mail was sent, please consider the present one as void.'
+        'overdue_msg': 'Please note that the following payments are now due. If your payment '
+                       'has been carried out, may we ask you to forward us your payment details '
+                       'as we seem to have missed it. If the payment needs to be delayed further, '
+                       'please contact us to discuss.\n'
+                       'If your payment has been carried out after this mail was sent, please '
+                       'ignore this message.'
     }
 
 res_company()

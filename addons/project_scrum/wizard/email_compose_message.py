@@ -24,7 +24,7 @@ from osv import fields
 from tools.translate import _
 
 class email_compose_message(osv.osv_memory):
-    _inherit = 'email.compose.message'
+    _inherit = 'mail.compose.message'
 
     def get_value(self, cr, uid, model, resource_id, context=None):
         '''
@@ -55,12 +55,11 @@ class email_compose_message(osv.osv_memory):
             message = _("Hello  , \nI am sending you Scrum Meeting : %s for the Sprint  '%s' of Project '%s'") %(meeting.date, sprint.name, sprint.project_id.name)
             result.update({
                        'subject': subject,
-                       'body': message,
+                       'body_text': message,
                        'model': model,
                        'res_id': resource_id
                     })
         return result
 
-email_compose_message()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

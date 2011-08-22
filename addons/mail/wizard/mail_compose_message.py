@@ -218,8 +218,8 @@ class mail_compose_message(osv.osv_memory):
 
     def render_template(self, cr, uid, template, model, res_id, context=None):
         """Render the given template text, replace mako-like expressions ``${expr}``
-           with the result of passing these expressions ``through safe_eval()`` with
-           an evaluation context containing:
+           with the result of evaluating these expressions with an evaluation context
+           containing:
 
                 * ``user``: browse_record of the current user
                 * ``object``: browse_record of the document record this mail is

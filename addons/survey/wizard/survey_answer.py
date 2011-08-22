@@ -61,7 +61,7 @@ class survey_question_wiz(osv.osv_memory):
         sur_response_obj = self.pool.get('survey.response')
         que_col_head = self.pool.get('survey.question.column.heading')
         user_obj = self.pool.get('res.users')
-        email_message_obj = self.pool.get('email.message')
+        mail_message = self.pool.get('mail.message')
         if context is None:
             context = {}
         if view_type in ['form']:
@@ -429,7 +429,7 @@ class survey_question_wiz(osv.osv_memory):
                         if user_email and resp_email:
                             user_name = user_obj.browse(cr, uid, uid, context=context).name
                             mail = "Hello " + survey_data.responsible_id.name + ",\n\n " + str(user_name) + " Give Response Of " + survey_data.title + " Survey.\n\n Thanks,"
-                            email_message_obj.schedule_with_attach(cr, uid, user_email, [resp_email], "Survey Answer Of " + str(user_name) , mail, model='survey.question.wiz', attach = attachments)
+                            mail_message.schedule_with_attach(cr, uid, user_email, [resp_email], "Survey Answer Of " + str(user_name) , mail, attachments=attachments, context=context)
 
                     xml_form = etree.Element('form', {'string': _('Complete Survey Answer')})
                     etree.SubElement(xml_form, 'separator', {'string': 'Complete Survey', 'colspan': "4"})

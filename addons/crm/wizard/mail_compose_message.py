@@ -33,8 +33,8 @@ class mail_compose_message(osv.osv_memory):
            wizard when sending an email related to the document record identified
            by ``model`` and ``res_id``.
 
-           The default implementation returns an empty dictionary, and is meant
-           to be overridden by subclasses.
+           Overrides the default implementation to provide more default field values
+           related to the corresponding CRM case.
 
            :param str model: model name of the document record this mail is related to.
            :param int res_id: id of the document record this mail is related to.

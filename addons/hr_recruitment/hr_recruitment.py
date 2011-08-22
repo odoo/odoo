@@ -80,7 +80,7 @@ class hr_applicant(crm.crm_case, osv.osv):
     _name = "hr.applicant"
     _description = "Applicant"
     _order = "id desc"
-    _inherit = ['email.thread']
+    _inherit = ['mail.thread']
 
     def _compute_day(self, cr, uid, ids, fields, args, context=None):
         """
@@ -118,7 +118,7 @@ class hr_applicant(crm.crm_case, osv.osv):
 
     _columns = {
         'name': fields.char('Name', size=128, required=True),
-        'message_ids': fields.one2many('email.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
+        'message_ids': fields.one2many('mail.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
         'active': fields.boolean('Active', help="If the active field is set to false, it will allow you to hide the case without removing it."),
         'description': fields.text('Description'),
         'email_from': fields.char('Email', size=128, help="These people will receive email."),
@@ -298,11 +298,11 @@ class hr_applicant(crm.crm_case, osv.osv):
         value = self.pool.get("survey").action_print_survey(cr, uid, ids, context=context)
         return value
 
-    def message_new(self, cr, uid, msg, context=None):
-        """Automatically calls when new email message arrives"""
+    def message_new(self, cr, uid, msg, custom_values=None, context=None):
+        """Automatically called when new email message arrives"""
         thread_pool = self.pool.get('mail.thread')
         subject = msg.get('subject') or _("No Subject")
-        body = msg.get('body')
+        body = msg.get('body_text')
         msg_from = msg.get('from')
         priority = msg.get('priority')
 
@@ -313,47 +313,23 @@ class hr_applicant(crm.crm_case, osv.osv):
             'description': body,
             'user_id': False,
         }
-        if msg.get('priority', False):
+        if priority:
             vals['priority'] = priority
 
         res = thread_pool.get_partner(cr, uid, msg.get('from'))
         if res:
             vals.update(res)
         res_id = self.create(cr, uid, vals, context)
-
-        attachments = msg.get('attachments', {})
-        self.history(cr, uid, [res_id], _('receive'), history=True,
-                            subject = msg.get('subject'),
-                            email = msg.get('to'),
-                            details = msg.get('body'),
-                            email_from = msg.get('from'),
-                            email_cc = msg.get('cc'),
-                            message_id = msg.get('message-id'),
-                            references = msg.get('references', False) or msg.get('in-reply-to', False),
-                            attach = attachments,
-                            email_date = msg.get('date'),
-                            body_html= msg.get('body_html'),
-                            sub_type = msg.get('sub_type'),
-                            headers = msg.get('headers'),
-                            priority = msg.get('priority'),
-                            context = context)
-
+        self.append_mail(cr, uid, ids, msg, context=context)
         return res_id
 
     def message_update(self, cr, uid, ids, msg, vals={}, default_act='pending', context=None):
-        """
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of update mail’s IDs
-        """
-
         if isinstance(ids, (str, int, long)):
             ids = [ids]
 
         msg_from = msg['from']
         vals.update({
-            'description': msg['body']
+            'description': msg['body_text']
         })
         if msg.get('priority', False):
             vals['priority'] = msg.get('priority')
@@ -364,7 +340,7 @@ class hr_applicant(crm.crm_case, osv.osv):
             'probability':'probability'
         }
         vls = { }
-        for line in msg['body'].split('\n'):
+        for line in msg['body_text'].split('\n'):
             line = line.strip()
             res = tools.misc.command_re.match(line)
             if res and maps.get(res.group(1).lower(), False):
@@ -373,23 +349,7 @@ class hr_applicant(crm.crm_case, osv.osv):
 
         vals.update(vls)
         res = self.write(cr, uid, ids, vals, context=context)
-
-        attachments = msg.get('attachments', {})
-        self.history(cr, uid, ids, _('receive'), history=True,
-                            subject = msg.get('subject'),
-                            email = msg.get('to'),
-                            details = msg.get('body'),
-                            email_from = msg.get('from'),
-                            email_cc = msg.get('cc'),
-                            message_id = msg.get('message-id'),
-                            references = msg.get('references', False) or msg.get('in-reply-to', False),
-                            attach = attachments,
-                            email_date = msg.get('date'),
-                            body_html= msg.get('body_html'),
-                            sub_type = msg.get('sub_type'),
-                            headers = msg.get('headers'),
-                            priority = msg.get('priority'),
-                            context = context)
+        self.append_mail(cr, uid, ids, msg, context=context)
         return res
 
     def case_open(self, cr, uid, ids, *args):

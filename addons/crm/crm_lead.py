@@ -352,7 +352,7 @@ class crm_lead(crm_case, osv.osv):
             'description': body,
             'user_id': False,
         }
-        if msg.get('priority', False):
+        if priority:
             vals['priority'] = priority
         res = mail_thread.get_partner(cr, uid, msg.get('from', False))
         if res:

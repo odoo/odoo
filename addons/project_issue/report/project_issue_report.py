@@ -102,7 +102,7 @@ class project_issue_report(osv.osv):
                     date_trunc('day',c.create_date) as create_date,
                     extract('epoch' from (c.date_open-c.create_date))/(3600*24) as  delay_open,
                     extract('epoch' from (c.date_closed-c.date_open))/(3600*24) as  delay_close,
-                    (SELECT count(id) FROM email_message WHERE model='project.issue' AND res_id=c.id) AS email
+                    (SELECT count(id) FROM mail_message WHERE model='project.issue' AND res_id=c.id) AS email
 
                 FROM
                     project_issue c

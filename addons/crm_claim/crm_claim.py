@@ -27,7 +27,7 @@ import binascii
 import tools
 from tools.translate import _
 
-wizard.email_compose_message.email_model.append('crm.claim')
+wizard.mail_compose_message.SUPPORTED_MODELS.append('crm.claim')
 CRM_CLAIM_PENDING_STATES = (
     crm.AVAILABLE_STATES[2][0], # Cancelled
     crm.AVAILABLE_STATES[3][0], # Done

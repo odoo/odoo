@@ -281,7 +281,7 @@ class event_registration(osv.osv):
     """Event Registration"""
     _name= 'event.registration'
     _description = __doc__
-    _inherit = 'email.thread'
+    _inherit = 'mail.thread'
 
     def _amount_line(self, cr, uid, ids, field_name, arg, context=None):
         cur_obj = self.pool.get('res.currency')
@@ -314,8 +314,8 @@ class event_registration(osv.osv):
         'create_date': fields.datetime('Creation Date', readonly=True),
         'write_date': fields.datetime('Write Date', readonly=True),
         'description': fields.text('Description', states={'done': [('readonly', True)]}),
-        'message_ids': fields.one2many('email.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
-        'log_ids': fields.one2many('email.message', 'res_id', 'Logs', domain=[('history', '=', False),('model','=',_name)]),
+        'message_ids': fields.one2many('mail.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
+        'log_ids': fields.one2many('mail.message', 'res_id', 'Logs', domain=[('email_from', '=', False),('model','=',_name)]),
         'date_deadline': fields.related('event_id','date_end', type='datetime', string="End Date", readonly=True),
         'date': fields.related('event_id', 'date_begin', type='datetime', string="Start Date", readonly=True),
         'user_id': fields.many2one('res.users', 'Responsible', states={'done': [('readonly', True)]}),
@@ -522,7 +522,7 @@ class event_registration(osv.osv):
         """
         Send email to user
         """
-        email_message_obj = self.pool.get('email.message')
+        mail_message = self.pool.get('mail.message')
         for regestration in self.browse(cr, uid, ids, context=context):
             src = regestration.event_id.reply_to or False
             email_to = []
@@ -546,7 +546,7 @@ class event_registration(osv.osv):
                     subject = _('Auto Confirmation: [%s] %s') %(regestration.id, regestration.name)
                     body = regestration.event_id.mail_confirm
             if subject or body:
-                email_message_obj.schedule_with_attach(cr, uid, src, email_to, subject, body, model='event.registration', email_cc=email_cc, openobject_id=regestration.id)
+                mail_message.schedule_with_attach(cr, uid, src, email_to, subject, body, model='event.registration', email_cc=email_cc, res_id=regestration.id)
 
         return True
 

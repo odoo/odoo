@@ -68,7 +68,7 @@ class project_task_close(osv.osv_memory):
         if context is None:
             context = {}
 
-        email_message_obj = self.pool.get('email.message')
+        mail_message = self.pool.get('mail.message')
         task_pool = self.pool.get('project.task')
         task_id = context.get('active_id', False)
         if not task_id:
@@ -113,7 +113,7 @@ class project_task_close(osv.osv_memory):
                     to_adr.append(data.manager_email)
                 if data.partner_warn and data.partner_email:
                     to_adr.append(data.partner_email)
-                mail_id = email_message_obj.schedule_with_attach(cr, uid, from_adr, to_adr, subject, tools.ustr(body), model='project.task.close', email_bcc=[from_adr])
+                mail_id = mail_message.schedule_with_attach(cr, uid, from_adr, to_adr, subject, tools.ustr(body), email_bcc=[from_adr], context=context)
                 if not mail_id:
                     raise osv.except_osv(_('Error'), _("Couldn't send mail! Check the email ids and smtp configuration settings"))
         return {'type': 'ir.actions.act_window_close'}

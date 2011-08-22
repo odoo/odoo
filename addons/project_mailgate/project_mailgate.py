@@ -33,20 +33,11 @@ class project_tasks(osv.osv):
                 'message_ids': fields.one2many('mail.message', 'res_id', 'Messages', domain=[('model','=',_name)], readonly=True),
               }
 
-    def message_new(self, cr, uid, msg, context=None):
-#        """
-#        Automatically calls when new email message arrives
-#
-#        @param self: The object pointer
-#        @param cr: the current row, from the database cursor,
-#        @param uid: the current user’s ID for security checks
-#        """
-        thread_obj = self.pool.get('email.thread')
+    def message_new(self, cr, uid, msg, custom_values=None, context=None):
+        thread_obj = self.pool.get('mail.thread')
         subject = msg.get('subject')
-        body = msg.get('body')
+        body = msg.get('body_text')
         msg_from = msg.get('from')
-        #TODO map email priority with openerp task priority
-        priority = msg.get('priority') 
 
         data = {
             'name': subject,
@@ -56,34 +47,11 @@ class project_tasks(osv.osv):
         res = thread_obj.get_partner(cr, uid, msg_from)
         if res:
             data.update(res)
-        res_id = self.create(cr, uid, data, context)
 
-        attachments = msg.get('attachments', {})
-        for attachment in attachments:
-            data_attach = {
-                'name': attachment,
-                'datas': binascii.b2a_base64(str(attachments.get(attachment))),
-                'datas_fname': attachment,
-                'description': 'Mail attachment',
-                'res_model': self._name,
-                'res_id': res,
-            }
-            self.pool.get('ir.attachment').create(cr, uid, data_attach, context)
-        self.history(cr, uid, [res_id], _('receive'), history=True,
-                            subject = msg.get('subject'),
-                            email = msg.get('to'),
-                            details = msg.get('body'),
-                            email_from = msg.get('from'),
-                            email_cc = msg.get('cc'),
-                            message_id = msg.get('message-id'),
-                            references = msg.get('references', False) or msg.get('in-reply-to', False),
-                            attach = attachments,
-                            email_date = msg.get('date'),
-                            body_html= msg.get('body_html'),
-                            sub_type = msg.get('sub_type'),
-                            headers = msg.get('headers'),
-                            priority = msg.get('priority'),
-                            context = context)
+        if custom_values and isinstance(custom_values, dict):
+            data.update(custom_values)
+        res_id = self.create(cr, uid, data, context)
+        self.append_mail(cr, uid, [res_id], msg, context=context)
         return res_id
 
     def message_update(self, cr, uid, ids, msg, data={}, default_act='pending'):
@@ -95,7 +63,7 @@ class project_tasks(osv.osv):
         maps = { 
             'cost':'planned_hours',
         }
-        for line in msg['body'].split('\n'):
+        for line in msg['body_text'].split('\n'):
             line = line.strip()
             res = tools.misc.command_re.match(line)
             if res:
@@ -112,23 +80,7 @@ class project_tasks(osv.osv):
 
         self.write(cr, uid, ids, data, context=context)
         getattr(self,act)(cr, uid, ids, context=context)
-
-        attachments = msg.get('attachments', {})
-        self.history(cr, uid, ids, _('receive'), history=True,
-                            subject = msg.get('subject'),
-                            email = msg.get('to'),
-                            details = msg.get('body'),
-                            email_from = msg.get('from'),
-                            email_cc = msg.get('cc'),
-                            message_id = msg.get('message-id'),
-                            references = msg.get('references', False) or msg.get('in-reply-to', False),
-                            attach = attachments,
-                            email_date = msg.get('date'),
-                            body_html= msg.get('body_html'),
-                            sub_type = msg.get('sub_type'),
-                            headers = msg.get('headers'),
-                            priority = msg.get('priority'),
-                            context = context)
+        self.append_mail(cr, uid, [res_id], msg, context=context)
         return True
 
     def thread_followers(self, cr, uid, ids, context=None):

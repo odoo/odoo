@@ -484,7 +484,7 @@ property or property parameter."),
             context = {}
 
         company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.name
-        email_message_obj = self.pool.get('email.message')
+        mail_message = self.pool.get('mail.message')
         for att in self.browse(cr, uid, ids, context=context):
             sign = att.sent_by_uid and att.sent_by_uid.signature or ''
             sign = '<br>'.join(sign and sign.split('\n') or [])
@@ -511,15 +511,15 @@ property or property parameter."),
                 body = html_invitation % body_vals
                 if mail_to and email_from:
                     attach = self.get_ics_file(cr, uid, res_obj, context=context)
-                    email_message_obj.schedule_with_attach(cr, uid,
+                    mail_message.schedule_with_attach(cr, uid,
                         email_from,
                         mail_to,
                         sub,
                         body,
-                        model='calendar.attendee',
-                        attach=attach and {'invitation.ics': attach} or None,
+                        attachments=attach and {'invitation.ics': attach} or None,
                         subtype='html',
-                        reply_to=email_from
+                        reply_to=email_from,
+                        context=context
                     )
             return True
 
@@ -814,7 +814,7 @@ class calendar_alarm(osv.osv):
         """
         if context is None:
             context = {}
-        email_message_obj = self.pool.get('email.message')
+        mail_message = self.pool.get('mail.message')
         current_datetime = datetime.now()
         request_obj = self.pool.get('res.request')
         alarm_ids = self.search(cr, uid, [('state', '!=', 'done')], context=context)
@@ -896,12 +896,12 @@ From:
                     for att in alarm.attendee_ids:
                         mail_to.append(att.user_id.user_email)
                     if mail_to:
-                        email_message_obj.schedule_with_attach(cr, uid,
+                        mail_message.schedule_with_attach(cr, uid,
                             tools.config.get('email_from', False),
                             mail_to,
                             sub,
                             body,
-                            model='calendar.alarm'
+                            context=context
                         )
             if next_trigger_date:
                 update_vals.update({'trigger_date': next_trigger_date})

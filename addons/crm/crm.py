@@ -210,8 +210,8 @@ class crm_base(object):
 class crm_case(crm_base):
     """
         A simple python class to be used for common functions
-        Object that inherit from this class should inherit from mailgate.thread
-        And need a stage_id field
+        Objects that inherit from this class should inherit from mail.thread
+        and need a stage_id field
 
         And object that inherit (orm inheritance) from a class the overwrite copy
     """
@@ -472,8 +472,9 @@ class crm_case(crm_base):
                 body,
                 model='crm.case',
                 reply_to=case.section_id.reply_to,
-                res_id=str(case.id),
-                attachments=attach_to_send
+                res_id=case.id,
+                attachments=attach_to_send,
+                context=context
             )
         return True
 

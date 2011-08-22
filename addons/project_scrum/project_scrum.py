@@ -317,7 +317,7 @@ class project_scrum_meeting(osv.osv):
         return True
 
     def email_send(self, cr, uid, ids, email, context=None):
-        email_message_obj = self.pool.get('email.message')
+        mail_message_obj = self.pool.get('mail.message')
         meeting_id = self.browse(cr, uid, ids, context=context)[0]
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         user_email = user.user_email or tools.config.get('email_from', False)
@@ -325,7 +325,7 @@ class project_scrum_meeting(osv.osv):
         body += _('\n* Tasks since yesterday:\n_______________________\n%s\n\n* Task for Today:\n_______________________ \n%s\n\n* Blocks encountered:\n_______________________ \n\n%s') %(meeting_id.question_yesterday,meeting_id.question_today, meeting_id.question_blocks or _('No Blocks'))
         body += _("\n\nThank you,\n%s") % user.name
         sub_name = meeting_id.name or _('Scrum Meeting of %s') % meeting_id.date
-        flag = email_message_obj.schedule_with_attach(cr, uid, user_email , [email], sub_name, body, model='project.scrum.meeting', reply_to=None, openobject_id=str(meeting_id.id))
+        flag = mail_message_obj.schedule_with_attach(cr, uid, user_email , [email], sub_name, body, model='project.scrum.meeting', res_id=meeting_id.id, context=context)
         if not flag:
             return False
         return True

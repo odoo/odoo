@@ -59,7 +59,7 @@ class base_action_rule(osv.osv):
             reply_to = emailfrom
         if not emailfrom:
             raise osv.except_osv(_('Error!'), _("No E-Mail Found for your Company address!"))
-        return mail_message.schedule_with_attach(cr, uid, emailfrom, emails, name, body, model='base.action.rule', reply_to=reply_to, res_id=str(obj.id))
+        return mail_message.schedule_with_attach(cr, uid, emailfrom, emails, name, body, model='base.action.rule', reply_to=reply_to, res_id=obj.id)
 
     def do_check(self, cr, uid, action, obj, context=None):
         ok = super(base_action_rule, self).do_check(cr, uid, action, obj, context=context)

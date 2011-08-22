@@ -109,8 +109,8 @@
         />
 
       <record model="ir.ui.view" id="email_message_tree_view">
-	      <field name="name">email.message.tree</field>
-	      <field name="model">email.message</field>
+	      <field name="name">mail.message.tree</field>
+	      <field name="model">mail.message</field>
 	      <field name="type">tree</field>
 	      <field name="inherit_id" ref="mail.view_email_message_tree"/>
 	      <field name="arch" type="xml">
@@ -121,8 +121,8 @@
       </record>
 
       <record model="ir.ui.view" id="email_message_search_view">
-	      <field name="name">email.message.inherit.search</field>
-	      <field name="model">email.message</field>
+	      <field name="name">mail.message.inherit.search</field>
+	      <field name="model">mail.message</field>
 	      <field name="type">search</field>
 	      <field name="inherit_id" ref="mail.view_email_message_search"/>
 	      <field name="arch" type="xml">
@@ -134,7 +134,7 @@
 
       <record id="action_view_mail_message_emails" model="ir.actions.act_window">
             <field name="name">Messages</field>
-            <field name="res_model">email.message</field>
+            <field name="res_model">mail.message</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="context">{'search_default_emails': 1}</field>
@@ -143,8 +143,8 @@
 
       <act_window
             context="{'search_default_server_id': [active_id], 'default_server_id': active_id}"
-            id="act_server_history" name="Messages" domain="[('history', '=', True), ('server_id', '=', active_id)]"
-            res_model="email.message" src_model="email.server"/>
+            id="act_server_history" name="Messages" domain="[('email_from', '!=', False), ('server_id', '=', active_id)]"
+            res_model="mail.message" src_model="email.server"/>
 
     </data>
 </openerp>

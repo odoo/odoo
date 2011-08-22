@@ -77,7 +77,7 @@ class mail_message_common(osv.osv_memory):
         'email_to': fields.char('To', size=256, help='Message recipients'),
         'email_cc': fields.char('Cc', size=256, help='Carbon copy message recipients'),
         'email_bcc': fields.char('Bcc', size=256, help='Blind carbon copy message recipients'),
-        'reply_to':fields.char('Reply-To', size=256, help='Response address for the message'),
+        'reply_to':fields.char('Reply-To', size=256, help='Preferred response address for the message'),
         'headers': fields.text('Message headers', help="Full message headers, e.g. SMTP session headers", readonly=1),
         'message_id': fields.char('Message-Id', size=256, help='Message unique identifier', select=1, readonly=1),
         'references': fields.text('References', help='Message references, such as identifiers of previous messages', readonly=1),
@@ -205,7 +205,7 @@ class mail_message(osv.osv):
            :param string subtype: optional mime subtype for the text body (usually 'plain' or 'html'),
                                   must match the format of the ``body`` parameter. Default is 'plain',
                                   making the content part of the mail "text/plain".
-           :param list attachments: list of (filename, filecontents) pairs, where filecontents is a string
+           :param dict attachments: map of filename to filecontents, where filecontents is a string
                                     containing the bytes of the attachment
            :param dict headers: optional map of headers to set on the outgoing mail (may override the
                                 other headers, including Subject, Reply-To, Message-Id, etc.)
@@ -245,7 +245,7 @@ class mail_message(osv.osv):
             }
         email_msg_id = self.create(cr, uid, msg_vals, context)
         attachment_ids = []
-        for fname, fcontent in attachments.items():
+        for fname, fcontent in attachments.iteritems():
             attachment_data = {
                     'name': fname,
                     'datas_fname': fname,
@@ -381,6 +381,7 @@ class mail_message(osv.osv):
             msg['in-reply-to'] = msg_txt.get('In-Reply-To')
 
         msg['headers'] = {}
+        msg['subtype'] = 'plain'
         for item in msg_txt.items():
             if item[0].startswith('X-'):
                 msg['headers'].update({item[0]: item[1]})
@@ -391,8 +392,6 @@ class mail_message(osv.osv):
                 msg['body_html'] =  body
                 msg['subtype'] = 'html'
                 body = tools.html2plaintext(body)
-            else:
-                msg['subtype'] = 'plain'
             msg['body_text'] = tools.ustr(body, encoding)
 
         attachments = {}
@@ -415,6 +414,7 @@ class mail_message(osv.osv):
                     content = tools.ustr(content, encoding)
                     if part.get_content_subtype() == 'html':
                         msg['body_html'] = content
+                        msg['subtype'] = 'html' # html version prevails
                         body = tools.ustr(tools.html2plaintext(content))
                     elif part.get_content_subtype() == 'plain':
                         body = content
@@ -426,7 +426,11 @@ class mail_message(osv.osv):
                         body += tools.ustr(res, encoding)
 
             msg['body_text'] = body
-            msg['attachments'] = attachments
+        msg['attachments'] = attachments
+
+        # for backwards compatibility:
+        msg['body'] = msg['body_text']
+        msg['sub_type'] = msg['subtype'] or 'plain'
         return msg
 
     def send(self, cr, uid, ids, auto_commit=False, context=None):

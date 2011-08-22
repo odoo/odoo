@@ -205,7 +205,7 @@ class account_followup_print_all(osv.osv_memory):
         move_obj = self.pool.get('account.move.line')
         user_obj = self.pool.get('res.users')
         line_obj = self.pool.get('account_followup.stat')
-        email_message_obj = self.pool.get('email.message')
+        mail_message = self.pool.get('mail.message')
 
         if context is None:
             context = {}
@@ -278,7 +278,7 @@ class account_followup_print_all(osv.osv_memory):
                 msg = ''
                 if dest:
                     try:
-                        email_message_obj.schedule_with_attach(cr, uid, src, dest, sub, body, model='account.followup.print.all')
+                        mail_message.schedule_with_attach(cr, uid, src, dest, sub, body, context=context)
                         msg_sent += partner.name + '\n'
                     except Exception, e:
                         raise osv.except_osv('Error !', e )

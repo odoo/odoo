@@ -24,15 +24,21 @@ from osv import fields
 import tools
 
 class email_compose_message(osv.osv_memory):
-    _inherit = 'email.compose.message'
+    _inherit = 'mail.compose.message'
 
     def get_value(self, cr, uid, model, resource_id, context=None):
         '''
-        To get values of the resource_id for the model
-        @param model: Object
-        @param resource_id: id of a record for which values to be read
+        """Returns a defaults-like dict with initial values for the composition
+           wizard when sending an email related to the document record identified
+           by ``model`` and ``res_id``.
 
-        @return: Returns a dictionary
+           Overrides the default implementation to provide more default field values
+           related to the corresponding CRM case.
+
+           :param str model: model name of the document record this mail is related to.
+           :param int res_id: id of the document record this mail is related to.
+           :param dict context: several context values will modify the behavior
+                                of the wizard, cfr. the class description.
         '''
         if context is None:
             context = {}

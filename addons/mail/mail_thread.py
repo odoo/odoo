@@ -111,7 +111,7 @@ class mail_thread(osv.osv):
         if custom_values and isinstance(custom_values, dict):
             data.update(custom_values)
         res_id = model_pool.create(cr, uid, data, context=context)
-        self.append_mail(cr, uid, ids, msg_dict, context=context)
+        self.append_mail(cr, uid, [res_id], msg_dict, context=context)
         return res_id
 
     def message_update(self, cr, uid, ids, msg_dict, vals={}, default_act=None, context=None):

@@ -25,7 +25,7 @@ import tools
 
 
 class email_compose_message(osv.osv_memory):
-    _inherit = 'email.compose.message'
+    _inherit = 'mail.compose.message'
 
     def get_value(self, cr, uid, model, resource_id, context=None):
         '''
@@ -45,13 +45,12 @@ class email_compose_message(osv.osv_memory):
                     'subject' : data.name or False,
                     'email_to' : data.email_from or False,
                     'email_from' : data.user_id and data.user_id.address_id and data.user_id.address_id.email or False,
-                    'body' : '\n' + (tools.ustr(data.user_id.signature or '')),
+                    'body_text' : '\n' + (tools.ustr(data.user_id.signature or '')),
                     'email_cc' : tools.ustr(data.email_cc or ''),
                     'model': model,
                     'res_id': resource_id,
                 })
         return result
 
-email_compose_message()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

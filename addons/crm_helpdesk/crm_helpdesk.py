@@ -111,7 +111,7 @@ class crm_helpdesk(crm.crm_case, osv.osv):
             'description': body,
             'user_id': False,
         }
-        if msg.get('priority', False):
+        if priority:
             vals['priority'] = priority
 
         res = thread_pool.get_partner(cr, uid, msg.get('from', False))

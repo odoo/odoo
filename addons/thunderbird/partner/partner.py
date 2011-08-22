@@ -45,11 +45,11 @@ class thunderbird_partner(osv.osv_memory):
         ref_ids = str(dictcreate.get('ref_ids')).split(';')
         msg = dictcreate.get('message')
         mail = msg
-        msg = self.pool.get('email.message').parse_message(msg)
+        mail_message = self.pool.get('mail.message')
+        msg = mail_message.parse_message(msg)
         subject = msg.get('Subject', False)
-        thread_pool = self.pool.get('email.thread')
+        thread_pool = self.pool.get('mail.thread')
         message_id = msg.get('message-id', False)
-        msg_pool = self.pool.get('email.message')
         msg_ids = []
         res = {}
         res_ids = []
@@ -59,7 +59,7 @@ class thunderbird_partner(osv.osv_memory):
             model = ref[0]
             res_id = int(ref[1])
             if message_id:
-                msg_ids = msg_pool.search(cr, uid, [('message_id','=',message_id),('res_id','=',res_id),('model','=',model)])
+                msg_ids = mail_message.search(cr, uid, [('message_id','=',message_id),('res_id','=',res_id),('model','=',model)])
                 if msg_ids and len(msg_ids):
                     continue
             if model not in obj_list:
@@ -88,21 +88,22 @@ class thunderbird_partner(osv.osv_memory):
                 res['res_id'] = res_id
                 obj_attch.create(cr, uid, res)
             threads = self.pool.get(model).browse(cr, uid, res_id)
-            thread_pool.history(cr, uid, [threads], _('receive'), history=True,
+
+            thread_pool.history(cr, uid,
+                            [threads],
                             subject = msg.get('subject'),
-                            email = msg.get('to'),
-                            details = msg.get('body'),
+                            details = msg.get('body_text'),
+                            email_to = msg.get('to'),
                             email_from = msg.get('from'),
                             email_cc = msg.get('cc'),
                             message_id = msg.get('message-id'),
                             references = msg.get('references', False) or msg.get('in-reply-to', False),
-                            attach = msg.get('attachments', {}),
+                            attachments = msg.get('attachments', {}),
                             email_date = msg.get('date'),
                             body_html= msg.get('body_html'),
-                            sub_type = msg.get('sub_type'),
+                            subtype = msg.get('subtype'),
                             headers = msg.get('headers'),
-                            reply = msg.get('reply'),
-                            priority = msg.get('priority'),)
+                            reply_to = msg.get('reply'))
             res_ids.append(res_id)
         return len(res_ids)
 
@@ -110,7 +111,7 @@ class thunderbird_partner(osv.osv_memory):
         dictcreate = dict(vals)
         model = str(dictcreate.get('model'))
         message = dictcreate.get('message')
-        return self.pool.get('email.thread').process_email(cr, uid, model, message, attach=True, context=None)
+        return self.pool.get('mail.thread').process_email(cr, uid, model, message, attach=True, context=None)
 
     def search_message(self, cr, uid, message, context=None):
         #@param message: string of mail which is read from EML File
@@ -118,26 +119,26 @@ class thunderbird_partner(osv.osv_memory):
         references = []
         dictcreate = dict(message)
         msg = dictcreate.get('message')
-        msg = self.pool.get('email.message').parse_message(msg)
+        msg = self.pool.get('mail.message').parse_message(msg)
         message_id = msg.get('message-id')
         refs =  msg.get('references',False)
         references = False
         if refs:
             references = refs.split()
-        msg_pool = self.pool.get('email.message')
+        mail_message = self.pool.get('mail.message')
         model = ''
         res_id = 0
         if message_id:
-            msg_ids = msg_pool.search(cr, uid, [('message_id','=',message_id)])
+            msg_ids = mail_message.search(cr, uid, [('message_id','=',message_id)])
             if msg_ids and len(msg_ids):
-                msg = msg_pool.browse(cr, uid, msg_ids[0])
+                msg = mail_message.browse(cr, uid, msg_ids[0])
                 model = msg.model
                 res_id = msg.res_id
             else:
                 if references :
-                    msg_ids = msg_pool.search(cr, uid, [('message_id','in',references)])
+                    msg_ids = mail_message.search(cr, uid, [('message_id','in',references)])
                     if msg_ids and len(msg_ids):
-                        msg = msg_pool.browse(cr, uid, msg_ids[0])
+                        msg = mail_message.browse(cr, uid, msg_ids[0])
                         model = msg.model
                         res_id = msg.res_id
         return (model,res_id)

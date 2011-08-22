@@ -69,7 +69,7 @@ class project_scrum_email(osv.osv_memory):
         if context is None:
             context = {}
 
-        email_message_obj = self.pool.get('email.message')
+        mail_message = self.pool.get('mail.message')
         active_id = context.get('active_id', False)
         scrum_meeting_pool = self.pool.get('project.scrum.meeting')
         user_pool = self.pool.get('res.users')
@@ -101,8 +101,7 @@ class project_scrum_email(osv.osv_memory):
         if data.scrum_master_email == data.product_owner_email:
             data.product_owner_email = False
         if data.scrum_master_email:
-            email_message_obj.schedule_with_attach(cr, uid, user_email, [data.scrum_master_email], data.subject, body, model='project.scrum.email', reply_to=user_email)
+            mail_message.schedule_with_attach(cr, uid, user_email, [data.scrum_master_email], data.subject, body, reply_to=user_email, context=context)
         if data.product_owner_email:
-            email_message_obj.schedule_with_attach(cr, uid, user_email, [data.product_owner_email], data.subject, body, model='project.scrum.email', reply_to=user_email)
+            mail_message.schedule_with_attach(cr, uid, user_email, [data.product_owner_email], data.subject, body, reply_to=user_email, context=context)
         return {'type': 'ir.actions.act_window_close'}
-project_scrum_email()

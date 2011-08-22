@@ -149,7 +149,7 @@ class email_server(osv.osv):
     def fetch_mail(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
-        thread_pool = self.pool.get('email.thread')
+        thread_pool = self.pool.get('mail.thread')
         action_pool = self.pool.get('ir.actions.server')
         context.update({'get_server': True})
         for server in self.browse(cr, uid, ids, context=context):
@@ -201,9 +201,9 @@ class email_server(osv.osv):
 
 email_server()
 
-class email_message(osv.osv):
+class mail_message(osv.osv):
 
-    _inherit = "email.message"
+    _inherit = "mail.message"
 
     _columns = {
         'server_id': fields.many2one('email.server', "Mail Server", readonly=True, select=True),
@@ -215,7 +215,7 @@ class email_message(osv.osv):
         server_id = context.get('server_id',False)
         if server_id:
             values['server_id'] = server_id
-        res = super(email_message,self).create(cr, uid, values, context=context)
+        res = super(mail_message,self).create(cr, uid, values, context=context)
         return res
 
     def write(self, cr, uid, ids, values, context=None):
@@ -224,9 +224,8 @@ class email_message(osv.osv):
         server_id = context.get('server_id',False)
         if server_id:
             values['server_id'] = server_id
-        res = super(email_message,self).write(cr, uid, ids, values, context=context)
+        res = super(mail_message,self).write(cr, uid, ids, values, context=context)
         return res
 
-email_message()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

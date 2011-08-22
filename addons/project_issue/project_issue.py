@@ -44,7 +44,7 @@ class project_issue(crm.crm_case, osv.osv):
     _name = "project.issue"
     _description = "Project Issue"
     _order = "priority, create_date desc"
-    _inherit = ['email.thread']
+    _inherit = ['mail.thread']
 
     def case_open(self, cr, uid, ids, *args):
         """
@@ -383,20 +383,14 @@ class project_issue(crm.crm_case, osv.osv):
         self.history(cr, uid, cases, _('Escalate'))
         return True
 
-    def message_new(self, cr, uid, msg, context=None):
-        """
-        Automatically calls when new email message arrives
-
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks
-        """
+    def message_new(self, cr, uid, msg, custom_values=None, context=None):
+        """Automatically called when new email message arrives"""
         if context is None:
             context = {}
-        thread_pool = self.pool.get('email.thread')
+        thread_pool = self.pool.get('mail.thread')
 
         subject = msg.get('subject') or _('No Title')
-        body = msg.get('body')
+        body = msg.get('body_text')
         msg_from = msg.get('from')
         priority = msg.get('priority')
 
@@ -407,7 +401,7 @@ class project_issue(crm.crm_case, osv.osv):
             'description': body,
             'user_id': False,
         }
-        if msg.get('priority', False):
+        if priority:
             vals['priority'] = priority
 
         res = thread_pool.get_partner(cr, uid, msg.get('from'))
@@ -415,34 +409,15 @@ class project_issue(crm.crm_case, osv.osv):
             vals.update(res)
         context.update({'state_to' : 'draft'})
 
-        res_id = self.create(cr, uid, vals, context)
+        if custom_values and isinstance(custom_values, dict):
+            vals.update(custom_values)
 
-        attachments = msg.get('attachments', {})
-        self.history(cr, uid, [res_id], _('receive'), history=True,
-                            subject = msg.get('subject'),
-                            email = msg.get('to'),
-                            details = msg.get('body'),
-                            email_from = msg.get('from'),
-                            email_cc = msg.get('cc'),
-                            message_id = msg.get('message-id'),
-                            references = msg.get('references', False) or msg.get('in-reply-to', False),
-                            attach = attachments,
-                            email_date = msg.get('date'),
-                            body_html= msg.get('body_html'),
-                            sub_type = msg.get('sub_type'),
-                            headers = msg.get('headers'),
-                            priority = msg.get('priority'),
-                            context = context)
+        res_id = self.create(cr, uid, vals, context)
+        self.append_mail(cr, uid, [res_id], msg, context=context)
         self.convert_to_bug(cr, uid, [res_id], context=context)
         return res_id
 
     def message_update(self, cr, uid, ids, msg, vals=None, default_act='pending', context=None):
-        """
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of update mail’s IDs
-        """
 
         if vals is None:
             vals = {}
@@ -451,7 +426,7 @@ class project_issue(crm.crm_case, osv.osv):
             ids = [ids]
 
         vals.update({
-            'description': msg['body']
+            'description': msg['body_text']
         })
         if msg.get('priority', False):
             vals['priority'] = msg.get('priority')
@@ -468,7 +443,7 @@ class project_issue(crm.crm_case, osv.osv):
                 record.write({'state' : 'open'})
 
         vls = { }
-        for line in msg['body'].split('\n'):
+        for line in msg['body_text'].split('\n'):
             line = line.strip()
             res = tools.misc.command_re.match(line)
             if res and maps.get(res.group(1).lower(), False):
@@ -477,23 +452,7 @@ class project_issue(crm.crm_case, osv.osv):
 
         vals.update(vls)
         res = self.write(cr, uid, ids, vals)
-
-        attachments = msg.get('attachments', {})
-        self.history(cr, uid, ids, _('receive'), history=True,
-                            subject = msg.get('subject'),
-                            email = msg.get('to'),
-                            details = msg.get('body'),
-                            email_from = msg.get('from'),
-                            email_cc = msg.get('cc'),
-                            message_id = msg.get('message-id'),
-                            references = msg.get('references', False) or msg.get('in-reply-to', False),
-                            attach = attachments,
-                            email_date = msg.get('date'),
-                            body_html= msg.get('body_html'),
-                            sub_type = msg.get('sub_type'),
-                            headers = msg.get('headers'),
-                            priority = msg.get('priority'),
-                            context = context)
+        self.append_mail(cr, uid, [res_id], msg, context=context)
         return res
 
     def copy(self, cr, uid, id, default=None, context=None):

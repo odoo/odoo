@@ -192,7 +192,7 @@ class hr_evaluation(osv.osv):
         return {'value': {'plan_id':evaluation_plan_id}}
 
     def button_plan_in_progress(self, cr, uid, ids, context=None):
-        email_message_obj = self.pool.get('email.message')
+        mail_message = self.pool.get('mail.message')
         hr_eval_inter_obj = self.pool.get('hr.evaluation.interview')
         if context is None:
             context = {}
@@ -229,7 +229,7 @@ class hr_evaluation(osv.osv):
                         sub = phase.email_subject
                         dest = [child.work_email]
                         if dest:
-                           email_message_obj.schedule_with_attach(cr, uid, evaluation.employee_id.work_email, dest, sub, body, model='hr_evaluation.evaluation')
+                           mail_message.schedule_with_attach(cr, uid, evaluation.employee_id.work_email, dest, sub, body, context=context)
 
         self.write(cr, uid, ids, {'state':'wait'}, context=context)
         return True
