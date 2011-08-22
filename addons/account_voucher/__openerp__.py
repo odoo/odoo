@@ -25,15 +25,22 @@
     "author" : 'OpenERP SA',
     'complexity': "normal",
     "description": """
-Account Voucher module includes all the basic requirements of Voucher Entries for Bank, Cash, Sales, Purchase, Expanse, Contra, etc.
-====================================================================================================================================
+Account Voucher module offers an easy way to deal with all the basic requirements of Voucher Entries
+====================================================================================================
 
-    * Voucher Entry
-    * Voucher Receipt
-    * Cheque Register
+Its increased usabililty allows you to create easily sales/purchases documents but also to encode payments.
+Doing so, you'll be able to see all the open transactions for the selected partner and that will help you
+to reconcile your entry with its invoice.
+
+Account Voucher module multi-currency support
+=============================================
+
+Thanks to the contribution of CampToCamp, the vouchers fully support the multi currency and compute the 
+currency rate difference besides the write off amount. Of course, the accounting entries are also created
+accordingly.
     """,
     "category" : "Finance",
-    "website" : "http://tinyerp.com",
+    "website" : "http://www.openerp.com",
     "images" : ["images/customer_payment.jpeg","images/journal_voucher.jpeg","images/sales_receipt.jpeg","images/supplier_voucher.jpeg"],
     "depends" : ["account"],
     "init_xml" : [],
