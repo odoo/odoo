@@ -7,6 +7,7 @@ openerp.base.form.DashBoard = openerp.base.form.Widget.extend({
         this._super(view, node);
         this.template = 'DashBoard';
         this.actions_attrs = {};
+        this.action_managers = [];
     },
     start: function() {
         var self = this;
@@ -225,6 +226,7 @@ openerp.base.form.DashBoard = openerp.base.form.Widget.extend({
             pager: false
         };
         var am = new openerp.base.ActionManager(this);
+        this.action_managers.push(am);
         am.appendTo($("#"+this.view.element_id + '_action_' + action.id));
         am.do_action(action);
     },
@@ -240,8 +242,12 @@ openerp.base.form.DashBoard = openerp.base.form.Widget.extend({
         return QWeb.render(this.template, this);
     },
     do_reload: function() {
-        this.view.widget_parent.stop();
-        this.view.widget_parent.start();
+        _.each(this.action_managers, function(am) {
+            am.stop();
+        });
+        this.action_managers = [];
+        this.view.stop();
+        this.view.start();
     }
 });
 openerp.base.form.DashBoardLegacy = openerp.base.form.DashBoard.extend({
