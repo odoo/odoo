@@ -142,6 +142,8 @@ openerp.base.list.editable = function (openerp) {
             this.cancel_pending_edition().then(function () {
                 var $new_row = $('<tr>', {
                         id: _.uniqueId('oe-editable-row-'),
+                        'data-id': $(row).data('id'),
+                        'data-index': $(row).data('index'),
                         'class': $(row).attr('class') + ' oe_forms',
                         click: function (e) {e.stopPropagation();}
                     })
@@ -238,9 +240,7 @@ openerp.base.list.editable = function (openerp) {
          */
         edit_record: function () {
             this.render_row_as_form(
-                this.$current.children(
-                    _.sprintf('[data-index=%d]',
-                            this.dataset.index)));
+                this.$current.children(':eq(' + this.dataset.index + ')'));
             $(this).trigger(
                 'edit',
                 [this.records.at(this.dataset.index).get('id'), this.dataset]);
