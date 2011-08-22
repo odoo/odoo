@@ -44,7 +44,7 @@ The preferred type of Structured Communication and associated Algorithm can be s
 A 'random' Structured Communication will generated if no algorithm is specified on the Partner record. 
 
     """,
-    'depends': ['account', 'account_cancel'],
+    'depends': ['account'],
     'demo_xml': [],
     'init_xml': [],
     'update_xml' : [

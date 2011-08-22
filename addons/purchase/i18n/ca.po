@@ -7,15 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:15+0000\n"
-"PO-Revision-Date: 2010-12-16 04:54+0000\n"
-"Last-Translator: Albert Cervera i Areny - http://www.NaN-tic.com <albert@nan-"
-"tic.com>\n"
+"PO-Revision-Date: 2011-08-17 21:54+0000\n"
+"Last-Translator: mgaja (GrupoIsep.com) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-07-23 04:55+0000\n"
-"X-Generator: Launchpad (build 13405)\n"
+"X-Launchpad-Export-Date: 2011-08-20 04:52+0000\n"
+"X-Generator: Launchpad (build 13697)\n"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_confirmingpurchaseorder0
@@ -28,7 +27,7 @@ msgstr ""
 "compra confirmada."
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:282
+#: code:addons/purchase/purchase.py:292
 #, python-format
 msgid "You can not confirm purchase order without Purchase Order Lines."
 msgstr ""
@@ -47,7 +46,7 @@ msgid "Destination"
 msgstr "Destí"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:710
+#: code:addons/purchase/purchase.py:721
 #, python-format
 msgid ""
 "You have to select a product UOM in the same category than the purchase UOM "
@@ -86,7 +85,7 @@ msgstr ""
 #. module: purchase
 #: selection:purchase.order,invoice_method:0
 msgid "From Reception"
-msgstr ""
+msgstr "A la recepció"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -130,7 +129,7 @@ msgstr ""
 "obtenir els productes rebuts, i controlar les factures dels proveïdors."
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:722
+#: code:addons/purchase/purchase.py:735
 #, python-format
 msgid "The selected supplier only sells this product by %s"
 msgstr "El proveïdor seleccionat només ven aquest producte per %s"
@@ -153,7 +152,7 @@ msgid "From a Pick list"
 msgstr "Des d'un albarà"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:649
+#: code:addons/purchase/purchase.py:660
 #, python-format
 msgid "No Pricelist !"
 msgstr "No tarifa!"
@@ -246,7 +245,7 @@ msgid "Partial Picking"
 msgstr "Empaquetat parcial"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:286
+#: code:addons/purchase/purchase.py:296
 #, python-format
 msgid "Purchase order '%s' is confirmed."
 msgstr "Comanda de compra '%s' esta confirmada."
@@ -293,7 +292,7 @@ msgid "Notes"
 msgstr "Notes"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:649
+#: code:addons/purchase/purchase.py:660
 #, python-format
 msgid ""
 "You have to select a pricelist or a supplier in the purchase form !\n"
@@ -371,7 +370,7 @@ msgid "Cancelled"
 msgstr "Cancel·lada"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:305
+#: code:addons/purchase/purchase.py:315
 #, python-format
 msgid "Purchase amount over the limit"
 msgstr "Import de la compra per sobre del límit"
@@ -425,7 +424,7 @@ msgid "Reference"
 msgstr "Referència"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:237
+#: code:addons/purchase/purchase.py:244
 #, python-format
 msgid "Cannot delete Purchase Order(s) which are in %s State!"
 msgstr "No es poden eliminar comanda(es) de compra que estiguin en estat %s!"
@@ -447,7 +446,7 @@ msgid "Day"
 msgstr "Dia"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:334
+#: code:addons/purchase/purchase.py:344
 #, python-format
 msgid "Purchase order '%s' has been set in draft state."
 msgstr "Comanda de compra '%s' s'ha canviat a l'estat esborrany."
@@ -464,8 +463,8 @@ msgid "# of Lines"
 msgstr "# de línies"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:685
-#: code:addons/purchase/purchase.py:722
+#: code:addons/purchase/purchase.py:696
+#: code:addons/purchase/purchase.py:735
 #: code:addons/purchase/wizard/purchase_order_group.py:47
 #, python-format
 msgid "Warning"
@@ -502,7 +501,7 @@ msgid "It indicates that a picking has been done"
 msgstr "Indica que un albarà ha estat realitzat."
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:710
+#: code:addons/purchase/purchase.py:721
 #, python-format
 msgid "Wrong Product UOM !"
 msgstr "UdM del producte errònia!"
@@ -607,7 +606,7 @@ msgid "Order Lines"
 msgstr "Línies de la comanda"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:651
+#: code:addons/purchase/purchase.py:662
 #, python-format
 msgid "No Partner!"
 msgstr "Falta empresa!"
@@ -663,9 +662,9 @@ msgid "Invoices generated for a purchase order"
 msgstr "Factures generades per a una comanda de compra"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:282
-#: code:addons/purchase/purchase.py:352
+#: code:addons/purchase/purchase.py:292
 #: code:addons/purchase/purchase.py:362
+#: code:addons/purchase/purchase.py:372
 #: code:addons/purchase/wizard/purchase_line_invoice.py:122
 #, python-format
 msgid "Error !"
@@ -730,7 +729,7 @@ msgid "Reservation Destination"
 msgstr "Destinació de la reserva"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:237
+#: code:addons/purchase/purchase.py:244
 #, python-format
 msgid "Invalid action !"
 msgstr "Acció no vàlida!"
@@ -814,7 +813,7 @@ msgid "    Month-1    "
 msgstr "    Mes-1    "
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:363
+#: code:addons/purchase/purchase.py:373
 #, python-format
 msgid "There is no purchase journal defined for this company: \"%s\" (id:%d)"
 msgstr "No s'ha definit un diari per a aquesta empresa: \"%s\" (id:%d)"
@@ -825,7 +824,7 @@ msgid "Manual"
 msgstr "Manual"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:400
+#: code:addons/purchase/purchase.py:410
 #, python-format
 msgid "You must first cancel all picking attached to this purchase order."
 msgstr ""
@@ -948,7 +947,6 @@ msgid "Month"
 msgstr "Mes"
 
 #. module: purchase
-#: selection:purchase.order,state:0
 #: selection:purchase.report,state:0
 msgid "Waiting Supplier Ack"
 msgstr "Esperant acceptació proveïdor"
@@ -1002,13 +1000,13 @@ msgstr "Per ser revisat pel comptable."
 #: model:ir.actions.act_window,name:purchase.purchase_line_form_action2
 #: model:ir.ui.menu,name:purchase.menu_purchase_line_order_draft
 msgid "On Purchase Order Line"
-msgstr ""
+msgstr "En la línia d'ordres de compra"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_picking_tree4_picking_to_invoice
 #: model:ir.ui.menu,name:purchase.action_picking_tree4_picking_to_invoice
 msgid "On Receptions"
-msgstr ""
+msgstr "En recepcions"
 
 #. module: purchase
 #: report:purchase.order:0
@@ -1154,7 +1152,7 @@ msgid "Manual Invoices"
 msgstr "Factures manuals"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:308
+#: code:addons/purchase/purchase.py:318
 #, python-format
 msgid ""
 "Somebody has just confirmed a purchase with an amount over the defined limit"
@@ -1172,7 +1170,7 @@ msgid "Extended Filters..."
 msgstr "Filtres extesos..."
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:352
+#: code:addons/purchase/purchase.py:362
 #: code:addons/purchase/wizard/purchase_line_invoice.py:123
 #, python-format
 msgid "There is no expense account defined for this product: \"%s\" (id:%d)"
@@ -1180,7 +1178,7 @@ msgstr ""
 "No hi ha compte de despeses definida per a aquest producte: \"%s\" (id:%d)"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:408
+#: code:addons/purchase/purchase.py:418
 #, python-format
 msgid "You must first cancel all invoices attached to this purchase order."
 msgstr ""
@@ -1239,7 +1237,7 @@ msgstr ""
 "    "
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:685
+#: code:addons/purchase/purchase.py:696
 #, python-format
 msgid ""
 "The selected supplier has a minimal quantity set to %s, you cannot purchase "
@@ -1512,7 +1510,7 @@ msgid "Date Approved"
 msgstr "Data aprovació"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:407
+#: code:addons/purchase/purchase.py:417
 #, python-format
 msgid "Could not cancel this purchase order !"
 msgstr "No es pot cancel·lar aquesta comanda de compra!"
@@ -1628,7 +1626,7 @@ msgid "Total Qty and Amount by month"
 msgstr "Qtat total i import per mes"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:399
+#: code:addons/purchase/purchase.py:409
 #, python-format
 msgid "Could not cancel purchase order !"
 msgstr "No es pot cancel·lar la comanda de compra!"
@@ -1795,7 +1793,7 @@ msgstr ""
 "una comanda de compra."
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:414
+#: code:addons/purchase/purchase.py:424
 #, python-format
 msgid "Purchase order '%s' is cancelled."
 msgstr "La comanda de compra '%s' està cancel·lada."
@@ -1875,7 +1873,7 @@ msgid "Partner"
 msgstr "Empresa"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:651
+#: code:addons/purchase/purchase.py:662
 #, python-format
 msgid ""
 "You have to select a partner in the purchase form !\n"
@@ -1925,9 +1923,6 @@ msgstr ""
 msgid "Purchase Dashboard"
 msgstr "Taulell de compres"
 
-#~ msgid "You can not have 2 pricelist version that overlaps!"
-#~ msgstr "No podeu tenir 2 versions de tarifes que es superposin!"
-
 #, python-format
 #~ msgid ""
 #~ "You have to select a pricelist in the purchase form !\n"
@@ -1948,15 +1943,6 @@ msgstr "Taulell de compres"
 #~ msgid "From Picking"
 #~ msgstr "Des de albarà"
 
-#~ msgid ""
-#~ "Please note that orders will only be merged if they are to the same partner "
-#~ "and going to the same location, and lines will only be merged if they are "
-#~ "exactly the same except for the quantity and unit."
-#~ msgstr ""
-#~ "Si us plau observeu que les comandes només es fusionaran si pertanyen a la "
-#~ "mateixa empresa i es dirigeixen a la mateixa ubicació, i les línies només es "
-#~ "fusionaran si són exactament les mateixes excepte la quantitat i unitat."
-
 #~ msgid "Packing"
 #~ msgstr "Paquet/Albarà"
 
@@ -1971,9 +1957,6 @@ msgstr "Taulell de compres"
 
 #~ msgid "Purchase Orders in Progress"
 #~ msgstr "Comandes de compra en procés"
-
-#~ msgid "N°"
-#~ msgstr "Nº"
 
 #~ msgid "Purchase order is confirmed by the user."
 #~ msgstr "Comanda de compra és confirmada per l'usuari."

@@ -80,7 +80,7 @@ class account_invoice(osv.osv):
                         algorithm = 'random' 
                     reference = self.generate_bbacomm(cr, uid, ids, type, reference_type, algorithm, partner_id, '')['value']['reference']
         res_update = {       
-            'reference_type': reference_type,
+            'reference_type': reference_type or 'none',
             'reference': reference,
         }
         result['value'].update(res_update)
@@ -180,6 +180,8 @@ class account_invoice(osv.osv):
         return super(account_invoice, self).create(cr, uid, vals, context=context)     
 
     def write(self, cr, uid, ids, vals, context={}):
+        if isinstance(ids, (int, long)):
+            ids = [ids]
         for inv in self.browse(cr, uid, ids, context):    
             if vals.has_key('reference_type'):
                 reference_type = vals['reference_type']
