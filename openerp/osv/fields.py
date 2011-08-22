@@ -136,6 +136,14 @@ class integer(_column):
     _symbol_get = lambda self,x: x or 0
 
 class integer_big(_column):
+    """Experimental 64 bit integer column type, currently unused.
+
+       TODO: this field should work fine for values up
+             to 32 bits, but greater values will not fit
+             in the XML-RPC int type, so a specific
+             get() method is needed to pass them as floats,
+             like what we do for integer functional fields.
+    """
     _type = 'integer_big'
     # do not reference the _symbol_* of integer class, as that would possibly
     # unbind the lambda functions
@@ -915,8 +923,13 @@ class function(_column):
             else:
                 result = sanitize_binary_value(value)
 
-        if field_type == "integer":
-            result = tools.ustr(value)
+        if field_type in ("integer","integer_big") and value > xmlrpclib.MAXINT:
+            # integer/long values greater than 2^31-1 are not supported
+            # in pure XMLRPC, so we have to pass them as floats :-(
+            # This is not needed for stored fields and non-functional integer
+            # fields, as their values are constrained by the database backend
+            # to the same 32bits signed int limit.
+            result = float(value)
         return result
 
     def get(self, cr, obj, ids, name, uid=False, context=None, values=None):

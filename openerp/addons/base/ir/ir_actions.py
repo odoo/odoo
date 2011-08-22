@@ -33,6 +33,7 @@ from report.report_sxw import report_sxw, report_rml
 from tools.config import config
 from tools.safe_eval import safe_eval as eval
 from tools.translate import _
+from socket import gethostname
 
 class actions(osv.osv):
     _name = 'ir.actions.actions'
@@ -598,16 +599,18 @@ class actions_server(osv.osv):
         logger = logging.getLogger(self._name)
         if context is None:
             context = {}
+        user = self.pool.get('res.users').browse(cr, uid, uid)
         for action in self.browse(cr, uid, ids, context):
             obj_pool = self.pool.get(action.model_id.model)
             obj = obj_pool.browse(cr, uid, context['active_id'], context=context)
             cxt = {
                 'context': dict(context), # copy context to prevent side-effects of eval
                 'object': obj,
-                'time':time,
+                'time': time,
                 'cr': cr,
-                'pool' : self.pool,
-                'uid' : uid
+                'pool': self.pool,
+                'uid': uid,
+                'user': user
             }
             expr = eval(str(action.condition), cxt)
             if not expr:
@@ -629,13 +632,14 @@ class actions_server(osv.osv):
                     'uid': uid,
                     'object':obj,
                     'obj': obj,
+                    'user': user,
                 }
                 eval(action.code, localdict, mode="exec", nocopy=True) # nocopy allows to return 'action'
                 if 'action' in localdict:
                     return localdict['action']
 
             if action.state == 'email':
-                user = config['email_from']
+                email_from = config['email_from']
                 address = str(action.email)
                 try:
                     address =  eval(str(action.email), cxt)
@@ -643,16 +647,20 @@ class actions_server(osv.osv):
                     pass
 
                 if not address:
-                    logger.info('Partner Email address not Specified!')
+                    logger.info('No partner email address specified, not sending any email.')
                     continue
-                if not user:
-                    logger.info('Email-From address not Specified at server!')
-                    raise osv.except_osv(_('Error'), _("Please specify server option --email-from !"))
+                
+                if not email_from:
+                    logger.debug('--email-from command line option is not specified, using a fallback value instead.')
+                    if user.user_email:
+                        email_from = user.user_email
+                    else:
+                        email_from = "%s@%s" % (user.login, gethostname())
 
                 subject = self.merge_message(cr, uid, action.subject, action, context)
                 body = self.merge_message(cr, uid, action.message, action, context)
 
-                if tools.email_send(user, [address], subject, body, debug=False, subtype='html') == True:
+                if tools.email_send(email_from, [address], subject, body, debug=False, subtype='html') == True:
                     logger.info('Email successfully sent to: %s', address)
                 else:
                     logger.warning('Failed to send email to: %s', address)
