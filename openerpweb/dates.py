@@ -28,7 +28,7 @@ DEFAULT_SERVER_DATETIME_FORMAT = "%s %s" % (
     DEFAULT_SERVER_DATE_FORMAT,
     DEFAULT_SERVER_TIME_FORMAT)
 
-def parse_datetime(str):
+def str_to_datetime(str):
     """
     Converts a string to a datetime object using OpenERP's
     datetime string format (exemple: '2011-12-01 15:12:35').
@@ -40,7 +40,7 @@ def parse_datetime(str):
         return str
     return datetime.datetime.strptime(str, DEFAULT_SERVER_DATETIME_FORMAT)
 
-def parse_date(str):
+def str_to_date(str):
     """
     Converts a string to a date object using OpenERP's
     date string format (exemple: '2011-12-01').
@@ -49,7 +49,7 @@ def parse_date(str):
         return str
     return datetime.datetime.strptime(str, DEFAULT_SERVER_DATE_FORMAT).date()
 
-def parse_time(str):
+def str_to_time(str):
     """
     Converts a string to a time object using OpenERP's
     time string format (exemple: '15:12:35').
@@ -58,7 +58,7 @@ def parse_time(str):
         return str
     return datetime.datetime.strptime(str, DEFAULT_SERVER_TIME_FORMAT).time()
 
-def format_datetime(obj):
+def datetime_to_str(obj):
     """
     Converts a datetime object to a string using OpenERP's
     datetime string format (exemple: '2011-12-01 15:12:35').
@@ -69,7 +69,7 @@ def format_datetime(obj):
         return False
     return obj.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
 
-def format_date(obj):
+def date_to_str(obj):
     """
     Converts a date object to a string using OpenERP's
     date string format (exemple: '2011-12-01').
@@ -78,7 +78,7 @@ def format_date(obj):
         return False
     return obj.strftime(DEFAULT_SERVER_DATE_FORMAT)
 
-def format_time(obj):
+def time_to_str(obj):
     """
     Converts a time object to a string using OpenERP's
     time string format (exemple: '15:12:35').

@@ -89,7 +89,7 @@ openerp.base_graph.GraphView = openerp.base.View.extend({
             }
             this.dataset.domain = domain;
             this.dataset.context = this.view_manager.dataset.context;
-            this.dataset.read_slice({fields: _(this.fields).keys()}, function(res) {
+            this.dataset.read_slice(_(this.fields).keys(),{}, function(res) {
                 self.schedule_chart(res);
             });
         }
@@ -468,7 +468,7 @@ openerp.base_graph.GraphView = openerp.base.View.extend({
             }
             self.dataset.context = results.context;
             self.dataset.domain = results.domain;
-            self.dataset.read_slice({}, $.proxy(self, 'load_chart'));
+            self.dataset.read_slice([],{}, $.proxy(self, 'load_chart'));
         });
     }
 });

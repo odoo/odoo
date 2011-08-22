@@ -102,6 +102,7 @@ openerp.base.Dialog = openerp.base.OldWidget.extend({
         }
         this.set_options(dialog_options);
         this.$dialog.dialog(this.dialog_options).dialog('open');
+        return this;
     },
     close: function() {
         // Closes the dialog but leave it in a state where it could be opened again.
@@ -291,8 +292,7 @@ openerp.base.Database = openerp.base.Widget.extend({
     },
     do_create: function() {
         var self = this;
-       	self.$option_id.html(QWeb.render("CreateDB", self));
-
+       	self.$option_id.html(QWeb.render("Database.CreateDB", self));
         self.$option_id.find("form[name=create_db_form]").validate({
             submitHandler: function (form) {
                 var fields = $(form).serializeArray();
@@ -314,11 +314,9 @@ openerp.base.Database = openerp.base.Widget.extend({
             }
         });
     },
-	
     do_drop: function() {
         var self = this;
        	self.$option_id.html(QWeb.render("DropDB", self));
-       	
        	self.$option_id.find("form[name=drop_db_form]").validate({
             submitHandler: function (form) {
                 var $form = $(form),
@@ -341,7 +339,6 @@ openerp.base.Database = openerp.base.Widget.extend({
             }
         });
     },
-
     wait_for_file: function (token, cleanup) {
         var self = this,
             cookie_name = 'fileToken',
@@ -362,7 +359,7 @@ openerp.base.Database = openerp.base.Widget.extend({
 
                 if (cleanup) { cleanup(); }
             }
-        }, 100);
+        }, 200);
     },
     do_backup: function() {
         var self = this;
@@ -402,7 +399,6 @@ openerp.base.Database = openerp.base.Widget.extend({
             }
         });
     },
-    
     do_restore: function() {
         var self = this;
        	self.$option_id.html(QWeb.render("RestoreDB", self));
@@ -441,7 +437,6 @@ openerp.base.Database = openerp.base.Widget.extend({
             }
         });
     },
-
     do_change_password: function() {
         var self = this;
        	self.$option_id.html(QWeb.render("Change_DB_Pwd", self));
@@ -835,13 +830,6 @@ openerp.base.WebClient = openerp.base.Widget.extend({
     do_about: function() {
     }
 });
-
-openerp.base.webclient = function(element_id) {
-    // TODO Helper to start webclient rename it openerp.base.webclient
-    var client = new openerp.base.WebClient(element_id);
-    client.start();
-    return client;
-};
 
 };
 

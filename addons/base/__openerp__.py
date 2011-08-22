@@ -5,6 +5,7 @@
     'active': True,
     'js' : [
         "static/lib/datejs/date-en-US.js",
+        "static/lib/datejs/strftime.js",
         "static/lib/jquery/jquery-1.6.2.js",
         "static/lib/jquery.form/jquery.form.js",
         "static/lib/jquery.validate/jquery.validate.js",
@@ -22,6 +23,7 @@
         "static/lib/underscore/underscore.string.js",
         "static/src/js/boot.js",
         "static/src/js/core.js",
+        "static/src/js/dates.js",
         "static/src/js/formats.js",
         "static/src/js/chrome.js",
         "static/src/js/views.js",
