@@ -209,6 +209,8 @@ openerp.base.list.editable = function (openerp) {
             var self = this;
             this.edition_form.do_save(function (result) {
                 if (result.created && !self.edition_index) {
+                    self.records.add({id: result.result},
+                        {at: self.options.editable === 'top' ? 0 : null});
                     self.edition_index = self.dataset.index;
                 }
                 self.cancel_pending_edition().then(function () {

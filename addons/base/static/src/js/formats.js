@@ -201,6 +201,9 @@ openerp.base.format_cell = function (row_data, column, value_if_empty) {
         ].join('')
     }
 
+    if (!row_data[column.id]) {
+        return value_if_empty === undefined ? '' : value_if_empty;
+    }
     return openerp.base.format_value(
             row_data[column.id].value, column, value_if_empty);
 }

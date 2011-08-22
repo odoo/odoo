@@ -642,6 +642,20 @@ openerp.base.ListView.List = openerp.base.Class.extend( /** @lends openerp.base.
             'change': function (event, record) {
                 var $row = self.$current.find('[data-id=' + record.get('id') + ']');
                 $row.replaceWith(self.render_record($row.data('index')));
+            },
+            'add': function (ev, records, record, index) {
+                var $row = $('<tr>').attr({
+                        'data-id': record.get('id'),
+                        'data-index': index
+                    });
+                if (index === 0) {
+                    $row.prependTo(self.$current);
+                } else {
+                    $row.insertAfter(self.$current.children().eq(index));
+                }
+                $row.nextAll().each(function (row) {
+                    $(row).data('index', ++index);
+                });
             }
         };
         _(this.record_callbacks).each(function (callback, event) {
@@ -767,8 +781,9 @@ openerp.base.ListView.List = openerp.base.Class.extend( /** @lends openerp.base.
                 }), 'name'),
             function (record) {
                 _(record[0]).each(function (value, key) {
-                    r.set(key, value);
+                    r.set(key, value, {silent: true});
                 });
+                r.trigger('change', r);
             }
         );
     },
@@ -1033,7 +1048,7 @@ openerp.base.ListView.Groups = openerp.base.Class.extend( /** @lends openerp.bas
                             .attr('disabled', page === pages - 1);
                 }
 
-                self.records.add(records);
+                self.records.add(records, {silent: true});
                 list.render();
                 d.resolve(list);
             });
@@ -1211,16 +1226,21 @@ var Record = openerp.base.Class.extend(/** @lends Record# */{
     /**
      * @param key
      * @param value
+     * @param {Object} [options]
+     * @param {Boolean} [options.silent=false]
      * @returns {Record}
      */
-    set: function (key, value) {
+    set: function (key, value, options) {
+        options = options || {};
         var old_value = this.attributes[key];
         if (old_value === value) {
             return this;
         }
         this.attributes[key] = value;
-        this.trigger('change:' + key, this, value, old_value);
-        this.trigger('change', this, key, value, old_value);
+        if (!options.silent) {
+            this.trigger('change:' + key, this, value, old_value);
+            this.trigger('change', this, key, value, old_value);
+        }
         return this;
     },
     /**
@@ -1279,6 +1299,7 @@ var Collection = openerp.base.Class.extend(/** @lends Collection# */{
      * @param {Object|Array} record
      * @param {Object} [options]
      * @param {Number} [options.at]
+     * @param {Boolean} [options.silent=false]
      * @returns this
      */
     add: function (record, options) {
@@ -1291,8 +1312,15 @@ var Collection = openerp.base.Class.extend(/** @lends Collection# */{
             this._byId[instance.get('id')] = instance;
             if (options.at === undefined) {
                 this.records.push(instance);
+                if (!options.silent) {
+                    this.trigger('add', this, instance, this.records.length-1);
+                }
             } else {
-                this.records.splice(options.at + i, 0, instance);
+                var insertion_index = options.at + i;
+                this.records.splice(insertion_index, 0, instance);
+                if (!options.silent) {
+                    this.trigger('add', this, instance, insertion_index);
+                }
             }
             this.length++;
         }
