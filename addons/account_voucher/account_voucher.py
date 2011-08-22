@@ -182,15 +182,11 @@ class account_voucher(osv.osv):
             ctx.update({'date': voucher.date})
             for l in voucher.line_dr_ids:
                 real_amount -= l.amount_in_company_currency
-                counter_for_writeoff -= (l.voucher_currency_id.id == l.company_currency_id.id) and l.amount_in_company_currency or l.amount_in_voucher_currency
-                #ctx.update({'date': l.date_original})
-                #counter_for_writeoff -= currency_pool.compute(cr, uid, voucher.company_id.currency_id.id, voucher.currency_id.id, l.amount_in_company_currency, context=ctx)
+                counter_for_writeoff -= (l.voucher_currency_id.id == l.currency_id.id) and l.amount or l.amount_in_voucher_currency
                 counter_for_currency_diff -= currency_pool.compute(cr, uid, l.currency_id.id, voucher.company_id.currency_id.id, l.amount, context=ctx) 
             for l in voucher.line_cr_ids:
                 real_amount += l.amount_in_company_currency
-                counter_for_writeoff += (l.voucher_currency_id.id == l.company_currency_id.id) and l.amount_in_company_currency or l.amount_in_voucher_currency
-                #ctx.update({'date': l.date_original})
-                #counter_for_writeoff += currency_pool.compute(cr, uid, voucher.company_id.currency_id.id, voucher.currency_id.id, l.amount_in_company_currency, context=ctx)
+                counter_for_writeoff += (l.voucher_currency_id.id == l.currency_id.id) and l.amount or l.amount_in_voucher_currency
                 counter_for_currency_diff += currency_pool.compute(cr, uid, l.currency_id.id, voucher.company_id.currency_id.id, l.amount, context=ctx) 
             writeoff_amount = voucher.amount - counter_for_writeoff
             res[voucher.id]['writeoff_amount'] = writeoff_amount 
