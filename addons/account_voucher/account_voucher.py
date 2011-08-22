@@ -899,7 +899,10 @@ class account_voucher_line(osv.osv):
         res = {}
         for line in self.browse(cr, uid, ids, context=context):
             move_line = line.move_line_id
-            res[line.id] = move_line.currency_id and move_line.currency_id.id or move_line.company_id.currency_id.id
+            if move_line:
+                res[line.id] = move_line.currency_id and move_line.currency_id.id or move_line.company_id.currency_id.id
+            else:
+                res[line.id] = line.voucher_id.currency_id.id
         return res
 
     def _get_amounts(self, cr, uid, line_browse_rec, context=None):
