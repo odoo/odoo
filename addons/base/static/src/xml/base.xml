@@ -700,7 +700,7 @@
     <p class="oe_form_paragraph"><t t-esc="widget.string"/></p>
 </t>
 <t t-name="FieldChar">
-    <input type="text"
+    <input type="text" size="1"
         t-att-name="widget.name"
         t-att-id="widget.element_id + '_field'"
         t-att-class="'field_' + widget.type" style="width: 100%"
@@ -742,7 +742,7 @@
     ></textarea>
 </t>
 <t t-name="FieldDate">
-    <input type="text" style="width: 100%"
+    <input type="text" size="1" style="width: 100%"
         t-att-name="widget.name"
         t-att-id="widget.element_id + '_field'"
         t-att-class="'field_' + widget.type"
@@ -763,7 +763,7 @@
 </t>
 <t t-name="FieldMany2One">
     <div t-att-id="widget.element_id" class="oe-m2o">
-        <input t-att-id="widget.element_id + '_input'" type="text" style="width: 100%;"/>
+        <input t-att-id="widget.element_id + '_input'" type="text" size="1" style="width: 100%;"/>
         <span class="oe-m2o-drop-down-button" t-att-id="widget.element_id + '_drop_down'">
             <img src="/base/static/src/img/down-arrow.png" /></span>
         <span class="oe-m2o-cm-button" t-att-id="widget.name + '_open'">
@@ -858,7 +858,7 @@
     <table cellpadding="0" cellspacing="0" border="0" width="100%">
     <tr>
         <td width="100%">
-            <input type="text"
+            <input type="text" size="1"
                 t-att-name="widget.name"
                 t-att-id="widget.element_id + '_field'"
                 t-att-class="'field_' + widget.type" style="width: 100%"

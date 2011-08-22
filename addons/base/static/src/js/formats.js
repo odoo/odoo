@@ -27,7 +27,9 @@ openerp.base.format_value = function (value, descriptor, value_if_empty) {
             return _.sprintf('%d', value);
         case 'float':
             var precision = descriptor.digits ? descriptor.digits[1] : 2;
-            return _.sprintf('%.' + precision + 'f', value);
+            var int_part = Math.floor(value);
+            var dec_part = Math.floor((value % 1) * Math.pow(10, precision));
+            return _.sprintf('%d' + openerp.base._t.database.parameters.decimal_point + '%d', int_part, dec_part);
         case 'float_time':
             return _.sprintf("%02d:%02d",
                     Math.floor(value),
@@ -39,9 +41,89 @@ openerp.base.format_value = function (value, descriptor, value_if_empty) {
         case 'many2one':
             // name_get value format
             return value[1];
+        case 'datetime':
+            if (typeof(value) == "string")
+                value = openerp.base.str_to_datetime(value);
+            try {
+                return value.format(_.sprintf("%s %s", openerp.base._t.database.parameters.date_format, 
+                    openerp.base._t.database.parameters.time_format));
+            } catch (e) {
+                return value.format("%m/%d/%Y %H:%M:%S");
+            }
+            return value;
+        case 'date':
+            if (typeof(value) == "string")
+                value = openerp.base.str_to_date(value);
+            try {
+                return value.format(openerp.base._t.database.parameters.date_format);
+            } catch (e) {
+                return value.format("%m/%d/%Y");
+            }
+        case 'time':
+            if (typeof(value) == "string")
+                value = openerp.base.str_to_time(value);
+            try {
+                return value.format(openerp.base._t.database.parameters.time_format);
+            } catch (e) {
+                return value.format("%H:%M:%S");
+            }
         default:
             return value;
     }
+};
+
+openerp.base.parse_value = function (value, descriptor, value_if_empty) {
+    switch (value) {
+        case false:
+        case "":
+            return value_if_empty === undefined ?  false : value_if_empty;
+    }
+    switch (descriptor.widget || descriptor.type) {
+        case 'integer':
+            var tmp = Number(value);
+            if (isNaN(tmp))
+                throw value + " is not a correct integer";
+            return tmp;
+        case 'float':
+            var tmp = Number(value);
+            if (!isNaN(tmp))
+                return tmp;
+            tmp = value.replace(openerp.base._t.database.parameters.decimal_point, ".");
+            var tmp2 = tmp;
+            do {
+                tmp = tmp2;
+                tmp2 = tmp.replace(openerp.base._t.database.parameters.thousands_sep, "");
+            } while(tmp !== tmp2);
+            tmp = Number(tmp);
+            if (isNaN(tmp))
+                throw value + " is not a correct float";
+            return tmp;
+        case 'float_time':
+            var tmp = value.split(":");
+            if (tmp.length != 2)
+                throw value + " is not a correct float_time";
+            var tmp1 = openerp.base.parse_value(tmp[0], {type: "integer"});
+            var tmp2 = openerp.base.parse_value(tmp[1], {type: "integer"});
+            return tmp1 + (tmp2 / 60);
+        case 'progressbar':
+            return openerp.base.parse_value(value, {type: "float"});
+        case 'datetime':
+            var tmp = Date.parse(value);
+            if (tmp !== null)
+                return tmp;
+            throw value + " is not a valid datetime";
+        case 'date':
+            var tmp = Date.parse(value);
+            if (tmp !== null)
+                return tmp;
+            throw value + " is not a valid date";
+        case 'time':
+            var tmp = Date.parse(value);
+            if (tmp !== null)
+                return tmp;
+            throw value + " is not a valid time";
+    }
+    return value;
 };
 
 /**

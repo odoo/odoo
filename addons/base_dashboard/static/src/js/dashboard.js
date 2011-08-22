@@ -285,6 +285,7 @@ if (!openerp.base_dashboard) {
     openerp.base_dashboard = {};
 }
 openerp.base_dashboard.ConfigOverview = openerp.base.View.extend({
+    template: 'ConfigOverview',
     init: function (parent, element_id) {
         this._super(parent, element_id);
         this.dataset = new openerp.base.DataSetSearch(
@@ -312,7 +313,7 @@ openerp.base_dashboard.ConfigOverview = openerp.base.View.extend({
             })
             .groupBy(function (record) {return record.category})
             .value();
-        this.$element.html(QWeb.render('ConfigOverview', {
+        this.$element.html(QWeb.render('ConfigOverview.content', {
             completion: 100 * progress.done / progress.total,
             groups: grouped_todos
         }));
@@ -347,6 +348,7 @@ openerp.base_dashboard.ConfigOverview = openerp.base.View.extend({
 openerp.base.client_actions.add(
     'board.home.applications', 'openerp.base_dashboard.ApplicationTiles');
 openerp.base_dashboard.ApplicationTiles = openerp.base.View.extend({
+    template: 'ApplicationTiles',
     start: function () {
         var self = this;
         return new openerp.base.DataSetSearch(
@@ -359,7 +361,7 @@ openerp.base_dashboard.ApplicationTiles = openerp.base.View.extend({
                 }
                 self.$element
                     .append(QWeb.render(
-                        'ApplicationTiles', {rows: rows}))
+                        'ApplicationTiles.content', {rows: rows}))
                     .find('.oe-dashboard-home-tile')
                         .click(function () {
                             var $this = $(this);
@@ -372,6 +374,7 @@ openerp.base_dashboard.ApplicationTiles = openerp.base.View.extend({
 openerp.base.client_actions.add(
     'board.home.widgets', 'openerp.base_dashboard.Widgets');
 openerp.base_dashboard.Widgets = openerp.base.View.extend({
+    template: 'HomeWidgets',
     start: function () {
         return new openerp.base.DataSetSearch(
                 this, 'res.widget.user', null,
