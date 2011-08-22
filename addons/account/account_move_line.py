@@ -483,7 +483,7 @@ class account_move_line(osv.osv):
         'credit': fields.float('Credit', digits_compute=dp.get_precision('Account')),
         'account_id': fields.many2one('account.account', 'Account', required=True, ondelete="cascade", domain=[('type','<>','view'), ('type', '<>', 'closed')], select=2),
         'move_id': fields.many2one('account.move', 'Move', ondelete="cascade", help="The move of this entry line.", select=2, required=True),
-        'narration': fields.related('move_id','narration', type='text', relation='account.move', string='Narration'),
+        'narration': fields.related('move_id','narration', type='text', relation='account.move', string='Internal Note'),
         'ref': fields.related('move_id', 'ref', string='Reference', type='char', size=64, store=True),
         'statement_id': fields.many2one('account.bank.statement', 'Statement', help="The bank statement used for bank reconciliation", select=1),
         'reconcile_id': fields.many2one('account.move.reconcile', 'Reconcile', readonly=True, ondelete='set null', select=2),

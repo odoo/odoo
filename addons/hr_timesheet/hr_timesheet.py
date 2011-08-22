@@ -30,7 +30,8 @@ class hr_employee(osv.osv):
     _inherit = "hr.employee"
     _columns = {
         'product_id': fields.many2one('product.product', 'Product', help="Specifies employee's designation as a product with type 'service'."),
-        'journal_id': fields.many2one('account.analytic.journal', 'Analytic Journal')
+        'journal_id': fields.many2one('account.analytic.journal', 'Analytic Journal'),
+        'uom_id': fields.related('product_id', 'uom_id', type='many2one', relation='product.uom', string='UoM', store=True, readonly=True)
     }
 
     def _getAnalyticJournal(self, cr, uid, context=None):

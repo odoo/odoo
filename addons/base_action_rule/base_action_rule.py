@@ -278,9 +278,9 @@ the rule to mark CC(mail to any other person defined in actions)."),
             'object_description': hasattr(obj, 'description') and obj.description or False, 
             'object_user': hasattr(obj, 'user_id') and (obj.user_id and obj.user_id.name) or '/', 
             'object_user_email': hasattr(obj, 'user_id') and (obj.user_id and \
-                                    obj.user_id.address_id and obj.user_id.address_id.email) or '/', 
-            'object_user_phone': hasattr(obj, 'user_id') and (obj.user_id and\
-                                     obj.user_id.address_id and obj.user_id.address_id.phone) or '/', 
+                                     obj.user_id.user_email) or '/',
+            'object_user_phone': hasattr(obj, 'partner_address_id') and (obj.partner_address_id and \
+                                     obj.partner_address_id.phone) or '/',
             'partner': hasattr(obj, 'partner_id') and (obj.partner_id and obj.partner_id.name) or '/', 
             'partner_email': hasattr(obj, 'partner_address_id') and (obj.partner_address_id and\
                                          obj.partner_address_id.email) or '/', 
@@ -304,9 +304,8 @@ the rule to mark CC(mail to any other person defined in actions)."),
 
         body = self.format_mail(obj, body)
         if not emailfrom:
-            if hasattr(obj, 'user_id')  and obj.user_id and obj.user_id.address_id and\
-                        obj.user_id.address_id.email:
-                emailfrom = obj.user_id.address_id.email
+            if hasattr(obj, 'user_id') and obj.user_id and obj.user_id.user_email:
+                emailfrom = obj.user_id.user_email
 
         name = '[%d] %s' % (obj.id, tools.ustr(obj.name))
         emailfrom = tools.ustr(emailfrom)
@@ -404,8 +403,8 @@ the rule to mark CC(mail to any other person defined in actions)."),
 
         emails = []
         if hasattr(obj, 'user_id') and action.act_mail_to_user:
-            if obj.user_id and obj.user_id.address_id:
-                emails.append(obj.user_id.address_id.email)
+            if obj.user_id:
+                emails.append(obj.user_id.user_email)
 
         if action.act_mail_to_watchers:
             emails += (action.act_email_cc or '').split(',')

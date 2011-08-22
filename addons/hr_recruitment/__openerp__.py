@@ -23,6 +23,7 @@
     'name': 'HR - Recruitment',
     'version': '1.0',
     'category': 'Human Resources',
+    'complexity': "easy",
     'description': """
 Manages job positions and the recruitment process.
 ==================================================
