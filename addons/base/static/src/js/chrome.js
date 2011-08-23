@@ -459,7 +459,7 @@ openerp.base.Database = openerp.base.Widget.extend({
                     }
                     self.notification.notify("Changed Password", "Password has been changed successfully");
                 });
-            }
+            },
         });
     }
 });
@@ -681,22 +681,15 @@ openerp.base.Header =  openerp.base.Widget.extend({
         this.dialog.open();
         this.dialog.$element.html(QWeb.render("Change_Pwd", self));
         this.dialog.$element.find("form[name=change_password_form]").validate({
-            messages: {
-                old_password: "Please enter your previous password",
-                new_password: "Please enter your new password",
-                confirm_password: {
-                    required: "Please confirm your new password",
-                    equalTo: "The confirmation does not match the password"
-                },
-            },
             submitHandler: function (form) {
+                console.log('form',form)
                 self.rpc("/base/session/change_password",{
-                    'fields': $("form[name=change_password_form]").serializeArray()
+                    'fields': $(form).serializeArray()
                 }, function(result) {
                     if (result.error) {
                         self.display_error(result);
                         return;
-                    }
+                    };
                     self.notification.notify("Changed Password", "Password has been changed successfully");
                     self.dialog.close();
                 });

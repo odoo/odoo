@@ -295,15 +295,18 @@ class Session(openerpweb.Controller):
         }
     @openerpweb.jsonrequest
     def change_password (self,req,fields):
-        old_password, new_password,confirm_password = operator.itemgetter('old_pwd', 'new_pwd','confirm_pwd')(
+        old_password, new_password,confirm_password = operator.itemgetter('old_pwd', 'new_password','confirm_pwd')(
                 dict(map(operator.itemgetter('name', 'value'), fields)))
+        if not (old_password.strip() and new_password.strip() and confirm_password.strip()):
+            return {'error':'All passwords have to be filled.','title': 'Change Password'}
+        if new_password != confirm_password:
+            return {'error': 'The new password and its confirmation must be identical.','title': 'Change Password'}
         try:
             if req.session.model('res.users').change_password(
                 old_password, new_password):
-                req.session.password = new_password
-            return dict(changed=True)
-            raise redirect('/')
-        except xmlrpclib.Fault, e:
+                req.session.password = new_password;
+                return dict(changed=True)
+        except:
             return {'error': 'Original password incorrect, your password was not changed.', 'title': 'Change Password'}
             
     @openerpweb.jsonrequest
