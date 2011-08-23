@@ -672,11 +672,10 @@ openerp.base.ListView.List = openerp.base.Class.extend( /** @lends openerp.base.
                 var $target = $(e.currentTarget),
                       field = $target.closest('td').data('field'),
                        $row = $target.closest('tr'),
-                  record_id = self.row_id($row),
-                      index = self.row_position($row);
+                  record_id = self.row_id($row);
 
                 $(self).trigger('action', [field, record_id, function () {
-                    return self.reload_record(index);
+                    return self.reload_record(self.records.get(record_id));
                 }]);
             })
             .delegate('tr', 'click', function (e) {
@@ -757,25 +756,31 @@ openerp.base.ListView.List = openerp.base.Class.extend( /** @lends openerp.base.
     /**
      * Reloads the record at index ``row_index`` in the list's rows.
      *
-     * By default, simply re-renders the record. If the ``fetch`` parameter is
-     * provided and ``true``, will first fetch the record anew.
-     *
      * @param {Number} record_index index of the record to reload
-     * @param {Boolean} fetch fetches the record from remote before reloading it
+     * @returns {$.Deferred} promise to the finalization of the reloading
      */
-    reload_record: function (record_index) {
+    reload_record_at_index: function (record_index) {
         var r = this.records.at(record_index);
 
+        return this.reload_record(r);
+    },
+    /**
+     * Reloads the provided record by re-reading its content from the server.
+     *
+     * @param {Record} record
+     * @returns {$.Deferred} promise to the finalization of the reloading
+     */
+    reload_record: function (record) {
         return this.dataset.read_ids(
-            [r.get('id')],
+            [record.get('id')],
             _.pluck(_(this.columns).filter(function (r) {
                     return r.tag === 'field';
                 }), 'name'),
-            function (record) {
-                _(record[0]).each(function (value, key) {
-                    r.set(key, value, {silent: true});
+            function (records) {
+                _(records[0]).each(function (value, key) {
+                    record.set(key, value, {silent: true});
                 });
-                r.trigger('change', r);
+                record.trigger('change', record);
             }
         );
     },

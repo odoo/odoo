@@ -105,7 +105,7 @@ openerp.base.list_editable = function (openerp) {
             }
 
             if (this.edition_index !== null) {
-                this.reload_record(this.edition_index).then(function () {
+                this.reload_record_at_index(this.edition_index).then(function () {
                     cancelled.resolve();
                 });
             } else {
@@ -201,6 +201,21 @@ openerp.base.list_editable = function (openerp) {
                 });
             });
         },
+        handle_onwrite: function (record_id, index) {
+            var self = this;
+            var on_write_callback = self.view.fields_view.arch.attrs.on_write;
+            if (!on_write_callback) { return; }
+            this.dataset.call(on_write_callback, [record_id], function (ids) {
+                _(ids).each(function (id) {
+                    var record = self.records.get(id);
+                    if (!record) {
+                        record = new openerp.base.list.Record({id: id});
+                        self.records.add(record, {at: index});
+                    }
+                    self.reload_record(record);
+                });
+            });
+        },
         /**
          * Saves the current row, and triggers the edition of its following
          * sibling if asked.
@@ -215,6 +230,8 @@ openerp.base.list_editable = function (openerp) {
                         {at: self.options.editable === 'top' ? 0 : null});
                     self.edition_index = self.dataset.index;
                 }
+                self.handle_onwrite(self.dataset.ids[self.dataset.index],
+                                    self.dataset.index);
                 self.cancel_pending_edition().then(function () {
                     $(self).trigger('saved', [self.dataset]);
                     if (!edit_next) {
