@@ -53,6 +53,8 @@ class product_product(osv.osv):
     _columns = {
         "bom_ids": fields.one2many('mrp.bom', 'product_id','Bill of Materials'),
     }
+    
+#    Removed do_change_standard_price for the fix of lp:747056
 
     def copy(self, cr, uid, id, default=None, context=None):
         if not default:
