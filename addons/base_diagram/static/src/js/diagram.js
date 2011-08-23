@@ -330,40 +330,6 @@ openerp.base_diagram.DiagramView = openerp.base.View.extend({
         this.$element.hide();
     }
 });
-
-openerp.base_diagram.DiagramFormDialog = openerp.base.Dialog.extend({
-    init: function(view, options, view_id, dataset) {
-        this._super(view, options);
-        this.dataset = dataset;
-        this.view_id = view_id;
-        this.view = view;
-    },
-    start: function() {
-        this._super();
-        this.form = new openerp.base.FormView(this, this.element_id, this.dataset, this.view_id, {
-            sidebar: false,
-            pager: false
-        });
-        this.form.start();
-        this.form.on_created.add_last(this.on_form_dialog_saved);
-        this.form.on_saved.add_last(this.on_form_dialog_saved);
-    },
-    on_form_dialog_saved: function() {
-        var id = this.dataset.ids[this.dataset.index];
-//        if (this.view.creating_event_id) {
-////            scheduler.changeEventId(this.view.creating_event_id, id);
-//            this.view.creating_event_id = null;
-//        }
-//        this.view.reload_event(id);
-        this.close();
-    },
-    on_close: function() {
-//        if (this.view.creating_event_id) {
-////            scheduler.deleteEvent(this.view.creating_event_id);
-//            this.view.creating_event_id = null;
-//        }
-    }
-});
 };
 
 // vim:et fdc=0 fdl=0 foldnestmax=3 fdm=syntax:
