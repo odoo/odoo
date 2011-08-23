@@ -245,7 +245,7 @@ class calendar_attendee(osv.osv):
                     continue
                 else:
                     result[id][name] = self._get_address(attdata.sent_by_uid.name, \
-                                        attdata.sent_by_uid.address_id.email)
+                                        attdata.sent_by_uid.user_email)
 
             if name == 'cn':
                 if attdata.user_id:
@@ -535,7 +535,7 @@ property or property parameter."),
             return {'value': {'email': ''}}
         usr_obj = self.pool.get('res.users')
         user = usr_obj.browse(cr, uid, user_id, *args)
-        return {'value': {'email': user.address_id.email, 'availability':user.availability}}
+        return {'value': {'email': user.user_email, 'availability':user.availability}}
 
     def do_tentative(self, cr, uid, ids, context=None, *args):
         """ Makes event invitation as Tentative
@@ -889,9 +889,9 @@ From:
 
 """  % (alarm.name, alarm.trigger_date, alarm.description, \
                         alarm.user_id.name, alarm.user_id.signature)
-                    mail_to = [alarm.user_id.address_id.email]
+                    mail_to = [alarm.user_id.user_email]
                     for att in alarm.attendee_ids:
-                        mail_to.append(att.user_id.address_id.email)
+                        mail_to.append(att.user_id.user_email)
                     if mail_to:
                         tools.email_send(
                             tools.config.get('email_from', False),

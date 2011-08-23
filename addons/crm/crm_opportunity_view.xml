@@ -281,9 +281,9 @@
                 <field name="arch" type="xml">
                     <search string="Search Opportunities">
                         <filter icon="terp-check"
-                            string="Current"  help="Draft and Open Opportunities"
+                            string="Current"  help="Draft, Open and Pending Opportunities"
                             name="current"
-                            domain="[('state','in',('draft','open'))]"/>
+                            domain="[('state','in',('draft','open','pending'))]"/>
                         <filter icon="terp-camera_test"
                             string="Open"  help="Open Opportunities"
                             domain="[('state','=','open')]"/>
@@ -292,7 +292,7 @@
                             domain="[('state','=','pending')]"/>
                         <separator orientation="vertical"/>
                         <field name="name" string="Opportunity"/>
-                        <field name="partner_id" string="Customer"/>
+                        <field name="partner_id" string="Customer / Email" filter_domain="['|','|',('partner_id','ilike',self),('partner_name','ilike',self),('email_from','ilike',self)]"/>
                         <field name="user_id">
                             <filter icon="terp-personal-"
                                 domain="[('user_id','=', False)]"
@@ -311,23 +311,6 @@
                                 help="Show Sales Team"/>
                         </field>
 
-                        <newline/>
-                        <group  expand="0" string="Extended Filters..." groups="base.group_extended">
-                              <field name="stage_id" widget="selection" domain="[('type', '=', 'opportunity')]"/>
-                              <field name="categ_id" widget="selection" domain="[('object_id.model', '=', 'crm.lead')]"/>
-                              <separator orientation="vertical"/>
-                              <field name="country_id" context="{'invisible_country': False}">
-                                  <filter icon="terp-personal+" context="{'invisible_country': False}" help="Show countries"/>
-                              </field>
-                              <separator orientation="vertical"/>
-                              <field name="email_from"/>
-                              <separator orientation="vertical"/>
-                              <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                              <newline/>
-                              <field name="create_date" string="Creation Date"/>
-                              <field name="date_closed"/>
-                              <field name="subjects"/>
-                        </group>
                         <newline/>
                         <group expand="0" string="Group By..." colspan="16">
                             <filter string="Salesman" icon="terp-personal"

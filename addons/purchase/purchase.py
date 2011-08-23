@@ -188,10 +188,10 @@ class purchase_order(osv.osv):
         'shipped_rate': fields.function(_shipped_rate, string='Received', type='float'),
         'invoiced': fields.function(_invoiced, string='Invoiced & Paid', type='boolean', help="It indicates that an invoice has been paid"),
         'invoiced_rate': fields.function(_invoiced_rate, string='Invoiced', type='float'),
-        'invoice_method': fields.selection([('manual','Manual'),('order','From Order'),('picking','From Picking')], 'Invoicing Control', required=True,
-            help="From Order: a draft invoice will be pre-generated based on the purchase order. The accountant " \
+        'invoice_method': fields.selection([('manual','Manual'),('order','From Order'),('picking','From Reception')], 'Invoicing Control', required=True,
+            help="From Order: a draft invoice will be generated based on the purchase order. The accountant " \
                 "will just have to validate this invoice for control.\n" \
-                "From Picking: a draft invoice will be pre-generated based on validated receptions.\n" \
+                "From Reception: a draft invoice will be generated based on validated receptions.\n" \
                 "Manual: allows you to generate suppliers invoices by chosing in the uninvoiced lines of all manual purchase orders."
         ),
         'minimum_planned_date':fields.function(_minimum_planned_date, fnct_inv=_set_minimum_planned_date, string='Expected Date', type='date', select=True, help="This is computed as the minimum scheduled date of all purchase order lines' products.",

@@ -13,21 +13,21 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 04:53+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-07-23 04:56+0000\n"
+"X-Generator: Launchpad (build 13405)\n"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_confirmingpurchaseorder0
 msgid ""
 "The buyer has to approve the RFQ before being sent to the supplier. The RFQ "
 "becomes a confirmed Purchase Order."
-msgstr "RFQ 必须先得到采购经理确认才能发给供货方。 RFQ 即成为确认的采购订单。"
+msgstr "询价单(RFQ) 必须先得到采购经理核准才能发给供应商。 询价单能确认为采购订单。"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:282
 #, python-format
 msgid "You can not confirm purchase order without Purchase Order Lines."
-msgstr "采购订单无明细，你无权确认。"
+msgstr "采购订单无明细，您不能确认。"
 
 #. module: purchase
 #: field:purchase.order,invoiced:0
@@ -47,12 +47,12 @@ msgstr "目的地"
 msgid ""
 "You have to select a product UOM in the same category than the purchase UOM "
 "of the product"
-msgstr ""
+msgstr "您选择的产品计量单位与产品的采购单位是同一的类型。"
 
 #. module: purchase
 #: help:purchase.report,date:0
 msgid "Date on which this document has been created"
-msgstr "文件生成日期"
+msgstr "文档生成日期"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_rfq
@@ -66,11 +66,13 @@ msgid ""
 "supplier invoices: based on the order, based on the receptions or manual "
 "encoding."
 msgstr ""
+"当您向供应商购买产品时您能创建一个询价但采购还没确认。询价基于您的后勤规则(最少库存，MTO(按单生产)等)。询价确认后转为采购订单。如果您使用扩展接口("
+"在用户偏好里)，您能选择控制供应商开发票的习惯：基于这订单，基于接收或者手动。"
 
 #. module: purchase
 #: selection:purchase.order,invoice_method:0
-msgid "From Picking"
-msgstr "来自领料/提货"
+msgid "From Reception"
+msgstr ""
 
 #. module: purchase
 #: view:purchase.order:0
@@ -100,7 +102,7 @@ msgstr "供应商"
 #. module: purchase
 #: view:purchase.order.line_invoice:0
 msgid "Do you want to generate the supplier invoices ?"
-msgstr "生成供货发票吗？"
+msgstr "生成供应商发票吗？"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_form_action
@@ -108,19 +110,19 @@ msgid ""
 "Use this menu to search within your purchase orders by references, supplier, "
 "products, etc. For each purchase order, you can track the products received, "
 "and control the supplier invoices."
-msgstr ""
+msgstr "使用这菜单按关联单号，供应商，产品等搜索您的采购订单，您可以跟踪接收的产品和控制供应商的发票。"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:722
 #, python-format
 msgid "The selected supplier only sells this product by %s"
-msgstr ""
+msgstr "选择的供应商只销售这产品  %s"
 
 #. module: purchase
 #: code:addons/purchase/wizard/purchase_line_invoice.py:156
 #, python-format
 msgid "Supplier Invoices"
-msgstr "供货发票"
+msgstr "供应商发票"
 
 #. module: purchase
 #: sql_constraint:purchase.order:0
@@ -131,7 +133,7 @@ msgstr "单号必须唯一！"
 #: model:process.transition,name:purchase.process_transition_packinginvoice0
 #: model:process.transition,name:purchase.process_transition_productrecept0
 msgid "From a Pick list"
-msgstr "来源自分拣单"
+msgstr "来自装箱单"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:649
@@ -149,7 +151,7 @@ msgstr "数量"
 #. module: purchase
 #: view:purchase.order.line_invoice:0
 msgid "Select an Open Sale Order"
-msgstr "选择一个打开的销售订单"
+msgstr "选择开启的销售订单"
 
 #. module: purchase
 #: field:purchase.order,company_id:0
@@ -164,7 +166,7 @@ msgstr "公司"
 #: model:ir.actions.act_window,name:purchase.action_purchase_order_monthly_categ_graph
 #: view:purchase.report:0
 msgid "Monthly Purchase by Category"
-msgstr "每个种类采购的月汇总"
+msgstr "采购按月分类"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -185,7 +187,7 @@ msgstr "默认采购价格表"
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_current_purchases
 msgid "Current purchases"
-msgstr "正在进行的采购"
+msgstr "当前的采购"
 
 #. module: purchase
 #: help:purchase.order,dest_address_id:0
@@ -193,14 +195,14 @@ msgid ""
 "Put an address if you want to deliver directly from the supplier to the "
 "customer.In this case, it will remove the warehouse link and set the "
 "customer location."
-msgstr "如果你想直接从供应商送货到客户填入地址.这个业务个案它将删除与仓库的连接并设置客户地址"
+msgstr "填入一个地址，如果您想直接提供从供应商送货到客户。在这情况下它将删除仓库链接并设定客户库位。"
 
 #. module: purchase
 #: help:res.partner,property_product_pricelist_purchase:0
 msgid ""
 "This pricelist will be used, instead of the default one, for purchases from "
 "the current partner"
-msgstr "这价格表将用于当前业务伙伴采购的价格表而不是默认的价格表"
+msgstr "这价格表将替代当前业务伙伴采购的默认价格表"
 
 #. module: purchase
 #: report:purchase.order:0
@@ -212,12 +214,12 @@ msgstr "传真 ："
 msgid ""
 "The pricelist sets the currency used for this purchase order. It also "
 "computes the supplier price for the selected products/quantities."
-msgstr "采购订单使用的价格表.它还计算选定产品的供应商价格/数量"
+msgstr "设定采购订单价格表使用的币别。它还计算出选定产品/数量的供应商价格。"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_stock_partial_picking
 msgid "Partial Picking"
-msgstr "部分交货"
+msgstr "部分装箱单"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:286
@@ -236,27 +238,27 @@ msgstr "批准采购"
 #: selection:purchase.order,state:0
 #: selection:purchase.report,state:0
 msgid "Approved"
-msgstr "已通过"
+msgstr "已核准"
 
 #. module: purchase
 #: view:purchase.report:0
 msgid "Reference UOM"
-msgstr "相关计量单位"
+msgstr "计量单位"
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "Origin"
-msgstr "原产地"
+msgstr "来源"
 
 #. module: purchase
 #: field:purchase.report,product_uom:0
 msgid "Reference UoM"
-msgstr "相关计量单位"
+msgstr "计量单位"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_line_product_tree
 msgid "Purchases"
-msgstr "采购单"
+msgstr "采购订单"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -273,13 +275,13 @@ msgid ""
 "You have to select a pricelist or a supplier in the purchase form !\n"
 "Please set one before choosing a product."
 msgstr ""
-"请先从采购单里选择一个价格表或者供应商！\n"
+"请在采购窗口选择价格表或供应商！\n"
 "然后再选择产品。"
 
 #. module: purchase
 #: selection:purchase.report,month:0
 msgid "September"
-msgstr "九月"
+msgstr "9"
 
 #. module: purchase
 #: report:purchase.order:0
@@ -287,7 +289,7 @@ msgstr "九月"
 #: view:purchase.order.line:0
 #: field:purchase.order.line,taxes_id:0
 msgid "Taxes"
-msgstr "税金"
+msgstr "税"
 
 #. module: purchase
 #: model:ir.actions.report.xml,name:purchase.report_purchase_order
@@ -305,7 +307,7 @@ msgstr "采购订单"
 #: view:purchase.order.line:0
 #: field:purchase.order.line,order_id:0
 msgid "Order Reference"
-msgstr "订单引用"
+msgstr "单号"
 
 #. module: purchase
 #: report:purchase.order:0
@@ -315,7 +317,7 @@ msgstr "净总额："
 #. module: purchase
 #: view:purchase.installer:0
 msgid "Configure Your Purchases Management Application"
-msgstr "配置您的采购管理应用"
+msgstr "设置您的采购管理应用"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_procurement_management_product
@@ -326,14 +328,14 @@ msgstr "产品"
 #. module: purchase
 #: field:purchase.installer,progress:0
 msgid "Configuration Progress"
-msgstr "配置进度"
+msgstr "设置进度"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_packinginvoice0
 msgid ""
 "A Pick list generates an invoice. Depending on the Invoicing control of the "
 "sale order, the invoice is based on delivered or on ordered quantities."
-msgstr "领货清单，根据订货或者交货数量，再生成发票。"
+msgstr "装箱单生成一发票，然后这发票控制销售订单，发票是基于交付的或订单上的数量。"
 
 #. module: purchase
 #: selection:purchase.order,state:0
@@ -374,12 +376,12 @@ msgstr "发票明细"
 #: model:process.node,name:purchase.process_node_packinglist0
 #: model:process.node,name:purchase.process_node_productrecept0
 msgid "Incoming Products"
-msgstr "入库货品"
+msgstr "接收的产品"
 
 #. module: purchase
 #: model:process.node,name:purchase.process_node_packinginvoice0
 msgid "Outgoing Products"
-msgstr "出库货品"
+msgstr "发出的产品"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -394,7 +396,7 @@ msgstr "   月   "
 #. module: purchase
 #: view:purchase.order:0
 msgid "Reference"
-msgstr "引用"
+msgstr "单号"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:237
@@ -422,18 +424,18 @@ msgstr "天"
 #: code:addons/purchase/purchase.py:334
 #, python-format
 msgid "Purchase order '%s' has been set in draft state."
-msgstr "采购单“%s”已经设为草稿"
+msgstr "采购订单 “%s” 已经设为草稿"
 
 #. module: purchase
 #: field:purchase.order.line,account_analytic_id:0
 msgid "Analytic Account"
-msgstr "辅助核算项目"
+msgstr "辅助核算项"
 
 #. module: purchase
 #: view:purchase.report:0
 #: field:purchase.report,nbr:0
 msgid "# of Lines"
-msgstr "笔明细"
+msgstr "# 明细"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:685
@@ -471,13 +473,13 @@ msgstr "采购订单明细"
 #. module: purchase
 #: help:purchase.order,shipped:0
 msgid "It indicates that a picking has been done"
-msgstr ""
+msgstr "这表示装箱单已完成"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:710
 #, python-format
 msgid "Wrong Product UOM !"
-msgstr "错误的货品计量单位！"
+msgstr "错误的产品计量单位！"
 
 #. module: purchase
 #: model:process.node,name:purchase.process_node_confirmpurchaseorder0
@@ -506,7 +508,7 @@ msgstr "确认"
 #: model:ir.ui.menu,name:purchase.menu_procurement_management_invoice
 #: view:purchase.order:0
 msgid "Invoice Control"
-msgstr "发票控制"
+msgstr "发票管理"
 
 #. module: purchase
 #: constraint:res.company:0
@@ -516,7 +518,7 @@ msgstr "错误！您不能创建递归公司."
 #. module: purchase
 #: field:purchase.order,partner_ref:0
 msgid "Supplier Reference"
-msgstr "供应商参考"
+msgstr "供应商单号"
 
 #. module: purchase
 #: help:purchase.order,amount_tax:0
@@ -529,7 +531,7 @@ msgid ""
 "A Pick list generates a supplier invoice. Depending on the Invoicing control "
 "of the purchase order, the invoice is based on received or on ordered "
 "quantities."
-msgstr ""
+msgstr "装箱单生成供应商发票。采购订单控制发票，发票是基于接收或订单的数量。"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -545,7 +547,7 @@ msgstr "状态"
 msgid ""
 "Reception Analysis allows you to easily check and analyse your company order "
 "receptions and the performance of your supplier's deliveries."
-msgstr ""
+msgstr "接收分析使您轻松检查和分析您公司订单的接收数量和您供应商交货的特性。"
 
 #. module: purchase
 #: report:purchase.quotation:0
@@ -556,7 +558,7 @@ msgstr "电话:"
 #: model:ir.model,name:purchase.model_stock_picking
 #: field:purchase.order,picking_ids:0
 msgid "Picking List"
-msgstr "分拣单"
+msgstr "装箱单"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -566,7 +568,7 @@ msgstr "打印"
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_view_purchase_order_group
 msgid "Merge Purchase orders"
-msgstr ""
+msgstr "合并采购订单"
 
 #. module: purchase
 #: field:purchase.order,order_line:0
@@ -588,7 +590,7 @@ msgstr "传真:"
 #: view:purchase.report:0
 #: field:purchase.report,price_total:0
 msgid "Total Price"
-msgstr "总价"
+msgstr "总价格"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -616,11 +618,14 @@ msgid ""
 "Manual: allows you to generate suppliers invoices by chosing in the "
 "uninvoiced lines of all manual purchase orders."
 msgstr ""
+"来自订单：发票草稿根据采购订单预先生成。会计人员对发票的控制只需确认。\n"
+"来自装箱单：发票草稿根据已确认的收货单预先生成。\n"
+"手动：允许您在所有未开票的采购订单的明细中挑选生成供应商发票。"
 
 #. module: purchase
 #: help:purchase.order,invoice_ids:0
 msgid "Invoices generated for a purchase order"
-msgstr "采购单的发票已生成"
+msgstr "采购订单的发票已生成"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:282
@@ -639,7 +644,7 @@ msgstr "一般信息"
 #. module: purchase
 #: view:board.board:0
 msgid "My Board"
-msgstr "我的面板"
+msgstr "我的控制台"
 
 #. module: purchase
 #: report:purchase.order:0
@@ -652,7 +657,7 @@ msgid ""
 "Purchase Analysis allows you to easily check and analyse your company "
 "purchase history and performance. From this menu you can track your "
 "negotiation performance, the delivery performance of your suppliers, etc."
-msgstr ""
+msgstr "采购分析使您轻松检查和分析您公司的采购日志和特性，在这菜单您能跟踪您协商的特性和您供应商送货的特性等。"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -665,7 +670,7 @@ msgid ""
 "The invoice is created automatically if the Invoice control of the purchase "
 "order is 'On picking'. The invoice can also be generated manually by the "
 "accountant (Invoice control = Manual)."
-msgstr ""
+msgstr "如果这采购订单的发票控制是“来自装箱单”发票将自动生成。发票也可以是会计人员手工生成(发票控制 = 手动)。"
 
 #. module: purchase
 #: selection:purchase.order,invoice_method:0
@@ -698,13 +703,13 @@ msgstr "完成"
 #. module: purchase
 #: selection:purchase.report,month:0
 msgid "July"
-msgstr "七月"
+msgstr "7"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_config_purchase
 #: view:res.company:0
 msgid "Configuration"
-msgstr "配置"
+msgstr "设置"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_by_supplier
@@ -715,18 +720,18 @@ msgstr "按供应商汇总采购"
 #. module: purchase
 #: view:purchase.order:0
 msgid "Total amount"
-msgstr "金额合计"
+msgstr "总金额"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.act_purchase_order_2_stock_picking
 msgid "Receptions"
-msgstr ""
+msgstr "接收"
 
 #. module: purchase
 #: field:purchase.order,validator:0
 #: view:purchase.report:0
 msgid "Validated by"
-msgstr "审核人:"
+msgstr "审批人"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.action_invoice_pending
@@ -736,6 +741,7 @@ msgid ""
 "according to your settings. Once you receive a supplier invoice, you can "
 "match it with the draft invoice and validate it."
 msgstr ""
+"使用这菜单控制您供应商收到的发票。系统根据您的设定从您的采购订单或者收货单生成发票草稿。一旦您收到供应商的发票，您可以匹配发票的草稿并审核它。"
 
 #. module: purchase
 #: model:process.node,name:purchase.process_node_draftpurchaseorder0
@@ -746,25 +752,25 @@ msgstr "询价单"
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_procurement_management_pending_invoice
 msgid "Supplier Invoices to Receive"
-msgstr ""
+msgstr "接收到的供应商发票"
 
 #. module: purchase
 #: help:purchase.installer,purchase_requisition:0
 msgid ""
 "Manages your Purchase Requisition and allows you to easily keep track and "
 "manage all your purchase orders."
-msgstr ""
+msgstr "管理您的采购申请和使您轻松跟踪和管理您所有的采购订单"
 
 #. module: purchase
 #: view:purchase.report:0
 msgid "    Month-1    "
-msgstr ""
+msgstr "    上月    "
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:363
 #, python-format
 msgid "There is no purchase journal defined for this company: \"%s\" (id:%d)"
-msgstr ""
+msgstr "公司没定义这采购分录序时薄：\"%s\" (id:%d)"
 
 #. module: purchase
 #: selection:purchase.order,invoice_method:0
@@ -775,7 +781,7 @@ msgstr "手动"
 #: code:addons/purchase/purchase.py:400
 #, python-format
 msgid "You must first cancel all picking attached to this purchase order."
-msgstr ""
+msgstr "您必须先取消这采购订单的所有装箱单。"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -787,17 +793,17 @@ msgstr "订单日期"
 #. module: purchase
 #: model:process.node,note:purchase.process_node_productrecept0
 msgid "Incoming products to control"
-msgstr ""
+msgstr "控制接收的产品"
 
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_approvingpurchaseorder0
 msgid "Approbation"
-msgstr ""
+msgstr "同意"
 
 #. module: purchase
 #: view:purchase.report:0
 msgid "Purchase Orders Statistics"
-msgstr "订货单统计数据"
+msgstr "采购订单统计"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_line_form_action2
@@ -807,6 +813,7 @@ msgid ""
 "supplier invoice yet. Once you are ready to receive a supplier invoice, you "
 "can generate a draft supplier invoice based on the lines from this menu."
 msgstr ""
+"如果您设定采购订单的发票控制是”手动“。您能跟踪还没有收到供应商发票的所有采购订单的明细。一旦您收到供应商发票从这菜单您基于这些明细能生成发票草稿。"
 
 #. module: purchase
 #: model:process.node,name:purchase.process_node_invoiceafterpacking0
@@ -817,19 +824,19 @@ msgstr "发票草稿"
 #. module: purchase
 #: help:purchase.installer,purchase_analytic_plans:0
 msgid "Manages analytic distribution and purchase orders."
-msgstr ""
+msgstr "管理分析配送和采购订单"
 
 #. module: purchase
 #: help:purchase.order,minimum_planned_date:0
 msgid ""
 "This is computed as the minimum scheduled date of all purchase order lines' "
 "products."
-msgstr "这是计算手动采购单产品的最小计划日期"
+msgstr "这计算所有采购订单明细产品的最小计划日期"
 
 #. module: purchase
 #: selection:purchase.report,month:0
 msgid "August"
-msgstr "八月"
+msgstr "8"
 
 #. module: purchase
 #: field:purchase.installer,purchase_requisition:0
@@ -839,24 +846,24 @@ msgstr "采购申请"
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_uom_categ_form_action
 msgid "Units of Measure Categories"
-msgstr ""
+msgstr "计量单位类别"
 
 #. module: purchase
 #: view:purchase.report:0
 #: field:purchase.report,delay_pass:0
 msgid "Days to Deliver"
-msgstr ""
+msgstr "交付日期"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_action_picking_tree_in_move
 #: model:ir.ui.menu,name:purchase.menu_procurement_management_inventory
 msgid "Receive Products"
-msgstr ""
+msgstr "收货"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_procurement_order
 msgid "Procurement"
-msgstr "请料单"
+msgstr "需求单"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -867,17 +874,17 @@ msgstr "发票列表"
 #. module: purchase
 #: model:process.node,note:purchase.process_node_purchaseorder0
 msgid "Confirmed purchase order to invoice"
-msgstr ""
+msgstr "已确认采购订单要开发票"
 
 #. module: purchase
 #: field:purchase.installer,config_logo:0
 msgid "Image"
-msgstr "图片"
+msgstr "图像"
 
 #. module: purchase
 #: view:purchase.report:0
 msgid "Total Orders Lines by User per month"
-msgstr ""
+msgstr "按用户每月的总订单明细"
 
 #. module: purchase
 #: view:purchase.report:0
@@ -889,7 +896,7 @@ msgstr "月"
 #: selection:purchase.order,state:0
 #: selection:purchase.report,state:0
 msgid "Waiting Supplier Ack"
-msgstr ""
+msgstr "等该供应商回复"
 
 #. module: purchase
 #: report:purchase.quotation:0
@@ -905,24 +912,24 @@ msgstr "等待审批的采购订单"
 #. module: purchase
 #: view:purchase.order:0
 msgid "Total Untaxed amount"
-msgstr ""
+msgstr "总未完税金额"
 
 #. module: purchase
 #: field:purchase.order,shipped:0
 #: field:purchase.order,shipped_rate:0
 msgid "Received"
-msgstr "已收货"
+msgstr "已接收"
 
 #. module: purchase
 #: model:process.node,note:purchase.process_node_packinglist0
 msgid "List of ordered products."
-msgstr ""
+msgstr "采购的产品"
 
 #. module: purchase
 #: help:purchase.order,picking_ids:0
 msgid ""
 "This is the list of picking list that have been generated for this purchase"
-msgstr "从领料/提货中产生采购"
+msgstr "从采购中已生成装箱单"
 
 #. module: purchase
 #: model:ir.module.module,shortdesc:purchase.module_meta_information
@@ -934,12 +941,18 @@ msgstr "采购管理"
 #: model:process.node,note:purchase.process_node_invoiceafterpacking0
 #: model:process.node,note:purchase.process_node_invoicecontrol0
 msgid "To be reviewed by the accountant."
-msgstr ""
+msgstr "等待会计审核。"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.purchase_line_form_action2
 #: model:ir.ui.menu,name:purchase.menu_purchase_line_order_draft
-msgid "Purchase Lines Not Invoiced"
+msgid "On Purchase Order Line"
+msgstr ""
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.action_picking_tree4_picking_to_invoice
+#: model:ir.ui.menu,name:purchase.action_picking_tree4_picking_to_invoice
+msgid "On Receptions"
 msgstr ""
 
 #. module: purchase
@@ -951,7 +964,7 @@ msgstr "税:"
 #: field:purchase.order,invoiced_rate:0
 #: field:purchase.order.line,invoiced:0
 msgid "Invoiced"
-msgstr "开发票"
+msgstr "已开票"
 
 #. module: purchase
 #: view:purchase.report:0
@@ -963,12 +976,12 @@ msgstr "分类"
 #: model:process.node,note:purchase.process_node_approvepurchaseorder0
 #: model:process.node,note:purchase.process_node_confirmpurchaseorder0
 msgid "State of the Purchase Order."
-msgstr "采购单状态"
+msgstr "采购订单状态"
 
 #. module: purchase
 #: view:purchase.report:0
 msgid "  Year  "
-msgstr ""
+msgstr "  年  "
 
 #. module: purchase
 #: field:purchase.report,state:0
@@ -990,7 +1003,7 @@ msgstr "采购订单明细"
 #. module: purchase
 #: constraint:res.partner:0
 msgid "Error ! You can not create recursive associated members."
-msgstr "错误！您不能创建递归的相关成员。"
+msgstr "错误！您不能创建递归的相关业务伙伴。"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -1000,23 +1013,23 @@ msgstr "日程表视图"
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_order_group
 msgid "Purchase Order Merge"
-msgstr "采购单合并"
+msgstr "采购订单合并"
 
 #. module: purchase
 #: report:purchase.quotation:0
 msgid "Regards,"
-msgstr "问候"
+msgstr "尊敬的"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_negotiation_by_supplier
 #: view:purchase.report:0
 msgid "Negotiation by Supplier"
-msgstr ""
+msgstr "供应商协商"
 
 #. module: purchase
 #: view:res.partner:0
 msgid "Purchase Properties"
-msgstr ""
+msgstr "采购属性"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_purchaseinvoice0
@@ -1024,7 +1037,7 @@ msgid ""
 "A purchase order generates a supplier invoice, as soon as it is confirmed by "
 "the buyer. Depending on the Invoicing control of the purchase order, the "
 "invoice is based on received or on ordered quantities."
-msgstr ""
+msgstr "一旦买方确认根据采购订单的发票控制，一个采购订单生成一个供应商发票，发票根据收到或订购的数量。"
 
 #. module: purchase
 #: field:purchase.order,amount_untaxed:0
@@ -1034,28 +1047,28 @@ msgstr "未完税金额"
 #. module: purchase
 #: help:purchase.order,invoiced:0
 msgid "It indicates that an invoice has been paid"
-msgstr ""
+msgstr "这表明发票已支付"
 
 #. module: purchase
 #: model:process.node,note:purchase.process_node_packinginvoice0
 msgid "Outgoing products to invoice"
-msgstr ""
+msgstr "出仓产品要开发票"
 
 #. module: purchase
 #: view:purchase.installer:0
 msgid "Configure"
-msgstr "配置"
+msgstr "设置"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_qty_per_product
 #: view:purchase.report:0
 msgid "Qty. per product"
-msgstr ""
+msgstr "Qty. per product"
 
 #. module: purchase
 #: constraint:stock.move:0
 msgid "You try to assign a lot which is not from the same product"
-msgstr ""
+msgstr "您尝试分配一个来自其它产品的批次"
 
 #. module: purchase
 #: help:purchase.order,date_order:0
@@ -1070,12 +1083,12 @@ msgstr "销售与采购"
 #. module: purchase
 #: selection:purchase.report,month:0
 msgid "June"
-msgstr ""
+msgstr "6"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_report
 msgid "Purchases Orders"
-msgstr "采购单列表"
+msgstr "采购订单"
 
 #. module: purchase
 #: view:purchase.order.line:0
@@ -1087,24 +1100,24 @@ msgstr "手工发票"
 #, python-format
 msgid ""
 "Somebody has just confirmed a purchase with an amount over the defined limit"
-msgstr ""
+msgstr "有人刚确认一个超过默认限制金额的采购"
 
 #. module: purchase
 #: selection:purchase.report,month:0
 msgid "November"
-msgstr "十一月"
+msgstr "11"
 
 #. module: purchase
 #: view:purchase.report:0
 msgid "Extended Filters..."
-msgstr "扩展过滤器..."
+msgstr "增加筛选条件"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:352
 #: code:addons/purchase/wizard/purchase_line_invoice.py:123
 #, python-format
 msgid "There is no expense account defined for this product: \"%s\" (id:%d)"
-msgstr ""
+msgstr "未定义此产品“%s“ (id:%d)的费用科目"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:408
@@ -1116,12 +1129,12 @@ msgstr "您必须先取消掉附加到此采购订单上的所有发票。"
 #: code:addons/purchase/wizard/purchase_order_group.py:48
 #, python-format
 msgid "Please select multiple order to merge in the list view."
-msgstr "请在此列表中选择多条待合并的订单"
+msgstr "请在此列表中选择多张待合并的订单"
 
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_createpackinglist0
 msgid "Pick list generated"
-msgstr ""
+msgstr "生成装箱单"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -1131,7 +1144,7 @@ msgstr "异常"
 #. module: purchase
 #: selection:purchase.report,month:0
 msgid "October"
-msgstr "十月"
+msgstr "10"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -1152,6 +1165,14 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"    采购模块是向供应商采购产品生成采购订单。\n"
+"    从采购订单创建供应商发票\n"
+"    采购管理的控制台包括：\n"
+"        当前的采购订单\n"
+"        每月的数量和金额图表    \n"
+"\n"
+"    "
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:685
@@ -1159,17 +1180,17 @@ msgstr ""
 msgid ""
 "The selected supplier has a minimal quantity set to %s, you cannot purchase "
 "less."
-msgstr ""
+msgstr "这选定的供应商设定的最少采购数量为 %s，您不能采购少了。"
 
 #. module: purchase
 #: selection:purchase.report,month:0
 msgid "January"
-msgstr "一月"
+msgstr "1"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_res_company
 msgid "Companies"
-msgstr ""
+msgstr "公司"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -1179,28 +1200,28 @@ msgstr "取消采购订单"
 #. module: purchase
 #: constraint:stock.move:0
 msgid "You must assign a production lot for this product"
-msgstr ""
+msgstr "必须为此产品赋予一个生产批次"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_createpackinglist0
 msgid "A pick list is generated to track the incoming products."
-msgstr ""
+msgstr "生成装箱单跟踪入库的产品"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_deshboard
 msgid "Dashboard"
-msgstr "仪表盘"
+msgstr "控制台"
 
 #. module: purchase
 #: view:purchase.report:0
 #: field:purchase.report,price_standard:0
 msgid "Products Value"
-msgstr "货品价值"
+msgstr "产品价值"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_product_pricelist_type
 msgid "Pricelists Types"
-msgstr ""
+msgstr "价格表类型"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -1212,7 +1233,7 @@ msgstr "报价单"
 #: model:ir.actions.act_window,name:purchase.action_po_per_month_tree
 #: view:purchase.report:0
 msgid "Purchase order per month"
-msgstr ""
+msgstr "每月的采购订单"
 
 #. module: purchase
 #: view:purchase.order.line:0
@@ -1222,18 +1243,18 @@ msgstr "日志"
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_by_category_purchase_form
 msgid "Products by Category"
-msgstr ""
+msgstr "分类的产品"
 
 #. module: purchase
 #: view:purchase.report:0
 #: field:purchase.report,delay:0
 msgid "Days to Validate"
-msgstr ""
+msgstr "审批日期"
 
 #. module: purchase
 #: help:purchase.order,origin:0
 msgid "Reference of the document that generated this purchase order request."
-msgstr "参考的文档生成这个采购订单请求"
+msgstr "相关文档生成这采购订单申请"
 
 #. module: purchase
 #: help:purchase.order,state:0
@@ -1245,8 +1266,12 @@ msgid ""
 "received, the state becomes 'Done'. If a cancel action occurs in the invoice "
 "or in the reception of goods, the state becomes in exception."
 msgstr ""
-"采购订单或询价的状态.询价是一个采购订单的‘草稿’状态.订单被用户确定为‘已确认’状态.然后订单的供应商必须被确定这时状态改为为‘已审批通过’.当采购订单"
-"支付和已收货,状态变为‘完成’.如果在发票或接收产品时执行取消操作,状态将变为‘异常’."
+"采购订单或询价单的状态。\r\n"
+"    询价单是采购订单的‘草稿’状态。\r\n"
+"    订单被用户确确认为‘已确认’状态。\r\n"
+"    然后订单的供应商必须确认这时状态改为为‘已核准’。 \r\n"
+"    当采购订单支付和已收货状态变为‘完成’。\r\n"
+"    如果在开发票或接收产品时执行取消操作状态将变为‘异常’。"
 
 #. module: purchase
 #: field:purchase.order.line,price_subtotal:0
@@ -1262,7 +1287,7 @@ msgstr "询价单"
 #. module: purchase
 #: help:purchase.order,date_approve:0
 msgid "Date on which purchase order has been approved"
-msgstr "采购单被批准的日期"
+msgstr "采购订单核准的日期"
 
 #. module: purchase
 #: selection:purchase.order,state:0
@@ -1279,13 +1304,13 @@ msgstr "默认采购价格表版本"
 #: view:purchase.installer:0
 msgid ""
 "Extend your Purchases Management Application with additional functionalities."
-msgstr ""
+msgstr "扩展您采购管理的应用并增加功能"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_install_module
 #: view:purchase.installer:0
 msgid "Purchases Application Configuration"
-msgstr "采购管理应用程序配置"
+msgstr "采购管理应用程序设置"
 
 #. module: purchase
 #: field:purchase.order,fiscal_position:0
@@ -1306,7 +1331,7 @@ msgstr "发票"
 #. module: purchase
 #: selection:purchase.report,month:0
 msgid "December"
-msgstr "十二月"
+msgstr "12"
 
 #. module: purchase
 #: model:process.transition.action,name:purchase.process_transition_action_approvingcancelpurchaseorder0
@@ -1326,7 +1351,7 @@ msgstr "采购订单明细"
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_approvingpurchaseorder0
 msgid "The supplier approves the Purchase Order."
-msgstr "供应商批准该采购单。"
+msgstr "供应商核准了这采购订单。"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.act_res_partner_2_purchase_order
@@ -1349,17 +1374,17 @@ msgstr "合并采购订单"
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_order_line_invoice
 msgid "Purchase Order Line Make Invoice"
-msgstr ""
+msgstr "采购订单明细产生发票"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_action_picking_tree4
 msgid "Incoming Shipments"
-msgstr ""
+msgstr "入库"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_order_by_user_all
 msgid "Total Orders by User per month"
-msgstr ""
+msgstr "按用户每月的订单总金额"
 
 #. module: purchase
 #: model:ir.actions.report.xml,name:purchase.report_purchase_quotation
@@ -1383,13 +1408,13 @@ msgstr "负责人"
 #. module: purchase
 #: report:purchase.order:0
 msgid "Our Order Reference"
-msgstr "订单参考"
+msgstr "我相关的订单"
 
 #. module: purchase
 #: view:purchase.order:0
 #: view:purchase.order.line:0
 msgid "Search Purchase Order"
-msgstr "搜索采购单"
+msgstr "搜索采购订单"
 
 #. module: purchase
 #: field:purchase.order,warehouse_id:0
@@ -1413,7 +1438,7 @@ msgstr "要求日期"
 #: field:purchase.order,date_approve:0
 #: field:purchase.report,date_approve:0
 msgid "Date Approved"
-msgstr "通过日期"
+msgstr "已核准日期"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:407
@@ -1430,7 +1455,7 @@ msgstr "单价"
 #. module: purchase
 #: view:purchase.order:0
 msgid "Delivery & Invoicing"
-msgstr "货运与开票"
+msgstr "交付 & 开发票"
 
 #. module: purchase
 #: field:purchase.order.line,date_planned:0
@@ -1463,12 +1488,12 @@ msgstr "说明"
 #. module: purchase
 #: help:res.company,po_lead:0
 msgid "This is the leads/security time for each purchase order."
-msgstr ""
+msgstr "这是每个采购订单的交货周期/备用时间。"
 
 #. module: purchase
 #: report:purchase.quotation:0
 msgid "Expected Delivery address:"
-msgstr "预期交货地址:"
+msgstr "预定交货地址:"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_stock_move_report_po
@@ -1479,7 +1504,7 @@ msgstr "收货分析"
 #. module: purchase
 #: help:purchase.order,amount_untaxed:0
 msgid "The amount without tax"
-msgstr ""
+msgstr "不含税金额"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.action_supplier_address_form
@@ -1487,18 +1512,18 @@ msgid ""
 "Access your supplier records and maintain a good relationship with your "
 "suppliers. You can track all your interactions with them through the History "
 "tab: emails, orders, meetings, etc."
-msgstr ""
+msgstr "访问您的供应商的记录与您的供应商保持良好的关系。通过日志标签您能跟踪您所有与供应商的互动：电子邮件，订单，会议等。"
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "Delivery"
-msgstr "送货"
+msgstr "交付"
 
 #. module: purchase
 #: view:board.board:0
 #: model:ir.actions.act_window,name:purchase.purchase_draft
 msgid "Request for Quotations"
-msgstr ""
+msgstr "询价请求"
 
 #. module: purchase
 #: field:purchase.order.line,product_uom:0
@@ -1525,7 +1550,7 @@ msgstr "预定"
 #: model:ir.actions.act_window,name:purchase.action_purchase_order_report_graph
 #: view:purchase.report:0
 msgid "Total Qty and Amount by month"
-msgstr "数量和金额的月汇总"
+msgstr "按月度的总数量和总金额"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:399
@@ -1538,28 +1563,28 @@ msgstr "无法取消采购订单！"
 msgid ""
 "In case there is no supplier for this product, the buyer can fill the form "
 "manually and confirm it. The RFQ becomes a confirmed Purchase Order."
-msgstr ""
+msgstr "如果这产品没有供应商，买方可以手动填写并确认。这询价单能通过确认转换为采购订单。"
 
 #. module: purchase
 #: selection:purchase.report,month:0
 msgid "February"
-msgstr "二月"
+msgstr "2"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_category_config_purchase
 msgid "Products Categories"
-msgstr ""
+msgstr "产品分类"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_order_report_all
 #: model:ir.ui.menu,name:purchase.menu_action_purchase_order_report_all
 msgid "Purchase Analysis"
-msgstr ""
+msgstr "采购分析"
 
 #. module: purchase
 #: report:purchase.order:0
 msgid "Your Order Reference"
-msgstr "你订单参考"
+msgstr "你订单"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -1567,13 +1592,13 @@ msgstr "你订单参考"
 #: report:purchase.quotation:0
 #: field:purchase.report,expected_date:0
 msgid "Expected Date"
-msgstr "预计日期"
+msgstr "预定日期"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_total_price_by_product_by_state
 #: view:purchase.report:0
 msgid "Total price by product by state"
-msgstr ""
+msgstr "该状态下产品的总价格"
 
 #. module: purchase
 #: report:purchase.quotation:0
@@ -1584,7 +1609,7 @@ msgstr "增值税:"
 #: report:purchase.order:0
 #: field:purchase.order,date_order:0
 msgid "Date Ordered"
-msgstr "订购日期"
+msgstr "下单日期"
 
 #. module: purchase
 #: report:purchase.order:0
@@ -1599,12 +1624,12 @@ msgstr "采购控制"
 #. module: purchase
 #: selection:purchase.report,month:0
 msgid "March"
-msgstr "三月"
+msgstr "3"
 
 #. module: purchase
 #: selection:purchase.report,month:0
 msgid "April"
-msgstr "四月"
+msgstr "4"
 
 #. module: purchase
 #: view:purchase.order.group:0
@@ -1621,6 +1646,15 @@ msgid ""
 "\n"
 " "
 msgstr ""
+" 请注意：\n"
+"订单将被合并如果：\n"
+"    * 采购订单在草稿状态\n"
+"    * 采购订单有相同的供应商\n"
+"    * 采购订单有相同的仓库库位，相同的价格表\n"
+"\n"
+"只合并明细如果：\n"
+"    * 订单明细刚好产品相同 \n"
+" "
 
 #. module: purchase
 #: view:purchase.report:0
@@ -1631,7 +1665,7 @@ msgstr "年"
 #. module: purchase
 #: field:purchase.report,negociation:0
 msgid "Purchase-Standard Price"
-msgstr ""
+msgstr "采购 - 标准单价"
 
 #. module: purchase
 #: model:product.pricelist.type,name:purchase.pricelist_type_purchase
@@ -1647,17 +1681,17 @@ msgstr "开票方式"
 #. module: purchase
 #: model:process.transition.action,name:purchase.process_transition_action_approvingpurchaseorder0
 msgid "Approve"
-msgstr "通过"
+msgstr "核准"
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "To Approve"
-msgstr "待批准"
+msgstr "待核准"
 
 #. module: purchase
 #: view:purchase.order.line:0
 msgid "Invoicing"
-msgstr "发票"
+msgstr "开发票"
 
 #. module: purchase
 #: help:purchase.order.line,state:0
@@ -1670,12 +1704,16 @@ msgid ""
 "                                      \n"
 "* The 'Cancelled' state is set automatically when user cancel purchase order."
 msgstr ""
+" “草稿”状态当采购订单在草稿状态是自动设置\n"
+"“确认”状态当采购订单在确认状态时自动设置为确认\n"
+"“完成”状态当采购订单完成自动设置\n"
+"“取消”状态当用户取消采购订单时自动设置"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:414
 #, python-format
 msgid "Purchase order '%s' is cancelled."
-msgstr "采购单“%s”已经取消"
+msgstr "采购订单 “%s” 已经取消"
 
 #. module: purchase
 #: field:purchase.order,amount_total:0
@@ -1702,12 +1740,12 @@ msgstr "你确定要合并此订单吗？"
 #: view:purchase.order.line:0
 #: view:purchase.report:0
 msgid "Group By..."
-msgstr "分组于"
+msgstr "分组..."
 
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_purchaseinvoice0
 msgid "From a purchase order"
-msgstr ""
+msgstr "从采购订单"
 
 #. module: purchase
 #: report:purchase.order:0
@@ -1717,12 +1755,12 @@ msgstr "增值税:"
 #. module: purchase
 #: help:purchase.order,amount_total:0
 msgid "The total amount"
-msgstr "总价"
+msgstr "总金额"
 
 #. module: purchase
 #: selection:purchase.report,month:0
 msgid "May"
-msgstr "五月"
+msgstr "5"
 
 #. module: purchase
 #: field:res.company,po_lead:0
@@ -1735,7 +1773,7 @@ msgid ""
 "The invoice is created automatically if the Invoice control of the purchase "
 "order is 'On order'. The invoice can also be generated manually by the "
 "accountant (Invoice control = Manual)."
-msgstr ""
+msgstr "如果采购订单的发票控制是“来自订单”发票是自动生成。发票也可以由会计人员手动产生(发票控制 = 手动)"
 
 #. module: purchase
 #: model:process.process,name:purchase.process_process_purchaseprocess0
@@ -1755,16 +1793,18 @@ msgid ""
 "You have to select a partner in the purchase form !\n"
 "Please set one partner before choosing a product."
 msgstr ""
+"您必须在采购订单里选择业务伙伴！\n"
+"请在选定产品前设定一个业务伙伴"
 
 #. module: purchase
 #: view:purchase.installer:0
 msgid "title"
-msgstr ""
+msgstr "标题"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_stock_partial_move
 msgid "Partial Move"
-msgstr ""
+msgstr "部分调拨"
 
 #. module: purchase
 #: view:purchase.order.line:0
@@ -1775,7 +1815,7 @@ msgstr "库存调拨"
 #: model:ir.ui.menu,name:purchase.menu_purchase_unit_measure_purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_uom_form_action
 msgid "Units of Measure"
-msgstr ""
+msgstr "计量单位"
 
 #. module: purchase
 #: view:purchase.report:0
@@ -1787,13 +1827,13 @@ msgstr "订单"
 msgid ""
 "unique number of the purchase order,computed automatically when the purchase "
 "order is created"
-msgstr ""
+msgstr "采购订单唯一的编号，在采购订单生成时计算"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.open_board_purchase
 #: model:ir.ui.menu,name:purchase.menu_board_purchase
 msgid "Purchase Dashboard"
-msgstr ""
+msgstr "采购控制台"
 
 #~ msgid "Purchase Process"
 #~ msgstr "采购流程"
@@ -1978,3 +2018,9 @@ msgstr ""
 
 #~ msgid "Product UoM"
 #~ msgstr "货品计量单位"
+
+#~ msgid "From Picking"
+#~ msgstr "来自装箱单"
+
+#~ msgid "Purchase Lines Not Invoiced"
+#~ msgstr "采购明细没开发票"

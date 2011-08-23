@@ -24,6 +24,7 @@
     'name': 'Base Contact',
     'version': '1.0',
     'category': 'Tools',
+    'complexity': "expert",
     'description': """
 This module allows you to manage your contacts entirely.
 ========================================================
