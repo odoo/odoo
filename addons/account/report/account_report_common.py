@@ -56,7 +56,7 @@ class report_account_common(report_sxw.rml_parse, common_report_header):
         balance = 0.0
         name = data['form'].get('account_report_id') and data['form']['account_report_id'][1] or ''
         report_id = data['form'].get('account_report_id') and data['form']['account_report_id'][0] or False
-        datas.append({'id': report_id})
+        datas.append({'id': report_id, 'label': data['form']['label_filter'] or ''})
         ctx = self.context.copy()
         if report_id:
             child_ids = report_obj.search(cr, uid, [('parent_id','=',report_id)])
@@ -108,6 +108,6 @@ class report_account_common(report_sxw.rml_parse, common_report_header):
                     balance += a.balance
         return balance
 
-report_sxw.report_sxw('report.account.common', 'account.account',
+report_sxw.report_sxw('report.accounting.report', 'account.account',
     'addons/account/report/account_report_common.rml', parser=report_account_common, header='internal')
 

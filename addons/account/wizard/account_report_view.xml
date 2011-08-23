@@ -3,18 +3,23 @@
      <data>
 
         <record id="accounting_report_view" model="ir.ui.view">
-            <field name="name">Account Report</field>
+            <field name="name">Accounting Report</field>
             <field name="model">accounting.report</field>
             <field name="type">form</field>
             <field name="inherit_id" ref="account.account_common_report_view"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='target_move']" position="after">
+                <xpath expr="//field[@name='fiscalyear_id']" position="replace">
+                </xpath>
+                <xpath expr="//field[@name='target_move']" position="replace">
                     <field name="account_report_id" domain="[('parent_id','=',False)]"/>
-                    <field name="comparison"/>
+                    <field name="label_filter"/>
                     <field name="account_details"/>
+                    <field name="enable_filter"/>
                 </xpath>
                 <xpath expr="//notebook/page[@string='Filters']" position="replace">
-                    <page string="Comparison" attrs="{'invisible': [('comparison','=',False)]}">
+                    <page string="Comparison" attrs="{'invisible': [('enable_filter','=',False)]}">
+                        <field name="fiscalyear_id"/>
+                        <field name="target_move"/>
                         <field name="filter" on_change="onchange_filter(filter, fiscalyear_id)" colspan="4"/>
                         <separator string="Dates" colspan="4"/>
                         <field name="date_from" attrs="{'readonly':[('filter', '!=', 'filter_date')], 'required':[('filter', '=', 'filter_date')]}" colspan="4"/>
@@ -30,7 +35,7 @@
         </record>
 
         <record id="action_account_report" model="ir.actions.act_window">
-             <field name="name">Account Report</field>
+             <field name="name">Financial Report</field>
              <field name="res_model">accounting.report</field>
              <field name="type">ir.actions.act_window</field>
              <field name="view_type">form</field>
@@ -40,11 +45,12 @@
        </record>
 
        <menuitem icon="STOCK_PRINT"
-            name="Report"
+            name="Financial Report"
             action="action_account_report"
             groups="group_account_user,group_account_manager"
             id="menu_account_report"
-            parent="final_accounting_reports"/>
+            parent="final_accounting_reports"
+            sequence="100"/>
 
     </data>
 </openerp>
