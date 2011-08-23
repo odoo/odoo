@@ -211,6 +211,7 @@ openerp.base.list_editable = function (openerp) {
                     if (!record) {
                         record = new openerp.base.list.Record({id: id});
                         self.records.add(record, {at: index});
+                        self.dataset.ids.splice(index, 0, id);
                     }
                     self.reload_record(record);
                 });
