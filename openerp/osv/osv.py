@@ -277,7 +277,7 @@ class TransientModel(Model):
         # No access rules for transient models.
         if self._log_access and uid != openerp.SUPERUSER:
             cr.execute("SELECT distinct create_uid FROM " + self._table + " WHERE"
-                " id in ", (tuple(ids),))
+                " id IN %s", (tuple(ids),))
             uids = [x[0] for x in cr.fetchall()]
             if len(uids) != 1 or uids[0] != uid:
                 raise orm.except_orm(_('AccessError'), '%s access is '
