@@ -7,6 +7,7 @@ openerp.base.form.DashBoard = openerp.base.form.Widget.extend({
         this._super(view, node);
         this.template = 'DashBoard';
         this.actions_attrs = {};
+        this.action_managers = [];
     },
     start: function() {
         var self = this;
@@ -23,8 +24,9 @@ openerp.base.form.DashBoard = openerp.base.form.Widget.extend({
         this.$element.find('.oe-dashboard-link-reset').click(this.on_reset);
         this.$element.find('.oe-dashboard-link-add_widget').click(this.on_add_widget);
         this.$element.find('.oe-dashboard-link-change_layout').click(this.on_change_layout);
-        this.$element.find('.oe-dashboard-column .oe-dashboard-fold').click(this.on_fold_action);
-        this.$element.find('.oe-dashboard-column .ui-icon-closethick').click(this.on_close_action);
+
+        this.$element.delegate('.oe-dashboard-column .oe-dashboard-fold', 'click', this.on_fold_action);
+        this.$element.delegate('.oe-dashboard-column .ui-icon-closethick', 'click', this.on_close_action);
 
         this.actions_attrs = {};
         // Init actions
@@ -58,7 +60,23 @@ openerp.base.form.DashBoard = openerp.base.form.Widget.extend({
     },
     on_add_widget: function() {
         var self = this;
-        var action = {
+        var action_manager = new openerp.base.ActionManager(this);
+        var dialog = new openerp.base.Dialog(this, {
+            title : 'Actions',
+            width: 800,
+            height: 600,
+            buttons : {
+                Cancel : function() {
+                    $(this).dialog('destroy');
+                },
+                Add : function() {
+                    self.do_add_widget(action_manager.inner_viewmanager.views.list.controller);
+                    $(this).dialog('destroy');
+                }
+            }
+        }).start().open();
+        action_manager.appendTo(dialog.$element);
+        action_manager.do_action({
             res_model : 'ir.actions.actions',
             views : [[false, 'list']],
             type : 'ir.actions.act_window',
@@ -69,33 +87,12 @@ openerp.base.form.DashBoard = openerp.base.form.Widget.extend({
                 views_switcher : false,
                 action_buttons : false
             }
-        };
-        // TODO: create a Dialog controller which optionally takes an action
-        // Should set width & height automatically and take buttons & views callback
-        var dialog_id = _.uniqueId('act_window_dialog');
-        var action_manager = new openerp.base.ActionManager(this, dialog_id);
-        $('<div id=' + dialog_id + '>').dialog({
-            modal : true,
-            title : 'Actions',
-            width : 800,
-            height : 600,
-            buttons : {
-                Cancel : function() {
-                    $(this).dialog('destroy');
-                },
-                Add : function() {
-                    self.do_add_widget(action_manager);
-                    $(this).dialog('destroy');
-                }
-            }
         });
-        action_manager.start();
-        action_manager.do_action(action);
         // TODO: should bind ListView#select_record in order to catch record clicking
     },
-    do_add_widget : function(action_manager) {
+    do_add_widget : function(listview) {
         var self = this,
-            actions = action_manager.viewmanager.views.list.controller.groups.get_selection().ids,
+            actions = listview.groups.get_selection().ids,
             results = [],
             qdict = { view : this.view };
         // TODO: should load multiple actions at once
@@ -229,6 +226,7 @@ openerp.base.form.DashBoard = openerp.base.form.Widget.extend({
             pager: false
         };
         var am = new openerp.base.ActionManager(this);
+        this.action_managers.push(am);
         am.appendTo($("#"+this.view.element_id + '_action_' + action.id));
         am.do_action(action);
     },
@@ -244,8 +242,12 @@ openerp.base.form.DashBoard = openerp.base.form.Widget.extend({
         return QWeb.render(this.template, this);
     },
     do_reload: function() {
-        this.view.widget_parent.stop();
-        this.view.widget_parent.start();
+        _.each(this.action_managers, function(am) {
+            am.stop();
+        });
+        this.action_managers = [];
+        this.view.stop();
+        this.view.start();
     }
 });
 openerp.base.form.DashBoardLegacy = openerp.base.form.DashBoard.extend({
@@ -283,6 +285,7 @@ if (!openerp.base_dashboard) {
     openerp.base_dashboard = {};
 }
 openerp.base_dashboard.ConfigOverview = openerp.base.View.extend({
+    template: 'ConfigOverview',
     init: function (parent, element_id) {
         this._super(parent, element_id);
         this.dataset = new openerp.base.DataSetSearch(
@@ -310,7 +313,7 @@ openerp.base_dashboard.ConfigOverview = openerp.base.View.extend({
             })
             .groupBy(function (record) {return record.category})
             .value();
-        this.$element.html(QWeb.render('ConfigOverview', {
+        this.$element.html(QWeb.render('ConfigOverview.content', {
             completion: 100 * progress.done / progress.total,
             groups: grouped_todos
         }));
@@ -345,14 +348,12 @@ openerp.base_dashboard.ConfigOverview = openerp.base.View.extend({
 openerp.base.client_actions.add(
     'board.home.applications', 'openerp.base_dashboard.ApplicationTiles');
 openerp.base_dashboard.ApplicationTiles = openerp.base.View.extend({
-    init: function (parent, element_id) {
-        this._super(parent, element_id);
-        this.dataset = new openerp.base.DataSetSearch(
-                this, 'ir.ui.menu', null, [['parent_id', '=', false]]);
-    },
+    template: 'ApplicationTiles',
     start: function () {
         var self = this;
-        this.dataset.read_slice( ['name', 'web_icon_data', 'web_icon_hover_data'], {}, function (applications) {
+        return new openerp.base.DataSetSearch(
+                this, 'ir.ui.menu', null, [['parent_id', '=', false]])
+            .read_slice( ['name', 'web_icon_data', 'web_icon_hover_data'], {}, function (applications) {
                 // Create a matrix of 3*x applications
                 var rows = [];
                 while (applications.length) {
@@ -360,29 +361,26 @@ openerp.base_dashboard.ApplicationTiles = openerp.base.View.extend({
                 }
                 self.$element
                     .append(QWeb.render(
-                        'ApplicationTiles', {rows: rows}))
+                        'ApplicationTiles.content', {rows: rows}))
                     .find('.oe-dashboard-home-tile')
                         .click(function () {
                             var $this = $(this);
                             $this.closest('.openerp')
                                  .find('.menu a[data-menu=' + $this.data('menuid') + ']')
                                  .click();});
-        });
+            });
     }
 });
 openerp.base.client_actions.add(
     'board.home.widgets', 'openerp.base_dashboard.Widgets');
 openerp.base_dashboard.Widgets = openerp.base.View.extend({
-    init: function (parent, element_id) {
-        this._super(parent, element_id);
-        this.user_widgets = new openerp.base.DataSetSearch(
+    template: 'HomeWidgets',
+    start: function () {
+        return new openerp.base.DataSetSearch(
                 this, 'res.widget.user', null,
                 ['|', ['user_id', '=', false],
-                      ['user_id', '=', parseInt(this.session.uid, 10)]]);
-        this.widgets = new openerp.base.DataSetSearch(this, 'res.widget');
-    },
-    start: function () {
-        this.user_widgets.read_slice(['widget_id', 'user_id'], {}, this.on_widgets_list_loaded);
+                      ['user_id', '=', parseInt(this.session.uid, 10)]])
+            .read_slice(['widget_id', 'user_id'], {}, this.on_widgets_list_loaded);
     },
     on_widgets_list_loaded: function (user_widgets) {
         var self = this;
@@ -394,18 +392,19 @@ openerp.base_dashboard.Widgets = openerp.base.View.extend({
                 user_widget_id: widget['id']
             };
         });
-        this.widgets.read_ids(_(user_widgets).pluck('widget_id'), ['title'], function (widgets) {
-            _(widgets).each(function (widget) {
-                _.extend(widget, widget_user[widget['id']]);
+        new openerp.base.DataSetSearch(this, 'res.widget')
+            .read_ids(_(user_widgets).pluck('widget_id'), ['title'], function (widgets) {
+                _(widgets).each(function (widget) {
+                    _.extend(widget, widget_user[widget['id']]);
+                });
+                var url = _.sprintf(
+                    '/base_dashboard/widgets/content?session_id=%s&widget_id=',
+                    self.session.session_id);
+                self.$element.html(QWeb.render('HomeWidgets', {
+                    widgets: widgets,
+                    url: url
+                }));
             });
-            var url = _.sprintf(
-                '/base_dashboard/widgets/content?session_id=%s&widget_id=',
-                self.session.session_id);
-            self.$element.html(QWeb.render('HomeWidgets', {
-                widgets: widgets,
-                url: url
-            }));
-        })
     }
 });
 };

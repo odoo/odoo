@@ -180,10 +180,10 @@ openerp.base_calendar.CalendarView = openerp.base.View.extend({
             }
 
             if (this.fields[this.date_start]['type'] == 'date') {
-                evt[this.date_start] = openerp.base.parse_date(evt[this.date_start]).set({hour: 9}).toString('yyyy-MM-dd HH:mm:ss');
+                evt[this.date_start] = openerp.base.str_to_date(evt[this.date_start]).set({hour: 9}).toString('yyyy-MM-dd HH:mm:ss');
             }
             if (this.date_stop && evt[this.date_stop] && this.fields[this.date_stop]['type'] == 'date') {
-                evt[this.date_stop] = openerp.base.parse_date(evt[this.date_stop]).set({hour: 17}).toString('yyyy-MM-dd HH:mm:ss');
+                evt[this.date_stop] = openerp.base.str_to_date(evt[this.date_stop]).set({hour: 17}).toString('yyyy-MM-dd HH:mm:ss');
             }
             res_events.push(this.convert_event(evt));
         }
@@ -195,8 +195,8 @@ openerp.base_calendar.CalendarView = openerp.base.View.extend({
         }
     },
     convert_event: function(evt) {
-        var date_start = openerp.base.parse_datetime(evt[this.date_start]),
-            date_stop = this.date_stop ? openerp.base.parse_datetime(evt[this.date_stop]) : null,
+        var date_start = openerp.base.str_to_datetime(evt[this.date_start]),
+            date_stop = this.date_stop ? openerp.base.str_to_datetime(evt[this.date_stop]) : null,
             date_delay = evt[this.date_delay] || null,
             res_text = '',
             res_description = [];
@@ -280,9 +280,9 @@ openerp.base_calendar.CalendarView = openerp.base.View.extend({
         var data = {
             name: event_obj.text
         };
-        data[this.date_start] = openerp.base.format_datetime(event_obj.start_date);
+        data[this.date_start] = openerp.base.datetime_to_str(event_obj.start_date);
         if (this.date_stop) {
-            data[this.date_stop] = openerp.base.format_datetime(event_obj.end_date);
+            data[this.date_stop] = openerp.base.datetime_to_str(event_obj.end_date);
         }
         if (this.date_delay) {
             var diff_seconds = Math.round((event_obj.end_date.getTime() - event_obj.start_date.getTime()) / 1000);

@@ -30,10 +30,14 @@ openerp.base.ActionManager = openerp.base.Widget.extend({
             this.dialog = null;
         }
     },
-    inner_stop: function () {
+    content_stop: function () {
         if (this.inner_viewmanager) {
             this.inner_viewmanager.stop();
             this.inner_viewmanager = null;
+        }
+        if (this.client_widget) {
+            this.client_widget.stop();
+            this.client_widget = null;
         }
     },
     url_update: function(action) {
@@ -89,7 +93,7 @@ openerp.base.ActionManager = openerp.base.Widget.extend({
             this.dialog.open();
         } else  {
             this.dialog_stop();
-            this.inner_stop();
+            this.content_stop();
             this.inner_viewmanager = new openerp.base.ViewManagerAction(this, action);
             this.inner_viewmanager.appendTo(this.$element);
             this.url_update(action);
@@ -114,8 +118,9 @@ openerp.base.ActionManager = openerp.base.Widget.extend({
         });
     },
     ir_actions_client: function (action) {
-        this.client_widget = openerp.base.client_actions.get_object(action.tag);
-        new this.client_widget(this, this.element_id, action.params).start();
+        this.content_stop();
+        var ClientWidget = openerp.base.client_actions.get_object(action.tag);
+        (this.client_widget = new ClientWidget(this, action.params)).appendTo(this);
     }
 });
 
