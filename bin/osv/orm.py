@@ -1958,13 +1958,30 @@ class orm_memory(orm_template):
                 result.append(r)
                 if id in self.datas:
                     self.datas[id]['internal.date_access'] = time.time()
+                    
+            # all non inherited fields for which the attribute whose name is in load is False
             fields_post = filter(lambda x: x in self._columns and not getattr(self._columns[x], load), fields_to_read)
+            todo = {}
             for f in fields_post:
-                res2 = self._columns[f].get_memory(cr, self, ids, f, user, context=context, values=result)
-                for record in result:
-                    record[f] = res2[record['id']]
-            if isinstance(ids_orig, (int, long)):
-                return result[0]
+                todo.setdefault(self._columns[f]._multi, [])
+                todo[self._columns[f]._multi].append(f)
+            for key, val in todo.items():
+                if key:
+                    res2 = self._columns[val[0]].get_memory(cr, self, ids, val, user, context=context, values=result)
+                    for pos in val:
+                        for record in result:
+                            if isinstance(res2[record['id']], str): res2[record['id']] = eval(res2[record['id']]) #TOCHECK : why got string instend of dict in python2.6
+                            multi_fields = res2.get(record['id'],{})
+                            if multi_fields:
+                                record[pos] = multi_fields.get(pos,[])
+                else:
+                    for f in val:
+                        res2 = self._columns[f].get_memory(cr, self, ids, f, user, context=context, values=result)
+                        for record in result:
+                            if res2:
+                                record[f] = res2[record['id']]
+                            else:
+                                record[f] = []
         return result
 
     def write(self, cr, user, ids, vals, context=None):
