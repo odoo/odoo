@@ -643,8 +643,8 @@ class actions_server(osv.osv):
 
             if action.state=='code':
                 eval(action.code, cxt, mode="exec", nocopy=True) # nocopy allows to return 'action'
-                if 'action' in localdict:
-                    return localdict['action']
+                if 'action' in cxt:
+                    return cxt['action']
 
             if action.state == 'email':
                 user = config['email_from']
