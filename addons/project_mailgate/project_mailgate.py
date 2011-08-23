@@ -103,7 +103,7 @@ class project_tasks(osv.osv):
         else:
             select = ids
         for task in self.browse(cr, uid, select, context=context):
-            user_email = (task.user_id and task.user_id.address_id and task.user_id.address_id.email) or False
+            user_email = (task.user_id and task.user_id.user_email) or False
             res += [(user_email, False, False, task.priority)]
         if isinstance(ids, (str, int, long)):
             return len(res) and res[0] or False

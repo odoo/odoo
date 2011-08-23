@@ -14,13 +14,12 @@
                     <separator string="title" position="attributes">
                         <attribute name="string">Select the Option for Addresses Migration</attribute>
                     </separator>
-                    <xpath expr="//label[@string='description']"
-                    position="attributes">
+                    <xpath expr="//label[@string='description']" position="attributes">
                         <attribute name="string">You can migrate Partner's current addresses to the contact.</attribute>
                     </xpath>
-                    <xpath expr='//separator[@string="vsep"]' position='attributes'>
-                        <attribute name='rowspan'>13</attribute>
-                        <attribute name='string'></attribute>
+                    <xpath expr="//separator[@string=&quot;vsep&quot;]" position="attributes">
+                        <attribute name="rowspan">13</attribute>
+                        <attribute name="string"/>
                     </xpath>
                     <xpath expr="//button[@string='Install Modules']" position="attributes">
                         <attribute name="string">Configure</attribute>
@@ -28,8 +27,8 @@
                     <group colspan="8">
                         <group colspan="2" col="2">
                             <label string="Due to changes in Address and Partner's relation, some of the details from address are needed to be migrated into contact information." colspan="4"/>
-                            <label string="Otherwise these details will not be visible from address/contact."  colspan="4"/>
-                            <label string="Do you want to migrate your Address data in Contact Data?" colspan="4" />
+                            <label string="Otherwise these details will not be visible from address/contact." colspan="4"/>
+                            <label string="Do you want to migrate your Address data in Contact Data?" colspan="4"/>
                             <group colspan="6">
                                 <field name="migrate" string="Migrate" colspan="1"/>
                             </group>
@@ -53,8 +52,7 @@
             <field name="action_id" ref="action_base_contact_installer"/>
             <field name="category_id" ref="base.category_administration_config"/>
             <field name="sequence">3</field>
-            <field name="state">open</field>
-            <field name="type">normal</field>
+            <field name="type">automatic</field>
         </record>
 
     </data>
