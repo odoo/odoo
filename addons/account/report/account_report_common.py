@@ -101,7 +101,7 @@ class report_account_common(report_sxw.rml_parse, common_report_header):
         if child.type == 'account_report' and child.account_report_id:
             for a in child.account_report_id.account_ids:
                 balance += a.balance
-        #it's the sum of balance of the children of this account.report (if there isn't, then it's 0.0)
+        # it's the sum of balance of the children of this account.report (if there isn't, then it's 0.0)
         if child.type == 'sum':
             for child in report_obj.browse(cr, uid, child_ids, context=context):
                 for a in child.account_ids:

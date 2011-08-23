@@ -12,15 +12,15 @@
                 </xpath>
                 <xpath expr="//field[@name='target_move']" position="replace">
                     <field name="account_report_id" domain="[('parent_id','=',False)]"/>
-                    <field name="label_filter"/>
                     <field name="account_details"/>
                     <field name="enable_filter"/>
                 </xpath>
                 <xpath expr="//notebook/page[@string='Filters']" position="replace">
-                    <page string="Comparison" attrs="{'invisible': [('enable_filter','=',False)]}">
+                    <page string="Filters" attrs="{'invisible': [('enable_filter','=',False)]}">
                         <field name="fiscalyear_id"/>
                         <field name="target_move"/>
-                        <field name="filter" on_change="onchange_filter(filter, fiscalyear_id)" colspan="4"/>
+                        <field name="filter" on_change="onchange_filter(filter, fiscalyear_id)"/>
+                        <field name="label_filter"/>
                         <separator string="Dates" colspan="4"/>
                         <field name="date_from" attrs="{'readonly':[('filter', '!=', 'filter_date')], 'required':[('filter', '=', 'filter_date')]}" colspan="4"/>
                         <field name="date_to" attrs="{'readonly':[('filter', '!=', 'filter_date')], 'required':[('filter', '=', 'filter_date')]}"  colspan="4"/>
