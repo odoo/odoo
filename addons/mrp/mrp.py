@@ -681,8 +681,10 @@ class mrp_production(osv.osv):
                 res = False
         return res
     
-    def rest_qty_compute(self, cr, uid, obj, move_obj=None, context=None):
-        return {'product_qty': obj.product_qty, 'sub_qty': 1}
+    def rest_qty_compute(self, cr, uid, production_id, move_id=None, context=None):
+        production_obj = self.pool.get('mrp.production')
+        production_browse = prod_obj.browse(cr, uid, production_id, context)
+        return {'product_qty': production_browse.product_qty, 'sub_qty': 1}
 
     def action_produce(self, cr, uid, production_id, production_qty, production_mode, context=None):
         """ To produce final product based on production mode (consume/consume&produce).
@@ -751,7 +753,7 @@ class mrp_production(osv.osv):
 
             for produce_product in production.move_created_ids:
                 produced_qty = produced_products.get(produce_product.product_id.id, 0)
-                get_qty = self.rest_qty_compute(cr, uid, production, produce_product)
+                get_qty = self.rest_qty_compute(cr, uid, production.id, produce_product.id)
                 rest_qty = get_qty['product_qty'] - produced_qty
                 if rest_qty <= production_qty:
                     production_qty = rest_qty
