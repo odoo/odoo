@@ -224,8 +224,6 @@ class product_product(osv.osv):
         if context.get('compute_child',True):
             child_location_ids = location_obj.search(cr, uid, [('location_id', 'child_of', location_ids)])
             location_ids = child_location_ids or location_ids
-        else:
-            location_ids = location_ids
 
         uoms_o = {}
         product2uom = {}
