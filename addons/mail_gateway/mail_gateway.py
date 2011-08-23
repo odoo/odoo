@@ -150,25 +150,18 @@ class mailgate_thread(osv.osv):
                     if isinstance(param, list):
                         param = ", ".join(param)
 
-                data = {
+                data.update({
                     'name': subject or _('History'),
                     'history': True,
-                    'user_id': uid,
-                    'model' : case._name,
-                    'res_id': case.id,
                     'date': email_date or time.strftime('%Y-%m-%d %H:%M:%S'),
-                    'description': details or (hasattr(case, 'description') and case.description or False),
                     'email_to': email,
                     'email_from': email_from or \
                         (hasattr(case, 'user_id') and case.user_id and case.user_id.address_id and \
                          case.user_id.address_id.email),
                     'email_cc': email_cc,
                     'email_bcc': email_bcc,
-                    'partner_id': partner_id,
                     'references': references,
-                    'message_id': message_id,
-                    'attachment_ids': [(6, 0, attachments)]
-                }
+                })
             obj.create(cr, uid, data, context=context)
         return True
 mailgate_thread()

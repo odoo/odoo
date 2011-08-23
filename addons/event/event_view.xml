@@ -408,16 +408,14 @@
                                     </group>
                                     <notebook colspan="4">
                                         <page string="Details">
-                                            <group attrs="{'invisible': [('history', '!=', True)]}">
+                                            <group>
                                                 <field name="description" colspan="4" nolabel="1" height="250"/>
                                                 <button colspan="4"
                                                     string="Reply"
+                                                    attrs="{'invisible': [('history', '!=', True)]}"
                                                     name="%(crm.action_crm_send_mail)d"
                                                     context="{'mail':'reply', 'model': 'event.registration', 'include_original' : True}"
                                                     icon="terp-mail-replied" type="action" />
-                                            </group>
-                                            <group attrs="{'invisible': [('history', '=', True)]}">
-                                                <field name="display_text" colspan="4" nolabel="1"  height="250"/>
                                             </group>
                                         </page>
                                         <page string="Attachments">
