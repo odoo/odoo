@@ -552,7 +552,9 @@ openerp.base.View = openerp.base.Widget.extend({
     },
     on_sidebar_manage_view: function() {
         if (this.fields_view && this.fields_view.arch) {
-            $('<xmp>' + openerp.base.json_node_to_xml(this.fields_view.arch, true) + '</xmp>').dialog({ width: '95%', height: 600});
+//            $('<xmp>' + openerp.base.json_node_to_xml(this.fields_view.arch, true) + '</xmp>').dialog({ width: '95%', height: 600});
+            var view_editor = new openerp.base.ViewEditor(this, this.$element, this.dataset, this.fields_view.arch)
+            view_editor.start();
         } else {
             this.notification.warn("Manage Views", "Could not find current view declaration");
         }

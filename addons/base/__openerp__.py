@@ -38,6 +38,7 @@
         "static/src/js/list-editable.js",
         "static/src/js/search.js",
         "static/src/js/view_tree.js",
+        "static/src/js/view_editor.js"
     ],
     'css' : [
         "static/lib/jquery.superfish/css/superfish.css",
