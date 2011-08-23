@@ -125,8 +125,14 @@ class res_currency(osv.osv):
         if not to_currency_id:
             to_currency_id = from_currency_id
 
-        xc = self.browse(cr, uid, [from_currency_id], context={'currency_rate_type_id': currency_rate_type_from})
-        xc1 = self.browse(cr, uid, [to_currency_id], context={'currency_rate_type_id': currency_rate_type_to})
+        context.update({'currency_rate_type_id': False})
+        if currency_rate_type_from:
+            context.update({'currency_rate_type_id': currency_rate_type_from})
+        if currency_rate_type_to:
+            context.update({'currency_rate_type_id': currency_rate_type_to})
+
+        xc = self.browse(cr, uid, [from_currency_id], context=context)
+        xc1 = self.browse(cr, uid, [to_currency_id], context=context)
         from_currency = (xc[0].id == from_currency_id and xc[0]) or xc[1]
         to_currency = (xc1[0].id == to_currency_id and xc1[0]) or xc1[1]
         if to_currency_id == from_currency_id:
