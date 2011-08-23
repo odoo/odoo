@@ -169,7 +169,7 @@ var QWeb2 = {
                     for (var i = 0; i < enu; i++) {
                         _enu.push(i);
                     }
-                    this.foreach(context, enu, as, old_dict, callback);
+                    this.foreach(context, _enu, as, old_dict, callback);
                 } else {
                     var index = 0;
                     for (var k in enu) {

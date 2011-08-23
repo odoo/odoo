@@ -105,7 +105,7 @@ openerp.base.list_editable = function (openerp) {
             }
 
             if (this.edition_index !== null) {
-                this.reload_record(this.edition_index, true).then(function () {
+                this.reload_record(this.edition_index).then(function () {
                     cancelled.resolve();
                 });
             } else {
@@ -142,6 +142,8 @@ openerp.base.list_editable = function (openerp) {
             this.cancel_pending_edition().then(function () {
                 var $new_row = $('<tr>', {
                         id: _.uniqueId('oe-editable-row-'),
+                        'data-id': $(row).data('id'),
+                        'data-index': $(row).data('index'),
                         'class': $(row).attr('class') + ' oe_forms',
                         click: function (e) {e.stopPropagation();}
                     })
@@ -209,6 +211,8 @@ openerp.base.list_editable = function (openerp) {
             var self = this;
             this.edition_form.do_save(function (result) {
                 if (result.created && !self.edition_index) {
+                    self.records.add({id: result.result},
+                        {at: self.options.editable === 'top' ? 0 : null});
                     self.edition_index = self.dataset.index;
                 }
                 self.cancel_pending_edition().then(function () {
@@ -236,12 +240,10 @@ openerp.base.list_editable = function (openerp) {
          */
         edit_record: function () {
             this.render_row_as_form(
-                this.$current.children(
-                    _.sprintf('[data-index=%d]',
-                            this.dataset.index)));
+                this.$current.children(':eq(' + this.dataset.index + ')'));
             $(this).trigger(
                 'edit',
-                [this.rows[this.dataset.index].data.id.value, this.dataset]);
+                [this.records.at(this.dataset.index).get('id'), this.dataset]);
         },
         new_record: function () {
             this.dataset.index = null;
