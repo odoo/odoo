@@ -110,7 +110,7 @@ class EmailParser(object):
         # pass message as bytes because we don't know its encoding until we parse its headers
         # and hence can't convert it to utf-8 for transport
         res_id = self.rpc('mail.thread',
-                          'process_email',
+                          'message_process',
                           self.model,
                           xmlrpclib.Binary(message),
                           custom_values)

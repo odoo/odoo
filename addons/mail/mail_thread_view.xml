@@ -1,7 +1,6 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-
         <record model="ir.ui.view" id="view_mailgate_thread_form">
             <field name="name">mail.thread.form</field>
             <field name="model">mail.thread</field>
@@ -17,7 +16,6 @@
                             <field name="subject" widget="char"/>
                             <field name="date"/>
                             <field name="user_id"/>
-                            <field name="message_id"/>
                             <notebook colspan="4">
                                 <page string="Email Details">
                                     <group col="4" colspan="4">
@@ -29,7 +27,6 @@
                                    </group>
                                 </page>
                                 <page string="Attachments">
-                                    <separator string="Attachments" colspan="4"/>
                                     <field name="attachment_ids" nolabel="1" colspan="4" />
                                 </page>
                             </notebook>

@@ -317,7 +317,7 @@ class XMLRpcConn(object):
             endCut = message_id.find(">")
             message_id = message_id[startCut:endCut+1]
             email.replace_header('Message-Id',message_id)
-            id = execute(conn,'execute',self._dbname,int(self._uid),self._pwd,'mail.thread','process_email',section, str(email))
+            id = execute(conn,'execute',self._dbname,int(self._uid),self._pwd,'mail.thread','message_process',section, str(email))
             if id > 0:
             	flag = True
             	return flag

@@ -484,7 +484,7 @@ class marketing_campaign_activity(osv.osv):
         return True
 
     def _process_wi_email(self, cr, uid, activity, workitem, context=None):
-        return self.pool.get('email.template').generate_mail(cr, uid,
+        return self.pool.get('email.template').send_mail(cr, uid,
                                             activity.email_template_id.id,
                                             [workitem.res_id], context=context)
 

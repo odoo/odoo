@@ -10,11 +10,11 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Email message">
-                    <group colspan="4" col="8">
-                       <field name="subject"/>
+                    <group colspan="4" col="6">
+                       <field name="subject" colspan="4"/>
                        <field name="date"/>
                        <field name="user_id" string="User"/>
-                       <field name="partner_id" readonly="1" />
+                       <field name="partner_id" readonly="1" attrs="{'invisible':[('partner_id', '=', False)]}"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Details">
@@ -22,17 +22,17 @@
                                 <separator string="Recipients" colspan="4"/>
                                 <field name="email_from"/>
                                 <field name="email_to"/>
-                                <field name="email_cc"/>
-                                <field name="email_bcc" groups="base.group_extended"/>
-                                <field name="reply_to"/>
+                                <field name="email_cc" attrs="{'invisible':[('email_cc', '=', False)]}"/>
+                                <field name="email_bcc" groups="base.group_extended" attrs="{'invisible':[('email_bcc', '=', False)]}"/>
+                                <field name="reply_to" attrs="{'invisible':[('reply_to', '=', False)]}"/>
                             </group>
                             <group col="4" colspan="2">
                                 <separator string="Message Details" colspan="4"/>
                                 <field name="model"/>
                                 <button name="open_document" string="Open" type="object" icon="gtk-jump-to" colspan="2"/>
                                 <field name="res_id" groups="base.group_extended"/>
-                                <field name="message_id" groups="base.group_extended" colspan="4"/>
-                                <field name="references" colspan="4" widget="char" size="4096" groups="base.group_extended"/>
+                                <field name="message_id" groups="base.group_extended" colspan="4" attrs="{'invisible':[('message_id', '=', False)]}"/>
+                                <field name="references" colspan="4" widget="char" size="512" groups="base.group_extended" attrs="{'invisible':[('references', '=', False)]}"/>
                             </group>
 
                             <notebook colspan="4">
@@ -49,7 +49,7 @@
                                 <field name="state" colspan="2"/>
                                 <group col="4" colspan="2">
                                     <button name="%(action_email_compose_message_wizard)d" string="Reply" type="action" icon="terp-mail-replied"
-                                    context="{'mail':'reply', 'message_id':active_id}" states='received,outgoing,sent,exception,cancel'/>
+                                    context="{'mail':'reply', 'message_id':active_id}" states='received,sent,exception,cancel'/>
                                     <button name="send" string="Send Now" type="object" icon="gtk-media-play" states='outgoing'/>
                                     <button name="mark_outgoing" string="Retry" type="object" icon="gtk-redo" states='exception,cancel'/>
                                     <button name="cancel" string="Cancel" type="object" icon="terp-gtk-stop" states='outgoing'/>
@@ -60,12 +60,13 @@
                             <separator string="Attachments" colspan="4"/>
                             <field name="attachment_ids" nolabel="1" colspan="4"/>
                         </page>
-                        <page string="Advanced">
+                        <page string="Advanced" groups="base.group_extended">
                             <group col="2" colspan="4">
-                                <field name="mail_server_id"/>
-                                <field name="subtype" groups="base.group_extended"/>
+                                <field name="mail_server_id" attrs="{'invisible':[('mail_server_id', '=', False)]}"/>
+                                <field name="subtype" attrs="{'invisible':[('subtype', '=', False)]}"/>
                                 <field name="auto_delete"/>
-                                <field name="headers" colspan="4" groups="base.group_extended" height="350"/>
+                                <field name="headers" colspan="4" attrs="{'invisible':[('headers', '=', False)]}"/>
+                                <field name="original" colspan="4" height="350" attrs="{'invisible':[('original', '=', False)]}"/>
                             </group>
                         </page>
                     </notebook>

@@ -83,7 +83,7 @@ class project_tasks(osv.osv):
         self.append_mail(cr, uid, [res_id], msg, context=context)
         return True
 
-    def thread_followers(self, cr, uid, ids, context=None):
+    def message_thread_followers(self, cr, uid, ids, context=None):
         res = []
         if isinstance(ids, (str, int, long)):
             select = [ids]

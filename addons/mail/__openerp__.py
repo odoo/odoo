@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2010-Today OpenERP S.A. (<http://www.openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -28,15 +28,28 @@
 A generic email subsystem with message storage and queuing
 ==========================================================
 
-    * Uses the global Outgoing Mail Servers for sending mail
+This email subsystem is not intended to be used as as standalone
+application, but to provide a unified email abstraction that all
+other applications can use.
+
+The main features are:
+
+    * Relies on the global Outgoing Mail Servers configured in the 
+      Administration menu for delivering outgoing mail
     * Provides an API for sending messages and archiving them,
       grouped by conversation
+    * Any OpenERP document can act as a conversation topic, provided
+      it includes the necessary support for handling incoming emails
+      (see the ``mail.thread`` class for more details). 
     * Includes queuing mechanism with automated configurable
       scheduler-based processing
-    * Includes a generic mail composition wizard, including
-      a simple mechanism for mass-mailing with the use of
-      basic templates - see ``email_template`` module for
-      more features
+    * Includes a generic email composition assistant, that can turn
+      into a mass-mailing assistant, and is capable of interpreting
+      simple *placeholder expressions* that will be replaced with
+      dynamic data when each email is actually sent.
+      This generic assistant is easily extensible to provide advanced
+      features (see ``email_template`` for example, which adds email
+      templating features to this assistant)
 
     """,
     'author': 'OpenERP SA',
@@ -44,7 +57,7 @@ A generic email subsystem with message storage and queuing
     'depends': ['base', 'base_tools'],
     'data': [
         "wizard/mail_compose_message_view.xml",
-        "mail_view.xml",
+        "mail_message_view.xml",
         "mail_thread_view.xml",
         "res_partner_view.xml",
         'security/ir.model.access.csv',

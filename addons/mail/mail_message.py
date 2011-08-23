@@ -78,14 +78,16 @@ class mail_message_common(osv.osv_memory):
         'email_cc': fields.char('Cc', size=256, help='Carbon copy message recipients'),
         'email_bcc': fields.char('Bcc', size=256, help='Blind carbon copy message recipients'),
         'reply_to':fields.char('Reply-To', size=256, help='Preferred response address for the message'),
-        'headers': fields.text('Message headers', help="Full message headers, e.g. SMTP session headers", readonly=1),
+        'headers': fields.text('Message headers', readonly=1,
+                               help="Full message headers, e.g. SMTP session headers "
+                                    "(usually available on inbound messages only)"),
         'message_id': fields.char('Message-Id', size=256, help='Message unique identifier', select=1, readonly=1),
         'references': fields.text('References', help='Message references, such as identifiers of previous messages', readonly=1),
         'subtype': fields.char('Message type', size=32, help="Type of message, usually 'html' or 'plain', used to "
                                                              "select plaintext or rich text contents accordingly", readonly=1),
         'body_text': fields.text('Text contents', help="Plain-text version of the message"),
         'body_html': fields.text('Rich-text contents', help="Rich-text/HTML version of the message"),
-        'original': fields.text('Original', help="Original version of the message, before being imported by the system", readonly=1),
+        'original': fields.text('Original', help="Original version of the message, as it was sent on the network", readonly=1),
     }
 
     _defaults = {
@@ -151,8 +153,8 @@ class mail_message(osv.osv):
             msg_txt = ''
             if message.email_from:
                 msg_txt += _('%s wrote on %s: \n Subject: %s \n\t') % (message.email_from or '/', format_date_tz(message.date, tz), message.subject)
-                if message.body:
-                    msg_txt += truncate_text(message.body)
+                if message.body_text:
+                    msg_txt += truncate_text(message.body_text)
             else:
                 msg_txt = (message.user_id.name or '/') + _(' on ') + format_date_tz(message.date, tz) + ':\n\t'
                 msg_txt += message.subject
@@ -175,10 +177,21 @@ class mail_message(osv.osv):
         'auto_delete': fields.boolean('Auto Delete', help="Permanently delete this email after sending it"),
     }
 
+    _defaults = {
+        'state': 'outgoing',
+    }
+
     def init(self, cr):
         cr.execute("""SELECT indexname FROM pg_indexes WHERE indexname = 'mail_message_model_res_id_idx'""")
         if not cr.fetchone():
             cr.execute("""CREATE INDEX mail_message_model_res_id_idx ON mail_message (model, res_id)""")
+
+    def copy(self, cr, uid, id, default=None, context=None):
+        """Overridden to avoid duplicating fields that are unique to each email"""
+        if default is None:
+            default = {}
+        default.update(message_id=False,original=False,headers=False)
+        return super(mail_message,self).copy(cr, uid, id, default=default, context=context)
 
     def schedule_with_attach(self, cr, uid, email_from, email_to, subject, body, model=False, email_cc=None,
                              email_bcc=None, reply_to=False, attachments=None, message_id=False, references=False,
@@ -474,7 +487,8 @@ class mail_message(osv.osv):
                                                 mail_server_id=message.mail_server_id.id,
                                                 context=context)
                 if res:
-                    message.write({'state':'sent', 'message_id': res})
+                    message.write({'state':'sent', 'message_id': res,
+                                   'original': msg.as_string(message.email_from)})
                 else:
                     message.write({'state':'exception'})
 

@@ -21,7 +21,7 @@
 
 import time
 import tools
-import binascii
+import base64
 import email
 from email.utils import parsedate
 
@@ -36,6 +36,8 @@ _logger = logging.getLogger('mail')
 class mail_thread(osv.osv):
     '''Mixin model, meant to be inherited by any model that needs to
        act as a discussion topic on which messages can be attached.
+       Public methods are prefixed in order to avoid name collisions
+       with existing methods of the models that will use this mixin.
 
        mail.thread adds a one2many of mail.messages, acting as thread
        history, and a few methods that may be overridden to implement
@@ -48,7 +50,7 @@ class mail_thread(osv.osv):
         'message_ids': fields.one2many('mail.message', 'res_id', 'Messages', readonly=True),
     }
 
-    def thread_followers(self, cr, uid, ids, context=None):
+    def message_thread_followers(self, cr, uid, ids, context=None):
         """Returns a list of email addresses of the people following
            this thread, including the sender of each mail, and the
            people who were in CC of the messages, if any.
@@ -78,7 +80,7 @@ class mail_thread(osv.osv):
         return super(mail_thread, self).copy(cr, uid, id, default, context=context)
 
     def message_new(self, cr, uid, msg_dict, custom_values=None, context=None):
-        """Called by ``process_email`` when a new message is received
+        """Called by ``message_process`` when a new message is received
            without referencing an existing thread. The default
            behavior is to create a new record of the corresponding
            model, then call ``append_mail()`` to attach a new
@@ -86,7 +88,7 @@ class mail_thread(osv.osv):
            Additional behavior may be implemented by overriding this method.
 
            :param dict msg_dict: a map containing the email details and
-                                 attachments. See ``process_email`` and
+                                 attachments. See ``message_process`` and
                                 ``mail.message.parse()`` for details.
            :param dict custom_values: optional dictionary of additional
                                       field values to pass to create()
@@ -115,7 +117,7 @@ class mail_thread(osv.osv):
         return res_id
 
     def message_update(self, cr, uid, ids, msg_dict, vals={}, default_act=None, context=None):
-        """Called by ``process_email`` when a new message is received
+        """Called by ``message_process`` when a new message is received
            for an existing thread. The default behavior is to create a
            new mail.message in the given thread by calling
            ``append_mail()``.
@@ -123,7 +125,7 @@ class mail_thread(osv.osv):
            method.
 
            :param dict msg_dict: a map containing the email details and
-                                attachments. See ``process_email`` and
+                                attachments. See ``message_process`` and
                                 ``mail.message.parse()`` for details.
            :param dict context: if a ``thread_model`` value is present
                                 in the context, its value will be used
@@ -140,7 +142,7 @@ class mail_thread(osv.osv):
            message.
 
            :param dict msg_dict: a map containing the email details and
-                                 attachments. See ``process_email`` and
+                                 attachments. See ``message_process`` and
                                 ``mail.message.parse()`` for details.
            :param dict context: if a ``thread_model`` value is present
                                 in the context, its value will be used
@@ -224,7 +226,7 @@ class mail_thread(osv.osv):
                     fcontent = fcontent.encode('utf-8')
                 data_attach = {
                     'name': fname,
-                    'datas': binascii.b2a_base64(str(fcontent)),
+                    'datas': base64.b64encode(str(fcontent)),
                     'datas_fname': fname,
                     'description': _('Mail attachment'),
                     'res_model': thread._name,
@@ -277,12 +279,12 @@ class mail_thread(osv.osv):
             mail_message.create(cr, uid, data, context=context)
         return True
 
-    def process_email(self, cr, uid, model, message, custom_values=None, context=None):
+    def message_process(self, cr, uid, model, message, custom_values=None, context=None):
         """Process an incoming RFC2822 email message related to the
            given thread model, relying on ``mail.message.parse()``
            for the parsing operation, and then calling ``message_new``
            (if the thread record did not exist) or ``message_update``
-           (if it did), then calling ``email_forward()`` to automatically
+           (if it did), then calling ``message_forward()`` to automatically
            notify other people that should receive this email.
 
            :param string model: the thread model for which a new message
@@ -346,10 +348,13 @@ class mail_thread(osv.osv):
         if not res_id:
             res_id = create_record(msg)
         #To forward the email to other followers
-        self.email_forward(cr, uid, model, [res_id], msg_txt, context=context)
+        self.message_forward(cr, uid, model, [res_id], msg_txt, context=context)
         return res_id
 
-    def email_forward(self, cr, uid, model, thread_ids, msg, email_error=False, context=None):
+    # for backwards-compatibility with old scripts
+    process_email = message_process
+
+    def message_forward(self, cr, uid, model, thread_ids, msg, email_error=False, context=None):
         """Sends an email to all people following the given threads.
            The emails are forwarded immediately, not queued for sending,
            and not archived.
@@ -365,10 +370,11 @@ class mail_thread(osv.osv):
         smtp_server_obj = self.pool.get('ir.mail_server')
         mail_message = self.pool.get('mail.message')
         for res in model_pool.browse(cr, uid, thread_ids, context=context):
-            if hasattr(model_pool, 'thread_followers'):
-                self.thread_followers = model_pool.thread_followers
-            thread_followers = self.thread_followers(cr, uid, [res.id])[res.id]
-            message_followers_emails = mail_message.to_email(','.join(filter(None, thread_followers)))
+            if hasattr(model_pool, 'message_thread_followers'):
+                followers = model_pool.message_thread_followers(cr, uid, [res.id])[res.id]
+            else:
+                followers = self.message_thread_followers(cr, uid, [res.id])[res.id]
+            message_followers_emails = mail_message.to_email(','.join(filter(None, followers)))
             message_recipients = mail_message.to_email(','.join(filter(None,
                                                                        [decode(msg['from']),
                                                                         decode(msg['to']),

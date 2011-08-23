@@ -501,7 +501,7 @@ class crm_case(crm_base):
     def format_mail(self, obj, body):
         return self.pool.get('base.action.rule').format_mail(obj, body)
 
-    def thread_followers(self, cr, uid, ids, context=None):
+    def message_thread_followers(self, cr, uid, ids, context=None):
         res = {}
         for case in self.browse(cr, uid, ids, context=context):
             l=[]
