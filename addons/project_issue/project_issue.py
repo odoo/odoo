@@ -116,6 +116,18 @@ class project_issue(crm.crm_case, osv.osv):
                         hours = cal_obj.interval_hours_get(cr, uid, issue.project_id.resource_calendar_id.id,
                                 datetime.strptime(issue.create_date, '%Y-%m-%d %H:%M:%S'),
                                 datetime.strptime(issue.date_closed, '%Y-%m-%d %H:%M:%S'))
+                elif field in ['days_since_creation']:
+                    if issue.create_date:
+                        days_since_creation = datetime.today() - datetime.strptime(issue.create_date, "%Y-%m-%d %H:%M:%S")
+                        res[issue.id][field] = days_since_creation.days
+                    continue
+
+                elif field in ['inactivity_days']:
+                    res[issue.id][field] = 0
+                    if issue.date_action_last:
+                        inactive_days = datetime.today() - datetime.strptime(issue.date_action_last, '%Y-%m-%d %H:%M:%S')
+                        res[issue.id][field] = inactive_days.days
+                    continue
                 if ans:
                     resource_id = False
                     if issue.user_id:
@@ -171,22 +183,24 @@ class project_issue(crm.crm_case, osv.osv):
         'active': fields.boolean('Active', required=False),
         'create_date': fields.datetime('Creation Date', readonly=True,select=True),
         'write_date': fields.datetime('Update Date', readonly=True),
+        'days_since_creation': fields.function(_compute_day, string='Days since creation date', \
+                                               multi='compute_day', type="integer", help="Difference in days between creation date and current date"),
         'date_deadline': fields.date('Deadline'),
         'section_id': fields.many2one('crm.case.section', 'Sales Team', \
                         select=True, help='Sales team to which Case belongs to.\
                              Define Responsible user and Email account for mail gateway.'),
         'user_id': fields.related('project_id', 'user_id', type='many2one', relation='res.users', store=True, select=1, string='Responsible'),
-        'partner_id': fields.many2one('res.partner', 'Partner'),
+        'partner_id': fields.many2one('res.partner', 'Partner', select=1),
         'partner_address_id': fields.many2one('res.partner.address', 'Partner Contact', \
                                  domain="[('partner_id','=',partner_id)]"),
         'company_id': fields.many2one('res.company', 'Company'),
         'description': fields.text('Description'),
-        'state': fields.selection([('draft', 'Draft'), ('open', 'To Do'), ('cancel', 'Cancelled'), ('done', 'Closed'),('pending', 'Pending'), ], 'State', size=16, readonly=True,
+        'state': fields.selection([('draft', 'New'), ('open', 'To Do'), ('cancel', 'Cancelled'), ('done', 'Closed'),('pending', 'Pending'), ], 'State', size=16, readonly=True,
                                   help='The state is set to \'Draft\', when a case is created.\
                                   \nIf the case is in progress the state is set to \'Open\'.\
                                   \nWhen the case is over, the state is set to \'Done\'.\
                                   \nIf the case needs to be reviewed then the state is set to \'Pending\'.'),
-        'email_from': fields.char('Email', size=128, help="These people will receive email."),
+        'email_from': fields.char('Email', size=128, help="These people will receive email.", select=1),
         'email_cc': fields.char('Watchers Emails', size=256, help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma"),
         'date_open': fields.datetime('Opened', readonly=True,select=True),
         # Project Issue fields
@@ -197,7 +211,7 @@ class project_issue(crm.crm_case, osv.osv):
         'categ_id': fields.many2one('crm.case.categ', 'Category', domain="[('object_id.model', '=', 'crm.project.bug')]"),
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),
         'version_id': fields.many2one('project.issue.version', 'Version'),
-        'partner_name': fields.char("Employee's Name", size=64),
+        'partner_name': fields.char("Partner Name", size=64),
         'partner_mobile': fields.char('Mobile', size=32),
         'partner_phone': fields.char('Phone', size=32),
         'type_id': fields.many2one ('project.task.type', 'Resolution', domain="[('project_ids', '=', project_id)]"),
@@ -213,6 +227,8 @@ class project_issue(crm.crm_case, osv.osv):
                                 multi='compute_day', type="float", store=True),
         'working_hours_close': fields.function(_compute_day, string='Working Hours to Close the Issue', \
                                 multi='compute_day', type="float", store=True),
+        'inactivity_days': fields.function(_compute_day, string='Days since last action', \
+                                multi='compute_day', type="integer", help="Difference in days between last action and current date"),
         'message_ids': fields.one2many('mailgate.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
         'date_action_last': fields.datetime('Last Action', readonly=1),
         'date_action_next': fields.datetime('Next Action', readonly=1),

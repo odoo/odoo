@@ -26,10 +26,10 @@ from datetime import datetime, date
 from tools.translate import _
 from osv import fields, osv
 
-class project_project(osv.osv):
-    _name = 'project.project'
-    
-project_project()    
+# I think we can remove this in v6.1 since VMT's improvements in the framework ?
+#class project_project(osv.osv):
+#    _name = 'project.project'
+#project_project()
 
 class project_task_type(osv.osv):
     _name = 'project.task.type'
@@ -39,13 +39,12 @@ class project_task_type(osv.osv):
         'name': fields.char('Stage Name', required=True, size=64, translate=True),
         'description': fields.text('Description'),
         'sequence': fields.integer('Sequence'),
+        'project_default': fields.boolean('Common to All Projects', help="If you check this field, this stage will be proposed by default on each new project. It will not assign this stage to existing projects."),
         'project_ids': fields.many2many('project.project', 'project_task_type_rel', 'type_id', 'project_id', 'Projects'),
     }
-
     _defaults = {
         'sequence': 1
     }
-
 project_task_type()
 
 class project(osv.osv):
@@ -150,11 +149,16 @@ class project(osv.osv):
         'warn_footer': fields.text('Mail Footer', help="Footer added at the beginning of the email for the warning message sent to the customer when a task is closed.", states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'type_ids': fields.many2many('project.task.type', 'project_task_type_rel', 'project_id', 'type_id', 'Tasks Stages', states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
      }
+    def _get_type_common(self, cr, uid, context):
+        ids = self.pool.get('project.task.type').search(cr, uid, [('project_default','=',1)], context=context)
+        return ids
+
     _order = "sequence"
     _defaults = {
         'active': True,
         'priority': 1,
         'sequence': 10,
+        'type_ids': _get_type_common
     }
 
     # TODO: Why not using a SQL contraints ?
