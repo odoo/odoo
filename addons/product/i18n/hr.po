@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-05-09 10:19+0000\n"
-"PO-Revision-Date: 2011-05-10 01:49+0000\n"
-"Last-Translator: Goran Kliska (Aplikacija d.o.o.) <gkliska@gmail.com>\n"
+"PO-Revision-Date: 2011-08-22 13:49+0000\n"
+"Last-Translator: Milan Tribuson <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-05-11 05:44+0000\n"
-"X-Generator: Launchpad (build 12959)\n"
+"X-Launchpad-Export-Date: 2011-08-23 05:47+0000\n"
+"X-Generator: Launchpad (build 13697)\n"
 
 #. module: product
 #: model:product.template,name:product.product_product_ram512_product_template
@@ -45,7 +45,7 @@ msgstr ""
 #. module: product
 #: model:product.category,name:product.cat1
 msgid "Sellable"
-msgstr "Može se prodati"
+msgstr "Može se prodavati"
 
 #. module: product
 #: model:product.template,name:product.product_product_mb2_product_template
@@ -95,6 +95,8 @@ msgid ""
 "Error: The default UOM and the Supplier Product UOM must be in the same "
 "category."
 msgstr ""
+"Greška: predefinirana JM i JM artikla dobavljača moraju biti iz iste "
+"kategorije"
 
 #. module: product
 #: field:product.template,seller_qty:0
@@ -138,7 +140,7 @@ msgstr "Naziv pravila"
 #: field:product.product,code:0
 #: field:product.product,default_code:0
 msgid "Reference"
-msgstr ""
+msgstr "Šifra"
 
 #. module: product
 #: constraint:product.category:0
@@ -151,6 +153,8 @@ msgid ""
 "The minimal quantity to trigger this rule, expressed in the supplier UoM if "
 "any or in the default UoM of the product otherrwise."
 msgstr ""
+"Mininalna količina za okidanje ovog pravila, izražena u nabavnoj JM ili u "
+"predefiniranoj JM artikla ukoliko nabavna JM nije upisana"
 
 #. module: product
 #: model:product.template,name:product.product_product_24_product_template
@@ -190,7 +194,7 @@ msgstr "Kategorije jedinica mjere"
 #. module: product
 #: model:product.template,name:product.product_product_cpu1_product_template
 msgid "Processor AMD Athlon XP 1800+"
-msgstr "Processor AMD Athlon XP 1800+"
+msgstr "Procesor AMD Athlon XP 1800+"
 
 #. module: product
 #: model:product.template,name:product.product_product_20_product_template
@@ -210,7 +214,7 @@ msgstr "Jed.mj."
 #. module: product
 #: model:product.uom,name:product.product_uom_unit
 msgid "PCE"
-msgstr "PCE"
+msgstr "KOM"
 
 #. module: product
 #: view:product.template:0
@@ -228,11 +232,12 @@ msgid ""
 "Determines if the product can be visible in the list of product within a "
 "selection from a sale order line."
 msgstr ""
+"Određuje vidljivost artikla u listi odabira artikala kod stavaka zaključnica"
 
 #. module: product
 #: model:product.pricelist.version,name:product.ver0
 msgid "Default Public Pricelist Version"
-msgstr "Zadana verzija javnog cjenika"
+msgstr "Predefinirna verzija javnog cjenika"
 
 #. module: product
 #: selection:product.template,cost_method:0
@@ -249,7 +254,7 @@ msgstr "Prodajni cjenik"
 #: view:product.template:0
 #: field:product.template,type:0
 msgid "Product Type"
-msgstr "Tip proizvoda"
+msgstr "Tip artikla"
 
 #. module: product
 #: view:product.uom:0
@@ -290,7 +295,7 @@ msgstr ""
 #. module: product
 #: model:process.node,note:product.process_node_supplier0
 msgid "Supplier name, price, product code, ..."
-msgstr ""
+msgstr "Naziv dobavljača, cijena, šifra artikla, ..."
 
 #. module: product
 #: model:product.template,name:product.product_product_hdd3_product_template
@@ -305,7 +310,7 @@ msgstr "EAN13"
 #. module: product
 #: field:product.template,seller_id:0
 msgid "Main Supplier"
-msgstr ""
+msgstr "Glavni dobavljač"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_ul_form_action
@@ -328,12 +333,12 @@ msgstr "Kategorija"
 msgid ""
 "The rule only applies if the partner buys/sells more than this quantity."
 msgstr ""
-"Pravilo se primjenjuje ssamo ako partner kupuje/prodaje više od ove količine."
+"Pravilo se primjenjuje samo ako partner kupuje/prodaje više od ove količine."
 
 #. module: product
 #: model:product.template,name:product.product_product_woodmm0_product_template
 msgid "Wood 2mm"
-msgstr ""
+msgstr "Drvo 2mm"
 
 #. module: product
 #: field:product.price_list,qty1:0
@@ -360,7 +365,7 @@ msgstr "Status"
 #. module: product
 #: help:product.template,categ_id:0
 msgid "Select category for the current product"
-msgstr ""
+msgstr "Odabir kategorije za trenutni artikl"
 
 #. module: product
 #: field:product.product,outgoing_qty:0
@@ -370,7 +375,7 @@ msgstr "Izlazno"
 #. module: product
 #: selection:product.uom,uom_type:0
 msgid "Reference UoM for this category"
-msgstr ""
+msgstr "Referentna JM za ovu kategoriju"
 
 #. module: product
 #: model:product.price.type,name:product.list_price
@@ -422,7 +427,7 @@ msgstr ""
 #: view:product.template:0
 #: field:product.template,description_sale:0
 msgid "Sale Description"
-msgstr "Prodajni opis"
+msgstr "Opis prodaje"
 
 #. module: product
 #: view:product.product:0
@@ -464,7 +469,7 @@ msgstr "Datum do kojeg vrijedi cjenik"
 #. module: product
 #: model:product.category,name:product.cat0
 msgid "All products"
-msgstr "Svi proizvodi"
+msgstr "Svi artikli"
 
 #. module: product
 #: model:ir.model,name:product.model_pricelist_partnerinfo
@@ -528,7 +533,7 @@ msgstr ""
 #. module: product
 #: model:product.template,name:product.product_product_metalcleats0_product_template
 msgid "Metal Cleats"
-msgstr ""
+msgstr "Metalni klinovi"
 
 #. module: product
 #: code:addons/product/pricelist.py:343
@@ -541,7 +546,7 @@ msgstr ""
 #. module: product
 #: model:ir.model,name:product.model_product_uom_categ
 msgid "Product uom categ"
-msgstr "Kateg. JM proizvoda"
+msgstr "Kategorija JM artikla"
 
 #. module: product
 #: model:product.ul,name:product.product_ul_box
@@ -662,12 +667,12 @@ msgstr "Dobavljač"
 #. module: product
 #: model:product.template,name:product.product_product_sidepanel0_product_template
 msgid "Side Panel"
-msgstr "Side Panel"
+msgstr "Bočni panel"
 
 #. module: product
 #: model:product.template,name:product.product_product_26_product_template
 msgid "Kit Keyboard + Mouse"
-msgstr "Pribor tipkovnica + miš"
+msgstr "Komplet tipkovnica + miš"
 
 #. module: product
 #: field:product.price.type,name:0
@@ -677,7 +682,7 @@ msgstr "Naziv cijene"
 #. module: product
 #: model:product.template,name:product.product_product_cpu3_product_template
 msgid "Processor AMD Athlon XP 2200+"
-msgstr "Processor AMD Athlon XP 2200+"
+msgstr "Procesor AMD Athlon XP 2200+"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.action_product_price_list
@@ -722,7 +727,7 @@ msgstr ""
 #. module: product
 #: model:product.category,name:product.product_category_accessories
 msgid "Accessories"
-msgstr "Oprema"
+msgstr "Dodatna oprema"
 
 #. module: product
 #: field:product.template,sale_delay:0
@@ -732,7 +737,7 @@ msgstr "Vrijeme vođenja kupca."
 #. module: product
 #: model:process.transition,name:product.process_transition_supplierofproduct0
 msgid "Supplier of the product"
-msgstr ""
+msgstr "Dobavljač artikla"
 
 #. module: product
 #: help:product.template,uos_id:0
@@ -801,8 +806,8 @@ msgid ""
 "Set a product if this rule only apply to one product. Keep empty for all "
 "products"
 msgstr ""
-"Odredite proizvod ako se ovo pravilo odnosi samo na jedan proizvod. Ostavite "
-"prazno ako vrijedi za sve proizvode."
+"Odaberite artikl ukoliko ovo pravilo vrijedi samo za jedan artikl. Ostavite "
+"prazno ukoliko pravilo vrijedi za sve artikle"
 
 #. module: product
 #: view:product.product:0
@@ -813,7 +818,7 @@ msgstr "Nabava i lokacije"
 #. module: product
 #: model:product.template,name:product.product_product_kitchendesignproject0_product_template
 msgid "Kitchen Design Project"
-msgstr ""
+msgstr "Projekt dizajna kuhinje"
 
 #. module: product
 #: model:product.uom,name:product.uom_hour
@@ -833,7 +838,7 @@ msgstr "Polica od 200cm"
 #. module: product
 #: view:product.uom:0
 msgid "Ratio & Precision"
-msgstr ""
+msgstr "Omjer & preciznost"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_gram
@@ -877,7 +882,7 @@ msgstr "Kategorije proizvoda"
 #. module: product
 #: view:product.uom:0
 msgid "  e.g: 1 * (reference unit) = ratio * (this unit)"
-msgstr ""
+msgstr "  npr: 1 * (referentna jedinica) = omjer * (trenutna jedinica)"
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_uom_form_action
@@ -917,7 +922,7 @@ msgstr "Posebna promjenjiva cijena"
 #. module: product
 #: model:product.template,name:product.product_product_fan_product_template
 msgid "Regular case fan 80mm"
-msgstr "Standardni ventilator kućišta 80mm"
+msgstr "Standardni ventilator za kućište 80mm"
 
 #. module: product
 #: model:ir.model,name:product.model_product_supplierinfo

@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2011-01-11 11:14+0000\n"
-"PO-Revision-Date: 2011-01-19 12:00+0000\n"
-"Last-Translator: Black Jack <onetimespeed@hotmail.com>\n"
+"PO-Revision-Date: 2011-08-22 09:52+0000\n"
+"Last-Translator: openerp-china.black-jack <onetimespeed@gmail.com>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-25 06:23+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-08-23 05:47+0000\n"
+"X-Generator: Launchpad (build 13697)\n"
 
 #. module: account_anglo_saxon
 #: view:product.category:0
@@ -25,43 +25,43 @@ msgstr " 会计属性"
 #. module: account_anglo_saxon
 #: sql_constraint:purchase.order:0
 msgid "Order Reference must be unique !"
-msgstr ""
+msgstr "单号必须唯一！"
 
 #. module: account_anglo_saxon
 #: constraint:product.category:0
 msgid "Error ! You can not create recursive categories."
-msgstr ""
+msgstr "错误!你不能创建递归的分类"
 
 #. module: account_anglo_saxon
 #: constraint:product.template:0
 msgid ""
 "Error: The default UOM and the purchase UOM must be in the same category."
-msgstr ""
+msgstr "错误:默认的计量单位和采购的计量单位必须是同一类型."
 
 #. module: account_anglo_saxon
 #: model:ir.model,name:account_anglo_saxon.model_account_invoice_line
 msgid "Invoice Line"
-msgstr ""
+msgstr "发票明细"
 
 #. module: account_anglo_saxon
 #: model:ir.model,name:account_anglo_saxon.model_purchase_order
 msgid "Purchase Order"
-msgstr ""
+msgstr "采购订单"
 
 #. module: account_anglo_saxon
 #: model:ir.model,name:account_anglo_saxon.model_product_template
 msgid "Product Template"
-msgstr ""
+msgstr "产品模板"
 
 #. module: account_anglo_saxon
 #: model:ir.model,name:account_anglo_saxon.model_product_category
 msgid "Product Category"
-msgstr ""
+msgstr "产品分类"
 
 #. module: account_anglo_saxon
 #: model:ir.module.module,shortdesc:account_anglo_saxon.module_meta_information
 msgid "Stock Accounting for Anglo Saxon countries"
-msgstr ""
+msgstr "新美国模式的库存会计"
 
 #. module: account_anglo_saxon
 #: field:product.category,property_account_creditor_price_difference_categ:0
@@ -72,12 +72,12 @@ msgstr "价格差异科目"
 #. module: account_anglo_saxon
 #: model:ir.model,name:account_anglo_saxon.model_account_invoice
 msgid "Invoice"
-msgstr ""
+msgstr "发票"
 
 #. module: account_anglo_saxon
 #: model:ir.model,name:account_anglo_saxon.model_stock_picking
 msgid "Picking List"
-msgstr ""
+msgstr "装箱单"
 
 #. module: account_anglo_saxon
 #: model:ir.module.module,description:account_anglo_saxon.module_meta_information
@@ -97,6 +97,11 @@ msgid ""
 "    Secondly, price differences between actual purchase price and fixed "
 "product standard price are booked on a separate account"
 msgstr ""
+"此模块支持按新美国会计模式更改会计逻辑和库存运作.\n"
+"新美国会计模式和欧洲大陆会计模式的不同在货物销售成本对应的销售成本不同.\n"
+"新美国会计模式的成本在在创建销售发票是完成,欧洲大陆会计模式的成本含货物运送成本.\n"
+"这模块通过使用一个临时性的科目来增加这功能.货物运输时的库存价值将保存在这临时科目,当创建发票时这金额将转借方或贷方科目.\n"
+"其次实际价格和固定的标准价格的差异价格保存在一个独立的科目."
 
 #. module: account_anglo_saxon
 #: help:product.category,property_account_creditor_price_difference_categ:0
@@ -104,4 +109,4 @@ msgstr ""
 msgid ""
 "This account will be used to value price difference between purchase price "
 "and cost price."
-msgstr "这科目将用于在采购价格和销售价格之间的价格差异"
+msgstr "这科目将用于采购价格和成本价格之间的差异"
