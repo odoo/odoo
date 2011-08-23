@@ -628,8 +628,8 @@ openerp.base.Header =  openerp.base.Widget.extend({
     on_preferences: function(){
         var self = this;
         var action_manager = new openerp.base.ActionManager(this);
-        this.rpc('/base/dataset/call', {model: 'res.users',method:"action_get",args: []},function(result){
-            self.rpc('/base/action/load', { action_id: result}, function(result){
+        var dataset = new openerp.base.DataSet (this,'res.users',this.context);
+        dataset.call ('action_get','',function (result){self.rpc('/base/action/load', {action_id:result}, function(result){
                 result['result']['res_id'] = self.session.uid;
                 result['result']['res_model']= 'res.users';
                 result['result']['view_id']=result['result']['views'][0][0];
@@ -641,7 +641,7 @@ openerp.base.Header =  openerp.base.Widget.extend({
                 result['result']['flags']['pager']=false;
                 action_manager.do_action(result['result']);
             });
-     });
+        });
         this.dialog = new openerp.base.Dialog(this,{
             modal: true,
             title: 'Preferences',
