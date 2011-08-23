@@ -18,20 +18,22 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
-from osv import fields,osv
-from tools.safe_eval import safe_eval as eval
-import tools
-import time
-from tools.config import config
-from tools.translate import _
-import netsvc
-import logging
-import re
+import ast
 import copy
+import logging
 import os
+import re
+import time
+import tools
 from xml import dom
+
+import netsvc
+from osv import fields,osv
 from report.report_sxw import report_sxw, report_rml
+from tools.config import config
+from tools.safe_eval import safe_eval as eval
+from tools.translate import _
+from socket import gethostname
 
 class actions(osv.osv):
     _name = 'ir.actions.actions'
@@ -162,13 +164,13 @@ class act_window(osv.osv):
 
     def _invalid_model_msg(self, cr, uid, ids, context=None):
         return _('Invalid model name in the action definition.')
-    
+
     _constraints = [
         (_check_model, _invalid_model_msg, ['res_model','src_model'])
     ]
 
     def _views_get_fnc(self, cr, uid, ids, name, arg, context=None):
-        """Returns an ordered list of the specific view modes that should be 
+        """Returns an ordered list of the specific view modes that should be
            enabled when displaying the result of this action, along with the
            ID of the specific view to use for each mode, if any were required.
 
@@ -208,7 +210,7 @@ class act_window(osv.osv):
             if act.search_view_id:
                 search_view_id = act.search_view_id.id
             else:
-                res_view = self.pool.get('ir.ui.view').search(cr, uid, 
+                res_view = self.pool.get('ir.ui.view').search(cr, uid,
                         [('model','=',act.res_model),('type','=','search'),
                         ('inherit_id','=',False)], context=context)
                 if res_view:
@@ -283,7 +285,6 @@ class act_window(osv.osv):
         'filter': fields.boolean('Filter'),
         'auto_search':fields.boolean('Auto Search'),
         'search_view' : fields.function(_search_view, type='text', method=True, string='Search View'),
-        'menus': fields.char('Menus', size=4096),
         'help': fields.text('Action description',
             help='Optional help text for the users with a description of the target view, such as its usage and purpose.',
             translate=True),
@@ -598,16 +599,18 @@ class actions_server(osv.osv):
         logger = logging.getLogger(self._name)
         if context is None:
             context = {}
+        user = self.pool.get('res.users').browse(cr, uid, uid)
         for action in self.browse(cr, uid, ids, context):
             obj_pool = self.pool.get(action.model_id.model)
             obj = obj_pool.browse(cr, uid, context['active_id'], context=context)
             cxt = {
                 'context': dict(context), # copy context to prevent side-effects of eval
                 'object': obj,
-                'time':time,
+                'time': time,
                 'cr': cr,
-                'pool' : self.pool,
-                'uid' : uid
+                'pool': self.pool,
+                'uid': uid,
+                'user': user
             }
             expr = eval(str(action.condition), cxt)
             if not expr:
@@ -629,13 +632,14 @@ class actions_server(osv.osv):
                     'uid': uid,
                     'object':obj,
                     'obj': obj,
+                    'user': user,
                 }
                 eval(action.code, localdict, mode="exec", nocopy=True) # nocopy allows to return 'action'
                 if 'action' in localdict:
                     return localdict['action']
 
             if action.state == 'email':
-                user = config['email_from']
+                email_from = config['email_from']
                 address = str(action.email)
                 try:
                     address =  eval(str(action.email), cxt)
@@ -643,16 +647,20 @@ class actions_server(osv.osv):
                     pass
 
                 if not address:
-                    logger.info('Partner Email address not Specified!')
+                    logger.info('No partner email address specified, not sending any email.')
                     continue
-                if not user:
-                    logger.info('Email-From address not Specified at server!')
-                    raise osv.except_osv(_('Error'), _("Please specify server option --email-from !"))
+                
+                if not email_from:
+                    logger.debug('--email-from command line option is not specified, using a fallback value instead.')
+                    if user.user_email:
+                        email_from = user.user_email
+                    else:
+                        email_from = "%s@%s" % (user.login, gethostname())
 
                 subject = self.merge_message(cr, uid, action.subject, action, context)
                 body = self.merge_message(cr, uid, action.message, action, context)
 
-                if tools.email_send(user, [address], subject, body, debug=False, subtype='html') == True:
+                if tools.email_send(email_from, [address], subject, body, debug=False, subtype='html') == True:
                     logger.info('Email successfully sent to: %s', address)
                 else:
                     logger.warning('Failed to send email to: %s', address)
@@ -808,7 +816,7 @@ class ir_actions_todo_category(osv.osv):
     _name = 'ir.actions.todo.category'
     _description = "Configuration Wizard Category"
     _columns = {
-         'name':fields.char('Name', size=64, translate=True, required=True), 
+         'name':fields.char('Name', size=64, translate=True, required=True),
          'sequence': fields.integer('Sequence'),
          'wizards_ids': fields.one2many('ir.actions.todo', 'category_id', 'Configuration Wizards'),
     }
@@ -816,10 +824,9 @@ ir_actions_todo_category()
 
 # This model use to register action services.
 TODO_STATES = [('open', 'To Do'),
-               ('done', 'Done'),
-               ('skip','Skipped'),
-               ('cancel','Cancelled')]
-
+               ('done', 'Done')]
+TODO_TYPES = [('manual', 'Launch Manually'),
+              ('automatic', 'Launch Automatically')]
 class ir_actions_todo(osv.osv):
     """
     Configuration Wizards
@@ -833,10 +840,9 @@ class ir_actions_todo(osv.osv):
         'sequence': fields.integer('Sequence'),
         'state': fields.selection(TODO_STATES, string='State', required=True),
         'name': fields.char('Name', size=64),
-        'type': fields.selection([('special','Special'),('normal','Normal'),('normal_recurring','Normal Recurring')], 'Type', required=True,
-            help="""Special: the wizard is run whenever the system is reconfigured.
-Normal: the wizard is visible in the configuration panel until it is done.
-Normal Recurring: the wizard is visible in the configuration panel regardless of its state."""),
+        'type': fields.selection(TODO_TYPES, 'Type', required=True,
+            help="""Manual: Launched manually.
+Automatic: Runs whenever the system is reconfigured."""),
         'groups_id': fields.many2many('res.groups', 'res_groups_action_rel', 'uid', 'gid', 'Groups'),
         'note': fields.text('Text', translate=True),
         'category_id': fields.many2one('ir.actions.todo.category','Category'),
@@ -844,33 +850,113 @@ Normal Recurring: the wizard is visible in the configuration panel regardless of
     _defaults={
         'state': 'open',
         'sequence': 10,
-        'type': 'special',
+        'type': 'manual',
     }
     _order="sequence,name,id"
 
     def action_launch(self, cr, uid, ids, context=None):
         """ Launch Action of Wizard"""
-        if context is None:
-            context = {}
         wizard_id = ids and ids[0] or False
         wizard = self.browse(cr, uid, wizard_id, context=context)
+        if wizard.type == 'automatic':
+            wizard.write({'state': 'done'})
+
+        # Load action
         res = self.pool.get('ir.actions.act_window').read(cr, uid, wizard.action_id.id, [], context=context)
-        res.update({'nodestroy': True})
+        res.setdefault('context','{}')
+        res['nodestroy'] = True
 
         # Open a specific record when res_id is provided in the context
-        if res.get('context'):
-            user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-            ctx = eval(res['context'], {'user': user})
-            if ctx.get('res_id'):
-                res.update({'res_id': ctx.pop('res_id')})
-                res.update({'context': ctx})
+        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+        ctx = eval(res['context'], {'user': user})
+        if ctx.get('res_id'):
+            res.update({'res_id': ctx.pop('res_id')})
+
+        # disable log for automatic wizards
+        if wizard.type == 'automatic':
+            ctx.update({'disable_log': True})
+        res.update({'context': ctx})
+
         return res
 
     def action_open(self, cr, uid, ids, context=None):
         """ Sets configuration wizard in TODO state"""
         return self.write(cr, uid, ids, {'state': 'open'}, context=context)
 
+    def progress(self, cr, uid, context=None):
+        """ Returns a dict with 3 keys {todo, done, total}.
+
+        These keys all map to integers and provide the number of todos
+        marked as open, the total number of todos and the number of
+        todos not open (which is basically a shortcut to total-todo)
+
+        :rtype: dict
+        """
+        user_groups = set(map(
+            lambda x: x.id,
+            self.pool['res.users'].browse(cr, uid, [uid], context=context)[0].groups_id))
+        def groups_match(todo):
+            """ Checks if the todo's groups match those of the current user
+            """
+            return not todo.groups_id \
+                   or bool(user_groups.intersection((
+                        group.id for group in todo.groups_id)))
+
+        done = filter(
+            groups_match,
+            self.browse(cr, uid,
+                self.search(cr, uid, ['&', ('state', '!=', 'open'), ('type', '=', 'manual')], context=context),
+                        context=context))
+
+        total = filter(
+            groups_match,
+            self.browse(cr, uid,
+                self.search(cr, uid, [('type', '=', 'manual')], context=context),
+                        context=context))
+
+        return {
+            'done': len(done),
+            'total': len(total),
+            'todo': len(total) - len(done)
+        }
+
 ir_actions_todo()
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+class act_client(osv.osv):
+    _name = 'ir.actions.client'
+    _inherit = 'ir.actions.actions'
+    _table = 'ir_act_client'
+    _sequence = 'ir_actions_id_seq'
+    _order = 'name'
 
+    def _get_params(self, cr, uid, ids, field_name, arg, context):
+        return dict([
+            ((record.id, ast.literal_eval(record.params_store))
+             if record.params_store else (record.id, False))
+            for record in self.browse(cr, uid, ids, context=context)
+        ])
+
+    def _set_params(self, cr, uid, ids, field_name, field_value, arg, context):
+        assert isinstance(field_value, dict), "params can only be dictionaries"
+        for record in self.browse(cr, uid, ids, context=context):
+            record.write({field_name: repr(field_value)})
+
+    _columns = {
+        'tag': fields.char('Client action tag', size=64, required=True,
+                           help="An arbitrary string, interpreted by the client"
+                                " according to its own needs and wishes. There "
+                                "is no central tag repository across clients."),
+        'params': fields.function(_get_params, fnct_inv=_set_params,
+                                  type='binary', method=True,
+                                  string="Supplementary arguments",
+                                  help="Arguments sent to the client along with"
+                                       "the view tag"),
+        'params_store': fields.binary("Params storage", readonly=True)
+    }
+    _defaults = {
+        'type': 'ir.actions.client',
+
+    }
+act_client()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

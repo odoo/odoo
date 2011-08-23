@@ -607,6 +607,8 @@ class orm_template(object):
 
     CONCURRENCY_CHECK_FIELD = '__last_update'
     def log(self, cr, uid, id, message, secondary=False, context=None):
+        if context and context.get('disable_log'):
+            return True
         return self.pool.get('res.log').create(cr, uid,
                 {
                     'name': message,
@@ -1555,8 +1557,10 @@ class orm_template(object):
                             attrs['selection'].append((False, ''))
                 fields[node.get('name')] = attrs
 
-                field = model_fields[node.get('name')]
-                transfer_field_to_modifiers(field, modifiers)
+                field = model_fields.get(node.get('name'))
+                if field:
+                    transfer_field_to_modifiers(field, modifiers)
+ 
 
         elif node.tag in ('form', 'tree'):
             result = self.view_header_get(cr, user, False, node.tag, context)
@@ -1763,7 +1767,7 @@ class orm_template(object):
         :param view_type: type of the view to return if view_id is None ('form', tree', ...)
         :param context: context arguments, like lang, time zone
         :param toolbar: true to include contextual actions
-        :param submenu: example (portal_project module)
+        :param submenu: deprecated
         :return: dictionary describing the composition of the requested view (including inherited views and extensions)
         :raise AttributeError:
                             * if the inherited view has unknown position to work with other than 'before', 'after', 'inside', 'replace'
@@ -1995,14 +1999,6 @@ class orm_template(object):
         result['arch'] = xarch
         result['fields'] = xfields
 
-        if submenu:
-            if context and context.get('active_id', False):
-                data_menu = self.pool.get('ir.ui.menu').browse(cr, user, context['active_id'], context).action
-                if data_menu:
-                    act_id = data_menu.id
-                    if act_id:
-                        data_action = self.pool.get('ir.actions.act_window').browse(cr, user, [act_id], context)[0]
-                        result['submenu'] = getattr(data_action, 'menus', False)
         if toolbar:
             def clean(x):
                 x = x[2]
