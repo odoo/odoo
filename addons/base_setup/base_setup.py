@@ -18,11 +18,14 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from osv import fields, osv
-import pooler
 import pytz
-from tools.translate import _
+
+import pooler
 import tools
+from osv import fields, osv
+from tools.translate import _
+
+#Application and feature chooser, this could be done by introspecting ir.modules
 
 class base_setup_installer(osv.osv_memory):
     _name = 'base.setup.installer'
@@ -134,8 +137,6 @@ class base_setup_installer(osv.osv_memory):
         if need_install:
             self.pool = pooler.restart_pool(cr.dbname, update_module=True)[1]
         return
-    
-base_setup_installer()
 
 #Migrate data from another application Conf wiz
 
@@ -152,8 +153,6 @@ class migrade_application_installer_modules(osv.osv_memory):
         'quickbooks_ippids': fields.boolean('Quickbooks Ippids',
             help="For Quickbooks Ippids"),
     }
-    
-migrade_application_installer_modules()
 
 class product_installer(osv.osv_memory):
     _name = 'product.installer'
@@ -165,7 +164,7 @@ class product_installer(osv.osv_memory):
     _defaults = {
                  'customers': 'create',
     }
-    
+
     def execute(self, cr, uid, ids, context=None):
         if context is None:
              context = {}
@@ -187,10 +186,7 @@ class product_installer(osv.osv_memory):
         if val.customers == 'import':
             return {'type': 'ir.actions.act_window'}
 
-product_installer()
-
-
-#       Define default users preferences config wiz
+# Define users preferences for new users (ir.values)
 
 def _lang_get(self, cr, uid, context=None):
     obj = self.pool.get('res.lang')
@@ -245,12 +241,10 @@ class user_preferences_config(osv.osv_memory):
             ir_values_obj.set(cr, uid, 'default', False, 'menu_tips', ['res.users'], o.menu_tips)
         return {}
 
-user_preferences_config()
-
 # Specify Your Terminology
 
 class specify_partner_terminology(osv.osv_memory):
-    _name = 'specify.partner.terminology'
+    _name = 'base.setup.terminology'
     _inherit = 'res.config'
     _columns = {
         'partner': fields.selection([('Customer','Customer'),
@@ -267,7 +261,7 @@ class specify_partner_terminology(osv.osv_memory):
     _defaults={
                'partner' :'Partner',
     }
-    
+
     def make_translations(self, cr, uid, ids, name, type, src, value, res_id=0, context=None):
         trans_obj = self.pool.get('ir.translation')
         user_obj = self.pool.get('res.users')
@@ -278,7 +272,7 @@ class specify_partner_terminology(osv.osv_memory):
         else:
             create_id = trans_obj.create(cr, uid, {'name': name,'lang': context_lang, 'type': type, 'src': src, 'value': value , 'res_id': res_id}, context=context)
         return {}
-    
+
     def execute(self, cr, uid, ids, context=None):
         def _case_insensitive_replace(ref_string, src, value):
             import re
@@ -317,8 +311,5 @@ class specify_partner_terminology(osv.osv_memory):
                 act_ref = 'ir.actions.act_window' + ',' + 'help'
                 self.make_translations(cr, uid, ids, act_ref, 'model', act_id.help, _case_insensitive_replace(act_id.help,'Customer',o.partner), res_id=act_id.id, context=context)
         return {}
-    
-specify_partner_terminology()
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
