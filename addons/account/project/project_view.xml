@@ -216,12 +216,6 @@
                             <filter string="My Entries" domain="[('user_id','=',uid)]" icon="terp-personal"/>
                         </field>
                     </group>
-					<newline/>
-                    <group expand="0" string="Extended Filters...">
-                        <field name="journal_id" widget="selection"/>
-                        <field name="product_id" widget="selection"/>
-                        <field name="amount" select="1"/>
-                    </group>
                     <newline/>
                     <group string="Group By..." expand="0">
                         <filter string="Account" context="{'group_by':'account_id'}" groups="base.group_extended" icon="terp-folder-green"/>

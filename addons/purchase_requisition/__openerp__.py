@@ -22,6 +22,7 @@
     "version" : "0.1",
     "author" : "OpenERP SA",
     "category" : "Purchases",
+    'complexity': "easy",
     "images" : ['images/purchase_requisitions.jpeg'],
     "website" : "http://www.openerp.com",
     "description": """

@@ -22,7 +22,7 @@
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 import time
-
+import pooler
 from osv import fields, osv
 from tools.translate import _
 import decimal_precision as dp
@@ -205,7 +205,7 @@ class sale_order(osv.osv):
             ('invoice_except', 'Invoice Exception'),
             ('done', 'Done'),
             ('cancel', 'Cancelled')
-            ], 'Order State', readonly=True, help="Gives the state of the quotation or sales order. \nThe exception state is automatically set when a cancel operation occurs in the invoice validation (Invoice Exception) or in the picking list process (Shipping Exception). \nThe 'Waiting Schedule' state is set when the invoice is confirmed but waiting for the scheduler to run on the date 'Ordered Date'.", select=True),
+            ], 'Order State', readonly=True, help="Givwizard = self.browse(cr, uid, ids)[0]es the state of the quotation or sales order. \nThe exception state is automatically set when a cancel operation occurs in the invoice validation (Invoice Exception) or in the picking list process (Shipping Exception). \nThe 'Waiting Schedule' state is set when the invoice is confirmed but waiting for the scheduler to run on the date 'Ordered Date'.", select=True),
         'date_order': fields.date('Ordered Date', required=True, readonly=True, select=True, states={'draft': [('readonly', False)]}),
         'create_date': fields.date('Creation Date', readonly=True, select=True, help="Date on which sales order is created."),
         'date_confirm': fields.date('Confirmation Date', readonly=True, select=True, help="Date on which sales order is confirmed."),
@@ -1175,42 +1175,93 @@ sale_order_line()
 class sale_config_picking_policy(osv.osv_memory):
     _name = 'sale.config.picking_policy'
     _inherit = 'res.config'
-
     _columns = {
         'name': fields.char('Name', size=64),
+        'sale_orders': fields.boolean('Based on Sales Orders',),
+        'deli_orders': fields.boolean('Based on Delivery Orders'),
+        'task_work': fields.boolean('Based on Tasks\' Work'),
+        'timesheet': fields.boolean('Based on Timesheet'),
         'order_policy': fields.selection([
             ('manual', 'Invoice Based on Sales Orders'),
             ('picking', 'Invoice Based on Deliveries'),
-        ], 'Invoicing Method', required=True,
-           help="You can generate invoices based on sales orders or based on shippings."),
-        'step': fields.selection([
-            ('one', 'Delivery Order Only'),
-            ('two', 'Picking List & Delivery Order')
-        ], 'Steps To Deliver a Sales Order', required=True,
-           help="By default, OpenERP is able to manage complex routing and paths "\
-           "of products in your warehouse and partner locations. This will configure "\
-           "the most common and simple methods to deliver products to the customer "\
-           "in one or two operations by the worker.")
+        ], 'Main Method Based On', required=True, help="You can generate invoices based on sales orders or based on shippings."),
+        'charge_delivery': fields.boolean('Do you charge the delivery'),
+        'time_unit': fields.many2one('product.uom','Main Working Time Unit')
     }
     _defaults = {
         'order_policy': 'manual',
-        'step': 'one'
     }
+
+    def onchange_order(self, cr, uid, ids, sale, deli, context=None):
+        res = {}
+        if sale or deli:
+            res.update({'order_policy': 'manual'})
+        elif not sale and not deli:
+            res.update({'order_policy': 'manual'})
+        else:
+            return {}
+        return {'value':res}
 
     def execute(self, cr, uid, ids, context=None):
         ir_values_obj = self.pool.get('ir.values')
-        ir_model_data_obj = self.pool.get('ir.model.data')
-        stock_location_obj = self.pool.get('stock.location')
-        location_id = ir_model_data_obj.get_object_reference(cr, uid, 'stock', 'stock_location_output')
-        location_id = location_id and location_id[1] or False
-        chaining_type = False
-        for o in self.browse(cr, uid, ids, context=context):
-            ir_values_obj.set(cr, uid, 'default', False, 'order_policy', ['sale.order'], o.order_policy)
-            if o.step == 'one':
-                chaining_type = 'transparent'
-            else:
-                chaining_type = 'manual'
-            stock_location_obj.write(cr, uid, [location_id], {'chained_auto_packing': chaining_type})
+        data_obj = self.pool.get('ir.model.data')
+        menu_obj = self.pool.get('ir.ui.menu')
+        module_obj = self.pool.get('ir.module.module')
+        module_upgrade_obj = self.pool.get('base.module.upgrade')
+        module_name = []
+        group_ids=[]
+        group_name = ['group_sale_salesman','group_sale_manager']
+
+        for name in group_name:
+            data_id = data_obj.name_search(cr, uid, name)
+            group_ids.append(data_obj.browse(cr,uid,data_id[0][0]).res_id)
+
+        wizard = self.browse(cr, uid, ids)[0]
+
+        if wizard.sale_orders:
+            menu_name = 'menu_invoicing_sales_order_lines'
+            data_id = data_obj.name_search(cr, uid, menu_name)
+            menu_id = data_obj.browse(cr,uid,data_id[0][0]).res_id
+            menu_obj.write(cr, uid, menu_id, {'groups_id':[(4,group_ids[0]),(4,group_ids[1])]}) 
+
+        if wizard.deli_orders:
+            menu_name = 'menu_action_picking_list_to_invoice'
+            data_id = data_obj.name_search(cr, uid, menu_name)
+            menu_id = data_obj.browse(cr,uid,data_id[0][0]).res_id
+            menu_obj.write(cr, uid, menu_id, {'groups_id':[(4,group_ids[0]),(4,group_ids[1])]})
+
+        if wizard.task_work:
+            module_name.append('project_timesheet')
+            module_name.append('account_analytic_analysis')
+
+        if wizard.timesheet:
+            module_name.append('account_analytic_analysis')
+
+        if wizard.charge_delivery:
+            module_name.append('delivery')    
+
+        if wizard.time_unit:
+            product_obj = self.pool.get('product.product')
+            product_id = product_obj.name_search(cr, uid, 'Employee')
+            product_obj.write(cr, uid, product_id[0][0], {'uom_id':wizard.time_unit.id})
+
+        if len(module_name):
+            module_ids = []
+            need_install = False
+            module_ids = []
+            for module in module_name:
+                data_id = module_obj.name_search(cr,uid,module)
+                module_ids.append(data_id[0][0])
+
+            for module in module_obj.browse(cr, uid, module_ids):
+                if module.state == 'uninstalled':
+                    module_obj.state_update(cr, uid, [module.id], 'to install', ['uninstalled'], context)
+                    need_install = True
+                    cr.commit()
+            if need_install:
+                pooler.restart_pool(cr.dbname, update_module=True)[1]
+
+        ir_values_obj.set(cr, uid, 'default', False, 'order_policy', ['sale.order'], wizard.order_policy)  
 
 sale_config_picking_policy()
 

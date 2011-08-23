@@ -25,6 +25,7 @@
     'version': '0.1',
     'category': 'General',
     'category': 'Profile',
+    'complexity': "normal",
     'description': """
 This module is to configure modules related to an association.
 ==============================================================

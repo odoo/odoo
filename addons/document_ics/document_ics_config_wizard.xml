@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
         <record id="view_document_ics_config_directories" model="ir.ui.view">
@@ -12,16 +11,15 @@
                   <attribute name="string">Configure Calendars for CRM Sections</attribute>
                 </form>
                 <separator string="title" position="attributes">
-                <attribute name="string"
-                       >Create Pre-Configured Calendars</attribute>
+                <attribute name="string">Create Pre-Configured Calendars</attribute>
                   </separator>
                   <xpath expr="//label[@string='description']" position="attributes">
                     <attribute name="string">OpenERP can create and pre-configure a series of integrated calendar for you.</attribute>
                     <attribute name="width">200</attribute>
                   </xpath>
-                   <xpath expr='//separator[@string="vsep"]' position='attributes'>
-                          <attribute name='rowspan'>15</attribute>
-                          <attribute name='string'></attribute>
+                   <xpath expr="//separator[@string=&quot;vsep&quot;]" position="attributes">
+                          <attribute name="rowspan">15</attribute>
+                          <attribute name="string"/>
                   </xpath>
                   <xpath expr="//button[@name='action_next']" position="attributes">
                     <attribute name="string">Configure</attribute>
@@ -56,9 +54,7 @@
         <record id="config_wizard_step_case_section_menu" model="ir.actions.todo">
             <field name="action_id" ref="action_view_document_ics_config_directories"/>
             <field name="category_id" ref="document.category_knowledge_mgmt_config"/>
-            <field name="type">special</field>
-            <field name="state">skip</field>
+            <field name="type">automatic</field>
         </record>
      </data>
 </openerp>
-

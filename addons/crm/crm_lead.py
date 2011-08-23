@@ -126,11 +126,11 @@ class crm_lead(crm_case, osv.osv):
 
         # From crm.case
         'id': fields.integer('ID'),
-        'name': fields.char('Name', size=64),
+        'name': fields.char('Name', size=64, select=1),
         'active': fields.boolean('Active', required=False),
         'date_action_last': fields.datetime('Last Action', readonly=1),
         'date_action_next': fields.datetime('Next Action', readonly=1),
-        'email_from': fields.char('Email', size=128, help="E-mail address of the contact"),
+        'email_from': fields.char('Email', size=128, help="E-mail address of the contact", select=1),
         'section_id': fields.many2one('crm.case.section', 'Sales Team', \
                         select=True, help='Sales team to which this case belongs to. Defines responsible user and e-mail address for the mail gateway.'),
         'create_date': fields.datetime('Creation Date' , readonly=True),
@@ -142,11 +142,10 @@ class crm_lead(crm_case, osv.osv):
         'categ_id': fields.many2one('crm.case.categ', 'Category', \
             domain="['|',('section_id','=',section_id),('section_id','=',False), ('object_id.model', '=', 'crm.lead')]"),
         'type_id': fields.many2one('crm.case.resource.type', 'Campaign', \
-            domain="['|',('section_id','=',section_id),('section_id','=',False)]"),
-        'channel_id': fields.many2one('res.partner.canal', 'Lead Source'),
-
+            domain="['|',('section_id','=',section_id),('section_id','=',False)]", help="From which campaign (seminar, marketing campaign, mass mailing, ...) did this contact come from?"),
+        'channel_id': fields.many2one('res.partner.canal', 'Channel', help="From which channel (mail, direct, phone, ...) did this contact reach you?"),
         'contact_name': fields.char('Contact Name', size=64),
-        'partner_name': fields.char("Customer Name", size=64,help='The name of the future partner that will be created while converting the into opportunity'),
+        'partner_name': fields.char("Customer Name", size=64,help='The name of the future partner that will be created while converting the into opportunity', select=1),
         'optin': fields.boolean('Opt-In', help="If opt-in is checked, this contact has accepted to receive emails."),
         'optout': fields.boolean('Opt-Out', help="If opt-out is checked, this contact has refused to receive emails or unsubscribed to a campaign."),
         'type':fields.selection([
@@ -157,7 +156,7 @@ class crm_lead(crm_case, osv.osv):
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),
         'date_closed': fields.datetime('Closed', readonly=True),
         'stage_id': fields.many2one('crm.case.stage', 'Stage', domain="[('type','=','lead')]"),
-        'user_id': fields.many2one('res.users', 'Salesman'),
+        'user_id': fields.many2one('res.users', 'Salesman', select=1),
         'referred': fields.char('Referred By', size=64),
         'date_open': fields.datetime('Opened', readonly=True),
         'day_open': fields.function(_compute_day, string='Days to Open', \
