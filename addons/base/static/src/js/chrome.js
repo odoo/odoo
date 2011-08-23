@@ -585,28 +585,26 @@ openerp.base.Header =  openerp.base.Widget.extend({
             $(sc.binding).bind({
                 'add': function (e, attrs) {
                     shortcuts_ds.create(attrs, function (out) {
-                        var $shortcut = $('<li>', {
-                        'data-shortcut-id':out.result,
-                        'data-id': attrs.res_id
+                        $('<li>', {
+                            'data-shortcut-id':out.result,
+                            'data-id': attrs.res_id
                         }).text(attrs.name)
                         .appendTo(self.$element.find('.oe-shortcuts ul'));
                         attrs.id = out.result;
-                        sc.splice(sc.lenght,0,attrs);
-                        sc.push.apply(sc);
+                        sc.push(attrs);
                     });
-                    
-                },
+            },
                 'remove-current': function () {
                     var menu_id = self.session.active_id;
                     var $shortcut = self.$element
-                            .find('.oe-shortcuts li[data-id=' + menu_id + ']');
+                        .find('.oe-shortcuts li[data-id=' + menu_id + ']');
                     var shortcut_id = $shortcut.data('shortcut-id');
                     $shortcut.remove();
                     shortcuts_ds.unlink([shortcut_id]);
-                    sc1 = _.reject(sc, function(shortcut){ return shortcut_id === shortcut.id});
+                    var sc_new = _.reject(sc, function(shortcut){ return shortcut_id === shortcut.id});
                     sc.splice(0, sc.length);
-                    sc.push.apply(sc ,sc1);
-                }
+                    sc.push.apply(sc,sc_new);
+                    }
             });
         }
         return this.rpc('/base/session/sc_list', {}, function(shortcuts) {
