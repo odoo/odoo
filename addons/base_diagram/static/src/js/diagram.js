@@ -225,7 +225,7 @@ openerp.base_diagram.DiagramView = openerp.base.View.extend({
         if ($('div#dia-canvas').children().length > 0) {
         	$('div#dia-canvas').children().remove();
         }
-        var renderer = new Graph.Renderer.Raphael('dia-canvas', dia, 600, 600);
+        var renderer = new Graph.Renderer.Raphael('dia-canvas', dia, $('div#dia-canvas').width(), $('div#dia-canvas').height());
         renderer.draw();
 		
     },
