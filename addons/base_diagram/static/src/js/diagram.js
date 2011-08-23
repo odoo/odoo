@@ -156,6 +156,8 @@ openerp.base_diagram.DiagramView = openerp.base.View.extend({
         var renderer= function(r, n) {
         var node;
         var set;
+        
+        // ellipse
         if (n.node.shape == 'ellipse') {
             var node = r.ellipse(n.node.x - 30, n.node.y - 13, 40, 20).attr({
                     "fill": n.node.color,
@@ -164,18 +166,20 @@ openerp.base_diagram.DiagramView = openerp.base.View.extend({
                 });
             
             set = r.set().push(node).push(r.text(n.node.x - 30, n.node.y - 10, (n.label || n.id)));
-        } 
-		else if(n.node.shape == 'rectangle')
-		{
+        }
+        
+        // rectangle
+		else if(n.node.shape == 'rectangle') {
 			var node = r.rect(n.node.x-30, n.node.y-13, 60, 44).attr({
              	"fill": n.node.color, 
                  r : "12px", 
                 "stroke-width" : n.distance == 0 ? "3px" : "1px" 
                 });
         	set = r.set().push(node).push(r.text(n.node.x , n.node.y+5 , (n.label || n.id)));
-		} 
-		else 
-		{
+		}
+        
+        // circle
+		else {
             var node = r.circle(n.node.x, n.node.y, 150).attr({
                         "fill": n.node.color, 
                         r : "30px", 
@@ -183,16 +187,25 @@ openerp.base_diagram.DiagramView = openerp.base.View.extend({
                 });
            	set = r.set().push(node).push(r.text(n.node.x , n.node.y , (n.label || n.id)));
 		}
-            jQuery(node.node).attr({
-                'id': n.node.id,
-                'name': n.id,
-                'kind': n.node.options['Kind'] || n.node.options['kind']
-            })
-            jQuery(node.node).dblclick(function() {
-                var $this = jQuery(this);
-                self.search_activity($this.attr('id'), $this.attr('name'), $this.attr('kind'))
-            })
-            return set;
+        
+        jQuery(node.node).attr({
+            'id': n.node.id,
+            'name': n.id,
+            'kind': n.node.options['Kind'] || n.node.options['kind']
+        }).dblclick(function() {
+            var $this = jQuery(this);
+            self.search_activity($this.attr('id'), $this.attr('name'), $this.attr('kind'))
+        });
+        
+        jQuery(node.next.node).attr({
+            'id': n.node.id,
+            'name': n.id,
+            'kind': n.node.options['Kind'] || n.node.options['kind']
+        }).dblclick(function() {
+            var $this = jQuery(this);
+            self.search_activity($this.attr('id'), $this.attr('name'), $this.attr('kind'))
+        });
+        return set;
         }
         
         
@@ -235,17 +248,34 @@ openerp.base_diagram.DiagramView = openerp.base.View.extend({
     },
     
     popup_activity: function(result) {
-    	
-    	var ds = new openerp.base.DataSetSearch(this, this.node);
-    	ds.ids = result.ids;
-    	ds.model = this.node;
-    	ds.count = result.ids.length;
-//    	ds.index = jQuery.inArray(parseInt(result.activity_id,10), result.ids);
-        this.form_dialog = new openerp.base_diagram.DiagramFormDialog(this, {}, this.options.action_views_ids.form, ds);
-        this.form_dialog.start();
-        this.form_dialog.form.do_show();
-        this.form_dialog.open();
-        return false;
+    	var action_manager = new openerp.base.ActionManager(this);
+    	var dialog = new openerp.base.Dialog(this, {
+            title : 'Activity',
+            width: 800,
+            height: 600,
+            buttons : {
+                Cancel : function() {
+                    $(this).dialog('destroy');
+                },
+                Save : function() {
+                    $(this).dialog('destroy');
+                }
+            }
+        }).start().open();
+    	action_manager.appendTo(dialog.$element);
+    	action_manager.do_action({
+            res_model : this.node,
+            res_id: result.activity_id[0],
+            views : [[false, 'form']],
+            type : 'ir.actions.act_window',
+            auto_search : false,
+            flags : {
+    			search_view: false,
+                sidebar : false,
+                views_switcher : false,
+                action_buttons : false
+            }
+        });
     },
     
     do_search: function(domains, contexts, groupbys) {
