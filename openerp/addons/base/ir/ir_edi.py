@@ -129,14 +129,14 @@ class ir_edi_document(osv.osv):
         for edi_document in edi_documents:
             module = edi_document.get('__module')
             module_id = module_obj.search(cr, uid, [('name','=',module),('state','=','installed')])
-            if module_id:
+            if  not module_id:
+                raise Exception("The document you are trying to import requires the OpenERP" +module+ "application")
+            else:
                 model = edi_document.get('__model')
                 assert model, _('model should be provided in EDI Dict')
                 model_obj = self.pool.get(model)
                 record_id = model_obj.edi_import(cr, uid, edi_document, context=context)
                 res.append((model,record_id))
-            else:
-                raise osv.except_osv(_('Invalid action !'), _('Module is not Installed'))
         return res
     
     def deserialize(self, edi_document_string):
@@ -323,7 +323,7 @@ class edi(object):
         dict_list = []
         
         for record in records:
-            dict_list.append(self.edi_o2m(cr, uid, [record], context=None))
+            dict_list.append(self.edi_m2o(cr, uid, [record], context=None))
       
         return dict_list
 
