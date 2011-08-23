@@ -97,9 +97,7 @@ openerp.base_default_home = function (openerp) {
                 this, 'ir.module.module', null, [['name', '=', module_name], ['state', '=', 'uninstalled']]);
             var Upgrade = new openerp.base.DataSet(this, 'base.module.upgrade');
 
-            $.blockUI({
-                message: '<img src="/base_default_home/static/src/img/throbber.gif">'
-            });
+            $.blockUI({message:'<img src="/base/static/src/img/throbber2.gif">'});
             Modules.read_slice(['id'], {}, function (records) {
                 if (!(records.length === 1)) { return; }
                 Modules.call('state_update',
