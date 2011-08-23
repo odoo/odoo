@@ -346,7 +346,10 @@ openerp.base.FormView = openerp.base.View.extend( /** @lends openerp.base.FormVi
                 });
             }
         } else {
-            return false;
+            setTimeout(function() {
+                self.on_saved({ result: true }, success);
+            });
+            return true;
         }
     },
     do_save_edit: function() {
@@ -424,10 +427,10 @@ openerp.base.FormView = openerp.base.View.extend( /** @lends openerp.base.FormVi
         this.notification.notify("Cancelling form");
     },
     reload: function() {
-        if (this.datarecord.id) {
-            this.dataset.read_index(_.keys(this.fields_view.fields), this.on_record_loaded);
-        } else {
+        if (this.dataset.index == null || this.dataset.index < 0) {
             this.on_button_new();
+        } else {
+            this.dataset.read_index(_.keys(this.fields_view.fields), this.on_record_loaded);
         }
     },
     get_fields_values: function() {
@@ -1098,8 +1101,8 @@ openerp.base.form.FieldDatetime = openerp.base.form.Field.extend({
     focus: function() {
         this.$element.find('input').focus();
     },
-    parse: openerp.base.parse_datetime,
-    format: openerp.base.format_datetime
+    parse: openerp.base.str_to_datetime,
+    format: openerp.base.datetime_to_str
 });
 
 openerp.base.form.FieldDate = openerp.base.form.FieldDatetime.extend({
@@ -1108,8 +1111,8 @@ openerp.base.form.FieldDate = openerp.base.form.FieldDatetime.extend({
         this.jqueryui_object = 'datepicker';
         this.validation_regex = /^\d+-\d+-\d+$/;
     },
-    parse: openerp.base.parse_date,
-    format: openerp.base.format_date
+    parse: openerp.base.str_to_date,
+    format: openerp.base.date_to_str
 });
 
 openerp.base.form.FieldFloatTime = openerp.base.form.FieldChar.extend({
