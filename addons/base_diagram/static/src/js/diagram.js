@@ -235,11 +235,13 @@ openerp.base_diagram.DiagramView = openerp.base.View.extend({
     },
     
     popup_activity: function(result) {
-        this.dataset.ids = result.ids;
-        this.dataset.model = this.node;
-        this.dataset.count = result.ids.length;
-        this.dataset.index = jQuery.inArray(parseInt(result.activity_id,10), result.ids);
-        this.form_dialog = new openerp.base_diagram.DiagramFormDialog(this, {}, this.options.action_views_ids.form, this.dataset);
+    	
+    	var ds = new openerp.base.DataSetSearch(this, this.node);
+    	ds.ids = result.ids;
+    	ds.model = this.node;
+    	ds.count = result.ids.length;
+//    	ds.index = jQuery.inArray(parseInt(result.activity_id,10), result.ids);
+        this.form_dialog = new openerp.base_diagram.DiagramFormDialog(this, {}, this.options.action_views_ids.form, ds);
         this.form_dialog.start();
         this.form_dialog.form.do_show();
         this.form_dialog.open();
