@@ -35,11 +35,9 @@ class report_account_common(report_sxw.rml_parse, common_report_header):
             'get_account': self._get_account,
             'get_start_period': self.get_start_period,
             'get_end_period': self.get_end_period,
-            'get_sortby': self._get_sortby,
             'get_filter': self._get_filter,
             'get_start_date':self._get_start_date,
             'get_end_date':self._get_end_date,
-            'get_company':self._get_company,
             'get_account_details': self.get_account_details,
         })
         self.context = context
@@ -59,11 +57,12 @@ class report_account_common(report_sxw.rml_parse, common_report_header):
         name = data['form'].get('account_report_id') and data['form']['account_report_id'][1] or ''
         report_id = data['form'].get('account_report_id') and data['form']['account_report_id'][0] or False
         datas.append({'id': report_id})
+        ctx = self.context.copy()
         if report_id:
             child_ids = report_obj.search(cr, uid, [('parent_id','=',report_id)])
             child_ids.append(datas[0]['id'])
-            for child in report_obj.browse(cr, uid, child_ids):
-                balance = self.get_report_balance(child)
+            for child in report_obj.browse(cr, uid, child_ids, context=ctx):
+                balance = self.get_report_balance(child, child_ids, ctx)
                 if child.id == datas[0]['id']:
                     datas[0].update({'name': child.name, 'balance': balance})
                 else:
@@ -74,14 +73,27 @@ class report_account_common(report_sxw.rml_parse, common_report_header):
         cr, uid = self.cr, self.uid
         report_obj = self.pool.get('account.report')
         accounts = []
+
+        ctx = self.context.copy()
+        ctx['fiscalyear'] = data['form'].get('fiscalyear_id', False)
+
+        if data['form']['filter'] == 'filter_period':
+            ctx['period_from'] = data['form'].get('period_from', False)
+            ctx['period_to'] =  data['form'].get('period_to', False)
+        elif data['form']['filter'] == 'filter_date':
+            ctx['date_from'] = data['form'].get('date_from', False)
+            ctx['date_to'] =  data['form'].get('date_to', False)
+
         if acc_id and data['form'].get('account_details', False):
-            for rpt in report_obj.browse(cr, uid, [acc_id]):
-                for acc in rpt.account_ids:
-                    accounts.append({'code': acc.code, 'name': acc.name, 'bal': acc.balance})
+            for rpt in report_obj.browse(cr, uid, [acc_id], context=ctx):
+                accounts = [acc for acc in rpt.account_ids if acc.level != 0]
         return accounts
 
-    def get_report_balance(self, child):
+    def get_report_balance(self, child, child_ids, context=None):
+        cr, uid = self.cr, self.uid
+        report_obj = self.pool.get('account.report')
         balance = 0.0
+        # it's the sum of balance of the linked accounts
         if child.type == 'accounts':
             for a in child.account_ids:
                 balance += a.balance
@@ -91,7 +103,7 @@ class report_account_common(report_sxw.rml_parse, common_report_header):
                 balance += a.balance
         #it's the sum of balance of the children of this account.report (if there isn't, then it's 0.0)
         if child.type == 'sum':
-            for child in report_obj.browse(cr, uid, child_ids):
+            for child in report_obj.browse(cr, uid, child_ids, context=context):
                 for a in child.account_ids:
                     balance += a.balance
         return balance
