@@ -22,6 +22,7 @@
 import tools
 
 from partner import *
+from bank import *
 from crm import *
 import edi_partner
 import wizard

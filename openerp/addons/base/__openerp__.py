@@ -25,6 +25,7 @@
     'name': 'Base',
     'version': '1.3',
     'category': 'Generic Modules/Base',
+    'complexity': "easy",
     'description': """The kernel of OpenERP, needed for all installation.""",
     'author': 'OpenERP SA',
     'maintainer': 'OpenERP SA',
@@ -53,7 +54,6 @@
         'module/wizard/base_import_language_view.xml',
         'module/wizard/base_module_upgrade_view.xml',
         'module/wizard/base_module_configuration_view.xml',
-        'module/wizard/base_module_shortcut_data.xml',
         'module/wizard/base_export_language_view.xml',
         'module/wizard/base_update_translations_view.xml',
         'res/res_request_view.xml',
@@ -62,7 +62,7 @@
         'res/partner/partner_report.xml',
         'res/partner/partner_view.xml',
         'res/partner/partner_shortcut_data.xml',
-        'res/bank_view.xml',
+        'res/partner/bank_view.xml',
         'res/country_view.xml',
         'res/res_currency_view.xml',
         'res/partner/crm_view.xml',
@@ -74,7 +74,6 @@
         'res/ir_property_view.xml',
         'security/base_security.xml',
         'publisher_warranty/publisher_warranty_view.xml',
-
         'security/ir.model.access.csv',
         'res/res_widget_view.xml',
         'res/res_widget_data.xml',
@@ -93,7 +92,6 @@
         'test/bug_lp541545.xml',
         'test/test_osv_expression.yml',
         'test/test_ir_rule.yml', # <-- These tests modify/add/delete ir_rules.
-        'test/test_config_users.yml',
         'test/test_ir_values.yml',
         'test/test_edi_documents.yml',
         

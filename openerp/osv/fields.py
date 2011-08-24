@@ -19,18 +19,19 @@
 #
 ##############################################################################
 
-# . Fields:
-#      - simple
-#      - relations (one2many, many2one, many2many)
-#      - function
-#
-# Fields Attributes:
-#   _classic_read: is a classic sql fields
-#   _type   : field type
-#   readonly
-#   required
-#   size
-#
+""" Fields:
+      - simple
+      - relations (one2many, many2one, many2many)
+      - function
+
+    Fields Attributes:
+        * _classic_read: is a classic sql fields
+        * _type   : field type
+        * readonly
+        * required
+        * size
+"""
+
 import datetime as DT
 import string
 import sys
@@ -51,6 +52,12 @@ def _symbol_set(symb):
 
 
 class _column(object):
+    """ Base of all fields, a database column
+    
+        An instance of this object is a *description* of a database column. It will
+        not hold any data, but only provide the methods to manipulate data of an
+        ORM record or even prepare/update the database to hold such a field of data.
+    """
     _classic_read = True
     _classic_write = True
     _prefetch = True
@@ -520,12 +527,24 @@ class one2many(_column):
             elif act[0] == 2:
                 obj.unlink(cr, user, [act[1]], context=context)
             elif act[0] == 3:
-                cr.execute('update '+_table+' set '+self._fields_id+'=null where id=%s', (act[1],))
+                reverse_rel = obj._all_columns.get(self._fields_id)
+                assert reverse_rel, 'Trying to unlink the content of a o2m but the pointed model does not have a m2o'
+                # if the model has on delete cascade, just delete the row
+                if reverse_rel.column.ondelete == "cascade":
+                    obj.unlink(cr, user, [act[1]], context=context)
+                else:
+                    cr.execute('update '+_table+' set '+self._fields_id+'=null where id=%s', (act[1],))
             elif act[0] == 4:
                 # Must use write() to recompute parent_store structure if needed
                 obj.write(cr, user, [act[1]], {self._fields_id:id}, context=context or {})
             elif act[0] == 5:
-                cr.execute('update '+_table+' set '+self._fields_id+'=null where '+self._fields_id+'=%s', (id,))
+                reverse_rel = obj._all_columns.get(self._fields_id)
+                assert reverse_rel, 'Trying to unlink the content of a o2m but the pointed model does not have a m2o'
+                # if the model has on delete cascade, just delete the rows
+                if reverse_rel.column.ondelete == "cascade":
+                    obj.unlink(cr, user, obj.search(cr, user, [(self._fields_id,'=',id)], context=context), context=context)
+                else:
+                    cr.execute('update '+_table+' set '+self._fields_id+'=null where '+self._fields_id+'=%s', (id,))
             elif act[0] == 6:
                 # Must use write() to recompute parent_store structure if needed
                 obj.write(cr, user, act[2], {self._fields_id:id}, context=context or {})
@@ -632,7 +651,7 @@ class many2many(_column):
             if not (isinstance(act, list) or isinstance(act, tuple)) or not act:
                 continue
             if act[0] == 0:
-                idnew = obj.create(cr, user, act[2])
+                idnew = obj.create(cr, user, act[2], context=context)
                 cr.execute('insert into '+self._rel+' ('+self._id1+','+self._id2+') values (%s,%s)', (id, idnew))
             elif act[0] == 1:
                 obj.write(cr, user, [act[1]], act[2], context=context)
@@ -692,24 +711,21 @@ class many2many(_column):
                 obj.datas[id][name] = act[2]
 
 
-def get_nice_size(a):
-    (x,y) = a
-    if isinstance(y, (int,long)):
-        size = y
-    elif y:
-        size = len(y)
-    else:
-        size = 0
-    return (x, tools.human_size(size))
+def get_nice_size(value):
+    size = 0
+    if isinstance(value, (int,long)):
+        size = value
+    elif value: # this is supposed to be a string
+        size = len(value)
+    return tools.human_size(size)
 
-def sanitize_binary_value(dict_item):
+def sanitize_binary_value(value):
     # binary fields should be 7-bit ASCII base64-encoded data,
     # but we do additional sanity checks to make sure the values
     # are not something else that won't pass via xmlrpc
-    index, value = dict_item
     if isinstance(value, (xmlrpclib.Binary, tuple, list, dict)):
         # these builtin types are meant to pass untouched
-        return index, value
+        return value
 
     # For all other cases, handle the value as a binary string:
     # it could be a 7-bit ASCII string (e.g base64 data), but also
@@ -730,13 +746,199 @@ def sanitize_binary_value(dict_item):
     # is not likely to produce the expected output, but this is
     # just a safety mechanism (in these cases base64 data or
     # xmlrpc.Binary values should be used instead)
-    return index, tools.ustr(value)
+    return tools.ustr(value)
 
 
 # ---------------------------------------------------------
 # Function fields
 # ---------------------------------------------------------
 class function(_column):
+    """
+    A field whose value is computed by a function (rather
+    than being read from the database).
+
+    :param fnct: the callable that will compute the field value.
+    :param arg: arbitrary value to be passed to ``fnct`` when computing the value.
+    :param fnct_inv: the callable that will allow writing values in that field
+                     (if not provided, the field is read-only).
+    :param fnct_inv_arg: arbitrary value to be passed to ``fnct_inv`` when
+                         writing a value.
+    :param str type: type of the field simulated by the function field
+    :param fnct_search: the callable that allows searching on the field
+                        (if not provided, search will not return any result).
+    :param store: store computed value in database
+                  (see :ref:`The *store* parameter <field-function-store>`).
+    :type store: True or dict specifying triggers for field computation
+    :param multi: name of batch for batch computation of function fields.
+                  All fields with the same batch name will be computed by
+                  a single function call. This changes the signature of the
+                  ``fnct`` callable.
+
+    .. _field-function-fnct: The ``fnct`` parameter
+
+    .. rubric:: The ``fnct`` parameter
+
+    The callable implementing the function field must have the following signature:
+
+    .. function:: fnct(model, cr, uid, ids, field_name(s), arg, context)
+
+        Implements the function field.
+
+        :param orm_template model: model to which the field belongs (should be ``self`` for
+                                   a model method)
+        :param field_name(s): name of the field to compute, or if ``multi`` is provided,
+                              list of field names to compute.
+        :type field_name(s): str | [str]
+        :param arg: arbitrary value passed when declaring the function field
+        :rtype: dict
+        :return: mapping of ``ids`` to computed values, or if multi is provided,
+                 to a map of field_names to computed values
+
+    The values in the returned dictionary must be of the type specified by the type
+    argument in the field declaration.
+
+    Here is an example with a simple function ``char`` function field::
+
+        # declarations
+        def compute(self, cr, uid, ids, field_name, arg, context):
+            result = {}
+            # ...
+            return result
+        _columns['my_char'] = fields.function(compute, type='char', size=50)
+
+        # when called with ``ids=[1,2,3]``, ``compute`` could return:
+        {
+            1: 'foo',
+            2: 'bar',
+            3: False # null values should be returned explicitly too
+        }
+
+    If ``multi`` is set, then ``field_name`` is replaced by ``field_names``: a list
+    of the field names that should be computed. Each value in the returned
+    dictionary must then be a dictionary mapping field names to values.
+
+    Here is an example where two function fields (``name`` and ``age``)
+    are both computed by a single function field::
+
+        # declarations
+        def compute(self, cr, uid, ids, field_names, arg, context):
+            result = {}
+            # ...
+            return result
+        _columns['name'] = fields.function(compute_person_data, type='char',\
+                                           size=50, multi='person_data')
+        _columns[''age'] = fields.function(compute_person_data, type='integer',\
+                                           multi='person_data')
+
+        # when called with ``ids=[1,2,3]``, ``compute_person_data`` could return:
+        {
+            1: {'name': 'Bob', 'age': 23},
+            2: {'name': 'Sally', 'age': 19},
+            3: {'name': 'unknown', 'age': False}
+        }
+
+    .. _field-function-fnct-inv:
+
+    .. rubric:: The ``fnct_inv`` parameter
+
+    This callable implements the write operation for the function field
+    and must have the following signature:
+
+    .. function:: fnct_inv(model, cr, uid, ids, field_name, field_value, fnct_inv_arg, context)
+
+        Callable that implements the ``write`` operation for the function field.
+
+        :param orm_template model: model to which the field belongs (should be ``self`` for
+                                   a model method)
+        :param str field_name: name of the field to set
+        :param fnct_inv_arg: arbitrary value passed when declaring the function field
+        :return: True
+
+    When writing values for a function field, the ``multi`` parameter is ignored.
+
+    .. _field-function-fnct-search:
+
+    .. rubric:: The ``fnct_search`` parameter
+
+    This callable implements the search operation for the function field
+    and must have the following signature:
+
+    .. function:: fnct_search(model, cr, uid, model_again, field_name, criterion, context)
+
+        Callable that implements the ``search`` operation for the function field by expanding
+        a search criterion based on the function field into a new domain based only on
+        columns that are stored in the database.
+
+        :param orm_template model: model to which the field belongs (should be ``self`` for
+                                   a model method)
+        :param orm_template model_again: same value as ``model`` (seriously! this is for backwards
+                                         compatibility)
+        :param str field_name: name of the field to search on
+        :param list criterion: domain component specifying the search criterion on the field.
+        :rtype: list
+        :return: domain to use instead of ``criterion`` when performing the search.
+                 This new domain must be based only on columns stored in the database, as it
+                 will be used directly without any translation.
+
+        The returned value must be a domain, that is, a list of the form [(field_name, operator, operand)].
+        The most generic way to implement ``fnct_search`` is to directly search for the records that
+        match the given ``criterion``, and return their ``ids`` wrapped in a domain, such as
+        ``[('id','in',[1,3,5])]``.
+
+    .. _field-function-store:
+
+    .. rubric:: The ``store`` parameter
+
+    The ``store`` parameter allows caching the result of the field computation in the
+    database, and defining the triggers that will invalidate that cache and force a
+    recomputation of the function field.
+    When not provided, the field is computed every time its value is read.
+    The value of ``store`` may be either ``True`` (to recompute the field value whenever
+    any field in the same record is modified), or a dictionary specifying a more
+    flexible set of recomputation triggers.
+
+    A trigger specification is a dictionary that maps the names of the models that
+    will trigger the computation, to a tuple describing the trigger rule, in the
+    following form::
+
+        store = {
+            'trigger_model': (mapping_function,
+                              ['trigger_field1', 'trigger_field2'],
+                              priority),
+        }
+
+    A trigger rule is defined by a 3-item tuple where:
+
+        * The ``mapping_function`` is defined as follows:
+
+            .. function:: mapping_function(trigger_model, cr, uid, trigger_ids, context)
+
+                Callable that maps record ids of a trigger model to ids of the
+                corresponding records in the source model (whose field values
+                need to be recomputed).
+
+                :param orm_template model: trigger_model
+                :param list trigger_ids: ids of the records of trigger_model that were
+                                         modified
+                :rtype: list
+                :return: list of ids of the source model whose function field values
+                         need to be recomputed
+
+        * The second item is a list of the fields who should act as triggers for
+          the computation. If an empty list is given, all fields will act as triggers.
+        * The last item is the priority, used to order the triggers when processing them
+          after any write operation on a model that has function field triggers. The
+          default priority is 10.
+
+    In fact, setting store = True is the same as using the following trigger dict::
+
+        store = {
+              'model_itself': (lambda self, cr, uid, ids, context: ids,
+                               [],
+                               10)
+        }
+
+    """
     _classic_read = False
     _classic_write = False
     _prefetch = False
@@ -746,10 +948,9 @@ class function(_column):
 #
 # multi: compute several fields in one call
 #
-    def __init__(self, fnct, arg=None, fnct_inv=None, fnct_inv_arg=None, type='float', fnct_search=None, obj=None, method=False, store=False, multi=False, **args):
+    def __init__(self, fnct, arg=None, fnct_inv=None, fnct_inv_arg=None, type='float', fnct_search=None, obj=None, store=False, multi=False, **args):
         _column.__init__(self, **args)
         self._obj = obj
-        self._method = method
         self._fnct = fnct
         self._fnct_inv = fnct_inv
         self._arg = arg
@@ -806,44 +1007,40 @@ class function(_column):
             return []
         return self._fnct_search(obj, cr, uid, obj, name, args, context=context)
 
-    def get(self, cr, obj, ids, name, user=None, context=None, values=None):
+    def postprocess(self, cr, uid, obj, field, value=None, context=None):
         if context is None:
             context = {}
-        if values is None:
-            values = {}
-        res = {}
-        if self._method:
-            res = self._fnct(obj, cr, user, ids, name, self._arg, context)
-        else:
-            res = self._fnct(cr, obj._table, ids, name, self._arg, context)
+        result = value
+        field_type = obj._columns[field]._type
+        if field_type == "many2one":
+            # make the result a tuple if it is not already one
+            if isinstance(value, (int,long)) and hasattr(obj._columns[field], 'relation'):
+                obj_model = obj.pool.get(obj._columns[field].relation)
+                dict_names = dict(obj_model.name_get(cr, uid, [value], context))
+                result = (value, dict_names[value])
 
-        if self._type == "many2one" :
-            # Filtering only integer/long values if passed
-            res_ids = [x for x in res.values() if x and isinstance(x, (int,long))]
-
-            if res_ids:
-                obj_model = obj.pool.get(self._obj)
-                dict_names = dict(obj_model.name_get(cr, user, res_ids, context))
-                for r in res.keys():
-                    if res[r] and res[r] in dict_names:
-                        res[r] = (res[r], dict_names[res[r]])
-
-        if self._type == 'binary':
+        if field_type == 'binary':
             if context.get('bin_size', False):
                 # client requests only the size of binary fields
-                res = dict(map(get_nice_size, res.items()))
+                result = get_nice_size(value)
             else:
-                res = dict(map(sanitize_binary_value, res.items()))
+                result = sanitize_binary_value(value)
 
-        if self._type == "integer":
-            for r in res.keys():
-                # Converting value into string so that it does not affect XML-RPC Limits
-                if isinstance(res[r],dict): # To treat integer values with _multi attribute
-                    for record in res[r].keys():
-                        res[r][record] = str(res[r][record])
-                else:
-                    res[r] = str(res[r])
-        return res
+        if field_type == "integer":
+            result = tools.ustr(value)
+        return result
+
+    def get(self, cr, obj, ids, name, uid=False, context=None, values=None):
+        result = self._fnct(obj, cr, uid, ids, name, self._arg, context)
+        for id in ids:
+            if self._multi and id in result:
+                for field, value in result[id].iteritems():
+                    if value:
+                        result[id][field] = self.postprocess(cr, uid, obj, field, value, context)
+            elif result.get(id):
+                result[id] = self.postprocess(cr, uid, obj, name, result[id], context)
+        return result
+
     get_memory = get
 
     def set(self, cr, obj, id, name, value, user=None, context=None):
@@ -858,6 +1055,15 @@ class function(_column):
 # ---------------------------------------------------------
 
 class related(function):
+    """Field that points to some data inside another field of the current record.
+
+    Example::
+
+       _columns = {
+           'foo_id': fields.many2one('my.foo', 'Foo'),
+           'bar': fields.related('frol', 'foo_id', type='char', string='Frol of Foo'),
+        }
+    """
 
     def _fnct_search(self, tobj, cr, uid, obj=None, name=None, domain=None, context=None):
         self._field_get2(cr, uid, obj, context)
@@ -939,6 +1145,9 @@ class related(function):
         if self._type=='many2one':
             ids = filter(None, res.values())
             if ids:
+                # name_get as root, as seeing the name of a related
+                # object depends on access right of source document,
+                # not target, so user may not have access.
                 ng = dict(obj.pool.get(self._obj).name_get(cr, 1, ids, context=context))
                 for r in res:
                     if res[r]:
@@ -952,7 +1161,7 @@ class related(function):
     def __init__(self, *arg, **args):
         self.arg = arg
         self._relations = []
-        super(related, self).__init__(self._fnct_read, arg, self._fnct_write, fnct_inv_arg=arg, method=True, fnct_search=self._fnct_search, **args)
+        super(related, self).__init__(self._fnct_read, arg, self._fnct_write, fnct_inv_arg=arg, fnct_search=self._fnct_search, **args)
         if self.store is True:
             # TODO: improve here to change self.store = {...} according to related objects
             pass
@@ -989,7 +1198,7 @@ class dummy(function):
     def __init__(self, *arg, **args):
         self.arg = arg
         self._relations = []
-        super(dummy, self).__init__(self._fnct_read, arg, self._fnct_write, fnct_inv_arg=arg, method=True, fnct_search=None, **args)
+        super(dummy, self).__init__(self._fnct_read, arg, self._fnct_write, fnct_inv_arg=arg, fnct_search=None, **args)
 
 # ---------------------------------------------------------
 # Serialized fields
@@ -1003,34 +1212,30 @@ class serialized(_column):
         self._symbol_get = self._deserialize_func
         super(serialized, self).__init__(string=string, **args)
 
-
 # TODO: review completly this class for speed improvement
 class property(function):
 
     def _get_default(self, obj, cr, uid, prop_name, context=None):
-        return self._get_defaults(obj, cr, uid, [prop_name], context=None)[0][prop_name]
+        return self._get_defaults(obj, cr, uid, [prop_name], context=None)[prop_name]
 
-    def _get_defaults(self, obj, cr, uid, prop_name, context=None):
+    def _get_defaults(self, obj, cr, uid, prop_names, context=None):
+        """Get the default values for ``prop_names´´ property fields (result of ir.property.get() function for res_id = False).
+
+           :param list of string prop_names: list of name of property fields for those we want the default value
+           :return: map of property field names to their default value
+           :rtype: dict
+        """
         prop = obj.pool.get('ir.property')
-        domain = [('fields_id.model', '=', obj._name), ('fields_id.name','in',prop_name), ('res_id','=',False)]
-        ids = prop.search(cr, uid, domain, context=context)
-        replaces = {}
-        default_value = {}.fromkeys(prop_name, False)
-        for prop_rec in prop.browse(cr, uid, ids, context=context):
-            if default_value.get(prop_rec.fields_id.name, False):
-                continue
-            value = prop.get_by_record(cr, uid, prop_rec, context=context) or False
-            default_value[prop_rec.fields_id.name] = value
-            if value and (prop_rec.type == 'many2one'):
-                replaces.setdefault(value._name, {})
-                replaces[value._name][value.id] = True
-        return default_value, replaces
+        res = {}
+        for prop_name in prop_names:
+            res[prop_name] = prop.get(cr, uid, prop_name, obj._name, context=context)
+        return res
 
     def _get_by_id(self, obj, cr, uid, prop_name, ids, context=None):
         prop = obj.pool.get('ir.property')
         vids = [obj._name + ',' + str(oid) for oid in  ids]
 
-        domain = [('fields_id.model', '=', obj._name), ('fields_id.name','in',prop_name)]
+        domain = [('fields_id.model', '=', obj._name), ('fields_id.name', 'in', prop_name)]
         #domain = prop._get_domain(cr, uid, prop_name, obj._name, context)
         if vids:
             domain = [('res_id', 'in', vids)] + domain
@@ -1065,41 +1270,47 @@ class property(function):
             }, context=context)
         return False
 
+    def _fnct_read(self, obj, cr, uid, ids, prop_names, obj_dest, context=None):
+        prop = obj.pool.get('ir.property')
+        # get the default values (for res_id = False) for the property fields 
+        default_val = self._get_defaults(obj, cr, uid, prop_names, context)
 
-    def _fnct_read(self, obj, cr, uid, ids, prop_name, obj_dest, context=None):
-        properties = obj.pool.get('ir.property')
-        domain = [('fields_id.model', '=', obj._name), ('fields_id.name','in',prop_name)]
-        domain += [('res_id','in', [obj._name + ',' + str(oid) for oid in  ids])]
-        nids = properties.search(cr, uid, domain, context=context)
-        default_val,replaces = self._get_defaults(obj, cr, uid, prop_name, context)
-
+        # build the dictionary that will be returned
         res = {}
         for id in ids:
             res[id] = default_val.copy()
 
-        brs = properties.browse(cr, uid, nids, context=context)
-        for prop in brs:
-            value = properties.get_by_record(cr, uid, prop, context=context)
-            res[prop.res_id.id][prop.fields_id.name] = value or False
-            if value and (prop.type == 'many2one'):
-                record_exists = obj.pool.get(value._name).exists(cr, uid, value.id)
-                if record_exists:
-                    replaces.setdefault(value._name, {})
-                    replaces[value._name][value.id] = True
-                else:
-                    res[prop.res_id.id][prop.fields_id.name] = False
-
-        for rep in replaces:
-            nids = obj.pool.get(rep).search(cr, uid, [('id','in',replaces[rep].keys())], context=context)
-            replaces[rep] = dict(obj.pool.get(rep).name_get(cr, uid, nids, context=context))
-
-        for prop in prop_name:
+        for prop_name in prop_names:
+            property_field = obj._all_columns.get(prop_name).column
+            property_destination_obj = property_field._obj if property_field._type == 'many2one' else False
+            # If the property field is a m2o field, we will append the id of the value to name_get_ids
+            # in order to make a name_get in batch for all the ids needed.
+            name_get_ids = {}
             for id in ids:
-                if res[id][prop] and hasattr(res[id][prop], '_name'):
-                    res[id][prop] = (res[id][prop].id , replaces[res[id][prop]._name].get(res[id][prop].id, False))
-
+                # get the result of ir.property.get() for this res_id and save it in res if it's existing
+                obj_reference = obj._name + ',' + str(id)
+                value = prop.get(cr, uid, prop_name, obj._name, res_id=obj_reference, context=context)
+                if value:
+                    res[id][prop_name] = value
+                # Check existence as root (as seeing the name of a related
+                # object depends on access right of source document,
+                # not target, so user may not have access) in order to avoid
+                # pointing on an unexisting record.
+                if property_destination_obj:
+                    if res[id][prop_name] and obj.pool.get(property_destination_obj).exists(cr, 1, res[id][prop_name].id):
+                        name_get_ids[id] = res[id][prop_name].id
+                    else:
+                        res[id][prop_name] = False
+            if property_destination_obj:
+                # name_get as root (as seeing the name of a related
+                # object depends on access right of source document,
+                # not target, so user may not have access.)
+                name_get_values = dict(obj.pool.get(property_destination_obj).name_get(cr, 1, name_get_ids.values(), context=context))
+                # the property field is a m2o, we need to return a tuple with (id, name)
+                for k, v in name_get_ids.iteritems():
+                    if res[k][prop_name]:
+                        res[k][prop_name] = (v , name_get_values.get(v))
         return res
-
 
     def _field_get(self, cr, uid, model_name, prop):
         if not self.field_id.get(cr.dbname):
@@ -1119,6 +1330,76 @@ class property(function):
     def restart(self):
         self.field_id = {}
 
+
+def field_to_dict(self, cr, user, context, field):
+    """ Return a dictionary representation of a field.
+
+    The string, help, and selection attributes (if any) are untranslated.  This
+    representation is the one returned by fields_get() (fields_get() will do
+    the translation).
+
+    """
+
+    res = {'type': field._type}
+    # This additional attributes for M2M and function field is added
+    # because we need to display tooltip with this additional information
+    # when client is started in debug mode.
+    if isinstance(field, function):
+        res['function'] = field._fnct and field._fnct.func_name or False
+        res['store'] = field.store
+        if isinstance(field.store, dict):
+            res['store'] = str(field.store)
+        res['fnct_search'] = field._fnct_search and field._fnct_search.func_name or False
+        res['fnct_inv'] = field._fnct_inv and field._fnct_inv.func_name or False
+        res['fnct_inv_arg'] = field._fnct_inv_arg or False
+        res['func_obj'] = field._obj or False
+    if isinstance(field, many2many):
+        res['related_columns'] = list((field._id1, field._id2))
+        res['third_table'] = field._rel
+    for arg in ('string', 'readonly', 'states', 'size', 'required', 'group_operator',
+            'change_default', 'translate', 'help', 'select', 'selectable'):
+        if getattr(field, arg):
+            res[arg] = getattr(field, arg)
+    for arg in ('digits', 'invisible', 'filters'):
+        if getattr(field, arg, None):
+            res[arg] = getattr(field, arg)
+
+    if field.string:
+        res['string'] = field.string
+    if field.help:
+        res['help'] = field.help
+
+    if hasattr(field, 'selection'):
+        if isinstance(field.selection, (tuple, list)):
+            res['selection'] = field.selection
+        else:
+            # call the 'dynamic selection' function
+            res['selection'] = field.selection(self, cr, user, context)
+    if res['type'] in ('one2many', 'many2many', 'many2one', 'one2one'):
+        res['relation'] = field._obj
+        res['domain'] = field._domain
+        res['context'] = field._context
+
+    return res
+
+
+class column_info(object):
+    """Struct containing details about an osv column, either one local to
+       its model, or one inherited via _inherits.
+
+       :attr name: name of the column
+       :attr column: column instance, subclass of osv.fields._column
+       :attr parent_model: if the column is inherited, name of the model
+                           that contains it, None for local columns.
+       :attr parent_column: the name of the column containing the m2o
+                            relationship to the parent model that contains
+                            this column, None for local columns.
+    """
+    def __init__(self, name, column, parent_model=None, parent_column=None):
+        self.name = name
+        self.column = column
+        self.parent_model = parent_model
+        self.parent_column = parent_column
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

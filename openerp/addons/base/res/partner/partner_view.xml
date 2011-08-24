@@ -3,7 +3,8 @@
     <data>
         <menuitem icon="terp-partner" id="menu_base_partner" name="Sales" sequence="0"
                   web_icon="data/sales.png"
-                  web_icon_hover="data/sales-hover.png"/>
+                  web_icon_hover="data/sales-hover.png"
+                  groups="base.group_sale_salesman"/>
 
         <menuitem id="menu_address_book" name="Address Book" parent="menu_base_partner" sequence="2"/>
 
@@ -77,6 +78,7 @@
                 <form string="Address">
                     <group colspan="4" col="6">
                         <field name="partner_id" colspan="2"/>
+                        <field name="active"/>
                         <field name="company_id" groups="base.group_multi_company" widget="selection" colspan="2"/>
                         <newline/>
                         <field name="name"/>
@@ -125,7 +127,7 @@
             <field name="act_window_id" ref="action_partner_address_form"/>
         </record>
         <menuitem action="action_partner_address_form" id="menu_partner_address_form"
-            groups="base.group_extended"
+            groups="base.group_extended" name="Contacts"
             parent="base.menu_address_book" sequence="30"/>
 
         <!--
@@ -342,7 +344,7 @@
                         <field name="country" select="1"/>
                         <field name="category_id" select="1" groups="base.group_extended"/>
                         <field name="user_id" select="1">
-                            <filter string="My Partners" icon="terp-personal+" domain="[('user_id','=',uid)]"/>
+                            <filter help="My Partners" icon="terp-personal+" domain="[('user_id','=',uid)]"/>
                         </field>
                    </group>
                    <newline />
@@ -395,8 +397,8 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.partner</field>
             <field name="view_type">form</field>
-            <field name="domain">[('supplier','=',1)]</field>
-            <field name="context">{'default_customer':0, 'search_default_supplier': 1, 'default_supplier':1}</field>
+            <field name="domain">[]</field>
+            <field name="context">{'search_default_supplier': 1}</field>
             <field name="filter" eval="True"/>
             <field name="help">You can access all information regarding your suppliers from the supplier form: accounting data, history of emails, meetings, purchases, etc. You can uncheck the 'Suppliers' filter button in order to search in all your partners, including customers and prospects.</field>
         </record>
@@ -437,71 +439,6 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="view_payterm_form"/>
         </record>
-
-        <record id="view_partner_bank_type_form" model="ir.ui.view">
-            <field name="name">res.partner.bank.type.form</field>
-            <field name="model">res.partner.bank.type</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Bank Account Type">
-                    <field name="name" select="1"/>
-                    <field name="code" select="1"/>
-                </form>
-            </field>
-        </record>
-
-        <record id="view_partner_bank_type_tree" model="ir.ui.view">
-            <field name="name">res.partner.bank.type.tree</field>
-            <field name="model">res.partner.bank.type</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree string="Bank Account Type">
-                    <field name="name" select="1"/>
-                    <field name="code" select="1"/>
-                </tree>
-            </field>
-        </record>
-
-
-        <record id="view_partner_bank_form" model="ir.ui.view">
-            <field name="name">res.partner.bank.form</field>
-            <field name="model">res.partner.bank</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Bank account">
-                    <field name="state"/>
-                    <field name="partner_id" select="1"/>
-                    <newline/>
-                    <field name="acc_number" select="1"/>
-                    <newline/>
-                    <field name="bank"/>
-                    <newline/>
-                    <field name="sequence"/>
-                    <field colspan="4" name="name"/>
-                    <separator colspan="4" string="Bank Account Owner"/>
-                    <field colspan="4" name="owner_name"/>
-                    <field colspan="4" name="street"/>
-                    <field name="city"/>
-                    <field name="zip"/>
-                    <field completion="1" name="country_id"/>
-                    <field name="state_id"/>
-                </form>
-            </field>
-        </record>
-        <record id="view_partner_bank_tree" model="ir.ui.view">
-            <field name="name">res.partner.bank.tree</field>
-            <field name="model">res.partner.bank</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree string="Bank Accounts">
-                    <field name="state"/>
-                    <field name="acc_number"/>
-                    <field name="partner_id"/>
-                    <field name="owner_name"/>
-                </tree>
-            </field>
-        </record>
-
         <!--
           ======================
           Categories

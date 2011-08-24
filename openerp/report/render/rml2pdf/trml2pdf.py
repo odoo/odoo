@@ -631,9 +631,11 @@ class _rml_flowable(object):
             paraStyle = None
             if tr.get('style'):
                 st = copy.deepcopy(self.styles.table_styles[tr.get('style')])
-                for s in st._cmds:
-                    s[1][1] = posy
-                    s[2][1] = posy
+                for si in range(len(st._cmds)):
+                    s = list(st._cmds[si])
+                    s[1] = (s[1][0],posy)
+                    s[2] = (s[2][0],posy)
+                    st._cmds[si] = tuple(s)
                 styles.append(st)
             if tr.get('paraStyle'):
                 paraStyle = self.styles.styles[tr.get('paraStyle')]

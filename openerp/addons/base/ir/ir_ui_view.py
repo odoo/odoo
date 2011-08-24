@@ -24,7 +24,6 @@ from lxml import etree
 from tools import graph
 from tools.safe_eval import safe_eval as eval
 import tools
-import netsvc
 import os
 import logging
 
@@ -48,8 +47,8 @@ class view_custom(osv.osv):
     _name = 'ir.ui.view.custom'
     _order = 'create_date desc'  # search(limit=1) should return the last customization
     _columns = {
-        'ref_id': fields.many2one('ir.ui.view', 'Original View', select=True),
-        'user_id': fields.many2one('res.users', 'User', select=True),
+        'ref_id': fields.many2one('ir.ui.view', 'Original View', select=True, required=True, ondelete='cascade'),
+        'user_id': fields.many2one('res.users', 'User', select=True, required=True, ondelete='cascade'),
         'arch': fields.text('View Architecture', required=True),
     }
 
@@ -197,10 +196,13 @@ class view_sc(osv.osv):
 
     def get_sc(self, cr, uid, user_id, model='ir.ui.menu', context=None):
         ids = self.search(cr, uid, [('user_id','=',user_id),('resource','=',model)], context=context)
-        results = self.read(cr, uid, ids, ['res_id','name'], context=context)
-        available_menus = self.pool.get(model).search(cr, uid, [], context=context)
+        results = self.read(cr, uid, ids, ['res_id'], context=context)
+        name_map = dict(self.pool.get(model).name_get(cr, uid, [x['res_id'] for x in results], context=context))
         # Make sure to return only shortcuts pointing to exisintg menu items.
-        return filter(lambda result: result['res_id'] in available_menus, results)
+        filtered_results = filter(lambda result: result['res_id'] in name_map, results)
+        for result in filtered_results:
+            result.update(name=name_map[result['res_id']])
+        return filtered_results
 
     _order = 'sequence,name'
     _defaults = {

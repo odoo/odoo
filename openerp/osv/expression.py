@@ -23,6 +23,74 @@
 from openerp.tools import flatten, reverse_enumerate
 import fields
 
+#.apidoc title: Domain Expressions
+
+NOT_OPERATOR = '!'
+OR_OPERATOR = '|'
+AND_OPERATOR = '&'
+
+TRUE_DOMAIN = [(1,'=',1)]
+FALSE_DOMAIN = [(0,'=',1)]
+
+def normalize(domain):
+    """Returns a normalized version of ``domain_expr``, where all implicit '&' operators
+       have been made explicit. One property of normalized domain expressions is that they
+       can be easily combined together as if they were single domain components.
+    """
+    assert isinstance(domain, (list, tuple)), "Domains to normalize must have a 'domain' form: a list or tuple of domain components"
+    if not domain:
+        return TRUE_DOMAIN
+    result = []
+    expected = 1                            # expected number of expressions
+    op_arity = {NOT_OPERATOR: 1, AND_OPERATOR: 2, OR_OPERATOR: 2}
+    for token in domain:
+        if expected == 0:                   # more than expected, like in [A, B]
+            result[0:0] = ['&']             # put an extra '&' in front
+            expected = 1
+        result.append(token)
+        if isinstance(token, (list,tuple)): # domain term
+            expected -= 1
+        else:
+            expected += op_arity.get(token, 0) - 1
+    assert expected == 0
+    return result
+
+def combine(operator, unit, zero, domains):
+    """Returns a new domain expression where all domain components from ``domains``
+       have been added together using the binary operator ``operator``.
+
+       :param unit: the identity element of the domains "set" with regard to the operation
+                    performed by ``operator``, i.e the domain component ``i`` which, when
+                    combined with any domain ``x`` via ``operator``, yields ``x``. 
+                    E.g. [(1,'=',1)] is the typical unit for AND_OPERATOR: adding it
+                    to any domain component gives the same domain.
+       :param zero: the absorbing element of the domains "set" with regard to the operation
+                    performed by ``operator``, i.e the domain component ``z`` which, when
+                    combined with any domain ``x`` via ``operator``, yields ``z``. 
+                    E.g. [(1,'=',1)] is the typical zero for OR_OPERATOR: as soon as
+                    you see it in a domain component the resulting domain is the zero.
+    """
+    result = []
+    count = 0
+    for domain in domains:
+        if domain == unit:
+            continue
+        if domain == zero:
+            return zero
+        if domain:
+            result += domain
+            count += 1
+    result = [operator] * (count - 1) + result
+    return result
+
+def AND(domains):
+    """ AND([D1,D2,...]) returns a domain representing D1 and D2 and ... """
+    return combine(AND_OPERATOR, TRUE_DOMAIN, FALSE_DOMAIN, domains)
+
+def OR(domains):
+    """ OR([D1,D2,...]) returns a domain representing D1 or D2 or ... """
+    return combine(OR_OPERATOR, FALSE_DOMAIN, TRUE_DOMAIN, domains)
+
 
 class expression(object):
     """
@@ -32,10 +100,12 @@ class expression(object):
     For more info: http://christophe-simonis-at-tiny.blogspot.com/2008/08/new-new-domain-notation.html
     """
 
-    def _is_operator(self, element):
-        return isinstance(element, (str, unicode)) and element in ['&', '|', '!']
+    @classmethod
+    def _is_operator(cls, element):
+        return isinstance(element, (str, unicode)) and element in [AND_OPERATOR, OR_OPERATOR, NOT_OPERATOR]
 
-    def _is_leaf(self, element, internal=False):
+    @classmethod
+    def _is_leaf(cls, element, internal=False):
         OPS = ('=', '!=', '<>', '<=', '<', '>', '>=', '=?', '=like', '=ilike', 'like', 'not like', 'ilike', 'not ilike', 'in', 'not in', 'child_of')
         INTERNAL_OPS = OPS + ('inselect',)
         return (isinstance(element, tuple) or isinstance(element, list)) \
@@ -92,8 +162,8 @@ class expression(object):
                 doms = []
                 for o in table.browse(cr, uid, ids, context=context):
                     if doms:
-                        doms.insert(0, '|')
-                    doms += ['&', ('parent_left', '<', o.parent_right), ('parent_left', '>=', o.parent_left)]
+                        doms.insert(0, OR_OPERATOR)
+                    doms += [AND_OPERATOR, ('parent_left', '<', o.parent_right), ('parent_left', '>=', o.parent_left)]
                 if prefix:
                     return [(left, 'in', table.search(cr, uid, doms, context=context))]
                 return doms
@@ -104,6 +174,20 @@ class expression(object):
                     ids2 = table.search(cr, uid, [(parent, 'in', ids)], context=context)
                     return ids + rg(ids2, table, parent)
                 return [(left, 'in', rg(ids, table, parent or table._parent_name))]
+
+        def child_of_right_to_ids(value):
+            """ Normalize a single id, or a string, or a list of ids to a list of ids.
+
+            This function is always used with _rec_get() above, so it should be
+            called directly from _rec_get instead of repeatedly before _rec_get.
+
+            """
+            if isinstance(value, basestring):
+                return [x[0] for x in field_obj.name_search(cr, uid, value, [], 'ilike', context=context, limit=None)]
+            elif isinstance(value, (int, long)):
+                return [value]
+            else:
+                return list(value)
 
         self.__main_table = table
         self.__all_tables.add(table)
@@ -135,7 +219,8 @@ class expression(object):
             field = working_table._columns.get(fargs[0], False)
             if not field:
                 if left == 'id' and operator == 'child_of':
-                    dom = _rec_get(right, working_table)
+                    ids2 = child_of_right_to_ids(right)
+                    dom = _rec_get(ids2, working_table)
                     self.__exp = self.__exp[:i] + dom + self.__exp[i+1:]
                 continue
 
@@ -172,7 +257,7 @@ class expression(object):
                     else:
                         # we assume that the expression is valid
                         # we create a dummy leaf for forcing the parsing of the resulting expression
-                        self.__exp[i] = '&'
+                        self.__exp[i] = AND_OPERATOR
                         self.__exp.insert(i + 1, self.__DUMMY_LEAF)
                         for j, se in enumerate(subexp):
                             self.__exp.insert(i + 2 + j, se)
@@ -181,10 +266,7 @@ class expression(object):
             elif field._type == 'one2many':
                 # Applying recursivity on field(one2many)
                 if operator == 'child_of':
-                    if isinstance(right, basestring):
-                        ids2 = [x[0] for x in field_obj.name_search(cr, uid, right, [], 'like', context=context, limit=None)]
-                    else:
-                        ids2 = list(right)
+                    ids2 = child_of_right_to_ids(right)
                     if field._obj != working_table._name:
                         dom = _rec_get(ids2, field_obj, left=left, prefix=field._obj)
                     else:
@@ -228,16 +310,12 @@ class expression(object):
             elif field._type == 'many2many':
                 #FIXME
                 if operator == 'child_of':
-                    if isinstance(right, basestring):
-                        ids2 = [x[0] for x in field_obj.name_search(cr, uid, right, [], 'like', context=context, limit=None)]
-                    else:
-                        ids2 = list(right)
-
                     def _rec_convert(ids):
                         if field_obj == table:
                             return ids
                         return self.__execute_recursive_in(cr, field._id1, field._rel, field._id2, ids, operator, field._type)
 
+                    ids2 = child_of_right_to_ids(right)
                     dom = _rec_get(ids2, field_obj)
                     ids2 = field_obj.search(cr, uid, dom, context=context)
                     self.__exp[i] = ('id', 'in', _rec_convert(ids2))
@@ -276,13 +354,7 @@ class expression(object):
 
             elif field._type == 'many2one':
                 if operator == 'child_of':
-                    if isinstance(right, basestring):
-                        ids2 = [x[0] for x in field_obj.name_search(cr, uid, right, [], 'like', limit=None)]
-                    elif isinstance(right, (int, long)):
-                        ids2 = list([right])
-                    else:
-                        ids2 = list(right)
-
+                    ids2 = child_of_right_to_ids(right)
                     self.__operator = 'in'
                     if field._obj != working_table._name:
                         dom = _rec_get(ids2, field_obj, left=left, prefix=field._obj)
@@ -292,12 +364,12 @@ class expression(object):
                 else:
                     def _get_expression(field_obj,cr, uid, left, right, operator, context=None):
                         if context is None:
-                            context = {}                        
+                            context = {}
                         c = context.copy()
                         c['active_test'] = False
                         #Special treatment to ill-formed domains
                         operator = ( operator in ['<','>','<=','>='] ) and 'in' or operator
-                        
+
                         dict_op = {'not in':'!=','in':'=','=':'in','!=':'not in','<>':'not in'}
                         if isinstance(right,tuple):
                             right = list(right)
@@ -319,7 +391,7 @@ class expression(object):
                         elif isinstance(right,(list,tuple)):
                             m2o_str = True
                             for ele in right:
-                                if not isinstance(ele, basestring): 
+                                if not isinstance(ele, basestring):
                                     m2o_str = False
                                     break
                     elif right == []:
@@ -335,7 +407,7 @@ class expression(object):
                             new_op = '!='
                         #Is it ok to put 'left' and not 'id' ?
                         self.__exp[i] = (left,new_op,False)
-                        
+
                     if m2o_str:
                         self.__exp[i] = _get_expression(field_obj,cr, uid, left, right, operator, context=context)
             else:
@@ -387,7 +459,6 @@ class expression(object):
                              ]
 
                     self.__exp[i] = ('id', 'inselect', (query1, query2))
-
         return self
 
     def __leaf_to_sql(self, leaf, table):
@@ -491,10 +562,10 @@ class expression(object):
                 params.insert(0, p)
                 stack.append(q)
             else:
-                if e == '!':
+                if e == NOT_OPERATOR:
                     stack.append('(NOT (%s))' % (stack.pop(),))
                 else:
-                    ops = {'&': ' AND ', '|': ' OR '}
+                    ops = {AND_OPERATOR: ' AND ', OR_OPERATOR: ' OR '}
                     q1 = stack.pop()
                     q2 = stack.pop()
                     stack.append('(%s %s %s)' % (q1, ops[e], q2,))

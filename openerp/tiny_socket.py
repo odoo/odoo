@@ -24,9 +24,13 @@ import cPickle
 import cStringIO
 import marshal
 
+import netsvc
+
+#.apidoc title: Net-RPC classes
+
 class Myexception(Exception):
     """
-    custome exception object store 
+    custom exception object store
     * faultcode
     * faulestring
     * args
@@ -56,8 +60,7 @@ class mysocket:
         self.sock.connect((host, int(port)))
         
     def disconnect(self):
-        self.sock.shutdown(socket.SHUT_RDWR)
-        self.sock.close()
+        netsvc.close_socket(self.sock)
         
     def mysend(self, msg, exception=False, traceback=None):
         msg = cPickle.dumps([msg,traceback])

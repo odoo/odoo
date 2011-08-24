@@ -89,7 +89,7 @@ if os.name == 'nt':
                 "pydot", "asyncore","asynchat", "reportlab", "vobject",
                 "HTMLParser", "select", "mako", "poplib",
                 "imaplib", "smtplib", "email", "yaml", "DAV",
-                "uuid", "commands", "openerp", # TODO is it necessary to include cgitb?
+                "uuid", "commands", "openerp",
             ],
             "excludes" : ["Tkconstants","Tkinter","tcl"],
         }
@@ -164,6 +164,7 @@ setup(name             = name,
           'pyyaml',
           'pywebdav',
           'feedparser',
+          'simplejson >= 2.0',
       ],
       extras_require = {
           'SSL' : ['pyopenssl'],
