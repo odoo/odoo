@@ -104,16 +104,11 @@ openerp.base_diagram.DiagramView = openerp.base.View.extend({
 		
 		this.do_update_pager();
 		
-		this.$element.find('.oe_diagram_button_new').click(function(){self.add_node()})
+		this.$element.find('.oe_diagram_button_new').click(function(){self.add_edit_node()})
 		
         if(this.id) {
         	self.get_diagram_info();
         }
-	},
-	
-	add_node: function() {
-		var self = this;
-		console.log('self>>', self)
 	},
 	
 	get_diagram_info: function() {
@@ -249,13 +244,16 @@ openerp.base_diagram.DiagramView = openerp.base.View.extend({
             'model': this.node
         },
         function(result) {
-            self.popup_activity(result)
+            self.add_edit_node(result)
         }
         )
     },
     
-    popup_activity: function(result) {
+    add_edit_node: function(result) {
     	var self = this;
+    	var id;
+    	if(result)
+			id = result.activity_id[0];
     	var action_manager = new openerp.base.ActionManager(this);
     	var dialog = new openerp.base.Dialog(this, {
             title : 'Activity',
@@ -273,7 +271,7 @@ openerp.base_diagram.DiagramView = openerp.base.View.extend({
     	action_manager.appendTo(dialog.$element);
     	action_manager.do_action({
             res_model : this.node,
-            res_id: result.activity_id[0],
+            res_id: id,
             views : [[false, 'form']],
             type : 'ir.actions.act_window',
             auto_search : false,
