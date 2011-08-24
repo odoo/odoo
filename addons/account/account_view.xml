@@ -267,6 +267,7 @@
             <field name="name">account.account.tree</field>
             <field name="model">account.account</field>
             <field name="type">tree</field>
+            <field name="priority">30</field>
             <field name="field_parent">child_id</field>
             <field name="arch" type="xml">
                 <tree colors="blue:type in ('view');black:type in ('other','receivable','payable','consolidation');gray:type in ('closed')" string="Chart of accounts" toolbar="1" >
