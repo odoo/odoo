@@ -638,8 +638,8 @@ class ir_model_data(osv.osv):
         """ Regular unlink method, but make sure to clear the caches. """
         ref_ids = self.browse(cr, uid, ids, context=context)
         for ref_id in ref_ids:
-            self._get_id.clear_cache(cr.dbname, uid, ref_id.module, ref_id.name)
-            self.get_object_reference.clear_cache(cr.dbname, uid, ref_id.module, ref_id.name)
+            self._get_id.clear_cache(self, uid, ref_id.module, ref_id.name)
+            self.get_object_reference.clear_cache(self, uid, ref_id.module, ref_id.name)
         return super(ir_model_data,self).unlink(cr, uid, ids, context=context)
 
     def _update(self,cr, uid, model, module, values, xml_id=False, store=True, noupdate=False, mode='init', res_id=False, context=None):
