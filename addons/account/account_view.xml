@@ -2707,9 +2707,9 @@ action = self.pool.get('res.config').next(cr, uid, [], context)
             Account Reports
         -->
 
-        <record id="view_account_report_form" model="ir.ui.view">
-            <field name="name">account.report.form</field>
-            <field name="model">account.report</field>
+        <record id="view_account_low_level_report_form" model="ir.ui.view">
+            <field name="name">account.low.level.report.form</field>
+            <field name="model">account.low.level.report</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Account Report">
@@ -2717,18 +2717,19 @@ action = self.pool.get('res.config').next(cr, uid, [], context)
                     <field name="parent_id"/>
                     <field name="sequence"/>
                     <field name="type"/>
-                    <field name="account_report_id"/>
+                    <field name="account_report_id" attrs="{'readonly': [('type', '!=', 'account_report')]}"/>
                     <separator string="Accounts" colspan="4"/>
-                    <field name="account_ids" nolabel="1" colspan="4"/>
+                    <field name="display_detail" attrs="{'readonly': [('type', '!=', 'accounts')]}"/>
+                    <field name="account_ids" nolabel="1" colspan="4" attrs="{'readonly': [('type', '!=', 'accounts')]}"/>
                     <separator string="Notes" colspan="4"/>
                     <field name="note" nolabel="1" colspan="4"/>
                 </form>
             </field>
         </record>
 
-        <record id="view_account_report_tree" model="ir.ui.view">
-            <field name="name">account.report.tree</field>
-            <field name="model">account.report</field>
+        <record id="view_account_low_level_report_tree" model="ir.ui.view">
+            <field name="name">account.low.level.report.tree</field>
+            <field name="model">account.low.level.report</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Account Report">
@@ -2740,8 +2741,8 @@ action = self.pool.get('res.config').next(cr, uid, [], context)
             </field>
         </record>
 
-        <record id="view_account_report_search" model="ir.ui.view">
-            <field name="name">account.report.search</field>
+        <record id="view_account_low_level_report_search" model="ir.ui.view">
+            <field name="name">account.low.level.report.search</field>
             <field name="model">account.report</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
@@ -2761,17 +2762,17 @@ action = self.pool.get('res.config').next(cr, uid, [], context)
             </field>
         </record>
 
-        <record id="action_account_report_tree" model="ir.actions.act_window">
+        <record id="action_account_low_level_report_tree" model="ir.actions.act_window">
             <field name="name">Account Reports</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="res_model">account.report</field>
+            <field name="res_model">account.low.level.report</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="view_account_report_tree"/>
-            <field name="search_view_id" ref="view_account_report_search"/>
+        <field name="search_view_id" ref="view_account_low_level_report_search"/>
+            <field name="view_id" ref="view_account_low_level_report_tree"/>
         </record>
 
-        <menuitem id="menu_account_reports_tree" name="Account Reports" parent="menu_account_reports" action="action_account_report_tree"/>
+        <menuitem id="menu_account_low_level_reports_tree" name="Account Reports" parent="menu_account_reports" action="action_account_low_level_report_tree"/>
 
         <record id="view_account_report_tree_hierarchy" model="ir.ui.view">
             <field name="name">account.report.hierarchy</field>

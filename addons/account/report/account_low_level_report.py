@@ -29,6 +29,8 @@ class report_account_common(report_sxw.rml_parse, common_report_header):
     def __init__(self, cr, uid, name, context=None):
         super(report_account_common, self).__init__(cr, uid, name, context=context)
         self.localcontext.update( {
+            'get_lines': self.get_lines,
+
             'time': time,
             'get_report_details': self._get_report_details,
             'get_fiscalyear': self._get_fiscalyear,
@@ -90,6 +92,27 @@ class report_account_common(report_sxw.rml_parse, common_report_header):
                 accounts = [acc for acc in rpt.account_ids if acc.level != 0]
         return accounts
 
+    def get_lines(self, data):
+        lines = []
+        import pdb;pdb.set_trace()
+        ids2 = self.search(cr, uid, [('parent_id', 'child_of', data['form']['report_id'])], context=self.context)
+        for report in self.pool.get('account.low.level.report').browse(self.cr, self.uid, ids2, context=self.context):
+            vals = {
+                'name': report.name,
+                'balance': report.balance,
+                'type': 'report',
+            }
+            lines.append(vals)
+            if report.type == 'accounts' and report.display_detail:
+                for account in report.account_ids:
+                    vals = {
+                        'name': account.code + ' ' + account.name,
+                        'balance': account.balance,
+                        'type': 'account',
+                    }
+                    lines.append(vals)
+        return lines
+
     def get_report_balance(self, child, child_ids, context=None):
         cr, uid = self.cr, self.uid
         report_obj = self.pool.get('account.report')
@@ -109,6 +132,6 @@ class report_account_common(report_sxw.rml_parse, common_report_header):
                     balance += a.balance
         return balance
 
-report_sxw.report_sxw('report.accounting.report', 'account.account',
-    'addons/account/report/account_report_common.rml', parser=report_account_common, header='internal')
+report_sxw.report_sxw('report.account.low.level.report', 'account.low.level.report',
+    'addons/account/report/account_low_level_report.rml', parser=report_account_common, header='internal')
 

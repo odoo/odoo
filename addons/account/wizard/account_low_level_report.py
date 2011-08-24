@@ -29,10 +29,22 @@ class accounting_report(osv.osv_memory):
     _columns = {
         'enable_filter': fields.boolean('Enable Comparison'),
         'account_details': fields.boolean('Details by Account', help="Print Report with the account details."),
-        'account_report_id': fields.many2one('account.report', 'Account Report', required=True),
-        'label_filter': fields.char('Filters Label', size=32, help="This label will be displayed on report to show the balance computed for the given comparison filter."),
+        'account_report_id': fields.many2one('account.report', 'Account Reports', required=True),
+        'label_filter': fields.char('Column Label', size=32, help="This label will be displayed on report to show the balance computed for the given comparison filter."),
+        'fiscalyear_id_cmp': fields.many2one('account.fiscalyear', 'Fiscal Year', help='Keep empty for all open fiscal year'),
+        'filter_cmp': fields.selection([('filter_no', 'No Filters'), ('filter_date', 'Date'), ('filter_period', 'Periods')], "Filter by", required=True),
+        'period_from_cmp': fields.many2one('account.period', 'Start Period'),
+        'period_to_cmp': fields.many2one('account.period', 'End Period'),
+        'date_from_cmp': fields.date("Start Date"),
+        'date_to_cmp': fields.date("End Date"),
+    }
+
+    _defaults = {
+            'filter_cmp': 'filter_no',
+            'target_move': 'posted',
     }
     def _print_report(self, cr, uid, ids, data, context=None):
+        #TODO: must read new fields, for comporison. Maybe better to do it at the end of check method
         data['form'].update(self.read(cr, uid, ids, ['account_report_id', 'enable_filter', 'account_details', 'label_filter'], context=context)[0])
         return {
             'type': 'ir.actions.report.xml',

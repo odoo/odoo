@@ -8,25 +8,22 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="account.account_common_report_view"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='fiscalyear_id']" position="replace">
-                </xpath>
-                <xpath expr="//field[@name='target_move']" position="replace">
+                <xpath expr="//field[@name='target_move']" position="after">
                     <field name="account_report_id" domain="[('parent_id','=',False)]"/>
                     <field name="account_details"/>
                     <field name="enable_filter"/>
                 </xpath>
-                <xpath expr="//notebook/page[@string='Filters']" position="replace">
-                    <page string="Filters" attrs="{'invisible': [('enable_filter','=',False)]}">
-                        <field name="fiscalyear_id"/>
-                        <field name="target_move"/>
-                        <field name="filter" on_change="onchange_filter(filter, fiscalyear_id)"/>
-                        <field name="label_filter"/>
+                <xpath expr="//notebook/page[@string='Filters']" position="after">
+                    <page string="Comparison" attrs="{'invisible': [('enable_filter','=',False)]}">
+                        <field name="label_filter" attrs="{'required': [('enable_filter', '=', True)]}"/>
+                        <field name="fiscalyear_id_cmp"/><newline/>
+                        <field name="filter_cmp" on_change="onchange_filter(filter, fiscalyear_id)"/>
                         <separator string="Dates" colspan="4"/>
-                        <field name="date_from" attrs="{'readonly':[('filter', '!=', 'filter_date')], 'required':[('filter', '=', 'filter_date')]}" colspan="4"/>
-                        <field name="date_to" attrs="{'readonly':[('filter', '!=', 'filter_date')], 'required':[('filter', '=', 'filter_date')]}"  colspan="4"/>
+                        <field name="date_from_cmp" attrs="{'readonly':[('filter_cmp', '!=', 'filter_date')], 'required':[('filter_cmp', '=', 'filter_date')]}" colspan="4"/>
+                        <field name="date_to_cmp" attrs="{'readonly':[('filter_cmp', '!=', 'filter_date')], 'required':[('filter_cmp', '=', 'filter_date')]}"  colspan="4"/>
                         <separator string="Periods" colspan="4"/>
-                        <field name="period_from" domain="[('fiscalyear_id', '=', fiscalyear_id)]" attrs="{'readonly':[('filter','!=','filter_period')], 'required':[('filter', '=', 'filter_period')]}" colspan="4"/>
-                        <field name="period_to" domain="[('fiscalyear_id', '=', fiscalyear_id)]" attrs="{'readonly':[('filter','!=','filter_period')], 'required':[('filter', '=', 'filter_period')]}" colspan="4"/>
+                        <field name="period_from_cmp" domain="[('fiscalyear_id_cmp', '=', fiscalyear_id)]" attrs="{'readonly':[('filter_cmp','!=','filter_period')], 'required':[('filter_cmp', '=', 'filter_period')]}" colspan="4"/>
+                        <field name="period_to_cmp" domain="[('fiscalyear_id_cmp', '=', fiscalyear_id)]" attrs="{'readonly':[('filter_cmp','!=','filter_period')], 'required':[('filter_cmp', '=', 'filter_period')]}" colspan="4"/>
                    </page>
                 </xpath>
                 <xpath expr="//notebook/page[@string='Journals']" position="replace">

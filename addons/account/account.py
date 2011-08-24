@@ -2607,30 +2607,48 @@ class account_fiscal_position_account_template(osv.osv):
 
 account_fiscal_position_account_template()
 
-class account_report(osv.osv):
-    _name = "account.report"
+class account_low_level_report(osv.osv):
+    _name = "account.low.level.report"
     _description = "Account Report"
 
+    def _get_balance(self, cr, uid, ids, context=None):
+        balance = 0.0
+        for report in self.browse(cr, uid, ids, context=context):
+            if report.type == 'accounts':
+                # it's the sum of balance of the linked accounts
+                for a in child.account_ids:
+                    balance += a.balance
+            elif report.type == 'account_report' and report.account_report_id:
+                # it's the amount of the linked report
+                balance = report.account_report_id.balance
+            elif report.type == 'sum':
+                # it's the sum of balance of the children of this account.report
+                for child in report.children_ids:
+                    balance += child.balance
+        return balance
+
     _columns = {
-        'name': fields.char('Name', size=32, required=True),
-        'parent_id': fields.many2one('account.report', 'Parent'),
+        'name': fields.char('Report Name', size=128, required=True),
+        'parent_id': fields.many2one('account.low.level.report', 'Parent'),
+        'children_ids':  fields.one2many('account.low.level.report', 'parent_id', 'Account Report'),
         'sequence': fields.integer('Sequence'),
         'type': fields.selection([
             ('sum','Sum'),
             ('accounts','Accounts'),
             ('account_report','Account Report'),
-            ],'Report Type'),
-        'account_ids': fields.many2many('account.account', 'account_account_report', 'report_line_id', 'account_id', 'Accounts'),
+            ],'Type'),
+        'account_ids': fields.many2many('account.account', 'account_account_low_level_report', 'report_line_id', 'account_id', 'Accounts'),
         'note': fields.text('Notes'),
-        'account_report_id': fields.many2one('account.report', 'Account Report'),
-        'child_ids': fields.one2many('account.report','parent_id','Children'),
+        'account_report_id':  fields.many2one('account.low.level.report', 'Account Report'),
+        'balance': fields.function(_get_balance, 'Balance'),
+        'display_detail': fields.boolean('Display the account list'),
     }
 
     _defaults = {
         'type': 'sum',
     }
 
-account_report()
+account_low_level_report()
 
     # Multi charts of Accounts wizard
 
