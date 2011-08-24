@@ -762,6 +762,13 @@ class procurement_order(osv.osv):
         return len(res) and res[0] or 0 #TO CHECK: why workflow is generated error if return not integer value
 
     def create_procurement_purchase_order(self, cr, uid, procurement, po_vals, line, context=None):
+        """ Create the purchase order from the procurement
+        :params procurement: the procurement object generating the purchase order
+        :params dict po_vals: the values of the purchase order
+        :params dict line: the values of the purchase order line
+        :return: purchase order id
+        :rtype: int
+        """
         po_vals.update({'order_line': [(0,0,line)]})
         return self.pool.get('purchase.order').create(cr, uid, po_vals, context=context)
 
