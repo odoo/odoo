@@ -88,18 +88,6 @@ class res_company(osv.osv):
                         result[company.id][field] = address[field] or False
         return result
 
-
-    def _get_bank_data(self, cr, uid, ids, field_names, arg, context=None):
-        """ Read the 'address' functional fields. """
-        result = {}
-        for company in self.browse(cr, uid, ids, context=context):
-            r = []
-            for bank in company.bank_ids:
-                if bank.footer:
-                    r.append(bank.name_get(context=context)[0][1])
-            result[company.id] = ' | '.join(r)
-        return result
-
     def _set_address_data(self, cr, uid, company_id, name, value, arg, context=None):
         """ Write the 'address' functional fields. """
         company = self.browse(cr, uid, company_id, context=context)
@@ -114,6 +102,16 @@ class res_company(osv.osv):
                 address_obj.create(cr, uid, {name: value or False, 'partner_id': company.partner_id.id}, context=context)
         return True
 
+    def _get_bank_data(self, cr, uid, ids, field_names, arg, context=None):
+        """ Read the 'address' functional fields. """
+        result = {}
+        for company in self.browse(cr, uid, ids, context=context):
+            r = []
+            for bank in company.bank_ids:
+                if bank.footer:
+                    r.append(bank.name_get(context=context)[0][1])
+            result[company.id] = ' | '.join(r)
+        return result
 
     _columns = {
         'name': fields.char('Company Name', size=64, required=True),
@@ -143,15 +141,8 @@ class res_company(osv.osv):
         'fax': fields.function(_get_address_data, fnct_inv=_set_address_data, size=64, type='char', string="Fax", multi='address'), 
         'website': fields.related('partner_id', 'website', string="Website", type="char", size=64), 
         'vat': fields.related('partner_id', 'vat', string="Tax ID", type="char", size=32), 
+        'company_registry': fields.char('Company Registry', size=64),
     }
-    def on_change_header(self, cr, uid, ids, phone, email, fax, website, vat, context={}):
-        val = []
-        if phone: val.append(_('Phone: ')+phone)
-        if fax: val.append(_('Fax: ')+fax)
-        if website: val.append(_('Website: ')+website)
-        if vat: val.append(_('VAT: ')+vat)
-        return {'value': {'rml_footer1':' | '.join(val)}}
-
 
     def _search(self, cr, uid, args, offset=0, limit=None, order=None,
             context=None, count=False, access_rights_uid=None):
@@ -233,6 +224,16 @@ class res_company(osv.osv):
     def write(self, cr, *args, **argv):
         self.cache_restart(cr)
         return super(res_company, self).write(cr, *args, **argv)
+
+    def generate_header(self, cr, uid, ids, context=None):
+        for c in self.browse(cr, uid, ids, context=context):
+            val = []
+            if c.phone: val.append(_('Phone: ')+c.phone)
+            if c.fax: val.append(_('Fax: ')+c.fax)
+            if c.website: val.append(_('Website: ')+c.website)
+            if c.vat: val.append(_('VAT: ')+c.vat)
+            if c.company_registry: val.append(_('Reg: ')+c.company_registry)
+            self.write(cr,uid, [c.id], {'rml_footer1':' | '.join(val)}, context)
 
     def _get_euro(self, cr, uid, context={}):
         try:
