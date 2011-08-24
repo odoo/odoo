@@ -1,5 +1,6 @@
 #!/usr/bin/python
 import datetime
+import urllib
 import dateutil.relativedelta
 import functools
 import optparse
@@ -446,7 +447,11 @@ class Root(object):
             #for the mobile web client we are supposed to use a different url to just add '/mobile'
             raise cherrypy.HTTPRedirect('/web_mobile/static/src/web_mobile.html', 301)
         else:
-            raise cherrypy.HTTPRedirect('/base/webclient/home', 301)
+            if kw:
+                qs = '?' + urllib.urlencode(kw)
+            else:
+                qs = ''
+            raise cherrypy.HTTPRedirect('/base/webclient/home' + qs, 301)
     default.exposed = True
 
 def main(argv):
