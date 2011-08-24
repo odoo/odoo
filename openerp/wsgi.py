@@ -21,7 +21,7 @@
 
 """ WSGI stuffs (proof of concept for now)
 
-This module offers an WSGI interface to OpenERP.
+This module offers a WSGI interface to OpenERP.
 
 """
 
@@ -29,7 +29,10 @@ from wsgiref.simple_server import make_server
 from SimpleXMLRPCServer import SimpleXMLRPCDispatcher
 import xmlrpclib
 
+import os
+import signal
 import sys
+import time
 
 import openerp
 import openerp.tools.config as config
@@ -63,10 +66,9 @@ def application(environ, start_response):
         return result
 
     # We never returned from the loop.
-    else:
-        response = 'No handler found.\n'
-        start_response('200 OK', [('Content-Type', 'text/plain'), ('Content-Length', str(len(response)))])
-        return [response]
+    response = 'No handler found.\n'
+    start_response('200 OK', [('Content-Type', 'text/plain'), ('Content-Length', str(len(response)))])
+    return [response]
 
 # Serve XMLRPC via wsgiref's simple_server.
 # Blocking, should probably be called in its own process.
@@ -74,13 +76,44 @@ def serve():
     httpd = make_server('localhost', config['xmlrpc_port'], application)
     httpd.serve_forever()
 
-# Application setup be fore we can spawn any worker process.
+arbiter_pid = None
+
+# Application setup before we can spawn any worker process.
 # This is suitable for e.g. gunicorn's on_starting hook.
 def on_starting(server):
+    global arbiter_pid
+    arbiter_pid = os.getpid() # TODO check if this is true even after replacing the executable
     config = openerp.tools.config
     config['addons_path'] = '/home/openerp/repos/addons/trunk/' # need a config file
+    openerp.tools.cache = kill_workers_cache
     openerp.netsvc.init_logger()
     openerp.osv.osv.start_object_proxy()
     openerp.service.web_services.start_web_services()
+
+# Install our own signal handler on the master process.
+def when_ready(server):
+    # Hijack gunicorn's SIGWINCH handling; we can choose another one.
+    signal.signal(signal.SIGWINCH, make_winch_handler(server))
+
+# Our signal handler will signal a SGIQUIT to all workers.
+def make_winch_handler(server):
+    def handle_winch(sig, fram):
+        server.kill_workers(signal.SIGQUIT) # This is gunicorn specific.
+    return handle_winch
+
+# Kill gracefuly the workers (e.g. because we want to clear their cache).
+# This is done by signaling a SIGWINCH to the master process, so it can be
+# called by the workers themselves.
+def kill_workers():
+    try:
+        os.kill(arbiter_pid, signal.SIGWINCH)
+    except OSError, e:
+        if e.errno == errno.ESRCH: # no such pid
+            return
+        raise            
+
+class kill_workers_cache(openerp.tools.real_cache):
+    def clear(self, dbname, *args, **kwargs):
+        kill_workers()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
