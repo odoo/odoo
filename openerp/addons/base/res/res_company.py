@@ -189,11 +189,6 @@ class res_company(osv.osv):
                 return rule.company_dest_id.id
         return user.company_id.id
 
-    def _get_child_ids(self, cr, uid, uid2, context={}):
-        company = self.pool.get('res.users').company_get(cr, uid, uid2)
-        ids = self._get_company_children(cr, uid, company)
-        return ids
-
     @tools.cache()
     def _get_company_children(self, cr, uid=None, company=None):
         if not company:
