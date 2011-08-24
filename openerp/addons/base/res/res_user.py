@@ -351,7 +351,6 @@ class users(osv.osv):
         'menu_tips':True
     }
 
-    @tools.ormcache()
     def company_get(self, cr, uid, uid2, context=None):
         return self._get_company(cr, uid, context=context, uid2=uid2)
 
