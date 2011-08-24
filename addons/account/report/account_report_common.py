@@ -56,7 +56,8 @@ class report_account_common(report_sxw.rml_parse, common_report_header):
         balance = 0.0
         name = data['form'].get('account_report_id') and data['form']['account_report_id'][1] or ''
         report_id = data['form'].get('account_report_id') and data['form']['account_report_id'][0] or False
-        datas.append({'id': report_id, 'label': data['form']['label_filter'] or ''})
+        label = data['form']['label_filter'] or ''
+        datas.append({'id': report_id, 'label': label})
         ctx = self.context.copy()
         if report_id:
             child_ids = report_obj.search(cr, uid, [('parent_id','=',report_id)])
@@ -66,7 +67,7 @@ class report_account_common(report_sxw.rml_parse, common_report_header):
                 if child.id == datas[0]['id']:
                     datas[0].update({'name': child.name, 'balance': balance})
                 else:
-                    datas.append({'id': child.id, 'name': child.name, 'balance': balance})
+                    datas.append({'id': child.id, 'name': child.name, 'balance': balance, 'label': label})
         return datas
 
     def get_account_details(self, acc_id, data):
