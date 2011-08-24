@@ -2741,6 +2741,27 @@ action = self.pool.get('res.config').next(cr, uid, [], context)
             </field>
         </record>
 
+        <record id="view_account_report_search" model="ir.ui.view">
+            <field name="name">account.report.search</field>
+            <field name="model">account.report</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Account Report">
+                    <group>
+                        <field name="name"/>
+                        <field name="parent_id"/>
+                        <field name="account_report_id"/>
+                    </group>
+                    <newline/>
+                    <group expand="0" string="Group By...">
+                        <filter string="Parent Report" icon="terp-folder-orange" domain="" context="{'group_by':'parent_id'}"/>
+                        <separator orientation="vertical"/>
+                        <filter string="Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'type'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
         <record id="action_account_report_tree" model="ir.actions.act_window">
             <field name="name">Account Reports</field>
             <field name="type">ir.actions.act_window</field>
@@ -2748,6 +2769,7 @@ action = self.pool.get('res.config').next(cr, uid, [], context)
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_account_report_tree"/>
+            <field name="search_view_id" ref="view_account_report_search"/>
         </record>
 
         <menuitem id="menu_account_reports_tree" name="Account Reports" parent="menu_account_reports" action="action_account_report_tree"/>
