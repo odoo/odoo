@@ -95,18 +95,25 @@ openerp.base_diagram.DiagramView = openerp.base.View.extend({
 			}
 		}
 		
-		this.$element.html(QWeb.render("DiagramView", {"fields_view": this.fields_view}));
+		this.$element.html(QWeb.render("DiagramView", this));
 		
 		this.$element.find('div.oe_diagram_pager button[data-pager-action]').click(function() {
             var action = $(this).data('pager-action');
             self.on_pager_action(action);
         });
 		
-		this.do_update_pager()
+		this.do_update_pager();
+		
+		this.$element.find('.oe_diagram_button_new').click(function(){self.add_node()})
 		
         if(this.id) {
-        	self.get_diagram_info()
+        	self.get_diagram_info();
         }
+	},
+	
+	add_node: function() {
+		var self = this;
+		console.log('self>>', self)
 	},
 	
 	get_diagram_info: function() {
@@ -248,6 +255,7 @@ openerp.base_diagram.DiagramView = openerp.base.View.extend({
     },
     
     popup_activity: function(result) {
+    	var self = this;
     	var action_manager = new openerp.base.ActionManager(this);
     	var dialog = new openerp.base.Dialog(this, {
             title : 'Activity',

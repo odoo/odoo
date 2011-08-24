@@ -8,6 +8,8 @@
         'static/lib/js/dracula_graph.js',
         'static/src/js/diagram.js'
     ],
-    "css": [],
+    'css' : [
+        "static/src/css/base_diagram.css",
+    ],
     'active': True,
 }
