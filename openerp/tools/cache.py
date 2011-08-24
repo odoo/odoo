@@ -1,7 +1,7 @@
 import lru
 
 class ormcache(object):
-    """ LRU cache decorator for orm methods
+    """ LRU cache decorator for orm methods,
     """
 
     def __init__(self, skiparg=2, size=8192, multi=None, timeout=None):
@@ -16,14 +16,12 @@ class ormcache(object):
         self.method = m
         def lookup(self2, cr, *args):
             r = self.lookup(self2, cr, *args)
-            #self.stat()
             return r
         lookup.clear_cache = self.clear
-        #print "lookup-func",lookup
         return lookup
 
     def stat(self):
-        print "lookup-stats hit=%s miss=%s err=%s ratio=%.1f" % (self.stat_hit,self.stat_miss,self.stat_err, (100*float(self.stat_hit))/(self.stat_miss+self.stat_hit) )
+        return "lookup-stats hit=%s miss=%s err=%s ratio=%.1f" % (self.stat_hit,self.stat_miss,self.stat_err, (100*float(self.stat_hit))/(self.stat_miss+self.stat_hit) )
 
     def lru(self, self2):
         try:
@@ -41,18 +39,14 @@ class ormcache(object):
         key = args[self.skiparg-2:]
         try:
            r = d[key]
-           #print "lookup-hit",self2,cr,key,r
            self.stat_hit += 1
            return r
         except KeyError:
            self.stat_miss += 1
-           #print "lookup-miss",self2,cr,key
            value = d[args] = self.method(self2, cr, *args)
-           #print "lookup-miss-value",value
            return value
         except TypeError:
            self.stat_err += 1
-           #print "lookup-error",self2,cr,key
            return self.method(self2, cr, *args)
 
     def clear(self, self2, *args):
@@ -62,7 +56,6 @@ class ormcache(object):
         if args:
             try:
                 key = args[self.skiparg-2:]
-                #print "del",key
                 del d[key]
             except KeyError:
                 pass
@@ -78,7 +71,6 @@ class ormcache_multi(ormcache):
         d = self.lru(self2)
         args = list(args)
         multi = self.multi
-        #print args, multi
         ids = args[multi]
         r = {}
         miss = []
@@ -88,12 +80,10 @@ class ormcache_multi(ormcache):
             key = tuple(args[self.skiparg-2:])
             try:
                r[i] = d[key]
-               #print "lookup-hit",self2,cr,key,r[i]
                self.stat_hit += 1
             except Exception:
                self.stat_miss += 1
                miss.append(i)
-               #print "lookup-miss",self2,cr,key
 
         if miss:
             args[multi] = miss
@@ -134,8 +124,8 @@ if __name__ == '__main__':
             return dict([(i,i) for i in ids])
 
     a=A()
-    #r=a.m(1,2)
-    #r=a.m(1,2)
+    r=a.m(1,2)
+    r=a.m(1,2)
     r=a.n("cr",1,[1,2,3,4])
     r=a.n("cr",1,[1,2])
     print r
@@ -144,4 +134,4 @@ if __name__ == '__main__':
     a.n.clear_cache(a,1,1)
     r=a.n("cr",1,[1,2])
     print r
-    #r=a.n("cr",1,[1,2])
+    r=a.n("cr",1,[1,2])
