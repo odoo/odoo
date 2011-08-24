@@ -1437,6 +1437,11 @@ var Collection = openerp.base.Class.extend(/** @lends Collection# */{
         });
         return results;
     },
+    pluck: function (fieldname) {
+        return this.map(function (record) {
+            return record.get(fieldname);
+        });
+    },
     indexOf: function (record) {
         return _(this.records).indexOf(record);
     }
