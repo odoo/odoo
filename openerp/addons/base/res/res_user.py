@@ -373,7 +373,6 @@ class users(osv.osv):
         res = super(users, self).write(cr, uid, ids, values, context=context)
 
         # clear caches linked to the users
-        self.company_get.clear_cache(self)
         self.pool.get('ir.model.access').call_cache_clearing_methods(cr)
         clear = partial(self.pool.get('ir.rule').clear_cache, cr)
         map(clear, ids)
