@@ -2755,7 +2755,7 @@ action = self.pool.get('res.config').next(cr, uid, [], context)
                     <group expand="0" string="Group By...">
                         <filter string="Parent Report" icon="terp-folder-orange" domain="" context="{'group_by':'parent_id'}"/>
                         <separator orientation="vertical"/>
-                        <filter string="Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'type'}"/>
+                        <filter string="Report Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'type'}"/>
                     </group>
                 </search>
             </field>
