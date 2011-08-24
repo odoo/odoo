@@ -143,7 +143,6 @@ openerp.base.list_editable = function (openerp) {
                 var $new_row = $('<tr>', {
                         id: _.uniqueId('oe-editable-row-'),
                         'data-id': $(row).data('id'),
-                        'data-index': $(row).data('index'),
                         'class': $(row).attr('class') + ' oe_forms',
                         click: function (e) {e.stopPropagation();}
                     })
@@ -201,14 +200,16 @@ openerp.base.list_editable = function (openerp) {
                 });
             });
         },
-        handle_onwrite: function (record_id, index) {
+        handle_onwrite: function (source_record_id) {
             var self = this;
             var on_write_callback = self.view.fields_view.arch.attrs.on_write;
             if (!on_write_callback) { return; }
-            this.dataset.call(on_write_callback, [record_id], function (ids) {
+            this.dataset.call(on_write_callback, [source_record_id], function (ids) {
                 _(ids).each(function (id) {
                     var record = self.records.get(id);
                     if (!record) {
+                        var index = self.records.indexOf(
+                                self.records.get(source_record_id));
                         record = new openerp.base.list.Record({id: id});
                         self.records.add(record, {at: index});
                         self.dataset.ids.splice(index, 0, id);
@@ -231,8 +232,7 @@ openerp.base.list_editable = function (openerp) {
                         {at: self.options.editable === 'top' ? 0 : null});
                     self.edition_index = self.dataset.index;
                 }
-                self.handle_onwrite(self.dataset.ids[self.dataset.index],
-                                    self.dataset.index);
+                self.handle_onwrite(self.dataset.ids[self.dataset.index]);
                 self.cancel_pending_edition().then(function () {
                     $(self).trigger('saved', [self.dataset]);
                     if (!edit_next) {

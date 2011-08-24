@@ -641,7 +641,7 @@ openerp.base.ListView.List = openerp.base.Class.extend( /** @lends openerp.base.
             'reset': $.proxy(this, 'on_records_reset'),
             'change': function (event, record) {
                 var $row = self.$current.find('[data-id=' + record.get('id') + ']');
-                $row.replaceWith(self.render_record($row.data('index')));
+                $row.replaceWith(self.render_record(record));
             },
             'add': function (ev, records, record, index) {
                 $('<tr>').attr({
@@ -680,7 +680,9 @@ openerp.base.ListView.List = openerp.base.Class.extend( /** @lends openerp.base.
             })
             .delegate('tr', 'click', function (e) {
                 e.stopPropagation();
-                self.dataset.index = self.row_position(e.currentTarget);
+                self.dataset.index = self.records.indexOf(
+                    self.records.get(
+                        self.row_id(e.currentTarget)));
                 self.row_clicked(e);
             });
     },
@@ -716,15 +718,6 @@ openerp.base.ListView.List = openerp.base.Class.extend( /** @lends openerp.base.
             result.records.push(record.attributes);
         });
         return result;
-    },
-    /**
-     * Returns the index of the row in the list of rows.
-     *
-     * @param {Object} row the selected row
-     * @returns {Number} the position of the row in this.rows
-     */
-    row_position: function (row) {
-        return $(row).data('index');
     },
     /**
      * Returns the identifier of the object displayed in the provided table
@@ -787,21 +780,21 @@ openerp.base.ListView.List = openerp.base.Class.extend( /** @lends openerp.base.
     /**
      * Renders a list record to HTML
      *
-     * @param {Number} record_index index of the record to render in ``this.rows``
+     * @param {Record} record index of the record to render in ``this.rows``
      * @returns {String} QWeb rendering of the selected record
      */
-    render_record: function (record_index) {
+    render_record: function (record) {
+        var index = this.records.indexOf(record);
         return QWeb.render('ListView.row', {
             columns: this.columns,
             options: this.options,
-            record: this.records.at(record_index),
-            row_parity: (record_index % 2 === 0) ? 'even' : 'odd',
-            row_index: record_index,
+            record: record,
+            row_parity: (index % 2 === 0) ? 'even' : 'odd',
             render_cell: openerp.base.format_cell
         });
     },
     /**
-     * Fixes @data-index on all table rows, and fixes the even/odd classes
+     * Fixes fixes the even/odd classes
      *
      * @param {Number} [from_index] index from which to resequence
      * @param {Number} [offset = 0] selection offset for DOM, in case there are rows to ignore in the table
@@ -815,8 +808,7 @@ openerp.base.ListView.List = openerp.base.Class.extend( /** @lends openerp.base.
             var index = from_index + i;
             // reset record-index accelerators on rows and even/odd
             var even = index%2 === 0;
-            $(e).attr('data-index', index)
-                .toggleClass('even', even)
+            $(e).toggleClass('even', even)
                 .toggleClass('odd', !even);
         });
     }
@@ -1080,14 +1072,12 @@ openerp.base.ListView.Groups = openerp.base.Class.extend( /** @lends openerp.bas
         // ondrop, move relevant record & fix sequences
         list.$current.sortable({
             stop: function (event, ui) {
-                var from = ui.item.data('index'),
-                      to = ui.item.prev().data('index') || 0;
-                if (from === to) { return; }
-                var to_move = list.records.at(from);
-                list.records.remove(to_move);
-                list.records.add(to_move, {at: to});
+                var to_move = list.records.get(ui.item.data('id')),
+                    target_id = ui.item.prev().data('id');
 
-                list.refresh_zebra();
+                list.records.remove(to_move);
+                var to = target_id ? list.records.indexOf(list.records.get(target_id)) : 0;
+                list.records.add(to_move, { at: to });
 
                 // resequencing time!
                 var record, index = to,
@@ -1101,6 +1091,8 @@ openerp.base.ListView.Groups = openerp.base.Class.extend( /** @lends openerp.bas
                     dataset.write(record.get('id'), {sequence: seq});
                     record.set('sequence', seq);
                 }
+
+                list.refresh_zebra();
             }
         });
     },
