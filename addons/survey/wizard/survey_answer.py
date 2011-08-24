@@ -600,8 +600,9 @@ class survey_question_wiz(osv.osv_memory):
         if not sur_name_read['store_ans']:
             his_id = self.pool.get('survey.history').create(cr, uid, {'user_id': uid, \
                                               'date': strftime('%Y-%m-%d %H:%M:%S'), 'survey_id': sur_name_read['survey_id']})
-            sur_rec = survey_obj.read(cr, uid, sur_name_read['survey_id'])
-            survey_obj.write(cr, uid, sur_name_read['survey_id'],  {'tot_start_survey' : sur_rec['tot_start_survey'] + 1})
+            survey_id = int(sur_name_read['survey_id']) # This is a selection field (a string).
+            sur_rec = survey_obj.read(cr, uid, survey_id)
+            survey_obj.write(cr, uid, survey_id,  {'tot_start_survey' : sur_rec['tot_start_survey'] + 1})
             if context.has_key('cur_id'):
                 if context.has_key('request') and context.get('request',False):
                     self.pool.get(context.get('object',False)).write(cr, uid, [int(context.get('cur_id',False))], {'response' : response_id})

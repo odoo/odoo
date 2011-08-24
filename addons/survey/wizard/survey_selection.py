@@ -64,7 +64,7 @@ class survey_name_wiz(osv.osv_memory):
         survey_user_group_id = self.pool.get('res.groups').search(cr, uid, [('name', '=', 'Survey / User')])
         group_id = self.pool.get('res.groups').search(cr, uid, [('name', 'in', ('Tools / Manager','Tools / User','Survey / User'))])
         user_obj = self.pool.get('res.users')
-        user_rec = user_obj.read(cr, uid, uid)
+        user_rec = user_obj.read(cr, uid, uid, ['groups_id', 'survey_id'], context)
         if survey_user_group_id:
             if survey_user_group_id == user_rec['groups_id']:
                 for sur in surv_obj.browse(cr, uid, surv_obj.search(cr, uid, [])):
@@ -123,7 +123,7 @@ class survey_name_wiz(osv.osv_memory):
         if context is None: context = {}
 
         this = self.browse(cr, uid, ids, context=context)[0]
-        survey_id = this.survey_id
+        survey_id = int(this.survey_id) # This is a selection field (a string).
         context.update({'survey_id': survey_id, 'sur_name_id': this.id})
         cr.execute('select count(id) from survey_history where user_id=%s\
                     and survey_id=%s' % (uid,survey_id))

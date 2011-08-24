@@ -26,7 +26,7 @@ from tools.translate import _
 class survey_print_statistics(osv.osv_memory):
     _name = 'survey.print.statistics'
     _columns = {
-        'survey_ids': fields.many2many('survey','survey_print_statistics','survey_id',\
+        'survey_ids': fields.many2many('survey','survey_print_statistics_survey_rel','survey_id',\
                                 'print_id', "Survey", required="1"),
     }
 
