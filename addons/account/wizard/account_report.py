@@ -29,7 +29,7 @@ class accounting_report(osv.osv_memory):
     _columns = {
         'enable_filter': fields.boolean('Enable Comparison'),
         'account_details': fields.boolean('Details by Account', help="Print Report with the account details."),
-        'account_report_id': fields.many2one('account.report', 'Account Reports', required=True),
+        'account_report_id': fields.many2one('account.report', 'Account Report', required=True),
         'label_filter': fields.char('Filters Label', size=32, help="This label will be displayed on report to show the balance computed for the given comparison filter."),
     }
     def _print_report(self, cr, uid, ids, data, context=None):
