@@ -554,12 +554,11 @@
 <t t-name="ListView.rows" t-foreach="records.length" t-as="index">
     <t t-call="ListView.row">
         <t t-set="record" t-value="records.at(index)"/>
-        <t t-set="row_index" t-value="index"/>
         <t t-set="row_parity" t-value="index_parity"/>
     </t>
 </t>
 <tr t-name="ListView.row" t-att-class="row_parity"
-    t-att-data-index="row_index" t-att-data-id="record.get('id')">
+        t-att-data-id="record.get('id')">
     <t t-foreach="columns" t-as="column">
         <td t-if="column.meta">
 
