@@ -363,20 +363,21 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
      * @param {Object} [context] context to send the server while loading the view
      */
     reload_view: function (grouped, context) {
-        var self = this;
-        var callback = function (field_view_get) {
+        var self = this, d = $.Deferred();
+        d.then(function (field_view_get) {
             self.on_loaded(field_view_get, grouped);
-        };
+        });
         if (this.embedded_view) {
-            return $.Deferred().then(callback).resolve({fields_view: this.embedded_view});
+            d.resolve({fields_view: this.embedded_view});
         } else {
-            return this.rpc('/base/listview/load', {
+            this.rpc('/base/listview/load', {
                 model: this.model,
                 view_id: this.view_id,
                 context: this.dataset.get_context(context),
                 toolbar: this.options.sidebar
-            }, callback);
+            }, function () { d.resolve.apply(this, arguments); });
         }
+        return d.promise();
     },
     /**
      * re-renders the content of the list view
