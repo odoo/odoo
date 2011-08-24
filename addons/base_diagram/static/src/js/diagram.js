@@ -264,6 +264,13 @@ openerp.base_diagram.DiagramView = openerp.base.View.extend({
                     $(this).dialog('destroy');
                 },
                 Save : function() {
+                	var form_dataset = action_manager.inner_viewmanager.dataset; 
+                	var form_view = action_manager.inner_viewmanager.views.form.controller;
+                	
+                	form_view.do_save(function() {
+                		self.dataset.index = jQuery.inArray(parseInt(self.id,10), self.dataset.ids)
+                		self.dataset.read_index(_.keys(self.fields_view.fields), self.on_diagram_loaded)
+                	});
                     $(this).dialog('destroy');
                 }
             }
