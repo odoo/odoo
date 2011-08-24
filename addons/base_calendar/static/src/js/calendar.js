@@ -26,6 +26,7 @@ openerp.base_calendar.CalendarView = openerp.base.View.extend({
              '#fcaf3e', '#ef2929', '#ff00c9', '#ad7fa8', '#729fcf', '#8ae234', '#e9b96e', '#fce94f',
              '#ff8e00', '#ff0000', '#b0008c', '#9000ff', '#0078ff', '#00ff00', '#e6ff00', '#ffff00',
              '#905000', '#9b0000', '#840067', '#510090', '#0000c9', '#009b00', '#9abe00', '#ffc900' ];
+        this.color_map = {};
     },
     start: function() {
         this.rpc("/base_calendar/calendarview/load", {"model": this.model, "view_id": this.view_id, 'toolbar': true}, this.on_loaded);
@@ -136,17 +137,21 @@ openerp.base_calendar.CalendarView = openerp.base.View.extend({
     reload_event: function(id) {
         this.dataset.read_ids([id], _.keys(this.fields), this.on_events_loaded);
     },
-    get_color: function(index) {
-        index = index % this.COLOR_PALETTE.length;
-        return this.COLOR_PALETTE[index];
+    get_color: function(key) {
+        if (this.color_map[key]) {
+            return this.color_map[key];
+        }
+        var index = _.keys(this.color_map).length % this.COLOR_PALETTE.length;
+        var color = this.COLOR_PALETTE[index];
+        this.color_map[key] = color;
+        return color;
     },
     on_events_loaded: function(events, fn_filter, no_filter_reload) {
         var self = this;
 
         //To parse Events we have to convert date Format
         var res_events = [],
-            sidebar_items = [],
-            sidebar_ids = [];
+            sidebar_items = {};
         for (var e = 0; e < events.length; e++) {
             var evt = events[e];
             if (!evt[this.date_start]) {
@@ -157,30 +162,28 @@ openerp.base_calendar.CalendarView = openerp.base.View.extend({
             if (this.color_field) {
                 var filter = evt[this.color_field];
                 if (filter) {
-                    var filter_item = {
-                        value: (typeof filter === 'object') ? filter[0] : filter,
-                        label: (typeof filter === 'object') ? filter[1] : filter
-                    }
-                    if (typeof(fn_filter) === 'function' && !fn_filter(filter_item.value)) {
+                    var filter_value = (typeof filter === 'object') ? filter[0] : filter;
+                    if (typeof(fn_filter) === 'function' && !fn_filter(filter_value)) {
                         continue;
                     }
-                    var filter_index = _.indexOf(sidebar_ids, filter_item.value);
-                    if (filter_index === -1) {
-                        evt.color = filter_item.color = this.get_color(sidebar_ids.length);
-                        sidebar_items.push(filter_item);
-                        sidebar_ids.push(filter_item.value);
-                    } else {
-                        evt.color = this.get_color(filter_index);
+                    var filter_item = {
+                        value: filter_value,
+                        label: (typeof filter === 'object') ? filter[1] : filter,
+                        color: this.get_color(filter_value)
                     }
+                    if (!sidebar_items[filter_value]) {
+                        sidebar_items[filter_value] = filter_item;
+                    }
+                    evt.color = filter_item.color;
                     evt.textColor = '#ffffff';
                 }
             }
 
             if (this.fields[this.date_start]['type'] == 'date') {
-                evt[this.date_start] = openerp.base.parse_date(evt[this.date_start]).set({hour: 9}).toString('yyyy-MM-dd HH:mm:ss');
+                evt[this.date_start] = openerp.base.str_to_date(evt[this.date_start]).set({hour: 9}).toString('yyyy-MM-dd HH:mm:ss');
             }
             if (this.date_stop && evt[this.date_stop] && this.fields[this.date_stop]['type'] == 'date') {
-                evt[this.date_stop] = openerp.base.parse_date(evt[this.date_stop]).set({hour: 17}).toString('yyyy-MM-dd HH:mm:ss');
+                evt[this.date_stop] = openerp.base.str_to_date(evt[this.date_stop]).set({hour: 17}).toString('yyyy-MM-dd HH:mm:ss');
             }
             res_events.push(this.convert_event(evt));
         }
@@ -192,8 +195,8 @@ openerp.base_calendar.CalendarView = openerp.base.View.extend({
         }
     },
     convert_event: function(evt) {
-        var date_start = openerp.base.parse_datetime(evt[this.date_start]),
-            date_stop = this.date_stop ? openerp.base.parse_datetime(evt[this.date_stop]) : null,
+        var date_start = openerp.base.str_to_datetime(evt[this.date_start]),
+            date_stop = this.date_stop ? openerp.base.str_to_datetime(evt[this.date_stop]) : null,
             date_delay = evt[this.date_delay] || null,
             res_text = '',
             res_description = [];
@@ -277,9 +280,9 @@ openerp.base_calendar.CalendarView = openerp.base.View.extend({
         var data = {
             name: event_obj.text
         };
-        data[this.date_start] = openerp.base.format_datetime(event_obj.start_date);
+        data[this.date_start] = openerp.base.datetime_to_str(event_obj.start_date);
         if (this.date_stop) {
-            data[this.date_stop] = openerp.base.format_datetime(event_obj.end_date);
+            data[this.date_stop] = openerp.base.datetime_to_str(event_obj.end_date);
         }
         if (this.date_delay) {
             var diff_seconds = Math.round((event_obj.end_date.getTime() - event_obj.start_date.getTime()) / 1000);
@@ -299,8 +302,7 @@ openerp.base_calendar.CalendarView = openerp.base.View.extend({
                 // TODO: handle non-empty results.group_by with read_group
                 self.dataset.context = self.context = results.context;
                 self.dataset.domain = self.domain = results.domain;
-                self.dataset.read_slice({
-                        fields: _.keys(self.fields),
+                self.dataset.read_slice(_.keys(self.fields), {
                         offset:0,
                         limit: self.limit
                     }, function(events) {

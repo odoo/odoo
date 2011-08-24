@@ -2,140 +2,6 @@
 openerp.base.formats = function(openerp) {
 
 /**
- * Converts a string to a Date javascript object using OpenERP's
- * datetime string format (exemple: '2011-12-01 15:12:35').
- * 
- * The timezone is assumed to be UTC (standard for OpenERP 6.1)
- * and will be converted to the browser's timezone.
- * 
- * @param {String} str A string representing a datetime.
- * @returns {Date}
- */
-openerp.base.parse_datetime = function(str) {
-    if(!str) {
-        return str;
-    }
-    var regex = /\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d/;
-    var res = regex.exec(str);
-    if ( res[0] != str ) {
-        throw "'" + str + "' is not a valid datetime";
-    }
-    var obj = Date.parse(str + " GMT");
-    if (! obj) {
-        throw "'" + str + "' is not a valid datetime";
-    }
-    return obj;
-};
-
-/**
- * Converts a string to a Date javascript object using OpenERP's
- * date string format (exemple: '2011-12-01').
- * 
- * @param {String} str A string representing a date.
- * @returns {Date}
- */
-openerp.base.parse_date = function(str) {
-    if(!str) {
-        return str;
-    }
-    var regex = /\d\d\d\d-\d\d-\d\d/;
-    var res = regex.exec(str);
-    if ( res[0] != str ) {
-        throw "'" + str + "' is not a valid date";
-    }
-    var obj = Date.parse(str);
-    if (! obj) {
-        throw "'" + str + "' is not a valid date";
-    }
-    return obj;
-};
-
-/**
- * Converts a string to a Date javascript object using OpenERP's
- * time string format (exemple: '15:12:35').
- * 
- * @param {String} str A string representing a time.
- * @returns {Date}
- */
-openerp.base.parse_time = function(str) {
-    if(!str) {
-        return str;
-    }
-    var regex = /\d\d:\d\d:\d\d/;
-    var res = regex.exec(str);
-    if ( res[0] != str ) {
-        throw "'" + str + "' is not a valid time";
-    }
-    var obj = Date.parse(str);
-    if (! obj) {
-        throw "'" + str + "' is not a valid time";
-    }
-    return obj;
-};
-
-/*
- * Left-pad provided arg 1 with zeroes until reaching size provided by second
- * argument.
- *
- * @param {Number|String} str value to pad
- * @param {Number} size size to reach on the final padded value
- * @returns {String} padded string
- */
-var zpad = function(str, size) {
-    str = "" + str;
-    return new Array(size - str.length + 1).join('0') + str;
-};
-
-/**
- * Converts a Date javascript object to a string using OpenERP's
- * datetime string format (exemple: '2011-12-01 15:12:35').
- * 
- * The timezone of the Date object is assumed to be the one of the
- * browser and it will be converted to UTC (standard for OpenERP 6.1).
- * 
- * @param {Date} obj
- * @returns {String} A string representing a datetime.
- */
-openerp.base.format_datetime = function(obj) {
-    if (!obj) {
-        return false;
-    }
-    return zpad(obj.getUTCFullYear(),4) + "-" + zpad(obj.getUTCMonth() + 1,2) + "-"
-         + zpad(obj.getUTCDate(),2) + " " + zpad(obj.getUTCHours(),2) + ":"
-         + zpad(obj.getUTCMinutes(),2) + ":" + zpad(obj.getUTCSeconds(),2);
-};
-
-/**
- * Converts a Date javascript object to a string using OpenERP's
- * date string format (exemple: '2011-12-01').
- * 
- * @param {Date} obj
- * @returns {String} A string representing a date.
- */
-openerp.base.format_date = function(obj) {
-    if (!obj) {
-        return false;
-    }
-    return zpad(obj.getFullYear(),4) + "-" + zpad(obj.getMonth() + 1,2) + "-"
-         + zpad(obj.getDate(),2);
-};
-
-/**
- * Converts a Date javascript object to a string using OpenERP's
- * time string format (exemple: '15:12:35').
- * 
- * @param {Date} obj
- * @returns {String} A string representing a time.
- */
-openerp.base.format_time = function(obj) {
-    if (!obj) {
-        return false;
-    }
-    return zpad(obj.getHours(),2) + ":" + zpad(obj.getMinutes(),2) + ":"
-         + zpad(obj.getSeconds(),2);
-};
-
-/**
  * Formats a single atomic value based on a field descriptor
  *
  * @param {Object} value read from OpenERP
@@ -161,7 +27,9 @@ openerp.base.format_value = function (value, descriptor, value_if_empty) {
             return _.sprintf('%d', value);
         case 'float':
             var precision = descriptor.digits ? descriptor.digits[1] : 2;
-            return _.sprintf('%.' + precision + 'f', value);
+            var int_part = Math.floor(value);
+            var dec_part = Math.floor((value % 1) * Math.pow(10, precision));
+            return _.sprintf('%d' + openerp.base._t.database.parameters.decimal_point + '%d', int_part, dec_part);
         case 'float_time':
             return _.sprintf("%02d:%02d",
                     Math.floor(value),
@@ -173,9 +41,89 @@ openerp.base.format_value = function (value, descriptor, value_if_empty) {
         case 'many2one':
             // name_get value format
             return value[1];
+        case 'datetime':
+            if (typeof(value) == "string")
+                value = openerp.base.str_to_datetime(value);
+            try {
+                return value.format(_.sprintf("%s %s", openerp.base._t.database.parameters.date_format, 
+                    openerp.base._t.database.parameters.time_format));
+            } catch (e) {
+                return value.format("%m/%d/%Y %H:%M:%S");
+            }
+            return value;
+        case 'date':
+            if (typeof(value) == "string")
+                value = openerp.base.str_to_date(value);
+            try {
+                return value.format(openerp.base._t.database.parameters.date_format);
+            } catch (e) {
+                return value.format("%m/%d/%Y");
+            }
+        case 'time':
+            if (typeof(value) == "string")
+                value = openerp.base.str_to_time(value);
+            try {
+                return value.format(openerp.base._t.database.parameters.time_format);
+            } catch (e) {
+                return value.format("%H:%M:%S");
+            }
         default:
             return value;
     }
+};
+
+openerp.base.parse_value = function (value, descriptor, value_if_empty) {
+    switch (value) {
+        case false:
+        case "":
+            return value_if_empty === undefined ?  false : value_if_empty;
+    }
+    switch (descriptor.widget || descriptor.type) {
+        case 'integer':
+            var tmp = Number(value);
+            if (isNaN(tmp))
+                throw value + " is not a correct integer";
+            return tmp;
+        case 'float':
+            var tmp = Number(value);
+            if (!isNaN(tmp))
+                return tmp;
+            tmp = value.replace(openerp.base._t.database.parameters.decimal_point, ".");
+            var tmp2 = tmp;
+            do {
+                tmp = tmp2;
+                tmp2 = tmp.replace(openerp.base._t.database.parameters.thousands_sep, "");
+            } while(tmp !== tmp2);
+            tmp = Number(tmp);
+            if (isNaN(tmp))
+                throw value + " is not a correct float";
+            return tmp;
+        case 'float_time':
+            var tmp = value.split(":");
+            if (tmp.length != 2)
+                throw value + " is not a correct float_time";
+            var tmp1 = openerp.base.parse_value(tmp[0], {type: "integer"});
+            var tmp2 = openerp.base.parse_value(tmp[1], {type: "integer"});
+            return tmp1 + (tmp2 / 60);
+        case 'progressbar':
+            return openerp.base.parse_value(value, {type: "float"});
+        case 'datetime':
+            var tmp = Date.parse(value);
+            if (tmp !== null)
+                return tmp;
+            throw value + " is not a valid datetime";
+        case 'date':
+            var tmp = Date.parse(value);
+            if (tmp !== null)
+                return tmp;
+            throw value + " is not a valid date";
+        case 'time':
+            var tmp = Date.parse(value);
+            if (tmp !== null)
+                return tmp;
+            throw value + " is not a valid time";
+    }
+    return value;
 };
 
 /**
@@ -201,6 +149,9 @@ openerp.base.format_cell = function (row_data, column, value_if_empty) {
         ].join('')
     }
 
+    if (!row_data[column.id]) {
+        return value_if_empty === undefined ? '' : value_if_empty;
+    }
     return openerp.base.format_value(
             row_data[column.id].value, column, value_if_empty);
 }

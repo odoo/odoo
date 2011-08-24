@@ -18,9 +18,9 @@
     </div>
 </t>
 <t t-name="CalendarView.sidebar.responsible">
-    <div t-foreach="filters" t-as="filter" class="oe_calendar_responsible" t-attf-style="background: #{filter.color}">
-        <input type="checkbox" name="selection" t-att-value="filter.value"/>
-        <span><t t-esc="filter.label"/></span>
+    <div t-foreach="filters" class="oe_calendar_responsible" t-attf-style="background: #{filters_value.color}">
+        <input type="checkbox" name="selection" t-att-value="filters_value.value"/>
+        <span><t t-esc="filters_value.label"/></span>
     </div>
 </t>
 </template>

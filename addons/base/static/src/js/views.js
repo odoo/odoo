@@ -17,6 +17,7 @@ openerp.base.ActionManager = openerp.base.Widget.extend({
         this.dialog = null;
         this.dialog_viewmanager = null;
         this.client_widget = null;
+        this.url = {}
     },
     render: function() {
         return "<div id='"+this.element_id+"'></div>";
@@ -29,11 +30,37 @@ openerp.base.ActionManager = openerp.base.Widget.extend({
             this.dialog = null;
         }
     },
-    inner_stop: function () {
+    content_stop: function () {
         if (this.inner_viewmanager) {
             this.inner_viewmanager.stop();
             this.inner_viewmanager = null;
         }
+        if (this.client_widget) {
+            this.client_widget.stop();
+            this.client_widget = null;
+        }
+    },
+    url_update: function(action) {
+        // this.url = {
+        //     "model": action.model,
+        //     "domain": action.domain,
+        // };
+        // action.res_model
+        // action.domain
+        // action.context
+        // after
+        // action.views
+        // action.res_id
+        // mode
+        // menu
+    },
+    url_stringify: function(action) {
+    },
+    url_parse: function(action) {
+    },
+    on_url_update: function(url) {
+    },
+    do_url_action: function(url) {
     },
     do_action: function(action, on_close) {
         var type = action.type.replace(/\./g,'_');
@@ -66,9 +93,10 @@ openerp.base.ActionManager = openerp.base.Widget.extend({
             this.dialog.open();
         } else  {
             this.dialog_stop();
-            this.inner_stop();
+            this.content_stop();
             this.inner_viewmanager = new openerp.base.ViewManagerAction(this, action);
             this.inner_viewmanager.appendTo(this.$element);
+            this.url_update(action);
         }
         /* new window code
             this.rpc("/base/session/save_session_action", { the_action : action}, function(key) {
@@ -90,8 +118,9 @@ openerp.base.ActionManager = openerp.base.Widget.extend({
         });
     },
     ir_actions_client: function (action) {
-        this.client_widget = openerp.base.client_actions.get_object(action.tag);
-        new this.client_widget(this, this.element_id, action.params).start();
+        this.content_stop();
+        var ClientWidget = openerp.base.client_actions.get_object(action.tag);
+        (this.client_widget = new ClientWidget(this, action.params)).appendTo(this);
     }
 });
 

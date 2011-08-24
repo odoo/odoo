@@ -72,7 +72,7 @@ openerp.base.TreeView = openerp.base.View.extend({
             'toolbar': has_toolbar
         }));
 
-        this.dataset.read_slice({fields: this.fields_list()}, function (records) {
+        this.dataset.read_slice(this.fields_list(), {}, function (records) {
             if (!has_toolbar) {
                 // WARNING: will do a second read on the same ids, but only on
                 //          first load so not very important

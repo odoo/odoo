@@ -79,7 +79,7 @@ init: function(parent, element_id, dataset, view_id) {
     get_events: function() {
 
         var self = this;
-        this.dataset.read_slice({}, function(result) {
+        this.dataset.read_slice([],{}, function(result) {
             self.load_event(result);
         });
 
@@ -474,31 +474,31 @@ init: function(parent, element_id, dataset, view_id) {
     convert_str_date: function (str){
         if (str.length == 19){
             this.format = "yyyy-MM-dd HH:mm:ss";
-            return openerp.base.parse_datetime(str);
+            return openerp.base.str_to_datetime(str);
         } else if (str.length == 10){
             this.format = "yyyy-MM-dd";
-            return openerp.base.parse_date(str);
+            return openerp.base.str_to_date(str);
         } else if (str.length == 8){
             this.format = "HH:mm:ss";
-            return openerp.base.parse_time(str);
+            return openerp.base.str_to_time(str);
         }
         throw "Unrecognized date/time format";
     },
 
     convert_date_str: function(full_date) {
         if (this.format == "yyyy-MM-dd HH:mm:ss"){
-            return openerp.base.format_datetime(full_date);
+            return openerp.base.datetime_to_str(full_date);
         } else if (this.format == "yyyy-MM-dd"){
-            return openerp.base.format_date(full_date);
+            return openerp.base.date_to_str(full_date);
         } else if (this.format == "HH:mm:ss"){
-            return openerp.base.format_time(full_date);
+            return openerp.base.time_to_str(full_date);
         }
         throw "Unrecognized date/time format";
     },
 
     reload_gantt: function() {
         var self = this;
-        this.dataset.read_slice({}, function(response) {
+        this.dataset.read_slice([],{}, function(response) {
             ganttChartControl.clearAll();
             jQuery("#GanttDiv").children().remove();
             self.load_event(response);

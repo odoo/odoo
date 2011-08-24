@@ -42,6 +42,7 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
      * @borrows openerp.base.ActionExecutor#execute_action as #execute_action
      */
     init: function(parent, element_id, dataset, view_id, options) {
+        var self = this;
         this._super(parent, element_id);
         this.set_default_options(_.extend({}, this.defaults, options || {}));
         this.dataset = dataset;
@@ -50,6 +51,8 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
 
         this.columns = [];
 
+        this.records = new Collection();
+
         this.set_groups(new openerp.base.ListView.Groups(this));
 
         if (this.dataset instanceof openerp.base.DataSetStatic) {
@@ -57,6 +60,13 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
         }
 
         this.page = 0;
+        this.records.bind('change', function (event, record, key) {
+            if (!_(self.aggregate_columns).chain()
+                    .pluck('name').contains(key).value()) {
+                return;
+            }
+            self.compute_aggregates();
+        });
     },
     /**
      * Retrieves the view's number of records per page (|| section)
@@ -336,9 +346,7 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
             this.sidebar.$element.show();
         }
         if (this.hidden) {
-            this.$element.find('.oe-listview-content').append(
-                this.groups.apoptosis().render());
-            this.hidden = false;
+            this.reload_content();
         }
     },
     do_hide: function () {
@@ -374,8 +382,9 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
      * re-renders the content of the list view
      */
     reload_content: function () {
+        this.records.reset();
         this.$element.find('.oe-listview-content').append(
-            this.groups.apoptosis().render(
+            this.groups.render(
                 $.proxy(this, 'compute_aggregates')));
     },
     /**
@@ -403,8 +412,8 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
     do_actual_search: function (results) {
         this.groups.datagroup = new openerp.base.DataGroup(
             this, this.model,
-            this.dataset.get_domain(results.domain),
-            this.dataset.get_context(results.context),
+            results.domain,
+            results.context,
             results.group_by);
         this.groups.datagroup.sort = this.dataset._sort;
 
@@ -426,7 +435,9 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
         }
         var self = this;
         return $.when(this.dataset.unlink(ids)).then(function () {
-            self.groups.drop_records(ids);
+            _(ids).each(function (id) {
+                self.records.remove(self.records.get(id));
+            });
             self.compute_aggregates();
         });
     },
@@ -456,16 +467,11 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
      * @param {Function} callback should be called after the action is executed, if non-null
      */
     do_button_action: function (name, id, callback) {
-        var   self = this,
-            action = _.detect(this.columns, function (field) {
+        var action = _.detect(this.columns, function (field) {
             return field.name === name;
         });
         if (!action) { return; }
-        this.execute_action(action, this.dataset, id, function () {
-            $.when(callback.apply(this, arguments).then(function () {
-                self.compute_aggregates();
-            }));
-        });
+        this.execute_action(action, this.dataset, id, callback);
     },
     /**
      * Handles the activation of a record (clicking on it)
@@ -476,7 +482,8 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
      */
     do_activate_record: function (index, id, dataset) {
         var self = this;
-        this.dataset.read_slice({
+        // TODO is it needed ?
+        this.dataset.read_slice([],{
                 context: dataset.get_context(),
                 domain: dataset.get_domain()
             }, function () {
@@ -621,7 +628,31 @@ openerp.base.ListView.List = openerp.base.Class.extend( /** @lends openerp.base.
         this.options = opts.options;
         this.columns = opts.columns;
         this.dataset = opts.dataset;
-        this.rows = opts.rows;
+        this.records = opts.records;
+
+        this.record_callbacks = {
+            'remove': function (event, record) {
+                var $row = self.$current.find(
+                        '[data-id=' + record.get('id') + ']');
+                var index = $row.data('index');
+                $row.remove();
+                self.refresh_zebra(index);
+            },
+            'reset': $.proxy(this, 'on_records_reset'),
+            'change': function (event, record) {
+                var $row = self.$current.find('[data-id=' + record.get('id') + ']');
+                $row.replaceWith(self.render_record($row.data('index')));
+            },
+            'add': function (ev, records, record, index) {
+                $('<tr>').attr({
+                    'data-id': record.get('id')
+                }).insertAfter(self.$current.children(':eq(' + index + ')'));
+                self.refresh_zebra(index, 1);
+            }
+        };
+        _(this.record_callbacks).each(function (callback, event) {
+            this.records.bind(event, callback);
+        }, this);
 
         this.$_element = $('<tbody class="ui-widget-content">')
             .appendTo(document.body)
@@ -645,7 +676,7 @@ openerp.base.ListView.List = openerp.base.Class.extend( /** @lends openerp.base.
                       index = self.row_position($row);
 
                 $(self).trigger('action', [field, record_id, function () {
-                    return self.reload_record(index, true);
+                    return self.reload_record(index);
                 }]);
             })
             .delegate('tr', 'click', function (e) {
@@ -657,7 +688,7 @@ openerp.base.ListView.List = openerp.base.Class.extend( /** @lends openerp.base.
     row_clicked: function () {
         $(this).trigger(
             'row_link',
-            [this.rows[this.dataset.index].data.id.value,
+            [this.records.at(this.dataset.index).get('id'),
              this.dataset]);
     },
     render: function () {
@@ -677,16 +708,13 @@ openerp.base.ListView.List = openerp.base.Class.extend( /** @lends openerp.base.
         if (!this.options.selectable) {
             return [];
         }
-        var rows = this.rows;
+        var records = this.records;
         var result = {ids: [], records: []};
         this.$current.find('th.oe-record-selector input:checked')
                 .closest('tr').each(function () {
-            var record = {};
-            _(rows[$(this).data('index')].data).each(function (obj, key) {
-                record[key] = obj.value;
-            });
-            result.ids.push(record.id);
-            result.records.push(record);
+            var record = records.get($(this).data('id'));
+            result.ids.push(record.get('id'));
+            result.records.push(record.attributes);
         });
         return result;
     },
@@ -707,53 +735,24 @@ openerp.base.ListView.List = openerp.base.Class.extend( /** @lends openerp.base.
      * @returns {Number|String} the identifier of the row's object
      */
     row_id: function (row) {
-        return this.rows[this.row_position(row)].data.id.value;
+        return $(row).data('id');
     },
     /**
-     * Death signal, cleans up list
+     * Death signal, cleans up list display
      */
-    apoptosis: function () {
+    on_records_reset: function () {
+        _(this.record_callbacks).each(function (callback, event) {
+            this.records.unbind(event, callback);
+        }, this);
         if (!this.$current) { return; }
         this.$current.remove();
         this.$current = null;
         this.$_element.remove();
     },
     get_records: function () {
-        return _(this.rows).map(function (row) {
-            var record = {};
-            _(row.data).each(function (obj, key) {
-                record[key] = obj.value;
-            });
-            return {count: 1, values: record};
+        return this.records.map(function (record) {
+            return {count: 1, values: record.attributes};
         });
-    },
-    /**
-     * Transforms a record from what is returned by a dataset read (a simple
-     * mapping of ``$fieldname: $value``) to the format expected by list rows
-     * and form views:
-     *
-     *    data: {
-     *         $fieldname: {
-     *             value: $value
-     *         }
-     *     }
-     *
-     * This format allows for the insertion of a bunch of metadata (names,
-     * colors, etc...)
-     *
-     * @param {Object} record original record, in dataset format
-     * @returns {Object} record displayable in a form or list view
-     */
-    transform_record: function (record) {
-        // TODO: colors handling
-        var form_data = {},
-          form_record = {data: form_data};
-
-        _(record).each(function (value, key) {
-            form_data[key] = {value: value};
-        });
-
-        return form_record;
     },
     /**
      * Reloads the record at index ``row_index`` in the list's rows.
@@ -764,26 +763,21 @@ openerp.base.ListView.List = openerp.base.Class.extend( /** @lends openerp.base.
      * @param {Number} record_index index of the record to reload
      * @param {Boolean} fetch fetches the record from remote before reloading it
      */
-    reload_record: function (record_index, fetch) {
-        var self = this;
-        var read_p = null;
-        if (fetch) {
-            // save index to restore it later, if already set
-            var old_index = this.dataset.index;
-            this.dataset.index = record_index;
-            read_p = this.dataset.read_index(
-                _.pluck(_(this.columns).filter(function (r) {return r.tag === 'field';}), 'name'),
-                function (record) {
-                    var form_record = self.transform_record(record);
-                    self.rows.splice(record_index, 1, form_record);
-                    self.dataset.index = old_index;
-                }
-            )
-        }
+    reload_record: function (record_index) {
+        var r = this.records.at(record_index);
 
-        return $.when(read_p).then(function () {
-            self.$current.children().eq(record_index)
-                .replaceWith(self.render_record(record_index)); });
+        return this.dataset.read_ids(
+            [r.get('id')],
+            _.pluck(_(this.columns).filter(function (r) {
+                    return r.tag === 'field';
+                }), 'name'),
+            function (record) {
+                _(record[0]).each(function (value, key) {
+                    r.set(key, value, {silent: true});
+                });
+                r.trigger('change', r);
+            }
+        );
     },
     /**
      * Renders a list record to HTML
@@ -795,31 +789,32 @@ openerp.base.ListView.List = openerp.base.Class.extend( /** @lends openerp.base.
         return QWeb.render('ListView.row', {
             columns: this.columns,
             options: this.options,
-            row: this.rows[record_index],
+            record: this.records.at(record_index),
             row_parity: (record_index % 2 === 0) ? 'even' : 'odd',
             row_index: record_index,
             render_cell: openerp.base.format_cell
         });
     },
     /**
-     * Stops displaying the records matching the provided ids.
+     * Fixes @data-index on all table rows, and fixes the even/odd classes
      *
-     * @param {Array} ids identifiers of the records to remove
+     * @param {Number} [from_index] index from which to resequence
+     * @param {Number} [offset = 0] selection offset for DOM, in case there are rows to ignore in the table
      */
-    drop_records: function (ids) {
-        var self = this;
-        _(this.rows).chain()
-              .map(function (record, index) {
-                return {index: index, id: record.data.id.value};
-            }).filter(function (record) {
-                return _(ids).contains(record.id);
-            }).reverse()
-              .each(function (record) {
-                self.$current.find('tr:eq(' + record.index + ')').remove();
-                self.rows.splice(record.index, 1);
-            })
+    refresh_zebra: function (from_index, offset) {
+        offset = offset || 0;
+        from_index = from_index || 0;
+        var dom_offset = offset + from_index;
+        var sel = dom_offset ? ':gt(' + (dom_offset - 1) + ')' : null;
+        this.$current.children(sel).each(function (i, e) {
+            var index = from_index + i;
+            // reset record-index accelerators on rows and even/odd
+            var even = index%2 === 0;
+            $(e).attr('data-index', index)
+                .toggleClass('even', even)
+                .toggleClass('odd', !even);
+        });
     }
-    // drag and drop
 });
 openerp.base.ListView.Groups = openerp.base.Class.extend( /** @lends openerp.base.ListView.Groups# */{
     passtrough_events: 'action deleted row_link',
@@ -829,17 +824,28 @@ openerp.base.ListView.Groups = openerp.base.Class.extend( /** @lends openerp.bas
      *
      * Provides events similar to those of
      * :js:class:`~openerp.base.ListView.List`
+     *
+     * @constructs
+     * @param {openerp.base.ListView} view
+     * @param {Object} [options]
+     * @param {Collection} [options.records]
+     * @param {Object} [options.options]
+     * @param {Array} [options.columns]
      */
-    init: function (view) {
+    init: function (view, options) {
+        options = options || {};
         this.view = view;
-        this.options = view.options;
-        this.columns = view.columns;
+        this.records = options.records || view.records;
+        this.options = options.options || view.options;
+        this.columns = options.columns || view.columns;
         this.datagroup = null;
 
         this.$row = null;
         this.children = {};
 
         this.page = 0;
+
+        this.records.bind('reset', $.proxy(this, 'on_records_reset'));
     },
     make_fragment: function () {
         return document.createDocumentFragment();
@@ -900,7 +906,7 @@ openerp.base.ListView.Groups = openerp.base.Class.extend( /** @lends openerp.bas
     },
     close: function () {
         this.$row.children().last().empty();
-        this.apoptosis();
+        this.records.reset();
     },
     /**
      * Prefixes ``$node`` with floated spaces in order to indent it relative
@@ -921,10 +927,11 @@ openerp.base.ListView.Groups = openerp.base.Class.extend( /** @lends openerp.bas
         var placeholder = this.make_fragment();
         _(datagroups).each(function (group) {
             if (self.children[group.value]) {
-                self.children[group.value].apoptosis();
+                self.records.proxy(group.value).reset();
                 delete self.children[group.value];
             }
             var child = self.children[group.value] = new openerp.base.ListView.Groups(self.view, {
+                records: self.records.proxy(group.value),
                 options: self.options,
                 columns: self.columns
             });
@@ -1019,13 +1026,12 @@ openerp.base.ListView.Groups = openerp.base.Class.extend( /** @lends openerp.bas
         });
     },
     render_dataset: function (dataset) {
-        var rows = [],
-            self = this,
+        var self = this,
             list = new openerp.base.ListView.List(this, {
                 options: this.options,
                 columns: this.columns,
                 dataset: dataset,
-                rows: rows
+                records: this.records
             });
         this.bind_child_events(list);
 
@@ -1034,11 +1040,9 @@ openerp.base.ListView.Groups = openerp.base.Class.extend( /** @lends openerp.bas
                d = new $.Deferred(),
             page = this.datagroup.openable ? this.page : view.page;
 
-        dataset.read_slice({
-                fields: _.pluck(_.select(this.columns, function(x) {return x.tag == "field"}), 'name'),
-                offset: page * limit,
-                limit: limit
-            }, function (records) {
+        var fields = _.pluck(_.select(this.columns, function(x) {return x.tag == "field"}), 'name');
+        var options = { offset: page * limit, limit: limit };
+        dataset.read_slice(fields, options , function (records) {
                 if (!self.datagroup.openable) {
                     view.configure_pager(dataset);
                 } else {
@@ -1054,11 +1058,7 @@ openerp.base.ListView.Groups = openerp.base.Class.extend( /** @lends openerp.bas
                             .attr('disabled', page === pages - 1);
                 }
 
-                var form_records = _(records).map(
-                    $.proxy(list, 'transform_record'));
-
-                rows.splice(0, rows.length);
-                rows.push.apply(rows, form_records);
+                self.records.add(records, {silent: true});
                 list.render();
                 d.resolve(list);
             });
@@ -1078,29 +1078,23 @@ openerp.base.ListView.Groups = openerp.base.Class.extend( /** @lends openerp.bas
                 var from = ui.item.data('index'),
                       to = ui.item.prev().data('index') || 0;
                 if (from === to) { return; }
-                list.rows.splice(to, 0, list.rows.splice(from, 1)[0]);
+                var to_move = list.records.at(from);
+                list.records.remove(to_move);
+                list.records.add(to_move, {at: to});
 
-                ui.item.parent().children().each(function (i, e) {
-                    // reset record-index accelerators on rows and even/odd
-                    var even = i%2 === 0;
-                    $(e).data('index', i)
-                        .toggleClass('even', even)
-                        .toggleClass('odd', !even);
-                });
+                list.refresh_zebra();
 
                 // resequencing time!
-                var data, index = to,
+                var record, index = to,
                     // if drag to 1st row (to = 0), start sequencing from 0
                     // (exclusive lower bound)
-                    seq = to ? list.rows[to - 1].data.sequence.value : 0;
-                while (++seq, list.rows[index]) {
-                    data = list.rows[index].data;
-                    data.sequence.value = seq;
+                    seq = to ? list.records.at(to - 1).get('sequence') : 0;
+                while (++seq, record = list.records.at(index++)) {
                     // write are independent from one another, so we can just
                     // launch them all at the same time and we don't really
                     // give a fig about when they're done
-                    dataset.write(data.id.value, {sequence: seq});
-                    list.reload_record(index++);
+                    dataset.write(record.get('id'), {sequence: seq});
+                    record.set('sequence', seq);
                 }
             }
         });
@@ -1145,13 +1139,9 @@ openerp.base.ListView.Groups = openerp.base.Class.extend( /** @lends openerp.bas
 
         return {ids: ids, records: records};
     },
-    apoptosis: function () {
-        _(this.children).each(function (child) {
-            child.apoptosis();
-        });
+    on_records_reset: function () {
         this.children = {};
         $(this.elements).remove();
-        return this;
     },
     get_records: function () {
         if (_(this.children).isEmpty()) {
@@ -1164,22 +1154,301 @@ openerp.base.ListView.Groups = openerp.base.Class.extend( /** @lends openerp.bas
             .map(function (child) {
                 return child.get_records();
             }).flatten().value();
-    },
-    /**
-     * Stops displaying the records with the linked ids, assumes these records
-     * were deleted from the DB.
-     *
-     * This is the up-signal from the `deleted` event on groups and lists.
-     *
-     * @param {Array} ids list of identifier of the records to remove.
-     */
-    drop_records: function (ids) {
-        _.each(this.children, function (child) {
-            child.drop_records(ids);
-        });
     }
 });
+
+/**
+ * @class
+ * @extends openerp.base.Class
+ */
+var Events = {
+    /**
+     * @param {String} event event to listen to on the current object, null for all events
+     * @param {Function} handler event handler to bind to the relevant event
+     * @returns this
+     */
+    bind: function (event, handler) {
+        var calls = this['_callbacks'] || (this._callbacks = {});
+
+        if (event in calls) {
+            calls[event].push(handler);
+        } else {
+            calls[event] = [handler];
+        }
+        return this;
+    },
+    /**
+     * @param {String} event event to unbind on the current object
+     * @param {function} [handler] specific event handler to remove (otherwise unbind all handlers for the event)
+     * @returns this
+     */
+    unbind: function (event, handler) {
+        var calls = this._callbacks || {};
+        if (!(event in calls)) { return this; }
+        if (!handler) {
+            delete calls[event];
+        } else {
+            var handlers = calls[event];
+            handlers.splice(
+                _(handlers).indexOf(handler),
+                1);
+        }
+        return this;
+    },
+    /**
+     * @param {String} event
+     * @returns this
+     */
+    trigger: function (event) {
+        var calls;
+        if (!(calls = this._callbacks)) { return this; }
+        var callbacks = (calls[event] || []).concat(calls[null] || []);
+        for(var i=0, length=callbacks.length; i<length; ++i) {
+            callbacks[i].apply(this, arguments);
+        }
+        return this;
+    }
 };
+var Record = openerp.base.Class.extend(/** @lends Record# */{
+    /**
+     * @constructs
+     * @extends openerp.base.Class
+     * @borrows Events#bind as this.bind
+     * @borrows Events#trigger as this.trigger
+     * @param {Object} [data]
+     */
+    init: function (data) {
+        this.attributes = data || {};
+    },
+    /**
+     * @param {String} key
+     * @returns {Object}
+     */
+    get: function (key) {
+        return this.attributes[key];
+    },
+    /**
+     * @param key
+     * @param value
+     * @param {Object} [options]
+     * @param {Boolean} [options.silent=false]
+     * @returns {Record}
+     */
+    set: function (key, value, options) {
+        options = options || {};
+        var old_value = this.attributes[key];
+        if (old_value === value) {
+            return this;
+        }
+        this.attributes[key] = value;
+        if (!options.silent) {
+            this.trigger('change:' + key, this, value, old_value);
+            this.trigger('change', this, key, value, old_value);
+        }
+        return this;
+    },
+    /**
+     * Converts the current record to the format expected by form views:
+     *
+     * .. code-block:: javascript
+     *
+     *    data: {
+     *         $fieldname: {
+     *             value: $value
+     *         }
+     *     }
+     *
+     *
+     * @returns {Object} record displayable in a form view
+     */
+    toForm: function () {
+        var form_data = {};
+        _(this.attributes).each(function (value, key) {
+            form_data[key] = {value: value};
+        });
 
+        return {data: form_data};
+    }
+});
+Record.include(Events);
+var Collection = openerp.base.Class.extend(/** @lends Collection# */{
+    /**
+     * Smarter collections, with events, very strongly inspired by Backbone's.
+     *
+     * Using a "dumb" array of records makes synchronization between the
+     * various serious 
+     *
+     * @constructs
+     * @extends openerp.base.Class
+     * @borrows Events#bind as this.bind
+     * @borrows Events#trigger as this.trigger
+     * @param {Array} [records] records to initialize the collection with
+     * @param {Object} [options]
+     */
+    init: function (records, options) {
+        options = options || {};
+        _.bindAll(this, '_onRecordEvent');
+        this.length = 0;
+        this.records = [];
+        this._byId = {};
+        this._proxies = {};
+        this._key = options.key;
+        this._parent = options.parent;
+
+        if (records) {
+            this.add(records);
+        }
+    },
+    /**
+     * @param {Object|Array} record
+     * @param {Object} [options]
+     * @param {Number} [options.at]
+     * @param {Boolean} [options.silent=false]
+     * @returns this
+     */
+    add: function (record, options) {
+        options = options || {};
+        var records = record instanceof Array ? record : [record];
+
+        for(var i=0, length=records.length; i<length; ++i) {
+            var instance = (records[i] instanceof Record) ? records[i] : new Record(records[i]);
+            instance.bind(null, this._onRecordEvent);
+            this._byId[instance.get('id')] = instance;
+            if (options.at == undefined) {
+                this.records.push(instance);
+                if (!options.silent) {
+                    this.trigger('add', this, instance, this.records.length-1);
+                }
+            } else {
+                var insertion_index = options.at + i;
+                this.records.splice(insertion_index, 0, instance);
+                if (!options.silent) {
+                    this.trigger('add', this, instance, insertion_index);
+                }
+            }
+            this.length++;
+        }
+        return this;
+    },
+
+    /**
+     * Get a record by its index in the collection, can also take a group if
+     * the collection is not degenerate
+     *
+     * @param {Number} index
+     * @param {String} [group]
+     * @returns {Record|undefined}
+     */
+    at: function (index, group) {
+        if (group) {
+            var groups = group.split('.');
+            return this._proxies[groups[0]].at(index, groups.join('.'));
+        }
+        return this.records[index];
+    },
+    /**
+     * Get a record by its database id
+     *
+     * @param {Number} id
+     * @returns {Record|undefined}
+     */
+    get: function (id) {
+        if (!_(this._proxies).isEmpty()) {
+            var record = null;
+            _(this._proxies).detect(function (proxy) {
+                return record = proxy.get(id);
+            });
+            return record;
+        }
+        return this._byId[id];
+    },
+    /**
+     * Builds a proxy (insert/retrieve) to a subtree of the collection, by
+     * the subtree's group
+     *
+     * @param {String} section group path section
+     * @returns {Collection}
+     */
+    proxy: function (section) {
+        return this._proxies[section] = new Collection(null, {
+            parent: this,
+            key: section
+        }).bind(null, this._onRecordEvent);
+    },
+    /**
+     * @param {Array} [records]
+     * @returns this
+     */
+    reset: function (records) {
+        _(this._proxies).each(function (proxy) {
+            proxy.reset();
+        });
+        this._proxies = {};
+        this.length = 0;
+        this.records = [];
+        this._byId = {};
+        if (records) {
+            this.add(records);
+        }
+        this.trigger('reset', this);
+        return this;
+    },
+    /**
+     * Removes the provided record from the collection
+     *
+     * @param {Record} record
+     * @returns this
+     */
+    remove: function (record) {
+        var self = this;
+        var index = _(this.records).indexOf(record);
+        if (index === -1) {
+            _(this._proxies).each(function (proxy) {
+                proxy.remove(record);
+            });
+            return this;
+        }
+
+        this.records.splice(index, 1);
+        delete this._byId[record.get('id')];
+        this.length--;
+        this.trigger('remove', record, this);
+        return this;
+    },
+
+    _onRecordEvent: function (event, record, options) {
+        // don't propagate reset events
+        if (event === 'reset') { return; }
+        this.trigger.apply(this, arguments);
+    },
+
+    // underscore-type methods
+    each: function (callback) {
+        for(var section in this._proxies) {
+            if (this._proxies.hasOwnProperty(section)) {
+                this._proxies[section].each(callback);
+            }
+        }
+        for(var i=0; i<this.length; ++i) {
+            callback(this.records[i]);
+        }
+    },
+    map: function (callback) {
+        var results = [];
+        this.each(function (record) {
+            results.push(callback(record));
+        });
+        return results;
+    },
+    indexOf: function (record) {
+        return _(this.records).indexOf(record);
+    }
+});
+Collection.include(Events);
+openerp.base.list = {
+    Events: Events,
+    Record: Record,
+    Collection: Collection
+}
+};
 // vim:et fdc=0 fdl=0 foldnestmax=3 fdm=syntax:
-
