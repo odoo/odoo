@@ -20,6 +20,8 @@
 #
 ##############################################################################
 
+#.apidoc title: Utilities: tools.misc
+
 """
 Miscelleanous tools used by OpenERP.
 """
@@ -36,6 +38,7 @@ import threading
 import time
 import warnings
 import zipfile
+from collections import defaultdict
 from datetime import datetime
 from email.MIMEText import MIMEText
 from email.MIMEBase import MIMEBase
@@ -123,16 +126,18 @@ def exec_command_pipe(name, *args):
 def file_open(name, mode="r", subdir='addons', pathinfo=False):
     """Open a file from the OpenERP root, using a subdir folder.
 
+    Example::
+    
     >>> file_open('hr/report/timesheer.xsl')
     >>> file_open('addons/hr/report/timesheet.xsl')
     >>> file_open('../../base/report/rml_template.xsl', subdir='addons/hr/report', pathinfo=True)
 
-    @param name: name of the file
-    @param mode: file open mode
-    @param subdir: subdirectory
-    @param pathinfo: if True returns tupple (fileobject, filepath)
+    @param name name of the file
+    @param mode file open mode
+    @param subdir subdirectory
+    @param pathinfo if True returns tupple (fileobject, filepath)
 
-    @return: fileobject if pathinfo is False else (fileobject, filepath)
+    @return fileobject if pathinfo is False else (fileobject, filepath)
     """
     import openerp.modules as addons
     adps = addons.module.ad_paths
@@ -216,7 +221,7 @@ def flatten(list):
     """Flatten a list of elements into a uniqu list
     Author: Christophe Simonis (christophe@tinyerp.com)
 
-    Examples:
+    Examples::
     >>> flatten(['a'])
     ['a']
     >>> flatten('b')
@@ -245,6 +250,8 @@ def flatten(list):
 
 def reverse_enumerate(l):
     """Like enumerate but in the other sens
+    
+    Usage::
     >>> a = ['a', 'b', 'c']
     >>> it = reverse_enumerate(a)
     >>> it.next()
@@ -284,15 +291,13 @@ priorities = {
     }
 
 def html2plaintext(html, body_id=None, encoding='utf-8'):
+    """ From an HTML text, convert the HTML to plain text.
+    If @param body_id is provided then this is the tag where the
+    body (not necessarily <body>) starts.
+    """
     ## (c) Fry-IT, www.fry-it.com, 2007
     ## <peter@fry-it.com>
     ## download here: http://www.peterbe.com/plog/html2plaintext
-
-
-    """ from an HTML text, convert the HTML to plain text.
-    If @body_id is provided then this is the tag where the
-    body (not necessarily <body>) starts.
-    """
 
     html = ustr(html)
 
@@ -350,14 +355,16 @@ def html2plaintext(html, body_id=None, encoding='utf-8'):
     return html
 
 def generate_tracking_message_id(openobject_id):
-    """Returns a string that can be used in the Message-ID RFC822 header field so we
-       can track the replies related to a given object thanks to the "In-Reply-To" or
-       "References" fields that Mail User Agents will set.
+    """Returns a string that can be used in the Message-ID RFC822 header field
+    
+       Used to track the replies related to a given object thanks to the "In-Reply-To"
+       or "References" fields that Mail User Agents will set.
     """
     return "<%s-openobject-%s@%s>" % (time.time(), openobject_id, socket.gethostname())
 
 def _email_send(smtp_from, smtp_to_list, message, openobject_id=None, ssl=False, debug=False):
-    """Low-level method to send directly a Message through the configured smtp server.
+    """ Low-level method to send directly a Message through the configured smtp server.
+    
         :param smtp_from: RFC-822 envelope FROM (not displayed to recipient)
         :param smtp_to_list: RFC-822 envelope RCPT_TOs (not displayed to recipient)
         :param message: an email.message.Message to send
@@ -426,17 +433,16 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
 
     """Send an email.
 
-    Arguments:
-
-    `email_from`: A string used to fill the `From` header, if falsy,
+    @param email_from A string used to fill the `From` header, if falsy,
                   config['email_from'] is used instead.  Also used for
                   the `Reply-To` header if `reply_to` is not provided
 
-    `email_to`: a sequence of addresses to send the mail to.
+    @param email_to a sequence of addresses to send the mail to.
     """
     if x_headers is None:
         x_headers = {}
 
+        
 
     if not (email_from or config['email_from']):
         raise ValueError("Sending an email requires either providing a sender "
@@ -506,10 +512,9 @@ def sms_send(user, password, api_id, text, to):
     # FIXME: Use the logger if there is an error
     return True
 
-#---------------------------------------------------------
-# Class that stores an updateable string (used in wizards)
-#---------------------------------------------------------
 class UpdateableStr(local):
+    """ Class that stores an updateable string (used in wizards)
+    """
 
     def __init__(self, string=''):
         self.string = string
@@ -525,7 +530,8 @@ class UpdateableStr(local):
 
 
 class UpdateableDict(local):
-    '''Stores an updateable dict to use in wizards'''
+    """Stores an updateable dict to use in wizards
+    """
 
     def __init__(self, dict=None):
         if dict is None:
@@ -622,8 +628,13 @@ class UpdateableDict(local):
     def __ne__(self, y):
         return self.dict.__ne__(y)
 
-# Don't use ! Use res.currency.round()
 class currency(float):
+    """ Deprecate
+    
+    .. warning::
+    
+    Don't use ! Use res.currency.round()
+    """
 
     def __init__(self, value, accuracy=2, rounding=None):
         if rounding is None:
@@ -1009,7 +1020,7 @@ def detect_ip_addr():
 #  times.
 def get_win32_timezone():
     """Attempt to return the "standard name" of the current timezone on a win32 system.
-       @return: the standard name of the current win32 timezone, or False if it cannot be found.
+       @return the standard name of the current win32 timezone, or False if it cannot be found.
     """
     res = False
     if (sys.platform == "win32"):
@@ -1027,7 +1038,7 @@ def get_win32_timezone():
 def detect_server_timezone():
     """Attempt to detect the timezone to use on the server side.
        Defaults to UTC if no working timezone can be found.
-       @return: the timezone identifier as expected by pytz.timezone.
+       @return the timezone identifier as expected by pytz.timezone.
     """
     try:
         import pytz
@@ -1153,7 +1164,7 @@ def server_to_local_timestamp(src_tstamp_str, src_format, dst_format, dst_tz_nam
     @param ignore_unparsable_time: if True, return False if src_tstamp_str cannot be parsed
                                    using src_format or formatted using dst_format.
 
-    @return: local/client formatted timestamp, expressed in the local/client timezone if possible
+    @return local/client formatted timestamp, expressed in the local/client timezone if possible
             and if tz_offset is true, or src_tstamp_str if timezone offset could not be determined.
     """
     if not src_tstamp_str:
@@ -1218,6 +1229,21 @@ def upload_data(email, data, type='SURVEY'):
     a.start()
     return True
 
+def get_and_group_by_field(cr, uid, obj, ids, field, context=None):
+    """ Read the values of ``field´´ for the given ``ids´´ and group ids by value.
+
+       :param string field: name of the field we want to read and group by
+       :return: mapping of field values to the list of ids that have it
+       :rtype: dict
+    """
+    res = {}
+    for record in obj.read(cr, uid, ids, [field], context=context):
+        key = record[field]
+        res.setdefault(key[0] if isinstance(key, tuple) else key, []).append(record['id'])
+    return res
+
+def get_and_group_by_company(cr, uid, obj, ids, context=None):
+    return get_and_group_by_field(cr, uid, obj, ids, field='company_id', context=context)
 
 # port of python 2.6's attrgetter with support for dotted notation
 def resolve_attr(obj, attr):
@@ -1240,18 +1266,46 @@ class unquote(str):
        or escaping, keeping the original string untouched. The name come from Lisp's unquote.
        One of the uses for this is to preserve or insert bare variable names within dicts during eval()
        of a dict's repr(). Use with care.
-       Some examples:
+
+       Some examples (notice that there are never quotes surrounding
+       the ``active_id`` name:
+
        >>> unquote('active_id')
-       active_id
-       >>> repr(unquote('active_id'))
        active_id
        >>> d = {'test': unquote('active_id')}
        >>> d
        {'test': active_id}
-       >>> repr(d)
-       "{'test': active_id}"
+       >>> print d
+       {'test': active_id}
     """
     def __repr__(self):
         return self
+
+class UnquoteEvalContext(defaultdict):
+    """Defaultdict-based evaluation context that returns 
+       an ``unquote`` string for any missing name used during
+       the evaluation.
+       Mostly useful for evaluating OpenERP domains/contexts that
+       may refer to names that are unknown at the time of eval,
+       so that when the context/domain is converted back to a string,
+       the original names are preserved.
+
+       **Warning**: using an ``UnquoteEvalContext`` as context for ``eval()`` or
+       ``safe_eval()`` will shadow the builtins, which may cause other
+       failures, depending on what is evaluated.
+
+       Example (notice that ``section_id`` is preserved in the final
+       result) :
+
+       >>> context_str = "{'default_user_id': uid, 'default_section_id': section_id}"
+       >>> eval(context_str, UnquoteEvalContext(uid=1))
+       {'default_user_id': 1, 'default_section_id': section_id}
+
+       """
+    def __init__(self, *args, **kwargs):
+        super(UnquoteEvalContext, self).__init__(None, *args, **kwargs)
+
+    def __missing__(self, key):
+        return unquote(key)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

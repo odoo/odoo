@@ -19,7 +19,7 @@
 #
 ##############################################################################
 import logging
-from operator import attrgetter
+from operator import attrgetter, itemgetter
 
 from osv import osv, fields
 from tools.translate import _
@@ -37,17 +37,14 @@ class res_config_configurable(osv.osv_memory):
     '''
     _name = 'res.config'
     _inherit = 'ir.wizard.screen'
-    logger = netsvc.Logger()
     __logger = logging.getLogger(_name)
 
     def get_current_progress(self, cr, uid, context=None):
         '''Return a description the current progress of configuration:
         a tuple of (non_open_todos:int, total_todos: int)
         '''
-        return (self.pool.get('ir.actions.todo')\
-                .search_count(cr, uid, [('state','<>','open')], context),
-                self.pool.get('ir.actions.todo')\
-                .search_count(cr, uid, [], context))
+        return itemgetter('done', 'total')(
+            self.pool.get('ir.actions.todo').progress(cr, uid, context=context))
 
     def _progress(self, cr, uid, context=None):
         closed, total = self.get_current_progress(cr, uid, context=context)
@@ -64,64 +61,43 @@ class res_config_configurable(osv.osv_memory):
     )
 
     def _next_action(self, cr, uid, context=None):
-        todos = self.pool.get('ir.actions.todo')
-        self.__logger.info('getting next %s', todos)
-        active_todos = todos.search(cr, uid, [('state','=','open')],
-                                    limit=1)
-        if active_todos:
-            todo_obj = todos.browse(cr, uid, active_todos[0], context=None)
-            todo_groups = map(lambda x:x.id, todo_obj.groups_id)
-            dont_skip_todo = True
-            if todo_groups:
-                cr.execute("select 1 from res_groups_users_rel where uid=%s and gid IN %s",(uid, tuple(todo_groups),))
-                dont_skip_todo = bool(cr.fetchone())
-            if dont_skip_todo:
-                return todos.browse(cr, uid, active_todos[0], context=None)
-            else:
-                todos.write(cr, uid, active_todos[0], {'state':'skip'}, context=None)
-                return self._next_action(cr, uid)
-        return None
+        Todos = self.pool['ir.actions.todo']
+        self.__logger.info('getting next %s', Todos)
 
-    def _set_previous_todo(self, cr, uid, state, context=None):
-        """ lookup the previous (which is still the next at this point)
-        ir.actions.todo, set it to whatever state was provided.
-        """
-        # this is ultra brittle, but apart from storing the todo id
-        # into the res.config view, I'm not sure how to get the
-        # "previous" todo
-        previous_todo = self._next_action(cr, uid, context=context)
-        if not previous_todo:
-            self.__logger.warn(_("Couldn't find previous ir.actions.todo"))
-            return
-        previous_todo.write({'state':state})
+        active_todos = Todos.browse(cr, uid,
+            Todos.search(cr, uid, ['&', ('type', '=', 'automatic'), ('state','=','open')]),
+                                    context=context)
+
+        user_groups = set(map(
+            lambda g: g.id,
+            self.pool['res.users'].browse(cr, uid, [uid], context=context)[0].groups_id))
+
+        valid_todos_for_user = [
+            todo for todo in active_todos
+            if not todo.groups_id or bool(user_groups.intersection((
+                group.id for group in todo.groups_id)))
+        ]
+
+        if valid_todos_for_user:
+            return valid_todos_for_user[0]
+
+        return None
 
     def _next(self, cr, uid, context=None):
         self.__logger.info('getting next operation')
-        next = self._next_action(cr, uid)
+        next = self._next_action(cr, uid, context=context)
         self.__logger.info('next action is %s', next)
         if next:
-            action = next.action_id
-            return {
-                'view_mode': action.view_mode,
-                'view_type': action.view_type,
-                'view_id': action.view_id and [action.view_id.id] or False,
-                'res_model': action.res_model,
-                'type': action.type,
-                'target': action.target,
-            }
+            res = next.action_launch(context=context)
+            res['nodestroy'] = False
+            return res
         self.__logger.info('all configuration actions have been executed')
 
-        current_user_menu = self.pool.get('res.users')\
-            .browse(cr, uid, uid).menu_id
+        current_user_menu = self.pool.get('res.users').browse(cr, uid, uid).menu_id
         # return the action associated with the menu
-        return self.pool.get(current_user_menu.type)\
-            .read(cr, uid, current_user_menu.id)
+        return self.pool.get(current_user_menu.type).read(cr, uid, current_user_menu.id)
 
     def start(self, cr, uid, ids, context=None):
-        ids2 = self.pool.get('ir.actions.todo').search(cr, uid, [], context=context)
-        for todo in self.pool.get('ir.actions.todo').browse(cr, uid, ids2, context=context):
-            if (todo.restart=='always') or (todo.restart=='onskip' and (todo.state in ('skip','cancel'))):
-                todo.write({'state':'open'})
         return self.next(cr, uid, ids, context)
 
     def next(self, cr, uid, ids, context=None):
@@ -163,8 +139,7 @@ class res_config_configurable(osv.osv_memory):
         an action dictionary -- executes the action provided by calling
         ``next``.
         """
-        self._set_previous_todo(cr, uid, state='done', context=context)
-        next = self.execute(cr, uid, ids, context=None)
+        next = self.execute(cr, uid, ids, context=context)
         if next: return next
         return self.next(cr, uid, ids, context=context)
 
@@ -176,8 +151,7 @@ class res_config_configurable(osv.osv_memory):
         an action dictionary -- executes the action provided by calling
         ``next``.
         """
-        self._set_previous_todo(cr, uid, state='skip', context=context)
-        next = self.cancel(cr, uid, ids, context=None)
+        next = self.cancel(cr, uid, ids, context=context)
         if next: return next
         return self.next(cr, uid, ids, context=context)
 
@@ -192,8 +166,7 @@ class res_config_configurable(osv.osv_memory):
         an action dictionary -- executes the action provided by calling
         ``next``.
         """
-        self._set_previous_todo(cr, uid, state='cancel', context=context)
-        next = self.cancel(cr, uid, ids, context=None)
+        next = self.cancel(cr, uid, ids, context=context)
         if next: return next
         return self.next(cr, uid, ids, context=context)
 
@@ -297,10 +270,24 @@ class res_config_installer(osv.osv_memory):
 
     _install_if = {}
 
+    def already_installed(self, cr, uid, context=None):
+        """ For each module, check if it's already installed and if it
+        is return its name
+
+        :returns: a list of the already installed modules in this
+                  installer
+        :rtype: [str]
+        """
+        return map(attrgetter('name'),
+                   self._already_installed(cr, uid, context=context))
+
     def _already_installed(self, cr, uid, context=None):
         """ For each module (boolean fields in a res.config.installer),
-        check if it's already installed (either 'to install', 'to upgrade' or 'installed')
-        and if it is, check it by default
+        check if it's already installed (either 'to install', 'to upgrade'
+        or 'installed') and if it is return the module's browse_record
+
+        :returns: a list of all installed modules in this installer
+        :rtype: [browse_record]
         """
         modules = self.pool.get('ir.module.module')
 
@@ -352,8 +339,8 @@ class res_config_installer(osv.osv_memory):
                    if base.issuperset(requirements)
                    for module in consequences)
 
-        return (base | hooks_results | additionals) - set(
-            map(attrgetter('name'), self._already_installed(cr, uid, context)))
+        return (base | hooks_results | additionals).difference(
+                    self.already_installed(cr, uid, context))
 
     def default_get(self, cr, uid, fields_list, context=None):
         ''' If an addon is already installed, check it by default
@@ -363,8 +350,7 @@ class res_config_installer(osv.osv_memory):
 
         return dict(defaults,
                     **dict.fromkeys(
-                        map(attrgetter('name'),
-                            self._already_installed(cr, uid, context=context)),
+                        self.already_installed(cr, uid, context=context),
                         True))
 
     def fields_get(self, cr, uid, fields=None, context=None, write_access=True):
@@ -375,12 +361,12 @@ class res_config_installer(osv.osv_memory):
         fields = super(res_config_installer, self).fields_get(
             cr, uid, fields, context, write_access)
 
-        for module in self._already_installed(cr, uid, context=context):
-            if module.name not in fields:
+        for name in self.already_installed(cr, uid, context=context):
+            if name not in fields:
                 continue
-            fields[module.name].update(
+            fields[name].update(
                 readonly=True,
-                help= ustr(fields[module.name].get('help', '')) +
+                help= ustr(fields[name].get('help', '')) +
                      _('\n\nThis addon is already installed on your system'))
         return fields
 

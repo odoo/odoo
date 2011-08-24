@@ -19,6 +19,8 @@
 #
 ##############################################################################
 
+#.apidoc title: NET-RPC Server
+
 """ This file contains instance of the net-rpc server
 
     
@@ -44,16 +46,6 @@ class TinySocketClientThread(threading.Thread, netsvc.OpenERPDispatcher):
         # clients connection when they're idle for 20min.
         self.sock.settimeout(1200)
         self.threads = threads
-
-    def __del__(self):
-        if self.sock:
-            try:
-                self.socket.shutdown(
-                    getattr(socket, 'SHUT_RDWR', 2))
-            except Exception:
-                pass
-            # That should garbage-collect and close it, too
-            self.sock = None
 
     def run(self):
         self.running = True
@@ -93,8 +85,7 @@ class TinySocketClientThread(threading.Thread, netsvc.OpenERPDispatcher):
                     logging.getLogger('web-services').exception("netrpc: cannot deliver exception message to client")
                     break
 
-        self.sock.shutdown(socket.SHUT_RDWR)
-        self.sock.close()
+        netsvc.close_socket(self.sock)
         self.sock = None
         self.threads.remove(self)
         self.running = False

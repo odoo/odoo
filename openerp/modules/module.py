@@ -274,21 +274,16 @@ def init_module_models(cr, module_name, obj_list):
 
     logger.notifyChannel('init', netsvc.LOG_INFO,
         'module %s: creating or updating database tables' % module_name)
-    # TODO _auto_init doesn't seem to return anything
-    # so this todo list would be useless.
     todo = []
     for obj in obj_list:
-        try:
-            # TODO the module in the context doesn't seem usefull:
-            # it is available (at least) in the class' _module attribute.
-            # (So module_name would be useless too.)
-            result = obj._auto_init(cr, {'module': module_name})
-        except Exception, e:
-            raise
+        result = obj._auto_init(cr, {'module': module_name})
         if result:
             todo += result
         if hasattr(obj, 'init'):
             obj.init(cr)
+        cr.commit()
+    for obj in obj_list:
+        obj._auto_end(cr, {'module': module_name})
         cr.commit()
     todo.sort()
     for t in todo:

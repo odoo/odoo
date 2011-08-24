@@ -56,6 +56,9 @@ class lang(osv.osv):
         default_value = ir_values_obj.get(cr, uid, 'default', False, ['res.partner'])
         if not default_value:
             ir_values_obj.set(cr, uid, 'default', False, 'lang', ['res.partner'], lang)
+        default_value = ir_values_obj.get(cr, uid, 'default', False, ['res.users'])
+        if not default_value:
+            ir_values_obj.set(cr, uid, 'default', False, 'context_lang', ['res.users'], lang)
         return True
 
     def load_lang(self, cr, uid, lang, lang_name=None):

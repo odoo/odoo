@@ -177,7 +177,7 @@ class YamlInterpreter(object):
             try:
                 _, id = self.pool.get('ir.model.data').get_object_reference(self.cr, self.uid, module, checked_xml_id)
                 self.id_map[xml_id] = id
-            except ValueError, e:
+            except ValueError:
                 raise ValueError("""%s not found when processing %s.
     This Yaml file appears to depend on missing data. This often happens for
     tests that belong to a module's test suite and depend on each other.""" % (checked_xml_id, self.filename))
@@ -488,7 +488,6 @@ class YamlInterpreter(object):
         if self.isnoupdate(function) and self.mode != 'init':
             return
         model = self.get_model(function.model)
-        context = self.get_context(function, self.eval_context)
         if function.eval:
             args = self.process_eval(function.eval)
         else:
@@ -643,7 +642,6 @@ class YamlInterpreter(object):
                 ids = [self.get_id(node.id)]
             if len(ids):
                 self.pool.get(node.model).unlink(self.cr, self.uid, ids)
-                self.pool.get('ir.model.data')._unlink(self.cr, 1, node.model, ids)
         else:
             self.logger.log(logging.TEST, "Record not deleted.")
 

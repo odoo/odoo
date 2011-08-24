@@ -40,6 +40,16 @@ from tools.translate import _
 
 from osv import fields, osv, orm
 
+
+ACTION_DICT = {
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'base.module.upgrade',
+            'target': 'new',
+            'type': 'ir.actions.act_window',
+            'nodestroy':True,
+        }
+
 class module_category(osv.osv):
     _name = "ir.module.category"
     _description = "Module Category"
@@ -187,6 +197,9 @@ class module(osv.osv):
         'views_by_module': fields.function(_get_views, method=True, string='Views', type='text', multi="meta", store=True),
         'certificate' : fields.char('Quality Certificate', size=64, readonly=True),
         'web': fields.boolean('Has a web component', readonly=True),
+        'complexity': fields.selection([('easy','Easy'), ('normal','Normal'), ('expert','Expert')],
+            string='Complexity', readonly=True,
+            help='Level of difficulty of module. Easy: intuitive and easy to use for everyone. Normal: easy to use for business experts. Expert: requires technical skills.'),
     }
 
     _defaults = {
@@ -285,7 +298,9 @@ class module(osv.osv):
         return demo
 
     def button_install(self, cr, uid, ids, context=None):
-        return self.state_update(cr, uid, ids, 'to install', ['uninstalled'], context)
+        self.state_update(cr, uid, ids, 'to install', ['uninstalled'], context)
+        return dict(ACTION_DICT, name=_('Install'))
+        
 
     def button_install_cancel(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state': 'uninstalled', 'demo':False})
@@ -305,7 +320,7 @@ class module(osv.osv):
             if res:
                 raise orm.except_orm(_('Error'), _('Some installed modules depend on the module you plan to Uninstall :\n %s') % '\n'.join(map(lambda x: '\t%s: %s' % (x[0], x[1]), res)))
         self.write(cr, uid, ids, {'state': 'to remove'})
-        return True
+        return dict(ACTION_DICT, name=_('Uninstall'))
 
     def button_uninstall_cancel(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state': 'installed'})
@@ -342,11 +357,12 @@ class module(osv.osv):
                     to_install.extend(ids2)
 
         self.button_install(cr, uid, to_install, context=context)
-        return True
+        return dict(ACTION_DICT, name=_('Upgrade'))
 
     def button_upgrade_cancel(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state': 'installed'})
         return True
+
     def button_update_translations(self, cr, uid, ids, context=None):
         self.update_translations(cr, uid, ids)
         return True
@@ -363,6 +379,7 @@ class module(osv.osv):
             'license': terp.get('license', 'AGPL-3'),
             'certificate': terp.get('certificate') or False,
             'web': terp.get('web') or False,
+            'complexity': terp.get('complexity', ''),
         }
 
     # update the list of available packages
