@@ -19,43 +19,38 @@
 #
 ##############################################################################
 
-import wizard
 from osv import osv
 import pooler
 from osv import fields
 import time
 
-def _launch_wizard(self, cr, uid, data, context=None):
-    address_obj= pooler.get_pool(cr.dbname).get('res.partner.address')
-    m= address_obj.browse(cr, uid, data['id'], context=context)
-    url=''
-    url="http://maps.google.com/maps?oi=map&q="
-    if m.street:
-        url+=m.street.replace(' ','+')
-    if m.street2:
-        url+='+'+m.street2.replace(' ','+')
-    if m.city:
-        url+='+'+m.city.replace(' ','+')
-    if m.state_id:
-        url+='+'+m.state_id.name.replace(' ','+')
-    if m.country_id:
-        url+='+'+m.country_id.name.replace(' ','+')
-    if m.zip:
-        url+='+'+m.zip.replace(' ','+')
-    return {
-    'type': 'ir.actions.act_url',
-    'url':url,
-    'target': 'new'
-    }
+class launch_map(osv.osv_memory):
+    
+    _name = "launch.map"
 
-class launch_map(wizard.interface):
+    def launch_wizard(self, cr, uid, data, context=None):
+        address_obj= pooler.get_pool(cr.dbname).get('res.partner.address')
+        m = address_obj.browse(cr, uid, data, context=context)[0]
+        url=''
+        url="http://maps.google.com/maps?oi=map&q="
+        if m.street:
+            url+=m.street.replace(' ','+')
+        if m.street2:
+            url+='+'+m.street2.replace(' ','+')
+        if m.city:
+            url+='+'+m.city.replace(' ','+')
+        if m.state_id:
+            url+='+'+m.state_id.name.replace(' ','+')
+        if m.country_id:
+            url+='+'+m.country_id.name.replace(' ','+')
+        if m.zip:
+            url+='+'+m.zip.replace(' ','+')
+        return {
+        'type': 'ir.actions.act_url',
+        'url':url,
+        'target': 'new'
+        }
 
-    states= {'init' : {'actions': [],
-                       'result':{'type':'action',
-                                 'action': _launch_wizard,
-                                 'state':'end'}
-                       }
-             }
-launch_map('google_map_launch')
+launch_map()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

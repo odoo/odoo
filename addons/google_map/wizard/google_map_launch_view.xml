@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="view_google_map_launch_form" model="ir.ui.view">
+            <field name="name">launch.map.form</field>
+            <field name="model">launch.map</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Launch Map">
+                    <group colspan="4">
+                        <separator string="Launch Map"/>
+                        <newline/>
+                        <button name="launch_wizard" string="Map" type="object" icon="gtk-zoom-in"/>
+                        <button string="Cancel" icon="gtk-cancel" special="cancel"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_google_map_launch_form" model="ir.actions.act_window">
+            <field name="name">Google Map</field>
+            <field name="res_model">launch.map</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar,graph</field>
+            <field name="target">new</field>
+            <field name="view_id" ref="view_google_map_launch_form"/>
+        </record>
+
+    </data>
+</openerp>
