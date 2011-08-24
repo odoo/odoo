@@ -644,9 +644,19 @@ openerp.base.ListView.List = openerp.base.Class.extend( /** @lends openerp.base.
                 $row.replaceWith(self.render_record(record));
             },
             'add': function (ev, records, record, index) {
-                $('<tr>').attr({
+                var $new_row = $('<tr>').attr({
                     'data-id': record.get('id')
-                }).insertAfter(self.$current.children(':eq(' + index + ')'));
+                });
+
+                if (index === 0) {
+                    $new_row.prependTo(self.$current);
+                } else {
+                    var previous_record = records.at(index-1),
+                        $previous_sibling = self.$current.find(
+                                '[data-id=' + previous_record.get('id') + ']');
+                    $new_row.insertAfter($previous_sibling);
+                }
+
                 self.refresh_zebra(index, 1);
             }
         };
@@ -745,17 +755,6 @@ openerp.base.ListView.List = openerp.base.Class.extend( /** @lends openerp.base.
         return this.records.map(function (record) {
             return {count: 1, values: record.attributes};
         });
-    },
-    /**
-     * Reloads the record at index ``row_index`` in the list's rows.
-     *
-     * @param {Number} record_index index of the record to reload
-     * @returns {$.Deferred} promise to the finalization of the reloading
-     */
-    reload_record_at_index: function (record_index) {
-        var r = this.records.at(record_index);
-
-        return this.reload_record(r);
     },
     /**
      * Reloads the provided record by re-reading its content from the server.
