@@ -30,6 +30,7 @@
         $(function() {
             QWeb = window.QWeb || new QWeb2.Engine();
             var oe = openerp.init();
+            openerp.web_mobile(oe);
             oe.web_mobile.mobilewebclient("moe");
         });
     </script>

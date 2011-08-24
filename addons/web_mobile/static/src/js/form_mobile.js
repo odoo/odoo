@@ -21,7 +21,7 @@ openerp.web_mobile.FormView = openerp.base.Widget.extend({
         id = this.list_id;
         model = this.action.res_model;
         view_id = this.action.views[1][0];
-        this.dataset = new openerp.base.DataSetSearch(this.session, this.action.res_model, null, null);
+        this.dataset = new openerp.base.DataSetSearch(this, this.action.res_model, null, null);
         this.dataset.read_slice([],{}, function (result) {
             for (var i = 0; i < result.length; i++) {
                 if (result[i].id == id) {

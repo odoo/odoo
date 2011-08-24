@@ -21,7 +21,7 @@ openerp.web_mobile.MobileWebClient = openerp.base.Widget.extend({
         this.session = new openerp.base.Session("oe_errors");
         this.crashmanager =  new openerp.base.CrashManager(this);
         this.login = new openerp.web_mobile.Login(this, "oe_app");
-        this.session.on_session_invalid.add(this.login.do_ask_login);
+//        this.session.on_session_invalid.add(this.login.do_ask_login);
     },
     start: function() {
         this.session.start();
