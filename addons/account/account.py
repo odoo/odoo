@@ -2622,7 +2622,8 @@ class account_report(osv.osv):
             ],'Report Type'),
         'account_ids': fields.many2many('account.account', 'account_account_report', 'report_line_id', 'account_id', 'Accounts'),
         'note': fields.text('Notes'),
-        'account_report_id':  fields.many2one('account.report', 'Account Report'),
+        'account_report_id': fields.many2one('account.report', 'Account Report'),
+        'child_ids': fields.one2many('account.report','parent_id','Children'),
     }
 
     _defaults = {

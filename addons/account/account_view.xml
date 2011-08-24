@@ -2732,9 +2732,8 @@ action = self.pool.get('res.config').next(cr, uid, [], context)
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Account Report">
-                    <field name="sequence"/>
                     <field name="name"/>
-                    <field name="parent_id"/>
+                    <field name="parent_id" invisible="1"/>
                     <field name="type"/>
                     <field name="account_report_id"/>
                 </tree>
@@ -2773,6 +2772,31 @@ action = self.pool.get('res.config').next(cr, uid, [], context)
         </record>
 
         <menuitem id="menu_account_reports_tree" name="Account Reports" parent="menu_account_reports" action="action_account_report_tree"/>
+
+        <record id="view_account_report_tree_hierarchy" model="ir.ui.view">
+            <field name="name">account.report.hierarchy</field>
+            <field name="model">account.report</field>
+            <field name="type">tree</field>
+            <field name="field_parent">child_ids</field>
+            <field name="arch" type="xml">
+                <tree string="Account Reports Hierarchy">
+                    <field name="name"/>
+                    <field name="type"/>
+                    <field name="parent_id" invisible="1"/>
+                    <field name="account_report_id"/>
+                </tree>
+            </field>
+        </record>
+        <record id="action_account_report_tree_hierarchy" model="ir.actions.act_window">
+            <field name="name">Account Reports Hierarchy</field>
+            <field name="res_model">account.report</field>
+            <field name="view_type">tree</field>
+            <field name="view_id" ref="view_account_report_tree_hierarchy"/>
+            <field name="domain">[('parent_id','=',False)]</field>
+        </record>
+
+        <menuitem id="menu_account_report_tree_hierarchy" name="Account Reports Hierarchy"
+                  parent="menu_account_reports" action="action_account_report_tree_hierarchy"/>
 
     </data>
 </openerp>
