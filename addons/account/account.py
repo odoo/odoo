@@ -2611,21 +2611,38 @@ class account_low_level_report(osv.osv):
     _name = "account.low.level.report"
     _description = "Account Report"
 
-    def _get_balance(self, cr, uid, ids, context=None):
-        balance = 0.0
+    def _get_children_by_order(self, cr, uid, ids, context=None):
+        res = []
+        for id in ids:
+            res.append(id)
+            ids2 = self.search(cr, uid, [('parent_id', '=', id)], order='sequence ASC', context=context)
+            res += self._get_children_by_order(cr, uid, ids2, context=context)
+        return res
+
+    def _get_balance(self, cr, uid, ids, name, args, context=None):
+        res = {}
+        res_all = {}
         for report in self.browse(cr, uid, ids, context=context):
-            if report.type == 'accounts':
+            balance = 0.0
+            if report.id in res_all:
+                balance = res_all[report.id]
+            elif report.type == 'accounts':
                 # it's the sum of balance of the linked accounts
-                for a in child.account_ids:
+                for a in report.account_ids:
                     balance += a.balance
             elif report.type == 'account_report' and report.account_report_id:
                 # it's the amount of the linked report
                 balance = report.account_report_id.balance
             elif report.type == 'sum':
                 # it's the sum of balance of the children of this account.report
-                for child in report.children_ids:
-                    balance += child.balance
-        return balance
+                #for child in report.children_ids:
+                res2 = self._get_balance(cr, uid, [rec.id for rec in report.children_ids], 'balance', False, context=context)
+                res_all.update(res2)
+                for key, value in res2.items():
+                    balance += value
+            res[report.id] = balance
+            res_all[report.id] = balance
+        return res
 
     _columns = {
         'name': fields.char('Report Name', size=128, required=True),

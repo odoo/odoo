@@ -94,9 +94,8 @@ class report_account_common(report_sxw.rml_parse, common_report_header):
 
     def get_lines(self, data):
         lines = []
-        import pdb;pdb.set_trace()
-        ids2 = self.search(cr, uid, [('parent_id', 'child_of', data['form']['report_id'])], context=self.context)
-        for report in self.pool.get('account.low.level.report').browse(self.cr, self.uid, ids2, context=self.context):
+        ids2 = self.pool.get('account.low.level.report')._get_children_by_order(self.cr, self.uid, [data['form']['account_report_id'][0]], context=data['form']['used_context'])
+        for report in self.pool.get('account.low.level.report').browse(self.cr, self.uid, ids2, context=data['form']['used_context']):
             vals = {
                 'name': report.name,
                 'balance': report.balance,

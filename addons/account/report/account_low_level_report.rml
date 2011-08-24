@@ -231,25 +231,19 @@
         <font color="white"> </font>
     </para>
     <para style="terp_header">Accounts</para>
-    <blockTable colWidths="110.0,153.0,100.0,120.0" style="Table_Account_Line_Title">
+    <blockTable colWidths="263.0,100.0" style="Table_Account_Line_Title">
       <tr>
-        <td>
-          <para style="terp_default_Bold_9">Code</para>
-        </td>
         <td>
           <para style="terp_default_Bold_9">Name</para>
         </td>
         <td>
           <para style="terp_tblheader_Details_Right">Balance</para>
         </td>
-        <td>
-          <para style="terp_tblheader_Details_Right">[[ r['label'] ]]</para>
-        </td>
       </tr>
       <tr style="Table3">
-          [[ repeatIn(get_lines(r['id'], data), 'a') ]]
-          <td>[[a.name]]</td>
-          <td>[[a.balance]]</td>
+          [[ repeatIn(get_lines(data), 'a') ]]
+          <td>[[a.get('name', '')]]</td>
+          <td>[[a.get('balance',0.0)]]</td>
            
 <!--
           [[ repeatIn(get_account_details(r['id'], data), 'a') ]]
