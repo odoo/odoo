@@ -35,6 +35,11 @@ class account_invoice(osv.osv, ir_edi.edi):
                 'type': True, # -> reversed at import
                 'internal_number': True, # -> reference at import
                 'comment': True,
+                'reference': True,
+                'amount_untaxed': True,
+                'amount_tax': True,
+                'amount_total': True,
+                'reconciled': True,
                 'date_invoice': True,
                 'date_due': True,
                 'partner_id': True,
@@ -47,6 +52,7 @@ class account_invoice(osv.osv, ir_edi.edi):
                         'uos_id': True,
                         'product_id': True,
                         'price_unit': True,
+                        'price_subtotal': True,
                         'quantity': True,
                         'discount': True,
                         'note': True,
@@ -108,7 +114,6 @@ class account_invoice(osv.osv, ir_edi.edi):
         return edi_doc_list
 
     def edi_import(self, cr, uid, edi_document, context=None):
-    
         """ During import, invoices will import the company that is provided in the invoice as
             a new partner (e.g. supplier company for a customer invoice will be come a supplier
             record for the new invoice.
@@ -190,6 +195,9 @@ class account_invoice(osv.osv, ir_edi.edi):
         partner = partner_pool.browse(cr, uid, partner_id, context=context)
         edi_document['partner_id'] = self.edi_m2o(cr, uid, partner, context=context)
 
+        partner_address = partner_address_pool.browse(cr, uid, address_id, context=context)
+        edi_document['address_invoice_id'] = self.edi_m2o(cr, uid, partner_address, context=context)
+
         # change type: out_invoice'<->'in_invoice','out_refund'<->'in_refund'
         invoice_type = invoice_type.startswith('in_') and invoice_type.replace('in_','out_') or invoice_type.replace('out_','in_')
         edi_document['type'] = invoice_type
@@ -221,7 +229,6 @@ class account_invoice(osv.osv, ir_edi.edi):
         if journal_id:
             journal = account_journal_pool.browse(cr, uid, journal_id, context=context)
         edi_document['journal_id'] = journal and  self.edi_m2o(cr, uid, journal, context=context) or False
-
         # for invoice lines, the account_id value should be taken from the product's default, i.e. from the default category, as it will not be provided.
         for edi_invoice_line in edi_document.get('invoice_line', []):
             product_id = edi_invoice_line.get('product_id', False)

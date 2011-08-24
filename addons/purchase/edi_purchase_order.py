@@ -22,33 +22,39 @@
 from osv import fields, osv, orm
 from base.ir import ir_edi
 from tools.translate import _
+from datetime import date
 
-class stock_picking(osv.osv, ir_edi.edi):
-    _inherit = 'stock.picking'
-
+class purchase_order(osv.osv, ir_edi.edi):
+    _inherit = 'purchase.order'
+    
     def edi_export(self, cr, uid, records, edi_struct=None, context=None):
-        """Exports a supplier or customer invoice"""
+        """Exports a Purchase Order"""
         edi_struct = {
-                
+                'name': True,
                 'origin': True,
-                'type': True,
-                'stock_journal_id': True,
-                'move_type': True,
-                'date': True,
-                'date_done': True,
-                'move_lines': {
+                'date_order': True,
+                'date_approve': True,
+                'partner_id': True,
+                'partner_address_id': True,
+                #'dest_address_id': True,
+                'warehouse_id': True,
+                'location_id': True,
+                'pricelist_id': True,
+                'validator' : True,
+                'order_line': {
                         'name': True,
-                        'date': True,
-                        'date_expected': True,
-                        'product_id': True,
                         'product_qty': True,
+                        'date_planned': True,
+                        'taxes_id': True,
                         'product_uom': True,
-                        'location_id': True,
-                        'location_dest_id': True,
-                        'company_id': True,
+                        'product_id': True,
+                        'move_dest_id': True,
+                        'price_unit': True,
+                        'order_id': True,
+                        'invoiced': True,
                 },
-                'invoice_state': True,
-                'address_id': True,
+                'invoice_ids': True,
+                'shipped': True,
                 'company_id': True,
         }
         partner_pool = self.pool.get('res.partner')
@@ -65,17 +71,17 @@ class stock_picking(osv.osv, ir_edi.edi):
                    
         }
         edi_doc_list = []
-        for picking in records:
+        for order in records:
             # Get EDI doc based on struct. The result will also contain all metadata fields and attachments.
-            edi_doc = super(stock_picking,self).edi_export(cr, uid, [picking], edi_struct, context)
+            edi_doc = super(purchase_order,self).edi_export(cr, uid, [order], edi_struct, context)
             if not edi_doc:
                 continue
             edi_doc = edi_doc[0]
 
             # Add company info and address
-            res = partner_pool.address_get(cr, uid, [picking.company_id.partner_id.id], ['contact', 'picking'])
+            res = partner_pool.address_get(cr, uid, [order.company_id.partner_id.id], ['contact', 'order'])
             contact_addr_id = res['contact']
-            invoice_addr_id = res['picking']
+            invoice_addr_id = res['order']
 
             address = partner_address_pool.browse(cr, uid, invoice_addr_id, context=context)
             edi_company_address_dict = {}
@@ -98,7 +104,7 @@ class stock_picking(osv.osv, ir_edi.edi):
         return edi_doc_list
 
     def edi_import(self, cr, uid, edi_document, context=None):
-    
+            
         partner_pool = self.pool.get('res.partner')
         partner_address_pool = self.pool.get('res.partner.address')
         model_data_pool = self.pool.get('ir.model.data')
@@ -110,6 +116,7 @@ class stock_picking(osv.osv, ir_edi.edi):
         account_journal_pool = self.pool.get('account.journal')
         invoice_line_pool = self.pool.get('account.invoice.line')
         account_pool = self.pool.get('account.account')
+        
         tax_id = []
         account_id = []
         partner_id = None
@@ -121,9 +128,8 @@ class stock_picking(osv.osv, ir_edi.edi):
         # partner_id field is modified to point to the new partner
         # company_address data used to add address to new partner
         edi_company_address = edi_document['company_address']
-        
-        company_name = edi_document['company_id'][1]
-        shipping_type = edi_document['type']
+        edi_partner_id = edi_document['partner_id']
+        company_name = edi_document['shop_id'][1]
         state_id = edi_company_address.get('state_id', False)
         state_name = state_id and state_id[1]
         country_id = edi_company_address.get('country_id', False)
@@ -143,41 +149,30 @@ class stock_picking(osv.osv, ir_edi.edi):
             'phone': edi_company_address.get('phone', False),
                
         }
-        
-
         partner_value = {'name': company_name}
-        partner_id = partner_pool.search(cr, uid, [('name','=',company_name)])
-        if len(partner_id):
-            partner_id = partner_pool.browse(cr, uid, partner_id[0], context=context)
-            address_id = partner_id.address[0].id
-        else:
-            partner_id = partner_pool.create(cr, uid, partner_value, context=context)
-            address_value.update({'partner_id': partner_id})
-            address_id = partner_address_pool.create(cr, uid, address_value, context=context)
+        partner_value.update({'customer': False, 'supplier': True})
+        partner_id = partner_pool.create(cr, uid, partner_value, context=context)
+        address_value.update({'partner_id': partner_id})
+        address_id = partner_address_pool.create(cr, uid, address_value, context=context)
         partner_address = partner_address_pool.browse(cr, uid, address_id, context=context)
-        edi_document.update({'address_id': self.edi_m2o(cr, uid, partner_address, context=context)})
+        edi_document.update({'partner_address_id':self.edi_o2m(cr, uid, partner_address, context=context)})
+        partner = partner_pool.browse(cr, uid, partner_id, context=context)
+        edi_document['partner_id'] = self.edi_m2o(cr, uid, partner, context=context)
         
-        
-        
-
-        # change type: out'<->'in for shipping
-        shipping_type = shipping_type.startswith('in') and shipping_type.replace('in','out') or shipping_type.replace('out','in')
-        edi_document['type'] = shipping_type
-        company_id = edi_document['company_id']
-        #print ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",edi_document['move_lines']
-        edi_document.update({'company_id': edi_document['move_lines'][0]['company_id']})
-        edi_document['move_lines'][0].update({'company_id':company_id})
-       
+        product_qty = edi_document['order_line'].get('product_uom_qty'),
+        edi_document.update({'product_qty': product_qty})               
+        # all fields are converted for purchase order import so unnecessary fields are deleted
+        del edi_document['order_line']['sequence']
+        del edi_document['order_line']['procurement_id']
+        del edi_document['order_line']['product_uom_qty']
         del edi_document['company_address']
-        
-       
-       
-        return super(stock_picking,self).edi_import(cr, uid, edi_document, context=context)
-      
-stock_picking()
+        del edi_document['shop_id'] 
 
-class stock_move(osv.osv, ir_edi.edi):
-    _inherit='stock.move'
+        return super(purchase_order,self).edi_import(cr, uid, edi_document, context=context)
+purchase_order()
 
-stock_move()
+class purchase_order_line(osv.osv, ir_edi.edi):
+    _inherit='purchase.order.line'
 
+purchase_order_line()
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
