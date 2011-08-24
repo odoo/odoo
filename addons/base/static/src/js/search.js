@@ -736,7 +736,18 @@ openerp.base.search.DateField = openerp.base.search.Field.extend( /** @lends ope
         return this.$element.val();
     }
 });
-openerp.base.search.DateTimeField = openerp.base.search.DateField.extend({
+/**
+ * Implementation of the ``datetime`` openerp field type:
+ *
+ * * Uses the same widget as the ``date`` field type (a simple date)
+ *
+ * * Builds a slighly more complex, it's a datetime range (includes time)
+ *   spanning the whole day selected by the date widget
+ *
+ * @class
+ * @extends openerp.base.DateField
+ */
+openerp.base.search.DateTimeField = openerp.base.search.DateField.extend(/** @lends openerp.base.search.DateTimeField# */{
     make_domain: function (name, operator, value) {
         return ['&', [name, '>=', value + ' 00:00:00'],
                      [name, '<=', value + ' 23:59:59']];
