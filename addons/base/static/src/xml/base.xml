@@ -453,6 +453,40 @@
         </ul>
     </div>
 </t>
+<t t-name="TranslateDialog">
+    <ul class="oe_translate_tabs">
+        <li><a t-attf-href="##{widget.element_id}_fields">Fields</a></li>
+        <li><a t-attf-href="##{widget.element_id}_view">View labels</a></li>
+        <li><a t-attf-href="##{widget.element_id}_sidebar">Sidebar Relates</a></li>
+    </ul>
+    <div t-attf-id="#{widget.element_id}_fields">
+        <table t-if="widget.view.translatable_fields" class="oe_frame oe_forms oe_translation_form" border="0" cellpadding="0" cellspacing="0" width="100%">
+        <tr>
+            <td class="oe_form_separator" width="1%" nowrap="nowrap">
+                <div class="separator horizontal">Field</div>
+            </td>
+            <th t-foreach="widget.languages" align="left">
+                <div class="separator horizontal"><t t-esc="name"/></div>
+            </th>
+        </tr>
+        <tr t-foreach="widget.view.translatable_fields" t-as="field">
+            <td class="oe_form_frame_cell" width="1%" nowrap="nowrap">
+                <label class="oe_form_label"><t t-esc="field.string"/>:</label>
+            </td>
+            <td t-foreach="widget.languages" t-as="lg" class="oe_form_frame_cell">
+                <input t-if="field.type == 'char'" type="text" t-attf-name="#{lg.code}-#{field.name}" value="" class="oe_trad_field" style="width: 100%"/>
+                <textarea t-if="field.type == 'text'" t-attf-name="#{lg.code}-#{field.name}" class="oe_trad_field" style="width: 100%"></textarea>
+            </td>
+        </tr>
+        </table>
+    </div>
+    <div t-attf-id="#{widget.element_id}_view">
+        Translate view
+    </div>
+    <div t-attf-id="#{widget.element_id}_sidebar">
+        Translate sidebar
+    </div>
+</t>
 <t t-name="TreeView">
     <h2 class="oe_view_title"><t t-esc="title"/></h2>
     <select t-if="toolbar" style="width: 30%">
@@ -702,8 +736,10 @@
     <input type="text" size="1"
         t-att-name="widget.name"
         t-att-id="widget.element_id + '_field'"
-        t-att-class="'field_' + widget.type" style="width: 100%"
+        t-att-class="'field_' + widget.type"
+        t-attf-style="width: #{widget.field.translate ? '99' : '100'}%"
     />
+    <img class="oe_field_translate" t-if="widget.field.translate" src="/base/static/src/img/icons/terp-translate.png" width="16" height="16" border="0"/>
 </t>
 <t t-name="FieldEmail">
     <table cellpadding="0" cellspacing="0" border="0" width="100%">
@@ -734,11 +770,13 @@
     </table>
 </t>
 <t t-name="FieldText">
-    <textarea rows="6" style="width: 100%;"
+    <textarea rows="6"
         t-att-name="widget.name"
         t-att-id="widget.element_id + '_field'"
         t-att-class="'field_' + widget.type"
+        t-attf-style="width: #{widget.field.translate ? '99' : '100'}%"
     ></textarea>
+    <img class="oe_field_translate" t-if="widget.field.translate" src="/base/static/src/img/icons/terp-translate.png" width="16" height="16" border="0"/>
 </t>
 <t t-name="FieldDate">
     <input type="text" size="1" style="width: 100%"
