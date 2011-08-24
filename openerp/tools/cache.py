@@ -18,8 +18,6 @@ class ormcache(object):
             r = self.lookup(self2, cr, *args)
             #self.stat()
             return r
-        def clear(self2, *args):
-            return self.clear(self2, *args)
         lookup.clear_cache = self.clear
         #print "lookup-func",lookup
         return lookup
