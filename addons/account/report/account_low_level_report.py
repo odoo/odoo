@@ -101,6 +101,8 @@ class report_account_common(report_sxw.rml_parse, common_report_header):
                 'balance': report.balance,
                 'type': 'report',
             }
+            if data['form']['enable_filter']:
+                vals['balance_cmp'] = self.pool.get('account.low.level.report').browse(self.cr, self.uid, report.id, context=data['form']['comparison_context']).balance
             lines.append(vals)
             if report.type == 'accounts' and report.display_detail:
                 for account in report.account_ids:
@@ -109,6 +111,8 @@ class report_account_common(report_sxw.rml_parse, common_report_header):
                         'balance': account.balance,
                         'type': 'account',
                     }
+                    if data['form']['enable_filter']:
+                        vals['balance_cmp'] = self.pool.get('account.account').browse(self.cr, self.uid, account.id, context=data['form']['comparison_context']).balance
                     lines.append(vals)
         return lines
 

@@ -232,6 +232,7 @@
     </para>
     <para style="terp_header">Accounts</para>
     <blockTable colWidths="263.0,100.0" style="Table_Account_Line_Title">
+      [[data['form']['enable_filter'] == False or removeParentNote('blockTable')]]
       <tr>
         <td>
           <para style="terp_default_Bold_9">Name</para>
@@ -255,6 +256,26 @@
         <td>[[ get_filter(data)!='No Filter' and (a.level &lt;&gt;2) or removeParentNode('td')  ]]<para style="terp_level_3_balance">[[ (a.type =='view' and a.level &gt;= 3) and setTag('para','para',{'style': 'terp_level_3_balance_bold'}) or setTag('para','para',{'style': 'terp_level_'+str(min(3,a.level))+'_balance'}) ]][[ formatLang(a.balance) ]] [[company.currency_id.symbol ]]</para></td>
         <td>[[ get_filter(data)!='No Filter' and a.level == 2 or removeParentNode('td') ]]<para style="terp_level_2_balance"><u>[[ formatLang(a.balance) ]] [[company.currency_id.symbol ]]</u></para></td>
 -->
+      </tr>
+    </blockTable>
+    <blockTable colWidths="263.0,100.0,100" style="Table_Account_Line_Title">
+      [[data['form']['enable_filter'] == True or removeParentNote('blockTable')]]
+      <tr>
+        <td>
+          <para style="terp_default_Bold_9">Name</para>
+        </td>
+        <td>
+          <para style="terp_tblheader_Details_Right">Balance</para>
+        </td>
+        <td>
+          <para style="terp_tblheader_Details_Right">[[data['form']['label_filter']]]</para>
+        </td>
+      </tr>
+      <tr style="Table3">
+          [[ repeatIn(get_lines(data), 'a') ]]
+          <td>[[a.get('name', '')]]</td>
+          <td>[[a.get('balance',0.0)]]</td>
+          <td>[[a.get('balance_cmp',0.0)]]</td>
       </tr>
     </blockTable>
     <para style="Standard">
