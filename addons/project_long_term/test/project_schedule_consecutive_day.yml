@@ -122,5 +122,17 @@
      for phase in proj.phase_ids:
         if (not phase.responsible_id) or (not phase.date_start) or (not phase.date_end):
            raise AssertionError("Phases not scheduled")      
-      
+
+- 
+  Schedule the task 
+- 
+  !record {model: project.schedule.tasks, id: project_schedule_tasks_0}:
+    msg: Task Scheduling Completed Successfully
+    
+- 
+  Compute date and Phase Scheduling
+- 
+  !python {model: project.schedule.tasks}: |
+    self.default_get(cr, uid, fields_list = {}, context=None) 
+    self.compute_date(cr, uid, context=None)     
 

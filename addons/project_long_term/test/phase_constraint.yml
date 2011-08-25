@@ -66,6 +66,7 @@
 - 
   !python {model: project.project}: |  
     self.write(cr, uid, [ref("project_project_developyamlproject0")], {'resource_calendar_id': ref("resource_calendar_hoursweeks0")})
+    self.generate_members(cr, uid, [ref('project_project_developyamlproject0')], context=None)
 
     
 - 
@@ -141,6 +142,7 @@
       from dateutil.relativedelta import *
       start = datetime.date.today() - relativedelta(days=5)    
       end = datetime.date.today() + relativedelta(days=10)
+      self._get_default_uom_id(cr, uid)
       self.write(cr,uid, [(ref("project_phase_developyaml0"))], {'constraint_date_start': start, 'constraint_date_end':end})
 -
   Create project phase 'Test Yaml'
@@ -176,4 +178,66 @@
      for phase in proj.phase_ids:
         for phase1 in proj.phase_ids:
              if phase1.id != phase.id and phase.constraint_date_start == phase1.date_start:
-               raise AssertionError("Phases not scheduled")      
+               raise AssertionError("Phases not scheduled")
+- 
+  Now, I am Checking constraint start and end for Phase 'Develop Yaml'
+- 
+  !python {model: project.phase}: |
+    self._check_constraint_start(cr, uid, [ref("project_phase_developyaml0")],context)
+    self._check_constraint_end(cr, uid, [ref("project_phase_developyaml0")],context)
+- 
+  I am opening the Phase 'Develop Yaml'
+- 
+  !python {model: project.phase}: |
+    self.set_open(cr, uid, [ref("project_phase_developyaml0")])
+- 
+  Now, Compute the Total Hours
+- 
+  !python {model: project.phase}: |
+    field_name = 'test'
+    arg = {} 
+    self._compute(cr, uid, [ref("project_phase_developyaml0")], field_name, arg, context=None)
+
+- 
+  Now, change the partner if needed
+- 
+  !python {model: project.phase}: |
+    for project in self.browse(cr, uid, [ref('project_phase_developyaml0')], context):
+      project_id = project.project_id.id
+      start_date = project.date_start
+      end_date = project.date_end
+    context.update({'start_date' : start_date,'end_date' : end_date})
+    self.onchange_project(cr, uid, [ref("project_phase_developyaml0")], project_id,context)
+- 
+  Now, Check start date.
+- 
+  !python {model: project.phase}: |
+    try:
+      self._check_date_start(cr, uid, ref('project_phase_developyaml0'), context.get('end_date'), context)
+    except:
+      pass
+- 
+  Now, Check end date.
+- 
+  !python {model: project.phase}: |
+    try:
+      self._check_date_end(cr, uid, ref('project_phase_developyaml0'), context.get('start_date'), context)
+    except:
+      pass      
+- 
+  I am Postponding the Phase 'Develop Yaml' So Setting State to Pending
+- 
+  !python {model: project.phase}: |
+    self.set_pending(cr, uid, [ref("project_phase_developyaml0")])
+- 
+  Now, Done the Phase 'Develop Yaml'
+- 
+  !python {model: project.phase}: |
+    self.set_done(cr, uid, [ref("project_phase_developyaml0")])
+- 
+  I am Cancelling the Phase 'Develop Yaml'.
+- 
+  !python {model: project.phase}: |
+    self.set_cancel(cr, uid, [ref("project_phase_developyaml0")])
+
+
