@@ -596,7 +596,8 @@ openerp.base.Session = openerp.base.CallbackEnabled.extend( /** @lends openerp.b
                 tag.onload_done = true;
                 self.do_load_js(files);
             };
-            document.head.appendChild(tag);
+            $('head').append(tag);
+            self.do_load_js(files);
         } else {
             this.on_modules_loaded();
         }
