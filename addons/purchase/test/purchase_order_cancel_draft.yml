@@ -121,7 +121,7 @@
   !python {model: purchase.order}: |
     self.action_cancel_draft(cr, uid, [ref("purchase_order_pendrive1")])   
 -
-  I check that the order which was in cancel state has transmit to draft state.
+  I check that the order is in draft state.
 -
   !assert {model: purchase.order, id: purchase_order_pendrive1}:
     - state == 'draft'
