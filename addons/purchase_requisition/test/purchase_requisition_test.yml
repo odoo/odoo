@@ -135,9 +135,7 @@
 -
   !python {model: purchase.order}: |
     partner_id=self.pool.get('res.partner').search(cr,uid,[('name','=','ASUStek')])[0]
-    req_obj = self.pool.get('purchase.requisition')
-    ids =req_obj.search(cr, uid, [('name','=','TE000010')])    
-    purchase_id= self.search(cr, uid, [('partner_id','=',partner_id),('requisition_id','in',ids)])
+    purchase_id= self.search(cr, uid, [('partner_id','=',partner_id),('requisition_id','=',ref("purchase_requisition_ex1"))])
     import netsvc
     wf_service = netsvc.LocalService("workflow")   
     if purchase_id:
