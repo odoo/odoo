@@ -106,6 +106,22 @@
 -
     !python {model: crm.lead}: |
       self.case_escalate(cr, uid, [ref("crm_lead_democustomer")])
+- 
+  Now i add Internal Note Saying Escalated Reason
+  Creating a crm.add.note record
+- 
+  !record {model: crm.add.note, id: crm_add_note_0}:
+    body: Sales Lead Has Been Escalated Due to Some Technical reason to the parent  'Sales
+      Team'
+    state: unchanged
+-
+  I click aa note button to attach the record
+- 
+  !python {model: crm.add.note}: |
+    context['active_model'] = "crm.lead"
+    context['active_ids'] = [ref("crm_lead_democustomer")]
+    self.action_add(cr, uid, [ref("crm_add_note_0")], context=context)
+
 -
   Now i Copying this lead "Demo Customer" to New Lead.
 -
