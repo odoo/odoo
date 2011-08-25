@@ -322,12 +322,11 @@ class hr_applicant(crm.crm_case, osv.osv):
 
     def message_new(self, cr, uid, msg, custom_values=None, context=None):
         """Automatically called when new email message arrives"""
-        thread_pool = self.pool.get('mail.thread')
+        res_id = super(hr_applicant,self).message_new(cr, uid, msg, custom_values=custom_values, context=context)
         subject = msg.get('subject') or _("No Subject")
         body = msg.get('body_text')
         msg_from = msg.get('from')
         priority = msg.get('priority')
-
         vals = {
             'name': subject,
             'email_from': msg_from,
@@ -337,12 +336,8 @@ class hr_applicant(crm.crm_case, osv.osv):
         }
         if priority:
             vals['priority'] = priority
-
-        res = thread_pool.get_partner(cr, uid, msg.get('from'))
-        if res:
-            vals.update(res)
-        res_id = self.create(cr, uid, vals, context)
-        self.append_mail(cr, uid, ids, msg, context=context)
+        vals.update(self.message_partner_by_email(cr, uid, msg.get('from', False)))
+        self.write(cr, uid, [res_id], vals, context)
         return res_id
 
     def message_update(self, cr, uid, ids, msg, vals={}, default_act='pending', context=None):
@@ -371,7 +366,7 @@ class hr_applicant(crm.crm_case, osv.osv):
 
         vals.update(vls)
         res = self.write(cr, uid, ids, vals, context=context)
-        self.append_mail(cr, uid, ids, msg, context=context)
+        self.message_append_dict(cr, uid, ids, msg, context=context)
         return res
 
     def case_open(self, cr, uid, ids, *args):

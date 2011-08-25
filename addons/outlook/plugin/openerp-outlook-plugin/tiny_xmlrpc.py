@@ -209,7 +209,7 @@ class XMLRpcConn(object):
             if attachments:
             	result = self.MakeAttachment([rec], mail)
             execute(conn, 'execute', self. _dbname, int(self._uid), self._pwd,
-                    'mail.thread','history',[res_id],
+                    'mail.thread','message_append',[res_id],
                     msg.get('subject', False),
                     msg.get('body', False),
                     msg.get('to', False),

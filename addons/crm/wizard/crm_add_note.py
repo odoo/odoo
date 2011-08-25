@@ -47,7 +47,7 @@ class crm_add_note(osv.osv_memory):
             attach = dict(
                 (x.name, base64.decodestring(x.binary)) for x in obj.attachment_ids
             )
-            case_pool.history(cr, uid, [case], truncate_text(obj.body),
+            case_pool.message_append(cr, uid, [case], truncate_text(obj.body),
                               body_text=obj.body, attachments=attach)
 
             if obj.state == 'unchanged':

@@ -34,24 +34,17 @@ class project_tasks(osv.osv):
               }
 
     def message_new(self, cr, uid, msg, custom_values=None, context=None):
-        thread_obj = self.pool.get('mail.thread')
+        res_id = super(project_tasks,self).message_new(cr, uid, msg, custom_values=custom_values, context=context)
         subject = msg.get('subject')
         body = msg.get('body_text')
         msg_from = msg.get('from')
-
         data = {
             'name': subject,
             'description': body,
             'planned_hours': 0.0,
         }
-        res = thread_obj.get_partner(cr, uid, msg_from)
-        if res:
-            data.update(res)
-
-        if custom_values and isinstance(custom_values, dict):
-            data.update(custom_values)
-        res_id = self.create(cr, uid, data, context)
-        self.append_mail(cr, uid, [res_id], msg, context=context)
+        data.update(self.message_partner_by_email(cr, uid, msg_from))
+        self.write(cr, uid, [res_id], data, context)
         return res_id
 
     def message_update(self, cr, uid, ids, msg, data={}, default_act='pending'):
@@ -80,7 +73,7 @@ class project_tasks(osv.osv):
 
         self.write(cr, uid, ids, data, context=context)
         getattr(self,act)(cr, uid, ids, context=context)
-        self.append_mail(cr, uid, [res_id], msg, context=context)
+        self.message_append_dict(cr, uid, [res_id], msg, context=context)
         return True
 
     def message_thread_followers(self, cr, uid, ids, context=None):
@@ -102,19 +95,19 @@ class project_tasks(osv.osv):
     def do_draft(self, cr, uid, ids, context=None):
         res = super(project_tasks, self).do_draft(cr, uid, ids, context)
         tasks = self.browse(cr, uid, ids, context=context)
-        self.history(cr, uid, tasks, _('Draft'), context=context)
+        self.message_append(cr, uid, tasks, _('Draft'), context=context)
         return res
 
     def do_open(self, cr, uid, ids, context=None):
         res = super(project_tasks, self).do_open(cr, uid, ids, context)
         tasks = self.browse(cr, uid, ids, context=context)
-        self.history(cr, uid, tasks, _('Open'), context=context)
+        self.message_append(cr, uid, tasks, _('Open'), context=context)
         return res
 
     def do_pending(self, cr, uid, ids, context=None):
         res = super(project_tasks, self).do_pending(cr, uid, ids, context)
         tasks = self.browse(cr, uid, ids, context=context)
-        self.history(cr, uid, tasks, _('Pending'), context=context)
+        self.message_append(cr, uid, tasks, _('Pending'), context=context)
         return res
 
     def do_close(self, cr, uid, ids, context=None):
@@ -122,13 +115,13 @@ class project_tasks(osv.osv):
         tasks = self.browse(cr, uid, ids, context=context)
         for task in tasks:
             if task.state == 'done':
-                self.history(cr, uid, tasks, _('Done'), context=context)
+                self.message_append(cr, uid, tasks, _('Done'), context=context)
         return res
 
     def do_cancel(self, cr, uid, ids, context=None):
         res = super(project_tasks, self).do_cancel(cr, uid, ids, context=context)
         tasks = self.browse(cr, uid, ids, context=context)
-        self.history(cr, uid, tasks, _('Cancel'), context=context)
+        self.message_append(cr, uid, tasks, _('Cancel'), context=context)
         return res
 
 project_tasks()

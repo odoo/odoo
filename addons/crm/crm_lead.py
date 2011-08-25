@@ -300,7 +300,7 @@ class crm_lead(crm_case, osv.osv):
         if 'stage_id' in vals and vals['stage_id']:
             stage_obj = self.pool.get('crm.case.stage').browse(cr, uid, vals['stage_id'], context=context)
             text = _("Changed Stage to: %s") % stage_obj.name
-            self.history(cr, uid, ids, text, body_text=text)
+            self.message_append(cr, uid, ids, text, body_text=text, context=context)
             message=''
             for case in self.browse(cr, uid, ids, context=context):
                 if case.type == 'lead' or  context.get('stage_type',False)=='lead':
@@ -337,10 +337,7 @@ class crm_lead(crm_case, osv.osv):
 
     def message_new(self, cr, uid, msg, custom_values=None, context=None):
         """Automatically calls when new email message arrives"""
-        res_id = super(crm_lead, self).message_new(cr, uid, msg,
-                                                   custom_values=custom_values,
-                                                   context=context)
-        mail_thread = self.pool.get('mail.thread')
+        res_id = super(crm_lead, self).message_new(cr, uid, msg, custom_values=custom_values, context=context)
         subject = msg.get('subject')  or _("No Subject")
         body = msg.get('body_text')
         msg_from = msg.get('from')
@@ -354,9 +351,7 @@ class crm_lead(crm_case, osv.osv):
         }
         if priority:
             vals['priority'] = priority
-        res = mail_thread.get_partner(cr, uid, msg.get('from', False))
-        if res:
-            vals.update(res)
+        vals.update(self.message_partner_by_email(cr, uid, msg.get('from', False)))
         res_id = self.write(cr, uid, [res_id], vals, context)
         return res_id
 

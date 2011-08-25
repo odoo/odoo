@@ -355,7 +355,7 @@ class event_registration(osv.osv):
             })
         inv_id = inv_pool.create(cr, uid, val_invoice['value'], context=context)
         inv_pool.button_compute(cr, uid, [inv_id])
-        self.history(cr, uid, [reg], _('Invoiced'))
+        self.message_append(cr, uid, [reg], _('Invoiced'))
         return inv_id
 
     def copy(self, cr, uid, id, default=None, context=None):
@@ -430,7 +430,7 @@ class event_registration(osv.osv):
         """
         res = self.write(cr, uid, ids, {'state': 'open'}, context=context)
         self.mail_user(cr, uid, ids)
-        self.history(cr, uid, ids, _('Open'))
+        self.message_append(cr, uid, ids, _('Open'))
         return res
 
     def do_close(self, cr, uid, ids, context=None):
@@ -444,7 +444,7 @@ class event_registration(osv.osv):
         if invoice_id:
             values['invoice_id'] = invoice_id
         res = self.write(cr, uid, ids, values)
-        self.history(cr, uid, ids, msg)
+        self.message_append(cr, uid, ids, msg)
         return res
 
     def check_confirm(self, cr, uid, ids, context=None):
@@ -515,7 +515,7 @@ class event_registration(osv.osv):
         """This Function Cancel Event Registration.
         """
         registrations = self.browse(cr, uid, ids)
-        self.history(cr, uid, registrations, _('Cancel'))
+        self.message_append(cr, uid, registrations, _('Cancel'))
         return self.write(cr, uid, ids, {'state': 'cancel'})
 
     def mail_user(self, cr, uid, ids, confirm=False, context=None):

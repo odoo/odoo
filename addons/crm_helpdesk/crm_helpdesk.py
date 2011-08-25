@@ -98,26 +98,17 @@ class crm_helpdesk(crm.crm_case, osv.osv):
     def message_new(self, cr, uid, msg_dict, custom_values=None, context=None):
         """Automatically called when new email message arrives"""
         res_id = super(crm_helpdesk,self).message_new(cr, uid, msg_dict, custom_values=custom_values, context=context)
-        thread_pool = self.pool.get('mail.thread')
-        subject = msg.get('subject')  or _("No Subject")
-        body = msg.get('body_text')
-        msg_from = msg.get('from')
-        priority = msg.get('priority')
-
+        subject = msg_dict.get('subject')  or _("No Subject")
+        body = msg_dict.get('body_text')
+        msg_from = msg_dict.get('from')
         vals = {
             'name': subject,
             'email_from': msg_from,
-            'email_cc': msg.get('cc'),
+            'email_cc': msg_dict.get('cc'),
             'description': body,
             'user_id': False,
         }
-        if priority:
-            vals['priority'] = priority
-
-        res = thread_pool.get_partner(cr, uid, msg.get('from', False))
-        if res:
-            vals.update(res)
-
+        vals.update(self.message_partner_by_email(cr, uid, msg_dict.get('from', False)))
         self.write(cr, uid, [res_id], vals, context)
         return res_id
 

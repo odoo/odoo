@@ -89,7 +89,7 @@ class thunderbird_partner(osv.osv_memory):
                 obj_attch.create(cr, uid, res)
             threads = self.pool.get(model).browse(cr, uid, res_id)
 
-            thread_pool.history(cr, uid,
+            thread_pool.message_append(cr, uid,
                             [threads],
                             subject = msg.get('subject'),
                             details = msg.get('body_text'),

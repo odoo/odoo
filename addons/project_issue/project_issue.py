@@ -388,20 +388,17 @@ class project_issue(crm.crm_case, osv.osv):
             else:
                 raise osv.except_osv(_('Warning !'), _('You cannot escalate this issue.\nThe relevant Project has not configured the Escalation Project!'))
             self.write(cr, uid, [case.id], data)
-        self.history(cr, uid, cases, _('Escalate'))
+        self.message_append(cr, uid, cases, _('Escalate'))
         return True
 
     def message_new(self, cr, uid, msg, custom_values=None, context=None):
         """Automatically called when new email message arrives"""
         if context is None:
             context = {}
-        thread_pool = self.pool.get('mail.thread')
-
         subject = msg.get('subject') or _('No Title')
         body = msg.get('body_text')
         msg_from = msg.get('from')
         priority = msg.get('priority')
-
         vals = {
             'name': subject,
             'email_from': msg_from,
@@ -411,17 +408,14 @@ class project_issue(crm.crm_case, osv.osv):
         }
         if priority:
             vals['priority'] = priority
-
-        res = thread_pool.get_partner(cr, uid, msg.get('from'))
-        if res:
-            vals.update(res)
+        vals.update(self.message_partner_by_email(cr, uid, msg.get('from', False)))
         context.update({'state_to' : 'draft'})
 
         if custom_values and isinstance(custom_values, dict):
             vals.update(custom_values)
 
         res_id = self.create(cr, uid, vals, context)
-        self.append_mail(cr, uid, [res_id], msg, context=context)
+        self.message_append_dict(cr, uid, [res_id], msg, context=context)
         self.convert_to_bug(cr, uid, [res_id], context=context)
         return res_id
 
@@ -460,7 +454,7 @@ class project_issue(crm.crm_case, osv.osv):
 
         vals.update(vls)
         res = self.write(cr, uid, ids, vals)
-        self.append_mail(cr, uid, [res_id], msg, context=context)
+        self.message_append_dict(cr, uid, [res_id], msg, context=context)
         return res
 
     def copy(self, cr, uid, id, default=None, context=None):

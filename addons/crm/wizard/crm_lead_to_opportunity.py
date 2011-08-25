@@ -133,7 +133,7 @@ class crm_lead2opportunity_partner(osv.osv_memory):
 
         lead.write(vals, context=context)
         text = _('Converted to opportunity')
-        leads.history(cr, uid, [lead], text, body_text=text, context=context)
+        leads.message_append(cr, uid, [lead], text, body_text=text, context=context)
         if lead.partner_id:
             msg_ids = [ x.id for x in lead.message_ids]
             self.pool.get('mail.message').write(cr, uid, msg_ids, {

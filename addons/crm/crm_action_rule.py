@@ -106,8 +106,8 @@ class base_action_rule(osv.osv):
                 write['email_cc'] = obj.act_email_cc
 
         # Put state change by rule in communication history
-        if hasattr(obj, 'state') and action.act_state:
-            model_obj.history(cr, uid, [obj], _(action.act_state))
+        if hasattr(obj, 'state') and hasattr(obj, 'message_append') and action.act_state:
+            model_obj.message_append(cr, uid, [obj], _(action.act_state))
 
         model_obj.write(cr, uid, [obj.id], write, context)
         emails = []

@@ -350,7 +350,7 @@ class crm_case(crm_base):
     def case_open(self, cr, uid, ids, *args):
         """Opens Case"""
         cases = self.browse(cr, uid, ids)
-        self.history(cr, uid, cases, _('Open'))
+        self.message_append(cr, uid, cases, _('Open'))
         for case in cases:
             data = {'state': 'open', 'active': True}
             if not case.user_id:
@@ -363,7 +363,7 @@ class crm_case(crm_base):
         """Closes Case"""
         cases = self.browse(cr, uid, ids)
         cases[0].state # to fill the browse record cache
-        self.history(cr, uid, cases, _('Close'))
+        self.message_append(cr, uid, cases, _('Close'))
         self.write(cr, uid, ids, {'state': 'done',
                                   'date_closed': time.strftime('%Y-%m-%d %H:%M:%S'),
                                   })
@@ -387,7 +387,7 @@ class crm_case(crm_base):
                 raise osv.except_osv(_('Error !'), _('You can not escalate, You are already at the top level regarding your sales-team category.'))
             self.write(cr, uid, [case.id], data)
         cases = self.browse(cr, uid, ids)
-        self.history(cr, uid, cases, _('Escalate'))
+        self.message_append(cr, uid, cases, _('Escalate'))
         self._action(cr, uid, cases, 'escalate')
         return True
 
@@ -395,7 +395,7 @@ class crm_case(crm_base):
         """Cancels Case"""
         cases = self.browse(cr, uid, ids)
         cases[0].state # to fill the browse record cache
-        self.history(cr, uid, cases, _('Cancel'))
+        self.message_append(cr, uid, cases, _('Cancel'))
         self.write(cr, uid, ids, {'state': 'cancel',
                                   'active': True})
         self._action(cr, uid, cases, 'cancel')
@@ -408,7 +408,7 @@ class crm_case(crm_base):
         """Marks case as pending"""
         cases = self.browse(cr, uid, ids)
         cases[0].state # to fill the browse record cache
-        self.history(cr, uid, cases, _('Pending'))
+        self.message_append(cr, uid, cases, _('Pending'))
         self.write(cr, uid, ids, {'state': 'pending', 'active': True})
         self._action(cr, uid, cases, 'pending')
         return True
@@ -420,7 +420,7 @@ class crm_case(crm_base):
             state = 'open'
         cases = self.browse(cr, uid, ids)
         cases[0].state # to fill the browse record cache
-        self.history(cr, uid, cases, _('Draft'))
+        self.message_append(cr, uid, cases, _('Draft'))
         self.write(cr, uid, ids, {'state': state, 'active': True})
         self._action(cr, uid, cases, state)
         return True

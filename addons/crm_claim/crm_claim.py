@@ -89,14 +89,14 @@ class crm_claim(crm.crm_case, osv.osv):
         stage = super(crm_claim, self).stage_next(cr, uid, ids, context=context)
         if stage:
             stage_obj = self.pool.get('crm.case.stage').browse(cr, uid, stage, context=context)
-            self.history(cr, uid, ids, _("Changed Stage to: ") + stage_obj.name)
+            self.message_append(cr, uid, ids, _("Changed Stage to: ") + stage_obj.name)
         return stage
 
     def stage_previous(self, cr, uid, ids, context=None):
         stage = super(crm_claim, self).stage_previous(cr, uid, ids, context=context)
         if stage:
             stage_obj = self.pool.get('crm.case.stage').browse(cr, uid, stage, context=context)
-            self.history(cr, uid, ids, _("Changed Stage to: ") + stage_obj.name)
+            self.message_append(cr, uid, ids, _("Changed Stage to: ") + stage_obj.name)
         return stage
 
     def _get_stage_id(self, cr, uid, context=None):
@@ -162,10 +162,7 @@ class crm_claim(crm.crm_case, osv.osv):
 
     def message_new(self, cr, uid, msg, custom_values=None, context=None):
         """Automatically called when new email message arrives"""
-        res_id = super(crm_claim,self).message_new(cr, uid, msg,
-                                                   custom_values=custom_values,
-                                                   context=context)
-        mail_thread = self.pool.get('mail.thread')
+        res_id = super(crm_claim,self).message_new(cr, uid, msg, custom_values=custom_values, context=context)
         subject = msg.get('subject')
         body = msg.get('body_text')
         msg_from = msg.get('from')
@@ -179,9 +176,7 @@ class crm_claim(crm.crm_case, osv.osv):
         }
         if priority:
             vals['priority'] = priority
-        res = mail_thread.get_partner(cr, uid, msg.get('from', False))
-        if res:
-            vals.update(res)
+        vals.update(self.message_partner_by_email(cr, uid, msg.get('from', False)))
         self.write(cr, uid, [res_id], vals, context=context)
         return res_id
 
