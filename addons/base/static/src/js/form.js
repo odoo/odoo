@@ -38,6 +38,7 @@ openerp.base.FormView = openerp.base.View.extend( /** @lends openerp.base.FormVi
         this.registry = openerp.base.form.widgets;
         this.has_been_loaded = $.Deferred();
         this.$form_header = null;
+        this.translatable_fields = [];
         _.defaults(this.options, {"always_show_new_button": true});
     },
     start: function() {
@@ -461,7 +462,7 @@ openerp.base.form.SidebarAttachments = openerp.base.Widget.extend({
                     ['res_model', '=', this.view.dataset.model],
                     ['res_id', '=', this.view.datarecord.id],
                     ['type', 'in', ['binary', 'url']]
-                ])).read_slice(['name', 'url', 'type'], this.on_attachments_loaded);
+                ])).read_slice(['name', 'url', 'type'], {}, this.on_attachments_loaded);
         }
     },
     on_attachments_loaded: function(attachments) {
@@ -839,6 +840,13 @@ openerp.base.form.Field = openerp.base.form.Widget.extend({
         this.invalid = false;
         this.dirty = false;
     },
+    start: function() {
+        this._super.apply(this, arguments);
+        if (this.field.translate) {
+            this.view.translatable_fields.push(this);
+            this.$element.find('.oe_field_translate').click(this.on_translate);
+        }
+    },
     set_value: function(value) {
         this.value = value;
         this.invalid = false;
@@ -849,6 +857,9 @@ openerp.base.form.Field = openerp.base.form.Widget.extend({
         this.on_value_changed();
     },
     on_value_changed: function() {
+    },
+    on_translate: function() {
+        this.view.open_translate_dialog(this);
     },
     get_value: function() {
         return this.value;
