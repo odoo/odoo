@@ -119,7 +119,6 @@
   Now again set purchase order for Pen Drive1 to draft state.
 -
   !python {model: purchase.order}: |
-    from tools.translate import _
     self.action_cancel_draft(cr, uid, [ref("purchase_order_pendrive1")])   
 -
   I check that the order which was in cancel state has transmit to draft state.
