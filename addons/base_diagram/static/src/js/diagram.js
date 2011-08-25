@@ -197,7 +197,8 @@ openerp.base_diagram.DiagramView = openerp.base.View.extend({
 	            'kind': n.node.options['Kind'] || n.node.options['kind']
 	        }).dblclick(function() {
 	            var $this = jQuery(this);
-	            self.search_activity($this.attr('id'), $this.attr('name'), $this.attr('kind'))
+	            self.add_edit_node($this.attr('id'), self.node);
+//	            self.search_activity($this.attr('id'), $this.attr('name'), $this.attr('kind'))
 	        });
 	        
 	        //Text Node Event
@@ -207,7 +208,8 @@ openerp.base_diagram.DiagramView = openerp.base.View.extend({
 	            'kind': n.node.options['Kind'] || n.node.options['kind']
 	        }).dblclick(function() {
 	            var $this = jQuery(this);
-	            self.search_activity($this.attr('id'), $this.attr('name'), $this.attr('kind'))
+	            self.add_edit_node($this.attr('id'), self.node);
+//	            self.search_activity($this.attr('id'), $this.attr('name'), $this.attr('kind'))
 	        });
 	        return set;
         }
@@ -239,35 +241,20 @@ openerp.base_diagram.DiagramView = openerp.base.View.extend({
         		's_id': res_connectors[index+1].s_id,
     		})
         });
-        jQuery('path',renderer.r.canvas).dblclick(function(){
+        jQuery('path',renderer.r.canvas).dblclick(function() {
+        	self.add_edit_node(this.id, self.connector)
         });
     },
     
-    search_activity: function(id, name, kind) {
-        var self = this;
-        this.rpc(
-        '/base_diagram/diagram/get_activity',
-        {
-            'id': id,
-            'name': name,
-            'kind': kind,
-            'active_model': this.active_model,
-            'model': this.node
-        },
-        function(result) {
-            self.add_edit_node(result)
-        }
-        )
-    },
-    
-    add_edit_node: function(result) {
+    add_edit_node: function(id, model) {
     	var self = this;
-    	var id;
-    	if(result)
-			id = result.activity_id[0];
+    	
+    	if(!model)
+    		model = self.node;
+    	if(id)
+    		id = parseInt(id, 10);
     	var action_manager = new openerp.base.ActionManager(this);
     	var dialog = new openerp.base.Dialog(this, {
-            title : 'Activity',
             width: 800,
             height: 600,
             buttons : {
@@ -288,7 +275,7 @@ openerp.base_diagram.DiagramView = openerp.base.View.extend({
         }).start().open();
     	action_manager.appendTo(dialog.$element);
     	action_manager.do_action({
-            res_model : this.node,
+            res_model : model,
             res_id: id,
             views : [[false, 'form']],
             type : 'ir.actions.act_window',
