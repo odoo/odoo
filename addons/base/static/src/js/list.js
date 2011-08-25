@@ -365,7 +365,6 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
     reload_view: function (grouped, context, initial) {
         var self = this;
         var callback = function (field_view_get) {
-            console.log('loaded', initial ? 'initial' : 'subsequent');
             self.on_loaded(field_view_get, grouped);
         };
         if (this.embedded_view) {
