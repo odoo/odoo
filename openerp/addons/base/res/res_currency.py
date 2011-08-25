@@ -103,15 +103,24 @@ class res_currency(osv.osv):
     def is_zero(self, cr, uid, currency, amount):
         return abs(self.round(cr, uid, currency, amount)) < currency.rounding
 
-    def _get_conversion_rate(self, cr, uid, from_currency_rate, to_currency_rate, context=None):
+    def _get_conversion_rate(self, cr, uid, from_currency, to_currency, context=None):
         if context is None:
             context = {}
+        ctx = context.copy()
+        ctx.update({'currency_rate_type_id': ctx.get('currency_rate_type_from')})
+        from_currency = self.browse(cr, uid, [from_currency.id], context=ctx)[0]
+        from_currency_rate = from_currency['rate']
+
+        ctx.update({'currency_rate_type_id': ctx.get('currency_rate_type_to')})
+        to_currency = self.browse(cr, uid, [to_currency.id], context=ctx)[0]
+        to_currency_rate = to_currency['rate']
+
         if from_currency_rate == 0 or to_currency_rate == 0:
             date = context.get('date', time.strftime('%Y-%m-%d'))
             if from_currency_rate == 0:
-                currency_symbol = context.get('from_curr_symbol')
+                currency_symbol = from_currency.symbol
             else:
-                currency_symbol = context.get('to_curr_symbol')
+                currency_symbol = to_currency.symbol
             raise osv.except_osv(_('Error'), _('No rate found \n' \
                     'for the currency: %s \n' \
                     'at the date: %s') % (currency_symbol, date))
@@ -126,28 +135,17 @@ class res_currency(osv.osv):
             from_currency_id = to_currency_id
         if not to_currency_id:
             to_currency_id = from_currency_id
-
-        ctx1 = context.copy()
-        ctx1.update({'currency_rate_type_id': currency_rate_type_from})
-        xc = self.browse(cr, uid, [from_currency_id], context=ctx1)
+        xc = self.browse(cr, uid, [from_currency_id,to_currency_id], context=context)
         from_currency = (xc[0].id == from_currency_id and xc[0]) or xc[1]
-        from_currency_rate = from_currency['rate']
-        context.update({'from_curr_symbol': from_currency.symbol})
-
-        ctx2 = context.copy()
-        ctx2.update({'currency_rate_type_id': currency_rate_type_to})
-        xc1 = self.browse(cr, uid, [to_currency_id], context=ctx2)
-        to_currency = (xc1[0].id == to_currency_id and xc1[0]) or xc1[1]
-        to_currency_rate = to_currency['rate']
-        context.update({'to_curr_symbol': to_currency.symbol})
-
+        to_currency = (xc[0].id == to_currency_id and xc[0]) or xc[1]
         if to_currency_id == from_currency_id:
             if round:
                 return self.round(cr, uid, to_currency, from_amount)
             else:
                 return from_amount
         else:
-            rate = self._get_conversion_rate(cr, uid, from_currency_rate, to_currency_rate, context=context)
+            context.update({'currency_rate_type_from': currency_rate_type_from, 'currency_rate_type_to': currency_rate_type_to})
+            rate = self._get_conversion_rate(cr, uid, from_currency, to_currency, context=context)
             if round:
                 return self.round(cr, uid, to_currency, from_amount * rate)
             else:
