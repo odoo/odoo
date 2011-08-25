@@ -582,6 +582,7 @@ openerp.base.form.Widget = openerp.base.Widget.extend({
         this.$element = $('#' + this.element_id);
     },
     stop: function() {
+        this.$element = $('#' + this.element_id);
         this.$element.remove();
     },
     process_modifiers: function() {

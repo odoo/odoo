@@ -54,14 +54,11 @@ openerp.base = function(instance) {
     openerp.base.formats(instance);
     openerp.base.chrome(instance);
     openerp.base.data(instance);
-    files = ["views","search","list","form","list_editable","web_mobile","view_tree","data_export"];
+    files = ["views","search","list","form","list_editable","web_mobile","view_tree","data_export","data_import"];
     for(i=0; i<files.length; i++) {
         if(openerp.base[files[i]]) {
             openerp.base[files[i]](instance);
         }
-    }
-    if (openerp.base.data_import){
-        openerp.base.data_import(instance);
     }
 };
 

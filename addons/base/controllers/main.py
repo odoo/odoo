@@ -168,14 +168,14 @@ class WebClient(openerpweb.Controller):
                                                 "grouping", "decimal_point", "thousands_sep"])
         else:
             lang_obj = None
-            
+
         if lang.count("_") > 0:
             separator = "_"
         else:
             separator = "@"
         langs = lang.split(separator)
         langs = [separator.join(langs[:x]) for x in range(1, len(langs) + 1)]
-        
+
         transs = {}
         for addon_name in mods:
             transl = {"messages":[]}
@@ -1331,7 +1331,7 @@ class Import(View):
         records = []
         fields = []
         word=''
-        limit = 3
+        limit = 4
         try:
             for i, row in enumerate(data):
                 records.append(row)
