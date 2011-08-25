@@ -53,8 +53,8 @@ class DiagramView(View):
         nodes = graphs['nodes']
         transitions = graphs['transitions']
         isolate_nodes = {}
-        for node in graphs['blank_nodes']:
-            isolate_nodes[node['id']] = node
+        for blnk_node in graphs['blank_nodes']:
+            isolate_nodes[blnk_node['id']] = blnk_node
         else:
             y = map(lambda t: t['y'],filter(lambda x: x['y'] if x['x']==20 else None, nodes.values()))
             y_max = (y and max(y)) or 120
