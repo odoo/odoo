@@ -107,11 +107,11 @@ class res_currency(osv.osv):
         if context is None:
             context = {}
         ctx = context.copy()
-        ctx.update({'currency_rate_type_id': ctx.get('currency_rate_type_from')})
+        ctx.update({'currency_rate_type_id': ctx.get('currency_rate_type_from', False)})
         from_currency = self.browse(cr, uid, [from_currency.id], context=ctx)[0]
         from_currency_rate = from_currency['rate']
 
-        ctx.update({'currency_rate_type_id': ctx.get('currency_rate_type_to')})
+        ctx.update({'currency_rate_type_id': ctx.get('currency_rate_type_to', False)})
         to_currency = self.browse(cr, uid, [to_currency.id], context=ctx)[0]
         to_currency_rate = to_currency['rate']
 
@@ -124,7 +124,6 @@ class res_currency(osv.osv):
             raise osv.except_osv(_('Error'), _('No rate found \n' \
                     'for the currency: %s \n' \
                     'at the date: %s') % (currency_symbol, date))
-
         return to_currency_rate/from_currency_rate
 
     def compute(self, cr, uid, from_currency_id, to_currency_id, from_amount,
