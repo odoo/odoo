@@ -571,15 +571,15 @@ class DataSet(openerpweb.Controller):
                                                               req.session.eval_context(req.context))}
 
     @openerpweb.jsonrequest
-    def search_read(self, request, model, fields=False, offset=0, limit=False, domain=None, sort=None):
-        return self.do_search_read(request, model, fields, offset, limit, domain, sort)
-    def do_search_read(self, request, model, fields=False, offset=0, limit=False, domain=None
+    def search_read(self, req, model, fields=False, offset=0, limit=False, domain=None, sort=None):
+        return self.do_search_read(req, model, fields, offset, limit, domain, sort)
+    def do_search_read(self, req, model, fields=False, offset=0, limit=False, domain=None
                        , sort=None):
         """ Performs a search() followed by a read() (if needed) using the
         provided search criteria
 
-        :param request: a JSON-RPC request object
-        :type request: openerpweb.JsonRequest
+        :param req: a JSON-RPC request object
+        :type req: openerpweb.JsonRequest
         :param str model: the name of the model to search on
         :param fields: a list of the fields to return in the result records
         :type fields: [str]
@@ -592,10 +592,10 @@ class DataSet(openerpweb.Controller):
                   matching fields selection set)
         :rtype: list
         """
-        Model = request.session.model(model)
+        Model = req.session.model(model)
 
         context, domain = eval_context_and_domain(
-            request.session, request.context, domain)
+            req.session, req.context, domain)
 
         ids = Model.search(domain, 0, False, sort or False, context)
         # need to fill the dataset with all ids for the (domain, context) pair,
@@ -617,22 +617,22 @@ class DataSet(openerpweb.Controller):
 
 
     @openerpweb.jsonrequest
-    def read(self, request, model, ids, fields=False):
-        return self.do_search_read(request, model, ids, fields)
+    def read(self, req, model, ids, fields=False):
+        return self.do_search_read(req, model, ids, fields)
 
     @openerpweb.jsonrequest
-    def get(self, request, model, ids, fields=False):
-        return self.do_get(request, model, ids, fields)
+    def get(self, req, model, ids, fields=False):
+        return self.do_get(req, model, ids, fields)
 
-    def do_get(self, request, model, ids, fields=False):
+    def do_get(self, req, model, ids, fields=False):
         """ Fetches and returns the records of the model ``model`` whose ids
         are in ``ids``.
 
         The results are in the same order as the inputs, but elements may be
         missing (if there is no record left for the id)
 
-        :param request: the JSON-RPC2 request object
-        :type request: openerpweb.JsonRequest
+        :param req: the JSON-RPC2 request object
+        :type req: openerpweb.JsonRequest
         :param model: the model to read from
         :type model: str
         :param ids: a list of identifiers
@@ -643,8 +643,8 @@ class DataSet(openerpweb.Controller):
         :returns: a list of records, in the same order as the list of ids
         :rtype: list
         """
-        Model = request.session.model(model)
-        records = Model.read(ids, fields, request.session.eval_context(request.context))
+        Model = req.session.model(model)
+        records = Model.read(ids, fields, req.session.eval_context(req.context))
 
         record_map = dict((record['id'], record) for record in records)
 
@@ -672,9 +672,9 @@ class DataSet(openerpweb.Controller):
         return {'result': r}
 
     @openerpweb.jsonrequest
-    def unlink(self, request, model, ids=()):
-        Model = request.session.model(model)
-        return Model.unlink(ids, request.session.eval_context(request.context))
+    def unlink(self, req, model, ids=()):
+        Model = req.session.model(model)
+        return Model.unlink(ids, req.session.eval_context(req.context))
 
     def call_common(self, req, model, method, args, domain_id=None, context_id=None):
         domain = args[domain_id] if domain_id and len(args) - 1 >= domain_id  else []
@@ -717,9 +717,9 @@ class DataSet(openerpweb.Controller):
 class DataGroup(openerpweb.Controller):
     _cp_path = "/base/group"
     @openerpweb.jsonrequest
-    def read(self, request, model, fields, group_by_fields, domain=None, sort=None):
-        Model = request.session.model(model)
-        context, domain = eval_context_and_domain(request.session, request.context, domain)
+    def read(self, req, model, fields, group_by_fields, domain=None, sort=None):
+        Model = req.session.model(model)
+        context, domain = eval_context_and_domain(req.session, req.context, domain)
 
         return Model.read_group(
             domain or [], fields, group_by_fields, 0, False,
@@ -728,13 +728,13 @@ class DataGroup(openerpweb.Controller):
 class View(openerpweb.Controller):
     _cp_path = "/base/view"
 
-    def fields_view_get(self, request, model, view_id, view_type,
+    def fields_view_get(self, req, model, view_id, view_type,
                         transform=True, toolbar=False, submenu=False):
-        Model = request.session.model(model)
-        context = request.session.eval_context(request.context)
+        Model = req.session.model(model)
+        context = req.session.eval_context(req.context)
         fvg = Model.fields_view_get(view_id, view_type, context, toolbar, submenu)
         # todo fme?: check that we should pass the evaluated context here
-        self.process_view(request.session, fvg, context, transform)
+        self.process_view(req.session, fvg, context, transform)
         return fvg
 
     def process_view(self, session, fvg, context, transform):
@@ -767,20 +767,20 @@ class View(openerpweb.Controller):
                 field["context"] = self.parse_context(field["context"], session)
 
     @openerpweb.jsonrequest
-    def add_custom(self, request, view_id, arch):
-        CustomView = request.session.model('ir.ui.view.custom')
+    def add_custom(self, req, view_id, arch):
+        CustomView = req.session.model('ir.ui.view.custom')
         CustomView.create({
-            'user_id': request.session._uid,
+            'user_id': req.session._uid,
             'ref_id': view_id,
             'arch': arch
-        }, request.session.eval_context(request.context))
+        }, req.session.eval_context(req.context))
         return {'result': True}
 
     @openerpweb.jsonrequest
-    def undo_custom(self, request, view_id, reset=False):
-        CustomView = request.session.model('ir.ui.view.custom')
-        context = request.session.eval_context(request.context)
-        vcustom = CustomView.search([('user_id', '=', request.session._uid), ('ref_id' ,'=', view_id)],
+    def undo_custom(self, req, view_id, reset=False):
+        CustomView = req.session.model('ir.ui.view.custom')
+        context = req.session.eval_context(req.context)
+        vcustom = CustomView.search([('user_id', '=', req.session._uid), ('ref_id' ,'=', view_id)],
                                     0, False, False, context)
         if vcustom:
             if reset:
