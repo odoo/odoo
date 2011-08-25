@@ -1306,36 +1306,46 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
         this.$input = this.$element.find("input");
         this.$drop_down = this.$element.find(".oe-m2o-drop-down-button");
         this.$menu_btn = this.$element.find(".oe-m2o-cm-button");
-
-        // context menu
-        var bindings = {};
-        bindings[this.cm_id + "_search"] = function() {
-            self._search_create_popup("search");
-        };
-        bindings[this.cm_id + "_create"] = function() {
-            self._search_create_popup("form");
-        };
-        bindings[this.cm_id + "_open"] = function() {
-            if (!self.value) {
-                return;
-            }
-            var pop = new openerp.base.form.FormOpenPopup(self.view);
-            pop.show_element(self.field.relation, self.value[0],self.build_context(), {});
-            pop.on_write_completed.add_last(function() {
-                self.set_value(self.value[0]);
-            });
-        };
-        var cmenu = this.$menu_btn.contextMenu(this.cm_id, {'leftClickToo': true,
-            bindings: bindings, itemStyle: {"color": ""},
-            onContextMenu: function() {
-                if(self.value) {
-                    $("#" + self.cm_id + "_open").removeClass("oe-m2o-disabled-cm");
-                } else {
-                    $("#" + self.cm_id + "_open").addClass("oe-m2o-disabled-cm");
+        
+        var init_context_menu_def = $.Deferred().then(function(e) {
+            // context menu
+            var bindings = {};
+            bindings[self.cm_id + "_search"] = function() {
+                self._search_create_popup("search");
+            };
+            bindings[self.cm_id + "_create"] = function() {
+                self._search_create_popup("form");
+            };
+            bindings[self.cm_id + "_open"] = function() {
+                if (!self.value) {
+                    return;
                 }
-                return true;
-            }
+                var pop = new openerp.base.form.FormOpenPopup(self.view);
+                pop.show_element(self.field.relation, self.value[0],self.build_context(), {});
+                pop.on_write_completed.add_last(function() {
+                    self.set_value(self.value[0]);
+                });
+            };
+            var cmenu = self.$menu_btn.contextMenu(self.cm_id, {'leftClickToo': true,
+                bindings: bindings, itemStyle: {"color": ""},
+                onContextMenu: function() {
+                    if(self.value) {
+                        $("#" + self.cm_id + "_open").removeClass("oe-m2o-disabled-cm");
+                    } else {
+                        $("#" + self.cm_id + "_open").addClass("oe-m2o-disabled-cm");
+                    }
+                    return true;
+                }
+            });
+            setTimeout(function() {
+                self.$menu_btn.trigger(e);
+            }, 0);
         });
+        
+        var ctx_callback = function(e) {init_context_menu_def.resolve(e); e.preventDefault()};
+        
+        this.$menu_btn.bind('contextmenu', ctx_callback);
+        this.$menu_btn.click(ctx_callback);
 
         // some behavior for input
         this.$input.keyup(function() {
