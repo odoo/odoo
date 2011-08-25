@@ -382,10 +382,19 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
      * re-renders the content of the list view
      */
     reload_content: function () {
+        var self = this;
         this.records.reset();
         this.$element.find('.oe-listview-content').append(
-            this.groups.render(
-                $.proxy(this, 'compute_aggregates')));
+            this.groups.render(function () {
+                if (self.dataset.index == null) {
+                    var has_one = false;
+                    self.records.each(function () { has_one = true; });
+                    if (has_one) {
+                        self.dataset.index = 0;
+                    }
+                }
+                self.compute_aggregates();
+            }));
     },
     /**
      * Event handler for a search, asks for the computation/folding of domains
@@ -398,8 +407,8 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
      */
     do_search: function (domains, contexts, groupbys) {
         return this.rpc('/base/session/eval_domain_and_context', {
-            domains: domains,
-            contexts: contexts,
+            domains: [this.dataset.get_domain()].concat(domains),
+            contexts: [this.dataset.get_context()].concat(contexts),
             group_by_seq: groupbys
         }, $.proxy(this, 'do_actual_search'));
     },
@@ -1039,25 +1048,25 @@ openerp.base.ListView.Groups = openerp.base.Class.extend( /** @lends openerp.bas
         var fields = _.pluck(_.select(this.columns, function(x) {return x.tag == "field"}), 'name');
         var options = { offset: page * limit, limit: limit };
         dataset.read_slice(fields, options , function (records) {
-                if (!self.datagroup.openable) {
-                    view.configure_pager(dataset);
-                } else {
-                    var pages = Math.ceil(dataset.ids.length / limit);
-                    self.$row
-                        .find('.oe-pager-state')
-                            .text(_.sprintf('%d/%d', page + 1, pages))
-                        .end()
-                        .find('button[data-pager-action=previous]')
-                            .attr('disabled', page === 0)
-                        .end()
-                        .find('button[data-pager-action=next]')
-                            .attr('disabled', page === pages - 1);
-                }
+            if (!self.datagroup.openable) {
+                view.configure_pager(dataset);
+            } else {
+                var pages = Math.ceil(dataset.ids.length / limit);
+                self.$row
+                    .find('.oe-pager-state')
+                        .text(_.sprintf('%d/%d', page + 1, pages))
+                    .end()
+                    .find('button[data-pager-action=previous]')
+                        .attr('disabled', page === 0)
+                    .end()
+                    .find('button[data-pager-action=next]')
+                        .attr('disabled', page === pages - 1);
+            }
 
-                self.records.add(records, {silent: true});
-                list.render();
-                d.resolve(list);
-            });
+            self.records.add(records, {silent: true});
+            list.render();
+            d.resolve(list);
+        });
         return d.promise();
     },
     setup_resequence_rows: function (list, dataset) {

@@ -321,7 +321,7 @@ openerp.base_dashboard.ConfigOverview = openerp.base.View.extend({
         $progress.progressbar({value: $progress.data('completion')});
 
         var self = this;
-        this.$element.find('div.oe-dashboard-config-overview ul')
+        this.$element.find('dl')
             .delegate('input', 'click', function (e) {
                 // switch todo status
                 e.stopImmediatePropagation();
@@ -372,39 +372,36 @@ openerp.base_dashboard.ApplicationTiles = openerp.base.View.extend({
     }
 });
 openerp.base.client_actions.add(
-    'board.home.widgets', 'openerp.base_dashboard.Widgets');
-openerp.base_dashboard.Widgets = openerp.base.View.extend({
-    template: 'HomeWidgets',
-    start: function () {
-        return new openerp.base.DataSetSearch(
-                this, 'res.widget.user', null,
-                ['|', ['user_id', '=', false],
-                      ['user_id', '=', parseInt(this.session.uid, 10)]])
-            .read_slice(['widget_id', 'user_id'], {}, this.on_widgets_list_loaded);
+    'board.home.widgets', 'openerp.base_dashboard.Widget');
+openerp.base_dashboard.Widget = openerp.base.View.extend(/** @lends openerp.base_dashboard.Widgets# */{
+    template: 'HomeWidget',
+    /**
+     * Initializes a "HomeWidget" client widget: handles the display of a given
+     * res.widget objects in an OpenERP view (mainly a dashboard).
+     *
+     * @constructs
+     * @extends openerp.base.View
+     * @param {Object} parent
+     * @param {Object} options
+     * @param {Number} options.widget_id
+     */
+    init: function (parent, options) {
+        this._super(parent);
+        this.widget_id = options.widget_id;
     },
-    on_widgets_list_loaded: function (user_widgets) {
-        var self = this;
-        var widget_user = {};
-        _(user_widgets).each(function (widget) {
-            widget['widget_id'] = widget['widget_id'][0];
-            widget_user[widget['widget_id']] = {
-                removable: widget['user_id'] !== false,
-                user_widget_id: widget['id']
-            };
-        });
-        new openerp.base.DataSetSearch(this, 'res.widget')
-            .read_ids(_(user_widgets).pluck('widget_id'), ['title'], function (widgets) {
-                _(widgets).each(function (widget) {
-                    _.extend(widget, widget_user[widget['id']]);
-                });
-                var url = _.sprintf(
-                    '/base_dashboard/widgets/content?session_id=%s&widget_id=',
-                    self.session.session_id);
-                self.$element.html(QWeb.render('HomeWidgets', {
-                    widgets: widgets,
-                    url: url
-                }));
-            });
+    start: function () {
+        return new openerp.base.DataSet(this, 'res.widget').read_ids(
+                [this.widget_id], ['title'], this.on_widget_loaded);
+    },
+    on_widget_loaded: function (widgets) {
+        var widget = widgets[0];
+        var url = _.sprintf(
+            '/base_dashboard/widgets/content?session_id=%s&widget_id=%d',
+            this.session.session_id, widget.id);
+        this.$element.html(QWeb.render('HomeWidget.content', {
+            widget: widget,
+            url: url
+        }));
     }
 });
 };
