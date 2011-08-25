@@ -107,10 +107,9 @@
         </td>
     </tr>
 </table>
-<div t-name="HomeWidgets" class="oe-dashboard-home-widgets"/>
-<div t-name="HomeWidgets.content" class="oe-dashboard-home-widgets-widget"
-     t-foreach="widgets" t-as="widget">
+<div t-name="HomeWidget" class="oe-dashboard-home-widget"/>
+<t t-name="HomeWidget.content">
     <h3><t t-esc="widget.title"/></h3>
-    <iframe width="100%" frameborder="0" t-att-src="url + widget.id"/>
-</div>
+    <iframe width="100%" frameborder="0" t-att-src="url"/>
+</t>
 </template>
