@@ -1767,7 +1767,7 @@ class orm_template(object):
         :param view_type: type of the view to return if view_id is None ('form', tree', ...)
         :param context: context arguments, like lang, time zone
         :param toolbar: true to include contextual actions
-        :param submenu: example (portal_project module)
+        :param submenu: deprecated
         :return: dictionary describing the composition of the requested view (including inherited views and extensions)
         :raise AttributeError:
                             * if the inherited view has unknown position to work with other than 'before', 'after', 'inside', 'replace'
@@ -1999,14 +1999,6 @@ class orm_template(object):
         result['arch'] = xarch
         result['fields'] = xfields
 
-        if submenu:
-            if context and context.get('active_id', False):
-                data_menu = self.pool.get('ir.ui.menu').browse(cr, user, context['active_id'], context).action
-                if data_menu:
-                    act_id = data_menu.id
-                    if act_id:
-                        data_action = self.pool.get('ir.actions.act_window').browse(cr, user, [act_id], context)[0]
-                        result['submenu'] = getattr(data_action, 'menus', False)
         if toolbar:
             def clean(x):
                 x = x[2]
