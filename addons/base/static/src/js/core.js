@@ -567,8 +567,8 @@ openerp.base.Session = openerp.base.CallbackEnabled.extend( /** @lends openerp.b
                         self.do_load_js(file_list.concat(files));
                     });
                 } else {
-                    self.do_load_css(file_list.concat(["/base/webclient/css?mods="+modules]));
-                    self.do_load_js(["/base/webclient/js?mods="+modules]);
+                    self.do_load_css(["/base/webclient/css?mods="+modules]);
+                    self.do_load_js(file_list.concat(["/base/webclient/js?mods="+modules]));
                 }
                 openerp._modules_loaded = true;
             });
