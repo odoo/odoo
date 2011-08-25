@@ -154,9 +154,7 @@
 -        
   !python {model: purchase.order}: |
    partner_id=self.pool.get('res.partner').search(cr,uid,[('name','=','Distrib PC')])[0]
-   req_obj = self.pool.get('purchase.requisition')
-   ids =req_obj.search(cr, uid,[('name','=','TE000010')])     
-   purchase_id= self.search(cr, uid, [('partner_id','=',partner_id),('requisition_id','in',ids)])[0]
+   purchase_id= self.search(cr, uid, [('partner_id','=',partner_id),('requisition_id','=',ref("purchase_requisition_ex1"))])[0]
    state=self.browse(cr,uid,purchase_id).state
    assert (state=='cancel')
 -
