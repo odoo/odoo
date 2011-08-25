@@ -75,7 +75,8 @@ class ir_edi_document(osv.osv):
         Return a new, random unique token to identify an edi.document
         :param record: It's a object of browse_record of any model
         """
-        db_uuid = safe_unique_id(record._name, record.id)
+        db_uuid = self.pool.get('ir.config_parameter').get_param(cr, uid, 'database.uuid')
+
         edi_token = hashlib.sha256('%s-%s-%s' % (time.time(), db_uuid, time.time())).hexdigest()
         return edi_token
     
@@ -193,19 +194,23 @@ class edi(object):
 
     def edi_xml_id(self, cr, uid, record, context=None):
         model_data_pool = self.pool.get('ir.model.data')
-        uuid = safe_unique_id(record._name, record.id)
+        db_uuid = self.pool.get('ir.config_parameter').get_param(cr, uid, 'database.uuid')
+
         data_ids = model_data_pool.search(cr, uid, [('res_id','=',record.id),('model','=',record._name)])
         if len(data_ids):
             xml_record_id = data_ids[0]
+            xml_record = model_data_pool.browse(cr, uid, xml_record_id, context=context)
+            uuid = '%s:%s' % (db_uuid, xml_record.name)
         else:
+            xml_id = safe_unique_id(model, db_uuid)
+            uuid = '%s:%s' % (db_uuid, xml_id)
             xml_record_id = model_data_pool.create(cr, uid, {
-                'name': uuid,
+                'name': xml_id,
                 'model': record._name,
-                'module': edi_module,
+                'module': uuid,
                 'res_id': record.id}, context=context)
-        xml_record = model_data_pool.browse(cr, uid, xml_record_id, context=context)
-        db_uuid = '%s:%s.%s' % (uuid, xml_record.module, xml_record.name)
-        return db_uuid
+            
+        return uuid
     
     def edi_metadata(self, cr, uid, records, context=None):
         """Return a list representing the boilerplate EDI structure for
@@ -457,31 +462,26 @@ class edi(object):
                         #Look in ir.model.data for a record that matches the db_id.
                         #If found, replace the m2o value with the correct database ID and stop.
                         #If not found, continue to next step
-                        if edi_parent_document[0].find(':') != -1 and edi_parent_document[1] != None:
-                            db_uuid, xml_id =  tuple(edi_parent_document[0].split(':'))
-                            data_ids = model_data.name_search(cr, uid, xml_id)
-                            if data_ids:
-                                for data in model_data.browse(cr, uid, [data_ids[0][0]], context=context):
-                                    parent_lines.append(data.res_id)
-                            else:
-                                #Perform name_search(name) to look for a record that matches the
-                                #given m2o name. If only one record is found, create the missing
-                                #ir.model.data record to link it to the db_id, and the replace the m2o
-                                #value with the correct database ID, then stop. If zero result or
-                                #multiple results are found, go to next step.
-                                #Create the new record using the only field value that is known: the
-                                #name, and create the ir.model.data entry to map to it.
-                                relation_model = _fields[field]['relation']
-                                relation_id = self.edi_import_relation(cr, uid, relation_model, edi_parent_document[1], context=context)
-                                relation_object = self.pool.get(relation_model)
-                                model_data.create(cr, uid, {
-                                                    'name': xml_id,
-                                                    'model': relation_object._name,
-                                                    'module':relation_object._module,
-                                                    'res_id':relation_id 
-                                                    }, context=context)
-                                
-                                parent_lines.append(relation_id)
+                        xml_id =  edi_parent_document[0]
+                        data_ids = model_data.name_search(cr, uid, xml_id)
+                        if data_ids:
+                            for data in model_data.browse(cr, uid, [data_ids[0][0]], context=context):
+                                parent_lines.append(data.res_id)
+                        else:
+                            #Perform name_search(name) to look for a record that matches the
+                            #given m2o name. If only one record is found, create the missing
+                            #ir.model.data record to link it to the db_id, and the replace the m2o
+                            #value with the correct database ID, then stop. If zero result or
+                            #multiple results are found, go to next step.
+                            #Create the new record using the only field value that is known: the
+                            #name, and create the ir.model.data entry to map to it.
+                            relation_model = _fields[field]['relation']
+                            relation_id = self.edi_import_relation(cr, uid, relation_model, edi_parent_document[1], context=context)
+                            relation_object = self.pool.get(relation_model)
+                            relation_record = relation_object.browse(cr, uid, relation_id, context=context)
+                            self.edi_xml_id(cr, uid, relation_record, context=context)
+                            
+                            parent_lines.append(relation_id)
                                 
                         
                     if len(parent_lines):   
