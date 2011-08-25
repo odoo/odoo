@@ -396,18 +396,18 @@ openerp.base.DataSet =  openerp.base.Widget.extend( /** @lends openerp.base.Data
      *
      * @param {String} method
      * @param {Array} [args]
-     * @param {Number} [domain_id] index of a domain to evaluate in the args array
-     * @param {Number} [context_id] index of a context to evaluate in the args array
+     * @param {Number} [domain_index] index of a domain to evaluate in the args array
+     * @param {Number} [context_index] index of a context to evaluate in the args array
      * @param {Function} callback
      * @param {Function }error_callback
      * @returns {$.Deferred}
      */
-    call_and_eval: function (method, args, domain_id, context_id, callback, error_callback) {
+    call_and_eval: function (method, args, domain_index, context_index, callback, error_callback) {
         return this.rpc('/base/dataset/call', {
             model: this.model,
             method: method,
-            domain_id: domain_id || null,
-            context_id: context_id || null,
+            domain_id: domain_index || null,
+            context_id: context_index || null,
             args: args || []
         }, callback, error_callback);
     },

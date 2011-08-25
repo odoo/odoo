@@ -1309,37 +1309,44 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
         
         // context menu
         var init_context_menu_def = $.Deferred().then(function(e) {
-            var $cmenu = $("#" + self.cm_id);
-            $cmenu.append(QWeb.render("FieldMany2One.context_menu", {widget: self}));
-            var bindings = {};
-            bindings[self.cm_id + "_search"] = function() {
-                self._search_create_popup("search");
-            };
-            bindings[self.cm_id + "_create"] = function() {
-                self._search_create_popup("form");
-            };
-            bindings[self.cm_id + "_open"] = function() {
-                if (!self.value) {
-                    return;
-                }
-                var pop = new openerp.base.form.FormOpenPopup(self.view);
-                pop.show_element(self.field.relation, self.value[0],self.build_context(), {});
-                pop.on_write_completed.add_last(function() {
-                    self.set_value(self.value[0]);
-                });
-            };
-            var cmenu = self.$menu_btn.contextMenu(self.cm_id, {'leftClickToo': true,
-                bindings: bindings, itemStyle: {"color": ""},
-                onContextMenu: function() {
-                    if(self.value) {
-                        $("#" + self.cm_id + "_open").removeClass("oe-m2o-disabled-cm");
-                    } else {
-                        $("#" + self.cm_id + "_open").addClass("oe-m2o-disabled-cm");
+            var rdataset = new openerp.base.DataSetStatic(self, "ir.values", self.build_context());
+            rdataset.call("get", ['action', 'client_action_relate',
+                [[self.field.relation, false]], false, rdataset.get_context()], false, 0)
+                .then(function(result) {
+                self.related_entries = result;
+                
+                var $cmenu = $("#" + self.cm_id);
+                $cmenu.append(QWeb.render("FieldMany2One.context_menu", {widget: self}));
+                var bindings = {};
+                bindings[self.cm_id + "_search"] = function() {
+                    self._search_create_popup("search");
+                };
+                bindings[self.cm_id + "_create"] = function() {
+                    self._search_create_popup("form");
+                };
+                bindings[self.cm_id + "_open"] = function() {
+                    if (!self.value) {
+                        return;
                     }
-                    return true;
-                }
+                    var pop = new openerp.base.form.FormOpenPopup(self.view);
+                    pop.show_element(self.field.relation, self.value[0],self.build_context(), {});
+                    pop.on_write_completed.add_last(function() {
+                        self.set_value(self.value[0]);
+                    });
+                };
+                var cmenu = self.$menu_btn.contextMenu(self.cm_id, {'leftClickToo': true,
+                    bindings: bindings, itemStyle: {"color": ""},
+                    onContextMenu: function() {
+                        if(self.value) {
+                            $("#" + self.cm_id + " .oe_m2o_menu_item_mandatory").removeClass("oe-m2o-disabled-cm");
+                        } else {
+                            $("#" + self.cm_id + " .oe_m2o_menu_item_mandatory").addClass("oe-m2o-disabled-cm");
+                        }
+                        return true;
+                    }, menuStyle: {width: "200px"}
+                });
+                setTimeout(function() {self.$menu_btn.trigger(e);}, 0);
             });
-            setTimeout(function() {self.$menu_btn.trigger(e);}, 0);
         });
         var ctx_callback = function(e) {init_context_menu_def.resolve(e); e.preventDefault()};
         this.$menu_btn.bind('contextmenu', ctx_callback);

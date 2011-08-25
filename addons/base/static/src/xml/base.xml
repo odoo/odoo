@@ -813,7 +813,14 @@
     <ul>
         <li t-att-id="widget.cm_id + '_open'" style="color:grey">Open...</li>
         <li t-att-id="widget.cm_id + '_create'">Create...</li>
-        <li t-att-id="widget.cm_id + '_search'">Search...</li>
+        <li t-att-id="widget.cm_id + '_search'" class="oe_m2o_menu_item_mandatory">Search...</li>
+        <t t-set="i" t-value="0"/>
+        <t t-foreach="widget.related_entries" t-as="entry">
+            <li t-att-id="widget.cm_id + '_related_' + i" style="color:grey" class="oe_m2o_menu_item_mandatory">
+                ... <t t-esc="(entry[2] || {})['name'] || ''"/>
+            </li>
+            <t t-set="i" t-value="i+1"/>
+        </t>
     </ul>
 </t>
 <t t-name="FieldOne2Many">
