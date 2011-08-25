@@ -109,7 +109,6 @@
   Now I have to cancel confirm  purchase order for Pen Drive1.
 -
   !python {model: purchase.order}: |
-    from tools.translate import _
     self.action_cancel(cr, uid, [ref("purchase_order_pendrive1")])
 -
   I check that the order which was in approved state has transmit to cancel state.
