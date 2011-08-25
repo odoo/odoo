@@ -64,9 +64,7 @@
   I confirm the purchase order of Axelor.
 -
   !python {model: purchase.order}: |
-    req_obj = self.pool.get('purchase.requisition')
-    ids =req_obj.search(cr, uid, [('name','=','TE00009')])    
-    purchase_id= self.search(cr, uid, [('requisition_id','in',ids)])
+    purchase_id= self.search(cr, uid, [('requisition_id','=',ref("purchase_requisition_te0"))])
     import netsvc
     wf_service = netsvc.LocalService("workflow")   
     if purchase_id:
@@ -76,9 +74,7 @@
   I check that Quotation of Axelor is Approved.
 -        
   !python {model: purchase.order}: |
-   req_obj = self.pool.get('purchase.requisition')
-   ids =req_obj.search(cr, uid,[('name','=','TE00009')])     
-   purchase_id= self.search(cr, uid, [('requisition_id','in',ids)])[0]
+   purchase_id= self.search(cr, uid, [('requisition_id','=',ref("purchase_requisition_te0"))])[0]
    state=self.browse(cr,uid,purchase_id).state
    assert (state=='approved')
 - 
