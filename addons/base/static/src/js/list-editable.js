@@ -92,7 +92,7 @@ openerp.base.list_editable = function (openerp) {
             if (!this.options.editable) {
                 return this._super(event);
             }
-            this.edit_record();
+            this.edit_record($(event.currentTarget).data('id'));
         },
         /**
          * Checks if a record is being edited, and if so cancels it
@@ -104,8 +104,8 @@ openerp.base.list_editable = function (openerp) {
                 return cancelled.promise();
             }
 
-            if (this.edition_index !== null) {
-                this.reload_record(this.edition_index, true).then(function () {
+            if (this.edition_id != null) {
+                this.reload_record(self.records.get(this.edition_id)).then(function () {
                     cancelled.resolve();
                 });
             } else {
@@ -115,13 +115,14 @@ openerp.base.list_editable = function (openerp) {
                 self.edition_form.stop();
                 self.edition_form.$element.remove();
                 delete self.edition_form;
-                delete self.edition_index;
+                delete self.edition_id;
                 delete self.edition;
             });
             return cancelled.promise();
         },
         /**
-         * Adapts this list's view description to be suitable to the inner form view of a row being edited.
+         * Adapts this list's view description to be suitable to the inner form
+         * view of a row being edited.
          *
          * @returns {Object} fields_view_get's view section suitable for putting into form view of editable rows.
          */
@@ -140,8 +141,10 @@ openerp.base.list_editable = function (openerp) {
         render_row_as_form: function (row) {
             var self = this;
             this.cancel_pending_edition().then(function () {
+                var record_id = $(row).data('id');
                 var $new_row = $('<tr>', {
                         id: _.uniqueId('oe-editable-row-'),
+                        'data-id': record_id,
                         'class': $(row).attr('class') + ' oe_forms',
                         click: function (e) {e.stopPropagation();}
                     })
@@ -174,7 +177,7 @@ openerp.base.list_editable = function (openerp) {
                     self.$current.append($new_row);
                 }
                 self.edition = true;
-                self.edition_index = self.dataset.index;
+                self.edition_id = record_id;
                 self.edition_form = _.extend(new openerp.base.FormView(
                         self, $new_row.attr('id'), self.dataset, false), {
                     template: 'ListView.row.form',
@@ -199,6 +202,25 @@ openerp.base.list_editable = function (openerp) {
                 });
             });
         },
+        handle_onwrite: function (source_record_id) {
+            var self = this;
+            var on_write_callback = self.view.fields_view.arch.attrs.on_write;
+            if (!on_write_callback) { return; }
+            this.dataset.call(on_write_callback, [source_record_id], function (ids) {
+                _(ids).each(function (id) {
+                    var record = self.records.get(id);
+                    if (!record) {
+                        // insert after the source record
+                        var index = self.records.indexOf(
+                            self.records.get(source_record_id)) + 1;
+                        record = new openerp.base.list.Record({id: id});
+                        self.records.add(record, {at: index});
+                        self.dataset.ids.splice(index, 0, id);
+                    }
+                    self.reload_record(record);
+                });
+            });
+        },
         /**
          * Saves the current row, and triggers the edition of its following
          * sibling if asked.
@@ -208,9 +230,16 @@ openerp.base.list_editable = function (openerp) {
         save_row: function (edit_next) {
             var self = this;
             this.edition_form.do_save(function (result) {
-                if (result.created && !self.edition_index) {
-                    self.edition_index = self.dataset.index;
+                if (result.created && !self.edition_id) {
+                    self.records.add({id: result.result},
+                        {at: self.options.editable === 'top' ? 0 : null});
+                    self.edition_id = result.result;
                 }
+                var edited_record = self.records.get(self.edition_id),
+                    next_record = self.records.at(
+                            self.records.indexOf(edited_record) + 1);
+
+                self.handle_onwrite(self.edition_id);
                 self.cancel_pending_edition().then(function () {
                     $(self).trigger('saved', [self.dataset]);
                     if (!edit_next) {
@@ -220,8 +249,16 @@ openerp.base.list_editable = function (openerp) {
                         self.new_record();
                         return;
                     }
-                    self.dataset.next();
-                    self.edit_record();
+                    var next_record_id;
+                    if (next_record) {
+                        next_record_id = next_record.get('id');
+                        self.dataset.index = _(self.dataset.ids)
+                                .indexOf(next_record_id);
+                    } else {
+                        self.dataset.index = 0;
+                        next_record_id = self.records.at(0).get('id');
+                    }
+                    self.edit_record(next_record_id);
                 });
             }, this.options.editable === 'top');
         },
@@ -234,14 +271,12 @@ openerp.base.list_editable = function (openerp) {
         /**
          * Edits record currently selected via dataset
          */
-        edit_record: function () {
+        edit_record: function (record_id) {
             this.render_row_as_form(
-                this.$current.children(
-                    _.sprintf('[data-index=%d]',
-                            this.dataset.index)));
+                this.$current.find('[data-id=' + record_id + ']'));
             $(this).trigger(
                 'edit',
-                [this.rows[this.dataset.index].data.id.value, this.dataset]);
+                [record_id, this.dataset]);
         },
         new_record: function () {
             this.dataset.index = null;
