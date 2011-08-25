@@ -101,13 +101,11 @@
   !assert {model: purchase.order, id: purchase_order_pendrive1}:
     - state == 'approved'
 -
-  I have to first cancel Picking of Approved Perchase order .
+  I have to first cancel Picking of Approved Purchase order .
 -
   !python {model: stock.picking}: |
     from tools.translate import _
-    pur_ord=self.pool.get( 'purchase.order')
-    name = pur_ord.browse(cr, uid, ref("purchase_order_pendrive1")).name
-    search_ids=self.search(cr, uid, [('origin', '=', name) ])
+    search_ids=self.search(cr, uid, [('purchase_id', '=', ref("purchase_order_pendrive1"))])
     self.action_cancel(cr, uid, search_ids)
 -
   Now I have to cancel confirm  purchase order for Pen Drive1.
