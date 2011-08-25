@@ -43,7 +43,11 @@
 -
   !assert {model: project.issue, id: project_issue_stockmovedates0, severity: error, string: Issue is in pending state}:
     - state == 'pending'
-    
+- 
+  Keep issue in 'Escalate' state
+- 
+  !python {model: project.issue}: |
+    self.case_escalate(cr, uid, [ref("project_issue_stockmovedates0")],
     
 - 
   Open the issue
