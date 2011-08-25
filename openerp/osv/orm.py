@@ -2251,6 +2251,18 @@ class orm_template(object):
             values = defaults
         return values
 
+    def clear_caches(self):
+        """ Clear the caches
+
+        This clears the caches associated to methods decorated with
+        ``tools.ormcache`` or ``tools.ormcache_multi``.
+        """
+        try:
+            getattr(self, '_ormcache')
+            self._ormcache = {}
+        except AttributeError:
+            pass
+
 class orm_memory(orm_template):
 
     _protected = ['read', 'write', 'create', 'default_get', 'perm_read', 'unlink', 'fields_get', 'fields_view_get', 'search', 'name_get', 'distinct_field_get', 'name_search', 'copy', 'import_data', 'search_count', 'exists']
