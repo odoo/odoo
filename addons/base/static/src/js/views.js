@@ -4,6 +4,8 @@
 
 openerp.base.views = function(openerp) {
 
+var _t = openerp.base._t;
+
 /**
  * Registry for all the client actions key: tag value: widget
  */
@@ -323,8 +325,9 @@ openerp.base.ViewManagerAction = openerp.base.ViewManager.extend({
         }
     },
     on_mode_switch: function (view_type) {
-        this._super(view_type);
-        this.shortcut_check(this.views[view_type]);
+        return $.when(
+            this._super(view_type),
+            this.shortcut_check(this.views[view_type]));
     },
     shortcut_check : function(view) {
         var self = this;
@@ -450,6 +453,106 @@ openerp.base.Sidebar = openerp.base.Widget.extend({
     }
 });
 
+openerp.base.TranslateDialog = openerp.base.Dialog.extend({
+    dialog_title: _t("Translations"),
+    init: function(view) {
+        this['on_button' + _t("Save")] = this.on_button_Save;
+        this['on_button' + _t("Close")] = this.on_button_Close;
+        this._super(view, {
+            width: '80%',
+            height: '80%'
+        });
+        this.view = view;
+        this.view_type = view.fields_view.type || '';
+        this.$fields_form = null;
+        this.$view_form = null;
+        this.$sidebar_form = null;
+        this.translatable_fields_keys = _.map(this.view.translatable_fields || [], function(i) { return i.name });
+        this.languages = null;
+        this.languages_loaded = $.Deferred();
+        (new openerp.base.DataSetSearch(this, 'res.lang', this.view.dataset.get_context(),
+            [['translatable', '=', '1']])).read_slice(['code', 'name'], { sort: 'id' }, this.on_languages_loaded);
+    },
+    start: function() {
+        var self = this;
+        this._super();
+        $.when(this.languages_loaded).then(function() {
+            self.$element.html(QWeb.render('TranslateDialog', { widget: self }));
+            self.$element.tabs();
+            if (!(self.view.translatable_fields && self.view.translatable_fields.length)) {
+                self.hide_tabs('fields');
+                self.select_tab('view');
+            }
+            self.$fields_form = self.$element.find('.oe_translation_form');
+        });
+        return this;
+    },
+    on_languages_loaded: function(langs) {
+        this.languages = langs;
+        this.languages_loaded.resolve();
+    },
+    do_load_fields_values: function(callback) {
+        var self = this,
+            deffered = [];
+        this.$fields_form.find('.oe_trad_field').val('').removeClass('touched');
+        _.each(self.languages, function(lg) {
+            var deff = $.Deferred();
+            deffered.push(deff);
+            self.rpc('/base/dataset/get', {
+                model: self.view.dataset.model,
+                ids: [self.view.datarecord.id],
+                fields: self.translatable_fields_keys,
+                context: self.view.dataset.get_context({
+                    'lang': lg.code
+                })
+            }, function(values) {
+                _.each(self.translatable_fields_keys, function(f) {
+                    self.$fields_form.find('.oe_trad_field[name="' + lg.code + '-' + f + '"]').val(values[0][f] || '');
+                });
+                deff.resolve();
+            });
+        });
+        $.when.apply(null, deffered).then(callback);
+    },
+    show_tabs: function() {
+        for (var i = 0; i < arguments.length; i++) {
+            this.$element.find('ul.oe_translate_tabs li a[href$="' + arguments[i] + '"]').parent().show();
+        }
+    },
+    hide_tabs: function() {
+        for (var i = 0; i < arguments.length; i++) {
+            this.$element.find('ul.oe_translate_tabs li a[href$="' + arguments[i] + '"]').parent().hide();
+        }
+    },
+    select_tab: function(name) {
+        this.show_tabs(name);
+        var index = this.$element.find('ul.oe_translate_tabs li a[href$="' + arguments[i] + '"]').parent().index() - 1;
+        this.$element.tabs('select', index);
+    },
+    open: function(field) {
+        var self = this,
+            sup = this._super;
+        $.when(this.languages_loaded).then(function() {
+            if (self.view.translatable_fields && self.view.translatable_fields.length) {
+                self.do_load_fields_values(function() {
+                    sup.call(self);
+                    if (field) {
+                        // TODO: focus and scroll to field
+                    }
+                });
+            } else {
+                sup.call(self);
+            }
+        });
+    },
+    on_button_Save: function() {
+        this.close();
+    },
+    on_button_Close: function() {
+        this.close();
+    }
+});
+
 openerp.base.View = openerp.base.Widget.extend({
     set_default_options: function(options) {
         this.options = options || {};
@@ -460,6 +563,12 @@ openerp.base.View = openerp.base.Widget.extend({
             action: null,
             action_views_ids: {}
         });
+    },
+    open_translate_dialog: function(field) {
+        if (!this.translate_dialog) {
+            this.translate_dialog = new openerp.base.TranslateDialog(this).start();
+        }
+        this.translate_dialog.open(field);
     },
     /**
      * Fetches and executes the action identified by ``action_data``.
@@ -542,7 +651,7 @@ openerp.base.View = openerp.base.Widget.extend({
             }, {
                 label: "Translate",
                 callback: this.on_sidebar_translate,
-                classname: 'oe_hide oe_sidebar_translate'
+                classname: 'oe_sidebar_translate'
             }, {
                 label: "View Log",
                 callback: this.on_sidebar_view_log,
@@ -570,6 +679,7 @@ openerp.base.View = openerp.base.Widget.extend({
         export_view.start();
     },
     on_sidebar_translate: function() {
+        this.open_translate_dialog();
     },
     on_sidebar_view_log: function() {
     }

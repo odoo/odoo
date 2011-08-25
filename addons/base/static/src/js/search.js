@@ -590,6 +590,20 @@ openerp.base.search.Field = openerp.base.search.Input.extend( /** @lends openerp
             {}, context,
             {own_values: {self: val}});
     },
+    /**
+     * Function creating the returned domain for the field, override this
+     * methods in children if you only need to customize the field's domain
+     * without more complex alterations or tests (and without the need to
+     * change override the handling of filter_domain)
+     *
+     * @param {String} name the field's name
+     * @param {String} operator the field's operator (either attribute-specified or default operator for the field
+     * @param {Number|String} value parsed value for the field
+     * @returns {Array<Array>} domain to include in the resulting search
+     */
+    make_domain: function (name, operator, value) {
+        return [[name, operator, value]];
+    },
     get_domain: function () {
         var val = this.get_value();
         if (val === null || val === '') {
@@ -598,11 +612,10 @@ openerp.base.search.Field = openerp.base.search.Input.extend( /** @lends openerp
 
         var domain = this.attrs['filter_domain'];
         if (!domain) {
-            return [[
+            return this.make_domain(
                 this.attrs.name,
                 this.attrs.operator || this.default_operator,
-                this.get_value()
-            ]];
+                val);
         }
         return _.extend({}, domain, {own_values: {self: val}});
     }
@@ -723,7 +736,22 @@ openerp.base.search.DateField = openerp.base.search.Field.extend( /** @lends ope
         return this.$element.val();
     }
 });
-openerp.base.search.DateTimeField = openerp.base.search.DateField.extend({
+/**
+ * Implementation of the ``datetime`` openerp field type:
+ *
+ * * Uses the same widget as the ``date`` field type (a simple date)
+ *
+ * * Builds a slighly more complex, it's a datetime range (includes time)
+ *   spanning the whole day selected by the date widget
+ *
+ * @class
+ * @extends openerp.base.DateField
+ */
+openerp.base.search.DateTimeField = openerp.base.search.DateField.extend(/** @lends openerp.base.search.DateTimeField# */{
+    make_domain: function (name, operator, value) {
+        return ['&', [name, '>=', value + ' 00:00:00'],
+                     [name, '<=', value + ' 23:59:59']];
+    }
 });
 openerp.base.search.ManyToOneField = openerp.base.search.CharField.extend({
     init: function (view_section, field, view) {
@@ -781,16 +809,16 @@ openerp.base.search.ManyToOneField = openerp.base.search.CharField.extend({
         }
         return this._super(defaults);
     },
-    get_domain: function () {
+    make_domain: function (name, operator, value) {
         if (this.id && this.name) {
-            if (this.$element.val() === this.name) {
-                return [[this.attrs.name, '=', this.id]];
+            if (value === this.name) {
+                return [[name, '=', this.id]];
             } else {
                 delete this.id;
                 delete this.name;
             }
         }
-        return this._super();
+        return this._super(name, operator, value);
     }
 });
 
