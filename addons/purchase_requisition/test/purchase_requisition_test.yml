@@ -39,6 +39,15 @@
   !assert {model: purchase.requisition, id: purchase_requisition_te0}:
     - state == 'draft'  
 - 
+  Copy purchase requisition which is in draft state than confirm and Done it.
+-
+  !python {model: purchase.requisition}: |
+    copy_id = self.copy(cr, uid, ref("purchase_requisition_te0"))   
+    self.tender_cancel(cr, uid, [copy_id], context=None)
+    self.tender_reset(cr, uid, [copy_id], context=None)
+    self.tender_in_progress(cr, uid, [copy_id], context=None)
+    self.tender_done(cr, uid, [copy_id], context=None)
+- 
   I confirm the purchase requisition for MOB1.
 - 
   !python {model: purchase.requisition}: |
