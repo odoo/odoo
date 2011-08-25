@@ -2743,7 +2743,7 @@ action = self.pool.get('res.config').next(cr, uid, [], context)
 
         <record id="view_account_low_level_report_search" model="ir.ui.view">
             <field name="name">account.low.level.report.search</field>
-            <field name="model">account.report</field>
+            <field name="model">account.low.level.report</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Account Report">
@@ -2776,7 +2776,7 @@ action = self.pool.get('res.config').next(cr, uid, [], context)
 
         <record id="view_account_report_tree_hierarchy" model="ir.ui.view">
             <field name="name">account.report.hierarchy</field>
-            <field name="model">account.report</field>
+            <field name="model">account.low.level.report</field>
             <field name="type">tree</field>
             <field name="field_parent">child_ids</field>
             <field name="arch" type="xml">
@@ -2790,7 +2790,7 @@ action = self.pool.get('res.config').next(cr, uid, [], context)
         </record>
         <record id="action_account_report_tree_hierarchy" model="ir.actions.act_window">
             <field name="name">Account Reports Hierarchy</field>
-            <field name="res_model">account.report</field>
+            <field name="res_model">account.low.level.report</field>
             <field name="view_type">tree</field>
             <field name="view_id" ref="view_account_report_tree_hierarchy"/>
             <field name="domain">[('parent_id','=',False)]</field>
