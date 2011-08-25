@@ -325,8 +325,9 @@ openerp.base.ViewManagerAction = openerp.base.ViewManager.extend({
         }
     },
     on_mode_switch: function (view_type) {
-        this._super(view_type);
-        this.shortcut_check(this.views[view_type]);
+        return $.when(
+            this._super(view_type),
+            this.shortcut_check(this.views[view_type]));
     },
     shortcut_check : function(view) {
         var self = this;
