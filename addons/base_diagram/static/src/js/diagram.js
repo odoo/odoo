@@ -137,10 +137,10 @@ openerp.base_diagram.DiagramView = openerp.base.View.extend({
 	},
 	
 	on_diagram_loaded: function(record) {
-    	var self = this;
-    	var id_record = record['id']
+    	var id_record = record['id'];
     	if(id_record) {
-        	self.get_diagram_info();
+    		this.id = id_record;
+        	this.get_diagram_info();
         }
     },
     
