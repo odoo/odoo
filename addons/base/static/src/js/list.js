@@ -120,7 +120,7 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
      */
     start: function() {
         this.$element.addClass('oe-listview');
-        return this.reload_view();
+        return this.reload_view(null, null, true);
     },
     /**
      * Called after loading the list view's description, sets up such things
@@ -362,22 +362,22 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
      * @param {Boolean} [grouped] Should the list be displayed grouped
      * @param {Object} [context] context to send the server while loading the view
      */
-    reload_view: function (grouped, context) {
-        var self = this, d = $.Deferred();
-        d.then(function (field_view_get) {
+    reload_view: function (grouped, context, initial) {
+        var self = this;
+        var callback = function (field_view_get) {
+            console.log('loaded', initial ? 'initial' : 'subsequent');
             self.on_loaded(field_view_get, grouped);
-        });
+        };
         if (this.embedded_view) {
-            d.resolve({fields_view: this.embedded_view});
+            return $.Deferred().then(callback).resolve({fields_view: this.embedded_view});
         } else {
-            this.rpc('/base/listview/load', {
+            return this.rpc('/base/listview/load', {
                 model: this.model,
                 view_id: this.view_id,
                 context: this.dataset.get_context(context),
                 toolbar: this.options.sidebar
-            }, function () { d.resolve.apply(this, arguments); });
+            }, callback);
         }
-        return d.promise();
     },
     /**
      * re-renders the content of the list view
