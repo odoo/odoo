@@ -1,21 +1,34 @@
 -
-   Create an issue  
+  Create task 'Training' for this project
+-
+  !record {model: project.task, id: project_task_training0}:
+    date_start: !eval time.strftime('%Y-%m-%d %H:%M:%S')
+    name: Technical Training
+    user_id: base.user_root
+    planned_hours: 30.0
+    project_id: project.project_project_22
+    remaining_hours: 30.0
+    state: draft
+-
+   Create a project issue  
 -
    !record {model: project.issue, id: project_issue_onchangeevent0}:
     categ_id: project_issue.bug_categ
+    date_open: !eval time.strftime('%Y-%m-%d')
     name: on_change event does not pass context to the method
     project_id: project.project_project_22
+    task_id: project_task_training0
     working_hours_close: 0.0
     working_hours_open: 0.0
 
 -
-   Check there is no task attached to issue
+   Check there is no task attached to project issue
 -
    !assert {model: project.issue, id: project_issue_onchangeevent0, string: There must not be any task attached to issue}:
      - task_id.id == False
 
 -
-   Convert issue to task
+   Convert project issue to task
 -
    !python {model: project.issue}: |
     self.convert_issue_task(cr, uid, [ref("project_issue_onchangeevent0")],
@@ -26,7 +39,77 @@
       ref("project_issue.menu_project_issue_track"), })
      
 -
-   Check there is a task attached to issue
+   Check there is a task attached to project issue
 -
    !assert {model: project.issue, id: project_issue_onchangeevent0, string: After creating a task for the issue there must be a task attached to it}:
      - task_id.id != False
+-
+   Get project issue's task work
+-
+   !python {model: project.issue}: |
+    self._get_project(cr, uid, context)
+-
+   Creat some changes on project
+-
+   !python {model: project.issue}: |
+    self.on_change_project(cr, uid, [ref("project_issue_onchangeevent0")],context)
+-
+   Go to next issue.
+-
+   !python {model: project.issue}: |
+    self.next_type(cr, uid, [ref("project_issue_onchangeevent0")])
+-
+   Go to Previous issue.
+-
+   !python {model: project.issue}: |
+    self.prev_type(cr, uid, [ref("project_issue_onchangeevent0")])
+-
+   Check the task.
+-
+   !python {model: project.issue}: |
+    self.onchange_task_id(cr, uid, [ref("project_issue_onchangeevent0")], ref('project_task_training0'),context=None)
+-
+   Convert Issue to Feature.
+-
+   !python {model: project.issue}: |
+    self.convert_to_feature(cr, uid, [ref("project_issue_onchangeevent0")])
+-
+   Convert Issue to Bug.
+-
+   !python {model: project.issue}: |
+    self.convert_to_bug(cr, uid, [ref("project_issue_onchangeevent0")])
+-
+   Copy the issue.
+-
+   !python {model: project.issue}: |
+    default=None
+    context=None
+    self.copy(cr, uid, ref("project_issue_onchangeevent0"),default, context)
+-
+  Create Message.
+-
+  !python {model: project.issue}: |
+    msg = {
+       'subject': 'test_email',
+       'body': 'Testing Project Issue',
+       'from': 'Administrator <admin@openerp.com>',
+      }
+    self.message_new(cr, uid,msg,context)
+-
+  Update this messages.
+-
+  !python {model: project.issue}: |
+    vals = {}
+    msg = {
+       'subject': 'test_email',
+       'body': 'Testing Project Issue',
+       'from': 'Administrator <admin@openerp.com>',
+      }
+    context = None
+    default_act = 'pending'
+    self.message_update(cr, uid, [ref('project_issue_onchangeevent0')], vals, msg, default_act, context)    
+-
+  Send created and update the messages.
+-
+  !python {model: project.issue}: |
+    self.msg_send(cr, uid, [ref('project_issue_onchangeevent0')])
