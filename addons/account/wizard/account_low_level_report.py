@@ -42,9 +42,42 @@ class accounting_report(osv.osv_memory):
             'filter_cmp': 'filter_no',
             'target_move': 'posted',
     }
+    
+    def _build_contexts_low(self, cr, uid, ids, data, context=None):
+        if context is None:
+            context = {}
+        result = {}
+        result['fiscalyear'] = 'fiscalyear_id_cmp' in data['form'] and data['form']['fiscalyear_id_cmp'] or False
+        result['journal_ids'] = 'journal_ids' in data['form'] and data['form']['journal_ids'] or False
+        result['chart_account_id'] = 'chart_account_id' in data['form'] and data['form']['chart_account_id'] or False
+        if data['form']['filter_cmp'] == 'filter_date':
+            result['date_from'] = data['form']['date_from_cmp']
+            result['date_to'] = data['form']['date_to_cmp']
+        elif data['form']['filter_cmp'] == 'filter_period':
+            if not data['form']['period_from_cmp'] or not data['form']['period_to_cmp']:
+                raise osv.except_osv(_('Error'),_('Select a starting and an ending period'))
+            result['period_from'] = data['form']['period_from_cmp']
+            result['period_to'] = data['form']['period_to_cmp']
+        return result
+    
+    def check_report(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {} 
+        res = super(accounting_report, self).check_report(cr, uid, ids, context=context)
+        data = {}
+        data['form'] = self.read(cr, uid, ids, ['account_report_id', 'date_from_cmp',  'date_to_cmp',  'fiscalyear_id_cmp', 'journal_ids', 'period_from_cmp', 'period_to_cmp',  'filter_cmp',  'chart_account_id', 'target_move'], context=context)[0]
+        for field in ['fiscalyear_id_cmp', 'chart_account_id', 'period_from_cmp', 'period_to_cmp', 'account_report_id']:
+            if isinstance(data['form'][field], tuple):
+                data['form'][field] = data['form'][field][0]
+        comparison_context = self._build_contexts_low(cr, uid, ids, data, context=context)
+#        data['form']['periods'] = comparison_context.get('periods', False) and comparison_context['periods'] or [] # Need to check
+#        data['form']['comparison_context'] = comparison_context # Need to check
+        res['datas']['form']['comparison_context'] = comparison_context
+        return res
+
     def _print_report(self, cr, uid, ids, data, context=None):
         #TODO: must read new fields, for comporison. Maybe better to do it at the end of check method
-        data['form'].update(self.read(cr, uid, ids, ['account_report_id', 'enable_filter', 'account_details', 'label_filter'], context=context)[0])
+        data['form'].update(self.read(cr, uid, ids, ['date_from_cmp',  'date_to_cmp',  'fiscalyear_id_cmp', 'period_from_cmp', 'period_to_cmp',  'filter_cmp', 'account_report_id', 'enable_filter', 'label_filter'], context=context)[0])
         return {
             'type': 'ir.actions.report.xml',
             'report_name': 'account.low.level.report',
