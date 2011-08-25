@@ -56,11 +56,10 @@
 -
   !python {model: purchase.order}: |
     from tools.translate import _
-    import time
     from datetime import datetime
     from dateutil.relativedelta import relativedelta
     next_day = datetime.today() + relativedelta(days=1)
-    self._set_minimum_planned_date(cr, uid, ref("purchase_order_po0"), 'minimum_planned_date', next_day.strftime('%Y-%m-%d'),None )
+    self.write(cr, uid, [ref("purchase_order_po0")], {'minimum_planned_date': next_day})
 -
   I check that the order which was initially in the draft state has transit to confirm state.
 -
