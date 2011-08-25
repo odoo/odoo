@@ -110,6 +110,8 @@ class report_account_common(report_sxw.rml_parse, common_report_header):
                         'name': account.code + ' ' + account.name,
                         'balance': account.balance,
                         'type': 'account',
+                        'level': account.level,
+                        'account_type': account.type,
                     }
                     if data['form']['enable_filter']:
                         vals['balance_cmp'] = self.pool.get('account.account').browse(self.cr, self.uid, account.id, context=data['form']['comparison_context']).balance
