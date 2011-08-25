@@ -1334,6 +1334,11 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
                         self.set_value(self.value[0]);
                     });
                 };
+                _.each(_.range(self.related_entries.length), function(i) {
+                    bindings[self.cm_id + "_related_" + i] = function() {
+                        self.open_related(self.related_entries[i]);
+                    };
+                });
                 var cmenu = self.$menu_btn.contextMenu(self.cm_id, {'leftClickToo': true,
                     bindings: bindings, itemStyle: {"color": ""},
                     onContextMenu: function() {
@@ -1544,6 +1549,22 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
         if (this.value === null) {
             this.invalid = this.required;
         }
+    },
+    open_related: function(related) {
+        var self = this;
+        if (!self.value)
+            return;
+        self.rpc("/base/action/load", {
+            action_id: related[2].id,
+            context: {
+                active_id: self.value[0],
+                active_ids: self.value[1],
+                active_model: self.field.relation
+            }
+        }, function(result) {
+            //TODO niv
+            debugger;
+        });
     }
 });
 

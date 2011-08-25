@@ -423,25 +423,25 @@ def eval_context_and_domain(session, context, domain=None):
 
     return e_context, e_domain
 
-def load_actions_from_ir_values(req, key, key2, models, meta, context):
+def load_actions_from_ir_values(req, key, key2, models, meta):
+    context = req.session.eval_context(req.context)
     Values = req.session.model('ir.values')
     actions = Values.get(key, key2, models, meta, context)
 
-    return [(id, name, clean_action(action, req.session, context=context))
+    return [(id, name, clean_action(req, action))
             for id, name, action in actions]
 
-def clean_action(action, session, context=None):
+def clean_action(req, action):
+    context = req.session.eval_context(req.context)
+    eval_ctx = req.session.evaluation_context(context)
     action.setdefault('flags', {})
-    if action['type'] != 'ir.actions.act_window':
-        return action
+    
     # values come from the server, we can just eval them
     if isinstance(action.get('context'), basestring):
-        localvars = session.evaluation_context(context=context)
-        action['context'] = eval( action['context'], localvars ) or {}
+        action['context'] = eval( action['context'], eval_ctx ) or {}
 
     if isinstance(action.get('domain'), basestring):
-        localvars = session.evaluation_context( action.get('context', {}))
-        action['domain'] = eval( action['domain'], localvars ) or []
+        action['domain'] = eval( action['domain'], eval_ctx ) or []
 
     return fix_view_modes(action)
 
@@ -559,8 +559,7 @@ class Menu(openerpweb.Controller):
     @openerpweb.jsonrequest
     def action(self, req, menu_id):
         actions = load_actions_from_ir_values(req,'action', 'tree_but_open',
-                                             [('ir.ui.menu', menu_id)], False,
-                                             req.session.eval_context(req.context))
+                                             [('ir.ui.menu', menu_id)], False)
         return {"action": actions}
 
 class DataSet(openerpweb.Controller):
@@ -696,7 +695,7 @@ class DataSet(openerpweb.Controller):
     def call_button(self, req, model, method, args, domain_id=None, context_id=None):
         action = self.call_common(req, model, method, args, domain_id, context_id)
         if isinstance(action, dict) and action.get('type') != '':
-            return {'result': clean_action(action, req.session)}
+            return {'result': clean_action(req, action)}
         return {'result': False}
 
     @openerpweb.jsonrequest
@@ -1040,13 +1039,13 @@ class Action(openerpweb.Controller):
             action = req.session.model(action_type[0]['type']).read([action_id], False,
                                                                     context)
             if action:
-                value = clean_action(action[0], req.session)
+                value = clean_action(req, action[0])
         return {'result': value}
 
     @openerpweb.jsonrequest
     def run(self, req, action_id):
-        return clean_action(req.session.model('ir.actions.server').run(
-            [action_id], req.session.eval_context(req.context)), req.session)
+        return clean_action(req, req.session.model('ir.actions.server').run(
+            [action_id], req.session.eval_context(req.context)))
 
 class TreeView(View):
     _cp_path = "/base/treeview"
@@ -1059,7 +1058,7 @@ class TreeView(View):
     def action(self, req, model, id):
         return load_actions_from_ir_values(
             req,'action', 'tree_but_open',[(model, id)],
-            False, req.session.eval_context(req.context))
+            False)
 
 def export_csv(fields, result):
     fp = StringIO()
