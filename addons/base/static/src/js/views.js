@@ -531,17 +531,17 @@ openerp.base.TranslateDialog = openerp.base.Dialog.extend({
     },
     open: function(field) {
         var self = this,
-            super = this._super;
+            sup = this._super;
         $.when(this.languages_loaded).then(function() {
             if (self.view.translatable_fields && self.view.translatable_fields.length) {
                 self.do_load_fields_values(function() {
-                    super.call(self);
+                    sup.call(self);
                     if (field) {
                         // TODO: focus and scroll to field
                     }
                 });
             } else {
-                super.call(self);
+                sup.call(self);
             }
         });
     },
