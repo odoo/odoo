@@ -69,27 +69,6 @@
   !assert {model: purchase.order, id: purchase_order_pendrive1}:
     - state == 'draft'
 -
-  I test onchanged on Wharehouse ,Product, Uom, Destination Address .
--
-  !python {model: purchase.order}: |
-    from tools.translate import _
-    self.onchange_warehouse_id(cr, uid, [ref("purchase_order_pendrive1")], 1)
-    part_obj = self.pool.get('res.partner')
-    price_obj = self.pool.get('product.pricelist')
-    product_obj = self.pool.get('product.product')
-    addrss_obj = self.pool.get('res.partner.address')
-    po_line_obj = self.pool.get('purchase.order.line')
-    uom_obj = self.pool.get('product.uom')
-    price_id = price_obj.search(cr, uid, [('name','=','Default Purchase Pricelist')])
-    product_id = product_obj.search(cr, uid, [('name','=','Pen Drive 2')])
-    uom_id = uom_obj.search(cr, uid, [('name','=','PCE')])
-    part_ids = part_obj.search(cr, uid, [('name','=','Distrib PC')])
-    line_id = po_line_obj.search(cr, uid, [('order_id','=',ref("purchase_order_pendrive1"))])
-    po_line_obj.product_id_change(cr, uid, line_id[0], price_id[0], product_id[0], 10, uom_id[0], part_ids[0])
-    po_line_obj.product_uom_change(cr, uid, line_id[0], price_id[0], product_id[0], 10, uom_id[0], part_ids[0])
-    address_id = addrss_obj.search(cr, uid, [('partner_id','=',part_ids)])
-    self.onchange_dest_address_id(cr, uid, [ref("purchase_order_pendrive1")], address_id[0])
--
   I confirm the purchase order for Pen Drive1.
 -
   !workflow {model: purchase.order, action: purchase_confirm, ref: purchase_order_pendrive1}
