@@ -689,7 +689,7 @@ class crm_case_section(osv.osv):
         'reply_to': fields.char('Reply-To', size=64, help="The email address put in the 'Reply-To' of all emails sent by OpenERP about cases in this sales team"),
         'parent_id': fields.many2one('crm.case.section', 'Parent Team'),
         'child_ids': fields.one2many('crm.case.section', 'parent_id', 'Child Teams'),
-        'resource_calendar_id': fields.many2one('resource.calendar', "Working Time"),
+        'resource_calendar_id': fields.many2one('resource.calendar', "Working Time", help="Used to compute open days"),
         'note': fields.text('Description'),
         'working_hours': fields.float('Working Hours', digits=(16,2 )),
         'stage_ids': fields.many2many('crm.case.stage', 'section_stage_rel', 'section_id', 'stage_id', 'Stages'),
