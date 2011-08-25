@@ -130,6 +130,6 @@
 -
   !python {model: purchase.order}: |
     from tools.translate import _
-    self.copy(cr, uid, ref("purchase_order_pendrive1"))   
-    self.unlink(cr, uid, [ref("purchase_order_pendrive1")])   
+    copy_id = self.copy(cr, uid, ref("purchase_order_pendrive1"))   
+    self.unlink(cr, uid, [copy_id])   
  
