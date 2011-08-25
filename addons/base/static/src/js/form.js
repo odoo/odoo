@@ -949,7 +949,7 @@ openerp.base.form.FieldChar = openerp.base.form.Field.extend({
     },
     set_value: function(value) {
         this._super.apply(this, arguments);
-        var show_value = (value != null && value !== false) ? value : '';
+        var show_value = openerp.base.format_value(value, this, '');
         this.$element.find('input').val(show_value);
     },
     update_dom: function() {
@@ -957,16 +957,16 @@ openerp.base.form.FieldChar = openerp.base.form.Field.extend({
         this.$element.find('input').attr('disabled', this.readonly);
     },
     set_value_from_ui: function() {
-        this.value = this.$element.find('input').val();
+        this.value = openerp.base.parse_value(this.$element.find('input').val(), this);
         this._super();
     },
     validate: function() {
         this.invalid = false;
-        var value = this.$element.find('input').val();
-        if (value === "") {
-            this.invalid = this.required;
-        } else if (this.validation_regex) {
-            this.invalid = !this.validation_regex.test(value);
+        try {
+            var value = openerp.base.parse_value(this.$element.find('input').val(), this, '');
+            this.invalid = this.required && value === '';
+        } catch(e) {
+            this.invalid = true;
         }
     },
     focus: function() {
@@ -978,7 +978,6 @@ openerp.base.form.FieldEmail = openerp.base.form.FieldChar.extend({
     init: function(view, node) {
         this._super(view, node);
         this.template = "FieldEmail";
-        this.validation_regex = /@/;
     },
     start: function() {
         this._super.apply(this, arguments);
@@ -993,8 +992,7 @@ openerp.base.form.FieldEmail = openerp.base.form.FieldChar.extend({
     },
     set_value: function(value) {
         this._super.apply(this, arguments);
-        var show_value = (value != null && value !== false) ? value : '';
-        this.$element.find('a').attr('href', 'mailto:' + show_value);
+        this.$element.find('a').attr('href', 'mailto:' + this.$element.find('input').val());
     }
 });
 
@@ -1017,44 +1015,13 @@ openerp.base.form.FieldUrl = openerp.base.form.FieldChar.extend({
 });
 
 openerp.base.form.FieldFloat = openerp.base.form.FieldChar.extend({
-    init: function(view, node) {
-        this._super(view, node);
-        this.validation_regex = /^-?\d+(\.\d+)?$/;
-    },
     set_value: function(value) {
-        this._super.apply(this, [value]);
         if (value === false || value === undefined) {
             // As in GTK client, floats default to 0
             value = 0;
             this.dirty = true;
         }
-        var show_value = value.toFixed(2);
-        this.$element.find('input').val(show_value);
-    },
-    set_value_from_ui: function() {
-        this.value = Number(this.$element.find('input').val().replace(/,/g, '.'));
-        this._super();
-    }
-});
-
-openerp.base.form.FieldInteger = openerp.base.form.FieldFloat.extend({
-    init: function(view, node) {
-        this._super(view, node);
-        this.validation_regex = /^-?\d+$/;
-    },
-    set_value: function(value) {
         this._super.apply(this, [value]);
-        if (value === false || value === undefined) {
-            // TODO fme: check if GTK client default integers to 0 (like it does with floats)
-            value = 0;
-            this.dirty = true;
-        }
-        var show_value = parseInt(value, 10);
-        this.$element.find('input').val(show_value);
-    },
-    set_value_from_ui: function() {
-        this.value = Number(this.$element.find('input').val());
-        this._super();
     }
 });
 
@@ -1063,7 +1030,6 @@ openerp.base.form.FieldDatetime = openerp.base.form.Field.extend({
         this._super(view, node);
         this.template = "FieldDate";
         this.jqueryui_object = 'datetimepicker';
-        this.validation_regex = /^\d+-\d+-\d+( \d+:\d+(:\d+)?)?$/;
     },
     start: function() {
         this._super.apply(this, arguments);
@@ -1103,8 +1069,6 @@ openerp.base.form.FieldDatetime = openerp.base.form.Field.extend({
         var value = this.$element.find('input').val();
         if (value === "") {
             this.invalid = this.required;
-        } else if (this.validation_regex) {
-            this.invalid = !this.validation_regex.test(value);
         } else {
             this.invalid = !this.$element.find('input')[this.jqueryui_object]('getDate');
         }
@@ -1120,39 +1084,15 @@ openerp.base.form.FieldDate = openerp.base.form.FieldDatetime.extend({
     init: function(view, node) {
         this._super(view, node);
         this.jqueryui_object = 'datepicker';
-        this.validation_regex = /^\d+-\d+-\d+$/;
     },
     parse: openerp.base.str_to_date,
     format: openerp.base.date_to_str
-});
-
-openerp.base.form.FieldFloatTime = openerp.base.form.FieldChar.extend({
-    init: function(view, node) {
-        this._super(view, node);
-        this.validation_regex = /^\d+:\d+$/;
-    },
-    set_value: function(value) {
-        this._super.apply(this, [value]);
-        if (value === false || value === undefined) {
-            // As in GTK client, floats default to 0
-            value = 0;
-            this.dirty = true;
-        }
-        var show_value = _.sprintf("%02d:%02d", Math.floor(value), Math.round((value % 1) * 60));
-        this.$element.find('input').val(show_value);
-    },
-    set_value_from_ui: function() {
-        var time = this.$element.find('input').val().split(':');
-        this.set_value(parseInt(time[0], 10) + parseInt(time[1], 10) / 60);
-        this._super();
-    }
 });
 
 openerp.base.form.FieldText = openerp.base.form.Field.extend({
     init: function(view, node) {
         this._super(view, node);
         this.template = "FieldText";
-        this.validation_regex = null;
     },
     start: function() {
         this._super.apply(this, arguments);
@@ -1160,7 +1100,7 @@ openerp.base.form.FieldText = openerp.base.form.Field.extend({
     },
     set_value: function(value) {
         this._super.apply(this, arguments);
-        var show_value = (value != null && value !== false) ? value : '';
+        var show_value = openerp.base.format_value(value, this, '');
         this.$element.find('textarea').val(show_value);
     },
     update_dom: function() {
@@ -1168,16 +1108,16 @@ openerp.base.form.FieldText = openerp.base.form.Field.extend({
         this.$element.find('textarea').attr('disabled', this.readonly);
     },
     set_value_from_ui: function() {
-        this.value = this.$element.find('textarea').val();
+        this.value = openerp.base.parse_value(this.$element.find('textarea').val(), this);
         this._super();
     },
     validate: function() {
         this.invalid = false;
-        var value = this.$element.find('textarea').val();
-        if (value === "") {
-            this.invalid = this.required;
-        } else if (this.validation_regex) {
-            this.invalid = !this.validation_regex.test(value);
+        try {
+            var value = openerp.base.parse_value(this.$element.find('textarea').val(), this, '');
+            this.invalid = this.required && value === '';
+        } catch(e) {
+            this.invalid = true;
         }
     },
     focus: function() {
@@ -2440,9 +2380,9 @@ openerp.base.form.widgets = new openerp.base.Registry({
     'reference' : 'openerp.base.form.FieldReference',
     'boolean' : 'openerp.base.form.FieldBoolean',
     'float' : 'openerp.base.form.FieldFloat',
-    'integer': 'openerp.base.form.FieldInteger',
+    'integer': 'openerp.base.form.FieldFloat',
+    'float_time': 'openerp.base.form.FieldFloat',
     'progressbar': 'openerp.base.form.FieldProgressBar',
-    'float_time': 'openerp.base.form.FieldFloatTime',
     'image': 'openerp.base.form.FieldBinaryImage',
     'binary': 'openerp.base.form.FieldBinaryFile'
 });
