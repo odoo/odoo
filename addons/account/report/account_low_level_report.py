@@ -106,18 +106,19 @@ class report_account_common(report_sxw.rml_parse, common_report_header):
             lines.append(vals)
             if report.type == 'accounts' and report.display_detail:
                 for account in report.account_ids:
-                    vals = {
-                        'name': account.code + ' ' + account.name,
-                        'balance': account.balance,
-                        'type': 'account',
-                        'level': account.level,
-                        'account_type': account.type,
-                    }
-                    if data['form']['enable_filter']:
-                        vals['balance_cmp'] = self.pool.get('account.account').browse(self.cr, self.uid, account.id, context=data['form']['comparison_context']).balance
-                    lines.append(vals)
+                    if account.level != 0:
+                        vals = {
+                            'name': account.code + ' ' + account.name,
+                            'balance': account.balance,
+                            'type': 'account',
+                            'level': account.level,
+                            'account_type': account.type,
+                        }
+                        if data['form']['enable_filter']:
+                            vals['balance_cmp'] = self.pool.get('account.account').browse(self.cr, self.uid, account.id, context=data['form']['comparison_context']).balance
+                        lines.append(vals)
         return lines
-#
+
 #    def get_report_balance(self, child, child_ids, context=None):
 #        cr, uid = self.cr, self.uid
 #        report_obj = self.pool.get('account.report')

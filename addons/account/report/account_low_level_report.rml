@@ -216,21 +216,10 @@
     <para style="Standard">
       <font color="white"> </font>
     </para>
-    <!--<para style="Standard">[[ repeatIn(get_report_details(data),'r') ]] </para>
-    <blockTable colWidths="314.0,156.0" style="Table2_Report">
-      <tr>
-        <td><para style="terp_default_Bold_9">Report Name</para></td>
-        <td><para style="terp_default_Bold_9">Report Balance</para></td>
-      </tr>
-      <tr>
-        <td><para style="terp_default_8">[[ r['name'] ]]</para></td>
-        <td><para style="terp_default_8">[[ formatLang(r['balance']) ]][[ company.currency_id.symbol ]]</para></td>
-      </tr>
-    </blockTable>-->
     <para style="Standard">
         <font color="white"> </font>
     </para>
-    <para style="terp_header">Accounts</para>
+    <para style="terp_header">Reports</para>
     <blockTable colWidths="330.0,160.0" style="Table_Account_Line_Title">
       [[ data['form']['enable_filter'] == 0 or removeParentNode('blockTable') ]]
       <tr>
@@ -243,6 +232,7 @@
       </tr>
       <tr style="Table3">
           [[ repeatIn(get_lines(data), 'a') ]]
+          [[ setTag('tr','tr',{'style': 'Table'+str(min(3,'level' in a and a.get('level') or 1))}) or removeParentNode('tr') ]]
           <td><para style="terp_level_1_name">[[ a.get('type')=='report' and a.get('name') or removeParentNode('td') ]]</para></td>
           <td><para style="terp_level_1_balance">[[ a.get('type')=='report' and formatLang(a.get('balance')) or removeParentNode('td') ]][[company.currency_id.symbol ]]</para></td>
           <td><para style="terp_level_3_name">[[ a.get('type') == 'account' and a.get('name') or removeParentNode('td') ]]
@@ -281,9 +271,6 @@
       </tr>
     </blockTable>
     <para style="Standard">
-      <font color="white"> </font>
-    </para>
-    <para style="terp_default_Right_9_Bold">
       <font color="white"> </font>
     </para>
   </story>
