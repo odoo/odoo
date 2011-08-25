@@ -20,136 +20,146 @@
 #
 ##############################################################################
 
+import base64
+
+import mako_template
+import netsvc
 from osv import osv
 from osv import fields
-import base64
-import netsvc
 from tools.translate import _
 
-class email_template(osv.osv):
-    "Templates for sending Email"
-    _inherit = 'email.message.common'
-    _name = "email.template"
-    _description = 'Email Templates for Models'
+try:
+    from mako.template import Template as MakoTemplate
+except ImportError:
+    logging.getLogger('init').warning("email_template: mako templates not available, templating features will not work!")
 
-    def get_template_value(self, cr, uid, message=None, model=None, record_id=None, context=None):
-        import mako_template
-        return mako_template.get_value(cr, uid, message=message, model=model, record_id=record_id, context=context)
+class email_template(osv.osv):
+    "Templates for sending email"
+    _inherit = 'mail.message'
+    _name = "email.template"
+    _description = 'Email Templates'
+
+    def render_template(self, cr, uid, template, model, res_id, context=None):
+        """Render the given template text, replace mako expressions ``${expr}``
+           with the result of evaluating these expressions with
+           an evaluation context containing:
+
+                * ``user``: browse_record of the current user
+                * ``object``: browse_record of the document record this mail is
+                              related to
+                * ``context``: the context passed to the mail composition wizard
+
+           :param str template: the template text to render
+           :param str model: model name of the document record this mail is related to.
+           :param int res_id: id of the document record this mail is related to.
+        """
+        if not template: return u""
+        try:
+            template = tools.ustr(template)
+            record = self.pool.get(model).browse(cr, uid, res_id, context=context)
+            user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+            result = MakoTemplate(template).render_unicode(object=record,
+                                                           user=user,
+                                                           context=context,
+                                                           format_exceptions=True)
+            if result == u'False':
+                result = u''
+            return result
+        except Exception:
+            logging.exception("failed to render mako template value %r", template)
+            return u""
 
     def get_email_template(self, cr, uid, template_id=False, record_id=None, context=None):
-        "Return Template Object"
         if context is None:
             context = {}
-
         if not template_id:
             return False
-
-        template = self.browse(cr, uid, int(template_id), context)
-        lang = self.get_template_value(cr, uid, template.lang, template.model, record_id, context)
+        lang = self.render_template(cr, uid, template.lang, template.model, record_id, context)
         if lang:
             # Use translated template if necessary
             ctx = context.copy()
             ctx['lang'] = lang
             template = self.browse(cr, uid, template.id, ctx)
+        else:
+            template = self.browse(cr, uid, int(template_id), context)
         return template
 
     def onchange_model_id(self, cr, uid, ids, model_id, context=None):
         mod_name = False
         if model_id:
             mod_name = self.pool.get('ir.model').browse(cr, uid, model_id, context).model
-        return {'value':{'model':mod_name}}
-
-    def _lang_get(self, cr, uid, context={}):
-        obj = self.pool.get('res.lang')
-        ids = obj.search(cr, uid, [], context=context)
-        res = obj.read(cr, uid, ids, ['code', 'name'], context)
-        return [(r['code'], r['name']) for r in res] + [('','')]
+        return {'value':{'model': mod_name}}
 
     _columns = {
         'name': fields.char('Name', size=250),
-        'model_id':fields.many2one('ir.model', 'Resource'),
-        'model': fields.related('model_id', 'model', string='Model', type="char", size=128, store=True, readonly=True),
-        'lang': fields.selection(_lang_get, 'Language', size=5, help="The default language for the email."
-                   " Placeholders can be used here. "
-                   "eg. ${object.partner_id.lang}"),
-        'subject':fields.char(
-                  'Subject',
-                  size=200,
-                  help="The subject of email."
-                  " Placeholders can be used here.",
-                  translate=True),
-        'user_signature':fields.boolean(
-                  'Signature',
-                  help="the signature from the User details"
-                  " will be appended to the mail"),
-        'report_name':fields.char(
-                'Report Filename',
-                size=200,
-                help="Name of the generated report file. Placeholders can be used in the filename. eg: 2009_SO003.pdf",
-                translate=True),
-        'report_template':fields.many2one(
-                  'ir.actions.report.xml',
-                  'Report to send'),
-        'attachment_ids': fields.many2many(
-                    'ir.attachment',
-                    'email_template_attachment_rel',
-                    'email_template_id',
-                    'attachment_id',
-                    'Attached Files',
-                    help="You may attach existing files to this template, "
-                         "so they will be added in all emails created from this template"),
-        'ref_ir_act_window':fields.many2one(
-                    'ir.actions.act_window',
-                    'Window Action',
-                    help="Action that will open this email template on Resource records",
-                    readonly=True),
-        'ref_ir_value':fields.many2one(
-                   'ir.values',
-                   'Wizard Button',
-                   help="Button in the side bar of the form view of this Resource that will invoke the Window Action",
-                   readonly=True),
-        'model_object_field':fields.many2one(
-                 'ir.model.fields',
-                 string="Field",
-                 help="Select the field from the model you want to use."
-                 "\nIf it is a relationship field you will be able to "
-                 "choose the nested values in the box below\n(Note:If "
-                 "there are no values make sure you have selected the"
-                 " correct model)"),
-        'sub_object':fields.many2one(
-                 'ir.model',
-                 'Sub-model',
-                 help='When a relation field is used this field'
-                 ' will show you the type of field you have selected'),
-        'sub_model_object_field':fields.many2one(
-                 'ir.model.fields',
-                 'Sub Field',
-                 help="When you choose relationship fields "
-                 "this field will specify the sub value you can use."),
-        'null_value':fields.char(
-                 'Null Value',
-                 help="This Value is used if the field is empty",
-                 size=50),
-        'copyvalue':fields.char(
-                'Expression',
-                size=100,
-                help="Copy and paste the value in the "
-                "location you want to use a system value."),
+        'model_id': fields.many2one('ir.model', 'Related document model'),
+        'lang': fields.char('Language code', size=250,
+                            help="Optional translation language to select when sending out an email. "
+                                 "If not set, the english version will be used. "
+                                 "This should usually be a placeholder expression "
+                                 "that provides the appropriate language code, e.g. "
+                                 "${object.partner_id.lang.code}."),
+        'user_signature': fields.boolean('Signature',
+                                         help="If checked, the user's signature will be appended to the text version "
+                                              "of the message"),
+        'report_name': fields.char('Report Filename', size=200, translate=True,
+                                   help="Name to use for the generated report file (may contain placeholders)\n"
+                                        "The extension can be omitted and will then come from the report type."),
+        'report_template':fields.many2one('ir.actions.report.xml', 'Optional report to print and attach'),
+        'ref_ir_act_window':fields.many2one('ir.actions.act_window', 'Sidebar action', readonly=True,
+                                            help="Sidebar action to make this template available on records "
+                                                 "of the related document model"),
+        'ref_ir_value':fields.many2one('ir.values', 'Sidebar button', readonly=True,
+                                       help="Sidebar button to open the sidebar action"),
         'auto_delete': fields.boolean('Auto Delete', help="Permanently delete emails after sending"),
-        'model': fields.related('model_id','model', type='char', size=128, string='Object', help="Placeholders can be used here."),
-        'email_from': fields.char('From', size=128, help="Email From. Placeholders can be used here."),
-        'email_to': fields.char('To', size=256, help="Email Recipients. Placeholders can be used here."),
-        'email_cc': fields.char('Cc', size=256, help="Carbon Copy Email Recipients. Placeholders can be used here."),
-        'email_bcc': fields.char('Bcc', size=256, help="Blind Carbon Copy Email Recipients. Placeholders can be used here."),
-        'reply_to':fields.char('Reply-To', size=250, help="Placeholders can be used here."),
-        'body': fields.text('Description', translate=True, help="Placeholders can be used here."),
-        'body_html': fields.text('HTML', help="Contains HTML version of email. Placeholders can be used here."),
+        'track_campaign_item': fields.boolean('Resource Tracking',
+                                              help="Enable this is you wish to include a special tracking marker "
+                                                   "in outgoing emails so you can identify replies and link "
+                                                   "them back to the corresponding resource record. "
+                                                   "This is useful for CRM leads for example"),
+
+        # Overridden mail.message.common fields for technical reasons:
+        'model': fields.related('model_id','model', type='char', string='Related Document model',
+                                size=128, select=True, store=True, readonly=True),
+        # we need a separate m2m table to avoid ID collisions with the original mail.message entries
+        'attachment_ids': fields.many2many('ir.attachment', 'email_template_attachment_rel', 'email_template_id',
+                                           'attachment_id', 'Files to attach',
+                                           help="You may attach files to this template, to be added to all "
+                                                "emails created from this template"),
+
+        # Overridden mail.message.common fields to make tooltips more appropriate:
+        'subject':fields.char('Subject', size=512, translate=True, help="Subject (placeholders may be used here)",),
+        'email_from': fields.char('From', size=128, help="Sender address (placeholders may be used here)"),
+        'email_to': fields.char('To', size=256, help="Comma-separated recipient addresses (placeholders may be used here)"),
+        'email_cc': fields.char('Cc', size=256, help="Carbon copy recipients (placeholders may be used here)"),
+        'email_bcc': fields.char('Bcc', size=256, help="Blind carbon copy recipients (placeholders may be used here)"),
+        'reply_to': fields.char('Reply-To', size=250, help="Preferred response address (placeholders may be used here)"),
+        'body_text': fields.text('Text contents', translate=True, help="Plaintext version of the message (placeholders may be used here)"),
+        'body_html': fields.text('Rich-text contents', help="Rich-text/HTML version of the message (placeholders may be used here)"),
+        'message_id': fields.char('Message-Id', size=256, help="Message-ID SMTP header to use in outgoing messages based on this template. "
+                                                               "Please note that this overrides the 'Resource Tracking' option, "
+                                                               "so if you simply need to track replies to outgoing emails, enable "
+                                                               "that option instead.\n"
+                                                               "Placeholders must be used here, as this value always needs to be unique!"),
+
+        # Fake fields used to implement the placeholder assistant
+        'model_object_field': fields.many2one('ir.model.fields', string="Field",
+                                              help="Select target field from the related document model.\n"
+                                                   "If it is a relationship field you will be able to select "
+                                                   "a target field at the destination of the relationship."),
+        'sub_object': fields.many2one('ir.model', 'Sub-model', readonly=True,
+                                      help="When a relationship field is selected as first field, "
+                                           "this field shows the document model the relationship goes to."),
+        'sub_model_object_field': fields.many2one('ir.model.fields', 'Sub-field',
+                                                  help="When a relationship field is selected as first field, "
+                                                       "this field lets you select the target field within the "
+                                                       "destination document model (sub-model)."),
+        'null_value': fields.char('Null value', help="Optional value to use if the target field is empty", size=128),
+        'copyvalue': fields.char('Expression', size=256, help="Final placeholder expression, to be copy-pasted in the desired template field."),
     }
 
     def create_action(self, cr, uid, ids, context=None):
         vals = {}
-        if context is None:
-            context = {}
         action_obj = self.pool.get('ir.actions.act_window')
         data_obj = self.pool.get('ir.model.data')
         for template in self.browse(cr, uid, ids, context=context):
@@ -159,7 +169,7 @@ class email_template(osv.osv):
             vals['ref_ir_act_window'] = action_obj.create(cr, uid, {
                  'name': template.name,
                  'type': 'ir.actions.act_window',
-                 'res_model': 'email.compose.message',
+                 'res_model': 'mail.compose.message',
                  'src_model': src_obj,
                  'view_type': 'form',
                  'context': "{'mass_mail':True}",
@@ -201,16 +211,17 @@ class email_template(osv.osv):
         if default is None:
             default = {}
         default = default.copy()
-        default['name'] = template.name or '' + '(copy)'
+        default['name'] = template.name + _('(copy)')
         return super(email_template, self).copy(cr, uid, id, default, context)
 
     def build_expression(self, field_name, sub_field_name, null_value):
-        """
-        Returns a template expression based on data provided
-        @param field_name: field name
-        @param sub_field_name: sub field name (M2O)
-        @param null_value: default value if the target value is empty
-        @return: computed expression
+        """Returns a placeholder expression for use in a template field,
+           based on the values provided in the placeholder assistant.
+
+          :param field_name: main field name
+          :param sub_field_name: sub field name (M2O)
+          :param null_value: default value if the target value is empty
+          :return: final placeholder expression
         """
         expression = ''
         if field_name:
@@ -221,78 +232,6 @@ class email_template(osv.osv):
                 expression += " or '''%s'''" % null_value
             expression += "}"
         return expression
-#
-#    def onchange_model_object_field(self, cr, uid, ids, model_object_field, context=None):
-#        if not model_object_field:
-#            return {}
-#        result = {}
-#        field_obj = self.pool.get('ir.model.fields').browse(cr, uid, model_object_field, context)
-#        #Check if field is relational
-#        if field_obj.ttype in ['many2one', 'one2many', 'many2many']:
-#            res_ids = self.pool.get('ir.model').search(cr, uid, [('model', '=', field_obj.relation)], context=context)
-#            if res_ids:
-#                result['sub_object'] = res_ids[0]
-#                result['copyvalue'] = self.build_expression(False, False, False)
-#                result['sub_model_object_field'] = False
-#                result['null_value'] = False
-#        else:
-#            #Its a simple field... just compute placeholder
-#            result['sub_object'] = False
-#            result['copyvalue'] = self.build_expression(field_obj.name, False, False)
-#            result['sub_model_object_field'] = False
-#            result['null_value'] = False
-#        return {'value':result}
-#
-#    def onchange_sub_model_object_field(self, cr, uid, ids, model_object_field, sub_model_object_field, context=None):
-#        if not model_object_field or not sub_model_object_field:
-#            return {}
-#        result = {}
-#        field_obj = self.pool.get('ir.model.fields').browse(cr, uid, model_object_field, context)
-#        if field_obj.ttype in ['many2one', 'one2many', 'many2many']:
-#            res_ids = self.pool.get('ir.model').search(cr, uid, [('model', '=', field_obj.relation)], context=context)
-#            sub_field_obj = self.pool.get('ir.model.fields').browse(cr, uid, sub_model_object_field, context)
-#            if res_ids:
-#                result['sub_object'] = res_ids[0]
-#                result['copyvalue'] = self.build_expression(field_obj.name, sub_field_obj.name, False)
-#                result['sub_model_object_field'] = sub_model_object_field
-#                result['null_value'] = False
-#        else:
-#            #Its a simple field... just compute placeholder
-#            result['sub_object'] = False
-#            result['copyvalue'] = self.build_expression(field_obj.name, False, False)
-#            result['sub_model_object_field'] = False
-#            result['null_value'] = False
-#        return {'value':result}
-#
-#
-#    def onchange_null_value(self, cr, uid, ids, model_object_field, sub_model_object_field, null_value, template_language, context=None):
-#        if not model_object_field and not null_value:
-#            return {}
-#        result = {}
-#        field_obj = self.pool.get('ir.model.fields').browse(cr, uid, model_object_field, context)
-#        if field_obj.ttype in ['many2one', 'one2many', 'many2many']:
-#            res_ids = self.pool.get('ir.model').search(cr, uid, [('model', '=', field_obj.relation)], context=context)
-#            sub_field_obj = self.pool.get('ir.model.fields').browse(cr, uid, sub_model_object_field, context)
-#            if res_ids:
-#                result['sub_object'] = res_ids[0]
-#                result['copyvalue'] = self.build_expression(field_obj.name,
-#                                                      sub_field_obj.name,
-#                                                      null_value,
-#                                                      template_language
-#                                                      )
-#                result['sub_model_object_field'] = sub_model_object_field
-#                result['null_value'] = null_value
-#        else:
-#            #Its a simple field... just compute placeholder
-#            result['sub_object'] = False
-#            result['copyvalue'] = self.build_expression(field_obj.name,
-#                                                  False,
-#                                                  null_value,
-#                                                  template_language
-#                                                  )
-#            result['sub_model_object_field'] = False
-#            result['null_value'] = null_value
-#        return {'value':result}
 
     def onchange_sub_model_object_value_field(self, cr, uid, ids, model_object_field, sub_model_object_field=False, null_value=None, context=None):
         result = {
@@ -324,16 +263,23 @@ class email_template(osv.osv):
         return {'value':result}
 
 
-    def generate_email(self, cr, uid, template_id, record_id, context=None):
-        """
-        Generates an email from the template for
-        record record_id of target object
+    def generate_email(self, cr, uid, template_id, res_id, context=None):
+        """Generates an email from the template for given (model, res_id) pair.
+
+           :param template_id: id of the template to render.
+           :param res_id: id of the record to use for rendering the template (model
+                          is taken from template definition)
+           :returns: a dict containing all relevant fields for creating a new
+                     mail.message entry, with the addition one additional
+                     special key ``attachments`` containing a list of
         """
         if context is None:
             context = {}
         values = {
                   'subject': False,
-                  'body': False,
+                  'body_text': False,
+                  'body_html': False,
+                  'email_from': False,
                   'email_to': False,
                   'email_cc': False,
                   'email_bcc': False,
@@ -341,70 +287,87 @@ class email_template(osv.osv):
                   'auto_delete': False,
                   'model': False,
                   'res_id': False,
-                  'smtp_server_id': False,
-                  'attachment': False,
+                  'mail_server_id': False,
+                  'attachments': False,
                   'attachment_ids': False,
+                  'message_id': False,
+                  'state': 'outgoing',
         }
         if not template_id:
             return values
 
         report_xml_pool = self.pool.get('ir.actions.report.xml')
-        template = self.get_email_template(cr, uid, template_id, record_id, context)
-        def _get_template_value(field):
-            if context.get('mass_mail', False): # Mass Mail: Gets original template values for multiple email change
-                return getattr(template, field)
-            else:
-                return self.get_template_value(cr, uid, getattr(template, field), template.model, record_id, context=context)
+        template = self.get_email_template(cr, uid, template_id, res_id, context)
 
-        body = _get_template_value('body')
+        for field in ['subject', 'body_text', 'body_html', 'email_from',
+                      'email_to', 'email_cc', 'email_bcc', 'reply_to',
+                      'message_id']:
+            values[field] = self.render_template(cr, uid, getattr(template, field),
+                                                 template.model, res_id, context=context) \
+                                                 or False
 
-        #Use signatures if allowed
         if template.user_signature:
             signature = self.pool.get('res.users').browse(cr, uid, uid, context).signature
-            body += '\n' + signature
+            values['body_text'] += '\n\n' + signature
 
-        values = {
-            'smtp_server_id' : template.smtp_server_id.id,
-            'body' : body,
-            'email_to' : _get_template_value('email_to') or False,
-            'email_cc' : _get_template_value('email_cc') or False,
-            'email_bcc' : _get_template_value('email_bcc') or False,
-            'reply_to' : _get_template_value('reply_to') or False,
-            'subject' : _get_template_value('subject') or False,
-            'auto_delete': template.auto_delete,
-            'model' : template.model or False,
-            'res_id' : record_id or False,
-            #'body_html': self.get_template_value(cr, uid, template.body_html, model, record_id, context),
-        }
+        values.update(mail_server_id = template.mail_server_id.id or False,
+                      auto_delete = template.auto_delete,
+                      model=template.model,
+                      res_id=res_id or False)
 
-        attachment = {}
+        attachments = {}
         # Add report as a Document
         if template.report_template:
             report_name = template.report_name
-            reportname = 'report.' + report_xml_pool.browse(cr, uid, template.report_template.id, context).report_name
-            data = {}
-            data['model'] = template.model
-
+            report_service = 'report.' + report_xml_pool.browse(cr, uid, template.report_template.id, context).report_name
             # Ensure report is rendered using template's language
             ctx = context.copy()
             if template.lang:
-                ctx['lang'] = self.get_template_value(cr, uid, template.lang, template.model, record_id, context)
-            service = netsvc.LocalService(reportname)
-            (result, format) = service.create(cr, uid, [record_id], data, ctx)
+                ctx['lang'] = self.render_template(cr, uid, template.lang, template.model, res_id, context)
+            service = netsvc.LocalService(report_service)
+            (result, format) = service.create(cr, uid, [res_id], {'model': template.model}, ctx)
             result = base64.b64encode(result)
             if not report_name:
-                report_name = reportname
-            report_name = report_name + "." + format
-            attachment[report_name] = result
+                report_name = report_service
+            ext = "." + format
+            if not report_name.endswith(ext):
+                report_name += ext
+            attachments[report_name] = result
 
         # Add document attachments
         for attach in template.attachment_ids:
-            #attach = attahcment_obj.browse(cr, uid, attachment_id, context)
-            attachment[attach.datas_fname] = base64.decodestring(attach.datas)
-        values['attachment'] = attachment
+            # keep the bytes as fetched from the db, base64 encoded
+            attachments[attach.datas_fname] = attach.datas
+
+        values['attachments'] = attachments
         return values
 
-email_template()
+    def send_mail(self, cr, uid, template_id, res_id, context=None):
+        """Generates a new mail message for the given template and record,
+           and schedule it for delivery through the ``mail`` module's scheduler.
 
+           :param int template_id: id of the template to render
+           :param int record_id: id of the record to render the template with
+                                (model is taken from the template)
+        """
+        mail_message = self.pool.get('mail.message')
+        ir_attachment = self.pool.get('ir.attachment')
+        template = self.browse(cr, uid, template_id, context)
+        values = self.generate_email(cr, uid, template_id, res_id, context=context)
+        attachments = values.pop('attachments')
+        message_id = mail_message.create(values)
+        # link attachments
+        attachment_ids = []
+        for fname, fcontent in values['attachments'].iteritems():
+            attachment_data = {
+                    'name': fname,
+                    'datas_fname': fname,
+                    'datas': fcontent,
+                    'res_model': mail_message._name,
+                    'res_id': message_id,
+            }
+            if context.has_key('default_type'):
+                del context['default_type']
+            attachment_ids.append(ir_attachment.create(cr, uid, attachment_data, context))
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

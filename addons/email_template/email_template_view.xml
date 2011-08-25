@@ -9,14 +9,13 @@
             <field name="arch" type="xml">
                 <form string="Templates">
                     <field name="name" required="1"/>
-                    <field name="model_id" required="1"
-                        on_change="onchange_model_id(model_id)"/>
+                    <field name="model_id" required="1" on_change="onchange_model_id(model_id)"/>
                     <field name="model" invisible="1"/>
                     <notebook colspan="4">
                         <page string="Email Details">
                             <group col="2" colspan="2">
                                 <separator string="Addresses" colspan="2"/>
-                                <field name="smtp_server_id"/>
+                                <field name="email_from" required="1"/>
                                 <field name="email_to" required="1"/>
                                 <field name="email_cc"/>
                                 <field name="email_bcc"/>
@@ -26,24 +25,24 @@
                                 <separator string="Options" colspan="2"/>
                                 <field name="lang" colspan="4" />
                                 <field name="user_signature" colspan="4" />
-                                <field name="auto_delete"/>
+                                <field name="track_campaign_item" colspan="4"/>
                             </group>
                             <group col="2" colspan="2">
                                 <separator colspan="2" string="Email Content"/>
                                 <field name="subject" colspan="4" required="1"/>
                                 <notebook>
-                                    <page string="Body">
-                                        <field name="body" colspan="4" nolabel="1"/>
+                                    <page string="Body (Text)">
+                                        <field name="body_text" colspan="4" nolabel="1"/>
                                     </page>
-                                    <!-- <page string="Body (Raw HTML)">
-                                        <field name="def_body_html" colspan="4" nolabel="1"/>
+                                    <page string="Body (Rich/HTML)">
+                                        <field name="body_html" colspan="4" nolabel="1"/>
                                         <label string="Note: This is Raw HTML." colspan="4"/>
-                                    </page> -->
+                                    </page>
                                 </notebook>
                             </group>
                             <group col="4" colspan="2">
                                 <notebook>
-                                    <page string="Insert Simple Field">
+                                    <page string="Dynamic Values Builder">
                                         <field name="model_object_field"
                                             domain="[('model_id','=',model_id),('ttype','!=','one2many'),('ttype','!=','many2many')]"
                                             on_change="onchange_sub_model_object_value_field(model_object_field)"
@@ -64,25 +63,37 @@
                             </group>
                         </page>
                         <page string="Advanced">
+                            <field name="mail_server_id"/>
                             <group colspan="2" col="2">
                                 <group colspan="2" col="2">
-                                    <separator string="Actions" colspan="2"/>
-                                    <button name="create_action" string="Create Action" type="object" icon="gtk-execute"  colspan="2" attrs="{'invisible':[('ref_ir_act_window','!=',False), ('ref_ir_value','!=',False)]}"/>
-                                    <field name="ref_ir_act_window"/>
-                                    <field name="ref_ir_value"/>
-                                    <button name="unlink_action" string="Delete Action" type="object" icon="gtk-delete" colspan="2" attrs="{'invisible':[('ref_ir_act_window','=',False), ('ref_ir_value','=',False)]}"/>
+                                    <separator string="Sidebar button" colspan="2"/>
+                                    <button name="create_action" string="Add sidebar button" type="object" icon="gtk-execute"
+                                            colspan="2" attrs="{'invisible':[('ref_ir_act_window','!=',False), ('ref_ir_value','!=',False)]}"
+                                            help="Display a button in the sidebar of related documents to open a composition wizard with this template"
+                                            />
+                                    <field name="ref_ir_act_window" attrs="{'invisible':[('ref_ir_act_window','!=',False), ('ref_ir_value','!=',False)]}"/>
+                                    <field name="ref_ir_value" attrs="{'invisible':[('ref_ir_act_window','!=',False), ('ref_ir_value','!=',False)]}"/>
+                                    <button name="unlink_action" string="Remove sidebar button" type="object" icon="gtk-delete"
+                                            colspan="2" attrs="{'invisible':[('ref_ir_act_window','=',False), ('ref_ir_value','=',False)]}"
+                                            help="Remove the sidebar button currentlu displayed on related documents"
+                                            />
+                                </group>
+                                <group colspan="2" col="2">
+                                    <separator string="Advanced Options" colspan="2"/>
+                                    <field name="message_id"/>
+                                    <field name="auto_delete"/>
                                 </group>
                             </group>
                             <group colspan="2" col="2">
                                 <separator string="Attachments" colspan="2"/>
                                 <notebook>
-                                    <page string="Existing files">
-                                        <field name="attachment_ids" colspan="4" nolabel="1" height="350"/>
-                                    </page>
-                                    <page string="Report">
+                                    <page string="Attach Report">
                                         <field name="report_template" colspan="4"
                                             domain="[('model','=',model)]"/>
                                         <field name="report_name" colspan="4" />
+                                    </page>
+                                    <page string="Attach existing files">
+                                        <field name="attachment_ids" colspan="4" nolabel="1" height="350"/>
                                     </page>
                                 </notebook>
                             </group>

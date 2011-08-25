@@ -22,11 +22,10 @@
 from osv import osv
 from osv import fields
 from tools.translate import _
-import binascii
+import base64
 
-class email_compose_message(osv.osv_memory):
-    _name = 'email.compose.message'
-    _inherit = 'email.compose.message'
+class mail_compose_message(osv.osv_memory):
+    _inherit = 'mail.compose.message'
 
     def _get_templates(self, cr, uid, context=None):
         """
@@ -38,8 +37,8 @@ class email_compose_message(osv.osv_memory):
         email_temp_pool = self.pool.get('email.template')
         model = False
         if context.get('message_id'):
-            message_pool = self.pool.get('email.message')
-            message_data = message_pool.browse(cr, uid, int(context.get('message_id')), context)
+            mail_message = self.pool.get('mail.message')
+            message_data = mail_message.browse(cr, uid, int(context.get('message_id')), context)
             model = message_data.model
         elif context.get('active_model', False):
             model = context.get('active_model')
@@ -52,10 +51,6 @@ class email_compose_message(osv.osv_memory):
         'template_id': fields.selection(_get_templates, 'Template'),
     }
 
-    def get_template_value(self, cr, uid, message, model, resource_id, context=None):
-        template_pool = self.pool.get('email.template')
-        return template_pool.get_template_value(cr, uid, message, model, resource_id, context)
-
     def on_change_template(self, cr, uid, ids, template_id, context=None):
         if context is None:
             context = {}
@@ -64,17 +59,17 @@ class email_compose_message(osv.osv_memory):
         if template_id:
             res_id = context.get('active_id', False)
             values = self.pool.get('email.template').generate_email(cr, uid, template_id, res_id, context=context)
-            if values['attachment']:
-                attachment = values['attachment']
+            if values['attachments']:
+                attachment = values.pop('attachments')
                 attachment_obj = self.pool.get('ir.attachment')
-                for fname, fcontent in attachment.items():
+                for fname, fcontent in attachment.iteritems():
                     data_attach = {
                         'name': fname,
-                        'datas': binascii.b2a_base64(str(fcontent)),
+                        'datas': base64.b64_encode(fcontent),
                         'datas_fname': fname,
-                        'description': _('Mail attachment'),
+                        'description': fname,
                         'res_model' : self._name,
-                        'res_id' : ids and ids[0] or False
+                        'res_id' : ids[0] if ids else False
                     }
                     att_ids.append(attachment_obj.create(cr, uid, data_attach))
                 values['attachment_ids'] = att_ids
@@ -109,6 +104,5 @@ class email_compose_message(osv.osv_memory):
             template_pool.create(cr, uid, values, context=context)
         return {'type': 'ir.actions.act_window_close'}
 
-email_compose_message()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

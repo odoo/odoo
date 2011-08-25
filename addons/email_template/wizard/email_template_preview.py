@@ -82,19 +82,17 @@ class email_template_preview(osv.osv_memory):
         template_id = context.get('template_id', False)
         template = template_pool.get_email_template(cr, uid, template_id=template_id, record_id=res_id, context=context)
         model = template.model
-        vals['email_to'] = self.get_template_value(cr, uid, template.email_to, model, res_id, context)
-        vals['email_cc'] = self.get_template_value(cr, uid, template.email_cc, model, res_id, context)
-        vals['email_bcc'] = self.get_template_value(cr, uid, template.email_bcc, model, res_id, context)
-        vals['reply_to'] = self.get_template_value(cr, uid, template.reply_to, model, res_id, context)
-        vals['subject'] = self.get_template_value(cr, uid, template.subject, model, res_id, context)
-        description = self.get_template_value(cr, uid, template.body, model, res_id, context) or ''
+        vals['email_to'] = self.render_template(cr, uid, template.email_to, model, res_id, context)
+        vals['email_cc'] = self.render_template(cr, uid, template.email_cc, model, res_id, context)
+        vals['email_bcc'] = self.render_template(cr, uid, template.email_bcc, model, res_id, context)
+        vals['reply_to'] = self.render_template(cr, uid, template.reply_to, model, res_id, context)
+        vals['subject'] = self.render_template(cr, uid, template.subject, model, res_id, context)
+        description = self.render_template(cr, uid, template.body, model, res_id, context) or ''
         if template.user_signature:
             signature = self.pool.get('res.users').browse(cr, uid, uid, context).signature
             description += '\n' + signature
         vals['body'] = description
-        vals['report_name'] = self.get_template_value(cr, uid, template.report_name, model, res_id, context)
-        return {'value':vals}
-
-email_template_preview()
+        vals['report_name'] = self.render_template(cr, uid, template.report_name, model, res_id, context)
+        return {'value': vals}
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
