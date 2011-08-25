@@ -1307,8 +1307,10 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
         this.$drop_down = this.$element.find(".oe-m2o-drop-down-button");
         this.$menu_btn = this.$element.find(".oe-m2o-cm-button");
         
+        // context menu
         var init_context_menu_def = $.Deferred().then(function(e) {
-            // context menu
+            var $cmenu = $("#" + self.cm_id);
+            $cmenu.append(QWeb.render("FieldMany2One.context_menu", {widget: self}));
             var bindings = {};
             bindings[self.cm_id + "_search"] = function() {
                 self._search_create_popup("search");
@@ -1337,13 +1339,9 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
                     return true;
                 }
             });
-            setTimeout(function() {
-                self.$menu_btn.trigger(e);
-            }, 0);
+            setTimeout(function() {self.$menu_btn.trigger(e);}, 0);
         });
-        
         var ctx_callback = function(e) {init_context_menu_def.resolve(e); e.preventDefault()};
-        
         this.$menu_btn.bind('contextmenu', ctx_callback);
         this.$menu_btn.click(ctx_callback);
 
