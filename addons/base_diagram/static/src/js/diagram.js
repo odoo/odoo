@@ -156,60 +156,61 @@ openerp.base_diagram.DiagramView = openerp.base.View.extend({
         //Custom logic
         var self = this;
         var renderer= function(r, n) {
-        var node;
-        var set;
+	        var node;
+	        var set;
         
-        // ellipse
-        if (n.node.shape == 'ellipse') {
-            var node = r.ellipse(n.node.x - 30, n.node.y - 13, 40, 20).attr({
-                    "fill": n.node.color,
-                    r: "12px",
-                    "stroke-width": n.distance == 0 ? "3px" : "1px"
-                });
-            
-            set = r.set().push(node).push(r.text(n.node.x - 30, n.node.y - 10, (n.label || n.id)));
+	        // ellipse
+	        if (n.node.shape == 'ellipse') {
+	            var node = r.ellipse(n.node.x - 30, n.node.y - 13, 40, 20).attr({
+	                    "fill": n.node.color,
+	                    r: "12px",
+	                    "stroke-width": n.distance == 0 ? "3px" : "1px"
+	                });
+	            
+	            set = r.set().push(node).push(r.text(n.node.x - 30, n.node.y - 10, (n.label || n.id)));
+	        }
+        
+	        // rectangle
+			else if(n.node.shape == 'rectangle') {
+				var node = r.rect(n.node.x-30, n.node.y-13, 60, 44).attr({
+	             	"fill": n.node.color, 
+	                 r : "12px", 
+	                "stroke-width" : n.distance == 0 ? "3px" : "1px" 
+	                });
+	        	set = r.set().push(node).push(r.text(n.node.x , n.node.y+5 , (n.label || n.id)));
+			}
+        
+	        // circle
+			else {
+	            var node = r.circle(n.node.x, n.node.y, 150).attr({
+	                        "fill": n.node.color, 
+	                        r : "30px", 
+	                        "stroke-width" : n.distance == 0 ? "3px" : "1px" 
+	                });
+	           	set = r.set().push(node).push(r.text(n.node.x , n.node.y , (n.label || n.id)));
+			}
+	        
+	        //Shape Node Event
+	        jQuery(node.node).attr({
+	            'id': n.node.id,
+	            'name': n.id,
+	            'kind': n.node.options['Kind'] || n.node.options['kind']
+	        }).dblclick(function() {
+	            var $this = jQuery(this);
+	            self.search_activity($this.attr('id'), $this.attr('name'), $this.attr('kind'))
+	        });
+	        
+	        //Text Node Event
+	        jQuery(node.next.node).attr({
+	            'id': n.node.id,
+	            'name': n.id,
+	            'kind': n.node.options['Kind'] || n.node.options['kind']
+	        }).dblclick(function() {
+	            var $this = jQuery(this);
+	            self.search_activity($this.attr('id'), $this.attr('name'), $this.attr('kind'))
+	        });
+	        return set;
         }
-        
-        // rectangle
-		else if(n.node.shape == 'rectangle') {
-			var node = r.rect(n.node.x-30, n.node.y-13, 60, 44).attr({
-             	"fill": n.node.color, 
-                 r : "12px", 
-                "stroke-width" : n.distance == 0 ? "3px" : "1px" 
-                });
-        	set = r.set().push(node).push(r.text(n.node.x , n.node.y+5 , (n.label || n.id)));
-		}
-        
-        // circle
-		else {
-            var node = r.circle(n.node.x, n.node.y, 150).attr({
-                        "fill": n.node.color, 
-                        r : "30px", 
-                        "stroke-width" : n.distance == 0 ? "3px" : "1px" 
-                });
-           	set = r.set().push(node).push(r.text(n.node.x , n.node.y , (n.label || n.id)));
-		}
-        
-        jQuery(node.node).attr({
-            'id': n.node.id,
-            'name': n.id,
-            'kind': n.node.options['Kind'] || n.node.options['kind']
-        }).dblclick(function() {
-            var $this = jQuery(this);
-            self.search_activity($this.attr('id'), $this.attr('name'), $this.attr('kind'))
-        });
-        
-        jQuery(node.next.node).attr({
-            'id': n.node.id,
-            'name': n.id,
-            'kind': n.node.options['Kind'] || n.node.options['kind']
-        }).dblclick(function() {
-            var $this = jQuery(this);
-            self.search_activity($this.attr('id'), $this.attr('name'), $this.attr('kind'))
-        });
-        return set;
-        }
-        
         
         for(node in res_nodes) {
             var res_node = res_nodes[node];
@@ -218,9 +219,8 @@ openerp.base_diagram.DiagramView = openerp.base.View.extend({
         
         for(cr in res_connectors) {
         	var res_connector = res_connectors[cr];
-        	dia.addEdge(res_connector['source'], res_connector['destination']);
+        	dia.addEdge(res_connector['source'], res_connector['destination'], {directed : true});
         }
-        
         
         var layouter = new Graph.Layout.Spring(dia);
         layouter.layout();
@@ -229,7 +229,18 @@ openerp.base_diagram.DiagramView = openerp.base.View.extend({
         }
         var renderer = new Graph.Renderer.Raphael('dia-canvas', dia, $('div#dia-canvas').width(), $('div#dia-canvas').height());
         renderer.draw();
-		
+        
+        //Path(Edges)
+        jQuery('path',renderer.r.canvas).each(function(index, path) {
+        	
+        	$(this).attr({
+        		'd_id': res_connectors[index+1].d_id,
+        		'id': res_connectors[index+1].id,
+        		's_id': res_connectors[index+1].s_id,
+    		})
+        });
+        jQuery('path',renderer.r.canvas).dblclick(function(){
+        });
     },
     
     search_activity: function(id, name, kind) {
