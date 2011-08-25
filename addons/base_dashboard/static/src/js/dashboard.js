@@ -321,7 +321,7 @@ openerp.base_dashboard.ConfigOverview = openerp.base.View.extend({
         $progress.progressbar({value: $progress.data('completion')});
 
         var self = this;
-        this.$element.find('div.oe-dashboard-config-overview ul')
+        this.$element.find('dl')
             .delegate('input', 'click', function (e) {
                 // switch todo status
                 e.stopImmediatePropagation();
