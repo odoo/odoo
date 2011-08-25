@@ -350,7 +350,7 @@ class crm_case(crm_base):
         value = {}
         if hasattr(self,'onchange_stage_id'):
             value = self.onchange_stage_id(cr, uid, ids, stage_id)['value']
-            value['stage_id'] = stage_id
+        value['stage_id'] = stage_id
         self.write(cr, uid, ids, value, context=context)
 
     def stage_change(self, cr, uid, ids, op, order, context=None):
