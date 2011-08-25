@@ -55,10 +55,8 @@
   I changed Expected Date to Next Day.
 -
   !python {model: purchase.order}: |
-    from tools.translate import _
-    from datetime import datetime
-    from dateutil.relativedelta import relativedelta
-    next_day = datetime.today() + relativedelta(days=1)
+    import datetime
+    next_day = (datetime.date.today()+datetime.timedelta(days=1))
     self.write(cr, uid, [ref("purchase_order_po0")], {'minimum_planned_date': next_day})
 -
   I check that the order which was initially in the draft state has transit to confirm state.
