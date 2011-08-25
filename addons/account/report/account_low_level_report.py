@@ -50,27 +50,27 @@ class report_account_common(report_sxw.rml_parse, common_report_header):
             new_ids = 'chart_account_id' in data['form'] and [data['form']['chart_account_id']] or []
             objects = self.pool.get('account.account').browse(self.cr, self.uid, new_ids)
         return super(report_account_common, self).set_context(objects, data, new_ids, report_type=report_type)
-
-    def _get_report_details(self, data):
-        cr, uid = self.cr, self.uid
-        report_obj = self.pool.get('account.report')
-        datas =  []
-        balance = 0.0
-        name = data['form'].get('account_report_id') and data['form']['account_report_id'][1] or ''
-        report_id = data['form'].get('account_report_id') and data['form']['account_report_id'][0] or False
-        label = data['form']['label_filter'] or ''
-        datas.append({'id': report_id, 'label': label})
-        ctx = self.context.copy()
-        if report_id:
-            child_ids = report_obj.search(cr, uid, [('parent_id','=',report_id)])
-            child_ids.append(datas[0]['id'])
-            for child in report_obj.browse(cr, uid, child_ids, context=ctx):
-                balance = self.get_report_balance(child, child_ids, ctx)
-                if child.id == datas[0]['id']:
-                    datas[0].update({'name': child.name, 'balance': balance})
-                else:
-                    datas.append({'id': child.id, 'name': child.name, 'balance': balance, 'label': label})
-        return datas
+#
+#    def _get_report_details(self, data):
+#        cr, uid = self.cr, self.uid
+#        report_obj = self.pool.get('account.report')
+#        datas =  []
+#        balance = 0.0
+#        name = data['form'].get('account_report_id') and data['form']['account_report_id'][1] or ''
+#        report_id = data['form'].get('account_report_id') and data['form']['account_report_id'][0] or False
+#        label = data['form']['label_filter'] or ''
+#        datas.append({'id': report_id, 'label': label})
+#        ctx = self.context.copy()
+#        if report_id:
+#            child_ids = report_obj.search(cr, uid, [('parent_id','=',report_id)])
+#            child_ids.append(datas[0]['id'])
+#            for child in report_obj.browse(cr, uid, child_ids, context=ctx):
+#                balance = self.get_report_balance(child, child_ids, ctx)
+#                if child.id == datas[0]['id']:
+#                    datas[0].update({'name': child.name, 'balance': balance})
+#                else:
+#                    datas.append({'id': child.id, 'name': child.name, 'balance': balance, 'label': label})
+#        return datas
 
     def get_account_details(self, acc_id, data):
         cr, uid = self.cr, self.uid
