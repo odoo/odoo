@@ -1,115 +1,125 @@
 -
-  This scenario tests the delegation process. Closing all the delegated tasks(task delegation at multiple levels) transits the parent task from pending to open state.  
-- 
+  This scenario tests the delegation process. Closing all the delegated tasks(task delegation at multiple levels) transits the parent task from pending to open state.
+-
   Creating a project OpenERP Documentation
-- 
+-
   !record {model: project.project, id: project_project_openerpdocumentation0}:
     company_id: base.main_company
-    name: OpenERP Documentation    
-    
-- 
+    name: OpenERP Documentation
+
+-
   Creating a task 'Develop book for Technical and Functional reference'
-- 
+-
   !record {model: project.task, id: project_task_documentation_book}:
     name: Develop book for Technical and Functional reference
     planned_hours: 20.0
     project_id: project_project_openerpdocumentation0
     remaining_hours: 20.0
     state: draft
-    
-- 
-  Open the task
-- 
+-
+  Open the 'Develop book for Technical and Functional reference' task
+-
   !python {model: project.task}: |
     self.do_open(cr, uid, [ref("project_task_documentation_book")],
       {"lang": "en_US", "active_model": "ir.ui.menu", "active_ids": [ref("project.menu_action_view_task")],
-      "tz": False, "active_id": ref("project.menu_action_view_task"), }) 
+      "tz": False, "active_id": ref("project.menu_action_view_task"), })
 
-- 
+-
   Creating a task 'Publish the References'
-- 
+-
   !record {model: project.task, id: project_task_publish_book}:
     name: Publish the References
     planned_hours: 10.0
     project_id: project_project_openerpdocumentation0
     remaining_hours: 10.0
     state: draft
-    
-- 
-  Open the task
-- 
+
+-
+  Open the task 'Publish the References'
+-
   !python {model: project.task}: |
     self.do_open(cr, uid, [ref("project_task_publish_book")],
       {"lang": "en_US", "active_model": "ir.ui.menu", "active_ids": [ref("project.menu_action_view_task")],
-      "tz": False, "active_id": ref("project.menu_action_view_task"), }) 
+      "tz": False, "active_id": ref("project.menu_action_view_task"), })
 
 -
-  Test the delegate wizard 
-- 
+  Test the delegate wizard
+-
   Creating a delegate task 'Publish the References' of 15 hours, renaming parent task to 'CHECK Publish the References' of 1 hour
-- 
+-
   !record {model: project.task.delegate, id: project_task_publish_book_delegate}:
     name: Publish the References
-    new_task_description: aaa
+    new_task_description: test_new_task
     planned_hours: 15.0
     planned_hours_me: 1.0
     prefix: 'CHECK: Publish the References'
     state: pending
     user_id: base.user_demo
-    
-- 
-  Validating the delegate task
-- 
+-
+  Create view for delegate task.
+-
   !python {model: project.task.delegate}: |
-    self.delegate(cr, uid, [ref("project_task_publish_book_delegate")],
-      {"lang": "en_US", "active_model": "project.task", "tz": False, "record_id":
-      4, "active_ids": [ref("project_task_publish_book")], "active_id": ref("project_task_publish_book"),
-      })
-
+    fields = {
+       'name' : 'Test',
+       'new_task_description' : 'test_new_task',
+       'planned_hours' : '15.0',
+       'planned_hours_me' : '1.0',
+       'prefix' : 'CHECK_Publish the References',
+       'state' : 'pending',
+       'user_id' : 'base.user_root'
+       }
+    context = {"lang": "en_US", "active_model": "project.task", "tz": False,"record_id":4, "active_ids": [ref("project_task_publish_book")], "active_id": ref("project_task_publish_book")}
+    self.default_get(cr, uid, fields, context=context)
+    self.fields_view_get(cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False)
+-
+  Validating the delegate task.
+-
+  !python {model: project.task.delegate}: |
+    self.delegate(cr, uid, [ref("project_task_publish_book_delegate")],context={"lang": "en_US", "active_model": "project.task", "tz": False,"record_id":4, "active_ids": [ref("project_task_publish_book")], "active_id": ref("project_task_publish_book")})
 -
   Check if parent task 'CHECK Publish the References' is in pending state
-- 
+-
   !assert {model: project.task, id: project_task_publish_book, severity: error, string: "Task must be in pending state after delegation"}:
-       - state == "pending"      
-- 
-  Creating a delegate task 'Prepare a book that gives functional overview of OpenERP' 
-- 
+       - state == "pending"
+-
+  Creating a delegate task 'Prepare a book that gives functional overview of OpenERP'
+-
   !record {model: project.task, id: project_task_delegate_openerp_tutorial}:
     name: Prepare a book that gives functional overview of OpenERP
     planned_hours: 30.0
     project_id: project.project_project_openerpdocumentation0
     remaining_hours: 30.0
     state: draft
-    
-- 
-  Open the task
-- 
+
+-
+  Open the delegate task 'Prepare a book that gives functional overview of OpenERP'
+-
   !python {model: project.task}: |
     self.do_open(cr, uid, [ref("project_task_delegate_openerp_tutorial")],
       {"lang": "en_US", "active_model": "ir.ui.menu", "active_ids": [ref("project.menu_action_view_task")],
       "tz": False, "active_id": ref("project.menu_action_view_task"), })
-          
-- 
+
+-
   Creating a delegate task 'Prepare a technical reference for creating your modules'
-- 
+-
   !record {model: project.task, id: project_task_delegate_developer_book}:
     name: Prepare a technical reference for creating your modules
     planned_hours: 30.0
     project_id: project_project_openerpdocumentation0
     remaining_hours: 30.0
     state: draft
- 
-- 
-  Open the task
-- 
+
+-
+  Open the delegate task 'Prepare a technical reference for creating your modules'
+-
   !python {model: project.task}: |
     self.do_open(cr, uid, [ref("project_task_delegate_developer_book")],
       {"lang": "en_US", "active_model": "ir.ui.menu", "active_ids": [ref("project.menu_action_view_task")],
       "tz": False, "active_id": ref("project.menu_action_view_task"), })
 
-- 
+-
   Delegate task 'Develop book for Technical and Functional reference' to these tasks and make it pending
-- 
+-
   !record {model: project.task, id: project_task_documentation_book}:
     child_ids:
       - project.project_task_delegate_openerp_tutorial
@@ -117,20 +127,20 @@
     planned_hours: 20.0
     state: pending
 
-- 
+-
   Creating a delegate task 'Prepare documentation for Module Development'
-- 
+-
   !record {model: project.task, id: project_task_delegate_module_develop}:
     name: Prepare documentation for Module Development
     planned_hours: 30.0
     project_id: project.project_project_openerpdocumentation0
     remaining_hours: 30.0
     state: draft
-    
 
-- 
+
+-
   Creating a delegate 'Prepare documentation for Business Process Development'
-- 
+-
   !record {model: project.task, id: project_task_delegate_business_process_develop}:
     name: Prepare documentation for Business Process Development
     planned_hours: 30.0
@@ -138,9 +148,9 @@
     remaining_hours: 30.0
     state: draft
 
-- 
+-
   Delegate task 'Prepare a technical reference for creating your modules' to these tasks and make it pending
-- 
+-
   !record {model: project.task, id: project_task_delegate_developer_book}:
     child_ids:
       - project.project_task_delegate_module_develop
@@ -148,83 +158,84 @@
     planned_hours: 20.0
     state: pending
 
-- 
-  Open the task
-- 
+-
+  Open the task 'Prepare documentation for Business Process Development'
+-
   !python {model: project.task}: |
     self.do_open(cr, uid, [ref("project_task_delegate_module_develop")],
       {"lang": "en_US", "active_model": "ir.ui.menu", "active_ids": [ref("project.menu_action_view_task")],
       "tz": False, "active_id": ref("project.menu_action_view_task"), })
-      
-- 
-  Open the task
-- 
+
+-
+  Open the task 'Prepare documentation for Business Process Development'
+-
   !python {model: project.task}: |
     self.do_open(cr, uid, [ref("project_task_delegate_business_process_develop")],
       {"lang": "en_US", "active_model": "ir.ui.menu", "active_ids": [ref("project.menu_action_view_task")],
-      "tz": False, "active_id": ref("project.menu_action_view_task"), })      
+      "tz": False, "active_id": ref("project.menu_action_view_task"), })
 
-- 
+-
   Check if 'Prepare a technical reference for creating your modules' in pending state
-- 
+-
   !assert {model: project.task, id: project_task_delegate_developer_book, severity: error, string: Task must be in pending state}:
        - state == "pending"
-                 
-- 
+
+-
   Close the child task 'Prepare documentation for Module Development'
-- 
+-
   !python {model: project.task}: |
     self.do_close(cr, uid, [ref("project_task_delegate_module_develop")], {"lang": "en_US",
       "active_ids": [ref("project.menu_action_view_task")], "tz": False, "active_model":
       "ir.ui.menu", "section_id": False, "search_default_project_id": False, "search_default_user_id":
       1, "search_default_current": 1, "mail_send": False, "active_id": ref("project.menu_action_view_task"),
       })
-      
-- 
+
+-
   Close the child task 'Prepare documentation for Business Process Development'
-- 
+-
   !python {model: project.task}: |
     self.do_close(cr, uid, [ref("project_task_delegate_business_process_develop")], {"lang": "en_US",
       "active_ids": [ref("project.menu_action_view_task")], "tz": False, "active_model":
       "ir.ui.menu", "section_id": False, "search_default_project_id": False, "search_default_user_id":
       1, "search_default_current": 1, "mail_send": False, "active_id": ref("project.menu_action_view_task"),
       })
-      
-- 
+
+-
   Parent task 'Prepare a technical reference for creating your modules' task must now be in open state
-- 
+-
   !assert {model: project.task, id: project_task_delegate_developer_book, severity: error, string: Task is in done state}:
        - state == "open"
-       
-      
-- 
+
+
+-
   Check if task 'Develop book for Technical and Functional reference' in pending state
-- 
+-
   !assert {model: project.task, id: project_task_documentation_book, severity: error, string: Task is in pending state}:
        - state == "pending"
-                 
-- 
+
+-
   Close the child task 'Prepare a technical reference for creating your modules'
-- 
+-
   !python {model: project.task}: |
     self.do_close(cr, uid, [ref("project_task_delegate_developer_book")], {"lang": "en_US",
       "active_ids": [ref("project.menu_action_view_task")], "tz": False, "active_model":
       "ir.ui.menu", "section_id": False, "search_default_project_id": False, "search_default_user_id":
       1, "search_default_current": 1, "mail_send": False, "active_id": ref("project.menu_action_view_task"),
       })
-      
-- 
-  Close the child task 'Prepare a book that gives functional overview of OpenERP' 
-- 
+
+-
+  Close the child task 'Prepare a book that gives functional overview of OpenERP'
+-
   !python {model: project.task}: |
     self.do_close(cr, uid, [ref("project_task_delegate_openerp_tutorial")], {"lang": "en_US",
       "active_ids": [ref("project.menu_action_view_task")], "tz": False, "active_model":
       "ir.ui.menu", "section_id": False, "search_default_project_id": False, "search_default_user_id":
       1, "search_default_current": 1, "mail_send": False, "active_id": ref("project.menu_action_view_task"),
       })
-      
-- 
-  Parent task 'Develop book for Technical and Functional reference' must be now in open state 
-- 
+
+-
+  Parent task 'Develop book for Technical and Functional reference' must be now in open state
+-
   !assert {model: project.task, id: project_task_documentation_book, severity: error, string: Task is in done state}:
-       - state == "open"                  
+       - state == "open"
+-

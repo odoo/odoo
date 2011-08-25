@@ -1,5 +1,10 @@
 -
-  Test project template feature
+  I assign an email address to Administrator.
+-
+  !record {model: res.users, id: base.user_root}:
+    user_email: admin@openerp.com
+-
+  Now, Test project template feature
 -
   Create project 'OpenERP Training Programme'
 -
@@ -12,6 +17,7 @@
   !record {model: project.task, id: project_task_technicaltraining0}:
     date_start: !eval time.strftime('%Y-%m-%d %H:%M:%S')
     name: Technical Training
+    user_id: base.user_root
     planned_hours: 30.0
     project_id: project_project_openerptrainingprogramme0
     remaining_hours: 30.0
@@ -26,6 +32,58 @@
     project_id: project_project_openerptrainingprogramme0
     remaining_hours: 30.0
     state: draft
+-
+  Set project's task view
+-
+  !python {model: project.task}: |
+    self._default_project(cr, uid,context)
+    self.fields_view_get(cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False)
+-
+  Check child project.
+-
+  !python {model: project.task}: |
+    self._check_child_task(cr, uid, [ref("project_task_functionaltraining0")])
+-
+  Do some changes on project.
+-
+  !python {model: project.task}: |
+    self.onchange_project(cr, uid, [ref("project_task_functionaltraining0")],ref('project_project_openerptrainingprogramme0'))
+-
+  Change the type of project.
+-
+  !python {model: project.task}: |
+    self._change_type(cr, uid,[ref("project_task_functionaltraining0")], next, context)
+-
+  Click on next Button.
+-
+  !python {model: project.task}: |
+    self.next_type(cr, uid,[ref("project_task_functionaltraining0")], context)
+-
+  Click on previous Button.
+-
+  !python {model: project.task}: |
+    self.prev_type(cr, uid,[ref("project_task_functionaltraining0")], context)
+-
+  Create work for project's task.
+-
+  !record {model: project.task.work, id: project_task_work0}:
+    name: Technical Training Task's Work
+    task_id: project_task_technicaltraining0
+-
+  Add project's Work
+-
+  !python {model: project.task.work}: |
+    self.write(cr, uid, [ref('project_task_work0')], vals={}, context={"lang": "en_US", "active_ids": [ref("project_task_functionaltraining0")],"tz": False, "active_id": ref("project_task_functionaltraining0")})
+-
+  Get project's Work
+-
+  !python {model: project.project}: |
+    self._get_project_work(cr, uid, [ref("project_task_work0")], context={"lang": "en_US", "active_ids": [ref("project_task_functionaltraining0")],"tz": False, "active_id": ref("project_task_functionaltraining0")})
+-
+  Change the project's partner if needed.
+-
+  !python {model: project.project}: |
+    self.onchange_partner_id(cr, uid, [ref("project_project_openerptrainingprogramme0")], part=False, context = {"lang": "en_US", "active_model": "ir.ui.menu", "active_ids": [ref("project.menu_open_view_project_all")],"tz": False, "active_id": ref("project.menu_open_view_project_all")})
 -
   Set project as project template
 -
@@ -101,7 +159,7 @@
       "tz": False, "active_model": "ir.ui.menu", "project_id": False, "active_id":
       ref("project.menu_open_view_project_all"), })
 -
-  Check if project in open state
+  Re-Check if project in open state
 -
   !assert {model: project.project, id: project_project_openerptrainingprogramme0, severity: error, string: Project is in open state}:
        - state == "open"
@@ -118,7 +176,17 @@
   !record {model: project.task.reevaluate, id: project_task_technicaltraining_remainingwiz0}:
     remaining_hours: 30.0
 - |
-  I click the apply button
+  Create the view for reevaluate the task.
+-
+  !python {model: project.task.reevaluate}: |
+      self.fields_view_get(cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False)
+- |
+  Now get the remaining hours required to close the task.
+-
+  !python {model: project.task.reevaluate}: |
+      self._get_remaining(cr, uid)
+- |
+  I click the apply button.
 -
   !python {model: project.task.reevaluate}: |
       self.compute_hours(cr, uid, [ref('project_task_technicaltraining_remainingwiz0')], {'active_id': ref("project_task_technicaltraining0"),'button_reactivate': True})
@@ -177,6 +245,11 @@
        - remaining_hours == 0
        - effective_hours == 30.0
 -
+  Create analytic account.
+-
+  !record {model: account.analytic.account, id: account_analytic_account0}:
+    name : account_analytic_account
+-
   Set remaining hours of 10 hours for reevaluating the task
 -
   !record {model: project.task.reevaluate, id: config_compute_remaining_0}:
@@ -223,8 +296,6 @@
 -
   !assert {model: project.task, id: project_task_technicaltraining0, severity: error, string: Task is in done state}:
        - state == "done"
-
-
 -
   Test for task reactivation
 -
@@ -265,6 +336,11 @@
        - remaining_hours == 5.0
        - effective_hours == 45.0
 -
+  Check for remaining hours
+-
+  !python {model: project.task}: |
+    self.onchange_remaining(cr, uid, [ref("project_task_functionaltraining0")], remaining = 0.0, planned = 0.0)
+-
   Close the task
 -
   !python {model: project.task}: |
@@ -293,4 +369,51 @@
 -
   !assert {model: project.project, id: project_project_openerptrainingprogramme0, severity: error, string: "Project must be in closed state"}:
        - state == "close"
+-
+  Unlink the task's work.
+-
+  !python {model: project.task.work}: |
+    self.unlink(cr, uid, [ref('project_task_work0')])
+-
+  After remove project task's work unlink it's details from the analytic account.
+-
+  !python {model: account.analytic.account}: |
+    self.unlink(cr, uid, [ref('account_analytic_account0')])
+-
+  Now, Close the project task
+-
+  !record {model: project.task.close, id: project_task_close_0}:
+    manager_warn : True
+    partner_warn : False
+    manager_email : 'info@mycustomer.com'
+    partner_email : 'info@myinfobid.com'
+    description : Description
+-
+  Send Warn Message by Email to Manager and Customer.
+-
+  !python {model: project.task.close}: |
+    fields = {
+        'manager_warn' : True,
+        'partner_warn' : False,
+        'manager_email' : 'info@mycustomer.com',
+        'partner_email' : 'info@myinfobid.com',
+        'description' : 'Description'
+        }
+    self.default_get(cr, uid, fields, context={"active_ids":[ref("project_task_technicaltraining0")],"active_id": ref("project_task_technicaltraining0")})
+    self.send(cr, uid, [ref('project_task_close_0')], context={"active_ids":[ref("project_task_technicaltraining0")],"active_id": ref("project_task_technicaltraining0")})
+-
+  Close this project.
+-
+  !python {model: project.task}: |
+    self.action_close(cr, uid, [ref("project_task_functionaltraining0")],context={"lang": "en_US", "active_ids": [ref("project_project_openerptrainingprogramme0")],"tz": False, "active_id": ref("project_project_openerptrainingprogramme0")})
+-
+  Cancel this project.
+-
+  !python {model: project.task}: |
+    self.do_cancel(cr, uid,[ref("project_task_functionaltraining0")],context={})
+-
+  Unlink this project.
+-
+  !python {model: project.task}: |
+    self.unlink(cr, uid,[ref("project_task_functionaltraining0")])
 
