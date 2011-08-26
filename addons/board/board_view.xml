@@ -6,9 +6,35 @@
         <field name="name">Applications Tiles</field>
         <field name="tag">board.home.applications</field>
       </record>
-      <record id="action_res_widgets_display" model="ir.actions.client">
-        <field name="name">Homepage Widgets</field>
+      <record id="action_res_widgets_tweets" model="ir.actions.client">
+        <field name="name">Tweets Widget</field>
         <field name="tag">board.home.widgets</field>
+        <field name="params" eval="{'widget_id': ref('base.openerp_favorites_twitter_widget')}"/>
+      </record>
+      <record id="action_res_widgets_events" model="ir.actions.client">
+        <field name="name">Events Widget</field>
+        <field name="tag">board.home.widgets</field>
+        <field name="params" eval="{'widget_id': ref('base.events_widget')}"/>
+      </record>
+      <record id="action_res_widgets_facebook" model="ir.actions.client">
+        <field name="name">Facebook Widget</field>
+        <field name="tag">board.home.widgets</field>
+        <field name="params" eval="{'widget_id': ref('base.facebook_widget')}"/>
+      </record>
+      <record id="action_res_widgets_note" model="ir.actions.client">
+        <field name="name">Note Widget</field>
+        <field name="tag">board.home.widgets</field>
+        <field name="params" eval="{'widget_id': ref('base.note_widget')}"/>
+      </record>
+      <record id="action_res_widgets_map" model="ir.actions.client">
+        <field name="name">Google Maps Widget</field>
+        <field name="tag">board.home.widgets</field>
+        <field name="params" eval="{'widget_id': ref('base.google_maps_widget')}"/>
+      </record>
+      <record id="action_res_widgets_currency_converter" model="ir.actions.client">
+        <field name="name">Currency Converter Widget</field>
+        <field name="tag">board.home.widgets</field>
+        <field name="params" eval="{'widget_id': ref('base.currency_converter_widget')}"/>
       </record>
       <record id="view_board_homepage" model="ir.ui.view">
         <field name="name">Homepage Board</field>
@@ -21,7 +47,8 @@
                 <action name="%(action_application_tiles)d"/>
               </child1>
               <child2>
-                <action name="%(action_res_widgets_display)d"/>
+                <action name="%(action_res_widgets_tweets)d"/>
+                <action name="%(action_res_widgets_events)d"/>
               </child2>
             </hpaned>
           </form>

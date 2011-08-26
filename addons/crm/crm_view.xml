@@ -108,7 +108,6 @@
                     <field name="sequence"/>
                     <field name="name"/>
                     <field name="probability"/>
-                    <field name="type" />
                 </tree>
             </field>
         </record>
@@ -124,8 +123,6 @@
                 <form string="Stage">
                     <separator string="Stage Definition" colspan="4"/>
                     <field name="name" select="1"/>
-                    <field name="type" groups="base.group_extended" />
-                     
                     <field name="sequence"/>
                     <field name="probability"/>
                     <group colspan="4" col="2" >
@@ -133,7 +130,7 @@
                     </group>
                     <separator string="Requirements" colspan="4"/>
                     <field name="requirements" nolabel="1" colspan="4"/>
-            <field name="section_ids" invisible="1" />
+                    <field name="section_ids" invisible="1" colspan="4"/>
                 </form>
             </field>
         </record>
@@ -146,9 +143,9 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="crm_case_stage_tree"/>
         </record>
-       
 
- <!-- Case Categories Form View -->
+
+     <!-- Case Categories Form View -->
 
         <record id="crm_case_categ-view" model="ir.ui.view">
             <field name="name">crm.case.categ.form</field>
@@ -372,49 +369,6 @@
                 </field>
         </record>
 
-        <!-- Inherit View From Partner  -->
-
-        <record id="view_partners_form_crm1" model="ir.ui.view">
-                <field name="name">view.res.partner.form.crm.inherited1</field>
-                <field name="model">res.partner</field>
-                <field name="type">form</field>
-                <field name="inherit_id" ref="base.view_partner_form"/>
-                <field eval="18" name="priority"/>
-                <field name="arch" type="xml">
-                    <field name="user_id" position="after">
-                        <field name="section_id" completion="1" widget="selection"
-                            groups="base.group_extended"/>
-                    </field>
-                </field>
-        </record>
-
-        <record id="view_partners_tree_crm2" model="ir.ui.view">
-                <field name="name">view.res.partner.tree.crm.inherited2</field>
-                <field name="model">res.partner</field>
-                <field name="type">tree</field>
-                <field name="inherit_id" ref="base.view_partner_tree"/>
-                <field eval="18" name="priority"/>
-                <field name="arch" type="xml">
-                    <field name="country" position="after">
-                        <field name="section_id" completion="1" widget="selection"
-                            groups="base.group_extended"/>
-                    </field>
-                </field>
-        </record>
-
-        <record id="view_partners_form_crm3" model="ir.ui.view">
-                <field name="name">view.res.partner.search.crm.inherited3</field>
-                <field name="model">res.partner</field>
-                <field name="type">search</field>
-                <field name="inherit_id" ref="base.view_res_partner_filter"/>
-                <field eval="18" name="priority"/>
-                <field name="arch" type="xml">
-                    <field name="category_id" position="after">
-                        <field name="section_id" completion="1" widget="selection"
-                            groups="base.group_extended"/>
-                    </field>
-                </field>
-        </record>
         <!-- menu for the working time -->
         <menuitem action="resource.action_resource_calendar_form" id="menu_action_resource_calendar_form" parent="resource.menu_resource_config" sequence="1"/>
 
