@@ -1,15 +1,15 @@
 openerp.base.data_export = function(openerp) {
 openerp.base.DataExport = openerp.base.Dialog.extend({
+    template: 'ExportTreeView',
+    dialog_title: 'Export Data',
     init: function(parent, dataset) {
         this._super(parent);
         this.dataset = dataset;
     },
     start: function() {
         var self = this;
-        self._super(false);
-        self.template = 'ExportTreeView';
-        self.dialog_title = "Export Data";
-        self.open({
+        this._super.apply(this, arguments);
+        this.open({
             modal: true,
             width: '55%',
             height: 'auto',
