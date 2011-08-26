@@ -376,8 +376,7 @@ openerp.base.Sidebar = openerp.base.Widget.extend({
         this.sections = {};
     },
     start: function() {
-        var self = this;
-        this._super(this, arguments);
+        this._super(this);
         this.$element.html(QWeb.render('Sidebar'));
         this.$element.find(".toggle-sidebar").click(function(e) {
             self.do_toggle();
