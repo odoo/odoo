@@ -34,6 +34,7 @@
   In order to test the Product Backlog.
 -
   !python {model: project.scrum.product.backlog}: |
+    self.name_search(cr, uid, name='test', args=None, operator='ilike', context=None, limit=100)
     self.button_draft(cr, uid, [ref("project_scrum_product_backlog0")],context=None)
 -
   Click on Open Button.
@@ -126,7 +127,6 @@
 - 
   !record {model: postpone.wizard, id: postpone_wizard_0}:
     {}
-
 -
   Now I am postponding the Backlog "Demo Product backlog".
 -
@@ -144,3 +144,22 @@
 -
   !python {model: project.scrum.product.backlog}: |
     self.button_close(cr, uid, [ref("project_scrum_product_backlog0")],context=None)
+-
+  Click on Cancel Button.
+-
+  !python {model: project.scrum.product.backlog}: |
+    self.button_cancel(cr, uid, [ref("project_scrum_product_backlog0")],context=None)
+-
+  Create a backlog sprint
+- 
+  !record {model: project.scrum.backlog.assign.sprint, id: project_scrum_backlog_assign_sprint}:
+    {}
+-
+  Now, I am assigning it.
+-
+  !python {model: project.scrum.backlog.assign.sprint}: |
+    context.update({'active_ids': [ref('project_scrum_backlog_task0')], 'avtive_id': ref('project_scrum_backlog_task0')})
+    try:
+      self.assign_sprint(cr, uid, [ref("project_scrum_backlog_assign_sprint")], context=context)
+    except:
+      pass
