@@ -26,30 +26,17 @@ import time
 import base64
 import urllib2
 import openerp.release as release
+from tools.translate import _
+import netsvc
 
 edi_module = 'edi_import'
 
-def safe_unique_id(model, database_id):
-    """Generate a unique string to represent a (model,database id) pair
+def safe_unique_id(database_id, model, record_id):
+    """Generate a unique string to represent a (database id,model,record_id) pair
     without being too long, without revealing the database id, and
     with a very low probability of collisions.
-
-    Each EDI record and each relationship value are represented using a unique
-    database identifier. These database identifiers include the database unique
-    ID, as a way to uniquely refer to any record within any OpenERP instance,
-    without conflict.
-
-    For OpenERP records that have an existing "XML ID" (i.e. an entry in
-    ir.model.data), the EDI unique identifier for this record will be made of
-    "%s:%s" % (the database's UUID, the XML ID). The database's UUID MUST
-    NOT contain a colon characters (this is guaranteed by the UUID algorithm).
-
-    For OpenERP records that have no existing "XML ID", a new one should be
-    created during the EDI export. It is recommended that the generated XML ID
-    contains a readable reference to the record model, plus a unique value that
-    hides the database ID.
     """
-    msg = "%s-%s-%s" % (model, time.time(), database_id)
+    msg = "%s-%s-%s-%s" % (time.time(), database_id, model, record_id)
     digest = hashlib.sha1(msg).digest()
     digest = ''.join(chr(ord(x) ^ ord(y)) for (x,y) in zip(digest[:9], digest[9:-2]))
     # finally, use the b64-encoded folded digest as ID part of the unique ID:
@@ -70,14 +57,14 @@ class ir_edi_document(osv.osv):
     ]
     
     
-    def new_edi_token(self, record):
+    def new_edi_token(self, cr, uid, record):
         """
         Return a new, random unique token to identify an edi.document
         :param record: It's a object of browse_record of any model
         """
         db_uuid = self.pool.get('ir.config_parameter').get_param(cr, uid, 'database.uuid')
 
-        edi_token = hashlib.sha256('%s-%s-%s' % (time.time(), db_uuid, time.time())).hexdigest()
+        edi_token = hashlib.sha256('%s-%s-%s-%s' % (time.time(), db_uuid, record._name, record.id)).hexdigest()
         return edi_token
     
     def serialize(self, edi_documents):
@@ -123,8 +110,14 @@ class ir_edi_document(osv.osv):
 
         :param edi_dicts: list of edi_dict
         """
+        module_obj =self.pool.get('ir.module.module')
         res = []
         for edi_document in edi_documents:
+            module = edi_document.get('__module')
+            module_ids = module_obj.search(cr, uid, [('name','=',module),('state','not in',['uninstalled', 'uninstallable', 'to remove'])])
+            if not module_ids:
+                raise osv.except_osv(_('Invalid action !'),
+                            _('The document you are trying to import requires the OpenERP "%s" application. The OpenERP configuration assistant will help with this if you are connected as an administrator.')%(module))
             model = edi_document.get('__model')
             assert model, _('model should be provided in EDI Dict')
             model_obj = self.pool.get(model)
@@ -154,7 +147,7 @@ class ir_edi_document(osv.osv):
         exported_ids = []
         for record in records:
             document = self.generate_edi(cr, uid, [record], context)
-            token = self.new_edi_token(record)
+            token = self.new_edi_token(cr, uid, record)
             self.create(cr, uid, {
                          'name': token,
                          'document': document
@@ -193,6 +186,23 @@ class edi(object):
        specific behavior, based on the primitives provided by this superclass."""
 
     def edi_xml_id(self, cr, uid, record, context=None):
+        """
+        Generate a unique string to represent a pair of (the database's UUID, the XML ID).
+        Each EDI record and each relationship value are represented using a unique
+        database identifier. These database identifiers include the database unique
+        ID, as a way to uniquely refer to any record within any OpenERP instance,
+        without conflict.
+
+        For OpenERP records that have an existing "XML ID" (i.e. an entry in
+        ir.model.data), the EDI unique identifier for this record will be made of
+        "%s:%s" % (the database's UUID, the XML ID). The database's UUID MUST
+        NOT contain a colon characters (this is guaranteed by the UUID algorithm).
+
+        For OpenERP records that have no existing "XML ID", a new one should be
+        created during the EDI export. It is recommended that the generated XML ID
+        contains a readable reference to the record model, plus a unique value that
+        hides the database ID.
+        """
         model_data_pool = self.pool.get('ir.model.data')
         db_uuid = self.pool.get('ir.config_parameter').get_param(cr, uid, 'database.uuid')
 
@@ -202,14 +212,13 @@ class edi(object):
             xml_record = model_data_pool.browse(cr, uid, xml_record_id, context=context)
             uuid = '%s:%s' % (db_uuid, xml_record.name)
         else:
-            xml_id = safe_unique_id(model, db_uuid)
+            xml_id = safe_unique_id(db_uuid, record._name, record.id)
             uuid = '%s:%s' % (db_uuid, xml_id)
             xml_record_id = model_data_pool.create(cr, uid, {
                 'name': xml_id,
                 'model': record._name,
                 'module': uuid,
                 'res_id': record.id}, context=context)
-            
         return uuid
     
     def edi_metadata(self, cr, uid, records, context=None):
@@ -250,9 +259,9 @@ class edi(object):
                 })
             
             
-            db_uuid = self.edi_xml_id(cr, uid, record, context=context)
+            uuid = self.edi_xml_id(cr, uid, record, context=context)
             edi_dict = {
-                '__id': db_uuid,
+                '__id': uuid,
                 '__last_update': False, #record.write_date, #TODO: convert into UTC
             }
             if not context.get('o2m_export'):
@@ -320,7 +329,7 @@ class edi(object):
         dict_list = []
         
         for record in records:
-            dict_list.append(self.edi_o2m(cr, uid, [record], context=None))
+            dict_list.append(self.edi_m2o(cr, uid, [record], context=None))
       
         return dict_list
 
