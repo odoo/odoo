@@ -741,12 +741,13 @@ class function(_column):
     This callable implements the write operation for the function field
     and must have the following signature:
 
-    .. function:: fnct_inv(model, cr, uid, ids, field_name, field_value, fnct_inv_arg, context)
+    .. function:: fnct_inv(model, cr, uid, id, field_name, field_value, fnct_inv_arg, context)
 
         Callable that implements the ``write`` operation for the function field.
 
         :param orm model: model to which the field belongs (should be ``self`` for
                           a model method)
+        :param int id: the identifier of the object to write on
         :param str field_name: name of the field to set
         :param fnct_inv_arg: arbitrary value passed when declaring the function field
         :return: True
