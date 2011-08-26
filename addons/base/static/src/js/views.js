@@ -432,9 +432,23 @@ openerp.base.Sidebar = openerp.base.Widget.extend({
                     item.callback();
                 }
                 if (item.action) {
-                    item.action.flags = item.action.flags || {};
-                    item.action.flags.new_window = true;
-                    self.do_action(item.action);
+                    var ids = self.widget_parent.get_selected_ids();
+                    if (ids.length == 0) {
+                        //TODO niv: maybe show a warning?
+                        return false;
+                    }
+                    self.rpc("/base/action/load", {
+                        action_id: item.action.id,
+                        context: {
+                            active_id: ids[0],
+                            active_ids: ids,
+                            active_model: self.widget_parent.dataset.model
+                        }
+                    }, function(result) {
+                        result.result.flags = result.result.flags || {};
+                        result.result.flags.new_window = true;
+                        self.do_action(result.result);
+                    });
                 }
                 return false;
             });

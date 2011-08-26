@@ -441,6 +441,10 @@ openerp.base.FormView = openerp.base.View.extend( /** @lends openerp.base.FormVi
             values[key] = val;
         });
         return values;
+    },
+    get_selected_ids: function() {
+        var id = this.dataset.ids[this.dataset.index];
+        return id ? [id] : [];
     }
 });
 
