@@ -59,7 +59,7 @@ openerp.base.DataExport = openerp.base.Dialog.extend({
             if (import_comp) {
                 var params = {
                     import_compat: parseInt(import_comp)
-                }
+                };
                 self.rpc("/base/export/get_fields", { model: self.dataset.model, params: params}, self.on_show_data);
             }
         });
@@ -166,7 +166,7 @@ openerp.base.DataExport = openerp.base.Dialog.extend({
                             var params = {
                                 import_compat: parseInt(import_comp),
                                 parent_field_type : record['field_type']
-                            }
+                            };
                             self.rpc("/base/export/get_fields", {
                                 model: model,
                                 prefix: prefix,
@@ -201,7 +201,7 @@ openerp.base.DataExport = openerp.base.Dialog.extend({
                 var o2m_fld = self.$element.find("tr[id='treerow-" + record.id + "']").find('#tree-column');
                 o2m_fld.addClass("oe_export_readonlyfield");
             }
-            if ((record.required == true) || record.required == "True") {
+            if (record.required) {
                 var required_fld = self.$element.find("tr[id='treerow-" + record.id + "']").find('#tree-column');
                 required_fld.addClass("oe_export_requiredfield");
             }
@@ -210,7 +210,7 @@ openerp.base.DataExport = openerp.base.Dialog.extend({
             });
 
             self.$element.find("tr[id='treerow-" + record.id + "']").click(function(e) {
-                if (e.shiftKey == true) {
+                if (e.shiftKey) {
                     var frst_click, scnd_click = '';
                     if (self.row_index == 0) {
                         self.row_index = this.rowIndex;
@@ -218,14 +218,14 @@ openerp.base.DataExport = openerp.base.Dialog.extend({
                         $(frst_click).addClass("ui-selected");
                     } else {
                         if (this.rowIndex >=self.row_index) {
-                            for (i = (self.row_index-1); i < this.rowIndex; i++) {
+                            for (var i = (self.row_index-1); i < this.rowIndex; i++) {
                                 scnd_click = self.$element.find("tr[id^='treerow-']")[i];
                                 if (!$(scnd_click).find('#tree-column').hasClass("oe_export_readonlyfield")) {
                                     $(scnd_click).addClass("ui-selected");
                                 }
                             }
                         } else {
-                            for (i = (self.row_index-1); i >= (this.rowIndex-1); i--) {
+                            for (var i = (self.row_index-1); i >= (this.rowIndex-1); i--) {
                                 scnd_click = self.$element.find("tr[id^='treerow-']")[i];
                                 if (!$(scnd_click).find('#tree-column').hasClass("oe_export_readonlyfield")) {
                                     $(scnd_click).addClass("ui-selected");
@@ -236,37 +236,30 @@ openerp.base.DataExport = openerp.base.Dialog.extend({
                 }
                 self.row_index = this.rowIndex;
 
-                self.$element.find("tr[id='treerow-" + record.id + "']").keyup(function(e) {
+                self.$element.find("tr[id='treerow-" + record.id + "']").keyup(function() {
                     self.row_index = 0;
                 });
                 var o2m_selection = self.$element.find("tr[id='treerow-" + record.id + "']").find('#tree-column');
                 if ($(o2m_selection).hasClass("oe_export_readonlyfield")) {
                     return false;
                 }
-                var selected = self.$element.find("tr.ui-selected");
-                if ($(this).hasClass("ui-selected") && (e.ctrlKey == true)) {
-                    $(this).find('a').blur();
-                    $(this).removeClass("ui-selected");
-                } else if ($(this).hasClass("ui-selected") && (e.ctrlKey == false) && (e.shiftKey == false)) {
-                    selected.find('a').blur();
-                    selected.removeClass("ui-selected");
-                    $(this).find('a').focus();
-                    $(this).addClass("ui-selected");
-                } else if (!$(this).hasClass("ui-selected") && (e.ctrlKey == false) && (e.shiftKey == false)) {
-                    selected.find('a').blur();
-                    selected.removeClass("ui-selected");
-                    $(this).find('a').focus();
-                    $(this).addClass("ui-selected");
-                } else if (!$(this).hasClass("ui-selected") && (e.ctrlKey == true)) {
-                    $(this).find('a').focus();
-                    $(this).addClass("ui-selected");
+                if (e.ctrlKey) {
+                    if ($(this).hasClass('ui-selected')) {
+                        $(this).removeClass('ui-selected').find('a').blur();
+                    } else {
+                        $(this).addClass('ui-selected').find('a').focus();
+                    }
+                } else if (!e.shiftKey) {
+                    self.$element.find("tr.ui-selected")
+                            .removeClass("ui-selected").find('a').blur();
+                    $(this).addClass("ui-selected").find('a').focus();
                 }
                 return false;
             });
 
             self.$element.find("tr[id='treerow-" + record.id + "']").keydown(function(e) {
                 var keyCode = e.keyCode || e.which;
-                arrow = {left: 37, up: 38, right: 39, down: 40 };
+                var arrow = {left: 37, up: 38, right: 39, down: 40 };
                 switch (keyCode) {
                     case arrow.left:
                         if ($(this).find('img').attr('src') === '/base/static/src/img/collapse.gif') {
@@ -276,7 +269,7 @@ openerp.base.DataExport = openerp.base.Dialog.extend({
                     case arrow.up:
                         var elem = this;
                         $(elem).removeClass("ui-selected");
-                        while ($(elem).prev().is(":visible") == false) {
+                        while (!$(elem).prev().is(":visible")) {
                             elem = $(elem).prev();
                         }
                         if (!$(elem).prev().find('#tree-column').hasClass("oe_export_readonlyfield")) {
@@ -292,7 +285,7 @@ openerp.base.DataExport = openerp.base.Dialog.extend({
                     case arrow.down:
                         var elem = this;
                         $(elem).removeClass("ui-selected");
-                        while($(elem).next().is(":visible") == false) {
+                        while(!$(elem).next().is(":visible")) {
                             elem = $(elem).next();
                         }
                         if (!$(elem).next().find('#tree-column').hasClass("oe_export_readonlyfield")) {
@@ -302,7 +295,7 @@ openerp.base.DataExport = openerp.base.Dialog.extend({
                         break;
                 }
             });
-            self.$element.find("tr[id='treerow-" + record.id + "']").dblclick(function(e) {
+            self.$element.find("tr[id='treerow-" + record.id + "']").dblclick(function() {
                 var $o2m_selection = self.$element.find("tr[id^='treerow-" + record.id + "']").find('#tree-column');
                 if (!$o2m_selection.hasClass("oe_export_readonlyfield")) {
                     var field_id = $(this).find("a").attr("id");
