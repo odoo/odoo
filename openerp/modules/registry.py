@@ -82,7 +82,7 @@ class Registry(object):
 
         return res
 
-    def clear_caches
+    def clear_caches():
         """ Clear the caches
 
         This clears the caches associated to methods decorated with
@@ -165,7 +165,7 @@ class RegistryManager(object):
 
 
     @classmethod
-    def clear_caches(db_name)
+    def clear_caches(db_name):
         """ Clear the caches
 
         This clears the caches associated to methods decorated with
@@ -176,7 +176,7 @@ class RegistryManager(object):
         that would loads the given database if it was not already loaded.
         """
         if db_name in cls.registries:
-            del cls.registries[db_name].clear_caches()
+            cls.registries[db_name].clear_caches()
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
