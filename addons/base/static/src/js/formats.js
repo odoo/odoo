@@ -45,8 +45,8 @@ openerp.base.format_value = function (value, descriptor, value_if_empty) {
             if (typeof(value) == "string")
                 value = openerp.base.str_to_datetime(value);
             try {
-                return value.format(_.sprintf("%s %s", openerp.base._t.database.parameters.date_format, 
-                    openerp.base._t.database.parameters.time_format));
+                return value.toString(_.sprintf("%s %s", Date.CultureInfo.formatPatterns.shortDate, 
+                    Date.CultureInfo.formatPatterns.longTime));
             } catch (e) {
                 return value.format("%m/%d/%Y %H:%M:%S");
             }
@@ -55,7 +55,7 @@ openerp.base.format_value = function (value, descriptor, value_if_empty) {
             if (typeof(value) == "string")
                 value = openerp.base.str_to_date(value);
             try {
-                return value.format(openerp.base._t.database.parameters.date_format);
+                return value.toString(Date.CultureInfo.formatPatterns.shortDate);
             } catch (e) {
                 return value.format("%m/%d/%Y");
             }
@@ -63,7 +63,7 @@ openerp.base.format_value = function (value, descriptor, value_if_empty) {
             if (typeof(value) == "string")
                 value = openerp.base.str_to_time(value);
             try {
-                return value.format(openerp.base._t.database.parameters.time_format);
+                return value.toString(Date.CultureInfo.formatPatterns.longTime);
             } catch (e) {
                 return value.format("%H:%M:%S");
             }
@@ -108,17 +108,27 @@ openerp.base.parse_value = function (value, descriptor, value_if_empty) {
         case 'progressbar':
             return openerp.base.parse_value(value, {type: "float"});
         case 'datetime':
-            var tmp = Date.parse(value);
+            var tmp = Date.parseExact(value, _.sprintf("%s %s", Date.CultureInfo.formatPatterns.shortDate, 
+                    Date.CultureInfo.formatPatterns.longTime));
+            if (tmp !== null)
+                return tmp;
+            tmp = Date.parse(value);
             if (tmp !== null)
                 return tmp;
             throw value + " is not a valid datetime";
         case 'date':
-            var tmp = Date.parse(value);
+            var tmp = Date.parseExact(Date.CultureInfo.formatPatterns.shortDate);
+            if (tmp !== null)
+                return tmp;
+            tmp = Date.parse(value);
             if (tmp !== null)
                 return tmp;
             throw value + " is not a valid date";
         case 'time':
-            var tmp = Date.parse(value);
+            var tmp = Date.parseExact(Date.CultureInfo.formatPatterns.longTime);
+            if (tmp !== null)
+                return tmp;
+            tmp = Date.parse(value);
             if (tmp !== null)
                 return tmp;
             throw value + " is not a valid time";
