@@ -30,9 +30,6 @@ GNU Public Licence.
 (c) 2003-TODAY, Fabien Pinckaers - OpenERP s.a.
 """
 
-#----------------------------------------------------------
-# python imports
-#----------------------------------------------------------
 import logging
 import os
 import signal
@@ -45,139 +42,140 @@ import openerp
 __author__ = openerp.release.author
 __version__ = openerp.release.version
 
-if os.name == 'posix':
-    import pwd
-    # We DON't log this using the standard logger, because we might mess
-    # with the logfile's permissions. Just do a quick exit here.
-    if pwd.getpwuid(os.getuid())[0] == 'root' :
-        sys.stderr.write("Attempted to run OpenERP server as root. This is not good, aborting.\n")
+def check_root_user():
+    """ Exit if the process’s user is 'root' (on POSIX system)."""
+    if os.name == 'posix':
+        import pwd
+        if pwd.getpwuid(os.getuid())[0] == 'root' :
+            sys.stderr.write("Running as user 'root' is a security risk, aborting.\n")
+            sys.exit(1)
+
+def check_postgres_user():
+    """ Exit if the configured database user is 'postgres'.
+
+    This function assumes the configuration has been initialized.
+    """
+    config = openerp.tools.config
+    if config['db_user'] == 'postgres':
+        sys.stderr.write("Using the database user 'postgres' is a security risk, aborting.")
         sys.exit(1)
 
-#-----------------------------------------------------------------------
-# parse the command line
-#-----------------------------------------------------------------------
-openerp.tools.config.parse_config(sys.argv[1:])
-config = openerp.tools.config
+def report_configuration():
+    """ Log the server version and some configuration values.
 
-#----------------------------------------------------------
-# get logger
-#----------------------------------------------------------
-openerp.netsvc.init_logger()
-logger = logging.getLogger('server')
+    This function assumes the configuration has been initialized.
+    """
+    config = openerp.tools.config
+    logger = logging.getLogger('server')
+    logger.info("OpenERP version %s", __version__)
+    for name, value in [('addons paths', config['addons_path']),
+                        ('database hostname', config['db_host'] or 'localhost'),
+                        ('database port', config['db_port'] or '5432'),
+                        ('database user', config['db_user'])]:
+        logger.info("%s: %s", name, value)
 
-logger.info("OpenERP version - %s", __version__)
-for name, value in [('addons_path', config['addons_path']),
-                    ('database hostname', config['db_host'] or 'localhost'),
-                    ('database port', config['db_port'] or '5432'),
-                    ('database user', config['db_user'])]:
-    logger.info("%s - %s", name, value)
+def setup_pid_file():
+    """ Create a file with the process id written in it.
 
-# Don't allow if the connection to PostgreSQL done by postgres user
-if config['db_user'] == 'postgres':
-    logger.error("Connecting to the database as 'postgres' user is forbidden, as it present major security issues. Shutting down.")
-    sys.exit(1)
+    This function assumes the configuration has been initialized.
+    """
+    config = openerp.tools.config
+    if config['pidfile']:
+        fd = open(config['pidfile'], 'w')
+        pidtext = "%d" % (os.getpid())
+        fd.write(pidtext)
+        fd.close()
 
-#----------------------------------------------------------
-# init net service
-#----------------------------------------------------------
-logger.info('initialising distributed objects services')
+def preload_registry(dbname):
+    """ Preload a registry, and start the cron."""
+    db, pool = openerp.pooler.get_db_and_pool(dbname, update_module=config['init'] or config['update'], pooljobs=False)
+    pool.get('ir.cron').restart(db.dbname)
 
-#----------------------------------------------------------
-# Load and update databases if requested
-#----------------------------------------------------------
+def run_test_file(dbname, test_file):
+    """ Preload a registry, possibly run a test file, and start the cron."""
+    db, pool = openerp.pooler.get_db_and_pool(dbname, update_module=config['init'] or config['update'], pooljobs=False)
 
-if not ( config["stop_after_init"] or \
-    config["translate_in"] or \
-    config["translate_out"] ):
-    openerp.osv.osv.start_object_proxy()
-    openerp.service.web_services.start_web_services()
+    cr = db.cursor()
+    logger = logging.getLogger('server')
+    logger.info('loading test file %s', test_file)
+    openerp.tools.convert_yaml_import(cr, 'base', file(test_file), {}, 'test', True)
+    cr.rollback()
+    cr.close()
+
+def export_translation():
+    config = openerp.tools.config
+    dbname = config['db_name']
+    logger = logging.getLogger('server')
+
+    if config["language"]:
+        msg = "language %s" % (config["language"],)
+    else:
+        msg = "new language"
+    logger.info('writing translation file for %s to %s', msg,
+        config["translate_out"])
+
+    fileformat = os.path.splitext(config["translate_out"])[-1][1:].lower()
+    buf = file(config["translate_out"], "w")
+    cr = openerp.pooler.get_db(dbname).cursor()
+    openerp.tools.trans_export(config["language"],
+        config["translate_modules"] or ["all"], buf, fileformat, cr)
+    cr.close()
+    buf.close()
+
+    logger.info('translation file written successfully')
+
+def import_translation():
+    config = openerp.tools.config
+    context = {'overwrite': config["overwrite_existing_translations"]}
+    dbname = config['db_name']
+
+    cr = openerp.pooler.get_db(dbname).cursor()
+    openerp.tools.trans_load( cr, config["translate_in"], config["language"],
+        context=context)
+    openerp.tools.trans_update_res_ids(cr)
+    cr.commit()
+    cr.close()
+
+def start_services():
     http_server = openerp.service.http_server
     netrpc_server = openerp.service.netrpc_server
+
+    # Instantiate local services (this is a legacy design).
+    openerp.osv.osv.start_object_proxy()
+    # Export (for RPC) services.
+    openerp.service.web_services.start_web_services()
+
+    # Initialize the HTTP stack.
     http_server.init_servers()
     http_server.init_xmlrpc()
     http_server.init_static_http()
     netrpc_server.init_servers()
 
-if config['db_name']:
-    for dbname in config['db_name'].split(','):
-        db, pool = openerp.pooler.get_db_and_pool(dbname, update_module=config['init'] or config['update'], pooljobs=False)
-        cr = db.cursor()
+    # Start the main cron thread.
+    openerp.netsvc.start_agent()
 
-        if config["test_file"]:
-            logger.info('loading test file %s', config["test_file"])
-            openerp.tools.convert_yaml_import(cr, 'base', file(config["test_file"]), {}, 'test', True)
-            cr.rollback()
+    # Start the top-level servers threads (normally HTTP, HTTPS, and NETRPC).
+    openerp.netsvc.Server.startAll()
 
-        pool.get('ir.cron').restart(db.dbname)
-
-        cr.close()
-
-#----------------------------------------------------------
-# translation stuff
-#----------------------------------------------------------
-if config["translate_out"]:
-    if config["language"]:
-        msg = "language %s" % (config["language"],)
-    else:
-        msg = "new language"
-    logger.info('writing translation file for %s to %s', msg, config["translate_out"])
-
-    fileformat = os.path.splitext(config["translate_out"])[-1][1:].lower()
-    buf = file(config["translate_out"], "w")
-    dbname = config['db_name']
-    cr = openerp.pooler.get_db(dbname).cursor()
-    openerp.tools.trans_export(config["language"], config["translate_modules"] or ["all"], buf, fileformat, cr)
-    cr.close()
-    buf.close()
-
-    logger.info('translation file written successfully')
-    sys.exit(0)
-
-if config["translate_in"]:
-    context = {'overwrite': config["overwrite_existing_translations"]}
-    dbname = config['db_name']
-    cr = openerp.pooler.get_db(dbname).cursor()
-    openerp.tools.trans_load(cr,
-                     config["translate_in"], 
-                     config["language"],
-                     context=context)
-    openerp.tools.trans_update_res_ids(cr)
-    cr.commit()
-    cr.close()
-    sys.exit(0)
-
-#----------------------------------------------------------------------------------
-# if we don't want the server to continue to run after initialization, we quit here
-#----------------------------------------------------------------------------------
-if config["stop_after_init"]:
-    sys.exit(0)
-
-openerp.netsvc.start_agent()
-
-#----------------------------------------------------------
-# Launch Servers
-#----------------------------------------------------------
-
-LST_SIGNALS = ['SIGINT', 'SIGTERM']
-
-SIGNALS = dict(
-    [(getattr(signal, sign), sign) for sign in LST_SIGNALS]
-)
-
+# Variable keeping track of the number of calls to the signal handler defined
+# below. This variable is monitored by ``quit_on_signals()``.
 quit_signals_received = 0
 
-def handler(signum, frame):
-    """
-    :param signum: the signal number
+def signal_handler(sig, frame):
+    """ Signal handler: exit ungracefully on the second handled signal.
+
+    :param sig: the signal number
     :param frame: the interrupted stack frame or None
     """
     global quit_signals_received
     quit_signals_received += 1
     if quit_signals_received > 1:
+        # logging.shutdown was already called at this point.
         sys.stderr.write("Forced shutdown.\n")
         os._exit(0)
 
-def dumpstacks(signum, frame):
+def dumpstacks(sig, frame):
+    """ Signal handler: dump a stack trace for each existing thread."""
     # code from http://stackoverflow.com/questions/132058/getting-stack-trace-from-a-running-python-application#answer-2569696
     # modified for python 2.5 compatibility
     thread_map = dict(threading._active, **threading._limbo)
@@ -191,20 +189,33 @@ def dumpstacks(signum, frame):
                 code.append("  %s" % (line.strip()))
     logging.getLogger('dumpstacks').info("\n".join(code))
 
-for signum in SIGNALS:
-    signal.signal(signum, handler)
+def setup_signal_handlers():
+    """ Register the signal handler defined above. """
+    SIGNALS = map(lambda x: getattr(signal, "SIG%s" % x), "INT TERM".split())
+    map(lambda sig: signal.signal(sig, signal_handler), SIGNALS)
+    if os.name == 'posix':
+        signal.signal(signal.SIGQUIT, dumpstacks)
 
-if os.name == 'posix':
-    signal.signal(signal.SIGQUIT, dumpstacks)
+def quit_on_signals():
+    """ Wait for one or two signals then shutdown the server.
 
-def quit():
+    The first SIGINT or SIGTERM signal will initiate a graceful shutdown while
+    a second one if any will force an immediate exit.
+
+    """
+    # Wait for a first signal to be handled. (time.sleep will be interrupted
+    # by the signal handler.)
+    while quit_signals_received == 0:
+        time.sleep(60)
+
     openerp.netsvc.Agent.quit()
     openerp.netsvc.Server.quitAll()
+    config = openerp.tools.config
     if config['pidfile']:
         os.unlink(config['pidfile'])
-    logger = logging.getLogger('shutdown')
-    logger.info("Initiating OpenERP Server shutdown")
-    logger.info("Hit CTRL-C again or send a second signal to immediately terminate the server...")
+    logger = logging.getLogger('server')
+    logger.info("Initiating shutdown")
+    logger.info("Hit CTRL-C again or send a second signal to force the sutdown.")
     logging.shutdown()
 
     # manually join() all threads before calling sys.exit() to allow a second signal
@@ -219,19 +230,40 @@ def quit():
                 time.sleep(0.05)
     sys.exit(0)
 
-if config['pidfile']:
-    fd = open(config['pidfile'], 'w')
-    pidtext = "%d" % (os.getpid())
-    fd.write(pidtext)
-    fd.close()
+if __name__ == "__main__":
 
-openerp.netsvc.Server.startAll()
+    check_root_user()
+    openerp.tools.config.parse_config(sys.argv[1:])
+    check_postgres_user()
+    openerp.netsvc.init_logger()
+    report_configuration()
 
-logger.info('OpenERP server is running, waiting for connections...')
+    config = openerp.tools.config
 
-while quit_signals_received == 0:
-    time.sleep(60)
+    if config["test_file"]:
+        run_test_file(config['db_name'], config['test_file'])
+        sys.exit(0)
 
-quit()
+    if config["translate_out"]:
+        export_translation()
+        sys.exit(0)
+
+    if config["translate_in"]:
+        import_translation()
+        sys.exit(0)
+
+    if config['db_name']:
+        for dbname in config['db_name'].split(','):
+            preload_registry(dbname)
+
+    if config["stop_after_init"]:
+        sys.exit(0)
+
+    setup_pid_file()
+    setup_signal_handlers()
+    start_services()
+    logger = logging.getLogger('server')
+    logger.info('OpenERP server is running, waiting for connections...')
+    quit_on_signals()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
