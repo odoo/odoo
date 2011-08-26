@@ -2,11 +2,12 @@
 <openerp>
 <data noupdate="0">
 
-    <record id="group_mrp_manager" model="res.groups">
-        <field name="name">Manufacturing / Manager</field>
-    </record>
     <record id="group_mrp_user" model="res.groups">
         <field name="name">Manufacturing / User</field>
+    </record>
+    <record id="group_mrp_manager" model="res.groups">
+        <field name="name">Manufacturing / Manager</field>
+        <field name="implied_ids" eval="[(4, ref('group_mrp_user'))]"/>
     </record>
 
     <!-- restrict access to menu -->

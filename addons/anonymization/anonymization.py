@@ -240,10 +240,10 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
 
     _columns = {
         'name': fields.char(size='64', string='File Name'),
-        'summary': fields.function(_get_summary, method=True, type='text', string='Summary'),
+        'summary': fields.function(_get_summary, type='text', string='Summary'),
         'file_export': fields.binary(string='Export'),
         'file_import': fields.binary(string='Import'),
-        'state': fields.function(_get_state, method=True, string='State', type='selection', selection=ANONYMIZATION_STATES, readonly=False),
+        'state': fields.function(_get_state, string='State', type='selection', selection=ANONYMIZATION_STATES, readonly=False),
         'msg': fields.text(string='Message'),
     }
 

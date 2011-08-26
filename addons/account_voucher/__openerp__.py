@@ -23,6 +23,7 @@
     "name" : "Accounting Voucher Entries",
     "version" : "1.0",
     "author" : 'OpenERP SA',
+    'complexity': "normal",
     "description": """
 Account Voucher module includes all the basic requirements of Voucher Entries for Bank, Cash, Sales, Purchase, Expanse, Contra, etc.
 ====================================================================================================================================

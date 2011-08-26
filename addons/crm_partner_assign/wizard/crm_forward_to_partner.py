@@ -20,11 +20,9 @@
 #
 ##############################################################################
 
-import base64
 import time
 import re
 from osv import osv, fields
-import tools
 from tools.translate import _
 
 class crm_lead_forward_to_partner(osv.osv_memory):
