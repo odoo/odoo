@@ -8,7 +8,7 @@
     categ_id: product.product_category_7
     cost_method: standard
     mes_type: fixed
-    name: Partners Training
+    name: Partners Technical Training
     procure_method: make_to_order
     supply_method: produce
     type: service
@@ -30,7 +30,7 @@
     order_line:
       - state: draft
         delay: 7.0
-        name: Partners Training
+        name: Partners Technical Training
         price_unit: 1.0
         product_id: product_product_partnerstraining0
         product_uom: product.uom_day
@@ -67,4 +67,13 @@
     order = order_obj.browse(cr, uid, ref('sale_order_so0')) 
     task_id = self.search(cr, uid, [('name','like', order.name)]) 
     assert task_id, 'No Task is created!'
-
+-
+  Now I am Closing the Created Task Vis Procurment .
+-
+  !python {model: project.task}: |
+    order_obj = self.pool.get('sale.order')
+    order = order_obj.browse(cr, uid, ref('sale_order_so0')) 
+    task_id = self.search(cr, uid, [('name','like', order.name)])
+    if task_id:
+      self.do_close(cr, uid, task_id)
+      self.do_cancel(cr, uid, task_id)
