@@ -11,7 +11,7 @@
     
     
 - 
-  Open the planning
+  Open the 'Project Planning'
 - 
   !python {model: report_account_analytic.planning}: |
     self.action_open(cr, uid, [ref("report_account_analytic_planning_projectplanning0")],
@@ -20,13 +20,13 @@
       ref("project_planning.menu_report_account_analytic_planning"), "search_default_user_id":
       1, "project_id": False, "department_id": False, })
 -
-   Check if planning in open state
+   Check if 'Project Planning' in open state
 -
    !assert {model: report_account_analytic.planning, id: report_account_analytic_planning_projectplanning0, string: Planning in open state}:     
      - state == "open"
 
 - 
-  Cancel the planning
+  Cancel the 'Project Planning'
 - 
   !python {model: report_account_analytic.planning}: |
     self.action_cancel(cr, uid, [ref("report_account_analytic_planning_projectplanning0")],
@@ -35,13 +35,13 @@
       ref("project_planning.menu_report_account_analytic_planning"), "search_default_user_id":
       1, "project_id": False, "department_id": False, })
 -
-   Check if planning in cancel state
+   Check if 'Project Planning' in cancel state
 -
    !assert {model: report_account_analytic.planning, id: report_account_analytic_planning_projectplanning0, string: Planning in cancel state}:     
      - state == "cancel"    
     
 - 
-  Reopen the planning
+  Reopen the 'Project Planning'
 - 
   !python {model: report_account_analytic.planning}: |
     self.action_draft(cr, uid, [ref("report_account_analytic_planning_projectplanning0")],
@@ -50,13 +50,13 @@
       ref("project_planning.menu_report_account_analytic_planning"), "search_default_user_id":
       1, "project_id": False, "department_id": False, })
 -
-   Check if planning in draft state
+   Check if 'Project Planning' in draft state
 -
    !assert {model: report_account_analytic.planning, id: report_account_analytic_planning_projectplanning0, string: Planning in draft state}:     
      - state == "draft"   
     
 - 
-  Open the planning
+  Open the 'Project Planning'
 - 
   !python {model: report_account_analytic.planning}: |
     self.action_open(cr, uid, [ref("report_account_analytic_planning_projectplanning0")],
@@ -65,13 +65,13 @@
       ref("project_planning.menu_report_account_analytic_planning"), "search_default_user_id":
       1, "project_id": False, "department_id": False, })
 -
-   Check if planning in open state
+   Check if 'Project Planning' in open state
 -
    !assert {model: report_account_analytic.planning, id: report_account_analytic_planning_projectplanning0, string: Planning in open state}:     
      - state == "open"    
     
 - 
-  Close the planning
+  Close the 'Project Planning'
 - 
   !python {model: report_account_analytic.planning}: |
     self.action_done(cr, uid, [ref("report_account_analytic_planning_projectplanning0")],
@@ -79,8 +79,35 @@
       "tz": False, "active_model": "ir.ui.menu", "section_id": False, "active_id":
       ref("project_planning.menu_report_account_analytic_planning"), "search_default_user_id":
       1, "project_id": False, "department_id": False, })
+    name = 'Project Planning'
+    self._get_total_planned(cr, uid, [ref("report_account_analytic_planning_projectplanning0")], name, args={},context=None)
+    self._get_total_free(cr, uid, [ref("report_account_analytic_planning_projectplanning0")], name, args={},context=None)
+- 
+  Create analytic planning report
+- 
+  !record {model: report_account_analytic.planning.line, id: report_account_analytic_planning_line}:
+    planning_id : report_account_analytic_planning_projectplanning0
+    amount : 100
+    amount_unit : product.product_uom_unit
+- 
+  Create account analytic report for planning 'Project Planning'
+- 
+  !python {model: report_account_analytic.planning.line}: |
+    self.name_get(cr, uid, [ref("report_account_analytic_planning_line")],context=None)
+- 
+  Add project line id in project task report.
+- 
+  !record {model: project.task, id: report_account_analytic_planning_line}:
+    planning_line_id: report_account_analytic_planning_line
+- 
+  Now, search palnning for the task
+- 
+  !python {model: project.task}: |
+    context.update({'planning' : ref("report_account_analytic_planning_projectplanning0")})
+    self.search(cr, uid, args={}, offset=0, limit=None, order=None, context=context, count=False)
+
 -
-   Check if planning in done state
+   Check if 'Project Planning' in done state
 -
    !assert {model: report_account_analytic.planning, id: report_account_analytic_planning_projectplanning0, string: Planning in done state}:     
-     - state == "done"
+     - state == "done"     
