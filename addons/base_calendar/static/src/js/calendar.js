@@ -327,6 +327,10 @@ openerp.base_calendar.CalendarView = openerp.base.View.extend({
         if (this.sidebar) {
             this.sidebar.$element.hide();
         }
+    },
+    get_selected_ids: function() {
+        // no way to select a record anyway
+        return [];
     }
 });
 
