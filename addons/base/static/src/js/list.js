@@ -599,8 +599,8 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
         });
     },
     get_selected_ids: function() {
-        //TODO niv: this is false
-        debugger;
+        var ids = this.groups.get_selection().ids;
+        return ids;
     }
 });
 openerp.base.ListView.List = openerp.base.Class.extend( /** @lends openerp.base.ListView.List# */{
