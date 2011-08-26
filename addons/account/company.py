@@ -24,6 +24,7 @@ from osv import fields, osv
 class res_company(osv.osv):
     _inherit = "res.company"
     _columns = {
+        'paypal_account': fields.char("Paypal Account", size=128, help="the paypal username (usually email)"),
         'overdue_msg': fields.text('Overdue Payments Message', translate=True),
         'property_reserve_and_surplus_account': fields.property(
             'account.account',

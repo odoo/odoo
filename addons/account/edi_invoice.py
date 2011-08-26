@@ -114,7 +114,6 @@ class account_invoice(osv.osv, ir_edi.edi):
         return edi_doc_list
 
     def edi_import(self, cr, uid, edi_document, context=None):
-    
         """ During import, invoices will import the company that is provided in the invoice as
             a new partner (e.g. supplier company for a customer invoice will be come a supplier
             record for the new invoice.
@@ -230,7 +229,6 @@ class account_invoice(osv.osv, ir_edi.edi):
         if journal_id:
             journal = account_journal_pool.browse(cr, uid, journal_id, context=context)
         edi_document['journal_id'] = journal and  self.edi_m2o(cr, uid, journal, context=context) or False
-
         # for invoice lines, the account_id value should be taken from the product's default, i.e. from the default category, as it will not be provided.
         for edi_invoice_line in edi_document.get('invoice_line', []):
             product_id = edi_invoice_line.get('product_id', False)
