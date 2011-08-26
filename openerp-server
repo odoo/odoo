@@ -43,7 +43,7 @@ __author__ = openerp.release.author
 __version__ = openerp.release.version
 
 def check_root_user():
-    """ Exit if the process’s user is 'root' (on POSIX system)."""
+    """ Exit if the process's user is 'root' (on POSIX system)."""
     if os.name == 'posix':
         import pwd
         if pwd.getpwuid(os.getuid())[0] == 'root' :
