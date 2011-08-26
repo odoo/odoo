@@ -107,9 +107,6 @@ class dummy_cache(object):
     def clear(self, *l, **kw):
         pass
 
-#ormcache = dummy_cache
-cache = dummy_cache
-
 if __name__ == '__main__':
 
     class A():
