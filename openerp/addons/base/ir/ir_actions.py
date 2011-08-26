@@ -936,10 +936,9 @@ class act_client(osv.osv):
             for record in self.browse(cr, uid, ids, context=context)
         ])
 
-    def _set_params(self, cr, uid, ids, field_name, field_value, arg, context):
+    def _set_params(self, cr, uid, id, field_name, field_value, arg, context):
         assert isinstance(field_value, dict), "params can only be dictionaries"
-        for record in self.browse(cr, uid, ids, context=context):
-            record.write({field_name: repr(field_value)})
+        self.write(cr, uid, id, {'params_store': repr(field_value)}, context=context)
 
     _columns = {
         'tag': fields.char('Client action tag', size=64, required=True,
