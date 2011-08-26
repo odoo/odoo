@@ -441,6 +441,10 @@ openerp.base.FormView = openerp.base.View.extend( /** @lends openerp.base.FormVi
             values[key] = val;
         });
         return values;
+    },
+    get_selected_ids: function() {
+        var id = this.dataset.ids[this.dataset.index];
+        return id ? [id] : [];
     }
 });
 
@@ -1558,12 +1562,11 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
             action_id: related[2].id,
             context: {
                 active_id: self.value[0],
-                active_ids: self.value[1],
+                active_ids: [self.value[0]],
                 active_model: self.field.relation
             }
         }, function(result) {
-            //TODO niv
-            debugger;
+            self.do_action(result.result);
         });
     }
 });
