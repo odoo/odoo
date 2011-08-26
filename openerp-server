@@ -51,15 +51,20 @@ def check_root_user():
             sys.exit(1)
 
 def check_postgres_user():
-    """ Exit if the configured database user is 'postgres'."""
+    """ Exit if the configured database user is 'postgres'.
+
+    This function assumes the configuration has been initialized.
+    """
     config = openerp.tools.config
-    logger = logging.getLogger('server')
     if config['db_user'] == 'postgres':
         sys.stderr.write("Using the database user 'postgres' is a security risk, aborting.")
         sys.exit(1)
 
 def report_configuration():
-    """ Log the server version and some configuration values."""
+    """ Log the server version and some configuration values.
+
+    This function assumes the configuration has been initialized.
+    """
     config = openerp.tools.config
     logger = logging.getLogger('server')
     logger.info("OpenERP version %s", __version__)
@@ -69,8 +74,11 @@ def report_configuration():
                         ('database user', config['db_user'])]:
         logger.info("%s: %s", name, value)
 
-# TODO is a \n better?
 def setup_pid_file():
+    """ Create a file with the process id written in it.
+
+    This function assumes the configuration has been initialized.
+    """
     config = openerp.tools.config
     if config['pidfile']:
         fd = open(config['pidfile'], 'w')
@@ -78,19 +86,21 @@ def setup_pid_file():
         fd.write(pidtext)
         fd.close()
 
-def run_registry(dbname):
+def preload_registry(dbname):
+    """ Preload a registry, and start the cron."""
+    db, pool = openerp.pooler.get_db_and_pool(dbname, update_module=config['init'] or config['update'], pooljobs=False)
+    pool.get('ir.cron').restart(db.dbname)
+
+def run_test_file(dbname, test_file):
     """ Preload a registry, possibly run a test file, and start the cron."""
     db, pool = openerp.pooler.get_db_and_pool(dbname, update_module=config['init'] or config['update'], pooljobs=False)
 
-    if config["test_file"]:
-        cr = db.cursor()
-        logger = logging.getLogger('server')
-        logger.info('loading test file %s', config["test_file"])
-        openerp.tools.convert_yaml_import(cr, 'base', file(config["test_file"]), {}, 'test', True)
-        cr.rollback()
-        cr.close()
-
-    pool.get('ir.cron').restart(db.dbname)
+    cr = db.cursor()
+    logger = logging.getLogger('server')
+    logger.info('loading test file %s', test_file)
+    openerp.tools.convert_yaml_import(cr, 'base', file(test_file), {}, 'test', True)
+    cr.rollback()
+    cr.close()
 
 def export_translation():
     config = openerp.tools.config
@@ -147,6 +157,8 @@ def start_services():
     # Start the top-level servers threads (normally HTTP, HTTPS, and NETRPC).
     openerp.netsvc.Server.startAll()
 
+# Variable keeping track of the number of calls to the signal handler defined
+# below. This variable is monitored by ``quit_on_signals()``.
 quit_signals_received = 0
 
 def signal_handler(sig, frame):
@@ -178,6 +190,7 @@ def dumpstacks(sig, frame):
     logging.getLogger('dumpstacks').info("\n".join(code))
 
 def setup_signal_handlers():
+    """ Register the signal handler defined above. """
     SIGNALS = map(lambda x: getattr(signal, "SIG%s" % x), "INT TERM".split())
     map(lambda sig: signal.signal(sig, signal_handler), SIGNALS)
     if os.name == 'posix':
@@ -227,6 +240,10 @@ if __name__ == "__main__":
 
     config = openerp.tools.config
 
+    if config["test_file"]:
+        run_test_file(config['db_name'], config['test_file'])
+        sys.exit(0)
+
     if config["translate_out"]:
         export_translation()
         sys.exit(0)
@@ -237,7 +254,7 @@ if __name__ == "__main__":
 
     if config['db_name']:
         for dbname in config['db_name'].split(','):
-            run_registry(dbname)
+            preload_registry(dbname)
 
     if config["stop_after_init"]:
         sys.exit(0)
