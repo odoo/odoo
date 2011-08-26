@@ -140,7 +140,7 @@ class WebClient(openerpweb.Controller):
         return content
 
     @openerpweb.httprequest
-    def home(self, req, s_action=None):
+    def home(self, req, s_action=None, **kw):
         # script tags
         jslist = ['/base/webclient/js']
         if req.debug:
