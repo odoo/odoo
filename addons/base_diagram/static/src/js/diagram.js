@@ -198,7 +198,6 @@ openerp.base_diagram.DiagramView = openerp.base.View.extend({
 	        }).dblclick(function() {
 	            var $this = jQuery(this);
 	            self.add_edit_node($this.attr('id'), self.node);
-//	            self.search_activity($this.attr('id'), $this.attr('name'), $this.attr('kind'))
 	        });
 	        
 	        //Text Node Event
@@ -209,7 +208,6 @@ openerp.base_diagram.DiagramView = openerp.base.View.extend({
 	        }).dblclick(function() {
 	            var $this = jQuery(this);
 	            self.add_edit_node($this.attr('id'), self.node);
-//	            self.search_activity($this.attr('id'), $this.attr('name'), $this.attr('kind'))
 	        });
 	        return set;
         }
@@ -219,10 +217,13 @@ openerp.base_diagram.DiagramView = openerp.base.View.extend({
             dia.addNode(res_node['name'],{node: res_node,render: renderer});
         }
         
-        for(cr in res_connectors) {
-        	var res_connector = res_connectors[cr];
-        	dia.addEdge(res_connector['source'], res_connector['destination'], {directed : true});
-        }
+        // Set Ides for Path(Edges)
+        var edge_ids = [];
+        
+        $.each(res_connectors, function(index, connector) {
+        	edge_ids.push(index)
+        	dia.addEdge(connector['source'], connector['destination'], {directed : true});
+        });
         
         var layouter = new Graph.Layout.Spring(dia);
         layouter.layout();
@@ -232,14 +233,10 @@ openerp.base_diagram.DiagramView = openerp.base.View.extend({
         var renderer = new Graph.Renderer.Raphael('dia-canvas', dia, $('div#dia-canvas').width(), $('div#dia-canvas').height());
         renderer.draw();
         
-        //Path(Edges)
-        jQuery('path',renderer.r.canvas).each(function(index, path) {
-        	
-        	$(this).attr({
-        		'd_id': res_connectors[index+1].d_id,
-        		'id': res_connectors[index+1].id,
-        		's_id': res_connectors[index+1].s_id,
-    		})
+      //Path(Edges)
+        $.each(dia.edges, function(index, edge) {
+        	if(edge.connection)
+        		edge.connection.fg.node.id = edge_ids[index];
         });
         jQuery('path',renderer.r.canvas).dblclick(function() {
         	self.add_edit_node(this.id, self.connector)
