@@ -70,15 +70,10 @@ class Registry(object):
 
         res = []
 
-        # Instanciate classes registered through their constructor and
-        # add them to the pool.
-        for klass in openerp.osv.orm.module_class_list.get(module, []):
-            res.append(klass.createInstance(self, cr))
-
-        # Instanciate classes automatically discovered.
+        # Instantiate registered classes (via metamodel discovery or via explicit
+        # constructor call), and add them to the pool.
         for cls in openerp.osv.orm.MetaModel.module_to_models.get(module, []):
-            if cls not in openerp.osv.orm.module_class_list.get(module, []):
-                res.append(cls.createInstance(self, cr))
+            res.append(cls.createInstance(self, cr))
 
         return res
 
