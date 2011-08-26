@@ -65,7 +65,10 @@ More information on the methodology:
         "board_project_scrum_view.xml",
     ],
     'demo_xml': ['project_scrum_demo.xml'],
-    'test': ['test/project_scrum_report.yml'],
+    'test': [
+            'test/project_scrum_report.yml',
+            'test/scrum_sprint_test.yml'
+            ],
     'installable': True,
     'active': False,
     'certificate' : '00736750152003010781',
