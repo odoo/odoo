@@ -1142,8 +1142,7 @@ class Export(View):
 
         for index, field in enumerate(fields_order):
             value = fields[field]
-            record = {}
-            if import_compat and value.get('readonly', False):
+            if import_compat and value.get('readonly'):
                 ok = False
                 for sl in value.get('states', {}).values():
                     for s in sl:
@@ -1152,15 +1151,16 @@ class Export(View):
 
             id = prefix + (prefix and '/'or '') + field
             nm = name + (name and '/' or '') + value['string']
-            record.update(id=id, string= nm, action='javascript: void(0)',
-                          target=None, icon=None, children=[], field_type=value.get('type',False), required=value.get('required', False))
+            record = {'id': id, 'string': nm, 'children': [],
+                      'field_type': value.get('type', False),
+                      'required': value.get('required', False)}
             records.append(record)
 
-            if len(nm.split('/')) < 3 and value.get('relation', False):
+            if len(nm.split('/')) < 3 and value.get('relation'):
                 if import_compat:
                     ref = value.pop('relation')
                     cfields = self.fields_get(req, ref)
-                    if (value['type'] == 'many2many'):
+                    if value['type'] == 'many2many':
                         record['children'] = []
                         record['params'] = {'model': ref, 'prefix': id, 'name': nm}
 
