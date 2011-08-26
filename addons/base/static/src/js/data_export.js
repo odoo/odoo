@@ -5,6 +5,8 @@ openerp.base.DataExport = openerp.base.Dialog.extend({
     init: function(parent, dataset) {
         this._super(parent);
         this.dataset = dataset;
+        this.exports = new openerp.base.DataSetSearch(
+            this, 'ir.exports', this.dataset.get_context());
     },
     start: function() {
         var self = this;
@@ -68,30 +70,33 @@ openerp.base.DataExport = openerp.base.Dialog.extend({
         var self = this;
         if (self.$element.find('#saved_export_list').is(':hidden')) {
             self.$element.find('#ExistsExportList').show();
-        } else {
-            this.rpc('/base/export/exist_export_lists', { 'model': this.dataset.model}, function(export_list) {
-                if (export_list.length) {
-                    self.$element.find('#ExistsExportList').append(QWeb.render('Exists.ExportList', {'existing_exports': export_list}));
-                    self.$element.find('#saved_export_list').change(function() {
-                        self.$element.find('#fields_list option').remove();
-                        var export_id = self.$element.find('#saved_export_list option:selected').val();
-                        if (export_id) {
-                            self.rpc('/base/export/namelist', {'model': self.dataset.model, export_id: parseInt(export_id)}, self.do_load_export_field);
-                        }
-                    });
-                    self.$element.find('#delete_export_list').click(function() {
-                        var select_exp = self.$element.find('#saved_export_list option:selected');
-                        if (select_exp.val()) {
-                            self.rpc('/base/export/delete_export', { export_id: parseInt(select_exp.val())}, {});
-                            select_exp.remove();
-                            if (self.$element.find('#saved_export_list option').length <= 1) {
-                                self.$element.find('#ExistsExportList').hide();
-                            }
-                        }
-                    });
+            return;
+        }
+        this.exports.read_slice(['name'], {
+            domain: [['resource', '=', this.dataset.model]]
+        }, function (export_list) {
+            if (!export_list.length) {
+                return;
+            }
+            self.$element.find('#ExistsExportList').append(QWeb.render('Exists.ExportList', {'existing_exports': export_list}));
+            self.$element.find('#saved_export_list').change(function() {
+                self.$element.find('#fields_list option').remove();
+                var export_id = self.$element.find('#saved_export_list option:selected').val();
+                if (export_id) {
+                    self.rpc('/base/export/namelist', {'model': self.dataset.model, export_id: parseInt(export_id)}, self.do_load_export_field);
                 }
             });
-        }
+            self.$element.find('#delete_export_list').click(function() {
+                var select_exp = self.$element.find('#saved_export_list option:selected');
+                if (select_exp.val()) {
+                    self.exports.unlink([parseInt(select_exp.val(), 10)]);
+                    select_exp.remove();
+                    if (self.$element.find('#saved_export_list option').length <= 1) {
+                        self.$element.find('#ExistsExportList').hide();
+                    }
+                }
+            });
+        });
     },
     do_load_export_field: function(field_list) {
         var export_node = this.$element.find("#fields_list");
@@ -123,23 +128,32 @@ openerp.base.DataExport = openerp.base.Dialog.extend({
     },
     do_save_export_list: function(value) {
         var self = this;
-        var export_field = self.get_fields();
-        if (export_field.length) {
-            self.rpc("/base/export/save_export_lists", {"model": self.dataset.model, "name":value, "field_list":export_field}, function(exp_id) {
-                if (exp_id) {
-                    if (self.$element.find("#saved_export_list").length > 0) {
-                        self.$element.find("#saved_export_list").append(new Option(value, exp_id));
-                    } else {
-                        self.on_show_exists_export_list();
-                    }
-                    if (self.$element.find("#saved_export_list").is(":hidden")) {
-                        self.on_show_exists_export_list();
-                    }
-                }
-            });
-            self.on_show_save_list();
-            self.$element.find("#fields_list option").remove();
+        var fields = self.get_fields();
+        if (!fields.length) {
+            return;
         }
+        this.exports.create({
+            name: value,
+            resource: this.dataset.model,
+            export_fields: _(fields).map(function (field) {
+                return [0, 0, {name: field}];
+            })
+        }, function (export_list_id) {
+            if (!export_list_id) {
+                return;
+            }
+            if (self.$element.find("#saved_export_list").length > 0) {
+                self.$element.find("#saved_export_list").append(
+                        new Option(value, export_list_id));
+            } else {
+                self.on_show_exists_export_list();
+            }
+            if (self.$element.find("#saved_export_list").is(":hidden")) {
+                self.on_show_exists_export_list();
+            }
+        });
+        this.on_show_save_list();
+        this.$element.find("#fields_list option").remove();
     },
     on_click: function(id, result) {
         var self = this;

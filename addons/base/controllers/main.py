@@ -1195,23 +1195,6 @@ class Export(View):
         return records
 
     @openerpweb.jsonrequest
-    def save_export_lists(self, req, name, model, field_list):
-        result = {'resource':model, 'name':name, 'export_fields': []}
-        for field in field_list:
-            result['export_fields'].append((0, 0, {'name': field}))
-        return req.session.model("ir.exports").create(result, req.session.eval_context(req.context))
-
-    @openerpweb.jsonrequest
-    def exist_export_lists(self, req, model):
-        export_model = req.session.model("ir.exports")
-        return export_model.read(export_model.search([('resource', '=', model)]), ['name'])
-
-    @openerpweb.jsonrequest
-    def delete_export(self, req, export_id):
-        req.session.model("ir.exports").unlink(export_id, req.session.eval_context(req.context))
-        return True
-
-    @openerpweb.jsonrequest
     def namelist(self,req,  model, export_id):
 
         result = self.get_data(req, model, req.session.eval_context(req.context))
