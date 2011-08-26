@@ -1,0 +1,133 @@
+# Finnish translation for openobject-addons
+# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"PO-Revision-Date: 2011-06-22 09:30+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Finnish <fi@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2011-06-23 04:56+0000\n"
+"X-Generator: Launchpad (build 13168)\n"
+
+#. module: project_mrp
+#: model:process.node,note:project_mrp.process_node_procuretasktask0
+msgid "For each product, on type service and on order"
+msgstr "Jokaiselle tuotteelle, pavelutyyppinen joka on tilattu."
+
+#. module: project_mrp
+#: model:process.transition,name:project_mrp.process_transition_procuretask0
+msgid "Procurement Task"
+msgstr "Hankintatehtävä"
+
+#. module: project_mrp
+#: model:ir.module.module,shortdesc:project_mrp.module_meta_information
+msgid "Procurement and Project Management integration"
+msgstr "Hankinnan ja projektinhallinnan integraatio"
+
+#. module: project_mrp
+#: model:process.transition,note:project_mrp.process_transition_createtask0
+msgid "Product type is service, then its creates the task."
+msgstr "Tuotteen tyyppi on palvelu, luodaan tehtävä."
+
+#. module: project_mrp
+#: model:process.transition,note:project_mrp.process_transition_procuretask0
+msgid "if product type is 'service' then it creates the task."
+msgstr "jos tuotteen tyyppi on 'palvelu' niin luo tehtävän."
+
+#. module: project_mrp
+#: constraint:project.task:0
+msgid "Error ! You cannot create recursive tasks."
+msgstr "Virhe ! Et voi luoda rekursiivisiä tehtäviä."
+
+#. module: project_mrp
+#: model:ir.model,name:project_mrp.model_product_product
+msgid "Product"
+msgstr "Tuote"
+
+#. module: project_mrp
+#: constraint:product.product:0
+msgid "Error: Invalid ean code"
+msgstr "Virhe: Väärä EAN-koodi"
+
+#. module: project_mrp
+#: field:product.product,project_id:0
+msgid "Project"
+msgstr "Projekti"
+
+#. module: project_mrp
+#: model:ir.model,name:project_mrp.model_procurement_order
+#: field:project.task,procurement_id:0
+msgid "Procurement"
+msgstr "Hankinta"
+
+#. module: project_mrp
+#: model:ir.model,name:project_mrp.model_project_task
+#: model:process.node,name:project_mrp.process_node_mrptask0
+#: model:process.node,name:project_mrp.process_node_procuretasktask0
+#: field:procurement.order,task_id:0
+msgid "Task"
+msgstr "Tehtävä"
+
+#. module: project_mrp
+#: model:process.node,note:project_mrp.process_node_mrptask0
+msgid "A task is created to provide the service."
+msgstr "Tehtävä on luotu tuottamaan palvelu"
+
+#. module: project_mrp
+#: model:process.transition,name:project_mrp.process_transition_ordertask0
+msgid "Order Task"
+msgstr "Tilaustehtävä"
+
+#. module: project_mrp
+#: model:process.node,name:project_mrp.process_node_saleordertask0
+msgid "Sale Order Task"
+msgstr "Myyntitilaustehtävä"
+
+#. module: project_mrp
+#: model:process.transition,name:project_mrp.process_transition_createtask0
+msgid "Create Task"
+msgstr "Luo tehtävä"
+
+#. module: project_mrp
+#: model:ir.module.module,description:project_mrp.module_meta_information
+msgid ""
+"\n"
+"This module creates a link between procurement orders\n"
+"containing \"service\" lines and project management tasks.\n"
+"\n"
+"When installed, this module will automatically create a new task\n"
+"for each procurement order line, when the corresponding product\n"
+"meets the following characteristics:\n"
+"  * Type = Service\n"
+"  * Procurement method (Order fulfillment) = MTO (make to order)\n"
+"  * Supply/Procurement method = Produce\n"
+"\n"
+"The new task is created outside of any existing project, but\n"
+"can be added to a project manually.\n"
+"\n"
+"When the project task is completed or cancelled, the workflow of the "
+"corresponding\n"
+"procurement line is updated accordingly.\n"
+"\n"
+"This module is useful to be able to invoice services based on tasks\n"
+"automatically created via sale orders.\n"
+"\n"
+msgstr ""
+
+#. module: project_mrp
+#: model:process.transition,note:project_mrp.process_transition_ordertask0
+msgid "If procurement method is Make to order and supply method is produce"
+msgstr "Jos hankintametodi on tee tilaukseen ja toimitusmetodi on tuota"
+
+#. module: project_mrp
+#: model:process.node,note:project_mrp.process_node_saleordertask0
+msgid "In case you sell services on sale order"
+msgstr "tapauksessa jossa myyt palveluja myyntitilauksella"

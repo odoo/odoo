@@ -92,9 +92,9 @@ class mrp_production_workcenter_line(osv.osv):
                                        "* When work order is in running mode, during that time if user wants to stop or to make changes in order then can set in 'Pause' state.\n" \
                                        "* When the user cancels the work order it will be set in 'Canceled' state.\n" \
                                        "* When order is completely processed that time it is set in 'Finished' state."),
-       'date_start_date': fields.function(_get_date_date, method=True, string='Start Date', type='date'),
+       'date_start_date': fields.function(_get_date_date, string='Start Date', type='date'),
        'date_planned': fields.datetime('Scheduled Date'),
-       'date_planned_end': fields.function(_get_date_end, method=True, string='End Date', type='datetime'),
+       'date_planned_end': fields.function(_get_date_end, string='End Date', type='datetime'),
        'date_start': fields.datetime('Start Date'),
        'date_finished': fields.datetime('End Date'),
        'delay': fields.float('Working Hours',help="This is lead time between operation start and stop in this Work Center",readonly=True),
@@ -554,7 +554,7 @@ class mrp_operations_operation(osv.osv):
         'code_id':fields.many2one('mrp_operations.operation.code','Code',required=True),
         'date_start': fields.datetime('Start Date'),
         'date_finished': fields.datetime('End Date'),
-        'order_date': fields.function(_get_order_date,method=True,string='Order Date',type='date',store={'mrp.production':(_order_date_search_production,['date_planned'], 10)}),
+        'order_date': fields.function(_get_order_date,string='Order Date',type='date',store={'mrp.production':(_order_date_search_production,['date_planned'], 10)}),
         }
     _defaults={
         'date_start': lambda *a:datetime.now().strftime('%Y-%m-%d %H:%M:%S')

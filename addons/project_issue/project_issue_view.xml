@@ -153,6 +153,7 @@
                             <field name="write_date" />
                             <field name="date_closed"/>
                             <field name="date_open"/>
+                            <field name="date_action_last"/>
                             </group>
                             <group colspan="2" col="2">
                             <separator string="Statistics" colspan="2" col="2"/>
@@ -160,6 +161,8 @@
                             <field name="day_close"/>
                             <field name="working_hours_open" widget="float_time"/>
                             <field name="working_hours_close" widget="float_time"/>
+                            <field name="inactivity_days"/>
+                            <field name="days_since_creation"/>
                             </group>
                             <group colspan="2" col="2">
                             <separator string="References" colspan="2"/>
@@ -221,12 +224,7 @@
                             <filter domain="[('assigned_to','=',False)]"  help="Unassigned Issues" icon="terp-personal-" separator="1"/>
                         </field>
                         <field name="project_id"/>
-                    </group>
-                    <newline/>
-                    <group expand="0" string="Extended Filters..."  groups="base.group_extended">
-                        <field name="categ_id" widget="selection" domain="[('object_id.model', '=', 'project.issue')]"/>
                         <field name="version_id" widget="selection"/>
-                        <separator orientation="vertical"/>
                         <field name="id"/>
                     </group>
                     <newline/>

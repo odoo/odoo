@@ -2,54 +2,23 @@
   <data>
     <record id="view_misc_tools_installer" model="ir.ui.view">
       <field name="name">misc_tools.installer.view</field>
-      <field name="model">misc_tools.installer</field>
+      <field name="model">base.setup.installer</field>
       <field name="type">form</field>
-      <field name="inherit_id" ref="base.res_config_installer"/>
+      <field name="inherit_id" ref="base_setup.view_base_setup_installer"/>
       <field name="arch" type="xml">
         <data>
-          <form position="attributes">
-            <attribute name="string">Extra Tools Configuration</attribute>
-          </form>
-          <xpath expr='//separator[@string="vsep"]' position='attributes'>
-                <attribute name='string'></attribute>
+          <xpath expr="//group[@name='profile_tools']" position="replace">
+            <newline/>
+            <separator  string="Extra Tools Features" colspan="4" />
+            <field name="share" />
+            <field name="lunch" />
+            <field name="idea" />
+            <field name="survey" />
+            <field name="subscription" />
+            <field name="pad" />            
           </xpath>
-
-          <separator string="title" position="attributes">
-            <attribute name="string">Configure Extra Tools</attribute>
-          </separator>
-          <xpath expr="//label[@string='description']"
-                 position="attributes">
-            <attribute name="string">Extra Tools are applications that can help you improve your organization although they are not key for company management.</attribute>
-          </xpath>
-          <xpath expr="//button[@string='Install Modules']" position="attributes">
-              <attribute name="string">Configure</attribute>
-          </xpath>
-          <group colspan="8">
-            <field name="share"/>
-            <field name="lunch"/>
-            <field name="idea"/>
-            <field name="survey"/>
-            <field name="subscription" groups="base.group_extended"/>
-            <field name="pad"/>
-          </group>
         </data>
       </field>
-    </record>
-
-    <record id="action_misc_tools_installer" model="ir.actions.act_window">
-      <field name="name">Tools Configuration</field>
-      <field name="type">ir.actions.act_window</field>
-      <field name="res_model">misc_tools.installer</field>
-      <field name="view_id" ref="view_misc_tools_installer"/>
-      <field name="view_type">form</field>
-      <field name="view_mode">form</field>
-      <field name="target">new</field>
-    </record>
-
-    <record id="misc_tools_installer_todo" model="ir.actions.todo">
-      <field name="action_id" ref="action_misc_tools_installer"/>
-        <field name="restart">always</field>
-      <field name="sequence">3</field>
     </record>
   </data>
 </openerp>
