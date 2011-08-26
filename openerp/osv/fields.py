@@ -53,7 +53,7 @@ def _symbol_set(symb):
 
 class _column(object):
     """ Base of all fields, a database column
-    
+
         An instance of this object is a *description* of a database column. It will
         not hold any data, but only provide the methods to manipulate data of an
         ORM record or even prepare/update the database to hold such a field of data.
@@ -1285,7 +1285,7 @@ class property(function):
 
     def _fnct_read(self, obj, cr, uid, ids, prop_names, obj_dest, context=None):
         prop = obj.pool.get('ir.property')
-        # get the default values (for res_id = False) for the property fields 
+        # get the default values (for res_id = False) for the property fields
         default_val = self._get_defaults(obj, cr, uid, prop_names, context)
 
         # build the dictionary that will be returned
@@ -1407,12 +1407,16 @@ class column_info(object):
        :attr parent_column: the name of the column containing the m2o
                             relationship to the parent model that contains
                             this column, None for local columns.
+       :attr original_parent: if the column is inherited, name of the original
+                            parent model that contains it i.e in case of multilevel
+                            inheritence, None for local columns.
     """
-    def __init__(self, name, column, parent_model=None, parent_column=None):
+    def __init__(self, name, column, parent_model=None, parent_column=None, original_parent=None):
         self.name = name
         self.column = column
         self.parent_model = parent_model
         self.parent_column = parent_column
+        self.original_parent = original_parent
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

@@ -38,7 +38,7 @@
           - classicals (varchar, integer, boolean, ...)
           - relations (one2many, many2one, many2many)
           - functions
- 
+
 """
 
 import calendar
@@ -168,7 +168,7 @@ def modifiers_tests():
     test_modifiers({}, '{}')
     test_modifiers({"invisible": True}, '{"invisible": true}')
     test_modifiers({"invisible": False}, '{}')
-    
+
 
 def check_object_name(name):
     """ Check if the given name is a valid openerp object name.
@@ -255,7 +255,7 @@ class browse_null(object):
 #
 class browse_record_list(list):
     """ Collection of browse objects
-    
+
         Such an instance will be returned when doing a ``browse([ids..])``
         and will be iterable, yielding browse() objects
     """
@@ -270,9 +270,9 @@ class browse_record_list(list):
 class browse_record(object):
     """ An object that behaves like a row of an object's table.
         It has attributes after the columns of the corresponding object.
-        
+
         Examples::
-        
+
             uobj = pool.get('res.users')
             user_rec = uobj.browse(cr, uid, 104)
             name = user_rec.name
@@ -1093,7 +1093,7 @@ class orm_template(object):
                     if line[i] and skip:
                         return False
                     continue
-                
+
                 #set the mode for m2o, o2m, m2m : xml_id/id/name
                 if len(field) == len(prefix)+1:
                     mode = False
@@ -1106,7 +1106,7 @@ class orm_template(object):
                     for db_id in line.split(config.get('csv_internal_sep')):
                         res.append(_get_id(relation, db_id, current_module, mode))
                     return [(6,0,res)]
-                    
+
                 # ID of the record using a XML ID
                 if field[len(prefix)]=='id':
                     try:
@@ -1130,9 +1130,9 @@ class orm_template(object):
                     relation_obj = self.pool.get(relation)
                     newfd = relation_obj.fields_get( cr, uid, context=context )
                     pos = position
-                    
+
                     res = many_ids(line[i], relation, current_module, mode)
-                    
+
                     first = 0
                     while pos < len(datas):
                         res2 = process_liness(self, datas, prefix + [field[len(prefix)]], current_module, relation_obj._name, newfd, pos, first)
@@ -1142,15 +1142,15 @@ class orm_template(object):
                         nbrmax = max(nbrmax, pos)
                         warning += w2
                         first += 1
-                        
+
                         if data_res_id2:
                             res.append((4, data_res_id2))
-                                
+
                         if (not newrow) or not reduce(lambda x, y: x or y, newrow.values(), 0):
                             break
 
                         res.append( (data_res_id2 and 1 or 0, data_res_id2 or 0, newrow) )
-                        
+
 
                 elif fields_def[field[len(prefix)]]['type']=='many2one':
                     relation = fields_def[field[len(prefix)]]['relation']
@@ -1179,7 +1179,7 @@ class orm_template(object):
 
                 else:
                     res = line[i]
-                    
+
                 row[field[len(prefix)]] = res or False
 
             result = (row, nbrmax, warning, data_res_id, xml_id)
@@ -1193,7 +1193,7 @@ class orm_template(object):
         position = 0
         while position<len(datas):
             res = {}
-            
+
             (res, position, warning, res_id, xml_id) = \
                     process_liness(self, datas, [], current_module, self._name, fields_def, position=position)
             if len(warning):
@@ -1560,7 +1560,7 @@ class orm_template(object):
                 field = model_fields.get(node.get('name'))
                 if field:
                     transfer_field_to_modifiers(field, modifiers)
- 
+
 
         elif node.tag in ('form', 'tree'):
             result = self.view_header_get(cr, user, False, node.tag, context)
@@ -2609,20 +2609,22 @@ class orm(orm_template):
             del d['id']
         return data
 
-    def _inherits_join_add(self, parent_model_name, query):
+    def _inherits_join_add(self, current_table, parent_model_name, query):
         """
         Add missing table SELECT and JOIN clause to ``query`` for reaching the parent table (no duplicates)
-
+        :param current_table: current model object
         :param parent_model_name: name of the parent model for which the clauses should be added
         :param query: query object on which the JOIN should be added
         """
-        inherits_field = self._inherits[parent_model_name]
+        inherits_field = current_table._inherits[parent_model_name]
         parent_model = self.pool.get(parent_model_name)
         parent_table_name = parent_model._table
         quoted_parent_table_name = '"%s"' % parent_table_name
         if quoted_parent_table_name not in query.tables:
             query.tables.append(quoted_parent_table_name)
-            query.where_clause.append('("%s".%s = %s.id)' % (self._table, inherits_field, parent_table_name))
+            query.where_clause.append('(%s.%s = %s.id)' % (current_table._table, inherits_field, parent_table_name))
+
+
 
     def _inherits_join_calc(self, field, query):
         """
@@ -2637,7 +2639,7 @@ class orm(orm_template):
         while field in current_table._inherit_fields and not field in current_table._columns:
             parent_model_name = current_table._inherit_fields[field][0]
             parent_table = self.pool.get(parent_model_name)
-            self._inherits_join_add(parent_model_name, query)
+            self._inherits_join_add(current_table, parent_model_name, query)
             current_table = parent_table
         return '"%s".%s' % (current_table._table, field)
 
@@ -3328,9 +3330,9 @@ class orm(orm_template):
         for table in self._inherits:
             other = self.pool.get(table)
             for col in other._columns.keys():
-                res[col] = (table, self._inherits[table], other._columns[col])
+                res[col] = (table, self._inherits[table], other._columns[col], table)
             for col in other._inherit_fields.keys():
-                res[col] = (table, self._inherits[table], other._inherit_fields[col][2])
+                res[col] = (table, self._inherits[table], other._inherit_fields[col][2], other._inherit_fields[col][3])
         self._inherit_fields = res
         self._all_columns = self._get_column_infos()
         self._inherits_reload_src()
@@ -3341,8 +3343,8 @@ class orm(orm_template):
            inherited field via _inherits) to a ``column_info`` struct
            giving detailed columns """
         result = {}
-        for k, (parent, m2o, col) in self._inherit_fields.iteritems():
-            result[k] = fields.column_info(k, col, parent, m2o)
+        for k, (parent, m2o, col, original_parent) in self._inherit_fields.iteritems():
+            result[k] = fields.column_info(k, col, parent, m2o, original_parent)
         for k, col in self._columns.iteritems():
             result[k] = fields.column_info(k, col)
         return result
@@ -4373,7 +4375,7 @@ class orm(orm_template):
                 if parent_model and child_object:
                     # as inherited rules are being applied, we need to add the missing JOIN
                     # to reach the parent table (if it was not JOINed yet in the query)
-                    child_object._inherits_join_add(parent_model, query)
+                    child_object._inherits_join_add(child_object, parent_model, query)
                 query.where_clause += added_clause
                 query.where_clause_params += added_params
                 for table in added_tables:
@@ -4462,7 +4464,7 @@ class orm(orm_template):
                     else:
                         continue # ignore non-readable or "non-joinable" fields
                 elif order_field in self._inherit_fields:
-                    parent_obj = self.pool.get(self._inherit_fields[order_field][0])
+                    parent_obj = self.pool.get(self._inherit_fields[order_field][3])
                     order_column = parent_obj._columns[order_field]
                     if order_column._classic_read:
                         inner_clause = self._inherits_join_calc(order_field, query)
