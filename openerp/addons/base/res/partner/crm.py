@@ -23,22 +23,6 @@ import time
 from osv import osv
 from osv import fields
 
-#
-# Sale/Purchase Canal, Media
-#
-class res_partner_canal(osv.osv):
-    _name = "res.partner.canal"
-    _description = "Channels"
-    _order = 'name'
-    _columns = {
-        'name': fields.char('Channel Name', size=64, required=True),
-        'active': fields.boolean('Active'),
-    }
-    _defaults = {
-        'active': lambda *a: 1,
-    }
-res_partner_canal()
-
 class res_partner_event(osv.osv):
     _name = "res.partner.event"
     _columns = {
