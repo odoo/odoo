@@ -28,28 +28,24 @@ from tools.translate import _
 
 class res_currency(osv.osv):
     def _current_rate(self, cr, uid, ids, name, arg, context=None):
-        currency_rate_obj = self.pool.get('res.currency.rate')
-        res = {}
         if context is None:
             context = {}
+        res = {}
         if 'date' in context:
             date = context['date']
         else:
             date = time.strftime('%Y-%m-%d')
-        domain = [('currency_id', 'in', ids), ('name', '<=', date)]
-        currency_rate_type_id = context.get('currency_rate_type_id', False)
-        if currency_rate_type_id:
-            domain.append(('currency_rate_type_id', '=', currency_rate_type_id))
-        curr_rate_ids = currency_rate_obj.search(cr, uid, domain, order='name desc', context=context)
-        curr_rates = currency_rate_obj.browse(cr, uid, curr_rate_ids, context=context)
+        date = date or time.strftime('%Y-%m-%d')
+        currency_rate_type = context.get('currency_rate_type_id', None)
+        operator = currency_rate_type and '=' or 'is'
         for id in ids:
-            res[id] = 0
-            for cur in curr_rates:
-                if cur.currency_id.id == id:
-                    res[id] = cur.rate
-                    break
+            cr.execute("SELECT currency_id, rate FROM res_currency_rate WHERE currency_id = %s AND name <= %s AND currency_rate_type_id " + operator +" %s ORDER BY name desc LIMIT 1" ,(id, date, currency_rate_type))
+            if cr.rowcount:
+                id, rate = cr.fetchall()[0]
+                res[id] = rate
+            else:
+                res[id] = 0
         return res
-
     _name = "res.currency"
     _description = "Currency"
     _columns = {
@@ -107,24 +103,22 @@ class res_currency(osv.osv):
         if context is None:
             context = {}
         ctx = context.copy()
-        ctx.update({'currency_rate_type_id': ctx.get('currency_rate_type_from', False)})
-        from_currency = self.browse(cr, uid, [from_currency.id], context=ctx)[0]
-        from_currency_rate = from_currency['rate']
+        ctx.update({'currency_rate_type_id': ctx.get('currency_rate_type_from', None)})
+        from_currency = self.browse(cr, uid, from_currency.id, context=ctx)
 
-        ctx.update({'currency_rate_type_id': ctx.get('currency_rate_type_to', False)})
-        to_currency = self.browse(cr, uid, [to_currency.id], context=ctx)[0]
-        to_currency_rate = to_currency['rate']
+        ctx.update({'currency_rate_type_id': ctx.get('currency_rate_type_to', None)})
+        to_currency = self.browse(cr, uid, to_currency.id, context=ctx)
 
-        if from_currency_rate == 0 or to_currency_rate == 0:
+        if from_currency.rate == 0 or to_currency.rate == 0:
             date = context.get('date', time.strftime('%Y-%m-%d'))
-            if from_currency_rate == 0:
+            if from_currency.rate == 0:
                 currency_symbol = from_currency.symbol
             else:
                 currency_symbol = to_currency.symbol
             raise osv.except_osv(_('Error'), _('No rate found \n' \
                     'for the currency: %s \n' \
                     'at the date: %s') % (currency_symbol, date))
-        return to_currency_rate/from_currency_rate
+        return to_currency.rate/from_currency.rate
 
     def compute(self, cr, uid, from_currency_id, to_currency_id, from_amount,
                 round=True, currency_rate_type_from=False, currency_rate_type_to=False, context=None):
@@ -156,7 +150,7 @@ class res_currency_rate_type(osv.osv):
     _name = "res.currency.rate.type"
     _description = "Currency Rate Type"
     _columns = {
-        'name': fields.char('Name', size=32, required=True),
+        'name': fields.char('Name', size=64, required=True, translate=True),
     }
 
 res_currency_rate_type()
@@ -164,12 +158,13 @@ res_currency_rate_type()
 class res_currency_rate(osv.osv):
     _name = "res.currency.rate"
     _description = "Currency Rate"
+
     _columns = {
         'name': fields.date('Date', required=True, select=True),
         'rate': fields.float('Rate', digits=(12,6), required=True,
             help='The rate of the currency to the currency of rate 1'),
         'currency_id': fields.many2one('res.currency', 'Currency', readonly=True),
-        'currency_rate_type_id': fields.many2one('res.currency.rate.type', 'Currency Rate Type'),
+        'currency_rate_type_id': fields.many2one('res.currency.rate.type', 'Currency Rate Type', help="Allow you to define your own currency rate types, like average or Day to Year. Leave empty if you simply want to use the normal 'spot' rate type"),
     }
     _defaults = {
         'name': lambda *a: time.strftime('%Y-%m-%d'),

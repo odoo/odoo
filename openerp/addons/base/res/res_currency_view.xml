@@ -88,7 +88,17 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-        
+        <record id="view_currency_rate_type_search" model="ir.ui.view">
+            <field name="name">res.currency.rate.type.search</field>
+            <field name="model">res.currency.rate.type</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Currency Rate Type">
+                    <field name="name"/>
+                </search>
+            </field>
+        </record>
+
         <menuitem action="action_currency_rate_type_form" id="menu_action_currency_rate_type_form" parent="menu_localisation" sequence="7"/>
 
     </data>
