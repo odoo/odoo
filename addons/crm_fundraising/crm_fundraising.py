@@ -64,7 +64,7 @@ class crm_fundraising(crm.crm_case, osv.osv):
             'partner_name2': fields.char('Employee Email', size=64),
             'partner_phone': fields.char('Phone', size=32),
             'partner_mobile': fields.char('Mobile', size=32),
-            'stage_id': fields.many2one ('crm.case.stage', 'Stage', domain="[('type', '=', 'fundraising')]"),
+            'stage_id': fields.many2one ('crm.case.stage', 'Stage', domain="[('section_ids', '=', section_id)]"), 
             'type_id': fields.many2one('crm.case.resource.type', 'Campaign', \
                              domain="[('section_id','=',section_id)]"),
             'duration': fields.float('Duration'),
@@ -95,16 +95,4 @@ class crm_fundraising(crm.crm_case, osv.osv):
             'planned_revenue': lambda *a:0.0,
             }
 
-
-class crm_stage_fundraising(osv.osv):
-
-    def _get_type_value(self, cr, user, context):
-        list = super(crm_stage_fundraising, self)._get_type_value(cr, user, context)
-        list.append(('fundraising','Fundraising'))
-        return list
-
-    _inherit = "crm.case.stage"
-    _columns = {
-            'type': fields.selection(_get_type_value, 'Type'),
-    }
 

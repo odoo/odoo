@@ -4,6 +4,7 @@
 
     <record id="base.group_hr_user" model="res.groups">
         <field name="name">Human Resources / HR Officer</field>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
     </record>
     <record id="base.group_hr_manager" model="res.groups">
         <field name="name">Human Resources / HR Manager</field>

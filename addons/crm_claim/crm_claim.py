@@ -75,7 +75,7 @@ class crm_claim(crm.crm_case, osv.osv):
         'email_cc': fields.text('Watchers Emails', size=252, help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma"),
         'email_from': fields.char('Email', size=128, help="These people will receive email."),
         'partner_phone': fields.char('Phone', size=32),
-        'stage_id': fields.many2one ('crm.case.stage', 'Stage', domain="[('type','=','claim')]"),
+        'stage_id': fields.many2one ('crm.case.stage', 'Stage', domain="[('section_ids','=',section_id)]"), 
         'cause': fields.text('Root Cause'),
         'state': fields.selection(crm.AVAILABLE_STATES, 'State', size=16, readonly=True,
                                   help='The state is set to \'Draft\', when a case is created.\
@@ -84,28 +84,6 @@ class crm_claim(crm.crm_case, osv.osv):
                                   \nIf the case needs to be reviewed then the state is set to \'Pending\'.'),
         'message_ids': fields.one2many('mail.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
     }
-
-    def stage_next(self, cr, uid, ids, context=None):
-        stage = super(crm_claim, self).stage_next(cr, uid, ids, context=context)
-        if stage:
-            stage_obj = self.pool.get('crm.case.stage').browse(cr, uid, stage, context=context)
-            self.message_append(cr, uid, ids, _("Changed Stage to: ") + stage_obj.name)
-        return stage
-
-    def stage_previous(self, cr, uid, ids, context=None):
-        stage = super(crm_claim, self).stage_previous(cr, uid, ids, context=context)
-        if stage:
-            stage_obj = self.pool.get('crm.case.stage').browse(cr, uid, stage, context=context)
-            self.message_append(cr, uid, ids, _("Changed Stage to: ") + stage_obj.name)
-        return stage
-
-    def _get_stage_id(self, cr, uid, context=None):
-        """Finds type of stage according to object."""
-        if context is None:
-            context = {}
-        type = context and context.get('stage_type', '')
-        stage_ids = self.pool.get('crm.case.stage').search(cr, uid, [('type','=',type),('sequence','>=',1)])
-        return stage_ids and stage_ids[0] or False
 
     _defaults = {
         'user_id': crm.crm_case._get_default_user,
@@ -117,12 +95,10 @@ class crm_claim(crm.crm_case, osv.osv):
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.case', context=c),
         'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0],
-        #'stage_id': _get_stage_id,
     }
 
     def onchange_partner_id(self, cr, uid, ids, part, email=False):
         """This function returns value of partner address based on partner
-
            :param part: Partner's id
            :param email: ignored
         """
@@ -139,7 +115,6 @@ class crm_claim(crm.crm_case, osv.osv):
 
     def onchange_partner_address_id(self, cr, uid, ids, add, email=False):
         """This function returns value of partner email based on Partner Address
-
            :param part: Partner's id
            :param email: ignored
         """
@@ -150,16 +125,19 @@ class crm_claim(crm.crm_case, osv.osv):
 
     def case_open(self, cr, uid, ids, *args):
         """Opens Claim"""
+        for l in self.browse(cr, uid, ids):
+            # When coming from draft override date and stage otherwise just set state
+            if l.state == 'draft':
+                message = _("The claim '%s' has been opened.") % l.name
+                self.log(cr, uid, l.id, message)
+                value = {'date_open': time.strftime('%Y-%m-%d %H:%M:%S')}
+                self.write(cr, uid, [l.id], value)
+                stage_id = self.stage_find(cr, uid, l.section_id.id or False, [('sequence','>',0)])
+                if stage_id:
+                    self.stage_set(cr, uid, [l.id], stage_id)
         res = super(crm_claim, self).case_open(cr, uid, ids, *args)
-        claims = self.browse(cr, uid, ids)
-
-        for i in xrange(0, len(ids)):
-            if not claims[i].stage_id :
-                stage_id = self._find_first_stage(cr, uid, 'claim', claims[i].section_id.id or False)
-                self.write(cr, uid, [ids[i]], {'stage_id' : stage_id})
-
         return res
-
+    
     def message_new(self, cr, uid, msg, custom_values=None, context=None):
         """Automatically called when new email message arrives"""
         res_id = super(crm_claim,self).message_new(cr, uid, msg, custom_values=custom_values, context=context)
@@ -220,18 +198,6 @@ class res_partner(osv.osv):
     _inherit = 'res.partner'
     _columns = {
         'claims_ids': fields.one2many('crm.claim', 'partner_id', 'Claims'),
-    }
-
-class crm_stage_claim(osv.osv):
-
-    def _get_type_value(self, cr, user, context):
-        list = super(crm_stage_claim, self)._get_type_value(cr, user, context)
-        list.append(('claim','Claim'))
-        return list
-
-    _inherit = "crm.case.stage"
-    _columns = {
-            'type': fields.selection(_get_type_value, 'Type'),
     }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

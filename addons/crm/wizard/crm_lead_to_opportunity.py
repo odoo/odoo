@@ -187,9 +187,9 @@ class crm_lead2opportunity_partner(osv.osv_memory):
 
         for lead in leads.browse(cr, uid, record_id, context=context):
             if lead.section_id:
-                stage_ids = self.pool.get('crm.case.stage').search(cr, uid, [('type','=','opportunity'),('sequence','>=',1), ('section_ids','=', lead.section_id.id)])
+                stage_ids = self.pool.get('crm.case.stage').search(cr, uid, [('sequence','>=',1), ('section_ids','=', lead.section_id.id)])
             else:
-                stage_ids = self.pool.get('crm.case.stage').search(cr, uid, [('type','=','opportunity'),('sequence','>=',1)])
+                stage_ids = self.pool.get('crm.case.stage').search(cr, uid, [('sequence','>=',1)])
 
             data = self.browse(cr, uid, ids[0], context=context)
 

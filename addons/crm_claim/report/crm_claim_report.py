@@ -62,7 +62,7 @@ class crm_claim_report(osv.osv):
         'create_date': fields.datetime('Create Date', readonly=True, select=True),
         'day': fields.char('Day', size=128, readonly=True),
         'delay_close': fields.float('Delay to close', digits=(16,2),readonly=True, group_operator="avg",help="Number of Days to close the case"),
-        'stage_id': fields.many2one ('crm.case.stage', 'Stage', readonly=True, domain="[('type','=','claim')]"),
+        'stage_id': fields.many2one ('crm.case.stage', 'Stage', readonly=True,domain="[('section_ids','=',section_id)]"),
         'categ_id': fields.many2one('crm.case.categ', 'Category',\
                          domain="[('section_id','=',section_id),\
                         ('object_id.model', '=', 'crm.claim')]", readonly=True),
@@ -107,7 +107,7 @@ class crm_claim_report(osv.osv):
                     date_trunc('day',c.create_date) as create_date,
                     avg(extract('epoch' from (c.date_closed-c.create_date)))/(3600*24) as  delay_close,
                     (SELECT count(id) FROM mail_message WHERE model='crm.claim' AND res_id=c.id AND email_from IS NOT NULL) AS email,
-                    (SELECT avg(probability) FROM crm_case_stage WHERE type='claim' AND id=c.stage_id) AS probability,
+                    (SELECT avg(probability) FROM crm_case_stage WHERE id=c.stage_id) AS probability,
                     extract('epoch' from (c.date_deadline - c.date_closed))/(3600*24) as  delay_expected
                 from
                     crm_claim c
