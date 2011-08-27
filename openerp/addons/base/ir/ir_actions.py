@@ -33,6 +33,7 @@ from report.report_sxw import report_sxw, report_rml
 from tools.config import config
 from tools.safe_eval import safe_eval as eval
 from tools.translate import _
+from socket import gethostname
 
 class actions(osv.osv):
     _name = 'ir.actions.actions'
@@ -586,7 +587,8 @@ class actions_server(osv.osv):
     def merge_message(self, cr, uid, keystr, action, context=None):
         if context is None:
             context = {}
-        def merge(match):
+
+        odef merge(match):
             obj_pool = self.pool.get(action.model_id.model)
             id = context.get('active_id')
             obj = obj_pool.browse(cr, uid, id)
@@ -618,18 +620,19 @@ class actions_server(osv.osv):
         logger = logging.getLogger(self._name)
         if context is None:
             context = {}
+        user = self.pool.get('res.users').browse(cr, uid, uid)
         for action in self.browse(cr, uid, ids, context):
             obj_pool = self.pool.get(action.model_id.model)
             obj = obj_pool.browse(cr, uid, context['active_id'], context=context)
             cxt = {
                 'self': obj_pool,
                 'object': obj,
-                'obj': obj,
-                'pool' : self.pool,
+                'time': time,
                 'cr': cr,
-                'uid' : uid,
-                'time':time,
                 'context': dict(context), # copy context to prevent side-effects of eval
+                'pool': self.pool,
+                'uid': uid,
+                'user': user
             }
             expr = eval(str(action.condition), cxt)
             if not expr:
@@ -647,7 +650,7 @@ class actions_server(osv.osv):
                     return cxt['action']
 
             if action.state == 'email':
-                user = config['email_from']
+                email_from = config['email_from']
                 address = str(action.email)
                 try:
                     address =  eval(str(action.email), cxt)
@@ -904,10 +907,9 @@ class act_client(osv.osv):
             for record in self.browse(cr, uid, ids, context=context)
         ])
 
-    def _set_params(self, cr, uid, ids, field_name, field_value, arg, context):
+    def _set_params(self, cr, uid, id, field_name, field_value, arg, context):
         assert isinstance(field_value, dict), "params can only be dictionaries"
-        for record in self.browse(cr, uid, ids, context=context):
-            record.write({field_name: repr(field_value)})
+        self.write(cr, uid, id, {'params_store': repr(field_value)}, context=context)
 
     _columns = {
         'tag': fields.char('Client action tag', size=64, required=True,
