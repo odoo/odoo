@@ -588,7 +588,7 @@ class actions_server(osv.osv):
         if context is None:
             context = {}
 
-        odef merge(match):
+        def merge(match):
             obj_pool = self.pool.get(action.model_id.model)
             id = context.get('active_id')
             obj = obj_pool.browse(cr, uid, id)
