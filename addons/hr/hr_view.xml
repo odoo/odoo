@@ -284,7 +284,7 @@
         </record>
 
         <menuitem action="open_view_categ_tree"
-            id="menu_view_employee_category_tree" parent="hr.menu_view_employee_category_form"/>
+            id="menu_view_employee_category_tree" parent="menu_view_employee_category_configuration_form" sequence="2"/>
 
         <record id="view_hr_job_form" model="ir.ui.view">
             <field name="name">hr.job.form</field>
@@ -377,7 +377,7 @@
         </record>
 
         <menuitem name="Recruitment" id="base.menu_crm_case_job_req_main" parent="menu_hr_root" groups="base.group_hr_user"/>
-        <menuitem parent="base.menu_crm_case_job_req_main" id="menu_hr_job" action="action_hr_job" sequence="2"/>
+        <menuitem parent="hr.menu_view_employee_category_configuration_form" id="menu_hr_job" action="action_hr_job" sequence="2"/>
 
     </data>
 </openerp>
