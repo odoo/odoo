@@ -7,7 +7,7 @@
 
         <menuitem id="base.menu_crm_config_lead" name="Leads &amp; Opportunities"
             parent="base.menu_base_config" sequence="1" groups="base.group_sale_manager"/>
-        
+
         <menuitem id="base.menu_crm_config_opportunity" name="Opportunities"
             parent="base.menu_base_config" sequence="1" groups="base.group_sale_manager"/>
 
@@ -20,6 +20,39 @@
         <menuitem id="base.next_id_64" name="Reporting"
             parent="base.menu_base_partner" sequence="11" />
 
+
+        <!-- crm.case.channel -->
+        <record id="crm_case_channel_view_tree" model="ir.ui.view">
+            <field name="name">crm.case.channel.tree</field>
+            <field name="model">crm.case.channel</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Channels">
+                    <field name="name" select="1"/>
+                    <field name="active" select="1"/>
+                </tree>
+            </field>
+        </record>
+        <record id="crm_case_channel_view_form" model="ir.ui.view">
+            <field name="name">crm.case.channel.form</field>
+            <field name="model">crm.case.channel</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Channel">
+                    <field name="name" select="1"/>
+                    <field name="active" select="1"/>
+                </form>
+            </field>
+        </record>
+        <record id="crm_case_channel_action" model="ir.actions.act_window">
+            <field name="name">Channels</field>
+            <field name="res_model">crm.case.channel</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help">Track from where is coming your leads and opportunities by creating specific channels that will be maintained at the creation of a document in the system. Some examples of channels can be: Website, Phone Call, Reseller, etc.</field>
+        </record>
+
+        <menuitem action="crm_case_channel_action" id="menu_crm_case_channel" parent="base.menu_crm_config_lead" sequence="4"/>
 
         <!-- Case Sections Form View -->
 

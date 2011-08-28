@@ -66,7 +66,7 @@ class project_issue_report(osv.osv):
         'version_id': fields.many2one('project.issue.version', 'Version'),
         'assigned_to' : fields.many2one('res.users', 'Assigned to',readonly=True),
         'partner_id': fields.many2one('res.partner','Partner',domain="[('object_id.model', '=', 'project.issue')]"),
-        'canal_id': fields.many2one('res.partner.canal', 'Channel',readonly=True),
+        'channel_id': fields.many2one('crm.case.channel', 'Channel',readonly=True),
         'task_id': fields.many2one('project.task', 'Task',domain="[('object_id.model', '=', 'project.issue')]" ),
         'email': fields.integer('# Emails', size=128, readonly=True),
     }
@@ -97,7 +97,7 @@ class project_issue_report(osv.osv):
                     1 as nbr,
                     c.assigned_to,
                     c.partner_id,
-                    c.canal_id,
+                    c.channel_id,
                     c.task_id,
                     date_trunc('day',c.create_date) as create_date,
                     extract('epoch' from (c.date_open-c.create_date))/(3600*24) as  delay_open,

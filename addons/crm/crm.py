@@ -44,6 +44,17 @@ AVAILABLE_PRIORITIES = [
     ('5', 'Lowest'),
 ]
 
+class crm_case_channel(osv.osv):
+    _name = "crm.case.channel"
+    _description = "Channels"
+    _order = 'name'
+    _columns = {
+        'name': fields.char('Channel Name', size=64, required=True),
+        'active': fields.boolean('Active'),
+    }
+    _defaults = {
+        'active': lambda *a: 1,
+    }
 
 class crm_case_stage(osv.osv):
     """ Stage of case """
