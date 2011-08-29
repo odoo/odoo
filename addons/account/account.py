@@ -250,6 +250,7 @@ class account_account(osv.osv):
         #compute for each account the balance/debit/credit from the move lines
         accounts = {}
         res = {}
+        null_result = dict((fn, 0.0) for fn in field_names)
         if children_and_consolidated:
             aml_query = self.pool.get('account.move.line')._query_get(cr, uid, context=context)
 
@@ -306,12 +307,11 @@ class account_account(osv.osv):
                             sums[current.id][fn] += sums[child.id][fn]
                         else:
                             sums[current.id][fn] += currency_obj.compute(cr, uid, child.company_id.currency_id.id, current.company_id.currency_id.id, sums[child.id][fn], context=context)
-            null_result = dict((fn, 0.0) for fn in field_names)
             for id in ids:
                 res[id] = sums.get(id, null_result)
         else:
             for id in ids:
-                res[id] = 0.0
+                res[id] = null_result
         return res
 
     def _get_company_currency(self, cr, uid, ids, field_name, arg, context=None):
@@ -1331,7 +1331,7 @@ class account_move(osv.osv):
 
     def _centralise(self, cr, uid, move, mode, context=None):
         assert mode in ('debit', 'credit'), 'Invalid Mode' #to prevent sql injection
-        currency_obj = self.pool.get('res.currency') 
+        currency_obj = self.pool.get('res.currency')
         if context is None:
             context = {}
 
@@ -1593,7 +1593,7 @@ class account_tax_code(osv.osv):
                        (parent_ids,) + where_params)
         res=dict(cr.fetchall())
         obj_precision = self.pool.get('decimal.precision')
-        res2 = {} 
+        res2 = {}
         for record in self.browse(cr, uid, ids, context=context):
             def _rec_get(record):
                 amount = res.get(record.id, 0.0)
