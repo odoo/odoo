@@ -1519,12 +1519,14 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
     },
     set_value: function(value) {
         value = value || null;
+        this.invalid = false;
         var self = this;
-        var _super = this._super;
         this.tmp_value = value;
+        self.update_dom();
+        self.on_value_changed();
         var real_set_value = function(rval) {
             self.tmp_value = undefined;
-            _super.apply(self, rval);
+            self.value = rval;
             self.original_value = undefined;
             self._change_int_ext_value(rval);
         };
@@ -1550,7 +1552,8 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
     },
     validate: function() {
         this.invalid = false;
-        if (this.value === null) {
+        var val = this.tmp_value !== undefined ? this.tmp_value : this.value;
+        if (val === null) {
             this.invalid = this.required;
         }
     },
