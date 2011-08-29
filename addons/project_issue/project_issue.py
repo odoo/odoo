@@ -206,14 +206,10 @@ class project_issue(crm.crm_case, osv.osv):
         # Project Issue fields
         'date_closed': fields.datetime('Closed', readonly=True,select=True),
         'date': fields.datetime('Date'),
-        'canal_id': fields.many2one('res.partner.canal', 'Channel', help="The channels represent the different communication modes available with the customer." \
-                                                                        " With each commercial opportunity, you can indicate the canall which is this opportunity source."),
+        'channel_id': fields.many2one('crm.case.channel', 'Channel', help="Communication channel."),
         'categ_id': fields.many2one('crm.case.categ', 'Category', domain="[('object_id.model', '=', 'crm.project.bug')]"),
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),
         'version_id': fields.many2one('project.issue.version', 'Version'),
-        'partner_name': fields.char("Partner Name", size=64),
-        'partner_mobile': fields.char('Mobile', size=32),
-        'partner_phone': fields.char('Phone', size=32),
         'type_id': fields.many2one ('project.task.type', 'Resolution', domain="[('project_ids', '=', project_id)]"),
         'project_id':fields.many2one('project.project', 'Project'),
         'duration': fields.float('Duration'),
