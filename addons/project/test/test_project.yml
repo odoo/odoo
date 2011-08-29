@@ -39,6 +39,26 @@
     self._default_project(cr, uid,context)
     self.fields_view_get(cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False)
 -
+  Click on Draft button.
+-
+  !python {model: project.task}: |
+    self.do_draft(cr, uid, [ref("project_task_functionaltraining0")], context={})
+-
+  Click on Start task button.
+-
+  !python {model: project.task}: |
+    self.do_open(cr, uid,[ref("project_task_functionaltraining0")],context={})
+-
+  Click Pending button
+-
+  !python {model: project.task}: |
+    self.do_pending(cr, uid, [ref("project_task_functionaltraining0")], context={})
+-
+  Click on Start task button.
+-
+  !python {model: project.task}: |
+    self.do_open(cr, uid,[ref("project_task_functionaltraining0")],context={})
+-
   Check child project.
 -
   !python {model: project.task}: |
@@ -54,12 +74,12 @@
   !python {model: project.task}: |
     self._change_type(cr, uid,[ref("project_task_functionaltraining0")], next, context)
 -
-  Click on next Button.
+  Click on next Button for change the type of project task.
 -
   !python {model: project.task}: |
     self.next_type(cr, uid,[ref("project_task_functionaltraining0")], context)
 -
-  Click on previous Button.
+  Click on previous Button for go back to previous type of task.
 -
   !python {model: project.task}: |
     self.prev_type(cr, uid,[ref("project_task_functionaltraining0")], context)
@@ -364,6 +384,7 @@
     self.set_done(cr, uid, [ref("project_project_openerptrainingprogramme0")], {"lang": "en_US", "active_ids": [ref("project.menu_open_view_project_all")],
       "tz": False, "active_model": "ir.ui.menu", "project_id": False, "active_id":
       ref("project.menu_open_view_project_all"), })
+
 -
   Check if project in close state
 -
@@ -402,7 +423,7 @@
     self.default_get(cr, uid, fields, context={"active_ids":[ref("project_task_technicaltraining0")],"active_id": ref("project_task_technicaltraining0")})
     self.send(cr, uid, [ref('project_task_close_0')], context={"active_ids":[ref("project_task_technicaltraining0")],"active_id": ref("project_task_technicaltraining0")})
 -
-  Close this project.
+  Click on the project task's Done button.
 -
   !python {model: project.task}: |
     self.action_close(cr, uid, [ref("project_task_functionaltraining0")],context={"lang": "en_US", "active_ids": [ref("project_project_openerptrainingprogramme0")],"tz": False, "active_id": ref("project_project_openerptrainingprogramme0")})
