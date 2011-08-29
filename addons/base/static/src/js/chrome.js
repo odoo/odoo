@@ -102,6 +102,7 @@ openerp.base.Dialog = openerp.base.OldWidget.extend({
         }
         this.set_options(dialog_options);
         this.$dialog.dialog(this.dialog_options).dialog('open');
+        return this;
     },
     close: function() {
         // Closes the dialog but leave it in a state where it could be opened again.
@@ -295,7 +296,7 @@ openerp.base.Database = openerp.base.Widget.extend({
         self.$option_id.find("form[name=create_db_form]").validate({
             submitHandler: function (form) {
                 var fields = $(form).serializeArray();
-                $.blockUI();
+                $.blockUI({message:'<img src="/base/static/src/img/throbber2.gif">'});
                 self.rpc("/base/database/create", {'fields': fields}, function(result) {
                     if (result.error) {
                         $.unblockUI();
@@ -366,7 +367,7 @@ openerp.base.Database = openerp.base.Widget.extend({
 
         self.$option_id.find("form[name=backup_db_form]").validate({
             submitHandler: function (form) {
-                $.blockUI();
+                $.blockUI({message:'<img src="/base/static/src/img/throbber2.gif">'});
                 // need to detect when the file is done downloading (not used
                 // yet, but we'll need it to fix the UI e.g. with a throbber
                 // while dump is being generated), iframe load event only fires
@@ -404,7 +405,7 @@ openerp.base.Database = openerp.base.Widget.extend({
        	
        	self.$option_id.find("form[name=restore_db_form]").validate({
             submitHandler: function (form) {
-                $.blockUI();
+                $.blockUI({message:'<img src="/base/static/src/img/throbber2.gif">'});
                 $(form).ajaxSubmit({
                     url: '/base/database/restore',
                     type: 'POST',
@@ -565,6 +566,11 @@ openerp.base.Login =  openerp.base.Widget.extend({
 openerp.base.Header =  openerp.base.Widget.extend({
     init: function(parent, element_id) {
         this._super(parent, element_id);
+        if (jQuery.deparam(jQuery.param.querystring()).debug !== undefined) {
+            this.qs = '?debug'
+        } else {
+            this.qs = ''
+        }
     },
     start: function() {
         return this.do_update();
@@ -584,22 +590,27 @@ openerp.base.Header =  openerp.base.Widget.extend({
             sc.binding = {};
             $(sc.binding).bind({
                 'add': function (e, attrs) {
-                    var $shortcut = $('<li>', {
+                    shortcuts_ds.create(attrs, function (out) {
+                        $('<li>', {
+                            'data-shortcut-id':out.result,
                             'data-id': attrs.res_id
                         }).text(attrs.name)
-                        .appendTo(self.$element.find('.oe-shortcuts ul'));
-                    shortcuts_ds.create(attrs, function (out) {
-                        $shortcut.data('shortcut-id', out.result);
+                          .appendTo(self.$element.find('.oe-shortcuts ul'));
+                        attrs.id = out.result;
+                        sc.push(attrs);
                     });
                 },
                 'remove-current': function () {
                     var menu_id = self.session.active_id;
                     var $shortcut = self.$element
-                            .find('.oe-shortcuts li[data-id=' + menu_id + ']');
+                        .find('.oe-shortcuts li[data-id=' + menu_id + ']');
                     var shortcut_id = $shortcut.data('shortcut-id');
                     $shortcut.remove();
                     shortcuts_ds.unlink([shortcut_id]);
-                }
+                    var sc_new = _.reject(sc, function(shortcut){ return shortcut_id === shortcut.id});
+                    sc.splice(0, sc.length);
+                    sc.push.apply(sc, sc_new);
+                    }
             });
         }
         return this.rpc('/base/session/sc_list', {}, function(shortcuts) {
@@ -609,6 +620,7 @@ openerp.base.Header =  openerp.base.Widget.extend({
             self.$element.find('.oe-shortcuts')
                 .html(QWeb.render('Shortcuts', {'shortcuts': shortcuts}))
                 .undelegate('li', 'click')
+
                 .delegate('li', 'click', function(e) {
                     e.stopPropagation();
                     var id = $(this).data('id');

@@ -459,7 +459,7 @@ init: function(parent, element_id, dataset, view_id) {
         }else{
             data[this.date_delay] = task.getDuration();
         }
-        this.dataset.write(event_id, data, function(result) {});
+        this.dataset.write(event_id, data, {}, function(result) {});
 
     },
 
@@ -474,24 +474,24 @@ init: function(parent, element_id, dataset, view_id) {
     convert_str_date: function (str){
         if (str.length == 19){
             this.format = "yyyy-MM-dd HH:mm:ss";
-            return openerp.base.parse_datetime(str);
+            return openerp.base.str_to_datetime(str);
         } else if (str.length == 10){
             this.format = "yyyy-MM-dd";
-            return openerp.base.parse_date(str);
+            return openerp.base.str_to_date(str);
         } else if (str.length == 8){
             this.format = "HH:mm:ss";
-            return openerp.base.parse_time(str);
+            return openerp.base.str_to_time(str);
         }
         throw "Unrecognized date/time format";
     },
 
     convert_date_str: function(full_date) {
         if (this.format == "yyyy-MM-dd HH:mm:ss"){
-            return openerp.base.format_datetime(full_date);
+            return openerp.base.datetime_to_str(full_date);
         } else if (this.format == "yyyy-MM-dd"){
-            return openerp.base.format_date(full_date);
+            return openerp.base.date_to_str(full_date);
         } else if (this.format == "HH:mm:ss"){
-            return openerp.base.format_time(full_date);
+            return openerp.base.time_to_str(full_date);
         }
         throw "Unrecognized date/time format";
     },

@@ -870,6 +870,9 @@ label.error {
 .openerp .oe_forms input[type="text"], .openerp .oe_forms input[type="password"], .openerp .oe_forms select, .openerp .oe_forms .button {
     height: 22px;
 }
+.openerp .oe_forms input.field_datetime {
+    min-width: 11em;
+}
 .openerp .oe_forms .button {
     color: #4c4c4c;
     white-space: nowrap;
@@ -878,12 +881,22 @@ label.error {
     position: relative;
     vertical-align: top;
 }
-.openerp img.ui-datepicker-trigger, .openerp img.ui-datepicker-trigger {
+.openerp img.ui-datepicker-trigger {
     margin-left: -20px;
     vertical-align: middle;
     cursor: pointer;
     position: relative;
     top: -1px;
+}
+.openerp img.oe_field_translate {
+    margin-left: -21px;
+    vertical-align: top;
+    cursor: pointer;
+    position: relative;
+    top: 4px;
+}
+.openerp .oe_trad_field.touched {
+    border: 1px solid green !important;
 }
 
 /* http://www.quirksmode.org/dom/inputfile.html
@@ -1146,10 +1159,12 @@ label.error {
 }
 
 .openerp .oe-m2o {
-    padding-right: 16px;
+    padding-right: 20px;
     white-space: nowrap;
 }
-
+.openerp .oe_forms .oe-m2o input[type="text"] {
+    padding-right: 20px;
+}
 .openerp .oe-m2o-drop-down-button {
     margin-left: -23px;
 }
@@ -1157,6 +1172,9 @@ label.error {
 .openerp .oe-m2o-cm-button img {
     margin-bottom: -4px;
     cursor: pointer;
+}
+.openerp .oe-m2o-cm-button img {
+    margin-left: 4px;
 }
 .openerp .oe-m2o-disabled-cm {
     color: grey;

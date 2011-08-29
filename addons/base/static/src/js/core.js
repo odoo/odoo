@@ -10,6 +10,9 @@ openerp.base.core = function(openerp) {
     var initializing = false,
         fnTest = /xyz/.test(function(){xyz;}) ? /\b_super\b/ : /.*/;
     // The base Class implementation (does nothing)
+    /**
+     * @class
+     */
     openerp.base.Class = function(){};
 
     // Create a new Class that inherits from this class
@@ -554,12 +557,18 @@ openerp.base.Session = openerp.base.CallbackEnabled.extend( /** @lends openerp.b
             self.rpc('/base/webclient/translations',params).then(function(transs) {
                 openerp.base._t.database.set_bundle(transs);
                 var modules = self.module_list.join(',');
+                var file_list = ["/base/static/lib/datejs/globalization/" +
+                    self.user_context.lang.replace("_", "-") + ".js",
+
+                    ];
                 if(self.debug) {
                     self.rpc('/base/webclient/csslist', {"mods": modules}, self.do_load_css);
-                    self.rpc('/base/webclient/jslist', {"mods": modules}, self.do_load_js);
+                    self.rpc('/base/webclient/jslist', {"mods": modules}, function(files) {
+                        self.do_load_js(file_list.concat(files));
+                    });
                 } else {
                     self.do_load_css(["/base/webclient/css?mods="+modules]);
-                    self.do_load_js(["/base/webclient/js?mods="+modules]);
+                    self.do_load_js(file_list.concat(["/base/webclient/js?mods="+modules]));
                 }
                 openerp._modules_loaded = true;
             });

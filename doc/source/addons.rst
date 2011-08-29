@@ -195,6 +195,13 @@ The new class can then be used in the following manner:
 After these two lines have executed (and any promise returned by ``appendTo``
 has been resolved if needed), the widget is ready to be used.
 
+.. note:: the insertion methods will start the widget themselves, and will
+          return the result of :js:func:`~openerp.base.Widget.start()`.
+
+          If for some reason you do not want to call these methods, you will
+          have to first call :js:func:`~openerp.base.Widget.render()` on the
+          widget, then insert it into your DOM and start it.
+
 If the widget is not needed anymore (because it's transient), simply terminate
 it:
 
