@@ -37,7 +37,7 @@ class crm_installer(osv.osv_memory):
         'thunderbird': fields.boolean('Thunderbird', help="Allows you to link your e-mail to OpenERP's documents. You can attach it to any existing one in OpenERP or create a new one."),
         'outlook': fields.boolean('MS-Outlook', help="Allows you to link your e-mail to OpenERP's documents. You can attach it to any existing one in OpenERP or create a new one."),
         'wiki_sale_faq': fields.boolean('Sale FAQ', help="Helps you manage wiki pages for Frequently Asked Questions on Sales Application."),
-        'crm_todo': fields.boolean('CRM TODO', help=" add a todo list in your Opportunities form."),
+        'crm_todo': fields.boolean('CRM TODO', help=" add a crm todo list in your Opportunities form."),
     }
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
