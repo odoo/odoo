@@ -33,8 +33,8 @@ if not object.partner_id.opt_out: self.pool.get('email.template').generate_mail(
 &lt;div style="font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, 255, 255); "&gt;
 
 &lt;p&gt;  Hello ${object.address_invoice_id.name and ' ' or ''},&lt;/p&gt;  
-&lt;p&gt;  You can click on the following link to preview, print and pay invoice: 
-    &lt;a href="${object._context.get('edi_web_invoice_url_view')}"&gt;$${object._context.get('edi_web_invoice_url_view')} &lt;/a&gt;
+&lt;p&gt;  You can click on the following link to preview, print and pay invoice: &lt;br/&gt;
+    &lt;a href="${object._context.get('edi_web_invoice_url_view')}"&gt;${object._context.get('edi_web_invoice_url_view')} &lt;/a&gt;
 &lt;/p&gt;  
 
 
