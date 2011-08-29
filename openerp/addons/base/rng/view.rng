@@ -121,21 +121,11 @@
 
     <rng:define name="kanban">
         <rng:element name="kanban">
-            <rng:zeroOrMore>
-                <rng:choice>
-                    <rng:ref name="template"/>
-                </rng:choice>
-            </rng:zeroOrMore>
-        </rng:element>
-    </rng:define>
-
-    <rng:define name="template">
-        <rng:element name="template">
-            <rng:zeroOrMore>
-                <rng:choice>
+            <rng:element name="template">
+                <rng:oneOrMore>
                     <rng:ref name="any"/>
-                </rng:choice>
-            </rng:zeroOrMore>
+                </rng:oneOrMore>
+            </rng:element>
         </rng:element>
     </rng:define>
 
