@@ -11,10 +11,10 @@
 </t>
 
 <t t-name="Login">
-     <div role="banner" data-role="header" data-theme="b">
-        <h1 aria-level="1" role="heading" tabindex="0" class="ui-title">OpenERP</h1>
+     <div data-role="header" data-theme="b">
+        <h1>OpenERP</h1>
     </div>
-    <div role="main" data-role="content">
+    <div data-role="content">
         <fieldset>
             <div data-role="fieldcontain">
                 <label for="database" class="select">Database:</label>
@@ -25,11 +25,11 @@
                         </t>
                     </t>
                 </select>
-                <label class="ui-input-text" for="name">Login:</label>
-                <input class="ui-input-text ui-body-null ui-corner-all ui-shadow-inset ui-body-c" type="text" name="login" value=""/><br/>
-                <label class="ui-input-text" for="name">Password:</label>
-                <input class="ui-input-text ui-body-null ui-corner-all ui-shadow-inset ui-body-c" type="password" name="password" value=""/><br/>
-                <a id="login" data-theme="c" href="#" data-role="button">Login</a>
+                <label for="login">Login:</label>
+                <input type="text" id="login" name="login" value=""/><br/>
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" value=""/><br/>
+                <a id="login_btn" data-theme="c" href="#" data-role="button">Login</a>
                 <div class="login_error_message ui-btn-inner ui-btn-corner-all">
                     <span class="ui-btn-text">Bad username or password</span>
                 </div>
@@ -191,7 +191,7 @@
                     </t>
                 </t>
                 <t t-if="fields[field.attrs.name].type == 'text'">
-                    <input type="text" style="width: 100%"/><br/>
+                    <textarea style="width:100%;" rows="8" name="textarea" id="textarea"></textarea><br/>
                 </t>
                 <t t-if="fields[field.attrs.name].type == 'float'">
                     <t t-if="values[field.attrs.name]">

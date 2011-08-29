@@ -40,7 +40,7 @@ openerp.web_mobile.Login =  openerp.base.Widget.extend({
             var selection = new openerp.web_mobile.Selection();
             self.db_list = result.db_list;
             self.$element.html(QWeb.render("Login", self));
-            self.$element.find("#login").click(self.on_login);
+            self.$element.find("#login_btn").click(self.on_login);
             $.mobile.initializePage();
         });
         this.$element
