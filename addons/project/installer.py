@@ -46,7 +46,7 @@ class project_installer(osv.osv_memory):
                  "in the SCRUM methodology."),
         'project_gtd': fields.boolean('Getting Things Done',
             help="GTD is a methodology to efficiently organise yourself and your tasks. This module fully integrates GTD principle with OpenERP's project management."),
-        'project_todo': fields.boolean('Project TODO', help=" add a todo list in your Opportunities form."),
+        'project_todo': fields.boolean('Project TODO', help=" add a project todo list in your Opportunities form."),
     }
 project_installer()
 
