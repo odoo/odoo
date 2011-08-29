@@ -315,14 +315,24 @@ openerp.base.SearchView = openerp.base.Widget.extend({
         this.notification.notify("Invalid Search", "triggered from search view");
     },
     do_clear: function () {
+        this.$element.find(':input').each(function(){
+            switch(this.type) {
+                case 'text':
+                case 'select-one':
+                    $(this).val('');
+                break;
+            }
+        });
+        $('.filter_label').removeClass('enabled');
         var string = $('a.searchview_group_string');
         _.each(string, function(str){
             $(str).closest('div.searchview_group').removeClass("expanded").addClass('folded');
          });
         this.$element.find('table:last').hide();
+
         $('.searchview_extended_groups_list').empty();
-		$('.filter_label').removeClass('enabled');
-     },
+        this.do_search();
+    },
     /**
      * Triggered when the search view gets cleared
      *
