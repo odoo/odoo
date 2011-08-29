@@ -396,7 +396,10 @@ openerp.base.DataExport = openerp.base.Dialog.extend({
             import_compat: parseInt(import_comp),
             export_format: export_format
         }, function(data) {
-            window.location = "data:text/csv/excel;charset=utf8," + data;
+            var mime = export_format === 'csv'
+                    ? 'text/csv;charset=utf8'
+                    : 'application/vnd.mx-excel';
+            window.location = 'data:' + mime + ',' + data;
             self.close();
         });
     },
