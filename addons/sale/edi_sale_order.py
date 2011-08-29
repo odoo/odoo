@@ -38,8 +38,6 @@ class sale_order(osv.osv, ir_edi.edi):
                 'date_confirm': True,
                 'partner_id': True,
                 'partner_invoice_id': True,
-                'partner_order_id': True,
-                'partner_shipping_id': True,
                 'incoterm': True,
                 'picking_policy': True,
                 'order_policy': True,
@@ -163,7 +161,7 @@ class sale_order(osv.osv, ir_edi.edi):
         address_value.update({'partner_id': partner_id})
         address_id = partner_address_pool.create(cr, uid, address_value, context=context)
         partner_address = partner_address_pool.browse(cr, uid, [address_id], context=context)
-        partner_address_id = self.edi_o2m(cr, uid, partner_address, context=context)
+        partner_address_id = self.edi_o2m(cr, uid, [partner_address], context=context)
         partner = partner_pool.browse(cr, uid, partner_id, context=context)
         edi_document['partner_id'] = self.edi_m2o(cr, uid, partner, context=context)
         edi_document.update({

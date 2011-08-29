@@ -100,6 +100,7 @@ Dashboard for Sales Manager that includes:
         'test/invoice_on_ordered_qty.yml',
         'test/invoice_on_shipped_qty.yml',
         'test/sale_report.yml',
+        'test/edi_sale_order.yml',
     ],
     'installable': True,
     'active': False,
