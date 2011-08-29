@@ -120,7 +120,7 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
      */
     start: function() {
         this.$element.addClass('oe-listview');
-        return this.reload_view();
+        return this.reload_view(null, null, true);
     },
     /**
      * Called after loading the list view's description, sets up such things
@@ -362,7 +362,7 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
      * @param {Boolean} [grouped] Should the list be displayed grouped
      * @param {Object} [context] context to send the server while loading the view
      */
-    reload_view: function (grouped, context) {
+    reload_view: function (grouped, context, initial) {
         var self = this;
         var callback = function (field_view_get) {
             self.on_loaded(field_view_get, grouped);
@@ -382,10 +382,19 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
      * re-renders the content of the list view
      */
     reload_content: function () {
+        var self = this;
         this.records.reset();
         this.$element.find('.oe-listview-content').append(
-            this.groups.render(
-                $.proxy(this, 'compute_aggregates')));
+            this.groups.render(function () {
+                if (self.dataset.index == null) {
+                    var has_one = false;
+                    self.records.each(function () { has_one = true; });
+                    if (has_one) {
+                        self.dataset.index = 0;
+                    }
+                }
+                self.compute_aggregates();
+            }));
     },
     /**
      * Event handler for a search, asks for the computation/folding of domains
@@ -398,8 +407,8 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
      */
     do_search: function (domains, contexts, groupbys) {
         return this.rpc('/base/session/eval_domain_and_context', {
-            domains: domains,
-            contexts: contexts,
+            domains: [this.dataset.get_domain()].concat(domains),
+            contexts: [this.dataset.get_context()].concat(contexts),
             group_by_seq: groupbys
         }, $.proxy(this, 'do_actual_search'));
     },
@@ -588,8 +597,11 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
             $footer_cells.filter(_.sprintf('[data-field=%s]', column.id))
                 .html(openerp.base.format_cell(aggregation, column));
         });
+    },
+    get_selected_ids: function() {
+        var ids = this.groups.get_selection().ids;
+        return ids;
     }
-    // TODO: implement reorder (drag and drop rows)
 });
 openerp.base.ListView.List = openerp.base.Class.extend( /** @lends openerp.base.ListView.List# */{
     /**
@@ -641,12 +653,22 @@ openerp.base.ListView.List = openerp.base.Class.extend( /** @lends openerp.base.
             'reset': $.proxy(this, 'on_records_reset'),
             'change': function (event, record) {
                 var $row = self.$current.find('[data-id=' + record.get('id') + ']');
-                $row.replaceWith(self.render_record($row.data('index')));
+                $row.replaceWith(self.render_record(record));
             },
             'add': function (ev, records, record, index) {
-                $('<tr>').attr({
+                var $new_row = $('<tr>').attr({
                     'data-id': record.get('id')
-                }).insertAfter(self.$current.children(':eq(' + index + ')'));
+                });
+
+                if (index === 0) {
+                    $new_row.prependTo(self.$current);
+                } else {
+                    var previous_record = records.at(index-1),
+                        $previous_sibling = self.$current.find(
+                                '[data-id=' + previous_record.get('id') + ']');
+                    $new_row.insertAfter($previous_sibling);
+                }
+
                 self.refresh_zebra(index, 1);
             }
         };
@@ -672,16 +694,17 @@ openerp.base.ListView.List = openerp.base.Class.extend( /** @lends openerp.base.
                 var $target = $(e.currentTarget),
                       field = $target.closest('td').data('field'),
                        $row = $target.closest('tr'),
-                  record_id = self.row_id($row),
-                      index = self.row_position($row);
+                  record_id = self.row_id($row);
 
                 $(self).trigger('action', [field, record_id, function () {
-                    return self.reload_record(index);
+                    return self.reload_record(self.records.get(record_id));
                 }]);
             })
             .delegate('tr', 'click', function (e) {
                 e.stopPropagation();
-                self.dataset.index = self.row_position(e.currentTarget);
+                self.dataset.index = self.records.indexOf(
+                    self.records.get(
+                        self.row_id(e.currentTarget)));
                 self.row_clicked(e);
             });
     },
@@ -719,15 +742,6 @@ openerp.base.ListView.List = openerp.base.Class.extend( /** @lends openerp.base.
         return result;
     },
     /**
-     * Returns the index of the row in the list of rows.
-     *
-     * @param {Object} row the selected row
-     * @returns {Number} the position of the row in this.rows
-     */
-    row_position: function (row) {
-        return $(row).data('index');
-    },
-    /**
      * Returns the identifier of the object displayed in the provided table
      * row
      *
@@ -755,48 +769,43 @@ openerp.base.ListView.List = openerp.base.Class.extend( /** @lends openerp.base.
         });
     },
     /**
-     * Reloads the record at index ``row_index`` in the list's rows.
+     * Reloads the provided record by re-reading its content from the server.
      *
-     * By default, simply re-renders the record. If the ``fetch`` parameter is
-     * provided and ``true``, will first fetch the record anew.
-     *
-     * @param {Number} record_index index of the record to reload
-     * @param {Boolean} fetch fetches the record from remote before reloading it
+     * @param {Record} record
+     * @returns {$.Deferred} promise to the finalization of the reloading
      */
-    reload_record: function (record_index) {
-        var r = this.records.at(record_index);
-
+    reload_record: function (record) {
         return this.dataset.read_ids(
-            [r.get('id')],
+            [record.get('id')],
             _.pluck(_(this.columns).filter(function (r) {
                     return r.tag === 'field';
                 }), 'name'),
-            function (record) {
-                _(record[0]).each(function (value, key) {
-                    r.set(key, value, {silent: true});
+            function (records) {
+                _(records[0]).each(function (value, key) {
+                    record.set(key, value, {silent: true});
                 });
-                r.trigger('change', r);
+                record.trigger('change', record);
             }
         );
     },
     /**
      * Renders a list record to HTML
      *
-     * @param {Number} record_index index of the record to render in ``this.rows``
+     * @param {Record} record index of the record to render in ``this.rows``
      * @returns {String} QWeb rendering of the selected record
      */
-    render_record: function (record_index) {
+    render_record: function (record) {
+        var index = this.records.indexOf(record);
         return QWeb.render('ListView.row', {
             columns: this.columns,
             options: this.options,
-            record: this.records.at(record_index),
-            row_parity: (record_index % 2 === 0) ? 'even' : 'odd',
-            row_index: record_index,
+            record: record,
+            row_parity: (index % 2 === 0) ? 'even' : 'odd',
             render_cell: openerp.base.format_cell
         });
     },
     /**
-     * Fixes @data-index on all table rows, and fixes the even/odd classes
+     * Fixes fixes the even/odd classes
      *
      * @param {Number} [from_index] index from which to resequence
      * @param {Number} [offset = 0] selection offset for DOM, in case there are rows to ignore in the table
@@ -810,8 +819,7 @@ openerp.base.ListView.List = openerp.base.Class.extend( /** @lends openerp.base.
             var index = from_index + i;
             // reset record-index accelerators on rows and even/odd
             var even = index%2 === 0;
-            $(e).attr('data-index', index)
-                .toggleClass('even', even)
+            $(e).toggleClass('even', even)
                 .toggleClass('odd', !even);
         });
     }
@@ -1043,25 +1051,25 @@ openerp.base.ListView.Groups = openerp.base.Class.extend( /** @lends openerp.bas
         var fields = _.pluck(_.select(this.columns, function(x) {return x.tag == "field"}), 'name');
         var options = { offset: page * limit, limit: limit };
         dataset.read_slice(fields, options , function (records) {
-                if (!self.datagroup.openable) {
-                    view.configure_pager(dataset);
-                } else {
-                    var pages = Math.ceil(dataset.ids.length / limit);
-                    self.$row
-                        .find('.oe-pager-state')
-                            .text(_.sprintf('%d/%d', page + 1, pages))
-                        .end()
-                        .find('button[data-pager-action=previous]')
-                            .attr('disabled', page === 0)
-                        .end()
-                        .find('button[data-pager-action=next]')
-                            .attr('disabled', page === pages - 1);
-                }
+            if (!self.datagroup.openable) {
+                view.configure_pager(dataset);
+            } else {
+                var pages = Math.ceil(dataset.ids.length / limit);
+                self.$row
+                    .find('.oe-pager-state')
+                        .text(_.sprintf('%d/%d', page + 1, pages))
+                    .end()
+                    .find('button[data-pager-action=previous]')
+                        .attr('disabled', page === 0)
+                    .end()
+                    .find('button[data-pager-action=next]')
+                        .attr('disabled', page === pages - 1);
+            }
 
-                self.records.add(records, {silent: true});
-                list.render();
-                d.resolve(list);
-            });
+            self.records.add(records, {silent: true});
+            list.render();
+            d.resolve(list);
+        });
         return d.promise();
     },
     setup_resequence_rows: function (list, dataset) {
@@ -1075,14 +1083,12 @@ openerp.base.ListView.Groups = openerp.base.Class.extend( /** @lends openerp.bas
         // ondrop, move relevant record & fix sequences
         list.$current.sortable({
             stop: function (event, ui) {
-                var from = ui.item.data('index'),
-                      to = ui.item.prev().data('index') || 0;
-                if (from === to) { return; }
-                var to_move = list.records.at(from);
-                list.records.remove(to_move);
-                list.records.add(to_move, {at: to});
+                var to_move = list.records.get(ui.item.data('id')),
+                    target_id = ui.item.prev().data('id');
 
-                list.refresh_zebra();
+                list.records.remove(to_move);
+                var to = target_id ? list.records.indexOf(list.records.get(target_id)) : 0;
+                list.records.add(to_move, { at: to });
 
                 // resequencing time!
                 var record, index = to,
@@ -1096,6 +1102,8 @@ openerp.base.ListView.Groups = openerp.base.Class.extend( /** @lends openerp.bas
                     dataset.write(record.get('id'), {sequence: seq});
                     record.set('sequence', seq);
                 }
+
+                list.refresh_zebra();
             }
         });
     },
@@ -1439,6 +1447,11 @@ var Collection = openerp.base.Class.extend(/** @lends Collection# */{
             results.push(callback(record));
         });
         return results;
+    },
+    pluck: function (fieldname) {
+        return this.map(function (record) {
+            return record.get(fieldname);
+        });
     },
     indexOf: function (record) {
         return _(this.records).indexOf(record);

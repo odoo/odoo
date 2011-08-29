@@ -870,6 +870,9 @@ label.error {
 .openerp .oe_forms input[type="text"], .openerp .oe_forms input[type="password"], .openerp .oe_forms select, .openerp .oe_forms .button {
     height: 22px;
 }
+.openerp .oe_forms input.field_datetime {
+    min-width: 11em;
+}
 .openerp .oe_forms .button {
     color: #4c4c4c;
     white-space: nowrap;
@@ -878,12 +881,19 @@ label.error {
     position: relative;
     vertical-align: top;
 }
-.openerp img.ui-datepicker-trigger, .openerp img.ui-datepicker-trigger {
+.openerp img.ui-datepicker-trigger {
     margin-left: -20px;
     vertical-align: middle;
     cursor: pointer;
     position: relative;
     top: -1px;
+}
+.openerp img.oe_field_translate {
+    margin-left: -21px;
+    vertical-align: top;
+    cursor: pointer;
+    position: relative;
+    top: 4px;
 }
 
 /* http://www.quirksmode.org/dom/inputfile.html
