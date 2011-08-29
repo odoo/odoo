@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="view_asset_close" model="ir.ui.view">
+            <field name="name">account.asset.close.wizard</field>
+            <field name="model">account.asset.close</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Close Asset">
+                    <separator string="Close Asset" colspan="4"/>
+                    <label string="This wizard will close the asset(s)." colspan="4"/>
+                    <separator string="" colspan="4"/>
+                    <group colspan="4" col="6">
+                       <label string="" colspan="2"/>
+                       <button icon="gtk-cancel" special="cancel" string="Cancel"/>
+                       <button icon="gtk-close" string="Close Asset" name="asset_close" type="object"/>
+                    </group>
+                 </form>
+            </field>
+        </record>
+
+        <!--  <act_window
+            id="act_asset_close"
+            res_model="account.asset.close"
+            src_model="account.asset.asset"
+            target="new"
+            name="Close Asset"
+            view_mode="form"
+            key2="client_action_multi"
+         />-->
+
+    </data>
+</openerp>

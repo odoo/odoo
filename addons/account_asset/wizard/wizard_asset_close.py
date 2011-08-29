@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,37 +15,25 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
-import wizard
-import pooler
+from osv import osv, fields
 
-asset_end_arch = '''<?xml version="1.0"?>
-<form string="Close asset">
-    <separator string="General information" colspan="4"/>
-</form>'''
+class wizard_asset_close(osv.osv_memory):
+    _name = 'account.asset.close'
+    _description = 'Close Asset'
 
-asset_end_fields = {
-}
+    def asset_close(self, cr, uid, ids, context=None):
+#        TODO: Need to improve
+#        asset_obj = self.pool.get('account.asset.asset')
+#        asset_ids = context and context.get('active_ids') or []
+#        for asset in asset_obj.browse(cr, uid, asset_ids, context=context):
+#            if asset.state == 'open':
+#                asset_obj.set_to_close(cr, uid, asset.id, context=context)
+        return {'type': 'ir.actions.act_window_close'}
 
-class wizard_asset_close(wizard.interface):
-    states = {
-        'init': {
-            'actions': [],
-            'result': {'type':'form', 'arch':asset_end_arch, 'fields':asset_end_fields, 'state':[
-                ('end','Cancel'),
-                ('asset_close','End of asset')
-            ]}
-        },
-        'asset_close': {
-            'actions': [],
-            'result': {'type' : 'state', 'state': 'end'}
-        }
-    }
-wizard_asset_close('account.asset.close')
-
+wizard_asset_close()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
