@@ -432,10 +432,13 @@ def load_actions_from_ir_values(req, key, key2, models, meta):
             for id, name, action in actions]
 
 def clean_action(req, action):
+    action.setdefault('flags', {})
+    if action['type'] != 'ir.actions.act_window':
+        return action
+
     context = req.session.eval_context(req.context)
     eval_ctx = req.session.evaluation_context(context)
-    action.setdefault('flags', {})
-    
+
     # values come from the server, we can just eval them
     if isinstance(action.get('context'), basestring):
         action['context'] = eval( action['context'], eval_ctx ) or {}
