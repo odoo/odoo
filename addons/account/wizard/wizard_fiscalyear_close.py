@@ -150,27 +150,28 @@ def _data_save(self, cr, uid, data, context=None):
                  name, create_uid, create_date, write_uid, write_date,
                  statement_id, journal_id, currency_id, date_maturity,
                  partner_id, blocked, credit, state, debit,
-                 ref, account_id, period_id, date, move_id, amount_currency, 
-                 quantity, product_id) 
-              (SELECT 
+                 ref, account_id, period_id, date, move_id, amount_currency,
+                 quantity, product_id)
+              (SELECT
                  b.name, b.create_uid, b.create_date, b.write_uid, b.write_date,
                  b.statement_id, %s, b.currency_id, b.date_maturity,
                  b.partner_id, b.blocked, b.credit, 'draft', b.debit,
-                 b.ref, b.account_id, %s, b.date, %s, b.amount_currency, 
+                 b.ref, b.account_id, %s, b.date, %s, b.amount_currency,
                  b.quantity, b.product_id
-                 FROM account_move_line a, account_move_line b
+                 FROM account_move_line b
                  WHERE b.account_id IN %s
                    AND b.reconcile_id IS NOT NULL
-                   AND a.reconcile_id = b.reconcile_id
                    AND b.period_id IN ('''+fy_period_set+''')
-                   AND a.period_id IN ('''+fy2_period_set+'''))''', (new_journal.id, period.id, move_id, tuple(account_ids),))
+                   AND b.reconcile_id IN (SELECT DISTINCT(reconcile_id)
+                                      FROM account_move_line a
+                                      WHERE a.period_id IN ('''+fy2_period_set+''')))''', (new_journal.id, period.id, move_id, tuple(account_ids),))
 
     #2. report of the accounts with defferal method == 'detail'
     cr.execute('''
-        SELECT a.id 
+        SELECT a.id
         FROM account_account a
         LEFT JOIN account_account_type t ON (a.user_type = t.id)
-        WHERE a.active 
+        WHERE a.active
           AND a.type != 'view'
           AND t.close_method = %s''', ('detail', ))
     account_ids = map(lambda x: x[0], cr.fetchall())
@@ -181,28 +182,35 @@ def _data_save(self, cr, uid, data, context=None):
                  name, create_uid, create_date, write_uid, write_date,
                  statement_id, journal_id, currency_id, date_maturity,
                  partner_id, blocked, credit, state, debit,
-                 ref, account_id, period_id, date, move_id, amount_currency, 
-                 quantity, product_id) 
+                 ref, account_id, period_id, date, move_id, amount_currency,
+                 quantity, product_id)
               (SELECT name, create_uid, create_date, write_uid, write_date,
                  statement_id, %s,currency_id, date_maturity, partner_id,
                  blocked, credit, 'draft', debit, ref, account_id,
                  %s, date, %s, amount_currency, quantity,product_id
                FROM account_move_line
-               WHERE account_id IN %s 
-                 AND ''' + query_line + ''') 
+               WHERE account_id IN %s
+                 AND ''' + query_line + ''')
                  ''', (new_journal.id, period.id, move_id, tuple(account_ids),))
 
 
     #3. report of the accounts with defferal method == 'balance'
     cr.execute('''
-        SELECT a.id 
+        SELECT a.id
         FROM account_account a
         LEFT JOIN account_account_type t ON (a.user_type = t.id)
-        WHERE a.active 
+        WHERE a.active
           AND a.type != 'view'
           AND t.close_method = %s''', ('balance', ))
     account_ids = map(lambda x: x[0], cr.fetchall())
 
+    query_1st_part = """
+            INSERT INTO account_move_line (
+                 debit, credit, name, date, move_id, journal_id, period_id,
+                 account_id, currency_id, amount_currency) VALUES 
+    """
+    query_2nd_part = ""
+    query_2nd_part_args = []
     for account in obj_acc_account.browse(cr, uid, account_ids, context={'fiscalyear': fy_id}):
         accnt_type_data = account.user_type
         if accnt_type_data.close_method == 'balance':
@@ -216,18 +224,21 @@ def _data_save(self, cr, uid, data, context=None):
 
             company_currency_id = pool.get('res.users').browse(cr, uid, uid).company_id.currency_id
             if not currency_obj.is_zero(cr, uid, company_currency_id, abs(account.balance)):
-                obj_acc_move_line.create(cr, uid, {
-                    'debit': account.balance > 0 and account.balance,
-                    'credit': account.balance < 0 and -account.balance,
-                    'name': data['form']['report_name'],
-                    'date': period.date_start,
-                    'move_id': move_id,
-                    'journal_id': new_journal.id,
-                    'period_id': period.id,
-                    'account_id': account.id,
-                    'currency_id': account.currency_id and account.currency_id.id or False,
-                    'amount_currency': balance_in_currency,
-                }, {'journal_id': new_journal.id, 'period_id':period.id})
+                if query_2nd_part:
+                    query_2nd_part += ','
+                query_2nd_part += "(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+                query_2nd_part_args += (account.balance > 0 and account.balance or 0.0,
+                       account.balance < 0 and -account.balance or 0.0,
+                       data['form']['report_name'],
+                       period.date_start,
+                       move_id,
+                       new_journal.id,
+                       period.id,
+                       account.id,
+                       account.currency_id and account.currency_id.id or None,
+                       balance_in_currency)
+    if query_2nd_part:
+        cr.execute(query_1st_part + query_2nd_part, tuple(query_2nd_part_args))
 
     #validate and centralize the opening move
     obj_acc_move.validate(cr, uid, [move_id], context=context)
