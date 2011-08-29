@@ -1112,7 +1112,7 @@ def export_xls(fieldnames, table):
     data = fp.read()
     fp.close()
     #return data.decode('ISO-8859-1')
-    return unicode(data, 'utf-8', 'replace')
+    return base64.b64encode(data)
 
 class Export(View):
     _cp_path = "/base/export"

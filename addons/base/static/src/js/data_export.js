@@ -398,7 +398,7 @@ openerp.base.DataExport = openerp.base.Dialog.extend({
         }, function(data) {
             var mime = export_format === 'csv'
                     ? 'text/csv;charset=utf8'
-                    : 'application/vnd.mx-excel';
+                    : 'application/vnd.mx-excel;base64';
             window.location = 'data:' + mime + ',' + data;
             self.close();
         });
