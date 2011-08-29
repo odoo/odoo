@@ -1565,14 +1565,16 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
         var self = this;
         if (!self.value)
             return;
-        self.rpc("/base/action/load", {
-            action_id: related[2].id,
-            context: {
+        var additional_context = {
                 active_id: self.value[0],
                 active_ids: [self.value[0]],
                 active_model: self.field.relation
-            }
+        };
+        self.rpc("/base/action/load", {
+            action_id: related[2].id,
+            context: additional_context
         }, function(result) {
+            result.result.context = _.extend(result.result.context || {}, additional_context);
             self.do_action(result.result);
         });
     }
