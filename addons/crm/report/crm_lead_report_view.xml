@@ -18,7 +18,8 @@
                 <field name="channel_id" invisible="1"/>
                 <field name="type" invisible="1"/>
                 <field name="priority" invisible="1"/>
-                <field name="month" invisible="1"/>
+                <field name="creation_month" invisible="1"/>
+                <field name="deadline_month" invisible="1"/>
                 <field name="section_id" invisible="1"/>
                 <field name="user_id" invisible="1"/>
                 <field name="company_id" invisible="1"/>
@@ -115,21 +116,7 @@
                         <field name="user_id" string="Salesman">
                             <filter icon="terp-personal" string="My Case(s)" help="My Case(s)" domain="[('user_id','=',uid)]" />
                         </field>
-                    </group>
-                    <newline/>
-                    <group expand="0" string="Extended Filters..." groups="base.group_extended">
                         <field name="partner_id"/>
-                        <separator orientation="vertical"/>
-                        <field name="stage_id" widget="selection" domain="[('type', '=', 'lead')]" />
-                        <field name="categ_id" widget="selection"/>
-                        <field name="type_id" widget="selection"/>
-                        <field name="channel_id" widget="selection"/>
-                        <separator orientation="vertical"/>
-                        <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                        <newline/>
-                        <field name="creation_date"/>
-                        <field name="opening_date"/>
-                        <field name="date_closed"/>
                     </group>
                     <newline/>
                     <group expand="1" string="Group By...">
@@ -157,12 +144,10 @@
                         <filter string="State" icon="terp-stock_effects-object-colorize"
                             domain="[]" context="{'group_by':'state'}" />
                         <separator orientation="vertical" />
-                        <filter string="Day" icon="terp-go-today"
-                            domain="[]" context="{'group_by':'day'}" help="Day on which lead/opportunity is created"/>
-                        <filter string="Month" icon="terp-go-month"
-                            domain="[]" context="{'group_by':'month'}" help="Month in which lead/opportunity is created"/>
-                        <filter string="Year" icon="terp-go-year"
-                            domain="[]" context="{'group_by':'name'}" help="Year in which lead/opportunity is created"/>
+                        <filter string="Creation Date" icon="terp-go-month"
+                            domain="[]" context="{'group_by':'creation_month'}"/>
+                        <filter string="Exp. Closing"  icon="terp-go-month"
+                            domain="[]" context="{'group_by':'deadline_month'}"/>
                     </group>
                 </search>
             </field>
@@ -177,7 +162,8 @@
             <field name="arch" type="xml">
             <tree colors="blue:state in ('draft');black:state in ('open','pending','done');gray:state in ('cancel') " string="Opportunities Analysis">
                 <field name="name" invisible="1"/>
-                <field name="month" invisible="1"/>
+                <field name="creation_month" invisible="1"/>
+                <field name="deadline_month" invisible="1"/>
                 <field name="section_id" invisible="1" groups="base.group_extended"/>
                 <field name="user_id" invisible="1"/>
                 <field name="partner_id" invisible="1"/>

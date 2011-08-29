@@ -123,7 +123,7 @@ class project(osv.osv):
         return super(project, self).unlink(cr, uid, ids, *args, **kwargs)
 
     _columns = {
-        'complete_name': fields.function(_complete_name, method=True, string="Project Name", type='char', size=250),
+        'complete_name': fields.function(_complete_name, string="Project Name", type='char', size=250),
         'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the project without removing it."),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of Projects."),
         'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account', help="Link this project to an analytic account if you need financial management on projects. It enables you to connect projects with budgets, planning, cost and revenue analysis, timesheets on projects, etc.", ondelete="cascade", required=True),
@@ -133,18 +133,18 @@ class project(osv.osv):
         'members': fields.many2many('res.users', 'project_user_rel', 'project_id', 'uid', 'Project Members',
             help="Project's members are users who can have an access to the tasks related to this project.", states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'tasks': fields.one2many('project.task', 'project_id', "Project tasks"),
-        'planned_hours': fields.function(_progress_rate, multi="progress", method=True, string='Planned Time', help="Sum of planned hours of all tasks related to this project and its child projects.",
+        'planned_hours': fields.function(_progress_rate, multi="progress", string='Planned Time', help="Sum of planned hours of all tasks related to this project and its child projects.",
             store = {
                 'project.project': (lambda self, cr, uid, ids, c={}: ids, ['tasks'], 10),
                 'project.task': (_get_project_task, ['planned_hours', 'effective_hours', 'remaining_hours', 'total_hours', 'progress', 'delay_hours','state'], 10),
             }),
-        'effective_hours': fields.function(_progress_rate, multi="progress", method=True, string='Time Spent', help="Sum of spent hours of all tasks related to this project and its child projects."),
-        'total_hours': fields.function(_progress_rate, multi="progress", method=True, string='Total Time', help="Sum of total hours of all tasks related to this project and its child projects.",
+        'effective_hours': fields.function(_progress_rate, multi="progress", string='Time Spent', help="Sum of spent hours of all tasks related to this project and its child projects."),
+        'total_hours': fields.function(_progress_rate, multi="progress", string='Total Time', help="Sum of total hours of all tasks related to this project and its child projects.",
             store = {
                 'project.project': (lambda self, cr, uid, ids, c={}: ids, ['tasks'], 10),
                 'project.task': (_get_project_task, ['planned_hours', 'effective_hours', 'remaining_hours', 'total_hours', 'progress', 'delay_hours','state'], 10),
             }),
-        'progress_rate': fields.function(_progress_rate, multi="progress", method=True, string='Progress', type='float', group_operator="avg", help="Percent of tasks closed according to the total of tasks todo."),
+        'progress_rate': fields.function(_progress_rate, multi="progress", string='Progress', type='float', group_operator="avg", help="Percent of tasks closed according to the total of tasks todo."),
         'warn_customer': fields.boolean('Warn Partner', help="If you check this, the user will have a popup when closing a task that propose a message to send by email to the customer.", states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'warn_header': fields.text('Mail Header', help="Header added at the beginning of the email for the warning message sent to the customer when a task is closed.", states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'warn_footer': fields.text('Mail Footer', help="Footer added at the beginning of the email for the warning message sent to the customer when a task is closed.", states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
@@ -420,7 +420,7 @@ class task(osv.osv):
         return result.keys()
 
     _columns = {
-        'active': fields.function(_is_template, method=True, store=True, string='Not a Template Task', type='boolean', help="This field is computed automatically and have the same behavior than the boolean 'active' field: if the task is linked to a template or unactivated project, it will be hidden unless specifically asked."),
+        'active': fields.function(_is_template, store=True, string='Not a Template Task', type='boolean', help="This field is computed automatically and have the same behavior than the boolean 'active' field: if the task is linked to a template or unactivated project, it will be hidden unless specifically asked."),
         'name': fields.char('Task Summary', size=128, required=True),
         'description': fields.text('Description'),
         'priority': fields.selection([('4','Very Low'), ('3','Low'), ('2','Medium'), ('1','Important'), ('0','Very important')], 'Priority'),
@@ -433,28 +433,28 @@ class task(osv.osv):
         'date_start': fields.datetime('Starting Date',select=True),
         'date_end': fields.datetime('Ending Date',select=True),
         'date_deadline': fields.date('Deadline',select=True),
-        'project_id': fields.many2one('project.project', 'Project', ondelete='cascade'),
+        'project_id': fields.many2one('project.project', 'Project', ondelete='set null', select="1"),
         'parent_ids': fields.many2many('project.task', 'project_task_parent_rel', 'task_id', 'parent_id', 'Parent Tasks'),
         'child_ids': fields.many2many('project.task', 'project_task_parent_rel', 'parent_id', 'task_id', 'Delegated Tasks'),
         'notes': fields.text('Notes'),
         'planned_hours': fields.float('Planned Hours', help='Estimated time to do the task, usually set by the project manager when the task is in draft state.'),
-        'effective_hours': fields.function(_hours_get, method=True, string='Hours Spent', multi='hours', help="Computed using the sum of the task work done.",
+        'effective_hours': fields.function(_hours_get, string='Hours Spent', multi='hours', help="Computed using the sum of the task work done.",
             store = {
                 'project.task': (lambda self, cr, uid, ids, c={}: ids, ['work_ids', 'remaining_hours', 'planned_hours'], 10),
                 'project.task.work': (_get_task, ['hours'], 10),
             }),
         'remaining_hours': fields.float('Remaining Hours', digits=(16,2), help="Total remaining time, can be re-estimated periodically by the assignee of the task."),
-        'total_hours': fields.function(_hours_get, method=True, string='Total Hours', multi='hours', help="Computed as: Time Spent + Remaining Time.",
+        'total_hours': fields.function(_hours_get, string='Total Hours', multi='hours', help="Computed as: Time Spent + Remaining Time.",
             store = {
                 'project.task': (lambda self, cr, uid, ids, c={}: ids, ['work_ids', 'remaining_hours', 'planned_hours'], 10),
                 'project.task.work': (_get_task, ['hours'], 10),
             }),
-        'progress': fields.function(_hours_get, method=True, string='Progress (%)', multi='hours', group_operator="avg", help="If the task has a progress of 99.99% you should close the task if it's finished or reevaluate the time",
+        'progress': fields.function(_hours_get, string='Progress (%)', multi='hours', group_operator="avg", help="If the task has a progress of 99.99% you should close the task if it's finished or reevaluate the time",
             store = {
                 'project.task': (lambda self, cr, uid, ids, c={}: ids, ['work_ids', 'remaining_hours', 'planned_hours','state'], 10),
                 'project.task.work': (_get_task, ['hours'], 10),
             }),
-        'delay_hours': fields.function(_hours_get, method=True, string='Delay Hours', multi='hours', help="Computed as difference of the time estimated by the project manager and the real time to close the task.",
+        'delay_hours': fields.function(_hours_get, string='Delay Hours', multi='hours', help="Computed as difference of the time estimated by the project manager and the real time to close the task.",
             store = {
                 'project.task': (lambda self, cr, uid, ids, c={}: ids, ['work_ids', 'remaining_hours', 'planned_hours'], 10),
                 'project.task.work': (_get_task, ['hours'], 10),
@@ -529,8 +529,6 @@ class task(osv.osv):
     #
     # Override view according to the company definition
     #
-
-
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         users_obj = self.pool.get('res.users')
 
@@ -562,13 +560,27 @@ class task(osv.osv):
                 res['fields'][f]['string'] = res['fields'][f]['string'].replace('Hours',tm)
         return res
 
+    def _check_child_task(self, cr, uid, ids, context=None):
+        if context == None:
+            context = {}
+        tasks = self.browse(cr, uid, ids, context=context)
+        for task in tasks:
+            if task.child_ids:
+                for child in task.child_ids:
+                    if child.state in ['draft', 'open', 'pending']:
+                        raise osv.except_osv(_("Warning !"), _("Child task still open.\nPlease cancel or complete child task first."))
+        return True
+
     def action_close(self, cr, uid, ids, context=None):
         # This action open wizard to send email to partner or project manager after close task.
-        project_id = len(ids) and ids[0] or False
-        if not project_id: return False
-        task = self.browse(cr, uid, project_id, context=context)
+        if context == None:
+            context = {}
+        task_id = len(ids) and ids[0] or False
+        self._check_child_task(cr, uid, ids, context=context)
+        if not task_id: return False
+        task = self.browse(cr, uid, task_id, context=context)
         project = task.project_id
-        res = self.do_close(cr, uid, [project_id], context=context)
+        res = self.do_close(cr, uid, [task_id], context=context)
         if project.warn_manager or project.warn_customer:
             return {
                 'name': _('Send Email after close task'),
@@ -582,7 +594,7 @@ class task(osv.osv):
            }
         return res
 
-    def do_close(self, cr, uid, ids, context=None):
+    def do_close(self, cr, uid, ids, context={}):
         """
         Close Task
         """
@@ -601,7 +613,7 @@ class task(osv.osv):
                         'ref_partner_id': task.partner_id.id,
                         'ref_doc1': 'project.task,%d'% (task.id,),
                         'ref_doc2': 'project.project,%d'% (project.id,),
-                    })
+                    }, context=context)
 
             for parent_id in task.parent_ids:
                 if parent_id.state in ('pending','draft'):
@@ -610,12 +622,12 @@ class task(osv.osv):
                         if child.id != task.id and child.state not in ('done','cancelled'):
                             reopen = False
                     if reopen:
-                        self.do_reopen(cr, uid, [parent_id.id])
+                        self.do_reopen(cr, uid, [parent_id.id], context=context)
             vals.update({'state': 'done'})
             vals.update({'remaining_hours': 0.0})
             if not task.date_end:
                 vals.update({ 'date_end':time.strftime('%Y-%m-%d %H:%M:%S')})
-            self.write(cr, uid, [task.id],vals)
+            self.write(cr, uid, [task.id],vals, context=context)
             message = _("The task '%s' is done") % (task.name,)
             self.log(cr, uid, task.id, message)
         return True
@@ -634,15 +646,15 @@ class task(osv.osv):
                     'ref_partner_id': task.partner_id.id,
                     'ref_doc1': 'project.task,%d' % task.id,
                     'ref_doc2': 'project.project,%d' % project.id,
-                })
+                }, context=context)
 
-            self.write(cr, uid, [task.id], {'state': 'open'})
-
+            self.write(cr, uid, [task.id], {'state': 'open'}, context=context)
         return True
 
-    def do_cancel(self, cr, uid, ids, *args):
+    def do_cancel(self, cr, uid, ids, context={}):
         request = self.pool.get('res.request')
-        tasks = self.browse(cr, uid, ids)
+        tasks = self.browse(cr, uid, ids, context=context)
+        self._check_child_task(cr, uid, ids, context=context)
         for task in tasks:
             project = task.project_id
             if project.warn_manager and project.user_id and (project.user_id.id != uid):
@@ -654,25 +666,25 @@ class task(osv.osv):
                     'ref_partner_id': task.partner_id.id,
                     'ref_doc1': 'project.task,%d' % task.id,
                     'ref_doc2': 'project.project,%d' % project.id,
-                })
+                }, context=context)
             message = _("The task '%s' is cancelled.") % (task.name,)
             self.log(cr, uid, task.id, message)
-            self.write(cr, uid, [task.id], {'state': 'cancelled', 'remaining_hours':0.0})
+            self.write(cr, uid, [task.id], {'state': 'cancelled', 'remaining_hours':0.0}, context=context)
         return True
 
-    def do_open(self, cr, uid, ids, *args):
-        tasks= self.browse(cr,uid,ids)
+    def do_open(self, cr, uid, ids, context={}):
+        tasks= self.browse(cr, uid, ids, context=context)
         for t in tasks:
             data = {'state': 'open'}
             if not t.date_start:
                 data['date_start'] = time.strftime('%Y-%m-%d %H:%M:%S')
-            self.write(cr, uid, [t.id], data)
+            self.write(cr, uid, [t.id], data, context=context)
             message = _("The task '%s' is opened.") % (t.name,)
             self.log(cr, uid, t.id, message)
         return True
 
-    def do_draft(self, cr, uid, ids, *args):
-        self.write(cr, uid, ids, {'state': 'draft'})
+    def do_draft(self, cr, uid, ids, context={}):
+        self.write(cr, uid, ids, {'state': 'draft'}, context=context)
         return True
 
     def do_delegate(self, cr, uid, task_id, delegate_data={}, context=None):
@@ -707,34 +719,48 @@ class task(osv.osv):
         self.log(cr, uid, task.id, message)
         return True
 
-    def do_pending(self, cr, uid, ids, *args):
-        self.write(cr, uid, ids, {'state': 'pending'})
+    def do_pending(self, cr, uid, ids, context={}):
+        self.write(cr, uid, ids, {'state': 'pending'}, context=context)
         for (id, name) in self.name_get(cr, uid, ids):
             message = _("The task '%s' is pending.") % name
             self.log(cr, uid, id, message)
         return True
 
-    def next_type(self, cr, uid, ids, *args):
+    def _change_type(self, cr, uid, ids, next, *args):
+        """
+            go to the next stage
+            if next is False, go to previous stage
+        """
         for task in self.browse(cr, uid, ids):
-            typeid = task.type_id.id
-            types = map(lambda x:x.id, task.project_id.type_ids or [])
-            if types:
+            if  task.project_id.type_ids:
+                typeid = task.type_id.id
+                types_seq={}
+                for type in task.project_id.type_ids :
+                    types_seq[type.id] = type.sequence
+                if next:
+                    types = sorted(types_seq.items(), lambda x, y: cmp(x[1], y[1]))
+                else:
+                    types = sorted(types_seq.items(), lambda x, y: cmp(y[1], x[1]))
+                sorted_types = [x[0] for x in types]
                 if not typeid:
-                    self.write(cr, uid, task.id, {'type_id': types[0]})
-                elif typeid and typeid in types and types.index(typeid) != len(types)-1:
-                    index = types.index(typeid)
-                    self.write(cr, uid, task.id, {'type_id': types[index+1]})
+                    self.write(cr, uid, task.id, {'type_id': sorted_types[0]})
+                elif typeid and typeid in sorted_types and sorted_types.index(typeid) != len(sorted_types)-1:
+                    index = sorted_types.index(typeid)
+                    self.write(cr, uid, task.id, {'type_id': sorted_types[index+1]})
         return True
 
+    def next_type(self, cr, uid, ids, *args):
+        return self._change_type(cr, uid, ids, True, *args)
+
     def prev_type(self, cr, uid, ids, *args):
-        for task in self.browse(cr, uid, ids):
-            typeid = task.type_id.id
-            types = map(lambda x:x.id, task.project_id and task.project_id.type_ids or [])
-            if types:
-                if typeid and typeid in types:
-                    index = types.index(typeid)
-                    self.write(cr, uid, task.id, {'type_id': index and types[index-1] or False})
-        return True
+        return self._change_type(cr, uid, ids, False, *args)
+
+    def unlink(self, cr, uid, ids, context=None):
+        if context == None:
+            context = {}
+        self._check_child_task(cr, uid, ids, context=context)
+        res = super(task, self).unlink(cr, uid, ids, context)
+        return res
 
 task()
 
@@ -743,10 +769,10 @@ class project_work(osv.osv):
     _description = "Project Task Work"
     _columns = {
         'name': fields.char('Work summary', size=128),
-        'date': fields.datetime('Date'),
-        'task_id': fields.many2one('project.task', 'Task', ondelete='cascade', required=True),
+        'date': fields.datetime('Date', select="1"),
+        'task_id': fields.many2one('project.task', 'Task', ondelete='cascade', required=True, select="1"),
         'hours': fields.float('Time Spent'),
-        'user_id': fields.many2one('res.users', 'Done by', required=True),
+        'user_id': fields.many2one('res.users', 'Done by', required=True, select="1"),
         'company_id': fields.related('task_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True)
     }
 

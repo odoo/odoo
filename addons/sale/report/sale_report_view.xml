@@ -21,7 +21,7 @@
                 <field name="categ_id" invisible="1"/>
                 <field name="nbr" sum="# of Lines"/>
                 <field name="product_uom_qty" sum="# of Qty"/>
-                <field name="shipped_qty_1" sum="Shipped Qty"/>
+                <field name="shipped_qty_1" sum="Shipped"/>
                 <field name="uom_name" invisible="not context.get('set_visible',False)"/>
                 <field name="price_total" sum="Total Price"/>
                 <field name="delay" sum="Commitment Delay"/>
@@ -83,15 +83,6 @@
                             help="My Sales"
                             domain="[('user_id','=',uid)]"/>
                     </field>
-                </group>
-                <newline/>
-                <group expand="0" string="Extended Filters..." groups="base.group_extended">
-                    <field name="shop_id" widget="selection"/>
-                    <field name="categ_id" widget="selection"/>
-                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                    <newline/>
-                    <field name="date"/>
-                    <field name="date_confirm"/>
                 </group>
                 <newline/>
                 <group expand="1" string="Group By..." colspan="10" col="12">

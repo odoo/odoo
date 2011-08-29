@@ -7,25 +7,25 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:14+0000\n"
-"PO-Revision-Date: 2011-01-15 22:23+0000\n"
-"Last-Translator: Arif Aydogmus <arifaydogmus@gmail.com>\n"
+"PO-Revision-Date: 2011-05-29 17:47+0000\n"
+"Last-Translator: Ayhan KIZILTAN <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 05:33+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-05-30 04:58+0000\n"
+"X-Generator: Launchpad (build 12959)\n"
 
 #. module: account_voucher
 #: view:account.voucher.unreconcile:0
 msgid "Unreconciliation transactions"
-msgstr "Mutabakatsız hareketler"
+msgstr "Uzlaştırılmamış işlemler"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:242
+#: code:addons/account_voucher/account_voucher.py:247
 #, python-format
 msgid "Write-Off"
-msgstr "Amortisman"
+msgstr "Borç Silme"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -35,29 +35,29 @@ msgstr "Ödeme Referansı"
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Open Customer Journal Entries"
-msgstr "Açık Müşteri Yevmiye Girdileri"
+msgstr "Müşteri Yevmiye Girişlerini Aç"
 
 #. module: account_voucher
 #: view:sale.receipt.report:0
 msgid "Voucher Date"
-msgstr "Çek Tarihi"
+msgstr "Fiş Tarihi"
 
 #. module: account_voucher
 #: report:voucher.print:0
 msgid "Particulars"
-msgstr ""
+msgstr "Ayrıntılar"
 
 #. module: account_voucher
 #: view:account.voucher:0
 #: view:sale.receipt.report:0
 msgid "Group By..."
-msgstr "Gruplama"
+msgstr "Gruplandır..."
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:591
+#: code:addons/account_voucher/account_voucher.py:596
 #, python-format
 msgid "Cannot delete Voucher(s) which are already opened or paid !"
-msgstr "Açık ya da ödenmiş çekler silinemez !"
+msgstr "Açık ya da ödenmiş fiş(ler) silinemez !"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -67,7 +67,7 @@ msgstr "Tedarikçi"
 #. module: account_voucher
 #: model:ir.actions.report.xml,name:account_voucher.report_account_voucher_print
 msgid "Voucher Print"
-msgstr "Çek Yazdır"
+msgstr "Fiş Yazdır"
 
 #. module: account_voucher
 #: model:ir.module.module,description:account_voucher.module_meta_information
@@ -80,19 +80,27 @@ msgid ""
 "    * Cheque Register\n"
 "    "
 msgstr ""
+"Hesap Fişi Modülü aşağıdakilere ait tüm temel gereksinimleri içerir\n"
+"    Bankalar, Nakit, Satış, Satınalma, Gider, Karlıhesap, v.b...\n"
+"    * Fiş Girişi\n"
+"    * Tahsilat Fişi\n"
+"    * Çek Kayıtı\n"
+"    "
 
 #. module: account_voucher
 #: view:account.voucher:0
 #: model:ir.actions.act_window,name:account_voucher.act_pay_bills
 msgid "Bill Payment"
-msgstr ""
+msgstr "Fatura Ödeme"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:741
+#: code:addons/account_voucher/account_voucher.py:746
 #, python-format
 msgid ""
 "You have to configure account base code and account tax code on the '%s' tax!"
 msgstr ""
+"'%s' Vergisi için temel hesap kodunu ve vergi hesap kodunu yapılandırmanız "
+"gerekir!"
 
 #. module: account_voucher
 #: view:account.statement.from.invoice.lines:0
@@ -100,12 +108,12 @@ msgstr ""
 #: model:ir.actions.act_window,name:account_voucher.action_view_account_statement_from_invoice_lines
 #, python-format
 msgid "Import Entries"
-msgstr "Girdileri İçe aktar"
+msgstr "Girişleri İçeaktar"
 
 #. module: account_voucher
 #: model:ir.model,name:account_voucher.model_account_voucher_unreconcile
 msgid "Account voucher unreconcile"
-msgstr ""
+msgstr "Hesap fişlerini uzlaştır"
 
 #. module: account_voucher
 #: selection:sale.receipt.report,month:0
@@ -120,6 +128,9 @@ msgid ""
 "automatically and you can record the customer payment related to this sales "
 "receipt."
 msgstr ""
+"Bir müşteriye mal satarken ona satış fişi ya da fatura verebilirsiniz. Satış "
+"fişi onaylandığında yevmiye kalemleri otomatik olarak oluşturulur ve bu "
+"satış fişine ait müşteri ödemesini kayıt edebilirisiniz."
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -132,27 +143,27 @@ msgstr "Fatura Öde"
 #: view:sale.receipt.report:0
 #: field:sale.receipt.report,company_id:0
 msgid "Company"
-msgstr "Şirket"
+msgstr "Firma"
 
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Set to Draft"
-msgstr "Taslak olarak Ayarla"
+msgstr "Taslağa  Ayarla"
 
 #. module: account_voucher
 #: help:account.voucher,reference:0
 msgid "Transaction reference number."
-msgstr "Hareket referans numarası"
+msgstr "Hareket referans sayısı"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,name:account_voucher.action_view_account_voucher_unreconcile
 msgid "Unreconcile entries"
-msgstr "Mutabakatsız Girdiler"
+msgstr "Girişlerin Uzlaşmasını kaldır"
 
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Voucher Statistics"
-msgstr "Çek İstatistikleri"
+msgstr "Fiş İstatistikleri"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -168,7 +179,7 @@ msgstr "Gün"
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Search Vouchers"
-msgstr "Çek Arama"
+msgstr "Fiş Arama"
 
 #. module: account_voucher
 #: selection:account.voucher,type:0
@@ -181,7 +192,7 @@ msgstr "Satınalma"
 #: field:account.voucher.line,account_id:0
 #: field:sale.receipt.report,account_id:0
 msgid "Account"
-msgstr "Cari"
+msgstr "Hesap"
 
 #. module: account_voucher
 #: field:account.voucher,line_dr_ids:0
@@ -200,6 +211,9 @@ msgid ""
 "customer as well as payment delays. The tool search can also be used to "
 "personalise your Invoices reports and so, match this analysis to your needs."
 msgstr ""
+"Bu rapordan, müşterilerinize ait fatura tutarlarını ve gecikmiş ödemeleri "
+"gözden geçirebilirsiniz. Arama araçı ile de fatura raporlarını "
+"ihtiyaçlarınıza göre kişiselleştirebilirsiniz."
 
 #. module: account_voucher
 #: field:account.voucher,date_due:0
@@ -223,6 +237,10 @@ msgid ""
 "to you automatically the reconciliation of this payment with the open "
 "invoices or sales receipts."
 msgstr ""
+"Satış ödemesi müşterileriniz tarafından yapılan ödemeleri kayıt etmenizi "
+"sağlar. Bir ödemeyi kayıt etmek için müşteriyi, ödeme biçimini (=yevmiye) ve "
+"ödeme tutarını girmeniz gerekir. OpenERP size otomatik olarak bu hesabın "
+"açık faturalarıyla ve satış makbuzlarıyla uzlaştırılmasını önerir."
 
 #. module: account_voucher
 #: selection:account.voucher,type:0
@@ -233,18 +251,18 @@ msgstr "Satış"
 #. module: account_voucher
 #: field:account.voucher.line,move_line_id:0
 msgid "Journal Item"
-msgstr "Yevmiye Öğesi"
+msgstr "Yevmiye Kalemi"
 
 #. module: account_voucher
 #: field:account.voucher,reference:0
 msgid "Ref #"
-msgstr "Referans #"
+msgstr "Ref No"
 
 #. module: account_voucher
 #: field:account.voucher.line,amount:0
 #: report:voucher.print:0
 msgid "Amount"
-msgstr "Toplam"
+msgstr "Tutar"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -276,13 +294,13 @@ msgstr "Banka Ekstresi Kalemi"
 #: model:ir.actions.act_window,name:account_voucher.action_purchase_receipt
 #: model:ir.ui.menu,name:account_voucher.menu_action_purchase_receipt
 msgid "Supplier Vouchers"
-msgstr "Tedarikçi Çekleri"
+msgstr "Tedarikçi Fişleri"
 
 #. module: account_voucher
 #: view:account.voucher:0
 #: view:account.voucher.unreconcile:0
 msgid "Unreconcile"
-msgstr "Mutabakatı Kaldır"
+msgstr "Uzlaşmayı Kaldır"
 
 #. module: account_voucher
 #: field:account.voucher,tax_id:0
@@ -298,7 +316,7 @@ msgstr "Tutar (Yazıyla) :"
 #: view:sale.receipt.report:0
 #: field:sale.receipt.report,nbr:0
 msgid "# of Voucher Lines"
-msgstr "# Çek Kalemi"
+msgstr "Çek Satırı Sayısı"
 
 #. module: account_voucher
 #: field:account.voucher.line,account_analytic_id:0
@@ -318,7 +336,7 @@ msgstr "Devam"
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Paid Amount"
-msgstr "Ödeme Tutarı"
+msgstr "Ödenen Tutar"
 
 #. module: account_voucher
 #: view:account.bank.statement:0
@@ -328,23 +346,23 @@ msgstr "Faturaları İçe aktar"
 #. module: account_voucher
 #: report:voucher.print:0
 msgid "Account :"
-msgstr "Cari Hesap :"
+msgstr "Hesap :"
 
 #. module: account_voucher
 #: selection:account.voucher,type:0
 #: selection:sale.receipt.report,type:0
 msgid "Receipt"
-msgstr "Alındı Makbuzu"
+msgstr "Makbuz"
 
 #. module: account_voucher
 #: report:voucher.print:0
 msgid "On Account of :"
-msgstr ""
+msgstr "Hesabında :"
 
 #. module: account_voucher
 #: field:account.voucher,writeoff_amount:0
 msgid "Write-Off Amount"
-msgstr "Amortisman Tutarı"
+msgstr "Borç Silme Tutarı"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -372,27 +390,27 @@ msgstr "Durum"
 #. module: account_voucher
 #: model:ir.module.module,shortdesc:account_voucher.module_meta_information
 msgid "Accounting Voucher Entries"
-msgstr "Muhasebe Fiş Kayıtları"
+msgstr "Muhasebe Fiş Girişleri"
 
 #. module: account_voucher
 #: view:sale.receipt.report:0
 #: field:sale.receipt.report,type:0
 msgid "Type"
-msgstr "Tip"
+msgstr "Tür"
 
 #. module: account_voucher
 #: field:account.voucher.unreconcile,remove:0
 msgid "Want to remove accounting entries too ?"
-msgstr "Hesap girdilerini de silmek ister misiniz?"
+msgstr "Hesap girişlerini de silmek ister misiniz?"
 
 #. module: account_voucher
 #: view:account.voucher:0
 #: model:ir.actions.act_window,name:account_voucher.act_journal_voucher_open
 msgid "Voucher Entries"
-msgstr "Çek Kayıtları"
+msgstr "Fiş Girişleri"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:640
+#: code:addons/account_voucher/account_voucher.py:645
 #, python-format
 msgid "Error !"
 msgstr "Hata !"
@@ -400,12 +418,12 @@ msgstr "Hata !"
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Supplier Voucher"
-msgstr "Tedarikçi Çeki"
+msgstr "Tedarikçi Fişi"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,name:account_voucher.action_review_voucher_list
 msgid "Vouchers Entries"
-msgstr "Çek Kayıtları"
+msgstr "Fiş Girişleri"
 
 #. module: account_voucher
 #: field:account.voucher,name:0
@@ -417,10 +435,10 @@ msgstr "Not"
 #: model:ir.actions.act_window,name:account_voucher.action_sale_receipt
 #: model:ir.ui.menu,name:account_voucher.menu_action_sale_receipt
 msgid "Sales Receipt"
-msgstr ""
+msgstr "Satış Makbuzu"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:591
+#: code:addons/account_voucher/account_voucher.py:596
 #, python-format
 msgid "Invalid action !"
 msgstr "Geçersiz İşlem !"
@@ -438,7 +456,7 @@ msgstr "Temmuz"
 #. module: account_voucher
 #: view:account.voucher.unreconcile:0
 msgid "Unreconciliation"
-msgstr "Mutabakatsız"
+msgstr "Uzlaşımayı Kaldırma"
 
 #. module: account_voucher
 #: view:sale.receipt.report:0
@@ -451,10 +469,10 @@ msgstr "Ort. Gecikme Vadesi"
 #: code:addons/account_voucher/invoice.py:32
 #, python-format
 msgid "Pay Invoice"
-msgstr "Fatura Ödemesi"
+msgstr "Fatura Ödeme"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:741
+#: code:addons/account_voucher/account_voucher.py:746
 #, python-format
 msgid "No Account Base Code and Account Tax Code!"
 msgstr "Hesap kodu ve Vergi kodu yok !"
@@ -467,7 +485,7 @@ msgstr "Vergi Tutarı"
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Voucher Entry"
-msgstr "Çek Kaydı"
+msgstr "Fiş Girişi"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -476,7 +494,7 @@ msgstr "Çek Kaydı"
 #: view:sale.receipt.report:0
 #: field:sale.receipt.report,partner_id:0
 msgid "Partner"
-msgstr "Cari"
+msgstr "Paydaş"
 
 #. module: account_voucher
 #: field:account.voucher,payment_option:0
@@ -488,7 +506,7 @@ msgstr "Ödeme Farkı"
 msgid ""
 "The amount of the voucher must be the same amount as the one on the "
 "statement line"
-msgstr "Çek tutarı banka ekstresi tutarı ile aynı olmalı"
+msgstr "Fiş tutarı banka ekstresi tutarı ile aynı olmalı"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -513,9 +531,10 @@ msgstr "Aralık"
 
 #. module: account_voucher
 #: field:account.voucher,line_ids:0
+#: view:account.voucher.line:0
 #: model:ir.model,name:account_voucher.model_account_voucher_line
 msgid "Voucher Lines"
-msgstr "Çek Kalemleri"
+msgstr "Fiş Kalemleri"
 
 #. module: account_voucher
 #: view:sale.receipt.report:0
@@ -532,13 +551,13 @@ msgstr "Para Birimi"
 #. module: account_voucher
 #: view:account.statement.from.invoice.lines:0
 msgid "Payable and Receivables"
-msgstr "Borçlar / Alacaklar"
+msgstr "Borçlar ve Alacaklar"
 
 #. module: account_voucher
 #: selection:account.voucher,pay_now:0
 #: selection:sale.receipt.report,pay_now:0
 msgid "Pay Later or Group Funds"
-msgstr ""
+msgstr "Sonra Öde ya da Fonları Gruplandır"
 
 #. module: account_voucher
 #: view:sale.receipt.report:0
@@ -564,28 +583,28 @@ msgstr "Taslak"
 #. module: account_voucher
 #: field:account.voucher,writeoff_acc_id:0
 msgid "Write-Off account"
-msgstr "Amortisman Hesabı"
+msgstr "Borç Silme Hesabı"
 
 #. module: account_voucher
 #: report:voucher.print:0
 msgid "Currency:"
-msgstr "Döviz Kuru:"
+msgstr "Para birimi:"
 
 #. module: account_voucher
 #: view:sale.receipt.report:0
 #: field:sale.receipt.report,price_total_tax:0
 msgid "Total With Tax"
-msgstr ""
+msgstr "Vergi Dahil Toplam"
 
 #. module: account_voucher
 #: report:voucher.print:0
 msgid "PRO-FORMA"
-msgstr ""
+msgstr "PROFORMA"
 
 #. module: account_voucher
 #: selection:sale.receipt.report,month:0
 msgid "August"
-msgstr ""
+msgstr "Ağustos"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_vendor_payment
@@ -595,36 +614,40 @@ msgid ""
 "the payment, OpenERP will propose to reconcile your payment with the open "
 "supplier invoices or bills."
 msgstr ""
+"Tedarikçi ödeme formu tefarikçilerinize yaptığınız ödemeleri izlemenizi "
+"sağlar. Bir tedarikçi, ödeme biçimi ve ödeme tutarı seçtiğinizde, OpenERP "
+"açık tedarikçi fatura ve fişlerinizin uzlaştırılmasını otomatik olarak "
+"önerir."
 
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Total Amount"
-msgstr ""
+msgstr "Toplam Tutar"
 
 #. module: account_voucher
 #: selection:sale.receipt.report,month:0
 msgid "June"
-msgstr ""
+msgstr "Haziran"
 
 #. module: account_voucher
 #: field:account.voucher.line,type:0
 msgid "Cr/Dr"
-msgstr ""
+msgstr "Cr/Dr"
 
 #. module: account_voucher
 #: field:account.voucher,audit:0
 msgid "Audit Complete ?"
-msgstr ""
+msgstr "Denetim Tamamlandı mı ?"
 
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Payment Terms"
-msgstr ""
+msgstr "Ödeme Koşulları"
 
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Are you sure to unreconcile this record ?"
-msgstr ""
+msgstr "Bu kayıtın uzlaşmasını gerçekten kaldırmak istiyor musunuz ?"
 
 #. module: account_voucher
 #: field:account.voucher,date:0
@@ -636,60 +659,60 @@ msgstr "Tarih"
 #. module: account_voucher
 #: selection:sale.receipt.report,month:0
 msgid "November"
-msgstr ""
+msgstr "Kasım"
 
 #. module: account_voucher
 #: view:account.voucher:0
 #: view:sale.receipt.report:0
 msgid "Extended Filters..."
-msgstr ""
+msgstr "Genişletilmiş Süzgeçler..."
 
 #. module: account_voucher
 #: report:voucher.print:0
 msgid "Number:"
-msgstr ""
+msgstr "Sayı:"
 
 #. module: account_voucher
 #: field:account.bank.statement.line,amount_reconciled:0
 msgid "Amount reconciled"
-msgstr ""
+msgstr "Uzlaşılan Tutar"
 
 #. module: account_voucher
 #: field:account.voucher,analytic_id:0
 msgid "Write-Off Analytic Account"
-msgstr ""
+msgstr "Borç Silme Analiz Hesabı"
 
 #. module: account_voucher
 #: selection:account.voucher,pay_now:0
 #: selection:sale.receipt.report,pay_now:0
 msgid "Pay Directly"
-msgstr ""
+msgstr "Doğrudan Ödeme"
 
 #. module: account_voucher
 #: selection:sale.receipt.report,month:0
 msgid "October"
-msgstr ""
+msgstr "Ekim"
 
 #. module: account_voucher
 #: field:account.voucher,pre_line:0
 msgid "Previous Payments ?"
-msgstr ""
+msgstr "Öncek Ödemeler ?"
 
 #. module: account_voucher
 #: selection:sale.receipt.report,month:0
 msgid "January"
-msgstr ""
+msgstr "Ocak"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,name:account_voucher.action_voucher_list
 #: model:ir.ui.menu,name:account_voucher.menu_encode_entries_by_voucher
 msgid "Journal Vouchers"
-msgstr ""
+msgstr "Yevniye Fişleri"
 
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Compute Tax"
-msgstr ""
+msgstr "Vergi Hesapla"
 
 #. module: account_voucher
 #: selection:account.voucher.line,type:0
@@ -697,47 +720,47 @@ msgid "Credit"
 msgstr "Alacak"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:640
+#: code:addons/account_voucher/account_voucher.py:645
 #, python-format
 msgid "Please define a sequence on the journal !"
-msgstr ""
+msgstr "Yevmiyede lütfen bir dizi tanımlayın !"
 
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Open Supplier Journal Entries"
-msgstr ""
+msgstr "Tedarikçi Yevmiye Girişlerini Aç"
 
 #. module: account_voucher
 #: report:voucher.print:0
 msgid "Through :"
-msgstr ""
+msgstr "Yoluyla"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,name:account_voucher.action_vendor_payment
 #: model:ir.ui.menu,name:account_voucher.menu_action_vendor_payment
 msgid "Supplier Payment"
-msgstr ""
+msgstr "Tedarikçi Ödemesi"
 
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Post"
-msgstr ""
+msgstr "İşle"
 
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Invoices and outstanding transactions"
-msgstr ""
+msgstr "Faturalar ve Kapatılmamış İşlemler"
 
 #. module: account_voucher
 #: view:sale.receipt.report:0
 #: field:sale.receipt.report,price_total:0
 msgid "Total Without Tax"
-msgstr ""
+msgstr "Vergisiz Toplam"
 
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Bill Date"
-msgstr ""
+msgstr "Fatura Tarihi"
 
 #. module: account_voucher
 #: help:account.voucher,state:0
@@ -751,6 +774,13 @@ msgid ""
 "\n"
 "* The 'Cancelled' state is used when user cancel voucher."
 msgstr ""
+" * 'Taslak' durumu bir kullanıcı yeni ve uzlaştırılmamış bir fiş kodlarken "
+"kullanılır.                         \n"
+"* 'Proforma' durumu fiş Proforma durumundayken,henüz fişe bir fiş sayısı "
+"verilmemişken kullanılır.                         \n"
+"* 'İşlendi' durumu kullanıcı fiş oluştururken kullanılır, fiş sayısı "
+"oluşturulur ve hesapta fiş girişleri oluşturulur.\n"
+"* 'Vazgeçildi' kullanıcı fişi iptal ederken kullanılır."
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -761,29 +791,29 @@ msgstr "Muhasebe Fişi"
 #. module: account_voucher
 #: field:account.voucher,number:0
 msgid "Number"
-msgstr ""
+msgstr "Sayı"
 
 #. module: account_voucher
 #: model:ir.model,name:account_voucher.model_account_bank_statement
 msgid "Bank Statement"
-msgstr ""
+msgstr "Banka Ekstresi"
 
 #. module: account_voucher
 #: selection:sale.receipt.report,month:0
 msgid "September"
-msgstr ""
+msgstr "Eylül"
 
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Sales Information"
-msgstr ""
+msgstr "Satış Bilgisi"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,name:account_voucher.action_sale_receipt_report_all
 #: model:ir.ui.menu,name:account_voucher.menu_action_sale_receipt_report_all
 #: view:sale.receipt.report:0
 msgid "Sales Receipt Analysis"
-msgstr ""
+msgstr "Satış Makbuzları Analizi"
 
 #. module: account_voucher
 #: field:account.voucher.line,voucher_id:0
@@ -794,12 +824,12 @@ msgstr "Fiş"
 #. module: account_voucher
 #: model:ir.model,name:account_voucher.model_account_invoice
 msgid "Invoice"
-msgstr ""
+msgstr "Fatura"
 
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Voucher Items"
-msgstr ""
+msgstr "Fiş Kalemleri"
 
 #. module: account_voucher
 #: view:account.statement.from.invoice:0
@@ -807,20 +837,20 @@ msgstr ""
 #: view:account.voucher:0
 #: view:account.voucher.unreconcile:0
 msgid "Cancel"
-msgstr "İptal"
+msgstr "Vazgeç"
 
 #. module: account_voucher
 #: selection:account.voucher,state:0
 #: view:sale.receipt.report:0
 #: selection:sale.receipt.report,state:0
 msgid "Pro-forma"
-msgstr ""
+msgstr "Proforma"
 
 #. module: account_voucher
 #: view:account.voucher:0
 #: field:account.voucher,move_ids:0
 msgid "Journal Items"
-msgstr ""
+msgstr "Yevmiye Kalemleri"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -828,18 +858,18 @@ msgstr ""
 #: model:ir.actions.act_window,name:account_voucher.action_vendor_receipt
 #: model:ir.ui.menu,name:account_voucher.menu_action_vendor_receipt
 msgid "Customer Payment"
-msgstr ""
+msgstr "Müşteri Ödemesi"
 
 #. module: account_voucher
 #: view:account.statement.from.invoice:0
 #: model:ir.actions.act_window,name:account_voucher.action_view_account_statement_from_invoice
 msgid "Import Invoices in Statement"
-msgstr ""
+msgstr "Ekstredeki Faturaları İçeaktar"
 
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Pay"
-msgstr ""
+msgstr "Öde"
 
 #. module: account_voucher
 #: selection:account.voucher.line,type:0
@@ -849,17 +879,17 @@ msgstr "Borç"
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Are you sure to confirm this record ?"
-msgstr ""
+msgstr "Bu kayıtı onaylamak istediğinizden emin misiniz ?"
 
 #. module: account_voucher
 #: selection:account.voucher,payment_option:0
 msgid "Reconcile with Write-Off"
-msgstr ""
+msgstr "Borç Silmede Uzlaştırma"
 
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Payment Method"
-msgstr ""
+msgstr "Ödeme Biçimi"
 
 #. module: account_voucher
 #: field:account.voucher.line,name:0
@@ -869,12 +899,12 @@ msgstr "Açıklama"
 #. module: account_voucher
 #: report:voucher.print:0
 msgid "Canceled"
-msgstr "İptal Edildi"
+msgstr "Vazgeçildi"
 
 #. module: account_voucher
 #: selection:sale.receipt.report,month:0
 msgid "May"
-msgstr ""
+msgstr "Mayıs"
 
 #. module: account_voucher
 #: field:account.statement.from.invoice,journal_ids:0
@@ -888,23 +918,23 @@ msgstr "Yevmiye"
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Internal Notes"
-msgstr ""
+msgstr "İç Notlar"
 
 #. module: account_voucher
 #: view:account.voucher:0
 #: field:account.voucher,line_cr_ids:0
 msgid "Credits"
-msgstr ""
+msgstr "Alacaklar"
 
 #. module: account_voucher
 #: field:account.voucher.line,amount_original:0
 msgid "Original Amount"
-msgstr ""
+msgstr "İlk Tutar"
 
 #. module: account_voucher
 #: report:voucher.print:0
 msgid "State:"
-msgstr ""
+msgstr "Durum:"
 
 #. module: account_voucher
 #: field:account.bank.statement.line,voucher_id:0
@@ -915,7 +945,7 @@ msgstr ""
 #: field:sale.receipt.report,pay_now:0
 #: selection:sale.receipt.report,type:0
 msgid "Payment"
-msgstr ""
+msgstr "Ödeme"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -924,63 +954,63 @@ msgstr ""
 #: selection:sale.receipt.report,state:0
 #: report:voucher.print:0
 msgid "Posted"
-msgstr "Muhasebeleşti"
+msgstr "İşlendi"
 
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Customer"
-msgstr ""
+msgstr "Müşteri"
 
 #. module: account_voucher
 #: selection:sale.receipt.report,month:0
 msgid "February"
-msgstr ""
+msgstr "Şubat"
 
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Supplier Invoices and Outstanding transactions"
-msgstr ""
+msgstr "Tedarikçi Faturaları ve Kapatılmamış İşlemler"
 
 #. module: account_voucher
 #: field:account.voucher,comment:0
 msgid "Write-Off Comment"
-msgstr ""
+msgstr "Borç Silme Açıklaması"
 
 #. module: account_voucher
 #: selection:sale.receipt.report,month:0
 msgid "April"
-msgstr ""
+msgstr "Nisan"
 
 #. module: account_voucher
 #: field:account.voucher,type:0
 msgid "Default Type"
-msgstr ""
+msgstr "Varsayılan Tür"
 
 #. module: account_voucher
 #: model:ir.model,name:account_voucher.model_account_statement_from_invoice
 #: model:ir.model,name:account_voucher.model_account_statement_from_invoice_lines
 msgid "Entries by Statement from Invoices"
-msgstr ""
+msgstr "Faturalardaki Kalemlere göre Girişler"
 
 #. module: account_voucher
 #: field:account.voucher,move_id:0
 msgid "Account Entry"
-msgstr ""
+msgstr "Hesap Girişi"
 
 #. module: account_voucher
 #: field:sale.receipt.report,state:0
 msgid "Voucher State"
-msgstr ""
+msgstr "Fiş Durumu"
 
 #. module: account_voucher
 #: help:account.voucher,date:0
 msgid "Effective date for accounting entries"
-msgstr ""
+msgstr "Hesap Girişleri için Yürürlük Tarihi"
 
 #. module: account_voucher
 #: selection:account.voucher,payment_option:0
 msgid "Keep Open"
-msgstr ""
+msgstr "Açık Tut"
 
 #. module: account_voucher
 #: view:account.voucher.unreconcile:0
@@ -988,34 +1018,37 @@ msgid ""
 "If you unreconciliate transactions, you must also verify all the actions "
 "that are linked to those transactions because they will not be disable"
 msgstr ""
+"Bu işlemlerin uzlaştırmasını kaldırırsanız, aynı zamanda bu işlemlere bağlı "
+"diğer hareketleri de doğrulamalısınız, aksi takdirde bu işlemler devre dışı "
+"bırakılamaz."
 
 #. module: account_voucher
 #: field:account.voucher.line,untax_amount:0
 msgid "Untax Amount"
-msgstr ""
+msgstr "Vergisi Tutar"
 
 #. module: account_voucher
 #: model:ir.model,name:account_voucher.model_sale_receipt_report
 msgid "Sales Receipt Statistics"
-msgstr ""
+msgstr "Satış Makbuzları İstatistikleri"
 
 #. module: account_voucher
 #: view:sale.receipt.report:0
 #: field:sale.receipt.report,year:0
 msgid "Year"
-msgstr ""
+msgstr "Yıl"
 
 #. module: account_voucher
 #: view:account.voucher:0
 #: field:account.voucher.line,amount_unreconciled:0
 msgid "Open Balance"
-msgstr ""
+msgstr "Bilanço Aç"
 
 #. module: account_voucher
 #: view:account.voucher:0
 #: field:account.voucher,amount:0
 msgid "Total"
-msgstr ""
+msgstr "Toplam"
 
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "Görüntüleme mimarisi için Geçersiz XML"

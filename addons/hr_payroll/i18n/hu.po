@@ -13,11 +13,11 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 05:43+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-02-05 05:01+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: hr_payroll
-#: rml:employees.salary:0
+#: report:employees.salary:0
 msgid "E-mail Address"
 msgstr "E-mail cím"
 
@@ -27,8 +27,11 @@ msgid "Based"
 msgstr "Alapul"
 
 #. module: hr_payroll
+#: field:hr.contract,net:0
+#: field:hr.employee,net:0
 #: field:hr.payroll.register,net:0
 #: field:hr.payslip,net:0
+#: report:salary.structure:0
 msgid "Net Salary"
 msgstr "Nettó bér"
 
@@ -38,43 +41,46 @@ msgid "Recompute Sheet"
 msgstr "Táblázat újraszámítása"
 
 #. module: hr_payroll
-#: rml:employees.salary:0
+#: report:employees.salary:0
 msgid "Employees Salary Details"
 msgstr "Alkalmazott bérének részletei"
 
 #. module: hr_payroll
-#: rml:employees.salary:0
+#: report:employees.salary:0
 msgid "Allowances with Basic:"
 msgstr "Alapjuttatások:"
 
 #. module: hr_payroll
-#: rml:employees.salary:0
-#: rml:salary.structure:0
+#: report:employees.salary:0
+#: report:salary.structure:0
 msgid "Department"
 msgstr "Osztály, részleg"
 
 #. module: hr_payroll
-#: rml:employees.salary:0
+#: report:employees.salary:0
 msgid "Deductions:"
 msgstr "Levonások:"
 
 #. module: hr_payroll
-#: field:hr.allounce.deduction.categoty,gratuity:0
+#: field:company.contribution,gratuity:0
 msgid "Use for Gratuity ?"
 msgstr "Prémiumként?"
 
 #. module: hr_payroll
+#: field:hr.contract,working_days_per_week:0
 #: field:hr.payslip,working_days:0
+#: report:payslip.pdf:0
 msgid "Working Days"
 msgstr "Munkanapok"
 
 #. module: hr_payroll
+#: selection:hr.allounce.deduction.categoty,type:0
 #: selection:hr.payslip.line,type:0
 msgid "Loan"
 msgstr "Kölcsön"
 
 #. module: hr_payroll
-#: rml:hr.payroll.register.sheet:0
+#: report:hr.payroll.register.sheet:0
 msgid "Salary Payment Register"
 msgstr "Bérkifizetési nyilvántartás"
 
@@ -82,6 +88,7 @@ msgstr "Bérkifizetési nyilvántartás"
 #: field:hr.employee,slip_ids:0
 #: view:hr.payroll.register:0
 #: field:hr.payroll.register,line_ids:0
+#: model:ir.actions.act_window,name:hr_payroll.act_hr_employee_payslip_list
 msgid "Payslips"
 msgstr "Fizetési jegyzékek"
 
@@ -102,14 +109,19 @@ msgid "("
 msgstr "("
 
 #. module: hr_payroll
+#: field:company.contribution,company_id:0
+#: field:hr.allounce.deduction.categoty,company_id:0
+#: field:hr.contibution.register,company_id:0
+#: field:hr.holidays.status,company_id:0
+#: field:hr.payroll.advice,company_id:0
 #: field:hr.payroll.register,company_id:0
+#: field:hr.payroll.structure,company_id:0
 #: field:hr.payslip,company_id:0
-#: wizard_field:payroll.analysis,init,company_id:0
 msgid "Company"
 msgstr "Vállalat"
 
 #. module: hr_payroll
-#: rml:payroll.advice:0
+#: report:payroll.advice:0
 msgid "The Manager"
 msgstr "Menedzser"
 
@@ -119,7 +131,8 @@ msgid "Letter Details"
 msgstr "Levél részletei"
 
 #. module: hr_payroll
-#: rml:hr.payroll.register.sheet:0
+#: report:hr.payroll.register.sheet:0
+#: report:payslip.pdf:0
 msgid ","
 msgstr ","
 
@@ -153,8 +166,7 @@ msgid "Half-Pay Holiday"
 msgstr ""
 
 #. module: hr_payroll
-#: selection:hr.allounce.deduction.categoty,type:0
-#: rml:hr.payroll.register.sheet:0
+#: report:hr.payroll.register.sheet:0
 #: field:hr.payslip,other_pay:0
 msgid "Others"
 msgstr "Egyéb"
@@ -162,12 +174,12 @@ msgstr "Egyéb"
 #. module: hr_payroll
 #: field:hr.payslip.line,slip_id:0
 #: model:ir.model,name:hr_payroll.model_hr_payslip
-#: rml:payslip.pdf:0
+#: report:payslip.pdf:0
 msgid "Pay Slip"
 msgstr "Fizetési jegyzék"
 
 #. module: hr_payroll
-#: rml:salary.structure:0
+#: report:salary.structure:0
 msgid "Contract Detail:"
 msgstr "Szerződés részletei:"
 
@@ -197,12 +209,16 @@ msgid "Reject"
 msgstr "Visszautasítás"
 
 #. module: hr_payroll
+#: selection:hr.allounce.deduction.categoty,type:0
 #: selection:hr.payslip.line,type:0
 msgid "Leaves"
 msgstr "Szabadságok"
 
 #. module: hr_payroll
+#: field:hr.contibution.register.line,register_id:0
+#: view:hr.payslip:0
 #: field:hr.payslip,register_id:0
+#: report:payslip.pdf:0
 msgid "Register"
 msgstr "Nyilvántartás"
 
@@ -215,17 +231,18 @@ msgstr ""
 "menedzsere."
 
 #. module: hr_payroll
-#: rml:payslip.pdf:0
+#: report:payslip.pdf:0
 msgid "Total Deductions"
 msgstr "Összes levonás"
 
 #. module: hr_payroll
-#: field:hr.allounce.deduction.categoty.line,value:0
+#: field:company.contribution.line,value:0
+#: field:hr.payslip.line.line,value:0
 msgid "Value"
 msgstr "Érték"
 
 #. module: hr_payroll
-#: rml:payroll.advice:0
+#: report:payroll.advice:0
 msgid "Name of the Employee"
 msgstr "Alkalmazott neve"
 
@@ -241,7 +258,8 @@ msgstr "Bér kiszámítása"
 
 #. module: hr_payroll
 #: field:hr.payroll.advice.line,amount:0
-#: rml:payroll.advice:0
+#: report:payroll.advice:0
+#: report:salary.structure:0
 msgid "Amount"
 msgstr "Összeg"
 
@@ -273,6 +291,7 @@ msgid "Employee Deduction"
 msgstr "Alkalmazott levonásai"
 
 #. module: hr_payroll
+#: selection:hr.allounce.deduction.categoty,type:0
 #: selection:hr.payslip.line,type:0
 msgid "Other Deduction"
 msgstr "Egyéb levonás"
@@ -315,7 +334,7 @@ msgstr ""
 "kimutatásokban"
 
 #. module: hr_payroll
-#: rml:payslip.pdf:0
+#: report:payslip.pdf:0
 msgid "Amount (in words) :"
 msgstr "Összeg (betűkkel) :"
 
@@ -325,6 +344,8 @@ msgid "Payment"
 msgstr "Kifizetés"
 
 #. module: hr_payroll
+#: view:hr.payroll.structure:0
+#: view:hr.payslip:0
 #: field:hr.payslip,line_ids:0
 #: view:hr.payslip.line:0
 #: model:ir.model,name:hr_payroll.model_hr_payslip_line
@@ -337,6 +358,7 @@ msgid "Identification No"
 msgstr "Személyi igazolvány száma"
 
 #. module: hr_payroll
+#: view:hr.allounce.deduction.categoty:0
 #: field:hr.allounce.deduction.categoty,base:0
 msgid "Based on"
 msgstr "Alapul"
@@ -413,17 +435,23 @@ msgid "Visa No"
 msgstr "Vízum száma"
 
 #. module: hr_payroll
-#: field:hr.allounce.deduction.categoty.line,from:0
+#: field:company.contribution.line,from_val:0
+#: report:employees.salary:0
+#: field:hr.payslip.line.line,from_val:0
+#: report:year.salary:0
 msgid "From"
 msgstr "Kezdő dátum"
 
 #. module: hr_payroll
 #: field:hr.payroll.advice.line,bysal:0
+#: report:payroll.advice:0
 msgid "By Salary"
 msgstr ""
 
 #. module: hr_payroll
-#: rml:salary.structure:0
+#: field:hr.payroll.employees.detail,date_to:0
+#: field:hr.payroll.year.salary,date_to:0
+#: report:salary.structure:0
 msgid "End Date"
 msgstr "Befejezés dátuma"
 
@@ -438,8 +466,8 @@ msgid "Leave Deductions"
 msgstr "Szabadság miatti levonás"
 
 #. module: hr_payroll
-#: rml:hr.payroll.register.sheet:0
-#: rml:payroll.advice:0
+#: report:hr.payroll.register.sheet:0
+#: report:payroll.advice:0
 msgid "Authorised Signature"
 msgstr ""
 
@@ -454,12 +482,11 @@ msgid "Contribution Register Line"
 msgstr ""
 
 #. module: hr_payroll
-#: rml:salary.structure:0
+#: report:salary.structure:0
 msgid "Notes:"
 msgstr "Megjegyzések:"
 
 #. module: hr_payroll
-#: field:hr.allounce.deduction.categoty,based_on:0
 #: field:hr.payroll.advice,state:0
 #: field:hr.payroll.register,state:0
 #: field:hr.payslip,state:0
@@ -492,10 +519,12 @@ msgid "Company Contributions"
 msgstr ""
 
 #. module: hr_payroll
+#: field:hr.contibution.register.line,employee_id:0
 #: field:hr.passport,employee_id:0
 #: field:hr.payroll.advice.line,employee_id:0
 #: field:hr.payslip,employee_id:0
 #: field:hr.payslip.line,employee_id:0
+#: model:ir.model,name:hr_payroll.model_hr_employee
 msgid "Employee"
 msgstr "Alkalmazott"
 
@@ -510,10 +539,11 @@ msgid "Bank Advice Lines"
 msgstr "Banki értesítő sorok"
 
 #. module: hr_payroll
+#: view:company.contribution:0
+#: view:hr.allounce.deduction.categoty:0
 #: field:hr.allounce.deduction.categoty,type:0
 #: field:hr.payslip.line,type:0
-#: wizard_field:payroll.analysis,init,type:0
-#: rml:salary.structure:0
+#: report:salary.structure:0
 msgid "Type"
 msgstr "Típus"
 
@@ -523,7 +553,7 @@ msgid "Email"
 msgstr "E-mail"
 
 #. module: hr_payroll
-#: rml:hr.payroll.register.sheet:0
+#: report:hr.payroll.register.sheet:0
 msgid "#"
 msgstr "#"
 
@@ -557,13 +587,16 @@ msgid "Net Basic"
 msgstr "Nettó alapbér"
 
 #. module: hr_payroll
+#: field:hr.contract,gross:0
+#: field:hr.employee,gross:0
 #: field:hr.payroll.register,grows:0
 #: field:hr.payslip,grows:0
+#: report:salary.structure:0
 msgid "Gross Salary"
 msgstr "Bruttó bér"
 
 #. module: hr_payroll
-#: rml:payslip.pdf:0
+#: report:payslip.pdf:0
 msgid "Total Earnings"
 msgstr "Összes jövedelem"
 
@@ -574,17 +607,20 @@ msgid "Employee Salary Statement"
 msgstr "Alkalmazott bérkimutatása"
 
 #. module: hr_payroll
+#: selection:hr.allounce.deduction.categoty,type:0
 #: selection:hr.payslip.line,type:0
 msgid "Other Payment"
 msgstr "Egyéb kifizetés"
 
 #. module: hr_payroll
-#: rml:payslip.pdf:0
+#: field:hr.employee,advantages_net:0
+#: report:payslip.pdf:0
+#: report:salary.structure:0
 msgid "Deductions"
 msgstr "Levonások"
 
 #. module: hr_payroll
-#: rml:payroll.advice:0
+#: report:payroll.advice:0
 msgid "C/D"
 msgstr ""
 
@@ -609,13 +645,19 @@ msgid "Total By Employee"
 msgstr "Alkalmazott összesen"
 
 #. module: hr_payroll
-#: selection:hr.allounce.deduction.categoty.line,amount_type:0
+#: view:company.contribution:0
+#: selection:company.contribution,amount_type:0
+#: selection:company.contribution.line,amount_type:0
 #: selection:hr.payslip.line,amount_type:0
+#: selection:hr.payslip.line.line,amount_type:0
 msgid "Fixed Amount"
 msgstr "Fix összeg"
 
 #. module: hr_payroll
-#: field:hr.allounce.deduction.categoty.line,to:0
+#: field:company.contribution.line,to_val:0
+#: report:employees.salary:0
+#: field:hr.payslip.line.line,to_val:0
+#: report:year.salary:0
 msgid "To"
 msgstr "Záró dátum"
 
@@ -653,15 +695,15 @@ msgid "Contribution Lines"
 msgstr ""
 
 #. module: hr_payroll
-#: rml:hr.payroll.register.sheet:0
-#: rml:payslip.pdf:0
+#: report:hr.payroll.register.sheet:0
 msgid "For the month of"
 msgstr "Hónapra"
 
 #. module: hr_payroll
+#: view:hr.allounce.deduction.categoty:0
 #: selection:hr.allounce.deduction.categoty,type:0
 #: field:hr.payroll.register,deduction:0
-#: rml:hr.payroll.register.sheet:0
+#: report:hr.payroll.register.sheet:0
 #: field:hr.payslip,deduction:0
 #: selection:hr.payslip.line,type:0
 msgid "Deduction"
@@ -684,40 +726,38 @@ msgid "Error! contract start-date must be lower then contract end-date."
 msgstr "Hiba! A szerződés kezdetének előbb kell lennie mint a végének."
 
 #. module: hr_payroll
+#: selection:hr.allounce.deduction.categoty,type:0
 #: selection:hr.payslip.line,type:0
 msgid "Loan Installment"
 msgstr "Kölcsöntörlesztés"
 
 #. module: hr_payroll
 #: view:hr.payroll.register:0
-#: view:hr.payslip:0
 msgid "Complete HR Checking"
 msgstr "HR ellenőrzés befejezése"
 
 #. module: hr_payroll
-#: rml:payroll.advice:0
+#: report:payroll.advice:0
 msgid "Yours Sincerely"
 msgstr "Üdvözlettel:"
 
 #. module: hr_payroll
-#: rml:payroll.advice:0
+#: report:payroll.advice:0
 msgid "SI. No."
 msgstr ""
 
 #. module: hr_payroll
-#: rml:payslip.pdf:0
+#: report:payslip.pdf:0
 msgid "Net Amount"
 msgstr "Nettó összeg"
 
 #. module: hr_payroll
-#: rml:salary.structure:0
+#: report:salary.structure:0
 msgid "Salary Structure:"
 msgstr "Bérszerkezet:"
 
 #. module: hr_payroll
 #: model:ir.actions.report.xml,name:hr_payroll.year_employees_detail
-#: model:ir.actions.wizard,name:hr_payroll.wizard_print_employees_detail
-#: model:ir.ui.menu,name:hr_payroll.menu_wizard_print_employees_detail
 msgid "Employees Salary Detail"
 msgstr "Alkalmazott bérének részletei"
 
@@ -735,7 +775,7 @@ msgid "Confirm Sheet"
 msgstr "Táblázat megerősítése"
 
 #. module: hr_payroll
-#: rml:employees.salary:0
+#: report:employees.salary:0
 msgid "Others:"
 msgstr "Egyéb:"
 
@@ -747,6 +787,7 @@ msgstr "Függvény kiszámítása"
 
 #. module: hr_payroll
 #: field:hr.payslip,worked_days:0
+#: report:payslip.pdf:0
 msgid "Worked Day"
 msgstr "Ledolgozott nap"
 
@@ -766,7 +807,7 @@ msgid "Country & Address"
 msgstr "Ország & Cím"
 
 #. module: hr_payroll
-#: rml:employees.salary:0
+#: report:employees.salary:0
 msgid "Employee Code"
 msgstr "Alkalmazott kódja"
 
@@ -776,16 +817,17 @@ msgid "Basic Salary – Leaves"
 msgstr "Alapbér - szabadságok"
 
 #. module: hr_payroll
-#: field:hr.allounce.deduction.categoty.line,amount_type:0
+#: field:company.contribution,amount_type:0
+#: field:company.contribution.line,amount_type:0
 #: field:hr.payslip.line,amount_type:0
-#: rml:salary.structure:0
+#: field:hr.payslip.line.line,amount_type:0
+#: report:salary.structure:0
 msgid "Amount Type"
 msgstr "Összeg típusa"
 
 #. module: hr_payroll
-#: field:hr.allounce.deduction.categoty.line,category_id:0
+#: view:company.contribution:0
 #: field:hr.payslip.line,category_id:0
-#: rml:salary.structure:0
 msgid "Category"
 msgstr "Kategória"
 
@@ -813,7 +855,7 @@ msgid "Draft"
 msgstr "Tervezet"
 
 #. module: hr_payroll
-#: rml:payslip.pdf:0
+#: report:payslip.pdf:0
 msgid "Earnings"
 msgstr "Jövedelem"
 
@@ -825,7 +867,6 @@ msgstr "Alapbér"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.action_hr_passport_tree
-#: model:ir.ui.menu,name:hr_payroll.menu_action_hr_passport_tree
 msgid "All Passports"
 msgstr "Összes útlevél"
 
@@ -836,9 +877,8 @@ msgid "Salary Register"
 msgstr "Bérnyilvántartás"
 
 #. module: hr_payroll
-#: rml:employees.salary:0
-#: rml:hr.payroll.register.sheet:0
-#: rml:payslip.pdf:0
+#: report:employees.salary:0
+#: report:hr.payroll.register.sheet:0
 msgid "Employee Name"
 msgstr "Alkalmazott neve"
 
@@ -848,7 +888,6 @@ msgid "Passport Detail"
 msgstr "Útlevél részlete"
 
 #. module: hr_payroll
-#: selection:hr.allounce.deduction.categoty.line,amount_type:0
 #: selection:hr.payslip.line,amount_type:0
 msgid "Percentage (%)"
 msgstr "Százalék (%)"
@@ -863,22 +902,18 @@ msgid "Payroll Register"
 msgstr "Bérszámfejtési nyilvántartás"
 
 #. module: hr_payroll
-#: rml:employees.salary:0
-#: rml:hr.payroll.register.sheet:0
-#: rml:payroll.advice:0
-#: rml:salary.structure:0
-#: rml:year.salary:0
+#: report:hr.payroll.register.sheet:0
+#: report:payroll.advice:0
 msgid "For"
 msgstr ""
 
 #. module: hr_payroll
-#: view:hr.employee:0
 #: field:hr.passport,contracts_ids:0
 msgid "Contracts"
 msgstr "Szerződések"
 
 #. module: hr_payroll
-#: view:hr.employee.grade:0
+#: view:hr.payroll.structure:0
 msgid "Employee Function"
 msgstr "Alkalmazotti funkció"
 
@@ -903,7 +938,7 @@ msgid "Validation"
 msgstr "Érvényesítés"
 
 #. module: hr_payroll
-#: rml:employees.salary:0
+#: report:employees.salary:0
 msgid "Title"
 msgstr ""
 
@@ -919,8 +954,6 @@ msgstr "Felhasználó"
 
 #. module: hr_payroll
 #: view:hr.payroll.advice:0
-#: view:hr.payslip:0
-#: field:hr.payslip,move_payment_ids:0
 msgid "Payment Lines"
 msgstr "Kifizetés sorok"
 
@@ -930,6 +963,7 @@ msgid "Compute Sheet"
 msgstr "Táblázat kiszámítása"
 
 #. module: hr_payroll
+#: field:company.contribution,active:0
 #: field:hr.payroll.register,active:0
 msgid "Active"
 msgstr "Aktív"
@@ -940,7 +974,7 @@ msgid "Applied this head for calculation if condition is true"
 msgstr ""
 
 #. module: hr_payroll
-#: rml:year.salary:0
+#: report:year.salary:0
 msgid "Yearly Salary Details"
 msgstr "Éves bér részletei"
 
@@ -971,22 +1005,23 @@ msgid "Compute"
 msgstr "Számítás"
 
 #. module: hr_payroll
-#: rml:employees.salary:0
+#: report:employees.salary:0
 #: field:hr.payslip,deg_id:0
-#: rml:payslip.pdf:0
-#: rml:salary.structure:0
+#: report:payslip.pdf:0
+#: report:salary.structure:0
 msgid "Designation"
 msgstr "Kijelölés"
 
 #. module: hr_payroll
-#: rml:hr.payroll.register.sheet:0
+#: report:hr.payroll.register.sheet:0
 msgid "HR Manager"
 msgstr "HR menedzser"
 
 #. module: hr_payroll
-#: selection:hr.allounce.deduction.categoty,based_on:0
+#: field:hr.contract,basic:0
+#: field:hr.employee,basic:0
 #: field:hr.payslip,basic_before_leaves:0
-#: rml:payslip.pdf:0
+#: report:payslip.pdf:0
 msgid "Basic Salary"
 msgstr "Alapbér"
 
@@ -1001,8 +1036,7 @@ msgid "Salary Information"
 msgstr "Bér információ"
 
 #. module: hr_payroll
-#: model:ir.model,name:hr_payroll.model_hr_allounce_deduction_categoty
-#: model:ir.model,name:hr_payroll.model_hr_allounce_deduction_categoty_line
+#: model:ir.model,name:hr_payroll.model_company_contribution_line
 msgid "Allowance Deduction Categoty"
 msgstr "Levonási kategória"
 
@@ -1012,12 +1046,13 @@ msgid "Companies"
 msgstr "Vállalatok"
 
 #. module: hr_payroll
-#: rml:payslip.pdf:0
+#: report:payslip.pdf:0
 msgid "Authorized Signature"
 msgstr "Cégszerű aláírás"
 
 #. module: hr_payroll
-#: view:hr.employee:0
+#: field:hr.payslip,contract_id:0
+#: model:ir.model,name:hr_payroll.model_hr_contract
 msgid "Contract"
 msgstr "Szerződés"
 
@@ -1027,14 +1062,14 @@ msgid "Draft Sheet"
 msgstr "Táblázattervezet"
 
 #. module: hr_payroll
-#: selection:wizard.year.salary,init,salary_on:0
+#: selection:hr.payroll.year.salary,salary_on:0
 msgid "Next Month Date"
 msgstr "Következő havi dátum"
 
 #. module: hr_payroll
+#: field:hr.contibution.register.line,date:0
 #: field:hr.payroll.advice,date:0
 #: field:hr.payroll.register,date:0
-#: rml:hr.payroll.register.sheet:0
 #: field:hr.payslip,date:0
 msgid "Date"
 msgstr "Dátum"
@@ -1050,8 +1085,8 @@ msgid "Search Passport"
 msgstr "Útlevél keresése"
 
 #. module: hr_payroll
-#: rml:employees.salary:0
-#: rml:salary.structure:0
+#: report:employees.salary:0
+#: report:salary.structure:0
 msgid "Phone No."
 msgstr "Telefonszám"
 
@@ -1083,16 +1118,19 @@ msgid "Other No."
 msgstr "Egyéb szám"
 
 #. module: hr_payroll
+#: field:company.contribution,code:0
+#: field:hr.contibution.register.line,code:0
 #: field:hr.holidays.status,code:0
+#: field:hr.payroll.structure,code:0
 #: field:hr.payslip.line,code:0
-#: rml:salary.structure:0
+#: report:payslip.pdf:0
+#: report:salary.structure:0
 msgid "Code"
 msgstr "Kód"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.action_view_hr_bank_advice_tree
 #: model:ir.ui.menu,name:hr_payroll.hr_menu_payment_advice
-#: rml:payroll.advice:0
 msgid "Payment Advice"
 msgstr "Kifizetési értesítés"
 
@@ -1115,24 +1153,28 @@ msgid "Computation Overview"
 msgstr "Számítás áttekintése"
 
 #. module: hr_payroll
-#: wizard_field:wizard.year.salary,init,salary_on:0
+#: field:hr.payroll.year.salary,salary_on:0
 msgid "Salary On"
 msgstr ""
 
 #. module: hr_payroll
 #: field:hr.payroll.advice,number:0
 #: field:hr.payroll.register,number:0
-#: rml:hr.payroll.register.sheet:0
 #: field:hr.payslip,number:0
 msgid "Number"
 msgstr "Sorszám"
 
 #. module: hr_payroll
-#: view:hr.employee:0
+#: field:hr.contract,struct_id:0
 #: field:hr.employee,line_ids:0
-#: view:hr.employee.grade:0
-#: field:hr.employee.grade,line_ids:0
-#: rml:salary.structure:0
+#: view:hr.payroll.structure:0
+#: field:hr.payroll.structure,line_ids:0
+#: view:hr.payslip:0
+#: view:hr.payslip.line:0
+#: model:ir.actions.act_window,name:hr_payroll.action_view_hr_employee_grade_form
+#: model:ir.actions.report.xml,name:hr_payroll.salary_structure_register
+#: model:ir.model,name:hr_payroll.model_hr_payroll_structure
+#: model:ir.ui.menu,name:hr_payroll.menu_hr_employee_function
 msgid "Salary Structure"
 msgstr "Bérszerkezet"
 
@@ -1144,9 +1186,6 @@ msgstr "Nyilvántartási sor"
 #. module: hr_payroll
 #: view:hr.payroll.register:0
 #: view:hr.payslip:0
-#: wizard_button:payroll.analysis,init,end:0
-#: wizard_button:wizard.employees.detail,init,end:0
-#: wizard_button:wizard.year.salary,init,end:0
 msgid "Cancel"
 msgstr "Mégse"
 
@@ -1158,34 +1197,33 @@ msgstr "Zárás"
 
 #. module: hr_payroll
 #: field:hr.payslip.line,amount:0
-#: rml:salary.structure:0
 msgid "Amount / Percentage"
 msgstr "Összeg / százalék"
 
 #. module: hr_payroll
-#: rml:hr.payroll.register.sheet:0
+#: field:hr.employee,advantages_gross:0
+#: report:hr.payroll.register.sheet:0
+#: report:salary.structure:0
 msgid "Allowances"
 msgstr "Juttatások"
 
 #. module: hr_payroll
-#: selection:wizard.year.salary,init,salary_on:0
+#: selection:hr.payroll.year.salary,salary_on:0
 msgid "Current Month Date"
 msgstr ""
 
 #. module: hr_payroll
-#: view:hr.employee:0
-#: rml:salary.structure:0
+#: report:salary.structure:0
 msgid "Salary"
 msgstr "Bér"
 
 #. module: hr_payroll
+#: field:hr.contract,passport_id:0
 #: field:hr.passport,name:0
 msgid "Passport No"
 msgstr "Útlevélszám"
 
 #. module: hr_payroll
-#: field:hr.contract,passport_id:0
-#: field:hr.employee,passport_id:0
 #: view:hr.passport:0
 msgid "Passport"
 msgstr "Útlevél"
@@ -1196,12 +1234,11 @@ msgid "Total Salary"
 msgstr "Összes bér"
 
 #. module: hr_payroll
-#: rml:payroll.advice:0
+#: report:payroll.advice:0
 msgid "for period"
 msgstr "időszakra"
 
 #. module: hr_payroll
-#: field:hr.expense.expense,category_id:0
 #: field:hr.holidays.status,head_id:0
 msgid "Payroll Head"
 msgstr "Bérlista fej"
@@ -1215,7 +1252,7 @@ msgid "Contribution Register"
 msgstr ""
 
 #. module: hr_payroll
-#: rml:salary.structure:0
+#: report:salary.structure:0
 msgid "E-mail"
 msgstr "E-mail"
 
@@ -1233,8 +1270,11 @@ msgid "Print Report"
 msgstr "Jelentés kinyomtatása"
 
 #. module: hr_payroll
-#: view:hr.allounce.deduction.categoty:0
-#: field:hr.allounce.deduction.categoty,line_ids:0
+#: field:company.contribution,line_ids:0
+#: view:hr.payroll.structure:0
+#: view:hr.payslip:0
+#: view:hr.payslip.line:0
+#: field:hr.payslip.line,line_ids:0
 msgid "Calculations"
 msgstr "Számítások"
 
@@ -1272,7 +1312,11 @@ msgid "Basic Salary without Leave:"
 msgstr "Alapbér szabadság nélkül:"
 
 #. module: hr_payroll
-#: field:hr.employee.grade,function_id:0
+#: view:company.contribution:0
+#: view:hr.allounce.deduction.categoty:0
+#: view:hr.payroll.structure:0
+#: view:hr.payslip:0
+#: view:hr.payslip.line:0
 #: field:hr.payslip.line,function_id:0
 msgid "Function"
 msgstr "Függvény"
@@ -1283,7 +1327,7 @@ msgid "States"
 msgstr "Állapotok"
 
 #. module: hr_payroll
-#: rml:payroll.advice:0
+#: report:payroll.advice:0
 msgid "Dear Sir/Madam,"
 msgstr "Tisztelt Hölgyem/Uram!"
 
@@ -1298,12 +1342,29 @@ msgid "Gross Sal."
 msgstr "Bruttó bér"
 
 #. module: hr_payroll
+#: view:company.contribution:0
+#: field:company.contribution,note:0
+#: view:hr.allounce.deduction.categoty:0
+#: field:hr.allounce.deduction.categoty,note:0
+#: view:hr.contibution.register:0
+#: field:hr.contibution.register,note:0
+#: view:hr.passport:0
+#: field:hr.passport,note:0
 #: field:hr.payroll.advice,note:0
+#: field:hr.payroll.register,note:0
+#: view:hr.payroll.structure:0
+#: field:hr.payroll.structure,note:0
+#: view:hr.payslip:0
+#: field:hr.payslip,note:0
+#: view:hr.payslip.line:0
+#: field:hr.payslip.line,note:0
 msgid "Description"
 msgstr "Leírás"
 
 #. module: hr_payroll
-#: rml:salary.structure:0
+#: field:hr.payroll.employees.detail,date_from:0
+#: field:hr.payroll.year.salary,date_from:0
+#: report:salary.structure:0
 msgid "Start Date"
 msgstr "Kezdő dátum"
 
@@ -1325,6 +1386,7 @@ msgstr ""
 #. module: hr_payroll
 #: model:ir.ui.menu,name:hr_payroll.menu_hr_payroll_reporting
 #: model:ir.ui.menu,name:hr_payroll.menu_hr_root_payroll
+#: model:ir.ui.menu,name:hr_payroll.payroll_configure
 msgid "Payroll"
 msgstr "Bérszámfejtés"
 
@@ -1354,9 +1416,10 @@ msgid "hr.payroll.year.salary"
 msgstr "hr.payroll.year.salary"
 
 #. module: hr_payroll
-#: rml:employees.salary:0
-#: rml:payslip.pdf:0
-#: rml:salary.structure:0
+#: report:employees.salary:0
+#: field:hr.passport,address_id:0
+#: report:payslip.pdf:0
+#: report:salary.structure:0
 msgid "Address"
 msgstr "Cím"
 
@@ -1371,8 +1434,10 @@ msgid "Number of Leaves"
 msgstr "Szabadságok száma"
 
 #. module: hr_payroll
-#: rml:employees.salary:0
-#: rml:salary.structure:0
+#: report:employees.salary:0
+#: field:hr.payroll.advice,bank_id:0
+#: field:hr.payroll.register,bank_id:0
+#: report:salary.structure:0
 msgid "Bank"
 msgstr "Bank"
 
@@ -1382,28 +1447,35 @@ msgid "Cancel Sheet"
 msgstr "Táblázat érvénytelenítése"
 
 #. module: hr_payroll
+#: selection:hr.allounce.deduction.categoty,type:0
 #: selection:hr.payslip.line,type:0
 msgid "Advance"
 msgstr "Előleg"
 
 #. module: hr_payroll
-#: rml:salary.structure:0
+#: report:salary.structure:0
 msgid "Special Allowances and Deductions For Employee:"
 msgstr ""
 
 #. module: hr_payroll
-#: field:hr.allounce.deduction.categoty.line,name:0
+#: field:company.contribution,name:0
+#: field:company.contribution.line,name:0
+#: field:hr.contibution.register,name:0
+#: field:hr.contibution.register.line,name:0
 #: field:hr.payroll.advice,name:0
 #: field:hr.payroll.register,name:0
+#: field:hr.payroll.structure,name:0
 #: field:hr.payslip,name:0
 #: field:hr.payslip.line,name:0
-#: rml:salary.structure:0
-#: rml:year.salary:0
+#: field:hr.payslip.line.line,name:0
+#: report:payslip.pdf:0
+#: report:salary.structure:0
+#: report:year.salary:0
 msgid "Name"
 msgstr "Név"
 
 #. module: hr_payroll
-#: field:hr.payslip,leaves:0
+#: report:payslip.pdf:0
 msgid "Leaved Deduction"
 msgstr "Szabadság miatti levonás"
 
@@ -1413,14 +1485,17 @@ msgid "Country"
 msgstr "Ország"
 
 #. module: hr_payroll
-#: wizard_field:wizard.employees.detail,init,employee_ids:0
-#: wizard_field:wizard.year.salary,init,employee_ids:0
+#: view:hr.passport:0
+#: view:hr.payroll.employees.detail:0
+#: field:hr.payroll.employees.detail,employee_ids:0
+#: view:hr.payroll.year.salary:0
+#: field:hr.payroll.year.salary,employee_ids:0
+#: view:hr.payslip:0
 msgid "Employees"
 msgstr "Alkalmazottak"
 
 #. module: hr_payroll
-#: field:hr.employee,property_bank_account:0
-#: rml:payroll.advice:0
+#: report:payroll.advice:0
 msgid "Bank Account"
 msgstr "Bankszámlaszám"
 
@@ -1472,6 +1547,7 @@ msgid "Passport Issue Date"
 msgstr "Útlevél kiállítás dátuma"
 
 #. module: hr_payroll
+#: view:hr.allounce.deduction.categoty:0
 #: selection:hr.allounce.deduction.categoty,type:0
 #: field:hr.payroll.register,allounce:0
 #: field:hr.payslip,allounce:0
@@ -1490,7 +1566,7 @@ msgid "Other Id"
 msgstr "Egyéb ID"
 
 #. module: hr_payroll
-#: rml:payslip.pdf:0
+#: report:payslip.pdf:0
 msgid "Bank Details"
 msgstr "Bankadatok"
 
@@ -1500,7 +1576,10 @@ msgid "Slip ID"
 msgstr "Fizetési jegyzék ID"
 
 #. module: hr_payroll
+#: field:company.contribution.line,sequence:0
 #: field:hr.allounce.deduction.categoty,sequence:0
+#: field:hr.payslip.line,sequence:0
+#: field:hr.payslip.line.line,sequence:0
 msgid "Sequence"
 msgstr "Sorszám"
 
@@ -1516,8 +1595,8 @@ msgid "Letter Content"
 msgstr "Levél tartalma"
 
 #. module: hr_payroll
-#: wizard_view:wizard.employees.detail,init:0
-#: wizard_view:wizard.year.salary,init:0
+#: view:hr.payroll.employees.detail:0
+#: view:hr.payroll.year.salary:0
 msgid "Year Salary"
 msgstr "Éves bér"
 
@@ -1537,9 +1616,9 @@ msgid "Search Payslips"
 msgstr "Fizetési jegyzékek keresése"
 
 #. module: hr_payroll
-#: rml:employees.salary:0
-#: rml:payroll.advice:0
-#: rml:year.salary:0
+#: report:employees.salary:0
+#: field:hr.contibution.register.line,total:0
+#: report:year.salary:0
 msgid "Total"
 msgstr "Összesen"
 

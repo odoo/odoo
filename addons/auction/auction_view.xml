@@ -375,7 +375,7 @@
                       </group>
                    </page>
                    <page string="Bids">
-                       <field name="bid_lines" colspan="4" nolabel="1" editable="top">
+                       <field name="bid_lines" colspan="4" nolabel="1">
                             <tree string="Bids Details"  editable="top">
                                 <field name="bid_id"/>
                                 <field name="price"/>
@@ -709,7 +709,7 @@
                         <field name="price"/>
                         <field name="call"/>
                     </tree>
-                    <form string="Bids Lines" editable="top">
+                    <form string="Bids Lines">
                         <field name="lot_id" domain="[('auction_id','=',parent.auction_id)]"/>
                         <field name="price"/>
                         <field name="call"/>

@@ -314,7 +314,7 @@
             <tree string="Stages">
                 <field name="sequence" invisible="1"/>
                 <field name="name"/>
-                <field name="department_id"/>
+                <field name="department_id" groups="base.group_extended"/>
             </tree>
         </field>
     </record>
@@ -330,7 +330,7 @@
                 <group colspan="4" col="6">
                     <separator string="Stage Definition" colspan="6"/>
                     <field name="name" select="1"/>
-                    <field name="department_id"/>
+                    <field name="department_id" groups="base.group_extended"/>
                     <field name="sequence"/>
                 </group>
                 <separator string="Requirements" colspan="4"/>
@@ -346,6 +346,7 @@
         <field name="res_model">hr.recruitment.stage</field>
         <field name="view_type">form</field>
         <field name="view_id" ref="hr_recruitment_stage_tree"/>
+        <field name="help"> Check if the following stages are matching your recruitment process. Don't forget to specify the department if your recruitment process is different according to the job position.</field>
     </record>
 
     <menuitem

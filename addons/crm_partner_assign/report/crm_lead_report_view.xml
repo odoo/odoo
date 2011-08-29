@@ -30,19 +30,6 @@
                         <field name="partner_assigned_id"/>
                    </group>
                    <newline/>
-                   <group  expand="0" string="Extended Filters..." groups="base.group_extended">
-                      <field name="partner_id"/>
-                      <separator orientation="vertical"/>
-                      <field name="stage_id" widget="selection" domain="[('type', '=', 'opportunity')]" />
-                      <field name="categ_id" widget="selection" domain="[('object_id.model', '=', 'crm.lead')]"/>
-                      <separator orientation="vertical"/>
-                      <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                      <newline/>
-                      <field name="creation_date"/>
-                      <field name="opening_date"/>
-                      <field name="date_closed"/>
-                   </group>
-                   <newline/>
                    <group  expand="1" string="Group By...">
                        <filter string="Salesman" name="user" icon="terp-personal"
                             domain="[]" context="{'group_by':'user_id'}" />

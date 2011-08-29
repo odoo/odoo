@@ -80,7 +80,7 @@ class mailgate_thread(osv.osv):
         for thread in self.browse(cr, uid, ids, context=context):
             l=[]
             for message in thread.message_ids:
-                l.append((message.user_id and message.user_id.email) or '')
+                l.append((message.user_id and message.user_id.user_email) or '')
                 l.append(message.email_from or '')
                 l.append(message.email_cc or '')
             res[thread.id] = l
@@ -164,8 +164,7 @@ class mailgate_thread(osv.osv):
                     'description': details or (hasattr(case, 'description') and case.description or False),
                     'email_to': email,
                     'email_from': email_from or \
-                        (hasattr(case, 'user_id') and case.user_id and case.user_id.address_id and \
-                         case.user_id.address_id.email),
+                        (hasattr(case, 'user_id') and case.user_id and case.user_id.user_email),
                     'email_cc': email_cc,
                     'email_bcc': email_bcc,
                     'partner_id': partner_id,
@@ -282,6 +281,8 @@ class mailgate_message(osv.osv):
         'partner_id': fields.many2one('res.partner', 'Partner', required=False),
         'attachment_ids': fields.many2many('ir.attachment', 'message_attachment_rel', 'message_id', 'attachment_id', 'Attachments'),
         'display_text': fields.function(_get_display_text, method=True, type='text', size="512", string='Notes'),
+        'attachment_ids': fields.many2many('ir.attachment', 'message_attachment_rel', 'message_id', 'attachment_id', 'Attachments', readonly=True),
+        'display_text': fields.function(_get_display_text, type='text', size="512", string='Display Text'),
     }
 
     def init(self, cr):
@@ -519,7 +520,7 @@ class mailgate_tool(osv.osv_memory):
                             body = content
                             has_plain_text = True
                 elif part.get_content_maintype() in ('application', 'image'):
-                    if filename :
+                    if filename and attach:
                         attachments[filename] = part.get_payload(decode=True)
                     else:
                         res = part.get_payload(decode=True)

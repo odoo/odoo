@@ -105,7 +105,7 @@
             <field name="res_model">pos.order</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="view_pos_pos_form"/>
-            <field name="domain">[['date_order','>=',time.strftime('%Y-%m-%d')]]</field>
+            <field name="domain">[]</field>
         </record>
         <record model="ir.ui.view" id="view_pos_order_tree">
             <field name="name">Sales</field>
@@ -639,12 +639,11 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="base.view_company_form"/>
             <field name="arch" type="xml">
-                <notebook position="inside">
-                    <page string="Other">
-                      <field  name="company_discount" colspan="4"/>
-                      <field  name="max_diff" colspan="4"/>
-                    </page>
-                </notebook>
+                <field name="currency_id" position="after">
+                    <separator string="Point of Sale" colspan="4"/>
+                    <field  name="company_discount" />
+                    <field  name="max_diff" />
+                </field>
             </field>
            </record>
 
@@ -654,15 +653,13 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
-                <xpath expr="/form/notebook/page/group[@name='misc']" position="before">
-                    <group colspan="2" col="2">
-                        <separator string="Point of Sale" colspan="2"/>
-                        <field name="income_pdt" string="Product for Input Operation"/>
-                        <field name="expense_pdt" string="Product for Output Operation"/>
-                        <field name="am_out"/>
-                        <field name="disc_controle"/>
-                    </group>
-                </xpath>
+                  <field name="company_id" position="after">
+                  <separator string="Point of Sale" colspan="2"/>
+                      <field name="income_pdt"/>
+                      <field name="expense_pdt"/>
+                      <field name="am_out"/>
+                      <field name="disc_controle"/>
+                  </field>
             </field>
         </record>
 

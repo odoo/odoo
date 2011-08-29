@@ -16,9 +16,9 @@
           	<xpath expr="//label[@string='description']" position="attributes">
             <attribute name="string">Choose the following Resouces to auto directory configuration.</attribute>
           </xpath>
-          <xpath expr='//separator[@string="vsep"]' position='attributes'>
-  				<attribute name='rowspan'>12</attribute>
-      			<attribute name='string'></attribute>
+          <xpath expr="//separator[@string=&quot;vsep&quot;]" position="attributes">
+  				<attribute name="rowspan">12</attribute>
+      			<attribute name="string"/>
 	      	</xpath>
             <group string="res_config_contents" position="replace">
                 <group col="6" colspan="4">
@@ -41,12 +41,17 @@
         <field name="view_mode">form</field>
         <field name="target">new</field>
     </record>
+    
+    <record id="category_knowledge_mgmt_config" model="ir.actions.todo.category">
+        <field name="name">Knowledge Management</field>
+        <field name="sequence">5</field>
+    </record>    
 
     <record model="ir.actions.todo" id="config_auto_directory">
         <field name="action_id" ref="action_config_auto_directory"/>
+        <field name="category_id" ref="category_knowledge_mgmt_config"/>
         <field name="groups_id" eval="[(6,0,[ref('base.group_extended')])]"/>
-        <field name="state" eval="'skip'" />
-        <field name="restart" eval="'onskip'" />
+        <field name="type">automatic</field>
     </record>
   </data>
 </openerp>

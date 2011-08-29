@@ -134,5 +134,48 @@
         <field eval="time.strftime('%Y-%m-15')" name="date_deadline"/>
         <field eval="'6630125'" name="partner_phone"/>
     </record>
+
+    <record id="hr_case_programmer" model="hr.applicant">
+        <field model="res.partner.canal" name="canal_id" search="[('name','=','E-mail')]"/>
+        <field name="partner_address_id" ref="base.res_partner_address_14"/>
+        <field eval="time.strftime('%Y-%m-12 17:49:19')" name="date"/>
+        <field name="type_id" ref="degree_bac5"/>
+        <field name="partner_id" ref="base.res_partner_15"/>
+        <field eval="'3'" name="priority"/>
+        <field name="user_id" ref="base.user_root"/>
+        <field eval="'Shane Williams'" name="partner_name"/>
+        <field eval="'open'" name="state"/>
+        <field eval="1.15" name="duration"/>
+        <field eval="'tina_augustie@example.com'" name="partner_name2"/>
+        <field eval="'9812398524'" name="partner_mobile"/>
+        <field eval="1" name="active"/>
+        <field name="categ_id" ref="categ_job2"/>
+        <field name="stage_id" ref="stage_job4"/>
+        <field eval="'Programmer'" name="name"/>
+        <field eval="time.strftime('%Y-%m-15')" name="date_deadline"/>
+        <field eval="'6630125'" name="partner_phone"/>
+        <field name="job_id" ref="hr.job_jr_appli"/>
+	    <field eval="11000.0" name="salary_expected"/>
+    </record>
+
+    <record id="hr_case_advertisement" model="hr.applicant">
+        <field eval="time.strftime('%Y-%m-26 17:39:42')" name="date"/>
+        <field eval="time.strftime('%Y-%m-28')" name="date_deadline"/>
+        <field name="type_id" ref="degree_licenced"/>
+        <field name="partner_id" ref="base.res_partner_11"/>
+        <field eval="'4'" name="priority"/>
+        <field name="user_id" ref="base.user_root"/>
+        <field eval="'David Armstrong'" name="partner_name"/>
+        <field eval="'done'" name="state"/>
+        <field eval="'david@market.edu'" name="partner_name2"/>
+        <field eval="'9925741564'" name="partner_mobile"/>
+        <field eval="1" name="active"/>
+        <field eval="2.20" name="duration"/>
+        <field name="categ_id" ref="categ_job1"/>
+        <field name="stage_id" ref="stage_job5"/>
+        <field eval="'Advertisement'" name="name"/>
+        <field eval="'25968745'" name="partner_phone"/>
+	    <field eval="11000.0" name="salary_expected"/>
+    </record>
 </data>
 </openerp>

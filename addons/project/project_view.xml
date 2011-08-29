@@ -63,7 +63,6 @@
                                 <tree string="Members">
                                     <field name="name"/>
                                     <field name="user_email"/>
-                                    <field name="address_id"/>
                                 </tree>
                             </field>
                         </page>
@@ -224,7 +223,7 @@
                 <form string="Task edition">
                     <group colspan="6" col="6">
                         <field name="name" select="1"/>
-                        <field name="project_id" select="1"  on_change="onchange_project(project_id)" domain="['|',('user_id','=',uid),('members','=',uid)]" />
+                        <field name="project_id" select="1"  on_change="onchange_project(project_id)"/>
                         <field name="total_hours" widget="float_time"/>
                         <field name="date_deadline" attrs="{'readonly':[('state','in',['done', 'cancelled'])]}"/>
                         <field name="user_id" select="1" attrs="{'readonly':[('state','in',['done', 'cancelled'])]}"/>
@@ -264,11 +263,11 @@
                                 <button name="do_open" states="pending,draft" string="Start Task" type="object" icon="gtk-execute"/>
                                 <button name="%(action_project_task_reevaluate)d" states="done,cancelled" string="Reactivate" type="action" icon="gtk-convert" context="{'button_reactivate':True}" />
                                 <button name="do_pending" states="open" string="Pending" type="object" icon="gtk-media-pause"/>
-                                <button groups="base.group_extended" name="%(action_project_task_delegate)d" states="pending,open" string="Delegate" type="action" icon="gtk-sort-descending"/>
+                                <button groups="base.group_extended" name="%(action_project_task_delegate)d" states="pending,open,draft" string="Delegate" type="action" icon="gtk-sort-descending"/>
                                 <button name="action_close" states="pending,open" string="Done" type="object" icon="terp-dialog-close"/>
                             </group>
                         </page>
-                        <page groups="base.group_extended" string="Delegations">
+                        <page groups="base.group_extended" string="Delegations History">
                             <separator string="Parent Tasks" colspan="4"/>
                             <field colspan="4" height="150" name="parent_ids" nolabel="1"/>
                             <separator string="Delegated tasks" colspan="4"/>
@@ -322,7 +321,7 @@
                 <tree colors="grey:state in ('cancelled','done');blue:state == 'pending';red:date_deadline and (date_deadline&lt;current_date) and (state in ('draft','pending','open'))" string="Tasks">
                     <field name="sequence" invisible="not context.get('seq_visible', False)"/>
                     <field name="name"/>
-                    <field name="project_id" icon="gtk-indent" domain="['|',('user_id','=',uid),('members','=',uid)]" invisible="context.get('user_invisible', False)"/>
+                    <field name="project_id" icon="gtk-indent" invisible="context.get('user_invisible', False)"/>
                     <field name="user_id" invisible="context.get('user_invisible', False)"/>
                     <field name="delegated_user_id" invisible="context.get('show_delegated', True)"/>
                     <field name="total_hours" invisible="1"/>
@@ -369,7 +368,7 @@
             <field name="type">gantt</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
-                <gantt color="user_id" date_delay="planned_hours" date_start="date_start" string="Tasks">
+                <gantt color="user_id" date_start="date_start" date_stop="date_end" string="Tasks">
                     <level object="project.project" link="project_id" domain="[]">
                         <field name="name"/>
                     </level>
@@ -397,7 +396,7 @@
             <field name="arch" type="xml">
                <search string="Task Edition">
                     <group col="20" colspan="4">
-                        <filter string="Current" domain="[('state','in',('open','draft'))]"  name="current" help="Draft and In Progress tasks" icon="terp-check"/>
+                        <filter string="Current" domain="[('state','in',('open','draft','pending'))]"  name="current" help="Draft, In Progress and Pending Tasks" icon="terp-check"/>
                         <filter string="In Progress" domain="[('state','=','open')]" help="In Progress Tasks" icon="terp-camera_test"/>
                         <filter string="Pending" domain="[('state','=','pending')]" context="{'show_delegated':False}" help="Pending Tasks" icon="terp-gtk-media-pause"/>
                         <separator orientation="vertical"/>
@@ -546,9 +545,9 @@
           <field name="inherit_id" ref="base.view_users_form"/>
           <field eval="18" name="priority"/>
           <field name="arch" type="xml">
-              <xpath expr="/form/notebook" position="before">
+              <group name="default_filters" position="inside">
                    <field name="context_project_id"/>
-              </xpath>
+              </group>
           </field>
      </record>
 
@@ -559,9 +558,9 @@
          <field name="type">form</field>
          <field eval="18" name="priority"/>
          <field name="arch" type="xml">
-            <page string="Current Activity" position="inside">
-                <field name="context_project_id" completion="1" context="{'user_prefence':True}" widget="selection" readonly="0"/>
-            </page>
+            <group name="default_filters" position="inside">
+                <field name="context_project_id" context="{'user_prefence':True}" widget="selection"/>
+            </group>
        </field>
     </record>
     <act_window context="{'search_default_user_id': [active_id], 'default_user_id': active_id}" domain="[('state', '&lt;&gt;', 'cancelled'),('state', '&lt;&gt;', 'done')]" id="act_res_users_2_project_task_opened" name="Assigned tasks" res_model="project.task" src_model="res.users" view_mode="tree,form,gantt,calendar,graph" view_type="form"/>

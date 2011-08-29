@@ -106,9 +106,9 @@ class project_scrum_sprint(osv.osv):
         'review': fields.text('Sprint Review'),
         'retrospective': fields.text('Sprint Retrospective'),
         'backlog_ids': fields.one2many('project.scrum.product.backlog', 'sprint_id', 'Sprint Backlog'),
-        'progress': fields.function(_compute, group_operator="avg", type='float', multi="progress", method=True, string='Progress (0-100)', help="Computed as: Time Spent / Total Time."),
-        'effective_hours': fields.function(_compute, multi="effective_hours", method=True, string='Effective hours', help="Computed using the sum of the task work done."),
-        'expected_hours': fields.function(_compute, multi="expected_hours", method=True, string='Planned Hours', help='Estimated time to do the task.'),
+        'progress': fields.function(_compute, group_operator="avg", type='float', multi="progress", string='Progress (0-100)', help="Computed as: Time Spent / Total Time."),
+        'effective_hours': fields.function(_compute, multi="effective_hours", string='Effective hours', help="Computed using the sum of the task work done."),
+        'expected_hours': fields.function(_compute, multi="expected_hours", string='Planned Hours', help='Estimated time to do the task.'),
         'state': fields.selection([('draft','Draft'),('open','Open'),('pending','Pending'),('cancel','Cancelled'),('done','Done')], 'State', required=True),
     }
     _defaults = {
@@ -230,11 +230,11 @@ class project_scrum_product_backlog(osv.osv):
         'sequence' : fields.integer('Sequence', help="Gives the sequence order when displaying a list of product backlog."),
         'tasks_id': fields.one2many('project.task', 'product_backlog_id', 'Tasks Details'),
         'state': fields.selection([('draft','Draft'),('open','Open'),('pending','Pending'),('done','Done'),('cancel','Cancelled')], 'State', required=True),
-        'progress': fields.function(_compute, multi="progress", group_operator="avg", type='float', method=True, string='Progress', help="Computed as: Time Spent / Total Time."),
-        'effective_hours': fields.function(_compute, multi="effective_hours", method=True, string='Spent Hours', help="Computed using the sum of the time spent on every related tasks", store=True),
+        'progress': fields.function(_compute, multi="progress", group_operator="avg", type='float', string='Progress', help="Computed as: Time Spent / Total Time."),
+        'effective_hours': fields.function(_compute, multi="effective_hours", string='Spent Hours', help="Computed using the sum of the time spent on every related tasks", store=True),
         'expected_hours': fields.float('Planned Hours', help='Estimated total time to do the Backlog'),
         'create_date': fields.datetime("Creation Date", readonly=True),
-        'task_hours': fields.function(_compute, multi="task_hours", method=True, string='Task Hours', help='Estimated time of the total hours of the tasks')
+        'task_hours': fields.function(_compute, multi="task_hours", string='Task Hours', help='Estimated time of the total hours of the tasks')
     }
     _defaults = {
         'state': 'draft',
@@ -317,12 +317,11 @@ class project_scrum_meeting(osv.osv):
         return True
 
     def email_send(self, cr, uid, ids, email, context=None):
-        email_from = tools.config.get('email_from', False)
         meeting_id = self.browse(cr, uid, ids, context=context)[0]
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-        user_email = email_from or user.address_id.email  or email_from
+        user_email = user.user_email or tools.config.get('email_from', False)
         body = _("Hello %s,\n \nI am sending you Daily Meeting Details of date %s for the Sprint %s\n") %(meeting_id.sprint_id.scrum_master_id.name, meeting_id.date, meeting_id.sprint_id.name)
-        body += _('\n*Tasks since yesterday:\n_______________________%s\n*Task for Today:\n_______________________ %s\n\n*Blocks encountered:\n_______________________ %s') %(meeting_id.question_yesterday,meeting_id.question_today, meeting_id.question_blocks or _('No Blocks'))
+        body += _('\n* Tasks since yesterday:\n_______________________\n%s\n\n* Task for Today:\n_______________________ \n%s\n\n* Blocks encountered:\n_______________________ \n\n%s') %(meeting_id.question_yesterday,meeting_id.question_today, meeting_id.question_blocks or _('No Blocks'))
         body += _("\n\nThank you,\n%s") % user.name
         sub_name = meeting_id.name or _('Scrum Meeting of %s') % meeting_id.date
         flag = tools.email_send(user_email , [email], sub_name, body, reply_to=None, openobject_id=str(meeting_id.id))
