@@ -234,7 +234,7 @@ class account_cash_statement(osv.osv):
     }
     _defaults = {
         'state': 'draft',
-        'date': lambda *a: time.strftime("%Y-%m-%d %H:%M:%S"),
+        'date': lambda self,cr,uid,context={}: context.get('date', time.strftime("%Y-%m-%d %H:%M:%S")),
         'user_id': lambda self, cr, uid, context=None: uid,
         'starting_details_ids': _get_cash_open_box_lines,
         'ending_details_ids': _get_default_cash_close_box_lines
