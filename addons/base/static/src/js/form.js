@@ -157,6 +157,7 @@ openerp.base.FormView = openerp.base.View.extend( /** @lends openerp.base.FormVi
         this.do_update_pager(record.id == null);
         if (this.sidebar) {
             this.sidebar.attachments.do_update();
+            this.sidebar.$element.find('.oe_sidebar_translate').toggleClass('oe_hide', !record.id);
         }
         if (this.default_focus_field && !this.embedded_view) {
             this.default_focus_field.focus();
@@ -342,7 +343,7 @@ openerp.base.FormView = openerp.base.View.extend( /** @lends openerp.base.FormVi
                     self.on_created(r, success, prepend_on_create);
                 });
             } else {
-                return this.dataset.write(this.datarecord.id, values, function(r) {
+                return this.dataset.write(this.datarecord.id, values, {}, function(r) {
                     self.on_saved(r, success);
                 });
             }
@@ -879,6 +880,9 @@ openerp.base.form.Field = openerp.base.form.Widget.extend({
     },
     update_dom: function() {
         this._super.apply(this, arguments);
+        if (this.field.translate) {
+            this.$element.find('.oe_field_translate').toggle(!!this.view.datarecord.id);
+        }
         if (!this.disable_utility_classes) {
             this.$element.toggleClass('disabled', this.readonly);
             this.$element.toggleClass('required', this.required);
@@ -1872,7 +1876,7 @@ openerp.base.form.One2ManyListView = openerp.base.ListView.extend({
             }
         });
         pop.on_write.add(function(id, data) {
-            self.o2m.dataset.write(id, data, function(r) {
+            self.o2m.dataset.write(id, data, {}, function(r) {
                 self.o2m.reload_current_view();
             });
         });
@@ -2171,7 +2175,7 @@ openerp.base.form.FormOpenPopup = openerp.base.OldWidget.extend({
         var self = this;
         var wdataset = new openerp.base.DataSetSearch(this, this.model, this.context, this.domain);
         wdataset.parent_view = this.options.parent_view;
-        wdataset.write(id, data, function(r) {
+        wdataset.write(id, data, {}, function(r) {
             self.on_write_completed();
         });
     },

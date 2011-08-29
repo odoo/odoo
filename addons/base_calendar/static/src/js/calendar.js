@@ -251,7 +251,7 @@ openerp.base_calendar.CalendarView = openerp.base.View.extend({
     do_save_event: function(event_id, event_obj) {
         var self = this,
             data = this.get_event_data(event_obj);
-        this.dataset.write(parseInt(event_id, 10), data, function() {
+        this.dataset.write(parseInt(event_id, 10), data, {}, function() {
             self.refresh_minical();
         });
     },

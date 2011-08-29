@@ -355,12 +355,13 @@ openerp.base.DataSet =  openerp.base.Widget.extend( /** @lends openerp.base.Data
      * @param {Function} error_callback function called in case of write error
      * @returns {$.Deferred}
      */
-    write: function (id, data, callback, error_callback) {
+    write: function (id, data, options, callback, error_callback) {
+        var options = options || {};
         return this.rpc('/base/dataset/save', {
             model: this.model,
             id: id,
             data: data,
-            context: this.get_context()
+            context: this.get_context(options.context)
         }, callback, error_callback);
     },
     /**
