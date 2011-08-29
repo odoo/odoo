@@ -300,6 +300,7 @@ class TransientModel(Model):
 
         # Restrict acces to the current user, except for the super-user.
         if self._log_access and uid != openerp.SUPERUSER:
+            import expression
             domain = expression.expression_and(('create_uid', '=', uid), domain)
 
         # TODO unclear: shoudl access_rights_uid be set to None (effectively ignoring it) or used instead of uid?
