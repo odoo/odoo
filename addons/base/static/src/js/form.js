@@ -2202,7 +2202,7 @@ openerp.base.form.FormOpenDataset = openerp.base.ReadOnlyDataSetSearch.extend({
         if (this.fop.options.read_function) {
             return this.fop.options.read_function.apply(null, arguments);
         } else {
-            this._super.apply(this, arguments);
+            return this._super.apply(this, arguments);
         }
     }
 });
