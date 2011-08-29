@@ -244,6 +244,7 @@ openerp.base_diagram.DiagramView = openerp.base.View.extend({
         	if(edge.connection)
         		edge.connection.fg.node.id = edge_ids[index];
         });
+        
         jQuery('path',renderer.r.canvas).dblclick(function() {
         	self.add_edit_node(this.id, self.connector)
         });
@@ -290,6 +291,24 @@ openerp.base_diagram.DiagramView = openerp.base.View.extend({
                 action_buttons : false
             }
         });
+    	
+    	if(id) {
+    		var readonly_fields;
+    		if(model == self.node) {
+    			readonly_fields = ['wkf_id'];
+    		} else {
+    			readonly_fields = ['act_from', 'act_to'];
+    		}
+    		var form_controller = action_manager.inner_viewmanager.views.form.controller;
+    		$.each(readonly_fields, function(index, fld) {
+    			form_controller.on_record_loaded.add_first(function() {
+    				form_controller.fields[fld].readonly = true;
+    				form_controller.fields[fld].$input.attr('disabled', true);
+		    		form_controller.fields[fld].$drop_down.unbind();
+		    		form_controller.fields[fld].$menu_btn.unbind();
+    			});
+    		});
+    	}
     },
     
     do_search: function(domains, contexts, groupbys) {
