@@ -1088,10 +1088,7 @@ def export_csv(fields, result):
     return data
 
 def export_xls(fieldnames, table):
-    try:
-        import xlwt
-    except ImportError:
-        common.error(_('Import Error.'), _('Please install xlwt library to export to MS Excel.'))
+    import xlwt
 
     workbook = xlwt.Workbook()
     worksheet = workbook.add_sheet('Sheet 1')
