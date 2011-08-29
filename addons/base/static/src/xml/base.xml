@@ -805,12 +805,23 @@
             <img src="/base/static/src/img/down-arrow.png" /></span>
         <span class="oe-m2o-cm-button" t-att-id="widget.name + '_open'">
             <img src="/base/static/src/img/icons/gtk-index.png"/></span>
-        <div t-att-id="widget.cm_id" class="contextMenu" style="display:none"><ul>
-            <li t-att-id="widget.cm_id + '_open'" style="color:grey">Open...</li>
-            <li t-att-id="widget.cm_id + '_create'">Create...</li>
-            <li t-att-id="widget.cm_id + '_search'">Search...</li>
-        </ul></div>
+        <div t-att-id="widget.cm_id" class="contextMenu" style="display:none">
+        </div>
     </div>
+</t>
+<t t-name="FieldMany2One.context_menu">
+    <ul>
+        <li t-att-id="widget.cm_id + '_open'" style="color:grey">Open...</li>
+        <li t-att-id="widget.cm_id + '_create'">Create...</li>
+        <li t-att-id="widget.cm_id + '_search'" class="oe_m2o_menu_item_mandatory">Search...</li>
+        <t t-set="i" t-value="0"/>
+        <t t-foreach="widget.related_entries" t-as="entry">
+            <li t-att-id="widget.cm_id + '_related_' + i" style="color:grey" class="oe_m2o_menu_item_mandatory">
+                ... <t t-esc="(entry[2] || {})['name'] || ''"/>
+            </li>
+            <t t-set="i" t-value="i+1"/>
+        </t>
+    </ul>
 </t>
 <t t-name="FieldOne2Many">
     <div t-att-id="widget.element_id">

@@ -350,20 +350,22 @@ openerp.base.ViewManagerAction = openerp.base.ViewManager.extend({
     shortcut_add_remove: function() {
         var self = this;
         var $shortcut_toggle = this.$element.find('.oe-shortcut-toggle');
-        $shortcut_toggle.click(function() {
-            if ($shortcut_toggle.hasClass("oe-shortcut-remove")) {
-                $(self.session.shortcuts.binding).trigger('remove-current');
-                $shortcut_toggle.removeClass("oe-shortcut-remove");
-            } else {
-                $(self.session.shortcuts.binding).trigger('add', {
-                    'user_id': self.session.uid,
-                    'res_id': self.session.active_id,
-                    'resource': 'ir.ui.menu',
-                    'name': self.action.name
-                });
-                $shortcut_toggle.addClass("oe-shortcut-remove");
-            }
-        });
+        $shortcut_toggle
+            .unbind("click")
+            .click(function() {
+                if ($shortcut_toggle.hasClass("oe-shortcut-remove")) {
+                    $(self.session.shortcuts.binding).trigger('remove-current');
+                    $shortcut_toggle.removeClass("oe-shortcut-remove");
+                } else {
+                    $(self.session.shortcuts.binding).trigger('add', {
+                        'user_id': self.session.uid,
+                        'res_id': self.session.active_id,
+                        'resource': 'ir.ui.menu',
+                        'name': self.action.name
+                    });
+                    $shortcut_toggle.addClass("oe-shortcut-remove");
+                }
+            });
     }
 });
 
@@ -374,8 +376,8 @@ openerp.base.Sidebar = openerp.base.Widget.extend({
         this.sections = {};
     },
     start: function() {
+        this._super(this);
         var self = this;
-        this._super(this, arguments);
         this.$element.html(QWeb.render('Sidebar'));
         this.$element.find(".toggle-sidebar").click(function(e) {
             self.do_toggle();
@@ -431,9 +433,23 @@ openerp.base.Sidebar = openerp.base.Widget.extend({
                     item.callback();
                 }
                 if (item.action) {
-                    item.action.flags = item.action.flags || {};
-                    item.action.flags.new_window = true;
-                    self.do_action(item.action);
+                    var ids = self.widget_parent.get_selected_ids();
+                    if (ids.length == 0) {
+                        //TODO niv: maybe show a warning?
+                        return false;
+                    }
+                    self.rpc("/base/action/load", {
+                        action_id: item.action.id,
+                        context: {
+                            active_id: ids[0],
+                            active_ids: ids,
+                            active_model: self.widget_parent.dataset.model
+                        }
+                    }, function(result) {
+                        result.result.flags = result.result.flags || {};
+                        result.result.flags.new_window = true;
+                        self.do_action(result.result);
+                    });
                 }
                 return false;
             });

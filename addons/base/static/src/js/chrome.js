@@ -590,22 +590,27 @@ openerp.base.Header =  openerp.base.Widget.extend({
             sc.binding = {};
             $(sc.binding).bind({
                 'add': function (e, attrs) {
-                    var $shortcut = $('<li>', {
+                    shortcuts_ds.create(attrs, function (out) {
+                        $('<li>', {
+                            'data-shortcut-id':out.result,
                             'data-id': attrs.res_id
                         }).text(attrs.name)
-                        .appendTo(self.$element.find('.oe-shortcuts ul'));
-                    shortcuts_ds.create(attrs, function (out) {
-                        $shortcut.data('shortcut-id', out.result);
+                          .appendTo(self.$element.find('.oe-shortcuts ul'));
+                        attrs.id = out.result;
+                        sc.push(attrs);
                     });
                 },
                 'remove-current': function () {
                     var menu_id = self.session.active_id;
                     var $shortcut = self.$element
-                            .find('.oe-shortcuts li[data-id=' + menu_id + ']');
+                        .find('.oe-shortcuts li[data-id=' + menu_id + ']');
                     var shortcut_id = $shortcut.data('shortcut-id');
                     $shortcut.remove();
                     shortcuts_ds.unlink([shortcut_id]);
-                }
+                    var sc_new = _.reject(sc, function(shortcut){ return shortcut_id === shortcut.id});
+                    sc.splice(0, sc.length);
+                    sc.push.apply(sc, sc_new);
+                    }
             });
         }
         return this.rpc('/base/session/sc_list', {}, function(shortcuts) {
@@ -615,6 +620,7 @@ openerp.base.Header =  openerp.base.Widget.extend({
             self.$element.find('.oe-shortcuts')
                 .html(QWeb.render('Shortcuts', {'shortcuts': shortcuts}))
                 .undelegate('li', 'click')
+
                 .delegate('li', 'click', function(e) {
                     e.stopPropagation();
                     var id = $(this).data('id');
