@@ -1,0 +1,51 @@
+<?xml version="1.0" ?>
+<openerp>
+	<data>
+		<!--Export edi document  -->
+		<record id="ir_actions_server_edi_purchase" model="ir.actions.server">
+			<field name="code">context.update({'edi_web_url_view': '%s/edi/view_edi?db=%s&amp;token=%s' %(self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url'),cr.dbname, self.pool.get('ir.edi.document').export_edi(cr, uid, [object], context = context)[0])})
+self.pool.get('email.template').generate_mail(cr,
+                      uid,
+                      self.pool.get('ir.model.data').get_object_reference(cr, uid, 'purchase', 'email_template_edi_purchase')[1],
+                      [object.id],
+                      context=context)</field>
+			<field eval="8" name="sequence"/>
+			<field name="state">code</field>
+			<field name="type">ir.actions.server</field>
+			<field name="model_id" ref="purchase.model_purchase_order"/>
+			<field name="condition">True</field>
+			<field name="name">EDI Document - Purchase Order</field>
+		</record>
+
+		
+		<!--calling multi action in workflow.activity -->
+		<record id="purchase.act_confirmed" model="workflow.activity">
+			<field name="action_id" ref="ir_actions_server_edi_purchase"/>
+		</record>
+
+        
+		<!--Email template -->
+		<record id="email_template_edi_purchase" model="email.template">
+			<field name="def_subject">${object.company_id.name} - Purchase Order ${object.name}</field>
+			<field name="def_to">${object.partner_address_id.email}</field>
+			<field name="object_name" ref="purchase.model_purchase_order"/>
+            <field name="use_sign">True</field>
+			<field name="def_body_text">
+Hello ${object.partner_address_id.name},
+
+We just registered the purchase order ${object.name} for ${object.amount_total} for your company ${object.partner_id.name}.
+You can click on the following link to preview.
+
+    ${object._context.get('edi_web_url_view')}
+
+	Confirmed on ${object.date_approve}
+	
+Regards,
+</field>
+			<field name="template_language">mako</field>
+			<field name="name">Mail Template of Purchase Order For EDI Document</field>
+			<field name="model_int_name">purchase.order</field>
+			<!--field name="reply_to">${object.user_id.email or ''}</field-->
+		</record>
+	</data>
+</openerp>
