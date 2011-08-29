@@ -49,11 +49,14 @@
   Set the task to tomorrow timebox
 -
   !python {model: project.timebox.fill.plan}: |
-    self.process(cr, uid, [ref("project_timebox_fill_plan_0")], {"lang": "en_US",
+    context={"lang": "en_US",
       "project_id": False, "tz": False, "active_model": "project.gtd.timebox",
       "department_id": False, "section_id": False, "record_id": 1, "active_ids":
       [ref("project_gtd.timebox_daily")], "active_id": ref("project_gtd.timebox_daily"),
-      })
+      }
+    self.process(cr, uid, [ref("project_timebox_fill_plan_0")], context=context)
+    self._get_from_tb(cr, uid, context=context)
+    self._get_to_tb(cr, uid, context=context)
 -
    Copy the task 'Develop time management module'.
 -
