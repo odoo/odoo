@@ -29,8 +29,6 @@ import openerp.release as release
 from tools.translate import _
 import netsvc
 
-edi_module = 'edi_import'
-
 def safe_unique_id(database_id, model, record_id):
     """Generate a unique string to represent a (database id,model,record_id) pair
     without being too long, without revealing the database id, and
@@ -42,7 +40,7 @@ def safe_unique_id(database_id, model, record_id):
     # finally, use the b64-encoded folded digest as ID part of the unique ID:
     digest = base64.urlsafe_b64encode(digest)
         
-    return '%s-%s' % (model,digest)
+    return '%s-%s' % (model.replace('.','_'), digest)
 
 class ir_edi_document(osv.osv):
     _name = 'ir.edi.document'
@@ -185,6 +183,15 @@ class edi(object):
        ``edi_import()`` and ``edi_export()`` methods to implement their
        specific behavior, based on the primitives provided by this superclass."""
 
+    def record_xml_id(self, cr, uid, record, context=None):
+        model_data_pool = self.pool.get('ir.model.data')
+        data_ids = model_data_pool.search(cr, uid, [('res_id','=',record.id),('model','=',record._name)])
+        if not data_ids:
+            return False
+        xml_record_id = data_ids[0]
+        xml_record = model_data_pool.browse(cr, uid, xml_record_id, context=context)
+        return xml_record.module, xml_record.name
+
     def edi_xml_id(self, cr, uid, record, context=None):
         """
         Generate a unique string to represent a pair of (the database's UUID, the XML ID).
@@ -206,20 +213,21 @@ class edi(object):
         model_data_pool = self.pool.get('ir.model.data')
         db_uuid = self.pool.get('ir.config_parameter').get_param(cr, uid, 'database.uuid')
 
-        data_ids = model_data_pool.search(cr, uid, [('res_id','=',record.id),('model','=',record._name)])
-        if len(data_ids):
-            xml_record_id = data_ids[0]
-            xml_record = model_data_pool.browse(cr, uid, xml_record_id, context=context)
-            uuid = '%s:%s' % (db_uuid, xml_record.name)
+        _record_xml = self.record_xml_id(cr, uid, record, context=context)
+        if _record_xml:
+            module, xml_id = _record_xml
+            xml_id = '%s:%s.%s' % (db_uuid, module, xml_id)
         else:
-            xml_id = safe_unique_id(db_uuid, record._name, record.id)
-            uuid = '%s:%s' % (db_uuid, xml_id)
+            uuid = safe_unique_id(db_uuid, record._name, record.id)
+            xml_id = '%s:%s.%s' % (db_uuid, record._module, uuid)
+            assert len(xml_id.split('.'))==2, _("'%s' contains too many dots. XML ids should not contain dots ! These are used to refer to other modules data, as in module.reference_id") % (xml_id)
+            module, xml_id2 = xml_id.split('.')
             xml_record_id = model_data_pool.create(cr, uid, {
-                'name': xml_id,
+                'name': xml_id2,
                 'model': record._name,
-                'module': uuid,
+                'module': module,
                 'res_id': record.id}, context=context)
-        return uuid
+        return xml_id
     
     def edi_metadata(self, cr, uid, records, context=None):
         """Return a list representing the boilerplate EDI structure for
@@ -385,14 +393,29 @@ class edi(object):
             edi_dict_list.append(edi_dict)
         return edi_dict_list
 
-    def edi_import_relation(self, cr, uid, relation_model, relation_value, values={}, context=None):
+    def edi_import_relation(self, cr, uid, relation_model, relation_value, xml_id=None, context=None):
+        relation_id = False
+        model_data = self.pool.get('ir.model.data')
         relation_object = self.pool.get(relation_model)
         relation_ids = relation_object.name_search(cr, uid, relation_value, context=context)
         if relation_ids and len(relation_ids) == 1:
             relation_id = relation_ids[0][0]
-        else:
-            values.update({'name': relation_value})
+        values = {relation_object._rec_name: relation_value}
+        if not relation_id:
             relation_id = relation_object.create(cr, uid, values, context=context)
+
+        relation_record = relation_object.browse(cr, uid, relation_id, context=context)
+        record_xml = self.record_xml_id(cr, uid, relation_record, context=context)
+        if record_xml:
+            module, xml_id = record_xml
+            xml_id = '%s.%s' % (module, xml_id)
+        if not xml_id:
+            xml_id = self.edi_xml_id(cr, uid, relation_record, context=context)
+        if xml_id:
+            assert len(xml_id.split('.'))==2, _("'%s' contains too many dots. XML ids should not contain dots ! These are used to refer to other modules data, as in module.reference_id") % (xml_id)
+            module, xml_id2 = xml_id.split('.')
+        #TODO: update record from values
+        #relation_id = model_data._update(cr, uid, relation_model, module, values, xml_id=xml_id, context=context)
         return relation_id
         
     def edi_import(self, cr, uid, edi_document, context=None):
@@ -443,24 +466,28 @@ class edi(object):
                     connect it to the parent record via a write value like (4, db_id).        
         """
         # generic implementation!
-        
         fields = edi_document.keys()
         fields_to_import = []
         data_line = []
         model_data = self.pool.get('ir.model.data')
         _fields = self.fields_get(cr, uid, context=context)
         values = {}
+        xml_id = edi_document['__id']
+        assert len(xml_id.split('.'))==2, _("'%s' contains too many dots. XML ids should not contain dots ! These are used to refer to other modules data, as in module.reference_id") % (xml_id)
+        module, xml_id2 = xml_id.split('.')
         for field in edi_document.keys():
             if not field.startswith('__'):
                 fields_to_import.append(field)
                 edi_field_value = edi_document[field]
+                field_type = _fields[field]['type']
+                relation_model = _fields[field].get('relation')
                 if not edi_field_value:
                     continue
                 if _fields[field].has_key('function') or _fields[field].has_key('related_columns'):
                     # DO NOT IMPORT FUNCTION FIELD AND RELATED FIELD
                     continue
-                elif _fields[field]['type'] in ('many2one', 'many2many'):
-                    if _fields[field]['type'] == 'many2one':
+                elif field_type in ('many2one', 'many2many'):
+                    if field_type == 'many2one':
                         edi_parent_documents = [edi_field_value]
                     else:
                         edi_parent_documents = edi_field_value
@@ -468,41 +495,19 @@ class edi(object):
                     parent_lines = []
 
                     for edi_parent_document in edi_parent_documents:
-                        #Look in ir.model.data for a record that matches the db_id.
-                        #If found, replace the m2o value with the correct database ID and stop.
-                        #If not found, continue to next step
-                        xml_id =  edi_parent_document[0]
-                        data_ids = model_data.name_search(cr, uid, xml_id)
-                        if data_ids:
-                            for data in model_data.browse(cr, uid, [data_ids[0][0]], context=context):
-                                parent_lines.append(data.res_id)
-                        else:
-                            #Perform name_search(name) to look for a record that matches the
-                            #given m2o name. If only one record is found, create the missing
-                            #ir.model.data record to link it to the db_id, and the replace the m2o
-                            #value with the correct database ID, then stop. If zero result or
-                            #multiple results are found, go to next step.
-                            #Create the new record using the only field value that is known: the
-                            #name, and create the ir.model.data entry to map to it.
-                            relation_model = _fields[field]['relation']
-                            relation_id = self.edi_import_relation(cr, uid, relation_model, edi_parent_document[1], context=context)
-                            relation_object = self.pool.get(relation_model)
-                            relation_record = relation_object.browse(cr, uid, relation_id, context=context)
-                            self.edi_xml_id(cr, uid, relation_record, context=context)
-                            
-                            parent_lines.append(relation_id)
-                                
+                        relation_id = self.edi_import_relation(cr, uid, relation_model, edi_parent_document[1], edi_parent_document[0], context=context)
+                        parent_lines.append(relation_id)
                         
                     if len(parent_lines):   
-                        if _fields[field]['type'] == 'many2one':
+                        if field_type == 'many2one':
                             values[field] = parent_lines[0]
                             
                         else:
                             many2many_ids = []
                             for m2m_id in parent_lines:
-                                many2many_ids.append((4,m2m_id))
+                                many2many_ids.append((4, m2m_id))
                             values[field] = many2many_ids
-                elif _fields[field]['type'] == 'one2many':
+                elif field_type == 'one2many':
                     #Look for a record that matches the db_id provided in the __id field. If
                     #found, keep the corresponding database id, and connect it to the parent
                     #using a write value like (4,db_id).
@@ -511,22 +516,12 @@ class edi(object):
                     #and use it to connect to the parent via a write value like (4, db_id).
             
                     relations = []
-                    relation_object = self.pool.get(_fields[field]['relation'])
+                    relation_object = self.pool.get(relation_model)
                     for edi_relation_document in edi_field_value:
-                        if edi_relation_document['__id'].find(':') != -1:
-                            db_uuid, xml_id = tuple(edi_relation_document['__id'].split(':'))
-                            data_ids = model_data.name_search(cr, uid, xml_id)
-                            if data_ids:
-                                for data in model_data.browse(cr,uid,[data_ids[0][0]]):
-                                    relations.append(data.res_id)
-                            else:
-                                r = relation_object.edi_import(cr, uid, edi_relation_document, context=context)
-                                relations.append(r)
-                    one2many_ids = []
-                    for o2m_id in relations:
-                        one2many_ids.append((4,o2m_id))
-                    values[field] = one2many_ids
+                        relation_id = relation_object.edi_import(cr, uid, edi_relation_document, context=context)
+                        relations.append((4, relation_id))
+                    values[field] = relations
                 else:
                     values[field] = edi_field_value
-        return model_data._update(cr, uid, self._name, edi_module, values, context=context)
+        return model_data._update(cr, uid, self._name, module, values, xml_id=xml_id, context=context)
 # vim: ts=4 sts=4 sw=4 si et

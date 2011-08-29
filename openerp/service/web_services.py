@@ -63,6 +63,7 @@ class edi(netsvc.ExportService):
             res = edi_pool.import_edi(cr, uid, edi_document=edi_document, context=context)
             cr.commit()
         except:
+            print traceback.format_exc()
             cr.rollback()
         finally:
             cr.close()
@@ -77,6 +78,7 @@ class edi(netsvc.ExportService):
             res = edi_pool.import_edi(cr, uid, edi_url=edi_url, context=context)
             cr.commit()
         except:
+            print traceback.format_exc()
             cr.rollback()
         finally:
             cr.close()
