@@ -26,36 +26,28 @@ import wizard
 from osv import osv
 import pooler
 from tools.translate import _
+from osv import osv, fields
 
-form_rep = '''<?xml version="1.0"?>
-<form string="Standard entries">
-    <field name="name"/>
-    <newline/>
-    <field name="module_file"/>
-</form>'''
+class save_report(osv.osv_memory):
 
+    _name = "save.report"
 
-fields_rep = {
-  'name': {'string': 'File name', 'type': 'char', 'required': True, 'help': 'Save report as .html format', 'size':64},
-  'module_file': {'string': 'Save report', 'type': 'binary', 'required': True},
-}
+    def default_get(self, cr, uid, fields, context=None):
+        res = super(save_report, self).default_get(cr, uid, fields, context=context)
+        active_ids = context.get('active_ids')
+        data = pooler.get_pool(cr.dbname).get('module.quality.detail').browse(cr, uid, active_ids)[0]
+        if not data.detail:
+            raise osv.except_osv(_('Warning'), _('No report to save!'))
+        buf = cStringIO.StringIO(data.detail)
+        out = base64.encodestring(buf.getvalue())
+        buf.close()
+        return {'module_file': out, 'name': data.name + '.html'}
 
-def get_detail(self, cr, uid, datas, context=None):
-    data = pooler.get_pool(cr.dbname).get('module.quality.detail').browse(cr, uid, datas['id'])
-    if not data.detail:
-        raise wizard.except_wizard(_('Warning'), _('No report to save!'))
-    buf = cStringIO.StringIO(data.detail)
-    out = base64.encodestring(buf.getvalue())
-    buf.close()
-    return {'module_file': out, 'name': data.name + '.html'}
+    _columns = {
+                    'name': fields.char('File Name', required=True, size=64, help="Save report as .html format"),
+                    'module_file': fields.binary('Save report', required=True),
+               }
 
-class save_report(wizard.interface):
-    states = {
-        'init': {
-            'actions': [get_detail],
-            'result': {'type': 'form', 'arch': form_rep, 'fields':fields_rep, 'state': [('end','Cancel')]}
-        },
-    }
-save_report('quality_detail_save')
+save_report()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

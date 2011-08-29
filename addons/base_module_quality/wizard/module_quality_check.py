@@ -26,7 +26,20 @@ from tools.translate import _
 import pooler
 from osv import osv, fields
 
-class quality_check(wizard.interface):
+class quality_check(osv.osv_memory):
+    _name = "quality.check"
+
+    def create_quality_check(self, cr, uid, ids, context=None):
+        pool = pooler.get_pool(cr.dbname)
+        obj_quality = pool.get('module.quality.check')
+        objs = []
+        module_id = context.get('active_id', False)
+        for id in ids:
+            module_data = pool.get('ir.module.module').browse(cr, uid, module_id)
+            data = obj_quality.check_quality(cr, uid, module_data.name, module_data.state)
+            obj = obj_quality.create(cr, uid, data, context)
+            objs.append(obj)
+        return objs
 
     def _create_quality_check(self, cr, uid, data, context=None):
         pool = pooler.get_pool(cr.dbname)
@@ -39,8 +52,8 @@ class quality_check(wizard.interface):
             objs.append(obj)
         return objs
 
-    def _open_quality_check(self, cr, uid, data, context):
-        obj_ids = self._create_quality_check(cr, uid, data, context)
+    def open_quality_check(self, cr, uid, data, context):
+        obj_ids = self.create_quality_check(cr, uid, data, context)
         return {
             'domain': "[('id','in', ["+','.join(map(str,obj_ids))+"])]",
             'name': _('Quality Check'),
@@ -49,14 +62,6 @@ class quality_check(wizard.interface):
             'res_model': 'module.quality.check',
             'type': 'ir.actions.act_window'
             }
-
-    states = {
-        'init' : {
-            'actions' : [],
-            'result': {'type':'action', 'action':_open_quality_check, 'state':'end'}
-        }
-    }
-
-quality_check("create_quality_check_wiz")
+quality_check()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
