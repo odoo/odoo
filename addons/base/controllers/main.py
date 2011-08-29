@@ -1275,3 +1275,15 @@ class Export(View):
             return export_xls(field, result)
         else:
             return export_csv(field, result)
+
+class Export(View):
+    _cp_path = "/base/report"
+
+    @openerpweb.jsonrequest
+    def get_report(self, req, action):
+        report_srv = req.session.proxy("report")
+        context = req.session.eval_context(openerpweb.nonliterals.CompoundContext(req.context, \
+                                                                                  action["context"]))
+        return False
+        #report_srv.report(req.session._db, req.session._uid, req.session._password)
+        
