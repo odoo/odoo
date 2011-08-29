@@ -221,6 +221,9 @@
     uom_po_id: product.product_uom_unit
     property_account_expense: account_account_productpurchase0
     property_account_income: account_account_productsale0
+    valuation: real_time
+    property_stock_account_input: account_account_productpurchase0
+    property_stock_account_output: account_account_productsale0
 
 -
   I create Stock Production Lot for product HP CD writers.
@@ -241,7 +244,7 @@
 -
   !record {model: stock.change.product.qty, id: stock_change_product_qty0}:
     product_id: stock.product_product_hpcdwriters0
-    new_quantity: 10
+    new_quantity: 100
     location_id: stock.stock_location_stock
     prodlot_id: stock.stock_production_lot0
 
@@ -257,25 +260,38 @@
       "stock.change.product.qty", "active_ids": ref("stock.product_product_hpcdwriters0"), "tz": False, "active_id":ref('stock.product_product_hpcdwriters0')})
 
 -
+  I check quantity on product HP CD writers is update or not.
+-
+  !python {model: product.product }: |
+    pro_obj = self.browse(cr, uid, ref("product_product_hpcdwriters0"))
+    assert (pro_obj.qty_available == 100) , "quantity is not updated"
+
+-
   I Read quantity on product HP CD writers.
 -
   !python {model: stock.location }: |
     self.read(cr, uid, [ref("stock.stock_location_stock")],['stock_real_value','stock_virtual'], {'lang': 'en_GB', 'tz': False, 'active_model': 'product.product', 'bin_size': True, 'active_ids': [ref("stock.product_product_hpcdwriters0")], 'product_id':ref("stock.product_product_hpcdwriters0"), 'active_id': ref("stock.product_product_hpcdwriters0")})
 
--
-  I create change location.
--
-  !python {model: stock.location }: |
-    to=self.browse(cr,uid,ref('stock.stock_location_stock'))
-    form=self.browse(cr,uid,ref('stock.stock_location_locations'))
-    self.picking_type_get(cr, uid, to, form)
+- 
+  I Creating a chained stock.location record
+- 
+  !record {model: stock.location, id: stock_location_loc0}:
+    chained_auto_packing: auto
+    chained_delay: 0.0
+    chained_location_id: stock.stock_location_customers
+    chained_location_type: fixed
+    location_id: stock.stock_location_company
+    name: chain location
+    parent_left: 2
+    parent_right: 3
+    usage: internal
 
 -
   I create Product By location chart for stock.location.product Object.
 -
   !record {model: stock.location.product, id: stock_location_product0}:
-    from_date: !eval time.strftime('%Y-%m-%d %H:%M:%S')
-    to_date: !eval time.strftime('%Y-%m-%d %H:%M:%S')
+    from_date: '2011-07-01 00:00:00'
+    to_date: '2011-07-31 23:59:00'
 
 -
   I open product chart.
@@ -284,7 +300,7 @@
     self.action_open_window(cr, uid, [ref("stock_location_product0")], {'lang': 'en_US', 'full': 1, 'tz': False, 'active_model': 'stock.location', 'search_default_in_location': 1, 'active_ids': [ref("stock.stock_location_stock")], 'active_id': ref("stock.stock_location_stock")})
 
 -
-  I open product Short key from location .
+  I open product form from stock.location object .
 -
   !python {model: product.product }: |
     self.fields_view_get(cr, uid, False, "tree", {'lang': 'en_US', 'full': 1, 'tz': False, 'active_model': 'stock.location', 'location': ref('stock.stock_location_stock'), 'search_default_in_location': 1, 'active_ids': [ref("stock.stock_location_stock")], 'active_id': ref("stock.stock_location_stock")})
@@ -293,7 +309,7 @@
   I create change product standard price for product HP CD writers.
 -
   !record {model: stock.change.standard.price, id: stock_change_standard_price0}:
-    new_price: 15
+    new_price: 1515
     stock_account_input: account_account_receivable0
     stock_account_output: account_account_payable0
     stock_journal: account_journal_purchasejournal0
@@ -314,7 +330,6 @@
    !record {model: stock.inventory, id: stock_inventory_physicalinventoy0}:
     company_id: base.main_company
     date: !eval time.strftime('%Y-%m-%d %H:%M:%S')
-    date_done: !eval time.strftime('%Y-%m-%d %H:%M:%S')
     inventory_line_id:
       - company_id: base.main_company
         location_id: stock.stock_location_stock
@@ -335,7 +350,6 @@
    !record {model: stock.inventory, id: stock_inventory_mergeinventoy0}:
     company_id: base.main_company
     date: !eval time.strftime('%Y-%m-%d %H:%M:%S')
-    date_done: !eval time.strftime('%Y-%m-%d %H:%M:%S')
     inventory_line_id:
       - company_id: base.main_company
         location_id: stock.stock_location_stock
@@ -394,13 +408,6 @@
     self.fill_inventory(cr, uid, [ref("stock_fill_inventory_0")], context)
 
 -
-  I confirm the Inventory for HP CD writers.
--
-  !python {model: stock.inventory}: |
-   self.action_confirm(cr,uid,[ref('stock_inventory_physicalinventoy0')])
-   self.action_done(cr,uid,[ref('stock_inventory_physicalinventoy0')])
-
--
   I create stock.inventory.line.split record.
 -
   !record {model: stock.inventory.line.split, id: stock_inventory_line_0}:
@@ -410,7 +417,7 @@
     line_exist_ids:
       - name: '00003-stock-test'
         quantity: 5
-    product_id: stock.product_product_hpcdwriters0
+    product_id: stock.product_product_hppaviliondesktoppcs0
     product_uom: product.product_uom_unit
     use_exist: False
     qty: 10
@@ -419,15 +426,18 @@
   I Split stock.inventory.line into production line.
 -
   !python {model: stock.inventory.line.split}: |
-    move_obj=self.pool.get('stock.inventory.line')
-    product_obj=self.pool.get('product.product')
-    product_id=product_obj.search(cr,uid,[('name','=','HP CD writers')])
-    move_ids=move_obj.search(cr,uid,[('product_id','in',product_id)])
+    context = {"lang": 'en_US', "active_model": "stock.inventory.line",
+    "active_ids": [ref("stock_inventory_line_0")], "tz": False, "active_id": ref("stock_inventory_line_0")}
     self.default_get(cr, uid, ["product_id", "product_uom", "line_exist_ids", "qty",
-     "line_ids", "use_exist"], {'lang': 'en_US', 'default_location_dest_id': ref('stock.stock_location_stock'), 'tz': False, 'active_model': 'stock.move', 'search_default_receive': 1, 'product_receive': True, 'active_ids': move_ids, 'default_location_id': ref('stock.stock_location_locations'), 'active_id': move_ids[0]})
-    self.split_lot(cr, uid, [ref("stock_inventory_line_0")], {"lang": 'en_US', "active_model":
-      "stock.inventory.line","active_ids": move_ids, "tz": False, "active_id":move_ids[0]
-      })
+     "line_ids", "use_exist"], context)
+    self.split_lot(cr, uid, [ref("stock_inventory_line_0")], context)
+
+-
+  I confirm the Inventory for HP CD writers.
+-
+  !python {model: stock.inventory}: |
+   self.action_confirm(cr,uid,[ref('stock_inventory_physicalinventoy0')])
+   self.action_done(cr,uid,[ref('stock_inventory_physicalinventoy0')])
 
 -
   I cancel the Inventory for HP CD writers.
@@ -442,35 +452,6 @@
    self.action_cancel_draft(cr,uid,[ref('stock_inventory_physicalinventoy0')])
 
 -
-  I create stock.move.split record.
--
-  !record {model: stock.move.split, id: stock_move_split_0}:
-    line_ids:
-      - name: '00001-stock-test'
-        quantity: 5
-    line_exist_ids:
-      - name: '00003-stock-test'
-        quantity: 5
-    product_id: stock.product_product_hpcdwriters0
-    product_uom: product.product_uom_unit
-    use_exist: False
-    qty: 10
-
--
-  I Split into production line.
--
-  !python {model: stock.move.split}: |
-    move_obj=self.pool.get('stock.move')
-    product_obj=self.pool.get('product.product')
-    product_id=product_obj.search(cr,uid,[('name','=','HP CD writers')])
-    move_ids=move_obj.search(cr,uid,[('product_id','in',product_id)])
-    self.default_get(cr, uid, ["product_id", "product_uom", "line_exist_ids", "qty",
-     "line_ids", "use_exist"], {'lang': 'en_US', 'default_location_dest_id': ref('stock.stock_location_stock'), 'tz': False, 'active_model': 'stock.move', 'search_default_receive': 1, 'product_receive': True, 'active_ids': move_ids, 'default_location_id': ref('stock.stock_location_locations'), 'active_id': move_ids[0]})
-    self.split_lot(cr, uid, [ref("stock_move_split_0")], {"lang": 'en_US', "active_model":
-      "stock.move", "active_ids": move_ids, "tz": False, "active_id":move_ids[0]
-      })
-
--
   In Order to test the picking I create picking with move lines.
 -
   !record {model: stock.picking, id: stock_picking_0}:
@@ -482,34 +463,32 @@
     move_lines:
       - company_id: base.main_company
         date: !eval time.strftime('%Y-%m-%d %H:%M:%S')
-        location_dest_id: stock.stock_location_customers
+        location_dest_id: stock.stock_location_loc0
         location_id: stock.stock_location_stock
         name: HP CD writers
-        product_id: product.product_product_pc1
-        product_qty: 3.0
+        product_id: stock.product_product_hpcdwriters0
+        product_qty: 100.0
         product_uom: product.product_uom_unit
         date: !eval time.strftime('%Y-%m-%d %H:%M:%S')
-        product_uos_qty: 3.0
+        product_uos_qty: 100.0
     move_type: direct
-    type: internal
+    type: out
 
 -
-  I create stock split.into quantity record.
+  I Performing an osv_memory action split on module stock.split.into
 -
-  !record {model: stock.split.into, id: stock_split_into0}:
-    quantity: 1
-
--
-  I apply the split quantity.
--
-  !python {model: stock.split.into}: |
-    move_obj=self.pool.get('stock.move')
-    product_obj=self.pool.get('product.product')
-    product_id=product_obj.search(cr,uid,[('name','=','HP CD writers')])
-    move_ids=move_obj.search(cr,uid,[('product_id','in',product_id)])
-    self.split(cr, uid, [ref("stock_split_into0")], {"lang": 'en_US', "active_model":
-      "stock.move", "active_ids": move_ids, "tz": False, "active_id":move_ids[0]
-      })
+  !python {model: stock.picking }: |
+    pick=self.browse(cr,uid,ref('stock_picking_0'))
+    split_obj=self.pool.get('stock.split.into')
+    partial_datas={}
+    move=pick.move_lines[0]
+    partial_datas= {
+          'quantity': 20,
+      }
+    split_id = self.pool.get('stock.split.into').create(cr, uid, partial_datas)
+    split_obj.split(cr, uid, [split_id], {"lang": "en_US", "tz":
+    False, "active_model": "stock.move", "active_ids": [move.id],
+    "active_id": move.id, })
 
 -
   I click on draft_force_assign on picking.
@@ -521,48 +500,148 @@
       ref("stock.menu_action_picking_tree6"), })
 
 -
-  I click on force_assign on picking.
+  I click on action_assign on picking.
 -
   !python {model: stock.picking}: |
-    self.force_assign(cr, uid, [ref("stock_picking_0")], {"lang": "en_US", "active_model":
+    self.action_assign(cr, uid, [ref("stock_picking_0")], {"lang": "en_US", "active_model":
       "ir.ui.menu", "tz": False, "search_default_confirmed": 1, "contact_display":
       "partner", "active_ids": [ref("stock.menu_action_picking_tree6")], "active_id":
       ref("stock.menu_action_picking_tree6"), })
 
 -
-  I confirm the picking.
+  I create a record for stock.partial.move.
+-
+  !record {model: stock.partial.move, id: stock_partial_move_0}:
+    date: !eval time.strftime('%Y-%m-%d %H:%M:%S')
+
+-
+  I done stock.partial.move record.
+-
+  !python {model: stock.partial.move }: |
+    pick_obj = self.pool.get('stock.picking')
+    move_obj = self.pool.get('stock.move')
+    pick=pick_obj.browse(cr,uid,ref('stock_picking_0'))
+    search_id = move_obj.search(cr, uid, [('picking_id', '=', pick.id)])
+    partial_datas={}
+    for move in pick.move_lines:
+        partial_datas['move%s'%(move.id)]= {
+          'quantity': 20,
+          'product_uom': move.product_uom.id,
+          'prodlot_id': move.prodlot_id and move.prodlot_id.id or False,
+          'wizard_id': ref('stock_partial_move_0'),
+        }
+    context = {"lang": 'en_US', "active_model": "stock.move", "active_ids": search_id, "tz": False, "active_id":search_id[0]}
+    self.fields_view_get(cr, uid, False,"form", context)
+    self.do_partial(cr, uid, [ref('stock_partial_move_0')], context)
+
+-
+  I Performing an osv_memory action split_lot on module stock.move.split
+-
+
+  !python {model: stock.picking }: |
+    split_obj=self.pool.get('stock.move.split')
+    split_move_lines=self.pool.get('stock.move.split.lines')
+    pick=self.browse(cr,uid,ref('stock_picking_0'))
+    partial_datas={}
+    move=pick.move_lines[0]
+    partial_datas= {
+          'product_id': move.product_id.id,
+          'qty': 80,
+          'product_uom': move.product_uom.id,
+          'use_exist': move.picking_id and move.picking_id.type=='out' and True or False
+      }
+    split_id = self.pool.get('stock.move.split').create(cr, uid, partial_datas, context={})
+    split_move_data= {
+          'lot_id': split_id,
+          'quantity': 10,
+          'name': 'lot',
+    }
+    split_move_id = split_move_lines.create(cr, uid, split_move_data, context={})
+    split_obj.default_get(cr, uid, ["product_id", "product_uom", "line_exist_ids", "qty",
+     "line_ids", "use_exist"], {'lang': 'en_US', 'default_location_dest_id': ref('stock.stock_location_stock'), 'tz': False, 'active_model': 'stock.move', 'search_default_receive': 1, 'product_receive': True, 'active_ids': [move.id], 'default_location_id': ref('stock.stock_location_locations'), 'active_id': move.id})
+    split_obj.split_lot(cr, uid, [split_id], context={"lang": "en_US", "tz":
+    False, "active_model": "stock.move", "scrap": True, "active_ids": [move.id],
+    "active_id": move.id, })
+
+-
+  I Performed an osv_memory action move_scrap on module stock.move.scrap
 -
   !python {model: stock.picking }: |
-   import time
-   pick=self.browse(cr,uid,ref('stock_picking_0'))
-   move =pick.move_lines[0]
-   partial_datas = {
-          'partner_id':pick.address_id.partner_id.id,
-           'address_id': pick.address_id.id,
-           'delivery_date' : time.strftime('%Y-%m-%d')
-            }
-   partial_datas['move%s'%(move.id)]= {
-          'product_id': move.product_id,
-          'product_qty': move.product_qty,
+    location_obj = self.pool.get('stock.location')
+    scrpaed_location_ids = location_obj.search(cr, uid, [('scrap_location','=',True)])
+    pick=self.browse(cr,uid,ref('stock_picking_0'))
+    scrap_obj=self.pool.get('stock.move.scrap')
+    partial_datas={}
+    move=pick.move_lines[0]
+    partial_datas= {
+          'product_id': move.product_id.id,
+          'location_id': scrpaed_location_ids[0],
+          'product_qty': 1,
           'product_uom': move.product_uom.id,
       }
-   self.do_partial(cr, uid, [ref('stock_picking_0')],partial_datas)
+    scrap_id = scrap_obj.create(cr, uid, partial_datas)
+    context = {"lang": "en_US", "tz": False, "active_model": "stock.move", 
+    "scrap": True, "active_ids": [move.id], "active_id": move.id, }
+    scrap_obj.default_get(cr, uid, ["location_id", "product_id", "product_uom", "product_qty"], context)
+    scrap_obj.move_scrap(cr, uid, [scrap_id], context)
 
 -
-  I check  payment term from partner.
+  I Performed an osv_memory do move consume  on module stock.move.consume
 -
-
   !python {model: stock.picking }: |
+    location_obj = self.pool.get('stock.location')
+    scrpaed_location_ids = location_obj.search(cr, uid, [('scrap_location','=',True)])
     pick=self.browse(cr,uid,ref('stock_picking_0'))
-    self._get_payment_term(cr, uid, pick)
+    consume_obj=self.pool.get('stock.move.consume')
+    partial_datas={}
+    move=pick.move_lines[0]
+    partial_datas= {
+          'product_id': move.product_id.id,
+          'location_id': scrpaed_location_ids[0],
+          'product_qty': 1,
+          'product_uom': move.product_uom.id,
+      }
+    context = {"lang": "en_US", "tz": False, "active_model": "stock.move", 
+    "scrap": True, "active_ids": [move.id], "active_id": move.id, }
+    consume_id = consume_obj.create(cr, uid, partial_datas)
+    consume_obj.default_get(cr, uid, ["location_id", "product_id", "product_uom", "product_qty"], context)
+    consume_obj.do_move_consume(cr, uid, [consume_id], context)
+
+-
+  I create a record for stock partial picking.
+-
+  !record {model: stock.partial.picking, id: stock_partial_picking_0}:
+    date: !eval time.strftime('%Y-%m-%d %H:%M:%S')
+
+-
+  I make stock partial picking order Done.
+-
+  !python {model: stock.partial.picking}: |
+     pick_obj = self.pool.get('stock.picking')
+     partial = self.browse(cr, uid, ref('stock_partial_picking_0'), context)
+     partial_datas = {
+            'delivery_date' : partial.date
+     }
+     for pick in pick_obj.browse(cr, uid, [ref('stock_picking_0')]):
+        for m in pick.move_lines:
+           partial_datas['move%s'%(m.id)] = {
+                    'product_id' : m.product_id.id,
+                    'product_qty' : 80,
+                    'product_uom' : m.product_uom.id
+           }
+     context = {"lang": "en_US", "search_default_available":
+      1, "tz": False, "active_model": "ir.ui.menu",
+      "active_ids": [ref('stock_picking_0')], "active_id": ref("stock_picking_0"),
+      }
+     self.fields_view_get(cr, uid, False,"form", context)
+     self.do_partial(cr, uid, [ref('stock_partial_picking_0')], context)
 
 -
   I Performing an osv_memory action create_invoice on module stock.invoice.onshipping
 -
   !python {model: stock.invoice.onshipping}: |
-    pick=self.browse(cr,uid,ref('stock_picking_0'))
-    invoice_line_id = self.pool.get('stock.invoice.onshipping').create(cr, uid,{}, {"lang": 'en_US', "active_model":
-      "stock.picking", "active_ids": [pick.id], "tz": False, "active_id":pick.id})
+    invoice_line_id = self.create(cr, uid,{}, {"lang": 'en_US', "active_model":
+      "stock.picking", "active_ids": [ref("stock_picking_0")], "tz": False, "active_id":ref("stock_picking_0")})
     self.open_invoice(cr, uid, [invoice_line_id], {"lang": "en_US",
       "search_default_available": 1, "inv_type": "in_invoice" , "tz": False, "active_model": "stock.picking",
       "contact_display": "partner_address", "active_ids": [ref("stock_picking_0")],
@@ -572,47 +651,55 @@
       "active_id": ref("stock_picking_0"), })
 
 -
-  I Performed an osv_memory action move_scrap and consume move on module stock.move.scrap
+  I create a record of stock.picking and unlink a record
 -
-  !python {model: stock.picking }: |
-    import time
-    location_obj = self.pool.get('stock.location')
-    scrpaed_location_ids = location_obj.search(cr, uid, [('scrap_location','=',True)])
-    pick=self.browse(cr,uid,ref('stock_picking_0'))
-    scrap_obj=self.pool.get('stock.move.scrap')
-    consume_obj=self.pool.get('stock.move.consume')
-    partial_datas={}
-    move=pick.move_lines[0]
-    partial_datas= {
-          'product_id': move.product_id.id,
-          'location_id': scrpaed_location_ids[0],
-          'product_qty': move.product_qty,
-          'product_uom': move.product_uom.id,
-      }
-    scrap_id = scrap_obj.create(cr, uid, partial_datas)
-    context = {"lang": "en_US", "tz": False, "active_model": "stock.move", 
-    "scrap": True, "active_ids": [move.id], "active_id": move.id, }
-    scrap_obj.default_get(cr, uid, ["location_id", "product_id", "product_uom", "product_qty"], context)
-    scrap_obj.move_scrap(cr, uid, [scrap_id], context)
-    consume_id = consume_obj.create(cr, uid, partial_datas)
-    consume_obj.default_get(cr, uid, ["location_id", "product_id", "product_uom", "product_qty"], context)
-    consume_obj.do_move_consume(cr, uid, [consume_id], context)
+  !python {model: stock.picking}: |
+    copy_id = self.copy(cr, uid, (ref("stock_picking_0")))
+    ctx = {"lang": "en_US", "active_model":
+      "ir.ui.menu", "tz": False, "search_default_confirmed": 1, "contact_display":
+      "partner", "active_ids": [ref("stock.menu_action_picking_tree6")], "active_id":
+      ref("stock.menu_action_picking_tree6"), }
+    self.draft_force_assign(cr, uid, [copy_id], ctx)
+    self.unlink(cr, uid, [copy_id], ctx)
 
 -
-  I return the picking.
+  I create a record of stock.picking and cancel a record
 -
+  !python {model: stock.picking}: |
+    copy_id = self.copy(cr, uid, (ref("stock_picking_0")))
+    self.draft_validate(cr, uid, [copy_id], {"lang": "en_US", "search_default_available":
+      1, "tz": False, "active_model": "ir.ui.menu", "contact_display": "partner_address",
+      "active_ids": [ref("stock.menu_action_picking_tree4")], "active_id": ref("stock.menu_action_picking_tree4"),
+      })
+    pick=self.browse(cr,uid,copy_id)
+    self.allow_cancel(cr, uid, [copy_id], context= None)
 
-  !python {model: stock.picking }: |
-    import time
-    pick=self.browse(cr,uid,ref('stock_picking_0'))
+-
+  I create a record of stock.picking and I reaturn the picking
+-
+  !python {model: stock.picking}: |
+    copy_id = self.copy(cr, uid, (ref("stock_picking_0")))
+    ctx = {"lang": "en_US", "active_model":
+      "ir.ui.menu", "tz": False, "search_default_confirmed": 1, "contact_display":
+      "partner", "active_ids": [ref("stock.menu_action_picking_tree6")], "active_id":
+      ref("stock.menu_action_picking_tree6")}
+    self.draft_force_assign(cr, uid, [copy_id], ctx)
+    self.force_assign(cr, uid, [copy_id], ctx)
+    pick=self.browse(cr,uid,copy_id)
     partial_datas={}
-    partial_pick_id = self.pool.get('stock.return.picking').create(cr, uid,{}, {"lang": 'en_US', "active_model":
-      "stock.picking", "active_ids": [pick.id], "tz": False, "active_id":pick.id})
     for move in pick.move_lines:
-      partial_datas= {
+        partial_datas['move%s'%(move.id)]= {
+          'product_id': move.product_id,
+          'product_qty': move.product_qty,
+        }
+    self.do_partial(cr, uid, [pick.id],partial_datas)
+    reurn_datas={}
+    context = {"lang": 'en_US', "active_model":
+      "stock.picking", "active_ids": [pick.id], "tz": False, "active_id":pick.id}
+    return_pick_id = self.pool.get('stock.return.picking').create(cr, uid,{}, context)
+    for move in pick.move_lines:
+      reurn_datas= {
           'product_id': move.product_id.id,
           'quantity': move.product_qty,
       }
-    self.pool.get('stock.return.picking').create_returns(cr, uid, [partial_pick_id], {"lang": 'en_US', "active_model":
-      "stock.picking", "active_ids": [pick.id], "tz": False, "active_id":pick.id})
-    
+    self.pool.get('stock.return.picking').create_returns(cr, uid, [return_pick_id], context)
