@@ -436,7 +436,7 @@ def clean_action(req, action):
     context = req.session.eval_context(req.context)
     eval_ctx = req.session.evaluation_context(context)
     action.setdefault('flags', {})
-    
+
     # values come from the server, we can just eval them
     if isinstance(action.get('context'), basestring):
         action['context'] = eval( action['context'], eval_ctx ) or {}
@@ -1289,7 +1289,7 @@ class Import(View):
         _fields = {}
         _fields_invert = {}
         error = None
-
+        all_fields = []
         fields = dict(req.session.model(params.get('model')).fields_get(False, req.session.eval_context(req.context)))
         fields.update({'id': {'string': 'ID'}, '.id': {'string': 'Database ID'}})
 
@@ -1320,7 +1320,7 @@ class Import(View):
                                        prefix_node+field, None, st_name+'/', level-1)
         fields.update({'id':{'string':'ID'},'.id':{'string':'Database ID'}})
         model_populate(fields)
-
+        all_fields = fields.keys()
         try:
             data = csv.reader(params.get('csvfile').file, quotechar=str(params.get('csvdel')), delimiter=str(params.get('csvsep')))
         except:
@@ -1336,6 +1336,7 @@ class Import(View):
                 records.append(row)
                 if i == limit:
                     break
+
             for line in records:
                 for word in line:
                     word = str(word.decode(params.get('csvcode')))
@@ -1344,7 +1345,8 @@ class Import(View):
                     elif word in _fields_invert.keys():
                         fields.append((_fields_invert[word], word))
                     else:
-                        error = {'message':("You cannot import the field '%s', because we cannot auto-detect it" % (word,))}
+                        fields.append((word, word))
+#                        error = {'message':("You cannot import the field '%s', because we cannot auto-detect it" % (word,))}
                 break
         except:
             error = {'message':('Error processing the first line of the file. Field "%s" is unknown') % (word,)}
@@ -1354,7 +1356,7 @@ class Import(View):
             error=dict(error, preview=params.get('csvfile').file.read(200))
             return simplejson.dumps({'error':error})
 
-        return simplejson.dumps({'records':records[1:],'fields':fields})
+        return simplejson.dumps({'records':records[1:],'fields':fields,'all_fields':all_fields})
 
     @openerpweb.httprequest
     def import_data(self, req, **params):

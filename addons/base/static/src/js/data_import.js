@@ -54,10 +54,11 @@ openerp.base.DataImport = openerp.base.Dialog.extend({
     },
     import_results:function(res){
         $('#result, #success').empty();
+        $(".ui-button-text:contains('Import File')").parent().attr("disabled",false);
         var results = $.parseJSON(res);
         var result_node = $("#result");
         if (results['records']){
-            records = {'header':results['fields'],'row':results['records']};
+            records = {'header':results['fields'],'sel':results['all_fields'],'row':results['records']};
             result_node.append(QWeb.render('ImportView-result',{'records':records}));
         }else if(results['error']){
             result_node.append(QWeb.render('ImportView-result',{'error': results['error']}));
@@ -65,6 +66,12 @@ openerp.base.DataImport = openerp.base.Dialog.extend({
             var success_node = $("#success");
             success_node.append(QWeb.render('ImportView-result',{'success': results['success']}));
         }
+        $('td #header').each(function(){
+            var head = $(this).text();
+            if (jQuery.inArray(head,results['all_fields']) <= -1){
+                $(".ui-button-text:contains('Import File')").parent().attr("disabled",true);
+            }
+        });
     },
     stop: function() {
         $(this.$dialog).remove();

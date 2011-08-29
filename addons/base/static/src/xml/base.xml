@@ -1459,7 +1459,23 @@
                 <t t-if="record=='header'">
                     <tr class="oe_import_grid-header">
                         <t t-foreach="records.header" t-as="header">
-                            <th class="oe_import_grid-cell"><t t-esc="header[0]"/></th>
+                            <td class="oe_import_grid-cell" id="header"><t t-esc="header[0]"/></td>
+                        </t>
+                    </tr>
+                </t>
+                <t t-if="record=='sel'">
+                    <tr>
+                        <t t-foreach="records.header" t-as="header">
+                            <td>
+                                <select name="fld" id="fld">
+                                    <option selected="selected" value=""></option>
+                                    <t t-foreach="records.sel" t-as="selection">
+                                        <option t-att="{'selected': header[0] === selection ? 'selected' : null}"
+                                                t-att-value="selection"><t t-esc="selection"/>
+                                        </option>
+                                    </t>
+                                </select>
+                            </td>
                         </t>
                     </tr>
                 </t>
