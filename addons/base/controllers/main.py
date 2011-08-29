@@ -1209,18 +1209,17 @@ class Export(View):
         return name_list
 
     def get_data(self, req, model, context=None):
-        ids = []
         context = context or {}
         fields_data = {}
         proxy = req.session.model(model)
         fields = self.fields_get(req, model)
-        if not ids:
-            f1 = proxy.fields_view_get(False, 'tree', context)['fields']
-            f2 = proxy.fields_view_get(False, 'form', context)['fields']
 
-            fields = dict(f1)
-            fields.update(f2)
-            fields.update({'id': {'string': 'ID'}, '.id': {'string': 'Database ID'}})
+        f1 = proxy.fields_view_get(False, 'tree', context)['fields']
+        f2 = proxy.fields_view_get(False, 'form', context)['fields']
+
+        fields = dict(f1)
+        fields.update(f2)
+        fields.update({'id': {'string': 'ID'}, '.id': {'string': 'Database ID'}})
 
         def rec(fields):
             _fields = {'id': 'ID' , '.id': 'Database ID' }
