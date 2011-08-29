@@ -3,7 +3,9 @@
     	<div class="oe_diagram_header" t-att-id="element_id + '_header'">
 	    	<h2 class="oe_view_title"><t t-esc="fields_view.arch.attrs.string"/></h2>
 			<div class="oe_diagram_buttons">
-				<button type="button" class="oe_diagram_button_new">New Node</button>
+				<button type="button" id="new_node" class="oe_diagram_button_new">New Node</button>
+				<button type="button" id="new_edge" class="oe_diagram_button_new">New Edge</button>
+				<label>Show Grid:</label><input type="checkbox" id="toggle_grid" checked="checked"/>
 			</div>
 	        <div class="oe_diagram_pager">
 	            <button type="button" data-pager-action="first">First</button>
@@ -15,6 +17,6 @@
 	            <button type="button" data-pager-action="last">Last</button>
 	        </div>
 		</div>
-    	<div id="dia-canvas" class="diagram" style="overflow: auto;"></div>
+    	<div id="dia-canvas" class="diagram show_grid" style="overflow: auto;"></div>
     </t>
 </template>
