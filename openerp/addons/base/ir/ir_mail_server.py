@@ -123,7 +123,6 @@ class ir_mail_server(osv.osv):
     def __init__(self, *args, **kwargs):
         # Make sure we pipe the smtplib outputs to our own DEBUG logger
         if not isinstance(smtplib.stderr, WriteToLogger):
-            print "REDIRECTING!!!"
             logpiper = WriteToLogger(_logger)
             smtplib.stderr = logpiper
             smtplib.stdout = logpiper
