@@ -1863,7 +1863,10 @@ openerp.base.form.One2ManyListView = openerp.base.ListView.extend({
         pop.show_element(self.o2m.field.relation, id, self.o2m.build_context(),{
             auto_write: false,
             alternative_form_view: self.o2m.field.views ? self.o2m.field.views["form"] : undefined,
-            parent_view: self.o2m.view
+            parent_view: self.o2m.view,
+            read_function: function() {
+                return self.o2m.dataset.read_ids.apply(self.o2m.dataset, arguments);
+            }
         });
         pop.on_write.add(function(id, data) {
             self.o2m.dataset.write(id, data, function(r) {
@@ -2135,6 +2138,7 @@ openerp.base.form.FormOpenPopup = openerp.base.OldWidget.extend({
      * options:
      * - alternative_form_view
      * - auto_write (default true)
+     * - read_function
      * - parent_view
      */
     show_element: function(model, row_id, context, options) {
@@ -2150,7 +2154,8 @@ openerp.base.form.FormOpenPopup = openerp.base.OldWidget.extend({
     },
     start: function() {
         this._super();
-        this.dataset = new openerp.base.ReadOnlyDataSetSearch(this, this.model, this.context);
+        this.dataset = new openerp.base.form.FormOpenDataset(this, this.model, this.context);
+        this.dataset.fop = this;
         this.dataset.ids = [this.row_id];
         this.dataset.index = 0;
         this.dataset.parent_view = this.options.parent_view;
@@ -2189,6 +2194,16 @@ openerp.base.form.FormOpenPopup = openerp.base.OldWidget.extend({
             self.view_form.do_show();
         });
         this.dataset.on_write.add(this.on_write);
+    }
+});
+
+openerp.base.form.FormOpenDataset = openerp.base.ReadOnlyDataSetSearch.extend({
+    read_ids: function() {
+        if (this.fop.options.read_function) {
+            return this.fop.options.read_function.apply(null, arguments);
+        } else {
+            this._super.apply(this, arguments);
+        }
     }
 });
 
