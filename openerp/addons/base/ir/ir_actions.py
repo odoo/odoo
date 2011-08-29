@@ -627,10 +627,11 @@ class actions_server(osv.osv):
             cxt = {
                 'self': obj_pool,
                 'object': obj,
+                'obj': obj,
+                'pool': self.pool,
                 'time': time,
                 'cr': cr,
                 'context': dict(context), # copy context to prevent side-effects of eval
-                'pool': self.pool,
                 'uid': uid,
                 'user': user
             }
@@ -658,14 +659,21 @@ class actions_server(osv.osv):
                     pass
 
                 if not address:
-                    logger.info('Recipient email address is mandatory')
+                    logger.info('No partner email address specified, not sending any email.')
                     continue
+
+                if not email_from:
+                    logger.debug('--email-from command line option is not specified, using a fallback value instead.')
+                    if user.user_email:
+                        email_from = user.user_email
+                    else:
+                        email_from = "%s@%s" % (user.login, gethostname())
 
                 subject = self.merge_message(cr, uid, action.subject, action, context)
                 body = self.merge_message(cr, uid, action.message, action, context)
 
                 ir_mail_server = self.pool.get('ir.mail_server')
-                msg = ir_mail_server.build_email(user, [address], subject, body)
+                msg = ir_mail_server.build_email(email_from, [address], subject, body)
                 res_email = ir_mail_server.send_email(cr, uid, msg)
                 if res_email:
                     logger.info('Email successfully sent to: %s', address)
