@@ -92,34 +92,36 @@ class sale_order(osv.osv):
         if not ids:
             return {}
         res = {}
+        tmp = {}
         for id in ids:
-            res[id] = [0.0, 0.0]
+            tmp[id] = {'picked': 0.0, 'total': 0.0}
         cr.execute('''SELECT
-                p.sale_id, sum(m.product_qty), mp.state as mp_state
+                p.sale_id as sale_order_id, sum(m.product_qty) as nbr, mp.state as procurement_state, m.state as move_state, p.type as picking_type
             FROM
                 stock_move m
-            LEFT JOIN
-                stock_picking p on (p.id=m.picking_id)
+        LEFT JOIN
+            stock_picking p on (p.id=m.picking_id)
             LEFT JOIN
                 procurement_order mp on (mp.move_id=m.id)
             WHERE
-                p.sale_id IN %s GROUP BY mp.state, p.sale_id''', (tuple(ids),))
-        for oid, nbr, mp_state in cr.fetchall():
-            if mp_state == 'cancel':
+                p.sale_id IN %s GROUP BY m.state, mp.state, p.sale_id, p.type''', (tuple(ids),))
+        for item in cr.dictfetchall():
+            if item['move_state'] == 'cancel':
                 continue
-            if mp_state == 'done':
-                res[oid][0] += nbr or 0.0
-                res[oid][1] += nbr or 0.0
+            if item['picking_type'] == 'in':#this is a returned picking
+                tmp[item['sale_order_id']]['total'] -= item['nbr'] or 0.0 # Deducting the return picking qty
+                if item['procurement_state'] == 'done' or item['move_state'] == 'done':
+                    tmp[item['sale_order_id']]['picked'] -= item['nbr'] or 0.0
             else:
-                res[oid][1] += nbr or 0.0
-        for r in res:
-            if not res[r][1]:
-                res[r] = 0.0
-            else:
-                res[r] = 100.0 * res[r][0] / res[r][1]
+                tmp[item['sale_order_id']]['total'] += item['nbr'] or 0.0
+                if item['procurement_state'] == 'done' or item['move_state'] == 'done':
+                    tmp[item['sale_order_id']]['picked'] += item['nbr'] or 0.0
+
         for order in self.browse(cr, uid, ids, context=context):
             if order.shipped:
                 res[order.id] = 100.0
+            else:
+                res[order.id] = tmp[order.id]['total'] and (100.0 * tmp[order.id]['picked'] / tmp[order.id]['total']) or 0.0
         return res
 
     def _invoiced_rate(self, cursor, user, ids, name, arg, context=None):
