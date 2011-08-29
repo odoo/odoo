@@ -7,24 +7,24 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-05-09 10:18+0000\n"
-"PO-Revision-Date: 2011-08-19 17:00+0000\n"
+"PO-Revision-Date: 2011-08-25 16:57+0000\n"
 "Last-Translator: openerp-china.black-jack <onetimespeed@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-08-20 05:26+0000\n"
-"X-Generator: Launchpad (build 13697)\n"
+"X-Launchpad-Export-Date: 2011-08-26 05:11+0000\n"
+"X-Generator: Launchpad (build 13779)\n"
 
 #. module: document
 #: field:document.directory,parent_id:0
 msgid "Parent Directory"
-msgstr "上级文件夹"
+msgstr "父目录"
 
 #. module: document
 #: model:ir.model,name:document.model_document_configuration
 msgid "Auto Directory Configuration"
-msgstr "自动目录配置"
+msgstr "自动目录设置"
 
 #. module: document
 #: field:document.directory,resource_field:0
@@ -34,12 +34,12 @@ msgstr "名称字段"
 #. module: document
 #: view:board.board:0
 msgid "Document board"
-msgstr "文档一览表"
+msgstr "文档控制台"
 
 #. module: document
 #: model:ir.model,name:document.model_process_node
 msgid "Process Node"
-msgstr "处理节点"
+msgstr "流程节点"
 
 #. module: document
 #: view:document.directory:0
@@ -51,24 +51,24 @@ msgstr "搜索文档文件夹"
 msgid ""
 "Field to be used as name on resource directories. If empty, the \"name\" "
 "will be used."
-msgstr "资源目录中用作名称的字段。若为空则使用“名称”。"
+msgstr "在资源目录中这字段用作名称。若为空则使用“name”。"
 
 #. module: document
 #: code:addons/document/document_directory.py:276
 #, python-format
 msgid "Directory name contains special characters!"
-msgstr "目录名包含特殊字符！"
+msgstr "目录名中有特殊字符！"
 
 #. module: document
 #: view:document.directory:0
 #: view:document.storage:0
 msgid "Group By..."
-msgstr "分组于"
+msgstr "分组..."
 
 #. module: document
 #: model:ir.model,name:document.model_document_directory_content_type
 msgid "Directory Content Type"
-msgstr "目录内容类型"
+msgstr "目录里内容的类型"
 
 #. module: document
 #: view:document.directory:0
@@ -84,13 +84,13 @@ msgstr "文件"
 #. module: document
 #: view:report.files.partner:0
 msgid "Files per Month"
-msgstr "每月的文件"
+msgstr "月度文件"
 
 #. module: document
 #: selection:report.document.user,month:0
 #: selection:report.files.partner,month:0
 msgid "March"
-msgstr "三月"
+msgstr "3月"
 
 #. module: document
 #: view:document.configuration:0
@@ -111,7 +111,7 @@ msgstr "目录内容"
 #. module: document
 #: view:document.directory:0
 msgid "Dynamic context"
-msgstr "动态内容"
+msgstr "动态上下文"
 
 #. module: document
 #: model:ir.ui.menu,name:document.menu_document_management_configuration
@@ -169,7 +169,7 @@ msgstr "目录"
 #. module: document
 #: field:document.configuration,sale_order:0
 msgid "Sale Order"
-msgstr "销售单"
+msgstr "销售订单"
 
 #. module: document
 #: model:ir.model,name:document.model_report_document_user
@@ -191,17 +191,17 @@ msgstr "错误！"
 #. module: document
 #: help:document.configuration,product:0
 msgid "Auto directory configuration for Products."
-msgstr "产品的自动文件夹配置"
+msgstr "产品的自动文件夹设置"
 
 #. module: document
 #: field:document.directory,resource_find_all:0
 msgid "Find all resources"
-msgstr "查找所有资源"
+msgstr "搜索所有资源"
 
 #. module: document
 #: selection:document.directory,type:0
 msgid "Folders per resource"
-msgstr "每条记录一个目录"
+msgstr "每个资源一个目录"
 
 #. module: document
 #: field:document.directory.content,suffix:0
@@ -216,7 +216,7 @@ msgstr "修改日期"
 #. module: document
 #: view:document.configuration:0
 msgid "Knowledge Application Configuration"
-msgstr "知识管理应用配置"
+msgstr "知识管理应用设置"
 
 #. module: document
 #: view:ir.attachment:0
@@ -228,7 +228,7 @@ msgstr "业务伙伴"
 #. module: document
 #: view:board.board:0
 msgid "Files by Users"
-msgstr "按用户排列文件"
+msgstr "用户的文件"
 
 #. module: document
 #: field:process.node,directory_id:0
@@ -272,7 +272,7 @@ msgstr "储存空间"
 #. module: document
 #: view:document.configuration:0
 msgid "Configure Resource Directory"
-msgstr "配置资源目录"
+msgstr "设置资源目录"
 
 #. module: document
 #: field:ir.attachment,file_size:0
@@ -301,7 +301,7 @@ msgstr "类型"
 msgid ""
 "Select an object here and there will be one folder per record of that "
 "resource."
-msgstr "在这里选择一个对象，这个对象的每个记录会有一个单独的目录。"
+msgstr "在这里选择一个对象并且这资源的每个记录有一个目录。"
 
 #. module: document
 #: help:document.directory,domain:0
@@ -344,7 +344,7 @@ msgstr "报表"
 #: selection:report.document.user,month:0
 #: selection:report.files.partner,month:0
 msgid "July"
-msgstr "七月"
+msgstr "7月"
 
 #. module: document
 #: model:ir.actions.act_window,name:document.open_board_document_manager
@@ -360,7 +360,7 @@ msgstr "扩展"
 #. module: document
 #: view:ir.attachment:0
 msgid "Created"
-msgstr "创建时间"
+msgstr "已创建"
 
 #. module: document
 #: field:document.directory,content_ids:0
@@ -370,7 +370,7 @@ msgstr "虚拟文件"
 #. module: document
 #: view:ir.attachment:0
 msgid "Modified"
-msgstr "修改时间"
+msgstr "已修改"
 
 #. module: document
 #: code:addons/document/document_storage.py:639
@@ -392,12 +392,12 @@ msgstr "自动生成的文件列表"
 #: model:ir.model,name:document.model_document_directory
 #: field:report.document.user,directory:0
 msgid "Directory"
-msgstr "说明"
+msgstr "目录"
 
 #. module: document
 #: view:board.board:0
 msgid "Files by Partner"
-msgstr "按业务伙伴排列文件"
+msgstr "业务伙伴文件"
 
 #. module: document
 #: field:document.directory,write_uid:0
@@ -410,17 +410,17 @@ msgstr "最近修改用户"
 #: model:ir.actions.act_window,name:document.act_res_partner_document
 #: model:ir.actions.act_window,name:document.zoom_directory
 msgid "Related Documents"
-msgstr "相关文档"
+msgstr "关联的文档"
 
 #. module: document
 #: field:document.configuration,progress:0
 msgid "Configuration Progress"
-msgstr "配置进度"
+msgstr "设置进度"
 
 #. module: document
 #: field:document.directory,domain:0
 msgid "Domain"
-msgstr "域"
+msgstr "范围"
 
 #. module: document
 #: field:document.directory,write_date:0
@@ -432,7 +432,7 @@ msgstr "修改日期"
 #. module: document
 #: model:ir.model,name:document.model_report_document_file
 msgid "Files details by Directory"
-msgstr "目录文件详情"
+msgstr "文件详细目录"
 
 #. module: document
 #: view:report.document.user:0
@@ -444,13 +444,13 @@ msgstr "所有用户文件"
 #: model:ir.actions.act_window,name:document.action_view_size_month
 #: view:report.document.file:0
 msgid "File Size by Month"
-msgstr "按月度排列文件大小"
+msgstr "月度文件大小"
 
 #. module: document
 #: selection:report.document.user,month:0
 #: selection:report.files.partner,month:0
 msgid "December"
-msgstr "十二月"
+msgstr "12月"
 
 #. module: document
 #: field:document.configuration,config_logo:0
@@ -520,7 +520,7 @@ msgstr "如果没有选中，那么介质目前是脱机的且里面的内容不
 #: field:report.document.user,user_id:0
 #: field:report.document.wall,user_id:0
 msgid "Owner"
-msgstr "拥有者"
+msgstr "所有者"
 
 #. module: document
 #: view:document.directory:0
@@ -579,12 +579,12 @@ msgstr "在线"
 msgid ""
 "Check this if you want to use the same tree structure as the object selected "
 "in the system."
-msgstr "如果你想使用树结构象系统选定对象, 请选择这"
+msgstr "如果你想在系统中对选择的对象使用树结构, 请选择这"
 
 #. module: document
 #: view:document.directory:0
 msgid "Security"
-msgstr "安全"
+msgstr "安全设定"
 
 #. module: document
 #: help:document.directory,ressource_id:0
@@ -597,18 +597,18 @@ msgstr "跟随上级对象，这个ID把这个目录附加在上级对象的一�
 #: selection:report.document.user,month:0
 #: selection:report.files.partner,month:0
 msgid "August"
-msgstr "八月"
+msgstr "8月"
 
 #. module: document
 #: sql_constraint:document.directory:0
 msgid "Directory cannot be parent of itself!"
-msgstr "目录不能设为自己的上级目录。"
+msgstr "目录不能设为自己的父目录。"
 
 #. module: document
 #: selection:report.document.user,month:0
 #: selection:report.files.partner,month:0
 msgid "June"
-msgstr "六月"
+msgstr "6月"
 
 #. module: document
 #: field:report.document.user,user:0
@@ -631,7 +631,7 @@ msgstr "生效"
 #: selection:report.document.user,month:0
 #: selection:report.files.partner,month:0
 msgid "November"
-msgstr "十一月"
+msgstr "11月"
 
 #. module: document
 #: view:ir.attachment:0
@@ -658,7 +658,7 @@ msgstr "定义"
 #: selection:report.document.user,month:0
 #: selection:report.files.partner,month:0
 msgid "October"
-msgstr "十月"
+msgstr "10月"
 
 #. module: document
 #: view:document.directory:0
@@ -688,7 +688,7 @@ msgstr "完整的文档管理系统"
 #. module: document
 #: view:document.configuration:0
 msgid "Choose the following Resouces to auto directory configuration."
-msgstr "请从下面选择需要自动目录配置的资源："
+msgstr "请从下面选择需要自动目录设置的资源："
 
 #. module: document
 #: view:ir.attachment:0
@@ -731,13 +731,13 @@ msgstr "创建者"
 #: model:ir.actions.act_window,name:document.action_view_files_by_month_graph
 #: view:report.document.user:0
 msgid "Files by Month"
-msgstr "按月度排列文件"
+msgstr "月度文件"
 
 #. module: document
 #: selection:report.document.user,month:0
 #: selection:report.files.partner,month:0
 msgid "September"
-msgstr "九月"
+msgstr "9月"
 
 #. module: document
 #: field:document.directory.content,prefix:0
@@ -747,7 +747,7 @@ msgstr "前缀"
 #. module: document
 #: field:report.document.wall,last:0
 msgid "Last Posted Time"
-msgstr "最近的发布时间"
+msgstr "最近发布时间"
 
 #. module: document
 #: field:report.document.user,datas_fname:0
@@ -774,7 +774,7 @@ msgstr "外部文件存储设区"
 #: model:ir.actions.act_window,name:document.action_view_wall
 #: view:report.document.wall:0
 msgid "Wall of Shame"
-msgstr "耻辱之墙"
+msgstr "羞愧者名单"
 
 #. module: document
 #: help:document.storage,path:0
@@ -804,7 +804,7 @@ msgstr "上级模型"
 #. module: document
 #: view:report.document.user:0
 msgid "Files by users"
-msgstr "用户的文件"
+msgstr "用户文件"
 
 #. module: document
 #: field:report.document.file,month:0
@@ -834,7 +834,7 @@ msgstr "树结构"
 #: selection:report.document.user,month:0
 #: selection:report.files.partner,month:0
 msgid "May"
-msgstr "五月"
+msgstr "5月"
 
 #. module: document
 #: model:ir.actions.act_window,name:document.action_view_all_document_tree1
@@ -872,7 +872,7 @@ msgstr "新文件"
 #: selection:report.document.user,month:0
 #: selection:report.files.partner,month:0
 msgid "January"
-msgstr "一月"
+msgstr "1月"
 
 #. module: document
 #: view:document.directory:0
@@ -894,7 +894,7 @@ msgstr "字段的名称。注意前缀\"dctx_\"会加在你输入的文字前。
 #. module: document
 #: view:report.document.user:0
 msgid "This Month"
-msgstr "本月"
+msgstr "该月"
 
 #. module: document
 #: view:ir.attachment:0
@@ -916,19 +916,19 @@ msgid ""
 "resources automatically possess sub-directories for each of resource types "
 "defined in the parent directory."
 msgstr ""
-"每个目录都可以是静态的或者链接到记录。静态的目录就是操作系统上用于存储文件的目录。链接到记录的目录会根据父级目录的对象类型配置自动创建子目录"
+"每个目录都可以是静态的或者链接到其它资源。静态的目录就是操作系统上存储文件的目录。目录链接系统资源会根据父级目录的对象类型配置自动创建子目录"
 
 #. module: document
 #: selection:report.document.user,month:0
 #: selection:report.files.partner,month:0
 msgid "February"
-msgstr "二月"
+msgstr "2月"
 
 #. module: document
 #: model:ir.actions.act_window,name:document.open_board_document_manager1
 #: model:ir.ui.menu,name:document.menu_reports_document_manager1
 msgid "Statistics by User"
-msgstr "按用户排列统计数据"
+msgstr "用户统计"
 
 #. module: document
 #: field:document.directory,name:0
@@ -955,7 +955,7 @@ msgstr "如果设置，该介质就是只读的。"
 #: selection:report.document.user,month:0
 #: selection:report.files.partner,month:0
 msgid "April"
-msgstr "四月"
+msgstr "4月"
 
 #. module: document
 #: field:report.document.file,nbr:0

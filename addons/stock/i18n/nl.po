@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-05-09 10:19+0000\n"
-"PO-Revision-Date: 2011-01-19 12:00+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"PO-Revision-Date: 2011-08-26 07:04+0000\n"
+"Last-Translator: Mark van Deursen (Neobis) <mark@neobis.nl>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-06-11 06:12+0000\n"
-"X-Generator: Launchpad (build 13168)\n"
+"X-Launchpad-Export-Date: 2011-08-27 06:27+0000\n"
+"X-Generator: Launchpad (build 13794)\n"
 
 #. module: stock
 #: field:product.product,track_outgoing:0
@@ -42,7 +42,7 @@ msgstr "Vastgelegde locatie"
 #: view:stock.move:0
 #: view:stock.picking:0
 msgid "Put in a new pack"
-msgstr ""
+msgstr "In nieuwe verpakking plaatsen"
 
 #. module: stock
 #: field:stock.move.split.lines,action:0
@@ -58,7 +58,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:stock.action_stock_line_date
 #: model:ir.ui.menu,name:stock.menu_report_stock_line_date
 msgid "Last Product Inventories"
-msgstr ""
+msgstr "Laatste product inventarisatie"
 
 #. module: stock
 #: view:stock.move:0
@@ -81,7 +81,7 @@ msgstr ""
 #: model:ir.ui.menu,name:stock.menu_action_stock_move_report
 #: view:report.stock.move:0
 msgid "Moves Analysis"
-msgstr ""
+msgstr "Mutatie analyse"
 
 #. module: stock
 #: help:stock.production.lot,ref:0
@@ -189,7 +189,7 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.server,name:stock.action_partial_move_server
 msgid "Deliver/Receive Products"
-msgstr ""
+msgstr "Geleverde/ontvangen producten"
 
 #. module: stock
 #: code:addons/stock/report/report_stock.py:78
@@ -215,7 +215,7 @@ msgstr ""
 #. module: stock
 #: help:stock.tracking,serial:0
 msgid "Other reference or serial number"
-msgstr ""
+msgstr "Afwijkende referentie of serie nummer"
 
 #. module: stock
 #: field:stock.move,origin:0
@@ -419,7 +419,7 @@ msgstr ""
 #: view:board.board:0
 #: model:ir.actions.act_window,name:stock.action_outgoing_product_board
 msgid "Outgoing Product"
-msgstr ""
+msgstr "Uitgaande producten"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_warehouse_form
@@ -430,7 +430,7 @@ msgstr ""
 #. module: stock
 #: field:report.stock.move,product_qty_in:0
 msgid "In Qty"
-msgstr ""
+msgstr "Per aantal"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_fill_inventory.py:106
@@ -447,12 +447,12 @@ msgstr "Locatie Uitgang"
 #: model:ir.actions.act_window,name:stock.split_into
 #: model:ir.model,name:stock.model_stock_split_into
 msgid "Split into"
-msgstr ""
+msgstr "Splitsen in"
 
 #. module: stock
 #: field:stock.move,price_currency_id:0
 msgid "Currency for average price"
-msgstr ""
+msgstr "Valuta voor gemiddelde prijs"
 
 #. module: stock
 #: help:product.template,property_stock_account_input:0
@@ -571,7 +571,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_inventory_control
 msgid "Inventory Control"
-msgstr ""
+msgstr "Voorraad beheer"
 
 #. module: stock
 #: view:stock.location:0
@@ -594,7 +594,7 @@ msgstr ""
 #. module: stock
 #: field:stock.tracking,serial:0
 msgid "Additional Reference"
-msgstr ""
+msgstr "Extra referenties"
 
 #. module: stock
 #: view:stock.production.lot.revision:0
@@ -701,7 +701,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model,name:stock.model_stock_inventory_line
 msgid "Inventory Line"
-msgstr ""
+msgstr "Voorraad regel"
 
 #. module: stock
 #: help:product.category,property_stock_journal:0
@@ -764,7 +764,7 @@ msgstr "Locatie binnenkomst"
 #. module: stock
 #: help:stock.picking,date:0
 msgid "Date of Order"
-msgstr ""
+msgstr "Besteldatum"
 
 #. module: stock
 #: selection:product.product,valuation:0
@@ -797,7 +797,7 @@ msgstr ""
 #: model:ir.model,name:stock.model_stock_change_product_qty
 #: view:stock.change.product.qty:0
 msgid "Change Product Quantity"
-msgstr ""
+msgstr "Hoeveelheid aanpassen"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_inventory_merge
@@ -837,7 +837,7 @@ msgstr ""
 #. module: stock
 #: view:stock.location:0
 msgid "Stock Locations"
-msgstr ""
+msgstr "Voorraadlocaties"
 
 #. module: stock
 #: report:lot.stock.overview:0
@@ -864,7 +864,7 @@ msgstr ""
 #. module: stock
 #: selection:stock.move,priority:0
 msgid "Urgent"
-msgstr "Urgent"
+msgstr "Dringend"
 
 #. module: stock
 #: view:stock.picking:0
@@ -912,6 +912,8 @@ msgstr ""
 msgid ""
 "By unchecking the active field, you may hide a location without deleting it."
 msgstr ""
+"Door het uivinken van dit actief veld, kunt u een locatie verbergen zonder "
+"deze te verwijderen."
 
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.report_picking_list
@@ -938,7 +940,7 @@ msgstr "Bovenliggende"
 #: code:addons/stock/wizard/stock_partial_move.py:132
 #, python-format
 msgid "Delivery Information"
-msgstr ""
+msgstr "Levering informatie"
 
 #. module: stock
 #: constraint:product.product:0
@@ -3277,7 +3279,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.menu,name:stock.next_id_61
 msgid "Reporting"
-msgstr "Rapportering"
+msgstr "Rapportages"
 
 #. module: stock
 #: code:addons/stock/stock.py:1313
