@@ -24,6 +24,7 @@
     'name': 'Event',
     'version': '0.1',
     'category': 'Tools',
+    'complexity': "easy",
     'description': """
 Organization and management of Events.
 ======================================

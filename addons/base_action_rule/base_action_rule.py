@@ -278,9 +278,9 @@ the rule to mark CC(mail to any other person defined in actions)."),
             'object_description': hasattr(obj, 'description') and obj.description or False, 
             'object_user': hasattr(obj, 'user_id') and (obj.user_id and obj.user_id.name) or '/', 
             'object_user_email': hasattr(obj, 'user_id') and (obj.user_id and \
-                                    obj.user_id.address_id and obj.user_id.address_id.email) or '/', 
-            'object_user_phone': hasattr(obj, 'user_id') and (obj.user_id and\
-                                     obj.user_id.address_id and obj.user_id.address_id.phone) or '/', 
+                                     obj.user_id.user_email) or '/',
+            'object_user_phone': hasattr(obj, 'partner_address_id') and (obj.partner_address_id and \
+                                     obj.partner_address_id.phone) or '/',
             'partner': hasattr(obj, 'partner_id') and (obj.partner_id and obj.partner_id.name) or '/', 
             'partner_email': hasattr(obj, 'partner_address_id') and (obj.partner_address_id and\
                                          obj.partner_address_id.email) or '/', 
@@ -304,9 +304,8 @@ the rule to mark CC(mail to any other person defined in actions)."),
 
         body = self.format_mail(obj, body)
         if not emailfrom:
-            if hasattr(obj, 'user_id')  and obj.user_id and obj.user_id.address_id and\
-                        obj.user_id.address_id.email:
-                emailfrom = obj.user_id.address_id.email
+            if hasattr(obj, 'user_id') and obj.user_id and obj.user_id.user_email:
+                emailfrom = obj.user_id.user_email
 
         name = '[%d] %s' % (obj.id, tools.ustr(obj.name))
         emailfrom = tools.ustr(emailfrom)
@@ -404,8 +403,8 @@ the rule to mark CC(mail to any other person defined in actions)."),
 
         emails = []
         if hasattr(obj, 'user_id') and action.act_mail_to_user:
-            if obj.user_id and obj.user_id.address_id:
-                emails.append(obj.user_id.address_id.email)
+            if obj.user_id:
+                emails.append(obj.user_id.user_email)
 
         if action.act_mail_to_watchers:
             emails += (action.act_email_cc or '').split(',')
@@ -487,21 +486,24 @@ base_action_rule()
 
 
 class ir_cron(osv.osv):
-    _inherit = 'ir.cron' 
-    
+    _inherit = 'ir.cron'
+    _init_done = False
+
     def _poolJobs(self, db_name, check=False):
-        try:
-            db = pooler.get_db(db_name)
-        except:
-            return False
-        cr = db.cursor()
-        try:
-            next = datetime.now().strftime('%Y-%m-%d %H:00:00')
-            # Putting nextcall always less than current time in order to call it every time
-            cr.execute('UPDATE ir_cron set nextcall = \'%s\' where numbercall<>0 and active and model=\'base.action.rule\' ' % (next))
-        finally:
-            cr.commit()
-            cr.close()
+        if not self._init_done:
+            self._init_done = True
+            try:
+                db = pooler.get_db(db_name)
+            except:
+                return False
+            cr = db.cursor()
+            try:
+                next = datetime.now().strftime('%Y-%m-%d %H:00:00')
+                # Putting nextcall always less than current time in order to call it every time
+                cr.execute('UPDATE ir_cron set nextcall = \'%s\' where numbercall<>0 and active and model=\'base.action.rule\' ' % (next))
+            finally:
+                cr.commit()
+                cr.close()
 
         super(ir_cron, self)._poolJobs(db_name, check=check)
 

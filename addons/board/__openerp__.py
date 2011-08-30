@@ -23,6 +23,7 @@
     'name': 'Dashboard Creator',
     'version': '1.0',
     'category': 'Tools',
+    'complexity': "normal",
     'description': """
 Lets the user create a custom dashboard.
 ========================================

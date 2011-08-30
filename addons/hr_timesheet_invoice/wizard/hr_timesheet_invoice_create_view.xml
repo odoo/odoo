@@ -7,7 +7,7 @@
             <field name="model">hr.timesheet.invoice.create</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-            <form string="Invoice analytic lines">
+            <form string="Create Invoice">
                 <notebook colspan="4">
                     <page string="Billing Data">
                        <group col="4" colspan="4">
@@ -33,7 +33,7 @@
         </record>
 
         <record id="action_hr_timesheet_invoice_create" model="ir.actions.act_window">
-            <field name="name">Invoice analytic lines</field>
+            <field name="name">Create Invoice</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">hr.timesheet.invoice.create</field>
             <field name="view_type">form</field>
@@ -44,7 +44,7 @@
         <record model="ir.values" id="hr_timesheet_invoice_create_values">
             <field name="model_id" ref="model_account_analytic_line" />
             <field name="object" eval="1" />
-            <field name="name">Invoice analytic lines</field>
+            <field name="name">Create Invoice</field>
             <field name="key2">client_action_multi</field>
             <field name="value" eval="'ir.actions.act_window,' + str(ref('action_hr_timesheet_invoice_create'))" />
             <field name="key">action</field>
