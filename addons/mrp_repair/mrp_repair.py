@@ -695,31 +695,33 @@ class mrp_repair_line(osv.osv, ProductChangeMixin):
         if context is None:
             context = {}
         warehouse_obj = self.pool.get('stock.warehouse')
+        location_obj = self.pool.get('stock.location')
         if not type:
             return {'value': {
                 'location_id': False,
                 'location_dest_id': False
                 }
             }
-
-        product_id = self.pool.get('stock.location').search(cr, uid, [('usage','=','production')], context=context)[0]
-        if type != 'add':
-            return {'value': {
-                'to_invoice': False,
-                'location_id': product_id,
-                'location_dest_id': False
-                }
-            }
             
         if ids:
             company_id = self.browse(cr, uid, ids[0], context=context).repair_id.company_id.id
+            product_id = location_obj.search(cr, uid, [('usage','=','production'), ('company_id','=',company_id)], context=context)
+            if not product_id:
+                product_id = location_obj.search(cr, uid, [('usage','=','production')], context=context)
+            if type != 'add':
+                return {'value': {
+                    'to_invoice': False,
+                    'location_id': product_id[0],
+                    'location_dest_id': False
+                    }
+                }
             stock_id = warehouse_obj.browse(cr, uid, company_id, context=context).lot_input_id.id
             to_invoice = (guarantee_limit and
                           datetime.strptime(guarantee_limit, '%Y-%m-%d') < datetime.now())
             return {'value': {
                 'to_invoice': to_invoice,
                 'location_id': stock_id,
-                'location_dest_id': product_id
+                'location_dest_id': product_id[0]
                 }
         }
 
