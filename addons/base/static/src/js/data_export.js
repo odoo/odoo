@@ -374,29 +374,25 @@ openerp.base.DataExport = openerp.base.Dialog.extend({
     },
     on_click_export_data: function() {
         $.blockUI(this.$element);
-        var export_field = {};
-        var flag = true;
+        var exported_fields = {};
         this.$element.find("#fields_list option").each(function() {
-            export_field[$(this).val()] = $(this).text();
-            flag = false;
+            exported_fields[$(this).val()] = $(this).text();
         });
-        if (flag) {
+        if (_.isEmpty(exported_fields)) {
             alert('Please select fields to export...');
             return;
         }
-
-        var import_comp = this.$element.find("#import_compat option:selected").val(),
-            export_format = this.$element.find("#export_format").val();
 
         this.session.get_file({
             url: '/base/export/export_data',
             data: {data: JSON.stringify({
                 model: this.dataset.model,
-                fields: export_field,
+                fields: exported_fields,
                 ids: this.dataset.ids,
                 domain: this.dataset.domain,
-                import_compat: parseInt(import_comp),
-                export_format: export_format
+                import_compat: parseInt(
+                        this.$element.find("#import_compat").val(), 10),
+                export_format: this.$element.find("#export_format").val()
             })},
             complete: $.unblockUI
         });
