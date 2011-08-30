@@ -36,8 +36,7 @@ class project_issue_report(osv.osv):
     _auto = False
 
     _columns = {
-        'name': fields.char('Year', size=64, required=False, readonly=True),
-        'user_id':fields.many2one('res.users', 'Responsible', readonly=True),
+        'name': fields.char('Year', size=64, required=False, readonly=True),        
         'section_id':fields.many2one('crm.case.section', 'Sale Team', readonly=True),
         'state': fields.selection(AVAILABLE_STATES, 'State', size=16, readonly=True),
         'month':fields.selection([('01', 'January'), ('02', 'February'), \
@@ -64,7 +63,7 @@ class project_issue_report(osv.osv):
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),
         'project_id':fields.many2one('project.project', 'Project',readonly=True),
         'version_id': fields.many2one('project.issue.version', 'Version'),
-        'assigned_to' : fields.many2one('res.users', 'Assigned to',readonly=True),
+        'user_id' : fields.many2one('res.users', 'Assigned to',readonly=True),
         'partner_id': fields.many2one('res.partner','Partner',domain="[('object_id.model', '=', 'project.issue')]"),
         'canal_id': fields.many2one('res.partner.canal', 'Channel',readonly=True),
         'task_id': fields.many2one('project.task', 'Task',domain="[('object_id.model', '=', 'project.issue')]" ),
@@ -95,7 +94,6 @@ class project_issue_report(osv.osv):
                     c.project_id as project_id,
                     c.version_id as version_id,
                     1 as nbr,
-                    c.assigned_to,
                     c.partner_id,
                     c.canal_id,
                     c.task_id,
