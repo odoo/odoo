@@ -43,7 +43,7 @@ openerp.base.DataExport = openerp.base.Dialog.extend({
             self.$element.find('#fields_list option:selected').remove();
         });
         self.$element.find('#remove_all_field').click(function() {
-            self.$element.find('#fields_list option').remove();
+            self.$element.find('#fields_list').empty();
         });
         self.$element.find('#export_new_list').click(function() {
             self.on_show_save_list();
