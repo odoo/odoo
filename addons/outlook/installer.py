@@ -31,7 +31,7 @@ class outlook_installer(osv.osv_memory):
 
     def default_get(self, cr, uid, fields, context=None):
         data = super(outlook_installer, self).default_get(cr, uid, fields, context=context)
-        data['doc_file'] = 'http://doc.openerp.com/book/2/2_6_Comms/2_6_Comms_outlook.html'
+        data['doc_file'] = 'http://doc.openerp.com/v6.0/book/2/3_CRM_Contacts/communicate.html#managing-your-crm-from-microsoft-outlook'
         file = open(addons.get_module_resource('outlook','plugin','openerp-outlook-addin.exe'), 'r')
         data['plugin_file'] = base64.encodestring(file.read())
         return data
