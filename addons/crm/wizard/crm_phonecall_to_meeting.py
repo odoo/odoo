@@ -24,58 +24,6 @@ from tools.translate import _
 import wizard
 import pooler
 
-#===============================================================================
-# Put original wizard because of action in init
-# Remove it after solution foraction in init
-#===============================================================================
-
-class phonecall2meeting(wizard.interface):
-
-    def _makeMeeting(self, cr, uid, data, context=None):
-        pool = pooler.get_pool(cr.dbname)
-        phonecall_case_obj = pool.get('crm.phonecall')                   
-        data_obj = pool.get('ir.model.data')
-        result = data_obj._get_id(cr, uid, 'crm', 'view_crm_case_meetings_filter')
-        id = data_obj.read(cr, uid, result, ['res_id'])
-        id1 = data_obj._get_id(cr, uid, 'crm', 'crm_case_calendar_view_meet')
-        id2 = data_obj._get_id(cr, uid, 'crm', 'crm_case_form_view_meet')
-        id3 = data_obj._get_id(cr, uid, 'crm', 'crm_case_tree_view_meet')
-        if id1:
-            id1 = data_obj.browse(cr, uid, id1, context=context).res_id
-        if id2:
-            id2 = data_obj.browse(cr, uid, id2, context=context).res_id
-        if id3:
-            id3 = data_obj.browse(cr, uid, id3, context=context).res_id
-        phonecall = phonecall_case_obj.browse(cr, uid, data['id'], context=context)
-        partner_id = phonecall.partner_id and phonecall.partner_id.id or False
-        name = phonecall.name
-        email = phonecall.email_from
-        section_id = phonecall.section_id and phonecall.section_id.id or False      
-        return {            
-            'name': _('Meetings'),
-            'domain' : "[('user_id','=',%s)]"%(uid), 
-            'context': {'default_partner_id': partner_id, 'default_section_id': section_id, 'default_email_from': email, 'default_state':'open', 'default_name':name},        
-            'view_type': 'form',
-            'view_mode': 'calendar,form,tree',
-            'res_model': 'crm.meeting',
-            'view_id': False,
-            'views': [(id1,'calendar'),(id2,'form'),(id3,'tree')],
-            'type': 'ir.actions.act_window',
-            'search_view_id': id['res_id']
-            }
-
-    states = {
-        'init': {
-            'actions': [],
-            'result': {'type': 'action', 'action': _makeMeeting, 'state': 'order'}
-        },
-        'order': {
-            'actions': [],
-            'result': {'type': 'state', 'state': 'end'}
-        }
-    }
-phonecall2meeting('crm.phonecall.meeting_set')
-
 class crm_phonecall2meeting(osv.osv_memory):
     """ Phonecall to Meeting """
 
@@ -109,7 +57,7 @@ class crm_phonecall2meeting(osv.osv_memory):
         record_id = context and context.get('active_id', False) or False
 
         if record_id:
-            phonecall_obj = self.pool.get('crm.phonecall')                   
+            phonecall_obj = self.pool.get('crm.phonecall')
             data_obj = self.pool.get('ir.model.data')
 
             # Get meeting views
@@ -127,22 +75,22 @@ class crm_phonecall2meeting(osv.osv_memory):
 
             phonecall = phonecall_obj.browse(cr, uid, record_id, context=context)
             context = {
-                        'default_phonecall_id': phonecall.id, 
-                        'default_partner_id': phonecall.partner_id and phonecall.partner_id.id or False, 
-                        'default_email': phonecall.email_from , 
+                        'default_phonecall_id': phonecall.id,
+                        'default_partner_id': phonecall.partner_id and phonecall.partner_id.id or False,
+                        'default_email': phonecall.email_from ,
                         'default_name': phonecall.name
                     }
 
             value = {
-                'name': _('Meetings'), 
-                'domain' : "[('user_id','=',%s)]" % (uid), 
-                'context': context, 
-                'view_type': 'form', 
-                'view_mode': 'calendar,form,tree', 
-                'res_model': 'crm.meeting', 
-                'view_id': False, 
-                'views': [(id1, 'calendar'), (id2, 'form'), (id3, 'tree')], 
-                'type': 'ir.actions.act_window', 
+                'name': _('Meetings'),
+                'domain' : "[('user_id','=',%s)]" % (uid),
+                'context': context,
+                'view_type': 'form',
+                'view_mode': 'calendar,form,tree',
+                'res_model': 'crm.meeting',
+                'view_id': False,
+                'views': [(id1, 'calendar'), (id2, 'form'), (id3, 'tree')],
+                'type': 'ir.actions.act_window',
                 'search_view_id': res['res_id']
                 }
 
