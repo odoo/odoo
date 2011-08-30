@@ -29,12 +29,12 @@ class sale_installer(osv.osv_memory):
             help="Allows you to compute delivery costs on your quotations."),
         'sale_journal': fields.boolean('Invoicing journals',
             help="Allows you to group and invoice your delivery orders according to different invoicing types: daily, weekly, etc."),
-        'sale_layout': fields.boolean('Sales Order Layout Improvement',
+        'sale_layout': fields.boolean('Sales Orders Print Layout',
             help="Provides some features to improve the layout of the Sales Order reports."),
         'sale_margin': fields.boolean('Margins in Sales Orders',
             help="Gives the margin of profitability by calculating "
                  "the difference between Unit Price and Cost Price."),
-        'sale_order_dates': fields.boolean('Sales Order Dates',
+        'sale_order_dates': fields.boolean('Full Dates on Sales Orders',
             help="Adds commitment, requested and effective dates on Sales Orders."),
     }
     

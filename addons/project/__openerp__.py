@@ -60,7 +60,6 @@ Dashboard for project members that includes:
     ],
     'demo_xml': [
         'project_demo.xml',
-        'board_project_demo.xml',
     ],
     'test':[
         'test/test_project.yml',
