@@ -36,7 +36,7 @@ class res_currency(osv.osv):
         else:
             date = time.strftime('%Y-%m-%d')
         date = date or time.strftime('%Y-%m-%d')
-        currency_rate_type = context.get('currency_rate_type_id', None)
+        currency_rate_type = context.get('currency_rate_type_id') or None
         operator = currency_rate_type and '=' or 'is'
         for id in ids:
             cr.execute("SELECT currency_id, rate FROM res_currency_rate WHERE currency_id = %s AND name <= %s AND currency_rate_type_id " + operator +" %s ORDER BY name desc LIMIT 1" ,(id, date, currency_rate_type))
