@@ -256,7 +256,7 @@
   !python {model: stock.partial.picking}: |
      pick_obj = self.pool.get('stock.picking')
      picking_ids = pick_obj.search(cr, uid, [('type','=','in'),('state','=','assigned')])
-     partial = self.browse(cr, uid, 1, context)
+     partial = self.browse(cr, uid, ref('stock_partial_picking0'), context)
      partial_datas = {
             'delivery_date': partial.date
      }
