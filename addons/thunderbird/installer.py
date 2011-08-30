@@ -33,7 +33,7 @@ class thunderbird_installer(osv.osv_memory):
 
     def default_get(self, cr, uid, fields, context=None):
         data = super(thunderbird_installer, self).default_get(cr, uid, fields, context)
-        data['pdf_file'] = 'http://doc.openerp.com/book/2/2_6_Comms/2_6_Comms_thunderbird.html'
+        data['pdf_file'] = 'http://doc.openerp.com/v6.0/book/2/3_CRM_Contacts/communicate.html#managing-your-crm-from-mozilla-thunderbird'
         file = open(addons.get_module_resource('thunderbird','plugin', 'openerp_plugin.xpi'),'rb')
         data['plugin_file'] = base64.encodestring(file.read())
         return data
