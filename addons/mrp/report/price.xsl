@@ -3,6 +3,8 @@
 
 	<xsl:import href="custom_default.xsl"/>
 	<xsl:import href="custom_rml.xsl"/>
+	<xsl:variable name="page_format">a4_normal</xsl:variable>
+
 
 	<xsl:template match="/">
 		<xsl:call-template name="rml"/>
@@ -11,7 +13,7 @@
 	<!-- stylesheet -->
 
 	<xsl:template name="stylesheet">
-		<paraStyle name="title" fontName="Helvetica-Bold" fontSize="15.0" leftIndent="-8.0cm" alignment="center"/>
+		<paraStyle name="title" fontName="Helvetica-Bold" fontSize="15.0" alignment="center"/>
 		<paraStyle name="terp_tblheader_General" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="LEFT"/>
 		<paraStyle name="terp_default_8" fontName="Helvetica" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
 		<paraStyle name="terp_tblheader_Details_Right" fontName="Helvetica" fontSize="8.0" leading="10" alignment="RIGHT"/>
