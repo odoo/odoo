@@ -614,6 +614,24 @@ openerp.base.Session = openerp.base.CallbackEnabled.extend( /** @lends openerp.b
             }
         }
     },
+    /**
+     * Cooperative file download implementation, for ajaxy APIs.
+     *
+     * Requires that the server side implements an httprequest correctly
+     * setting the `fileToken` cookie to the value provided as the `token`
+     * parameter. The cookie *must* be set on the `/` path and *must not* be
+     * `httpOnly`.
+     *
+     * It would probably also be a good idea for the response to use a
+     * `Content-Disposition: attachment` header, especially if the MIME is a
+     * "known" type (e.g. text/plain, or for some browsers application/json
+     *
+     * @param {Object} options
+     * @param {HTMLFormElement} options.form the form to submit in order to fetch the file
+     * @param {Function} [options.success] callback in case of download success
+     * @param {Function} [options.error] callback in case of request error, provided with the error body
+     * @param {Function} [options.complete] called after both ``success`` and ``error` callbacks have executed
+     */
     getFile: function (options) {
         // need to detect when the file is done downloading (not used
         // yet, but we'll need it to fix the UI e.g. with a throbber
@@ -622,8 +640,14 @@ openerp.base.Session = openerp.base.CallbackEnabled.extend( /** @lends openerp.b
         // http://geekswithblogs.net/GruffCode/archive/2010/10/28/detecting-the-file-download-dialog-in-the-browser.aspx
         var timer, token = new Date().getTime(),
             cookie_name = 'fileToken', cookie_length = cookie_name.length,
-            self = this, CHECK_INTERVAL = 100, id = _.uniqueId('get_file_frame');
-        var complete = function () { clearTimeout(timer); $target.remove(); };
+            self = this, CHECK_INTERVAL = 100, id = _.uniqueId('get_file_frame'),
+            $token = $('<input type="hidden" name="token" value="' + token +'">');
+        var complete = function () {
+            if (options.complete) { options.complete(); }
+            clearTimeout(timer);
+            $token.remove();
+            $target.remove();
+        };
         var $target = $('<iframe style="display: none;">')
             .attr({id: id, name: id})
             .appendTo(document.body)
@@ -634,7 +658,7 @@ openerp.base.Session = openerp.base.CallbackEnabled.extend( /** @lends openerp.b
                 complete();
             });
         $(options.form)
-            .append('<input type="hidden" name="token" value="' + token +'">')
+            .append($token)
             .attr('target', id)
             .get(0).submit();
 

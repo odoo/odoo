@@ -348,17 +348,14 @@ openerp.base.Database = openerp.base.Widget.extend({
                 $.blockUI({message:'<img src="/base/static/src/img/throbber2.gif">'});
                 self.session.getFile({
                     form: form,
-                    success: function () {
-                        $.unblockUI();
-                    },
                     error: function (body) {
-                        $.unblockUI();
                         var error = body.firstChild.data.split('|');
                         self.display_error({
                             title: error[0],
                             error: error[1]
                         });
-                    }
+                    },
+                    complete: $.unblockUI
                 });
             }
         });
