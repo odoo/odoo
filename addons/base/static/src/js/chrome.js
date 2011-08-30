@@ -564,21 +564,24 @@ openerp.base.Login =  openerp.base.Widget.extend({
 });
 
 openerp.base.Header =  openerp.base.Widget.extend({
-    init: function(parent, element_id) {
-        this._super(parent, element_id);
-        if (jQuery.deparam(jQuery.param.querystring()).debug !== undefined) {
-            this.qs = '?debug'
-        } else {
-            this.qs = ''
-        }
+    template: "Header",
+    identifier_prefix: 'oe-app-header-',
+    init: function(parent) {
+        this._super(parent);
+        this.qs = "?" + jQuery.param.querystring();
+        this.$content = $();
     },
     start: function() {
-        return this.do_update();
+        this._super();
     },
     do_update: function () {
-        this.$element.html(QWeb.render("Header", this));
+        this.$content = $(QWeb.render("Header-content", {widget: this}));
+        this.$content.appendTo(this.$element);
         this.$element.find(".logout").click(this.on_logout);
         return this.shortcut_load();
+    },
+    do_reset: function() {
+        this.$content.remove();
     },
     shortcut_load :function(){
         var self = this,
@@ -749,21 +752,23 @@ openerp.base.WebClient = openerp.base.Widget.extend({
         // Do you autorize this ? will be replaced by notify() in controller
         openerp.base.Widget.prototype.notification = new openerp.base.Notification(this, "oe_notification");
 
-        this.header = new openerp.base.Header(this, "oe_header");
+        
+        this.header = new openerp.base.Header(this);
         this.login = new openerp.base.Login(this, "oe_login");
         this.header.on_logout.add(this.login.on_logout);
+        this.header.on_action.add(this.on_menu_action);
 
         this.session.on_session_invalid.add(this.login.do_ask_login);
         this.session.on_session_valid.add_last(this.header.do_update);
+        this.session.on_session_invalid.add_last(this.header.do_reset);
         this.session.on_session_valid.add_last(this.on_logged);
 
         this.menu = new openerp.base.Menu(this, "oe_menu", "oe_secondary_menu");
         this.menu.on_action.add(this.on_menu_action);
-        this.header.on_action.add(this.on_menu_action);
     },
     start: function() {
+        this.header.appendTo($("#oe_header"));
         this.session.start();
-        this.header.start();
         this.login.start();
         this.menu.start();
         this.notification.notify("OpenERP Client", "The openerp client has been initialized.");
