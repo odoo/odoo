@@ -121,7 +121,7 @@
                     <group expand="0" string="Extended Filters..." groups="base.group_extended">
                         <field name="partner_id"/>
                         <separator orientation="vertical"/>
-                        <field name="stage_id" widget="selection" domain="[('type', '=', 'lead')]" />
+                        <field name="stage_id" widget="selection" domain="[('section_ids', '=', 'section_id')]" />
                         <field name="categ_id" widget="selection"/>
                         <field name="type_id" widget="selection"/>
                         <field name="channel_id" widget="selection"/>
@@ -233,7 +233,6 @@
             <field name="view_type">form</field>
             <field name="context">{"search_default_filter_opportunity":1, "search_default_opportunity": 1, "search_default_user":1,"search_default_this_month":1,'group_by_no_leaf':1,'group_by':[]}</field>
             <field name="view_mode">tree,graph</field>
-            <field name="domain">[('type', '=', 'opportunity')]</field>
             <field name="help">Opportunities Analysis gives you an instant access to your opportunities with information such as the expected revenue, planned cost, missed deadlines or the number of interactions per opportunity. This report is mainly used by the sales manager in order to do the periodic review with the teams of the sales pipeline.</field>
         </record>
 
