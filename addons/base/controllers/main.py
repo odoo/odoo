@@ -1308,8 +1308,8 @@ class ExcelExport(Export):
 
         for row_index, row in enumerate(rows):
             for cell_index, cell_value in enumerate(row):
-                cell_value = str(cell_value)
-                cell_value = re.sub("\r", " ", cell_value)
+                if isinstance(cell_value, basestring):
+                    cell_value = re.sub("\r", " ", cell_value)
                 worksheet.write(row_index + 1, cell_index, cell_value, style)
 
         fp = StringIO()
