@@ -1063,57 +1063,6 @@ class TreeView(View):
             req,'action', 'tree_but_open',[(model, id)],
             False)
 
-def export_csv(fields, result):
-    fp = StringIO()
-    writer = csv.writer(fp, quoting=csv.QUOTE_ALL)
-
-    writer.writerow(fields)
-
-    for data in result:
-        row = []
-        for d in data:
-            if isinstance(d, basestring):
-                d = d.replace('\n',' ').replace('\t',' ')
-                try:
-                    d = d.encode('utf-8')
-                except:
-                    pass
-            if d is False: d = None
-            row.append(d)
-        writer.writerow(row)
-
-    fp.seek(0)
-    data = fp.read()
-    fp.close()
-    return data
-
-def export_xls(fieldnames, table):
-    import xlwt
-
-    workbook = xlwt.Workbook()
-    worksheet = workbook.add_sheet('Sheet 1')
-
-    for i, fieldname in enumerate(fieldnames):
-        worksheet.write(0, i, str(fieldname))
-        worksheet.col(i).width = 8000 # around 220 pixels
-
-    style = xlwt.easyxf('align: wrap yes')
-
-    for row_index, row in enumerate(table):
-        for cell_index, cell_value in enumerate(row):
-            cell_value = str(cell_value)
-            cell_value = re.sub("\r", " ", cell_value)
-            worksheet.write(row_index + 1, cell_index, cell_value, style)
-
-
-    fp = StringIO()
-    workbook.save(fp)
-    fp.seek(0)
-    data = fp.read()
-    fp.close()
-    #return data.decode('ISO-8859-1')
-    return data
-
 class Export(View):
     _cp_path = "/base/export"
 
@@ -1238,11 +1187,34 @@ class Export(View):
             return _fields
         return rec(fields)
 
+    #noinspection PyPropertyDefinition
+    @property
+    def content_type(self):
+        """ Provides the format's content type """
+        raise NotImplementedError()
+
+    def filename(self, base):
+        """ Creates a valid filename for the format (with extension) from the
+         provided base name (exension-less)
+        """
+        raise NotImplementedError()
+
+    def from_data(self, fields, rows):
+        """ Conversion method from OpenERP's export data to whatever the
+        current export class outputs
+
+        :params list fields: a list of fields to export
+        :params list rows: a list of records to export
+        :returns:
+        :rtype: bytes
+        """
+        raise NotImplementedError()
+
     @openerpweb.httprequest
-    def export_data(self, req, data, token):
-        model, fields, ids, domain, import_compat, export_format = \
+    def index(self, req, data, token):
+        model, fields, ids, domain, import_compat = \
             operator.itemgetter('model', 'fields', 'ids', 'domain',
-                                'import_compat', 'export_format')(
+                                'import_compat')(
                 simplejson.loads(data))
 
         context = req.session.eval_context(req.context)
@@ -1256,12 +1228,77 @@ class Export(View):
             field = [val.strip() for val in fields.values()]
 
         req.httpresponse.headers['Content-Disposition'] = \
-            'attachment; filename="%s.%s"' % (model, export_format)
+            'attachment; filename="%s"' % self.filename(model)
         req.httpresponse.cookie['fileToken'] = int(token)
         req.httpresponse.cookie['fileToken']['path'] = '/'
-        if export_format == 'xls':
-            req.httpresponse.headers['Content-Type'] = 'application/vnd.mx-excel'
-            return export_xls(field, result)
-        else:
-            req.httpresponse.headers['Content-Type'] = 'text/csv;charset=utf8'
-            return export_csv(field, result)
+        req.httpresponse.headers['Content-Type'] = self.content_type
+        return self.from_data(field, result)
+
+class CSVExport(Export):
+    _cp_path = '/base/export/csv'
+
+    @property
+    def content_type(self):
+        return 'text/csv;charset=utf8'
+
+    def filename(self, base):
+        return base + '.csv'
+
+    def from_data(self, fields, rows):
+        fp = StringIO()
+        writer = csv.writer(fp, quoting=csv.QUOTE_ALL)
+
+        writer.writerow(fields)
+
+        for data in rows:
+            row = []
+            for d in data:
+                if isinstance(d, basestring):
+                    d = d.replace('\n',' ').replace('\t',' ')
+                    try:
+                        d = d.encode('utf-8')
+                    except:
+                        pass
+                if d is False: d = None
+                row.append(d)
+            writer.writerow(row)
+
+        fp.seek(0)
+        data = fp.read()
+        fp.close()
+        return data
+
+class ExcelExport(Export):
+    _cp_path = '/base/export/xls'
+
+    @property
+    def content_type(self):
+        return 'application/vnd.ms-excel'
+
+    def filename(self, base):
+        return base + '.xls'
+
+    def from_data(self, fields, rows):
+        import xlwt
+
+        workbook = xlwt.Workbook()
+        worksheet = workbook.add_sheet('Sheet 1')
+
+        for i, fieldname in enumerate(fields):
+            worksheet.write(0, i, str(fieldname))
+            worksheet.col(i).width = 8000 # around 220 pixels
+
+        style = xlwt.easyxf('align: wrap yes')
+
+        for row_index, row in enumerate(rows):
+            for cell_index, cell_value in enumerate(row):
+                cell_value = str(cell_value)
+                cell_value = re.sub("\r", " ", cell_value)
+                worksheet.write(row_index + 1, cell_index, cell_value, style)
+
+        fp = StringIO()
+        workbook.save(fp)
+        fp.seek(0)
+        data = fp.read()
+        fp.close()
+        return data

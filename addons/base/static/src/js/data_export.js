@@ -383,16 +383,16 @@ openerp.base.DataExport = openerp.base.Dialog.extend({
             return;
         }
 
+        var export_format = this.$element.find("#export_format").val();
         this.session.get_file({
-            url: '/base/export/export_data',
+            url: '/base/export/' + export_format,
             data: {data: JSON.stringify({
                 model: this.dataset.model,
                 fields: exported_fields,
                 ids: this.dataset.ids,
                 domain: this.dataset.domain,
                 import_compat: parseInt(
-                        this.$element.find("#import_compat").val(), 10),
-                export_format: this.$element.find("#export_format").val()
+                        this.$element.find("#import_compat").val(), 10)
             })},
             complete: $.unblockUI
         });
