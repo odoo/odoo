@@ -250,7 +250,7 @@ class Database(openerpweb.Controller):
                 req.session.proxy("db").dump(backup_pwd, backup_db))
             req.httpresponse.headers['Content-Type'] = "application/octet-stream; charset=binary"
             req.httpresponse.headers['Content-Disposition'] = 'attachment; filename="' + backup_db + '.dump"'
-            req.httpresponse.cookie['fileToken'] = token
+            req.httpresponse.cookie['fileToken'] = int(token)
             req.httpresponse.cookie['fileToken']['path'] = '/'
             return db_dump
         except xmlrpclib.Fault, e:
