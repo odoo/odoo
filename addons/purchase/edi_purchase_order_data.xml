@@ -45,7 +45,7 @@ Regards,
 			<field name="template_language">mako</field>
 			<field name="name">Mail Template of Purchase Order For EDI Document</field>
 			<field name="model_int_name">purchase.order</field>
-			<!--field name="reply_to">${object.user_id.email or ''}</field-->
+			<field name="reply_to">${object.user_id.user_email or ''}</field>
 		</record>
 	</data>
 </openerp>

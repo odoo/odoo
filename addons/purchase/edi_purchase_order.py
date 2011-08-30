@@ -118,14 +118,13 @@ class purchase_order(osv.osv, ir_edi.edi):
         invoice_line_pool = self.pool.get('account.invoice.line')
         account_pool = self.pool.get('account.account')
         stock = self.pool.get('stock.location')
-        
         tax_id = []
         account_id = []
         partner_id = None
         company_id = None
         if context is None:
             context = {}
-        
+        print edi_document
         # import company as a new partner, if type==in then supplier=1, else customer=1
         # partner_id field is modified to point to the new partner
         # company_address data used to add address to new partner
@@ -178,7 +177,6 @@ class purchase_order(osv.osv, ir_edi.edi):
                     if document.has_key(key):
                         del document[key]
     
-        print edi_document
         return super(purchase_order,self).edi_import(cr, uid, edi_document, context=context)
     
 purchase_order()
