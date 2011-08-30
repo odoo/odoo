@@ -685,13 +685,15 @@ class mrp_repair_line(osv.osv, ProductChangeMixin):
      'product_uom_qty': lambda *a: 1,
     }
 
-    def onchange_operation_type(self, cr, uid, ids, type, guarantee_limit):
+    def onchange_operation_type(self, cr, uid, ids, type, guarantee_limit, context = None):
         """ On change of operation type it sets source location, destination location
         and to invoice field.
         @param product: Changed operation type.
         @param guarantee_limit: Guarantee limit of current record.
         @return: Dictionary of values.
         """
+        if context is None:
+            context = {}
         warehouse_obj = self.pool.get('stock.warehouse')
         if not type:
             return {'value': {
@@ -700,7 +702,7 @@ class mrp_repair_line(osv.osv, ProductChangeMixin):
                 }
             }
 
-        product_id = self.pool.get('stock.location').search(cr, uid, [('usage','=','production')])[0]
+        product_id = self.pool.get('stock.location').search(cr, uid, [('usage','=','production')], context=context)[0]
         if type != 'add':
             return {'value': {
                 'to_invoice': False,
