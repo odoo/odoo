@@ -1,0 +1,240 @@
+/* jqm docs css
+
+Beware: lots of last-minute CSS going on in here
+cobblers, shoes,
+*/
+
+body { background: #dddddd; }
+
+.ui-mobile #jqm-home {  background: #e5e5e5 url(../images/jqm-sitebg.png) top center repeat-x; }
+.ui-mobile #jqm-homeheader { padding: 40px 10px 0; text-align: center;  margin: 0 auto; }
+.ui-mobile #jqm-homeheader h1 { margin: 0 0 ; }
+.ui-mobile #jqm-homeheader p { margin: .3em 0 0; line-height: 1.3; font-size: .9em; font-weight: bold; color: #666; }
+.ui-mobile #jqm-version { text-indent: -99999px; background: url(../images/version.png) top right no-repeat; width: 119px; height: 122px; overflow: hidden; position: absolute; z-index: 50; top: 0; right: 0; }
+.ui-mobile .jqm-themeswitcher { margin: 10px 25px 10px 10px;  }
+
+h2 { margin-top:1.5em; }
+p code { font-size:1.2em; font-weight:bold; }
+
+dt { font-weight: bold; margin: 2em 0 .5em; }
+dt code, dd code { font-size:1.3em; line-height:150%; }
+pre { white-space: pre; white-space: pre-wrap; word-wrap: break-word; }
+
+#jqm-homeheader img { width: 235px; }
+
+.ui-header .jqm-home { top:0.65em; }
+nav { margin: 0; }
+
+p.intro {
+    font-size: .96em;
+    line-height: 1.3;
+        border-top: 1px solid #75ae18;
+        border-bottom: 0;
+        background: none;
+        margin: 1.5em 0;
+        padding: 1.5em 15px 0;
+
+}
+p.intro strong {
+    color:  #558e08;
+}
+.footer-docs {
+    padding: 5px 0;
+}
+.footer-docs p {
+    float: left;
+    margin-left:15px;
+    font-weight: normal;
+    font-size: .9em;
+}
+
+.type-interior .content-secondary {
+    border-right: 0;
+    border-left: 0;
+    margin: 10px -15px 0;
+    background: #fff;
+    border-top: 1px solid #ccc;
+}
+.type-home .ui-content {
+    margin-top: 5px;
+}
+.type-interior .ui-content {
+    padding-bottom: 0;
+}
+.content-secondary .ui-collapsible-contain {
+    padding: 10px 15px;
+
+}
+.content-secondary .ui-collapsible-heading {
+    margin: 0 0 30px;
+}
+.content-secondary .ui-collapsible-heading-collapsed,
+.content-secondary .ui-collapsible-content {
+    padding:0;
+    margin: 0;
+}
+
+
+
+/* F bar theme - just for the docs overview headers */
+.ui-bar-f {
+    border: 1px solid       #56A00E;
+    background:             #74b042;
+    color:                  #fff;
+    font-weight: bold;
+    text-shadow: 0 -1px 1px #234403;
+    background-image: -moz-linear-gradient(top,
+                            #74b042,
+                            #56A00E);
+    background-image: -webkit-gradient(linear,left top,left bottom,
+        color-stop(0,       #74b042),
+        color-stop(1,       #56A00E));
+    -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorStr='#81a8ce', EndColorStr='#5e87b0')";
+}
+.ui-bar-f,
+.ui-bar-f .ui-link-inherit {
+    color:                  #fff;
+}
+.ui-bar-f .ui-link {
+    color:                  #fff;
+    font-weight: bold;
+}
+
+
+
+
+/* docs site layout */
+
+@media all and (min-width: 650px){
+
+    .jqm-home {
+        position: absolute;
+        left: 10px;
+        top: 0;
+    }
+    .type-home .ui-content {
+        margin-top: 5px;
+    }
+    .ui-mobile #jqm-homeheader {
+        max-width: 340px;
+    }
+    .ui-mobile .jqm-themeswitcher {
+        float: right;
+    }
+    p.intro {
+        margin: 2em 0;
+    }
+    .type-home .ui-content,
+    .type-interior .ui-content {
+        padding: 0;
+        background: url(../images/px-ccc.gif) 50% 0 repeat-y;
+    }
+    .type-interior .ui-content {
+        background-position: 45%;
+        overflow: hidden;
+    }
+    .content-secondary {
+        text-align: left;
+        float: left;
+        width: 45%;
+        background: none;
+        border-top: 0;
+    }
+    .content-secondary,
+    .type-interior .content-secondary {
+        margin: 30px 0 20px 2%;
+        padding: 20px 4% 0 0;
+            background: none;
+    }
+    .type-index .content-secondary {
+        padding: 0;
+    }
+    .type-index .content-secondary .ui-listview {
+        margin: 0;
+    }
+
+    .ui-mobile #jqm-homeheader {
+        padding: 0;
+    }
+    .content-primary {
+        width: 45%;
+        float: right;
+        margin-top: 30px;
+        margin-right: 1%;
+        padding-right: 1%;
+    }
+    .content-primary ul:first-child {
+        margin-top: 0;
+    }
+    .content-secondary h2 {
+        position: absolute;
+        left: -9999px;
+    }
+    .type-interior .content-primary {
+        padding: 1.5em 6% 3em 0;
+        margin: 0;
+    }
+    /* fix up the collapsibles - expanded on desktop */
+    .content-secondary .ui-collapsible-heading {
+        display: none;
+    }
+    .content-secondary .ui-collapsible-contain {
+        margin:0;
+    }
+    .content-secondary .ui-collapsible-content {
+        display: block;
+        margin: 0;
+        padding: 0;
+    }
+    .type-interior  .content-secondary .ui-li-divider {
+        padding-top: 1em;
+        padding-bottom: 1em;
+    }
+    .type-interior .content-secondary {
+        margin: 0;
+        padding: 0;
+    }
+
+}
+@media all and (min-width: 750px){
+    .type-home .ui-content,
+    .type-interior .ui-content {
+        background-position: 39%;
+    }
+    .content-secondary {
+        width: 34%;
+    }
+    .content-primary {
+        width: 56%;
+        padding-right: 1%;
+    }
+    .type-interior .ui-content {
+        background-position: 34%;
+    }
+}
+
+@media all and (min-width: 1200px){
+    .type-home .ui-content{
+        background-position: 38.5%;
+    }
+    .type-interior .ui-content {
+        background-position: 30%;
+    }
+    .content-secondary {
+        width: 30%;
+        padding-right:6%;
+        margin: 30px 0 20px 5%;
+    }
+    .type-interior .content-secondary {
+        margin: 0;
+        padding: 0;
+    }
+    .content-primary {
+        width: 50%;
+        margin-right: 5%;
+        padding-right: 3%;
+    }
+    .type-interior .content-primary {
+        width: 60%;
+    }
+}
