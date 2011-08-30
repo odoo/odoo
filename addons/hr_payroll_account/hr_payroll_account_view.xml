@@ -229,12 +229,12 @@
             <field name="model">hr.employee</field>
             <field name="inherit_id" ref="hr_contract.hr_hr_employee_view_form2"/>
             <field name="arch" type="xml">
-                <field name="bank_account_id" position="after">
+            	<xpath expr="/form/notebook/page[@string='Miscellaneous']/group/field[@name='bank_account_id']" position='after'>
                     <field name="property_bank_account" string="Employee Bank Account"/>
                     <field name="salary_account"/>
                     <field name="employee_account"/>
                     <field name="analytic_account"/>
-                </field>
+                </xpath>
             </field>
         </record>
 

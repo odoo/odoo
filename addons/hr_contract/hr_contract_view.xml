@@ -99,27 +99,28 @@
         <record id="hr_hr_employee_view_form2" model="ir.ui.view">
             <field name="name">hr.hr.employee.view.form2</field>
             <field name="model">hr.employee</field>
+			<field name="type">form</field>
             <field name="inherit_id" ref="hr.view_employee_form"/>
             <field name="arch" type="xml">
                 <page string="Personal Information" position="after">
-                    <page string="Miscellaneous" groups="base.group_hr_user">
-                        <group colspan="2" col="2">
-                        <separator string="Personal Info" colspan="2"/>
-                        <field name="bank_account_id"/>
-                        <field name="place_of_birth"/>
-                        <field name="children"/>
-                        </group>
-                        <group colspan="2" col="2">
-                        <separator string="Job Info" colspan="2"/>
-                        <field name="manager" />
-                        <field name="vehicle" />
-                        <field name="vehicle_distance" />
-                        </group>
-                        <group colspan="2" col="2">
-                        <separator string="Others Info" colspan="2"/>
-                        <field name="medic_exam" />
-                        </group>
-                    </page>
+                <page string="Miscellaneous" groups="base.group_hr_user">
+                    <group colspan="2" col="2">
+                    <separator string="Personal Info" colspan="2"/>
+                    <field name="bank_account_id"/>
+                    <field name="place_of_birth"/>
+                    <field name="children"/>
+                    </group>
+                    <group colspan="2" col="2">
+                    <separator string="Job Info" colspan="2"/>
+                    <field name="manager" />
+                    <field name="vehicle" />
+                    <field name="vehicle_distance" />
+                    </group>
+                    <group colspan="2" col="2">
+                    <separator string="Others Info" colspan="2"/>
+                    <field name="medic_exam" />
+                    </group>
+                </page>
                 </page>
             </field>
         </record>
