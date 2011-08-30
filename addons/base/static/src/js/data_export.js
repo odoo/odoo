@@ -26,7 +26,6 @@ openerp.base.DataExport = openerp.base.Dialog.extend({
                },
             close: function(event, ui){ self.close();}
         });
-        self.on_show_exists_export_list();
         self.$element.removeClass('ui-dialog-content ui-widget-content');
         self.$element.find('#add_field').click(function() {
             if ($('#field-tree-structure tr.ui-selected')) {
@@ -45,43 +44,42 @@ openerp.base.DataExport = openerp.base.Dialog.extend({
         self.$element.find('#remove_all_field').click(function() {
             self.$element.find('#fields_list').empty();
         });
-        self.$element.find('#export_new_list').click(function() {
-            self.on_show_save_list();
-        });
-        var import_comp = self.$element.find('#import_compat option:selected').val(),
-            params = {
-                import_compat: parseInt(import_comp, 10)
-            };
-        self.rpc('/base/export/get_fields', { model: self.dataset.model, params: params }, self.on_show_data);
+        this.$element.find('#export_new_list').click(this.on_show_save_list);
 
-        self.$element.find('#import_compat').change(function() {
-            self.$element.find('#fields_list option').remove();
+        var got_fields = new $.Deferred();
+        this.$element.find('#import_compat').change(function() {
+            self.$element.find('#fields_list').empty();
             self.$element.find('#field-tree-structure').remove();
             var import_comp = self.$element.find("#import_compat option:selected").val();
             if (import_comp) {
-                var params = {
-                    import_compat: parseInt(import_comp, 10)
-                };
-                self.rpc("/base/export/get_fields", { model: self.dataset.model, params: params}, self.on_show_data);
+                self.rpc("/base/export/get_fields", {
+                    model: self.dataset.model,
+                    params: { import_compat: parseInt(import_comp, 10) }
+                }, function (records) {
+                    got_fields.resolve();
+                    self.on_show_data(records);
+                });
             }
-        });
-        self.rpc('/base/export/formats', {}, function (formats) {
-            self.setup_export_formats(formats);
-        });
+        }).change();
+
+        return $.when(
+            got_fields,
+            this.rpc('/base/export/formats', {}, this.do_setup_export_formats),
+            this.show_exports_list());
     },
-    setup_export_formats: function (formats) {
+    do_setup_export_formats: function (formats) {
         var $fmts = this.$element.find('#export_format');
         _(formats).each(function (format) {
             $fmts.append(new Option(format[1], format[0]));
         });
     },
-    on_show_exists_export_list: function() {
+    show_exports_list: function() {
         var self = this;
         if (self.$element.find('#saved_export_list').is(':hidden')) {
             self.$element.find('#ExistsExportList').show();
             return;
         }
-        this.exports.read_slice(['name'], {
+        return this.exports.read_slice(['name'], {
             domain: [['resource', '=', this.dataset.model]]
         }, function (export_list) {
             if (!export_list.length) {
@@ -155,10 +153,10 @@ openerp.base.DataExport = openerp.base.Dialog.extend({
                 self.$element.find("#saved_export_list").append(
                         new Option(value, export_list_id));
             } else {
-                self.on_show_exists_export_list();
+                self.show_exports_list();
             }
             if (self.$element.find("#saved_export_list").is(":hidden")) {
-                self.on_show_exists_export_list();
+                self.show_exports_list();
             }
         });
         this.on_show_save_list();
