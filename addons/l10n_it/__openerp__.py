@@ -3,11 +3,14 @@
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2010
-#    Italian OpenERP Community (<http://www.openerp-italia.org>)
+#    OpenERP Italian Community (<http://www.openerp-italia.org>)
 #    Servabit srl
 #    Agile Business Group sagl
 #    Domsense srl
 #    Albatos srl
+#
+#    Copyright (C) 2011
+#    Associazione OpenERP Italia (<http://www.openerp-italia.org>)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -39,9 +42,6 @@ Italian accounting chart and localization.
     "category" : "Finance",
     'website': 'http://www.openerp-italia.org/',
     'init_xml': [
-        'report.xml',
-        'libroIVA_view.xml',
-        'libroIVA_menu.xml',
         ],
     'update_xml': [
         'data/account.account.type.csv',
@@ -51,7 +51,6 @@ Italian accounting chart and localization.
         'data/account.tax.template.csv',
         'data/account.fiscal.position.template.csv',
         'l10n_chart_it_generic.xml',
-        'security/ir.model.access.csv',
         ],
     'demo_xml': [
         ],
