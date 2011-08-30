@@ -692,7 +692,7 @@ class mrp_repair_line(osv.osv, ProductChangeMixin):
         @param guarantee_limit: Guarantee limit of current record.
         @return: Dictionary of values.
         """
-        wrehouse_obj = self.pool.get('stock.warehouse')
+        warehouse_obj = self.pool.get('stock.warehouse')
         if not type:
             return {'value': {
                 'location_id': False,
@@ -711,7 +711,7 @@ class mrp_repair_line(osv.osv, ProductChangeMixin):
             
         if ids:
             company_id = self.browse(cr, uid, ids[0]).repair_id.company_id.id
-            stock_id = wrehouse_obj.browse(cr, uid, company_id).lot_input_id.id
+            stock_id = warehouse_obj.browse(cr, uid, company_id).lot_input_id.id
             to_invoice = (guarantee_limit and
                           datetime.strptime(guarantee_limit, '%Y-%m-%d') < datetime.now())
             return {'value': {
