@@ -1259,7 +1259,7 @@ class orm_template(object):
                     else:
                         translated_msg = tmp_msg
                 else:
-                    translated_msg = trans._get_source(cr, uid, self._name, 'constraint', lng, source=msg) or msg
+                    translated_msg = trans._get_source(cr, uid, self._name, 'constraint', lng, msg) or msg
                 error_msgs.append(
                         _("Error occurred while validating the field(s) %s: %s") % (','.join(fields), translated_msg)
                 )
@@ -2177,7 +2177,7 @@ class orm_template(object):
     def read_string(self, cr, uid, id, langs, fields=None, context=None):
         res = {}
         res2 = {}
-        self.pool.get('ir.model.access').check(cr, uid, 'ir.translation', 'read', context=context)
+        self.pool.get('ir.model.access').check(cr, uid, 'ir.translation', 'read')
         if not fields:
             fields = self._columns.keys() + self._inherit_fields.keys()
         #FIXME: collect all calls to _get_source into one SQL call.
@@ -2201,7 +2201,7 @@ class orm_template(object):
         return res
 
     def write_string(self, cr, uid, id, langs, vals, context=None):
-        self.pool.get('ir.model.access').check(cr, uid, 'ir.translation', 'write', context=context)
+        self.pool.get('ir.model.access').check(cr, uid, 'ir.translation', 'write')
         #FIXME: try to only call the translation in one SQL
         for lang in langs:
             for field in vals:
@@ -2245,6 +2245,18 @@ class orm_template(object):
             defaults.update(values)
             values = defaults
         return values
+
+    def clear_caches(self):
+        """ Clear the caches
+
+        This clears the caches associated to methods decorated with
+        ``tools.ormcache`` or ``tools.ormcache_multi``.
+        """
+        try:
+            getattr(self, '_ormcache')
+            self._ormcache = {}
+        except AttributeError:
+            pass
 
 class orm_memory(orm_template):
 
@@ -2511,7 +2523,7 @@ class orm(orm_template):
 
         """
         context = context or {}
-        self.pool.get('ir.model.access').check(cr, uid, self._name, 'read', context=context)
+        self.pool.get('ir.model.access').check(cr, uid, self._name, 'read')
         if not fields:
             fields = self._columns.keys()
 
@@ -3393,14 +3405,14 @@ class orm(orm_template):
 
         """
         ira = self.pool.get('ir.model.access')
-        write_access = ira.check(cr, user, self._name, 'write', raise_exception=False, context=context) or \
-                       ira.check(cr, user, self._name, 'create', raise_exception=False, context=context)
+        write_access = ira.check(cr, user, self._name, 'write', False) or \
+                       ira.check(cr, user, self._name, 'create', False)
         return super(orm, self).fields_get(cr, user, fields, context, write_access)
 
     def read(self, cr, user, ids, fields=None, context=None, load='_classic_read'):
         if not context:
             context = {}
-        self.pool.get('ir.model.access').check(cr, user, self._name, 'read', context=context)
+        self.pool.get('ir.model.access').check(cr, user, self._name, 'read')
         if not fields:
             fields = list(set(self._columns.keys() + self._inherit_fields.keys()))
         if isinstance(ids, (int, long)):
@@ -3686,7 +3698,7 @@ class orm(orm_template):
 
         self._check_concurrency(cr, ids, context)
 
-        self.pool.get('ir.model.access').check(cr, uid, self._name, 'unlink', context=context)
+        self.pool.get('ir.model.access').check(cr, uid, self._name, 'unlink')
 
         properties = self.pool.get('ir.property')
         domain = [('res_id', '=', False),
@@ -3823,7 +3835,7 @@ class orm(orm_template):
             ids = [ids]
 
         self._check_concurrency(cr, ids, context)
-        self.pool.get('ir.model.access').check(cr, user, self._name, 'write', context=context)
+        self.pool.get('ir.model.access').check(cr, user, self._name, 'write')
 
         result = self._store_get_values(cr, user, ids, vals.keys(), context) or []
 
@@ -4032,7 +4044,7 @@ class orm(orm_template):
         """
         if not context:
             context = {}
-        self.pool.get('ir.model.access').check(cr, user, self._name, 'create', context=context)
+        self.pool.get('ir.model.access').check(cr, user, self._name, 'create')
 
         vals = self._add_missing_default_values(cr, user, vals, context)
 
@@ -4488,7 +4500,7 @@ class orm(orm_template):
         """
         if context is None:
             context = {}
-        self.pool.get('ir.model.access').check(cr, access_rights_uid or user, self._name, 'read', context=context)
+        self.pool.get('ir.model.access').check(cr, access_rights_uid or user, self._name, 'read')
 
         query = self._where_calc(cr, user, args, context=context)
         self._apply_ir_rules(cr, user, query, 'read', context=context)

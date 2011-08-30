@@ -77,6 +77,15 @@ class Registry(object):
 
         return res
 
+    def clear_caches():
+        """ Clear the caches
+
+        This clears the caches associated to methods decorated with
+        ``tools.ormcache`` or ``tools.ormcache_multi`` for all the models.
+        """
+        for model in self.models.itervalues():
+            model.clear_caches()
+
 
 class RegistryManager(object):
     """ Model registries manager.
@@ -148,6 +157,21 @@ class RegistryManager(object):
         """ Delete the registry linked to a given database. """
         if db_name in cls.registries:
             del cls.registries[db_name]
+
+
+    @classmethod
+    def clear_caches(db_name):
+        """ Clear the caches
+
+        This clears the caches associated to methods decorated with
+        ``tools.ormcache`` or ``tools.ormcache_multi`` for all the models
+        of the given database name.
+
+        This method is given to spare you a ``RegistryManager.get(db_name)``
+        that would loads the given database if it was not already loaded.
+        """
+        if db_name in cls.registries:
+            cls.registries[db_name].clear_caches()
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
