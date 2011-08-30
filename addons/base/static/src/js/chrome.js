@@ -630,16 +630,17 @@ openerp.base.Header =  openerp.base.Widget.extend({
         var action_manager = new openerp.base.ActionManager(this);
         var dataset = new openerp.base.DataSet (this,'res.users',this.context);
         dataset.call ('action_get','',function (result){self.rpc('/base/action/load', {action_id:result}, function(result){
-                result['result']['res_id'] = self.session.uid;
-                result['result']['res_model']= 'res.users';
-                result['result']['view_id']=result['result']['views'][0][0];
-                result['result']['flags']['action_buttons']=false;
-                result['result']['flags']['search_view']=false;
-                result['result']['flags']['sidebar']=false;
-                result['result']['view_mode']="form";
-                result['result']['flags']['views_switcher']=false;
-                result['result']['flags']['pager']=false;
-                action_manager.do_action(result['result']);
+                var action = result['result'];
+                action['res_id'] = self.session.uid;
+                action['res_model']= 'res.users';
+                action['view_id']=result['result']['views'][0][0];
+                action['flags']['action_buttons']=false;
+                action['flags']['search_view']=false;
+                action['flags']['sidebar']=false;
+                action['view_mode']="form";
+                action['flags']['views_switcher']=false;
+                action['flags']['pager']=false;
+                action_manager.do_action(action);
             });
         });
         this.dialog = new openerp.base.Dialog(this,{
@@ -659,12 +660,11 @@ openerp.base.Header =  openerp.base.Widget.extend({
                     inner_viewmanager.views[inner_viewmanager.active_view].controller.do_save(function(){
                         inner_viewmanager.start();
                     });
-                    $(this).dialog('destroy');
-                },
-            },
+                    $(this).dialog('destroy')
+                }
+            }
         });
-       this.dialog.start();
-       this.dialog.open();
+       this.dialog.start().open();
        action_manager.appendTo(this.dialog);
        action_manager.render(this.dialog);
     },
@@ -677,19 +677,25 @@ openerp.base.Header =  openerp.base.Widget.extend({
             width : 'auto',
             height : 'auto',
         });
-        this.dialog.start();
-        this.dialog.open();
+        this.dialog.start().open();
         this.dialog.$element.html(QWeb.render("Change_Pwd", self));
         this.dialog.$element.find("form[name=change_password_form]").validate({
             submitHandler: function (form) {
-                console.log('form',form)
                 self.rpc("/base/session/change_password",{
                     'fields': $(form).serializeArray()
-                }, function(result) {
-                    if (result.error) {
-                        self.display_error(result);
+                        }, function(result) {
+                         if (result.error) {
+                            self.display_error(result);
                         return;
-                    };
+                        }
+                        else {
+                            if (result.new_password) {
+                                self.session.password = result.new_password;
+                                var session = new openerp.base.Session(self.session.server, self.session.port);
+                                session.start();
+                                session.session_login(self.session.db, self.session.login, self.session.password)
+                            }
+                        }
                     self.notification.notify("Changed Password", "Password has been changed successfully");
                     self.dialog.close();
                 });

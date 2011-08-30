@@ -304,11 +304,10 @@ class Session(openerpweb.Controller):
         try:
             if req.session.model('res.users').change_password(
                 old_password, new_password):
-                req.session.password = new_password;
-                return dict(changed=True)
+                return {'new_password':new_password}
         except:
             return {'error': 'Original password incorrect, your password was not changed.', 'title': 'Change Password'}
-            
+        return {'error': 'Error, password not changed !', 'title': 'Change Password'}
     @openerpweb.jsonrequest
     def sc_list(self, req):
         return req.session.model('ir.ui.view_sc').get_sc(
