@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-06-03 06:00+0000\n"
-"X-Generator: Launchpad (build 12959)\n"
+"X-Launchpad-Export-Date: 2011-08-30 05:44+0000\n"
+"X-Generator: Launchpad (build 13794)\n"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -35,6 +35,17 @@ msgid ""
 "* The 'Done' state is set when repairing is completed.            \n"
 "* The 'Cancelled' state is used when user cancel repair order."
 msgstr ""
+" * 'Taslak' durumu, bir kullanıcı yeni ve onaylanmamış bir onarım siparişi "
+"girerken kullanılır.             \n"
+"* 'Onaylı' durumu, bir kullanıcı bir onarım siparişini onaylarken "
+"kullanılır.             \n"
+"* 'Onarıma Hazır' durumu, kullanıcı onarıma başlarken kullanılır, kullanıcı "
+"ancak onarım siparişi onaylandıktan sonra onarıma başlayabilir.             "
+"\n"
+"* 'Faturalandırılacak' durumu, onarımdan önce ya da sonra fatura oluşturmak "
+"için kullanılır.             \n"
+"* 'Bitti' durumu, onarım bittiğinde kullanılır.            \n"
+"* 'İptal' durumu, onarım siparişi iptal edildiğinde kullanılır."
 
 #. module: mrp_repair
 #: field:mrp.repair.line,move_id:0
@@ -50,11 +61,16 @@ msgid ""
 "date on the production lot in order to know if whether the repair should be "
 "invoiced to the customer or not."
 msgstr ""
+"Onarım siparişleri ürün onarımlarınızı düzenlemenizi sağlar. Bir onarım "
+"siparişinde, kaldırılacak bileşenleri ayrıntılayabilir, farklı işlemler için "
+"harcadığınız süreleri ekleyebilir, çıkarabilir ve kayıt edebilirsiniz. "
+"Onarım siparişi, müşteriye kesilip kesilmeyeceğini belirlemek için ürün "
+"partisine ait garanti tarihini kullanır."
 
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Group By..."
-msgstr "Gruplandır..."
+msgstr "Şuna göre grupla"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -69,6 +85,9 @@ msgid ""
 "that you can select the locations in the Info tab, if you have the extended "
 "view."
 msgstr ""
+"Bu kutuyu, ürün onarılır onarılmaz teslimatı yapmak isterseniz işaretleyin. "
+"İşaretlenirse, seçilen ürün için toplama oluşturulacaktır. Genişletilmiş "
+"görünümdeyseniz, Bilgi Sekmesinde konumları seçebileceğinize dikkat edin."
 
 #. module: mrp_repair
 #: model:ir.actions.act_window,name:mrp_repair.action_cancel_repair
@@ -80,7 +99,7 @@ msgstr "Onarım Siparişini İptal Et"
 #: field:mrp.repair.fee,to_invoice:0
 #: field:mrp.repair.line,to_invoice:0
 msgid "To Invoice"
-msgstr "Fatura Adresi"
+msgstr "Faturalandırılacak"
 
 #. module: mrp_repair
 #: report:repair.order:0
@@ -90,7 +109,7 @@ msgstr "Yazdırma Tarihi"
 #. module: mrp_repair
 #: field:mrp.repair.make_invoice,group:0
 msgid "Group by partner invoice address"
-msgstr "Cari Fatura Adreslerine göre Gruplandı"
+msgstr "Paydaş Fatura Adreslerine göre Gruplandır"
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/mrp_repair.py:430
@@ -101,7 +120,7 @@ msgstr "Ücretlerde tanımlanmış ürün yok!"
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Set to Draft"
-msgstr "Taslak olarak Ayarla"
+msgstr "Taslağa  Ayarla"
 
 #. module: mrp_repair
 #: selection:mrp.repair,state:0
@@ -124,7 +143,7 @@ msgstr "Fatura Oluştur"
 #: field:mrp.repair.fee,price_subtotal:0
 #: field:mrp.repair.line,price_subtotal:0
 msgid "Subtotal"
-msgstr "Alt Toplam"
+msgstr "Ara Toplam"
 
 #. module: mrp_repair
 #: report:repair.order:0
@@ -134,7 +153,7 @@ msgstr "Fatura Adresi:"
 #. module: mrp_repair
 #: field:mrp.repair,guarantee_limit:0
 msgid "Guarantee limit"
-msgstr "Garanti limiti"
+msgstr "Garanti sınırı"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -154,13 +173,22 @@ msgid ""
 "           * Repair quotation report\n"
 "           * Notes for the technician and for the final customer\n"
 msgstr ""
+"\n"
+"           Amaç, bütün ürün onarımlarını yapmak için tam bir modül elde "
+"etmektir. Aşağıdaki konular bu modülün kapsamındadır:\n"
+"           * Onarımdaki ürünleri ekle/kaldır\n"
+"           * Stokları etkile\n"
+"           * Faturalama (ürünler ve/veya hizmetler)\n"
+"           * Garanti kavramı\n"
+"           * Onarım teklifi raporu\n"
+"           * Teknisyen ve son müşteri için notlar\n"
 
 #. module: mrp_repair
 #: field:mrp.repair,amount_tax:0
 #: field:mrp.repair.fee,tax_id:0
 #: field:mrp.repair.line,tax_id:0
 msgid "Taxes"
-msgstr "Vergi"
+msgstr "Vergiler"
 
 #. module: mrp_repair
 #: report:repair.order:0
@@ -181,7 +209,7 @@ msgstr "KDV"
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Operations"
-msgstr "Operasyonlar"
+msgstr "İşlemler"
 
 #. module: mrp_repair
 #: field:mrp.repair,move_id:0
@@ -198,7 +226,7 @@ msgstr "Onarım formundan bir Paydaş Adresi seçmelisiniz !"
 #: model:ir.actions.act_window,name:mrp_repair.action_repair_order_tree
 #: model:ir.ui.menu,name:mrp_repair.menu_repair_order
 msgid "Repair Orders"
-msgstr "Onarım Emirleri"
+msgstr "Onarım Siparişleri"
 
 #. module: mrp_repair
 #: model:ir.actions.report.xml,name:mrp_repair.report_mrp_repair
@@ -214,7 +242,7 @@ msgstr "Uyarı"
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Extra Info"
-msgstr "Extra Bilgi"
+msgstr "Ek Bilgi"
 
 #. module: mrp_repair
 #: field:mrp.repair.fee,repair_id:0
@@ -243,19 +271,19 @@ msgstr "Onaylandı"
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Repairs order"
-msgstr "Onarım Emri"
+msgstr "Onarım Siparişi"
 
 #. module: mrp_repair
 #: report:repair.order:0
 msgid "Repair Order N° :"
-msgstr "Onarım Emri N° :"
+msgstr "Onarım Siparişi N° :"
 
 #. module: mrp_repair
 #: field:mrp.repair,prodlot_id:0
 #: field:mrp.repair.line,prodlot_id:0
 #: report:repair.order:0
 msgid "Lot Number"
-msgstr "Lot Numarası"
+msgstr "Parti Numarası"
 
 #. module: mrp_repair
 #: field:mrp.repair,fees_lines:0
@@ -265,7 +293,7 @@ msgstr "Ücret Kalemleri"
 #. module: mrp_repair
 #: field:mrp.repair.line,type:0
 msgid "Type"
-msgstr "Tipi"
+msgstr "Tür"
 
 #. module: mrp_repair
 #: report:repair.order:0
@@ -293,7 +321,7 @@ msgstr "Hata !"
 #. module: mrp_repair
 #: field:mrp.repair.line,product_uom_qty:0
 msgid "Quantity (UoM)"
-msgstr "Miktar (Birim)"
+msgstr "Miktar (Ölçü Birimi)"
 
 #. module: mrp_repair
 #: help:mrp.repair.line,state:0
@@ -306,6 +334,14 @@ msgid ""
 "                  \n"
 "* The 'Cancelled' state is set automatically when user cancel repair order."
 msgstr ""
+" * 'Taslak' durumu, onarım siparişi taslak durumundayken otomatik olarak "
+"ayarlanır.                         \n"
+"* 'Onaylı' durumu, onarım siparişi onaylı durumdayken otomatik olarak "
+"ayarlanır.                         \n"
+"* 'Done' durumu, onarım siparişi tamamlandığında otomatik olarak ayarlanır.  "
+"                      \n"
+"* 'Cancelled' durumu, kullanıcı onarım siparişini iptal ettiğinde otomatik "
+"olarak ayarlanır."
 
 #. module: mrp_repair
 #: report:repair.order:0
@@ -358,7 +394,7 @@ msgstr "Onarım Kalemi"
 #: view:mrp.repair:0
 #: field:mrp.repair,partner_id:0
 msgid "Partner"
-msgstr "Ortak"
+msgstr "Paydaş"
 
 #. module: mrp_repair
 #: field:mrp.repair,invoice_method:0
@@ -400,7 +436,7 @@ msgstr "Onarım Öncesi"
 #. module: mrp_repair
 #: field:mrp.repair,location_id:0
 msgid "Current Location"
-msgstr "Geçerli Lokasyon"
+msgstr "Geçerli Konum"
 
 #. module: mrp_repair
 #: view:mrp.repair.cancel:0
@@ -417,7 +453,7 @@ msgstr "Faturalandı"
 #. module: mrp_repair
 #: view:mrp.repair.cancel:0
 msgid "No"
-msgstr "Hayır"
+msgstr "No"
 
 #. module: mrp_repair
 #: view:mrp.repair.make_invoice:0
@@ -452,7 +488,7 @@ msgstr "Onarım Siparişi"
 #. module: mrp_repair
 #: selection:mrp.repair,state:0
 msgid "Under Repair"
-msgstr "Onarımdakiler"
+msgstr "Onarımda"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -462,23 +498,23 @@ msgstr "Onarıma Hazır"
 #. module: mrp_repair
 #: field:mrp.repair,amount_untaxed:0
 msgid "Untaxed Amount"
-msgstr "Tutar"
+msgstr "Vergisiz Tutar"
 
 #. module: mrp_repair
 #: report:repair.order:0
 msgid "Guarantee Limit"
-msgstr "Garanti Limiti"
+msgstr "Garanti Sınırı"
 
 #. module: mrp_repair
 #: field:mrp.repair,default_address_id:0
 msgid "unknown"
-msgstr "Bilinmeyen"
+msgstr "bilinmeyen"
 
 #. module: mrp_repair
 #: field:mrp.repair,product_id:0
 #: report:repair.order:0
 msgid "Product to Repair"
-msgstr "Ürün Onarımı"
+msgstr "Onarılacak Ürün"
 
 #. module: mrp_repair
 #: report:repair.order:0
@@ -488,7 +524,7 @@ msgstr "N° :"
 #. module: mrp_repair
 #: help:mrp.repair,pricelist_id:0
 msgid "The pricelist comes from the selected partner, by default."
-msgstr "Fiyat Listesi, varsayılan olarak seçilen paydaştan gelir."
+msgstr "Fiyat Listesi, varsayılan olarak seçilen paydaşa aittir."
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -513,7 +549,7 @@ msgstr "Hesapla"
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Confirm Repair"
-msgstr "Düzeltmeyi Onayla"
+msgstr "Onarımı Onayla"
 
 #. module: mrp_repair
 #: report:repair.order:0
@@ -581,6 +617,10 @@ msgid ""
 "operation and fee you will add will be set as 'not to invoiced' by default. "
 "Note that you can change manually afterwards."
 msgstr ""
+"Garanti sınırı şöyle hesaplanır: son işlem tarihi + seçilen ürüne ait "
+"tanımlı garanti. Eğer geçerli tarih garanti sınırının altındaysa, "
+"ekleyeceğiniz her işlem ve ücret varsayılan olarak faturalandırılmayacak "
+"olarak işaretlenir. Daha sonra el ile değiştirebileceğinizi unutmayın."
 
 #. module: mrp_repair
 #: field:mrp.repair,invoice_id:0
@@ -596,12 +636,12 @@ msgstr "Ücretler"
 #: selection:mrp.repair,state:0
 #: view:mrp.repair.make_invoice:0
 msgid "Cancel"
-msgstr "İptal"
+msgstr "Vazgeç"
 
 #. module: mrp_repair
 #: field:mrp.repair.line,location_dest_id:0
 msgid "Dest. Location"
-msgstr "Hedef Lokasyon"
+msgstr "Hedef Konum"
 
 #. module: mrp_repair
 #: report:repair.order:0
@@ -611,12 +651,12 @@ msgstr "Operasyon Kalemi (leri)"
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "History"
-msgstr "Geçmiş Bilgisi"
+msgstr "Geçmiş"
 
 #. module: mrp_repair
 #: field:mrp.repair,location_dest_id:0
 msgid "Delivery Location"
-msgstr "Teslimat Lokasyonu"
+msgstr "Teslimat Konumu"
 
 #. module: mrp_repair
 #: help:mrp.repair,invoice_method:0
@@ -625,6 +665,9 @@ msgid ""
 "selected is different from 'No Invoice', it also allow you to select the "
 "pricelist and invoicing address."
 msgstr ""
+"Bu alan, sipariş emrine ait işakışını değiştirmenizi sağlar. Seçilen değer "
+"'Faturasız' dan farklı ise, fiyat listesi ve fatura adresi seçmenize izin "
+"verir."
 
 #. module: mrp_repair
 #: view:mrp.repair.make_invoice:0
@@ -641,7 +684,7 @@ msgstr "Açıklama"
 #. module: mrp_repair
 #: field:mrp.repair,operations:0
 msgid "Operation Lines"
-msgstr "Operasyon Kalemleri"
+msgstr "İşlem Kalemleri"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -668,13 +711,13 @@ msgstr "Fiyat"
 #. module: mrp_repair
 #: field:mrp.repair,deliver_bool:0
 msgid "Deliver"
-msgstr "Teslimat"
+msgstr "Teslim Et"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
 #: field:mrp.repair,internal_notes:0
 msgid "Internal Notes"
-msgstr "Dahili Notlar"
+msgstr "İç Notlar"
 
 #. module: mrp_repair
 #: report:repair.order:0
@@ -684,18 +727,18 @@ msgstr "Vergi:"
 #. module: mrp_repair
 #: field:mrp.repair,picking_id:0
 msgid "Picking"
-msgstr "Alım"
+msgstr "Toplama"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Untaxed amount"
-msgstr "Tutar"
+msgstr "Vergisiz Tutar"
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/wizard/cancel_repair.py:41
 #, python-format
 msgid "Active ID is not Found"
-msgstr "Etkin No Bulnmadı"
+msgstr "Etkin No Bulunmadı"
 
 #. module: mrp_repair
 #: code:addons/mrp_repair/wizard/cancel_repair.py:49
@@ -711,7 +754,7 @@ msgstr "Toplam Tutar"
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "UoM"
-msgstr "Birim"
+msgstr "Ölçü Birimi"
 
 #. module: mrp_repair
 #: selection:mrp.repair.line,type:0

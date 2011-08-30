@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-25 06:39+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-08-30 05:31+0000\n"
+"X-Generator: Launchpad (build 13794)\n"
 
 #. module: event
 #: view:event.event:0
@@ -96,6 +96,8 @@ msgid ""
 "event. Note that you can specify for each registration a specific amount if "
 "you want to"
 msgstr ""
+"Ez lesz az alapértelmezett regisztrációs díj a rendezvény számlázása esetén. "
+"Ha úgy kívánja, minden regisztrációra más összeget határozhat meg."
 
 #. module: event
 #: selection:report.event.registration,month:0
@@ -112,6 +114,8 @@ msgstr "Megerősítő e-mail"
 #, python-format
 msgid "Registration doesn't have any partner to invoice."
 msgstr ""
+"A regisztrációhoz nem adott meg partnert, akinek a nevére a számlát "
+"kiállíthatná."
 
 #. module: event
 #: field:event.event,company_id:0
@@ -154,7 +158,7 @@ msgstr "Számla készítése"
 #. module: event
 #: field:event.registration,price_subtotal:0
 msgid "Subtotal"
-msgstr ""
+msgstr "Érték"
 
 #. module: event
 #: view:report.event.registration:0
@@ -326,6 +330,9 @@ msgid ""
 "Thus it allows you to set the default label and the accounting info you want "
 "by default on these invoices."
 msgstr ""
+"A rendezvény regisztráció számláiban ez a termék kerül kiszámlázásra. Ez "
+"lehetővé teszi a számlákon megjelenítendő alapértelmezett megnevezések és "
+"könyvelési információk beállítását."
 
 #. module: event
 #: view:event.registration:0
@@ -422,6 +429,7 @@ msgstr "Regisztráció törlése"
 #, python-format
 msgid "Registered partner doesn't have an address to make the invoice."
 msgstr ""
+"A regisztrált partnernek nincs címe, amelyre a számlát ki lehetne állítani."
 
 #. module: event
 #: field:event.registration,nb_register:0
@@ -533,7 +541,7 @@ msgstr ""
 #. module: event
 #: field:event.make.invoice,grouped:0
 msgid "Group the invoices"
-msgstr "Számlák csoportja"
+msgstr "Számlák összevonása"
 
 #. module: event
 #: view:event.event:0
@@ -554,7 +562,7 @@ msgstr "Meg nem erősített regisztrációk"
 #. module: event
 #: field:event.registration,partner_invoice_id:0
 msgid "Partner Invoiced"
-msgstr "Partner számlái"
+msgstr "Partner, akinek számlázunk"
 
 #. module: event
 #: field:event.registration,log_ids:0
@@ -569,7 +577,7 @@ msgstr "Naplók"
 #: view:report.event.registration:0
 #: field:report.event.registration,state:0
 msgid "State"
-msgstr ""
+msgstr "Állapot"
 
 #. module: event
 #: selection:report.event.registration,month:0
@@ -658,7 +666,7 @@ msgstr "Előadók"
 #. module: event
 #: view:event.make.invoice:0
 msgid "Create invoices"
-msgstr "Számlák létrehozása"
+msgstr "Számlák készítése"
 
 #. module: event
 #: help:event.registration,email_cc:0
@@ -676,7 +684,7 @@ msgstr "Hiba! Nem hozhat létre rekurzív társult tagokat."
 #. module: event
 #: view:event.make.invoice:0
 msgid "Do you really want to create the invoice(s) ?"
-msgstr "Valóban létre akarja hozni a számlá(ka)t ?"
+msgstr "Valóban el akarja készíteni a számlá(ka)t?"
 
 #. module: event
 #: view:event.event:0
@@ -686,7 +694,7 @@ msgstr "Kezdés időpontja"
 #. module: event
 #: field:event.registration,date_closed:0
 msgid "Closed"
-msgstr "lezárt"
+msgstr "Lezárt"
 
 #. module: event
 #: view:event.event:0
@@ -752,7 +760,7 @@ msgstr ""
 #. module: event
 #: field:event.registration,active:0
 msgid "Active"
-msgstr "aktív"
+msgstr "Aktív"
 
 #. module: event
 #: selection:report.event.registration,month:0
@@ -777,7 +785,7 @@ msgstr "Október"
 #. module: event
 #: help:event.event,register_current:0
 msgid "Total of Open and Done Registrations"
-msgstr ""
+msgstr "A nyitott és a kész regisztrációk összege."
 
 #. module: event
 #: field:event.event,language:0
@@ -803,7 +811,7 @@ msgstr "Ezek az emberek fogják megkapni az e-mailt."
 #. module: event
 #: view:event.event:0
 msgid "Set To Draft"
-msgstr "Piszkozat"
+msgstr "Beállítás tervezetnek"
 
 #. module: event
 #: code:addons/event/event.py:472
@@ -857,7 +865,7 @@ msgstr "Mellékletek"
 #: code:addons/event/wizard/event_make_invoice.py:59
 #, python-format
 msgid "Event related doesn't have any product defined"
-msgstr ""
+msgstr "A kapcsolódó rendezvényhez nem határoztak meg terméket."
 
 #. module: event
 #: view:event.event:0
@@ -1076,7 +1084,7 @@ msgstr "Rendezvény kezdő időpontja"
 #. module: event
 #: selection:event.registration,state:0
 msgid "Unconfirmed"
-msgstr "Nincs megerődítve"
+msgstr "Nincs megerősítve"
 
 #. module: event
 #: code:addons/event/event.py:542
@@ -1123,7 +1131,7 @@ msgstr "Ország"
 #: code:addons/event/wizard/event_make_invoice.py:55
 #, python-format
 msgid "Registration is set as Cannot be invoiced"
-msgstr ""
+msgstr "A regisztráció nem számlázhatóként került beállításra."
 
 #. module: event
 #: code:addons/event/event.py:500
@@ -1165,7 +1173,7 @@ msgstr "Regisztrációk"
 #. module: event
 #: field:event.registration,date:0
 msgid "Start Date"
-msgstr "Kezdődátum"
+msgstr "Kezdő dátum"
 
 #. module: event
 #: field:event.event,register_max:0
@@ -1193,6 +1201,7 @@ msgstr "Rendezvény regisztráció"
 #, python-format
 msgid "Invoice cannot be created if the registration is in %s state."
 msgstr ""
+"A számlát nem lehet elkészíteni, ha a regisztráció %s állapotban van."
 
 #. module: event
 #: view:event.confirm:0

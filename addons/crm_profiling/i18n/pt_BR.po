@@ -13,13 +13,13 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-25 06:36+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-08-30 05:28+0000\n"
+"X-Generator: Launchpad (build 13794)\n"
 
 #. module: crm_profiling
 #: view:crm_profiling.questionnaire:0
 msgid "Questions List"
-msgstr ""
+msgstr "Lista de Perguntas"
 
 #. module: crm_profiling
 #: model:ir.module.module,description:crm_profiling.module_meta_information
@@ -41,6 +41,23 @@ msgid ""
 "since it's the same which has been renamed.\n"
 "    "
 msgstr ""
+"\n"
+"    Este módulo permite que usuários executem a segmentação entre os "
+"parceiros.\n"
+"    Ele usa os critérios de perfil a partir do Módulo de segmentação "
+"anterior e melhorá-lo. Graças ao novo conceito de questionário.              "
+"          Agora você pode agrupar as questões em um questionário e usá-lo "
+"diretamente em um parceiro.\n"
+"\n"
+"    Ele também foi fundido com a ferramenta de segmentação anterior CRM SRM "
+"porque estavam sobrepostas.\n"
+"\n"
+"    Os itens do menu estão relacionadas em \"CRM e SRM \\ Configuration \\ "
+"Segmentações\"\n"
+"\n"
+"    * Nota: este módulo não é compatível com o módulo de segmentação, já que "
+"é o mesmo que foi renomeado\n"
+"    "
 
 #. module: crm_profiling
 #: model:ir.actions.act_window,help:crm_profiling.open_questionnaires
@@ -50,6 +67,11 @@ msgid ""
 "segmentation tool allows you to automatically assign a partner to a category "
 "according to his answers to the different questionnaires."
 msgstr ""
+"Você pode criar questionários específicos relacionados a tópicos para "
+"orientação da sua equipe (s) no ciclo de vendas, ajudando-os a fazerem as "
+"perguntas certas. A ferramenta de segmentação permite atribuir "
+"automaticamente um parceiro à uma categoria, de acordo com suas respostas "
+"aos diferentes questionários."
 
 #. module: crm_profiling
 #: field:crm_profiling.answer,question_id:0
@@ -66,7 +88,7 @@ msgstr "Abrir questionário"
 #. module: crm_profiling
 #: constraint:res.partner:0
 msgid "Error ! You can not create recursive associated members."
-msgstr ""
+msgstr "Erro ! Você não pode criar membros associados recursivos."
 
 #. module: crm_profiling
 #: view:crm.segmentation:0
@@ -77,12 +99,12 @@ msgstr "Segmentações de Parceiros"
 #: field:crm_profiling.answer,name:0
 #: model:ir.model,name:crm_profiling.model_crm_profiling_answer
 msgid "Answer"
-msgstr "Responder"
+msgstr "Resposta"
 
 #. module: crm_profiling
 #: model:ir.model,name:crm_profiling.model_crm_segmentation
 msgid "Partner Segmentation"
-msgstr ""
+msgstr "Segmentação de Parceiros"
 
 #. module: crm_profiling
 #: view:res.partner:0
@@ -92,7 +114,7 @@ msgstr "Criação de perfil"
 #. module: crm_profiling
 #: model:ir.module.module,shortdesc:crm_profiling.module_meta_information
 msgid "Crm Profiling management - To Perform Segmentation within Partners"
-msgstr ""
+msgstr "Gestão de perfis CRM - Para a segmentação dos Parceiros"
 
 #. module: crm_profiling
 #: view:crm_profiling.questionnaire:0
@@ -103,7 +125,7 @@ msgstr "Descrição"
 #. module: crm_profiling
 #: field:crm.segmentation,answer_no:0
 msgid "Excluded Answers"
-msgstr "Respostas excluídas"
+msgstr "Respostas Excluídas"
 
 #. module: crm_profiling
 #: view:crm_profiling.answer:0
@@ -115,7 +137,7 @@ msgstr "Respostas"
 #. module: crm_profiling
 #: wizard_field:open_questionnaire,init,questionnaire_name:0
 msgid "Questionnaire name"
-msgstr "Nome do questionário"
+msgstr "Nome do Questionário"
 
 #. module: crm_profiling
 #: view:res.partner:0
@@ -136,6 +158,8 @@ msgid ""
 "part of the                              segmentation rule. If not checked, "
 "the criteria beneath will be ignored"
 msgstr ""
+"Marque esta caixa se você quiser usar essa aba como parte da regra de "
+"segmentação. Se não for marcada, os critérios abaixo serão ignoradas"
 
 #. module: crm_profiling
 #: constraint:crm.segmentation:0
@@ -151,12 +175,12 @@ msgstr "Use as Regras de Criação de Perfil"
 #: view:crm_profiling.question:0
 #: field:crm_profiling.question,answers_ids:0
 msgid "Avalaible answers"
-msgstr "Respostas disponíveis"
+msgstr "Respostas Disponíveis"
 
 #. module: crm_profiling
 #: field:crm.segmentation,answer_yes:0
 msgid "Included Answers"
-msgstr "Respostas incluídas"
+msgstr "Respostas Incluídas"
 
 #. module: crm_profiling
 #: field:crm.segmentation,child_ids:0
@@ -185,7 +209,7 @@ msgstr "Cancelar"
 #. module: crm_profiling
 #: model:ir.model,name:crm_profiling.model_res_partner
 msgid "Partner"
-msgstr ""
+msgstr "Parceiro"
 
 #. module: crm_profiling
 #: code:addons/crm_profiling/crm_profiling.py:178

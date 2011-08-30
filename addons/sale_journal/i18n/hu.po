@@ -13,45 +13,45 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-25 07:04+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-08-30 05:58+0000\n"
+"X-Generator: Launchpad (build 13794)\n"
 
 #. module: sale_journal
 #: field:sale_journal.invoice.type,note:0
 msgid "Note"
-msgstr ""
+msgstr "Megjegyzés"
 
 #. module: sale_journal
 #: help:res.partner,property_invoice_type:0
 msgid "The type of journal used for sales and picking."
-msgstr ""
+msgstr "Az értékesítésre és kiszedésre használt napló típusa."
 
 #. module: sale_journal
 #: sql_constraint:sale.order:0
 msgid "Order Reference must be unique !"
-msgstr ""
+msgstr "A megrendelés hivatkozásnak egyedinek kell lennie!"
 
 #. module: sale_journal
 #: view:res.partner:0
 msgid "Invoicing"
-msgstr ""
+msgstr "Számlázás"
 
 #. module: sale_journal
 #: view:res.partner:0
 msgid "Sales & Purchases"
-msgstr ""
+msgstr "Értékesítés és beszerzés"
 
 #. module: sale_journal
 #: help:sale_journal.invoice.type,active:0
 msgid ""
 "If the active field is set to False, it will allow you to hide the invoice "
 "type without removing it."
-msgstr ""
+msgstr "Ha az aktív mező nincs bejelölve, nem használható a számlatípus."
 
 #. module: sale_journal
 #: view:sale_journal.invoice.type:0
 msgid "Notes"
-msgstr ""
+msgstr "Megjegyzések"
 
 #. module: sale_journal
 #: field:res.partner,property_invoice_type:0
@@ -85,6 +85,33 @@ msgid ""
 "    Some statistics by journals are provided.\n"
 "    "
 msgstr ""
+"\n"
+"    Az értékesítési napló modul lehetővé teszi az értékesítések és a "
+"szállítások\n"
+"    (kiszedési listák) különböző naplók közötti osztályozását.\n"
+"    Ez a modul nagyon hasznos nagyobb vállalatok számára, amelyek osztályok\n"
+"    szerint épülnek fel.\n"
+"\n"
+"    Különböző célokra használhatják a naplót, például:\n"
+"    * különböző osztályok értékesítésének elkülönítésére\n"
+"    * kamionos vagy UPS által végzett szállítások szétválasztására\n"
+"\n"
+"    A naplónak felelőse van, és a napló különböző állapotokban lehet:\n"
+"    * tervezet, nyitott, törölt, kész.\n"
+"\n"
+"    A naplókon kötegelt műveleteket lehet végrehajtani, pl. minden "
+"értékesítés\n"
+"    egyszerre történő jóváhagyása, kiszedések jóváhagyása vagy számlázása, "
+"stb.\n"
+"\n"
+"    A modul támogatja a kötegelt számlázást is, amely partnerekre vagy "
+"vevői\n"
+"    megrendelésekre állítható be, pl.:\n"
+"    * napi számlázás\n"
+"    * havi számlázás, stb\n"
+"\n"
+"    A naplókról néhány statisztikát is elérhetővé tesz a modul.\n"
+"    "
 
 #. module: sale_journal
 #: selection:sale_journal.invoice.type,invoicing_method:0
@@ -94,12 +121,12 @@ msgstr "Nem csoportosított"
 #. module: sale_journal
 #: selection:sale_journal.invoice.type,invoicing_method:0
 msgid "Grouped"
-msgstr ""
+msgstr "Csoportosított"
 
 #. module: sale_journal
 #: constraint:res.partner:0
 msgid "Error ! You can not create recursive associated members."
-msgstr ""
+msgstr "Hiba! Nem hozhat létre rekurzív társult tagokat."
 
 #. module: sale_journal
 #: model:ir.actions.act_window,help:sale_journal.action_definition_journal_invoice_type
@@ -108,6 +135,10 @@ msgid ""
 "can create a specific invoicing journal to group your invoicing according to "
 "your customer's needs: daily, each Wednesday, monthly, etc."
 msgstr ""
+"A számlatípusok partnerek, vevői megrendelések és szállítólevek esetében "
+"használhatóak. Létrehozhat egy speciális számlázási naplót, hogy a vevő "
+"igényeinek megfelelően csoportosítsa a számlázását: napi, minden szerdán, "
+"havi, stb."
 
 #. module: sale_journal
 #: field:sale_journal.invoice.type,invoicing_method:0
@@ -117,7 +148,7 @@ msgstr "Számlázási mód"
 #. module: sale_journal
 #: model:ir.model,name:sale_journal.model_sale_order
 msgid "Sales Order"
-msgstr ""
+msgstr "Vevői megrendelés"
 
 #. module: sale_journal
 #: field:sale.order,invoice_type_id:0
@@ -130,12 +161,12 @@ msgstr "Számla típusa"
 #. module: sale_journal
 #: field:sale_journal.invoice.type,active:0
 msgid "Active"
-msgstr ""
+msgstr "Aktív"
 
 #. module: sale_journal
 #: model:ir.model,name:sale_journal.model_res_partner
 msgid "Partner"
-msgstr ""
+msgstr "Partner"
 
 #. module: sale_journal
 #: model:ir.actions.act_window,name:sale_journal.action_definition_journal_invoice_type
@@ -147,7 +178,7 @@ msgstr "Számla típusok"
 #. module: sale_journal
 #: model:ir.model,name:sale_journal.model_stock_picking
 msgid "Picking List"
-msgstr ""
+msgstr "Kiszedési lista"
 
 #. module: sale_journal
 #: model:ir.module.module,shortdesc:sale_journal.module_meta_information

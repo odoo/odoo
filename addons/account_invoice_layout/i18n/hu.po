@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-25 06:25+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-08-30 05:14+0000\n"
+"X-Generator: Launchpad (build 13794)\n"
 
 #. module: account_invoice_layout
 #: selection:account.invoice.line,state:0
@@ -31,13 +31,13 @@ msgstr "Megjegyzés:"
 #: report:account.invoice.layout:0
 #: report:notify_account.invoice:0
 msgid "Cancelled Invoice"
-msgstr "Törölt számla"
+msgstr "Érvénytelenített számla"
 
 #. module: account_invoice_layout
 #: selection:account.invoice.line,state:0
 #: field:notify.message,name:0
 msgid "Title"
-msgstr "Cím"
+msgstr "Megnevezés"
 
 #. module: account_invoice_layout
 #: model:ir.actions.act_window,name:account_invoice_layout.action_account_invoice_special_msg
@@ -59,7 +59,7 @@ msgstr "Megjegyzés"
 #. module: account_invoice_layout
 #: model:ir.model,name:account_invoice_layout.model_notify_message
 msgid "Notify By Messages"
-msgstr ""
+msgstr "Értesítés üzenetként"
 
 #. module: account_invoice_layout
 #: help:notify.message,msg:0
@@ -92,6 +92,20 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"    Ez a modul néhány eszközt biztosít a számla elrendezésének javítására.\n"
+"\n"
+"    Megadja a lehetőséget az alábbiakra:\n"
+"        * számla sorainak sorba rendezése\n"
+"        * megnevezések, megjegyzés sorok, részösszeg sorok hozzáadása\n"
+"        * vízszintes vonalak húzása és oldaltörések berakása\n"
+"\n"
+"    Továbbá lehetővé teszi a kiválasztott számlák kinyomtatását speciális "
+"üzenetek megjelenítésével a számla alján. Ez a funkció nagyon hasznos lehet "
+"év végi jókívánságokat, speciális feltételeket, stb. tartalmazó számlák "
+"nyomtatására.\n"
+"\n"
+"    "
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -135,7 +149,7 @@ msgstr "Termék"
 #: report:account.invoice.layout:0
 #: report:notify_account.invoice:0
 msgid "Description"
-msgstr "Leírás"
+msgstr "Megjegyzés"
 
 #. module: account_invoice_layout
 #: help:account.invoice.line,sequence:0
@@ -146,7 +160,7 @@ msgstr "Megadja a számlasorok listázási sorrendjét."
 #: report:account.invoice.layout:0
 #: report:notify_account.invoice:0
 msgid "Price"
-msgstr "Ár"
+msgstr "Nettó érték"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -162,7 +176,7 @@ msgstr "Adók:"
 #. module: account_invoice_layout
 #: field:account.invoice.line,functional_field:0
 msgid "Source Account"
-msgstr "Forrás számla"
+msgstr "Főkönyvi számla"
 
 #. module: account_invoice_layout
 #: model:ir.actions.act_window,name:account_invoice_layout.notify_mesage_tree_form
@@ -233,13 +247,13 @@ msgstr "Számlák elrendezéssel"
 #: report:account.invoice.layout:0
 #: report:notify_account.invoice:0
 msgid "Description / Taxes"
-msgstr "Megjegyzés / Adók"
+msgstr "Termék/szolgáltatás megnevezése / Adók"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
 #: report:notify_account.invoice:0
 msgid "Amount"
-msgstr "Összeg"
+msgstr "Adó összege"
 
 #. module: account_invoice_layout
 #: model:notify.message,msg:account_invoice_layout.demo_message1
@@ -276,7 +290,7 @@ msgstr "Számlán megjelenítendő speciális üzenet"
 #: report:account.invoice.layout:0
 #: report:notify_account.invoice:0
 msgid "Origin"
-msgstr "Eredet"
+msgstr "Forrás"
 
 #. module: account_invoice_layout
 #: field:account.invoice.line,state:0
@@ -292,12 +306,12 @@ msgstr "Elválasztó vonal"
 #: report:account.invoice.layout:0
 #: report:notify_account.invoice:0
 msgid "Your Reference"
-msgstr "Az Ön hivatkozása"
+msgstr "Partner hivatkozása"
 
 #. module: account_invoice_layout
 #: model:ir.module.module,shortdesc:account_invoice_layout.module_meta_information
 msgid "Invoices Layout Improvement"
-msgstr ""
+msgstr "Számlák elrendezésének javítása"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0

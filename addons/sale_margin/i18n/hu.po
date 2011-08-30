@@ -13,44 +13,55 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-25 07:04+0000\n"
-"X-Generator: Launchpad (build 12177)\n"
+"X-Launchpad-Export-Date: 2011-08-30 05:58+0000\n"
+"X-Generator: Launchpad (build 13794)\n"
 
 #. module: sale_margin
 #: view:report.account.invoice.product:0
 msgid "Category"
-msgstr ""
+msgstr "Kategória"
 
 #. module: sale_margin
+#: selection:report.account.invoice,type:0
+#: selection:report.account.invoice.category,type:0
+#: selection:report.account.invoice.partner,type:0
+#: selection:report.account.invoice.partner.product,type:0
 #: selection:report.account.invoice.product,type:0
 msgid "Customer Refund"
-msgstr ""
+msgstr "Kimenő jóváíró számla"
 
 #. module: sale_margin
+#: selection:report.account.invoice,type:0
+#: selection:report.account.invoice.category,type:0
+#: selection:report.account.invoice.partner,type:0
+#: selection:report.account.invoice.partner.product,type:0
 #: selection:report.account.invoice.product,type:0
 msgid "Customer Invoice"
-msgstr ""
+msgstr "Kimenő számla"
 
 #. module: sale_margin
 #: selection:report.account.invoice.product,month:0
 msgid "February"
-msgstr ""
+msgstr "Február"
 
 #. module: sale_margin
 #: view:report.account.invoice.product:0
 msgid "Current"
-msgstr ""
+msgstr "Jelenleg"
 
 #. module: sale_margin
 #: view:report.account.invoice.product:0
 msgid "Group By..."
-msgstr ""
+msgstr "Csoportosítás..."
 
 #. module: sale_margin
-#: view:report.account.invoice.product:0
+#: field:report.account.invoice,state:0
+#: field:report.account.invoice.category,state:0
+#: field:report.account.invoice.partner,state:0
+#: field:report.account.invoice.partner.product,state:0
 #: field:report.account.invoice.product,state:0
 msgid "State"
-msgstr ""
+msgstr "Állapot"
 
 #. module: sale_margin
 #: model:ir.module.module,description:sale_margin.module_meta_information
@@ -61,17 +72,30 @@ msgid ""
 "Unit Price and Cost Price\n"
 "    "
 msgstr ""
+" \n"
+"    Ez a modul a vevői megrendeléshez hozzáadja az árrés mezőt, amely az "
+"egységár és a bekerülési\n"
+"    érték közötti különbözet és a mennyiség szorzatának kiszámításával "
+"megadja a jövedelmezőséget.\n"
+"    "
 
 #. module: sale_margin
-#: view:report.account.invoice.product:0
+#: selection:report.account.invoice,state:0
+#: selection:report.account.invoice.category,state:0
+#: selection:report.account.invoice.partner,state:0
+#: selection:report.account.invoice.partner.product,state:0
 #: selection:report.account.invoice.product,state:0
 msgid "Draft"
-msgstr ""
+msgstr "Tervezet"
 
 #. module: sale_margin
+#: selection:report.account.invoice,state:0
+#: selection:report.account.invoice.category,state:0
+#: selection:report.account.invoice.partner,state:0
+#: selection:report.account.invoice.partner.product,state:0
 #: selection:report.account.invoice.product,state:0
 msgid "Paid"
-msgstr ""
+msgstr "Fizetve"
 
 #. module: sale_margin
 #: model:ir.model,name:sale_margin.model_stock_picking
@@ -84,189 +108,227 @@ msgid ""
 "It gives profitability by calculating the difference between the Unit Price "
 "and Cost Price."
 msgstr ""
+"Az egységár és a bekerülési érték közötti különbözet és a mennyiség "
+"szorzatának kiszámításával megadja a jövedelmezőséget."
 
 #. module: sale_margin
+#: field:report.account.invoice,type:0
+#: field:report.account.invoice.category,type:0
+#: field:report.account.invoice.partner,type:0
+#: field:report.account.invoice.partner.product,type:0
 #: field:report.account.invoice.product,type:0
+#: wizard_field:stock.invoice_onshipping,init,type:0
 msgid "Type"
-msgstr ""
+msgstr "Típus"
 
 #. module: sale_margin
 #: model:ir.model,name:sale_margin.model_report_account_invoice_product
 msgid "Invoice Statistics"
-msgstr ""
+msgstr "Számlastatisztika"
 
 #. module: sale_margin
-#: view:report.account.invoice.product:0
+#: field:report.account.invoice.partner.product,product_id:0
 #: field:report.account.invoice.product,product_id:0
 msgid "Product"
-msgstr ""
+msgstr "Termék"
 
 #. module: sale_margin
 #: sql_constraint:sale.order:0
 msgid "Order Reference must be unique !"
-msgstr ""
+msgstr "A megrendelés hivatkozásnak egyedinek kell lennie!"
 
 #. module: sale_margin
 #: view:report.account.invoice.product:0
 msgid "Invoice by Partner"
-msgstr ""
+msgstr "Számla partnerek szerint"
 
 #. module: sale_margin
 #: selection:report.account.invoice.product,month:0
 msgid "August"
-msgstr ""
+msgstr "Augusztus"
 
 #. module: sale_margin
-#: view:report.account.invoice.product:0
+#: selection:report.account.invoice,state:0
+#: selection:report.account.invoice.category,state:0
+#: selection:report.account.invoice.partner,state:0
+#: selection:report.account.invoice.partner.product,state:0
 #: selection:report.account.invoice.product,state:0
 msgid "Pro-forma"
-msgstr ""
+msgstr "Pro forma"
 
 #. module: sale_margin
 #: selection:report.account.invoice.product,month:0
 msgid "May"
-msgstr ""
+msgstr "Május"
 
 #. module: sale_margin
 #: selection:report.account.invoice.product,month:0
 msgid "June"
-msgstr ""
+msgstr "Június"
 
 #. module: sale_margin
 #: view:report.account.invoice.product:0
 msgid "Date Invoiced"
-msgstr ""
+msgstr "Számla kelte"
 
 #. module: sale_margin
 #: model:ir.module.module,shortdesc:sale_margin.module_meta_information
 msgid "Margins in Sales Order"
-msgstr ""
+msgstr "Vevői megrendelések árrése"
 
 #. module: sale_margin
 #: view:report.account.invoice.product:0
 msgid "Search Margin"
-msgstr ""
+msgstr "Árrés keresése"
 
 #. module: sale_margin
 #: view:report.account.invoice.product:0
 msgid "This Year"
-msgstr ""
+msgstr "Tárgyév"
 
 #. module: sale_margin
 #: field:report.account.invoice.product,date:0
 msgid "Date"
-msgstr ""
+msgstr "Dátum"
 
 #. module: sale_margin
 #: selection:report.account.invoice.product,month:0
 msgid "July"
-msgstr ""
+msgstr "Július"
 
 #. module: sale_margin
 #: view:report.account.invoice.product:0
 msgid "Extended Filters..."
-msgstr ""
+msgstr "Kiterjesztett szűrők…"
 
 #. module: sale_margin
-#: view:report.account.invoice.product:0
+#: model:ir.ui.menu,name:sale_margin.menu_report_account_this_month_product
 msgid "This Month"
-msgstr ""
+msgstr "Tárgyhó"
 
 #. module: sale_margin
 #: view:report.account.invoice.product:0
 #: field:report.account.invoice.product,day:0
 msgid "Day"
-msgstr ""
+msgstr "Nap"
 
 #. module: sale_margin
-#: field:report.account.invoice.product,categ_id:0
+#: field:report.account.invoice.category,categ_id:0
 msgid "Categories"
-msgstr ""
+msgstr "Kategóriák"
 
 #. module: sale_margin
 #: field:account.invoice.line,cost_price:0
+#: field:report.account.invoice,cost_price:0
+#: field:report.account.invoice.category,cost_price:0
+#: field:report.account.invoice.partner,cost_price:0
+#: field:report.account.invoice.partner.product,cost_price:0
 #: field:report.account.invoice.product,cost_price:0
 #: field:sale.order.line,purchase_price:0
 msgid "Cost Price"
-msgstr ""
+msgstr "Bekerülési érték"
 
 #. module: sale_margin
 #: selection:report.account.invoice.product,month:0
 msgid "October"
-msgstr ""
+msgstr "Október"
 
 #. module: sale_margin
 #: selection:report.account.invoice.product,month:0
 msgid "January"
-msgstr ""
+msgstr "Január"
 
 #. module: sale_margin
 #: view:report.account.invoice.product:0
 #: field:report.account.invoice.product,year:0
 msgid "Year"
-msgstr ""
+msgstr "Év"
 
 #. module: sale_margin
 #: selection:report.account.invoice.product,month:0
 msgid "September"
-msgstr ""
+msgstr "Szeptember"
 
 #. module: sale_margin
 #: selection:report.account.invoice.product,month:0
 msgid "April"
-msgstr ""
+msgstr "Április"
 
 #. module: sale_margin
+#: field:report.account.invoice,amount:0
+#: field:report.account.invoice.category,amount:0
+#: field:report.account.invoice.partner,amount:0
+#: field:report.account.invoice.partner.product,amount:0
 #: field:report.account.invoice.product,amount:0
 msgid "Amount"
-msgstr ""
+msgstr "Összeg"
 
 #. module: sale_margin
+#: selection:report.account.invoice,type:0
+#: selection:report.account.invoice.category,type:0
+#: selection:report.account.invoice.partner,type:0
+#: selection:report.account.invoice.partner.product,type:0
 #: selection:report.account.invoice.product,type:0
 msgid "Supplier Refund"
-msgstr ""
+msgstr "Bejövő jóváíró számla"
 
 #. module: sale_margin
 #: selection:report.account.invoice.product,month:0
 msgid "March"
-msgstr ""
+msgstr "Március"
 
 #. module: sale_margin
+#: field:report.account.invoice,margin:0
+#: field:report.account.invoice.category,margin:0
+#: field:report.account.invoice.partner,margin:0
+#: field:report.account.invoice.partner.product,margin:0
 #: field:report.account.invoice.product,margin:0
 #: field:sale.order,margin:0
 #: field:sale.order.line,margin:0
 msgid "Margin"
-msgstr ""
+msgstr "Árrés"
 
 #. module: sale_margin
 #: selection:report.account.invoice.product,month:0
 msgid "November"
-msgstr ""
+msgstr "November"
 
 #. module: sale_margin
+#: field:report.account.invoice,quantity:0
+#: field:report.account.invoice.category,quantity:0
+#: field:report.account.invoice.partner,quantity:0
+#: field:report.account.invoice.partner.product,quantity:0
 #: field:report.account.invoice.product,quantity:0
 msgid "Quantity"
-msgstr ""
+msgstr "Mennyiség"
 
 #. module: sale_margin
 #: view:report.account.invoice.product:0
 msgid "Invoices by product"
-msgstr ""
+msgstr "Számlák termékek szerint"
 
 #. module: sale_margin
+#: selection:report.account.invoice,type:0
+#: selection:report.account.invoice.category,type:0
+#: selection:report.account.invoice.partner,type:0
+#: selection:report.account.invoice.partner.product,type:0
 #: selection:report.account.invoice.product,type:0
 msgid "Supplier Invoice"
-msgstr ""
+msgstr "Bejövő számla"
 
 #. module: sale_margin
+#: model:ir.ui.menu,name:sale_margin.menu_report_account_all_invoice_by_invoices
+#: model:ir.ui.menu,name:sale_margin.menu_report_account_invoice_by_invoices
+#: view:report.account.invoice:0
+#: view:stock.picking:0
 #: field:stock.picking,invoice_ids:0
 msgid "Invoices"
-msgstr ""
+msgstr "Számlák"
 
 #. module: sale_margin
 #: selection:report.account.invoice.product,month:0
 msgid "December"
-msgstr ""
+msgstr "December"
 
 #. module: sale_margin
 #: model:ir.model,name:sale_margin.model_account_invoice_line
@@ -274,12 +336,19 @@ msgid "Invoice Line"
 msgstr "Számlasor"
 
 #. module: sale_margin
-#: view:report.account.invoice.product:0
-#: field:report.account.invoice.product,month:0
+#: field:report.account.invoice,name:0
+#: field:report.account.invoice.category,name:0
+#: field:report.account.invoice.partner,name:0
+#: field:report.account.invoice.partner.product,name:0
+#: field:report.account.invoice.product,name:0
 msgid "Month"
-msgstr ""
+msgstr "Hónap"
 
 #. module: sale_margin
+#: selection:report.account.invoice,state:0
+#: selection:report.account.invoice.category,state:0
+#: selection:report.account.invoice.partner,state:0
+#: selection:report.account.invoice.partner.product,state:0
 #: selection:report.account.invoice.product,state:0
 msgid "Canceled"
 msgstr ""
@@ -291,21 +360,24 @@ msgid ""
 "system. You can sort and group your results by specific selection criteria "
 "to quickly find what you are looking for."
 msgstr ""
+"Ez a kimutatás áttekintést nyújt a rendszer által előállított minden "
+"számláról. Speciális kiválasztási kritériumok meghatározásával rendezheti és "
+"csoportosíthatja a tételeket, hogy gyorsan megtalálja, amit keres."
 
 #. module: sale_margin
 #: model:ir.ui.menu,name:sale_margin.menu_report_account_invoice_product
 msgid "Invoice Report"
-msgstr ""
+msgstr "Számlakimutatás"
 
 #. module: sale_margin
 #: view:report.account.invoice.product:0
 msgid "Done"
-msgstr ""
+msgstr "Rendben"
 
 #. module: sale_margin
-#: model:ir.ui.menu,name:sale_margin.menu_report_account_invoice_reoirt
+#: model:ir.ui.menu,name:sale_margin.menu_report_account_invoice_product
 msgid "Invoice"
-msgstr ""
+msgstr "Invoice"
 
 #. module: sale_margin
 #: view:stock.picking:0
@@ -313,27 +385,31 @@ msgid "Customer Invoices"
 msgstr ""
 
 #. module: sale_margin
-#: view:report.account.invoice.product:0
-#: field:report.account.invoice.product,partner_id:0
+#: field:report.account.invoice.partner,partner_id:0
+#: field:report.account.invoice.partner.product,partner_id:0
 msgid "Partner"
-msgstr ""
+msgstr "Partner"
 
 #. module: sale_margin
 #: model:ir.model,name:sale_margin.model_sale_order
 msgid "Sales Order"
-msgstr ""
+msgstr "Vevői megrendelés"
 
 #. module: sale_margin
+#: selection:report.account.invoice,state:0
+#: selection:report.account.invoice.category,state:0
+#: selection:report.account.invoice.partner,state:0
+#: selection:report.account.invoice.partner.product,state:0
 #: selection:report.account.invoice.product,state:0
 msgid "Open"
-msgstr ""
+msgstr "Nyitott"
 
 #. module: sale_margin
 #: model:ir.actions.act_window,name:sale_margin.action_report_account_invoice_report
 msgid "Invoice Analysis"
-msgstr ""
+msgstr "Számlaelemzés"
 
 #. module: sale_margin
 #: model:ir.model,name:sale_margin.model_sale_order_line
 msgid "Sales Order Line"
-msgstr ""
+msgstr "Vevői megrendelés sor"
