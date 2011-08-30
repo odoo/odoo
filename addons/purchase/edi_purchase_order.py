@@ -41,6 +41,9 @@ class purchase_order(osv.osv, ir_edi.edi):
                 'location_id': True,
                 'pricelist_id': True,
                 'validator' : True,
+                'amount_tax': True,
+                'amount_total': True,
+                'amount_untaxed': True,
                 'order_line': {
                         'name': True,
                         'product_qty': True,
@@ -102,6 +105,7 @@ class purchase_order(osv.osv, ir_edi.edi):
                     #'paid': inv_comp.paid, #TODO
             })
             edi_doc_list.append(edi_doc)
+            print "??????????????????????",edi_doc_list
         return edi_doc_list
 
     def edi_import(self, cr, uid, edi_document, context=None):
