@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import openerpweb
+import base.common as openerpweb
 
 WIDGET_CONTENT_PATTERN = """<!DOCTYPE html>
 <html>

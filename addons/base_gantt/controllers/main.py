@@ -1,4 +1,4 @@
-import openerpweb
+import base.common as openerpweb
 from base.controllers.main import View
 
 class GanttView(View):

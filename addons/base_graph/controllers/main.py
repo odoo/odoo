@@ -1,5 +1,5 @@
 from base.controllers.main import View
-import openerpweb
+import base.common as openerpweb
 
 class GraphView(View):
     _cp_path = "/base_graph/graphview"

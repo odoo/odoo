@@ -23,8 +23,10 @@ import logging
 # Globals
 #-----------------------------------------------------------
 
-path_root = os.path.dirname(os.path.dirname(os.path.normpath(__file__)))
-path_addons = os.path.join(path_root, 'addons')
+import __main__
+
+path_root = __main__.path_root
+path_addons = __main__.path_addons
 cherrypy_root = None
 
 #-----------------------------------------------------------
@@ -425,12 +427,16 @@ class Root(object):
                     controllers_path[o._cp_path] = o
 
     def default(self, *l, **kw):
-        #print "default",l,kw
+        print "default",l,kw
         # handle static files
         if len(l) > 2 and l[1] == 'static':
             # sanitize path
             p = os.path.normpath(os.path.join(*l))
-            return cherrypy.lib.static.serve_file(os.path.join(path_addons, p))
+            p2 = os.path.join(path_addons, p)
+            print "p",p
+            print "p2",p2
+
+            return cherrypy.lib.static.serve_file(p2)
         elif len(l) > 1:
             for i in range(len(l), 1, -1):
                 ps = "/" + "/".join(l[0:i])
