@@ -19,10 +19,27 @@
 #
 ##############################################################################
 
-import account_voucher
-import company
-import invoice
-import report
-import wizard
+from osv import fields, osv
+
+class res_company(osv.osv):
+    _inherit = "res.company"
+    _columns = {
+        'property_income_currency_exchange': fields.property(
+            'account.account',
+            type='many2one',
+            relation='account.account',
+            string="Income Currency Rate",
+            view_load=True,
+            domain="[('type', '=', 'other')]",),
+        'property_expense_currency_exchange': fields.property(
+            'account.account',
+            type='many2one',
+            relation='account.account',
+            string="Expense Currency Rate",
+            view_load=True,
+            domain="[('type', '=', 'other')]",),
+    }
+
+res_company()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
