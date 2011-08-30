@@ -70,8 +70,8 @@ class res_currency(osv.osv):
     _order = "name"
 
     def read(self, cr, user, ids, fields=None, context=None, load='_classic_read'):
-        currency_rate_obj=  self.pool.get('res.currency.rate')
         res = super(osv.osv, self).read(cr, user, ids, fields, context, load)
+        currency_rate_obj = self.pool.get('res.currency.rate')
         for r in res:
             if r.__contains__('rate_ids'):
                 rates=r['rate_ids']
@@ -148,7 +148,7 @@ res_currency()
 
 class res_currency_rate_type(osv.osv):
     _name = "res.currency.rate.type"
-    _description = "Currency Rate Type"
+    _description = "Used to define the type of Currency Rates"
     _columns = {
         'name': fields.char('Name', size=64, required=True, translate=True),
     }
