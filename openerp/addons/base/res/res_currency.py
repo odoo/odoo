@@ -131,7 +131,7 @@ class res_currency(osv.osv):
         xc = self.browse(cr, uid, [from_currency_id,to_currency_id], context=context)
         from_currency = (xc[0].id == from_currency_id and xc[0]) or xc[1]
         to_currency = (xc[0].id == to_currency_id and xc[0]) or xc[1]
-        if to_currency_id == from_currency_id:
+        if (to_currency_id == from_currency_id) and (currency_rate_type_from == currency_rate_type_to):
             if round:
                 return self.round(cr, uid, to_currency, from_amount)
             else:
@@ -164,7 +164,7 @@ class res_currency_rate(osv.osv):
         'rate': fields.float('Rate', digits=(12,6), required=True,
             help='The rate of the currency to the currency of rate 1'),
         'currency_id': fields.many2one('res.currency', 'Currency', readonly=True),
-        'currency_rate_type_id': fields.many2one('res.currency.rate.type', 'Currency Rate Type', help="Allow you to define your own currency rate types, like average or Day to Year. Leave empty if you simply want to use the normal 'spot' rate type"),
+        'currency_rate_type_id': fields.many2one('res.currency.rate.type', 'Currency Rate Type', help="Allow you to define your own currency rate types, like 'Average' or 'Year to Date'. Leave empty if you simply want to use the normal 'spot' rate type"),
     }
     _defaults = {
         'name': lambda *a: time.strftime('%Y-%m-%d'),
