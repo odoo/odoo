@@ -53,10 +53,9 @@
                 <form string="Issue Tracker Form">
                     <group colspan="4" col="6">
                         <field name="name"/>
-                        <field name="project_id" required="True" on_change="on_change_project(project_id)"/>
+                        <field name="project_id" required="True" />
                         <field name="categ_id" widget="selection" domain="[('object_id.model', '=', 'project.issue')]"/>
-                        <field name="user_id" invisible="1" />
-                        <field name="assigned_to"/>
+                        <field name="user_id"/>                        
                         <field name="version_id" colspan="2" widget="selection"/>
                         <group colspan="2" col="4">
                             <field name="type_id" string="Resolution" />
@@ -188,7 +187,7 @@
                     <button name="prev_type" string="Previous" type="object" icon="gtk-go-back" help="Change to Previous Stage"/>
                     <button name="next_type" string="Next" type="object" icon="gtk-go-forward" help="Change to Next Stage"/>
                     <field name="version_id" widget="selection"/>
-                    <field name="assigned_to"/>
+                    <field name="user_id"/>
                     <field name="progress" widget="progressbar" attrs="{'invisible':[('task_id','=',False)]}"/>
                     <field name="state"/>
                     <button name="case_cancel" string="Cancel" states="draft,open,pending" type="object" icon="gtk-cancel"/>
@@ -217,8 +216,8 @@
                         <separator orientation="vertical"/>
                         <field name="name"/>
                         <field name="partner_id" groups="base.group_extended"/>
-                        <field name="assigned_to">
-                            <filter domain="[('assigned_to','=',False)]"  help="Unassigned Issues" icon="terp-personal-" separator="1"/>
+                        <field name="user_id">
+                            <filter domain="[('user_id','=',False)]"  help="Unassigned Issues" icon="terp-personal-" separator="1"/>
                         </field>
                         <field name="project_id"/>
                         <field name="version_id" widget="selection"/>
@@ -227,7 +226,7 @@
                     <newline/>
                     <group expand="0" string="Group By..."  groups="base.group_extended">
                         <filter string="Responsible" icon="terp-personal"
-                            domain="[]" context="{'group_by':'assigned_to'}" />
+                            domain="[]" context="{'group_by':'user_id'}" />
                         <filter string="Partner" icon="terp-partner" domain="[]"
                             context="{'group_by':'partner_id'}" />
                         <separator orientation="vertical"/>
@@ -258,7 +257,7 @@
             <field name="type">calendar</field>
             <field name="priority" eval="2"/>
             <field name="arch" type="xml">
-                <calendar string="Issues" date_start="date" color="assigned_to" date_delay="duration">
+                <calendar string="Issues" date_start="date" color="user_id" date_delay="duration">
                     <field name="name"/>
                     <field name="partner_id"/>
                 </calendar>
@@ -283,7 +282,7 @@
                     <button name="prev_type" string="Previous" type="object" icon="gtk-go-back" help="Change to Previous Stage"/>
                     <button name="next_type" string="Next" type="object" icon="gtk-go-forward" help="Change to Next Stage"/>
                     <field name="version_id"/>
-                    <field name="assigned_to"/>
+                    <field name="user_id"/>
                     <field name="state"/>
                     <button name="case_cancel" string="Cancel" states="draft,open,pending" type="object" icon="gtk-cancel"/>
                     <button name="case_close" string="Done" states="open,draft,pending" type="object" icon="gtk-jump-to"/>
@@ -306,7 +305,7 @@
                     <separator orientation="vertical"/>
                     <group>
                         <field name="name" select='1' string="Feature description"/>
-                        <field name="assigned_to" select="1"/>
+                        <field name="user_id" select="1"/>
                         <field name="state" select="1">
                             <filter icon="terp-check" domain="[('state','in',('open','draft'))]" help="Current Features" name="current_feature"/>
                             <filter icon="terp-camera_test" domain="[('state','=','open')]" help="Open Features"/>
