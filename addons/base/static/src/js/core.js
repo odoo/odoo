@@ -632,7 +632,7 @@ openerp.base.Session = openerp.base.CallbackEnabled.extend( /** @lends openerp.b
      * @param {Function} [options.error] callback in case of request error, provided with the error body
      * @param {Function} [options.complete] called after both ``success`` and ``error` callbacks have executed
      */
-    getFile: function (options) {
+    get_file: function (options) {
         // need to detect when the file is done downloading (not used
         // yet, but we'll need it to fix the UI e.g. with a throbber
         // while dump is being generated), iframe load event only fires

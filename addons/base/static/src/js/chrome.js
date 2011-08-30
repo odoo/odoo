@@ -346,7 +346,7 @@ openerp.base.Database = openerp.base.Widget.extend({
             .find("form[name=backup_db_form]").validate({
             submitHandler: function (form) {
                 $.blockUI({message:'<img src="/base/static/src/img/throbber2.gif">'});
-                self.session.getFile({
+                self.session.get_file({
                     form: form,
                     error: function (body) {
                         var error = body.firstChild.data.split('|');
