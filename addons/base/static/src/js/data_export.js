@@ -50,7 +50,7 @@ openerp.base.DataExport = openerp.base.Dialog.extend({
         });
         var import_comp = self.$element.find('#import_compat option:selected').val(),
             params = {
-                import_compat: parseInt(import_comp)
+                import_compat: parseInt(import_comp, 10)
             };
         self.rpc('/base/export/get_fields', { model: self.dataset.model, params: params }, self.on_show_data);
 
@@ -60,7 +60,7 @@ openerp.base.DataExport = openerp.base.Dialog.extend({
             var import_comp = self.$element.find("#import_compat option:selected").val();
             if (import_comp) {
                 var params = {
-                    import_compat: parseInt(import_comp)
+                    import_compat: parseInt(import_comp, 10)
                 };
                 self.rpc("/base/export/get_fields", { model: self.dataset.model, params: params}, self.on_show_data);
             }
