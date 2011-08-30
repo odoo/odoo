@@ -34,7 +34,6 @@ class project_issue(osv.osv):
         if not project_id:
             return {}
         result={}        
-        #result = super(project_issue, self).on_change_project(cr, uid, ids, project_id, context=context)
         
         project = self.pool.get('project.project').browse(cr, uid, project_id, context=context)
         if 'value' not in result:
