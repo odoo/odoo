@@ -627,7 +627,9 @@ openerp.base.Session = openerp.base.CallbackEnabled.extend( /** @lends openerp.b
      * "known" type (e.g. text/plain, or for some browsers application/json
      *
      * @param {Object} options
-     * @param {HTMLFormElement} options.form the form to submit in order to fetch the file
+     * @param {String} [options.url] used to dynamically create a form
+     * @param {Object} [options.data] data to add to the form submission. If can be used without a form, in which case a form is created from scratch. Otherwise, added to form data
+     * @param {HTMLFormElement} [options.form] the form to submit in order to fetch the file
      * @param {Function} [options.success] callback in case of download success
      * @param {Function} [options.error] callback in case of request error, provided with the error body
      * @param {Function} [options.complete] called after both ``success`` and ``error` callbacks have executed
@@ -640,25 +642,46 @@ openerp.base.Session = openerp.base.CallbackEnabled.extend( /** @lends openerp.b
         // http://geekswithblogs.net/GruffCode/archive/2010/10/28/detecting-the-file-download-dialog-in-the-browser.aspx
         var timer, token = new Date().getTime(),
             cookie_name = 'fileToken', cookie_length = cookie_name.length,
-            self = this, CHECK_INTERVAL = 100, id = _.uniqueId('get_file_frame'),
-            $token = $('<input type="hidden" name="token" value="' + token +'">');
+            CHECK_INTERVAL = 1000, id = _.uniqueId('get_file_frame'),
+            remove_form = false;
+
+        var $form, $form_data = $('<div>');
+
         var complete = function () {
             if (options.complete) { options.complete(); }
             clearTimeout(timer);
-            $token.remove();
+            $form_data.remove();
             $target.remove();
+            if (remove_form && $form) { $form.remove(); }
         };
         var $target = $('<iframe style="display: none;">')
             .attr({id: id, name: id})
             .appendTo(document.body)
             .load(function () {
-                if (options.error) {
-                    options.error(this.contentDocument.body)
-                }
+                if (options.error) { options.error(this.contentDocument.body); }
                 complete();
             });
-        $(options.form)
-            .append($token)
+
+        if (options.form) {
+            $form = $(options.form);
+        } else {
+            remove_form = true;
+            $form = $('<form>', {
+                action: options.url,
+                method: 'POST'
+            }).appendTo(document.body);
+        }
+
+        _(_.extend({}, options.data || {},
+                   {session_id: this.session_id, token: token}))
+            .each(function (value, key) {
+                $('<input type="hidden" name="' + key + '">')
+                    .val(value)
+                    .appendTo($form_data);
+            });
+
+        $form
+            .append($form_data)
             .attr('target', id)
             .get(0).submit();
 

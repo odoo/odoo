@@ -1112,7 +1112,7 @@ def export_xls(fieldnames, table):
     data = fp.read()
     fp.close()
     #return data.decode('ISO-8859-1')
-    return base64.b64encode(data)
+    return data
 
 class Export(View):
     _cp_path = "/base/export"
@@ -1238,19 +1238,30 @@ class Export(View):
             return _fields
         return rec(fields)
 
-    @openerpweb.jsonrequest
-    def export_data(self, req, model, fields, ids, domain, import_compat=False, export_format="csv", context=None):
+    @openerpweb.httprequest
+    def export_data(self, req, data, token):
+        model, fields, ids, domain, import_compat, export_format = \
+            operator.itemgetter('model', 'fields', 'ids', 'domain',
+                                'import_compat', 'export_format')(
+                simplejson.loads(data))
+
         context = req.session.eval_context(req.context)
-        modle_obj = req.session.model(model)
-        ids = ids or modle_obj.search(domain, context=context)
+        Model = req.session.model(model)
+        ids = ids or Model.search(domain, context=context)
 
         field = fields.keys()
-        result = modle_obj.export_data(ids, field , context).get('datas',[])
+        result = Model.export_data(ids, field, context).get('datas',[])
 
         if not import_compat:
             field = [val.strip() for val in fields.values()]
 
+        req.httpresponse.headers['Content-Disposition'] = \
+            'attachment; filename="%s.%s"' % (model, export_format)
+        req.httpresponse.cookie['fileToken'] = int(token)
+        req.httpresponse.cookie['fileToken']['path'] = '/'
         if export_format == 'xls':
+            req.httpresponse.headers['Content-Type'] = 'application/vnd.mx-excel'
             return export_xls(field, result)
         else:
+            req.httpresponse.headers['Content-Type'] = 'text/csv;charset=utf8'
             return export_csv(field, result)

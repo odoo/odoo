@@ -373,10 +373,10 @@ openerp.base.DataExport = openerp.base.Dialog.extend({
         return export_field;
     },
     on_click_export_data: function() {
-        var self = this;
+        $.blockUI(this.$element);
         var export_field = {};
         var flag = true;
-        self.$element.find("#fields_list option").each(function() {
+        this.$element.find("#fields_list option").each(function() {
             export_field[$(this).val()] = $(this).text();
             flag = false;
         });
@@ -385,22 +385,20 @@ openerp.base.DataExport = openerp.base.Dialog.extend({
             return;
         }
 
-        var import_comp = self.$element.find("#import_compat option:selected").val(),
-            export_format = self.$element.find("#export_format").val();
+        var import_comp = this.$element.find("#import_compat option:selected").val(),
+            export_format = this.$element.find("#export_format").val();
 
-        self.rpc("/base/export/export_data", {
-            model: self.dataset.model,
-            fields: export_field,
-            ids: self.dataset.ids,
-            domain: self.dataset.domain,
-            import_compat: parseInt(import_comp),
-            export_format: export_format
-        }, function(data) {
-            var mime = export_format === 'csv'
-                    ? 'text/csv;charset=utf8'
-                    : 'application/vnd.mx-excel;base64';
-            window.location = 'data:' + mime + ',' + data;
-            self.close();
+        this.session.get_file({
+            url: '/base/export/export_data',
+            data: {data: JSON.stringify({
+                model: this.dataset.model,
+                fields: export_field,
+                ids: this.dataset.ids,
+                domain: this.dataset.domain,
+                import_compat: parseInt(import_comp),
+                export_format: export_format
+            })},
+            complete: $.unblockUI
         });
     },
     close: function() {
