@@ -123,6 +123,14 @@ openerp.base.ActionManager = openerp.base.Widget.extend({
         this.content_stop();
         var ClientWidget = openerp.base.client_actions.get_object(action.tag);
         (this.client_widget = new ClientWidget(this, action.params)).appendTo(this);
+    },
+    ir_actions_report_xml: function(action) {
+        this.rpc('/base/report/get_report', {
+            action: action,
+            context: {}
+        }).then(function(result) {
+            debugger;
+        });
     }
 });
 
@@ -438,14 +446,17 @@ openerp.base.Sidebar = openerp.base.Widget.extend({
                         //TODO niv: maybe show a warning?
                         return false;
                     }
+                    var additional_context = {
+                        active_id: ids[0],
+                        active_ids: ids,
+                        active_model: self.widget_parent.dataset.model
+                    };
                     self.rpc("/base/action/load", {
                         action_id: item.action.id,
-                        context: {
-                            active_id: ids[0],
-                            active_ids: ids,
-                            active_model: self.widget_parent.dataset.model
-                        }
+                        context: additional_context
                     }, function(result) {
+                        result.result.context = _.extend(result.result.context || {},
+                            additional_context);
                         result.result.flags = result.result.flags || {};
                         result.result.flags.new_window = true;
                         self.do_action(result.result);

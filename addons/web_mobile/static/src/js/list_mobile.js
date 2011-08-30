@@ -1,4 +1,9 @@
+/*---------------------------------------------------------
+ * OpenERP Web Mobile List View
+ *---------------------------------------------------------*/
+
 openerp.web_mobile.list_mobile = function (openerp) {
+
 openerp.web_mobile.ListView = openerp.base.Widget.extend({
     init: function(session, element_id, list_id) {
         this._super(session, element_id);
@@ -35,10 +40,11 @@ openerp.web_mobile.ListView = openerp.base.Widget.extend({
             var search_val = '';
         }
         var self = this;
-        var dataset = new openerp.base.DataSetStatic(this.session, this.action.res_model, this.action.context);
+
+        var dataset = new openerp.base.DataSetStatic(this, this.action.res_model, this.action.context);
         dataset.domain=[['name','ilike',search_val]];
         dataset.name_search(search_val, dataset.domain, 'ilike',false ,function(result){
-            self.$element.html(QWeb.render("ListView", {'records' : result.result}));
+            self.$element.html(QWeb.render("ListView", {'records' : result}));
             self.$element.find("#searchid").focus();
             if(request.term){
                 self.$element.find("#searchid").val(request.term);
@@ -60,7 +66,7 @@ openerp.web_mobile.ListView = openerp.base.Widget.extend({
         $record = $(ev.currentTarget);
         var self = this;
         id = $record.data('id');
-        this.formview = new openerp.web_mobile.FormView(this.session, "oe_app", id, this.action);
+        this.formview = new openerp.web_mobile.FormView(this, "oe_app", id, this.action);
         this.formview.start();
     }
  });
