@@ -18,7 +18,7 @@ WIDGET_CONTENT_PATTERN = """<!DOCTYPE html>
     </body>
 </html>
 """
-class Widgets(openerpweb.openerpweb.Controller):
+class Widgets(openerpweb.Controller):
     _cp_path = '/base_dashboard/widgets'
 
     @openerpweb.httprequest
