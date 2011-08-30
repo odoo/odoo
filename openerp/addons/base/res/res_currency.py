@@ -36,8 +36,8 @@ class res_currency(osv.osv):
         else:
             date = time.strftime('%Y-%m-%d')
         date = date or time.strftime('%Y-%m-%d')
-        currency_rate_type = context.get('currency_rate_type_id') or None
-        operator = currency_rate_type and '=' or 'is'
+        currency_rate_type = context.get('currency_rate_type_id') or None #to deal with the case were context['currency_rate_type_id'] == False
+        operator = '=' if currency_rate_type else 'is'
         for id in ids:
             cr.execute("SELECT currency_id, rate FROM res_currency_rate WHERE currency_id = %s AND name <= %s AND currency_rate_type_id " + operator +" %s ORDER BY name desc LIMIT 1" ,(id, date, currency_rate_type))
             if cr.rowcount:
@@ -103,10 +103,10 @@ class res_currency(osv.osv):
         if context is None:
             context = {}
         ctx = context.copy()
-        ctx.update({'currency_rate_type_id': ctx.get('currency_rate_type_from', None)})
+        ctx.update({'currency_rate_type_id': ctx.get('currency_rate_type_from')})
         from_currency = self.browse(cr, uid, from_currency.id, context=ctx)
 
-        ctx.update({'currency_rate_type_id': ctx.get('currency_rate_type_to', None)})
+        ctx.update({'currency_rate_type_id': ctx.get('currency_rate_type_to')})
         to_currency = self.browse(cr, uid, to_currency.id, context=ctx)
 
         if from_currency.rate == 0 or to_currency.rate == 0:
