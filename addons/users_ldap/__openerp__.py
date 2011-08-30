@@ -24,6 +24,7 @@
     "depends" : ["base"],
     "images" : ["images/ldap_configuration.jpeg"],
     "author" : "OpenERP SA",
+    'complexity': "easy",
     "description": """
 Adds support for authentication by LDAP server.
 ===============================================

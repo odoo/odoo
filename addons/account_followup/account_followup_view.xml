@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
 
@@ -22,8 +21,8 @@
             <field name="arch" type="xml">
                 <form string="Follow-Up Lines">
                   <group col="6" colspan="4">
-                     <field name="name" />
-                     <field name="delay" />
+                     <field name="name"/>
+                     <field name="delay"/>
                      <field name="start" groups="base.group_extended"/>
                   </group>
                     <newline/>
@@ -44,9 +43,9 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Follow-Up">
-                    <field name="name" />
+                    <field name="name"/>
                     <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                    <separator colspan="4" string="" />
+                    <separator colspan="4" string=""/>
                     <field colspan="4" name="followup_line" nolabel="1"/>
                 </form>
             </field>
@@ -90,8 +89,7 @@
             <field name="view_type">form</field>
             <field name="help">Define follow up levels and their related messages and delay. For each step, specify the message and the day of delay. Use the legend to know the using code to adapt the email content to the good context (good name, good date) and you can manage the multi language of messages.</field>
         </record>
-        <menuitem action="action_account_followup_definition_form" id="account_followup_menu"
-            parent="account.menu_configuration_misc"/>
+        <menuitem action="action_account_followup_definition_form" id="account_followup_menu" parent="account.menu_configuration_misc"/>
 
         <report auto="False" id="account_followup_followup_report" menu="False" model="account_followup.followup" name="account_followup.followup.print" rml="account_followup/report/account_followup_print.rml" string="Followup Report"/>
 
@@ -142,23 +140,11 @@
             </field>
         </record>
 
-        <act_window
-            domain="[('reconcile_id', '=', False),('account_id.type','=','receivable')]"
-            id="act_account_partner_account_move_all"
-            name="Receivable Items"
-            res_model="account.move.line"
-            src_model=""
-            view_id="account_move_line_partner_tree"/>
+        <act_window domain="[('reconcile_id', '=', False),('account_id.type','=','receivable')]" id="act_account_partner_account_move_all" name="Receivable Items" res_model="account.move.line" src_model="" view_id="account_move_line_partner_tree"/>
 
       <!--<menuitem action="act_account_partner_account_move_all" id="menu_account_move_open_unreconcile" parent="account_followup.menu_action_followup_stat"/> -->
 
-        <act_window
-            domain="[('reconcile_id', '=', False), ('account_id.type','=','payable')]"
-            id="act_account_partner_account_move_payable_all"
-            name="Payable Items"
-            res_model="account.move.line"
-            src_model=""
-            view_id="account_move_line_partner_tree"/>
+        <act_window domain="[('reconcile_id', '=', False), ('account_id.type','=','payable')]" id="act_account_partner_account_move_payable_all" name="Payable Items" res_model="account.move.line" src_model="" view_id="account_move_line_partner_tree"/>
 
       <!-- <menuitem action="act_account_partner_account_move_payable_all" id="menu_account_move_open_unreconcile_payable" parent="account_followup.menu_action_followup_stat"/> -->
 
@@ -168,8 +154,8 @@
             <field name="model">res.company</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <field name="overdue_msg" nolabel="1" colspan ="4" position="after">
-                    <field name="follow_up_msg" nolabel="1" colspan ="4"/>
+                <field name="overdue_msg" nolabel="1" colspan="4" position="after">
+                    <field name="follow_up_msg" nolabel="1" colspan="4"/>
                     <separator string="Follow-up Message" colspan="4"/>
                 </field>
             </field>
@@ -190,9 +176,6 @@
         <record id="config_wizard_view_account_followup_followup_form" model="ir.actions.todo">
             <field name="action_id" ref="action_view_account_followup_followup_form"/>
             <field name="category_id" ref="account.category_accounting_configuration"/>
-            <field name="target">current</field>
-            <field name="type">normal</field>
-            <field name="state">skip</field>
         </record>
         
         
