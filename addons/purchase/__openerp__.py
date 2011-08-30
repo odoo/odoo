@@ -58,6 +58,7 @@ Dashboard for purchase management that includes:
         'process/purchase_process.xml',
         'report/purchase_report_view.xml',
         'board_purchase_view.xml',
+        'edi_purchase_order_data.xml',
     ],
     'test': [
              'test/purchase_from_order.yml',

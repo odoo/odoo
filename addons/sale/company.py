@@ -24,6 +24,7 @@ from osv import osv, fields
 class company(osv.osv):
     _inherit = 'res.company'
     _columns = {
+        'paypal_account': fields.char("Paypal Account", size=128, help="the paypal username (usually email)"),
         'security_lead': fields.float('Security Days', required=True,
             help="This is the days added to what you promise to customers "\
             "for security purpose"),

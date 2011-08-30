@@ -34,31 +34,21 @@ class sale_order(osv.osv, ir_edi.edi):
                 'origin': True,
                 'amount_total': True,
                 'date_order': True,
-                'create_date': True,
                 'date_confirm': True,
                 'partner_id': True,
                 'partner_invoice_id': True,
-                'incoterm': True,
-                'picking_policy': True,
-                'order_policy': True,
                 'pricelist_id': True,
-                'project_id': True,
-                'invoice_quantity': True,
+                'company_id': True,
                 'order_line': {
                         'name': True,
-                        'sequence': True,
                         'product_id': True,
-                        'invoiced': True,
                         'procurement_id': True,
                         'price_unit': True,
-                        'type': True,
                         'price_subtotal': True,
                         'tax_id': True,
-                        'address_allotment_id': True,
                         'product_uom': True,
                         'product_uom_qty': True,
                         'product_uos': True,
-                        'notes': True,
                         
                 },
                 'shipped': True,
@@ -111,7 +101,7 @@ class sale_order(osv.osv, ir_edi.edi):
         return edi_doc_list
 
     def edi_import(self, cr, uid, edi_document, context=None):
-            
+
         partner_pool = self.pool.get('res.partner')
         partner_address_pool = self.pool.get('res.partner.address')
         model_data_pool = self.pool.get('ir.model.data')
