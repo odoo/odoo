@@ -8,5 +8,13 @@ if path_addons not in sys.path:
 
 import base
 
-if __name__ == "__main__":
+def main():
+    # TODO move the code of base.common.main here !
+    # change the code to configure a simple werzug server -> base.common.Root()
     base.common.main(sys.argv)
+
+if __name__ == "__main__":
+    main()
+
+
+
