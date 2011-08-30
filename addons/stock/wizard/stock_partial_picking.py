@@ -67,7 +67,8 @@ class stock_partial_picking(osv.osv_memory):
             for m in pick.move_lines:
                 if m.state in ('done', 'cancel'):
                     continue
-                result.append(self.__create_partial_picking_memory(m, pick_type))
+                if m.state == 'assigned':
+                    result.append(self.__create_partial_picking_memory(m, pick_type))
                 
         if 'product_moves_in' in fields:
             res.update({'product_moves_in': result})
@@ -101,7 +102,6 @@ class stock_partial_picking(osv.osv_memory):
         _moves_fields.update({
                             'product_moves_' + picking_type: {'relation': 'stock.move.memory.'+picking_type, 'type' : 'one2many', 'string' : 'Product Moves'}, 
                             })
-
         _moves_arch_lst += """
                 <separator string="" colspan="4" />
                 <label string="" colspan="2"/>
