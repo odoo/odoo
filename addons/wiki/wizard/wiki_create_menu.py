@@ -55,7 +55,7 @@ class wiki_create_menu(osv.osv_memory):
             data = datas[0]
         if not data:
             return {}
-        value = {            
+        value = {
             'name': 'Wiki Page',
             'view_type': 'form',
             'view_mode': 'form,tree',
@@ -73,19 +73,19 @@ class wiki_create_menu(osv.osv_memory):
             value['view_mode'] = 'tree,form'
         elif group.method == 'tree':
             view_id = obj_view.search(cr, uid, [('name', '=', 'wiki.wiki.tree.children')])
-            value['view_id'] = view_id
+            value['view_id'] = view_id and view_id[0] or False
             value['domain'] = [('group_id', '=', group.id), ('parent_id', '=', False)]
             value['view_type'] = 'tree'
 
         action_id = obj_action.create(cr, uid, value)
-            
+
         menu_id = obj_menu.create(cr, uid, {
                         'name': data.menu_name,
                         'parent_id':data.menu_parent_id.id,
                         'icon': 'STOCK_DIALOG_QUESTION',
                         'action': 'ir.actions.act_window,'+ str(action_id),
                         }, context)
-        obj_wiki_group.write(cr, uid, [group_id], {'menu_id':menu_id})        
+        obj_wiki_group.write(cr, uid, [group_id], {'menu_id':menu_id})
         return {'type':  'ir.actions.act_window_close'}
 
 
