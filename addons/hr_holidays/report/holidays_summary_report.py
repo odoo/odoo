@@ -207,19 +207,17 @@ class report_custom(report_rml):
         row_id=1
 
         if data['model']=='hr.employee':
-            for id in data['form']['emp']:
-                 items = obj_emp.read(cr, uid, id, ['id','name'])
+            for emp_id in data['form']['emp']:
+                 items = obj_emp.read(cr, uid, emp_id, ['id','name'])
 
                  emp_xml += emp_create_xml(self, cr, uid, 0, holiday_type, row_id, items['id'], items['name'], som, eom)
                  row_id = row_id +1
 
         elif data['model']=='ir.ui.menu':
-            for id in data['form']['depts']:
-                dept = obj_dept.browse(cr, uid, id, context=context)
-                cr.execute("""SELECT id FROM hr_employee \
-                WHERE department_id = %s""", (id,))
-                emp_ids = [x[0] for x in cr.fetchall()]
-                if emp_ids==[]:
+            for dept_id in data['form']['depts']:
+                dept = obj_dept.browse(cr, uid, dept_id, context=context)
+                emp_ids = obj_emp.search(cr, uid, [('department_id','=',dept_id)], context=context)
+                if not emp_ids:
                     continue
                 dept_done=0
                 for item in obj_emp.read(cr, uid, emp_ids, ['id', 'name']):
