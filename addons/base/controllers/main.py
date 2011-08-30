@@ -1066,6 +1066,20 @@ class TreeView(View):
 class Export(View):
     _cp_path = "/base/export"
 
+    @openerpweb.jsonrequest
+    def formats(self, req):
+        """ Returns all valid export formats
+
+        :returns: for each export format, a pair of identifier and printable name
+        :rtype: [(str, str)]
+        """
+        return sorted([
+            controller.fmt
+            for path, controller in openerpweb.controllers_path.iteritems()
+            if path.startswith(self._cp_path)
+            if hasattr(controller, 'fmt')
+        ], key=operator.itemgetter(1))
+
     def fields_get(self, req, model):
         Model = req.session.model(model)
         fields = Model.fields_get(False, req.session.eval_context(req.context))
@@ -1236,6 +1250,7 @@ class Export(View):
 
 class CSVExport(Export):
     _cp_path = '/base/export/csv'
+    fmt = ('csv', 'CSV')
 
     @property
     def content_type(self):
@@ -1270,6 +1285,7 @@ class CSVExport(Export):
 
 class ExcelExport(Export):
     _cp_path = '/base/export/xls'
+    fmt = ('xls', 'Excel')
 
     @property
     def content_type(self):

@@ -65,6 +65,15 @@ openerp.base.DataExport = openerp.base.Dialog.extend({
                 self.rpc("/base/export/get_fields", { model: self.dataset.model, params: params}, self.on_show_data);
             }
         });
+        self.rpc('/base/export/formats', {}, function (formats) {
+            self.setup_export_formats(formats);
+        });
+    },
+    setup_export_formats: function (formats) {
+        var $fmts = this.$element.find('#export_format');
+        _(formats).each(function (format) {
+            $fmts.append(new Option(format[1], format[0]));
+        });
     },
     on_show_exists_export_list: function() {
         var self = this;
