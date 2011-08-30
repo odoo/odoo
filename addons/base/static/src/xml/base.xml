@@ -474,8 +474,8 @@
                 <label class="oe_form_label"><t t-esc="field.string"/>:</label>
             </td>
             <td t-foreach="widget.languages" t-as="lg" class="oe_form_frame_cell">
-                <input t-if="field.type == 'char'" type="text" t-attf-name="#{lg.code}-#{field.name}" value="" class="oe_trad_field" style="width: 100%"/>
-                <textarea t-if="field.type == 'text'" t-attf-name="#{lg.code}-#{field.name}" class="oe_trad_field" style="width: 100%"></textarea>
+                <input t-if="field.type == 'char'" type="text" t-attf-name="#{lg.code}-#{field.name}" value="" data-value="" class="oe_trad_field" style="width: 100%"/>
+                <textarea t-if="field.type == 'text'" t-attf-name="#{lg.code}-#{field.name}" data-value="" class="oe_trad_field" style="width: 100%"></textarea>
             </td>
         </tr>
         </table>
