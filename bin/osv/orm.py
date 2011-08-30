@@ -3850,7 +3850,7 @@ class orm(orm_template):
         domain = domain[:]
         # if the object has a field named 'active', filter out all inactive
         # records unless they were explicitely asked for
-        if 'active' in self._columns and (active_test and context.get('active_test', True)):
+        if 'active' in (self._columns.keys() + self._inherit_fields.keys()) and (active_test and context.get('active_test', True)):
             if domain:
                 active_in_args = False
                 for a in domain:
