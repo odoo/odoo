@@ -613,6 +613,50 @@ openerp.base.Session = openerp.base.CallbackEnabled.extend( /** @lends openerp.b
                 this.module_loaded[mod] = true;
             }
         }
+    },
+    getFile: function (options) {
+        // need to detect when the file is done downloading (not used
+        // yet, but we'll need it to fix the UI e.g. with a throbber
+        // while dump is being generated), iframe load event only fires
+        // when the iframe content loads, so we need to go smarter:
+        // http://geekswithblogs.net/GruffCode/archive/2010/10/28/detecting-the-file-download-dialog-in-the-browser.aspx
+        var timer, token = new Date().getTime(),
+            cookie_name = 'fileToken', cookie_length = cookie_name.length,
+            self = this, CHECK_INTERVAL = 100, id = _.uniqueId('get_file_frame');
+        var complete = function () { clearTimeout(timer); $target.remove(); };
+        var $target = $('<iframe style="display: none;">')
+            .attr({id: id, name: id})
+            .appendTo(document.body)
+            .load(function () {
+                if (options.error) {
+                    options.error(this.contentDocument.body)
+                }
+                complete();
+            });
+        $(options.form)
+            .append('<input type="hidden" name="token" value="' + token +'">')
+            .attr('target', id)
+            .get(0).submit();
+
+        var waitLoop = function () {
+            var cookies = document.cookie.split(';');
+            // setup next check
+            timer = setTimeout(waitLoop, CHECK_INTERVAL);
+            for (var i=0; i<cookies.length; ++i) {
+                var cookie = cookies[i].replace(/^\s*/, '');
+                if (!cookie.indexOf(cookie_name === 0)) { continue; }
+                var cookie_val = cookie.substring(cookie_length + 1);
+                if (parseInt(cookie_val, 10) !== token) { continue; }
+
+                // clear cookie
+                document.cookie = _.sprintf("%s=;expires=%s;path=/",
+                    cookie_name, new Date().toGMTString());
+                if (options.success) { options.success(); }
+                complete();
+                return;
+            }
+        };
+        timer = setTimeout(waitLoop, CHECK_INTERVAL);
     }
 });
 

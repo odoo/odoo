@@ -339,62 +339,26 @@ openerp.base.Database = openerp.base.Widget.extend({
             }
         });
     },
-    wait_for_file: function (token, cleanup) {
-        var self = this,
-            cookie_name = 'fileToken',
-            cookie_length = cookie_name.length;
-        this.backup_timer = setInterval(function () {
-            var cookies = document.cookie.split(';');
-            for(var i=0; i<cookies.length; ++i) {
-                var cookie = cookies[i].replace(/^\s*/, '');
-                if(!cookie.indexOf(cookie_name) === 0) { continue; }
-                var cookie_val = cookie.substring(cookie_length + 1);
-                if(parseInt(cookie_val, 10) !== token) { continue; }
-
-                // clear waiter
-                clearInterval(self.backup_timer);
-                // clear cookie
-                document.cookie = _.sprintf("%s=;expires=%s;path=/",
-                    cookie_name, new Date().toGMTString());
-
-                if (cleanup) { cleanup(); }
-            }
-        }, 200);
-    },
     do_backup: function() {
         var self = this;
-       	self.$option_id.html(QWeb.render("BackupDB", self));
-
-        self.$option_id.find("form[name=backup_db_form]").validate({
+       	self.$option_id
+            .html(QWeb.render("BackupDB", self))
+            .find("form[name=backup_db_form]").validate({
             submitHandler: function (form) {
                 $.blockUI({message:'<img src="/base/static/src/img/throbber2.gif">'});
-                // need to detect when the file is done downloading (not used
-                // yet, but we'll need it to fix the UI e.g. with a throbber
-                // while dump is being generated), iframe load event only fires
-                // when the iframe content loads, so we need to go smarter:
-                // http://geekswithblogs.net/GruffCode/archive/2010/10/28/detecting-the-file-download-dialog-in-the-browser.aspx
-                var $target = $('#backup-target'),
-                      token = new Date().getTime();
-                if (!$target.length) {
-                    $target = $('<iframe id="backup-target" style="display: none;">')
-                        .appendTo(document.body)
-                        .load(function () {
-                            $.unblockUI();
-                            clearInterval(self.backup_timer);
-                            var error = this.contentDocument.body
-                                    .firstChild.data
-                                    .split('|');
-                            self.display_error({
-                                title: error[0],
-                                error: error[1]
-                            });
+                self.session.getFile({
+                    form: form,
+                    success: function () {
+                        $.unblockUI();
+                    },
+                    error: function (body) {
+                        $.unblockUI();
+                        var error = body.firstChild.data.split('|');
+                        self.display_error({
+                            title: error[0],
+                            error: error[1]
                         });
-                }
-                $(form).find('input[name=token]').val(token);
-                form.submit();
-
-                self.wait_for_file(token, function () {
-                    $.unblockUI();
+                    }
                 });
             }
         });
