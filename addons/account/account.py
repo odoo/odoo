@@ -2340,6 +2340,7 @@ class account_account_template(osv.osv):
         'child_parent_ids':fields.one2many('account.account.template', 'parent_id', 'Children'),
         'tax_ids': fields.many2many('account.tax.template', 'account_account_template_tax_rel', 'account_id', 'tax_id', 'Default Taxes'),
         'nocreate': fields.boolean('Optional create', help="If checked, the new chart of accounts will not contain this by default."),
+        'chart_template_id': fields.many2one('account.chart.template', 'Chart Template'),
     }
 
     _defaults = {
@@ -2375,6 +2376,16 @@ class account_account_template(osv.osv):
                 name = record['code']+' '+name
             res.append((record['id'],name ))
         return res
+
+    
+    def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
+        if context is None:
+            context = {}
+        if context.get("coa_template"):
+            args += ['|',('chart_template_id', '=', context.get("coa_template")),('chart_template_id', '=', False)]
+        return super(account_account_template, self).search(cr, uid, args, offset, limit,
+                order, context=context, count=count)
+
 
     def generate_account(self, cr, uid, account_root_id, tax_template_ref, code_digits, company_id, context=None):
         """

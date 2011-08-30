@@ -2064,6 +2064,7 @@
 
                             <field name="currency_id"/>
                             <field name="reconcile"/>
+                            <field name="chart_template_id"/>
                             <separator string="Default taxes" colspan="4"/>
                             <field name="tax_ids" colspan="4" nolabel="1"/>
                         </page>
@@ -2135,7 +2136,7 @@
                     <group>
                     <field name="name"/>
                     <field name="account_root_id" attrs="{'required': [('parent_id', '=', False)]}"/>
-                    <field name="bank_account_view_id" attrs="{'required': [('parent_id', '=', False)]}"/>
+                    <field name="bank_account_view_id" attrs="{'required': [('parent_id', '=', False)]}" context="{'coa_template': active_id}"/>
                     <field name="tax_code_root_id" attrs="{'required': [('parent_id', '=', False)]}"/>
                     <field name="parent_id" />
                     <field name="code_digits" />
@@ -2145,14 +2146,14 @@
                     <field name="tax_template_ids" colspan="4" readonly="1" nolabel="1"/>
                     <separator string="Properties" colspan="4"/>
                     <group>
-                    <field name="property_account_receivable" domain="[('id', 'child_of', [account_root_id])]"/>
-                    <field name="property_account_payable" domain="[('id', 'child_of', [account_root_id])]"/>
-                    <field name="property_account_expense_categ" domain="[('id', 'child_of', [account_root_id])]"/>
-                    <field name="property_account_income_categ" domain="[('id', 'child_of', [account_root_id])]" />
-                    <field name="property_account_expense" domain="[('id', 'child_of', [account_root_id])]"/>
-                    <field name="property_account_income" domain="[('id', 'child_of', [account_root_id])]"/>
-                    <field name="property_account_income_opening" domain="[('id', 'child_of', [account_root_id])]"/>
-                    <field name="property_account_expense_opening" domain="[('id', 'child_of', [account_root_id])]"/>
+                    <field name="property_account_receivable" domain="[('id', 'child_of', [account_root_id])]" context="{'coa_template': active_id}"/>
+                    <field name="property_account_payable" domain="[('id', 'child_of', [account_root_id])]" context="{'coa_template': active_id}"/>
+                    <field name="property_account_expense_categ" domain="[('id', 'child_of', [account_root_id])]" context="{'coa_template': active_id}"/>
+                    <field name="property_account_income_categ" domain="[('id', 'child_of', [account_root_id])]" context="{'coa_template': active_id}"/>
+                    <field name="property_account_expense" domain="[('id', 'child_of', [account_root_id])]" context="{'coa_template': active_id}"/>
+                    <field name="property_account_income" domain="[('id', 'child_of', [account_root_id])]" context="{'coa_template': active_id}"/>
+                    <field name="property_account_income_opening" domain="[('id', 'child_of', [account_root_id])]" context="{'coa_template': active_id}"/>
+                    <field name="property_account_expense_opening" domain="[('id', 'child_of', [account_root_id])]" context="{'coa_template': active_id}"/>
                     <field name="property_reserve_and_surplus_account" />
                     </group>
                 </form>
