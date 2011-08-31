@@ -1088,41 +1088,40 @@ class Export(View):
     @openerpweb.jsonrequest
     def get_fields(self, req, model, prefix='', name= '',
                    import_compat=True, field_parent_type=None):
-        fields = self.fields_get(req, model)
 
+        fields = self.fields_get(req, model)
         if import_compat and field_parent_type == "many2one":
             fields = {}
-
         fields.update({'id': {'string': 'ID'}, '.id': {'string': 'Database ID'}})
-        records = []
-        fields_order = fields.keys()
-        fields_order.sort(lambda x,y: -cmp(fields[x].get('string', ''), fields[y].get('string', '')))
 
-        for index, field in enumerate(fields_order):
-            value = fields[field]
-            if import_compat and value.get('readonly'):
+        fields_seq = sorted(fields.iteritems(),
+            key=lambda field: field[1].get('string', ''), reverse=True)
+
+        records = []
+        for field_name, field in fields_seq:
+            if import_compat and field.get('readonly'):
                 ok = False
-                for sl in value.get('states', {}).values():
+                for sl in field.get('states', {}).values():
                     for s in sl:
                         ok = ok or (s==['readonly',False])
                 if not ok: continue
 
-            id = prefix + (prefix and '/'or '') + field
-            nm = name + (name and '/' or '') + value['string']
+            id = prefix + (prefix and '/'or '') + field_name
+            nm = name + (name and '/' or '') + field['string']
             record = {'id': id, 'string': nm, 'children': [],
-                      'field_type': value.get('type', False),
-                      'required': value.get('required', False)}
+                      'field_type': field.get('type', False),
+                      'required': field.get('required', False)}
             records.append(record)
 
-            if len(nm.split('/')) < 3 and value.get('relation'):
+            if len(nm.split('/')) < 3 and field.get('relation'):
                 if import_compat:
-                    ref = value.pop('relation')
+                    ref = field.pop('relation')
                     cfields = self.fields_get(req, ref)
-                    if value['type'] == 'many2many':
+                    if field['type'] == 'many2many':
                         record['children'] = []
                         record['params'] = {'model': ref, 'prefix': id, 'name': nm}
 
-                    elif value['type'] == 'many2one':
+                    elif field['type'] == 'many2one':
                         record['children'] = [id + '/id', id + '/.id']
                         record['params'] = {'model': ref, 'prefix': id, 'name': nm}
 
@@ -1137,7 +1136,7 @@ class Export(View):
                         record['children'] = children or []
                         record['params'] = {'model': ref, 'prefix': id, 'name': nm}
                 else:
-                    ref = value.pop('relation')
+                    ref = field.pop('relation')
                     cfields = self.fields_get(req, ref)
                     cfields_order = cfields.keys()
                     cfields_order.sort(lambda x,y: -cmp(cfields[x].get('string', ''), cfields[y].get('string', '')))
