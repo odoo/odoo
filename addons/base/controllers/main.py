@@ -1090,7 +1090,7 @@ class Export(View):
                    import_compat=True, field_parent_type=None):
         fields = self.fields_get(req, model)
 
-        if import_compat and field_parent_type and field_parent_type == "many2one":
+        if import_compat and field_parent_type == "many2one":
             fields = {}
 
         fields.update({'id': {'string': 'ID'}, '.id': {'string': 'Database ID'}})
