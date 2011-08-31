@@ -42,6 +42,19 @@
 	        <field name="report_type">asset</field>
 	    </record>
 
+        <!-- Chart template -->
+        <record id="account_chart_template_a" model="account.chart.template">
+            <field name="name">Demo Chart A</field>
+        </record>
+
+        <record id="account_chart_template_b" model="account.chart.template">
+            <field name="name">Demo Chart B</field>
+        </record>
+
+        <record id="account_chart_template_c" model="account.chart.template">
+            <field name="name">Demo Chart C</field>
+        </record>
+
         <!-- Account Templates for A -->
 
         <record model="account.account.template" id="chart_a_root">
@@ -281,7 +294,7 @@
  
         <record id="acc_fisc_pos_temp_b" model="account.fiscal.position.template">
             <field name="name">Fiscal Position Template B</field>
-            <field name="chart_template_id" ref="account_chart_template_a"/>
+            <field name="chart_template_id" ref="account_chart_template_b"/>
         </record>
 
         <record id="acc_fisc_pos_tax_temp_a" model="account.fiscal.position.tax.template">
