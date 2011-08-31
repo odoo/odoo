@@ -1114,29 +1114,14 @@ class Export(View):
             records.append(record)
 
             if len(nm.split('/')) < 3 and 'relation' in field:
-                if import_compat:
-                    ref = field.pop('relation')
-                    cfields = self.fields_get(req, ref)
+                ref = field.pop('relation')
+                record['params'] = {'model': ref, 'prefix': id, 'name': nm}
+                if import_compat and field['type'] in ('many2one', 'many2many'):
                     if field['type'] == 'many2many':
                         record['children'] = []
-                        record['params'] = {'model': ref, 'prefix': id, 'name': nm}
-
                     elif field['type'] == 'many2one':
                         record['children'] = [id + '/id', id + '/.id']
-                        record['params'] = {'model': ref, 'prefix': id, 'name': nm}
-
-                    else:
-                        cfields_order = cfields.keys()
-                        cfields_order.sort(lambda x,y: -cmp(cfields[x].get('string', ''), cfields[y].get('string', '')))
-                        children = []
-                        for fld in cfields_order:
-                            cid = id + '/' + fld
-                            cid = cid.replace(' ', '_')
-                            children.append(cid)
-                        record['children'] = children or []
-                        record['params'] = {'model': ref, 'prefix': id, 'name': nm}
                 else:
-                    ref = field.pop('relation')
                     cfields = self.fields_get(req, ref)
                     cfields_order = cfields.keys()
                     cfields_order.sort(lambda x,y: -cmp(cfields[x].get('string', ''), cfields[y].get('string', '')))
@@ -1145,8 +1130,7 @@ class Export(View):
                         cid = id + '/' + fld
                         cid = cid.replace(' ', '_')
                         children.append(cid)
-                    record['children'] = children or []
-                    record['params'] = {'model': ref, 'prefix': id, 'name': nm}
+                    record['children'] = children
 
         records.reverse()
         return records
