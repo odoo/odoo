@@ -20,7 +20,7 @@ openerp.web_mobile.MobileWebClient = openerp.base.Widget.extend({
         this.$element.html(QWeb.render("WebClient", {}));
         this.session = new openerp.base.Session("oe_errors");
         this.crashmanager =  new openerp.base.CrashManager(this);
-        this.login = new openerp.web_mobile.Login(this, "oe_app");
+        this.login = new openerp.web_mobile.Login(this, "oe_login");
 //        this.session.on_session_invalid.add(this.login.do_ask_login);
     },
     start: function() {
@@ -74,7 +74,7 @@ openerp.web_mobile.Login =  openerp.base.Widget.extend({
             .removeClass("login_invalid")
             .addClass("login_valid");
             //.hide();
-        this.homepage = new openerp.web_mobile.HomePage(this, "oe_app");
+        this.homepage = new openerp.web_mobile.HomePage(this, "oe_home");
         this.homepage.start();
     },
     do_ask_login: function(continuation) {
@@ -97,12 +97,14 @@ openerp.web_mobile.HomePage =  openerp.base.Widget.extend({
         this.shortcuts = new openerp.web_mobile.Shortcuts(this, "oe_shortcuts");
         this.menu = new openerp.web_mobile.Menu(this, "oe_menu", "oe_secondary_menu");
         this.options = new openerp.web_mobile.Options(this, "oe_options");
+        this.footer = new openerp.web_mobile.Footer(this, "oe_footer");
         this.header.start();
         this.shortcuts.start();
         this.menu.start();
         this.options.start();
-        jQuery("#oe_header").find("h1").html('Home');
+        this.footer.start();
         this.$element.find("a").click(this.on_clicked);
+        $.mobile.changePage($("#oe_home"), "slide", true, true);
     }
 });
 
@@ -113,15 +115,16 @@ openerp.web_mobile.Header =  openerp.base.Widget.extend({
     start: function() {
         var self = this;
         self.$element.html(QWeb.render("Header", this));
-        self.$element.find("a").click(this.on_clicked);
+    }
+});
+
+openerp.web_mobile.Footer =  openerp.base.Widget.extend({
+    init: function(session, element_id) {
+        this._super(session, element_id);
     },
-    on_clicked: function(ev) {
-        $opt = $(ev.currentTarget);
-        current_id = $opt.attr('id');
-        if (current_id == 'home') {
-            this.homepage = new openerp.web_mobile.HomePage(this, "oe_app");
-            this.homepage.start();
-        }
+    start: function() {
+        var self = this;
+        self.$element.html(QWeb.render("Footer", this));
     }
 });
 
@@ -140,9 +143,11 @@ openerp.web_mobile.Shortcuts =  openerp.base.Widget.extend({
         $shortcut = $(ev.currentTarget);
         id = $shortcut.data('menu');
         res_id = $shortcut.data('res');
-        jQuery("#oe_header").find("h1").html($shortcut.data('name'));
-        this.listview = new openerp.web_mobile.ListView(this, "oe_app", res_id);
+        this.header = new openerp.web_mobile.Header(this, "oe_header");
+        this.listview = new openerp.web_mobile.ListView(this, "oe_list", res_id);
+        this.header.start();
         this.listview.start();
+        jQuery("#oe_header").find("h1").html($shortcut.data('name'));
     }
 });
 
@@ -169,13 +174,15 @@ openerp.web_mobile.Menu =  openerp.base.Widget.extend({
                 this.children = this.data.data.children[i];
             }
         }
-        jQuery("#oe_header").find("h1").html($menu.data('name'));
         this.$element
             .removeClass("login_valid")
             .addClass("secondary_menu");
             //.hide();
-        this.secondary = new openerp.web_mobile.Secondary(this, "oe_app", this.children);
+        this.header = new openerp.web_mobile.Header(this, "oe_header");
+        this.secondary = new openerp.web_mobile.Secondary(this, "oe_sec_menu", this.children);
+        this.header.start();
         this.secondary.start();
+        jQuery("#oe_header").find("h1").html($menu.data('name'));
     }
 });
 
@@ -188,6 +195,7 @@ openerp.web_mobile.Secondary =  openerp.base.Widget.extend({
         var v = { menu : this.data };
         this.$element.html(QWeb.render("Menu.secondary", v));
         this.$element.add(this.$secondary_menu).find("a").click(this.on_menu_click);
+        $.mobile.changePage($("#oe_sec_menu"), "slide", true, true);
     },
     on_menu_click: function(ev, id) {
         $menu = $(ev.currentTarget);
@@ -197,22 +205,25 @@ openerp.web_mobile.Secondary =  openerp.base.Widget.extend({
                 this.children = this.data.children[i];
             }
         }
-        jQuery("#oe_header").find("h1").html($menu.data('name'));
         var child_len = this.children.children.length;
         if (child_len > 0) {
             this.$element
                 .removeClass("secondary_menu")
                 .addClass("content_menu");
                 //.hide();
-            this.secondary = new openerp.web_mobile.Secondary(this, "oe_app", this.children);
+            this.header = new openerp.web_mobile.Header(this, "oe_header");
+            this.secondary = new openerp.web_mobile.Secondary(this, "oe_sec_menu_new", this.children);
+            this.header.start();
             this.secondary.start();
+            $.mobile.changePage($("#oe_sec_menu_new"), "slide", true, true);
         }
         else {
             if (id) {
-                this.listview = new openerp.web_mobile.ListView(this, "oe_app", id);
+                this.listview = new openerp.web_mobile.ListView(this, "oe_list", id);
                 this.listview.start();
             }
         }
+        jQuery("#oe_header").find("h1").html($menu.data('name'));
     }
 });
 
@@ -223,12 +234,6 @@ openerp.web_mobile.Options =  openerp.base.Widget.extend({
     start: function() {
         var self = this;
         this.$element.html(QWeb.render("Options", this));
-        self.$element.find("#logout").click(self.on_logout);
-    },
-    on_logout: function(ev) {
-        this.session.logout();
-//        this.login = new openerp.web_mobile.Login(this, "oe_app");
-//        this.login.start();
     }
 });
 

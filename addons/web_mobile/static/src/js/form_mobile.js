@@ -38,7 +38,6 @@ openerp.web_mobile.FormView = openerp.base.Widget.extend({
                         var notebooks = view_fields[j];
                     }
                 }
-                $("#oe_header").find("h1").html(result.fields_view.arch.attrs.string);
                 self.$element.html(QWeb.render("FormView", {'get_fields': get_fields, 'notebooks': notebooks || false, 'fields' : fields, 'values' : data }));
                     self.$element.find('select').change(function(ev){
                         selection.on_select_option(ev);
@@ -101,6 +100,8 @@ openerp.web_mobile.FormView = openerp.base.Widget.extend({
                         });
                     });
                 });
+                $.mobile.changePage($("#oe_form"), "slide", true, true);
+                $("#oe_header").find("h1").html(result.fields_view.arch.attrs.string);
         });
     },
     get_fields: function(view_fields, fields) {
