@@ -479,8 +479,6 @@ openerp.base.Login =  openerp.base.Widget.extend({
             this.selected_login = localStorage.getItem('last_login_login_success');
         }
         if (jQuery.deparam(jQuery.param.querystring()).debug != undefined) {
-            this.selected_db = this.selected_db || "trunk";
-            this.selected_login = this.selected_login || "admin";
             this.selected_password = this.selected_password || "a";
         }
     },
@@ -564,21 +562,24 @@ openerp.base.Login =  openerp.base.Widget.extend({
 });
 
 openerp.base.Header =  openerp.base.Widget.extend({
-    init: function(parent, element_id) {
-        this._super(parent, element_id);
-        if (jQuery.deparam(jQuery.param.querystring()).debug !== undefined) {
-            this.qs = '?debug'
-        } else {
-            this.qs = ''
-        }
+    template: "Header",
+    identifier_prefix: 'oe-app-header-',
+    init: function(parent) {
+        this._super(parent);
+        this.qs = "?" + jQuery.param.querystring();
+        this.$content = $();
     },
     start: function() {
-        return this.do_update();
+        this._super();
     },
     do_update: function () {
-        this.$element.html(QWeb.render("Header", this));
+        this.$content = $(QWeb.render("Header-content", {widget: this}));
+        this.$content.appendTo(this.$element);
         this.$element.find(".logout").click(this.on_logout);
         return this.shortcut_load();
+    },
+    do_reset: function() {
+        this.$content.remove();
     },
     shortcut_load :function(){
         var self = this,
@@ -590,22 +591,27 @@ openerp.base.Header =  openerp.base.Widget.extend({
             sc.binding = {};
             $(sc.binding).bind({
                 'add': function (e, attrs) {
-                    var $shortcut = $('<li>', {
+                    shortcuts_ds.create(attrs, function (out) {
+                        $('<li>', {
+                            'data-shortcut-id':out.result,
                             'data-id': attrs.res_id
                         }).text(attrs.name)
-                        .appendTo(self.$element.find('.oe-shortcuts ul'));
-                    shortcuts_ds.create(attrs, function (out) {
-                        $shortcut.data('shortcut-id', out.result);
+                          .appendTo(self.$element.find('.oe-shortcuts ul'));
+                        attrs.id = out.result;
+                        sc.push(attrs);
                     });
                 },
                 'remove-current': function () {
                     var menu_id = self.session.active_id;
                     var $shortcut = self.$element
-                            .find('.oe-shortcuts li[data-id=' + menu_id + ']');
+                        .find('.oe-shortcuts li[data-id=' + menu_id + ']');
                     var shortcut_id = $shortcut.data('shortcut-id');
                     $shortcut.remove();
                     shortcuts_ds.unlink([shortcut_id]);
-                }
+                    var sc_new = _.reject(sc, function(shortcut){ return shortcut_id === shortcut.id});
+                    sc.splice(0, sc.length);
+                    sc.push.apply(sc, sc_new);
+                    }
             });
         }
         return this.rpc('/base/session/sc_list', {}, function(shortcuts) {
@@ -615,6 +621,7 @@ openerp.base.Header =  openerp.base.Widget.extend({
             self.$element.find('.oe-shortcuts')
                 .html(QWeb.render('Shortcuts', {'shortcuts': shortcuts}))
                 .undelegate('li', 'click')
+
                 .delegate('li', 'click', function(e) {
                     e.stopPropagation();
                     var id = $(this).data('id');
@@ -743,21 +750,23 @@ openerp.base.WebClient = openerp.base.Widget.extend({
         // Do you autorize this ? will be replaced by notify() in controller
         openerp.base.Widget.prototype.notification = new openerp.base.Notification(this, "oe_notification");
 
-        this.header = new openerp.base.Header(this, "oe_header");
+        
+        this.header = new openerp.base.Header(this);
         this.login = new openerp.base.Login(this, "oe_login");
         this.header.on_logout.add(this.login.on_logout);
+        this.header.on_action.add(this.on_menu_action);
 
         this.session.on_session_invalid.add(this.login.do_ask_login);
         this.session.on_session_valid.add_last(this.header.do_update);
+        this.session.on_session_invalid.add_last(this.header.do_reset);
         this.session.on_session_valid.add_last(this.on_logged);
 
         this.menu = new openerp.base.Menu(this, "oe_menu", "oe_secondary_menu");
         this.menu.on_action.add(this.on_menu_action);
-        this.header.on_action.add(this.on_menu_action);
     },
     start: function() {
+        this.header.appendTo($("#oe_header"));
         this.session.start();
-        this.header.start();
         this.login.start();
         this.menu.start();
         this.notification.notify("OpenERP Client", "The openerp client has been initialized.");

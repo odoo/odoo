@@ -327,7 +327,7 @@ openerp.base_dashboard.ConfigOverview = openerp.base.View.extend({
                 e.stopImmediatePropagation();
                 var new_state = this.checked ? 'done' : 'open',
                       todo_id = parseInt($(this).val(), 10);
-                self.dataset.write(todo_id, {state: new_state}, function () {
+                self.dataset.write(todo_id, {state: new_state}, {}, function () {
                     self.start();
                 });
             })

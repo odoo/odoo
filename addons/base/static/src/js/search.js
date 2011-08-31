@@ -801,6 +801,8 @@ openerp.base.search.ManyToOneField = openerp.base.search.CharField.extend({
     render: function (defaults) {
         if (defaults[this.attrs.name]) {
             this.id = defaults[this.attrs.name];
+            if (this.id instanceof Array)
+                this.id = this.id[0];
             // TODO: maybe this should not be completely removed
             delete defaults[this.attrs.name];
             this.dataset.name_get([this.id], $.proxy(this, 'on_name_get'));

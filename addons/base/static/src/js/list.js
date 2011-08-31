@@ -597,8 +597,11 @@ openerp.base.ListView = openerp.base.View.extend( /** @lends openerp.base.ListVi
             $footer_cells.filter(_.sprintf('[data-field=%s]', column.id))
                 .html(openerp.base.format_cell(aggregation, column));
         });
+    },
+    get_selected_ids: function() {
+        var ids = this.groups.get_selection().ids;
+        return ids;
     }
-    // TODO: implement reorder (drag and drop rows)
 });
 openerp.base.ListView.List = openerp.base.Class.extend( /** @lends openerp.base.ListView.List# */{
     /**

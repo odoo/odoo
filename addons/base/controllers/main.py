@@ -9,16 +9,21 @@ import re
 import simplejson
 import textwrap
 import xmlrpclib
+import time
 from xml.etree import ElementTree
 from cStringIO import StringIO
 
 import cherrypy
 
-import openerpweb
-import openerpweb.ast
-import openerpweb.nonliterals
+import base.common as openerpweb
+import base.common.ast
+import base.common.nonliterals
+openerpweb.ast = base.common.ast
+openerpweb.nonliterals = base.common.nonliterals
 
 from babel.messages.pofile import read_po
+
+_REPORT_POLLER_DELAY = 0.05
 
 # Should move to openerpweb.Xml2Json
 class Xml2Json:
@@ -140,8 +145,7 @@ class WebClient(openerpweb.Controller):
         return content
 
     @openerpweb.httprequest
-    def home(self, req, s_action=None):
-
+    def home(self, req, s_action=None, **kw):
         # script tags
         jslist = ['/base/webclient/js']
         if req.debug:
@@ -433,9 +437,12 @@ def load_actions_from_ir_values(req, key, key2, models, meta):
             for id, name, action in actions]
 
 def clean_action(req, action):
+    action.setdefault('flags', {})
+    if action['type'] != 'ir.actions.act_window':
+        return action
+
     context = req.session.eval_context(req.context)
     eval_ctx = req.session.evaluation_context(context)
-    action.setdefault('flags', {})
 
     # values come from the server, we can just eval them
     if isinstance(action.get('context'), basestring):
@@ -1275,6 +1282,29 @@ class Export(View):
         else:
             return export_csv(field, result)
 
+class Export(View):
+    _cp_path = "/base/report"
+
+    @openerpweb.jsonrequest
+    def get_report(self, req, action):
+        report_srv = req.session.proxy("report")
+        context = req.session.eval_context(openerpweb.nonliterals.CompoundContext(req.context, \
+                                                                                  action["context"]))
+
+        args = [req.session._db, req.session._uid, req.session._password, action["report_name"], context["active_ids"], {"id": context["active_id"], "model": context["active_model"], "report_type": action["report_type"]}, context]
+        report_id = report_srv.report(*args)
+        report = None
+        while True:
+            args2 = [req.session._db, req.session._uid, req.session._password, report_id]
+            report = report_srv.report_get(*args2)
+            if report["state"]:
+                break
+
+            time.sleep(_REPORT_POLLER_DELAY)
+        #TODO: ok now we've got the report, and so what?
+        return False
+
+
 class Import(View):
     _cp_path = "/base/import"
 
@@ -1347,7 +1377,6 @@ class Import(View):
                     else:
                         fields.append((word, word))
 #                        error = {'message':("You cannot import the field '%s', because we cannot auto-detect it" % (word,))}
-                break
         except:
             error = {'message':('Error processing the first line of the file. Field "%s" is unknown') % (word,)}
 

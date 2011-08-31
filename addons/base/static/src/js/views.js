@@ -123,6 +123,14 @@ openerp.base.ActionManager = openerp.base.Widget.extend({
         this.content_stop();
         var ClientWidget = openerp.base.client_actions.get_object(action.tag);
         (this.client_widget = new ClientWidget(this, action.params)).appendTo(this);
+    },
+    ir_actions_report_xml: function(action) {
+        this.rpc('/base/report/get_report', {
+            action: action,
+            context: {}
+        }).then(function(result) {
+            debugger;
+        });
     }
 });
 
@@ -350,20 +358,22 @@ openerp.base.ViewManagerAction = openerp.base.ViewManager.extend({
     shortcut_add_remove: function() {
         var self = this;
         var $shortcut_toggle = this.$element.find('.oe-shortcut-toggle');
-        $shortcut_toggle.click(function() {
-            if ($shortcut_toggle.hasClass("oe-shortcut-remove")) {
-                $(self.session.shortcuts.binding).trigger('remove-current');
-                $shortcut_toggle.removeClass("oe-shortcut-remove");
-            } else {
-                $(self.session.shortcuts.binding).trigger('add', {
-                    'user_id': self.session.uid,
-                    'res_id': self.session.active_id,
-                    'resource': 'ir.ui.menu',
-                    'name': self.action.name
-                });
-                $shortcut_toggle.addClass("oe-shortcut-remove");
-            }
-        });
+        $shortcut_toggle
+            .unbind("click")
+            .click(function() {
+                if ($shortcut_toggle.hasClass("oe-shortcut-remove")) {
+                    $(self.session.shortcuts.binding).trigger('remove-current');
+                    $shortcut_toggle.removeClass("oe-shortcut-remove");
+                } else {
+                    $(self.session.shortcuts.binding).trigger('add', {
+                        'user_id': self.session.uid,
+                        'res_id': self.session.active_id,
+                        'resource': 'ir.ui.menu',
+                        'name': self.action.name
+                    });
+                    $shortcut_toggle.addClass("oe-shortcut-remove");
+                }
+            });
     }
 });
 
@@ -374,8 +384,8 @@ openerp.base.Sidebar = openerp.base.Widget.extend({
         this.sections = {};
     },
     start: function() {
+        this._super(this);
         var self = this;
-        this._super(this, arguments);
         this.$element.html(QWeb.render('Sidebar'));
         this.$element.find(".toggle-sidebar").click(function(e) {
             self.do_toggle();
@@ -431,9 +441,26 @@ openerp.base.Sidebar = openerp.base.Widget.extend({
                     item.callback();
                 }
                 if (item.action) {
-                    item.action.flags = item.action.flags || {};
-                    item.action.flags.new_window = true;
-                    self.do_action(item.action);
+                    var ids = self.widget_parent.get_selected_ids();
+                    if (ids.length == 0) {
+                        //TODO niv: maybe show a warning?
+                        return false;
+                    }
+                    var additional_context = {
+                        active_id: ids[0],
+                        active_ids: ids,
+                        active_model: self.widget_parent.dataset.model
+                    };
+                    self.rpc("/base/action/load", {
+                        action_id: item.action.id,
+                        context: additional_context
+                    }, function(result) {
+                        result.result.context = _.extend(result.result.context || {},
+                            additional_context);
+                        result.result.flags = result.result.flags || {};
+                        result.result.flags.new_window = true;
+                        self.do_action(result.result);
+                    });
                 }
                 return false;
             });
@@ -456,6 +483,9 @@ openerp.base.Sidebar = openerp.base.Widget.extend({
 openerp.base.TranslateDialog = openerp.base.Dialog.extend({
     dialog_title: _t("Translations"),
     init: function(view) {
+        // TODO fme: should add the language to fields_view_get because between the fields view get
+        // and the moment the user opens the translation dialog, the user language could have been changed
+        this.view_language = view.session.user_context.lang;
         this['on_button' + _t("Save")] = this.on_button_Save;
         this['on_button' + _t("Close")] = this.on_button_Close;
         this._super(view, {
@@ -484,6 +514,9 @@ openerp.base.TranslateDialog = openerp.base.Dialog.extend({
                 self.select_tab('view');
             }
             self.$fields_form = self.$element.find('.oe_translation_form');
+            self.$fields_form.find('.oe_trad_field').change(function() {
+                $(this).toggleClass('touched', ($(this).val() != $(this).attr('data-value')));
+            });
         });
         return this;
     },
@@ -498,19 +531,27 @@ openerp.base.TranslateDialog = openerp.base.Dialog.extend({
         _.each(self.languages, function(lg) {
             var deff = $.Deferred();
             deffered.push(deff);
-            self.rpc('/base/dataset/get', {
-                model: self.view.dataset.model,
-                ids: [self.view.datarecord.id],
-                fields: self.translatable_fields_keys,
-                context: self.view.dataset.get_context({
-                    'lang': lg.code
-                })
-            }, function(values) {
+            var callback = function(values) {
                 _.each(self.translatable_fields_keys, function(f) {
-                    self.$fields_form.find('.oe_trad_field[name="' + lg.code + '-' + f + '"]').val(values[0][f] || '');
+                    self.$fields_form.find('.oe_trad_field[name="' + lg.code + '-' + f + '"]').val(values[0][f] || '').attr('data-value', values[0][f] || '');
                 });
                 deff.resolve();
-            });
+            }
+            if (lg.code === self.view_language) {
+                var values = {};
+                _.each(self.translatable_fields_keys, function(field) {
+                    values[field] = self.view.fields[field].get_value();
+                });
+                callback([values]);
+            } else {
+                self.rpc('/base/dataset/get', {
+                    model: self.view.dataset.model,
+                    ids: [self.view.datarecord.id],
+                    fields: self.translatable_fields_keys,
+                    context: self.view.dataset.get_context({
+                        'lang': lg.code
+                    })}, callback);
+            }
         });
         $.when.apply(null, deffered).then(callback);
     },
@@ -546,6 +587,24 @@ openerp.base.TranslateDialog = openerp.base.Dialog.extend({
         });
     },
     on_button_Save: function() {
+        var trads = {},
+            self = this;
+        self.$fields_form.find('.oe_trad_field.touched').each(function() {
+            var field = $(this).attr('name').split('-');
+            if (!trads[field[0]]) {
+                trads[field[0]] = {};
+            }
+            trads[field[0]][field[1]] = $(this).val();
+        });
+        _.each(trads, function(data, code) {
+            if (code === self.view_language) {
+                _.each(data, function(value, field) {
+                    self.view.fields[field].set_value(value);
+                });
+            } else {
+                self.view.dataset.write(self.view.datarecord.id, data, { 'lang': code });
+            }
+        });
         this.close();
     },
     on_button_Close: function() {
@@ -651,7 +710,7 @@ openerp.base.View = openerp.base.Widget.extend({
             }, {
                 label: "Translate",
                 callback: this.on_sidebar_translate,
-                classname: 'oe_sidebar_translate'
+                classname: 'oe_sidebar_translate oe_hide'
             }, {
                 label: "View Log",
                 callback: this.on_sidebar_view_log,
