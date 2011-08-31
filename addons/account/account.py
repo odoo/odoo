@@ -3048,7 +3048,6 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         return True
 
     def _install_template(self, cr, uid, ids, template_id, company_id, code_digits=None ,tax_data={}, context=None):
-        print 'install', template_id
         template = self.pool.get('account.chart.template').browse(cr, uid, template_id, context=context)
 #        TOFIX: Improve relation between COA template and account template
 #        If we have COA template struct like :
