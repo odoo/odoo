@@ -2611,6 +2611,15 @@ class account_low_level_report(osv.osv):
     _name = "account.low.level.report"
     _description = "Account Report"
 
+    def _get_level(self, cr, uid, ids, field_name, arg, context=None):
+        res = {}
+        for report in self.browse(cr, uid, ids, context=context):
+            level = 0
+            if report.parent_id:
+                level = report.parent_id.level + 1
+            res[report.id] = level
+        return res
+
     def _get_children_by_order(self, cr, uid, ids, context=None):
         res = []
         for id in ids:
@@ -2659,6 +2668,7 @@ class account_low_level_report(osv.osv):
         'account_report_id':  fields.many2one('account.low.level.report', 'Account Report'),
         'balance': fields.function(_get_balance, 'Balance'),
         'display_detail': fields.boolean('Display the account list'),
+        'level': fields.function(_get_level, string='Level', store=True, type='integer'),
     }
 
     _defaults = {
