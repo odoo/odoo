@@ -185,7 +185,7 @@ openerp.base.DataExport = openerp.base.Dialog.extend({
                             self.rpc("/base/export/get_fields", {
                                 model: model,
                                 prefix: prefix,
-                                name: name,
+                                parent_name: name,
                                 import_compat: Boolean(import_comp),
                                 parent_field_type : record['field_type']
                             }, function(results) {

@@ -1086,7 +1086,7 @@ class Export(View):
         return fields
 
     @openerpweb.jsonrequest
-    def get_fields(self, req, model, prefix='', name= '',
+    def get_fields(self, req, model, prefix='', parent_name= '',
                    import_compat=True, parent_field_type=None):
 
         fields = self.fields_get(req, model)
@@ -1094,11 +1094,11 @@ class Export(View):
             fields = {}
         fields.update({'id': {'string': 'ID'}, '.id': {'string': 'Database ID'}})
 
-        fields_seq = sorted(fields.iteritems(),
+        fields_sequence = sorted(fields.iteritems(),
             key=lambda field: field[1].get('string', ''), reverse=True)
 
         records = []
-        for field_name, field in fields_seq:
+        for field_name, field in fields_sequence:
             if import_compat and field.get('readonly'):
                 # If none of the field's states unsets readonly, skip the field
                 if all(dict(attrs).get('readonly', True)
@@ -1106,15 +1106,15 @@ class Export(View):
                     continue
 
             id = prefix + (prefix and '/'or '') + field_name
-            nm = name + (name and '/' or '') + field['string']
-            record = {'id': id, 'string': nm, 'children': [],
+            name = parent_name + (parent_name and '/' or '') + field['string']
+            record = {'id': id, 'string': name, 'children': [],
                       'field_type': field.get('type'),
                       'required': field.get('required')}
             records.append(record)
 
-            if len(nm.split('/')) < 3 and 'relation' in field:
+            if len(name.split('/')) < 3 and 'relation' in field:
                 ref = field.pop('relation')
-                record['params'] = {'model': ref, 'prefix': id, 'name': nm}
+                record['params'] = {'model': ref, 'prefix': id, 'name': name}
                 if import_compat and field['type'] in ('many2one', 'many2many'):
                     # m2m remains childless
                     if field['type'] == 'many2one':
