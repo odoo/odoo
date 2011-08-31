@@ -93,16 +93,16 @@ openerp.web_mobile.HomePage =  openerp.base.Widget.extend({
     },
     start: function() {
         this.$element.html(QWeb.render("HomePage", {}));
-        this.header = new openerp.web_mobile.Header(this, "oe_header");
+//        this.header = new openerp.web_mobile.Header(this, "oe_header");
         this.shortcuts = new openerp.web_mobile.Shortcuts(this, "oe_shortcuts");
         this.menu = new openerp.web_mobile.Menu(this, "oe_menu", "oe_secondary_menu");
         this.options = new openerp.web_mobile.Options(this, "oe_options");
-        this.footer = new openerp.web_mobile.Footer(this, "oe_footer");
-        this.header.start();
+//        this.footer = new openerp.web_mobile.Footer(this, "oe_footer");
+//        this.header.start();
         this.shortcuts.start();
         this.menu.start();
         this.options.start();
-        this.footer.start();
+//        this.footer.start();
         this.$element.find("a").click(this.on_clicked);
         $.mobile.changePage($("#oe_home"), "slide", true, true);
     }
@@ -143,9 +143,9 @@ openerp.web_mobile.Shortcuts =  openerp.base.Widget.extend({
         $shortcut = $(ev.currentTarget);
         id = $shortcut.data('menu');
         res_id = $shortcut.data('res');
-        this.header = new openerp.web_mobile.Header(this, "oe_header");
+//        this.header = new openerp.web_mobile.Header(this, "oe_header");
         this.listview = new openerp.web_mobile.ListView(this, "oe_list", res_id);
-        this.header.start();
+//        this.header.start();
         this.listview.start();
         jQuery("#oe_header").find("h1").html($shortcut.data('name'));
     }
@@ -178,9 +178,9 @@ openerp.web_mobile.Menu =  openerp.base.Widget.extend({
             .removeClass("login_valid")
             .addClass("secondary_menu");
             //.hide();
-        this.header = new openerp.web_mobile.Header(this, "oe_header");
+//        this.header = new openerp.web_mobile.Header(this, "oe_header");
         this.secondary = new openerp.web_mobile.Secondary(this, "oe_sec_menu", this.children);
-        this.header.start();
+//        this.header.start();
         this.secondary.start();
         jQuery("#oe_header").find("h1").html($menu.data('name'));
     }
@@ -211,9 +211,9 @@ openerp.web_mobile.Secondary =  openerp.base.Widget.extend({
                 .removeClass("secondary_menu")
                 .addClass("content_menu");
                 //.hide();
-            this.header = new openerp.web_mobile.Header(this, "oe_header");
+//            this.header = new openerp.web_mobile.Header(this, "oe_header");
             this.secondary = new openerp.web_mobile.Secondary(this, "oe_sec_menu_new", this.children);
-            this.header.start();
+//            this.header.start();
             this.secondary.start();
             $.mobile.changePage($("#oe_sec_menu_new"), "slide", true, true);
         }

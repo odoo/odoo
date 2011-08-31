@@ -41,24 +41,29 @@
 </t>
 
 <t t-name="HomePage">
-    <div id="oe_header"></div>
+    <div data-role="header" data-theme="b" data-position="fixed">
+        <h1>OpenERP</h1>
+        <a id="home" class="ui-btn-right" data-iconpos="notext" data-icon="home" href="#oe_home" title="Home" data-theme="b"></a>
+    </div>
     <div data-role="content">
         <div id="oe_shortcuts"></div>
         <div id="oe_menu"></div>
         <div id="oe_options"></div>
     </div>
-    <div id="oe_footer"></div>
+    <div data-role="footer" data-theme="b" data-position="fixed">
+        <h1>Footer</h1>
+    </div>
 </t>
 
 <t t-name="Header">
-    <div data-role="header" data-theme="b">
+    <div data-role="header" data-theme="b" data-position="fixed">
         <h1>OpenERP</h1>
         <a id="home" class="ui-btn-right" data-iconpos="notext" data-icon="home" href="#oe_home" title="Home" data-theme="b"></a>
     </div>
 </t>
 
 <t t-name="Footer">
-    <div data-role="footer" data-theme="b">
+    <div data-role="footer" data-theme="b" data-position="fixed">
         <h1>Footer</h1>
     </div>
 </t>
@@ -100,8 +105,7 @@
 </t>
 
 <t t-name="Menu.secondary">
-    <div id="oe_header"></div>
-     <div data-role="header" data-theme="b">
+     <div data-role="header" data-theme="b" data-position="fixed">
         <h1>OpenERP</h1>
         <a id="home" class="ui-btn-right" data-iconpos="notext" data-icon="home" href="#" title="Home" data-theme="b"></a>
     </div>
@@ -113,6 +117,9 @@
                 </a>
             </li>
         </ul>
+    </div>
+     <div data-role="footer" data-theme="b" data-position="fixed">
+        <h1>Footer</h1>
     </div>
 </t>
 
@@ -143,6 +150,9 @@
                 </a>
             </li>
         </ul>
+    </div>
+     <div data-role="footer" data-theme="b" data-position="fixed">
+        <h1>Footer</h1>
     </div>
 </t>
 
