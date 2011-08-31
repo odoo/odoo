@@ -228,7 +228,7 @@ openerp.base_diagram.DiagramView = openerp.base.View.extend({
         
         $.each(res_connectors, function(index, connector) {
         	edge_ids.push(index)
-        	dia.addEdge(connector['source'], connector['destination'], {directed : true});
+        	dia.addEdge(connector['source'], connector['destination'], {directed : true, label: connector['signal']});
         });
         
         var layouter = new Graph.Layout.Spring(dia);

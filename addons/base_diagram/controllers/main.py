@@ -80,7 +80,8 @@ class DiagramView(View):
             t.update({
                       'source': tr[src_node][1],
                       'destination': tr[des_node][1],
-                      'options': {}
+                      'options': {},
+                      'signal': tr['signal']
                       })
 
             for i, fld in enumerate(connector_fields):
