@@ -4,11 +4,17 @@
   !record {model: project.project, id: project.project_project_22}:
     project_escalation_id: project.project_project_21
 -
+  Check escalate the project assign
+-
+  !python {model: project.project}: |
+    self._check_escalation(cr, uid, [ref('project.project_project_22')], context=None)  
+-
    Create an issue for "Specific Developments" project
 -
    !record {model: project.issue, id: project_issue_stockmovedates0}:
     categ_id: project_issue.bug_categ
     name: Stock Move dates
+    task_id: project_task_training0
     project_id: project.project_project_22
     working_hours_close: 0.0
     working_hours_open: 0.0
