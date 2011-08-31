@@ -1089,9 +1089,11 @@ class Export(View):
     def get_fields(self, req, model, prefix='', parent_name= '',
                    import_compat=True, parent_field_type=None):
 
-        fields = self.fields_get(req, model)
+
         if import_compat and parent_field_type == "many2one":
             fields = {}
+        else:
+            fields = self.fields_get(req, model)
         fields.update({'id': {'string': 'ID'}, '.id': {'string': 'Database ID'}})
 
         fields_sequence = sorted(fields.iteritems(),
