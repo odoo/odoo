@@ -76,8 +76,14 @@
   Send project scrum email
 -
   !python {model: project.scrum.email}: |
+    fields={
+           'subject': 'Subject',
+           'message': 'test message'
+           }
+    context.update({'active_ids':[ref('project_scrum_meeting_0')],'active_id':ref('project_scrum_meeting_0')})
+    self.default_get(cr, uid, fields, context)
     try:
-      self.button_send_scrum_email(cr, uid, [ref("project_scrum_email_0")],context=None)
+      self.button_send_scrum_email(cr, uid, [ref("project_scrum_email_0")],context)
     except:
       pass
 -
