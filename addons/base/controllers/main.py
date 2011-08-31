@@ -1129,7 +1129,7 @@ class Export(View):
                         cfields_order = cfields.keys()
                         cfields_order.sort(lambda x,y: -cmp(cfields[x].get('string', ''), cfields[y].get('string', '')))
                         children = []
-                        for j, fld in enumerate(cfields_order):
+                        for fld in cfields_order:
                             cid = id + '/' + fld
                             cid = cid.replace(' ', '_')
                             children.append(cid)
@@ -1141,7 +1141,7 @@ class Export(View):
                     cfields_order = cfields.keys()
                     cfields_order.sort(lambda x,y: -cmp(cfields[x].get('string', ''), cfields[y].get('string', '')))
                     children = []
-                    for j, fld in enumerate(cfields_order):
+                    for fld in cfields_order:
                         cid = id + '/' + fld
                         cid = cid.replace(' ', '_')
                         children.append(cid)
