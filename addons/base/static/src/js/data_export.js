@@ -203,7 +203,7 @@ openerp.base.DataExport = openerp.base.Dialog.extend({
     },
     on_show_data: function(result) {
         var self = this;
-        var imp_cmpt = parseInt(self.$element.find("#import_compat option:selected").val());
+        var imp_cmpt = Boolean(self.$element.find("#import_compat").val());
         var current_tr = self.$element.find("tr[id='treerow-" + self.field_id + "']");
         if (current_tr.length >= 1) {
             current_tr.find('img').attr('src','/base/static/src/img/collapse.gif');
