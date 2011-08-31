@@ -1121,15 +1121,13 @@ class Export(View):
                     if field['type'] == 'many2one':
                         record['children'] = [id + '/id', id + '/.id']
                 else:
-                    cfields = self.fields_get(req, ref)
-                    cfields_order = cfields.keys()
-                    cfields_order.sort(lambda x,y: -cmp(cfields[x].get('string', ''), cfields[y].get('string', '')))
-                    children = []
-                    for fld in cfields_order:
-                        cid = id + '/' + fld
-                        cid = cid.replace(' ', '_')
-                        children.append(cid)
-                    record['children'] = children
+                    child_fields = self.fields_get(req, ref)
+                    cfield_keys = child_fields.keys()
+                    cfield_keys.sort(key=lambda field: child_fields[field].get('string', ''), reverse=True)
+
+                    record['children'] = [
+                        (id + '/' + field_name).replace(' ', '_')
+                        for field_name in cfield_keys]
 
         records.reverse()
         return records
