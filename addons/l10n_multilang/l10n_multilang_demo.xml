@@ -42,6 +42,19 @@
 	        <field name="report_type">asset</field>
 	    </record>
 
+        <!-- Chart template -->
+        <record id="account_chart_template_a" model="account.chart.template">
+            <field name="name">Demo Chart A</field>
+        </record>
+
+        <record id="account_chart_template_b" model="account.chart.template">
+            <field name="name">Demo Chart B</field>
+        </record>
+
+        <record id="account_chart_template_c" model="account.chart.template">
+            <field name="name">Demo Chart C</field>
+        </record>
+
         <!-- Account Templates for A -->
 
         <record model="account.account.template" id="chart_a_root">
@@ -50,6 +63,7 @@
             <field name="type">view</field>
             <field name="user_type" ref="account_type_view"/>
             <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="account_chart_template_a"/>
         </record>
 
         <record model="account.account.template" id="chart_a0">
@@ -59,6 +73,7 @@
             <field name="user_type" ref="account_type_view"/>
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="chart_a_root"/>
+            <field name="chart_template_id" ref="account_chart_template_a"/>
         </record>
 
         <record model="account.account.template" id="chart_a1">
@@ -68,6 +83,7 @@
             <field name="user_type" ref="account_type_view"/>
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="chart_a_root"/>
+            <field name="chart_template_id" ref="account_chart_template_a"/>
         </record>
 
         <record id="chart_a2" model="account.account.template">
@@ -76,6 +92,7 @@
             <field ref="chart_a0" name="parent_id"/>
             <field name="type">view</field>
             <field name="user_type" ref="account_type_view"/>
+            <field name="chart_template_id" ref="account_chart_template_a"/>
         </record>
 
         <!-- Tax Code template for A-->
@@ -95,6 +112,7 @@
 
 
         <!-- Account Templates for B -->
+
         <record model="account.account.template" id="chart_b1">
             <field name="name">Assets B</field>
             <field name="code">B00012</field>
@@ -102,6 +120,7 @@
             <field name="user_type" ref="acct_type_asset_view"/>
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="chart_a0"/>
+            <field name="chart_template_id" ref="account_chart_template_b"/>
         </record>
 
         <record model="account.account.template" id="chart_b2">
@@ -111,6 +130,7 @@
             <field name="user_type" ref="acct_type_liability_view"/>
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="chart_a0"/>
+            <field name="chart_template_id" ref="account_chart_template_b"/>
         </record>
 
         <record model="account.account.template" id="chart_b3">
@@ -120,6 +140,7 @@
             <field name="user_type" ref="account_type_receivable"/>
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="chart_a1"/>
+            <field name="chart_template_id" ref="account_chart_template_b"/>
         </record>
 
         <record model="account.account.template" id="chart_b4">
@@ -129,6 +150,7 @@
             <field name="user_type" ref="account_type_payable"/>
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="chart_a1"/>
+            <field name="chart_template_id" ref="account_chart_template_b"/>
         </record>
 
         <record model="account.account.template" id="chart_b5">
@@ -138,6 +160,7 @@
             <field name="user_type" ref="account_type_payable"/>
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="chart_a1"/>
+            <field name="chart_template_id" ref="account_chart_template_b"/>
         </record>
 
         <record id="chart_b6" model="account.account.template">
@@ -146,6 +169,7 @@
             <field ref="chart_b3" name="parent_id"/>
             <field name="type">view</field>
             <field name="user_type" ref="account_type_view"/>
+            <field name="chart_template_id" ref="account_chart_template_b"/>
         </record>
 
         <!-- Account Templates for C -->
@@ -157,6 +181,7 @@
             <field name="user_type" ref="acct_type_asset_view"/>
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="chart_a0"/>
+            <field name="chart_template_id" ref="account_chart_template_c"/>
         </record>
 
         <record model="account.account.template" id="chart_c2">
@@ -166,6 +191,7 @@
             <field name="user_type" ref="acct_type_liability_view"/>
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="chart_a0"/>
+            <field name="chart_template_id" ref="account_chart_template_c"/>
         </record>
 
         <record model="account.account.template" id="chart_c3">
@@ -175,6 +201,7 @@
             <field name="user_type" ref="account_type_receivable"/>
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="chart_a1"/>
+            <field name="chart_template_id" ref="account_chart_template_c"/>
         </record>
 
         <record model="account.account.template" id="chart_c4">
@@ -184,6 +211,7 @@
             <field name="user_type" ref="account_type_payable"/>
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="chart_a1"/>
+            <field name="chart_template_id" ref="account_chart_template_c"/>
         </record>
 
         <record id="chart_c5" model="account.account.template">
@@ -192,6 +220,7 @@
             <field ref="chart_c3" name="parent_id"/>
             <field name="type">view</field>
             <field name="user_type" ref="account_type_view"/>
+            <field name="chart_template_id" ref="account_chart_template_c"/>
         </record>
 
         <!-- Chart template -->
@@ -265,7 +294,7 @@
  
         <record id="acc_fisc_pos_temp_b" model="account.fiscal.position.template">
             <field name="name">Fiscal Position Template B</field>
-            <field name="chart_template_id" ref="account_chart_template_a"/>
+            <field name="chart_template_id" ref="account_chart_template_b"/>
         </record>
 
         <record id="acc_fisc_pos_tax_temp_a" model="account.fiscal.position.tax.template">
