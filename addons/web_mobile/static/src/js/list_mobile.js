@@ -33,9 +33,9 @@ openerp.web_mobile.ListView = openerp.base.Widget.extend({
         $record = $(ev.currentTarget);
         var self = this;
         id = $record.data('id');
-        this.header = new openerp.web_mobile.Header(this, "oe_header");
+//        this.header = new openerp.web_mobile.Header(this, "oe_header");
         this.formview = new openerp.web_mobile.FormView(this, "oe_form", id, this.action);
-        this.header.start();
+//        this.header.start();
         this.formview.start();
     }
  });
