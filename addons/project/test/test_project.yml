@@ -4,13 +4,22 @@
   !record {model: res.users, id: base.user_root}:
     user_email: admin@openerp.com
 -
+  Create analytic account.
+-
+  !record {model: account.analytic.account, id: account_analytic_account0}:
+    name : account_analytic_account
+    partner_id: base.res_partner_asus
+-
   Now, Test project template feature
 -
   Create project 'OpenERP Training Programme'
 -
   !record {model: project.project, id: project_project_openerptrainingprogramme0}:
     company_id: base.main_company
+    partner_id: base.res_partner_asus
     name: OpenERP Training Programme
+    date_start: !eval time.strftime('%Y-%m-%d')
+    date: !eval time.strftime('%Y-%m-%d')
 -
   Create task 'Technical Training' for this project
 -
@@ -23,6 +32,16 @@
     remaining_hours: 30.0
     state: draft
 -
+  Create task 'Training' for this project
+-
+  !record {model: project.task, id: project_task_child0}:
+    date_start: !eval time.strftime('%Y-%m-%d %H:%M:%S')
+    name: Training
+    planned_hours: 30.0
+    project_id: project_project_openerptrainingprogramme0
+    remaining_hours: 30.0
+    state: done
+-
   Create task 'Functional Training' for this project
 -
   !record {model: project.task, id: project_task_functionaltraining0}:
@@ -31,11 +50,14 @@
     planned_hours: 30.0
     project_id: project_project_openerptrainingprogramme0
     remaining_hours: 30.0
+    child_ids:
+      - project_task_child0
     state: draft
 -
   Set project's task view
 -
   !python {model: project.task}: |
+    context.update({'project_id': ref('project_task_functionaltraining0')})
     self._default_project(cr, uid,context)
     self.fields_view_get(cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False)
 -
@@ -103,7 +125,7 @@
   Change the project's partner if needed.
 -
   !python {model: project.project}: |
-    self.onchange_partner_id(cr, uid, [ref("project_project_openerptrainingprogramme0")], part=False, context = {"lang": "en_US", "active_model": "ir.ui.menu", "active_ids": [ref("project.menu_open_view_project_all")],"tz": False, "active_id": ref("project.menu_open_view_project_all")})
+    self.onchange_partner_id(cr, uid, [ref("project_project_openerptrainingprogramme0")], part=ref('base.res_partner_asus'), context = {"lang": "en_US", "active_model": "ir.ui.menu", "active_ids": [ref("project.menu_open_view_project_all")],"tz": False, "active_id": ref("project.menu_open_view_project_all")})
 -
   Set project as project template
 -
@@ -264,11 +286,7 @@
    !assert {model: project.task, id: project_task_technicaltraining0, severity: error, string: After one more work task of 10 hours effective_hours must be equal to 30}:
        - remaining_hours == 0
        - effective_hours == 30.0
--
-  Create analytic account.
--
-  !record {model: account.analytic.account, id: account_analytic_account0}:
-    name : account_analytic_account
+
 -
   Set remaining hours of 10 hours for reevaluating the task
 -
@@ -378,12 +396,35 @@
        - remaining_hours == 0.0
        - effective_hours == 45.0
 -
+  Execute the search method
+-
+  !python {model: project.project}: |
+    context.update({"lang": "en_US", "active_ids": [ref("project.menu_open_view_project_all")],
+      "tz": False, "active_model": "ir.ui.menu", "project_id": False, "active_id":
+      ref("project.menu_open_view_project_all")})
+    user = ref('base.user_demo')
+    try:
+      self.search(cr, user, args={}, offset=0, limit=None, order=None, context=None, count=False)
+    except:
+      pass
+-
   Close project 'OpenERP Training Programme'
 -
   !python {model: project.project}: |
-    self.set_done(cr, uid, [ref("project_project_openerptrainingprogramme0")], {"lang": "en_US", "active_ids": [ref("project.menu_open_view_project_all")],
+    context.update({"lang": "en_US", "active_ids": [ref("project.menu_open_view_project_all")],
       "tz": False, "active_model": "ir.ui.menu", "project_id": False, "active_id":
-      ref("project.menu_open_view_project_all"), })
+      ref("project.menu_open_view_project_all")})
+    user = ref('base.user_demo')
+    args={}
+    offset=0
+    limit=None
+    order=None
+    count=False
+    try:
+      self.search(cr, user, args, offset, limit, order, context, count)
+    except:
+      pass
+    self.set_done(cr, uid, [ref("project_project_openerptrainingprogramme0")], context=context)
 
 -
   Check if project in close state
@@ -421,20 +462,38 @@
         'description' : 'Description'
         }
     self.default_get(cr, uid, fields, context={"active_ids":[ref("project_task_technicaltraining0")],"active_id": ref("project_task_technicaltraining0")})
-    self.send(cr, uid, [ref('project_task_close_0')], context={"active_ids":[ref("project_task_technicaltraining0")],"active_id": ref("project_task_technicaltraining0")})
+    try:
+      self.send(cr, uid, [ref('project_task_close_0')], context={"active_ids":[ref("project_task_technicaltraining0")],"active_id": ref("project_task_technicaltraining0")})
+    except :
+      pass
 -
-  Click on the project task's Done button.
+  Check for remaining hours
 -
   !python {model: project.task}: |
-    self.action_close(cr, uid, [ref("project_task_functionaltraining0")],context={"lang": "en_US", "active_ids": [ref("project_project_openerptrainingprogramme0")],"tz": False, "active_id": ref("project_project_openerptrainingprogramme0")})
+    self.onchange_remaining(cr, uid, [ref("project_task_functionaltraining0")], remaining = 0.0, planned = 0.0)
+-
+  Change the planned.
+-
+  !python {model: project.task}: |
+    self.onchange_planned(cr, uid, [ref("project_task_functionaltraining0")], planned = 0.0, effective = 0.0)
 -
   Cancel this project.
 -
   !python {model: project.task}: |
     self.do_cancel(cr, uid,[ref("project_task_functionaltraining0")],context={})
 -
-  Unlink this project.
+  Unlink this project's task.
 -
   !python {model: project.task}: |
     self.unlink(cr, uid,[ref("project_task_functionaltraining0")])
-
+-
+  Create test project 'OpenERP Test Programme'
+-
+  !record {model: project.project, id: project_project_testprogramme0}:
+    company_id: base.main_company
+    name: OpenERP Training Programm
+-
+  Unlink the project.
+-
+  !python {model: project.project}: |
+    self.unlink(cr, uid, [ref('project_project_testprogramme0')])

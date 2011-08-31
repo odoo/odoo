@@ -15,7 +15,7 @@
     planned_hours: 20.0
     project_id: project_project_openerpdocumentation0
     remaining_hours: 20.0
-    state: draft
+    state: pending
 -
   Open the 'Develop book for Technical and Functional reference' task
 -
@@ -23,7 +23,6 @@
     self.do_open(cr, uid, [ref("project_task_documentation_book")],
       {"lang": "en_US", "active_model": "ir.ui.menu", "active_ids": [ref("project.menu_action_view_task")],
       "tz": False, "active_id": ref("project.menu_action_view_task"), })
-
 -
   Creating a task 'Publish the References'
 -
@@ -75,7 +74,7 @@
   Validating the delegate task.
 -
   !python {model: project.task.delegate}: |
-    self.delegate(cr, uid, [ref("project_task_publish_book_delegate")],context={"lang": "en_US", "active_model": "project.task", "tz": False,"record_id":4, "active_ids": [ref("project_task_publish_book")], "active_id": ref("project_task_publish_book")})
+    self.delegate(cr, uid, [ref('project_task_publish_book_delegate')], {"active_id": ref("project_task_publish_book")})
 -
   Check if parent task 'CHECK Publish the References' is in pending state
 -
@@ -173,7 +172,6 @@
     self.do_open(cr, uid, [ref("project_task_delegate_business_process_develop")],
       {"lang": "en_US", "active_model": "ir.ui.menu", "active_ids": [ref("project.menu_action_view_task")],
       "tz": False, "active_id": ref("project.menu_action_view_task"), })
-
 -
   Check if 'Prepare a technical reference for creating your modules' in pending state
 -
