@@ -1109,11 +1109,11 @@ class Export(View):
             id = prefix + (prefix and '/'or '') + field_name
             nm = name + (name and '/' or '') + field['string']
             record = {'id': id, 'string': nm, 'children': [],
-                      'field_type': field.get('type', False),
-                      'required': field.get('required', False)}
+                      'field_type': field.get('type'),
+                      'required': field.get('required')}
             records.append(record)
 
-            if len(nm.split('/')) < 3 and field.get('relation'):
+            if len(nm.split('/')) < 3 and 'relation' in field:
                 if import_compat:
                     ref = field.pop('relation')
                     cfields = self.fields_get(req, ref)
