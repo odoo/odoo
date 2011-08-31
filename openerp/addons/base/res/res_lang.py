@@ -163,7 +163,7 @@ class lang(osv.osv):
         (_check_format, 'Invalid date/time format directive specified. Please refer to the list of allowed directives, displayed when you edit a language.', ['time_format', 'date_format'])
     ]
 
-    @tools.cache(skiparg=3)
+    @tools.ormcache(skiparg=3)
     def _lang_data_get(self, cr, uid, lang_id, monetary=False):
         conv = localeconv()
         lang_obj = self.browse(cr, uid, lang_id)
@@ -174,7 +174,7 @@ class lang(osv.osv):
 
     def write(self, cr, uid, ids, vals, context=None):
         for lang_id in ids :
-            self._lang_data_get.clear_cache(cr.dbname,lang_id= lang_id)
+            self._lang_data_get.clear_cache(self,lang_id= lang_id)
         return super(lang, self).write(cr, uid, ids, vals, context)
 
     def unlink(self, cr, uid, ids, context=None):
