@@ -70,17 +70,21 @@ class Registry(object):
 
         res = []
 
-        # Instanciate classes registered through their constructor and
-        # add them to the pool.
-        for klass in openerp.osv.orm.module_class_list.get(module, []):
-            res.append(klass.create_instance(self, cr))
-
-        # Instanciate classes automatically discovered.
+        # Instantiate registered classes (via the MetaModel automatic discovery
+        # or via explicit constructor call), and add them to the pool.
         for cls in openerp.osv.orm.MetaModel.module_to_models.get(module, []):
-            if cls not in openerp.osv.orm.module_class_list.get(module, []):
-                res.append(cls.create_instance(self, cr))
+            res.append(cls.create_instance(self, cr))
 
         return res
+
+    def clear_caches(self):
+        """ Clear the caches
+
+        This clears the caches associated to methods decorated with
+        ``tools.ormcache`` or ``tools.ormcache_multi`` for all the models.
+        """
+        for model in self.models.itervalues():
+            model.clear_caches()
 
 
 class RegistryManager(object):
@@ -153,6 +157,21 @@ class RegistryManager(object):
         """ Delete the registry linked to a given database. """
         if db_name in cls.registries:
             del cls.registries[db_name]
+
+
+    @classmethod
+    def clear_caches(cls, db_name):
+        """ Clear the caches
+
+        This clears the caches associated to methods decorated with
+        ``tools.ormcache`` or ``tools.ormcache_multi`` for all the models
+        of the given database name.
+
+        This method is given to spare you a ``RegistryManager.get(db_name)``
+        that would loads the given database if it was not already loaded.
+        """
+        if db_name in cls.registries:
+            cls.registries[db_name].clear_caches()
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

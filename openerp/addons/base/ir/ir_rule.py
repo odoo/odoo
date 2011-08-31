@@ -99,7 +99,7 @@ class ir_rule(osv.osv):
         (_check_model_obj, 'Rules are not supported for osv_memory objects !', ['model_id'])
     ]
 
-    @tools.cache()
+    @tools.ormcache()
     def _compute_domain(self, cr, uid, model_name, mode="read"):
         if mode not in self._MODES:
             raise ValueError('Invalid mode: %r' % (mode,))
@@ -139,25 +139,10 @@ class ir_rule(osv.osv):
         return []
 
     def clear_cache(self, cr, uid):
-        cr.execute("""SELECT DISTINCT m.model
-                        FROM ir_rule r
-                        JOIN ir_model m
-                          ON r.model_id = m.id
-                       WHERE r.global
-                          OR EXISTS (SELECT 1
-                                       FROM rule_group_rel g_rel
-                                       JOIN res_groups_users_rel u_rel
-                                         ON g_rel.group_id = u_rel.gid
-                                      WHERE g_rel.rule_group_id = r.id
-                                        AND u_rel.uid = %s)
-                    """, (uid,))
-        models = map(itemgetter(0), cr.fetchall())
-        clear = partial(self._compute_domain.clear_cache, cr.dbname, uid)
-        [clear(model, mode) for model in models for mode in self._MODES]
-
+        self._compute_domain.clear_cache(self)
 
     def domain_get(self, cr, uid, model_name, mode='read', context=None):
-        dom = self._compute_domain(cr, uid, model_name, mode=mode)
+        dom = self._compute_domain(cr, uid, model_name, mode)
         if dom:
             # _where_calc is called as superuser. This means that rules can
             # involve objects on which the real uid has no acces rights.
@@ -169,20 +154,17 @@ class ir_rule(osv.osv):
 
     def unlink(self, cr, uid, ids, context=None):
         res = super(ir_rule, self).unlink(cr, uid, ids, context=context)
-        # Restart the cache on the _compute_domain method of ir.rule
-        self._compute_domain.clear_cache(cr.dbname)
+        self.clear_cache(cr, uid)
         return res
 
-    def create(self, cr, user, vals, context=None):
-        res = super(ir_rule, self).create(cr, user, vals, context=context)
-        # Restart the cache on the _compute_domain method of ir.rule
-        self._compute_domain.clear_cache(cr.dbname)
+    def create(self, cr, uid, vals, context=None):
+        res = super(ir_rule, self).create(cr, uid, vals, context=context)
+        self.clear_cache(cr, uid)
         return res
 
     def write(self, cr, uid, ids, vals, context=None):
         res = super(ir_rule, self).write(cr, uid, ids, vals, context=context)
-        # Restart the cache on the _compute_domain method
-        self._compute_domain.clear_cache(cr.dbname)
+        self.clear_cache(cr,uid)
         return res
 
 ir_rule()

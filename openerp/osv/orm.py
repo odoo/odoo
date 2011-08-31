@@ -70,9 +70,6 @@ from openerp.tools import SKIPPED_ELEMENT_TYPES
 regex_order = re.compile('^(([a-z0-9_]+|"[a-z0-9_]+")( *desc| *asc)?( *, *|))+$', re.I)
 regex_object_name = re.compile(r'^[a-z0-9_.]+$')
 
-# Mapping between openerp module names and their osv classes.
-module_class_list = {}
-
 # Super-user identifier (aka Administrator aka root)
 ROOT_USER_ID = 1
 
@@ -809,20 +806,22 @@ class Model(object):
         return obj
 
     def __new__(cls):
-        """ Register this model.
+        """Register this model.
 
         This doesn't create an instance but simply register the model
         as being part of the module where it is defined.
 
         """
-
         # Set the module name (e.g. base, sale, accounting, ...) on the class.
         module = cls.__module__.split('.')[0]
         if not hasattr(cls, '_module'):
             cls._module = module
 
-        # Remember which models to instanciate for this module.
-        module_class_list.setdefault(cls._module, []).append(cls)
+        # Record this class in the list of models to instantiate for this module,
+        # managed by the metaclass.
+        module_model_list = MetaModel.module_to_models.setdefault(cls._module, [])
+        if cls not in module_model_list:
+            module_model_list.append(cls)
 
         # Since we don't return an instance here, the __init__
         # method won't be called.
@@ -1311,7 +1310,7 @@ class Model(object):
                     else:
                         translated_msg = tmp_msg
                 else:
-                    translated_msg = trans._get_source(cr, uid, self._name, 'constraint', lng, source=msg) or msg
+                    translated_msg = trans._get_source(cr, uid, self._name, 'constraint', lng, msg) or msg
                 error_msgs.append(
                         _("Error occurred while validating the field(s) %s: %s") % (','.join(fields), translated_msg)
                 )
@@ -2149,7 +2148,7 @@ class Model(object):
     def read_string(self, cr, uid, id, langs, fields=None, context=None):
         res = {}
         res2 = {}
-        self.pool.get('ir.model.access').check(cr, uid, 'ir.translation', 'read', context=context)
+        self.pool.get('ir.model.access').check(cr, uid, 'ir.translation', 'read')
         if not fields:
             fields = self._columns.keys() + self._inherit_fields.keys()
         #FIXME: collect all calls to _get_source into one SQL call.
@@ -2173,7 +2172,7 @@ class Model(object):
         return res
 
     def write_string(self, cr, uid, id, langs, vals, context=None):
-        self.pool.get('ir.model.access').check(cr, uid, 'ir.translation', 'write', context=context)
+        self.pool.get('ir.model.access').check(cr, uid, 'ir.translation', 'write')
         #FIXME: try to only call the translation in one SQL
         for lang in langs:
             for field in vals:
@@ -2215,6 +2214,18 @@ class Model(object):
             values = defaults
         return values
 
+    def clear_caches(self):
+        """ Clear the caches
+
+        This clears the caches associated to methods decorated with
+        ``tools.ormcache`` or ``tools.ormcache_multi``.
+        """
+        try:
+            getattr(self, '_ormcache')
+            self._ormcache = {}
+        except AttributeError:
+            pass
+
     def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False):
         """
         Get the list of records in list view grouped by the given ``groupby`` fields
@@ -2242,7 +2253,7 @@ class Model(object):
 
         """
         context = context or {}
-        self.pool.get('ir.model.access').check(cr, uid, self._name, 'read', context=context)
+        self.pool.get('ir.model.access').check(cr, uid, self._name, 'read')
         if not fields:
             fields = self._columns.keys()
 
@@ -3028,8 +3039,8 @@ class Model(object):
             context = {}
 
         ira = self.pool.get('ir.model.access')
-        write_access = ira.check(cr, user, self._name, 'write', raise_exception=False, context=context) or \
-                       ira.check(cr, user, self._name, 'create', raise_exception=False, context=context)
+        write_access = ira.check(cr, user, self._name, 'write', False) or \
+                       ira.check(cr, user, self._name, 'create', False)
 
         res = {}
 
@@ -3092,7 +3103,7 @@ class Model(object):
 
         if not context:
             context = {}
-        self.pool.get('ir.model.access').check(cr, user, self._name, 'read', context=context)
+        self.pool.get('ir.model.access').check(cr, user, self._name, 'read')
         if not fields:
             fields = list(set(self._columns.keys() + self._inherit_fields.keys()))
         if isinstance(ids, (int, long)):
@@ -3379,7 +3390,7 @@ class Model(object):
 
         self._check_concurrency(cr, ids, context)
 
-        self.pool.get('ir.model.access').check(cr, uid, self._name, 'unlink', context=context)
+        self.pool.get('ir.model.access').check(cr, uid, self._name, 'unlink')
 
         properties = self.pool.get('ir.property')
         domain = [('res_id', '=', False),
@@ -3516,7 +3527,7 @@ class Model(object):
             ids = [ids]
 
         self._check_concurrency(cr, ids, context)
-        self.pool.get('ir.model.access').check(cr, user, self._name, 'write', context=context)
+        self.pool.get('ir.model.access').check(cr, user, self._name, 'write')
 
         result = self._store_get_values(cr, user, ids, vals.keys(), context) or []
 
@@ -3725,7 +3736,7 @@ class Model(object):
         """
         if not context:
             context = {}
-        self.pool.get('ir.model.access').check(cr, user, self._name, 'create', context=context)
+        self.pool.get('ir.model.access').check(cr, user, self._name, 'create')
 
         vals = self._add_missing_default_values(cr, user, vals, context)
 
@@ -4202,7 +4213,7 @@ class Model(object):
         """
         if context is None:
             context = {}
-        self.pool.get('ir.model.access').check(cr, access_rights_uid or user, self._name, 'read', context=context)
+        self.pool.get('ir.model.access').check(cr, access_rights_uid or user, self._name, 'read')
 
         query = self._where_calc(cr, user, args, context=context)
         self._apply_ir_rules(cr, user, query, 'read', context=context)

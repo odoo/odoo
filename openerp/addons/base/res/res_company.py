@@ -180,7 +180,7 @@ class res_company(osv.osv):
                 return rule.company_dest_id.id
         return user.company_id.id
 
-    @tools.cache()
+    @tools.ormcache()
     def _get_company_children(self, cr, uid=None, company=None):
         if not company:
             return []
@@ -207,7 +207,7 @@ class res_company(osv.osv):
     # This function restart the cache on the _get_company_children method
     #
     def cache_restart(self, cr):
-        self._get_company_children.clear_cache(cr.dbname)
+        self._get_company_children.clear_cache(self)
 
     def create(self, cr, uid, vals, context=None):
         if not vals.get('name', False) or vals.get('partner_id', False):
