@@ -1287,7 +1287,7 @@
                     </t>
                 </t>
                 <td valign="top" align="left" style="cursor: pointer;" width="18">
-                    <t t-if="(field.children).length >= 1">
+                    <t t-if="field.children">
                         <t t-if="(field.id).split('/').length != 3">
                             <img t-att-id="'parentimg-' + field.id" src="/base/static/src/img/expand.gif" width="16" height="16" border="0"/>
                         </t>

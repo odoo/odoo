@@ -1107,7 +1107,7 @@ class Export(View):
 
             id = prefix + (prefix and '/'or '') + field_name
             name = parent_name + (parent_name and '/' or '') + field['string']
-            record = {'id': id, 'string': name, 'children': [],
+            record = {'id': id, 'string': name, 'children': False,
                       'field_type': field.get('type'),
                       'required': field.get('required')}
             records.append(record)
@@ -1118,15 +1118,9 @@ class Export(View):
                 if import_compat and field['type'] in ('many2one', 'many2many'):
                     # m2m remains childless
                     if field['type'] == 'many2one':
-                        record['children'] = [id + '/id', id + '/.id']
+                        record['children'] = True
                 else:
-                    child_fields = self.fields_get(req, ref)
-                    cfield_keys = child_fields.keys()
-                    cfield_keys.sort(key=lambda field: child_fields[field].get('string', ''), reverse=True)
-
-                    record['children'] = [
-                        (id + '/' + field_name).replace(' ', '_')
-                        for field_name in cfield_keys]
+                    record['children'] = bool(self.fields_get(req, ref))
 
         return records
 
