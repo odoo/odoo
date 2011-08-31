@@ -1157,7 +1157,7 @@ class Export(View):
     @openerpweb.jsonrequest
     def namelist(self,req,  model, export_id):
 
-        result = self.get_data(req, model, req.session.eval_context(req.context))
+        result = self.get_data(req, model)
         ir_export_obj = req.session.model("ir.exports")
         ir_export_line_obj = req.session.model("ir.exports.line")
 
@@ -1168,17 +1168,10 @@ class Export(View):
         [name_list.update({field['name']: result.get(field['name'])}) for field in fields]
         return name_list
 
-    def get_data(self, req, model, context=None):
-        context = context or {}
+    def get_data(self, req, model):
         fields_data = {}
-        proxy = req.session.model(model)
         fields = self.fields_get(req, model)
 
-        f1 = proxy.fields_view_get(False, 'tree', context)['fields']
-        f2 = proxy.fields_view_get(False, 'form', context)['fields']
-
-        fields = dict(f1)
-        fields.update(f2)
         fields.update({'id': {'string': 'ID'}, '.id': {'string': 'Database ID'}})
 
         def rec(fields):
