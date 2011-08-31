@@ -303,7 +303,7 @@ openerp.base_diagram.DiagramView = openerp.base.View.extend({
 			form_fields = ['act_from', 'act_to'];
 		}
     	
-    	if(id) {
+    	if(model == self.node || id) {
 	    	$.each(form_fields, function(index, fld) {
 				form_controller.on_record_loaded.add_first(function() {
 					form_controller.fields[fld].modifiers.readonly = true;
