@@ -3034,32 +3034,13 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         
         return True
 
-    def _install_template(self, cr, uid, ids, template_id, company_id, code_digits=None ,tax_data={}, context=None):
-        print 'install', template_id
+    def _install_template(self, cr, uid, template_id, company_id, code_digits=None ,tax_data={}, bank_jrnl_acc_list=[], context=None):
         template = self.pool.get('account.chart.template').browse(cr, uid, template_id, context=context)
-#        TOFIX: Improve relation between COA template and account template
-#        If we have COA template struct like :
-#        COA A
-#            COA B
-#
-#        and account template struct like:
-#        A0
-#           - A01
-#           - B02 
-#        A1
-#          - B11
-#          - B12
-#        where prefix A is intended to load for COA A, and B for B
-#        
-#        now I am processing COA B 
-#        B02 is child of A0 so children_acc_template = obj_acc_template.search(cr, uid,  [('parent_id','child_of',[obj_acc_root.id]),('nocreate','!=',True)])
-#          will search all acc templates of A and B 
+        if template.parent_id:
+            self._install_template(cr, uid, template.parent_id.id, company_id, code_digits=code_digits, context=context)
+        return self._load_template(cr, uid, template_id, company_id, code_digits=code_digits, tax_data=tax_data, bank_jrnl_acc_list=bank_jrnl_acc_list,context=context)
 
-#        if template.parent_id:
-#            self._install_template(cr, uid, ids, template.parent_id.id, company_id, code_digits=code_digits, context=context)
-        return self._load_template(cr, uid, ids, template_id, company_id, code_digits=code_digits, tax_data=tax_data, context=context)
-
-    def _load_template(self, cr, uid, ids, template_id, company_id, code_digits=None, tax_data={}, context=None):
+    def _load_template(self, cr, uid, template_id, company_id, code_digits=None, tax_data={}, bank_jrnl_acc_list=[], context=None):
         template = self.pool.get('account.chart.template').browse(cr, uid, template_id, context=context)
         obj_tax_code_template = self.pool.get('account.tax.code.template')
         obj_tax_code = self.pool.get('account.tax.code')
@@ -3154,13 +3135,22 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         obj_tax_temp = self.pool.get('account.tax.template')
         obj_multi = self.browse(cr, uid, ids[0])
         company_id = obj_multi.company_id.id
+        bank_jrnl_acc_list = []
         tax_data = {
                     'sale': obj_multi.sale_tax_rate, 
                     'purchase': obj_multi.purchase_tax_rate, 
                     'sale_tax': obj_multi.complete_tax and obj_multi.sale_tax.id or False, 
                     'purchase_tax': obj_multi.complete_tax and obj_multi.purchase_tax.id or False, 
                      }
-        self._install_template(cr, uid, ids, obj_multi.chart_template_id.id, company_id, code_digits=obj_multi.code_digits, tax_data=tax_data, context=context)
+        if obj_multi.bank_accounts_id:
+            for acc in obj_multi.bank_accounts_id:
+                bank_jrnl_acc_list.append({
+                            'acc_name': acc.acc_name,
+                            'account_type': acc.account_type,
+                            'currency_id': acc.currency_id.id,
+                            })
+        self._install_template(cr, uid, obj_multi.chart_template_id.id, company_id, code_digits=obj_multi.code_digits, tax_data=tax_data, bank_jrnl_acc_list = bank_jrnl_acc_list, context=context)
+
         return {}
 
 wizard_multi_charts_accounts()
