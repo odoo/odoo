@@ -121,7 +121,10 @@
 
     <rng:define name="kanban">
         <rng:element name="kanban">
-            <rng:element name="template">
+            <rng:zeroOrMore>
+                <rng:ref name="field"/>
+            </rng:zeroOrMore>
+            <rng:element name="templates">
                 <rng:oneOrMore>
                     <rng:ref name="any"/>
                 </rng:oneOrMore>
