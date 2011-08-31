@@ -192,7 +192,6 @@ openerp.base.DataExport = openerp.base.Dialog.extend({
                                 model: model,
                                 prefix: prefix,
                                 name: name,
-                                field_parent : self.field_id,
                                 params: params
                             }, function(results) {
                                 self.on_show_data(results);

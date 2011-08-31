@@ -1086,7 +1086,7 @@ class Export(View):
         return fields
 
     @openerpweb.jsonrequest
-    def get_fields(self, req, model, prefix='', name= '', field_parent=None, params={}):
+    def get_fields(self, req, model, prefix='', name= '', params={}):
         import_compat = params.get("import_compat", False)
 
         fields = self.fields_get(req, model)
