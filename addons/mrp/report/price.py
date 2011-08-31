@@ -26,7 +26,7 @@ from tools import to_xml
 from report import report_sxw
 from datetime import datetime
 from tools.translate import _
-
+import tools
 
 #FIXME: we should use toxml
 class report_custom(report_rml):
@@ -48,14 +48,14 @@ class report_custom(report_rml):
             sum_strd = 0
             prod = product_pool.browse(cr, uid, bom['product_id'])
 
-            prod_name = bom['name']
+            prod_name = to_xml(tools.ustr(bom['name']))
             prod_qtty = factor * bom['product_qty']
             product_uom = product_uom_pool.browse(cr, uid, bom['product_uom'], context=context)
             main_sp_price, main_sp_name , main_strd_price = '','',''
             sellers, sellers_price = '',''
 
             if prod.seller_id:
-                main_sp_name = "<b>%s</b>\r\n" %(prod.seller_id.name)
+                main_sp_name = "<b>%s</b>\r\n" % to_xml(tools.ustr(prod.seller_id.name))
                 price = supplier_info_pool.price_get(cr, uid, prod.seller_id.id, prod.id, number*prod_qtty)[prod.seller_id.id]
                 price = product_uom_pool._compute_price(cr, uid, prod.uom_id.id, price, to_uom_id=product_uom.id)
                 main_sp_price = """<b>"""+rml_obj.formatLang(price)+' '+ company_currency.symbol+"""</b>\r\n"""
@@ -64,12 +64,12 @@ class report_custom(report_rml):
             main_strd_price = str(std_price) + '\r\n'
             sum_strd = prod_qtty*std_price
             for seller_id in prod.seller_ids:
-                sellers +=  '- <i>'+ seller_id.name.name +'</i>\r\n'
+                sellers +=  '- <i>'+ to_xml(tools.ustr(seller_id.name.name)) +'</i>\r\n'
                 price = supplier_info_pool.price_get(cr, uid, seller_id.name.id, prod.id, number*prod_qtty)[seller_id.name.id]
                 price = product_uom_pool._compute_price(cr, uid, prod.uom_id.id, price, to_uom_id=product_uom.id)
                 sellers_price += """<i>"""+rml_obj.formatLang(price) +' '+ company_currency.symbol +"""</i>\r\n"""
-            xml += """<col para='yes'> """+ prod_name +""" </col>
-                    <col para='yes'> """+ main_sp_name + sellers + """ </col>
+            xml += """<col para='yes'> """+ to_xml(tools.ustr(prod_name)) +""" </col>
+                    <col para='yes'> """+ to_xml(tools.ustr(main_sp_name)) + to_xml(tools.ustr(sellers)) + """ </col>
                     <col f='yes'>"""+ rml_obj.formatLang(prod_qtty) +' '+ product_uom.name +"""</col>
                     <col f='yes'>"""+ rml_obj.formatLang(float(main_strd_price)) +' '+ company_currency.symbol +"""</col>
                     <col f='yes'>""" + main_sp_price + sellers_price + """</col>'"""
@@ -134,7 +134,7 @@ class report_custom(report_rml):
         for product in product_pool.browse(cr, uid, ids, context=context):
             bom_id = bom_pool._bom_find(cr, uid, product.id, product.uom_id.id)
             title = "<title>%s</title>" %(_("Cost Structure"))
-            title += "<title>%s</title>" %product.name
+            title += "<title>%s</title>" %to_xml(tools.ustr(product.name))
             xml += "<lines style='header'>" + title + prod_header + "</lines>"
             if not bom_id:
                 total_strd = number * product.standard_price
