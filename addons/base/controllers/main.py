@@ -15,9 +15,11 @@ from cStringIO import StringIO
 
 import cherrypy
 
-import openerpweb
-import openerpweb.ast
-import openerpweb.nonliterals
+import base.common as openerpweb
+import base.common.ast
+import base.common.nonliterals
+openerpweb.ast = base.common.ast
+openerpweb.nonliterals = base.common.nonliterals
 
 from babel.messages.pofile import read_po
 

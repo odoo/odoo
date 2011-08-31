@@ -1,5 +1,5 @@
+import base.common as openerpweb
 from base.controllers.main import View
-import openerpweb
 
 class DiagramView(View):
     _cp_path = "/base_diagram/diagram"
