@@ -3043,6 +3043,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
     def _load_template(self, cr, uid, template_id, company_id, code_digits=None, tax_data={}, bank_jrnl_acc_list=[], context=None):
         template = self.pool.get('account.chart.template').browse(cr, uid, template_id, context=context)
         obj_tax_code_template = self.pool.get('account.tax.code.template')
+        obj_acc_tax = self.pool.get('account.tax')
         obj_tax_code = self.pool.get('account.tax.code')
         obj_tax_temp = self.pool.get('account.tax.template')
         obj_acc_template = self.pool.get('account.account.template')
@@ -3050,7 +3051,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         ir_values_obj = self.pool.get('ir.values')
 
         # create tax templates and real taxes from purchase_tax_rate,sale_tax_rate fields
-        if not template.set_tax_complete:
+        if not template.set_tax_complete and tax_data:
             tax_dict = {'sale': tax_data['sale'], 'purchase': tax_data['purchase']}
             for tax_type, value in tax_dict.items():
                 tax_name = tax_type == 'sale' and 'TAX Received' or 'TAX Paid'
