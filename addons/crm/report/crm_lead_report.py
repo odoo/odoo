@@ -57,7 +57,7 @@ class crm_lead_report(osv.osv):
         'user_id':fields.many2one('res.users', 'User', readonly=True),
         'country_id':fields.many2one('res.country', 'Country', readonly=True),
         'section_id':fields.many2one('crm.case.section', 'Sales Team', readonly=True),
-        'channel_id':fields.many2one('res.partner.canal', 'Channel', readonly=True),
+        'channel_id':fields.many2one('crm.case.channel', 'Channel', readonly=True),
         'type_id':fields.many2one('crm.case.resource.type', 'Campaign', readonly=True),
         'state': fields.selection(AVAILABLE_STATES, 'State', size=16, readonly=True),
         'creation_month':fields.selection(MONTHS, 'Creation Date', readonly=True),
