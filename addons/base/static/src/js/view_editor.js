@@ -16,7 +16,7 @@ openerp.base.ViewEditor = openerp.base.Dialog.extend({
         var action = {
             name:'ViewEditor',
             context:this.session.user_context,
-//            domain: ["model", "=", this.dataset.model],
+            domain: [["model", "=", this.dataset.model]],
             res_model: 'ir.ui.view',
             views : [[false, 'list']],
             type: 'ir.actions.act_window',
