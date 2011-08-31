@@ -1087,10 +1087,10 @@ class Export(View):
 
     @openerpweb.jsonrequest
     def get_fields(self, req, model, prefix='', name= '',
-                   import_compat=True, field_parent_type=None):
+                   import_compat=True, parent_field_type=None):
 
         fields = self.fields_get(req, model)
-        if import_compat and field_parent_type == "many2one":
+        if import_compat and parent_field_type == "many2one":
             fields = {}
         fields.update({'id': {'string': 'ID'}, '.id': {'string': 'Database ID'}})
 
