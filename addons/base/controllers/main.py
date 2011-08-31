@@ -1228,18 +1228,21 @@ class Export(View):
         Model = req.session.model(model)
         ids = ids or Model.search(domain, context=context)
 
-        field = fields.keys()
-        result = Model.export_data(ids, field, context).get('datas',[])
+        field_names = map(operator.itemgetter('name'), fields)
+        import_data = Model.export_data(ids, field_names, context).get('datas',[])
 
-        if not import_compat:
-            field = [val.strip() for val in fields.values()]
+        if import_compat:
+            columns_headers = field_names
+        else:
+            columns_headers = [val['label'].strip() for val in fields]
+
 
         req.httpresponse.headers['Content-Disposition'] = \
             'attachment; filename="%s"' % self.filename(model)
         req.httpresponse.cookie['fileToken'] = int(token)
         req.httpresponse.cookie['fileToken']['path'] = '/'
         req.httpresponse.headers['Content-Type'] = self.content_type
-        return self.from_data(field, result)
+        return self.from_data(columns_headers, import_data)
 
 class CSVExport(Export):
     _cp_path = '/base/export/csv'

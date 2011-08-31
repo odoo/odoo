@@ -381,9 +381,9 @@ openerp.base.DataExport = openerp.base.Dialog.extend({
     },
     on_click_export_data: function() {
         $.blockUI(this.$element);
-        var exported_fields = {};
+        var exported_fields = [];
         this.$element.find("#fields_list option").each(function() {
-            exported_fields[$(this).val()] = $(this).text();
+            exported_fields.push({name: $(this).val(), label: $(this).text()});
         });
         if (_.isEmpty(exported_fields)) {
             alert('Please select fields to export...');
