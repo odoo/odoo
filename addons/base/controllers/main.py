@@ -1100,11 +1100,10 @@ class Export(View):
         records = []
         for field_name, field in fields_seq:
             if import_compat and field.get('readonly'):
-                ok = False
-                for sl in field.get('states', {}).values():
-                    for s in sl:
-                        ok = ok or (s==['readonly',False])
-                if not ok: continue
+                # If none of the field's states unsets readonly, skip the field
+                if all(dict(attrs).get('readonly', True)
+                       for attrs in field.get('states', {}).values()):
+                    continue
 
             id = prefix + (prefix and '/'or '') + field_name
             nm = name + (name and '/' or '') + field['string']
