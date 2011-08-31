@@ -50,16 +50,14 @@ openerp.base.DataExport = openerp.base.Dialog.extend({
         this.$element.find('#import_compat').change(function() {
             self.$element.find('#fields_list').empty();
             self.$element.find('#field-tree-structure').remove();
-            var import_comp = self.$element.find("#import_compat option:selected").val();
-            if (import_comp) {
-                self.rpc("/base/export/get_fields", {
-                    model: self.dataset.model,
-                    import_compat: parseInt(import_comp, 10)
-                }, function (records) {
-                    got_fields.resolve();
-                    self.on_show_data(records);
-                });
-            }
+            var import_comp = self.$element.find("#import_compat").val();
+            self.rpc("/base/export/get_fields", {
+                model: self.dataset.model,
+                import_compat: Boolean(import_comp)
+            }, function (records) {
+                got_fields.resolve();
+                self.on_show_data(records);
+            });
         }).change();
 
         return $.when(
@@ -183,12 +181,12 @@ openerp.base.DataExport = openerp.base.Dialog.extend({
                 if (is_loaded == 0) {
                     if (self.$element.find("tr[id='treerow-" + self.field_id +"']").find('img').attr('src') === '/base/static/src/img/expand.gif') {
                         if (model) {
-                            var import_comp = self.$element.find("#import_compat option:selected").val();
+                            var import_comp = self.$element.find("#import_compat").val();
                             self.rpc("/base/export/get_fields", {
                                 model: model,
                                 prefix: prefix,
                                 name: name,
-                                import_compat: parseInt(import_comp, 10),
+                                import_compat: Boolean(import_comp),
                                 parent_field_type : record['field_type']
                             }, function(results) {
                                 self.on_show_data(results);
@@ -394,8 +392,8 @@ openerp.base.DataExport = openerp.base.Dialog.extend({
                 fields: exported_fields,
                 ids: this.dataset.ids,
                 domain: this.dataset.domain,
-                import_compat: parseInt(
-                        this.$element.find("#import_compat").val(), 10)
+                import_compat: Boolean(
+                        this.$element.find("#import_compat").val())
             })},
             complete: $.unblockUI
         });
