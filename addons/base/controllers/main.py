@@ -1117,12 +1117,10 @@ class Export(View):
             if len(name.split('/')) < 3 and 'relation' in field:
                 ref = field.pop('relation')
                 record['params'] = {'model': ref, 'prefix': id, 'name': name}
-                if import_compat and field['type'] in ('many2one', 'many2many'):
-                    # m2m remains childless
-                    if field['type'] == 'many2one':
-                        record['children'] = True
-                else:
-                    record['children'] = bool(self.fields_get(req, ref))
+
+                if not (import_compat and field['type'] == 'many2many'):
+                    # m2m field in import_compat is childless
+                    record['children'] = True
 
         return records
 
