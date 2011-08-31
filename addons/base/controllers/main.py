@@ -1117,9 +1117,8 @@ class Export(View):
                 ref = field.pop('relation')
                 record['params'] = {'model': ref, 'prefix': id, 'name': nm}
                 if import_compat and field['type'] in ('many2one', 'many2many'):
-                    if field['type'] == 'many2many':
-                        record['children'] = []
-                    elif field['type'] == 'many2one':
+                    # m2m remains childless
+                    if field['type'] == 'many2one':
                         record['children'] = [id + '/id', id + '/.id']
                 else:
                     cfields = self.fields_get(req, ref)
