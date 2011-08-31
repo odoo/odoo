@@ -94,6 +94,8 @@ class report_account_common(report_sxw.rml_parse, common_report_header):
 
     def get_lines(self, data):
         lines = []
+        account_obj = self.pool.get('account.account')
+        currency_obj = self.pool.get('res.currency')
         ids2 = self.pool.get('account.low.level.report')._get_children_by_order(self.cr, self.uid, [data['form']['account_report_id'][0]], context=data['form']['used_context'])
         for report in self.pool.get('account.low.level.report').browse(self.cr, self.uid, ids2, context=data['form']['used_context']):
             vals = {
@@ -106,8 +108,10 @@ class report_account_common(report_sxw.rml_parse, common_report_header):
                 vals['balance_cmp'] = self.pool.get('account.low.level.report').browse(self.cr, self.uid, report.id, context=data['form']['comparison_context']).balance
             lines.append(vals)
             if report.type == 'accounts' and report.display_detail:
-                for account in report.account_ids:
-                    if account.level != 0:
+                account_ids = account_obj._get_children_and_consol(self.cr, self.uid, [x.id for x in report.account_ids])
+                for account in account_obj.browse(self.cr, self.uid, account_ids, context=data['form']['used_context']):
+                    if account.type != 'view':
+                        flag = False
                         vals = {
                             'name': account.code + ' ' + account.name,
                             'balance': account.balance,
@@ -115,9 +119,14 @@ class report_account_common(report_sxw.rml_parse, common_report_header):
                             'level': 6,
                             'account_type': account.type,
                         }
+                        if not currency_obj.is_zero(self.cr, self.uid, account.company_id.currency_id, vals['balance']):
+                            flag = True
                         if data['form']['enable_filter']:
-                            vals['balance_cmp'] = self.pool.get('account.account').browse(self.cr, self.uid, account.id, context=data['form']['comparison_context']).balance
-                        lines.append(vals)
+                            vals['balance_cmp'] = account_obj.browse(self.cr, self.uid, account.id, context=data['form']['comparison_context']).balance
+                            if not currency_obj.is_zero(self.cr, self.uid, account.company_id.currency_id, vals['balance_cmp']):
+                                flag = True
+                        if flag:
+                            lines.append(vals)
         return lines
 
 #    def get_report_balance(self, child, child_ids, context=None):
