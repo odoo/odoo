@@ -2376,7 +2376,7 @@ class account_account_template(osv.osv):
             res.append((record['id'],name ))
         return res
 
-    def generate_account(self, cr, uid, account_root_id, tax_template_ref, code_digits, company_id, context=None):
+    def generate_account(self, cr, uid, template_id, account_root_id, tax_template_ref, code_digits, company_id, context=None):
         """
         This method for generating accounts from templates.
         @param cr: A database cursor.
@@ -2396,7 +2396,7 @@ class account_account_template(osv.osv):
         #deactivate the parent_store functionnality on account_account for rapidity purpose
         ctx = context.copy()
         ctx.update({'defer_parent_store_computation': True})
-        children_acc_template = self.search(cr, uid, [('parent_id','child_of', [account_root_id]),('nocreate','!=',True)], order='id')
+        children_acc_template = self.search(cr, uid, [('parent_id','child_of', [account_root_id]),'|', ('chart_template_id','=', [template_id]),('chart_template_id','=', False), ('nocreate','!=',True)], order='id')
         for account_template in self.browse(cr, uid, children_acc_template, context=context):
             tax_ids = []
             for tax in account_template.tax_ids:
@@ -3117,7 +3117,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         taxes_ref = obj_tax_temp.generate_tax(cr, uid, tax_templates, tax_code_template_ref, company_id, context=context)
 
         # Generating Accounts from templates.
-        acc_template_ref = obj_acc_template.generate_account(cr, uid, template.account_root_id.id, taxes_ref['tax_template_ref'], code_digits, company_id, context=context)
+        acc_template_ref = obj_acc_template.generate_account(cr, uid, template_id, template.account_root_id.id, taxes_ref['tax_template_ref'], code_digits, company_id, context=context)
 
         # writing account values on tax after creation of accounts
         for key,value in taxes_ref['account_dict'].items():
