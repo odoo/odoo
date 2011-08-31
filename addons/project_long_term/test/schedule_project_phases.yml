@@ -38,7 +38,15 @@
   !record {model: project.resource.allocation, id: res_phase1}:
     resource_id: project_long_term.resource_project_manager
     phase_id: project_phase_definingclientsbasicideaofproject0
-
+-
+  call get_name function
+-
+  !python {model: project.resource.allocation}: |
+    arg={}
+    field_name = {
+                 'phase_id': ref('project_phase_definingclientsbasicideaofproject0')
+                 }
+    self.get_name(cr, uid, [ref('res_phase1')], field_name, arg, context=None)
 -
  Resource2
 -

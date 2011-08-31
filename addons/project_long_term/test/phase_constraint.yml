@@ -65,10 +65,16 @@
   Now Set working period to  Project 'Develop yaml Project Module'
 - 
   !python {model: project.project}: |  
-    self.write(cr, uid, [ref("project_project_developyamlproject0")], {'resource_calendar_id': ref("resource_calendar_hoursweeks0")})
-    self.generate_members(cr, uid, [ref('project_project_developyamlproject0')], context=None)
-
+    context.update({'resource_calendar_id': ref("resource_calendar_hoursweeks0")})
+    self.write(cr, uid, [ref("project_project_developyamlproject0")], context)
+    self.schedule_tasks(cr, uid, [ref('project_project_developyamlproject0')], context)
     
+    for project in self.browse(cr, uid, [ref('project_project_developyamlproject0')], context):
+      start_date = project.date_start
+      end_date = start_date
+    context.update({'start_date' : start_date,'end_date' : end_date})
+    self.compute_allocation(cr, uid, [ref('project_project_developyamlproject0')], start_date, end_date, context)
+    self.generate_members(cr, uid, [ref('project_project_developyamlproject0')], context=None)
 - 
   Creating 3 consecutive 5-days phases.
   For that Creating a Analyst Human resource to analyst Project Yaml.
@@ -131,6 +137,7 @@
     name: Develop Yaml
     product_uom: product.uom_day
     project_id: project_project_developyamlproject0
+    responsible_id: base.user_admin
     previous_phase_ids:
       - project_phase_analysisflowforyaml0
 
@@ -212,16 +219,18 @@
   Now, Check start date.
 - 
   !python {model: project.phase}: |
+    phase=self.browse(cr, uid, ref('project_phase_developyaml0'), context=context)
     try:
-      self._check_date_start(cr, uid, ref('project_phase_developyaml0'), context.get('end_date'), context)
+      self._check_date_start(cr, uid, phase, context.get('end_date'), context)
     except:
       pass
 - 
   Now, Check end date.
 - 
   !python {model: project.phase}: |
+    phase=self.browse(cr, uid, ref('project_phase_developyaml0'), context=context)
     try:
-      self._check_date_end(cr, uid, ref('project_phase_developyaml0'), context.get('start_date'), context)
+      self._check_date_end(cr, uid, phase, context.get('start_date'), context)
     except:
       pass      
 - 

@@ -62,6 +62,7 @@
   !python {model: project.phase}: |
     import datetime
     from dateutil.relativedelta import *
+    self.copy(cr, uid, ref('project_phase_firstphase0_case1'), default={}, context=None)
     start = (datetime.date.today()).strftime('%Y-%m-%d')
     end = (datetime.date.today() + relativedelta(days=2)).strftime('%Y-%m-%d')
     first_phase = self.browse(cr, uid, ref('project_phase_firstphase0_case1'))
