@@ -1095,7 +1095,7 @@ class Export(View):
         fields.update({'id': {'string': 'ID'}, '.id': {'string': 'Database ID'}})
 
         fields_sequence = sorted(fields.iteritems(),
-            key=lambda field: field[1].get('string', ''), reverse=True)
+            key=lambda field: field[1].get('string', ''))
 
         records = []
         for field_name, field in fields_sequence:
@@ -1128,7 +1128,6 @@ class Export(View):
                         (id + '/' + field_name).replace(' ', '_')
                         for field_name in cfield_keys]
 
-        records.reverse()
         return records
 
     @openerpweb.jsonrequest
