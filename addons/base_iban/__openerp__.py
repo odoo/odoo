@@ -31,7 +31,7 @@ The ability to extract the correctly represented local accounts from IBAN accoun
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
-    'depends': ['account'],
+    'depends': ['base'],
     'init_xml': ['base_iban_data.xml'],
     'update_xml': ['base_iban_view.xml'],
     'installable': True,

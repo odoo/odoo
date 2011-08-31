@@ -102,7 +102,7 @@ class account_payment_term_line(osv.osv):
                                    ('fixed', 'Fixed Amount')], 'Valuation',
                                    required=True, help="""Select here the kind of valuation related to this payment term line. Note that you should have your last line with the type 'Balance' to ensure that the whole amount will be threated."""),
 
-        'value_amount': fields.float('Value Amount', digits_compute=dp.get_precision('Payment Term'), help="For Value percent enter % ratio between 0-1."),
+        'value_amount': fields.float('Amount To Pay', digits_compute=dp.get_precision('Payment Term'), help="For percent enter a ratio between 0-1."),
         'days': fields.integer('Number of Days', required=True, help="Number of days to add before computation of the day of month." \
             "If Date=15/01, Number of Days=22, Day of Month=-1, then the due date is 28/02."),
         'days2': fields.integer('Day of the Month', required=True, help="Day of the month, set -1 for the last day of the current month. If it's positive, it gives the day of the next month. Set 0 for net days (otherwise it's based on the beginning of the month)."),
@@ -131,7 +131,7 @@ class account_account_type(osv.osv):
     _name = "account.account.type"
     _description = "Account Type"
     _columns = {
-        'name': fields.char('Acc. Type Name', size=64, required=True),
+        'name': fields.char('Account Type', size=64, required=True),
         'code': fields.char('Code', size=32, required=True),
         'close_method': fields.selection([('none', 'None'), ('balance', 'Balance'), ('detail', 'Detail'), ('unreconciled', 'Unreconciled')], 'Deferral Method', required=True, help="""Set here the method that will be used to generate the end of year journal entries for all the accounts of this type.
 
@@ -146,7 +146,7 @@ class account_account_type(osv.osv):
             ('expense','Profit & Loss (Expense Accounts)'),
             ('asset','Balance Sheet (Assets Accounts)'),
             ('liability','Balance Sheet (Liability Accounts)')
-        ],'P&L / BS Category', select=True, readonly=False, help="According value related accounts will be display on respective reports (Balance Sheet Profit & Loss Account)", required=True),
+        ],'P&L / BS Category', select=True, readonly=False, help="This field is used to generate legal reports: profit and loss, balance sheet.", required=True),
         'note': fields.text('Description'),
     }
     _defaults = {
@@ -358,13 +358,13 @@ class account_account(osv.osv):
             ('liquidity','Liquidity'),
             ('consolidation', 'Consolidation'),
             ('closed', 'Closed'),
-        ], 'Internal Type', required=True, help="This type is used to differentiate types with "\
-            "special effects in OpenERP: view can not have entries, consolidation are accounts that "\
+        ], 'Internal Type', required=True, help="The 'Internal Type' is used for features available on "\
+            "different types of accounts: view can not have journal items, consolidation are accounts that "\
             "can have children accounts for multi-company consolidations, payable/receivable are for "\
             "partners accounts (for debit/credit computations), closed for depreciated accounts."),
         'user_type': fields.many2one('account.account.type', 'Account Type', required=True,
-            help="These types are defined according to your country. The type contains more information "\
-            "about the account and its specificities."),
+            help="Account Type is used for information purpose, to generate "
+              "country-specific legal reports, and set the rules to close a fiscal year and generate opening entries."),
         'parent_id': fields.many2one('account.account', 'Parent', ondelete='cascade', domain=[('type','=','view')]),
         'child_parent_ids': fields.one2many('account.account','parent_id','Children'),
         'child_consol_ids': fields.many2many('account.account', 'account_account_consol_rel', 'child_id', 'parent_id', 'Consolidated Children'),
@@ -604,11 +604,11 @@ class account_journal(osv.osv):
         'name': fields.char('Journal Name', size=64, required=True),
         'code': fields.char('Code', size=5, required=True, help="The code will be displayed on reports."),
         'type': fields.selection([('sale', 'Sale'),('sale_refund','Sale Refund'), ('purchase', 'Purchase'), ('purchase_refund','Purchase Refund'), ('cash', 'Cash'), ('bank', 'Bank and Cheques'), ('general', 'General'), ('situation', 'Opening/Closing Situation')], 'Type', size=32, required=True,
-                                 help="Select 'Sale' for Sale journal to be used at the time of making invoice."\
-                                 " Select 'Purchase' for Purchase Journal to be used at the time of approving purchase order."\
-                                 " Select 'Cash' to be used at the time of making payment."\
-                                 " Select 'General' for miscellaneous operations."\
-                                 " Select 'Opening/Closing Situation' to be used at the time of new fiscal year creation or end of year entries generation."),
+                                 help="Select 'Sale' for customer invoices journals."\
+                                 " Select 'Purchase' for supplier invoices journals."\
+                                 " Select 'Cash' or 'Bank' for journals that are used in customer or supplier payments."\
+                                 " Select 'General' for miscellaneous operations journals."\
+                                 " Select 'Opening/Closing Situation' for entries generated for new fiscal years."),
         'type_control_ids': fields.many2many('account.account.type', 'account_journal_type_rel', 'journal_id','type_id', 'Type Controls', domain=[('code','<>','view'), ('code', '<>', 'closed')]),
         'account_control_ids': fields.many2many('account.account', 'account_account_type_rel', 'journal_id','account_id', 'Account', domain=[('type','<>','view'), ('type', '<>', 'closed')]),
         'view_id': fields.many2one('account.journal.view', 'Display Mode', required=True, help="Gives the view used when writing or browsing entries in this journal. The view tells OpenERP which fields should be visible, required or readonly and in which order. You can create your own view for a faster encoding in each journal."),
@@ -711,6 +711,8 @@ class account_journal(osv.osv):
             name = rs.name
             if rs.currency:
                 name = "%s (%s)" % (rs.name, rs.currency.name)
+            else:
+                name = "%s (%s)" % (rs.name, rs.company_id.currency_id.name)
             res += [(rs.id, name)]
         return res
 
@@ -916,10 +918,17 @@ class account_period(osv.osv):
         return False
 
     def find(self, cr, uid, dt=None, context=None):
+        if context is None: context = {}
         if not dt:
             dt = time.strftime('%Y-%m-%d')
 #CHECKME: shouldn't we check the state of the period?
-        ids = self.search(cr, uid, [('date_start','<=',dt),('date_stop','>=',dt)])
+        args = [('date_start', '<=' ,dt), ('date_stop', '>=', dt)]
+        if context.get('company_id', False):
+            args.append(('company_id', '=', context['company_id']))
+        else:
+            company_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
+            args.append(('company_id', '=', company_id))
+        ids = self.search(cr, uid, args, context=context)
         if not ids:
             raise osv.except_osv(_('Error !'), _('No period defined for this date: %s !\nPlease create one.')%dt)
         return ids
