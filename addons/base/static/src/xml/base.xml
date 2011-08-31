@@ -1471,7 +1471,7 @@
                     <tr>
                         <t t-foreach="records.header" t-as="header">
                             <td>
-                                <select name="fld" id="fld">
+                                <select name="sel_field" id="sel_field">
                                     <option selected="selected" value=""></option>
                                     <t t-foreach="records.sel" t-as="selection">
                                         <option t-att="{'selected': header[0] === selection ? 'selected' : null}"

@@ -1304,7 +1304,6 @@ class Export(View):
         #TODO: ok now we've got the report, and so what?
         return False
 
-
 class Import(View):
     _cp_path = "/base/import"
 
@@ -1351,6 +1350,7 @@ class Import(View):
         fields.update({'id':{'string':'ID'},'.id':{'string':'Database ID'}})
         model_populate(fields)
         all_fields = fields.keys()
+
         try:
             data = csv.reader(params.get('csvfile').file, quotechar=str(params.get('csvdel')), delimiter=str(params.get('csvsep')))
         except:
@@ -1361,13 +1361,16 @@ class Import(View):
         fields = []
         word=''
         limit = 4
+        count = 0
         try:
             for i, row in enumerate(data):
                 records.append(row)
                 if i == limit:
                     break
 
-            for line in records:
+            for j, line in enumerate(records):
+                if j == 1:
+                    break
                 for word in line:
                     word = str(word.decode(params.get('csvcode')))
                     if word in _fields:
@@ -1375,8 +1378,12 @@ class Import(View):
                     elif word in _fields_invert.keys():
                         fields.append((_fields_invert[word], word))
                     else:
+                        count = count + 1
                         fields.append((word, word))
 #                        error = {'message':("You cannot import the field '%s', because we cannot auto-detect it" % (word,))}
+
+            if len(line) == count:
+                error = {'message':"File has not any column header."}
         except:
             error = {'message':('Error processing the first line of the file. Field "%s" is unknown') % (word,)}
 
@@ -1385,7 +1392,7 @@ class Import(View):
             error=dict(error, preview=params.get('csvfile').file.read(200))
             return simplejson.dumps({'error':error})
 
-        return simplejson.dumps({'records':records[1:],'fields':fields,'all_fields':all_fields})
+        return simplejson.dumps({'records':records[1:],'header':fields,'all_fields':all_fields})
 
     @openerpweb.httprequest
     def import_data(self, req, **params):
@@ -1449,5 +1456,4 @@ class Import(View):
             d+= ('%s: %s' % (str(key),str(val)))
         msg = 'Error trying to import this record:%s. ErrorMessage:%s %s' % (d,res[2],res[3])
         error = {'message':str(msg), 'title':'ImportationError'}
-
         return simplejson.dumps({'error':error})
