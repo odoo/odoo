@@ -16,13 +16,13 @@
                     <page string="Comparison" attrs="{'invisible': [('enable_filter','=',False)]}">
                         <field name="label_filter" attrs="{'required': [('enable_filter', '=', True)]}"/>
                         <field name="fiscalyear_id_cmp"/><newline/>
-                        <field name="filter_cmp" on_change="onchange_filter(filter, fiscalyear_id)"/>
+                        <field name="filter_cmp"/>
                         <separator string="Dates" colspan="4"/>
                         <field name="date_from_cmp" attrs="{'readonly':[('filter_cmp', '!=', 'filter_date')], 'required':[('filter_cmp', '=', 'filter_date')]}" colspan="4"/>
                         <field name="date_to_cmp" attrs="{'readonly':[('filter_cmp', '!=', 'filter_date')], 'required':[('filter_cmp', '=', 'filter_date')]}"  colspan="4"/>
                         <separator string="Periods" colspan="4"/>
-                        <field name="period_from_cmp" domain="[('fiscalyear_id_cmp', '=', fiscalyear_id)]" attrs="{'readonly':[('filter_cmp','!=','filter_period')], 'required':[('filter_cmp', '=', 'filter_period')]}" colspan="4"/>
-                        <field name="period_to_cmp" domain="[('fiscalyear_id_cmp', '=', fiscalyear_id)]" attrs="{'readonly':[('filter_cmp','!=','filter_period')], 'required':[('filter_cmp', '=', 'filter_period')]}" colspan="4"/>
+                        <field name="period_from_cmp" domain="[('fiscalyear_id', '=', fiscalyear_id_cmp)]" attrs="{'readonly':[('filter_cmp','!=','filter_period')], 'required':[('filter_cmp', '=', 'filter_period')]}" colspan="4"/>
+                        <field name="period_to_cmp" domain="[('fiscalyear_id', '=', fiscalyear_id_cmp)]" attrs="{'readonly':[('filter_cmp','!=','filter_period')], 'required':[('filter_cmp', '=', 'filter_period')]}" colspan="4"/>
                    </page>
                 </xpath>
                 <xpath expr="//notebook/page[@string='Journals']" position="replace">
