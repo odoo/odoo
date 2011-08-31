@@ -653,8 +653,8 @@ class account_voucher(osv.osv):
                 name = inv.number
             elif inv.journal_id.sequence_id:
                 name = seq_obj.get_id(cr, uid, inv.journal_id.sequence_id.id)
-            else:
-                raise osv.except_osv(_('Error !'), _('Please define a sequence on the journal !'))
+            if not name:
+                raise osv.except_osv(_('Error !'), _('Please define a sequence on the journal and make sure it is activated !'))
             if not inv.reference:
                 ref = name.replace('/','')
             else:
