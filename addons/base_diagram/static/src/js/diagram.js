@@ -317,6 +317,7 @@ openerp.base_diagram.DiagramView = openerp.base.View.extend({
     		$.each(form_fields, function(index, fld) {
     			form_controller.on_record_loaded.add_last(function() {
     				form_controller.fields[fld].set_value([self.id,self.active_model])
+    				form_controller.fields[fld].dirty = true;
     			});
     		});
     	}
