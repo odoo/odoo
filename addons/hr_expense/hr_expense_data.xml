@@ -8,6 +8,18 @@
             <field name="parent_id" ref="product.cat0"/>
             <field name="name">Expenses</field>
         </record>
+        
+        <record id="product_product_expense_car" model="product.product">
+            <field name="list_price">0.32</field>
+            <field name="standard_price">0.32</field>
+            <field name="uom_id" ref="product.product_uom_km"/>
+            <field name="uom_po_id" ref="product.product_uom_km"/>
+            <field name="type">consu</field>
+            <field name="name">Travel Expenses</field>
+            <field name="default_code">TRA</field>
+            <field name="categ_id" ref="hr_expense.cat_expense"/>
+            <field name="hr_expense_ok" eval="True" />
+        </record>
 
     </data>
 </openerp>

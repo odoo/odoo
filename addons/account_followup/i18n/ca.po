@@ -7,26 +7,25 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:14+0000\n"
-"PO-Revision-Date: 2010-10-30 13:46+0000\n"
-"Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
-"<jesteve@zikzakmedia.com>\n"
+"PO-Revision-Date: 2011-08-17 23:03+0000\n"
+"Last-Translator: mgaja (GrupoIsep.com) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 05:02+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-08-23 05:04+0000\n"
+"X-Generator: Launchpad (build 13697)\n"
 
 #. module: account_followup
-#: code:addons/account_followup/wizard/account_followup_print.py:295
+#: code:addons/account_followup/wizard/account_followup_print.py:298
 #, python-format
 msgid "Follwoup Summary"
-msgstr ""
+msgstr "Informe de seguiment"
 
 #. module: account_followup
 #: view:account_followup.followup:0
 msgid "Search Followup"
-msgstr ""
+msgstr "Cerca de seguiment"
 
 #. module: account_followup
 #: model:ir.module.module,description:account_followup.module_meta_information
@@ -52,11 +51,34 @@ msgid ""
 "Sent\n"
 "\n"
 msgstr ""
+"\n"
+"    Mòdul per automatitzar cartes de factures impagades, amb recordatoris "
+"multi-nivell.\n"
+"\n"
+"    Podeu definir els múltiples nivells de recordatoris a través del menú:\n"
+"        Comptabilitat/Configuració/Miscel·lanis/Recordatoris\n"
+"\n"
+"    Una vegada definit, podeu automatitzar la impressió de recordatoris cada "
+"dia\n"
+"    fent clic en el menú:\n"
+"        Comptabilitat/Processos periòdics/Facturació/Envia recordatoris\n"
+"\n"
+"    Es generarà un PDF amb totes les cartes en funció dels\n"
+"    diferents nivells de recordatoris definits. Podeu definir diferents "
+"regles\n"
+"    per a diferents empreses. Podeu també enviar un correu electrònic al "
+"client.\n"
+"\n"
+"    Tingueu en compte que si voleu modificar els nivells de recordatoris per "
+"a una empresa/anotació comptable, ho podeu fer des del menú:\n"
+"        Comptabilitat/Informis/Informes genèrics/Expliques "
+"empreses/Recordatoris enviats\n"
+"\n"
 
 #. module: account_followup
 #: view:account_followup.stat:0
 msgid "Group By..."
-msgstr ""
+msgstr "Agrupa per..."
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:290
@@ -98,6 +120,7 @@ msgstr "Assumpte correu electrònic"
 msgid ""
 "Follow up on the reminders sent over to your partners for unpaid invoices."
 msgstr ""
+"Seguiment dels recordatoris enviats als seus clients per factures no pagades."
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -113,12 +136,12 @@ msgstr "D'acord"
 #. module: account_followup
 #: view:account.followup.print.all:0
 msgid "Select Partners to Remind"
-msgstr ""
+msgstr "Selecciona empreses per recordar"
 
 #. module: account_followup
 #: constraint:account.move.line:0
 msgid "You can not create move line on closed account."
-msgstr ""
+msgstr "No podeu crear una anotació en un compte tancat."
 
 #. module: account_followup
 #: field:account.followup.print,date:0
@@ -128,7 +151,7 @@ msgstr "Data enviament del seguiment"
 #. module: account_followup
 #: sql_constraint:account.move.line:0
 msgid "Wrong credit or debit value in accounting entry !"
-msgstr ""
+msgstr "Valor erroni del deure o haver en l'assentament comptable !"
 
 #. module: account_followup
 #: selection:account_followup.followup.line,start:0
@@ -144,7 +167,7 @@ msgstr "Seguiments"
 #. module: account_followup
 #: view:account_followup.stat.by.partner:0
 msgid "Balance > 0"
-msgstr ""
+msgstr "Balanç > 0"
 
 #. module: account_followup
 #: view:account.move.line:0
@@ -193,12 +216,12 @@ msgstr "Empreses"
 #: code:addons/account_followup/wizard/account_followup_print.py:138
 #, python-format
 msgid "Invoices Reminder"
-msgstr ""
+msgstr "Recordatori de factures"
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_followup
 msgid "Account Follow Up"
-msgstr ""
+msgstr "Seguiment comptable"
 
 #. module: account_followup
 #: selection:account_followup.followup.line,start:0
@@ -208,7 +231,7 @@ msgstr "Fi de mes"
 #. module: account_followup
 #: view:account_followup.stat:0
 msgid "Not Litigation"
-msgstr ""
+msgstr "Sense litigi"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -227,6 +250,10 @@ msgid ""
 "You can send them the default message for unpaid invoices or manually enter "
 "a message should you need to remind them of a specific information."
 msgstr ""
+"Aquesta funcionalitat li permet enviar recordatoris a les empreses amb "
+"factures pendents. Podeu enviar el missatge per defecte per les factures "
+"impagades o introduir manualment un missatge si necessiteu recordar alguna "
+"informació específica."
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
@@ -237,6 +264,8 @@ msgstr "Ref."
 #: help:account_followup.followup.line,sequence:0
 msgid "Gives the sequence order when displaying a list of follow-up lines."
 msgstr ""
+"Indica l'ordre de seqüència quan es mostra una llista de seguiment de les "
+"línies."
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -278,6 +307,25 @@ msgid ""
 "\n"
 "Best Regards,\n"
 msgstr ""
+"\n"
+"Benvolgut %(partner_name)s,\n"
+"\n"
+"Estem preocupats de veure que, malgrat enviar un recordatori, els pagaments "
+"del seu compte estan molt endarrerits.\n"
+"\n"
+"És essencial que realitzi el pagament de forma immediata, en cas contrari "
+"haurà de considerar la suspensió del seu compte, la qual cosa significa que "
+"no serem capaços de subministrar a la seva empresa.\n"
+"Si us plau, prengui les mesures oportunes per dur a terme aquest pagament en "
+"els propers 8 dies.\n"
+"\n"
+"Si hi ha un problema amb el pagament de la(es) factura(es) que desconeixem, "
+"no dubti a posar-se en contacte amb el nostre departament de comptabilitat "
+"de manera que puguem resoldre l'assumpte el més ràpid possible.\n"
+"\n"
+"Els detalls dels pagaments pendents es llisten a continuació.\n"
+"\n"
+"Salutacions cordials,\n"
 
 #. module: account_followup
 #: field:account.followup.print.all,partner_lang:0
@@ -289,6 +337,7 @@ msgstr "Envia correu en l'idioma de l'empresa"
 msgid ""
 "You can not create move line on receivable/payable account without partner"
 msgstr ""
+"No podeu crear una anotació en un compte a cobrar/a pagar sense una empresa."
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -312,7 +361,7 @@ msgstr "Envia seguiments"
 #. module: account_followup
 #: view:account_followup.stat.by.partner:0
 msgid "Partner to Remind"
-msgstr ""
+msgstr "Empresa per recordar"
 
 #. module: account_followup
 #: field:account_followup.followup.line,followup_id:0
@@ -336,6 +385,18 @@ msgid ""
 "\n"
 "Best Regards,\n"
 msgstr ""
+"\n"
+"Benvolgut %(*partner_*name)s,\n"
+"\n"
+"Excepte si hi hagués un error per part nostre, sembla que els següents "
+"imports estan pendents de pagament. Si us plau, prengui les mesures "
+"oportunes per dur a terme aquest pagament en els propers 8 dies.\n"
+"\n"
+"Si el pagament hagués estat realitzat després d'enviar aquest correu, si us "
+"plau no ho tingui en compte. No dubti a posar-se en contacte amb el nostre "
+"departament de comptabilitat.\n"
+"\n"
+"Salutacions cordials,\n"
 
 #. module: account_followup
 #: model:account_followup.followup.line,description:account_followup.demo_followup_line3
@@ -356,21 +417,37 @@ msgid ""
 "\n"
 "Best Regards,\n"
 msgstr ""
+"\n"
+"Benvolgut %(partner_name)s,\n"
+"\n"
+"Malgrat diversos recordatoris, el deute del seu compte encara no està "
+"resolt.\n"
+"\n"
+"Tret que el pagament total es realitzi en els propers 8 dies, les accions "
+"legals per al cobrament del deute es prendran sense previ avís.\n"
+"\n"
+"Confiem que aquesta mesura sigui innecessària. Els detalls dels pagaments "
+"pendents es llisten a continuació.\n"
+"\n"
+"En cas de qualsevol consulta relacionada amb aquest tema, no dubti en "
+"contactar amb el nostre departament de comptabilitat.\n"
+"\n"
+"Salutacions cordials,\n"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
 msgid "Send Mails"
-msgstr ""
+msgstr "Envia emails"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Currency"
-msgstr ""
+msgstr "Divisa"
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_stat_by_partner
 msgid "Followup Statistics by Partner"
-msgstr ""
+msgstr "Estadístiques de seguiment per empresa"
 
 #. module: account_followup
 #: model:ir.module.module,shortdesc:account_followup.module_meta_information
@@ -380,7 +457,7 @@ msgstr "Gestió dels seguiments/avisos comptables"
 #. module: account_followup
 #: field:account_followup.stat,blocked:0
 msgid "Blocked"
-msgstr ""
+msgstr "Bloquejat"
 
 #. module: account_followup
 #: help:account.followup.print,date:0
@@ -399,7 +476,7 @@ msgstr "Degut"
 #: code:addons/account_followup/wizard/account_followup_print.py:56
 #, python-format
 msgid "Select Partners"
-msgstr ""
+msgstr "Selecciona empreses"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -409,7 +486,7 @@ msgstr "Configuracions email"
 #. module: account_followup
 #: view:account.followup.print.all:0
 msgid "Print Follow Ups"
-msgstr ""
+msgstr "Imprimeix els seguiments"
 
 #. module: account_followup
 #: field:account.move.line,followup_date:0
@@ -429,7 +506,7 @@ msgstr "Saldo pendent:"
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_stat
 msgid "Followup Statistics"
-msgstr ""
+msgstr "Estadístiques de seguiment"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
@@ -439,17 +516,18 @@ msgstr "Pagat"
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid "%(user_signature)s: User Name"
-msgstr ""
+msgstr "%(user_signature)s: Nom d'usuari/a"
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_move_line
 msgid "Journal Items"
-msgstr ""
+msgstr "Apunts comptables"
 
 #. module: account_followup
 #: constraint:account.move.line:0
 msgid "Company must be same for its related account and period."
 msgstr ""
+"La companyia ha de ser la mateixa per al compte i període relacionats."
 
 #. module: account_followup
 #: field:account.followup.print.all,email_conf:0
@@ -464,11 +542,14 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"Tots els correus electronics han estat enviats amb èxit a les empreses:.\n"
+"\n"
+"%s"
 
 #. module: account_followup
 #: constraint:res.company:0
 msgid "Error! You can not create recursive companies."
-msgstr ""
+msgstr "Error! No podeu crear companyies recursives."
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -478,12 +559,12 @@ msgstr "%(company_name): Nom de la companyia de l'usuari"
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_res_company
 msgid "Companies"
-msgstr ""
+msgstr "Companyies"
 
 #. module: account_followup
 #: view:account_followup.followup:0
 msgid "Followup Lines"
-msgstr ""
+msgstr "Línies de seguiment"
 
 #. module: account_followup
 #: field:account_followup.stat,credit:0
@@ -498,7 +579,7 @@ msgstr "Data venciment"
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid "%(partner_name)s: Partner Name"
-msgstr ""
+msgstr "%(partner_name)s: Nom d'empresa"
 
 #. module: account_followup
 #: view:account_followup.stat:0
@@ -526,7 +607,7 @@ msgstr "Tipus de termini"
 #: model:ir.model,name:account_followup.model_account_followup_print
 #: model:ir.model,name:account_followup.model_account_followup_print_all
 msgid "Print Followup & Send Mail to Customers"
-msgstr ""
+msgstr "Imprimeix seguiment i envia correu als clients"
 
 #. module: account_followup
 #: field:account_followup.stat,date_move_last:0
@@ -542,7 +623,7 @@ msgstr "Informe de seguiments"
 #. module: account_followup
 #: field:account_followup.stat,period_id:0
 msgid "Period"
-msgstr ""
+msgstr "Període"
 
 #. module: account_followup
 #: view:account.followup.print:0
@@ -558,17 +639,17 @@ msgstr "Línies de seguiment"
 #. module: account_followup
 #: view:account_followup.stat:0
 msgid "Litigation"
-msgstr ""
+msgstr "Litigi"
 
 #. module: account_followup
 #: field:account_followup.stat.by.partner,max_followup_id:0
 msgid "Max Follow Up Level"
-msgstr ""
+msgstr "Nivell màxim de seguiment"
 
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.act_account_partner_account_move_payable_all
 msgid "Payable Items"
-msgstr ""
+msgstr "Registres a pagar"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -584,7 +665,7 @@ msgstr "%(date)s: Data actual"
 #. module: account_followup
 #: view:account_followup.stat:0
 msgid "Followup Level"
-msgstr ""
+msgstr "Nivell de seguiment"
 
 #. module: account_followup
 #: view:account_followup.followup:0
@@ -596,7 +677,7 @@ msgstr "Descripció"
 #. module: account_followup
 #: view:account_followup.stat:0
 msgid "This Fiscal year"
-msgstr ""
+msgstr "Aquest exercici fiscal"
 
 #. module: account_followup
 #: view:account.move.line:0
@@ -609,18 +690,20 @@ msgid ""
 "Do not change message text, if you want to send email in partner language, "
 "or configure from company"
 msgstr ""
+"No canvieu el text del missatge, si voleu enviar un correu electrònic en el "
+"llenguatge associat o configurar-ho des de la companyia"
 
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.act_account_partner_account_move_all
 msgid "Receivable Items"
-msgstr ""
+msgstr "Registres a cobrar"
 
 #. module: account_followup
 #: view:account_followup.stat:0
 #: model:ir.actions.act_window,name:account_followup.action_followup_stat
 #: model:ir.ui.menu,name:account_followup.menu_action_followup_stat_follow
 msgid "Follow-ups Sent"
-msgstr ""
+msgstr "Seguiments enviats"
 
 #. module: account_followup
 #: field:account_followup.followup,name:0
@@ -652,6 +735,10 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"El correu electrònic no enviat a les empreses, no es disposa de correu "
+"electrònic!\n"
+"\n"
+"%s"
 
 #. module: account_followup
 #: view:account.followup.print:0
@@ -682,7 +769,7 @@ msgstr "Total haver"
 #. module: account_followup
 #: view:account.followup.print.all:0
 msgid "%(line)s: Ledger Posting lines"
-msgstr ""
+msgstr "%(line)s: Línies incloses en el llibre major"
 
 #. module: account_followup
 #: field:account_followup.followup.line,sequence:0
@@ -692,7 +779,7 @@ msgstr "Seqüència"
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid "%(company_name)s: User's Company Name"
-msgstr ""
+msgstr "%(company_name)s: Nom de la companyia de l'usuari"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
@@ -707,17 +794,17 @@ msgstr "%(partner_name)s: Nom empresa"
 #. module: account_followup
 #: view:account_followup.stat:0
 msgid "Latest Followup Date"
-msgstr ""
+msgstr "Data del últim seguiment"
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_followup_line
 msgid "Follow-Up Criteria"
-msgstr ""
+msgstr "Criteris de seguiment"
 
 #. module: account_followup
 #: constraint:account.move.line:0
 msgid "You can not create move line on view account."
-msgstr ""
+msgstr "No podeu crear un apunt en un compte de tipus \"Vista\"."
 
 #~ msgid "All payable entries"
 #~ msgstr "Tots els assentaments comptes a pagar"
@@ -920,13 +1007,6 @@ msgstr ""
 #~ msgstr ""
 #~ "Tots els correus han estat enviats a les empreses correctament:.\n"
 #~ "\n"
-
-#~ msgid ""
-#~ "Do not change message text, if you want to send email in partner language, "
-#~ "or configre from company"
-#~ msgstr ""
-#~ "No canvieu el text del missatge si voleu enviar el correu en l'idioma de "
-#~ "l'empresa o configurar-lo des de la companyia."
 
 #, python-format
 #~ msgid ""
