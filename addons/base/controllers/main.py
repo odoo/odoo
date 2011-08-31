@@ -1086,11 +1086,9 @@ class Export(View):
         return fields
 
     @openerpweb.jsonrequest
-    def get_fields(self, req, model, prefix='', name= '', params={}):
-        import_compat = params.get("import_compat", False)
-
+    def get_fields(self, req, model, prefix='', name= '',
+                   import_compat=True, field_parent_type=None):
         fields = self.fields_get(req, model)
-        field_parent_type = params.get("parent_field_type",False)
 
         if import_compat and field_parent_type and field_parent_type == "many2one":
             fields = {}

@@ -54,7 +54,7 @@ openerp.base.DataExport = openerp.base.Dialog.extend({
             if (import_comp) {
                 self.rpc("/base/export/get_fields", {
                     model: self.dataset.model,
-                    params: { import_compat: parseInt(import_comp, 10) }
+                    import_compat: parseInt(import_comp, 10)
                 }, function (records) {
                     got_fields.resolve();
                     self.on_show_data(records);
@@ -184,15 +184,12 @@ openerp.base.DataExport = openerp.base.Dialog.extend({
                     if (self.$element.find("tr[id='treerow-" + self.field_id +"']").find('img').attr('src') === '/base/static/src/img/expand.gif') {
                         if (model) {
                             var import_comp = self.$element.find("#import_compat option:selected").val();
-                            var params = {
-                                import_compat: parseInt(import_comp),
-                                parent_field_type : record['field_type']
-                            };
                             self.rpc("/base/export/get_fields", {
                                 model: model,
                                 prefix: prefix,
                                 name: name,
-                                params: params
+                                import_compat: parseInt(import_comp, 10),
+                                parent_field_type : record['field_type']
                             }, function(results) {
                                 self.on_show_data(results);
                             });
