@@ -1,5 +1,6 @@
+import base.common as openerpweb
+
 from base.controllers.main import View
-import openerpweb
 
 class CalendarView(View):
     _cp_path = "/base_calendar/calendarview"

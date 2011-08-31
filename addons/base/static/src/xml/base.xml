@@ -326,15 +326,19 @@
     </div>
 </t>
 <t t-name="Header">
-    <a t-att-href="'/' + qs" class="company_logo_link">
-        <div class="company_logo" />
-    </a>
-    <h1 class="header_title" t-if="session.session_is_valid()">
-        <span class="database"><t t-esc="session.db"/></span> - <t t-esc="session.login"/> <br/>
-        <small class="username">rpc_session_id: <t t-esc="session.session_id"/></small>
+    <div>
+        <a t-att-href="'/' + widget.qs" class="company_logo_link">
+            <div class="company_logo" />
+        </a>
+    </div>
+</t>
+<t t-name="Header-content">
+    <h1 class="header_title">
+        <span class="database"><t t-esc="widget.session.db"/></span> - <t t-esc="widget.session.login"/> <br/>
+        <small class="username">rpc_session_id: <t t-esc="widget.session.session_id"/></small>
     </h1>
     <div class="header_corner">
-        <ul class="block" t-if="session.session_is_valid()">
+        <ul class="block">
             <li>
                 <a href="#home" title="Home" class="home"><img src="/base/static/src/img/header-home.png" width="16" height="16" border="0"/></a>
             </li>
@@ -474,8 +478,8 @@
                 <label class="oe_form_label"><t t-esc="field.string"/>:</label>
             </td>
             <td t-foreach="widget.languages" t-as="lg" class="oe_form_frame_cell">
-                <input t-if="field.type == 'char'" type="text" t-attf-name="#{lg.code}-#{field.name}" value="" class="oe_trad_field" style="width: 100%"/>
-                <textarea t-if="field.type == 'text'" t-attf-name="#{lg.code}-#{field.name}" class="oe_trad_field" style="width: 100%"></textarea>
+                <input t-if="field.type == 'char'" type="text" t-attf-name="#{lg.code}-#{field.name}" value="" data-value="" class="oe_trad_field" style="width: 100%"/>
+                <textarea t-if="field.type == 'text'" t-attf-name="#{lg.code}-#{field.name}" data-value="" class="oe_trad_field" style="width: 100%"></textarea>
             </td>
         </tr>
         </table>
@@ -805,12 +809,23 @@
             <img src="/base/static/src/img/down-arrow.png" /></span>
         <span class="oe-m2o-cm-button" t-att-id="widget.name + '_open'">
             <img src="/base/static/src/img/icons/gtk-index.png"/></span>
-        <div t-att-id="widget.cm_id" class="contextMenu" style="display:none"><ul>
-            <li t-att-id="widget.cm_id + '_open'" style="color:grey">Open...</li>
-            <li t-att-id="widget.cm_id + '_create'">Create...</li>
-            <li t-att-id="widget.cm_id + '_search'">Search...</li>
-        </ul></div>
+        <div t-att-id="widget.cm_id" class="contextMenu" style="display:none">
+        </div>
     </div>
+</t>
+<t t-name="FieldMany2One.context_menu">
+    <ul>
+        <li t-att-id="widget.cm_id + '_open'" style="color:grey">Open...</li>
+        <li t-att-id="widget.cm_id + '_create'">Create...</li>
+        <li t-att-id="widget.cm_id + '_search'" class="oe_m2o_menu_item_mandatory">Search...</li>
+        <t t-set="i" t-value="0"/>
+        <t t-foreach="widget.related_entries" t-as="entry">
+            <li t-att-id="widget.cm_id + '_related_' + i" style="color:grey" class="oe_m2o_menu_item_mandatory">
+                ... <t t-esc="(entry[2] || {})['name'] || ''"/>
+            </li>
+            <t t-set="i" t-value="i+1"/>
+        </t>
+    </ul>
 </t>
 <t t-name="FieldOne2Many">
     <div t-att-id="widget.element_id">

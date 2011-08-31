@@ -157,6 +157,7 @@ openerp.base.FormView = openerp.base.View.extend( /** @lends openerp.base.FormVi
         this.do_update_pager(record.id == null);
         if (this.sidebar) {
             this.sidebar.attachments.do_update();
+            this.sidebar.$element.find('.oe_sidebar_translate').toggleClass('oe_hide', !record.id);
         }
         if (this.default_focus_field && !this.embedded_view) {
             this.default_focus_field.focus();
@@ -342,7 +343,7 @@ openerp.base.FormView = openerp.base.View.extend( /** @lends openerp.base.FormVi
                     self.on_created(r, success, prepend_on_create);
                 });
             } else {
-                return this.dataset.write(this.datarecord.id, values, function(r) {
+                return this.dataset.write(this.datarecord.id, values, {}, function(r) {
                     self.on_saved(r, success);
                 });
             }
@@ -441,6 +442,10 @@ openerp.base.FormView = openerp.base.View.extend( /** @lends openerp.base.FormVi
             values[key] = val;
         });
         return values;
+    },
+    get_selected_ids: function() {
+        var id = this.dataset.ids[this.dataset.index];
+        return id ? [id] : [];
     }
 });
 
@@ -875,6 +880,9 @@ openerp.base.form.Field = openerp.base.form.Widget.extend({
     },
     update_dom: function() {
         this._super.apply(this, arguments);
+        if (this.field.translate) {
+            this.$element.find('.oe_field_translate').toggle(!!this.view.datarecord.id);
+        }
         if (!this.disable_utility_classes) {
             this.$element.toggleClass('disabled', this.readonly);
             this.$element.toggleClass('required', this.required);
@@ -949,7 +957,7 @@ openerp.base.form.FieldChar = openerp.base.form.Field.extend({
     },
     set_value: function(value) {
         this._super.apply(this, arguments);
-        var show_value = (value != null && value !== false) ? value : '';
+        var show_value = openerp.base.format_value(value, this, '');
         this.$element.find('input').val(show_value);
     },
     update_dom: function() {
@@ -957,16 +965,16 @@ openerp.base.form.FieldChar = openerp.base.form.Field.extend({
         this.$element.find('input').attr('disabled', this.readonly);
     },
     set_value_from_ui: function() {
-        this.value = this.$element.find('input').val();
+        this.value = openerp.base.parse_value(this.$element.find('input').val(), this);
         this._super();
     },
     validate: function() {
         this.invalid = false;
-        var value = this.$element.find('input').val();
-        if (value === "") {
-            this.invalid = this.required;
-        } else if (this.validation_regex) {
-            this.invalid = !this.validation_regex.test(value);
+        try {
+            var value = openerp.base.parse_value(this.$element.find('input').val(), this, '');
+            this.invalid = this.required && value === '';
+        } catch(e) {
+            this.invalid = true;
         }
     },
     focus: function() {
@@ -978,7 +986,6 @@ openerp.base.form.FieldEmail = openerp.base.form.FieldChar.extend({
     init: function(view, node) {
         this._super(view, node);
         this.template = "FieldEmail";
-        this.validation_regex = /@/;
     },
     start: function() {
         this._super.apply(this, arguments);
@@ -993,8 +1000,7 @@ openerp.base.form.FieldEmail = openerp.base.form.FieldChar.extend({
     },
     set_value: function(value) {
         this._super.apply(this, arguments);
-        var show_value = (value != null && value !== false) ? value : '';
-        this.$element.find('a').attr('href', 'mailto:' + show_value);
+        this.$element.find('a').attr('href', 'mailto:' + this.$element.find('input').val());
     }
 });
 
@@ -1017,44 +1023,13 @@ openerp.base.form.FieldUrl = openerp.base.form.FieldChar.extend({
 });
 
 openerp.base.form.FieldFloat = openerp.base.form.FieldChar.extend({
-    init: function(view, node) {
-        this._super(view, node);
-        this.validation_regex = /^-?\d+(\.\d+)?$/;
-    },
     set_value: function(value) {
-        this._super.apply(this, [value]);
         if (value === false || value === undefined) {
             // As in GTK client, floats default to 0
             value = 0;
             this.dirty = true;
         }
-        var show_value = value.toFixed(2);
-        this.$element.find('input').val(show_value);
-    },
-    set_value_from_ui: function() {
-        this.value = Number(this.$element.find('input').val().replace(/,/g, '.'));
-        this._super();
-    }
-});
-
-openerp.base.form.FieldInteger = openerp.base.form.FieldFloat.extend({
-    init: function(view, node) {
-        this._super(view, node);
-        this.validation_regex = /^-?\d+$/;
-    },
-    set_value: function(value) {
         this._super.apply(this, [value]);
-        if (value === false || value === undefined) {
-            // TODO fme: check if GTK client default integers to 0 (like it does with floats)
-            value = 0;
-            this.dirty = true;
-        }
-        var show_value = parseInt(value, 10);
-        this.$element.find('input').val(show_value);
-    },
-    set_value_from_ui: function() {
-        this.value = Number(this.$element.find('input').val());
-        this._super();
     }
 });
 
@@ -1063,7 +1038,6 @@ openerp.base.form.FieldDatetime = openerp.base.form.Field.extend({
         this._super(view, node);
         this.template = "FieldDate";
         this.jqueryui_object = 'datetimepicker';
-        this.validation_regex = /^\d+-\d+-\d+( \d+:\d+(:\d+)?)?$/;
     },
     start: function() {
         this._super.apply(this, arguments);
@@ -1103,8 +1077,6 @@ openerp.base.form.FieldDatetime = openerp.base.form.Field.extend({
         var value = this.$element.find('input').val();
         if (value === "") {
             this.invalid = this.required;
-        } else if (this.validation_regex) {
-            this.invalid = !this.validation_regex.test(value);
         } else {
             this.invalid = !this.$element.find('input')[this.jqueryui_object]('getDate');
         }
@@ -1120,39 +1092,15 @@ openerp.base.form.FieldDate = openerp.base.form.FieldDatetime.extend({
     init: function(view, node) {
         this._super(view, node);
         this.jqueryui_object = 'datepicker';
-        this.validation_regex = /^\d+-\d+-\d+$/;
     },
     parse: openerp.base.str_to_date,
     format: openerp.base.date_to_str
-});
-
-openerp.base.form.FieldFloatTime = openerp.base.form.FieldChar.extend({
-    init: function(view, node) {
-        this._super(view, node);
-        this.validation_regex = /^\d+:\d+$/;
-    },
-    set_value: function(value) {
-        this._super.apply(this, [value]);
-        if (value === false || value === undefined) {
-            // As in GTK client, floats default to 0
-            value = 0;
-            this.dirty = true;
-        }
-        var show_value = _.sprintf("%02d:%02d", Math.floor(value), Math.round((value % 1) * 60));
-        this.$element.find('input').val(show_value);
-    },
-    set_value_from_ui: function() {
-        var time = this.$element.find('input').val().split(':');
-        this.set_value(parseInt(time[0], 10) + parseInt(time[1], 10) / 60);
-        this._super();
-    }
 });
 
 openerp.base.form.FieldText = openerp.base.form.Field.extend({
     init: function(view, node) {
         this._super(view, node);
         this.template = "FieldText";
-        this.validation_regex = null;
     },
     start: function() {
         this._super.apply(this, arguments);
@@ -1160,7 +1108,7 @@ openerp.base.form.FieldText = openerp.base.form.Field.extend({
     },
     set_value: function(value) {
         this._super.apply(this, arguments);
-        var show_value = (value != null && value !== false) ? value : '';
+        var show_value = openerp.base.format_value(value, this, '');
         this.$element.find('textarea').val(show_value);
     },
     update_dom: function() {
@@ -1168,16 +1116,16 @@ openerp.base.form.FieldText = openerp.base.form.Field.extend({
         this.$element.find('textarea').attr('disabled', this.readonly);
     },
     set_value_from_ui: function() {
-        this.value = this.$element.find('textarea').val();
+        this.value = openerp.base.parse_value(this.$element.find('textarea').val(), this);
         this._super();
     },
     validate: function() {
         this.invalid = false;
-        var value = this.$element.find('textarea').val();
-        if (value === "") {
-            this.invalid = this.required;
-        } else if (this.validation_regex) {
-            this.invalid = !this.validation_regex.test(value);
+        try {
+            var value = openerp.base.parse_value(this.$element.find('textarea').val(), this, '');
+            this.invalid = this.required && value === '';
+        } catch(e) {
+            this.invalid = true;
         }
     },
     focus: function() {
@@ -1366,36 +1314,56 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
         this.$input = this.$element.find("input");
         this.$drop_down = this.$element.find(".oe-m2o-drop-down-button");
         this.$menu_btn = this.$element.find(".oe-m2o-cm-button");
-
+        
         // context menu
-        var bindings = {};
-        bindings[this.cm_id + "_search"] = function() {
-            self._search_create_popup("search");
-        };
-        bindings[this.cm_id + "_create"] = function() {
-            self._search_create_popup("form");
-        };
-        bindings[this.cm_id + "_open"] = function() {
-            if (!self.value) {
-                return;
-            }
-            var pop = new openerp.base.form.FormOpenPopup(self.view);
-            pop.show_element(self.field.relation, self.value[0],self.build_context(), {});
-            pop.on_write_completed.add_last(function() {
-                self.set_value(self.value[0]);
+        var init_context_menu_def = $.Deferred().then(function(e) {
+            var rdataset = new openerp.base.DataSetStatic(self, "ir.values", self.build_context());
+            rdataset.call("get", ['action', 'client_action_relate',
+                [[self.field.relation, false]], false, rdataset.get_context()], false, 0)
+                .then(function(result) {
+                self.related_entries = result;
+                
+                var $cmenu = $("#" + self.cm_id);
+                $cmenu.append(QWeb.render("FieldMany2One.context_menu", {widget: self}));
+                var bindings = {};
+                bindings[self.cm_id + "_search"] = function() {
+                    self._search_create_popup("search");
+                };
+                bindings[self.cm_id + "_create"] = function() {
+                    self._search_create_popup("form");
+                };
+                bindings[self.cm_id + "_open"] = function() {
+                    if (!self.value) {
+                        return;
+                    }
+                    var pop = new openerp.base.form.FormOpenPopup(self.view);
+                    pop.show_element(self.field.relation, self.value[0],self.build_context(), {});
+                    pop.on_write_completed.add_last(function() {
+                        self.set_value(self.value[0]);
+                    });
+                };
+                _.each(_.range(self.related_entries.length), function(i) {
+                    bindings[self.cm_id + "_related_" + i] = function() {
+                        self.open_related(self.related_entries[i]);
+                    };
+                });
+                var cmenu = self.$menu_btn.contextMenu(self.cm_id, {'leftClickToo': true,
+                    bindings: bindings, itemStyle: {"color": ""},
+                    onContextMenu: function() {
+                        if(self.value) {
+                            $("#" + self.cm_id + " .oe_m2o_menu_item_mandatory").removeClass("oe-m2o-disabled-cm");
+                        } else {
+                            $("#" + self.cm_id + " .oe_m2o_menu_item_mandatory").addClass("oe-m2o-disabled-cm");
+                        }
+                        return true;
+                    }, menuStyle: {width: "200px"}
+                });
+                setTimeout(function() {self.$menu_btn.trigger(e);}, 0);
             });
-        };
-        var cmenu = this.$menu_btn.contextMenu(this.cm_id, {'leftClickToo': true,
-            bindings: bindings, itemStyle: {"color": ""},
-            onContextMenu: function() {
-                if(self.value) {
-                    $("#" + self.cm_id + "_open").removeClass("oe-m2o-disabled-cm");
-                } else {
-                    $("#" + self.cm_id + "_open").addClass("oe-m2o-disabled-cm");
-                }
-                return true;
-            }
         });
+        var ctx_callback = function(e) {init_context_menu_def.resolve(e); e.preventDefault()};
+        this.$menu_btn.bind('contextmenu', ctx_callback);
+        this.$menu_btn.click(ctx_callback);
 
         // some behavior for input
         this.$input.keyup(function() {
@@ -1555,12 +1523,14 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
     },
     set_value: function(value) {
         value = value || null;
+        this.invalid = false;
         var self = this;
-        var _super = this._super;
         this.tmp_value = value;
+        self.update_dom();
+        self.on_value_changed();
         var real_set_value = function(rval) {
             self.tmp_value = undefined;
-            _super.apply(self, rval);
+            self.value = rval;
             self.original_value = undefined;
             self._change_int_ext_value(rval);
         };
@@ -1586,9 +1556,27 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
     },
     validate: function() {
         this.invalid = false;
-        if (this.value === null) {
+        var val = this.tmp_value !== undefined ? this.tmp_value : this.value;
+        if (val === null) {
             this.invalid = this.required;
         }
+    },
+    open_related: function(related) {
+        var self = this;
+        if (!self.value)
+            return;
+        var additional_context = {
+                active_id: self.value[0],
+                active_ids: [self.value[0]],
+                active_model: self.field.relation
+        };
+        self.rpc("/base/action/load", {
+            action_id: related[2].id,
+            context: additional_context
+        }, function(result) {
+            result.result.context = _.extend(result.result.context || {}, additional_context);
+            self.do_action(result.result);
+        });
     }
 });
 
@@ -1884,10 +1872,13 @@ openerp.base.form.One2ManyListView = openerp.base.ListView.extend({
         pop.show_element(self.o2m.field.relation, id, self.o2m.build_context(),{
             auto_write: false,
             alternative_form_view: self.o2m.field.views ? self.o2m.field.views["form"] : undefined,
-            parent_view: self.o2m.view
+            parent_view: self.o2m.view,
+            read_function: function() {
+                return self.o2m.dataset.read_ids.apply(self.o2m.dataset, arguments);
+            }
         });
         pop.on_write.add(function(id, data) {
-            self.o2m.dataset.write(id, data, function(r) {
+            self.o2m.dataset.write(id, data, {}, function(r) {
                 self.o2m.reload_current_view();
             });
         });
@@ -2156,6 +2147,7 @@ openerp.base.form.FormOpenPopup = openerp.base.OldWidget.extend({
      * options:
      * - alternative_form_view
      * - auto_write (default true)
+     * - read_function
      * - parent_view
      */
     show_element: function(model, row_id, context, options) {
@@ -2171,7 +2163,8 @@ openerp.base.form.FormOpenPopup = openerp.base.OldWidget.extend({
     },
     start: function() {
         this._super();
-        this.dataset = new openerp.base.ReadOnlyDataSetSearch(this, this.model, this.context);
+        this.dataset = new openerp.base.form.FormOpenDataset(this, this.model, this.context);
+        this.dataset.fop = this;
         this.dataset.ids = [this.row_id];
         this.dataset.index = 0;
         this.dataset.parent_view = this.options.parent_view;
@@ -2184,7 +2177,7 @@ openerp.base.form.FormOpenPopup = openerp.base.OldWidget.extend({
         var self = this;
         var wdataset = new openerp.base.DataSetSearch(this, this.model, this.context, this.domain);
         wdataset.parent_view = this.options.parent_view;
-        wdataset.write(id, data, function(r) {
+        wdataset.write(id, data, {}, function(r) {
             self.on_write_completed();
         });
     },
@@ -2210,6 +2203,16 @@ openerp.base.form.FormOpenPopup = openerp.base.OldWidget.extend({
             self.view_form.do_show();
         });
         this.dataset.on_write.add(this.on_write);
+    }
+});
+
+openerp.base.form.FormOpenDataset = openerp.base.ReadOnlyDataSetSearch.extend({
+    read_ids: function() {
+        if (this.fop.options.read_function) {
+            return this.fop.options.read_function.apply(null, arguments);
+        } else {
+            return this._super.apply(this, arguments);
+        }
     }
 });
 
@@ -2440,9 +2443,9 @@ openerp.base.form.widgets = new openerp.base.Registry({
     'reference' : 'openerp.base.form.FieldReference',
     'boolean' : 'openerp.base.form.FieldBoolean',
     'float' : 'openerp.base.form.FieldFloat',
-    'integer': 'openerp.base.form.FieldInteger',
+    'integer': 'openerp.base.form.FieldFloat',
+    'float_time': 'openerp.base.form.FieldFloat',
     'progressbar': 'openerp.base.form.FieldProgressBar',
-    'float_time': 'openerp.base.form.FieldFloatTime',
     'image': 'openerp.base.form.FieldBinaryImage',
     'binary': 'openerp.base.form.FieldBinaryFile'
 });

@@ -4,7 +4,7 @@ import cherrypy
 
 import simplejson
 import random
-import openerpweb
+import base.common as openerpweb
 
 #----------------------------------------------------------
 # OpenERP Web ajaxim Controllers
