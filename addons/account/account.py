@@ -657,11 +657,6 @@ class account_journal(osv.osv):
     def create_sequence(self, cr, uid, vals, context=None):
         """
         Create new entry sequence for every new Joural
-        @param cr: cursor to database
-        @param user: id of current user
-        @param ids: list of record ids to be process
-        @param context: context arguments, like lang, time zone
-        @return: return a result
         """
         seq_pool = self.pool.get('ir.sequence')
         seq_typ_pool = self.pool.get('ir.sequence.type')
@@ -683,6 +678,8 @@ class account_journal(osv.osv):
             'padding': 4,
             'number_increment': 1
         }
+        if 'company_id' in vals:
+            seq['company_id'] = vals['company_id']
         return seq_pool.create(cr, uid, seq)
 
     def create(self, cr, uid, vals, context=None):
