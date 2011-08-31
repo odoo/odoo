@@ -20,6 +20,7 @@
 ##############################################################################
 
 import time
+import random
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from operator import itemgetter
@@ -2862,7 +2863,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                     res['fields'][field]['selection'] = template_select
         return res
 
-    def generate_journals(self, cr, uid, chart_template_id, acc_template_ref, company_id, context=None):
+    def generate_journals(self, cr, uid, chart_template_id, acc_template_ref, company_id, bank_jrnl_acc_list, code_digits, context=None):
         """
         This method used for creating journals.
         @param cr: A database cursor.
@@ -2875,29 +2876,33 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         obj_data = self.pool.get('ir.model.data')
         analytic_journal_obj = self.pool.get('account.analytic.journal')
         obj_journal = self.pool.get('account.journal')
+        obj_acc = self.pool.get('account.account')
+        template = self.pool.get('account.chart.template').browse(cr, uid, chart_template_id, context=context)
 
         data = obj_data.get_object_reference(cr, uid, 'account', 'account_sp_journal_view') 
         view_id = data and data[1] or False
 
-        income_acc_id = acc_template_ref.get(chart_template_id.property_account_income_categ.id)
-        expense_acc_id = acc_template_ref.get(chart_template_id.property_account_expense_categ.id)
-        credit_acc_id = acc_template_ref.get(chart_template_id.property_account_income_opening.id)
-        debit_acc_id = acc_template_ref.get(chart_template_id.property_account_expense_opening.id)
+        income_acc_id = acc_template_ref.get(template.property_account_income_categ.id)
+        expense_acc_id = acc_template_ref.get(template.property_account_expense_categ.id)
+        credit_acc_id = acc_template_ref.get(template.property_account_income_opening.id)
+        debit_acc_id = acc_template_ref.get(template.property_account_expense_opening.id)
+        ref_acc_bank = template.bank_account_view_id
                 
         #Sales Journal
         analytical_sale_ids = analytic_journal_obj.search(cr, uid, [('type','=','sale')], context=context)
         analytical_journal_sale = analytical_sale_ids and analytical_sale_ids[0] or False
 
+        file_no = str(random.randint(1,9))
         vals_journal = {
-            'name': _('Sales Journal'),
+            'name': _('Sales Journal-%s') %(file_no),
             'type': 'sale',
-            'code': _('SAJ'),
+            'code': _('SAJ%s') %(file_no),
             'view_id': view_id,
             'company_id': company_id,
             'analytic_journal_id': analytical_journal_sale,
         }
 
-        if chart_template_id.property_account_receivable:
+        if template.property_account_receivable:
             vals_journal.update({
                             'default_credit_account_id': income_acc_id,
                             'default_debit_account_id': income_acc_id
@@ -2909,15 +2914,15 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         analytical_journal_purchase = analytical_purchase_ids and analytical_purchase_ids[0] or False
 
         vals_journal = {
-            'name': _('Purchase Journal'),
+            'name': _('Purchase Journal-%s') %(file_no),
             'type': 'purchase',
-            'code': _('EXJ'),
+            'code': _('EXJ%s') %(file_no),
             'view_id': view_id,
             'company_id': company_id,
             'analytic_journal_id': analytical_journal_purchase,
         }
 
-        if chart_template_id.property_account_payable:
+        if template.property_account_payable:
             vals_journal.update({
                             'default_credit_account_id': expense_acc_id,
                             'default_debit_account_id': expense_acc_id
@@ -2930,14 +2935,14 @@ class wizard_multi_charts_accounts(osv.osv_memory):
 
         #Sales Refund Journal
         vals_journal = {
-            'name': _('Sales Refund Journal'),
+            'name': _('Sales Refund Journal-%s') %(file_no),
             'type': 'sale_refund',
-            'code': _('SCNJ'),
+            'code': _('SCNJ%s') %(file_no),
             'view_id': view_id,
             'analytic_journal_id': analytical_journal_sale,
             'company_id': company_id
         }
-        if chart_template_id.property_account_receivable:
+        if template.property_account_receivable:
             vals_journal.update({
                             'default_credit_account_id': income_acc_id,
                             'default_debit_account_id': income_acc_id
@@ -2946,14 +2951,14 @@ class wizard_multi_charts_accounts(osv.osv_memory):
 
         # Purchase Refund Journal
         vals_journal = {
-            'name': _('Purchase Refund Journal'),
+            'name': _('Purchase Refund Journal-%s') %(file_no),
             'type': 'purchase_refund',
-            'code': _('ECNJ'),
+            'code': _('ECNJ%s') %(file_no),
             'view_id': view_id,
             'analytic_journal_id': analytical_journal_purchase,
             'company_id': company_id
         }
-        if chart_template_id.property_account_payable:
+        if template.property_account_payable:
             vals_journal.update({
                             'default_credit_account_id': expense_acc_id,
                             'default_debit_account_id': expense_acc_id
@@ -2967,9 +2972,9 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         analytical_miscellaneous_ids = analytic_journal_obj.search(cr, uid, [('type', '=', 'situation')], context=context)
 
         vals_journal = {
-            'name': _('Miscellaneous Journal'),
+            'name': _('Miscellaneous Journal%s') %(file_no),
             'type': 'general',
-            'code': _('MISC'),
+            'code': _('MISC%s') %(file_no),
             'view_id': view_id,
             'analytic_journal_id': analytical_miscellaneous_ids and analytical_miscellaneous_ids[0] or False,
             'company_id': company_id
@@ -2977,11 +2982,11 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         obj_journal.create(cr, uid, vals_journal, context=context)
 
         # Opening Entries Journal
-        if chart_template_id.property_account_income_opening and chart_template_id.property_account_expense_opening:
+        if template.property_account_income_opening and template.property_account_expense_opening:
             vals_journal = {
-                'name': _('Opening Entries Journal'),
+                'name': _('Opening Entries Journal%s') %(file_no),
                 'type': 'situation',
-                'code': _('OPEJ'),
+                'code': _('OPEJ%s') %(file_no),
                 'view_id': view_id,
                 'company_id': company_id,
                 'centralisation': True,
@@ -2989,6 +2994,60 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                 'default_debit_account_id': debit_acc_id
                 }
             obj_journal.create(cr, uid, vals_journal, context=context)
+
+        data = obj_data.get_object_reference(cr, uid, 'account', 'account_journal_bank_view_multi') 
+        view_id_cur = data and data[1] or False
+
+        data = obj_data.get_object_reference(cr, uid, 'account', 'account_journal_bank_view') 
+        view_id_cash = data and data[1] or False
+
+        #Create Bank journals
+        current_num = 1
+        valid = True
+        for line in bank_jrnl_acc_list:
+            #create the account_account for this bank journal
+            if not ref_acc_bank.code:
+                raise osv.except_osv(_('Configuration Error !'), _('The bank account defined on the selected chart of account hasn\'t a code.'))
+            while True:
+                new_code = str(ref_acc_bank.code.ljust(code_digits-len(str(current_num)), '0')) + str(current_num)
+                ids = obj_acc.search(cr, uid, [('code', '=', new_code), ('company_id', '=', company_id)])
+                if not ids:
+                    break
+                else:
+                    current_num += 1
+            user_type = self.pool.get('account.account.type').search(cr, uid, [('name', '=', line['account_type'])], context=context)
+            vals = {
+                'name': line['acc_name'],
+                'currency_id': line['currency_id'],
+                'code': new_code,
+                'type': 'liquidity',
+                'user_type': 1,
+                'reconcile': True,
+                'parent_id': acc_template_ref[ref_acc_bank.id] or False,
+                'company_id': company_id,
+            }
+            acc_cash_id  = obj_acc.create(cr,uid,vals)
+
+            #create the bank journal
+            vals_journal = {
+                'name': vals['name'],
+                'code': _('BNK') + str(current_num),
+                'type': line['account_type'] == 'cash' and 'cash' or 'bank',
+                'company_id': company_id,
+                'analytic_journal_id': False,
+                'currency_id': False,
+            }
+            if line['currency_id']:
+                vals_journal['view_id'] = view_id_cur
+                vals_journal['currency'] = line['currency_id']
+            else:
+                vals_journal['view_id'] = view_id_cash
+            vals_journal['default_credit_account_id'] = acc_cash_id
+            vals_journal['default_debit_account_id'] = acc_cash_id
+            obj_journal.create(cr, uid, vals_journal)
+            current_num += 1
+            valid = True
+            
         return True
 
     def generate_properties(self, cr, uid, chart_template_id, acc_template_ref, company_id, context=None):
