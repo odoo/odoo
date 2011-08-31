@@ -12,6 +12,12 @@
 -
   Now, Test project template feature
 -
+  Create test project 'OpenERP Test Programme'
+-
+  !record {model: project.project, id: project_project_testprogramme0}:
+    company_id: base.main_company
+    name: OpenERP Training Programm
+-
   Create project 'OpenERP Training Programme'
 -
   !record {model: project.project, id: project_project_openerptrainingprogramme0}:
@@ -111,6 +117,15 @@
   !record {model: project.task.work, id: project_task_work0}:
     name: Technical Training Task's Work
     task_id: project_task_technicaltraining0
+-
+  Create project's Work
+-
+  !python {model: project.task.work}: |
+    vals = {
+           'name': 'Technical Training',
+           'task_id': ref('project_task_technicaltraining0'),
+            }
+    self.create(cr, uid, vals,context={"lang": "en_US", "active_ids": [ref("project_task_functionaltraining0")],"tz": False, "active_id": ref("project_task_functionaltraining0")})
 -
   Add project's Work
 -
@@ -408,6 +423,11 @@
     except:
       pass
 -
+  Copy project 'OpenERP Training Programme'
+-
+  !python {model: project.project}: |
+    self.copy(cr, uid, ref("project_project_testprogramme0"), default={}, context=None)
+-
   Close project 'OpenERP Training Programme'
 -
   !python {model: project.project}: |
@@ -486,12 +506,6 @@
 -
   !python {model: project.task}: |
     self.unlink(cr, uid,[ref("project_task_functionaltraining0")])
--
-  Create test project 'OpenERP Test Programme'
--
-  !record {model: project.project, id: project_project_testprogramme0}:
-    company_id: base.main_company
-    name: OpenERP Training Programm
 -
   Unlink the project.
 -
