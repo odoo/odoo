@@ -32,7 +32,7 @@
         if(!menu) {
             menu=$('<div id="jqContextMenu"></div>').hide().css({
                 position:'absolute',
-                zIndex:'500'
+                zIndex:'2000'
             }).appendTo('body').bind('click', function(e) {
                 e.stopPropagation()
             })

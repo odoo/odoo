@@ -28,8 +28,10 @@ openerp.base.format_value = function (value, descriptor, value_if_empty) {
         case 'float':
             var precision = descriptor.digits ? descriptor.digits[1] : 2;
             var int_part = Math.floor(value);
-            var dec_part = Math.floor((value % 1) * Math.pow(10, precision));
-            return _.sprintf('%d' + openerp.base._t.database.parameters.decimal_point + '%d', int_part, dec_part);
+            var dec_part = Math.abs(Math.floor((value % 1) * Math.pow(10, precision)));
+            return _.sprintf('%d%s%d',
+                        int_part, dec_part,
+                        openerp.base._t.database.parameters.decimal_point);
         case 'float_time':
             return _.sprintf("%02d:%02d",
                     Math.floor(value),
@@ -45,7 +47,7 @@ openerp.base.format_value = function (value, descriptor, value_if_empty) {
             if (typeof(value) == "string")
                 value = openerp.base.str_to_datetime(value);
             try {
-                return value.toString(_.sprintf("%s %s", Date.CultureInfo.formatPatterns.shortDate, 
+                return value.toString(_.sprintf("%s %s", Date.CultureInfo.formatPatterns.shortDate,
                     Date.CultureInfo.formatPatterns.longTime));
             } catch (e) {
                 return value.format("%m/%d/%Y %H:%M:%S");
@@ -108,7 +110,7 @@ openerp.base.parse_value = function (value, descriptor, value_if_empty) {
         case 'progressbar':
             return openerp.base.parse_value(value, {type: "float"});
         case 'datetime':
-            var tmp = Date.parseExact(value, _.sprintf("%s %s", Date.CultureInfo.formatPatterns.shortDate, 
+            var tmp = Date.parseExact(value, _.sprintf("%s %s", Date.CultureInfo.formatPatterns.shortDate,
                     Date.CultureInfo.formatPatterns.longTime));
             if (tmp !== null)
                 return tmp;
