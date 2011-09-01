@@ -263,7 +263,7 @@ class users(osv.osv):
                 o['password'] = '********'
             return o
         result = super(users, self).read(cr, uid, ids, fields, context, load)
-        canwrite = self.pool.get('ir.model.access').check(cr, uid, 'res.users', 'write', raise_exception=False)
+        canwrite = self.pool.get('ir.model.access').check(cr, uid, 'res.users', 'write', False)
         if not canwrite:
             if isinstance(ids, (int, float)):
                 result = override_password(result)
@@ -346,10 +346,6 @@ class users(osv.osv):
         'menu_tips':True
     }
 
-    @tools.cache()
-    def company_get(self, cr, uid, uid2, context=None):
-        return self._get_company(cr, uid, context=context, uid2=uid2)
-
     # User can write to a few of her own fields (but not her groups for example)
     SELF_WRITEABLE_FIELDS = ['menu_tips','view', 'password', 'signature', 'action_id', 'company_id', 'user_email']
 
@@ -369,7 +365,6 @@ class users(osv.osv):
         res = super(users, self).write(cr, uid, ids, values, context=context)
 
         # clear caches linked to the users
-        self.company_get.clear_cache(cr.dbname)
         self.pool.get('ir.model.access').call_cache_clearing_methods(cr)
         clear = partial(self.pool.get('ir.rule').clear_cache, cr)
         map(clear, ids)
