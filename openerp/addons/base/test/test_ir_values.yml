@@ -21,5 +21,8 @@
 -
     !python {model: ir.values }: |
         d = self.get(cr, uid, 'default', False, ['unexisting_model'])
+        assert len(d) == 1, "Only one default must be returned per field"
         assert d[0][1] == u'my_test_ir_value', "Can't retrieve the created default value."
         assert d[0][2] == 'specific value', "Can't retrieve the created default value."
+
+# TODO: ADD tests for action bindings too, the other half of ir_values.
