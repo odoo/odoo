@@ -63,7 +63,7 @@ class report_account_common(report_sxw.rml_parse, common_report_header):
             if data['form']['enable_filter']:
                 vals['balance_cmp'] = self.pool.get('account.low.level.report').browse(self.cr, self.uid, report.id, context=data['form']['comparison_context']).balance
             lines.append(vals)
-            if report.type == 'accounts' and report.display_detail:
+            if report.type == 'accounts' and report.display_detail and report.account_ids:
                 account_ids = account_obj._get_children_and_consol(self.cr, self.uid, [x.id for x in report.account_ids])
                 for account in account_obj.browse(self.cr, self.uid, account_ids, context=data['form']['used_context']):
                     if account.type != 'view':
