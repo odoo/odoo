@@ -1,48 +1,53 @@
 openerp.base_kanban = function (openerp) {
+
 QWeb.add_template('/base_kanban/static/src/xml/base_kanban.xml');
 openerp.base.views.add('kanban', 'openerp.base_kanban.KanbanView');
 openerp.base_kanban.KanbanView = openerp.base.View.extend({
-
-    init: function (parent, element_id, dataset, view_id) {
+    init: function (parent, element_id, dataset, view_id, options) {
         this._super(parent, element_id);
-        this.view_manager = parent;
+        this.set_default_options(options);
         this.dataset = dataset;
+        this.model = dataset.model;
         this.domain = dataset.domain;
         this.context = dataset.context;
-        this.model = this.dataset.model;
         this.view_id = view_id;
+        this.fields_view = {};
         this.group_by = [];
         this.source_index = {};
         this.all_display_data = false;
         this.groups = [];
+        this.qweb = new QWeb2.Engine();
     },
-    start: function () {
-        this.rpc("/base_kanban/kanbanview/load",
-        {"model": this.model, "view_id": this.view_id}, this.on_loaded);
+    start: function() {
+        return this.rpc("/base_kanban/kanbanview/load",
+            {"model": this.model, "view_id": this.view_id}, this.on_loaded);
     },
-    on_loaded: function (data) {
+    on_loaded: function(data) {
         var self = this;
-        this.template_xml = '';
-        this.columns = data.all_fields;
-        _.each(data.fields_view.arch.children, function(child) {
-            if (child.tag == "template"){
-                self.template_xml = openerp.base.json_node_to_xml(child, true);
+        this.fields_view = data.fields_view;
+        for (var i=0, ii=data.fields_view.arch.children.length; i < ii; i++) {
+            var child = data.fields_view.arch.children[i];
+            if (child.tag == "templates") {
+                var template_xml = openerp.base.json_node_to_xml(child, true);
+                template_xml = template_xml.replace(/<field /g, '<t t-field="" ').replace(/<\/field>/g, '</t>');
+                self.qweb.add_template(template_xml);
+                break;
             }
-        });
-        if (this.template_xml) {
-            self.dataset.read_slice([], {
-                context: self.dataset.get_context(),
-                domain: self.dataset.get_domain()}, function (records) {
-                self.all_display_data = [{'records': records, 'value':false, 'header': false, 'ids': self.dataset.ids}];
-                self.on_show_data(self.all_display_data);
-            });
+        }
+        if (this.qweb.has_template('kanban-box')) {
+            self.dataset.read_slice(_.keys(self.fields_view.fields), {
+                    context: self.dataset.get_context(),
+                    domain: self.dataset.get_domain()
+                }, function (records) {
+                    self.all_display_data = [{'records': records, 'value': false, 'header': false, 'ids': self.dataset.ids}];
+                    self.on_show_data(self.all_display_data);
+                }
+            );
         }
     },
-    on_show_data: function (datas) {
+    on_show_data: function(data) {
         var self = this;
-        var new_qweb = new QWeb2.Engine();
-        self.$element.html(QWeb.render("KanbanBiew", {"datas" :datas}));
-
+        this.$element.html(QWeb.render("KanbanBiew", {"data": data}));
         this.on_reload_kanban();
         var drag_handel = false;
         if (this.$element.find(".oe-kanban-draghandle").length > 0) {
@@ -55,7 +60,7 @@ openerp.base_kanban.KanbanView = openerp.base.View.extend({
                 self.source_index['index'] = ui.item.index();
                 self.source_index['column'] = ui.item.parent().attr('id');
             },
-            stop: self.on_recieve_record,
+            stop: self.on_receive_record,
         });
         this.$element.find(".record").addClass( "ui-widget ui-widget-content ui-corner-all" )
         this.$element.find(".oe_column").disableSelection()
@@ -142,7 +147,7 @@ openerp.base_kanban.KanbanView = openerp.base.View.extend({
             }
         );
     },
-    on_recieve_record: function (event, ui) {
+    on_receive_record: function (event, ui) {
         var self = this;
         var from = ui.item.index();
         var search_action = false;
@@ -150,7 +155,8 @@ openerp.base_kanban.KanbanView = openerp.base.View.extend({
         if (!ui.item.attr("id")) {
             return false;
         }
-        if (self.columns.sequence && (self.source_index.index >= 0 && self.source_index.index != from) ||
+        // TODO fme: check what was this sequence
+        if (self.fields_view.fields.sequence && (self.source_index.index >= 0 && self.source_index.index != from) ||
                 (self.source_index.column && self.source_index.column != ui.item.parent().attr('id'))) {
             var child_record = ui.item.parent().children();
             var data, sequence = 1, index = to;
@@ -228,13 +234,15 @@ openerp.base_kanban.KanbanView = openerp.base.View.extend({
     },
     on_reload_kanban: function (){
         var self = this;
-        var new_qweb = new QWeb2.Engine();
-        new_qweb.add_template('<templates><t t-name="custom_template">' + this.template_xml + '</t></templates>');
+        QWeb2.Element.prototype.compile_action_field = function(value) {
+            debugger;
+            this.top("r.push(context.engine.tools.html_escape(" + (this.format_expression(value)) + "));");
+        };
         _.each(self.all_display_data, function(data, index) {
             if (data.records.length > 0){
                 _.each(data.records, function(record) {
                     self.$element.find("#main_" + record.id).children().remove();
-                    self.$element.find("#main_" + record.id).append(new_qweb.render('custom_template', record));
+                    self.$element.find("#main_" + record.id).append(self.qweb.render('kanban-box', record));
                 });
             } else {
                 self.$element.find("#column_" + data.value).remove();
