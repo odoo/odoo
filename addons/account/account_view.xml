@@ -2778,7 +2778,7 @@ action = self.pool.get('res.config').next(cr, uid, [], context)
             <field name="name">account.report.hierarchy</field>
             <field name="model">account.low.level.report</field>
             <field name="type">tree</field>
-            <field name="field_parent">child_ids</field>
+            <field name="field_parent">children_ids</field>
             <field name="arch" type="xml">
                 <tree string="Account Reports Hierarchy">
                     <field name="name"/>
