@@ -15,7 +15,7 @@ class DiagramView(View):
         activity_id = req.session.model(model).search([('name','=',name),('kind','=',kind),('wkf_id','=',active_model)], 0, 0, 0, req.session.context)
         ids = req.session.model(model).search([], 0, 0, 0, req.session.context)
         return {'activity_id':activity_id, 'ids': ids}
-    
+
     @openerpweb.jsonrequest
     def get_diagram_info(self, req, **kw):
         id = kw['id']
