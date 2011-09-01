@@ -37,45 +37,89 @@ import time
 import openerp
 import openerp.tools.config as config
 
+def xmlrpc_return(start_response, service, method, params):
+    """ Helper to call a service's method with some params, using a
+    wsgi-supplied ``start_response`` callback."""
+    result = openerp.netsvc.ExportService.getService(service).dispatch(method, None, params)
+    response = xmlrpclib.dumps((result,), methodresponse=1, allow_none=False, encoding=None)
+    start_response("200 OK", [('Content-Type','text/xml'), ('Content-Length', str(len(response)))])
+    return [response]
+
 def wsgi_xmlrpc(environ, start_response):
-    if environ['REQUEST_METHOD'] == 'POST' and environ['PATH_INFO'].startswith('/xmlrpc/'):
+    """ The main OpenERP WSGI handler."""
+    if environ['REQUEST_METHOD'] == 'POST' and environ['PATH_INFO'].startswith('/openerp/xmlrpc'):
         length = int(environ['CONTENT_LENGTH'])
         data = environ['wsgi.input'].read(length)
-        path = environ['PATH_INFO'][len('/xmlrpc/'):] # expected to be one of db, object, ... TODO should we expect a possible trailing '/' ?
 
         # TODO see SimpleXMLRPCDispatcher._marshaled_dispatch() for some necessary handling.
         # TODO see OpenERPDispatcher for some othe handling (in particular, auth things).
         params, method = xmlrpclib.loads(data)
-        result = openerp.netsvc.ExportService.getService(path).dispatch(method, None, params)
-        response = xmlrpclib.dumps((result,), methodresponse=1, allow_none=False, encoding=None)
 
-        start_response("200 OK", [('Content-Type','text/xml'), ('Content-Length', str(len(response)))])
-        return [response]
+        path = environ['PATH_INFO'][len('/openerp/xmlrpc'):]
+        if path.startswith('/'): path = path[1:]
+        if path.endswith('/'): p = path[:-1]
+        path = path.split('/')
+
+        # All routes are hard-coded. Need a way to register addons-supplied handlers.
+
+        # No need for a db segment.
+        if len(path) == 1:
+            service = path[0]
+
+            if service == 'common':
+                if method in ('create_database', 'list', 'server_version'):
+                    return xmlrpc_return(start_response, 'db', method, params)
+                else:
+                    return xmlrpc_return(start_response, 'common', method, params)
+        # A db segment must be given.
+        elif len(path) == 2:
+            service, db_name = path
+            params = (db_name,) + params
+
+            if service == 'model':
+                return xmlrpc_return(start_response, 'object', method, params)
+            elif service == 'report':
+                return xmlrpc_return(start_response, 'report', method, params)
+
+def legacy_wsgi_xmlrpc(environ, start_response):
+    if environ['REQUEST_METHOD'] == 'POST' and environ['PATH_INFO'].startswith('/xmlrpc/'):
+        length = int(environ['CONTENT_LENGTH'])
+        data = environ['wsgi.input'].read(length)
+        path = environ['PATH_INFO'][len('/xmlrpc/'):] # expected to be one of db, object, ...
+
+        # TODO see SimpleXMLRPCDispatcher._marshaled_dispatch() for some necessary handling.
+        # TODO see OpenERPDispatcher for some othe handling (in particular, auth things).
+        params, method = xmlrpclib.loads(data)
+        return xmlrpc_return(start_response, path, method, params)
 
 def wsgi_jsonrpc(environ, start_response):
     pass
 
 def application(environ, start_response):
+    """ WSGI entry point."""
 
     # Try all handlers until one returns some result (i.e. not None).
-    wsgi_handlers = [wsgi_xmlrpc, wsgi_jsonrpc]
+    wsgi_handlers = [wsgi_xmlrpc, wsgi_jsonrpc, legacy_wsgi_xmlrpc]
     for handler in wsgi_handlers:
         result = handler(environ, start_response)
         if result is None:
             continue
         return result
 
-    # We never returned from the loop.
+    # We never returned from the loop. Needs something else than 200 OK.
     response = 'No handler found.\n'
     start_response('200 OK', [('Content-Type', 'text/plain'), ('Content-Length', str(len(response)))])
     return [response]
 
-# Serve XMLRPC via wsgiref's simple_server.
-# Blocking, should probably be called in its own process.
 def serve():
+    """ Serve XMLRPC requests via wsgiref's simple_server.
+
+    Blocking, should probably be called in its own process.
+    """
     httpd = make_server('localhost', config['xmlrpc_port'], application)
     httpd.serve_forever()
 
+# Master process id, can be used for signaling.
 arbiter_pid = None
 
 # Application setup before we can spawn any worker process.
@@ -84,8 +128,8 @@ def on_starting(server):
     global arbiter_pid
     arbiter_pid = os.getpid() # TODO check if this is true even after replacing the executable
     config = openerp.tools.config
-    config['addons_path'] = '/home/openerp/repos/addons/trunk/' # need a config file
-    openerp.tools.cache = kill_workers_cache
+    config['addons_path'] = '/home/openerp/repos/addons/trunk-xmlrpc-no-osv-memory' # need a config file
+    #openerp.tools.cache = kill_workers_cache
     openerp.netsvc.init_logger()
     openerp.osv.osv.start_object_proxy()
     openerp.service.web_services.start_web_services()
@@ -112,7 +156,7 @@ def kill_workers():
             return
         raise            
 
-class kill_workers_cache(openerp.tools.real_cache):
+class kill_workers_cache(openerp.tools.ormcache):
     def clear(self, dbname, *args, **kwargs):
         kill_workers()
 

@@ -96,7 +96,8 @@ class db(netsvc.ExportService):
     def dispatch(self, method, auth, params):
         if method in [ 'create', 'get_progress', 'drop', 'dump',
             'restore', 'rename',
-            'change_admin_password', 'migrate_databases' ]:
+            'change_admin_password', 'migrate_databases',
+            'create_database' ]:
             passwd = params[0]
             params = params[1:]
             security.check_super(passwd)
@@ -134,6 +135,20 @@ class db(netsvc.ExportService):
         create_thread.start()
         self.actions[id]['thread'] = create_thread
         return id
+
+    def exp_create_database(self, db_name, demo, lang, user_password='admin'):
+        """ Similar to exp_create but blocking."""
+        self.id_protect.acquire()
+        self.id += 1
+        id = self.id
+        self.id_protect.release()
+
+        self.actions[id] = {'clean': False}
+
+        logging.getLogger('db.create').info('CREATE DATABASE %s', db_name.lower())
+        self._create_empty_database(db_name)
+        _initialize_db(self, id, db_name, demo, lang, user_password)
+        return True
 
     def exp_get_progress(self, id):
         if self.actions[id]['thread'].isAlive():
@@ -640,12 +655,54 @@ class report_spool(netsvc.ExportService):
     def dispatch(self, method, auth, params):
         (db, uid, passwd ) = params[0:3]
         params = params[3:]
-        if method not in ['report','report_get']:
+        if method not in ['report', 'report_get', 'render_report']:
             raise KeyError("Method not supported %s" % method)
         security.check(db,uid,passwd)
         fn = getattr(self, 'exp_' + method)
         res = fn(db, uid, *params)
         return res
+
+    def exp_render_report(self, db, uid, object, ids, datas=None, context=None):
+        if not datas:
+            datas={}
+        if not context:
+            context={}
+
+        self.id_protect.acquire()
+        self.id += 1
+        id = self.id
+        self.id_protect.release()
+
+        self._reports[id] = {'uid': uid, 'result': False, 'state': False, 'exception': None}
+
+        cr = pooler.get_db(db).cursor()
+        import traceback
+        import sys
+        try:
+            obj = netsvc.LocalService('report.'+object)
+            (result, format) = obj.create(cr, uid, ids, datas, context)
+            if not result:
+                tb = sys.exc_info()
+                self._reports[id]['exception'] = ExceptionWithTraceback('RML is not available at specified location or not enough data to print!', tb)
+            self._reports[id]['result'] = result
+            self._reports[id]['format'] = format
+            self._reports[id]['state'] = True
+        except Exception, exception:
+
+            tb = sys.exc_info()
+            tb_s = "".join(traceback.format_exception(*tb))
+            logger = netsvc.Logger()
+            logger.notifyChannel('web-services', netsvc.LOG_ERROR,
+                    'Exception: %s\n%s' % (str(exception), tb_s))
+            if hasattr(exception, 'name') and hasattr(exception, 'value'):
+                self._reports[id]['exception'] = ExceptionWithTraceback(tools.ustr(exception.name), tools.ustr(exception.value))
+            else:
+                self._reports[id]['exception'] = ExceptionWithTraceback(tools.exception_to_unicode(exception), tb)
+            self._reports[id]['state'] = True
+        cr.commit()
+        cr.close()
+
+        return self._check_report(id)
 
     def exp_report(self, db, uid, object, ids, datas=None, context=None):
         if not datas:
