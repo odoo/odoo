@@ -17,6 +17,11 @@ openerp.base_kanban.KanbanView = openerp.base.View.extend({
         this.all_display_data = false;
         this.groups = [];
         this.qweb = new QWeb2.Engine();
+        this.qweb.actions_precedence.push('field');
+        this.qweb.compile_action_field = function(value) {
+            var val = this.node.attributes['name'].value + '.value';
+            return this.compile_action_esc(val);
+        }
     },
     start: function() {
         return this.rpc("/base_kanban/kanbanview/load",
@@ -234,15 +239,11 @@ openerp.base_kanban.KanbanView = openerp.base.View.extend({
     },
     on_reload_kanban: function (){
         var self = this;
-        QWeb2.Element.prototype.compile_action_field = function(value) {
-            debugger;
-            this.top("r.push(context.engine.tools.html_escape(" + (this.format_expression(value)) + "));");
-        };
         _.each(self.all_display_data, function(data, index) {
             if (data.records.length > 0){
                 _.each(data.records, function(record) {
                     self.$element.find("#main_" + record.id).children().remove();
-                    self.$element.find("#main_" + record.id).append(self.qweb.render('kanban-box', record));
+                    self.$element.find("#main_" + record.id).append(self.qweb.render('kanban-box', self.do_process_record(record)));
                 });
             } else {
                 self.$element.find("#column_" + data.value).remove();
@@ -265,7 +266,17 @@ openerp.base_kanban.KanbanView = openerp.base.View.extend({
             }
         });
     },
-
+    do_process_record: function(record) {
+        var self = this,
+            new_record = {};
+        _.each(record, function(value, name) {
+            var r = _.clone(self.fields_view.fields[name]);
+            r.raw_value = value;
+            r.value = openerp.base.format_value(value, r);
+            new_record[name] = r;
+        });
+        return new_record;
+    },
     do_search: function (domains, contexts, group_by) {
         var self = this;
         this.rpc('/base/session/eval_domain_and_context', {
