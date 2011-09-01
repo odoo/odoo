@@ -45,7 +45,7 @@ openerp.base.format_value = function (value, descriptor, value_if_empty) {
             return value[1];
         case 'datetime':
             if (typeof(value) == "string")
-                value = openerp.base.str_to_datetime(value);
+                value = auto_str_to_date(value, descriptor.type);
             try {
                 return value.toString(_.sprintf("%s %s", Date.CultureInfo.formatPatterns.shortDate,
                     Date.CultureInfo.formatPatterns.longTime));
@@ -55,7 +55,7 @@ openerp.base.format_value = function (value, descriptor, value_if_empty) {
             return value;
         case 'date':
             if (typeof(value) == "string")
-                value = openerp.base.str_to_date(value);
+                value = auto_str_to_date(value, descriptor.type);
             try {
                 return value.toString(Date.CultureInfo.formatPatterns.shortDate);
             } catch (e) {
@@ -63,7 +63,7 @@ openerp.base.format_value = function (value, descriptor, value_if_empty) {
             }
         case 'time':
             if (typeof(value) == "string")
-                value = openerp.base.str_to_time(value);
+                value = auto_str_to_date(value, descriptor.type);
             try {
                 return value.toString(Date.CultureInfo.formatPatterns.longTime);
             } catch (e) {
@@ -136,6 +136,19 @@ openerp.base.parse_value = function (value, descriptor, value_if_empty) {
             throw value + " is not a valid time";
     }
     return value;
+};
+
+var auto_str_to_date = function(value, type) {
+    switch(type) {
+        case 'datetime':
+            return openerp.base.str_to_datetime(value);
+        case 'date':
+            return openerp.base.str_to_date(value);
+        case 'time':
+            return openerp.base.str_to_time(value);
+        default:
+            throw "'" + value + "' is not a valid date, datetime nor time"
+    }
 };
 
 /**
