@@ -1094,7 +1094,7 @@ class Export(View):
             fields = {}
         else:
             fields = self.fields_get(req, model)
-        fields.update({'id': {'string': 'ID'}, '.id': {'string': 'Database ID'}})
+        fields.update({'.id': {'string': 'ID'}})
 
         fields_sequence = sorted(fields.iteritems(),
             key=lambda field: field[1].get('string', ''))
@@ -1109,16 +1109,18 @@ class Export(View):
 
             id = prefix + (prefix and '/'or '') + field_name
             name = parent_name + (parent_name and '/' or '') + field['string']
-            record = {'id': id, 'string': name, 'children': False,
+            record = {'id': id, 'string': name,
+                      'value': id, 'children': False,
                       'field_type': field.get('type'),
                       'required': field.get('required')}
             records.append(record)
 
             if len(name.split('/')) < 3 and 'relation' in field:
                 ref = field.pop('relation')
+                record['value'] += '/id'
                 record['params'] = {'model': ref, 'prefix': id, 'name': name}
 
-                if not (import_compat and field['type'] == 'many2many'):
+                if not import_compat or field['type'] == 'one2many':
                     # m2m field in import_compat is childless
                     record['children'] = True
 

@@ -4,6 +4,7 @@ openerp.base.DataExport = openerp.base.Dialog.extend({
     dialog_title: 'Export Data',
     init: function(parent, dataset) {
         this._super(parent);
+        this.records = {};
         this.dataset = dataset;
         this.exports = new openerp.base.DataSetSearch(
             this, 'ir.exports', this.dataset.get_context());
@@ -198,6 +199,7 @@ openerp.base.DataExport = openerp.base.Dialog.extend({
             self.$element.find('#left_field_panel').append(QWeb.render('ExportTreeView-Secondary', {'fields': result}));
         }
         _.each(result, function(record) {
+            self.records[record.id] = record.value;
             if ((record.field_type == "one2many") && imp_cmpt) {
                 var o2m_fld = self.$element.find("tr[id='treerow-" + record.id + "']").find('#tree-column');
                 o2m_fld.addClass("oe_export_readonlyfield");
@@ -362,9 +364,10 @@ openerp.base.DataExport = openerp.base.Dialog.extend({
     },
     on_click_export_data: function() {
         $.blockUI(this.$element);
-        var exported_fields = [];
+        var exported_fields = [], self = this;
         this.$element.find("#fields_list option").each(function() {
-            exported_fields.push({name: $(this).val(), label: $(this).text()});
+            var fieldname = self.records[$(this).val()];
+            exported_fields.push({name: fieldname, label: $(this).text()});
         });
         if (_.isEmpty(exported_fields)) {
             alert('Please select fields to export...');
