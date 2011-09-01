@@ -172,7 +172,7 @@ class stock_partial_picking(osv.osv_memory):
                       move.move_id.product_qty, move.move_id.product_uom.name))
 
                 #Adding a check whether any move line contains qty less than zero
-                if calc_qty <= 0:
+                if calc_qty < 0:
                     raise osv.except_osv(_('Processing Error'), \
                             _('Can not process quantity %d for Product %s !') \
                             %(move.quantity, move.product_id.name))
