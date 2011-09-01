@@ -290,6 +290,9 @@ QWeb2.Engine = (function() {
             xDoc.loadXML(s);
             return xDoc;
         },
+        has_template : function(template) {
+            return !!this.templates[template];
+        },
         get_xhr : function() {
             if (window.XMLHttpRequest) {
                 return new window.XMLHttpRequest();
@@ -584,10 +587,13 @@ QWeb2.Element = (function() {
                 if (a in this.actions) {
                     var value = this.actions[a];
                     var key = 'compile_action_' + a;
-                    if (!this[key]) {
+                    if (this[key]) {
+                        this[key](value);
+                    } else if (this.engine[key]) {
+                        this.engine[key].call(this, value);
+                    } else {
                         this.engine.tools.exception("No handler method for action '" + a + "'");
                     }
-                    this[key](value);
                 }
             }
             if (this.tag !== this.engine.prefix) {
