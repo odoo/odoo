@@ -629,18 +629,19 @@ openerp.base.Header =  openerp.base.Widget.extend({
         var self = this;
         var action_manager = new openerp.base.ActionManager(this);
         var dataset = new openerp.base.DataSet (this,'res.users',this.context);
-        dataset.call ('action_get','',function (result){self.rpc('/base/action/load', {action_id:result}, function(result){
-                var action = result['result'];
-                action['res_id'] = self.session.uid;
-                action['res_model']= 'res.users';
-                action['view_id']=result['result']['views'][0][0];
-                action['flags']['action_buttons']=false;
-                action['flags']['search_view']=false;
-                action['flags']['sidebar']=false;
-                action['view_mode']="form";
-                action['flags']['views_switcher']=false;
-                action['flags']['pager']=false;
-                action_manager.do_action(action);
+        dataset.call ('action_get','',function (result){
+            self.rpc('/base/action/load', {action_id:result}, function(result){
+                action_manager.do_action(_.extend(result['result'], {
+                    res_id: self.session.uid,
+                    res_model: 'res.users',
+                    flags: {
+                        action_buttons: false,
+                        search_view: false,
+                        sidebar: false,
+                        views_switcher: false,
+                        pager: false
+                    }
+                }));
             });
         });
         this.dialog = new openerp.base.Dialog(this,{
