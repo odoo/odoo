@@ -109,6 +109,8 @@ class project_task(osv.osv):
                 self.write(cr, uid, [exists], val)
                 ids.append(exists)
             else:
+                #set user_id with id, needed later
+                val.update({'user_id' : uid})
                 task_id = self.create(cr, uid, val)
                 ids.append(task_id)
         return ids

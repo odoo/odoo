@@ -121,10 +121,10 @@ def str2mailto(emailstr, multi=False):
     for mas in mailz:
         m = mege.match(mas.strip())
         if not m:
-            # one of the rare non-matching strings is "sad" :(
-            # retz.append({ 'name': mas.strip() })
-            # continue
-            raise ValueError("Invalid email address %r" % mas)
+            #one of the rare non-matching strings is "sad" :(
+            retz.append({ 'name': mas.strip() })
+            continue
+            # raise ValueError("Invalid email address %r" % mas)
         rd = {  'name': m.group(1).strip(),
                 'email': m.group(5), }
         if m.group(2):
@@ -189,6 +189,9 @@ def map_data(cr, uid, obj, context=None):
         field = obj.ical_get(map_dict, 'field')
         field_type = obj.ical_get(map_dict, 'type')
         if field:
+            #ignore write date, this field is resered for the orm
+            if field == 'write_date':
+                continue
             if field_type == 'selection':
                 if not map_val:
                     continue
