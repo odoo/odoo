@@ -298,7 +298,21 @@ class Session(openerpweb.Controller):
             "uid": req.session._uid,
             "context": ctx
         }
-
+    @openerpweb.jsonrequest
+    def change_password (self,req,fields):
+        old_password, new_password,confirm_password = operator.itemgetter('old_pwd', 'new_password','confirm_pwd')(
+                dict(map(operator.itemgetter('name', 'value'), fields)))
+        if not (old_password.strip() and new_password.strip() and confirm_password.strip()):
+            return {'error':'All passwords have to be filled.','title': 'Change Password'}
+        if new_password != confirm_password:
+            return {'error': 'The new password and its confirmation must be identical.','title': 'Change Password'}
+        try:
+            if req.session.model('res.users').change_password(
+                old_password, new_password):
+                return {'new_password':new_password}
+        except:
+            return {'error': 'Original password incorrect, your password was not changed.', 'title': 'Change Password'}
+        return {'error': 'Error, password not changed !', 'title': 'Change Password'}
     @openerpweb.jsonrequest
     def sc_list(self, req):
         return req.session.model('ir.ui.view_sc').get_sc(
