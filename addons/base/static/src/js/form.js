@@ -1106,17 +1106,17 @@ openerp.base.form.FieldDatetime = openerp.base.form.Field.extend({
     focus: function() {
         this.$element.find('input').focus();
     },
-    parse: openerp.base.str_to_datetime,
-    format: openerp.base.datetime_to_str
+    parse: openerp.base.auto_str_to_date,
+    format: function(val) {
+        return openerp.base.auto_date_to_str(val, this.field.type);
+    }
 });
 
 openerp.base.form.FieldDate = openerp.base.form.FieldDatetime.extend({
     init: function(view, node) {
         this._super(view, node);
         this.jqueryui_object = 'datepicker';
-    },
-    parse: openerp.base.str_to_date,
-    format: openerp.base.date_to_str
+    }
 });
 
 openerp.base.form.FieldText = openerp.base.form.Field.extend({
