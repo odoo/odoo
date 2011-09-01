@@ -4,9 +4,9 @@
 // TODO: t-set + t-value + children node == scoped variable ?
 var QWeb2 = {
     expressions_cache: {},
-    reserved_words: 'true,false,NaN,null,undefined,debugger,in,instanceof,new,function,return,this,typeof,eval,Math,RegExp,Array,Object,Date'.split(','),
-    actions_precedence: 'foreach,if,call,set,esc,escf,raw,rawf,js,debug,log'.split(','),
-    word_replacement: {
+    RESERVED_WORDS: 'true,false,NaN,null,undefined,debugger,in,instanceof,new,function,return,this,typeof,eval,Math,RegExp,Array,Object,Date'.split(','),
+    ACTIONS_PRECEDENCE: 'foreach,if,call,set,esc,escf,raw,rawf,js,debug,log'.split(','),
+    WORD_REPLACEMENT: {
         'and': '&&',
         'or': '||',
         'gt': '>',
@@ -204,6 +204,9 @@ QWeb2.Engine = (function() {
         this.dict = {};
         this.tools = QWeb2.tools;
         this.jQuery = window.jQuery;
+        this.reserved_words = QWeb2.RESERVED_WORDS.slice(0);
+        this.actions_precedence = QWeb2.ACTIONS_PRECEDENCE.slice(0);
+        this.word_replacement = QWeb2.tools.extend({}, QWeb2.WORD_REPLACEMENT);
         for (var i = 0; i < arguments.length; i++) {
             this.add_template(arguments[i]);
         }
@@ -522,8 +525,8 @@ QWeb2.Element = (function() {
                     continue;
                 } else if (c.match(/\W/) && invar.length) {
                     // TODO: Should check for possible spaces before dot
-                    if (chars[invar_pos - 1] !== '.' && QWeb2.tools.arrayIndexOf(QWeb2.reserved_words, invar) < 0) {
-                        invar = QWeb2.word_replacement[invar] || ("dict['" + invar + "']");
+                    if (chars[invar_pos - 1] !== '.' && QWeb2.tools.arrayIndexOf(this.engine.reserved_words, invar) < 0) {
+                        invar = this.engine.word_replacement[invar] || ("dict['" + invar + "']");
                     }
                     r += invar;
                     invar = '';
@@ -582,8 +585,8 @@ QWeb2.Element = (function() {
             return this._bottom.unshift(this.get_indent() + "//@string=" + this.engine.tools.js_escape(s, true) + '\n');
         },
         compile_element : function() {
-            for (var i = 0, ilen = QWeb2.actions_precedence.length; i < ilen; i++) {
-                var a = QWeb2.actions_precedence[i];
+            for (var i = 0, ilen = this.engine.actions_precedence.length; i < ilen; i++) {
+                var a = this.engine.actions_precedence[i];
                 if (a in this.actions) {
                     var value = this.actions[a];
                     var key = 'compile_action_' + a;
