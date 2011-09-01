@@ -370,6 +370,7 @@ openerp.base.DataExport = openerp.base.Dialog.extend({
             return;
         }
 
+        exported_fields.unshift({name: 'id', label: 'External ID'});
         var export_format = this.$element.find("#export_format").val();
         this.session.get_file({
             url: '/base/export/' + export_format,
