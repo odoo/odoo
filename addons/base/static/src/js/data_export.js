@@ -200,10 +200,6 @@ openerp.base.DataExport = openerp.base.Dialog.extend({
         }
         _.each(result, function(record) {
             self.records[record.id] = record.value;
-            if ((record.field_type == "one2many") && imp_cmpt) {
-                var o2m_fld = self.$element.find("tr[id='treerow-" + record.id + "']").find('#tree-column');
-                o2m_fld.addClass("oe_export_readonlyfield");
-            }
             if (record.required) {
                 var required_fld = self.$element.find("tr[id='treerow-" + record.id + "']").find('#tree-column');
                 required_fld.addClass("oe_export_requiredfield");
