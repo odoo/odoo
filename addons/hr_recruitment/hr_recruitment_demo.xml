@@ -25,7 +25,6 @@
         <field eval="'1236547890'" name="partner_phone"/>
     </record>
     <record id="hr_case_traineemca0" model="hr.applicant">
-        <field model="res.partner.canal" name="canal_id" search="[('name','=','E-mail')]"/>
         <field name="partner_address_id" ref="base.res_partner_address_14"/>
         <field eval="time.strftime('%Y-%m-10 18:15:00')" name="date"/>
         <field name="type_id" ref="degree_bac5"/>
@@ -45,7 +44,6 @@
         <field eval="'6633225'" name="partner_phone"/>
     </record>
     <record id="hr_case_fresher0" model="hr.applicant">
-        <field model="res.partner.canal" name="canal_id" search="[('name','=','direct')]"/>
         <field eval="time.strftime('%Y-%m-15 16:10:00')" name="date"/>
         <field eval="time.strftime('%Y-%m-18')" name="date_deadline"/>
         <field name="type_id" ref="degree_licenced"/>
@@ -115,7 +113,6 @@
         <field eval="'33968745'" name="partner_phone"/>
     </record>
     <record id="hr_case_traineemca1" model="hr.applicant">
-        <field model="res.partner.canal" name="canal_id" search="[('name','=','E-mail')]"/>
         <field name="partner_address_id" ref="base.res_partner_address_14"/>
         <field eval="time.strftime('%Y-%m-12 17:49:19')" name="date"/>
         <field name="type_id" ref="degree_bac5"/>
@@ -136,7 +133,6 @@
     </record>
 
     <record id="hr_case_programmer" model="hr.applicant">
-        <field model="res.partner.canal" name="canal_id" search="[('name','=','E-mail')]"/>
         <field name="partner_address_id" ref="base.res_partner_address_14"/>
         <field eval="time.strftime('%Y-%m-12 17:49:19')" name="date"/>
         <field name="type_id" ref="degree_bac5"/>
