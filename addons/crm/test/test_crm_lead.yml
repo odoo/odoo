@@ -3,6 +3,16 @@
    I will do a customer qualification process that
    starts with a fist contact with a customer (a lead), which will be converted to a
    business opportunity and a partner.
+-
+  Check installer report
+-
+  !record {model: base.setup.installer , id: base_action_rule_0_1}:
+    name: Test_action
+-
+  Create the view at the time of setup.
+-
+   !python {model: base.setup.installer}: |
+      self.fields_view_get(cr, uid,view_id=None, view_type='form', context=None, toolbar=False, submenu=False)
 -  |
    In order to test the flow, I create a two new users "user_crm" and
    I assign the group "salesman".
@@ -45,9 +55,8 @@
 -
   !assert {model: crm.lead, id: crm_lead_newcustomer0, string: Lead in open state}:
      - state == "open"
-
 -
-   Now, Find id for case object
+   Now, Find id for case object.
 -
    !python {model: crm.case.categ}: |
      self._find_object_id(cr, uid, context)
@@ -78,6 +87,89 @@
   !python {model: crm.lead}: |
     lead = self.browse(cr, uid, ref("crm_lead_newcustomer0"))
     assert lead.type == 'opportunity'
+
+-
+  Convert lead2opportunity partner record
+-
+  !record {model: crm.lead2opportunity.partner, id: crm_lead2opportunity_partner_convert0}:
+    action: exist
+    name: convert
+-
+  Then, Click on "Create Opportunity" button of this wizard.
+-
+   !python {model: crm.lead2opportunity.partner}: |
+      self.action_apply(cr, uid, [ref("crm_lead2opportunity_partner_convert0")])
+-
+  Creating a partner wih merge Option
+-
+  !record {model: crm.lead2opportunity.partner, id: crm_lead2opportunity_partner_merge0}:
+    action: create
+    name: merge
+-
+  Then, Click on "Create Opportunity" button of this wizard.
+-
+   !python {model: crm.lead2opportunity.partner}: |
+      fields={}
+      self.action_apply(cr, uid, [ref("crm_lead2opportunity_partner_merge0")])
+-
+  Creating a crm.lead2opportunity.partner record with existing
+-
+  !record {model: crm.lead2opportunity.partner, id: crm_lead2opportunity_partner_convert0}:
+    action: exist
+    name: convert
+    partner_id: base.res_partner_desertic_hispafuentes
+-
+  Then, Click on "Create Opportunity" button of this wizard.
+-
+   !python {model: crm.lead2opportunity.partner}: |
+      self.action_apply(cr, uid, [ref("crm_lead2opportunity_partner_convert0")])
+
+-
+  Creating crm.lead2opportunity.partner.mass report
+-
+  !record {model: crm.lead2opportunity.partner.mass, id: crm_lead2opportunity_partner_mass0}:
+    {}
+-
+  Then, execute  lead2opportunity.partner.mass wizard.
+-
+   !python {model: crm.lead2opportunity.partner.mass}: |
+      self.mass_convert(cr, uid, [ref("crm_lead2opportunity_partner_mass0")],{'active_ids': [ref("crm_lead_newcustomer0")], 'active_id': ref("crm_lead_newcustomer0")})
+ 
+-
+  Creating notes.
+-
+  !record {model: crm.add.note, id: crm_add_note0}:
+    {}
+-
+  Then, try to add notes.
+-
+   !python {model: crm.add.note}: |
+      try:
+        context.update({'active_model': ref("crm_lead_newcustomer0")})
+        model = context.get('active_model') or False
+        self.action_add(cr, uid, [ref("crm_add_note0")],context)
+      except:
+        pass
+-
+   I close lead by click on "close" button,
+-
+   !python {model: crm.lead}: |
+     self.case_close(cr, uid, [ref("crm_lead_newcustomer0")])
+- |
+  I check that lead is now in 'done' state.
+-
+  !assert {model: crm.lead, id: crm_lead_newcustomer0, string: Lead in done state}:
+     - state == "done"
+-
+   cancel lead by click on "cancel" button,
+-
+   !python {model: crm.lead}: |
+     self.case_cancel(cr, uid, [ref("crm_lead_newcustomer0")])
+- |
+  I check that lead is now in 'cancel' state.
+-
+  !assert {model: crm.lead, id: crm_lead_newcustomer0, string: Lead in cancel state}:
+     - state == "cancel"     
 #-
 #  |
 #  yaml is also not working with smtp server and send new email.

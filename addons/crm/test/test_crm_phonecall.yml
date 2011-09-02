@@ -17,6 +17,8 @@
   Now, click on "Continue" button of this wizard.
 -
   !python {model: crm.phonecall2partner}: |
+    self._select_partner(cr, uid,{"active_ids": [ref("crm_phonecall_interviewcall0")]})
+    self.open_create_partner(cr, uid, [ref("crm_phonecall2partner_1")], {"active_ids": [ref("crm_phonecall_interviewcall0")]})
     self.make_partner(cr, uid, [ref("crm_phonecall2partner_1")], {"active_ids": [ref("crm_phonecall_interviewcall0")]})
 
 - |
