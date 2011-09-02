@@ -24,7 +24,7 @@ if path_addons not in sys.path:
 
 import base
 
-def main(argv):
+def main(options):
     # change the timezone of the program to the OpenERP server's assumed timezone
     os.environ["TZ"] = "UTC"
 
@@ -35,19 +35,12 @@ def main(argv):
         'tools.sessions.timeout': 60
     }
 
-    # Parse config
-    (o, args) = optparser.parse_args(argv[1:])
-    o = vars(o)
-    for k in o.keys():
-        if o[k] is None:
-            del(o[k])
-
     cherrypy.config.update(config=DEFAULT_CONFIG)
     if os.path.exists(os.path.join(path_root,'openerp-web.cfg')):
         cherrypy.config.update(os.path.join(path_root,'openerp-web.cfg'))
     if os.path.exists(os.path.expanduser('~/.openerp_webrc')):
         cherrypy.config.update(os.path.expanduser('~/.openerp_webrc'))
-    cherrypy.config.update(o)
+    cherrypy.config.update(options)
 
     if not os.path.exists(cherrypy.config['tools.sessions.storage_path']):
         os.makedirs(cherrypy.config['tools.sessions.storage_path'], 0700)
@@ -55,7 +48,10 @@ def main(argv):
     return base.common.Root()
 
 if __name__ == "__main__":
-    cherrypy.tree.mount(main(sys.argv))
+    (o, args) = optparser.parse_args(sys.argv[1:])
+    o = dict((k, v) for k, v in vars(o).iteritems() if v is not None)
+
+    cherrypy.tree.mount(main(o))
     cherrypy.server.subscribe()
     cherrypy.engine.start()
     cherrypy.engine.block()
