@@ -292,7 +292,7 @@ class audittrail_objects_proxy(object_proxy):
 
     def log_fct(self, db, uid, model, method, fct_src, *args):
         """
-        Logging function: This function is performs logging oprations according to method
+        Logging function: This function is performs logging operations according to method
         @param db: the current database
         @param uid: the current user’s ID for security checks,
         @param object: Object who's values are being changed
@@ -482,41 +482,32 @@ class audittrail_objects_proxy(object_proxy):
         cr = pooler.get_db(db).cursor()
         cr.autocommit(True)
         logged_uids = []
+        rule = False
+        ignore_methods = ['default_get','read','fields_view_get','fields_get','search',
+                          'search_count','name_search','name_get','get','request_get',
+                          'get_sc', 'unlink', 'write', 'create']
         fct_src = super(audittrail_objects_proxy, self).execute
-
-        def my_fct(db, uid, model, method, *args):
-            rule = False
+        try:
             model_ids = model_pool.search(cr, uid, [('model', '=', model)])
             model_id = model_ids and model_ids[0] or False
-
-            for model_name in pool.obj_list():
-                if model_name == 'audittrail.rule':
-                    rule = True
-            if not rule:
-                return fct_src(db, uid_orig, model, method, *args)
-            if not model_id:
-                return fct_src(db, uid_orig, model, method, *args)
-
+            if 'audittrail.rule' in pool.obj_list():
+                rule = True
+            if not rule or not model_id:
+                 return fct_src(db, uid_orig, model, method, *args)
             rule_ids = rule_pool.search(cr, uid, [('object_id', '=', model_id), ('state', '=', 'subscribed')])
             if not rule_ids:
                 return fct_src(db, uid_orig, model, method, *args)
 
-            for thisrule in rule_pool.browse(cr, uid, rule_ids):
-                for user in thisrule.user_id:
-                    logged_uids.append(user.id)
+            for model_rule in rule_pool.browse(cr, uid, rule_ids):
+                logged_uids += map(lambda x:x.id, model_rule.user_id)
                 if not logged_uids or uid in logged_uids:
                     if method in ('read', 'write', 'create', 'unlink'):
-                        if getattr(thisrule, 'log_' + method):
+                        if getattr(model_rule, 'log_' + method):
                             return self.log_fct(db, uid_orig, model, method, fct_src, *args)
-
-                    elif method not in ('default_get','read','fields_view_get','fields_get','search','search_count','name_search','name_get','get','request_get', 'get_sc', 'unlink', 'write', 'create'):
-                        if thisrule.log_action:
+                    elif method not in ignore_methods:
+                        if model_rule.log_action:
                             return self.log_fct(db, uid_orig, model, method, fct_src, *args)
-
                 return fct_src(db, uid_orig, model, method, *args)
-        try:
-            res = my_fct(db, uid, model, method, *args)
-            return res
         finally:
             cr.close()
 
