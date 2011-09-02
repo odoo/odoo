@@ -95,11 +95,31 @@ def legacy_wsgi_xmlrpc(environ, start_response):
 def wsgi_jsonrpc(environ, start_response):
     pass
 
+def wsgi_modules(environ, start_response):
+    """ WSGI handler dispatching to addons-provided entry points."""
+    pass
+
+# WSGI handlers provided by modules loaded with the --load command-line option.
+module_handlers = []
+
+def register_wsgi_handler(handler):
+    """ Register a WSGI handler.
+
+    Handlers are tried in the order they are added. We might provide a way to
+    register a handler for specific routes later.
+    """
+    module_handlers.append(handler)
+
 def application(environ, start_response):
     """ WSGI entry point."""
 
     # Try all handlers until one returns some result (i.e. not None).
-    wsgi_handlers = [wsgi_xmlrpc, wsgi_jsonrpc, legacy_wsgi_xmlrpc]
+    wsgi_handlers = [
+        wsgi_xmlrpc,
+        wsgi_jsonrpc,
+        legacy_wsgi_xmlrpc,
+        wsgi_modules,
+        ] + module_handlers
     for handler in wsgi_handlers:
         result = handler(environ, start_response)
         if result is None:

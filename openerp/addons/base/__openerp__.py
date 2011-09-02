@@ -93,6 +93,7 @@
         'test/test_ir_rule.yml', # <-- These tests modify/add/delete ir_rules.
         'test/test_ir_values.yml',
     ],
+    'wsgi': 'YEAH',
     'installable': True,
     'active': True,
     'certificate': '0076807797149',

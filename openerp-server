@@ -259,6 +259,16 @@ if __name__ == "__main__":
     if config["stop_after_init"]:
         sys.exit(0)
 
+    for m in openerp.conf.server_wide_modules:
+        __import__(m)
+        # Register a WSGI entry point if any.
+        info = openerp.modules.module.load_information_from_description_file(m)
+        if info['wsgi']:
+            openerp.wsgi.register_wsgi_handler(getattr(sys.modules[m], info['wsgi']))
+
+    openerp.wsgi.serve()
+
+
     setup_pid_file()
     setup_signal_handlers()
     start_services()
