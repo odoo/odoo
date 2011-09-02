@@ -12,6 +12,7 @@ import xmlrpclib
 import simplejson
 import werkzeug.datastructures
 import werkzeug.exceptions
+import werkzeug.urls
 import werkzeug.utils
 import werkzeug.wrappers
 import werkzeug.wsgi
@@ -211,6 +212,7 @@ class Controller(object):
 
 class Root(object):
     def __init__(self, options):
+        self.root = werkzeug.urls.Href('/base/webclient/home')
         self.config = options
 
         self.session_cookie = 'sessionid'
@@ -235,7 +237,8 @@ class Root(object):
 
         if request.path == '/':
             return werkzeug.utils.redirect(
-                '/base/webclient/home', 301)(environ, start_response)
+                self.root(request.args), 301)(
+                    environ, start_response)
         elif request.path == '/mobile':
             return werkzeug.utils.redirect(
                 '/web_mobile/static/src/web_mobile.html', 301)(
