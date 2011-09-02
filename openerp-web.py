@@ -1,11 +1,16 @@
 #!/usr/bin/env python
-import optparse,os,sys,tempfile
+import optparse
+import os
+import signal
+import sys
+import tempfile
 
 import cherrypy
 import cherrypy.lib.static
+import werkzeug.serving
 
 optparser = optparse.OptionParser()
-optparser.add_option("-p", "--port", dest="server.socket_port", default=8002,
+optparser.add_option("-p", "--port", dest="socket_port", default=8002,
                      help="listening port", type="int", metavar="NUMBER")
 optparser.add_option("-s", "--session-path", dest="tools.sessions.storage_path",
                      default=os.path.join(tempfile.gettempdir(), "cpsessions"),
@@ -45,14 +50,13 @@ def main(options):
     if not os.path.exists(cherrypy.config['tools.sessions.storage_path']):
         os.makedirs(cherrypy.config['tools.sessions.storage_path'], 0700)
 
-    return base.common.Root()
+    return cherrypy.tree.mount(base.common.Root())
 
 if __name__ == "__main__":
-    (o, args) = optparser.parse_args(sys.argv[1:])
-    o = dict((k, v) for k, v in vars(o).iteritems() if v is not None)
+    (options, args) = optparser.parse_args(sys.argv[1:])
+    o = dict((k, v) for k, v in vars(options).iteritems() if v is not None)
 
-    cherrypy.tree.mount(main(o))
-    cherrypy.server.subscribe()
-    cherrypy.engine.start()
-    cherrypy.engine.block()
+    werkzeug.serving.run_simple(
+        '0.0.0.0', options.socket_port, main(o),
+        use_reloader=True, threaded=True)
 
