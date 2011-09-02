@@ -4,6 +4,19 @@ import optparse,os,sys,tempfile
 import cherrypy
 import cherrypy.lib.static
 
+optparser = optparse.OptionParser()
+optparser.add_option("-p", "--port", dest="server.socket_port", default=8002,
+                     help="listening port", type="int", metavar="NUMBER")
+optparser.add_option("-s", "--session-path", dest="tools.sessions.storage_path",
+                     default=os.path.join(tempfile.gettempdir(), "cpsessions"),
+                     help="directory used for session storage", metavar="DIR")
+optparser.add_option("--server-host", dest="openerp.server.host",
+                     default='127.0.0.1', help="OpenERP server hostname", metavar="HOST")
+optparser.add_option("--server-port", dest="openerp.server.port", default=8069,
+                     help="OpenERP server port", type="int", metavar="NUMBER")
+optparser.add_option("--db-filter", dest="openerp.dbfilter", default='.*',
+                     help="Filter listed database", metavar="REGEXP")
+
 path_root = os.path.dirname(os.path.abspath(__file__))
 path_addons = os.path.join(path_root, 'addons')
 if path_addons not in sys.path:
@@ -23,20 +36,11 @@ def main(argv):
     }
 
     # Parse config
-    op = optparse.OptionParser()
-    op.add_option("-p", "--port", dest="server.socket_port", default=8002, help="listening port", type="int", metavar="NUMBER")
-    op.add_option("-s", "--session-path", dest="tools.sessions.storage_path", default=os.path.join(tempfile.gettempdir(), "cpsessions"),  help="directory used for session storage", metavar="DIR")
-    op.add_option("--server-host", dest="openerp.server.host", default='127.0.0.1', help="OpenERP server hostname", metavar="HOST")
-    op.add_option("--server-port", dest="openerp.server.port", default=8069, help="OpenERP server port", type="int", metavar="NUMBER")
-    op.add_option("--db-filter", dest="openerp.dbfilter", default='.*', help="Filter listed database", metavar="REGEXP")
-    (o, args) = op.parse_args(argv[1:])
+    (o, args) = optparser.parse_args(argv[1:])
     o = vars(o)
     for k in o.keys():
         if o[k] is None:
             del(o[k])
-
-    # Setup and run cherrypy
-    cherrypy.tree.mount(base.common.Root())
 
     cherrypy.config.update(config=DEFAULT_CONFIG)
     if os.path.exists(os.path.join(path_root,'openerp-web.cfg')):
@@ -48,10 +52,11 @@ def main(argv):
     if not os.path.exists(cherrypy.config['tools.sessions.storage_path']):
         os.makedirs(cherrypy.config['tools.sessions.storage_path'], 0700)
 
+    return base.common.Root()
+
+if __name__ == "__main__":
+    cherrypy.tree.mount(main(sys.argv))
     cherrypy.server.subscribe()
     cherrypy.engine.start()
     cherrypy.engine.block()
-
-if __name__ == "__main__":
-    main(sys.argv)
 
