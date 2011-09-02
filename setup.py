@@ -54,11 +54,11 @@ setup(
     download_url=download_url,
     license=license,
     install_requires=[
-        "CherryPy >= 3.1.2",
         "Babel >= 0.9.6",
         "simplejson >= 2.0.9",
         "python-dateutil >= 1.4.1",
         "pytz",
+        "werkzeug = 0.7",
     ],
     tests_require=[
         'unittest2',
