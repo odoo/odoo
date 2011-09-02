@@ -100,9 +100,6 @@ home_template = textwrap.dedent("""<!DOCTYPE html>
         <title>OpenERP</title>
         <link rel="shortcut icon" href="/web/static/src/img/favicon.ico" type="image/x-icon"/>
         %(css)s
-        <!--[if lte IE 7]>
-        <link rel="stylesheet" href="/web/static/src/css/web-ie7.css" type="text/css"/>
-        <![endif]-->
         %(javascript)s
         <script type="text/javascript">
             $(function() {
