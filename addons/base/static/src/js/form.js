@@ -83,9 +83,11 @@ openerp.base.FormView = openerp.base.View.extend( /** @lends openerp.base.FormVi
         this.$form_header.find('button.oe_form_button_cancel').click(this.do_cancel);
         this.$form_header.find('button.oe_form_button_new').click(this.on_button_new);
 
-        this.$form_header.find('button.oe_get_xml_view').click(function() {
-            $('<xmp>' + openerp.base.json_node_to_xml(self.fields_view.arch, true) + '</xmp>').dialog({ width: '95%', height: 600});
-        });
+        if (this.session.debug) {
+            this.$form_header.find('button.oe_get_xml_view').click(function() {
+                $('<xmp>' + openerp.base.json_node_to_xml(self.fields_view.arch, true) + '</xmp>').dialog({ width: '95%', height: 600});
+            });
+        }
 
         if (this.options.sidebar && this.options.sidebar_id) {
             this.sidebar = new openerp.base.Sidebar(this, this.options.sidebar_id);
@@ -577,18 +579,23 @@ openerp.base.form.Widget = openerp.base.Widget.extend({
 
         this.view.widgets[this.element_id] = this;
         this.children = node.children;
-        this.colspan = parseInt(node.attrs.colspan || 1);
+        this.colspan = parseInt(node.attrs.colspan || 1, 10);
+        this.decrease_max_width = 0;
 
         this.string = this.string || node.attrs.string;
         this.help = this.help || node.attrs.help;
         this.invisible = this.modifiers['invisible'] === true;
+        this.classname = 'oe_form_' + this.type;
+
+        this.width = this.node.attrs.width;
     },
     start: function() {
         this.$element = $('#' + this.element_id);
     },
     stop: function() {
-        this.$element = $('#' + this.element_id);
-        this.$element.remove();
+        if (this.$element) {
+            this.$element.remove();
+        }
     },
     process_modifiers: function() {
         var compute_domain = openerp.base.form.compute_domain;
@@ -609,7 +616,7 @@ openerp.base.form.WidgetFrame = openerp.base.form.Widget.extend({
     template: 'WidgetFrame',
     init: function(view, node) {
         this._super(view, node);
-        this.columns = node.attrs.col || 4;
+        this.columns = parseInt(node.attrs.col || 4, 10);
         this.x = 0;
         this.y = 0;
         this.table = [];
@@ -635,15 +642,21 @@ openerp.base.form.WidgetFrame = openerp.base.form.Widget.extend({
         return row;
     },
     set_row_cells_with: function(row) {
+        var bypass = 0,
+            max_width = 100;
+        for (var i = 0; i < row.length; i++) {
+            bypass += row[i].width === undefined ? 0 : 1;
+            max_width -= row[i].decrease_max_width;
+        }
+        var size_unit = Math.round(max_width / (this.columns - bypass)),
+            colspan_sum = 0;
         for (var i = 0; i < row.length; i++) {
             var w = row[i];
-            if (w.is_field_label) {
-                w.width = "1%";
-                if (row[i + 1]) {
-                    row[i + 1].width = Math.round((100 / this.columns) * (w.colspan + 1) - 1) + '%';
-                }
-            } else if (w.width === undefined) {
-                w.width = Math.round((100 / this.columns) * w.colspan) + '%';
+            colspan_sum += w.colspan;
+            if (w.width === undefined) {
+                var width = (i === row.length - 1 && colspan_sum === this.columns) ? max_width : Math.round(size_unit * w.colspan);
+                max_width -= width;
+                w.width = width + '%';
             }
         }
     },
@@ -733,6 +746,11 @@ openerp.base.form.WidgetSeparator = openerp.base.form.Widget.extend({
     init: function(view, node) {
         this._super(view, node);
         this.template = "WidgetSeparator";
+        this.orientation = node.attrs.orientation || 'horizontal';
+        if (this.orientation === 'vertical') {
+            this.width = '1';
+        }
+        this.classname += '_' + this.orientation;
     }
 });
 
@@ -796,14 +814,15 @@ openerp.base.form.WidgetLabel = openerp.base.form.Widget.extend({
         this._super(view, node);
 
         // TODO fme: support for attrs.align
-        if (this.node.tag == 'label' && this.node.attrs.colspan) {
-            this.is_field_label = false;
+        if (this.node.tag == 'label' && (this.node.attrs.colspan || (this.string && this.string.length > 32))) {
             this.template = "WidgetParagraph";
-            this.colspan = this.node.attrs.colspan;
+            this.colspan = parseInt(this.node.attrs.colspan || 1, 10);
         } else {
-            this.is_field_label = true;
             this.template = "WidgetLabel";
             this.colspan = 1;
+            this.width = '1%';
+            this.decrease_max_width = 1;
+            this.nowrap = true;
         }
     },
     render: function () {
@@ -845,6 +864,8 @@ openerp.base.form.Field = openerp.base.form.Widget.extend({
         this.required = this.modifiers['required'] === true;
         this.invalid = false;
         this.dirty = false;
+
+        this.classname = 'oe_form_field_' + this.type;
     },
     start: function() {
         this._super.apply(this, arguments);
@@ -1315,7 +1336,7 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
         this.$input = this.$element.find("input");
         this.$drop_down = this.$element.find(".oe-m2o-drop-down-button");
         this.$menu_btn = this.$element.find(".oe-m2o-cm-button");
-        
+
         // context menu
         var init_context_menu_def = $.Deferred().then(function(e) {
             var rdataset = new openerp.base.DataSetStatic(self, "ir.values", self.build_context());
@@ -1323,7 +1344,7 @@ openerp.base.form.FieldMany2One = openerp.base.form.Field.extend({
                 [[self.field.relation, false]], false, rdataset.get_context()], false, 0)
                 .then(function(result) {
                 self.related_entries = result;
-                
+
                 var $cmenu = $("#" + self.cm_id);
                 $cmenu.append(QWeb.render("FieldMany2One.context_menu", {widget: self}));
                 var bindings = {};

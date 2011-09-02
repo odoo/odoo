@@ -622,7 +622,7 @@
 </t>
 <t t-name="FormView">
     <div class="oe_form_header" t-att-id="view.element_id + '_header'">
-        <h2 class="oe_view_title"><t t-esc="view.fields_view.arch.attrs.string"/> <button class="oe_get_xml_view">xml</button></h2>
+        <h2 class="oe_view_title"><t t-esc="view.fields_view.arch.attrs.string"/> <button t-if="view.session.debug" class="oe_get_xml_view">View#<t t-esc="view.fields_view.view_id"/></button></h2>
         <div class="oe_form_buttons" t-if="view.options.action_buttons !== false">
             <!--<button type="button" class="oe_form_button_save">
                 <span class="oe_form_on_update">Save</span>
@@ -690,11 +690,11 @@
     <tr t-foreach="widget.table" t-as="row">
         <t t-foreach="row" t-as="td">
             <td t-att-colspan="td.colspan gt 1 ? td.colspan : undefined"
-                t-att-width="td.width ? td.width : undefined"
-                t-att-nowrap="td.is_field_label or td.is_field_m2o? 'true' : undefined"
+                t-att-width="td.width"
+                t-att-nowrap="td.nowrap or td.is_field_m2o? 'true' : undefined"
                 t-att-valign="td.table ? 'top' : undefined"
                 t-att-id="td.element_id"
-                t-att-class="'oe_form_frame_cell oe_form_' + (td.is_field_label ? 'label' : (td.field ? 'field_' + td.type : td.type))"
+                t-attf-class="oe_form_frame_cell #{td.classname}"
             >
                 <t t-raw="td.render()"/>
             </td>
@@ -720,7 +720,7 @@
     </div>
 </t>
 <t t-name="WidgetSeparator">
-    <div t-att-class="'separator ' + (widget.node.attrs.orientation || 'horizontal')">
+    <div t-if="widget.orientation !== 'vertical'" t-att-class="'separator ' + widget.orientation">
         <t t-esc="widget.string"/>
     </div>
 </t>
@@ -861,7 +861,8 @@
     <table cellpadding="0" cellspacing="0" border="0">
     <tr>
         <td align="center">
-            <img src="/base/static/src/img/placeholder.png" class="oe-binary-image" border="1"
+            <img src="/base/static/src/img/placeholder.png" class="oe-binary-image"
+                t-att-border="widget.readonly ? 0 : 1"
                 t-att-id="widget.element_id + '_field'"
                 t-att-name="widget.name"
                 t-att-class="'field_' + widget.type"
@@ -1362,6 +1363,31 @@
         <td><button class="oe_export_button_export" id="delete_export_list">Delete</button></td>
     </tr>
 </t>
+<t t-name="Change_Pwd">
+    <form name="change_password_form" class="oe_forms" method="POST">
+        <table align="center">
+            <tr>
+                <td><label for="old_pwd">Old Password:</label></td>
+                <td><input type="password" name="old_pwd"
+                           minlength="1" autofocus="autofocus"/></td>
+            </tr>
+            <tr>
+            <td><label for="new_password">New Password:</label></td>
+            <td><input type="password" name="new_password"
+                       minlength="1" autofocus="autofocus"/></td>
+            </tr>
+            <tr>
+                <td><label for="confirm_pwd">Confirm Password:</label></td>
+                <td><input type="password" name="confirm_pwd"
+                             minlength="1"/></td>
+            </tr>
+            <tr>
+                <td colspan="2" align="right"><input type="submit" value="Change Password"/></td>
+            </tr>
+        </table>
+    </form>
+</t>
+
 <t t-name="ImportView">
     <a id="importview" href="javascript: void(0)" style="text-decoration: none;color: #3D3D3D;">Import</a>
 </t>
