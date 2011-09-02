@@ -134,7 +134,7 @@ class report_custom(report_rml):
         for product in product_pool.browse(cr, uid, ids, context=context):
             bom_id = bom_pool._bom_find(cr, uid, product.id, product.uom_id.id)
             title = "<title>%s</title>" %(_("Cost Structure"))
-            title += "<title>%s</title>" %to_xml(tools.ustr(product.name))
+            title += "<title>%s</title>" % (to_xml(tools.ustr(product.name))).replace('&', '&amp;')
             xml += "<lines style='header'>" + title + prod_header + "</lines>"
             if not bom_id:
                 total_strd = number * product.standard_price
