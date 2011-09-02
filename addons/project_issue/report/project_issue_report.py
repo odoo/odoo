@@ -36,7 +36,7 @@ class project_issue_report(osv.osv):
     _auto = False
 
     _columns = {
-        'name': fields.char('Year', size=64, required=False, readonly=True),        
+        'name': fields.char('Year', size=64, required=False, readonly=True),
         'section_id':fields.many2one('crm.case.section', 'Sale Team', readonly=True),
         'state': fields.selection(AVAILABLE_STATES, 'State', size=16, readonly=True),
         'month':fields.selection([('01', 'January'), ('02', 'February'), \
