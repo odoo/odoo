@@ -309,7 +309,7 @@ class ir_values(osv.osv):
             ('key', '=', 'action'),
             ('key2', '=', action_slot),
             ('model', '=', model),
-            ('res_id', '=', res_id),
+            ('res_id', '=', res_id or 0), # int field -> NULL == 0
             ('value', '=', action),
             ]
         self.unlink(cr, uid, self.search(cr, uid, search_criteria))
@@ -319,7 +319,7 @@ class ir_values(osv.osv):
             'key2': action_slot,
             'object': True,
             'model': model,
-            'res_id': res_id or False,
+            'res_id': res_id,
             'name': name,
             'value': action,
         })
