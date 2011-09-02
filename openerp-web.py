@@ -6,6 +6,11 @@ import tempfile
 
 import werkzeug.serving
 
+path_root = os.path.dirname(os.path.abspath(__file__))
+path_addons = os.path.join(path_root, 'addons')
+if path_addons not in sys.path:
+    sys.path.insert(0, path_addons)
+
 optparser = optparse.OptionParser()
 optparser.add_option("-p", "--port", dest="socket_port", default=8002,
                      help="listening port", type="int", metavar="NUMBER")
@@ -18,18 +23,16 @@ optparser.add_option("--server-port", dest="server_port", default=8069,
                      help="OpenERP server port", type="int", metavar="NUMBER")
 optparser.add_option("--db-filter", dest="dbfilter", default='.*',
                      help="Filter listed database", metavar="REGEXP")
-
-path_root = os.path.dirname(os.path.abspath(__file__))
-path_addons = os.path.join(path_root, 'addons')
-if path_addons not in sys.path:
-    sys.path.insert(0, path_addons)
+optparser.add_option('--addons-path', dest='addons_path', default=path_addons,
+                    help="Path do addons directory", metavar="PATH")
+optparser.add_option('--no-serve-static', dest='serve_static',
+                     default=True, action='store_false',
+                     help="Do not serve static files via this server")
 
 import base
 
 if __name__ == "__main__":
     (options, args) = optparser.parse_args(sys.argv[1:])
-    options.serve_static = True
-    options.addons_path = path_addons
 
     os.environ["TZ"] = "UTC"
     app = base.common.Root(options)
