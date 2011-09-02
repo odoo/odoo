@@ -23,6 +23,9 @@ import http
 # import backendlocal as backend
 import backendrpc as backend
 
+__all__ = ['Root', 'jsonrequest', 'httprequest', 'Controller',
+           'WebRequest', 'JsonRequest', 'HttpRequest']
+
 #-----------------------------------------------------------
 # Globals (wont move into a pool)
 #-----------------------------------------------------------
@@ -38,13 +41,61 @@ controllers_path = {}
 # OpenERP Web RequestHandler
 #----------------------------------------------------------
 class WebRequest(object):
+    """ Parent class for all OpenERP Web request types, mostly deals with
+    initialization and setup of the request object (the dispatching itself has
+    to be handled by the subclasses)
+
+    :param request: a wrapped werkzeug Request object
+    :type request: :class:`werkzeug.wrappers.BaseRequest`
+    :param config: configuration object
+
+    .. attribute:: applicationsession
+
+        an application-wide :class:`~collections.Mapping`
+
+    .. attribute:: httprequest
+
+        the original :class:`werkzeug.wrappers.Request` object provided to the
+        request
+
+    .. attribute:: httpsession
+
+        a :class:`~collections.Mapping` holding the HTTP session data for the
+        current http session
+
+    .. attribute:: config
+
+        config parameter provided to the request object
+
+    .. attribute:: params
+
+        :class:`~collections.Mapping` of request parameters, not generally
+        useful as they're provided directly to the handler method as keyword
+        arguments
+
+    .. attribute:: session_id
+
+        opaque identifier for the :class:`backend.OpenERPSession` instance of
+        the current request
+
+    .. attribute:: session
+
+        :class:`~backend.OpenERPSession` instance for the current request
+
+    .. attribute:: context
+
+        :class:`~collections.Mapping` of context values for the current request
+
+    .. attribute:: debug
+
+        ``bool``, indicates whether the debug mode is active on the client
+    """
     def __init__(self, request, config):
         self.applicationsession = applicationsession
         self.httprequest = request
         self.httpresponse = None
         self.httpsession = request.session
         self.config = config
-        # Request attributes
     def init(self, params):
         self.params = dict(params)
         # OpenERP session setup
@@ -156,6 +207,15 @@ class JsonRequest(WebRequest):
                               ('Content-Length', len(content))])
 
 def jsonrequest(f):
+    """ Decorator marking the decorated method as being a handler for a
+    JSON-RPC request (the exact request path is specified via the
+    ``$(Controller._cp_path)/$methodname`` combination.
+
+    If the method is called, it will be provided with a :class:`JsonRequest`
+    instance and all ``params`` sent during the JSON-RPC request, apart from
+    the ``session_id``, ``context`` and ``debug`` keys (which are stripped out
+    beforehand)
+    """
     @functools.wraps(f)
     def json_handler(controller, request, config):
         return JsonRequest(request, config).dispatch(
@@ -186,6 +246,19 @@ class HttpRequest(WebRequest):
         return r
 
     def make_response(self, data, headers=None, cookies=None):
+        """ Helper for non-HTML responses, or HTML responses with custom
+        response headers or cookies.
+
+        While handlers can just return the HTML markup of a page they want to
+        send as a string if non-HTML data is returned they need to create a
+        complete response object, or the returned data will not be correctly
+        interpreted by the clients.
+
+        :param basestring data: response body
+        :param headers: HTTP headers to set on the response
+        :type headers: ``[(name, value)]``
+        :param collections.Mapping cookies: cookies to set on the client
+        """
         response = werkzeug.wrappers.Response(data, headers=headers)
         if cookies:
             for k, v in cookies.iteritems():
@@ -193,9 +266,20 @@ class HttpRequest(WebRequest):
         return response
 
     def not_found(self, description=None):
+        """ Helper for 404 response, return its result from the method
+        """
         return werkzeug.exceptions.NotFound(description)
 
 def httprequest(f):
+    """ Decorator marking the decorated method as being a handler for a
+    normal HTTP request (the exact request path is specified via the
+    ``$(Controller._cp_path)/$methodname`` combination.
+
+    If the method is called, it will be provided with a :class:`HttpRequest`
+    instance and all ``params`` sent during the request (``GET`` and ``POST``
+    merged in the same dictionary), apart from the ``session_id``, ``context``
+    and ``debug`` keys (which are stripped out beforehand)
+    """
     @functools.wraps(f)
     def http_handler(controller, request, config):
         return HttpRequest(request, config).dispatch(controller, f)
@@ -211,27 +295,25 @@ class Controller(object):
     __metaclass__ = ControllerType
 
 class Root(object):
-    """
-    Root WSGI application for the OpenERP Web Client.
+    """Root WSGI application for the OpenERP Web Client.
+
+    :param options: mandatory initialization options object, must provide
+                    the following attributes:
+
+                    ``server_host`` (``str``)
+                      hostname of the OpenERP server to dispatch RPC to
+                    ``server_port`` (``int``)
+                      RPC port of the OpenERP server
+                    ``serve_static`` (``bool | None``)
+                      whether this application should serve the various
+                      addons's static files
+                    ``storage_path`` (``str``)
+                      filesystem path where HTTP session data will be stored
+                    ``dbfilter`` (``str``)
+                      only used in case the list of databases is requested
+                      by the server, will be filtered by this pattern
     """
     def __init__(self, options):
-        """
-        :param options: mandatory initialization options object: must provide
-                        the following attributes:
-
-                        ``server_host`` (``str``)
-                          hostname of the OpenERP server to dispatch RPC to
-                        ``server_port`` (``int``)
-                          RPC port of the OpenERP server
-                        ``serve_static`` (``bool | None``)
-                          whether this application should serve the various
-                          addons's static files
-                        ``storage_path`` (``str``)
-                          filesystem path where HTTP session data will be stored
-                        ``dbfilter`` (``str``)
-                          only used in case the list of databases is requested
-                          by the server, will be filtered by this pattern
-        """
         self.root = werkzeug.urls.Href('/base/webclient/home')
         self.config = options
 
@@ -249,9 +331,17 @@ class Root(object):
             self.session_storage = options.session_storage
 
     def __call__(self, environ, start_response):
+        """ Handle a WSGI request
+        """
         return self.dispatch(environ, start_response)
 
     def dispatch(self, environ, start_response):
+        """
+        Performs the actual WSGI dispatching for the application, may be
+        wrapped during the initialization of the object.
+
+        Call the object directly.
+        """
         request = werkzeug.wrappers.Request(environ)
         request.parameter_storage_class = werkzeug.datastructures.ImmutableDict
 
@@ -314,6 +404,14 @@ class Root(object):
         return statics
 
     def find_handler(self, *l):
+        """
+        Tries to discover the controller handling the request for the path
+        specified by the provided parameters
+
+        :param l: path sections to a controller or controller method
+        :returns: a callable matching the path sections, or ``None``
+        :rtype: ``Controller | None``
+        """
         if len(l) > 1:
             for i in range(len(l), 1, -1):
                 ps = "/" + "/".join(l[0:i])
