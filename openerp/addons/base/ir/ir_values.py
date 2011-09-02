@@ -162,10 +162,10 @@ class ir_values(osv.osv):
                                           string='Default value or action reference'),
         'object': fields.boolean('No value serialization', help="Should be enabled when Type is Action"),
         'key': fields.selection([('action','Action'),('default','Default')],
-                                'Action Type', size=128, select=True, required=True,
+                                'Type', size=128, select=True, required=True,
                                 help="- Action: an action attached to one slot of the given model\n"
                                      "- Default: a default value for a model field"),
-        'key2' : fields.char('Action Qualifier', size=128, select=True,
+        'key2' : fields.char('Qualifier', size=128, select=True,
                              help="For actions, one of the possible action slots: \n"
                                   "  - client_action_multi\n"
                                   "  - client_print_multi\n"
@@ -174,7 +174,7 @@ class ir_values(osv.osv):
                                   "For defaults, an optional condition"
                              ,),
         'res_id': fields.integer('Record ID', select=True,
-                                 help="Database identifier of the record to which this applies."
+                                 help="Database identifier of the record to which this applies. "
                                       "0 = for all records"),
         'user_id': fields.many2one('res.users', 'User', ondelete='cascade', select=True,
                                    help="If set, action binding only applies for this user."),
@@ -381,14 +381,9 @@ class ir_values(osv.osv):
                 continue
         return results.values()
 
-    def _map_legacy_model_list(self, model_list, map_fn):
+    def _map_legacy_model_list(self, model_list, map_fn, merge_results=False):
         """Apply map_fn to the various models passed, according to
            legacy way to specify models/records.
-
-           :param model_list: list of models/records reference in the form ``[model,..]``
-                              or ``[(model,res_id), ...]``
-           :param map_fn: the map function to apply - should expect 2 arguments:
-                          ``model`` and ``res_id``.
         """
         assert isinstance(model_list, (list, tuple)), \
             "model_list should be in the form [model,..] or [(model,res_id), ..]"
@@ -400,7 +395,7 @@ class ir_values(osv.osv):
             result = map_fn(model, res_id)
             # some of the functions return one result at a time (tuple or id)
             # and some return a list of many of them - care for both
-            if isinstance(result,list):
+            if merge_results:
                 results.extend(result)
             else:
                 results.append(result)
@@ -440,4 +435,4 @@ class ir_values(osv.osv):
         elif key == 'action':
             def do_get(model,res_id):
                 return self.get_actions(cr, uid, action_slot=key2, model=model, res_id=res_id, context=context)
-        return self._map_legacy_model_list(models, do_get)
+        return self._map_legacy_model_list(models, do_get, merge_results=True)
