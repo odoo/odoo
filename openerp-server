@@ -266,7 +266,7 @@ if __name__ == "__main__":
         if info['wsgi']:
             openerp.wsgi.register_wsgi_handler(getattr(sys.modules[m], info['wsgi']))
 
-    openerp.wsgi.serve()
+    #openerp.wsgi.serve()
 
 
     setup_pid_file()

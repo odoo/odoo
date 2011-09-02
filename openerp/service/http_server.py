@@ -271,9 +271,7 @@ def list_http_services(protocol=None):
         raise Exception("Incorrect protocol or no http services")
 
 import SimpleXMLRPCServer
-# Basically, this class extends SimpleXMLRPCRequestHandler to use
-# OpenERPDispatcher as the dispatcher (to select the correct ExportService).
-class XMLRPCRequestHandler(netsvc.OpenERPDispatcher,FixSendError,HttpLogHandler,SimpleXMLRPCServer.SimpleXMLRPCRequestHandler):
+class XMLRPCRequestHandler(FixSendError,HttpLogHandler,SimpleXMLRPCServer.SimpleXMLRPCRequestHandler):
     rpc_paths = []
     protocol_version = 'HTTP/1.1'
     _logger = logging.getLogger('xmlrpc')
@@ -281,7 +279,8 @@ class XMLRPCRequestHandler(netsvc.OpenERPDispatcher,FixSendError,HttpLogHandler,
     def _dispatch(self, method, params):
         try:
             service_name = self.path.split("/")[-1]
-            return self.dispatch(service_name, method, params)
+            auth = getattr(self, 'auth_provider', None)
+            return netsvc.dispatch_rpc(service_name, method, params, auth)
         except netsvc.OpenERPDispatcherException, e:
             raise xmlrpclib.Fault(tools.exception_to_unicode(e.exception), e.traceback)
 

@@ -393,38 +393,36 @@ def log(title, msg, channel=logging.DEBUG_RPC, depth=None, fn=""):
             logger.log(channel, indent+line)
             indent=indent_after
 
-# This class is used to dispatch a RPC to a service. So it is used
-# for both XMLRPC (with a SimpleXMLRPCRequestHandler), and NETRPC.
-# The service (ExportService) will then dispatch on the method name.
-# This can be re-written as a single function
-#   def dispatch(self, service_name, method, params, auth_provider).
-class OpenERPDispatcher:
-    def log(self, title, msg, channel=logging.DEBUG_RPC, depth=None, fn=""):
+def dispatch_rpc(service_name, method, params, auth):
+    """ Handle a RPC call.
+
+    This is pure Python code, the actual marshalling (from/to XML-RPC or
+    NET-RPC) is done in a upper laye.
+    """
+    def _log(title, msg, channel=logging.DEBUG_RPC, depth=None, fn=""):
         log(title, msg, channel=channel, depth=depth, fn=fn)
-    def dispatch(self, service_name, method, params):
-        try:
-            auth = getattr(self, 'auth_provider', None)
-            logger = logging.getLogger('result')
-            start_time = end_time = 0
-            if logger.isEnabledFor(logging.DEBUG_RPC_ANSWER):
-                self.log('service', tuple(replace_request_password(params)), depth=None, fn='%s.%s'%(service_name,method))
-            if logger.isEnabledFor(logging.DEBUG_RPC):
-                start_time = time.time()
-            result = ExportService.getService(service_name).dispatch(method, auth, params)
-            if logger.isEnabledFor(logging.DEBUG_RPC):
-                end_time = time.time()
-            if not logger.isEnabledFor(logging.DEBUG_RPC_ANSWER):
-                self.log('service (%.3fs)' % (end_time - start_time), tuple(replace_request_password(params)), depth=1, fn='%s.%s'%(service_name,method))
-            self.log('execution time', '%.3fs' % (end_time - start_time), channel=logging.DEBUG_RPC_ANSWER)
-            self.log('result', result, channel=logging.DEBUG_RPC_ANSWER)
-            return result
-        except Exception, e:
-            self.log('exception', tools.exception_to_unicode(e))
-            tb = getattr(e, 'traceback', sys.exc_info())
-            tb_s = "".join(traceback.format_exception(*tb))
-            if tools.config['debug_mode'] and isinstance(tb[2], types.TracebackType):
-                import pdb
-                pdb.post_mortem(tb[2])
-            raise OpenERPDispatcherException(e, tb_s)
+    try:
+        logger = logging.getLogger('result')
+        start_time = end_time = 0
+        if logger.isEnabledFor(logging.DEBUG_RPC_ANSWER):
+            _log('service', tuple(replace_request_password(params)), depth=None, fn='%s.%s'%(service_name,method))
+        if logger.isEnabledFor(logging.DEBUG_RPC):
+            start_time = time.time()
+        result = ExportService.getService(service_name).dispatch(method, auth, params)
+        if logger.isEnabledFor(logging.DEBUG_RPC):
+            end_time = time.time()
+        if not logger.isEnabledFor(logging.DEBUG_RPC_ANSWER):
+            _log('service (%.3fs)' % (end_time - start_time), tuple(replace_request_password(params)), depth=1, fn='%s.%s'%(service_name,method))
+        _log('execution time', '%.3fs' % (end_time - start_time), channel=logging.DEBUG_RPC_ANSWER)
+        _log('result', result, channel=logging.DEBUG_RPC_ANSWER)
+        return result
+    except Exception, e:
+        _log('exception', tools.exception_to_unicode(e))
+        tb = getattr(e, 'traceback', sys.exc_info())
+        tb_s = "".join(traceback.format_exception(*tb))
+        if tools.config['debug_mode'] and isinstance(tb[2], types.TracebackType):
+            import pdb
+            pdb.post_mortem(tb[2])
+        raise OpenERPDispatcherException(e, tb_s)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
