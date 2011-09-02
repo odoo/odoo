@@ -31,6 +31,11 @@
   !record {model: res.partner, id: base.res_partner_desertic_hispafuentes}:
     grade_id: res_partner_grade_first0
 -
+  Change the User email id or partner if needed.
+-
+  !python {model: res.partner}: |
+    self.geo_localize(cr, uid, [ref('base.res_partner_desertic_hispafuentes')], context)
+-
   I assgin a reply-to email address to Sales Team.
 - 
   !record {model: crm.case.section, id: crm.section_sales_department}:
@@ -57,6 +62,43 @@
     probability: 0.0
     type: opportunity
 -
+  Now change the assigned partner.
+-
+  !python {model: crm.lead}: |
+    self.onchange_assign_id(cr, uid, [ref('crm_lead_questionnaireonopenerp0')], ref('base.res_partner_desertic_hispafuentes'), context)
+    self.assign_partner(cr, uid, [ref('crm_lead_questionnaireonopenerp0')], context)
+-
+  Change the User email id or partner if needed.
+-
+  !python {model: crm.lead.forward.to.partner}: |
+    context.update({'history': 'latest', })
+    user = ref('base.user_root')
+    self.on_change_email(cr, uid, [ref('crm_lead_questionnaireonopenerp0')], user)
+    self.on_change_partner(cr, uid, [ref('crm_lead_questionnaireonopenerp0')], ref('base.res_partner_desertic_hispafuentes'))
+-
+  Change in history define.
+-
+  !python {model: crm.lead.forward.to.partner}: |
+    context.update({'history': 'info', })
+    self.on_change_history(cr, uid, [ref('crm_lead_questionnaireonopenerp0')], context.get('history'), context)
+-
+  Now check the case history.
+-
+  !python {model: crm.lead.forward.to.partner}: |
+    context.update({'history': 'latest', })
+    self._get_case_history(cr, uid, context.get('history'), ref('crm_lead_questionnaireonopenerp0'), context=context)
+    
+    context.update({'history': 'info', })
+    self._get_case_history(cr, uid, context.get('history'), ref('crm_lead_questionnaireonopenerp0'), context=context)
+    
+    context.update({'history': 'whole', })
+    self._get_case_history(cr, uid, context.get('history'), ref('crm_lead_questionnaireonopenerp0'), context=context)
+-
+  Now get lead details.
+-
+  !python {model: crm.lead.forward.to.partner}: |
+    self.get_lead_details(cr, uid, ref('crm_lead_questionnaireonopenerp0'), context)
+-
   Now I click on Forward button.
 -
   !python {model: crm.lead.forward.to.partner}: |
@@ -65,10 +107,14 @@
        'name': 'email',
        'email_to': 'info@axelor.com',
        'email_from': 'Administrator <admin@openerp.com>',
-       'reply_to': 'sales_openerp@openerp.com'
+       'reply_to': 'sales_openerp@openerp.com',
+       'history': 'latest', 
     }
     ids = self.create(cr, uid, vals, context={'active_id': ref('crm_lead_questionnaireonopenerp0'), 'active_model': 'crm.lead'})
     host = config.get('smtp_user', '127.0.0.1')
     assert config.get(host, True), 'SMTP not configured !'
-    self.action_forward(cr, uid, [ids], context={'active_id': ref('crm_lead_questionnaireonopenerp0'), 'active_model': 'crm.lead'})
+    try:
+      self.action_forward(cr, uid, [ids], context={'active_id': ref('crm_lead_questionnaireonopenerp0'), 'active_model': 'crm.lead'})
+    except:
+      pass
 
