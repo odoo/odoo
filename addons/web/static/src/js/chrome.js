@@ -454,7 +454,7 @@ openerp.web.Login =  openerp.web.Widget.extend({
     },
     display: function() {
         var self = this;
-
+        
         this.$element.html(QWeb.render("Login", this));
         this.database = new openerp.web.Database(
                 this, "oe_database", "oe_db_options");
@@ -680,7 +680,7 @@ openerp.web.Header =  openerp.web.Widget.extend({
                 });
             }
         });
-},
+    },
     display_error: function (error) {
         return $('<div>').dialog({
             modal: true,

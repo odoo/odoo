@@ -334,8 +334,8 @@
 </t>
 <t t-name="Header-content">
     <h1 class="header_title">
-        <span class="database"><t t-esc="widget.session.db"/></span> - <t t-esc="widget.session.login"/> <br/>
-        <small class="username">rpc_session_id: <t t-esc="widget.session.session_id"/></small>
+        (<t t-esc="widget.session.db"/>)<br/>
+        <small class="username"><t t-esc="widget.session.login"/></small>
     </h1>
     <div class="header_corner">
         <ul class="block">
