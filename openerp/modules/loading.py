@@ -158,7 +158,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
         logger.info('module %s: loading objects', package.name)
         migrations.migrate_module(package, 'pre')
         register_module_classes(package.name)
-        models = pool.instanciate(package.name, cr)
+        models = pool.load(cr, package)
         loaded_modules.append(package.name)
         if hasattr(package, 'init') or hasattr(package, 'update') or package.state in ('to install', 'to upgrade'):
             init_module_models(cr, package.name, models)
@@ -273,8 +273,6 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         # This is a brand new pool, just created in pooler.get_db_and_pool()
         pool = pooler.get_pool(cr.dbname)
 
-        processed_modules = [] # for cleanup step after install
-        loaded_modules = [] # to avoid double loading
         report = tools.assertion_report()
         if 'base' in tools.config['update'] or 'all' in tools.config['update']:
             cr.execute("update ir_module_module set state=%s where name=%s and state=%s", ('to upgrade', 'base', 'installed'))
@@ -285,8 +283,10 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         if not graph:
             logger.notifyChannel('init', netsvc.LOG_CRITICAL, 'module base cannot be loaded! (hint: verify addons-path)')
             raise osv.osv.except_osv(_('Could not load base module'), _('module base cannot be loaded! (hint: verify addons-path)'))
-        loaded, processed = load_module_graph(cr, graph, status, perform_checks=(not update_module), report=report)
-        processed_modules.extend(processed)
+
+        # processed_modules: for cleanup step after install
+        # loaded_modules: to avoid double loading
+        loaded_modules, processed_modules = load_module_graph(cr, graph, status, perform_checks=(not update_module), report=report)
 
         if tools.config['load_language']:
             for lang in tools.config['load_language'].split(','):
