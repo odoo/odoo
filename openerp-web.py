@@ -29,13 +29,13 @@ optparser.add_option('--no-serve-static', dest='serve_static',
                      default=True, action='store_false',
                      help="Do not serve static files via this server")
 
-import base
+import base.common.dispatch
 
 if __name__ == "__main__":
     (options, args) = optparser.parse_args(sys.argv[1:])
 
     os.environ["TZ"] = "UTC"
-    app = base.common.Root(options)
+    app = base.common.dispatch.Root(options)
 
     werkzeug.serving.run_simple(
         '0.0.0.0', options.socket_port, app,
