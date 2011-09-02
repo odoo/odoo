@@ -1,5 +1,6 @@
 #!/usr/bin/python
-import urllib
+from __future__ import with_statement
+
 import functools
 import logging
 import os
@@ -8,11 +9,15 @@ import traceback
 import uuid
 import xmlrpclib
 
-import cherrypy
-import cherrypy.lib.static
 import simplejson
+import werkzeug.exceptions
+import werkzeug.utils
+import werkzeug.wrappers
+import werkzeug.wsgi
 
+import ast
 import nonliterals
+import http
 # import backendlocal as backend
 import backendrpc as backend
 
@@ -40,27 +45,28 @@ controllers_path = {}
 #----------------------------------------------------------
 # OpenERP Web RequestHandler
 #----------------------------------------------------------
-class CherryPyRequest(object):
+class WebRequest(object):
     """ CherryPy request handling
     """
-    def init(self,params):
-        self.params = params
+    def __init__(self, request, config):
         # Move cherrypy thread local objects to attributes
         self.applicationsession = applicationsession
-        self.httprequest = cherrypy.request
-        self.httpresponse = cherrypy.response
-        self.httpsession = cherrypy.session
-        self.httpsession_id = "cookieid"
+        self.httprequest = request
+        self.httpresponse = None
+        self.httpsession = request.session
+        self.config = config
+        # Request attributes
+    def init(self, params):
+        self.params = dict(params)
         # OpenERP session setup
         self.session_id = self.params.pop("session_id", None) or uuid.uuid4().hex
-        host = cherrypy.config['openerp.server.host']
-        port = cherrypy.config['openerp.server.port']
-        self.session = self.httpsession.setdefault(self.session_id, backend.OpenERPSession(host, port))
-        # Request attributes
+        self.session = self.httpsession.setdefault(
+            self.session_id, backend.OpenERPSession(
+                self.config.server_host, self.config.server_port))
         self.context = self.params.pop('context', None)
-        self.debug = self.params.pop('debug',False) != False
+        self.debug = self.params.pop('debug', False) != False
 
-class JsonRequest(CherryPyRequest):
+class JsonRequest(WebRequest):
     """ JSON-RPC2 over HTTP.
 
     Sucessful request::
@@ -138,8 +144,8 @@ class JsonRequest(CherryPyRequest):
                 }
             }
         except Exception:
-            cherrypy.log("An error occured while handling a json request",
-                         severity=logging.ERROR, traceback=True)
+            logging.getLogger('openerp.JSONRequest.dispatch').exception\
+                ("An error occured while handling a json request")
             error = {
                 'code': 300,
                 'message': "OpenERP WebClient Error",
@@ -156,42 +162,55 @@ class JsonRequest(CherryPyRequest):
             print
 
         content = simplejson.dumps(response, cls=nonliterals.NonLiteralEncoder)
-        cherrypy.response.headers['Content-Type'] = 'application/json'
-        cherrypy.response.headers['Content-Length'] = len(content)
-        return content
+        return werkzeug.wrappers.Response(
+            content, headers=[('Content-Type', 'application/json'),
+                              ('Content-Length', len(content))])
 
 def jsonrequest(f):
-    @cherrypy.expose
     @functools.wraps(f)
-    def json_handler(controller):
-        return JsonRequest().dispatch(controller, f, requestf=cherrypy.request.body)
+    def json_handler(controller, request, config):
+        return JsonRequest(request, config).dispatch(
+            controller, f, requestf=request.stream)
+    json_handler.exposed = True
     return json_handler
 
-class HttpRequest(CherryPyRequest):
+class HttpRequest(WebRequest):
     """ Regular GET/POST request
     """
-    def dispatch(self, controller, method, **kw):
-        self.init(kw)
+    def dispatch(self, controller, method):
+        self.init(self.httprequest.args)
         akw = {}
-        for key in kw.keys():
-            if isinstance(kw[key], basestring) and len(kw[key]) < 1024:
-                akw[key] = kw[key]
+        for key, value in self.httprequest.args.iteritems():
+            if isinstance(value, basestring) and len(value) < 1024:
+                akw[key] = value
             else:
-                akw[key] = type(kw[key])
+                akw[key] = type(value)
         if self.debug or 1:
             print "%s --> %s.%s %r" % (self.httprequest.method, controller.__class__.__name__, method.__name__, akw)
-        r = method(controller, self, **kw)
+        r = method(controller, self, **self.params)
         if self.debug or 1:
-            print "<--", 'size:', len(r)
+            if isinstance(r, werkzeug.wrappers.BaseResponse):
+                print '<--', r
+            else:
+                print "<--", 'size:', len(r)
             print
         return r
 
+    def make_response(self, data, headers=None, cookies=None):
+        response = werkzeug.wrappers.Response(data, headers=headers)
+        if cookies:
+            for k, v in cookies.iteritems():
+                response.set_cookie(k, v)
+        return response
+
+    def not_found(self, description=None):
+        return werkzeug.exceptions.NotFound(description)
+
 def httprequest(f):
-    # check cleaner wrapping:
-    # functools.wraps(f)(lambda x: JsonRequest().dispatch(x, f))
-    def http_handler(controller,*l, **kw):
-        return HttpRequest().dispatch(controller, f, **kw)
-    http_handler.exposed = 1
+    @functools.wraps(f)
+    def http_handler(controller, request, config):
+        return HttpRequest(request, config).dispatch(controller, f)
+    http_handler.exposed = True
     return http_handler
 
 #-----------------------------------------------------------
@@ -207,41 +226,82 @@ class Controller(object):
     __metaclass__ = ControllerType
 
 class Root(object):
-    def __init__(self):
+    def __init__(self, options):
+        self.config = options
+
+        self.session_cookie = 'sessionid'
         self.addons = {}
-        self._load_addons()
+
+        static_dirs = self._load_addons()
+        if options.serve_static:
+            self.dispatch = werkzeug.wsgi.SharedDataMiddleware(
+                self.dispatch, static_dirs)
+
+        if options.session_storage:
+            if not os.path.exists(options.session_storage):
+                os.mkdir(options.session_storage, 0700)
+            self.session_storage = options.session_storage
+
+    def __call__(self, environ, start_response):
+        return self.dispatch(environ, start_response)
+
+    def dispatch(self, environ, start_response):
+        request = werkzeug.wrappers.Request(environ)
+
+        if request.path == '/':
+            return werkzeug.utils.redirect(
+                '/base/webclient/home', 301)(environ, start_response)
+        elif request.path == '/mobile':
+            return werkzeug.utils.redirect(
+                '/web_mobile/static/src/web_mobile.html', 301)(
+                environ, start_response)
+
+        handler = self.find_handler(*(request.path.split('/')[1:]))
+
+        if not handler:
+            response = werkzeug.exceptions.NotFound()
+        else:
+            with http.session(request, self.session_storage, self.session_cookie) as session:
+                result = handler(
+                    request, self.config)
+
+                if isinstance(result, werkzeug.wrappers.Response):
+                    response = result
+                else:
+                    response = werkzeug.wrappers.Response(
+                        result, headers=[('Content-Type', 'text/html; charset=utf-8'),
+                                         ('Content-Length', len(result))])
+
+                response.set_cookie(self.session_cookie, session.sid)
+
+        return response(environ, start_response)
 
     def _load_addons(self):
+        statics = {}
         if path_addons not in sys.path:
             sys.path.insert(0, path_addons)
-        for i in os.listdir(path_addons):
-            if i not in addons_module:
-                manifest_path = os.path.join(path_addons, i, '__openerp__.py')
+        for module in os.listdir(path_addons):
+            if module not in addons_module:
+                manifest_path = os.path.join(path_addons, module, '__openerp__.py')
                 if os.path.isfile(manifest_path):
-                    manifest = eval(open(manifest_path).read())
-                    print "Loading", i
-                    m = __import__(i)
-                    addons_module[i] = m
-                    addons_manifest[i] = manifest
+                    manifest = ast.literal_eval(open(manifest_path).read())
+                    print "Loading", module
+                    m = __import__(module)
+                    addons_module[module] = m
+                    addons_manifest[module] = manifest
+
+                    statics['/%s/static' % module] = \
+                        os.path.join(path_addons, module, 'static')
         for k, v in controllers_class.items():
             if k not in controllers_object:
                 o = v()
                 controllers_object[k] = o
                 if hasattr(o, '_cp_path'):
                     controllers_path[o._cp_path] = o
+        return statics
 
-    def default(self, *l, **kw):
-        print "default",l,kw
-        # handle static files
-        if len(l) > 2 and l[1] == 'static':
-            # sanitize path
-            p = os.path.normpath(os.path.join(*l))
-            p2 = os.path.join(path_addons, p)
-            print "p",p
-            print "p2",p2
-
-            return cherrypy.lib.static.serve_file(p2)
-        elif len(l) > 1:
+    def find_handler(self, *l):
+        if len(l) > 1:
             for i in range(len(l), 1, -1):
                 ps = "/" + "/".join(l[0:i])
                 if ps in controllers_path:
@@ -249,19 +309,7 @@ class Root(object):
                     rest = l[i:] or ['index']
                     meth = rest[0]
                     m = getattr(c, meth)
-                    if getattr(m, 'exposed', 0):
-                        print "Calling", ps, c, meth, m
-                        return m(**kw)
-            raise cherrypy.NotFound('/' + '/'.join(l))
-        elif l and l[0] == 'mobile':
-            #for the mobile web client we are supposed to use a different url to just add '/mobile'
-            raise cherrypy.HTTPRedirect('/web_mobile/static/src/web_mobile.html', 301)
-        else:
-            if kw:
-                qs = '?' + urllib.urlencode(kw)
-            else:
-                qs = ''
-            raise cherrypy.HTTPRedirect('/base/webclient/home' + qs, 301)
-    default.exposed = True
-
-#
+                    if getattr(m, 'exposed', False):
+                        print "Dispatching to", ps, c, meth, m
+                        return m
+        return None

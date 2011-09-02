@@ -53,29 +53,29 @@ class DispatcherTest(unittest2.TestCase):
     def test_default_redirect(self):
         self.assertRaises(
             cherrypy.HTTPRedirect,
-            openerpweb.openerpweb.Root().default)
+            openerpweb.openerpweb.Root().find_handler)
     def test_serve_static_missing(self):
         self.assertRaises(
             cherrypy.NotFound,
-            openerpweb.openerpweb.Root().default,
+            openerpweb.openerpweb.Root().find_handler,
             'does-not-exist', 'static', 'bar')
 
     def test_serve_controller_missing(self):
         self.assertRaises(
             cherrypy.NotFound,
-            openerpweb.openerpweb.Root().default,
+            openerpweb.openerpweb.Root().find_handler,
             'controller', 'does', 'not', 'exist')
 
     def test_find_controller_method(self):
-        openerpweb.openerpweb.Root().default(
+        openerpweb.openerpweb.Root().find_handler(
             'some', 'controller', 'path', 'method')
         self.mock_method.assert_called_once_with()
     def test_find_controller_index(self):
-        openerpweb.openerpweb.Root().default(
+        openerpweb.openerpweb.Root().find_handler(
             'some', 'controller', 'path')
         self.mock_index.assert_called_once_with()
 
     def test_nested_paths(self):
-        openerpweb.openerpweb.Root().default(
+        openerpweb.openerpweb.Root().find_handler(
             'some', 'other', 'controller', '2')
         self.mock_index.assert_called_once_with()

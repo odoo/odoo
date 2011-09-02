@@ -13,8 +13,6 @@ import time
 from xml.etree import ElementTree
 from cStringIO import StringIO
 
-import cherrypy
-
 import base.common as openerpweb
 import base.common.ast
 import base.common.nonliterals
@@ -130,19 +128,17 @@ class WebClient(openerpweb.Controller):
 
     @openerpweb.httprequest
     def css(self, req, mods='base'):
-        req.httpresponse.headers['Content-Type'] = 'text/css'
         files = manifest_glob(mods.split(','), 'css')
         content,timestamp = concat_files(files)
         # TODO request set the Date of last modif and Etag
-        return content
+        return req.make_response(content, [('Content-Type', 'text/css')])
 
     @openerpweb.httprequest
     def js(self, req, mods='base'):
-        req.httpresponse.headers['Content-Type'] = 'application/javascript'
         files = manifest_glob(mods.split(','), 'js')
         content,timestamp = concat_files(files)
         # TODO request set the Date of last modif and Etag
-        return content
+        return req.make_response(content, [('Content-Type', 'application/javascript')])
 
     @openerpweb.httprequest
     def home(self, req, s_action=None, **kw):
@@ -208,7 +204,7 @@ class Database(openerpweb.Controller):
         dbs = proxy.list()
         h = req.httprequest.headers['Host'].split(':')[0]
         d = h.split('.')[0]
-        r = cherrypy.config['openerp.dbfilter'].replace('%h', h).replace('%d', d)
+        r = req.config.dbfilter.replace('%h', h).replace('%d', d)
         dbs = [i for i in dbs if re.match(r, i)]
         return {"db_list": dbs}
 
@@ -253,11 +249,11 @@ class Database(openerpweb.Controller):
         try:
             db_dump = base64.decodestring(
                 req.session.proxy("db").dump(backup_pwd, backup_db))
-            req.httpresponse.headers['Content-Type'] = "application/octet-stream; charset=binary"
-            req.httpresponse.headers['Content-Disposition'] = 'attachment; filename="' + backup_db + '.dump"'
-            req.httpresponse.cookie['fileToken'] = token
-            req.httpresponse.cookie['fileToken']['path'] = '/'
-            return db_dump
+            return req.make_response(db_dump,
+                [('Content-Type', 'application/octet-stream; charset=binary'),
+                 ('Content-Disposition', 'attachment; filename="' + backup_db + '.dump"')],
+                {'fileToken': token}
+            )
         except xmlrpclib.Fault, e:
             if e.faultCode and e.faultCode.split(':')[0] == 'AccessDenied':
                 return 'Backup Database|' + e.faultCode
@@ -985,18 +981,17 @@ class Binary(openerpweb.Controller):
         res = Model.read([int(id)], [field, fieldname], context)[0]
         filecontent = res.get(field, '')
         if not filecontent:
-            raise cherrypy.NotFound
+            return req.not_found()
         else:
-            req.httpresponse.headers['Content-Type'] = 'application/octet-stream'
             filename = '%s_%s' % (model.replace('.', '_'), id)
             if fieldname:
                 filename = res.get(fieldname, '') or filename
-            req.httpresponse.headers['Content-Disposition'] = 'attachment; filename=' +  filename
-            return base64.decodestring(filecontent)
+            return req.make_response(filecontent,
+                [('Content-Type', 'application/octet-stream'),
+                 ('Content-Disposition', 'attachment; filename=' +  filename)])
 
     @openerpweb.httprequest
     def upload(self, req, callback, ufile=None):
-        cherrypy.response.timeout = 500
         headers = {}
         for key, val in req.httprequest.headers.iteritems():
             headers[key.lower()] = val
@@ -1023,7 +1018,6 @@ class Binary(openerpweb.Controller):
 
     @openerpweb.httprequest
     def upload_attachment(self, req, callback, model, id, ufile=None):
-        cherrypy.response.timeout = 500
         context = req.session.eval_context(req.context)
         Model = req.session.model('ir.attachment')
         try:
