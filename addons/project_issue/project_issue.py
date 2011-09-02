@@ -174,7 +174,7 @@ class project_issue(crm.crm_case, osv.osv):
         'date_deadline': fields.date('Deadline'),
         'section_id': fields.many2one('crm.case.section', 'Sales Team', \
                         select=True, help='Sales team to which Case belongs to.\
-                             Define Responsible user and Email account for mail gateway.'),        
+                             Define Responsible user and Email account for mail gateway.'),
         'partner_id': fields.many2one('res.partner', 'Partner'),
         'partner_address_id': fields.many2one('res.partner.address', 'Partner Contact', \
                                  domain="[('partner_id','=',partner_id)]"),
@@ -228,6 +228,10 @@ class project_issue(crm.crm_case, osv.osv):
         if user.context_project_id:
             return user.context_project_id.id
         return False
+
+    def on_change_project(self, cr, uid, ids, project_id, context=None):
+        return {}
+
 
     _defaults = {
         'active': 1,
