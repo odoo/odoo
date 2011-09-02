@@ -346,7 +346,6 @@ openerp.web.Session = openerp.web.CallbackEnabled.extend( /** @lends openerp.web
         this.context = {};
         this.shortcuts = [];
         this.active_id = null;
-        this.session = this;
     },
     start: function() {
         this.session_restore();
