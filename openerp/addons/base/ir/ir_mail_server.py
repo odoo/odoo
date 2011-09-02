@@ -105,8 +105,8 @@ class ir_mail_server(osv.osv):
                                             string='Connection Security',
                                             help="Choose the connection encryption scheme:\n"
                                                  "- None: SMTP sessions are done in cleartext.\n"
-                                                 "- TLS (STARTTLS): TLS encryption will be requested at start of cleartext SMTP session (Recommended)\n"
-                                                 "- SSL/TLS: Uses Secure SMTP over SSL tunnel, through dedicated SMTP/SSL port (default: 465)"),
+                                                 "- TLS (STARTTLS): TLS encryption is requested at start of SMTP session (Recommended)\n"
+                                                 "- SSL/TLS: SMTP sessions are encrypted with SSL/TLS through a dedicated port (default: 465)"),
         'smtp_debug': fields.boolean('Debugging', help="If enabled, the full output of SMTP sessions will "
                                                        "be written to the server log at DEBUG level"
                                                        "(this is very verbose and may include confidential info!)"),
