@@ -1,14 +1,9 @@
 #!/usr/bin/python
-import datetime
 import urllib
-import dateutil.relativedelta
 import functools
 import logging
-import optparse
 import os
 import sys
-import tempfile
-import time
 import traceback
 import uuid
 import xmlrpclib
@@ -18,9 +13,8 @@ import cherrypy.lib.static
 import simplejson
 
 import nonliterals
-# TODO if from openerpserver use backendlocal
-# from backendlocal import *
-from backendrpc import *
+# import backendlocal as backend
+import backendrpc as backend
 
 #-----------------------------------------------------------
 # Globals
@@ -61,7 +55,7 @@ class CherryPyRequest(object):
         self.session_id = self.params.pop("session_id", None) or uuid.uuid4().hex
         host = cherrypy.config['openerp.server.host']
         port = cherrypy.config['openerp.server.port']
-        self.session = self.httpsession.setdefault(self.session_id, OpenERPSession(host, port))
+        self.session = self.httpsession.setdefault(self.session_id, backend.OpenERPSession(host, port))
         # Request attributes
         self.context = self.params.pop('context', None)
         self.debug = self.params.pop('debug',False) != False
@@ -123,7 +117,7 @@ class JsonRequest(CherryPyRequest):
                 print "--> %s.%s %s" % (controller.__class__.__name__, method.__name__, self.jsonrequest)
             response['id'] = self.jsonrequest.get('id')
             response["result"] = method(controller, self, **self.params)
-        except OpenERPUnboundException:
+        except backend.OpenERPUnboundException:
             error = {
                 'code': 100,
                 'message': "OpenERP Session Invalid",
