@@ -85,6 +85,15 @@
                     </field>
                 </group>
                 <newline/>
+                <group expand="0" string="Extended Filters..." groups="base.group_extended">
+                    <field name="shop_id" widget="selection"/>
+                    <field name="categ_id" widget="selection"/>
+                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                    <newline/>
+                    <field name="date"/>
+                    <field name="date_confirm"/>
+                </group>
+                <newline/>
                 <group expand="1" string="Group By..." colspan="10" col="12">
                     <filter string="Salesman" icon="terp-personal" name="User" context="{'group_by':'user_id'}"/>
                     <filter string="Partner" icon="terp-partner"  name="Customer" context="{'group_by':'partner_id'}"/>

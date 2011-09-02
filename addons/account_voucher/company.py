@@ -20,30 +20,26 @@
 ##############################################################################
 
 from osv import fields, osv
-import os
-import tools
-from tools.translate import _
 
-
-class res_company_logo(osv.osv_memory):
-    _name = 'res.company.logo'
-    _inherit = 'res.config'
+class res_company(osv.osv):
+    _inherit = "res.company"
     _columns = {
-        'logo' : fields.binary('Logo'),
+        'property_income_currency_exchange': fields.property(
+            'account.account',
+            type='many2one',
+            relation='account.account',
+            string="Income Currency Rate",
+            view_load=True,
+            domain="[('type', '=', 'other')]",),
+        'property_expense_currency_exchange': fields.property(
+            'account.account',
+            type='many2one',
+            relation='account.account',
+            string="Expense Currency Rate",
+            view_load=True,
+            domain="[('type', '=', 'other')]",),
     }
-    _defaults={
-               'logo':lambda self,cr,uid,c: self.pool.get('res.company').browse(cr, uid, uid,c).logo,
-     }
 
-    def execute(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
-        user_comp = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id
-        get_val = self.browse(cr, uid, ids)[0]
-        user_comp.write({'logo': get_val.logo}, context=context)
-        return {'type': 'ir.actions.act_window_close'}
-    
-res_company_logo()
+res_company()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

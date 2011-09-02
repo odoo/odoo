@@ -98,9 +98,17 @@
                 <separator orientation="vertical"/>
                 <field name="product_id" default_focus="1"/>
                 <field name="partner_id" context="{'contact_display':'partner'}"/>
-                <separator orientation="vertical"/>
-                <field name="location_id" />
-                <field name="location_dest_id" />
+                </group>
+                <newline/>
+                <group expand="0" string="Extended Filters..."  groups="base.group_extended">
+                    <field name="location_id" />
+                    <field name="location_dest_id" />
+                    <field name="categ_id"/>
+                    <field name="stock_journal"/>
+                    <separator orientation="vertical"/>
+                    <field name="company_id" groups="base.group_multi_company" widget = "selection"/>
+                    <newline/>
+                    <field name="date"/>
                 </group>
                 <newline/>
                 <group expand="1" string="Group By...">
@@ -194,12 +202,19 @@
                     <separator orientation="vertical"/>
                     <filter icon="terp-go-home" name="location_type_internal" string="Internal" domain="[('location_type','=','internal')]"/>
                     <separator orientation="vertical"/>
-                    <filter icon="terp-go-home" name="location_type_scrap" string="Scrap" domain="[('location_type','=','scrap')]"/>
-                    <separator orientation="vertical"/>
                     <field name="product_id" default_focus="1"/>
                     <field name="location_id" filter_domain="[('location_id', 'child_of', self)]"/>
                     <field name="company_id" groups="base.group_multi_company"/>
+                </group>
+                <newline/>
+                <group expand="0" string="Extended Filters..."  groups="base.group_extended">
+                    <field name="partner_id" context="{'contact_display':'partner'}"/>
+                    <field name="product_categ_id" />
                     <field name="prodlot_id"/>
+                    <field name="state"/>
+                    <field name="location_type"/>
+                    <field name="date"/>
+                    <filter icon="terp-go-home" name="location_type_scrap" string="Scrap" domain="[('location_type','=','scrap')]"/>
                 </group>
                 <newline/>
                 <group expand="1" string="Group By..." >

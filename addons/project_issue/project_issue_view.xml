@@ -90,7 +90,7 @@
                             <button name="case_close" string="Close" states="open,draft,pending" type="object" icon="terp-dialog-close"/>
                             <button name="case_pending" string="Pending" states="draft,open" type="object" icon="gtk-media-pause"/>
                             <button name="case_escalate" string="Escalate" states="open,draft,pending" type="object" icon="gtk-go-up"/>
-                            <button name="case_reset" string="Reset to Draft" states="done,cancel" type="object" icon="gtk-convert"/>
+                            <button name="case_reset" string="Reset to New" states="done,cancel" type="object" icon="gtk-convert"/>
                             </group>
                         </page>
                         <page string="Communication &amp; History" groups="base.group_extended">
@@ -153,6 +153,7 @@
                             <field name="write_date" />
                             <field name="date_closed"/>
                             <field name="date_open"/>
+                            <field name="date_action_last"/>
                             </group>
                             <group colspan="2" col="2">
                             <separator string="Statistics" colspan="2" col="2"/>
@@ -160,6 +161,8 @@
                             <field name="day_close"/>
                             <field name="working_hours_open" widget="float_time"/>
                             <field name="working_hours_close" widget="float_time"/>
+                            <field name="inactivity_days"/>
+                            <field name="days_since_creation"/>
                             </group>
                             <group colspan="2" col="2">
                             <separator string="References" colspan="2"/>
@@ -196,7 +199,7 @@
                     <button name="case_open" string="Open" states="draft,pending" type="object" icon="gtk-go-forward" help="To Do"/>
                     <button name="case_pending" string="Pending" states="draft,open" type="object" icon="gtk-media-pause"/>
                     <button name="case_escalate" string="Escalate" states="open,draft,pending" type="object" icon="gtk-go-up"/>
-                    <button name="case_reset" string="Reset to Draft" states="done,cancel" type="object" icon="gtk-convert"/>
+                    <button name="case_reset" string="Reset to New" states="done,cancel" type="object" icon="gtk-convert"/>
                     <field name="categ_id" invisible="1"/>
                 </tree>
             </field>
@@ -209,19 +212,17 @@
             <field name="arch" type="xml">
                 <search string="Issue Tracker Search">
                     <group>
-                        <filter string="Current" name="current" domain="[('state','in',('open','draft'))]" help="Draft and To Do" icon="terp-check"/>
+                        <filter string="Current" name="current" domain="[('state','in',('open','draft','pending'))]" help="New, pending and to do" icon="terp-check"/>
+                        <separator orientation="vertical"/>
+                        <filter string="New" icon="terp-document-new" domain="[('state','=','draft')]" help="New Issues"/>
                         <filter string="To Do" domain="[('state','=','open')]" help="To Do Issues" icon="terp-camera_test"/>
                         <filter string="Pending" domain="[('state','=','pending')]"  help="Pending Issues" icon="terp-gtk-media-pause"/>
                         <separator orientation="vertical"/>
-                        <filter icon="terp-go-today" string="Today" separator="1" domain="[('create_date','&gt;=',time.strftime('%%Y-%%m-%%d')),('create_date','&lt;', (datetime.date.today() + datetime.timedelta (days = 1)).strftime('%%Y-%%m-%%d'))]" help="Today's bugs" />
-                        <separator orientation="vertical"/>
-                        <field name="name"/>
-                        <field name="partner_id" groups="base.group_extended"/>
+                        <field name="name" string="Issue / Partner" filter_domain="['|', '|', ('partner_id','ilike',self), ('email_from','ilike',self), ('name','ilike',self)]"/>
                         <field name="assigned_to">
                             <filter domain="[('assigned_to','=',False)]"  help="Unassigned Issues" icon="terp-personal-" separator="1"/>
                         </field>
                         <field name="project_id"/>
-                        <field name="version_id" widget="selection"/>
                         <field name="id"/>
                     </group>
                     <newline/>
@@ -290,7 +291,7 @@
                     <button name="case_open" string="Open" states="draft,pending" type="object" icon="gtk-go-forward"/>
                     <button name="case_pending" string="Pending" states="draft,open" type="object" icon="gtk-media-pause"/>
                     <button name="case_escalate" string="Escalate" states="open,draft,pending" type="object" icon="gtk-go-up"/>
-                    <button name="case_reset" string="Reset to Draft" states="done,cancel" type="object" icon="gtk-convert"/>
+                    <button name="case_reset" string="Reset to New" states="done,cancel" type="object" icon="gtk-convert"/>
                 </tree>
             </field>
         </record>

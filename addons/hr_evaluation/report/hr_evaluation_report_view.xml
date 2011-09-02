@@ -66,6 +66,14 @@
 	                <field name="plan_id" widget="selection"/>
                 </group>
                 <newline/>
+				<group expand="0" string="Extended Filters..." groups="base.group_extended">
+                    <field name="rating"/>
+                    <newline/>
+                    <field name="deadline"/>
+                    <separator orientation="vertical"/>
+                    <field name="state"/>
+                </group>
+                <newline/>
                 <group expand="1" string="Group By...">
                     <filter string="Employee" name="employee" icon="terp-personal" context="{'group_by':'employee_id'}"/>
                     <separator orientation="vertical"/>

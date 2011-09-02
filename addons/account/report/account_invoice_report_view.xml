@@ -97,6 +97,18 @@
                    <field name="categ_id" filter_domain="[('categ_id', 'child_of', self)]"/>
                 </group>
                 <newline/>
+                <group expand="0" string="Extended Filters..." groups="base.group_extended">
+                    <field name="product_id"/>
+                    <separator orientation="vertical"/>
+                    <field name="journal_id" widget="selection"/>
+                    <field name="account_id"/>
+                    <field name="account_line_id"/>
+                    <separator orientation="vertical"/>
+                    <field name="date_due"/>
+                    <separator orientation="vertical" groups="base.group_multi_company"/>
+                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                </group>
+                <newline/>
                 <group expand="1" string="Group By...">
                     <filter string="Partner" name="partner" icon="terp-partner" context="{'group_by':'partner_id','residual_visible':True}"/>
                     <filter string="Salesman" name='user' icon="terp-personal" context="{'group_by':'user_id'}"/>

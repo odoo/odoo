@@ -109,6 +109,19 @@
                       <field name="partner_id" />
                     </group>
                     <newline/>
+                    <group expand="0" string="Extended Filters..." colspan="10" col="12" groups="base.group_extended">
+                        <field name="priority"/>
+                        <field name="type_id" widget="selection"/>
+                        <separator orientation="vertical"/>
+                        <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                        <newline/>
+                        <field name="date_start"/>
+                        <field name="date_end"/>
+                        <field name="date_deadline"/>
+                        <separator orientation="vertical"/>
+
+                    </group>
+                    <newline/>
                     <group expand="1" string="Group By..." colspan="10" col="12">
                         <filter string="Project" name="project" icon="terp-folder-violet" context="{'group_by':'project_id'}"/>
                         <filter string="Task" icon="terp-stock_align_left_24" context="{'group_by':'name'}" />

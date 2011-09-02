@@ -87,7 +87,16 @@
                         <field name="user_id" string="Salesman" select="1">
                             <filter icon="terp-personal" string="My Case(s)" help="My Case(s)" domain="[('user_id','=',uid)]" />
                         </field>
+                    </group>
+                    <newline/>
+                    <group expand="0" string="Extended Filters..."  groups="base.group_extended">
                         <field name="partner_id"/>
+                        <separator orientation="vertical"/>
+                        <field name="company_id" groups="base.group_multi_company"/>
+                        <newline/>
+                        <field name="creation_date"/>
+                        <field name="opening_date"/>
+                        <field name="date_closed"/>
                     </group>
                     <newline/>
                     <group expand="1" string="Group By...">

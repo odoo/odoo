@@ -73,9 +73,20 @@
                         <separator orientation="vertical"/>
                         <field name="account_id"/>
                       <field name="user_id" />
-                      <field name="to_invoice" widget="selection"/>                      
-                      <field name="product_id"/>                      
-                      <field name="department_id" widget="selection"/>
+                    </group>
+                    <newline/>
+                    <group expand="0" string="Extended Filters..." groups="base.group_extended">
+                        <field name="general_account_id"/>
+                        <field name="to_invoice" widget="selection"/>
+                        <separator orientation="vertical"/>
+                        <field name="product_id"/>
+                        <separator orientation="vertical"/>
+                        <field name="department_id" widget="selection"/>
+                        <separator orientation="vertical"/>
+                        <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                        <newline/>
+                        <field name="date_to"/>
+                        <field name="date_from"/>
                     </group>
                     <newline/>
                     <group expand="1" string="Group By...">

@@ -18,7 +18,7 @@
                     <field name="section_id" invisible="1"/>
                     <field name="user_id" invisible="1"/>
                     <field name="categ_id" invisible="1"/>
-                    <field name="canal_id" invisible="1"/>
+                    <field name="channel_id" invisible="1"/>
                     <field name="partner_id" invisible="1"/>
                     <field name="task_id" invisible="1"/>
                     <field name="assigned_to" invisible="1"/>
@@ -89,9 +89,24 @@
 
                            </field>
                               <field name="project_id"/>
-                          <field name="user_id"  select="1" widget="selection" filter_domain="['|',('user_id','ilike',self),('assigned_to','ilike',self)]"/>
-                          <field name="partner_id"/>
-                          <field name="version_id" widget="selection" />
+                          <field name="user_id"  select="1" widget="selection"/>
+                   </group>
+                   <newline/>
+                   <group expand="0" string="Extended Filters..." colspan="10" col="12" groups="base.group_extended">
+                       <field name="partner_id"/>
+                       <field name="assigned_to" widget="selection"/>
+                       <separator orientation="vertical"/>
+                       <field name="priority" />
+                       <separator orientation="vertical"/>
+                       <field name="version_id" widget="selection" />
+                       <field name="categ_id" widget="selection" domain="[('object_id.model', '=', 'project.issue')]"/>
+                       <field name="type_id" widget="selection"/>
+                       <separator orientation="vertical"/>
+                       <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                       <newline/>
+                       <field name="creation_date"/>
+                       <field name="opening_date"/>
+                       <field name="date_closed" string="Date Closed"/>
                    </group>
                    <newline/>
                    <group  expand="1" string="Group By..." colspan="4" col="8">
