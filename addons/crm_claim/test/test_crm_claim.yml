@@ -29,5 +29,10 @@
   I make this claim as Open
 -
   !python {model: crm.claim}: |
-    self.case_open(cr, uid, [ref('crm_claim_damagedproduct0')])  
+    self.case_open(cr, uid, [ref('crm_claim_damagedproduct0')])
+- |
+  I  am changing partner Assigned to the Claim
+-
+  !python {model: crm.claim}: |
+    self.onchange_partner_id(cr, uid, [ref('crm_claim_damagedproduct0')], ref('base.res_partner_10'))     
   
