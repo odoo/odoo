@@ -10,6 +10,17 @@
     partner_address_id: base.res_partner_address_1
     partner_id: base.res_partner_9
     section_id: crm.section_sales_department
+-
+  Create the message.
+-
+  !python {model: crm.helpdesk}: |
+    msg = {
+       'subject': 'test_email',
+       'body': 'Testing',
+       'from': 'Administrator <admin@openerp.com>',
+      }
+    context = None
+    self.message_new(cr, uid,msg,context)
 
 - |
   I check that the Helpdesk request  is in 'Draft' state.
@@ -21,6 +32,19 @@
 -
   !python {model: crm.helpdesk}: |
     self.case_open(cr, uid, [ref('crm_helpdesk_somefunctionalquestion0')])  
+-
+  Update the created message.
+-
+  !python {model: crm.helpdesk}: |
+    vals = {}
+    msg = {
+       'subject': 'test_email',
+       'body': 'Testing',
+       'from': 'Administrator <admin@openerp.com>',
+      }
+    context = None
+    default_act = 'pending'
+    self.message_update(cr, uid, [ref('crm_helpdesk_somefunctionalquestion0')], vals, msg, default_act, context)    
 - |
   After a proper communication for the request via email I make sure that the request is fulfilled and
   I close this HelpDesk Request by clicking on "Close" button.
