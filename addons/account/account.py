@@ -3169,11 +3169,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                 })
         
         # Create Jourals
-        #TODO: pass template_id
-        self.generate_journals(cr, uid, template, acc_template_ref, company_id, context)
-
-        # Create Bank Journals (Can be done in the generate_journals function)
-        #TODO: Create a new function
+        self.generate_journals(cr, uid, template_id, acc_template_ref, company_id, bank_jrnl_acc_list, code_digits, context)
 
         # generate properties function
         self.generate_properties(cr, uid, template_id, acc_template_ref, company_id, context=context)
