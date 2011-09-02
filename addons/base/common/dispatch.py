@@ -10,6 +10,7 @@ import uuid
 import xmlrpclib
 
 import simplejson
+import werkzeug.datastructures
 import werkzeug.exceptions
 import werkzeug.utils
 import werkzeug.wrappers
@@ -230,6 +231,7 @@ class Root(object):
 
     def dispatch(self, environ, start_response):
         request = werkzeug.wrappers.Request(environ)
+        request.parameter_storage_class = werkzeug.datastructures.ImmutableDict
 
         if request.path == '/':
             return werkzeug.utils.redirect(
