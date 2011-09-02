@@ -271,7 +271,7 @@ class ir_values(osv.osv):
         query = query % ('AND v.key2 = %s' if condition else '')
         params = ('default', model, uid, uid)
         if condition:
-            params += (condition,)
+            params += (condition[:200],)
         cr.execute(query, params)
 
         # keep only the highest priority default for each field
