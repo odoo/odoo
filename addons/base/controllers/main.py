@@ -13,7 +13,7 @@ import time
 from xml.etree import ElementTree
 from cStringIO import StringIO
 
-import base.common as openerpweb
+import base.common.dispatch as openerpweb
 import base.common.ast
 import base.common.nonliterals
 openerpweb.ast = base.common.ast
