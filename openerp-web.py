@@ -29,6 +29,7 @@ import base
 if __name__ == "__main__":
     (options, args) = optparser.parse_args(sys.argv[1:])
     options.serve_static = True
+    options.addons_path = path_addons
 
     os.environ["TZ"] = "UTC"
     app = base.common.Root(options)

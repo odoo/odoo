@@ -22,15 +22,6 @@ import http
 import backendrpc as backend
 
 #-----------------------------------------------------------
-# Globals
-#-----------------------------------------------------------
-
-import __main__
-
-path_root = __main__.path_root
-path_addons = __main__.path_addons
-
-#-----------------------------------------------------------
 # Globals (wont move into a pool)
 #-----------------------------------------------------------
 
@@ -270,11 +261,12 @@ class Root(object):
 
     def _load_addons(self):
         statics = {}
-        if path_addons not in sys.path:
-            sys.path.insert(0, path_addons)
-        for module in os.listdir(path_addons):
+        addons_path = self.config.addons_path
+        if addons_path not in sys.path:
+            sys.path.insert(0, addons_path)
+        for module in os.listdir(addons_path):
             if module not in addons_module:
-                manifest_path = os.path.join(path_addons, module, '__openerp__.py')
+                manifest_path = os.path.join(addons_path, module, '__openerp__.py')
                 if os.path.isfile(manifest_path):
                     manifest = ast.literal_eval(open(manifest_path).read())
                     print "Loading", module
@@ -283,7 +275,7 @@ class Root(object):
                     addons_manifest[module] = manifest
 
                     statics['/%s/static' % module] = \
-                        os.path.join(path_addons, module, 'static')
+                        os.path.join(addons_path, module, 'static')
         for k, v in controllers_class.items():
             if k not in controllers_object:
                 o = v()

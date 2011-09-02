@@ -66,16 +66,16 @@ class Xml2Json:
 # OpenERP Web base Controllers
 #----------------------------------------------------------
 
-def manifest_glob(addons, key):
+def manifest_glob(addons_path, addons, key):
     files = []
     for addon in addons:
         globlist = openerpweb.addons_manifest.get(addon, {}).get(key, [])
         for pattern in globlist:
-            for path in glob.glob(os.path.join(openerpweb.path_addons, addon, pattern)):
-                files.append(path[len(openerpweb.path_addons):])
+            for path in glob.glob(os.path.join(addons_path, addon, pattern)):
+                files.append(path[len(addons_path):])
     return files
 
-def concat_files(file_list):
+def concat_files(addons_path, file_list):
     """ Concatenate file content
     return (concat,timestamp)
     concat: concatenation of file content
@@ -84,13 +84,13 @@ def concat_files(file_list):
     files_content = []
     files_timestamp = 0
     for i in file_list:
-        fname = os.path.join(openerpweb.path_addons, i[1:])
+        fname = os.path.join(addons_path, i[1:])
         ftime = os.path.getmtime(fname)
         if ftime > files_timestamp:
             files_timestamp = ftime
         files_content.append(open(fname).read())
     files_concat = "".join(files_content)
-    return (files_concat,files_timestamp)
+    return files_concat,files_timestamp
 
 home_template = textwrap.dedent("""<!DOCTYPE html>
 <html style="height: 100%%">
@@ -120,23 +120,23 @@ class WebClient(openerpweb.Controller):
 
     @openerpweb.jsonrequest
     def csslist(self, req, mods='base'):
-        return manifest_glob(mods.split(','), 'css')
+        return manifest_glob(req.config.addons_path, mods.split(','), 'css')
 
     @openerpweb.jsonrequest
     def jslist(self, req, mods='base'):
-        return manifest_glob(mods.split(','), 'js')
+        return manifest_glob(req.config.addons_path, mods.split(','), 'js')
 
     @openerpweb.httprequest
     def css(self, req, mods='base'):
-        files = manifest_glob(mods.split(','), 'css')
-        content,timestamp = concat_files(files)
+        files = manifest_glob(req.config.addons_path, mods.split(','), 'css')
+        content,timestamp = concat_files(req.config.addons_path, files)
         # TODO request set the Date of last modif and Etag
         return req.make_response(content, [('Content-Type', 'text/css')])
 
     @openerpweb.httprequest
     def js(self, req, mods='base'):
-        files = manifest_glob(mods.split(','), 'js')
-        content,timestamp = concat_files(files)
+        files = manifest_glob(req.config.addons_path, mods.split(','), 'js')
+        content,timestamp = concat_files(req.config.addons_path, files)
         # TODO request set the Date of last modif and Etag
         return req.make_response(content, [('Content-Type', 'application/javascript')])
 
@@ -145,13 +145,13 @@ class WebClient(openerpweb.Controller):
         # script tags
         jslist = ['/base/webclient/js']
         if req.debug:
-            jslist = manifest_glob(['base'], 'js')
+            jslist = manifest_glob(req.config.addons_path, ['base'], 'js')
         js = "\n        ".join(['<script type="text/javascript" src="%s"></script>'%i for i in jslist])
 
         # css tags
         csslist = ['/base/webclient/css']
         if req.debug:
-            csslist = manifest_glob(['base'], 'css')
+            csslist = manifest_glob(req.config.addons_path, ['base'], 'css')
         css = "\n        ".join(['<link rel="stylesheet" href="%s">'%i for i in csslist])
         r = home_template % {
             'javascript': js,
@@ -181,7 +181,7 @@ class WebClient(openerpweb.Controller):
             transl = {"messages":[]}
             transs[addon_name] = transl
             for l in langs:
-                f_name = os.path.join(openerpweb.path_addons, addon_name, "po", l + ".po")
+                f_name = os.path.join(req.config.addons_path, addon_name, "po", l + ".po")
                 if not os.path.exists(f_name):
                     continue
                 try:
@@ -970,9 +970,9 @@ class Binary(openerpweb.Controller):
                 res = Model.read([int(id)], [field], context)[0].get(field, '')
             return base64.decodestring(res)
         except: # TODO: what's the exception here?
-            return self.placeholder()
-    def placeholder(self):
-        return open(os.path.join(openerpweb.path_addons, 'base', 'static', 'src', 'img', 'placeholder.png'), 'rb').read()
+            return self.placeholder(req)
+    def placeholder(self, req):
+        return open(os.path.join(req.addons_path, 'base', 'static', 'src', 'img', 'placeholder.png'), 'rb').read()
 
     @openerpweb.httprequest
     def saveas(self, req, model, id, field, fieldname, **kw):
