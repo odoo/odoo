@@ -167,7 +167,7 @@ class HttpRequest(WebRequest):
     """ Regular GET/POST request
     """
     def dispatch(self, controller, method):
-        self.init(self.httprequest.args)
+        self.init(dict(self.httprequest.args, **self.httprequest.form))
         akw = {}
         for key, value in self.httprequest.args.iteritems():
             if isinstance(value, basestring) and len(value) < 1024:
