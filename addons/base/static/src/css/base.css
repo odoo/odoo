@@ -832,15 +832,17 @@ label.error {
     float: right;
 }
 
-.openerp label.oe_form_label_help {
+.openerp label.oe_label_help, .openerp label.oe_label {
+    display: block;
+}
+.openerp label.oe_label_help {
     cursor: help;
 }
-.openerp label.oe_form_label, .openerp label.oe_form_label_help {
-    display: block;
+.openerp .oe_form_field label.oe_label, .openerp .oe_form_field label.oe_label_help {
     text-align: right;
     margin: 3px 0 0 10px;
 }
-.openerp label.oe_form_label_help span {
+.openerp label.oe_label_help span {
     font-size: 80%;
     color: darkgreen;
     vertical-align:top;
