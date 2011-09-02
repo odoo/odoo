@@ -1035,10 +1035,11 @@
     </div>
 </t>
 <t t-name="SearchView.field.selection">
-    <label style="display: block" t-att-title="attrs.help"
+    <label t-att-title="attrs.help"
+           t-att-class="'oe_label' + (attrs.help ? '_help' : '')"
            t-att-for="element_id">
         <t t-esc="attrs.string || attrs.name"/>
-        <span t-if="attrs.help">(?)</span>
+        <span t-if="attrs.help">?</span>
     </label>
     <div style="white-space: nowrap;">
         <select t-att-name="attrs.name" t-att-id="element_id"
