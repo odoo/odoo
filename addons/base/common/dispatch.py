@@ -211,7 +211,27 @@ class Controller(object):
     __metaclass__ = ControllerType
 
 class Root(object):
+    """
+    Root WSGI application for the OpenERP Web Client.
+    """
     def __init__(self, options):
+        """
+        :param options: mandatory initialization options object: must provide
+                        the following attributes:
+
+                        ``server_host`` (``str``)
+                          hostname of the OpenERP server to dispatch RPC to
+                        ``server_port`` (``int``)
+                          RPC port of the OpenERP server
+                        ``serve_static`` (``bool | None``)
+                          whether this application should serve the various
+                          addons's static files
+                        ``storage_path`` (``str``)
+                          filesystem path where HTTP session data will be stored
+                        ``dbfilter`` (``str``)
+                          only used in case the list of databases is requested
+                          by the server, will be filtered by this pattern
+        """
         self.root = werkzeug.urls.Href('/base/webclient/home')
         self.config = options
 
@@ -265,6 +285,10 @@ class Root(object):
         return response(environ, start_response)
 
     def _load_addons(self):
+        """
+        Loads all addons at the specified addons path, returns a mapping of
+        static URLs to the corresponding directories
+        """
         statics = {}
         addons_path = self.config.addons_path
         if addons_path not in sys.path:
