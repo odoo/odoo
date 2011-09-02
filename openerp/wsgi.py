@@ -40,8 +40,18 @@ import openerp.tools.config as config
 def xmlrpc_return(start_response, service, method, params):
     """ Helper to call a service's method with some params, using a
     wsgi-supplied ``start_response`` callback."""
-    result = openerp.netsvc.ExportService.getService(service).dispatch(method, None, params)
-    response = xmlrpclib.dumps((result,), methodresponse=1, allow_none=False, encoding=None)
+    # This mimics SimpleXMLRPCDispatcher._marshaled_dispatch() for exception
+    # handling.
+    try:
+        result = openerp.netsvc.dispatch_rpc(service, method, params, None) # TODO auth
+        response = xmlrpclib.dumps((result,), methodresponse=1, allow_none=False, encoding=None)
+    except openerp.netsvc.OpenERPDispatcherException, e:
+        fault = xmlrpclib.Fault(openerp.tools.exception_to_unicode(e.exception), e.traceback)
+        response = xmlrpclib.dumps(fault, allow_none=False, encoding=None)
+    except:
+        exc_type, exc_value, exc_tb = sys.exc_info()
+        fault = xmlrpclib.Fault(1, "%s:%s" % (exc_type, exc_value))
+        response = xmlrpclib.dumps(fault, allow_none=None, encoding=None)
     start_response("200 OK", [('Content-Type','text/xml'), ('Content-Length', str(len(response)))])
     return [response]
 
@@ -51,8 +61,6 @@ def wsgi_xmlrpc(environ, start_response):
         length = int(environ['CONTENT_LENGTH'])
         data = environ['wsgi.input'].read(length)
 
-        # TODO see SimpleXMLRPCDispatcher._marshaled_dispatch() for some necessary handling.
-        # TODO see OpenERPDispatcher for some othe handling (in particular, auth things).
         params, method = xmlrpclib.loads(data)
 
         path = environ['PATH_INFO'][len('/openerp/xmlrpc'):]
@@ -87,8 +95,6 @@ def legacy_wsgi_xmlrpc(environ, start_response):
         data = environ['wsgi.input'].read(length)
         path = environ['PATH_INFO'][len('/xmlrpc/'):] # expected to be one of db, object, ...
 
-        # TODO see SimpleXMLRPCDispatcher._marshaled_dispatch() for some necessary handling.
-        # TODO see OpenERPDispatcher for some othe handling (in particular, auth things).
         params, method = xmlrpclib.loads(data)
         return xmlrpc_return(start_response, path, method, params)
 

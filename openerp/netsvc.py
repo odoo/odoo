@@ -397,7 +397,7 @@ def dispatch_rpc(service_name, method, params, auth):
     """ Handle a RPC call.
 
     This is pure Python code, the actual marshalling (from/to XML-RPC or
-    NET-RPC) is done in a upper laye.
+    NET-RPC) is done in a upper layer.
     """
     def _log(title, msg, channel=logging.DEBUG_RPC, depth=None, fn=""):
         log(title, msg, channel=channel, depth=depth, fn=fn)
