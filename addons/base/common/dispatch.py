@@ -253,12 +253,12 @@ class Root(object):
                 result = handler(
                     request, self.config)
 
-                if isinstance(result, werkzeug.wrappers.Response):
-                    response = result
-                else:
+                if isinstance(result, basestring):
                     response = werkzeug.wrappers.Response(
                         result, headers=[('Content-Type', 'text/html; charset=utf-8'),
                                          ('Content-Length', len(result))])
+                else:
+                    response = result
 
                 response.set_cookie(self.session_cookie, session.sid)
 
