@@ -6,6 +6,7 @@ openerp.base_diagram = function (openerp) {
 QWeb.add_template('/base_diagram/static/src/xml/base_diagram.xml');
 openerp.base.views.add('diagram', 'openerp.base_diagram.DiagramView');
 openerp.base_diagram.DiagramView = openerp.base.View.extend({
+	searchable: false,
     init: function(parent, element_id, dataset, view_id, options) {
         this._super(parent, element_id);
         this.set_default_options(options);
@@ -13,7 +14,6 @@ openerp.base_diagram.DiagramView = openerp.base.View.extend({
         this.dataset = dataset;
         this.model = this.dataset.model;
         this.view_id = view_id;
-        this.name = "";
         this.domain = this.dataset._domain || [];
         this.context = {};
         this.ids = this.dataset.ids;
@@ -21,7 +21,7 @@ openerp.base_diagram.DiagramView = openerp.base.View.extend({
     start: function() {
         return this.rpc("/base_diagram/diagram/load", {"model": this.model, "view_id": this.view_id}, this.on_loaded);
     },
-
+    
     toTitleCase: function(str) {
         return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
     },
@@ -32,69 +32,15 @@ openerp.base_diagram.DiagramView = openerp.base.View.extend({
         if(this.ids && this.ids.length) {
             this.id = this.ids[self.dataset.index || 0];
         }
-        this.fields_view = result.fields_view;
-
-        this.view_id = this.fields_view.view_id;
-        this.name = this.fields_view.name;
-
-        this.fields = this.fields_view.fields;
-        var children = this.fields_view.arch.children;
-
-        /*
-         * For Nodes (Fields)
-         */
-        this.node = '';
-        this.bgcolor = '';
-        this.shape = '';
-        this.visible_fields_nodes = [];
-        this.invisible_fields_nodes = [];
-        this.fields_nodes_string = [];
-
-        /*
-         * For Arrows (Connector)
-         */
-        this.connector = '';
-        this.src_node = '';
-        this.des_node = '';
-        this.connector_fields = [];
-        this.fields_connector_string = [];
-
-        for(var ch in children) {
-            if(children[ch]['tag'] == 'node') {
-                this.node = children[ch]['attrs']['object'];
-                this.bgcolor = children[ch]['attrs']['bgcolor'] || '';
-                this.shape = children[ch]['attrs']['shape'] || '';
-                for(var node_chld in children[ch]['children']) {
-                    if (children[ch]['children'][node_chld]['tag'] = 'field') {
-                        var ch_name = children[ch]['children'][node_chld]['attrs']['name'];
-
-                        if (children[ch]['children'][node_chld]['attrs']['invisible']) {
-                            if (children[ch]['children'][node_chld]['attrs']['invisible'] == 1 && children[ch]['children'][node_chld]['attrs']['invisible'] == '1') {
-                                this.invisible_fields_nodes.push(ch_name)
-                            }
-                        }
-                        else {
-                            this.visible_fields_nodes.push(ch_name);
-                            var ch_node_string = this.fields[ch_name]['string'] || this.toTitleCase(ch_name);
-                            this.fields_nodes_string.push(ch_node_string)
-                        }
-                    }
-                }
-            } else if(children[ch]['tag'] == 'arrow') {
-                this.connector = children[ch]['attrs']['object'];
-                this.src_node = children[ch]['attrs']['source'];
-                this.des_node = children[ch]['attrs']['destination'];
-                for (var arrow_chld in children[ch]['children']) {
-                    if (children[ch]['children'][arrow_chld]['tag'] = 'field') {
-                        var arr_ch_name = children[ch]['children'][arrow_chld]['attrs']['name'];
-                        var ch_node_string = this.fields[arr_ch_name]['string'] || this.toTitleCase(arr_ch_name);
-                        this.fields_connector_string.push(ch_node_string);
-                        this.connector_fields.push(arr_ch_name);
-                    }
-                }
-            }
-        }
-
+        
+        this.fields_view = result.fields_view,
+        this.view_id = this.fields_view.view_id,
+        this.fields = this.fields_view.fields,
+        this.nodes = this.fields_view.arch.children[0],
+    	this.connectors = this.fields_view.arch.children[1],
+        this.node = this.nodes.attrs.object,
+        this.connector = this.connectors.attrs.object;
+        
         this.$element.html(QWeb.render("DiagramView", this));
 
         this.$element.find('div.oe_diagram_pager button[data-pager-action]').click(function() {
@@ -105,37 +51,53 @@ openerp.base_diagram.DiagramView = openerp.base.View.extend({
         this.do_update_pager();
 
         // New Node,Edge
-        this.$element.find('#new_node.oe_diagram_button_new').click(function(){self.add_edit_node(null, self.node)});
-        this.$element.find('#new_edge.oe_diagram_button_new').click(function(){self.add_edit_node(null, self.connector)});
+        this.$element.find('#new_node.oe_diagram_button_new').click(function(){self.add_edit_node(null, self.node);});
+        this.$element.find('#new_edge.oe_diagram_button_new').click(function(){self.add_edit_node(null, self.connector);});
 
         this.$element.find('#toggle_grid').click(function() {
-            self.$element.find('.diagram').toggleClass('show_grid')
+            self.$element.find('.diagram').toggleClass('show_grid');
         });
-
+        
         if(this.id) {
             self.get_diagram_info();
         }
+        
     },
 
     get_diagram_info: function() {
         var self = this;
+        var params = {
+        		'id': this.id,
+        		'model': this.model,
+        		'node': this.node,
+        		'connector': this.connector,
+        		'bgcolor': this.nodes.attrs.bgcolor,
+        		'shape': this.nodes.attrs.shape,
+        		'src_node': this.connectors.attrs.source,
+        		'des_node': this.connectors.attrs.destination,
+        		'visible_nodes': [],
+        		'invisible_nodes': [],
+        		'node_fields': [],
+        		'connectors': [],
+        		'connectors_fields': []
+        		};
+        
+        _.each(this.nodes.children, function(child) {
+        	if(child.attrs.invisible)
+        		params['invisible_nodes'].push(child.attrs.name);
+    		else {
+    			params['visible_nodes'].push(child.attrs.name);
+    			params['node_fields'].push(self.fields[child.attrs.name]['string']|| this.toTitleCase(child.attrs.name));
+    		}
+        });
+        
+        _.each(this.connectors.children, function(conn) {
+        	params['connectors_fields'].push(self.fields[conn.attrs.name]['string']|| this.toTitleCase(conn.attrs.name));
+        	params['connectors'].push(conn.attrs.name);
+        });
+        
         this.rpc(
-            '/base_diagram/diagram/get_diagram_info',
-            {
-                'id': this.id,
-                'model': this.model,
-                'bgcolor': this.bgcolor,
-                'shape': this.shape,
-                'node': this.node,
-                'connector': this.connector,
-                'src_node': this.src_node,
-                'des_node': this.des_node,
-                'visible_node_fields': this.visible_fields_nodes,
-                'invisible_node_fields': this.invisible_fields_nodes,
-                'node_fields_string': this.fields_nodes_string,
-                'connector_fields': this.connector_fields,
-                'connector_fields_string': this.fields_connector_string
-            },
+            '/base_diagram/diagram/get_diagram_info',params,
             function(result) {
                 self.draw_diagram(result);
             }
@@ -151,11 +113,10 @@ openerp.base_diagram.DiagramView = openerp.base.View.extend({
     },
 
     draw_diagram: function(result) {
-        var dia = new Graph();
+        var diagram = new Graph();
 
         this.active_model = result['id_model'];
-        this.in_transition_field = result['in_transition_field'];
-        this.out_transition_field = result['out_transition_field'];
+        
         var res_nodes = result['nodes'];
         var res_connectors = result['conn'];
 
@@ -164,89 +125,60 @@ openerp.base_diagram.DiagramView = openerp.base.View.extend({
         var renderer = function(r, n) {
             var node;
             var set;
-
-            // ellipse
-            if (n.node.shape == 'ellipse') {
-                node = r.ellipse(n.node.x - 30, n.node.y - 13, 40, 20).attr({
-                        "fill": n.node.color,
-                        r: "12px",
-                        "stroke-width": n.distance == 0 ? "3px" : "1px"
-                    });
-
-                set = r.set().push(node).push(r.text(n.node.x - 30, n.node.y - 10, (n.label || n.id)));
-            }
-
-            // rectangle
-            else if(n.node.shape == 'rectangle') {
-                node = r.rect(n.node.x-30, n.node.y-13, 60, 44).attr({
-                 	"fill": n.node.color,
-                     r : "12px",
-                    "stroke-width" : n.distance == 0 ? "3px" : "1px"
-                    });
-            	set = r.set().push(node).push(r.text(n.node.x , n.node.y+10 , (n.label || n.id)));
-            }
-
-            // circle
-            else {
-                node = r.circle(n.node.x, n.node.y, 150).attr({
-                            "fill": n.node.color,
-                            r : "30px",
-                            "stroke-width" : n.distance == 0 ? "3px" : "1px"
-                    });
-               	set = r.set().push(node).push(r.text(n.node.x , n.node.y , (n.label || n.id)));
-            }
-
-            //Shape Node Event
-            jQuery(node.node).attr({
-                'id': n.node.id,
-                'name': n.id,
-                'kind': n.node.options['Kind'] || n.node.options['kind']
-            }).dblclick(function() {
-                var $this = jQuery(this);
-                self.add_edit_node($this.attr('id'), self.node);
-            });
-
-            //Text Node Event
-            jQuery(node.next.node).attr({
-                'id': n.node.id,
-                'name': n.id,
-                'kind': n.node.options['Kind'] || n.node.options['kind']
-            }).dblclick(function() {
-                var $this = jQuery(this);
-                self.add_edit_node($this.attr('id'), self.node);
-            });
-            return set;
+            var shape = n.node.shape;
+            if(shape == 'rectangle')
+            	shape = 'rect';
+            node = r[shape](n.node.x, n.node.y).attr({
+            		"fill": n.node.color,
+            	}).dblclick(function() {
+            		self.add_edit_node(n.node.id, self.node);
+        		});
+            set = r.set()
+            		.push(node)
+            		.push(
+        				r.text(n.node.x, n.node.y, (n.label || n.id))
+        				.attr({"cursor":"pointer"})
+        				.dblclick(function() {
+        					self.add_edit_node(n.node.id, self.node);
+        				})
+    				);
+            node.attr({cursor: "pointer"});
+            
+            if(shape == "ellipse")
+            	node.attr({rx: "40", ry: "20"});
+        	else if(shape == 'rect') {
+        		node.attr({width: "60", height: "44"});
+            	node.next.attr({"text-anchor": "middle", x: n.node.x + 20, y: n.node.y + 20});
+        	}
+        	return set;
         };
-
-        for(var node in res_nodes) {
-            var res_node = res_nodes[node];
-            dia.addNode(res_node['name'],{node: res_node,render: renderer});
-        }
-
-        // Set Ides for Path(Edges)
-        var edge_ids = [];
-
-        $.each(res_connectors, function(index, connector) {
-            edge_ids.push(index);
-            dia.addEdge(connector['source'], connector['destination'], {directed : true, label: connector['signal']});
+        
+        _.each(res_nodes, function(res_node) {
+        	diagram.addNode(res_node['name'],{node: res_node,render: renderer});
         });
 
-        var layouter = new Graph.Layout.Spring(dia);
-        layouter.layout();
+        // Id for Path(Edges)
+        var edge_ids = [];
+
+        _.each(res_connectors, function(connector, index) {
+            edge_ids.push(index);
+            diagram.addEdge(connector['source'], connector['destination'], {directed : true, label: connector['signal']});
+        });
+        
+        
         if ($('div#dia-canvas').children().length > 0) {
             $('div#dia-canvas').children().remove();
         }
-        var renderer = new Graph.Renderer.Raphael('dia-canvas', dia, $('div#dia-canvas').width(), $('div#dia-canvas').height());
-        renderer.draw();
-
-        //Path(Edges)
-        $.each(dia.edges, function(index, edge) {
-            if(edge.connection)
-                edge.connection.fg.node.id = edge_ids[index];
-        });
-
-        jQuery('path',renderer.r.canvas).dblclick(function() {
-            self.add_edit_node(this.id, self.connector)
+        
+        var layouter = new Graph.Layout.Ordered(diagram, topological_sort(diagram));
+        var render_diagram = new Graph.Renderer.Raphael('dia-canvas', diagram, $('div#dia-canvas').width(), $('div#dia-canvas').height());
+        
+        _.each(diagram.edges, function(edge, index) {
+        	if(edge.connection) {
+        		edge.connection.fg.attr({cursor: "pointer"}).dblclick(function() {
+        			self.add_edit_node(edge_ids[index], self.connector);
+        		});
+        	}
         });
     },
 
@@ -266,12 +198,10 @@ openerp.base_diagram.DiagramView = openerp.base.View.extend({
                     $(this).dialog('destroy');
                 },
                 Save : function() {
-                    var form_dataset = action_manager.inner_viewmanager.dataset;
                     var form_view = action_manager.inner_viewmanager.views.form.controller;
 
                     form_view.do_save(function() {
-                        self.dataset.index = jQuery.inArray(parseInt(self.id,10), self.dataset.ids);
-                        self.dataset.read_index(_.keys(self.fields_view.fields), self.on_diagram_loaded)
+                        self.dataset.read_index(_.keys(self.fields_view.fields), self.on_diagram_loaded);
                     });
                     $(this).dialog('destroy');
                 }
@@ -321,22 +251,6 @@ openerp.base_diagram.DiagramView = openerp.base.View.extend({
                 });
             });
         }
-    },
-
-    do_search: function(domains, contexts, groupbys) {
-        var self = this;
-        this.rpc('/base/session/eval_domain_and_context', {
-            domains: domains,
-            contexts: contexts,
-            group_by_seq: groupbys
-        }, function (results) {
-            // TODO: handle non-empty results.group_by with read_group
-            self.dataset.context = self.context = results.context;
-            self.dataset.domain = self.domain = results.domain;
-            self.dataset.read_slice(self.fields, 0, self.limit,function(events){
-                self.schedule_events(events)
-            });
-        });
     },
 
     on_pager_action: function(action) {

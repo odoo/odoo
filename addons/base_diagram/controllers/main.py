@@ -8,22 +8,10 @@ class DiagramView(View):
     def load(self, req, model, view_id):
         fields_view = self.fields_view_get(req, model, view_id, 'diagram')
         return {'fields_view': fields_view}
-    
-    @openerpweb.jsonrequest
-    def get_activity(self, req, id, name, kind, active_model, model):
-        
-        activity_id = req.session.model(model).search([('name','=',name),('kind','=',kind),('wkf_id','=',active_model)], 0, 0, 0, req.session.context)
-        ids = req.session.model(model).search([], 0, 0, 0, req.session.context)
-        return {'activity_id':activity_id, 'ids': ids}
 
     @openerpweb.jsonrequest
-    def get_diagram_info(self, req, **kw):
-        id = kw['id']
-        model = kw['model']
-        node = kw['node']
-        connector = kw['connector']
-        src_node = kw['src_node']
-        des_node = kw['des_node']
+    def get_diagram_info(self, req, id, model, node, connector, src_node, des_node, **kw):
+        
         visible_node_fields = kw.get('visible_node_fields',[])
         invisible_node_fields = kw.get('invisible_node_fields',[])
         node_fields_string = kw.get('node_fields_string',[])
@@ -127,4 +115,4 @@ class DiagramView(View):
         out_transition_field = fields.read(out_transition_field_id[0], ['name'], req.session.context)['name']
         
         id_model = req.session.model(model).read([id],['name'], req.session.context)[0]['name']
-        return dict(nodes=nodes, conn=connectors, in_transition_field=in_transition_field, out_transition_field=out_transition_field, id_model = id_model)
+        return dict(nodes=nodes, conn=connectors, id_model = id_model)
