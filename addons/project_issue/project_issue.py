@@ -56,7 +56,7 @@ class project_issue(crm.crm_case, osv.osv):
         """
 
         res = super(project_issue, self).case_open(cr, uid, ids, *args)
-        self.write(cr, uid, ids, {'date_open': time.strftime('%Y-%m-%d %H:%M:%S'), 'assigned_to' : uid})
+        self.write(cr, uid, ids, {'date_open': time.strftime('%Y-%m-%d %H:%M:%S'), 'user_id' : uid})
         for (id, name) in self.name_get(cr, uid, ids):
             message = _("Issue '%s' has been opened.") % name
             self.log(cr, uid, id, message)
@@ -189,7 +189,6 @@ class project_issue(crm.crm_case, osv.osv):
         'section_id': fields.many2one('crm.case.section', 'Sales Team', \
                         select=True, help='Sales team to which Case belongs to.\
                              Define Responsible user and Email account for mail gateway.'),
-        'user_id': fields.related('project_id', 'user_id', type='many2one', relation='res.users', store=True, select=1, string='Responsible'),
         'partner_id': fields.many2one('res.partner', 'Partner', select=1),
         'partner_address_id': fields.many2one('res.partner.address', 'Partner Contact', \
                                  domain="[('partner_id','=',partner_id)]"),
@@ -218,7 +217,7 @@ class project_issue(crm.crm_case, osv.osv):
                                 multi='compute_day', type="float", store=True),
         'day_close': fields.function(_compute_day, string='Days to Close', \
                                 multi='compute_day', type="float", store=True),
-        'assigned_to': fields.many2one('res.users', 'Assigned to', required=False, select=1),
+        'user_id': fields.many2one('res.users', 'Assigned to', required=False, select=1),
         'working_hours_open': fields.function(_compute_day, string='Working Hours to Open the Issue', \
                                 multi='compute_day', type="float", store=True),
         'working_hours_close': fields.function(_compute_day, string='Working Hours to Close the Issue', \
@@ -243,19 +242,11 @@ class project_issue(crm.crm_case, osv.osv):
         return False
 
     def on_change_project(self, cr, uid, ids, project_id, context=None):
-        result = {}
-
-        if project_id:
-            project = self.pool.get('project.project').browse(cr, uid, project_id, context=context)
-            if project.user_id:
-                result['value'] = {'user_id' : project.user_id.id}
-
-        return result
+        return {}
 
 
     _defaults = {
         'active': 1,
-        #'user_id': crm.crm_case._get_default_user,
         'partner_id': crm.crm_case._get_default_partner,
         'partner_address_id': crm.crm_case._get_default_partner_address,
         'email_from': crm.crm_case._get_default_email,
@@ -265,7 +256,6 @@ class project_issue(crm.crm_case, osv.osv):
         'priority': crm.AVAILABLE_PRIORITIES[2][0],
         'project_id':_get_project,
         'categ_id' : lambda *a: False,
-        #'assigned_to' : lambda obj, cr, uid, context: uid,
     }
 
     def convert_issue_task(self, cr, uid, ids, context=None):
@@ -294,7 +284,7 @@ class project_issue(crm.crm_case, osv.osv):
                 'date': bug.date,
                 'project_id': bug.project_id.id,
                 'priority': bug.priority,
-                'user_id': bug.assigned_to.id,
+                'user_id': bug.user_id.id,
                 'planned_hours': 0.0,
             })
 
@@ -362,7 +352,7 @@ class project_issue(crm.crm_case, osv.osv):
         if not task_id:
             return {'value':{}}
         task = self.pool.get('project.task').browse(cr, uid, task_id, context=context)
-        return {'value':{'assigned_to': task.user_id.id,}}
+        return {'value':{'user_id': task.user_id.id,}}
 
     def case_escalate(self, cr, uid, ids, *args):
         """Escalates case to top level
