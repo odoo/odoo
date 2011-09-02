@@ -438,9 +438,9 @@ openerp.web.Login =  openerp.web.Widget.extend({
         if (this.has_local_storage && this.remember_creditentials) {
             this.selected_db = localStorage.getItem('last_db_login_success');
             this.selected_login = localStorage.getItem('last_login_login_success');
-        }
-        if (jQuery.deparam(jQuery.param.querystring()).debug != undefined) {
-            this.selected_password = this.selected_password || "a";
+            if (jQuery.deparam(jQuery.param.querystring()).debug != undefined) {
+                this.selected_password = localStorage.getItem('last_password_login_success');
+            }
         }
     },
     start: function() {
@@ -495,9 +495,13 @@ openerp.web.Login =  openerp.web.Widget.extend({
                     if(self.remember_creditentials) {
                         localStorage.setItem('last_db_login_success', db);
                         localStorage.setItem('last_login_login_success', login);
+                        if (jQuery.deparam(jQuery.param.querystring()).debug != undefined) {
+                            localStorage.setItem('last_password_login_success', password);
+                        }
                     } else {
                         localStorage.setItem('last_db_login_success', '');
                         localStorage.setItem('last_login_login_success', '');
+                        localStorage.setItem('last_password_login_success', '');
                     }
                 }
                 self.on_login_valid();
