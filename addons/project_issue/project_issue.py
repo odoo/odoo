@@ -235,7 +235,6 @@ class project_issue(crm.crm_case, osv.osv):
 
     _defaults = {
         'active': 1,
-        #'user_id': crm.crm_case._get_default_user,
         'partner_id': crm.crm_case._get_default_partner,
         'partner_address_id': crm.crm_case._get_default_partner_address,
         'email_from': crm.crm_case._get_default_email,
@@ -245,7 +244,6 @@ class project_issue(crm.crm_case, osv.osv):
         'priority': crm.AVAILABLE_PRIORITIES[2][0],
         'project_id':_get_project,
         'categ_id' : lambda *a: False,
-        #'assigned_to' : lambda obj, cr, uid, context: uid,
     }
 
     def convert_issue_task(self, cr, uid, ids, context=None):
