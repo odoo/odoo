@@ -747,7 +747,7 @@ openerp.base.Model = openerp.base.SessionAware.extend({
         return function() {
             if (method_name == "search_read")
                 return self._search_read.apply(self, arguments);
-            return self._call(method_name, arguments);
+            return self._call(method_name, _.toArray(arguments));
         };
     },
     _call: function (method, args) {
