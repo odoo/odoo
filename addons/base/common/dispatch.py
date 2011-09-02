@@ -29,7 +29,6 @@ import __main__
 
 path_root = __main__.path_root
 path_addons = __main__.path_addons
-cherrypy_root = None
 
 #-----------------------------------------------------------
 # Globals (wont move into a pool)
@@ -46,10 +45,7 @@ controllers_path = {}
 # OpenERP Web RequestHandler
 #----------------------------------------------------------
 class WebRequest(object):
-    """ CherryPy request handling
-    """
     def __init__(self, request, config):
-        # Move cherrypy thread local objects to attributes
         self.applicationsession = applicationsession
         self.httprequest = request
         self.httpresponse = None
@@ -212,10 +208,6 @@ def httprequest(f):
         return HttpRequest(request, config).dispatch(controller, f)
     http_handler.exposed = True
     return http_handler
-
-#-----------------------------------------------------------
-# Cherrypy stuff
-#-----------------------------------------------------------
 
 class ControllerType(type):
     def __init__(cls, name, bases, attrs):
