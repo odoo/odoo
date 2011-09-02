@@ -3015,6 +3015,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                     break
                 else:
                     current_num += 1
+            #TODO: create proper user_type for account creation.
             user_type = self.pool.get('account.account.type').search(cr, uid, [('name', '=', line['account_type'])], context=context)
             vals = {
                 'name': line['acc_name'],
@@ -3134,7 +3135,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                                 }, context=context)
 
 
-        # create all the tax code [TOCHECK: finds children of tax_code_root_id and processes]
+        # create all the tax code.
         tax_code_template_ref = {}
         tax_code_root_id = template.tax_code_root_id.id
         children_tax_code_template = obj_tax_code_template.search(cr, uid, [('parent_id','child_of',[tax_code_root_id])], order='id')
