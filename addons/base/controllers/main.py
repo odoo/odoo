@@ -1411,6 +1411,10 @@ class Import(View):
     @openerpweb.httprequest
     def import_data(self, req, **params):
         import StringIO
+        _fields = {}
+        _fields_invert = {}
+        prefix_node=''
+        prefix_value = ''
 
         context = req.session.eval_context(req.context)
         modle_obj = req.session.model(params.get('model'))
@@ -1442,6 +1446,23 @@ class Import(View):
 
         if not isinstance(fields, list):
             fields = [fields]
+
+        flds = dict(req.session.model(params.get('model')).fields_get(False, req.session.eval_context(req.context)))
+        flds.update({'id':{'string':'ID'},'.id':{'string':'Database ID'}})
+        fields_order = flds.keys()
+        for field in fields_order:
+            st_name = prefix_value+flds[field]['string'] or field
+            _fields[prefix_node+field] = st_name
+            _fields_invert[st_name] = prefix_node+field
+
+        unmatch_field = []
+        for fld in fields:
+            if ((fld not in _fields.keys()) and (fld not in _fields_invert.keys())):
+                unmatch_field.append(fld)
+
+        if unmatch_field:
+            error = {'message':("You cannot import the fields '%s',because we cannot auto-detect it." % (unmatch_field))}
+            return simplejson.dumps({'error':error})
 
         for line in data:
             try:

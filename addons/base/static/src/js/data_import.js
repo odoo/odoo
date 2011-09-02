@@ -66,18 +66,22 @@ openerp.base.DataImport = openerp.base.Dialog.extend({
             var success_node = $("#success");
             success_node.append(QWeb.render('ImportView-result',{'success': results['success']}));
         }
-        var mm = [];
+        var selected_fields = [];
         $("td #sel_field").click(function(){
-            mm = [];
+            selected_fields = [];
             $("td #sel_field option:selected").each(function(){
-                mm.push($(this).index());
+                selected_fields.push($(this).index());
             });
         });
         $("td #sel_field").change(function(){
-            $(this).css('background-color','');
-            var kk = this.selectedIndex;
-            if ($.inArray(kk,mm) > -1){
+            $("#message").empty();
+            $("td #sel_field").css('background-color','');
+            $(".ui-button-text:contains('Import File')").parent().attr("disabled",false);
+            var curr_selected = this.selectedIndex;
+            if ($.inArray(curr_selected,selected_fields) > -1){
                 $(this).css('background-color','#FF6666');
+                $("#message").append("Selected column should not be same.");
+                $(".ui-button-text:contains('Import File')").parent().attr("disabled",true);
             }else{
                 $(this).css('background-color','');
             }
