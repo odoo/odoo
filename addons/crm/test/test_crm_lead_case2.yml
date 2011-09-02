@@ -22,7 +22,9 @@
     working_hours: 0.0
     resource_calendar_id: resource.timesheet_group1
     parent_id: crm.section_sales_department
-
+-
+   !record {model: res.users, id: res_users_usercrm0}:
+     context_section_id: crm_case_section_demosalesteam    
 -  |
    Creating a new lead "Demo Customer" and I provide an address to this
    demo customer and email "info@democustomer.com" and Also "Demo Sales Team".

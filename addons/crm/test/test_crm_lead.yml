@@ -1,4 +1,4 @@
--  |
+﻿-  |
    In order to test the CRM in OpenERP,
    I will do a customer qualification process that
    starts with a fist contact with a customer (a lead), which will be converted to a
@@ -25,6 +25,7 @@
      email_from: info@mycustomer.com
      name: New Customer
      partner_name: Capegemini
+     partner_id: base.res_partner_9
      phone: (855) 924-4364
      mobile: (333) 715-1450
      section_id: crm.section_sales_department
@@ -45,6 +46,11 @@
   !assert {model: crm.lead, id: crm_lead_newcustomer0, string: Lead in open state}:
      - state == "open"
 
+-
+   Now, Find id for case object
+-
+   !python {model: crm.case.categ}: |
+     self._find_object_id(cr, uid, context)
 -  |
    As the lead seems to be a real business opportunity, I will convert it to a
    partner
@@ -72,7 +78,6 @@
   !python {model: crm.lead}: |
     lead = self.browse(cr, uid, ref("crm_lead_newcustomer0"))
     assert lead.type == 'opportunity'
-
 #-
 #  |
 #  yaml is also not working with smtp server and send new email.
