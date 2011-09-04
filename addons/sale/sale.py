@@ -794,7 +794,6 @@ class sale_order(osv.osv):
                 'document': '',
                 'partner_id': part,
                 'date': time.strftime('%Y-%m-%d'),
-                'canal_id': False,
                 'user_id': uid,
                 'partner_type': partnertype,
                 'probability': 1.0,

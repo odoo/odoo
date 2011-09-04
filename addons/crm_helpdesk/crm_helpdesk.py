@@ -63,9 +63,7 @@ class crm_helpdesk(crm.crm_case, osv.osv):
             'date': fields.datetime('Date'), 
             'ref' : fields.reference('Reference', selection=crm._links_get, size=128), 
             'ref2' : fields.reference('Reference 2', selection=crm._links_get, size=128), 
-            'canal_id': fields.many2one('res.partner.canal', 'Channel', \
-                            help="The channels represent the different communication \
- modes available with the customer."), 
+            'channel_id': fields.many2one('crm.case.channel', 'Channel', help="Communication channel."),
             'planned_revenue': fields.float('Planned Revenue'), 
             'planned_cost': fields.float('Planned Costs'), 
             'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'), 
