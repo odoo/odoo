@@ -492,6 +492,7 @@ def get_pg_type(f):
             fields.datetime: 'timestamp',
             fields.binary: 'bytea',
             fields.many2one: 'int4',
+            fields.serialized: 'text',
             }
     if type(f) in type_dict:
         f_type = (type_dict[type(f)], type_dict[type(f)])

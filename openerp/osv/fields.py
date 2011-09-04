@@ -42,6 +42,7 @@ from psycopg2 import Binary
 import openerp.netsvc as netsvc
 import openerp.tools as tools
 from openerp.tools.translate import _
+import json
 
 def _symbol_set(symb):
     if symb == None or symb == False:
@@ -1218,13 +1219,24 @@ class dummy(function):
 # Serialized fields
 # ---------------------------------------------------------
 class serialized(_column):
-    def __init__(self, string='unknown', serialize_func=repr, deserialize_func=eval, type='text', **args):
-        self._serialize_func = serialize_func
-        self._deserialize_func = deserialize_func
-        self._type = type
-        self._symbol_set = (self._symbol_c, self._serialize_func)
-        self._symbol_get = self._deserialize_func
-        super(serialized, self).__init__(string=string, **args)
+    """ A field able to store an arbitrary python data structure.
+    
+        Note: only plain components allowed.
+    """
+    
+    def _symbol_set_struct(val):
+        return json.dumps(val)
+
+    def _symbol_get_struct(self, val):
+        return json.loads(val or '{}')
+    
+    _prefetch = False
+    _type = 'serialized'
+
+    _symbol_c = '%s'
+    _symbol_f = _symbol_set_struct
+    _symbol_set = (_symbol_c, _symbol_f)
+    _symbol_get = _symbol_get_struct
 
 # TODO: review completly this class for speed improvement
 class property(function):
