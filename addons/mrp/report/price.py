@@ -70,7 +70,7 @@ class report_custom(report_rml):
                 sellers_price += """<i>"""+rml_obj.formatLang(price) +' '+ company_currency.symbol +"""</i>\r\n"""
             xml += """<col para='yes'> """+ to_xml(tools.ustr(prod_name)) +""" </col>
                     <col para='yes'> """+ to_xml(tools.ustr(main_sp_name)) + to_xml(tools.ustr(sellers)) + """ </col>
-                    <col f='yes'>"""+ rml_obj.formatLang(prod_qtty) +' '+ product_uom.name +"""</col>
+                    <col f='yes'>"""+ rml_obj.formatLang(prod_qtty) +' '+ to_xml(tools.ustr(product_uom.name)).replace('&', '&amp;') +"""</col>
                     <col f='yes'>"""+ rml_obj.formatLang(float(main_strd_price)) +' '+ company_currency.symbol +"""</col>
                     <col f='yes'>""" + main_sp_price + sellers_price + """</col>'"""
 
@@ -147,7 +147,7 @@ class report_custom(report_rml):
                     <col para='yes'>-</col>
                     </row></lines>"""
                 xml += """<lines style='total'> <row>
-                    <col> """ + _('Total Cost of %s %s') % (str(number), product.uom_id.name) + """: </col>
+                    <col> """ + _('Total Cost of %s %s') % (str(number), to_xml(tools.ustr(product.uom_id.name)).replace('&', '&amp;')) + """: </col>
                     <col/>
                     <col f='yes'/>
                     <col t='yes'>"""+ rml_obj.formatLang(total_strd, digits=purchase_price_digits) +' '+ company_currency.symbol + """</col>
@@ -174,7 +174,7 @@ class report_custom(report_rml):
 
                 xml += "<lines style='lines'>" + xml_tmp + '</lines>'
                 xml += """<lines style='sub_total'> <row>
-                    <col> """ + _('Components Cost of %s %s') % (str(number), product.uom_id.name) + """: </col>
+                    <col> """ + _('Components Cost of %s %s') % (str(number), to_xml(tools.ustr(product.uom_id.name)).replace('&', '&amp;')) + """: </col>
                     <col/>
                     <col t='yes'/>
                     <col t='yes'>"""+ rml_obj.formatLang(total_strd, digits=purchase_price_digits) +' '+ company_currency.symbol + """</col>
@@ -191,14 +191,14 @@ class report_custom(report_rml):
                     xml += workcenter_header
                     xml += "<lines style='lines'>" + xml_tmp + '</lines>'
                     xml += """<lines style='sub_total'> <row>
-                    <col> """ + _('Work Cost of %s %s') % (str(number), product.uom_id.name) +""": </col>
+                    <col> """ + _('Work Cost of %s %s') % (str(number), to_xml(tools.ustr(product.uom_id.name)).replace('&', '&amp;')) +""": </col>
                     <col/>
                     <col/>
                     <col/>
                     <col t='yes'>"""+ rml_obj.formatLang(total2, digits=purchase_price_digits) +' '+ company_currency.symbol +"""</col>
                     </row></lines>'"""
                 xml += """<lines style='total'> <row>
-                    <col> """ + _('Total Cost of %s %s') % (str(number), product.uom_id.name) + """: </col>
+                    <col> """ + _('Total Cost of %s %s') % (str(number), to_xml(tools.ustr(product.uom_id.name)).replace('&', '&amp;')) + """: </col>
                     <col/>
                     <col t='yes'/>
                     <col t='yes'>"""+ rml_obj.formatLang(total_strd+total2, digits=purchase_price_digits) +' '+ company_currency.symbol + """</col>
