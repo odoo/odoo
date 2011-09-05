@@ -774,7 +774,7 @@ openerp.base.json_node_to_xml = function(node, single_quote, indent) {
         }
         r += ' ' + attr + '="' + vattr + '"';
     }
-    if (node.children.length) {
+    if (node.children && node.children.length) {
         r += '>\n';
         var childs = [];
         for (var i = 0, ii = node.children.length; i < ii; i++) {
