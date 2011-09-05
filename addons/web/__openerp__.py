@@ -1,5 +1,5 @@
 {
-    "name" : "OpenERP Web web",
+    "name" : "web",
     "version" : "2.0",
     "depends" : [],
     'active': True,

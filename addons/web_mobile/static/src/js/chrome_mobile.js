@@ -36,7 +36,7 @@ openerp.web_mobile.Login =  openerp.web.Widget.extend({
     start: function() {
         var self = this;
         jQuery("#oe_header").children().remove();
-        this.rpc("/web/dataweb/get_list", {}, function(result) {
+        this.rpc("/web/database/get_list", {}, function(result) {
             var selection = new openerp.web_mobile.Selection();
             self.db_list = result.db_list;
             self.$element.html(QWeb.render("Login", self));
@@ -50,7 +50,7 @@ openerp.web_mobile.Login =  openerp.web.Widget.extend({
         ev.preventDefault();
         var self = this;
         var $e = this.$element;
-        var db = $e.find("div select[name=dataweb]").val();
+        var db = $e.find("div select[name=database]").val();
         var login = $e.find("div input[name=login]").val();
         var password = $e.find("div input[name=password]").val();
         //$e.hide();

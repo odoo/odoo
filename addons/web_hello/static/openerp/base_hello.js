@@ -2,9 +2,9 @@
  * OpenERP base_hello (Example module)
  *---------------------------------------------------------*/
 
-openerp.base_hello = function(openerp) {
+openerp.web_hello = function(openerp) {
 
-openerp.base.SearchView = openerp.base.SearchView.extend({
+openerp.web.SearchView = openerp.web.SearchView.extend({
     init:function() {
         this._super.apply(this,arguments);
         this.on_search.add(function(){console.log('hello');});
