@@ -2,7 +2,7 @@
 import time
 
 import simplejson
-import base.common as openerpweb
+import web.common as openerpweb
 
 #----------------------------------------------------------
 # OpenERP Web ajaxim Controllers

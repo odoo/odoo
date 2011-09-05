@@ -32,13 +32,13 @@ optparser.add_option('--reloader', dest='reloader',
                      default=False, action='store_true',
                      help="Reload application when python files change")
 
-import base.common.dispatch
+import web.common.dispatch
 
 if __name__ == "__main__":
     (options, args) = optparser.parse_args(sys.argv[1:])
 
     os.environ["TZ"] = "UTC"
-    app = base.common.dispatch.Root(options)
+    app = web.common.dispatch.Root(options)
 
     werkzeug.serving.run_simple(
         '0.0.0.0', options.socket_port, app,
