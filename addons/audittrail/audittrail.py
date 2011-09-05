@@ -292,31 +292,38 @@ class audittrail_objects_proxy(object_proxy):
         model_id = model_ids and model_ids[0] or False
         assert model_id, _("'%s' Model does not exist..." %(model))
         model = model_pool.browse(cr, uid, model_id)
-
+        relational_table_log = args and args[-1] == 'child_relation_log' or  False
         if method in ('create'):
-            res_id = fct_src(db, uid_orig, model.model, method, *args)
-            cr.commit()
-            resource = resource_pool.read(cr, uid, res_id, args[0].keys())
-            vals = {
-                    "method": method,
-                    "object_id": model.id,
-                    "user_id": uid_orig,
-                    "res_id": resource['id'],
-            }
-            if 'id' in resource:
-                del resource['id']
-            log_id = log_pool.create(cr, uid, vals)
-            lines = []
-            for field in resource:
-                line = {
-                      'name': field,
-                      'new_value': resource[field],
-                      'new_value_text': self.get_value_text(cr, uid, field, resource[field], model)
-                      }
-                lines.append(line)
-            self.create_log_line(cr, uid, log_id, model, lines)
-
-            cr.commit()
+            fields_to_read = []
+            if relational_table_log:
+                res_id = args[0]
+            else:
+                res_id = fct_src(db, uid_orig, model.model, method, *args)
+                cr.commit()
+                fields_to_read = args[0].keys()
+            resource = resource_pool.read(cr, uid, res_id, fields_to_read)
+            if not isinstance(resource, list):
+                resource = [resource]
+            vals = { 'method': method, 'object_id': model.id,'user_id': uid_orig}
+            for resource_data in resource:
+                vals.update({'res_id': resource_data['id']})
+                if 'id' in resource_data:
+                    del resource_data['id']
+                log_id = log_pool.create(cr, uid, vals)
+                lines = []
+                for field in resource_data:
+                    field_obj = resource_pool._all_columns.get(field, False)
+                    field_obj = field_obj.column
+                    if field_obj._type in ('one2many','many2many'):
+                        self.log_fct(db, uid, field_obj._obj, method, None, resource_data[field], 'child_relation_log')
+                    line = {
+                          'name': field,
+                          'new_value': resource_data[field],
+                          'new_value_text': self.get_value_text(cr, uid, field, resource_data[field], model)
+                          }
+                    lines.append(line)
+                self.create_log_line(cr, uid, log_id, model, lines)
+                cr.commit()
             cr.close()
             return res_id
 
