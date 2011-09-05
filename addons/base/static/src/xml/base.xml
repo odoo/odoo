@@ -475,7 +475,7 @@
         </tr>
         <tr t-foreach="widget.view.translatable_fields" t-as="field">
             <td class="oe_form_frame_cell" width="1%" nowrap="nowrap">
-                <label class="oe_form_label"><t t-esc="field.string"/>:</label>
+                <label class="oe_label"><t t-esc="field.string"/>:</label>
             </td>
             <td t-foreach="widget.languages" t-as="lg" class="oe_form_frame_cell">
                 <input t-if="field.type == 'char'" type="text" t-attf-name="#{lg.code}-#{field.name}" value="" data-value="" class="oe_trad_field" style="width: 100%"/>
@@ -631,7 +631,7 @@
 </t>
 <t t-name="FormView">
     <div class="oe_form_header" t-att-id="view.element_id + '_header'">
-        <h2 class="oe_view_title"><t t-esc="view.fields_view.arch.attrs.string"/> <button class="oe_get_xml_view">xml</button></h2>
+        <h2 class="oe_view_title"><t t-esc="view.fields_view.arch.attrs.string"/> <button t-if="view.session.debug" class="oe_get_xml_view">View#<t t-esc="view.fields_view.view_id"/></button></h2>
         <div class="oe_form_buttons" t-if="view.options.action_buttons !== false">
             <!--<button type="button" class="oe_form_button_save">
                 <span class="oe_form_on_update">Save</span>
@@ -699,11 +699,11 @@
     <tr t-foreach="widget.table" t-as="row">
         <t t-foreach="row" t-as="td">
             <td t-att-colspan="td.colspan gt 1 ? td.colspan : undefined"
-                t-att-width="td.width ? td.width : undefined"
-                t-att-nowrap="td.is_field_label or td.is_field_m2o? 'true' : undefined"
+                t-att-width="td.width"
+                t-att-nowrap="td.nowrap or td.is_field_m2o? 'true' : undefined"
                 t-att-valign="td.table ? 'top' : undefined"
                 t-att-id="td.element_id"
-                t-att-class="'oe_form_frame_cell oe_form_' + (td.is_field_label ? 'label' : (td.field ? 'field_' + td.type : td.type))"
+                t-attf-class="oe_form_frame_cell #{td.classname}"
             >
                 <t t-raw="td.render()"/>
             </td>
@@ -729,13 +729,13 @@
     </div>
 </t>
 <t t-name="WidgetSeparator">
-    <div t-att-class="'separator ' + (widget.node.attrs.orientation || 'horizontal')">
+    <div t-if="widget.orientation !== 'vertical'" t-att-class="'separator ' + widget.orientation">
         <t t-esc="widget.string"/>
     </div>
 </t>
 <t t-name="WidgetLabel">
     <label t-att-for="widget.element_id + '_field'"
-           t-att-class="'oe_form_label' + (widget.help ? '_help' : '')"
+           t-att-class="'oe_label' + (widget.help ? '_help' : '')"
            t-att-title="widget.help">
         <t t-esc="widget.string"/>
         <span t-if="widget.help">?</span>
@@ -870,7 +870,8 @@
     <table cellpadding="0" cellspacing="0" border="0">
     <tr>
         <td align="center">
-            <img src="/base/static/src/img/placeholder.png" class="oe-binary-image" border="1"
+            <img src="/base/static/src/img/placeholder.png" class="oe-binary-image"
+                t-att-border="widget.readonly ? 0 : 1"
                 t-att-id="widget.element_id + '_field'"
                 t-att-name="widget.name"
                 t-att-class="'field_' + widget.type"
@@ -1028,10 +1029,11 @@
         ><t t-raw="filter.render(defaults)"/></t
 ></span>
 <t t-name="SearchView.field">
-    <label style="display: block" t-att-title="attrs.help"
+    <label t-att-class="'oe_label' + (attrs.help ? '_help' : '')"
+           t-att-title="attrs.help"
            t-att-for="element_id">
         <t t-esc="attrs.string || attrs.name"/>
-        <span t-if="attrs.help">(?)</span>
+        <span t-if="attrs.help">?</span>
     </label>
     <div style="white-space: nowrap;">
         <input type="text" size="15" t-att-name="attrs.name"
@@ -1042,10 +1044,11 @@
     </div>
 </t>
 <t t-name="SearchView.field.selection">
-    <label style="display: block" t-att-title="attrs.help"
+    <label t-att-title="attrs.help"
+           t-att-class="'oe_label' + (attrs.help ? '_help' : '')"
            t-att-for="element_id">
         <t t-esc="attrs.string || attrs.name"/>
-        <span t-if="attrs.help">(?)</span>
+        <span t-if="attrs.help">?</span>
     </label>
     <div style="white-space: nowrap;">
         <select t-att-name="attrs.name" t-att-id="element_id"
@@ -1370,5 +1373,29 @@
         </td>
         <td><button class="oe_export_button_export" id="delete_export_list">Delete</button></td>
     </tr>
+</t>
+<t t-name="Change_Pwd">
+    <form name="change_password_form" class="oe_forms" method="POST">
+        <table align="center">
+            <tr>
+                <td><label for="old_pwd">Old Password:</label></td>
+                <td><input type="password" name="old_pwd"
+                           minlength="1" autofocus="autofocus"/></td>
+            </tr>
+            <tr>
+            <td><label for="new_password">New Password:</label></td>
+            <td><input type="password" name="new_password"
+                       minlength="1" autofocus="autofocus"/></td>
+            </tr>
+            <tr>
+                <td><label for="confirm_pwd">Confirm Password:</label></td>
+                <td><input type="password" name="confirm_pwd"
+                             minlength="1"/></td>
+            </tr>
+            <tr>
+                <td colspan="2" align="right"><input type="submit" value="Change Password"/></td>
+            </tr>
+        </table>
+    </form>
 </t>
 </templates>

@@ -832,15 +832,17 @@ label.error {
     float: right;
 }
 
-.openerp label.oe_form_label_help {
+.openerp label.oe_label_help, .openerp label.oe_label {
+    display: block;
+}
+.openerp label.oe_label_help {
     cursor: help;
 }
-.openerp label.oe_form_label, .openerp label.oe_form_label_help {
-    display: block;
+.openerp .oe_form_field label.oe_label, .openerp .oe_form_field label.oe_label_help {
     text-align: right;
     margin: 3px 0 0 10px;
 }
-.openerp label.oe_form_label_help span {
+.openerp label.oe_label_help span {
     font-size: 80%;
     color: darkgreen;
     vertical-align:top;
@@ -930,6 +932,9 @@ label.error {
     border-bottom-width: 1px;
     margin: 3px 4px 3px 1px;
     height: 15px;
+}
+.openerp .oe_form_frame_cell.oe_form_separator_vertical {
+    border-left: 1px solid #666;
 }
 .openerp td.required input, .openerp td.required select {
     background-color: #D2D2FF !important;

@@ -7,8 +7,6 @@ can't be sent there themselves).
 import binascii
 import hashlib
 import simplejson.encoder
-import time
-import datetime
 
 __all__ = ['Domain', 'Context', 'NonLiteralEncoder, non_literal_decoder', 'CompoundDomain', 'CompoundContext']
 

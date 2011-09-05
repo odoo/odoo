@@ -1,39 +1,33 @@
 #!/usr/bin/python
-import datetime
-import urllib
-import dateutil.relativedelta
+from __future__ import with_statement
+
 import functools
 import logging
-import optparse
 import os
 import sys
-import tempfile
-import time
 import traceback
 import uuid
 import xmlrpclib
 
-import cherrypy
-import cherrypy.lib.static
 import simplejson
+import werkzeug.datastructures
+import werkzeug.exceptions
+import werkzeug.urls
+import werkzeug.utils
+import werkzeug.wrappers
+import werkzeug.wsgi
 
+import ast
 import nonliterals
-# TODO if from openerpserver use backendlocal
-# from backendlocal import *
-from backendrpc import *
+import http
+# import backendlocal as backend
+import backendrpc as backend
+
+__all__ = ['Root', 'jsonrequest', 'httprequest', 'Controller',
+           'WebRequest', 'JsonRequest', 'HttpRequest']
 
 #-----------------------------------------------------------
-# Globals
-#-----------------------------------------------------------
-
-import __main__
-
-path_root = __main__.path_root
-path_addons = __main__.path_addons
-cherrypy_root = None
-
-#-----------------------------------------------------------
-# Per Database Globals (might move into a pool if needed)
+# Globals (wont move into a pool)
 #-----------------------------------------------------------
 
 applicationsession = {}
@@ -46,27 +40,73 @@ controllers_path = {}
 #----------------------------------------------------------
 # OpenERP Web RequestHandler
 #----------------------------------------------------------
-class CherryPyRequest(object):
-    """ CherryPy request handling
+class WebRequest(object):
+    """ Parent class for all OpenERP Web request types, mostly deals with
+    initialization and setup of the request object (the dispatching itself has
+    to be handled by the subclasses)
+
+    :param request: a wrapped werkzeug Request object
+    :type request: :class:`werkzeug.wrappers.BaseRequest`
+    :param config: configuration object
+
+    .. attribute:: applicationsession
+
+        an application-wide :class:`~collections.Mapping`
+
+    .. attribute:: httprequest
+
+        the original :class:`werkzeug.wrappers.Request` object provided to the
+        request
+
+    .. attribute:: httpsession
+
+        a :class:`~collections.Mapping` holding the HTTP session data for the
+        current http session
+
+    .. attribute:: config
+
+        config parameter provided to the request object
+
+    .. attribute:: params
+
+        :class:`~collections.Mapping` of request parameters, not generally
+        useful as they're provided directly to the handler method as keyword
+        arguments
+
+    .. attribute:: session_id
+
+        opaque identifier for the :class:`backend.OpenERPSession` instance of
+        the current request
+
+    .. attribute:: session
+
+        :class:`~backend.OpenERPSession` instance for the current request
+
+    .. attribute:: context
+
+        :class:`~collections.Mapping` of context values for the current request
+
+    .. attribute:: debug
+
+        ``bool``, indicates whether the debug mode is active on the client
     """
-    def init(self,params):
-        self.params = params
-        # Move cherrypy thread local objects to attributes
+    def __init__(self, request, config):
         self.applicationsession = applicationsession
-        self.httprequest = cherrypy.request
-        self.httpresponse = cherrypy.response
-        self.httpsession = cherrypy.session
-        self.httpsession_id = "cookieid"
+        self.httprequest = request
+        self.httpresponse = None
+        self.httpsession = request.session
+        self.config = config
+    def init(self, params):
+        self.params = dict(params)
         # OpenERP session setup
         self.session_id = self.params.pop("session_id", None) or uuid.uuid4().hex
-        host = cherrypy.config['openerp.server.host']
-        port = cherrypy.config['openerp.server.port']
-        self.session = self.httpsession.setdefault(self.session_id, OpenERPSession(host, port))
-        # Request attributes
+        self.session = self.httpsession.setdefault(
+            self.session_id, backend.OpenERPSession(
+                self.config.server_host, self.config.server_port))
         self.context = self.params.pop('context', None)
-        self.debug = self.params.pop('debug',False) != False
+        self.debug = self.params.pop('debug', False) != False
 
-class JsonRequest(CherryPyRequest):
+class JsonRequest(WebRequest):
     """ JSON-RPC2 over HTTP.
 
     Sucessful request::
@@ -123,7 +163,7 @@ class JsonRequest(CherryPyRequest):
                 print "--> %s.%s %s" % (controller.__class__.__name__, method.__name__, self.jsonrequest)
             response['id'] = self.jsonrequest.get('id')
             response["result"] = method(controller, self, **self.params)
-        except OpenERPUnboundException:
+        except backend.OpenERPUnboundException:
             error = {
                 'code': 100,
                 'message': "OpenERP Session Invalid",
@@ -144,8 +184,8 @@ class JsonRequest(CherryPyRequest):
                 }
             }
         except Exception:
-            cherrypy.log("An error occured while handling a json request",
-                         severity=logging.ERROR, traceback=True)
+            logging.getLogger('openerp.JSONRequest.dispatch').exception\
+                ("An error occured while handling a json request")
             error = {
                 'code': 300,
                 'message': "OpenERP WebClient Error",
@@ -162,47 +202,89 @@ class JsonRequest(CherryPyRequest):
             print
 
         content = simplejson.dumps(response, cls=nonliterals.NonLiteralEncoder)
-        cherrypy.response.headers['Content-Type'] = 'application/json'
-        cherrypy.response.headers['Content-Length'] = len(content)
-        return content
+        return werkzeug.wrappers.Response(
+            content, headers=[('Content-Type', 'application/json'),
+                              ('Content-Length', len(content))])
 
 def jsonrequest(f):
-    @cherrypy.expose
+    """ Decorator marking the decorated method as being a handler for a
+    JSON-RPC request (the exact request path is specified via the
+    ``$(Controller._cp_path)/$methodname`` combination.
+
+    If the method is called, it will be provided with a :class:`JsonRequest`
+    instance and all ``params`` sent during the JSON-RPC request, apart from
+    the ``session_id``, ``context`` and ``debug`` keys (which are stripped out
+    beforehand)
+    """
     @functools.wraps(f)
-    def json_handler(controller):
-        return JsonRequest().dispatch(controller, f, requestf=cherrypy.request.body)
+    def json_handler(controller, request, config):
+        return JsonRequest(request, config).dispatch(
+            controller, f, requestf=request.stream)
+    json_handler.exposed = True
     return json_handler
 
-class HttpRequest(CherryPyRequest):
+class HttpRequest(WebRequest):
     """ Regular GET/POST request
     """
-    def dispatch(self, controller, method, **kw):
-        self.init(kw)
+    def dispatch(self, controller, method):
+        self.init(dict(self.httprequest.args, **self.httprequest.form))
         akw = {}
-        for key in kw.keys():
-            if isinstance(kw[key], basestring) and len(kw[key]) < 1024:
-                akw[key] = kw[key]
+        for key, value in self.httprequest.args.iteritems():
+            if isinstance(value, basestring) and len(value) < 1024:
+                akw[key] = value
             else:
-                akw[key] = type(kw[key])
+                akw[key] = type(value)
         if self.debug or 1:
             print "%s --> %s.%s %r" % (self.httprequest.method, controller.__class__.__name__, method.__name__, akw)
-        r = method(controller, self, **kw)
+        r = method(controller, self, **self.params)
         if self.debug or 1:
-            print "<--", 'size:', len(r)
+            if isinstance(r, werkzeug.wrappers.BaseResponse):
+                print '<--', r
+            else:
+                print "<--", 'size:', len(r)
             print
         return r
 
-def httprequest(f):
-    # check cleaner wrapping:
-    # functools.wraps(f)(lambda x: JsonRequest().dispatch(x, f))
-    def http_handler(controller,*l, **kw):
-        return HttpRequest().dispatch(controller, f, **kw)
-    http_handler.exposed = 1
-    return http_handler
+    def make_response(self, data, headers=None, cookies=None):
+        """ Helper for non-HTML responses, or HTML responses with custom
+        response headers or cookies.
 
-#-----------------------------------------------------------
-# Cherrypy stuff
-#-----------------------------------------------------------
+        While handlers can just return the HTML markup of a page they want to
+        send as a string if non-HTML data is returned they need to create a
+        complete response object, or the returned data will not be correctly
+        interpreted by the clients.
+
+        :param basestring data: response body
+        :param headers: HTTP headers to set on the response
+        :type headers: ``[(name, value)]``
+        :param collections.Mapping cookies: cookies to set on the client
+        """
+        response = werkzeug.wrappers.Response(data, headers=headers)
+        if cookies:
+            for k, v in cookies.iteritems():
+                response.set_cookie(k, v)
+        return response
+
+    def not_found(self, description=None):
+        """ Helper for 404 response, return its result from the method
+        """
+        return werkzeug.exceptions.NotFound(description)
+
+def httprequest(f):
+    """ Decorator marking the decorated method as being a handler for a
+    normal HTTP request (the exact request path is specified via the
+    ``$(Controller._cp_path)/$methodname`` combination.
+
+    If the method is called, it will be provided with a :class:`HttpRequest`
+    instance and all ``params`` sent during the request (``GET`` and ``POST``
+    merged in the same dictionary), apart from the ``session_id``, ``context``
+    and ``debug`` keys (which are stripped out beforehand)
+    """
+    @functools.wraps(f)
+    def http_handler(controller, request, config):
+        return HttpRequest(request, config).dispatch(controller, f)
+    http_handler.exposed = True
+    return http_handler
 
 class ControllerType(type):
     def __init__(cls, name, bases, attrs):
@@ -213,41 +295,124 @@ class Controller(object):
     __metaclass__ = ControllerType
 
 class Root(object):
-    def __init__(self):
+    """Root WSGI application for the OpenERP Web Client.
+
+    :param options: mandatory initialization options object, must provide
+                    the following attributes:
+
+                    ``server_host`` (``str``)
+                      hostname of the OpenERP server to dispatch RPC to
+                    ``server_port`` (``int``)
+                      RPC port of the OpenERP server
+                    ``serve_static`` (``bool | None``)
+                      whether this application should serve the various
+                      addons's static files
+                    ``storage_path`` (``str``)
+                      filesystem path where HTTP session data will be stored
+                    ``dbfilter`` (``str``)
+                      only used in case the list of databases is requested
+                      by the server, will be filtered by this pattern
+    """
+    def __init__(self, options):
+        self.root = werkzeug.urls.Href('/base/webclient/home')
+        self.config = options
+
+        self.session_cookie = 'sessionid'
         self.addons = {}
-        self._load_addons()
+
+        static_dirs = self._load_addons()
+        if options.serve_static:
+            self.dispatch = werkzeug.wsgi.SharedDataMiddleware(
+                self.dispatch, static_dirs)
+
+        if options.session_storage:
+            if not os.path.exists(options.session_storage):
+                os.mkdir(options.session_storage, 0700)
+            self.session_storage = options.session_storage
+
+    def __call__(self, environ, start_response):
+        """ Handle a WSGI request
+        """
+        return self.dispatch(environ, start_response)
+
+    def dispatch(self, environ, start_response):
+        """
+        Performs the actual WSGI dispatching for the application, may be
+        wrapped during the initialization of the object.
+
+        Call the object directly.
+        """
+        request = werkzeug.wrappers.Request(environ)
+        request.parameter_storage_class = werkzeug.datastructures.ImmutableDict
+
+        if request.path == '/':
+            return werkzeug.utils.redirect(
+                self.root(request.args), 301)(
+                    environ, start_response)
+        elif request.path == '/mobile':
+            return werkzeug.utils.redirect(
+                '/web_mobile/static/src/web_mobile.html', 301)(
+                environ, start_response)
+
+        handler = self.find_handler(*(request.path.split('/')[1:]))
+
+        if not handler:
+            response = werkzeug.exceptions.NotFound()
+        else:
+            with http.session(request, self.session_storage, self.session_cookie) as session:
+                result = handler(
+                    request, self.config)
+
+                if isinstance(result, basestring):
+                    response = werkzeug.wrappers.Response(
+                        result, headers=[('Content-Type', 'text/html; charset=utf-8'),
+                                         ('Content-Length', len(result))])
+                else:
+                    response = result
+
+                response.set_cookie(self.session_cookie, session.sid)
+
+        return response(environ, start_response)
 
     def _load_addons(self):
-        if path_addons not in sys.path:
-            sys.path.insert(0, path_addons)
-        for i in os.listdir(path_addons):
-            if i not in addons_module:
-                manifest_path = os.path.join(path_addons, i, '__openerp__.py')
+        """
+        Loads all addons at the specified addons path, returns a mapping of
+        static URLs to the corresponding directories
+        """
+        statics = {}
+        addons_path = self.config.addons_path
+        if addons_path not in sys.path:
+            sys.path.insert(0, addons_path)
+        for module in os.listdir(addons_path):
+            if module not in addons_module:
+                manifest_path = os.path.join(addons_path, module, '__openerp__.py')
                 if os.path.isfile(manifest_path):
-                    manifest = eval(open(manifest_path).read())
-                    print "Loading", i
-                    m = __import__(i)
-                    addons_module[i] = m
-                    addons_manifest[i] = manifest
+                    manifest = ast.literal_eval(open(manifest_path).read())
+                    print "Loading", module
+                    m = __import__(module)
+                    addons_module[module] = m
+                    addons_manifest[module] = manifest
+
+                    statics['/%s/static' % module] = \
+                        os.path.join(addons_path, module, 'static')
         for k, v in controllers_class.items():
             if k not in controllers_object:
                 o = v()
                 controllers_object[k] = o
                 if hasattr(o, '_cp_path'):
                     controllers_path[o._cp_path] = o
+        return statics
 
-    def default(self, *l, **kw):
-        print "default",l,kw
-        # handle static files
-        if len(l) > 2 and l[1] == 'static':
-            # sanitize path
-            p = os.path.normpath(os.path.join(*l))
-            p2 = os.path.join(path_addons, p)
-            print "p",p
-            print "p2",p2
+    def find_handler(self, *l):
+        """
+        Tries to discover the controller handling the request for the path
+        specified by the provided parameters
 
-            return cherrypy.lib.static.serve_file(p2)
-        elif len(l) > 1:
+        :param l: path sections to a controller or controller method
+        :returns: a callable matching the path sections, or ``None``
+        :rtype: ``Controller | None``
+        """
+        if len(l) > 1:
             for i in range(len(l), 1, -1):
                 ps = "/" + "/".join(l[0:i])
                 if ps in controllers_path:
@@ -255,59 +420,7 @@ class Root(object):
                     rest = l[i:] or ['index']
                     meth = rest[0]
                     m = getattr(c, meth)
-                    if getattr(m, 'exposed', 0):
-                        print "Calling", ps, c, meth, m
-                        return m(**kw)
-            raise cherrypy.NotFound('/' + '/'.join(l))
-        elif l and l[0] == 'mobile':
-            #for the mobile web client we are supposed to use a different url to just add '/mobile'
-            raise cherrypy.HTTPRedirect('/web_mobile/static/src/web_mobile.html', 301)
-        else:
-            if kw:
-                qs = '?' + urllib.urlencode(kw)
-            else:
-                qs = ''
-            raise cherrypy.HTTPRedirect('/base/webclient/home' + qs, 301)
-    default.exposed = True
-
-def main(argv):
-    # change the timezone of the program to the OpenERP server's assumed timezone
-    os.environ["TZ"] = "UTC"
-
-    DEFAULT_CONFIG = {
-        'server.socket_host': '0.0.0.0',
-        'tools.sessions.on': True,
-        'tools.sessions.storage_type': 'file',
-        'tools.sessions.timeout': 60
-    }
-
-    # Parse config
-    op = optparse.OptionParser()
-    op.add_option("-p", "--port", dest="server.socket_port", default=8002, help="listening port", type="int", metavar="NUMBER")
-    op.add_option("-s", "--session-path", dest="tools.sessions.storage_path", default=os.path.join(tempfile.gettempdir(), "cpsessions"),  help="directory used for session storage", metavar="DIR")
-    op.add_option("--server-host", dest="openerp.server.host", default='127.0.0.1', help="OpenERP server hostname", metavar="HOST")
-    op.add_option("--server-port", dest="openerp.server.port", default=8069, help="OpenERP server port", type="int", metavar="NUMBER")
-    op.add_option("--db-filter", dest="openerp.dbfilter", default='.*', help="Filter listed database", metavar="REGEXP")
-    (o, args) = op.parse_args(argv[1:])
-    o = vars(o)
-    for k in o.keys():
-        if o[k] is None:
-            del(o[k])
-
-    # Setup and run cherrypy
-    cherrypy.tree.mount(Root())
-
-    cherrypy.config.update(config=DEFAULT_CONFIG)
-    if os.path.exists(os.path.join(path_root,'openerp-web.cfg')):
-        cherrypy.config.update(os.path.join(path_root,'openerp-web.cfg'))
-    if os.path.exists(os.path.expanduser('~/.openerp_webrc')):
-        cherrypy.config.update(os.path.expanduser('~/.openerp_webrc'))
-    cherrypy.config.update(o)
-
-    if not os.path.exists(cherrypy.config['tools.sessions.storage_path']):
-        os.makedirs(cherrypy.config['tools.sessions.storage_path'], 0700)
-
-    cherrypy.server.subscribe()
-    cherrypy.engine.start()
-    cherrypy.engine.block()
-
+                    if getattr(m, 'exposed', False):
+                        print "Dispatching to", ps, c, meth, m
+                        return m
+        return None
