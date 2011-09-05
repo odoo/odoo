@@ -613,6 +613,97 @@ openerp.web.Session = openerp.web.CallbackEnabled.extend( /** @lends openerp.web
                 this.module_loaded[mod] = true;
             }
         }
+    },
+    /**
+     * Cooperative file download implementation, for ajaxy APIs.
+     *
+     * Requires that the server side implements an httprequest correctly
+     * setting the `fileToken` cookie to the value provided as the `token`
+     * parameter. The cookie *must* be set on the `/` path and *must not* be
+     * `httpOnly`.
+     *
+     * It would probably also be a good idea for the response to use a
+     * `Content-Disposition: attachment` header, especially if the MIME is a
+     * "known" type (e.g. text/plain, or for some browsers application/json
+     *
+     * @param {Object} options
+     * @param {String} [options.url] used to dynamically create a form
+     * @param {Object} [options.data] data to add to the form submission. If can be used without a form, in which case a form is created from scratch. Otherwise, added to form data
+     * @param {HTMLFormElement} [options.form] the form to submit in order to fetch the file
+     * @param {Function} [options.success] callback in case of download success
+     * @param {Function} [options.error] callback in case of request error, provided with the error body
+     * @param {Function} [options.complete] called after both ``success`` and ``error` callbacks have executed
+     */
+    get_file: function (options) {
+        // need to detect when the file is done downloading (not used
+        // yet, but we'll need it to fix the UI e.g. with a throbber
+        // while dump is being generated), iframe load event only fires
+        // when the iframe content loads, so we need to go smarter:
+        // http://geekswithblogs.net/GruffCode/archive/2010/10/28/detecting-the-file-download-dialog-in-the-browser.aspx
+        var timer, token = new Date().getTime(),
+            cookie_name = 'fileToken', cookie_length = cookie_name.length,
+            CHECK_INTERVAL = 1000, id = _.uniqueId('get_file_frame'),
+            remove_form = false;
+
+        var $form, $form_data = $('<div>');
+
+        var complete = function () {
+            if (options.complete) { options.complete(); }
+            clearTimeout(timer);
+            $form_data.remove();
+            $target.remove();
+            if (remove_form && $form) { $form.remove(); }
+        };
+        var $target = $('<iframe style="display: none;">')
+            .attr({id: id, name: id})
+            .appendTo(document.body)
+            .load(function () {
+                if (options.error) { options.error(this.contentDocument.body); }
+                complete();
+            });
+
+        if (options.form) {
+            $form = $(options.form);
+        } else {
+            remove_form = true;
+            $form = $('<form>', {
+                action: options.url,
+                method: 'POST'
+            }).appendTo(document.body);
+        }
+
+        _(_.extend({}, options.data || {},
+                   {session_id: this.session_id, token: token}))
+            .each(function (value, key) {
+                $('<input type="hidden" name="' + key + '">')
+                    .val(value)
+                    .appendTo($form_data);
+            });
+
+        $form
+            .append($form_data)
+            .attr('target', id)
+            .get(0).submit();
+
+        var waitLoop = function () {
+            var cookies = document.cookie.split(';');
+            // setup next check
+            timer = setTimeout(waitLoop, CHECK_INTERVAL);
+            for (var i=0; i<cookies.length; ++i) {
+                var cookie = cookies[i].replace(/^\s*/, '');
+                if (!cookie.indexOf(cookie_name === 0)) { continue; }
+                var cookie_val = cookie.substring(cookie_length + 1);
+                if (parseInt(cookie_val, 10) !== token) { continue; }
+
+                // clear cookie
+                document.cookie = _.sprintf("%s=;expires=%s;path=/",
+                    cookie_name, new Date().toGMTString());
+                if (options.success) { options.success(); }
+                complete();
+                return;
+            }
+        };
+        timer = setTimeout(waitLoop, CHECK_INTERVAL);
     }
 });
 

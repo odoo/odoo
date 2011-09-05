@@ -3,6 +3,7 @@
 import base64
 import csv
 import glob
+import itertools
 import operator
 import os
 import re
@@ -252,7 +253,7 @@ class Database(openerpweb.Controller):
             return req.make_response(db_dump,
                 [('Content-Type', 'application/octet-stream; charset=binary'),
                  ('Content-Disposition', 'attachment; filename="' + backup_db + '.dump"')],
-                {'fileToken': token}
+                {'fileToken': int(token)}
             )
         except xmlrpclib.Fault, e:
             if e.faultCode and e.faultCode.split(':')[0] == 'AccessDenied':
@@ -1076,62 +1077,22 @@ class TreeView(View):
             req,'action', 'tree_but_open',[(model, id)],
             False)
 
-def export_csv(fields, result):
-    fp = StringIO()
-    writer = csv.writer(fp, quoting=csv.QUOTE_ALL)
-
-    writer.writerow(fields)
-
-    for data in result:
-        row = []
-        for d in data:
-            if isinstance(d, basestring):
-                d = d.replace('\n',' ').replace('\t',' ')
-                try:
-                    d = d.encode('utf-8')
-                except:
-                    pass
-            if d is False: d = None
-            row.append(d)
-        writer.writerow(row)
-
-    fp.seek(0)
-    data = fp.read()
-    fp.close()
-    return data
-
-def export_xls(fieldnames, table):
-    try:
-        import xlwt
-    except ImportError:
-        common.error(_('Import Error.'), _('Please install xlwt library to export to MS Excel.'))
-
-    workbook = xlwt.Workbook()
-    worksheet = workbook.add_sheet('Sheet 1')
-
-    for i, fieldname in enumerate(fieldnames):
-        worksheet.write(0, i, str(fieldname))
-        worksheet.col(i).width = 8000 # around 220 pixels
-
-    style = xlwt.easyxf('align: wrap yes')
-
-    for row_index, row in enumerate(table):
-        for cell_index, cell_value in enumerate(row):
-            cell_value = str(cell_value)
-            cell_value = re.sub("\r", " ", cell_value)
-            worksheet.write(row_index + 1, cell_index, cell_value, style)
-
-
-    fp = StringIO()
-    workbook.save(fp)
-    fp.seek(0)
-    data = fp.read()
-    fp.close()
-    #return data.decode('ISO-8859-1')
-    return unicode(data, 'utf-8', 'replace')
-
 class Export(View):
     _cp_path = "/web/export"
+
+    @openerpweb.jsonrequest
+    def formats(self, req):
+        """ Returns all valid export formats
+
+        :returns: for each export format, a pair of identifier and printable name
+        :rtype: [(str, str)]
+        """
+        return sorted([
+            controller.fmt
+            for path, controller in openerpweb.controllers_path.iteritems()
+            if path.startswith(self._cp_path)
+            if hasattr(controller, 'fmt')
+        ], key=operator.itemgetter(1))
 
     def fields_get(self, req, model):
         Model = req.session.model(model)
@@ -1139,174 +1100,228 @@ class Export(View):
         return fields
 
     @openerpweb.jsonrequest
-    def get_fields(self, req, model, prefix='', name= '', field_parent=None, params={}):
-        import_compat = params.get("import_compat", False)
+    def get_fields(self, req, model, prefix='', parent_name= '',
+                   import_compat=True, parent_field_type=None):
 
-        fields = self.fields_get(req, model)
-        field_parent_type = params.get("parent_field_type",False)
-
-        if import_compat and field_parent_type and field_parent_type == "many2one":
+        if import_compat and parent_field_type == "many2one":
             fields = {}
+        else:
+            fields = self.fields_get(req, model)
+        fields['.id'] = fields.pop('id') if 'id' in fields else {'string': 'ID'}
 
-        fields.update({'id': {'string': 'ID'}, '.id': {'string': 'Database ID'}})
+        fields_sequence = sorted(fields.iteritems(),
+            key=lambda field: field[1].get('string', ''))
+
         records = []
-        fields_order = fields.keys()
-        fields_order.sort(lambda x,y: -cmp(fields[x].get('string', ''), fields[y].get('string', '')))
+        for field_name, field in fields_sequence:
+            if import_compat and field.get('readonly'):
+                # If none of the field's states unsets readonly, skip the field
+                if all(dict(attrs).get('readonly', True)
+                       for attrs in field.get('states', {}).values()):
+                    continue
 
-        for index, field in enumerate(fields_order):
-            value = fields[field]
-            record = {}
-            if import_compat and value.get('readonly', False):
-                ok = False
-                for sl in value.get('states', {}).values():
-                    for s in sl:
-                        ok = ok or (s==['readonly',False])
-                if not ok: continue
-
-            id = prefix + (prefix and '/'or '') + field
-            nm = name + (name and '/' or '') + value['string']
-            record.update(id=id, string= nm, action='javascript: void(0)',
-                          target=None, icon=None, children=[], field_type=value.get('type',False), required=value.get('required', False))
+            id = prefix + (prefix and '/'or '') + field_name
+            name = parent_name + (parent_name and '/' or '') + field['string']
+            record = {'id': id, 'string': name,
+                      'value': id, 'children': False,
+                      'field_type': field.get('type'),
+                      'required': field.get('required')}
             records.append(record)
 
-            if len(nm.split('/')) < 3 and value.get('relation', False):
-                if import_compat:
-                    ref = value.pop('relation')
-                    cfields = self.fields_get(req, ref)
-                    if (value['type'] == 'many2many'):
-                        record['children'] = []
-                        record['params'] = {'model': ref, 'prefix': id, 'name': nm}
+            if len(name.split('/')) < 3 and 'relation' in field:
+                ref = field.pop('relation')
+                record['value'] += '/id'
+                record['params'] = {'model': ref, 'prefix': id, 'name': name}
 
-                    elif value['type'] == 'many2one':
-                        record['children'] = [id + '/id', id + '/.id']
-                        record['params'] = {'model': ref, 'prefix': id, 'name': nm}
+                if not import_compat or field['type'] == 'one2many':
+                    # m2m field in import_compat is childless
+                    record['children'] = True
 
-                    else:
-                        cfields_order = cfields.keys()
-                        cfields_order.sort(lambda x,y: -cmp(cfields[x].get('string', ''), cfields[y].get('string', '')))
-                        children = []
-                        for j, fld in enumerate(cfields_order):
-                            cid = id + '/' + fld
-                            cid = cid.replace(' ', '_')
-                            children.append(cid)
-                        record['children'] = children or []
-                        record['params'] = {'model': ref, 'prefix': id, 'name': nm}
-                else:
-                    ref = value.pop('relation')
-                    cfields = self.fields_get(req, ref)
-                    cfields_order = cfields.keys()
-                    cfields_order.sort(lambda x,y: -cmp(cfields[x].get('string', ''), cfields[y].get('string', '')))
-                    children = []
-                    for j, fld in enumerate(cfields_order):
-                        cid = id + '/' + fld
-                        cid = cid.replace(' ', '_')
-                        children.append(cid)
-                    record['children'] = children or []
-                    record['params'] = {'model': ref, 'prefix': id, 'name': nm}
-
-        records.reverse()
         return records
 
     @openerpweb.jsonrequest
-    def save_export_lists(self, req, name, model, field_list):
-        result = {'resource':model, 'name':name, 'export_fields': []}
-        for field in field_list:
-            result['export_fields'].append((0, 0, {'name': field}))
-        return req.session.model("ir.exports").create(result, req.session.eval_context(req.context))
-
-    @openerpweb.jsonrequest
-    def exist_export_lists(self, req, model):
-        export_model = req.session.model("ir.exports")
-        return export_model.read(export_model.search([('resource', '=', model)]), ['name'])
-
-    @openerpweb.jsonrequest
-    def delete_export(self, req, export_id):
-        req.session.model("ir.exports").unlink(export_id, req.session.eval_context(req.context))
-        return True
-
-    @openerpweb.jsonrequest
     def namelist(self,req,  model, export_id):
+        # TODO: namelist really has no reason to be in Python (although itertools.groupby helps)
+        export = req.session.model("ir.exports").read([export_id])[0]
+        export_fields_list = req.session.model("ir.exports.line").read(
+            export['export_fields'])
 
-        result = self.get_data(req, model, req.session.eval_context(req.context))
-        ir_export_obj = req.session.model("ir.exports")
-        ir_export_line_obj = req.session.model("ir.exports.line")
+        fields_data = self.fields_info(
+            req, model, map(operator.itemgetter('name'), export_fields_list))
 
-        field = ir_export_obj.read(export_id)
-        fields = ir_export_line_obj.read(field['export_fields'])
+        return dict(
+            (field['name'], fields_data[field['name']])
+            for field in export_fields_list)
 
-        name_list = {}
-        [name_list.update({field['name']: result.get(field['name'])}) for field in fields]
-        return name_list
-
-    def get_data(self, req, model, context=None):
-        ids = []
-        context = context or {}
-        fields_data = {}
-        proxy = req.session.model(model)
+    def fields_info(self, req, model, export_fields):
+        info = {}
         fields = self.fields_get(req, model)
-        if not ids:
-            f1 = proxy.fields_view_get(False, 'tree', context)['fields']
-            f2 = proxy.fields_view_get(False, 'form', context)['fields']
+        fields['.id'] = fields.pop('id') if 'id' in fields else {'string': 'ID'}
 
-            fields = dict(f1)
-            fields.update(f2)
-            fields.update({'id': {'string': 'ID'}, '.id': {'string': 'Database ID'}})
+        # To make fields retrieval more efficient, fetch all sub-fields of a
+        # given field at the same time. Because the order in the export list is
+        # arbitrary, this requires ordering all sub-fields of a given field
+        # together so they can be fetched at the same time
+        #
+        # Works the following way:
+        # * sort the list of fields to export, the default sorting order will
+        #   put the field itself (if present, for xmlid) and all of its
+        #   sub-fields right after it
+        # * then, group on: the first field of the path (which is the same for
+        #   a field and for its subfields and the length of splitting on the
+        #   first '/', which basically means grouping the field on one side and
+        #   all of the subfields on the other. This way, we have the field (for
+        #   the xmlid) with length 1, and all of the subfields with the same
+        #   base but a length "flag" of 2
+        # * if we have a normal field (length 1), just add it to the info
+        #   mapping (with its string) as-is
+        # * otherwise, recursively call fields_info via graft_subfields.
+        #   all graft_subfields does is take the result of fields_info (on the
+        #   field's model) and prepend the current base (current field), which
+        #   rebuilds the whole sub-tree for the field
+        #
+        # result: because we're not fetching the fields_get for half the
+        # database models, fetching a namelist with a dozen fields (including
+        # relational data) falls from ~6s to ~300ms (on the leads model).
+        # export lists with no sub-fields (e.g. import_compatible lists with
+        # no o2m) are even more efficient (from the same 6s to ~170ms, as
+        # there's a single fields_get to execute)
+        for (base, length), subfields in itertools.groupby(
+                sorted(export_fields),
+                lambda field: (field.split('/', 1)[0], len(field.split('/', 1)))):
+            subfields = list(subfields)
+            if length == 2:
+                # subfields is a seq of $base/*rest, and not loaded yet
+                info.update(self.graft_subfields(
+                    req, fields[base]['relation'], base, fields[base]['string'],
+                    subfields
+                ))
+            else:
+                info[base] = fields[base]['string']
 
-        def rec(fields):
-            _fields = {'id': 'ID' , '.id': 'Database ID' }
-            def model_populate(fields, prefix_node='', prefix=None, prefix_value='', level=2):
-                fields_order = fields.keys()
-                fields_order.sort(lambda x,y: -cmp(fields[x].get('string', ''), fields[y].get('string', '')))
+        return info
 
-                for field in fields_order:
-                    fields_data[prefix_node+field] = fields[field]
-                    if prefix_node:
-                        fields_data[prefix_node + field]['string'] = '%s%s' % (prefix_value, fields_data[prefix_node + field]['string'])
-                    st_name = fields[field]['string'] or field
-                    _fields[prefix_node+field] = st_name
-                    if fields[field].get('relation', False) and level>0:
-                        fields2 = self.fields_get(req,  fields[field]['relation'])
-                        fields2.update({'id': {'string': 'ID'}, '.id': {'string': 'Database ID'}})
-                        model_populate(fields2, prefix_node+field+'/', None, st_name+'/', level-1)
-            model_populate(fields)
-            return _fields
-        return rec(fields)
+    def graft_subfields(self, req, model, prefix, prefix_string, fields):
+        export_fields = [field.split('/', 1)[1] for field in fields]
+        return (
+            (prefix + '/' + k, prefix_string + '/' + v)
+            for k, v in self.fields_info(req, model, export_fields).iteritems())
 
-    @openerpweb.jsonrequest
-    def export_data(self, req, model, fields, ids, domain, import_compat=False, export_format="csv", context=None):
+    #noinspection PyPropertyDefinition
+    @property
+    def content_type(self):
+        """ Provides the format's content type """
+        raise NotImplementedError()
+
+    def filename(self, base):
+        """ Creates a valid filename for the format (with extension) from the
+         provided base name (exension-less)
+        """
+        raise NotImplementedError()
+
+    def from_data(self, fields, rows):
+        """ Conversion method from OpenERP's export data to whatever the
+        current export class outputs
+
+        :params list fields: a list of fields to export
+        :params list rows: a list of records to export
+        :returns:
+        :rtype: bytes
+        """
+        raise NotImplementedError()
+
+    @openerpweb.httprequest
+    def index(self, req, data, token):
+        model, fields, ids, domain, import_compat = \
+            operator.itemgetter('model', 'fields', 'ids', 'domain',
+                                'import_compat')(
+                simplejson.loads(data))
+
         context = req.session.eval_context(req.context)
-        modle_obj = req.session.model(model)
-        ids = ids or modle_obj.search(domain, context=context)
+        Model = req.session.model(model)
+        ids = ids or Model.search(domain, context=context)
 
-        field = fields.keys()
-        result = modle_obj.export_data(ids, field , context).get('datas',[])
+        field_names = map(operator.itemgetter('name'), fields)
+        import_data = Model.export_data(ids, field_names, context).get('datas',[])
 
-        if not import_compat:
-            field = [val.strip() for val in fields.values()]
-
-        if export_format == 'xls':
-            return export_xls(field, result)
+        if import_compat:
+            columns_headers = field_names
         else:
-            return export_csv(field, result)
+            columns_headers = [val['label'].strip() for val in fields]
 
-class Export(View):
-    _cp_path = "/web/report"
 
-    @openerpweb.jsonrequest
-    def get_report(self, req, action):
-        report_srv = req.session.proxy("report")
-        context = req.session.eval_context(openerpweb.nonliterals.CompoundContext(req.context, \
-                                                                                  action["context"]))
+        return req.make_response(self.from_data(columns_headers, import_data),
+            headers=[('Content-Disposition', 'attachment; filename="%s"' % self.filename(model)),
+                     ('Content-Type', self.content_type)],
+            cookies={'fileToken': int(token)})
 
-        args = [req.session._db, req.session._uid, req.session._password, action["report_name"], context["active_ids"], {"id": context["active_id"], "model": context["active_model"], "report_type": action["report_type"]}, context]
-        report_id = report_srv.report(*args)
-        report = None
-        while True:
-            args2 = [req.session._db, req.session._uid, req.session._password, report_id]
-            report = report_srv.report_get(*args2)
-            if report["state"]:
-                break
-            time.sleep(_REPORT_POLLER_DELAY)
-        
-        #TODO: ok now we've got the report, and so what?
-        return False
+class CSVExport(Export):
+    _cp_path = '/web/export/csv'
+    fmt = ('csv', 'CSV')
+
+    @property
+    def content_type(self):
+        return 'text/csv;charset=utf8'
+
+    def filename(self, base):
+        return base + '.csv'
+
+    def from_data(self, fields, rows):
+        fp = StringIO()
+        writer = csv.writer(fp, quoting=csv.QUOTE_ALL)
+
+        writer.writerow(fields)
+
+        for data in rows:
+            row = []
+            for d in data:
+                if isinstance(d, basestring):
+                    d = d.replace('\n',' ').replace('\t',' ')
+                    try:
+                        d = d.encode('utf-8')
+                    except:
+                        pass
+                if d is False: d = None
+                row.append(d)
+            writer.writerow(row)
+
+        fp.seek(0)
+        data = fp.read()
+        fp.close()
+        return data
+
+class ExcelExport(Export):
+    _cp_path = '/web/export/xls'
+    fmt = ('xls', 'Excel')
+
+    @property
+    def content_type(self):
+        return 'application/vnd.ms-excel'
+
+    def filename(self, base):
+        return base + '.xls'
+
+    def from_data(self, fields, rows):
+        import xlwt
+
+        workbook = xlwt.Workbook()
+        worksheet = workbook.add_sheet('Sheet 1')
+
+        for i, fieldname in enumerate(fields):
+            worksheet.write(0, i, str(fieldname))
+            worksheet.col(i).width = 8000 # around 220 pixels
+
+        style = xlwt.easyxf('align: wrap yes')
+
+        for row_index, row in enumerate(rows):
+            for cell_index, cell_value in enumerate(row):
+                if isinstance(cell_value, basestring):
+                    cell_value = re.sub("\r", " ", cell_value)
+                worksheet.write(row_index + 1, cell_index, cell_value, style)
+
+        fp = StringIO()
+        workbook.save(fp)
+        fp.seek(0)
+        data = fp.read()
+        fp.close()
+        return data

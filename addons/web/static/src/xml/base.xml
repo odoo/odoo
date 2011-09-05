@@ -1229,119 +1229,87 @@
 <t t-name="ExportView">
     <a id="exportview" href="javascript: void(0)" style="text-decoration: none;color: #3D3D3D;">Export</a>
 </t>
-<t t-name="ExportTreeView">
-    <table class="view" style="background-color: #F3F3F3;">
-        <tr>
-            <td align="left">
-                This wizard will export all data that matches the current search criteria to a CSV file.
-                You can export all data or only the fields that can be reimported after modification.
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <table>
-                    <tr>
-                        <td class="label"><label>Export Type:</label></td>
-                        <td>
-                            <select id="import_compat" name="import_compat">
-                                <option value="1">Import Compatible Export</option>
-                                <option value="0">Export all Data</option>
-                            </select>
-                        </td>
-                        <td class="label"><label>Export Format</label></td>
-                        <td>
-                            <select id="export_format" name="export_format">
-                                <option value="csv">CSV</option>
-                                <option value="xls">Excel</option>
-                            </select>
-                        </td>
+<table t-name="ExportTreeView" class="oe-export"
+       style="background-color: #F3F3F3;">
+    <tr>
+        <td colspan="3">
+            This wizard will export all data that matches the current search criteria to a CSV file.
+            You can export all data or only the fields that can be reimported after modification.
+        </td>
+    </tr>
+    <tr>
+        <td colspan="3">
+            <label for="import_compat">Export Type:</label>
+            <select id="import_compat" name="import_compat">
+                <option value="yes">Import Compatible Export</option>
+                <option value="">Export all Data</option>
+            </select>
 
-                    </tr>
-                </table>
-            </td>
-        </tr>
+            <label for="export_format">Export Formats</label>
+            <select id="export_format" name="export_format"></select>
+        </td>
+    </tr>
 
-        <tr>
-            <td>
-                <table class="oe_export_fields_selector_export">
-                    <tr>
-                        <th class="oe_view_title" valign="bottom">Available fields</th>
-                        <th class="oe_view_title"></th>
-                        <th class="oe_view_title">Fields to export
-                        <a style="color: blue; text-decoration: none;" href="#" id="export_new_list">Save fields list</a>
-                        <div id="savenewlist"></div>
-                        <div id="ExistsExportList"></div>
-                        </th>
-                    </tr>
-                    <tr>
-                        <td class="oe_export_fields_selector_left">
-                            <div id="left_field_panel">
-                            </div>
-                        </td>
-                        <td>
-                            <table class="oe_export_fields_selector_center">
-                                <tr>
-                                    <td align="center">
-                                        <button id="add_field" class="oe_export_button_export">Add</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td align="center">
-                                        <button id="remove_field" class="oe_export_button_export">Remove</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td align="center">
-                                        <button id="remove_all_field" class="oe_export_button_export">Remove All</button>
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                        <td class="oe_export_fields_selector_right">
-                            <select name="fields_list" id="fields_list" multiple="multiple"></select>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-    </table>
-</t>
+    <tr>
+        <th>Available fields</th>
+        <th/>
+        <th>
+            Fields to export
+            <a style="color: blue; text-decoration: none;" href="#" id="export_new_list">Save fields list</a>
+            <div id="savenewlist"></div>
+            <div id="ExistsExportList"></div>
+        </th>
+    </tr>
+    <tr style="height: 400px;">
+        <td class="oe_export_fields_selector_left">
+            <div id="left_field_panel">
+            </div>
+        </td>
+        <td class="oe_export_fields_selector_center">
+            <button id="add_field">Add</button>
+            <button id="remove_field">Remove</button>
+            <button id="remove_all_field">Remove All</button>
+        </td>
+        <td class="oe_export_fields_selector_right">
+            <select name="fields_list" id="fields_list"
+                    multiple="multiple"></select>
+        </td>
+    </tr>
+</table>
 
-<t t-name="ExportTreeView-Secondary">
-    <table id="field-tree-structure" class="oe_export_fields_selector_export" cellspacing="0" cellpadding="0">
-        <tr><th class="oe_export_tree_header"> Name </th></tr>
-        <t t-call="ExportTreeView-Secondary.children"/>
-    </table>
-</t>
-<t t-name="ExportTreeView-Secondary.children">
-    <t t-foreach="fields" t-as="field" >
-        <tr t-att-id="'treerow-' + field.id" class="oe_export_row">
-            <td>
-                <table class="tree_grid" border="0">
-                    <tr class="oe_export_row">
-                        <t t-foreach="(field.id).split('/')" t-as="level" >
-                            <t t-if="(field.id).split('/')[0] != level">
-                                <td width="18">&amp;nbsp;</td>
-                            </t>
+<table t-name="ExportTreeView-Secondary"
+       id="field-tree-structure" class="oe_export_fields_selector_export"
+       cellspacing="0" cellpadding="0">
+    <tr><th class="oe_export_tree_header"> Name </th></tr>
+    <t t-call="ExportTreeView-Secondary.children"/>
+</table>
+<tr t-name="ExportTreeView-Secondary.children"
+    t-foreach="fields" t-as="field"
+    t-att-id="'treerow-' + field.id" class="oe_export_row">
+    <td>
+        <table class="tree_grid" border="0">
+            <tr class="oe_export_row">
+                <t t-foreach="(field.id).split('/')" t-as="level" >
+                    <t t-if="(field.id).split('/')[0] != level">
+                        <td width="18">&amp;nbsp;</td>
+                    </t>
+                </t>
+                <td valign="top" align="left" style="cursor: pointer;" width="18">
+                    <t t-if="field.children">
+                        <t t-if="(field.id).split('/').length != 3">
+                            <img t-att-id="'parentimg-' + field.id" src="/web/static/src/img/expand.gif" width="16" height="16" border="0"/>
                         </t>
-                        <td valign="top" align="left" style="cursor: pointer;" width="18">
-                            <t t-if="(field.children).length >= 1">
-                                <t t-if="(field.id).split('/').length != 3">
-                                    <img t-att-id="'parentimg-' + field.id" src="/web/static/src/img/expand.gif" width="16" height="16" border="0"/>
-                                </t>
-                            </t>
-                        </td>
-                        <td id="tree-column" valign="middle" align="left" style="cursor: pointer;">
-                            <a t-att-id="'export-' + field.id"  t-att-string="field.string" href="javascript: void(0);" style="text-decoration: none;">
-                                <t t-esc="field.string"/>
-                            </a>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-    </t>
-</t>
+                    </t>
+                </td>
+                <td id="tree-column" valign="middle" align="left" style="cursor: pointer;">
+                    <a t-att-id="'export-' + field.id"  t-att-string="field.string" href="javascript: void(0);" style="text-decoration: none;">
+                        <t t-esc="field.string"/>
+                    </a>
+                </td>
+            </tr>
+        </table>
+    </td>
+</tr>
 
 <t t-name="ExportNewList">
     <tr>
