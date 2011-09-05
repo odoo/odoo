@@ -111,7 +111,8 @@
                     <group colspan="4" col="6">
                         <field name="name" select="1"/>
                         <field name="login" select="1"/>
-                        <field name="new_password" password="True"/>
+                        <field name="id" invisible="1"/>
+                        <field name="new_password" password="True" attrs="{'required': [('id','=',False)]}"/>
                         <field name="active"/>
                     </group>
                     <notebook colspan="4">

@@ -81,12 +81,8 @@
     <rng:define name="diagram">
         <rng:element name="diagram">
             <rng:optional><rng:attribute name="string"/></rng:optional>
-            <rng:zeroOrMore>
-                <rng:choice>
-                    <rng:ref name="node"/>
-                    <rng:ref name="arrow"/>
-                </rng:choice>
-            </rng:zeroOrMore>
+            <rng:ref name="node"/>
+            <rng:ref name="arrow"/>
         </rng:element>
     </rng:define>
 
@@ -96,11 +92,9 @@
             <rng:optional><rng:attribute name="shape"/></rng:optional>
             <rng:optional><rng:attribute name="bgcolor"/></rng:optional>
             <rng:optional><rng:attribute name="form_view_ref"/></rng:optional>
-            <rng:zeroOrMore>
-                <rng:choice>
-                    <rng:ref name="field"/>
-                </rng:choice>
-            </rng:zeroOrMore>
+            <rng:oneOrMore>
+              <rng:ref name="field"/>
+            </rng:oneOrMore>
         </rng:element>
     </rng:define>
 
@@ -111,11 +105,9 @@
             <rng:attribute name="destination" />
             <rng:optional><rng:attribute name="form_view_ref"/></rng:optional>
             <rng:optional><rng:attribute name="label"/></rng:optional>
-            <rng:zeroOrMore>
-                <rng:choice>
-                    <rng:ref name="field"/>
-                </rng:choice>
-            </rng:zeroOrMore>
+            <rng:oneOrMore>
+              <rng:ref name="field"/>
+            </rng:oneOrMore>
         </rng:element>
     </rng:define>
 
@@ -444,7 +436,6 @@
             <rng:optional><rng:attribute name="operator"/></rng:optional>
             <rng:optional><rng:attribute name="colspan"/></rng:optional>
             <rng:optional><rng:attribute name="nolabel"/></rng:optional>
-            <rng:optional><rng:attribute name="default"/></rng:optional>
             <rng:optional><rng:attribute name="default_get"/></rng:optional>
             <rng:optional><rng:attribute name="required"/></rng:optional>
             <rng:optional><rng:attribute name="readonly"/></rng:optional>
@@ -601,7 +592,6 @@
             <rng:optional><rng:attribute name="context"/></rng:optional>
             <rng:optional><rng:attribute name="help"/></rng:optional>
             <rng:optional><rng:attribute name="domain"/></rng:optional>
-            <rng:optional><rng:attribute name="default"/></rng:optional>
             <rng:zeroOrMore>
                 <rng:choice>
                     <rng:ref name="form" />

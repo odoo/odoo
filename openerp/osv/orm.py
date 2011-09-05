@@ -984,9 +984,10 @@ class orm_template(object):
         cols = self._columns.copy()
         for f in self._inherit_fields:
             cols.update({f: self._inherit_fields[f][2]})
-        def fsplit(x):
-            if x=='.id': return [x]
-            return x.replace(':id','/id').replace('.id','/.id').split('/')
+        def fsplit(fieldname):
+            fixed_db_id = re.sub(r'([^/])\.id', r'\1/.id', fieldname)
+            fixed_external_id = re.sub(r'([^/]):id', r'\1/id', fixed_db_id)
+            return fixed_external_id.split('/')
         fields_to_export = map(fsplit, fields_to_export)
         datas = []
         for row in self.browse(cr, uid, ids, context):

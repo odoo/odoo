@@ -174,7 +174,7 @@ class lang(osv.osv):
 
     def write(self, cr, uid, ids, vals, context=None):
         for lang_id in ids :
-            self._lang_data_get.clear_cache(self,lang_id= lang_id)
+            self._lang_data_get.clear_cache(self)
         return super(lang, self).write(cr, uid, ids, vals, context)
 
     def unlink(self, cr, uid, ids, context=None):

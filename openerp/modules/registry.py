@@ -77,7 +77,7 @@ class Registry(object):
 
         return res
 
-    def clear_caches():
+    def clear_caches(self):
         """ Clear the caches
 
         This clears the caches associated to methods decorated with
@@ -160,7 +160,7 @@ class RegistryManager(object):
 
 
     @classmethod
-    def clear_caches(db_name):
+    def clear_caches(cls, db_name):
         """ Clear the caches
 
         This clears the caches associated to methods decorated with
