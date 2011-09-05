@@ -34,5 +34,11 @@
   I  am changing partner Assigned to the Claim
 -
   !python {model: crm.claim}: |
-    self.onchange_partner_id(cr, uid, [ref('crm_claim_damagedproduct0')], ref('base.res_partner_10'))     
-  
+    self.onchange_partner_id(cr, uid, [ref('crm_claim_damagedproduct0')], []) 
+    self.onchange_partner_id(cr, uid, [ref('crm_claim_damagedproduct0')], ref('base.res_partner_10'))
+- |
+  I  am changing partner Address to the Claim
+-
+  !python {model: crm.claim}: |
+    self.onchange_partner_address_id(cr, uid, [ref('crm_claim_damagedproduct0')], [], email = False)     
+     
