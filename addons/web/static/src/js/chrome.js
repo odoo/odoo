@@ -539,7 +539,7 @@ openerp.web.Header =  openerp.web.Widget.extend({
     },
     do_update: function () {
         var self = this;
-        var func = new openerp.base.Model(self.session, "res.users").get_func("read");
+        var func = new openerp.web.Model(self.session, "res.users").get_func("read");
         func(self.session.uid, ["name", "company_id"]).then(function(res) {
             self.$content = $(QWeb.render("Header-content", {widget: self, user: res}));
             self.$content.appendTo(self.$element);

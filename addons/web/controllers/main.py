@@ -702,9 +702,9 @@ class DataSet(openerpweb.Controller):
             args[context_id] = c
         
         for i in xrange(len(args)):
-            if isinstance(args[i], base.common.nonliterals.BaseContext):
+            if isinstance(args[i], web.common.nonliterals.BaseContext):
                 args[i] = req.session.eval_context(args[i])
-            if isinstance(args[i], base.common.nonliterals.BaseDomain):
+            if isinstance(args[i], web.common.nonliterals.BaseDomain):
                 args[i] = req.session.eval_domain(args[i])
 
         return getattr(req.session.model(model), method)(*args)

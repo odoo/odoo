@@ -737,7 +737,7 @@ openerp.web.ReadOnlyDataSetSearch = openerp.web.DataSetSearch.extend({
     on_unlink: function(ids) {}
 });
 
-openerp.base.Model = openerp.base.SessionAware.extend({
+openerp.web.Model = openerp.web.SessionAware.extend({
     init: function(session, model_name) {
         this._super(session);
         this.model_name = model_name;
@@ -751,7 +751,7 @@ openerp.base.Model = openerp.base.SessionAware.extend({
         };
     },
     _call: function (method, args) {
-        return this.rpc('/base/dataset/call', {
+        return this.rpc('/web/dataset/call', {
             model: this.model_name,
             method: method,
             args: args
@@ -767,7 +767,7 @@ openerp.base.Model = openerp.base.SessionAware.extend({
         });
     },
     _search_read: function(domain, fields, offset, limit, order, context) {
-        return this.rpc('/base/dataset/search_read', {
+        return this.rpc('/web/dataset/search_read', {
             model: this.model_name,
             fields: fields,
             offset: offset,
