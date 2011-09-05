@@ -106,9 +106,9 @@ openerp.web.DataExport = openerp.web.Dialog.extend({
     },
     do_load_export_field: function(field_list) {
         var export_node = this.$element.find("#fields_list");
-        for (var key in field_list) {
-            export_node.append(new Option(field_list[key], key));
-        }
+        _(field_list).each(function (field) {
+            export_node.append(new Option(field.label, field.name));
+        });
     },
     on_show_save_list: function() {
         var self = this;

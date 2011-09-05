@@ -1149,9 +1149,10 @@ class Export(View):
         fields_data = self.fields_info(
             req, model, map(operator.itemgetter('name'), export_fields_list))
 
-        return dict(
-            (field['name'], fields_data[field['name']])
-            for field in export_fields_list)
+        return [
+            {'name': field['name'], 'label': fields_data[field['name']]}
+            for field in export_fields_list
+        ]
 
     def fields_info(self, req, model, export_fields):
         info = {}
