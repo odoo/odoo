@@ -44,10 +44,16 @@
    !assert {model: crm.lead, id: crm_lead_democustomer, string: Lead in Draft}:
      - state == "draft"
 -
-  I assigning contact detail to the Lead "Demo Customer".
+  I assigning contact detail to the Lead "Demo Customer" without address.
 -
   !python {model: crm.lead}: |
-    self.onchange_partner_address_id(cr, uid, ref("crm_lead_democustomer"), ref("base.res_partner_address_notsotinysarl0"), email=False)
+    self.onchange_partner_address_id(cr, uid, ref("crm_lead_democustomer"), None, email=False)
+
+-
+  I assigning contact detail to the Lead "Demo Customer" with address.
+-
+  !python {model: crm.lead}: |
+    self.onchange_partner_address_id(cr, uid, ref("crm_lead_democustomer"), ref("base.res_partner_address_notsotinysarl0"), email=False)    
 
 -
   I selecting email "Opt-out" option for the "Demo Customer" Lead.

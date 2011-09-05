@@ -29,6 +29,16 @@
   !python {model: crm.lead}: |
     self.case_open(cr, uid, [ref('crm_lead_openerppresentation0')])
 -
+  I assigning stage
+-
+  !python {model: crm.lead}: |
+    self.onchange_stage_id(cr, uid, [ref('crm_lead_openerppresentation0')], [], context)
+-
+  I assigning stage
+-
+  !python {model: crm.lead}: |
+    self.stage_find_percent(cr, uid, 10.0, [])
+-
   I find that this lead can be converted to opportunity. 
 -
   !record {model: crm.lead2opportunity.partner, id: crm_lead2opportunity_partner0}:

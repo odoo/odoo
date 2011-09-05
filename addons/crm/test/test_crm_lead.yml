@@ -50,6 +50,11 @@
 -
    !python {model: crm.lead}: |
      self.case_open(cr, uid, [ref("crm_lead_newcustomer0")])
+     fields={
+            'day_open': 0.0,
+            'day_close': 0.0
+            }
+     self._compute_day(cr, uid, [ref("crm_lead_newcustomer0")], fields, context)
 - |
   I check that lead is now in 'open' state.
 -
