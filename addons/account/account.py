@@ -3151,16 +3151,18 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         company_name = self.pool.get('res.company').browse(cr, uid, company_id, context=context)
         for tax_code_template in obj_tax_code_template.browse(cr, uid, children_tax_code_template, context=context):
             vals = {
-                'name': (tax_code_root_id == tax_code_template.id) and company_name or tax_code_template.name,
+                'name': (tax_code_root_id == tax_code_template.id) and company_name.name or tax_code_template.name,
                 'code': tax_code_template.code,
                 'info': tax_code_template.info,
                 'parent_id': tax_code_template.parent_id and ((tax_code_template.parent_id.id in tax_code_template_ref) and tax_code_template_ref[tax_code_template.parent_id.id]) or False,
                 'company_id': company_id,
                 'sign': tax_code_template.sign,
             }
-            new_tax_code = obj_tax_code.create(cr, uid, vals)
-            #recording the new tax code to do the mapping
-            tax_code_template_ref[tax_code_template.id] = new_tax_code
+            rec_list = obj_tax_code.search(cr, uid, [('name', '=', vals['name']),('company_id', '=', vals['company_id'])], context=context)
+            if not rec_list:
+                new_tax_code = obj_tax_code.create(cr, uid, vals)
+                #recording the new tax code to do the mapping
+                tax_code_template_ref[tax_code_template.id] = new_tax_code
 
         # Generate taxes from templates.
         tax_template_to_tax = {}
