@@ -83,7 +83,7 @@ class report_custom(report_rml):
             cost_hour = wrk['hour']*workcenter.costs_hour
             total = cost_cycle + cost_hour
             xml = '<row>'
-            xml += "<col para='yes'>" + to_xml(tools.ustr(workcenter.name)) + '</col>'
+            xml += "<col para='yes'>" + to_xml(tools.ustr(workcenter.name)).replace('&', '&amp;') + '</col>'
             xml += "<col/>"
             xml += """<col f='yes'>"""+rml_obj.formatLang(cost_cycle)+' '+ company_currency.symbol + """</col>"""
             xml += """<col f='yes'>"""+rml_obj.formatLang(cost_hour)+' '+ company_currency.symbol + """</col>"""
