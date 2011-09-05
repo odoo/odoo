@@ -78,8 +78,8 @@ class ir_values(osv.osv):
        all records).
 
        The content of the entry is defined by the ``value`` column, which may either
-       contain an arbitrary value (for default values - when the ``object`` column
-       is False), or a reference string defining the action that should be executed.
+       contain an arbitrary value, or a reference string defining the action that
+       should be executed.
 
        .. rubric:: Usage: default values
        
@@ -102,14 +102,15 @@ class ir_values(osv.osv):
 
     def _value_unpickle(self, cursor, user, ids, name, arg, context=None):
         res = {}
-        for report in self.browse(cursor, user, ids, context=context):
-            value = report[name[:-9]]
-            if not report.object and value:
+        for record in self.browse(cursor, user, ids, context=context):
+            value = record[name[:-9]]
+            if record.key == 'default' and value:
+                # default values are pickled on the fly
                 try:
                     value = str(pickle.loads(value))
                 except Exception:
                     pass
-            res[report.id] = value
+            res[record.id] = value
         return res
 
     def _value_pickle(self, cursor, user, id, name, value, arg, context=None):
@@ -118,7 +119,9 @@ class ir_values(osv.osv):
         ctx = context.copy()
         if self.CONCURRENCY_CHECK_FIELD in ctx:
             del ctx[self.CONCURRENCY_CHECK_FIELD]
-        if not self.browse(cursor, user, id, context=context).object:
+        record = self.browse(cursor, user, id, context=context)
+        if record.key == 'default':
+            # default values are pickled on the fly
             value = pickle.dumps(value)
         self.write(cursor, user, id, {name[:-9]: value}, context=ctx)
 
@@ -134,11 +137,6 @@ class ir_values(osv.osv):
         act = self.pool.get('ir.actions.actions').browse(cr, uid, action_id, context=context)
         return {
                 'value': {'value_unpickle': act.type+','+str(act.id)}
-        }
-
-    def onchange_key(self, cr, uid, ids, key, context=None):
-        return {
-                'value': {'object': key == 'action'}
         }
 
     _columns = {
@@ -160,7 +158,6 @@ class ir_values(osv.osv):
         'value_unpickle': fields.function(_value_unpickle, fnct_inv=_value_pickle,
                                           type='text',
                                           string='Default value or action reference'),
-        'object': fields.boolean('No value serialization', help="Should be enabled when Type is Action"),
         'key': fields.selection([('action','Action'),('default','Default')],
                                 'Type', size=128, select=True, required=True,
                                 help="- Action: an action attached to one slot of the given model\n"
@@ -184,7 +181,6 @@ class ir_values(osv.osv):
     _defaults = {
         'key': 'action',
         'key2': 'tree_but_open',
-        'object': True,
     }
 
     def _auto_init(self, cr, context=None):
@@ -195,7 +191,17 @@ class ir_values(osv.osv):
 
     def set_default(self, cr, uid, model, field_name, value, for_all_users=True, company_id=False, condition=False):
         """Defines a default value for the given model and field_name. Any previous
-           default will be replaced and lost in the process.
+           default for the same scope (model, field_name, value, for_all_users, company_id, condition)
+           will be replaced and lost in the process.
+
+           Defaults can be later retrieved via :meth:`~.get_defaults`, which will return
+           the highest priority default for any given field. Defaults that are more specific
+           have a higher priority, in the following order (highest to lowest):
+
+               * specific to user and company
+               * specific to user only
+               * specific to company only
+               * global to everyone
 
            :param string model: model name
            :param string field_name: field name to which the default applies
@@ -208,7 +214,13 @@ class ir_values(osv.osv):
                                   is passed, the current user's company will be used.
            :param string condition: optional condition specification that can be used to
                                     restrict the applicability of the default values
-                                    (e.g. based on another field's value)
+                                    (e.g. based on another field's value). This is an
+                                    opaque string as far as the API is concerned, but client
+                                    stacks typically use single-field conditions in the
+                                    form ``'key=stringified_value'``.
+                                    (Currently, the condition is trimmed to 200 characters,
+                                    so values that share the same first 200 characters always
+                                    match)
            :return: id of the newly created ir.values entry
         """
         if isinstance(value, unicode):
@@ -233,7 +245,6 @@ class ir_values(osv.osv):
             'name': field_name,
             'value': pickle.dumps(value),
             'model': model,
-            'object': False,
             'key': 'default',
             'key2': condition and condition[:200],
             'user_id': False if for_all_users else uid,
@@ -241,18 +252,29 @@ class ir_values(osv.osv):
         })
 
     def get_defaults(self, cr, uid, model, condition=False):
-        """Returns any user-defined values registered for the given model.
-           This is not field-specific, but an optional ``condition`` can be
-           provided to query for default values that should be applied only
-           when the given condition is met (usually another field's value).
-           Defaults that have been set for the user herself will have higher
-           priority that those that have been set for everyone
-           (see :meth:`~.set_default`).
+        """Returns any default values that are defined for the current model and user,
+           (and match ``condition``, if specified), previously registered via
+           :meth:`~.set_default`.
+
+           Defaults are global to a model, not field-specific, but an optional
+           ``condition`` can be provided to restrict matching default values
+           to those that were defined for the same condition (usually based
+           on another field's value).
+
+           Default values also have priorities depending on whom they apply
+           to: only the highest priority value will be returned for any
+           field. See :meth:`~.set_default` for more details.
 
            :param string model: model name
            :param string condition: optional condition specification that can be used to
                                     restrict the applicability of the default values
-                                    (e.g. based on another field's value)
+                                    (e.g. based on another field's value). This is an
+                                    opaque string as far as the API is concerned, but client
+                                    stacks typically use single-field conditions in the
+                                    form ``'key=stringified_value'``.
+                                    (Currently, the condition is trimmed to 200 characters,
+                                    so values that share the same first 200 characters always
+                                    match)
            :return: list of default values tuples of the form ``(id, field_name, value)``
                     (``id`` is the ID of the default entry, usually irrelevant)
         """
@@ -317,7 +339,6 @@ class ir_values(osv.osv):
         return self.create(cr, uid, {
             'key': 'action',
             'key2': action_slot,
-            'object': True,
             'model': model,
             'res_id': res_id,
             'name': name,

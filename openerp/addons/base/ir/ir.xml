@@ -93,7 +93,7 @@
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="values_view_search_action"/>
             <field name="domain">[('key','=','action')]</field>
-            <field name="context">{'default_object':1,'default_key':'action'}</field>
+            <field name="context">{'default_key':'action'}</field>
         </record>
         <record model="ir.actions.act_window.view" id="action_values_tree_view">
             <field name="sequence" eval="1"/>
@@ -116,7 +116,7 @@
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="values_view_search_action"/>
             <field name="domain">[('key','=','default')]</field>
-            <field name="context">{'default_object':0,'default_key':'default','default_key2':''}</field>
+            <field name="context">{'default_key':'default','default_key2':''}</field>
         </record>
         <record model="ir.actions.act_window.view" id="action_values_defaults_tree_view">
             <field name="sequence" eval="1"/>
