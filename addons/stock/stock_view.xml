@@ -698,7 +698,7 @@
                             <field name="name" readonly="1"/>
                             <field name="origin"/>
                             <field name="address_id" on_change="onchange_partner_in(address_id)" context="{'contact_display':'partner'}" colspan="4"/>
-                            <field name="invoice_state" string="Invoice Control"/>
+                            <field name="invoice_state" string="Invoice Control" groups="base.group_extended"/>
                             <field name="backorder_id" readonly="1" groups="base.group_extended"/>
                         </group>
                         <group colspan="2" col="2">
