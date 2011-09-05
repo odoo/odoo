@@ -235,43 +235,36 @@ class audittrail_objects_proxy(object_proxy):
         model_pool = pool.get('ir.model')
         field_pool = pool.get('ir.model.fields')
         log_line_pool = pool.get('audittrail.log.line')
-        #start Loop
         for line in lines:
-            if line['name'] in('__last_update','id'):
+            if line['name'] in ('__last_update','id'):
                 continue
+            field_obj = obj_pool._all_columns.get(line['name'], False)
+            assert field_obj, _("'%s' field does not exist in '%s' model" %(line['name'], model.model))
+            field_obj = field_obj.column
+            old_value = line.get('old_value', '')
+            new_value = line.get('new_value', '')
+            old_value_text = line.get('old_value_text', '')
+            new_value_text = line.get('new_value_text', '')
+            search_models = [ model.id ]
             if obj_pool._inherits:
-                inherits_ids = model_pool.search(cr, uid, [('model', '=', obj_pool._inherits.keys()[0])])
-                field_ids = field_pool.search(cr, uid, [('name', '=', line['name']), ('model_id', 'in', (model.id, inherits_ids[0]))])
-            else:
-                field_ids = field_pool.search(cr, uid, [('name', '=', line['name']), ('model_id', '=', model.id)])
-            field_id = field_ids and field_ids[0] or False
-            assert field_id, _("'%s' field does not exist in '%s' model" %(line['name'], model.model))
-
-            field = field_pool.read(cr, uid, field_id)
-            old_value = 'old_value' in line and  line['old_value'] or ''
-            new_value = 'new_value' in line and  line['new_value'] or ''
-            old_value_text = 'old_value_text' in line and  line['old_value_text'] or ''
-            new_value_text = 'new_value_text' in line and  line['new_value_text'] or ''
-
+                search_models += model_pool.search(cr, uid, [('model', 'in', obj_pool._inherits.keys())])
+            field_id = field_pool.search(cr, uid, [('name', '=', line['name']), ('model_id', 'in', search_models)])
             if old_value_text == new_value_text:
                 continue
-            if field['ttype'] == 'many2one':
-                if type(old_value) == tuple:
-                    old_value = old_value[0]
-                if type(new_value) == tuple:
-                    new_value = new_value[0]
+            if field_obj._type == 'many2one':
+                old_value = isinstance(old_value, tuple) and old_value[0] or old_value
+                new_value = isinstance(new_value, tuple) and new_value[0] or new_value
             vals = {
                     "log_id": log_id,
-                    "field_id": field_id,
+                    "field_id": field_id and field_id[0] or False,
                     "old_value": old_value,
                     "new_value": new_value,
                     "old_value_text": old_value_text,
                     "new_value_text": new_value_text,
-                    "field_description": field['field_description']
+                    "field_description": field_obj.string
                     }
             line_id = log_line_pool.create(cr, uid, vals)
             cr.commit()
-        #End Loop
         return True
 
 
