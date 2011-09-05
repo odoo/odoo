@@ -545,7 +545,15 @@ openerp.web.Header =  openerp.web.Widget.extend({
             self.$content.appendTo(self.$element);
             self.$element.find(".logout").click(self.on_logout);
             self.$element.find("a.preferences").click(self.on_preferences);
+            self.$element.find(".about").click(self.on_about);
             self.shortcut_load();
+        });
+    },
+    on_about: function() {
+        var self = this;
+        self.rpc("/web/webclient/version_info", {}).then(function(res) {
+            var $help = $(QWeb.render("About-Page", {version_info: res}));
+            debugger;
         });
     },
     do_reset: function() {

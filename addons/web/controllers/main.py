@@ -11,6 +11,7 @@ import simplejson
 import textwrap
 import xmlrpclib
 import time
+import webrelease
 from xml.etree import ElementTree
 from cStringIO import StringIO
 
@@ -192,6 +193,12 @@ class WebClient(openerpweb.Controller):
                         transl["messages"].append({'id': x.id, 'string': x.string})
         return {"modules": transs,
                 "lang_parameters": lang_obj}
+
+    @openerpweb.jsonrequest
+    def version_info(self, req):
+        return {
+            "version": webrelease.version
+        }
 
 class Database(openerpweb.Controller):
     _cp_path = "/web/database"
