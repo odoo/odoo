@@ -412,6 +412,7 @@ class Root(object):
         :returns: a callable matching the path sections, or ``None``
         :rtype: ``Controller | None``
         """
+        print "Find handler",l
         if len(l) > 1:
             for i in range(len(l), 1, -1):
                 ps = "/" + "/".join(l[0:i])

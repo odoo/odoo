@@ -1,8 +1,8 @@
-import base.common as openerpweb
-from base.controllers.main import View
+import web.common as openerpweb
+from web.controllers.main import View
 
 class DiagramView(View):
-    _cp_path = "/base_diagram/diagram"
+    _cp_path = "/web_diagram/diagram"
 
     @openerpweb.jsonrequest
     def load(self, req, model, view_id):

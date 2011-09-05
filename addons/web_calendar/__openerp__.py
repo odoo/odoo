@@ -1,7 +1,7 @@
 {
-    "name": "Base calendar",
+    "name": "web calendar",
     "version": "2.0",
-    "depends": ['base'],
+    "depends": ['web'],
     "js": [
         'static/lib/dhtmlxScheduler/codebase/dhtmlxscheduler_debug.js',
         'static/lib/dhtmlxScheduler/codebase/ext/dhtmlxscheduler_minical.js',

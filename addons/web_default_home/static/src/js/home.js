@@ -1,7 +1,7 @@
-openerp.base_default_home = function (openerp) {
-    QWeb.add_template('/base_default_home/static/src/xml/base_default_home.xml');
+openerp.web_default_home = function (openerp) {
+    QWeb.add_template('/web_default_home/static/src/xml/web_default_home.xml');
 
-    openerp.base_default_home = {
+    openerp.web_default_home = {
         applications: [
             [
                 {
@@ -49,7 +49,7 @@ openerp.base_default_home = function (openerp) {
         ]
     };
 
-    openerp.base.WebClient.include({
+    openerp.web.WebClient.include({
         default_home: function () {
             var self = this,
                 // resig class can't handle _super in async contexts, by the
@@ -57,8 +57,8 @@ openerp.base_default_home = function (openerp) {
                 // reset to a baseline value of this.prototype (or something
                 // like that)
                 old_home = this._super;
-            var Installer = new openerp.base.DataSet(
-                    this, 'base.setup.installer');
+            var Installer = new openerp.web.DataSet(
+                    this, 'web.setup.installer');
             Installer.call('already_installed', [], function (installed_modules) {
                 if (!_(installed_modules).isEmpty()) {
                     return old_home.call(self);
@@ -74,9 +74,9 @@ openerp.base_default_home = function (openerp) {
         }
     });
 
-    openerp.base.client_actions.add(
-        'home.default', 'openerp.base_default_home.DefaultHome');
-    openerp.base_default_home.DefaultHome = openerp.base.View.extend({
+    openerp.web.client_actions.add(
+        'home.default', 'openerp.web_default_home.DefaultHome');
+    openerp.web_default_home.DefaultHome = openerp.web.View.extend({
         template: 'StaticHome',
         start: function () {
             var r = this._super(), self = this;
@@ -89,15 +89,15 @@ openerp.base_default_home = function (openerp) {
             return this._super({
                 url: window.location.protocol + '//' + window.location.host + window.location.pathname,
                 session: this.session,
-                rows: openerp.base_default_home.applications
+                rows: openerp.web_default_home.applications
             })
         },
         install_module: function (module_name) {
-            var Modules = new openerp.base.DataSetSearch(
+            var Modules = new openerp.web.DataSetSearch(
                 this, 'ir.module.module', null, [['name', '=', module_name], ['state', '=', 'uninstalled']]);
-            var Upgrade = new openerp.base.DataSet(this, 'base.module.upgrade');
+            var Upgrade = new openerp.web.DataSet(this, 'web.module.upgrade');
 
-            $.blockUI({message:'<img src="/base/static/src/img/throbber2.gif">'});
+            $.blockUI({message:'<img src="/web/static/src/img/throbber2.gif">'});
             Modules.read_slice(['id'], {}, function (records) {
                 if (!(records.length === 1)) { return; }
                 Modules.call('state_update',

@@ -365,7 +365,7 @@ openerp.web.DataSet =  openerp.web.Widget.extend( /** @lends openerp.web.DataSet
         }, callback, error_callback);
     },
     /**
-     * Deletes an existing record from the dataweb
+     * Deletes an existing record from the database
      *
      * @param {Number|String} ids identifier of the record to delete
      * @param {Function} callback function called with operation result

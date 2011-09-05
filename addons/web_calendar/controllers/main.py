@@ -1,9 +1,9 @@
-import base.common as openerpweb
+import web.common as openerpweb
 
-from base.controllers.main import View
+from web.controllers.main import View
 
 class CalendarView(View):
-    _cp_path = "/base_calendar/calendarview"
+    _cp_path = "/web_calendar/calendarview"
     
     @openerpweb.jsonrequest
     def load(self, req, model, view_id, toolbar=False):

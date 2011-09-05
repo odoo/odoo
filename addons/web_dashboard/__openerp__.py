@@ -1,7 +1,7 @@
 {
-    "name": "Base Dashboard",
+    "name": "web Dashboard",
     "version": "2.0",
-    "depends": ['base'],
+    "depends": ['web'],
     "js": [
         'static/src/js/dashboard.js'
     ],

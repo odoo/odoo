@@ -2,19 +2,19 @@
 <t t-name="DashBoard">
     <div class="oe-dashboard-links">
         <button type="button" class="button oe-dashboard-link-reset" t-att-style="view.fields_view.custom_view_id ? null : 'display: none'">
-            <img src="/base/static/src/img/icons/STOCK_GOTO_FIRST.png" width="16" height="16"/>
+            <img src="/web/static/src/img/icons/STOCK_GOTO_FIRST.png" width="16" height="16"/>
             <span>Reset</span>
         </button>
         <button type="button" class="button oe-dashboard-link-undo" t-att-style="view.fields_view.custom_view_id ? null : 'display: none'">
-            <img src="/base/static/src/img/icons/gtk-undo.png" width="16" height="16"/>
+            <img src="/web/static/src/img/icons/gtk-undo.png" width="16" height="16"/>
             <span>Undo</span>
         </button>
         <button type="button" class="button oe-dashboard-link-add_widget">
-            <img src="/base/static/src/img/icons/STOCK_ADD.png" width="16" height="16"/>
+            <img src="/web/static/src/img/icons/STOCK_ADD.png" width="16" height="16"/>
             <span>Add Widget</span>
         </button>
         <button type="button" class="button oe-dashboard-link-change_layout">
-            <img src="/base/static/src/img/icons/gtk-edit.png" width="16" height="16"/>
+            <img src="/web/static/src/img/icons/gtk-edit.png" width="16" height="16"/>
             <span>Change layout</span>
         </button>
     </div>
@@ -32,7 +32,7 @@
     <div t-att-data-id="action.attrs.name" class="oe-dashboard-action">
         <h2 class="oe-dashboard-action-header oe_view_title">
             <t t-esc="action.attrs.string"/>
-            <!--<a href="#" class="oe-dashboard-action-rename"><img src="/base/static/src/img/icons/gtk-edit.png" width="16" height="16"/></a>-->
+            <!--<a href="#" class="oe-dashboard-action-rename"><img src="/web/static/src/img/icons/gtk-edit.png" width="16" height="16"/></a>-->
             <input class="oe-dashboard-action-input" type="text" name="title" value="" style="display: none"/>
             <span class='ui-icon ui-icon-closethick'></span>
             <span class='ui-icon ui-icon-minusthick oe-dashboard-fold' t-if="!action.attrs.fold"></span>
@@ -48,9 +48,9 @@
         </p>
         <ul>
             <li t-foreach="'1 1-1 1-1-1 1-2 2-1'.split(' ')" t-as="layout" t-att-data-layout="layout">
-                <img t-attf-src="/base_dashboard/static/src/img/layout_#{layout}.png"/>
+                <img t-attf-src="/web_dashboard/static/src/img/layout_#{layout}.png"/>
                 <img t-if="layout == current_layout"
-                    src="/base/static/src/img/icons/gtk-apply.png" width="16" height="16" class="oe-selected-layout"/>
+                    src="/web/static/src/img/icons/gtk-apply.png" width="16" height="16" class="oe-selected-layout"/>
             </li>
         </ul>
     </div>

@@ -1,11 +1,11 @@
 /*---------------------------------------------------------
- * OpenERP base library
+ * OpenERP web library
  *---------------------------------------------------------*/
 
-openerp.base.diagram = function (openerp) {
+openerp.web.diagram = function (openerp) {
 	
-openerp.base.views.add('diagram', 'openerp.base.DiagramView');
-openerp.base.DiagramView = openerp.base.Widget.extend({
+openerp.web.views.add('diagram', 'openerp.web.DiagramView');
+openerp.web.DiagramView = openerp.web.Widget.extend({
 	init: function(view_manager, session, element_id, dataset, view_id){
 		this._super(session, element_id);
         this.view_manager = view_manager;
@@ -20,7 +20,7 @@ openerp.base.DiagramView = openerp.base.Widget.extend({
 		console.log('data set>>',this.dataset)
 	},
 	start: function() {
-		this.rpc("/base_diagram/diagram/load", {"model": this.model, "view_id": this.view_id}, this.on_loaded);
+		this.rpc("/web_diagram/diagram/load", {"model": this.model, "view_id": this.view_id}, this.on_loaded);
 	},
 	
 	toTitleCase: function(str) {
@@ -99,7 +99,7 @@ openerp.base.DiagramView = openerp.base.Widget.extend({
 		
 		if(this.id) {
 			this.rpc(
-			'/base_diagram/diagram/get_diagram_info',
+			'/web_diagram/diagram/get_diagram_info',
 			{
 				'id': this.id,
 				'model': this.model,

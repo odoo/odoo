@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import base.common as openerpweb
+import web.common as openerpweb
 
 WIDGET_CONTENT_PATTERN = """<!DOCTYPE html>
 <html>
@@ -19,7 +19,7 @@ WIDGET_CONTENT_PATTERN = """<!DOCTYPE html>
 </html>
 """
 class Widgets(openerpweb.Controller):
-    _cp_path = '/base_dashboard/widgets'
+    _cp_path = '/web_dashboard/widgets'
 
     @openerpweb.httprequest
     def content(self, request, widget_id):

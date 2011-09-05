@@ -1,14 +1,14 @@
 /*---------------------------------------------------------
- * OpenERP base_gantt
+ * OpenERP web_gantt
  *---------------------------------------------------------*/
-openerp.base_gantt = function (openerp) {
-QWeb.add_template('/base_gantt/static/src/xml/base_gantt.xml');
-openerp.base.views.add('gantt', 'openerp.base_gantt.GanttView');
-openerp.base_gantt.GanttView = openerp.base.View.extend({
+openerp.web_gantt = function (openerp) {
+QWeb.add_template('/web_gantt/static/src/xml/web_gantt.xml');
+openerp.web.views.add('gantt', 'openerp.web_gantt.GanttView');
+openerp.web_gantt.GanttView = openerp.web.View.extend({
 
 init: function(parent, element_id, dataset, view_id) {
         this._super(parent, element_id);
-        this.view_manager = parent || new openerp.base.NullViewManager();
+        this.view_manager = parent || new openerp.web.NullViewManager();
         this.dataset = dataset;
         this.model = dataset.model;
         this.view_id = view_id;
@@ -31,7 +31,7 @@ init: function(parent, element_id, dataset, view_id) {
     },
 
     start: function() {
-        this.rpc("/base_gantt/ganttview/load",
+        this.rpc("/web_gantt/ganttview/load",
         {"model": this.model, "view_id": this.view_id}, this.on_loaded);
     },
 
@@ -67,7 +67,7 @@ init: function(parent, element_id, dataset, view_id) {
     create_gantt: function() {
 
         ganttChartControl = new GanttChart(this.day_length);
-        ganttChartControl.setImagePath("/base_gantt/static/lib/dhtmlxGantt/codebase/imgs/");
+        ganttChartControl.setImagePath("/web_gantt/static/lib/dhtmlxGantt/codeweb/imgs/");
         ganttChartControl.setEditable(true);
         ganttChartControl.showTreePanel(true);
         ganttChartControl.showContextMenu(true);
@@ -425,7 +425,7 @@ init: function(parent, element_id, dataset, view_id) {
                     }
                 }
         });
-        var action_manager = new openerp.base.ActionManager(this, element_id);
+        var action_manager = new openerp.web.ActionManager(this, element_id);
         action_manager.start();
         action_manager.do_action(action);
 
@@ -474,24 +474,24 @@ init: function(parent, element_id, dataset, view_id) {
     convert_str_date: function (str){
         if (str.length == 19){
             this.format = "yyyy-MM-dd HH:mm:ss";
-            return openerp.base.str_to_datetime(str);
+            return openerp.web.str_to_datetime(str);
         } else if (str.length == 10){
             this.format = "yyyy-MM-dd";
-            return openerp.base.str_to_date(str);
+            return openerp.web.str_to_date(str);
         } else if (str.length == 8){
             this.format = "HH:mm:ss";
-            return openerp.base.str_to_time(str);
+            return openerp.web.str_to_time(str);
         }
         throw "Unrecognized date/time format";
     },
 
     convert_date_str: function(full_date) {
         if (this.format == "yyyy-MM-dd HH:mm:ss"){
-            return openerp.base.datetime_to_str(full_date);
+            return openerp.web.datetime_to_str(full_date);
         } else if (this.format == "yyyy-MM-dd"){
-            return openerp.base.date_to_str(full_date);
+            return openerp.web.date_to_str(full_date);
         } else if (this.format == "HH:mm:ss"){
-            return openerp.base.time_to_str(full_date);
+            return openerp.web.time_to_str(full_date);
         }
         throw "Unrecognized date/time format";
     },
@@ -508,7 +508,7 @@ init: function(parent, element_id, dataset, view_id) {
     do_search: function (domains, contexts, groupbys) {
         var self = this;
         this.grp = groupbys;
-        return this.rpc('/base/session/eval_domain_and_context', {
+        return this.rpc('/web/session/eval_domain_and_context', {
             domains: domains,
             contexts: contexts,
             group_by_seq: groupbys

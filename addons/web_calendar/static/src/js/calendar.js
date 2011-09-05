@@ -1,11 +1,11 @@
 /*---------------------------------------------------------
- * OpenERP base_calendar
+ * OpenERP web_calendar
  *---------------------------------------------------------*/
 
-openerp.base_calendar = function(openerp) {
-QWeb.add_template('/base_calendar/static/src/xml/base_calendar.xml');
-openerp.base.views.add('calendar', 'openerp.base_calendar.CalendarView');
-openerp.base_calendar.CalendarView = openerp.base.View.extend({
+openerp.web_calendar = function(openerp) {
+QWeb.add_template('/web_calendar/static/src/xml/web_calendar.xml');
+openerp.web.views.add('calendar', 'openerp.web_calendar.CalendarView');
+openerp.web_calendar.CalendarView = openerp.web.View.extend({
 // Dhtmlx scheduler ?
     init: function(parent, element_id, dataset, view_id, options) {
         this._super(parent, element_id);
@@ -19,7 +19,7 @@ openerp.base_calendar.CalendarView = openerp.base.View.extend({
         this.creating_event_id = null;
         this.dataset_events = [];
         if (this.options.action_views_ids.form) {
-            this.form_dialog = new openerp.base_calendar.CalendarFormDialog(this, {}, this.options.action_views_ids.form, dataset);
+            this.form_dialog = new openerp.web_calendar.CalendarFormDialog(this, {}, this.options.action_views_ids.form, dataset);
             this.form_dialog.start();
         }
         this.COLOR_PALETTE = ['#f57900', '#cc0000', '#d400a8', '#75507b', '#3465a4', '#73d216', '#c17d11', '#edd400',
@@ -29,7 +29,7 @@ openerp.base_calendar.CalendarView = openerp.base.View.extend({
         this.color_map = {};
     },
     start: function() {
-        this.rpc("/base_calendar/calendarview/load", {"model": this.model, "view_id": this.view_id, 'toolbar': true}, this.on_loaded);
+        this.rpc("/web_calendar/calendarview/load", {"model": this.model, "view_id": this.view_id, 'toolbar': true}, this.on_loaded);
     },
     stop: function() {
         scheduler.clearAll();
@@ -75,10 +75,10 @@ openerp.base_calendar.CalendarView = openerp.base.View.extend({
         this.$element.html(QWeb.render("CalendarView", {"fields_view": this.fields_view}));
 
         if (this.options.sidebar && this.options.sidebar_id) {
-            this.sidebar = new openerp.base.Sidebar(this, this.options.sidebar_id);
+            this.sidebar = new openerp.web.Sidebar(this, this.options.sidebar_id);
             this.sidebar.start();
-            this.sidebar.navigator = new openerp.base_calendar.SidebarNavigator(this.sidebar, this.sidebar.add_section('navigator', "Navigator"), this);
-            this.sidebar.responsible = new openerp.base_calendar.SidebarResponsible(this.sidebar, this.sidebar.add_section('responsible', "Responsible"), this);
+            this.sidebar.navigator = new openerp.web_calendar.SidebarNavigator(this.sidebar, this.sidebar.add_section('navigator', "Navigator"), this);
+            this.sidebar.responsible = new openerp.web_calendar.SidebarResponsible(this.sidebar, this.sidebar.add_section('responsible', "Responsible"), this);
             this.sidebar.add_toolbar(data.fields_view.toolbar);
             this.set_common_sidebar_sections(this.sidebar);
             this.sidebar.do_unfold();
@@ -180,10 +180,10 @@ openerp.base_calendar.CalendarView = openerp.base.View.extend({
             }
 
             if (this.fields[this.date_start]['type'] == 'date') {
-                evt[this.date_start] = openerp.base.str_to_date(evt[this.date_start]).set({hour: 9}).toString('yyyy-MM-dd HH:mm:ss');
+                evt[this.date_start] = openerp.web.str_to_date(evt[this.date_start]).set({hour: 9}).toString('yyyy-MM-dd HH:mm:ss');
             }
             if (this.date_stop && evt[this.date_stop] && this.fields[this.date_stop]['type'] == 'date') {
-                evt[this.date_stop] = openerp.base.str_to_date(evt[this.date_stop]).set({hour: 17}).toString('yyyy-MM-dd HH:mm:ss');
+                evt[this.date_stop] = openerp.web.str_to_date(evt[this.date_stop]).set({hour: 17}).toString('yyyy-MM-dd HH:mm:ss');
             }
             res_events.push(this.convert_event(evt));
         }
@@ -195,8 +195,8 @@ openerp.base_calendar.CalendarView = openerp.base.View.extend({
         }
     },
     convert_event: function(evt) {
-        var date_start = openerp.base.str_to_datetime(evt[this.date_start]),
-            date_stop = this.date_stop ? openerp.base.str_to_datetime(evt[this.date_stop]) : null,
+        var date_start = openerp.web.str_to_datetime(evt[this.date_start]),
+            date_stop = this.date_stop ? openerp.web.str_to_datetime(evt[this.date_stop]) : null,
             date_delay = evt[this.date_delay] || null,
             res_text = '',
             res_description = [];
@@ -280,9 +280,9 @@ openerp.base_calendar.CalendarView = openerp.base.View.extend({
         var data = {
             name: event_obj.text
         };
-        data[this.date_start] = openerp.base.datetime_to_str(event_obj.start_date);
+        data[this.date_start] = openerp.web.datetime_to_str(event_obj.start_date);
         if (this.date_stop) {
-            data[this.date_stop] = openerp.base.datetime_to_str(event_obj.end_date);
+            data[this.date_stop] = openerp.web.datetime_to_str(event_obj.end_date);
         }
         if (this.date_delay) {
             var diff_seconds = Math.round((event_obj.end_date.getTime() - event_obj.start_date.getTime()) / 1000);
@@ -294,7 +294,7 @@ openerp.base_calendar.CalendarView = openerp.base.View.extend({
         var self = this;
         scheduler.clearAll();
         $.when(this.has_been_loaded).then(function() {
-            self.rpc('/base/session/eval_domain_and_context', {
+            self.rpc('/web/session/eval_domain_and_context', {
                 domains: domains,
                 contexts: contexts,
                 group_by_seq: groupbys
@@ -334,7 +334,7 @@ openerp.base_calendar.CalendarView = openerp.base.View.extend({
     }
 });
 
-openerp.base_calendar.CalendarFormDialog = openerp.base.Dialog.extend({
+openerp.web_calendar.CalendarFormDialog = openerp.web.Dialog.extend({
     init: function(view, options, view_id, dataset) {
         this._super(view, options);
         this.dataset = dataset;
@@ -343,7 +343,7 @@ openerp.base_calendar.CalendarFormDialog = openerp.base.Dialog.extend({
     },
     start: function() {
         this._super();
-        this.form = new openerp.base.FormView(this, this.element_id, this.dataset, this.view_id, {
+        this.form = new openerp.web.FormView(this, this.element_id, this.dataset, this.view_id, {
             sidebar: false,
             pager: false
         });
@@ -368,7 +368,7 @@ openerp.base_calendar.CalendarFormDialog = openerp.base.Dialog.extend({
     }
 });
 
-openerp.base_calendar.SidebarResponsible = openerp.base.Widget.extend({
+openerp.web_calendar.SidebarResponsible = openerp.web.Widget.extend({
     init: function(parent, element_id, view) {
         this._super(parent, element_id);
         this.view = view;
@@ -394,7 +394,7 @@ openerp.base_calendar.SidebarResponsible = openerp.base.Widget.extend({
     }
 });
 
-openerp.base_calendar.SidebarNavigator = openerp.base.Widget.extend({
+openerp.web_calendar.SidebarNavigator = openerp.web.Widget.extend({
     init: function(parent, element_id, view) {
         this._super(parent, element_id);
         this.view = view;

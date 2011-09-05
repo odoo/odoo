@@ -172,7 +172,7 @@ openerp.web.Loading =  openerp.web.Widget.extend({
     }
 });
 
-openerp.web.Dataweb = openerp.web.Widget.extend({
+openerp.web.Database = openerp.web.Widget.extend({
     init: function(parent, element_id, option_id) {
         this._super(parent, element_id);
         this.$option_id = $('#' + option_id);
@@ -499,7 +499,7 @@ openerp.web.Login =  openerp.web.Widget.extend({
                 this, "oe_database", "oe_db_options");
 
         this.$element.find('#oe-db-config').click(function() {
-            self.dataweb.start();
+            self.database.start();
         });
 
         this.$element.find("form").submit(this.on_submit);
@@ -825,7 +825,7 @@ openerp.web.WebClient = openerp.web.Widget.extend({
         this._super(null, element_id);
         openerp.webclient = this;
 
-        QWeb.add_template("/web/static/src/xml/web.xml");
+        QWeb.add_template("/web/static/src/xml/base.xml");
         var params = {};
         if(jQuery.param != undefined && jQuery.deparam(jQuery.param.querystring()).kitten != undefined) {
             this.$element.addClass("kitten-mode-activated");

@@ -4,13 +4,13 @@
 
 openerp.web_mobile.list_mobile = function (openerp) {
 
-openerp.web_mobile.ListView = openerp.base.Widget.extend({
+openerp.web_mobile.ListView = openerp.web.Widget.extend({
     init: function(session, element_id, list_id) {
         this._super(session, element_id);
         this.list_id = list_id;
     },
     start: function() {
-        this.rpc('/base/menu/action', {'menu_id': this.list_id},
+        this.rpc('/web/menu/action', {'menu_id': this.list_id},
                     this.on_menu_action_loaded);
     },
     on_menu_action_loaded: function(data) {
@@ -41,7 +41,7 @@ openerp.web_mobile.ListView = openerp.base.Widget.extend({
         }
         var self = this;
 
-        var dataset = new openerp.base.DataSetStatic(this, this.action.res_model, this.action.context);
+        var dataset = new openerp.web.DataSetStatic(this, this.action.res_model, this.action.context);
         dataset.domain=[['name','ilike',search_val]];
         dataset.name_search(search_val, dataset.domain, 'ilike',false ,function(result){
             self.$element.html(QWeb.render("ListView", {'records' : result}));

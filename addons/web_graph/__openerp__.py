@@ -1,7 +1,7 @@
 {
-    "name": "Base Graph",
+    "name": "web Graph",
     "version": "2.0",
-    "depends": ['base'],
+    "depends": ['web'],
     "js": [
            "static/lib/dhtmlxGraph/codebase/dhtmlxchart.js",
            "static/src/js/graph.js"],

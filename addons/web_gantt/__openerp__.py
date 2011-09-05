@@ -1,7 +1,7 @@
 {
-    "name": "Base Gantt",
+    "name": "web Gantt",
     "version": "2.0",
-    "depends": ['base'],
+    "depends": ['web'],
     "js": [
         'static/lib/dhtmlxGantt/sources/dhtmlxcommon.js',
         'static/lib/dhtmlxGantt/sources/dhtmlxgantt.js',

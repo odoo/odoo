@@ -1,8 +1,8 @@
 /*---------------------------------------------------------
- * OpenERP base_graph
+ * OpenERP web_graph
  *---------------------------------------------------------*/
 
-openerp.base_graph = function (openerp) {
+openerp.web_graph = function (openerp) {
 var COLOR_PALETTE = [
     '#cc99ff', '#ccccff', '#48D1CC', '#CFD784', '#8B7B8B', '#75507b',
     '#b0008c', '#ff0000', '#ff8e00', '#9000ff', '#0078ff', '#00ff00',
@@ -12,9 +12,9 @@ var COLOR_PALETTE = [
     '#ad7fa8', '#729fcf', '#8ae234', '#e9b96e', '#fce94f', '#f57900',
     '#cc0000', '#d400a8'];
 
-QWeb.add_template('/base_graph/static/src/xml/base_graph.xml');
-openerp.base.views.add('graph', 'openerp.base_graph.GraphView');
-openerp.base_graph.GraphView = openerp.base.View.extend({
+QWeb.add_template('/web_graph/static/src/xml/web_graph.xml');
+openerp.web.views.add('graph', 'openerp.web_graph.GraphView');
+openerp.web_graph.GraphView = openerp.web.View.extend({
 
     init: function(parent, element_id, dataset, view_id) {
         this._super(parent, element_id);
@@ -32,7 +32,7 @@ openerp.base_graph.GraphView = openerp.base.View.extend({
         this.$element.hide();
     },
     start: function() {
-        return this.rpc("/base_graph/graphview/load", {"model": this.model, "view_id": this.view_id}, this.on_loaded);
+        return this.rpc("/web_graph/graphview/load", {"model": this.model, "view_id": this.view_id}, this.on_loaded);
     },
     on_loaded: function(data) {
         this.all_fields = data.all_fields;
@@ -455,7 +455,7 @@ openerp.base_graph.GraphView = openerp.base.View.extend({
 
     do_search: function(domains, contexts, groupbys) {
         var self = this;
-        this.rpc('/base/session/eval_domain_and_context', {
+        this.rpc('/web/session/eval_domain_and_context', {
             domains: domains,
             contexts: contexts,
             group_by_seq: groupbys

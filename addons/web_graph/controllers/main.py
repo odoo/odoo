@@ -1,8 +1,8 @@
-from base.controllers.main import View
-import base.common as openerpweb
+from web.controllers.main import View
+import web.common as openerpweb
 
 class GraphView(View):
-    _cp_path = "/base_graph/graphview"
+    _cp_path = "/web_graph/graphview"
 
     @openerpweb.jsonrequest
     def load(self, req, model, view_id):

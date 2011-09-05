@@ -1,8 +1,8 @@
-openerp.base_dashboard = function(openerp) {
+openerp.web_dashboard = function(openerp) {
 
-QWeb.add_template('/base_dashboard/static/src/xml/base_dashboard.xml');
+QWeb.add_template('/web_dashboard/static/src/xml/web_dashboard.xml');
 
-openerp.base.form.DashBoard = openerp.base.form.Widget.extend({
+openerp.web.form.DashBoard = openerp.web.form.Widget.extend({
     init: function(view, node) {
         this._super(view, node);
         this.template = 'DashBoard';
@@ -36,7 +36,7 @@ openerp.base.form.DashBoard = openerp.base.form.Widget.extend({
                 delete(action.attrs.height);
                 delete(action.attrs.colspan);
                 self.actions_attrs[action.attrs.name] = action.attrs;
-                self.rpc('/base/action/load', {
+                self.rpc('/web/action/load', {
                     action_id: parseInt(action.attrs.name, 10)
                 }, self.on_load_action);
             });
@@ -48,20 +48,20 @@ openerp.base.form.DashBoard = openerp.base.form.Widget.extend({
         });
     },
     on_undo: function() {
-        this.rpc('/base/view/undo_custom', {
+        this.rpc('/web/view/undo_custom', {
             view_id: this.view.fields_view.view_id
         }, this.do_reload);
     },
     on_reset: function() {
-        this.rpc('/base/view/undo_custom', {
+        this.rpc('/web/view/undo_custom', {
             view_id: this.view.fields_view.view_id,
             reset: true
         }, this.do_reload);
     },
     on_add_widget: function() {
         var self = this;
-        var action_manager = new openerp.base.ActionManager(this);
-        var dialog = new openerp.base.Dialog(this, {
+        var action_manager = new openerp.web.ActionManager(this);
+        var dialog = new openerp.web.Dialog(this, {
             title : 'Actions',
             width: 800,
             height: 600,
@@ -97,7 +97,7 @@ openerp.base.form.DashBoard = openerp.base.form.Widget.extend({
             qdict = { view : this.view };
         // TODO: should load multiple actions at once
         _.each(actions, function(aid) {
-            self.rpc('/base/action/load', {
+            self.rpc('/web/action/load', {
                 action_id: aid
             }, function(result) {
                 self.actions_attrs[aid] = {
@@ -209,7 +209,7 @@ openerp.base.form.DashBoard = openerp.base.form.Widget.extend({
             board.columns.push(actions);
         });
         var arch = QWeb.render('DashBoard.xml', board);
-        this.rpc('/base/view/add_custom', {
+        this.rpc('/web/view/add_custom', {
             view_id: this.view.fields_view.view_id,
             arch: arch
         }, function() {
@@ -225,7 +225,7 @@ openerp.base.form.DashBoard = openerp.base.form.Widget.extend({
             action_buttons : false,
             pager: false
         };
-        var am = new openerp.base.ActionManager(this);
+        var am = new openerp.web.ActionManager(this);
         this.action_managers.push(am);
         am.appendTo($("#"+this.view.element_id + '_action_' + action.id));
         am.do_action(action);
@@ -250,7 +250,7 @@ openerp.base.form.DashBoard = openerp.base.form.Widget.extend({
         this.view.start();
     }
 });
-openerp.base.form.DashBoardLegacy = openerp.base.form.DashBoard.extend({
+openerp.web.form.DashBoardLegacy = openerp.web.form.DashBoard.extend({
     render: function() {
         if (this.node.tag == 'hpaned') {
             this.node.attrs.style = '1-1';
@@ -274,21 +274,21 @@ openerp.base.form.DashBoardLegacy = openerp.base.form.DashBoard.extend({
     }
 });
 
-openerp.base.form.widgets.add('hpaned', 'openerp.base.form.DashBoardLegacy');
-openerp.base.form.widgets.add('vpaned', 'openerp.base.form.DashBoardLegacy');
-openerp.base.form.widgets.add('board', 'openerp.base.form.DashBoard');
+openerp.web.form.widgets.add('hpaned', 'openerp.web.form.DashBoardLegacy');
+openerp.web.form.widgets.add('vpaned', 'openerp.web.form.DashBoardLegacy');
+openerp.web.form.widgets.add('board', 'openerp.web.form.DashBoard');
 
-openerp.base.client_actions.add(
-    'board.config.overview', 'openerp.base_dashboard.ConfigOverview'
+openerp.web.client_actions.add(
+    'board.config.overview', 'openerp.web_dashboard.ConfigOverview'
 );
-if (!openerp.base_dashboard) {
-    openerp.base_dashboard = {};
+if (!openerp.web_dashboard) {
+    openerp.web_dashboard = {};
 }
-openerp.base_dashboard.ConfigOverview = openerp.base.View.extend({
+openerp.web_dashboard.ConfigOverview = openerp.web.View.extend({
     template: 'ConfigOverview',
     init: function (parent, element_id) {
         this._super(parent, element_id);
-        this.dataset = new openerp.base.DataSetSearch(
+        this.dataset = new openerp.web.DataSetSearch(
                 this, 'ir.actions.todo');
         this.dataset.domain = [['type', '=', 'manual']];
     },
@@ -345,13 +345,13 @@ openerp.base_dashboard.ConfigOverview = openerp.base.View.extend({
     }
 });
 
-openerp.base.client_actions.add(
-    'board.home.applications', 'openerp.base_dashboard.ApplicationTiles');
-openerp.base_dashboard.ApplicationTiles = openerp.base.View.extend({
+openerp.web.client_actions.add(
+    'board.home.applications', 'openerp.web_dashboard.ApplicationTiles');
+openerp.web_dashboard.ApplicationTiles = openerp.web.View.extend({
     template: 'ApplicationTiles',
     start: function () {
         var self = this;
-        return new openerp.base.DataSetSearch(
+        return new openerp.web.DataSetSearch(
                 this, 'ir.ui.menu', null, [['parent_id', '=', false]])
             .read_slice( ['name', 'web_icon_data', 'web_icon_hover_data'], {}, function (applications) {
                 // Create a matrix of 3*x applications
@@ -371,16 +371,16 @@ openerp.base_dashboard.ApplicationTiles = openerp.base.View.extend({
             });
     }
 });
-openerp.base.client_actions.add(
-    'board.home.widgets', 'openerp.base_dashboard.Widget');
-openerp.base_dashboard.Widget = openerp.base.View.extend(/** @lends openerp.base_dashboard.Widgets# */{
+openerp.web.client_actions.add(
+    'board.home.widgets', 'openerp.web_dashboard.Widget');
+openerp.web_dashboard.Widget = openerp.web.View.extend(/** @lends openerp.web_dashboard.Widgets# */{
     template: 'HomeWidget',
     /**
      * Initializes a "HomeWidget" client widget: handles the display of a given
      * res.widget objects in an OpenERP view (mainly a dashboard).
      *
      * @constructs
-     * @extends openerp.base.View
+     * @extends openerp.web.View
      * @param {Object} parent
      * @param {Object} options
      * @param {Number} options.widget_id
@@ -390,13 +390,13 @@ openerp.base_dashboard.Widget = openerp.base.View.extend(/** @lends openerp.base
         this.widget_id = options.widget_id;
     },
     start: function () {
-        return new openerp.base.DataSet(this, 'res.widget').read_ids(
+        return new openerp.web.DataSet(this, 'res.widget').read_ids(
                 [this.widget_id], ['title'], this.on_widget_loaded);
     },
     on_widget_loaded: function (widgets) {
         var widget = widgets[0];
         var url = _.sprintf(
-            '/base_dashboard/widgets/content?session_id=%s&widget_id=%d',
+            '/web_dashboard/widgets/content?session_id=%s&widget_id=%d',
             this.session.session_id, widget.id);
         this.$element.html(QWeb.render('HomeWidget.content', {
             widget: widget,
