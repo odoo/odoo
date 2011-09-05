@@ -52,7 +52,7 @@ openerp.base_kanban.KanbanView = openerp.base.View.extend({
     },
     on_show_data: function(data) {
         var self = this;
-        this.$element.html(QWeb.render("KanbanBiew", {"data": data}));
+        this.$element.html(QWeb.render("KanbanView", {"data": data}));
         this.on_reload_kanban();
         var drag_handel = false;
         if (this.$element.find(".oe-kanban-draghandle").length > 0) {

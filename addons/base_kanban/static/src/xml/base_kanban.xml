@@ -1,33 +1,25 @@
 <template>
-<t t-name="KanbanBiew">
+<t t-name="KanbanView">
     <table style="width:100%;" id="kanbanview">
-        <tr>
-            <td>
-                <div class="oe_form_header">
-                    <button type="button" class="oe_kanban_button_new">New</button>
-                </div>
-            </td>
-        </tr>
-        <tr>
-            <t t-foreach="data" t-as="columns">
-                <td class="oe_table_column oe_column_heading" t-att-id="'column_' + columns.value">
-                    <t t-if="columns.value">
-                        <t t-esc="columns.header"/>
-                    </t>
-                </td>
-            </t>
-        </tr>
-        <tr>
-            <t t-foreach="data" t-as="columns">
-                <td class="oe_table_column" t-att-id="'column_' + columns.value">
-                    <div class="oe_column" t-att-id="'column_' + columns.value">
-                        <t t-foreach="columns.records" t-as="record">
-                            <div class="record" t-att-id="'main_' + record.id"/>
-                        </t>
-                    </div>
-                </td>
-            </t>
-        </tr>
+    <tr>
+        <td>
+            <div class="oe_form_header">
+                <button type="button" class="oe_kanban_button_new">New</button>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td t-foreach="data" t-as="columns" class="oe_table_column oe_column_heading" t-att-id="'column_' + columns.value">
+            <t t-if="columns.value" t-esc="columns.header"/>
+        </td>
+    </tr>
+    <tr>
+        <td t-foreach="data" t-as="columns" class="oe_table_column" t-att-id="'column_' + columns.value">
+            <div class="oe_column" t-att-id="'column_' + columns.value">
+                <div t-foreach="columns.records" t-as="record" class="record" t-att-id="'main_' + record.id"/>
+            </div>
+        </td>
+    </tr>
     </table>
 </t>
 </template>
