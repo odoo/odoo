@@ -1,14 +1,14 @@
 - |
   Now I check segmentation which allows users to perform segmentation within partners.
 - 
-  Creating a crm_profiling.question record
+  Creating a crm profiling question record.
 - 
   !record {model: crm_profiling.question, id: crm_profiling_question_openerppartner0}:
     answers_ids:
       - name: 'no'
     name: OpenERP partner?
 - 
-  Creating a crm_profiling.question record
+  Creating a crm profiling answer record.
 - 
   !record {model: crm_profiling.answer, id: crm_profiling_answer_openerppartner0}:
     name: 'yes'
@@ -19,7 +19,7 @@
   !record {model: res.partner.category, id: res_partner_category_customers0}:
     name: Customers
 - | 
-  I'm creating new partner "Mark Johnson" with his email "info@mycustomer.com".
+  I'm creating new partner "John" with his email "info@mycustomer.com".
 - 
   !record {model: res.partner, id: res_partner_john0}:
     address:
@@ -42,7 +42,7 @@
     data ={'form': {'questionnaire_name': ref('res_partner_john0')}, 'ids': [ref('res_partner_john0')], 'report_type': 'pdf', 'model': 'res.partner', 'id': ref('res_partner_john0')}
     self._questionnaire_compute(cr, uid, data, context)
 - |
-  I start by creating new Questionnaire.
+  Now, I start by creating new Questionnaire.
 - 
   !record {model: crm_profiling.questionnaire, id: crm_profiling_questionnaire_basequestionnaire0}:
     description: First questionnaire.
@@ -52,14 +52,14 @@
       - crm_profiling.nb_employees
       - crm_profiling.partner_level
 - |
-  I create the form
+  I create the form for the "Base questionnaire".
 -
   !python {model: crm_profiling.questionnaire}: |
     context.update({'active_id':ref('res_partner_john0')})
     data ={'form': {'questionnaire_name': ref('res_partner_john0')}, 'ids': [ref('res_partner_john0')], 'report_type': 'pdf', 'model': 'res.partner', 'id': ref('res_partner_john0')}
     self.build_form(cr, uid, data, context)
 - 
-  Creating a crm.segmentation record
+  Creating a segmentation record
 - 
   !record {model: crm.segmentation, id: crm_segmentation_test1}:
     answer_yes:
@@ -70,22 +70,8 @@
     profiling_active: true
     som_interval: 0.0    
 - |
-  I continue the process.
+  I continue the process of segmentation.
 -
   !python {model: crm.segmentation}: |
-    #context.update({'active_id':ref('res_partner_john0')})   
     self.process_continue(cr, uid, [ref('crm_segmentation_test1')], start=False) 
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+       
