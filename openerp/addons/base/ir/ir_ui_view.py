@@ -73,6 +73,7 @@ class view(osv.osv):
             ('calendar', 'Calendar'),
             ('diagram','Diagram'),
             ('gantt', 'Gantt'),
+            ('kanban', 'Kanban'),
             ('search','Search')), 'View Type', required=True, select=True),
         'arch': fields.text('View Architecture', required=True),
         'inherit_id': fields.many2one('ir.ui.view', 'Inherited View', ondelete='cascade', select=True),
