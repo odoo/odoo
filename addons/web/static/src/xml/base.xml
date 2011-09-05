@@ -334,8 +334,8 @@
 </t>
 <t t-name="Header-content">
     <h1 class="header_title">
-        (<t t-esc="widget.session.db"/>)<br/>
-        <small class="username"><t t-esc="widget.session.login"/></small>
+        <t t-esc="user.company_id[1]"/> (<t t-esc="widget.session.db"/>)<br/>
+        <small class="username"><t t-esc="user.name"/></small>
     </h1>
     <div class="header_corner">
         <ul class="block">

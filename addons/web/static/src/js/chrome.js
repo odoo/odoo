@@ -538,11 +538,15 @@ openerp.web.Header =  openerp.web.Widget.extend({
         this._super();
     },
     do_update: function () {
-        this.$content = $(QWeb.render("Header-content", {widget: this}));
-        this.$content.appendTo(this.$element);
-        this.$element.find(".logout").click(this.on_logout);
-        this.$element.find("a.preferences").click(this.on_preferences);
-        return this.shortcut_load();
+        var self = this;
+        return new openerp.base.Model(self.session, "res.users")
+        .get_func("read")(self.session.uid, ["name", "company_id"]).pipe(function(res) {
+            self.$content = $(QWeb.render("Header-content", {widget: self, user: res}));
+            self.$content.appendTo(self.$element);
+            self.$element.find(".logout").click(self.on_logout);
+            self.$element.find("a.preferences").click(self.on_preferences);
+            return self.shortcut_load();
+        });
     },
     do_reset: function() {
         this.$content.remove();
