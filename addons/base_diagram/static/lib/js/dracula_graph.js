@@ -160,11 +160,13 @@ Graph.Renderer.Raphael = function(element, graph, width, height) {
      */
     this.isDrag = false;
     this.dragger = function (e) {
-        this.dx = e.clientX;
-        this.dy = e.clientY;
-        selfRef.isDrag = this;
-        this.set && this.set.animate({"fill-opacity": .1}, 200) && this.set.toFront();
-        e.preventDefault && e.preventDefault();
+    	if(e.detail < 2) {
+    		this.dx = e.clientX;
+	        this.dy = e.clientY;
+	        selfRef.isDrag = this;
+	        this.set && this.set.animate({"fill-opacity": .1}, 200) && this.set.toFront();
+	        e.preventDefault && e.preventDefault();
+    	}
     };
     
     var d = document.getElementById(element);
