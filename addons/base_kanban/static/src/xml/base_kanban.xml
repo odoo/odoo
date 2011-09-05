@@ -1,6 +1,6 @@
 <template>
 <t t-name="KanbanView">
-    <table style="width:100%;" id="kanbanview">
+    <table style="width:100%;" class="oe_kanban_view">
     <tr>
         <td>
             <div class="oe_form_header">
@@ -16,7 +16,7 @@
     <tr>
         <td t-foreach="data" t-as="columns" class="oe_table_column" t-att-id="'column_' + columns.value">
             <div class="oe_column" t-att-id="'column_' + columns.value">
-                <div t-foreach="columns.records" t-as="record" class="record" t-att-id="'main_' + record.id"/>
+                <div t-foreach="columns.records" t-as="record" class="oe_kanban_record" t-att-id="'main_' + record.id"/>
             </div>
         </td>
     </tr>
