@@ -145,15 +145,11 @@ openerp.web.DataExport = openerp.web.Dialog.extend({
                 return [0, 0, {name: field}];
             })
         }, function (export_list_id) {
-            if (!export_list_id) {
+            if (!export_list_id.result) {
                 return;
             }
-            if (self.$element.find("#saved_export_list").length > 0) {
-                self.$element.find("#saved_export_list").append(
-                        new Option(value, export_list_id));
-            } else {
-                self.show_exports_list();
-            }
+            self.$element.find("#saved_export_list").append(
+                    new Option(value, export_list_id.result));
             if (self.$element.find("#saved_export_list").is(":hidden")) {
                 self.show_exports_list();
             }
