@@ -83,7 +83,7 @@ openerp.base_diagram.DiagramView = openerp.base.View.extend({
         		};
         
         _.each(this.nodes.children, function(child) {
-        	if(child.attrs.invisible)
+        	if(child.attrs.invisible == '1')
         		params['invisible_nodes'].push(child.attrs.name);
     		else {
     			params['visible_nodes'].push(child.attrs.name);
@@ -170,7 +170,7 @@ openerp.base_diagram.DiagramView = openerp.base.View.extend({
             $('div#dia-canvas').children().remove();
         }
         
-        var layouter = new Graph.Layout.Ordered(diagram, topological_sort(diagram));
+        var layouter = new Graph.Layout.Ordered(diagram);
         var render_diagram = new Graph.Renderer.Raphael('dia-canvas', diagram, $('div#dia-canvas').width(), $('div#dia-canvas').height());
         
         _.each(diagram.edges, function(edge, index) {
