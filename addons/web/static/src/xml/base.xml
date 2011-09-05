@@ -1320,18 +1320,15 @@
 </t>
 
 <t t-name="Exists.ExportList">
-    <tr><th align="right"><label >Saved exports:</label></th></tr>
-    <tr align="left">
-        <td>
-            <select id="saved_export_list" style="width: 100%;">
-                <option></option>
-                <t t-foreach="existing_exports" t-as="export">
-                    <option t-att-value="export.id"><t t-esc="export.name"/></option>
-                </t>
-            </select>
-        </td>
-        <td><button class="oe_export_button_export" id="delete_export_list">Delete</button></td>
-    </tr>
+    <label for="saved_export_list">Saved exports:</label>
+
+    <select id="saved_export_list">
+        <option></option>
+        <t t-foreach="existing_exports" t-as="export">
+            <option t-att-value="export.id"><t t-esc="export.name"/></option>
+        </t>
+    </select>
+    <button class="oe_export_button_export" id="delete_export_list" type="button">Delete</button>
 </t>
 <t t-name="Change_Pwd">
     <form name="change_password_form" class="oe_forms" method="POST">
