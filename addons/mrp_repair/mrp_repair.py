@@ -706,12 +706,15 @@ class mrp_repair_line(osv.osv, ProductChangeMixin):
         if ids:
             company_id = self.browse(cr, uid, ids[0], context=context).repair_id.company_id.id
             product_id = location_obj.search(cr, uid, [('usage','=','production'), ('company_id','=',company_id)], context=context)
-            if not product_id:
-                product_id = location_obj.search(cr, uid, [('usage','=','production')], context=context)
+            if product_id:
+                product_id = product_id[0]
+            else:
+                product_id = False
+            
             if type != 'add':
                 return {'value': {
                     'to_invoice': False,
-                    'location_id': product_id[0],
+                    'location_id': product_id,
                     'location_dest_id': False
                     }
                 }
@@ -721,7 +724,7 @@ class mrp_repair_line(osv.osv, ProductChangeMixin):
             return {'value': {
                 'to_invoice': to_invoice,
                 'location_id': stock_id,
-                'location_dest_id': product_id[0]
+                'location_dest_id': product_id
                 }
         }
 
