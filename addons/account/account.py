@@ -20,7 +20,6 @@
 ##############################################################################
 
 import time
-import random
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from operator import itemgetter
@@ -2863,6 +2862,16 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                     res['fields'][field]['selection'] = template_select
         return res
 
+    def journals_already_created(self, cr, uid, name, vals_journal, company_id, context=None):
+        """
+        This method used for checking journals already created or not. If not then create new journal.
+        """
+        obj_journal = self.pool.get('account.journal')
+        rec_list = obj_journal.search(cr, uid, [('name','=', name),('company_id', '=', company_id)], context=context)
+        if not rec_list:
+            obj_journal.create(cr, uid, vals_journal, context=context)
+        return True
+
     def generate_journals(self, cr, uid, chart_template_id, acc_template_ref, company_id, bank_jrnl_acc_list, code_digits, context=None):
         """
         This method used for creating journals.
@@ -2891,12 +2900,10 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         #Sales Journal
         analytical_sale_ids = analytic_journal_obj.search(cr, uid, [('type','=','sale')], context=context)
         analytical_journal_sale = analytical_sale_ids and analytical_sale_ids[0] or False
-
-        file_no = str(random.randint(1,9))
         vals_journal = {
-            'name': _('Sales Journal-%s') %(file_no),
+            'name': _('Sales Journal'),
             'type': 'sale',
-            'code': _('SAJ%s') %(file_no),
+            'code': _('SAJ'),
             'view_id': view_id,
             'company_id': company_id,
             'analytic_journal_id': analytical_journal_sale,
@@ -2907,16 +2914,16 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                             'default_credit_account_id': income_acc_id,
                             'default_debit_account_id': income_acc_id
                                })
-        obj_journal.create(cr, uid, vals_journal, context=context)
+        self.journals_already_created(cr, uid, vals_journal['name'], vals_journal, company_id, context=context)
 
         # Purchase Journal
         analytical_purchase_ids = analytic_journal_obj.search(cr,uid,[('type','=','purchase')], context=context)
         analytical_journal_purchase = analytical_purchase_ids and analytical_purchase_ids[0] or False
 
         vals_journal = {
-            'name': _('Purchase Journal-%s') %(file_no),
+            'name': _('Purchase Journal'),
             'type': 'purchase',
-            'code': _('EXJ%s') %(file_no),
+            'code': _('EXJ'),
             'view_id': view_id,
             'company_id': company_id,
             'analytic_journal_id': analytical_journal_purchase,
@@ -2927,7 +2934,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                             'default_credit_account_id': expense_acc_id,
                             'default_debit_account_id': expense_acc_id
                                })
-        obj_journal.create(cr, uid, vals_journal, context=context)
+        self.journals_already_created(cr, uid, vals_journal['name'], vals_journal, company_id, context=context)
 
         # Creating Journals Sales Refund and Purchase Refund
         data = obj_data.get_object_reference(cr, uid, 'account', 'account_sp_refund_journal_view') 
@@ -2935,9 +2942,9 @@ class wizard_multi_charts_accounts(osv.osv_memory):
 
         #Sales Refund Journal
         vals_journal = {
-            'name': _('Sales Refund Journal-%s') %(file_no),
+            'name': _('Sales Refund Journal'),
             'type': 'sale_refund',
-            'code': _('SCNJ%s') %(file_no),
+            'code': _('SCNJ'),
             'view_id': view_id,
             'analytic_journal_id': analytical_journal_sale,
             'company_id': company_id
@@ -2947,13 +2954,13 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                             'default_credit_account_id': income_acc_id,
                             'default_debit_account_id': income_acc_id
                                })
-        obj_journal.create(cr, uid, vals_journal, context=context)
+        self.journals_already_created(cr, uid, vals_journal['name'], vals_journal, company_id, context=context)
 
         # Purchase Refund Journal
         vals_journal = {
-            'name': _('Purchase Refund Journal-%s') %(file_no),
+            'name': _('Purchase Refund Journal'),
             'type': 'purchase_refund',
-            'code': _('ECNJ%s') %(file_no),
+            'code': _('ECNJ'),
             'view_id': view_id,
             'analytic_journal_id': analytical_journal_purchase,
             'company_id': company_id
@@ -2963,7 +2970,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                             'default_credit_account_id': expense_acc_id,
                             'default_debit_account_id': expense_acc_id
                                })
-        obj_journal.create(cr, uid, vals_journal, context=context)
+        self.journals_already_created(cr, uid, vals_journal['name'], vals_journal, company_id, context=context)
 
         # Miscellaneous Journal
         data = obj_data.get_object_reference(cr, uid, 'account', 'account_journal_view') 
@@ -2972,28 +2979,28 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         analytical_miscellaneous_ids = analytic_journal_obj.search(cr, uid, [('type', '=', 'situation')], context=context)
 
         vals_journal = {
-            'name': _('Miscellaneous Journal%s') %(file_no),
+            'name': _('Miscellaneous Journal'),
             'type': 'general',
-            'code': _('MISC%s') %(file_no),
+            'code': _('MISC'),
             'view_id': view_id,
             'analytic_journal_id': analytical_miscellaneous_ids and analytical_miscellaneous_ids[0] or False,
             'company_id': company_id
         }
-        obj_journal.create(cr, uid, vals_journal, context=context)
+        self.journals_already_created(cr, uid, vals_journal['name'], vals_journal, company_id, context=context)
 
         # Opening Entries Journal
         if template.property_account_income_opening and template.property_account_expense_opening:
             vals_journal = {
-                'name': _('Opening Entries Journal%s') %(file_no),
+                'name': _('Opening Entries Journal'),
                 'type': 'situation',
-                'code': _('OPEJ%s') %(file_no),
+                'code': _('OPEJ'),
                 'view_id': view_id,
                 'company_id': company_id,
                 'centralisation': True,
                 'default_credit_account_id': credit_acc_id,
                 'default_debit_account_id': debit_acc_id
                 }
-            obj_journal.create(cr, uid, vals_journal, context=context)
+            self.journals_already_created(cr, uid, vals_journal['name'], vals_journal, company_id, context=context)
 
         data = obj_data.get_object_reference(cr, uid, 'account', 'account_journal_bank_view_multi') 
         view_id_cur = data and data[1] or False
