@@ -70,11 +70,11 @@
                             domain="[('state','=','assigned')]" help="Incoming Shipments Available"/>
                         <filter icon="terp-dialog-close" name="done" string="Done"
                             domain="[('state','=','done')]" help="Incoming Shipments already processed"/>
-                        <filter string="To invoice" name="to_invoice" icon="terp-dolar"
-                            domain="[('invoice_state', '=', '2binvoiced')]"/>
                         <separator orientation="vertical"/>
                         <filter icon="terp-accessories-archiver-minus" string="Back Orders"
                             domain="[('backorder_id', '!=', False)]" help="Is a Back Order" groups="base.group_extended"/>
+                        <filter string="To invoice" name="to_invoice" icon="terp-dolar"
+                            domain="[('invoice_state', '=', '2binvoiced')]"/>
                         <separator orientation="vertical"/>
                         <field name="name"/>
                         <field name="partner_id"/>
