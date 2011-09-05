@@ -440,8 +440,6 @@ openerp.base.Login =  openerp.base.Widget.extend({
             this.selected_login = localStorage.getItem('last_login_login_success');
         }
         if (jQuery.deparam(jQuery.param.querystring()).debug != undefined) {
-            this.selected_db = this.selected_db || "trunk";
-            this.selected_login = this.selected_login || "admin";
             this.selected_password = this.selected_password || "a";
         }
     },
@@ -525,21 +523,25 @@ openerp.base.Login =  openerp.base.Widget.extend({
 });
 
 openerp.base.Header =  openerp.base.Widget.extend({
-    init: function(parent, element_id) {
-        this._super(parent, element_id);
-        if (jQuery.deparam(jQuery.param.querystring()).debug !== undefined) {
-            this.qs = '?debug'
-        } else {
-            this.qs = ''
-        }
+    template: "Header",
+    identifier_prefix: 'oe-app-header-',
+    init: function(parent) {
+        this._super(parent);
+        this.qs = "?" + jQuery.param.querystring();
+        this.$content = $();
     },
     start: function() {
-        return this.do_update();
+        this._super();
     },
     do_update: function () {
-        this.$element.html(QWeb.render("Header", this));
+        this.$content = $(QWeb.render("Header-content", {widget: this}));
+        this.$content.appendTo(this.$element);
         this.$element.find(".logout").click(this.on_logout);
+        this.$element.find("a.preferences").click(this.on_preferences);
         return this.shortcut_load();
+    },
+    do_reset: function() {
+        this.$content.remove();
     },
     shortcut_load :function(){
         var self = this,
@@ -594,9 +596,98 @@ openerp.base.Header =  openerp.base.Widget.extend({
                 });
         });
     },
+    
     on_action: function(action) {
     },
-
+    on_preferences: function(){
+        var self = this;
+        var action_manager = new openerp.base.ActionManager(this);
+        var dataset = new openerp.base.DataSet (this,'res.users',this.context);
+        dataset.call ('action_get','',function (result){
+            self.rpc('/base/action/load', {action_id:result}, function(result){
+                action_manager.do_action(_.extend(result['result'], {
+                    res_id: self.session.uid,
+                    res_model: 'res.users',
+                    flags: {
+                        action_buttons: false,
+                        search_view: false,
+                        sidebar: false,
+                        views_switcher: false,
+                        pager: false
+                    }
+                }));
+            });
+        });
+        this.dialog = new openerp.base.Dialog(this,{
+            modal: true,
+            title: 'Preferences',
+            width: 600,
+            height: 500,
+            buttons: {
+                "Change password": function(){
+                    self.change_password();
+            },
+                Cancel: function(){
+                     $(this).dialog('destroy');
+            },
+                Save: function(){
+                    var inner_viewmanager = action_manager.inner_viewmanager;
+                    inner_viewmanager.views[inner_viewmanager.active_view].controller.do_save(function(){
+                        inner_viewmanager.start();
+                    });
+                    $(this).dialog('destroy')
+                }
+            }
+        });
+       this.dialog.start().open();
+       action_manager.appendTo(this.dialog);
+       action_manager.render(this.dialog);
+    },
+    
+    change_password :function() {
+        var self = this;
+        this.dialog = new openerp.base.Dialog(this,{
+            modal : true,
+            title : 'Change Password',
+            width : 'auto',
+            height : 'auto'
+        });
+        this.dialog.start().open();
+        this.dialog.$element.html(QWeb.render("Change_Pwd", self));
+        this.dialog.$element.find("form[name=change_password_form]").validate({
+            submitHandler: function (form) {
+                self.rpc("/base/session/change_password",{
+                    'fields': $(form).serializeArray()
+                        }, function(result) {
+                         if (result.error) {
+                            self.display_error(result);
+                        return;
+                        }
+                        else {
+                            if (result.new_password) {
+                                self.session.password = result.new_password;
+                                var session = new openerp.base.Session(self.session.server, self.session.port);
+                                session.start();
+                                session.session_login(self.session.db, self.session.login, self.session.password)
+                            }
+                        }
+                    self.notification.notify("Changed Password", "Password has been changed successfully");
+                    self.dialog.close();
+                });
+            }
+        });
+},
+    display_error: function (error) {
+        return $('<div>').dialog({
+            modal: true,
+            title: error.title,
+            buttons: {
+                Ok: function() {
+                    $(this).dialog("close");
+                }
+            }
+        }).html(error.error);
+    },
     on_logout: function() {
         this.$element.find('.oe-shortcuts ul').empty();
     }
@@ -710,21 +801,23 @@ openerp.base.WebClient = openerp.base.Widget.extend({
         // Do you autorize this ? will be replaced by notify() in controller
         openerp.base.Widget.prototype.notification = new openerp.base.Notification(this, "oe_notification");
 
-        this.header = new openerp.base.Header(this, "oe_header");
+        
+        this.header = new openerp.base.Header(this);
         this.login = new openerp.base.Login(this, "oe_login");
         this.header.on_logout.add(this.login.on_logout);
+        this.header.on_action.add(this.on_menu_action);
 
         this.session.on_session_invalid.add(this.login.do_ask_login);
         this.session.on_session_valid.add_last(this.header.do_update);
+        this.session.on_session_invalid.add_last(this.header.do_reset);
         this.session.on_session_valid.add_last(this.on_logged);
 
         this.menu = new openerp.base.Menu(this, "oe_menu", "oe_secondary_menu");
         this.menu.on_action.add(this.on_menu_action);
-        this.header.on_action.add(this.on_menu_action);
     },
     start: function() {
+        this.header.appendTo($("#oe_header"));
         this.session.start();
-        this.header.start();
         this.login.start();
         this.menu.start();
         this.notification.notify("OpenERP Client", "The openerp client has been initialized.");

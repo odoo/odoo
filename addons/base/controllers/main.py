@@ -9,16 +9,19 @@ import re
 import simplejson
 import textwrap
 import xmlrpclib
+import time
 from xml.etree import ElementTree
 from cStringIO import StringIO
 
-import cherrypy
-
-import openerpweb
-import openerpweb.ast
-import openerpweb.nonliterals
+import base.common.dispatch as openerpweb
+import base.common.ast
+import base.common.nonliterals
+openerpweb.ast = base.common.ast
+openerpweb.nonliterals = base.common.nonliterals
 
 from babel.messages.pofile import read_po
+
+_REPORT_POLLER_DELAY = 0.05
 
 # Should move to openerpweb.Xml2Json
 class Xml2Json:
@@ -63,16 +66,16 @@ class Xml2Json:
 # OpenERP Web base Controllers
 #----------------------------------------------------------
 
-def manifest_glob(addons, key):
+def manifest_glob(addons_path, addons, key):
     files = []
     for addon in addons:
         globlist = openerpweb.addons_manifest.get(addon, {}).get(key, [])
         for pattern in globlist:
-            for path in glob.glob(os.path.join(openerpweb.path_addons, addon, pattern)):
-                files.append(path[len(openerpweb.path_addons):])
+            for path in glob.glob(os.path.join(addons_path, addon, pattern)):
+                files.append(path[len(addons_path):])
     return files
 
-def concat_files(file_list):
+def concat_files(addons_path, file_list):
     """ Concatenate file content
     return (concat,timestamp)
     concat: concatenation of file content
@@ -81,13 +84,13 @@ def concat_files(file_list):
     files_content = []
     files_timestamp = 0
     for i in file_list:
-        fname = os.path.join(openerpweb.path_addons, i[1:])
+        fname = os.path.join(addons_path, i[1:])
         ftime = os.path.getmtime(fname)
         if ftime > files_timestamp:
             files_timestamp = ftime
         files_content.append(open(fname).read())
     files_concat = "".join(files_content)
-    return (files_concat,files_timestamp)
+    return files_concat,files_timestamp
 
 home_template = textwrap.dedent("""<!DOCTYPE html>
 <html style="height: 100%%">
@@ -117,40 +120,38 @@ class WebClient(openerpweb.Controller):
 
     @openerpweb.jsonrequest
     def csslist(self, req, mods='base'):
-        return manifest_glob(mods.split(','), 'css')
+        return manifest_glob(req.config.addons_path, mods.split(','), 'css')
 
     @openerpweb.jsonrequest
     def jslist(self, req, mods='base'):
-        return manifest_glob(mods.split(','), 'js')
+        return manifest_glob(req.config.addons_path, mods.split(','), 'js')
 
     @openerpweb.httprequest
     def css(self, req, mods='base'):
-        req.httpresponse.headers['Content-Type'] = 'text/css'
-        files = manifest_glob(mods.split(','), 'css')
-        content,timestamp = concat_files(files)
+        files = manifest_glob(req.config.addons_path, mods.split(','), 'css')
+        content,timestamp = concat_files(req.config.addons_path, files)
         # TODO request set the Date of last modif and Etag
-        return content
+        return req.make_response(content, [('Content-Type', 'text/css')])
 
     @openerpweb.httprequest
     def js(self, req, mods='base'):
-        req.httpresponse.headers['Content-Type'] = 'application/javascript'
-        files = manifest_glob(mods.split(','), 'js')
-        content,timestamp = concat_files(files)
+        files = manifest_glob(req.config.addons_path, mods.split(','), 'js')
+        content,timestamp = concat_files(req.config.addons_path, files)
         # TODO request set the Date of last modif and Etag
-        return content
+        return req.make_response(content, [('Content-Type', 'application/javascript')])
 
     @openerpweb.httprequest
     def home(self, req, s_action=None, **kw):
         # script tags
         jslist = ['/base/webclient/js']
         if req.debug:
-            jslist = manifest_glob(['base'], 'js')
+            jslist = manifest_glob(req.config.addons_path, ['base'], 'js')
         js = "\n        ".join(['<script type="text/javascript" src="%s"></script>'%i for i in jslist])
 
         # css tags
         csslist = ['/base/webclient/css']
         if req.debug:
-            csslist = manifest_glob(['base'], 'css')
+            csslist = manifest_glob(req.config.addons_path, ['base'], 'css')
         css = "\n        ".join(['<link rel="stylesheet" href="%s">'%i for i in csslist])
         r = home_template % {
             'javascript': js,
@@ -180,7 +181,7 @@ class WebClient(openerpweb.Controller):
             transl = {"messages":[]}
             transs[addon_name] = transl
             for l in langs:
-                f_name = os.path.join(openerpweb.path_addons, addon_name, "po", l + ".po")
+                f_name = os.path.join(req.config.addons_path, addon_name, "po", l + ".po")
                 if not os.path.exists(f_name):
                     continue
                 try:
@@ -203,7 +204,7 @@ class Database(openerpweb.Controller):
         dbs = proxy.list()
         h = req.httprequest.headers['Host'].split(':')[0]
         d = h.split('.')[0]
-        r = cherrypy.config['openerp.dbfilter'].replace('%h', h).replace('%d', d)
+        r = req.config.dbfilter.replace('%h', h).replace('%d', d)
         dbs = [i for i in dbs if re.match(r, i)]
         return {"db_list": dbs}
 
@@ -248,11 +249,11 @@ class Database(openerpweb.Controller):
         try:
             db_dump = base64.decodestring(
                 req.session.proxy("db").dump(backup_pwd, backup_db))
-            req.httpresponse.headers['Content-Type'] = "application/octet-stream; charset=binary"
-            req.httpresponse.headers['Content-Disposition'] = 'attachment; filename="' + backup_db + '.dump"'
-            req.httpresponse.cookie['fileToken'] = int(token)
-            req.httpresponse.cookie['fileToken']['path'] = '/'
-            return db_dump
+            return req.make_response(db_dump,
+                [('Content-Type', 'application/octet-stream; charset=binary'),
+                 ('Content-Disposition', 'attachment; filename="' + backup_db + '.dump"')],
+                {'fileToken': int(token)}
+            )
         except xmlrpclib.Fault, e:
             if e.faultCode and e.faultCode.split(':')[0] == 'AccessDenied':
                 return 'Backup Database|' + e.faultCode
@@ -293,7 +294,21 @@ class Session(openerpweb.Controller):
             "uid": req.session._uid,
             "context": ctx
         }
-
+    @openerpweb.jsonrequest
+    def change_password (self,req,fields):
+        old_password, new_password,confirm_password = operator.itemgetter('old_pwd', 'new_password','confirm_pwd')(
+                dict(map(operator.itemgetter('name', 'value'), fields)))
+        if not (old_password.strip() and new_password.strip() and confirm_password.strip()):
+            return {'error':'All passwords have to be filled.','title': 'Change Password'}
+        if new_password != confirm_password:
+            return {'error': 'The new password and its confirmation must be identical.','title': 'Change Password'}
+        try:
+            if req.session.model('res.users').change_password(
+                old_password, new_password):
+                return {'new_password':new_password}
+        except:
+            return {'error': 'Original password incorrect, your password was not changed.', 'title': 'Change Password'}
+        return {'error': 'Error, password not changed !', 'title': 'Change Password'}
     @openerpweb.jsonrequest
     def sc_list(self, req):
         return req.session.model('ir.ui.view_sc').get_sc(
@@ -955,9 +970,9 @@ class Binary(openerpweb.Controller):
                 res = Model.read([int(id)], [field], context)[0].get(field, '')
             return base64.decodestring(res)
         except: # TODO: what's the exception here?
-            return self.placeholder()
-    def placeholder(self):
-        return open(os.path.join(openerpweb.path_addons, 'base', 'static', 'src', 'img', 'placeholder.png'), 'rb').read()
+            return self.placeholder(req)
+    def placeholder(self, req):
+        return open(os.path.join(req.addons_path, 'base', 'static', 'src', 'img', 'placeholder.png'), 'rb').read()
 
     @openerpweb.httprequest
     def saveas(self, req, model, id, field, fieldname, **kw):
@@ -966,18 +981,17 @@ class Binary(openerpweb.Controller):
         res = Model.read([int(id)], [field, fieldname], context)[0]
         filecontent = res.get(field, '')
         if not filecontent:
-            raise cherrypy.NotFound
+            return req.not_found()
         else:
-            req.httpresponse.headers['Content-Type'] = 'application/octet-stream'
             filename = '%s_%s' % (model.replace('.', '_'), id)
             if fieldname:
                 filename = res.get(fieldname, '') or filename
-            req.httpresponse.headers['Content-Disposition'] = 'attachment; filename=' +  filename
-            return base64.decodestring(filecontent)
+            return req.make_response(filecontent,
+                [('Content-Type', 'application/octet-stream'),
+                 ('Content-Disposition', 'attachment; filename=' +  filename)])
 
     @openerpweb.httprequest
     def upload(self, req, callback, ufile=None):
-        cherrypy.response.timeout = 500
         headers = {}
         for key, val in req.httprequest.headers.iteritems():
             headers[key.lower()] = val
@@ -1004,7 +1018,6 @@ class Binary(openerpweb.Controller):
 
     @openerpweb.httprequest
     def upload_attachment(self, req, callback, model, id, ufile=None):
-        cherrypy.response.timeout = 500
         context = req.session.eval_context(req.context)
         Model = req.session.model('ir.attachment')
         try:

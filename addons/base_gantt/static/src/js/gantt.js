@@ -459,7 +459,7 @@ init: function(parent, element_id, dataset, view_id) {
         }else{
             data[this.date_delay] = task.getDuration();
         }
-        this.dataset.write(event_id, data, function(result) {});
+        this.dataset.write(event_id, data, {}, function(result) {});
 
     },
 

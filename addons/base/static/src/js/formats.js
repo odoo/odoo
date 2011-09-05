@@ -28,8 +28,10 @@ openerp.base.format_value = function (value, descriptor, value_if_empty) {
         case 'float':
             var precision = descriptor.digits ? descriptor.digits[1] : 2;
             var int_part = Math.floor(value);
-            var dec_part = Math.floor((value % 1) * Math.pow(10, precision));
-            return _.sprintf('%d' + openerp.base._t.database.parameters.decimal_point + '%d', int_part, dec_part);
+            var dec_part = Math.abs(Math.floor((value % 1) * Math.pow(10, precision)));
+            return _.sprintf('%d%s%d',
+                        int_part,
+                        openerp.base._t.database.parameters.decimal_point, dec_part);
         case 'float_time':
             return _.sprintf("%02d:%02d",
                     Math.floor(value),
@@ -43,9 +45,9 @@ openerp.base.format_value = function (value, descriptor, value_if_empty) {
             return value[1];
         case 'datetime':
             if (typeof(value) == "string")
-                value = openerp.base.str_to_datetime(value);
+                value = openerp.base.auto_str_to_date(value);
             try {
-                return value.toString(_.sprintf("%s %s", Date.CultureInfo.formatPatterns.shortDate, 
+                return value.toString(_.sprintf("%s %s", Date.CultureInfo.formatPatterns.shortDate,
                     Date.CultureInfo.formatPatterns.longTime));
             } catch (e) {
                 return value.format("%m/%d/%Y %H:%M:%S");
@@ -53,7 +55,7 @@ openerp.base.format_value = function (value, descriptor, value_if_empty) {
             return value;
         case 'date':
             if (typeof(value) == "string")
-                value = openerp.base.str_to_date(value);
+                value = openerp.base.auto_str_to_date(value);
             try {
                 return value.toString(Date.CultureInfo.formatPatterns.shortDate);
             } catch (e) {
@@ -61,7 +63,7 @@ openerp.base.format_value = function (value, descriptor, value_if_empty) {
             }
         case 'time':
             if (typeof(value) == "string")
-                value = openerp.base.str_to_time(value);
+                value = openerp.base.auto_str_to_date(value);
             try {
                 return value.toString(Date.CultureInfo.formatPatterns.longTime);
             } catch (e) {
@@ -108,7 +110,7 @@ openerp.base.parse_value = function (value, descriptor, value_if_empty) {
         case 'progressbar':
             return openerp.base.parse_value(value, {type: "float"});
         case 'datetime':
-            var tmp = Date.parseExact(value, _.sprintf("%s %s", Date.CultureInfo.formatPatterns.shortDate, 
+            var tmp = Date.parseExact(value, _.sprintf("%s %s", Date.CultureInfo.formatPatterns.shortDate,
                     Date.CultureInfo.formatPatterns.longTime));
             if (tmp !== null)
                 return tmp;
@@ -117,7 +119,7 @@ openerp.base.parse_value = function (value, descriptor, value_if_empty) {
                 return tmp;
             throw value + " is not a valid datetime";
         case 'date':
-            var tmp = Date.parseExact(Date.CultureInfo.formatPatterns.shortDate);
+            var tmp = Date.parseExact(value, Date.CultureInfo.formatPatterns.shortDate);
             if (tmp !== null)
                 return tmp;
             tmp = Date.parse(value);
@@ -125,7 +127,7 @@ openerp.base.parse_value = function (value, descriptor, value_if_empty) {
                 return tmp;
             throw value + " is not a valid date";
         case 'time':
-            var tmp = Date.parseExact(Date.CultureInfo.formatPatterns.longTime);
+            var tmp = Date.parseExact(value, Date.CultureInfo.formatPatterns.longTime);
             if (tmp !== null)
                 return tmp;
             tmp = Date.parse(value);
@@ -134,6 +136,32 @@ openerp.base.parse_value = function (value, descriptor, value_if_empty) {
             throw value + " is not a valid time";
     }
     return value;
+};
+
+openerp.base.auto_str_to_date = function(value, type) {
+    try {
+        return openerp.base.str_to_datetime(value);
+    } catch(e) {}
+    try {
+        return openerp.base.str_to_date(value);
+    } catch(e) {}
+    try {
+        return openerp.base.str_to_time(value);
+    } catch(e) {}
+    throw "'" + value + "' is not a valid date, datetime nor time"
+};
+
+openerp.base.auto_date_to_str = function(value, type) {
+    switch(type) {
+        case 'datetime':
+            return openerp.base.datetime_to_str(value);
+        case 'date':
+            return openerp.base.date_to_str(value);
+        case 'time':
+            return openerp.base.time_to_str(value);
+        default:
+            throw type + " is not convertible to date, datetime nor time"
+    }
 };
 
 /**

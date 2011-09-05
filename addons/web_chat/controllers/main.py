@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
-import sys, time
-import cherrypy
+import time
 
 import simplejson
-import random
-import openerpweb
+import base.common as openerpweb
 
 #----------------------------------------------------------
 # OpenERP Web ajaxim Controllers
@@ -38,7 +36,7 @@ class PollServerMessageQueue(object):
             if msg['to'] == recipient:
                 return self.messages
             
-    def gc():
+    def gc(self):
         # remove message older than 300s from self.l
         # remove dead users from self.users
         pass
@@ -72,7 +70,6 @@ class PollServer(openerpweb.Controller):
         
         #r = 'logged in'
         #u = generate random.randint(0,2**32)
-        #s = cherrypy cookie id
         #f = mq.userlist()
         
 #        username = 'Guest'+ str(random.randint(0, 2**32))
@@ -132,8 +129,6 @@ class PollServer(openerpweb.Controller):
         
         msg = '[]'
 
-        cherrypy.response.headers['content-type'] = 'application/javascript';
-        
         for i in range(5):
             received_msg = mq.read('Guest1', i)
             if received_msg:
