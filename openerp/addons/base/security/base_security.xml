@@ -65,6 +65,13 @@
         <field name="domain_force">[('company_id','child_of',[user.company_id.id])]</field>
     </record>
 
+    <record model="ir.rule" id="ir_values_default_rule">
+        <field name="name">Defaults: alter personal values only</field>
+        <field name="model_id" ref="model_ir_values"/>
+        <field name="domain_force">[('key','=','default'),('user_id','=',user.id)]</field>
+        <field name="perm_read" eval="False"/>
+    </record>
+
     </data>
 </openerp>
 
