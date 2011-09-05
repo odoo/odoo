@@ -1140,17 +1140,15 @@ class Export(View):
 
     @openerpweb.jsonrequest
     def namelist(self,req,  model, export_id):
+        export = req.session.model("ir.exports").read([export_id])[0]
+        export_fields_list = req.session.model("ir.exports.line").read(
+            export['export_fields'])
 
-        result = self.get_data(req, model)
-        ir_export_obj = req.session.model("ir.exports")
-        ir_export_line_obj = req.session.model("ir.exports.line")
+        fields_data = self.get_data(req, model)
 
-        field = ir_export_obj.read(export_id)
-        fields = ir_export_line_obj.read(field['export_fields'])
-
-        name_list = {}
-        [name_list.update({field['name']: result.get(field['name'])}) for field in fields]
-        return name_list
+        return dict(
+            (field['name'], fields_data[field['name']])
+            for field in export_fields_list)
 
     def get_data(self, req, model):
         fields_data = {}
