@@ -66,7 +66,6 @@ class crm_claim_report(osv.osv):
         'categ_id': fields.many2one('crm.case.categ', 'Category',\
                          domain="[('section_id','=',section_id),\
                         ('object_id.model', '=', 'crm.claim')]", readonly=True),
-        'probability': fields.float('Probability',digits=(16,2),readonly=True, group_operator="avg"),
         'partner_id': fields.many2one('res.partner', 'Partner', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'priority': fields.selection(AVAILABLE_PRIORITIES, 'Priority'),
@@ -106,7 +105,6 @@ class crm_claim_report(osv.osv):
                     date_trunc('day',c.create_date) as create_date,
                     avg(extract('epoch' from (c.date_closed-c.create_date)))/(3600*24) as  delay_close,
                     (SELECT count(id) FROM mailgate_message WHERE model='crm.claim' AND res_id=c.id AND history=True) AS email,
-                    (SELECT avg(probability) FROM crm_case_stage WHERE id=c.stage_id) AS probability,
                     extract('epoch' from (c.date_deadline - c.date_closed))/(3600*24) as  delay_expected
                 from
                     crm_claim c
