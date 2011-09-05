@@ -602,9 +602,18 @@
 
         </td>
     </t>
-    <th t-if="options.selectable" class="oe-record-selector" width="1">
-        <input type="checkbox"/>
-    </th>
+    <t t-if="options.radio">
+        <th t-if="options.selectable" class="oe-record-selector" width="1">
+            <input type="radio" group ="radiogroup"/>
+        </th>
+    </t>
+    <t t-if="!options.radio">
+        <th t-if="options.selectable" class="oe-record-selector" width="1">
+            <input type="checkbox"/>
+        </th>
+    </t>
+    
+  
     <t t-foreach="columns" t-as="column">
         <t t-set="align" t-value="column.type === 'integer' or column.type == 'float'"/>
         <td t-if="!column.meta and column.invisible !== '1'" t-att-title="column.help"

@@ -1,13 +1,11 @@
 openerp.base.view_editor = function(openerp) {
-openerp.base.ViewEditor = openerp.base.Dialog.extend({
+openerp.base.ViewEditor =  openerp.base.Widget.extend({
     init: function(parent, element_id, dataset, view, options) {
         this._super(parent);
-        self.template = 'ViewEditor';
         this.element_id = element_id
         this.parent = parent
         this.dataset = dataset;
         this.model = dataset.model;
-
         this.fields_views = view;
     },
     start: function() {
@@ -29,30 +27,57 @@ openerp.base.ViewEditor = openerp.base.Dialog.extend({
                 action_buttons:false,
                 search_view:false,
                 pager:false,
+                radio:true
             },
         };
         var action_manager = new openerp.base.ActionManager(this);
         this.dialog = new openerp.base.Dialog(this,{
             modal: true,
             title: 'ViewEditor',
-            width: 600,
+            width: 750,
             height: 500,
             buttons: {
-
-                Cancel: function(){
+                "Create": function(){
                      $(this).dialog('destroy');
                 },
-                Edit: function(){
+                "Edit": function(){
+                    self.Edit_view();
                 },
-                Create: function(){
+                " Close": function(){
                 }
             },
+
         });
-       this.dialog.start();
+       this.dialog.start(); 
        this.dialog.open();
        action_manager.appendTo(this.dialog);
-       action_manager.render(this.dialog);
        action_manager.do_action(action);
     },
+
+    Edit_view : function(){
+        
+            this.dialog = new openerp.base.Dialog(this,{
+            modal: true,
+            title: 'Edit Xml',
+            width: 750,
+            height: 500,
+            buttons: {
+                "Inherited View": function(){
+                    
+                },
+                "Preview": function(){
+                    
+                },
+                "Close": function(){
+                    $(this).dialog('destroy');
+                   
+                }
+            },
+
+        });
+         this.dialog.start().open();
+         
+    }
+        
 });
 };
