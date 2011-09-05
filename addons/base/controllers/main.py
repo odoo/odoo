@@ -3,6 +3,7 @@
 import base64
 import csv
 import glob
+import itertools
 import operator
 import os
 import re
@@ -1140,41 +1141,71 @@ class Export(View):
 
     @openerpweb.jsonrequest
     def namelist(self,req,  model, export_id):
+        # TODO: namelist really has no reason to be in Python (although itertools.groupby helps)
         export = req.session.model("ir.exports").read([export_id])[0]
         export_fields_list = req.session.model("ir.exports.line").read(
             export['export_fields'])
 
-        fields_data = self.get_data(req, model)
+        fields_data = self.fields_info(
+            req, model, map(operator.itemgetter('name'), export_fields_list))
 
         return dict(
             (field['name'], fields_data[field['name']])
             for field in export_fields_list)
 
-    def get_data(self, req, model):
-        fields_data = {}
+    def fields_info(self, req, model, export_fields):
+        info = {}
         fields = self.fields_get(req, model)
+        fields['.id'] = fields.pop('id') if 'id' in fields else {'string': 'ID'}
 
-        fields.update({'id': {'string': 'ID'}, '.id': {'string': 'Database ID'}})
+        # To make fields retrieval more efficient, fetch all sub-fields of a
+        # given field at the same time. Because the order in the export list is
+        # arbitrary, this requires ordering all sub-fields of a given field
+        # together so they can be fetched at the same time
+        #
+        # Works the following way:
+        # * sort the list of fields to export, the default sorting order will
+        #   put the field itself (if present, for xmlid) and all of its
+        #   sub-fields right after it
+        # * then, group on: the first field of the path (which is the same for
+        #   a field and for its subfields and the length of splitting on the
+        #   first '/', which basically means grouping the field on one side and
+        #   all of the subfields on the other. This way, we have the field (for
+        #   the xmlid) with length 1, and all of the subfields with the same
+        #   base but a length "flag" of 2
+        # * if we have a normal field (length 1), just add it to the info
+        #   mapping (with its string) as-is
+        # * otherwise, recursively call fields_info via graft_subfields.
+        #   all graft_subfields does is take the result of fields_info (on the
+        #   field's model) and prepend the current base (current field), which
+        #   rebuilds the whole sub-tree for the field
+        #
+        # result: because we're not fetching the fields_get for half the
+        # database models, fetching a namelist with a dozen fields (including
+        # relational data) falls from ~6s to ~300ms (on the leads model).
+        # export lists with no sub-fields (e.g. import_compatible lists with
+        # no o2m) are even more efficient (from the same 6s to ~170ms, as
+        # there's a single fields_get to execute)
+        for (base, length), subfields in itertools.groupby(
+                sorted(export_fields),
+                lambda field: (field.split('/', 1)[0], len(field.split('/', 1)))):
+            subfields = list(subfields)
+            if length == 2:
+                # subfields is a seq of $base/*rest, and not loaded yet
+                info.update(self.graft_subfields(
+                    req, fields[base]['relation'], base, fields[base]['string'],
+                    subfields
+                ))
+            else:
+                info[base] = fields[base]['string']
 
-        def rec(fields):
-            _fields = {'id': 'ID' , '.id': 'Database ID' }
-            def model_populate(fields, prefix_node='', prefix=None, prefix_value='', level=2):
-                fields_order = fields.keys()
-                fields_order.sort(lambda x,y: -cmp(fields[x].get('string', ''), fields[y].get('string', '')))
+        return info
 
-                for field in fields_order:
-                    fields_data[prefix_node+field] = fields[field]
-                    if prefix_node:
-                        fields_data[prefix_node + field]['string'] = '%s%s' % (prefix_value, fields_data[prefix_node + field]['string'])
-                    st_name = fields[field]['string'] or field
-                    _fields[prefix_node+field] = st_name
-                    if fields[field].get('relation', False) and level>0:
-                        fields2 = self.fields_get(req,  fields[field]['relation'])
-                        fields2.update({'id': {'string': 'ID'}, '.id': {'string': 'Database ID'}})
-                        model_populate(fields2, prefix_node+field+'/', None, st_name+'/', level-1)
-            model_populate(fields)
-            return _fields
-        return rec(fields)
+    def graft_subfields(self, req, model, prefix, prefix_string, fields):
+        export_fields = [field.split('/', 1)[1] for field in fields]
+        return (
+            (prefix + '/' + k, prefix_string + '/' + v)
+            for k, v in self.fields_info(req, model, export_fields).iteritems())
 
     #noinspection PyPropertyDefinition
     @property
