@@ -698,6 +698,7 @@
                             <field name="name" readonly="1"/>
                             <field name="origin"/>
                             <field name="address_id" on_change="onchange_partner_in(address_id)" context="{'contact_display':'partner'}" colspan="4"/>
+                            <field name="invoice_state" string="Invoice Control"/>
                             <field name="backorder_id" readonly="1" groups="base.group_extended"/>
                         </group>
                         <group colspan="2" col="2">
@@ -708,7 +709,7 @@
                     </group>
                     <notebook colspan="4">
                         <page string="Products">
-                            <field colspan="4" name="move_lines" nolabel="1" widget="one2many_list" default_get="{'move_line':move_lines}">
+                            <field colspan="4" name="move_lines" nolabel="1" widget="one2many_list" default_get="{'move_line':move_lines, 'address_in_id': address_id}">
                                 <tree colors="grey:scrapped == True" string="Stock Moves">
                                     <field name="product_id"/>
                                     <field name="product_qty" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
@@ -737,7 +738,6 @@
                                         groups="base.group_extended"
                                         icon="terp-stock_effects-object-colorize"
                                         states="draft,assigned,confirmed"/>
-                                    <field name="location_id"/>
                                     <field name="location_dest_id"/>
                                     <field name="date_expected" string="Date Expected"/>
                                     <field name="state"/>
@@ -760,7 +760,7 @@
 
                                     <group colspan="2" col="2">
                                         <separator string="Locations" colspan="2" />
-                                        <field name="location_id" domain="[('usage','=','internal')]" />
+                                        <field name="location_id" domain="[('usage','&lt;&gt;','view')]" />
                                         <field name="location_dest_id" domain="[('usage','=','internal')]" />
                                     </group>
 
@@ -810,7 +810,6 @@
                         </page>
                         <page string="Additional info" groups="base.group_extended,base.group_multi_company">
                             <field name="auto_picking" groups="base.group_extended"/>
-                            <field name="invoice_state" groups="base.group_extended"/>
                             <field name="date_done" groups="base.group_extended"/>
                             <field name="move_type" groups="base.group_extended"/>
                             <field name="type" groups="base.group_extended"/>
