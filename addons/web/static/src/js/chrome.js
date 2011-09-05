@@ -518,7 +518,7 @@ openerp.web.Login =  openerp.web.Widget.extend({
         this.on_login_valid.add({
             position: "last",
             unique: true,
-            callback: continuation
+            callback: continuation || function() {}
         });
     },
     on_logout: function() {
@@ -539,13 +539,13 @@ openerp.web.Header =  openerp.web.Widget.extend({
     },
     do_update: function () {
         var self = this;
-        return new openerp.base.Model(self.session, "res.users")
-        .get_func("read")(self.session.uid, ["name", "company_id"]).pipe(function(res) {
+        var func = new openerp.base.Model(self.session, "res.users").get_func("read");
+        func(self.session.uid, ["name", "company_id"]).then(function(res) {
             self.$content = $(QWeb.render("Header-content", {widget: self, user: res}));
             self.$content.appendTo(self.$element);
             self.$element.find(".logout").click(self.on_logout);
             self.$element.find("a.preferences").click(self.on_preferences);
-            return self.shortcut_load();
+            self.shortcut_load();
         });
     },
     do_reset: function() {
