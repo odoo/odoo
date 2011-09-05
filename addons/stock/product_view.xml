@@ -82,7 +82,7 @@
                     <group groups="base.group_extended">
                         <separator string="Inventory Valuation" colspan="4"/>
                         <group colspan="2" col="2">
-                            <field name="valuation"/>
+                            <field name="valuation" attrs="{'invisible':[('type', '=', 'service')]}"/>
                         </group>
                         <group colspan="2" col="2">
                             <field name="property_stock_account_input" attrs="{'readonly':[('valuation', '!=', 'real_time')]}"
