@@ -28,6 +28,9 @@ optparser.add_option('--addons-path', dest='addons_path', default=path_addons,
 optparser.add_option('--no-serve-static', dest='serve_static',
                      default=True, action='store_false',
                      help="Do not serve static files via this server")
+optparser.add_option('--reloader', dest='reloader',
+                     default=False, action='store_true',
+                     help="Reload application when python files change")
 
 import base.common.dispatch
 
@@ -39,5 +42,5 @@ if __name__ == "__main__":
 
     werkzeug.serving.run_simple(
         '0.0.0.0', options.socket_port, app,
-        use_reloader=True, threaded=True)
+        use_reloader=options.reloader, threaded=True)
 
