@@ -2340,6 +2340,7 @@ class account_account_template(osv.osv):
         'child_parent_ids':fields.one2many('account.account.template', 'parent_id', 'Children'),
         'tax_ids': fields.many2many('account.tax.template', 'account_account_template_tax_rel', 'account_id', 'tax_id', 'Default Taxes'),
         'nocreate': fields.boolean('Optional create', help="If checked, the new chart of accounts will not contain this by default."),
+        'chart_template_id': fields.many2one('account.chart.template', 'Chart Template'),
     }
 
     _defaults = {
