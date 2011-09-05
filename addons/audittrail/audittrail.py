@@ -203,37 +203,22 @@ class audittrail_objects_proxy(object_proxy):
         if field_name in('__last_update','id'):
             return values
         pool = pooler.get_pool(cr.dbname)
-        field_pool = pool.get('ir.model.fields')
-        model_pool = pool.get('ir.model')
         obj_pool = pool.get(model.model)
-        if obj_pool._inherits:
-            inherits_ids = model_pool.search(cr, uid, [('model', '=', obj_pool._inherits.keys()[0])])
-            field_ids = field_pool.search(cr, uid, [('name', '=', field_name), ('model_id', 'in', (model.id, inherits_ids[0]))])
-        else:
-            field_ids = field_pool.search(cr, uid, [('name', '=', field_name), ('model_id', '=', model.id)])
-        field_id = field_ids and field_ids[0] or False
-        assert field_id, _("'%s' field does not exist in '%s' model" %(field_name, model.model))
-
-        field = field_pool.read(cr, uid, field_id)
-        relation_model = field['relation']
-        relation_model_pool = relation_model and pool.get(relation_model) or False
-
-        if field['ttype'] == 'many2one':
-            res = False
-            relation_id = False
-            if values and type(values) == tuple:
-                relation_id = values[0]
-                if relation_id and relation_model_pool:
-                    relation_model_object = relation_model_pool.read(cr, uid, relation_id, [relation_model_pool._rec_name])
-                    res = relation_model_object[relation_model_pool._rec_name]
-            return res
-
-        elif field['ttype'] in ('many2many','one2many'):
-            res = []
-            for relation_model_object in relation_model_pool.read(cr, uid, values, [relation_model_pool._rec_name]):
-                res.append(relation_model_object[relation_model_pool._rec_name])
-            return res
-
+        field_obj = obj_pool._all_columns.get(field_name, False)
+        assert field_obj, _("'%s' field does not exist in '%s' model" %(field_name, model.model))
+        field_obj = field_obj.column
+        if field_obj._obj:
+            relation_model_pool = pool.get(field_obj._obj)
+            relational_rec_name = relation_model_pool._rec_name
+        if field_obj._type == 'many2one':
+            if values and isinstance(values, tuple):
+                if values[0]:
+                    relation_model_object = relation_model_pool.read(cr, uid, values[0], [relational_rec_name])
+                    return relation_model_object.get(relational_rec_name)
+            return False
+        elif field_obj._type in ('many2many','one2many'):
+            data = relation_model_pool.read(cr, uid, values, [relational_rec_name])
+            return map(lambda x:x.get(relational_rec_name, False), data)
         return values
 
     def create_log_line(self, cr, uid, log_id, model, lines=[]):
@@ -482,7 +467,6 @@ class audittrail_objects_proxy(object_proxy):
         cr = pooler.get_db(db).cursor()
         cr.autocommit(True)
         logged_uids = []
-        rule = False
         ignore_methods = ['default_get','read','fields_view_get','fields_get','search',
                           'search_count','name_search','name_get','get','request_get',
                           'get_sc', 'unlink', 'write', 'create']
@@ -490,9 +474,7 @@ class audittrail_objects_proxy(object_proxy):
         try:
             model_ids = model_pool.search(cr, uid, [('model', '=', model)])
             model_id = model_ids and model_ids[0] or False
-            if 'audittrail.rule' in pool.obj_list():
-                rule = True
-            if not rule or not model_id:
+            if not ('audittrail.rule' in pool.obj_list()) or not model_id:
                  return fct_src(db, uid_orig, model, method, *args)
             rule_ids = rule_pool.search(cr, uid, [('object_id', '=', model_id), ('state', '=', 'subscribed')])
             if not rule_ids:
