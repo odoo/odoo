@@ -980,7 +980,7 @@ class Binary(openerpweb.Controller):
             else:
                 res = Model.read([int(id)], [field], context)[0].get(field, '')
             image_data = base64.b64decode(res)
-        except: # TODO: what's the exception here?
+        except (TypeError, xmlrpclib.Fault):
             image_data = self.placeholder(req)
         return req.make_response(image_data, [
             ('Content-Type', 'image/png'), ('Content-Length', len(image_data))])
