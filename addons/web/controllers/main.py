@@ -1043,7 +1043,7 @@ class Binary(openerpweb.Controller):
                     </script>"""
             attachment_id = Model.create({
                 'name': ufile.filename,
-                'datas': web64.encodestring(ufile.file.read()),
+                'datas': base64.encodestring(ufile.file.read()),
                 'res_model': model,
                 'res_id': int(id)
             }, context)
