@@ -247,7 +247,7 @@ openerp.web.ViewManager =  openerp.web.Widget.extend({
     },
     /**
      * Event launched when a controller has been inited.
-     * 
+     *
      * @param {String} view_type type of view
      * @param {String} view the inited controller
      */
@@ -324,7 +324,7 @@ openerp.web.ViewManagerAction = openerp.web.ViewManager.extend({
 
             var searchview_loaded = this.setup_search_view(
                     searchview_id || false, search_defaults);
-            
+
             // schedule auto_search
             if (searchview_loaded != null && this.action['auto_search']) {
                 $.when(searchview_loaded, inital_view_loaded)
@@ -668,7 +668,7 @@ openerp.web.View = openerp.web.Widget.extend({
             return this.rpc('/web/action/load', { action_id: parseInt(action_data.name, 10), context: context }, handler);
         } else  {
             return dataset.exec_workflow(record_id, action_data.name, handler);
-        } 
+        }
     },
     /**
      * Directly set a view to use instead of calling fields_view_get. This method must
@@ -752,7 +752,11 @@ openerp.web.views = new openerp.web.Registry();
 openerp.web.json_node_to_xml = function(node, single_quote, indent) {
     // For debugging purpose, this function will convert a json node back to xml
     // Maybe usefull for xml view editor
-    if (typeof(node.tag) !== 'string' || !node.children instanceof Array || !node.attrs instanceof Object) {
+
+    if (typeof(node) === 'string') {
+        return node;
+    }
+    else if (typeof(node.tag) !== 'string' || !node.children instanceof Array || !node.attrs instanceof Object) {
         throw("Node a json node");
     }
     indent = indent || 0;
@@ -770,7 +774,7 @@ openerp.web.json_node_to_xml = function(node, single_quote, indent) {
         }
         r += ' ' + attr + '="' + vattr + '"';
     }
-    if (node.children.length) {
+    if (node.children && node.children.length) {
         r += '>\n';
         var childs = [];
         for (var i = 0, ii = node.children.length; i < ii; i++) {

@@ -289,7 +289,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
             });
         }
         if (result.domain) {
-            // TODO: 
+            // TODO:
         }
         this.ready = true;
     },
@@ -1862,7 +1862,6 @@ openerp.web.form.One2ManyDataSet = openerp.web.BufferedDataSet.extend({
 });
 
 openerp.web.form.One2ManyFormView = openerp.web.FormView.extend({
-    
 });
 
 openerp.web.form.One2ManyListView = openerp.web.ListView.extend({
