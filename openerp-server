@@ -252,6 +252,11 @@ if __name__ == "__main__":
         import_translation()
         sys.exit(0)
 
+    if not config["stop_after_init"]:
+        # Some module register themselves when they are loaded so we need the
+        # services to be running before loading any registry.
+        start_services()
+
     if config['db_name']:
         for dbname in config['db_name'].split(','):
             preload_registry(dbname)
@@ -261,7 +266,6 @@ if __name__ == "__main__":
 
     setup_pid_file()
     setup_signal_handlers()
-    start_services()
     logger = logging.getLogger('server')
     logger.info('OpenERP server is running, waiting for connections...')
     quit_on_signals()

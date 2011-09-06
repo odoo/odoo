@@ -241,7 +241,7 @@
             <field name="view_id" ref="sequence_view_tree"/>
             <field name="context">{'active_test': False}</field>
         </record>
-        <menuitem id="next_id_5" name="Sequences" parent="base.menu_config"/>
+        <menuitem id="next_id_5" name="Sequences &amp; Identifiers" parent="base.menu_config"/>
         <menuitem action="ir_sequence_form" id="menu_ir_sequence_form" parent="next_id_5"/>
 
         <!-- Sequences Types -->
@@ -1221,7 +1221,7 @@
             <field name="model">ir.model.data</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Object Identifiers">
+                <form string="External Identifiers">
                     <field name="name"/>
                     <field name="module"/>
                     <field name="model"/>
@@ -1239,7 +1239,7 @@
             <field name="model">ir.model.data</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Object Identifiers">
+                <tree string="External Identifiers">
                     <field name="module"/>
                     <field name="name"/>
                     <field name="model"/>
@@ -1253,7 +1253,7 @@
             <field name="model">ir.model.data</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
-                <search string="Object Identifiers">
+                <search string="External Identifiers">
                     <filter icon="terp-camera_test"
                         string="Updatable"
                         domain="[('noupdate', '=', False)]"/>
@@ -1293,7 +1293,7 @@
         <menuitem action="action_model_fields" id="ir_model_model_fields" parent="base.next_id_9"/>
 
         <record id="action_model_data" model="ir.actions.act_window">
-            <field name="name">Object Identifiers</field>
+            <field name="name">External Identifiers</field>
             <field name="res_model">ir.model.data</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="view_model_data_list"/>
