@@ -1335,3 +1335,26 @@ class ExcelExport(Export):
         data = fp.read()
         fp.close()
         return data
+
+
+class Reports(View):
+    _cp_path = "/web/report"
+
+    @openerpweb.jsonrequest
+    def get_report(self, req, action):
+        report_srv = req.session.proxy("report")
+        context = req.session.eval_context(openerpweb.nonliterals.CompoundContext(req.context, \
+                                                                                  action["context"]))
+
+        args = [req.session._db, req.session._uid, req.session._password, action["report_name"], context["active_ids"], {"id": context["active_id"], "model": context["active_model"], "report_type": action["report_type"]}, context]
+        report_id = report_srv.report(*args)
+        report = None
+        while True:
+            args2 = [req.session._db, req.session._uid, req.session._password, report_id]
+            report = report_srv.report_get(*args2)
+            if report["state"]:
+                break
+            time.sleep(_REPORT_POLLER_DELAY)
+
+        #TODO: ok now we've got the report, and so what?
+        return False
