@@ -236,7 +236,7 @@ class audittrail_objects_proxy(object_proxy):
         for line in lines:
             if line['name'] in ('__last_update','id'):
                 continue
-            field_obj = obj_pool._all_columns.get(line['name'], False)
+            field_obj = obj_pool._all_columns.get(line['name'])
             assert field_obj, _("'%s' field does not exist in '%s' model" %(line['name'], model.model))
             field_obj = field_obj.column
             old_value = line.get('old_value', '')
@@ -250,8 +250,8 @@ class audittrail_objects_proxy(object_proxy):
             if old_value_text == new_value_text:
                 continue
             if field_obj._type == 'many2one':
-                old_value = isinstance(old_value, tuple) and old_value[0] or old_value
-                new_value = isinstance(new_value, tuple) and new_value[0] or new_value
+                old_value = old_value[0]
+                new_value = new_value[0]
             vals = {
                     "log_id": log_id,
                     "field_id": field_id and field_id[0] or False,
@@ -305,8 +305,7 @@ class audittrail_objects_proxy(object_proxy):
             vals = { 'method': method, 'object_id': model.id,'user_id': uid_orig}
             for resource_data in resource:
                 vals.update({'res_id': resource_data['id']})
-                if 'id' in resource_data:
-                    del resource_data['id']
+                del resource_data['id']
                 log_id = log_pool.create(cr, uid, vals)
                 lines = []
                 for field in resource_data:
@@ -393,38 +392,36 @@ class audittrail_objects_proxy(object_proxy):
                 res_ids = args[0]
                 old_values = {}
                 fields = []
-                if len(args)>1 and type(args[1]) == dict:
+                if len(args) > 1 and isinstance(args[1], dict):
                     fields = args[1].keys()
-                if type(res_ids) in (long, int):
+                if isinstance(res_ids, (long, int)):
                     res_ids = [res_ids]
             if res_ids:
-                for resource in resource_pool.read(cr, uid, res_ids):
+                resource_data = resource_pool.read(cr, uid, res_ids)
+                for resource in resource_data:
                     resource_id = resource['id']
-                    if 'id' in resource:
-                        del resource['id']
+                    del resource['id']
                     old_values_text = {}
                     old_value = {}
                     for field in resource.keys():
+                        field_obj = resource_pool._all_columns.get(field)
+                        field_obj = field_obj.column
+                        if field_obj._type in ('one2many','many2many'):
+                             self.log_fct(db, uid, field_obj._obj, method, None, resource[field], 'child_relation_log')
                         old_value[field] = resource[field]
                         old_values_text[field] = self.get_value_text(cr, uid, field, resource[field], model)
                     old_values[resource_id] = {'text':old_values_text, 'value': old_value}
-
-            res = fct_src(db, uid_orig, model.model, method, *args)
-            cr.commit()
+            if not relational_table_log:
+                res = fct_src(db, uid_orig, model.model, method, *args)
+                cr.commit()
 
             if res_ids:
-                for resource in resource_pool.read(cr, uid, res_ids):
+                resource_data = resource_pool.read(cr, uid, res_ids)
+                vals = {'method': method,'object_id': model.id,'user_id': uid_orig }
+                for resource in resource_data:
                     resource_id = resource['id']
-                    if 'id' in resource:
-                        del resource['id']
-                    vals = {
-                        "method": method,
-                        "object_id": model.id,
-                        "user_id": uid_orig,
-                        "res_id": resource_id,
-                    }
-
-
+                    del resource['id']
+                    vals.update({'res_id': resource_id})
                     log_id = log_pool.create(cr, uid, vals)
                     lines = []
                     for field in resource.keys():
@@ -436,7 +433,6 @@ class audittrail_objects_proxy(object_proxy):
                               'old_value_text': old_values[resource_id]['text'][field]
                               }
                         lines.append(line)
-
                     self.create_log_line(cr, uid, log_id, model, lines)
                 cr.commit()
             cr.close()
