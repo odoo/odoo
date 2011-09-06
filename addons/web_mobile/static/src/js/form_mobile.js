@@ -86,7 +86,7 @@ openerp.web_mobile.FormView = openerp.base.Widget.extend({
                                 }
 
                                 //$.mobile.changePage($("#oe_form"), "slide", true, true);
-                                next.find('.detail').find('li').click(function(){
+                                /*next.find('.detail').find('li').click(function(){
                                     if(data[relational]){
                                         var dataset = new openerp.base.DataSetStatic(self, result.fields_view.fields[relational].relation, result.fields_view.fields[relational].context);
                                         dataset.domain=[['id', 'in', data[relational]]];
@@ -113,7 +113,7 @@ openerp.web_mobile.FormView = openerp.base.Widget.extend({
                                             });
                                         });
                                     }
-                                });
+                                });*/
                             }
                         }
                         self.$element.find('select').change(function(ev){
