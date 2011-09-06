@@ -26,6 +26,7 @@ from email.Header import Header
 from email.Utils import formatdate, make_msgid, COMMASPACE
 from email import Encoders
 import logging
+import re
 import smtplib
 
 from osv import osv
@@ -55,6 +56,21 @@ class WriteToLogger(object):
     def write(self, s):
         self.logger.log(self.level, s)
 
+
+def try_coerce_ascii(string_utf8):
+    """Attempts to decode the given utf8-encoded string
+       as ASCII after coercing it to UTF-8, then return
+       the confirmed 7-bit ASCII string.
+
+       If the process fails (because the string
+       contains non-ASCII characters) returns ``None``.
+    """
+    try:
+        string_utf8.decode('ascii')
+    except UnicodeDecodeError:
+        return
+    return string_utf8
+
 def encode_header(header_text):
     """Returns an appropriate representation of the given header value,
        suitable for direct assignment as a header value in an
@@ -65,29 +81,63 @@ def encode_header(header_text):
        :param header_text: unicode or utf-8 encoded string with header value
        :rtype: string | email.header.Header
        :return: if ``header_text`` represents a plain ASCII string,
-                return a 7-bit string, otherwise returns an email.header.Header
+                return the same 7-bit string, otherwise returns an email.header.Header
                 that will perform the appropriate RFC2047 encoding of
                 non-ASCII values.
     """
     if not header_text: return ""
-
-    # convert anything to utf-8, suitable for
-    # testing ASCIIness, as 7-bit chars are
+    # convert anything to utf-8, suitable for testing ASCIIness, as 7-bit chars are
     # encoded as ASCII in utf-8
     header_text_utf8 = tools.ustr(header_text).encode('utf-8')
+    header_text_ascii = try_coerce_ascii(header_text_utf8)
+    # if this header contains non-ASCII characters,
+    # we'll need to wrap it up in a message.header.Header
+    # that will take care of RFC2047-encoding it as
+    # 7-bit string.
+    return header_text_ascii if header_text_ascii\
+         else Header(header_text_utf8, 'utf-8')
 
-    # check for non-ascii content in the header value
-    try:
-        header_text_utf8.decode('ascii')
-        # was plain ascii, we can use it verbatim as 
-        # a header
-        return header_text_utf8
-    except UnicodeDecodeError:
-        # this header contains non-ASCII characters, so
-        # we need to wrap it up in a message.header.Header
-        # that will take care of RFC2047-encoding it as
-        # 7-bit string.
-        return Header(header_text_utf8, 'utf-8')
+name_with_email_pattern = re.compile(r'("[^<@>]+")\s*<([^ ,<@]+@[^> ,]+)>')
+address_pattern = re.compile(r'([^ ,<@]+@[^> ,]+)')
+
+def extract_rfc2822_addresses(text):
+    """Returns a list of valid RFC2822 addresses
+       that can be found in ``source``, ignoring 
+       malformed ones and non-ASCII ones.
+    """
+    if not text: return []
+    candidates = address_pattern.findall(tools.ustr(text).encode('utf-8'))
+    return filter(try_coerce_ascii, candidates)
+
+def encode_rfc2822_address_header(header_text):
+    """If ``header_text`` contains non-ASCII characters,
+       attempts to locate patterns of the form
+       ``"Name" <address@domain>`` and replace the
+       ``"Name"`` portion by the RFC2047-encoded
+       version, preserving the address part untouched.
+    """
+    header_text_utf8 = tools.ustr(header_text).encode('utf-8')
+    header_text_ascii = try_coerce_ascii(header_text_utf8)
+    if header_text_ascii:
+        return header_text_ascii
+    # non-ASCII characters are present, attempt to
+    # replace all "Name" patterns with the RFC2047-
+    # encoded version
+    def replace(match_obj):
+        name, email = match_obj.group(1), match_obj.group(2)
+        name_encoded = str(Header(name, 'utf-8'))
+        return "%s <%s>" % (name_encoded, email)
+    header_text_utf8 = name_with_email_pattern.sub(replace,
+                                                   header_text_utf8)
+    # try again after encoding
+    header_text_ascii = try_coerce_ascii(header_text_utf8)
+    if header_text_ascii:
+        return header_text_ascii
+    # fallback to extracting pure addresses only, which could
+    # still cause a failure downstream if the actual addresses
+    # contain non-ASCII characters
+    return COMMASPACE.join(extract_rfc2822_addresses(header_text_utf8))
+
  
 class ir_mail_server(osv.osv):
     """Represents an SMTP server, able to send outgoing e-mails, with SSL and TLS capabilities."""
@@ -190,7 +240,7 @@ class ir_mail_server(osv.osv):
         """Constructs an RFC2822 email.message.Message object based on the keyword arguments passed, and returns it.
 
            :param string email_from: sender email address
-           :param list email_from: list of recipient addresses (to be joined with commas) 
+           :param list email_to: list of recipient addresses (to be joined with commas) 
            :param string subject: email subject (no pre-encoding/quoting necessary)
            :param string body: email body, according to the ``subtype`` (by default, plaintext).
                                If html subtype is used, the message will be automatically converted
@@ -238,17 +288,17 @@ class ir_mail_server(osv.osv):
         if references:
             msg['references'] = encode_header(references)
         msg['Subject'] = encode_header(subject)
-        msg['From'] = encode_header(email_from)
+        msg['From'] = encode_rfc2822_address_header(email_from)
         del msg['Reply-To']
         if reply_to:
-            msg['Reply-To'] = encode_header(reply_to)
+            msg['Reply-To'] = encode_rfc2822_address_header(reply_to)
         else:
             msg['Reply-To'] = msg['From']
-        msg['To'] = encode_header(COMMASPACE.join(email_to))
+        msg['To'] = encode_rfc2822_address_header(COMMASPACE.join(email_to))
         if email_cc:
-            msg['Cc'] = encode_header(COMMASPACE.join(email_cc))
+            msg['Cc'] = encode_rfc2822_address_header(COMMASPACE.join(email_cc))
         if email_bcc:
-            msg['Bcc'] = encode_header(COMMASPACE.join(email_bcc))
+            msg['Bcc'] = encode_rfc2822_address_header(COMMASPACE.join(email_bcc))
         msg['Date'] = formatdate(localtime=True)
         # Custom headers may override normal headers or provide additional ones
         for key, value in headers.iteritems():
@@ -291,7 +341,9 @@ class ir_mail_server(osv.osv):
         If both mail_server_id and smtp_server are None, look for an 'smtp_server' value in server config,
         and fails if not found.
 
-        :param message: the email.message.Message to send
+        :param message: the email.message.Message to send. The envelope sender will be extracted from the
+                        ``Return-Path`` or ``From`` headers. The envelope recipients will be
+                        extracted from the combined list of ``To``, ``CC`` and ``BCC`` headers.
         :param mail_server_id: optional id of ir.mail_server to use for sending. overrides other smtp_* arguments.
         :param smtp_server: optional hostname of SMTP server to use
         :param smtp_encryption: one of 'none', 'starttls' or 'ssl' (see ir.mail_server fields for explanation)
@@ -303,12 +355,18 @@ class ir_mail_server(osv.osv):
         :return: the Message-ID of the message that was just sent, if successfully sent, otherwise raises
                  MailDeliveryException and logs root cause.
         """
-        smtp_from = message['From']
-        assert smtp_from, "The From header is required in any outbound e-mail"
+        smtp_from = message['Return-Path'] or message['From']
+        assert smtp_from, "The Return-Path or From header is required for any outbound e-mail"
+
+        # The email's "Envelope From" (Return-Path), and all recipient addresses must only contain ASCII characters.
+        from_rfc2822 = extract_rfc2822_addresses(smtp_from)
+        assert len(from_rfc2822) == 1, "Malformed 'Return-Path' or 'From' address - it may only contain plain ASCII characters"
+        smtp_from = from_rfc2822[0]
         email_to = message['To']
         email_cc = message['Cc']
         email_bcc = message['Bcc']
-        smtp_to_list = filter(None,tools.flatten([email_to, email_cc, email_bcc]))
+        smtp_to_list = filter(None, tools.flatten(map(extract_rfc2822_addresses,[email_to, email_cc, email_bcc])))
+        assert smtp_to_list, "At least one valid recipient address should be specified for outgoing emails (To/Cc/Bcc)"
 
         # Get SMTP Server Details from Mail Server
         mail_server = None
