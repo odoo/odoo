@@ -13,19 +13,19 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 05:33+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-09-05 05:37+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
 
 #. module: account_voucher
 #: view:account.voucher.unreconcile:0
 msgid "Unreconciliation transactions"
-msgstr ""
+msgstr "Icke avstämda transaktioner"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:242
+#: code:addons/account_voucher/account_voucher.py:247
 #, python-format
 msgid "Write-Off"
-msgstr ""
+msgstr "Avskrivning"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -40,7 +40,7 @@ msgstr "Öppna kundjournal transaktioner"
 #. module: account_voucher
 #: view:sale.receipt.report:0
 msgid "Voucher Date"
-msgstr ""
+msgstr "Verifikatdatum"
 
 #. module: account_voucher
 #: report:voucher.print:0
@@ -51,10 +51,10 @@ msgstr "Uppgifter"
 #: view:account.voucher:0
 #: view:sale.receipt.report:0
 msgid "Group By..."
-msgstr "Gruppera efter"
+msgstr "Gruppera på..."
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:591
+#: code:addons/account_voucher/account_voucher.py:596
 #, python-format
 msgid "Cannot delete Voucher(s) which are already opened or paid !"
 msgstr "Kan inte ta bort verifikation som redan är öppnade eller betalda !"
@@ -88,7 +88,7 @@ msgid "Bill Payment"
 msgstr "Fakturabetalning"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:741
+#: code:addons/account_voucher/account_voucher.py:746
 #, python-format
 msgid ""
 "You have to configure account base code and account tax code on the '%s' tax!"
@@ -110,7 +110,7 @@ msgstr ""
 #. module: account_voucher
 #: selection:sale.receipt.report,month:0
 msgid "March"
-msgstr ""
+msgstr "mars"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_sale_receipt
@@ -127,7 +127,7 @@ msgstr ""
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Pay Bill"
-msgstr "Betala räkning"
+msgstr "Betala faktura"
 
 #. module: account_voucher
 #: field:account.voucher,company_id:0
@@ -140,7 +140,7 @@ msgstr "Företag"
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Set to Draft"
-msgstr "Sätt till utkast"
+msgstr "Sätt till preliminär"
 
 #. module: account_voucher
 #: help:account.voucher,reference:0
@@ -304,7 +304,7 @@ msgstr "Belopp (verbalt):"
 #: view:sale.receipt.report:0
 #: field:sale.receipt.report,nbr:0
 msgid "# of Voucher Lines"
-msgstr ""
+msgstr "Antal verifikatrader"
 
 #. module: account_voucher
 #: field:account.voucher.line,account_analytic_id:0
@@ -350,7 +350,7 @@ msgstr ""
 #. module: account_voucher
 #: field:account.voucher,writeoff_amount:0
 msgid "Write-Off Amount"
-msgstr ""
+msgstr "Avskrivet belopp"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -398,7 +398,7 @@ msgid "Voucher Entries"
 msgstr "Verifikattransaktioner"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:640
+#: code:addons/account_voucher/account_voucher.py:645
 #, python-format
 msgid "Error !"
 msgstr "Fel !"
@@ -426,7 +426,7 @@ msgid "Sales Receipt"
 msgstr "Försäljningskvitto"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:591
+#: code:addons/account_voucher/account_voucher.py:596
 #, python-format
 msgid "Invalid action !"
 msgstr "Felaktig åtgärd!"
@@ -460,7 +460,7 @@ msgid "Pay Invoice"
 msgstr "Betala faktura"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:741
+#: code:addons/account_voucher/account_voucher.py:746
 #, python-format
 msgid "No Account Base Code and Account Tax Code!"
 msgstr "Ingen kontokod och skattekod"
@@ -519,6 +519,7 @@ msgstr ""
 
 #. module: account_voucher
 #: field:account.voucher,line_ids:0
+#: view:account.voucher.line:0
 #: model:ir.model,name:account_voucher.model_account_voucher_line
 msgid "Voucher Lines"
 msgstr "Verifikatstransaktioner"
@@ -703,7 +704,7 @@ msgid "Credit"
 msgstr "Kredit"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:640
+#: code:addons/account_voucher/account_voucher.py:645
 #, python-format
 msgid "Please define a sequence on the journal !"
 msgstr "Definiera en sekvens för denna journal !"
@@ -1075,56 +1076,3 @@ msgstr "Total"
 
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Felaktigt namn för modellen i händelsedefinitionen."
-
-#~ msgid "You can not create move line on closed account."
-#~ msgstr "Du kan inte skapa transaktioner för ett avslutat konto."
-
-#~ msgid "Originial Amount"
-#~ msgstr "Ursprungligt belopp"
-
-#~ msgid "Wrong credit or debit value in accounting entry !"
-#~ msgstr "Fel kredit- eller debitvärde i bokföringstransaktionerna."
-
-#~ msgid "Write-Off journal"
-#~ msgstr "Avskrivningsjournal"
-
-#~ msgid "Journal:"
-#~ msgstr "Journal:"
-
-#~ msgid ""
-#~ "You can not create move line on receivable/payable account without partner"
-#~ msgstr ""
-#~ "Du kan inte skapa en transaktion på en ett konto utan en kund/leverantör"
-
-#~ msgid "Vendor Payment"
-#~ msgstr "Leverantörsbetalning"
-
-#~ msgid "Vendor"
-#~ msgstr "Leverantör"
-
-#~ msgid "Company must be same for its related account and period."
-#~ msgstr "Företaget måste vara samma för relaterat konto och period."
-
-#~ msgid "Without Write-off"
-#~ msgstr "Utan avskrivning"
-
-#~ msgid "Comment"
-#~ msgstr "Kommentar"
-
-#~ msgid "Open Vendor Journal Entries"
-#~ msgstr "Öppna leverantörjournalstransaktioner"
-
-#~ msgid "Vendor Invoices and Outstanding transactions"
-#~ msgstr "Leverantörsfakturor och utestående transaktioner"
-
-#~ msgid "Payment Option"
-#~ msgstr "Betalningsalternativ"
-
-#~ msgid "Writeoff Amount"
-#~ msgstr "Avskrivningsbelopp"
-
-#~ msgid "With Write-off"
-#~ msgstr "Med avskrivning"
-
-#~ msgid "You can not create move line on view account."
-#~ msgstr "Du kan inte skapa en transaktion för ett vykonto"
