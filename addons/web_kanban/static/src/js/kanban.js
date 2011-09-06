@@ -42,7 +42,7 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
             var child = this.fields_view.arch.children[i];
             if (child.tag === "templates") {
                 this.transform_qweb_template(child);
-                this.qweb.add_template(openerp.web.json_node_to_xml(child, true));
+                this.qweb.add_template(openerp.web.json_node_to_xml(child));
                 break;
             }
         }
