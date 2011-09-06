@@ -1004,7 +1004,7 @@ class Binary(openerpweb.Controller):
                  ('Content-Disposition', 'attachment; filename=' +  filename)])
 
     @openerpweb.httprequest
-    def upload(self, req, callback, ufile=None):
+    def upload(self, req, callback, ufile):
         headers = {}
         for key, val in req.httprequest.headers.iteritems():
             headers[key.lower()] = val
@@ -1023,14 +1023,15 @@ class Binary(openerpweb.Controller):
                             });
                         }
                     </script>"""
-            data = ufile.file.read()
-            args = [size, ufile.filename, ufile.headers.getheader('Content-Type'), base64.b64encode(data)]
+            data = ufile.read()
+            args = [ufile.content_length, ufile.filename,
+                    ufile.content_type, base64.b64encode(data)]
         except Exception, e:
             args = [False, e.message]
         return out % (simplejson.dumps(callback), simplejson.dumps(args))
 
     @openerpweb.httprequest
-    def upload_attachment(self, req, callback, model, id, ufile=None):
+    def upload_attachment(self, req, callback, model, id, ufile):
         context = req.session.eval_context(req.context)
         Model = req.session.model('ir.attachment')
         try:
@@ -1043,7 +1044,7 @@ class Binary(openerpweb.Controller):
                     </script>"""
             attachment_id = Model.create({
                 'name': ufile.filename,
-                'datas': base64.encodestring(ufile.file.read()),
+                'datas': base64.encodestring(ufile.read()),
                 'res_model': model,
                 'res_id': int(id)
             }, context)
