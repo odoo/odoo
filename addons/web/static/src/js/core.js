@@ -558,9 +558,8 @@ openerp.web.Session = openerp.web.CallbackEnabled.extend( /** @lends openerp.web
                 openerp.web._t.database.set_bundle(transs);
                 var modules = self.module_list.join(',');
                 var file_list = ["/web/static/lib/datejs/globalization/" +
-                    self.user_context.lang.replace("_", "-") + ".js",
-
-                    ];
+                    self.user_context.lang.replace("_", "-") + ".js"
+                ];
                 if(self.debug) {
                     self.rpc('/web/webclient/csslist', {"mods": modules}, self.do_load_css);
                     self.rpc('/web/webclient/jslist', {"mods": modules}, function(files) {
