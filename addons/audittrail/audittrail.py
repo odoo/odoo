@@ -204,21 +204,19 @@ class audittrail_objects_proxy(object_proxy):
             return values
         pool = pooler.get_pool(cr.dbname)
         obj_pool = pool.get(model.model)
-        field_obj = obj_pool._all_columns.get(field_name, False)
+        field_obj = obj_pool._all_columns.get(field_name)
         assert field_obj, _("'%s' field does not exist in '%s' model" %(field_name, model.model))
         field_obj = field_obj.column
         if field_obj._obj:
             relation_model_pool = pool.get(field_obj._obj)
             relational_rec_name = relation_model_pool._rec_name
         if field_obj._type == 'many2one':
-            if values and isinstance(values, tuple):
-                if values[0]:
-                    relation_model_object = relation_model_pool.read(cr, uid, values[0], [relational_rec_name])
-                    return relation_model_object.get(relational_rec_name)
-            return False
+            if values:
+                return values[1]
+            return values
         elif field_obj._type in ('many2many','one2many'):
-            data = relation_model_pool.read(cr, uid, values, [relational_rec_name])
-            return map(lambda x:x.get(relational_rec_name, False), data)
+            data = relation_model_pool.name_get(cr, uid, values)
+            return map(lambda x:x[1], data)
         return values
 
     def create_log_line(self, cr, uid, log_id, model, lines=[]):
@@ -312,7 +310,7 @@ class audittrail_objects_proxy(object_proxy):
                 log_id = log_pool.create(cr, uid, vals)
                 lines = []
                 for field in resource_data:
-                    field_obj = resource_pool._all_columns.get(field, False)
+                    field_obj = resource_pool._all_columns.get(field)
                     field_obj = field_obj.column
                     if field_obj._type in ('one2many','many2many'):
                         self.log_fct(db, uid, field_obj._obj, method, None, resource_data[field], 'child_relation_log')
