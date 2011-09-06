@@ -3,7 +3,6 @@
 HOST = 127.0.0.1
 PORT = 8080
 
-
 all: run
 
 run:
@@ -25,5 +24,5 @@ clean:
 	@rm -rf *.egg-info
 
 cloc:
-	cloc openerpweb/*.py addons/*/controllers/*.py addons/*/static/src/*.js addons/*/static/src/js/*.js addons/*/static/src/css/*.css addons/*/static/src/xml/*.xml
+	cloc addons/*/common/*.py addons/*/controllers/*.py addons/*/static/src/*.js addons/*/static/src/js/*.js addons/*/static/src/css/*.css addons/*/static/src/xml/*.xml
 
