@@ -2864,7 +2864,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                     res['fields'][field]['selection'] = template_select
         return res
 
-    def journals_already_created(self, cr, uid, vals_journal, company_id, context=None):
+    def check_created_journals(self, cr, uid, vals_journal, company_id, context=None):
         """
         This method used for checking journals already created or not. If not then create new journal.
         """
@@ -2915,7 +2915,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                             'default_credit_account_id': income_acc_id,
                             'default_debit_account_id': income_acc_id
                                })
-        self.journals_already_created(cr, uid, vals_journal, company_id, context=context)
+        self.check_created_journals(cr, uid, vals_journal, company_id, context=context)
 
         # Purchase Journal
         analytical_purchase_ids = analytic_journal_obj.search(cr,uid,[('type','=','purchase')], context=context)
@@ -2935,7 +2935,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                             'default_credit_account_id': expense_acc_id,
                             'default_debit_account_id': expense_acc_id
                                })
-        self.journals_already_created(cr, uid, vals_journal, company_id, context=context)
+        self.check_created_journals(cr, uid, vals_journal, company_id, context=context)
 
         # Creating Journals Sales Refund and Purchase Refund
         data = obj_data.get_object_reference(cr, uid, 'account', 'account_sp_refund_journal_view') 
@@ -2955,7 +2955,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                             'default_credit_account_id': income_acc_id,
                             'default_debit_account_id': income_acc_id
                                })
-        self.journals_already_created(cr, uid, vals_journal, company_id, context=context)
+        self.check_created_journals(cr, uid, vals_journal, company_id, context=context)
 
         # Purchase Refund Journal
         vals_journal = {
@@ -2971,7 +2971,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                             'default_credit_account_id': expense_acc_id,
                             'default_debit_account_id': expense_acc_id
                                })
-        self.journals_already_created(cr, uid, vals_journal, company_id, context=context)
+        self.check_created_journals(cr, uid, vals_journal, company_id, context=context)
 
         # Miscellaneous Journal
         data = obj_data.get_object_reference(cr, uid, 'account', 'account_journal_view') 
@@ -2987,7 +2987,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             'analytic_journal_id': analytical_miscellaneous_ids and analytical_miscellaneous_ids[0] or False,
             'company_id': company_id
         }
-        self.journals_already_created(cr, uid, vals_journal, company_id, context=context)
+        self.check_created_journals(cr, uid, vals_journal, company_id, context=context)
 
         # Opening Entries Journal
         if template.property_account_income_opening and template.property_account_expense_opening:
@@ -3001,7 +3001,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                 'default_credit_account_id': credit_acc_id,
                 'default_debit_account_id': debit_acc_id
                 }
-            self.journals_already_created(cr, uid, vals_journal, company_id, context=context)
+            self.check_created_journals(cr, uid, vals_journal, company_id, context=context)
 
         data = obj_data.get_object_reference(cr, uid, 'account', 'account_journal_bank_view_multi') 
         view_id_cur = data and data[1] or False
