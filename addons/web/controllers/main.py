@@ -971,17 +971,19 @@ class Binary(openerpweb.Controller):
 
     @openerpweb.httprequest
     def image(self, req, model, id, field, **kw):
-        req.httpresponse.headers['Content-Type'] = 'image/png'
         Model = req.session.model(model)
         context = req.session.eval_context(req.context)
+
         try:
             if not id:
                 res = Model.default_get([field], context).get(field, '')
             else:
                 res = Model.read([int(id)], [field], context)[0].get(field, '')
-            return base64.decodestring(res)
+            image_data = base64.decodestring(res)
         except: # TODO: what's the exception here?
-            return self.placeholder(req)
+            image_data = self.placeholder(req)
+        return req.make_response(image_data, [
+            ('Content-Type', 'image/png'), ('Content-Length', len(image_data))])
     def placeholder(self, req):
         return open(os.path.join(req.addons_path, 'web', 'static', 'src', 'img', 'placeholder.png'), 'rb').read()
 
