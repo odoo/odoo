@@ -141,7 +141,7 @@ init: function(parent, element_id, dataset, view_id) {
             var color = res[this.color_field][0] || res[this.color_field];
             if (color_box[color] == undefined){
                 color_box[color] = COLOR_PALETTE[k];
-                k = k + 1;
+                k += 1;
             }
 
             if (this.date_stop != undefined){
