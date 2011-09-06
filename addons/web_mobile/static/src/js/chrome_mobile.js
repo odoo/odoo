@@ -13,7 +13,6 @@ openerp.web_mobile.mobilewebclient = function(element_id) {
 
 openerp.web_mobile.MobileWebClient = openerp.web.Widget.extend({
     init: function(element_id) {
-        var self = this;
         this._super(null, element_id);
         QWeb.add_template("xml/web_mobile.xml");
         var params = {};
@@ -30,9 +29,6 @@ openerp.web_mobile.MobileWebClient = openerp.web.Widget.extend({
 });
 
 openerp.web_mobile.Login =  openerp.web.Widget.extend({
-    init: function(session, element_id) {
-        this._super(session, element_id);
-    },
     start: function() {
         var self = this;
         jQuery("#oe_header").children().remove();
@@ -217,9 +213,6 @@ openerp.web_mobile.Secondary =  openerp.web.Widget.extend({
 });
 
 openerp.web_mobile.Options =  openerp.web.Widget.extend({
-    init: function(session, element_id) {
-        this._super(session, element_id);
-    },
     start: function() {
         var self = this;
         this.$element.html(QWeb.render("Options", this));
@@ -233,13 +226,6 @@ openerp.web_mobile.Options =  openerp.web.Widget.extend({
 });
 
 openerp.web_mobile.Selection = openerp.web.Widget.extend({
-    init: function (){
-        this._super();
-    },
-    start: function(){
-        this._super();
-        var self = this;
-    },
     on_select_option: function(ev){
         ev.preventDefault();
         var $this = ev.currentTarget;
