@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -25,13 +25,14 @@ from osv import fields
 import time
 
 class launch_map(osv.osv_memory):
-    
-    _name = "launch.map"
 
-    def launch_wizard(self, cr, uid, data, context=None):
-        address_obj= pooler.get_pool(cr.dbname).get('res.partner.address')
-        m = address_obj.browse(cr, uid, data, context=context)[0]
-        url=''
+    _name = "launch.map"
+    _description = "Google Map"
+
+    def launch_wizard(self, cr, uid, ids, context=None):
+        active_id = context.get('active_id', False)
+        address_obj= self.pool.get('res.partner.address')
+        m = address_obj.browse(cr, uid, active_id, context=context)
         url="http://maps.google.com/maps?oi=map&q="
         if m.street:
             url+=m.street.replace(' ','+')
