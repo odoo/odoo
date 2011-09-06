@@ -67,20 +67,20 @@ openerp.base_diagram.DiagramView = openerp.base.View.extend({
     get_diagram_info: function() {
         var self = this;
         var params = {
-        		'id': this.id,
-        		'model': this.model,
-        		'node': this.node,
-        		'connector': this.connector,
-        		'bgcolor': this.nodes.attrs.bgcolor,
-        		'shape': this.nodes.attrs.shape,
-        		'src_node': this.connectors.attrs.source,
-        		'des_node': this.connectors.attrs.destination,
-        		'visible_nodes': [],
-        		'invisible_nodes': [],
-        		'node_fields': [],
-        		'connectors': [],
-        		'connectors_fields': []
-        		};
+            'id': this.id,
+            'model': this.model,
+            'node': this.node,
+            'connector': this.connector,
+            'bgcolor': this.nodes.attrs.bgcolor,
+            'shape': this.nodes.attrs.shape,
+            'src_node': this.connectors.attrs.source,
+            'des_node': this.connectors.attrs.destination,
+            'visible_nodes': [],
+            'invisible_nodes': [],
+            'node_fields': [],
+            'connectors': [],
+            'connectors_fields': []
+        };
         
         _.each(this.nodes.children, function(child) {
         	if(child.attrs.invisible == '1')
@@ -129,10 +129,10 @@ openerp.base_diagram.DiagramView = openerp.base.View.extend({
             if(shape == 'rectangle')
             	shape = 'rect';
             node = r[shape](n.node.x, n.node.y).attr({
-            		"fill": n.node.color,
-            	}).dblclick(function() {
-            		self.add_edit_node(n.node.id, self.node);
-        		});
+                "fill": n.node.color
+            }).dblclick(function() {
+                self.add_edit_node(n.node.id, self.node);
+            });
             set = r.set()
             		.push(node)
             		.push(
@@ -169,7 +169,7 @@ openerp.base_diagram.DiagramView = openerp.base.View.extend({
         if ($('div#dia-canvas').children().length > 0) {
             $('div#dia-canvas').children().remove();
         }
-        
+
         var layouter = new Graph.Layout.Ordered(diagram);
         var render_diagram = new Graph.Renderer.Raphael('dia-canvas', diagram, $('div#dia-canvas').width(), $('div#dia-canvas').height());
         
