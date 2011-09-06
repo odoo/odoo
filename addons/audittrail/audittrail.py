@@ -231,7 +231,17 @@ class audittrail_objects_proxy(object_proxy):
             cr.commit()
         return True
 
-
+    def get_x2m_m2o_values(self, cr, db, uid, pool, resource_pool, method, field, value, recursive=True):
+        field_obj = (resource_pool._all_columns.get(field)).column
+        if field_obj._type in ('one2many','many2many'):
+            if recursive:
+                self.log_fct(db, uid, field_obj._obj, method, None, value, 'child_relation_log')
+            data = pool.get(field_obj._obj).name_get(cr, uid, value)
+            return map(lambda x:x[1], data)
+        elif field_obj._type == 'many2one':
+            return value and value[1] or value
+        return False
+    
     def log_fct(self, db, uid, model, method, fct_src, *args):
         """
         Logging function: This function is performs logging operations according to method
@@ -268,27 +278,18 @@ class audittrail_objects_proxy(object_proxy):
             if not isinstance(resource, list):
                 resource = [resource]
             vals = { 'method': method, 'object_id': model.id,'user_id': uid_orig}
-            new_value_text = ''
             for resource_data in resource:
                 vals.update({'res_id': resource_data['id']})
                 del resource_data['id']
                 log_id = log_pool.create(cr, uid, vals)
                 lines = []
                 for field in resource_data:
-                    field_obj = resource_pool._all_columns.get(field)
-                    field_obj = field_obj.column
-                    new_value_text = resource_data[field]
                     if field in ('__last_update', 'id'):continue
-                    if field_obj._type in ('one2many','many2many'):
-                        self.log_fct(db, uid, field_obj._obj, method, None, resource_data[field], 'child_relation_log')
-                        data = pool.get(field_obj._obj).name_get(cr, uid, resource_data[field])
-                        new_value_text =  map(lambda x:x[1], data)
-                    elif field_obj._type == 'many2one':
-                        new_value_text = resource_data[field] and resource_data[field][1] or resource_data[field]
+                    ret_val = self.get_x2m_m2o_values(cr, db, uid, pool, resource_pool, method, field, resource_data[field])
                     line = {
                           'name': field,
                           'new_value': resource_data[field],
-                          'new_value_text': new_value_text
+                          'new_value_text': ret_val and ret_val or resource_data[field]
                           }
                     lines.append(line)
                 self.create_log_line(cr, uid, log_id, model, lines)
@@ -302,25 +303,17 @@ class audittrail_objects_proxy(object_proxy):
             res = fct_src(db, uid_orig, model.model, method, *args)
             map(lambda x:old_values.setdefault(x['id'], x), res)
             vals = {'method': method,'object_id': model.id,'user_id': uid_orig}
-            old_value_text = ''
             for res_id in old_values:
                 vals.update({'res_id': res_id})
                 log_id = log_pool.create(cr, uid, vals)
                 lines = []
                 for field in old_values[res_id]:
                     if field in ('__last_update', 'id'):continue
-                    field_obj = resource_pool._all_columns.get(field)
-                    field_obj = field_obj.column
-                    old_value_text = old_values[res_id][field]
-                    if field_obj._type in ('one2many','many2many'):
-                        data = pool.get(field_obj._obj).name_get(cr, uid, old_values[res_id][field])
-                        old_value_text =  map(lambda x:x[1], data)
-                    elif field_obj._type == 'many2one':
-                        old_value_text = old_values[res_id][field] and old_values[res_id][field][1] or old_values[res_id][field]
+                    ret_val = self.get_x2m_m2o_values(cr, db, uid, pool, resource_pool, method, field, old_values[res_id][field], False)
                     line = {
                           'name': field,
                           'old_value': old_values[res_id][field],
-                          'old_value_text': old_value_text
+                          'old_value_text': ret_val and ret_val or old_values[res_id][field]
                           }
                     lines.append(line)
                 self.create_log_line(cr, uid, log_id, model, lines)
@@ -335,26 +328,17 @@ class audittrail_objects_proxy(object_proxy):
             for res_id in res_ids:
                 old_values[res_id] = resource_pool.read(cr, uid, res_id)
             vals = {'method': method,'object_id': model.id,'user_id': uid_orig}
-            old_value_text = ''
             for res_id in res_ids:
                 vals.update({'res_id': res_id})
                 log_id = log_pool.create(cr, uid, vals)
                 lines = []
                 for field in old_values[res_id]:
                     if field in ('__last_update', 'id'):continue
-                    field_obj = resource_pool._all_columns.get(field)
-                    field_obj = field_obj.column
-                    old_value_text = old_values[res_id][field]
-                    if field_obj._type in ('one2many','many2many'):
-                        self.log_fct(db, uid, field_obj._obj, method, None, old_values[res_id][field], 'child_relation_log')
-                        data = pool.get(field_obj._obj).name_get(cr, uid, old_values[res_id][field])
-                        old_value_text =  map(lambda x:x[1], data)
-                    elif field_obj._type == 'many2one':
-                        old_value_text = old_values[res_id][field] and old_values[res_id][field][1] or old_values[res_id][field]
+                    ret_val = self.get_x2m_m2o_values(cr, db, uid, pool, resource_pool, method, field, old_values[res_id][field])
                     line = {
                           'name': field,
                           'old_value': old_values[res_id][field],
-                          'old_value_text': old_value_text
+                          'old_value_text': ret_val and ret_val or old_values[res_id][field]
                           }
                     lines.append(line)
                 self.create_log_line(cr, uid, log_id, model, lines)
@@ -376,7 +360,6 @@ class audittrail_objects_proxy(object_proxy):
                     res_ids = [res_ids]
             if res_ids:
                 resource_data = resource_pool.read(cr, uid, res_ids)
-                old_text = ''
                 for resource in resource_data:
                     resource_id = resource['id']
                     del resource['id']
@@ -384,17 +367,9 @@ class audittrail_objects_proxy(object_proxy):
                     old_value = {}
                     for field in resource.keys():
                         if field in ('__last_update', 'id'):continue
-                        field_obj = resource_pool._all_columns.get(field)
-                        field_obj = field_obj.column
-                        old_text = resource[field]
-                        if field_obj._type in ('one2many','many2many'):
-                            self.log_fct(db, uid, field_obj._obj, method, None, resource[field], 'child_relation_log')
-                            data = pool.get(field_obj._obj).name_get(cr, uid, resource[field])
-                            old_text =  map(lambda x:x[1], data)
-                        elif field_obj._type == 'many2one':
-                            old_text = resource[field] and resource[field][1] or resource[field]
+                        ret_val = self.get_x2m_m2o_values(cr, db, uid, pool, resource_pool, method, field, resource[field])
                         old_value[field] = resource[field]
-                        old_values_text[field] = old_text
+                        old_values_text[field] = ret_val and ret_val or resource[field]
                     old_values[resource_id] = {'text':old_values_text, 'value': old_value}
             if not relational_table_log:
                 res = fct_src(db, uid_orig, model.model, method, *args)
@@ -402,7 +377,6 @@ class audittrail_objects_proxy(object_proxy):
             if res_ids:
                 resource_data = resource_pool.read(cr, uid, res_ids)
                 vals = {'method': method,'object_id': model.id,'user_id': uid_orig }
-                old_value_text = ''
                 for resource in resource_data:
                     resource_id = resource['id']
                     del resource['id']
@@ -411,19 +385,12 @@ class audittrail_objects_proxy(object_proxy):
                     lines = []
                     for field in resource.keys():
                         if field in ('__last_update', 'id'):continue
-                        field_obj = resource_pool._all_columns.get(field)
-                        field_obj = field_obj.column
-                        old_value_text = resource[field]
-                        if field_obj._type in ('one2many','many2many'):
-                            data = pool.get(field_obj._obj).name_get(cr, uid, resource[field])
-                            old_value_text =  map(lambda x:x[1], data)
-                        elif field_obj._type == 'many2one':
-                            old_value_text = resource[field] and resource[field][1] or resource[field]
+                        ret_val = self.get_x2m_m2o_values(cr, db, uid, pool, resource_pool, method, field, resource[field], False)
                         line = {
                               'name': field,
                               'new_value': resource[field],
                               'old_value': old_values[resource_id]['value'][field],
-                              'new_value_text': old_value_text,
+                              'new_value_text': ret_val and ret_val or resource[field],
                               'old_value_text': old_values[resource_id]['text'][field]
                               }
                         lines.append(line)
