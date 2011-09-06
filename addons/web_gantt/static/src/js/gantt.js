@@ -156,7 +156,7 @@ init: function(parent, element_id, dataset, view_id) {
             else{
                 var duration = res[this.date_delay];
             }
-            if (duration == false)
+            if (!duration)
                 duration = 0;
 
             if (self.grp.length){
@@ -169,7 +169,7 @@ init: function(parent, element_id, dataset, view_id) {
                         grp_key = res[self.grp[j]['group_by']];
                     }
 
-                    if (grp_key == false){
+                    if (!grp_key){
                         grp_key = "Undefined";
                     }
 
