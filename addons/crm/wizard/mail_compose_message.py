@@ -48,11 +48,12 @@ class mail_compose_message(osv.osv_memory):
             result.update({
                     'subject' : data.name or False,
                     'email_to' : data.email_from or False,
-                    'email_from' : data.user_id and data.user_id.address_id and data.user_id.address_id.email or tools.config.get('email_from', False),
+                    'email_from' : data.user_id.user_email if data.user_id else tools.config.get('email_from', False),
                     'body_text' : '\n' + (tools.ustr(data.user_id.signature or '')),
                     'email_cc' : tools.ustr(data.email_cc or ''),
                     'model': model,
                     'res_id': res_id,
+                    'subtype': 'plain',
                 })
             if hasattr(data, 'section_id'):
                 result.update({'reply_to' : data.section_id and data.section_id.reply_to or False})

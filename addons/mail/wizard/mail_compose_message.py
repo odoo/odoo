@@ -39,7 +39,7 @@ class mail_compose_message(osv.osv_memory):
        The behavior of the wizard can be modified through the use of context
        parameters, among which are:
 
-         * mass_mail: turns multi-recipient mode, where the mail details can
+         * mass_mail: turns multi-recipient mode on, where the mail details can
                       contain template placeholders that will be merged with
                       actual data before being sent to each recipient, as
                       determined via  ``context['active_model']`` and
@@ -68,18 +68,19 @@ class mail_compose_message(osv.osv_memory):
             context = {}
         result = super(mail_compose_message, self).default_get(cr, uid, fields, context=context)
         vals = {}
-        if context.get('mass_mail'):
-            return result
-        if context.get('active_model') and context.get('active_id') and not context.get('mail')=='reply':
+        if context.get('active_model') and context.get('active_id') and not context.get('mail') == 'reply':
             vals = self.get_value(cr, uid, context.get('active_model'), context.get('active_id'), context)
-        elif context.get('mail')=='reply' and context.get('active_id'):
+        elif context.get('mail') == 'reply' and context.get('active_id'):
             vals = self.get_message_data(cr, uid, int(context['active_id']), context)
         else:
             result['model'] = context.get('active_model', False)
-        if not vals:
-            return result
-        for field in fields:
-            result.update({field : vals.get(field, False)})
+        if vals:
+            for field in fields:
+                result.update({field : vals.get(field, False)})
+        # Try to provide default email_from if not specified yet
+        if not result.get('email_from'):
+            current_user = self.pool.get('res.users').browse(cr, uid, uid, context)
+            result['email_from'] = current_user.user_email or False
         return result
 
     _columns = {

@@ -174,9 +174,10 @@
                    <group colspan="4">
                        <field colspan="4" name="email_cc" widget="char" size="512"/>
                    </group>
-                    <field name="message_ids" colspan="4" nolabel="1" mode="tree,form">
+                    <field name="message_ids" colspan="4" nolabel="1" mode="tree,form" readonly="1">
                         <tree string="History">
                             <field name="display_text" string="History Information"/>
+                            <field name="email_from" invisible="1"/>
                             <button
                                 string="Reply" attrs="{'invisible': [('email_from', '=', False)]}"
                                 name="%(mail.action_email_compose_message_wizard)d"
@@ -185,15 +186,19 @@
                         </tree>
                         <form string="History">
                             <group col="4" colspan="4">
-                                <field name="email_from"/>
-                                <field name="date"/>
-                                <field name="email_to" size="512"/>
-                                <field name="email_cc" size="512"/>
+                                <group col="2" colspan="2" attrs="{'invisible': [('email_from', '=', False)]}">
+                                    <field name="email_from"/>
+                                    <field name="email_to" size="512"/>
+                                </group>
+                                <group col="2" colspan="2">
+                                    <field name="date"/>
+                                    <field name="email_cc" size="512" attrs="{'invisible': [('email_from', '=', False)]}"/>
+                                </group>
                                 <field name="subject" colspan="4" widget="char" attrs="{'invisible': [('email_from', '=', False)]}" size="512"/>
                                 <field name="display_text" colspan="4" attrs="{'invisible': [('email_from', '!=', False)]}"/>
                             </group>
                             <notebook colspan="4">
-                                <page string="Details">
+                                <page string="Details" attrs="{'invisible': [('email_from', '=', False)]}">
                                     <field name="body_text" colspan="4" nolabel="1"/>
                                     <group attrs="{'invisible': [('email_from', '=', False)]}">
                                         <button colspan="4" string="Reply"
@@ -203,7 +208,7 @@
                                         </group>
 
                                 </page>
-                                <page string="Attachments">
+                                <page string="Attachments" attrs="{'invisible': [('email_from', '=', False)]}">
                                     <field name="attachment_ids" colspan="4" readonly="1" nolabel="1"/>
                                 </page>
                                 </notebook>
