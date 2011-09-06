@@ -2874,7 +2874,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             obj_journal.create(cr, uid, vals_journal, context=context)
         return True
 
-    def generate_journals(self, cr, uid, chart_template_id, acc_template_ref, company_id, bank_jrnl_acc_list, code_digits, context=None):
+    def generate_journals(self, cr, uid, chart_template_id, acc_template_ref, company_id, code_digits, context=None):
         """
         This method used for creating journals.
         @param cr: A database cursor.
@@ -2897,7 +2897,6 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         expense_acc_id = acc_template_ref.get(template.property_account_expense_categ.id)
         credit_acc_id = acc_template_ref.get(template.property_account_income_opening.id)
         debit_acc_id = acc_template_ref.get(template.property_account_expense_opening.id)
-        ref_acc_bank = template.bank_account_view_id
                 
         #Sales Journal
         analytical_sale_ids = analytic_journal_obj.search(cr, uid, [('type','=','sale')], context=context)
@@ -3009,54 +3008,6 @@ class wizard_multi_charts_accounts(osv.osv_memory):
 
         data = obj_data.get_object_reference(cr, uid, 'account', 'account_journal_bank_view') 
         view_id_cash = data and data[1] or False
-
-        #Create Bank journals
-        current_num = 1
-        valid = True
-        for line in bank_jrnl_acc_list:
-            #create the account_account for this bank journal
-            if not ref_acc_bank.code:
-                raise osv.except_osv(_('Configuration Error !'), _('The bank account defined on the selected chart of account hasn\'t a code.'))
-            while True:
-                new_code = str(ref_acc_bank.code.ljust(code_digits-len(str(current_num)), '0')) + str(current_num)
-                ids = obj_acc.search(cr, uid, [('code', '=', new_code), ('company_id', '=', company_id)])
-                if not ids:
-                    break
-                else:
-                    current_num += 1
-            #TODO: create proper user_type for account creation.
-            user_type = self.pool.get('account.account.type').search(cr, uid, [('name', '=', line['account_type'])], context=context)
-            vals = {
-                'name': line['acc_name'],
-                'currency_id': line['currency_id'],
-                'code': new_code,
-                'type': 'liquidity',
-                'user_type': 1,
-                'reconcile': True,
-                'parent_id': acc_template_ref[ref_acc_bank.id] or False,
-                'company_id': company_id,
-            }
-            acc_cash_id  = obj_acc.create(cr,uid,vals)
-
-            #create the bank journal
-            vals_journal = {
-                'name': vals['name'],
-                'code': _('BNK') + str(current_num),
-                'type': line['account_type'] == 'cash' and 'cash' or 'bank',
-                'company_id': company_id,
-                'analytic_journal_id': False,
-                'currency_id': False,
-            }
-            if line['currency_id']:
-                vals_journal['view_id'] = view_id_cur
-                vals_journal['currency'] = line['currency_id']
-            else:
-                vals_journal['view_id'] = view_id_cash
-            vals_journal['default_credit_account_id'] = acc_cash_id
-            vals_journal['default_debit_account_id'] = acc_cash_id
-            obj_journal.create(cr, uid, vals_journal)
-            current_num += 1
-            valid = True
             
         return True
 
@@ -3103,13 +3054,13 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         
         return True
 
-    def _install_template(self, cr, uid, template_id, company_id, code_digits=None ,tax_data={}, bank_jrnl_acc_list=[], context=None):
+    def _install_template(self, cr, uid, template_id, company_id, code_digits=None ,tax_data={}, context=None):
         template = self.pool.get('account.chart.template').browse(cr, uid, template_id, context=context)
         if template.parent_id:
             self._install_template(cr, uid, template.parent_id.id, company_id, code_digits=code_digits, context=context)
-        return self._load_template(cr, uid, template_id, company_id, code_digits=code_digits, tax_data=tax_data, bank_jrnl_acc_list=bank_jrnl_acc_list,context=context)
+        return self._load_template(cr, uid, template_id, company_id, code_digits=code_digits, tax_data=tax_data,context=context)
 
-    def _load_template(self, cr, uid, template_id, company_id, code_digits=None, tax_data={}, bank_jrnl_acc_list=[], context=None):
+    def _load_template(self, cr, uid, template_id, company_id, code_digits=None, tax_data={}, context=None):
         template = self.pool.get('account.chart.template').browse(cr, uid, template_id, context=context)
         obj_tax_code_template = self.pool.get('account.tax.code.template')
         obj_acc_tax = self.pool.get('account.tax')
@@ -3181,7 +3132,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                 })
         
         # Create Jourals
-        self.generate_journals(cr, uid, template_id, acc_template_ref, company_id, bank_jrnl_acc_list, code_digits, context)
+        self.generate_journals(cr, uid, template_id, acc_template_ref, company_id, code_digits, context)
 
         # generate properties function
         self.generate_properties(cr, uid, template_id, acc_template_ref, company_id, context=context)
@@ -3197,29 +3148,84 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             if tax_data['purchase_tax'] and taxes_ref['taxes_id']:
                 ir_values_obj.set(cr, uid, key='default', key2=False, name="supplier_taxes_id", company=company_id,
                                 models =[('product.product',False)], value=[taxes_ref['taxes_id'][tax_data['purchase_tax']]])
-        return True
+        return acc_template_ref
 
     def execute(self, cr, uid, ids, context=None):
-        obj_tax_temp = self.pool.get('account.tax.template')
+        obj_acc = self.pool.get('account.account')
+        obj_journal = self.pool.get('account.journal')
+        
         obj_multi = self.browse(cr, uid, ids[0])
         company_id = obj_multi.company_id.id
-        bank_jrnl_acc_list = []
+
+        code_digits = obj_multi.code_digits
+        ref_acc_bank = obj_multi.chart_template_id.bank_account_view_id
+
+        journal_data = []
         tax_data = {
                     'sale': obj_multi.sale_tax_rate, 
                     'purchase': obj_multi.purchase_tax_rate, 
                     'sale_tax': obj_multi.complete_tax and obj_multi.sale_tax.id or False, 
                     'purchase_tax': obj_multi.complete_tax and obj_multi.purchase_tax.id or False, 
                      }
+
+        acc_temp_ref = self._install_template(cr, uid, obj_multi.chart_template_id.id, company_id, code_digits=code_digits, tax_data=tax_data, context=context)                         
         if obj_multi.bank_accounts_id:
             for acc in obj_multi.bank_accounts_id:
-                bank_jrnl_acc_list.append({
+                journal_data.append({
                             'acc_name': acc.acc_name,
                             'account_type': acc.account_type,
                             'currency_id': acc.currency_id.id,
                             })
-        self._install_template(cr, uid, obj_multi.chart_template_id.id, company_id, code_digits=obj_multi.code_digits, tax_data=tax_data, bank_jrnl_acc_list = bank_jrnl_acc_list, context=context)
+        
+        #Create Bank journals
+        current_num = 1
+        valid = True
+        for line in journal_data:
+            #create the account_account for this bank journal
+            if not ref_acc_bank.code:
+                raise osv.except_osv(_('Configuration Error !'), _('The bank account defined on the selected chart of account hasn\'t a code.'))
+            while True:
+                new_code = str(ref_acc_bank.code.ljust(code_digits-len(str(current_num)), '0')) + str(current_num)
+                ids = obj_acc.search(cr, uid, [('code', '=', new_code), ('company_id', '=', company_id)])
+                if not ids:
+                    break
+                else:
+                    current_num += 1
+            #TODO: create proper user_type for account creation.
+            user_type = self.pool.get('account.account.type').search(cr, uid, [('name', '=', line['account_type'])], context=context)
+            vals = {
+                'name': line['acc_name'],
+                'currency_id': line['currency_id'],
+                'code': new_code,
+                'type': 'liquidity',
+                'user_type': 1,
+                'reconcile': True,
+                'parent_id': acc_template_ref[ref_acc_bank.id] or False,
+                'company_id': company_id,
+            }
+            acc_cash_id  = obj_acc.create(cr,uid,vals)
 
-        return {}
+            #create the bank journal
+            vals_journal = {
+                'name': vals['name'],
+                'code': _('BNK') + str(current_num),
+                'type': line['account_type'] == 'cash' and 'cash' or 'bank',
+                'company_id': company_id,
+                'analytic_journal_id': False,
+                'currency_id': False,
+            }
+            if line['currency_id']:
+                vals_journal['view_id'] = view_id_cur
+                vals_journal['currency'] = line['currency_id']
+            else:
+                vals_journal['view_id'] = view_id_cash
+            vals_journal['default_credit_account_id'] = acc_cash_id
+            vals_journal['default_debit_account_id'] = acc_cash_id
+            obj_journal.create(cr, uid, vals_journal)
+            current_num += 1
+            valid = True
+        return True
+
 
 wizard_multi_charts_accounts()
 
