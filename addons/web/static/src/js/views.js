@@ -453,7 +453,7 @@ openerp.web.Sidebar = openerp.web.Widget.extend({
                     };
                     self.rpc("/web/action/load", {
                         action_id: item.action.id,
-                        context: additional_context
+                        context: _.extend({"bin_size": true}, additional_context)
                     }, function(result) {
                         result.result.context = _.extend(result.result.context || {},
                             additional_context);
@@ -754,7 +754,11 @@ openerp.web.views = new openerp.web.Registry();
 openerp.web.json_node_to_xml = function(node, single_quote, indent) {
     // For debugging purpose, this function will convert a json node back to xml
     // Maybe usefull for xml view editor
-    if (typeof(node.tag) !== 'string' || !node.children instanceof Array || !node.attrs instanceof Object) {
+
+    if (typeof(node) === 'string') {
+        return node;
+    }
+    else if (typeof(node.tag) !== 'string' || !node.children instanceof Array || !node.attrs instanceof Object) {
         throw("Node a json node");
     }
     indent = indent || 0;
@@ -772,7 +776,7 @@ openerp.web.json_node_to_xml = function(node, single_quote, indent) {
         }
         r += ' ' + attr + '="' + vattr + '"';
     }
-    if (node.children.length) {
+    if (node.children && node.children.length) {
         r += '>\n';
         var childs = [];
         for (var i = 0, ii = node.children.length; i < ii; i++) {
