@@ -253,7 +253,7 @@ openerp.web.form.DashBoard = openerp.web.form.Widget.extend({
 openerp.web.form.DashBoardLegacy = openerp.web.form.DashBoard.extend({
     render: function() {
         if (this.node.tag == 'hpaned') {
-            this.node.attrs.style = '1-1';
+            this.node.attrs.style = '2-1';
         } else if (this.node.tag == 'vpaned') {
             this.node.attrs.style = '1';
         }
