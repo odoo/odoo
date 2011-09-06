@@ -78,7 +78,7 @@ class view(osv.osv):
         'arch': fields.text('View Architecture', required=True),
         'inherit_id': fields.many2one('ir.ui.view', 'Inherited View', ondelete='cascade', select=True),
         'field_parent': fields.char('Child Field',size=64),
-        'xml_id': fields.function(osv.osv.get_xml_id, type='char', size=128, string="XML ID",
+        'xml_id': fields.function(osv.osv.get_xml_id, type='char', size=128, string="External ID",
                                   method=True, help="ID of the view defined in xml file"),
     }
     _defaults = {
