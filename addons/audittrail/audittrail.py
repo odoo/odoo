@@ -359,33 +359,31 @@ class audittrail_objects_proxy(object_proxy):
 
         elif method in ('unlink'):
             res_ids = args[0]
+            res = False
             old_values = {}
             for res_id in res_ids:
                 old_values[res_id] = resource_pool.read(cr, uid, res_id)
-
+            vals = {'method': method,'object_id': model.id,'user_id': uid_orig}
             for res_id in res_ids:
-                vals = {
-                    "method": method,
-                    "object_id": model.id,
-                    "user_id": uid_orig,
-                    "res_id": res_id,
-
-                }
+                vals.update({'res_id': res_id})
                 log_id = log_pool.create(cr, uid, vals)
                 lines = []
                 for field in old_values[res_id]:
-                    if field in ('id'):
-                        continue
+                    if field == 'id': continue
+                    field_obj = resource_pool._all_columns.get(field)
+                    field_obj = field_obj.column
+                    if field_obj._type in ('one2many','many2many'):
+                        self.log_fct(db, uid, field_obj._obj, method, None, old_values[res_id][field], 'child_relation_log')
                     line = {
                           'name': field,
                           'old_value': old_values[res_id][field],
                           'old_value_text': self.get_value_text(cr, uid, field, old_values[res_id][field], model)
                           }
                     lines.append(line)
-
                 self.create_log_line(cr, uid, log_id, model, lines)
-            res = fct_src(db, uid_orig, model.model, method, *args)
-            cr.commit()
+            if not relational_table_log:
+                res = fct_src(db, uid_orig, model.model, method, *args)
+                cr.commit()
             cr.close()
             return res
         else:
