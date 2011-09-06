@@ -4,12 +4,6 @@
   !record {model: res.users, id: base.user_root}:
     user_email: admin@openerp.com
 -
-  Create analytic account.
--
-  !record {model: account.analytic.account, id: account_analytic_account0}:
-    name : account_analytic_account
-    partner_id: base.res_partner_asus
--
   Now, Test project template feature
 -
   Create test project 'OpenERP Test Programme'
@@ -18,10 +12,17 @@
     company_id: base.main_company
     name: OpenERP Training Programm
 -
+  Create analytic account.
+-
+  !record {model: account.analytic.account, id: account_analytic_account0}:
+    name : account_analytic_account
+    partner_id: base.res_partner_asus
+-
   Create project 'OpenERP Training Programme'
 -
   !record {model: project.project, id: project_project_openerptrainingprogramme0}:
     company_id: base.main_company
+    parent_id: account_analytic_account0
     partner_id: base.res_partner_asus
     name: OpenERP Training Programme
     date_start: !eval time.strftime('%Y-%m-%d')
@@ -66,6 +67,7 @@
     context.update({'project_id': ref('project_task_functionaltraining0')})
     self._default_project(cr, uid,context)
     self.fields_view_get(cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False)
+    self.action_close
 -
   Click on Draft button.
 -
@@ -91,6 +93,11 @@
 -
   !python {model: project.task}: |
     self._check_child_task(cr, uid, [ref("project_task_functionaltraining0")])
+-
+  Do some changes on project without define partner.
+-
+  !python {model: project.task}: |
+    self.onchange_project(cr, uid, [ref("project_task_functionaltraining0")],[])
 -
   Do some changes on project.
 -
@@ -123,6 +130,7 @@
   !python {model: project.task.work}: |
     vals = {
            'name': 'Technical Training',
+           'hours': 0.0,
            'task_id': ref('project_task_technicaltraining0'),
             }
     self.create(cr, uid, vals,context={"lang": "en_US", "active_ids": [ref("project_task_functionaltraining0")],"tz": False, "active_id": ref("project_task_functionaltraining0")})
@@ -130,7 +138,12 @@
   Add project's Work
 -
   !python {model: project.task.work}: |
-    self.write(cr, uid, [ref('project_task_work0')], vals={}, context={"lang": "en_US", "active_ids": [ref("project_task_functionaltraining0")],"tz": False, "active_id": ref("project_task_functionaltraining0")})
+    vals = {
+       'name': 'Technical Training',
+       'hours': 0.0,
+       'task_id': ref('project_task_technicaltraining0'),
+        }
+    self.write(cr, uid, [ref('project_task_work0')], vals, context={"lang": "en_US", "active_ids": [ref("project_task_functionaltraining0")],"tz": False, "active_id": ref("project_task_functionaltraining0")})
 -
   Get project's Work
 -
@@ -392,7 +405,7 @@
   Check for remaining hours
 -
   !python {model: project.task}: |
-    self.onchange_remaining(cr, uid, [ref("project_task_functionaltraining0")], remaining = 0.0, planned = 0.0)
+    self.onchange_remaining(cr, uid, [ref("project_task_functionaltraining0")], remaining = 10.0, planned = False)
 -
   Close the task
 -
@@ -460,6 +473,11 @@
   After remove project task's work unlink it's details from the analytic account.
 -
   !python {model: account.analytic.account}: |
+    vals = {
+            'name' : 'account_analytic_account',
+            'partner_id': ref('base.res_partner_asus')
+           }
+    self.create(cr, uid, vals, context=None)
     self.unlink(cr, uid, [ref('account_analytic_account0')])
 -
   Now, Close the project task
@@ -501,6 +519,7 @@
 -
   !python {model: project.task}: |
     self.do_cancel(cr, uid,[ref("project_task_functionaltraining0")],context={})
+    self.action_close(cr, uid, [ref("project_task_functionaltraining0")], context=None)
 -
   Unlink this project's task.
 -
@@ -511,3 +530,4 @@
 -
   !python {model: project.project}: |
     self.unlink(cr, uid, [ref('project_project_testprogramme0')])
+
