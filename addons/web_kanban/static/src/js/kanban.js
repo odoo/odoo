@@ -48,7 +48,21 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
         }
     },
     do_get_kanban_color: function(variable) {
-        return 'oe_kanban_color_1';
+        var number_of_color_schemes = 2,
+            index = 0;
+        switch (typeof(variable)) {
+            case 'string':
+                for (var i=0, ii=variable.length; i<ii; i++) {
+                    index += variable.charCodeAt(i);
+                }
+                break;
+            case 'number':
+                index = Math.round(variable);
+                break;
+            default:
+                return '';
+        }
+        return 'oe_kanban_color_' + ((index % number_of_color_schemes) + 1);
     },
     transform_qweb_template: function(node) {
         switch (node.tag) {
