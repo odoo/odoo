@@ -1361,7 +1361,7 @@ class Reports(View):
         return False
 
 class Import(View):
-    _cp_path = "/base/import"
+    _cp_path = "/web/import"
 
     def fields_get(self, req, model):
         Model = req.session.model(model)
@@ -1414,7 +1414,7 @@ class Import(View):
         all_fields = fields.keys()
 
         try:
-            data = csv.reader(params.get('csvfile').file, quotechar=str(params.get('csvdel')), delimiter=str(params.get('csvsep')))
+            data = csv.reader(params.get('csvfile'), quotechar=str(params.get('csvdel')), delimiter=str(params.get('csvsep')))
         except:
             error={'message': 'error opening .CSV file. Input Error.'}
             return simplejson.dumps({'error':error})
@@ -1449,8 +1449,8 @@ class Import(View):
             error = {'message':('Error processing the first line of the file. Field "%s" is unknown') % (word,)}
 
         if error:
-            params.get('csvfile').file.seek(0)
-            error=dict(error, preview=params.get('csvfile').file.read(200))
+            params.get('csvfile').seek(0)
+            error=dict(error, preview=params.get('csvfile').read(200))
             return simplejson.dumps({'error':error})
 
         return simplejson.dumps({'records':records[1:],'header':fields,'all_fields':all_fields,'req_field':req_field})
@@ -1466,7 +1466,7 @@ class Import(View):
         context = req.session.eval_context(req.context)
         modle_obj = req.session.model(params.get('model'))
         res = None
-        content = params.get('csvfile').file.read()
+        content = params.get('csvfile').read()
         input=StringIO.StringIO(content)
         limit = 0
         data = []

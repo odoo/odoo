@@ -1,5 +1,5 @@
-openerp.base.data_import = function(openerp) {
-openerp.base.DataImport = openerp.base.Dialog.extend({
+openerp.web.data_import = function(openerp) {
+openerp.web.DataImport = openerp.web.Dialog.extend({
     init: function(parent, dataset){
         this.parent = parent;
         this._super(parent);
@@ -35,7 +35,7 @@ openerp.base.DataImport = openerp.base.Dialog.extend({
             var self = this;
             if(!this.$element.find('#csvfile').val()) { return; }
             this.$element.find('#import_data').attr({
-                'action': '/base/import/import_data'
+                'action': '/web/import/import_data'
             }).ajaxSubmit({
                 success: this.on_import_results
             });
@@ -48,7 +48,7 @@ openerp.base.DataImport = openerp.base.Dialog.extend({
             }
             if(!this.$element.find('#csvfile').val()) { return; }
             this.$element.find('#import_data').attr({
-                'action': '/base/import/detect_data'
+                'action': '/web/import/detect_data'
             }).ajaxSubmit({
                 success: this.on_import_results
             });

@@ -247,7 +247,7 @@ openerp.web.ViewManager =  openerp.web.Widget.extend({
     },
     /**
      * Event launched when a controller has been inited.
-     * 
+     *
      * @param {String} view_type type of view
      * @param {String} view the inited controller
      */
@@ -324,7 +324,7 @@ openerp.web.ViewManagerAction = openerp.web.ViewManager.extend({
 
             var searchview_loaded = this.setup_search_view(
                     searchview_id || false, search_defaults);
-            
+
             // schedule auto_search
             if (searchview_loaded != null && this.action['auto_search']) {
                 $.when(searchview_loaded, inital_view_loaded)
@@ -668,13 +668,13 @@ openerp.web.View = openerp.web.Widget.extend({
             return this.rpc('/web/action/load', { action_id: parseInt(action_data.name, 10), context: context }, handler);
         } else  {
             return dataset.exec_workflow(record_id, action_data.name, handler);
-        } 
+        }
     },
     /**
      * Directly set a view to use instead of calling fields_view_get. This method must
      * be called before start(). When an embedded view is set, underlying implementations
      * of openerp.web.View must use the provided view instead of any other one.
-     * 
+     *
      * @param embedded_view A view.
      */
     set_embedded_view: function(embedded_view) {
@@ -732,7 +732,7 @@ openerp.web.View = openerp.web.Widget.extend({
         this.log('Todo');
     },
     on_sidebar_import: function() {
-        var import_view = new openerp.base.DataImport(this, this.dataset);
+        var import_view = new openerp.web.DataImport(this, this.dataset);
         import_view.start(false);
     },
     on_sidebar_export: function() {
