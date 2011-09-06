@@ -250,8 +250,8 @@ class audittrail_objects_proxy(object_proxy):
             if old_value_text == new_value_text:
                 continue
             if field_obj._type == 'many2one':
-                old_value = old_value[0]
-                new_value = new_value[0]
+                old_value = old_value and old_value[0] or old_value
+                new_value = new_value and new_value[0] or new_value
             vals = {
                     "log_id": log_id,
                     "field_id": field_id and field_id[0] or False,
@@ -439,90 +439,61 @@ class audittrail_objects_proxy(object_proxy):
             return res
         return True
 
-
-
-    def execute(self, db, uid, model, method, *args, **kw):
+    def audit_log_call(self, db, uid, model, method, action_type, *args, **argv):
         """
         Overrides Object Proxy execute method
         @param db: the current database
         @param uid: the current user's ID for security checks,
         @param object: Object who's values are being changed
         @param method: get any method and create log
-
+        @param action_type: either 'execute' or 'workflow'
         @return: Returns result as per method of Object proxy
         """
         uid_orig = uid
         uid = 1
         pool = pooler.get_pool(db)
+        logged_uids = []
         model_pool = pool.get('ir.model')
         rule_pool = pool.get('audittrail.rule')
         cr = pooler.get_db(db).cursor()
         cr.autocommit(True)
-        logged_uids = []
-        ignore_methods = ['default_get','read','fields_view_get','fields_get','search',
-                          'search_count','name_search','name_get','get','request_get',
-                          'get_sc', 'unlink', 'write', 'create']
-        fct_src = super(audittrail_objects_proxy, self).execute
+        if action_type == 'execute':
+            ignore_methods = ['default_get','read','fields_view_get','fields_get','search',
+                              'search_count','name_search','name_get','get','request_get',
+                              'get_sc', 'unlink', 'write', 'create']
+            fct_src = super(audittrail_objects_proxy, self).execute
+        else:
+            fct_src = super(audittrail_objects_proxy, self).exec_workflow
         try:
             model_ids = model_pool.search(cr, uid, [('model', '=', model)])
             model_id = model_ids and model_ids[0] or False
             if not ('audittrail.rule' in pool.obj_list()) or not model_id:
-                 return fct_src(db, uid_orig, model, method, *args)
+                 return fct_src(db, uid_orig, model, method, *args, **argv)
             rule_ids = rule_pool.search(cr, uid, [('object_id', '=', model_id), ('state', '=', 'subscribed')])
             if not rule_ids:
-                return fct_src(db, uid_orig, model, method, *args)
-
+                return fct_src(db, uid_orig, model, method, *args, **argv)
             for model_rule in rule_pool.browse(cr, uid, rule_ids):
                 logged_uids += map(lambda x:x.id, model_rule.user_id)
                 if not logged_uids or uid in logged_uids:
-                    if method in ('read', 'write', 'create', 'unlink'):
-                        if getattr(model_rule, 'log_' + method):
+                    if action_type == 'execute':
+                        if method in ('read', 'write', 'create', 'unlink'):
+                            if getattr(model_rule, 'log_' + method):
+                                return self.log_fct(db, uid_orig, model, method, fct_src, *args)
+                        elif method not in ignore_methods:
+                            if model_rule.log_action:
+                                return self.log_fct(db, uid_orig, model, method, fct_src, *args)
+                    else:
+                        if model_rule.log_workflow:
                             return self.log_fct(db, uid_orig, model, method, fct_src, *args)
-                    elif method not in ignore_methods:
-                        if model_rule.log_action:
-                            return self.log_fct(db, uid_orig, model, method, fct_src, *args)
-                return fct_src(db, uid_orig, model, method, *args)
+                return fct_src(db, uid_orig, model, method, *args, **argv)
         finally:
             cr.close()
+
+    def execute(self, db, uid, model, method, *args, **argv):
+        return self.audit_log_call(db, uid, model, method, 'execute', *args, **argv)
 
     def exec_workflow(self, db, uid, model, method, *args, **argv):
-        uid_orig = uid
-        uid = 1
-
-        pool = pooler.get_pool(db)
-        logged_uids = []
-        fct_src = super(audittrail_objects_proxy, self).exec_workflow
-        field = method
-        rule = False
-        model_pool = pool.get('ir.model')
-        rule_pool = pool.get('audittrail.rule')
-        cr = pooler.get_db(db).cursor()
-        cr.autocommit(True)
-        try:
-            model_ids = model_pool.search(cr, uid, [('model', '=', model)])
-            for obj_name in pool.obj_list():
-                if obj_name == 'audittrail.rule':
-                    rule = True
-            if not rule:
-                return super(audittrail_objects_proxy, self).exec_workflow(db, uid_orig, model, method, *args, **argv)
-            if not model_ids:
-                return super(audittrail_objects_proxy, self).exec_workflow(db, uid_orig, model, method, *args, **argv)
-
-            rule_ids = rule_pool.search(cr, uid, [('object_id', 'in', model_ids), ('state', '=', 'subscribed')])
-            if not rule_ids:
-                return super(audittrail_objects_proxy, self).exec_workflow(db, uid_orig, model, method, *args, **argv)
-
-            for thisrule in rule_pool.browse(cr, uid, rule_ids):
-                for user in thisrule.user_id:
-                    logged_uids.append(user.id)
-                if not logged_uids or uid in logged_uids:
-                    if thisrule.log_workflow:
-                        return self.log_fct(db, uid_orig, model, method, fct_src, *args)
-                return super(audittrail_objects_proxy, self).exec_workflow(db, uid_orig, model, method, *args, **argv)
-
-            return True
-        finally:
-            cr.close()
+        return self.audit_log_call(db, uid, model, method, 'workflow', *args, **argv)
 
 audittrail_objects_proxy()
 
