@@ -252,7 +252,7 @@ class Database(openerpweb.Controller):
     @openerpweb.httprequest
     def backup(self, req, backup_db, backup_pwd, token):
         try:
-            db_dump = base64.decodestring(
+            db_dump = base64.b64decode(
                 req.session.proxy("db").dump(backup_pwd, backup_db))
             return req.make_response(db_dump,
                 [('Content-Type', 'application/octet-stream; charset=binary'),
@@ -267,7 +267,7 @@ class Database(openerpweb.Controller):
     @openerpweb.httprequest
     def restore(self, req, db_file, restore_pwd, new_db):
         try:
-            data = base64.encodestring(db_file.file.read())
+            data = base64.b64encode(db_file.file.read())
             req.session.proxy("db").restore(restore_pwd, new_db, data)
             return ''
         except xmlrpclib.Fault, e:
@@ -979,7 +979,7 @@ class Binary(openerpweb.Controller):
                 res = Model.default_get([field], context).get(field, '')
             else:
                 res = Model.read([int(id)], [field], context)[0].get(field, '')
-            image_data = base64.decodestring(res)
+            image_data = base64.b64decode(res)
         except: # TODO: what's the exception here?
             image_data = self.placeholder(req)
         return req.make_response(image_data, [
@@ -1024,7 +1024,7 @@ class Binary(openerpweb.Controller):
                         }
                     </script>"""
             data = ufile.file.read()
-            args = [size, ufile.filename, ufile.headers.getheader('Content-Type'), base64.encodestring(data)]
+            args = [size, ufile.filename, ufile.headers.getheader('Content-Type'), base64.b64encode(data)]
         except Exception, e:
             args = [False, e.message]
         return out % (simplejson.dumps(callback), simplejson.dumps(args))
