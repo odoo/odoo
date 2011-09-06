@@ -1331,10 +1331,16 @@ class Import(View):
         import StringIO
         _fields = {}
         _fields_invert = {}
+        req_field = []
         error = None
         all_fields = []
         fields = dict(req.session.model(params.get('model')).fields_get(False, req.session.eval_context(req.context)))
         fields.update({'id': {'string': 'ID'}, '.id': {'string': 'Database ID'}})
+
+        for field in fields:
+            value = fields[field]
+            if (value.get('required',False) == True):
+                req_field.append(field)
 
         def model_populate(fields, prefix_node='', prefix=None, prefix_value='', level=2):
             def str_comp(x,y):
@@ -1394,7 +1400,6 @@ class Import(View):
                     else:
                         count = count + 1
                         fields.append((word, word))
-#                        error = {'message':("You cannot import the field '%s', because we cannot auto-detect it" % (word,))}
 
             if len(line) == count:
                 error = {'message':"File has not any column header."}
@@ -1406,7 +1411,7 @@ class Import(View):
             error=dict(error, preview=params.get('csvfile').file.read(200))
             return simplejson.dumps({'error':error})
 
-        return simplejson.dumps({'records':records[1:],'header':fields,'all_fields':all_fields})
+        return simplejson.dumps({'records':records[1:],'header':fields,'all_fields':all_fields,'req_field':req_field})
 
     @openerpweb.httprequest
     def import_data(self, req, **params):
