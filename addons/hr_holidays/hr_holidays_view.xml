@@ -139,7 +139,7 @@
                             <button string="Confirm" name="confirm" states="draft" type="workflow" icon="gtk-yes"/>
                             <button string="Approve" name="validate" states="confirm" type="workflow" icon="gtk-apply" groups="base.group_hr_user"/>
                             <button string="Approved" name="second_validate" states="validate1" type="workflow" icon="gtk-apply" groups="base.group_hr_user"/>
-                            <button string="Set to Draft" name="set_to_draft" states="cancel" type="object" icon="gtk-convert" groups="base.group_hr_user"/>
+                            <button string="Set to Draft" name="set_to_draft" states="refuse,cancel" type="object" icon="gtk-convert" groups="base.group_hr_user"/>
                         </group>
                     </page>
                 </notebook>
