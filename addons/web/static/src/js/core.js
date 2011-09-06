@@ -346,7 +346,6 @@ openerp.web.Session = openerp.web.CallbackEnabled.extend( /** @lends openerp.web
         this.context = {};
         this.shortcuts = [];
         this.active_id = null;
-        this.session = this;
     },
     start: function() {
         this.session_restore();
@@ -471,9 +470,8 @@ openerp.web.Session = openerp.web.CallbackEnabled.extend( /** @lends openerp.web
             self.user_context = result.context;
             self.session_save();
             self.on_session_valid();
-            if (success_callback)
-                success_callback();
-        });
+            return true;
+        }).then(success_callback);
     },
     session_logout: function() {
         this.uid = false;
@@ -489,7 +487,10 @@ openerp.web.Session = openerp.web.CallbackEnabled.extend( /** @lends openerp.web
         this.user_context = this.get_cookie("user_context");
         // we should do an rpc to confirm that this session_id is valid and if it is retrieve the information about db and login
         // then call on_session_valid
-        this.on_session_valid();
+        if (this.uid)
+            this.on_session_valid();
+        else
+            this.on_session_invalid();
     },
     /**
      * Saves the session id and uid locally

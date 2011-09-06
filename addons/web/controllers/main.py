@@ -11,6 +11,7 @@ import simplejson
 import textwrap
 import xmlrpclib
 import time
+import webrelease
 from xml.etree import ElementTree
 from cStringIO import StringIO
 
@@ -100,9 +101,6 @@ home_template = textwrap.dedent("""<!DOCTYPE html>
         <title>OpenERP</title>
         <link rel="shortcut icon" href="/web/static/src/img/favicon.ico" type="image/x-icon"/>
         %(css)s
-        <!--[if lte IE 7]>
-        <link rel="stylesheet" href="/web/static/src/css/web-ie7.css" type="text/css"/>
-        <![endif]-->
         %(javascript)s
         <script type="text/javascript">
             $(function() {
@@ -195,6 +193,12 @@ class WebClient(openerpweb.Controller):
                         transl["messages"].append({'id': x.id, 'string': x.string})
         return {"modules": transs,
                 "lang_parameters": lang_obj}
+
+    @openerpweb.jsonrequest
+    def version_info(self, req):
+        return {
+            "version": webrelease.version
+        }
 
 class Database(openerpweb.Controller):
     _cp_path = "/web/database"
@@ -703,6 +707,12 @@ class DataSet(openerpweb.Controller):
             args[domain_id] = d
         if context_id and len(args) - 1 >= context_id:
             args[context_id] = c
+        
+        for i in xrange(len(args)):
+            if isinstance(args[i], web.common.nonliterals.BaseContext):
+                args[i] = req.session.eval_context(args[i])
+            if isinstance(args[i], web.common.nonliterals.BaseDomain):
+                args[i] = req.session.eval_domain(args[i])
 
         return getattr(req.session.model(model), method)(*args)
 

@@ -438,9 +438,9 @@ openerp.web.Login =  openerp.web.Widget.extend({
         if (this.has_local_storage && this.remember_creditentials) {
             this.selected_db = localStorage.getItem('last_db_login_success');
             this.selected_login = localStorage.getItem('last_login_login_success');
-        }
-        if (jQuery.deparam(jQuery.param.querystring()).debug != undefined) {
-            this.selected_password = this.selected_password || "a";
+            if (jQuery.deparam(jQuery.param.querystring()).debug != undefined) {
+                this.selected_password = localStorage.getItem('last_password_login_success');
+            }
         }
     },
     start: function() {
@@ -454,7 +454,7 @@ openerp.web.Login =  openerp.web.Widget.extend({
     },
     display: function() {
         var self = this;
-
+        
         this.$element.html(QWeb.render("Login", this));
         this.database = new openerp.web.Database(
                 this, "oe_database", "oe_db_options");
@@ -495,9 +495,13 @@ openerp.web.Login =  openerp.web.Widget.extend({
                     if(self.remember_creditentials) {
                         localStorage.setItem('last_db_login_success', db);
                         localStorage.setItem('last_login_login_success', login);
+                        if (jQuery.deparam(jQuery.param.querystring()).debug != undefined) {
+                            localStorage.setItem('last_password_login_success', password);
+                        }
                     } else {
                         localStorage.setItem('last_db_login_success', '');
                         localStorage.setItem('last_login_login_success', '');
+                        localStorage.setItem('last_password_login_success', '');
                     }
                 }
                 self.on_login_valid();
@@ -514,7 +518,7 @@ openerp.web.Login =  openerp.web.Widget.extend({
         this.on_login_valid.add({
             position: "last",
             unique: true,
-            callback: continuation
+            callback: continuation || function() {}
         });
     },
     on_logout: function() {
@@ -534,11 +538,24 @@ openerp.web.Header =  openerp.web.Widget.extend({
         this._super();
     },
     do_update: function () {
-        this.$content = $(QWeb.render("Header-content", {widget: this}));
-        this.$content.appendTo(this.$element);
-        this.$element.find(".logout").click(this.on_logout);
-        this.$element.find("a.preferences").click(this.on_preferences);
-        return this.shortcut_load();
+        var self = this;
+        var func = new openerp.web.Model(self.session, "res.users").get_func("read");
+        func(self.session.uid, ["name", "company_id"]).then(function(res) {
+            self.$content = $(QWeb.render("Header-content", {widget: self, user: res}));
+            self.$content.appendTo(self.$element);
+            self.$element.find(".logout").click(self.on_logout);
+            self.$element.find("a.preferences").click(self.on_preferences);
+            self.$element.find(".about").click(self.on_about);
+            self.shortcut_load();
+        });
+    },
+    on_about: function() {
+        var self = this;
+        self.rpc("/web/webclient/version_info", {}).then(function(res) {
+            var $help = $(QWeb.render("About-Page", {version_info: res}));
+            $help.dialog({autoOpen: true,
+                modal: true, width: 960, title: "About"});
+        });
     },
     do_reset: function() {
         this.$content.remove();
@@ -676,7 +693,7 @@ openerp.web.Header =  openerp.web.Widget.extend({
                 });
             }
         });
-},
+    },
     display_error: function (error) {
         return $('<div>').dialog({
             modal: true,
