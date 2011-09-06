@@ -171,7 +171,7 @@ class mail_message(osv.osv):
                         ('outgoing', 'Outgoing'),
                         ('sent', 'Sent'),
                         ('received', 'Received'),
-                        ('exception', 'Exception'),
+                        ('exception', 'Delivery Failed'),
                         ('cancel', 'Cancelled'),
                         ], 'State', readonly=True),
         'auto_delete': fields.boolean('Auto Delete', help="Permanently delete this email after sending it"),
