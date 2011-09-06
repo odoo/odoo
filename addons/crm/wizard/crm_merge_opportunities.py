@@ -136,7 +136,7 @@ class crm_merge_opportunity(osv.osv_memory):
         data = self._update_data(op_ids, oldest_opp)
         #copy message into the first opportunity + merge attachement
         
-        for opp in tail_opportunities + [first_opportunity]:
+        for opp in tail_opportunities:
             attach_ids = self.get_attachments(cr, uid, opp, context=context)
             self.set_attachements_res_id(cr, uid, first_opportunity.id, attach_ids)
             for history in opp.message_ids:
