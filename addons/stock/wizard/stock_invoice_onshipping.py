@@ -25,6 +25,24 @@ from tools.translate import _
 
 class stock_invoice_onshipping(osv.osv_memory):
 
+    def _get_journal(self, cr, uid, context=None):
+        if context is None:
+            context = {}
+        stock =  self.pool.get('stock.picking')
+        stock_browse = stock.browse(cr, uid, context.get('active_id'))
+        if stock_browse.sale_id:
+            type_inv = 'out'
+        elif stock_browse.purchase_id:
+            type_inv = 'in'
+        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+        company_id = context.get('company_id', user.company_id.id)
+        type2journal = {'out': 'sale', 'in': 'purchase'}
+        journal_obj = self.pool.get('account.journal')
+        res = journal_obj.search(cr, uid, [('type', '=', type2journal.get(type_inv)),
+                                            ('company_id', '=', company_id)],
+                                                limit=1)
+        return res and res[0] or False
+    
     def _get_journal_id(self, cr, uid, context=None):
         if context is None:
             context = {}
@@ -61,7 +79,6 @@ class stock_invoice_onshipping(osv.osv_memory):
                     vals.append(t1)
         return vals
 
-
     _name = "stock.invoice.onshipping"
     _description = "Stock Invoice Onshipping"
 
@@ -70,7 +87,11 @@ class stock_invoice_onshipping(osv.osv_memory):
         'group': fields.boolean("Group by partner"),
         'invoice_date': fields.date('Invoiced date'),
     }
-
+    
+    _defaults = {
+        'journal_id' : _get_journal,
+    }
+    
     def view_init(self, cr, uid, fields_list, context=None):
         if context is None:
             context = {}
