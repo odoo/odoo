@@ -453,7 +453,7 @@ openerp.web.Sidebar = openerp.web.Widget.extend({
                     };
                     self.rpc("/web/action/load", {
                         action_id: item.action.id,
-                        context: additional_context
+                        context: _.extend({"bin_size": true}, additional_context)
                     }, function(result) {
                         result.result.context = _.extend(result.result.context || {},
                             additional_context);
