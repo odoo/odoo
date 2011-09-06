@@ -2341,7 +2341,7 @@ openerp.web.form.FieldBinary = openerp.web.form.Field.extend({
     toggle_progress: function() {
         this.$element.find('.oe-binary-progress, .oe-binary').toggle();
     },
-    on_file_uploaded: function(size, name, content_type, file_web64) {
+    on_file_uploaded: function(size, name, content_type, file_base64) {
         delete(window[this.iframe]);
         if (size === false) {
             this.notification.warn("File Upload", "There was a problem while uploading your file");
@@ -2353,7 +2353,7 @@ openerp.web.form.FieldBinary = openerp.web.form.Field.extend({
         }
         this.toggle_progress();
     },
-    on_file_uploaded_and_valid: function(size, name, content_type, file_web64) {
+    on_file_uploaded_and_valid: function(size, name, content_type, file_base64) {
     },
     on_save_as: function() {
         if (!this.view.datarecord.id) {
@@ -2385,7 +2385,7 @@ openerp.web.form.FieldBinaryFile = openerp.web.form.FieldBinary.extend({
         var show_value = (value != null && value !== false) ? value : '';
         this.$element.find('input').eq(0).val(show_value);
     },
-    on_file_uploaded_and_valid: function(size, name, content_type, file_web64) {
+    on_file_uploaded_and_valid: function(size, name, content_type, file_base64) {
         this.value = file_base64;
         this.binary_value = true;
         var show_value = this.human_filesize(size);
@@ -2429,7 +2429,7 @@ openerp.web.form.FieldBinaryImage = openerp.web.form.FieldBinary.extend({
         this.set_image_maxwidth();
         this._super.apply(this, arguments);
     },
-    on_file_uploaded_and_valid: function(size, name, content_type, file_web64) {
+    on_file_uploaded_and_valid: function(size, name, content_type, file_base64) {
         this.value = file_base64;
         this.binary_value = true;
         this.$image.attr('src', 'data:' + (content_type || 'image/png') + ';base64,' + file_base64);
