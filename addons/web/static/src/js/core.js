@@ -553,14 +553,13 @@ openerp.web.Session = openerp.web.CallbackEnabled.extend( /** @lends openerp.web
         this.rpc('/web/session/modules', {}, function(result) {
             self.module_list = result;
             var lang = self.user_context.lang;
-            params = { mods: ["web"].concat(result), lang: lang};
+            var params = { mods: ["web"].concat(result), lang: lang};
             self.rpc('/web/webclient/translations',params).then(function(transs) {
                 openerp.web._t.database.set_bundle(transs);
                 var modules = self.module_list.join(',');
                 var file_list = ["/web/static/lib/datejs/globalization/" +
-                    self.user_context.lang.replace("_", "-") + ".js",
-
-                    ];
+                    self.user_context.lang.replace("_", "-") + ".js"
+                ];
                 if(self.debug) {
                     self.rpc('/web/webclient/csslist', {"mods": modules}, self.do_load_css);
                     self.rpc('/web/webclient/jslist', {"mods": modules}, function(files) {
@@ -987,7 +986,7 @@ openerp.web.TranslationDataBase = openerp.web.Class.extend({
         var fcnt = function(str) {
             var tmp = self.get(str);
             return tmp === undefined ? str : tmp;
-        }
+        };
         fcnt.database = this;
         return fcnt;
     },

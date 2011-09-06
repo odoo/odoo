@@ -94,7 +94,7 @@ init: function(parent, element_id, dataset, view_id) {
         COLOR_PALETTE = ['#ccccff', '#cc99ff', '#75507b', '#3465a4', '#73d216', '#c17d11', '#edd400',
                  '#fcaf3e', '#ef2929', '#ff00c9', '#ad7fa8', '#729fcf', '#8ae234', '#e9b96e', '#fce94f',
                  '#ff8e00', '#ff0000', '#b0008c', '#9000ff', '#0078ff', '#00ff00', '#e6ff00', '#ffff00',
-                 '#905000', '#9b0000', '#840067', '#510090', '#0000c9', '#009b00', '#9abe00', '#ffc900']
+                 '#905000', '#9b0000', '#840067', '#510090', '#0000c9', '#009b00', '#9abe00', '#ffc900'];
 
         if (result.length != 0){
             var show_event = [];
@@ -141,7 +141,7 @@ init: function(parent, element_id, dataset, view_id) {
             var color = res[this.color_field][0] || res[this.color_field];
             if (color_box[color] == undefined){
                 color_box[color] = COLOR_PALETTE[k];
-                k = k + 1;
+                k += 1;
             }
 
             if (this.date_stop != undefined){
@@ -156,8 +156,8 @@ init: function(parent, element_id, dataset, view_id) {
             else{
                 var duration = res[this.date_delay];
             }
-            if (duration == false)
-                duration = 0
+            if (!duration)
+                duration = 0;
 
             if (self.grp.length){
                 for (var j in self.grp){
@@ -169,7 +169,7 @@ init: function(parent, element_id, dataset, view_id) {
                         grp_key = res[self.grp[j]['group_by']];
                     }
 
-                    if (grp_key == false){
+                    if (!grp_key){
                         grp_key = "Undefined";
                     }
 
@@ -233,7 +233,7 @@ init: function(parent, element_id, dataset, view_id) {
             evt_date = all_events[evt_id]['evt'][2];
             evt_duration = all_events[evt_id]['evt'][3];
 
-            evt_str_date = this.convert_date_str(evt_date);
+            var evt_str_date = this.convert_date_str(evt_date);
             evt_end_date = this.end_date(evt_str_date, evt_duration);
 
             while (all_events[evt_id]['parent'] != "") {
@@ -396,14 +396,14 @@ init: function(parent, element_id, dataset, view_id) {
             "type":"ir.actions.act_window",
             "view_type":"form",
             "view_mode":"form"
-        }
+        };
 
         action.flags = {
             search_view: false,
             sidebar : false,
             views_switcher : false,
             pager: false
-            }
+        };
         var element_id = _.uniqueId("act_window_dialog");
         var dialog = jQuery('<div>', {
             'id': element_id
