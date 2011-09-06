@@ -1005,10 +1005,6 @@ class Binary(openerpweb.Controller):
 
     @openerpweb.httprequest
     def upload(self, req, callback, ufile):
-        headers = {}
-        for key, val in req.httprequest.headers.iteritems():
-            headers[key.lower()] = val
-        size = int(headers.get('content-length', 0))
         # TODO: might be useful to have a configuration flag for max-length file uploads
         try:
             out = """<script language="javascript" type="text/javascript">
