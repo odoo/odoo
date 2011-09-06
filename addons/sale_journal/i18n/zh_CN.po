@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 05:22+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-09-05 05:26+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
 
 #. module: sale_journal
 #: field:sale_journal.invoice.type,note:0
@@ -24,7 +24,7 @@ msgstr "备注"
 #. module: sale_journal
 #: help:res.partner,property_invoice_type:0
 msgid "The type of journal used for sales and picking."
-msgstr ""
+msgstr "用于销售和拣货的账簿类型。"
 
 #. module: sale_journal
 #: sql_constraint:sale.order:0
@@ -46,7 +46,7 @@ msgstr "销售&采购"
 msgid ""
 "If the active field is set to False, it will allow you to hide the invoice "
 "type without removing it."
-msgstr ""
+msgstr "如果设置active为False，你可以隐藏发票类型，不用删除它。"
 
 #. module: sale_journal
 #: view:sale_journal.invoice.type:0
@@ -85,6 +85,25 @@ msgid ""
 "    Some statistics by journals are provided.\n"
 "    "
 msgstr ""
+"\n"
+"    销售账簿模块允许你对你的销售订单和发货订单（拣货单）的账簿进行分类。\n"
+"    这个模块对按部门核算的大公司非常有用。\n"
+"\n"
+"    你可以把账簿用于不同的目的，比如：\n"
+"    *不同部门的独立销售\n"
+"    *按卡车或UPS发货的账簿\n"
+"\n"
+"    账簿可以在不同的状态之间进行转换：\n"
+"    *草稿，启动，取消，已完成。\n"
+"\n"
+"    可以在不同的账簿上执行批量的操作，以确认所有销售订单，验证或装箱开票，...\n"
+"\n"
+"    它也支持批量开票方式， 可以按业务伙伴或销售订单配置，比如：\n"
+"    *每天开票。\n"
+"    *每月开票，...\n"
+"\n"
+"    同时提供了按账簿的一些统计。\n"
+"    "
 
 #. module: sale_journal
 #: selection:sale_journal.invoice.type,invoicing_method:0
@@ -94,12 +113,12 @@ msgstr "没分组"
 #. module: sale_journal
 #: selection:sale_journal.invoice.type,invoicing_method:0
 msgid "Grouped"
-msgstr "组"
+msgstr "已分组"
 
 #. module: sale_journal
 #: constraint:res.partner:0
 msgid "Error ! You can not create recursive associated members."
-msgstr "错误！您不能创建递归的相关成员。"
+msgstr "错误！您不能创建递归的协会会员。"
 
 #. module: sale_journal
 #: model:ir.actions.act_window,help:sale_journal.action_definition_journal_invoice_type
@@ -107,7 +126,7 @@ msgid ""
 "Invoice types are used for partners, sales orders and delivery orders. You "
 "can create a specific invoicing journal to group your invoicing according to "
 "your customer's needs: daily, each Wednesday, monthly, etc."
-msgstr ""
+msgstr "发票类型对业务伙伴，销售订单和发货订单是有用的。你可以根据用户的需要生成专门的发票账簿来对你的发票进行分组：每天，每周三，每周，每月等。"
 
 #. module: sale_journal
 #: field:sale_journal.invoice.type,invoicing_method:0
@@ -147,12 +166,12 @@ msgstr "发票类型"
 #. module: sale_journal
 #: model:ir.model,name:sale_journal.model_stock_picking
 msgid "Picking List"
-msgstr "分拣单"
+msgstr "装箱单"
 
 #. module: sale_journal
 #: model:ir.module.module,shortdesc:sale_journal.module_meta_information
 msgid "Managing sales and deliveries by journal"
-msgstr "管理销售和送货分类帐"
+msgstr "管理销售和送货的账簿"
 
 #~ msgid "Set to Draft"
 #~ msgstr "设为草稿"
@@ -285,54 +304,6 @@ msgstr "管理销售和送货分类帐"
 
 #~ msgid "Packing journals"
 #~ msgstr "包装分类帐"
-
-#~ msgid ""
-#~ "\n"
-#~ "    The sale journal modules allows you to categorise your\n"
-#~ "    sales and deliveries (packing lists) between different journals.\n"
-#~ "    This module is very helpful for bigger companies that\n"
-#~ "    works by departments.\n"
-#~ "\n"
-#~ "    You can use journal for different purposes, some examples:\n"
-#~ "    * isolate sales of different departments\n"
-#~ "    * journals for deliveries by truck or by UPS\n"
-#~ "\n"
-#~ "    Journals have a responsible and evolves between different status:\n"
-#~ "    * draft, open, cancel, done.\n"
-#~ "\n"
-#~ "    Batch operations can be processed on the different journals to\n"
-#~ "    confirm all sales at once, to validate or invoice packing, ...\n"
-#~ "\n"
-#~ "    It also supports batch invoicing methods that can be configured by\n"
-#~ "    partners and sales orders, examples:\n"
-#~ "    * daily invoicing,\n"
-#~ "    * monthly invoicing, ...\n"
-#~ "\n"
-#~ "    Some statistics by journals are provided.\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "    这销售分类帐模块,允许你在不同的分类帐中分类出\n"
-#~ "你的销售和送货(包装单)\n"
-#~ "\t这模块对大公司的\n"
-#~ "工作部门是非常有帮助的\n"
-#~ "\n"
-#~ "\t你能使用分类帐达到不同目的的,如:\n"
-#~ "\t*分开不同部门的销售\n"
-#~ "\t*跟踪用快递送货分类帐\n"
-#~ "\t\n"
-#~ "\t分类帐有不同的状态下:\n"
-#~ "              草稿,待处理,取消,完成\n"
-#~ "\t\n"
-#~ "在不同的分类帐批处理\n"
-#~ "一次确认所有销售，使生效或者发票,包装。。\n"
-#~ "\n"
-#~ "\t它还支持配置业务伙伴和销售订单的开票方式如:\n"
-#~ "        *每日开票\n"
-#~ "        *每月开票\n"
-#~ "\t\n"
-#~ "\t提供在一个会计期间的分类帐统计\n"
-#~ "    "
 
 #~ msgid "Reporting"
 #~ msgstr "内部报表"

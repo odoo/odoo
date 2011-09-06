@@ -50,9 +50,9 @@
   Create a timesheet sheet for HR manager
 -
   !record {model: hr_timesheet_sheet.sheet, id: hr_timesheet_sheet_sheet_sheetforhrmanager0}:
-    date_current: !eval time.strftime('%Y-06-%d')
-    date_from: !eval "'%s-06-01' %(datetime.now().year)"
-    date_to: !eval "'%s-06-30' %(datetime.now().year)"
+    date_current: !eval time.strftime('%Y-05-%d')
+    date_from: !eval "'%s-05-01' %(datetime.now().year)"
+    date_to: !eval "'%s-05-31' %(datetime.now().year)"
     name: Sheet for hr manager
     state: new
     user_id: res_users_hrmanager0
@@ -75,7 +75,7 @@
   Create a task 'Get all timesheet records'
 -
   !record {model: project.task, id: project_task_getalltimesheetrecords0}:
-    date_start: !eval time.strftime('%Y-06-%d %H:%M:%S')
+    date_start: !eval time.strftime('%Y-05-%d %H:%M:%S')
     name: Get all timesheet records
     planned_hours: 20.0
     project_id: project_project_timesheetmanagement0
@@ -98,7 +98,7 @@
 -
   !record {model: project.task, id: project_task_getalltimesheetrecords0}:
     work_ids:
-      - date: !eval time.strftime('%Y-06-%d %H:%M:%S')
+      - date: !eval time.strftime('%Y-05-%d %H:%M:%S')
         hours: 10.0
         name: Get work calendar of all employees
         user_id: res_users_hrmanager0
