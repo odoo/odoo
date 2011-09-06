@@ -2377,19 +2377,7 @@ class account_account_template(osv.osv):
             res.append((record['id'],name ))
         return res
 
-    
-    def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
-        # This method is used to get only account templates relavant to the current COA template
-        # but not sure of it, if its really to be used, put proper value of context in xml to use it
-        if context is None:
-            context = {}
-        if context.get("coa_template"):
-            args += ['|',('chart_template_id', '=', context.get("coa_template")),('chart_template_id', '=', False)]
-        return super(account_account_template, self).search(cr, uid, args, offset, limit,
-                order, context=context, count=count)
-
-
-    def generate_account(self, cr, uid, account_root_id, tax_template_ref, code_digits, company_id, context=None):
+    def generate_account(self, cr, uid, template_id, tax_template_ref, code_digits, company_id, context=None):
         """
         This method for generating accounts from templates.
         @param cr: A database cursor.
@@ -2405,11 +2393,12 @@ class account_account_template(osv.osv):
             context = {}
         obj_acc = self.pool.get('account.account')
         company_name = self.pool.get('res.company').browse(cr, uid, company_id, context=context).name
+        template = self.pool.get('account.chart.template').browse(cr, uid, template_id, context=context)
         acc_template_ref = {}
         #deactivate the parent_store functionnality on account_account for rapidity purpose
         ctx = context.copy()
         ctx.update({'defer_parent_store_computation': True})
-        children_acc_template = self.search(cr, uid, [('parent_id','child_of', [account_root_id]),('nocreate','!=',True)], order='id')
+        children_acc_template = self.search(cr, uid, [('parent_id','child_of', [template.account_root_id.id]),'|', ('chart_template_id','=', [template_id]),('chart_template_id','=', False), ('nocreate','!=',True)], order='id')
         for account_template in self.browse(cr, uid, children_acc_template, context=context):
             tax_ids = []
             for tax in account_template.tax_ids:
@@ -2420,7 +2409,7 @@ class account_account_template(osv.osv):
             if code_main > 0 and code_main <= code_digits and account_template.type != 'view':
                 code_acc = str(code_acc) + (str('0'*(code_digits-code_main)))
             vals={
-                'name': (account_root_id == account_template.id) and company_name or account_template.name,
+                'name': (template.account_root_id.id == account_template.id) and company_name or account_template.name,
                 'currency_id': account_template.currency_id and account_template.currency_id.id or False,
                 'code': code_acc,
                 'type': account_template.type,
@@ -2875,7 +2864,17 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                     res['fields'][field]['selection'] = template_select
         return res
 
-    def generate_journals(self, cr, uid, chart_template_id, acc_template_ref, company_id, context=None):
+    def journals_already_created(self, cr, uid, vals_journal, company_id, context=None):
+        """
+        This method used for checking journals already created or not. If not then create new journal.
+        """
+        obj_journal = self.pool.get('account.journal')
+        rec_list = obj_journal.search(cr, uid, [('name','=', vals_journal['name']),('company_id', '=', company_id)], context=context)
+        if not rec_list:
+            obj_journal.create(cr, uid, vals_journal, context=context)
+        return True
+
+    def generate_journals(self, cr, uid, chart_template_id, acc_template_ref, company_id, bank_jrnl_acc_list, code_digits, context=None):
         """
         This method used for creating journals.
         @param cr: A database cursor.
@@ -2888,19 +2887,21 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         obj_data = self.pool.get('ir.model.data')
         analytic_journal_obj = self.pool.get('account.analytic.journal')
         obj_journal = self.pool.get('account.journal')
+        obj_acc = self.pool.get('account.account')
+        template = self.pool.get('account.chart.template').browse(cr, uid, chart_template_id, context=context)
 
         data = obj_data.get_object_reference(cr, uid, 'account', 'account_sp_journal_view') 
         view_id = data and data[1] or False
 
-        income_acc_id = acc_template_ref.get(chart_template_id.property_account_income_categ.id)
-        expense_acc_id = acc_template_ref.get(chart_template_id.property_account_expense_categ.id)
-        credit_acc_id = acc_template_ref.get(chart_template_id.property_account_income_opening.id)
-        debit_acc_id = acc_template_ref.get(chart_template_id.property_account_expense_opening.id)
+        income_acc_id = acc_template_ref.get(template.property_account_income_categ.id)
+        expense_acc_id = acc_template_ref.get(template.property_account_expense_categ.id)
+        credit_acc_id = acc_template_ref.get(template.property_account_income_opening.id)
+        debit_acc_id = acc_template_ref.get(template.property_account_expense_opening.id)
+        ref_acc_bank = template.bank_account_view_id
                 
         #Sales Journal
         analytical_sale_ids = analytic_journal_obj.search(cr, uid, [('type','=','sale')], context=context)
         analytical_journal_sale = analytical_sale_ids and analytical_sale_ids[0] or False
-
         vals_journal = {
             'name': _('Sales Journal'),
             'type': 'sale',
@@ -2910,12 +2911,12 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             'analytic_journal_id': analytical_journal_sale,
         }
 
-        if chart_template_id.property_account_receivable:
+        if template.property_account_receivable:
             vals_journal.update({
                             'default_credit_account_id': income_acc_id,
                             'default_debit_account_id': income_acc_id
                                })
-        obj_journal.create(cr, uid, vals_journal, context=context)
+        self.journals_already_created(cr, uid, vals_journal, company_id, context=context)
 
         # Purchase Journal
         analytical_purchase_ids = analytic_journal_obj.search(cr,uid,[('type','=','purchase')], context=context)
@@ -2930,12 +2931,12 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             'analytic_journal_id': analytical_journal_purchase,
         }
 
-        if chart_template_id.property_account_payable:
+        if template.property_account_payable:
             vals_journal.update({
                             'default_credit_account_id': expense_acc_id,
                             'default_debit_account_id': expense_acc_id
                                })
-        obj_journal.create(cr, uid, vals_journal, context=context)
+        self.journals_already_created(cr, uid, vals_journal, company_id, context=context)
 
         # Creating Journals Sales Refund and Purchase Refund
         data = obj_data.get_object_reference(cr, uid, 'account', 'account_sp_refund_journal_view') 
@@ -2950,12 +2951,12 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             'analytic_journal_id': analytical_journal_sale,
             'company_id': company_id
         }
-        if chart_template_id.property_account_receivable:
+        if template.property_account_receivable:
             vals_journal.update({
                             'default_credit_account_id': income_acc_id,
                             'default_debit_account_id': income_acc_id
                                })
-        obj_journal.create(cr, uid, vals_journal, context=context)
+        self.journals_already_created(cr, uid, vals_journal, company_id, context=context)
 
         # Purchase Refund Journal
         vals_journal = {
@@ -2966,12 +2967,12 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             'analytic_journal_id': analytical_journal_purchase,
             'company_id': company_id
         }
-        if chart_template_id.property_account_payable:
+        if template.property_account_payable:
             vals_journal.update({
                             'default_credit_account_id': expense_acc_id,
                             'default_debit_account_id': expense_acc_id
                                })
-        obj_journal.create(cr, uid, vals_journal, context=context)
+        self.journals_already_created(cr, uid, vals_journal, company_id, context=context)
 
         # Miscellaneous Journal
         data = obj_data.get_object_reference(cr, uid, 'account', 'account_journal_view') 
@@ -2987,10 +2988,10 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             'analytic_journal_id': analytical_miscellaneous_ids and analytical_miscellaneous_ids[0] or False,
             'company_id': company_id
         }
-        obj_journal.create(cr, uid, vals_journal, context=context)
+        self.journals_already_created(cr, uid, vals_journal, company_id, context=context)
 
         # Opening Entries Journal
-        if chart_template_id.property_account_income_opening and chart_template_id.property_account_expense_opening:
+        if template.property_account_income_opening and template.property_account_expense_opening:
             vals_journal = {
                 'name': _('Opening Entries Journal'),
                 'type': 'situation',
@@ -3001,7 +3002,62 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                 'default_credit_account_id': credit_acc_id,
                 'default_debit_account_id': debit_acc_id
                 }
-            obj_journal.create(cr, uid, vals_journal, context=context)
+            self.journals_already_created(cr, uid, vals_journal, company_id, context=context)
+
+        data = obj_data.get_object_reference(cr, uid, 'account', 'account_journal_bank_view_multi') 
+        view_id_cur = data and data[1] or False
+
+        data = obj_data.get_object_reference(cr, uid, 'account', 'account_journal_bank_view') 
+        view_id_cash = data and data[1] or False
+
+        #Create Bank journals
+        current_num = 1
+        valid = True
+        for line in bank_jrnl_acc_list:
+            #create the account_account for this bank journal
+            if not ref_acc_bank.code:
+                raise osv.except_osv(_('Configuration Error !'), _('The bank account defined on the selected chart of account hasn\'t a code.'))
+            while True:
+                new_code = str(ref_acc_bank.code.ljust(code_digits-len(str(current_num)), '0')) + str(current_num)
+                ids = obj_acc.search(cr, uid, [('code', '=', new_code), ('company_id', '=', company_id)])
+                if not ids:
+                    break
+                else:
+                    current_num += 1
+            #TODO: create proper user_type for account creation.
+            user_type = self.pool.get('account.account.type').search(cr, uid, [('name', '=', line['account_type'])], context=context)
+            vals = {
+                'name': line['acc_name'],
+                'currency_id': line['currency_id'],
+                'code': new_code,
+                'type': 'liquidity',
+                'user_type': 1,
+                'reconcile': True,
+                'parent_id': acc_template_ref[ref_acc_bank.id] or False,
+                'company_id': company_id,
+            }
+            acc_cash_id  = obj_acc.create(cr,uid,vals)
+
+            #create the bank journal
+            vals_journal = {
+                'name': vals['name'],
+                'code': _('BNK') + str(current_num),
+                'type': line['account_type'] == 'cash' and 'cash' or 'bank',
+                'company_id': company_id,
+                'analytic_journal_id': False,
+                'currency_id': False,
+            }
+            if line['currency_id']:
+                vals_journal['view_id'] = view_id_cur
+                vals_journal['currency'] = line['currency_id']
+            else:
+                vals_journal['view_id'] = view_id_cash
+            vals_journal['default_credit_account_id'] = acc_cash_id
+            vals_journal['default_debit_account_id'] = acc_cash_id
+            obj_journal.create(cr, uid, vals_journal)
+            current_num += 1
+            valid = True
+            
         return True
 
     def generate_properties(self, cr, uid, chart_template_id, acc_template_ref, company_id, context=None):
@@ -3047,33 +3103,16 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         
         return True
 
-    def _install_template(self, cr, uid, ids, template_id, company_id, code_digits=None ,tax_data={}, context=None):
+    def _install_template(self, cr, uid, template_id, company_id, code_digits=None ,tax_data={}, bank_jrnl_acc_list=[], context=None):
         template = self.pool.get('account.chart.template').browse(cr, uid, template_id, context=context)
-#        TOFIX: Improve relation between COA template and account template
-#        If we have COA template struct like :
-#        COA A
-#            COA B
-#
-#        and account template struct like:
-#        A0
-#           - A01
-#           - B02 
-#        A1
-#          - B11
-#          - B12
-#        where prefix A is intended to load for COA A, and B for B
-#        
-#        now I am processing COA B 
-#        B02 is child of A0 so children_acc_template = obj_acc_template.search(cr, uid,  [('parent_id','child_of',[obj_acc_root.id]),('nocreate','!=',True)])
-#          will search all acc templates of A and B 
+        if template.parent_id:
+            self._install_template(cr, uid, template.parent_id.id, company_id, code_digits=code_digits, context=context)
+        return self._load_template(cr, uid, template_id, company_id, code_digits=code_digits, tax_data=tax_data, bank_jrnl_acc_list=bank_jrnl_acc_list,context=context)
 
-#        if template.parent_id:
-#            self._install_template(cr, uid, ids, template.parent_id.id, company_id, code_digits=code_digits, context=context)
-        return self._load_template(cr, uid, ids, template_id, company_id, code_digits=code_digits, tax_data=tax_data, context=context)
-
-    def _load_template(self, cr, uid, ids, template_id, company_id, code_digits=None, tax_data={}, context=None):
+    def _load_template(self, cr, uid, template_id, company_id, code_digits=None, tax_data={}, bank_jrnl_acc_list=[], context=None):
         template = self.pool.get('account.chart.template').browse(cr, uid, template_id, context=context)
         obj_tax_code_template = self.pool.get('account.tax.code.template')
+        obj_acc_tax = self.pool.get('account.tax')
         obj_tax_code = self.pool.get('account.tax.code')
         obj_tax_temp = self.pool.get('account.tax.template')
         obj_acc_template = self.pool.get('account.account.template')
@@ -3081,7 +3120,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         ir_values_obj = self.pool.get('ir.values')
 
         # create tax templates and real taxes from purchase_tax_rate,sale_tax_rate fields
-        if not template.set_tax_complete:
+        if not template.set_tax_complete and tax_data:
             tax_dict = {'sale': tax_data['sale'], 'purchase': tax_data['purchase']}
             for tax_type, value in tax_dict.items():
                 tax_name = tax_type == 'sale' and 'TAX Received' or 'TAX Paid'
@@ -3105,23 +3144,25 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                                 }, context=context)
 
 
-        # create all the tax code [TOCHECK: finds children of tax_code_root_id and processes]
+        # create all the tax code.
         tax_code_template_ref = {}
         tax_code_root_id = template.tax_code_root_id.id
         children_tax_code_template = obj_tax_code_template.search(cr, uid, [('parent_id','child_of',[tax_code_root_id])], order='id')
         company_name = self.pool.get('res.company').browse(cr, uid, company_id, context=context)
         for tax_code_template in obj_tax_code_template.browse(cr, uid, children_tax_code_template, context=context):
             vals = {
-                'name': (tax_code_root_id == tax_code_template.id) and company_name or tax_code_template.name,
+                'name': (tax_code_root_id == tax_code_template.id) and company_name.name or tax_code_template.name,
                 'code': tax_code_template.code,
                 'info': tax_code_template.info,
                 'parent_id': tax_code_template.parent_id and ((tax_code_template.parent_id.id in tax_code_template_ref) and tax_code_template_ref[tax_code_template.parent_id.id]) or False,
                 'company_id': company_id,
                 'sign': tax_code_template.sign,
             }
-            new_tax_code = obj_tax_code.create(cr, uid, vals)
-            #recording the new tax code to do the mapping
-            tax_code_template_ref[tax_code_template.id] = new_tax_code
+            rec_list = obj_tax_code.search(cr, uid, [('name', '=', vals['name']),('company_id', '=', vals['company_id'])], context=context)
+            if not rec_list:
+                new_tax_code = obj_tax_code.create(cr, uid, vals)
+                #recording the new tax code to do the mapping
+                tax_code_template_ref[tax_code_template.id] = new_tax_code
 
         # Generate taxes from templates.
         tax_template_to_tax = {}
@@ -3129,7 +3170,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         taxes_ref = obj_tax_temp.generate_tax(cr, uid, tax_templates, tax_code_template_ref, company_id, context=context)
 
         # Generating Accounts from templates.
-        acc_template_ref = obj_acc_template.generate_account(cr, uid, template.account_root_id.id, taxes_ref['tax_template_ref'], code_digits, company_id, context=context)
+        acc_template_ref = obj_acc_template.generate_account(cr, uid, template_id, taxes_ref['tax_template_ref'], code_digits, company_id, context=context)
 
         # writing account values on tax after creation of accounts
         for key,value in taxes_ref['account_dict'].items():
@@ -3140,11 +3181,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                 })
         
         # Create Jourals
-        #TODO: pass template_id
-        self.generate_journals(cr, uid, template, acc_template_ref, company_id, context)
-
-        # Create Bank Journals (Can be done in the generate_journals function)
-        #TODO: Create a new function
+        self.generate_journals(cr, uid, template_id, acc_template_ref, company_id, bank_jrnl_acc_list, code_digits, context)
 
         # generate properties function
         self.generate_properties(cr, uid, template_id, acc_template_ref, company_id, context=context)
@@ -3166,13 +3203,22 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         obj_tax_temp = self.pool.get('account.tax.template')
         obj_multi = self.browse(cr, uid, ids[0])
         company_id = obj_multi.company_id.id
+        bank_jrnl_acc_list = []
         tax_data = {
                     'sale': obj_multi.sale_tax_rate, 
                     'purchase': obj_multi.purchase_tax_rate, 
                     'sale_tax': obj_multi.complete_tax and obj_multi.sale_tax.id or False, 
                     'purchase_tax': obj_multi.complete_tax and obj_multi.purchase_tax.id or False, 
                      }
-        self._install_template(cr, uid, ids, obj_multi.chart_template_id.id, company_id, code_digits=obj_multi.code_digits, tax_data=tax_data, context=context)
+        if obj_multi.bank_accounts_id:
+            for acc in obj_multi.bank_accounts_id:
+                bank_jrnl_acc_list.append({
+                            'acc_name': acc.acc_name,
+                            'account_type': acc.account_type,
+                            'currency_id': acc.currency_id.id,
+                            })
+        self._install_template(cr, uid, obj_multi.chart_template_id.id, company_id, code_digits=obj_multi.code_digits, tax_data=tax_data, bank_jrnl_acc_list = bank_jrnl_acc_list, context=context)
+
         return {}
 
 wizard_multi_charts_accounts()
