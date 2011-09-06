@@ -31,14 +31,13 @@ init: function(parent, element_id, dataset, view_id) {
     },
 
     start: function() {
-        this.rpc("/web_gantt/ganttview/load",
-        {"model": this.model, "view_id": this.view_id}, this.on_loaded);
+        this.rpc("/web/view/load", {"model": this.model, "view_id": this.view_id, "view_type": "gantt"}, this.on_loaded);
     },
 
     on_loaded: function(data) {
 
         var self = this;
-        this.fields_view = data.fields_view;
+        this.fields_view = data;
 
         this.name =  this.fields_view.arch.attrs.string;
         this.view_id = this.fields_view.view_id;

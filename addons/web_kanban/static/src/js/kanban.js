@@ -19,12 +19,11 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
         this.qweb = new QWeb2.Engine();
     },
     start: function() {
-        return this.rpc("/web_kanban/kanbanview/load",
-            {"model": this.model, "view_id": this.view_id}, this.on_loaded);
+        return this.rpc("/web/view/load", {"model": this.model, "view_id": this.view_id, "view_type": "kanban"}, this.on_loaded);
     },
     on_loaded: function(data) {
         var self = this;
-        this.fields_view = data.fields_view;
+        this.fields_view = data;
         this.add_qweb_template();
         if (this.qweb.has_template('kanban-box')) {
             self.dataset.read_slice(_.keys(self.fields_view.fields), {

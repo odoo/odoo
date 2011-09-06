@@ -29,18 +29,18 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
         this.color_map = {};
     },
     start: function() {
-        this.rpc("/web_calendar/calendarview/load", {"model": this.model, "view_id": this.view_id, 'toolbar': true}, this.on_loaded);
+        this.rpc("/web/view/load", {"model": this.model, "view_id": this.view_id, "view_type":"calendar", 'toolbar': true}, this.on_loaded);
     },
     stop: function() {
         scheduler.clearAll();
     },
     on_loaded: function(data) {
+        this.fields_view = data;
         this.calendar_fields = {};
         this.ids = this.dataset.ids;
         this.color_values = [];
         this.info_fields = [];
 
-        this.fields_view = data.fields_view;
         this.name = this.fields_view.name || this.fields_view.arch.attrs.string;
         this.view_id = this.fields_view.view_id;
 
@@ -79,7 +79,7 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
             this.sidebar.start();
             this.sidebar.navigator = new openerp.web_calendar.SidebarNavigator(this.sidebar, this.sidebar.add_section('navigator', "Navigator"), this);
             this.sidebar.responsible = new openerp.web_calendar.SidebarResponsible(this.sidebar, this.sidebar.add_section('responsible', "Responsible"), this);
-            this.sidebar.add_toolbar(data.fields_view.toolbar);
+            this.sidebar.add_toolbar(this.fields_view.toolbar);
             this.set_common_sidebar_sections(this.sidebar);
             this.sidebar.do_unfold();
             this.sidebar.do_fold.add_last(this.refresh_scheduler);
