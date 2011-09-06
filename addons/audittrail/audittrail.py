@@ -266,7 +266,7 @@ class audittrail_objects_proxy(object_proxy):
         assert model_id, _("'%s' Model does not exist..." %(model))
         model = model_pool.browse(cr, uid, model_id)
         relational_table_log = args and args[-1] == 'child_relation_log' or  False
-        if method in ('create'):
+        if method == 'create':
             fields_to_read = []
             if relational_table_log:
                 res_id = args[0]
@@ -297,7 +297,7 @@ class audittrail_objects_proxy(object_proxy):
             cr.close()
             return res_id
 
-        elif method in ('read'):
+        elif method == 'read':
             res_ids = args[0]
             old_values = {}
             res = fct_src(db, uid_orig, model.model, method, *args)
@@ -321,7 +321,7 @@ class audittrail_objects_proxy(object_proxy):
             cr.close()
             return res
 
-        elif method in ('unlink'):
+        elif method == 'unlink':
             res_ids = args[0]
             res = False
             old_values = {}
