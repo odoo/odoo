@@ -10,6 +10,9 @@
     <div data-role="page" id="oe_sec_menu_new"></div>
     <div data-role="page" id="oe_list"></div>
     <div data-role="page" id="oe_form"></div>
+    <div data-role="page" id="oe_shortcuts"></div>
+    <div data-role="page" id="oe_menu"></div>
+    <div data-role="page" id="oe_options"></div>
 </t>
 
 <t t-name="Login">
@@ -41,17 +44,16 @@
 </t>
 
 <t t-name="HomePage">
-    <div data-role="header" data-theme="b" data-position="fixed">
+    <div id="header" data-role="header" data-theme="b" data-position="fixed">
         <h1>OpenERP</h1>
         <a id="home" class="ui-btn-right" data-iconpos="notext" data-icon="home" href="#oe_home" title="Home" data-theme="b"></a>
     </div>
     <div data-role="content">
-        <div id="oe_shortcuts"></div>
-        <div id="oe_menu"></div>
-        <div id="oe_options"></div>
+
     </div>
-    <div data-role="footer" data-theme="b" data-position="fixed">
-        <h1>Footer</h1>
+    <div id="footer" data-role="footer" data-theme="b" data-position="fixed">
+        <a id="shortcuts" class="ui-btn-right" data-iconpos="notext" title="Favourite" data-theme="b"></a>
+        <a id="application" class="ui-btn-right" data-iconpos="notext" href="#oe_home" title="Application" data-theme="b"></a>
     </div>
 </t>
 
@@ -69,61 +71,86 @@
 </t>
 
 <t t-name="Shortcuts">
-    <ul data-dividertheme="b" data-theme="c" data-inset="true" data-role="listview" class="ui-listview ui-listview-inset ui-corner-all ui-shadow">
-        <li data-role="list-divider" role="heading" class="ui-li ui-li-divider ui-btn ui-bar-b ui-corner-top ui-btn-up-undefined">
+    <div data-role="header" data-theme="b">
+        <h1>OpenERP</h1>
+        <a id="home" class="ui-btn-right" data-iconpos="notext" data-icon="home" href="#oe_menu" title="Home" data-theme="b"></a>
+    </div>
+    <div id="content" data-role="content">
+    <ul data-role="listview" data-inset="true">
+        <li data-role="list-divider" role="heading">
                 Shortcuts
         </li>
-        <li data-theme="c" class="ui-btn ui-btn-icon-right ui-li ui-btn-up-c" t-foreach="sc" t-as="opt">
-            <div class="ui-btn-inner ui-li">
-                <div class="ui-btn-text">
-                    <a href="#" class="ui-link-inherit" t-att-data-menu="opt.id" t-att-data-name="opt.name" t-att-data-res="opt.res_id">
-                        <span><t t-esc="opt.name"/></span>
-                    </a>
-                </div>
-                <span class="ui-icon ui-icon-arrow-r"></span>
-            </div>
+        <li data-theme="c" t-foreach="sc" t-as="opt">
+            <a href="#" t-att-data-menu="opt.id" t-att-data-name="opt.name" t-att-data-res="opt.res_id">
+                <span><t t-esc="opt.name"/></span>
+            </a>
         </li>
    </ul>
+   </div>
+   <div id="footer" data-role="footer" data-theme="b" data-position="fixed">
+        <a data-role="button" id="shrotcuts" href="">Favourite</a>
+        <a data-role="button" id="application" href="#oe_menu">Application</a>
+        <a data-role="button" id="preference" href="">Preference</a>
+    </div>
 </t>
-
 <t t-name="Menu">
-    <ul data-dividertheme="b" data-theme="c" data-inset="true" data-role="listview" class="ui-listview ui-listview-inset ui-corner-all ui-shadow">
-        <li data-role="list-divider" role="heading" class="ui-li ui-li-divider ui-btn ui-bar-b ui-corner-top ui-btn-up-undefined">
+     <div data-role="header" data-theme="b" data-position="fixed">
+        <h1>OpenERP</h1>
+        <a id="home" class="ui-btn-right" data-iconpos="notext" data-icon="home" href="#oe_menu" title="Home" data-theme="b"></a>
+    </div>
+    <div id="content" data-role="content">
+    <ul data-role="listview" data-inset="true">
+        <li data-role="list-divider" role="heading">
             Menu
         </li>
-        <li data-theme="c" class="ui-btn ui-btn-icon-right ui-li ui-btn-up-c" t-foreach="data.children" t-as="menu">
-            <div class="ui-btn-inner ui-li">
-                <div class="ui-btn-text">
-                    <a href="#" class="ui-link-inherit" t-att-data-menu="menu.id" t-att-data-name="menu.name">
+        <li data-theme="c" t-foreach="data.children" t-as="menu">
+                    <a href="#" t-att-data-menu="menu.id" t-att-data-name="menu.name">
                         <span><t t-esc="menu.name"/></span>
                     </a>
-                </div>
-                <span class="ui-icon ui-icon-arrow-r"></span>
-            </div>
         </li>
     </ul>
+    </div>
+    <div id="footer" data-role="footer" data-theme="b" data-position="fixed">
+        <a data-role="button" id="shrotcuts">Favourite</a>
+        <a data-role="button" id="application" href="#oe_menu">Application</a>
+        <a data-role="button" id="preference">Preference</a>
+    </div>
 </t>
 
 <t t-name="Menu.secondary">
-     <div data-role="header" data-theme="b" data-position="fixed">
-        <h1>OpenERP</h1>
+     <div id="header" data-role="header" data-theme="b" data-position="fixed">
+        <h1></h1>
+        <a id="home" class="ui-btn-right" data-iconpos="notext" data-icon="home" href="#" title="Home" data-theme="b"></a>
+    </div>
+    <div id="content" data-role="content">
+
+          <ul data-dividertheme="b" data-theme="c" data-inset="true" data-role="listview">
+            <t t-foreach="menu.children" t-as="menu1" >
+            <li data-role="list-divider">
+                <t t-esc="menu1.name"/>
+            </li>
+            <t t-if="menu1.children.length">
+                <li data-theme="c" t-foreach="menu1.children" t-as="childmenu" >
+                    <a href="#" t-attf-id="menu_#{childmenu.id}" t-att-data-menu="childmenu.id" t-att-data-name="childmenu.name">
+                      <t t-esc="childmenu.name" />
+                    </a>
+                </li>
+            </t>
+            </t>
+        </ul>
+    </div>
+     <div id="footer" data-role="footer" data-theme="b" data-position="fixed">
+        <a data-role="button" id="shrotcuts">Favourite</a>
+        <a data-role="button" id="application" href="#oe_menu">Application</a>
+        <a data-role="button" id="preference" href="">Preference</a>
+    </div>
+</t>
+<t t-name="Options">
+    <div id="header" data-role="header" data-theme="b" data-position="fixed">
+        <h1>Openerp</h1>
         <a id="home" class="ui-btn-right" data-iconpos="notext" data-icon="home" href="#" title="Home" data-theme="b"></a>
     </div>
     <div data-role="content">
-        <ul data-role="listview">
-            <li data-theme="c" t-foreach="menu.children" t-as="menu">
-                <a href="#" t-attf-id="menu_#{menu.id}" t-att-data-menu="menu.id" t-att-data-name="menu.name">
-                    <t t-esc="menu.name"/>
-                </a>
-            </li>
-        </ul>
-    </div>
-     <div data-role="footer" data-theme="b" data-position="fixed">
-        <h1>Footer</h1>
-    </div>
-</t>
-
-<t t-name="Options">
     <ul data-dividertheme="b" data-theme="c" data-inset="true" data-role="listview">
         <li data-role="list-divider">
             Options
@@ -131,16 +158,19 @@
         <li data-theme="c">
             <a id="logout" href="#oe_login">Logout</a>
         </li>
-        <li data-theme="c">
-            <a id="pref" href="#">Preferences</a>
-        </li>
     </ul>
+    </div>
+    <div id="footer" data-role="footer" data-theme="b" data-position="fixed">
+        <a data-role="button" id="shrotcuts" >Favourite</a>
+        <a data-role="button" id="application" href="#oe_menu">Application</a>
+        <a data-role="button" id="preference">Preference</a>
+    </div>
 </t>
 
 <t t-name="ListView">
-     <div data-role="header" data-theme="b">
-        <h1>OpenERP</h1>
-        <a id="home" class="ui-btn-right" data-iconpos="notext" data-icon="home" href="#oe_home" title="Home" data-theme="b"></a>
+     <div id="header" data-role="header" data-theme="b">
+        <h1></h1>
+        <a id="home" class="ui-btn-right" data-iconpos="notext" data-icon="home" href="#oe_menu" title="Home" data-theme="b"></a>
     </div>
     <div data-role="content">
         <ul data-role="listview" data-inset="true" data-theme="d" data-filter="true">
@@ -151,13 +181,19 @@
             </li>
         </ul>
     </div>
-     <div data-role="footer" data-theme="b" data-position="fixed">
-        <h1>Footer</h1>
+     <div id="footer" data-role="footer" data-theme="b" data-position="fixed">
+        <a data-role="button" id="shrotcuts" href="#oe_shortcuts">Favourite</a>
+        <a data-role="button" id="application" href="#oe_menu">Application</a>
+        <a data-role="button" id="preference" href="#oe_options">Preference</a>
     </div>
 </t>
 
 <t t-name="FormView">
-    <div role="main" class="ui-content" data-role="content">
+    <div id="header" data-role="header" data-theme="b">
+        <h1></h1>
+        <a id="home" class="ui-btn-right" data-iconpos="notext" data-icon="home" href="#oe_menu" title="Home" data-theme="b"></a>
+    </div>
+    <div role="main" data-role="content">
         <form>
             <t t-foreach="get_fields" t-as="field">
             <div data-role="fieldcontain">

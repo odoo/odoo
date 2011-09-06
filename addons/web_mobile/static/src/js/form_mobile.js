@@ -39,6 +39,8 @@ openerp.web_mobile.FormView = openerp.base.Widget.extend({
                     }
                 }
                 self.$element.html(QWeb.render("FormView", {'get_fields': get_fields, 'notebooks': notebooks || false, 'fields' : fields, 'values' : data }));
+
+                    self.$element.find("#header").find('h1').html(self.action.name);
                     self.$element.find('select').change(function(ev){
                         selection.on_select_option(ev);
                     });
@@ -68,9 +70,12 @@ openerp.web_mobile.FormView = openerp.base.Widget.extend({
                                 if (!next.find('.detail').html().length) {
                                     for (var i = 0; i < get_fields.length; i++) {
                                         if (fields[get_fields[i].attrs.name].type == 'one2many'){
-                                            var get_fields_test = self.get_fields(fields[get_fields[i].attrs.name].views.form.arch.children);
-                                            var fields_test = fields[get_fields[i].attrs.name]['views'].form.fields;
-                                            var notebook=fields[get_fields[i].attrs.name].views.form.arch;
+                                            if(fields[get_fields[i].attrs.name].views.form){
+	                                            var get_fields_test = self.get_fields(fields[get_fields[i].attrs.name].views.form.arch.children);
+	                                            var fields_test = fields[get_fields[i].attrs.name]['views'].form.fields;
+	                                            var notebook=fields[get_fields[i].attrs.name].views.form.arch;
+                                            }
+                                            var relational = get_fields[i].attrs.name;
                                         }
                                     }
                                     if(notebook){
@@ -79,18 +84,34 @@ openerp.web_mobile.FormView = openerp.base.Widget.extend({
                                         next.find('.detail').append(QWeb.render("FormView", {'get_fields': get_fields,'fields' : result.fields_view.fields, 'values' : data }));
                                     }
                                 }
-                                next.find('.detail').find('a').click(function(){
-                                    if(next.find('.detail').find('a').next().find('.detail').html().length){
-                                        if (next.find('.detail').find('a').next().hasClass(self.content_collapsed_class)) {
-                                            self.collapsed(next.find('.detail').find('a').next(),next.find('.detail').find('a').find('span .ui-icon'));
-                                        }
-                                        else if (next.find('.detail').find('a').next().hasClass(self.content_expanded_class)) {
-                                            self.expanded(next.find('.detail').find('a').next(),next.find('.detail').find('a').find('span .ui-icon'));
-                                        }
-                                    }
-                                    if(!next.find('.detail').find('a').next().find('.detail').html().length){
-                                        next.find('.detail').find('a').next().find('.detail').append(QWeb.render("FormView", {'get_fields': get_fields_test,'fields' : fields_test, 'values' : data  }));
-                                        self.collapsed(next.find('.detail').find('a').next(),next.find('.detail').find('a').find('span .ui-icon'));
+
+                                //$.mobile.changePage($("#oe_form"), "slide", true, true);
+                                next.find('.detail').find('li').click(function(){
+                                    if(data[relational]){
+                                        var dataset = new openerp.base.DataSetStatic(self, result.fields_view.fields[relational].relation, result.fields_view.fields[relational].context);
+                                        dataset.domain=[['id', 'in', data[relational]]];
+                                        dataset.name_search('', dataset.domain, 'in',false ,function(res){
+                                            for(var i=0;i<res.length;i++){
+                                                var splited_data = res[i][1].split(',');
+                                                res[i][1] = splited_data[0];
+                                            }
+                                            self.$element.html(QWeb.render("ListView", {'records' : res}));
+                                            self.$element.find("#searchid").focus();
+                                            self.$element.find("a#list-id").click(function(ev){
+                                                dataset = new openerp.base.DataSetSearch(self, dataset.model, null, null);
+                                                dataset.read_slice([],{}, function (result_relational) {
+                                                for (var i = 0; i < result_relational.length; i++) {
+                                                    if (result_relational[i].id == $(ev.currentTarget).data('id')) {
+                                                        var data_relational = result_relational[i];
+                                                    }
+                                                }
+                                                self.$element.html(QWeb.render("FormView", {'get_fields': get_fields_test, 'notebooks': false, 'fields' : fields_test, 'values' : data_relational }));
+                                                self.$element.find('select').change(function(ev){
+                                                    selection.on_select_option(ev);
+                                                });
+                                                });
+                                            });
+                                        });
                                     }
                                 });
                             }
@@ -101,7 +122,7 @@ openerp.web_mobile.FormView = openerp.base.Widget.extend({
                     });
                 });
                 $.mobile.changePage($("#oe_form"), "slide", true, true);
-                $("#oe_header").find("h1").html(result.fields_view.arch.attrs.string);
+                //$("#oe_header").find("h1").html(result.fields_view.arch.attrs.string);
         });
     },
     get_fields: function(view_fields, fields) {

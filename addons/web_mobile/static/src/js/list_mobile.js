@@ -22,10 +22,21 @@ openerp.web_mobile.ListView = openerp.base.Widget.extend({
     },
     on_search_data: function(ev){
         var self = this;
+
         var dataset = new openerp.base.DataSetStatic(this, this.action.res_model, this.action.context);
         dataset.name_search('', [], 'ilike',false ,function(result){
             self.$element.html(QWeb.render("ListView", {'records' : result}));
+            self.$element.find("#header").find('h1').html(self.action.name);
             self.$element.find("a#list-id").click(self.on_list_click);
+            self.$element.find("#footer").find('#shrotcuts').click(function(){
+                this.shortcuts = new openerp.web_mobile.Shortcuts(self, "oe_shortcuts");
+                this.shortcuts.start();
+            });
+            self.$element.find("#footer").find('#preference').click(function(){
+                this.options = new openerp.web_mobile.Options(self, "oe_options");
+                this.options.start();
+            });
+
             $.mobile.changePage($("#oe_list"), "slide", true, true);
         });
     },
