@@ -884,21 +884,12 @@ class View(openerpweb.Controller):
             if context_string:
                 elem.set(el, self.parse_context(context_string, session))
 
-class FormView(View):
-    _cp_path = "/web/formview"
-
     @openerpweb.jsonrequest
-    def load(self, req, model, view_id, toolbar=False):
-        fields_view = self.fields_view_get(req, model, view_id, 'form', toolbar=toolbar)
-        return {'fields_view': fields_view}
+    def load(self, req, model, view_id, view_type, toolbar=False):
+        return self.fields_view_get(req, model, view_id, view_type, toolbar=toolbar)
 
 class ListView(View):
     _cp_path = "/web/listview"
-
-    @openerpweb.jsonrequest
-    def load(self, req, model, view_id, toolbar=False):
-        fields_view = self.fields_view_get(req, model, view_id, 'tree', toolbar=toolbar)
-        return {'fields_view': fields_view}
 
     def process_colors(self, view, row, context):
         colors = view['arch']['attrs'].get('colors')
@@ -917,6 +908,15 @@ class ListView(View):
         elif len(color) == 1:
             return color[0]
         return 'maroon'
+
+class TreeView(View):
+    _cp_path = "/web/treeview"
+
+    @openerpweb.jsonrequest
+    def action(self, req, model, id):
+        return load_actions_from_ir_values(
+            req,'action', 'tree_but_open',[(model, id)],
+            False)
 
 class SearchView(View):
     _cp_path = "/web/searchview"
@@ -1072,19 +1072,6 @@ class Action(openerpweb.Controller):
     def run(self, req, action_id):
         return clean_action(req, req.session.model('ir.actions.server').run(
             [action_id], req.session.eval_context(req.context)))
-
-class TreeView(View):
-    _cp_path = "/web/treeview"
-
-    @openerpweb.jsonrequest
-    def load(self, req, model, view_id, toolbar=False):
-        return self.fields_view_get(req, model, view_id, 'tree', toolbar=toolbar)
-
-    @openerpweb.jsonrequest
-    def action(self, req, model, id):
-        return load_actions_from_ir_values(
-            req,'action', 'tree_but_open',[(model, id)],
-            False)
 
 class Export(View):
     _cp_path = "/web/export"
@@ -1335,7 +1322,6 @@ class ExcelExport(Export):
         data = fp.read()
         fp.close()
         return data
-
 
 class Reports(View):
     _cp_path = "/web/report"

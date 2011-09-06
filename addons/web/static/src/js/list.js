@@ -147,7 +147,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
      */
     on_loaded: function(data, grouped) {
         var self = this;
-        this.fields_view = data.fields_view;
+        this.fields_view = data;
         //this.log(this.fields_view);
         this.name = "" + this.fields_view.arch.attrs.string;
 
@@ -218,7 +218,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
         if (!this.sidebar && this.options.sidebar && this.options.sidebar_id) {
             this.sidebar = new openerp.web.Sidebar(this, this.options.sidebar_id);
             this.sidebar.start();
-            this.sidebar.add_toolbar(data.fields_view.toolbar);
+            this.sidebar.add_toolbar(this.fields_view.toolbar);
             this.set_common_sidebar_sections(this.sidebar);
         }
     },
@@ -373,6 +373,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
             return this.rpc('/web/listview/load', {
                 model: this.model,
                 view_id: this.view_id,
+                "view_type": "list",
                 context: this.dataset.get_context(context),
                 toolbar: this.options.sidebar
             }, callback);

@@ -50,8 +50,13 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
             return def.promise();
         } else {
             var context = new openerp.web.CompoundContext(this.dataset.get_context());
-            return this.rpc("/web/formview/load", {"model": this.model, "view_id": this.view_id,
-                toolbar: this.options.sidebar, context: context}, this.on_loaded);
+            return this.rpc("/web/view/load", {
+                "model": this.model,
+                "view_id": this.view_id,
+                "view_type": "form",
+                toolbar: this.options.sidebar,
+                context: context
+                }, this.on_loaded);
         }
     },
     stop: function() {
@@ -65,7 +70,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
     },
     on_loaded: function(data) {
         var self = this;
-        this.fields_view = data.fields_view;
+        this.fields_view = data;
         var frame = new (this.registry.get_object('frame'))(this, this.fields_view.arch);
 
         this.$element.html(QWeb.render(this.template, { 'frame': frame, 'view': this }));
