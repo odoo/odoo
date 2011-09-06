@@ -553,7 +553,7 @@ openerp.web.Session = openerp.web.CallbackEnabled.extend( /** @lends openerp.web
         this.rpc('/web/session/modules', {}, function(result) {
             self.module_list = result;
             var lang = self.user_context.lang;
-            params = { mods: ["web"].concat(result), lang: lang};
+            var params = { mods: ["web"].concat(result), lang: lang};
             self.rpc('/web/webclient/translations',params).then(function(transs) {
                 openerp.web._t.database.set_bundle(transs);
                 var modules = self.module_list.join(',');

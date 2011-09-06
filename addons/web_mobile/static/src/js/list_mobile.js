@@ -63,9 +63,9 @@ openerp.web_mobile.ListView = openerp.web.Widget.extend({
         });
     },
     on_list_click: function(ev) {
-        $record = $(ev.currentTarget);
+        var $record = $(ev.currentTarget);
         var self = this;
-        id = $record.data('id');
+        var id = $record.data('id');
         this.formview = new openerp.web_mobile.FormView(this, "oe_app", id, this.action);
         this.formview.start();
     }

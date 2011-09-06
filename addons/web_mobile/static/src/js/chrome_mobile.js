@@ -116,8 +116,8 @@ openerp.web_mobile.Header =  openerp.web.Widget.extend({
         self.$element.find("a").click(this.on_clicked);
     },
     on_clicked: function(ev) {
-        $opt = $(ev.currentTarget);
-        current_id = $opt.attr('id');
+        var $opt = $(ev.currentTarget);
+        var current_id = $opt.attr('id');
         if (current_id == 'home') {
             this.homepage = new openerp.web_mobile.HomePage(this, "oe_app");
             this.homepage.start();
@@ -137,9 +137,9 @@ openerp.web_mobile.Shortcuts =  openerp.web.Widget.extend({
         })
     },
     on_clicked: function(ev) {
-        $shortcut = $(ev.currentTarget);
-        id = $shortcut.data('menu');
-        res_id = $shortcut.data('res');
+        var $shortcut = $(ev.currentTarget);
+        var id = $shortcut.data('menu');
+        var res_id = $shortcut.data('res');
         jQuery("#oe_header").find("h1").html($shortcut.data('name'));
         this.listview = new openerp.web_mobile.ListView(this, "oe_app", res_id);
         this.listview.start();
@@ -162,7 +162,7 @@ openerp.web_mobile.Menu =  openerp.web.Widget.extend({
         this.$element.add(this.$secondary_menu).find("a").click(this.on_menu_click);
     },
     on_menu_click: function(ev, id) {
-        $menu = $(ev.currentTarget);
+        var $menu = $(ev.currentTarget);
         id = $menu.data('menu');
         for (var i = 0; i < this.data.data.children.length; i++) {
             if (this.data.data.children[i].id == id) {
@@ -190,7 +190,7 @@ openerp.web_mobile.Secondary =  openerp.web.Widget.extend({
         this.$element.add(this.$secondary_menu).find("a").click(this.on_menu_click);
     },
     on_menu_click: function(ev, id) {
-        $menu = $(ev.currentTarget);
+        var $menu = $(ev.currentTarget);
         id = $menu.data('menu');
         for (var i = 0; i < this.data.children.length; i++) {
             if (this.data.children[i].id == id) {

@@ -233,7 +233,7 @@ init: function(parent, element_id, dataset, view_id) {
             evt_date = all_events[evt_id]['evt'][2];
             evt_duration = all_events[evt_id]['evt'][3];
 
-            evt_str_date = this.convert_date_str(evt_date);
+            var evt_str_date = this.convert_date_str(evt_date);
             evt_end_date = this.end_date(evt_str_date, evt_duration);
 
             while (all_events[evt_id]['parent'] != "") {

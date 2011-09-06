@@ -622,7 +622,7 @@ openerp.web.BufferedDataSet = openerp.web.DataSetStatic.extend({
         record = record || _.detect(this.to_write, function(x) {return x.id === id;});
         var dirty = false;
         if (record) {
-            for (k in data) {
+            for (var k in data) {
                 if (record.values[k] === undefined || record.values[k] !== data[k]) {
                     dirty = true;
                     break;

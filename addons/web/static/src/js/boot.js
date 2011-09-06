@@ -56,8 +56,8 @@ openerp.web = function(instance) {
     openerp.web.formats(instance);
     openerp.web.chrome(instance);
     openerp.web.data(instance);
-    files = ["views","search","list","form","list_editable","web_mobile","view_tree","data_export"];
-    for(i=0; i<files.length; i++) {
+    var files = ["views","search","list","form","list_editable","web_mobile","view_tree","data_export"];
+    for(var i=0; i<files.length; i++) {
         if(openerp.web[files[i]]) {
             openerp.web[files[i]](instance);
         }
