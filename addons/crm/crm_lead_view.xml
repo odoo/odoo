@@ -181,7 +181,7 @@
                             <button
                                 string="Reply" attrs="{'invisible': [('email_from', '=', False)]}"
                                 name="%(mail.action_email_compose_message_wizard)d"
-                                context="{'mail':'reply', 'message_id':active_id}"
+                                context="{'mail.compose.message.mode':'reply', 'message_id':active_id}"
                                 icon="terp-mail-replied" type="action" />
                         </tree>
                         <form string="History">
@@ -203,7 +203,7 @@
                                     <group attrs="{'invisible': [('email_from', '=', False)]}">
                                         <button colspan="4" string="Reply"
                                             name="%(mail.action_email_compose_message_wizard)d"
-                                            context="{'mail':'reply'}"
+                                            context="{'mail.compose.message.mode':'reply'}"
                                             icon="terp-mail-replied" type="action"/>
                                         </group>
 
@@ -497,7 +497,7 @@
                             <button
                                 string="Reply" attrs="{'invisible': [('history', '!=', True)]}"
                                 name="%(mail.action_email_compose_message_wizard)d"
-                                context="{'mail':'reply', 'model': 'crm.lead', 'include_original' : True}"
+                                context="{'mail.compose.message.mode':'reply', 'model': 'crm.lead', 'include_original' : True}"
                                 icon="terp-mail-replied" type="action" />
                         </tree>
                         <form string="History">
@@ -518,7 +518,7 @@
                                         <button colspan="4"
                                             string="Reply"
                                             name="%(mail.action_email_compose_message_wizard)d"
-                                            context="{'mail':'reply', 'model': 'crm.lead', 'include_original' : True}"
+                                            context="{'mail.compose.message.mode':'reply', 'model': 'crm.lead', 'include_original' : True}"
                                             icon="terp-mail-replied" type="action" />
                                     </group>
 

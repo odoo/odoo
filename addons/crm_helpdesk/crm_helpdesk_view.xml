@@ -102,7 +102,7 @@
 		                            <button
 		                                string="Reply" attrs="{'invisible': [('email_from', '=', False)]}"
 		                                name="%(mail.action_email_compose_message_wizard)d"
-		                                context="{'mail':'reply', 'message_id':active_id}"
+		                                context="{'mail.compose.message.mode':'reply', 'message_id':active_id}"
 		                                icon="terp-mail-replied" type="action" />
                                 </tree>
                                 <form string="History">
@@ -119,7 +119,7 @@
                                                 <field name="body_text" colspan="4" nolabel="1" height="250"/>
 		                                        <button colspan="4" string="Reply"
 		                                            name="%(mail.action_email_compose_message_wizard)d"
-		                                            context="{'mail':'reply', 'message_id':active_id}"
+		                                            context="{'mail.compose.message.mode':'reply', 'message_id':active_id}"
 		                                            icon="terp-mail-replied" type="action"/>
                                              </group>
                                             <group attrs="{'invisible': [('email_from', '!=', False)]}">

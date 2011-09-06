@@ -49,7 +49,7 @@
                                 <field name="state" colspan="2"/>
                                 <group col="4" colspan="2">
                                     <button name="%(action_email_compose_message_wizard)d" string="Reply" type="action" icon="terp-mail-replied"
-                                    context="{'mail':'reply', 'message_id':active_id}" states='received,sent,exception,cancel'/>
+                                    context="{'mail.compose.message.mode':'reply', 'message_id':active_id}" states='received,sent,exception,cancel'/>
                                     <button name="send" string="Send Now" type="object" icon="gtk-media-play" states='outgoing'/>
                                     <button name="mark_outgoing" string="Retry" type="object" icon="gtk-redo" states='exception,cancel'/>
                                     <button name="cancel" string="Cancel" type="object" icon="terp-gtk-stop" states='outgoing'/>

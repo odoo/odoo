@@ -39,19 +39,21 @@ class mail_compose_message(osv.osv_memory):
        The behavior of the wizard can be modified through the use of context
        parameters, among which are:
 
-         * mass_mail: turns multi-recipient mode on, where the mail details can
-                      contain template placeholders that will be merged with
-                      actual data before being sent to each recipient, as
-                      determined via  ``context['active_model']`` and
+         * mail.compose.message.mode: if set to 'reply', the wizard is in 
+                      reply mode and pre-populated with the original quote.
+                      If set to 'mass_mail', the wizard is in mass mailing
+                      where the mail details can contain template placeholders
+                      that will be merged with actual data before being sent
+                      to each recipient. Recipients will be derived from the
+                      records determined via  ``context['active_model']`` and
                       ``context['active_ids']``.
-         * mail: if set to 'reply', the wizard will be in mail reply mode
          * active_model: model name of the document to which the mail being
                         composed is related
          * active_id: id of the document to which the mail being composed is
                       related, or id of the message to which user is replying,
-                      in case mail == 'reply'.
+                      in case ``mail.compose.message.mode == 'reply'``
          * active_ids: ids of the documents to which the mail being composed is
-                      related, in case ``context['mass_mail']`` is set.
+                      related, in case ``mail.compose.message.mode == 'mass_mail'``.
     """
     _name = 'mail.compose.message'
     _inherit = 'mail.message.common'
@@ -68,11 +70,17 @@ class mail_compose_message(osv.osv_memory):
             context = {}
         result = super(mail_compose_message, self).default_get(cr, uid, fields, context=context)
         vals = {}
-        if context.get('active_model') and context.get('active_id') and not context.get('mail') == 'reply':
+        reply_mode = context.get('mail.compose.message.mode') == 'reply'
+        if (not reply_mode) and context.get('active_model') and context.get('active_id'):
+            # normal mode when sending an email related to any document, as specified by
+            # active_model and active_id in context
             vals = self.get_value(cr, uid, context.get('active_model'), context.get('active_id'), context)
-        elif context.get('mail') == 'reply' and context.get('active_id'):
+        elif reply_mode and context.get('active_id'):
+            # reply mode, consider active_id is the ID of a mail.message to which we're
+            # replying
             vals = self.get_message_data(cr, uid, int(context['active_id']), context)
         else:
+            # default mode
             result['model'] = context.get('active_model', False)
         if vals:
             for field in fields:
@@ -108,7 +116,7 @@ class mail_compose_message(osv.osv_memory):
         """Returns a defaults-like dict with initial values for the composition
            wizard when replying to the given message (e.g. including the quote
            of the initial message, and the correct recipient).
-           Should not be called unless ``context['mail'] == 'reply'``.
+           Should not be called unless ``context['mail.compose.message.mode'] == 'reply'``.
 
            :param int message_id: id of the mail.message to which the user
                                   is replying.
@@ -128,7 +136,7 @@ class mail_compose_message(osv.osv_memory):
             # as it is easier to quote than the HTML version.
             # XXX TODO: make it possible to switch to HTML on the fly
             body = message_data.body_text or ''
-            if context.get('mail') == 'reply':
+            if context.get('mail.compose.message.mode') == 'reply':
                 header = _('-------- Original Message --------')
                 sender = _('From: %s')  % tools.ustr(message_data.email_from or '')
                 email_to = _('To: %s') %  tools.ustr(message_data.email_to or '')
@@ -162,9 +170,9 @@ class mail_compose_message(osv.osv_memory):
     def send_mail(self, cr, uid, ids, context=None):
         '''Process the wizard contents and proceed with sending the corresponding
            email(s), rendering any template patterns on the fly if needed.
-           If the wizard is in mass-mail mode (context has a ``mass_mail`` key),
-           the resulting email(s) are scheduled for being sent the next time
-           the mail.message scheduler runs, or the next time
+           If the wizard is in mass-mail mode (context['mail.compose.message.mode'] is
+           set to ``'mass_mail'``), the resulting email(s) are scheduled for being
+           sent the next time the mail.message scheduler runs, or the next time
            ``mail.message.process_email_queue`` is called.
            Otherwise the new message is sent immediately.
 
@@ -184,11 +192,11 @@ class mail_compose_message(osv.osv_memory):
             body =  mail.body_html if mail.subtype == 'html' else mail.body_text
 
             # Reply Email
-            if context.get('mail') == 'reply' and mail.message_id:
+            if context.get('mail.compose.message.mode') == 'reply' and mail.message_id:
                 references = (mail.references or '') + " " + mail.message_id
                 headers['In-Reply-To'] = mail.message_id
 
-            if context.get('mass_mail'):
+            if context.get('mail.compose.message.mode') == 'mass_mail':
                 # Mass mailing: must render the template patterns
                 if context.get('active_ids') and context.get('active_model'):
                     active_ids = context['active_ids']

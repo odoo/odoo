@@ -172,7 +172,7 @@ class email_template(osv.osv):
                  'res_model': 'mail.compose.message',
                  'src_model': src_obj,
                  'view_type': 'form',
-                 'context': "{'mass_mail':True}",
+                 'context': "{'mail.compose.message.mode':'mass_mail'}",
                  'view_mode':'form,tree',
                  'view_id': res_id,
                  'target': 'new',
