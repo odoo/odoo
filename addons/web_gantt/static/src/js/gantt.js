@@ -94,7 +94,7 @@ init: function(parent, element_id, dataset, view_id) {
         COLOR_PALETTE = ['#ccccff', '#cc99ff', '#75507b', '#3465a4', '#73d216', '#c17d11', '#edd400',
                  '#fcaf3e', '#ef2929', '#ff00c9', '#ad7fa8', '#729fcf', '#8ae234', '#e9b96e', '#fce94f',
                  '#ff8e00', '#ff0000', '#b0008c', '#9000ff', '#0078ff', '#00ff00', '#e6ff00', '#ffff00',
-                 '#905000', '#9b0000', '#840067', '#510090', '#0000c9', '#009b00', '#9abe00', '#ffc900']
+                 '#905000', '#9b0000', '#840067', '#510090', '#0000c9', '#009b00', '#9abe00', '#ffc900'];
 
         if (result.length != 0){
             var show_event = [];
@@ -157,7 +157,7 @@ init: function(parent, element_id, dataset, view_id) {
                 var duration = res[this.date_delay];
             }
             if (duration == false)
-                duration = 0
+                duration = 0;
 
             if (self.grp.length){
                 for (var j in self.grp){
@@ -396,14 +396,14 @@ init: function(parent, element_id, dataset, view_id) {
             "type":"ir.actions.act_window",
             "view_type":"form",
             "view_mode":"form"
-        }
+        };
 
         action.flags = {
             search_view: false,
             sidebar : false,
             views_switcher : false,
             pager: false
-            }
+        };
         var element_id = _.uniqueId("act_window_dialog");
         var dialog = jQuery('<div>', {
             'id': element_id

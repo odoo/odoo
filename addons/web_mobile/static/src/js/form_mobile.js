@@ -128,4 +128,4 @@ openerp.web_mobile.FormView = openerp.web.Widget.extend({
         next.addClass(this.collapsed_class);
     }
 });
-}
+};

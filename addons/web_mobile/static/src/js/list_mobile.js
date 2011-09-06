@@ -70,4 +70,4 @@ openerp.web_mobile.ListView = openerp.web.Widget.extend({
         this.formview.start();
     }
  });
-}
+};

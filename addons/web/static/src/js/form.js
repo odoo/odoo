@@ -214,7 +214,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
                         var ctx = widget.build_context ? widget.build_context() : {};
                         return ctx;
                     }
-                }
+                };
                 var parent_fields = null;
                 _.each(call[2].split(','), function(a, i) {
                     var field = _.trim(a);
@@ -1318,7 +1318,7 @@ openerp.web.form.dialog = function(content, options) {
     var dialog = new openerp.web.Dialog(null, options);
     dialog.$dialog = $(content).dialog(dialog.dialog_options);
     return dialog.$dialog;
-}
+};
 
 openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
     init: function(view, node) {
@@ -1411,13 +1411,13 @@ openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
             if (!self.$input.is(":focus") &&
                     !self.$input.autocomplete("widget").is(":visible") &&
                     !self.value) {
-                if(self.value === undefined && self.last_search.length > 0) {
+                if (self.value === undefined && self.last_search.length > 0) {
                     self._change_int_ext_value(self.last_search[0]);
                 } else {
                     self._change_int_ext_value(null);
                 }
             }
-        }
+        };
         this.$input.focusout(anyoneLoosesFocus);
 
         var isSelecting = false;
@@ -1479,7 +1479,7 @@ openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
                 }});
             }
             // quick create
-            var raw_result = _(data.result).map(function(x) {return x[1];})
+            var raw_result = _(data.result).map(function(x) {return x[1];});
             if (search_val.length > 0 &&
                 !_.include(raw_result, search_val) &&
                 (!self.value || search_val !== self.value[1])) {
@@ -2251,7 +2251,7 @@ openerp.web.form.FieldReference = openerp.web.form.Field.extend({
                     relation: null
                 }
             }
-        }
+        };
         this.get_fields_values = view.get_fields_values;
         this.do_onchange = this.on_form_changed = this.on_nop;
         this.widgets = {};
@@ -2361,7 +2361,7 @@ openerp.web.form.FieldBinary = openerp.web.form.Field.extend({
         } else {
             var url = '/web/binary/saveas?session_id=' + this.session.session_id + '&model=' +
                 this.view.dataset.model +'&id=' + (this.view.datarecord.id || '') + '&field=' + this.name +
-                '&fieldname=' + (this.node.attrs.filename || '') + '&t=' + (new Date().getTime())
+                '&fieldname=' + (this.node.attrs.filename || '') + '&t=' + (new Date().getTime());
             window.open(url);
         }
     },
@@ -2419,7 +2419,7 @@ openerp.web.form.FieldBinaryImage = openerp.web.form.FieldBinary.extend({
         this._super.apply(this, arguments);
         this.set_image_maxwidth();
         var url = '/web/binary/image?session_id=' + this.session.session_id + '&model=' +
-            this.view.dataset.model +'&id=' + (this.view.datarecord.id || '') + '&field=' + this.name + '&t=' + (new Date().getTime())
+            this.view.dataset.model +'&id=' + (this.view.datarecord.id || '') + '&field=' + this.name + '&t=' + (new Date().getTime());
         this.$image.attr('src', url);
     },
     set_image_maxwidth: function() {

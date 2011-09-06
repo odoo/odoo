@@ -691,7 +691,7 @@ openerp.web.BufferedDataSet = openerp.web.DataSetStatic.extend({
                 }
             }
             setTimeout(function () {completion.resolve(records);}, 0);
-        }
+        };
         if(to_get.length > 0) {
             var rpc_promise = this._super(to_get, fields, function(records) {
                 _.each(records, function(record, index) {

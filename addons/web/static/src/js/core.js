@@ -987,7 +987,7 @@ openerp.web.TranslationDataBase = openerp.web.Class.extend({
         var fcnt = function(str) {
             var tmp = self.get(str);
             return tmp === undefined ? str : tmp;
-        }
+        };
         fcnt.database = this;
         return fcnt;
     },

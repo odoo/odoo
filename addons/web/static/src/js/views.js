@@ -536,7 +536,7 @@ openerp.web.TranslateDialog = openerp.web.Dialog.extend({
                     self.$fields_form.find('.oe_trad_field[name="' + lg.code + '-' + f + '"]').val(values[0][f] || '').attr('data-value', values[0][f] || '');
                 });
                 deff.resolve();
-            }
+            };
             if (lg.code === self.view_language) {
                 var values = {};
                 _.each(self.translatable_fields_keys, function(field) {

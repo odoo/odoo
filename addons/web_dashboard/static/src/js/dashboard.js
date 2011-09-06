@@ -103,10 +103,10 @@ openerp.web.form.DashBoard = openerp.web.form.Widget.extend({
                 self.actions_attrs[aid] = {
                     name: aid,
                     string: _.trim(result.result.name)
-                }
+                };
                 qdict.action = {
                     attrs : self.actions_attrs[aid]
-                }
+                };
                 self.$element.find('.oe-dashboard-column:first').prepend(QWeb.render('DashBoard.action', qdict));
                 self.do_save_dashboard();
                 self.on_load_action(result)

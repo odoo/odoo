@@ -170,7 +170,7 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
                         value: filter_value,
                         label: (typeof filter === 'object') ? filter[1] : filter,
                         color: this.get_color(filter_value)
-                    }
+                    };
                     if (!sidebar_items[filter_value]) {
                         sidebar_items[filter_value] = filter_item;
                     }
@@ -224,7 +224,7 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
             'text': res_text,
             'id': evt.id,
             'title': res_description.join()
-        }
+        };
         if (evt.color) {
             r.color = evt.color;
         }

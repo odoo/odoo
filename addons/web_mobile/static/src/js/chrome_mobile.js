@@ -132,7 +132,7 @@ openerp.web_mobile.Shortcuts =  openerp.web.Widget.extend({
     start: function() {
         var self = this;
         this.rpc('/web/session/sc_list',{} ,function(res){
-            self.$element.html(QWeb.render("Shortcuts", {'sc' : res}))
+            self.$element.html(QWeb.render("Shortcuts", {'sc' : res}));
             self.$element.find("a").click(self.on_clicked);
         })
     },
@@ -246,4 +246,4 @@ openerp.web_mobile.Selection = openerp.web.Widget.extend({
         $($this).prev().find(".ui-btn-text").html($($this).find("option:selected").text());
     }
 });
-}
+};
