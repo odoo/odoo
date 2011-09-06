@@ -6,7 +6,7 @@ openerp.base_diagram = function (openerp) {
 QWeb.add_template('/base_diagram/static/src/xml/base_diagram.xml');
 openerp.base.views.add('diagram', 'openerp.base_diagram.DiagramView');
 openerp.base_diagram.DiagramView = openerp.base.View.extend({
-	searchable: false,
+    searchable: false,
     init: function(parent, element_id, dataset, view_id, options) {
         this._super(parent, element_id);
         this.set_default_options(options);
@@ -21,7 +21,7 @@ openerp.base_diagram.DiagramView = openerp.base.View.extend({
     start: function() {
         return this.rpc("/base_diagram/diagram/load", {"model": this.model, "view_id": this.view_id}, this.on_loaded);
     },
-    
+
     toTitleCase: function(str) {
         return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
     },
@@ -32,15 +32,15 @@ openerp.base_diagram.DiagramView = openerp.base.View.extend({
         if(this.ids && this.ids.length) {
             this.id = this.ids[self.dataset.index || 0];
         }
-        
+
         this.fields_view = result.fields_view,
         this.view_id = this.fields_view.view_id,
         this.fields = this.fields_view.fields,
         this.nodes = this.fields_view.arch.children[0],
-    	this.connectors = this.fields_view.arch.children[1],
+        this.connectors = this.fields_view.arch.children[1],
         this.node = this.nodes.attrs.object,
         this.connector = this.connectors.attrs.object;
-        
+
         this.$element.html(QWeb.render("DiagramView", this));
 
         this.$element.find('div.oe_diagram_pager button[data-pager-action]').click(function() {
@@ -57,11 +57,11 @@ openerp.base_diagram.DiagramView = openerp.base.View.extend({
         this.$element.find('#toggle_grid').click(function() {
             self.$element.find('.diagram').toggleClass('show_grid');
         });
-        
+
         if(this.id) {
             self.get_diagram_info();
         }
-        
+
     },
 
     get_diagram_info: function() {
@@ -81,21 +81,21 @@ openerp.base_diagram.DiagramView = openerp.base.View.extend({
             'connectors': [],
             'connectors_fields': []
         };
-        
+
         _.each(this.nodes.children, function(child) {
-        	if(child.attrs.invisible == '1')
-        		params['invisible_nodes'].push(child.attrs.name);
-    		else {
-    			params['visible_nodes'].push(child.attrs.name);
-    			params['node_fields'].push(self.fields[child.attrs.name]['string']|| this.toTitleCase(child.attrs.name));
-    		}
+            if(child.attrs.invisible == '1')
+                params['invisible_nodes'].push(child.attrs.name);
+            else {
+                params['visible_nodes'].push(child.attrs.name);
+                params['node_fields'].push(self.fields[child.attrs.name]['string']|| this.toTitleCase(child.attrs.name));
+            }
         });
-        
+
         _.each(this.connectors.children, function(conn) {
-        	params['connectors_fields'].push(self.fields[conn.attrs.name]['string']|| this.toTitleCase(conn.attrs.name));
-        	params['connectors'].push(conn.attrs.name);
+            params['connectors_fields'].push(self.fields[conn.attrs.name]['string']|| this.toTitleCase(conn.attrs.name));
+            params['connectors'].push(conn.attrs.name);
         });
-        
+
         this.rpc(
             '/base_diagram/diagram/get_diagram_info',params,
             function(result) {
@@ -116,7 +116,7 @@ openerp.base_diagram.DiagramView = openerp.base.View.extend({
         var diagram = new Graph();
 
         this.active_model = result['id_model'];
-        
+
         var res_nodes = result['nodes'];
         var res_connectors = result['conn'];
 
@@ -127,34 +127,34 @@ openerp.base_diagram.DiagramView = openerp.base.View.extend({
             var set;
             var shape = n.node.shape;
             if(shape == 'rectangle')
-            	shape = 'rect';
+                shape = 'rect';
             node = r[shape](n.node.x, n.node.y).attr({
                 "fill": n.node.color
             }).dblclick(function() {
                 self.add_edit_node(n.node.id, self.node);
             });
             set = r.set()
-            		.push(node)
-            		.push(
-        				r.text(n.node.x, n.node.y, (n.label || n.id))
-        				.attr({"cursor":"pointer"})
-        				.dblclick(function() {
-        					self.add_edit_node(n.node.id, self.node);
-        				})
-    				);
+                    .push(node)
+                    .push(
+                        r.text(n.node.x, n.node.y, (n.label || n.id))
+                        .attr({"cursor":"pointer"})
+                        .dblclick(function() {
+                            self.add_edit_node(n.node.id, self.node);
+                        })
+                    );
             node.attr({cursor: "pointer"});
-            
+
             if(shape == "ellipse")
-            	node.attr({rx: "40", ry: "20"});
-        	else if(shape == 'rect') {
-        		node.attr({width: "60", height: "44"});
-            	node.next.attr({"text-anchor": "middle", x: n.node.x + 20, y: n.node.y + 20});
-        	}
-        	return set;
+                node.attr({rx: "40", ry: "20"});
+            else if(shape == 'rect') {
+                node.attr({width: "60", height: "44"});
+                node.next.attr({"text-anchor": "middle", x: n.node.x + 20, y: n.node.y + 20});
+            }
+            return set;
         };
-        
+
         _.each(res_nodes, function(res_node) {
-        	diagram.addNode(res_node['name'],{node: res_node,render: renderer});
+            diagram.addNode(res_node['name'],{node: res_node,render: renderer});
         });
 
         // Id for Path(Edges)
@@ -164,21 +164,21 @@ openerp.base_diagram.DiagramView = openerp.base.View.extend({
             edge_ids.push(index);
             diagram.addEdge(connector['source'], connector['destination'], {directed : true, label: connector['signal']});
         });
-        
-        
+
+
         if ($('div#dia-canvas').children().length > 0) {
             $('div#dia-canvas').children().remove();
         }
 
         var layouter = new Graph.Layout.Ordered(diagram);
         var render_diagram = new Graph.Renderer.Raphael('dia-canvas', diagram, $('div#dia-canvas').width(), $('div#dia-canvas').height());
-        
+
         _.each(diagram.edges, function(edge, index) {
-        	if(edge.connection) {
-        		edge.connection.fg.attr({cursor: "pointer"}).dblclick(function() {
-        			self.add_edit_node(edge_ids[index], self.connector);
-        		});
-        	}
+            if(edge.connection) {
+                edge.connection.fg.attr({cursor: "pointer"}).dblclick(function() {
+                    self.add_edit_node(edge_ids[index], self.connector);
+                });
+            }
         });
     },
 
@@ -234,12 +234,12 @@ openerp.base_diagram.DiagramView = openerp.base.View.extend({
         }
 
         if(model == self.node || id) {
-        	$.each(form_fields, function(index, fld) {
+            $.each(form_fields, function(index, fld) {
                 form_controller.on_record_loaded.add_first(function() {
                     form_controller.fields[fld].modifiers.readonly = true;
                     form_controller.fields[fld].$input.attr('disabled', true);
-            		form_controller.fields[fld].$drop_down.unbind();
-            		form_controller.fields[fld].$menu_btn.unbind();
+                    form_controller.fields[fld].$drop_down.unbind();
+                    form_controller.fields[fld].$menu_btn.unbind();
                 });
             });
         }
