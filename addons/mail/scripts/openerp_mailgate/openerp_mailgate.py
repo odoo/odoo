@@ -173,7 +173,6 @@ def main():
 
     custom_values = {}
     try:
-        print "custom vals: %s" % options.custom_values
         custom_values = dict(eval(options.custom_values or {} ))
     except:
         import traceback
