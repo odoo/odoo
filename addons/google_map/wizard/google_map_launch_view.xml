@@ -8,7 +8,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Launch Map">
-                    <separator string="This wizard will launch Google Map" colspan="4"/>
+                    <separator string="This wizard will launch google map" colspan="4"/>
                     <group colspan="4" col="2">
                         <button string="Cancel" icon="gtk-cancel" special="cancel"/>
                         <button name="launch_wizard" string="Map" type="object" icon="gtk-zoom-in"/>
@@ -28,7 +28,7 @@
 
         <act_window
             name="Launch Google Map"
-            id="view_google_map_launch_form"
+            id="act_google_map_launch_form"
             res_model="launch.map"
             src_model="res.partner.address"
             view_mode="form"

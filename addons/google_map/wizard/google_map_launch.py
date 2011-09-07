@@ -19,33 +19,30 @@
 #
 ##############################################################################
 
-from osv import osv
-import pooler
-from osv import fields
-import time
+from osv import osv, fields
 
 class launch_map(osv.osv_memory):
 
     _name = "launch.map"
-    _description = "Google Map"
+    _description = "Launch Google Map"
 
     def launch_wizard(self, cr, uid, ids, context=None):
         active_id = context.get('active_id', False)
         address_obj= self.pool.get('res.partner.address')
-        m = address_obj.browse(cr, uid, active_id, context=context)
+        partner = address_obj.browse(cr, uid, active_id, context=context)
         url="http://maps.google.com/maps?oi=map&q="
-        if m.street:
-            url+=m.street.replace(' ','+')
-        if m.street2:
-            url+='+'+m.street2.replace(' ','+')
-        if m.city:
-            url+='+'+m.city.replace(' ','+')
-        if m.state_id:
-            url+='+'+m.state_id.name.replace(' ','+')
-        if m.country_id:
-            url+='+'+m.country_id.name.replace(' ','+')
-        if m.zip:
-            url+='+'+m.zip.replace(' ','+')
+        if partner.street:
+            url+=partner.street.replace(' ','+')
+        if partner.street2:
+            url+='+'+partner.street2.replace(' ','+')
+        if partner.city:
+            url+='+'+partner.city.replace(' ','+')
+        if partner.state_id:
+            url+='+'+partner.state_id.name.replace(' ','+')
+        if partner.country_id:
+            url+='+'+partner.country_id.name.replace(' ','+')
+        if partner.zip:
+            url+='+'+partner.zip.replace(' ','+')
         return {
         'type': 'ir.actions.act_url',
         'url':url,
