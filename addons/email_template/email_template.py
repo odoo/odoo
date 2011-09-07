@@ -22,7 +22,6 @@
 
 import base64
 
-import mako_template
 import netsvc
 from osv import osv
 from osv import fields
