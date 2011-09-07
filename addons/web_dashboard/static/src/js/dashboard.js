@@ -1,5 +1,5 @@
 openerp.web_dashboard = function(openerp) {
-
+var QWeb = openerp.web.qweb;
 QWeb.add_template('/web_dashboard/static/src/xml/web_dashboard.xml');
 
 openerp.web.form.DashBoard = openerp.web.form.Widget.extend({

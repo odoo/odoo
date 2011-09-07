@@ -5,6 +5,7 @@
 openerp.web.views = function(openerp) {
 
 var _t = openerp.web._t;
+var QWeb = openerp.web.qweb;
 
 /**
  * Registry for all the client actions key: tag value: widget

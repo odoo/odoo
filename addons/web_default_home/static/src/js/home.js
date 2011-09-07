@@ -1,4 +1,5 @@
 openerp.web_default_home = function (openerp) {
+    var QWeb = openerp.web.qweb;
     QWeb.add_template('/web_default_home/static/src/xml/web_default_home.xml');
 
     openerp.web_default_home = {

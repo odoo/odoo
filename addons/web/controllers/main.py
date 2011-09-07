@@ -103,7 +103,6 @@ home_template = textwrap.dedent("""<!DOCTYPE html>
         %(javascript)s
         <script type="text/javascript">
             $(function() {
-                QWeb = new QWeb2.Engine();
                 var c = new openerp.init();
                 var wc = new c.web.WebClient("oe");
                 wc.start();

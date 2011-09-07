@@ -1,6 +1,7 @@
 openerp.web.form = function (openerp) {
 
 var _t = openerp.web._t;
+var QWeb = openerp.web.qweb;
 
 openerp.web.views.add('form', 'openerp.web.FormView');
 openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView# */{

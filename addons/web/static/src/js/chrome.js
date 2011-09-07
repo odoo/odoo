@@ -3,6 +3,7 @@
  *---------------------------------------------------------*/
 
 openerp.web.chrome = function(openerp) {
+var QWeb = openerp.web.qweb;
 
 openerp.web.Notification =  openerp.web.Widget.extend({
     init: function(parent, element_id) {

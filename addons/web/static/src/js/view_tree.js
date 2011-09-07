@@ -3,6 +3,7 @@
  *---------------------------------------------------------*/
 
 openerp.web.view_tree = function(openerp) {
+var QWeb = openerp.web.qweb;
 
 openerp.web.views.add('tree', 'openerp.web.TreeView');
 /**

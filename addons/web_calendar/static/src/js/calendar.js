@@ -3,6 +3,7 @@
  *---------------------------------------------------------*/
 
 openerp.web_calendar = function(openerp) {
+var QWeb = openerp.web.qweb;
 QWeb.add_template('/web_calendar/static/src/xml/web_calendar.xml');
 openerp.web.views.add('calendar', 'openerp.web_calendar.CalendarView');
 openerp.web_calendar.CalendarView = openerp.web.View.extend({
