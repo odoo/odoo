@@ -368,7 +368,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
             self.on_loaded(field_view_get, grouped);
         };
         if (this.embedded_view) {
-            return $.Deferred().then(callback).resolve({fields_view: this.embedded_view});
+            return $.Deferred().then(callback).resolve(this.embedded_view);
         } else {
             return this.rpc('/web/listview/load', {
                 model: this.model,
