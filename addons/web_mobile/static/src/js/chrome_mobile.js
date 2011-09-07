@@ -53,6 +53,7 @@ openerp.web_mobile.Login =  openerp.base.Widget.extend({
         var db = $e.find("div select[name=database]").val();
         var login = $e.find("div input[name=login]").val();
         var password = $e.find("div input[name=password]").val();
+
         //$e.hide();
         // Should hide then call callback
         this.session.session_login(db, login, password, function() {
@@ -118,8 +119,13 @@ openerp.web_mobile.Shortcuts =  openerp.base.Widget.extend({
             self.$element.html(QWeb.render("Shortcuts", {'sc' : res}))
             self.$element.find('#content').find("a").click(self.on_clicked);
             self.$element.find("#footer").find('#preference').click(function(){
-                this.options = new openerp.web_mobile.Options(self, "oe_options");
-                this.options.start();
+                if(!$('#oe_options').html().length){
+                    this.options = new openerp.web_mobile.Options(self, "oe_options");
+                    this.options.start();
+                }
+                else{
+                    self.$element.find("#footer").find('#preference').attr('href','#oe_options');
+                }
             });
             $.mobile.changePage($("#oe_shortcuts"), "slide", true, true);
         });
@@ -152,12 +158,22 @@ openerp.web_mobile.Menu =  openerp.base.Widget.extend({
         this.$element.html(QWeb.render("Menu", this.data));
 
         this.$element.find("#footer").find('#shrotcuts').click(function(){
-            this.shortcuts = new openerp.web_mobile.Shortcuts(self, "oe_shortcuts");
-            this.shortcuts.start();
+            if(!$('#oe_shortcuts').html().length){
+                this.shortcuts = new openerp.web_mobile.Shortcuts(self, "oe_shortcuts");
+                this.shortcuts.start();
+            }
+            else{
+                self.$element.find("#footer").find('#shrotcuts').attr('href','#oe_shortcuts');
+            }
         });
         this.$element.find("#footer").find('#preference').click(function(){
-            this.options = new openerp.web_mobile.Options(self, "oe_options");
-            this.options.start();
+            if(!$('#oe_options').html().length){
+                this.options = new openerp.web_mobile.Options(self, "oe_options");
+                this.options.start();
+            }
+            else{
+                self.$element.find("#footer").find('#preference').attr('href','#oe_options');
+            }
         });
         this.$element.add(this.$secondary_menu).find("#content").find('a').click(this.on_menu_click);
         $.mobile.changePage($("#oe_menu"), "slide", true, true);
@@ -192,12 +208,22 @@ openerp.web_mobile.Secondary =  openerp.base.Widget.extend({
         this.$element.find("#header").find("h1").html(this.data.name);
         this.$element.add(this.$secondary_menu).find('#content').find("a").click(this.on_menu_click);
         this.$element.find("#footer").find('#shrotcuts').click(function(){
-            this.shortcuts = new openerp.web_mobile.Shortcuts(self, "oe_shortcuts");
-            this.shortcuts.start();
+            if(!$('#oe_shortcuts').html().length){
+                this.shortcuts = new openerp.web_mobile.Shortcuts(self, "oe_shortcuts");
+                this.shortcuts.start();
+            }
+            else{
+                self.$element.find("#footer").find('#shrotcuts').attr('href','#oe_shortcuts');
+            }
         });
         this.$element.find("#footer").find('#preference').click(function(){
-            this.options = new openerp.web_mobile.Options(self, "oe_options");
-            this.options.start();
+            if(!$('#oe_options').html().length){
+                this.options = new openerp.web_mobile.Options(self, "oe_options");
+                this.options.start();
+            }
+            else{
+                self.$element.find("#footer").find('#preference').attr('href','#oe_options');
+            }
         });
         $.mobile.changePage($("#oe_sec_menu"), "slide", true, true);
     },
@@ -220,8 +246,13 @@ openerp.web_mobile.Options =  openerp.base.Widget.extend({
         var self = this;
         this.$element.html(QWeb.render("Options", this));
         this.$element.find("#footer").find('#shrotcuts').click(function(){
-            this.shortcuts = new openerp.web_mobile.Shortcuts(self, "oe_shortcuts");
-            this.shortcuts.start();
+            if(!$('#oe_shortcuts').html().length){
+                this.shortcuts = new openerp.web_mobile.Shortcuts(self, "oe_shortcuts");
+                this.shortcuts.start();
+            }
+            else{
+                self.$element.find("#footer").find('#shrotcuts').attr('href','#oe_shortcuts');
+            }
         });
         $.mobile.changePage($("#oe_options"), "slide", true, true);
     }
