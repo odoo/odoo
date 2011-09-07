@@ -1717,6 +1717,7 @@ openerp.web.form.FieldOne2Many = openerp.web.form.Field.extend({
         });
         this.viewmanager.on_mode_switch.add_first(function() {
             self.save_form_view();
+            self.$element.find('.oe-shortcut-toggle').hide();
         });
         setTimeout(function () {
             self.viewmanager.appendTo(self.$element);
