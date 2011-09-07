@@ -4,6 +4,7 @@ from __future__ import with_statement
 import functools
 import logging
 import os
+import pprint
 import sys
 import traceback
 import uuid
@@ -161,7 +162,8 @@ class JsonRequest(WebRequest):
             else:
                 self.jsonrequest = simplejson.loads(request, object_hook=nonliterals.non_literal_decoder)
             self.init(self.jsonrequest.get("params", {}))
-            _logger.debug("--> %s.%s %s", controller.__class__.__name__, method.__name__, self.jsonrequest)
+            if _logger.isEnabledFor(logging.DEBUG):
+                _logger.debug("--> %s.%s\n%s", controller.__class__.__name__, method.__name__, pprint.pformat(self.jsonrequest))
             response['id'] = self.jsonrequest.get('id')
             response["result"] = method(controller, self, **self.params)
         except backend.OpenERPUnboundException:
@@ -198,7 +200,8 @@ class JsonRequest(WebRequest):
         if error:
             response["error"] = error
 
-        _logger.debug("<-- %s", response)
+        if _logger.isEnabledFor(logging.DEBUG):
+            _logger.debug("<--\n%s", pprint.pformat(response))
         content = simplejson.dumps(response, cls=nonliterals.NonLiteralEncoder)
         return werkzeug.wrappers.Response(
             content, headers=[('Content-Type', 'application/json'),
@@ -420,6 +423,6 @@ class Root(object):
                     meth = rest[0]
                     m = getattr(c, meth)
                     if getattr(m, 'exposed', False):
-                        _logger.debug("Dispatching to %s %s %s %s", ps, c, meth, m)
+                        _logger.debug("Dispatching to %s %s %s", ps, c, meth)
                         return m
         return None
