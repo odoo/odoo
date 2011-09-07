@@ -94,6 +94,7 @@ class purchase_line_invoice(osv.osv_memory):
                     'origin': multiple_order_invoice_name(orders),
                     'type': 'in_invoice',
                     'journal_id':journal_id,
+                    'reference' : partner.ref,
                     'account_id': a,
                     'partner_id': partner.id,
                     'address_invoice_id': orders[0].partner_address_id.id,
