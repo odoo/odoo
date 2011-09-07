@@ -451,8 +451,6 @@ def load_actions_from_ir_values(req, key, key2, models, meta):
 
 def clean_action(req, action):
     action.setdefault('flags', {})
-    if action['type'] != 'ir.actions.act_window':
-        return action
 
     context = req.session.eval_context(req.context)
     eval_ctx = req.session.evaluation_context(context)
@@ -464,7 +462,9 @@ def clean_action(req, action):
     if isinstance(action.get('domain'), basestring):
         action['domain'] = eval( action['domain'], eval_ctx ) or []
 
-    return fix_view_modes(action)
+    if action['type'] == 'ir.actions.act_window':
+        return fix_view_modes(action)
+    return action
 
 # I think generate_views,fix_view_modes should go into js ActionManager
 def generate_views(action):
