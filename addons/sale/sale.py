@@ -839,9 +839,13 @@ class sale_order_line(osv.osv):
         return res
 
     def _get_uom_id(self, cr, uid, *args):
-        cr.execute('select id from product_uom order by id limit 1')
-        res = cr.fetchone()
-        return res and res[0] or False
+        model_data = self.pool.get('ir.model.data')
+        xml_id = 'product_uom_unit'
+        res = model_data.search(cr, uid, [('name', '=', xml_id)])
+        if len(res):
+            res = model_data.browse(cr,uid,res[0])
+            return res.res_id
+        return False
     
     _name = 'sale.order.line'
     _description = 'Sales Order Line'
