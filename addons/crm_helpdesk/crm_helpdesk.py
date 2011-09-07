@@ -23,7 +23,6 @@ from crm import crm
 from osv import fields, osv
 import time
 from crm import wizard
-import binascii
 import tools
 from tools.translate import _
 
@@ -32,6 +31,8 @@ CRM_HELPDESK_STATES = (
     crm.AVAILABLE_STATES[3][0], # Done
     crm.AVAILABLE_STATES[4][0], # Pending
 )
+
+wizard.mail_compose_message.SUPPORTED_MODELS.append('crm.helpdesk')
 
 class crm_helpdesk(crm.crm_case, osv.osv):
     """ Helpdesk Cases """
@@ -107,7 +108,7 @@ class crm_helpdesk(crm.crm_case, osv.osv):
             'description': body,
             'user_id': False,
         }
-        vals.update(self.message_partner_by_email(cr, uid, msg_dict.get('from', False)))
+        vals.update(self.message_partner_by_email(cr, uid, msg_from))
         self.write(cr, uid, [res_id], vals, context)
         return res_id
 
