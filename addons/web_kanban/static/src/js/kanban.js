@@ -18,6 +18,9 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
         this.all_display_data = false;
         this.groups = [];
         this.qweb = new QWeb2.Engine();
+        if (this.options.action_views_ids.form) {
+            this.form_dialog = new openerp.web.FormDialog(this, {}, this.options.action_views_ids.form, dataset).start();
+        }
     },
     start: function() {
         return this.rpc("/web/view/load", {"model": this.model, "view_id": this.view_id, "view_type": "kanban"}, this.on_loaded);
@@ -157,24 +160,19 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
         }
     },
     on_confirm_click: function (dataset, button_attrs, index, record_id) {
-        if (button_attrs.type == 'edit') {
-            this.do_edit_record(dataset, index);
+        this.on_execute_button_click(dataset, button_attrs, record_id);
+    },
+    do_add_record: function() {
+        this.dataset.index = null;
+        this.do_switch_view('form');
+    },
+    do_edit_record: function(record_id) {
+        if (this.form_dialog) {
+            this.form_dialog.load_id(record_id);
+            this.form_dialog.open();
         } else {
-            this.on_execute_button_click(dataset, button_attrs, record_id);
+            this.notification.warn("Kanban", "No form view defined for this object");
         }
-    },
-    do_add_record: function () {
-        this.do_edit_record(this.dataset, null);
-    },
-    do_edit_record: function (dataset, index) {
-        var self = this;
-        _.extend(this.dataset, {
-            domain: dataset.domain,
-            context: dataset.get_context()
-        }).read_slice([], {}, function () {
-            self.dataset.index = index;
-            self.do_switch_view('form');
-        });
     },
     do_delete: function (id) {
         var self = this;
@@ -311,23 +309,23 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
                 self.all_display_data.splice(index, 1);
             }
         });
-        this.$element.find('.oe_kanban_action').click(function() {
-            var record_id = $(this).closest(".oe_kanban_record").attr("id");
-            if (record_id) {
-                record_id = parseInt(record_id.split("_")[1])
-                if (record_id) {
-                    if ($(this).data("type") == "delete") {
-                        self.do_delete(record_id);
-                    } else {
-                        var button_attrs = $(this).data()
-                        self.on_button_click(button_attrs, record_id);
-                    }
-                }
-            }
-        });
+        this.$element.find('.oe_kanban_action').click(this.on_action_clicked);
         this.$element.find('.oe_kanban_record').click(function() {
             $(this).find('.oe_kanban_box_show_onclick').removeClass('oe_kanban_box_show_onclick');
         });
+    },
+    on_action_clicked: function(evt) {
+        var $action = $(evt.currentTarget),
+            record_id = parseInt($action.closest(".oe_kanban_record").attr("id").split('_')[1]),
+            type = $action.data('type');
+        if (type == 'delete') {
+            this.do_delete(record_id);
+        } else if (type == 'edit') {
+            this.do_edit_record(record_id);
+        } else {
+            var button_attrs = $(this).data();
+            this.on_button_click(button_attrs, record_id);
+        }
     },
     do_transform_record: function(record) {
         var self = this,

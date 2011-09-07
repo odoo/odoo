@@ -183,7 +183,7 @@ openerp.web.list_editable = function (openerp) {
                     template: 'ListView.row.form',
                     registry: openerp.web.list.form.widgets
                 });
-                $.when(self.edition_form.on_loaded({fields_view: self.get_form_fields_view()})).then(function () {
+                $.when(self.edition_form.on_loaded(self.get_form_fields_view())).then(function () {
                     // put in $.when just in case  FormView.on_loaded becomes asynchronous
                     $new_row.find('td')
                           .addClass('oe-field-cell')
