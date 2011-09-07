@@ -29,9 +29,9 @@ class project_tasks(osv.osv):
     _name = "project.task"
     _inherit = ['mail.thread','project.task']
 
-    _columns={
-                'message_ids': fields.one2many('mail.message', 'res_id', 'Messages', domain=[('model','=',_name)], readonly=True),
-              }
+    _columns = {
+         'message_ids': fields.one2many('mail.message', 'res_id', 'Messages', domain=[('model','=',_name)], readonly=True),
+    }
 
     def message_new(self, cr, uid, msg, custom_values=None, context=None):
         res_id = super(project_tasks,self).message_new(cr, uid, msg, custom_values=custom_values, context=context)
@@ -88,9 +88,6 @@ class project_tasks(osv.osv):
         if isinstance(ids, (str, int, long)):
             return len(res) and res[0] or False
         return res
-
-    def msg_send(self, cr, uid, id, *args, **argv):
-        return True
 
     def do_draft(self, cr, uid, ids, context=None):
         res = super(project_tasks, self).do_draft(cr, uid, ids, context)

@@ -388,12 +388,6 @@ class crm_lead(crm_case, osv.osv):
             res = self.write(cr, uid, [case.id], values, context=context)
         return res
 
-    def msg_send(self, cr, uid, id, *args, **argv):
-        """ Send The Message
-        @param ids: List of email’s IDs
-        """
-        return True
-
     def action_makeMeeting(self, cr, uid, ids, context=None):
         """
         This opens Meeting's calendar view to schedule meeting on current Opportunity

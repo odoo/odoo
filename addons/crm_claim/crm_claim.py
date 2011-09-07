@@ -191,9 +191,6 @@ class crm_claim(crm.crm_case, osv.osv):
             res = self.write(cr, uid, [case.id], values, context=context)
         return res
 
-    def msg_send(self, cr, uid, id, *args, **argv):
-        return True
-
 class res_partner(osv.osv):
     _inherit = 'res.partner'
     _columns = {
