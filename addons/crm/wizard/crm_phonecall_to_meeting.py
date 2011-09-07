@@ -21,8 +21,6 @@
 
 from osv import osv
 from tools.translate import _
-import wizard
-import pooler
 
 class crm_phonecall2meeting(osv.osv_memory):
     """ Phonecall to Meeting """

@@ -20,26 +20,26 @@
 #
 ##############################################################################
 
-import wizard
-import pooler
 from osv import osv, fields
 
 class case_history_event(osv.osv_memory):
 
     _name = 'case.history.event'
+    _description = "Case History Event"
 
-    def default_get(self, cr, uid, data, context=None):
-        pool = pooler.get_pool(cr.dbname)
-        data_obj = pool.get('ir.model.data')
+    def open_history_event(self, cr, uid, ids, context=None):
+        model = context.get('active_model', False)
+        act_id = context.get('active_id', False)
+        data_obj = self.pool.get('ir.model.data')
         result = data_obj._get_id(cr, uid, 'crm', 'view_crm_case_filter')
         id = data_obj.read(cr, uid, result, ['res_id'])
         id2 = data_obj._get_id(cr, uid, 'crm', 'crm_case_calendar_section-view')
         if id2:
             id2 = data_obj.browse(cr, uid, id2, context=context).res_id
         res = ''
-        if data.get('model',False) and data.get('ids',False):
-            model_obj = pooler.get_pool(cr.dbname).get(data['model'])
-            res = model_obj.browse(cr, uid, data['ids'], context=context)
+        if model and ids:
+            model_obj = self.pool.get(model)
+            res = model_obj.browse(cr, uid, ids, context=context)
             if len(res):
                 res = res[0].name
         return {
@@ -50,8 +50,10 @@ class case_history_event(osv.osv_memory):
             'views': [(id2,'calendar'),(False,'form'),(False,'tree'),(False,'graph')],
             'res_model': 'crm.case',
             'type': 'ir.actions.act_window',
-            'domain': data.get('id',False) and "[('case_id','=',%d)]" % (data['id']) or "[]",
+            'domain': act_id and "[('case_id','=',%d)]" % act_id or "[]",
             'search_view_id': id['res_id']
         }
 
 case_history_event()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
