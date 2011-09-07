@@ -99,7 +99,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
             this.sidebar.start();
             this.sidebar.do_unfold();
             this.sidebar.attachments = new openerp.web.form.SidebarAttachments(this.sidebar, this.sidebar.add_section('attachments', "Attachments"), this);
-            this.sidebar.add_toolbar(data.fields_view.toolbar);
+            this.sidebar.add_toolbar(this.fields_view.toolbar);
             this.set_common_sidebar_sections(this.sidebar);
         }
         this.has_been_loaded.resolve();
