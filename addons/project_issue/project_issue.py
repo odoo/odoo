@@ -28,6 +28,8 @@ import time
 import tools
 from crm import wizard
 
+wizard.mail_compose_message.SUPPORTED_MODELS.append('project.issue')
+
 class project_issue_version(osv.osv):
     _name = "project.issue.version"
     _order = "name desc"
@@ -404,7 +406,7 @@ class project_issue(crm.crm_case, osv.osv):
         }
         if priority:
             vals['priority'] = priority
-        vals.update(self.message_partner_by_email(cr, uid, msg.get('from', False)))
+        vals.update(self.message_partner_by_email(cr, uid, msg_from))
         context.update({'state_to' : 'draft'})
 
         if custom_values and isinstance(custom_values, dict):
