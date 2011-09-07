@@ -88,7 +88,7 @@ openerp.web_mobile.FormView = openerp.web.Widget.extend({
                                 //$.mobile.changePage($("#oe_form"), "slide", true, true);
                                 /*next.find('.detail').find('li').click(function(){
                                     if(data[relational]){
-                                        var dataset = new openerp.base.DataSetStatic(self, result.fields_view.fields[relational].relation, result.fields_view.fields[relational].context);
+                                        var dataset = new openerp.web.DataSetStatic(self, result.fields_view.fields[relational].relation, result.fields_view.fields[relational].context);
                                         dataset.domain=[['id', 'in', data[relational]]];
                                         dataset.name_search('', dataset.domain, 'in',false ,function(res){
                                             for(var i=0;i<res.length;i++){
@@ -98,7 +98,7 @@ openerp.web_mobile.FormView = openerp.web.Widget.extend({
                                             self.$element.html(QWeb.render("ListView", {'records' : res}));
                                             self.$element.find("#searchid").focus();
                                             self.$element.find("a#list-id").click(function(ev){
-                                                dataset = new openerp.base.DataSetSearch(self, dataset.model, null, null);
+                                                dataset = new openerp.web.DataSetSearch(self, dataset.model, null, null);
                                                 dataset.read_slice([],{}, function (result_relational) {
                                                 for (var i = 0; i < result_relational.length; i++) {
                                                     if (result_relational[i].id == $(ev.currentTarget).data('id')) {

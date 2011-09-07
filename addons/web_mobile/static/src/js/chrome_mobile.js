@@ -17,8 +17,8 @@ openerp.web_mobile.MobileWebClient = openerp.web.Widget.extend({
         QWeb.add_template("xml/web_mobile.xml");
         var params = {};
         this.$element.html(QWeb.render("WebClient", {}));
-        this.session = new openerp.base.Session("oe_errors");
-        this.crashmanager =  new openerp.base.CrashManager(this);
+        this.session = new openerp.web.Session("oe_errors");
+        this.crashmanager =  new openerp.web.CrashManager(this);
         this.login = new openerp.web_mobile.Login(this, "oe_login");
 //        this.session.on_session_invalid.add(this.login.do_ask_login);
     },
@@ -85,7 +85,7 @@ openerp.web_mobile.Login =  openerp.web.Widget.extend({
     }
 });
 
-openerp.web_mobile.Header =  openerp.base.Widget.extend({
+openerp.web_mobile.Header =  openerp.web.Widget.extend({
     init: function(session, element_id) {
         this._super(session, element_id);
     },
@@ -95,7 +95,7 @@ openerp.web_mobile.Header =  openerp.base.Widget.extend({
     }
 });
 
-openerp.web_mobile.Footer =  openerp.base.Widget.extend({
+openerp.web_mobile.Footer =  openerp.web.Widget.extend({
     init: function(session, element_id) {
         this._super(session, element_id);
     },
@@ -201,7 +201,7 @@ openerp.web_mobile.Menu =  openerp.web.Widget.extend({
         this.secondary.start();
     }
 });
-openerp.web_mobile.Secondary =  openerp.base.Widget.extend({
+openerp.web_mobile.Secondary =  openerp.web.Widget.extend({
     init: function(session, element_id, secondary_menu_id) {
         this._super(session, element_id);
         this.data = secondary_menu_id;
