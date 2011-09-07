@@ -44,15 +44,12 @@ if __name__ == "__main__":
     (options, args) = optparser.parse_args(sys.argv[1:])
 
     os.environ["TZ"] = "UTC"
-    
+
     if not options.log_config:
         logging.basicConfig(level=getattr(logging, options.log_level.upper()))
-        dispatch = logging.getLogger('web.common.dispatch')
-        dispatch.addHandler(logging.StreamHandler(sys.stdout))
-        dispatch.propagate = False
     else:
         logging.config.fileConfig(options.log_config)
-    
+
     app = web.common.dispatch.Root(options)
 
     werkzeug.serving.run_simple(
