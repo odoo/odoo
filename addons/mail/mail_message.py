@@ -179,7 +179,7 @@ class mail_message(osv.osv):
     }
 
     _defaults = {
-        'state': 'outgoing',
+        'state': 'received',
     }
 
     def init(self, cr):

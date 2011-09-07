@@ -226,7 +226,8 @@ class mail_thread(osv.osv):
                 'date': time.strftime('%Y-%m-%d %H:%M:%S'),
                 'message_id': message_id,
                 'body_text': body_text or (hasattr(thread, 'description') and thread.description or False),
-                'attachment_ids': [(6, 0, to_attach)]
+                'attachment_ids': [(6, 0, to_attach)],
+                'state' : 'received',
             }
 
             if email_from:
