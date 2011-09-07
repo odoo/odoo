@@ -27,9 +27,6 @@ __all__ = ['Root', 'jsonrequest', 'httprequest', 'Controller',
            'WebRequest', 'JsonRequest', 'HttpRequest']
 
 _logger = logging.getLogger(__name__)
-if not _logger.handlers:
-    _logger.addHandler(logging.StreamHandler(sys.stdout))
-    _logger.propagate = False
 
 #-----------------------------------------------------------
 # Globals (wont move into a pool)

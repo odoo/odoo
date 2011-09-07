@@ -47,6 +47,9 @@ if __name__ == "__main__":
     
     if not options.log_config:
         logging.basicConfig(level=getattr(logging, options.log_level.upper()))
+        dispatch = logging.getLogger('web.common.dispatch')
+        dispatch.addHandler(logging.StreamHandler(sys.stdout))
+        dispatch.propagate = False
     else:
         logging.config.fileConfig(options.log_config)
     
