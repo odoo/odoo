@@ -1248,7 +1248,7 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
         @param limit: The Number of Results to Return """
 
         if not limit:
-            limit = 100
+            limit = 1000
         if isinstance(select, (str, int, long)):
             ids = [select]
         else:
@@ -1260,12 +1260,10 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
                             m.exdate, m.exrule, m.recurrent_id, m.recurrent_uid from " + self._table + \
                             " m where m.id = ANY(%s)", (ids,) )
 
-            count = 0
+
             for data in cr.dictfetchall():
                 start_date = base_start_date and datetime.strptime(base_start_date[:10]+ ' 00:00:00' , "%Y-%m-%d %H:%M:%S") or False
                 until_date = base_until_date and datetime.strptime(base_until_date[:10]+ ' 23:59:59', "%Y-%m-%d %H:%M:%S") or False
-                if count > limit:
-                    break
                 event_date = datetime.strptime(data['date'], "%Y-%m-%d %H:%M:%S")
 #                To check: If the start date is replace by event date .. the event date will be changed by that of calendar code
                 start_date = event_date
@@ -1277,7 +1275,6 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
                     idval = real_id2base_calendar_id(data['id'], data['date'])
                     if not data['recurrent_id']:
                         result.append(idval)
-                        count += 1
                     else:
                         ex_id = real_id2base_calendar_id(data['recurrent_uid'], data['recurrent_id'])
                         ls = base_calendar_id2real_id(ex_id, with_date=data and data.get('duration', 0) or 0)
@@ -1310,7 +1307,10 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
                         new_rrule_str.append(new_rule)
                     new_rrule_str = ';'.join(new_rrule_str)
                     rdates = get_recurrent_dates(str(new_rrule_str), exdate, start_date, data['exrule'])
+                    count = 0
                     for r_date in rdates:
+                        if count > limit:
+                            break
                         if start_date and r_date < start_date:
                             continue
                         if until_date and r_date > until_date:
