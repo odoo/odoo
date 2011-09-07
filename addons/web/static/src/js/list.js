@@ -373,7 +373,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
             return this.rpc('/web/listview/load', {
                 model: this.model,
                 view_id: this.view_id,
-                "view_type": "list",
+                view_type: "tree",
                 context: this.dataset.get_context(context),
                 toolbar: this.options.sidebar
             }, callback);
