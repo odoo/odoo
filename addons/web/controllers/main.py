@@ -1060,8 +1060,11 @@ class Action(openerpweb.Controller):
         context = req.session.eval_context(req.context)
         action_type = Actions.read([action_id], ['type'], context)
         if action_type:
-            action = req.session.model(action_type[0]['type']).read([action_id], False,
-                                                                    context)
+            ctx = {}
+            if action_type[0]['type'] == 'ir.actions.report.xml':
+                ctx.update({'bin_size': True})
+            ctx.update(context)
+            action = req.session.model(action_type[0]['type']).read([action_id], False, ctx)
             if action:
                 value = clean_action(req, action[0])
         return {'result': value}
