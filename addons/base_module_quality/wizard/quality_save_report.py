@@ -31,6 +31,7 @@ from osv import osv, fields
 class save_report(osv.osv_memory):
 
     _name = "save.report"
+    _description = "Save Report"
 
     def default_get(self, cr, uid, fields, context=None):
         res = super(save_report, self).default_get(cr, uid, fields, context=context)

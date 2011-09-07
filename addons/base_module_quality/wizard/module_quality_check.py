@@ -28,32 +28,20 @@ from osv import osv, fields
 
 class quality_check(osv.osv_memory):
     _name = "quality.check"
+    _description = "Quality Check"
 
-    def create_quality_check(self, cr, uid, ids, context=None):
-        pool = pooler.get_pool(cr.dbname)
-        obj_quality = pool.get('module.quality.check')
-        objs = []
+    def _create_quality_check(self, cr, uid, ids, context=None):
+        obj_quality = self.pool.get('module.quality.check')
+        objs_ids = []
         module_id = context.get('active_id', False)
-        for id in ids:
-            module_data = pool.get('ir.module.module').browse(cr, uid, module_id)
-            data = obj_quality.check_quality(cr, uid, module_data.name, module_data.state)
-            obj = obj_quality.create(cr, uid, data, context)
-            objs.append(obj)
-        return objs
+        module_data = self.pool.get('ir.module.module').browse(cr, uid, module_id)
+        data = obj_quality.check_quality(cr, uid, module_data.name, module_data.state)
+        obj = obj_quality.create(cr, uid, data, context)
+        objs_ids.append(obj)
+        return objs_ids
 
-    def _create_quality_check(self, cr, uid, data, context=None):
-        pool = pooler.get_pool(cr.dbname)
-        obj_quality = pool.get('module.quality.check')
-        objs = []
-        for id in data['ids']:
-            module_data = pool.get('ir.module.module').browse(cr, uid, id)
-            data = obj_quality.check_quality(cr, uid, module_data.name, module_data.state)
-            obj = obj_quality.create(cr, uid, data, context)
-            objs.append(obj)
-        return objs
-
-    def open_quality_check(self, cr, uid, data, context):
-        obj_ids = self.create_quality_check(cr, uid, data, context)
+    def open_quality_check(self, cr, uid, ids, context):
+        obj_ids = self._create_quality_check(cr, uid, ids, context)
         return {
             'domain': "[('id','in', ["+','.join(map(str,obj_ids))+"])]",
             'name': _('Quality Check'),

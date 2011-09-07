@@ -9,11 +9,10 @@
             <field name="arch" type="xml">
                 <form string="Quality Check">
                     <group colspan="4">
-                        <label string = "Check Quality" help="You can check the quality of selected module"/>
-                        <separator colspan="4"/>
+                        <separator string = "This wizard will check Module quality" colspan="4"/>
                         <newline/>
-                        <button name="open_quality_check" icon="gtk-ok" string="Check" type="object"/>
                         <button icon="gtk-cancel" string="Cancel" special="cancel"/>
+                        <button name="open_quality_check" icon="terp-camera_test" string="Check" type="object"/>
                     </group>
                 </form>
             </field>
