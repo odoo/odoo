@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from osv import osv, fields
+from osv import osv
 
 class launch_map(osv.osv_memory):
 
@@ -50,5 +50,6 @@ class launch_map(osv.osv_memory):
         }
 
 launch_map()
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
