@@ -17,6 +17,7 @@
   Now, click on "Continue" button of this wizard.
 -
   !python {model: crm.phonecall2partner}: |
+    
     self._select_partner(cr, uid,{"active_ids": [ref("crm_phonecall_interviewcall0")]})
     self.open_create_partner(cr, uid, [ref("crm_phonecall2partner_1")], {"active_ids": [ref("crm_phonecall_interviewcall0")]})
     self.make_partner(cr, uid, [ref("crm_phonecall2partner_1")], {"active_ids": [ref("crm_phonecall_interviewcall0")]})
@@ -49,6 +50,7 @@
   !python {model:  crm.phonecall}: |
     obj_phonecall = self.browse(cr, uid, ref('crm_phonecall_interviewcall0'))
     ids = self.pool.get('crm.lead').search(cr, uid, [('name', '=', obj_phonecall.opportunity_id.name)])
+    #self.case_reset(cr, uid, ids)
     obj_opp = self.pool.get('crm.lead').browse(cr, uid, ids)[0]
     assert obj_phonecall.partner_id == obj_opp.partner_id
 
@@ -87,9 +89,32 @@
     name: Interview call
     section_id: crm.section_sales_department
     user_id: base.user_root
+    action: schedule
+    categ_id: crm.categ_phone1
+-
+  I click on "schedule other call" button. and plan for other call.
+-
+  !record {model: crm.phonecall2phonecall, id: crm_phonecall2phonecall_interviewcall1}:
+    date: !eval "'%s-%s-%s 19:49:00' %(datetime.now().year,datetime.now().month,datetime.now().day)"
+    name: Interview call
+    section_id: crm.section_sales_department
+    user_id: base.user_root
+    action: log
     categ_id: crm.categ_phone1
 - |
   I click on "Schedule" button of this  wizard.
 -
   !python {model: crm.phonecall2phonecall}: |
+    fields = {
+              'name': 'Interview call',
+              'section_id': ref('crm.section_sales_department'),
+              'user_id': ref('base.user_root'),
+              'categ_id': ref('crm.categ_phone1')
+             }
+    self.default_get(cr, uid, fields,{'active_id': ref('crm_phonecall_interviewcall0')})
     self.action_apply(cr, uid, [ref('crm_phonecall2phonecall_interviewcall0')], {'active_id': ref('crm_phonecall_interviewcall0')})
+- |
+  I click on "Schedule" button of this  wizard with log option.
+-
+  !python {model: crm.phonecall2phonecall}: |
+        self.action_apply(cr, uid, [ref('crm_phonecall2phonecall_interviewcall1')], {'active_id': ref('crm_phonecall_interviewcall0')})

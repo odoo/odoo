@@ -23,6 +23,8 @@
     resource_calendar_id: resource.timesheet_group1
     parent_id: crm.section_sales_department
 -
+   I assign segmentation.
+-
    !record {model: res.users, id: res_users_usercrm0}:
      context_section_id: crm_case_section_demosalesteam    
 -  |
@@ -43,6 +45,12 @@
 -
    !assert {model: crm.lead, id: crm_lead_democustomer, string: Lead in Draft}:
      - state == "draft"
+-
+   I create categories.
+-
+   !record {model: crm.case.categ, id: crm_case_categ0}:
+     name: crm_case_section_demosalesteam
+     section_id: crm_case_section_demosalesteam
 -
   I assigning contact detail to the Lead "Demo Customer" without address.
 -
