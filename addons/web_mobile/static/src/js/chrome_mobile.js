@@ -118,6 +118,15 @@ openerp.web_mobile.Shortcuts =  openerp.base.Widget.extend({
         this.rpc('/base/session/sc_list',{} ,function(res){
             self.$element.html(QWeb.render("Shortcuts", {'sc' : res}))
             self.$element.find('#content').find("a").click(self.on_clicked);
+            self.$element.find("#header").find('#application').click(function(){
+                if(!$('#oe_menu').html().length){
+                    this.menu = new openerp.web_mobile.Menu(self, "oe_menu");
+                    this.menu.start();
+                }
+                else{
+                    self.$element.find("#header").find('#application').attr('href','#oe_menu');
+                }
+            });
             self.$element.find("#footer").find('#preference').click(function(){
                 if(!$('#oe_options').html().length){
                     this.options = new openerp.web_mobile.Options(self, "oe_options");
@@ -207,6 +216,15 @@ openerp.web_mobile.Secondary =  openerp.base.Widget.extend({
         this.$element.html(QWeb.render("Menu.secondary", v));
         this.$element.find("#header").find("h1").html(this.data.name);
         this.$element.add(this.$secondary_menu).find('#content').find("a").click(this.on_menu_click);
+        this.$element.find("#header").find('#application').click(function(){
+            if(!$('#oe_menu').html().length){
+                this.menu = new openerp.web_mobile.Menu(self, "oe_menu");
+                this.menu.start();
+            }
+            else{
+                self.$element.find("#header").find('#application').attr('href','#oe_menu');
+            }
+        });
         this.$element.find("#footer").find('#shrotcuts').click(function(){
             if(!$('#oe_shortcuts').html().length){
                 this.shortcuts = new openerp.web_mobile.Shortcuts(self, "oe_shortcuts");
@@ -245,6 +263,15 @@ openerp.web_mobile.Options =  openerp.base.Widget.extend({
     start: function() {
         var self = this;
         this.$element.html(QWeb.render("Options", this));
+        this.$element.find("#header").find('#application').click(function(){
+            if(!$('#oe_menu').html().length){
+                this.menu = new openerp.web_mobile.Menu(self, "oe_menu");
+                this.menu.start();
+            }
+            else{
+                self.$element.find("#header").find('#application').attr('href','#oe_menu');
+            }
+        });
         this.$element.find("#footer").find('#shrotcuts').click(function(){
             if(!$('#oe_shortcuts').html().length){
                 this.shortcuts = new openerp.web_mobile.Shortcuts(self, "oe_shortcuts");
