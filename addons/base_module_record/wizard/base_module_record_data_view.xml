@@ -23,14 +23,14 @@
             </field>
         </record>
 
-		<record model="ir.actions.act_window" id="action_base_module_record_data">
-			<field name="name">Export Customizations as Data</field>
-			<field name="res_model">base.module.data</field>
-			<field name="view_type">form</field>
-			<field name="view_mode">form</field>
-			<field name="target">new</field>
-			<field name="view_id" ref="base_module_record_data_view"/>
-		</record>
+        <record model="ir.actions.act_window" id="action_base_module_record_data">
+            <field name="name">Export Customizations as Data</field>
+            <field name="res_model">base.module.data</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="view_id" ref="base_module_record_data_view"/>
+        </record>
 
             
         <menuitem
@@ -49,20 +49,20 @@
             multi="True"
             key2="client_action_multi"/>            
             
-		<record id="module_create_xml_view" model="ir.ui.view">
+        <record id="module_create_xml_view" model="ir.ui.view">
             <field name="name">module.create.xml.form</field>
             <field name="model">base.module.record.data</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-				<form string="Objects Recording">
-					<separator string="Result, paste this to your module's xml" colspan="4" />
-    				<field name="res_text" nolabel="1"  colspan="4"/>
-    				<separator colspan="4"/>
-    				<group colspan="4" col="2">
-    					<label string=""/>
-	    				<button icon="gtk-ok" string="Close" special="cancel"/>
-    				</group>
-				</form>
+                <form string="Objects Recording">
+                    <separator string="Result, paste this to your module's xml" colspan="4" />
+                    <field name="res_text" nolabel="1"  colspan="4"/>
+                    <separator colspan="4"/>
+                    <group colspan="4" col="2">
+                        <label string=""/>
+                        <button icon="gtk-ok" string="Close" special="cancel"/>
+                    </group>
+                </form>
             </field>
          </record>
     </data>
