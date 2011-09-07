@@ -444,7 +444,10 @@ openerp.web.Sidebar = openerp.web.Widget.extend({
                 if (item.action) {
                     var ids = self.widget_parent.get_selected_ids();
                     if (ids.length == 0) {
-                        //TODO niv: maybe show a warning?
+                        $("<div />").text(_t("You must choose at least one record.")).dialog({
+                            title: _t("Warning"),
+                            modal: true
+                        });
                         return false;
                     }
                     var additional_context = {
