@@ -375,7 +375,7 @@ openerp.web.Session = openerp.web.CallbackEnabled.extend( /** @lends openerp.web
             jsonrpc: "2.0",
             method: "call",
             params: params,
-            id:null
+            id: _.uniqueId('browser-client-')
         }).then(function () {deferred.resolve.apply(deferred, arguments);},
                 function(error) {deferred.reject(error, $.Event());});
         return deferred.fail(function() {
