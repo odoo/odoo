@@ -5,15 +5,14 @@
 openerp.web_mobile.chrome_mobile = function(openerp) {
 
 openerp.web_mobile.mobilewebclient = function(element_id) {
-    // TODO Helper to start mobile webclient rename it openerp.base.webclient
+    // TODO Helper to start mobile webclient rename it openerp.web.webclient
     var client = new openerp.web_mobile.MobileWebClient(element_id);
     client.start();
     return client;
 };
 
-openerp.web_mobile.MobileWebClient = openerp.base.Widget.extend({
+openerp.web_mobile.MobileWebClient = openerp.web.Widget.extend({
     init: function(element_id) {
-        var self = this;
         this._super(null, element_id);
         QWeb.add_template("xml/web_mobile.xml");
         var params = {};
@@ -29,14 +28,11 @@ openerp.web_mobile.MobileWebClient = openerp.base.Widget.extend({
     }
 });
 
-openerp.web_mobile.Login =  openerp.base.Widget.extend({
-    init: function(session, element_id) {
-        this._super(session, element_id);
-    },
+openerp.web_mobile.Login =  openerp.web.Widget.extend({
     start: function() {
         var self = this;
         jQuery("#oe_header").children().remove();
-        this.rpc("/base/database/get_list", {}, function(result) {
+        this.rpc("/web/database/get_list", {}, function(result) {
             var selection = new openerp.web_mobile.Selection();
             self.db_list = result.db_list;
             self.$element.html(QWeb.render("Login", self));
@@ -109,7 +105,7 @@ openerp.web_mobile.Footer =  openerp.base.Widget.extend({
     }
 });
 
-openerp.web_mobile.Shortcuts =  openerp.base.Widget.extend({
+openerp.web_mobile.Shortcuts =  openerp.web.Widget.extend({
     init: function(session, element_id) {
         this._super(session, element_id);
     },
@@ -151,7 +147,7 @@ openerp.web_mobile.Shortcuts =  openerp.base.Widget.extend({
     }
 });
 
-openerp.web_mobile.Menu =  openerp.base.Widget.extend({
+openerp.web_mobile.Menu =  openerp.web.Widget.extend({
     init: function(session, element_id, secondary_menu_id) {
         this._super(session, element_id);
         this.secondary_menu_id = secondary_menu_id;
@@ -159,7 +155,7 @@ openerp.web_mobile.Menu =  openerp.base.Widget.extend({
         this.menu = false;
     },
     start: function() {
-        this.rpc("/base/menu/load", {}, this.on_loaded);
+        this.rpc("/web/menu/load", {}, this.on_loaded);
     },
     on_loaded: function(data) {
         var self = this;
@@ -188,7 +184,7 @@ openerp.web_mobile.Menu =  openerp.base.Widget.extend({
         $.mobile.changePage($("#oe_menu"), "slide", true, true);
     },
     on_menu_click: function(ev, id) {
-        $menu = $(ev.currentTarget);
+        var $menu = $(ev.currentTarget);
         id = $menu.data('menu');
         for (var i = 0; i < this.data.data.children.length; i++) {
             if (this.data.data.children[i].id == id) {
@@ -246,7 +242,7 @@ openerp.web_mobile.Secondary =  openerp.base.Widget.extend({
         $.mobile.changePage($("#oe_sec_menu"), "slide", true, true);
     },
     on_menu_click: function(ev, id) {
-        $menu = $(ev.currentTarget);
+        var $menu = $(ev.currentTarget);
         id = $menu.data('menu');
         if (id) {
             this.listview = new openerp.web_mobile.ListView(this, "oe_list", id);
@@ -256,10 +252,7 @@ openerp.web_mobile.Secondary =  openerp.base.Widget.extend({
     }
 });
 
-openerp.web_mobile.Options =  openerp.base.Widget.extend({
-    init: function(session, element_id) {
-        this._super(session, element_id);
-    },
+openerp.web_mobile.Options =  openerp.web.Widget.extend({
     start: function() {
         var self = this;
         this.$element.html(QWeb.render("Options", this));
@@ -285,18 +278,11 @@ openerp.web_mobile.Options =  openerp.base.Widget.extend({
     }
 });
 
-openerp.web_mobile.Selection = openerp.base.Widget.extend({
-    init: function (){
-        this._super();
-    },
-    start: function(){
-        this._super();
-        var self = this;
-    },
+openerp.web_mobile.Selection = openerp.web.Widget.extend({
     on_select_option: function(ev){
         ev.preventDefault();
         var $this = ev.currentTarget;
         $($this).prev().find(".ui-btn-text").html($($this).find("option:selected").text());
     }
 });
-}
+};

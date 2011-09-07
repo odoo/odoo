@@ -376,7 +376,7 @@ entirely.
 
 .. note::
 
- the list-wise deletion button (next to the record addition button)
+  the list-wise deletion button (next to the record addition button)
   simply proxies to :js:func:`~openerp.base.ListView.do_delete` after
   obtaining all selected record ids, but it is possible to override it
   alone by replacing
@@ -391,13 +391,14 @@ Python
 These classes should be moved to other sections of the doc as needed,
 probably.
 
-.. automodule:: openerpweb.openerpweb
-    :members: JsonRequest
+.. automodule:: web.common.dispatch
+    :members:
+    :undoc-members:
 
-    See also: :class:`~openerpweb.openerpweb.OpenERPSession`,
-    :class:`~openerpweb.openerpweb.OpenERPModel`
+    See also: :class:`~web.common.backendrpc.OpenERPSession`,
+    :class:`~web.common.backendrpc.OpenERPModel`
 
-.. automodule:: base.controllers.main
+.. automodule:: web.controllers.main
     :members:
     :undoc-members:
 

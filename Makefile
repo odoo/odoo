@@ -1,8 +1,7 @@
-.PHONY: all release clean
+.PHONY: all doc release clean
 
 HOST = 127.0.0.1
 PORT = 8080
-
 
 all: run
 
@@ -24,6 +23,9 @@ clean:
 	@rm -rf dist
 	@rm -rf *.egg-info
 
+doc:
+	make -C doc html
+
 cloc:
-	cloc openerpweb/*.py addons/*/controllers/*.py addons/*/static/src/*.js addons/*/static/src/js/*.js addons/*/static/src/css/*.css addons/*/static/src/xml/*.xml
+	cloc addons/*/common/*.py addons/*/controllers/*.py addons/*/static/src/*.js addons/*/static/src/js/*.js addons/*/static/src/css/*.css addons/*/static/src/xml/*.xml
 

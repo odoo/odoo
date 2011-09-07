@@ -4,13 +4,13 @@
 
 openerp.web_mobile.list_mobile = function (openerp) {
 
-openerp.web_mobile.ListView = openerp.base.Widget.extend({
+openerp.web_mobile.ListView = openerp.web.Widget.extend({
     init: function(session, element_id, list_id) {
         this._super(session, element_id);
         this.list_id = list_id;
     },
     start: function() {
-        this.rpc('/base/menu/action', {'menu_id': this.list_id},
+        this.rpc('/web/menu/action', {'menu_id': this.list_id},
                     this.on_menu_action_loaded);
     },
     on_menu_action_loaded: function(data) {
@@ -48,7 +48,7 @@ openerp.web_mobile.ListView = openerp.base.Widget.extend({
         });
     },
     on_list_click: function(ev) {
-        $record = $(ev.currentTarget);
+        var $record = $(ev.currentTarget);
         var self = this;
         id = $record.data('id');
 //        this.header = new openerp.web_mobile.Header(this, "oe_header");
@@ -57,4 +57,4 @@ openerp.web_mobile.ListView = openerp.base.Widget.extend({
         this.formview.start();
     }
  });
-}
+};
