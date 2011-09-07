@@ -570,7 +570,8 @@ This is useful for CRM leads for example"),
 
         # determine name of sender, either it is specified in email_id or we
         # use the account name
-        email_id = from_account['email_id'].strip()
+        print "////////////////////////",from_account
+        email_id = from_account['email_id']
         email_from = re.findall(r'([^ ,<@]+@[^> ,]+)', email_id)[0]
         if email_from != email_id:
             # we should keep it all, name is probably specified in the address
@@ -670,6 +671,7 @@ This is useful for CRM leads for example"),
         if context is None:
             context = {}
         template = self.browse(cursor, user, template_id, context=context)
+        print ">>>>>>>>>>>><<<<<<<<<<<<<<<<",template
         if not template:
             raise Exception("The requested template could not be loaded")
         result = True
