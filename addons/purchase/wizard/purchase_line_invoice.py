@@ -58,13 +58,13 @@ class purchase_line_invoice(osv.osv_memory):
             def multiple_order_invoice_name(orders):
                 name = "PO";
                 for order in orders:
-                    name += "-%d" % order.id
+                    name += "000%d" % order.id
                 return name
 
             def multiple_order_invoice_reference(partner, orders):
                 reference = "P%dPO" % partner.id
                 for order in orders:
-                    reference += "-%d" % order.id
+                    reference += "%d" % order.id
                 return reference
 
             def multiple_order_invoice_notes(orders):
@@ -94,7 +94,6 @@ class purchase_line_invoice(osv.osv_memory):
                     'origin': multiple_order_invoice_name(orders),
                     'type': 'in_invoice',
                     'journal_id':journal_id,
-                    'reference': multiple_order_invoice_reference(partner, orders),
                     'account_id': a,
                     'partner_id': partner.id,
                     'address_invoice_id': orders[0].partner_address_id.id,
