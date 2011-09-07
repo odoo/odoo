@@ -19,7 +19,6 @@
 #
 ##############################################################################
 
-#import project_task_close
 import email_compose_message
 import project_task_delegate
 import project_task_reevaluate
