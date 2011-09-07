@@ -47,7 +47,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         if (this.embedded_view) {
             var def = $.Deferred().then(this.on_loaded);
             var self = this;
-            setTimeout(function() {def.resolve({fields_view: self.embedded_view});}, 0);
+            setTimeout(function() {def.resolve(self.embedded_view);}, 0);
             return def.promise();
         } else {
             var context = new openerp.web.CompoundContext(this.dataset.get_context());
