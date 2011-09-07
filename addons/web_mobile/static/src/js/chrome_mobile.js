@@ -111,7 +111,7 @@ openerp.web_mobile.Shortcuts =  openerp.web.Widget.extend({
     },
     start: function() {
         var self = this;
-        this.rpc('/base/session/sc_list',{} ,function(res){
+        this.rpc('/web/session/sc_list',{} ,function(res){
             self.$element.html(QWeb.render("Shortcuts", {'sc' : res}))
             self.$element.find('#content').find("a").click(self.on_clicked);
             self.$element.find("#header").find('#application').click(function(){

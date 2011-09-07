@@ -22,15 +22,16 @@ openerp.web_mobile.FormView = openerp.web.Widget.extend({
         var model = this.action.res_model;
         var view_id = this.action.views[1][0];
         this.dataset = new openerp.web.DataSetSearch(this, this.action.res_model, null, null);
+        var context = new openerp.web.CompoundContext(this.dataset.get_context());
         this.dataset.read_slice([],{}, function (result) {
             for (var i = 0; i < result.length; i++) {
                 if (result[i].id == id) {
                     var data = result[i];
                 }
             }
-            self.rpc("/web/formview/load", {"model": model, "view_id": view_id }, function (result) {
-                var fields = result.fields_view.fields;
-                var view_fields = result.fields_view.arch.children;
+            self.rpc("/web/view/load", {"model": model, "view_id": view_id, "view_type": "form", context: context}, function (result) {
+                var fields = result.fields;
+                var view_fields = result.arch.children;
                 var get_fields = self.get_fields(view_fields);
                 var selection = new openerp.web_mobile.Selection();
                 for (var j = 0; j < view_fields.length; j++) {
@@ -79,16 +80,16 @@ openerp.web_mobile.FormView = openerp.web.Widget.extend({
                                         }
                                     }
                                     if(notebook){
-                                        next.find('.detail').append(QWeb.render("FormView", {'get_fields': get_fields,'fields' : result.fields_view.fields, 'values' : data,'til': notebook.attrs.string }));
+                                        next.find('.detail').append(QWeb.render("FormView", {'get_fields': get_fields,'fields' : result.fields, 'values' : data,'til': notebook.attrs.string }));
                                     }else{
-                                        next.find('.detail').append(QWeb.render("FormView", {'get_fields': get_fields,'fields' : result.fields_view.fields, 'values' : data }));
+                                        next.find('.detail').append(QWeb.render("FormView", {'get_fields': get_fields,'fields' : result.fields, 'values' : data }));
                                     }
                                 }
 
                                 //$.mobile.changePage($("#oe_form"), "slide", true, true);
                                 /*next.find('.detail').find('li').click(function(){
                                     if(data[relational]){
-                                        var dataset = new openerp.web.DataSetStatic(self, result.fields_view.fields[relational].relation, result.fields_view.fields[relational].context);
+                                        var dataset = new openerp.web.DataSetStatic(self, result.fields[relational].relation, result.fields[relational].context);
                                         dataset.domain=[['id', 'in', data[relational]]];
                                         dataset.name_search('', dataset.domain, 'in',false ,function(res){
                                             for(var i=0;i<res.length;i++){
@@ -122,7 +123,7 @@ openerp.web_mobile.FormView = openerp.web.Widget.extend({
                     });
                 });
                 $.mobile.changePage($("#oe_form"), "slide", true, true);
-                //$("#oe_header").find("h1").html(result.fields_view.arch.attrs.string);
+                //$("#oe_header").find("h1").html(result.arch.attrs.string);
         });
     },
     get_fields: function(view_fields, fields) {
