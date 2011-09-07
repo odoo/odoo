@@ -1251,11 +1251,16 @@ openerp.web.form.FieldTextXml = openerp.web.form.Field.extend({
 
 openerp.web.form.FieldSelection = openerp.web.form.Field.extend({
     init: function(view, node) {
+        var self = this;
         this._super(view, node);
         this.template = "FieldSelection";
-        this.field_index = _.map(this.field.selection, function(x, index) {
-            return {"ikey": "" + index, "ekey": x[0], "label": x[1]};
+        this.values = this.field.selection;
+        _.each(this.values, function(v, i) {
+            if (v[0] === false && v[1] === '') {
+                self.values.splice(i, 1);
+            }
         });
+        this.values.unshift([false, '']);
     },
     start: function() {
         // Flag indicating whether we're in an event chain containing a change
@@ -1285,13 +1290,14 @@ openerp.web.form.FieldSelection = openerp.web.form.Field.extend({
         value = value === null ? false : value;
         value = value instanceof Array ? value[0] : value;
         this._super(value);
-        var option = _.detect(this.field_index, function(x) {return x.ekey === value;});
-        this.$element.find('select').val(option === undefined ? '' : option.ikey);
+        var index = 0;
+        for (var i = 0, ii = this.values.length; i < ii; i++) {
+            if (this.values[i][0] === value) index = i;
+        }
+        this.$element.find('select')[0].selectedIndex = index;
     },
     set_value_from_ui: function() {
-        var ikey = this.$element.find('select').val();
-        var option = _.detect(this.field_index, function(x) {return x.ikey === ikey;});
-        this.value = option === undefined ? false : option.ekey;
+        this.value = this.values[this.$element.find('select')[0].selectedIndex][0];
         this._super();
     },
     update_dom: function() {
@@ -1299,9 +1305,8 @@ openerp.web.form.FieldSelection = openerp.web.form.Field.extend({
         this.$element.find('select').attr('disabled', this.readonly);
     },
     validate: function() {
-        var ikey = this.$element.find('select').val();
-        var option = _.detect(this.field_index, function(x) {return x.ikey === ikey;});
-        this.invalid = this.required && (option === undefined || option.ekey === false);
+        var value = this.values[this.$element.find('select')[0].selectedIndex];
+        this.invalid = !(value && !(this.required && value[0] === false));
     },
     focus: function() {
         this.$element.find('select').focus();

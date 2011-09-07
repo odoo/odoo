@@ -799,10 +799,8 @@
         t-att-id="widget.element_id + '_field'"
         t-att-class="'field_' + widget.type"
         style="width: 100%">
-            <t t-foreach="widget.field_index" t-as="options">
-                <option t-att-value="options.ikey">
-                    <t t-esc="options.label"/>
-                </option>
+            <t t-foreach="widget.values" t-as="option">
+                <option><t t-esc="option[1]"/></option>
             </t>
     </select>
 </t>
