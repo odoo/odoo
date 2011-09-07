@@ -69,7 +69,7 @@ class mail_thread(osv.osv):
         for thread in self.browse(cr, uid, ids, context=context):
             l = set()
             for message in thread.message_ids:
-                l.add((message.user_id and message.user_id.email) or '')
+                l.add((message.user_id and message.user_id.user_email) or '')
                 l.add(message.email_from or '')
                 l.add(message.email_cc or '')
             res[thread.id] = filter(None, l)
@@ -409,9 +409,9 @@ class mail_thread(osv.osv):
                     del msg['reply-to']
                     msg['reply-to'] = res.section_id.reply_to
 
-                smtp_from = to_email(msg['from'])
+                smtp_from, = to_email(msg['from'])
                 msg['from'] = smtp_from
-                msg['to'] =  forward_to
+                msg['to'] =  ", ".join(forward_to)
                 msg['message-id'] = tools.generate_tracking_message_id(res.id)
                 if not smtp_server_obj.send_email(cr, uid, msg) and email_error:
                     subj = msg['subject']

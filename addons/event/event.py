@@ -530,7 +530,7 @@ class event_registration(osv.osv):
             email_to = []
             email_cc = []
             if registration.email_from:
-                email_to = registration.email_from
+                email_to = [registration.email_from]
             if registration.email_cc:
                 email_cc += [registration.email_cc]
             if not (email_to or email_cc):
