@@ -291,6 +291,74 @@
         </field>
     </record>
 
+    <!-- CRM Lead Kanban View  -->
+    <record model="ir.ui.view" id="crm_case_kanban_view_leads">
+        <field name="name">CRM - Leads Kanban</field>
+        <field name="model">crm.lead</field>
+        <field name="type">kanban</field>
+        <field name="arch" type="xml">
+            <kanban>
+                <field name="state"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_box oe_kanban_color_border #{__kanban_color(state.raw_value)}">
+                            <div class="oe_kanban_box_header oe_kanban_color_bgdark oe_kanban_color_border oe_kanban_draghandle">
+                                <h6 class="oe_kanban_left"><field name="name"/></h6>
+                                <h5 class="oe_kanban_right" style="vertical-align: top">
+                                    <field name="planned_revenue"/>
+                                    <img src="http://www.gravatar.com/avatar/2eb60ad22dadcf4dc456b28390a80268.png" style="border-radius: 2px" width="20" height="20"/>
+                                </h5>
+                                <br class="oe_kanban_clear"/>
+                            </div>
+
+                            <div class="oe_kanban_box_content oe_kanban_color_bglight">
+                                <div class="oe_kanban_right oe_kanban_small">
+                                    <field name="user_id"/>
+                                </div>
+                                <br class="oe_kanban_clear"/>
+
+                                <b><field name="partner_address_id"/></b><br/>
+                                <field name="description"/><br/>
+                                <field name="date_action"/><t t-if="date_action.raw_value">: </t><field name="title_action"/>
+                            </div>
+
+                            <div class="oe_kanban_buttons_set oe_kanban_color_border oe_kanban_color_bglight oe_kanban_box_show_onclick">
+                                <div class="oe_kanban_left">
+                                    <a string="Send New Email" class="oe_kanban_color_border"
+                                       name="%(crm.action_crm_send_mail)d"
+                                       context="{'mail':'new', 'model': 'crm.lead'}"
+                                       icon="terp-mail-message-new" type="action"/>
+
+                                    <a string="Schedule/Log Call" class="oe_kanban_color_border"
+                                       name="%(opportunity2phonecall_act)d"
+                                       icon="terp-call-start" type="action"/>
+
+                                    <a string="Add Internal Note" class="oe_kanban_color_border"
+                                       name="%(crm.action_crm_add_note)d"
+                                       context="{'model': 'crm.lead' }"
+                                       icon="terp-document-new" type="action"/>
+
+                                    <a name="action_makeMeeting" type="object" class="oe_kanban_color_border"
+                                            string="Schedule Meeting" icon="gtk-redo" />
+                                </div>
+                                <div class="oe_kanban_right">
+                                    <a name="case_cancel" string="Cancel" states="draft" type="object" icon="gtk-cancel" />
+                                    <a name="case_mark_lost" string="Mark Lost" states="open,pending" type="object" icon="gtk-cancel" />
+                                    <a name="case_reset" string="Reset to Draft" states="done,cancel" type="object" icon="gtk-convert" />
+                                    <a name="case_open" string="Open" states="draft,pending" type="object" icon="gtk-go-forward" />
+                                    <a name="case_pending" string="Pending" states="draft,open" type="object" icon="gtk-media-pause" />
+                                    <a name="case_escalate" string="Escalate" states="open,pending" type="object" icon="gtk-go-up" />
+                                    <a name="case_mark_won" string="Mark Won" states="open,pending" type="object" icon="gtk-apply" />
+                                </div>
+                                <br class="oe_kanban_clear"/>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
     <!-- CRM Lead Search View -->
 
     <record id="view_crm_case_leads_filter" model="ir.ui.view">
