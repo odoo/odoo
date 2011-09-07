@@ -1,5 +1,5 @@
 -
-  In order to test project_mrp module with OpenERP I want to create sale orders 
+  In order to test project_mrp module with OpenERP I want to create sale orders
   with product type 'service' so when procurement runs one task is created.
 -
   I create record for a service type product.
@@ -15,9 +15,9 @@
     uom_id: product.uom_day
     uom_po_id: product.uom_day
     warranty: 0.0
-- 
+-
   I create a sale order for product Partners Training which has type 'Service'.
-- 
+-
   !record {model: sale.order, id: sale_order_so0}:
     date_order: !eval time.strftime('%Y-%m-%d')
     invoice_quantity: order
@@ -64,15 +64,15 @@
 -
   !python {model: project.task}: |
     order_obj = self.pool.get('sale.order')
-    order = order_obj.browse(cr, uid, ref('sale_order_so0')) 
-    task_id = self.search(cr, uid, [('name','like', order.name)]) 
+    order = order_obj.browse(cr, uid, ref('sale_order_so0'))
+    task_id = self.search(cr, uid, [('name','like', order.name)])
     assert task_id, 'No Task is created!'
 -
   Now I am Closing the Created Task Vis Procurment .
 -
   !python {model: project.task}: |
     order_obj = self.pool.get('sale.order')
-    order = order_obj.browse(cr, uid, ref('sale_order_so0')) 
+    order = order_obj.browse(cr, uid, ref('sale_order_so0'))
     task_id = self.search(cr, uid, [('name','like', order.name)])
     if task_id:
       self.do_close(cr, uid, task_id)
