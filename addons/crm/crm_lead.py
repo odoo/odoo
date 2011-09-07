@@ -353,16 +353,14 @@ class crm_lead(crm_case, osv.osv):
         if priority:
             vals['priority'] = priority
         vals.update(self.message_partner_by_email(cr, uid, msg.get('from', False)))
-        res_id = self.write(cr, uid, [res_id], vals, context)
+        self.write(cr, uid, [res_id], vals, context)
         return res_id
 
     def message_update(self, cr, uid, ids, msg, vals={}, default_act='pending', context=None):
         if isinstance(ids, (str, int, long)):
             ids = [ids]
 
-        super(crm_lead, self).message_update(cr, uid, msg,
-                                             custom_values=custom_values,
-                                             context=context)
+        super(crm_lead, self).message_update(cr, uid, ids, msg, context=context)
 
         if msg.get('priority') in dict(crm.AVAILABLE_PRIORITIES):
             vals['priority'] = msg.get('priority')

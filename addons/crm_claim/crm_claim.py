@@ -162,7 +162,7 @@ class crm_claim(crm.crm_case, osv.osv):
         if isinstance(ids, (str, int, long)):
             ids = [ids]
 
-        res_id = super(crm_claim,self).message_update(cr, uid, msg, context=context)
+        res_id = super(crm_claim,self).message_update(cr, uid, ids, msg, context=context)
 
         if msg.get('priority') in dict(crm.AVAILABLE_PRIORITIES):
             vals['priority'] = msg.get('priority')

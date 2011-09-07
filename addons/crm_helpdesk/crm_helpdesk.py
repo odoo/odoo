@@ -115,7 +115,7 @@ class crm_helpdesk(crm.crm_case, osv.osv):
         if isinstance(ids, (str, int, long)):
             ids = [ids]
 
-        super(crm_helpdesk,self).message_update(cr, uid, msg, context=context)
+        super(crm_helpdesk,self).message_update(cr, uid, ids, msg, context=context)
 
         if msg.get('priority') in dict(crm.AVAILABLE_PRIORITIES):
             vals['priority'] = msg.get('priority')
