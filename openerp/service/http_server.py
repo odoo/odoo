@@ -154,7 +154,6 @@ class BaseHttpDaemon(threading.Thread, netsvc.Server):
 
         try:
             self.server = ThreadedHTTPServer((interface, port), handler, proto=self._RealProto)
-            self.server.vdirs = []
             self.server.logRequests = True
             self.server.timeout = self._busywait_timeout
             logging.getLogger("web-services").info(
@@ -191,28 +190,6 @@ class BaseHttpDaemon(threading.Thread, netsvc.Server):
             res += ", %d threads" % (self.server.numThreads,)
         return res
 
-    def append_svc(self, service):
-        if not isinstance(service, HTTPDir):
-            raise Exception("Wrong class for http service")
-        
-        pos = len(self.server.vdirs)
-        lastpos = pos
-        while pos > 0:
-            pos -= 1
-            if self.server.vdirs[pos].matches(service.path):
-                lastpos = pos
-            # we won't break here, but search all way to the top, to
-            # ensure there is no lesser entry that will shadow the one
-            # we are inserting.
-        self.server.vdirs.insert(lastpos, service)
-
-    def list_services(self):
-        ret = []
-        for svc in self.server.vdirs:
-            ret.append( ( svc.path, str(svc.handler)) )
-        
-        return ret
-    
 # No need for these two classes: init_server() below can initialize correctly
 # directly the BaseHttpDaemon class.
 class HttpDaemon(BaseHttpDaemon):
@@ -244,31 +221,6 @@ def init_servers():
     if tools.config.get('xmlrpcs'):
         httpsd = HttpSDaemon(tools.config.get('xmlrpcs_interface', ''),
                              int(tools.config.get('xmlrpcs_port', 8071)))
-
-def reg_http_service(hts, secure_only = False):
-    """ Register some handler to httpd.
-        hts must be an HTTPDir
-    """
-    global httpd, httpsd
-
-    if httpd and not secure_only:
-        httpd.append_svc(hts)
-
-    if httpsd:
-        httpsd.append_svc(hts)
-
-    if (not httpd) and (not httpsd):
-        logging.getLogger('httpd').warning("No httpd available to register service %s" % hts.path)
-    return
-
-def list_http_services(protocol=None):
-    global httpd, httpsd
-    if httpd and (protocol == 'http' or protocol == None):
-        return httpd.list_services()
-    elif httpsd and (protocol == 'https' or protocol == None):
-        return httpsd.list_services()
-    else:
-        raise Exception("Incorrect protocol or no http services")
 
 import SimpleXMLRPCServer
 class XMLRPCRequestHandler(FixSendError,HttpLogHandler,SimpleXMLRPCServer.SimpleXMLRPCRequestHandler):
@@ -305,7 +257,7 @@ def init_xmlrpc():
     if tools.config.get('xmlrpcs', False) \
             and not tools.config.get('xmlrpc', False):
         # only register at the secure server
-        reg_http_service(HTTPDir('/xmlrpc/', XMLRPCRequestHandler), True)
+        reg_http_service(HTTPDir('/xmlrpc/', XMLRPCRequestHandler, secure_only=True))
         logging.getLogger("web-services").info("Registered XML-RPC over HTTPS only")
 
 class StaticHTTPHandler(HttpLogHandler, FixSendError, HttpOptions, HTTPHandler):

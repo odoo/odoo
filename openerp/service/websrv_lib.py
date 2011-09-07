@@ -125,13 +125,17 @@ class HTTPHandler(SimpleHTTPRequestHandler):
     def setup(self):
         pass
 
+# A list of HTTPDir.
+handlers = []
+
 class HTTPDir:
     """ A dispatcher class, like a virtual folder in httpd
     """
-    def __init__(self,path,handler, auth_provider = None):
+    def __init__(self, path, handler, auth_provider=None, secure_only=False):
         self.path = path
         self.handler = handler
         self.auth_provider = auth_provider
+        self.secure_only = secure_only
 
     def matches(self, request):
         """ Test if some request matches us. If so, return
@@ -139,6 +143,42 @@ class HTTPDir:
         if request.startswith(self.path):
             return self.path
         return False
+
+def reg_http_service(service):
+    """ Register some handler to httpd.
+        hts must be an HTTPDir
+    """
+    assert isinstance(service, HTTPDir), "Wrong class for http service"
+    
+    global handlers
+    pos = len(handlers)
+    lastpos = pos
+    while pos > 0:
+        pos -= 1
+        if handlers[pos].matches(service.path):
+            lastpos = pos
+        # we won't break here, but search all way to the top, to
+        # ensure there is no lesser entry that will shadow the one
+        # we are inserting.
+    handlers.insert(lastpos, service)
+
+def list_http_services(protocol=None):
+    global handlers
+    ret = []
+    for svc in handlers:
+        if protocol is None or protocol == 'http' or svc.secure_only:
+            ret.append((svc.path, str(svc.handler)))
+    
+    return ret
+
+def find_http_service(path, secure=False):
+    global handlers
+    for vdir in handlers:
+        p = vdir.matches(path)
+        if p == False or (vdir.secure_only and not secure):
+            continue
+        return vdir
+    return None
 
 class noconnection(object):
     """ a class to use instead of the real connection
@@ -408,11 +448,9 @@ class MultiHTTPHandler(FixSendError, HttpOptions, BaseHTTPRequestHandler):
                 return
             self.do_OPTIONS()
             return
-            
-        for vdir in self.server.vdirs:
-            p = vdir.matches(self.path)
-            if p == False:
-                continue
+        vdir = find_http_service(self.path, self.server.proto == 'HTTPS')
+        if vdir:
+            p = vdir.path
             npath = self.path[len(p):]
             if not npath.startswith('/'):
                 npath = '/' + npath
@@ -433,10 +471,8 @@ class MultiHTTPHandler(FixSendError, HttpOptions, BaseHTTPRequestHandler):
                             "client closed connection", self.rlpath.rstrip())
                 else:
                     raise
-            return
-        # if no match:
-        self.send_error(404, "Path not found: %s" % self.path)
-        return
+        else: # no match:
+            self.send_error(404, "Path not found: %s" % self.path)
 
     def _get_ignore_body(self,fore):
         if not fore.headers.has_key("content-length"):
