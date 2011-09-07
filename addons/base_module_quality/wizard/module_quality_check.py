@@ -19,29 +19,25 @@
 #
 ##############################################################################
 
-import os
-
-import wizard
 from tools.translate import _
-import pooler
 from osv import osv, fields
 
 class quality_check(osv.osv_memory):
     _name = "quality.check"
-    _description = "Quality Check"
+    _description = "Module Quality Check"
 
     def _create_quality_check(self, cr, uid, ids, context=None):
         obj_quality = self.pool.get('module.quality.check')
         objs_ids = []
         module_id = context.get('active_id', False)
-        module_data = self.pool.get('ir.module.module').browse(cr, uid, module_id)
+        module_data = self.pool.get('ir.module.module').browse(cr, uid, module_id, context=context)
         data = obj_quality.check_quality(cr, uid, module_data.name, module_data.state)
-        obj = obj_quality.create(cr, uid, data, context)
+        obj = obj_quality.create(cr, uid, data, context=context)
         objs_ids.append(obj)
         return objs_ids
 
-    def open_quality_check(self, cr, uid, ids, context):
-        obj_ids = self._create_quality_check(cr, uid, ids, context)
+    def open_quality_check(self, cr, uid, ids, context=None):
+        obj_ids = self._create_quality_check(cr, uid, ids, context=context)
         return {
             'domain': "[('id','in', ["+','.join(map(str,obj_ids))+"])]",
             'name': _('Quality Check'),
@@ -50,6 +46,7 @@ class quality_check(osv.osv_memory):
             'res_model': 'module.quality.check',
             'type': 'ir.actions.act_window'
             }
+        
 quality_check()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

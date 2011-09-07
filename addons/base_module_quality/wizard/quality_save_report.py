@@ -22,21 +22,19 @@
 import base64
 import cStringIO
 
-import wizard
 from osv import osv
-import pooler
 from tools.translate import _
 from osv import osv, fields
 
-class save_report(osv.osv_memory):
+class quality_save_report(osv.osv_memory):
 
     _name = "save.report"
-    _description = "Save Report"
+    _description = "Save Report of Quality"
 
     def default_get(self, cr, uid, fields, context=None):
-        res = super(save_report, self).default_get(cr, uid, fields, context=context)
+        res = super(quality_save_report, self).default_get(cr, uid, fields, context=context)
         active_ids = context.get('active_ids')
-        data = pooler.get_pool(cr.dbname).get('module.quality.detail').browse(cr, uid, active_ids)[0]
+        data = self.pool.get('module.quality.detail').browse(cr, uid, active_ids, context=context)[0]
         if not data.detail:
             raise osv.except_osv(_('Warning'), _('No report to save!'))
         buf = cStringIO.StringIO(data.detail)
@@ -45,10 +43,10 @@ class save_report(osv.osv_memory):
         return {'module_file': out, 'name': data.name + '.html'}
 
     _columns = {
-                    'name': fields.char('File Name', required=True, size=64, help="Save report as .html format"),
-                    'module_file': fields.binary('Save report', required=True),
-               }
+        'name': fields.char('File Name', required=True, size=32, help="Save report as .html format"),
+        'module_file': fields.binary('Save report', required=True),
+    }
 
-save_report()
+quality_save_report()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
