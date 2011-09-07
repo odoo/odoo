@@ -838,6 +838,11 @@ class sale_order_line(osv.osv):
                 res[line.id] = 1
         return res
 
+    def _get_uom_id(self, cr, uid, *args):
+        cr.execute('select id from product_uom order by id limit 1')
+        res = cr.fetchone()
+        return res and res[0] or False
+    
     _name = 'sale.order.line'
     _description = 'Sales Order Line'
     _columns = {
@@ -877,6 +882,7 @@ class sale_order_line(osv.osv):
     }
     _order = 'sequence, id'
     _defaults = {
+        'product_uom' : _get_uom_id,
         'discount': 0.0,
         'delay': 0.0,
         'product_uom_qty': 1,

@@ -612,6 +612,11 @@ class purchase_order_line(osv.osv):
             res[line.id] = cur_obj.round(cr, uid, cur, taxes['total'])
         return res
 
+    def _get_uom_id(self, cr, uid, *args):
+        cr.execute('select id from product_uom order by id limit 1')
+        res = cr.fetchone()
+        return res and res[0] or False
+    
     _columns = {
         'name': fields.char('Description', size=256, required=True),
         'product_qty': fields.float('Quantity', required=True, digits=(16,2)),
@@ -639,6 +644,7 @@ class purchase_order_line(osv.osv):
 
     }
     _defaults = {
+        'product_uom' : _get_uom_id,
         'product_qty': lambda *a: 1.0,
         'state': lambda *args: 'draft',
         'invoiced': lambda *a: 0,
