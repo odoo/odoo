@@ -78,19 +78,37 @@ class crm_fundraising(crm.crm_case, osv.osv):
             'message_ids': fields.one2many('mail.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
         }
 
+
+    def message_new(self, cr, uid, msg, custom_values=None, context=None):
+        """Automatically called when new email message arrives"""
+        res_id = super(crm_fundraising,self).message_new(cr, uid, msg, custom_values=custom_values, context=context)
+        vals = {
+            'name': msg.get('subject'),
+            'email_from': msg.get('from'),
+            'email_cc': msg.get('cc'),
+            'description': msg.get('body_text'),
+        }
+        priority = msg.get('priority')
+        if priority:
+            vals['priority'] = priority
+        vals.update(self.message_partner_by_email(cr, uid, msg.get('from')))
+        self.write(cr, uid, [res_id], vals, context=context)
+        return res_id
+
+
     _defaults = {
-            'active': lambda *a: 1,
+            'active': 1,
             'user_id': crm.crm_case._get_default_user,
             'partner_id': crm.crm_case._get_default_partner,
             'partner_address_id': crm.crm_case._get_default_partner_address,
             'email_from': crm.crm_case. _get_default_email,
-            'state': lambda *a: 'draft',
+            'state': 'draft',
             'section_id': crm.crm_case. _get_section,
             'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.case', context=c),
-            'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0],
-            'probability': lambda *a:0.0,
-            'planned_cost': lambda *a:0.0,
-            'planned_revenue': lambda *a:0.0,
-            }
+            'priority': crm.AVAILABLE_PRIORITIES[2][0],
+            'probability': 0.0,
+            'planned_cost': 0.0,
+            'planned_revenue': 0.0,
+    }
 
 
