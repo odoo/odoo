@@ -29,7 +29,7 @@
 Organization and management of Events.
 ======================================
 
-This module allow you
+This module allows you
     * to manage your events and their registrations
     * to use emails to automatically confirm and send acknowledgements for any registration to an event
     * ...

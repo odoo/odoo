@@ -28,6 +28,8 @@ import decimal_precision as dp
 from crm import wizard
 
 
+wizard.mail_compose_message.SUPPORTED_MODELS.append('event.registration')
+
 class event_type(osv.osv):
     """ Event Type """
     _name = 'event.type'
@@ -523,30 +525,30 @@ class event_registration(osv.osv):
         Send email to user
         """
         mail_message = self.pool.get('mail.message')
-        for regestration in self.browse(cr, uid, ids, context=context):
-            src = regestration.event_id.reply_to or False
+        for registration in self.browse(cr, uid, ids, context=context):
+            src = registration.event_id.reply_to or False
             email_to = []
             email_cc = []
-            if regestration.email_from:
-                email_to = regestration.email_from
-            if regestration.email_cc:
-                email_cc += [regestration.email_cc]
+            if registration.email_from:
+                email_to = registration.email_from
+            if registration.email_cc:
+                email_cc += [registration.email_cc]
             if not (email_to or email_cc):
                 continue
             subject = ""
             body = ""
             if confirm:
-                subject = _('Auto Confirmation: [%s] %s') %(regestration.id, regestration.name)
-                body = regestration.event_id.mail_confirm
-            elif regestration.event_id.mail_auto_confirm or regestration.event_id.mail_auto_registr:
-                if regestration.event_id.state in ['draft', 'fixed', 'open', 'confirm', 'running'] and regestration.event_id.mail_auto_registr:
-                    subject = _('Auto Registration: [%s] %s') %(regestration.id, regestration.name)
-                    body = regestration.event_id.mail_registr
-                if (regestration.event_id.state in ['confirm', 'running']) and regestration.event_id.mail_auto_confirm:
-                    subject = _('Auto Confirmation: [%s] %s') %(regestration.id, regestration.name)
-                    body = regestration.event_id.mail_confirm
+                subject = _('Auto Confirmation: [%s] %s') %(registration.id, registration.name)
+                body = registration.event_id.mail_confirm
+            elif registration.event_id.mail_auto_confirm or registration.event_id.mail_auto_registr:
+                if registration.event_id.state in ['draft', 'fixed', 'open', 'confirm', 'running'] and registration.event_id.mail_auto_registr:
+                    subject = _('Auto Registration: [%s] %s') %(registration.id, registration.name)
+                    body = registration.event_id.mail_registr
+                if (registration.event_id.state in ['confirm', 'running']) and registration.event_id.mail_auto_confirm:
+                    subject = _('Auto Confirmation: [%s] %s') %(registration.id, registration.name)
+                    body = registration.event_id.mail_confirm
             if subject or body:
-                mail_message.schedule_with_attach(cr, uid, src, email_to, subject, body, model='event.registration', email_cc=email_cc, res_id=regestration.id)
+                mail_message.schedule_with_attach(cr, uid, src, email_to, subject, body, model='event.registration', email_cc=email_cc, res_id=registration.id)
 
         return True
 
