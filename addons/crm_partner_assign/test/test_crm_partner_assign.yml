@@ -117,4 +117,20 @@
       self.action_forward(cr, uid, [ids], context={'active_id': ref('crm_lead_questionnaireonopenerp0'), 'active_model': 'crm.lead'})
     except:
       pass
-
+-
+  Create the opportunity.
+-
+   !record {model: crm.lead, id: crm_opportunity2}:
+    email_from: info@balmerinc.be
+    name: 'FUEL CO 829264 - 10002 units'
+    partner_address_id: base.res_partner_address_1
+    partner_id: base.res_partner_9
+    probability: 1.0
+    stage_id: crm.stage_lead1
+    categ_id: crm.categ_oppor2
+    section_id: crm.section_sales_department
+-  |
+   I Update the data,
+-
+   !python {model: crm.merge.opportunity}: |
+    self._update_data([ref('crm_opportunity2')], ref('crm_lead_questionnaireonopenerp0'))
