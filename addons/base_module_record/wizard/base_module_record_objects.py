@@ -19,147 +19,169 @@
 #
 ##############################################################################
 
-import wizard
-import osv
 import pooler
 import time
 import base_module_save
+from osv import osv, fields
+import tools
+from tools.translate import _
 
-info = '''<?xml version="1.0"?>
-<form string="Module Recording">
-    <label string="Thanks For using Module Recorder" colspan="4" align="0.0"/>
-</form>'''
+class base_module_record(osv.osv_memory):
+    _name = 'base.module.record'
+    _description = "Base Module Record"
+        
+    def default_get(self, cr, uid, fields, context):
+         pool = pooler.get_pool(cr.dbname)
+         mod = pool.get('ir.model')
+         res = super(base_module_record, self).default_get(cr, uid, fields, context=context)
+         
+         list=('ir.ui.view', 'ir.ui.menu', 'ir.model', 'ir.model.fields', 'ir.model.access', \
+            'res.partner', 'res.partner.address', 'res.partner.category', 'workflow', \
+            'workflow.activity', 'workflow.transition', 'ir.actions.server', 'ir.server.object.lines')
+         if 'objects' in fields:
+             res.update({'objects': mod.search(cr, uid, [('model', 'in', list)])})
+         cr.execute('select max(create_date) from ir_model_data')
+         c=(cr.fetchone())[0].split('.')[0]
+         c = time.strptime(c, "%Y-%m-%d %H:%M:%S")
+         sec=c.tm_sec!=59 and c.tm_sec + 1
+         c=(c[0],c[1],c[2],c[3],c[4],sec,c[6],c[7],c[8])
+         if 'check_date' in fields:
+             res.update({'check_date': time.strftime("%Y-%m-%d %H:%M:%S", c)})
+         return res
 
-intro_start_form = '''<?xml version="1.0"?>
-<form string="Objects Recording">
-    <field name="check_date"/>
-    <newline/>
-    <field name="filter_cond"/>
-    <separator string="Choose objects to record" colspan="4"/>
-    <field name="objects" colspan="4" nolabel="1"/>
-    <group><field name="info_yaml"/></group>
-</form>'''
-
-intro_start_fields = {
-    'check_date':  {'string':"Record from Date",'type':'datetime','required':True, 'default': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S')},
-    'objects':{'string': 'Objects', 'type': 'many2many', 'relation': 'ir.model', 'help': 'List of objects to be recorded'},
-    'filter_cond':{'string':'Records only', 'type':'selection','selection':[('created','Created'),('modified','Modified'),('created_modified','Created & Modified')], 'required':True, 'default': lambda *args:'created'},
-    'info_yaml': {'string':'YAML','type':'boolean'}
-}
-
-def _info_default(self, cr, uid, data, context):
-     pool = pooler.get_pool(cr.dbname)
-     mod = pool.get('ir.model')
-     list=('ir.ui.view','ir.ui.menu','ir.model','ir.model.fields','ir.model.access',\
-        'res.partner','res.partner.address','res.partner.category','workflow',\
-        'workflow.activity','workflow.transition','ir.actions.server','ir.server.object.lines')
-     data['form']['objects']=mod.search(cr,uid,[('model','in',list)])
-     cr.execute('select max(create_date) from ir_model_data')
-     c=(cr.fetchone())[0].split('.')[0]
-     c = time.strptime(c,"%Y-%m-%d %H:%M:%S")
-     sec=c.tm_sec!=59 and c.tm_sec + 1
-     c=(c[0],c[1],c[2],c[3],c[4],sec,c[6],c[7],c[8])
-     data['form']['check_date']=time.strftime("%Y-%m-%d %H:%M:%S",c)
-     return data['form']
-
-def _record_objects(self, cr, uid, data, context):
-    check_date=data['form']['check_date']
-    filter=data['form']['filter_cond']
-    pool = pooler.get_pool(cr.dbname)
-    user=(pool.get('res.users').browse(cr,uid,uid)).login
-    mod = pool.get('ir.module.record')
-    mod_obj = pool.get('ir.model')
-    mod.recording_data = []
-
-    for id in data['form']['objects'][0][2]:
-        obj_name=(mod_obj.browse(cr,uid,id)).model
-        obj_pool=pool.get(obj_name)
-        if filter =='created':
-            search_condition =[('create_date','>',check_date)]
-        elif filter =='modified':
-            search_condition =[('write_date','>',check_date)]
-        elif filter =='created_modified':
-            search_condition =['|',('create_date','>',check_date),('write_date','>',check_date)]
-        if '_log_access' in dir(obj_pool):
-              if not (obj_pool._log_access):
-                  search_condition=[]
-              if '_auto' in dir(obj_pool):
-                  if not obj_pool._auto:
-                      continue
-        search_ids=obj_pool.search(cr,uid,search_condition)
-        for s_id in search_ids:
-             args=(cr.dbname,uid,obj_name,'copy',s_id,{},context)
-             mod.recording_data.append(('query',args, {}, s_id))
-    return {}
-
-def inter_call(self,cr,uid,data,context):
-    res=base_module_save._create_module(self,cr, uid, data, context)
-    return res
-
-def _create_yaml(self,cr,uid,data,context):
-    res=base_module_save._create_yaml(self,cr, uid, data, context)
-    return res
-
-class base_module_record_objects(wizard.interface):
-    states = {
-         'init': {
-            'actions': [_info_default],
-            'result': {
-                'type':'form',
-                'arch':intro_start_form,
-                'fields': intro_start_fields,
-                'state':[
-                    ('end', 'Cancel', 'gtk-cancel'),
-                    ('record', 'Record', 'gtk-ok'),
-                ]
-            }
-         },
-         'record': {
-            'actions': [],
-            'result': {'type':'action','action':_record_objects,'state':'check'}
-                },
-         'check': {
-            'actions': [],
-            'result': {'type':'choice','next_state':base_module_save._check}
-        },
-         'info': {
-            'actions': [],
-            'result': {
-                'type':'form',
-                'arch':base_module_save.intro_start_form,
-                'fields':base_module_save.intro_start_fields,
-                'state':[
-                    ('end', 'Cancel', 'gtk-cancel'),
-                    ('save', 'Continue', 'gtk-ok'),
-                ]
-            },
-         },
-         'save': {
-            'actions': [inter_call],
-            'result': {
-                'type':'form',
-                'arch':base_module_save.intro_save_form,
-                'fields': base_module_save.intro_save_fields,
-                'state':[('end', 'Close', 'gtk-ok'),]
-                },
-                },
-         'save_yaml': {
-            'actions': [_create_yaml],
-            'result': {
-                'type':'form',
-                'arch':base_module_save.yaml_save_form,
-                'fields': base_module_save.yaml_save_fields,
-                'state':[
-                    ('end', 'Close', 'gtk-ok'),
-                ]
-            }
-         },
-         'end': {
-            'actions': [],
-            'result': {'type':'form', 'arch':info, 'fields':{}, 'state':[('end','OK')]}
-        },
+    _columns = {
+        'check_date': fields.datetime('Record from Date', size=64, required=True),
+        'objects': fields.many2many('ir.model', 'base_module_record_object_rel', 'objects', 'model_id', 'Objects'),
+        'filter_cond': fields.selection([('created', 'Created'), ('modified', 'Modified'), ('created_modified', 'Created & Modified')], 'Records only', required=True),
+        'info_yaml': fields.boolean('YAML'),
     }
-base_module_record_objects('base_module_record.module_record_objects')
+    _defaults = {
+        'check_date': time.strftime('%Y-%m-%d %H:%M:%S'),
+        'filter_cond': 'created',
+    }
+    
+    def record_objects(self, cr, uid, ids, context):
+        data = self.read(cr, uid, ids, [], context=context)[0]
+        check_date=data['check_date']
+        filter=data['filter_cond']
+        pool = pooler.get_pool(cr.dbname)
+        user=(pool.get('res.users').browse(cr,uid,uid)).login
+        mod = pool.get('ir.module.record')
+        mod_obj = pool.get('ir.model')
+        mod.recording_data = []
+        for id in data['objects']:
+            obj_name=(mod_obj.browse(cr,uid,id)).model
+            obj_pool=pool.get(obj_name)
+            if filter =='created':
+                search_condition =[('create_date', '>', check_date)]
+            elif filter =='modified':
+                search_condition =[('write_date', '>', check_date)]
+            elif filter =='created_modified':
+                search_condition =['|',('create_date', '>', check_date), ('write_date', '>', check_date)]
+            if '_log_access' in dir(obj_pool):
+                  if not (obj_pool._log_access):
+                      search_condition=[]
+                  if '_auto' in dir(obj_pool):
+                      if not obj_pool._auto:
+                          continue
+            search_ids=obj_pool.search(cr,uid,search_condition)
+            for s_id in search_ids:
+                 args=(cr.dbname, uid,obj_name, 'copy', s_id,{},context)
+                 mod.recording_data.append(('query', args, {}, s_id))
+         
+        mod_obj = self.pool.get('ir.model.data')
+        if len(mod.recording_data):
+            if data['info_yaml']:
+                pool = pooler.get_pool(cr.dbname)
+                mod = pool.get('ir.module.record')
+                res=base_module_save._create_yaml(self, cr, uid, data, context)
+                model_data_ids = mod_obj.search(cr, uid,[('model', '=', 'ir.ui.view'), ('name', '=', 'yml_save_form_view')], context=context)
+                resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
+                return {
+                    'name': _('Message'),
+                    'context':  {
+                        'default_yaml_file': tools.ustr(res['yaml_file']),
+                        },
+                    'view_type': 'form',
+                    'view_mode': 'form',
+                    'res_model': 'base.module.record.objects',
+                    'views': [(resource_id, 'form')],
+                    'type': 'ir.actions.act_window',
+                    'target': 'new',
+                }
+            else:
+                model_data_ids = mod_obj.search(cr, uid, [('model', '=', 'ir.ui.view'), ('name', '=', 'info_start_form_view')], context=context)
+                resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
+                return {
+                    'name': _('Message'),
+                    'context': context,
+                    'view_type': 'form',
+                    'view_mode': 'form',
+                    'res_model': 'base.module.record.objects',
+                    'views': [(resource_id, 'form')],
+                    'type': 'ir.actions.act_window',
+                    'target': 'new',
+                }
+        model_data_ids = mod_obj.search(cr, uid, [('model', '=', 'ir.ui.view'), ('name', '=', 'module_recording_message_view')], context=context)
+        resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
+        
+        return {
+            'name': _('Message'),
+            'context': context,
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'base.module.record.objects',
+            'views': [(resource_id, 'form')],
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+        }      
+base_module_record()
 
+class base_module_record_objects(osv.osv_memory):
+    _name = 'base.module.record.objects'
+    _description = "Base Module Record Objects"
+                
+    def inter_call(self,cr,uid,data,context):
+        res=base_module_save._create_module(self, cr, uid, data, context)
+        mod_obj = self.pool.get('ir.model.data')
+        model_data_ids = mod_obj.search(cr, uid,[('model', '=', 'ir.ui.view'), ('name', '=', 'module_create_form_view')], context=context)
+        resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
+        context.update(res)
+        
+        return {
+            'name': _('Message'),
+            'context':  {
+                        'default_module_filename': tools.ustr(res['module_filename']),
+                        'default_module_file': tools.ustr(res['module_file']),
+                        },
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'base.module.record.objects',
+            'views': [(resource_id, 'form')],
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+        }
+    
+    _columns = {
+        'name': fields.char('Module Name', size=64, required=True),
+        'directory_name': fields.char('Directory Name', size=32, required=True),
+        'version': fields.char('Version', size=16, required=True),
+        'author': fields.char('Author', size=64, required=True),
+        'category': fields.char('Category', size=64, required=True),
+        'website': fields.char('Documentation URL', size=64, required=True),
+        'description': fields.text('Full Description', required=True),
+        'data_kind': fields.selection([('demo', 'Demo Data'), ('update', 'Normal Data')], 'Type of Data', required=True),
+        'module_file': fields.binary('Module .zip File', filename="module_filename"),
+        'module_filename': fields.char('Filename', size=64),
+        'yaml_file': fields.binary('Module .zip File'),
+    }
+    _defaults = {
+        'author': 'OpenERP SA',
+        'category': 'Vertical Modules/Parametrization',
+        'website': 'http://www.openerp.com',
+        'data_kind': 'update'
+    }    
+   
+base_module_record_objects()
+   
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

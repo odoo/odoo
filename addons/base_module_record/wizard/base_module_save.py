@@ -20,105 +20,14 @@
 ##############################################################################
 
 import wizard
-import osv
 import pooler
-from tools.translate import _
-
-info = '''<?xml version="1.0"?>
-<form string="Module Recording">
-    <label string="Thanks For using Module Recorder" colspan="4" align="0.0"/>
-</form>'''
-
-info_start_form = '''<?xml version="1.0"?>
-<form string="Module Recording">
-    <separator string="Recording Information" colspan="4"/>
-    <field name="info_status"/>
-    <field name="info_text" colspan="4" nolabel="1"/>
-    <field name="info_yaml" colspan="4"/>
-</form>'''
-
-info_start_fields = {
-    'info_text': {'string':'Information', 'type':'text', 'readonly':True},
-    'info_status': {'string':'Status','type':'selection', 'selection':[('no','Not Recording'),('record','Recording')], 'readonly':True},
-    'info_yaml': {'string':'YAML','type':'boolean'}
-}
-
-
-
-intro_start_form = '''<?xml version="1.0"?>
-<form string="Module Recording">
-    <separator string="Module Information" colspan="4"/>
-    <field name="name"/>
-    <field name="directory_name"/>
-    <field name="version"/>
-    <field name="author"/>
-    <field name="website" colspan="4"/>
-    <field name="category" colspan="4"/>
-    <field name="data_kind"/>
-    <newline/>
-    <field name="description" colspan="4"/>
-</form>'''
-
-intro_start_fields = {
-    'name': {'string':'Module Name', 'type':'char', 'size':64, 'required':True},
-    'directory_name': {'string':'Directory Name', 'type':'char', 'size':32, 'required':True},
-    'version': {'string':'Version', 'type':'char', 'size':16, 'required':True},
-    'author': {'string':'Author', 'type':'char', 'size':64, 'default': lambda *args: 'OpenERP SA', 'required':True},
-    'category': {'string':'Category', 'type':'char', 'size':64, 'default': lambda *args: 'Vertical Modules/Parametrization', 'required':True},
-    'website': {'string':'Documentation URL', 'type':'char', 'size':64, 'default': lambda *args: 'http://www.openerp.com', 'required':True},
-    'description': {'string':'Full Description', 'type':'text', 'required':True},
-    'data_kind': {'string':'Type of Data', 'type':'selection', 'selection':[('demo','Demo Data'),('update','Normal Data')], 'required':True, 'default': lambda *args:'update'},
-}
-
-intro_save_form = '''<?xml version="1.0"?>
-<form string="Module Recording">
-    <separator string="Module successfully created !" colspan="4"/>
-    <field name="module_filename"/>
-    <newline/>
-    <field name="module_file" filename="module_filename"/>
-    <separator string="Information" colspan="4"/>
-     <label string="If you think your module could interest other people, we'd like you to publish it on http://www.openerp.com, in the 'Modules' section. You can do it through the website or using features of the 'base_module_publish' module." colspan="4" align="0.0"/>
-    <label string="Thanks in advance for your contribution." colspan="4" align="0.0"/>
-</form>'''
-
-intro_save_fields = {
-    'module_file': {'string': 'Module .zip File', 'type':'binary', 'readonly':True},
-    'module_filename': {'string': 'Filename', 'type':'char', 'size': 64, 'readonly':True},
-}
-
-yaml_save_form = '''<?xml version="1.0"?>
-<form string="Module Recording">
-    <separator string="YAML file successfully created !" colspan="4"/>
-    <newline/>
-    <field name="yaml_file" filename="module_filename"/>
-</form>'''
-
-yaml_save_fields = {
-    'yaml_file': {'string': 'Module .zip File', 'type':'binary'},
-}
-
+import tools
 import zipfile
 import StringIO
 import base64
+from tools.translate import _
+from osv import osv, fields
 
-def _info_default(self, cr, uid, data, context):
-    pool = pooler.get_pool(cr.dbname)
-    mod = pool.get('ir.module.record')
-    result = {}
-    info = "Details of "+str(len(mod.recording_data))+" Operation(s):\n\n"
-
-    for line in mod.recording_data:
-        result.setdefault(line[0],{})
-        result[line[0]].setdefault(line[1][3], {})
-        result[line[0]][line[1][3]].setdefault(line[1][3], 0)
-        result[line[0]][line[1][3]][line[1][3]]+=1
-    for key1,val1 in result.items():
-        info+=key1+"\n"
-        for key2,val2 in val1.items():
-            info+="\t"+key2+"\n"
-            for key3,val3 in val2.items():
-                info+="\t\t"+key3+" : "+str(val3)+"\n"
-    return {'info_text': info, 'info_status':mod.recording and 'record' or 'no'}
 
 def _create_yaml(self, cr, uid, data, context):
     pool = pooler.get_pool(cr.dbname)
@@ -131,21 +40,21 @@ def _create_yaml(self, cr, uid, data, context):
     'yaml_file': base64.encodestring(res_xml),
 }
     
-def _create_module(self, cr, uid, data, context):
+def _create_module(self, cr, uid, ids, context):
     pool = pooler.get_pool(cr.dbname)
     mod = pool.get('ir.module.record')
     res_xml = mod.generate_xml(cr, uid)
-    
+    data = self.read(cr, uid, ids, [], context=context)[0]
     s=StringIO.StringIO()
     zip = zipfile.ZipFile(s, 'w')
-    dname = data['form']['directory_name']
-    data['form']['update_name'] = ''
-    data['form']['demo_name'] = ''
-    if data['form']['data_kind'] =='demo':
-        data['form']['demo_name'] = '"%(directory_name)s_data.xml"' % data['form']
+    dname = data['directory_name']
+    data['update_name'] = ''
+    data['demo_name'] = ''
+    if ['data_kind'] =='demo':
+        data['demo_name'] = '"%(directory_name)s_data.xml"' % data
     else:
-        data['form']['update_name'] = '"%(directory_name)s_data.xml"' % data['form']
-    data['form']['depends'] = ','.join(map(lambda x: '"'+x+'"',mod.depends.keys()))
+        data['update_name'] = '"%(directory_name)s_data.xml"' % data
+    data['depends'] = ','.join(map(lambda x: '"'+x+'"', mod.depends.keys()))
     _terp = """{
         "name" : "%(name)s",
         "version" : "%(version)s",
@@ -158,7 +67,7 @@ def _create_module(self, cr, uid, data, context):
         "demo_xml" : [ %(demo_name)s],
         "update_xml" : [%(update_name)s],
         "installable": True
-} """ % data['form']
+} """ % data
     filewrite = {
         '__init__.py':'#\n# Generated by the OpenERP module recorder !\n#\n',
         '__openerp__.py':_terp,
@@ -174,78 +83,93 @@ def _create_module(self, cr, uid, data, context):
     zip.close()
     return {
         'module_file': base64.encodestring(s.getvalue()),
-        'module_filename': data['form']['directory_name']+'-'+data['form']['version']+'.zip'
+        'module_filename': data['directory_name']+'-'+data['version']+'.zip'
     }
-def _check(self, cr, uid, data, context):
-     pool = pooler.get_pool(cr.dbname)
-     mod = pool.get('ir.module.record')
-     if len(mod.recording_data):
-         if data['form']['info_yaml']:
-             return 'save_yaml'
-         else:
-             return 'info'
-     else:
-         return 'end'
 
-class base_module_publish(wizard.interface):
-    states = {
-        'init': {
-            'actions': [_info_default],
-            'result': {
-                'type':'form',
-                'arch':info_start_form,
-                'fields': info_start_fields,
-                'state':[
-                    ('end', 'Cancel', 'gtk-cancel'),
-                    ('check', 'Continue', 'gtk-ok'),
-                ]
-            }
-        },
-        'check': {
-            'actions': [],
-            'result': {'type':'choice','next_state':_check}
-        },
-        'info': {
-            'actions': [],
-            'result': {
-                'type':'form',
-                'arch':intro_start_form,
-                'fields': intro_start_fields,
-                'state':[
-                    ('end', 'Cancel', 'gtk-cancel'),
-                    ('save', 'Continue', 'gtk-ok'),
-                ]
-            }
-        },
-        'save': {
-            'actions': [_create_module],
-            'result': {
-                'type':'form',
-                'arch':intro_save_form,
-                'fields': intro_save_fields,
-                'state':[
-                    ('end', 'Close', 'gtk-ok'),
-                ]
-            }
-        },
-        'save_yaml': {
-            'actions': [_create_yaml],
-            'result': {
-                'type':'form',
-                'arch':yaml_save_form,
-                'fields': yaml_save_fields,
-                'state':[
-                    ('end', 'Close', 'gtk-ok'),
-                ]
-            }
-         },
-         
-        'end': {
-            'actions': [],
-            'result': {'type':'form', 'arch':info, 'fields':{}, 'state':[('end','OK')]}
-        },
+class base_module_save(osv.osv_memory):
+    _name = 'base.module.save'
+    _description = "Base Module Save"
+
+    def default_get(self, cr, uid, fields, context):
+        pool = pooler.get_pool(cr.dbname)
+        mod = pool.get('ir.module.record')
+        result = {}
+        info = "Details of "+str(len(mod.recording_data))+" Operation(s):\n\n"
+        res = super(base_module_save, self).default_get(cr, uid, fields, context=context)
+        for line in mod.recording_data:
+            result.setdefault(line[0],{})
+            result[line[0]].setdefault(line[1][3], {})
+            result[line[0]][line[1][3]].setdefault(line[1][3], 0)
+            result[line[0]][line[1][3]][line[1][3]]+=1
+        for key1,val1 in result.items():
+            info+=key1+"\n"
+            for key2,val2 in val1.items():
+                info+="\t"+key2+"\n"
+                for key3,val3 in val2.items():
+                    info+="\t\t"+key3+" : "+str(val3)+"\n"
+        if 'info_text' in fields:
+            res.update({'info_text': info})
+        if 'info_status' in fields:
+            info_status = mod.recording and 'record' or 'no'
+            res.update({'info_status': info_status})
+        return res
+    
+    _columns = {
+        'info_text': fields.text('Information', readonly=True),
+        'info_status': fields.selection([('no', 'Not Recording'),('record', 'Recording')], 'Status', readonly=True),
+        'info_yaml': fields.boolean('YAML'),
     }
-base_module_publish('base_module_record.module_save')
+
+    def record_save(self, cr, uid, ids, context):
+        data = self.read(cr, uid, ids, [], context=context)[0]
+        pool = pooler.get_pool(cr.dbname)
+        mod = pool.get('ir.module.record')
+        mod_obj = self.pool.get('ir.model.data')
+        if len(mod.recording_data):
+            if data['info_yaml']:
+                pool = pooler.get_pool(cr.dbname)
+                mod = pool.get('ir.module.record')
+                res=_create_yaml(self, cr, uid, data, context)
+                model_data_ids = mod_obj.search(cr, uid,[('model', '=', 'ir.ui.view'), ('name', '=', 'yml_save_form_view')], context=context)
+                resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
+                return {
+                    'name': _('Message'),
+                    'context':  {
+                        'default_yaml_file': tools.ustr(res['yaml_file']),
+                        },
+                    'view_type': 'form',
+                    'view_mode': 'form',
+                    'res_model': 'base.module.record.objects',
+                    'views': [(resource_id, 'form')],
+                    'type': 'ir.actions.act_window',
+                    'target': 'new',
+                }
+            else:
+                model_data_ids = mod_obj.search(cr, uid,[('model', '=', 'ir.ui.view'), ('name', '=', 'info_start_form_view')], context=context)
+                resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
+                return {
+                    'name': _('Message'),
+                    'context': context,
+                    'view_type': 'form',
+                    'view_mode': 'form',
+                    'res_model': 'base.module.record.objects',
+                    'views': [(resource_id, 'form')],
+                    'type': 'ir.actions.act_window',
+                    'target': 'new',
+                }
+        model_data_ids = mod_obj.search(cr, uid,[('model', '=', 'ir.ui.view'), ('name', '=', 'module_recording_message_view')], context=context)
+        resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
+        
+        return {
+            'name': _('Message'),
+            'context': context,
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'base.module.record.objects',
+            'views': [(resource_id, 'form')],
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+        }      
+base_module_save()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
