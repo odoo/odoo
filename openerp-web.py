@@ -4,6 +4,7 @@ import os
 import sys
 import tempfile
 import logging
+import logging.config
 
 import werkzeug.serving
 
