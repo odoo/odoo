@@ -316,7 +316,7 @@ class Root(object):
                       by the server, will be filtered by this pattern
     """
     def __init__(self, options):
-        self.root = werkzeug.urls.Href('/web/webclient/home')
+        self.root = werkzeug.urls.Href('/web/webclient/home?debug')
         self.config = options
 
         self.session_cookie = 'sessionid'
