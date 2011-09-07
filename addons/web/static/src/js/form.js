@@ -456,6 +456,34 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         return id ? [id] : [];
     }
 });
+openerp.web.FormDialog = openerp.web.Dialog.extend({
+    init: function(parent, options, view_id, dataset) {
+        this._super(parent, options);
+        this.dataset = dataset;
+        this.view_id = view_id;
+        return this;
+    },
+    start: function() {
+        this._super();
+        this.form = new openerp.web.FormView(this, this.element_id, this.dataset, this.view_id, {
+            sidebar: false,
+            pager: false
+        });
+        this.form.start();
+        this.form.on_created.add_last(this.on_form_dialog_saved);
+        this.form.on_saved.add_last(this.on_form_dialog_saved);
+        return this;
+    },
+    load_id: function(id) {
+        var self = this;
+        return this.dataset.read_ids([id], _.keys(this.form.fields_view.fields), function(records) {
+            self.form.on_record_loaded(records[0]);
+        });
+    },
+    on_form_dialog_saved: function() {
+        this.close();
+    }
+});
 
 /** @namespace */
 openerp.web.form = {};
