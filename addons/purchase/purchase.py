@@ -614,11 +614,8 @@ class purchase_order_line(osv.osv):
 
     def _get_uom_id(self, cr, uid, *args):
         model_data = self.pool.get('ir.model.data')
-        xml_id = 'product_uom_unit'
-        res = model_data.search(cr,uid, [('name', '=', xml_id)])
-        if len(res):
-            res = model_data.browse(cr, uid, res[0])
-            return res.res_id 
+        res = model_data.search(cr,uid, [('name', '=', 'product_uom_unit')])
+        if res:return model_data.browse(cr,uid,res[0]).res_id
         return False
     
     _columns = {
