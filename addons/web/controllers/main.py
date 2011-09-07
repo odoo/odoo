@@ -762,6 +762,8 @@ class View(openerpweb.Controller):
         fvg = Model.fields_view_get(view_id, view_type, context, toolbar, submenu)
         # todo fme?: check that we should pass the evaluated context here
         self.process_view(req.session, fvg, context, transform)
+        if toolbar and transform:
+            self.process_toolbar(req, fvg['toolbar'])
         return fvg
 
     def process_view(self, session, fvg, context, transform):
@@ -792,6 +794,17 @@ class View(openerpweb.Controller):
                 field["domain"] = self.parse_domain(field["domain"], session)
             if field.get('context'):
                 field["context"] = self.parse_context(field["context"], session)
+
+    def process_toolbar(self, req, toolbar):
+        """
+        The toolbar is a mapping of section_key: [action_descriptor]
+
+        We need to clean all those actions in order to ensure correct
+        round-tripping
+        """
+        for section in toolbar.keys():
+            toolbar[section] = [clean_action(req, action)
+                                for action in toolbar[section]]
 
     @openerpweb.jsonrequest
     def add_custom(self, req, view_id, arch):
