@@ -161,7 +161,7 @@ class JsonRequest(WebRequest):
             else:
                 self.jsonrequest = simplejson.loads(request, object_hook=nonliterals.non_literal_decoder)
             self.init(self.jsonrequest.get("params", {}))
-            _logger.debug("--> %s.%s %s" % (controller.__class__.__name__, method.__name__, self.jsonrequest))
+            _logger.debug("--> %s.%s %s", controller.__class__.__name__, method.__name__, self.jsonrequest)
             response['id'] = self.jsonrequest.get('id')
             response["result"] = method(controller, self, **self.params)
         except backend.OpenERPUnboundException:
@@ -198,7 +198,7 @@ class JsonRequest(WebRequest):
         if error:
             response["error"] = error
 
-        _logger.debug("<-- %s" % response)
+        _logger.debug("<-- %s", response)
         content = simplejson.dumps(response, cls=nonliterals.NonLiteralEncoder)
         return werkzeug.wrappers.Response(
             content, headers=[('Content-Type', 'application/json'),
@@ -235,13 +235,13 @@ class HttpRequest(WebRequest):
                 akw[key] = value
             else:
                 akw[key] = type(value)
-        _logger.debug("%s --> %s.%s %r" % (self.httprequest.method, controller.__class__.__name__, method.__name__, akw))
+        _logger.debug("%s --> %s.%s %r", self.httprequest.method, controller.__class__.__name__, method.__name__, akw)
         r = method(controller, self, **self.params)
         if self.debug or 1:
             if isinstance(r, werkzeug.wrappers.BaseResponse):
-                _logger.debug('<-- %s' % r)
+                _logger.debug('<-- %s', r)
             else:
-                _logger.debug("<-- size: %s" % len(r))
+                _logger.debug("<-- size: %s", len(r))
         return r
 
     def make_response(self, data, headers=None, cookies=None):
