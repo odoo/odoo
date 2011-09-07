@@ -11,6 +11,7 @@ import simplejson
 import textwrap
 import xmlrpclib
 import time
+import zlib
 import webrelease
 from xml.etree import ElementTree
 from cStringIO import StringIO
@@ -1357,6 +1358,8 @@ class Reports(View):
             time.sleep(self.POLLING_DELAY)
 
         report = base64.b64decode(report_struct['result'])
+        if report_struct.get('code') == 'zlib':
+            report = zlib.decompress(report)
         report_mimetype = self.TYPES_MAPPING.get(
             report_struct['format'], 'octet-stream')
         return req.make_response(report,
