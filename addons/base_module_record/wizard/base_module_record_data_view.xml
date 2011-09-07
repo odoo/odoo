@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="base_module_record_data_view" model="ir.ui.view">
+            <field name="name">base_module_record_data</field>
+            <field name="model">base.module.data</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Objects Recording">
+                    <field name="check_date"/>
+                    <newline/>
+                    <field name="filter_cond"/>
+                    <separator string="Choose objects to record" colspan="4"/>
+                    <field name="objects" colspan="4" nolabel="1"/>
+                    <group><field name="info_yaml"/></group>
+                    <separator colspan="4"/>
+                    <group colspan="4" col="2">
+                        <button icon="gtk-cancel" string="Cancel" special="cancel"/>
+                        <button name="record_objects" icon="gtk-ok" string="Record" type="object"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+		<record model="ir.actions.act_window" id="action_base_module_record_data">
+			<field name="name">Export Customizations as Data</field>
+			<field name="res_model">base.module.data</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form</field>
+			<field name="target">new</field>
+			<field name="view_id" ref="base_module_record_data_view"/>
+		</record>
+
+            
+        <menuitem
+            parent="menu_wizard_base_mod_rec"
+            name="Export Customizations As Data file"
+            action="action_base_module_record_data"
+            id="menu_wizard_base_module_record_data"/>
+
+        <act_window
+            id="act_base_module_record_data"
+            name="Export Customizations As Data File"
+            res_model="base.module.data"
+            src_model="ir.module.module"
+            view_mode="form"
+            target="new"
+            multi="True"
+            key2="client_action_multi"/>            
+            
+		<record id="module_create_xml_view" model="ir.ui.view">
+            <field name="name">module.create.xml.form</field>
+            <field name="model">base.module.record.data</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+				<form string="Objects Recording">
+					<separator string="Result, paste this to your module's xml" colspan="4" />
+    				<field name="res_text" nolabel="1"  colspan="4"/>
+    				<separator colspan="4"/>
+    				<group colspan="4" col="2">
+    					<label string=""/>
+	    				<button icon="gtk-ok" string="Close" special="cancel"/>
+    				</group>
+				</form>
+            </field>
+         </record>
+    </data>
+</openerp>            
