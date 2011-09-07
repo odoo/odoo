@@ -26,6 +26,11 @@ import backendrpc as backend
 __all__ = ['Root', 'jsonrequest', 'httprequest', 'Controller',
            'WebRequest', 'JsonRequest', 'HttpRequest']
 
+_logger = logging.getLogger(__name__)
+if not _logger.handlers:
+    _logger.addHandler(logging.StreamHandler(sys.stdout))
+    _logger.propagate = False
+
 #-----------------------------------------------------------
 # Globals (wont move into a pool)
 #-----------------------------------------------------------
@@ -159,8 +164,7 @@ class JsonRequest(WebRequest):
             else:
                 self.jsonrequest = simplejson.loads(request, object_hook=nonliterals.non_literal_decoder)
             self.init(self.jsonrequest.get("params", {}))
-            if self.debug or 1:
-                print "--> %s.%s %s" % (controller.__class__.__name__, method.__name__, self.jsonrequest)
+            _logger.debug("--> %s.%s %s" % (controller.__class__.__name__, method.__name__, self.jsonrequest))
             response['id'] = self.jsonrequest.get('id')
             response["result"] = method(controller, self, **self.params)
         except backend.OpenERPUnboundException:
@@ -197,10 +201,7 @@ class JsonRequest(WebRequest):
         if error:
             response["error"] = error
 
-        if self.debug or 1:
-            print "<--", response
-            print
-
+        _logger.debug("<-- %s" % response)
         content = simplejson.dumps(response, cls=nonliterals.NonLiteralEncoder)
         return werkzeug.wrappers.Response(
             content, headers=[('Content-Type', 'application/json'),
@@ -237,15 +238,13 @@ class HttpRequest(WebRequest):
                 akw[key] = value
             else:
                 akw[key] = type(value)
-        if self.debug or 1:
-            print "%s --> %s.%s %r" % (self.httprequest.method, controller.__class__.__name__, method.__name__, akw)
+        _logger.debug("%s --> %s.%s %r" % (self.httprequest.method, controller.__class__.__name__, method.__name__, akw))
         r = method(controller, self, **self.params)
         if self.debug or 1:
             if isinstance(r, werkzeug.wrappers.BaseResponse):
-                print '<--', r
+                _logger.debug('<-- %s' % r)
             else:
-                print "<--", 'size:', len(r)
-            print
+                _logger.debug("<-- size: %s" % len(r))
         return r
 
     def make_response(self, data, headers=None, cookies=None):
@@ -391,7 +390,7 @@ class Root(object):
                 manifest_path = os.path.join(addons_path, module, '__openerp__.py')
                 if os.path.isfile(manifest_path):
                     manifest = ast.literal_eval(open(manifest_path).read())
-                    print "Loading", module
+                    _logger.info("Loading %s", module)
                     m = __import__(module)
                     addons_module[module] = m
                     addons_manifest[module] = manifest
@@ -424,6 +423,6 @@ class Root(object):
                     meth = rest[0]
                     m = getattr(c, meth)
                     if getattr(m, 'exposed', False):
-                        print "Dispatching to", ps, c, meth, m
+                        _logger.debug("Dispatching to %s %s %s %s", ps, c, meth, m)
                         return m
         return None
