@@ -46,13 +46,14 @@ class DefaultConfig(object):
     OPENERP_PORT = 8069
     OPENERP_DEFAULT_DATABASE = 'openerp'
     MAIL_ERROR = 'error@example.com'
-    MAIL_SERVER = 'localhost'
-    MAIL_ADMINS = ('admin@example.com',)
+    MAIL_SERVER = 'smtp.example.com'
+    MAIL_SERVER_PORT = 25
+    MAIL_ADMINS = ('info@example.com',)
 
 config = DefaultConfig()
 
 
-def send_mail(_from_, to_, subject, text, files=None, server=config.MAIL_SERVER):
+def send_mail(_from_, to_, subject, text, files=None, server=config.MAIL_SERVER, port=config.MAIL_SERVER_PORT):
     assert isinstance(to_, (list, tuple))
 
     if files is None:
@@ -74,7 +75,7 @@ def send_mail(_from_, to_, subject, text, files=None, server=config.MAIL_SERVER)
                        % file_name)
         msg.attach(part)
 
-    smtp = smtplib.SMTP(server)
+    smtp = smtplib.SMTP(server, port=port)
     smtp.sendmail(_from_, to_, msg.as_string() )
     smtp.close()
 
@@ -104,16 +105,15 @@ class EmailParser(object):
         self.email_default = email_default
 
 
-    def parse(self, message, custom_values=None):
-        if custom_values is None:
-            custom_values = {}
+    def parse(self, message, custom_values=None, save_original=None):
         # pass message as bytes because we don't know its encoding until we parse its headers
         # and hence can't convert it to utf-8 for transport
         res_id = self.rpc('mail.thread',
                           'message_process',
                           self.model,
                           xmlrpclib.Binary(message),
-                          custom_values)
+                          custom_values or {},
+                          save_original or False)
 
 def configure_parser():
     parser = optparse.OptionParser(usage='usage: %prog [options]', version='%prog v1.1')
@@ -145,6 +145,10 @@ def configure_parser():
     parser.add_option("--custom-values", dest="custom_values",
                       help="Add Custom Values to the object",
                       default=None)
+    parser.add_option("-s", dest="save_original",
+                      action="store_true",
+                      help="Attach a copy of original email to the message entry",
+                      default=False)
 
     return parser
 
@@ -169,12 +173,14 @@ def main():
 
     custom_values = {}
     try:
+        print "custom vals: %s" % options.custom_values
         custom_values = dict(eval(options.custom_values or {} ))
     except:
-        pass
+        import traceback
+        traceback.print_exc()
 
     try:
-        email_parser.parse(msg_txt, custom_values)
+        email_parser.parse(msg_txt, custom_values, options.save_original or False)
     except Exception:
         msg = '\n'.join([
             'parameters',
@@ -191,6 +197,7 @@ def main():
             config.MAIL_ADMINS,
             subject, msg, files=[('message.txt', msg_txt)]
         )
+        sys.stderr.write("Failed to deliver email to OpenERP Server, sending error notification to %s\n" % config.MAIL_ADMINS)
 
 if __name__ == '__main__':
     main()

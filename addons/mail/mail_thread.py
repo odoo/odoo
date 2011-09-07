@@ -153,10 +153,14 @@ class mail_thread(osv.osv):
            containing all the details passed as parameters.  All attachments
            will be attached to the thread record as well as to the actual
            message.
+           If only the ``threads`` and ``subject`` parameters are provided,
+           a *event log* message is created, without the usual envelope
+           attributes (sender, recipients, etc.). 
 
         :param threads: list of thread ids, or list of browse_records representing
                         threads to which a new message should be attached
-        :param subject: Thread action keyword e.g.: If thread is closed "Close" keyword is used
+        :param subject: subject of the message, or description of the event if this
+                        is an *event log* entry.
         :param email_to: Email-To / Recipient address
         :param email_from: Email From / Sender address if any
         :param email_cc: Comma-Separated list of Carbon Copy Emails To addresse if any
@@ -291,7 +295,8 @@ class mail_thread(osv.osv):
                             context = context)
 
 
-    def message_process(self, cr, uid, model, message, custom_values=None, context=None):
+    def message_process(self, cr, uid, model, message, custom_values=None,
+                        save_original=False, context=None):
         """Process an incoming RFC2822 email message related to the
            given thread model, relying on ``mail.message.parse()``
            for the parsing operation, and then calling ``message_new``
@@ -307,6 +312,8 @@ class mail_thread(osv.osv):
                                     to pass to ``message_new`` if a new
                                     record needs to be created. Ignored
                                     if the thread record already exists.
+           :param bool save_original: whether to keep a copy of the original
+               email source attached to the message after it is imported.
         """
         # extract message bytes - we are forced to pass the message as binary because
         # we don't know its encoding until we parse its headers and hence can't
@@ -328,7 +335,7 @@ class mail_thread(osv.osv):
         if isinstance(message, unicode):
             message = message.encode('utf-8')
         msg_txt = email.message_from_string(message)
-        msg = mail_message.parse_message(msg_txt)
+        msg = mail_message.parse_message(msg_txt, save_original=save_original)
 
         # Create New Record into particular model
         def create_record(msg):
@@ -357,6 +364,9 @@ class mail_thread(osv.osv):
                     if model_pool.exists(cr, uid, res_id):
                         if hasattr(model_pool, 'message_update'):
                             model_pool.message_update(cr, uid, [res_id], msg, {}, context=context)
+                    else:
+                        # referenced thread was not found, we'll have to create a new one
+                        res_id = False
         if not res_id:
             res_id = create_record(msg)
         #To forward the email to other followers
@@ -386,8 +396,8 @@ class mail_thread(osv.osv):
                 followers = model_pool.message_thread_followers(cr, uid, [res.id])[res.id]
             else:
                 followers = self.message_thread_followers(cr, uid, [res.id])[res.id]
-            message_followers_emails = mail_message.to_email(','.join(filter(None, followers)))
-            message_recipients = mail_message.to_email(','.join(filter(None,
+            message_followers_emails = to_email(','.join(filter(None, followers)))
+            message_recipients = to_email(','.join(filter(None,
                                                                        [decode(msg['from']),
                                                                         decode(msg['to']),
                                                                         decode(msg['cc'])])))
@@ -398,7 +408,7 @@ class mail_thread(osv.osv):
                     del msg['reply-to']
                     msg['reply-to'] = res.section_id.reply_to
 
-                smtp_from = mail_message.to_email(msg['from'])
+                smtp_from = to_email(msg['from'])
                 msg['from'] = smtp_from
                 msg['to'] =  forward_to
                 msg['message-id'] = tools.generate_tracking_message_id(res.id)

@@ -36,11 +36,11 @@
                             </group>
 
                             <notebook colspan="4">
-                                <page string="Body (Plain)" attrs="{'invisible':[('subtype','=','html')]}">
-                                    <field name="body_text" colspan="4" widget="text" nolabel="1"/>
-                                </page>
                                 <page string="Body (Rich)" attrs="{'invisible':[('subtype','=','plain')]}">
                                     <field name="body_html" widget="text_html" nolabel="1" colspan="4"/>
+                                </page>
+                                <page string="Body (Plain)">
+                                    <field name="body_text" colspan="4" widget="text" nolabel="1"/>
                                 </page>
                             </notebook>
 
@@ -66,7 +66,7 @@
                                 <field name="subtype" attrs="{'invisible':[('subtype', '=', False)]}"/>
                                 <field name="auto_delete"/>
                                 <field name="headers" colspan="4" attrs="{'invisible':[('headers', '=', False)]}"/>
-                                <field name="original" colspan="4" height="350" attrs="{'invisible':[('original', '=', False)]}"/>
+                                <field name="original" colspan="4" attrs="{'invisible':[('original', '=', False)]}"/>
                             </group>
                         </page>
                     </notebook>

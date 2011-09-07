@@ -26,6 +26,7 @@ import logging
 import re
 import time
 from email.header import decode_header
+from email.message import Message
 
 import tools
 from osv import osv
@@ -87,7 +88,6 @@ class mail_message_common(osv.osv_memory):
                                                              "select plaintext or rich text contents accordingly", readonly=1),
         'body_text': fields.text('Text contents', help="Plain-text version of the message"),
         'body_html': fields.text('Rich-text contents', help="Rich-text/HTML version of the message"),
-        'original': fields.text('Original', help="Original version of the message, as it was sent on the network", readonly=1),
     }
 
     _defaults = {
@@ -175,6 +175,7 @@ class mail_message(osv.osv):
                         ('cancel', 'Cancelled'),
                         ], 'State', readonly=True),
         'auto_delete': fields.boolean('Auto Delete', help="Permanently delete this email after sending it"),
+        'original': fields.binary('Original', help="Original version of the message, as it was sent on the network", readonly=1),
     }
 
     _defaults = {
@@ -307,13 +308,16 @@ class mail_message(osv.osv):
             _logger.exception("Failed processing mail queue")
         return res
 
-    def parse_message(self, message):
+    def parse_message(self, message, save_original=False):
         """Parses a string or email.message.Message representing an
            RFC-2822 email, and returns a generic dict holding the
            message details.
 
            :param message: the message to parse
            :type message: email.message.Message | string | unicode
+           :param bool save_original: whether the returned dict
+               should include an ``original`` entry with the base64
+               encoded source of the message.
            :rtype: dict
            :return: A dict with the following structure, where each
                     field may not be present if missing in original
@@ -349,8 +353,11 @@ class mail_message(osv.osv):
         message_id = msg_txt.get('message-id', False)
         msg = {}
 
-        # save original, we need to be able to read the original email sometimes
-        msg['original'] = message
+        if save_original:
+            # save original, we need to be able to read the original email sometimes
+            msg['original'] = message.as_string() if isinstance(message, Message) \
+                                                  else message
+            msg['original'] = base64.b64encode(msg['original']) # binary fields are b64
 
         if not message_id:
             # Very unusual situation, be we should be fault-tolerant here
@@ -487,8 +494,7 @@ class mail_message(osv.osv):
                                                 mail_server_id=message.mail_server_id.id,
                                                 context=context)
                 if res:
-                    message.write({'state':'sent', 'message_id': res,
-                                   'original': msg.as_string(message.email_from)})
+                    message.write({'state':'sent', 'message_id': res})
                 else:
                     message.write({'state':'exception'})
 
