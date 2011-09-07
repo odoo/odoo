@@ -501,6 +501,7 @@ class sale_order(osv.osv):
     
     def action_cancel(self, cr, uid, ids, context={}):
         ok = True
+        wf_service = netsvc.LocalService("workflow")
         sale_order_line_obj = self.pool.get('sale.order.line')
         for sale in self.browse(cr, uid, ids):
             for pick in sale.picking_ids:
@@ -508,6 +509,12 @@ class sale_order(osv.osv):
                     raise osv.except_osv(
                         _('Could not cancel sale order !'),
                         _('You must first cancel all packing attached to this sale order.'))
+                if pick.state == 'cancel':
+                    for mov in pick.move_lines:
+                        proc_ids = self.pool.get('mrp.procurement').search(cr, uid, [('move_id', '=', mov.id)])
+                        if proc_ids:
+                            for proc in proc_ids:
+                                wf_service.trg_validate(uid, 'mrp.procurement', proc, 'button_check', cr)
             for r in self.read(cr, uid, ids, ['picking_ids']):
                 for pick in r['picking_ids']:
                     wf_service = netsvc.LocalService("workflow")
