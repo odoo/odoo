@@ -125,11 +125,11 @@ openerp.web.ActionManager = openerp.web.Widget.extend({
         (this.client_widget = new ClientWidget(this, action.params)).appendTo(this);
     },
     ir_actions_report_xml: function(action) {
-        this.rpc('/web/report/get_report', {
-            action: action,
-            context: {}
-        }).then(function(result) {
-            debugger;
+        $.blockUI();
+        this.session.get_file({
+            url: '/web/report',
+            data: {action: JSON.stringify(action)},
+            complete: $.unblockUI
         });
     }
 });

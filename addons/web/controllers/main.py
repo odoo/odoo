@@ -23,8 +23,6 @@ openerpweb.nonliterals = web.common.nonliterals
 
 from babel.messages.pofile import read_po
 
-_REPORT_POLLER_DELAY = 0.05
-
 # Should move to openerpweb.Xml2Json
 class Xml2Json:
     # xml2json-direct
@@ -1325,22 +1323,45 @@ class ExcelExport(Export):
 
 class Reports(View):
     _cp_path = "/web/report"
+    POLLING_DELAY = 0.25
+    TYPES_MAPPING = {
+        'doc': 'application/vnd.ms-word',
+        'html': 'text/html',
+        'odt': 'application/vnd.oasis.opendocument.text',
+        'pdf': 'application/pdf',
+        'sxw': 'application/vnd.sun.xml.writer',
+        'xls': 'application/vnd.ms-excel',
+    }
 
-    @openerpweb.jsonrequest
-    def get_report(self, req, action):
+    @openerpweb.httprequest
+    def index(self, req, action, token):
+        action = simplejson.loads(action)
+
         report_srv = req.session.proxy("report")
-        context = req.session.eval_context(openerpweb.nonliterals.CompoundContext(req.context, \
-                                                                                  action["context"]))
-
-        args = [req.session._db, req.session._uid, req.session._password, action["report_name"], context["active_ids"], {"id": context["active_id"], "model": context["active_model"], "report_type": action["report_type"]}, context]
-        report_id = report_srv.report(*args)
-        report = None
+        context = req.session.eval_context(
+            openerpweb.nonliterals.CompoundContext(
+                req.context or {}, action[ "context"]))
+        report_id = report_srv.report(
+            req.session._db, req.session._uid, req.session._password,
+            action["report_name"], context["active_ids"],
+            {"id": context["active_id"],
+             "model": context["active_model"],
+             "report_type": action["report_type"]},
+            context)
+        report_struct = None
         while True:
-            args2 = [req.session._db, req.session._uid, req.session._password, report_id]
-            report = report_srv.report_get(*args2)
-            if report["state"]:
+            report_struct = report_srv.report_get(
+                req.session._db, req.session._uid, req.session._password, report_id)
+            if report_struct["state"]:
                 break
-            time.sleep(_REPORT_POLLER_DELAY)
+            time.sleep(self.POLLING_DELAY)
 
-        #TODO: ok now we've got the report, and so what?
-        return False
+        report = base64.b64decode(report_struct['result'])
+        report_mimetype = self.TYPES_MAPPING.get(
+            report_struct['format'], 'octet-stream')
+        return req.make_response(report,
+             headers=[
+                 ('Content-Disposition', 'attachment; filename="%s.%s"' % (action['report_name'], action['report_type'])),
+                 ('Content-Type', report_mimetype),
+                 ('Content-Length', len(report))],
+             cookies={'fileToken': int(token)})
