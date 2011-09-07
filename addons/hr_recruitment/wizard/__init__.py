@@ -23,7 +23,6 @@
 import hr_recruitment_phonecall
 import hr_recruitment_create_partner_job
 import hr_recruitment_employee_hired
-import email_compose_message
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

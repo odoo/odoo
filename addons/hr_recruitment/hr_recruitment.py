@@ -31,6 +31,8 @@ import tools
 from tools.translate import _
 from crm import wizard
 
+wizard.mail_compose_message.SUPPORTED_MODELS.append('hr.applicant')
+
 AVAILABLE_STATES = [
     ('draft', 'New'),
     ('open', 'In Progress'),
