@@ -254,7 +254,7 @@
   Now get the remaining hours required to close the task.
 -
   !python {model: project.task.reevaluate}: |
-      self._get_remaining(cr, uid)
+      self._get_remaining(cr, uid,{'active_id':ref('project_task_functionaltraining0') })
 - |
   I click the apply button.
 -
