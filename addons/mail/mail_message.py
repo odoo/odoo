@@ -378,6 +378,8 @@ class mail_message(osv.osv):
         if 'From' in fields:
             msg['from'] = decode(msg_txt.get('From') or msg_txt.get_unixfrom())
 
+        if 'To' in fields:
+            msg['to'] = decode(msg_txt.get('To'))
         if 'Delivered-To' in fields:
             msg['to'] = decode(msg_txt.get('Delivered-To'))
 
