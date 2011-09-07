@@ -135,19 +135,17 @@ class mail_compose_message(osv.osv_memory):
             # we use the plain text version of the original mail, by default,
             # as it is easier to quote than the HTML version.
             # XXX TODO: make it possible to switch to HTML on the fly
-            body = message_data.body_text or ''
+            current_user = self.pool.get('res.users').browse(cr, uid, uid, context)
+            body = message_data.body_text or current_user.signature 
             if context.get('mail.compose.message.mode') == 'reply':
-                header = _('-------- Original Message --------')
-                sender = _('From: %s')  % tools.ustr(message_data.email_from or '')
-                email_to = _('To: %s') %  tools.ustr(message_data.email_to or '')
-                sentdate = _('Date: %s') % message_data.date if message_data.date else ''
-                quoted_body = '> \n> %s' % tools.ustr(body.replace('\n', "\n> ") or '')
-                body = '\n'.join(filter(None, ["\n", header, sender, email_to, sentdate,
-                                               quoted_body]))
+                sent_date = _('On %(date)s, ') % {'date': message_data.date} if message_data.date else ''
+                sender = _('%(sender_name)s wrote:') % {'sender_name': tools.ustr(message_data.email_from or _('You'))}
+                quoted_body = '> %s' % tools.ustr(body.replace('\n', "\n> ") or '')
+                body = '\n'.join(["\n", (sent_date + sender), quoted_body])
+                body += "\n" + current_user.signature
                 re_prefix = _("Re:")
                 if not (subject.startswith('Re:') or subject.startswith(re_prefix)):
                     subject = "%s %s" % (re_prefix, subject)
-            current_user = self.pool.get('res.users').browse(cr, uid, uid, context)
             result.update({
                     'subtype' : 'plain', # default to the text version due to quoting
                     'body_text' : body,
