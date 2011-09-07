@@ -107,7 +107,7 @@
           <para style="terp_default_9">[[ (order.partner_id and order.partner_id.title and order.partner_id.title.name) or '' ]] [[ order.partner_id.name ]]</para>
           <para style="terp_default_9">[[ (order.partner_address_id and order.partner_address_id.street) or '']]</para>
           <para style="terp_default_9">[[ (order.partner_address_id.street2) or removeParentNode('para') ]]</para>
-          <para style="terp_default_9">[[ (order.partner_address_id and order.partner_address_id.zip) or '' ]][[ (order.partner_address_id and order.partner_address_id.city) or '' ]]</para>
+          <para style="terp_default_9">[[ (order.partner_address_id and order.partner_address_id.zip) or '' ]] [[ (order.partner_address_id and order.partner_address_id.city) or '' ]]</para>
           <para style="terp_default_9">[[ (order.partner_address_id.state_id.name) or removeParentNode('para') ]]</para>
           <para style="terp_default_9">[[ (order.partner_address_id and order.partner_address_id.country_id and order.partner_address_id.country_id.name) or '' ]]</para>
           <para style="terp_default_9">
