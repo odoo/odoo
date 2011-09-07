@@ -9,7 +9,7 @@
 		            <field name="arch" type="xml">
 		                <xpath expr="/form/notebook/page[@string='Extra Info']" position="before">
 		                    <page string="History">
-	                        	<field name="message_ids" colspan="4" nolabel="1" mode="tree,form">
+	                        	<field name="message_ids" colspan="4" nolabel="1" mode="tree,form" readonly="1">
 			                        <tree string="History">
 			                            <field name="display_text" string="History Information"/>
 			                        </tree>
