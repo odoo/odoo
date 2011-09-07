@@ -77,17 +77,12 @@ class project_tasks(osv.osv):
         return True
 
     def message_thread_followers(self, cr, uid, ids, context=None):
-        res = []
-        if isinstance(ids, (str, int, long)):
-            select = [ids]
-        else:
-            select = ids
-        for task in self.browse(cr, uid, select, context=context):
-            user_email = (task.user_id and task.user_id.user_email) or False
-            res += [(user_email, False, False, task.priority)]
-        if isinstance(ids, (str, int, long)):
-            return len(res) and res[0] or False
-        return res
+        followers = super(project_tasks,self).message_thread_followers(cr, uid, ids, context=context)
+        for task in self.browse(cr, uid, followers.keys(), context=context):
+            task_followers = set(followers[task.id])
+            task_followers.add(task.user_id.user_email)
+            followers[task.id] = filter(None, task_followers)
+        return followers
 
     def do_draft(self, cr, uid, ids, context=None):
         res = super(project_tasks, self).do_draft(cr, uid, ids, context)
