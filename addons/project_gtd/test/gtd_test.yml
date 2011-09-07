@@ -1,5 +1,5 @@
 -
-  Create a task 'Develop time management module' with monthly timebox
+  I create a task 'Develop time management module' with monthly timebox.
 -
   !record {model: project.task, id: project_task_developtimemanagementmodule0}:
     name: Develop time management module
@@ -9,7 +9,7 @@
     state: draft
     timebox_id: project_gtd.timebox_monthly
 -
-  Copy the task
+  I copy the task.
 -
   !python {model: project.task}: |
     self.copy_data(cr, uid, ref("project_task_developtimemanagementmodule0"), default=None, context=None)
@@ -20,17 +20,17 @@
     self.fields_view_get(cr, uid, view_id=None, view_type='form', context={'active_id':ref('project_task_developtimemanagementmodule0')}, toolbar=False, submenu=False)
     self.fields_view_get(cr, uid, view_id=None, view_type='search', context={'active_id':ref('project_task_developtimemanagementmodule0')}, toolbar=False, submenu=False)
 -
-  Change the time to next
+  I change the time to next.
 -
   !python {model: project.task}: |
     self.next_timebox(cr, uid, [ref("project_task_developtimemanagementmodule0")])
 -
-  Change the time to previous
+  I change the time to previous.
 -
   !python {model: project.task}: |
     self.prev_timebox(cr, uid, [ref("project_task_developtimemanagementmodule0")])
 -
-  Open the task
+  Open the task.
 -
   !python {model: project.task}: |
     self.do_open(cr, uid, [ref("project_task_developtimemanagementmodule0")], {"lang":
@@ -40,19 +40,19 @@
       [ref("project.menu_action_view_task")], "active_id": ref("project.menu_action_view_task"),
       })
 -
-  Create time box for next week
+  I create time box for next week.
 -
   !record {model: project.gtd.timebox, id: project_gtd_timebox_nextweek0}:
     name: Next Week
     sequence: 0.0
 -
-  Create time box for tomorrow
+  I create time box for tomorrow.
 -
   !record {model: project.gtd.timebox, id: project_gtd_timebox_tomorrow1}:
     name: Tomorrow
     sequence: 0.0
 -
-  Planify the task from monthly timebox to tomorrow timebox
+  Planify the task from monthly timebox to tomorrow timebox.
 -
   !record {model: project.timebox.fill.plan, id: project_timebox_fill_plan_0}:
     task_ids:
@@ -60,7 +60,7 @@
     timebox_id: project_gtd.timebox_monthly
     timebox_to_id: project_gtd_timebox_tomorrow1
 -
-  Set the task to tomorrow timebox
+  Set the task to tomorrow timebox.
 -
   !python {model: project.timebox.fill.plan}: |
     self._get_from_tb(cr, uid, context=None)
@@ -71,12 +71,12 @@
       [ref("project_gtd.timebox_daily")], "active_id": ref("project_gtd.timebox_daily"),
       })
 -
-   Check if task set to tomorrow timebox
+   I check if task set to tomorrow timebox.
 -
    !assert {model: project.task, id: project_task_developtimemanagementmodule0, string: Task set to tomorrow timebox}:
       - timebox_id.id == ref("project_gtd_timebox_tomorrow1")
 -
-   Empty Timebox for tomorrow
+   Empty Timebox for tomorrow.
 -
    !python {model: project.timebox.empty}: |
       self.view_init(cr , uid , fields_list={}, context=None)
@@ -86,7 +86,7 @@
       [ref("project_gtd_timebox_tomorrow1")], "active_id": ref("project_gtd_timebox_tomorrow1"),
       })
 -
-   Check task 'Develop time management module' is no more in tomorrow timebox
+   I check task 'Develop time management module' is no more in tomorrow timebox.
 -
    !assert {model: project.task, id: project_task_developtimemanagementmodule0, string: Task is not in tomorrow timebox}:
       - timebox_id.id != ref("project_gtd_timebox_tomorrow1")

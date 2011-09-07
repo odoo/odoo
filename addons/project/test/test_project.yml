@@ -4,9 +4,9 @@
   !record {model: res.users, id: base.user_root}:
     user_email: admin@openerp.com
 -
-  I test project template feature
+  I test project template feature.
 -
-  I create test project 'OpenERP Test Programme'
+  I create test project 'OpenERP Test Programme'.
 -
   !record {model: project.project, id: project_project_testprogramme0}:
     company_id: base.main_company
@@ -18,7 +18,7 @@
     name : account_analytic_account
     partner_id: base.res_partner_asus
 -
-  I create project 'OpenERP Training Programme'
+  I create project 'OpenERP Training Programme'.
 -
   !record {model: project.project, id: project_project_openerptrainingprogramme0}:
     company_id: base.main_company
@@ -28,7 +28,7 @@
     date_start: !eval time.strftime('%Y-%m-%d')
     date: !eval time.strftime('%Y-%m-%d')
 -
-  I create task 'Technical Training' for this project
+  I create task 'Technical Training' for this project.
 -
   !record {model: project.task, id: project_task_technicaltraining0}:
     date_start: !eval time.strftime('%Y-%m-%d %H:%M:%S')
@@ -39,7 +39,7 @@
     remaining_hours: 30.0
     state: draft
 -
-  I create task 'Training' for this project
+  I create task 'Training' for this project.
 -
   !record {model: project.task, id: project_task_child0}:
     date_start: !eval time.strftime('%Y-%m-%d %H:%M:%S')
@@ -49,7 +49,7 @@
     remaining_hours: 30.0
     state: done
 -
-  I create task 'Functional Training' for this project
+  I create task 'Functional Training' for this project.
 -
   !record {model: project.task, id: project_task_functionaltraining0}:
     date_start: !eval time.strftime('%Y-%m-%d %H:%M:%S')
@@ -61,7 +61,7 @@
       - project_task_child0
     state: draft
 -
-  I set project's task view
+  I set project's task view.
 -
   !python {model: project.task}: |
     context.update({'project_id': ref('project_task_functionaltraining0')})
@@ -79,7 +79,7 @@
   !python {model: project.task}: |
     self.do_open(cr, uid,[ref("project_task_functionaltraining0")],context={})
 -
-  I click Pending button
+  I click Pending button.
 -
   !python {model: project.task}: |
     self.do_pending(cr, uid, [ref("project_task_functionaltraining0")], context={})
@@ -125,7 +125,7 @@
     name: Technical Training Task's Work
     task_id: project_task_technicaltraining0
 -
-  I create project's Work
+  I create project's Work.
 -
   !python {model: project.task.work}: |
     vals = {
@@ -135,7 +135,7 @@
             }
     self.create(cr, uid, vals,context={"lang": "en_US", "active_ids": [ref("project_task_functionaltraining0")],"tz": False, "active_id": ref("project_task_functionaltraining0")})
 -
-  I add project's Work
+  I add project's Work.
 -
   !python {model: project.task.work}: |
     vals = {
@@ -145,7 +145,7 @@
         }
     self.write(cr, uid, [ref('project_task_work0')], vals, context={"lang": "en_US", "active_ids": [ref("project_task_functionaltraining0")],"tz": False, "active_id": ref("project_task_functionaltraining0")})
 -
-  I get project's Work
+  I get project's Work.
 -
   !python {model: project.project}: |
     self._get_project_work(cr, uid, [ref("project_task_work0")], context={"lang": "en_US", "active_ids": [ref("project_task_functionaltraining0")],"tz": False, "active_id": ref("project_task_functionaltraining0")})
@@ -155,19 +155,19 @@
   !python {model: project.project}: |
     self.onchange_partner_id(cr, uid, [ref("project_project_openerptrainingprogramme0")], part=ref('base.res_partner_asus'), context = {"lang": "en_US", "active_model": "ir.ui.menu", "active_ids": [ref("project.menu_open_view_project_all")],"tz": False, "active_id": ref("project.menu_open_view_project_all")})
 -
-  I set project as project template
+  I set project as project template.
 -
   !python {model: project.project}: |
     self.set_template(cr, uid, [ref("project_project_openerptrainingprogramme0")],
       {"lang": "en_US", "active_model": "ir.ui.menu", "active_ids": [ref("project.menu_open_view_project_all")],
       "tz": False, "active_id": ref("project.menu_open_view_project_all"), })
 -
-  I check if project in template state
+  I check if project in template state.
 -
   !assert {model: project.project, id: project_project_openerptrainingprogramme0, severity: error, string: Project is in template state}:
        - state == "template"
 -
-  I create new project based on this template
+  I create new project based on this template.
 -
   !python {model: project.project}: |
      new_prj = self.duplicate_template(cr, uid, [ref("project_project_openerptrainingprogramme0")],
@@ -181,7 +181,7 @@
      name = new_prj['name']
      assert state == 'open', "Project in %s state. Project created from template project must be in open state"%state
 -
-  I reset project template to normal project
+  I reset project template to normal project.
 -
   !python {model: project.project}: |
     self.reset_project(cr, uid, [ref("project_project_openerptrainingprogramme0")], {"lang": "en_US", "active_ids":
@@ -189,14 +189,14 @@
       "ir.ui.menu", "project_id": False, "active_id": ref("project.menu_open_view_project_all"),
       })
 -
-  I check if project in open state
+  I check if project in open state.
 -
   !assert {model: project.project, id: project_project_openerptrainingprogramme0, severity: error, string: Project is in open state}:
        - state == "open"
 -
-  I test for different project-states
+  I test for different project-states.
 -
-  Keep project pending
+  Keep project pending.
 -
   !python {model: project.project}: |
     self.set_pending(cr, uid, [ref("project_project_openerptrainingprogramme0")], {"lang": "en_US", "active_ids":
@@ -204,12 +204,12 @@
       "ir.ui.menu", "project_id": False, "active_id": ref("project.menu_open_view_project_all"),
       })
 -
-  I check if project in pending state
+  I check if project in pending state.
 -
   !assert {model: project.project, id: project_project_openerptrainingprogramme0, severity: error, string: Project is in pending state}:
        - state == "pending"
 -
-  I cancel the project
+  I cancel the project.
 -
   !python {model: project.project}: |
     self.set_cancel(cr, uid, [ref("project_project_openerptrainingprogramme0")], {"lang": "en_US", "active_ids":
@@ -217,31 +217,31 @@
       "ir.ui.menu", "project_id": False, "active_id": ref("project.menu_open_view_project_all"),
       })
 -
-  I check if project in cancel state
+  I check if project in cancel state.
 -
   !assert {model: project.project, id: project_project_openerptrainingprogramme0, severity: error, string: Project is in cancel state}:
        - state == "cancelled"
 -
-  Re-open the project
+  Re-open the project.
 -
   !python {model: project.project}: |
     self.set_open(cr, uid, [ref("project_project_openerptrainingprogramme0")], {"lang": "en_US", "active_ids": [ref("project.menu_open_view_project_all")],
       "tz": False, "active_model": "ir.ui.menu", "project_id": False, "active_id":
       ref("project.menu_open_view_project_all"), })
 -
-  Re-Check if project in open state
+  Re-Check if project in open state.
 -
   !assert {model: project.project, id: project_project_openerptrainingprogramme0, severity: error, string: Project is in open state}:
        - state == "open"
 -
-  I test for task work allocation
+  I test for task work allocation.
 -
-  As I cancelled my project before, i check if the task 'Technical Training' is in cancelled state
+  As I cancelled my project before, i check if the task 'Technical Training' is in cancelled state.
 -
   !assert {model: project.task, id: project_task_technicaltraining0, severity: error, string: Task is in cancelled state}:
        - state == "cancelled"
 -
-  Now, in order to reactivate the task 'Technical Training', i click on the "Reactivate" button and fill the remaining hour field
+  Now, in order to reactivate the task 'Technical Training', i click on the "Reactivate" button and fill the remaining hour field.
 -
   !record {model: project.task.reevaluate, id: project_task_technicaltraining_remainingwiz0}:
     remaining_hours: 30.0
@@ -261,7 +261,7 @@
   !python {model: project.task.reevaluate}: |
       self.compute_hours(cr, uid, [ref('project_task_technicaltraining_remainingwiz0')], {'active_id': ref("project_task_technicaltraining0"),'button_reactivate': True})
 - |
-  I check if task 'Technical Training' in  open state and for other initial values
+  I check if task 'Technical Training' in  open state and for other initial values.
 -
   !assert {model: project.task, id: project_task_technicaltraining0, severity: error, string: Project is in open state}:
        - state == "open"
@@ -270,7 +270,7 @@
        - delay_hours == 0.0
        - effective_hours == 0.0
 -
-  I create a work task entry 'Training on OpenERP modules, models and classes' of 10 hours
+  I create a work task entry 'Training on OpenERP modules, models and classes' of 10 hours.
 -
   !record {model: project.task, id: project_task_technicaltraining0, context:{'no_analytic_entry':True}}:
     work_ids:
@@ -279,13 +279,13 @@
         name: Training on OpenERP modules, models and classes
         user_id: base.user_root
 -
-   I check for effective hours and remaining hours, effective_hours must be equal to 10
+   I check for effective hours and remaining hours, effective_hours must be equal to 10.
 -
    !assert {model: project.task, id: project_task_technicaltraining0, severity: error, string: After work task of 10 hours effective_hours must be equal to 10}:
        - remaining_hours == 20
        - effective_hours == 10.0
 -
-  I create a work task entry 'Training on OpenERP xml views' of 10 hours
+  I create a work task entry 'Training on OpenERP xml views' of 10 hours.
 -
   !record {model: project.task, id: project_task_technicaltraining0, context:{'no_analytic_entry':True}}:
     work_ids:
@@ -294,13 +294,13 @@
         name: Training on OpenERP xml views
         user_id: base.user_root
 -
-   I check for effective hours and remaining hours, effective_hours must be equal to 20
+   I check for effective hours and remaining hours, effective_hours must be equal to 20.
 -
    !assert {model: project.task, id: project_task_technicaltraining0, severity: error, string: After one more work task of 10 hours effective_hours must be equal to 20}:
        - remaining_hours == 10
        - effective_hours == 20.0
 -
-  I create a work task entry 'Training on workflows' of 10 hours
+  I create a work task entry 'Training on workflows' of 10 hours.
 -
   !record {model: project.task, id: project_task_technicaltraining0, context:{'no_analytic_entry':True}}:
     work_ids:
@@ -309,19 +309,19 @@
         name: Training on workflows
         user_id: base.user_root
 -
-   I check for effective hours and remaining hours, effective_hours must be equal to 30
+   I check for effective hours and remaining hours, effective_hours must be equal to 30.
 -
    !assert {model: project.task, id: project_task_technicaltraining0, severity: error, string: After one more work task of 10 hours effective_hours must be equal to 30}:
        - remaining_hours == 0
        - effective_hours == 30.0
 
 -
-  I set remaining hours of 10 hours for reevaluating the task
+  I set remaining hours of 10 hours for reevaluating the task.
 -
   !record {model: project.task.reevaluate, id: config_compute_remaining_0}:
     remaining_hours: 10.0
 -
-  I reevaluate the task
+  I reevaluate the task.
 -
   !python {model: project.task.reevaluate}: |
     self.compute_hours(cr, uid, [ref("config_compute_remaining_0")], {"lang": "en_US",
@@ -330,14 +330,14 @@
       [ref("project_task_technicaltraining0")], "active_id": ref("project_task_technicaltraining0"), })
 
 -
-   I check for effective hours and remaining hours, remaining_hours must be 10 while planned_hours remains 30
+   I check for effective hours and remaining hours, remaining_hours must be 10 while planned_hours remains 30.
 -
    !assert {model: project.task, id: project_task_technicaltraining0, severity: error, string: After reevaluating the task with 10 hours remaining_hours must be 10 while planned_hours remains 30}:
        - planned_hours == 30
        - remaining_hours == 10.0
        - effective_hours == 30.0
 -
-  I create a work task entry 'Training on reports and wizards' of 10 hours
+  I create a work task entry 'Training on reports and wizards' of 10 hours.
 -
   !record {model: project.task, id: project_task_technicaltraining0, context:{'no_analytic_entry':True}}:
     work_ids:
@@ -346,31 +346,31 @@
         name: Training on reports and wizards
         user_id: base.user_root
 -
-   I check for effective hours and remaining hours
+   I check for effective hours and remaining hours.
 -
    !assert {model: project.task, id: project_task_technicaltraining0, severity: error, string: After one more work task of 10 hours effective_hours must be equal to 40 while planned_hours remains 30}:
        - planned_hours == 30
        - remaining_hours == 0
        - effective_hours == 40.0
 -
-  I close the task
+  I close the task.
 -
   !python {model: project.task}: |
     self.do_close(cr, uid, [ref("project_task_technicaltraining0")], {'mail_send': False})
 -
-  I check if task in done state
+  I check if task in done state.
 -
   !assert {model: project.task, id: project_task_technicaltraining0, severity: error, string: Task is in done state}:
        - state == "done"
 -
-  I test for task reactivation
+  I test for task reactivation.
 -
-  I reactivate task
+  I reactivate task.
 -
   !record {model: project.task.reevaluate, id: config_compute_remaining_1}:
     remaining_hours: 10.0
 -
-  Reevaluate the task with 10 hours remaining
+  Reevaluate the task with 10 hours remaining.
 -
   !python {model: project.task.reevaluate}: |
     self.compute_hours(cr, uid, [ref("config_compute_remaining_1")], {"lang": "en_US",
@@ -379,14 +379,14 @@
       1, "search_default_current": 1, "active_ids": [ref("project_task_technicaltraining0")], "active_id": ref("project_task_technicaltraining0"),
       })
 -
-   I check for effective hours and remaining hours, remaining_hours must be 10 while planned_hours remains 30
+   I check for effective hours and remaining hours, remaining_hours must be 10 while planned_hours remains 30.
 -
    !assert {model: project.task, id: project_task_technicaltraining0, severity: error, string: After reevaluating the task with 10 hours remaining_hours must be 10 while planned_hours remains 30}:
        - planned_hours == 30
        - remaining_hours == 10.0
        - effective_hours == 40.0
 -
-  I create a work task entry 'Training on yml' of 5 hours
+  I create a work task entry 'Training on yml' of 5 hours.
 -
   !record {model: project.task, id: project_task_technicaltraining0, context:{'no_analytic_entry':True}}:
     work_ids:
@@ -395,36 +395,36 @@
         name: Training on yml
         user_id: base.user_root
 -
-   I check for effective hours and remaining hours, remaining_hours must be 5, effective_hours must be 45
+   I check for effective hours and remaining hours, remaining_hours must be 5, effective_hours must be 45.
 -
    !assert {model: project.task, id: project_task_technicaltraining0, severity: error, string: After work task of 5 hours effective_hours must be equal to 45 and remaining_hours is 5}:
        - planned_hours == 30
        - remaining_hours == 5.0
        - effective_hours == 45.0
 -
-  Check for remaining hours
+  Check for remaining hours.
 -
   !python {model: project.task}: |
     self.onchange_remaining(cr, uid, [ref("project_task_functionaltraining0")], remaining = 10.0, planned = False)
 -
-  I close the task
+  I close the task.
 -
   !python {model: project.task}: |
     self.do_close(cr, uid, [ref("project_task_technicaltraining0")], {'mail_send': False})
 -
-  I check if task in done state
+  I check if task in done state.
 -
   !assert {model: project.task, id: project_task_technicaltraining0, severity: error}:
        - state == "done"
 -
-   I check for effective hours and remaining hours
+   I check for effective hours and remaining hours.
 -
    !assert {model: project.task, id: project_task_technicaltraining0, severity: error, string: After closing the task planned_hours must remain 30 effective_hours must be 45 and remaining hours must be 0}:
        - planned_hours == 30
        - remaining_hours == 0.0
        - effective_hours == 45.0
 -
-  Now, Execute the search method
+  Now, Execute the search method.
 -
   !python {model: project.project}: |
     context.update({"lang": "en_US", "active_ids": [ref("project.menu_open_view_project_all")],
@@ -436,12 +436,12 @@
     except:
       pass
 -
-  I copy project 'OpenERP Training Programme'
+  I copy project 'OpenERP Training Programme'.
 -
   !python {model: project.project}: |
     self.copy(cr, uid, ref("project_project_testprogramme0"), default={}, context=None)
 -
-  I close project 'OpenERP Training Programme'
+  I close project 'OpenERP Training Programme'.
 -
   !python {model: project.project}: |
     context.update({"lang": "en_US", "active_ids": [ref("project.menu_open_view_project_all")],
@@ -460,7 +460,7 @@
     self.set_done(cr, uid, [ref("project_project_openerptrainingprogramme0")], context=context)
 
 -
-  I check if project in close state
+  I check if project in close state.
 -
   !assert {model: project.project, id: project_project_openerptrainingprogramme0, severity: error, string: "Project must be in closed state"}:
        - state == "close"
@@ -480,7 +480,7 @@
     self.create(cr, uid, vals, context=None)
     self.unlink(cr, uid, [ref('account_analytic_account0')])
 -
-  I close the project task
+  I close the project task.
 -
   !record {model: project.task.close, id: project_task_close_0}:
     manager_warn : True
@@ -505,7 +505,7 @@
     except :
       pass
 -
-  I check for remaining hours
+  I check for remaining hours.
 -
   !python {model: project.task}: |
     self.onchange_remaining(cr, uid, [ref("project_task_functionaltraining0")], remaining = 0.0, planned = 0.0)
@@ -530,4 +530,3 @@
 -
   !python {model: project.project}: |
     self.unlink(cr, uid, [ref('project_project_testprogramme0')])
-
