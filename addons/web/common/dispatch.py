@@ -185,7 +185,7 @@ class JsonRequest(WebRequest):
                 }
             }
         except Exception:
-            logging.getLogger('openerp.JSONRequest.dispatch').exception\
+            logging.getLogger(__name__ + '.JSONRequest.dispatch').exception\
                 ("An error occured while handling a json request")
             error = {
                 'code': 300,
