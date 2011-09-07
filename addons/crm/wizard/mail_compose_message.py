@@ -45,11 +45,12 @@ class mail_compose_message(osv.osv_memory):
         if model in SUPPORTED_MODELS and res_id:
             model_obj = self.pool.get(model)
             data = model_obj.browse(cr, uid , res_id, context)
+            user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
             result.update({
                     'subject' : data.name or False,
                     'email_to' : data.email_from or False,
-                    'email_from' : data.user_id.user_email if data.user_id else tools.config.get('email_from', False),
-                    'body_text' : '\n' + (tools.ustr(data.user_id.signature or '')),
+                    'email_from' : user.user_email or tools.config.get('email_from', False),
+                    'body_text' : '\n' + tools.ustr(user.signature),
                     'email_cc' : tools.ustr(data.email_cc or ''),
                     'model': model,
                     'res_id': res_id,
