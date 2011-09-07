@@ -201,7 +201,7 @@ QWeb2.Engine = (function() {
         this.templates = {};
         this.compiled_templates = {};
         this.extend_templates = {};
-        this.dict = {};
+        this.default_dict = {};
         this.tools = QWeb2.tools;
         this.jQuery = window.jQuery;
         this.reserved_words = QWeb2.RESERVED_WORDS.slice(0);
@@ -323,10 +323,12 @@ QWeb2.Engine = (function() {
                     "   return r.join('');";
         },
         render : function(template, dict) {
+            var ndict = QWeb2.tools.extend({}, this.default_dict);
+            QWeb2.tools.extend(ndict, dict);
             if (this.debug && window['console'] !== undefined) {
                 console.time("QWeb render template " + template);
             }
-            var r = this._render(template, dict);
+            var r = this._render(template, ndict);
             if (this.debug && window['console'] !== undefined) {
                 console.timeEnd("QWeb render template " + template);
             }
