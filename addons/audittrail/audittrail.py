@@ -231,7 +231,7 @@ class audittrail_objects_proxy(object_proxy):
             cr.commit()
         return True
 
-    def get_x2m_m2o_values(self, cr, db, uid, pool, resource_pool, method, field, value, recursive=True):
+    def get_value_text(self, cr, db, uid, pool, resource_pool, method, field, value, recursive=True):
         field_obj = (resource_pool._all_columns.get(field)).column
         if field_obj._type in ('one2many','many2many'):
             if recursive:
@@ -241,6 +241,27 @@ class audittrail_objects_proxy(object_proxy):
         elif field_obj._type == 'many2one':
             return value and value[1] or value
         return False
+    
+    def start_log_process(self, cr, db, user_id, model, method, resource_data, pool, resource_pool):
+        key1 = '%s_value'%(method == 'create' and 'new' or 'old')
+        key2 = '%s_value_text'%(method == 'create' and 'new' or 'old')
+        uid = 1
+        vals = { 'method': method, 'object_id': model.id,'user_id': user_id}
+        for resource, fields in resource_data.iteritems():
+            vals.update({'res_id': resource})
+            log_id = pool.get('audittrail.log').create(cr, uid, vals)
+            lines = []
+            for field_key, value in fields.iteritems():
+                if field_key in ('__last_update', 'id'):continue
+                ret_val = self.get_value_text(cr, db, uid, pool, resource_pool, method, field_key, value, method != 'read')
+                line = {
+                      'name': field_key,
+                      key1: value,
+                      key2: ret_val and ret_val or value
+                      }
+                lines.append(line)
+            self.create_log_line(cr, uid, log_id, model, lines)
+        return True
     
     def log_fct(self, db, uid, model, method, fct_src, *args):
         """
@@ -259,14 +280,12 @@ class audittrail_objects_proxy(object_proxy):
         cr = pooler.get_db(db).cursor()
         resource_pool = pool.get(model)
         log_pool = pool.get('audittrail.log')
-        model_pool = pool.get('ir.model')
-
-        model_ids = model_pool.search(cr, uid, [('model', '=', model)])
-        model_id = model_ids and model_ids[0] or False
-        assert model_id, _("'%s' Model does not exist..." %(model))
-        model = model_pool.browse(cr, uid, model_id)
+        model = self.check_rule_subscription(cr, uid, pool, model, False)
+        assert model, _("'%s' Model does not exist..." %(model))
+        
         relational_table_log = args and args[-1] == 'child_relation_log' or  False
         if method == 'create':
+            resource_data = {}
             fields_to_read = []
             if relational_table_log:
                 res_id = args[0]
@@ -274,77 +293,29 @@ class audittrail_objects_proxy(object_proxy):
                 res_id = fct_src(db, uid_orig, model.model, method, *args)
                 cr.commit()
                 fields_to_read = args[0].keys()
-            resource = resource_pool.read(cr, uid, res_id, fields_to_read)
-            if not isinstance(resource, list):
-                resource = [resource]
-            vals = { 'method': method, 'object_id': model.id,'user_id': uid_orig}
-            for resource_data in resource:
-                vals.update({'res_id': resource_data['id']})
-                del resource_data['id']
-                log_id = log_pool.create(cr, uid, vals)
-                lines = []
-                for field in resource_data:
-                    if field in ('__last_update', 'id'):continue
-                    ret_val = self.get_x2m_m2o_values(cr, db, uid, pool, resource_pool, method, field, resource_data[field])
-                    line = {
-                          'name': field,
-                          'new_value': resource_data[field],
-                          'new_value_text': ret_val and ret_val or resource_data[field]
-                          }
-                    lines.append(line)
-                self.create_log_line(cr, uid, log_id, model, lines)
-                cr.commit()
+            if res_id:
+                resource = resource_pool.read(cr, uid, res_id, fields_to_read)
+                if not isinstance(resource,list):
+                    resource = [resource]
+                map(lambda x: resource_data.setdefault(x['id'], x), resource)
+                self.start_log_process(cr, db, uid_orig, model, method, resource_data, pool, resource_pool)
+            cr.commit()
             cr.close()
             return res_id
 
-        elif method == 'read':
+        elif method in('read', 'unlink'):
             res_ids = args[0]
             old_values = {}
-            res = fct_src(db, uid_orig, model.model, method, *args)
-            map(lambda x:old_values.setdefault(x['id'], x), res)
-            vals = {'method': method,'object_id': model.id,'user_id': uid_orig}
-            for res_id in old_values:
-                vals.update({'res_id': res_id})
-                log_id = log_pool.create(cr, uid, vals)
-                lines = []
-                for field in old_values[res_id]:
-                    if field in ('__last_update', 'id'):continue
-                    ret_val = self.get_x2m_m2o_values(cr, db, uid, pool, resource_pool, method, field, old_values[res_id][field], False)
-                    line = {
-                          'name': field,
-                          'old_value': old_values[res_id][field],
-                          'old_value_text': ret_val and ret_val or old_values[res_id][field]
-                          }
-                    lines.append(line)
-                self.create_log_line(cr, uid, log_id, model, lines)
-            cr.commit()
-            cr.close()
-            return res
-
-        elif method == 'unlink':
-            res_ids = args[0]
-            res = False
-            old_values = {}
-            for res_id in res_ids:
-                old_values[res_id] = resource_pool.read(cr, uid, res_id)
-            vals = {'method': method,'object_id': model.id,'user_id': uid_orig}
-            for res_id in res_ids:
-                vals.update({'res_id': res_id})
-                log_id = log_pool.create(cr, uid, vals)
-                lines = []
-                for field in old_values[res_id]:
-                    if field in ('__last_update', 'id'):continue
-                    ret_val = self.get_x2m_m2o_values(cr, db, uid, pool, resource_pool, method, field, old_values[res_id][field])
-                    line = {
-                          'name': field,
-                          'old_value': old_values[res_id][field],
-                          'old_value_text': ret_val and ret_val or old_values[res_id][field]
-                          }
-                    lines.append(line)
-                self.create_log_line(cr, uid, log_id, model, lines)
-            if not relational_table_log:
+            if method == 'read':
                 res = fct_src(db, uid_orig, model.model, method, *args)
-                cr.commit()
+                map(lambda x: old_values.setdefault(x['id'], x), res)
+            else:
+                res = resource_pool.read(cr, uid, res_ids)
+                map(lambda x:old_values.setdefault(x['id'], x), res)
+            self.start_log_process(cr, db, uid_orig, model, method, old_values, pool, resource_pool)
+            if not relational_table_log and method == 'unlink':
+                res = fct_src(db, uid_orig, model.model, method, *args)
+            cr.commit()
             cr.close()
             return res
         else:
@@ -359,47 +330,79 @@ class audittrail_objects_proxy(object_proxy):
                 if isinstance(res_ids, (long, int)):
                     res_ids = [res_ids]
             if res_ids:
-                resource_data = resource_pool.read(cr, uid, res_ids)
-                for resource in resource_data:
-                    resource_id = resource['id']
-                    del resource['id']
-                    old_values_text = {}
-                    old_value = {}
-                    for field in resource.keys():
-                        if field in ('__last_update', 'id'):continue
-                        ret_val = self.get_x2m_m2o_values(cr, db, uid, pool, resource_pool, method, field, resource[field])
-                        old_value[field] = resource[field]
-                        old_values_text[field] = ret_val and ret_val or resource[field]
-                    old_values[resource_id] = {'text':old_values_text, 'value': old_value}
-            if not relational_table_log:
-                res = fct_src(db, uid_orig, model.model, method, *args)
-                cr.commit()
+                x2m_old_values = {}
+                old_values = {}
+                def inline_process_old_data(res_ids, model, model_id=False):
+                    resource_pool = pool.get(model)
+                    resource_data = resource_pool.read(cr, uid, res_ids)
+                    _old_values = {}
+                    for resource in resource_data:
+                        _old_values_text = {}
+                        _old_value = {}
+                        resource_id = resource['id']
+                        for field in resource.keys():
+                            if field in ('__last_update', 'id'):continue
+                            field_obj = (resource_pool._all_columns.get(field)).column
+                            if field_obj._type in ('one2many','many2many'):
+                                x2m_rule_ids, x2m_model = self.check_rule_subscription(cr, uid, pool,  field_obj._obj)
+                                if x2m_rule_ids:
+                                    x2m_old_values.update(inline_process_old_data(resource[field], field_obj._obj, x2m_model))
+                            ret_val = self.get_value_text(cr, db, uid, pool, resource_pool, method, field, resource[field], False)
+                            _old_value[field] = resource[field]
+                            _old_values_text[field] = ret_val and ret_val or resource[field]
+                        _old_values[resource_id] = {'text':_old_values_text, 'value': _old_value}
+                        if model_id:
+                            _old_values[resource_id].update({'model_id':model_id})
+                    return _old_values
+                old_values.update(inline_process_old_data(res_ids, model.model))
+            res = fct_src(db, uid_orig, model.model, method, *args)
+            cr.commit()
             if res_ids:
-                resource_data = resource_pool.read(cr, uid, res_ids)
-                vals = {'method': method,'object_id': model.id,'user_id': uid_orig }
-                for resource in resource_data:
-                    resource_id = resource['id']
-                    del resource['id']
-                    vals.update({'res_id': resource_id})
-                    log_id = log_pool.create(cr, uid, vals)
-                    lines = []
-                    for field in resource.keys():
-                        if field in ('__last_update', 'id'):continue
-                        ret_val = self.get_x2m_m2o_values(cr, db, uid, pool, resource_pool, method, field, resource[field], False)
-                        line = {
-                              'name': field,
-                              'new_value': resource[field],
-                              'old_value': old_values[resource_id]['value'][field],
-                              'new_value_text': ret_val and ret_val or resource[field],
-                              'old_value_text': old_values[resource_id]['text'][field]
-                              }
-                        lines.append(line)
-                    self.create_log_line(cr, uid, log_id, model, lines)
+                def inline_process_new_data(res_ids, model, dict_to_use={}):
+                    resource_pool = pool.get(model.model)
+                    resource_data = resource_pool.read(cr, uid, res_ids)
+                    vals = {'method': method,'object_id': model.id,'user_id': uid_orig }
+                    for resource in resource_data:
+                        resource_id = resource['id']
+                        vals.update({'res_id': resource_id})
+                        log_id = log_pool.create(cr, uid, vals)
+                        lines = []
+                        for field in resource.keys():
+                            if field in ('__last_update', 'id'):continue
+                            field_obj = (resource_pool._all_columns.get(field)).column
+                            if field_obj._type in ('one2many','many2many'):
+                                x2m_rule_ids, x2m_model = self.check_rule_subscription(cr, uid, pool,  field_obj._obj)
+                                if x2m_rule_ids:
+                                    inline_process_new_data(resource[field], x2m_model, x2m_old_values)
+                            ret_val = self.get_value_text(cr, db, uid, pool, resource_pool, method, field, resource[field], False)
+                            line = {
+                                  'name': field,
+                                  'new_value': resource[field],
+                                  'old_value': resource_id in dict_to_use and dict_to_use[resource_id]['value'].get(field),
+                                  'new_value_text': ret_val and ret_val or resource[field],
+                                  'old_value_text': resource_id in dict_to_use and dict_to_use[resource_id]['text'].get(field)
+                                  }
+                            lines.append(line)
+                        self.create_log_line(cr, uid, log_id, model, lines)
+                    return True
+                inline_process_new_data(res_ids, model, old_values)
                 cr.commit()
             cr.close()
             return res
         return True
-
+    
+    def check_rule_subscription(self, cr, uid, pool, model, rule_check=True):
+        '''
+        Test if the model has been subscribed to the audit rule
+        if yes then return the rule_ids also return the model browse_record object.
+        '''
+        model_ids =  pool.get('ir.model').search(cr, uid, [('model', '=', model)])
+        model_obj = model_ids and model_ids[0] and pool.get('ir.model').browse(cr, uid, model_ids[0]) or False
+        if rule_check:
+            rule_ids = pool.get('audittrail.rule').search(cr, uid, [('object_id', '=', model_obj.id), ('state', '=', 'subscribed')])
+            return rule_ids, model_obj
+        return model_obj
+    
     def audit_log_call(self, db, uid, model, method, action_type, *args, **argv):
         """
         Overrides Object Proxy execute method
@@ -414,8 +417,6 @@ class audittrail_objects_proxy(object_proxy):
         uid = 1
         pool = pooler.get_pool(db)
         logged_uids = []
-        model_pool = pool.get('ir.model')
-        rule_pool = pool.get('audittrail.rule')
         cr = pooler.get_db(db).cursor()
         cr.autocommit(True)
         if action_type == 'execute':
@@ -426,14 +427,10 @@ class audittrail_objects_proxy(object_proxy):
         else:
             fct_src = super(audittrail_objects_proxy, self).exec_workflow
         try:
-            model_ids = model_pool.search(cr, uid, [('model', '=', model)])
-            model_id = model_ids and model_ids[0] or False
-            if not ('audittrail.rule' in pool.obj_list()) or not model_id:
+            rule_ids, model_obj = self.check_rule_subscription(cr, uid, pool, model)
+            if not ('audittrail.rule' in pool.obj_list() and model_obj and rule_ids):
                  return fct_src(db, uid_orig, model, method, *args, **argv)
-            rule_ids = rule_pool.search(cr, uid, [('object_id', '=', model_id), ('state', '=', 'subscribed')])
-            if not rule_ids:
-                return fct_src(db, uid_orig, model, method, *args, **argv)
-            for model_rule in rule_pool.browse(cr, uid, rule_ids):
+            for model_rule in pool.get('audittrail.rule').browse(cr, uid, rule_ids):
                 logged_uids += map(lambda x:x.id, model_rule.user_id)
                 if not logged_uids or uid in logged_uids:
                     if action_type == 'execute':
