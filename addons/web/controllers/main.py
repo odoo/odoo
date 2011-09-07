@@ -142,13 +142,13 @@ class WebClient(openerpweb.Controller):
         # script tags
         jslist = ['/web/webclient/js']
         if req.debug:
-            jslist = manifest_glob(req.config.addons_path, ['web'], 'js')
+            jslist = [i + '?debug=' + str(time.time()) for i in manifest_glob(req.config.addons_path, ['web'], 'js')]
         js = "\n        ".join(['<script type="text/javascript" src="%s"></script>'%i for i in jslist])
 
         # css tags
         csslist = ['/web/webclient/css']
         if req.debug:
-            csslist = manifest_glob(req.config.addons_path, ['web'], 'css')
+            csslist = [i + '?debug=' + str(time.time()) for i in manifest_glob(req.config.addons_path, ['web'], 'css')]
         css = "\n        ".join(['<link rel="stylesheet" href="%s">'%i for i in csslist])
         r = home_template % {
             'javascript': js,
