@@ -14,6 +14,12 @@
   !python {model: project.task}: |
     self.copy_data(cr, uid, ref("project_task_developtimemanagementmodule0"), default=None, context=None)
 - 
+  Set the different view types like form and search for this object
+- 
+  !python {model: project.task}: |
+    self.fields_view_get(cr, uid, view_id=None, view_type='form', context={'active_id':ref('project_task_developtimemanagementmodule0')}, toolbar=False, submenu=False)
+    self.fields_view_get(cr, uid, view_id=None, view_type='search', context={'active_id':ref('project_task_developtimemanagementmodule0')}, toolbar=False, submenu=False)
+- 
   Change the time to next
 - 
   !python {model: project.task}: |
