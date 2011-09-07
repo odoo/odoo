@@ -68,7 +68,7 @@ class account_followup_stat(osv.osv):
         cr.execute("""
             create or replace view account_followup_stat as (
                 SELECT
-                    l.partner_id as id,
+                    (l.company_id*10000+l.partner_id*100+l.period_id) as id,
                     l.partner_id AS partner_id,
                     min(l.date) AS date_move,
                     max(l.date) AS date_move_last,
@@ -89,7 +89,7 @@ class account_followup_stat(osv.osv):
                     l.reconcile_id is NULL AND
                     l.partner_id IS NOT NULL
                 GROUP BY
-                    l.id, l.partner_id, l.company_id, l.blocked, l.period_id
+                    l.partner_id, l.company_id, l.blocked, l.period_id
             )""")
 account_followup_stat()
 
