@@ -24,7 +24,7 @@ clean:
 	@rm -rf *.egg-info
 
 doc:
-	cd doc; make html
+	make -C doc html
 
 cloc:
 	cloc addons/*/common/*.py addons/*/controllers/*.py addons/*/static/src/*.js addons/*/static/src/js/*.js addons/*/static/src/css/*.css addons/*/static/src/xml/*.xml
