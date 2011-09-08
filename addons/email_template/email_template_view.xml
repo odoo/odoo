@@ -25,7 +25,6 @@
                                 <separator string="Options" colspan="2"/>
                                 <field name="lang" colspan="4" />
                                 <field name="user_signature" colspan="4" />
-                                <field name="track_campaign_item" colspan="4"/>
                             </group>
                             <group col="2" colspan="2">
                                 <separator colspan="2" string="Email Content"/>
@@ -63,23 +62,24 @@
                             </group>
                         </page>
                         <page string="Advanced">
-                            <field name="mail_server_id"/>
                             <group colspan="2" col="2">
                                 <group colspan="2" col="2">
                                     <separator string="Sidebar button" colspan="2"/>
                                     <button name="create_action" string="Add sidebar button" type="object" icon="gtk-execute"
-                                            colspan="2" attrs="{'invisible':[('ref_ir_act_window','!=',False), ('ref_ir_value','!=',False)]}"
+                                            colspan="2" attrs="{'invisible':[('ref_ir_act_window','!=',False)]}"
                                             help="Display a button in the sidebar of related documents to open a composition wizard with this template"
                                             />
-                                    <field name="ref_ir_act_window" attrs="{'invisible':[('ref_ir_act_window','!=',False), ('ref_ir_value','!=',False)]}"/>
-                                    <field name="ref_ir_value" attrs="{'invisible':[('ref_ir_act_window','!=',False), ('ref_ir_value','!=',False)]}"/>
+                                    <field name="ref_ir_act_window" attrs="{'invisible':[('ref_ir_act_window','=',False)]}"/>
+                                    <field name="ref_ir_value" attrs="{'invisible':[('ref_ir_act_window','=',False)]}"/>
                                     <button name="unlink_action" string="Remove sidebar button" type="object" icon="gtk-delete"
-                                            colspan="2" attrs="{'invisible':[('ref_ir_act_window','=',False), ('ref_ir_value','=',False)]}"
-                                            help="Remove the sidebar button currentlu displayed on related documents"
+                                            colspan="2" attrs="{'invisible':[('ref_ir_act_window','=',False)]}"
+                                            help="Remove the sidebar button currently displayed on related documents"
                                             />
                                 </group>
-                                <group colspan="2" col="2">
+                                <group colspan="2" col="2" groups="base.group_extended">
                                     <separator string="Advanced Options" colspan="2"/>
+                                    <field name="mail_server_id"/>
+                                    <field name="track_campaign_item" colspan="4"/>
                                     <field name="message_id"/>
                                     <field name="auto_delete"/>
                                 </group>

@@ -97,8 +97,8 @@ class email_template(osv.osv):
     _columns = {
         'name': fields.char('Name', size=250),
         'model_id': fields.many2one('ir.model', 'Related document model'),
-        'lang': fields.char('Language code', size=250,
-                            help="Optional translation language to select when sending out an email. "
+        'lang': fields.char('Language Selection', size=250,
+                            help="Optional translation language (ISO code) to select when sending out an email. "
                                  "If not set, the english version will be used. "
                                  "This should usually be a placeholder expression "
                                  "that provides the appropriate language code, e.g. "
@@ -137,6 +137,9 @@ class email_template(osv.osv):
         'email_cc': fields.char('Cc', size=256, help="Carbon copy recipients (placeholders may be used here)"),
         'email_bcc': fields.char('Bcc', size=256, help="Blind carbon copy recipients (placeholders may be used here)"),
         'reply_to': fields.char('Reply-To', size=250, help="Preferred response address (placeholders may be used here)"),
+        'mail_server_id': fields.many2one('ir.mail_server', 'Outgoing Mail Server', readonly=False,
+                                          help="Optional preferred server for outgoing mails. If not set, the highest "
+                                               "priority one will be used."),
         'body_text': fields.text('Text contents', translate=True, help="Plaintext version of the message (placeholders may be used here)"),
         'body_html': fields.text('Rich-text contents', help="Rich-text/HTML version of the message (placeholders may be used here)"),
         'message_id': fields.char('Message-Id', size=256, help="Message-ID SMTP header to use in outgoing messages based on this template. "
@@ -208,6 +211,7 @@ class email_template(osv.osv):
                     ir_values_obj.unlink(cr, uid, template.ref_ir_value.id, context)
             except:
                 raise osv.except_osv(_("Warning"), _("Deletion of Record failed"))
+        return True
 
     def unlink(self, cr, uid, ids, context=None):
         self.unlink_action(cr, uid, ids, context=context)
