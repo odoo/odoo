@@ -1369,19 +1369,18 @@ class Import(View):
         return fields
 
     @openerpweb.httprequest
-    def detect_data(self, req, **params):
-        import StringIO
+    def detect_data(self, req, csvfile, csvsep, csvdel, csvcode, csvskip, **params):
+
         _fields = {}
         _fields_invert = {}
         req_field = []
         error = None
-        all_fields = []
-        fields = dict(req.session.model(params.get('model')).fields_get(False, req.session.eval_context(req.context)))
+        fields = req.session.model(params.get('model')).fields_get(False, req.session.eval_context(req.context))
         fields.update({'id': {'string': 'ID'}, '.id': {'string': 'Database ID'}})
 
         for field in fields:
             value = fields[field]
-            if (value.get('required',False) == True):
+            if value.get('required'):
                 req_field.append(field)
 
         def model_populate(fields, prefix_node='', prefix=None, prefix_value='', level=2):
@@ -1402,7 +1401,7 @@ class Import(View):
                     _fields[prefix_node+field] = st_name
                     _fields_invert[st_name] = prefix_node+field
 
-                    if fields[field].get('type','')=='one2many' and level>0:
+                    if fields[field].get('type')=='one2many' and level>0:
                         fields2 = self.fields_get(req,  fields[field]['relation'])
                         model_populate(fields2, prefix_node+field+'/', None, st_name+'/', level-1)
 
@@ -1412,36 +1411,35 @@ class Import(View):
         fields.update({'id':{'string':'ID'},'.id':{'string':'Database ID'}})
         model_populate(fields)
         all_fields = fields.keys()
+        all_fields.sort()
 
         try:
-            data = csv.reader(params.get('csvfile'), quotechar=str(params.get('csvdel')), delimiter=str(params.get('csvsep')))
+            data = csv.reader(csvfile, quotechar=str(csvdel), delimiter=str(csvsep))
         except:
             error={'message': 'error opening .CSV file. Input Error.'}
             return simplejson.dumps({'error':error})
 
         records = []
-        fields = []
-        word=''
-        limit = 4
         count = 0
-        try:
-            for i, row in enumerate(data):
-                records.append(row)
-                if i == limit:
-                    break
+        header_fields = []
+        word=''
 
-            for j, line in enumerate(records):
-                if j == 1:
-                    break
-                for word in line:
-                    word = str(word.decode(params.get('csvcode')))
-                    if word in _fields:
-                        fields.append((word, _fields[word]))
-                    elif word in _fields_invert.keys():
-                        fields.append((_fields_invert[word], word))
-                    else:
-                        count = count + 1
-                        fields.append((word, word))
+        try:
+            for rec in itertools.islice(data,0,4):
+                records.append(rec)
+
+            headers = itertools.islice(records,1)
+            line = headers.next()
+
+            for word in line:
+                word = str(word.decode(csvcode))
+                if word in _fields:
+                    header_fields.append((word, _fields[word]))
+                elif word in _fields_invert.keys():
+                    header_fields.append((_fields_invert[word], word))
+                else:
+                    count = count + 1
+                    header_fields.append((word, word))
 
             if len(line) == count:
                 error = {'message':"File has not any column header."}
@@ -1449,15 +1447,15 @@ class Import(View):
             error = {'message':('Error processing the first line of the file. Field "%s" is unknown') % (word,)}
 
         if error:
-            params.get('csvfile').seek(0)
-            error=dict(error, preview=params.get('csvfile').read(200))
+            csvfile.seek(0)
+            error=dict(error, preview=csvfile.read(200))
             return simplejson.dumps({'error':error})
 
-        return simplejson.dumps({'records':records[1:],'header':fields,'all_fields':all_fields,'req_field':req_field})
+        return simplejson.dumps({'records':records[1:],'header':header_fields,'all_fields':all_fields,'req_field':req_field})
 
     @openerpweb.httprequest
-    def import_data(self, req, **params):
-        import StringIO
+    def import_data(self, req, csvfile, csvsep, csvdel, csvcode, csvskip, **params):
+
         _fields = {}
         _fields_invert = {}
         prefix_node=''
@@ -1466,24 +1464,22 @@ class Import(View):
         context = req.session.eval_context(req.context)
         modle_obj = req.session.model(params.get('model'))
         res = None
-        content = params.get('csvfile').read()
-        input=StringIO.StringIO(content)
+
         limit = 0
         data = []
 
-        if not (params.get('csvdel') and len(params.get('csvdel')) == 1):
+        if not (csvdel and len(csvdel) == 1):
             error={'message': "The CSV delimiter must be a single character"}
             return simplejson.dumps({'error':error})
 
         try:
-            for j, line in enumerate(csv.reader(input, quotechar=str(params.get('csvdel')), delimiter=str(params.get('csvsep')))):
-                # If the line contains no data, we should skip it.
-                if not line:
-                    continue
-                if j == limit:
-                    fields = line
-                else:
-                    data.append(line)
+            data_record = csv.reader(csvfile, quotechar=str(csvdel), delimiter=str(csvsep))
+            for rec in itertools.islice(data_record,0,None):
+                data.append(rec)
+
+            headers = itertools.islice(data,1)
+            fields = headers.next()
+
         except csv.Error, e:
             error={'message': str(e),'title': 'File Format Error'}
             return simplejson.dumps({'error':error})
@@ -1494,7 +1490,7 @@ class Import(View):
         if not isinstance(fields, list):
             fields = [fields]
 
-        flds = dict(req.session.model(params.get('model')).fields_get(False, req.session.eval_context(req.context)))
+        flds = modle_obj.fields_get(False, req.session.eval_context(req.context))
         flds.update({'id':{'string':'ID'},'.id':{'string':'Database ID'}})
         fields_order = flds.keys()
         for field in fields_order:
@@ -1504,16 +1500,16 @@ class Import(View):
 
         unmatch_field = []
         for fld in fields:
-            if ((fld not in _fields.keys()) and (fld not in _fields_invert.keys())):
+            if ((fld not in _fields) and (fld not in _fields_invert)):
                 unmatch_field.append(fld)
 
         if unmatch_field:
             error = {'message':("You cannot import the fields '%s',because we cannot auto-detect it." % (unmatch_field))}
             return simplejson.dumps({'error':error})
 
-        for line in data:
+        for line in data[1:]:
             try:
-                datas.append(map(lambda x:x.decode(params.get('csvcode')).encode('utf-8'), line))
+                datas.append(map(lambda x:x.decode(csvcode).encode('utf-8'), line))
             except:
                 datas.append(map(lambda x:x.decode('latin').encode('utf-8'), line))
 

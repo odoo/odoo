@@ -733,7 +733,7 @@ openerp.web.View = openerp.web.Widget.extend({
     },
     on_sidebar_import: function() {
         var import_view = new openerp.web.DataImport(this, this.dataset);
-        import_view.start(false);
+        import_view.start();
     },
     on_sidebar_export: function() {
         var export_view = new openerp.web.DataExport(this, this.dataset);
