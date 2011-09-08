@@ -58,7 +58,7 @@
 <t t-name="Shortcuts">
     <div id="header" data-role="header" data-theme="b" data-position="fixed">
         <h1>Favourite</h1>
-        <a id="application" class="ui-btn-right" data-iconpos="notext" data-icon="home" href="#" title="Home" data-theme="b"></a>
+        <a id="application" class="ui-btn-right" data-iconpos="notext" data-icon="home" href="#oe_menu" title="Home" data-theme="b"></a>
     </div>
     <div id="content" data-role="content">
         <ul data-role="listview" data-inset="true">
@@ -96,7 +96,7 @@
 <t t-name="Menu.secondary">
     <div id="header" data-role="header" data-theme="b" data-position="fixed">
         <h1></h1>
-        <a id="application" class="ui-btn-right" data-iconpos="notext" data-icon="home" href="#" title="Home" data-theme="b"></a>
+        <a id="application" class="ui-btn-right" data-iconpos="notext" data-icon="home" href="#oe_menu" title="Home" data-theme="b"></a>
     </div>
     <div id="content" data-role="content">
         <t t-foreach="menu.children" t-as="menu1" >
@@ -122,7 +122,7 @@
 <t t-name="Options">
     <div id="header" data-role="header" data-theme="b" data-position="fixed">
         <h1>Options</h1>
-        <a id="application" class="ui-btn-right" data-iconpos="notext" data-icon="home" href="#" title="Home" data-theme="b"></a>
+        <a id="application" class="ui-btn-right" data-iconpos="notext" data-icon="home" href="#oe_menu" title="Home" data-theme="b"></a>
     </div>
     <div data-role="content">
         <ul data-dividertheme="b" data-theme="c" data-inset="true" data-role="listview">
@@ -140,9 +140,9 @@
 <t t-name="ListView">
     <div id="header" data-role="header" data-theme="b" data-position="fixed">
         <h1></h1>
-        <a id="application" class="ui-btn-right" data-iconpos="notext" data-icon="home" href="#" title="Home" data-theme="b"></a>
+        <a id="application" class="ui-btn-right" data-iconpos="notext" data-icon="home" href="#oe_menu" title="Home" data-theme="b"></a>
     </div>
-    <div data-role="content">
+    <div id="content" data-role="content">
         <ul data-role="listview" data-inset="true" data-theme="d" data-filter="true">
             <li data-theme="c" t-foreach="records" t-as="record">
                 <a id="list-id" t-att-data-id="record[0]" href="#">

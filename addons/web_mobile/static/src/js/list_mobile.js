@@ -24,26 +24,36 @@ openerp.web_mobile.ListView = openerp.web.Widget.extend({
         var self = this;
         var dataset = new openerp.web.DataSetStatic(this, this.action.res_model, this.action.context);
         dataset.name_search('', [], 'ilike',false ,function(result){
+            if(self.$element.html().length){
+                self.$element.find('[data-role="listview"]').find('li').remove();
+                for(var i=0;i<result.length;i++){
+                    var newli = '<li><a id="list-id" data-id='+ result[i][0] +' href="#">' + result[i][1] + '</a></li>';  // Create New List Item
+                    self.$element.find('[data-role="listview"]').append(newli);
+                }
+                self.$element.find('[data-role="listview"]').listview('refresh');
+            }else{
             self.$element.html(QWeb.render("ListView", {'records' : result}));
             self.$element.find("#header").find('h1').html(self.action.name);
-            self.$element.find("a#list-id").click(self.on_list_click);
-            self.$element.find("#header").find('#application').click(function(){
-                if(!$('#oe_menu').html().length){
-                    this.menu = new openerp.web_mobile.Menu(self, "oe_menu");
-                    this.menu.start();
+            self.$element.find("#footer").find('#shortcuts').click(function(){
+                if(!$('#oe_shortcuts').html().length){
+                    this.shortcut = new openerp.web_mobile.Options(self, "oe_shortcuts");
+                    this.options.start();
                 }
                 else{
-                    self.$element.find("#header").find('#application').attr('href','#oe_menu');
+                    self.$element.find("#footer").find('#shrotcuts').attr('href','#oe_shortcuts');
                 }
             });
-            self.$element.find("#footer").find('#shrotcuts').click(function(){
-                this.shortcuts = new openerp.web_mobile.Shortcuts(self, "oe_shortcuts");
-                this.shortcuts.start();
-            });
             self.$element.find("#footer").find('#preference').click(function(){
-                this.options = new openerp.web_mobile.Options(self, "oe_options");
-                this.options.start();
+                if(!$('#oe_options').html().length){
+                    this.options = new openerp.web_mobile.Options(self, "oe_options");
+                    this.options.start();
+                }
+                else{
+                    self.$element.find("#footer").find('#preference').attr('href','#oe_options');
+                }
             });
+            }
+            self.$element.find("a#list-id").click(self.on_list_click);
             $.mobile.changePage($("#oe_list"), "slide", true, true);
         });
     },
