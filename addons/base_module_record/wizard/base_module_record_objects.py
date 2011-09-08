@@ -19,8 +19,8 @@
 #
 ##############################################################################
 
-import pooler
 import time
+
 import base_module_save
 from osv import osv, fields
 import tools
@@ -30,9 +30,8 @@ class base_module_record(osv.osv_memory):
     _name = 'base.module.record'
     _description = "Base Module Record"
         
-    def default_get(self, cr, uid, fields, context):
-         pool = pooler.get_pool(cr.dbname)
-         mod = pool.get('ir.model')
+    def default_get(self, cr, uid, fields, context=None):
+         mod = self.pool.get('ir.model')
          res = super(base_module_record, self).default_get(cr, uid, fields, context=context)
          
          list=('ir.ui.view', 'ir.ui.menu', 'ir.model', 'ir.model.fields', 'ir.model.access', \
@@ -50,28 +49,27 @@ class base_module_record(osv.osv_memory):
          return res
 
     _columns = {
-        'check_date': fields.datetime('Record from Date', size=64, required=True),
+        'check_date': fields.datetime('Record from Date', required=True),
         'objects': fields.many2many('ir.model', 'base_module_record_object_rel', 'objects', 'model_id', 'Objects'),
         'filter_cond': fields.selection([('created', 'Created'), ('modified', 'Modified'), ('created_modified', 'Created & Modified')], 'Records only', required=True),
         'info_yaml': fields.boolean('YAML'),
     }
     _defaults = {
-        'check_date': time.strftime('%Y-%m-%d %H:%M:%S'),
+        'check_date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'filter_cond': 'created',
     }
     
-    def record_objects(self, cr, uid, ids, context):
+    def record_objects(self, cr, uid, ids, context=None):
         data = self.read(cr, uid, ids, [], context=context)[0]
         check_date=data['check_date']
         filter=data['filter_cond']
-        pool = pooler.get_pool(cr.dbname)
-        user=(pool.get('res.users').browse(cr,uid,uid)).login
-        mod = pool.get('ir.module.record')
-        mod_obj = pool.get('ir.model')
+        user=(self.pool.get('res.users').browse(cr,uid,uid)).login
+        mod = self.pool.get('ir.module.record')
+        mod_obj = self.pool.get('ir.model')
         mod.recording_data = []
         for id in data['objects']:
             obj_name=(mod_obj.browse(cr,uid,id)).model
-            obj_pool=pool.get(obj_name)
+            obj_pool=self.pool.get(obj_name)
             if filter =='created':
                 search_condition =[('create_date', '>', check_date)]
             elif filter =='modified':
@@ -84,7 +82,7 @@ class base_module_record(osv.osv_memory):
                   if '_auto' in dir(obj_pool):
                       if not obj_pool._auto:
                           continue
-            search_ids=obj_pool.search(cr,uid,search_condition)
+            search_ids = obj_pool.search(cr,uid,search_condition)
             for s_id in search_ids:
                  args=(cr.dbname, uid,obj_name, 'copy', s_id,{},context)
                  mod.recording_data.append(('query', args, {}, s_id))
@@ -92,8 +90,7 @@ class base_module_record(osv.osv_memory):
         mod_obj = self.pool.get('ir.model.data')
         if len(mod.recording_data):
             if data['info_yaml']:
-                pool = pooler.get_pool(cr.dbname)
-                mod = pool.get('ir.module.record')
+                mod = self.pool.get('ir.module.record')
                 res=base_module_save._create_yaml(self, cr, uid, data, context)
                 model_data_ids = mod_obj.search(cr, uid,[('model', '=', 'ir.ui.view'), ('name', '=', 'yml_save_form_view')], context=context)
                 resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
@@ -141,7 +138,7 @@ class base_module_record_objects(osv.osv_memory):
     _name = 'base.module.record.objects'
     _description = "Base Module Record Objects"
                 
-    def inter_call(self,cr,uid,data,context):
+    def inter_call(self,cr,uid,data,context=None):
         res=base_module_save._create_module(self, cr, uid, data, context)
         mod_obj = self.pool.get('ir.model.data')
         model_data_ids = mod_obj.search(cr, uid,[('model', '=', 'ir.ui.view'), ('name', '=', 'module_create_form_view')], context=context)
