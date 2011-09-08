@@ -1377,4 +1377,17 @@
         </p>
     </div>
 </t>
+<t t-name="FieldStatus">
+    <div t-att-id="widget.element_id"></div>
+</t>
+<t t-name="FieldStatus.content">
+    <ul class="oe-arrow-list">
+        <t t-set="size" t-value="widget.to_show.length"/>
+        <t t-foreach="_.range(size)" t-as="i">
+            <li t-att-class="widget.to_show[i][0] === widget.selected_value ? 'oe-arrow-list-selected' : ''">
+                <span class="oe-arrow-list-before" t-if="i &gt; 0"></span><span><t t-esc="widget.to_show[i][1]"/></span><span class="oe-arrow-list-after" t-if="i &lt; size - 1"></span>
+            </li>
+        </t>
+    </ul>
+</t>
 </templates>

@@ -382,9 +382,9 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
     },
     on_saved: function(r, success) {
         if (!r.result) {
-            this.notification.warn("Record not saved", "Problem while saving record.");
+            this.notification.warn(_t("Record not saved"), _t("Problem while saving record."));
         } else {
-            this.notification.notify("Record saved", "The record #" + this.datarecord.id + " has been saved.");
+            this.notification.notify(_t("Record saved"), _.sprintf(_("The record #%s has been saved.") + this.datarecord.id));
             if (success) {
                 success(r);
             }
@@ -406,7 +406,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
      */
     on_created: function(r, success, prepend_on_create) {
         if (!r.result) {
-            this.notification.warn("Record not created", "Problem while creating record.");
+            this.notification.warn(_t("Record not created"), "Problem while creating record.");
         } else {
             this.datarecord.id = r.result;
             if (!prepend_on_create) {
@@ -420,7 +420,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
             if (this.sidebar) {
                 this.sidebar.attachments.do_update();
             }
-            this.notification.notify("Record created", "The record has been created with id #" + this.datarecord.id);
+            this.notification.notify(_t("Record created"), "The record has been created with id #" + this.datarecord.id);
             if (success) {
                 success(_.extend(r, {created: true}));
             }
@@ -2478,6 +2478,50 @@ openerp.web.form.FieldBinaryImage = openerp.web.form.FieldBinary.extend({
     }
 });
 
+openerp.web.form.FieldStatus = openerp.web.form.Field.extend({
+    template: "FieldStatus",
+    start: function() {
+        this._super();
+        this.selected_value = null;
+        
+        this.render_list();
+    },
+    set_value: function(value) {
+        this._super(value);
+        this.selected_value = value;
+        
+        this.render_list();
+    },
+    render_list: function() {
+        var self = this;
+        var shown = _.map(((this.node.attrs || {}).statusbar_visible || "").split(","),
+            function(x) { return x.trim(); });
+            
+        if (shown.length == 0) {
+            this.to_show = this.field.selection;
+        } else {
+            this.to_show = _.select(this.field.selection, function(x) {
+                return _.indexOf(shown, x[0]) !== -1 || x[0] === self.selected_value;
+            });
+        }
+        
+        var content = openerp.web.qweb.render("FieldStatus.content", {widget: this, _:_});
+        this.$element.html(content);
+        
+        var colors = JSON.parse(((this.node.attrs || {}).statusbar_colors || "{}").split("'").join('"'));
+        var color = colors[this.selected_value];
+        if (color) {
+            var elem = this.$element.find("li.oe-arrow-list-selected span");
+            elem.css("border-color", color);
+            elem = this.$element.find("li.oe-arrow-list-selected .oe-arrow-list-before");
+            elem.css("border-left-color", "rgba(0,0,0,0)");
+            elem = this.$element.find("li.oe-arrow-list-selected .oe-arrow-list-after");
+            elem.css("border-color", "rgba(0,0,0,0)");
+            elem.css("border-left-color", color);
+        }
+    }
+});
+
 /**
  * Registry of form widgets, called by :js:`openerp.web.FormView`
  */
@@ -2507,7 +2551,8 @@ openerp.web.form.widgets = new openerp.web.Registry({
     'float_time': 'openerp.web.form.FieldFloat',
     'progressbar': 'openerp.web.form.FieldProgressBar',
     'image': 'openerp.web.form.FieldBinaryImage',
-    'binary': 'openerp.web.form.FieldBinaryFile'
+    'binary': 'openerp.web.form.FieldBinaryFile',
+    'status': 'openerp.web.form.FieldStatus'
 });
 
 };

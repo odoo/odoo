@@ -1363,12 +1363,19 @@ class Reports(View):
             openerpweb.nonliterals.CompoundContext(
                 req.context or {}, action[ "context"]))
 
-        report_data = {"id": context["active_id"], "model": context["active_model"]}
+        report_data = {}
+        report_ids = context["active_ids"]
         if 'report_type' in action:
             report_data['report_type'] = action['report_type']
+        if 'datas' in action:
+            if 'form' in action['datas']:
+                report_data['form'] = action['datas']['form']
+            if 'ids' in action['datas']:
+                report_ids = action['datas']['ids']
+        
         report_id = report_srv.report(
             req.session._db, req.session._uid, req.session._password,
-            action["report_name"], context["active_ids"],
+            action["report_name"], report_ids,
             report_data, context)
 
         report_struct = None
