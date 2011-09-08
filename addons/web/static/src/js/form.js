@@ -420,7 +420,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
             if (this.sidebar) {
                 this.sidebar.attachments.do_update();
             }
-            this.notification.notify("Record created", "The record has been created with id #" + this.datarecord.id);
+            this.notification.notify(_t("Record created"), "The record has been created with id #" + this.datarecord.id);
             if (success) {
                 success(_.extend(r, {created: true}));
             }
