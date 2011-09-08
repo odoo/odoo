@@ -17,56 +17,53 @@ openerp.web_mobile.ListView = openerp.web.Widget.extend({
         var self = this;
         if (data.action.length) {
             this.action = data.action[0][2];
-            this.on_search_data('');
+            this.on_search_data();
         }
     },
-    on_search_data: function(request){
-        if(request){
-            if(request.term){
-                var search_val = request.term;
-            }else{
-                if(request.which==27 || request.which==13 || request.which==9){
-                    var search_val = '';
-                }else if(request.which==38 || request.which==40 || request.which==39 || request.which==37){
-                    return;
-                }else if($("#searchid").val()==""){
-                    var search_val = '';
-                }else{
-                    return;
-                }
-            }
-        }
-        else{
-            var search_val = '';
-        }
+    on_search_data: function(ev){
         var self = this;
-
         var dataset = new openerp.web.DataSetStatic(this, this.action.res_model, this.action.context);
-        dataset.domain=[['name','ilike',search_val]];
-        dataset.name_search(search_val, dataset.domain, 'ilike',false ,function(result){
+        dataset.name_search('', [], 'ilike',false ,function(result){
+            if(self.$element.html().length){
+                self.$element.find('[data-role="listview"]').find('li').remove();
+                for(var i=0;i<result.length;i++){
+                    var newli = '<li><a id="list-id" data-id='+ result[i][0] +' href="#">' + result[i][1] + '</a></li>';  // Create New List Item
+                    self.$element.find('[data-role="listview"]').append(newli);
+                }
+                self.$element.find('[data-role="listview"]').listview('refresh');
+            }else{
             self.$element.html(QWeb.render("ListView", {'records' : result}));
-            self.$element.find("#searchid").focus();
-            if(request.term){
-                self.$element.find("#searchid").val(request.term);
-            }
-            self.$element.find("#searchid").autocomplete({
-                source: function(req) { self.on_search_data(req); },
-                focus: function(e, ui) {
-                    e.preventDefault();
-                },
-                html: true,
-                minLength: 0,
-                delay: 0
+            self.$element.find("#header").find('h1').html(self.action.name);
+            self.$element.find("#footer").find('#shortcuts').click(function(){
+                if(!$('#oe_shortcuts').html().length){
+                    this.shortcut = new openerp.web_mobile.Options(self, "oe_shortcuts");
+                    this.options.start();
+                }
+                else{
+                    self.$element.find("#footer").find('#shrotcuts').attr('href','#oe_shortcuts');
+                }
             });
-            self.$element.find("#searchid").keyup(self.on_search_data);
+            self.$element.find("#footer").find('#preference').click(function(){
+                if(!$('#oe_options').html().length){
+                    this.options = new openerp.web_mobile.Options(self, "oe_options");
+                    this.options.start();
+                }
+                else{
+                    self.$element.find("#footer").find('#preference').attr('href','#oe_options');
+                }
+            });
+            }
             self.$element.find("a#list-id").click(self.on_list_click);
+            $.mobile.changePage($("#oe_list"), "slide", true, true);
         });
     },
     on_list_click: function(ev) {
         var $record = $(ev.currentTarget);
         var self = this;
-        var id = $record.data('id');
-        this.formview = new openerp.web_mobile.FormView(this, "oe_app", id, this.action);
+        id = $record.data('id');
+//        this.header = new openerp.web_mobile.Header(this, "oe_header");
+        this.formview = new openerp.web_mobile.FormView(this, "oe_form", id, this.action);
+//        this.header.start();
         this.formview.start();
     }
  });
