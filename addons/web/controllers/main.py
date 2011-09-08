@@ -802,9 +802,14 @@ class View(openerpweb.Controller):
         We need to clean all those actions in order to ensure correct
         round-tripping
         """
-        for section in toolbar.keys():
-            toolbar[section] = [clean_action(req, action)
-                                for action in toolbar[section]]
+        for actions in toolbar.itervalues():
+            for action in actions:
+                if 'context' in action:
+                    action['context'] = self.parse_context(
+                        action['context'], req.session)
+                if 'domain' in action:
+                    action['domain'] = self.parse_domain(
+                        action['domain'], req.session)
 
     @openerpweb.jsonrequest
     def add_custom(self, req, view_id, arch):
