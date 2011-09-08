@@ -1,4 +1,5 @@
 openerp.web.data_import = function(openerp) {
+var QWeb = openerp.web.qweb;
 openerp.web.DataImport = openerp.web.Dialog.extend({
     init: function(parent, dataset){
         this.parent = parent;
