@@ -1,0 +1,47 @@
+-
+  I create a partner which is a my customer
+-
+  !record {model: res.partner, id: res_partner_test20}:
+    name: jones white
+    supplier: False
+    customer: True
+    opt_out: False
+-
+  I create one Purchase Order
+-
+  !record {model: purchase.order, id: purchase_order_test}:
+    partner_id: res_partner_test20
+    partner_address_id: base.res_partner_address_11
+    location_id: stock.stock_location_3
+    pricelist_id: 1
+    order_line:
+      - product_id: product.product_product_pc1
+        product_qty: 1.0
+        product_uom: 1
+        price_unit: 150.0
+        name: 'basic pc'
+        date_planned: '2011-08-31'
+-
+  I Open the sale order
+-
+  !python {model: purchase.order}: |
+    
+    orders = self.browse(cr, uid, ref("purchase_order_test"))
+    import netsvc
+    wf_service = netsvc.LocalService("workflow")
+    wf_service.trg_validate(uid, 'purchase.order',orders.id,'approved', cr)
+-
+  !python {model: ir.edi.document}: |
+     order_pool = self.pool.get('purchase.order')
+     purchase_id = order_pool.search(cr, uid, ref("purchase_order_test"))
+     orders = order_pool.browse(cr, uid, purchase_id)
+     import json
+
+     tokens = self.export_edi(cr, uid, [orders])
+     assert tokens, 'Token is not generated'
+     document = self.get_document(cr, uid, tokens[0])
+     document = json.loads(document)
+     document[0]["__model"] = "sale.order"
+     document = json.dumps(document)
+     a = self.import_edi(cr, uid, edi_document = document)
+     
