@@ -173,15 +173,8 @@ def http_to_wsgi(http_dir):
         server.server_port = int(environ['SERVER_PORT'])
         con = openerp.service.websrv_lib.noconnection(environ['gunicorn.socket']) # None TODO
 
-        # Let's pretend we have a Multi handler (i.e. the
-        # websrv_lib.MultiHTTPHandler class) to hand to the auth. provider.
-        multi = Dummy()
-        multi.sec_realms = {}
-
         # Initialize the underlying handler and associated auth. provider.
-        handler = http_dir.handler(openerp.service.websrv_lib.noconnection(con), environ['REMOTE_ADDR'], server)
-        auth_provider = http_dir.auth_provider
-        auth_provider.setupAuth(multi, handler)
+        handler = http_dir.instanciate_handler(openerp.service.websrv_lib.noconnection(con), environ['REMOTE_ADDR'], server)
 
         # Populate the handler as if it is called by a regular HTTP server
         # and the request is already parsed.
@@ -197,9 +190,9 @@ def http_to_wsgi(http_dir):
 
         # Handle authentication if there is an auth. provider associated to
         # the handler.
-        if auth_provider and auth_provider.realm:
+        if hasattr(handler, 'auth_provider'):
             try:
-                multi.sec_realms[auth_provider.realm].checkRequest(handler, path)
+                handler.auth_provider.checkRequest(handler, path)
             except websrv_lib.AuthRequiredExc, ae:
                 # Darwin 9.x.x webdav clients will report "HTTP/1.0" to us, while they support (and need) the
                 # authorisation features of HTTP/1.1 
@@ -245,7 +238,7 @@ def http_to_wsgi(http_dir):
         except (websrv_lib.AuthRejectedExc, websrv_lib.AuthRequiredExc):
             raise
         except Exception, e:
-            start_response("500 Internal error")
+            start_response("500 Internal error", [])
             return []
 
     return wsgi_handler
