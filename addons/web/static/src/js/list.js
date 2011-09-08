@@ -49,6 +49,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
         this.dataset = dataset;
         this.model = dataset.model;
         this.view_id = view_id;
+        this.previous_colspan = null;
 
         this.columns = [];
 
@@ -603,6 +604,49 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
     get_selected_ids: function() {
         var ids = this.groups.get_selection().ids;
         return ids;
+    },
+    /**
+     * Adds padding columns at the start or end of all table rows (including
+     * field names row)
+     *
+     * @param {Number} count number of columns to add
+     * @param {Object} options
+     * @param {"before"|"after"} [position="after"] insertion position for the new columns
+     * @param {Object} [except] content row to not pad
+     */
+    pad_columns: function (count, options) {
+        options = options || {};
+        // padding for action/pager header
+        var $first_header = this.$element.find('thead tr:first th');
+        var colspan = $first_header.attr('colspan');
+        if (colspan) {
+            if (!this.previous_colspan) {
+                this.previous_colspan = colspan;
+            }
+            $first_header.attr('colspan', parseInt(colspan, 10) + count);
+        }
+        // Padding for column titles, footer and data rows
+        var $rows = this.$element
+                .find('.oe-listview-header-columns, tr:not(thead tr)')
+                .not(options['except']);
+        var newcols = new Array(count+1).join('<td class="oe-listview-padding"></td>');
+        if (options.position === 'before') {
+            $rows.prepend(newcols);
+        } else {
+            $rows.append(newcols);
+        }
+    },
+    /**
+     * Removes all padding columns of the table
+     */
+    unpad_columns: function () {
+        this.$element.find('.oe-listview-padding').remove();
+        if (this.previous_colspan) {
+            this.$element
+                    .find('thead tr:first th')
+                    .attr('colspan', this.previous_colspan);
+            this.previous_colspan = null;
+        }
     }
 });
 openerp.web.ListView.List = openerp.web.Class.extend( /** @lends openerp.web.ListView.List# */{

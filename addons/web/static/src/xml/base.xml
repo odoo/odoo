@@ -566,7 +566,7 @@
                 </table>
             </th>
         </tr>
-        <tr t-if="options.header">
+        <tr t-if="options.header" class="oe-listview-header-columns">
             <t t-foreach="columns" t-as="column">
                 <th t-if="column.meta">
                     <t t-esc="column.string"/>
@@ -1211,21 +1211,11 @@
     <button type="button" class="oe_formopenpopup-form-close">Cancel</button>
 </t>
 <t t-name="ListView.row.frame" t-extend="WidgetFrame">
-    <t t-jquery="tr">
-        $(document.createElement('t'))
-            .append(this.contents())
-            .attr({
-                't-foreach': this.attr('t-foreach'),
-                't-as': this.attr('t-as')
-            })
-            .replaceAll(this)
-            .after($(document.createElement('td')).append(
-                $(document.createElement('button')).attr({
-                    'class': 'oe-edit-row-save', 'type': 'button'}).text('Save')))
-            .before($(document.createElement('td')).append(
-                $(document.createElement('button')).attr({
-                    'class': 'oe-edit-row-cancel', 'type': 'button'}).text('Cancel')))
-            .unwrap();
+    <t t-jquery="tr" t-operation="prepend">
+        <td><button type="button" class="oe-edit-row-cancel">Cancel</button></td>
+    </t>
+    <t t-jquery="tr" t-operation="append">
+        <td><button type="button" class="oe-edit-row-save">Save</button></td>
     </t>
 </t>
 
