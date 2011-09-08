@@ -2482,16 +2482,25 @@ openerp.web.form.FieldStatus = openerp.web.form.Field.extend({
     template: "FieldStatus",
     start: function() {
         this._super();
-        this.selected_index = null;
+        this.selected_value = null;
         this.render_list();
     },
     set_value: function(value) {
         this._super(value);
-        var select = _.detect(this.field.selection, function(x) { return x[0] === value; });
-        this.selected_index = _.indexOf(this.field.selection, select);
+        this.selected_value = value;
         this.render_list();
     },
     render_list: function() {
+        var self = this;
+        var shown = _.map(((this.node.attrs || {}).statusbar_visible || "").split(","),
+            function(x) { return x.trim(); });
+        if (shown.length == 0) {
+            this.to_show = this.field.selection;
+        } else {
+            this.to_show = _.select(this.field.selection, function(x) {
+                return _.indexOf(shown, x[0]) !== -1 || x[0] === self.selected_value;
+            });
+        }
         var content = openerp.web.qweb.render("FieldStatus.content", {widget: this, _:_});
         this.$element.html(content);
     }
