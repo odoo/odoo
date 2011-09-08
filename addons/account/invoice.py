@@ -113,8 +113,8 @@ class account_invoice(osv.osv):
                 continue
             inv_total = inv.amount_total
             context_unreconciled = context.copy()
-            for lines in inv.move_lines:
-                if lines.currency_id and lines.currency_id.id == inv.currency_id.id:
+            for lines in inv.payment_ids:
+                if lines.amount_currency and lines.currency_id.id == inv.currency_id.id:
                    if inv.type in ('out_invoice','in_refund'):
                         inv_total += lines.amount_currency
                    else:
@@ -128,6 +128,8 @@ class account_invoice(osv.osv):
             res[inv.id] =  self.pool.get('res.currency').round(cr, uid, inv.currency_id, result)
         return res
 
+    #This function is called by the fields.function move_lines, which is probably unused now.
+    #This function is also wrongly computed: you should use the one on the field payment_ids instead
     def _get_lines(self, cr, uid, ids, name, arg, context=None):
         res = {}
         for id in ids:
@@ -285,6 +287,7 @@ class account_invoice(osv.osv):
             }, help="The account moves of the invoice have been reconciled with account moves of the payment(s)."),
         'partner_bank': fields.many2one('res.partner.bank', 'Bank Account',
             help='The bank account to pay to or to be paid from'),
+        #this field is probably unused, and wrongly computed. Use payment_ids instead.
         'move_lines':fields.function(_get_lines , method=True,type='many2many' , relation='account.move.line',string='Move Lines'),
         'residual': fields.function(_amount_residual, method=True, digits=(16, int(config['price_accuracy'])),string='Residual',
             store={
