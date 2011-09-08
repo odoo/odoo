@@ -55,18 +55,6 @@ class purchase_line_invoice(osv.osv_memory):
             invoice_line_obj=self.pool.get('account.invoice.line')
             account_jrnl_obj=self.pool.get('account.journal')
 
-            def multiple_order_invoice_name(orders):
-                name = "PO";
-                for order in orders:
-                    name += "000%d" % order.id
-                return name
-
-            def multiple_order_invoice_reference(partner, orders):
-                reference = "P%dPO" % partner.id
-                for order in orders:
-                    reference += "%d" % order.id
-                return reference
-
             def multiple_order_invoice_notes(orders):
                 notes = ""
                 for order in orders:
@@ -90,8 +78,8 @@ class purchase_line_invoice(osv.osv_memory):
                 else:
                     pay_term = False
                 inv = {
-                    'name': multiple_order_invoice_name(orders),
-                    'origin': multiple_order_invoice_name(orders),
+                    'name': orders[0].name,
+                    'origin': orders[0].name,
                     'type': 'in_invoice',
                     'journal_id':journal_id,
                     'reference' : partner.ref,
