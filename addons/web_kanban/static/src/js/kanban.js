@@ -50,8 +50,8 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
             }
         }
     },
-    do_get_kanban_color: function(variable) {
-        var number_of_color_schemes = 2,
+    kanban_color: function(variable) {
+        var number_of_color_schemes = 8,
             index = 0;
         switch (typeof(variable)) {
             case 'string':
@@ -67,11 +67,16 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
         }
         return 'oe_kanban_color_' + ((index % number_of_color_schemes) + 1);
     },
+    kanban_gravatar: function(email, size) {
+        size = size || 22;
+        var email_md5 = '2eb60ad22dadcf4dc456b28390a80268';
+        return 'http://www.gravatar.com/avatar/' + email_md5 + '.png?s=' + size;
+    },
     transform_qweb_template: function(node) {
         switch (node.tag) {
             case 'field':
                 node.tag = 't';
-                node.attrs['t-esc'] = node.attrs['name'] + '.value';
+                node.attrs['t-esc'] = 'record.' + node.attrs['name'] + '.value';
                 break
             case 'button':
             case 'a':
@@ -83,7 +88,7 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
                     });
                     if (node.attrs['data-states']) {
                         var states = _.map(node.attrs['data-states'].split(','), function(state) {
-                            return "state.value == '" + _.trim(state) + "'";
+                            return "record.state.value == '" + _.trim(state) + "'";
                         });
                         node.attrs['t-if'] = states.join(' or ');
                     }
@@ -173,6 +178,9 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
         } else {
             this.notification.warn("Kanban", "No form view defined for this object");
         }
+    },
+    do_change_color: function(method) {
+        var color = '#FFC7C7,#FFF1C7,#E3FFC7,#C7FFD5,#C7FFFF,#C7D5FF,#FFC7F1'.split(',');
     },
     do_delete: function (id) {
         var self = this;
@@ -302,7 +310,11 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
             if (data.records.length > 0){
                 _.each(data.records, function(record) {
                     self.$element.find("#main_" + record.id).children().remove();
-                    self.$element.find("#main_" + record.id).append(self.qweb.render('kanban-box', self.do_transform_record(record)));
+                    self.$element.find("#main_" + record.id).append(self.qweb.render('kanban-box', {
+                        record: self.do_transform_record(record),
+                        kanban_color: self.kanban_color,
+                        kanban_gravatar: self.kanban_gravatar
+                    }));
                 });
             } else {
                 self.$element.find("#column_" + data.value).remove();
@@ -311,7 +323,7 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
         });
         this.$element.find('.oe_kanban_action').click(this.on_action_clicked);
         this.$element.find('.oe_kanban_record').click(function() {
-            $(this).find('.oe_kanban_box_show_onclick').removeClass('oe_kanban_box_show_onclick');
+            $(this).find('.oe_kanban_box_show_onclick').toggle();
         });
     },
     on_action_clicked: function(evt) {
@@ -336,7 +348,6 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
             r.value = openerp.web.format_value(value, r);
             new_record[name] = r;
         });
-        new_record.__kanban_color = this.do_get_kanban_color;
         return new_record;
     },
     do_search: function (domains, contexts, group_by) {
