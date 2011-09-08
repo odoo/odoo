@@ -1,4 +1,5 @@
 openerp.web.data_export = function(openerp) {
+var QWeb = openerp.web.qweb;
 openerp.web.DataExport = openerp.web.Dialog.extend({
     template: 'ExportTreeView',
     dialog_title: 'Export Data',

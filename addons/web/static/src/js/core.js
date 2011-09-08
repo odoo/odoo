@@ -3,6 +3,7 @@
  *--------------------------------------------------------*/
 
 openerp.web.core = function(openerp) {
+openerp.web.qweb = new QWeb2.Engine();
 /**
  * John Resig Class with factory improvement
  */
@@ -374,7 +375,7 @@ openerp.web.Session = openerp.web.CallbackEnabled.extend( /** @lends openerp.web
             jsonrpc: "2.0",
             method: "call",
             params: params,
-            id:null
+            id: _.uniqueId('browser-client-')
         }).then(function () {deferred.resolve.apply(deferred, arguments);},
                 function(error) {deferred.reject(error, $.Event());});
         return deferred.fail(function() {
@@ -868,7 +869,7 @@ openerp.web.Widget = openerp.web.SessionAware.extend({
      * @param {Object} additional Additional context arguments to pass to the template.
      */
     render: function (additional) {
-        return QWeb.render(this.template, _.extend({widget: this}, additional || {}));
+        return openerp.web.qweb.render(this.template, _.extend({widget: this}, additional || {}));
     },
     /**
      * Method called after rendering. Mostly used to bind actions, perform asynchronous
@@ -946,7 +947,7 @@ openerp.web.Widget = openerp.web.SessionAware.extend({
  */
 openerp.web.OldWidget = openerp.web.Widget.extend({
     render: function (additional) {
-        return QWeb.render(this.template, _.extend(_.extend({}, this), additional || {}));
+        return openerp.web.qweb.render(this.template, _.extend(_.extend({}, this), additional || {}));
     }
 });
 

@@ -3,6 +3,7 @@
  *---------------------------------------------------------*/
 
 openerp.web_diagram = function (openerp) {
+var QWeb = openerp.web.qweb;
 QWeb.add_template('/web_diagram/static/src/xml/base_diagram.xml');
 openerp.web.views.add('diagram', 'openerp.web.DiagramView');
 openerp.web.DiagramView = openerp.web.View.extend({

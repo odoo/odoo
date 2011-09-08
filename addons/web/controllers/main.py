@@ -11,6 +11,7 @@ import simplejson
 import textwrap
 import xmlrpclib
 import time
+import zlib
 import webrelease
 from xml.etree import ElementTree
 from cStringIO import StringIO
@@ -22,8 +23,6 @@ openerpweb.ast = web.common.ast
 openerpweb.nonliterals = web.common.nonliterals
 
 from babel.messages.pofile import read_po
-
-_REPORT_POLLER_DELAY = 0.05
 
 # Should move to openerpweb.Xml2Json
 class Xml2Json:
@@ -104,7 +103,6 @@ home_template = textwrap.dedent("""<!DOCTYPE html>
         %(javascript)s
         <script type="text/javascript">
             $(function() {
-                QWeb = new QWeb2.Engine();
                 var c = new openerp.init();
                 var wc = new c.web.WebClient("oe");
                 wc.start();
@@ -144,13 +142,13 @@ class WebClient(openerpweb.Controller):
         # script tags
         jslist = ['/web/webclient/js']
         if req.debug:
-            jslist = manifest_glob(req.config.addons_path, ['web'], 'js')
+            jslist = [i + '?debug=' + str(time.time()) for i in manifest_glob(req.config.addons_path, ['web'], 'js')]
         js = "\n        ".join(['<script type="text/javascript" src="%s"></script>'%i for i in jslist])
 
         # css tags
         csslist = ['/web/webclient/css']
         if req.debug:
-            csslist = manifest_glob(req.config.addons_path, ['web'], 'css')
+            csslist = [i + '?debug=' + str(time.time()) for i in manifest_glob(req.config.addons_path, ['web'], 'css')]
         css = "\n        ".join(['<link rel="stylesheet" href="%s">'%i for i in csslist])
         r = home_template % {
             'javascript': js,
@@ -453,8 +451,6 @@ def load_actions_from_ir_values(req, key, key2, models, meta):
 
 def clean_action(req, action):
     action.setdefault('flags', {})
-    if action['type'] != 'ir.actions.act_window':
-        return action
 
     context = req.session.eval_context(req.context)
     eval_ctx = req.session.evaluation_context(context)
@@ -466,7 +462,9 @@ def clean_action(req, action):
     if isinstance(action.get('domain'), basestring):
         action['domain'] = eval( action['domain'], eval_ctx ) or []
 
-    return fix_view_modes(action)
+    if action['type'] == 'ir.actions.act_window':
+        return fix_view_modes(action)
+    return action
 
 # I think generate_views,fix_view_modes should go into js ActionManager
 def generate_views(action):
@@ -764,6 +762,8 @@ class View(openerpweb.Controller):
         fvg = Model.fields_view_get(view_id, view_type, context, toolbar, submenu)
         # todo fme?: check that we should pass the evaluated context here
         self.process_view(req.session, fvg, context, transform)
+        if toolbar and transform:
+            self.process_toolbar(req, fvg['toolbar'])
         return fvg
 
     def process_view(self, session, fvg, context, transform):
@@ -794,6 +794,22 @@ class View(openerpweb.Controller):
                 field["domain"] = self.parse_domain(field["domain"], session)
             if field.get('context'):
                 field["context"] = self.parse_context(field["context"], session)
+
+    def process_toolbar(self, req, toolbar):
+        """
+        The toolbar is a mapping of section_key: [action_descriptor]
+
+        We need to clean all those actions in order to ensure correct
+        round-tripping
+        """
+        for actions in toolbar.itervalues():
+            for action in actions:
+                if 'context' in action:
+                    action['context'] = self.parse_context(
+                        action['context'], req.session)
+                if 'domain' in action:
+                    action['domain'] = self.parse_domain(
+                        action['domain'], req.session)
 
     @openerpweb.jsonrequest
     def add_custom(self, req, view_id, arch):
@@ -884,21 +900,12 @@ class View(openerpweb.Controller):
             if context_string:
                 elem.set(el, self.parse_context(context_string, session))
 
-class FormView(View):
-    _cp_path = "/web/formview"
-
     @openerpweb.jsonrequest
-    def load(self, req, model, view_id, toolbar=False):
-        fields_view = self.fields_view_get(req, model, view_id, 'form', toolbar=toolbar)
-        return {'fields_view': fields_view}
+    def load(self, req, model, view_id, view_type, toolbar=False):
+        return self.fields_view_get(req, model, view_id, view_type, toolbar=toolbar)
 
 class ListView(View):
     _cp_path = "/web/listview"
-
-    @openerpweb.jsonrequest
-    def load(self, req, model, view_id, toolbar=False):
-        fields_view = self.fields_view_get(req, model, view_id, 'tree', toolbar=toolbar)
-        return {'fields_view': fields_view}
 
     def process_colors(self, view, row, context):
         colors = view['arch']['attrs'].get('colors')
@@ -917,6 +924,15 @@ class ListView(View):
         elif len(color) == 1:
             return color[0]
         return 'maroon'
+
+class TreeView(View):
+    _cp_path = "/web/treeview"
+
+    @openerpweb.jsonrequest
+    def action(self, req, model, id):
+        return load_actions_from_ir_values(
+            req,'action', 'tree_but_open',[(model, id)],
+            False)
 
 class SearchView(View):
     _cp_path = "/web/searchview"
@@ -1062,8 +1078,11 @@ class Action(openerpweb.Controller):
         context = req.session.eval_context(req.context)
         action_type = Actions.read([action_id], ['type'], context)
         if action_type:
-            action = req.session.model(action_type[0]['type']).read([action_id], False,
-                                                                    context)
+            ctx = {}
+            if action_type[0]['type'] == 'ir.actions.report.xml':
+                ctx.update({'bin_size': True})
+            ctx.update(context)
+            action = req.session.model(action_type[0]['type']).read([action_id], False, ctx)
             if action:
                 value = clean_action(req, action[0])
         return {'result': value}
@@ -1072,19 +1091,6 @@ class Action(openerpweb.Controller):
     def run(self, req, action_id):
         return clean_action(req, req.session.model('ir.actions.server').run(
             [action_id], req.session.eval_context(req.context)))
-
-class TreeView(View):
-    _cp_path = "/web/treeview"
-
-    @openerpweb.jsonrequest
-    def load(self, req, model, view_id, toolbar=False):
-        return self.fields_view_get(req, model, view_id, 'tree', toolbar=toolbar)
-
-    @openerpweb.jsonrequest
-    def action(self, req, model, id):
-        return load_actions_from_ir_values(
-            req,'action', 'tree_but_open',[(model, id)],
-            False)
 
 class Export(View):
     _cp_path = "/web/export"
@@ -1336,29 +1342,56 @@ class ExcelExport(Export):
         fp.close()
         return data
 
-
 class Reports(View):
     _cp_path = "/web/report"
+    POLLING_DELAY = 0.25
+    TYPES_MAPPING = {
+        'doc': 'application/vnd.ms-word',
+        'html': 'text/html',
+        'odt': 'application/vnd.oasis.opendocument.text',
+        'pdf': 'application/pdf',
+        'sxw': 'application/vnd.sun.xml.writer',
+        'xls': 'application/vnd.ms-excel',
+    }
 
-    @openerpweb.jsonrequest
-    def get_report(self, req, action):
+    @openerpweb.httprequest
+    def index(self, req, action, token):
+        action = simplejson.loads(action)
+
         report_srv = req.session.proxy("report")
-        context = req.session.eval_context(openerpweb.nonliterals.CompoundContext(req.context, \
-                                                                                  action["context"]))
+        context = req.session.eval_context(
+            openerpweb.nonliterals.CompoundContext(
+                req.context or {}, action[ "context"]))
 
-        args = [req.session._db, req.session._uid, req.session._password, action["report_name"], context["active_ids"], {"id": context["active_id"], "model": context["active_model"], "report_type": action["report_type"]}, context]
-        report_id = report_srv.report(*args)
-        report = None
+        report_data = {"id": context["active_id"], "model": context["active_model"]}
+        if 'report_type' in action:
+            report_data['report_type'] = action['report_type']
+        report_id = report_srv.report(
+            req.session._db, req.session._uid, req.session._password,
+            action["report_name"], context["active_ids"],
+            report_data, context)
+
+        report_struct = None
         while True:
-            args2 = [req.session._db, req.session._uid, req.session._password, report_id]
-            report = report_srv.report_get(*args2)
-            if report["state"]:
+            report_struct = report_srv.report_get(
+                req.session._db, req.session._uid, req.session._password, report_id)
+            if report_struct["state"]:
                 break
 
-            time.sleep(_REPORT_POLLER_DELAY)
+            time.sleep(self.POLLING_DELAY)
 
-        #TODO: ok now we've got the report, and so what?
-        return False
+        report = base64.b64decode(report_struct['result'])
+        if report_struct.get('code') == 'zlib':
+            report = zlib.decompress(report)
+        report_mimetype = self.TYPES_MAPPING.get(
+            report_struct['format'], 'octet-stream')
+        return req.make_response(report,
+             headers=[
+                 ('Content-Disposition', 'attachment; filename="%s.%s"' % (action['report_name'], report_struct['format'])),
+                 ('Content-Type', report_mimetype),
+                 ('Content-Length', len(report))],
+             cookies={'fileToken': int(token)})
+
 
 class Import(View):
     _cp_path = "/web/import"

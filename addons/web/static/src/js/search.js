@@ -1,4 +1,5 @@
 openerp.web.search = function(openerp) {
+var QWeb = openerp.web.qweb;
 
 openerp.web.SearchView = openerp.web.Widget.extend({
     init: function(parent, element_id, dataset, view_id, defaults) {

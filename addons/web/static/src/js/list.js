@@ -1,4 +1,5 @@
 openerp.web.list = function (openerp) {
+var QWeb = openerp.web.qweb;
 openerp.web.views.add('list', 'openerp.web.ListView');
 openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView# */ {
     defaults: {
@@ -147,7 +148,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
      */
     on_loaded: function(data, grouped) {
         var self = this;
-        this.fields_view = data.fields_view;
+        this.fields_view = data;
         //this.log(this.fields_view);
         this.name = "" + this.fields_view.arch.attrs.string;
 
@@ -218,7 +219,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
         if (!this.sidebar && this.options.sidebar && this.options.sidebar_id) {
             this.sidebar = new openerp.web.Sidebar(this, this.options.sidebar_id);
             this.sidebar.start();
-            this.sidebar.add_toolbar(data.fields_view.toolbar);
+            this.sidebar.add_toolbar(this.fields_view.toolbar);
             this.set_common_sidebar_sections(this.sidebar);
         }
     },
@@ -368,11 +369,12 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
             self.on_loaded(field_view_get, grouped);
         };
         if (this.embedded_view) {
-            return $.Deferred().then(callback).resolve({fields_view: this.embedded_view});
+            return $.Deferred().then(callback).resolve(this.embedded_view);
         } else {
             return this.rpc('/web/listview/load', {
                 model: this.model,
                 view_id: this.view_id,
+                view_type: "tree",
                 context: this.dataset.get_context(context),
                 toolbar: this.options.sidebar
             }, callback);

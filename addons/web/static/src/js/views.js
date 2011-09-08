@@ -5,6 +5,7 @@
 openerp.web.views = function(openerp) {
 
 var _t = openerp.web._t;
+var QWeb = openerp.web.qweb;
 
 /**
  * Registry for all the client actions key: tag value: widget
@@ -125,11 +126,11 @@ openerp.web.ActionManager = openerp.web.Widget.extend({
         (this.client_widget = new ClientWidget(this, action.params)).appendTo(this);
     },
     ir_actions_report_xml: function(action) {
-        this.rpc('/web/report/get_report', {
-            action: action,
-            context: {}
-        }).then(function(result) {
-            debugger;
+        $.blockUI();
+        this.session.get_file({
+            url: '/web/report',
+            data: {action: JSON.stringify(action)},
+            complete: $.unblockUI
         });
     }
 });
@@ -443,7 +444,10 @@ openerp.web.Sidebar = openerp.web.Widget.extend({
                 if (item.action) {
                     var ids = self.widget_parent.get_selected_ids();
                     if (ids.length == 0) {
-                        //TODO niv: maybe show a warning?
+                        $("<div />").text(_t("You must choose at least one record.")).dialog({
+                            title: _t("Warning"),
+                            modal: true
+                        });
                         return false;
                     }
                     var additional_context = {
@@ -453,7 +457,7 @@ openerp.web.Sidebar = openerp.web.Widget.extend({
                     };
                     self.rpc("/web/action/load", {
                         action_id: item.action.id,
-                        context: _.extend({"bin_size": true}, additional_context)
+                        context: additional_context
                     }, function(result) {
                         result.result.context = _.extend(result.result.context || {},
                             additional_context);

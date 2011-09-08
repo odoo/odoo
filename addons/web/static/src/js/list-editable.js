@@ -74,7 +74,7 @@ openerp.web.list_editable = function (openerp) {
         },
         on_loaded: function (data, grouped) {
             // tree/@editable takes priority on everything else if present.
-            this.options.editable = data.fields_view.arch.attrs.editable || this.options.editable;
+            this.options.editable = data.arch.attrs.editable || this.options.editable;
             return this._super(data, grouped);
         }
     });
@@ -183,7 +183,7 @@ openerp.web.list_editable = function (openerp) {
                     template: 'ListView.row.form',
                     registry: openerp.web.list.form.widgets
                 });
-                $.when(self.edition_form.on_loaded({fields_view: self.get_form_fields_view()})).then(function () {
+                $.when(self.edition_form.on_loaded(self.get_form_fields_view())).then(function () {
                     // put in $.when just in case  FormView.on_loaded becomes asynchronous
                     $new_row.find('td')
                           .addClass('oe-field-cell')

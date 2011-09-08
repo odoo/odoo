@@ -3,6 +3,7 @@
  *---------------------------------------------------------*/
 
 openerp.web.view_tree = function(openerp) {
+var QWeb = openerp.web.qweb;
 
 openerp.web.views.add('tree', 'openerp.web.TreeView');
 /**
@@ -31,6 +32,7 @@ openerp.web.TreeView = openerp.web.View.extend({
         return this.rpc("/web/treeview/load", {
             model: this.model,
             view_id: this.view_id,
+            view_type: "tree",
             toolbar: this.view_manager ? !!this.view_manager.sidebar : false
         }, this.on_loaded);
     },
