@@ -7,7 +7,7 @@
             <field name="model">base.module.data</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Objects Recording">
+                <form string="Data Recording">
                     <field name="check_date"/>
                     <newline/>
                     <field name="filter_cond"/>
@@ -54,13 +54,13 @@
             <field name="model">base.module.record.data</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Objects Recording">
+                <form string="Data Recording">
                     <separator string="Result, paste this to your module's xml" colspan="4" />
                     <field name="res_text" nolabel="1"  colspan="4"/>
                     <separator colspan="4"/>
                     <group colspan="4" col="2">
                         <label string=""/>
-                        <button icon="gtk-ok" string="Close" special="cancel"/>
+                        <button icon="gtk-close" string="Close" special="cancel"/>
                     </group>
                 </form>
             </field>
