@@ -2489,7 +2489,8 @@ openerp.web.form.FieldStatus = openerp.web.form.Field.extend({
         this.render_list();
     },
     render_list: function() {
-        this.$element.html("Youpsla");
+        var content = openerp.web.qweb.render("FieldStatus.content", {});
+        this.$element.html(content);
     }
 });
 
