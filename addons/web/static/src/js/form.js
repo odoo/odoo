@@ -406,7 +406,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
      */
     on_created: function(r, success, prepend_on_create) {
         if (!r.result) {
-            this.notification.warn("Record not created", "Problem while creating record.");
+            this.notification.warn(_t("Record not created"), "Problem while creating record.");
         } else {
             this.datarecord.id = r.result;
             if (!prepend_on_create) {
