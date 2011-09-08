@@ -59,7 +59,7 @@ class ir_translation(osv.osv):
         # These two columns map to ir_model_data.module and ir_model_data.name.
         # They are used to resolve the res_id above after loading is done.
         'module': fields.char('Module', size=64, help='Maps to the ir_model_data for which this translation is provided.'),
-        'xml_id': fields.char('XML Id', size=128, help='Maps to the ir_model_data for which this translation is provided.'),
+        'xml_id': fields.char('External ID', size=128, help='Maps to the ir_model_data for which this translation is provided.'),
     }
 
     def _auto_init(self, cr, context={}):

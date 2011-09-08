@@ -561,14 +561,27 @@ class ir_model_access(osv.osv):
 ir_model_access()
 
 class ir_model_data(osv.osv):
+    """Holds external identifier keys for records in the database.
+       This has two main uses:
+
+           * allows easy data integration with third-party systems,
+             making import/export/sync of data possible, as records
+             can be uniquely identified across multiple systems
+           * allows tracking the origin of data installed by OpenERP
+             modules themselves, thus making it possible to later
+             update them seamlessly.
+    """
     _name = 'ir.model.data'
     __logger = logging.getLogger('addons.base.'+_name)
     _order = 'module,model,name'
     _columns = {
-        'name': fields.char('XML Identifier', required=True, size=128, select=1),
-        'model': fields.char('Object', required=True, size=64, select=1),
+        'name': fields.char('External Identifier', required=True, size=128, select=1,
+                            help="External Key/Identifier that can be used for "
+                                 "data integration with third-party systems"),
+        'model': fields.char('Model Name', required=True, size=64, select=1),
         'module': fields.char('Module', required=True, size=64, select=1),
-        'res_id': fields.integer('Resource ID', select=1),
+        'res_id': fields.integer('Record ID', select=1,
+                                 help="ID of the target record in the database"),
         'noupdate': fields.boolean('Non Updatable'),
         'date_update': fields.datetime('Update Date'),
         'date_init': fields.datetime('Init Date')
@@ -580,7 +593,7 @@ class ir_model_data(osv.osv):
         'module': ''
     }
     _sql_constraints = [
-        ('module_name_uniq', 'unique(name, module)', 'You cannot have multiple records with the same id for the same module !'),
+        ('module_name_uniq', 'unique(name, module)', 'You cannot have multiple records with the same external ID in the same module!'),
     ]
 
     def __init__(self, pool, cr):
