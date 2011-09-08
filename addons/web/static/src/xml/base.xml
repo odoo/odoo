@@ -1111,7 +1111,8 @@
     <div t-att-id="element_id">
         <select class="searchview_extended_prop_field">
             <t t-foreach="attrs.fields" t-as="field">
-                <option t-att="{'selected': field === attrs.selected ? 'selected' : null}"
+                <option t-if="typeof field.store === 'undefined' || field.store || field.fnct_search"
+                        t-att="{'selected': field === attrs.selected ? 'selected' : null}"
                         t-att-value="field.name">
                     <t t-esc="field.string"/>
                 </option>
