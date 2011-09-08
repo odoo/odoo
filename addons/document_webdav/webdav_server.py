@@ -174,11 +174,11 @@ class DAVHandler(HttpOptions, FixSendError, DAVRequestHandler):
             pass
         elif self.close_connection == 1: # close header already sent
             pass
-        else:
-            if headers is None:
-                headers = {}
-            if self.headers.get('Connection',False) == 'Keep-Alive':
-                headers['Connection'] = 'keep-alive'
+        elif headers and self.headers.get('Connection',False) == 'Keep-Alive':
+            headers['Connection'] = 'keep-alive'
+
+        if headers is None:
+            headers = {}
 
         DAVRequestHandler.send_body(self, DATA, code=code, msg=msg, desc=desc,
                     ctype=ctype, headers=headers)
