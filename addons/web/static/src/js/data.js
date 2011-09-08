@@ -616,7 +616,7 @@ openerp.web.BufferedDataSet = openerp.web.DataSetStatic.extend({
         to_return.resolve({result: cached.id});
         return to_return.promise();
     },
-    write: function (id, data, callback) {
+    write: function (id, data, options, callback) {
         var self = this;
         var record = _.detect(this.to_create, function(x) {return x.id === id;});
         record = record || _.detect(this.to_write, function(x) {return x.id === id;});
