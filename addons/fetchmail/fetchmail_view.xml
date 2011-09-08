@@ -3,8 +3,8 @@
     <data>
 
         <record model="ir.ui.view" id="view_email_server_tree">
-            <field name="name">email.server.tree</field>
-            <field name="model">email.server</field>
+            <field name="name">fetchmail.server.list</field>
+            <field name="model">fetchmail.server</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree colors="blue:state in ('draft');" string="POP/IMAP Servers">
@@ -20,11 +20,11 @@
         </record>
 
         <record model="ir.ui.view" id="view_email_server_form">
-            <field name="name">email.server.form</field>
-            <field name="model">email.server</field>
+            <field name="name">fetchmail.server.form</field>
+            <field name="model">fetchmail.server</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="POP/IMAP Server">
+                <form string="Incoming Mail Server">
                     <group col="6" colspan="4">
                         <field name="name" select="1" colspan="4"/>
                         <field name="type" select="1" on_change="onchange_server_type(type, is_ssl)"/>
@@ -63,20 +63,20 @@
                     </notebook>
                     <group col="6" colspan="4">
                         <field name="state" select="1"/>
-                        <button string="Confirm" type="object" name="button_confirm_login" states="draft" icon="gtk-apply"/>
-                        <button string="Fetch Now" type="object" name="fetch_mail" states="done"/>
                         <button string="Reset Confirmation" type="object" name="set_draft" icon="gtk-convert" states="done"/>
+                        <button string="Test &amp; Confirm" type="object" name="button_confirm_login" states="draft" icon="gtk-apply"/>
+                        <button string="Fetch Now" type="object" name="fetch_mail" states="done" icon="gtk-network"/>
                     </group>
                 </form>
             </field>
         </record>
 
         <record model="ir.ui.view" id="view_email_server_search">
-            <field name="name">email.server.search</field>
-            <field name="model">email.server</field>
+            <field name="name">fetchmail.server.search</field>
+            <field name="model">fetchmail.server</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
-                <search string="Search Email Servers">
+                <search string="Search Incoming Mail Servers">
                     <filter string="IMAP" icon="terp-folder-green" domain="[('type','=','imap')]" help="Server type IMAP."/>
                     <filter string="POP" icon="terp-folder-orange" domain="[('type','=','pop')]" help="Server type POP."/>
                     <separator orientation="vertical"/>
@@ -96,7 +96,7 @@
 
         <record model="ir.actions.act_window" id="action_email_server_tree">
             <field name="name">Incoming Mail Servers</field>
-            <field name="res_model">email.server</field>
+            <field name="res_model">fetchmail.server</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_email_server_tree"/>
@@ -112,13 +112,13 @@
         />
 
       <record model="ir.ui.view" id="email_message_tree_view">
-          <field name="name">mail.message.tree</field>
+          <field name="name">mail.message.list.fetchmail</field>
           <field name="model">mail.message</field>
           <field name="type">tree</field>
           <field name="inherit_id" ref="mail.view_email_message_tree"/>
           <field name="arch" type="xml">
               <field name="user_id" position="after">
-                  <field name="server_id" select="1"/>
+                  <field name="fetchmail_server_id" select="1"/>
               </field>
           </field>
       </record>
@@ -130,15 +130,15 @@
           <field name="inherit_id" ref="mail.view_email_message_search"/>
           <field name="arch" type="xml">
             <xpath expr="/search/group/filter[@string='Thread']" position="before">
-                <filter string="Mail Server" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'server_id'}"/>
+                <filter string="Mail Server" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'fetchmail_server_id'}"/>
             </xpath>
           </field>
       </record>
 
       <act_window
             context="{'search_default_server_id': active_id, 'default_server_id': active_id}"
-            id="act_server_history" name="Messages" domain="[('email_from', '!=', False), ('server_id', '=', active_id)]"
-            res_model="mail.message" src_model="email.server"/>
+            id="act_server_history" name="Messages" domain="[('email_from', '!=', False), ('fetchmail_server_id', '=', active_id)]"
+            res_model="mail.message" src_model="fetchmail.server"/>
 
     </data>
 </openerp>

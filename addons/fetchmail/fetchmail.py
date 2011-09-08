@@ -29,13 +29,13 @@ from poplib import POP3_SSL
 import netsvc
 from osv import osv, fields
 import tools
+from tools.translate import _
 
 logger = logging.getLogger('fetchmail')
 
-
-class email_server(osv.osv):
-
-    _name = 'email.server'
+class fetchmail_server(osv.osv):
+    """Incoming POP/IMAP mail server account"""
+    _name = 'fetchmail.server'
     _description = "POP/IMAP Server"
     _order = 'priority'
 
@@ -69,7 +69,7 @@ class email_server(osv.osv):
                                                                                              "emails to the existing conversations (documents)."),
         'priority': fields.integer('Server Priority', readonly=True, states={'draft':[('readonly', False)]}, help="Defines the order of processing, "
                                                                                                                   "lower values mean higher priority"),
-        'message_ids': fields.one2many('mail.message', 'server_id', 'Messages', readonly=True),
+        'message_ids': fields.one2many('mail.message', 'fetchmail_server_id', 'Messages', readonly=True),
     }
     _defaults = {
         'state': "draft",
@@ -84,7 +84,6 @@ class email_server(osv.osv):
             port = ssl and 995 or 110
         elif server_type == 'imap':
             port = ssl and 993 or 143
-
         return {'value':{'port':port}}
 
     def set_draft(self, cr, uid, ids, context=None):
@@ -147,7 +146,7 @@ class email_server(osv.osv):
         action_pool = self.pool.get('ir.actions.server')
         for server in self.browse(cr, uid, ids, context=context):
             logger.info('start checking for new emails on %s server %s', server.type, server.name)
-            context.update({'server_id': server.id, 'server_type': server.type})
+            context.update({'fetchmail_server_id': server.id, 'server_type': server.type})
             count = 0
             if server.type == 'imap':
                 try:
@@ -199,28 +198,29 @@ class email_server(osv.osv):
         return True
 
 class mail_message(osv.osv):
-
     _inherit = "mail.message"
-
     _columns = {
-        'server_id': fields.many2one('email.server', "Inbound Mail Server", readonly=True, select=True),
+        'fetchmail_server_id': fields.many2one('fetchmail.server', "Inbound Mail Server",
+                                               readonly=True,
+                                               select=True,
+                                               oldname='server_id'),
     }
 
     def create(self, cr, uid, values, context=None):
         if context is None:
             context={}
-        server_id = context.get('server_id',False)
-        if server_id:
-            values['server_id'] = server_id
+        fetchmail_server_id = context.get('fetchmail_server_id')
+        if fetchmail_server_id:
+            values['fetchmail_server_id'] = fetchmail_server_id
         res = super(mail_message,self).create(cr, uid, values, context=context)
         return res
 
     def write(self, cr, uid, ids, values, context=None):
         if context is None:
             context={}
-        server_id = context.get('server_id',False)
-        if server_id:
-            values['server_id'] = server_id
+        fetchmail_server_id = context.get('fetchmail_server_id')
+        if fetchmail_server_id:
+            values['fetchmail_server_id'] = server_id
         res = super(mail_message,self).write(cr, uid, ids, values, context=context)
         return res
 
