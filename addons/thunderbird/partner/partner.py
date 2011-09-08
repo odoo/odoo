@@ -111,7 +111,7 @@ class thunderbird_partner(osv.osv_memory):
         dictcreate = dict(vals)
         model = str(dictcreate.get('model'))
         message = dictcreate.get('message')
-        return self.pool.get('mail.thread').message_process(cr, uid, model, message, attach=True, context=None)
+        return self.pool.get('mail.thread').message_process(cr, uid, model, message)
 
     def search_message(self, cr, uid, message, context=None):
         #@param message: string of mail which is read from EML File

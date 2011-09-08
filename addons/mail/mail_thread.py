@@ -297,7 +297,8 @@ class mail_thread(osv.osv):
 
 
     def message_process(self, cr, uid, model, message, custom_values=None,
-                        save_original=False, context=None):
+                        save_original=False, strip_attachments=False,
+                        context=None):
         """Process an incoming RFC2822 email message related to the
            given thread model, relying on ``mail.message.parse()``
            for the parsing operation, and then calling ``message_new``
@@ -315,6 +316,8 @@ class mail_thread(osv.osv):
                                     if the thread record already exists.
            :param bool save_original: whether to keep a copy of the original
                email source attached to the message after it is imported.
+           :param bool strip_attachments: whether to strip all attachments
+               before processing the message, in order to save some space.
         """
         # extract message bytes - we are forced to pass the message as binary because
         # we don't know its encoding until we parse its headers and hence can't
@@ -337,6 +340,9 @@ class mail_thread(osv.osv):
             message = message.encode('utf-8')
         msg_txt = email.message_from_string(message)
         msg = mail_message.parse_message(msg_txt, save_original=save_original)
+
+        if strip_attachments and 'attachments' in msg:
+            del msg['attachments']
 
         # Create New Record into particular model
         def create_record(msg):
