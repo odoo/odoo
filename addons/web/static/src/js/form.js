@@ -2483,11 +2483,13 @@ openerp.web.form.FieldStatus = openerp.web.form.Field.extend({
     start: function() {
         this._super();
         this.selected_value = null;
+        
         this.render_list();
     },
     set_value: function(value) {
         this._super(value);
         this.selected_value = value;
+        
         this.render_list();
     },
     render_list: function() {
