@@ -2478,6 +2478,59 @@ openerp.web.form.FieldBinaryImage = openerp.web.form.FieldBinary.extend({
     }
 });
 
+openerp.web.form.FieldStatus = openerp.web.form.Field.extend({
+    init: function(view, node) {
+        var self = this;
+        this._super(view, node);
+        this.template = "FieldSelection";
+        this.values = this.field.selection;
+        _.each(this.values, function(v, i) {
+            if (v[0] === false && v[1] === '') {
+                self.values.splice(i, 1);
+            }
+        });
+        this.values.unshift([false, '']);
+    },
+    start: function() {
+        var ischanging = false;
+        this._super.apply(this, arguments);
+        this.$element.find('select')
+            .change(this.on_ui_change)
+            .change(function () { ischanging = true; })
+            .click(function () { ischanging = false; })
+            .keyup(function (e) {
+                if (e.which !== 13 || !ischanging) { return; }
+                e.stopPropagation();
+                ischanging = false;
+            });
+    },
+    set_value: function(value) {
+        value = value === null ? false : value;
+        value = value instanceof Array ? value[0] : value;
+        this._super(value);
+        var index = 0;
+        for (var i = 0, ii = this.values.length; i < ii; i++) {
+            if (this.values[i][0] === value) index = i;
+        }
+        this.$element.find('select')[0].selectedIndex = index;
+    },
+    set_value_from_ui: function() {
+        this.value = this.values[this.$element.find('select')[0].selectedIndex][0];
+        this._super();
+    },
+    update_dom: function() {
+        this._super.apply(this, arguments);
+        this.$element.find('select').attr('disabled', this.readonly);
+    },
+    validate: function() {
+        var value = this.values[this.$element.find('select')[0].selectedIndex];
+        this.invalid = !(value && !(this.required && value[0] === false));
+    },
+    focus: function() {
+        this.$element.find('select').focus();
+    }
+});
+
 /**
  * Registry of form widgets, called by :js:`openerp.web.FormView`
  */
@@ -2507,7 +2560,8 @@ openerp.web.form.widgets = new openerp.web.Registry({
     'float_time': 'openerp.web.form.FieldFloat',
     'progressbar': 'openerp.web.form.FieldProgressBar',
     'image': 'openerp.web.form.FieldBinaryImage',
-    'binary': 'openerp.web.form.FieldBinaryFile'
+    'binary': 'openerp.web.form.FieldBinaryFile',
+    'status': 'openerp.web.form.FieldStatus'
 });
 
 };
