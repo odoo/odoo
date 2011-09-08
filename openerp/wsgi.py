@@ -39,6 +39,7 @@ import time
 
 import openerp
 import openerp.tools.config as config
+import openerp.service.websrv_lib as websrv_lib
 
 def xmlrpc_return(start_response, service, method, params):
     """ Helper to call a service's method with some params, using a
@@ -113,9 +114,15 @@ def wsgi_modules(environ, start_response):
 def wsgi_webdav(environ, start_response):
     if environ['REQUEST_METHOD'] == 'OPTIONS' and environ['PATH_INFO'] == '*':
         return return_options(start_response)
-    if environ['PATH_INFO'].startswith('/webdav'): # TODO depends on config
-        environ['PATH_INFO'] = '/' + environ['PATH_INFO'][len('/webdav'):]
-        return wsgi_to_http(environ, start_response)
+
+    # Make sure the addons are loaded in the registry, so they have a chance
+    # to register themselves in the 'service' layer.
+    openerp.pooler.get_db_and_pool('xx', update_module=[], pooljobs=False)
+
+    http_dir = websrv_lib.find_http_service(environ['PATH_INFO'])
+    if http_dir:
+        environ['PATH_INFO'] = '/' + environ['PATH_INFO'][len(http_dir.path):]
+        return http_to_wsgi(http_dir)(environ, start_response)
 
 def return_options(start_response):
     # TODO Microsoft specifi header, see websrv_lib do_OPTIONS 
@@ -123,143 +130,139 @@ def return_options(start_response):
     start_response("200 OK", [('Content-Length', str(0))] + options)
     return []
 
-webdav = None
-
-def wsgi_to_http(environ, start_response):
+def http_to_wsgi(http_dir):
     """
-    Forward a WSGI request to a BaseHTTPRequestHandler.
+    Turn BaseHTTPRequestHandler into a WSGI entry point.
+
+    Actually the argument is not a bare BaseHTTPRequestHandler but is wrapped
+    (as a class, so it needs to be instanciated) in a HTTPDir.
 
     This code is adapted from wbsrv_lib.MultiHTTPHandler._handle_one_foreign().
     It is a temporary solution: the HTTP sub-handlers (in particular the
     document_webdav addon) have to be WSGIfied.
     """
-    global webdav
-    # Make sure the addons are loaded in the registry, so they have a chance
-    # to register themselves in the 'service' layer.
-    openerp.pooler.get_db_and_pool('xx', update_module=[], pooljobs=False)
+    def wsgi_handler(environ, start_response):
 
-    scheme = environ['wsgi.url_scheme']
+        # Extract from the WSGI environment the necessary data.
+        scheme = environ['wsgi.url_scheme']
 
-    headers = {}
-    for key, value in environ.items():
-        if key.startswith('HTTP_'):
-            key = key[5:].replace('_', '-').title()
-            headers[key] = value
-        if key == 'CONTENT_LENGTH':
-            key = key.replace('_', '-').title()
-            headers[key] = value
-    if environ.get('Content-Type'):
-        headers['Content-Type'] = environ['Content-Type']
+        headers = {}
+        for key, value in environ.items():
+            if key.startswith('HTTP_'):
+                key = key[5:].replace('_', '-').title()
+                headers[key] = value
+            if key == 'CONTENT_LENGTH':
+                key = key.replace('_', '-').title()
+                headers[key] = value
+        if environ.get('Content-Type'):
+            headers['Content-Type'] = environ['Content-Type']
 
-    path = urllib.quote(environ.get('PATH_INFO', ''))
-    if environ.get('QUERY_STRING'):
-        path += '?' + environ['QUERY_STRING']
+        path = urllib.quote(environ.get('PATH_INFO', ''))
+        if environ.get('QUERY_STRING'):
+            path += '?' + environ['QUERY_STRING']
 
-    class Dummy():
-        pass
-    server = Dummy()
-    server.server_name = environ['SERVER_NAME']
-    server.server_port = int(environ['SERVER_PORT'])
-    con = openerp.service.websrv_lib.noconnection(environ['gunicorn.socket']) # None
-    fore = webdav.handler(openerp.service.websrv_lib.noconnection(con), environ['REMOTE_ADDR'], server)
+        request_version = 'HTTP/1.1' # TODO
+        request_line = "%s %s %s\n" % (environ['REQUEST_METHOD'], path, request_version)
 
-    # let's pretend we are a Multi handler
-    class M():
-        def __init__(self):
-            self.sec_realms = {}
-            self.shared_headers = []
-            self.shared_response = ''
-            self.shared_body = ''
-        def send_error(self, code, msg):
-            self.shared_response = str(code) + ' ' + msg
-        def send_response(self, code, msg):
-            self.shared_response = str(code) + ' ' + msg
-        def send_header(self, a, b):
-            self.shared_headers.append((a, b))
-        def end_headers(self, *args, **kwargs):
+        class Dummy(object):
             pass
 
-    multi = M()
+        # Let's pretend we have a server to hand to the handler.
+        server = Dummy()
+        server.server_name = environ['SERVER_NAME']
+        server.server_port = int(environ['SERVER_PORT'])
+        con = openerp.service.websrv_lib.noconnection(environ['gunicorn.socket']) # None TODO
 
-    webdav.auth_provider.setupAuth(multi, fore)
+        # Let's pretend we have a Multi handler (i.e. the
+        # websrv_lib.MultiHTTPHandler class) to hand to the auth. provider.
+        multi = Dummy()
+        multi.sec_realms = {}
 
-    request_version = 'HTTP/1.1' # TODO
-    fore.wfile = StringIO.StringIO()
-    fore.rfile = environ['wsgi.input']
-    fore.headers = headers
-    fore.command = environ['REQUEST_METHOD']
-    fore.path = path
-    fore.request_version = request_version
-    fore.close_connection = 1
+        # Initialize the underlying handler and associated auth. provider.
+        handler = http_dir.handler(openerp.service.websrv_lib.noconnection(con), environ['REMOTE_ADDR'], server)
+        auth_provider = http_dir.auth_provider
+        auth_provider.setupAuth(multi, handler)
 
-    fore.raw_requestline = "%s %s %s\n" % (environ['REQUEST_METHOD'], path, request_version)
-    fore.requestline = fore.raw_requestline
+        # Populate the handler as if it is called by a regular HTTP server
+        # and the request is already parsed.
+        handler.wfile = StringIO.StringIO()
+        handler.rfile = environ['wsgi.input']
+        handler.headers = headers
+        handler.command = environ['REQUEST_METHOD']
+        handler.path = path
+        handler.request_version = request_version
+        handler.close_connection = 1
+        handler.raw_requestline = request_line
+        handler.requestline = request_line
 
-    from openerp.service.websrv_lib import AuthRequiredExc, AuthRejectedExc
-
-    def go():
-        auth_provider = webdav.auth_provider
+        # Handle authentication if there is an auth. provider associated to
+        # the handler.
         if auth_provider and auth_provider.realm:
             try:
-                multi.sec_realms[auth_provider.realm].checkRequest(fore, path)
-            except AuthRequiredExc, ae:
+                multi.sec_realms[auth_provider.realm].checkRequest(handler, path)
+            except websrv_lib.AuthRequiredExc, ae:
                 # Darwin 9.x.x webdav clients will report "HTTP/1.0" to us, while they support (and need) the
                 # authorisation features of HTTP/1.1 
-                if request_version != 'HTTP/1.1' and ('Darwin/9.' not in fore.headers.get('User-Agent', '')):
+                if request_version != 'HTTP/1.1' and ('Darwin/9.' not in handler.headers.get('User-Agent', '')):
                     print 'self.log_error("Cannot require auth at %s", self.request_version)'
-                    multi.send_error(403)
-                    return
-                #self._get_ignore_body(fore) # consume any body that came, not loose sync with input
-                multi.send_response(401,'Authorization required')
-                multi.send_header('WWW-Authenticate','%s realm="%s"' % (ae.atype,ae.realm))
-                multi.send_header('Connection', 'keep-alive')
-                multi.send_header('Content-Type','text/html')
-                multi.send_header('Content-Length', 4) # len(self.auth_required_msg))
-                multi.end_headers()
-                #self.wfile.write(self.auth_required_msg)
-                multi.shared_body = 'Blah'
-                return
-            except AuthRejectedExc,e:
+                    start_response("403 Forbidden", [])
+                    return []
+                start_response("401 Authorization required", [
+                    ('WWW-Authenticate', '%s realm="%s"' % (ae.atype,ae.realm)),
+                    # ('Connection', 'keep-alive'),
+                    ('Content-Type', 'text/html'),
+                    ('Content-Length', 4), # len(self.auth_required_msg)
+                    ])
+                return ['Blah'] # self.auth_required_msg
+            except websrv_lib.AuthRejectedExc,e:
                 print '("Rejected auth: %s" % e.args[0])'
-                multi.send_error(403,e.args[0])
-                return
-        mname = 'do_' + fore.command
-        if not hasattr(fore, mname):
-            if fore.command == 'OPTIONS':
+                start_response("403 %s" % (e.args[0],))
+                return []
+
+        method_name = 'do_' + handler.command
+
+        # Support the OPTIONS method even when not provided directly by the
+        # handler. TODO I would prefer to remove it and fix the handler if
+        # needed.
+        if not hasattr(handler, method_name):
+            if handler.command == 'OPTIONS':
                 return return_options(start_response)
-            multi.send_error(501, "Unsupported method (%r)" % fore.command)
-            return
-        method = getattr(fore, mname)
+            start_response("501 Unsupported method (%r)" % handler.command)
+            return []
+
+        # Finally, call the handler's method.
         try:
+            method = getattr(handler, method_name)
             method()
-            if hasattr(fore, '_flush'):
-                fore._flush()
-            response = fore.wfile.getvalue()
-            class DummySocket(StringIO.StringIO):
-                """
-                This is used to provide a StringIO to httplib.HTTPResponse
-                which, instead of taking a file object, expects a socket and
-                uses its makefile() method.
-                """
-                def makefile(self, *args, **kw):
-                    return self
-            response = httplib.HTTPResponse(DummySocket(response))
-            response.begin()
+            # The DAV handler buffers its output and provides a _flush()
+            # method.
+            getattr(handler, '_flush', lambda: None)()
+            response = parse_http_response(handler.wfile.getvalue())
             response_headers = response.getheaders()
             body = response.read()
             start_response(str(response.status) + ' ' + response.reason, response_headers)
             return [body]
-        except (AuthRejectedExc, AuthRequiredExc):
+        except (websrv_lib.AuthRejectedExc, websrv_lib.AuthRequiredExc):
             raise
         except Exception, e:
-            multi.send_error(500, "Internal error")
-            return
-    res = go()
-    if res is None:
-        start_response(multi.shared_response, multi.shared_headers)
-        return [multi.shared_body]
-    else:
-        return res
+            start_response("500 Internal error")
+            return []
+
+    return wsgi_handler
+
+def parse_http_response(s):
+    """ Turn a HTTP response string into a httplib.HTTPResponse object."""
+    class DummySocket(StringIO.StringIO):
+        """
+        This is used to provide a StringIO to httplib.HTTPResponse
+        which, instead of taking a file object, expects a socket and
+        uses its makefile() method.
+        """
+        def makefile(self, *args, **kw):
+            return self
+    response = httplib.HTTPResponse(DummySocket(s))
+    response.begin()
+    return response
 
 # WSGI handlers provided by modules loaded with the --load command-line option.
 module_handlers = []
