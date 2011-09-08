@@ -1362,13 +1362,15 @@ class Reports(View):
         context = req.session.eval_context(
             openerpweb.nonliterals.CompoundContext(
                 req.context or {}, action[ "context"]))
+
+        report_data = {"id": context["active_id"], "model": context["active_model"]}
+        if 'report_type' in action:
+            report_data['report_type'] = action['report_type']
         report_id = report_srv.report(
             req.session._db, req.session._uid, req.session._password,
             action["report_name"], context["active_ids"],
-            {"id": context["active_id"],
-             "model": context["active_model"],
-             "report_type": action["report_type"]},
-            context)
+            report_data, context)
+
         report_struct = None
         while True:
             report_struct = report_srv.report_get(
@@ -1384,7 +1386,7 @@ class Reports(View):
             report_struct['format'], 'octet-stream')
         return req.make_response(report,
              headers=[
-                 ('Content-Disposition', 'attachment; filename="%s.%s"' % (action['report_name'], action['report_type'])),
+                 ('Content-Disposition', 'attachment; filename="%s.%s"' % (action['report_name'], report_struct['format'])),
                  ('Content-Type', report_mimetype),
                  ('Content-Length', len(report))],
              cookies={'fileToken': int(token)})
