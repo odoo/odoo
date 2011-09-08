@@ -38,8 +38,8 @@ class email_template_preview(osv.osv_memory):
         template_id = context.get('template_id', False)
         if not template_id:
             return []
-        template_pool = self.pool.get('email.template')
-        template = template_pool.browse(cr, uid, int(template_id), context=context)
+        email_template = self.pool.get('email.template')
+        template = email_template.browse(cr, uid, int(template_id), context=context)
         template_object = template.model_id
         model =  self.pool.get(template_object.model)
         record_ids = model.search(cr, uid, [], 0, 10, 'id', context=context)
@@ -56,17 +56,17 @@ class email_template_preview(osv.osv_memory):
             context = {}
         result = super(email_template_preview, self).default_get(cr, uid, fields, context=context)
 
-        template_pool = self.pool.get('email.template')
+        email_template = self.pool.get('email.template')
         template_id = context.get('active_id', False)
         if 'res_id' in fields:
             records = self._get_records(cr, uid, context=context)
             result['res_id'] = records and records[0][0] or False # select first record as a Default
         if template_id and 'model_id' in fields:
-            result['model_id'] = template_pool.read(cr, uid, int(template_id), ['model_id'], context).get('model_id', False)
+            result['model_id'] = email_template.read(cr, uid, int(template_id), ['model_id'], context).get('model_id', False)
         return result
 
     _columns = {
-        'res_id':fields.selection(_get_records, 'Referred Document'),
+        'res_id':fields.selection(_get_records, 'Sample Document'),
     }
 
     def on_change_ref(self, cr, uid, ids, res_id, context=None):
@@ -87,11 +87,11 @@ class email_template_preview(osv.osv_memory):
         vals['email_bcc'] = self.render_template(cr, uid, template.email_bcc, model, res_id, context)
         vals['reply_to'] = self.render_template(cr, uid, template.reply_to, model, res_id, context)
         vals['subject'] = self.render_template(cr, uid, template.subject, model, res_id, context)
-        description = self.render_template(cr, uid, template.body, model, res_id, context) or ''
+        description = self.render_template(cr, uid, template.body_text, model, res_id, context) or ''
         if template.user_signature:
             signature = self.pool.get('res.users').browse(cr, uid, uid, context).signature
             description += '\n' + signature
-        vals['body'] = description
+        vals['body_text'] = description
         vals['report_name'] = self.render_template(cr, uid, template.report_name, model, res_id, context)
         return {'value': vals}
 

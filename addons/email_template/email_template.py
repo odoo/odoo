@@ -21,10 +21,12 @@
 ##############################################################################
 
 import base64
+import logging
 
 import netsvc
 from osv import osv
 from osv import fields
+import tools
 from tools.translate import _
 
 try:
@@ -37,6 +39,7 @@ class email_template(osv.osv):
     _inherit = 'mail.message'
     _name = "email.template"
     _description = 'Email Templates'
+    _rec_name = 'name' # override mail.message's behavior
 
     def render_template(self, cr, uid, template, model, res_id, context=None):
         """Render the given template text, replace mako expressions ``${expr}``
@@ -59,7 +62,8 @@ class email_template(osv.osv):
             user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
             result = MakoTemplate(template).render_unicode(object=record,
                                                            user=user,
-                                                           context=context,
+                                                           # context kw would clash with mako internals
+                                                           ctx=context,
                                                            format_exceptions=True)
             if result == u'False':
                 result = u''
@@ -73,6 +77,7 @@ class email_template(osv.osv):
             context = {}
         if not template_id:
             return False
+        template = self.browse(cr, uid, template_id, context)
         lang = self.render_template(cr, uid, template.lang, template.model, record_id, context)
         if lang:
             # Use translated template if necessary
@@ -98,7 +103,7 @@ class email_template(osv.osv):
                                  "This should usually be a placeholder expression "
                                  "that provides the appropriate language code, e.g. "
                                  "${object.partner_id.lang.code}."),
-        'user_signature': fields.boolean('Signature',
+        'user_signature': fields.boolean('Add Signature',
                                          help="If checked, the user's signature will be appended to the text version "
                                               "of the message"),
         'report_name': fields.char('Report Filename', size=200, translate=True,
@@ -110,7 +115,6 @@ class email_template(osv.osv):
                                                  "of the related document model"),
         'ref_ir_value':fields.many2one('ir.values', 'Sidebar button', readonly=True,
                                        help="Sidebar button to open the sidebar action"),
-        'auto_delete': fields.boolean('Auto Delete', help="Permanently delete emails after sending"),
         'track_campaign_item': fields.boolean('Resource Tracking',
                                               help="Enable this is you wish to include a special tracking marker "
                                                    "in outgoing emails so you can identify replies and link "
@@ -155,6 +159,10 @@ class email_template(osv.osv):
                                                        "destination document model (sub-model)."),
         'null_value': fields.char('Null value', help="Optional value to use if the target field is empty", size=128),
         'copyvalue': fields.char('Expression', size=256, help="Final placeholder expression, to be copy-pasted in the desired template field."),
+    }
+
+    _defaults = {
+        'track_campaign_item': True
     }
 
     def create_action(self, cr, uid, ids, context=None):

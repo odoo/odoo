@@ -109,14 +109,11 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Templates">
-                    <field name="name"/>
-                    <field name="smtp_server_id"/>
                     <field name="model_id"/>
-                    <field name="email_to"/>
-                    <field name="email_cc"/>
-                    <field name="email_bcc"/>
+                    <field name="name"/>
                     <field name="subject"/>
-                    <field name="user_signature"/>
+                    <field name="email_from"/>
+                    <field name="email_to"/>
                     <field name="report_name"/>
                     <button name="%(wizard_email_template_preview)d" string="Preview Template"
                             type="action" target="new" icon="gtk-zoom-fit"/>
@@ -158,7 +155,7 @@
             <field name="search_view_id" ref="view_email_template_search"/>
         </record>
 
-        <menuitem name="Email Templates" id="menu_email_template_all_tools"
+        <menuitem name="Templates" id="menu_email_template_all_tools"
             parent="mail.menu_email_message_tools" action="action_email_template_tree_all" />
 
 
