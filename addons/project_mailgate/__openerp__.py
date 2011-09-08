@@ -42,6 +42,7 @@ Moreover, it keeps track of all further communications and task states.
     ],
     'demo_xml': [
     ],
+    'test': ['test/test_project_mailgate.yml'],
     'installable': True,
     'active': False,
     'certificate': '001075048780413258261',
