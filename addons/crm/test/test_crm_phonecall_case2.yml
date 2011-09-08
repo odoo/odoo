@@ -15,7 +15,7 @@
     self.onchange_partner_address_id(cr, uid,[ref("crm_phonecall_dummycall")], ref("base.res_partner_address_8invoice"))
 
 -
-  I setting Phone call to Held (Done)
+  I setting Phone call to Held (Done).
 -
   !python {model: crm.phonecall}: |
     self.case_close(cr, uid, [ref("crm_phonecall_dummycall")])

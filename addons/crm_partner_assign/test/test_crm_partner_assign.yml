@@ -31,7 +31,7 @@
   !record {model: res.partner, id: base.res_partner_desertic_hispafuentes}:
     grade_id: res_partner_grade_first0
 -
-  Change the User email id or partner if needed.
+  I change the User email id or partner if needed.
 -
   !python {model: res.partner}: |
     self.geo_localize(cr, uid, [ref('base.res_partner_desertic_hispafuentes')], context)
@@ -68,7 +68,7 @@
     self.onchange_assign_id(cr, uid, [ref('crm_lead_questionnaireonopenerp0')], ref('base.res_partner_desertic_hispafuentes'), context)
     self.assign_partner(cr, uid, [ref('crm_lead_questionnaireonopenerp0')], context)
 -
-  Change the User email id or partner if needed.
+  I change the User email id or partner if needed.
 -
   !python {model: crm.lead.forward.to.partner}: |
     context.update({'history': 'latest', })
@@ -76,7 +76,7 @@
     self.on_change_email(cr, uid, [ref('crm_lead_questionnaireonopenerp0')], user)
     self.on_change_partner(cr, uid, [ref('crm_lead_questionnaireonopenerp0')], ref('base.res_partner_desertic_hispafuentes'))
 -
-  Change in history define.
+  I change in history define.
 -
   !python {model: crm.lead.forward.to.partner}: |
     context.update({'history': 'info', })
@@ -118,7 +118,7 @@
     except:
       pass
 -
-  Create the opportunity.
+  I create the opportunity.
 -
    !record {model: crm.lead, id: crm_opportunity2}:
     email_from: info@balmerinc.be
@@ -130,7 +130,7 @@
     categ_id: crm.categ_oppor2
     section_id: crm.section_sales_department
 -  |
-   I Update the data,
+   I Update the data.
 -
    !python {model: crm.merge.opportunity}: |
     self._update_data([ref('crm_opportunity2')], ref('crm_lead_questionnaireonopenerp0'))

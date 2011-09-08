@@ -32,7 +32,7 @@
 -  |
    I can see that Meeting's calendar view is shown.
    then I click on the date on which I want to schedule meeting.
-   I fill proper data for that meeting and save it
+   I fill proper data for that meeting and save it.
 -
   !record {model: crm.meeting, id: crm_meeting_abcfuelcounits0}:
     date: !eval time.strftime('%Y-%m-%d 00:00:00')
@@ -50,13 +50,13 @@
   I click on "schedule call" button and select planned date for the call.
 -
   !record {model: crm.opportunity2phonecall, id: crm_opportunity2phonecall_abcfuelcounits0}:
-    date: !eval "(datetime.now() + timedelta(1)).strftime('%Y-%m-%d 11:15:00')" 
+    date: !eval "(datetime.now() + timedelta(1)).strftime('%Y-%m-%d 11:15:00')"
     name: 'ABC FUEL CO 829264 - 10002 units'
     section_id: crm.section_sales_department
     user_id: base.user_demo
     categ_id: crm.categ_phone1
 - |
-  schedule phonecall by apply (action_apply)function of opportunity2phoncall wizard
+  schedule phonecall by opportunity2phoncall wizard.
 -
   !python {model: crm.opportunity2phonecall}: |
       self.action_apply(cr, uid, [ref('crm_opportunity2phonecall_abcfuelcounits0')], {'active_ids': [ref("crm_opportunity_abcfuelcounits0")]})
@@ -71,7 +71,7 @@
   I can see phonecall record after click on "Schedule call" wizard.
 -
   !record {model: crm.phonecall, id: crm_phonecall_abcfuelcounits0}:
-    date: !eval "(datetime.now() + timedelta(1)).strftime('%Y-%m-%d 11:15:00')" 
+    date: !eval "(datetime.now() + timedelta(1)).strftime('%Y-%m-%d 11:15:00')"
     duration: 3.0
     name: 'ABC FUEL CO 829264 - 10002 units'
     partner_address_id:  base.res_partner_address_1
@@ -92,7 +92,7 @@
     categ_id: crm.categ_oppor2
     section_id: crm.section_sales_department
 -
-  Create the opportunity 'FUEL CO'.
+  I create the opportunity 'FUEL CO'.
 -
    !record {model: crm.lead, id: crm_opportunity_2}:
     email_from: info@balmerinc.be
@@ -104,7 +104,7 @@
     categ_id: crm.categ_oppor2
     section_id: crm.section_sales_department
 -  |
-   I Merge two Opportunities,
+   I Merge two Opportunities.
 -
    !python {model: crm.merge.opportunity}: |
     op_list = [ref('crm_opportunity_1'),ref('crm_opportunity_2')]

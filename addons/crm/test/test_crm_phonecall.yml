@@ -17,7 +17,7 @@
   Now, click on "Continue" button of this wizard.
 -
   !python {model: crm.phonecall2partner}: |
-    
+
     self._select_partner(cr, uid,{"active_ids": [ref("crm_phonecall_interviewcall0")]})
     self.open_create_partner(cr, uid, [ref("crm_phonecall2partner_1")], {"active_ids": [ref("crm_phonecall_interviewcall0")]})
     self.make_partner(cr, uid, [ref("crm_phonecall2partner_1")], {"active_ids": [ref("crm_phonecall_interviewcall0")]})
@@ -45,7 +45,7 @@
 
 - |
   And I check that the phonecall and the newly created business opportunity is linked
-  to same  partner
+  to same  partner.
 -
   !python {model:  crm.phonecall}: |
     obj_phonecall = self.browse(cr, uid, ref('crm_phonecall_interviewcall0'))
@@ -56,7 +56,7 @@
 
 - |
   I schedule Meeting on this current phonecall by clicking on "schedule
-  Meeting"
+  Meeting".
 -
    !python {model: crm.phonecall}: |
      self.action_make_meeting(cr, uid, [ref('crm_phonecall_interviewcall0')])
@@ -64,7 +64,7 @@
 -  |
    I can see that Meeting's calendar view is shown.
    then I click on the date on which I want schedule meeting.
-   I fill proper data for that meeting and save it
+   I fill proper data for that meeting and save it.
 -
   !record {model: crm.meeting, id: crm_meeting_interviewcall0}:
     alarm_id: base_calendar.alarm3

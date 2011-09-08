@@ -1,10 +1,10 @@
 -
   In order to test the changes on stage of a lead or an opportunity with OpenERP,
   I create some leads and test the stage changes.
-- 
+-
   I want to change the probability to 0.0 when the opportunity is marked as lost.
   So I set its Change probability automatically true.
-- 
+-
   !record {model: crm.case.stage, id: crm.stage_lead6}:
     name: Lost
     on_change: true
@@ -12,9 +12,9 @@
     section_ids:
       - crm.section_sales_department
     sequence: 0
-- 
+-
   I create a lead 'Test Lead1'.
-- 
+-
   !record {model: crm.lead, id: crm_lead_openerppresentation0}:
     categ_id: crm.categ_oppor4
     day_close: 0.0
@@ -29,17 +29,17 @@
   !python {model: crm.lead}: |
     self.case_open(cr, uid, [ref('crm_lead_openerppresentation0')])
 -
-  I assigning stage
+  I assigning stage.
 -
   !python {model: crm.lead}: |
     self.onchange_stage_id(cr, uid, [ref('crm_lead_openerppresentation0')], [], context)
 -
-  I assigning stage
+  I assigning percent.
 -
   !python {model: crm.lead}: |
     self.stage_find_percent(cr, uid, 10.0, [])
 -
-  I find that this lead can be converted to opportunity. 
+  I find that this lead can be converted to opportunity.
 -
   !record {model: crm.lead2opportunity.partner, id: crm_lead2opportunity_partner0}:
     action: 'create'

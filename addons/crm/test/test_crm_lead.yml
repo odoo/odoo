@@ -4,12 +4,12 @@
    starts with a fist contact with a customer (a lead), which will be converted to a
    business opportunity and a partner.
 -
-  Check installer report
+  I check installer report.
 -
   !record {model: base.setup.installer , id: base_action_rule_0_1}:
     name: Test_action
 -
-  Create the view at the time of setup.
+  I create the view at the time of setup.
 -
    !python {model: base.setup.installer}: |
       self.fields_view_get(cr, uid,view_id=None, view_type='form', context=None, toolbar=False, submenu=False)
@@ -41,12 +41,12 @@
      section_id: crm.section_sales_department
      referred: False
 -  |
-   I check that the lead is in 'draft' state,
+   I check that the lead is in 'draft' state.
 -
    !assert {model: crm.lead, id: crm_lead_newcustomer0, string: Lead in Draft}:
      - state == "draft"
 -
-   I open lead by click on "Open" button,
+   I open lead by click on "Open" button.
 -
    !python {model: crm.lead}: |
      self.case_open(cr, uid, [ref("crm_lead_newcustomer0")])
@@ -109,7 +109,7 @@
   Then, Click on "Create Opportunity" button of this wizard.
 -
    !python {model: crm.lead2opportunity.partner}: |
-      self.action_apply(cr, uid, [ref("crm_lead2opportunity_partner_create_2")], {'active_ids': [ref("crm_lead_newcustomer0")], 'active_id': ref("crm_lead_newcustomer0")})      
+      self.action_apply(cr, uid, [ref("crm_lead2opportunity_partner_create_2")], {'active_ids': [ref("crm_lead_newcustomer0")], 'active_id': ref("crm_lead_newcustomer0")})
 -  |
    In order to check the opportunity is created or not, I check type.
 -
@@ -118,20 +118,20 @@
     assert lead.type == 'opportunity'
 
 -
-  Creating crm.lead2opportunity.partner.mass report
+  I create mass report of lead to opprtunity partner.
 -
   !record {model: crm.lead2opportunity.partner.mass, id: crm_lead2opportunity_partner_mass0}:
-    user_ids: 
+    user_ids:
       - base.user_root
     section_id: crm.section_sales_department
 -
-  Then, execute  lead2opportunity.partner.mass wizard.
+  Then, execute that mass wizard.
 -
    !python {model: crm.lead2opportunity.partner.mass}: |
       self.mass_convert(cr, uid, [ref("crm_lead2opportunity_partner_mass0")],{'active_ids': [ref("crm_lead_newcustomer0")], 'active_id': ref("crm_lead_newcustomer0")})
- 
+
 -
-  Creating notes.
+  I create notes.
 -
   !record {model: crm.add.note, id: crm_add_note0}:
     {}
@@ -146,18 +146,12 @@
       except:
         pass
 -
-  Creating crm.send.mail report
+  I create send mail report.
 -
   !record {model: crm.send.mail, id: crm_send_mail0}:
-     #email_to: info@axelor.com
-     #email_from: admin@openerp.com
-     #reply_to: sales_openerp@openerp.com
-     #subject: latest
-     #body: test
-     #state: draft
      {}
 -
-   I close lead by click on "close" button,
+   I close lead by click on "close" button.
 -
    !python {model: crm.send.mail}: |
     fields = {
@@ -172,7 +166,7 @@
     #self.action_mass_send(cr, uid, [ref('crm_send_mail0')], {'active_ids':[ref('crm_send_mail0')],'active_id':ref('crm_send_mail0')})
     self.get_reply_defaults(cr, uid, fields, {'active_ids':[ref('crm_send_mail0')],'active_id':ref('crm_send_mail0')})
 -
-   I close lead by click on "close" button,
+   I close lead by click on "close" button.
 -
    !python {model: crm.lead}: |
      self.case_close(cr, uid, [ref("crm_lead_newcustomer0")])
@@ -182,7 +176,7 @@
   !assert {model: crm.lead, id: crm_lead_newcustomer0, string: Lead in done state}:
      - state == "done"
 -
-   cancel lead by click on "cancel" button,
+  I cancel lead by click on "cancel" button.
 -
    !python {model: crm.lead}: |
      self.case_cancel(cr, uid, [ref("crm_lead_newcustomer0")])
@@ -190,7 +184,7 @@
   I check that lead is now in 'cancel' state.
 -
   !assert {model: crm.lead, id: crm_lead_newcustomer0, string: Lead in cancel state}:
-     - state == "cancel"     
+     - state == "cancel"
 
 #-
 #  |
@@ -207,5 +201,4 @@
 
 - |
   I Reply to last Email to lead with some document attached.and check that communication history generated or not.
-
 

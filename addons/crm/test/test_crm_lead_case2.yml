@@ -3,7 +3,7 @@
    I will create new full configured record and carry test on it.
 -  |
    I Start by creating "Demo Sales Team" with No Unlink.
-   Creating a crm.case.section record
+   I create a crm.case.section record.
 -
   !record {model: crm.case.section, id: crm_case_section_demosalesteam}:
     code: DEMO
@@ -26,9 +26,9 @@
    I assign segmentation.
 -
    !record {model: res.users, id: res_users_usercrm0}:
-     context_section_id: crm_case_section_demosalesteam    
+     context_section_id: crm_case_section_demosalesteam
 -  |
-   Creating a new lead "Demo Customer" and I provide an address to this
+   I create a new lead "Demo Customer" and I provide an address to this
    demo customer and email "info@democustomer.com" and Also "Demo Sales Team".
 -
    !record {model: crm.lead, id: crm_lead_democustomer}:
@@ -41,7 +41,7 @@
      referred: False
      type: lead
 -
-   I check that the lead is in 'draft' state,
+   I check that the lead is in 'draft' state.
 -
    !assert {model: crm.lead, id: crm_lead_democustomer, string: Lead in Draft}:
      - state == "draft"
@@ -61,7 +61,7 @@
   I assigning contact detail to the Lead "Demo Customer" with address.
 -
   !python {model: crm.lead}: |
-    self.onchange_partner_address_id(cr, uid, ref("crm_lead_democustomer"), ref("base.res_partner_address_notsotinysarl0"), email=False)    
+    self.onchange_partner_address_id(cr, uid, ref("crm_lead_democustomer"), ref("base.res_partner_address_notsotinysarl0"), email=False)
 
 -
   I selecting email "Opt-out" option for the "Demo Customer" Lead.
@@ -75,7 +75,7 @@
   !python {model: crm.lead}: |
     self.on_change_optin(cr, uid, ref("crm_lead_democustomer"), True)
 -
-   I open lead by click on "Open" button,
+   I open lead by click on "Open" button.
 -
    !python {model: crm.lead}: |
      self.case_open(cr, uid, [ref("crm_lead_democustomer")])
@@ -90,7 +90,7 @@
     !python {model: crm.lead}: |
       self.case_reset(cr, uid, [ref("crm_lead_democustomer")])
 -
-   I again opening lead by click on "Open" button,
+   I again opening lead by click on "Open" button.
 -
    !python {model: crm.lead}: |
      self.case_open(cr, uid, [ref("crm_lead_democustomer")])
@@ -100,7 +100,7 @@
    !python {model: crm.lead}: |
      self.stage_next(cr, uid, [ref("crm_lead_democustomer")], context={'stage_type': 'lead'})
 -
-  I try to Unlink the Lead "Demo Customer" demo Lead
+  I try to Unlink the Lead "Demo Customer" demo Lead.
 -
    !python {model: crm.lead}: |
     try:
@@ -108,7 +108,7 @@
     except:
       pass
 -
-   I setting Lead "Demo Customer" to Pending State
+   I setting Lead "Demo Customer" to Pending State.
 -
     !python {model: crm.lead}: |
       self.case_pending(cr, uid, [ref("crm_lead_democustomer")])
@@ -118,36 +118,34 @@
   !assert {model: crm.lead, id: crm_lead_democustomer, string: Lead in Pending state}:
      - state == "pending"
 -
-  Now i Escalate the Lead "Demo Customer" Parent "Sales Team".
+  Now I Escalate the Lead "Demo Customer" Parent "Sales Team".
 -
     !python {model: crm.lead}: |
       self.case_escalate(cr, uid, [ref("crm_lead_democustomer")])
-- 
-  Now i add Internal Note Saying Escalated Reason
-  Creating a crm.add.note record
-- 
+-
+  Now I add Internal Note Saying Escalated Reason.
+-
   !record {model: crm.add.note, id: crm_add_note_0}:
     body: Sales Lead Has Been Escalated Due to Some Technical reason to the parent  'Sales
       Team'
     state: unchanged
 -
-  I click aa note button to attach the record
-- 
+  I click a note button to attach the record.
+-
   !python {model: crm.add.note}: |
     context['active_model'] = "crm.lead"
     context['active_ids'] = [ref("crm_lead_democustomer")]
     self.action_add(cr, uid, [ref("crm_add_note_0")], context=context)
 
 -
-  Now i Copying this lead "Demo Customer" to New Lead.
+  Now I Copying this lead "Demo Customer" to New Lead.
 -
     !python {model: crm.lead}: |
       self.copy(cr, uid, ref("crm_lead_democustomer"))
 -
-  Checking the Lead Copied or Not.
+  I checking the Lead Copied or Not.
 -
     !python {model: crm.lead}: |
       sid = self.search(cr, uid, [('name', '=', 'Demo Customer'),('state', '=', 'draft')])
       if not sid:
         raise AssertionError("Lead is not copied Successfully")
-

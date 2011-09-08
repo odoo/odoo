@@ -11,7 +11,7 @@
     partner_id: base.res_partner_9
     section_id: crm.section_sales_department
 -
-  Create the message.
+  I create the message.
 -
   !python {model: crm.helpdesk}: |
     msg = {
@@ -28,7 +28,7 @@
   !assert {model: crm.helpdesk, id: crm_helpdesk_somefunctionalquestion0}: 
     - state == 'draft'  
 - |
-  In order to make this helpdesk request to be considered I make it "Open"
+  In order to make this helpdesk request to be considered I make it "Open".
 -
   !python {model: crm.helpdesk}: |
     self.case_open(cr, uid, [ref('crm_helpdesk_somefunctionalquestion0')])  

@@ -17,7 +17,7 @@
   !assert {model: crm.lead, id: crm_opportunity_demotestopportunity, string: Opportunity in Draft}:
     - state == "draft"
 -
-  I open opportunity by click on "Open" button,
+  I open opportunity by click on "Open" button.
 -
   !python {model: crm.lead}: |
     self.case_open(cr, uid, [ref("crm_opportunity_demotestopportunity")])
