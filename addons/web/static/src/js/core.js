@@ -578,7 +578,7 @@ openerp.web.Session = openerp.web.CallbackEnabled.extend( /** @lends openerp.web
     do_load_css: function (files) {
         _.each(files, function (file) {
             $('head').append($('<link>', {
-                'href': file,
+                'href': file + (this.debug ? '?debug=' + (new Date().getTime()) : ''),
                 'rel': 'stylesheet',
                 'type': 'text/css'
             }));
@@ -590,7 +590,7 @@ openerp.web.Session = openerp.web.CallbackEnabled.extend( /** @lends openerp.web
             var file = files.shift();
             var tag = document.createElement('script');
             tag.type = 'text/javascript';
-            tag.src = file;
+            tag.src = file + (this.debug ? '?debug=' + (new Date().getTime()) : '');
             tag.onload = tag.onreadystatechange = function() {
                 if ( (tag.readyState && tag.readyState != "loaded" && tag.readyState != "complete") || tag.onload_done )
                     return;
