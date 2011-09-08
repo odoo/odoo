@@ -2482,14 +2482,16 @@ openerp.web.form.FieldStatus = openerp.web.form.Field.extend({
     template: "FieldStatus",
     start: function() {
         this._super();
+        this.selected_item = null;
         this.render_list();
     },
     set_value: function(value) {
         this._super(value);
+        this.selected_item = value;
         this.render_list();
     },
     render_list: function() {
-        var content = openerp.web.qweb.render("FieldStatus.content", {});
+        var content = openerp.web.qweb.render("FieldStatus.content", {widget: this, _:_});
         this.$element.html(content);
     }
 });
