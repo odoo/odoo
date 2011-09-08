@@ -452,7 +452,7 @@ class project_issue(crm.crm_case, osv.osv):
 
         vals.update(vls)
         res = self.write(cr, uid, ids, vals)
-        self.message_append_dict(cr, uid, [res_id], msg, context=context)
+        self.message_append_dict(cr, uid, ids, msg, context=context)
         return res
 
     def copy(self, cr, uid, id, default=None, context=None):
