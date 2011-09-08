@@ -34,6 +34,7 @@ on a remote server.
     "depends": ["project", "caldav", "base_calendar"],
     "init_xml": ["project_caldav_data.xml", 'project_caldav_setup.xml', ],
     "demo_xml": [],
+    "test": ['test/test_project_caldav.yml'],
     "update_xml": ["project_caldav_view.xml"],
     "active": False,
     "website": "http://www.openerp.com",

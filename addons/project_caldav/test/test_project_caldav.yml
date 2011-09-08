@@ -1,0 +1,59 @@
+- |
+  Now Create test cases for project caldav
+-
+  I create task 'Training task' for this project.
+-
+  !record {model: project.task, id: project_task_technicaltasktraining}:
+    date_start: !eval time.strftime('%Y-%m-%d %H:%M:%S')
+    name: Technical Training
+    user_id: base.user_root
+    planned_hours: 30.0
+    date_deadline: !eval time.strftime('%Y-%m-%d 20:20:00')
+    remaining_hours: 30.0
+    state: draft
+-
+  Open the created task.
+-
+  !python {model: project.task}: |
+    context.update({'model':'project.task','active_id': ref('project_task_technicaltasktraining')})
+    self.open_task(cr, uid, [ref('project_task_technicaltasktraining')], context)
+-
+  Check the export functionality.
+-
+  !python {model: project.task}: |
+    context.update({'model':'project.task','active_id': ref('project_task_technicaltasktraining')})
+    self.export_cal(cr, uid, [ref('project_task_technicaltasktraining')], context)
+-
+  Check the Import functionality with the define date.
+-
+  !python {model: project.task}: |
+    import time
+    vals = []
+    context.update({'model':'project.task','active_id': ref('project_task_technicaltasktraining')})
+    vals.append({
+              'date': time.strftime('%Y-%m-%d 16:04:00'),
+              'date_deadline':time.strftime('%Y-%m-%d 20:20:00'),
+              }) 
+    try:
+      self.check_import(cr, uid, vals, context)
+    except:
+      pass
+-
+  Check the export Import functionality with the planned hours.
+-
+  !python {model: project.task}: |
+    import time
+    vals = []
+    context.update({'model':'project.task','active_id': ref('project_task_technicaltasktraining')})
+    vals.append({
+          'date': time.strftime('%Y-%m-%d 16:04:00'),
+          'create_date': time.strftime('%Y-%m-%d 16:04:00'),
+          'date_deadline':time.strftime('%Y-%m-%d 20:20:00'),
+          'planned_hours':30.0,
+          'ids':ref('project_task_technicaltasktraining'),
+          'recurrent_id': time.strftime('%Y-%m-%d 50:00:00'),
+           }) 
+    try:
+      self.check_import(cr, uid, vals, context)
+    except:
+      pass
