@@ -2507,6 +2507,18 @@ openerp.web.form.FieldStatus = openerp.web.form.Field.extend({
         
         var content = openerp.web.qweb.render("FieldStatus.content", {widget: this, _:_});
         this.$element.html(content);
+        
+        var colors = JSON.parse(((this.node.attrs || {}).statusbar_colors || "{}").split("'").join('"'));
+        var color = colors[this.selected_value];
+        if (color) {
+            var elem = this.$element.find("li.oe-arrow-list-selected span");
+            elem.css("border-color", color);
+            elem = this.$element.find("li.oe-arrow-list-selected .oe-arrow-list-before");
+            elem.css("border-left-color", "rgba(0,0,0,0)");
+            elem = this.$element.find("li.oe-arrow-list-selected .oe-arrow-list-after");
+            elem.css("border-color", "rgba(0,0,0,0)");
+            elem.css("border-left-color", color);
+        }
     }
 });
 
