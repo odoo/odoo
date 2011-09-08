@@ -2482,12 +2482,13 @@ openerp.web.form.FieldStatus = openerp.web.form.Field.extend({
     template: "FieldStatus",
     start: function() {
         this._super();
-        this.selected_item = null;
+        this.selected_index = null;
         this.render_list();
     },
     set_value: function(value) {
         this._super(value);
-        this.selected_item = value;
+        var select = _.detect(this.field.selection, function(x) { return x[0] === value; });
+        this.selected_index = _.indexOf(this.field.selection, select);
         this.render_list();
     },
     render_list: function() {

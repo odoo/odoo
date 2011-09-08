@@ -1384,7 +1384,7 @@
     <ul class="oe-arrow-list">
         <t t-set="size" t-value="widget.field.selection.length"/>
         <t t-foreach="_.range(size)" t-as="i">
-            <li>
+            <li t-att-class="i === widget.selected_index ? 'oe-arrow-list-selected' : ''">
                 <span class="oe-arrow-list-before" t-if="i &gt; 0"></span><span><t t-esc="widget.field.selection[i][1]"/></span><span class="oe-arrow-list-after" t-if="i &lt; size - 1"></span>
             </li>
         </t>
