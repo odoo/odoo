@@ -121,7 +121,11 @@ def wsgi_webdav(environ, start_response):
 
     http_dir = websrv_lib.find_http_service(environ['PATH_INFO'])
     if http_dir:
-        environ['PATH_INFO'] = '/' + environ['PATH_INFO'][len(http_dir.path):]
+        path = environ['PATH_INFO'][len(http_dir.path):]
+        if path.startswith('/'):
+            environ['PATH_INFO'] = path
+        else:
+            environ['PATH_INFO'] = '/' + npath
         return http_to_wsgi(http_dir)(environ, start_response)
 
 def return_options(start_response):
@@ -209,7 +213,7 @@ def http_to_wsgi(http_dir):
                 return ['Blah'] # self.auth_required_msg
             except websrv_lib.AuthRejectedExc,e:
                 print '("Rejected auth: %s" % e.args[0])'
-                start_response("403 %s" % (e.args[0],))
+                start_response("403 %s" % (e.args[0],), [])
                 return []
 
         method_name = 'do_' + handler.command
@@ -220,7 +224,7 @@ def http_to_wsgi(http_dir):
         if not hasattr(handler, method_name):
             if handler.command == 'OPTIONS':
                 return return_options(start_response)
-            start_response("501 Unsupported method (%r)" % handler.command)
+            start_response("501 Unsupported method (%r)" % handler.command, [])
             return []
 
         # Finally, call the handler's method.
