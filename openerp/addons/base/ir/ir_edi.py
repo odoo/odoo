@@ -366,26 +366,27 @@ class edi(object):
             context = {}
         if edi_struct is None:
             edi_struct = {}
-        _fields = self.fields_get(cr, uid, context=context)
-        fields_to_export = edi_struct and edi_struct.keys() or _fields.keys()
+        _columns = self._all_columns
+        fields_to_export = edi_struct and edi_struct.keys() or _columns.keys()
         edi_dict_list = []
         value = None
         for row in records:
             edi_dict = {}
             edi_dict.update(self.edi_metadata(cr, uid, [row], context=context)[0])
             for field in fields_to_export:
-                cols = _fields[field]
+                _column = _columns[field].column
+                _column_dict = fields.field_to_dict(self, cr, uid, context, _column)
                 record = getattr(row, field)
                 if not record:
                     continue
                 #if _fields[field].has_key('function') or _fields[field].has_key('related_columns'):
                 #    # Do not Export Function Fields and related fields
                 #    continue
-                elif cols['type'] == 'many2one':
+                elif _column_dict['type'] == 'many2one':
                     value = self.edi_m2o(cr, uid, record, context=context)
-                elif cols['type'] == 'many2many':
+                elif _column_dict['type'] == 'many2many':
                     value = self.edi_m2m(cr, uid, record, context=context)
-                elif cols['type'] == 'one2many':
+                elif _column_dict['type'] == 'one2many':
                     value = self.edi_o2m(cr, uid, record, edi_struct=edi_struct.get(field, {}), context=context )
                 else:
                     value = record
@@ -466,24 +467,26 @@ class edi(object):
                     connect it to the parent record via a write value like (4, db_id).        
         """
         # generic implementation!
-        fields = edi_document.keys()
         fields_to_import = []
         data_line = []
         model_data = self.pool.get('ir.model.data')
-        _fields = self.fields_get(cr, uid, context=context)
+        _columns = self._all_columns
         values = {}
         xml_id = edi_document['__id']
         assert len(xml_id.split('.'))==2, _("'%s' contains too many dots. XML ids should not contain dots ! These are used to refer to other modules data, as in module.reference_id") % (xml_id)
         module, xml_id2 = xml_id.split('.')
         for field in edi_document.keys():
             if not field.startswith('__'):
+                _column = _columns[field].column
+                _column_dict = fields.field_to_dict(self, cr, uid, context, _column)
+            
                 fields_to_import.append(field)
                 edi_field_value = edi_document[field]
-                field_type = _fields[field]['type']
-                relation_model = _fields[field].get('relation')
+                field_type = _column_dict['type']
+                relation_model = _column_dict.get('relation')
                 if not edi_field_value:
                     continue
-                if _fields[field].has_key('function') or _fields[field].has_key('related_columns'):
+                if _column_dict.has_key('function') or _column_dict.has_key('related_columns'):
                     # DO NOT IMPORT FUNCTION FIELD AND RELATED FIELD
                     continue
                 elif field_type in ('many2one', 'many2many'):
