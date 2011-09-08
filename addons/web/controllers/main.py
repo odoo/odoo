@@ -1372,6 +1372,7 @@ class Reports(View):
                 report_data['form'] = action['datas']['form']
             if 'ids' in action['datas']:
                 report_ids = action['datas']['ids']
+        
         report_id = report_srv.report(
             req.session._db, req.session._uid, req.session._password,
             action["report_name"], report_ids,
