@@ -45,6 +45,7 @@ Worklogs can be maintained to signify number of hours spent by users to handle a
     ],
     'demo_xml': [
     ],
+    'test': ['test/test_project_issue_sheet.yml'],
     'installable': True,
     'active': False,
     'certificate' : '00856032058128997037',
