@@ -1,0 +1,51 @@
+-
+  I create a partner which is a my customer
+-
+  !record {model: res.partner, id: res_partner_test22}:
+    name: Junjun wala
+    supplier: False
+    customer: True
+    opt_out: False
+-
+  I create one Sale Order
+-
+  !record {model: sale.order, id: sale_order_test}:
+    partner_id: res_partner_test22
+    partner_invoice_id: base.res_partner_address_3
+    partner_order_id: base.res_partner_address_3
+    partner_shipping_id: base.res_partner_address_3
+    pricelist_id: 1
+    order_line:
+      - product_id: product.product_product_pc1
+        product_uom_qty: 1.0
+        product_uom: 1
+        price_unit: 150.0
+        name: 'basic pc'
+-
+  I Open the sale order
+-
+  !python {model: sale.order}: |
+    
+    orders = self.browse(cr, uid, ref("sale_order_test"))
+    import netsvc
+    wf_service = netsvc.LocalService("workflow")
+    wf_service.trg_validate(uid, 'sale.order',orders.id,'order_confirm', cr)
+
+-
+  I Tesing of EDI functionality. First I export Sale Order from my company than import that Order into customer company
+-
+  !python {model: ir.edi.document}: |
+    import json
+    invoice_pool = self.pool.get('sale.order')
+    orders = invoice_pool.browse(cr, uid, ref("sale_order_test"))
+
+    tokens = self.export_edi(cr, uid, [orders])
+    assert tokens, 'Token is not generated'
+    document = self.get_document(cr, uid, tokens[0])
+    document = json.loads(document)
+    document[0]["__model"] = "purchase.order"
+    document = json.dumps(document)
+    #a = self.import_edi(cr, uid, edi_document = document)
+    #assert a, 'Invoice is not imported'
+
+        
