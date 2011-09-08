@@ -1368,9 +1368,10 @@ class Reports(View):
             report_data['report_type'] = action['report_type']
         if 'datas' in action and 'form' in action['datas']:
             report_data['form'] = action['datas']['form']
+        report_ids = context["active_ids"]
         report_id = report_srv.report(
             req.session._db, req.session._uid, req.session._password,
-            action["report_name"], context["active_ids"],
+            action["report_name"], report_ids,
             report_data, context)
 
         report_struct = None
