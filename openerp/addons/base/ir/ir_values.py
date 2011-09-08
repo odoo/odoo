@@ -284,8 +284,8 @@ class ir_values(osv.osv):
                       LEFT JOIN res_users u ON (v.user_id = u.id)
                    WHERE v.key = %%s AND v.model = %%s
                       AND (v.user_id = %%s OR v.user_id IS NULL)
-                      AND (u.company_id IS NULL OR
-                           u.company_id =
+                      AND (v.company_id IS NULL OR
+                           v.company_id =
                              (SELECT company_id from res_users where id = %%s)
                           )
                       %s
