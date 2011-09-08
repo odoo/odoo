@@ -19,33 +19,30 @@
 #
 ##############################################################################
 
-import wizard
-import pooler
-import tools
 import zipfile
 import StringIO
 import base64
+
+import tools
 from tools.translate import _
 from osv import osv, fields
 
 
-def _create_yaml(self, cr, uid, data, context):
-    pool = pooler.get_pool(cr.dbname)
-    mod = pool.get('ir.module.record')
+def _create_yaml(self, cr, uid, data, context=None):
+    mod = self.pool.get('ir.module.record')
     try:
         res_xml = mod.generate_yaml(cr, uid)
     except Exception, e:
-        raise wizard.except_wizard(_('Error'),_(str(e)))
+        raise osv.except_osv(_('Error'),_(str(e)))
     return {
     'yaml_file': base64.encodestring(res_xml),
 }
     
-def _create_module(self, cr, uid, ids, context):
-    pool = pooler.get_pool(cr.dbname)
-    mod = pool.get('ir.module.record')
+def _create_module(self, cr, uid, ids, context=None):
+    mod = self.pool.get('ir.module.record')
     res_xml = mod.generate_xml(cr, uid)
     data = self.read(cr, uid, ids, [], context=context)[0]
-    s=StringIO.StringIO()
+    s = StringIO.StringIO()
     zip = zipfile.ZipFile(s, 'w')
     dname = data['directory_name']
     data['update_name'] = ''
@@ -90,9 +87,8 @@ class base_module_save(osv.osv_memory):
     _name = 'base.module.save'
     _description = "Base Module Save"
 
-    def default_get(self, cr, uid, fields, context):
-        pool = pooler.get_pool(cr.dbname)
-        mod = pool.get('ir.module.record')
+    def default_get(self, cr, uid, fields, context=None):
+        mod = self.pool.get('ir.module.record')
         result = {}
         info = "Details of "+str(len(mod.recording_data))+" Operation(s):\n\n"
         res = super(base_module_save, self).default_get(cr, uid, fields, context=context)
@@ -120,15 +116,13 @@ class base_module_save(osv.osv_memory):
         'info_yaml': fields.boolean('YAML'),
     }
 
-    def record_save(self, cr, uid, ids, context):
+    def record_save(self, cr, uid, ids, context=None):
         data = self.read(cr, uid, ids, [], context=context)[0]
-        pool = pooler.get_pool(cr.dbname)
-        mod = pool.get('ir.module.record')
+        mod = self.pool.get('ir.module.record')
         mod_obj = self.pool.get('ir.model.data')
         if len(mod.recording_data):
             if data['info_yaml']:
-                pool = pooler.get_pool(cr.dbname)
-                mod = pool.get('ir.module.record')
+                mod = self.pool.get('ir.module.record')
                 res=_create_yaml(self, cr, uid, data, context)
                 model_data_ids = mod_obj.search(cr, uid,[('model', '=', 'ir.ui.view'), ('name', '=', 'yml_save_form_view')], context=context)
                 resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
@@ -170,6 +164,7 @@ class base_module_save(osv.osv_memory):
             'type': 'ir.actions.act_window',
             'target': 'new',
         }      
+        
 base_module_save()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
