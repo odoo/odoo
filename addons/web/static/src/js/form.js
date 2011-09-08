@@ -2494,6 +2494,7 @@ openerp.web.form.FieldStatus = openerp.web.form.Field.extend({
         var self = this;
         var shown = _.map(((this.node.attrs || {}).statusbar_visible || "").split(","),
             function(x) { return x.trim(); });
+            
         if (shown.length == 0) {
             this.to_show = this.field.selection;
         } else {
@@ -2501,6 +2502,7 @@ openerp.web.form.FieldStatus = openerp.web.form.Field.extend({
                 return _.indexOf(shown, x[0]) !== -1 || x[0] === self.selected_value;
             });
         }
+        
         var content = openerp.web.qweb.render("FieldStatus.content", {widget: this, _:_});
         this.$element.html(content);
     }
