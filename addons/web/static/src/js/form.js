@@ -382,7 +382,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
     },
     on_saved: function(r, success) {
         if (!r.result) {
-            this.notification.warn(_t("Record not saved"), "Problem while saving record.");
+            this.notification.warn(_t("Record not saved"), _t("Problem while saving record."));
         } else {
             this.notification.notify("Record saved", "The record #" + this.datarecord.id + " has been saved.");
             if (success) {
