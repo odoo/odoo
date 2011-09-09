@@ -2536,7 +2536,7 @@ openerp.web.form.FieldStatus = openerp.web.form.Field.extend({
         var content = openerp.web.qweb.render("FieldStatus.content", {widget: this, _:_});
         this.$element.html(content);
         
-        var colors = JSON.parse(((this.node.attrs || {}).statusbar_colors || "{}").split("'").join('"'));
+        var colors = JSON.parse((this.node.attrs || {}).statusbar_colors || "{}");
         var color = colors[this.selected_value];
         if (color) {
             var elem = this.$element.find("li.oe-arrow-list-selected span");
