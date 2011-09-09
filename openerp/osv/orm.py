@@ -485,6 +485,12 @@ def pg_varchar(size=0):
     :rtype: str
     """
     if size:
+        if not isinstance(size, int):
+            raise TypeError("VARCHAR parameter should be an int, got %s"
+                            % type(size))
+        if size < 0:
+            raise ValueError("VARCHAR parameter can not be negative, got %d"
+                             % size)
         return 'VARCHAR(%d)' % size
     return 'VARCHAR'
 
