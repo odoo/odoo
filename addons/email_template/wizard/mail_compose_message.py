@@ -71,31 +71,32 @@ class mail_compose_message(osv.osv_memory):
     def on_change_template(self, cr, uid, ids, use_template, template_id, email_from=None, email_to=None, context=None):
         if context is None:
             context = {}
-        att_ids = []
         values = {}
         if template_id:
             res_id = context.get('active_id', False)
-            values = self.pool.get('email.template').generate_email(cr, uid, template_id, res_id, context=context)
-            if values['attachments']:
-                attachment = values.pop('attachments')
-                attachment_obj = self.pool.get('ir.attachment')
-                for fname, fcontent in attachment.iteritems():
-                    data_attach = {
-                        'name': fname,
-                        'datas': base64.b64encode(fcontent),
-                        'datas_fname': fname,
-                        'description': fname,
-                        'res_model' : self._name,
-                        'res_id' : ids[0] if ids else False
-                    }
-                    att_ids.append(attachment_obj.create(cr, uid, data_attach))
-                values['attachment_ids'] = att_ids
-
-            # avoid overriding existing values
-            if email_from and 'email_from' in values:
-                del values['email_from']
-            if email_to and 'email_to' in values:
-                del values['email_to']
+            if context.get('mail.compose.message.mode') == 'mass_mail':
+                # use the original template values - to be rendered when actually sent
+                # by super.send_mail()
+                values = self.pool.get('email.template').read(cr, uid, template_id, self.fields_get_keys(cr, uid), context)
+            else:
+                # render the mail as one-shot
+                values = self.pool.get('email.template').generate_email(cr, uid, template_id, res_id, context=context)
+                # retrofit generated attachments in the expected field format
+                if values['attachments']:
+                    attachment = values.pop('attachments')
+                    attachment_obj = self.pool.get('ir.attachment')
+                    att_ids = []
+                    for fname, fcontent in attachment.iteritems():
+                        data_attach = {
+                            'name': fname,
+                            'datas': base64.b64encode(fcontent),
+                            'datas_fname': fname,
+                            'description': fname,
+                            'res_model' : self._name,
+                            'res_id' : ids[0] if ids else False
+                        }
+                        att_ids.append(attachment_obj.create(cr, uid, data_attach))
+                    values['attachment_ids'] = att_ids
         else:
             # restore defaults
             values = self.default_get(cr, uid, self.fields_get_keys(cr, uid), context)
@@ -148,5 +149,8 @@ class mail_compose_message(osv.osv_memory):
         # _reopen same wizard screen with new template preselected
         return _reopen(self, record.id, model)
 
+    # override the basic implementation 
+    def render_template(self, cr, uid, template, model, res_id, context=None):
+        return self.pool.get('email.template').render_template(cr, uid, template, model, res_id, context=context)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

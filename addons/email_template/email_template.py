@@ -58,7 +58,9 @@ class email_template(osv.osv):
         if not template: return u""
         try:
             template = tools.ustr(template)
-            record = self.pool.get(model).browse(cr, uid, res_id, context=context)
+            record = None
+            if res_id:
+                record = self.pool.get(model).browse(cr, uid, res_id, context=context)
             user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
             result = MakoTemplate(template).render_unicode(object=record,
                                                            user=user,
