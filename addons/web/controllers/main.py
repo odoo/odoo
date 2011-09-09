@@ -1402,13 +1402,14 @@ class Import(View):
         return fields
 
     @openerpweb.httprequest
-    def detect_data(self, req, csvfile, csvsep, csvdel, csvcode, csvskip, **params):
+    def detect_data(self, req, model, csvfile, csvsep, csvdel, csvcode, csvskip,
+                    jsonp):
 
         _fields = {}
         _fields_invert = {}
         req_field = []
         error = None
-        fields = req.session.model(params.get('model')).fields_get(False, req.session.eval_context(req.context))
+        fields = req.session.model(model).fields_get(False, req.session.eval_context(req.context))
         fields.update({'id': {'string': 'ID'}, '.id': {'string': 'Database ID'}})
 
         for field in fields:
@@ -1450,7 +1451,8 @@ class Import(View):
             data = csv.reader(csvfile, quotechar=str(csvdel), delimiter=str(csvsep))
         except:
             error={'message': 'error opening .CSV file. Input Error.'}
-            return simplejson.dumps({'error':error})
+            return '<script>window.top.%s(%s);</script>' % (
+                jsonp, simplejson.dumps({'error':error}))
 
         records = []
         count = 0
@@ -1482,12 +1484,15 @@ class Import(View):
         if error:
             csvfile.seek(0)
             error=dict(error, preview=csvfile.read(200))
-            return simplejson.dumps({'error':error})
+            return '<script>window.top.%s(%s);</script>' % (
+                jsonp, simplejson.dumps({'error':error}))
 
-        return simplejson.dumps({'records':records[1:],'header':header_fields,'all_fields':all_fields,'req_field':req_field})
+        return '<script>window.top.%s(%s);</script>' % (
+            jsonp, simplejson.dumps({'records':records[1:],'header':header_fields,'all_fields':all_fields,'req_field':req_field}))
 
     @openerpweb.httprequest
-    def import_data(self, req, csvfile, csvsep, csvdel, csvcode, csvskip, **params):
+    def import_data(self, req, model, csvfile, csvsep, csvdel, csvcode, csvskip,
+                        jsonp):
 
         _fields = {}
         _fields_invert = {}
@@ -1495,7 +1500,7 @@ class Import(View):
         prefix_value = ''
 
         context = req.session.eval_context(req.context)
-        modle_obj = req.session.model(params.get('model'))
+        modle_obj = req.session.model(model)
         res = None
 
         limit = 0
@@ -1503,7 +1508,8 @@ class Import(View):
 
         if not (csvdel and len(csvdel) == 1):
             error={'message': "The CSV delimiter must be a single character"}
-            return simplejson.dumps({'error':error})
+            return '<script>window.top.%s(%s);</script>' % (
+                jsonp, simplejson.dumps({'error':error}))
 
         try:
             data_record = csv.reader(csvfile, quotechar=str(csvdel), delimiter=str(csvsep))
@@ -1515,7 +1521,8 @@ class Import(View):
 
         except csv.Error, e:
             error={'message': str(e),'title': 'File Format Error'}
-            return simplejson.dumps({'error':error})
+            return '<script>window.top.%s(%s);</script>' % (
+                jsonp, simplejson.dumps({'error':error}))
 
         datas = []
         ctx = context
@@ -1538,7 +1545,8 @@ class Import(View):
 
         if unmatch_field:
             error = {'message':("You cannot import the fields '%s',because we cannot auto-detect it." % (unmatch_field))}
-            return simplejson.dumps({'error':error})
+            return '<script>window.top.%s(%s);</script>' % (
+                jsonp, simplejson.dumps({'error':error}))
 
         for line in data[1:]:
             try:
@@ -1549,22 +1557,26 @@ class Import(View):
         # If the file contains nothing,
         if not datas:
             error = {'message': 'The file is empty !', 'title': 'Importation !'}
-            return simplejson.dumps({'error':error})
+            return '<script>window.top.%s(%s);</script>' % (
+                jsonp, simplejson.dumps({'error':error}))
 
         #Inverting the header into column names
         try:
             res = modle_obj.import_data(fields, datas, 'init', '', False, ctx)
         except xmlrpclib.Fault, e:
             error = {"message":e.faultCode}
-            return simplejson.dumps({'error':error})
+            return '<script>window.top.%s(%s);</script>' % (
+                jsonp, simplejson.dumps({'error':error}))
 
         if res[0]>=0:
             success={'message':'Imported %d objects' % (res[0],)}
-            return simplejson.dumps({'success':success})
+            return '<script>window.top.%s(%s);</script>' % (
+                jsonp, simplejson.dumps({'error':success}))
 
         d = ''
         for key,val in res[1].items():
             d+= ('%s: %s' % (str(key),str(val)))
         msg = 'Error trying to import this record:%s. ErrorMessage:%s %s' % (d,res[2],res[3])
         error = {'message':str(msg), 'title':'ImportationError'}
-        return simplejson.dumps({'error':error})
+        return '<script>window.top.%s(%s);</script>' % (
+            jsonp, simplejson.dumps({'error':error}))

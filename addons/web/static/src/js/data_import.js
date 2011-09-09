@@ -1,5 +1,28 @@
 openerp.web.data_import = function(openerp) {
 var QWeb = openerp.web.qweb;
+/**
+ * Safari does not deal well at all with raw JSON data being returned. As a
+ * result, we're going to cheat by using a pseudo-jsonp: instead of getting
+ * JSON data in the iframe, we're getting a ``script`` tag which consists of a
+ * function call and the returned data (the json dump).
+ *
+ * The function is an auto-generated name bound to ``window``, which calls
+ * back into the callback provided here.
+ *
+ * @param {Object} form the form element (DOM or jQuery) to use in the call
+ * @param {Object} attributes jquery.form attributes object
+ * @param {Function} callback function to call with the returned data
+ */
+function jsonp(form, attributes, callback) {
+    var options = {jsonp: _.uniqueId('import_callback_')};
+    window[options.jsonp] = function () {
+        delete window[options.jsonp];
+        callback.apply(null, arguments);
+    };
+    $(form).ajaxSubmit(_.extend({
+        data: options
+    }, attributes));
+}
 openerp.web.DataImport = openerp.web.Dialog.extend({
     init: function(parent, dataset){
         this.parent = parent;
@@ -35,11 +58,9 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
     do_import: function() {
             var self = this;
             if(!this.$element.find('#csvfile').val()) { return; }
-            this.$element.find('#import_data').attr({
-                'action': '/web/import/import_data'
-            }).ajaxSubmit({
-                success: this.on_import_results
-            });
+            jsonp(this.$element.find('#import_data'), {
+                url: '/web/import/import_data'
+            }, this.on_import_results);
     },
     on_autodetect_data: function() {
             var self = this;
@@ -48,17 +69,14 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
                 this.$element.find("#imported_success").css('display','none');
             }
             if(!this.$element.find('#csvfile').val()) { return; }
-            this.$element.find('#import_data').attr({
-                'action': '/web/import/detect_data'
-            }).ajaxSubmit({
-                success: this.on_import_results
-            });
+            jsonp(this.$element.find('#import_data'), {
+                url: '/web/import/detect_data'
+            }, this.on_import_results);
     },
-    on_import_results:function(res){
+    on_import_results:function(results){
         var self = this;
         this.$element.find('#result, #success , #message').empty();
 
-        var results = $.parseJSON(res);
         var result_node = $("#result");
         var records = {};
 
