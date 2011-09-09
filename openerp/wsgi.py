@@ -107,10 +107,6 @@ def legacy_wsgi_xmlrpc(environ, start_response):
 def wsgi_jsonrpc(environ, start_response):
     pass
 
-def wsgi_modules(environ, start_response):
-    """ WSGI handler dispatching to addons-provided entry points."""
-    pass
-
 def wsgi_webdav(environ, start_response):
     if environ['REQUEST_METHOD'] == 'OPTIONS' and environ['PATH_INFO'] == '*':
         return return_options(start_response)
@@ -125,7 +121,7 @@ def wsgi_webdav(environ, start_response):
         if path.startswith('/'):
             environ['PATH_INFO'] = path
         else:
-            environ['PATH_INFO'] = '/' + npath
+            environ['PATH_INFO'] = '/' + path
         return http_to_wsgi(http_dir)(environ, start_response)
 
 def return_options(start_response):
@@ -280,7 +276,6 @@ def application(environ, start_response):
         #wsgi_xmlrpc,
         #wsgi_jsonrpc,
         #legacy_wsgi_xmlrpc,
-        #wsgi_modules,
         wsgi_webdav
         ] #+ module_handlers
     for handler in wsgi_handlers:
@@ -312,12 +307,13 @@ def on_starting(server):
     arbiter_pid = os.getpid() # TODO check if this is true even after replacing the executable
     config = openerp.tools.config
     config['addons_path'] = '/home/openerp/repos/addons/trunk-xmlrpc' # need a config file
-    #config['log_level'] = 10 # debug
+    config['static_http_document_root'] = '/tmp'
+    config['log_level'] = 10 # debug
     #openerp.tools.cache = kill_workers_cache
     openerp.netsvc.init_logger()
     openerp.osv.osv.start_object_proxy()
     openerp.service.web_services.start_web_services()
-    test_in_thread()
+    #test_in_thread()
 
 def test_in_thread():
     def f():
