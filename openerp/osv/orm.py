@@ -528,8 +528,7 @@ def get_pg_type(f, type_override=None):
         else:
             f_type = get_pg_type(f, getattr(fields, f._type))
     else:
-        logger = netsvc.Logger()
-        logger.notifyChannel("init", netsvc.LOG_WARNING, '%s type not supported!' % (field_type))
+        logging.getLogger('orm').warn('%s type not supported!', field_type)
         f_type = None
     return f_type
 
