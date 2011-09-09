@@ -100,6 +100,7 @@
                             <field name="message_ids" colspan="4" nolabel="1" mode="tree,form" readonly="1">
                                 <tree string="History">
                                     <field name="display_text" string="History Information"/>
+                                    <field name="email_from" invisible="1"/>
 		                            <button
 		                                string="Reply" attrs="{'invisible': [('email_from', '=', False)]}"
 		                                name="%(mail.action_email_compose_message_wizard)d"
