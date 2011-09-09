@@ -306,16 +306,11 @@ class WebKitParser(report_sxw):
             raise except_osv(_('Webkit render'), msg)
         head_mako_tpl = mako_template(header)
         try :
-            head = head_mako_tpl.render(
-                                        company=company,
-                                        time=time,
-                                        helper=helper,
+            head = head_mako_tpl.render(helper=helper,
                                         css=css,
-                                        formatLang=self.formatLang,
-                                        setLang=self.setLang,
                                         _=self.translate_call,
-                                        _debug=False
-                                    )
+                                        _debug=False,
+                                        **self.parser_instance.localcontext)
         except Exception, e:
             raise except_osv(_('Webkit render'),
                 exceptions.text_error_template().render())
@@ -323,31 +318,21 @@ class WebKitParser(report_sxw):
         if footer :
             foot_mako_tpl = mako_template(footer)
             try :
-                foot = foot_mako_tpl.render(
-                                            company=company,
-                                            time=time,
-                                            helper=helper,
+                foot = foot_mako_tpl.render(helper=helper,
                                             css=css,
-                                            formatLang=self.formatLang,
-                                            setLang=self.setLang,
                                             _=self.translate_call,
-                                            )
+                                            **self.parser_instance.localcontext)
             except:
                 msg = exceptions.text_error_template().render()
                 netsvc.Logger().notifyChannel('Webkit render', netsvc.LOG_ERROR, msg)
                 raise except_osv(_('Webkit render'), msg)
         if report_xml.webkit_debug :
             try :
-                deb = head_mako_tpl.render(
-                                            company=company,
-                                            time=time,
-                                            helper=helper,
-                                            css=css,
-                                            _debug=tools.ustr(html),
-                                            formatLang=self.formatLang,
-                                            setLang=self.setLang,
-                                            _=self.translate_call,
-                                            )
+                deb = head_mako_tpl.render(helper=helper,
+                                           css=css,
+                                           _debug=tools.ustr(html),
+                                           _=self.translate_call,
+                                           **self.parser_instance.localcontext)
             except Exception, e:
                 msg = exceptions.text_error_template().render()
                 netsvc.Logger().notifyChannel('Webkit render', netsvc.LOG_ERROR, msg)
