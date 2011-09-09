@@ -1852,7 +1852,7 @@ openerp.web.form.FieldOne2Many = openerp.web.form.Field.extend({
             this.viewmanager.views[this.viewmanager.active_view].controller) {
             var view = this.viewmanager.views[this.viewmanager.active_view].controller;
             if (this.viewmanager.active_view === "form") {
-                var res = view.do_save();
+                var res = $.when(view.do_save());
                 if (res === false) {
                     // ignore
                 } else if (res.isRejected()) {
