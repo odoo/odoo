@@ -488,11 +488,14 @@ def pg_varchar(size=0):
         return 'VARCHAR(%d)' % size
     return 'VARCHAR'
 
-def get_pg_type(f):
+def get_pg_type(f, type_override=None):
     """
-    returns a tuple
-    (type returned by postgres when the column was created, type expression to create the column)
+    :param fields._column f: field to get a Postgres type for
+    :param type type_override: use the provided type for dispatching instead of the field's own type
+    :returns: (postgres_identification_type, postgres_type_specification)
+    :rtype: (str, str)
     """
+    field_type = type_override or type(f)
 
     type_dict = {
             fields.boolean: 'bool',
@@ -505,8 +508,8 @@ def get_pg_type(f):
             fields.binary: 'bytea',
             fields.many2one: 'int4',
             }
-    if type(f) in type_dict:
-        f_type = (type_dict[type(f)], type_dict[type(f)])
+    if field_type in type_dict:
+        f_type = (type_dict[field_type], type_dict[field_type])
     elif isinstance(f, fields.float):
         if f.digits:
             f_type = ('numeric', 'NUMERIC')
@@ -526,21 +529,15 @@ def get_pg_type(f):
             f_type = ('int4', 'INTEGER')
         else:
             f_type = ('varchar', pg_varchar(f_size))
-    elif isinstance(f, fields.function) and getattr(fields, f._type, None) in type_dict:
-        t = type_dict[getattr(fields, f._type)]
-        f_type = (t, t)
-    elif isinstance(f, fields.function) and f._type == 'float':
-        if f.digits:
-            f_type = ('numeric', 'NUMERIC')
+
+    elif isinstance(f, fields.function):
+        if f._type = 'selection':
+            f_type = ('varchar', pg_varchar())
         else:
-            f_type = ('float8', 'DOUBLE PRECISION')
-    elif isinstance(f, fields.function) and f._type == 'selection':
-        f_type = ('text', 'text')
-    elif isinstance(f, fields.function) and f._type == 'char':
-        f_type = ('varchar', pg_varchar(f.size))
+            f_type = get_pg_type(f, getattr(fields, f._type))
     else:
         logger = netsvc.Logger()
-        logger.notifyChannel("init", netsvc.LOG_WARNING, '%s type not supported!' % (type(f)))
+        logger.notifyChannel("init", netsvc.LOG_WARNING, '%s type not supported!' % (field_type))
         f_type = None
     return f_type
 
