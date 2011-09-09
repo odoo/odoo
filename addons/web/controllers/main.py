@@ -1571,7 +1571,7 @@ class Import(View):
         if res[0]>=0:
             success={'message':'Imported %d objects' % (res[0],)}
             return '<script>window.top.%s(%s);</script>' % (
-                jsonp, simplejson.dumps({'error':success}))
+                jsonp, simplejson.dumps({'success':success}))
 
         d = ''
         for key,val in res[1].items():

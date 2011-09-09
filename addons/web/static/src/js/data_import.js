@@ -24,8 +24,9 @@ function jsonp(form, attributes, callback) {
     }, attributes));
 }
 openerp.web.DataImport = openerp.web.Dialog.extend({
+    template: 'ImportDataView',
+    dialog_title: "Import Data",
     init: function(parent, dataset){
-        this.parent = parent;
         this._super(parent);
         this.dataset = dataset;
     },
@@ -87,23 +88,25 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
             result_node.append(QWeb.render('ImportView-result',{'error': results['error']}));
         }else if(results['success']){
             self.stop();
-            this.parent.reload_content();
+            if (((this.widget_parent['fields_view']['type']) == "tree") || ((this.widget_parent['fields_view']['type']) == "list")){
+                this.widget_parent.reload_content();
+            }
         }
         this.do_check_req_field(results['req_field']);
         var selected_fields = [];
-        $("td #sel_field").click(function(){
+        this.$element.find("td #sel_field").click(function(){
             selected_fields = [];
-            $("td #sel_field option:selected").each(function(){
+            self.$element.find("td #sel_field option:selected").each(function(){
                 selected_fields.push($(this).index());
             });
         });
-        $("td #sel_field").change(function(){
-            $("#message").empty();
-            $("td #sel_field").css('background-color','');
-            $(".ui-button-text:contains('Import File')").parent().attr("disabled",false);
+        this.$element.find("td #sel_field").change(function(){
+            self.$element.find("#message").empty();
+            self.$element.find("td #sel_field").css('background-color','');
+            self.$element.find(".ui-button-text:contains('Import File')").parent().attr("disabled",false);
             self.do_check_req_field(results['req_field']);
             var curr_selected = this.selectedIndex;
-            if ($.inArray(curr_selected,selected_fields) > -1){
+            if ((curr_selected != 0) && _.contains(selected_fields, curr_selected)){
                 $(this).css('background-color','#FF6666');
                 $("#message").append("*Selected column should not be same.");
                 $(".ui-button-text:contains('Import File')").parent().attr("disabled",true);
@@ -114,19 +117,22 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
     },
     do_check_req_field: function(req_fld){
         if (req_fld.length){
-            var sel_fields =[];
-            var required_fields = [];
-            $("td #sel_field option:selected").each(function(){
-                sel_fields.push($(this).val());
-            });
-            _.each(req_fld,function(fld){
-                if ($.inArray(fld,sel_fields) <= -1){
-                    required_fields.push(fld);
-                }
-            });
+            var required_fields = "";
+            var sel_fields = _.map(this.$element.find("td #sel_field option:selected"), function(fld){
+                                return fld['text']
+                            });
+
+            required_fields =  required_fields + _.filter(req_fld, function (fld){
+                                    if (!_.contains(sel_fields,fld)){
+                                        return fld + "," ;
+                                    }
+                                });
+
             if (required_fields.length){
                 $("#message").append("*Required Fields are not selected which is "+required_fields+". ");
                 $(".ui-button-text:contains('Import File')").parent().attr("disabled",true);
+            }else{
+                $(".ui-button-text:contains('Import File')").parent().attr("disabled",false);
             }
         }
     },
