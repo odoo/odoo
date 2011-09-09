@@ -1246,7 +1246,6 @@ class account_invoice_line(osv.osv):
     def _amount_line(self, cr, uid, ids, prop, unknow_none, unknow_dict):
 
         account_inv_obj = self.pool.get('account.invoice').browse(cr, uid, ids)[0]
-        print "account_inv_obj", account_inv_obj
         res = {}
         tax_obj = self.pool.get('account.tax')
         cur_obj = self.pool.get('res.currency')
@@ -1318,13 +1317,10 @@ class account_invoice_line(osv.osv):
         return res
 
     def product_id_change(self, cr, uid, ids, product, uom, qty=0, name='', type='out_invoice', partner_id=False, fposition_id=False, price_unit=False, address_invoice_id=False, currency_id=False, context=None, company_id=None):
-        print ">>>>>>>>>>>", self, cr, uid, ids, product, uom, qty, name, type, partner_id, fposition_id, price_unit, address_invoice_id, currency_id, context, company_id
         if context is None:
             context = {}
         company_id = company_id if company_id != None else context.get('company_id',False)
-        print "company_id", company_id
         context = dict(context)
-        print "context", context
         context.update({'company_id': company_id})
         if not partner_id:
             raise osv.except_osv(_('No Partner Defined !'),_("You must first select a partner !") )
@@ -1351,7 +1347,6 @@ class account_invoice_line(osv.osv):
             if not a:
                 a = res.categ_id.property_account_expense_categ.id
         a = fpos_obj.map_account(cr, uid, fpos, a)
-        print "a", a
         if a:
             result['account_id'] = a
 
@@ -1362,13 +1357,10 @@ class account_invoice_line(osv.osv):
         tax_id = fpos_obj.map_tax(cr, uid, fpos, taxes)
 
         if type in ('in_invoice', 'in_refund'):
-            print "price_unit",price_unit
             result.update( {'price_unit': price_unit or res.standard_price,'invoice_line_tax_id': tax_id} )
         else:
-            print "price_unitelseeeeee",res.list_price
             result.update({'price_unit': res.list_price, 'invoice_line_tax_id': tax_id})
         result['name'] = res.partner_ref
-        print "result['name']", result['name']
 
         domain = {}
         result['uos_id'] = res.uom_id.id or uom or False
@@ -1386,31 +1378,18 @@ class account_invoice_line(osv.osv):
 
         company = self.pool.get('res.company').browse(cr, uid, company_id, context=context)
         currency = self.pool.get('res.currency').browse(cr, uid, currency_id, context=context)
-        print "currency", currency
-
-        print "company.currency_id.id", company.currency_id.id
-        print "currency.id", currency.id
-        print "res.standard_price", res.standard_price
 
         if company.currency_id.id != currency.id:
             if type in ('in_invoice', 'in_refund'):
                 res_final['value']['price_unit'] = res.standard_price
             new_price = res_final['value']['price_unit'] * currency.rate
             res_final['value']['price_unit'] = new_price
-            print "res_final['value']['price_unit']", res_final['value']['price_unit']
-            print "currency.rate", currency.rate
 
         if uom:
-            print "uom", uom
-            print "res.uom_id.category_id.id", res.uom_id.category_id.id
-            print "uom.category_id.id", uom.category_id.id
-            print "uom.factor_inv", uom.factor_inv
             uom = self.pool.get('product.uom').browse(cr, uid, uom, context=context)
             if res.uom_id.category_id.id == uom.category_id.id:
                 new_price = res_final['value']['price_unit'] * uom.factor_inv
                 res_final['value']['price_unit'] = new_price
-                print "res_final['value']['price_unit']", res_final['value']['price_unit']
-                print "res_final", res_final
         return res_final
 
     def uos_id_change(self, cr, uid, ids, product, uom, qty=0, name='', type='out_invoice', partner_id=False, fposition_id=False, price_unit=False, address_invoice_id=False, currency_id=False, context=None, company_id=None):
