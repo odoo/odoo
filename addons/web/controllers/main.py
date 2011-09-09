@@ -12,17 +12,18 @@ import textwrap
 import xmlrpclib
 import time
 import zlib
-import webrelease
 from xml.etree import ElementTree
 from cStringIO import StringIO
+
+from babel.messages.pofile import read_po
 
 import web.common.dispatch as openerpweb
 import web.common.ast
 import web.common.nonliterals
+import web.common.release
 openerpweb.ast = web.common.ast
 openerpweb.nonliterals = web.common.nonliterals
 
-from babel.messages.pofile import read_po
 
 # Should move to openerpweb.Xml2Json
 class Xml2Json:
@@ -195,7 +196,7 @@ class WebClient(openerpweb.Controller):
     @openerpweb.jsonrequest
     def version_info(self, req):
         return {
-            "version": webrelease.version
+            "version": web.common.release.version
         }
 
 class Database(openerpweb.Controller):
