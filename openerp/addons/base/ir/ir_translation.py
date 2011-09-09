@@ -199,7 +199,7 @@ class ir_translation(osv.osv):
             ids = [ids]
         for trans_obj in self.read(cursor, user, ids, ['name','type','res_id','src','lang'], context=context):
             self._get_source.clear_cache(self, user, trans_obj['name'], trans_obj['type'], trans_obj['lang'], source=trans_obj['src'])
-            self._get_ids.clear_cache(self, user, trans_obj['name'], trans_obj['type'], trans_obj['lang'], [trans_obj['res_id']])
+            self._get_ids.clear_cache(self, user, trans_obj['name'], trans_obj['type'], trans_obj['lang'], trans_obj['res_id'])
         result = super(ir_translation, self).unlink(cursor, user, ids, context=context)
         return result
 
