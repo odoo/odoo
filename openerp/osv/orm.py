@@ -2182,7 +2182,19 @@ class orm_template(object):
     def copy(self, cr, uid, id, default=None, context=None):
         raise NotImplementedError(_('The copy method is not implemented on this object !'))
 
-    def exists(self, cr, uid, id, context=None):
+    def exists(self, cr, uid, ids, context=None):
+        """Checks whether the given id or ids exist in this model,
+           and return the list of ids that do. This is simple to use for
+           a truth test on a browse_record::
+
+               if record.exists():
+                   pass
+
+           :param ids: id or list of ids to check for existence
+           :type ids: int or [int]
+           :return: the list of ids that currently exist, out of
+                    the given `ids`
+        """
         raise NotImplementedError(_('The exists method is not implemented on this object !'))
 
     def read_string(self, cr, uid, id, langs, fields=None, context=None):
@@ -2268,6 +2280,16 @@ class orm_template(object):
             self._ormcache = {}
         except AttributeError:
             pass
+
+    def check_access_rule(self, cr, uid, ids, operation, context=None):
+        """Verifies that the operation given by ``operation`` is allowed for the user
+           according to ir.rules.
+
+           :param operation: one of ``write``, ``unlink``
+           :raise except_orm: * if current ir.rules do not permit this operation.
+           :return: None if the operation is allowed
+        """
+        raise NotImplementedError(_('The check_access_rule method is not implemented on this object !'))
 
 class orm_memory(orm_template):
 
@@ -2498,8 +2520,16 @@ class orm_memory(orm_template):
         # nothing to check in memory...
         pass
 
-    def exists(self, cr, uid, id, context=None):
-        return id in self.datas
+    def exists(self, cr, uid, ids, context=None):
+        if isinstance(ids, (long,int)):
+            ids = [ids]
+        return [id for id in ids if id in self.datas]
+
+    def check_access_rule(self, cr, uid, ids, operation, context=None):
+        # ir.rules do not currently apply for orm.memory instances, 
+        # only the implicit visibility=owner one.
+        for id in ids:
+            self._check_access(uid, id, operation)
 
 class orm(orm_template):
     _sql_constraints = []
@@ -4700,9 +4730,9 @@ class orm(orm_template):
     def exists(self, cr, uid, ids, context=None):
         if type(ids) in (int, long):
             ids = [ids]
-        query = 'SELECT count(1) FROM "%s"' % (self._table)
+        query = 'SELECT id FROM "%s"' % (self._table)
         cr.execute(query + "WHERE ID IN %s", (tuple(ids),))
-        return cr.fetchone()[0] == len(ids)
+        return [x[0] for x in cr.fetchall()]
 
     def check_recursion(self, cr, uid, ids, context=None, parent=None):
         warnings.warn("You are using deprecated %s.check_recursion(). Please use the '_check_recursion()' instead!" % \
