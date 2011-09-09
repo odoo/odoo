@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-04-29 05:38+0000\n"
-"X-Generator: Launchpad (build 12758)\n"
+"X-Launchpad-Export-Date: 2011-09-05 05:41+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
 
 #. module: mrp_subproduct
 #: field:mrp.subproduct,product_id:0
@@ -28,6 +28,9 @@ msgid ""
 "You should install the mrp_subproduct module if you want to manage extra "
 "products on BoMs !"
 msgstr ""
+"Tüm ürün miktarları 0'dan büyük olmalıdır.\n"
+"BoM üzerinde ekstra ürünleri yönetmek istiyorsanız mrp_subproduct modülünü "
+"kurmanız gerekir!"
 
 #. module: mrp_subproduct
 #: view:mrp.bom:0
@@ -37,13 +40,13 @@ msgstr "Alt Ürünler"
 #. module: mrp_subproduct
 #: model:ir.model,name:mrp_subproduct.model_mrp_production
 msgid "Manufacturing Order"
-msgstr ""
+msgstr "Üretim Emri"
 
 #. module: mrp_subproduct
 #: model:ir.module.module,shortdesc:mrp_subproduct.module_meta_information
 msgid ""
 "MRP Sub Product - To produce several products from one production order"
-msgstr ""
+msgstr "MRP Alt Ürünü - Bir üretim emrinden birden fazla ürün üretimi için"
 
 #. module: mrp_subproduct
 #: field:mrp.subproduct,product_qty:0
@@ -63,7 +66,7 @@ msgstr "Miktar Tipi"
 #. module: mrp_subproduct
 #: model:ir.model,name:mrp_subproduct.model_mrp_bom
 msgid "Bill of Material"
-msgstr ""
+msgstr "Malzeme Faturası"
 
 #. module: mrp_subproduct
 #: model:ir.module.module,description:mrp_subproduct.module_meta_information
@@ -78,6 +81,14 @@ msgid ""
 "    A + B + C -> D + E\n"
 "    "
 msgstr ""
+"\n"
+"Bu modül, bir üretim emrinden birden fazla ürün üretmenize olanak sağlar.\n"
+"Malzeme faturasında alt-ürünleri yapılandırabilirsiniz.\n"
+"Without this module:\n"
+"    A + B + C -> D\n"
+"Bu modül ile:\n"
+"    A + B + C -> D + E\n"
+"    "
 
 #. module: mrp_subproduct
 #: field:mrp.subproduct,product_uom:0
@@ -87,12 +98,12 @@ msgstr "Birim"
 #. module: mrp_subproduct
 #: field:mrp.subproduct,bom_id:0
 msgid "BoM"
-msgstr ""
+msgstr "BoM (Malzeme Faturası)"
 
 #. module: mrp_subproduct
 #: constraint:mrp.bom:0
 msgid "Error ! You can not create recursive BoM."
-msgstr ""
+msgstr "Hata! Yinelemeli BoM oluşturamazsınız."
 
 #. module: mrp_subproduct
 #: view:mrp.bom:0
@@ -102,17 +113,17 @@ msgstr "Alt Ürünler"
 #. module: mrp_subproduct
 #: selection:mrp.subproduct,subproduct_type:0
 msgid "Variable"
-msgstr ""
+msgstr "Değişken"
 
 #. module: mrp_subproduct
 #: constraint:mrp.production:0
 msgid "Order quantity cannot be negative or zero !"
-msgstr ""
+msgstr "Sipariş miktarı negatif veya sıfır olamaz!"
 
 #. module: mrp_subproduct
 #: model:ir.model,name:mrp_subproduct.model_mrp_subproduct
 msgid "Sub Product"
-msgstr ""
+msgstr "Alt Ürün"
 
 #. module: mrp_subproduct
 #: selection:mrp.subproduct,subproduct_type:0

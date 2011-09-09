@@ -19,6 +19,7 @@
 #
 ##############################################################################
 import pooler
+import sql_db
 
 import os
 import time
@@ -361,7 +362,7 @@ class openerp_dav_handler(dav_interface):
         for db_name in result:
             cr = None
             try:
-                db = pooler.get_db(db_name)
+                db = sql_db.db_connect(db_name)
                 cr = db.cursor()
                 cr.execute("SELECT id FROM ir_module_module WHERE name = 'document' AND state='installed' ")
                 res=cr.fetchone()

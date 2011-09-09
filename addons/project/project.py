@@ -55,7 +55,7 @@ class project(osv.osv):
     def search(self, cr, user, args, offset=0, limit=None, order=None, context=None, count=False):
         if user == 1:
             return super(project, self).search(cr, user, args, offset=offset, limit=limit, order=order, context=context, count=count)
-        if context and context.has_key('user_prefence') and context['user_prefence']:
+        if context and context.get('user_preference'):
                 cr.execute("""SELECT project.id FROM project_project project
                            LEFT JOIN account_analytic_account account ON account.id = project.analytic_account_id
                            LEFT JOIN project_user_rel rel ON rel.project_id = project.analytic_account_id
