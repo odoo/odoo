@@ -23,7 +23,7 @@ from osv import osv
 from osv import fields
 from tools.translate import _
 
-class email_compose_message(osv.osv_memory):
+class mail_compose_message(osv.osv_memory):
     _inherit = 'mail.compose.message'
 
     def get_value(self, cr, uid, model, resource_id, context=None):
@@ -34,7 +34,7 @@ class email_compose_message(osv.osv_memory):
 
         @return: Returns a dictionary
         '''
-        result = super(email_compose_message, self).get_value(cr, uid,  model, resource_id, context=context)
+        result = super(mail_compose_message, self).get_value(cr, uid,  model, resource_id, context=context)
         if model == 'project.task' and resource_id:
             task_pool = self.pool.get('project.task')
             task_data = task_pool.browse(cr, uid, resource_id, context=context)

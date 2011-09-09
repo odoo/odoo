@@ -23,7 +23,7 @@ from osv import osv
 from osv import fields
 from tools.translate import _
 
-class email_compose_message(osv.osv_memory):
+class mail_compose_message(osv.osv_memory):
     _inherit = 'mail.compose.message'
 
     def get_value(self, cr, uid, model, resource_id, context=None):
@@ -36,7 +36,7 @@ class email_compose_message(osv.osv_memory):
         '''
         if context is None:
             context = {}
-        result = super(email_compose_message, self).get_value(cr, uid,  model, resource_id, context=context)
+        result = super(mail_compose_message, self).get_value(cr, uid,  model, resource_id, context=context)
         if model == 'project.scrum.meeting' and resource_id:
             meeting_pool = self.pool.get('project.scrum.meeting')
             user_pool = self.pool.get('res.users')

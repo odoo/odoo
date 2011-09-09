@@ -20,5 +20,5 @@
 #
 ##############################################################################
 import email_template_preview
-import email_compose_message
+import mail_compose_message
 

@@ -20,6 +20,6 @@
 ##############################################################################
 
 #import hr_evaluation_mail
-import email_compose_message
+import mail_compose_message
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
