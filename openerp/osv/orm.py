@@ -488,6 +488,17 @@ def pg_varchar(size=0):
         return 'VARCHAR(%d)' % size
     return 'VARCHAR'
 
+FIELDS_TO_PGTYPES = {
+    fields.boolean: 'bool',
+    fields.integer: 'int4',
+    fields.integer_big: 'int8',
+    fields.text: 'text',
+    fields.date: 'date',
+    fields.time: 'time',
+    fields.datetime: 'timestamp',
+    fields.binary: 'bytea',
+    fields.many2one: 'int4',
+}
 def get_pg_type(f, type_override=None):
     """
     :param fields._column f: field to get a Postgres type for
@@ -497,19 +508,8 @@ def get_pg_type(f, type_override=None):
     """
     field_type = type_override or type(f)
 
-    type_dict = {
-            fields.boolean: 'bool',
-            fields.integer: 'int4',
-            fields.integer_big: 'int8',
-            fields.text: 'text',
-            fields.date: 'date',
-            fields.time: 'time',
-            fields.datetime: 'timestamp',
-            fields.binary: 'bytea',
-            fields.many2one: 'int4',
-            }
-    if field_type in type_dict:
-        f_type = (type_dict[field_type], type_dict[field_type])
+    if field_type in FIELDS_TO_PGTYPES:
+        f_type = (FIELDS_TO_PGTYPES[field_type], FIELDS_TO_PGTYPES[field_type])
     elif isinstance(f, fields.float):
         if f.digits:
             f_type = ('numeric', 'NUMERIC')
