@@ -2616,8 +2616,8 @@ class account_fiscal_position_account_template(osv.osv):
 
 account_fiscal_position_account_template()
 
-class account_low_level_report(osv.osv):
-    _name = "account.low.level.report"
+class account_financial_report(osv.osv):
+    _name = "account.financial.report"
     _description = "Account Report"
 
     def _get_level(self, cr, uid, ids, field_name, arg, context=None):
@@ -2664,17 +2664,17 @@ class account_low_level_report(osv.osv):
 
     _columns = {
         'name': fields.char('Report Name', size=128, required=True),
-        'parent_id': fields.many2one('account.low.level.report', 'Parent'),
-        'children_ids':  fields.one2many('account.low.level.report', 'parent_id', 'Account Report'),
+        'parent_id': fields.many2one('account.financial.report', 'Parent'),
+        'children_ids':  fields.one2many('account.financial.report', 'parent_id', 'Account Report'),
         'sequence': fields.integer('Sequence'),
         'type': fields.selection([
             ('sum','Sum'),
             ('accounts','Accounts'),
             ('account_report','Account Report'),
             ],'Type'),
-        'account_ids': fields.many2many('account.account', 'account_account_low_level_report', 'report_line_id', 'account_id', 'Accounts'),
+        'account_ids': fields.many2many('account.account', 'account_account_financial_report', 'report_line_id', 'account_id', 'Accounts'),
         'note': fields.text('Notes'),
-        'account_report_id':  fields.many2one('account.low.level.report', 'Account Report'),
+        'account_report_id':  fields.many2one('account.financial.report', 'Account Report'),
         'balance': fields.function(_get_balance, 'Balance'),
         'display_detail': fields.boolean('Display the account list'),
         'level': fields.function(_get_level, string='Level', store=True, type='integer'),
@@ -2684,7 +2684,7 @@ class account_low_level_report(osv.osv):
         'type': 'sum',
     }
 
-account_low_level_report()
+account_financial_report()
 
     # Multi charts of Accounts wizard
 

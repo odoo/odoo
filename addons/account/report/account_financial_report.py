@@ -52,8 +52,8 @@ class report_account_common(report_sxw.rml_parse, common_report_header):
         lines = []
         account_obj = self.pool.get('account.account')
         currency_obj = self.pool.get('res.currency')
-        ids2 = self.pool.get('account.low.level.report')._get_children_by_order(self.cr, self.uid, [data['form']['account_report_id'][0]], context=data['form']['used_context'])
-        for report in self.pool.get('account.low.level.report').browse(self.cr, self.uid, ids2, context=data['form']['used_context']):
+        ids2 = self.pool.get('account.financial.report')._get_children_by_order(self.cr, self.uid, [data['form']['account_report_id'][0]], context=data['form']['used_context'])
+        for report in self.pool.get('account.financial.report').browse(self.cr, self.uid, ids2, context=data['form']['used_context']):
             vals = {
                 'name': report.name,
                 'balance': report.balance,
@@ -61,7 +61,7 @@ class report_account_common(report_sxw.rml_parse, common_report_header):
                 'level': report.level,
             }
             if data['form']['enable_filter']:
-                vals['balance_cmp'] = self.pool.get('account.low.level.report').browse(self.cr, self.uid, report.id, context=data['form']['comparison_context']).balance
+                vals['balance_cmp'] = self.pool.get('account.financial.report').browse(self.cr, self.uid, report.id, context=data['form']['comparison_context']).balance
             lines.append(vals)
             if report.type == 'accounts' and report.display_detail and report.account_ids:
                 account_ids = account_obj._get_children_and_consol(self.cr, self.uid, [x.id for x in report.account_ids])
@@ -85,6 +85,6 @@ class report_account_common(report_sxw.rml_parse, common_report_header):
                             lines.append(vals)
         return lines
 
-report_sxw.report_sxw('report.account.low.level.report', 'account.low.level.report',
-    'addons/account/report/account_low_level_report.rml', parser=report_account_common, header='internal')
+report_sxw.report_sxw('report.account.financial.report', 'account.financial.report',
+    'addons/account/report/account_financial_report.rml', parser=report_account_common, header='internal')
 
