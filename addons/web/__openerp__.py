@@ -45,4 +45,5 @@
         "static/src/css/base.css",
         "static/src/css/data_export.css",
     ],
+    'wsgi' : 'app',
 }
