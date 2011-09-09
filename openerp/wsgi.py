@@ -308,7 +308,7 @@ def on_starting(server):
     config = openerp.tools.config
     config['addons_path'] = '/home/openerp/repos/addons/trunk-xmlrpc' # need a config file
     config['static_http_document_root'] = '/tmp'
-    config['log_level'] = 10 # debug
+    #config['log_level'] = 10 # debug
     #openerp.tools.cache = kill_workers_cache
     openerp.netsvc.init_logger()
     openerp.osv.osv.start_object_proxy()

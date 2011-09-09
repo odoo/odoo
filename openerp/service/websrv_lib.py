@@ -103,13 +103,13 @@ class HTTPDir:
     def instanciate_handler(self, request, client_address, server):
         handler = self.handler(noconnection(request), client_address, server)
         if self.auth_provider:
-            handler.auth_provider = self.auth_provider
+            handler.auth_provider = self.auth_provider()
         return handler
 
 def reg_http_service(path, handler, auth_provider=None, secure_only=False):
     """ Register a HTTP handler at a given path.
 
-    The auth_provider will be set on the handler instances.
+    The auth_provider will be instanciated and set on the handler instances.
     """
     global handlers
     service = HTTPDir(path, handler, auth_provider, secure_only)
