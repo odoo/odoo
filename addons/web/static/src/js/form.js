@@ -2552,7 +2552,7 @@ openerp.web.form.widgets = new openerp.web.Registry({
     'progressbar': 'openerp.web.form.FieldProgressBar',
     'image': 'openerp.web.form.FieldBinaryImage',
     'binary': 'openerp.web.form.FieldBinaryFile',
-    'status': 'openerp.web.form.FieldStatus'
+    'statusbar': 'openerp.web.form.FieldStatus'
 });
 
 };
