@@ -150,7 +150,7 @@ res_currency()
 
 class res_currency_rate_type(osv.osv):
     _name = "res.currency.rate.type"
-    _description = "Used to define the type of Currency Rates"
+    _description = "Currency Rate Type"
     _columns = {
         'name': fields.char('Name', size=64, required=True, translate=True),
     }
