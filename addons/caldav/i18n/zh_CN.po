@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-07-05 04:33+0000\n"
-"X-Generator: Launchpad (build 13168)\n"
+"X-Launchpad-Export-Date: 2011-09-05 05:55+0000\n"
+"X-Generator: Launchpad (build 13830)\n"
 
 #. module: caldav
 #: view:basic.calendar:0
@@ -40,7 +40,7 @@ msgstr "事件导出"
 #. module: caldav
 #: view:calendar.event.subscribe:0
 msgid "Provide path for Remote Calendar"
-msgstr "提供远程日历路径"
+msgstr "提供远程日程表路径"
 
 #. module: caldav
 #: model:ir.actions.act_window,name:caldav.action_calendar_event_import_values
@@ -94,7 +94,7 @@ msgstr "服务"
 #. module: caldav
 #: selection:basic.calendar.fields,fn:0
 msgid "Expression as constant"
-msgstr "表现像常量"
+msgstr "表达式常量"
 
 #. module: caldav
 #: selection:user.preference,device:0
@@ -121,13 +121,13 @@ msgstr "文件名"
 #. module: caldav
 #: field:caldav.browse,url:0
 msgid "Caldav Server"
-msgstr ""
+msgstr "Caldav 服务器"
 
 #. module: caldav
 #: code:addons/caldav/wizard/calendar_event_subscribe.py:59
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "错误！"
 
 #. module: caldav
 #: help:caldav.browse,caldav_doc_file:0
@@ -137,7 +137,7 @@ msgstr ""
 #. module: caldav
 #: selection:user.preference,device:0
 msgid "iPhone"
-msgstr ""
+msgstr "iPhone"
 
 #. module: caldav
 #: code:addons/caldav/wizard/caldav_browse.py:32
@@ -166,6 +166,24 @@ msgid ""
 "        CALENDAR_NAME: Name of calendar to access\n"
 "     "
 msgstr ""
+"\n"
+"  WebDav服务器允许远程访问日程表\n"
+"用WebDav同步日程表\n"
+"设置日程表事件和待办事项与OpenERP的任意对象关联\n"
+"提供iCal的导入导出\n"
+"\n"
+"要用CalDAV客户端访问日程表，指定路径为：\n"
+"http://主机名:端口/webdav/数据库名/calendars/users/USERNAME/c\n"
+"\n"
+"要从远端访问OpenERP的日程表请使用地址：\n"
+"http://主机名:端口/webdav/数据库名/Calendars/日程表名.ics\n"
+"\n"
+"这里，\n"
+"主机名：OpenERP服务器所在的主机名\n"
+"端口：OpenERP Server运行的端口（默认是8069）\n"
+"数据库名称：日程表所在的数据库\n"
+"日程表名：要访问的日程表\n"
+"     "
 
 #. module: caldav
 #: code:addons/caldav/wizard/caldav_browse.py:147
@@ -199,58 +217,71 @@ msgid ""
 "\n"
 "7. Then Finish, your meetings should appear now in your calendar view\n"
 msgstr ""
+"\n"
+"前提：\n"
+"如果你用的是thunderbird，首先要安装lightning模块\n"
+"http://www.mozilla.org/projects/calendar/lightning/\n"
+"配置过程：\n"
+"1.进入日程表视图\n"
+"2.文件-新日程表\n"
+"3.选择从网络\n"
+"4.格式选择CalDav，地址输入上述地址，如：http://host.com:8069/webdav/db/calendars/users/demo/c"
+"/Meetings\n"
+"5.选择日程表的名称和颜色，建议你不选择提醒\n"
+"6.输入你的OpenERP用户名和密码（可以让密码管理器记住密码）\n"
+"7.点结束。你的会议将在日程表中显示。\n"
 
 #. module: caldav
 #: selection:basic.calendar,type:0
 #: selection:basic.calendar.attributes,type:0
 #: selection:basic.calendar.lines,name:0
 msgid "TODO"
-msgstr ""
+msgstr "待办"
 
 #. module: caldav
 #: view:calendar.event.export:0
 msgid "Export ICS"
-msgstr ""
+msgstr "导出ics格式日程表"
 
 #. module: caldav
 #: selection:basic.calendar.fields,fn:0
 msgid "Use the field"
-msgstr ""
+msgstr "用这个字段"
 
 #. module: caldav
 #: code:addons/caldav/calendar.py:787
 #, python-format
 msgid "Can not create line \"%s\" more than once"
-msgstr ""
+msgstr "不能重复创建行 \"%s\""
 
 #. module: caldav
 #: view:basic.calendar:0
 #: field:basic.calendar,line_ids:0
 #: model:ir.model,name:caldav.model_basic_calendar_lines
 msgid "Calendar Lines"
-msgstr ""
+msgstr "日程记录"
 
 #. module: caldav
 #: model:ir.model,name:caldav.model_calendar_event_subscribe
 msgid "Event subscribe"
-msgstr ""
+msgstr "订阅事件"
 
 #. module: caldav
 #: view:calendar.event.import:0
 msgid "Import ICS"
-msgstr ""
+msgstr "导入ics日程文件"
 
 #. module: caldav
 #: view:calendar.event.import:0
 #: view:calendar.event.subscribe:0
 #: view:user.preference:0
 msgid "_Cancel"
-msgstr ""
+msgstr "取消(_C)"
 
 #. module: caldav
 #: model:ir.model,name:caldav.model_basic_calendar_event
 msgid "basic.calendar.event"
-msgstr ""
+msgstr "basic.calendar.event"
 
 #. module: caldav
 #: view:basic.calendar:0
@@ -258,23 +289,23 @@ msgstr ""
 #: selection:basic.calendar.attributes,type:0
 #: selection:basic.calendar.lines,name:0
 msgid "Event"
-msgstr ""
+msgstr "事件"
 
 #. module: caldav
 #: field:document.directory,calendar_collection:0
 #: field:user.preference,collection:0
 msgid "Calendar Collection"
-msgstr ""
+msgstr "日程集"
 
 #. module: caldav
 #: constraint:document.directory:0
 msgid "Error! You can not create recursive Directories."
-msgstr ""
+msgstr "错误:你无法建立递归的目录"
 
 #. module: caldav
 #: view:user.preference:0
 msgid "_Open"
-msgstr ""
+msgstr "打开(_O)"
 
 #. module: caldav
 #: field:basic.calendar,type:0
@@ -282,18 +313,18 @@ msgstr ""
 #: field:basic.calendar.fields,type_id:0
 #: field:basic.calendar.lines,name:0
 msgid "Type"
-msgstr ""
+msgstr "类型"
 
 #. module: caldav
 #: help:calendar.event.export,name:0
 msgid "Save in .ics format"
-msgstr ""
+msgstr "保存为ics格式"
 
 #. module: caldav
 #: code:addons/caldav/calendar.py:1291
 #, python-format
 msgid "Error !"
-msgstr ""
+msgstr "错误！"
 
 #. module: caldav
 #: code:addons/caldav/wizard/caldav_browse.py:128
@@ -322,16 +353,29 @@ msgid ""
 "side.     \n"
 "     "
 msgstr ""
+"\n"
+"    1.进入日程表视图\n"
+"2.文件-新建-日程表\n"
+"3.输入表单\n"
+"类型：CalDav\n"
+"名称：任意输入\n"
+"url：http://HOST:PORT/webdav/DB_NAME/calendars/users/USER/c/Meetings \n"
+"使用SSL：否\n"
+"用户名：你的OpenERP用户名\n"
+"刷新：你希望每次都和服务器同步\n"
+"4.点击确定并输入你的OpenERP密码\n"
+"5.新的日程表会出现在左侧     \n"
+"     "
 
 #. module: caldav
 #: model:ir.model,name:caldav.model_basic_calendar_attributes
 msgid "Calendar attributes"
-msgstr ""
+msgstr "日程表属性"
 
 #. module: caldav
 #: model:ir.model,name:caldav.model_caldav_browse
 msgid "Caldav Browse"
-msgstr ""
+msgstr "Caldav 浏览"
 
 #. module: caldav
 #: model:ir.module.module,description:caldav.module_meta_information
@@ -359,31 +403,49 @@ msgid ""
 "created\n"
 "        CALENDAR_NAME: Name of calendar to access\n"
 msgstr ""
+"\n"
+"    本模块包括caldav服务器的基本功能：\n"
+"WebDav服务器允许远程访问日程表\n"
+"用WebDav同步日程表\n"
+"设置日程表事件和待办事项与OpenERP的任意对象关联\n"
+"提供iCal的导入导出\n"
+"\n"
+"要用CalDAV客户端访问日程表，指定路径为：\n"
+"http://主机名:端口/webdav/数据库名/calendars/users/USERNAME/c\n"
+"\n"
+"要从远端访问OpenERP的日程表请使用地址：\n"
+"http://主机名:端口/webdav/数据库名/Calendars/日程表名.ics\n"
+"\n"
+"这里，\n"
+"主机名：OpenERP服务器所在的主机名\n"
+"端口：OpenERP Server运行的端口（默认是8069）\n"
+"数据库名称：日程表所在的数据库\n"
+"日程表名：要访问的日程表\n"
 
 #. module: caldav
 #: selection:user.preference,device:0
 msgid "Android based device"
-msgstr ""
+msgstr "基于安卓的设备"
 
 #. module: caldav
 #: field:basic.calendar,create_date:0
 msgid "Created Date"
-msgstr ""
+msgstr "创建日期"
 
 #. module: caldav
 #: view:basic.calendar:0
 msgid "Attributes Mapping"
-msgstr ""
+msgstr "属性匹配"
 
 #. module: caldav
 #: model:ir.model,name:caldav.model_document_directory
 msgid "Directory"
-msgstr ""
+msgstr "目录"
 
 #. module: caldav
 #: field:calendar.event.subscribe,url_path:0
 msgid "Provide path for remote calendar"
-msgstr ""
+msgstr "输入远程日程表的路径"
 
 #. module: caldav
 #: view:caldav.browse:0
@@ -393,17 +455,17 @@ msgstr ""
 #. module: caldav
 #: field:basic.calendar.lines,domain:0
 msgid "Domain"
-msgstr ""
+msgstr "过滤条件"
 
 #. module: caldav
 #: view:calendar.event.subscribe:0
 msgid "_Subscribe"
-msgstr ""
+msgstr "订阅(_S)"
 
 #. module: caldav
 #: field:basic.calendar,user_id:0
 msgid "Owner"
-msgstr ""
+msgstr "所有者"
 
 #. module: caldav
 #: view:basic.calendar:0
@@ -412,7 +474,7 @@ msgstr ""
 #: model:ir.ui.menu,name:caldav.menu_calendar
 #: field:user.preference,calendar:0
 msgid "Calendar"
-msgstr ""
+msgstr "日程表"
 
 #. module: caldav
 #: code:addons/caldav/calendar.py:41
@@ -420,62 +482,64 @@ msgstr ""
 msgid ""
 "Please install python-vobject from http://vobject.skyhouseconsulting.com/"
 msgstr ""
+"请安装 python-vobject\r\n"
+"http://vobject.skyhouseconsulting.com/"
 
 #. module: caldav
 #: code:addons/caldav/wizard/calendar_event_import.py:63
 #, python-format
 msgid "Invalid format of the ics, file can not be imported"
-msgstr ""
+msgstr "ics文件格式错误，无法导入"
 
 #. module: caldav
 #: selection:user.preference,service:0
 msgid "CalDAV"
-msgstr ""
+msgstr "CalDAV"
 
 #. module: caldav
 #: field:basic.calendar.fields,field_id:0
 msgid "OpenObject Field"
-msgstr ""
+msgstr "对象字段"
 
 #. module: caldav
 #: field:basic.calendar.alias,res_id:0
 msgid "Res. ID"
-msgstr ""
+msgstr "资源ID"
 
 #. module: caldav
 #: view:calendar.event.subscribe:0
 msgid "Message..."
-msgstr ""
+msgstr "消息"
 
 #. module: caldav
 #: selection:user.preference,device:0
 msgid "Other"
-msgstr ""
+msgstr "其它"
 
 #. module: caldav
 #: view:basic.calendar:0
 #: field:basic.calendar,has_webcal:0
 msgid "WebCal"
-msgstr ""
+msgstr "WebCal"
 
 #. module: caldav
 #: view:document.directory:0
 #: model:ir.actions.act_window,name:caldav.action_calendar_collection_form
 #: model:ir.ui.menu,name:caldav.menu_calendar_collection
 msgid "Calendar Collections"
-msgstr ""
+msgstr "日程集"
 
 #. module: caldav
 #: code:addons/caldav/calendar.py:813
 #: sql_constraint:basic.calendar.alias:0
 #, python-format
 msgid "The same filename cannot apply to two records!"
-msgstr ""
+msgstr "两条记录不能用同一个文件名"
 
 #. module: caldav
 #: sql_constraint:document.directory:0
 msgid "Directory cannot be parent of itself!"
-msgstr ""
+msgstr "目录不能设为自己的上级目录。"
 
 #. module: caldav
 #: view:basic.calendar:0
@@ -483,17 +547,17 @@ msgstr ""
 #: model:ir.actions.act_window,name:caldav.action_caldav_form
 #: model:ir.ui.menu,name:caldav.menu_caldav_directories
 msgid "Calendars"
-msgstr ""
+msgstr "日程表"
 
 #. module: caldav
 #: field:basic.calendar,collection_id:0
 msgid "Collection"
-msgstr ""
+msgstr "集合"
 
 #. module: caldav
 #: field:basic.calendar,write_date:0
 msgid "Write Date"
-msgstr ""
+msgstr "修改日期"
 
 #. module: caldav
 #: code:addons/caldav/wizard/caldav_browse.py:104
@@ -525,6 +589,20 @@ msgid ""
 "    \n"
 "    "
 msgstr ""
+"\n"
+"前提：\n"
+"没有与caldav同步的内置功能\n"
+"需要安装第三方软件Calendar(CalDav)\n"
+"就安装一个就够了\n"
+"\n"
+"配置：\n"
+"1.打开日程表同步 输入第一个标签页就可以了\n"
+"2.CalDAV日程表地址，输入上面给出的地址\n"
+"3.输入你的openerp用户名和密码\n"
+"4.如果你不用SSL，会得到一个警告，选择是\n"
+"5.可以手动同步也可以设置每隔多少分钟同步一次\n"
+"    \n"
+"    "
 
 #. module: caldav
 #: code:addons/caldav/wizard/caldav_browse.py:53
@@ -587,48 +665,68 @@ msgid ""
 "      now trusts it.   \n"
 "    "
 msgstr ""
+"\n"
+"    SSL相关的配置参见最后的部分\n"
+"首先设置日程表\n"
+"1.点击设置，进入邮件、联系人和日程表页面\n"
+"2.进入添加帐号\n"
+"3.点击其他\n"
+"4.从日程表组，选择增加CalDav帐号\n"
+"5.输入服务器主机名\n"
+"6.输入OpenERP的用户名和密码\n"
+"7.描述可以输入服务器名也可以任意输入\n"
+"9.如果不用SSL服务器会得到一个报错，点继续\n"
+"10.点击高级设置\n"
+"11.输入openerp服务器的端口，8071是SSL，8069是普通的\n"
+"12.输入向导给定的url地址\n"
+"13.点击完成。iphone会试图连接openerp服务器并验证用户名和密码\n"
+"14.从iphone主画面进入日程表会看到openerp的日程表，每次输入新日程时要选择属于哪个日程表。\n"
+"\n"
+"如果你需要SSL连接，先用浏览器打开openERP的服务器地址，如https://my.server.ip:8071/，然后在证书警告信息后选择接受，则i"
+"phone已信任你的openerp服务器。   \n"
+"    "
 
 #. module: caldav
 #: sql_constraint:document.directory:0
 msgid "The directory name must be unique !"
-msgstr ""
+msgstr "目录名必须唯一！"
 
 #. module: caldav
 #: view:user.preference:0
 msgid "User Preference"
-msgstr ""
+msgstr "用户首选项"
 
 #. module: caldav
 #: code:addons/caldav/wizard/calendar_event_subscribe.py:59
 #, python-format
 msgid "Please provide Proper URL !"
-msgstr ""
+msgstr "请输入正确的地址"
 
 #. module: caldav
 #: model:ir.model,name:caldav.model_basic_calendar_timezone
 msgid "basic.calendar.timezone"
-msgstr ""
+msgstr "basic.calendar.timezone"
 
 #. module: caldav
 #: field:basic.calendar.fields,expr:0
 msgid "Expression"
-msgstr ""
+msgstr "表达式"
 
 #. module: caldav
 #: model:ir.model,name:caldav.model_basic_calendar_attendee
 msgid "basic.calendar.attendee"
-msgstr ""
+msgstr "basic.calendar.attendee"
 
 #. module: caldav
 #: model:ir.model,name:caldav.model_basic_calendar_alias
 msgid "basic.calendar.alias"
-msgstr ""
+msgstr "basic.calendar.alias"
 
 #. module: caldav
 #: view:calendar.event.import:0
 #: field:calendar.event.import,file_path:0
 msgid "Select ICS file"
-msgstr ""
+msgstr "选择ics文件"
 
 #. module: caldav
 #: field:caldav.browse,caldav_doc_file:0
@@ -638,39 +736,39 @@ msgstr ""
 #. module: caldav
 #: field:basic.calendar.lines,mapping_ids:0
 msgid "Fields Mapping"
-msgstr ""
+msgstr "字段映射"
 
 #. module: caldav
 #: view:caldav.browse:0
 msgid "Browse caldav"
-msgstr ""
+msgstr "浏览caldav"
 
 #. module: caldav
 #: model:ir.model,name:caldav.model_basic_calendar
 msgid "basic.calendar"
-msgstr ""
+msgstr "basic.calendar"
 
 #. module: caldav
 #: view:basic.calendar:0
 msgid "Other Info"
-msgstr ""
+msgstr "其它信息"
 
 #. module: caldav
 #: field:user.preference,device:0
 msgid "Software/Devices"
-msgstr ""
+msgstr "软件 / 设备"
 
 #. module: caldav
 #: help:basic.calendar,has_webcal:0
 msgid ""
 "Also export a <name>.ics entry next to the calendar folder, with WebCal "
 "content."
-msgstr ""
+msgstr "并且在日程表目录后生成一个 日程表名称.ics文件"
 
 #. module: caldav
 #: field:basic.calendar.fields,fn:0
 msgid "Function"
-msgstr ""
+msgstr "功能"
 
 #. module: caldav
 #: view:basic.calendar:0
@@ -678,141 +776,141 @@ msgstr ""
 #: view:caldav.browse:0
 #: field:caldav.browse,description:0
 msgid "Description"
-msgstr ""
+msgstr "描述"
 
 #. module: caldav
 #: help:basic.calendar.alias,cal_line_id:0
 msgid "The calendar/line this mapping applies to"
-msgstr ""
+msgstr "日程表对应于"
 
 #. module: caldav
 #: field:basic.calendar.fields,mapping:0
 msgid "Mapping"
-msgstr ""
+msgstr "映射"
 
 #. module: caldav
 #: code:addons/caldav/wizard/calendar_event_import.py:86
 #, python-format
 msgid "Import Sucessful"
-msgstr ""
+msgstr "导入成功"
 
 #. module: caldav
 #: view:calendar.event.import:0
 msgid "_Import"
-msgstr ""
+msgstr "导入(_I)"
 
 #. module: caldav
 #: model:ir.model,name:caldav.model_calendar_event_import
 msgid "Event Import"
-msgstr ""
+msgstr "导入事件"
 
 #. module: caldav
 #: selection:basic.calendar.fields,fn:0
 msgid "Interval in hours"
-msgstr ""
+msgstr "间隔小时数"
 
 #. module: caldav
 #: view:calendar.event.subscribe:0
 msgid "Subscribe to Remote Calendar"
-msgstr ""
+msgstr "订阅远程日程表"
 
 #. module: caldav
 #: help:basic.calendar,calendar_color:0
 msgid "For supporting clients, the color of the calendar entries"
-msgstr ""
+msgstr "为支持彩色的客户端指定此日程表颜色"
 
 #. module: caldav
 #: field:basic.calendar,name:0
 #: field:basic.calendar.attributes,name:0
 #: field:basic.calendar.fields,name:0
 msgid "Name"
-msgstr ""
+msgstr "名称"
 
 #. module: caldav
 #: selection:basic.calendar.attributes,type:0
 #: selection:basic.calendar.lines,name:0
 msgid "Alarm"
-msgstr ""
+msgstr "提醒"
 
 #. module: caldav
 #: model:ir.model,name:caldav.model_basic_calendar_alarm
 msgid "basic.calendar.alarm"
-msgstr ""
+msgstr "basic.calendar.alarm"
 
 #. module: caldav
 #: code:addons/caldav/calendar.py:1291
 #, python-format
 msgid "Attendee must have an Email Id"
-msgstr ""
+msgstr "参与者必须有邮件地址"
 
 #. module: caldav
 #: model:ir.actions.act_window,name:caldav.action_calendar_event_export_values
 msgid "Export .ics File"
-msgstr ""
+msgstr "导出 .ics 文件"
 
 #. module: caldav
 #: code:addons/caldav/calendar.py:41
 #, python-format
 msgid "vobject Import Error!"
-msgstr ""
+msgstr "vobject导入出错"
 
 #. module: caldav
 #: field:calendar.event.export,file_path:0
 msgid "Save ICS file"
-msgstr ""
+msgstr "保存ics文件"
 
 #. module: caldav
 #: selection:user.preference,device:0
 msgid "Sunbird/Thunderbird"
-msgstr ""
+msgstr "Sunbird/Thunderbird"
 
 #. module: caldav
 #: field:basic.calendar,calendar_order:0
 msgid "Order"
-msgstr ""
+msgstr "顺序"
 
 #. module: caldav
 #: model:ir.module.module,shortdesc:caldav.module_meta_information
 msgid "Share Calendar using CalDAV"
-msgstr ""
+msgstr "和Caldav共享日程"
 
 #. module: caldav
 #: field:basic.calendar,calendar_color:0
 msgid "Color"
-msgstr ""
+msgstr "颜色"
 
 #. module: caldav
 #: view:basic.calendar:0
 msgid "MY"
-msgstr ""
+msgstr "我的"
 
 #. module: caldav
 #: model:ir.model,name:caldav.model_basic_calendar_fields
 msgid "Calendar fields"
-msgstr ""
+msgstr "日程表字段"
 
 #. module: caldav
 #: view:calendar.event.import:0
 msgid "Import Message"
-msgstr ""
+msgstr "导入信息"
 
 #. module: caldav
 #: model:ir.actions.act_window,name:caldav.action_calendar_event_subscribe
 #: model:ir.actions.act_window,name:caldav.action_calendar_event_subscribe_values
 msgid "Subscribe"
-msgstr ""
+msgstr "订阅"
 
 #. module: caldav
 #: sql_constraint:document.directory:0
 msgid "Directory must have a parent or a storage"
-msgstr ""
+msgstr "目录必须具有上级目录或一个存储区"
 
 #. module: caldav
 #: model:ir.model,name:caldav.model_basic_calendar_todo
 msgid "basic.calendar.todo"
-msgstr ""
+msgstr "basic.calendar.todo"
 
 #. module: caldav
 #: help:basic.calendar,calendar_order:0
 msgid "For supporting clients, the order of this folder among the calendars"
-msgstr ""
+msgstr "针对支持排序的客户端，此日程表所在的位置"

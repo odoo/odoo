@@ -51,26 +51,22 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Invoice Line">
-                    <notebook>
-                        <page string="Line">
-                            <field name="product_id" on_change="product_id_change(product_id, uos_id, quantity, name, parent.type, parent.partner_id, parent.fiscal_position, price_unit, parent.address_invoice_id, parent.currency_id, context, parent.company_id)"/>
-                            <field name="uos_id"  on_change="uos_id_change(product_id, uos_id, quantity, name, parent.type, parent.partner_id, parent.fiscal_position, price_unit, parent.address_invoice_id, parent.currency_id, context, parent.company_id)"/>
-                            <field name="quantity"/>
-                            <field name="price_unit"/>
-                            <field name="discount" groups="base.group_extended"/>
-                            <field colspan="4" name="name"/>
-                            <field domain="[('company_id', '=', parent.company_id), ('journal_id', '=', parent.journal_id), ('type', '&lt;&gt;', 'view')]" name="account_id" on_change="onchange_account_id(parent.fiscal_position,account_id)"/>
-                            <field domain="[('type','&lt;&gt;','view'), ('company_id', '=', parent.company_id), ('parent_id', '!=', False)]" name="account_analytic_id" groups="analytic.group_analytic_accounting"/>
-                            <newline/>
-                            <field name="company_id" groups="base.group_multi_company" readonly="1"/>
-                            <separator colspan="4" string="Taxes"/>
-                            <field colspan="4" name="invoice_line_tax_id" context="{'type':parent.type}" domain="[('parent_id','=',False),('company_id', '=', parent.company_id)]"
-                            nolabel="1"/>
-                        </page>
-                        <page string="Notes">
-                            <field colspan="4" name="note" nolabel="1"/>
-                        </page>
-                    </notebook>
+                    <field name="product_id" on_change="product_id_change(product_id, uos_id, quantity, name, parent.type, parent.partner_id, parent.fiscal_position, price_unit, parent.address_invoice_id, parent.currency_id, context, parent.company_id)"/>
+                    <field colspan="2" name="name"/>
+                    <label string="Quantity :" align="1.0"/>
+                    <group colspan="1" col="2">
+                        <field name="quantity" nolabel="1"/>
+                        <field name="uos_id" on_change="uos_id_change(product_id, uos_id, quantity, name, parent.type, parent.partner_id, parent.fiscal_position, price_unit, parent.address_invoice_id, parent.currency_id, context, parent.company_id)" nolabel="1"/>
+                    </group>
+                    <field name="price_unit"/>
+                    <field domain="[('company_id', '=', parent.company_id), ('journal_id', '=', parent.journal_id), ('type', '&lt;&gt;', 'view')]" name="account_id" on_change="onchange_account_id(parent.fiscal_position,account_id)"/>
+                    <field name="discount" groups="base.group_extended"/>
+                    <field domain="[('type','&lt;&gt;','view'), ('company_id', '=', parent.company_id), ('parent_id', '!=', False)]" name="account_analytic_id" groups="analytic.group_analytic_accounting"/>
+                    <field name="company_id" groups="base.group_multi_company" readonly="1"/>
+                    <separator string="Notes" colspan="4"/>
+                    <field colspan="4" name="note" nolabel="1"/>
+                    <separator colspan="4" string="Taxes"/>
+                    <field colspan="4" name="invoice_line_tax_id" context="{'type':parent.type}" domain="[('parent_id','=',False),('company_id', '=', parent.company_id)]" nolabel="1"/>
                 </form>
             </field>
         </record>
@@ -238,6 +234,7 @@
                             <field name="payment_ids" colspan="4" nolabel="1" >
                                 <tree string="Payments">
                                     <field name="date" string="Payment Date"/>
+                                    <field name="move_id"/>
                                     <field name="ref"/>
                                     <field name="name" groups="base.group_extended"/>
                                     <field name="journal_id"/>
@@ -336,6 +333,7 @@
                             <field name="payment_ids" colspan="4" nolabel="1">
                                 <tree string="Payments">
                                     <field name="date"/>
+                                    <field name="move_id"/>
                                     <field name="ref"/>
                                     <field name="name"/>
                                     <field name="journal_id" groups="base.group_user"/>
@@ -376,10 +374,6 @@
                     <group col="10" colspan="4">
                         <field name="journal_id" widget="selection" select='1'/>
                         <field name="period_id" select='1' string="Period"/>
-                    </group>
-                    <newline/>
-                    <group expand="0" string="Extended Filters..." name = "extended filter" >
-                        <field name="reference" select="1" string="Invoice Reference"/>
                     </group>
                     <newline/>
                     <group expand="0" string="Group By...">
