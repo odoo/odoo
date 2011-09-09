@@ -864,11 +864,7 @@ class account_invoice(osv.osv):
                     ctx = context.copy()
                     ctx.update({'date':inv.date_invoice})
                     if inv.currency_id.id != company_currency:
-<<<<<<< TREE
                         amount_currency = cur_obj.compute(cr, uid, company_currency, inv.currency_id.id, t[1], context=ctx)
-=======
-                                company_currency, inv.currency_id.id, t[1], context=ctx)
->>>>>>> MERGE-SOURCE
                     else:
                         amount_currency = False
 
