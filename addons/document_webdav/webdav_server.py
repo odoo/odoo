@@ -572,7 +572,7 @@ try:
 
         conf = OpenDAVConfig(**_dc)
         handler._config = conf
-        reg_http_service(directory, DAVHandler, DAVAuthProvider())
+        reg_http_service(directory, DAVHandler, DAVAuthProvider)
         logging.getLogger('webdav').info("WebDAV service registered at path: %s/ "% directory)
         
         if not (config.get_misc('webdav', 'no_root_hack', False)):
