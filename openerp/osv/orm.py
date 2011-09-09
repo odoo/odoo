@@ -510,17 +510,17 @@ def get_pg_type(f, type_override=None):
 
     if field_type in FIELDS_TO_PGTYPES:
         return (FIELDS_TO_PGTYPES[field_type], FIELDS_TO_PGTYPES[field_type])
-    elif isinstance(f, fields.float):
+    elif issubclass(field_type, fields.float):
         if f.digits:
             return ('numeric', 'NUMERIC')
         return ('float8', 'DOUBLE PRECISION')
-    elif isinstance(f, (fields.char, fields.reference)):
+    elif issubclass(field_type, (fields.char, fields.reference)):
         return ('varchar', pg_varchar(f.size))
-    elif isinstance(f, fields.selection):
+    elif issubclass(field_type, fields.selection):
         if isinstance(f.selection, list) and isinstance(f.selection[0][0], int):
             return ('int4', 'INTEGER')
         return ('varchar', pg_varchar(getattr(f, 'size', None)))
-    elif isinstance(f, fields.function):
+    elif issubclass(field_type, fields.function):
         if f._type == 'selection':
             return ('varchar', pg_varchar())
         return get_pg_type(f, getattr(fields, f._type))
