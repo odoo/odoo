@@ -85,6 +85,16 @@ class mail_compose_message(osv.osv_memory):
         if vals:
             for field in fields:
                 result.update({field : vals.get(field, False)})
+
+        # link to model and record if not done yet
+        if not result.get('model') or not result.get('res_id'):
+            active_model = context.get('active_model')
+            res_id = context.get('active_id')
+            if active_model and active_model not in (self._name, 'mail.message'):
+                result['model'] = active_model
+                if res_id:
+                    result['res_id'] = res_id
+
         # Try to provide default email_from if not specified yet
         if not result.get('email_from'):
             current_user = self.pool.get('res.users').browse(cr, uid, uid, context)
