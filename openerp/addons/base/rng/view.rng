@@ -111,6 +111,19 @@
         </rng:element>
     </rng:define>
 
+    <rng:define name="kanban">
+        <rng:element name="kanban">
+            <rng:zeroOrMore>
+                <rng:ref name="field"/>
+            </rng:zeroOrMore>
+            <rng:element name="templates">
+                <rng:oneOrMore>
+                    <rng:ref name="any"/>
+                </rng:oneOrMore>
+            </rng:element>
+        </rng:element>
+    </rng:define>
+
     <rng:define name="tree">
         <rng:element name="tree">
             <rng:ref name="overload"/>
@@ -460,6 +473,7 @@
             <rng:zeroOrMore>
                 <rng:choice>
                     <rng:ref name="diagram"/>
+                    <rng:ref name="kanban"/>
                     <rng:ref name="form"/>
                     <rng:ref name="data"/>
                     <rng:ref name="tree"/>
@@ -618,6 +632,7 @@
     <rng:start>
         <rng:choice>
             <rng:ref name="diagram" />
+            <rng:ref name="kanban" />
             <rng:ref name="form" />
             <rng:ref name="search" />
             <rng:ref name="group" />

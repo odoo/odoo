@@ -59,7 +59,7 @@ class ir_translation(osv.osv):
         # These two columns map to ir_model_data.module and ir_model_data.name.
         # They are used to resolve the res_id above after loading is done.
         'module': fields.char('Module', size=64, help='Maps to the ir_model_data for which this translation is provided.'),
-        'xml_id': fields.char('XML Id', size=128, help='Maps to the ir_model_data for which this translation is provided.'),
+        'xml_id': fields.char('External ID', size=128, help='Maps to the ir_model_data for which this translation is provided.'),
     }
 
     def _auto_init(self, cr, context={}):
@@ -177,7 +177,8 @@ class ir_translation(osv.osv):
         if not context:
             context = {}
         ids = super(ir_translation, self).create(cr, uid, vals, context=context)
-        self._get_source.clear_cache(self, vals.get('name',0), vals.get('type',0),  vals.get('lang',0), vals.get('src',0))
+        self._get_source.clear_cache(self, uid, vals.get('name',0), vals.get('type',0),  vals.get('lang',0), vals.get('src',0))
+        self._get_ids.clear_cache(self, uid, vals.get('name',0), vals.get('type',0), vals.get('lang',0), vals.get('res_id',0))
         return ids
 
     def write(self, cursor, user, ids, vals, context=None):
@@ -186,8 +187,8 @@ class ir_translation(osv.osv):
         if isinstance(ids, (int, long)):
             ids = [ids]
         result = super(ir_translation, self).write(cursor, user, ids, vals, context=context)
-        self._get_source.clear_cache(self, user, trans_obj['name'], trans_obj['type'], trans_obj['lang'], source=trans_obj['src'])
         for trans_obj in self.read(cursor, user, ids, ['name','type','res_id','src','lang'], context=context):
+            self._get_source.clear_cache(self, user, trans_obj['name'], trans_obj['type'], trans_obj['lang'], trans_obj['src'])
             self._get_ids.clear_cache(self, user, trans_obj['name'], trans_obj['type'], trans_obj['lang'], [trans_obj['res_id']])
         return result
 
