@@ -514,9 +514,9 @@ def get_pg_type(f):
             f_type = ('int4', 'INTEGER')
         else:
             f_type = ('varchar', 'VARCHAR(%d)' % f_size)
-    elif isinstance(f, fields.function) and eval('fields.'+(f._type), globals()) in type_dict:
-        t = eval('fields.'+(f._type), globals())
-        f_type = (type_dict[t], type_dict[t])
+    elif isinstance(f, fields.function) and getattr(fields, f._type, None) in type_dict:
+        t = type_dict[getattr(fields, f._type)]
+        f_type = (t, t)
     elif isinstance(f, fields.function) and f._type == 'float':
         if f.digits:
             f_type = ('numeric', 'NUMERIC')
