@@ -475,6 +475,18 @@ class browse_record(object):
 
     __repr__ = __str__
 
+def pg_varchar(size=0):
+    """ Returns the VARCHAR declaration for the provided size:
+
+    * If no size (or an empty size is provided) return an 'infinite' VARCHAR
+    * Otherwise return a VARCHAR(n)
+
+    :type int size: varchar size, optional
+    :rtype: str
+    """
+    if size:
+        return 'VARCHAR(%d)' % size
+    return 'VARCHAR'
 
 def get_pg_type(f):
     """
@@ -501,19 +513,19 @@ def get_pg_type(f):
         else:
             f_type = ('float8', 'DOUBLE PRECISION')
     elif isinstance(f, (fields.char, fields.reference)):
-        f_type = ('varchar', 'VARCHAR(%d)' % (f.size,))
+        f_type = ('varchar', pg_varchar(f.size))
     elif isinstance(f, fields.selection):
         if isinstance(f.selection, list) and isinstance(f.selection[0][0], (str, unicode)):
-            f_size = reduce(lambda x, y: max(x, len(y[0])), f.selection, f.size or 16)
+            f_size = reduce(lambda x, y: max(x, len(y[0])), f.selection, f.size)
         elif isinstance(f.selection, list) and isinstance(f.selection[0][0], int):
             f_size = -1
         else:
-            f_size = getattr(f, 'size', None) or 16
+            f_size = getattr(f, 'size', None)
 
         if f_size == -1:
             f_type = ('int4', 'INTEGER')
         else:
-            f_type = ('varchar', 'VARCHAR(%d)' % f_size)
+            f_type = ('varchar', pg_varchar(f_size))
     elif isinstance(f, fields.function) and getattr(fields, f._type, None) in type_dict:
         t = type_dict[getattr(fields, f._type)]
         f_type = (t, t)
@@ -525,7 +537,7 @@ def get_pg_type(f):
     elif isinstance(f, fields.function) and f._type == 'selection':
         f_type = ('text', 'text')
     elif isinstance(f, fields.function) and f._type == 'char':
-        f_type = ('varchar', 'VARCHAR(%d)' % (f.size))
+        f_type = ('varchar', pg_varchar(f.size))
     else:
         logger = netsvc.Logger()
         logger.notifyChannel("init", netsvc.LOG_WARNING, '%s type not supported!' % (type(f)))
@@ -2838,7 +2850,7 @@ class orm(orm_template):
                         if f_obj_type:
                             ok = False
                             casts = [
-                                ('text', 'char', 'VARCHAR(%d)' % (f.size or 0,), '::VARCHAR(%d)'%(f.size or 0,)),
+                                ('text', 'char', pg_varchar(f.size), '::%s' % pg_varchar(f.size),
                                 ('varchar', 'text', 'TEXT', ''),
                                 ('int4', 'float', get_pg_type(f)[1], '::'+get_pg_type(f)[1]),
                                 ('date', 'datetime', 'TIMESTAMP', '::TIMESTAMP'),
@@ -2848,8 +2860,8 @@ class orm(orm_template):
                             ]
                             if f_pg_type == 'varchar' and f._type == 'char' and f_pg_size < f.size:
                                 cr.execute('ALTER TABLE "%s" RENAME COLUMN "%s" TO temp_change_size' % (self._table, k))
-                                cr.execute('ALTER TABLE "%s" ADD COLUMN "%s" VARCHAR(%d)' % (self._table, k, f.size))
-                                cr.execute('UPDATE "%s" SET "%s"=temp_change_size::VARCHAR(%d)' % (self._table, k, f.size))
+                                cr.execute('ALTER TABLE "%s" ADD COLUMN "%s" %s' % (self._table, k, pg_varchar(f.size)))
+                                cr.execute('UPDATE "%s" SET "%s"=temp_change_size::%s' % (self._table, k, pg_varchar(f.size)))
                                 cr.execute('ALTER TABLE "%s" DROP COLUMN temp_change_size CASCADE' % (self._table,))
                                 cr.commit()
                                 self.__schema.debug("Table '%s': column '%s' (type varchar) changed size from %s to %s",
