@@ -24,19 +24,23 @@
                     <field name="name"/>
                     <newline/>
                     <notebook>
-                        <page string="Content and styling" >
-                            <field name='company_id' />
-                            <field name="css" colspan="4"/>
-                            <field name="html" colspan="4"/>
-                            <field name="footer_html" colspan="4" />
-                        </page>
-                        <page string="page setup" >
+                        <page string="Company and Page Setup" >
+                            <field name='company_id' colspan="4"/>
                             <field name="orientation" />
                             <field name="format" />
                             <field name="margin_top" />
                             <field name="margin_bottom" />
                             <field name="margin_left" />
                             <field name="margin_right" />
+                        </page>
+                        <page string="css Styling" >
+                            <field name="css" colspan="4"/>
+                        </page>
+                        <page string="Webkit Header" >
+                            <field name="html" colspan="4"/>
+                        </page>
+                        <page string="Webkit Footer" >
+                            <field name="footer_html" colspan="4" />
                         </page>
                     </notebook>
                 </form>
