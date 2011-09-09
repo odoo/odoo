@@ -518,18 +518,10 @@ def get_pg_type(f, type_override=None):
     elif isinstance(f, (fields.char, fields.reference)):
         f_type = ('varchar', pg_varchar(f.size))
     elif isinstance(f, fields.selection):
-        if isinstance(f.selection, list) and isinstance(f.selection[0][0], (str, unicode)):
-            f_size = reduce(lambda x, y: max(x, len(y[0])), f.selection, f.size)
-        elif isinstance(f.selection, list) and isinstance(f.selection[0][0], int):
-            f_size = -1
-        else:
-            f_size = getattr(f, 'size', None)
-
-        if f_size == -1:
+        if isinstance(f.selection, list) and isinstance(f.selection[0][0], int):
             f_type = ('int4', 'INTEGER')
         else:
-            f_type = ('varchar', pg_varchar(f_size))
-
+            f_type = ('varchar', pg_varchar(getattr(f, 'size', None)))
     elif isinstance(f, fields.function):
         if f._type = 'selection':
             f_type = ('varchar', pg_varchar())
