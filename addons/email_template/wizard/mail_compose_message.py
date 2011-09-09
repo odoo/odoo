@@ -27,13 +27,18 @@ from tools.translate import _
 import tools
 
 
-def _reopen(self,res_id):
+def _reopen(self,res_id,model):
     return {'type': 'ir.actions.act_window',
             'view_mode': 'form',
             'view_type': 'form',
             'res_id': res_id,
             'res_model': self._name,
-            'target': 'new'}
+            'target': 'new',
+
+            # save original model in context, otherwise
+            # it will be lost on the action's context switch
+            'mail.compose.target.model': model,
+    }
 
 class mail_compose_message(osv.osv_memory):
     _inherit = 'mail.compose.message'
@@ -51,8 +56,8 @@ class mail_compose_message(osv.osv_memory):
             mail_message = self.pool.get('mail.message')
             message_data = mail_message.browse(cr, uid, int(context.get('message_id')), context)
             model = message_data.model
-        elif context.get('active_model', False):
-            model = context.get('active_model')
+        elif context.get('mail.compose.target.model') or context.get('active_model'):
+            model = context.get('mail.compose.target.model', context.get('active_model'))
         if model:
             record_ids = email_template.search(cr, uid, [('model', '=', model)])
             return email_template.name_get(cr, uid, record_ids, context) + [(False,'')]
@@ -109,7 +114,7 @@ class mail_compose_message(osv.osv_memory):
                                                             False, email_from=record.email_from,
                                                             email_to=record.email_to, context=context)
                 record.write(onchange_defaults['value'])
-            return _reopen(self, record.id)
+            return _reopen(self, record.id, record.model)
 
     def save_as_template(self, cr, uid, ids, context=None):
         if context is None:
@@ -117,9 +122,12 @@ class mail_compose_message(osv.osv_memory):
         email_template = self.pool.get('email.template')
         model_pool = self.pool.get('ir.model')
         for record in self.browse(cr, uid, ids, context=context):
-            model = context.get('active_model', record.model or False)
-            model = model_pool.search(cr, uid, [('model', '=', model)])[0]
-            model_name = model_pool.browse(cr, uid, model, context=context).name
+            model = record.model or context.get('active_model')
+            model_ids = model_pool.search(cr, uid, [('model', '=', model)])
+            model_id = model_ids and model_ids[0] or False
+            model_name = ''
+            if model_id:
+                model_name = model_pool.browse(cr, uid, model_id, context=context).name
             template_name = "%s: %s" % (model_name, tools.ustr(record.subject))
             values = {
                 'name': template_name,
@@ -130,7 +138,7 @@ class mail_compose_message(osv.osv_memory):
                 'email_cc': record.email_cc or False,
                 'email_bcc': record.email_bcc or False,
                 'reply_to': record.reply_to or False,
-                'model_id': model or False,
+                'model_id': model_id or False,
                 'attachment_ids': [(6, 0, [att.id for att in record.attachment_ids])]
             }
             template_id = email_template.create(cr, uid, values, context=context)
@@ -138,7 +146,7 @@ class mail_compose_message(osv.osv_memory):
                           'use_template': True})
 
         # _reopen same wizard screen with new template preselected
-        return _reopen(self, record.id)
+        return _reopen(self, record.id, model)
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
