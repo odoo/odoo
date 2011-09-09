@@ -521,7 +521,7 @@ def get_pg_type(f, type_override=None):
             return ('int4', 'INTEGER')
         return ('varchar', pg_varchar(getattr(f, 'size', None)))
     elif isinstance(f, fields.function):
-        if f._type = 'selection':
+        if f._type == 'selection':
             return ('varchar', pg_varchar())
         return get_pg_type(f, getattr(fields, f._type))
     logging.getLogger('orm').warn('%s type not supported!', field_type)
@@ -2833,7 +2833,7 @@ class orm(orm_template):
                         if f_obj_type:
                             ok = False
                             casts = [
-                                ('text', 'char', pg_varchar(f.size), '::%s' % pg_varchar(f.size),
+                                ('text', 'char', pg_varchar(f.size), '::%s' % pg_varchar(f.size)),
                                 ('varchar', 'text', 'TEXT', ''),
                                 ('int4', 'float', get_pg_type(f)[1], '::'+get_pg_type(f)[1]),
                                 ('date', 'datetime', 'TIMESTAMP', '::TIMESTAMP'),
