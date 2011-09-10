@@ -72,7 +72,7 @@
                         <field name="department_id" groups="base.group_extended"/>
                     </group>
                     <notebook colspan="4">
-                        <page string="Daily View">
+                        <page string="Daily">
                             <group col="6" colspan="4">
                                 <button name="button_dummy" string="Go to:" type="object" icon="terp-gtk-jump-to-ltr"/>
                                 <field name="date_current" nolabel="1"/>
@@ -126,7 +126,7 @@
                             <field name="total_difference_day" widget="float_time"/>
                             <field name="total_timesheet_day" widget="float_time"/>
                         </page>
-                        <page string="By Day">
+                        <page string="Summary">
                             <field colspan="4" name="period_ids" nolabel="1">
                                 <tree colors="red:total_difference&lt;0.1;blue:total_difference&gt;=0.1" string="Period">
                                     <field name="name"/>
