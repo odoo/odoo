@@ -306,7 +306,7 @@
             <field name="type">tree</field>
             <field eval="10" name="priority"/>
             <field name="arch" type="xml">
-                <tree colors="blue:state in ('draft');black:state in ('confirm','new');gray:state in('done')" string="Timesheets">
+                <tree colors="blue:state == 'draft';black:state in ('confirm','new');gray:state == 'done'" string="Timesheets">
                     <field name="employee_id"/>
                     <field name="date_from"/>
                     <field name="date_to"/>

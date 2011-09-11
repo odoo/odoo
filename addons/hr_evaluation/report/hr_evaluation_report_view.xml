@@ -7,7 +7,7 @@
         <field name="model">hr.evaluation.report</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree colors="blue:state in ('draft');black:state in ('wait','progress');gray:state in('done','cancel')"
+            <tree colors="blue:state == 'draft';black:state in ('wait','progress');gray:state in('done','cancel')"
              string="Evaluations Analysis">
                 <field name="create_date" invisible="1"/>
                 <field name="employee_id" invisible="1"/>
