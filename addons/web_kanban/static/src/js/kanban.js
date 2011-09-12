@@ -356,7 +356,7 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
         } else if (type == 'color') {
             this.do_change_color(record_id, $action);
         } else {
-            var button_attrs = $(this).data();
+            var button_attrs = $action.data();
             this.on_button_click(button_attrs, record_id);
         }
     },
