@@ -3,7 +3,7 @@ import controllers
 import common.dispatch
 
 try:
-    import openerp
+    import openerp.wsgi
     import os
     import tempfile
     print "embedded mode"
