@@ -62,7 +62,7 @@
                                 <separator colspan="4" string="Categorization"/>
                                 <field name="priority"/>
                                 <field name="categ_id" context="{'object_id':'crm.helpdesk'}"/>
-                                <field name="canal_id"/>
+                                <field name="channel_id"/>
                             </group>
 
                             <separator colspan="4" string="Notes"/>
@@ -254,10 +254,6 @@
                             domain="['|', ('section_id', '=', context.get('section_id')), '|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
                             help="My Sales Team(s)" />
                     </field>
-                    <newline/>
-					<group  expand="0" string="Extended Filters..." groups="base.group_extended">
-                            <field name="write_date" string="Updated Date"/>
-                    </group>
                     <newline/>                         
                     <group expand="0" string="Group By...">
                         <filter string="Partner" icon="terp-partner"

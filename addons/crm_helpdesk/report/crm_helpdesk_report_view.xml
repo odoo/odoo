@@ -25,7 +25,7 @@
                     <field name="planned_cost"/>
                     <field name="state" invisible="1"/>
                     <field name="day" invisible="1"/>
-                    <field name="canal_id" invisible="1"/>
+                    <field name="channel_id" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -106,9 +106,7 @@
                             domain="[]"
                             context="{'group_by':'partner_id'}" />
                         <separator orientation="vertical" />
-                        <filter string="Channel" icon="terp-call-start"
-                            domain="[]"
-                        context="{'group_by':'canal_id'}" />
+                        <filter string="Channel" icon="terp-call-start" domain="[]" context="{'group_by':'channel_id'}" />
                         <separator orientation="vertical" />
                         <filter string="State" icon="terp-stock_effects-object-colorize"
                             domain="[]" context="{'group_by':'state'}" />

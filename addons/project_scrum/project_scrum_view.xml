@@ -33,7 +33,7 @@
             <field name="model">project.scrum.product.backlog</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="grey:state in ('cancel','done');blue:state in ('pending')" string="Product Backlog">
+                <tree colors="grey:state in ('cancel','done');blue:state == 'pending'" string="Product Backlog">
                     <field name="sequence"/>
                     <field name="name"/>
                     <field name="project_id"/>
@@ -573,8 +573,8 @@
             <field name="arch" type="xml">
                 <field name="project_id" position="after">
                     <field name="sprint_id" context="{'sprint_invisible':False}">
-                        <filter icon="terp-check" string="Current" context="{'sprint_invisible':False}" domain="[('sprint_id.state','in',('draft','open'))]" help="Current Sprints"/>
-                        <filter icon="gtk-find" string="Current" context="{'sprint_invisible':False}" domain="[]" help="View Sprints"/>
+                        <filter icon="terp-check" context="{'sprint_invisible':False}" domain="[('sprint_id.state','in',('draft','open'))]" help="Current Sprints"/>
+                        <filter icon="gtk-find" context="{'sprint_invisible':False}" domain="[]" help="View Sprints"/>
                     </field>
                 </field>
             </field>
