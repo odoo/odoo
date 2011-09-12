@@ -149,7 +149,7 @@ openerp.web.ViewManager =  openerp.web.Widget.extend({
         this.registry = openerp.web.views;
     },
     render: function() {
-        return QWeb.render("ViewManager", {"prefix": this.element_id, views: this.views_src})
+        return QWeb.render("ViewManager", {"prefix": this.element_id, views: this.views_src, 'action': this.action ? true: false})
     },
     /**
      * @returns {jQuery.Deferred} initial view loading promise
