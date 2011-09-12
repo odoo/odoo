@@ -861,8 +861,10 @@ openerp.web.Widget = openerp.web.SessionAware.extend({
         if (target instanceof openerp.web.Widget)
             target = target.$element;
         insertion(target);
+        this.on_inserted(this.$element, this);
         return this.start();
     },
+    on_inserted: function(element, widget) {},
     /**
      * Renders the widget using QWeb, `this.template` must be defined.
      * The context given to QWeb contains the "widget" key that references `this`.
