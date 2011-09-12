@@ -57,11 +57,11 @@ class email_template_preview(osv.osv_memory):
         result = super(email_template_preview, self).default_get(cr, uid, fields, context=context)
 
         email_template = self.pool.get('email.template')
-        template_id = context.get('active_id', False)
-        if 'res_id' in fields:
+        template_id = context.get('template_id')
+        if 'res_id' in fields and not result.get('res_id'):
             records = self._get_records(cr, uid, context=context)
             result['res_id'] = records and records[0][0] or False # select first record as a Default
-        if template_id and 'model_id' in fields:
+        if template_id and 'model_id' in fields and not result.get('model_id'):
             result['model_id'] = email_template.read(cr, uid, int(template_id), ['model_id'], context).get('model_id', False)
         return result
 
@@ -69,18 +69,13 @@ class email_template_preview(osv.osv_memory):
         'res_id':fields.selection(_get_records, 'Sample Document'),
     }
 
-    def on_change_ref(self, cr, uid, ids, res_id, context=None):
-        if context is None:
-            context = {}
+    def on_change_res_id(self, cr, uid, ids, res_id, context=None):
         if not res_id:
             return {}
         vals = {}
-        if context == {}:
-            context = self.context
-
-        template_pool = self.pool.get('email.template')
-        template_id = context.get('template_id', False)
-        template = template_pool.get_email_template(cr, uid, template_id=template_id, record_id=res_id, context=context)
+        email_template = self.pool.get('email.template')
+        template_id = context and context.get('template_id')
+        template = email_template.get_email_template(cr, uid, template_id=template_id, record_id=res_id, context=context)
         model = template.model
         vals['email_to'] = self.render_template(cr, uid, template.email_to, model, res_id, context)
         vals['email_cc'] = self.render_template(cr, uid, template.email_cc, model, res_id, context)

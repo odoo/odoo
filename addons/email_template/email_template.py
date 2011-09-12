@@ -360,18 +360,18 @@ class email_template(osv.osv):
            and schedule it for delivery through the ``mail`` module's scheduler.
 
            :param int template_id: id of the template to render
-           :param int record_id: id of the record to render the template with
-                                (model is taken from the template)
+           :param int res_id: id of the record to render the template with
+                              (model is taken from the template)
         """
         mail_message = self.pool.get('mail.message')
         ir_attachment = self.pool.get('ir.attachment')
         template = self.browse(cr, uid, template_id, context)
         values = self.generate_email(cr, uid, template_id, res_id, context=context)
-        attachments = values.pop('attachments')
-        message_id = mail_message.create(values)
+        attachments = values.pop('attachments') or {}
+        message_id = mail_message.create(cr, uid, values, context=context)
         # link attachments
         attachment_ids = []
-        for fname, fcontent in values['attachments'].iteritems():
+        for fname, fcontent in attachments.iteritems():
             attachment_data = {
                     'name': fname,
                     'datas_fname': fname,

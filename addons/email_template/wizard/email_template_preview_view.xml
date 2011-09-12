@@ -8,26 +8,31 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Email Preview">
-                    <group col="4" colspan="4">
-                        <field name="model_id" readonly="1"/>
-                        <field name="res_id" on_change="on_change_ref(res_id, context)"/>
-                    </group>
-                    <group col="8" colspan="4">
+                    <field name="model_id" invisible="1"/>
+                    <field name="res_id" on_change="on_change_res_id(res_id, context)"/>
+                    <group col="2" colspan="4">
                         <field name="email_to" readonly="1"/>
-                        <field name="email_cc" readonly="1"/>
-                        <field name="email_bcc" readonly="1"/>
-                        <field name="reply_to" readonly="1"/>
-                        <field name="subject" colspan="8" readonly="1"/>
+                        <field name="email_cc" readonly="1" attrs="{'invisible': [('email_cc','=',False)]}"/>
+                        <field name="email_bcc" readonly="1" attrs="{'invisible': [('email_bcc','=',False)]}"/>
+                        <field name="reply_to" readonly="1" attrs="{'invisible': [('reply_to','=',False)]}"/>
+                        <field name="subject" readonly="1"/>
                     </group>
                     <group col="4" colspan="4">
-                        <separator string= "Body" colspan="2" />
-                        <!--<separator string= "Body(Html)" colspan="2" />-->
-                        <newline/>
-                        <field name="body_text" nolabel="1" colspan="2" readonly="1"/>
-                        <!-- <field name="body_html" nolabel="1" colspan="2" readonly="1"/>-->
+                        <notebook>
+                            <page string="Body (Text)">
+                                <field name="body_text" nolabel="1" colspan="4" height="350" width="350" readonly="1"/>
+                            </page>
+                            <page string="Body (Rich/HTML)" attrs="{'invisible': [('body_html','=', False)]}">
+                                <field name="body_html" nolabel="1" colspan="4" height="350" width="350" readonly="1"/>
+                            </page>
+                        </notebook>
                     </group>
-                    <field name="report_name" colspan="2" readonly="1"/>
-                    <button icon="gtk-ok" special="cancel" string="OK" colspan="1"/>
+                    <field name="report_name" colspan="4" readonly="1"/>
+                    <separator colspan="4"/>
+                    <group col="4" colspan="4">
+                        <label string=""/>
+                        <button icon="gtk-ok" special="cancel" string="Close" colspan="1"/>
+                    </group>
                 </form>
             </field>
         </record>
