@@ -4,6 +4,7 @@
 
 openerp.web.core = function(openerp) {
 openerp.web.qweb = new QWeb2.Engine();
+openerp.web.qweb.debug = (window.location.search.indexOf('?debug') !== -1);
 /**
  * John Resig Class with factory improvement
  */
