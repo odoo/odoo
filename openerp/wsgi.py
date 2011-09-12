@@ -273,11 +273,11 @@ def application(environ, start_response):
 
     # Try all handlers until one returns some result (i.e. not None).
     wsgi_handlers = [
-        #wsgi_xmlrpc,
-        #wsgi_jsonrpc,
-        #legacy_wsgi_xmlrpc,
+        wsgi_xmlrpc,
+        wsgi_jsonrpc,
+        legacy_wsgi_xmlrpc,
         wsgi_webdav
-        ] #+ module_handlers
+        ] + module_handlers
     for handler in wsgi_handlers:
         result = handler(environ, start_response)
         if result is None:
@@ -306,9 +306,6 @@ def on_starting(server):
     global arbiter_pid
     arbiter_pid = os.getpid() # TODO check if this is true even after replacing the executable
     config = openerp.tools.config
-    config['addons_path'] = '/home/openerp/repos/addons/trunk-xmlrpc' # need a config file
-    config['static_http_document_root'] = '/tmp'
-    #config['log_level'] = 10 # debug
     #openerp.tools.cache = kill_workers_cache
     openerp.netsvc.init_logger()
     openerp.osv.osv.start_object_proxy()
