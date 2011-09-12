@@ -88,7 +88,7 @@ openerp.web.list_editable = function (openerp) {
         }
     });
 
-    openerp.web.ListView.List.include(/** @lends openerp.web.ListView.List */{
+    openerp.web.ListView.List.include(/** @lends openerp.web.ListView.List# */{
         row_clicked: function (event) {
             if (!this.options.editable) {
                 return this._super(event);
