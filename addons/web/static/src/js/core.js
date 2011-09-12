@@ -777,9 +777,6 @@ openerp.web.SessionAware = openerp.web.CallbackEnabled.extend(/** @lends openerp
                 if(body) {
                     $('<pre></pre>').text(v).appendTo($('body'));
                 }
-                if(notify && this.notification) {
-                    this.notification.notify("Logging:",v);
-                }
             }
         }
     }

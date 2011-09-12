@@ -386,7 +386,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         if (!r.result) {
             this.notification.warn(_t("Record not saved"), _t("Problem while saving record."));
         } else {
-            this.notification.notify(_t("Record saved"), _.sprintf(_("The record #%s has been saved.") + this.datarecord.id));
+            console.debug(_.sprintf("The record #%s has been saved." + this.datarecord.id));
             if (success) {
                 success(r);
             }
@@ -422,7 +422,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
             if (this.sidebar) {
                 this.sidebar.attachments.do_update();
             }
-            this.notification.notify(_t("Record created"), "The record has been created with id #" + this.datarecord.id);
+            console.debug("The record has been created with id #" + this.datarecord.id);
             if (success) {
                 success(_.extend(r, {created: true}));
             }
@@ -430,13 +430,13 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
         }
     },
     do_search: function (domains, contexts, groupbys) {
-        this.notification.notify("Searching form");
+        console.debug("Searching form");
     },
     on_action: function (action) {
-        this.notification.notify('Executing action ' + action);
+        console.debug('Executing action', action);
     },
     do_cancel: function () {
-        this.notification.notify("Cancelling form");
+        console.debug("Cancelling form");
     },
     reload: function() {
         if (this.dataset.index == null || this.dataset.index < 0) {
@@ -2412,7 +2412,7 @@ openerp.web.form.FieldBinary = openerp.web.form.Field.extend({
         if (size === false) {
             this.notification.warn("File Upload", "There was a problem while uploading your file");
             // TODO: use openerp web crashmanager
-            this.log("Error while uploading file : ", name);
+            console.warn("Error while uploading file : ", name);
         } else {
             this.on_file_uploaded_and_valid.apply(this, arguments);
             this.on_ui_change();

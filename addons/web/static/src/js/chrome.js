@@ -892,7 +892,7 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
         this.session.start();
         this.login.start();
         this.menu.start();
-        this.notification.notify("OpenERP Client", "The openerp client has been initialized.");
+        console.debug("The openerp client has been initialized.");
     },
     on_logged: function() {
         if(this.action_manager)
