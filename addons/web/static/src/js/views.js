@@ -137,6 +137,7 @@ openerp.web.ActionManager = openerp.web.Widget.extend({
 
 openerp.web.ViewManager =  openerp.web.Widget.extend(/** @lends openerp.web.ViewManager# */{
     identifier_prefix: "viewmanager",
+    template: "ViewManager",
     /**
      * @constructs openerp.web.ViewManager
      * @extends openerp.web.Widget
@@ -157,7 +158,7 @@ openerp.web.ViewManager =  openerp.web.Widget.extend(/** @lends openerp.web.View
         this.registry = openerp.web.views;
     },
     render: function() {
-        return QWeb.render("ViewManager", {"prefix": this.element_id, views: this.views_src})
+    	return QWeb.render(this.template, {"prefix": this.element_id, views: this.views_src})
     },
     /**
      * @returns {jQuery.Deferred} initial view loading promise
@@ -297,7 +298,8 @@ openerp.web.ViewManager =  openerp.web.Widget.extend(/** @lends openerp.web.View
 });
 
 openerp.web.ViewManagerAction = openerp.web.ViewManager.extend({
-    init: function(parent, action) {
+	template: "ViewManagerAction",
+	init: function(parent, action) {
         this.session = parent.session;
         this.action = action;
         var dataset;
