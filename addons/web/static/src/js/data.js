@@ -29,7 +29,7 @@ openerp.web.DataGroup =  openerp.web.Widget.extend( /** @lends openerp.web.DataG
      * :js:func:`~openerp.web.DataGroup.list`, which is used to read the
      * content of the current grouping level.
      *
-     * @constructs
+     * @constructs openerp.web.DataGroup
      * @extends openerp.web.Widget
      *
      * @param {openerp.web.Session} session Current OpenERP session
@@ -60,7 +60,7 @@ openerp.web.DataGroup =  openerp.web.Widget.extend( /** @lends openerp.web.DataG
 openerp.web.ContainerDataGroup = openerp.web.DataGroup.extend( /** @lends openerp.web.ContainerDataGroup# */ {
     /**
      *
-     * @constructs
+     * @constructs openerp.web.ContainerDataGroup
      * @extends openerp.web.DataGroup
      *
      * @param session
@@ -197,7 +197,7 @@ openerp.web.ContainerDataGroup = openerp.web.DataGroup.extend( /** @lends opener
 openerp.web.GrouplessDataGroup = openerp.web.DataGroup.extend( /** @lends openerp.web.GrouplessDataGroup# */ {
     /**
      *
-     * @constructs
+     * @constructs openerp.web.GrouplessDataGroup
      * @extends openerp.web.DataGroup
      *
      * @param session
@@ -220,7 +220,7 @@ openerp.web.StaticDataGroup = openerp.web.GrouplessDataGroup.extend( /** @lends 
      * A specialization of groupless data groups, relying on a single static
      * dataset as its records provider.
      *
-     * @constructs
+     * @constructs openerp.web.StaticDataGroup
      * @extends openerp.web.GrouplessDataGroup
      * @param {openep.web.DataSetStatic} dataset a static dataset backing the groups
      */
@@ -237,7 +237,7 @@ openerp.web.DataSet =  openerp.web.Widget.extend( /** @lends openerp.web.DataSet
      * DateaManagement interface between views and the collection of selected
      * OpenERP records (represents the view's state?)
      *
-     * @constructs
+     * @constructs openerp.web.DataSet
      * @extends openerp.web.Widget
      *
      * @param {String} model the OpenERP model this dataset will manage
@@ -507,7 +507,8 @@ openerp.web.DataSetStatic =  openerp.web.DataSet.extend({
 });
 openerp.web.DataSetSearch =  openerp.web.DataSet.extend({
     /**
-     * @constructs
+     * @constructs openerp.web.DataSetSearch
+     * @extends openerp.web.DataSet
      *
      * @param {Object} parent
      * @param {String} model
