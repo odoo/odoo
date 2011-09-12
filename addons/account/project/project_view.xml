@@ -57,7 +57,7 @@
             <field name="type">tree</field>
             <field name="field_parent">child_complete_ids</field>
             <field name="arch" type="xml">
-                <tree colors="blue:type in ('view');red:(date&lt;current_date);black:(date&gt;=current_date);black:(date==False)" string="Analytic account" toolbar="1">
+                <tree colors="blue:type == 'view';red:(date&lt;current_date);black:(date&gt;=current_date);black:(date==False)" string="Analytic account" toolbar="1">
                     <field name="name"/>
                     <field name="code"/>
                     <field name="quantity"/>

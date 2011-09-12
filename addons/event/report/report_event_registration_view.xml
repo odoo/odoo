@@ -8,7 +8,7 @@
             <field name="model">report.event.registration</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="blue:state in ('draft');black:state in ('confirm');gray:state in('done','cancel')" string="Events Analysis">
+                <tree colors="blue:state == 'draft';black:state == 'confirm';gray:state in('done','cancel')" string="Events Analysis">
                     <field name="date" invisible="1"/>
                     <field name="user_id" invisible="1"/>
                     <field name="speaker_id" invisible="1"/>

@@ -33,7 +33,7 @@
             <field name="model">project.scrum.product.backlog</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="grey:state in ('cancel','done');blue:state in ('pending')" string="Product Backlog">
+                <tree colors="grey:state in ('cancel','done');blue:state == 'pending'" string="Product Backlog">
                     <field name="sequence"/>
                     <field name="name"/>
                     <field name="project_id"/>

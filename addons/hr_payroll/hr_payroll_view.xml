@@ -213,7 +213,7 @@
             <field name="model">hr.payslip</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="blue:state in ('confirm','hr_check','accont_check');black:state in ('new');gray:state in('cancel')" string="Payslips">
+                <tree colors="blue:state in ('confirm','hr_check','accont_check');black:state == 'new';gray:state == 'cancel'" string="Payslips">
                     <field name="number"/>
                     <field name="employee_id"/>
                     <field name="name"/>
