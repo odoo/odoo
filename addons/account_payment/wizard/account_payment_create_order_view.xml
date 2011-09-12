@@ -25,16 +25,16 @@
             <field name="model">payment.order.create</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-			<form string="Search Payment lines">
-				<group col="4" colspan="6">
-					<field name="entries"/>
-				</group>
-				<separator colspan="4"/>
-			    <group col="2" colspan="4">
-            		<button special="cancel"  string="Cancel" icon='gtk-cancel'/>
-					<button name="create_payment" string="_Add to payment order" colspan="1" type="object" icon="gtk-execute"/>
-				</group>
-			</form>
+                <form string="Search Payment lines">
+                    <group col="4" colspan="6">
+                        <field name="entries"/>
+                    </group>
+                    <separator colspan="4"/>
+                    <group col="2" colspan="4">
+                        <button special="cancel"  string="Cancel" icon='gtk-cancel'/>
+                        <button name="create_payment" string="_Add to payment order" colspan="1" type="object" icon="gtk-execute"/>
+                    </group>
+                </form>
             </field>
         </record>
 
