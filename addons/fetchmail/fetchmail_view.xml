@@ -7,7 +7,7 @@
             <field name="model">fetchmail.server</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="blue:state in ('draft');" string="POP/IMAP Servers">
+                <tree colors="blue:state == 'draft'" string="POP/IMAP Servers">
                     <field name="name"/>
                     <field name="type"/>
                     <field name="is_ssl"/>

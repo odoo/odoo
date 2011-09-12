@@ -134,7 +134,7 @@
             <field name="type">tree</field>
             <field name="field_parent">child_ids</field>
             <field name="arch" type="xml">
-                <tree colors="red:date and (date&lt;current_date) and (state in ('open'));blue:state in ('draft','pending');grey: state in ('close','cancelled')" string="Projects">
+                <tree colors="red:date and (date&lt;current_date) and (state == 'open');blue:state in ('draft','pending');grey: state in ('close','cancelled')" string="Projects">
                     <field name="sequence" invisible="1"/>
                     <field name="date" invisible="1"/>
                     <field name="name" string="Project Name"/>
