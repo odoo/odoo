@@ -441,11 +441,11 @@
     </table>
 </t>
 
-<t t-extend="ViewManager">
-    <t t-jquery="table td:first-child" t-operation="prepend">
-    	<a t-if="action" class="oe-shortcut-toggle" title="Add / Remove Shortcut..."
-               href="javascript: void(0)"> </a>
-    </t>
+<t t-extend="ViewManager" t-name="ViewManagerAction">
+	<t t-jquery=".view-manager-main-table .view-manager-main-content" t-operation="prepend">
+		<a class="oe-shortcut-toggle" title="Add / Remove Shortcut..."
+	               href="javascript: void(0)"> </a>
+   </t>
 </t>
 
 <t t-name="Sidebar">
