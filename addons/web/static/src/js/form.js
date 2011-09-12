@@ -384,9 +384,9 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
     },
     on_saved: function(r, success) {
         if (!r.result) {
-            this.notification.warn(_t("Record not saved"), _t("Problem while saving record."));
+            // should not happen in the server, but may happen for internal purpose
         } else {
-            console.debug(_.sprintf("The record #%s has been saved." + this.datarecord.id));
+            console.debug(_.sprintf("The record #%s has been saved.", this.datarecord.id));
             if (success) {
                 success(r);
             }
@@ -408,7 +408,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
      */
     on_created: function(r, success, prepend_on_create) {
         if (!r.result) {
-            this.notification.warn(_t("Record not created"), "Problem while creating record.");
+            // should not happen in the server, but may happen for internal purpose
         } else {
             this.datarecord.id = r.result;
             if (!prepend_on_create) {
