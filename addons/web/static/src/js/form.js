@@ -601,8 +601,15 @@ openerp.web.form.compute_domain = function(expr, fields) {
     return _.all(stack, _.identity);
 };
 
-openerp.web.form.Widget = openerp.web.Widget.extend({
+openerp.web.form.Widget = openerp.web.Widget.extend(/** @lends openerp.web.form.Widget# */{
     template: 'Widget',
+    /**
+     * @constructs openerp.web.form.Widget
+     * @extends openerp.web.Widget
+     *
+     * @param view
+     * @param node
+     */
     init: function(view, node) {
         this.view = view;
         this.node = node;
@@ -879,7 +886,14 @@ openerp.web.form.WidgetLabel = openerp.web.form.Widget.extend({
     }
 });
 
-openerp.web.form.Field = openerp.web.form.Widget.extend({
+openerp.web.form.Field = openerp.web.form.Widget.extend(/** @lends openerp.web.form.Field# */{
+    /**
+     * @constructs openerp.web.form.Field
+     * @extends openerp.web.form.Widget
+     *
+     * @param view
+     * @param node
+     */
     init: function(view, node) {
         this.name = node.attrs.name;
         this.value = undefined;
@@ -2006,7 +2020,11 @@ openerp.web.form.Many2ManyDataSet = openerp.web.DataSetStatic.extend({
     }
 });
 
-openerp.web.form.Many2ManyListView = openerp.web.ListView.extend({
+/**
+ * @class
+ * @extends openerp.web.ListView
+ */
+openerp.web.form.Many2ManyListView = openerp.web.ListView.extend(/** @lends openerp.web.form.Many2ManyListView# */{
     do_add_record: function () {
         var pop = new openerp.web.form.SelectCreatePopup(this);
         pop.select_element(this.model, {},
@@ -2033,7 +2051,11 @@ openerp.web.form.Many2ManyListView = openerp.web.ListView.extend({
     }
 });
 
-openerp.web.form.SelectCreatePopup = openerp.web.OldWidget.extend({
+/**
+ * @class
+ * @extends openerp.web.OldWidget
+ */
+openerp.web.form.SelectCreatePopup = openerp.web.OldWidget.extend(/** @lends openerp.web.form.SelectCreatePopup# */{
     identifier_prefix: "selectcreatepopup",
     template: "SelectCreatePopup",
     /**
@@ -2202,7 +2224,11 @@ openerp.web.form.SelectCreateListView = openerp.web.ListView.extend({
     }
 });
 
-openerp.web.form.FormOpenPopup = openerp.web.OldWidget.extend({
+/**
+ * @class
+ * @extends openerp.web.OldWidget
+ */
+openerp.web.form.FormOpenPopup = openerp.web.OldWidget.extend(/** @lends openerp.web.form.FormOpenPopup# */{
     identifier_prefix: "formopenpopup",
     template: "FormOpenPopup",
     /**
