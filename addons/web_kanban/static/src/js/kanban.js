@@ -31,14 +31,7 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
         this.fields_view = data;
         this.add_qweb_template();
         if (this.qweb.has_template('kanban-box')) {
-            self.dataset.read_slice(_.keys(self.fields_view.fields), {
-                    context: self.dataset.get_context(),
-                    domain: self.dataset.get_domain()
-                }, function (records) {
-                    self.all_display_data = [{'records': records, 'value': false, 'header': false, 'ids': self.dataset.ids}];
-                    self.on_show_data(self.all_display_data);
-                }
-            );
+            this.do_actual_search();
         }
     },
     add_qweb_template: function() {
@@ -394,8 +387,12 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
         });
     },
     do_actual_search : function () {
-        var self = this;
-        self.datagroup = new openerp.web.DataGroup(self, self.model, self.domain, self.context, self.group_by || []);
+        var self = this,
+            group_by = self.group_by;
+        if (!group_by.length && this.fields_view.arch.attrs.default_group_by) {
+            group_by = [this.fields_view.arch.attrs.default_group_by];
+        }
+        self.datagroup = new openerp.web.DataGroup(self, self.model, self.domain, self.context, group_by);
         self.dataset.context = self.context;
         self.dataset.domain = self.domain;
         self.datagroup.list([],
