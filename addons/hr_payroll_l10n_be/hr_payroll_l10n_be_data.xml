@@ -1,44 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-	<record id="hr_payroll_head_major" model="hr.salary.head">
+	<record id="hr_payroll_head_major" model="hr.salary.rule.category">
 		<field name="name">Premium pay 108% Worker</field>
 		<field name="code">MAJ</field>
 	</record>
 
 
-	<record id="hr_payroll_head_employee" model="hr.salary.head">
+	<record id="hr_payroll_head_employee" model="hr.salary.rule.category">
 		<field name="name">Employee Salary</field>
 		<field name="code">NON-MAJ</field>
 	</record>
 
-        <record id="hr_payroll_head_onss" model="hr.salary.head">
+        <record id="hr_payroll_head_onss" model="hr.salary.rule.category">
                 <field name="name">Office National Securite Sociale</field>
                 <field name="code">ONSS</field>
                 <field name="parent_id" ref="hr_payroll.ALW"/>
         </record>
 	
 
-	<record id="hr_payroll_head_pp" model="hr.salary.head">
+	<record id="hr_payroll_head_pp" model="hr.salary.rule.category">
 		<field name="name">Precompte Professionnel Bareme 2011</field>
 		<field name="code">P.P.</field>
                 <field name="parent_id" ref="hr_payroll.DED"/>
 	</record>
 
-	<record id="hr_payroll_head_company_car" model="hr.salary.head">
+	<record id="hr_payroll_head_company_car" model="hr.salary.rule.category">
 		<field name="name">Company car</field>
 		<field name="code">C.C.</field>
                 <field name="parent_id" ref="hr_payroll.ALW"/>
 	</record>
 
-	<record id="hr_payroll_head_child_alw" model="hr.salary.head">
+	<record id="hr_payroll_head_child_alw" model="hr.salary.rule.category">
 		<field name="name">Child Allowance Belgium</field>
 		<field name="code">Ch.A</field>
 		<field name="parent_id" ref="hr_payroll.DED"/>
 	</record>
 
 
-	<record id="hr_payroll_head_spouse_handicap" model="hr.salary.head">
+	<record id="hr_payroll_head_spouse_handicap" model="hr.salary.rule.category">
 		<field name="name">Disabled Spouse</field>
 		<field name="code">Sp.handicap</field>
 		<field name="parent_id" ref="hr_payroll.DED"/>
