@@ -1,21 +1,9 @@
 from crm import crm
 from osv import fields, osv
 from tools.translate import _
-import base64
 from mail.mail_message import truncate_text
 
 AVAILABLE_STATES = crm.AVAILABLE_STATES + [('unchanged', 'Unchanged')]
-
-class crm_add_note_email_attachment(osv.osv_memory):
-    _name = 'crm.add.note.email.attachment'
-
-    _columns = {
-        'binary' : fields.binary('Attachment', required=True),
-        'name' : fields.char('Name', size=128, required=True),
-        'wizard_id' : fields.many2one('crm.add.note', 'Wizard', required=True),
-    }
-
-crm_add_note_email_attachment()
 
 class crm_add_note(osv.osv_memory):
     """Adds a new note to the case."""
@@ -26,7 +14,10 @@ class crm_add_note(osv.osv_memory):
         'body': fields.text('Note Body', required=True),
         'state': fields.selection(AVAILABLE_STATES, string='Set New State To',
                                   required=True),
-        'attachment_ids' : fields.one2many('crm.add.note.email.attachment', 'wizard_id'),
+    }
+
+    _defaults = {
+        'state': 'unchanged'
     }
 
     def action_add(self, cr, uid, ids, context=None):
@@ -43,13 +34,8 @@ class crm_add_note(osv.osv_memory):
             case_list = case_pool.browse(cr, uid, context['active_ids'],
                                          context=context)
             case = case_list[0]
-            user_obj = self.pool.get('res.users')
-            attach = dict(
-                (x.name, base64.decodestring(x.binary)) for x in obj.attachment_ids
-            )
             case_pool.message_append(cr, uid, [case], truncate_text(obj.body),
-                              body_text=obj.body, attachments=attach)
-
+                                     body_text=obj.body)
             if obj.state == 'unchanged':
                 pass
             elif obj.state == 'done':
@@ -61,12 +47,5 @@ class crm_add_note(osv.osv_memory):
                 getattr(case_pool, act)(cr, uid, [case.id])
 
         return {'type': 'ir.actions.act_window_close'}
-
-    def default_get(self, cr, uid, fields, context=None):
-        """
-        This function gets default values
-        """
-        return {'state': u'unchanged'}
-
 
 crm_add_note()
