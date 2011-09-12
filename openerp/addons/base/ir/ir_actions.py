@@ -601,8 +601,10 @@ class actions_server(osv.osv):
             context = {}
         user = self.pool.get('res.users').browse(cr, uid, uid)
         for action in self.browse(cr, uid, ids, context):
-            obj_pool = self.pool.get(action.model_id.model)
-            obj = obj_pool.browse(cr, uid, context['active_id'], context=context)
+            obj = None
+            if context.get('active_model') == action.model_id.model and context.get('active_id'):
+                obj_pool = self.pool.get(action.model_id.model)
+                obj = obj_pool.browse(cr, uid, context['active_id'], context=context)
             cxt = {
                 'context': dict(context), # copy context to prevent side-effects of eval
                 'object': obj,
