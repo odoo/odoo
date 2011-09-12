@@ -4053,7 +4053,7 @@ class orm(orm_template):
         upd_todo = []
         for v in vals.keys():
             if v in self._inherit_fields:
-                (table, col, col_detail) = self._inherit_fields[v]
+                (table, col, col_detail, original_parent) = self._inherit_fields[v]
                 tocreate[table][v] = vals[v]
                 del vals[v]
             else:
@@ -4608,9 +4608,12 @@ class orm(orm_template):
         # force a clean recompute!
         for parent_column in ['parent_left', 'parent_right']:
             data.pop(parent_column, None)
-
-        for v in self._inherits:
-            del data[self._inherits[v]]
+        # remove _inherits field's from data recursively
+        def remove_ids(inherits_dict):
+            for parent_table in inherits_dict:
+                del data[inherits_dict[parent_table]]
+                remove_ids(self.pool.get(parent_table)._inherits)
+        remove_ids(self._inherits)
         return data
 
     def copy_translations(self, cr, uid, old_id, new_id, context=None):
