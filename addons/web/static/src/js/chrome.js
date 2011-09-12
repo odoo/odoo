@@ -5,7 +5,14 @@
 openerp.web.chrome = function(openerp) {
 var QWeb = openerp.web.qweb;
 
-openerp.web.Notification =  openerp.web.Widget.extend({
+openerp.web.Notification =  openerp.web.Widget.extend(/** @lends openerp.web.Notification# */{
+    /**
+     * @constructs openerp.web.Notification
+     * @extends openerp.web.Widget
+     *
+     * @param parent
+     * @param element_id
+     */
     init: function(parent, element_id) {
         this._super(parent, element_id);
         this.$element.notify({
@@ -27,9 +34,16 @@ openerp.web.Notification =  openerp.web.Widget.extend({
     }
 });
 
-openerp.web.Dialog = openerp.web.OldWidget.extend({
+openerp.web.Dialog = openerp.web.OldWidget.extend(/** @lends openerp.web.Dialog# */{
     dialog_title: "",
     identifier_prefix: 'dialog',
+    /**
+     * @constructs openerp.web.Dialog
+     * @extends openerp.web.OldWidget
+     *
+     * @param parent
+     * @param dialog_options
+     */
     init: function (parent, dialog_options) {
         var self = this;
         this._super(parent);
@@ -118,8 +132,14 @@ openerp.web.Dialog = openerp.web.OldWidget.extend({
     }
 });
 
-openerp.web.CrashManager = openerp.web.Dialog.extend({
+openerp.web.CrashManager = openerp.web.Dialog.extend(/** @lends openerp.web.CrashManager# */{
     identifier_prefix: 'dialog_crash',
+    /**
+     * @constructs opener.web.CrashManager
+     * @extends openerp.web.Dialog
+     *
+     * @param parent
+     */
     init: function(parent) {
         this._super(parent);
         this.session.on_rpc_error.add(this.on_rpc_error);
@@ -154,7 +174,14 @@ openerp.web.CrashManager = openerp.web.Dialog.extend({
     }
 });
 
-openerp.web.Loading =  openerp.web.Widget.extend({
+openerp.web.Loading =  openerp.web.Widget.extend(/** @lends openerp.web.Loading# */{
+    /**
+     * @constructs openerp.web.Loading
+     * @extends openerp.web.Widget
+     *
+     * @param parent
+     * @param element_id
+     */
     init: function(parent, element_id) {
         this._super(parent, element_id);
         this.count = 0;
@@ -173,7 +200,15 @@ openerp.web.Loading =  openerp.web.Widget.extend({
     }
 });
 
-openerp.web.Database = openerp.web.Widget.extend({
+openerp.web.Database = openerp.web.Widget.extend(/** @lends openerp.web.Database# */{
+    /**
+     * @constructs openerp.web.Database
+     * @extends openerp.web.Widget
+     *
+     * @param parent
+     * @param element_id
+     * @param option_id
+     */
     init: function(parent, element_id, option_id) {
         this._super(parent, element_id);
         this.$option_id = $('#' + option_id);
@@ -427,9 +462,15 @@ openerp.web.Database = openerp.web.Widget.extend({
     }
 });
 
-openerp.web.Login =  openerp.web.Widget.extend({
+openerp.web.Login =  openerp.web.Widget.extend(/** @lends openerp.web.Login# */{
     remember_creditentials: true,
-    
+    /**
+     * @constructs openerp.web.Login
+     * @extends openerp.web.Widget
+     * 
+     * @param parent
+     * @param element_id
+     */
     init: function(parent, element_id) {
         this._super(parent, element_id);
         this.has_local_storage = typeof(localStorage) != 'undefined';
@@ -527,9 +568,15 @@ openerp.web.Login =  openerp.web.Widget.extend({
     }
 });
 
-openerp.web.Header =  openerp.web.Widget.extend({
+openerp.web.Header =  openerp.web.Widget.extend(/** @lends openerp.web.Header# */{
     template: "Header",
     identifier_prefix: 'oe-app-header-',
+    /**
+     * @constructs openerp.web.Header
+     * @extends openerp.web.Widget
+     * 
+     * @param parent
+     */
     init: function(parent) {
         this._super(parent);
         this.qs = "?" + jQuery.param.querystring();
@@ -711,7 +758,15 @@ openerp.web.Header =  openerp.web.Widget.extend({
     }
 });
 
-openerp.web.Menu =  openerp.web.Widget.extend({
+openerp.web.Menu =  openerp.web.Widget.extend(/** @lends openerp.web.Menu# */{
+    /**
+     * @constructs openerp.web.Menu
+     * @extends openerp.web.Widget
+     * 
+     * @param parent
+     * @param element_id
+     * @param secondary_menu_id
+     */
     init: function(parent, element_id, secondary_menu_id) {
         this._super(parent, element_id);
         this.secondary_menu_id = secondary_menu_id;
@@ -793,13 +848,13 @@ openerp.web.Menu =  openerp.web.Widget.extend({
     }
 });
 
-openerp.web.Homepage = openerp.web.Widget.extend({
-});
-
-openerp.web.Preferences = openerp.web.Widget.extend({
-});
-
-openerp.web.WebClient = openerp.web.Widget.extend({
+openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClient */{
+    /**
+     * @constructs openerp.web.WebClient
+     * @extends openerp.web.Widget
+     * 
+     * @param element_id
+     */
     init: function(element_id) {
         this._super(null, element_id);
         openerp.webclient = this;

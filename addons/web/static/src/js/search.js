@@ -380,7 +380,9 @@ openerp.web.search.Invalid = openerp.web.Class.extend( /** @lends openerp.web.se
      * Exception thrown by search widgets when they hold invalid values,
      * which they can not return when asked.
      *
-     * @constructs
+     * @constructs openerp.web.search.Invalid
+     * @extends openerp.web.Class
+     *
      * @param field the name of the field holding an invalid value
      * @param value the invalid value
      * @param message validation failure message
@@ -400,7 +402,7 @@ openerp.web.search.Widget = openerp.web.Widget.extend( /** @lends openerp.web.se
     /**
      * Root class of all search widgets
      *
-     * @constructs
+     * @constructs openerp.web.search.Widget
      * @extends openerp.web.Widget
      *
      * @param view the ancestor view of this widget
@@ -494,7 +496,7 @@ openerp.web.search.Group = openerp.web.search.Widget.extend({
 
 openerp.web.search.Input = openerp.web.search.Widget.extend( /** @lends openerp.web.search.Input# */{
     /**
-     * @constructs
+     * @constructs openerp.web.search.Input
      * @extends openerp.web.search.Widget
      *
      * @param view
@@ -566,7 +568,7 @@ openerp.web.search.Field = openerp.web.search.Input.extend( /** @lends openerp.w
     template: 'SearchView.field',
     default_operator: '=',
     /**
-     * @constructs
+     * @constructs openerp.web.search.Field
      * @extends openerp.web.search.Input
      *
      * @param view_section
@@ -694,7 +696,7 @@ openerp.web.search.SelectionField = openerp.web.search.Field.extend(/** @lends o
 });
 openerp.web.search.BooleanField = openerp.web.search.SelectionField.extend(/** @lends openerp.web.search.BooleanField# */{
     /**
-     * @constructs
+     * @constructs openerp.web.search.BooleanField
      * @extends openerp.web.search.BooleanField
      */
     init: function () {

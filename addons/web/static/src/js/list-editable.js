@@ -1,5 +1,6 @@
 /**
- * @namespace handles editability case for lists, because it depends on form and forms already depends on lists it had to be split out
+ * handles editability case for lists, because it depends on form and forms already depends on lists it had to be split out
+ * @namespace
  */
 openerp.web.list_editable = function (openerp) {
     var KEY_RETURN = 13,

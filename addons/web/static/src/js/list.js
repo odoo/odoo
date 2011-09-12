@@ -27,7 +27,9 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
      * See constructor parameters and method documentations for information on
      * the default behaviors and possible options for the list view.
      *
-     * @constructs
+     * @constructs openerp.web.ListView
+     * @extends openerp.web.View
+     *
      * @param parent parent object
      * @param element_id the id of the DOM elements this view should link itself to
      * @param {openerp.web.DataSet} dataset the dataset the view should work with
@@ -674,7 +676,9 @@ openerp.web.ListView.List = openerp.web.Class.extend( /** @lends openerp.web.Lis
      *   Triggered when a row of the table is clicked, provides the index (in
      *   the rows array) and id of the selected record to the handle function.
      *
-     * @constructs
+     * @constructs openerp.web.ListView.List
+     * @extends openerp.web.Class
+     * 
      * @param {Object} opts display options, identical to those of :js:class:`openerp.web.ListView`
      */
     init: function (group, opts) {
@@ -879,7 +883,9 @@ openerp.web.ListView.Groups = openerp.web.Class.extend( /** @lends openerp.web.L
      * Provides events similar to those of
      * :js:class:`~openerp.web.ListView.List`
      *
-     * @constructs
+     * @constructs openerp.web.ListView.Groups
+     * @extends openerp.web.Class
+     *
      * @param {openerp.web.ListView} view
      * @param {Object} [options]
      * @param {Collection} [options.records]
@@ -1265,8 +1271,9 @@ var Events = {
 };
 var Record = openerp.web.Class.extend(/** @lends Record# */{
     /**
-     * @constructs
+     * @constructs Record
      * @extends openerp.web.Class
+     * 
      * @borrows Events#bind as this.bind
      * @borrows Events#trigger as this.trigger
      * @param {Object} [data]
@@ -1332,8 +1339,9 @@ var Collection = openerp.web.Class.extend(/** @lends Collection# */{
      * Using a "dumb" array of records makes synchronization between the
      * various serious 
      *
-     * @constructs
+     * @constructs Collection
      * @extends openerp.web.Class
+     * 
      * @borrows Events#bind as this.bind
      * @borrows Events#trigger as this.trigger
      * @param {Array} [records] records to initialize the collection with

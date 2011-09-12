@@ -379,8 +379,9 @@ openerp.web_dashboard.Widget = openerp.web.View.extend(/** @lends openerp.web_da
      * Initializes a "HomeWidget" client widget: handles the display of a given
      * res.widget objects in an OpenERP view (mainly a dashboard).
      *
-     * @constructs
+     * @constructs openerp.web_dashboard.Widget
      * @extends openerp.web.View
+     *
      * @param {Object} parent
      * @param {Object} options
      * @param {Number} options.widget_id

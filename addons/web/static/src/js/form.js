@@ -12,7 +12,9 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
     searchable: false,
     template: "FormView",
     /**
-     * @constructs
+     * @constructs openerp.web.FormView
+     * @extends openerp.web.View
+     * 
      * @param {openerp.web.Session} session the current openerp session
      * @param {String} element_id this view's root element id
      * @param {openerp.web.DataSet} dataset the dataset this view will work with
