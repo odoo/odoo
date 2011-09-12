@@ -587,6 +587,9 @@ openerp.web.Header =  openerp.web.Widget.extend(/** @lends openerp.web.Header# *
     },
     do_update: function () {
         var self = this;
+        this.$content.remove();
+        if (! this.session.uid)
+            return;
         var func = new openerp.web.Model(self.session, "res.users").get_func("read");
         func(self.session.uid, ["name", "company_id"]).then(function(res) {
             self.$content = $(QWeb.render("Header-content", {widget: self, user: res}));
@@ -604,9 +607,6 @@ openerp.web.Header =  openerp.web.Widget.extend(/** @lends openerp.web.Header# *
             $help.dialog({autoOpen: true,
                 modal: true, width: 960, title: "About"});
         });
-    },
-    do_reset: function() {
-        this.$content.remove();
     },
     shortcut_load :function(){
         var self = this,
@@ -754,7 +754,6 @@ openerp.web.Header =  openerp.web.Widget.extend(/** @lends openerp.web.Header# *
         }).html(error.error);
     },
     on_logout: function() {
-        this.$element.find('.oe-shortcuts ul').empty();
     }
 });
 
@@ -882,7 +881,7 @@ openerp.web.WebClient = openerp.web.Widget.extend(/** @lends openerp.web.WebClie
 
         this.session.on_session_invalid.add(this.login.do_ask_login);
         this.session.on_session_valid.add_last(this.header.do_update);
-        this.session.on_session_invalid.add_last(this.header.do_reset);
+        this.session.on_session_invalid.add_last(this.header.do_update);
         this.session.on_session_valid.add_last(this.on_logged);
 
         this.menu = new openerp.web.Menu(this, "oe_menu", "oe_secondary_menu");
