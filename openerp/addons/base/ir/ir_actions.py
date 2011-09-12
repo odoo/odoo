@@ -627,6 +627,7 @@ class actions_server(osv.osv):
             if action.state=='code':
                 localdict = {
                     'self': self.pool.get(action.model_id.model),
+                    'pool': self.pool,
                     'context': dict(context), # copy context to prevent side-effects of eval
                     'time': time,
                     'ids': ids,
