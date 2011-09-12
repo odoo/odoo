@@ -1364,7 +1364,7 @@
 <t t-name="ImportDataView">
 <form name="import_data" id="import_data" action="" method="post" enctype="multipart/form-data">
     <input type="hidden" name="session_id" t-att-value="session.session_id"/>
-    <input type="hidden" name="model" t-att-value="dataset.model"/>
+    <input type="hidden" name="model" t-att-value="widget_parent.model"/>
      <table cellspacing="5" border="0" width="100%">
         <tr>
             <td>
@@ -1490,18 +1490,6 @@
                     </t>
                 </t>
             </t>
-        </table>
-    </t>
-    <t t-if="success">
-        <table width="100%">
-            <tr>
-                <td width="100%" valign="middle" colspan="4">
-                    <h2 class="separator horizontal">3. File imported</h2>
-                </td>
-            </tr>
-            <tr>
-                <t t-esc="success.message"/>
-            </tr>
         </table>
     </t>
 </t>

@@ -28,7 +28,6 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
     dialog_title: "Import Data",
     init: function(parent, dataset){
         this._super(parent);
-        this.dataset = dataset;
     },
     start: function() {
         var self = this;
@@ -88,7 +87,7 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
             result_node.append(QWeb.render('ImportView-result',{'error': results['error']}));
         }else if(results['success']){
             self.stop();
-            if (((this.widget_parent['fields_view']['type']) == "tree") || ((this.widget_parent['fields_view']['type']) == "list")){
+            if (this.widget_parent.widget_parent.active_view == "list"){
                 this.widget_parent.reload_content();
             }
         }
@@ -116,17 +115,15 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
         });
     },
     do_check_req_field: function(req_fld){
+        var self = this;
         if (req_fld.length){
-            var required_fields = "";
             var sel_fields = _.map(this.$element.find("td #sel_field option:selected"), function(fld){
-                                return fld['text']
-                            });
+                return fld['text']
+            });
 
-            required_fields =  required_fields + _.filter(req_fld, function (fld){
-                                    if (!_.contains(sel_fields,fld)){
-                                        return fld + "," ;
-                                    }
-                                });
+            var required_fields = _.filter(req_fld, function(fld){
+                return !_.contains(sel_fields, fld)
+            });
 
             if (required_fields.length){
                 $("#message").append("*Required Fields are not selected which is "+required_fields+". ");

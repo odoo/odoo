@@ -1444,6 +1444,7 @@ class Import(View):
                                        prefix_node+field, None, st_name+'/', level-1)
         fields.update({'id':{'string':'ID'},'.id':{'string':'Database ID'}})
         model_populate(fields)
+
         all_fields = fields.keys()
         all_fields.sort()
 
@@ -1569,9 +1570,8 @@ class Import(View):
                 jsonp, simplejson.dumps({'error':error}))
 
         if res[0]>=0:
-            success={'message':'Imported %d objects' % (res[0],)}
             return '<script>window.top.%s(%s);</script>' % (
-                jsonp, simplejson.dumps({'success':success}))
+                jsonp, simplejson.dumps({'success':True}))
 
         d = ''
         for key,val in res[1].items():
