@@ -1218,10 +1218,9 @@ openerp.web.ListView.Groups = openerp.web.Class.extend( /** @lends openerp.web.L
 });
 
 /**
- * @class
- * @extends openerp.web.Class
+ * @mixin Events
  */
-var Events = {
+var Events = /** @lends Events# */{
     /**
      * @param {String} event event to listen to on the current object, null for all events
      * @param {Function} handler event handler to bind to the relevant event
@@ -1274,8 +1273,7 @@ var Record = openerp.web.Class.extend(/** @lends Record# */{
      * @constructs Record
      * @extends openerp.web.Class
      * 
-     * @borrows Events#bind as this.bind
-     * @borrows Events#trigger as this.trigger
+     * @mixes Events
      * @param {Object} [data]
      */
     init: function (data) {
@@ -1342,8 +1340,7 @@ var Collection = openerp.web.Class.extend(/** @lends Collection# */{
      * @constructs Collection
      * @extends openerp.web.Class
      * 
-     * @borrows Events#bind as this.bind
-     * @borrows Events#trigger as this.trigger
+     * @mixes Events
      * @param {Array} [records] records to initialize the collection with
      * @param {Object} [options]
      */
