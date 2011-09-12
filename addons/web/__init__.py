@@ -1,12 +1,15 @@
 import common
 import controllers
 import common.dispatch
+import logging
+
+_logger = logging.getLogger(__name__)
 
 try:
     import openerp.wsgi
     import os
     import tempfile
-    print "embedded mode"
+    _logger.info("embedded mode")
     class Options(object):
         pass
     o = Options()
@@ -22,7 +25,7 @@ try:
     openerp.wsgi.register_wsgi_handler(app)
 
 except ImportError:
-    print "standalone mode"
+    _logger.info("standalone mode")
 
 # TODO
 # if we detect that we are imported from the openerp server register common.Root() as a wsgi entry point
