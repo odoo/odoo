@@ -159,19 +159,19 @@ class questionnaire(osv.osv):
     _name="crm_profiling.questionnaire"
     _description= "Questionnaire"
 
-    def build_form(self, cr, uid, data, context=None):
+    def build_form(self, cr, uid, questionnaire_id, context=None):
         """
             @param self: The object pointer
             @param cr: the current row, from the database cursor,
             @param uid: the current user’s ID for security checks,
             @param data: Get Data
             @param context: A standard dictionary for contextual values """
-        
+
         query = """
         select name, id
         from crm_profiling_question
         where id in ( select question from profile_questionnaire_quest_rel where questionnaire = %s)"""
-        res = cr.execute(query, (data['form']['questionnaire_name'],))
+        res = cr.execute(query, (questionnaire_id,))
         result = cr.fetchall()
         quest_fields={}
         quest_form='''<?xml version="1.0"?>
@@ -180,7 +180,6 @@ class questionnaire(osv.osv):
             quest_form = quest_form + '<field name="quest_form%d"/><newline/>' % (oid,)
             quest_fields['quest_form%d' % (oid,)] = {'string': name, 'type': 'many2one', \
                         'relation': 'crm_profiling.answer', 'domain': [('question_id','=',oid)] }
-        quest_form = quest_form + '''</form>'''
         return quest_form, quest_fields
 
     _columns = {
@@ -219,16 +218,16 @@ class partner(osv.osv):
             @param context: A standard dictionary for contextual values """
 
         temp = []
-        for x in data['form']:
-            if x.startswith("quest_form") and data['form'][x] != 0 :
-                temp.append(data['form'][x])
-
+        for x in context.get('fields'):
+            if x.startswith("quest_form") and data[x] != 0 :
+                if data[x] and data[x][0]:
+                    temp.append(data[x][0])
+        partner_id = context.get('active_id')
         query = "select answer from partner_question_rel where partner=%s"
-        cr.execute(query, (data['id'],))
+        cr.execute(query, (partner_id,))
         for x in cr.fetchall():
             temp.append(x[0])
-
-        self.write(cr, uid, [data['id']], {'answers_ids':[[6, 0, temp]]}, context=context)
+        self.write(cr, uid, [partner_id], {'answers_ids':[[6, 0, temp]]}, context=context)
         return {}
 
 

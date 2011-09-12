@@ -39,7 +39,7 @@ It also has been merged with the earlier CRM & SRM segmentation tool because the
     'website': 'http://www.openerp.com',
     'depends': ['base', 'crm'],
     'init_xml': [],
-    'update_xml': ['security/ir.model.access.csv', 'crm_profiling_view.xml'],
+    'update_xml': ['security/ir.model.access.csv', 'wizard/open_questionnaire_view.xml', 'crm_profiling_view.xml'],
     'demo_xml': ['crm_profiling_demo.xml'],
     'installable': True,
     'active': False,
