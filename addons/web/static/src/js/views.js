@@ -115,7 +115,7 @@ openerp.web.ActionManager = openerp.web.Widget.extend({
         var self = this;
         this.rpc('/web/action/run', {
             action_id: action.id,
-            context: {active_id: 66, active_ids: [66], active_model: 'ir.ui.menu'}
+            context: action.context || {}
         }).then(function (action) {
             self.do_action(action, on_closed)
         });
