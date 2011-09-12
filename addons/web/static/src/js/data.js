@@ -505,7 +505,7 @@ openerp.web.DataSetStatic =  openerp.web.DataSet.extend({
         this.set_ids(_.without.apply(null, [this.ids].concat(ids)));
     }
 });
-openerp.web.DataSetSearch =  openerp.web.DataSet.extend({
+openerp.web.DataSetSearch =  openerp.web.DataSet.extend(/** @lends openerp.web.DataSetSearch */{
     /**
      * @constructs openerp.web.DataSetSearch
      * @extends openerp.web.DataSet

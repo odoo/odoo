@@ -282,6 +282,7 @@ openerp.web.client_actions.add(
     'board.config.overview', 'openerp.web_dashboard.ConfigOverview'
 );
 if (!openerp.web_dashboard) {
+    /** @namespace */
     openerp.web_dashboard = {};
 }
 openerp.web_dashboard.ConfigOverview = openerp.web.View.extend({

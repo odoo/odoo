@@ -1,7 +1,17 @@
 openerp.web.search = function(openerp) {
 var QWeb = openerp.web.qweb;
 
-openerp.web.SearchView = openerp.web.Widget.extend({
+openerp.web.SearchView = openerp.web.Widget.extend(/** @lends openerp.web.SearchView# */{
+    /**
+     * @constructs openerp.web.SearchView
+     * @extends openerp.web.Widget
+     * 
+     * @param parent
+     * @param element_id
+     * @param dataset
+     * @param view_id
+     * @param defaults
+     */
     init: function(parent, element_id, dataset, view_id, defaults) {
         this._super(parent, element_id);
         this.dataset = dataset;
@@ -454,8 +464,18 @@ openerp.web.search.Widget = openerp.web.Widget.extend( /** @lends openerp.web.se
         }));
     }
 });
-openerp.web.search.FilterGroup = openerp.web.search.Widget.extend({
+openerp.web.search.FilterGroup = openerp.web.search.Widget.extend(/** @lends openerp.web.search.FilterGroup# */{
     template: 'SearchView.filters',
+    /**
+     * Inclusive group of filters, creates a continuous "button" with clickable
+     * sections (the normal display for filters is to be a self-contained button)
+     *
+     * @constructs openerp.web.search.FilterGroup
+     * @extends openerp.web.search.Widget
+     *
+     * @param {Array<openerp.web.search.Filter>} filters elements of the group
+     * @param {openerp.web.SearchView} view view in which the filters are contained
+     */
     init: function (filters, view) {
         this._super(view);
         this.filters = filters;
@@ -514,8 +534,18 @@ openerp.web.search.Input = openerp.web.search.Widget.extend( /** @lends openerp.
             "get_domain not implemented for widget " + this.attrs.type);
     }
 });
-openerp.web.search.Filter = openerp.web.search.Input.extend({
+openerp.web.search.Filter = openerp.web.search.Input.extend(/** @lends openerp.web.search.Filter# */{
     template: 'SearchView.filter',
+    /**
+     * Implementation of the OpenERP filters (button with a context and/or
+     * a domain sent as-is to the search view)
+     *
+     * @constructs openerp.web.search.Filter
+     * @extends openerp.web.search.Input
+     *
+     * @param node
+     * @param view
+     */
     init: function (node, view) {
         this._super(view);
         this.attrs = node.attrs;
@@ -731,7 +761,11 @@ openerp.web.search.BooleanField = openerp.web.search.SelectionField.extend(/** @
         }
     }
 });
-openerp.web.search.DateField = openerp.web.search.Field.extend( /** @lends openerp.web.search.DateField# */{
+/**
+ * @class
+ * @extends openerp.web.search.DateField
+ */
+openerp.web.search.DateField = openerp.web.search.Field.extend(/** @lends openerp.web.search.DateField# */{
     /**
      * enables date picker on the HTML widgets
      */
@@ -946,9 +980,16 @@ openerp.web.search.ExtendedSearchGroup = openerp.web.OldWidget.extend({
     }
 });
 
-openerp.web.search.ExtendedSearchProposition = openerp.web.OldWidget.extend({
+openerp.web.search.ExtendedSearchProposition = openerp.web.OldWidget.extend(/** @lends openerp.web.search.ExtendedSearchProposition# */{
     template: 'SearchView.extended_search.proposition',
     identifier_prefix: 'extended-search-proposition',
+    /**
+     * @constructs openerp.web.search.ExtendedSearchProposition
+     * @extends openerp.web.OldWidget
+     *
+     * @param parent
+     * @param fields
+     */
     init: function (parent, fields) {
         this._super(parent);
         this.fields = _(fields).chain()

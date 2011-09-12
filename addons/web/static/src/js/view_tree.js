@@ -6,16 +6,24 @@ openerp.web.view_tree = function(openerp) {
 var QWeb = openerp.web.qweb;
 
 openerp.web.views.add('tree', 'openerp.web.TreeView');
-/**
- * Genuine tree view (the one displayed as a tree, not the list)
- */
-openerp.web.TreeView = openerp.web.View.extend({
+openerp.web.TreeView = openerp.web.View.extend(/** @lends openerp.web.TreeView# */{
     /**
      * Indicates that this view is not searchable, and thus that no search
      * view should be displayed (if there is one active).
      */
     searchable : false,
-
+    /**
+     * Genuine tree view (the one displayed as a tree, not the list)
+     *
+     * @constructs openerp.web.TreeView
+     * @extends openerp.web.View
+     *
+     * @param parent
+     * @param element_id
+     * @param dataset
+     * @param view_id
+     * @param options
+     */
     init: function(parent, element_id, dataset, view_id, options) {
         this._super(parent, element_id);
         this.dataset = dataset;

@@ -135,8 +135,16 @@ openerp.web.ActionManager = openerp.web.Widget.extend({
     }
 });
 
-openerp.web.ViewManager =  openerp.web.Widget.extend({
+openerp.web.ViewManager =  openerp.web.Widget.extend(/** @lends openerp.web.ViewManager# */{
     identifier_prefix: "viewmanager",
+    /**
+     * @constructs openerp.web.ViewManager
+     * @extends openerp.web.Widget
+     *
+     * @param parent
+     * @param dataset
+     * @param views
+     */
     init: function(parent, dataset, views) {
         this._super(parent);
         this.model = dataset.model;
@@ -617,7 +625,11 @@ openerp.web.TranslateDialog = openerp.web.Dialog.extend({
     }
 });
 
-openerp.web.View = openerp.web.Widget.extend({
+/**
+ * @class
+ * @extends openerp.web.Widget
+ */
+openerp.web.View = openerp.web.Widget.extend(/** @lends openerp.web.View# */{
     set_default_options: function(options) {
         this.options = options || {};
         _.defaults(this.options, {
