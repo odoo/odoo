@@ -205,7 +205,11 @@ class followup_all_print(wizard.interface):
                 sub = tools.ustr(data['form']['email_subject'])
                 msg = ''
                 if dest:
-                    tools.email_send(src,dest,sub,body)
+                    data_dict = {'form':{'partner_ids':[(6,0,[partner.id])]}}
+                    datax,frmt = netsvc.LocalService('report.account_followup.followup.print').create(cr, uid, [],data_dict,{})
+                    fname = 'followup-' + str(partner.name) +'.'+frmt
+                    attach = [(fname,datax)]
+                    tools.email_send(src, dest, sub, body,attach=attach)
                     msg_sent += partner.name + '\n'
                 else:
                     msg += partner.name + '\n'
