@@ -671,6 +671,7 @@ openerp.web.View = openerp.web.Widget.extend(/** @lends openerp.web.View# */{
                     active_ids: [record_id || false],
                     active_model: dataset.model
                 });
+                action.context = new openerp.web.CompoundContext(dataset.get_context(), action.context);
                 self.do_action(action, on_closed);
             } else if (on_closed) {
                 on_closed(action);
