@@ -150,7 +150,7 @@ openerp.web.CrashManager = openerp.web.Dialog.extend(/** @lends openerp.web.Cras
     on_rpc_error: function(error) {
         this.error = error;
         if (error.data.fault_code) {
-            var split = error.data.fault_code.split('\n')[0].split(' -- ');
+            var split = ("" + error.data.fault_code).split('\n')[0].split(' -- ');
             if (split.length > 1) {
                 error.type = split.shift();
                 error.data.fault_code = error.data.fault_code.substr(error.type.length + 4);
