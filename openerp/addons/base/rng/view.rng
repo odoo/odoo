@@ -113,6 +113,7 @@
 
     <rng:define name="kanban">
         <rng:element name="kanban">
+            <rng:optional><rng:attribute name="default_group_by" /></rng:optional>
             <rng:zeroOrMore>
                 <rng:ref name="field"/>
             </rng:zeroOrMore>
