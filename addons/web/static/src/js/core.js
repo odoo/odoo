@@ -577,9 +577,10 @@ openerp.web.Session = openerp.web.CallbackEnabled.extend( /** @lends openerp.web
         });
     },
     do_load_css: function (files) {
+        var self = this;
         _.each(files, function (file) {
             $('head').append($('<link>', {
-                'href': file + (this.debug ? '?debug=' + (new Date().getTime()) : ''),
+                'href': file + (self.debug ? '?debug=' + (new Date().getTime()) : ''),
                 'rel': 'stylesheet',
                 'type': 'text/css'
             }));
