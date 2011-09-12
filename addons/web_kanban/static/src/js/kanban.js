@@ -74,6 +74,7 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
         return 'http://www.gravatar.com/avatar/' + email_md5 + '.png?s=' + size;
     },
     transform_qweb_template: function(node) {
+        var qweb_prefix = QWeb.prefix;
         switch (node.tag) {
             case 'field':
                 node.tag = 't';
@@ -84,8 +85,10 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
                 var type = node.attrs.type || '';
                 if (_.indexOf('action,object,edit,delete,color'.split(','), type) !== -1) {
                     _.each(node.attrs, function(v, k) {
-                        node.attrs['data-' + k] = v;
-                        delete(node.attrs[k]);
+                        if (k.substr(0, qweb_prefix.length + 1) !== qweb_prefix + '-') {
+                            node.attrs['data-' + k] = v;
+                            delete(node.attrs[k]);
+                        }
                     });
                     if (node.attrs['data-states']) {
                         var states = _.map(node.attrs['data-states'].split(','), function(state) {
