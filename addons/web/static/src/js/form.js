@@ -482,7 +482,7 @@ openerp.web.FormDialog = openerp.web.Dialog.extend({
             self.form.on_record_loaded(records[0]);
         });
     },
-    on_form_dialog_saved: function() {
+    on_form_dialog_saved: function(r) {
         this.close();
     }
 });
