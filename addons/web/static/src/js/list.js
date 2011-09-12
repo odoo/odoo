@@ -349,7 +349,7 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
         if (this.sidebar) {
             this.sidebar.$element.show();
         }
-        if (this.hidden) {
+        if (!_(this.dataset.ids).isEmpty()) {
             this.reload_content();
         }
     },
@@ -358,7 +358,6 @@ openerp.web.ListView = openerp.web.View.extend( /** @lends openerp.web.ListView#
         if (this.sidebar) {
             this.sidebar.$element.hide();
         }
-        this.hidden = true;
     },
     /**
      * Reloads the list view based on the current settings (dataset & al)
