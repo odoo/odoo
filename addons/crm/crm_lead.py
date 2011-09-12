@@ -42,6 +42,14 @@ class crm_lead(crm_case, osv.osv):
     _order = "priority,date_action,id desc"
     _inherit = ['mail.thread','res.partner.address']
 
+    # overridden because res.partner.address has an inconvenient name_get,
+    # especially if base_contact is installed.
+    def name_get(self, cr, user, ids, context=None):
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        return [(r['id'], tools.ustr(r[self._rec_name]))
+                    for r in self.read(cr, user, ids, [self._rec_name], context)]
+
     def _compute_day(self, cr, uid, ids, fields, args, context=None):
         """
         @param cr: the current row, from the database cursor,
