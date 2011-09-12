@@ -51,12 +51,18 @@ class crm_merge_opportunity(osv.osv_memory):
     def get_attachments(self, cr, uid, id, context=None):
         attach_obj = self.pool.get('ir.attachment')
         attach_ids = attach_obj.search(cr, uid, [('res_model' , '=', 'crm.lead'), ('res_id', '=', id)])
-        return attach_ids
+        if attach_ids:
+            return attach_obj.browse(cr, uid, attach_ids)
+        else:
+            return False
 
-    def set_attachements_res_id(self, cr, uid, op_id, attach_ids, context=None):
+    def set_attachements_res_id(self, cr, uid, op_id, attachments, context=None):
         attach_obj = self.pool.get('ir.attachment')
-        attach_obj.write(cr, uid, attach_ids, {'res_id' : op_id})
-
+        for attachment in attachments:
+            attachment.update({'res_id' : op_id})
+            id = attachment['id']
+            del attachment['id']
+            attach_obj.write(cr, uid, id, attachment)
 
     def find_oldest(self, cr, uid, op_ids, context=None):
         if not context:
@@ -131,14 +137,24 @@ class crm_merge_opportunity(osv.osv_memory):
             first_opportunity = opportunities_list[0]
             tail_opportunities = opportunities_list[1:]
             
-
-        
         data = self._update_data(op_ids, oldest_opp)
         #copy message into the first opportunity + merge attachement
-        
+        attach = []
+        count = 1
+        first_attachments = self.get_attachments(cr, uid, first_opportunity, context=context)
         for opp in tail_opportunities:
-            attach_ids = self.get_attachments(cr, uid, opp, context=context)
-            self.set_attachements_res_id(cr, uid, first_opportunity.id, attach_ids)
+            attachments = self.get_attachments(cr, uid, opp, context=context)
+            if attachments:
+                for first in first_attachments:
+                    res = {}
+                    for attachment in attachments:
+                        if attachment.name == first.name:
+                            res.update({'name':attachment.name+'('+`count`+')'})
+                            res.update({'id':[attachment.id]})
+                            attach.append(res)
+                            count+=1
+                    
+            self.set_attachements_res_id(cr, uid, first_opportunity.id, attach)
             for history in opp.message_ids:
                 message_obj.write(cr, uid, history.id, {'res_id': first_opportunity.id, 'name' : _("From %s : %s") % (opp.name, history.name) }, context=context)
 
