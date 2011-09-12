@@ -66,16 +66,30 @@
     padding: 4px;
 }
 .openerp .oe_kanban_buttons_set {
-    border-top: 1px dotted #CCC;
+    border-top: 1px dotted;
     white-space: nowrap;
+    padding-top: 2px;
+    position: relative;
 }
-.openerp .oe_kanban_buttons_set .oe_kanban_left a {
-    border-right: 1px dotted #CCC;
+.openerp .oe_kanban_buttons_set a {
     padding: 2px;
 }
-.openerp .oe_kanban_buttons_set .oe_kanban_right a {
-    border-left: 1px dotted #CCC;
-    padding: 2px;
+.oe_kanban_color_picker {
+    position: absolute;
+    top: -10px;
+    border: 1px solid black;
+    -moz-box-shadow: 2px 2px 5px #666;
+    -webkit-box-shadow: 2px 2px 5px #666;
+    box-shadow: 2px 2px 5px #666;
+}
+.oe_kanban_color_picker a {
+    display: block;
+    width: 30px;
+    height: 30px;
+    border: 1px solid black;
+}
+.oe_kanban_color_picker a:hover {
+    border-color: white;
 }
 .openerp .oe_kanban_left {
     float: left;
@@ -95,30 +109,24 @@
 
 /* Custom colors are also present in kanban.js */
 /* Custom color#1 */
-.openerp .oe_kanban_color_1 .oe_kanban_color_bglight,
-.openerp .oe_kanban_color_1.oe_kanban_color_bglight {
+.openerp .oe_kanban_color_1 .oe_kanban_color_bglight {
     background: #FFC7C7;
 }
-.openerp .oe_kanban_color_1 .oe_kanban_color_bgdark,
-.openerp .oe_kanban_color_1.oe_kanban_color_bgdark {
+.openerp .oe_kanban_color_1 .oe_kanban_color_bgdark {
     background: #FF8F8F;
 }
-.openerp .oe_kanban_color_1 .oe_kanban_color_border,
-.openerp .oe_kanban_color_1.oe_kanban_color_border {
+.openerp .oe_kanban_color_1 .oe_kanban_color_border {
     border-color: #D97979;
 }
 
 /* Custom color#2 */
-.openerp .oe_kanban_color_2 .oe_kanban_color_bglight,
-.openerp .oe_kanban_color_2.oe_kanban_color_bglight {
+.openerp .oe_kanban_color_2 .oe_kanban_color_bglight {
     background: #FFF1C7;
 }
-.openerp .oe_kanban_color_2 .oe_kanban_color_bgdark,
-.openerp .oe_kanban_color_2.oe_kanban_color_bgdark {
+.openerp .oe_kanban_color_2 .oe_kanban_color_bgdark {
     background: #FFE38F;
 }
-.openerp .oe_kanban_color_2 .oe_kanban_color_border,
-.openerp .oe_kanban_color_2.oe_kanban_color_border {
+.openerp .oe_kanban_color_2 .oe_kanban_color_border {
     border-color: #D9C179;
 }
 
@@ -196,6 +204,6 @@
     background: #E99;
 }
 .openerp .oe_kanban_color_alert .oe_kanban_color_border {
-    border-color: #999;
+    border-color: #900;
 }
 

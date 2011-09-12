@@ -22,4 +22,16 @@
     </tr>
     </table>
 </t>
+<t t-name="KanbanColorPicker">
+    <table cellspacing="0" cellpadding="0" border="0" class="oe_kanban_color_picker">
+    <tr>
+        <t t-foreach="colors" t-as="color">
+            <td t-att-bgcolor="color">
+                <a href="#" t-att-data-color="color_index + 1"/>
+            </td>
+            <t t-if="((color_index + 1) % Math.round(colors.length / columns)) == 0">&lt;/tr&gt;&lt;tr&gt;</t>
+        </t>
+    </tr>
+    </table>
+</t>
 </template>

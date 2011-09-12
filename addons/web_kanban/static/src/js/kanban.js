@@ -65,7 +65,7 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
             default:
                 return '';
         }
-        return 'oe_kanban_color_' + ((index % number_of_color_schemes) + 1);
+        return 'oe_kanban_color_' + ((index % number_of_color_schemes) || number_of_color_schemes);
     },
     kanban_gravatar: function(email, size) {
         size = size || 22;
@@ -81,7 +81,7 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
             case 'button':
             case 'a':
                 var type = node.attrs.type || '';
-                if (_.indexOf('action,object,edit,delete,'.split(','), type) !== -1) {
+                if (_.indexOf('action,object,edit,delete,color'.split(','), type) !== -1) {
                     _.each(node.attrs, function(v, k) {
                         node.attrs['data-' + k] = v;
                         delete(node.attrs[k]);
@@ -179,8 +179,27 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
             this.notification.warn("Kanban", "No form view defined for this object");
         }
     },
-    do_change_color: function(method) {
-        var color = '#FFC7C7,#FFF1C7,#E3FFC7,#C7FFD5,#C7FFFF,#C7D5FF,#FFC7F1'.split(',');
+    do_change_color: function(record_id, $e) {
+        var self = this,
+            id = record_id,
+            colors = '#FFC7C7,#FFF1C7,#E3FFC7,#C7FFD5,#C7FFFF,#C7D5FF,#E3C7FF,#FFC7F1'.split(','),
+            $cpicker = $(QWeb.render('KanbanColorPicker', { colors : colors, columns: 2 }));
+        $e.after($cpicker);
+        $cpicker.mouseenter(function() {
+            clearTimeout($cpicker.data('timeoutId'));
+        }).mouseleave(function(evt) {
+            var timeoutId = setTimeout(function() { $cpicker.remove() }, 500);
+            $cpicker.data('timeoutId', timeoutId);
+        });
+        $cpicker.find('a').click(function() {
+            var data = {};
+            data[$e.data('name')] = $(this).data('color');
+            self.dataset.write(id, data, {}, function() {
+                // TODO fme: reload record instead of all. need refactoring
+                self.do_actual_search();
+            });
+            $cpicker.remove();
+        });
     },
     do_delete: function (id) {
         var self = this;
@@ -322,8 +341,8 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
             }
         });
         this.$element.find('.oe_kanban_action').click(this.on_action_clicked);
-        this.$element.find('.oe_kanban_record').click(function() {
-            $(this).find('.oe_kanban_box_show_onclick').toggle();
+        this.$element.find('.oe_kanban_box_show_onclick_trigger').click(function() {
+            $(this).parent('.oe_kanban_box').find('.oe_kanban_box_show_onclick').toggle();
         });
     },
     on_action_clicked: function(evt) {
@@ -334,6 +353,8 @@ openerp.web_kanban.KanbanView = openerp.web.View.extend({
             this.do_delete(record_id);
         } else if (type == 'edit') {
             this.do_edit_record(record_id);
+        } else if (type == 'color') {
+            this.do_change_color(record_id, $action);
         } else {
             var button_attrs = $(this).data();
             this.on_button_click(button_attrs, record_id);
