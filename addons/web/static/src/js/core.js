@@ -2,6 +2,10 @@
  * OpenERP Web core
  *--------------------------------------------------------*/
 
+if (!console.debug) {
+    console.debug = console.log;
+}
+
 openerp.web.core = function(openerp) {
 openerp.web.qweb = new QWeb2.Engine();
 openerp.web.qweb.debug = (window.location.search.indexOf('?debug') !== -1);
@@ -741,33 +745,10 @@ openerp.web.SessionAware = openerp.web.CallbackEnabled.extend(/** @lends openerp
     },
     log: function() {
         var args = Array.prototype.slice.call(arguments);
-        var caller = arguments.callee.caller;
-        // TODO add support for line number using
-        // https://github.com/emwendelin/javascript-stacktrace/blob/master/stacktrace.js
-        // args.unshift("" + caller.debug_name);
         this.on_log.apply(this,args);
     },
     on_log: function() {
-        if(this.session.debug) {
-            var notify = false;
-            var body = false;
-            if(window.console) {
-                console.log(arguments);
-            } else {
-                body = true;
-            }
-            var a = Array.prototype.slice.call(arguments, 0);
-            for(var i = 0; i < a.length; i++) {
-                var v = a[i]==null ? "null" : a[i].toString();
-                if(i==0) {
-                    notify = v.match(/^not/);
-                    body = v.match(/^bod/);
-                }
-                if(body) {
-                    $('<pre></pre>').text(v).appendTo($('body'));
-                }
-            }
-        }
+        console.log.apply(console, arguments);
     }
 });
 
