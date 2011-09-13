@@ -108,8 +108,8 @@ class ir_translation(osv.osv):
         for res_id in tr:
             if tr[res_id]:
                 self._get_source.clear_cache(self, uid, name, tt, lang, tr[res_id])
+            self._get_ids.clear_cache(self, uid, name, tt, lang, res_id)
         self._get_source.clear_cache(self, uid, name, tt, lang)
-        self._get_ids.clear_cache(self, uid, name, tt, lang, ids)
 
         cr.execute('delete from ir_translation ' \
                 'where lang=%s ' \
