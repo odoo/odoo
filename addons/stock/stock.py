@@ -1628,8 +1628,7 @@ class report_stock_lines_date(osv.osv):
     _description = "Dates of Inventories"
     _auto = False
     _columns = {
-        'id': fields.integer('Inventory Line Id', readonly=True),
-        'product_id': fields.integer('Product Id', readonly=True),
+        'product_id': fields.many2one('product.product', 'Product Id', readonly=True),
         'create_date': fields.datetime('Latest Date of Inventory'),
         }
 
@@ -1637,7 +1636,7 @@ class report_stock_lines_date(osv.osv):
         cr.execute("""
             create or replace view report_stock_lines_date as (
                 select
-                l.id as id,
+                p.id as id,
                 p.id as product_id,
                 max(l.create_date) as create_date
                 from
@@ -1645,7 +1644,7 @@ class report_stock_lines_date(osv.osv):
                 left outer join
                 stock_inventory_line l on (p.id=l.product_id)
                 where l.create_date is not null
-                group by p.id,l.id
+                group by p.id
             )""")
 
 report_stock_lines_date()
