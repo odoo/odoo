@@ -299,6 +299,14 @@ class Session(openerpweb.Controller):
             "context": ctx
         }
     @openerpweb.jsonrequest
+    def get_session_info(self, req):
+        ctx = req.session.get_context()
+        return {
+            "uid": req.session._uid,
+            "context": ctx,
+            "db": req.session._db
+        }
+    @openerpweb.jsonrequest
     def change_password (self,req,fields):
         old_password, new_password,confirm_password = operator.itemgetter('old_pwd', 'new_password','confirm_pwd')(
                 dict(map(operator.itemgetter('name', 'value'), fields)))

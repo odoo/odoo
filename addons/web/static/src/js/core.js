@@ -349,9 +349,6 @@ openerp.web.Session = openerp.web.CallbackEnabled.extend( /** @lends openerp.web
         this.port = (port == undefined) ? location.port : port;
         this.rpc_mode = (server == location.hostname) ? "ajax" : "jsonp";
         this.debug = (window.location.search.indexOf('?debug') !== -1);
-        this.db = "";
-        this.login = "";
-        this.password = "";
         this.user_context= {};
         this.uid = false;
         this.session_id = false;
@@ -474,14 +471,12 @@ openerp.web.Session = openerp.web.CallbackEnabled.extend( /** @lends openerp.web
     },
     session_login: function(db, login, password, success_callback) {
         var self = this;
-        this.db = db;
-        this.login = login;
-        this.password = password;
-        var params = { db: this.db, login: this.login, password: this.password };
+        var params = { db: db, login: login, password: password };
         this.rpc("/web/session/login", params, function(result) {
             self.session_id = result.session_id;
             self.uid = result.uid;
             self.user_context = result.context;
+            self.db = result.db;
             self.session_save();
             self.on_session_valid();
             return true;
@@ -494,17 +489,17 @@ openerp.web.Session = openerp.web.CallbackEnabled.extend( /** @lends openerp.web
      * Reloads uid and session_id from local storage, if they exist
      */
     session_restore: function () {
-        this.uid = this.get_cookie('uid');
+        var self = this;
         this.session_id = this.get_cookie('session_id');
-        this.db = this.get_cookie('db');
-        this.login = this.get_cookie('login');
-        this.user_context = this.get_cookie("user_context");
-        // we should do an rpc to confirm that this session_id is valid and if it is retrieve the information about db and login
-        // then call on_session_valid
-        if (this.uid)
-            this.on_session_valid();
-        else
-            this.on_session_invalid();
+        return this.rpc("/web/session/get_session_info", {}).then(function(result) {
+            self.uid = result.uid;
+            self.user_context = result.context;
+            self.db = result.db;
+            if (self.uid)
+                self.on_session_valid();
+            else
+                self.on_session_invalid();
+        });
     },
     /**
      * Saves the session id and uid locally
@@ -512,19 +507,13 @@ openerp.web.Session = openerp.web.CallbackEnabled.extend( /** @lends openerp.web
     session_save: function () {
         this.set_cookie('uid', this.uid);
         this.set_cookie('session_id', this.session_id);
-        this.set_cookie('db', this.db);
-        this.set_cookie('login', this.login);
         this.set_cookie('user_context', this.user_context);
     },
     logout: function() {
         delete this.uid;
         delete this.session_id;
-        delete this.db;
-        delete this.login;
         this.set_cookie('uid', '');
         this.set_cookie('session_id', '');
-        this.set_cookie('db', '');
-        this.set_cookie('login', '');
         this.on_session_invalid(function() {});
     },
     /**
