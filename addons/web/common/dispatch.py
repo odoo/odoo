@@ -316,7 +316,7 @@ class Root(object):
                       by the server, will be filtered by this pattern
     """
     def __init__(self, options):
-        self.root = werkzeug.urls.Href('/web/webclient/home?debug')
+        self.root = werkzeug.urls.Href('/web/webclient/home')
         self.config = options
 
         self.session_cookie = 'sessionid'
@@ -349,7 +349,7 @@ class Root(object):
 
         if request.path == '/':
             return werkzeug.utils.redirect(
-                self.root(request.args), 301)(
+                self.root(dict(request.args, debug='')), 301)(
                     environ, start_response)
         elif request.path == '/mobile':
             return werkzeug.utils.redirect(
