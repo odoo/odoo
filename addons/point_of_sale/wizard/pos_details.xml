@@ -1,23 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-    <data>        
+    <data>
         <!--   pos.details -->
-        
+
 		<record id="view_pos_details" model="ir.ui.view">
             <field name="name">POS Details</field>
             <field name="model">pos.details</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="POS Details :">
-				    <group col="2" colspan="4">
-				    	<field name="date_start"/>
-				    	<field name="date_end"/>
-				    	<separator colspan="4"/>
-                		<button icon='gtk-cancel' special="cancel"
-                			string="Close" />
-                		<button name="print_report" string="Print Report"
-                			colspan="1" type="object" icon="gtk-print" />
-                	</group>
+                <form string="POS Details">
+                    <group col="4" colspan="4">
+                        <separator string="Dates" colspan="4"/>
+                        <field name="date_start"/>
+                        <field name="date_end"/>
+                        <separator string="User" colspan="4"/>
+                        <field name="user_ids" nolabel="1" colspan="4"/>
+                        <separator string="" colspan="4"/>
+                        <label string="" colspan="2"/>
+                        <group colspan="2" col="2">
+                            <button icon='gtk-cancel' special="cancel"
+                                    string="Close" />
+                            <button name="print_report" string="Print Report"
+                                    colspan="1" type="object" icon="gtk-print" />
+                        </group>
+                    </group>
                 </form>
             </field>
         </record>
@@ -32,6 +38,6 @@
             <field name="target">new</field>
         </record>
 
-        
+
 	</data>
-</openerp>	        
+</openerp>

@@ -70,7 +70,7 @@
     import time
     ctx={}
     ctx.update({'model': 'ir.ui.menu','active_ids': []})
-    data_dict = {'date_start': time.strftime('%Y-%m-%d'), 'date_end': time.strftime('%Y-%m-%d')}
+    data_dict = {'date_start': time.strftime('%Y-%m-%d'), 'date_end': time.strftime('%Y-%m-%d'), 'user_ids': [(6,0,[ref('base.user_root')])]}
     from tools import test_reports
     test_reports.try_report_action(cr, uid, 'action_report_pos_details',wiz_data=data_dict, context=ctx, our_module='point_of_sale')
 
@@ -93,7 +93,7 @@
     journal_id: account_journal_cash0
     line_ids:
         - name: statement
-          date: !eval "(datetime.now() + timedelta(5*31)).strftime('%Y-%m-%d')" 
+          date: !eval "(datetime.now() + timedelta(5*31)).strftime('%Y-%m-%d')"
           type: customer
           account_id: account_pos_account_sales
           amount: 100

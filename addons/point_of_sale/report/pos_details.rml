@@ -225,7 +225,7 @@
       </tr>
     </blockTable>
     <section>
-      <para style="terp_default_1">[[ repeatIn(pos_sales_details(data['form'],user), 'line_ids') ]]</para>
+      <para style="terp_default_1">[[ repeatIn(pos_sales_details(data['form']), 'line_ids') ]]</para>
       <blockTable colWidths="54.0,44.0,159.0,54.0,75.0,36.0,89.0" style="Table6">
         <tr>
           <td>
@@ -247,7 +247,7 @@
             <para style="terp_default_Centre_9">[[ formatLang(line_ids['discount'], dp='Sale Price') ]]</para>
           </td>
           <td>
-            <para style="terp_default_Centre_9">[[ getinvoice(line_ids['invoice_id'],user) or removeParentNode('font') ]]</para>
+            <para style="terp_default_Centre_9">[[ getinvoice(line_ids['invoice_id']) or removeParentNode('font') ]]</para>
           </td>
         </tr>
       </blockTable>
@@ -268,7 +268,7 @@
       </tr>
     </blockTable>
     <section>
-      <para style="terp_default_1">[[ repeatIn(gettaxamount(data['form'],user), 'p')]]</para>
+      <para style="terp_default_1">[[ repeatIn(gettaxamount(data['form']), 'p')]]</para>
       <blockTable colWidths="256.0,256.0" style="Table5">
         <tr>
           <td>
@@ -299,7 +299,7 @@
       </tr>
     </blockTable>
     <section>
-      <para style="terp_default_1">[[ repeatIn(getpayments(data['form'],user), 'p') ]]</para>
+      <para style="terp_default_1">[[ repeatIn(getpayments(data['form']), 'p') ]]</para>
       <blockTable colWidths="255.0,255.0" style="Table11">
         <tr>
           <td>
@@ -335,7 +335,7 @@
           <para style="terp_default_Bold_9">Sales total(Revenue)</para>
         </td>
         <td>
-          <para style="terp_default_Right_9_Bold">[[ formatLang(getsalestotal2(data['form'],user), dp='Sale Price') ]] [[ company.currency_id.symbol ]]</para>
+          <para style="terp_default_Right_9_Bold">[[ formatLang(getsalestotal2(data['form']), dp='Sale Price') ]] [[ company.currency_id.symbol ]]</para>
         </td>
       </tr>
       <tr>
@@ -343,7 +343,7 @@
           <para style="terp_default_Bold_9">Qty of product</para>
         </td>
         <td>
-          <para style="terp_default_Right_9_Bold">[[ formatLang(getqtytotal2(data['form'],user)) ]]</para>
+          <para style="terp_default_Right_9_Bold">[[ formatLang(getqtytotal2(data['form'])) ]]</para>
         </td>
       </tr>
       <tr>
@@ -351,7 +351,7 @@
           <para style="terp_default_Bold_9">Total invoiced</para>
         </td>
         <td>
-          <para style="terp_default_Right_9_Bold">[[ formatLang(getsuminvoice2(data['form'],user), dp='Sale Price') ]] [[ company.currency_id.symbol ]]</para>
+          <para style="terp_default_Right_9_Bold">[[ formatLang(getsuminvoice2(data['form']), dp='Sale Price') ]] [[ company.currency_id.symbol ]]</para>
         </td>
       </tr>
       <tr>
@@ -359,7 +359,7 @@
           <para style="terp_default_Bold_9">Total discount</para>
         </td>
         <td>
-          <para style="terp_default_Right_9_Bold">[[ formatLang(getsumdisc(data['form'],user), dp='Sale Price') ]] [[ company.currency_id.symbol ]]</para>
+          <para style="terp_default_Right_9_Bold">[[ formatLang(getsumdisc(data['form']), dp='Sale Price') ]] [[ company.currency_id.symbol ]]</para>
         </td>
       </tr>
       <tr>
@@ -367,7 +367,7 @@
           <para style="terp_default_Bold_9">Total paid</para>
         </td>
         <td>
-          <para style="terp_default_Right_9_Bold">[[ formatLang(getpaidtotal2(data['form'],user), dp='Sale Price') ]] [[ company.currency_id.symbol ]]</para>
+          <para style="terp_default_Right_9_Bold">[[ formatLang(getpaidtotal2(data['form']), dp='Sale Price') ]] [[ company.currency_id.symbol ]]</para>
         </td>
       </tr>
       <tr>
