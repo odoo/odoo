@@ -6,6 +6,7 @@
         "static/src/js/process.js"
     ],
     "css": [
+        "static/src/css/process.css"
     ],
     'active': True
 }
