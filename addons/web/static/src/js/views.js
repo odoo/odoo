@@ -307,7 +307,6 @@ openerp.web.ViewManagerAction = openerp.web.ViewManager.extend(/** @lends oepner
      * @param {Object} action descriptor for the action this viewmanager needs to manage its views.
      */
     init: function(parent, action) {
-        this.session = parent.session;
         this.action = action;
         var dataset = new openerp.web.DataSetSearch(this, action.res_model, action.context, action.domain);
         if (action.res_id) {
@@ -315,7 +314,6 @@ openerp.web.ViewManagerAction = openerp.web.ViewManager.extend(/** @lends oepner
             dataset.index = 0;
         }
         this._super(parent, dataset, action.views);
-        this.action = action;
         this.flags = this.action.flags || {};
         if (action.res_model == 'board.board' && action.views.length == 1 && action.views) {
             // Not elegant but allows to avoid flickering of SearchView#do_hide
