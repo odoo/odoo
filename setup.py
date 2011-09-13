@@ -4,7 +4,7 @@ import re
 import sys
 from setuptools import setup
 
-execfile('webrelease.py')
+execfile('addons/web/common/release.py')
 
 version_dash_incompatible = False
 if 'bdist_rpm' in sys.argv:

@@ -4,6 +4,7 @@
 
 openerp.web.core = function(openerp) {
 openerp.web.qweb = new QWeb2.Engine();
+openerp.web.qweb.debug = (window.location.search.indexOf('?debug') !== -1);
 /**
  * John Resig Class with factory improvement
  */
@@ -12,11 +13,17 @@ openerp.web.qweb = new QWeb2.Engine();
         fnTest = /xyz/.test(function(){xyz;}) ? /\b_super\b/ : /.*/;
     // The web Class implementation (does nothing)
     /**
+     * Extended version of John Resig's Class pattern
+     *
      * @class
      */
     openerp.web.Class = function(){};
 
-    // Create a new Class that inherits from this class
+    /**
+     * Subclass an existing class
+     *
+     * @param {Object} prop class-level properties (class attributes and instance methods) to set on the new class
+     */
     openerp.web.Class.extend = function(prop) {
         var _super = this.prototype;
 
@@ -157,7 +164,7 @@ openerp.web.callback = function(obj, method) {
  * that does nothing and always return undefined).
  *
  * @param {Class} claz
- * @param {dict} add Additional functions to override.
+ * @param {Object} add Additional functions to override.
  * @return {Class}
  */
 openerp.web.generate_null_object_class = function(claz, add) {
@@ -188,7 +195,7 @@ openerp.web.KeyNotFound = openerp.web.NotFound.extend( /** @lends openerp.web.Ke
     /**
      * Thrown when a key could not be found in a mapping
      *
-     * @constructs
+     * @constructs openerp.web.KeyNotFound
      * @extends openerp.web.NotFound
      * @param {String} key the key which could not be found
      */
@@ -204,7 +211,7 @@ openerp.web.ObjectNotFound = openerp.web.NotFound.extend( /** @lends openerp.web
      * Thrown when an object path does not designate a valid class or object
      * in the openerp hierarchy.
      *
-     * @constructs
+     * @constructs openerp.web.ObjectNotFound
      * @extends openerp.web.NotFound
      * @param {String} path the invalid object path
      */
@@ -228,7 +235,7 @@ openerp.web.Registry = openerp.web.Class.extend( /** @lends openerp.web.Registry
      * object pointed to (e.g. ``"openerp.web.Session"`` for an OpenERP
      * session object).
      *
-     * @constructs
+     * @constructs openerp.web.Registry
      * @param {Object} mapping a mapping of keys to object-paths
      */
     init: function (mapping) {
@@ -309,7 +316,11 @@ openerp.web.Registry = openerp.web.Class.extend( /** @lends openerp.web.Registry
     }
 });
 
-openerp.web.CallbackEnabled = openerp.web.Class.extend({
+openerp.web.CallbackEnabled = openerp.web.Class.extend(/** @lends openerp.web.CallbackEnabled# */{
+    /**
+     * @constructs openerp.web.CallbackEnabled
+     * @extends openerp.web.Class
+     */
     init: function() {
         // Transform on_* method into openerp.web.callbacks
         for (var name in this) {
@@ -326,9 +337,11 @@ openerp.web.CallbackEnabled = openerp.web.Class.extend({
 
 openerp.web.Session = openerp.web.CallbackEnabled.extend( /** @lends openerp.web.Session# */{
     /**
-     * @constructs
-     * @param server
-     * @param port
+     * @constructs openerp.web.Session
+     * @extends openerp.web.CallbackEnabled
+     *
+     * @param {String} [server] JSON-RPC endpoint hostname
+     * @param {String} [port] JSON-RPC endpoint port
      */
     init: function(server, port) {
         this._super();
@@ -576,9 +589,10 @@ openerp.web.Session = openerp.web.CallbackEnabled.extend( /** @lends openerp.web
         });
     },
     do_load_css: function (files) {
+        var self = this;
         _.each(files, function (file) {
             $('head').append($('<link>', {
-                'href': file,
+                'href': file + (self.debug ? '?debug=' + (new Date().getTime()) : ''),
                 'rel': 'stylesheet',
                 'type': 'text/css'
             }));
@@ -590,7 +604,7 @@ openerp.web.Session = openerp.web.CallbackEnabled.extend( /** @lends openerp.web
             var file = files.shift();
             var tag = document.createElement('script');
             tag.type = 'text/javascript';
-            tag.src = file;
+            tag.src = file + (this.debug ? '?debug=' + (new Date().getTime()) : '');
             tag.onload = tag.onreadystatechange = function() {
                 if ( (tag.readyState && tag.readyState != "loaded" && tag.readyState != "complete") || tag.onload_done )
                     return;
@@ -708,13 +722,18 @@ openerp.web.Session = openerp.web.CallbackEnabled.extend( /** @lends openerp.web
     }
 });
 
-/**
- * Utility class that any class is allowed to extend to easy common manipulations.
- *
- * It provides rpc calls, callback on all methods preceded by "on_" or "do_" and a
- * logging facility.
- */
-openerp.web.SessionAware = openerp.web.CallbackEnabled.extend({
+openerp.web.SessionAware = openerp.web.CallbackEnabled.extend(/** @lends openerp.web.SessionAware# */{
+    /**
+     * Utility class that any class is allowed to extend to easy common manipulations.
+     *
+     * It provides rpc calls, callback on all methods preceded by "on_" or "do_" and a
+     * logging facility.
+     *
+     * @constructs openerp.web.SessionAware
+     * @extends openerp.web.CallbackEnabled
+     *
+     * @param {openerp.web.Session} session
+     */
     init: function(session) {
         this._super();
         this.session = session;
@@ -758,15 +777,12 @@ openerp.web.SessionAware = openerp.web.CallbackEnabled.extend({
                 if(body) {
                     $('<pre></pre>').text(v).appendTo($('body'));
                 }
-                if(notify && this.notification) {
-                    this.notification.notify("Logging:",v);
-                }
             }
         }
     }
 });
 
-openerp.web.Widget = openerp.web.SessionAware.extend({
+openerp.web.Widget = openerp.web.SessionAware.extend(/** @lends openerp.web.Widget# */{
     /**
      * The name of the QWeb template that will be used for rendering. Must be
      * redefined in subclasses or the default render() method can not be used.
@@ -784,7 +800,9 @@ openerp.web.Widget = openerp.web.SessionAware.extend({
     /**
      * Construct the widget and set its parent if a parent is given.
      *
-     * @constructs
+     * @constructs openerp.web.Widget
+     * @extends openerp.web.SessionAware
+     *
      * @param {openerp.web.Widget} parent Binds the current instance to the given Widget instance.
      * When that widget is destroyed by calling stop(), the current instance will be
      * destroyed too. Can be null.
@@ -860,8 +878,10 @@ openerp.web.Widget = openerp.web.SessionAware.extend({
         if (target instanceof openerp.web.Widget)
             target = target.$element;
         insertion(target);
+        this.on_inserted(this.$element, this);
         return this.start();
     },
+    on_inserted: function(element, widget) {},
     /**
      * Renders the widget using QWeb, `this.template` must be defined.
      * The context given to QWeb contains the "widget" key that references `this`.
@@ -941,17 +961,23 @@ openerp.web.Widget = openerp.web.SessionAware.extend({
 });
 
 /**
+ * @class
+ * @extends openerp.web.Widget
  * @deprecated
  * For retro compatibility only, the only difference with is that render() uses
- * directly `this` instead of context with a "widget" key.
+ * directly ``this`` instead of context with a ``widget`` key.
  */
-openerp.web.OldWidget = openerp.web.Widget.extend({
+openerp.web.OldWidget = openerp.web.Widget.extend(/** @lends openerp.web.OldWidget# */{
     render: function (additional) {
         return openerp.web.qweb.render(this.template, _.extend(_.extend({}, this), additional || {}));
     }
 });
 
-openerp.web.TranslationDataBase = openerp.web.Class.extend({
+openerp.web.TranslationDataBase = openerp.web.Class.extend(/** @lends openerp.web.TranslationDataBase# */{
+    /**
+     * @constructs openerp.web.TranslationDataBase
+     * @extends openerp.web.Class
+     */
     init: function() {
         this.db = {};
         this.parameters = {"direction": 'ltr',

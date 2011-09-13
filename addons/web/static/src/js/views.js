@@ -115,7 +115,7 @@ openerp.web.ActionManager = openerp.web.Widget.extend({
         var self = this;
         this.rpc('/web/action/run', {
             action_id: action.id,
-            context: {active_id: 66, active_ids: [66], active_model: 'ir.ui.menu'}
+            context: action.context || {}
         }).then(function (action) {
             self.do_action(action, on_closed)
         });
@@ -135,8 +135,17 @@ openerp.web.ActionManager = openerp.web.Widget.extend({
     }
 });
 
-openerp.web.ViewManager =  openerp.web.Widget.extend({
+openerp.web.ViewManager =  openerp.web.Widget.extend(/** @lends openerp.web.ViewManager# */{
     identifier_prefix: "viewmanager",
+    template: "ViewManager",
+    /**
+     * @constructs openerp.web.ViewManager
+     * @extends openerp.web.Widget
+     *
+     * @param parent
+     * @param dataset
+     * @param views
+     */
     init: function(parent, dataset, views) {
         this._super(parent);
         this.model = dataset.model;
@@ -149,7 +158,7 @@ openerp.web.ViewManager =  openerp.web.Widget.extend({
         this.registry = openerp.web.views;
     },
     render: function() {
-        return QWeb.render("ViewManager", {"prefix": this.element_id, views: this.views_src})
+    	return QWeb.render(this.template, {"prefix": this.element_id, views: this.views_src})
     },
     /**
      * @returns {jQuery.Deferred} initial view loading promise
@@ -289,7 +298,8 @@ openerp.web.ViewManager =  openerp.web.Widget.extend({
 });
 
 openerp.web.ViewManagerAction = openerp.web.ViewManager.extend({
-    init: function(parent, action) {
+	template: "ViewManagerAction",
+	init: function(parent, action) {
         this.session = parent.session;
         this.action = action;
         var dataset;
@@ -444,6 +454,7 @@ openerp.web.Sidebar = openerp.web.Widget.extend({
                 if (item.action) {
                     var ids = self.widget_parent.get_selected_ids();
                     if (ids.length == 0) {
+                        //TODO: make prettier warning?
                         $("<div />").text(_t("You must choose at least one record.")).dialog({
                             title: _t("Warning"),
                             modal: true
@@ -616,7 +627,11 @@ openerp.web.TranslateDialog = openerp.web.Dialog.extend({
     }
 });
 
-openerp.web.View = openerp.web.Widget.extend({
+/**
+ * @class
+ * @extends openerp.web.Widget
+ */
+openerp.web.View = openerp.web.Widget.extend(/** @lends openerp.web.View# */{
     set_default_options: function(options) {
         this.options = options || {};
         _.defaults(this.options, {
@@ -656,6 +671,7 @@ openerp.web.View = openerp.web.Widget.extend({
                     active_ids: [record_id || false],
                     active_model: dataset.model
                 });
+                action.context = new openerp.web.CompoundContext(dataset.get_context(), action.context);
                 self.do_action(action, on_closed);
             } else if (on_closed) {
                 on_closed(action);

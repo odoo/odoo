@@ -5,7 +5,6 @@
 /**
  * @name openerp
  * @namespace openerp
- * @namespace window.openerp
  */
 (function() {
     if (this.openerp)
@@ -48,6 +47,9 @@
  * OpenERP Web web module split
  *---------------------------------------------------------*/
 
+/**
+ * @namespace
+ */
 openerp.web = function(instance) {
     openerp.web.core(instance);
     if (openerp.web.dates) {

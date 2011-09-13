@@ -1,5 +1,6 @@
 /**
- * @namespace handles editability case for lists, because it depends on form and forms already depends on lists it had to be split out
+ * handles editability case for lists, because it depends on form and forms already depends on lists it had to be split out
+ * @namespace
  */
 openerp.web.list_editable = function (openerp) {
     var KEY_RETURN = 13,
@@ -87,7 +88,7 @@ openerp.web.list_editable = function (openerp) {
         }
     });
 
-    openerp.web.ListView.List.include(/** @lends openerp.web.ListView.List */{
+    openerp.web.ListView.List.include(/** @lends openerp.web.ListView.List# */{
         row_clicked: function (event) {
             if (!this.options.editable) {
                 return this._super(event);
@@ -112,6 +113,7 @@ openerp.web.list_editable = function (openerp) {
                 cancelled.resolve();
             }
             cancelled.then(function () {
+                self.view.unpad_columns();
                 self.edition_form.stop();
                 self.edition_form.$element.remove();
                 delete self.edition_form;
@@ -197,6 +199,16 @@ openerp.web.list_editable = function (openerp) {
                             $new_row.prepend('<td>');
                         }
                     });
+                    // Add columns for the cancel and save buttons, if
+                    // there are none in the list
+                    if (!self.options.selectable) {
+                        self.view.pad_columns(
+                            1, {except: $new_row, position: 'before'});
+                    }
+                    if (!self.options.deletable) {
+                        self.view.pad_columns(
+                            1, {except: $new_row});
+                    }
 
                     self.edition_form.do_show();
                 });

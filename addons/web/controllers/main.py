@@ -12,17 +12,18 @@ import textwrap
 import xmlrpclib
 import time
 import zlib
-import webrelease
 from xml.etree import ElementTree
 from cStringIO import StringIO
+
+from babel.messages.pofile import read_po
 
 import web.common.dispatch as openerpweb
 import web.common.ast
 import web.common.nonliterals
+import web.common.release
 openerpweb.ast = web.common.ast
 openerpweb.nonliterals = web.common.nonliterals
 
-from babel.messages.pofile import read_po
 
 # Should move to openerpweb.Xml2Json
 class Xml2Json:
@@ -195,7 +196,7 @@ class WebClient(openerpweb.Controller):
     @openerpweb.jsonrequest
     def version_info(self, req):
         return {
-            "version": webrelease.version
+            "version": web.common.release.version
         }
 
 class Database(openerpweb.Controller):
@@ -1363,12 +1364,19 @@ class Reports(View):
             openerpweb.nonliterals.CompoundContext(
                 req.context or {}, action[ "context"]))
 
-        report_data = {"id": context["active_id"], "model": context["active_model"]}
+        report_data = {}
+        report_ids = context["active_ids"]
         if 'report_type' in action:
             report_data['report_type'] = action['report_type']
+        if 'datas' in action:
+            if 'form' in action['datas']:
+                report_data['form'] = action['datas']['form']
+            if 'ids' in action['datas']:
+                report_ids = action['datas']['ids']
+        
         report_id = report_srv.report(
             req.session._db, req.session._uid, req.session._password,
-            action["report_name"], context["active_ids"],
+            action["report_name"], report_ids,
             report_data, context)
 
         report_struct = None
