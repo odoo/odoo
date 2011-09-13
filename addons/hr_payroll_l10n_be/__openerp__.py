@@ -41,7 +41,9 @@ Belgian Payroll system.
     """,
 
     'active': False,
-    'demo_xml': [],
+    'demo_xml': [
+     'hr_payroll_l10n_be_demo.xml',
+    ],
     'update_xml':[
      'hr_payroll_l10n_be_view.xml',
      'hr_payroll_l10n_be_data.xml',
