@@ -581,24 +581,29 @@ openerp.web.Header =  openerp.web.Widget.extend(/** @lends openerp.web.Header# *
         this._super(parent);
         this.qs = "?" + jQuery.param.querystring();
         this.$content = $();
+        console.debug("initializing header with id", this.element_id);
+        this.update_promise = $.Deferred().resolve();
     },
     start: function() {
         this._super();
     },
     do_update: function () {
         var self = this;
-        this.$content.remove();
-        if (! this.session.uid)
-            return;
-        var func = new openerp.web.Model(self.session, "res.users").get_func("read");
-        func(self.session.uid, ["name", "company_id"]).then(function(res) {
-            self.$content = $(QWeb.render("Header-content", {widget: self, user: res}));
-            self.$content.appendTo(self.$element);
-            self.$element.find(".logout").click(self.on_logout);
-            self.$element.find("a.preferences").click(self.on_preferences);
-            self.$element.find(".about").click(self.on_about);
-            self.shortcut_load();
-        });
+        var fct = function() {
+            self.$content.remove();
+            if (!self.session.uid)
+                return;
+            var func = new openerp.web.Model(self.session, "res.users").get_func("read");
+            return func(self.session.uid, ["name", "company_id"]).pipe(function(res) {
+                self.$content = $(QWeb.render("Header-content", {widget: self, user: res}));
+                self.$content.appendTo(self.$element);
+                self.$element.find(".logout").click(self.on_logout);
+                self.$element.find("a.preferences").click(self.on_preferences);
+                self.$element.find(".about").click(self.on_about);
+                return self.shortcut_load();
+            });
+        };
+        this.update_promise = this.update_promise.pipe(fct, fct);
     },
     on_about: function() {
         var self = this;
