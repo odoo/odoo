@@ -622,8 +622,10 @@ class actions_server(osv.osv):
             context = {}
         user = self.pool.get('res.users').browse(cr, uid, uid)
         for action in self.browse(cr, uid, ids, context):
+            obj = None
             obj_pool = self.pool.get(action.model_id.model)
-            obj = obj_pool.browse(cr, uid, context['active_id'], context=context)
+            if context.get('active_model') == action.model_id.model and context.get('active_id'):
+                obj = obj_pool.browse(cr, uid, context['active_id'], context=context)
             cxt = {
                 'self': obj_pool,
                 'object': obj,

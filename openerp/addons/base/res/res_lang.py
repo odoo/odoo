@@ -194,7 +194,7 @@ class lang(osv.osv):
             trans_obj.unlink(cr, uid, trans_ids, context=context)
         return super(lang, self).unlink(cr, uid, ids, context=context)
 
-    def format(self, cr, uid, ids, percent, value, grouping=False, monetary=False):
+    def format(self, cr, uid, ids, percent, value, grouping=False, monetary=False, context=None):
         """ Format() will return the language-specific output for float values"""
 
         if percent[0] != '%':
