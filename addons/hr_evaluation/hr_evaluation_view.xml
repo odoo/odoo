@@ -222,7 +222,7 @@
             <field name="model">hr_evaluation.evaluation</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="blue:state in ('draft');black:state in ('wait','progress');gray:state in('done','cancel')" string="Evaluation">
+                <tree colors="blue:state == 'draft';black:state in ('wait','progress');gray:state in('done','cancel')" string="Evaluation">
                     <field name="employee_id"/>
                     <field name="plan_id"/>
                     <field name="date"/>
