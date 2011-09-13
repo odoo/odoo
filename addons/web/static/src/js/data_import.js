@@ -111,6 +111,7 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
                 $(".ui-button-text:contains('Import File')").parent().attr("disabled",true);
             }else{
                 $(this).css('background-color','');
+                $(".ui-button-text:contains('Import File')").parent().attr("disabled",false);
             }
         });
     },

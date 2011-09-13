@@ -1371,80 +1371,62 @@
 <form name="import_data" id="import_data" action="" method="post" enctype="multipart/form-data">
     <input type="hidden" name="session_id" t-att-value="session.session_id"/>
     <input type="hidden" name="model" t-att-value="widget_parent.model"/>
-     <table cellspacing="5" border="0" width="100%">
+    <table cellspacing="5" border="0" width="100%">
         <tr>
-            <td>
-                <table width="100%">
-                    <tr>
-                        <td width="100%" valign="middle" colspan="4">
-                            <h2 class="separator horizontal">1. Import a .CSV file</h2>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            Select a .CSV file to import. If you need a sample of file to import,
-                            you should use the export tool with the "Import Compatible" option.
-                        </td>
-                    </tr>
-                </table>
+            <td width="100%" valign="middle" colspan="4">
+                <h2 class="separator horizontal">1. Import a .CSV file</h2>
+            </td>
+        </tr>
+        <tr>
+            <td width="100%" valign="middle" colspan="4">
+                Select a .CSV file to import. If you need a sample of file to import,
+                you should use the export tool with the "Import Compatible" option.
             </td>
         </tr>
         <tr>
             <td>
-                <table align="left">
-                    <tr>
-                        <td><label>CSV File:</label></td>
-                        <td>
-                            <input type="file" id="csvfile" size="50" name="csvfile"/>
-                        </td>
-                    </tr>
-                </table>
+                <label>CSV File:</label>
+                <input type="file" id="csvfile" size="50" name="csvfile"/>
             </td>
         </tr>
         <tr>
-            <td height="10px">
+            <td height="10px"></td>
+        </tr>
+        <tr>
+            <td width="100%" valign="middle" colspan="4">
+                <h2 class="separator horizontal">2. Check your file format</h2>
             </td>
         </tr>
         <tr>
-            <td width="100%">
-                <div id="record">
-                    <table width="100%">
+            <td width="100%" colspan="4">
+                <div id="message" style="color:red"></div>
+                <div id="result"></div>
+            </td>
+        </tr>
+        <tr>
+            <td width="100%" colspan="4">
+                <fieldset>
+                    <legend style="cursor:pointer;">CSV Options</legend>
+                    <table style="display:none">
                         <tr>
-                            <td width="100%" valign="middle">
-                                <h2 class="separator horizontal">2. Check your file format</h2>
+                            <td><label>Separator:</label></td>
+                            <td><input type="text" name="csvsep" id="csv_separator" value=","/></td>
+                            <td><label>Delimiter:</label></td>
+                            <td><input type="text" name="csvdel" id="csv_delimiter" value='"'/></td>
+                        </tr>
+                        <tr>
+                            <td><label>Encoding:</label></td>
+                            <td>
+                                <select name="csvcode" id="csv_encoding">
+                                    <option value="utf-8">UTF-8</option>
+                                    <option value="latin1">Latin 1</option>
+                                </select>
                             </td>
+                            <td><label>Lines to skip:</label></td>
+                            <td><input type="text" name="csvskip" id="csv_skip" value="1"/></td>
                         </tr>
                     </table>
-                    <div id="message" style="color:red"></div>
-                    <div id="result"></div>
-                    <fieldset>
-                        <legend style="cursor:pointer;">CSV Options</legend>
-                        <table style="display:none">
-                            <tr>
-                               <td><label for="csv_separator">Separator:</label></td>
-                                <td><input type="text" name="csvsep" id="csv_separator" value=","/></td>
-                                <td><label for="csv_delimiter">Delimiter:</label></td>
-                                <td><input type="text" name="csvdel" id="csv_delimiter" value='"'/></td>
-                            </tr>
-                            <tr>
-                                <td><label for="csv_encoding">Encoding:</label></td>
-                                <td>
-                                    <select name="csvcode" id="csv_encoding">
-                                        <option value="utf-8">UTF-8</option>
-                                        <option value="latin1">Latin 1</option>
-                                    </select>
-                                </td>
-                                <td><label>Lines to skip:</label></td>
-                                <td><input type="text" name="csvskip" id="csv_skip" value="1"/></td>
-                            </tr>
-                        </table>
-                    </fieldset>
-                </div>
-            </td>
-        </tr>
-        <tr>
-            <td width="100%">
-                <div id="success"></div>
+                </fieldset>
             </td>
         </tr>
     </table>
@@ -1452,52 +1434,31 @@
 </t>
 <t t-name="ImportView-result">
     <t t-if="error">
-        <table id="error_tbl">
-            <tr style="white-space:pre-line;">The import failed due to:<t t-esc="error.message"/></tr>
-            <t t-if="error.preview">
-                <tr>Here is a preview of the file we could not import:</tr>
-                <tr><pre><t t-esc="error.preview"/></pre></tr>
-            </t>
-        </table>
+        <p style="white-space:pre-line;">The import failed due to:<t t-esc="error.message"/></p>
+        <t t-if="error.preview">
+            <p>Here is a preview of the file we could not import:</p>
+            <pre><t t-esc="error.preview"/></pre>
+        </t>
     </t>
-    <t t-if="records">
-        <table id="records_data" class="oe_import_grid" width="100%" style="margin: 5px 0;">
-            <t t-foreach="records" t-as="record">
-                <t t-if="record=='header'">
-                    <tr class="oe_import_grid-header">
-                        <t t-foreach="records.header" t-as="header">
-                            <td class="oe_import_grid-cell" id="header"><t t-esc="header[0]"/></td>
-                        </t>
-                    </tr>
-                </t>
-                <t t-if="record=='sel'">
-                    <tr>
-                        <t t-foreach="records.header" t-as="header">
-                            <td>
-                                <select id="sel_field">
-                                    <option selected="selected" value=""></option>
-                                    <t t-foreach="records.sel" t-as="selection">
-                                        <option t-att="{'selected': header[0] === selection ? 'selected' : null}"
-                                                t-att-value="selection"><t t-esc="selection"/>
-                                        </option>
-                                    </t>
-                                </select>
-                            </td>
-                        </t>
-                    </tr>
-                </t>
-                <t t-if="record=='row'">
-                    <t t-foreach="records.row" t-as="row">
-                        <tr class="oe_import_grid-row">
-                            <t t-foreach="row" t-as="column">
-                                <td class="oe_import_grid-cell"><t t-esc="column"/></td>
-                            </t>
-                        </tr>
-                    </t>
-                </t>
-            </t>
-        </table>
-    </t>
+    <table t-if="records" class="oe_import_grid" width="100%" style="margin: 5px 0;">
+        <t t-foreach="records" t-as="record">
+            <tr t-if="record=='header'" class="oe_import_grid-header">
+                <td t-foreach="records.header" t-as="header" class="oe_import_grid-cell"><t t-esc="header[0]"/></td>
+            </tr>
+            <tr t-if="record=='sel'">
+                <td t-foreach="records.header" t-as="header">
+                    <select id="sel_field">
+                        <option selected="selected" value=""></option>
+                        <option t-foreach="records.sel" t-as="selection" t-att="{'selected': header[0] === selection ? 'selected' : null}"
+                                t-att-value="selection"><t t-esc="selection"/></option>
+                    </select>
+                </td>
+            </tr>
+            <tr t-if="record=='row'" t-foreach="records.row" t-as="row" class="oe_import_grid-row">
+                <td t-foreach="row" t-as="column" class="oe_import_grid-cell"><t t-esc="column"/></td>
+            </tr>
+        </t>
+    </table>
 </t>
 
 <t t-name="About-Page">
