@@ -29,6 +29,11 @@ import openerp.release as release
 from tools.translate import _
 import netsvc
 
+def split_xml_id(xml_id):
+    assert len(xml_id.split('.'))==2, \
+            _("'%s' contains too many dots. XML ids should not contain dots ! These are used to refer to other modules data, as in module.reference_id") % (xml_id)
+    return xml_id.split('.')
+
 def safe_unique_id(database_id, model, record_id):
     """Generate a unique string to represent a (database id,model,record_id) pair
     without being too long, without revealing the database id, and
@@ -221,8 +226,7 @@ class edi(object):
             if not xml_id:
                 uuid = safe_unique_id(db_uuid, record._name, record.id)
                 xml_id = '%s:%s.%s' % (db_uuid, record._module, uuid)
-            assert len(xml_id.split('.'))==2, _("'%s' contains too many dots. XML ids should not contain dots ! These are used to refer to other modules data, as in module.reference_id") % (xml_id)
-            module, xml_id2 = xml_id.split('.')
+            module, xml_id2 = split_xml_id(xml_id)
             xml_record_id = model_data_pool.create(cr, uid, {
                 'name': xml_id2,
                 'model': record._name,
@@ -407,8 +411,7 @@ class edi(object):
 
     def edi_get_object(self, cr, uid, xml_id, model, context=None):
         model_data = self.pool.get('ir.model.data')
-        assert len(xml_id.split('.'))==2, _("'%s' contains too many dots. XML ids should not contain dots ! These are used to refer to other modules data, as in module.reference_id") % (xml_id)
-        module, xml_id2 = xml_id.split('.')
+        module, xml_id2 = split_xml_id(xml_id)
         openobject = False
         data_ids = model_data.search(cr, uid, [('model','=', model), ('name','=', xml_id2)])
         if data_ids:
@@ -495,8 +498,7 @@ class edi(object):
             values = {}
             model_pool = self.pool.get(model_name)
             xml_id = datas['__id']
-            assert len(xml_id.split('.'))==2, _("'%s' contains too many dots. XML ids should not contain dots ! These are used to refer to other modules data, as in module.reference_id") % (xml_id)
-            module, xml_id2 = xml_id.split('.')
+            module, xml_id2 = split_xml_id(xml_id)
             _columns = model_pool._all_columns
             for field in datas.keys():
                 if field not in _columns:
@@ -508,7 +510,6 @@ class edi(object):
                     edi_field_value = datas[field]
                     field_type = _column_dict['type']
                     relation_model = _column_dict.get('relation')
-                    #print '???????', field, edi_field_value, relation_model, field_type
                     if not edi_field_value:
                         continue
                     if _column_dict.has_key('function') or _column_dict.has_key('related_columns'):
