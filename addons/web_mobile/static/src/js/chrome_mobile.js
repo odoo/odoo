@@ -285,6 +285,10 @@ openerp.web_mobile.Options =  openerp.web.Widget.extend({
         this.$element.find("[data-role=header]").find('#home').click(function(){
             $.mobile.changePage($("#oe_menu"), "slide", true, true);
         });
+        this.$element.find("[data-role=content]").find('a').click(function(){
+            $('#oe_login').empty();
+            window.location.replace('');
+        });
         $.mobile.changePage($("#oe_options"), "slide", true, true);
     }
 });
