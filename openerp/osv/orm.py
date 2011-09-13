@@ -326,9 +326,12 @@ class browse_record(object):
                 col = self._table._inherit_fields[name][2]
             elif hasattr(self._table, str(name)):
                 attr = getattr(self._table, name)
-
                 if isinstance(attr, (types.MethodType, types.LambdaType, types.FunctionType)):
-                    return lambda *args, **argv: attr(self._cr, self._uid, [self._id], *args, **argv)
+                    def function_proxy(*args, **kwargs):
+                        if 'context' not in kwargs:
+                            kwargs.update(context=self._context)
+                        return attr(self._cr, self._uid, [self._id], *args, **kwargs)
+                    return function_proxy
                 else:
                     return attr
             else:
