@@ -5,90 +5,82 @@
             <field name="name">hr.contract.form.inherit</field>
             <field name="model">hr.contract</field>
             <field name="type">form</field>
-	    <field name="priority">20</field>
+            <field name="priority">20</field>
             <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
             <field name="arch" type="xml">
             <data>
-<!--		 <xpath expr="/form/notebook/page/group/field[@name='working_hours']" position="after">
-		    <field name="horaire_effectif"/>
-		 </xpath>
--->
                  <xpath expr="/form/notebook/page/group/field[@name='advantages']" position="after">
-		    <field name="reim_travel"/>
+                    <field name="reim_travel"/>
                     <field name="company_car_emp"/>
-		    <field name="mis_ex_onss"/>
-		    <field name="ch_value"/>
-		    <field name="advantage"/>
-		    <group colspan="2" col="2">
-			<separator string="Miscellaneous" colspan="2"/>
-			  <field name="suppl_net"/>
-			  <field name="retained_net"/>
-<!--			  <field name="vol_tax"/>-->
-		    </group>	
-                </xpath>
-
+                    <field name="mis_ex_onss"/>
+                    <field name="ch_value"/>
+                    <field name="advantage"/>
+                    <group colspan="2" col="2">
+                        <separator string="Miscellaneous" colspan="2"/>
+                        <field name="suppl_net"/>
+                        <field name="retained_net"/>
+                    </group>    
+                 </xpath>
                  <xpath expr="/form/notebook/page/group/field[@name='trial_date_end']" position="after">
                     <group colspan="2" col="2">
-			<separator string="by Worker" colspan="2"/>
-	  	    	   <field name="insurance"/>
-	                   <field name="ch_worker"/>
-			   <field name="company_car_wkr"/>
-		    </group>
+                        <separator string="by Worker" colspan="2"/>
+                        <field name="insurance"/>
+                        <field name="ch_worker"/>
+                        <field name="company_car_wkr"/>
+                    </group>
                  </xpath>
-                <xpath expr="/form//group/field[@name='type_id']" position="after">
+                 <xpath expr="/form//group/field[@name='type_id']" position="after">
                     <field name="struct_id" select="1"/>
-                </xpath>
+                 </xpath>
             </data>
             </field>
         </record>
 
-	<record id="view_employee_marital_required_form" model="ir.ui.view">
+        <record id="view_employee_marital_required_form" model="ir.ui.view">
             <field name="name">hr.employee.employee.inherit.form</field>
             <field name="model">hr.employee</field>
             <field name="type">form</field>
-	    <field name="priority">25</field>
+            <field name="priority">25</field>
             <field name="inherit_id" ref="hr.view_employee_form"/>
             <field name="arch" type="xml">
                 <field name="marital" position="replace">
-                   <!-- <field name="marital" required="True"/>--><!-- attrs="{'invisible':[('resident','=',True)], 'required':[('resident','!=',True)]}" colspan="1"/-->
                 </field>
             </field>
         </record>
 
-	<record id="view_contract_salary_structure" model="ir.ui.view">
-		<field name="name">hr.contract.struc</field>
-		<field name="model">hr.contract</field>
-		<field name="inherit_id" ref="hr_payroll.hr_contract_form_inherit"/>
-		<field name="type">form</field>
-		<field name="arch" type="xml">
-		     <field name="struct_id" position="replace">		
-		     </field>
-		</field>
-	</record>
+        <record id="view_contract_salary_structure" model="ir.ui.view">
+            <field name="name">hr.contract.struc</field>
+            <field name="model">hr.contract</field>
+            <field name="inherit_id" ref="hr_payroll.hr_contract_form_inherit"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                 <field name="struct_id" position="replace">
+                 </field>
+            </field>
+        </record>
 
         <record id="hr_contract_hr_hr_employee_view_for" model="ir.ui.view">
             <field name="name">hr.hr.employee.view.for</field>
             <field name="model">hr.employee</field>
             <field name="inherit_id" ref="hr.view_employee_form"/>
-	    <field name="priority">30</field>
-            <field name="arch" type="xml">	
+            <field name="priority">30</field>
+            <field name="arch" type="xml">
             <data>
                 <xpath expr="/form/notebook/page/group/field[@name='birthday']" position="after">
-                       	<field name="marital" required="True"/>
+                    <field name="marital" required="True"/>
                 </xpath>
-
                 <xpath expr="/form/notebook/page/group/field[@name='gender']" position="before">
-			<field name="resident" eval="False"/> 
-		</xpath>
+                    <field name="resident" eval="False"/> 
+                </xpath>
                 <xpath expr="/form/notebook/page/group/field[@name='marital']" position="after">
-			<field name="statut_fiscal" attrs="{'invisible':[('marital','!=','married')],'required':[('marital','=','married')]}" colspan="1" help="if spouse has professionnel income or not"/> 
-			<field name="handicap" attrs="{'invisible':[('marital','!=','married')]}" colspan="1"/>
-		</xpath>
-		<xpath expr="/form/notebook/page/group/field[@name='children']" position="after">
-			<field name="handicap_child"/>
-			<field name="number_handicap" attrs="{'invisible':[('handicap_child','!=',True)]}" colspan="1" help="number of dependent children declared as disabled"/>
-		</xpath>
-	    </data>
+                    <field name="statut_fiscal" attrs="{'invisible':[('marital','!=','married')],'required':[('marital','=','married')]}" colspan="1" help="if spouse has professionnel income or not"/> 
+                    <field name="handicap" attrs="{'invisible':[('marital','!=','married')]}" colspan="1"/>
+                </xpath>
+                <xpath expr="/form/notebook/page/group/field[@name='children']" position="after">
+                    <field name="handicap_child"/>
+                    <field name="number_handicap" attrs="{'invisible':[('handicap_child','!=',True)]}" colspan="1" help="number of dependent children declared as disabled"/>
+                </xpath>
+            </data>
             </field>
         </record>
     </data>
