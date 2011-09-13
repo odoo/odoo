@@ -42,7 +42,7 @@ _ref_vat = {
     'pt': 'PT123456789', 'ro': 'RO1234567897',
     'se': 'SE123456789701', 'si': 'SI12345679',
     'sk': 'SK0012345675', 'el': 'EL12345670',
-    'mx': 'MXABCD831230T1B',
+    'mx': 'MXABCD831230T1B', 'hr': 'HR01234567896'
 
             }
 
@@ -1104,7 +1104,28 @@ class res_partner(osv.osv):
         
         #Valid format and valid date
         return True
-        
+ 
+    def check_vat_hr(self, vat):
+        '''
+        Check Croatia VAT number.
+        '''      
+        if not vat:
+            return True      
+            
+        if len(vat) != 11:
+            return False
+        try:
+            int(vat)
+        except ValueError:
+            return False
+        t = 10
+        for i in vat[:-1]:
+            c = int(i)
+            t = (2 * ((t + c) % 10 or 10)) % 11
+        check = (11 - t) % 10
+        if check != int(vat[10]):
+            return False
+        return True       
 res_partner()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
