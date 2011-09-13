@@ -34,36 +34,30 @@ import decimal_precision as dp
 
 
 class hr_contract_be(osv.osv):
-
     _inherit = 'hr.contract'
-    _description = 'Add for belgium users'
+
     _columns = {
-
-    'reim_travel':fields.float('Reimbursement of travel expenses', digits=(16,2)),
-    'company_car_emp':fields.float('Company car employer', digits=(16,2)),
-    'company_car_wkr':fields.float('Company Car Deduction for Worker', digits=(16,2)),
-    'mis_ex_onss':fields.float('Miscellaneous exempt ONSS ', digits=(16,2)),
-    'ch_value':fields.float('Check Value Meal ', digits=(16,2)),
-    'ch_worker':fields.float('Check Value Meal - by worker ', digits=(16,2)),
-    'insurance':fields.float('Insurance Group - by worker ', digits=(16,2)),
-    'advantage':fields.float('Benefits of various nature ', digits=(16,2)),
-    'suppl_net':fields.float('Net supplements', digits=(16,2)),
-    'retained_net':fields.float('Net retained ', digits=(16,2)),
-#    'vol_tax':fields.float('Voluntary tax ', digits=(16,2)),
-#    'horaire_effectif': fields.many2one('resource.calendar','Actual Work', help="Hours of work means the actual working time elapsing between the beginning and end of the workday, regardless of where it runs, excluding the stop work devoted to meals, breaks and, more generally, any interruptions between 2 sequences of work that are not actually worked since the employee can go freely about his personal affairs"),
-
+        'reim_travel':fields.float('Reimbursement of travel expenses', digits=(16,2)),
+        'company_car_emp':fields.float('Company car employer', digits=(16,2)),
+        'company_car_wkr':fields.float('Company Car Deduction for Worker', digits=(16,2)),
+        'mis_ex_onss':fields.float('Miscellaneous exempt ONSS ', digits=(16,2)),
+        'ch_value':fields.float('Check Value Meal ', digits=(16,2)),
+        'ch_worker':fields.float('Check Value Meal - by worker ', digits=(16,2)),
+        'insurance':fields.float('Insurance Group - by worker ', digits=(16,2)),
+        'advantage':fields.float('Benefits of various nature ', digits=(16,2)),
+        'suppl_net':fields.float('Net supplements', digits=(16,2)),
+        'retained_net':fields.float('Net retained ', digits=(16,2)),
     }
 hr_contract_be()
 
 class hr_employee_be(osv.osv):
-
     _inherit = 'hr.employee'
-    _description = 'add for all Belgian users'
+
     _columns = {
-    'statut_fiscal':fields.selection([('without income','Without Income'),('with income','With Income')], 'Tax status for spouse'),
-    'handicap':fields.boolean('Disabled Spouse', help="if recipient spouse is declared disabled by law"),
+        'statut_fiscal':fields.selection([('without income','Without Income'),('with income','With Income')], 'Tax status for spouse'),
+        'handicap':fields.boolean('Disabled Spouse', help="if recipient spouse is declared disabled by law"),
         'handicap_child':fields.boolean('Disabled Children', help="if recipient children is/are declared disabled by law"),
-    'resident':fields.boolean('Nonresident', help="if recipient lives in a foreign country"),
-    'number_handicap':fields.integer('Number of disabled children'),
+        'resident':fields.boolean('Nonresident', help="if recipient lives in a foreign country"),
+        'number_handicap':fields.integer('Number of disabled children'),
     }
 hr_employee_be()
