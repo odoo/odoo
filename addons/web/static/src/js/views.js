@@ -266,7 +266,7 @@ openerp.web.ViewManager =  openerp.web.Widget.extend(/** @lends openerp.web.View
     /**
      * Sets up the current viewmanager's search view.
      *
-     * @param view_id the view to use or false for a default one
+     * @param {Number|false} view_id the view to use or false for a default one
      * @returns {jQuery.Deferred} search view startup deferred
      */
     setup_search_view: function(view_id, search_defaults) {
@@ -274,10 +274,10 @@ openerp.web.ViewManager =  openerp.web.Widget.extend(/** @lends openerp.web.View
         if (this.searchview) {
             this.searchview.stop();
         }
-        this.searchview = new openerp.web.SearchView(this, this.element_id + "_search", this.dataset, view_id, search_defaults);
-        if (this.flags.search_view === false) {
-            this.searchview.hide();
-        }
+        this.searchview = new openerp.web.SearchView(
+                this, this.element_id + "_search", this.dataset,
+                view_id, search_defaults);
+
         this.searchview.on_search.add(function(domains, contexts, groupbys) {
             var controller = self.views[self.active_view].controller;
             controller.do_search.call(controller, domains, contexts, groupbys);
@@ -297,8 +297,15 @@ openerp.web.ViewManager =  openerp.web.Widget.extend(/** @lends openerp.web.View
     }
 });
 
-openerp.web.ViewManagerAction = openerp.web.ViewManager.extend({
+openerp.web.ViewManagerAction = openerp.web.ViewManager.extend(/** @lends oepnerp.web.ViewManagerAction# */{
 	template: "ViewManagerAction",
+    /**
+     * @constructs openerp.web.ViewManagerAction
+     * @extends openerp.web.ViewManager
+     *
+     * @param {openerp.web.ActionManager} parent parent object/widget
+     * @param {Object} action descriptor for the action this viewmanager needs to manage its views.
+     */
 	init: function(parent, action) {
         this.session = parent.session;
         this.action = action;
@@ -315,29 +322,35 @@ openerp.web.ViewManagerAction = openerp.web.ViewManager.extend({
             this.flags.search_view = this.flags.pager = this.flags.sidebar = this.flags.action_buttons = false;
         }
     },
+    /**
+     * Initializes the ViewManagerAction: sets up the searchview (if the
+     * searchview is enabled in the manager's action flags), calls into the
+     * parent to initialize the primary view and (if the VMA has a searchview)
+     * launches an initial search after both views are done rendering.
+     */
     start: function() {
-        var inital_view_loaded = this._super();
-
-        var search_defaults = {};
-        _.each(this.action.context, function (value, key) {
-            var match = /^search_default_(.*)$/.exec(key);
-            if (match) {
-                search_defaults[match[1]] = value;
-            }
-        });
-
+        var searchview_loaded;
         if (this.flags.search_view !== false) {
+            var search_defaults = {};
+            _.each(this.action.context, function (value, key) {
+                var match = /^search_default_(.*)$/.exec(key);
+                if (match) {
+                    search_defaults[match[1]] = value;
+                }
+            });
             // init search view
-            var searchview_id = this.action.search_view_id && this.action.search_view_id[0];
+            var searchview_id = this.action['search_view_id'] && this.action['search_view_id'][0];
 
-            var searchview_loaded = this.setup_search_view(
+            searchview_loaded = this.setup_search_view(
                     searchview_id || false, search_defaults);
+        }
 
-            // schedule auto_search
-            if (searchview_loaded != null && this.action['auto_search']) {
-                $.when(searchview_loaded, inital_view_loaded)
-                    .then(this.searchview.do_search);
-            }
+        var main_view_loaded = this._super();
+
+        // schedule auto_search
+        if (searchview_loaded && this.action['auto_search']) {
+            $.when(searchview_loaded, main_view_loaded)
+                .then(this.searchview.do_search);
         }
     },
     on_mode_switch: function (view_type) {
