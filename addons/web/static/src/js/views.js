@@ -158,7 +158,7 @@ openerp.web.ViewManager =  openerp.web.Widget.extend(/** @lends openerp.web.View
         this.registry = openerp.web.views;
     },
     render: function() {
-    	return QWeb.render(this.template, {"prefix": this.element_id, views: this.views_src})
+        return QWeb.render(this.template, {"prefix": this.element_id, views: this.views_src})
     },
     /**
      * @returns {jQuery.Deferred} initial view loading promise
@@ -266,7 +266,7 @@ openerp.web.ViewManager =  openerp.web.Widget.extend(/** @lends openerp.web.View
     /**
      * Sets up the current viewmanager's search view.
      *
-     * @param view_id the view to use or false for a default one
+     * @param {Number|false} view_id the view to use or false for a default one
      * @returns {jQuery.Deferred} search view startup deferred
      */
     setup_search_view: function(view_id, search_defaults) {
@@ -274,10 +274,10 @@ openerp.web.ViewManager =  openerp.web.Widget.extend(/** @lends openerp.web.View
         if (this.searchview) {
             this.searchview.stop();
         }
-        this.searchview = new openerp.web.SearchView(this, this.element_id + "_search", this.dataset, view_id, search_defaults);
-        if (this.flags.search_view === false) {
-            this.searchview.hide();
-        }
+        this.searchview = new openerp.web.SearchView(
+                this, this.element_id + "_search", this.dataset,
+                view_id, search_defaults);
+
         this.searchview.on_search.add(function(domains, contexts, groupbys) {
             var controller = self.views[self.active_view].controller;
             controller.do_search.call(controller, domains, contexts, groupbys);
@@ -297,51 +297,65 @@ openerp.web.ViewManager =  openerp.web.Widget.extend(/** @lends openerp.web.View
     }
 });
 
-openerp.web.ViewManagerAction = openerp.web.ViewManager.extend({
-	template: "ViewManagerAction",
-	init: function(parent, action) {
+openerp.web.ViewManagerAction = openerp.web.ViewManager.extend(/** @lends oepnerp.web.ViewManagerAction# */{
+    template:"ViewManagerAction",
+    /**
+     * @constructs openerp.web.ViewManagerAction
+     * @extends openerp.web.ViewManager
+     *
+     * @param {openerp.web.ActionManager} parent parent object/widget
+     * @param {Object} action descriptor for the action this viewmanager needs to manage its views.
+     */
+    init: function(parent, action) {
+        // dataset initialization will take the session from ``this``, so if we
+        // do not have it yet (and we don't, because we've not called our own
+        // ``_super()``) rpc requests will blow up.
         this.session = parent.session;
         this.action = action;
-        var dataset;
-        if (!action.res_id) {
-            dataset = new openerp.web.DataSetSearch(this, action.res_model, action.context, action.domain);
-        } else {
-            this.action.flags.search_view = false;
-            dataset = new openerp.web.DataSetStatic(this, action.res_model, action.context, [action.res_id]);
+        var dataset = new openerp.web.DataSetSearch(this, action.res_model, action.context, action.domain);
+        if (action.res_id) {
+            dataset.ids.push(action.res_id);
             dataset.index = 0;
         }
         this._super(parent, dataset, action.views);
-        this.action = action;
         this.flags = this.action.flags || {};
         if (action.res_model == 'board.board' && action.views.length == 1 && action.views) {
-            // Not elegant but allows to avoid flickering of SearchView#do_hide
+            // Not elegant but allows to avoid form chrome (pager, save/new
+            // buttons, sidebar, ...) displaying
             this.flags.search_view = this.flags.pager = this.flags.sidebar = this.flags.action_buttons = false;
         }
     },
+    /**
+     * Initializes the ViewManagerAction: sets up the searchview (if the
+     * searchview is enabled in the manager's action flags), calls into the
+     * parent to initialize the primary view and (if the VMA has a searchview)
+     * launches an initial search after both views are done rendering.
+     */
     start: function() {
-        var inital_view_loaded = this._super();
-
-        var search_defaults = {};
-        _.each(this.action.context, function (value, key) {
-            var match = /^search_default_(.*)$/.exec(key);
-            if (match) {
-                search_defaults[match[1]] = value;
-            }
-        });
-
+        var searchview_loaded;
         if (this.flags.search_view !== false) {
+            var search_defaults = {};
+            _.each(this.action.context, function (value, key) {
+                var match = /^search_default_(.*)$/.exec(key);
+                if (match) {
+                    search_defaults[match[1]] = value;
+                }
+            });
             // init search view
-            var searchview_id = this.action.search_view_id && this.action.search_view_id[0];
+            var searchview_id = this.action['search_view_id'] && this.action['search_view_id'][0];
 
-            var searchview_loaded = this.setup_search_view(
+            searchview_loaded = this.setup_search_view(
                     searchview_id || false, search_defaults);
-
-            // schedule auto_search
-            if (searchview_loaded != null && this.action['auto_search']) {
-                $.when(searchview_loaded, inital_view_loaded)
-                    .then(this.searchview.do_search);
-            }
         }
+
+        var main_view_loaded = this._super();
+
+        var manager_ready = $.when(searchview_loaded, main_view_loaded);
+        if (searchview_loaded && this.action['auto_search']) {
+            // schedule auto_search
+            manager_ready.then(this.searchview.do_search);
+        }
+        return manager_ready;
     },
     on_mode_switch: function (view_type) {
         return $.when(
@@ -694,7 +708,7 @@ openerp.web.View = openerp.web.Widget.extend(/** @lends openerp.web.View# */{
      * Directly set a view to use instead of calling fields_view_get. This method must
      * be called before start(). When an embedded view is set, underlying implementations
      * of openerp.web.View must use the provided view instead of any other one.
-     * 
+     *
      * @param embedded_view A view.
      */
     set_embedded_view: function(embedded_view) {
