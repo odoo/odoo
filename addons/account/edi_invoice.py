@@ -66,20 +66,9 @@ class account_invoice(osv.osv, ir_edi.edi):
                         'base_amount': True,
                         'tax_amount': True,
                 },
+                #'paid': True,
         }
-        partner_pool = self.pool.get('res.partner')
-        partner_address_pool = self.pool.get('res.partner.address')
-        company_address_dict = {
-            'street': True,
-            'street2': True,
-            'zip': True,
-            'city': True,
-            'state_id': True,
-            'country_id': True,
-            'email': True,
-            'phone': True,
-                   
-        }
+        company_pool = self.pool.get('res.company')
         edi_doc_list = []
         for invoice in records:
             # Get EDI doc based on struct. The result will also contain all metadata fields and attachments.
@@ -89,26 +78,10 @@ class account_invoice(osv.osv, ir_edi.edi):
             edi_doc = edi_doc[0]
 
             # Add company info and address
-            res = partner_pool.address_get(cr, uid, [invoice.company_id.partner_id.id], ['contact', 'invoice'])
-            contact_addr_id = res['contact']
-            invoice_addr_id = res['invoice']
-
-            address = partner_address_pool.browse(cr, uid, invoice_addr_id, context=context)
-            edi_company_address_dict = {}
-            for key, value in company_address_dict.items():
-                if not value:
-                   continue
-                address_rec = getattr(address, key)
-                if not address_rec:
-                    continue
-                if key.endswith('_id'):
-                    address_rec = self.edi_m2o(cr, uid, address_rec, context=context)
-                edi_company_address_dict[key] = address_rec
-                    
+            edi_company_document = company_pool.edi_export_address(cr, uid, [invoice.company_id], context=context)[invoice.company_id.id]
             edi_doc.update({
-                    'company_address': edi_company_address_dict,
-                    #'company_logo': inv_comp.logo,#TODO
-                    #'paid': inv_comp.paid, #TODO
+                    'company_address': edi_company_document['company_address'],
+                    #'company_logo': edi_company_document['company_logo'],#TODO
             })
             edi_doc_list.append(edi_doc)
         return edi_doc_list
@@ -158,54 +131,30 @@ class account_invoice(osv.osv, ir_edi.edi):
         return account
 
     def edi_import_company(self, cr, uid, edi_document, context=None):
-        # import company as a new partner, if type==in then supplier=1, else customer=1
-        # partner_id field is modified to point to the new partner
-        # company_address data used to add address to new partner
-
-        partner_pool = self.pool.get('res.partner')
         partner_address_pool = self.pool.get('res.partner.address')
-        edi_company_address = edi_document['company_address']
-        edi_partner_id = edi_document['partner_id']
-        company_name = edi_document['company_id'][1]
+        partner_pool = self.pool.get('res.partner')
+        company_pool = self.pool.get('res.company')
+
+        # import company as a new partner, if type==in then supplier=1, else customer=1
+        # company_address data used to add address to new partner
         invoice_type = edi_document['type']
-        state_id = edi_company_address.get('state_id', False)
-        state_name = state_id and state_id[1]
-        country_id = edi_company_address.get('country_id', False)
-        country_name = country_id and country_id[1]
-
-        country_id = country_name and self.edi_import_relation(cr, uid, 'res.country', country_name, context=context) or False
-        state_id = state_name and self.edi_import_relation(cr, uid, 'res.country.state', state_name, 
-                                values={'country_id': country_id, 'code': state_name}, context=context) or False
-        address_value = {
-            'street': edi_company_address.get('street', False),
-            'street2': edi_company_address.get('street2', False),
-            'zip': edi_company_address.get('zip', False),
-            'city': edi_company_address.get('city', False),
-            'state_id': state_id,
-            'country_id': country_id,
-            'email': edi_company_address.get('email', False),
-            'phone': edi_company_address.get('phone', False),
-               
-        }
-        
-
-        partner_value = {'name': company_name}
+        partner_value = {}
         if invoice_type in ('out_invoice', 'in_refund'):
-            partner_value.update({'customer': True, 'supplier': False})
+            partner_value.update({'customer': True})
         if invoice_type in ('in_invoice', 'out_refund'):
-            partner_value.update({'customer': False, 'supplier': True})
+            partner_value.update({'supplier': True})
+        partner_id = company_pool.edi_import_as_partner(cr, uid, edi_document, values=partner_value, context=context)
 
-        partner_id = partner_pool.create(cr, uid, partner_value, context=context)
-        address_value.update({'partner_id': partner_id})
-        address_id = partner_address_pool.create(cr, uid, address_value, context=context)
-
+        # partner_id field is modified to point to the new partner
+        res = partner_pool.address_get(cr, uid, [partner_id], ['contact', 'invoice'])
+        address_id = res['invoice']
         partner = partner_pool.browse(cr, uid, partner_id, context=context)
-        edi_document['partner_id'] = self.edi_m2o(cr, uid, partner, context=context)
-
         partner_address = partner_address_pool.browse(cr, uid, address_id, context=context)
+        edi_document['partner_id'] = self.edi_m2o(cr, uid, partner, context=context)
         edi_document['address_invoice_id'] = self.edi_m2o(cr, uid, partner_address, context=context)
-
-        return partner.id
+        del edi_document['company_id']
+        return partner_id
+        
 
     def edi_import(self, cr, uid, edi_document, context=None):
         """ During import, invoices will import the company that is provided in the invoice as
@@ -251,10 +200,7 @@ class account_invoice(osv.osv, ir_edi.edi):
 
         # internal number: reset to False, auto-generated
         edi_document['internal_number'] = False
-
-        # company should set by default so delete company data from edi Document
-        del edi_document['company_address']
-        del edi_document['company_id'] 
+        
 
         # journal_id: should be selected based on type: simply put the 'type' in the context when calling create(), will be selected correctly
         journal = self.get_invoice_journal(cr, uid, invoice_type, context=context)
@@ -281,7 +227,6 @@ class account_invoice(osv.osv, ir_edi.edi):
             edi_tax_line['manual'] = True
 
         # TODO :=> payment_term: if set, create a default one based on name... 
-       
         return super(account_invoice,self).edi_import(cr, uid, edi_document, context=context)
       
 account_invoice()
@@ -294,3 +239,5 @@ class account_invoice_tax(osv.osv, ir_edi.edi):
     _inherit = "account.invoice.tax"
 
 account_invoice_tax()
+
+

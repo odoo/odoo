@@ -19,9 +19,9 @@ if not object.partner_id.opt_out: self.pool.get('email.template').generate_mail(
 
 		
 		<!--calling multi action in workflow.activity -->
-		<record id="purchase.act_confirmed" model="workflow.activity">
+		<!--<record id="purchase.act_confirmed" model="workflow.activity">
 			<field name="action_id" ref="ir_actions_server_edi_purchase"/>
-		</record>
+		</record> -->
 
         
 		<!--Email template -->

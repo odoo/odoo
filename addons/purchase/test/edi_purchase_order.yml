@@ -5,7 +5,7 @@
     name: jones white
     supplier: False
     customer: True
-    opt_out: False
+    opt_out: True
 -
   I create one Purchase Order
 -
@@ -31,17 +31,55 @@
     wf_service = netsvc.LocalService("workflow")
     wf_service.trg_validate(uid, 'purchase.order',orders.id,'approved', cr)
 -
+  I Tesing of EDI functionality. First I export Purchase Order from my company than import that Order into customer company
+-
   !python {model: ir.edi.document}: |
      order_pool = self.pool.get('purchase.order')
-     purchase_id = order_pool.search(cr, uid, ref("purchase_order_test"))
-     orders = order_pool.browse(cr, uid, purchase_id)
-     import json
+     order = order_pool.browse(cr, uid, ref("purchase_order_test"))
 
-     tokens = self.export_edi(cr, uid, [orders])
+     tokens = self.export_edi(cr, uid, [order])
      assert tokens, 'Token is not generated'
-     document = self.get_document(cr, uid, tokens[0])
-     document = json.loads(document)
-     document[0]["__model"] = "sale.order"
-     document = json.dumps(document)
-     a = self.import_edi(cr, uid, edi_document = document)
-     
+
+-
+ I import purchase order from EDI Document of sale order
+-
+  !python {model: ir.edi.document}: |
+    purchase_order_pool = self.pool.get('purchase.order')
+    edi_document = {
+        "order_line": [{
+            "product_uom_qty": 1.0, 
+            "name": "basic pc", 
+            "product_uom": ["724f93ec-ddd0-11e0-88ec-701a04e25543:product.product_uom_unit", "PCE"], 
+            "sequence": 10, 
+            "price_unit": 150.0, 
+            "__last_update": False, 
+            "__id": "724f93ec-ddd0-11e0-88ec-701a04e25543:724f93ec-ddd0-11e0-88ec-701a04e25543:sale.sale_order_line-LXEqeuI-SSP0", 
+            "product_id": ["724f93ec-ddd0-11e0-88ec-701a04e25543:product.product_product_pc1", "[PC1] Basic PC"]
+        }], 
+        "order_policy": "manual", 
+        "company_address": {
+                "city": "Gerompont", 
+                "zip": "1367", 
+                "__last_update": False, 
+                "country_id": ["724f93ec-ddd0-11e0-88ec-701a04e25543:base.be", "Belgium"], 
+                "__id": "724f93ec-ddd0-11e0-88ec-701a04e25543:base.main_address", 
+                "phone": "(+32).81.81.37.00", 
+                "street": "Chaussee de Namur 40"
+        }, 
+        "partner_order_id": ["724f93ec-ddd0-11e0-88ec-701a04e25543:base.res_partner_address_3", "Thomas Passot, Belgium, Louvain-la-Neuve, Rue de l'Angelique, 1"],
+        "__id": "724f93ec-ddd0-11e0-88ec-701a04e25543:sale.sale_order_test", 
+        "date_order": "2011-09-13", 
+        "partner_id": ["724f93ec-ddd0-11e0-88ec-701a04e25543:sale.res_partner_test22", "Junjun wala"], 
+        "__attachments": [], 
+        "__module": "sale", 
+        "amount_total": 150.0, 
+        "amount_untaxed": 150.0, 
+        "name": "SO008", 
+        "__model": "sale.order", 
+        "__last_update": False, 
+        "company_id": ["724f93ec-ddd0-11e0-88ec-701a04e25543:base.main_company", "OpenERP S.A."], 
+        "__version": [6, 1], 
+        "pricelist_id": ["724f93ec-ddd0-11e0-88ec-701a04e25543:product.list0", "Public Pricelist (EUR)"]
+    }
+    new_purchase_order_id = purchase_order_pool.edi_import(cr, uid, edi_document, context=context)
+    assert new_purchase_order_id,  'Purchase order is not imported'

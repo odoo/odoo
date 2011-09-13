@@ -56,7 +56,7 @@
     wf_service.trg_validate(uid, 'account.invoice',invoices.id,'invoice_open', cr)
 
 -
-  I Tesing of EDI functionality. First I export customer invoice from my company than import that invoice into customer company
+  I Testing of EDI functionality. First I export customer invoice from my company than import that invoice into customer company
 -
   !python {model: ir.edi.document}: |
     invoice_pool = self.pool.get('account.invoice')
@@ -64,9 +64,60 @@
 
     tokens = self.export_edi(cr, uid, [invoice])
     assert tokens, 'Token is not generated'
-    document = self.get_document(cr, uid, tokens[0])
-    a = self.import_edi(cr, uid, edi_document = document)
-    assert a, 'Invoice is not imported'
+-
+  I import of EDI document of custmer invoice
+-
+  !python {model: ir.edi.document}: |
+    invoice_pool = self.pool.get('account.invoice')
+    edi_document = {
+        "internal_number": "SAJ/2011/002", 
+        "company_address": {
+                "city": "Gerompont", 
+                "zip": "1367", 
+                "__last_update": False, 
+                "country_id": ["b22acf7a-ddcd-11e0-a4db-701a04e25543:base.be", "Belgium"], 
+                "__id": "b22acf7a-ddcd-11e0-a4db-701a04e25543:base.main_address", 
+                "phone": "(+32).81.81.37.00", 
+                "street": "Chaussee de Namur 40"
+        }, 
+        "company_id": ["b22acf7a-ddcd-11e0-a4db-701a04e25543:account.res_company_test11", "Thomson pvt. ltd."], 
+        "currency_id": ["b22acf7a-ddcd-11e0-a4db-701a04e25543:base.EUR", "EUR (\u20ac)"], 
+        "address_invoice_id": ["b22acf7a-ddcd-11e0-a4db-701a04e25543:base.res_partner_address_11", "Sebastien LANGE, France, Alencon, 1 place de l'\u00c9glise"],
+        "partner_id": ["b22acf7a-ddcd-11e0-a4db-701a04e25543:account.res_partner_test20", "Junjun wala"], 
+        "__attachments": [], 
+        "__module": "account", 
+        "amount_total": 1010.0, 
+        "date_invoice": "2011-06-22", 
+        "amount_untaxed": 10.0, 
+        "name": "selling product", 
+        "__model": "account.invoice", 
+        "__last_update": False, 
+        "tax_line": [{
+                "amount": 1000.0, 
+                "manual": True, 
+                "__id": "b22acf7a-ddcd-11e0-a4db-701a04e25543:b22acf7a-ddcd-11e0-a4db-701a04e25543:account.account_invoice_tax-4g4EutbiEMVl", 
+                "name": "sale tax", 
+                "__last_update": False
+        }], 
+        "__id": "b22acf7a-ddcd-11e0-a4db-701a04e25543:account.customer_invoice_test", 
+        "amount_tax": 1000.0, 
+        "__version": [6, 1], 
+        "type": "out_invoice", 
+        "invoice_line": [{
+                "uos_id": ["b22acf7a-ddcd-11e0-a4db-701a04e25543:product.product_uom_unit", "PCE"], 
+                "name": "basic pc", 
+                "__last_update": False, 
+                "price_unit": 10.0, 
+                "price_subtotal": 10.0, 
+                "__id": "b22acf7a-ddcd-11e0-a4db-701a04e25543:b22acf7a-ddcd-11e0-a4db-701a04e25543:account.account_invoice_line-1RP3so-u2vV4",
+                "product_id": ["b22acf7a-ddcd-11e0-a4db-701a04e25543:product.product_product_pc1", "[PC1] Basic PC"], 
+                "quantity": 1.0
+        }]
+    }
+
+    invoice_id = invoice_pool.edi_import(cr, uid, edi_document, context=context)
+    invoice_new = invoice_pool.browse(cr, uid, invoice_id, context=context)
+    assert invoice_id, 'Invoice is not imported'
 -
   I Checking the out invoice become in invoice or not after import
 -
@@ -75,8 +126,7 @@
     invoice_old = self.browse(cr, uid, ref("customer_invoice_test"))
     new_partner_id = self.pool.get('res.partner').name_search(cr, uid, invoice_old.company_id.name)
     assert new_partner_id, 'Partner is not created of Supplier'
-    
-    ids = self.search(cr, uid, [('partner_id','=',new_partner_id[0][0]),('reference','=',invoice_old.internal_number)])
+    ids = self.search(cr, uid, [('partner_id','=',new_partner_id[0][0]),('reference','=',"SAJ/2011/002")])
     assert ids, 'Invoice does not have created of party'
     invoice_new = self.browse(cr, uid, ids[0])
     assert invoice_new.reference == invoice_old.internal_number, "internal number is not stored in reference"

@@ -22,58 +22,48 @@
 from osv import fields, osv, orm
 from base.ir import ir_edi
 from tools.translate import _
-from datetime import date
+from datetime import date, datetime, timedelta
 
 class purchase_order(osv.osv, ir_edi.edi):
     _inherit = 'purchase.order'
     
     def edi_export(self, cr, uid, records, edi_struct=None, context=None):
-        """Exports a supplier or customer invoice"""
+        """Exports a purchase order"""
         edi_struct = {
+            'company_id': True, # -> to be changed into partner
+            'name': True,
+           
+            'date_order': True,
+            'partner_id': True,
+            'partner_address_id': True, #only one address needed
+                    #SO: 'partner_order_id'
+                    #PO: 'partner_address_id'
+
+            'pricelist_id': True,
+            'notes': True,
+                    #SO: 'note'
+                    #PO: 'notes'
+    
+            'amount_total': True,
+            'amount_tax': True,
+            'amount_untaxed': True,
+            'order_line': {
                 'name': True,
-                'origin': True,
-                'date_order': True,
-                'date_approve': True,
-                'partner_id': True,
-                'partner_address_id': True,
-                'dest_address_id': True,
-                'warehouse_id': True,
-                'location_id': True,
-                'pricelist_id': True,
-                'validator' : True,
-                'amount_tax': True,
-                'amount_total': True,
-                'amount_untaxed': True,
-                'order_line': {
-                        'name': True,
-                        'product_qty': True,
-                        'date_planned': True,
-                        'taxes_id': True,
-                        'product_uom': True,
-                        'product_id': True,
-                        'move_dest_id': True,
-                        'price_unit': True,
-                        'order_id': True,
-                        'invoiced': True,
-                        'price_subtotal': True,
-                },
-                'invoice_ids': True,
-                'shipped': True,
-                'company_id': True,
+                'date_planned': True,
+                        #SO: 'delay' : 'date_approve' - 'date_planned'
+                        #PO: 'date_planned': 'date_approve' + 'delay'
+
+                'product_id': True,
+                'product_uom': True,
+                'price_unit': True,
+                'product_qty': True,
+                        #SO: 'product_uom_qty'
+                        #PO: 'product_qty'
+
+                'notes': True,
+            }
         }
-        partner_pool = self.pool.get('res.partner')
-        partner_address_pool = self.pool.get('res.partner.address')
-        company_address_dict = {
-            'street': True,
-            'street2': True,
-            'zip': True,
-            'city': True,
-            'state_id': True,
-            'country_id': True,
-            'email': True,
-            'phone': True,
-                   
-        }
+        company_pool = self.pool.get('res.company')
         edi_doc_list = []
         for order in records:
             # Get EDI doc based on struct. The result will also contain all metadata fields and attachments.
@@ -83,107 +73,80 @@ class purchase_order(osv.osv, ir_edi.edi):
             edi_doc = edi_doc[0]
 
             # Add company info and address
-            res = partner_pool.address_get(cr, uid, [order.company_id.partner_id.id], ['contact', 'order'])
-            contact_addr_id = res['contact']
-            invoice_addr_id = res['order']
-
-            address = partner_address_pool.browse(cr, uid, invoice_addr_id, context=context)
-            edi_company_address_dict = {}
-            for key, value in company_address_dict.items():
-                if not value:
-                   continue
-                address_rec = getattr(address, key)
-                if not address_rec:
-                    continue
-                if key.endswith('_id'):
-                    address_rec = self.edi_m2o(cr, uid, address_rec, context=context)
-                edi_company_address_dict[key] = address_rec
-                    
+            edi_company_document = company_pool.edi_export_address(cr, uid, [order.company_id], context=context)[order.company_id.id]
             edi_doc.update({
-                    'company_address': edi_company_address_dict,
-                    #'company_logo': inv_comp.logo,#TODO
-                    #'paid': inv_comp.paid, #TODO
+                    'company_address': edi_company_document['company_address'],
+                    #'company_logo': edi_company_document['company_logo'],#TODO
             })
-            edi_doc['__model'] = 'sale.order'
             edi_doc_list.append(edi_doc)
-            
         return edi_doc_list
 
-    def edi_import(self, cr, uid, edi_document, context=None):
-            
-        partner_pool = self.pool.get('res.partner')
+    def edi_import_company(self, cr, uid, edi_document, context=None):
         partner_address_pool = self.pool.get('res.partner.address')
-        model_data_pool = self.pool.get('ir.model.data')
-        product_pool = self.pool.get('product.product')
-        product_categ_pool = self.pool.get('product.category')
+        partner_pool = self.pool.get('res.partner')
         company_pool = self.pool.get('res.company')
-        country_pool = self.pool.get('res.country')
-        state_pool = self.pool.get('res.country.state')
-        account_journal_pool = self.pool.get('account.journal')
-        invoice_line_pool = self.pool.get('account.invoice.line')
-        account_pool = self.pool.get('account.account')
-        stock = self.pool.get('stock.location')
-        tax_id = []
-        account_id = []
-        partner_id = None
-        company_id = None
+
+        # import company as a new partner, supplier=1.
+        # company_address data used to add address to new partner
+        partner_value = {'customer': True}
+        partner_id = company_pool.edi_import_as_partner(cr, uid, edi_document, values=partner_value, context=context)
+
+
+        # partner_id field is modified to point to the new partner
+        res = partner_pool.address_get(cr, uid, [partner_id], ['contact', 'invoice'])
+        address_id = res['invoice']
+        partner = partner_pool.browse(cr, uid, partner_id, context=context)
+        partner_address = partner_address_pool.browse(cr, uid, address_id, context=context)
+        edi_document['partner_id'] = self.edi_m2o(cr, uid, partner, context=context)
+        edi_document['partner_address_id'] = self.edi_m2o(cr, uid, partner_address, context=context)
+        del edi_document['company_id']
+        return partner_id
+
+    def edi_get_pricelist(self, cr, uid, partner_id, context=None):
+        # return value = ["724f93ec-ddd0-11e0-88ec-701a04e25543:product.list0", "Public Pricelist (EUR)"]
+        partner_model = self.pool.get('res.partner')
+        partner = partner_model.browse(cr, uid, partner_id, context=context)
+        pricelist = partner.property_product_pricelist_purchase
+        if not pricelist:
+            pricelist = self.pool.get('ir.model.data').get_object(cr, uid, 'purchase', 'list0', context=context)
+        return self.edi_m2o(cr, uid, pricelist, context=context)
+
+    def edi_get_location(self, cr, uid, partner_id, context=None):
+        # return value = ["724f93ec-ddd0-11e0-88ec-701a04e25543:stock.stock_location_stock", "Stock"]
+        partner_model = self.pool.get('res.partner')
+        partner = partner_model.browse(cr, uid, partner_id, context=context)
+        location = partner.property_stock_customer
+        if not location:
+            location = self.pool.get('ir.model.data').get_object(cr, uid, 'stock', 'stock_location_stock', context=context)
+        return self.edi_m2o(cr, uid, location, context=context)
+
+    def edi_import(self, cr, uid, edi_document, context=None):
         if context is None:
             context = {}
-        print edi_document
-        # import company as a new partner, if type==in then supplier=1, else customer=1
-        # partner_id field is modified to point to the new partner
-        # company_address data used to add address to new partner
-        edi_company_address = edi_document['company_address']
-        edi_partner_id = edi_document['partner_id']
-        company_name = edi_document['shop_id'][1]
-        state_id = edi_company_address.get('state_id', False)
-        state_name = state_id and state_id[1]
-        country_id = edi_company_address.get('country_id', False)
-        country_name = country_id and country_id[1]
-
-        country_id = country_name and self.edi_import_relation(cr, uid, 'res.country', country_name, context=context) or False
-        state_id = state_name and self.edi_import_relation(cr, uid, 'res.country.state', state_name, 
-                                values={'country_id': country_id, 'code': state_name}, context=context) or False
-        address_value = {
-            'street': edi_company_address.get('street', False),
-            'street2': edi_company_address.get('street2', False),
-            'zip': edi_company_address.get('zip', False),
-            'city': edi_company_address.get('city', False),
-            'state_id': state_id,
-            'country_id': country_id,
-            'email': edi_company_address.get('email', False),
-            'phone': edi_company_address.get('phone', False),
-               
-        }
-        partner_value = {'name': company_name}
-        partner_value.update({'customer': False, 'supplier': True})
-        partner_id = partner_pool.create(cr, uid, partner_value, context=context)
-        address_value.update({'partner_id': partner_id})
-        address_id = partner_address_pool.create(cr, uid, address_value, context=context)
-        partner_address = partner_address_pool.browse(cr, uid, address_id, context=context)
-        edi_document.update({'partner_address_id':self.edi_m2o(cr, uid, partner_address, context=context)})
-        partner = partner_pool.browse(cr, uid, partner_id, context=context)
-        edi_document['partner_id'] = self.edi_m2o(cr, uid, partner, context=context)
-        location_id = stock.search(cr, uid,[('name','=','Stock')])
-        location = stock.browse(cr, uid, location_id[0])
-        edi_document.update({'dest_address_id': edi_document['partner_shipping_id'],'location_id': self.edi_m2o(cr, uid, location, context=context)})
         
-        for line in range(len(edi_document['order_line'])):
-            product_qty = edi_document['order_line'][line]['product_uom_qty']
-            edi_document['order_line'][line].update({'product_qty': product_qty,'taxes_id':edi_document['order_line'][line]['tax_id']})
-               
-        # all fields are converted for purchase order import so unnecessary fields are deleted
-        delete_key = ['sequence','procurement_id','product_uom_qty','company_address','shop_id','create_date','picking_policy','order_policy','partner_order_id','partner_shipping_id','invoice_quantity','partner_invoice_id','price_subtotal','date_confirm']
-        for key in delete_key:
-            if edi_document.has_key(key):
-                del edi_document[key]
-            else:
-                for document in edi_document['order_line']:
-                    if document.has_key(key):
-                        del document[key]
-        print "in the edi_purchase import",edi_document
+        model = edi_document['__model']
+        assert model == 'sale.order', _('Could not import purchase order')
+        edi_document['__model'] = self._name
+        #import company as a new partner
+        partner_id = self.edi_import_company(cr, uid, edi_document, context=context)
+        
+        edi_document['partner_ref'] = edi_document['name']
+        edi_document['notes'] = edi_document.get('note', False)
+        edi_document['pricelist_id'] = self.edi_get_pricelist(cr, uid, partner_id, context=context)
+        edi_document['location_id'] = self.edi_get_location(cr, uid, partner_id, context=context)
+        for order_line in edi_document['order_line']:
+            order_line['product_qty'] = order_line['product_uom_qty']
+            date_order = datetime.strptime(edi_document['date_order'], "%Y-%m-%d")
+            delay = order_line.get('delay', 0.0)
+            order_line['date_planned'] = (date_order + timedelta(days=delay)).strftime("%Y-%m-%d")
+            # price_unit = price_unit - discount
+            discount = order_line.get('discount', 0.0)
+            price_unit = order_line['price_unit']
+            if discount:
+                price_unit = price_unit * (1 - (discount or 0.0) / 100.0)
+            order_line['price_unit'] = price_unit
+        
         return super(purchase_order,self).edi_import(cr, uid, edi_document, context=context)
-    
 purchase_order()
 
 class purchase_order_line(osv.osv, ir_edi.edi):
