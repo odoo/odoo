@@ -2,7 +2,7 @@
 import datetime
 import dateutil.relativedelta
 import time
-import xmlrpclib
+import openerplib
 
 import nonliterals
 #----------------------------------------------------------
@@ -16,14 +16,6 @@ class OpenERPConnector(object):
 
 class OpenERPAuth(object):
     pass
-
-class OpenERPModel(object):
-    def __init__(self, session, model):
-        self._session = session
-        self._model = model
-
-    def __getattr__(self, name):
-        return lambda *l:self._session.execute(self._model, name, *l)
 
 class OpenERPSession(object):
     """
@@ -42,7 +34,7 @@ class OpenERPSession(object):
         Used to store references to non-literal domains which need to be
         round-tripped to the client browser.
     """
-    def __init__(self, server='127.0.0.1', port=8069, model_factory=OpenERPModel):
+    def __init__(self, server='127.0.0.1', port=8069):
         self._server = server
         self._port = port
         self._db = False
@@ -57,10 +49,14 @@ class OpenERPSession(object):
         self._lang = {}
         self.remote_timezone = 'utc'
         self.client_timezone = False
+        
+    def build_connection(self):
+        return openerplib.get_connection(hostname=self._server, port=self._port,
+                                         database=self._db,
+                                         user_id=self._uid, password=self._password)
 
     def proxy(self, service):
-        s = xmlrpclib.ServerProxy('http://%s:%s/xmlrpc/%s' % (self._server, self._port, service))
-        return s
+        return self.build_connection().get_service(service)
 
     def bind(self, db, uid, password):
         self._db = db
@@ -84,7 +80,8 @@ class OpenERPSession(object):
 
     def execute(self, model, func, *l, **d):
         self.assert_valid()
-        r = self.proxy('object').execute(self._db, self._uid, self._password, model, func, *l, **d)
+        model = self.build_connection().get_model(model)
+        r = getattr(model, func)(*l, **d)
         return r
 
     def exec_workflow(self, model, id, signal):
@@ -97,9 +94,9 @@ class OpenERPSession(object):
 
         :param model: an OpenERP model name
         :type model: str
-        :rtype: :class:`openerpweb.openerpweb.OpenERPModel`
+        :rtype: a model object
         """
-        return self.model_factory(self, model)
+        return self.build_connection().get_model(model)
 
     def get_context(self):
         """ Re-initializes the current user's session context (based on

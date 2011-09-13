@@ -10,14 +10,6 @@ class OpenERPConnector(object):
 class OpenERPAuth(object):
     pass
 
-class OpenERPModel(object):
-    def __init__(self, session, model):
-        self._session = session
-        self._model = model
-
-    def __getattr__(self, name):
-        return lambda *l:self._session.execute(self._model, name, *l)
-
 class OpenERPSession(object):
-        def __init__(self, model_factory=OpenERPModel):
+        def __init__(self):
             pass
