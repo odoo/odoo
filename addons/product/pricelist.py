@@ -165,7 +165,6 @@ class product_pricelist(osv.osv):
         if not pricelist_ids:
             pricelist_ids = self.pool.get('product.pricelist').search(cr, uid, [], context=context)
 
-        pricelist_ids = list(set(pricelist_ids))
         pricelist_version_ids = self.pool.get('product.pricelist.version').search(cr, uid, [
                                                         ('pricelist_id', 'in', pricelist_ids),
                                                         '|',
