@@ -340,7 +340,6 @@ class account_cash_statement(osv.osv):
                 })
 
             vals.update({
-                'date': statement.date,
                 'state': 'open',
             })
             self.write(cr, uid, [statement.id], vals, context=context)
