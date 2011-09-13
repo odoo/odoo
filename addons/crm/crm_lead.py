@@ -186,6 +186,12 @@ class crm_lead(crm_case, osv.osv):
         'date_action': fields.date('Next Action Date'),
         'title_action': fields.char('Next Action', size=64),
         'stage_id': fields.many2one('crm.case.stage', 'Stage', domain="[('section_ids', '=', section_id)]"),
+        'color': fields.integer('Color Index'),
+        'partner_address_name': fields.related('partner_address_id', 'name', type='char', string='Partner Contact Name', readonly=True),
+        'company_currency': fields.related('company_id', 'currency_id', 'symbol', type='char', string='Company Currency', readonly=True),
+        'user_email': fields.related('user_id', 'user_email', type='char', string='User Email', readonly=True),
+        'user_login': fields.related('user_id', 'login', type='char', string='User Login', readonly=True),
+
     }
 
     _defaults = {
@@ -197,6 +203,7 @@ class crm_lead(crm_case, osv.osv):
         'section_id': crm_case._get_section,
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.lead', context=c),
         'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0],
+        'color': 0,
         #'stage_id': _get_stage_id,
     }
 
@@ -311,6 +318,21 @@ class crm_lead(crm_case, osv.osv):
             message = _("The opportunity '%s' has been been won.") % l.name
             self.log(cr, uid, l.id, message)
         return res
+
+    def set_priority(self, cr, uid, ids, priority):
+        """Set lead priority
+        """
+        return self.write(cr, uid, ids, {'priority' : priority})
+
+    def set_high_priority(self, cr, uid, ids, *args):
+        """Set lead priority to high
+        """
+        return self.set_priority(cr, uid, ids, '1')
+
+    def set_normal_priority(self, cr, uid, ids, *args):
+        """Set lead priority to normal
+        """
+        return self.set_priority(cr, uid, ids, '3')
 
     def convert_opportunity(self, cr, uid, ids, context=None):
         """ Precomputation for converting lead to opportunity
