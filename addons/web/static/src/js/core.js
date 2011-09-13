@@ -349,9 +349,10 @@ openerp.web.Session = openerp.web.CallbackEnabled.extend( /** @lends openerp.web
         this.port = (port == undefined) ? location.port : port;
         this.rpc_mode = (server == location.hostname) ? "ajax" : "jsonp";
         this.debug = (window.location.search.indexOf('?debug') !== -1);
-        this.user_context= {};
-        this.uid = false;
         this.session_id = false;
+        this.uid = false;
+        this.user_context= {};
+        this.db = false;
         this.module_list = [];
         this.module_loaded = {"web": true};
         this.context = {};
@@ -505,14 +506,13 @@ openerp.web.Session = openerp.web.CallbackEnabled.extend( /** @lends openerp.web
      * Saves the session id and uid locally
      */
     session_save: function () {
-        this.set_cookie('uid', this.uid);
         this.set_cookie('session_id', this.session_id);
-        this.set_cookie('user_context', this.user_context);
     },
     logout: function() {
-        delete this.uid;
         delete this.session_id;
-        this.set_cookie('uid', '');
+        delete this.uid;
+        delete this.user_context;
+        delete this.db;
         this.set_cookie('session_id', '');
         this.on_session_invalid(function() {});
     },
