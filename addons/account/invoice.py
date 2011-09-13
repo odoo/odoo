@@ -1,4 +1,4 @@
-    # -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
@@ -1242,9 +1242,8 @@ class account_invoice(osv.osv):
 account_invoice()
 
 class account_invoice_line(osv.osv):
-    def _amount_line(self, cr, uid, ids, prop, unknow_none, unknow_dict):
 
-        account_inv_obj = self.pool.get('account.invoice').browse(cr, uid, ids)[0]
+    def _amount_line(self, cr, uid, ids, prop, unknow_none, unknow_dict):
         res = {}
         tax_obj = self.pool.get('account.tax')
         cur_obj = self.pool.get('res.currency')
