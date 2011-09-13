@@ -158,7 +158,7 @@ openerp.web.ViewManager =  openerp.web.Widget.extend(/** @lends openerp.web.View
         this.registry = openerp.web.views;
     },
     render: function() {
-    	return QWeb.render(this.template, {"prefix": this.element_id, views: this.views_src})
+        return QWeb.render(this.template, {"prefix": this.element_id, views: this.views_src})
     },
     /**
      * @returns {jQuery.Deferred} initial view loading promise
@@ -298,7 +298,7 @@ openerp.web.ViewManager =  openerp.web.Widget.extend(/** @lends openerp.web.View
 });
 
 openerp.web.ViewManagerAction = openerp.web.ViewManager.extend(/** @lends oepnerp.web.ViewManagerAction# */{
-	template: "ViewManagerAction",
+    template:"ViewManagerAction",
     /**
      * @constructs openerp.web.ViewManagerAction
      * @extends openerp.web.ViewManager
@@ -306,7 +306,7 @@ openerp.web.ViewManagerAction = openerp.web.ViewManager.extend(/** @lends oepner
      * @param {openerp.web.ActionManager} parent parent object/widget
      * @param {Object} action descriptor for the action this viewmanager needs to manage its views.
      */
-	init: function(parent, action) {
+    init: function(parent, action) {
         this.session = parent.session;
         this.action = action;
         var dataset = new openerp.web.DataSetSearch(this, action.res_model, action.context, action.domain);
@@ -704,7 +704,7 @@ openerp.web.View = openerp.web.Widget.extend(/** @lends openerp.web.View# */{
      * Directly set a view to use instead of calling fields_view_get. This method must
      * be called before start(). When an embedded view is set, underlying implementations
      * of openerp.web.View must use the provided view instead of any other one.
-     * 
+     *
      * @param embedded_view A view.
      */
     set_embedded_view: function(embedded_view) {
