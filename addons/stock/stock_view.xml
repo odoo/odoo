@@ -95,7 +95,7 @@
             <field name="model">stock.inventory</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Lot Inventory" colors="grey:state in ('cancel')">
+                <tree string="Lot Inventory" colors="grey:state == 'cancel'">
                     <field name="name"/>
                     <field name="date"/>
                     <field name="state"/>
@@ -423,7 +423,7 @@
             <field name="type">tree</field>
             <field name="field_parent">move_history_ids</field>
             <field name="arch" type="xml">
-                <tree colors="grey:state in ('cancel')" string="Moves">
+                <tree colors="grey:state == 'cancel'" string="Moves">
                     <field name="product_id" />
                     <field name="product_qty" />
                     <field name="product_uom"  string="UOM"/>
@@ -447,7 +447,7 @@
             <field name="type">tree</field>
             <field name="field_parent">move_history_ids2</field>
             <field name="arch" type="xml">
-                <tree colors="grey:state in ('cancel')" string="Moves">
+                <tree colors="grey:state == 'cancel'" string="Moves">
                     <field name="product_id" />
                     <field name="product_qty" />
                     <field name="product_uom"  string="UOM"/>
@@ -673,7 +673,7 @@
             <field name="model">stock.picking</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="blue:state in ('draft');grey:state in ('cancel');red:state not in ('cancel', 'done') and date &lt; current_date" string="Picking list">
+                <tree colors="blue:state == 'draft';grey:state == 'cancel';red:state not in ('cancel', 'done') and date &lt; current_date" string="Picking list">
                     <field name="name"/>
                     <field name="backorder_id" groups="base.group_extended"/>
                     <field name="origin"/>
@@ -867,7 +867,7 @@
             <field name="model">stock.picking</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="blue:state in ('draft');grey:state in ('cancel');red:state not in ('cancel', 'done') and date &lt; current_date" string="Delivery Orders">
+                <tree colors="blue:state == 'draft';grey:state == 'cancel';red:state not in ('cancel', 'done') and date &lt; current_date" string="Delivery Orders">
                     <field name="name"/>
                     <field name="partner_id"/>
                     <field name="origin"/>
@@ -1087,7 +1087,7 @@
             <field name="model">stock.picking</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="blue:state in ('draft');grey:state in ('done');red:state not in ('cancel', 'done') and date &lt; current_date" string="Picking list">
+                <tree colors="blue:state == 'draft';grey:state == 'done';red:state not in ('cancel', 'done') and date &lt; current_date" string="Picking list">
                     <field name="name"/>
                     <field name="partner_id" />
                     <field name="backorder_id" groups="base.group_extended"/>
@@ -1366,7 +1366,7 @@
             <field name="type">tree</field>
             <field eval="6" name="priority"/>
             <field name="arch" type="xml">
-                <tree colors="grey:state in ('cancel');red:(state not in ('cancel','done')) and date > current_date" string="Moves" editable="top">
+                <tree colors="grey:state == 'cancel';red:(state not in ('cancel','done')) and date > current_date" string="Moves" editable="top">
                     <field name="name"/>
                     <field name="picking_id" string="Reference"/>
                     <field name="origin"/>
@@ -1543,7 +1543,7 @@
             <field name="type">tree</field>
             <field name="priority" eval="6" />
             <field name="arch" type="xml">
-                <tree colors="grey:state in ('cancel')" string="Moves">
+                <tree colors="grey:state == 'cancel'" string="Moves">
                     <field name="picking_id" string="Reference"/>
                     <field name="origin"/>
                     <field name="partner_id" string="Partner"/>

@@ -46,7 +46,7 @@
             <field name="model">hr.expense.expense</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="blue:state in ('draft');black:state in ('confirm','accepted','invoiced','paid');gray:state in('cancelled')"  string="Expenses" editable="top">
+                <tree colors="blue:state == 'draft';black:state in ('confirm','accepted','invoiced','paid');gray:state == 'cancelled'"  string="Expenses" editable="top">
                     <field name="employee_id"/>
                     <field name="date"/>
                     <field name="department_id" groups="base.group_extended"/>

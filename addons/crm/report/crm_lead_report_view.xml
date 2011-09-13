@@ -174,7 +174,7 @@
             <field name="model">crm.lead.report</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-            <tree colors="blue:state in ('draft');black:state in ('open','pending','done');gray:state in ('cancel') " string="Opportunities Analysis">
+            <tree colors="blue:state == 'draft';black:state in ('open','pending','done');gray:state == 'cancel' " string="Opportunities Analysis">
                 <field name="name" invisible="1"/>
                 <field name="creation_month" invisible="1"/>
                 <field name="deadline_month" invisible="1"/>
