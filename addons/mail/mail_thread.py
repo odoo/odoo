@@ -310,7 +310,7 @@ class mail_thread(osv.osv):
                                 must be processed
            :param message: source of the RFC2822 mail
            :type message: string or xmlrpclib.Binary
-           :type dict custom_value: optional dictionary of field values
+           :type dict custom_values: optional dictionary of field values
                                     to pass to ``message_new`` if a new
                                     record needs to be created. Ignored
                                     if the thread record already exists.
