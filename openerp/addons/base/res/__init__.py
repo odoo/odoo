@@ -34,3 +34,5 @@ import res_log
 import ir_property
 import res_widget
 
+import edi_res_company
+

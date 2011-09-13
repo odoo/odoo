@@ -91,7 +91,7 @@ class ir_edi_document(osv.osv):
         returns the string serialization that is in the database (column: document) for the given edi_token or raise.
         """
         
-        records = self.name_search(cr, uid, edi_token, context=context)
+        records = self.name_search(cr, uid, edi_token, operator='=', context=context)
         if records:
             record = records[0][0]
             edi = self.browse(cr, uid, record, context=context)
@@ -192,7 +192,7 @@ class edi(object):
         xml_record = model_data_pool.browse(cr, uid, xml_record_id, context=context)
         return xml_record.module, xml_record.name
 
-    def edi_xml_id(self, cr, uid, record, context=None):
+    def edi_xml_id(self, cr, uid, record, xml_id=None, context=None):
         """
         Generate a unique string to represent a pair of (the database's UUID, the XML ID).
         Each EDI record and each relationship value are represented using a unique
@@ -218,8 +218,9 @@ class edi(object):
             module, xml_id = _record_xml
             xml_id = '%s:%s.%s' % (db_uuid, module, xml_id)
         else:
-            uuid = safe_unique_id(db_uuid, record._name, record.id)
-            xml_id = '%s:%s.%s' % (db_uuid, record._module, uuid)
+            if not xml_id:
+                uuid = safe_unique_id(db_uuid, record._name, record.id)
+                xml_id = '%s:%s.%s' % (db_uuid, record._module, uuid)
             assert len(xml_id.split('.'))==2, _("'%s' contains too many dots. XML ids should not contain dots ! These are used to refer to other modules data, as in module.reference_id") % (xml_id)
             module, xml_id2 = xml_id.split('.')
             xml_record_id = model_data_pool.create(cr, uid, {
@@ -337,7 +338,7 @@ class edi(object):
         dict_list = []
         
         for record in records:
-            dict_list.append(self.edi_m2o(cr, uid, [record], context=None))
+            dict_list.append(self.edi_m2o(cr, uid, record, context=None))
       
         return dict_list
 
@@ -394,30 +395,51 @@ class edi(object):
             edi_dict_list.append(edi_dict)
         return edi_dict_list
 
-    def edi_import_relation(self, cr, uid, relation_model, relation_value, xml_id=None, context=None):
-        relation_id = False
-        model_data = self.pool.get('ir.model.data')
-        relation_object = self.pool.get(relation_model)
-        relation_ids = relation_object.name_search(cr, uid, relation_value, context=context)
-        if relation_ids and len(relation_ids) == 1:
-            relation_id = relation_ids[0][0]
-        values = {relation_object._rec_name: relation_value}
-        if not relation_id:
-            relation_id = relation_object.create(cr, uid, values, context=context)
 
-        relation_record = relation_object.browse(cr, uid, relation_id, context=context)
-        record_xml = self.record_xml_id(cr, uid, relation_record, context=context)
+    def edi_get_object_by_name(self, cr, uid, value, model_name, context=None):
+        openobject = False
+        model = self.pool.get(model_name)
+        object_ids = model.name_search(cr, uid, value, operator='=', context=context)
+        if object_ids and len(object_ids) == 1:
+            object_id = object_ids[0][0]
+            openobject = model.browse(cr, uid, object_id, context=context)
+        return openobject
+
+    def edi_get_object(self, cr, uid, xml_id, model, context=None):
+        model_data = self.pool.get('ir.model.data')
+        assert len(xml_id.split('.'))==2, _("'%s' contains too many dots. XML ids should not contain dots ! These are used to refer to other modules data, as in module.reference_id") % (xml_id)
+        module, xml_id2 = xml_id.split('.')
+        openobject = False
+        data_ids = model_data.search(cr, uid, [('model','=', model), ('name','=', xml_id2)])
+        if data_ids:
+            model = self.pool.get(model)
+            data = model_data.browse(cr, uid, data_ids[0], context=context)
+            openobject = model.browse(cr, uid, data.res_id, context=context)
+        return openobject
+
+    def edi_import_relation(self, cr, uid, relation_model, relation_value, xml_id=None, context=None):
+        relation = False
+        if xml_id:
+            relation = self.edi_get_object(cr, uid, xml_id, relation_model, context=context)
+        if not relation:
+            relation = self.edi_get_object_by_name(cr, uid, relation_value, relation_model, context=context)
+        if not relation:
+            relation_model = self.pool.get(relation_model)
+            values = {} #relation_model.default_get(cr, uid, fields, context=context)
+            values[relation_model._rec_name] = relation_value            
+            relation_id = relation_model.create(cr, uid, values, context=context)
+            relation = relation_model.browse(cr, uid, relation_id, context=context)
+
+        record_xml = self.record_xml_id(cr, uid, relation, context=context)
         if record_xml:
             module, xml_id = record_xml
             xml_id = '%s.%s' % (module, xml_id)
         if not xml_id:
-            xml_id = self.edi_xml_id(cr, uid, relation_record, context=context)
-        if xml_id:
-            assert len(xml_id.split('.'))==2, _("'%s' contains too many dots. XML ids should not contain dots ! These are used to refer to other modules data, as in module.reference_id") % (xml_id)
-            module, xml_id2 = xml_id.split('.')
-        #TODO: update record from values
+            xml_id = self.edi_xml_id(cr, uid, relation, context=context)
+        
+        #TODO: update record from values ?
         #relation_id = model_data._update(cr, uid, relation_model, module, values, xml_id=xml_id, context=context)
-        return relation_id
+        return relation and relation.id or False
         
     def edi_import(self, cr, uid, edi_document, context=None):
     
@@ -467,64 +489,72 @@ class edi(object):
                     connect it to the parent record via a write value like (4, db_id).        
         """
         # generic implementation!
-        fields_to_import = []
-        data_line = []
         model_data = self.pool.get('ir.model.data')
-        _columns = self._all_columns
-        values = {}
-        xml_id = edi_document['__id']
-        assert len(xml_id.split('.'))==2, _("'%s' contains too many dots. XML ids should not contain dots ! These are used to refer to other modules data, as in module.reference_id") % (xml_id)
-        module, xml_id2 = xml_id.split('.')
-        for field in edi_document.keys():
-            if not field.startswith('__'):
-                _column = _columns[field].column
-                _column_dict = fields.field_to_dict(self, cr, uid, context, _column)
-            
-                fields_to_import.append(field)
-                edi_field_value = edi_document[field]
-                field_type = _column_dict['type']
-                relation_model = _column_dict.get('relation')
-                if not edi_field_value:
+        assert self._name == edi_document['__model'], 'EDI Document could not import. Model of EDI Document and current model are does not match'
+        def process(datas, model_name):
+            values = {}
+            model_pool = self.pool.get(model_name)
+            xml_id = datas['__id']
+            assert len(xml_id.split('.'))==2, _("'%s' contains too many dots. XML ids should not contain dots ! These are used to refer to other modules data, as in module.reference_id") % (xml_id)
+            module, xml_id2 = xml_id.split('.')
+            _columns = model_pool._all_columns
+            for field in datas.keys():
+                if field not in _columns:
                     continue
-                if _column_dict.has_key('function') or _column_dict.has_key('related_columns'):
-                    # DO NOT IMPORT FUNCTION FIELD AND RELATED FIELD
-                    continue
-                elif field_type in ('many2one', 'many2many'):
-                    if field_type == 'many2one':
-                        edi_parent_documents = [edi_field_value]
-                    else:
-                        edi_parent_documents = edi_field_value
-
-                    parent_lines = []
-
-                    for edi_parent_document in edi_parent_documents:
-                        relation_id = self.edi_import_relation(cr, uid, relation_model, edi_parent_document[1], edi_parent_document[0], context=context)
-                        parent_lines.append(relation_id)
-                        
-                    if len(parent_lines):   
+                if not field.startswith('__'):
+                    _column = _columns[field].column
+                    _column_dict = fields.field_to_dict(self, cr, uid, context, _column)
+                
+                    edi_field_value = datas[field]
+                    field_type = _column_dict['type']
+                    relation_model = _column_dict.get('relation')
+                    #print '???????', field, edi_field_value, relation_model, field_type
+                    if not edi_field_value:
+                        continue
+                    if _column_dict.has_key('function') or _column_dict.has_key('related_columns'):
+                        # DO NOT IMPORT FUNCTION FIELD AND RELATED FIELD
+                        continue
+                    elif field_type == 'one2many':
+                        # recursive call for getting children and returning [(0,0,{})] or [(1,ID,{})]
+                        relations = []
+                        relation_object = self.pool.get(relation_model)
+                        for edi_relation_document in edi_field_value:
+                            relation = self.edi_get_object(cr, uid, edi_relation_document['__id'], relation_model, context=context)
+                            if not relation and edi_relation_document.get('name'):
+                                relation = self.edi_get_object_by_name(cr, uid, edi_relation_document['name'], relation_model, context=context)
+                            if relation:
+                                self.edi_xml_id(cr, uid, relation, \
+                                                    xml_id=edi_relation_document['__id'], context=context)
+                                relations.append((4, relation.id))
+                            res_module, res_xml_id, newrow = process(edi_relation_document, relation_model)
+                            relations.append( (relation and 1 or 0, relation and relation.id or 0, newrow))
+                        values[field] = relations
+                    elif field_type in ('many2one', 'many2many'):
                         if field_type == 'many2one':
-                            values[field] = parent_lines[0]
-                            
+                            edi_parent_documents = [edi_field_value]
                         else:
-                            many2many_ids = []
-                            for m2m_id in parent_lines:
-                                many2many_ids.append((4, m2m_id))
-                            values[field] = many2many_ids
-                elif field_type == 'one2many':
-                    #Look for a record that matches the db_id provided in the __id field. If
-                    #found, keep the corresponding database id, and connect it to the parent
-                    #using a write value like (4,db_id).
-                    #If not found via db_id, create a new entry using the same method that
-                    #imports a full EDI record (recursive call!), grab the resulting db id,
-                    #and use it to connect to the parent via a write value like (4, db_id).
-            
-                    relations = []
-                    relation_object = self.pool.get(relation_model)
-                    for edi_relation_document in edi_field_value:
-                        relation_id = relation_object.edi_import(cr, uid, edi_relation_document, context=context)
-                        relations.append((4, relation_id))
-                    values[field] = relations
-                else:
-                    values[field] = edi_field_value
-        return model_data._update(cr, uid, self._name, module, values, xml_id=xml_id, context=context)
+                            edi_parent_documents = edi_field_value
+
+                        parent_lines = []
+
+                        for edi_parent_document in edi_parent_documents:
+                            relation_id = self.edi_import_relation(cr, uid, relation_model, edi_parent_document[1], edi_parent_document[0], context=context)
+                            parent_lines.append(relation_id)
+                            
+                        if len(parent_lines):   
+                            if field_type == 'many2one':
+                                values[field] = parent_lines[0]
+                                
+                            else:
+                                many2many_ids = []
+                                for m2m_id in parent_lines:
+                                    many2many_ids.append((4, m2m_id))
+                                values[field] = many2many_ids
+                    
+                    else:
+                        values[field] = edi_field_value
+            return module, xml_id2, values
+        
+        module, xml_id, data_values = process(edi_document, self._name)
+        return model_data._update(cr, uid, self._name, module, data_values, xml_id=xml_id, context=context)
 # vim: ts=4 sts=4 sw=4 si et
