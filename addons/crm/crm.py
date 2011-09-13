@@ -357,13 +357,14 @@ class crm_case(crm_base):
         stage_ids = self.pool.get('crm.case.stage').search(cr, uid, domain, order=order)
         if stage_ids:
             return stage_ids[0]
+        return False
 
     def stage_set(self, cr, uid, ids, stage_id, context=None):
         value = {}
         if hasattr(self,'onchange_stage_id'):
             value = self.onchange_stage_id(cr, uid, ids, stage_id)['value']
         value['stage_id'] = stage_id
-        self.write(cr, uid, ids, value, context=context)
+        return self.write(cr, uid, ids, value, context=context)
 
     def stage_change(self, cr, uid, ids, op, order, context=None):
         if context is None:
@@ -377,19 +378,20 @@ class crm_case(crm_base):
                 section_id = case.section_id.id
             next_stage_id = self.stage_find(cr, uid, section_id, [('sequence',op,seq)],order)
             if next_stage_id:
-                self.stage_set(cr, uid, [case.id], next_stage_id, context=context)
+                return self.stage_set(cr, uid, [case.id], next_stage_id, context=context)
+        return False
 
     def stage_next(self, cr, uid, ids, context=None):
         """This function computes next stage for case from its current stage
         using available stage for that case type
         """
-        self.stage_change(cr, uid, ids, '>','sequence', context)
+        return self.stage_change(cr, uid, ids, '>','sequence', context)
 
     def stage_previous(self, cr, uid, ids, context=None):
         """This function computes previous stage for case from its current
         stage using available stage for that case type
         """
-        self.stage_change(cr, uid, ids, '<', 'sequence desc', context)
+        return self.stage_change(cr, uid, ids, '<', 'sequence desc', context)
 
     def copy(self, cr, uid, id, default=None, context=None):
         """ Overrides orm copy method.
